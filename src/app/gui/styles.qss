@@ -1,0 +1,57 @@
+/* Lightweight "book" stylesheet. Replace texture paths with real assets to improve realism. */
+
+QMainWindow {
+    /* parchment background will be embedded at runtime; fallback color below */
+    background-color: #f6efe0; /* warm parchment */
+    background-image: url("{PARCHMENT}");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+QTabWidget::pane {
+    border: 2px solid #c7b495;
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #fffdf6, stop:1 #f7f0df);
+}
+
+QTabBar::tab {
+    /* use leather texture for tab background when available */
+    background: #e7dcc5 url("{LEATHER}") center/cover no-repeat;
+    color: #2b1e10;
+    padding: 12px 18px;
+    margin: 2px;
+    border-radius: 6px;
+    font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+QTabBar::tab:selected {
+    background: #fffef8;
+    font-weight: bold;
+}
+
+/* Buttons like leather-bound tabs */
+QPushButton {
+    background-color: #8a623a;
+    color: #fffef6;
+    border: 1px solid #6f4a2a;
+    border-radius: 4px;
+    padding: 6px 10px;
+}
+
+QPushButton:hover {
+    background-color: #9a7048;
+}
+
+/* Alert button special style */
+QPushButton#alert_button {
+    background-color: #c0392b;
+    color: white;
+    font-weight: bold;
+    padding: 10px;
+}
+
+/* Footer area styling (status bar) */
+QStatusBar {
+    background: transparent;
+    color: #5b4636;
+}
