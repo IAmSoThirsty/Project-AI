@@ -1,0 +1,59 @@
+name: Node CI and Security
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  node-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: npm ci
+      - name: Detect JS test files
+        id: detect_js_tests
+        run: |
+          count=$(find src -type f -name '*.test.js' | wc -l)
+          echo "found=$count" > $GITHUB_OUTPUT
+      - name: Run JS tests
+        if: steps.detect_js_tests.outputs.found != '0'
+        run: npm run test:js
+      - name: No JS tests found
+        if: steps.detect_js_tests.outputs.found == '0'
+        run: echo "No JS test files found in src/ — skipping JS tests."
+      - name: Security scan (optional)
+        run: echo "Security steps here (unchanged)"
+
+  python-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Detect Python files
+        id: detect_py
+        run: |
+          count=$(git ls-files "**/*.py" | wc -l)
+          echo "found=$count" > $GITHUB_OUTPUT
+      - name: Skip Python CI if no Python files
+        if: steps.detect_py.outputs.found == '0'
+        run: echo "No Python files found — skipping Python CI."
+      - name: Setup Python
+        if: steps.detect_py.outputs.found != '0'
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - name: Install Python test deps
+        if: steps.detect_py.outputs.found != '0'
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest flake8
+      - name: Run flake8
+        if: steps.detect_py.outputs.found != '0'
+        run: flake8 .
+      - name: Run pytest
+        if: steps.detect_py.outputs.found != '0'
+        run: pytest -q
