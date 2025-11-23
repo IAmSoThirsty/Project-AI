@@ -1,0 +1,69 @@
+{
+  "name": "project-ai",
+  "version": "1.0.0",
+  "description": "AI-powered personal assistant with learning paths, data analysis, and security resources",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node --test src/**/*.test.js",
+    "test:coverage": "node --test --experimental-test-coverage src/**/*.test.js",
+    "test:watch": "node --test --watch src/**/*.test.js",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc",
+    "lint": "eslint src --ext .js,.ts",
+    "lint:fix": "eslint src --ext .js,.ts --fix",
+    "format": "prettier --write \"src/**/*.{js,ts,json,md}\"",
+    "format:check": "prettier --check \"src/**/*.{js,ts,json,md}\"",
+    "prepare": "husky install || true",
+    "clean": "rimraf dist coverage .tsbuildinfo"
+  },
+  "keywords": [
+    "ai",
+    "assistant",
+    "learning",
+    "data-analysis",
+    "security",
+    "personal-assistant"
+  ],
+  "author": "IAmSoThirsty",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IAmSoThirsty/Project-AI.git"
+  },
+  "bugs": {
+    "url": "https://github.com/IAmSoThirsty/Project-AI/issues"
+  },
+  "homepage": "https://github.com/IAmSoThirsty/Project-AI#readme",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-node": "^11.1.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.1.1",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1"
+  },
+  "lint-staged": {
+    "*.{js,ts}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
+  }
+}
