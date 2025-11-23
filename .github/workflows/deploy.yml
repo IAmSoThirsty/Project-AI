@@ -8,29 +8,35 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      HOST: ${{ secrets.HOST }}
+      USER: ${{ secrets.USER }}
+      PORT: ${{ secrets.PORT }}
+      REMOTE_PATH: ${{ secrets.REMOTE_PATH }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup SSH (uses secrets)
+      - name: Setup SSH Action
         uses: LuisEnMarroquin/setup-ssh-action@v3.0.0
         with:
-          # PRIVATE SSH KEY (add to repo secrets as `SSH`)
           SSHKEY: ${{ secrets.SSH }}
-          # Optional: remote host to connect to (add as `HOST`)
-          ORIGIN: ${{ secrets.HOST }}
-          # Logical name for the remote defined by the action (defaults to 'production')
-          NAME: production
-          # Optional remote connection details (add as secrets if needed)
-          PORT: ${{ secrets.PORT }}
-          USER: ${{ secrets.USER }}
-          # Optional: commit author identity used by the action when it makes commits on remote
-          GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
-          GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
 
       - name: Test GitHub SSH auth
         run: ssh -T git@github.com || true
 
       - name: Test remote host (only if HOST secret is set)
-        if: ${{ secrets.HOST != '' }}
-        run: ssh production ls --help
+        if: ${{ env.HOST != '' }}
+        run: |
+          echo "Testing connection to ${{ env.HOST }} (user: ${{ env.USER }})"
+          ssh -o StrictHostKeyChecking=no -p "${{ env.PORT || '22' }}" "${{ env.USER }}@${{ env.HOST }}" ls --help || true
+
+      - name: Run deploy script on remote host
+        if: ${{ env.HOST != '' && env.USER != '' }}
+        run: |
+          PORT=${{ env.PORT }}
+          PORT=${PORT:-22}
+          REMOTE_PATH=${{ env.REMOTE_PATH }}
+          REMOTE_PATH=${REMOTE_PATH:-/var/www/project}
+          echo "Connecting to ${{ env.USER }}@${{ env.HOST }} on port $PORT and running remote deploy script in $REMOTE_PATH"
+          ssh -o StrictHostKeyChecking=no -p "$PORT" "${{ env.USER }}@${{ env.HOST }}" "cd '$REMOTE_PATH' || true; if [ -x ./deploy.sh ]; then ./deploy.sh; else echo 'No deploy.sh found at $REMOTE_PATH'; ls -la; fi"
