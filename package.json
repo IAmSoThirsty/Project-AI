@@ -1,0 +1,13 @@
+{
+  "name": "project-ai",
+  "version": "1.0.0",
+  "description": "Desktop AI Assistant",
+  "scripts": {
+    "test": "node --test",
+    "test:js": "node --test src/**/*.test.js",
+    "test:python": "pytest -q"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
