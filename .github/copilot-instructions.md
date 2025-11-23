@@ -92,7 +92,6 @@ tools/                               # Migration and utility scripts
 ### Encryption
 - Use Fernet encryption for sensitive data (location history, secrets)
 - Always use `FERNET_KEY` from environment variables
-- Use `html_escape` as a sanitizer to avoid cross-site scripting vulnerabilities
 
 ### Input Validation
 - Validate and sanitize all user inputs
@@ -142,16 +141,17 @@ npm run test:python
 # Create virtual environment
 python -m venv .venv
 
-# Activate virtual environment (Windows)
+# Activate virtual environment (Windows PowerShell)
 .venv\Scripts\Activate.ps1
+
+# Activate virtual environment (Windows cmd)
+.venv\Scripts\activate.bat
 
 # Activate virtual environment (Linux/Mac)
 source .venv/bin/activate
 
-# Install dependencies
+# Install dependencies (use setup.py)
 pip install -e .
-# OR
-pip install -r requirements.txt  # if available
 
 # Run the application
 python src/app/main.py
