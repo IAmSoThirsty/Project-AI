@@ -10,10 +10,10 @@ them to hashed `password_hash` entries on load.
 
 import json
 import os
-from cryptography.fernet import Fernet
-from dotenv import load_dotenv
-from passlib.context import CryptContext
-from passlib.hash import pbkdf2_sha256
+from cryptography.fernet import Fernet  # type: ignore
+from dotenv import load_dotenv  # type: ignore
+from passlib.context import CryptContext  # type: ignore
+from passlib.hash import pbkdf2_sha256  # type: ignore
 
 # Setup password hashing context.
 # Prefer pbkdf2_sha256 to avoid bcrypt backend issues in some environments.

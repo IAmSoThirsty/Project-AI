@@ -12,7 +12,7 @@ users file.
 import argparse
 import json
 import os
-from passlib.context import CryptContext
+from passlib.context import CryptContext  # type: ignore
 
 pwd = CryptContext(
     schemes=["bcrypt"],
