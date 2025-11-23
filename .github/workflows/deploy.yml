@@ -16,18 +16,16 @@ jobs:
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.SSH }}
+        if: secrets.SSH != ''
 
-      - name: Test GitHub SSH auth
-        run: ssh -T git@github.com || true
-
-      - name: Test remote host (only if HOST secret is set)
-        if: ${{ secrets.HOST != '' }}
+      - name: Test SSH connection
+        if: secrets.HOST != '' && secrets.SSH != ''
         run: |
           echo "Testing connection to ${{ secrets.HOST }} (user: ${{ secrets.USER }})"
           ssh -o StrictHostKeyChecking=no -p "${{ secrets.PORT || '22' }}" "${{ secrets.USER }}@${{ secrets.HOST }}" ls --help || true
 
       - name: Run deploy script on remote host
-        if: ${{ secrets.HOST != '' && secrets.USER != '' }}
+        if: secrets.HOST != '' && secrets.USER != '' && secrets.SSH != ''
         run: |
           PORT=${{ secrets.PORT }}
           PORT=${PORT:-22}
