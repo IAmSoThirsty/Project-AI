@@ -183,6 +183,8 @@ python src/app/main.py
   - numpy, pandas (data processing)
   - matplotlib (visualization)
   - scikit-learn (machine learning)
+  - passlib (password hashing)
+  - joblib (model serialization)
 
 ### Adding New Dependencies
 - Add to `setup.py` in the `install_requires` list
