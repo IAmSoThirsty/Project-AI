@@ -2,7 +2,7 @@
 Main dashboard window implementation.
 """
 
-from PyQt6.QtWidgets import (
+from PyQt6.QtWidgets import (  # type: ignore
     QMainWindow,
     QTabWidget,
     QWidget,
@@ -17,7 +17,7 @@ from PyQt6.QtWidgets import (
     QListWidget,
     QGraphicsOpacityEffect,
 )
-from PyQt6.QtCore import QTimer, QPropertyAnimation
+from PyQt6.QtCore import QTimer, QPropertyAnimation  # type: ignore
 import os
 import base64
 from app.core.user_manager import UserManager
@@ -28,8 +28,8 @@ from app.core.security_resources import SecurityResourceManager
 from app.core.location_tracker import LocationTracker
 from app.core.emergency_alert import EmergencyAlert
 from app.gui.settings_dialog import SettingsDialog
-from PyQt6.QtGui import QFont, QAction
-from PyQt6.QtWidgets import QApplication
+from PyQt6.QtGui import QFont, QAction  # type: ignore
+from PyQt6.QtWidgets import QApplication  # type: ignore
 
 
 class DashboardWindow(QMainWindow):
@@ -121,7 +121,7 @@ class DashboardWindow(QMainWindow):
                 path = os.path.join(assets_dir, name)
                 try:
                     if os.path.exists(path):
-                        from PyQt6.QtGui import QIcon
+                        from PyQt6.QtGui import QIcon  # type: ignore
 
                         return QIcon(path)
                 except Exception:

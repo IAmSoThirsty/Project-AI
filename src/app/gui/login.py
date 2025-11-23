@@ -8,7 +8,7 @@ Flow:
    exposes selected_tab and username for the caller.
 """
 
-from PyQt6.QtWidgets import (
+from PyQt6.QtWidgets import (  # type: ignore
     QDialog,
     QVBoxLayout,
     QLabel,
@@ -17,7 +17,7 @@ from PyQt6.QtWidgets import (
     QListWidget,
     QMessageBox,
 )
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt  # type: ignore
 from app.core.user_manager import UserManager
 
 
