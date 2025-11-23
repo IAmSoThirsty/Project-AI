@@ -1,25 +1,25 @@
 """Image generation tab for the AI Assistant dashboard."""
 
+from datetime import datetime
+
+from PyQt6.QtCore import Qt, QThread, pyqtSignal  # type: ignore
+from PyQt6.QtGui import QImage, QPixmap  # type: ignore
 from PyQt6.QtWidgets import (  # type: ignore
-    QWidget,
-    QVBoxLayout,
+    QComboBox,
+    QFileDialog,
     QHBoxLayout,
     QLabel,
     QLineEdit,
-    QPushButton,
-    QTextEdit,
-    QComboBox,
-    QScrollArea,
-    QFileDialog,
     QMessageBox,
     QProgressBar,
+    QPushButton,
+    QScrollArea,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
 )
-from PyQt6.QtCore import Qt, QThread, pyqtSignal  # type: ignore
-from PyQt6.QtGui import QPixmap, QImage  # type: ignore
+
 from app.core.image_generator import ImageGenerator
-from PIL import Image
-import os
-from datetime import datetime
 
 
 class ImageGenerationThread(QThread):
