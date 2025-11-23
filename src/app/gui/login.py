@@ -87,6 +87,7 @@ class LoginDialog(QDialog):
             "🔐 Chapter 4 — Security Resources",
             "📍 Chapter 5 — Location Tracking",
             "🚨 Chapter 6 — Emergency Alert",
+            "🎨 Chapter 7 — AI Image Generation",
         ]
         for c in chapters:
             self.toc.addItem(c)

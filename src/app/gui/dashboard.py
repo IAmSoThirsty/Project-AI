@@ -242,6 +242,7 @@ class DashboardWindow(QMainWindow):
         self.setup_security_tab()
         self.setup_location_tab()
         self.setup_emergency_tab()
+        self.setup_image_generation_tab()
         # Add Users management tab if widget is available
         try:
             from app.gui.user_management import UserManagementWidget
@@ -519,7 +520,23 @@ class DashboardWindow(QMainWindow):
         self.alert_history = QListWidget()
         layout.addWidget(self.alert_history)
 
-        self.tabs.addTab(tab, "Chapter 7 — Emergency Alert")
+        self.tabs.addTab(tab, "Chapter 6 — Emergency Alert")
+    
+    def setup_image_generation_tab(self):
+        """Setup the AI image generation tab"""
+        try:
+            from app.gui.image_generation import ImageGenerationTab
+            image_tab = ImageGenerationTab()
+            self.tabs.addTab(image_tab, "Chapter 7 — AI Image Generation")
+        except Exception as e:
+            # Fallback if import fails
+            tab = QWidget()
+            layout = QVBoxLayout()
+            error_label = QLabel(f"⚠️ Image generation not available: {str(e)}")
+            error_label.setStyleSheet("color: #ff4757; font-size: 12pt; padding: 20px;")
+            layout.addWidget(error_label)
+            tab.setLayout(layout)
+            self.tabs.addTab(tab, "Chapter 7 — AI Image Generation")
 
     def send_message(self):
         """Handle sending a message"""
