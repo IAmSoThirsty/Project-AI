@@ -1,0 +1,36 @@
+name: Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup SSH (uses secrets)
+        uses: LuisEnMarroquin/setup-ssh-action@v3.0.0
+        with:
+          # PRIVATE SSH KEY (add to repo secrets as `SSH`)
+          SSHKEY: ${{ secrets.SSH }}
+          # Optional: remote host to connect to (add as `HOST`)
+          ORIGIN: ${{ secrets.HOST }}
+          # Logical name for the remote defined by the action (defaults to 'production')
+          NAME: production
+          # Optional remote connection details (add as secrets if needed)
+          PORT: ${{ secrets.PORT }}
+          USER: ${{ secrets.USER }}
+          # Optional: commit author identity used by the action when it makes commits on remote
+          GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
+          GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
+
+      - name: Test GitHub SSH auth
+        run: ssh -T git@github.com || true
+
+      - name: Test remote host (only if HOST secret is set)
+        if: ${{ secrets.HOST != '' }}
+        run: ssh production ls --help
