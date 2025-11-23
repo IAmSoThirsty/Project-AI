@@ -24,7 +24,7 @@ jobs:
         id: detect_js_tests
         run: |
           count=$(find src -type f -name '*.test.js' 2>/dev/null | wc -l)
-          echo "found=$count" > $GITHUB_OUTPUT
+          echo "found=$count" >> $GITHUB_OUTPUT
       - name: Run JS tests
         if: steps.detect_js_tests.outputs.found != '0'
         run: npm run test:js
@@ -42,7 +42,7 @@ jobs:
         id: detect_py
         run: |
           count=$(git ls-files "**/*.py" | wc -l)
-          echo "found=$count" > $GITHUB_OUTPUT
+          echo "found=$count" >> $GITHUB_OUTPUT
       - name: Skip Python CI if no Python files
         if: steps.detect_py.outputs.found == '0'
         run: echo "No Python files found — skipping Python CI."
