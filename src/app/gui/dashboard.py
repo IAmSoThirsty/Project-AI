@@ -7,6 +7,8 @@ from PyQt6.QtWidgets import (
     QTabWidget,
     QWidget,
     QVBoxLayout,
+    QToolBar,
+    QStyle,
     QPushButton,
     QTextEdit,
     QLineEdit,
@@ -25,6 +27,9 @@ from app.core.data_analysis import DataAnalyzer
 from app.core.security_resources import SecurityResourceManager
 from app.core.location_tracker import LocationTracker
 from app.core.emergency_alert import EmergencyAlert
+from app.gui.settings_dialog import SettingsDialog
+from PyQt6.QtGui import QFont, QAction
+from PyQt6.QtWidgets import QApplication
 
 
 class DashboardWindow(QMainWindow):
@@ -65,7 +70,9 @@ class DashboardWindow(QMainWindow):
             self.statusBar().showMessage("")
 
     def animate_tab_change(self, index: int):
-        """Apply a quick fade-in animation to the newly selected tab to emulate a page turn."""
+        """Apply a quick fade-in animation to the newly selected tab to
+        emulate a page turn.
+        """
         try:
             widget = self.tabs.widget(index)
             if widget is None:
@@ -84,56 +91,136 @@ class DashboardWindow(QMainWindow):
     def setup_ui(self):
         """Setup the user interface"""
         self.setWindowTitle("AI Assistant")
-        self.setGeometry(100, 100, 1200, 800)
+        # Larger default window for better usability
+        self.setGeometry(80, 60, 1400, 900)
+
+        # Add a small toolbar with common actions for a modern feel
+        try:
+            toolbar = QToolBar("Main")
+            toolbar.setMovable(False)
+            self.addToolBar(toolbar)
+
+            style = self.style()
+            # Prefer bundled SVG assets for crisp icons; fall back to style icons
+            assets_dir = os.path.join(
+                os.path.dirname(__file__),
+                'assets',
+            )
+
+            def _icon(name, fallback_pixmap):
+                path = os.path.join(assets_dir, name)
+                try:
+                    if os.path.exists(path):
+                        from PyQt6.QtGui import QIcon
+
+                        return QIcon(path)
+                except Exception:
+                    pass
+                return style.standardIcon(fallback_pixmap)
+
+            act_home = QAction(_icon('home.svg',
+                                     QStyle.StandardPixmap.SP_DesktopIcon),
+                               "Home", self)
+
+            act_refresh = QAction(_icon('refresh.svg',
+                                        QStyle.StandardPixmap.SP_BrowserReload),
+                                  "Refresh", self)
+
+            act_help = QAction(_icon('help.svg',
+                                     QStyle.StandardPixmap.SP_DialogHelpButton),
+                               "Help", self)
+
+            act_settings = QAction(_icon('help.svg',
+                                         QStyle.StandardPixmap.SP_FileDialogDetailedView),
+                                   "Settings", self)
+
+            toolbar.addAction(act_home)
+            toolbar.addAction(act_refresh)
+            toolbar.addSeparator()
+            toolbar.addAction(act_help)
+            toolbar.addAction(act_settings)
+            # connect settings action
+            act_settings.triggered.connect(self.open_settings_dialog)
+        except Exception:
+            # toolbar is cosmetic — ignore failures
+            pass
 
         # Create main widget and layout
         main_widget = QWidget()
         self.setCentralWidget(main_widget)
         layout = QVBoxLayout(main_widget)
+        # provide comfortable spacing and margins for a modern UI
+        layout.setContentsMargins(18, 18, 18, 18)
+        layout.setSpacing(12)
 
         # Create tab widget
         self.tabs = QTabWidget()
         layout.addWidget(self.tabs)
 
-        # Try to load external QSS stylesheet for the "book" appearance if present
+        # Try to load external QSS stylesheet for the "book" appearance
+        # if present
         try:
-            qss_path = os.path.join(os.path.dirname(__file__), 'styles.qss')
+            qss_path = os.path.join(
+                os.path.dirname(__file__), 'styles.qss'
+            )
             if os.path.exists(qss_path):
                 with open(qss_path, 'r', encoding='utf-8') as f:
                     qss = f.read()
 
                 # embed assets as data URIs if present
-                assets_dir = os.path.join(os.path.dirname(__file__), 'assets')
+                assets_dir = os.path.join(
+                    os.path.dirname(__file__), 'assets'
+                )
                 # parchment
                 parchment_path = os.path.join(assets_dir, 'parchment.svg')
                 if os.path.exists(parchment_path):
                     with open(parchment_path, 'rb') as af:
                         pdata = base64.b64encode(af.read()).decode('ascii')
-                        qss = qss.replace('{PARCHMENT}', f'data:image/svg+xml;base64,{pdata}')
+                        pdata_uri = f'data:image/svg+xml;base64,{pdata}'
+                        qss = qss.replace('{PARCHMENT}', pdata_uri)
                 # leather
                 leather_path = os.path.join(assets_dir, 'leather.svg')
                 if os.path.exists(leather_path):
                     with open(leather_path, 'rb') as af:
                         ldata = base64.b64encode(af.read()).decode('ascii')
-                        qss = qss.replace('{LEATHER}', f'data:image/svg+xml;base64,{ldata}')
+                        ldata_uri = f'data:image/svg+xml;base64,{ldata}'
+                        qss = qss.replace('{LEATHER}', ldata_uri)
 
-                self.setStyleSheet(qss)
+                # Apply stylesheet according to saved settings (light/dark)
+                self._apply_stylesheet_from_settings(qss)
             else:
-                # fallback inline style
-                self.setStyleSheet("""
-                    QMainWindow { background-color: #f7f1e1; }
-                    QTabWidget::pane { border: 1px solid #c9b79c; background: #fffdf6; }
-                    QTabBar::tab { background: #e9dcc7; padding: 10px; margin: 2px; border-radius: 4px; }
-                    QTabBar::tab:selected { background: #fff; font-weight: bold; }
-                    QPushButton { background-color: #a67c52; color: white; border-radius: 4px; padding: 6px; }
-                    QPushButton#alert_button { background-color: red; }
-                """)
+                # fallback inline style (kept short per line for linters)
+                self._apply_stylesheet_from_settings(qss)
+                # _apply_stylesheet_from_settings will call setStyleSheet internally
+                # but if it fails, ensure a minimal fallback is applied:
+                try:
+                    fallback_qss = (
+                        "QMainWindow { background-color: #f7f1e1; }\n"
+                        "QTabWidget::pane { border: 1px solid #c9b79c; }\n"
+                        "QTabWidget::pane { background: #fffdf6; }\n"
+                        "QTabBar::tab { background: #e9dcc7; padding: 10px; }\n"
+                        "QTabBar::tab { margin: 2px; border-radius: 4px; }\n"
+                        "QTabBar::tab:selected { background: #fff; }\n"
+                        "QPushButton { background-color: #a67c52; color: white; }\n"
+                        "QPushButton { border-radius: 4px; padding: 6px; }\n"
+                        "QPushButton#alert_button { background-color: red; }\n"
+                    )
+                    self.setStyleSheet(fallback_qss)
+                except Exception:
+                    # ignore fallback stylesheet failures
+                    pass
         except Exception:
             # if anything fails, keep default styles
             pass
 
         # Status bar will show a page number like a book footer
         self.statusBar().showMessage("")
+        # Apply initial saved settings (font size and theme)
+        try:
+            settings = SettingsDialog.load_settings()
+            self._apply_settings(settings)
+        except Exception:
+            pass
         # Keep page number update and add tab-change animation
         self.tabs.currentChanged.connect(self.update_page_number)
         self.tabs.currentChanged.connect(self.animate_tab_change)
@@ -153,6 +240,66 @@ class DashboardWindow(QMainWindow):
         except Exception:
             # non-fatal: keep going without Users tab
             pass
+
+    def _apply_stylesheet_from_settings(self, base_qss: str):
+        """Apply stylesheet depending on saved theme setting (light/dark).
+
+        If theme is dark and a `styles_dark.qss` file exists, that file is
+        used. Otherwise the provided `base_qss` is applied.
+        """
+        try:
+            settings = SettingsDialog.load_settings()
+            theme = settings.get('theme', 'light')
+            if theme == 'dark':
+                dark_path = os.path.join(
+                    os.path.dirname(__file__), 'styles_dark.qss'
+                )
+                if os.path.exists(dark_path):
+                    with open(dark_path, 'r', encoding='utf-8') as df:
+                        dark_qss = df.read()
+                    self.setStyleSheet(dark_qss)
+                    return
+            # default: apply provided base qss
+            self.setStyleSheet(base_qss)
+        except Exception:
+            # best-effort: try to apply base qss
+            try:
+                self.setStyleSheet(base_qss)
+            except Exception:
+                pass
+
+    def _apply_settings(self, settings: dict):
+        """Apply runtime settings such as UI scale and reload stylesheet."""
+        try:
+            size = int(settings.get('ui_scale', 10))
+            QApplication.instance().setFont(QFont("Segoe UI", size))
+        except Exception:
+            # ignore font errors
+            pass
+
+        # Reload the stylesheet so theme changes are applied
+        qss_path = os.path.join(
+            os.path.dirname(__file__),
+            'styles.qss',
+        )
+        try:
+            if os.path.exists(qss_path):
+                with open(qss_path, 'r', encoding='utf-8') as f:
+
+                    qss = f.read()
+                self._apply_stylesheet_from_settings(qss)
+        except Exception:
+            pass
+
+    def open_settings_dialog(self):
+        """Open the settings dialog and persist/apply new settings."""
+        current = SettingsDialog.load_settings()
+        dlg = SettingsDialog(self, current=current)
+        if dlg.exec() == dlg.Accepted:
+            new = dlg.get_values()
+            ok = SettingsDialog.save_settings(new)
+            if ok:
+                self._apply_settings(new)
 
     def setup_chat_tab(self):
         """Setup the chat interface tab"""
@@ -235,7 +382,15 @@ class DashboardWindow(QMainWindow):
 
         # Analysis options
         self.analysis_type = QComboBox()
-        self.analysis_type.addItems(["Basic Stats", "Scatter Plot", "Histogram", "Box Plot", "Correlation", "Clustering"])
+        analysis_items = [
+            "Basic Stats",
+            "Scatter Plot",
+            "Histogram",
+            "Box Plot",
+            "Correlation",
+            "Clustering",
+        ]
+        self.analysis_type.addItems(analysis_items)
         layout.addWidget(self.analysis_type)
 
         # Column selection
@@ -261,13 +416,19 @@ class DashboardWindow(QMainWindow):
 
         # Category selection
         self.security_category = QComboBox()
-        self.security_category.addItems(self.security_manager.get_all_categories())
-        self.security_category.currentTextChanged.connect(self.update_security_resources)
+        self.security_category.addItems(
+            self.security_manager.get_all_categories()
+        )
+        self.security_category.currentTextChanged.connect(
+            self.update_security_resources
+        )
         layout.addWidget(self.security_category)
 
         # Resources list
         self.resources_list = QListWidget()
-        self.resources_list.itemDoubleClicked.connect(self.open_security_resource)
+        self.resources_list.itemDoubleClicked.connect(
+            self.open_security_resource
+        )
         layout.addWidget(self.resources_list)
 
         # Favorite button
@@ -333,7 +494,11 @@ class DashboardWindow(QMainWindow):
         # Alert button
         self.alert_button = QPushButton("SEND EMERGENCY ALERT")
         self.alert_button.setObjectName("alert_button")
-        self.alert_button.setStyleSheet("background-color: red; color: white; font-weight: bold;")
+        self.alert_button.setStyleSheet(
+            "background-color: red;"
+            " color: white;"
+            " font-weight: bold;"
+        )
         self.alert_button.clicked.connect(self.send_emergency_alert)
         layout.addWidget(self.alert_button)
 

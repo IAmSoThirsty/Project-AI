@@ -50,36 +50,56 @@ class EmergencyAlert:
             msg['To'] = ", ".join(contacts['emails'])
             msg['Subject'] = f"EMERGENCY ALERT - {username}"
 
-            # Create message body
-            body = f"""
-            EMERGENCY ALERT
+            # Create message body (built as lines to avoid long inline
+            # literals)
+            if not location_data:
+                loc_text = "Location not available"
+            else:
+                loc_lines = [
+                    f"Latitude: {location_data.get('latitude')}",
+                    (f"Longitude: "
+                     f"{location_data.get('longitude')}"),
+                    (f"Address: "
+                     f"{location_data.get('address', 'Not available')}"),
+                    (f"City: "
+                     f"{location_data.get('city', 'Not available')}"),
+                    (f"Region: "
+                     f"{location_data.get('region', 'Not available')}"),
+                    (f"Country: "
+                     f"{location_data.get('country', 'Not available')}"),
+                ]
+                loc_text = "\n".join(loc_lines)
 
-            User: {username}
-            Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+            body_lines = [
+                "EMERGENCY ALERT",
+                "",
+                f"User: {username}",
+                f"Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+                "",
+                "Location Information:",
+                loc_text,
+                "",
+                "Additional Message:",
+                message or "No additional message provided",
+                "",
+                ("This is an automated emergency alert. Please attempt to "
+                 "contact the user"),
+                "and alert appropriate authorities if necessary.",
+            ]
 
-            Location Information:
-            {"Location not available" if not location_data else f'''
-            Latitude: {location_data.get('latitude')}
-            Longitude: {location_data.get('longitude')}
-            Address: {location_data.get('address', 'Not available')}
-            City: {location_data.get('city', 'Not available')}
-            Region: {location_data.get('region', 'Not available')}
-            Country: {location_data.get('country', 'Not available')}
-            '''}
-
-            Additional Message:
-            {message or "No additional message provided"}
-
-            This is an automated emergency alert. Please attempt to contact the user
-            and alert appropriate authorities if necessary.
-            """
+            body = "\n".join(body_lines)
 
             msg.attach(MIMEText(body, 'plain'))
 
             # Connect to SMTP server and send
-            with smtplib.SMTP(self.smtp_config['server'], self.smtp_config['port']) as server:
+            with smtplib.SMTP(
+                self.smtp_config['server'], self.smtp_config['port']
+            ) as server:
                 server.starttls()
-                server.login(self.smtp_config['username'], self.smtp_config['password'])
+                server.login(
+                    self.smtp_config['username'],
+                    self.smtp_config['password']
+                )
                 server.send_message(msg)
 
             # Log alert

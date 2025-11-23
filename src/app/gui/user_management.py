@@ -61,7 +61,10 @@ class UserManagementWidget(QWidget):
         self.layout.addLayout(btn_row)
 
         # Details area
-        self.details_label = QLabel("Select a user to see details and edit settings.")
+        details_text = (
+            "Select a user to see details and edit settings."
+        )
+        self.details_label = QLabel(details_text)
         self.layout.addWidget(self.details_label)
 
         form_row = QHBoxLayout()
@@ -88,7 +91,10 @@ class UserManagementWidget(QWidget):
         left.addWidget(QLabel("Avatar preview:"))
         self.avatar_preview = QLabel()
         self.avatar_preview.setFixedSize(96, 96)
-        self.avatar_preview.setStyleSheet("border:1px solid #ccc; background: #fff;")
+        self.avatar_preview.setStyleSheet(
+            "border:1px solid #ccc; "
+            "background: #fff;"
+        )
         left.addWidget(self.avatar_preview)
 
         form_row.addLayout(left)
@@ -139,21 +145,41 @@ class UserManagementWidget(QWidget):
             uname, pw, approved, role, pic = dlg.get_values()
             success = self.um.create_user(uname, pw)
             if success:
-                self.um.update_user(uname, approved=approved, role=role, profile_picture=pic)
-                QMessageBox.information(self, "Created", f"User '{uname}' created.")
+                self.um.update_user(
+                    uname,
+                    approved=approved,
+                    role=role,
+                    profile_picture=pic,
+                )
+                created_msg = f"User '{uname}' created."
+                QMessageBox.information(
+                    self, "Created", created_msg
+                )
                 self.refresh_user_list()
             else:
                 QMessageBox.warning(self, "Exists", "User already exists")
 
     def delete_user(self):
-        username = self.user_list.currentItem().text() if self.user_list.currentItem() else None
+        username = (
+            self.user_list.currentItem().text()
+            if self.user_list.currentItem()
+            else None
+        )
         if not username:
-            QMessageBox.warning(self, "Delete", "Select a user to delete")
+            QMessageBox.warning(
+                self, "Delete", "Select a user to delete"
+            )
             return
         if username == self.um.current_user:
-            QMessageBox.warning(self, "Delete", "Cannot delete currently logged-in user")
+            QMessageBox.warning(
+                self, "Delete", "Cannot delete currently logged-in user"
+            )
             return
-        confirm = QMessageBox.question(self, "Confirm Delete", f"Delete user '{username}'? This is irreversible.")
+        confirm = QMessageBox.question(
+            self,
+            "Confirm Delete",
+            f"Delete user '{username}'? This is irreversible.",
+        )
         if confirm == QMessageBox.StandardButton.Yes:
             ok = self.um.delete_user(username)
             if ok:
@@ -163,37 +189,63 @@ class UserManagementWidget(QWidget):
                 QMessageBox.warning(self, "Error", "Failed to delete user")
 
     def toggle_approve(self):
-        username = self.user_list.currentItem().text() if self.user_list.currentItem() else None
+        username = (
+            self.user_list.currentItem().text()
+            if self.user_list.currentItem()
+            else None
+        )
         if not username:
-            QMessageBox.warning(self, "Approve", "Select a user first")
+            QMessageBox.warning(
+                self, "Approve", "Select a user first"
+            )
             return
         data = self.um.users.get(username, {})
         new = not data.get('approved', False)
         self.um.update_user(username, approved=new)
         self.on_user_selected(username)
-        QMessageBox.information(self, "Updated", f"User '{username}' approved set to {new}")
+        updated_msg = f"User '{username}' approved set to {new}"
+        QMessageBox.information(
+            self, "Updated", updated_msg
+        )
 
     def reset_password(self):
-        username = self.user_list.currentItem().text() if self.user_list.currentItem() else None
+        username = (
+            self.user_list.currentItem().text()
+            if self.user_list.currentItem()
+            else None
+        )
         if not username:
-            QMessageBox.warning(self, "Reset Password", "Select a user first")
+            QMessageBox.warning(
+                self, "Reset Password", "Select a user first"
+            )
             return
         dlg = ResetPasswordDialog(username, parent=self)
         if dlg.exec() == QDialog.Accepted:
             newpw = dlg.get_password()
             if newpw:
                 self.um.set_password(username, newpw)
-                QMessageBox.information(self, "Password", "Password updated")
+                QMessageBox.information(
+                    self, "Password", "Password updated"
+                )
 
     def save_changes(self):
         username = self.username_field.text().strip()
         if not username:
-            QMessageBox.warning(self, "Save", "Username cannot be empty")
+            QMessageBox.warning(
+                self,
+                "Save",
+                "Username cannot be empty",
+            )
             return
         role = self.role_combo.currentText()
         pic = self.pic_field.text().strip()
-        approved = True if self.approved_label.text().endswith('True') else False
-        ok = self.um.update_user(self.user_list.currentItem().text(), role=role, profile_picture=pic, approved=approved)
+        approved = self.approved_label.text().endswith('True')
+        ok = self.um.update_user(
+            self.user_list.currentItem().text(),
+            role=role,
+            profile_picture=pic,
+            approved=approved,
+        )
         if ok:
             QMessageBox.information(self, "Saved", "User updated")
             self.refresh_user_list()
@@ -234,7 +286,10 @@ class CreateUserDialog(QDialog):
         pic_row.addWidget(self.pic_btn_d)
         layout.addLayout(pic_row)
 
-        btns = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        btns = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok
+            | QDialogButtonBox.StandardButton.Cancel
+        )
         btns.accepted.connect(self.accept)
         btns.rejected.connect(self.reject)
         layout.addWidget(btns)
@@ -250,7 +305,13 @@ class CreateUserDialog(QDialog):
             self.pic_field_d.setText(fname)
 
     def get_values(self):
-        return (self.username.text().strip(), self.password.text(), self.approved_cb.isChecked(), self.role.currentText(), self.pic_field_d.text().strip())
+        return (
+            self.username.text().strip(),
+            self.password.text(),
+            self.approved_cb.isChecked(),
+            self.role.currentText(),
+            self.pic_field_d.text().strip(),
+        )
 
 
 class ResetPasswordDialog(QDialog):
@@ -262,7 +323,10 @@ class ResetPasswordDialog(QDialog):
         self.pw = QLineEdit()
         self.pw.setEchoMode(QLineEdit.EchoMode.Password)
         layout.addWidget(self.pw)
-        btns = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        btns = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok
+            | QDialogButtonBox.StandardButton.Cancel
+        )
         btns.accepted.connect(self.accept)
         btns.rejected.connect(self.reject)
         layout.addWidget(btns)

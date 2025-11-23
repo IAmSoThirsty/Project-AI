@@ -1,0 +1,22 @@
+# Virtual env
+.venv/
+
+# Secrets and local keys
+.secrets/
+
+# Python caches
+__pycache__/
+*.pyc
+
+# Test cache
+.pytest_cache/
+
+# Editor settings
+.vscode/
+
+# Logs and data
+logs/
+data/
+
+# Optional README newer copy
+README_UPDATED.md

@@ -1,5 +1,4 @@
 # Project AI
-# Project-AI — Desktop AI Assistant
 
 This repository contains a Python desktop application that provides a personal AI assistant with features adapted from a WinForms prototype. The app is designed for member-only use and can be extended for mobile later.
 
@@ -38,107 +37,110 @@ This repository contains a Python desktop application that provides a personal A
 
 - Emergency Alerts (feature #5)
   - Register emergency contacts per user
-  - Send email alerts to contacts with last known location
-  - Alert logging and history
 
-## Files of interest
+  # Project-AI — Desktop AI Assistant
 
-- `src/app/main.py` — Application entrypoint. Loads environment variables.
-- `src/app/gui/dashboard.py` — Main UI (PyQt6) with tabs for all features.
-- `src/app/core/intent_detection.py` — Simple scikit-learn pipeline for intent detection.
-- `src/app/core/user_manager.py` — User profile and persistence; uses Fernet key from environment if available.
-- `src/app/core/learning_paths.py` — Learning path generation using OpenAI.
-- `src/app/core/data_analysis.py` — Data analysis utilities and plotting helpers.
-- `src/app/core/security_resources.py` — Security resources manager and GitHub lookup.
-- `src/app/core/location_tracker.py` — Tracking and encrypted history (uses FERNET_KEY from env if set).
-- `src/app/core/emergency_alert.py` — Emergency alert sending and logging.
+   A Python desktop application providing a local AI assistant with a book-like UI.
+   It was converted from a WinForms prototype and implements a prioritized feature set
+   (learning paths, data analysis, security resources, location tracking, emergency
+   alerts) using a PyQt6 GUI and a small collection of core modules.
 
-## Environment variables (.env)
+  ## Highlights
 
-Create a `.env` file in the repository root or set OS-level environment variables. The app loads the `.env` automatically.
+  - Local user management (JSON-backed, hashed passwords).
+  - Learning Paths: personalized learning path generation (OpenAI optional).
+  - Data Analysis: load CSV/XLSX/JSON, basic summary stats, visualizations, clustering.
+  - Security Resources: curated repo lists and favorites per user.
+  - Location Tracking: encrypted location history (Fernet) and reverse-geocoding.
+  - Emergency Alerts: send email alerts to registered contacts with last known location.
 
-Required / recommended variables:
+  ## Quick setup (Windows, PowerShell)
 
-- `OPENAI_API_KEY` — (optional) API key for OpenAI if you want to use auto-generated learning paths and code tutor.
-- `SMTP_USERNAME` — Email address used to send emergency alerts.
-- `SMTP_PASSWORD` — Password (or app-specific password) for the SMTP account.
-- `FERNET_KEY` — Base64-encoded Fernet key used to encrypt location history and other secrets. If omitted, the app will generate a key on first run but it will not be reproducible across restarts.
-- `DATA_DIR` — Optional path for app data (default: `data`).
-- `LOG_DIR` — Optional log directory (default: `logs`).
+   1. Create and activate a virtual environment (recommended):
 
-A sample `.env` was added to the repository with placeholders and a generated `FERNET_KEY`.
+   ```powershell
+   python -m venv .venv
+   & .\.venv\Scripts\Activate.ps1
+   ```
 
-## Setup and run
+   Install dependencies (use the repo `requirements.txt`):
 
-Create and activate a Python virtual environment (the repo already includes a `.venv` if you followed prior steps):
+   ```powershell
+   pip install -r requirements.txt
+   ```
 
-powershell
+   3. Create a `.env` file in the repository root (or set OS environment variables).
+      Minimal recommended variables:
 
-1. python -m venv .venv
-& .venv\Scripts\Activate.ps1
-pip install -r requirements.txt  # or use setup.py / pip install -e .
+  - `OPENAI_API_KEY` — optional, for the learning-paths and any OpenAI calls.
+  - `SMTP_USERNAME` / `SMTP_PASSWORD` — for sending emergency alert emails.
+  - `FERNET_KEY` — base64-encoded Fernet key. If omitted the app will generate a
+     runtime key (not persistent across restarts).
+  - `DATA_DIR` / `LOG_DIR` — optional directories (defaults: `data`, `logs`).
 
-2. Populate `.env` (or set OS env vars):
+   Example `.env` lines (do not commit real secrets):
 
-OPENAI_API_KEY=sk-...
-SMTP_USERNAME=<your.email@example.com>
-SMTP_PASSWORD=app-or-real-password
-FERNET_KEY=<>
+   ```text
+   OPENAI_API_KEY=sk-...
+   SMTP_USERNAME=you@example.com
+   SMTP_PASSWORD=<app-password>
+   FERNET_KEY=<base64-key>
+   ```
 
-1. Run the app:
+   4. Run tests and lint (recommended before running the app):
 
-```powershell
-python src/app/main.py
-```
+   ```powershell
+   $env:PYTHONPATH='src'; .\.venv\Scripts\Activate.ps1; python -m pytest -q
+   $env:PYTHONPATH='src'; .\.venv\Scripts\Activate.ps1; flake8 src tests setup.py
+   ```
 
-## Notes on security
+  ## Run the application (PowerShell)
 
-- The included Fernet key in the example `.env` is for convenience only. For production, keep your key secret and rotate as needed.
-- Do not commit real API keys or passwords to source control. Use a secret manager or OS-level environment variables when deploying.
-- Emails for emergency alerts require correct SMTP settings and credentials (e.g., Gmail may need an app password and "Less secure apps" settings disabled).
+   Start the app from the repository root (ensure the venv is activated and PYTHONPATH is set):
 
-## How the env vars are used in-app
+   ```powershell
+   $env:PYTHONPATH='src'; .\.venv\Scripts\Activate.ps1; python src/app/main.py
+   ```
 
-- `main.py` uses `python-dotenv` to load `.env` at startup.
-- `user_manager` and `location_tracker` prefer `FERNET_KEY` from env to make encryption consistent across runs.
-- `learning_paths` uses `OPENAI_API_KEY` for OpenAI requests.
-- `emergency_alert` uses `SMTP_USERNAME` / `SMTP_PASSWORD` for sending emails.
+   Notes:
+  - On first run the app will prompt to create an admin account (first-run onboarding).
+  - The GUI uses PyQt6; the app expects a graphical desktop environment.
 
-or
+  ## Migration and utilities
 
-## Quick start (book UI and first-run onboarding)
+  - `tools/migrate_users.py` — preview/apply migration of plaintext `password` fields
+     in an existing `users.json` into `password_hash` entries. It creates a `.bak` when
+     applying changes.
 
-Run the application:
+   Example preview:
 
-```powershell
-python src/app/main.py
-```
+   ```powershell
+   python tools/migrate_users.py --users-file src/app/users.json
+   ```
 
-1. On first run, the app will detect no users and prompt you to create a secure admin account (username + password). Create the admin account when prompted.
+   Apply migration:
 
-2. After creating the admin account, return to the login screen and sign in with that account. The Login dialog will switch to a "Table of Contents" view (the book's TOC). Select a chapter and click "Open Chapter" — the Dashboard will open with that chapter active.
+   ```powershell
+   python tools/migrate_users.py --users-file src/app/users.json --apply
+   ```
 
-3. Admins can manage users from the "Users" tab (create/delete accounts, approve registrations, set roles and profile picture paths).
+  ## Security notes
 
-Migration tool: If you previously had plaintext passwords saved in `users.json`, use the migration preview tool to see which users would be migrated and optionally apply it (it creates a `.bak` backup):
+  - Do not commit API keys, passwords, or private Fernet keys to source control.
+  - Use OS-level secrets or a secrets manager for production deployments.
+  - The app uses pbkdf2_sha256 as the preferred hashing scheme and accepts bcrypt
+     for legacy verification.
 
-```powershell
-python tools/migrate_users.py --users-file src/app/users.json
-# or to apply the changes
-python tools/migrate_users.py --users-file src/app/users.json --apply
-```
+  ## Developer notes
 
-Security reminder: The app now uses bcrypt-hashed passwords stored under `password_hash`. Keep `FERNET_KEY` and other secrets out of source control and rotate keys as needed.
+  - Entry point: `src/app/main.py` (loads `.env` and starts the PyQt application).
+  - Core modules live under `src/app/core/` and GUI components under `src/app/gui/`.
+  - Tests: `tests/` (run with `python -m pytest` using PYTHONPATH=src).
 
-## Next steps / optional improvements
+   ---
 
-- Replace direct OpenAI calls with a pluggable provider interface (local model, Hugging Face, etc.).
-- Add a proper login screen and protect the app with a stronger authentication flow.
-- Implement a secure secrets storage backend instead of `.env` (Azure Key Vault, HashiCorp Vault, or platform secrets).
-- Add unit tests for core modules (user_manager, location_tracker, emergency_alert).
+   If you want, I can:
+  - Add a GitHub Actions CI workflow to run pytest + flake8 on push/PR, or
+  - Commit these README changes and create a branch with the lint fixes I made.
 
-If you'd like, I can:
-
-- Wire up a more robust login flow (persist sessions, hashed passwords),
-- Add a settings dialog to manage SMTP/OpenAI keys from the GUI,
-- Or implement mobile integration scaffolding (React Native / Flutter bridge).
+   Now I'll run the test suite and then start the application in the background so you can interact with the GUI if you're on the machine.

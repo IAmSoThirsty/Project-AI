@@ -72,7 +72,9 @@ class LoginDialog(QDialog):
             "No users found. You must create an admin account to continue."
             " Please choose a secure username and password."
         )
-        QMessageBox.information(self, "Onboarding", msg)
+        QMessageBox.information(
+            self, "Onboarding", msg
+        )
 
         # Replace login UI with admin creation widgets
         for w in (self.user_input, self.pass_input, self.login_button):
@@ -95,18 +97,31 @@ class LoginDialog(QDialog):
         username = self.admin_user.text().strip()
         password = self.admin_pass.text().strip()
         if not username or not password:
-            QMessageBox.warning(self, "Onboarding", "Provide username and password for admin")
+            QMessageBox.warning(
+                self,
+                "Onboarding",
+                "Provide username and password for admin",
+            )
             return
-        ok = self.user_manager.create_user(username, password, persona="admin")
+        ok = self.user_manager.create_user(
+            username, password, persona="admin"
+        )
         if ok:
-            QMessageBox.information(self, "Onboarding", "Admin account created — please log in.")
+            info_msg = "Admin account created — please log in."
+            QMessageBox.information(
+                self, "Onboarding", info_msg
+            )
             # Remove admin creation widgets and show login
             for w in (self.admin_user, self.admin_pass, self.create_admin_btn):
                 w.hide()
             for w in (self.user_input, self.pass_input, self.login_button):
                 w.show()
         else:
-            QMessageBox.warning(self, "Onboarding", "Username already exists — choose another")
+            QMessageBox.warning(
+                self,
+                "Onboarding",
+                "Username already exists — choose another",
+            )
 
     def try_login(self):
         username = self.user_input.text().strip()
@@ -119,7 +134,9 @@ class LoginDialog(QDialog):
             # Show TOC
             self._show_toc()
         else:
-            QMessageBox.warning(self, "Login Failed", "Invalid credentials")
+            QMessageBox.warning(
+                self, "Login Failed", "Invalid credentials"
+            )
 
     def _show_toc(self):
         # Clear login widgets and show TOC
@@ -132,7 +149,11 @@ class LoginDialog(QDialog):
     def open_chapter(self):
         idx = self.toc.currentRow()
         if idx < 0:
-            QMessageBox.warning(self, "Select Chapter", "Please select a chapter from the Table of Contents")
+            QMessageBox.warning(
+                self,
+                "Select Chapter",
+                "Please select a chapter from the Table of Contents",
+            )
             return
         self.selected_tab = idx
         self.accept()
