@@ -13,6 +13,19 @@ from PIL import Image
 class ImageGenerator:
     """Generate images from text prompts using Stable Diffusion."""
     
+    # Professional content filtering - blocked keywords
+    NSFW_KEYWORDS = [
+        'nsfw', 'nude', 'naked', 'explicit', 'adult', 'sexual',
+        'porn', 'xxx', 'erotic', 'lewd', 'inappropriate',
+        'seductive', 'provocative', 'intimate', 'mature content'
+    ]
+    
+    # Automatic safety additions to negative prompts
+    SAFETY_NEGATIVE = (
+        "nsfw, nude, naked, explicit content, adult content, "
+        "inappropriate, sexual, mature themes"
+    )
+    
     def __init__(self):
         """Initialize the image generator with Hugging Face API."""
         # Using free Stable Diffusion model from Hugging Face
@@ -22,6 +35,27 @@ class ImageGenerator:
         # You can optionally add a Hugging Face token for faster/unlimited access
         # Get free token at: https://huggingface.co/settings/tokens
         # self.headers = {"Authorization": f"Bearer {HF_TOKEN}"}
+    
+    def _validate_prompt(self, prompt: str) -> tuple[bool, str]:
+        """Validate prompt for inappropriate content.
+        
+        Args:
+            prompt: The prompt to validate
+            
+        Returns:
+            Tuple of (is_valid, error_message)
+        """
+        prompt_lower = prompt.lower()
+        
+        # Check for blocked keywords
+        for keyword in self.NSFW_KEYWORDS:
+            if keyword in prompt_lower:
+                return False, (
+                    f"Inappropriate content detected: '{keyword}'. "
+                    "This application is for professional and creative use only."
+                )
+        
+        return True, ""
     
     def generate_image(
         self,
@@ -41,6 +75,17 @@ class ImageGenerator:
         """
         if not prompt or not prompt.strip():
             raise ValueError("Prompt cannot be empty")
+        
+        # CONTENT FILTERING: Validate prompt for inappropriate content
+        is_valid, error_msg = self._validate_prompt(prompt)
+        if not is_valid:
+            raise ValueError(error_msg)
+        
+        # SAFETY ENHANCEMENT: Always add safety terms to negative prompt
+        if negative_prompt:
+            negative_prompt = f"{negative_prompt}, {self.SAFETY_NEGATIVE}"
+        else:
+            negative_prompt = self.SAFETY_NEGATIVE
         
         # Build the payload
         payload = {
