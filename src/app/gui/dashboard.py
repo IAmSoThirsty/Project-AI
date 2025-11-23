@@ -90,9 +90,19 @@ class DashboardWindow(QMainWindow):
 
     def setup_ui(self):
         """Setup the user interface"""
-        self.setWindowTitle("AI Assistant")
-        # Larger default window for better usability
-        self.setGeometry(80, 60, 1400, 900)
+        self.setWindowTitle("🤖 AI Assistant — Your Digital Companion")
+        
+        # GLORIOUS NEAR-FULLSCREEN EXPERIENCE
+        # Get screen geometry and maximize to 95% of screen
+        screen = QApplication.primaryScreen().geometry()
+        width = int(screen.width() * 0.95)
+        height = int(screen.height() * 0.95)
+        x = int((screen.width() - width) / 2)
+        y = int((screen.height() - height) / 2)
+        self.setGeometry(x, y, width, height)
+        
+        # Optional: Start maximized for true glory
+        # self.showMaximized()
 
         # Add a small toolbar with common actions for a modern feel
         try:

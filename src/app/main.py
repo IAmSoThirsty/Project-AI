@@ -31,15 +31,29 @@ def main():
     setup_environment()
 
     # Create and run application
-
     app = QApplication(sys.argv)
-    # Use a modern, legible default font and slightly larger base size
+    
+    # GLORIOUS STYLING - Use modern font and apply dark theme
     try:
-        default_font = QFont("Segoe UI", 10)
+        default_font = QFont("Segoe UI", 11)
         app.setFont(default_font)
     except Exception:
-        fallback_font = QFont("Arial", 10)
+        fallback_font = QFont("Arial", 11)
         app.setFont(fallback_font)
+    
+    # Load the glorious dark theme stylesheet
+    try:
+        style_path = os.path.join(
+            os.path.dirname(__file__),
+            'gui',
+            'styles_dark.qss'
+        )
+        if os.path.exists(style_path):
+            with open(style_path, 'r', encoding='utf-8') as f:
+                app.setStyleSheet(f.read())
+    except Exception as e:
+        print(f"Could not load stylesheet: {e}")
+    
     # Show login dialog first
     login = LoginDialog()
     if login.exec() == QDialog.DialogCode.Accepted:

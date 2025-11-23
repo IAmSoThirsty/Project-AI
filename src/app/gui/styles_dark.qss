@@ -1,42 +1,158 @@
-/* Dark theme override for the book-like UI */
+/* GLORIOUS Dark Theme - Futuristic UI with Gradients and Glow Effects */
+
 QMainWindow {
-    background-color: #1e1e1e;
-    color: #e6e6e6;
-    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-    font-size: 11pt;
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                                stop:0 #0a0e1a, stop:0.5 #1a1f2e, stop:1 #0f1419);
+    color: #e8f0ff;
+    font-family: 'Segoe UI', 'Helvetica Neue', 'SF Pro Display', Arial, sans-serif;
+    font-size: 12pt;
 }
 
 QTabWidget::pane {
-    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #2b2b2b, stop:1 #1f1f1f);
-    border: 1px solid #3a3a3a;
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, 
+                                stop:0 #1e2433, stop:1 #14181f);
+    border: 2px solid qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                                      stop:0 #3a4a6a, stop:0.5 #5a7aaa, stop:1 #3a4a6a);
+    border-radius: 12px;
+    margin-top: 8px;
 }
 
 QTabBar::tab {
-    background: #2b2b2b;
-    color: #e6e6e6;
-    padding: 10px 14px;
-    margin: 3px;
-    border-radius: 6px;
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                stop:0 #2a3444, stop:1 #1f2633);
+    color: #c0d0e8;
+    padding: 14px 20px;
+    margin: 4px 2px;
+    border-radius: 8px;
+    border: 1px solid #3a4a5a;
+    font-weight: 500;
+    min-width: 120px;
 }
 
 QTabBar::tab:selected {
-    background: #383838;
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                stop:0 #4a6a9a, stop:1 #2a4a7a);
+    color: #ffffff;
     font-weight: bold;
+    border: 2px solid #5a8aca;
+    box-shadow: 0 0 20px rgba(90, 138, 202, 0.5);
+}
+
+QTabBar::tab:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                stop:0 #3a5080, stop:1 #253a60);
+    border: 1px solid #4a6a9a;
 }
 
 QPushButton {
-    background-color: #3a3a3a;
-    color: #e6e6e6;
-    border: 1px solid #4a4a4a;
-    border-radius: 6px;
-    padding: 8px 12px;
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                stop:0 #3a4a6a, stop:1 #2a3a5a);
+    color: #e8f0ff;
+    border: 2px solid #4a5a7a;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-weight: 600;
+    font-size: 11pt;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                stop:0 #4a6a9a, stop:1 #3a5a8a);
+    border: 2px solid #5a7aaa;
+    box-shadow: 0 0 15px rgba(90, 138, 202, 0.4);
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                stop:0 #2a4a7a, stop:1 #1a3a6a);
 }
 
 QPushButton#alert_button {
-    background-color: #a33a34;
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                stop:0 #d62839, stop:1 #a33a34);
+    border: 2px solid #ff4757;
+    font-weight: bold;
+}
+
+QPushButton#alert_button:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                stop:0 #ff4757, stop:1 #d62839);
+    box-shadow: 0 0 20px rgba(255, 71, 87, 0.6);
+}
+
+QTextEdit, QLineEdit, QListWidget, QComboBox {
+    background-color: #1a2030;
+    color: #e8f0ff;
+    border: 2px solid #2a3a5a;
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 11pt;
+    selection-background-color: #4a6a9a;
+}
+
+QTextEdit:focus, QLineEdit:focus {
+    border: 2px solid #5a8aca;
+    box-shadow: 0 0 10px rgba(90, 138, 202, 0.3);
+}
+
+QLabel {
+    color: #c8d8f0;
+    font-size: 11pt;
 }
 
 QStatusBar {
-    background: transparent;
-    color: #cfcfcf;
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                                stop:0 #0f1419, stop:0.5 #1a1f2e, stop:1 #0f1419);
+    color: #8090a8;
+    border-top: 1px solid #2a3a5a;
+    font-style: italic;
+    font-size: 10pt;
 }
+
+QToolBar {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                stop:0 #1e2838, stop:1 #14181f);
+    border-bottom: 2px solid #2a3a5a;
+    spacing: 8px;
+    padding: 4px;
+}
+
+QToolButton {
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    padding: 8px;
+}
+
+QToolButton:hover {
+    background: rgba(90, 138, 202, 0.2);
+    border: 1px solid #4a6a9a;
+}
+
+QScrollBar:vertical {
+    background: #14181f;
+    width: 14px;
+    border-radius: 7px;
+}
+
+QScrollBar::handle:vertical {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                                stop:0 #3a4a6a, stop:1 #4a5a7a);
+    border-radius: 7px;
+    min-height: 30px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                                stop:0 #4a6a9a, stop:1 #5a7aaa);
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+/* Glorious accent glow for important elements */
+QLineEdit[echoMode="2"] {
+    border: 2px solid #4a6a9a;
+}
+
