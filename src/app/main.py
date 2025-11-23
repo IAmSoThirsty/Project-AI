@@ -5,10 +5,9 @@ Main entry point for the AI Desktop Application.
 
 import sys
 import os
-from dotenv import load_dotenv
-from PyQt6.QtWidgets import QApplication, QDialog
-from PyQt6.QtGui import QFont
-from PyQt6.QtCore import Qt
+from dotenv import load_dotenv  # type: ignore
+from PyQt6.QtWidgets import QApplication, QDialog  # type: ignore
+from PyQt6.QtGui import QFont  # type: ignore
 from app.gui.login import LoginDialog
 from app.gui.dashboard import DashboardWindow
 

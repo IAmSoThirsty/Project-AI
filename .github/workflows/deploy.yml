@@ -8,35 +8,30 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      HOST: ${{ secrets.HOST }}
-      USER: ${{ secrets.USER }}
-      PORT: ${{ secrets.PORT }}
-      REMOTE_PATH: ${{ secrets.REMOTE_PATH }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup SSH Action
-        uses: LuisEnMarroquin/setup-ssh-action@v3.0.0
+      - name: Setup SSH Agent
+        uses: webfactory/ssh-agent@v0.9.0
         with:
-          SSHKEY: ${{ secrets.SSH }}
+          ssh-private-key: ${{ secrets.SSH }}
 
       - name: Test GitHub SSH auth
         run: ssh -T git@github.com || true
 
       - name: Test remote host (only if HOST secret is set)
-        if: ${{ env.HOST != '' }}
+        if: ${{ secrets.HOST != '' }}
         run: |
-          echo "Testing connection to ${{ env.HOST }} (user: ${{ env.USER }})"
-          ssh -o StrictHostKeyChecking=no -p "${{ env.PORT || '22' }}" "${{ env.USER }}@${{ env.HOST }}" ls --help || true
+          echo "Testing connection to ${{ secrets.HOST }} (user: ${{ secrets.USER }})"
+          ssh -o StrictHostKeyChecking=no -p "${{ secrets.PORT || '22' }}" "${{ secrets.USER }}@${{ secrets.HOST }}" ls --help || true
 
       - name: Run deploy script on remote host
-        if: ${{ env.HOST != '' && env.USER != '' }}
+        if: ${{ secrets.HOST != '' && secrets.USER != '' }}
         run: |
-          PORT=${{ env.PORT }}
+          PORT=${{ secrets.PORT }}
           PORT=${PORT:-22}
-          REMOTE_PATH=${{ env.REMOTE_PATH }}
+          REMOTE_PATH=${{ secrets.REMOTE_PATH }}
           REMOTE_PATH=${REMOTE_PATH:-/var/www/project}
-          echo "Connecting to ${{ env.USER }}@${{ env.HOST }} on port $PORT and running remote deploy script in $REMOTE_PATH"
-          ssh -o StrictHostKeyChecking=no -p "$PORT" "${{ env.USER }}@${{ env.HOST }}" "cd '$REMOTE_PATH' || true; if [ -x ./deploy.sh ]; then ./deploy.sh; else echo 'No deploy.sh found at $REMOTE_PATH'; ls -la; fi"
+          echo "Connecting to ${{ secrets.USER }}@${{ secrets.HOST }} on port $PORT and running remote deploy script in $REMOTE_PATH"
+          ssh -o StrictHostKeyChecking=no -p "$PORT" "${{ secrets.USER }}@${{ secrets.HOST }}" "cd '$REMOTE_PATH' || true; if [ -x ./deploy.sh ]; then ./deploy.sh; else echo 'No deploy.sh found at $REMOTE_PATH'; ls -la; fi"

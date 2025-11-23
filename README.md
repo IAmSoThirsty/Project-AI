@@ -20,13 +20,13 @@ python -m venv .venv
 & .\.venv\Scripts\Activate.ps1
 ```
 
-2. Install dependencies (use the repo `requirements.txt`):
+1. Install dependencies (use the repo `requirements.txt`):
 
 ```powershell
 pip install -r requirements.txt
 ```
 
-3. Create a `.env` file in the repository root (or set OS environment variables). Minimal recommended variables:
+1. Create a `.env` file in the repository root (or set OS environment variables). Minimal recommended variables:
 
 - `OPENAI_API_KEY` — optional, for the learning-paths and any OpenAI calls.
 - `SMTP_USERNAME` / `SMTP_PASSWORD` — for sending emergency alert emails.
@@ -42,7 +42,7 @@ SMTP_PASSWORD=<app-password>
 FERNET_KEY=<base64-key>
 ```
 
-4. Run tests and lint (recommended before running the app):
+1. Run tests and lint (recommended before running the app):
 
 ```powershell
 $env:PYTHONPATH='src'; .\.venv\Scripts\Activate.ps1; python -m pytest -q
@@ -58,6 +58,7 @@ $env:PYTHONPATH='src'; .\.venv\Scripts\Activate.ps1; python src/app/main.py
 ```
 
 Notes:
+
 - On first run the app will prompt to create an admin account (first-run onboarding).
 - The GUI uses PyQt6; the app expects a graphical desktop environment.
 
