@@ -1,0 +1,21 @@
+# Web Backend Requirements
+flask==3.0.0
+flask-cors==4.0.0
+flask-jwt-extended==4.6.0
+python-dotenv==1.0.0
+gunicorn==21.2.0
+
+# Database
+sqlalchemy==2.0.23
+psycopg2-binary==2.9.9
+
+# API & Validation
+marshmallow==3.20.1
+flask-restful==0.3.10
+
+# Security
+werkzeug==3.0.1
+cryptography==41.0.7
+
+# Existing Project-AI dependencies (inherit from parent)
+# These will be imported from the parent requirements.txt
