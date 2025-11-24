@@ -1,0 +1,5 @@
+// settings.gradle
+// This is a stub settings file for the Android APK app integration branch.
+// Replace with a full configuration when starting Android development.
+
+include ':app'

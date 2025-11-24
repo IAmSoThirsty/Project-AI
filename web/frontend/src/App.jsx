@@ -1,13 +1,13 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { useState } from 'react'
-import Login from './components/Login'
-import Dashboard from './components/Dashboard'
-import UserManagement from './components/UserManagement'
-import ImageGeneration from './components/ImageGeneration'
-import DataAnalysis from './components/DataAnalysis'
-import LearningPaths from './components/LearningPaths'
-import SecurityResources from './components/SecurityResources'
+import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import './App.css'
+import Dashboard from './components/Dashboard'
+import DataAnalysis from './components/DataAnalysis'
+import ImageGeneration from './components/ImageGeneration'
+import LearningPaths from './components/LearningPaths'
+import Login from './components/Login'
+import SecurityResources from './components/SecurityResources'
+import UserManagement from './components/UserManagement'
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)

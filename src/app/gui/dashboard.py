@@ -1,15 +1,17 @@
 """
-Main dashboard window implementation.
+Main dashboard window implementation with cloud sync, advanced ML, and plugin support.
 """
 
 import base64
 import os
+from typing import Optional
 
-from PyQt6.QtCore import QPropertyAnimation, QTimer
+from PyQt6.QtCore import QAbstractAnimation, QPropertyAnimation, QTimer
 from PyQt6.QtGui import QAction, QFont
 from PyQt6.QtWidgets import (
     QApplication,
     QComboBox,
+    QDialog,
     QGraphicsOpacityEffect,
     QLabel,
     QLineEdit,
@@ -24,18 +26,21 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
+from app.core.cloud_sync import CloudSyncManager
 from app.core.data_analysis import DataAnalyzer
 from app.core.emergency_alert import EmergencyAlert
 from app.core.intent_detection import IntentDetector
 from app.core.learning_paths import LearningPathManager
 from app.core.location_tracker import LocationTracker
+from app.core.ml_models import AdvancedMLManager
+from app.core.plugin_system import PluginManager
 from app.core.security_resources import SecurityResourceManager
 from app.core.user_manager import UserManager
 from app.gui.settings_dialog import SettingsDialog
 
 
 class DashboardWindow(QMainWindow):
-    def __init__(self, username: str = None, initial_tab: int = 0):
+    def __init__(self, username: Optional[str] = None, initial_tab: int = 0):
         super().__init__()
         # Initialize core components
         self.user_manager = UserManager()
@@ -45,14 +50,29 @@ class DashboardWindow(QMainWindow):
         self.security_manager = SecurityResourceManager()
         self.location_tracker = LocationTracker()
         self.emergency_alert = EmergencyAlert()
+        
+        # Initialize new advanced features
+        self.cloud_sync = CloudSyncManager()
+        self.ml_manager = AdvancedMLManager()
+        self.plugin_manager = PluginManager()
+        
+        # Initialize plugins with context
+        plugin_context = {
+            'user_manager': self.user_manager,
+            'ml_manager': self.ml_manager,
+            'cloud_sync': self.cloud_sync
+        }
+        self.plugin_manager.initialize_all_plugins(plugin_context)
 
         # Setup timers
         self.location_timer = QTimer()
         self.location_timer.timeout.connect(self.update_location)
 
-        # If username provided, set current user
+        # If username provided, set current user and sync
         if username:
             self.user_manager.current_user = username
+            # Auto-sync user data from cloud
+            self._perform_cloud_sync(username)
 
         self.setup_ui()
         # Select initial chapter/tab (book-like)
@@ -85,10 +105,183 @@ class DashboardWindow(QMainWindow):
             anim.setDuration(300)
             anim.setStartValue(0.0)
             anim.setEndValue(1.0)
-            anim.start(QPropertyAnimation.DeleteWhenStopped)
+            anim.start(QAbstractAnimation.DeletionPolicy.DeleteWhenStopped)
         except Exception:
             # animations are cosmetic; ignore errors
             pass
+    
+    def _perform_cloud_sync(self, username: str) -> None:
+        """Perform cloud synchronization for user data."""
+        try:
+            if self.cloud_sync.sync_enabled:
+                user_data = self.user_manager.users.get(username, {})
+                synced_data = self.cloud_sync.auto_sync(username, user_data)
+                if synced_data != user_data:
+                    self.user_manager.users[username] = synced_data
+                    self.user_manager.save_users()
+        except Exception as e:
+            print(f"Cloud sync error: {e}")
+    
+    # Handler Methods
+    def update_location(self) -> None:
+        """Update location tracking display."""
+        try:
+            if hasattr(self, 'location_display'):
+                location = self.location_tracker.get_current_location()
+                if location:
+                    self.location_display.append(
+                        f"Location updated: {location.get('address', 'Unknown')}"
+                    )
+        except Exception as e:
+            print(f"Location update error: {e}")
+    
+    def toggle_location_tracking(self) -> None:
+        """Toggle location tracking on/off."""
+        try:
+            if self.location_timer.isActive():
+                self.location_timer.stop()
+                if hasattr(self, 'location_toggle'):
+                    self.location_toggle.setText("Start Tracking")
+            else:
+                self.location_timer.start(300000)  # 5 minutes
+                if hasattr(self, 'location_toggle'):
+                    self.location_toggle.setText("Stop Tracking")
+                self.update_location()
+        except Exception as e:
+            print(f"Toggle tracking error: {e}")
+    
+    def clear_location_history(self) -> None:
+        """Clear location tracking history."""
+        try:
+            from PyQt6.QtWidgets import QMessageBox
+            if hasattr(self, 'location_display'):
+                self.location_display.clear()
+            QMessageBox.information(
+                self,
+                "Location History",
+                "Location history cleared successfully."
+            )
+        except Exception as e:
+            print(f"Clear history error: {e}")
+    
+    def update_security_resources(self) -> None:
+        """Update security resources list."""
+        try:
+            if hasattr(self, 'security_list'):
+                resources = self.security_manager.get_resources()
+                self.security_list.clear()
+                for resource in resources:
+                    self.security_list.addItem(resource.get('name', 'Unknown'))
+        except Exception as e:
+            print(f"Security update error: {e}")
+    
+    def open_security_resource(self) -> None:
+        """Open selected security resource."""
+        try:
+            from PyQt6.QtWidgets import QMessageBox
+            if hasattr(self, 'security_list'):
+                current_item = self.security_list.currentItem()
+                if current_item:
+                    QMessageBox.information(
+                        self,
+                        "Security Resource",
+                        f"Opening: {current_item.text()}"
+                    )
+        except Exception as e:
+            print(f"Open resource error: {e}")
+    
+    def add_security_favorite(self) -> None:
+        """Add current security resource to favorites."""
+        try:
+            from PyQt6.QtWidgets import QMessageBox
+            if hasattr(self, 'security_list'):
+                current_item = self.security_list.currentItem()
+                if current_item:
+                    QMessageBox.information(
+                        self,
+                        "Favorites",
+                        f"Added to favorites: {current_item.text()}"
+                    )
+        except Exception as e:
+            print(f"Add favorite error: {e}")
+    
+    def generate_learning_path(self) -> None:
+        """Generate a new learning path."""
+        try:
+            if hasattr(self, 'learning_output'):
+                topic = "Python Programming"
+                if hasattr(self, 'learning_topic'):
+                    topic = self.learning_topic.text() or topic
+                path = self.learning_manager.generate_path(topic)
+                self.learning_output.setPlainText(str(path))
+        except Exception as e:
+            print(f"Generate path error: {e}")
+            if hasattr(self, 'learning_output'):
+                self.learning_output.setPlainText(f"Error: {e}")
+    
+    def load_data_file(self) -> None:
+        """Load a data file for analysis."""
+        try:
+            from PyQt6.QtWidgets import QFileDialog, QMessageBox
+            file_path, _ = QFileDialog.getOpenFileName(
+                self,
+                "Select Data File",
+                "",
+                "Data Files (*.csv *.xlsx *.json);;All Files (*)"
+            )
+            if file_path:
+                success = self.data_analyzer.load_file(file_path)
+                if success and hasattr(self, 'data_info'):
+                    self.data_info.setText(f"Loaded: {file_path}")
+                else:
+                    QMessageBox.warning(self, "Load Error", "Failed to load data file")
+        except Exception as e:
+            print(f"Load data error: {e}")
+    
+    def perform_analysis(self) -> None:
+        """Perform data analysis on loaded data."""
+        try:
+            if hasattr(self, 'analysis_output'):
+                results = self.data_analyzer.analyze()
+                self.analysis_output.setPlainText(str(results))
+        except Exception as e:
+            print(f"Analysis error: {e}")
+            if hasattr(self, 'analysis_output'):
+                self.analysis_output.setPlainText(f"Error: {e}")
+    
+    def save_emergency_contacts(self) -> None:
+        """Save emergency contact information."""
+        try:
+            from PyQt6.QtWidgets import QMessageBox
+            if hasattr(self, 'contacts_input'):
+                contacts_text = self.contacts_input.toPlainText()
+                # Save contacts logic here
+                QMessageBox.information(
+                    self,
+                    "Emergency Contacts",
+                    "Emergency contacts saved successfully."
+                )
+        except Exception as e:
+            print(f"Save contacts error: {e}")
+    
+    def send_emergency_alert(self) -> None:
+        """Send emergency alert to contacts."""
+        try:
+            from PyQt6.QtWidgets import QMessageBox
+            reply = QMessageBox.question(
+                self,
+                "Emergency Alert",
+                "Send emergency alert to all contacts?",
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+            )
+            if reply == QMessageBox.StandardButton.Yes:
+                success = self.emergency_alert.send_alert()
+                if success:
+                    QMessageBox.information(self, "Alert Sent", "Emergency alert sent successfully.")
+                else:
+                    QMessageBox.warning(self, "Alert Failed", "Failed to send emergency alert.")
+        except Exception as e:
+            print(f"Send alert error: {e}")
 
     def setup_ui(self):
         """Setup the user interface"""

@@ -1,0 +1,16 @@
+// AndroidManifest.xml
+// This is a stub manifest for the Android APK app integration branch.
+// Replace with a full manifest when starting Android development.
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.projectai.android">
+
+    <application
+        android:allowBackup="true"
+        android:label="ProjectAI"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+        <!-- MainActivity and other activities go here -->
+    </application>
+
+</manifest>

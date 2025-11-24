@@ -3,14 +3,15 @@
 Main entry point for the AI Desktop Application.
 """
 
-import sys
 import os
+import sys
+
 from dotenv import load_dotenv
-from PyQt6.QtWidgets import QApplication, QDialog
 from PyQt6.QtGui import QFont
-from PyQt6.QtCore import Qt
-from app.gui.login import LoginDialog
+from PyQt6.QtWidgets import QApplication, QDialog
+
 from app.gui.dashboard import DashboardWindow
+from app.gui.login import LoginDialog
 
 
 def setup_environment():
@@ -45,10 +46,13 @@ def main():
     login = LoginDialog()
     if login.exec() == QDialog.DialogCode.Accepted:
         username = login.username
-        initial_tab = getattr(login, 'selected_tab', 0)
-        window = DashboardWindow(username=username, initial_tab=initial_tab)
-        window.show()
-        sys.exit(app.exec())
+        if username:  # Only proceed if username exists
+            initial_tab = getattr(login, 'selected_tab', 0)
+            window = DashboardWindow(username=username, initial_tab=initial_tab)
+            window.show()
+            sys.exit(app.exec())
+        else:
+            sys.exit(0)
     else:
         # User cancelled login
         sys.exit(0)

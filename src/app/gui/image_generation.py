@@ -3,13 +3,24 @@ Image Generation UI Tab (Chapter 7)
 Professional image generation interface with content filtering
 """
 
-from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,  # type: ignore
-                              QLineEdit, QTextEdit, QPushButton, QComboBox,
-                              QProgressBar, QFileDialog, QMessageBox)
+import os
+
 from PyQt6.QtCore import QThread, pyqtSignal  # type: ignore
 from PyQt6.QtGui import QPixmap  # type: ignore
+from PyQt6.QtWidgets import (  # type: ignore
+    QComboBox,
+    QFileDialog,
+    QLabel,
+    QLineEdit,
+    QMessageBox,
+    QProgressBar,
+    QPushButton,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+)
+
 from app.core.image_generator import ImageGenerator
-import os
 
 
 class ImageGenerationThread(QThread):
@@ -43,6 +54,7 @@ class ImageGenerationTab(QWidget):
         super().__init__()
         self.generator = ImageGenerator()
         self.current_image = None
+        self._generation_thread = None  # Store thread reference
         self._setup_ui()
     
     def _setup_ui(self):
@@ -109,15 +121,15 @@ class ImageGenerationTab(QWidget):
         self.progress.setVisible(True)
         self.progress.setRange(0, 0)  # Indeterminate
         
-        self.thread = ImageGenerationThread(
+        self._generation_thread = ImageGenerationThread(
             self.generator,
             prompt,
             self.negative_input.text(),
             self.style_combo.currentText()
         )
-        self.thread.finished.connect(self._on_image_generated)
-        self.thread.error.connect(self._on_error)
-        self.thread.start()
+        self._generation_thread.finished.connect(self._on_image_generated)
+        self._generation_thread.error.connect(self._on_error)
+        self._generation_thread.start()
     
     def _on_image_generated(self, image):
         """Handle generated image."""

@@ -10,13 +10,14 @@ Flow:
 
 from PyQt6.QtWidgets import (
     QDialog,
-    QVBoxLayout,
     QLabel,
     QLineEdit,
-    QPushButton,
     QListWidget,
     QMessageBox,
+    QPushButton,
+    QVBoxLayout,
 )
+
 from app.core.user_manager import UserManager
 
 
@@ -34,21 +35,21 @@ class LoginDialog(QDialog):
             self._onboard_admin()
 
     def _build_ui(self):
-        self.layout = QVBoxLayout(self)
+        main_layout = QVBoxLayout(self)
 
         # Login widgets
-        self.layout.addWidget(QLabel("Username:"))
+        main_layout.addWidget(QLabel("Username:"))
         self.user_input = QLineEdit()
-        self.layout.addWidget(self.user_input)
+        main_layout.addWidget(self.user_input)
 
-        self.layout.addWidget(QLabel("Password:"))
+        main_layout.addWidget(QLabel("Password:"))
         self.pass_input = QLineEdit()
         self.pass_input.setEchoMode(QLineEdit.EchoMode.Password)
-        self.layout.addWidget(self.pass_input)
+        main_layout.addWidget(self.pass_input)
 
         self.login_button = QPushButton("Log in")
         self.login_button.clicked.connect(self.try_login)
-        self.layout.addWidget(self.login_button)
+        main_layout.addWidget(self.login_button)
 
         # Table of Contents (hidden until login)
         self.toc = QListWidget()
@@ -80,18 +81,20 @@ class LoginDialog(QDialog):
         for w in (self.user_input, self.pass_input, self.login_button):
             w.hide()
 
-        self.layout.addWidget(QLabel("Admin username:"))
-        self.admin_user = QLineEdit()
-        self.layout.addWidget(self.admin_user)
+        main_layout = self.layout()
+        if main_layout:
+            main_layout.addWidget(QLabel("Admin username:"))
+            self.admin_user = QLineEdit()
+            main_layout.addWidget(self.admin_user)
 
-        self.layout.addWidget(QLabel("Admin password:"))
-        self.admin_pass = QLineEdit()
-        self.admin_pass.setEchoMode(QLineEdit.EchoMode.Password)
-        self.layout.addWidget(self.admin_pass)
+            main_layout.addWidget(QLabel("Admin password:"))
+            self.admin_pass = QLineEdit()
+            self.admin_pass.setEchoMode(QLineEdit.EchoMode.Password)
+            main_layout.addWidget(self.admin_pass)
 
-        self.create_admin_btn = QPushButton("Create Admin Account")
-        self.create_admin_btn.clicked.connect(self.create_admin_account)
-        self.layout.addWidget(self.create_admin_btn)
+            self.create_admin_btn = QPushButton("Create Admin Account")
+            self.create_admin_btn.clicked.connect(self.create_admin_account)
+            main_layout.addWidget(self.create_admin_btn)
 
     def create_admin_account(self):
         username = self.admin_user.text().strip()
@@ -142,9 +145,11 @@ class LoginDialog(QDialog):
         # Clear login widgets and show TOC
         for w in (self.user_input, self.pass_input, self.login_button):
             w.hide()
-        self.layout.addWidget(QLabel("Table of Contents"))
-        self.layout.addWidget(self.toc)
-        self.layout.addWidget(self.open_button)
+        main_layout = self.layout()
+        if main_layout:
+            main_layout.addWidget(QLabel("Table of Contents"))
+            main_layout.addWidget(self.toc)
+            main_layout.addWidget(self.open_button)
 
     def open_chapter(self):
         idx = self.toc.currentRow()
