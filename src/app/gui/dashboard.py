@@ -2,34 +2,36 @@
 Main dashboard window implementation.
 """
 
-from PyQt6.QtWidgets import (
-    QMainWindow,
-    QTabWidget,
-    QWidget,
-    QVBoxLayout,
-    QToolBar,
-    QStyle,
-    QPushButton,
-    QTextEdit,
-    QLineEdit,
-    QLabel,
-    QComboBox,
-    QListWidget,
-    QGraphicsOpacityEffect,
-)
-from PyQt6.QtCore import QTimer, QPropertyAnimation
-import os
 import base64
-from app.core.user_manager import UserManager
+import os
+
+from PyQt6.QtCore import QPropertyAnimation, QTimer
+from PyQt6.QtGui import QAction, QFont
+from PyQt6.QtWidgets import (
+    QApplication,
+    QComboBox,
+    QGraphicsOpacityEffect,
+    QLabel,
+    QLineEdit,
+    QListWidget,
+    QMainWindow,
+    QPushButton,
+    QStyle,
+    QTabWidget,
+    QTextEdit,
+    QToolBar,
+    QVBoxLayout,
+    QWidget,
+)
+
+from app.core.data_analysis import DataAnalyzer
+from app.core.emergency_alert import EmergencyAlert
 from app.core.intent_detection import IntentDetector
 from app.core.learning_paths import LearningPathManager
-from app.core.data_analysis import DataAnalyzer
-from app.core.security_resources import SecurityResourceManager
 from app.core.location_tracker import LocationTracker
-from app.core.emergency_alert import EmergencyAlert
+from app.core.security_resources import SecurityResourceManager
+from app.core.user_manager import UserManager
 from app.gui.settings_dialog import SettingsDialog
-from PyQt6.QtGui import QFont, QAction
-from PyQt6.QtWidgets import QApplication
 
 
 class DashboardWindow(QMainWindow):
@@ -232,6 +234,14 @@ class DashboardWindow(QMainWindow):
         self.setup_security_tab()
         self.setup_location_tab()
         self.setup_emergency_tab()
+        # Add Image Generation tab
+        try:
+            from app.gui.image_generation import ImageGenerationTab
+            self.image_gen_tab = ImageGenerationTab()
+            self.tabs.addTab(self.image_gen_tab, "🎨 AI Image Generation")
+        except Exception:
+            # non-fatal: keep going without Image Generation tab
+            pass
         # Add Users management tab if widget is available
         try:
             from app.gui.user_management import UserManagementWidget

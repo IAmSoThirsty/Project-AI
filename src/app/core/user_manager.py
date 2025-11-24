@@ -10,6 +10,7 @@ them to hashed `password_hash` entries on load.
 
 import json
 import os
+
 from cryptography.fernet import Fernet
 from dotenv import load_dotenv
 from passlib.context import CryptContext
@@ -36,8 +37,12 @@ class UserManager:
         """
         load_dotenv()
         self.users_file = users_file
+        self.user_file = users_file  # Alias for compatibility
         self.users = {}
         self.current_user = None
+        
+        # Make pwd_context available as instance attribute for testing
+        self.pwd_context = pwd_context
 
         env_key = os.getenv('FERNET_KEY')
         if env_key:
