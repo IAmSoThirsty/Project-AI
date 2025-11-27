@@ -6,10 +6,11 @@ import base64
 import os
 
 from PyQt6.QtCore import QPropertyAnimation, QTimer
-from PyQt6.QtGui import QAction, QFont
+from PyQt6.QtGui import QAction, QColor, QFont
 from PyQt6.QtWidgets import (
     QApplication,
     QComboBox,
+    QGraphicsDropShadowEffect,
     QGraphicsOpacityEffect,
     QLabel,
     QLineEdit,
@@ -156,6 +157,13 @@ class DashboardWindow(QMainWindow):
         # Create main widget and layout
         main_widget = QWidget()
         self.setCentralWidget(main_widget)
+        # Apply a subtle drop shadow to the main container for soft 3D depth
+        try:
+            self._apply_shadow(
+                main_widget, radius=18, dx=0, dy=6, color=QColor(0, 0, 0, 100)
+            )
+        except Exception:
+            pass
         layout = QVBoxLayout(main_widget)
         # provide comfortable spacing and margins for a modern UI
         layout.setContentsMargins(18, 18, 18, 18)
@@ -246,6 +254,18 @@ class DashboardWindow(QMainWindow):
             # non-fatal: keep going without Users tab
             pass
 
+        # Apply subtle shadows to each tab page to reinforce depth
+        try:
+            for i in range(self.tabs.count()):
+                widget = self.tabs.widget(i)
+                if widget is not None:
+                    # slightly smaller radius for inner panels
+                    self._apply_shadow(
+                        widget, radius=10, dx=0, dy=3, color=QColor(0, 0, 0, 80)
+                    )
+        except Exception:
+            pass
+
     def _apply_stylesheet_from_settings(self, base_qss: str):
         """Apply stylesheet depending on saved theme setting (light/dark).
 
@@ -292,6 +312,25 @@ class DashboardWindow(QMainWindow):
                     qss = f.read()
                 self._apply_stylesheet_from_settings(qss)
         except Exception:
+            pass
+
+    def _apply_shadow(
+        self, widget, radius: int = 12, dx: int = 0, dy: int = 4, color: QColor = None
+    ):
+        """Apply a subtle QGraphicsDropShadowEffect to the given widget.
+
+        This provides a soft, neumorphic depth effect without changing layout.
+        """
+        try:
+            eff = QGraphicsDropShadowEffect(widget)
+            eff.setBlurRadius(radius)
+            eff.setOffset(dx, dy)
+            if color is None:
+                color = QColor(0, 0, 0, 120)
+            eff.setColor(color)
+            widget.setGraphicsEffect(eff)
+        except Exception:
+            # best-effort: don't raise on styling failure
             pass
 
     def open_settings_dialog(self):

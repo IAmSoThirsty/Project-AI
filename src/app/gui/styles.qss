@@ -58,3 +58,41 @@ QStatusBar {
     color: #5b4636;
     padding: 6px;
 }
+
+/* Neumorphic / subtle 3D additions */
+.card {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #fcfbf8, stop:1 #f2ece0);
+    border-radius: 12px;
+    border: 1px solid rgba(110,80,50,0.12);
+    padding: 12px;
+}
+
+/* Floating / raised panels */
+.floating {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ffffff, stop:1 #f6efe0);
+    border-radius: 10px;
+    border: 1px solid rgba(0,0,0,0.06);
+}
+
+QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #7a5a38, stop:1 #6f4a2a);
+    color: #fffef6;
+    border: 1px solid rgba(0,0,0,0.12);
+    border-radius: 8px;
+    padding: 8px 12px;
+    min-height: 28px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #886143, stop:1 #7f5a38);
+}
+
+QPushButton:pressed {
+    padding-top: 10px; /* subtle press feedback */
+}
+
+/* Card-like list (e.g., TOC) */
+QListWidget.cardList {
+    background: transparent;
+    border: none;
+}

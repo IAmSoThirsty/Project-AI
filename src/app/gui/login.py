@@ -8,8 +8,10 @@ Flow:
    exposes selected_tab and username for the caller.
 """
 
+from PyQt6.QtGui import QColor
 from PyQt6.QtWidgets import (
     QDialog,
+    QGraphicsDropShadowEffect,
     QLabel,
     QLineEdit,
     QListWidget,
@@ -66,6 +68,25 @@ class LoginDialog(QDialog):
 
         self.open_button = QPushButton("Open Chapter")
         self.open_button.clicked.connect(self.open_chapter)
+        # Apply a subtle shadow to the dialog to create a raised card look
+        try:
+            self._apply_shadow(self, radius=16, dx=0, dy=6, color=QColor(0, 0, 0, 110))
+        except Exception:
+            pass
+
+    def _apply_shadow(
+        self, widget, radius: int = 12, dx: int = 0, dy: int = 4, color: QColor = None
+    ):
+        try:
+            eff = QGraphicsDropShadowEffect(widget)
+            eff.setBlurRadius(radius)
+            eff.setOffset(dx, dy)
+            if color is None:
+                color = QColor(0, 0, 0, 120)
+            eff.setColor(color)
+            widget.setGraphicsEffect(eff)
+        except Exception:
+            pass
 
     def _onboard_admin(self):
         """Prompt the user to create an admin account on first run."""

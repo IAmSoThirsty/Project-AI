@@ -40,3 +40,38 @@ QStatusBar {
     background: transparent;
     color: #cfcfcf;
 }
+
+/* Neumorphic / subtle 3D additions (dark theme) */
+.card {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #2b2b2b, stop:1 #242424);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.03);
+    padding: 12px;
+}
+
+.floating {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #2f2f2f, stop:1 #242424);
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.02);
+}
+
+QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #4a4a4a, stop:1 #3a3a3a);
+    color: #e6e6e6;
+    border: 1px solid rgba(0,0,0,0.35);
+    border-radius: 8px;
+    padding: 8px 12px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #5a5a5a, stop:1 #444444);
+}
+
+QPushButton:pressed {
+    padding-top: 10px;
+}
+
+QListWidget.cardList {
+    background: transparent;
+    border: none;
+}
