@@ -68,6 +68,11 @@ class LoginDialog(QDialog):
 
         self.open_button = QPushButton("Open Chapter")
         self.open_button.clicked.connect(self.open_chapter)
+        # style the TOC list as a card-list
+        try:
+            self.toc.setProperty("class", "cardList")
+        except Exception:
+            pass
         # Apply a subtle shadow to the dialog to create a raised card look
         try:
             self._apply_shadow(self, radius=16, dx=0, dy=6, color=QColor(0, 0, 0, 110))

@@ -75,3 +75,22 @@ QListWidget.cardList {
     background: transparent;
     border: none;
 }
+
+/* Compatibility selectors for Qt dynamic properties (dark theme) */
+QWidget[class="card"] {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #2b2b2b, stop:1 #242424);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.03);
+    padding: 12px;
+}
+
+QWidget[class="floating"] {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #2f2f2f, stop:1 #242424);
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.02);
+}
+
+QListWidget[class="cardList"] {
+    background: transparent;
+    border: none;
+}

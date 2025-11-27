@@ -156,6 +156,11 @@ class DashboardWindow(QMainWindow):
 
         # Create main widget and layout
         main_widget = QWidget()
+        # Mark the main container as 'floating' so QSS can style it as a raised panel
+        try:
+            main_widget.setProperty("class", "floating")
+        except Exception:
+            pass
         self.setCentralWidget(main_widget)
         # Apply a subtle drop shadow to the main container for soft 3D depth
         try:
@@ -346,6 +351,11 @@ class DashboardWindow(QMainWindow):
     def setup_chat_tab(self):
         """Setup the chat interface tab"""
         chat_tab = QWidget()
+        # style as a card
+        try:
+            chat_tab.setProperty("class", "card")
+        except Exception:
+            pass
         layout = QVBoxLayout(chat_tab)
 
         # Chat display
@@ -367,6 +377,10 @@ class DashboardWindow(QMainWindow):
     def setup_tasks_tab(self):
         """Setup the tasks management tab"""
         tasks_tab = QWidget()
+        try:
+            tasks_tab.setProperty("class", "card")
+        except Exception:
+            pass
         layout = QVBoxLayout(tasks_tab)
 
         # Tasks list
@@ -383,6 +397,10 @@ class DashboardWindow(QMainWindow):
     def setup_learning_paths_tab(self):
         """Setup the learning paths tab"""
         tab = QWidget()
+        try:
+            tab.setProperty("class", "card")
+        except Exception:
+            pass
         layout = QVBoxLayout(tab)
 
         # Interest input
@@ -415,6 +433,10 @@ class DashboardWindow(QMainWindow):
     def setup_data_analysis_tab(self):
         """Setup the data analysis tab"""
         tab = QWidget()
+        try:
+            tab.setProperty("class", "card")
+        except Exception:
+            pass
         layout = QVBoxLayout(tab)
 
         # File selection
