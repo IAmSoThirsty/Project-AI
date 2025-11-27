@@ -106,7 +106,16 @@ jobs:
         if: steps.detect_py.outputs.found != '0'
         run: flake8 . || true
 
-      - name: Run pytest
+      - name: Run pytest (generate JUnit XML)
         if: steps.detect_py.outputs.found != '0'
-        run: pytest -q
+        run: pytest --junitxml=reports/junit.xml -q
+
+      - name: Upload JUnit report
+        if: ${{ always() && (steps.detect_py.outputs.found != '0') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-report
+          path: |
+            reports/junit.xml
+            reports/**/*.xml
 
