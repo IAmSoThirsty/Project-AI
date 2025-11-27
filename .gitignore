@@ -20,3 +20,15 @@ data/
 
 # Optional README newer copy
 README_UPDATED.md
+
+# Node modules
+node_modules/
+web/frontend/node_modules/
+
+# Coverage and reports
+reports/
+coverage.xml
+coverage/
+
+# Python env
+.venv/
