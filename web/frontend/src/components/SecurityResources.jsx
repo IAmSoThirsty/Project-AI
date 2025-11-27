@@ -10,7 +10,7 @@ function SecurityResources() {
         <p>Security resource features will be implemented here.</p>
       </main>
     </div>
-  )
+  );
 }
 
-export default SecurityResources
+export default SecurityResources;

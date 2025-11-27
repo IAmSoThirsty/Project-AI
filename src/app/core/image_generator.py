@@ -12,13 +12,25 @@ from PIL import Image  # type: ignore
 
 class ImageGenerator:
     """Professional AI image generator with content safety filtering."""
-    
+
     BLOCKED_KEYWORDS = [
-        "nude", "naked", "nsfw", "explicit", "porn", "sex", "xxx",
-        "erotic", "adult", "inappropriate", "graphic", "vulgar",
-        "offensive", "violent", "gore"
+        "nude",
+        "naked",
+        "nsfw",
+        "explicit",
+        "porn",
+        "sex",
+        "xxx",
+        "erotic",
+        "adult",
+        "inappropriate",
+        "graphic",
+        "vulgar",
+        "offensive",
+        "violent",
+        "gore",
     ]
-    
+
     STYLE_PRESETS = {
         "Photorealistic": "highly detailed, photorealistic, 8k uhd, professional photography",
         "Digital Art": "digital art, concept art, trending on artstation, highly detailed",
@@ -29,18 +41,26 @@ class ImageGenerator:
         "Fantasy": "fantasy art, magical, ethereal, enchanted, mystical",
         "Minimalist": "minimalist design, clean lines, simple, modern",
         "Abstract": "abstract art, geometric shapes, creative, artistic",
-        "Cinematic": "cinematic lighting, dramatic, movie still, professional"
+        "Cinematic": "cinematic lighting, dramatic, movie still, professional",
     }
-    
+
     SAFETY_NEGATIVE_PROMPTS = [
-        "nude", "naked", "nsfw", "explicit", "inappropriate",
-        "violent", "gore", "offensive", "vulgar", "adult content"
+        "nude",
+        "naked",
+        "nsfw",
+        "explicit",
+        "inappropriate",
+        "violent",
+        "gore",
+        "offensive",
+        "vulgar",
+        "adult content",
     ]
-    
+
     def __init__(self):
         self.api_url = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1"
         self.content_filtering_enabled = True
-    
+
     def _validate_prompt(self, prompt: str) -> bool:
         if not self.content_filtering_enabled:
             return True
@@ -49,8 +69,15 @@ class ImageGenerator:
             if keyword in prompt_lower:
                 return False
         return True
-    
-    def generate_image(self, prompt: str, negative_prompt: str = "", style: Optional[str] = None, width: int = 512, height: int = 512) -> Optional[Image.Image]:
+
+    def generate_image(
+        self,
+        prompt: str,
+        negative_prompt: str = "",
+        style: Optional[str] = None,
+        width: int = 512,
+        height: int = 512,
+    ) -> Optional[Image.Image]:
         if not prompt or not prompt.strip():
             raise ValueError("Prompt cannot be empty")
         if not self._validate_prompt(prompt):
@@ -69,8 +96,8 @@ class ImageGenerator:
                 "negative_prompt": full_negative,
                 "width": width,
                 "height": height,
-                "num_inference_steps": 30
-            }
+                "num_inference_steps": 30,
+            },
         }
         try:
             response = requests.post(self.api_url, json=payload, timeout=60)
@@ -83,12 +110,12 @@ class ImageGenerator:
         except Exception as e:
             print(f"Image generation error: {e}")
             return None
-    
+
     def get_available_styles(self) -> List[str]:
         return list(self.STYLE_PRESETS.keys())
-    
+
     def get_style_description(self, style: str) -> Optional[str]:
         return self.STYLE_PRESETS.get(style)
-    
+
     def set_content_filtering(self, enabled: bool):
         self.content_filtering_enabled = enabled

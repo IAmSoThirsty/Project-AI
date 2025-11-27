@@ -166,3 +166,10 @@ This will add the `web/` directory without affecting existing desktop code.
 - Merging this branch only adds new files
 - No conflicts with existing desktop code
 - Both desktop and web can coexist
+
+
+---
+
+**Repository note:** Last updated: 2025-11-26 (automated)
+
+<!-- last-updated-marker -->

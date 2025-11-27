@@ -5,24 +5,26 @@ moderate UI to manage users (create, delete, set roles, approve accounts,
 reset passwords, and set a profile picture path).
 """
 
+import os
+
+from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QHBoxLayout,
-    QListWidget,
-    QPushButton,
-    QLabel,
-    QLineEdit,
-    QMessageBox,
-    QFileDialog,
+    QCheckBox,
     QComboBox,
     QDialog,
     QDialogButtonBox,
-    QCheckBox,
+    QFileDialog,
+    QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QListWidget,
+    QMessageBox,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
 )
-from PyQt6.QtGui import QPixmap
+
 from app.core.user_manager import UserManager
-import os
 
 
 class UserManagementWidget(QWidget):
@@ -61,9 +63,7 @@ class UserManagementWidget(QWidget):
         self.layout.addLayout(btn_row)
 
         # Details area
-        details_text = (
-            "Select a user to see details and edit settings."
-        )
+        details_text = "Select a user to see details and edit settings."
         self.details_label = QLabel(details_text)
         self.layout.addWidget(self.details_label)
 
@@ -91,10 +91,7 @@ class UserManagementWidget(QWidget):
         left.addWidget(QLabel("Avatar preview:"))
         self.avatar_preview = QLabel()
         self.avatar_preview.setFixedSize(96, 96)
-        self.avatar_preview.setStyleSheet(
-            "border:1px solid #ccc; "
-            "background: #fff;"
-        )
+        self.avatar_preview.setStyleSheet("border:1px solid #ccc; " "background: #fff;")
         left.addWidget(self.avatar_preview)
 
         form_row.addLayout(left)
@@ -122,8 +119,8 @@ class UserManagementWidget(QWidget):
             return
         data = self.um.get_user_data(username)
         self.username_field.setText(username)
-        self.role_combo.setCurrentText(data.get('role', 'user'))
-        self.pic_field.setText(data.get('profile_picture', ''))
+        self.role_combo.setCurrentText(data.get("role", "user"))
+        self.pic_field.setText(data.get("profile_picture", ""))
         self.approved_label.setText(f"Approved: {data.get('approved', False)}")
 
     def browse_picture(self):
@@ -152,9 +149,7 @@ class UserManagementWidget(QWidget):
                     profile_picture=pic,
                 )
                 created_msg = f"User '{uname}' created."
-                QMessageBox.information(
-                    self, "Created", created_msg
-                )
+                QMessageBox.information(self, "Created", created_msg)
                 self.refresh_user_list()
             else:
                 QMessageBox.warning(self, "Exists", "User already exists")
@@ -166,9 +161,7 @@ class UserManagementWidget(QWidget):
             else None
         )
         if not username:
-            QMessageBox.warning(
-                self, "Delete", "Select a user to delete"
-            )
+            QMessageBox.warning(self, "Delete", "Select a user to delete")
             return
         if username == self.um.current_user:
             QMessageBox.warning(
@@ -195,18 +188,14 @@ class UserManagementWidget(QWidget):
             else None
         )
         if not username:
-            QMessageBox.warning(
-                self, "Approve", "Select a user first"
-            )
+            QMessageBox.warning(self, "Approve", "Select a user first")
             return
         data = self.um.users.get(username, {})
-        new = not data.get('approved', False)
+        new = not data.get("approved", False)
         self.um.update_user(username, approved=new)
         self.on_user_selected(username)
         updated_msg = f"User '{username}' approved set to {new}"
-        QMessageBox.information(
-            self, "Updated", updated_msg
-        )
+        QMessageBox.information(self, "Updated", updated_msg)
 
     def reset_password(self):
         username = (
@@ -215,18 +204,14 @@ class UserManagementWidget(QWidget):
             else None
         )
         if not username:
-            QMessageBox.warning(
-                self, "Reset Password", "Select a user first"
-            )
+            QMessageBox.warning(self, "Reset Password", "Select a user first")
             return
         dlg = ResetPasswordDialog(username, parent=self)
         if dlg.exec() == QDialog.Accepted:
             newpw = dlg.get_password()
             if newpw:
                 self.um.set_password(username, newpw)
-                QMessageBox.information(
-                    self, "Password", "Password updated"
-                )
+                QMessageBox.information(self, "Password", "Password updated")
 
     def save_changes(self):
         username = self.username_field.text().strip()
@@ -239,7 +224,7 @@ class UserManagementWidget(QWidget):
             return
         role = self.role_combo.currentText()
         pic = self.pic_field.text().strip()
-        approved = self.approved_label.text().endswith('True')
+        approved = self.approved_label.text().endswith("True")
         ok = self.um.update_user(
             self.user_list.currentItem().text(),
             role=role,
@@ -287,8 +272,7 @@ class CreateUserDialog(QDialog):
         layout.addLayout(pic_row)
 
         btns = QDialogButtonBox(
-            QDialogButtonBox.StandardButton.Ok
-            | QDialogButtonBox.StandardButton.Cancel
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
         )
         btns.accepted.connect(self.accept)
         btns.rejected.connect(self.reject)
@@ -324,8 +308,7 @@ class ResetPasswordDialog(QDialog):
         self.pw.setEchoMode(QLineEdit.EchoMode.Password)
         layout.addWidget(self.pw)
         btns = QDialogButtonBox(
-            QDialogButtonBox.StandardButton.Ok
-            | QDialogButtonBox.StandardButton.Cancel
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
         )
         btns.accepted.connect(self.accept)
         btns.rejected.connect(self.reject)

@@ -6,7 +6,7 @@ import base64
 import os
 from typing import Optional
 
-from PyQt6.QtCore import QAbstractAnimation, QPropertyAnimation, QTimer
+from PyQt6.QtCore import QPropertyAnimation, QTimer
 from PyQt6.QtGui import QAction, QFont
 from PyQt6.QtWidgets import (
     QApplication,
@@ -26,16 +26,23 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
+from app.core.ai_persona import AIPersona
 from app.core.cloud_sync import CloudSyncManager
+from app.core.command_override import CommandOverrideSystem
 from app.core.data_analysis import DataAnalyzer
 from app.core.emergency_alert import EmergencyAlert
 from app.core.intent_detection import IntentDetector
 from app.core.learning_paths import LearningPathManager
+from app.core.learning_request_log import LearningRequestLog
 from app.core.location_tracker import LocationTracker
+from app.core.memory_expansion import MemoryExpansionSystem
 from app.core.ml_models import AdvancedMLManager
 from app.core.plugin_system import PluginManager
 from app.core.security_resources import SecurityResourceManager
 from app.core.user_manager import UserManager
+from app.gui.ai_persona_ui import AIPersonaDialog
+from app.gui.command_memory_ui import CommandOverrideDialog, MemoryExpansionDialog
+from app.gui.learning_request_ui import LearningRequestDialog
 from app.gui.settings_dialog import SettingsDialog
 
 
@@ -50,19 +57,45 @@ class DashboardWindow(QMainWindow):
         self.security_manager = SecurityResourceManager()
         self.location_tracker = LocationTracker()
         self.emergency_alert = EmergencyAlert()
-        
+
         # Initialize new advanced features
         self.cloud_sync = CloudSyncManager()
         self.ml_manager = AdvancedMLManager()
         self.plugin_manager = PluginManager()
-        
+
+        # Initialize command override and memory expansion systems
+        self.command_override = CommandOverrideSystem()
+        self.memory_expansion = MemoryExpansionSystem(
+            command_override=self.command_override
+        )
+
+        # Initialize learning request log (pass memory_expansion for integration)
+        self.learning_request_log = LearningRequestLog(
+            memory_system=self.memory_expansion
+        )
+
+        # Initialize AI Persona system (with memory integration and user name)
+        self.ai_persona = AIPersona(
+            memory_system=self.memory_expansion,
+            user_name=username if username else "User",
+        )
+
         # Initialize plugins with context
         plugin_context = {
-            'user_manager': self.user_manager,
-            'ml_manager': self.ml_manager,
-            'cloud_sync': self.cloud_sync
+            "user_manager": self.user_manager,
+            "ml_manager": self.ml_manager,
+            "cloud_sync": self.cloud_sync,
+            "command_override": self.command_override,
+            "memory_expansion": self.memory_expansion,
+            "learning_request_log": self.learning_request_log,
+            "ai_persona": self.ai_persona,
         }
         self.plugin_manager.initialize_all_plugins(plugin_context)
+
+        # Setup proactive conversation timer
+        self.proactive_timer = QTimer()
+        self.proactive_timer.timeout.connect(self._check_proactive_conversation)
+        self.proactive_timer.start(60000)  # Check every minute
 
         # Setup timers
         self.location_timer = QTimer()
@@ -73,6 +106,13 @@ class DashboardWindow(QMainWindow):
             self.user_manager.current_user = username
             # Auto-sync user data from cloud
             self._perform_cloud_sync(username)
+            # Log session start to memory
+            self.memory_expansion.store_action(
+                "session_start",
+                {"username": username, "timestamp": self._get_timestamp()},
+                "User session initiated",
+                tags=["session", "login"],
+            )
 
         self.setup_ui()
         # Select initial chapter/tab (book-like)
@@ -105,11 +145,11 @@ class DashboardWindow(QMainWindow):
             anim.setDuration(300)
             anim.setStartValue(0.0)
             anim.setEndValue(1.0)
-            anim.start(QAbstractAnimation.DeletionPolicy.DeleteWhenStopped)
+            anim.start(QPropertyAnimation.DeletionPolicy.DeleteWhenStopped)
         except Exception:
             # animations are cosmetic; ignore errors
             pass
-    
+
     def _perform_cloud_sync(self, username: str) -> None:
         """Perform cloud synchronization for user data."""
         try:
@@ -121,12 +161,12 @@ class DashboardWindow(QMainWindow):
                     self.user_manager.save_users()
         except Exception as e:
             print(f"Cloud sync error: {e}")
-    
+
     # Handler Methods
     def update_location(self) -> None:
         """Update location tracking display."""
         try:
-            if hasattr(self, 'location_display'):
+            if hasattr(self, "location_display"):
                 location = self.location_tracker.get_current_location()
                 if location:
                     self.location_display.append(
@@ -134,152 +174,154 @@ class DashboardWindow(QMainWindow):
                     )
         except Exception as e:
             print(f"Location update error: {e}")
-    
+
     def toggle_location_tracking(self) -> None:
         """Toggle location tracking on/off."""
         try:
             if self.location_timer.isActive():
                 self.location_timer.stop()
-                if hasattr(self, 'location_toggle'):
+                if hasattr(self, "location_toggle"):
                     self.location_toggle.setText("Start Tracking")
             else:
                 self.location_timer.start(300000)  # 5 minutes
-                if hasattr(self, 'location_toggle'):
+                if hasattr(self, "location_toggle"):
                     self.location_toggle.setText("Stop Tracking")
                 self.update_location()
         except Exception as e:
             print(f"Toggle tracking error: {e}")
-    
+
     def clear_location_history(self) -> None:
         """Clear location tracking history."""
         try:
             from PyQt6.QtWidgets import QMessageBox
-            if hasattr(self, 'location_display'):
+
+            if hasattr(self, "location_display"):
                 self.location_display.clear()
             QMessageBox.information(
-                self,
-                "Location History",
-                "Location history cleared successfully."
+                self, "Location History", "Location history cleared successfully."
             )
         except Exception as e:
             print(f"Clear history error: {e}")
-    
+
     def update_security_resources(self) -> None:
         """Update security resources list."""
         try:
-            if hasattr(self, 'security_list'):
+            if hasattr(self, "security_list"):
                 resources = self.security_manager.get_resources()
                 self.security_list.clear()
                 for resource in resources:
-                    self.security_list.addItem(resource.get('name', 'Unknown'))
+                    self.security_list.addItem(resource.get("name", "Unknown"))
         except Exception as e:
             print(f"Security update error: {e}")
-    
+
     def open_security_resource(self) -> None:
         """Open selected security resource."""
         try:
             from PyQt6.QtWidgets import QMessageBox
-            if hasattr(self, 'security_list'):
+
+            if hasattr(self, "security_list"):
                 current_item = self.security_list.currentItem()
                 if current_item:
                     QMessageBox.information(
-                        self,
-                        "Security Resource",
-                        f"Opening: {current_item.text()}"
+                        self, "Security Resource", f"Opening: {current_item.text()}"
                     )
         except Exception as e:
             print(f"Open resource error: {e}")
-    
+
     def add_security_favorite(self) -> None:
         """Add current security resource to favorites."""
         try:
             from PyQt6.QtWidgets import QMessageBox
-            if hasattr(self, 'security_list'):
+
+            if hasattr(self, "security_list"):
                 current_item = self.security_list.currentItem()
                 if current_item:
                     QMessageBox.information(
-                        self,
-                        "Favorites",
-                        f"Added to favorites: {current_item.text()}"
+                        self, "Favorites", f"Added to favorites: {current_item.text()}"
                     )
         except Exception as e:
             print(f"Add favorite error: {e}")
-    
+
     def generate_learning_path(self) -> None:
         """Generate a new learning path."""
         try:
-            if hasattr(self, 'learning_output'):
+            if hasattr(self, "learning_output"):
                 topic = "Python Programming"
-                if hasattr(self, 'learning_topic'):
+                if hasattr(self, "learning_topic"):
                     topic = self.learning_topic.text() or topic
                 path = self.learning_manager.generate_path(topic)
                 self.learning_output.setPlainText(str(path))
         except Exception as e:
             print(f"Generate path error: {e}")
-            if hasattr(self, 'learning_output'):
+            if hasattr(self, "learning_output"):
                 self.learning_output.setPlainText(f"Error: {e}")
-    
+
     def load_data_file(self) -> None:
         """Load a data file for analysis."""
         try:
             from PyQt6.QtWidgets import QFileDialog, QMessageBox
+
             file_path, _ = QFileDialog.getOpenFileName(
                 self,
                 "Select Data File",
                 "",
-                "Data Files (*.csv *.xlsx *.json);;All Files (*)"
+                "Data Files (*.csv *.xlsx *.json);;All Files (*)",
             )
             if file_path:
                 success = self.data_analyzer.load_file(file_path)
-                if success and hasattr(self, 'data_info'):
+                if success and hasattr(self, "data_info"):
                     self.data_info.setText(f"Loaded: {file_path}")
                 else:
                     QMessageBox.warning(self, "Load Error", "Failed to load data file")
         except Exception as e:
             print(f"Load data error: {e}")
-    
+
     def perform_analysis(self) -> None:
         """Perform data analysis on loaded data."""
         try:
-            if hasattr(self, 'analysis_output'):
+            if hasattr(self, "analysis_output"):
                 results = self.data_analyzer.analyze()
                 self.analysis_output.setPlainText(str(results))
         except Exception as e:
             print(f"Analysis error: {e}")
-            if hasattr(self, 'analysis_output'):
+            if hasattr(self, "analysis_output"):
                 self.analysis_output.setPlainText(f"Error: {e}")
-    
+
     def save_emergency_contacts(self) -> None:
         """Save emergency contact information."""
         try:
             from PyQt6.QtWidgets import QMessageBox
-            if hasattr(self, 'contacts_input'):
-                contacts_text = self.contacts_input.toPlainText()
-                # Save contacts logic here
+
+            if hasattr(self, "contacts_input"):
+                _ = self.contacts_input.toPlainText()
+                # Save contacts logic here (contacts would be processed here)
                 QMessageBox.information(
-                    self,
-                    "Emergency Contacts",
-                    "Emergency contacts saved successfully."
+                    self, "Emergency Contacts", "Emergency contacts saved successfully."
                 )
         except Exception as e:
             print(f"Save contacts error: {e}")
-    
+
     def send_emergency_alert(self) -> None:
         """Send emergency alert to contacts."""
         try:
             from PyQt6.QtWidgets import QMessageBox
+
             reply = QMessageBox.question(
                 self,
                 "Emergency Alert",
                 "Send emergency alert to all contacts?",
-                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
             )
             if reply == QMessageBox.StandardButton.Yes:
                 success = self.emergency_alert.send_alert()
                 if success:
-                    QMessageBox.information(self, "Alert Sent", "Emergency alert sent successfully.")
+                    QMessageBox.information(
+                        self, "Alert Sent", "Emergency alert sent successfully."
+                    )
                 else:
-                    QMessageBox.warning(self, "Alert Failed", "Failed to send emergency alert.")
+                    QMessageBox.warning(
+                        self, "Alert Failed", "Failed to send emergency alert."
+                    )
         except Exception as e:
             print(f"Send alert error: {e}")
 
@@ -299,7 +341,7 @@ class DashboardWindow(QMainWindow):
             # Prefer bundled SVG assets for crisp icons; fall back to style icons
             assets_dir = os.path.join(
                 os.path.dirname(__file__),
-                'assets',
+                "assets",
             )
 
             def _icon(name, fallback_pixmap):
@@ -313,29 +355,64 @@ class DashboardWindow(QMainWindow):
                     pass
                 return style.standardIcon(fallback_pixmap)
 
-            act_home = QAction(_icon('home.svg',
-                                     QStyle.StandardPixmap.SP_DesktopIcon),
-                               "Home", self)
+            act_home = QAction(
+                _icon("home.svg", QStyle.StandardPixmap.SP_DesktopIcon), "Home", self
+            )
 
-            act_refresh = QAction(_icon('refresh.svg',
-                                        QStyle.StandardPixmap.SP_BrowserReload),
-                                  "Refresh", self)
+            act_refresh = QAction(
+                _icon("refresh.svg", QStyle.StandardPixmap.SP_BrowserReload),
+                "Refresh",
+                self,
+            )
 
-            act_help = QAction(_icon('help.svg',
-                                     QStyle.StandardPixmap.SP_DialogHelpButton),
-                               "Help", self)
+            act_help = QAction(
+                _icon("help.svg", QStyle.StandardPixmap.SP_DialogHelpButton),
+                "Help",
+                self,
+            )
 
-            act_settings = QAction(_icon('help.svg',
-                                         QStyle.StandardPixmap.SP_FileDialogDetailedView),
-                                   "Settings", self)
+            act_settings = QAction(
+                _icon("help.svg", QStyle.StandardPixmap.SP_FileDialogDetailedView),
+                "Settings",
+                self,
+            )
+
+            # New advanced features
+            act_command = QAction("⚠️ Command Override", self)
+            act_command.setToolTip("Command Override System - Control safety protocols")
+
+            act_memory = QAction("🧠 Memory", self)
+            act_memory.setToolTip("Memory Expansion System - AI memory and learning")
+
+            act_requests = QAction("📋 Learning Requests", self)
+            act_requests.setToolTip(
+                "Learning Request Log - AI learning approval system"
+            )
+
+            act_persona = QAction("🤖 AI Persona", self)
+            act_persona.setToolTip(
+                "AI Persona & Four Laws - Configure AI personality and ethics"
+            )
 
             toolbar.addAction(act_home)
             toolbar.addAction(act_refresh)
             toolbar.addSeparator()
             toolbar.addAction(act_help)
             toolbar.addAction(act_settings)
-            # connect settings action
+            toolbar.addSeparator()
+            toolbar.addAction(act_command)
+            toolbar.addAction(act_memory)
+            toolbar.addAction(act_requests)
+            toolbar.addAction(act_persona)
+
+            # Connect actions
             act_settings.triggered.connect(self.open_settings_dialog)
+            act_command.triggered.connect(self.open_command_override_dialog)
+            act_memory.triggered.connect(self.open_memory_expansion_dialog)
+            act_requests.triggered.connect(self.open_learning_request_dialog)
+            act_persona.triggered.connect(self.open_ai_persona_dialog)
+            act_memory.triggered.connect(self.open_memory_expansion_dialog)
+            act_requests.triggered.connect(self.open_learning_request_dialog)
         except Exception:
             # toolbar is cosmetic — ignore failures
             pass
@@ -355,31 +432,27 @@ class DashboardWindow(QMainWindow):
         # Try to load external QSS stylesheet for the "book" appearance
         # if present
         try:
-            qss_path = os.path.join(
-                os.path.dirname(__file__), 'styles.qss'
-            )
+            qss_path = os.path.join(os.path.dirname(__file__), "styles.qss")
             if os.path.exists(qss_path):
-                with open(qss_path, 'r', encoding='utf-8') as f:
+                with open(qss_path, "r", encoding="utf-8") as f:
                     qss = f.read()
 
                 # embed assets as data URIs if present
-                assets_dir = os.path.join(
-                    os.path.dirname(__file__), 'assets'
-                )
+                assets_dir = os.path.join(os.path.dirname(__file__), "assets")
                 # parchment
-                parchment_path = os.path.join(assets_dir, 'parchment.svg')
+                parchment_path = os.path.join(assets_dir, "parchment.svg")
                 if os.path.exists(parchment_path):
-                    with open(parchment_path, 'rb') as af:
-                        pdata = base64.b64encode(af.read()).decode('ascii')
-                        pdata_uri = f'data:image/svg+xml;base64,{pdata}'
-                        qss = qss.replace('{PARCHMENT}', pdata_uri)
+                    with open(parchment_path, "rb") as af:
+                        pdata = base64.b64encode(af.read()).decode("ascii")
+                        pdata_uri = f"data:image/svg+xml;base64,{pdata}"
+                        qss = qss.replace("{PARCHMENT}", pdata_uri)
                 # leather
-                leather_path = os.path.join(assets_dir, 'leather.svg')
+                leather_path = os.path.join(assets_dir, "leather.svg")
                 if os.path.exists(leather_path):
-                    with open(leather_path, 'rb') as af:
-                        ldata = base64.b64encode(af.read()).decode('ascii')
-                        ldata_uri = f'data:image/svg+xml;base64,{ldata}'
-                        qss = qss.replace('{LEATHER}', ldata_uri)
+                    with open(leather_path, "rb") as af:
+                        ldata = base64.b64encode(af.read()).decode("ascii")
+                        ldata_uri = f"data:image/svg+xml;base64,{ldata}"
+                        qss = qss.replace("{LEATHER}", ldata_uri)
 
                 # Apply stylesheet according to saved settings (light/dark)
                 self._apply_stylesheet_from_settings(qss)
@@ -430,6 +503,7 @@ class DashboardWindow(QMainWindow):
         # Add Image Generation tab
         try:
             from app.gui.image_generation import ImageGenerationTab
+
             self.image_gen_tab = ImageGenerationTab()
             self.tabs.addTab(self.image_gen_tab, "🎨 AI Image Generation")
         except Exception:
@@ -438,6 +512,7 @@ class DashboardWindow(QMainWindow):
         # Add Users management tab if widget is available
         try:
             from app.gui.user_management import UserManagementWidget
+
             self.user_mgmt = UserManagementWidget()
             self.tabs.addTab(self.user_mgmt, "Users")
         except Exception:
@@ -452,13 +527,11 @@ class DashboardWindow(QMainWindow):
         """
         try:
             settings = SettingsDialog.load_settings()
-            theme = settings.get('theme', 'light')
-            if theme == 'dark':
-                dark_path = os.path.join(
-                    os.path.dirname(__file__), 'styles_dark.qss'
-                )
+            theme = settings.get("theme", "light")
+            if theme == "dark":
+                dark_path = os.path.join(os.path.dirname(__file__), "styles_dark.qss")
                 if os.path.exists(dark_path):
-                    with open(dark_path, 'r', encoding='utf-8') as df:
+                    with open(dark_path, "r", encoding="utf-8") as df:
                         dark_qss = df.read()
                     self.setStyleSheet(dark_qss)
                     return
@@ -474,8 +547,10 @@ class DashboardWindow(QMainWindow):
     def _apply_settings(self, settings: dict):
         """Apply runtime settings such as UI scale and reload stylesheet."""
         try:
-            size = int(settings.get('ui_scale', 10))
-            QApplication.instance().setFont(QFont("Segoe UI", size))
+            size = int(settings.get("ui_scale", 10))
+            app = QApplication.instance()
+            if isinstance(app, QApplication):
+                app.setFont(QFont("Segoe UI", size))
         except Exception:
             # ignore font errors
             pass
@@ -483,12 +558,11 @@ class DashboardWindow(QMainWindow):
         # Reload the stylesheet so theme changes are applied
         qss_path = os.path.join(
             os.path.dirname(__file__),
-            'styles.qss',
+            "styles.qss",
         )
         try:
             if os.path.exists(qss_path):
-                with open(qss_path, 'r', encoding='utf-8') as f:
-
+                with open(qss_path, "r", encoding="utf-8") as f:
                     qss = f.read()
                 self._apply_stylesheet_from_settings(qss)
         except Exception:
@@ -498,7 +572,7 @@ class DashboardWindow(QMainWindow):
         """Open the settings dialog and persist/apply new settings."""
         current = SettingsDialog.load_settings()
         dlg = SettingsDialog(self, current=current)
-        if dlg.exec() == dlg.Accepted:
+        if dlg.exec() == QDialog.DialogCode.Accepted:
             new = dlg.get_values()
             ok = SettingsDialog.save_settings(new)
             if ok:
@@ -619,9 +693,7 @@ class DashboardWindow(QMainWindow):
 
         # Category selection
         self.security_category = QComboBox()
-        self.security_category.addItems(
-            self.security_manager.get_all_categories()
-        )
+        self.security_category.addItems(self.security_manager.get_all_categories())
         self.security_category.currentTextChanged.connect(
             self.update_security_resources
         )
@@ -629,9 +701,7 @@ class DashboardWindow(QMainWindow):
 
         # Resources list
         self.resources_list = QListWidget()
-        self.resources_list.itemDoubleClicked.connect(
-            self.open_security_resource
-        )
+        self.resources_list.itemDoubleClicked.connect(self.open_security_resource)
         layout.addWidget(self.resources_list)
 
         # Favorite button
@@ -698,9 +768,7 @@ class DashboardWindow(QMainWindow):
         self.alert_button = QPushButton("SEND EMERGENCY ALERT")
         self.alert_button.setObjectName("alert_button")
         self.alert_button.setStyleSheet(
-            "background-color: red;"
-            " color: white;"
-            " font-weight: bold;"
+            "background-color: red;" " color: white;" " font-weight: bold;"
         )
         self.alert_button.clicked.connect(self.send_emergency_alert)
         layout.addWidget(self.alert_button)
@@ -719,10 +787,32 @@ class DashboardWindow(QMainWindow):
         message = self.chat_input.text()
         if message:
             self.chat_display.append(f"You: {message}")
+
+            # Update AI persona conversation state (user message)
+            if hasattr(self, "ai_persona"):
+                self.ai_persona.update_conversation_state(
+                    is_user_message=True, message_length=len(message)
+                )
+
             # Process message and get response
             response = self.process_message(message)
             self.chat_display.append(f"AI: {response}")
             self.chat_input.clear()
+
+            # Update AI persona conversation state (AI response)
+            if hasattr(self, "ai_persona"):
+                self.ai_persona.update_conversation_state(
+                    is_user_message=False, message_length=len(response)
+                )
+
+            # Store conversation in memory
+            if hasattr(self, "memory_expansion"):
+                self.memory_expansion.store_conversation(
+                    user_message=message,
+                    ai_response=response,
+                    context={"intent": self.intent_detector.predict(message)},
+                    tags=["chat", "conversation"],
+                )
 
     def process_message(self, message):
         """Process user message and generate response"""
@@ -739,3 +829,82 @@ class DashboardWindow(QMainWindow):
         """Update user persona"""
         # Implement persona update logic
         pass
+
+    def _get_timestamp(self) -> str:
+        """Get current timestamp as ISO string."""
+        from datetime import datetime
+
+        return datetime.now().isoformat()
+
+    def open_command_override_dialog(self):
+        """Open the command override control dialog."""
+        try:
+            dialog = CommandOverrideDialog(self, self.command_override)
+            dialog.exec()
+        except Exception as e:
+            from PyQt6.QtWidgets import QMessageBox
+
+            QMessageBox.warning(
+                self, "Error", f"Failed to open command override dialog: {e}"
+            )
+
+    def open_memory_expansion_dialog(self):
+        """Open the memory expansion control dialog."""
+        try:
+            dialog = MemoryExpansionDialog(self, self.memory_expansion)
+            dialog.exec()
+        except Exception as e:
+            from PyQt6.QtWidgets import QMessageBox
+
+            QMessageBox.warning(
+                self, "Error", f"Failed to open memory expansion dialog: {e}"
+            )
+
+    def open_learning_request_dialog(self):
+        """Open the learning request log dialog."""
+        try:
+            dialog = LearningRequestDialog(self, self.learning_request_log)
+            dialog.exec()
+        except Exception as e:
+            from PyQt6.QtWidgets import QMessageBox
+
+            QMessageBox.warning(
+                self, "Error", f"Failed to open learning request dialog: {e}"
+            )
+
+    def open_ai_persona_dialog(self):
+        """Open the AI persona configuration dialog."""
+        try:
+            dialog = AIPersonaDialog(self, self.ai_persona)
+            dialog.exec()
+        except Exception as e:
+            from PyQt6.QtWidgets import QMessageBox
+
+            QMessageBox.warning(self, "Error", f"Failed to open AI persona dialog: {e}")
+
+    def _check_proactive_conversation(self):
+        """Check if AI should initiate proactive conversation."""
+        try:
+            should_initiate, reason = self.ai_persona.should_initiate_conversation()
+
+            if should_initiate:
+                # Generate proactive message
+                message = self.ai_persona.generate_proactive_message()
+
+                # Display in chat (add to conversation)
+                if hasattr(self, "chat_display"):
+                    self.chat_display.append(f"\n🤖 AI (Proactive): {message}\n")
+
+                # Update conversation state
+                self.ai_persona.update_conversation_state(is_user_message=False)
+
+                # Log to memory
+                if self.memory_expansion:
+                    self.memory_expansion.store_conversation(
+                        user_message="",
+                        ai_response=message,
+                        context={"type": "proactive_initiation"},
+                        tags=["proactive", "ai_initiated"],
+                    )
+        except Exception as e:
+            print(f"Error checking proactive conversation: {e}")

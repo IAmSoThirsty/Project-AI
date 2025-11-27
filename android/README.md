@@ -2,6 +2,13 @@
 
 This directory is reserved for the future development of an Android-based APK app that will fully integrate with the Project-AI computer program and web components.
 
+## ✨ Latest Features Available for Integration
+
+The desktop version now includes these powerful new features:
+- **Cloud Sync**: Encrypted cross-device synchronization with device management and conflict resolution
+- **Advanced ML Models**: RandomForest, GradientBoosting, and Neural Networks for intent/sentiment/behavior prediction
+- **Plugin System**: Dynamic plugin loading with hooks and lifecycle management
+
 ## Integration Plan
 - The Android app will communicate with the main program and web backend via API endpoints and shared data models.
 - All integration points will be documented and stubbed for easy merging into the main branch when development begins.
@@ -76,3 +83,30 @@ Refer to the respective Python files in `src/app/core/`, `src/app/gui/`, and `sr
 
 ---
 *This branch is a stub for integration only. No actual integration is performed yet.*
+
+## Formatting & Contribution
+
+If you're contributing to the project, please format code before opening a PR.
+
+PowerShell (Python):
+```powershell
+$env:PYTHONPATH='src'
+python -m pip install ruff black isort
+isort src tests --profile black
+ruff check src tests --fix
+black src tests
+```
+
+Frontend (if editing web files):
+```powershell
+cd web/frontend
+npm install
+npm run format
+```
+
+
+---
+
+**Repository note:** Last updated: 2025-11-26 (automated)
+
+<!-- last-updated-marker -->

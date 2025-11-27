@@ -10,7 +10,7 @@ function DataAnalysis() {
         <p>Data analysis features will be implemented here.</p>
       </main>
     </div>
-  )
+  );
 }
 
-export default DataAnalysis
+export default DataAnalysis;

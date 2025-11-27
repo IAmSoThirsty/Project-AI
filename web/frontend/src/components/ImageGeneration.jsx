@@ -1,13 +1,13 @@
-import { useState } from 'react'
+import { useState } from 'react';
 
 function ImageGeneration() {
-  const [prompt, setPrompt] = useState('')
-  const [generatedImage, setGeneratedImage] = useState(null)
+  const [prompt, setPrompt] = useState('');
+  const [generatedImage, _setGeneratedImage] = useState(null);
 
   const handleGenerate = async () => {
     // TODO: Implement image generation API call
-    console.log('Generating image with prompt:', prompt)
-  }
+    console.log('Generating image with prompt:', prompt);
+  };
 
   return (
     <div className="dashboard">
@@ -34,7 +34,7 @@ function ImageGeneration() {
         )}
       </main>
     </div>
-  )
+  );
 }
 
-export default ImageGeneration
+export default ImageGeneration;

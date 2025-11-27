@@ -1,0 +1,47 @@
+﻿[1m============================= test session starts =============================[0m
+platform win32 -- Python 3.14.0, pytest-9.0.1, pluggy-1.6.0 -- C:\Users\Jeremy\AppData\Local\Programs\Python\Python314\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Jeremy\Documents\GitHub\Project-AI
+plugins: anyio-4.11.0, cov-7.0.0
+[1mcollecting ... [0mcollected 6 items
+
+tests/test_full_program.py::test_imports [32mPASSED[0m[32m                          [ 16%][0m
+tests/test_full_program.py::test_image_generator [32mPASSED[0m[33m                  [ 33%][0m
+tests/test_full_program.py::test_user_manager [32mPASSED[0m[33m                     [ 50%][0m
+tests/test_full_program.py::test_settings [32mPASSED[0m[33m                         [ 66%][0m
+tests/test_full_program.py::test_file_structure [32mPASSED[0m[33m                   [ 83%][0m
+tests/test_user_manager.py::test_migration_and_authentication [32mPASSED[0m[33m     [100%][0m
+
+[33m============================== warnings summary ===============================[0m
+tests/test_full_program.py::test_imports
+  C:\Users\Jeremy\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_full_program.py::test_imports returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_full_program.py::test_image_generator
+  C:\Users\Jeremy\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_full_program.py::test_image_generator returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_full_program.py::test_user_manager
+  C:\Users\Jeremy\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_full_program.py::test_user_manager returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_full_program.py::test_settings
+  C:\Users\Jeremy\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_full_program.py::test_settings returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_full_program.py::test_file_structure
+  C:\Users\Jeremy\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_full_program.py::test_file_structure returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+[33m======================== [32m6 passed[0m, [33m[1m5 warnings[0m[33m in 7.78s[0m[33m ========================[0m

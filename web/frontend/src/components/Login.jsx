@@ -1,34 +1,34 @@
-import axios from 'axios'
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import './Login.css'
+import axios from 'axios';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './Login.css';
 
 function Login({ onLogin }) {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const navigate = useNavigate()
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setError('')
+    e.preventDefault();
+    setError('');
 
     try {
       const response = await axios.post('/api/auth/login', {
         username,
-        password
-      })
+        password,
+      });
 
       if (response.data.success) {
-        localStorage.setItem('token', response.data.token)
-        onLogin()
-        navigate('/dashboard')
+        localStorage.setItem('token', response.data.token);
+        onLogin();
+        navigate('/dashboard');
       }
     } catch (err) {
-      setError('Login failed. Please check your credentials.')
-      console.error('Login error:', err)
+      setError('Login failed. Please check your credentials.');
+      console.error('Login error:', err);
     }
-  }
+  };
 
   return (
     <div className="login-container">
@@ -61,7 +61,7 @@ function Login({ onLogin }) {
         </form>
       </div>
     </div>
-  )
+  );
 }
 
-export default Login
+export default Login;

@@ -10,7 +10,7 @@ function LearningPaths() {
         <p>Learning path features will be implemented here.</p>
       </main>
     </div>
-  )
+  );
 }
 
-export default LearningPaths
+export default LearningPaths;

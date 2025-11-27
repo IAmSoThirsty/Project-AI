@@ -19,14 +19,14 @@ services:
       - DATABASE_URL=postgresql://user:pass@db:5432/projectai
     depends_on:
       - db
-    
+
   frontend:
     build: ./frontend
     ports:
       - "80:80"
     depends_on:
       - backend
-  
+
   db:
     image: postgres:15
     environment:
@@ -94,3 +94,10 @@ GEMINI_API_KEY=<your-key>
 - [ ] Use environment variables for sensitive data
 - [ ] Set up database backups
 - [ ] Configure logging and monitoring
+
+
+---
+
+**Repository note:** Last updated: 2025-11-26 (automated)
+
+<!-- last-updated-marker -->

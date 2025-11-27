@@ -57,7 +57,7 @@
   text-align: center;
 }
 
-button[type="submit"] {
+button[type='submit'] {
   width: 100%;
   padding: 0.75rem;
   background: #667eea;
@@ -69,6 +69,6 @@ button[type="submit"] {
   transition: background 0.3s;
 }
 
-button[type="submit"]:hover {
+button[type='submit']:hover {
   background: #5568d3;
 }

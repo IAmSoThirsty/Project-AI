@@ -20,3 +20,7 @@ data/
 
 # Optional README newer copy
 README_UPDATED.md
+
+
+#Ignore vscode AI rules
+.github\instructions\codacy.instructions.md

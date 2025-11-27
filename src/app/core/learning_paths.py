@@ -1,14 +1,16 @@
 """
 Learning path generator and manager.
 """
-import openai
+
 import json
 import os
+
+import openai
 
 
 class LearningPathManager:
     def __init__(self, api_key=None):
-        self.api_key = api_key or os.getenv('OPENAI_API_KEY')
+        self.api_key = api_key or os.getenv("OPENAI_API_KEY")
         if self.api_key:
             openai.api_key = self.api_key
 
@@ -34,8 +36,7 @@ class LearningPathManager:
                     {
                         "role": "system",
                         "content": (
-                            "You are an educational expert creating "
-                            "learning paths."
+                            "You are an educational expert creating " "learning paths."
                         ),
                     },
                     {"role": "user", "content": prompt},
@@ -51,22 +52,22 @@ class LearningPathManager:
         filename = f"learning_paths_{username}.json"
         paths = {}
         if os.path.exists(filename):
-            with open(filename, 'r') as f:
+            with open(filename, "r") as f:
                 paths = json.load(f)
 
         paths[interest] = {
-            'content': path_content,
-            'progress': 0,
-            'completed_milestones': []
+            "content": path_content,
+            "progress": 0,
+            "completed_milestones": [],
         }
 
-        with open(filename, 'w') as f:
+        with open(filename, "w") as f:
             json.dump(paths, f)
 
     def get_saved_paths(self, username):
         """Get all saved learning paths for a user"""
         filename = f"learning_paths_{username}.json"
         if os.path.exists(filename):
-            with open(filename, 'r') as f:
+            with open(filename, "r") as f:
                 return json.load(f)
         return {}

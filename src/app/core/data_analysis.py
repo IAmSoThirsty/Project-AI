@@ -7,6 +7,7 @@ from matplotlib.figure import Figure
 try:
     # Matplotlib 3.7+ provides backend_qtagg for Qt6/Qt5
     from matplotlib.backends import backend_qtagg as _back_qt
+
     FigureCanvasQTAgg = _back_qt.FigureCanvasQTAgg
 except Exception:
     try:
@@ -14,9 +15,9 @@ except Exception:
     except Exception:
         FigureCanvasQTAgg = None
 
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
 
 
 class DataAnalyzer:
@@ -123,9 +124,7 @@ class DataAnalyzer:
 
             fig = Figure(figsize=(8, 6))
             ax = fig.add_subplot(111)
-            scatter = ax.scatter(
-                X_pca[:, 0], X_pca[:, 1], c=clusters, cmap="viridis"
-            )
+            scatter = ax.scatter(X_pca[:, 0], X_pca[:, 1], c=clusters, cmap="viridis")
             ax.set_xlabel("First Principal Component")
             ax.set_ylabel("Second Principal Component")
             ax.set_title("K-means Clustering Results")

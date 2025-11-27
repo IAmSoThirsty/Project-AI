@@ -20,8 +20,8 @@ def setup_environment():
     load_dotenv()
 
     # Ensure required directories exist
-    os.makedirs('data', exist_ok=True)
-    os.makedirs('logs', exist_ok=True)
+    os.makedirs("data", exist_ok=True)
+    os.makedirs("logs", exist_ok=True)
 
     # Set up logging if needed
     # Configure any external APIs (OpenAI, etc.)
@@ -47,7 +47,7 @@ def main():
     if login.exec() == QDialog.DialogCode.Accepted:
         username = login.username
         if username:  # Only proceed if username exists
-            initial_tab = getattr(login, 'selected_tab', 0)
+            initial_tab = getattr(login, "selected_tab", 0)
             window = DashboardWindow(username=username, initial_tab=initial_tab)
             window.show()
             sys.exit(app.exec())

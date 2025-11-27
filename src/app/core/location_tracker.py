@@ -1,14 +1,16 @@
 """
 Location tracking and management system.
 """
+
 import json
-import requests
-from datetime import datetime
-from cryptography.fernet import Fernet
 import os
+from datetime import datetime
+
+import requests
+from cryptography.fernet import Fernet
 from dotenv import load_dotenv
-from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut
+from geopy.geocoders import Nominatim
 
 
 class LocationTracker:
@@ -16,7 +18,7 @@ class LocationTracker:
         # Prefer explicit argument, then FERNET_KEY env var, then
         # generate a new key. Load .env so environment keys are available.
         load_dotenv()
-        key = encryption_key or os.getenv('FERNET_KEY')
+        key = encryption_key or os.getenv("FERNET_KEY")
         if key:
             if isinstance(key, str):
                 key = key.encode()
@@ -49,18 +51,18 @@ class LocationTracker:
     def get_location_from_ip(self):
         """Get location from IP address"""
         try:
-            response = requests.get('https://ipapi.co/json/')
+            response = requests.get("https://ipapi.co/json/")
             if response.status_code == 200:
                 data = response.json()
                 return {
-                    'latitude': data.get('latitude'),
-                    'longitude': data.get('longitude'),
-                    'city': data.get('city'),
-                    'region': data.get('region'),
-                    'country': data.get('country_name'),
-                    'ip': data.get('ip'),
-                    'timestamp': datetime.now().isoformat(),
-                    'source': 'ip'
+                    "latitude": data.get("latitude"),
+                    "longitude": data.get("longitude"),
+                    "city": data.get("city"),
+                    "region": data.get("region"),
+                    "country": data.get("country_name"),
+                    "ip": data.get("ip"),
+                    "timestamp": datetime.now().isoformat(),
+                    "source": "ip",
                 }
             return None
         except Exception as e:
@@ -73,11 +75,11 @@ class LocationTracker:
             location = self.geolocator.reverse(f"{latitude}, {longitude}")
             if location:
                 return {
-                    'latitude': latitude,
-                    'longitude': longitude,
-                    'address': location.address,
-                    'timestamp': datetime.now().isoformat(),
-                    'source': 'gps'
+                    "latitude": latitude,
+                    "longitude": longitude,
+                    "address": location.address,
+                    "timestamp": datetime.now().isoformat(),
+                    "source": "gps",
                 }
             return None
         except GeocoderTimedOut:
@@ -93,7 +95,7 @@ class LocationTracker:
         history = []
 
         if os.path.exists(filename):
-            with open(filename, 'r') as f:
+            with open(filename, "r") as f:
                 history = json.load(f)
 
         encrypted_location = self.encrypt_location(location_data)
@@ -101,7 +103,7 @@ class LocationTracker:
             # Convert bytes to string for JSON
             history.append(encrypted_location.decode())
 
-        with open(filename, 'w') as f:
+        with open(filename, "w") as f:
             json.dump(history, f)
 
     def get_location_history(self, username):
@@ -110,15 +112,13 @@ class LocationTracker:
         if not os.path.exists(filename):
             return []
 
-        with open(filename, 'r') as f:
+        with open(filename, "r") as f:
             history = json.load(f)
 
         decrypted_history = []
         for encrypted_location in history:
             # Convert string back to bytes
-            location_data = self.decrypt_location(
-                encrypted_location.encode()
-            )
+            location_data = self.decrypt_location(encrypted_location.encode())
             if location_data:
                 decrypted_history.append(location_data)
 

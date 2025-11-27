@@ -10,7 +10,7 @@ function UserManagement() {
         <p>User management features will be implemented here.</p>
       </main>
     </div>
-  )
+  );
 }
 
-export default UserManagement
+export default UserManagement;

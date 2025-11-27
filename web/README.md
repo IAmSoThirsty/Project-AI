@@ -2,6 +2,15 @@
 
 This branch contains a web-based version of Project-AI, converting the PyQt desktop application into a modern web application with React frontend and Flask backend.
 
+## ✨ New Features (Latest Update)
+
+The desktop version now includes:
+- **Cloud Sync**: Encrypted cross-device synchronization with device management
+- **Advanced ML Models**: RandomForest, GradientBoosting, and Neural Networks
+- **Plugin System**: Dynamic plugin loading with hooks and lifecycle management
+
+These features are being integrated into the web version.
+
 ## 🌐 Architecture
 
 ### Backend (Flask API)
@@ -163,6 +172,17 @@ The Flask app can be deployed using Gunicorn:
 gunicorn -w 4 -b 0.0.0.0:5000 app:app
 ```
 
+## Formatting & Linters (Frontend)
+
+The frontend uses Prettier for code formatting. After pulling changes, run:
+
+```bash
+cd web/frontend
+npm install
+npm run format
+# To enable ESLint linting, run `npm init @eslint/config` to create a config file.
+```
+
 ## 🌟 Next Steps for Integration
 
 1. **Connect Backend to Core Logic**: Wire up the Flask API endpoints to the actual `src/app/core/` modules
@@ -191,3 +211,10 @@ When ready to integrate:
 ## 📄 License
 
 Same as Project-AI main project
+
+
+---
+
+**Repository note:** Last updated: 2025-11-26 (automated)
+
+<!-- last-updated-marker -->
