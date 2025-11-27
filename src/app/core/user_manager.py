@@ -10,6 +10,7 @@ them to hashed `password_hash` entries on load.
 
 import json
 import os
+
 from cryptography.fernet import Fernet
 from dotenv import load_dotenv
 from passlib.context import CryptContext
@@ -39,7 +40,7 @@ class UserManager:
         self.users = {}
         self.current_user = None
 
-        env_key = os.getenv('FERNET_KEY')
+        env_key = os.getenv("FERNET_KEY")
         if env_key:
             try:
                 key = env_key.encode()
@@ -52,7 +53,7 @@ class UserManager:
 
         # Load users (if file exists); do NOT create default plaintext users
         if os.path.exists(self.users_file):
-            with open(self.users_file, 'r') as f:
+            with open(self.users_file, "r") as f:
                 try:
                     self.users = json.load(f)
                 except Exception:
@@ -61,26 +62,27 @@ class UserManager:
             # If any user entries have plaintext 'password', migrate them
             migrated = False
             for uname, udata in list(self.users.items()):
-                if (isinstance(udata, dict) and 'password' in udata and
-                        'password_hash' not in udata):
+                if (
+                    isinstance(udata, dict)
+                    and "password" in udata
+                    and "password_hash" not in udata
+                ):
                     try:
-                        pw = udata.get('password')
+                        pw = udata.get("password")
                         # try to hash first; only remove plaintext if
                         # hashing succeeds
                         pw_hash = pwd_context.hash(pw)
-                        self.users[uname]['password_hash'] = pw_hash
+                        self.users[uname]["password_hash"] = pw_hash
                         # remove plaintext password
-                        self.users[uname].pop('password', None)
+                        self.users[uname].pop("password", None)
                         migrated = True
                     except Exception:
                         # bcrypt hashing failed (backend issues); try a
                         # safe fallback
                         try:
                             fallback_hash = pbkdf2_sha256.hash(pw)
-                            self.users[uname]['password_hash'] = (
-                                fallback_hash
-                            )
-                            self.users[uname].pop('password', None)
+                            self.users[uname]["password_hash"] = fallback_hash
+                            self.users[uname].pop("password", None)
                             migrated = True
                         except Exception:
                             # skip migration for this user if hashing
@@ -91,7 +93,7 @@ class UserManager:
 
     def save_users(self):
         """Save users to file"""
-        with open(self.users_file, 'w') as f:
+        with open(self.users_file, "w") as f:
             json.dump(self.users, f)
 
     def authenticate(self, username, password):
@@ -99,7 +101,7 @@ class UserManager:
         user = self.users.get(username)
         if not user:
             return False
-        password_hash = user.get('password_hash')
+        password_hash = user.get("password_hash")
         if not password_hash:
             return False
         try:
@@ -145,7 +147,7 @@ class UserManager:
         u = self.users.get(username)
         if not u:
             return {}
-        sanitized = {k: v for k, v in u.items() if k != 'password_hash'}
+        sanitized = {k: v for k, v in u.items() if k != "password_hash"}
         return sanitized
 
     # --- Additional management helpers ---
@@ -165,9 +167,9 @@ class UserManager:
         """Set a new password for an existing user (hashes it)."""
         if username not in self.users:
             return False
-        self.users[username]['password_hash'] = pwd_context.hash(new_password)
+        self.users[username]["password_hash"] = pwd_context.hash(new_password)
         # Remove any plaintext password if present
-        self.users[username].pop('password', None)
+        self.users[username].pop("password", None)
         self.save_users()
         return True
 
@@ -185,7 +187,7 @@ class UserManager:
         if username not in self.users:
             return False
         for k, v in kwargs.items():
-            if k == 'password':
+            if k == "password":
                 # redirect to set_password to ensure hashing
                 self.set_password(username, v)
                 continue

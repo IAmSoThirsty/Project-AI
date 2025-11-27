@@ -3,14 +3,15 @@
 Main entry point for the AI Desktop Application.
 """
 
-import sys
 import os
+import sys
+
 from dotenv import load_dotenv
-from PyQt6.QtWidgets import QApplication, QDialog
 from PyQt6.QtGui import QFont
-from PyQt6.QtCore import Qt
-from app.gui.login import LoginDialog
+from PyQt6.QtWidgets import QApplication, QDialog
+
 from app.gui.dashboard import DashboardWindow
+from app.gui.login import LoginDialog
 
 
 def setup_environment():
@@ -19,8 +20,8 @@ def setup_environment():
     load_dotenv()
 
     # Ensure required directories exist
-    os.makedirs('data', exist_ok=True)
-    os.makedirs('logs', exist_ok=True)
+    os.makedirs("data", exist_ok=True)
+    os.makedirs("logs", exist_ok=True)
 
     # Set up logging if needed
     # Configure any external APIs (OpenAI, etc.)
@@ -45,7 +46,7 @@ def main():
     login = LoginDialog()
     if login.exec() == QDialog.DialogCode.Accepted:
         username = login.username
-        initial_tab = getattr(login, 'selected_tab', 0)
+        initial_tab = getattr(login, "selected_tab", 0)
         window = DashboardWindow(username=username, initial_tab=initial_tab)
         window.show()
         sys.exit(app.exec())

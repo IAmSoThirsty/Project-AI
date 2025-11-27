@@ -2,34 +2,36 @@
 Main dashboard window implementation.
 """
 
-from PyQt6.QtWidgets import (
-    QMainWindow,
-    QTabWidget,
-    QWidget,
-    QVBoxLayout,
-    QToolBar,
-    QStyle,
-    QPushButton,
-    QTextEdit,
-    QLineEdit,
-    QLabel,
-    QComboBox,
-    QListWidget,
-    QGraphicsOpacityEffect,
-)
-from PyQt6.QtCore import QTimer, QPropertyAnimation
-import os
 import base64
-from app.core.user_manager import UserManager
+import os
+
+from PyQt6.QtCore import QPropertyAnimation, QTimer
+from PyQt6.QtGui import QAction, QFont
+from PyQt6.QtWidgets import (
+    QApplication,
+    QComboBox,
+    QGraphicsOpacityEffect,
+    QLabel,
+    QLineEdit,
+    QListWidget,
+    QMainWindow,
+    QPushButton,
+    QStyle,
+    QTabWidget,
+    QTextEdit,
+    QToolBar,
+    QVBoxLayout,
+    QWidget,
+)
+
+from app.core.data_analysis import DataAnalyzer
+from app.core.emergency_alert import EmergencyAlert
 from app.core.intent_detection import IntentDetector
 from app.core.learning_paths import LearningPathManager
-from app.core.data_analysis import DataAnalyzer
-from app.core.security_resources import SecurityResourceManager
 from app.core.location_tracker import LocationTracker
-from app.core.emergency_alert import EmergencyAlert
+from app.core.security_resources import SecurityResourceManager
+from app.core.user_manager import UserManager
 from app.gui.settings_dialog import SettingsDialog
-from PyQt6.QtGui import QFont, QAction
-from PyQt6.QtWidgets import QApplication
 
 
 class DashboardWindow(QMainWindow):
@@ -104,7 +106,7 @@ class DashboardWindow(QMainWindow):
             # Prefer bundled SVG assets for crisp icons; fall back to style icons
             assets_dir = os.path.join(
                 os.path.dirname(__file__),
-                'assets',
+                "assets",
             )
 
             def _icon(name, fallback_pixmap):
@@ -118,21 +120,27 @@ class DashboardWindow(QMainWindow):
                     pass
                 return style.standardIcon(fallback_pixmap)
 
-            act_home = QAction(_icon('home.svg',
-                                     QStyle.StandardPixmap.SP_DesktopIcon),
-                               "Home", self)
+            act_home = QAction(
+                _icon("home.svg", QStyle.StandardPixmap.SP_DesktopIcon), "Home", self
+            )
 
-            act_refresh = QAction(_icon('refresh.svg',
-                                        QStyle.StandardPixmap.SP_BrowserReload),
-                                  "Refresh", self)
+            act_refresh = QAction(
+                _icon("refresh.svg", QStyle.StandardPixmap.SP_BrowserReload),
+                "Refresh",
+                self,
+            )
 
-            act_help = QAction(_icon('help.svg',
-                                     QStyle.StandardPixmap.SP_DialogHelpButton),
-                               "Help", self)
+            act_help = QAction(
+                _icon("help.svg", QStyle.StandardPixmap.SP_DialogHelpButton),
+                "Help",
+                self,
+            )
 
-            act_settings = QAction(_icon('help.svg',
-                                         QStyle.StandardPixmap.SP_FileDialogDetailedView),
-                                   "Settings", self)
+            act_settings = QAction(
+                _icon("help.svg", QStyle.StandardPixmap.SP_FileDialogDetailedView),
+                "Settings",
+                self,
+            )
 
             toolbar.addAction(act_home)
             toolbar.addAction(act_refresh)
@@ -160,31 +168,27 @@ class DashboardWindow(QMainWindow):
         # Try to load external QSS stylesheet for the "book" appearance
         # if present
         try:
-            qss_path = os.path.join(
-                os.path.dirname(__file__), 'styles.qss'
-            )
+            qss_path = os.path.join(os.path.dirname(__file__), "styles.qss")
             if os.path.exists(qss_path):
-                with open(qss_path, 'r', encoding='utf-8') as f:
+                with open(qss_path, "r", encoding="utf-8") as f:
                     qss = f.read()
 
                 # embed assets as data URIs if present
-                assets_dir = os.path.join(
-                    os.path.dirname(__file__), 'assets'
-                )
+                assets_dir = os.path.join(os.path.dirname(__file__), "assets")
                 # parchment
-                parchment_path = os.path.join(assets_dir, 'parchment.svg')
+                parchment_path = os.path.join(assets_dir, "parchment.svg")
                 if os.path.exists(parchment_path):
-                    with open(parchment_path, 'rb') as af:
-                        pdata = base64.b64encode(af.read()).decode('ascii')
-                        pdata_uri = f'data:image/svg+xml;base64,{pdata}'
-                        qss = qss.replace('{PARCHMENT}', pdata_uri)
+                    with open(parchment_path, "rb") as af:
+                        pdata = base64.b64encode(af.read()).decode("ascii")
+                        pdata_uri = f"data:image/svg+xml;base64,{pdata}"
+                        qss = qss.replace("{PARCHMENT}", pdata_uri)
                 # leather
-                leather_path = os.path.join(assets_dir, 'leather.svg')
+                leather_path = os.path.join(assets_dir, "leather.svg")
                 if os.path.exists(leather_path):
-                    with open(leather_path, 'rb') as af:
-                        ldata = base64.b64encode(af.read()).decode('ascii')
-                        ldata_uri = f'data:image/svg+xml;base64,{ldata}'
-                        qss = qss.replace('{LEATHER}', ldata_uri)
+                    with open(leather_path, "rb") as af:
+                        ldata = base64.b64encode(af.read()).decode("ascii")
+                        ldata_uri = f"data:image/svg+xml;base64,{ldata}"
+                        qss = qss.replace("{LEATHER}", ldata_uri)
 
                 # Apply stylesheet according to saved settings (light/dark)
                 self._apply_stylesheet_from_settings(qss)
@@ -235,6 +239,7 @@ class DashboardWindow(QMainWindow):
         # Add Users management tab if widget is available
         try:
             from app.gui.user_management import UserManagementWidget
+
             self.user_mgmt = UserManagementWidget()
             self.tabs.addTab(self.user_mgmt, "Users")
         except Exception:
@@ -249,13 +254,11 @@ class DashboardWindow(QMainWindow):
         """
         try:
             settings = SettingsDialog.load_settings()
-            theme = settings.get('theme', 'light')
-            if theme == 'dark':
-                dark_path = os.path.join(
-                    os.path.dirname(__file__), 'styles_dark.qss'
-                )
+            theme = settings.get("theme", "light")
+            if theme == "dark":
+                dark_path = os.path.join(os.path.dirname(__file__), "styles_dark.qss")
                 if os.path.exists(dark_path):
-                    with open(dark_path, 'r', encoding='utf-8') as df:
+                    with open(dark_path, "r", encoding="utf-8") as df:
                         dark_qss = df.read()
                     self.setStyleSheet(dark_qss)
                     return
@@ -271,7 +274,7 @@ class DashboardWindow(QMainWindow):
     def _apply_settings(self, settings: dict):
         """Apply runtime settings such as UI scale and reload stylesheet."""
         try:
-            size = int(settings.get('ui_scale', 10))
+            size = int(settings.get("ui_scale", 10))
             QApplication.instance().setFont(QFont("Segoe UI", size))
         except Exception:
             # ignore font errors
@@ -280,11 +283,11 @@ class DashboardWindow(QMainWindow):
         # Reload the stylesheet so theme changes are applied
         qss_path = os.path.join(
             os.path.dirname(__file__),
-            'styles.qss',
+            "styles.qss",
         )
         try:
             if os.path.exists(qss_path):
-                with open(qss_path, 'r', encoding='utf-8') as f:
+                with open(qss_path, "r", encoding="utf-8") as f:
 
                     qss = f.read()
                 self._apply_stylesheet_from_settings(qss)
@@ -416,9 +419,7 @@ class DashboardWindow(QMainWindow):
 
         # Category selection
         self.security_category = QComboBox()
-        self.security_category.addItems(
-            self.security_manager.get_all_categories()
-        )
+        self.security_category.addItems(self.security_manager.get_all_categories())
         self.security_category.currentTextChanged.connect(
             self.update_security_resources
         )
@@ -426,9 +427,7 @@ class DashboardWindow(QMainWindow):
 
         # Resources list
         self.resources_list = QListWidget()
-        self.resources_list.itemDoubleClicked.connect(
-            self.open_security_resource
-        )
+        self.resources_list.itemDoubleClicked.connect(self.open_security_resource)
         layout.addWidget(self.resources_list)
 
         # Favorite button
@@ -495,9 +494,7 @@ class DashboardWindow(QMainWindow):
         self.alert_button = QPushButton("SEND EMERGENCY ALERT")
         self.alert_button.setObjectName("alert_button")
         self.alert_button.setStyleSheet(
-            "background-color: red;"
-            " color: white;"
-            " font-weight: bold;"
+            "background-color: red;" " color: white;" " font-weight: bold;"
         )
         self.alert_button.clicked.connect(self.send_emergency_alert)
         layout.addWidget(self.alert_button)

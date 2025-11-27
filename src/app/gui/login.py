@@ -10,13 +10,14 @@ Flow:
 
 from PyQt6.QtWidgets import (
     QDialog,
-    QVBoxLayout,
     QLabel,
     QLineEdit,
-    QPushButton,
     QListWidget,
     QMessageBox,
+    QPushButton,
+    QVBoxLayout,
 )
+
 from app.core.user_manager import UserManager
 
 
@@ -72,9 +73,7 @@ class LoginDialog(QDialog):
             "No users found. You must create an admin account to continue."
             " Please choose a secure username and password."
         )
-        QMessageBox.information(
-            self, "Onboarding", msg
-        )
+        QMessageBox.information(self, "Onboarding", msg)
 
         # Replace login UI with admin creation widgets
         for w in (self.user_input, self.pass_input, self.login_button):
@@ -103,14 +102,10 @@ class LoginDialog(QDialog):
                 "Provide username and password for admin",
             )
             return
-        ok = self.user_manager.create_user(
-            username, password, persona="admin"
-        )
+        ok = self.user_manager.create_user(username, password, persona="admin")
         if ok:
             info_msg = "Admin account created — please log in."
-            QMessageBox.information(
-                self, "Onboarding", info_msg
-            )
+            QMessageBox.information(self, "Onboarding", info_msg)
             # Remove admin creation widgets and show login
             for w in (self.admin_user, self.admin_pass, self.create_admin_btn):
                 w.hide()
@@ -134,9 +129,7 @@ class LoginDialog(QDialog):
             # Show TOC
             self._show_toc()
         else:
-            QMessageBox.warning(
-                self, "Login Failed", "Invalid credentials"
-            )
+            QMessageBox.warning(self, "Login Failed", "Invalid credentials")
 
     def _show_toc(self):
         # Clear login widgets and show TOC
