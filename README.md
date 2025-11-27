@@ -268,6 +268,22 @@ python tools/migrate_users.py --users-file src/app/users.json --apply
 - Core modules live under `src/app/core/` and GUI components under `src/app/gui/`.
 - Tests: `tests/` (run with `python -m pytest` using PYTHONPATH=src).
 
+## CI artifacts
+
+Our GitHub Actions CI uploads test and coverage artifacts for each run so you can
+download and inspect them when a job completes. The important artifacts are:
+
+- `junit-report` — contains `reports/junit.xml` (JUnit-format test report). Useful for
+  test failure parsing and integrations.
+- `coverage-report` — contains `reports/coverage.xml` (coverage.py XML). Useful for
+  uploading to coverage services or offline inspection.
+
+When running locally, generate the JUnit report with pytest:
+
+```powershell
+pytest --junitxml=reports/junit.xml --cov=src --cov-report=xml:reports/coverage.xml -q
+```
+
 ## Advanced Features Documentation
 
 For detailed documentation on advanced features:
