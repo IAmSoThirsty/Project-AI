@@ -76,6 +76,8 @@ jobs:
   python-ci:
     name: Python checks (flake8, pytest)
     runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: src
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
