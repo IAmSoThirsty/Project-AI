@@ -56,9 +56,10 @@ class HoverLiftEventFilter(QObject):
         self._leave_off = QPropertyAnimation(self.effect, b"offset")
         self._leave_off.setDuration(180)
 
-    def eventFilter(self, obj, event):
+    def eventFilter(self, a0, a1):
+        """Override eventFilter to add hover lift animations."""
         try:
-            if event.type() == QEvent.Type.Enter:
+            if a1 is not None and a1.type() == QEvent.Type.Enter:  # type: ignore
                 start = self.effect.blurRadius()
                 self._enter_blur.stop()
                 self._enter_blur.setStartValue(start)
@@ -69,7 +70,7 @@ class HoverLiftEventFilter(QObject):
                 self._enter_off.setEndValue(QPointF(cur.x(), cur.y() - 4))
                 self._enter_blur.start()
                 self._enter_off.start()
-            elif event.type() == QEvent.Type.Leave:
+            elif a1 is not None and a1.type() == QEvent.Type.Leave:  # type: ignore
                 self._leave_blur.stop()
                 self._leave_blur.setStartValue(self.effect.blurRadius())
                 self._leave_blur.setEndValue(8)
@@ -85,7 +86,7 @@ class HoverLiftEventFilter(QObject):
 
 
 class DashboardWindow(QMainWindow):
-    def __init__(self, username: str = None, initial_tab: int = 0):
+    def __init__(self, username: str | None = None, initial_tab: int = 0):
         super().__init__()
         # Initialize core components
         self.user_manager = UserManager()
@@ -117,9 +118,9 @@ class DashboardWindow(QMainWindow):
         """Update the footer with current page/chapter number."""
         total = max(1, self.tabs.count())
         try:
-            self.statusBar().showMessage(f"Page {index+1} of {total}")
+            self.statusBar().showMessage(f"Page {index+1} of {total}")  # type: ignore
         except Exception:
-            self.statusBar().showMessage("")
+            self.statusBar().showMessage("")  # type: ignore
 
     def animate_tab_change(self, index: int):
         """Apply a quick fade-in animation to the newly selected tab to
@@ -135,10 +136,10 @@ class DashboardWindow(QMainWindow):
             anim.setDuration(300)
             anim.setStartValue(0.0)
             anim.setEndValue(1.0)
-            anim.start(QPropertyAnimation.DeleteWhenStopped)
+            anim.start()  # type: ignore
             # subtle parallax: shift main container shadow slightly based on tab
             try:
-                main_eff = self.centralWidget().graphicsEffect()
+                main_eff = self.centralWidget().graphicsEffect()  # type: ignore
                 if isinstance(main_eff, QGraphicsDropShadowEffect):
                     # animate offset left/right depending on tab index
                     cur = main_eff.offset()
@@ -147,7 +148,7 @@ class DashboardWindow(QMainWindow):
                     off_anim.setDuration(300)
                     off_anim.setStartValue(cur)
                     off_anim.setEndValue(QPointF(target_x, cur.y()))
-                    off_anim.start(QPropertyAnimation.DeleteWhenStopped)
+                    off_anim.start()  # type: ignore
             except Exception:
                 pass
         except Exception:
@@ -182,7 +183,11 @@ class DashboardWindow(QMainWindow):
                         return QIcon(path)
                 except Exception:
                     pass
-                return style.standardIcon(fallback_pixmap)
+                try:
+                    return style.standardIcon(fallback_pixmap)  # type: ignore
+                except Exception:
+                    from PyQt6.QtGui import QIcon
+                    return QIcon()
 
             act_home = QAction(
                 _icon("home.svg", QStyle.StandardPixmap.SP_DesktopIcon), "Home", self
@@ -270,8 +275,8 @@ class DashboardWindow(QMainWindow):
                 self._apply_stylesheet_from_settings(qss)
             else:
                 # fallback inline style (kept short per line for linters)
-                self._apply_stylesheet_from_settings(qss)
                 # _apply_stylesheet_from_settings will call setStyleSheet internally
+
                 # but if it fails, ensure a minimal fallback is applied:
                 try:
                     fallback_qss = (
@@ -294,7 +299,7 @@ class DashboardWindow(QMainWindow):
             pass
 
         # Status bar will show a page number like a book footer
-        self.statusBar().showMessage("")
+        self.statusBar().showMessage("")  # type: ignore
         # Apply initial saved settings (font size and theme)
         try:
             settings = SettingsDialog.load_settings()
@@ -345,7 +350,7 @@ class DashboardWindow(QMainWindow):
                 filt = HoverLiftEventFilter(eff, button)
                 button.installEventFilter(filt)
                 # keep a reference so it isn't garbage-collected
-                button._hover_lift_filter = filt
+                button._hover_lift_filter = filt  # type: ignore
         except Exception:
             pass
 
@@ -396,7 +401,9 @@ class DashboardWindow(QMainWindow):
         """Apply runtime settings such as UI scale and reload stylesheet."""
         try:
             size = int(settings.get("ui_scale", 10))
-            QApplication.instance().setFont(QFont("Segoe UI", size))
+            app = QApplication.instance()
+            if app is not None:
+                app.setFont(QFont("Segoe UI", size))  # type: ignore
         except Exception:
             # ignore font errors
             pass
@@ -416,7 +423,7 @@ class DashboardWindow(QMainWindow):
             pass
 
     def _apply_shadow(
-        self, widget, radius: int = 12, dx: int = 0, dy: int = 4, color: QColor = None
+        self, widget, radius: int = 12, dx: int = 0, dy: int = 4, color: QColor | None = None
     ):
         """Apply a subtle QGraphicsDropShadowEffect to the given widget.
 
@@ -438,7 +445,8 @@ class DashboardWindow(QMainWindow):
         """Open the settings dialog and persist/apply new settings."""
         current = SettingsDialog.load_settings()
         dlg = SettingsDialog(self, current=current)
-        if dlg.exec() == dlg.Accepted:
+        from PyQt6.QtWidgets import QDialog
+        if dlg.exec() == QDialog.DialogCode.Accepted:  # type: ignore
             new = dlg.get_values()
             ok = SettingsDialog.save_settings(new)
             if ok:
@@ -690,3 +698,80 @@ class DashboardWindow(QMainWindow):
         """Update user persona"""
         # Implement persona update logic
         pass
+
+    def update_location(self):
+        """Update location display from location tracker"""
+        try:
+            location = self.location_tracker.get_location_from_ip()
+            if location:
+                self.location_display.setText(str(location))
+                self.location_history.addItem(str(location))
+        except Exception as e:
+            self.location_display.setText(f"Error updating location: {str(e)}")
+
+    def toggle_location_tracking(self):
+        """Toggle location tracking on/off"""
+        try:
+            if self.location_toggle.text() == "Start Location Tracking":
+                self.location_timer.start(5000)  # Update every 5 seconds
+                self.location_toggle.setText("Stop Location Tracking")
+            else:
+                self.location_timer.stop()
+                self.location_toggle.setText("Start Location Tracking")
+        except Exception as e:
+            self.location_display.setText(f"Error toggling location tracking: {str(e)}")
+
+    def clear_location_history(self):
+        """Clear location history"""
+        self.location_history.clear()
+        self.location_display.clear()
+
+    def save_emergency_contacts(self):
+        """Save emergency contacts"""
+        try:
+            contacts = self.contacts_input.text()
+            if contacts:
+                # Store contacts in emergency alert system
+                contact_info = {"emails": [c.strip() for c in contacts.split(",")]}
+                username = self.user_manager.current_user or "default"
+                self.emergency_alert.add_emergency_contact(username, contact_info)
+                self.location_display.setText("Emergency contacts saved successfully")
+        except Exception as e:
+            self.location_display.setText(f"Error saving contacts: {str(e)}")
+
+    def send_emergency_alert(self):
+        """Send emergency alert"""
+        try:
+            message = self.emergency_message.toPlainText()
+            username = self.user_manager.current_user or "default"
+            location_data = self.location_tracker.get_location_from_ip()
+            success, result = self.emergency_alert.send_alert(username, location_data, message)
+            self.alert_history.addItem(f"Alert: {result}")
+            self.emergency_message.clear()
+        except Exception as e:
+            self.alert_history.addItem(f"Error sending alert: {str(e)}")
+
+    def generate_learning_path(self):
+        """Generate a learning path"""
+        pass
+
+    def load_data_file(self):
+        """Load a data file for analysis"""
+        pass
+
+    def perform_analysis(self):
+        """Perform data analysis"""
+        pass
+
+    def update_security_resources(self):
+        """Update security resources display"""
+        pass
+
+    def open_security_resource(self):
+        """Open a selected security resource"""
+        pass
+
+    def add_security_favorite(self):
+        """Add a security resource to favorites"""
+        pass
+
