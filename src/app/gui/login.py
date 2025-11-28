@@ -60,8 +60,8 @@ class LoginDialog(QDialog):
             "Chapter 5 — Location Tracking",
             "Chapter 6 — Emergency Alert",
         ]
-        for c in chapters:
-            self.toc.addItem(c)
+        for chapter_name in chapters:
+            self.toc.addItem(chapter_name)
 
         self.open_button = QPushButton("Open Chapter")
         self.open_button.clicked.connect(self.open_chapter)
@@ -75,8 +75,8 @@ class LoginDialog(QDialog):
         QMessageBox.information(self, "Onboarding", msg)
 
         # Replace login UI with admin creation widgets
-        for w in (self.user_input, self.pass_input, self.login_button):
-            w.hide()
+        for widget in (self.user_input, self.pass_input, self.login_button):
+            widget.hide()
 
         self.layout.addWidget(QLabel("Admin username:"))
         self.admin_user = QLineEdit()
@@ -97,14 +97,14 @@ class LoginDialog(QDialog):
         if not username or not password:
             QMessageBox.warning(self, "Onboarding", "Provide username and password for admin")
             return
-        ok = self.user_manager.create_user(username, password, persona="admin")
-        if ok:
+        created_successfully = self.user_manager.create_user(username, password, persona="admin")
+        if created_successfully:
             QMessageBox.information(self, "Onboarding", "Admin account created — please log in.")
             # Remove admin creation widgets and show login
-            for w in (self.admin_user, self.admin_pass, self.create_admin_btn):
-                w.hide()
-            for w in (self.user_input, self.pass_input, self.login_button):
-                w.show()
+            for widget in (self.admin_user, self.admin_pass, self.create_admin_btn):
+                widget.hide()
+            for widget in (self.user_input, self.pass_input, self.login_button):
+                widget.show()
         else:
             QMessageBox.warning(self, "Onboarding", "Username already exists — choose another")
 
@@ -123,16 +123,16 @@ class LoginDialog(QDialog):
 
     def _show_toc(self):
         # Clear login widgets and show TOC
-        for w in (self.user_input, self.pass_input, self.login_button):
-            w.hide()
+        for widget in (self.user_input, self.pass_input, self.login_button):
+            widget.hide()
         self.layout.addWidget(QLabel("Table of Contents"))
         self.layout.addWidget(self.toc)
         self.layout.addWidget(self.open_button)
 
     def open_chapter(self):
-        idx = self.toc.currentRow()
-        if idx < 0:
+        selected_index = self.toc.currentRow()
+        if selected_index < 0:
             QMessageBox.warning(self, "Select Chapter", "Please select a chapter from the Table of Contents")
             return
-        self.selected_tab = idx
+        self.selected_tab = selected_index
         self.accept()

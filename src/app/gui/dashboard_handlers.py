@@ -52,15 +52,15 @@ class DashboardHandlers:
     def open_security_resource(self, item):
         """Open the selected security resource"""
         import webbrowser
-        text = item.text()
-        repo = text[text.find("(")+1:text.find(")")]
+        item_text = item.text()
+        repo = item_text[item_text.find("(")+1:item_text.find(")")]
         webbrowser.open(f"https://github.com/{repo}")
 
     def add_security_favorite(self):
         """Add current security resource to favorites"""
         if self.resources_list.currentItem():
-            text = self.resources_list.currentItem().text()
-            repo = text[text.find("(")+1:text.find(")")]
+            item_text = self.resources_list.currentItem().text()
+            repo = item_text[item_text.find("(")+1:item_text.find(")")]
             self.security_manager.save_favorite(self.user_manager.current_user, repo)
             QMessageBox.information(self, "Success", "Added to favorites")
 

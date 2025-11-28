@@ -34,11 +34,11 @@ class UserManager:
         self.users = {}
         self.current_user = None
 
-        env_key = os.getenv('FERNET_KEY')
-        if env_key:
+        encryption_key_from_env = os.getenv('FERNET_KEY')
+        if encryption_key_from_env:
             try:
-                key = env_key.encode()
-                self.cipher_suite = Fernet(key)
+                encryption_key = encryption_key_from_env.encode()
+                self.cipher_suite = Fernet(encryption_key)
             except Exception:
                 # invalid key -> generate a runtime key
                 self.cipher_suite = Fernet(Fernet.generate_key())
@@ -54,28 +54,28 @@ class UserManager:
                     self.users = {}
 
             # If any user entries have plaintext 'password', migrate them
-            migrated = False
-            for uname, udata in list(self.users.items()):
-                if isinstance(udata, dict) and 'password' in udata and 'password_hash' not in udata:
+            migration_performed = False
+            for username, user_data in list(self.users.items()):
+                if isinstance(user_data, dict) and 'password' in user_data and 'password_hash' not in user_data:
                     try:
-                        pw = udata.get('password')
+                        plaintext_password = user_data.get('password')
                         # try to hash first; only remove plaintext if hashing succeeds
-                        pw_hash = pwd_context.hash(pw)
-                        self.users[uname]['password_hash'] = pw_hash
+                        hashed_password = pwd_context.hash(plaintext_password)
+                        self.users[username]['password_hash'] = hashed_password
                         # remove plaintext password
-                        self.users[uname].pop('password', None)
-                        migrated = True
+                        self.users[username].pop('password', None)
+                        migration_performed = True
                     except Exception:
                         # bcrypt hashing failed (backend issues); try a safe fallback
                         try:
-                            fallback_hash = pbkdf2_sha256.hash(pw)
-                            self.users[uname]['password_hash'] = fallback_hash
-                            self.users[uname].pop('password', None)
-                            migrated = True
+                            fallback_hash = pbkdf2_sha256.hash(plaintext_password)
+                            self.users[username]['password_hash'] = fallback_hash
+                            self.users[username].pop('password', None)
+                            migration_performed = True
                         except Exception:
                             # skip migration for this user if hashing fails
                             continue
-            if migrated:
+            if migration_performed:
                 self.save_users()
 
     def save_users(self):
@@ -122,11 +122,11 @@ class UserManager:
 
     def get_user_data(self, username):
         """Get sanitized user data (omit password hash)."""
-        u = self.users.get(username)
-        if not u:
+        user = self.users.get(username)
+        if not user:
             return {}
-        sanitized = {k: v for k, v in u.items() if k != 'password_hash'}
-        return sanitized
+        sanitized_data = {key: value for key, value in user.items() if key != 'password_hash'}
+        return sanitized_data
 
     # --- Additional management helpers ---
     def list_users(self):
@@ -158,11 +158,11 @@ class UserManager:
         """
         if username not in self.users:
             return False
-        for k, v in kwargs.items():
-            if k == 'password':
+        for key, value in kwargs.items():
+            if key == 'password':
                 # redirect to set_password to ensure hashing
-                self.set_password(username, v)
+                self.set_password(username, value)
                 continue
-            self.users[username][k] = v
+            self.users[username][key] = value
         self.save_users()
         return True

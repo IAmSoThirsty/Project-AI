@@ -33,8 +33,8 @@ class LocationTracker:
             json_data = json.dumps(location_data)
             encrypted_data = self.cipher_suite.encrypt(json_data.encode())
             return encrypted_data
-        except Exception as e:
-            print(f"Encryption error: {str(e)}")
+        except Exception as encryption_error:
+            print(f"Encryption error: {str(encryption_error)}")
             return None
 
     def decrypt_location(self, encrypted_data):
@@ -42,8 +42,8 @@ class LocationTracker:
         try:
             decrypted_data = self.cipher_suite.decrypt(encrypted_data)
             return json.loads(decrypted_data.decode())
-        except Exception as e:
-            print(f"Decryption error: {str(e)}")
+        except Exception as decryption_error:
+            print(f"Decryption error: {str(decryption_error)}")
             return None
 
     def get_location_from_ip(self):
@@ -51,20 +51,20 @@ class LocationTracker:
         try:
             response = requests.get('https://ipapi.co/json/')
             if response.status_code == 200:
-                data = response.json()
+                response_data = response.json()
                 return {
-                    'latitude': data.get('latitude'),
-                    'longitude': data.get('longitude'),
-                    'city': data.get('city'),
-                    'region': data.get('region'),
-                    'country': data.get('country_name'),
-                    'ip': data.get('ip'),
+                    'latitude': response_data.get('latitude'),
+                    'longitude': response_data.get('longitude'),
+                    'city': response_data.get('city'),
+                    'region': response_data.get('region'),
+                    'country': response_data.get('country_name'),
+                    'ip': response_data.get('ip'),
                     'timestamp': datetime.now().isoformat(),
                     'source': 'ip'
                 }
             return None
-        except Exception as e:
-            print(f"Error getting location from IP: {str(e)}")
+        except Exception as ip_lookup_error:
+            print(f"Error getting location from IP: {str(ip_lookup_error)}")
             return None
 
     def get_location_from_coords(self, latitude, longitude):
@@ -83,8 +83,8 @@ class LocationTracker:
         except GeocoderTimedOut:
             print("Geocoding service timed out")
             return None
-        except Exception as e:
-            print(f"Error getting location from coordinates: {str(e)}")
+        except Exception as geocoding_error:
+            print(f"Error getting location from coordinates: {str(geocoding_error)}")
             return None
 
     def save_location_history(self, username, location_data):

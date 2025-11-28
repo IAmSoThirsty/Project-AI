@@ -86,8 +86,8 @@ class EmergencyAlert:
             self.log_alert(username, location_data, message)
             return True, "Alert sent successfully"
 
-        except Exception as e:
-            return False, f"Error sending alert: {str(e)}"
+        except Exception as send_error:
+            return False, f"Error sending alert: {str(send_error)}"
 
     def log_alert(self, username, location_data, message):
         """Log emergency alert details"""

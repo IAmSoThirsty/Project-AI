@@ -65,32 +65,32 @@ class DataAnalyzer:
         if self.data is None:
             return None
 
-        fig = Figure(figsize=(8, 6))
-        ax = fig.add_subplot(111)
+        figure = Figure(figsize=(8, 6))
+        axes = figure.add_subplot(111)
 
         try:
             if plot_type == "scatter":
-                ax.scatter(self.data[x_col], self.data[y_col])
-                ax.set_xlabel(x_col)
-                ax.set_ylabel(y_col)
+                axes.scatter(self.data[x_col], self.data[y_col])
+                axes.set_xlabel(x_col)
+                axes.set_ylabel(y_col)
             elif plot_type == "histogram":
-                ax.hist(self.data[x_col], bins=30)
-                ax.set_xlabel(x_col)
-                ax.set_ylabel("Frequency")
+                axes.hist(self.data[x_col], bins=30)
+                axes.set_xlabel(x_col)
+                axes.set_ylabel("Frequency")
             elif plot_type == "boxplot":
-                self.data.boxplot(column=x_col, ax=ax)
+                self.data.boxplot(column=x_col, ax=axes)
             elif plot_type == "correlation":
-                corr = self.data.corr()
-                ax.imshow(corr)
-                ax.set_xticks(range(len(corr.columns)))
-                ax.set_yticks(range(len(corr.columns)))
-                ax.set_xticklabels(corr.columns, rotation=45)
-                ax.set_yticklabels(corr.columns)
+                correlation_matrix = self.data.corr()
+                axes.imshow(correlation_matrix)
+                axes.set_xticks(range(len(correlation_matrix.columns)))
+                axes.set_yticks(range(len(correlation_matrix.columns)))
+                axes.set_xticklabels(correlation_matrix.columns, rotation=45)
+                axes.set_yticklabels(correlation_matrix.columns)
 
             if FigureCanvasQTAgg is not None:
-                return FigureCanvasQTAgg(fig)
+                return FigureCanvasQTAgg(figure)
 
-            return fig
+            return figure
         except Exception as exc:  # pragma: no cover - runtime visualization errors
             print(f"Error creating visualization: {exc}")
             return None
@@ -101,27 +101,27 @@ class DataAnalyzer:
             return None, None
 
         try:
-            X = self.data[columns].values
-            X_scaled = self.scaler.fit_transform(X)
+            feature_data = self.data[columns].values
+            scaled_feature_data = self.scaler.fit_transform(feature_data)
 
             pca = PCA(n_components=2)
-            X_pca = pca.fit_transform(X_scaled)
+            pca_transformed_data = pca.fit_transform(scaled_feature_data)
 
             kmeans = KMeans(n_clusters=n_clusters, random_state=42)
-            clusters = kmeans.fit_predict(X_scaled)
+            cluster_labels = kmeans.fit_predict(scaled_feature_data)
 
-            fig = Figure(figsize=(8, 6))
-            ax = fig.add_subplot(111)
-            scatter = ax.scatter(X_pca[:, 0], X_pca[:, 1], c=clusters, cmap="viridis")
-            ax.set_xlabel("First Principal Component")
-            ax.set_ylabel("Second Principal Component")
-            ax.set_title("K-means Clustering Results")
-            fig.colorbar(scatter)
+            figure = Figure(figsize=(8, 6))
+            axes = figure.add_subplot(111)
+            scatter_plot = axes.scatter(pca_transformed_data[:, 0], pca_transformed_data[:, 1], c=cluster_labels, cmap="viridis")
+            axes.set_xlabel("First Principal Component")
+            axes.set_ylabel("Second Principal Component")
+            axes.set_title("K-means Clustering Results")
+            figure.colorbar(scatter_plot)
 
             if FigureCanvasQTAgg is not None:
-                return FigureCanvasQTAgg(fig), clusters
+                return FigureCanvasQTAgg(figure), cluster_labels
 
-            return fig, clusters
+            return figure, cluster_labels
         except Exception as exc:  # pragma: no cover
             print(f"Error performing clustering: {exc}")
             return None, None

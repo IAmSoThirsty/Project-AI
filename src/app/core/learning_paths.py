@@ -35,8 +35,8 @@ class LearningPathManager:
             )
 
             return response.choices[0].message.content
-        except Exception as e:
-            return f"Error generating learning path: {str(e)}"
+        except Exception as generation_error:
+            return f"Error generating learning path: {str(generation_error)}"
 
     def save_path(self, username, interest, path_content):
         """Save a generated learning path"""

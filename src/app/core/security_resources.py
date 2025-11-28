@@ -76,17 +76,17 @@ class SecurityResourceManager:
             url = f"https://api.github.com/repos/{repo}"
             response = requests.get(url)
             if response.status_code == 200:
-                data = response.json()
+                response_data = response.json()
                 return {
-                    'name': data['name'],
-                    'description': data['description'],
-                    'stars': data['stargazers_count'],
-                    'last_updated': data['updated_at'],
-                    'url': data['html_url']
+                    'name': response_data['name'],
+                    'description': response_data['description'],
+                    'stars': response_data['stargazers_count'],
+                    'last_updated': response_data['updated_at'],
+                    'url': response_data['html_url']
                 }
             return None
-        except Exception as e:
-            print(f"Error fetching repo details: {str(e)}")
+        except Exception as fetch_error:
+            print(f"Error fetching repo details: {str(fetch_error)}")
             return None
 
     def save_favorite(self, username, repo):

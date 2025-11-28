@@ -28,7 +28,7 @@ import os
 class UserManagementWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.um = UserManager()
+        self.user_manager = UserManager()
         self._build_ui()
         self.refresh_user_list()
 
@@ -106,41 +106,41 @@ class UserManagementWidget(QWidget):
 
     def refresh_user_list(self):
         self.user_list.clear()
-        for uname in sorted(self.um.users.keys()):
-            self.user_list.addItem(uname)
+        for username in sorted(self.user_manager.users.keys()):
+            self.user_list.addItem(username)
         # clear preview
         self.avatar_preview.clear()
 
     def on_user_selected(self, username: str):
         if not username:
             return
-        data = self.um.get_user_data(username)
+        user_data = self.user_manager.get_user_data(username)
         self.username_field.setText(username)
-        self.role_combo.setCurrentText(data.get('role', 'user'))
-        self.pic_field.setText(data.get('profile_picture', ''))
-        self.approved_label.setText(f"Approved: {data.get('approved', False)}")
+        self.role_combo.setCurrentText(user_data.get('role', 'user'))
+        self.pic_field.setText(user_data.get('profile_picture', ''))
+        self.approved_label.setText(f"Approved: {user_data.get('approved', False)}")
 
     def browse_picture(self):
-        fname, _ = QFileDialog.getOpenFileName(
+        filename, _ = QFileDialog.getOpenFileName(
             self,
             "Select profile picture",
             os.getcwd(),
             "Images (*.png *.jpg *.jpeg *.bmp)",
         )
-        if fname:
-            self.pic_field.setText(fname)
-            pix = QPixmap(fname)
-            if not pix.isNull():
-                self.avatar_preview.setPixmap(pix.scaled(96, 96))
+        if filename:
+            self.pic_field.setText(filename)
+            pixmap = QPixmap(filename)
+            if not pixmap.isNull():
+                self.avatar_preview.setPixmap(pixmap.scaled(96, 96))
 
     def create_user_dialog(self):
-        dlg = CreateUserDialog(parent=self)
-        if dlg.exec() == QDialog.Accepted:
-            uname, pw, approved, role, pic = dlg.get_values()
-            success = self.um.create_user(uname, pw)
+        dialog = CreateUserDialog(parent=self)
+        if dialog.exec() == QDialog.Accepted:
+            username, password, approved, role, profile_picture_path = dialog.get_values()
+            success = self.user_manager.create_user(username, password)
             if success:
-                self.um.update_user(uname, approved=approved, role=role, profile_picture=pic)
-                QMessageBox.information(self, "Created", f"User '{uname}' created.")
+                self.user_manager.update_user(username, approved=approved, role=role, profile_picture=profile_picture_path)
+                QMessageBox.information(self, "Created", f"User '{username}' created.")
                 self.refresh_user_list()
             else:
                 QMessageBox.warning(self, "Exists", "User already exists")
@@ -150,13 +150,13 @@ class UserManagementWidget(QWidget):
         if not username:
             QMessageBox.warning(self, "Delete", "Select a user to delete")
             return
-        if username == self.um.current_user:
+        if username == self.user_manager.current_user:
             QMessageBox.warning(self, "Delete", "Cannot delete currently logged-in user")
             return
         confirm = QMessageBox.question(self, "Confirm Delete", f"Delete user '{username}'? This is irreversible.")
         if confirm == QMessageBox.StandardButton.Yes:
-            ok = self.um.delete_user(username)
-            if ok:
+            deletion_successful = self.user_manager.delete_user(username)
+            if deletion_successful:
                 QMessageBox.information(self, "Deleted", "User deleted")
                 self.refresh_user_list()
             else:
@@ -167,22 +167,22 @@ class UserManagementWidget(QWidget):
         if not username:
             QMessageBox.warning(self, "Approve", "Select a user first")
             return
-        data = self.um.users.get(username, {})
-        new = not data.get('approved', False)
-        self.um.update_user(username, approved=new)
+        user_data = self.user_manager.users.get(username, {})
+        new_approval_status = not user_data.get('approved', False)
+        self.user_manager.update_user(username, approved=new_approval_status)
         self.on_user_selected(username)
-        QMessageBox.information(self, "Updated", f"User '{username}' approved set to {new}")
+        QMessageBox.information(self, "Updated", f"User '{username}' approved set to {new_approval_status}")
 
     def reset_password(self):
         username = self.user_list.currentItem().text() if self.user_list.currentItem() else None
         if not username:
             QMessageBox.warning(self, "Reset Password", "Select a user first")
             return
-        dlg = ResetPasswordDialog(username, parent=self)
-        if dlg.exec() == QDialog.Accepted:
-            newpw = dlg.get_password()
-            if newpw:
-                self.um.set_password(username, newpw)
+        dialog = ResetPasswordDialog(username, parent=self)
+        if dialog.exec() == QDialog.Accepted:
+            new_password = dialog.get_password()
+            if new_password:
+                self.user_manager.set_password(username, new_password)
                 QMessageBox.information(self, "Password", "Password updated")
 
     def save_changes(self):
@@ -191,10 +191,10 @@ class UserManagementWidget(QWidget):
             QMessageBox.warning(self, "Save", "Username cannot be empty")
             return
         role = self.role_combo.currentText()
-        pic = self.pic_field.text().strip()
+        profile_picture_path = self.pic_field.text().strip()
         approved = True if self.approved_label.text().endswith('True') else False
-        ok = self.um.update_user(self.user_list.currentItem().text(), role=role, profile_picture=pic, approved=approved)
-        if ok:
+        update_successful = self.user_manager.update_user(self.user_list.currentItem().text(), role=role, profile_picture=profile_picture_path, approved=approved)
+        if update_successful:
             QMessageBox.information(self, "Saved", "User updated")
             self.refresh_user_list()
         else:
@@ -234,20 +234,20 @@ class CreateUserDialog(QDialog):
         pic_row.addWidget(self.pic_btn_d)
         layout.addLayout(pic_row)
 
-        btns = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
-        btns.accepted.connect(self.accept)
-        btns.rejected.connect(self.reject)
-        layout.addWidget(btns)
+        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        button_box.accepted.connect(self.accept)
+        button_box.rejected.connect(self.reject)
+        layout.addWidget(button_box)
 
     def _browse(self):
-        fname, _ = QFileDialog.getOpenFileName(
+        filename, _ = QFileDialog.getOpenFileName(
             self,
             "Select profile picture",
             os.getcwd(),
             "Images (*.png *.jpg *.jpeg *.bmp)",
         )
-        if fname:
-            self.pic_field_d.setText(fname)
+        if filename:
+            self.pic_field_d.setText(filename)
 
     def get_values(self):
         return (self.username.text().strip(), self.password.text(), self.approved_cb.isChecked(), self.role.currentText(), self.pic_field_d.text().strip())
@@ -259,13 +259,13 @@ class ResetPasswordDialog(QDialog):
         self.setWindowTitle(f"Reset Password: {username}")
         layout = QVBoxLayout(self)
         layout.addWidget(QLabel("New password:"))
-        self.pw = QLineEdit()
-        self.pw.setEchoMode(QLineEdit.EchoMode.Password)
-        layout.addWidget(self.pw)
-        btns = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
-        btns.accepted.connect(self.accept)
-        btns.rejected.connect(self.reject)
-        layout.addWidget(btns)
+        self.password_input = QLineEdit()
+        self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
+        layout.addWidget(self.password_input)
+        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        button_box.accepted.connect(self.accept)
+        button_box.rejected.connect(self.reject)
+        layout.addWidget(button_box)
 
     def get_password(self):
-        return self.pw.text()
+        return self.password_input.text()
