@@ -74,7 +74,7 @@ class UserManager:
                         self.users[uname].pop('password', None)
                         migrated = True
                     except Exception:
-                        # bcrypt hashing failed (backend issue); try fallback
+                        # bcrypt hashing failed; trying fallback
                         try:
                             fallback_hash = pbkdf2_sha256.hash(pw)
                             self.users[uname]['password_hash'] = fallback_hash

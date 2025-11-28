@@ -1,4 +1,4 @@
-"""CLI tool to preview or apply migration of plaintext passwords.
+"""CLI tool to preview or apply migration of plaintext passwords to hashes.
 
 Usage:
     python tools/migrate_users.py [--users-file path] [--apply]

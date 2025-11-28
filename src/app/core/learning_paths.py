@@ -15,7 +15,7 @@ class LearningPathManager:
     def generate_path(self, interest, skill_level="beginner"):
         """Generate a personalized learning path"""
         try:
-            # Build a prompt to satisfy linters
+            # Build structured prompt for learning path
             prompt = (
                 f"Create a structured learning path for {interest} "
                 f"at {skill_level} level.\n"
