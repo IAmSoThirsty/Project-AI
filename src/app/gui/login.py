@@ -26,7 +26,7 @@ from app.core.user_manager import UserManager
 class LoginDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowTitle("◈ N7 AI SYSTEM — AUTHENTICATION ◈")
+        self.setWindowTitle("AI Assistant — Login")
         self.setFixedSize(500, 400)
         self.user_manager = UserManager()
         self.selected_tab = 0
@@ -111,7 +111,7 @@ class LoginDialog(QDialog):
         self.layout.setContentsMargins(30, 30, 30, 30)
 
         # Header
-        header_label = QLabel("◈ SYSTEM ACCESS TERMINAL ◈")
+        header_label = QLabel("◈ System Access ◈")
         header_label.setStyleSheet("""
             color: #00d4ff;
             font-size: 18px;
@@ -128,63 +128,63 @@ class LoginDialog(QDialog):
         self.layout.addWidget(sep)
 
         # Login widgets
-        self.layout.addWidget(QLabel("◈ USER IDENTIFICATION:"))
+        self.layout.addWidget(QLabel("Username:"))
         self.user_input = QLineEdit()
         self.user_input.setPlaceholderText("Enter username...")
         self.layout.addWidget(self.user_input)
 
-        self.layout.addWidget(QLabel("◈ ACCESS CODE:"))
+        self.layout.addWidget(QLabel("Password:"))
         self.pass_input = QLineEdit()
         self.pass_input.setEchoMode(QLineEdit.EchoMode.Password)
         self.pass_input.setPlaceholderText("Enter password...")
         self.pass_input.returnPressed.connect(self.try_login)
         self.layout.addWidget(self.pass_input)
 
-        self.login_button = QPushButton("◈ AUTHENTICATE ◈")
+        self.login_button = QPushButton("Login")
         self.login_button.clicked.connect(self.try_login)
         self.layout.addWidget(self.login_button)
 
-        # Mission Select (hidden until login)
+        # Module Select (hidden until login)
         self.toc = QListWidget()
         modules = [
-            "◈ AI INTERFACE — Communication Terminal",
-            "◈ TRAINING — Skills Development Protocol",
-            "◈ INTEL — Data Analysis Center",
-            "◈ TACTICAL — Security Resources",
-            "◈ NAVIGATION — Location Tracking",
-            "◈ DISTRESS — Emergency Alert System",
+            "Chat — AI Communication",
+            "Learning Paths — Skills Development",
+            "Data Analysis — Analytics Center",
+            "Security Resources — Security Tools",
+            "Location Tracking — GPS Tracking",
+            "Emergency Alert — Alert System",
         ]
         for m in modules:
             self.toc.addItem(m)
 
-        self.open_button = QPushButton("◈ ACCESS MODULE ◈")
+        self.open_button = QPushButton("Open Module")
         self.open_button.clicked.connect(self.open_chapter)
 
     def _onboard_admin(self):
         """Prompt the user to create an admin account on first run."""
         msg = (
-            "◈ SYSTEM INITIALIZATION ◈\n\n"
-            "No personnel records found in database.\n"
-            "Please create a Command Access account to continue."
+            "Welcome!\n\n"
+            "No users found in database.\n"
+            "Please create an admin account to continue."
         )
-        QMessageBox.information(self, "◈ ONBOARDING ◈", msg)
+        QMessageBox.information(self, "Onboarding", msg)
 
         # Replace login UI with admin creation widgets
         for w in (self.user_input, self.pass_input, self.login_button):
             w.hide()
 
-        self.layout.addWidget(QLabel("◈ COMMANDER DESIGNATION:"))
+        self.layout.addWidget(QLabel("Admin Username:"))
         self.admin_user = QLineEdit()
-        self.admin_user.setPlaceholderText("Enter commander username...")
+        self.admin_user.setPlaceholderText("Enter admin username...")
         self.layout.addWidget(self.admin_user)
 
-        self.layout.addWidget(QLabel("◈ SECURE ACCESS CODE:"))
+        self.layout.addWidget(QLabel("Admin Password:"))
         self.admin_pass = QLineEdit()
         self.admin_pass.setEchoMode(QLineEdit.EchoMode.Password)
         self.admin_pass.setPlaceholderText("Enter secure password...")
         self.layout.addWidget(self.admin_pass)
 
-        self.create_admin_btn = QPushButton("◈ CREATE COMMAND ACCESS ◈")
+        self.create_admin_btn = QPushButton("Create Admin Account")
         self.create_admin_btn.clicked.connect(self.create_admin_account)
         self.layout.addWidget(self.create_admin_btn)
 
@@ -192,39 +192,39 @@ class LoginDialog(QDialog):
         username = self.admin_user.text().strip()
         password = self.admin_pass.text().strip()
         if not username or not password:
-            msg = "◈ ERROR: Provide username and access code for command access."
-            QMessageBox.warning(self, "◈ VALIDATION ◈", msg)
+            msg = "Please provide username and password for admin account."
+            QMessageBox.warning(self, "Validation", msg)
             return
         ok = self.user_manager.create_user(username, password, persona="admin")
         if ok:
-            msg = "◈ COMMAND ACCESS CREATED ◈\n\nYou may now authenticate."
-            QMessageBox.information(self, "◈ SUCCESS ◈", msg)
+            msg = "Admin account created successfully!\n\nYou may now login."
+            QMessageBox.information(self, "Success", msg)
             # Remove admin creation widgets and show login
             for w in (self.admin_user, self.admin_pass, self.create_admin_btn):
                 w.hide()
             for w in (self.user_input, self.pass_input, self.login_button):
                 w.show()
         else:
-            msg = "◈ ERROR: Designation already exists in database."
-            QMessageBox.warning(self, "◈ CONFLICT ◈", msg)
+            msg = "Username already exists. Please choose another."
+            QMessageBox.warning(self, "Conflict", msg)
 
     def try_login(self):
         username = self.user_input.text().strip()
         password = self.pass_input.text().strip()
         if not username or not password:
-            msg = "◈ ERROR: Enter user identification and access code."
-            QMessageBox.warning(self, "◈ VALIDATION ◈", msg)
+            msg = "Please enter username and password."
+            QMessageBox.warning(self, "Validation", msg)
             return
         if self.user_manager.authenticate(username, password):
             self.username = username
-            # Show Mission Select
+            # Show Module Select
             self._show_toc()
         else:
-            msg = "◈ ACCESS DENIED ◈\n\nInvalid credentials. Please try again."
-            QMessageBox.warning(self, "◈ AUTHENTICATION FAILED ◈", msg)
+            msg = "Invalid credentials. Please try again."
+            QMessageBox.warning(self, "Login Failed", msg)
 
     def _show_toc(self):
-        # Clear login widgets and show Mission Select
+        # Clear login widgets and show Module Select
         for w in (self.user_input, self.pass_input, self.login_button):
             w.hide()
 
@@ -233,10 +233,10 @@ class LoginDialog(QDialog):
             widget = self.layout.itemAt(i).widget()
             if isinstance(widget, QLabel):
                 text = widget.text()
-                if "IDENTIFICATION" in text or "ACCESS CODE" in text:
+                if "Username" in text or "Password" in text:
                     widget.hide()
 
-        select_label = QLabel("◈ SELECT MISSION MODULE ◈")
+        select_label = QLabel("◈ Select Module ◈")
         select_label.setStyleSheet("""
             color: #00d4ff;
             font-size: 16px;
@@ -251,8 +251,8 @@ class LoginDialog(QDialog):
     def open_chapter(self):
         idx = self.toc.currentRow()
         if idx < 0:
-            msg = "◈ ERROR: Please select a module to access."
-            QMessageBox.warning(self, "◈ SELECTION REQUIRED ◈", msg)
+            msg = "Please select a module to access."
+            QMessageBox.warning(self, "Selection Required", msg)
             return
         self.selected_tab = idx
         self.accept()

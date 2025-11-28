@@ -65,10 +65,11 @@ class DashboardWindow(DashboardHandlers, QMainWindow):
         self.update_page_number(self.tabs.currentIndex())
 
     def update_page_number(self, index: int):
-        """Update the footer with current module/section number (sci-fi style)."""
+        """Update the footer with current tab info (sci-fi style)."""
         total = max(1, self.tabs.count())
+        tab_name = self.tabs.tabText(index) if index >= 0 else ""
         try:
-            self.statusBar().showMessage(f"◈ MODULE {index+1} OF {total} ◈ SYSTEM ONLINE")
+            self.statusBar().showMessage(f"◈ {tab_name} | Tab {index+1} of {total} | System Online")
         except Exception:
             self.statusBar().showMessage("")
 
@@ -90,8 +91,8 @@ class DashboardWindow(DashboardHandlers, QMainWindow):
             pass
 
     def setup_ui(self):
-        """Setup the user interface with Mass Effect / Sci-Fi theme"""
-        self.setWindowTitle("◈ N7 AI INTERFACE ◈")
+        """Setup the user interface with Sci-Fi theme"""
+        self.setWindowTitle("AI Assistant")
         self.setGeometry(100, 100, 1200, 800)
 
         # Create main widget and layout
@@ -156,12 +157,12 @@ class DashboardWindow(DashboardHandlers, QMainWindow):
             pass
 
         # Status bar with sci-fi styling
-        self.statusBar().showMessage("◈ SYSTEM INITIALIZING...")
+        self.statusBar().showMessage("System Online")
         # Update status and animate on tab change
         self.tabs.currentChanged.connect(self.update_page_number)
         self.tabs.currentChanged.connect(self.animate_tab_change)
 
-        # Add tabs with sci-fi module names
+        # Add tabs
         self.setup_chat_tab()
         self.setup_learning_paths_tab()
         self.setup_data_analysis_tab()
@@ -172,7 +173,7 @@ class DashboardWindow(DashboardHandlers, QMainWindow):
         try:
             from app.gui.user_management import UserManagementWidget
             self.user_mgmt = UserManagementWidget()
-            self.tabs.addTab(self.user_mgmt, "◈ CREW")
+            self.tabs.addTab(self.user_mgmt, "Users")
         except Exception:
             # non-fatal: keep going without Users tab
             pass
@@ -198,11 +199,11 @@ class DashboardWindow(DashboardHandlers, QMainWindow):
         return pixmap
 
     def setup_chat_tab(self):
-        """Setup the chat interface tab with AI digital face construct."""
+        """Setup the chat interface tab with AI digital face construct and status monitors."""
         chat_tab = QWidget()
         main_layout = QVBoxLayout(chat_tab)
 
-        # Top section: AI Face and status
+        # Top section: AI Face and system monitors
         top_section = QHBoxLayout()
 
         # AI Face display (digital construct)
@@ -220,39 +221,101 @@ class DashboardWindow(DashboardHandlers, QMainWindow):
 
         top_section.addWidget(ai_frame)
 
-        # AI Status panel
-        status_panel = QVBoxLayout()
-        ai_name_label = QLabel("◈ E.D.I. — Enhanced Defense Intelligence ◈")
-        ai_name_label.setStyleSheet("""
+        # System Status Monitors Panel
+        monitors_panel = QVBoxLayout()
+
+        # AI Status header
+        ai_status_header = QLabel("◈ AI ASSISTANT STATUS ◈")
+        ai_status_header.setStyleSheet("""
             color: #00d4ff;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
-            padding: 8px;
-        """)
-        status_panel.addWidget(ai_name_label)
-
-        ai_status_label = QLabel("STATUS: ONLINE | READY FOR INTERFACE")
-        ai_status_label.setStyleSheet("""
-            color: #40ff80;
-            font-size: 12px;
             padding: 4px 8px;
         """)
-        status_panel.addWidget(ai_status_label)
+        monitors_panel.addWidget(ai_status_header)
 
-        ai_desc_label = QLabel(
-            "Advanced AI companion providing tactical support,\n"
-            "data analysis, and mission assistance."
-        )
-        ai_desc_label.setStyleSheet("""
-            color: #80a0c0;
-            font-size: 11px;
+        # Status monitor frame
+        status_monitor = QFrame()
+        status_monitor.setStyleSheet("""
+            QFrame {
+                background: rgba(10, 25, 45, 0.8);
+                border: 1px solid rgba(0, 200, 255, 0.4);
+                border-radius: 4px;
+                padding: 8px;
+            }
+        """)
+        status_layout = QVBoxLayout(status_monitor)
+        status_layout.setSpacing(4)
+
+        # System status indicators
+        self.status_online = QLabel("● SYSTEM STATUS: ONLINE")
+        self.status_online.setStyleSheet("color: #40ff80; font-size: 11px;")
+        status_layout.addWidget(self.status_online)
+
+        self.status_memory = QLabel("● MEMORY: NOMINAL")
+        self.status_memory.setStyleSheet("color: #40ff80; font-size: 11px;")
+        status_layout.addWidget(self.status_memory)
+
+        self.status_network = QLabel("● NETWORK: CONNECTED")
+        self.status_network.setStyleSheet("color: #40ff80; font-size: 11px;")
+        status_layout.addWidget(self.status_network)
+
+        self.status_ai = QLabel("● AI CORE: READY")
+        self.status_ai.setStyleSheet("color: #00d4ff; font-size: 11px;")
+        status_layout.addWidget(self.status_ai)
+
+        monitors_panel.addWidget(status_monitor)
+        monitors_panel.addStretch()
+
+        top_section.addLayout(monitors_panel)
+
+        # Right side: Additional stats panel
+        stats_panel = QVBoxLayout()
+
+        stats_header = QLabel("◈ SYSTEM METRICS ◈")
+        stats_header.setStyleSheet("""
+            color: #00d4ff;
+            font-size: 14px;
+            font-weight: bold;
             padding: 4px 8px;
         """)
-        status_panel.addWidget(ai_desc_label)
-        status_panel.addStretch()
+        stats_panel.addWidget(stats_header)
 
-        top_section.addLayout(status_panel)
+        # Stats monitor frame
+        stats_monitor = QFrame()
+        stats_monitor.setStyleSheet("""
+            QFrame {
+                background: rgba(10, 25, 45, 0.8);
+                border: 1px solid rgba(0, 200, 255, 0.4);
+                border-radius: 4px;
+                padding: 8px;
+            }
+        """)
+        stats_inner = QVBoxLayout(stats_monitor)
+        stats_inner.setSpacing(4)
+
+        self.stat_uptime = QLabel("◆ UPTIME: 00:00:00")
+        self.stat_uptime.setStyleSheet("color: #a0d4ff; font-size: 11px;")
+        stats_inner.addWidget(self.stat_uptime)
+
+        self.stat_messages = QLabel("◆ MESSAGES: 0")
+        self.stat_messages.setStyleSheet("color: #a0d4ff; font-size: 11px;")
+        stats_inner.addWidget(self.stat_messages)
+
+        self.stat_response = QLabel("◆ AVG RESPONSE: <1ms")
+        self.stat_response.setStyleSheet("color: #a0d4ff; font-size: 11px;")
+        stats_inner.addWidget(self.stat_response)
+
+        self.stat_user = QLabel(f"◆ USER: {self.user_manager.current_user or 'GUEST'}")
+        self.stat_user.setStyleSheet("color: #80c0e0; font-size: 11px;")
+        stats_inner.addWidget(self.stat_user)
+
+        stats_panel.addWidget(stats_monitor)
+        stats_panel.addStretch()
+
+        top_section.addLayout(stats_panel)
         top_section.addStretch()
+
         main_layout.addLayout(top_section)
 
         # Separator line
@@ -271,26 +334,29 @@ class DashboardWindow(DashboardHandlers, QMainWindow):
         self.chat_display.setReadOnly(True)
         self.chat_display.setPlaceholderText(
             "◈ COMMUNICATION TERMINAL ACTIVE ◈\n\n"
-            "Type your message below to interface with E.D.I."
+            "Type your message below to interact with the AI Assistant."
         )
         main_layout.addWidget(self.chat_display)
 
         # Input area with sci-fi styling
         input_layout = QHBoxLayout()
         self.chat_input = QLineEdit()
-        self.chat_input.setPlaceholderText("Enter command or query...")
+        self.chat_input.setPlaceholderText("Enter your message...")
         self.chat_input.returnPressed.connect(self.send_message)
         input_layout.addWidget(self.chat_input)
 
         # Send button with sci-fi styling
-        send_button = QPushButton("◈ TRANSMIT ◈")
-        send_button.setMinimumWidth(120)
+        send_button = QPushButton("Send")
+        send_button.setMinimumWidth(100)
         send_button.clicked.connect(self.send_message)
         input_layout.addWidget(send_button)
 
         main_layout.addLayout(input_layout)
 
-        self.tabs.addTab(chat_tab, "◈ AI INTERFACE")
+        # Message counter for stats
+        self.message_count = 0
+
+        self.tabs.addTab(chat_tab, "Chat")
 
     def setup_tasks_tab(self):
         """Setup the tasks management tab"""
@@ -309,12 +375,12 @@ class DashboardWindow(DashboardHandlers, QMainWindow):
         self.tabs.addTab(tasks_tab, "Chapter 2 — Tasks")
 
     def setup_learning_paths_tab(self):
-        """Setup the learning paths tab (Training Protocols)"""
+        """Setup the learning paths tab"""
         tab = QWidget()
         layout = QVBoxLayout(tab)
 
         # Interest input
-        interest_label = QLabel("◈ SPECIFY TRAINING OBJECTIVE:")
+        interest_label = QLabel("What would you like to learn?")
         layout.addWidget(interest_label)
 
         self.interest_input = QLineEdit()
@@ -322,15 +388,15 @@ class DashboardWindow(DashboardHandlers, QMainWindow):
         layout.addWidget(self.interest_input)
 
         # Skill level selection
-        level_label = QLabel("◈ SELECT CLEARANCE LEVEL:")
+        level_label = QLabel("Select your skill level:")
         layout.addWidget(level_label)
 
         self.skill_level = QComboBox()
-        self.skill_level.addItems(["Recruit", "Operative", "Spectre"])
+        self.skill_level.addItems(["Beginner", "Intermediate", "Advanced"])
         layout.addWidget(self.skill_level)
 
         # Generate button
-        generate_button = QPushButton("◈ GENERATE TRAINING PROTOCOL ◈")
+        generate_button = QPushButton("Generate Learning Path")
         generate_button.clicked.connect(self.generate_learning_path)
         layout.addWidget(generate_button)
 
@@ -338,44 +404,44 @@ class DashboardWindow(DashboardHandlers, QMainWindow):
         self.learning_path_display = QTextEdit()
         self.learning_path_display.setReadOnly(True)
         self.learning_path_display.setPlaceholderText(
-            "Training protocol will be displayed here..."
+            "Learning path will be displayed here..."
         )
         layout.addWidget(self.learning_path_display)
 
-        self.tabs.addTab(tab, "◈ TRAINING")
+        self.tabs.addTab(tab, "Learning Paths")
 
     def setup_data_analysis_tab(self):
-        """Setup the data analysis tab (Intel Processing)"""
+        """Setup the data analysis tab"""
         tab = QWidget()
         layout = QVBoxLayout(tab)
 
         # File selection
-        load_button = QPushButton("◈ IMPORT DATA FILE ◈")
+        load_button = QPushButton("Load Data File")
         load_button.clicked.connect(self.load_data_file)
         layout.addWidget(load_button)
 
         # Analysis options
-        analysis_label = QLabel("◈ SELECT ANALYSIS PROTOCOL:")
+        analysis_label = QLabel("Select Analysis Type:")
         layout.addWidget(analysis_label)
         self.analysis_type = QComboBox()
         self.analysis_type.addItems([
-            "Basic Statistics",
-            "Scatter Analysis",
-            "Frequency Distribution",
-            "Variance Analysis",
-            "Correlation Matrix",
-            "Pattern Recognition"
+            "Basic Stats",
+            "Scatter Plot",
+            "Histogram",
+            "Box Plot",
+            "Correlation",
+            "Clustering"
         ])
         layout.addWidget(self.analysis_type)
 
         # Column selection
-        column_label = QLabel("◈ TARGET DATA COLUMN:")
+        column_label = QLabel("Select Column:")
         layout.addWidget(column_label)
         self.column_selector = QComboBox()
         layout.addWidget(self.column_selector)
 
         # Analyze button
-        analyze_button = QPushButton("◈ EXECUTE ANALYSIS ◈")
+        analyze_button = QPushButton("Analyze")
         analyze_button.clicked.connect(self.perform_analysis)
         layout.addWidget(analyze_button)
 
@@ -387,15 +453,15 @@ class DashboardWindow(DashboardHandlers, QMainWindow):
         )
         layout.addWidget(self.analysis_display)
 
-        self.tabs.addTab(tab, "◈ INTEL")
+        self.tabs.addTab(tab, "Data Analysis")
 
     def setup_security_tab(self):
-        """Setup the security resources tab (Tactical Database)"""
+        """Setup the security resources tab"""
         tab = QWidget()
         layout = QVBoxLayout(tab)
 
         # Category selection
-        category_label = QLabel("◈ SELECT SECURITY CATEGORY:")
+        category_label = QLabel("Select Category:")
         layout.addWidget(category_label)
         self.security_category = QComboBox()
         self.security_category.addItems(self.security_manager.get_all_categories())
@@ -403,32 +469,32 @@ class DashboardWindow(DashboardHandlers, QMainWindow):
         layout.addWidget(self.security_category)
 
         # Resources list
-        resources_label = QLabel("◈ AVAILABLE RESOURCES:")
+        resources_label = QLabel("Available Resources:")
         layout.addWidget(resources_label)
         self.resources_list = QListWidget()
         self.resources_list.itemDoubleClicked.connect(self.open_security_resource)
         layout.addWidget(self.resources_list)
 
         # Favorite button
-        favorite_button = QPushButton("◈ ADD TO FAVORITES ◈")
+        favorite_button = QPushButton("Add to Favorites")
         favorite_button.clicked.connect(self.add_security_favorite)
         layout.addWidget(favorite_button)
 
-        self.tabs.addTab(tab, "◈ TACTICAL")
+        self.tabs.addTab(tab, "Security Resources")
         self.update_security_resources()
 
     def setup_location_tab(self):
-        """Setup the location tracking tab (Navigation)"""
+        """Setup the location tracking tab"""
         tab = QWidget()
         layout = QVBoxLayout(tab)
 
         # Location toggle
-        self.location_toggle = QPushButton("◈ ACTIVATE TRACKING ◈")
+        self.location_toggle = QPushButton("Start Location Tracking")
         self.location_toggle.clicked.connect(self.toggle_location_tracking)
         layout.addWidget(self.location_toggle)
 
         # Current location display
-        location_label = QLabel("◈ CURRENT COORDINATES:")
+        location_label = QLabel("Current Location:")
         layout.addWidget(location_label)
         self.location_display = QTextEdit()
         self.location_display.setReadOnly(True)
@@ -438,26 +504,26 @@ class DashboardWindow(DashboardHandlers, QMainWindow):
         layout.addWidget(self.location_display)
 
         # Location history
-        history_label = QLabel("◈ NAVIGATION HISTORY:")
+        history_label = QLabel("Location History:")
         layout.addWidget(history_label)
 
         self.location_history = QListWidget()
         layout.addWidget(self.location_history)
 
         # Clear history button
-        clear_button = QPushButton("◈ PURGE HISTORY ◈")
+        clear_button = QPushButton("Clear History")
         clear_button.clicked.connect(self.clear_location_history)
         layout.addWidget(clear_button)
 
-        self.tabs.addTab(tab, "◈ NAVIGATION")
+        self.tabs.addTab(tab, "Location Tracking")
 
     def setup_emergency_tab(self):
-        """Setup the emergency alert tab (Distress Signal)"""
+        """Setup the emergency alert tab"""
         tab = QWidget()
         layout = QVBoxLayout(tab)
 
         # Warning header
-        warning_label = QLabel("⚠ EMERGENCY DISTRESS SYSTEM ⚠")
+        warning_label = QLabel("⚠ EMERGENCY ALERT SYSTEM ⚠")
         warning_label.setStyleSheet("""
             color: #ff4040;
             font-size: 16px;
@@ -471,53 +537,58 @@ class DashboardWindow(DashboardHandlers, QMainWindow):
         layout.addWidget(warning_label)
 
         # Emergency contacts setup
-        contacts_label = QLabel("◈ EMERGENCY CONTACTS (comma-separated):")
+        contacts_label = QLabel("Emergency Contacts (comma-separated emails):")
         layout.addWidget(contacts_label)
 
         self.contacts_input = QLineEdit()
         self.contacts_input.setPlaceholderText("Enter email addresses...")
         layout.addWidget(self.contacts_input)
 
-        save_contacts = QPushButton("◈ SAVE CONTACTS ◈")
+        save_contacts = QPushButton("Save Contacts")
         save_contacts.clicked.connect(self.save_emergency_contacts)
         layout.addWidget(save_contacts)
 
         # Emergency message
-        message_label = QLabel("◈ DISTRESS MESSAGE (optional):")
+        message_label = QLabel("Emergency Message (optional):")
         layout.addWidget(message_label)
 
         self.emergency_message = QTextEdit()
         self.emergency_message.setPlaceholderText(
-            "Enter additional details for your distress signal..."
+            "Enter additional message details..."
         )
         layout.addWidget(self.emergency_message)
 
         # Alert button
-        self.alert_button = QPushButton("⚠ BROADCAST DISTRESS SIGNAL ⚠")
+        self.alert_button = QPushButton("SEND EMERGENCY ALERT")
         self.alert_button.setObjectName("alert_button")
         self.alert_button.clicked.connect(self.send_emergency_alert)
         layout.addWidget(self.alert_button)
 
         # Alert history
-        history_label = QLabel("◈ SIGNAL HISTORY:")
+        history_label = QLabel("Alert History:")
         layout.addWidget(history_label)
 
         self.alert_history = QListWidget()
         layout.addWidget(self.alert_history)
 
-        self.tabs.addTab(tab, "◈ DISTRESS")
+        self.tabs.addTab(tab, "Emergency Alert")
 
     def send_message(self):
         """Handle sending a message with sci-fi styled output."""
         message = self.chat_input.text()
         if message:
+            # Update message counter
+            self.message_count += 1
+            if hasattr(self, 'stat_messages'):
+                self.stat_messages.setText(f"◆ MESSAGES: {self.message_count}")
+            
             # User message with styled prefix
-            user_prefix = '<span style="color: #80c0e0;">◈ COMMANDER:</span>'
+            user_prefix = '<span style="color: #80c0e0;">◈ You:</span>'
             self.chat_display.append(f'{user_prefix} {message}')
             # Process message and get response
             response = self.process_message(message)
             # AI response with styled prefix
-            ai_prefix = '<span style="color: #00d4ff;">◈ E.D.I.:</span>'
+            ai_prefix = '<span style="color: #00d4ff;">◈ AI:</span>'
             self.chat_display.append(f'{ai_prefix} {response}')
             self.chat_display.append("")  # Add spacing
             self.chat_input.clear()
