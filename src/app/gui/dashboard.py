@@ -32,9 +32,10 @@ from app.core.data_analysis import DataAnalyzer
 from app.core.security_resources import SecurityResourceManager
 from app.core.location_tracker import LocationTracker
 from app.core.emergency_alert import EmergencyAlert
+from app.gui.dashboard_handlers import DashboardHandlers
 
 
-class DashboardWindow(QMainWindow):
+class DashboardWindow(DashboardHandlers, QMainWindow):
     def __init__(self, username: str = None, initial_tab: int = 0):
         super().__init__()
         # Initialize core components
