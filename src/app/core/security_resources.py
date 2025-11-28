@@ -2,9 +2,10 @@
 Security resources and repository management.
 """
 import requests
-import json
 import os
 from datetime import datetime
+
+from app.core.json_file_utils import load_json_file, save_json_file
 
 
 class SecurityResourceManager:
@@ -92,10 +93,7 @@ class SecurityResourceManager:
     def save_favorite(self, username, repo):
         """Save a repository as favorite for a user"""
         filename = f"security_favorites_{username}.json"
-        favorites = {}
-        if os.path.exists(filename):
-            with open(filename, 'r') as f:
-                favorites = json.load(f)
+        favorites = load_json_file(filename)
 
         if repo not in favorites:
             favorites[repo] = {
@@ -103,13 +101,9 @@ class SecurityResourceManager:
                 'details': self.get_repo_details(repo)
             }
 
-        with open(filename, 'w') as f:
-            json.dump(favorites, f)
+        save_json_file(filename, favorites)
 
     def get_favorites(self, username):
         """Get user's favorite security resources"""
         filename = f"security_favorites_{username}.json"
-        if os.path.exists(filename):
-            with open(filename, 'r') as f:
-                return json.load(f)
-        return {}
+        return load_json_file(filename)

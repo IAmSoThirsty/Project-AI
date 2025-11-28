@@ -2,8 +2,9 @@
 Learning path generator and manager.
 """
 import openai
-import json
 import os
+
+from app.core.json_file_utils import load_json_file, save_json_file
 
 
 class LearningPathManager:
@@ -41,10 +42,7 @@ class LearningPathManager:
     def save_path(self, username, interest, path_content):
         """Save a generated learning path"""
         filename = f"learning_paths_{username}.json"
-        paths = {}
-        if os.path.exists(filename):
-            with open(filename, 'r') as f:
-                paths = json.load(f)
+        paths = load_json_file(filename)
 
         paths[interest] = {
             'content': path_content,
@@ -52,13 +50,9 @@ class LearningPathManager:
             'completed_milestones': []
         }
 
-        with open(filename, 'w') as f:
-            json.dump(paths, f)
+        save_json_file(filename, paths)
 
     def get_saved_paths(self, username):
         """Get all saved learning paths for a user"""
         filename = f"learning_paths_{username}.json"
-        if os.path.exists(filename):
-            with open(filename, 'r') as f:
-                return json.load(f)
-        return {}
+        return load_json_file(filename)

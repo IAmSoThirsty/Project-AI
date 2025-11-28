@@ -4,9 +4,10 @@ Emergency alert system implementation.
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-import json
 import os
 from datetime import datetime
+
+from app.core.json_file_utils import load_json_file, save_json_file, append_to_json_list
 
 
 class EmergencyAlert:
@@ -22,14 +23,11 @@ class EmergencyAlert:
 
     def load_contacts(self):
         """Load emergency contacts from file"""
-        if os.path.exists('emergency_contacts.json'):
-            with open('emergency_contacts.json', 'r') as f:
-                self.emergency_contacts = json.load(f)
+        self.emergency_contacts = load_json_file('emergency_contacts.json')
 
     def save_contacts(self):
         """Save emergency contacts to file"""
-        with open('emergency_contacts.json', 'w') as f:
-            json.dump(self.emergency_contacts, f)
+        save_json_file('emergency_contacts.json', self.emergency_contacts)
 
     def add_emergency_contact(self, username, contact_info):
         """Add or update emergency contact for a user"""
@@ -99,21 +97,9 @@ class EmergencyAlert:
         }
 
         filename = f"emergency_alerts_{username}.json"
-        logs = []
-
-        if os.path.exists(filename):
-            with open(filename, 'r') as f:
-                logs = json.load(f)
-
-        logs.append(log_entry)
-
-        with open(filename, 'w') as f:
-            json.dump(logs, f)
+        append_to_json_list(filename, log_entry)
 
     def get_alert_history(self, username):
         """Get history of emergency alerts for a user"""
         filename = f"emergency_alerts_{username}.json"
-        if os.path.exists(filename):
-            with open(filename, 'r') as f:
-                return json.load(f)
-        return []
+        return load_json_file(filename, default=[])

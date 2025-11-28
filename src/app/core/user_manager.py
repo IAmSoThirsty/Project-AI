@@ -8,12 +8,13 @@ method stores a password hash under the `password_hash` key. If an existing
 them to hashed `password_hash` entries on load.
 """
 
-import json
 import os
 from cryptography.fernet import Fernet
 from dotenv import load_dotenv
 from passlib.context import CryptContext
 from passlib.hash import pbkdf2_sha256
+
+from app.core.json_file_utils import load_json_file, save_json_file
 
 # Setup password hashing context (prefer pbkdf2_sha256 to avoid bcrypt backend issues in some
 # environments; keep bcrypt listed so older hashes remain verifiable)
@@ -46,42 +47,36 @@ class UserManager:
             self.cipher_suite = Fernet(Fernet.generate_key())
 
         # Load users (if file exists); do NOT create default plaintext users
-        if os.path.exists(self.users_file):
-            with open(self.users_file, 'r') as f:
-                try:
-                    self.users = json.load(f)
-                except Exception:
-                    self.users = {}
+        self.users = load_json_file(self.users_file)
 
-            # If any user entries have plaintext 'password', migrate them
-            migrated = False
-            for uname, udata in list(self.users.items()):
-                if isinstance(udata, dict) and 'password' in udata and 'password_hash' not in udata:
+        # If any user entries have plaintext 'password', migrate them
+        migrated = False
+        for uname, udata in list(self.users.items()):
+            if isinstance(udata, dict) and 'password' in udata and 'password_hash' not in udata:
+                try:
+                    pw = udata.get('password')
+                    # try to hash first; only remove plaintext if hashing succeeds
+                    pw_hash = pwd_context.hash(pw)
+                    self.users[uname]['password_hash'] = pw_hash
+                    # remove plaintext password
+                    self.users[uname].pop('password', None)
+                    migrated = True
+                except Exception:
+                    # bcrypt hashing failed (backend issues); try a safe fallback
                     try:
-                        pw = udata.get('password')
-                        # try to hash first; only remove plaintext if hashing succeeds
-                        pw_hash = pwd_context.hash(pw)
-                        self.users[uname]['password_hash'] = pw_hash
-                        # remove plaintext password
+                        fallback_hash = pbkdf2_sha256.hash(pw)
+                        self.users[uname]['password_hash'] = fallback_hash
                         self.users[uname].pop('password', None)
                         migrated = True
                     except Exception:
-                        # bcrypt hashing failed (backend issues); try a safe fallback
-                        try:
-                            fallback_hash = pbkdf2_sha256.hash(pw)
-                            self.users[uname]['password_hash'] = fallback_hash
-                            self.users[uname].pop('password', None)
-                            migrated = True
-                        except Exception:
-                            # skip migration for this user if hashing fails
-                            continue
-            if migrated:
-                self.save_users()
+                        # skip migration for this user if hashing fails
+                        continue
+        if migrated:
+            self.save_users()
 
     def save_users(self):
         """Save users to file"""
-        with open(self.users_file, 'w') as f:
-            json.dump(self.users, f)
+        save_json_file(self.users_file, self.users)
 
     def authenticate(self, username, password):
         """Authenticate a user using stored bcrypt password hash."""

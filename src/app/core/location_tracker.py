@@ -10,6 +10,8 @@ from dotenv import load_dotenv
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut
 
+from app.core.json_file_utils import load_json_file, save_json_file
+
 
 class LocationTracker:
     def __init__(self, encryption_key=None):
@@ -90,27 +92,18 @@ class LocationTracker:
     def save_location_history(self, username, location_data):
         """Save encrypted location history"""
         filename = f"location_history_{username}.json"
-        history = []
-
-        if os.path.exists(filename):
-            with open(filename, 'r') as f:
-                history = json.load(f)
+        history = load_json_file(filename, default=[])
 
         encrypted_location = self.encrypt_location(location_data)
         if encrypted_location:
             history.append(encrypted_location.decode())  # Convert bytes to string for JSON
 
-        with open(filename, 'w') as f:
-            json.dump(history, f)
+        save_json_file(filename, history)
 
     def get_location_history(self, username):
         """Get decrypted location history"""
         filename = f"location_history_{username}.json"
-        if not os.path.exists(filename):
-            return []
-
-        with open(filename, 'r') as f:
-            history = json.load(f)
+        history = load_json_file(filename, default=[])
 
         decrypted_history = []
         for encrypted_location in history:
