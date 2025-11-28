@@ -5,7 +5,7 @@ Main dashboard window implementation.
 import base64
 import os
 
-from PyQt6.QtCore import QPropertyAnimation, QTimer
+from PyQt6.QtCore import QEvent, QObject, QPointF, QPropertyAnimation, QTimer
 from PyQt6.QtGui import QAction, QColor, QFont
 from PyQt6.QtWidgets import (
     QApplication,
@@ -33,6 +33,55 @@ from app.core.location_tracker import LocationTracker
 from app.core.security_resources import SecurityResourceManager
 from app.core.user_manager import UserManager
 from app.gui.settings_dialog import SettingsDialog
+
+
+class HoverLiftEventFilter(QObject):
+    """Event filter that applies a small lift animation to a widget's shadow effect
+
+    It increases blur radius and shifts the shadow upward on hover, and restores
+    the original values on leave. This creates a tactile "lift" effect.
+    """
+
+    def __init__(self, effect, parent=None):
+        super().__init__(parent)
+        self.effect = effect
+        # animations for blur and offset
+        self._enter_blur = QPropertyAnimation(self.effect, b"blurRadius")
+        self._enter_blur.setDuration(180)
+        self._leave_blur = QPropertyAnimation(self.effect, b"blurRadius")
+        self._leave_blur.setDuration(180)
+
+        self._enter_off = QPropertyAnimation(self.effect, b"offset")
+        self._enter_off.setDuration(180)
+        self._leave_off = QPropertyAnimation(self.effect, b"offset")
+        self._leave_off.setDuration(180)
+
+    def eventFilter(self, obj, event):
+        try:
+            if event.type() == QEvent.Type.Enter:
+                start = self.effect.blurRadius()
+                self._enter_blur.stop()
+                self._enter_blur.setStartValue(start)
+                self._enter_blur.setEndValue(min(start * 1.6, 30))
+                cur = self.effect.offset()
+                self._enter_off.stop()
+                self._enter_off.setStartValue(cur)
+                self._enter_off.setEndValue(QPointF(cur.x(), cur.y() - 4))
+                self._enter_blur.start()
+                self._enter_off.start()
+            elif event.type() == QEvent.Type.Leave:
+                self._leave_blur.stop()
+                self._leave_blur.setStartValue(self.effect.blurRadius())
+                self._leave_blur.setEndValue(8)
+                cur = self.effect.offset()
+                self._leave_off.stop()
+                self._leave_off.setStartValue(cur)
+                self._leave_off.setEndValue(QPointF(0, 3))
+                self._leave_blur.start()
+                self._leave_off.start()
+        except Exception:
+            pass
+        return False
 
 
 class DashboardWindow(QMainWindow):
@@ -87,6 +136,20 @@ class DashboardWindow(QMainWindow):
             anim.setStartValue(0.0)
             anim.setEndValue(1.0)
             anim.start(QPropertyAnimation.DeleteWhenStopped)
+            # subtle parallax: shift main container shadow slightly based on tab
+            try:
+                main_eff = self.centralWidget().graphicsEffect()
+                if isinstance(main_eff, QGraphicsDropShadowEffect):
+                    # animate offset left/right depending on tab index
+                    cur = main_eff.offset()
+                    target_x = -6 if (index % 2) == 0 else 6
+                    off_anim = QPropertyAnimation(main_eff, b"offset", self)
+                    off_anim.setDuration(300)
+                    off_anim.setStartValue(cur)
+                    off_anim.setEndValue(QPointF(target_x, cur.y()))
+                    off_anim.start(QPropertyAnimation.DeleteWhenStopped)
+            except Exception:
+                pass
         except Exception:
             # animations are cosmetic; ignore errors
             pass
@@ -259,6 +322,39 @@ class DashboardWindow(QMainWindow):
             # non-fatal: keep going without Users tab
             pass
 
+        # Attach hover/press lift behavior to all buttons for tactile feedback
+        try:
+            self._attach_lifts_to_all_buttons()
+        except Exception:
+            pass
+
+    def _attach_lift_to_button(self, button: QPushButton):
+        """Ensure a button has a drop shadow effect and an event filter that
+        animates the effect on hover/leave.
+        """
+        try:
+            eff = button.graphicsEffect()
+            if not isinstance(eff, QGraphicsDropShadowEffect):
+                eff = QGraphicsDropShadowEffect(button)
+                eff.setBlurRadius(8)
+                eff.setOffset(0, 3)
+                eff.setColor(QColor(0, 0, 0, 100))
+                button.setGraphicsEffect(eff)
+
+            if not hasattr(button, "_hover_lift_filter"):
+                filt = HoverLiftEventFilter(eff, button)
+                button.installEventFilter(filt)
+                # keep a reference so it isn't garbage-collected
+                button._hover_lift_filter = filt
+        except Exception:
+            pass
+
+    def _attach_lifts_to_all_buttons(self):
+        try:
+            for btn in self.findChildren(QPushButton):
+                self._attach_lift_to_button(btn)
+        except Exception:
+            pass
         # Apply subtle shadows to each tab page to reinforce depth
         try:
             for i in range(self.tabs.count()):
