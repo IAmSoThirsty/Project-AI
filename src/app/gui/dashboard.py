@@ -179,10 +179,11 @@ class DashboardWindow(DashboardHandlers, QMainWindow):
             pass
 
     def _load_ai_face_svg(self) -> QPixmap:
-        """Load the AI face SVG and return as QPixmap."""
+        """Load the AI face SVG and return as QPixmap (enlarged 3D version)."""
         assets_dir = os.path.join(os.path.dirname(__file__), 'assets')
         ai_face_path = os.path.join(assets_dir, 'ai_face.svg')
-        pixmap = QPixmap(150, 150)
+        # Enlarged size for 3D face display (300x300 for better visual impact)
+        pixmap = QPixmap(280, 280)
         pixmap.fill(Qt.GlobalColor.transparent)
 
         if os.path.exists(ai_face_path):
@@ -199,121 +200,214 @@ class DashboardWindow(DashboardHandlers, QMainWindow):
         return pixmap
 
     def setup_chat_tab(self):
-        """Setup the chat interface tab with AI digital face construct and status monitors."""
+        """Setup the chat interface tab with enhanced 3D AI face and status monitors."""
         chat_tab = QWidget()
         main_layout = QVBoxLayout(chat_tab)
 
-        # Top section: AI Face and system monitors
+        # Top section: Enlarged AI Face and enhanced system monitors
         top_section = QHBoxLayout()
 
-        # AI Face display (digital construct)
+        # AI Face display (enlarged 3D digital construct)
+        ai_container = QVBoxLayout()
+        
         ai_frame = QFrame()
         ai_frame.setObjectName("ai_face_frame")
-        ai_frame.setFixedSize(160, 160)
+        ai_frame.setFixedSize(300, 300)
+        ai_frame.setStyleSheet("""
+            QFrame#ai_face_frame {
+                background: qradialgradient(cx:0.5, cy:0.5, radius:0.8,
+                    fx:0.5, fy:0.3,
+                    stop:0 rgba(0, 50, 80, 0.4),
+                    stop:0.5 rgba(0, 30, 50, 0.3),
+                    stop:1 rgba(5, 15, 25, 0.2));
+                border: 3px solid rgba(0, 200, 255, 0.5);
+                border-radius: 150px;
+            }
+        """)
         ai_layout = QVBoxLayout(ai_frame)
-        ai_layout.setContentsMargins(5, 5, 5, 5)
+        ai_layout.setContentsMargins(10, 10, 10, 10)
 
         self.ai_face_label = QLabel()
         self.ai_face_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         ai_pixmap = self._load_ai_face_svg()
         self.ai_face_label.setPixmap(ai_pixmap)
         ai_layout.addWidget(self.ai_face_label)
+        
+        ai_container.addWidget(ai_frame, alignment=Qt.AlignmentFlag.AlignCenter)
+        
+        # AI identifier label under the face
+        ai_id_label = QLabel("◈ AI CORE INTERFACE ◈")
+        ai_id_label.setStyleSheet("""
+            color: #00d4ff;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 8px;
+        """)
+        ai_id_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        ai_container.addWidget(ai_id_label)
+        
+        top_section.addLayout(ai_container)
 
-        top_section.addWidget(ai_frame)
+        # Enhanced System Status Monitors Panel with 3D styling
+        monitors_container = QVBoxLayout()
 
-        # System Status Monitors Panel
-        monitors_panel = QVBoxLayout()
-
-        # AI Status header
-        ai_status_header = QLabel("◈ AI ASSISTANT STATUS ◈")
+        # AI Status header with enhanced styling
+        ai_status_header = QLabel("◈ SYSTEM STATUS ◈")
         ai_status_header.setStyleSheet("""
             color: #00d4ff;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: bold;
-            padding: 4px 8px;
+            padding: 8px;
+            background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                stop:0 rgba(0, 50, 80, 0.4),
+                stop:0.5 rgba(0, 80, 120, 0.3),
+                stop:1 rgba(0, 50, 80, 0.4));
+            border-radius: 4px;
         """)
-        monitors_panel.addWidget(ai_status_header)
+        monitors_container.addWidget(ai_status_header)
 
-        # Status monitor frame
+        # Status monitor frame with enhanced 3D appearance
         status_monitor = QFrame()
         status_monitor.setStyleSheet("""
             QFrame {
-                background: rgba(10, 25, 45, 0.8);
-                border: 1px solid rgba(0, 200, 255, 0.4);
-                border-radius: 4px;
-                padding: 8px;
+                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                    stop:0 rgba(10, 30, 50, 0.9),
+                    stop:0.5 rgba(5, 20, 40, 0.95),
+                    stop:1 rgba(10, 30, 50, 0.9));
+                border: 2px solid rgba(0, 200, 255, 0.5);
+                border-radius: 8px;
+                padding: 12px;
             }
         """)
         status_layout = QVBoxLayout(status_monitor)
-        status_layout.setSpacing(4)
+        status_layout.setSpacing(8)
 
-        # System status indicators
+        # Enhanced system status indicators with icons
         self.status_online = QLabel("● SYSTEM STATUS: ONLINE")
-        self.status_online.setStyleSheet("color: #40ff80; font-size: 11px;")
+        self.status_online.setStyleSheet("""
+            color: #40ff80;
+            font-size: 13px;
+            font-weight: bold;
+            padding: 4px;
+            background: rgba(0, 100, 50, 0.2);
+            border-radius: 4px;
+        """)
         status_layout.addWidget(self.status_online)
 
-        self.status_memory = QLabel("● MEMORY: NOMINAL")
-        self.status_memory.setStyleSheet("color: #40ff80; font-size: 11px;")
+        self.status_memory = QLabel("● MEMORY: 85% OPTIMAL")
+        self.status_memory.setStyleSheet("""
+            color: #40ff80;
+            font-size: 13px;
+            padding: 4px;
+            background: rgba(0, 100, 50, 0.15);
+            border-radius: 4px;
+        """)
         status_layout.addWidget(self.status_memory)
 
-        self.status_network = QLabel("● NETWORK: CONNECTED")
-        self.status_network.setStyleSheet("color: #40ff80; font-size: 11px;")
+        self.status_network = QLabel("● NETWORK: SECURE CONNECTION")
+        self.status_network.setStyleSheet("""
+            color: #40ff80;
+            font-size: 13px;
+            padding: 4px;
+            background: rgba(0, 100, 50, 0.15);
+            border-radius: 4px;
+        """)
         status_layout.addWidget(self.status_network)
 
-        self.status_ai = QLabel("● AI CORE: READY")
-        self.status_ai.setStyleSheet("color: #00d4ff; font-size: 11px;")
+        self.status_ai = QLabel("● AI CORE: FULLY OPERATIONAL")
+        self.status_ai.setStyleSheet("""
+            color: #00d4ff;
+            font-size: 13px;
+            font-weight: bold;
+            padding: 4px;
+            background: rgba(0, 80, 120, 0.3);
+            border-radius: 4px;
+        """)
         status_layout.addWidget(self.status_ai)
 
-        monitors_panel.addWidget(status_monitor)
-        monitors_panel.addStretch()
+        monitors_container.addWidget(status_monitor)
+        monitors_container.addStretch()
 
-        top_section.addLayout(monitors_panel)
+        top_section.addLayout(monitors_container)
 
-        # Right side: Additional stats panel
-        stats_panel = QVBoxLayout()
+        # Right side: Enhanced metrics panel with 3D styling
+        stats_container = QVBoxLayout()
 
-        stats_header = QLabel("◈ SYSTEM METRICS ◈")
+        stats_header = QLabel("◈ PERFORMANCE METRICS ◈")
         stats_header.setStyleSheet("""
             color: #00d4ff;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: bold;
-            padding: 4px 8px;
+            padding: 8px;
+            background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                stop:0 rgba(0, 50, 80, 0.4),
+                stop:0.5 rgba(0, 80, 120, 0.3),
+                stop:1 rgba(0, 50, 80, 0.4));
+            border-radius: 4px;
         """)
-        stats_panel.addWidget(stats_header)
+        stats_container.addWidget(stats_header)
 
-        # Stats monitor frame
+        # Stats monitor frame with 3D appearance
         stats_monitor = QFrame()
         stats_monitor.setStyleSheet("""
             QFrame {
-                background: rgba(10, 25, 45, 0.8);
-                border: 1px solid rgba(0, 200, 255, 0.4);
-                border-radius: 4px;
-                padding: 8px;
+                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                    stop:0 rgba(10, 30, 50, 0.9),
+                    stop:0.5 rgba(5, 20, 40, 0.95),
+                    stop:1 rgba(10, 30, 50, 0.9));
+                border: 2px solid rgba(0, 200, 255, 0.5);
+                border-radius: 8px;
+                padding: 12px;
             }
         """)
         stats_inner = QVBoxLayout(stats_monitor)
-        stats_inner.setSpacing(4)
+        stats_inner.setSpacing(8)
 
         self.stat_uptime = QLabel("◆ UPTIME: 00:00:00")
-        self.stat_uptime.setStyleSheet("color: #a0d4ff; font-size: 11px;")
+        self.stat_uptime.setStyleSheet("""
+            color: #a0d4ff;
+            font-size: 13px;
+            padding: 4px;
+            background: rgba(0, 60, 100, 0.2);
+            border-radius: 4px;
+        """)
         stats_inner.addWidget(self.stat_uptime)
 
-        self.stat_messages = QLabel("◆ MESSAGES: 0")
-        self.stat_messages.setStyleSheet("color: #a0d4ff; font-size: 11px;")
+        self.stat_messages = QLabel("◆ MESSAGES PROCESSED: 0")
+        self.stat_messages.setStyleSheet("""
+            color: #a0d4ff;
+            font-size: 13px;
+            padding: 4px;
+            background: rgba(0, 60, 100, 0.2);
+            border-radius: 4px;
+        """)
         stats_inner.addWidget(self.stat_messages)
 
-        self.stat_response = QLabel("◆ AVG RESPONSE: <1ms")
-        self.stat_response.setStyleSheet("color: #a0d4ff; font-size: 11px;")
+        self.stat_response = QLabel("◆ RESPONSE TIME: <1ms")
+        self.stat_response.setStyleSheet("""
+            color: #a0d4ff;
+            font-size: 13px;
+            padding: 4px;
+            background: rgba(0, 60, 100, 0.2);
+            border-radius: 4px;
+        """)
         stats_inner.addWidget(self.stat_response)
 
-        self.stat_user = QLabel(f"◆ USER: {self.user_manager.current_user or 'GUEST'}")
-        self.stat_user.setStyleSheet("color: #80c0e0; font-size: 11px;")
+        self.stat_user = QLabel(f"◆ ACTIVE USER: {self.user_manager.current_user or 'GUEST'}")
+        self.stat_user.setStyleSheet("""
+            color: #80c0e0;
+            font-size: 13px;
+            font-weight: bold;
+            padding: 4px;
+            background: rgba(0, 80, 120, 0.25);
+            border-radius: 4px;
+        """)
         stats_inner.addWidget(self.stat_user)
 
-        stats_panel.addWidget(stats_monitor)
-        stats_panel.addStretch()
+        stats_container.addWidget(stats_monitor)
+        stats_container.addStretch()
 
-        top_section.addLayout(stats_panel)
+        top_section.addLayout(stats_container)
         top_section.addStretch()
 
         main_layout.addLayout(top_section)
