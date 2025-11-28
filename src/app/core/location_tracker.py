@@ -13,7 +13,7 @@ from geopy.exc import GeocoderTimedOut
 
 class LocationTracker:
     def __init__(self, encryption_key=None):
-        # Prefer explicit argument, then FERNET_KEY env var, then generate a new key
+        # Prefer explicit argument, then FERNET_KEY env var, else generate key
         # Load .env so environment keys are available
         load_dotenv()
         key = encryption_key or os.getenv('FERNET_KEY')
@@ -98,7 +98,8 @@ class LocationTracker:
 
         encrypted_location = self.encrypt_location(location_data)
         if encrypted_location:
-            history.append(encrypted_location.decode())  # Convert bytes to string for JSON
+            # Convert bytes to string for JSON
+            history.append(encrypted_location.decode())
 
         with open(filename, 'w') as f:
             json.dump(history, f)
@@ -114,7 +115,8 @@ class LocationTracker:
 
         decrypted_history = []
         for encrypted_location in history:
-            location_data = self.decrypt_location(encrypted_location.encode())  # Convert string back to bytes
+            # Convert string back to bytes
+            location_data = self.decrypt_location(encrypted_location.encode())
             if location_data:
                 decrypted_history.append(location_data)
 

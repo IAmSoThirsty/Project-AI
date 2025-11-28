@@ -1,10 +1,11 @@
-"""CLI tool to preview or apply migration of plaintext passwords to bcrypt hashes.
+"""CLI tool to preview or apply migration of plaintext passwords.
 
 Usage:
     python tools/migrate_users.py [--users-file path] [--apply]
 
-If --apply is not provided, the script prints what it would change. If --apply
-is provided, it will perform the migration and overwrite the users file.
+If --apply is not provided, the script prints what it would change.
+If --apply is provided, it will perform the migration and overwrite
+the users file.
 """
 import argparse
 import json
@@ -19,7 +20,12 @@ def preview_migration(users_path: str):
         data = json.load(f)
     to_migrate = []
     for uname, udata in data.items():
-        if isinstance(udata, dict) and 'password' in udata and 'password_hash' not in udata:
+        has_plaintext = (
+            isinstance(udata, dict) and
+            'password' in udata and
+            'password_hash' not in udata
+        )
+        if has_plaintext:
             to_migrate.append(uname)
     return data, to_migrate
 
@@ -49,8 +55,12 @@ def apply_migration(users_path: str):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--users-file', default='src/app/users.json', help='Path to users.json')
-    parser.add_argument('--apply', action='store_true', help='Apply the migration')
+    parser.add_argument(
+        '--users-file', default='src/app/users.json', help='Path to users.json'
+    )
+    parser.add_argument(
+        '--apply', action='store_true', help='Apply the migration'
+    )
     args = parser.parse_args()
 
     if not os.path.exists(args.users_file):
@@ -70,4 +80,5 @@ if __name__ == '__main__':
         n = apply_migration(args.users_file)
         print(f'Migrated {n} users')
     else:
-        print('\nRun with --apply to perform the migration (this will back up the file).')
+        msg = 'Run with --apply to perform the migration (backs up the file).'
+        print(f'\n{msg}')

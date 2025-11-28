@@ -9,7 +9,7 @@ from datetime import datetime
 
 class SecurityResourceManager:
     def __init__(self):
-        # break long entries across multiple lines to keep line lengths reasonable
+        # break long entries across lines to keep line lengths reasonable
         self.resources = {
             "CTF_Security": [
                 {
@@ -27,8 +27,16 @@ class SecurityResourceManager:
                     "repo": "blaCCkHatHacEEkr/PENTESTING-BIBLE",
                     "category": "Penetration Testing",
                 },
-                {"name": "CTF Tools", "repo": "zardus/ctf-tools", "category": "CTF"},
-                {"name": "Awesome CTF", "repo": "apsdehal/awesome-ctf", "category": "CTF"},
+                {
+                    "name": "CTF Tools",
+                    "repo": "zardus/ctf-tools",
+                    "category": "CTF"
+                },
+                {
+                    "name": "Awesome CTF",
+                    "repo": "apsdehal/awesome-ctf",
+                    "category": "CTF",
+                },
             ],
             "Privacy_Tools": [
                 {
@@ -60,7 +68,9 @@ class SecurityResourceManager:
         """Get security resources filtered by category"""
         resources = []
         for category_resources in self.resources.values():
-            resources.extend([r for r in category_resources if r['category'] == category])
+            resources.extend(
+                [r for r in category_resources if r['category'] == category]
+            )
         return resources
 
     def get_all_categories(self):

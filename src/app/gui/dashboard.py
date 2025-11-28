@@ -65,7 +65,7 @@ class DashboardWindow(QMainWindow):
             self.statusBar().showMessage("")
 
     def animate_tab_change(self, index: int):
-        """Apply a quick fade-in animation to the newly selected tab to emulate a page turn."""
+        """Apply a quick fade-in animation to the newly selected tab."""
         try:
             widget = self.tabs.widget(index)
             if widget is None:
@@ -95,7 +95,7 @@ class DashboardWindow(QMainWindow):
         self.tabs = QTabWidget()
         layout.addWidget(self.tabs)
 
-        # Try to load external QSS stylesheet for the "book" appearance if present
+        # Try to load external QSS stylesheet for the book appearance
         try:
             qss_path = os.path.join(os.path.dirname(__file__), 'styles.qss')
             if os.path.exists(qss_path):
@@ -109,23 +109,41 @@ class DashboardWindow(QMainWindow):
                 if os.path.exists(parchment_path):
                     with open(parchment_path, 'rb') as af:
                         pdata = base64.b64encode(af.read()).decode('ascii')
-                        qss = qss.replace('{PARCHMENT}', f'data:image/svg+xml;base64,{pdata}')
+                        data_uri = f'data:image/svg+xml;base64,{pdata}'
+                        qss = qss.replace('{PARCHMENT}', data_uri)
                 # leather
                 leather_path = os.path.join(assets_dir, 'leather.svg')
                 if os.path.exists(leather_path):
                     with open(leather_path, 'rb') as af:
                         ldata = base64.b64encode(af.read()).decode('ascii')
-                        qss = qss.replace('{LEATHER}', f'data:image/svg+xml;base64,{ldata}')
+                        data_uri = f'data:image/svg+xml;base64,{ldata}'
+                        qss = qss.replace('{LEATHER}', data_uri)
 
                 self.setStyleSheet(qss)
             else:
                 # fallback inline style
                 self.setStyleSheet("""
                     QMainWindow { background-color: #f7f1e1; }
-                    QTabWidget::pane { border: 1px solid #c9b79c; background: #fffdf6; }
-                    QTabBar::tab { background: #e9dcc7; padding: 10px; margin: 2px; border-radius: 4px; }
-                    QTabBar::tab:selected { background: #fff; font-weight: bold; }
-                    QPushButton { background-color: #a67c52; color: white; border-radius: 4px; padding: 6px; }
+                    QTabWidget::pane {
+                        border: 1px solid #c9b79c;
+                        background: #fffdf6;
+                    }
+                    QTabBar::tab {
+                        background: #e9dcc7;
+                        padding: 10px;
+                        margin: 2px;
+                        border-radius: 4px;
+                    }
+                    QTabBar::tab:selected {
+                        background: #fff;
+                        font-weight: bold;
+                    }
+                    QPushButton {
+                        background-color: #a67c52;
+                        color: white;
+                        border-radius: 4px;
+                        padding: 6px;
+                    }
                     QPushButton#alert_button { background-color: red; }
                 """)
         except Exception:
@@ -235,7 +253,10 @@ class DashboardWindow(QMainWindow):
 
         # Analysis options
         self.analysis_type = QComboBox()
-        self.analysis_type.addItems(["Basic Stats", "Scatter Plot", "Histogram", "Box Plot", "Correlation", "Clustering"])
+        self.analysis_type.addItems([
+            "Basic Stats", "Scatter Plot", "Histogram",
+            "Box Plot", "Correlation", "Clustering"
+        ])
         layout.addWidget(self.analysis_type)
 
         # Column selection
@@ -261,13 +282,18 @@ class DashboardWindow(QMainWindow):
 
         # Category selection
         self.security_category = QComboBox()
-        self.security_category.addItems(self.security_manager.get_all_categories())
-        self.security_category.currentTextChanged.connect(self.update_security_resources)
+        categories = self.security_manager.get_all_categories()
+        self.security_category.addItems(categories)
+        self.security_category.currentTextChanged.connect(
+            self.update_security_resources
+        )
         layout.addWidget(self.security_category)
 
         # Resources list
         self.resources_list = QListWidget()
-        self.resources_list.itemDoubleClicked.connect(self.open_security_resource)
+        self.resources_list.itemDoubleClicked.connect(
+            self.open_security_resource
+        )
         layout.addWidget(self.resources_list)
 
         # Favorite button
@@ -333,7 +359,9 @@ class DashboardWindow(QMainWindow):
         # Alert button
         self.alert_button = QPushButton("SEND EMERGENCY ALERT")
         self.alert_button.setObjectName("alert_button")
-        self.alert_button.setStyleSheet("background-color: red; color: white; font-weight: bold;")
+        self.alert_button.setStyleSheet(
+            "background-color: red; color: white; font-weight: bold;"
+        )
         self.alert_button.clicked.connect(self.send_emergency_alert)
         layout.addWidget(self.alert_button)
 

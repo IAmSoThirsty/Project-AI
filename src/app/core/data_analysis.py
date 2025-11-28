@@ -45,7 +45,7 @@ class DataAnalyzer:
             return False
 
     def get_summary_stats(self):
-        """Return basic summary statistics and metadata for the loaded dataset."""
+        """Return basic summary statistics and metadata for the dataset."""
         if self.data is None:
             return "No data loaded"
 
@@ -57,7 +57,12 @@ class DataAnalyzer:
             "column_count": len(self.data.columns),
         }
 
-    def create_visualization(self, plot_type: str, x_col: str | None = None, y_col: str | None = None):
+    def create_visualization(
+        self,
+        plot_type: str,
+        x_col: str | None = None,
+        y_col: str | None = None
+    ):
         """Create a matplotlib Figure or a Qt canvas depending on environment.
 
         Returns a Figure or a FigureCanvasQTAgg when available.
@@ -91,12 +96,12 @@ class DataAnalyzer:
                 return FigureCanvasQTAgg(fig)
 
             return fig
-        except Exception as exc:  # pragma: no cover - runtime visualization errors
+        except Exception as exc:  # pragma: no cover - visualization errors
             print(f"Error creating visualization: {exc}")
             return None
 
     def perform_clustering(self, columns, n_clusters: int = 3):
-        """Run KMeans clustering on specified numeric columns and return (figure, clusters)."""
+        """Run KMeans clustering on columns, return (figure, clusters)."""
         if self.data is None:
             return None, None
 
@@ -112,7 +117,9 @@ class DataAnalyzer:
 
             fig = Figure(figsize=(8, 6))
             ax = fig.add_subplot(111)
-            scatter = ax.scatter(X_pca[:, 0], X_pca[:, 1], c=clusters, cmap="viridis")
+            scatter = ax.scatter(
+                X_pca[:, 0], X_pca[:, 1], c=clusters, cmap="viridis"
+            )
             ax.set_xlabel("First Principal Component")
             ax.set_ylabel("Second Principal Component")
             ax.set_title("K-means Clustering Results")

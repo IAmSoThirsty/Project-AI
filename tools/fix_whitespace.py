@@ -1,4 +1,5 @@
-"""Simple script to trim trailing whitespace and ensure EOF newline for project files.
+"""Simple script to trim trailing whitespace and ensure EOF newline.
+
 Targets: src/, tests/, setup.py, tools/.
 
 Run from repository root. Prints modified files.
@@ -32,7 +33,8 @@ def iter_files(root: Path):
         p = root / t
         if p.is_dir():
             for f in p.rglob("*"):
-                if f.is_file() and f.suffix in {".py", ".qss", ".md", ".txt", ".json"}:
+                exts = {".py", ".qss", ".md", ".txt", ".json"}
+                if f.is_file() and f.suffix in exts:
                     yield f
         elif p.is_file():
             yield p

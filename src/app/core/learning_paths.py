@@ -15,9 +15,10 @@ class LearningPathManager:
     def generate_path(self, interest, skill_level="beginner"):
         """Generate a personalized learning path"""
         try:
-            # Build a prompt without long indented triple-quoted literal to satisfy linters
+            # Build a prompt to satisfy linters
             prompt = (
-                f"Create a structured learning path for {interest} at {skill_level} level.\n"
+                f"Create a structured learning path for {interest} "
+                f"at {skill_level} level.\n"
                 "Include:\n"
                 "1. Core concepts to master\n"
                 "2. Recommended resources (tutorials, books, courses)\n"
@@ -29,7 +30,11 @@ class LearningPathManager:
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=[
-                    {"role": "system", "content": "You are an educational expert creating learning paths."},
+                    {
+                        "role": "system",
+                        "content": "You are an educational expert "
+                        "creating learning paths.",
+                    },
                     {"role": "user", "content": prompt},
                 ],
             )

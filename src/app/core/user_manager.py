@@ -15,9 +15,11 @@ from dotenv import load_dotenv
 from passlib.context import CryptContext
 from passlib.hash import pbkdf2_sha256
 
-# Setup password hashing context (prefer pbkdf2_sha256 to avoid bcrypt backend issues in some
-# environments; keep bcrypt listed so older hashes remain verifiable)
-pwd_context = CryptContext(schemes=["pbkdf2_sha256", "bcrypt"], deprecated="auto")
+# Setup password hashing context (prefer pbkdf2_sha256 to avoid bcrypt
+# backend issues in some environments; keep bcrypt for older hashes)
+pwd_context = CryptContext(
+    schemes=["pbkdf2_sha256", "bcrypt"], deprecated="auto"
+)
 
 
 class UserManager:
@@ -25,8 +27,9 @@ class UserManager:
         """Manage users and load encryption key from environment.
 
         - Loads FERNET_KEY from environment (via `.env`) if present.
-        - Loads users from `users_file` when present. If not present, keeps
-          an empty users dict until an admin is created through the onboarding flow.
+        - Loads users from `users_file` when present. If not present,
+          keeps an empty users dict until an admin is created through
+          the onboarding flow.
         - Migrates any plaintext passwords to bcrypt hashes on load.
         """
         load_dotenv()
@@ -56,17 +59,22 @@ class UserManager:
             # If any user entries have plaintext 'password', migrate them
             migrated = False
             for uname, udata in list(self.users.items()):
-                if isinstance(udata, dict) and 'password' in udata and 'password_hash' not in udata:
+                has_plaintext = (
+                    isinstance(udata, dict) and
+                    'password' in udata and
+                    'password_hash' not in udata
+                )
+                if has_plaintext:
                     try:
                         pw = udata.get('password')
-                        # try to hash first; only remove plaintext if hashing succeeds
+                        # hash first; remove plaintext if succeeds
                         pw_hash = pwd_context.hash(pw)
                         self.users[uname]['password_hash'] = pw_hash
                         # remove plaintext password
                         self.users[uname].pop('password', None)
                         migrated = True
                     except Exception:
-                        # bcrypt hashing failed (backend issues); try a safe fallback
+                        # bcrypt hashing failed (backend issue); try fallback
                         try:
                             fallback_hash = pbkdf2_sha256.hash(pw)
                             self.users[uname]['password_hash'] = fallback_hash
@@ -99,7 +107,9 @@ class UserManager:
             return False
         return False
 
-    def create_user(self, username, password, persona="friendly", preferences=None):
+    def create_user(
+        self, username, password, persona="friendly", preferences=None
+    ):
         """Create a new user with a hashed password.
 
         Returns True if created, False if user already exists.
@@ -152,9 +162,10 @@ class UserManager:
         return True
 
     def update_user(self, username, **kwargs):
-        """Update user metadata (role, approved, persona, preferences, profile_picture).
+        """Update user metadata (role, approved, persona, preferences, etc).
 
-        Accepts keys like role (str), approved (bool), persona (str), preferences (dict), profile_picture (path).
+        Accepts keys like role (str), approved (bool), persona (str),
+        preferences (dict), profile_picture (path).
         """
         if username not in self.users:
             return False

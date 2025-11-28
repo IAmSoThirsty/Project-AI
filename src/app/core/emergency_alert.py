@@ -70,16 +70,20 @@ class EmergencyAlert:
             Additional Message:
             {message or "No additional message provided"}
 
-            This is an automated emergency alert. Please attempt to contact the user
-            and alert appropriate authorities if necessary.
+            This is an automated emergency alert. Please attempt to
+            contact the user and alert appropriate authorities if necessary.
             """
 
             msg.attach(MIMEText(body, 'plain'))
 
             # Connect to SMTP server and send
-            with smtplib.SMTP(self.smtp_config['server'], self.smtp_config['port']) as server:
+            with smtplib.SMTP(
+                self.smtp_config['server'], self.smtp_config['port']
+            ) as server:
                 server.starttls()
-                server.login(self.smtp_config['username'], self.smtp_config['password'])
+                server.login(
+                    self.smtp_config['username'], self.smtp_config['password']
+                )
                 server.send_message(msg)
 
             # Log alert
