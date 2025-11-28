@@ -68,6 +68,15 @@ def test_append_to_json_list_overwrites_non_list(tmp_path):
     assert loaded == [{"id": 1}]
 
 
+def test_save_json_file_non_serializable(tmp_path):
+    """Test saving non-serializable data returns False."""
+    filepath = str(tmp_path / "nonserial.json")
+
+    # Objects like functions and sets are not JSON serializable
+    success = save_json_file(filepath, {"func": lambda x: x})
+    assert success is False
+
+
 if __name__ == '__main__':
     import pytest
     pytest.main([__file__])

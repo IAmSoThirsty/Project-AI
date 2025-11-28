@@ -45,14 +45,14 @@ def save_json_file(filepath: str, data: Any) -> bool:
         with open(filepath, 'w', encoding='utf-8') as f:
             json.dump(data, f)
         return True
-    except OSError:
+    except (OSError, TypeError, ValueError):
         return False
 
 
 def append_to_json_list(filepath: str, entry: Any) -> bool:
     """Append an entry to a JSON list file.
 
-    If the file doesn't exist or is empty, creates a new list.
+    If the file doesn't exist or contains invalid JSON, creates a new list.
 
     Args:
         filepath: Path to the JSON file containing a list.
