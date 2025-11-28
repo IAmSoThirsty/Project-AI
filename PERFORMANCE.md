@@ -45,10 +45,10 @@ def save_favorite(self, username, repo):
 The `get_repo_details()` method in `security_resources.py` makes synchronous HTTP requests. When called from the GUI (e.g., `save_favorite()`), this blocks the UI thread.
 
 ### Affected Files
-- `src/app/core/security_resources.py`: `get_repo_details()` (lines 73-90)
-- `src/app/core/location_tracker.py`: `get_location_from_ip()` (lines 49-68)
+- `src/app/core/security_resources.py`: `get_repo_details()` method
+- `src/app/core/location_tracker.py`: `get_location_from_ip()` method
 
-### Example (security_resources.py:73-90)
+### Example (before fix)
 ```python
 def get_repo_details(self, repo):
     try:
@@ -64,39 +64,31 @@ def get_repo_details(self, repo):
 ### Suggestions
 1. **Use async/await**: Refactor to use `aiohttp` or `httpx` with async patterns.
 2. **Use QThread or ThreadPoolExecutor**: Move network operations off the main thread.
-3. **Add timeout parameters**: Prevent indefinite hangs on slow networks.
+3. ✅ **Add timeout parameters**: Prevent indefinite hangs on slow networks. (IMPLEMENTED)
 
 ```python
-# Improved version with timeout
-response = requests.get(url, timeout=5)  # 5-second timeout
+# Improved version with timeout (implemented)
+response = requests.get(url, timeout=10)  # 10-second timeout
 ```
 
 ---
 
-## 3. Inefficient List/Set Operations
+## 3. ✅ Inefficient List/Set Operations (FIXED)
 
 ### Issue
-The `get_all_categories()` method in `security_resources.py` uses unnecessary conversions.
+The `get_all_categories()` method in `security_resources.py` used unnecessary conversions.
 
 ### Affected Files
-- `src/app/core/security_resources.py`: `get_all_categories()` (lines 66-71)
+- `src/app/core/security_resources.py`: `get_all_categories()` method
 
-### Example
+### Resolution
+Changed from:
 ```python
-def get_all_categories(self):
-    categories = set()
-    for category_resources in self.resources.values():
-        categories.update(r['category'] for r in category_resources)
-    return sorted(list(categories))  # sorted() already returns a list
+return sorted(list(categories))  # sorted() already returns a list
 ```
-
-### Suggestion
+To:
 ```python
-def get_all_categories(self):
-    categories = set()
-    for category_resources in self.resources.values():
-        categories.update(r['category'] for r in category_resources)
-    return sorted(categories)  # sorted() accepts any iterable
+return sorted(categories)  # sorted() accepts any iterable
 ```
 
 ---
@@ -171,17 +163,17 @@ def get_location_history(self, username):
 
 ---
 
-## 6. Missing Request Timeouts
+## 6. ✅ Missing Request Timeouts (FIXED)
 
 ### Issue
-HTTP requests don't specify timeouts, risking indefinite blocking.
+HTTP requests didn't specify timeouts, risking indefinite blocking.
 
 ### Affected Files
-- `src/app/core/location_tracker.py`: `get_location_from_ip()` (line 52)
-- `src/app/core/security_resources.py`: `get_repo_details()` (line 77)
+- `src/app/core/location_tracker.py`: `get_location_from_ip()` method
+- `src/app/core/security_resources.py`: `get_repo_details()` method
 
-### Suggestions
-Add timeout to all `requests.get()` calls:
+### Resolution
+Added 10-second timeout to all `requests.get()` calls:
 ```python
 response = requests.get(url, timeout=10)  # 10-second timeout
 ```
@@ -255,19 +247,19 @@ def open_security_resource(self, item):
 
 ## Summary Priority
 
-| Priority | Issue | Impact | Effort |
-|----------|-------|--------|--------|
-| High | Missing request timeouts | Can hang application | Low |
-| High | Blocking network calls | Freezes UI | Medium |
-| Medium | Repeated file I/O | Disk overhead | Medium |
-| Medium | Multiple UserManager instances | Memory waste | Low |
-| Medium | Location decryption loop | CPU overhead | Medium |
-| Low | Sorted list conversion | Minor overhead | Trivial |
-| Low | Eager dashboard init | Startup delay | Medium |
-| Low | String parsing | Fragile code | Low |
+| Priority | Issue | Impact | Effort | Status |
+|----------|-------|--------|--------|--------|
+| High | Missing request timeouts | Can hang application | Low | ✅ Fixed |
+| High | Blocking network calls | Freezes UI | Medium | Open |
+| Medium | Repeated file I/O | Disk overhead | Medium | Open |
+| Medium | Multiple UserManager instances | Memory waste | Low | Open |
+| Medium | Location decryption loop | CPU overhead | Medium | Open |
+| Low | Sorted list conversion | Minor overhead | Trivial | ✅ Fixed |
+| Low | Eager dashboard init | Startup delay | Medium | Open |
+| Low | String parsing | Fragile code | Low | Open |
 
 ## Quick Wins (Minimal Changes)
 
-1. **Add timeouts to requests** - Change 2 lines
-2. **Fix sorted(list(x))** - Change 1 line
-3. **Share UserManager instance** - Refactor injection pattern
+1. ✅ **Add timeouts to requests** - DONE
+2. ✅ **Fix sorted(list(x))** - DONE
+3. **Share UserManager instance** - Refactor injection pattern (remaining)
