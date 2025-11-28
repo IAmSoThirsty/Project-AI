@@ -4,8 +4,7 @@
   "description": "AI Desktop Assistant with various features",
   "scripts": {
     "test": "node --test",
-    "test:js": "node --test src/**/*.test.js",
-    "test:python": "pytest -q"
+    "test:js": "node --test src/**/*.test.js"
   },
   "keywords": ["ai", "assistant", "desktop"],
   "author": "Your Name",
