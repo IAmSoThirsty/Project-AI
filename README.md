@@ -284,6 +284,31 @@ When running locally, generate the JUnit report with pytest:
 pytest --junitxml=reports/junit.xml --cov=src --cov-report=xml:reports/coverage.xml -q
 ```
 
+## GUI Prototype — 3D / Neumorphic theme
+
+A prototype 3D / neumorphic visual style has been added on a feature branch
+`feature/gui-3d-prototype`. The prototype includes:
+
+- Updated QSS styles (`src/app/gui/styles.qss` and `styles_dark.qss`) with
+  card and floating panel styles and button gradients.
+- Subtle drop-shadow effects applied in code (`QGraphicsDropShadowEffect`) to
+  the main window and dialogs to create real depth (not just QSS).
+- Hover "lift" animations and a small tab-change parallax effect for tactile
+  feedback (implemented in `src/app/gui/dashboard.py`).
+
+To try the prototype locally:
+
+```powershell
+$env:PYTHONPATH='src'
+git fetch origin feature/gui-3d-prototype
+git checkout feature/gui-3d-prototype
+python -m pytest -q
+python src/app/main.py
+```
+
+If you'd like me to merge or split the prototype into smaller PRs, I can do
+that next.
+
 ## Advanced Features Documentation
 
 For detailed documentation on advanced features:
