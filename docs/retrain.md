@@ -3,15 +3,13 @@
 This document describes the CLI retrain helper and the retraining behavior used by the
 AI Persona.
 
-Overview
---------
+## Overview
 
 The repository includes a lightweight CLI helper at `tools/retrain_detectors.py` that
 lets you retrain the persona's Zeroth/First-law detectors without opening the GUI. This
 is useful for automated retraining, scheduled jobs, or debugging model updates.
 
-Model artifacts and vocab
--------------------------
+## Model artifacts and vocab
 
 When retraining, the persona saves model artifacts and vocabulary under
 `data/ai_persona/`:
@@ -20,8 +18,7 @@ When retraining, the persona saves model artifacts and vocabulary under
 - `ml_vocab.json` — saved vocabulary (always written when retrain runs)
 - `retrain_audit.log` — simple JSON lines audit log with timestamp and example counts
 
-CLI usage
----------
+## CLI usage
 
 PowerShell examples:
 
@@ -33,8 +30,7 @@ python .\tools\retrain_detectors.py --data-dir .\data
 python .\tools\retrain_detectors.py --async --data-dir .\data
 ```
 
-Retrain behavior
-----------------
+## Retrain behavior
 
 - If `scikit-learn` is available, retraining will use `TfidfVectorizer` to build feature vectors. If not, a simple
   bag-of-words vector based on saved vocabulary will be used.
@@ -45,8 +41,7 @@ Retrain behavior
   whether `torch`/`sklearn` were available.
 - When saving model files, existing files are backed up with a timestamped `.bak` copy when possible.
 
-Security notes
---------------
+## Security notes
 
 Retraining is an administrative action. Always validate training data and keep an audit
 trail of changes. ML detectors augment the Four Laws by providing scores and
