@@ -1,6 +1,8 @@
 # Project AI
 
-This repository contains a Python desktop application that provides a personal AI assistant with features adapted from a WinForms prototype. The app is designed for member-only use and can be extended for mobile later.
+This repository contains a Python desktop application that provides a personal AI
+assistant with features adapted from a WinForms prototype. The app is designed for
+member-only use and can be extended for mobile later.
 
 ## High-level features
 
@@ -99,7 +101,8 @@ This repository contains a Python desktop application that provides a personal A
 ML ThreatDetector notes
 -----------------------
 
-The AI persona now includes an optional PyTorch-based ThreatDetector used to augment Four Laws enforcement:
+The AI persona now includes an optional PyTorch-based ThreatDetector used to augment
+Four Laws enforcement:
 
 - If you install `torch` and `numpy`, the persona will build or load tiny neural detectors at startup.
 - If `torch` is not available the persona uses a safe keyword-based fallback to flag obvious threats.
@@ -110,7 +113,8 @@ The AI persona now includes an optional PyTorch-based ThreatDetector used to aug
 Training & retraining
 ---------------------
 
-The repository includes a minimal bootstrapping routine that trains tiny detectors on synthetic examples for quick startup. For real usage you should:
+The repository includes a minimal bootstrapping routine that trains tiny detectors on
+synthetic examples for quick startup. For real usage you should:
 
 1. Gather labeled examples (human-labeled) for `zeroth` (humanity-level harm) and `first` (individual human harm) categories.
 2. Store examples in a directory or in the `memory_system` so the persona can load them for supervised retraining.
@@ -152,16 +156,19 @@ The docs contain usage examples, retrain behavior, audit logging, and security n
 Security and safety notes
 -------------------------
 
-Retraining is considered an administrative action: always verify training examples
-and keep an audit trail of changes. The ML detectors augment the Four Laws — they
-provide scores and explainability tokens, but the Four Laws remain the authoritative
-control mechanism. Use the Learning Request Log and Black Vault workflows to maintain
-human-in-the-loop approvals for all persistent learning.
+Retraining is considered an administrative action: always verify training examples and
+keep an audit trail of changes. The ML detectors augment the Four Laws — they provide
+scores and explainability tokens, but the Four Laws remain the authoritative control
+mechanism. Use the Learning Request Log and Black Vault workflows to maintain human-in-
+the-loop approvals for all persistent learning.
 
 Security & safety
 -----------------
 
-The Four Laws remain the authoritative decision mechanism; ML detectors only provide scores which are used to annotate the decision context. Human-in-the-loop approvals (Learning Request Log) and the Black Vault remain the final gatekeepers for what the AI may integrate.
+The Four Laws remain the authoritative decision mechanism; ML detectors only provide
+scores which are used to annotate the decision context. Human-in-the-loop approvals
+(Learning Request Log) and the Black Vault remain the final gatekeepers for what the AI
+may integrate.
 
 ## Project-AI — Desktop AI Assistant
 
@@ -226,7 +233,8 @@ $env:PYTHONPATH='src'; .\.venv\Scripts\Activate.ps1; flake8 src tests setup.py
 
 ## Run the application (PowerShell)
 
-Start the app from the repository root (ensure the venv is activated and PYTHONPATH is set):
+Start the app from the repository root (ensure the venv is activated and PYTHONPATH is
+set):
 
 ```powershell
 $env:PYTHONPATH='src'; .\.venv\Scripts\Activate.ps1; python src/app/main.py
@@ -306,8 +314,7 @@ python -m pytest -q
 python src/app/main.py
 ```
 
-If you'd like me to merge or split the prototype into smaller PRs, I can do
-that next.
+If you'd like me to merge or split the prototype into smaller PRs, I can do that next.
 
 ## Advanced Features Documentation
 

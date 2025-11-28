@@ -11,17 +11,21 @@
 Two powerful new features have been added to Project-AI:
 
 ### 1. Command Override System
-A privileged control system that allows authorized users to disable any and all safety protocols in the application.
+A privileged control system that allows authorized users to disable any and all safety
+protocols in the application.
 
 ### 2. Memory Expansion System
-A self-organizing memory database that gives the AI the ability to remember everything, learn autonomously, and expand its knowledge base.
+A self-organizing memory database that gives the AI the ability to remember everything,
+learn autonomously, and expand its knowledge base.
 
 ---
 
 ## ⚠️ Command Override System
 
 ### Purpose
-The Command Override System provides master control over all safety mechanisms in the application. This allows you to bypass content filtering, rate limiting, and other protective measures when needed.
+The Command Override System provides master control over all safety mechanisms in the
+application. This allows you to bypass content filtering, rate limiting, and other
+protective measures when needed.
 
 ### Features
 
@@ -123,7 +127,9 @@ All override actions are logged to `data/command_override_audit.log`:
 ## 🧠 Memory Expansion System
 
 ### Purpose
-The Memory Expansion System gives the AI persistent, expandable memory capabilities. It can remember all conversations, actions, and learned information, and can autonomously explore and learn new things.
+The Memory Expansion System gives the AI persistent, expandable memory capabilities. It
+can remember all conversations, actions, and learned information, and can autonomously
+explore and learn new things.
 
 ### Features
 

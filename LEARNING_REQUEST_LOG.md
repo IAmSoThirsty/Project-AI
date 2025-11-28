@@ -2,7 +2,10 @@
 
 ## Overview
 
-The **Learning Request Log** is a sophisticated AI learning approval system that allows the AI to discover and propose learning new information, while giving users complete control over what the AI is allowed to learn. This system implements a human-in-the-loop approval workflow with a "Black Vault" mechanism for permanently denying content.
+The **Learning Request Log** is a sophisticated AI learning approval system that allows
+the AI to discover and propose learning new information, while giving users complete
+control over what the AI is allowed to learn. This system implements a human-in-the-loop
+approval workflow with a "Black Vault" mechanism for permanently denying content.
 
 ## Key Features
 
@@ -54,7 +57,8 @@ data/
 
 ### Access Control
 
-The system uses **for_ai** boolean parameters throughout the API to control what the AI can see:
+The system uses **for_ai** boolean parameters throughout the API to control what the AI
+can see:
 
 ```python
 # AI calls (for_ai=True or not specified)
@@ -524,7 +528,9 @@ Potential improvements to consider:
 
 ## Conclusion
 
-The Learning Request Log system provides a sophisticated, secure, and user-friendly way to control AI learning. It balances AI autonomy with human oversight, ensuring the AI can grow and improve while maintaining complete user control over what gets learned.
+The Learning Request Log system provides a sophisticated, secure, and user-friendly way
+to control AI learning. It balances AI autonomy with human oversight, ensuring the AI
+can grow and improve while maintaining complete user control over what gets learned.
 
 Key benefits:
 - ✅ AI can propose valuable learning

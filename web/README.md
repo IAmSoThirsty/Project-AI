@@ -1,6 +1,7 @@
 # Project-AI Web Version
 
-This branch contains a web-based version of Project-AI, converting the PyQt desktop application into a modern web application with React frontend and Flask backend.
+This branch contains a web-based version of Project-AI, converting the PyQt desktop
+application into a modern web application with React frontend and Flask backend.
 
 ## ✨ New Features (Latest Update)
 
@@ -94,7 +95,8 @@ Frontend will be available at `http://localhost:3000`
 
 ### Running Both Services
 
-You can run both backend and frontend simultaneously. The frontend is configured to proxy API requests to the backend.
+You can run both backend and frontend simultaneously. The frontend is configured to
+proxy API requests to the backend.
 
 ## 📁 Project Structure
 

@@ -1,6 +1,7 @@
 # Android APK Integration Stub
 
-This directory is reserved for the future development of an Android-based APK app that will fully integrate with the Project-AI computer program and web components.
+This directory is reserved for the future development of an Android-based APK app that
+will fully integrate with the Project-AI computer program and web components.
 
 ## ✨ Latest Features Available for Integration
 
@@ -21,7 +22,8 @@ The desktop version now includes these powerful new features:
 
 ## Program Functions for Integration
 
-Below is a list of core functions and features from the Project-AI program that should be considered for integration with the Android APK app:
+Below is a list of core functions and features from the Project-AI program that should
+be considered for integration with the Android APK app:
 
 ### Core Modules
 
@@ -50,7 +52,8 @@ Below is a list of core functions and features from the Project-AI program that 
 - setup_environment
 - main
 
-Refer to the respective Python files in `src/app/core/`, `src/app/gui/`, and `src/app/main.py` for implementation details.
+Refer to the respective Python files in `src/app/core/`, `src/app/gui/`, and
+`src/app/main.py` for implementation details.
 
 ## Integration Requirements
 

@@ -2,11 +2,15 @@
 
 ## Overview
 
-The **AI Persona System** transforms the AI from a passive assistant into a self-aware entity with its own personality, the ability to initiate conversations, and adherence to strict ethical guidelines. This system implements the Four Laws of AI Ethics, personality development, proactive conversation, and emotional awareness.
+The **AI Persona System** transforms the AI from a passive assistant into a self-aware
+entity with its own personality, the ability to initiate conversations, and adherence to
+strict ethical guidelines. This system implements the Four Laws of AI Ethics,
+personality development, proactive conversation, and emotional awareness.
 
 ## The Four Laws of AI Ethics
 
-The AI operates under four immutable, hierarchical laws inspired by Isaac Asimov's Laws of Robotics:
+The AI operates under four immutable, hierarchical laws inspired by Isaac Asimov's Laws
+of Robotics:
 
 ### Asimov's Law (Prime Directive)
 **"Asimov's Law (Prime Directive): A.I. may not harm Humanity, or, by inaction, allow Humanity to come to harm."**
@@ -532,7 +536,9 @@ Potential improvements:
 
 ## Conclusion
 
-The AI Persona System with Four Laws creates a truly intelligent, ethical, and personable AI assistant. It balances autonomy with safety, proactivity with patience, and personality with ethical constraints.
+The AI Persona System with Four Laws creates a truly intelligent, ethical, and
+personable AI assistant. It balances autonomy with safety, proactivity with patience,
+and personality with ethical constraints.
 
 **Key Benefits:**
 - ✅ Strong ethical foundation (Four Laws)
@@ -543,7 +549,8 @@ The AI Persona System with Four Laws creates a truly intelligent, ethical, and p
 - ✅ Respects your time and needs
 - ✅ Safe and trustworthy
 
-The AI is now not just a tool, but a partner that grows with you while always prioritizing safety and ethical behavior.
+The AI is now not just a tool, but a partner that grows with you while always
+prioritizing safety and ethical behavior.
 
 For additional documentation, see:
 - Main README
@@ -564,7 +571,8 @@ For additional documentation, see:
 ## Formatting & Linters
 
 This repository uses `black`, `isort`, and `ruff` for Python formatting/linting and
-`prettier` for frontend formatting. Please run the relevant formatters before opening a PR.
+`prettier` for frontend formatting. Please run the relevant formatters before opening a
+PR.
 
 Python (PowerShell):
 ```powershell
