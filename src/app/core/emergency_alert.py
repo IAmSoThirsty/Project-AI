@@ -9,6 +9,8 @@ from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+EMERGENCY_CONTACTS_FILE = "emergency_contacts.json"
+
 
 class EmergencyAlert:
     def __init__(self, smtp_config=None):
@@ -23,13 +25,13 @@ class EmergencyAlert:
 
     def load_contacts(self):
         """Load emergency contacts from file"""
-        if os.path.exists("emergency_contacts.json"):
-            with open("emergency_contacts.json", "r") as f:
+        if os.path.exists(EMERGENCY_CONTACTS_FILE):
+            with open(EMERGENCY_CONTACTS_FILE) as f:
                 self.emergency_contacts = json.load(f)
 
     def save_contacts(self):
         """Save emergency contacts to file"""
-        with open("emergency_contacts.json", "w") as f:
+        with open(EMERGENCY_CONTACTS_FILE, "w") as f:
             json.dump(self.emergency_contacts, f)
 
     def add_emergency_contact(self, username, contact_info):
@@ -117,7 +119,7 @@ class EmergencyAlert:
         logs = []
 
         if os.path.exists(filename):
-            with open(filename, "r") as f:
+            with open(filename) as f:
                 logs = json.load(f)
 
         logs.append(log_entry)
@@ -129,6 +131,6 @@ class EmergencyAlert:
         """Get history of emergency alerts for a user"""
         filename = f"emergency_alerts_{username}.json"
         if os.path.exists(filename):
-            with open(filename, "r") as f:
+            with open(filename) as f:
                 return json.load(f)
         return []

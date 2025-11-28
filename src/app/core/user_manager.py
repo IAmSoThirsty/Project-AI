@@ -53,7 +53,7 @@ class UserManager:
 
         # Load users (if file exists); do NOT create default plaintext users
         if os.path.exists(self.users_file):
-            with open(self.users_file, "r") as f:
+            with open(self.users_file) as f:
                 try:
                     self.users = json.load(f)
                 except Exception:
@@ -67,8 +67,11 @@ class UserManager:
                     and "password" in udata
                     and "password_hash" not in udata
                 ):
+                    pw = udata.get("password")
+                    if not pw:
+                        # Skip if password is empty/None
+                        continue
                     try:
-                        pw = udata.get("password")
                         # try to hash first; only remove plaintext if
                         # hashing succeeds
                         pw_hash = pwd_context.hash(pw)

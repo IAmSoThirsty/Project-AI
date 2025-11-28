@@ -31,27 +31,91 @@ def is_table_line(line: str) -> bool:
     return "|" in line and any(c.isalnum() for c in line)
 
 
-def reflow_markdown_text(text: str, width: int) -> tuple[str, int]:
-    lines = text.splitlines()
+def is_code_fence(line: str) -> bool:
+    """Check if line is a code fence marker."""
+    stripped = line.strip()
+    return stripped.startswith("```") or stripped.startswith("~~~")
+
+
+def should_preserve_line(line: str) -> bool:
+    """Check if line should be preserved as-is (not reflowed)."""
+    stripped = line.lstrip()
+    if not line.strip():
+        return True
+    if stripped.startswith("#") or stripped.startswith(">"):
+        return True
+    if stripped.startswith("-") or stripped.startswith("*"):
+        return True
+    if stripped.startswith("+"):
+        return True
+    if stripped[0].isdigit() and stripped.split(" ", 1)[0].endswith("."):
+        return True
+    if stripped.startswith("<") or line.strip().startswith(":::"):
+        return True
+    return is_table_line(line)
+
+
+def _process_lines(
+    lines: list[str], width: int, flush_fn
+) -> tuple[list[str], int]:
+    """Process all lines and return (out_lines, changed count)."""
     out_lines: list[str] = []
     changed = 0
-
     in_code = False
     code_fence = ""
     paragraph: list[str] = []
 
-    def flush_paragraph():
-        nonlocal paragraph, out_lines, changed
+    for line in lines:
+        # detect code fence
+        if not in_code and is_code_fence(line):
+            flush_fn(paragraph)
+            paragraph = []
+            in_code = True
+            code_fence = line.strip()[:3]
+            out_lines.append(line)
+            continue
+
+        if in_code:
+            out_lines.append(line)
+            if line.strip().startswith(code_fence):
+                in_code = False
+            continue
+
+        # YAML frontmatter
+        if line.strip().startswith("---") and not paragraph:
+            flush_fn(paragraph)
+            paragraph = []
+            out_lines.append(line)
+            continue
+
+        # preserve special lines
+        if should_preserve_line(line):
+            flush_fn(paragraph)
+            paragraph = []
+            out_lines.append(line)
+            continue
+
+        # accumulate paragraph lines
+        paragraph.append(line)
+
+    flush_fn(paragraph)
+    return out_lines, changed
+
+
+def reflow_markdown_text(text: str, width: int) -> tuple[str, int]:
+    lines = text.splitlines()
+    changed = 0
+
+    def flush_paragraph(paragraph: list):
+        nonlocal changed
         if not paragraph:
             return
         raw = "\n".join(paragraph).strip()
         # keep leading/trailing blank lines as single blank line
         if not raw:
             out_lines.append("")
-            paragraph = []
             return
         # reflow using textwrap while preserving single leading indent
-        # detect a common indent (for nested paragraphs it's usually '')
         indent = ""
         for pl in paragraph:
             stripped = pl.lstrip()
@@ -60,55 +124,13 @@ def reflow_markdown_text(text: str, width: int) -> tuple[str, int]:
                 break
 
         wrapped = textwrap.fill(raw, width=width)
-        wrapped_lines = [(indent + l).rstrip() for l in wrapped.splitlines()]
-        if wrapped_lines != [l.rstrip() for l in paragraph]:
+        wrapped_lines = [(indent + line).rstrip() for line in wrapped.splitlines()]
+        if wrapped_lines != [line.rstrip() for line in paragraph]:
             changed += 1
         out_lines.extend(wrapped_lines)
-        paragraph = []
 
-    for line in lines:
-        # detect code fence (``` or ~~~)
-        if not in_code and (line.strip().startswith("```") or line.strip().startswith("~~~")):
-            flush_paragraph()
-            in_code = True
-            code_fence = line.strip()[:3]
-            out_lines.append(line)
-            continue
-        if in_code:
-            out_lines.append(line)
-            if line.strip().startswith(code_fence):
-                in_code = False
-            continue
-
-        # YAML frontmatter start/end
-        if line.strip().startswith("---") and not paragraph:
-            # treat as boundary; flush and copy until next --- line
-            flush_paragraph()
-            out_lines.append(line)
-            continue
-
-        # preserve headings, lists, blockquotes, HTML tags, tables
-        stripped = line.lstrip()
-        if (
-            not line.strip()
-            or stripped.startswith("#")
-            or stripped.startswith(">")
-            or stripped.startswith("-")
-            or stripped.startswith("*")
-            or stripped.startswith("+")
-            or stripped[0].isdigit() and stripped.split(" ", 1)[0].endswith(".")
-            or stripped.startswith("<")
-            or is_table_line(line)
-            or line.strip().startswith(":::")
-        ):
-            flush_paragraph()
-            out_lines.append(line)
-            continue
-
-        # otherwise treat as paragraph line to be reflowed
-        paragraph.append(line)
-
-    flush_paragraph()
+    out_lines: list[str] = []
+    out_lines, changed = _process_lines(lines, width, flush_paragraph)
     return "\n".join(out_lines) + ("\n" if text.endswith("\n") else ""), changed
 
 

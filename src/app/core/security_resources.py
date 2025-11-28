@@ -81,7 +81,7 @@ class SecurityResourceManager:
         categories = set()
         for category_resources in self.resources.values():
             categories.update(r["category"] for r in category_resources)
-        return sorted(list(categories))
+        return sorted(categories)
 
     def get_repo_details(self, repo):
         """Get detailed information about a GitHub repository"""
@@ -107,7 +107,7 @@ class SecurityResourceManager:
         filename = f"security_favorites_{username}.json"
         favorites = {}
         if os.path.exists(filename):
-            with open(filename, "r") as f:
+            with open(filename) as f:
                 favorites = json.load(f)
 
         if repo not in favorites:
@@ -123,6 +123,6 @@ class SecurityResourceManager:
         """Get user's favorite security resources"""
         filename = f"security_favorites_{username}.json"
         if os.path.exists(filename):
-            with open(filename, "r") as f:
+            with open(filename) as f:
                 return json.load(f)
         return {}

@@ -52,7 +52,7 @@ class LearningPathManager:
         filename = f"learning_paths_{username}.json"
         paths = {}
         if os.path.exists(filename):
-            with open(filename, "r") as f:
+            with open(filename) as f:
                 paths = json.load(f)
 
         paths[interest] = {
@@ -68,6 +68,6 @@ class LearningPathManager:
         """Get all saved learning paths for a user"""
         filename = f"learning_paths_{username}.json"
         if os.path.exists(filename):
-            with open(filename, "r") as f:
+            with open(filename) as f:
                 return json.load(f)
         return {}

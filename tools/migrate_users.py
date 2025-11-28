@@ -12,6 +12,7 @@ users file.
 import argparse
 import json
 import os
+
 from passlib.context import CryptContext
 
 pwd = CryptContext(
@@ -21,11 +22,13 @@ pwd = CryptContext(
 
 
 def preview_migration(users_path: str):
-    with open(users_path, 'r', encoding='utf-8') as f:
+    with open(users_path, encoding='utf-8') as f:
         data = json.load(f)
     to_migrate = []
     for uname, udata in data.items():
-        if isinstance(udata, dict) and 'password' in udata and 'password_hash' not in udata:
+        has_password = isinstance(udata, dict) and 'password' in udata
+        has_hash = 'password_hash' in udata if isinstance(udata, dict) else False
+        if has_password and not has_hash:
             to_migrate.append(uname)
     return data, to_migrate
 
@@ -90,4 +93,6 @@ if __name__ == '__main__':
         n = apply_migration(users_path)
         print(f'Migrated {n} users')
     else:
-        print('\nRun with --apply to perform the migration (this will back up the file).')
+        msg = '\nRun with --apply to perform the migration '
+        msg += '(this will back up the file).'
+        print(msg)

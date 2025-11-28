@@ -79,11 +79,11 @@ class DataAnalyzer:
         try:
             if plot_type == "scatter":
                 ax.scatter(self.data[x_col], self.data[y_col])
-                ax.set_xlabel(x_col)
-                ax.set_ylabel(y_col)
+                ax.set_xlabel(x_col or "X Axis")
+                ax.set_ylabel(y_col or "Y Axis")
             elif plot_type == "histogram":
                 ax.hist(self.data[x_col], bins=30)
-                ax.set_xlabel(x_col)
+                ax.set_xlabel(x_col or "Value")
                 ax.set_ylabel("Frequency")
             elif plot_type == "boxplot":
                 self.data.boxplot(column=x_col, ax=ax)
@@ -113,18 +113,18 @@ class DataAnalyzer:
             return None, None
 
         try:
-            X = self.data[columns].values
-            X_scaled = self.scaler.fit_transform(X)
+            x_data = self.data[columns].values
+            x_scaled = self.scaler.fit_transform(x_data)
 
             pca = PCA(n_components=2)
-            X_pca = pca.fit_transform(X_scaled)
+            x_pca = pca.fit_transform(x_scaled)
 
             kmeans = KMeans(n_clusters=n_clusters, random_state=42)
-            clusters = kmeans.fit_predict(X_scaled)
+            clusters = kmeans.fit_predict(x_scaled)
 
             fig = Figure(figsize=(8, 6))
             ax = fig.add_subplot(111)
-            scatter = ax.scatter(X_pca[:, 0], X_pca[:, 1], c=clusters, cmap="viridis")
+            scatter = ax.scatter(x_pca[:, 0], x_pca[:, 1], c=clusters, cmap="viridis")
             ax.set_xlabel("First Principal Component")
             ax.set_ylabel("Second Principal Component")
             ax.set_title("K-means Clustering Results")

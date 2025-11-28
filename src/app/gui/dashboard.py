@@ -246,7 +246,7 @@ class DashboardWindow(QMainWindow):
         try:
             qss_path = os.path.join(os.path.dirname(__file__), "styles.qss")
             if os.path.exists(qss_path):
-                with open(qss_path, "r", encoding="utf-8") as f:
+                with open(qss_path, encoding="utf-8") as f:
                     qss = f.read()
 
                 # embed assets as data URIs if present
@@ -379,7 +379,7 @@ class DashboardWindow(QMainWindow):
             if theme == "dark":
                 dark_path = os.path.join(os.path.dirname(__file__), "styles_dark.qss")
                 if os.path.exists(dark_path):
-                    with open(dark_path, "r", encoding="utf-8") as df:
+                    with open(dark_path, encoding="utf-8") as df:
                         dark_qss = df.read()
                     self.setStyleSheet(dark_qss)
                     return
@@ -408,7 +408,7 @@ class DashboardWindow(QMainWindow):
         )
         try:
             if os.path.exists(qss_path):
-                with open(qss_path, "r", encoding="utf-8") as f:
+                with open(qss_path, encoding="utf-8") as f:
 
                     qss = f.read()
                 self._apply_stylesheet_from_settings(qss)

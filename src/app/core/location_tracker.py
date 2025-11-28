@@ -95,7 +95,7 @@ class LocationTracker:
         history = []
 
         if os.path.exists(filename):
-            with open(filename, "r") as f:
+            with open(filename) as f:
                 history = json.load(f)
 
         encrypted_location = self.encrypt_location(location_data)
@@ -112,7 +112,7 @@ class LocationTracker:
         if not os.path.exists(filename):
             return []
 
-        with open(filename, "r") as f:
+        with open(filename) as f:
             history = json.load(f)
 
         decrypted_history = []

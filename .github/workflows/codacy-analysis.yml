@@ -15,23 +15,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Check for Codacy token
-        run: |
-          if [ -z "${{ secrets.CODACY_API_TOKEN }}" ]; then
-            echo "CODACY_API_TOKEN not set. Skipping Codacy analysis. To enable, add a repository secret named CODACY_API_TOKEN.";
-            exit 0;
-          fi
+      # To enable Codacy analysis:
+      # 1. Create a Codacy account at https://codacy.com
+      # 2. Add repository secret CODACY_API_TOKEN with your API token
+      # 3. Uncomment the steps below
+      
+      # - name: Run Codacy analysis (Docker)
+      #   if: ${{ secrets.CODACY_API_TOKEN != '' }}
+      #   env:
+      #     CODACY_API_TOKEN: ${{ secrets.CODACY_API_TOKEN }}
+      #   run: |
+      #     echo "Running Codacy Analysis CLI in Docker (this may take a few minutes)"
+      #     docker run --rm -e CODACY_API_TOKEN="$CODACY_API_TOKEN" -v "${{ github.workspace }}":/src -w /src codacy/codacy-analysis-cli analyze --output codacy-report.json || echo "Codacy analysis failed (non-zero exit)"
 
-      - name: Run Codacy analysis (Docker)
-        env:
-          CODACY_API_TOKEN: ${{ secrets.CODACY_API_TOKEN }}
-        run: |
-          echo "Running Codacy Analysis CLI in Docker (this may take a few minutes)"
-          docker run --rm -e CODACY_API_TOKEN="$CODACY_API_TOKEN" -v "${{ github.workspace }}":/src -w /src codacy/codacy-analysis-cli analyze --output codacy-report.json || echo "Codacy analysis failed (non-zero exit)"
-
-      - name: Upload Codacy report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: codacy-report
-          path: codacy-report.json
+      # - name: Upload Codacy report
+      #   if: always()
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: codacy-report
+      #     path: codacy-report.json

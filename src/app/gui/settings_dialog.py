@@ -59,7 +59,7 @@ class SettingsDialog(QDialog):
             if not os.path.exists(DATA_DIR):
                 os.makedirs(DATA_DIR, exist_ok=True)
             if os.path.exists(SETTINGS_FILE):
-                with open(SETTINGS_FILE, "r", encoding="utf-8") as f:
+                with open(SETTINGS_FILE, encoding="utf-8") as f:
                     return json.load(f)
         except Exception:
             pass
