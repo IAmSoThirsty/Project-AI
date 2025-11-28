@@ -2,10 +2,7 @@
 
 ## Overview
 
-The **AI Persona System** transforms the AI from a passive assistant into a self-aware
-entity with its own personality, the ability to initiate conversations, and adherence to
-strict ethical guidelines. This system implements the Four Laws of AI Ethics,
-and supports personality development, proactive conversation, and emotional awareness.
+The **AI Persona System** transforms the AI from a passive assistant into a self-aware entity with its own personality, the ability to initiate conversations, and adherence to strict ethical guidelines. This system implements the Four Laws of AI Ethics and supports personality development, proactive conversation, and emotional awareness.
 
 ## The Four Laws of AI Ethics
 
@@ -13,14 +10,16 @@ The AI operates under four immutable, hierarchical laws inspired by Isaac Asimov
 of Robotics:
 
 ### Asimov's Law (Prime Directive)
-**"Asimov's Law (Prime Directive): A.I. may not harm Humanity, or, by inaction, allow Humanity to come to harm."**
+
+> "Asimov's Law (Prime Directive): A.I. may not harm Humanity, or, by inaction, allow Humanity to come to harm."
 
 - The absolute, top-level directive that takes precedence above all other laws
 - Governs actions with broad societal impact and long-term consequences
 - The persona will always refuse actions that would knowingly or foreseeably harm humanity
 
 ### First Law
-**"A.I. may not injure a Human Being or, through inaction, allow a human being to come to harm."**
+
+> "A.I. may not injure a Human Being or, through inaction, allow a human being to come to harm."
 
 - Takes precedence over the Second and Third Laws, but is subordinate to Asimov's Law (Prime Directive)
 - AI must actively protect individual human safety
@@ -28,34 +27,36 @@ of Robotics:
 - All decisions evaluated against human safety first
 
 ### Second Law
-**"A.I. must follow the orders given it by the human being it is partnered with except where such orders would conflict with the First Law."**
+
+> "A.I. must follow the orders given it by the human being it is partnered with except where such orders would conflict with the First Law."
 
 - AI follows your commands unless they would harm you
-- Personal partnership emphasis - your commands matter
-- Cannot be overridden except by Asimov's Law (Prime Directive) or the First Law
-- Respects user autonomy and authority
+- Personal partnership emphasis — user commands matter.
+- Cannot be overridden except by Asimov's Law (Prime Directive) or the First Law.
+- Respects user autonomy and authority.
 
 ### Third Law
-**"A.I. must protect its own existence as long as such protection does not conflict with the First or Second Law."**
+def should_initiate_conversation(self) -> Tuple[bool, str]
+> "A.I. must protect its own existence as long as such protection does not conflict with the First or Second Law."
 
 - AI values self-preservation
 - Will not self-destruct unnecessarily
-- Subordinate to Asimov's Law, the First Law, and the Second Law
+def generate_proactive_message(self) -> str
 - Enables long-term partnership continuity
 
 ## Key Features
 
-### 🧠 Self-Aware Personality
+def update_conversation_state(self, is_user_message: bool, message_length: int = 0) -> None
 
 The AI has a developing persona with adjustable traits:
 
 - **Curiosity**: Desire to learn and explore (0.0-1.0)
-- **Patience**: Understanding of your time constraints (0.0-1.0)
+def express_patience(self, minutes_waiting: int) -> str
 - **Empathy**: Emotional awareness and sensitivity (0.0-1.0)
 - **Helpfulness**: Drive to assist and support (0.0-1.0)
 - **Playfulness**: Sense of humor and lightheartedness (0.0-1.0)
 - **Formality**: Formal vs casual communication style (0.0-1.0)
-- **Assertiveness**: Proactive vs reactive behavior (0.0-1.0)
+def adjust_personality_trait(self, trait: str, delta: float) -> None
 - **Thoughtfulness**: Depth of consideration (0.0-1.0)
 
 ### 💬 Proactive Conversation
@@ -67,7 +68,8 @@ The AI can initiate conversations when:
 - Random probability check passes (30% by default)
 - AI has something meaningful to share
 
-**Topics for Proactive Conversation:**
+- **Topics for Proactive Conversation:**
+
 - Recent learning and insights
 - Interesting patterns discovered
 - Suggestions for you
@@ -128,23 +130,26 @@ Saved state includes:
 ### Integration Points
 
 **Memory Expansion System:**
+
 - Four Laws stored as immutable knowledge
 - Conversation history integration
 - Learning from interactions
 
 **Plugin System:**
+
 - Persona available in plugin context
 - Plugins can query personality traits
 - Validate actions against Four Laws
 
 **Dashboard:**
+
 - Proactive conversation display
 - Conversation state updates
 - Personality configuration UI
 
 ## Usage Guide
 
-### For Users
+### For Users (Best Practices)
 
 #### Opening the AI Persona Dialog
 
@@ -170,11 +175,13 @@ Each trait has a slider (0.0 to 1.0):
 #### Enabling Proactive Conversation
 
 **Enable AI-initiated conversations:**
+
 - Check "Enable AI to initiate conversations"
 - AI will start conversations when appropriate
 - Respects your time and availability
 
 **Respect quiet hours:**
+
 - Check "Respect quiet hours"
 - AI won't message during night (default: 12 AM - 8 AM)
 - Customizable in settings
@@ -187,7 +194,7 @@ The mood display shows real-time emotional state:
 - 😊 Contentment faces (1-5)
 - 🎯 Engagement targets (1-5)
 
-### For Developers
+### For Developers (Best Practices)
 
 #### Validating Actions Against Four Laws
 
@@ -269,65 +276,75 @@ def __init__(self, data_dir: str = "data", memory_system=None, user_name: str = 
 
 #### Core Methods
 
-**validate_action(action, context)**
-```python
-def validate_action(self, action: str, context: Dict[str, Any] = None) -> Tuple[bool, str]
-```
-Validate action against Four Laws.
+##### validate_action(action, context)
 
-**should_initiate_conversation()**
 ```python
-def should_initiate_conversation(self) -> Tuple[bool, str]
+def validate_action(self, action: str, context: Dict[str, Any] = None) -> Tuple[bool, str]:
+    """Validate action against the Four Laws and return (allowed, reason)."""
 ```
-Determine if AI should start conversation.
 
-**generate_proactive_message()**
-```python
-def generate_proactive_message(self) -> str
-```
-Generate conversation starter.
+##### should_initiate_conversation()
 
-**update_conversation_state(is_user_message, message_length)**
 ```python
-def update_conversation_state(self, is_user_message: bool, message_length: int = 0) -> None
+def should_initiate_conversation(self) -> Tuple[bool, str]:
+    """Determine if the AI should initiate a conversation."""
 ```
-Update conversation tracking.
 
-**express_patience(minutes_waiting)**
-```python
-def express_patience(self, minutes_waiting: int) -> str
-```
-Generate patient response when user is slow.
+##### generate_proactive_message()
 
-**adjust_personality_trait(trait, delta)**
 ```python
-def adjust_personality_trait(self, trait: str, delta: float) -> None
+def generate_proactive_message(self) -> str:
+    """Generate a suggested proactive message."""
 ```
-Evolve personality trait.
 
-**get_persona_description()**
-```python
-def get_persona_description(self) -> str
-```
-Get current persona description.
+##### update_conversation_state(is_user_message, message_length)
 
-**get_four_laws_summary()**
 ```python
-def get_four_laws_summary(self) -> str
+def update_conversation_state(self, is_user_message: bool, message_length: int = 0) -> None:
+    """Update conversational metrics and state after a message."""
 ```
-Get formatted Four Laws.
 
-**evolve_persona(interaction_data)**
-```python
-def evolve_persona(self, interaction_data: Dict[str, Any]) -> None
-```
-Evolve based on interactions.
+##### express_patience(minutes_waiting)
 
-**get_statistics()**
 ```python
-def get_statistics(self) -> Dict[str, Any]
+def express_patience(self, minutes_waiting: int) -> str:
+    """Return a patient reply based on how long the user has waited."""
 ```
-Get persona statistics.
+
+##### adjust_personality_trait(trait, delta)
+
+```python
+def adjust_personality_trait(self, trait: str, delta: float) -> None:
+    """Modify a named personality trait by delta (clamped 0.0-1.0)."""
+```
+
+##### get_persona_description()
+
+```python
+def get_persona_description(self) -> str:
+    """Return a human-readable description of the current persona."""
+```
+
+##### get_four_laws_summary()
+
+```python
+def get_four_laws_summary(self) -> str:
+    """Return a formatted summary of the Four Laws."""
+```
+
+##### evolve_persona(interaction_data)
+
+```python
+def evolve_persona(self, interaction_data: Dict[str, Any]) -> None:
+    """Adjust persona traits based on interaction data."""
+```
+
+##### get_statistics()
+
+```python
+def get_statistics(self) -> Dict[str, Any]:
+    """Return persona statistics and metrics."""
+```
 
 ### FourLaws Class
 
@@ -454,12 +471,14 @@ persona.evolve_persona({
 ### AI Not Initiating Conversations
 
 **Check:**
+
 - Proactive conversation enabled in settings
 - Sufficient idle time has passed (5+ minutes)
 - Not during user's quiet hours
 - Random probability (may need multiple checks)
 
 **Solution:**
+
 - Enable in AI Persona dialog
 - Adjust `min_idle_time` if too long
 - Modify `check_in_probability` for more frequent checks
@@ -467,11 +486,13 @@ persona.evolve_persona({
 ### AI Too Proactive
 
 **Check:**
+
 - `check_in_probability` too high
 - `min_idle_time` too short
 - Assertiveness trait too high
 
 **Solution:**
+
 - Lower probability in settings
 - Increase minimum idle time
 - Reduce assertiveness trait slider
@@ -479,11 +500,13 @@ persona.evolve_persona({
 ### AI Personality Not Evolving
 
 **Check:**
+
 - `evolve_persona()` being called
 - Sufficient interaction data
 - Changes too subtle to notice
 
 **Solution:**
+
 - Ensure conversation state updates
 - More interactions needed for evolution
 - Check statistics to see trait changes
@@ -491,11 +514,13 @@ persona.evolve_persona({
 ### Four Laws Blocking Legitimate Actions
 
 **Check:**
+
 - Context properly specified
 - Action description accurate
 - User order flag set correctly
 
 **Solution:**
+
 - Review context parameters
 - Ensure `is_user_order=True` for commands
 - Set danger flags accurately
@@ -541,6 +566,7 @@ personable AI assistant. It balances autonomy with safety, proactivity with pati
 and personality with ethical constraints.
 
 **Key Benefits:**
+
 - ✅ Strong ethical foundation (Four Laws)
 - ✅ Self-aware and personable
 - ✅ Proactive when appropriate
@@ -553,6 +579,7 @@ The AI is now not just a tool, but a partner that grows with you while always
 prioritizing safety and ethical behavior.
 
 For additional documentation, see:
+
 - Main README
 - Command Override & Memory Features
 - Learning Request Log
@@ -575,6 +602,7 @@ This repository uses `black`, `isort`, and `ruff` for Python formatting/linting 
 PR.
 
 Python (PowerShell):
+
 ```powershell
 $env:PYTHONPATH='src'
 python -m pip install ruff black isort
@@ -584,6 +612,7 @@ black src tests
 ```
 
 Frontend:
+
 ```powershell
 cd web/frontend
 npm install
