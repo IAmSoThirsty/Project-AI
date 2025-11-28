@@ -49,7 +49,7 @@ class LocationTracker:
     def get_location_from_ip(self):
         """Get location from IP address"""
         try:
-            response = requests.get('https://ipapi.co/json/')
+            response = requests.get('https://ipapi.co/json/', timeout=10)
             if response.status_code == 200:
                 data = response.json()
                 return {

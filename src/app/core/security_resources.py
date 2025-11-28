@@ -68,13 +68,13 @@ class SecurityResourceManager:
         categories = set()
         for category_resources in self.resources.values():
             categories.update(r['category'] for r in category_resources)
-        return sorted(list(categories))
+        return sorted(categories)
 
     def get_repo_details(self, repo):
         """Get detailed information about a GitHub repository"""
         try:
             url = f"https://api.github.com/repos/{repo}"
-            response = requests.get(url)
+            response = requests.get(url, timeout=10)
             if response.status_code == 200:
                 data = response.json()
                 return {
