@@ -1,0 +1,114 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' width='200' height='200'>
+  <defs>
+    <!-- Glowing cyan gradient -->
+    <linearGradient id='faceGrad' x1='0%' y1='0%' x2='100%' y2='100%'>
+      <stop offset='0%' stop-color='#00d4ff'/>
+      <stop offset='50%' stop-color='#00a8cc'/>
+      <stop offset='100%' stop-color='#0080aa'/>
+    </linearGradient>
+    <linearGradient id='eyeGrad' x1='0%' y1='0%' x2='100%' y2='100%'>
+      <stop offset='0%' stop-color='#00ffff'/>
+      <stop offset='100%' stop-color='#00ccff'/>
+    </linearGradient>
+    <!-- Glow filter -->
+    <filter id='glow' x='-50%' y='-50%' width='200%' height='200%'>
+      <feGaussianBlur in='SourceGraphic' stdDeviation='3' result='blur'/>
+      <feMerge>
+        <feMergeNode in='blur'/>
+        <feMergeNode in='SourceGraphic'/>
+      </feMerge>
+    </filter>
+    <filter id='innerGlow' x='-50%' y='-50%' width='200%' height='200%'>
+      <feGaussianBlur in='SourceGraphic' stdDeviation='2' result='blur'/>
+      <feMerge>
+        <feMergeNode in='blur'/>
+        <feMergeNode in='SourceGraphic'/>
+      </feMerge>
+    </filter>
+    <!-- Scan line pattern -->
+    <pattern id='scanlines' patternUnits='userSpaceOnUse' width='4' height='4'>
+      <line x1='0' y1='0' x2='4' y2='0' stroke='rgba(0,0,0,0.1)' stroke-width='1'/>
+    </pattern>
+  </defs>
+  
+  <!-- Dark background circle -->
+  <circle cx='100' cy='100' r='95' fill='#0a0e17' stroke='rgba(0,200,255,0.3)' stroke-width='2'/>
+  
+  <!-- Outer glowing ring -->
+  <circle cx='100' cy='100' r='90' fill='none' stroke='url(#faceGrad)' stroke-width='2' opacity='0.6' filter='url(#glow)'/>
+  
+  <!-- Digital face wireframe structure -->
+  <g stroke='url(#faceGrad)' stroke-width='1.5' fill='none' opacity='0.9' filter='url(#glow)'>
+    <!-- Face outline (hexagonal/angular sci-fi style) -->
+    <path d='M100,25 L140,45 L155,85 L150,130 L130,160 L100,175 L70,160 L50,130 L45,85 L60,45 Z'/>
+    
+    <!-- Inner face structure lines -->
+    <path d='M100,35 L125,50 L135,80 L130,115 L115,140 L100,150 L85,140 L70,115 L65,80 L75,50 Z' opacity='0.5'/>
+    
+    <!-- Cheekbone lines -->
+    <line x1='60' y1='85' x2='75' y2='95'/>
+    <line x1='140' y1='85' x2='125' y2='95'/>
+    
+    <!-- Jawline accent -->
+    <path d='M70,130 L85,145 L100,150 L115,145 L130,130' opacity='0.7'/>
+  </g>
+  
+  <!-- Eyes - glowing geometric shapes -->
+  <g filter='url(#innerGlow)'>
+    <!-- Left eye -->
+    <polygon points='65,80 80,72 90,80 80,88' fill='url(#eyeGrad)' opacity='0.9'/>
+    <circle cx='77' cy='80' r='4' fill='#ffffff' opacity='0.9'/>
+    
+    <!-- Right eye -->
+    <polygon points='110,80 120,72 135,80 120,88' fill='url(#eyeGrad)' opacity='0.9'/>
+    <circle cx='123' cy='80' r='4' fill='#ffffff' opacity='0.9'/>
+  </g>
+  
+  <!-- Nose - simple angular line -->
+  <path d='M100,90 L105,105 L100,115 L95,105 Z' stroke='url(#faceGrad)' stroke-width='1' fill='none' opacity='0.6' filter='url(#glow)'/>
+  
+  <!-- Mouth - horizontal glowing bar -->
+  <g filter='url(#glow)'>
+    <rect x='80' y='130' width='40' height='6' rx='3' fill='url(#faceGrad)' opacity='0.8'/>
+    <line x1='85' y1='133' x2='115' y2='133' stroke='#ffffff' stroke-width='1' opacity='0.5'/>
+  </g>
+  
+  <!-- Circuit decoration around face -->
+  <g stroke='rgba(0,200,255,0.4)' stroke-width='1' fill='none'>
+    <!-- Top circuit lines -->
+    <path d='M100,10 L100,20'/>
+    <path d='M85,15 L85,25 L75,25'/>
+    <path d='M115,15 L115,25 L125,25'/>
+    <circle cx='100' cy='10' r='3' fill='rgba(0,200,255,0.6)'/>
+    
+    <!-- Side circuit decorations -->
+    <path d='M35,100 L25,100 L25,80'/>
+    <path d='M165,100 L175,100 L175,80'/>
+    <circle cx='25' cy='80' r='2' fill='rgba(0,200,255,0.5)'/>
+    <circle cx='175' cy='80' r='2' fill='rgba(0,200,255,0.5)'/>
+    
+    <!-- Bottom circuits -->
+    <path d='M100,185 L100,195'/>
+    <path d='M80,180 L80,190 L70,190'/>
+    <path d='M120,180 L120,190 L130,190'/>
+  </g>
+  
+  <!-- Data stream visualization (small dots) -->
+  <g fill='rgba(0,255,255,0.5)'>
+    <circle cx='30' cy='60' r='1.5'>
+      <animate attributeName='opacity' values='1;0.3;1' dur='2s' repeatCount='indefinite'/>
+    </circle>
+    <circle cx='170' cy='60' r='1.5'>
+      <animate attributeName='opacity' values='0.3;1;0.3' dur='2s' repeatCount='indefinite'/>
+    </circle>
+    <circle cx='50' cy='170' r='1.5'>
+      <animate attributeName='opacity' values='1;0.5;1' dur='1.5s' repeatCount='indefinite'/>
+    </circle>
+    <circle cx='150' cy='170' r='1.5'>
+      <animate attributeName='opacity' values='0.5;1;0.5' dur='1.5s' repeatCount='indefinite'/>
+    </circle>
+  </g>
+  
+  <!-- Scan line overlay effect -->
+  <rect x='5' y='5' width='190' height='190' fill='url(#scanlines)' opacity='0.3' rx='90'/>
+</svg>
