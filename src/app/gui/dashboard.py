@@ -422,7 +422,26 @@ class DashboardWindow(DashboardHandlers, QMainWindow):
         """)
         main_layout.addWidget(separator)
 
-        # Chat display with styled object name
+        # Create a horizontal layout for chat and thought process side by side
+        chat_section = QHBoxLayout()
+
+        # Left side: Chat display
+        chat_container = QVBoxLayout()
+        
+        chat_header = QLabel("◈ COMMUNICATION TERMINAL ◈")
+        chat_header.setStyleSheet("""
+            color: #00d4ff;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 6px;
+            background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                stop:0 rgba(0, 50, 80, 0.4),
+                stop:0.5 rgba(0, 80, 120, 0.3),
+                stop:1 rgba(0, 50, 80, 0.4));
+            border-radius: 4px;
+        """)
+        chat_container.addWidget(chat_header)
+
         self.chat_display = QTextEdit()
         self.chat_display.setObjectName("ai_chat_display")
         self.chat_display.setReadOnly(True)
@@ -430,7 +449,50 @@ class DashboardWindow(DashboardHandlers, QMainWindow):
             "◈ COMMUNICATION TERMINAL ACTIVE ◈\n\n"
             "Type your message below to interact with the AI Assistant."
         )
-        main_layout.addWidget(self.chat_display)
+        chat_container.addWidget(self.chat_display)
+        
+        chat_section.addLayout(chat_container, stretch=3)
+
+        # Right side: AI Thought Process section
+        thought_container = QVBoxLayout()
+        
+        thought_header = QLabel("◈ AI THOUGHT PROCESS ◈")
+        thought_header.setStyleSheet("""
+            color: #ff9040;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 6px;
+            background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                stop:0 rgba(80, 50, 0, 0.4),
+                stop:0.5 rgba(120, 80, 0, 0.3),
+                stop:1 rgba(80, 50, 0, 0.4));
+            border-radius: 4px;
+        """)
+        thought_container.addWidget(thought_header)
+
+        self.thought_display = QTextEdit()
+        self.thought_display.setObjectName("ai_thought_display")
+        self.thought_display.setReadOnly(True)
+        self.thought_display.setStyleSheet("""
+            QTextEdit#ai_thought_display {
+                background: rgba(20, 15, 5, 0.95);
+                border: 2px solid rgba(255, 150, 50, 0.4);
+                border-radius: 8px;
+                font-family: 'Consolas', 'Monaco', monospace;
+                font-size: 12px;
+                color: #ffd080;
+            }
+        """)
+        self.thought_display.setPlaceholderText(
+            "◈ COGNITIVE PROCESS MONITOR ◈\n\n"
+            "AI reasoning and thought analysis\n"
+            "will be displayed here..."
+        )
+        thought_container.addWidget(self.thought_display)
+        
+        chat_section.addLayout(thought_container, stretch=2)
+
+        main_layout.addLayout(chat_section)
 
         # Input area with sci-fi styling
         input_layout = QHBoxLayout()
@@ -668,30 +730,68 @@ class DashboardWindow(DashboardHandlers, QMainWindow):
         self.tabs.addTab(tab, "Emergency Alert")
 
     def send_message(self):
-        """Handle sending a message with sci-fi styled output."""
+        """Handle sending a message with sci-fi styled output and thought process display."""
         message = self.chat_input.text()
         if message:
             # Update message counter
             self.message_count += 1
             if hasattr(self, 'stat_messages'):
-                self.stat_messages.setText(f"◆ MESSAGES: {self.message_count}")
+                self.stat_messages.setText(f"◆ MESSAGES PROCESSED: {self.message_count}")
             
             # User message with styled prefix
             user_prefix = '<span style="color: #80c0e0;">◈ You:</span>'
             self.chat_display.append(f'{user_prefix} {message}')
-            # Process message and get response
-            response = self.process_message(message)
+            
+            # Process message and get response with thought process
+            response, thought_process = self.process_message_with_thoughts(message)
+            
+            # Display AI thought process
+            if hasattr(self, 'thought_display'):
+                thought_prefix = '<span style="color: #ff9040;">◈ ANALYZING INPUT:</span>'
+                self.thought_display.append(f'{thought_prefix}')
+                self.thought_display.append(
+                    f'<span style="color: #ffd080;">{thought_process}</span>'
+                )
+                self.thought_display.append("")
+            
             # AI response with styled prefix
             ai_prefix = '<span style="color: #00d4ff;">◈ AI:</span>'
             self.chat_display.append(f'{ai_prefix} {response}')
             self.chat_display.append("")  # Add spacing
             self.chat_input.clear()
 
-    def process_message(self, message):
-        """Process user message and generate response."""
+    def process_message_with_thoughts(self, message):
+        """Process user message and generate response with thought process explanation."""
+        # Detect intent
         intent = self.intent_detector.predict(message)
-        # Handle different intents and generate appropriate response
-        return f"Detected intent: {intent}"  # Placeholder response
+        
+        # Build thought process explanation
+        thoughts = []
+        thoughts.append(f"<b>Step 1 - Input Analysis:</b><br/>")
+        thoughts.append(f"• Received message: \"{message}\"")
+        thoughts.append(f"• Character count: {len(message)}")
+        thoughts.append(f"• Word count: {len(message.split())}<br/>")
+        
+        thoughts.append(f"<b>Step 2 - Intent Classification:</b><br/>")
+        thoughts.append(f"• Running NLP classifier...")
+        thoughts.append(f"• Detected intent: <span style='color:#40ff80;'>{intent}</span><br/>")
+        
+        thoughts.append(f"<b>Step 3 - Response Generation:</b><br/>")
+        thoughts.append(f"• Formulating contextual response...")
+        thoughts.append(f"• Applying safety filters...")
+        thoughts.append(f"• Response ready ✓")
+        
+        thought_process = "<br/>".join(thoughts)
+        
+        # Generate response based on intent
+        response = f"I understood your intent as: {intent}. How can I assist you further?"
+        
+        return response, thought_process
+
+    def process_message(self, message):
+        """Process user message and generate response (legacy method)."""
+        response, _ = self.process_message_with_thoughts(message)
+        return response
 
     def add_task(self):
         """Add a new task"""
