@@ -16,6 +16,8 @@ cd c:\Users\Jeremy\Documents\GitHub\Project-AI
 python -m src.app.main
 ```
 
+
+
 ### What You'll See
 
 1. **Login Screen**: Right page shows login form with username/password fields
@@ -36,7 +38,7 @@ python -m src.app.main
 
 ## File Structure
 
-```
+```text
 src/app/gui/
 ├── leather_book_interface.py   # Main window with page switching
 ├── leather_book_dashboard.py   # Dashboard with 6-zone layout
@@ -46,12 +48,14 @@ src/app/gui/
 ## Key Features
 
 ### Visual Design
+
 - Neon green/cyan Tron theme for the left page
 - Dark leather brown theme for the right page
 - Smooth animations at 20 FPS (50ms timer)
 - Glowing text effects and LED-style indicators
 
 ### Functionality
+
 - Real-time system monitoring (uptime, stats)
 - Chat interface with message history
 - Animated AI visualization
@@ -59,10 +63,12 @@ src/app/gui/
 - Background task display
 
 ### Architecture
+
 - Signal/slot design for loose coupling
 - Modular component system
 - Easy to extend and customize
 - Production-ready code quality
+
 
 ## Documentation
 
@@ -115,7 +121,7 @@ self.animation_timer.start(50)  # Lower = faster, Higher = slower
 
 ## Architecture Overview
 
-```
+```text
 LeatherBookInterface (Main Window)
 ├── TronFacePage (Left Page - Always Visible)
 │   ├── TronFaceCanvas (Animated Face)
@@ -131,6 +137,7 @@ LeatherBookInterface (Main Window)
         │   └── AIFaceCanvas (Animated Face)
         └── AIResponsePanel (Bottom Right)
 ```
+
 
 ## Performance
 
@@ -185,7 +192,8 @@ middle_layout.addWidget(self.my_panel, 1)
 
 **Cause**: Stats timer not started
 
-**Fix**: Check `self.stats_timer.start(1000)` in StatsPanel.__init__
+**Fix**: Check `self.stats_timer.start(1000)` in StatsPanel.`__init__`
+
 
 ### Messages don't appear
 
@@ -262,9 +270,11 @@ dashboard.ai_head.stop_thinking()   # Shows RESPONDING
 ## Support & Help
 
 For detailed technical information, see:
+
 - **Architecture Details**: LEATHER_BOOK_ARCHITECTURE.md
 - **Developer Reference**: DEVELOPER_QUICK_REFERENCE.md
 - **Implementation Guide**: LEATHER_BOOK_UI_COMPLETE.md
+
 
 ## Future Enhancements
 
