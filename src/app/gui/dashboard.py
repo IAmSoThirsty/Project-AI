@@ -183,7 +183,7 @@ class DashboardWindow(DashboardHandlers, QMainWindow):
         assets_dir = os.path.join(os.path.dirname(__file__), 'assets')
         ai_face_path = os.path.join(assets_dir, 'ai_face.svg')
         # Enlarged size for 3D face display (300x300 for better visual impact)
-        pixmap = QPixmap(280, 280)
+        pixmap = QPixmap(260, 260)
         pixmap.fill(Qt.GlobalColor.transparent)
 
         if os.path.exists(ai_face_path):
@@ -199,56 +199,35 @@ class DashboardWindow(DashboardHandlers, QMainWindow):
                 pass
         return pixmap
 
+    def _update_ai_initiative(self):
+        """Update the AI Initiative display with autonomous activities."""
+        from datetime import datetime
+        current_time = datetime.now().strftime("%H:%M:%S")
+        
+        activities = [
+            f"<span style='color:#60ff60;'>● [{current_time}]</span>",
+            "<span style='color:#a0ffa0;'>  Monitoring system health...</span>",
+            "<span style='color:#60ff60;'>● Background tasks:</span>",
+            "<span style='color:#80ff80;'>  • Data optimization: ACTIVE</span>",
+            "<span style='color:#80ff80;'>  • Security scan: RUNNING</span>",
+            "<span style='color:#80ff80;'>  • Learning patterns: ANALYZING</span>",
+            "<span style='color:#60ff60;'>● Predictive analysis:</span>",
+            "<span style='color:#a0ffa0;'>  Preparing recommendations...</span>",
+            "<span style='color:#60ff60;'>● Auto-maintenance:</span>",
+            "<span style='color:#a0ffa0;'>  Cache optimization: 94%</span>",
+        ]
+        
+        self.initiative_display.setHtml("<br/>".join(activities))
+
     def setup_chat_tab(self):
-        """Setup the chat interface tab with enhanced 3D AI face and status monitors."""
+        """Setup the chat interface tab with centered AI face and initiative window."""
         chat_tab = QWidget()
         main_layout = QVBoxLayout(chat_tab)
 
-        # Top section: Enlarged AI Face and enhanced system monitors
+        # Top section: Three columns - Status | Centered AI Face | Initiative Window
         top_section = QHBoxLayout()
 
-        # AI Face display (enlarged 3D digital construct)
-        ai_container = QVBoxLayout()
-        
-        ai_frame = QFrame()
-        ai_frame.setObjectName("ai_face_frame")
-        ai_frame.setFixedSize(300, 300)
-        ai_frame.setStyleSheet("""
-            QFrame#ai_face_frame {
-                background: qradialgradient(cx:0.5, cy:0.5, radius:0.8,
-                    fx:0.5, fy:0.3,
-                    stop:0 rgba(0, 50, 80, 0.4),
-                    stop:0.5 rgba(0, 30, 50, 0.3),
-                    stop:1 rgba(5, 15, 25, 0.2));
-                border: 3px solid rgba(0, 200, 255, 0.5);
-                border-radius: 150px;
-            }
-        """)
-        ai_layout = QVBoxLayout(ai_frame)
-        ai_layout.setContentsMargins(10, 10, 10, 10)
-
-        self.ai_face_label = QLabel()
-        self.ai_face_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        ai_pixmap = self._load_ai_face_svg()
-        self.ai_face_label.setPixmap(ai_pixmap)
-        ai_layout.addWidget(self.ai_face_label)
-        
-        ai_container.addWidget(ai_frame, alignment=Qt.AlignmentFlag.AlignCenter)
-        
-        # AI identifier label under the face
-        ai_id_label = QLabel("◈ AI CORE INTERFACE ◈")
-        ai_id_label.setStyleSheet("""
-            color: #00d4ff;
-            font-size: 12px;
-            font-weight: bold;
-            padding: 8px;
-        """)
-        ai_id_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        ai_container.addWidget(ai_id_label)
-        
-        top_section.addLayout(ai_container)
-
-        # Enhanced System Status Monitors Panel with 3D styling
+        # Left column: System Status Monitors
         monitors_container = QVBoxLayout()
 
         # AI Status header with enhanced styling
@@ -328,87 +307,113 @@ class DashboardWindow(DashboardHandlers, QMainWindow):
         monitors_container.addWidget(status_monitor)
         monitors_container.addStretch()
 
-        top_section.addLayout(monitors_container)
+        top_section.addLayout(monitors_container, stretch=1)
 
-        # Right side: Enhanced metrics panel with 3D styling
-        stats_container = QVBoxLayout()
+        # CENTER column: AI Face (centered and prominent)
+        ai_container = QVBoxLayout()
+        ai_container.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        
+        ai_frame = QFrame()
+        ai_frame.setObjectName("ai_face_frame")
+        ai_frame.setFixedSize(280, 280)
+        ai_frame.setStyleSheet("""
+            QFrame#ai_face_frame {
+                background: qradialgradient(cx:0.5, cy:0.5, radius:0.8,
+                    fx:0.5, fy:0.3,
+                    stop:0 rgba(0, 50, 80, 0.4),
+                    stop:0.5 rgba(0, 30, 50, 0.3),
+                    stop:1 rgba(5, 15, 25, 0.2));
+                border: 3px solid rgba(0, 200, 255, 0.5);
+                border-radius: 140px;
+            }
+        """)
+        ai_layout = QVBoxLayout(ai_frame)
+        ai_layout.setContentsMargins(10, 10, 10, 10)
 
-        stats_header = QLabel("◈ PERFORMANCE METRICS ◈")
-        stats_header.setStyleSheet("""
+        self.ai_face_label = QLabel()
+        self.ai_face_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        ai_pixmap = self._load_ai_face_svg()
+        self.ai_face_label.setPixmap(ai_pixmap)
+        ai_layout.addWidget(self.ai_face_label)
+        
+        ai_container.addWidget(ai_frame, alignment=Qt.AlignmentFlag.AlignCenter)
+        
+        # AI identifier label under the face
+        ai_id_label = QLabel("◈ AI CORE INTERFACE ◈")
+        ai_id_label.setStyleSheet("""
             color: #00d4ff;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 8px;
+        """)
+        ai_id_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        ai_container.addWidget(ai_id_label)
+        
+        top_section.addLayout(ai_container, stretch=2)
+
+        # Right column: AI Initiative Window (what AI is doing on its own)
+        initiative_container = QVBoxLayout()
+
+        initiative_header = QLabel("◈ AI INITIATIVE ◈")
+        initiative_header.setStyleSheet("""
+            color: #80ff80;
             font-size: 16px;
             font-weight: bold;
             padding: 8px;
             background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-                stop:0 rgba(0, 50, 80, 0.4),
-                stop:0.5 rgba(0, 80, 120, 0.3),
-                stop:1 rgba(0, 50, 80, 0.4));
+                stop:0 rgba(0, 80, 50, 0.4),
+                stop:0.5 rgba(0, 120, 80, 0.3),
+                stop:1 rgba(0, 80, 50, 0.4));
             border-radius: 4px;
         """)
-        stats_container.addWidget(stats_header)
+        initiative_container.addWidget(initiative_header)
 
-        # Stats monitor frame with 3D appearance
-        stats_monitor = QFrame()
-        stats_monitor.setStyleSheet("""
+        # AI Initiative monitor frame
+        initiative_monitor = QFrame()
+        initiative_monitor.setFixedSize(220, 200)
+        initiative_monitor.setStyleSheet("""
             QFrame {
                 background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                    stop:0 rgba(10, 30, 50, 0.9),
-                    stop:0.5 rgba(5, 20, 40, 0.95),
-                    stop:1 rgba(10, 30, 50, 0.9));
-                border: 2px solid rgba(0, 200, 255, 0.5);
+                    stop:0 rgba(10, 40, 30, 0.9),
+                    stop:0.5 rgba(5, 30, 20, 0.95),
+                    stop:1 rgba(10, 40, 30, 0.9));
+                border: 2px solid rgba(100, 255, 150, 0.5);
                 border-radius: 8px;
-                padding: 12px;
+                padding: 8px;
             }
         """)
-        stats_inner = QVBoxLayout(stats_monitor)
-        stats_inner.setSpacing(8)
+        initiative_inner = QVBoxLayout(initiative_monitor)
+        initiative_inner.setSpacing(6)
 
-        self.stat_uptime = QLabel("◆ UPTIME: 00:00:00")
-        self.stat_uptime.setStyleSheet("""
-            color: #a0d4ff;
-            font-size: 13px;
-            padding: 4px;
-            background: rgba(0, 60, 100, 0.2);
-            border-radius: 4px;
+        # AI Initiative activity display
+        self.initiative_display = QTextEdit()
+        self.initiative_display.setObjectName("ai_initiative_display")
+        self.initiative_display.setReadOnly(True)
+        self.initiative_display.setStyleSheet("""
+            QTextEdit#ai_initiative_display {
+                background: rgba(5, 25, 15, 0.9);
+                border: 1px solid rgba(100, 255, 150, 0.3);
+                border-radius: 4px;
+                font-family: 'Consolas', 'Monaco', monospace;
+                font-size: 11px;
+                color: #90ff90;
+                padding: 6px;
+            }
         """)
-        stats_inner.addWidget(self.stat_uptime)
+        self.initiative_display.setPlaceholderText(
+            "◈ AI AUTONOMOUS ACTIVITY ◈\n\n"
+            "Monitoring background processes..."
+        )
+        
+        # Initialize with some default autonomous activities
+        self._update_ai_initiative()
+        
+        initiative_inner.addWidget(self.initiative_display)
 
-        self.stat_messages = QLabel("◆ MESSAGES PROCESSED: 0")
-        self.stat_messages.setStyleSheet("""
-            color: #a0d4ff;
-            font-size: 13px;
-            padding: 4px;
-            background: rgba(0, 60, 100, 0.2);
-            border-radius: 4px;
-        """)
-        stats_inner.addWidget(self.stat_messages)
+        initiative_container.addWidget(initiative_monitor)
+        initiative_container.addStretch()
 
-        self.stat_response = QLabel("◆ RESPONSE TIME: <1ms")
-        self.stat_response.setStyleSheet("""
-            color: #a0d4ff;
-            font-size: 13px;
-            padding: 4px;
-            background: rgba(0, 60, 100, 0.2);
-            border-radius: 4px;
-        """)
-        stats_inner.addWidget(self.stat_response)
-
-        self.stat_user = QLabel(f"◆ ACTIVE USER: {self.user_manager.current_user or 'GUEST'}")
-        self.stat_user.setStyleSheet("""
-            color: #80c0e0;
-            font-size: 13px;
-            font-weight: bold;
-            padding: 4px;
-            background: rgba(0, 80, 120, 0.25);
-            border-radius: 4px;
-        """)
-        stats_inner.addWidget(self.stat_user)
-
-        stats_container.addWidget(stats_monitor)
-        stats_container.addStretch()
-
-        top_section.addLayout(stats_container)
-        top_section.addStretch()
+        top_section.addLayout(initiative_container, stretch=1)
 
         main_layout.addLayout(top_section)
 
