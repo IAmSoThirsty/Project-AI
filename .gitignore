@@ -1,9 +1,8 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
 build/
 develop-eggs/
 dist/
@@ -16,40 +15,73 @@ parts/
 sdist/
 var/
 wheels/
+pip-wheel-metadata/
+share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+MANIFEST
 
-# Virtual environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
+# Python caches and compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
 
-# IDE
-.idea/
+# Testing and coverage
+.pytest_cache/
+.tox/
+coverage.xml
+coverage/
+reports/
+.coverage
+htmlcov/
+.hypothesis/
+
+# IDE and editor settings
 .vscode/
+.idea/
 *.swp
 *.swo
 *~
+.DS_Store
+*.sublime-project
+*.sublime-workspace
 
-# Testing
-.pytest_cache/
-.coverage
-htmlcov/
-.tox/
-.nox/
+# Secrets and environment files
+.env
+.env.local
+.env.*.local
+.secrets/
+*.pem
+*.key
 
-# Data files (user-specific)
-*.json
-!package.json
-
-# Logs
+# Logs and temporary data
 logs/
 *.log
+data/local/
+temp/
+tmp/
+*.tmp
 
-# Node modules
+# Node modules and package manager
 node_modules/
+web/frontend/node_modules/
+package-lock.json
+yarn.lock
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Documentation
+site/
+docs/_build/
+
+# Miscellaneous
+.DS_Store
+*.bak
+*.orig
+README_UPDATED.md
