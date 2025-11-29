@@ -10,9 +10,17 @@ import math
 
 from PyQt6.QtCore import QTimer, pyqtSignal
 from PyQt6.QtGui import QBrush, QColor, QFont, QPainter, QPen
-from PyQt6.QtWidgets import (QFrame, QGraphicsDropShadowEffect, QHBoxLayout,
-                             QLabel, QMainWindow, QPushButton, QStackedWidget,
-                             QVBoxLayout, QWidget)
+from PyQt6.QtWidgets import (
+    QFrame,
+    QGraphicsDropShadowEffect,
+    QHBoxLayout,
+    QLabel,
+    QMainWindow,
+    QPushButton,
+    QStackedWidget,
+    QVBoxLayout,
+    QWidget,
+)
 
 
 class LeatherBookInterface(QMainWindow):
@@ -121,6 +129,9 @@ class LeatherBookInterface(QMainWindow):
         # Create dashboard
         dashboard = LeatherBookDashboard(username)
 
+        # Connect image generation signal
+        dashboard.actions_panel.image_gen_requested.connect(self.switch_to_image_generation)
+
         # Add to page container
         if self.page_container.count() > 1:
             self.page_container.removeWidget(self.page_container.widget(1))
@@ -128,6 +139,27 @@ class LeatherBookInterface(QMainWindow):
         self.page_container.addWidget(dashboard)
         self.page_container.setCurrentIndex(1)
         self.current_page = 1
+
+    def switch_to_image_generation(self):
+        """Switch to image generation interface."""
+        from app.gui.image_generation import ImageGenerationInterface
+
+        # Create image generation interface
+        image_gen = ImageGenerationInterface()
+
+        # Add to page container
+        if self.page_container.count() > 2:
+            self.page_container.removeWidget(self.page_container.widget(2))
+
+        self.page_container.addWidget(image_gen)
+        self.page_container.setCurrentIndex(2)
+        self.current_page = 2
+
+    def switch_to_dashboard(self):
+        """Switch back to dashboard."""
+        if self.page_container.count() > 1:
+            self.page_container.setCurrentIndex(1)
+            self.current_page = 1
 
 
 class TronFacePage(QFrame):
