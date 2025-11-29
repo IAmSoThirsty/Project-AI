@@ -10,10 +10,14 @@ This repository contains a Python desktop application that provides a personal A
   - Persona and preference settings
   - (Encrypted) storage support for sensitive data
 
-- Chat / AI Tutor
-  - Conversational interface
+- Chat / AI Tutor with Voice Capabilities
+  - Conversational interface with real-time voice interaction
   - AI Code Tutor (via OpenAI GPT models)
   - Intent detection using a scikit-learn model
+  - Text-to-speech (TTS) for AI responses
+  - Speech-to-text (STT) for voice input
+  - Continuous listening mode for hands-free conversation
+  - Adjustable speech rate and voice selection
 
 - Learning Paths (feature #3 implemented first)
   - Generate personalized learning paths via OpenAI
@@ -52,6 +56,7 @@ This repository contains a Python desktop application that provides a personal A
 - `src/app/core/security_resources.py` — Security resources manager and GitHub lookup.
 - `src/app/core/location_tracker.py` — Tracking and encrypted history (uses FERNET_KEY from env if set).
 - `src/app/core/emergency_alert.py` — Emergency alert sending and logging.
+- `src/app/core/voice_assistant.py` — Voice assistant with TTS/STT for real-time conversational AI.
 
 ## Environment variables (.env)
 

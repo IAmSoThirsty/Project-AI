@@ -7,6 +7,7 @@ from PyQt6.QtWidgets import (
     QTabWidget,
     QWidget,
     QVBoxLayout,
+    QHBoxLayout,
     QPushButton,
     QTextEdit,
     QLineEdit,
@@ -14,8 +15,11 @@ from PyQt6.QtWidgets import (
     QComboBox,
     QListWidget,
     QGraphicsOpacityEffect,
+    QCheckBox,
+    QSlider,
+    QMessageBox,
 )
-from PyQt6.QtCore import QTimer, QPropertyAnimation
+from PyQt6.QtCore import QTimer, QPropertyAnimation, Qt, pyqtSignal, QObject
 import os
 import base64
 from app.core.user_manager import UserManager
@@ -25,6 +29,12 @@ from app.core.data_analysis import DataAnalyzer
 from app.core.security_resources import SecurityResourceManager
 from app.core.location_tracker import LocationTracker
 from app.core.emergency_alert import EmergencyAlert
+from app.core.voice_assistant import VoiceAssistant
+
+
+class SpeechSignals(QObject):
+    """Signals for thread-safe speech recognition updates."""
+    speech_recognized = pyqtSignal(str)
 
 
 class DashboardWindow(QMainWindow):
@@ -38,6 +48,18 @@ class DashboardWindow(QMainWindow):
         self.security_manager = SecurityResourceManager()
         self.location_tracker = LocationTracker()
         self.emergency_alert = EmergencyAlert()
+        self.voice_assistant = VoiceAssistant()
+
+        # Setup speech signals for thread-safe GUI updates
+        self.speech_signals = SpeechSignals()
+        self.speech_signals.speech_recognized.connect(self._on_speech_recognized)
+
+        # Conversation history for context-aware responses
+        self.conversation_history = []
+
+        # Voice settings
+        self.voice_enabled = True
+        self.auto_listen = False
 
         # Setup timers
         self.location_timer = QTimer()
@@ -155,7 +177,7 @@ class DashboardWindow(QMainWindow):
             pass
 
     def setup_chat_tab(self):
-        """Setup the chat interface tab"""
+        """Setup the chat interface tab with voice capabilities"""
         chat_tab = QWidget()
         layout = QVBoxLayout(chat_tab)
 
@@ -166,12 +188,59 @@ class DashboardWindow(QMainWindow):
 
         # Input area
         self.chat_input = QLineEdit()
+        self.chat_input.setPlaceholderText("Type a message or use voice input...")
+        self.chat_input.returnPressed.connect(self.send_message)
         layout.addWidget(self.chat_input)
+
+        # Button row for send and voice controls
+        button_row = QHBoxLayout()
 
         # Send button
         send_button = QPushButton("Send")
         send_button.clicked.connect(self.send_message)
-        layout.addWidget(send_button)
+        button_row.addWidget(send_button)
+
+        # Voice input button (push-to-talk)
+        self.voice_input_button = QPushButton("🎤 Voice Input")
+        self.voice_input_button.setToolTip("Click to speak a message")
+        self.voice_input_button.clicked.connect(self.start_voice_input)
+        button_row.addWidget(self.voice_input_button)
+
+        # Continuous listening toggle
+        self.listen_toggle = QPushButton("🎧 Auto-Listen: OFF")
+        self.listen_toggle.setCheckable(True)
+        self.listen_toggle.setToolTip("Toggle continuous voice listening")
+        self.listen_toggle.clicked.connect(self.toggle_continuous_listening)
+        button_row.addWidget(self.listen_toggle)
+
+        layout.addLayout(button_row)
+
+        # Voice settings row
+        voice_settings = QHBoxLayout()
+
+        # Voice output toggle
+        self.voice_output_checkbox = QCheckBox("🔊 Voice Output")
+        self.voice_output_checkbox.setChecked(True)
+        self.voice_output_checkbox.setToolTip("Enable/disable AI voice responses")
+        self.voice_output_checkbox.stateChanged.connect(self._on_voice_output_changed)
+        voice_settings.addWidget(self.voice_output_checkbox)
+
+        # Speech rate slider
+        voice_settings.addWidget(QLabel("Speed:"))
+        self.speech_rate_slider = QSlider(Qt.Orientation.Horizontal)
+        self.speech_rate_slider.setMinimum(100)
+        self.speech_rate_slider.setMaximum(250)
+        self.speech_rate_slider.setValue(175)
+        self.speech_rate_slider.setToolTip("Adjust speech speed")
+        self.speech_rate_slider.valueChanged.connect(self._on_speech_rate_changed)
+        voice_settings.addWidget(self.speech_rate_slider)
+
+        # Clear conversation button
+        clear_button = QPushButton("Clear Chat")
+        clear_button.clicked.connect(self.clear_conversation)
+        voice_settings.addWidget(clear_button)
+
+        layout.addLayout(voice_settings)
 
         self.tabs.addTab(chat_tab, "Chapter 1 — Chat")
 
@@ -347,20 +416,105 @@ class DashboardWindow(QMainWindow):
         self.tabs.addTab(tab, "Chapter 7 — Emergency Alert")
 
     def send_message(self):
-        """Handle sending a message"""
-        message = self.chat_input.text()
+        """Handle sending a message (text or voice)"""
+        message = self.chat_input.text().strip()
         if message:
-            self.chat_display.append(f"You: {message}")
-            # Process message and get response
-            response = self.process_message(message)
-            self.chat_display.append(f"AI: {response}")
+            self._process_and_respond(message)
             self.chat_input.clear()
 
+    def _process_and_respond(self, message: str):
+        """Process user message and generate AI response."""
+        self.chat_display.append(f"<b>You:</b> {message}")
+
+        # Add to conversation history for context
+        self.conversation_history.append({"role": "user", "content": message})
+
+        # Get AI response with conversation context
+        response = self.voice_assistant.get_ai_response(
+            message,
+            context=self.conversation_history[-10:]  # Keep last 10 exchanges
+        )
+
+        # Add AI response to history
+        self.conversation_history.append({"role": "assistant", "content": response})
+
+        # Display response
+        self.chat_display.append(f"<b>AI:</b> {response}")
+
+        # Speak response if voice output is enabled
+        if self.voice_enabled:
+            self.voice_assistant.speak_async(response)
+
     def process_message(self, message):
-        """Process user message and generate response"""
+        """Process user message and generate response (legacy method)."""
         intent = self.intent_detector.predict(message)
-        # Handle different intents and generate appropriate response
-        return f"Detected intent: {intent}"  # Placeholder response
+        # Use AI for conversational response
+        return self.voice_assistant.get_ai_response(message)
+
+    def start_voice_input(self):
+        """Start listening for voice input (push-to-talk)."""
+        self.voice_input_button.setText("🎤 Listening...")
+        self.voice_input_button.setEnabled(False)
+        self.chat_display.append("<i>Listening for voice input...</i>")
+
+        # Run recognition in background thread
+        import threading
+
+        def recognize():
+            text = self.voice_assistant.listen_once(timeout=10, phrase_limit=30)
+            # Use signal to update GUI from main thread
+            if text:
+                self.speech_signals.speech_recognized.emit(text)
+            else:
+                self.speech_signals.speech_recognized.emit("")
+
+        thread = threading.Thread(target=recognize, daemon=True)
+        thread.start()
+
+    def _on_speech_recognized(self, text: str):
+        """Handle recognized speech (called from main thread via signal)."""
+        self.voice_input_button.setText("🎤 Voice Input")
+        self.voice_input_button.setEnabled(True)
+
+        if text:
+            self.chat_input.setText(text)
+            # Automatically send if in auto-listen mode
+            if self.auto_listen:
+                self.send_message()
+            else:
+                self.chat_display.append(f"<i>Heard: {text}</i>")
+        else:
+            self.chat_display.append("<i>Could not understand audio. Please try again.</i>")
+
+        # Continue listening if auto-listen is on
+        if self.auto_listen:
+            QTimer.singleShot(500, self.start_voice_input)
+
+    def toggle_continuous_listening(self):
+        """Toggle continuous voice listening mode."""
+        self.auto_listen = self.listen_toggle.isChecked()
+
+        if self.auto_listen:
+            self.listen_toggle.setText("🎧 Auto-Listen: ON")
+            self.chat_display.append("<i>Continuous listening enabled. Speak to interact.</i>")
+            self.start_voice_input()
+        else:
+            self.listen_toggle.setText("🎧 Auto-Listen: OFF")
+            self.chat_display.append("<i>Continuous listening disabled.</i>")
+
+    def _on_voice_output_changed(self, state):
+        """Handle voice output checkbox change."""
+        self.voice_enabled = (state == Qt.CheckState.Checked.value)
+
+    def _on_speech_rate_changed(self, value):
+        """Handle speech rate slider change."""
+        self.voice_assistant.set_voice_rate(value)
+
+    def clear_conversation(self):
+        """Clear the chat display and conversation history."""
+        self.chat_display.clear()
+        self.conversation_history.clear()
+        self.chat_display.append("<i>Conversation cleared.</i>")
 
     def add_task(self):
         """Add a new task"""

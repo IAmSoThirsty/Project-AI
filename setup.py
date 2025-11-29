@@ -15,7 +15,9 @@ setup(
         'numpy',
         'pandas',
         'matplotlib',
-        'scikit-learn'
+        'scikit-learn',
+        'pyttsx3',
+        'SpeechRecognition',
     ],
     entry_points={
         'console_scripts': [
