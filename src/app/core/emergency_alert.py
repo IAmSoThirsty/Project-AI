@@ -60,11 +60,11 @@ class EmergencyAlert:
             else:
                 loc_lines = [
                     f"Latitude: {location_data.get('latitude')}",
-                    (f"Longitude: " f"{location_data.get('longitude')}"),
-                    (f"Address: " f"{location_data.get('address', 'Not available')}"),
-                    (f"City: " f"{location_data.get('city', 'Not available')}"),
-                    (f"Region: " f"{location_data.get('region', 'Not available')}"),
-                    (f"Country: " f"{location_data.get('country', 'Not available')}"),
+                    f"Longitude: {location_data.get('longitude')}",
+                    f"Address: {location_data.get('address', 'Not available')}",
+                    f"City: {location_data.get('city', 'Not available')}",
+                    f"Region: {location_data.get('region', 'Not available')}",
+                    f"Country: {location_data.get('country', 'Not available')}",
                 ]
                 loc_text = "\n".join(loc_lines)
 
