@@ -56,7 +56,7 @@ def should_preserve_line(line: str) -> bool:
 
 
 def _process_lines(
-    lines: list[str], width: int, flush_fn
+    lines: list[str], flush_fn
 ) -> tuple[list[str], int]:
     """Process all lines and return (out_lines, changed count)."""
     out_lines: list[str] = []
@@ -130,7 +130,7 @@ def reflow_markdown_text(text: str, width: int) -> tuple[str, int]:
         out_lines.extend(wrapped_lines)
 
     out_lines: list[str] = []
-    out_lines, changed = _process_lines(lines, width, flush_paragraph)
+    out_lines, changed = _process_lines(lines, flush_paragraph)
     return "\n".join(out_lines) + ("\n" if text.endswith("\n") else ""), changed
 
 

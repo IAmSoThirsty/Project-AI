@@ -30,13 +30,13 @@ class LearningPathManager:
                 "5. Milestones and checkpoints"
             )
 
-            response = openai.ChatCompletion.create(
+            response = openai.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=[
                     {
                         "role": "system",
                         "content": (
-                            "You are an educational expert creating " "learning paths."
+                            "You are an educational expert creating learning paths."
                         ),
                     },
                     {"role": "user", "content": prompt},
