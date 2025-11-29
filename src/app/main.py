@@ -42,7 +42,8 @@ def main():
         app.setFont(fallback_font)
 
     # Use new leather book interface
-    app_window = LeatherBookInterface()  # noqa: F841
+    app_window = LeatherBookInterface()
+    app_window.show()
     app.exec()
 
 
