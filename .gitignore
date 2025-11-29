@@ -64,11 +64,9 @@ temp/
 tmp/
 *.tmp
 
-# Node modules and package manager
+# Node modules (but keep lock files for dependency tracking)
 node_modules/
 web/frontend/node_modules/
-package-lock.json
-yarn.lock
 
 # Build artifacts
 build/
