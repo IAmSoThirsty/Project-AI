@@ -1,0 +1,113 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "project-ai"
+version = "1.0.0"
+description = "Comprehensive AI assistant with advanced features"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [{name = "Project AI Team"}]
+keywords = ["ai", "assistant", "pyqt6", "machine-learning"]
+
+dependencies = [
+    "PyQt6>=6.0.0",
+    "scikit-learn>=1.0.0",
+    "geopy>=2.0.0",
+    "cryptography>=3.4.0",
+    "openai>=0.27.0",
+    "python-dotenv>=0.19.0",
+    "requests>=2.28.0",
+    "numpy>=1.20.0",
+    "pandas>=1.0.0",
+    "matplotlib>=3.5.0",
+    "PyPDF2>=3.0.0",
+    "passlib>=1.7.0",
+    "bcrypt>=5.0.0",
+    "httpx>=0.24.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.1.0",
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=22.0.0",
+    "flake8>=7.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/IAmSoThirsty/Project-AI"
+Repository = "https://github.com/IAmSoThirsty/Project-AI"
+Issues = "https://github.com/IAmSoThirsty/Project-AI/issues"
+
+[tool.ruff]
+# Exclude markdown documentation files from linting
+exclude = [
+    "*.md",
+    "node_modules",
+    ".venv",
+    "venv",
+    "__pycache__",
+    ".git",
+    "build",
+    "dist"
+]
+
+# Line length for black compatibility
+line-length = 88
+
+# Target Python version
+target-version = "py311"
+
+[tool.ruff.lint]
+# Select rules to check
+select = [
+    "E",      # Errors
+    "W",      # Warnings
+    "F",      # Pyflakes
+    "I",      # isort
+    "N",      # pep8-naming
+    "UP",     # pyupgrade
+    "B",      # flake8-bugbear
+    "C4",     # flake8-comprehensions
+    "SIM",    # flake8-simplify
+]
+
+# Ignore specific rules
+ignore = [
+    "E501",   # Line too long (handled by formatter)
+    "D",      # Skip all pydocstyle rules for now
+    "SIM105", # Suppress contextlib suggestions
+    "N807",   # __init__ in documentation examples (INTEGRATION_GUIDE.py)
+    "N802",   # eventFilter is a PyQt6 method name that can't be changed
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+addopts = "--strict-markers -v"
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests",
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py311']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
