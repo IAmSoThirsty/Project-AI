@@ -25,10 +25,12 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from app.core.data_analysis import DataAnalyzer
 from app.core.emergency_alert import EmergencyAlert
-from app.core.intent_detection import IntentDetector
-from app.core.learning_paths import LearningPathManager
+from app.core.intelligence_engine import (
+    DataAnalyzer,
+    IntentDetector,
+    LearningPathManager,
+)
 from app.core.location_tracker import LocationTracker
 from app.core.security_resources import SecurityResourceManager
 from app.core.user_manager import UserManager

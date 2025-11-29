@@ -11,7 +11,14 @@ class ExplainabilityAgent:
     def __init__(self) -> None:
         """Initialize the explainability agent with explanation models.
 
-        TODO: Implement explanation generation logic
+        This method initializes the agent state. Full feature implementation
+        is deferred to future development phases. The agent currently operates
+        in disabled mode and maintains empty data structures for future use.
         """
-        self.enabled = False
-        self.explanations = {}
+        # State initialization: The explainability agent state is initialized
+        # with disabled mode (enabled = False) and empty explanation storage.
+        # This is a placeholder design that allows future implementation of
+        # explanation generation and reasoning trace features without breaking
+        # existing code that may reference this agent.
+        self.enabled: bool = False
+        self.explanations: dict = {}
