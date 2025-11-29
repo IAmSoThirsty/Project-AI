@@ -56,13 +56,13 @@ def test_speak_empty_text():
     assert result is False
 
 
-@patch('pyttsx3.init')
-def test_speak_success(mock_pyttsx3_init):
+@patch('app.core.voice_assistant.pyttsx3')
+def test_speak_success(mock_pyttsx3):
     """Test successful text-to-speech."""
     from app.core.voice_assistant import VoiceAssistant
 
     mock_engine = MagicMock()
-    mock_pyttsx3_init.return_value = mock_engine
+    mock_pyttsx3.init.return_value = mock_engine
 
     va = VoiceAssistant()
     result = va.speak("Hello, world!")
@@ -72,13 +72,13 @@ def test_speak_success(mock_pyttsx3_init):
     mock_engine.runAndWait.assert_called_once()
 
 
-@patch('pyttsx3.init')
-def test_set_voice_rate(mock_pyttsx3_init):
+@patch('app.core.voice_assistant.pyttsx3')
+def test_set_voice_rate(mock_pyttsx3):
     """Test setting voice rate."""
     from app.core.voice_assistant import VoiceAssistant
 
     mock_engine = MagicMock()
-    mock_pyttsx3_init.return_value = mock_engine
+    mock_pyttsx3.init.return_value = mock_engine
 
     va = VoiceAssistant()
     va.set_voice_rate(200)
@@ -86,13 +86,13 @@ def test_set_voice_rate(mock_pyttsx3_init):
     mock_engine.setProperty.assert_called_with('rate', 200)
 
 
-@patch('pyttsx3.init')
-def test_set_voice_volume(mock_pyttsx3_init):
+@patch('app.core.voice_assistant.pyttsx3')
+def test_set_voice_volume(mock_pyttsx3):
     """Test setting voice volume."""
     from app.core.voice_assistant import VoiceAssistant
 
     mock_engine = MagicMock()
-    mock_pyttsx3_init.return_value = mock_engine
+    mock_pyttsx3.init.return_value = mock_engine
 
     va = VoiceAssistant()
     va.set_voice_volume(0.5)
@@ -100,13 +100,13 @@ def test_set_voice_volume(mock_pyttsx3_init):
     mock_engine.setProperty.assert_called_with('volume', 0.5)
 
 
-@patch('pyttsx3.init')
-def test_set_voice_volume_clamped(mock_pyttsx3_init):
+@patch('app.core.voice_assistant.pyttsx3')
+def test_set_voice_volume_clamped(mock_pyttsx3):
     """Test volume is clamped to valid range."""
     from app.core.voice_assistant import VoiceAssistant
 
     mock_engine = MagicMock()
-    mock_pyttsx3_init.return_value = mock_engine
+    mock_pyttsx3.init.return_value = mock_engine
 
     va = VoiceAssistant()
 
@@ -119,8 +119,8 @@ def test_set_voice_volume_clamped(mock_pyttsx3_init):
     mock_engine.setProperty.assert_called_with('volume', 0.0)
 
 
-@patch('pyttsx3.init')
-def test_get_available_voices(mock_pyttsx3_init):
+@patch('app.core.voice_assistant.pyttsx3')
+def test_get_available_voices(mock_pyttsx3):
     """Test getting available voices."""
     from app.core.voice_assistant import VoiceAssistant
 
@@ -130,7 +130,7 @@ def test_get_available_voices(mock_pyttsx3_init):
 
     mock_engine = MagicMock()
     mock_engine.getProperty.return_value = [mock_voice]
-    mock_pyttsx3_init.return_value = mock_engine
+    mock_pyttsx3.init.return_value = mock_engine
 
     va = VoiceAssistant()
     voices = va.get_available_voices()
@@ -140,13 +140,13 @@ def test_get_available_voices(mock_pyttsx3_init):
     assert voices[0]['name'] == "Voice One"
 
 
-@patch('pyttsx3.init')
-def test_set_voice(mock_pyttsx3_init):
+@patch('app.core.voice_assistant.pyttsx3')
+def test_set_voice(mock_pyttsx3):
     """Test setting a specific voice."""
     from app.core.voice_assistant import VoiceAssistant
 
     mock_engine = MagicMock()
-    mock_pyttsx3_init.return_value = mock_engine
+    mock_pyttsx3.init.return_value = mock_engine
 
     va = VoiceAssistant()
     result = va.set_voice("voice1")
@@ -178,7 +178,7 @@ def test_stop_listening():
     assert va._is_listening is False
 
 
-@patch('openai.OpenAI')
+@patch('app.core.voice_assistant.OpenAI')
 def test_get_ai_response_success(mock_openai_class):
     """Test successful AI response."""
     from app.core.voice_assistant import VoiceAssistant
@@ -199,7 +199,7 @@ def test_get_ai_response_success(mock_openai_class):
     mock_client.chat.completions.create.assert_called_once()
 
 
-@patch('openai.OpenAI')
+@patch('app.core.voice_assistant.OpenAI')
 def test_get_ai_response_with_context(mock_openai_class):
     """Test AI response with conversation context."""
     from app.core.voice_assistant import VoiceAssistant
@@ -225,7 +225,7 @@ def test_get_ai_response_with_context(mock_openai_class):
     assert len(messages) == 4  # system + 2 context + user message
 
 
-@patch('openai.OpenAI')
+@patch('app.core.voice_assistant.OpenAI')
 def test_get_ai_response_error_handling(mock_openai_class):
     """Test AI response error handling."""
     from app.core.voice_assistant import VoiceAssistant
@@ -240,15 +240,15 @@ def test_get_ai_response_error_handling(mock_openai_class):
     assert "Error getting AI response" in response
 
 
-@patch('pyttsx3.init')
-@patch('openai.OpenAI')
-def test_converse_with_speech(mock_openai_class, mock_pyttsx3_init):
+@patch('app.core.voice_assistant.pyttsx3')
+@patch('app.core.voice_assistant.OpenAI')
+def test_converse_with_speech(mock_openai_class, mock_pyttsx3):
     """Test converse method with speech output."""
     from app.core.voice_assistant import VoiceAssistant
 
     # Setup TTS mock
     mock_engine = MagicMock()
-    mock_pyttsx3_init.return_value = mock_engine
+    mock_pyttsx3.init.return_value = mock_engine
 
     # Setup OpenAI mock
     mock_client = MagicMock()

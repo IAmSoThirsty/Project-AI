@@ -8,6 +8,22 @@ import threading
 import queue
 from typing import Optional, Callable
 
+# Lazy imports for optional dependencies - set to None if not available
+try:
+    import pyttsx3
+except ImportError:
+    pyttsx3 = None
+
+try:
+    import speech_recognition as sr
+except ImportError:
+    sr = None
+
+try:
+    from openai import OpenAI
+except ImportError:
+    OpenAI = None
+
 
 class VoiceAssistant:
     """Voice assistant with text-to-speech and speech recognition capabilities."""
@@ -32,8 +48,9 @@ class VoiceAssistant:
     def _init_tts(self):
         """Initialize text-to-speech engine lazily."""
         if self._tts_engine is None:
+            if pyttsx3 is None:
+                raise RuntimeError("pyttsx3 is not installed. Install with: pip install pyttsx3")
             try:
-                import pyttsx3
                 self._tts_engine = pyttsx3.init()
                 # Configure voice properties
                 self._tts_engine.setProperty('rate', 175)  # Words per minute
@@ -44,8 +61,11 @@ class VoiceAssistant:
     def _init_recognizer(self):
         """Initialize speech recognizer lazily."""
         if self._recognizer is None:
+            if sr is None:
+                raise RuntimeError(
+                    "SpeechRecognition is not installed. Install with: pip install SpeechRecognition"
+                )
             try:
-                import speech_recognition as sr
                 self._recognizer = sr.Recognizer()
                 self._microphone = sr.Microphone()
                 # Adjust for ambient noise initially
@@ -100,7 +120,6 @@ class VoiceAssistant:
         """
         try:
             self._init_recognizer()
-            import speech_recognition as sr
 
             with self._microphone as source:
                 audio = self._recognizer.listen(
@@ -171,8 +190,10 @@ class VoiceAssistant:
         if not self.api_key:
             return "OpenAI API key not configured. Please set OPENAI_API_KEY."
 
+        if OpenAI is None:
+            return "OpenAI library is not installed. Install with: pip install openai"
+
         try:
-            from openai import OpenAI
             client = OpenAI(api_key=self.api_key)
 
             messages = [

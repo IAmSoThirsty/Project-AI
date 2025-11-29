@@ -2,6 +2,8 @@
 Main dashboard window implementation.
 """
 
+import threading
+
 from PyQt6.QtWidgets import (
     QMainWindow,
     QTabWidget,
@@ -458,8 +460,6 @@ class DashboardWindow(QMainWindow):
         self.chat_display.append("<i>Listening for voice input...</i>")
 
         # Run recognition in background thread
-        import threading
-
         def recognize():
             text = self.voice_assistant.listen_once(timeout=10, phrase_limit=30)
             # Use signal to update GUI from main thread
@@ -504,7 +504,7 @@ class DashboardWindow(QMainWindow):
 
     def _on_voice_output_changed(self, state):
         """Handle voice output checkbox change."""
-        self.voice_enabled = (state == Qt.CheckState.Checked.value)
+        self.voice_enabled = (state == Qt.CheckState.Checked)
 
     def _on_speech_rate_changed(self, value):
         """Handle speech rate slider change."""
