@@ -1,0 +1,36 @@
+name: Codacy Analysis
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  codacy-analysis:
+    name: Run Codacy Analysis (if token present)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # To enable Codacy analysis:
+      # 1. Create a Codacy account at https://codacy.com
+      # 2. Add repository secret CODACY_API_TOKEN with your API token
+      # 3. Uncomment the steps below
+      
+      # - name: Run Codacy analysis (Docker)
+      #   if: ${{ secrets.CODACY_API_TOKEN != '' }}
+      #   env:
+      #     CODACY_API_TOKEN: ${{ secrets.CODACY_API_TOKEN }}
+      #   run: |
+      #     echo "Running Codacy Analysis CLI in Docker (this may take a few minutes)"
+      #     docker run --rm -e CODACY_API_TOKEN="$CODACY_API_TOKEN" -v "${{ github.workspace }}":/src -w /src codacy/codacy-analysis-cli analyze --output codacy-report.json || echo "Codacy analysis failed (non-zero exit)"
+
+      # - name: Upload Codacy report
+      #   if: always()
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: codacy-report
+      #     path: codacy-report.json
