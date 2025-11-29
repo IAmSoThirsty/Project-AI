@@ -149,7 +149,7 @@ Replace simulated values in StatsPanel._update_stats():
 
 ### Change Animation Speed
 
-Modify timer interval in LeatherBookDashboard.__init__:
+Modify timer interval in `LeatherBookDashboard.__init__`:
 
     self.animation_timer.start(50)  # milliseconds
 
