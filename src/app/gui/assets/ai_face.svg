@@ -1,36 +1,36 @@
 <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300' width='300' height='300'>
   <defs>
-    <!-- 3D Gradient effects for depth -->
-    <linearGradient id='face3dGrad' x1='0%' y1='0%' x2='100%' y2='100%'>
-      <stop offset='0%' stop-color='#00ffff'/>
-      <stop offset='30%' stop-color='#00d4ff'/>
-      <stop offset='60%' stop-color='#0099cc'/>
-      <stop offset='100%' stop-color='#006699'/>
+    <!-- Yin Yang gradients -->
+    <linearGradient id='yinGrad' x1='0%' y1='0%' x2='100%' y2='100%'>
+      <stop offset='0%' stop-color='#0a1525'/>
+      <stop offset='50%' stop-color='#05101a'/>
+      <stop offset='100%' stop-color='#020810'/>
     </linearGradient>
-    <linearGradient id='innerGrad' x1='0%' y1='0%' x2='100%' y2='100%'>
-      <stop offset='0%' stop-color='#40e0ff'/>
-      <stop offset='100%' stop-color='#0080aa'/>
+    <linearGradient id='yangGrad' x1='0%' y1='0%' x2='100%' y2='100%'>
+      <stop offset='0%' stop-color='#00ffff'/>
+      <stop offset='50%' stop-color='#00d4ff'/>
+      <stop offset='100%' stop-color='#0099cc'/>
     </linearGradient>
     <radialGradient id='eyeGlow' cx='50%' cy='50%' r='50%'>
       <stop offset='0%' stop-color='#ffffff'/>
       <stop offset='40%' stop-color='#80ffff'/>
       <stop offset='100%' stop-color='#00d4ff'/>
     </radialGradient>
-    <radialGradient id='coreGlow' cx='50%' cy='50%' r='50%'>
-      <stop offset='0%' stop-color='rgba(0,255,255,0.4)'/>
-      <stop offset='100%' stop-color='rgba(0,200,255,0)'/>
+    <radialGradient id='darkEyeGlow' cx='50%' cy='50%' r='50%'>
+      <stop offset='0%' stop-color='#ff8040'/>
+      <stop offset='40%' stop-color='#ff6020'/>
+      <stop offset='100%' stop-color='#cc4010'/>
     </radialGradient>
     <radialGradient id='hologramGlow' cx='50%' cy='30%' r='70%'>
       <stop offset='0%' stop-color='rgba(0,220,255,0.3)'/>
       <stop offset='50%' stop-color='rgba(0,180,255,0.1)'/>
       <stop offset='100%' stop-color='rgba(0,100,200,0)'/>
     </radialGradient>
-    <!-- Enhanced glow filters -->
+    <!-- Glow filters -->
     <filter id='glow3d' x='-100%' y='-100%' width='300%' height='300%'>
       <feGaussianBlur in='SourceGraphic' stdDeviation='4' result='blur'/>
-      <feColorMatrix in='blur' type='matrix' values='1 0 0 0 0  0 1 0 0 0.5  0 0 1 0 1  0 0 0 1 0'/>
       <feMerge>
-        <feMergeNode/>
+        <feMergeNode in='blur'/>
         <feMergeNode in='SourceGraphic'/>
       </feMerge>
     </filter>
@@ -49,188 +49,164 @@
         <feMergeNode in='SourceGraphic'/>
       </feMerge>
     </filter>
-    <!-- 3D depth shadow -->
-    <filter id='depth3d'>
-      <feDropShadow dx='3' dy='3' stdDeviation='4' flood-color='rgba(0,100,150,0.5)'/>
-    </filter>
-    <!-- Scan lines for holographic effect -->
+    <!-- Scan lines -->
     <pattern id='scanlines3d' patternUnits='userSpaceOnUse' width='2' height='4'>
       <line x1='0' y1='0' x2='2' y2='0' stroke='rgba(0,255,255,0.08)' stroke-width='1'/>
       <line x1='0' y1='2' x2='2' y2='2' stroke='rgba(0,0,0,0.15)' stroke-width='1'/>
     </pattern>
+    <!-- Clip path for yin yang halves -->
+    <clipPath id='leftHalf'>
+      <rect x='0' y='0' width='150' height='300'/>
+    </clipPath>
+    <clipPath id='rightHalf'>
+      <rect x='150' y='0' width='150' height='300'/>
+    </clipPath>
   </defs>
   
   <!-- Background holographic glow -->
   <ellipse cx='150' cy='150' rx='140' ry='140' fill='url(#hologramGlow)'/>
   
-  <!-- Outer ring - 3D effect with multiple layers -->
-  <circle cx='150' cy='150' r='135' fill='none' stroke='rgba(0,150,200,0.3)' stroke-width='4' filter='url(#depth3d)'/>
-  <circle cx='150' cy='150' r='130' fill='none' stroke='url(#face3dGrad)' stroke-width='3' filter='url(#outerGlow)'/>
+  <!-- Outer ring -->
+  <circle cx='150' cy='150' r='130' fill='none' stroke='url(#yangGrad)' stroke-width='3' filter='url(#outerGlow)'/>
   <circle cx='150' cy='150' r='125' fill='#050a15' stroke='rgba(0,200,255,0.5)' stroke-width='2'/>
   
-  <!-- Inner holographic core glow -->
-  <circle cx='150' cy='150' r='110' fill='url(#coreGlow)'/>
-  
-  <!-- 3D Face structure - main wireframe with depth -->
+  <!-- Yin Yang Mask Face Structure -->
+  <!-- Main mask outline -->
   <g filter='url(#glow3d)'>
-    <!-- Primary face outline - 3D angular design -->
-    <path d='M150,30 L200,55 L225,100 L220,160 L195,210 L150,235 L105,210 L80,160 L75,100 L100,55 Z' 
-          stroke='url(#face3dGrad)' stroke-width='2.5' fill='none' opacity='0.95'/>
+    <!-- Full mask shape -->
+    <path d='M150,35 L195,55 L220,95 L215,155 L190,205 L150,225 L110,205 L85,155 L80,95 L105,55 Z' 
+          stroke='url(#yangGrad)' stroke-width='2.5' fill='none' opacity='0.9'/>
+  </g>
+  
+  <!-- Left half (Yin - Dark) -->
+  <g clip-path='url(#leftHalf)'>
+    <!-- Dark face half -->
+    <path d='M150,35 L105,55 L80,95 L85,155 L110,205 L150,225 L150,35' 
+          fill='url(#yinGrad)' stroke='none' opacity='0.95'/>
     
-    <!-- Secondary inner layer for 3D depth -->
-    <path d='M150,45 L190,65 L210,105 L205,155 L185,195 L150,215 L115,195 L95,155 L90,105 L110,65 Z' 
-          stroke='url(#innerGrad)' stroke-width='1.5' fill='none' opacity='0.7'/>
+    <!-- Left eye (bright eye in dark) -->
+    <g filter='url(#glow3d)'>
+      <ellipse cx='115' cy='110' rx='18' ry='12' fill='rgba(0,20,40,0.9)' stroke='url(#yangGrad)' stroke-width='1.5'/>
+      <ellipse cx='115' cy='110' rx='10' ry='7' fill='url(#eyeGlow)' opacity='0.95'>
+        <animate attributeName='opacity' values='0.95;0.7;0.95' dur='3s' repeatCount='indefinite'/>
+      </ellipse>
+      <circle cx='115' cy='110' r='4' fill='#ffffff' opacity='0.95'/>
+    </g>
     
-    <!-- Tertiary depth layer -->
-    <path d='M150,60 L180,75 L195,110 L190,150 L175,180 L150,195 L125,180 L110,150 L105,110 L120,75 Z' 
-          stroke='rgba(0,200,255,0.5)' stroke-width='1' fill='none' opacity='0.5'/>
-  </g>
-  
-  <!-- Forehead tech patterns -->
-  <g stroke='url(#face3dGrad)' stroke-width='1.5' fill='none' filter='url(#innerLight)'>
-    <path d='M120,65 L150,55 L180,65' opacity='0.8'/>
-    <path d='M130,75 L150,68 L170,75' opacity='0.6'/>
-    <circle cx='150' cy='62' r='4' fill='url(#eyeGlow)' opacity='0.8'/>
-  </g>
-  
-  <!-- Eyes - 3D glowing with depth -->
-  <g filter='url(#glow3d)'>
-    <!-- Left eye socket -->
-    <path d='M95,105 L115,92 L135,105 L115,118 Z' stroke='url(#face3dGrad)' stroke-width='2' fill='rgba(0,20,40,0.8)'/>
-    <!-- Left eye glow -->
-    <ellipse cx='115' cy='105' rx='12' ry='8' fill='url(#eyeGlow)' opacity='0.95'/>
-    <circle cx='115' cy='105' r='5' fill='#ffffff' opacity='0.95'>
-      <animate attributeName='opacity' values='0.95;0.7;0.95' dur='3s' repeatCount='indefinite'/>
-    </circle>
-    
-    <!-- Right eye socket -->
-    <path d='M165,105 L185,92 L205,105 L185,118 Z' stroke='url(#face3dGrad)' stroke-width='2' fill='rgba(0,20,40,0.8)'/>
-    <!-- Right eye glow -->
-    <ellipse cx='185' cy='105' rx='12' ry='8' fill='url(#eyeGlow)' opacity='0.95'/>
-    <circle cx='185' cy='105' r='5' fill='#ffffff' opacity='0.95'>
-      <animate attributeName='opacity' values='0.7;0.95;0.7' dur='3s' repeatCount='indefinite'/>
-    </circle>
-  </g>
-  
-  <!-- Cheekbone structures - 3D angular -->
-  <g stroke='url(#innerGrad)' stroke-width='1.5' fill='none' opacity='0.8'>
-    <path d='M80,110 L95,125 L90,145'/>
-    <path d='M220,110 L205,125 L210,145'/>
-    <!-- Highlight lines -->
-    <line x1='85' y1='120' x2='100' y2='130' stroke='rgba(100,220,255,0.6)'/>
-    <line x1='215' y1='120' x2='200' y2='130' stroke='rgba(100,220,255,0.6)'/>
-  </g>
-  
-  <!-- Nose - 3D geometric with glow -->
-  <g filter='url(#innerLight)'>
-    <path d='M150,115 L158,140 L150,160 L142,140 Z' 
-          stroke='url(#face3dGrad)' stroke-width='1.5' fill='rgba(0,50,80,0.4)' opacity='0.8'/>
-    <line x1='150' y1='125' x2='150' y2='155' stroke='rgba(0,255,255,0.4)' stroke-width='1'/>
-  </g>
-  
-  <!-- Mouth - Animated holographic bar -->
-  <g filter='url(#glow3d)'>
-    <rect x='115' y='175' width='70' height='10' rx='5' fill='rgba(0,30,50,0.6)' stroke='url(#face3dGrad)' stroke-width='1.5'/>
-    <rect x='120' y='177' width='60' height='6' rx='3' fill='url(#face3dGrad)' opacity='0.85'>
-      <animate attributeName='opacity' values='0.85;0.6;0.85' dur='2s' repeatCount='indefinite'/>
-    </rect>
-    <!-- Voice activity indicator -->
-    <g opacity='0.7'>
-      <rect x='125' y='178' width='3' height='4' fill='#ffffff'>
-        <animate attributeName='height' values='4;2;4' dur='0.3s' repeatCount='indefinite'/>
-      </rect>
-      <rect x='132' y='178' width='3' height='4' fill='#ffffff'>
-        <animate attributeName='height' values='2;4;2' dur='0.25s' repeatCount='indefinite'/>
-      </rect>
-      <rect x='139' y='178' width='3' height='4' fill='#ffffff'>
-        <animate attributeName='height' values='4;3;4' dur='0.35s' repeatCount='indefinite'/>
-      </rect>
-      <rect x='146' y='178' width='3' height='4' fill='#ffffff'>
-        <animate attributeName='height' values='3;4;3' dur='0.4s' repeatCount='indefinite'/>
-      </rect>
-      <rect x='153' y='178' width='3' height='4' fill='#ffffff'>
-        <animate attributeName='height' values='4;2;4' dur='0.28s' repeatCount='indefinite'/>
-      </rect>
-      <rect x='160' y='178' width='3' height='4' fill='#ffffff'>
-        <animate attributeName='height' values='2;4;2' dur='0.32s' repeatCount='indefinite'/>
-      </rect>
-      <rect x='167' y='178' width='3' height='4' fill='#ffffff'>
-        <animate attributeName='height' values='4;3;4' dur='0.38s' repeatCount='indefinite'/>
-      </rect>
+    <!-- Left side decorative lines (bright on dark) -->
+    <g stroke='url(#yangGrad)' stroke-width='1' fill='none' opacity='0.7'>
+      <path d='M100,70 L120,75 L100,90'/>
+      <path d='M95,130 L110,145 L95,160'/>
+      <circle cx='100' cy='80' r='2' fill='rgba(0,255,255,0.8)'/>
     </g>
   </g>
   
-  <!-- Jawline accent - 3D depth -->
-  <path d='M95,165 L115,195 L150,210 L185,195 L205,165' 
-        stroke='url(#face3dGrad)' stroke-width='2' fill='none' opacity='0.7' filter='url(#innerLight)'/>
-  
-  <!-- Circuit decorations - enhanced 3D tech look -->
-  <g stroke='rgba(0,220,255,0.6)' stroke-width='1.5' fill='none'>
-    <!-- Top circuits -->
-    <path d='M150,10 L150,25'/>
-    <path d='M130,15 L130,30 L115,30'/>
-    <path d='M170,15 L170,30 L185,30'/>
-    <circle cx='150' cy='10' r='4' fill='url(#eyeGlow)' opacity='0.8'>
-      <animate attributeName='opacity' values='0.8;0.4;0.8' dur='1.5s' repeatCount='indefinite'/>
-    </circle>
-    <circle cx='115' cy='30' r='3' fill='rgba(0,255,255,0.7)'/>
-    <circle cx='185' cy='30' r='3' fill='rgba(0,255,255,0.7)'/>
+  <!-- Right half (Yang - Light) -->
+  <g clip-path='url(#rightHalf)'>
+    <!-- Light face half (wireframe style) -->
+    <path d='M150,35 L195,55 L220,95 L215,155 L190,205 L150,225 L150,35' 
+          fill='none' stroke='url(#yangGrad)' stroke-width='1.5' opacity='0.9'/>
     
-    <!-- Side circuits - left -->
-    <path d='M35,150 L20,150 L20,120 L25,100'/>
-    <path d='M30,180 L15,180 L15,200'/>
-    <circle cx='25' cy='100' r='3' fill='rgba(0,255,255,0.6)'>
-      <animate attributeName='opacity' values='0.6;1;0.6' dur='2s' repeatCount='indefinite'/>
-    </circle>
+    <!-- Inner structure lines -->
+    <path d='M150,50 L185,65 L205,100 L200,150 L180,190 L150,205' 
+          stroke='rgba(0,200,255,0.5)' stroke-width='1' fill='none'/>
+    <path d='M150,65 L175,78 L190,105 L185,145 L170,175 L150,188' 
+          stroke='rgba(0,200,255,0.3)' stroke-width='1' fill='none'/>
     
-    <!-- Side circuits - right -->
-    <path d='M265,150 L280,150 L280,120 L275,100'/>
-    <path d='M270,180 L285,180 L285,200'/>
-    <circle cx='275' cy='100' r='3' fill='rgba(0,255,255,0.6)'>
-      <animate attributeName='opacity' values='1;0.6;1' dur='2s' repeatCount='indefinite'/>
-    </circle>
+    <!-- Right eye (dark eye in light) -->
+    <g filter='url(#glow3d)'>
+      <ellipse cx='185' cy='110' rx='18' ry='12' fill='rgba(5,15,25,0.9)' stroke='url(#yangGrad)' stroke-width='1.5'/>
+      <ellipse cx='185' cy='110' rx='10' ry='7' fill='url(#darkEyeGlow)' opacity='0.95'>
+        <animate attributeName='opacity' values='0.7;0.95;0.7' dur='3s' repeatCount='indefinite'/>
+      </ellipse>
+      <circle cx='185' cy='110' r='4' fill='#ffd080' opacity='0.95'/>
+    </g>
     
-    <!-- Bottom circuits -->
-    <path d='M150,265 L150,285'/>
-    <path d='M120,255 L120,275 L100,275'/>
-    <path d='M180,255 L180,275 L200,275'/>
-    <circle cx='150' cy='285' r='4' fill='url(#eyeGlow)' opacity='0.7'/>
-    <circle cx='100' cy='275' r='3' fill='rgba(0,255,255,0.5)'/>
-    <circle cx='200' cy='275' r='3' fill='rgba(0,255,255,0.5)'/>
+    <!-- Right side decorative lines (dark on light wireframe) -->
+    <g stroke='rgba(0,200,255,0.6)' stroke-width='1' fill='none' opacity='0.8'>
+      <path d='M200,70 L180,75 L200,90'/>
+      <path d='M205,130 L190,145 L205,160'/>
+      <circle cx='200' cy='80' r='2' fill='rgba(0,255,255,0.8)'/>
+    </g>
   </g>
   
-  <!-- Data stream particles - animated -->
+  <!-- Center dividing line with S-curve (Yin Yang style) -->
+  <g filter='url(#innerLight)'>
+    <path d='M150,35 C150,35 130,80 150,115 C170,150 130,185 150,225' 
+          stroke='url(#yangGrad)' stroke-width='2' fill='none' opacity='0.9'/>
+  </g>
+  
+  <!-- Center nose -->
+  <g filter='url(#innerLight)'>
+    <path d='M150,125 L156,145 L150,165 L144,145 Z' 
+          stroke='url(#yangGrad)' stroke-width='1.5' fill='rgba(0,50,80,0.4)' opacity='0.8'/>
+  </g>
+  
+  <!-- Mouth - spans both halves -->
+  <g filter='url(#glow3d)'>
+    <rect x='120' y='180' width='60' height='8' rx='4' fill='rgba(0,30,50,0.6)' stroke='url(#yangGrad)' stroke-width='1.5'/>
+    <!-- Left half mouth (bright in dark) -->
+    <rect x='122' y='182' width='26' height='4' rx='2' fill='url(#yangGrad)' opacity='0.85'>
+      <animate attributeName='opacity' values='0.85;0.6;0.85' dur='2s' repeatCount='indefinite'/>
+    </rect>
+    <!-- Right half mouth (dim) -->
+    <rect x='152' y='182' width='26' height='4' rx='2' fill='rgba(255,150,80,0.7)' opacity='0.7'>
+      <animate attributeName='opacity' values='0.7;0.5;0.7' dur='2s' repeatCount='indefinite'/>
+    </rect>
+  </g>
+  
+  <!-- Yin Yang dots (small circles representing duality) -->
+  <!-- Bright dot in dark half -->
+  <circle cx='115' cy='145' r='8' fill='url(#yangGrad)' filter='url(#innerLight)' opacity='0.9'>
+    <animate attributeName='opacity' values='0.9;0.6;0.9' dur='2.5s' repeatCount='indefinite'/>
+  </circle>
+  <!-- Dark dot in light half -->
+  <circle cx='185' cy='145' r='8' fill='url(#darkEyeGlow)' filter='url(#innerLight)' opacity='0.9'>
+    <animate attributeName='opacity' values='0.6;0.9;0.6' dur='2.5s' repeatCount='indefinite'/>
+  </circle>
+  
+  <!-- Forehead symbol -->
+  <g stroke='url(#yangGrad)' stroke-width='1.5' fill='none' filter='url(#innerLight)'>
+    <path d='M130,60 L150,50 L170,60' opacity='0.8'/>
+    <circle cx='150' cy='55' r='5' fill='rgba(0,255,255,0.6)'>
+      <animate attributeName='opacity' values='0.6;1;0.6' dur='1.5s' repeatCount='indefinite'/>
+    </circle>
+  </g>
+  
+  <!-- Circuit decorations -->
+  <g stroke='rgba(0,220,255,0.5)' stroke-width='1.5' fill='none'>
+    <!-- Top -->
+    <path d='M150,15 L150,30'/>
+    <circle cx='150' cy='15' r='3' fill='url(#eyeGlow)' opacity='0.7'>
+      <animate attributeName='opacity' values='0.7;0.4;0.7' dur='1.5s' repeatCount='indefinite'/>
+    </circle>
+    <!-- Sides -->
+    <path d='M40,150 L25,150 L25,120'/>
+    <path d='M260,150 L275,150 L275,120'/>
+    <circle cx='25' cy='120' r='3' fill='rgba(0,255,255,0.5)'/>
+    <circle cx='275' cy='120' r='3' fill='rgba(255,150,80,0.5)'/>
+    <!-- Bottom -->
+    <path d='M150,270 L150,285'/>
+    <circle cx='150' cy='285' r='3' fill='url(#eyeGlow)' opacity='0.6'/>
+  </g>
+  
+  <!-- Data stream particles -->
   <g fill='rgba(0,255,255,0.7)'>
-    <circle cx='40' cy='70' r='2'>
-      <animate attributeName='cy' values='70;60;70' dur='2s' repeatCount='indefinite'/>
+    <circle cx='45' cy='80' r='2'>
+      <animate attributeName='cy' values='80;70;80' dur='2s' repeatCount='indefinite'/>
       <animate attributeName='opacity' values='0.7;1;0.7' dur='2s' repeatCount='indefinite'/>
     </circle>
-    <circle cx='260' cy='70' r='2'>
-      <animate attributeName='cy' values='60;70;60' dur='2s' repeatCount='indefinite'/>
+    <circle cx='255' cy='80' r='2' fill='rgba(255,150,80,0.7)'>
+      <animate attributeName='cy' values='70;80;70' dur='2s' repeatCount='indefinite'/>
       <animate attributeName='opacity' values='1;0.7;1' dur='2s' repeatCount='indefinite'/>
-    </circle>
-    <circle cx='55' cy='230' r='2'>
-      <animate attributeName='cy' values='230;240;230' dur='1.8s' repeatCount='indefinite'/>
-      <animate attributeName='opacity' values='0.8;0.5;0.8' dur='1.8s' repeatCount='indefinite'/>
-    </circle>
-    <circle cx='245' cy='230' r='2'>
-      <animate attributeName='cy' values='240;230;240' dur='1.8s' repeatCount='indefinite'/>
-      <animate attributeName='opacity' values='0.5;0.8;0.5' dur='1.8s' repeatCount='indefinite'/>
-    </circle>
-    <!-- Center data stream -->
-    <circle cx='50' cy='150' r='1.5'>
-      <animate attributeName='cx' values='50;60;50' dur='1.5s' repeatCount='indefinite'/>
-    </circle>
-    <circle cx='250' cy='150' r='1.5'>
-      <animate attributeName='cx' values='250;240;250' dur='1.5s' repeatCount='indefinite'/>
     </circle>
   </g>
   
   <!-- Holographic scan line overlay -->
-  <rect x='20' y='20' width='260' height='260' fill='url(#scanlines3d)' opacity='0.4' rx='130'/>
+  <rect x='20' y='20' width='260' height='260' fill='url(#scanlines3d)' opacity='0.3' rx='130'/>
   
-  <!-- Rotating outer ring effect -->
-  <circle cx='150' cy='150' r='140' fill='none' stroke='rgba(0,200,255,0.2)' stroke-width='1' stroke-dasharray='10 5'>
+  <!-- Rotating outer ring -->
+  <circle cx='150' cy='150' r='138' fill='none' stroke='rgba(0,200,255,0.2)' stroke-width='1' stroke-dasharray='10 5'>
     <animateTransform attributeName='transform' type='rotate' from='0 150 150' to='360 150 150' dur='30s' repeatCount='indefinite'/>
   </circle>
 </svg>
