@@ -60,13 +60,8 @@ def on_personality_changed(self, personality_traits):
 def on_proactive_changed(self, settings):
     """Handle proactive settings changes."""
     logger.info(f"Proactive settings updated: {settings}")
-    # Apply settings
-    if settings['enabled']:
-        # Start proactive message timer
-        pass
-    else:
-        # Stop proactive message timer
-        pass
+    # Apply settings based on enabled flag
+    # Implementation: start/stop proactive message timer as needed
 
 
 # ============================================================================
@@ -321,28 +316,7 @@ class PersonaFeatureExample:
 # 8. TESTING THE NEW COMPONENTS
 # ============================================================================
 
-"""
-# Test the new components in isolation:
-
-from tests.test_ai_systems import TestFourLaws, TestAIPersona
-import pytest
-
-# Run persona panel tests
-pytest.main([
-    'tests/test_ai_systems.py::TestAIPersona',
-    '-v'
-])
-
-# Or test utilities directly
-from app.gui.dashboard_utils import DashboardValidationManager
-
-# Valid username
-valid, msg = DashboardValidationManager.validate_username("user123")
-assert valid and msg == ""
-
-# Invalid username (too short)
-valid, msg = DashboardValidationManager.validate_username("ab")
-assert not valid and "3 characters" in msg
-"""
+# See tests/test_ai_systems.py for comprehensive test cases
+# Run tests with: pytest tests/test_ai_systems.py -v
 
 print("✅ Integration guide complete. See above for usage patterns.")

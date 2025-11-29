@@ -34,6 +34,10 @@ from app.core.security_resources import SecurityResourceManager
 from app.core.user_manager import UserManager
 from app.gui.settings_dialog import SettingsDialog
 
+# UI Constants
+START_LOCATION_BUTTON_TEXT = "Start Location Tracking"
+STOP_LOCATION_BUTTON_TEXT = "Stop Location Tracking"
+
 
 class HoverLiftEventFilter(QObject):
     """Event filter that applies a small lift animation to a widget's shadow effect
@@ -162,6 +166,34 @@ class DashboardWindow(QMainWindow):
         self.setGeometry(80, 60, 1400, 900)
 
         # Add a small toolbar with common actions for a modern feel
+        self._setup_toolbar()
+
+        # Create main widget and layout
+        self._setup_main_widget()
+
+        # Status bar will show a page number like a book footer
+        self.statusBar().showMessage("")  # type: ignore
+        # Apply initial saved settings (font size and theme)
+        try:
+            settings = SettingsDialog.load_settings()
+            self._apply_settings(settings)
+        except Exception:
+            pass
+        # Keep page number update and add tab-change animation
+        self.tabs.currentChanged.connect(self.update_page_number)
+        self.tabs.currentChanged.connect(self.animate_tab_change)
+
+        # Add tabs
+        self._add_all_tabs()
+
+        # Attach hover/press lift behavior to all buttons for tactile feedback
+        try:
+            self._attach_lifts_to_all_buttons()
+        except Exception:
+            pass
+
+    def _setup_toolbar(self):
+        """Setup the main toolbar with icons and actions."""
         try:
             toolbar = QToolBar("Main")
             toolbar.setMovable(False)
@@ -222,6 +254,8 @@ class DashboardWindow(QMainWindow):
             # toolbar is cosmetic — ignore failures
             pass
 
+    def _setup_main_widget(self):
+        """Setup the main central widget with layout."""
         # Create main widget and layout
         main_widget = QWidget()
         # Mark the main container as 'floating' so QSS can style it as a raised panel
@@ -248,6 +282,10 @@ class DashboardWindow(QMainWindow):
 
         # Try to load external QSS stylesheet for the "book" appearance
         # if present
+        self._apply_styles()
+
+    def _apply_styles(self):
+        """Apply QSS stylesheets for the dashboard."""
         try:
             qss_path = os.path.join(os.path.dirname(__file__), "styles.qss")
             if os.path.exists(qss_path):
@@ -298,18 +336,8 @@ class DashboardWindow(QMainWindow):
             # if anything fails, keep default styles
             pass
 
-        # Status bar will show a page number like a book footer
-        self.statusBar().showMessage("")  # type: ignore
-        # Apply initial saved settings (font size and theme)
-        try:
-            settings = SettingsDialog.load_settings()
-            self._apply_settings(settings)
-        except Exception:
-            pass
-        # Keep page number update and add tab-change animation
-        self.tabs.currentChanged.connect(self.update_page_number)
-        self.tabs.currentChanged.connect(self.animate_tab_change)
-
+    def _add_all_tabs(self):
+        """Add all tabs to the dashboard."""
         # Add tabs
         self.setup_chat_tab()
         self.setup_learning_paths_tab()
@@ -325,12 +353,6 @@ class DashboardWindow(QMainWindow):
             self.tabs.addTab(self.user_mgmt, "Users")
         except Exception:
             # non-fatal: keep going without Users tab
-            pass
-
-        # Attach hover/press lift behavior to all buttons for tactile feedback
-        try:
-            self._attach_lifts_to_all_buttons()
-        except Exception:
             pass
 
     def _attach_lift_to_button(self, button: QPushButton):
@@ -609,7 +631,7 @@ class DashboardWindow(QMainWindow):
         layout = QVBoxLayout(tab)
 
         # Location toggle
-        self.location_toggle = QPushButton("Start Location Tracking")
+        self.location_toggle = QPushButton(START_LOCATION_BUTTON_TEXT)
         self.location_toggle.clicked.connect(self.toggle_location_tracking)
         layout.addWidget(self.location_toggle)
 
@@ -659,7 +681,7 @@ class DashboardWindow(QMainWindow):
         self.alert_button = QPushButton("SEND EMERGENCY ALERT")
         self.alert_button.setObjectName("alert_button")
         self.alert_button.setStyleSheet(
-            "background-color: red;" " color: white;" " font-weight: bold;"
+            "background-color: red; color: white; font-weight: bold;"
         )
         self.alert_button.clicked.connect(self.send_emergency_alert)
         layout.addWidget(self.alert_button)
@@ -712,12 +734,12 @@ class DashboardWindow(QMainWindow):
     def toggle_location_tracking(self):
         """Toggle location tracking on/off"""
         try:
-            if self.location_toggle.text() == "Start Location Tracking":
+            if self.location_toggle.text() == START_LOCATION_BUTTON_TEXT:
                 self.location_timer.start(5000)  # Update every 5 seconds
-                self.location_toggle.setText("Stop Location Tracking")
+                self.location_toggle.setText(STOP_LOCATION_BUTTON_TEXT)
             else:
                 self.location_timer.stop()
-                self.location_toggle.setText("Start Location Tracking")
+                self.location_toggle.setText(START_LOCATION_BUTTON_TEXT)
         except Exception as e:
             self.location_display.setText(f"Error toggling location tracking: {str(e)}")
 
@@ -745,7 +767,7 @@ class DashboardWindow(QMainWindow):
             message = self.emergency_message.toPlainText()
             username = self.user_manager.current_user or "default"
             location_data = self.location_tracker.get_location_from_ip()
-            success, result = self.emergency_alert.send_alert(username, location_data, message)
+            _, result = self.emergency_alert.send_alert(username, location_data, message)
             self.alert_history.addItem(f"Alert: {result}")
             self.emergency_message.clear()
         except Exception as e:

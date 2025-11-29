@@ -40,6 +40,11 @@ class UserManager:
         self.users = {}
         self.current_user = None
 
+        self._setup_cipher()
+        self._load_users()
+
+    def _setup_cipher(self):
+        """Setup Fernet cipher from environment or generate new key."""
         env_key = os.getenv("FERNET_KEY")
         if env_key:
             try:
@@ -51,6 +56,8 @@ class UserManager:
         else:
             self.cipher_suite = Fernet(Fernet.generate_key())
 
+    def _load_users(self):
+        """Load users from file and migrate plaintext passwords if needed."""
         # Load users (if file exists); do NOT create default plaintext users
         if os.path.exists(self.users_file):
             with open(self.users_file) as f:
@@ -59,40 +66,50 @@ class UserManager:
                 except Exception:
                     self.users = {}
 
-            # If any user entries have plaintext 'password', migrate them
-            migrated = False
-            for uname, udata in list(self.users.items()):
-                if (
-                    isinstance(udata, dict)
-                    and "password" in udata
-                    and "password_hash" not in udata
-                ):
-                    pw = udata.get("password")
-                    if not pw:
-                        # Skip if password is empty/None
-                        continue
-                    try:
-                        # try to hash first; only remove plaintext if
-                        # hashing succeeds
-                        pw_hash = pwd_context.hash(pw)
-                        self.users[uname]["password_hash"] = pw_hash
-                        # remove plaintext password
-                        self.users[uname].pop("password", None)
-                        migrated = True
-                    except Exception:
-                        # bcrypt hashing failed (backend issues); try a
-                        # safe fallback
-                        try:
-                            fallback_hash = pbkdf2_sha256.hash(pw)
-                            self.users[uname]["password_hash"] = fallback_hash
-                            self.users[uname].pop("password", None)
-                            migrated = True
-                        except Exception:
-                            # skip migration for this user if hashing
-                            # fails
-                            continue
-            if migrated:
-                self.save_users()
+            # Migrate any plaintext passwords to hashes
+            self._migrate_plaintext_passwords()
+
+    def _migrate_plaintext_passwords(self):
+        """Migrate plaintext passwords to hashed versions."""
+        migrated = False
+        for uname, udata in self.users.items():
+            if (
+                isinstance(udata, dict)
+                and "password" in udata
+                and "password_hash" not in udata
+            ):
+                pw = udata.get("password")
+                if not pw:
+                    # Skip if password is empty/None
+                    continue
+                if self._hash_and_store_password(uname, pw):
+                    migrated = True
+
+        if migrated:
+            self.save_users()
+
+    def _hash_and_store_password(self, username, password):
+        """Hash and store password, trying fallback if primary fails.
+
+        Returns True if successful, False otherwise.
+        """
+        try:
+            # try to hash first; only remove plaintext if hashing succeeds
+            pw_hash = pwd_context.hash(password)
+            self.users[username]["password_hash"] = pw_hash
+            # remove plaintext password
+            self.users[username].pop("password", None)
+            return True
+        except Exception:
+            # bcrypt hashing failed (backend issues); try a safe fallback
+            try:
+                fallback_hash = pbkdf2_sha256.hash(password)
+                self.users[username]["password_hash"] = fallback_hash
+                self.users[username].pop("password", None)
+                return True
+            except Exception:
+                # skip migration for this user if hashing fails
+                return False
 
     def save_users(self):
         """Save users to file"""
