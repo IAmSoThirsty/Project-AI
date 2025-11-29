@@ -112,7 +112,10 @@ class DataAnalyzer:
 
             figure = Figure(figsize=(8, 6))
             axes = figure.add_subplot(111)
-            scatter_plot = axes.scatter(pca_transformed_data[:, 0], pca_transformed_data[:, 1], c=cluster_labels, cmap="viridis")
+            scatter_plot = axes.scatter(
+                pca_transformed_data[:, 0], pca_transformed_data[:, 1],
+                c=cluster_labels, cmap="viridis"
+            )
             axes.set_xlabel("First Principal Component")
             axes.set_ylabel("Second Principal Component")
             axes.set_title("K-means Clustering Results")

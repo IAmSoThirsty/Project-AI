@@ -139,7 +139,9 @@ class UserManagementWidget(QWidget):
             username, password, approved, role, profile_picture_path = dialog.get_values()
             success = self.user_manager.create_user(username, password)
             if success:
-                self.user_manager.update_user(username, approved=approved, role=role, profile_picture=profile_picture_path)
+                self.user_manager.update_user(
+                    username, approved=approved, role=role, profile_picture=profile_picture_path
+                )
                 QMessageBox.information(self, "Created", f"User '{username}' created.")
                 self.refresh_user_list()
             else:
@@ -193,7 +195,10 @@ class UserManagementWidget(QWidget):
         role = self.role_combo.currentText()
         profile_picture_path = self.pic_field.text().strip()
         approved = True if self.approved_label.text().endswith('True') else False
-        update_successful = self.user_manager.update_user(self.user_list.currentItem().text(), role=role, profile_picture=profile_picture_path, approved=approved)
+        selected_username = self.user_list.currentItem().text()
+        update_successful = self.user_manager.update_user(
+            selected_username, role=role, profile_picture=profile_picture_path, approved=approved
+        )
         if update_successful:
             QMessageBox.information(self, "Saved", "User updated")
             self.refresh_user_list()
