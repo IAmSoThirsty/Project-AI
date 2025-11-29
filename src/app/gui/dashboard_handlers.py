@@ -84,6 +84,32 @@ class DashboardHandlers:
                 self.location_tracker.save_location_history(
                     self.user_manager.current_user, location)
                 self.update_location_display()
+                # Show offline indicator in location display if applicable
+                if location.get('offline'):
+                    offline_msg = (
+                        "📴 Location tracking is in offline mode.\n"
+                        "Showing cached/estimated location.\n\n"
+                    )
+                    self.location_display.setText(
+                        offline_msg + self._format_location(location)
+                    )
+                else:
+                    self.location_display.setText(self._format_location(location))
+
+    def _format_location(self, location: dict) -> str:
+        """Format location data for display."""
+        parts = [
+            f"City: {location.get('city', 'Unknown')}",
+            f"Region: {location.get('region', 'Unknown')}",
+            f"Country: {location.get('country', 'Unknown')}",
+        ]
+        if location.get('latitude') and location.get('longitude'):
+            parts.append(f"Coordinates: {location['latitude']}, {location['longitude']}")
+        if location.get('ip'):
+            parts.append(f"IP: {location['ip']}")
+        parts.append(f"Source: {location.get('source', 'unknown')}")
+        parts.append(f"Time: {location.get('timestamp', 'unknown')}")
+        return "\n".join(parts)
 
     def update_location_display(self):
         """Update the location display"""
@@ -92,9 +118,12 @@ class DashboardHandlers:
 
         self.location_history.clear()
         for location in history:
+            # Add offline indicator if location was cached
+            offline_indicator = " 📴" if location.get('offline') else ""
             self.location_history.addItem(
                 f"{location['timestamp']}: {location.get('city', 'Unknown')}, "
-                f"{location.get('region', 'Unknown')}")
+                f"{location.get('region', 'Unknown')}{offline_indicator}"
+            )
 
     def clear_location_history(self):
         """Clear the location history"""

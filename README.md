@@ -17,6 +17,7 @@ This repository contains a Python desktop application that provides a personal A
 
 - Learning Paths (feature #3 implemented first)
   - Generate personalized learning paths via OpenAI
+  - **Offline mode**: Template-based learning paths for common topics (Python, Programming, Data Science, Web Development, Machine Learning, Cybersecurity)
   - Save generated paths per user
 
 - Data Analysis (feature #6)
@@ -24,10 +25,12 @@ This repository contains a Python desktop application that provides a personal A
   - Basic statistics and missing value reports
   - Visualizations (scatter, histogram, boxplot, correlation)
   - Simple clustering (K-means) with PCA visualization
+  - **Works fully offline** - all processing is local
 
 - Security Resources (feature #2)
   - Curated lists of security/CTF/privacy repos
   - Fetch repository details from GitHub API
+  - **Offline mode**: Built-in cache of popular security repositories
   - Save favorites per user
 
 - Location Tracking (feature #1)
@@ -35,11 +38,34 @@ This repository contains a Python desktop application that provides a personal A
   - Optional GPS reverse-geocoding support (via geopy)
   - Encrypted location history (Fernet)
   - Periodic recording when enabled (every 5 minutes)
+  - **Offline mode**: Uses cached last-known location when offline
 
 - Emergency Alerts (feature #5)
   - Register emergency contacts per user
   - Send email alerts to contacts with last known location
   - Alert logging and history
+
+## Offline Mode
+
+The application is designed to work offline with graceful degradation:
+
+- **Network Status Indicator**: The status bar shows current connectivity status (🌐 Online or 📴 Offline Mode)
+- **Learning Paths**: When offline or without API key, provides template-based learning paths for common topics
+- **Security Resources**: Uses built-in cache for repository information when GitHub API is unavailable
+- **Location Tracking**: Falls back to last known location when geolocation APIs are unavailable
+- **Data Analysis**: Works fully offline as all processing is done locally
+- **Intent Detection**: Uses local scikit-learn model, works offline
+
+### Offline-compatible features summary
+
+| Feature | Online | Offline |
+|---------|--------|---------|
+| Learning Paths | AI-generated via OpenAI | Template-based paths |
+| Security Resources | Live GitHub data | Cached repository info |
+| Location Tracking | IP geolocation | Last known location |
+| Data Analysis | ✓ | ✓ (fully local) |
+| Intent Detection | ✓ | ✓ (fully local) |
+| Emergency Alerts | ✓ (requires SMTP) | Logs locally |
 
 ## Files of interest
 
@@ -47,11 +73,12 @@ This repository contains a Python desktop application that provides a personal A
 - `src/app/gui/dashboard.py` — Main UI (PyQt6) with tabs for all features.
 - `src/app/core/intent_detection.py` — Simple scikit-learn pipeline for intent detection.
 - `src/app/core/user_manager.py` — User profile and persistence; uses Fernet key from environment if available.
-- `src/app/core/learning_paths.py` — Learning path generation using OpenAI.
+- `src/app/core/learning_paths.py` — Learning path generation using OpenAI (with offline fallback templates).
 - `src/app/core/data_analysis.py` — Data analysis utilities and plotting helpers.
-- `src/app/core/security_resources.py` — Security resources manager and GitHub lookup.
-- `src/app/core/location_tracker.py` — Tracking and encrypted history (uses FERNET_KEY from env if set).
+- `src/app/core/security_resources.py` — Security resources manager and GitHub lookup (with offline cache).
+- `src/app/core/location_tracker.py` — Tracking and encrypted history (with offline fallback).
 - `src/app/core/emergency_alert.py` — Emergency alert sending and logging.
+- `src/app/core/network_utils.py` — Network connectivity detection utilities.
 
 ## Environment variables (.env)
 

@@ -7,6 +7,7 @@ from PyQt6.QtWidgets import (
     QTabWidget,
     QWidget,
     QVBoxLayout,
+    QHBoxLayout,
     QPushButton,
     QTextEdit,
     QLineEdit,
@@ -16,6 +17,7 @@ from PyQt6.QtWidgets import (
     QGraphicsOpacityEffect,
 )
 from PyQt6.QtCore import QTimer, QPropertyAnimation
+from PyQt6.QtGui import QColor
 import os
 import base64
 from app.core.user_manager import UserManager
@@ -25,6 +27,7 @@ from app.core.data_analysis import DataAnalyzer
 from app.core.security_resources import SecurityResourceManager
 from app.core.location_tracker import LocationTracker
 from app.core.emergency_alert import EmergencyAlert
+from app.core.network_utils import is_online, get_network_status
 
 
 class DashboardWindow(QMainWindow):
@@ -39,9 +42,16 @@ class DashboardWindow(QMainWindow):
         self.location_tracker = LocationTracker()
         self.emergency_alert = EmergencyAlert()
 
+        # Network status tracking
+        self._is_online = True
+
         # Setup timers
         self.location_timer = QTimer()
         self.location_timer.timeout.connect(self.update_location)
+
+        # Network status check timer (check every 30 seconds)
+        self.network_timer = QTimer()
+        self.network_timer.timeout.connect(self.check_network_status)
 
         # If username provided, set current user
         if username:
@@ -56,13 +66,39 @@ class DashboardWindow(QMainWindow):
         # Initialize page number
         self.update_page_number(self.tabs.currentIndex())
 
+        # Start network monitoring
+        self.network_timer.start(30000)  # Check every 30 seconds
+        self.check_network_status()  # Initial check
+
+    def check_network_status(self):
+        """Check and update network status indicator."""
+        online = is_online(timeout=2.0)
+        if online != self._is_online:
+            self._is_online = online
+            self.update_network_indicator()
+
+    def update_network_indicator(self):
+        """Update the network status indicator in the status bar."""
+        if self._is_online:
+            status_text = "🌐 Online"
+            self.network_indicator.setStyleSheet(
+                "color: green; font-weight: bold; padding: 2px 8px;"
+            )
+        else:
+            status_text = "📴 Offline Mode"
+            self.network_indicator.setStyleSheet(
+                "color: orange; font-weight: bold; padding: 2px 8px;"
+            )
+        self.network_indicator.setText(status_text)
+
     def update_page_number(self, index: int):
         """Update the footer with current page/chapter number."""
         total = max(1, self.tabs.count())
         try:
-            self.statusBar().showMessage(f"Page {index+1} of {total}")
+            page_text = f"Page {index+1} of {total}"
+            self.page_label.setText(page_text)
         except Exception:
-            self.statusBar().showMessage("")
+            pass
 
     def animate_tab_change(self, index: int):
         """Apply a quick fade-in animation to the newly selected tab to emulate a page turn."""
@@ -132,8 +168,31 @@ class DashboardWindow(QMainWindow):
             # if anything fails, keep default styles
             pass
 
-        # Status bar will show a page number like a book footer
-        self.statusBar().showMessage("")
+        # Setup status bar with network indicator and page number
+        status_bar = self.statusBar()
+        status_bar.showMessage("")
+
+        # Create a container widget for status bar items
+        status_widget = QWidget()
+        status_layout = QHBoxLayout(status_widget)
+        status_layout.setContentsMargins(0, 0, 0, 0)
+
+        # Network status indicator
+        self.network_indicator = QLabel("🌐 Online")
+        self.network_indicator.setStyleSheet(
+            "color: green; font-weight: bold; padding: 2px 8px;"
+        )
+        status_layout.addWidget(self.network_indicator)
+
+        # Spacer
+        status_layout.addStretch()
+
+        # Page number label
+        self.page_label = QLabel("")
+        status_layout.addWidget(self.page_label)
+
+        status_bar.addPermanentWidget(status_widget, 1)
+
         # Keep page number update and add tab-change animation
         self.tabs.currentChanged.connect(self.update_page_number)
         self.tabs.currentChanged.connect(self.animate_tab_change)
