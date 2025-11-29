@@ -9,13 +9,32 @@ Layout:
 - Top Right: Proactive AI Actions
 - Background: 3D grid visualization
 """
-
 import math
 
 from PyQt6.QtCore import QDateTime, QTimer, Qt, pyqtSignal
 from PyQt6.QtGui import QBrush, QColor, QFont, QPainter, QPen
 from PyQt6.QtWidgets import (QFrame, QHBoxLayout, QLabel, QPushButton,
                              QScrollArea, QTextEdit, QVBoxLayout, QWidget)
+
+# ============================================================================
+# STYLE CONSTANTS
+# ============================================================================
+
+# Common panel stylesheet - used by StatsPanel, ProactiveActionsPanel, UserChatPanel
+PANEL_STYLESHEET = """
+    QFrame {
+        background-color: #0f0f0f;
+        border: 2px solid #00ff00;
+        border-radius: 5px;
+    }
+"""
+
+# Font constant - used for panel titles
+TITLE_FONT = QFont("Courier New", 12, QFont.Weight.Bold)
+
+# Color styles - used for text styling
+STYLE_CYAN_GLOW = "color: #00ffff; text-shadow: 0px 0px 10px #00ffff;"
+STYLE_GREEN_TEXT = "color: #00ff00;"
 
 
 class LeatherBookDashboard(QWidget):
@@ -130,13 +149,7 @@ class StatsPanel(QFrame):
     def __init__(self, username: str, parent=None):
         super().__init__(parent)
         self.username = username
-        self.setStyleSheet("""
-            QFrame {
-                background-color: #0f0f0f;
-                border: 2px solid #00ff00;
-                border-radius: 5px;
-            }
-        """)
+        self.setStyleSheet(PANEL_STYLESHEET)
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(15, 15, 15, 15)
@@ -144,34 +157,33 @@ class StatsPanel(QFrame):
 
         # Title
         title = QLabel("SYSTEM STATS")
-        title.setFont(QFont("Courier New", 12, QFont.Weight.Bold))
-        title.setStyleSheet(
-            "color: #00ffff; text-shadow: 0px 0px 10px #00ffff;")
+        title.setFont(TITLE_FONT)
+        title.setStyleSheet(STYLE_CYAN_GLOW)
         layout.addWidget(title)
 
         # User info
         user_label = QLabel(f"User: {username}")
-        user_label.setStyleSheet("color: #00ff00;")
+        user_label.setStyleSheet(STYLE_GREEN_TEXT)
         layout.addWidget(user_label)
 
         # System uptime
         self.uptime_label = QLabel("Uptime: 00:00:00")
-        self.uptime_label.setStyleSheet("color: #00ff00;")
+        self.uptime_label.setStyleSheet(STYLE_GREEN_TEXT)
         layout.addWidget(self.uptime_label)
 
         # Memory usage
         self.memory_label = QLabel("Memory: 45%")
-        self.memory_label.setStyleSheet("color: #00ff00;")
+        self.memory_label.setStyleSheet(STYLE_GREEN_TEXT)
         layout.addWidget(self.memory_label)
 
         # Processor
         self.processor_label = QLabel("CPU: 32%")
-        self.processor_label.setStyleSheet("color: #00ff00;")
+        self.processor_label.setStyleSheet(STYLE_GREEN_TEXT)
         layout.addWidget(self.processor_label)
 
         # Session time
         self.session_label = QLabel("Session: 00:00")
-        self.session_label.setStyleSheet("color: #00ff00;")
+        self.session_label.setStyleSheet(STYLE_GREEN_TEXT)
         layout.addWidget(self.session_label)
 
         layout.addStretch()
@@ -218,13 +230,7 @@ class ProactiveActionsPanel(QFrame):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setStyleSheet("""
-            QFrame {
-                background-color: #0f0f0f;
-                border: 2px solid #00ff00;
-                border-radius: 5px;
-            }
-        """)
+        self.setStyleSheet(PANEL_STYLESHEET)
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(15, 15, 15, 15)
@@ -232,9 +238,8 @@ class ProactiveActionsPanel(QFrame):
 
         # Title
         title = QLabel("PROACTIVE ACTIONS")
-        title.setFont(QFont("Courier New", 12, QFont.Weight.Bold))
-        title.setStyleSheet(
-            "color: #00ffff; text-shadow: 0px 0px 10px #00ffff;")
+        title.setFont(TITLE_FONT)
+        title.setStyleSheet(STYLE_CYAN_GLOW)
         layout.addWidget(title)
 
         # Action list with scroll
@@ -319,13 +324,7 @@ class UserChatPanel(QFrame):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setStyleSheet("""
-            QFrame {
-                background-color: #0f0f0f;
-                border: 2px solid #00ff00;
-                border-radius: 5px;
-            }
-        """)
+        self.setStyleSheet(PANEL_STYLESHEET)
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(15, 15, 15, 15)
@@ -333,9 +332,8 @@ class UserChatPanel(QFrame):
 
         # Title
         title = QLabel("YOUR MESSAGE")
-        title.setFont(QFont("Courier New", 12, QFont.Weight.Bold))
-        title.setStyleSheet(
-            "color: #00ffff; text-shadow: 0px 0px 10px #00ffff;")
+        title.setFont(TITLE_FONT)
+        title.setStyleSheet(STYLE_CYAN_GLOW)
         layout.addWidget(title)
 
         # Chat input
@@ -443,9 +441,9 @@ class AINeuralHead(QFrame):
         self.status_label.setStyleSheet(
             "color: #00ff00; text-align: center; font-weight: bold;")
 
-    def paintEvent(self, event):
+    def paintEvent(self, a0):
         """Paint the neural head."""
-        super().paintEvent(event)
+        super().paintEvent(a0)
 
         if self.is_thinking:
             self.thinking_intensity = min(self.thinking_intensity + 1, 255)
@@ -465,9 +463,9 @@ class AIFaceCanvas(QFrame):
         self.setStyleSheet(
             "background-color: #000000; border: 2px solid #00ff00;")
 
-    def paintEvent(self, event):
+    def paintEvent(self, a0):
         """Paint the AI face."""
-        super().paintEvent(event)
+        super().paintEvent(a0)
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
@@ -535,13 +533,7 @@ class AIResponsePanel(QFrame):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setStyleSheet("""
-            QFrame {
-                background-color: #0f0f0f;
-                border: 2px solid #00ff00;
-                border-radius: 5px;
-            }
-        """)
+        self.setStyleSheet(PANEL_STYLESHEET)
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(15, 15, 15, 15)
@@ -549,9 +541,8 @@ class AIResponsePanel(QFrame):
 
         # Title
         title = QLabel("AI RESPONSE")
-        title.setFont(QFont("Courier New", 12, QFont.Weight.Bold))
-        title.setStyleSheet(
-            "color: #00ffff; text-shadow: 0px 0px 10px #00ffff;")
+        title.setFont(TITLE_FONT)
+        title.setStyleSheet(STYLE_CYAN_GLOW)
         layout.addWidget(title)
 
         # Response display
