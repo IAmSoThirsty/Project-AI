@@ -7,10 +7,10 @@ Agents:
 - Explainability: Decision explanation and transparency
 """
 
+from .explainability import ExplainabilityAgent
 from .oversight import OversightAgent
 from .planner import PlannerAgent
 from .validator import ValidatorAgent
-from .explainability import ExplainabilityAgent
 
 __all__ = [
     'OversightAgent',
