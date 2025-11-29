@@ -8,10 +8,9 @@ import sys
 
 from dotenv import load_dotenv
 from PyQt6.QtGui import QFont
-from PyQt6.QtWidgets import QApplication, QDialog
+from PyQt6.QtWidgets import QApplication
 
-from app.gui.dashboard import DashboardWindow
-from app.gui.login import LoginDialog
+from app.gui.leather_book_interface import LeatherBookInterface
 
 
 def setup_environment():
@@ -33,7 +32,6 @@ def main():
     setup_environment()
 
     # Create and run application
-
     app = QApplication(sys.argv)
     # Use a modern, legible default font and slightly larger base size
     try:
@@ -42,17 +40,10 @@ def main():
     except Exception:
         fallback_font = QFont("Arial", 10)
         app.setFont(fallback_font)
-    # Show login dialog first
-    login = LoginDialog()
-    if login.exec() == QDialog.DialogCode.Accepted:
-        username = login.username
-        initial_tab = getattr(login, "selected_tab", 0)
-        window = DashboardWindow(username=username, initial_tab=initial_tab)
-        window.show()
-        sys.exit(app.exec())
-    else:
-        # User cancelled login
-        sys.exit(0)
+
+    # Use new leather book interface
+    app_window = LeatherBookInterface()  # noqa: F841
+    app.exec()
 
 
 if __name__ == "__main__":
