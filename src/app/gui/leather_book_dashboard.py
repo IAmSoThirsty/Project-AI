@@ -11,10 +11,18 @@ Layout:
 """
 import math
 
-from PyQt6.QtCore import QDateTime, QTimer, Qt, pyqtSignal
+from PyQt6.QtCore import QDateTime, Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QBrush, QColor, QFont, QPainter, QPen
-from PyQt6.QtWidgets import (QFrame, QHBoxLayout, QLabel, QPushButton,
-                             QScrollArea, QTextEdit, QVBoxLayout, QWidget)
+from PyQt6.QtWidgets import (
+    QFrame,
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QScrollArea,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+)
 
 # ============================================================================
 # STYLE CONSTANTS
@@ -228,6 +236,8 @@ class StatsPanel(QFrame):
 class ProactiveActionsPanel(QFrame):
     """Top right panel showing AI proactive actions."""
 
+    image_gen_requested = pyqtSignal()  # Signal to request image generation interface
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setStyleSheet(PANEL_STYLESHEET)
@@ -315,6 +325,25 @@ class ProactiveActionsPanel(QFrame):
             }
         """)
         layout.addWidget(optimize_btn)
+
+        # Image generation button
+        image_gen_btn = QPushButton("🎨 GENERATE IMAGES")
+        image_gen_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #1a1a1a;
+                border: 2px solid #00ff00;
+                color: #00ff00;
+                padding: 8px;
+                font-weight: bold;
+                font-size: 10px;
+            }
+            QPushButton:hover {
+                border: 2px solid #00ffff;
+                color: #00ffff;
+            }
+        """)
+        image_gen_btn.clicked.connect(self.image_gen_requested.emit)
+        layout.addWidget(image_gen_btn)
 
 
 class UserChatPanel(QFrame):

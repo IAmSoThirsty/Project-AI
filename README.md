@@ -40,6 +40,17 @@ member-only use and can be extended for mobile later.
 - Emergency Alerts (feature #5)
   - Register emergency contacts per user
 
+- **Image Generation** (✅ RESTORED & IMPROVED!)
+  - AI-powered image generation with dual backend support
+  - Hugging Face Stable Diffusion 2.1 and OpenAI DALL-E 3
+  - 10 professional style presets (photorealistic, digital art, oil painting, etc.)
+  - Content filtering with 15 blocked keywords and safety negative prompts
+  - Dual-page Leather Book UI (left: Tron-themed prompt input, right: image display)
+  - Async generation with progress feedback (20-60 second generation time)
+  - Image history tracking, zoom controls, save/copy to clipboard
+  - Metadata display (prompt, style, backend, timestamp)
+  - Generation queue management
+
 - **Cloud Sync** (NEW!)
   - Encrypted cloud synchronization for user data across devices
   - Device tracking and management
