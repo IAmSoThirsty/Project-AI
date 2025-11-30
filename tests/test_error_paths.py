@@ -1,19 +1,19 @@
 """Additional tests for error handling and edge cases to boost coverage to 90%."""
 
+import json
 import os
 import tempfile
-import json
-import pytest
 from unittest.mock import patch
+
+import pytest
 
 from app.core.ai_systems import (
     AIPersona,
-    MemoryExpansionSystem,
     LearningRequestManager,
+    MemoryExpansionSystem,
 )
-from app.core.user_manager import UserManager
 from app.core.image_generator import ImageGenerator
-
+from app.core.user_manager import UserManager
 
 # ==================== Error Handling Tests ====================
 
