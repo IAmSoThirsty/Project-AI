@@ -123,9 +123,13 @@ class DashboardWindow(QMainWindow):
                 self.setStyleSheet("""
                     QMainWindow { background-color: #f7f1e1; }
                     QTabWidget::pane { border: 1px solid #c9b79c; background: #fffdf6; }
-                    QTabBar::tab { background: #e9dcc7; padding: 10px; margin: 2px; border-radius: 4px; }
+                    QTabBar::tab {
+                        background: #e9dcc7; padding: 10px; margin: 2px; border-radius: 4px;
+                    }
                     QTabBar::tab:selected { background: #fff; font-weight: bold; }
-                    QPushButton { background-color: #a67c52; color: white; border-radius: 4px; padding: 6px; }
+                    QPushButton {
+                        background-color: #a67c52; color: white; border-radius: 4px; padding: 6px;
+                    }
                     QPushButton#alert_button { background-color: red; }
                 """)
         except Exception:
@@ -235,7 +239,11 @@ class DashboardWindow(QMainWindow):
 
         # Analysis options
         self.analysis_type = QComboBox()
-        self.analysis_type.addItems(["Basic Stats", "Scatter Plot", "Histogram", "Box Plot", "Correlation", "Clustering"])
+        analysis_types = [
+            "Basic Stats", "Scatter Plot", "Histogram",
+            "Box Plot", "Correlation", "Clustering"
+        ]
+        self.analysis_type.addItems(analysis_types)
         layout.addWidget(self.analysis_type)
 
         # Column selection
