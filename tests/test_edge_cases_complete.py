@@ -3,8 +3,7 @@
 import json
 import os
 import tempfile
-from datetime import datetime
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -20,9 +19,8 @@ from app.core.ai_systems import (
     RequestPriority,
     RequestStatus,
 )
-from app.core.image_generator import ImageGenerator, ImageGenerationBackend, ImageStyle
+from app.core.image_generator import ImageGenerationBackend, ImageGenerator, ImageStyle
 from app.core.user_manager import UserManager
-
 
 # ==================== FOUR LAWS TESTS ====================
 
