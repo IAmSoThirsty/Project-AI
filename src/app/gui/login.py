@@ -132,7 +132,8 @@ class LoginDialog(QDialog):
     def open_chapter(self):
         idx = self.toc.currentRow()
         if idx < 0:
-            QMessageBox.warning(self, "Select Chapter", "Please select a chapter from the Table of Contents")
+            warning_msg = "Please select a chapter from the Table of Contents"
+            QMessageBox.warning(self, "Select Chapter", warning_msg)
             return
         self.selected_tab = idx
         self.accept()
