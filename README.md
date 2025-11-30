@@ -410,6 +410,6 @@ If you want, I can:
 
 ---
 
-**Repository note:** Last updated: 2025-11-26 (automated)
+**Repository note:** Last updated: 2025-11-30 (automated)
 
 <!-- last-updated-marker -->
