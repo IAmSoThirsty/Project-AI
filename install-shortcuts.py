@@ -65,7 +65,7 @@ def install_desktop_shortcuts():
         return False
 
     try:
-        with open(config_file, "r") as f:
+        with open(config_file) as f:
             config = json.load(f)
     except Exception as e:
         print(f"Error reading configuration: {e}")
@@ -84,7 +84,7 @@ def install_desktop_shortcuts():
     # Create desktop shortcut
     desktop_link = desktop_path / "Project-AI.lnk"
     desktop_config = config.get("shortcuts", {}).get("desktop", {})
-    
+
     print("Creating desktop shortcut...")
     if create_shortcut(
         launcher_bat,
@@ -94,7 +94,7 @@ def install_desktop_shortcuts():
     ):
         print(f"✓ Desktop shortcut created: {desktop_link}")
     else:
-        print(f"✗ Failed to create desktop shortcut")
+        print("✗ Failed to create desktop shortcut")
         return False
 
     # Create Start Menu folder
@@ -112,7 +112,7 @@ def install_desktop_shortcuts():
     ):
         print(f"✓ Start Menu shortcut created: {start_menu_link}")
     else:
-        print(f"✗ Failed to create Start Menu shortcut")
+        print("✗ Failed to create Start Menu shortcut")
         return False
 
     print("\n✓ All shortcuts installed successfully!")
@@ -134,7 +134,7 @@ def uninstall_desktop_shortcuts():
         return False
 
     try:
-        with open(config_file, "r") as f:
+        with open(config_file) as f:
             config = json.load(f)
     except Exception as e:
         print(f"Error reading configuration: {e}")

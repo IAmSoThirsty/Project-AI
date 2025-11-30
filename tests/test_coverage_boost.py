@@ -148,8 +148,9 @@ class TestLearningCoverage:
 
     def test_black_vault_functionality(self, temp_dir):
         """Test Black Vault content blocking."""
-        from app.core.ai_systems import RequestPriority
         import hashlib
+
+        from app.core.ai_systems import RequestPriority
         manager = LearningRequestManager(data_dir=temp_dir)
 
         # Deny content to Black Vault
@@ -157,7 +158,7 @@ class TestLearningCoverage:
         manager.deny_request(req_id, "Inappropriate content", to_vault=True)
 
         # Verify it's in the vault by computing the hash ourselves
-        content_hash = hashlib.sha256("test description".encode()).hexdigest()
+        content_hash = hashlib.sha256(b"test description").hexdigest()
         assert content_hash in manager.black_vault
 
     def test_statistics_tracking(self, temp_dir):
