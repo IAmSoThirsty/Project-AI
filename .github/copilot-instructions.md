@@ -23,10 +23,16 @@ src/app/
 │   └── intent_detection.py
 ├── gui/              # PyQt6 GUI components
 │   ├── dashboard.py
+│   ├── dashboard_handlers.py
 │   ├── login.py
-│   └── user_management.py
+│   ├── user_management.py
+│   ├── styles.qss
+│   └── assets/       # SVG icons and images
 tests/                # pytest test files
 tools/                # Utility scripts
+├── migrate_users.py
+├── fix_whitespace.py
+└── import_test.py
 ```
 
 ### Core Principles
