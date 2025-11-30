@@ -169,12 +169,12 @@ class TestLearningCoverage:
         # Create multiple requests
         req1 = manager.create_request("Content 1", "description 1", RequestPriority.HIGH)
         req2 = manager.create_request("Content 2", "description 2", RequestPriority.MEDIUM)
-        req3 = manager.create_request("Content 3", "description 3", RequestPriority.LOW)
+        manager.create_request("Content 3", "description 3", RequestPriority.LOW)
 
         # Process them differently
         manager.approve_request(req1, "Good")
         manager.deny_request(req2, "Bad", to_vault=False)
-        # req3 left pending
+        # Third request left pending
 
         stats = manager.get_statistics()
         assert stats["pending"] == 1

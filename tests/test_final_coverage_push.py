@@ -10,7 +10,6 @@ from app.core.ai_systems import AIPersona, LearningRequestManager
 from app.core.image_generator import ImageGenerator, ImageStyle
 from app.core.user_manager import UserManager
 
-
 # ==================== REMAINING AI SYSTEMS COVERAGE ====================
 
 
@@ -40,11 +39,11 @@ class TestAISystemsRemaining:
         with tempfile.TemporaryDirectory() as tmpdir:
             learning = LearningRequestManager(data_dir=tmpdir)
             req_id = learning.create_request("topic", "sensitive content")
-            
+
             # Deny and add to vault
             result = learning.deny_request(req_id, "Inappropriate", to_vault=True)
             assert result is True
-            
+
             # Verify content added to black vault
             import hashlib
             content = learning.requests[req_id]["description"]
@@ -164,7 +163,7 @@ class TestUserManagerRemaining:
         """Test user deletion edge case (lines 131-132)."""
         manager.create_user("testuser", "password")
         assert "testuser" in manager.users
-        
+
         result = manager.delete_user("testuser")
         assert result is True
         assert "testuser" not in manager.users
@@ -180,15 +179,15 @@ class TestIntegrationEdgeCases:
         """Test persona and user manager working together."""
         with tempfile.TemporaryDirectory() as tmpdir:
             users_file = os.path.join(tmpdir, "users.json")
-            
+
             # Create user
             manager = UserManager(users_file=users_file)
             manager.create_user("alice", "secure_password")
-            
+
             # Create persona
             persona = AIPersona(data_dir=tmpdir, user_name="alice")
             persona.update_conversation_state(is_user=True)
-            
+
             # Verify both persisted
             assert "alice" in manager.users
             assert persona.total_interactions == 1
@@ -225,10 +224,10 @@ class TestIntegrationEdgeCases:
             # Build prompt with persona awareness
             base_prompt = "a beautiful landscape"
             enhanced = generator.build_enhanced_prompt(base_prompt, ImageStyle.PHOTOREALISTIC)
-            
+
             assert len(enhanced) > len(base_prompt)
             assert "photorealistic" in enhanced.lower() or "professional" in enhanced.lower()
-            
+
             os.environ.pop("HUGGINGFACE_API_KEY", None)
 
 
@@ -242,11 +241,11 @@ class TestMutationResistance:
         """Ensure trait adjustment respects bounds."""
         with tempfile.TemporaryDirectory() as tmpdir:
             persona = AIPersona(data_dir=tmpdir)
-            
+
             # Max trait should be 1.0
             persona.adjust_trait("curiosity", 1.0)
             assert persona.personality["curiosity"] <= 1.0
-            
+
             # Min trait should be 0.0
             persona.adjust_trait("curiosity", -2.0)
             assert persona.personality["curiosity"] >= 0.0
@@ -254,7 +253,7 @@ class TestMutationResistance:
     def test_learning_request_priority_values(self):
         """Ensure priorities are properly differentiated."""
         from app.core.ai_systems import RequestPriority
-        
+
         assert RequestPriority.LOW.value == 1
         assert RequestPriority.MEDIUM.value == 2
         assert RequestPriority.HIGH.value == 3
@@ -266,7 +265,7 @@ class TestMutationResistance:
         with tempfile.TemporaryDirectory() as tmpdir:
             os.environ["HUGGINGFACE_API_KEY"] = "test_key"
             generator = ImageGenerator(data_dir=tmpdir)
-            
+
             # All variations should be caught
             test_cases = [
                 ("nsfw", False),
@@ -274,11 +273,11 @@ class TestMutationResistance:
                 ("NsFw", False),
                 ("clean landscape", True),
             ]
-            
+
             for prompt, expected_safe in test_cases:
                 is_safe, _ = generator.check_content_filter(prompt)
                 assert is_safe == expected_safe, f"Failed for prompt: {prompt}"
-            
+
             os.environ.pop("HUGGINGFACE_API_KEY", None)
 
 
