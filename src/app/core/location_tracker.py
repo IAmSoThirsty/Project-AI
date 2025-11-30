@@ -114,7 +114,8 @@ class LocationTracker:
 
         decrypted_history = []
         for encrypted_location in history:
-            location_data = self.decrypt_location(encrypted_location.encode())  # Convert string back to bytes
+            # Convert string back to bytes
+            location_data = self.decrypt_location(encrypted_location.encode())
             if location_data:
                 decrypted_history.append(location_data)
 

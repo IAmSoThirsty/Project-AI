@@ -57,7 +57,9 @@ class DataAnalyzer:
             "column_count": len(self.data.columns),
         }
 
-    def create_visualization(self, plot_type: str, x_col: str | None = None, y_col: str | None = None):
+    def create_visualization(
+        self, plot_type: str, x_col: str | None = None, y_col: str | None = None
+    ):
         """Create a matplotlib Figure or a Qt canvas depending on environment.
 
         Returns a Figure or a FigureCanvasQTAgg when available.

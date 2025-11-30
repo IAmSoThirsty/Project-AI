@@ -153,7 +153,8 @@ class UserManagementWidget(QWidget):
         if username == self.um.current_user:
             QMessageBox.warning(self, "Delete", "Cannot delete currently logged-in user")
             return
-        confirm = QMessageBox.question(self, "Confirm Delete", f"Delete user '{username}'? This is irreversible.")
+        confirm_msg = f"Delete user '{username}'? This is irreversible."
+        confirm = QMessageBox.question(self, "Confirm Delete", confirm_msg)
         if confirm == QMessageBox.StandardButton.Yes:
             ok = self.um.delete_user(username)
             if ok:
@@ -193,7 +194,10 @@ class UserManagementWidget(QWidget):
         role = self.role_combo.currentText()
         pic = self.pic_field.text().strip()
         approved = True if self.approved_label.text().endswith('True') else False
-        ok = self.um.update_user(self.user_list.currentItem().text(), role=role, profile_picture=pic, approved=approved)
+        selected_user = self.user_list.currentItem().text()
+        ok = self.um.update_user(
+            selected_user, role=role, profile_picture=pic, approved=approved
+        )
         if ok:
             QMessageBox.information(self, "Saved", "User updated")
             self.refresh_user_list()
@@ -234,7 +238,9 @@ class CreateUserDialog(QDialog):
         pic_row.addWidget(self.pic_btn_d)
         layout.addLayout(pic_row)
 
-        btns = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        btns = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
         btns.accepted.connect(self.accept)
         btns.rejected.connect(self.reject)
         layout.addWidget(btns)
@@ -250,7 +256,13 @@ class CreateUserDialog(QDialog):
             self.pic_field_d.setText(fname)
 
     def get_values(self):
-        return (self.username.text().strip(), self.password.text(), self.approved_cb.isChecked(), self.role.currentText(), self.pic_field_d.text().strip())
+        return (
+            self.username.text().strip(),
+            self.password.text(),
+            self.approved_cb.isChecked(),
+            self.role.currentText(),
+            self.pic_field_d.text().strip()
+        )
 
 
 class ResetPasswordDialog(QDialog):
@@ -262,7 +274,9 @@ class ResetPasswordDialog(QDialog):
         self.pw = QLineEdit()
         self.pw.setEchoMode(QLineEdit.EchoMode.Password)
         layout.addWidget(self.pw)
-        btns = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        btns = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
         btns.accepted.connect(self.accept)
         btns.rejected.connect(self.reject)
         layout.addWidget(btns)

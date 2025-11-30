@@ -3,7 +3,8 @@ from setuptools import setup, find_packages
 setup(
     name="ai-desktop-assistant",
     version="0.1.0",
-    packages=find_packages(),
+    packages=find_packages(where="src"),
+    package_dir={"": "src"},
     install_requires=[
         'PyQt6',
         'openai',
@@ -15,7 +16,8 @@ setup(
         'numpy',
         'pandas',
         'matplotlib',
-        'scikit-learn'
+        'scikit-learn',
+        'passlib'
     ],
     entry_points={
         'console_scripts': [
