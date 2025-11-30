@@ -33,6 +33,31 @@ Auxiliary notes, session reports, test results, and reference materials:
 - Feature summaries and branch notes
 - Quick reference guides and troubleshooting
 
+### `docs/developer/`
+
+Developer-focused guides, implementation details, and technical references:
+
+- **DEVELOPER_QUICK_REFERENCE.md** — Quick reference for developers
+- **COMMAND_MEMORY_FEATURES.md** — Command memory and feature descriptions
+- **LEARNING_REQUEST_IMPLEMENTATION.md** — Learning request system implementation
+- **LEARNING_REQUEST_LOG.md** — Learning request logs and status
+- **DOCKER_WSL_SETUP.md** — Docker and WSL setup guide for development
+
+### `docs/policy/`
+
+Project policies, contributing guidelines, and code of conduct:
+
+- **CODE_OF_CONDUCT.md** — Community code of conduct
+- **CONTRIBUTING.md** — Contribution guidelines and workflow
+- **SECURITY.md** — Security policy and vulnerability reporting
+
+### `docs/web/`
+
+Web version documentation and deployment guides:
+
+- **WEB_README.md** — Web application overview and features
+- **DEPLOYMENT.md** — Web deployment and infrastructure setup
+
 ## Key Files at Repository Root
 
 - **README.md** — Primary entry point (kept at root per GitHub convention)
@@ -47,6 +72,10 @@ Auxiliary notes, session reports, test results, and reference materials:
 - Review [docs/overview/PROGRAM_SUMMARY.md](overview/PROGRAM_SUMMARY.md) for complete architecture
 - Check [docs/overview/DESKTOP_APP_QUICKSTART.md](overview/DESKTOP_APP_QUICKSTART.md) to run the app locally
 - See [docs/overview/LEATHER_BOOK_ARCHITECTURE.md](overview/LEATHER_BOOK_ARCHITECTURE.md) for UI implementation details
+- Developer setup: [docs/developer/DOCKER_WSL_SETUP.md](developer/DOCKER_WSL_SETUP.md)
+- Web app docs: [docs/web/WEB_README.md](web/WEB_README.md) and [docs/web/DEPLOYMENT.md](web/DEPLOYMENT.md)
+- Contributing: [docs/policy/CONTRIBUTING.md](policy/CONTRIBUTING.md)
+- Security: [docs/policy/SECURITY.md](policy/SECURITY.md)
 
 ## Document Cross-References
 
