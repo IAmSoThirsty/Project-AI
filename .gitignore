@@ -46,6 +46,7 @@ htmlcov/
 # Data files (user-specific)
 *.json
 !package.json
+!package-lock.json
 
 # Logs
 logs/
