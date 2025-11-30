@@ -181,7 +181,7 @@ Dependencies are defined in `setup.py` and include:
 - PyPDF2 (PDF handling)
 - numpy, pandas, matplotlib (data processing and visualization)
 - scikit-learn (machine learning)
-- passlib (password hashing - used in codebase)
+- passlib (password hashing)
 
 ### Adding New Dependencies
 

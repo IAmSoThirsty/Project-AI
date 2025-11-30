@@ -154,7 +154,8 @@ class UserManager:
     def update_user(self, username, **kwargs):
         """Update user metadata (role, approved, persona, preferences, profile_picture).
 
-        Accepts keys like role (str), approved (bool), persona (str), preferences (dict), profile_picture (path).
+        Accepts keys like role (str), approved (bool), persona (str),
+        preferences (dict), profile_picture (path).
         """
         if username not in self.users:
             return False

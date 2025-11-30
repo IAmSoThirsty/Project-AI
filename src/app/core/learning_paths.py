@@ -29,7 +29,10 @@ class LearningPathManager:
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=[
-                    {"role": "system", "content": "You are an educational expert creating learning paths."},
+                    {
+                        "role": "system",
+                        "content": "You are an educational expert creating learning paths."
+                    },
                     {"role": "user", "content": prompt},
                 ],
             )
