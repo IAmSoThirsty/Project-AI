@@ -83,3 +83,8 @@ docs/_build/
 *.bak
 *.orig
 README_UPDATED.md
+
+# Build/analysis artifacts
+*.jar
+screenshots/
+codacy-analysis-cli-assembly.jar
