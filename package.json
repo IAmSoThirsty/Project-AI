@@ -10,7 +10,8 @@
     "lint": "ruff check .",
     "format": "ruff check . --fix",
     "dev": "docker-compose up",
-    "build": "docker build -t project-ai:latest ."
+    "build": "docker build -t project-ai:latest .",
+    "lint:markdown": "markdownlint README.md PROGRAM_SUMMARY.md docs docs/developer --config .markdownlint.json"
   },
   "keywords": [
     "ai",
@@ -28,6 +29,8 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "markdownlint-cli": "^0.34.0"
+  }
 }
 
