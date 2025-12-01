@@ -8,6 +8,11 @@ from datetime import datetime
 from enum import Enum
 from typing import Any
 
+from app.core.continuous_learning import (
+    ContinuousLearningEngine,
+    LearningReport,
+)
+
 logger = logging.getLogger(__name__)
 
 
@@ -75,6 +80,7 @@ class AIPersona:
         self.total_interactions = 0
         self.last_user_message_time = None
         self._load_state()
+        self.continuous_learning = ContinuousLearningEngine(data_dir=data_dir)
 
     def _load_state(self) -> None:
         """Load persona state from file."""
@@ -117,6 +123,12 @@ class AIPersona:
         if is_user:
             self.last_user_message_time = datetime.now()
         self._save_state()
+
+    def learn_continuously(
+        self, topic: str, content: str, metadata: dict[str, Any] | None = None
+    ) -> LearningReport:
+        """Log new input and return the generated learning report."""
+        return self.continuous_learning.absorb_information(topic, content, metadata)
 
     def adjust_trait(self, trait: str, delta: float) -> None:
         """Adjust personality trait."""
@@ -172,14 +184,15 @@ class MemoryExpansionSystem:
         self,
         user_msg: str,
         ai_response: str,
-        context: dict | None = None,
+        context: dict[str, Any] | None = None,
     ) -> str:
         """Log conversation."""
-        timestamp = datetime.now().isoformat()
-        conv_id = hashlib.md5(f"{timestamp}{user_msg}".encode()).hexdigest()[:12]
+        timestamp = datetime.now()
+        timestamp_iso = timestamp.isoformat()
+        conv_id = hashlib.sha256(f"{timestamp_iso}{user_msg}".encode()).hexdigest()[:12]
         entry = {
             "id": conv_id,
-            "timestamp": datetime.now().isoformat(),
+            "timestamp": timestamp_iso,
             "user": user_msg,
             "ai": ai_response,
             "context": context or {},
@@ -238,7 +251,7 @@ class LearningRequestManager:
         os.makedirs(self.requests_dir, exist_ok=True)
 
         self.requests: dict[str, dict[str, Any]] = {}
-        self.black_vault: set = set()
+        self.black_vault: set[str] = set()
         self._load_requests()
 
     def _load_requests(self) -> None:
@@ -272,8 +285,9 @@ class LearningRequestManager:
         priority: RequestPriority = RequestPriority.MEDIUM,
     ) -> str:
         """Create learning request."""
-        timestamp = datetime.now().isoformat()
-        req_id = hashlib.md5(f"{timestamp}{topic}".encode()).hexdigest()[:12]
+        timestamp = datetime.now()
+        timestamp_iso = timestamp.isoformat()
+        req_id = hashlib.sha256(f"{timestamp_iso}{topic}".encode()).hexdigest()[:12]
         content_hash = hashlib.sha256(description.encode()).hexdigest()
 
         if content_hash in self.black_vault:
@@ -285,7 +299,7 @@ class LearningRequestManager:
             "description": description,
             "priority": priority.value,
             "status": RequestStatus.PENDING.value,
-            "created": datetime.now().isoformat(),
+            "created": timestamp_iso,
         }
         self._save_requests()
         return req_id
@@ -372,6 +386,8 @@ class PluginManager:
 
     def load_plugin(self, plugin: Plugin) -> bool:
         """Load plugin."""
+        if plugin.name in self.plugins:
+            logger.warning("Plugin %s already loaded; replacing with new instance", plugin.name)
         self.plugins[plugin.name] = plugin
         return plugin.enable()
 

@@ -10,6 +10,7 @@ Layout:
 - Background: 3D grid visualization
 """
 import math
+import random
 
 from PyQt6.QtCore import QDateTime, Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QBrush, QColor, QFont, QPainter, QPen
@@ -44,6 +45,28 @@ TITLE_FONT = QFont("Courier New", 12, QFont.Weight.Bold)
 STYLE_CYAN_GLOW = "color: #00ffff; text-shadow: 0px 0px 10px #00ffff;"
 STYLE_GREEN_TEXT = "color: #00ff00;"
 
+ACTION_BUTTON_STYLESHEET = """
+    QPushButton {
+        background-color: #1a1a1a;
+        border: 2px solid #00ff00;
+        color: #00ff00;
+        padding: 8px;
+        font-weight: bold;
+        font-size: 10px;
+    }
+    QPushButton:hover {
+        border: 2px solid #00ffff;
+        color: #00ffff;
+    }
+"""
+
+PROACTIVE_ACTIONS = (
+    "Analyzing user patterns",
+    "Optimizing memory cache",
+    "Updating knowledge base",
+    "Processing data streams",
+)
+
 
 class LeatherBookDashboard(QWidget):
     """Main dashboard with 6-zone layout on leather book."""
@@ -55,47 +78,51 @@ class LeatherBookDashboard(QWidget):
         self.username = username
         self.setStyleSheet(self._get_stylesheet())
 
-        # Main layout - vertical split
-        main_layout = QVBoxLayout(self)
-        main_layout.setContentsMargins(0, 0, 0, 0)
-        main_layout.setSpacing(0)
+        self._build_main_layout()
+        self._build_top_section()
+        self._build_middle_section()
+        self._setup_animation_timer()
 
-        # Top section (Stats + Top Right Actions)
+    def _build_main_layout(self) -> None:
+        """Initialize the dashboard's main vertical layout."""
+        self._main_layout = QVBoxLayout(self)
+        self._main_layout.setContentsMargins(0, 0, 0, 0)
+        self._main_layout.setSpacing(0)
+
+    def _build_top_section(self) -> None:
+        """Construct the top row containing stats and proactive actions."""
         top_layout = QHBoxLayout()
         top_layout.setSpacing(10)
         top_layout.setContentsMargins(10, 10, 10, 10)
 
-        # Top Left: Stats Panel
-        self.stats_panel = StatsPanel(username)
+        self.stats_panel = StatsPanel(self.username)
         top_layout.addWidget(self.stats_panel, 1)
 
-        # Top Right: Proactive Actions
         self.actions_panel = ProactiveActionsPanel()
         top_layout.addWidget(self.actions_panel, 1)
 
-        main_layout.addLayout(top_layout, 1)
+        self._main_layout.addLayout(top_layout, 1)
 
-        # Middle section - AI Head and chat interface
+    def _build_middle_section(self) -> None:
+        """Construct the central layout with chat input, AI head, and responses."""
         middle_layout = QHBoxLayout()
         middle_layout.setSpacing(10)
         middle_layout.setContentsMargins(10, 10, 10, 10)
 
-        # Bottom Left: User Chat Input
         self.chat_input = UserChatPanel()
         self.chat_input.message_sent.connect(self._on_user_message)
         middle_layout.addWidget(self.chat_input, 1)
 
-        # Center: AI Head
         self.ai_head = AINeuralHead()
         middle_layout.addWidget(self.ai_head, 2)
 
-        # Bottom Right: AI Response/Thoughts
         self.ai_response = AIResponsePanel()
         middle_layout.addWidget(self.ai_response, 1)
 
-        main_layout.addLayout(middle_layout, 2)
+        self._main_layout.addLayout(middle_layout, 2)
 
-        # Background grid animation
+    def _setup_animation_timer(self) -> None:
+        """Wire up the animation timer that powers the dashboard background."""
         self.animation_timer = QTimer()
         self.animation_timer.timeout.connect(self._update_animations)
         self.animation_timer.start(50)
@@ -163,74 +190,71 @@ class StatsPanel(QFrame):
         layout.setContentsMargins(15, 15, 15, 15)
         layout.setSpacing(10)
 
-        # Title
-        title = QLabel("SYSTEM STATS")
-        title.setFont(TITLE_FONT)
-        title.setStyleSheet(STYLE_CYAN_GLOW)
-        layout.addWidget(title)
-
-        # User info
-        user_label = QLabel(f"User: {username}")
-        user_label.setStyleSheet(STYLE_GREEN_TEXT)
-        layout.addWidget(user_label)
-
-        # System uptime
-        self.uptime_label = QLabel("Uptime: 00:00:00")
-        self.uptime_label.setStyleSheet(STYLE_GREEN_TEXT)
-        layout.addWidget(self.uptime_label)
-
-        # Memory usage
-        self.memory_label = QLabel("Memory: 45%")
-        self.memory_label.setStyleSheet(STYLE_GREEN_TEXT)
-        layout.addWidget(self.memory_label)
-
-        # Processor
-        self.processor_label = QLabel("CPU: 32%")
-        self.processor_label.setStyleSheet(STYLE_GREEN_TEXT)
-        layout.addWidget(self.processor_label)
-
-        # Session time
-        self.session_label = QLabel("Session: 00:00")
-        self.session_label.setStyleSheet(STYLE_GREEN_TEXT)
-        layout.addWidget(self.session_label)
-
+        self._setup_stat_labels(layout)
         layout.addStretch()
-
-        # Update stats timer
-        self.stats_timer = QTimer()
-        self.stats_timer.timeout.connect(self._update_stats)
-        self.stats_timer.start(1000)
-
-        self.uptime_seconds = 0
-        self.session_seconds = 0
+        self._configure_stats_timer()
 
     def _update_stats(self):
         """Update displayed stats."""
         self.uptime_seconds += 1
         self.session_seconds += 1
 
-        # Format as HH:MM:SS
-        hours = self.uptime_seconds // 3600
-        minutes = (self.uptime_seconds % 3600) // 60
-        seconds = self.uptime_seconds % 60
-        self.uptime_label.setText(
-            f"Uptime: {
-                hours:02d}:{
-                minutes:02d}:{
-                seconds:02d}")
+        self.uptime_label.setText(self._format_uptime())
+        self.session_label.setText(self._format_session_duration())
+        self._update_dynamic_stats()
 
-        # Session
-        sess_minutes = self.session_seconds // 60
-        sess_seconds = self.session_seconds % 60
-        self.session_label.setText(
-            f"Session: {
-                sess_minutes:02d}:{
-                sess_seconds:02d}")
+    def _format_uptime(self) -> str:
+        """Return uptime formatted as HH:MM:SS."""
+        hours, remainder = divmod(self.uptime_seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        return f"Uptime: {hours:02d}:{minutes:02d}:{seconds:02d}"
 
-        # Simulate dynamic stats
-        import random
-        self.memory_label.setText(f"Memory: {40 + random.randint(-5, 5)}%")
-        self.processor_label.setText(f"CPU: {25 + random.randint(-10, 15)}%")
+    def _format_session_duration(self) -> str:
+        """Return session duration formatted as MM:SS."""
+        minutes, seconds = divmod(self.session_seconds, 60)
+        return f"Session: {minutes:02d}:{seconds:02d}"
+
+    def _update_dynamic_stats(self) -> None:
+        """Simulate variable memory and CPU usage values."""
+        memory_percent = 40 + self._rng.randint(-5, 5)
+        cpu_percent = 25 + self._rng.randint(-10, 15)
+        self.memory_label.setText(f"Memory: {memory_percent}%")
+        self.processor_label.setText(f"CPU: {cpu_percent}%")
+
+    def _setup_stat_labels(self, layout: QVBoxLayout) -> None:
+        title = QLabel("SYSTEM STATS")
+        title.setFont(TITLE_FONT)
+        title.setStyleSheet(STYLE_CYAN_GLOW)
+        layout.addWidget(title)
+
+        user_label = QLabel(f"User: {self.username}")
+        user_label.setStyleSheet(STYLE_GREEN_TEXT)
+        layout.addWidget(user_label)
+
+        self.uptime_label = QLabel("Uptime: 00:00:00")
+        self.uptime_label.setStyleSheet(STYLE_GREEN_TEXT)
+        layout.addWidget(self.uptime_label)
+
+        self.memory_label = QLabel("Memory: 45%")
+        self.memory_label.setStyleSheet(STYLE_GREEN_TEXT)
+        layout.addWidget(self.memory_label)
+
+        self.processor_label = QLabel("CPU: 32%")
+        self.processor_label.setStyleSheet(STYLE_GREEN_TEXT)
+        layout.addWidget(self.processor_label)
+
+        self.session_label = QLabel("Session: 00:00")
+        self.session_label.setStyleSheet(STYLE_GREEN_TEXT)
+        layout.addWidget(self.session_label)
+
+    def _configure_stats_timer(self) -> None:
+        self.stats_timer = QTimer()
+        self.stats_timer.timeout.connect(self._update_stats)
+        self.stats_timer.start(1000)
+
+        self.uptime_seconds = 0
+        self.session_seconds = 0
+        self._rng = random.Random()
 
 
 class ProactiveActionsPanel(QFrame):
@@ -246,13 +270,22 @@ class ProactiveActionsPanel(QFrame):
         layout.setContentsMargins(15, 15, 15, 15)
         layout.setSpacing(10)
 
-        # Title
+        layout.addWidget(self._create_title())
+        layout.addWidget(self._create_action_scroll(), 1)
+        layout.addWidget(self._create_action_button("▶ ANALYZE"))
+        layout.addWidget(self._create_action_button("⚙ OPTIMIZE"))
+
+        image_gen_btn = self._create_action_button("🎨 GENERATE IMAGES")
+        image_gen_btn.clicked.connect(self.image_gen_requested.emit)
+        layout.addWidget(image_gen_btn)
+
+    def _create_title(self) -> QLabel:
         title = QLabel("PROACTIVE ACTIONS")
         title.setFont(TITLE_FONT)
         title.setStyleSheet(STYLE_CYAN_GLOW)
-        layout.addWidget(title)
+        return title
 
-        # Action list with scroll
+    def _create_action_scroll(self) -> QScrollArea:
         scroll = QScrollArea()
         scroll.setStyleSheet("""
             QScrollArea {
@@ -274,76 +307,19 @@ class ProactiveActionsPanel(QFrame):
         actions_layout = QVBoxLayout(actions_widget)
         actions_layout.setSpacing(5)
 
-        # Sample actions
-        actions = [
-            "Analyzing user patterns",
-            "Optimizing memory cache",
-            "Updating knowledge base",
-            "Processing data streams",
-        ]
-
-        for action in actions:
+        for action in PROACTIVE_ACTIONS:
             action_item = QLabel(f"→ {action}")
             action_item.setStyleSheet("color: #00ff00; font-size: 10px;")
             actions_layout.addWidget(action_item)
 
         actions_layout.addStretch()
         scroll.setWidget(actions_widget)
-        layout.addWidget(scroll, 1)
+        return scroll
 
-        # Action buttons
-        analyze_btn = QPushButton("▶ ANALYZE")
-        analyze_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #1a1a1a;
-                border: 2px solid #00ff00;
-                color: #00ff00;
-                padding: 8px;
-                font-weight: bold;
-                font-size: 10px;
-            }
-            QPushButton:hover {
-                border: 2px solid #00ffff;
-                color: #00ffff;
-            }
-        """)
-        layout.addWidget(analyze_btn)
-
-        optimize_btn = QPushButton("⚙ OPTIMIZE")
-        optimize_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #1a1a1a;
-                border: 2px solid #00ff00;
-                color: #00ff00;
-                padding: 8px;
-                font-weight: bold;
-                font-size: 10px;
-            }
-            QPushButton:hover {
-                border: 2px solid #00ffff;
-                color: #00ffff;
-            }
-        """)
-        layout.addWidget(optimize_btn)
-
-        # Image generation button
-        image_gen_btn = QPushButton("🎨 GENERATE IMAGES")
-        image_gen_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #1a1a1a;
-                border: 2px solid #00ff00;
-                color: #00ff00;
-                padding: 8px;
-                font-weight: bold;
-                font-size: 10px;
-            }
-            QPushButton:hover {
-                border: 2px solid #00ffff;
-                color: #00ffff;
-            }
-        """)
-        image_gen_btn.clicked.connect(self.image_gen_requested.emit)
-        layout.addWidget(image_gen_btn)
+    def _create_action_button(self, label: str) -> QPushButton:
+        btn = QPushButton(label)
+        btn.setStyleSheet(ACTION_BUTTON_STYLESHEET)
+        return btn
 
 
 class UserChatPanel(QFrame):
