@@ -206,9 +206,21 @@ tests/test_ai_systems.py
     ✓ test_request_override
     ✓ test_override_active
 
+tests/test_image_generator.py
+  ✅ TestImageGenerator
+    ✓ test_initialization
+    ✓ test_content_filter_blocks_forbidden_keywords
+    ✓ test_content_filter_allows_safe_prompts
+    ✓ test_style_presets_available
+    ✓ test_history_tracking
+    ✓ test_generate_with_huggingface_success
+    ✓ test_generate_with_huggingface_failure
+    ✓ test_generate_without_api_key
+    ✓ test_multiple_generations_tracked
+
 tests/test_user_manager.py
   ✅ test_migration_and_authentication
-```text
+```
 
 ---
 

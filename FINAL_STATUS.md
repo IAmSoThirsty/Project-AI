@@ -78,7 +78,7 @@ All three requested tasks have been completed with production-ready code, compre
 | Updated files | 3+ |
 | Lines of code (new) | 801 |
 | Documentation pages | 4 |
-| Test cases | 13 |
+| Test cases | 23 |
 | Test pass rate | 100% ✅ |
 | Python classes | 6 |
 | PyQt6 signals | 2 |
@@ -89,9 +89,9 @@ All three requested tasks have been completed with production-ready code, compre
 ## 🧪 Test Results
 
 ```
-Platform: Windows, Python 3.14, pytest-9.0.1
+Platform: Linux, Python 3.12, pytest-9.0.1
 
-Test Run: tests/test_ai_systems.py -v
+Test Run: tests/ -v
 
 Results:
   ✅ TestFourLaws::test_law_validation_blocked
@@ -107,8 +107,18 @@ Results:
   ✅ TestCommandOverride::test_password_verification
   ✅ TestCommandOverride::test_request_override
   ✅ TestCommandOverride::test_override_active
+  ✅ TestImageGenerator::test_initialization
+  ✅ TestImageGenerator::test_content_filter_blocks_forbidden_keywords
+  ✅ TestImageGenerator::test_content_filter_allows_safe_prompts
+  ✅ TestImageGenerator::test_style_presets_available
+  ✅ TestImageGenerator::test_history_tracking
+  ✅ TestImageGenerator::test_generate_with_huggingface_success
+  ✅ TestImageGenerator::test_generate_with_huggingface_failure
+  ✅ TestImageGenerator::test_generate_without_api_key
+  ✅ TestImageGenerator::test_multiple_generations_tracked
+  ✅ test_migration_and_authentication
 
-TOTAL: 13 passed in 0.16s ✅
+TOTAL: 23 passed in 0.23s ✅
 ```
 
 ---
