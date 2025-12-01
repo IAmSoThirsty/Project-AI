@@ -1,68 +1,56 @@
 # Project AI
 
+![CI](https://github.com/IAmSoThirsty/Project-AI/actions/workflows/ci.yml/badge.svg)
+
 This repository contains a Python desktop application that provides a personal AI
 assistant with features adapted from a WinForms prototype. The app is designed for
 member-only use and can be extended for mobile later.
 
-## High-level features
+## Smoke checks & quick verification
 
-- User management
-  - Local JSON-backed user profiles
-  - Persona and preference settings
-  - (Encrypted) storage support for sensitive data
+Key resources live under `docs/developer/` (smoke checks, troubleshooting, coverage notes). The quick checklist below mirrors those docs so you can run a single command snapshot.
 
-- Chat / AI Tutor
-  - Conversational interface
-  - AI Code Tutor (via OpenAI GPT models)
-  - Intent detection using a scikit-learn model
+1. **Prepare the environment**
 
-- Learning Paths (feature #3 implemented first)
-  - Generate personalized learning paths via OpenAI
-  - Save generated paths per user
+  ```powershell
+  python -m pip install --upgrade pip
+  pip install -r requirements.txt
+  npm install
+  ```
 
-- Data Analysis (feature #6)
-  - Load CSV/XLSX/JSON
-  - Basic statistics and missing value reports
-  - Visualizations (scatter, histogram, boxplot, correlation)
-  - Simple clustering (K-means) with PCA visualization
+1. **Run the baseline tests & coverage**
 
-- Security Resources (feature #2)
-  - Curated lists of security/CTF/privacy repos
-  - Fetch repository details from GitHub API
-  - Save favorites per user
+  ```powershell
+  $env:PYTHONPATH='src'
+  python -m pytest tests/test_data_analysis.py -q
+  python -m pytest tests/ --cov=src/app/core --cov-report=term-missing --cov-report=xml:reports/coverage.xml --cov-report=html:htmlcov -q
+  ```
 
-- Location Tracking (feature #1)
-  - IP-based fallback geolocation
-  - Optional GPS reverse-geocoding support (via geopy)
-  - Encrypted location history (Fernet)
-  - Periodic recording when enabled (every 5 minutes)
+1. **Lint documentation + formatting**
 
-- Emergency Alerts (feature #5)
-  - Register emergency contacts per user
+  ```powershell
+  isort src tests --profile black
+  ruff check src tests
+  black --check src tests
+  npm run lint:markdown
+  ```
 
-- **Image Generation** (✅ RESTORED & IMPROVED!)
-  - AI-powered image generation with dual backend support
-  - Hugging Face Stable Diffusion 2.1 and OpenAI DALL-E 3
-  - 10 professional style presets (photorealistic, digital art, oil painting, etc.)
-  - Content filtering with 15 blocked keywords and safety negative prompts
-  - Dual-page Leather Book UI (left: Tron-themed prompt input, right: image display)
-  - Async generation with progress feedback (20-60 second generation time)
-  - Image history tracking, zoom controls, save/copy to clipboard
-  - Metadata display (prompt, style, backend, timestamp)
-  - Generation queue management
+1. **Start the apps for manual verification**
 
-- **Cloud Sync** (NEW!)
-  - Encrypted cloud synchronization for user data across devices
-  - Device tracking and management
-  - Automatic conflict resolution (timestamp-based)
-  - Bidirectional sync with secure API endpoints
+  ```powershell
+  $env:PYTHONPATH='src'; python -m src.app.main
+  cd web/backend
+  flask run
+  cd ../frontend
+  npm run dev
+  ```
 
-- **Advanced ML Models** (NEW!)
-  - RandomForest classifier for intent prediction
-  - GradientBoosting for sentiment analysis
-  - Neural Network (MLPClassifier) for user behavior prediction
-  - Model training, persistence, and real-time predictions
-  - PyTorch-based ThreatDetector (optional) for ethical checks
+- Detailed steps and troubleshooting tips live in `docs/developer/smoke_checks.md` and `docs/developer/troubleshooting.md` if you need full context.
+
+- GradientBoosting for sentiment analysis
+ - Neural Network (MLPClassifier) for user behavior prediction
+ - Model training, persistence, and real-time predictions
+ - PyTorch-based ThreatDetector (optional) for ethical checks
     - Detects potential Zeroth/First-law conflicts using a small neural detector
     - Falls back to keyword heuristics when `torch` is not installed
     - Models and vocab are persisted to `data/ai_persona/` when trained or saved
@@ -134,8 +122,8 @@ The repository includes a minimal bootstrapping routine that trains tiny detecto
 synthetic examples for quick startup. For real usage you should:
 
 1. Gather labeled examples (human-labeled) for `zeroth` (humanity-level harm) and `first` (individual human harm) categories.
-2. Store examples in a directory or in the `memory_system` so the persona can load them for supervised retraining.
-3. Call the persona retrain flow (UI or CLI) to persist updated model weights.
+1. Store examples in a directory or in the `memory_system` so the persona can load them for supervised retraining.
+1. Call the persona retrain flow (UI or CLI) to persist updated model weights.
 
 See documentation for retraining and the CLI helper in the repository docs:
 
@@ -147,6 +135,7 @@ This project uses the following formatting and linting tools:
 
 - Python: ruff, black, isort
 - Frontend: Prettier (in `web/frontend`), ESLint
+- Markdown: markdownlint-cli (uses `.markdownlint.json`)
 
 Run formatters locally before committing changes:
 
@@ -159,6 +148,8 @@ python -m pip install ruff black isort
 isort src tests --profile black
 ruff check src tests --fix
 black src tests
+npm install
+npm run lint:markdown
 ```
 
 PowerShell (Web frontend):
