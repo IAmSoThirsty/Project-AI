@@ -1,0 +1,1 @@
+python tools/check_large_files_for_lfs.py
