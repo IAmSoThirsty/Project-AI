@@ -4,7 +4,7 @@ This document provides repository-specific instructions for GitHub Copilot to ge
 
 ## Project Overview
 
-Project-AI is a Python desktop AI assistant application built with PyQt6. It provides features including user management, AI chat/tutoring, learning path generation, data analysis, security resources, location tracking, and emergency alerts.
+Project-AI is a Python desktop AI assistant application built with PyQt6. It provides features including user management, AI chat/tutoring, learning path generation, data analysis, security resources, location tracking, emergency alerts, AI image generation, and web interface.
 
 ## Architecture
 
@@ -12,27 +12,42 @@ Project-AI is a Python desktop AI assistant application built with PyQt6. It pro
 
 ```
 src/app/
-├── main.py           # Application entrypoint
-├── core/             # Business logic (no GUI dependencies)
-│   ├── user_manager.py
-│   ├── location_tracker.py
-│   ├── learning_paths.py
+├── main.py               # Application entrypoint
+├── core/                 # Business logic (no GUI dependencies)
+│   ├── ai_systems.py
+│   ├── command_override.py
+│   ├── continuous_learning.py
 │   ├── data_analysis.py
-│   ├── security_resources.py
 │   ├── emergency_alert.py
-│   └── intent_detection.py
-├── gui/              # PyQt6 GUI components
+│   ├── image_generator.py
+│   ├── intelligence_engine.py
+│   ├── intent_detection.py
+│   ├── learning_paths.py
+│   ├── location_tracker.py
+│   ├── security_resources.py
+│   └── user_manager.py
+├── gui/                  # PyQt6 GUI components
 │   ├── dashboard.py
 │   ├── dashboard_handlers.py
+│   ├── dashboard_utils.py
+│   ├── image_generation.py
+│   ├── leather_book_dashboard.py
+│   ├── leather_book_interface.py
+│   ├── leather_book_panels.py
 │   ├── login.py
-│   ├── user_management.py
+│   ├── persona_panel.py
+│   ├── settings_dialog.py
 │   ├── styles.qss
-│   └── assets/       # SVG icons and images
-tests/                # pytest test files
-tools/                # Utility scripts
-├── migrate_users.py
-├── fix_whitespace.py
-└── import_test.py
+│   ├── styles_dark.qss
+│   ├── user_management.py
+│   └── assets/           # SVG icons and images
+tests/                    # pytest test files (173+ tests)
+tools/                    # Utility scripts
+scripts/                  # Developer and deployment scripts
+docs/                     # Documentation (overview/ and notes/)
+web/                      # Flask web interface
+android/                  # Android app components
+examples/                 # Example code and usage
 ```
 
 ### Core Principles
@@ -175,9 +190,11 @@ def test_with_files(tmp_path):
 
 ```bash
 pip install -e .
+# or
+pip install -r requirements.txt
 ```
 
-Dependencies are defined in `setup.py` and include:
+Dependencies are defined in `pyproject.toml` and `requirements.txt` and include:
 - PyQt6 (GUI framework)
 - openai (AI/LLM integration)
 - requests (HTTP requests)
@@ -188,11 +205,13 @@ Dependencies are defined in `setup.py` and include:
 - numpy, pandas, matplotlib (data processing and visualization)
 - scikit-learn (machine learning)
 - passlib (password hashing)
+- Flask (web interface)
+- Pillow (image processing)
 
 ### Adding New Dependencies
 
 When adding new dependencies:
-1. Add to `setup.py` `install_requires` list
+1. Add to `pyproject.toml` or `requirements.txt`
 2. Document the purpose in commit message
 3. Prefer well-maintained, security-audited packages
 
@@ -236,7 +255,8 @@ load_dotenv()  # Call at application startup
 
 ### Linting
 
-- Python: Use flake8 (`flake8 .`)
+- Python: Use ruff (`ruff check .`) or flake8 (`flake8 .`)
+- Configuration in `pyproject.toml` and `.flake8`
 - Run linting before committing
 
 ### Running Tests
@@ -248,6 +268,11 @@ pytest -q
 # Or via npm script
 npm run test:python
 ```
+
+### Test Coverage
+
+- Current coverage: ~97% across all modules
+- Total tests: 173+ passing tests
 
 ## Common Tasks
 
