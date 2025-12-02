@@ -17,6 +17,7 @@
 		"chat.mcp.gallery.enabled": true,
 		"chat.tools.terminal.autoReplyToPrompts": true,
 		"inlineChat.enableV2": true,
-		"inlineChat.notebookAgent": true
+		"inlineChat.notebookAgent": true,
+		"terminal.integrated.suggest.enabled": true
 	}
 }

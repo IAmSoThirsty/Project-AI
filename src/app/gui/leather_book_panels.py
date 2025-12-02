@@ -15,6 +15,8 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
+from app.core.backend_client import BackendAPIClient
+
 
 class TronFacePage(QFrame):  # pylint: disable=too-few-public-methods
     """Left page with a Tron-styled animated face."""
@@ -219,6 +221,10 @@ class IntroInfoPage(QFrame):
         self.current_tab = 0
         self.username_input: QLineEdit | None = None
         self.password_input: QLineEdit | None = None
+        self.login_feedback_label: QLabel | None = None
+        self.backend_status_label: QLabel | None = None
+        self.backend_client = BackendAPIClient()
+        self.login_button: QPushButton | None = None
         self._configure_frame()
         self._setup_layout()
         self.update_tab_styling()
@@ -300,7 +306,10 @@ class IntroInfoPage(QFrame):
         layout.setSpacing(15)
         self._add_login_header(layout)
         self._add_login_form(layout)
+        self._add_backend_status(layout)
+        self._add_login_feedback(layout)
         layout.addStretch()
+        QTimer.singleShot(100, self.refresh_backend_status)
         return page
 
     def _add_login_header(self, layout: QVBoxLayout):
@@ -339,8 +348,8 @@ class IntroInfoPage(QFrame):
         self._style_login_input(self.password_input)
         layout.addWidget(self.password_input)
         layout.addSpacing(20)
-        login_btn = QPushButton("ENTER SYSTEM")
-        login_btn.setStyleSheet("""
+        self.login_button = QPushButton("ENTER SYSTEM")
+        self.login_button.setStyleSheet("""
             QPushButton {
                 background-color: #8b7355;
                 border: 2px solid #8b7355;
@@ -355,8 +364,24 @@ class IntroInfoPage(QFrame):
                 border: 2px solid #a0826d;
             }
         """)
-        login_btn.clicked.connect(self._handle_login)
-        layout.addWidget(login_btn)
+        self.login_button.clicked.connect(self._handle_login)
+        layout.addWidget(self.login_button)
+
+    def _add_backend_status(self, layout: QVBoxLayout):
+        status_title = QLabel("Backend Status:")
+        status_title.setStyleSheet("color: #8b7355; font-weight: bold;")
+        layout.addWidget(status_title)
+        self.backend_status_label = QLabel("Checking service heartbeat …")
+        self.backend_status_label.setStyleSheet(
+            "color: #a0a0a0; font-size: 11px; padding-bottom: 10px;"
+        )
+        layout.addWidget(self.backend_status_label)
+
+    def _add_login_feedback(self, layout: QVBoxLayout):
+        self.login_feedback_label = QLabel("")
+        self.login_feedback_label.setWordWrap(True)
+        self.login_feedback_label.setStyleSheet("color: #a0a0a0; font-size: 11px;")
+        layout.addWidget(self.login_feedback_label)
 
     @staticmethod
     def _style_login_input(input_field: QLineEdit):
@@ -479,15 +504,57 @@ class IntroInfoPage(QFrame):
                     }
                 """)
 
+    def refresh_backend_status(self):
+        """Fetch backend heartbeat and update label."""
+        if not self.backend_status_label:
+            return
+        try:
+            payload = self.backend_client.get_status()
+        except Exception as exc:  # pylint: disable=broad-except
+            self.backend_status_label.setText(f"Status: Offline ({exc})")
+            self.backend_status_label.setStyleSheet("color: #ff6b6b; font-size: 11px;")
+            return
+        status_text = payload.get("status", "unknown").upper()
+        color = "#8bff55" if status_text == "OK" else "#ffc857"
+        component = payload.get("component", "backend")
+        self.backend_status_label.setText(f"Status: {status_text} ({component})")
+        self.backend_status_label.setStyleSheet(f"color: {color}; font-size: 11px;")
+
+    def _display_login_feedback(self, message: str, *, success: bool = False):
+        if not self.login_feedback_label:
+            return
+        color = "#55ff99" if success else "#ff8c69"
+        self.login_feedback_label.setText(message)
+        self.login_feedback_label.setStyleSheet(f"color: {color}; font-size: 11px;")
+
+    def _set_login_enabled(self, enabled: bool):
+        if self.login_button:
+            self.login_button.setEnabled(enabled)
+
     def _handle_login(self):
-        """Attempt to authenticate and switch to the dashboard."""
+        """Attempt to authenticate against Flask backend and switch to the dashboard."""
         if not self.username_input or not self.password_input:
             return
-        username = self.username_input.text()
+        username = self.username_input.text().strip()
         password = self.password_input.text()
-        if username and password and self.parent_window is not None:
-            self.parent_window.switch_to_main_dashboard(username)
-        if username:
+        if not username or not password:
+            self._display_login_feedback("Enter both username and password.")
+            return
+        self._set_login_enabled(False)
+        result = self.backend_client.authenticate(username, password)
+        self._set_login_enabled(True)
+        if not result.success:
+            self._display_login_feedback(f"Login failed: {result.message}")
+            return
+        display_name = result.user.get("username") if result.user else username
+        self._display_login_feedback(
+            f"Authenticated as {display_name}. Switching to dashboard…",
+            success=True,
+        )
+        if self.parent_window is not None:
+            self.parent_window.set_backend_token(result.token)
+            self.parent_window.switch_to_main_dashboard(display_name or username)
+        if self.username_input:
             self.username_input.clear()
-        if password:
+        if self.password_input:
             self.password_input.clear()

@@ -2,7 +2,7 @@
 
 import tempfile
 
-from app.core.image_generator import ImageGenerator, ImageGenerationBackend
+from app.core.image_generator import ImageGenerationBackend, ImageGenerator
 
 
 def test_content_filter_blocked_lines_269_270():

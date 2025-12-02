@@ -29,6 +29,7 @@ class LeatherBookInterface(QMainWindow):
     def __init__(self, username: str | None = None):
         super().__init__()
         self.username = username
+        self.backend_token: str | None = None
         self.current_page = 0  # 0 = login/intro, 1 = main dashboard
 
         self.setWindowTitle("Project-AI: Leather Book Interface")
@@ -129,6 +130,10 @@ class LeatherBookInterface(QMainWindow):
         dashboard.actions_panel.image_gen_requested.connect(self.switch_to_image_generation)
 
         self._set_stack_page(dashboard, 1)
+
+    def set_backend_token(self, token: str | None):
+        """Store backend auth token for downstream components."""
+        self.backend_token = token
 
     def switch_to_image_generation(self):
         """Switch to image generation interface."""
