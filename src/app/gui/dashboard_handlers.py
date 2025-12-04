@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QFileDialog, QMessageBox, QWidget, QVBoxLayout
+from PyQt6.QtWidgets import QFileDialog, QMessageBox, QVBoxLayout, QWidget
 
 
 class DashboardHandlers:
@@ -18,11 +18,10 @@ class DashboardHandlers:
             self, "Select Data File", "",
             "Data Files (*.csv *.xlsx *.json);;All Files (*.*)")
 
-        if file_path:
-            if self.data_analyzer.load_data(file_path):
-                self.column_selector.clear()
-                self.column_selector.addItems(self.data_analyzer.data.columns)
-                self.show_basic_stats()
+        if file_path and self.data_analyzer.load_data(file_path):
+            self.column_selector.clear()
+            self.column_selector.addItems(self.data_analyzer.data.columns)
+            self.show_basic_stats()
 
     def perform_analysis(self):
         """Perform selected data analysis"""
@@ -167,7 +166,7 @@ class DashboardHandlers:
             QMessageBox.warning(self, "Error", "Need at least 2 numeric columns for clustering")
             return
 
-        canvas, clusters = self.data_analyzer.perform_clustering(numeric_cols)
+        canvas, _ = self.data_analyzer.perform_clustering(numeric_cols)
         if canvas:
             plot_window = QWidget()
             plot_layout = QVBoxLayout(plot_window)
