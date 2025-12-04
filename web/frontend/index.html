@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Project-AI Frontend</title>
+    <style>
+      :root {
+        font-family: 'Segoe UI', sans-serif;
+        background: #060510;
+        color: #f0f4f8;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(circle at top, #111c44, #04030b 60%);
+      }
+
+      main {
+        width: min(900px, 90vw);
+        padding: 2rem;
+        border-radius: 24px;
+        background: rgba(10, 12, 25, 0.9);
+        box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      h1 {
+        margin-top: 0;
+        font-size: 2.5rem;
+        color: #7af5ff;
+      }
+
+      section {
+        margin-top: 1.5rem;
+      }
+
+      ul {
+        padding-left: 1.2rem;
+      }
+
+      .status {
+        margin-top: 1rem;
+        padding: 1rem;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.05);
+        font-family: 'Courier New', monospace;
+      }
+
+      .status.online {
+        border: 1px solid #1eec93;
+      }
+
+      .status.offline {
+        border: 1px solid #ff728c;
+      }
+
+      footer {
+        font-size: 0.9rem;
+        color: #a9b4c1;
+        margin-top: 2rem;
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Project-AI Frontend Preview</h1>
+      <p>
+        This page demonstrates the future React/Vite experience for the leather book
+        interface. Every SPA view will load through this entrypoint and pipe its data
+        through the backend APIs so the same AI core powers desktop, web, and mobile.
+      </p>
+
+      <section>
+        <h2>Key Frontend Concepts</h2>
+        <ul>
+          <li>Persona dashboard panels rendered using canvas, charts, and telemetry.</li>
+          <li>Plugin marketplace tiles with status badges and safety ratings.</li>
+          <li>Learning request builder with approval workflow status indicator.</li>
+          <li>Continuous learning cards summarizing facts, usage ideas, and pros/cons.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Backend Connectivity</h2>
+        <p>
+          The Flask backend exposes a minimal `/api/status` endpoint that can be polled
+          during development. The next step is to wire the React frontend to real-time
+          WebSocket updates coming from the persona controller.
+        </p>
+        <div id="status" class="status offline">Fetching status...</div>
+      </section>
+
+      <footer>Built for Project-AI · <span id="year"></span></footer>
+    </main>
+    <script>
+      document.getElementById('year').textContent = new Date().getFullYear();
+      const statusEl = document.getElementById('status');
+
+      async function fetchStatus() {
+        try {
+          const response = await fetch('/api/status');
+          if (!response.ok) throw new Error('network');
+          const payload = await response.json();
+          statusEl.textContent = `${payload.component} is ${payload.status}`;
+          statusEl.classList.remove('offline');
+          statusEl.classList.add('online');
+        } catch (error) {
+          statusEl.textContent = 'Backend unavailable (Flask not running)';
+          statusEl.classList.remove('online');
+          statusEl.classList.add('offline');
+        }
+      }
+
+      fetchStatus();
+      setInterval(fetchStatus, 5000);
+    </script>
+  </body>
+</html>

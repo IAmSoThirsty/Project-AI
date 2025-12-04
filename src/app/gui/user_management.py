@@ -5,24 +5,29 @@ moderate UI to manage users (create, delete, set roles, approve accounts,
 reset passwords, and set a profile picture path).
 """
 
+import os
+
+from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QHBoxLayout,
-    QListWidget,
-    QPushButton,
-    QLabel,
-    QLineEdit,
-    QMessageBox,
-    QFileDialog,
+    QCheckBox,
     QComboBox,
     QDialog,
     QDialogButtonBox,
-    QCheckBox,
+    QFileDialog,
+    QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QListWidget,
+    QMessageBox,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
 )
-from PyQt6.QtGui import QPixmap
+
 from app.core.user_manager import UserManager
-import os
+
+# UI Constants
+SELECT_USER_FIRST_MSG = "Select a user first"
 
 
 class UserManagementWidget(QWidget):
@@ -33,12 +38,12 @@ class UserManagementWidget(QWidget):
         self.refresh_user_list()
 
     def _build_ui(self):
-        self.layout = QVBoxLayout(self)
+        self.main_layout = QVBoxLayout(self)
 
         self.user_list = QListWidget()
         self.user_list.currentTextChanged.connect(self.on_user_selected)
-        self.layout.addWidget(QLabel("Users:"))
-        self.layout.addWidget(self.user_list)
+        self.main_layout.addWidget(QLabel("Users:"))
+        self.main_layout.addWidget(self.user_list)
 
         # Buttons row
         btn_row = QHBoxLayout()
@@ -58,11 +63,12 @@ class UserManagementWidget(QWidget):
         self.reset_pw_btn.clicked.connect(self.reset_password)
         btn_row.addWidget(self.reset_pw_btn)
 
-        self.layout.addLayout(btn_row)
+        self.main_layout.addLayout(btn_row)
 
         # Details area
-        self.details_label = QLabel("Select a user to see details and edit settings.")
-        self.layout.addWidget(self.details_label)
+        details_text = "Select a user to see details and edit settings."
+        self.details_label = QLabel(details_text)
+        self.main_layout.addWidget(self.details_label)
 
         form_row = QHBoxLayout()
         left = QVBoxLayout()
@@ -102,7 +108,7 @@ class UserManagementWidget(QWidget):
         right.addWidget(self.save_btn)
 
         form_row.addLayout(right)
-        self.layout.addLayout(form_row)
+        self.main_layout.addLayout(form_row)
 
     def refresh_user_list(self):
         self.user_list.clear()
@@ -116,8 +122,8 @@ class UserManagementWidget(QWidget):
             return
         data = self.um.get_user_data(username)
         self.username_field.setText(username)
-        self.role_combo.setCurrentText(data.get('role', 'user'))
-        self.pic_field.setText(data.get('profile_picture', ''))
+        self.role_combo.setCurrentText(data.get("role", "user"))
+        self.pic_field.setText(data.get("profile_picture", ""))
         self.approved_label.setText(f"Approved: {data.get('approved', False)}")
 
     def browse_picture(self):
@@ -135,26 +141,38 @@ class UserManagementWidget(QWidget):
 
     def create_user_dialog(self):
         dlg = CreateUserDialog(parent=self)
-        if dlg.exec() == QDialog.Accepted:
+        if dlg.exec() == QDialog.DialogCode.Accepted:
             uname, pw, approved, role, pic = dlg.get_values()
             success = self.um.create_user(uname, pw)
             if success:
-                self.um.update_user(uname, approved=approved, role=role, profile_picture=pic)
-                QMessageBox.information(self, "Created", f"User '{uname}' created.")
+                self.um.update_user(
+                    uname,
+                    approved=approved,
+                    role=role,
+                    profile_picture=pic,
+                )
+                created_msg = f"User '{uname}' created."
+                QMessageBox.information(self, "Created", created_msg)
                 self.refresh_user_list()
             else:
                 QMessageBox.warning(self, "Exists", "User already exists")
 
     def delete_user(self):
-        username = self.user_list.currentItem().text() if self.user_list.currentItem() else None
+        item = self.user_list.currentItem()
+        username = item.text() if item else None
         if not username:
             QMessageBox.warning(self, "Delete", "Select a user to delete")
             return
         if username == self.um.current_user:
-            QMessageBox.warning(self, "Delete", "Cannot delete currently logged-in user")
+            QMessageBox.warning(
+                self, "Delete", "Cannot delete currently logged-in user"
+            )
             return
-        confirm_msg = f"Delete user '{username}'? This is irreversible."
-        confirm = QMessageBox.question(self, "Confirm Delete", confirm_msg)
+        confirm = QMessageBox.question(
+            self,
+            "Confirm Delete",
+            f"Delete user '{username}'? This is irreversible.",
+        )
         if confirm == QMessageBox.StandardButton.Yes:
             ok = self.um.delete_user(username)
             if ok:
@@ -164,23 +182,26 @@ class UserManagementWidget(QWidget):
                 QMessageBox.warning(self, "Error", "Failed to delete user")
 
     def toggle_approve(self):
-        username = self.user_list.currentItem().text() if self.user_list.currentItem() else None
+        item = self.user_list.currentItem()
+        username = item.text() if item else None
         if not username:
-            QMessageBox.warning(self, "Approve", "Select a user first")
+            QMessageBox.warning(self, "Approve", SELECT_USER_FIRST_MSG)
             return
         data = self.um.users.get(username, {})
-        new = not data.get('approved', False)
+        new = not data.get("approved", False)
         self.um.update_user(username, approved=new)
         self.on_user_selected(username)
-        QMessageBox.information(self, "Updated", f"User '{username}' approved set to {new}")
+        updated_msg = f"User '{username}' approved set to {new}"
+        QMessageBox.information(self, "Updated", updated_msg)
 
     def reset_password(self):
-        username = self.user_list.currentItem().text() if self.user_list.currentItem() else None
+        item = self.user_list.currentItem()
+        username = item.text() if item else None
         if not username:
-            QMessageBox.warning(self, "Reset Password", "Select a user first")
+            QMessageBox.warning(self, "Reset Password", SELECT_USER_FIRST_MSG)
             return
         dlg = ResetPasswordDialog(username, parent=self)
-        if dlg.exec() == QDialog.Accepted:
+        if dlg.exec() == QDialog.DialogCode.Accepted:
             newpw = dlg.get_password()
             if newpw:
                 self.um.set_password(username, newpw)
@@ -189,14 +210,24 @@ class UserManagementWidget(QWidget):
     def save_changes(self):
         username = self.username_field.text().strip()
         if not username:
-            QMessageBox.warning(self, "Save", "Username cannot be empty")
+            QMessageBox.warning(
+                self,
+                "Save",
+                "Username cannot be empty",
+            )
             return
         role = self.role_combo.currentText()
         pic = self.pic_field.text().strip()
-        approved = True if self.approved_label.text().endswith('True') else False
-        selected_user = self.user_list.currentItem().text()
+        approved = self.approved_label.text().endswith("True")
+        current_item = self.user_list.currentItem()
+        if current_item is None:
+            QMessageBox.warning(self, "Save", "Select a user first")
+            return
         ok = self.um.update_user(
-            selected_user, role=role, profile_picture=pic, approved=approved
+            current_item.text(),
+            role=role,
+            profile_picture=pic,
+            approved=approved,
         )
         if ok:
             QMessageBox.information(self, "Saved", "User updated")
@@ -261,7 +292,7 @@ class CreateUserDialog(QDialog):
             self.password.text(),
             self.approved_cb.isChecked(),
             self.role.currentText(),
-            self.pic_field_d.text().strip()
+            self.pic_field_d.text().strip(),
         )
 
 

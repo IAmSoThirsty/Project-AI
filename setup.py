@@ -1,30 +1,18 @@
-from setuptools import setup, find_packages
+"""
+Setup configuration for Project-AI.
+
+This setup.py uses configuration from pyproject.toml.
+For Python 3.11+, use: pip install -e .
+"""
+
+from setuptools import find_packages, setup
 
 setup(
-    name="ai-desktop-assistant",
-    version="0.1.0",
     packages=find_packages(where="src"),
     package_dir={"": "src"},
-    install_requires=[
-        'PyQt6',
-        'openai',
-        'requests',
-        'python-dotenv',
-        'cryptography',
-        'geopy',
-        'PyPDF2',
-        'numpy',
-        'pandas',
-        'matplotlib',
-        'scikit-learn',
-        'passlib'
-    ],
     entry_points={
         'console_scripts': [
-            'ai-assistant=app.main:main',
+            'project-ai=app.main:main',
         ],
     },
-    author="Your Name",
-    description="AI Desktop Assistant with various features",
-    python_requires=">=3.8",
 )
