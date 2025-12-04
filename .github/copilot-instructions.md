@@ -1,298 +1,317 @@
-# Copilot Instructions for Project-AI
-
-This document provides repository-specific instructions for GitHub Copilot to generate code that aligns with this project's conventions, architecture, and best practices.
+# Project-AI Copilot Instructions
 
 ## Project Overview
-
-Project-AI is a Python desktop AI assistant application built with PyQt6. It provides features including user management, AI chat/tutoring, learning path generation, data analysis, security resources, location tracking, emergency alerts, AI image generation, and web interface.
+Project-AI is a sophisticated Python desktop application providing a self-aware AI assistant with ethical decision-making (Asimov's Laws), autonomous learning, and a PyQt6 "Leather Book" UI. Features include plugin system, command overrides, memory expansion, and a web version (React + Flask).
 
 ## Architecture
 
-### Directory Structure
-
+### Core Structure
 ```
 src/app/
-├── main.py               # Application entrypoint
-├── core/                 # Business logic (no GUI dependencies)
-│   ├── ai_systems.py
-│   ├── command_override.py
-│   ├── continuous_learning.py
-│   ├── data_analysis.py
-│   ├── emergency_alert.py
-│   ├── image_generator.py
-│   ├── intelligence_engine.py
-│   ├── intent_detection.py
-│   ├── learning_paths.py
-│   ├── location_tracker.py
-│   ├── security_resources.py
-│   └── user_manager.py
-├── gui/                  # PyQt6 GUI components
-│   ├── dashboard.py
-│   ├── dashboard_handlers.py
-│   ├── dashboard_utils.py
-│   ├── image_generation.py
-│   ├── leather_book_dashboard.py
-│   ├── leather_book_interface.py
-│   ├── leather_book_panels.py
-│   ├── login.py
-│   ├── persona_panel.py
-│   ├── settings_dialog.py
-│   ├── styles.qss
-│   ├── styles_dark.qss
-│   ├── user_management.py
-│   └── assets/           # SVG icons and images
-tests/                    # pytest test files (173+ tests)
-tools/                    # Utility scripts
-scripts/                  # Developer and deployment scripts
-docs/                     # Documentation (overview/ and notes/)
-web/                      # Flask web interface
-android/                  # Android app components
-examples/                 # Example code and usage
+├── main.py                    # Entry point: LeatherBookInterface
+├── core/                      # 11 business logic modules
+│   ├── ai_systems.py         # 6 AI systems (470 lines: FourLaws, Persona, Memory, Learning, Plugin, Override)
+│   ├── user_manager.py       # User auth, bcrypt hashing, JSON persistence
+│   ├── command_override.py   # Extended master password system with 10+ safety protocols
+│   ├── learning_paths.py     # OpenAI-powered learning path generation
+│   ├── data_analysis.py      # CSV/XLSX/JSON analysis, K-means clustering
+│   ├── security_resources.py # GitHub API integration, CTF/security repos
+│   ├── location_tracker.py   # IP geolocation, GPS, encrypted history (Fernet)
+│   ├── emergency_alert.py    # Emergency contact system with email alerts
+│   ├── intelligence_engine.py # OpenAI chat integration
+│   ├── intent_detection.py   # Scikit-learn ML intent classifier
+│   └── image_generator.py    # Image generation (HF Stable Diffusion, OpenAI DALL-E)
+├── agents/                    # 4 AI agent modules (NOT plugins)
+│   ├── oversight.py          # Action safety validation
+│   ├── planner.py            # Task decomposition
+│   ├── validator.py          # Input/output validation
+│   └── explainability.py     # Decision explanations
+└── gui/                       # 6 PyQt6 UI modules
+    ├── leather_book_interface.py   # Main window (659 lines)
+    ├── leather_book_dashboard.py   # 6-zone dashboard (608 lines)
+    ├── persona_panel.py            # 4-tab AI configuration
+    ├── dashboard_handlers.py       # Event handler methods
+    ├── dashboard_utils.py          # Error handling, logging, validation
+    └── image_generation.py         # Image gen UI (dual-page layout, 450 lines)
 ```
 
-### Core Principles
+### Six Core AI Systems (`src/app/core/ai_systems.py`)
+All six systems are implemented in a single file for cohesion:
 
-- **Separation of Concerns**: Keep PyQt6 GUI code in `src/app/gui/` and business logic in `src/app/core/`. GUI modules should import from core, not vice versa.
-- **No Circular Imports**: Avoid circular dependencies between modules.
+1. **FourLaws**: Immutable ethics framework validating actions against hierarchical rules
+2. **AIPersona**: 8 personality traits, mood tracking, persistent state in `data/ai_persona/state.json`
+3. **MemoryExpansionSystem**: Conversation logging, knowledge base (6 categories), JSON persistence
+4. **LearningRequestManager**: Human-in-the-loop approval workflow, Black Vault for denied content
+5. **CommandOverride**: SHA-256 password protection, audit logging (lines 400-470)
+6. **PluginManager**: Simple plugin system with enable/disable (lines 340-395)
 
-## Code Style and Conventions
+Note: `command_override.py` contains extended override system with 10+ safety protocols.
 
-### Python Style
+### Data Persistence Pattern
+All systems use JSON for persistence in `data/` directory:
+- `users.json` - User profiles with bcrypt password hashes
+- `data/ai_persona/state.json` - Personality, mood, interaction counts
+- `data/memory/knowledge.json` - Categorized knowledge base
+- `data/learning_requests/requests.json` - Learning requests with status tracking
+- `data/command_override_config.json` - Override states and audit logs
 
-- Follow PEP 8 guidelines
-- Use descriptive variable names instead of single-letter or abbreviated names:
-  - `user_manager` instead of `um`
-  - `username` instead of `uname`
-  - `user_data` instead of `udata`
-- Use descriptive exception variable names that indicate context:
-  - `encryption_error` instead of `e`
-  - `decryption_error`, `ip_lookup_error`, etc.
-- Use type hints where appropriate
+**Critical**: Always call `_save_state()` or `save_users()` after modifying state to ensure persistence.
 
-### Line Length
+## Development Workflows
 
-- Maximum line length: 100 characters
-- Extract long strings (especially for QMessageBox) into variables before calling functions:
+### Running the Application
+```powershell
+# Desktop (PyQt6)
+python -m src.app.main
+
+# Tests (14 tests in tests/)
+pytest -v
+npm run test:python
+
+# Linting (ruff configured in pyproject.toml)
+ruff check .
+ruff check . --fix
+
+# Docker (see docker-compose.yml)
+docker-compose up
+```
+
+### Testing Strategy
+All core systems accept `data_dir` parameter for isolated testing:
 
 ```python
-# Good
-error_message = "This is a long error message that would exceed the line limit"
-QMessageBox.warning(self, "Error", error_message)
-
-# Avoid
-QMessageBox.warning(self, "Error", "This is a long error message that would exceed the line limit")
+@pytest.fixture
+def persona(self):
+    with tempfile.TemporaryDirectory() as tmpdir:
+        yield AIPersona(data_dir=tmpdir)
 ```
 
-## Security Practices
+Pattern: Use context managers with `tempfile.TemporaryDirectory()` to avoid test data leakage.
+Tests: 14 tests across 6 test classes in `tests/test_ai_systems.py`, `tests/test_user_manager.py`
+Coverage: Each system has 2-4 tests validating core functionality (initialization, state changes, persistence)
 
-### Password Handling
+### GUI Development
+**Leather Book UI** uses dual-page layout:
+- **Left (Tron)**: Login page with `TRON_GREEN = "#00ff00"`, `TRON_CYAN = "#00ffff"`
+- **Right**: Dashboard with 6 zones (stats, actions, AI head, chat, response)
 
-- **Never store plaintext passwords**
-- Use passlib's CryptContext with `pbkdf2_sha256` as primary scheme and `bcrypt` for backward compatibility:
+Key classes:
+- `LeatherBookInterface(QMainWindow)` - Main window with page switching
+- `LeatherBookDashboard(QWidget)` - 6-zone dashboard
+- `PersonaPanel(QWidget)` - 4-tab AI configuration UI
 
+**Signal pattern**: Use PyQt6 signals for inter-component communication:
 ```python
-from passlib.context import CryptContext
-
-pwd_context = CryptContext(schemes=["pbkdf2_sha256", "bcrypt"], deprecated="auto")
-
-# Hash a password
-password_hash = pwd_context.hash(password)
-
-# Verify a password
-is_valid = pwd_context.verify(password, stored_hash)
+user_logged_in = pyqtSignal(str)  # In LeatherBookInterface
+send_message = pyqtSignal(str)     # In UserChatPanel
 ```
 
-### Encryption
+## Project-Specific Conventions
 
-- Use Fernet encryption (from `cryptography` library) for sensitive data
-- Load encryption key from `FERNET_KEY` environment variable
-- Example pattern:
-
+### Error Handling Pattern
+All core systems use Python logging:
 ```python
-import os
-from cryptography.fernet import Fernet
-
-env_key = os.getenv('FERNET_KEY')
-if env_key:
-    cipher_suite = Fernet(env_key.encode())
-else:
-    cipher_suite = Fernet(Fernet.generate_key())
-```
-
-### Environment Variables
-
-Required/recommended environment variables:
-- `OPENAI_API_KEY` - OpenAI API key for AI features
-- `SMTP_USERNAME` - Email for sending emergency alerts
-- `SMTP_PASSWORD` - SMTP account password
-- `FERNET_KEY` - Base64-encoded Fernet key for encryption
-- `DATA_DIR` - Optional data directory path
-- `LOG_DIR` - Optional log directory path
-
-**Never commit secrets or API keys to source control.**
-
-## Data Storage Patterns
-
-### Per-User Data
-
-Use username-prefixed JSON files for per-user data storage:
-
-```python
-# Pattern: {feature}_{username}.json
-f"favorites_{username}.json"
-f"history_{username}.json"
-f"contacts_{username}.json"
-```
-
-### File Operations
-
-- Use `encoding='utf-8'` when opening files
-- Handle file not found gracefully
-- Create parent directories if needed
-
-## Testing
-
-### Framework
-
-- Use pytest for all tests
-- Tests are located in the `tests/` directory
-- Run tests with: `pytest -q` or `npm run test:python`
-
-### Test Structure
-
-Follow the Arrange-Act-Assert pattern:
-
-```python
-def test_feature_does_something(tmp_path):
-    # Arrange - set up test data
-    test_file = tmp_path / "test.json"
-    
-    # Act - perform the action
-    result = function_under_test()
-    
-    # Assert - verify the outcome
-    assert result == expected_value
-```
-
-### File Operations in Tests
-
-Use pytest's `tmp_path` fixture for file operations to ensure test isolation:
-
-```python
-def test_with_files(tmp_path):
-    test_file = tmp_path / "users.json"
-    # ... test code ...
-```
-
-## Dependencies
-
-### Installing Dependencies
-
-```bash
-pip install -e .
-# or
-pip install -r requirements.txt
-```
-
-Dependencies are defined in `pyproject.toml` and `requirements.txt` and include:
-- PyQt6 (GUI framework)
-- openai (AI/LLM integration)
-- requests (HTTP requests)
-- python-dotenv (environment variables)
-- cryptography (Fernet encryption)
-- geopy (geocoding)
-- PyPDF2 (PDF handling)
-- numpy, pandas, matplotlib (data processing and visualization)
-- scikit-learn (machine learning)
-- passlib (password hashing)
-- Flask (web interface)
-- Pillow (image processing)
-
-### Adding New Dependencies
-
-When adding new dependencies:
-1. Add to `pyproject.toml` or `requirements.txt`
-2. Document the purpose in commit message
-3. Prefer well-maintained, security-audited packages
-
-## GUI Development (PyQt6)
-
-### Widget Patterns
-
-- Create custom widgets by subclassing PyQt6 widgets
-- Connect signals to slots for event handling
-- Use layouts (QVBoxLayout, QHBoxLayout, QGridLayout) for responsive design
-
-### Error Handling in GUI
-
-Show user-friendly error messages:
-
-```python
+import logging
+logger = logging.getLogger(__name__)
 try:
-    # operation that might fail
-except SpecificException as operation_error:
-    error_msg = f"Operation failed: {operation_error}"
-    QMessageBox.warning(self, "Error", error_msg)
+    # operation
+except Exception as e:
+    logger.error(f"Error description: {e}")
 ```
 
-## Common Patterns
+### State Validation Pattern
+AI systems validate actions through `FourLaws.validate_action(action, context)` before execution:
+```python
+is_allowed, reason = FourLaws.validate_action(
+    "Delete cache",
+    context={"is_user_order": True, "endangers_humanity": False}
+)
+```
 
-### Loading Environment Variables
+### Password Security
+- Use `bcrypt` for password hashing (see `UserManager._hash_and_store_password`)
+- `CommandOverrideSystem` uses SHA-256 for master password (legacy, consider bcrypt)
+- Fernet encryption for sensitive data (location history, cloud sync)
 
+### Import Organization
+Follow ruff-enforced order (pyproject.toml configures isort):
+1. Standard library
+2. Third-party (PyQt6, scikit-learn, openai, etc.)
+3. Local modules (`from app.core import ...`)
+
+## Integration Points
+
+### OpenAI Integration
+API key via environment variable:
 ```python
 from dotenv import load_dotenv
-
-load_dotenv()  # Call at application startup
+load_dotenv()  # Loads OPENAI_API_KEY from .env
 ```
+Used in: `learning_paths.py`, `intelligence_engine.py`, `image_generator.py`
 
-### Logging
+### Image Generation System
+Dual backend support with content filtering and style presets:
 
-- Use Python's built-in `logging` module
-- Configure appropriate log levels
-- Store logs in `LOG_DIR` if specified
+**Core Module** (`src/app/core/image_generator.py`):
+- `ImageGenerator` class with async generation
+- Backends: Hugging Face Stable Diffusion 2.1 (`stabilityai/stable-diffusion-2-1`), OpenAI DALL-E 3
+- Content filtering: 15 blocked keywords, automatic safety negative prompts
+- Style presets: 10 options (photorealistic, digital_art, oil_painting, watercolor, anime, sketch, abstract, cyberpunk, fantasy, minimalist)
+- Generation history tracking with JSON persistence
+- Methods: `generate()`, `check_content_filter()`, `generate_with_huggingface()`, `generate_with_openai()`
 
-## CI/CD
+**GUI Module** (`src/app/gui/image_generation.py`):
+- Dual-page layout: Left (Tron-themed prompt input) + Right (image display)
+- `ImageGenerationWorker`: QThread for async generation (prevents UI blocking during 20-60s generation)
+- `ImageGenerationLeftPanel`: Prompt input, style selector, size selector, backend choice, generate button
+- `ImageGenerationRightPanel`: Image display with zoom controls, metadata, save/copy buttons
+- Signal-based communication: `image_generated.emit(image_path, metadata)`
 
-### Linting
+**Dashboard Integration**:
+- "🎨 GENERATE IMAGES" button in `ProactiveActionsPanel`
+- Signal: `actions_panel.image_gen_requested.connect(switch_to_image_generation)`
+- Navigation: `switch_to_image_generation()` adds interface to page 2, `switch_to_dashboard()` returns to page 1
 
-- Python: Use ruff (`ruff check .`) or flake8 (`flake8 .`)
-- Configuration in `pyproject.toml` and `.flake8`
-- Run linting before committing
-
-### Running Tests
-
+**Environment Setup**:
 ```bash
-# Python tests
-pytest -q
-
-# Or via npm script
-npm run test:python
+# Required in .env
+HUGGINGFACE_API_KEY=hf_...  # From https://huggingface.co/settings/tokens
+OPENAI_API_KEY=sk-...        # For DALL-E 3 backend
 ```
 
-### Test Coverage
+**Content Safety Pattern**:
+```python
+is_safe, reason = generator.check_content_filter(prompt)
+if not is_safe:
+    return None, f"Content filter: {reason}"
+```
 
-- Current coverage: ~97% across all modules
-- Total tests: 173+ passing tests
+### Web Version Architecture
+**Note**: Web version is in development - desktop is production-ready.
 
-## Common Tasks
+- **Backend**: Flask API wrapping core (`web/backend/`)
+- **Frontend**: React 18 + Vite, Zustand state management (`web/frontend/`)
+- **Port Separation**: Backend (5000), Frontend (3000)
+- **Deployment**: Docker Compose with PostgreSQL (see `web/DEPLOYMENT.md`)
 
-### Creating a New Core Module
+Switching contexts:
+- Desktop: `python -m src.app.main` (PyQt6)
+- Web backend: `cd web/backend && flask run`
+- Web frontend: `cd web/frontend && npm run dev`
 
-1. Create file in `src/app/core/`
-2. Add necessary imports
-3. Implement class or functions
-4. Add corresponding tests in `tests/`
+### AI Agent System
+Four specialized agents in `src/app/agents/`:
+- `oversight.py` - Action oversight and safety validation
+- `planner.py` - Task decomposition and planning
+- `validator.py` - Input/output validation
+- `explainability.py` - Decision explanation generation
 
-### Creating a New GUI Component
+Agents are NOT the same as plugins. Plugin system is simpler (enable/disable only).
 
-1. Create file in `src/app/gui/`
-2. Import from core modules as needed
-3. Subclass appropriate PyQt6 widget
-4. Integrate with dashboard or other parent components
+## Critical Gotchas
 
-### Adding a New Feature
+1. **Module imports**: ALWAYS use `python -m src.app.main` NOT `python src/app/main.py`
+   - Reason: PYTHONPATH must include `src/` for imports like `from app.core import ...`
+   - Tests also require: `pytest` (auto-discovers from project root)
 
-1. Implement business logic in `src/app/core/`
-2. Create GUI components in `src/app/gui/`
-3. Add tests for core logic
-4. Update documentation if needed
+2. **Data directory creation**: Every system constructor must call:
+   ```python
+   os.makedirs(data_dir, exist_ok=True)
+   ```
+   Without this, JSON persistence will fail silently in new installations.
+
+3. **PyQt6 threading**: NEVER use `threading.Thread` in GUI code
+   - Correct: `QTimer.singleShot(1000, callback)` for delays
+   - Correct: `pyqtSignal` for cross-thread communication
+   - GUI updates MUST occur on main thread
+
+4. **State persistence**: Call `_save_state()` or `save_users()` after EVERY state modification
+   - Systems persist to JSON - forgetting this loses user data
+   - Pattern in `ai_systems.py`: all mutating methods call `_save_state()` before returning
+
+5. **Black Vault fingerprinting**: SHA-256 hash content before checking vault
+   ```python
+   content_hash = hashlib.sha256(content.encode()).hexdigest()
+   if content_hash in manager.black_vault:
+       return  # Content is forbidden
+   ```
+
+6. **Password security**: Different systems use different hashing
+   - `UserManager`: bcrypt (secure, salted)
+   - `CommandOverride`: SHA-256 (legacy, consider upgrading)
+
+7. **Codacy integration**: After file edits, MUST run `codacy_cli_analyze`
+   - See `.github/instructions/codacy.instructions.md` for workflow
+
+## Deployment Workflows
+
+### Development (Desktop)
+```powershell
+# Quick launch (Windows)
+.\launch-desktop.bat
+# or
+.\launch-desktop.ps1
+
+# Manual launch
+python -m src.app.main
+```
+
+### Production (Docker)
+```bash
+# Desktop in container
+docker-compose up
+
+# Multi-stage build (optimized)
+docker build -t project-ai:latest .
+```
+
+Dockerfile uses:
+- Multi-stage build (builder + runtime)
+- Python 3.11-slim base
+- Health checks every 30s
+- Volume mounts for `data/` and `logs/`
+
+### Web Deployment
+```bash
+# Local development
+cd web/backend && flask run
+cd web/frontend && npm run dev
+
+# Production (Docker Compose)
+docker-compose -f web/docker-compose.yml up -d
+```
+
+Cloud options: Vercel (frontend), Railway/Heroku (backend) - see `web/DEPLOYMENT.md`
+
+## Key Documentation Files
+- `PROGRAM_SUMMARY.md` - Complete architecture (600+ lines)
+- `DEVELOPER_QUICK_REFERENCE.md` - GUI component API reference
+- `AI_PERSONA_IMPLEMENTATION.md` - Persona system details
+- `LEARNING_REQUEST_IMPLEMENTATION.md` - Learning workflow and Black Vault
+- `DESKTOP_APP_QUICKSTART.md` - Installation and launch methods
+- `.github/instructions/ARCHITECTURE_QUICK_REF.md` - Visual diagrams and data flows
+- `.github/instructions/README.md` - Instructions index and navigation guide
+
+## Environment Setup
+Required in `.env` (root directory):
+```bash
+OPENAI_API_KEY=sk-...           # For GPT models and DALL-E 3
+HUGGINGFACE_API_KEY=hf_...      # For Stable Diffusion 2.1 (get from https://huggingface.co/settings/tokens)
+FERNET_KEY=<generated_key>      # For encryption
+SMTP_USERNAME=<optional>        # For email alerts
+SMTP_PASSWORD=<optional>        # For email alerts
+```
+
+Generate Fernet key:
+```python
+from cryptography.fernet import Fernet
+print(Fernet.generate_key().decode())
+```
+
+API Key Setup:
+- **OpenAI**: Sign up at https://platform.openai.com/api-keys
+- **Hugging Face**: Create account and get token at https://huggingface.co/settings/tokens
+
+Dependencies:
+- Python: See `pyproject.toml` (PyQt6, scikit-learn, openai, cryptography, requests, etc.)
+- Node.js: See `package.json` (test runners only, not required for desktop)

@@ -1,0 +1,25 @@
+# Include project metadata
+include README.md
+include LICENSE
+include pyproject.toml
+include setup.py
+include setup.cfg
+
+# Include package data
+recursive-include src *.qss
+recursive-include src *.json
+recursive-include src *.yaml
+recursive-include src *.yml
+
+# Include documentation
+recursive-include docs *
+
+# Include examples
+recursive-include examples *
+
+# Exclude unnecessary files
+global-exclude __pycache__
+global-exclude *.py[cod]
+global-exclude .pytest_cache
+global-exclude .git
+global-exclude .github

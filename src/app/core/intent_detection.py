@@ -2,19 +2,23 @@
 Intent detection system using scikit-learn for text classification.
 """
 
+import os
+
+import joblib
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import SGDClassifier
 from sklearn.pipeline import Pipeline
-import joblib
-import os
 
 
 class IntentDetector:
     def __init__(self):
-        self.pipeline = Pipeline([
-            ('tfidf', TfidfVectorizer()),
-            ('clf', SGDClassifier(loss='modified_huber'))
-        ])
+        self.pipeline = Pipeline(
+            [
+                ("tfidf", TfidfVectorizer()),
+                ("clf", SGDClassifier(loss="modified_huber")),
+            ],
+            memory=None
+        )
         self.trained = False
 
     def train(self, texts, labels):
