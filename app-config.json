@@ -1,0 +1,41 @@
+{
+  "app": {
+    "name": "Project-AI",
+    "version": "1.0.0",
+    "description": "AI Dashboard with Command Override and Memory Expansion",
+    "author": "Project-AI Team",
+    "license": "MIT",
+    "homepage": "https://github.com/IAmSoThirsty/Project-AI"
+  },
+  "desktop": {
+    "name": "Project-AI",
+    "icon": "assets/app-icon.ico",
+    "executable": "launch-desktop.bat",
+    "description": "Advanced AI Assistant with Command Override and Memory Expansion Systems",
+    "categories": ["Utility", "Application"],
+    "keywords": ["AI", "Assistant", "Dashboard", "Memory", "Control"]
+  },
+  "system": {
+    "python_minimum_version": "3.11",
+    "platform": "windows",
+    "requires_admin": false,
+    "auto_start_enabled": false,
+    "start_menu_folder": "Project-AI"
+  },
+  "features": {
+    "command_override": true,
+    "memory_expansion": true,
+    "autonomous_learning": true,
+    "security_audit_logging": true,
+    "location_tracking": true,
+    "emergency_alerts": true
+  },
+  "shortcuts": {
+    "desktop": {
+      "name": "Project-AI Dashboard",
+      "target": "launch-desktop.bat",
+      "icon": "assets/app-icon.ico",
+      "arguments": ""
+    }
+  }
+}

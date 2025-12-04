@@ -1,0 +1,46 @@
+name: Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    # To enable deployment to a remote server:
+    # 1. Add repository secrets: SSH (private key), HOST, PORT, USER
+    # 2. Uncomment the deployment steps below
+    # 3. Update the deploy commands for your infrastructure
+    
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Example deployment configuration:
+      #
+      # - name: Setup SSH (uses secrets)
+      #   uses: LuisEnMarroquin/setup-ssh-action@v3.0.0
+      #   if: ${{ secrets.SSH != '' && secrets.HOST != '' }}
+      #   with:
+      #     SSHKEY: ${{ secrets.SSH }}
+      #     ORIGIN: ${{ secrets.HOST }}
+      #     NAME: production
+      #     PORT: ${{ secrets.PORT || '22' }}
+      #     USER: ${{ secrets.USER || 'root' }}
+      #
+      # - name: Test GitHub SSH auth
+      #   run: ssh -T git@github.com || true
+      #
+      # - name: Test remote host
+      #   if: ${{ secrets.HOST != '' }}
+      #   run: ssh -p ${{ secrets.PORT || '22' }} ${{ secrets.USER || 'root' }}@${{ secrets.HOST }} ls --help
+      #
+      # - name: Deploy to remote server
+      #   if: ${{ secrets.HOST != '' }}
+      #   run: |
+      #     ssh -p ${{ secrets.PORT || '22' }} ${{ secrets.USER || 'root' }}@${{ secrets.HOST }} << 'EOF'
+      #     cd /path/to/app
+      #     git pull origin main
+      #     # Add your deployment commands here
+      #     EOF

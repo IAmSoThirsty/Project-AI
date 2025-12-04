@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  project-ai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: project-ai-dev
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=/app/src
+      # Override with .env file values
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - FERNET_KEY=${FERNET_KEY}
+      - DATA_DIR=/app/data
+      - LOG_DIR=/app/logs
+    volumes:
+      - ./src:/app/src
+      - ./data:/app/data
+      - ./logs:/app/logs
+    ports:
+      # Adjust if your app exposes web ports
+      - "5000:5000"
+      - "8000:8000"
+    # Uncomment for interactive terminal
+    # stdin_open: true
+    # tty: true
+    env_file:
+      - .env
+    networks:
+      - project-ai-network
+    restart: unless-stopped
+
+networks:
+  project-ai-network:
+    driver: bridge
