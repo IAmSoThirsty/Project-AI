@@ -1,0 +1,3 @@
+[submodule "external/Cerberus"]
+	path = external/Cerberus
+	url = https://github.com/IAmSoThirsty/Cerberus
