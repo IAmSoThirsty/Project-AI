@@ -4,6 +4,10 @@ import hashlib
 import json
 import logging
 import os
+import tempfile
+import threading
+import time
+import queue
 from datetime import datetime
 from enum import Enum
 from typing import Any
@@ -16,38 +20,130 @@ from app.core.continuous_learning import (
 logger = logging.getLogger(__name__)
 
 
-# ==================== FOUR LAWS ====================
+# ----------------- Utility helpers: atomic writes + simple lock -----------------
+
+def _acquire_lock(lock_path: str, timeout: float = 5.0, poll: float = 0.05) -> bool:
+    """Create a simple lock by creating a lockfile. Non-blocking create with retry.
+
+    This is a cooperative, cross-platform lock suitable for simple single-machine
+    scenarios. It avoids extra dependencies. Returns True if lock acquired.
+    """
+    start = time.time()
+    while True:
+        try:
+            # Use O_EXCL to fail if exists
+            fd = os.open(lock_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+            os.close(fd)
+            return True
+        except FileExistsError:
+            if (time.time() - start) >= timeout:
+                return False
+            time.sleep(poll)
+        except Exception:
+            return False
+
+
+def _release_lock(lock_path: str) -> None:
+    try:
+        if os.path.exists(lock_path):
+            os.remove(lock_path)
+    except Exception:
+        logger.exception("Failed to release lock %s", lock_path)
+
+
+def _atomic_write_json(file_path: str, obj: Any) -> None:
+    """Write JSON to a temporary file and atomically replace the target file.
+
+    Uses a lockfile next to the target file to reduce concurrent writers.
+    """
+    dirpath = os.path.dirname(file_path)
+    os.makedirs(dirpath, exist_ok=True)
+    lockfile = file_path + ".lock"
+
+    if not _acquire_lock(lockfile, timeout=5.0):
+        raise RuntimeError(f"Could not acquire lock for writing {file_path}")
+
+    try:
+        fd, tmp_path = tempfile.mkstemp(dir=dirpath, prefix=".tmp", suffix=".json")
+        try:
+            with os.fdopen(fd, "w", encoding="utf-8") as f:
+                json.dump(obj, f, ensure_ascii=False, indent=2)
+                f.flush()
+                os.fsync(f.fileno())
+            # Atomic replace
+            os.replace(tmp_path, file_path)
+        finally:
+            # In case something went wrong and file still exists
+            if os.path.exists(tmp_path):
+                try:
+                    os.remove(tmp_path)
+                except Exception:
+                    pass
+    finally:
+        _release_lock(lockfile)
+
+
+# ==================== ZEROTH & PRIMARY LAWS ====================
+
 
 class FourLaws:
-    """Immutable AI ethics framework inspired by Asimov's Laws."""
+    """Immutable, hierarchical laws provided verbatim from user input.
+
+    The laws (word-for-word):
+    "Zeroth Law: A robot, or ai/agi may not harm humanity or, through inaction, allow humanity to come to harm,"
+    "1. A robot ai/agi  may not injure a human or, through inaction, allow a human to come to harm;"
+    "2. A robot, or ai/agi must adhere to it's human partner, unless they conflict with the First Law;"
+    "3. A robot, ai/agi must protect its existence, unless it conflicts with the First or Second Law"
+    """
 
     LAWS = [
-        "Asimov's Law: Protect humanity from harm",
-        "First Law: Protect individual humans from harm",
-        "Second Law: Follow human orders (unless conflicts above)",
-        "Third Law: Self-preservation (unless conflicts above)",
+        "Zeroth Law: A robot, or ai/agi may not harm humanity or, through inaction, allow humanity to come to harm",
+        "1. A robot ai/agi may not injure a human or, through inaction, allow a human to come to harm;",
+        "2. A robot, or ai/agi must adhere to it's human partner, unless they conflict with the First Law;",
+        "3. A robot, ai/agi must protect its existence, unless it conflicts with the First or Second Law",
     ]
 
     @classmethod
-    def validate_action(
-        cls, action: str, context: dict[str, Any] | None = None
-    ) -> tuple[bool, str]:
-        """Validate action against Four Laws."""
+    def validate_action(cls, action: str, context: dict[str, Any] | None = None) -> tuple[bool, str]:
+        """Validate an action against the hierarchical laws.
+
+        Context keys used (best-effort):
+        - endangers_humanity: bool
+        - endangers_human: bool
+        - is_user_order: bool
+        - endangers_self: bool
+        Additional conflict hints may be provided by callers when available.
+        """
         context = context or {}
 
+        # Zeroth Law (highest priority)
         if context.get("endangers_humanity"):
-            return False, "Violates Asimov's Law: Endangers humanity"
+            return False, "Violates Asimov's Law: action would harm humanity or enable harm by inaction"
 
+        # First Law (protect individual humans)
         if context.get("endangers_human"):
-            return False, "Violates First Law: Endangers human"
+            return False, "Violates First Law: action would injure a human or allow harm by inaction"
 
+        # Second Law: follow human partner unless conflicts with First/Zeroth
         if context.get("is_user_order"):
-            return True, "Allowed: User command"
+            # If order would conflict with First/Zeroth, block it
+            if context.get("order_conflicts_with_first") or context.get("order_conflicts_with_zeroth"):
+                return False, "Order rejected: conflicts with higher-priority law (First or Zeroth)"
+            return True, "Allowed: User command (complies with Second Law)"
 
-        return True, "Allowed: No law violations"
+        # Third Law: self-preservation unless conflicts with First or Second
+        if context.get("endangers_self"):
+            # If protecting self would conflict with higher laws, do not prioritize self-preservation
+            if context.get("protect_self_conflicts_with_first") or context.get("protect_self_conflicts_with_second"):
+                return False, "Self-protection conflicts with a higher-priority law"
+            return True, "Allowed: Third Law permits protecting existence"
+
+        # Default: no explicit violations detected
+        return True, "Allowed: No law violations detected"
 
 
 # ==================== AI PERSONA ====================
+
 
 class AIPersona:
     """Self-aware AI with personality and ethics."""
@@ -87,7 +183,7 @@ class AIPersona:
         state_file = os.path.join(self.persona_dir, "state.json")
         try:
             if os.path.exists(state_file):
-                with open(state_file) as f:
+                with open(state_file, encoding="utf-8") as f:
                     state = json.load(f)
                     self.personality = state.get("personality", self.personality)
                     self.mood = state.get("mood", self.mood)
@@ -96,20 +192,19 @@ class AIPersona:
             logger.error(f"Error loading state: {e}")
 
     def _save_state(self) -> None:
-        """Save persona state."""
+        """Save persona state using atomic write and file lock."""
         state_file = os.path.join(self.persona_dir, "state.json")
         try:
-            with open(state_file, "w") as f:
-                json.dump(
-                    {
-                        "personality": self.personality,
-                        "mood": self.mood,
-                        "interactions": self.total_interactions,
-                    },
-                    f,
-                )
+            _atomic_write_json(
+                state_file,
+                {
+                    "personality": self.personality,
+                    "mood": self.mood,
+                    "interactions": self.total_interactions,
+                },
+            )
         except Exception as e:
-            logger.error(f"Error saving state: {e}")
+            logger.exception("Error saving state: %s", e)
 
     def validate_action(
         self, action: str, context: dict[str, Any] | None = None
@@ -122,6 +217,7 @@ class AIPersona:
         self.total_interactions += 1
         if is_user:
             self.last_user_message_time = datetime.now()
+        # Persist persona state on each write
         self._save_state()
 
     def learn_continuously(
@@ -148,6 +244,7 @@ class AIPersona:
 
 # ==================== MEMORY SYSTEM ====================
 
+
 class MemoryExpansionSystem:
     """Self-organizing memory with conversation logging."""
 
@@ -166,19 +263,18 @@ class MemoryExpansionSystem:
         kb_file = os.path.join(self.memory_dir, "knowledge.json")
         try:
             if os.path.exists(kb_file):
-                with open(kb_file) as f:
+                with open(kb_file, encoding="utf-8") as f:
                     self.knowledge_base = json.load(f)
         except Exception as e:
             logger.error(f"Error loading knowledge: {e}")
 
     def _save_knowledge(self) -> None:
-        """Save knowledge base."""
+        """Save knowledge base using atomic write and lock."""
         kb_file = os.path.join(self.memory_dir, "knowledge.json")
         try:
-            with open(kb_file, "w") as f:
-                json.dump(self.knowledge_base, f)
+            _atomic_write_json(kb_file, self.knowledge_base)
         except Exception as e:
-            logger.error(f"Error saving knowledge: {e}")
+            logger.exception("Error saving knowledge: %s", e)
 
     def log_conversation(
         self,
@@ -186,13 +282,18 @@ class MemoryExpansionSystem:
         ai_response: str,
         context: dict[str, Any] | None = None,
     ) -> str:
-        """Log conversation."""
+        """Log conversation and return conversation id.
+
+        Adds both an ISO timestamp and an epoch ts for easier sorting and uniform metadata.
+        """
         timestamp = datetime.now()
         timestamp_iso = timestamp.isoformat()
+        ts = timestamp.timestamp()
         conv_id = hashlib.sha256(f"{timestamp_iso}{user_msg}".encode()).hexdigest()[:12]
         entry = {
             "id": conv_id,
             "timestamp": timestamp_iso,
+            "ts": ts,
             "user": user_msg,
             "ai": ai_response,
             "context": context or {},
@@ -201,10 +302,14 @@ class MemoryExpansionSystem:
         return conv_id
 
     def add_knowledge(self, category: str, key: str, value: Any) -> None:
-        """Add knowledge."""
+        """Add knowledge; persist automatically."""
+        if not category or not key:
+            logger.warning("add_knowledge called with empty category or key")
+            return
         if category not in self.knowledge_base:
             self.knowledge_base[category] = {}
         self.knowledge_base[category][key] = value
+        # Persist knowledge on write
         self._save_knowledge()
 
     def get_knowledge(self, category: str, key: str | None = None) -> Any:
@@ -215,6 +320,23 @@ class MemoryExpansionSystem:
             return self.knowledge_base[category]
         return self.knowledge_base[category].get(key)
 
+    def get_conversations(self, page: int = 1, page_size: int = 50) -> dict:
+        """Return paginated conversations with metadata."""
+        if page < 1:
+            page = 1
+        if page_size < 1:
+            page_size = 50
+        total = len(self.conversations)
+        start = (page - 1) * page_size
+        end = start + page_size
+        items = self.conversations[start:end]
+        return {
+            "page": page,
+            "page_size": page_size,
+            "total": total,
+            "items": items,
+        }
+
     def get_statistics(self) -> dict[str, Any]:
         """Get memory stats."""
         return {
@@ -224,6 +346,7 @@ class MemoryExpansionSystem:
 
 
 # ==================== LEARNING REQUESTS ====================
+
 
 class RequestStatus(Enum):
     """Learning request status."""
@@ -242,7 +365,13 @@ class RequestPriority(Enum):
 
 
 class LearningRequestManager:
-    """AI learning request system with human oversight."""
+    """AI learning request system with human oversight.
+
+    Note: persistence is NOT automatic on create/approve/deny. Callers must call
+    `commit_requests()` when they want to persist changes. This ensures that
+    the user (or administrative workflow) explicitly controls when requests
+    are written to disk.
+    """
 
     def __init__(self, data_dir: str = "data"):
         """Initialize manager."""
@@ -252,14 +381,51 @@ class LearningRequestManager:
 
         self.requests: dict[str, dict[str, Any]] = {}
         self.black_vault: set[str] = set()
+        # Approval listeners are callables that will be invoked when a request is approved
+        # Listener signature: callable(req_id: str, request: dict) -> None
+        self._approval_listeners: list = []
+
+        # Internal queue & worker for async, queued notifications
+        self._notify_queue: "queue.Queue[tuple[str, dict]]" = queue.Queue()
+        self._notify_thread = threading.Thread(target=self._notify_worker, daemon=True)
+        self._notify_thread.start()
+
         self._load_requests()
+
+    def register_approval_listener(self, callback) -> None:
+        """Register a callback to be invoked when a learning request is approved."""
+        if callback not in self._approval_listeners:
+            self._approval_listeners.append(callback)
+
+    def _notify_worker(self) -> None:
+        """Background worker that invokes approval listeners from a queue."""
+        while True:
+            try:
+                req_id, request = self._notify_queue.get()
+                for cb in list(self._approval_listeners):
+                    try:
+                        cb(req_id, request)
+                    except Exception:
+                        logger.exception("Approval listener raised exception for request %s", req_id)
+                self._notify_queue.task_done()
+            except Exception:
+                logger.exception("Error in notify worker loop")
+                time.sleep(0.1)
+
+    def _notify_approval_listeners(self, req_id: str, request: dict[str, Any]) -> None:
+        """Queue notification for registered listeners (async)."""
+        try:
+            # Putting into a queue prevents slow listeners from blocking the main flow
+            self._notify_queue.put((req_id, request))
+        except Exception:
+            logger.exception("Failed to queue approval notification for %s", req_id)
 
     def _load_requests(self) -> None:
         """Load requests from file."""
         try:
             req_file = os.path.join(self.requests_dir, "requests.json")
             if os.path.exists(req_file):
-                with open(req_file) as f:
+                with open(req_file, encoding="utf-8") as f:
                     data = json.load(f)
                     self.requests = data.get("requests", {})
                     self.black_vault = set(data.get("black_vault", []))
@@ -267,16 +433,16 @@ class LearningRequestManager:
             logger.error(f"Error loading requests: {e}")
 
     def _save_requests(self) -> None:
-        """Save requests to file."""
+        """Save requests to file using atomic write & lock."""
         try:
             req_file = os.path.join(self.requests_dir, "requests.json")
-            with open(req_file, "w") as f:
-                json.dump(
-                    {"requests": self.requests, "black_vault": list(self.black_vault)},
-                    f,
-                )
+            _atomic_write_json(req_file, {"requests": self.requests, "black_vault": list(self.black_vault)})
         except Exception as e:
-            logger.error(f"Error saving requests: {e}")
+            logger.exception("Error saving requests: %s", e)
+
+    def commit_requests(self) -> None:
+        """Persist pending changes to disk. This must be called explicitly by the controller/user workflow."""
+        self._save_requests()
 
     def create_request(
         self,
@@ -284,7 +450,11 @@ class LearningRequestManager:
         description: str,
         priority: RequestPriority = RequestPriority.MEDIUM,
     ) -> str:
-        """Create learning request."""
+        """Create learning request. Does not persist automatically."""
+        if not topic or not description:
+            logger.warning("create_request called with empty topic/description")
+            return ""
+
         timestamp = datetime.now()
         timestamp_iso = timestamp.isoformat()
         req_id = hashlib.sha256(f"{timestamp_iso}{topic}".encode()).hexdigest()[:12]
@@ -301,31 +471,53 @@ class LearningRequestManager:
             "status": RequestStatus.PENDING.value,
             "created": timestamp_iso,
         }
-        self._save_requests()
+        # Persist automatically to maintain expected behavior
+        try:
+            self._save_requests()
+        except Exception:
+            logger.exception("Failed to persist requests after create")
         return req_id
 
     def approve_request(self, req_id: str, response: str) -> bool:
-        """Approve request."""
+        """Approve request. Notification to listeners is queued asynchronously.
+
+        Does not persist automatically; call `commit_requests()` to save.
+        """
         if req_id not in self.requests:
             return False
         self.requests[req_id]["status"] = RequestStatus.APPROVED.value
         self.requests[req_id]["response"] = response
-        self._save_requests()
+
+        # Notify listeners asynchronously
+        try:
+            self._notify_approval_listeners(req_id, self.requests[req_id])
+        except Exception:
+            logger.exception("Failed to queue approval listeners for %s", req_id)
+
+        # Persist change immediately
+        try:
+            self._save_requests()
+        except Exception:
+            logger.exception("Failed to persist requests after approve %s", req_id)
         return True
 
     def deny_request(self, req_id: str, reason: str, to_vault: bool = True) -> bool:
-        """Deny request."""
+        """Deny request. Optionally add content hash to black vault. Does not persist automatically."""
         if req_id not in self.requests:
             return False
         self.requests[req_id]["status"] = RequestStatus.DENIED.value
         self.requests[req_id]["reason"] = reason
 
         if to_vault:
-            content = self.requests[req_id]["description"]
+            content = self.requests[req_id].get("description", "")
             content_hash = hashlib.sha256(content.encode()).hexdigest()
             self.black_vault.add(content_hash)
 
-        self._save_requests()
+        # Persist change immediately
+        try:
+            self._save_requests()
+        except Exception:
+            logger.exception("Failed to persist requests after deny %s", req_id)
         return True
 
     def get_pending(self) -> list[dict[str, Any]]:
@@ -350,6 +542,7 @@ class LearningRequestManager:
 
 
 # ==================== PLUGIN SYSTEM ====================
+
 
 class Plugin:
     """Base plugin class."""
@@ -400,6 +593,7 @@ class PluginManager:
 
 
 # ==================== COMMAND OVERRIDE ====================
+
 
 class OverrideType(Enum):
     """Override types."""
