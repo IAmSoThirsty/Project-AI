@@ -3,70 +3,8 @@
 venv/
 env/
 ENV/
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-pip-wheel-metadata/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
-
-# Python caches and compiled files
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-
-# Testing and coverage
-.pytest_cache/
-.tox/
-coverage.xml
-coverage/
-reports/
-.coverage
-htmlcov/
-.hypothesis/
-
-# IDE and editor settings
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-.DS_Store
-*.sublime-project
-*.sublime-workspace
-
-# Secrets and environment files
-.env
-.env.local
-.env.*.local
-.secrets/
-*.pem
-*.key
-
-# Logs and temporary data
-logs/
-*.log
-data/local/
-temp/
-tmp/
-*.tmp
-
-# Node modules (but keep lock files for dependency tracking)
-node_modules/
-web/frontend/node_modules/
+# Visual Studio workspace and CodeLens
+.vs/
 
 # Build artifacts
 build/
