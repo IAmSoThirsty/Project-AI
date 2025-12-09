@@ -1,41 +1,105 @@
 """Core AI systems: Persona, Memory, Learning Requests, Plugins, and Overrides."""
 
+import base64
 import hashlib
 import json
 import logging
 import os
+import queue
+import secrets
+import sqlite3
 import tempfile
 import threading
 import time
-import queue
+import uuid
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from enum import Enum
 from typing import Any
+
+try:
+    from argon2 import PasswordHasher
+except Exception:
+    PasswordHasher = None
 
 from app.core.continuous_learning import (
     ContinuousLearningEngine,
     LearningReport,
 )
 
+try:
+    from app.core.telemetry import send_event
+except Exception:
+    def send_event(name, payload=None):
+        return None
+
 logger = logging.getLogger(__name__)
 
 
 # ----------------- Utility helpers: atomic writes + simple lock -----------------
 
-def _acquire_lock(lock_path: str, timeout: float = 5.0, poll: float = 0.05) -> bool:
-    """Create a simple lock by creating a lockfile. Non-blocking create with retry.
+def _is_process_alive(pid: int) -> bool:
+    """Check whether a process with given PID exists (cross-platform best-effort)."""
+    try:
+        if pid <= 0:
+            return False
+        # On Unix, os.kill(pid, 0) checks for existence; on Windows, same works in Python
+        os.kill(pid, 0)
+    except OSError:
+        return False
+    except Exception:
+        # If platform doesn't support, assume True to be conservative
+        return True
+    return True
 
-    This is a cooperative, cross-platform lock suitable for simple single-machine
-    scenarios. It avoids extra dependencies. Returns True if lock acquired.
-    """
+
+def _write_lockfile(lockfile: str, pid: int, ts: float) -> None:
+    try:
+        with open(lockfile, "w", encoding="utf-8") as f:
+            f.write(f"{pid}\n{ts}\n")
+    except Exception:
+        logger.exception("Failed to write lockfile %s", lockfile)
+
+
+def _read_lockfile(lockfile: str) -> tuple[int, float] | None:
+    try:
+        if not os.path.exists(lockfile):
+            return None
+        with open(lockfile, encoding="utf-8") as f:
+            parts = f.read().splitlines()
+            if len(parts) >= 2:
+                pid = int(parts[0])
+                ts = float(parts[1])
+                return pid, ts
+    except Exception:
+        logger.exception("Failed to read lockfile %s", lockfile)
+    return None
+
+
+def _acquire_lock(lock_path: str, timeout: float = 5.0, poll: float = 0.05, stale_after: float = 30.0) -> bool:
+    """Create a simple lock by creating a lockfile. If an existing lockfile is stale or the owning process is dead, reclaim it."""
     start = time.time()
     while True:
         try:
-            # Use O_EXCL to fail if exists
             fd = os.open(lock_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
             os.close(fd)
+            # write pid/timestamp for stale detection
+            _write_lockfile(lock_path, os.getpid(), time.time())
             return True
         except FileExistsError:
+            # inspect existing lock
+            info = _read_lockfile(lock_path)
+            if info:
+                pid, ts = info
+                age = time.time() - ts
+                if age > stale_after or not _is_process_alive(pid):
+                    # attempt to remove stale lock
+                    try:
+                        os.remove(lock_path)
+                        logger.warning("Removed stale lock %s (pid=%s, age=%.1f)", lock_path, pid, age)
+                        continue
+                    except Exception:
+                        logger.exception("Failed to remove stale lock %s", lock_path)
             if (time.time() - start) >= timeout:
                 return False
             time.sleep(poll)
@@ -45,12 +109,19 @@ def _acquire_lock(lock_path: str, timeout: float = 5.0, poll: float = 0.05) -> b
 
 def _release_lock(lock_path: str) -> None:
     try:
-        if os.path.exists(lock_path):
+        # Only remove if owned by us (best-effort check)
+        info = _read_lockfile(lock_path)
+        if info:
+            pid, _ = info
+            if pid == os.getpid() and os.path.exists(lock_path):
+                os.remove(lock_path)
+        elif os.path.exists(lock_path):
             os.remove(lock_path)
     except Exception:
         logger.exception("Failed to release lock %s", lock_path)
 
 
+# atomic write unchanged; uses new lock helpers
 def _atomic_write_json(file_path: str, obj: Any) -> None:
     """Write JSON to a temporary file and atomically replace the target file.
 
@@ -81,6 +152,12 @@ def _atomic_write_json(file_path: str, obj: Any) -> None:
                     pass
     finally:
         _release_lock(lockfile)
+
+
+# ------------------ Structured logging helpers ------------------
+
+def new_correlation_id() -> str:
+    return uuid.uuid4().hex
 
 
 # ==================== ZEROTH & PRIMARY LAWS ====================
@@ -385,11 +462,18 @@ class LearningRequestManager:
         # Listener signature: callable(req_id: str, request: dict) -> None
         self._approval_listeners: list = []
 
-        # Internal queue & worker for async, queued notifications
-        self._notify_queue: "queue.Queue[tuple[str, dict]]" = queue.Queue()
+        # Internal queue & bounded worker pool for async notifications
+        self._notify_queue: queue.Queue[tuple[str, dict]] = queue.Queue(maxsize=200)
+        self._notify_executor = ThreadPoolExecutor(max_workers=4)
         self._notify_thread = threading.Thread(target=self._notify_worker, daemon=True)
         self._notify_thread.start()
 
+        # SQLite DB path
+        self._db_file = os.path.join(self.requests_dir, "requests.db")
+        self._init_db()
+        # Migrate from legacy JSON if present
+        self._migrate_json_to_db()
+        # Load requests from DB into memory
         self._load_requests()
 
     def register_approval_listener(self, callback) -> None:
@@ -402,47 +486,130 @@ class LearningRequestManager:
         while True:
             try:
                 req_id, request = self._notify_queue.get()
+                # submit to threadpool for each listener
                 for cb in list(self._approval_listeners):
                     try:
-                        cb(req_id, request)
+                        self._notify_executor.submit(cb, req_id, request)
                     except Exception:
-                        logger.exception("Approval listener raised exception for request %s", req_id)
+                        logger.exception("Failed to submit approval listener for %s", req_id)
                 self._notify_queue.task_done()
             except Exception:
                 logger.exception("Error in notify worker loop")
                 time.sleep(0.1)
 
-    def _notify_approval_listeners(self, req_id: str, request: dict[str, Any]) -> None:
-        """Queue notification for registered listeners (async)."""
-        try:
-            # Putting into a queue prevents slow listeners from blocking the main flow
-            self._notify_queue.put((req_id, request))
-        except Exception:
-            logger.exception("Failed to queue approval notification for %s", req_id)
-
     def _load_requests(self) -> None:
         """Load requests from file."""
+        # Load from SQLite DB
         try:
-            req_file = os.path.join(self.requests_dir, "requests.json")
-            if os.path.exists(req_file):
-                with open(req_file, encoding="utf-8") as f:
-                    data = json.load(f)
-                    self.requests = data.get("requests", {})
-                    self.black_vault = set(data.get("black_vault", []))
+            conn = sqlite3.connect(self._db_file)
+            cur = conn.cursor()
+            cur.execute("SELECT id, topic, description, priority, status, created, response, reason FROM requests")
+            rows = cur.fetchall()
+            for row in rows:
+                req_id = row[0]
+                self.requests[req_id] = {
+                    "topic": row[1],
+                    "description": row[2],
+                    "priority": row[3],
+                    "status": row[4],
+                    "created": row[5],
+                    "response": row[6],
+                    "reason": row[7],
+                }
+            cur.execute("SELECT hash FROM black_vault")
+            self.black_vault = set(r[0] for r in cur.fetchall())
+            conn.close()
         except Exception as e:
-            logger.error(f"Error loading requests: {e}")
+            logger.exception("Error loading requests from DB: %s", e)
 
     def _save_requests(self) -> None:
-        """Save requests to file using atomic write & lock."""
+        """Persist in-memory requests and vault into SQLite DB."""
         try:
-            req_file = os.path.join(self.requests_dir, "requests.json")
-            _atomic_write_json(req_file, {"requests": self.requests, "black_vault": list(self.black_vault)})
+            conn = sqlite3.connect(self._db_file)
+            cur = conn.cursor()
+            # upsert requests
+            for req_id, data in self.requests.items():
+                cur.execute(
+                    "REPLACE INTO requests(id, topic, description, priority, status, created, response, reason) VALUES (?,?,?,?,?,?,?,?)",
+                    (
+                        req_id,
+                        data.get("topic"),
+                        data.get("description"),
+                        data.get("priority"),
+                        data.get("status"),
+                        data.get("created"),
+                        data.get("response"),
+                        data.get("reason"),
+                    ),
+                )
+            # sync black_vault table
+            cur.execute("DELETE FROM black_vault")
+            for h in self.black_vault:
+                cur.execute("INSERT INTO black_vault(hash) VALUES (?)", (h,))
+            conn.commit()
+            conn.close()
         except Exception as e:
-            logger.exception("Error saving requests: %s", e)
+            logger.exception("Error saving requests to DB: %s", e)
 
-    def commit_requests(self) -> None:
-        """Persist pending changes to disk. This must be called explicitly by the controller/user workflow."""
-        self._save_requests()
+    def _init_db(self) -> None:
+        try:
+            conn = sqlite3.connect(self._db_file)
+            cur = conn.cursor()
+            cur.execute(
+                """
+                CREATE TABLE IF NOT EXISTS requests (
+                    id TEXT PRIMARY KEY,
+                    topic TEXT,
+                    description TEXT,
+                    priority INTEGER,
+                    status TEXT,
+                    created TEXT,
+                    response TEXT,
+                    reason TEXT
+                )
+                """
+            )
+            cur.execute("CREATE TABLE IF NOT EXISTS black_vault (hash TEXT PRIMARY KEY)")
+            conn.commit()
+            conn.close()
+        except Exception:
+            logger.exception("Failed to init requests DB")
+
+    def _migrate_json_to_db(self) -> None:
+        # If legacy JSON exists, migrate into DB (best-effort) then remove JSON
+        try:
+            legacy = os.path.join(self.requests_dir, "requests.json")
+            if os.path.exists(legacy):
+                with open(legacy, encoding="utf-8") as f:
+                    data = json.load(f)
+                reqs = data.get("requests", {})
+                vault = set(data.get("black_vault", []))
+                conn = sqlite3.connect(self._db_file)
+                cur = conn.cursor()
+                for req_id, r in reqs.items():
+                    cur.execute(
+                        "REPLACE INTO requests(id, topic, description, priority, status, created, response, reason) VALUES (?,?,?,?,?,?,?,?)",
+                        (
+                            req_id,
+                            r.get("topic"),
+                            r.get("description"),
+                            r.get("priority"),
+                            r.get("status"),
+                            r.get("created"),
+                            r.get("response"),
+                            r.get("reason"),
+                        ),
+                    )
+                for h in vault:
+                    cur.execute("REPLACE INTO black_vault(hash) VALUES (?)", (h,))
+                conn.commit()
+                conn.close()
+                try:
+                    os.remove(legacy)
+                except Exception:
+                    pass
+        except Exception:
+            logger.exception("Migration from JSON to DB failed")
 
     def create_request(
         self,
@@ -471,11 +638,12 @@ class LearningRequestManager:
             "status": RequestStatus.PENDING.value,
             "created": timestamp_iso,
         }
-        # Persist automatically to maintain expected behavior
+        # Persist immediately to DB
+        self._save_requests()
         try:
-            self._save_requests()
+            send_event("learning_request_created", {"id": req_id, "topic": topic})
         except Exception:
-            logger.exception("Failed to persist requests after create")
+            pass
         return req_id
 
     def approve_request(self, req_id: str, response: str) -> bool:
@@ -488,17 +656,19 @@ class LearningRequestManager:
         self.requests[req_id]["status"] = RequestStatus.APPROVED.value
         self.requests[req_id]["response"] = response
 
-        # Notify listeners asynchronously
+        # Notify listeners asynchronously (attach correlation id)
+        corr = new_correlation_id()
+        self.requests[req_id]["correlation_id"] = corr
         try:
             self._notify_approval_listeners(req_id, self.requests[req_id])
         except Exception:
             logger.exception("Failed to queue approval listeners for %s", req_id)
-
-        # Persist change immediately
+        # persist
+        self._save_requests()
         try:
-            self._save_requests()
+            send_event("learning_request_approved", {"id": req_id, "response": response})
         except Exception:
-            logger.exception("Failed to persist requests after approve %s", req_id)
+            pass
         return True
 
     def deny_request(self, req_id: str, reason: str, to_vault: bool = True) -> bool:
@@ -512,12 +682,12 @@ class LearningRequestManager:
             content = self.requests[req_id].get("description", "")
             content_hash = hashlib.sha256(content.encode()).hexdigest()
             self.black_vault.add(content_hash)
-
-        # Persist change immediately
+        # persist
+        self._save_requests()
         try:
-            self._save_requests()
+            send_event("learning_request_denied", {"id": req_id, "reason": reason})
         except Exception:
-            logger.exception("Failed to persist requests after deny %s", req_id)
+            pass
         return True
 
     def get_pending(self) -> list[dict[str, Any]]:
@@ -603,7 +773,7 @@ class OverrideType(Enum):
     FOUR_LAWS = "four_laws"
 
 
-class CommandOverride:
+class CommandOverrideSystem:
     """Command override system."""
 
     def __init__(self, data_dir: str = "data", password_hash: str | None = None):
@@ -613,25 +783,74 @@ class CommandOverride:
         os.makedirs(self.override_dir, exist_ok=True)
 
         self.password_hash = password_hash
+        self.password_salt: str | None = None
         self.active_overrides: dict[str, dict[str, Any]] = {}
         self.audit_log: list[dict[str, Any]] = []
+        self._audit_path = os.path.join(self.override_dir, "audit.json")
+        # load persisted audit if present
+        self._load_audit()
 
     def _hash_password(self, password: str) -> str:
-        """Hash password."""
-        return hashlib.sha256(password.encode()).hexdigest()
+        """Hash password. Prefer argon2 if available, otherwise PBKDF2 fallback."""
+        if PasswordHasher is not None:
+            try:
+                ph = PasswordHasher()
+                return ph.hash(password)
+            except Exception:
+                logger.exception("argon2 hashing failed, falling back to pbkdf2")
+        # fallback
+        iterations = 100_000
+        if self.password_salt is None:
+            self.password_salt = secrets.token_hex(16)
+        dk = hashlib.pbkdf2_hmac("sha256", password.encode(), self.password_salt.encode(), iterations)
+        return f"{iterations}${self.password_salt}${base64.b64encode(dk).decode()}"
 
     def set_password(self, password: str) -> bool:
         """Set master password."""
         if self.password_hash is not None:
             return False
         self.password_hash = self._hash_password(password)
+        # persist audit (credentials info only)
+        self._save_audit()
         return True
 
     def verify_password(self, password: str) -> bool:
         """Verify password."""
         if self.password_hash is None:
             return False
-        return self._hash_password(password) == self.password_hash
+        if PasswordHasher is not None:
+            try:
+                ph = PasswordHasher()
+                return ph.verify(self.password_hash, password)
+            except Exception:
+                # fall back to pbkdf2 check if stored format matches
+                pass
+        try:
+            parts = self.password_hash.split("$")
+            if len(parts) != 3:
+                return False
+            iterations = int(parts[0])
+            salt = parts[1]
+            stored = parts[2]
+            dk = hashlib.pbkdf2_hmac("sha256", password.encode(), salt.encode(), iterations)
+            return base64.b64encode(dk).decode() == stored
+        except Exception:
+            logger.exception("Password verify failed")
+            return False
+
+    def _load_audit(self) -> None:
+        try:
+            if os.path.exists(self._audit_path):
+                with open(self._audit_path, encoding="utf-8") as f:
+                    self.audit_log = json.load(f)
+        except Exception:
+            logger.exception("Failed to load override audit log")
+
+    def _save_audit(self) -> None:
+        try:
+            _atomic_write_json(self._audit_path, self.audit_log)
+        except Exception:
+            logger.exception("Failed to persist override audit log")
 
     def request_override(
         self,
@@ -641,9 +860,9 @@ class CommandOverride:
     ) -> tuple[bool, str]:
         """Request override."""
         if not self.verify_password(password):
-            self.audit_log.append(
-                {"action": "failed_auth", "timestamp": datetime.now().isoformat()}
-            )
+            entry = {"action": "failed_auth", "timestamp": datetime.now().isoformat(), "corr": new_correlation_id()}
+            self.audit_log.append(entry)
+            self._save_audit()
             return False, "Invalid password"
 
         override_key = f"{override_type.value}_{datetime.now().timestamp()}"
@@ -653,13 +872,13 @@ class CommandOverride:
             "created": datetime.now().isoformat(),
         }
 
-        self.audit_log.append(
-            {
-                "action": "override_granted",
-                "type": override_type.value,
-                "timestamp": datetime.now().isoformat(),
-            }
-        )
+        self.audit_log.append({"action": "override_granted", "type": override_type.value, "timestamp": datetime.now().isoformat(), "corr": new_correlation_id()})
+        # persist audit
+        self._save_audit()
+        try:
+            send_event("command_override_requested", {"type": override_type.value, "reason": reason})
+        except Exception:
+            pass
 
         return True, f"Override granted: {override_type.value}"
 
@@ -677,3 +896,6 @@ class CommandOverride:
             "audit_entries": len(self.audit_log),
             "password_set": self.password_hash is not None,
         }
+
+# compatibility alias for older imports
+CommandOverride = CommandOverrideSystem

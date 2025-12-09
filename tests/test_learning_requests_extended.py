@@ -12,7 +12,6 @@ Covers:
 from __future__ import annotations
 
 import hashlib
-import os
 import tempfile
 from unittest.mock import patch
 
@@ -53,7 +52,7 @@ def test_deny_flow_adds_to_vault(lr_tmpdir):
     rid = mgr.create_request("topic", "sensitive")
     ok = mgr.deny_request(rid, "No", to_vault=True)
     assert ok is True
-    h = hashlib.sha256("sensitive".encode()).hexdigest()
+    h = hashlib.sha256(b"sensitive").hexdigest()
     assert h in mgr.black_vault
 
 
@@ -62,7 +61,7 @@ def test_deny_flow_without_vault(lr_tmpdir):
     rid = mgr.create_request("topic", "content")
     ok = mgr.deny_request(rid, "No", to_vault=False)
     assert ok is True
-    h = hashlib.sha256("content".encode()).hexdigest()
+    h = hashlib.sha256(b"content").hexdigest()
     assert h not in mgr.black_vault
 
 

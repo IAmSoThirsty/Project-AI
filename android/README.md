@@ -1,4 +1,4 @@
-# Android APK Integration Stub
+`# Android APK Integration Stub
 
 This directory is reserved for the future development of an Android-based APK app that
 will fully integrate with the Project-AI computer program and web components.
@@ -18,6 +18,7 @@ The desktop version now includes these powerful new features:
 - Place Android Studio project files here.
 - Use this README to track integration requirements and progress.
 
+- 
 ## Next Steps
 
 ## Program Functions for Integration

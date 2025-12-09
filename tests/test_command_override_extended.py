@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
-import os
 import tempfile
 
 import pytest
 
 from app.core.ai_systems import CommandOverride, OverrideType
 from app.core.command_override import CommandOverrideSystem
+
 
 @pytest.fixture
 def tmpdir():
