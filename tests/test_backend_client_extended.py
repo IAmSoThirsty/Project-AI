@@ -7,7 +7,7 @@ from typing import cast
 import pytest
 import requests
 
-from app.core.backend_client import BackendAPIClient, AuthResult
+from app.core.backend_client import BackendAPIClient
 
 
 class DummyResponse:

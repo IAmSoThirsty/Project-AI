@@ -9,6 +9,8 @@ Supports multiple backends:
 
 import logging
 import os
+import time
+import random
 from datetime import datetime
 from enum import Enum
 from typing import Any
@@ -18,6 +20,67 @@ from dotenv import load_dotenv
 
 load_dotenv()
 logger = logging.getLogger(__name__)
+
+# Read retry configuration from environment (fallbacks)
+MAX_API_RETRIES = int(os.getenv("IMAGE_API_MAX_RETRIES", "3"))
+BACKOFF_FACTOR = float(os.getenv("IMAGE_API_BACKOFF_FACTOR", "0.8"))
+
+
+def _request_with_retries(method: str, url: str, **kwargs) -> requests.Response:
+    """Perform an HTTP request with retries and exponential backoff for transient errors.
+
+    Retries on status codes 429, 502, 503, 504 and on network errors.
+    Uses requests.post/get when available so unit tests patching those functions are effective.
+    Honors `Retry-After` header when present for 429 responses.
+    """
+    allowed_status_retry = {429, 502, 503, 504}
+    attempt = 0
+    method_lower = method.lower()
+    # prefer direct method helper (post/get) to allow tests to patch them
+    request_func = getattr(requests, method_lower, requests.request)
+    while True:
+        try:
+            resp = request_func(url, timeout=kwargs.pop("timeout", 60), **kwargs)
+            if resp.status_code in allowed_status_retry:
+                attempt += 1
+                # If Retry-After provided, honor it before counting as a retry backoff
+                retry_after = None
+                try:
+                    retry_after = resp.headers.get("Retry-After")
+                except Exception:
+                    retry_after = None
+                if retry_after:
+                    try:
+                        # Retry-After can be seconds or HTTP-date; handle seconds first
+                        ra = int(retry_after)
+                    except Exception:
+                        # fallback: don't parse HTTP-date; use exponential backoff instead
+                        ra = None
+                    if ra is not None:
+                        if attempt > MAX_API_RETRIES:
+                            logger.error("Max retries reached for %s %s (status=%s)", method, url, resp.status_code)
+                            resp.raise_for_status()
+                            return resp
+                        logger.warning("Received Retry-After=%s for %s %s - sleeping %ds (attempt %d)", retry_after, method, url, ra, attempt)
+                        time.sleep(ra)
+                        continue
+                if attempt > MAX_API_RETRIES:
+                    logger.error("Max retries reached for %s %s (status=%s)", method, url, resp.status_code)
+                    resp.raise_for_status()
+                    return resp
+                backoff = BACKOFF_FACTOR * (2 ** (attempt - 1)) + random.random() * 0.1
+                logger.warning("Transient status %s for %s %s - retrying in %.2fs (attempt %d)", resp.status_code, method, url, backoff, attempt)
+                time.sleep(backoff)
+                continue
+            return resp
+        except requests.RequestException as exc:
+            attempt += 1
+            if attempt > MAX_API_RETRIES:
+                logger.exception("Request failed after %d attempts: %s %s", attempt, method, url)
+                raise
+            backoff = BACKOFF_FACTOR * (2 ** (attempt - 1)) + random.random() * 0.1
+            logger.warning("Request exception for %s %s: %s - retrying in %.2fs (attempt %d)", method, url, exc, backoff, attempt)
+            time.sleep(backoff)
 
 
 class ImageStyle(Enum):
@@ -153,7 +216,7 @@ class ImageGenerator:
         }
 
         try:
-            response = requests.post(api_url, headers=headers, json=payload, timeout=60)
+            response = _request_with_retries("POST", api_url, headers=headers, json=payload, timeout=60)
             response.raise_for_status()
 
             # Save image
@@ -200,32 +263,44 @@ class ImageGenerator:
             if size not in valid_sizes:
                 size = "1024x1024"  # Default to DALL-E 3 standard size
 
-            response = openai.images.generate(
-                model="dall-e-3",
-                prompt=prompt,
-                size=cast(Any, size),  # Type cast for OpenAI API
-                quality="standard",
-                n=1,
-            )
+            attempt = 0
+            while True:
+                try:
+                    response = openai.images.generate(
+                        model="dall-e-3",
+                        prompt=prompt,
+                        size=cast(Any, size),  # Type cast for OpenAI API
+                        quality="standard",
+                        n=1,
+                    )
+                    break
+                except Exception as exc:
+                    attempt += 1
+                    if attempt > MAX_API_RETRIES:
+                        logger.exception("OpenAI generate failed after %d attempts", attempt)
+                        raise
+                    backoff = BACKOFF_FACTOR * (2 ** (attempt - 1)) + random.random() * 0.1
+                    logger.warning("OpenAI transient error: %s - retrying in %.2fs (attempt %d)", exc, backoff, attempt)
+                    time.sleep(backoff)
 
             # Validate response
-            if not response.data or len(response.data) == 0:
+            if not getattr(response, "data", None) or len(response.data) == 0:
                 raise ValueError("No image data received from OpenAI")
 
             image_url = response.data[0].url
             if not image_url:
                 raise ValueError("No image URL in response")
 
-            # Download and save
-            img_response = requests.get(str(image_url), timeout=30)
-            img_response.raise_for_status()
+            # Download and save (with retries)
+            img_resp = _request_with_retries("GET", str(image_url), timeout=30)
+            img_resp.raise_for_status()
 
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             filename = f"dalle_{timestamp}.png"
             filepath = os.path.join(self.output_dir, filename)
 
             with open(filepath, "wb") as f:
-                f.write(img_response.content)
+                f.write(img_resp.content)
 
             return {
                 "success": True,

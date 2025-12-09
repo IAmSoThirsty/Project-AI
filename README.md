@@ -6,6 +6,22 @@ This repository contains a Python desktop application that provides a personal A
 assistant with features adapted from a WinForms prototype. The app is designed for
 member-only use and can be extended for mobile later.
 
+## Designer & Qt notes (updated)
+
+This project supports both `PyQt6` and `PySide6` for Qt tooling. For development we recommend `PySide6` because prebuilt wheels with `pyside6-designer` are commonly available and avoid requiring a system Qt `qmake` toolchain during a `pip install`.
+
+If you prefer `PyQt6`, you must ensure a working Qt toolchain (providing `qmake`) is available on PATH before installing `pyqt6` from source. On Windows, install the Qt development tools or use the official Qt installer. In CI, prefer `pyside6` or preinstall Qt build dependencies.
+
+Quick steps to set up Designer (Windows PowerShell):
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\tools\setup_designer_env.ps1
+```
+
+This will create `venv-designer` in the repo root, try to install developer requirements (if present) or `pyqt6` (fallbacks to `pyside6`), and launch the Qt Designer (`pyside6-designer.exe` when available).
+
+
 ## Smoke checks & quick verification
 
 Key resources live under `docs/developer/` (smoke checks, troubleshooting, coverage notes). The quick checklist below mirrors those docs so you can run a single command snapshot.
