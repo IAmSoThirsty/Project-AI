@@ -5,14 +5,11 @@ Conservative: it only creates simple asserts reflecting generated function signa
 """
 from __future__ import annotations
 
-import importlib.util
-import inspect
-import json
 import logging
 import os
 import subprocess
 import time
-from typing import Any, Dict, List
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +19,7 @@ class TestQAGenerator:
         self.data_dir = data_dir
         self._last_test_dir: str | None = None
 
-    def generate_test_for_module(self, module_path: str) -> Dict[str, Any]:
+    def generate_test_for_module(self, module_path: str) -> dict[str, Any]:
         # Create a unique subdirectory for this generation to avoid colliding with other test artifacts
         base = os.path.basename(module_path)
         modname = os.path.splitext(base)[0]
@@ -31,7 +28,7 @@ class TestQAGenerator:
         os.makedirs(run_dir, exist_ok=True)
         test_path = os.path.join(run_dir, f"test_{modname}.py")
         try:
-            with open(module_path, "r", encoding="utf-8") as f:
+            with open(module_path, encoding="utf-8") as f:
                 src = f.read()
             funcs = [line.split("def ")[1].split("(")[0] for line in src.splitlines() if line.strip().startswith("def ")]
             # Build a test that imports the module and calls functions that accept no required args
@@ -40,7 +37,7 @@ class TestQAGenerator:
                 "import sys",
                 "import inspect",
                 f"spec = importlib.util.spec_from_file_location('{modname}', r'{module_path}')",
-                f"mod = importlib.util.module_from_spec(spec)",
+                "mod = importlib.util.module_from_spec(spec)",
                 "spec.loader.exec_module(mod)",
             ]
             for fn in funcs:
@@ -69,7 +66,7 @@ class TestQAGenerator:
             logger.exception("Failed to generate test for %s: %s", module_path, e)
             return {"success": False, "error": str(e)}
 
-    def run_tests(self, tests_dir: str | None = None) -> Dict[str, Any]:
+    def run_tests(self, tests_dir: str | None = None) -> dict[str, Any]:
         # Prefer running only the latest generated test directory to avoid unrelated tests
         run_dir = tests_dir or self._last_test_dir or os.path.join(self.data_dir, "generated_tests")
         if not os.path.exists(run_dir):

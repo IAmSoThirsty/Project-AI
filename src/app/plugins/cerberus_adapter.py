@@ -3,9 +3,9 @@
 This module provides a thin wrapper around the Cerberus HubCoordinator so the
 main application can initialize and use the guard bot safely.
 """
-from typing import Any, Dict, Optional
-import os
 import logging
+import os
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -48,13 +48,13 @@ class CerberusAdapter:
             self._hub = None
             return False
 
-    def analyze(self, content: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def analyze(self, content: str, context: dict[str, Any] | None = None) -> dict[str, Any]:
         """Analyze content via Cerberus hub. If not enabled, return a permissive result."""
         if not self.enabled or self._hub is None:
             return {"decision": "allowed", "is_safe": True, "guardian_count": 0, "results": []}
         return self._hub.analyze(content, context)
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Return hub status or a disabled placeholder."""
         if not self.enabled or self._hub is None:
             return {"hub_status": "disabled", "guardian_count": 0}

@@ -3,15 +3,15 @@
 Main entry point for the AI Desktop Application.
 """
 
+import logging
 import os
 import sys
-import logging
 
 from dotenv import load_dotenv
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QApplication
 
-from app.gui.leather_book_interface import LeatherBookInterface
+from app.gui.dashboard_main import DashboardMainWindow
 
 # Initialize logger early
 logger = logging.getLogger(__name__)
@@ -30,26 +30,10 @@ def setup_environment():
     # Configure any external APIs (OpenAI, etc.)
 
 
-def initialize_cerberus_adapter():
-    """Initialize CerberusGuard adapter if available."""
-    try:
-        from app.plugins.cerberus_adapter import CerberusAdapter
-
-        adapter = CerberusAdapter()
-        adapter.initialize()
-        return adapter
-    except Exception:
-        logger.info("Cerberus adapter not available in this environment")
-        return None
-
-
 def main():
     """Main application entry point"""
     # Setup environment
     setup_environment()
-
-    # Initialize optional Cerberus guard
-    cerberus_adapter = initialize_cerberus_adapter()
 
     # Create and run application
     app = QApplication(sys.argv)
@@ -61,16 +45,13 @@ def main():
         fallback_font = QFont("Arial", 10)
         app.setFont(fallback_font)
 
-    # Use new leather book interface
-    app_window = LeatherBookInterface()
-    # Attach adapter for potential runtime checks
-    if cerberus_adapter is not None:
-        app_window.cerberus = cerberus_adapter
-
+    # Show the consolidated dashboard
+    app_window = DashboardMainWindow()
     app_window.show()
     app.exec()
 
 
-
 if __name__ == "__main__":
     main()
+
+# Integrated generated module
