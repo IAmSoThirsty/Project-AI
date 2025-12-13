@@ -1,96 +1,110 @@
-name: Universal Security & Fixer Bot
+name: Universal Security & Fixer Bot (Aggressive)
 
+# -----------------------------------------------------------------
+# 1. AGGRESSIVE TRIGGERS (24/7 PATROL)
+# -----------------------------------------------------------------
 on:
+  # Runs immediately on ANY push to ANY branch (main, dev, feature-x, etc.)
   push:
-    branches: [ "main" ]
+    branches: [ "**" ]
+  
+  # Runs on Pull Requests to catch bugs before merging
   pull_request:
-    branches: [ "main" ]
+    branches: [ "**" ]
+  
+  # Nightly Patrol: Runs every night at 2 AM UTC
   schedule:
-    - cron: '0 2 * * *' # Runs every night at 2 AM
+    - cron: '0 2 * * *'
 
 permissions:
-  contents: write      # Required for 'The Fixer' to modify your code
+  contents: write      # REQUIRED: Allows the bot to edit/fix your code
   security-events: write
   packages: read
   statuses: write
 
 jobs:
   # -----------------------------------------------------------------
-  # BOT 1: THE FIXER (Runs FIRST to clean code before scanning)
+  # BOT 1: THE FIXER (Auto-Format All Languages)
+  # Runs first. If code is messy, it cleans it before scanning.
   # -----------------------------------------------------------------
   fix_code:
-    name: The Fixer (Auto-Format All)
+    name: The Fixer (Auto-Format)
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref }} # Ensures we fix the specific branch
 
-      # 1. PYTHON FIXER
-      - name: Fix Python (Black)
+      # 1. PYTHON FIXER (Black)
+      - name: Fix Python
         uses: psf/black@stable
         with:
           options: "--verbose"
           src: "."
 
-      # 2. JAVASCRIPT / TYPESCRIPT FIXER
-      - name: Fix JS/TS (Prettier)
+      # 2. JS/TS FIXER (Prettier)
+      - name: Fix JS/TS
         run: |
           npm install --global prettier
           npx prettier --write .
-        continue-on-error: true # Keep going even if no JS files exist
+        continue-on-error: true 
 
-      # 3. JAVA FIXER
-      - name: Fix Java (Google Java Format)
+      # 3. JAVA FIXER (Google Format)
+      - name: Fix Java
         uses: axel-op/googlejavaformat-action@v3
         with:
           args: "--replace"
         continue-on-error: true
 
-      # 4. C/C++ FIXER
-      - name: Fix C/C++ (Clang-Format)
+      # 4. C/C++ FIXER (Clang-Format)
+      - name: Fix C/C++
         uses: jidicula/clang-format-action@v4.11.0
         with:
           clang-format-version: '13'
         continue-on-error: true
 
-      # 5. GO FIXER
-      - name: Fix Go (gofmt)
+      # 5. GO FIXER (gofmt)
+      - name: Fix Go
         run: |
           if command -v go &> /dev/null; then
             gofmt -w .
           fi
         continue-on-error: true
 
-      # 6. C# FIXER
-      - name: Fix C# (dotnet format)
+      # 6. C# FIXER (dotnet format)
+      - name: Fix C#
         run: |
           if command -v dotnet &> /dev/null; then
             dotnet format --verbosity diagnostic || true
           fi
         continue-on-error: true
 
-      # 7. RUBY FIXER
-      - name: Fix Ruby (Rubocop)
+      # 7. RUBY FIXER (Rubocop)
+      - name: Fix Ruby
         run: |
           gem install rubocop
           rubocop --autocorrect-all || true
         continue-on-error: true
 
-      # 8. COMMIT THE FIXES
+      # COMMIT CHANGES
       - name: Commit & Push Fixes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "🤖 The Fixer: Cleaned up code across all languages"
+          commit_message: "🤖 The Fixer: Cleaned up code style"
+          file_pattern: "."
 
   # -----------------------------------------------------------------
   # BOT 2: GRAMMAR POLICE (Super-Linter)
+  # Checks for style errors that the Fixer couldn't solve automatically.
   # -----------------------------------------------------------------
   lint_code:
-    name: Grammar Police (Super-Linter)
-    needs: fix_code # Wait for the Fixer to finish first!
+    name: Grammar Police
+    needs: fix_code
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -102,14 +116,15 @@ jobs:
           DEFAULT_BRANCH: main
 
   # -----------------------------------------------------------------
-  # BOT 3: GENERAL SECURITY (Trivy)
+  # BOT 3: SECURITY GUARD (Trivy)
+  # Scans filesystem and dependencies for known vulnerabilities.
   # -----------------------------------------------------------------
   security_trivy:
-    name: Security Bot (Trivy)
+    name: Security Guard (Trivy)
     needs: fix_code
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v4
       - name: Run Trivy Scanner
         uses: aquasecurity/trivy-action@master
@@ -117,12 +132,13 @@ jobs:
           scan-type: 'fs'
           scan-ref: '.'
           format: 'table'
-          exit-code: '1'
+          exit-code: '1' # Fails the build if vulnerabilities found
           ignore-unfixed: true
           severity: 'CRITICAL,HIGH'
 
   # -----------------------------------------------------------------
   # BOT 4: BUG HUNTER (CodeQL)
+  # Deep analysis for logic errors and security bugs.
   # -----------------------------------------------------------------
   bug_hunter:
     name: Bug Hunter (CodeQL)
@@ -135,15 +151,22 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # Scans all these languages if found
         language: [ 'c-cpp', 'csharp', 'go', 'java-kotlin', 'javascript-typescript', 'python', 'ruby', 'swift' ] 
     steps:
-      - name: Checkout repository
+      - name: Checkout Code
         uses: actions/checkout@v4
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
+        continue-on-error: true # Skips if language not found
         with:
           languages: ${{ matrix.language }}
+
       - name: Autobuild
         uses: github/codeql-action/autobuild@v3
+        continue-on-error: true
+
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
+        continue-on-error: true
