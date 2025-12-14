@@ -1,7 +1,5 @@
 # Project AI
 
-![CI](https://github.com/IAmSoThirsty/Project-AI/actions/workflows/ci.yml/badge.svg)
-
 This repository contains a Python desktop application that provides a personal AI
 assistant with features adapted from a WinForms prototype. The app is designed for
 member-only use and can be extended for mobile later.
