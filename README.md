@@ -1,7 +1,5 @@
 # Project AI
 
-![CI](https://github.com/IAmSoThirsty/Project-AI/actions/workflows/ci.yml/badge.svg)
-
 The Synthesis Manifesto: On the Emergent Symbiosis of Project AI, Cerberus, and Codex Deus Maximus
 
 Author's Note
