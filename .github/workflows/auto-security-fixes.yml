@@ -1,0 +1,229 @@
+name: Auto Security Fixes
+
+on:
+  schedule:
+    # Run daily at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+  # Trigger on security alerts
+  repository_dispatch:
+    types: [security-alert]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  security-events: read
+
+jobs:
+  check-security-alerts:
+    name: Check and Fix Security Alerts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install security tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install pip-audit safety bandit
+
+      - name: Run pip-audit
+        id: pip-audit
+        run: |
+          pip-audit --format json -o pip-audit-report.json || true
+          if [ -s pip-audit-report.json ]; then
+            echo "VULNERABILITIES_FOUND=true" >> $GITHUB_OUTPUT
+          fi
+        continue-on-error: true
+
+      - name: Run safety check
+        id: safety
+        run: |
+          safety check --json > safety-report.json || true
+          if [ -s safety-report.json ]; then
+            echo "SAFETY_ISSUES_FOUND=true" >> $GITHUB_OUTPUT
+          fi
+        continue-on-error: true
+
+      - name: Create issue for security alerts
+        if: steps.pip-audit.outputs.VULNERABILITIES_FOUND == 'true' || steps.safety.outputs.SAFETY_ISSUES_FOUND == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let issueBody = '## 🔒 Security Alert\n\n';
+            issueBody += 'Automated security scan detected vulnerabilities in dependencies.\n\n';
+            
+            // Check pip-audit results
+            try {
+              const pipAudit = JSON.parse(fs.readFileSync('pip-audit-report.json', 'utf8'));
+              if (pipAudit.dependencies && pipAudit.dependencies.length > 0) {
+                issueBody += '### pip-audit findings:\n\n';
+                pipAudit.dependencies.forEach(dep => {
+                  issueBody += `- **${dep.name}** (${dep.version}): ${dep.vulns.length} vulnerability(ies)\n`;
+                });
+                issueBody += '\n';
+              }
+            } catch (e) {
+              console.log('No pip-audit results or parsing error');
+            }
+            
+            // Check safety results
+            try {
+              const safety = JSON.parse(fs.readFileSync('safety-report.json', 'utf8'));
+              if (safety.vulnerabilities && safety.vulnerabilities.length > 0) {
+                issueBody += '### Safety findings:\n\n';
+                safety.vulnerabilities.forEach(vuln => {
+                  issueBody += `- **${vuln.package_name}**: ${vuln.vulnerability_id}\n`;
+                });
+              }
+            } catch (e) {
+              console.log('No safety results or parsing error');
+            }
+            
+            issueBody += '\n### Action Required\n\n';
+            issueBody += 'Review the attached reports and update dependencies accordingly.\n';
+            issueBody += 'Run `pip install --upgrade <package>` to update affected packages.\n\n';
+            issueBody += '**Reports**: Check workflow artifacts for detailed JSON reports.';
+            
+            // Create issue
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🔒 Security vulnerabilities detected in dependencies',
+              body: issueBody,
+              labels: ['security', 'dependencies', 'automated']
+            });
+
+      - name: Upload security reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-reports
+          path: |
+            pip-audit-report.json
+            safety-report.json
+
+  auto-fix-dependabot:
+    name: Auto-fix Dependabot Alerts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Upgrade vulnerable packages
+        id: upgrade
+        run: |
+          # Get list of outdated packages
+          pip list --outdated --format=json > outdated.json
+          
+          # Check if there are updates
+          if [ -s outdated.json ] && [ "$(cat outdated.json)" != "[]" ]; then
+            echo "UPDATES_AVAILABLE=true" >> $GITHUB_OUTPUT
+            
+            # Update packages with security fixes
+            pip install --upgrade pip-audit
+            pip-audit --fix --dry-run > fix-plan.txt || true
+            
+            if [ -s fix-plan.txt ]; then
+              echo "SECURITY_FIXES=true" >> $GITHUB_OUTPUT
+            fi
+          fi
+        continue-on-error: true
+
+      - name: Create PR for security fixes
+        if: steps.upgrade.outputs.SECURITY_FIXES == 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: '🔒 Auto-fix security vulnerabilities in dependencies'
+          title: '🔒 Security: Auto-update vulnerable dependencies'
+          body: |
+            ## Automated Security Update
+            
+            This PR was automatically created to fix security vulnerabilities in dependencies.
+            
+            ### Changes
+            - Updated packages with known security vulnerabilities
+            - Run by automated security scanning workflow
+            
+            ### Verification
+            - All tests must pass before merging
+            - Review the changes to ensure compatibility
+            
+            **Note**: This is an automated PR. Please review carefully before merging.
+          branch: security/auto-fix-dependencies
+          labels: security, dependencies, automated
+          delete-branch: true
+
+  codeql-auto-fix:
+    name: CodeQL Auto-fix
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: python
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v2
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+        with:
+          category: "/language:python"
+
+      - name: Check for CodeQL alerts
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const alerts = await github.rest.codeScanning.listAlertsForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              severity: 'high'
+            });
+            
+            if (alerts.data.length > 0) {
+              let issueBody = '## 🔒 CodeQL Security Alerts\n\n';
+              issueBody += `Found ${alerts.data.length} high severity security alert(s).\n\n`;
+              
+              alerts.data.slice(0, 10).forEach(alert => {
+                issueBody += `### ${alert.rule.description}\n`;
+                issueBody += `- **Severity**: ${alert.rule.severity}\n`;
+                issueBody += `- **Location**: ${alert.most_recent_instance.location.path}:${alert.most_recent_instance.location.start_line}\n`;
+                issueBody += `- **Alert URL**: ${alert.html_url}\n\n`;
+              });
+              
+              issueBody += '### Action Required\n\n';
+              issueBody += 'Review and fix the security issues identified by CodeQL.\n';
+              
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: '🔒 CodeQL detected high severity security issues',
+                body: issueBody,
+                labels: ['security', 'codeql', 'automated']
+              });
+            }
