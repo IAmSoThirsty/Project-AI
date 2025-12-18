@@ -139,12 +139,41 @@ jobs:
           if [ -s outdated.json ] && [ "$(cat outdated.json)" != "[]" ]; then
             echo "UPDATES_AVAILABLE=true" >> $GITHUB_OUTPUT
             
-            # Update packages with security fixes
+            # Scan for vulnerabilities and get list of packages to fix
             pip install --upgrade pip-audit
-            pip-audit --fix --dry-run > fix-plan.txt || true
+            pip-audit --format json > vulnerabilities.json || true
             
-            if [ -s fix-plan.txt ]; then
-              echo "SECURITY_FIXES=true" >> $GITHUB_OUTPUT
+            # Check if vulnerabilities were found
+            if [ -s vulnerabilities.json ]; then
+              # Extract vulnerable packages and upgrade them
+              python3 << 'EOF'
+          import json
+          import subprocess
+          
+          with open('vulnerabilities.json', 'r') as f:
+              data = json.load(f)
+          
+          # Get unique package names to upgrade
+          packages = set()
+          for dep in data.get('dependencies', []):
+              packages.add(dep.get('name'))
+          
+          if packages:
+              print(f"Upgrading {len(packages)} vulnerable packages...")
+              for pkg in packages:
+                  try:
+                      subprocess.run(['pip', 'install', '--upgrade', pkg], check=True)
+                      print(f"✓ Upgraded {pkg}")
+                  except Exception as e:
+                      print(f"✗ Failed to upgrade {pkg}: {e}")
+              
+              with open('fix-plan.txt', 'w') as f:
+                  f.write(f"Upgraded packages: {', '.join(packages)}\n")
+          EOF
+              
+              if [ -s fix-plan.txt ]; then
+                echo "SECURITY_FIXES=true" >> $GITHUB_OUTPUT
+              fi
             fi
           fi
         continue-on-error: true
