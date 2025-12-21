@@ -340,79 +340,138 @@ class OpticalFlowDetector:
         # Find local extrema in divergence (convergent/divergent epicenters)
         threshold = self.sensitivity * np.std(divergence)
 
-        # Convergent points (negative divergence)
-        convergent = divergence < -threshold
-        if np.any(convergent):
-            y_conv, x_conv = np.where(convergent)
-            for x, y in zip(x_conv, y_conv):
-                strength = abs(float(divergence[y, x]))
-                if strength > threshold:
-                    epicenters.append(
-                        FlowEpicenter(
-                            x=float(x),
-                            y=float(y),
-                            strength=strength,
-                            frame_number=frame_number,
-                            timestamp=timestamp,
-                            flow_type="convergent",
-                            metadata={
-                                "magnitude": float(magnitude[y, x]),
-                                "angle": float(angle[y, x]),
-                            },
-                        )
-                    )
+        # Apply spatial filtering to reduce number of candidates
+        # Use non-maximum suppression approach with larger neighborhoods
+        kernel_size = 15
+        half_kernel = kernel_size // 2
 
-        # Divergent points (positive divergence)
-        divergent = divergence > threshold
-        if np.any(divergent):
-            y_div, x_div = np.where(divergent)
-            for x, y in zip(x_div, y_div):
-                strength = float(divergence[y, x])
-                if strength > threshold:
-                    epicenters.append(
-                        FlowEpicenter(
-                            x=float(x),
-                            y=float(y),
-                            strength=strength,
-                            frame_number=frame_number,
-                            timestamp=timestamp,
-                            flow_type="divergent",
-                            metadata={
-                                "magnitude": float(magnitude[y, x]),
-                                "angle": float(angle[y, x]),
-                            },
-                        )
-                    )
+        # Helper function to find local maxima with spatial suppression
+        def find_local_maxima(field, is_minimum=False):
+            """Find local maxima/minima in field with spatial suppression."""
+            candidates = []
+            abs_field = np.abs(field)
+            
+            # Find pixels above threshold
+            if is_minimum:
+                mask = field < -threshold
+            else:
+                mask = field > threshold
+                
+            y_coords, x_coords = np.where(mask)
+            
+            # Sort by strength
+            strengths = abs_field[y_coords, x_coords]
+            sorted_indices = np.argsort(strengths)[::-1]
+            
+            # Apply non-maximum suppression
+            for idx in sorted_indices:
+                y, x = y_coords[idx], x_coords[idx]
+                
+                # Check if this location is too close to existing candidates
+                is_too_close = False
+                for cy, cx in candidates:
+                    if abs(y - cy) < kernel_size and abs(x - cx) < kernel_size:
+                        is_too_close = True
+                        break
+                
+                if not is_too_close:
+                    candidates.append((y, x))
+                    
+                # Limit candidates
+                if len(candidates) >= 10:
+                    break
+                    
+            return candidates
 
-        # Vortex points (high curl)
+        # Convergent points (negative divergence) with spatial filtering
+        convergent_candidates = find_local_maxima(divergence, is_minimum=True)
+        for y, x in convergent_candidates:
+            strength = abs(float(divergence[y, x]))
+            epicenters.append(
+                FlowEpicenter(
+                    x=float(x),
+                    y=float(y),
+                    strength=strength,
+                    frame_number=frame_number,
+                    timestamp=timestamp,
+                    flow_type="convergent",
+                    metadata={
+                        "magnitude": float(magnitude[y, x]),
+                        "angle": float(angle[y, x]),
+                    },
+                )
+            )
+
+        # Divergent points (positive divergence) with spatial filtering
+        divergent_candidates = find_local_maxima(divergence, is_minimum=False)
+        for y, x in divergent_candidates:
+            strength = float(divergence[y, x])
+            epicenters.append(
+                FlowEpicenter(
+                    x=float(x),
+                    y=float(y),
+                    strength=strength,
+                    frame_number=frame_number,
+                    timestamp=timestamp,
+                    flow_type="divergent",
+                    metadata={
+                        "magnitude": float(magnitude[y, x]),
+                        "angle": float(angle[y, x]),
+                    },
+                )
+            )
+
+        # Vortex points (high curl) with spatial filtering
         curl_threshold = self.sensitivity * np.std(curl)
-        vortex = np.abs(curl) > curl_threshold
-        if np.any(vortex):
-            y_vor, x_vor = np.where(vortex)
-            for x, y in zip(x_vor, y_vor):
-                strength = abs(float(curl[y, x]))
-                if strength > curl_threshold:
-                    epicenters.append(
-                        FlowEpicenter(
-                            x=float(x),
-                            y=float(y),
-                            strength=strength,
-                            frame_number=frame_number,
-                            timestamp=timestamp,
-                            flow_type="vortex",
-                            metadata={
-                                "magnitude": float(magnitude[y, x]),
-                                "angle": float(angle[y, x]),
-                                "curl": float(curl[y, x]),
-                            },
-                        )
-                    )
+        
+        # Find vortex candidates
+        vortex_candidates = []
+        abs_curl = np.abs(curl)
+        mask = abs_curl > curl_threshold
+        y_coords, x_coords = np.where(mask)
+        
+        if len(y_coords) > 0:
+            strengths = abs_curl[y_coords, x_coords]
+            sorted_indices = np.argsort(strengths)[::-1]
+            
+            for idx in sorted_indices:
+                y, x = y_coords[idx], x_coords[idx]
+                
+                # Check spatial suppression
+                is_too_close = False
+                for cy, cx in vortex_candidates:
+                    if abs(y - cy) < kernel_size and abs(x - cx) < kernel_size:
+                        is_too_close = True
+                        break
+                
+                if not is_too_close:
+                    vortex_candidates.append((y, x))
+                    
+                if len(vortex_candidates) >= 10:
+                    break
+        
+        for y, x in vortex_candidates:
+            strength = abs(float(curl[y, x]))
+            epicenters.append(
+                FlowEpicenter(
+                    x=float(x),
+                    y=float(y),
+                    strength=strength,
+                    frame_number=frame_number,
+                    timestamp=timestamp,
+                    flow_type="vortex",
+                    metadata={
+                        "magnitude": float(magnitude[y, x]),
+                        "angle": float(angle[y, x]),
+                        "curl": float(curl[y, x]),
+                    },
+                )
+            )
 
-        # Limit epicenters per frame to avoid noise
-        if len(epicenters) > 10:
-            # Keep top 10 by strength
+        # Final limit to top epicenters by strength (should already be limited)
+        if len(epicenters) > 30:
             epicenters.sort(key=lambda e: e.strength, reverse=True)
-            epicenters = epicenters[:10]
+            epicenters = epicenters[:30]
 
         return epicenters
 
@@ -503,7 +562,7 @@ class OpticalFlowDetector:
 
         Args:
             video_path: Input video path
-            output_path: Output video path (None = display only)
+            output_path: Output video path (None = display with cv2.imshow)
             show_epicenters: Whether to mark epicenters
         """
         if not Path(video_path).exists():
@@ -586,6 +645,12 @@ class OpticalFlowDetector:
 
             if writer:
                 writer.write(frame)
+            else:
+                # Display mode when no output path provided
+                self.cv2.imshow('Optical Flow Visualization', frame)
+                # Wait 1ms and check if user pressed 'q' to quit
+                if self.cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
 
             prev_gray = gray
 
@@ -593,6 +658,9 @@ class OpticalFlowDetector:
         if writer:
             writer.release()
             logger.info(f"Visualization saved to: {output_path}")
+        else:
+            self.cv2.destroyAllWindows()
+            logger.info("Visualization display closed")
 
     def get_statistics(self) -> dict[str, Any]:
         """Get statistics about stored analyses."""

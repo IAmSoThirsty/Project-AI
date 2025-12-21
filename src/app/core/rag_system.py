@@ -183,7 +183,7 @@ class RAGSystem:
                 continue
 
             # Create unique chunk ID based on content hash
-            chunk_id = hashlib.md5(
+            chunk_id = hashlib.sha256(
                 f"{source}:{i}:{chunk_text}".encode()
             ).hexdigest()
 
@@ -444,27 +444,61 @@ Question: {query}
 
 Answer:"""
 
-            # Call OpenAI API
-            response = openai.chat.completions.create(
-                model=model,
-                messages=[
-                    {
-                        "role": "system",
-                        "content": "You are a helpful assistant that answers questions based on provided context.",
-                    },
-                    {"role": "user", "content": prompt},
-                ],
-                temperature=0.3,
-            )
+            # Call OpenAI API with timeout and error handling
+            try:
+                response = openai.chat.completions.create(
+                    model=model,
+                    messages=[
+                        {
+                            "role": "system",
+                            "content": "You are a helpful assistant that answers questions based on provided context.",
+                        },
+                        {"role": "user", "content": prompt},
+                    ],
+                    temperature=0.3,
+                    timeout=30,  # 30 second timeout
+                )
 
-            answer = response.choices[0].message.content
+                answer = response.choices[0].message.content
 
-            return {
-                "answer": answer,
-                "context": context,
-                "chunks_used": top_k,
-                "model": model,
-            }
+                return {
+                    "answer": answer,
+                    "context": context,
+                    "chunks_used": top_k,
+                    "model": model,
+                }
+            except openai.RateLimitError as e:
+                logger.error(f"OpenAI rate limit exceeded: {e}")
+                return {
+                    "answer": "Rate limit exceeded. Please try again later.",
+                    "context": context,
+                    "chunks_used": 0,
+                    "error": "rate_limit",
+                }
+            except openai.AuthenticationError as e:
+                logger.error(f"OpenAI authentication failed: {e}")
+                return {
+                    "answer": "Authentication error. Please check your API key.",
+                    "context": context,
+                    "chunks_used": 0,
+                    "error": "authentication",
+                }
+            except openai.APITimeoutError as e:
+                logger.error(f"OpenAI API timeout: {e}")
+                return {
+                    "answer": "Request timed out. Please try again.",
+                    "context": context,
+                    "chunks_used": 0,
+                    "error": "timeout",
+                }
+            except openai.APIError as e:
+                logger.error(f"OpenAI API error: {e}")
+                return {
+                    "answer": f"API error occurred: {str(e)}",
+                    "context": context,
+                    "chunks_used": 0,
+                    "error": "api_error",
+                }
 
         except ImportError:
             logger.error("OpenAI not installed")

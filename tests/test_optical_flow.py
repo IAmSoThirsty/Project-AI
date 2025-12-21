@@ -10,7 +10,6 @@ from app.core.optical_flow import (
     FlowAnalysisResult,
     FlowEpicenter,
     OpticalFlowDetector,
-    analyze_video,
     create_flow_detector,
 )
 
