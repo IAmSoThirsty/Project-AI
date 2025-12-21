@@ -5,8 +5,6 @@ This example demonstrates how to use all three new systems together
 for a complete offline-first AI assistant experience.
 """
 
-from pathlib import Path
-
 from app.core.local_fbo import LocalFBOSystem
 from app.core.optical_flow import OpticalFlowDetector
 from app.core.rag_system import RAGSystem
