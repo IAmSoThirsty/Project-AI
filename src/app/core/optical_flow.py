@@ -343,7 +343,6 @@ class OpticalFlowDetector:
         # Apply spatial filtering to reduce number of candidates
         # Use non-maximum suppression approach with larger neighborhoods
         kernel_size = 15
-        half_kernel = kernel_size // 2
 
         # Helper function to find local maxima with spatial suppression
         def find_local_maxima(field, is_minimum=False):
