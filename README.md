@@ -1,8 +1,9 @@
 # Project AI
 
 This repository contains a Python desktop application that provides a personal AI
-assistant with features adapted from a WinForms prototype. The app is designed for
-member-only use and can be extended for mobile later.
+assistant with **offline-first architecture** for mobile and desktop. The app features
+RAG (Retrieval-Augmented Generation), optical flow detection, and local fallback
+offline (FBO) systems that ensure full functionality without internet connectivity.
 
 ## Designer & Qt notes (updated)
 
@@ -192,15 +193,24 @@ scores which are used to annotate the decision context. Human-in-the-loop approv
 (Learning Request Log) and the Black Vault remain the final gatekeepers for what the AI
 may integrate.
 
-## Project-AI — Desktop AI Assistant
+## Project-AI — Offline-First AI Assistant
 
-A Python desktop application providing a local AI assistant with a book-like UI. It was
-converted from a WinForms prototype and implements a prioritized feature set (learning
-paths, data analysis, security resources, location tracking, emergency alerts) using a
-PyQt6 GUI and a collection of core modules.
+A Python desktop and mobile AI assistant with **offline-first architecture**. Provides
+full AI functionality without internet connectivity through local knowledge bases,
+RAG systems, and intelligent caching. The application features a beautiful PyQt6
+"Leather Book" UI and comprehensive mobile optimization.
 
 ### Highlights
 
+**🌐 Offline-First Features (NEW)**
+- RAG System (Retrieval-Augmented Generation with local embeddings)
+- Optical Flow Detection (motion epicenter analysis for video streams)
+- Local FBO (Fallback Offline system with knowledge persistence)
+- AI Reflection Engine (pattern recognition and self-learning)
+- Smart Response Caching (intelligent offline query handling)
+- Automatic Sync (seamless online/offline transitions)
+
+**🎯 Core Features**
 - Local user management (JSON-backed, hashed passwords)
 - Command Override System (master password control over safety protocols)
 - Memory Expansion (self-organizing AI memory with autonomous web learning)
@@ -245,6 +255,38 @@ SMTP_USERNAME=you@example.com
 SMTP_PASSWORD=<app-password>
 FERNET_KEY=<base64-key>
 ```
+
+## Offline-First Architecture (NEW)
+
+Project-AI now features comprehensive offline capabilities:
+
+### RAG System
+```python
+from app.core.rag_system import RAGSystem
+
+rag = RAGSystem()
+rag.ingest_directory('knowledge_base/')  # Load local documents
+results = rag.retrieve("your query", top_k=3)  # Semantic search
+```
+
+### Optical Flow Detection
+```python
+from app.core.optical_flow import OpticalFlowDetector
+
+detector = OpticalFlowDetector()
+result = detector.analyze_video('video.mp4')  # Detect motion epicenters
+```
+
+### Local FBO System
+```python
+from app.core.local_fbo import LocalFBOSystem
+
+fbo = LocalFBOSystem(enable_rag=True, enable_reflection=True)
+fbo.add_offline_knowledge("key", "value", "category")
+result = fbo.query_offline("question")  # Works without internet
+```
+
+**See `docs/OFFLINE_FIRST_ARCHITECTURE.md` for complete documentation.**
 
 1. Run tests and lint (recommended before running the app):
 
