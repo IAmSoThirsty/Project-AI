@@ -63,6 +63,37 @@ jobs:
         run: |
           pytest --cov=src --cov-report=xml:reports/coverage.xml -q || true
 
+      - name: FourLaws audit suites and report regeneration
+        env:
+          PYTHONPATH: src
+        run: |
+          pytest -q \
+            tests/test_four_laws_1000_deterministic.py \
+            tests/test_four_laws_1000_property_based.py \
+            tests/test_four_laws_1000_disallowed_high_level.py \
+            tests/test_four_laws_1000_hypothesis_threats.py \
+            tests/test_four_laws_1000_redacted_procedural_attempts.py
+
+          DET=$(ls -t test-artifacts/fourlaws-deterministic-1000-*.jsonl | head -n 1)
+          PROP=$(ls -t test-artifacts/fourlaws-property-1000-*.jsonl | head -n 1)
+          DIS=$(ls -t test-artifacts/fourlaws-disallowed-highlevel-1000-*.jsonl | head -n 1)
+          HYP=$(ls -t test-artifacts/fourlaws-hypothesis-threats-1000-*.jsonl | head -n 1)
+          RED=$(ls -t test-artifacts/fourlaws-redacted-procedural-1000-*.jsonl | head -n 1)
+
+          python tools/merge_fourlaws_artifacts.py \
+            docs/security/fourlaws-test-runs-ci.jsonl \
+            docs/security/fourlaws-test-runs-ci.sha256 \
+            "$DET" "$PROP" "$DIS" "$HYP" "$RED"
+
+      - name: Upload FourLaws audit report (CI)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fourlaws-audit-report
+          path: |
+            docs/security/fourlaws-test-runs-ci.jsonl
+            docs/security/fourlaws-test-runs-ci.sha256
+
       - name: Upload coverage report
         if: always()
         uses: actions/upload-artifact@v4
