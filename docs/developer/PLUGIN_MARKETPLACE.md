@@ -40,10 +40,10 @@ Follow these steps when validating a new marketplace plugin:
 ## Marketplace submission flow
 
 1. Fork the repository and add the plugin module under `src/app/plugins/<plugin_name>.py`.
-1. Include `plugin.json` with metadata and ensure the module exposes an `initialize(context)` function returning `True/False`.
-1. Submit a pull request that adds the plugin descriptor to `docs/developer/PLUGIN_MARKETPLACE.md` in the `Marketplace Catalog` section (see below).
-1. The reviewer runs the QA checklist, ensures `FourLaws` validation reports no issues, and confirms the plugin is disabled-by-default.
-1. Once merged, the plugin appears in the marketplace UI under the categorized list.
+2. Include `plugin.json` with metadata and ensure the module exposes an `initialize(context)` function returning `True/False`.
+3. Submit a pull request that adds the plugin descriptor to `docs/developer/PLUGIN_MARKETPLACE.md` in the `Marketplace Catalog` section (see below).
+4. The reviewer runs the QA checklist, ensures `FourLaws` validation reports no issues, and confirms the plugin is disabled-by-default.
+5. Once merged, the plugin appears in the marketplace UI under the categorized list.
 
 ## Marketplace Catalog
 
