@@ -23,10 +23,10 @@ The marketplace UI filters plugins by `hooks` and the `description` string. `fou
 ## QA checklist
 
 1. **Import guard**: Plugins must wrap imports in `try/except` blocks so missing dependencies do not crash the host.
-1. **Signal handling**: Every Qt signal or hook subscription must disconnect on shutdown to avoid leaks.
-1. **Four Laws validation**: Plugins that make decisions (e.g., intercepting commands) must call `FourLaws.validate_action` before proceeding.
-1. **Telemetry**: Plugins should log their actions via `app.core.observability.emit_event` (see Observability guide) so they appear in the audit log.
-1. **Test coverage**: Provide at least one pytest file that calls the plugin entry point with a mock context.
+2. **Signal handling**: Every Qt signal or hook subscription must disconnect on shutdown to avoid leaks.
+3. **Four Laws validation**: Plugins that make decisions (e.g., intercepting commands) must call `FourLaws.validate_action` before proceeding.
+4. **Telemetry**: Plugins should log their actions via `app.core.observability.emit_event` (see Observability guide) so they appear in the audit log.
+5. **Test coverage**: Provide at least one pytest file that calls the plugin entry point with a mock context.
 
 ## QA guidance
 
