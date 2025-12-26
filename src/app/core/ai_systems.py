@@ -22,6 +22,11 @@ try:
 except Exception:
     PasswordHasher = None
 
+try:
+    import bcrypt
+except Exception:
+    bcrypt = None
+
 from app.core.continuous_learning import (
     ContinuousLearningEngine,
     LearningReport,
@@ -818,6 +823,19 @@ class CommandOverrideSystem:
         """Verify password."""
         if self.password_hash is None:
             return False
+
+        # Support bcrypt hashes if present (common in user stores)
+        try:
+            if bcrypt is not None and isinstance(self.password_hash, str) and self.password_hash.startswith("$2"):
+                try:
+                    return bcrypt.checkpw(password.encode(), self.password_hash.encode())
+                except Exception:
+                    # Fall through to other checks
+                    pass
+        except Exception:
+            # Defensive: do not fail verification on unexpected bcrypt errors
+            logger.exception("bcrypt verification failed")
+
         if PasswordHasher is not None:
             try:
                 ph = PasswordHasher()
