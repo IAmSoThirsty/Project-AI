@@ -23,10 +23,10 @@ The marketplace UI filters plugins by `hooks` and the `description` string. `fou
 ## QA checklist
 
 1. **Import guard**: Plugins must wrap imports in `try/except` blocks so missing dependencies do not crash the host.
-2. **Signal handling**: Every Qt signal or hook subscription must disconnect on shutdown to avoid leaks.
-3. **Four Laws validation**: Plugins that make decisions (e.g., intercepting commands) must call `FourLaws.validate_action` before proceeding.
-4. **Telemetry**: Plugins should log their actions via `app.core.observability.emit_event` (see Observability guide) so they appear in the audit log.
-5. **Test coverage**: Provide at least one pytest file that calls the plugin entry point with a mock context.
+1. **Signal handling**: Every Qt signal or hook subscription must disconnect on shutdown to avoid leaks.
+1. **Four Laws validation**: Plugins that make decisions (e.g., intercepting commands) must call `FourLaws.validate_action` before proceeding.
+1. **Telemetry**: Plugins should log their actions via `app.core.observability.emit_event` (see Observability guide) so they appear in the audit log.
+1. **Test coverage**: Provide at least one pytest file that calls the plugin entry point with a mock context.
 
 ## QA guidance
 
@@ -40,10 +40,10 @@ Follow these steps when validating a new marketplace plugin:
 ## Marketplace submission flow
 
 1. Fork the repository and add the plugin module under `src/app/plugins/<plugin_name>.py`.
-2. Include `plugin.json` with metadata and ensure the module exposes an `initialize(context)` function returning `True/False`.
-3. Submit a pull request that adds the plugin descriptor to `docs/developer/PLUGIN_MARKETPLACE.md` in the `Marketplace Catalog` section (see below).
-4. The reviewer runs the QA checklist, ensures `FourLaws` validation reports no issues, and confirms the plugin is disabled-by-default.
-5. Once merged, the plugin appears in the marketplace UI under the categorized list.
+1. Include `plugin.json` with metadata and ensure the module exposes an `initialize(context)` function returning `True/False`.
+1. Submit a pull request that adds the plugin descriptor to `docs/developer/PLUGIN_MARKETPLACE.md` in the `Marketplace Catalog` section (see below).
+1. The reviewer runs the QA checklist, ensures `FourLaws` validation reports no issues, and confirms the plugin is disabled-by-default.
+1. Once merged, the plugin appears in the marketplace UI under the categorized list.
 
 ## Marketplace Catalog
 
