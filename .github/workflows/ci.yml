@@ -37,6 +37,15 @@ jobs:
         run: |
           pre-commit run --all-files || true
 
+      - name: Format check (isort/black/ruff)
+        run: |
+          echo "Running format checks..."
+          python -m pip install --upgrade pip
+          pip install isort black ruff
+          isort --check-only --profile black src tests
+          black --check src tests
+          ruff check src tests
+
       - name: Lint (ruff)
         run: ruff check . || true
 
