@@ -136,8 +136,8 @@ The repository includes a minimal bootstrapping routine that trains tiny detecto
 synthetic examples for quick startup. For real usage you should:
 
 1. Gather labeled examples (human-labeled) for `zeroth` (humanity-level harm) and `first` (individual human harm) categories.
-1. Store examples in a directory or in the `memory_system` so the persona can load them for supervised retraining.
-1. Call the persona retrain flow (UI or CLI) to persist updated model weights.
+2. Store examples in a directory or in the `memory_system` so the persona can load them for supervised retraining.
+3. Call the persona retrain flow (UI or CLI) to persist updated model weights.
 
 See documentation for retraining and the CLI helper in the repository docs:
 
