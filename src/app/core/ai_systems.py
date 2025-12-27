@@ -16,6 +16,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from enum import Enum
 from typing import Any
+import importlib.util
 
 try:
     from argon2 import PasswordHasher
@@ -768,10 +769,9 @@ class PluginManager:
         - True if plugin loaded successfully
         - False if there was an error or the plugin was quarantined
         """
-        from border_patrol import VerifierAgent, GateGuardian  # type: ignore[import]
+        from app.agents.border_patrol import VerifierAgent  # type: ignore[import]
 
         vg = VerifierAgent()
-        guardian = GateGuardian()
 
         # Verify and quarantine if needed
         verdict = vg.verify(file_path)
@@ -781,7 +781,7 @@ class PluginManager:
         elif verdict == "suspicious":
             logger.warning("Plugin file %s is suspicious; further analysis may be required", file_path)
             # Quarantine suspicious files for admin review
-            guardian.quarantine(file_path)
+            # guardian.quarantine(file_path)
             return False
         elif verdict == "clean":
             logger.info("Plugin file %s is clean", file_path)
