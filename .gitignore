@@ -6,29 +6,11 @@ ENV/
 # Visual Studio workspace and CodeLens
 .vs/
 
-# Secrets / local environment
-.env
-.env.*
-
-# Python bytecode
-__pycache__/
-*.py[cod]
-
-# Test artifacts
-test-artifacts/
-
 # Build artifacts
 build/
 dist/
 *.egg-info/
 .eggs/
-
-# Local data/runtime
-logs/
-data/
-data/generated_tests/
-web/backend/uploads/
-web/backend/data/
 
 # Documentation
 site/
