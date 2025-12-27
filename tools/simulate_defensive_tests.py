@@ -83,12 +83,13 @@ def generate_payloads(count: int, out_dir: Path) -> List[Path]:
     return files
 
 
-def run_simulation(count: int, data_dir: Path, concurrency: int = 4, timeout: int = 8):
+def run_simulation(count: int, data_dir: Path, concurrency: int = 4, timeout: int = 8, bypass_ratio: float = 0.0):
     out = {
         "count": count,
         "timestamp": time.time(),
         "results": [],
         "summary": {},
+        "bypass_ratio": bypass_ratio,
     }
     tmp = Path(tempfile.mkdtemp(prefix="sim_def_"))
     payloads = generate_payloads(count, tmp)
@@ -96,11 +97,21 @@ def run_simulation(count: int, data_dir: Path, concurrency: int = 4, timeout: in
     verifier = VerifierAgent(agent_id="sim-runner", data_dir=str(data_dir), max_workers=concurrency, timeout=timeout)
 
     detected = 0
+    bypassed = 0
     for p in payloads:
         start = time.time()
-        report = verifier.verify(str(p))
-        took = time.time() - start
-        verdict = report.get('verdict') if isinstance(report, dict) else None
+        simulated_bypass = False
+        if bypass_ratio > 0 and random.random() < bypass_ratio:
+            # simulate that this payload was introduced/ignored by gatekeepers and thus bypasses verification
+            simulated_bypass = True
+            verdict = 'clean'
+            report = {"success": True, "verdict": 'clean', "sandbox": {}, "simulated_bypass": True}
+            bypassed += 1
+            took = 0.0
+        else:
+            report = verifier.verify(str(p))
+            verdict = report.get('verdict') if isinstance(report, dict) else None
+            took = time.time() - start
         if verdict != 'clean':
             detected += 1
         out['results'].append({
@@ -108,18 +119,19 @@ def run_simulation(count: int, data_dir: Path, concurrency: int = 4, timeout: in
             'verdict': verdict,
             'time': took,
             'report': report,
+            'simulated_bypass': simulated_bypass,
         })
 
     out['summary'] = {
         'detected': detected,
         'clean': count - detected,
+        'bypassed': bypassed,
         'duration': time.time() - out['timestamp'],
     }
 
     # persist
-    data_dir.mkdir(parents=True, exist_ok=True)
-    dest = data_dir / 'monitoring' if data_dir.is_dir() else Path(data_dir) / 'monitoring'
-    dest = Path('data/monitoring')
+    data_dir = Path(data_dir)
+    dest = data_dir / 'monitoring'
     dest.mkdir(parents=True, exist_ok=True)
     out_file = dest / f'simulation_results_{int(time.time())}.json'
     out_file.write_text(json.dumps(out, indent=2))
@@ -134,9 +146,10 @@ def main():
     parser.add_argument('--data-dir', type=str, default='data')
     parser.add_argument('--concurrency', type=int, default=4)
     parser.add_argument('--timeout', type=int, default=8)
+    parser.add_argument('--bypass-ratio', type=float, default=0.0, help='Fraction of payloads that simulate bypass (0.0-1.0)')
     args = parser.parse_args()
 
-    res = run_simulation(args.count, Path(args.data_dir), concurrency=args.concurrency, timeout=args.timeout)
+    res = run_simulation(args.count, Path(args.data_dir), concurrency=args.concurrency, timeout=args.timeout, bypass_ratio=args.bypass_ratio)
     print('Done')
 
 
