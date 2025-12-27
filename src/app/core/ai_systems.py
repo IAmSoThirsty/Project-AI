@@ -771,17 +771,20 @@ class PluginManager:
         """
         from app.agents.border_patrol import VerifierAgent  # type: ignore[import]
 
-        vg = VerifierAgent()
+        vg = VerifierAgent(agent_id="plugin-loader")
 
         # Verify and quarantine if needed
-        verdict = vg.verify(file_path)
+        verdict_report = vg.verify(file_path)
+        verdict = None
+        if isinstance(verdict_report, dict):
+            verdict = verdict_report.get("verdict")
+        # backward-compatible simple responses
         if verdict == "malicious":
             logger.warning("Plugin file %s is malicious and has been quarantined", file_path)
             return False
         elif verdict == "suspicious":
             logger.warning("Plugin file %s is suspicious; further analysis may be required", file_path)
             # Quarantine suspicious files for admin review
-            # guardian.quarantine(file_path)
             return False
         elif verdict == "clean":
             logger.info("Plugin file %s is clean", file_path)
@@ -795,11 +798,21 @@ class PluginManager:
             spec = importlib.util.spec_from_file_location(plugin_name, file_path)
             plugin_module = importlib.util.module_from_spec(spec)  # type: ignore
             spec.loader.exec_module(plugin_module)
-            # Assume plugin class is named Plugin and is a subclass of the base Plugin class
+            # Assume plugin class is named Plugin
             plugin_class = getattr(plugin_module, "Plugin", None)
-            if isinstance(plugin_class, type) and issubclass(plugin_class, Plugin):
-                plugin_instance = plugin_class(plugin_name)
-                return self.load_plugin(plugin_instance)
+            if isinstance(plugin_class, type):
+                # Accept either a subclass of Plugin or any class that implements `enable()` (duck-typing)
+                try:
+                    # Instantiate with name if constructor accepts it
+                    try:
+                        plugin_instance = plugin_class(plugin_name)
+                    except TypeError:
+                        plugin_instance = plugin_class()
+                    # Basic duck-typing check: must have enable()
+                    if hasattr(plugin_instance, "enable") and callable(getattr(plugin_instance, "enable")):
+                        return self.load_plugin(plugin_instance)
+                except Exception as e:
+                    logger.exception("Failed to instantiate plugin class from %s: %s", file_path, e)
             logger.warning("No valid plugin class found in %s", file_path)
         except Exception as e:
             logger.exception("Error loading plugin from file %s: %s", file_path, e)
