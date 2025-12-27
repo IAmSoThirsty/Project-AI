@@ -6,6 +6,8 @@ import time
 from dataclasses import dataclass
 from queue import Queue
 from typing import Any
+from concurrent.futures import ProcessPoolExecutor, TimeoutError
+from pathlib import Path
 
 from app.agents.dependency_auditor import DependencyAuditor
 from app.monitoring.cerberus_dashboard import record_incident
@@ -23,15 +25,55 @@ class QuarantineBox:
 
 
 class VerifierAgent:
-    """VerifierAgent executes audits in a sandbox and reports results."""
+    """VerifierAgent executes audits in a sandbox and reports results.
 
-    def __init__(self, agent_id: str, data_dir: str = "data"):
+    Uses a ProcessPoolExecutor to run sandbox executions in isolated processes with a configurable timeout.
+    """
+
+    def __init__(self, agent_id: str, data_dir: str = "data", max_workers: int = 2, timeout: int = 8):
         self.agent_id = agent_id
         self.auditor = DependencyAuditor(data_dir=data_dir)
+        self.executor = ProcessPoolExecutor(max_workers=max_workers)
+        self.timeout = timeout
+
+    def _run_sandbox(self, module_path: str) -> dict[str, Any]:
+        # sandbox_worker.run_module is importable by path; use module run via python -m is safer
+        worker = Path(__file__).parent.parent / "agents" / "sandbox_worker.py"
+        # Use ProcessPoolExecutor to call run_module by import
+        try:
+            future = self.executor.submit(self._call_worker_run, str(worker), str(Path(module_path).resolve()))
+            return future.result(timeout=self.timeout)
+        except TimeoutError:
+            logger.exception("Sandbox execution timed out for %s", module_path)
+            return {"error": "timeout", "success": False}
+        except Exception as e:
+            logger.exception("Sandbox execution failed for %s: %s", module_path, e)
+            return {"error": str(e), "success": False}
+
+    @staticmethod
+    def _call_worker_run(worker_script: str, module_path: str) -> dict[str, Any]:
+        # Import the worker module and call run_module
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("sandbox_worker", worker_script)
+        module = importlib.util.module_from_spec(spec)  # type: ignore
+        spec.loader.exec_module(module)  # type: ignore
+        # call run_module
+        return module.run_module(module_path)
 
     def verify(self, file_path: str) -> dict[str, Any]:
         logger.info("VerifierAgent %s verifying %s", self.agent_id, file_path)
-        report = self.auditor.analyze_new_module(file_path)
+        # quick dependency scan
+        deps_report = self.auditor.analyze_new_module(file_path)
+        # run sandboxed execution
+        sandbox_report = self._run_sandbox(file_path)
+        # merge reports
+        report = {"success": True, "deps": deps_report, "sandbox": sandbox_report}
+        # decide verdict
+        if sandbox_report.get("exception"):
+            report["success"] = False
+            report["verdict"] = "suspicious"
+        else:
+            report["verdict"] = "clean"
         return report
 
 
