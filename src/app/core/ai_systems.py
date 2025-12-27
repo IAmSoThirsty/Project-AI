@@ -759,6 +759,52 @@ class PluginManager:
         self.plugins[plugin.name] = plugin
         return plugin.enable()
 
+    def load_plugin_file(self, file_path: str) -> bool:
+        """Load plugin from file.
+
+        Integrates with border_patrol.VerifierAgent and GateGuardian for quarantine.
+
+        Returns:
+        - True if plugin loaded successfully
+        - False if there was an error or the plugin was quarantined
+        """
+        from border_patrol import VerifierAgent, GateGuardian  # type: ignore[import]
+
+        vg = VerifierAgent()
+        guardian = GateGuardian()
+
+        # Verify and quarantine if needed
+        verdict = vg.verify(file_path)
+        if verdict == "malicious":
+            logger.warning("Plugin file %s is malicious and has been quarantined", file_path)
+            return False
+        elif verdict == "suspicious":
+            logger.warning("Plugin file %s is suspicious; further analysis may be required", file_path)
+            # Quarantine suspicious files for admin review
+            guardian.quarantine(file_path)
+            return False
+        elif verdict == "clean":
+            logger.info("Plugin file %s is clean", file_path)
+        else:
+            logger.warning("Plugin file %s could not be verified (unknown verdict)", file_path)
+            return False  # Default to deny if unsure
+
+        # If file is clean, proceed to load it as a plugin
+        try:
+            plugin_name = os.path.basename(file_path).rsplit(".", 1)[0]
+            spec = importlib.util.spec_from_file_location(plugin_name, file_path)
+            plugin_module = importlib.util.module_from_spec(spec)  # type: ignore
+            spec.loader.exec_module(plugin_module)
+            # Assume plugin class is named Plugin and is a subclass of the base Plugin class
+            plugin_class = getattr(plugin_module, "Plugin", None)
+            if isinstance(plugin_class, type) and issubclass(plugin_class, Plugin):
+                plugin_instance = plugin_class(plugin_name)
+                return self.load_plugin(plugin_instance)
+            logger.warning("No valid plugin class found in %s", file_path)
+        except Exception as e:
+            logger.exception("Error loading plugin from file %s: %s", file_path, e)
+        return False
+
     def get_statistics(self) -> dict[str, Any]:
         """Get stats."""
         return {
