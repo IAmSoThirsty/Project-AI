@@ -16,6 +16,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from enum import Enum
 from typing import Any
+import importlib.util
 
 try:
     from argon2 import PasswordHasher
@@ -753,6 +754,64 @@ class PluginManager:
             logger.warning("Plugin %s already loaded; replacing with new instance", plugin.name)
         self.plugins[plugin.name] = plugin
         return plugin.enable()
+
+    def load_plugin_file(self, file_path: str) -> bool:
+        """Load plugin from file.
+
+        Integrates with border_patrol.VerifierAgent and GateGuardian for quarantine.
+
+        Returns:
+        - True if plugin loaded successfully
+        - False if there was an error or the plugin was quarantined
+        """
+        from app.agents.border_patrol import VerifierAgent  # type: ignore[import]
+
+        vg = VerifierAgent(agent_id="plugin-loader")
+
+        # Verify and quarantine if needed
+        verdict_report = vg.verify(file_path)
+        verdict = None
+        if isinstance(verdict_report, dict):
+            verdict = verdict_report.get("verdict")
+        # backward-compatible simple responses
+        if verdict == "malicious":
+            logger.warning("Plugin file %s is malicious and has been quarantined", file_path)
+            return False
+        elif verdict == "suspicious":
+            logger.warning("Plugin file %s is suspicious; further analysis may be required", file_path)
+            # Quarantine suspicious files for admin review
+            return False
+        elif verdict == "clean":
+            logger.info("Plugin file %s is clean", file_path)
+        else:
+            logger.warning("Plugin file %s could not be verified (unknown verdict)", file_path)
+            return False  # Default to deny if unsure
+
+        # If file is clean, proceed to load it as a plugin
+        try:
+            plugin_name = os.path.basename(file_path).rsplit(".", 1)[0]
+            spec = importlib.util.spec_from_file_location(plugin_name, file_path)
+            plugin_module = importlib.util.module_from_spec(spec)  # type: ignore
+            spec.loader.exec_module(plugin_module)
+            # Assume plugin class is named Plugin
+            plugin_class = getattr(plugin_module, "Plugin", None)
+            if isinstance(plugin_class, type):
+                # Accept either a subclass of Plugin or any class that implements `enable()` (duck-typing)
+                try:
+                    # Instantiate with name if constructor accepts it
+                    try:
+                        plugin_instance = plugin_class(plugin_name)
+                    except TypeError:
+                        plugin_instance = plugin_class()
+                    # Basic duck-typing check: must have enable()
+                    if hasattr(plugin_instance, "enable") and callable(getattr(plugin_instance, "enable")):
+                        return self.load_plugin(plugin_instance)
+                except Exception as e:
+                    logger.exception("Failed to instantiate plugin class from %s: %s", file_path, e)
+            logger.warning("No valid plugin class found in %s", file_path)
+        except Exception as e:
+            logger.exception("Error loading plugin from file %s: %s", file_path, e)
+        return False
 
     def get_statistics(self) -> dict[str, Any]:
         """Get stats."""
