@@ -8,6 +8,7 @@ from queue import Queue
 from typing import Any
 
 from app.agents.dependency_auditor import DependencyAuditor
+from app.monitoring.cerberus_dashboard import record_incident
 
 logger = logging.getLogger(__name__)
 
@@ -22,12 +23,7 @@ class QuarantineBox:
 
 
 class VerifierAgent:
-    """VerifierAgent executes audits in a sandbox and reports results.
-
-    It uses DependencyAuditor to run sandboxed execution and returns a structured
-    verification report. The agent runs tasks from a work queue so it can be
-    scaled or run in its own thread/process.
-    """
+    """VerifierAgent executes audits in a sandbox and reports results."""
 
     def __init__(self, agent_id: str, data_dir: str = "data"):
         self.agent_id = agent_id
@@ -69,6 +65,9 @@ class GateGuardian:
         box.metadata = report
         # Notify watch tower of result
         self.watch_tower.receive_report(self.gate_id, box)
+        # record incident for monitoring if suspicious
+        if not box.verified:
+            record_incident({"type": "suspicious_plugin", "gate": self.gate_id, "module": file_path, "metadata": report})
         return report
 
     def activate_force_field(self) -> None:
@@ -89,13 +88,21 @@ class WatchTower:
         self.tower_id = tower_id
         self.port_admin = port_admin
         self.reports: list[QuarantineBox] = []
+        self.attack_counts: dict[str, int] = {}
 
     def receive_report(self, gate_id: str, box: QuarantineBox) -> None:
         logger.info("WatchTower %s received report from gate %s", self.tower_id, gate_id)
         self.reports.append(box)
         # Evaluate report & escalate if necessary
+        src = box.metadata.get("sandbox", {}).get("source") if box.metadata else None
+        src_id = src or gate_id
+        self.attack_counts[src_id] = self.attack_counts.get(src_id, 0) + 1
+        # If repeated attacks from same source, escalate
+        if self.attack_counts[src_id] > 3:
+            self.port_admin.notify_incident(self.tower_id, gate_id, box)
+            record_incident({"type": "repeated_attacks", "tower": self.tower_id, "gate": gate_id, "source": src_id})
+        # If sandbox crashed or exception, escalate immediately
         if box.metadata and box.metadata.get("sandbox", {}).get("exception"):
-            # suspicious or crashed in sandbox -> escalate
             self.port_admin.notify_incident(self.tower_id, gate_id, box)
 
     def signal_emergency(self, gate_id: str) -> None:
@@ -126,6 +133,8 @@ class Cerberus:
 
     def record_incident(self, incident: dict[str, Any]) -> None:
         logger.error("Cerberus recording incident: %s", incident)
+        # record in persistent monitor
+        record_incident({"type": "incident", "detail": incident})
         self.incidents.append(incident)
 
     def execute_lockdown(self, tower_id: str, gate_id: str) -> None:

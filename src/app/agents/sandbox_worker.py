@@ -5,6 +5,8 @@ import os
 import runpy
 import sys
 import traceback
+import platform
+from pathlib import Path
 
 # Optional resource limits (POSIX)
 try:
@@ -14,8 +16,8 @@ except Exception:
 
 
 def apply_limits():
-    """Apply conservative resource limits when available."""
-    if resource is None:
+    """Apply conservative resource limits when available (POSIX only)."""
+    if resource is None or platform.system() == "Windows":
         return
     try:
         # 100 MB address space
@@ -28,13 +30,12 @@ def apply_limits():
         pass
 
 
-def main():
-    if len(sys.argv) < 2:
-        print(json.dumps({"error": "missing module path"}))
-        sys.exit(2)
-    module_path = sys.argv[1]
-    out = {"module": module_path, "stdout": "", "stderr": "", "exception": None}
+def run_module(module_path: str) -> dict:
+    """Execute the module at module_path in a constrained environment and return a report dict.
 
+    Designed to be safe to call inside a separate process (via ProcessPoolExecutor).
+    """
+    out = {"module": module_path, "stdout": "", "stderr": "", "exception": None}
     try:
         apply_limits()
         # change working dir to module dir
@@ -48,8 +49,16 @@ def main():
         out["exit_code"] = getattr(se, "code", None)
     except Exception:
         out["exception"] = traceback.format_exc()
-    # Return JSON on stdout
-    print(json.dumps(out))
+    return out
+
+
+def main():
+    if len(sys.argv) < 2:
+        print(json.dumps({"error": "missing module path"}))
+        sys.exit(2)
+    module_path = sys.argv[1]
+    report = run_module(module_path)
+    print(json.dumps(report))
 
 
 if __name__ == "__main__":
