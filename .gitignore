@@ -12,6 +12,13 @@ dist/
 *.egg-info/
 .eggs/
 
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
 # Documentation
 site/
 docs/_build/
@@ -21,6 +28,10 @@ docs/_build/
 *.bak
 *.orig
 README_UPDATED.md
+
+# Test and runtime data directories
+data/monitoring/
+data/sandbox_reports/
 
 # Build/analysis artifacts
 *.jar
