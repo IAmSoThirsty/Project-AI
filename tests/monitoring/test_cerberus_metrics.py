@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from app.monitoring.cerberus_dashboard import record_incident, get_metrics
+from app.monitoring.cerberus_dashboard import get_metrics, record_incident
 
 
 def test_metrics_record_and_read(tmp_path: Path, monkeypatch):
