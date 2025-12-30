@@ -22,7 +22,34 @@ docs/_build/
 *.orig
 README_UPDATED.md
 
-# Build/analysis artifacts
-*.jar
-screenshots/
-codacy-analysis-cli-assembly.jar
+# Bytecode caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# pytest cache
+.pytest_cache/
+
+# Coverage
+.coverage
+coverage.xml
+
+# Environment
+.env
+.env.*
+
+# Data (test output, monitoring, sandbox reports)
+data/
+logs/
+
+# Editor/IDE files
+*.sublime-workspace
+*.sublime-project
+.idea/
+.vscode/
+
+# Local runtime files
+*.log
+
+# GitHub Actions transient
+.github/workflows/**.local
