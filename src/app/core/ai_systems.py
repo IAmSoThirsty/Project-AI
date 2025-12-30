@@ -17,9 +17,12 @@ from datetime import datetime
 from enum import Enum
 from typing import Any
 import importlib.util
+import importlib
 
+# Dynamically import argon2.PasswordHasher if available to avoid hard import-time dependency
 try:
-    from argon2 import PasswordHasher
+    _argon2_mod = importlib.import_module("argon2")
+    PasswordHasher = getattr(_argon2_mod, "PasswordHasher", None)
 except Exception:
     PasswordHasher = None
 
@@ -472,6 +475,8 @@ class LearningRequestManager:
         self._notify_queue: queue.Queue[tuple[str, dict]] = queue.Queue(maxsize=200)
         self._notify_executor = ThreadPoolExecutor(max_workers=4)
         self._notify_thread = threading.Thread(target=self._notify_worker, daemon=True)
+        # Event to control background worker lifecycle
+        self._stop_event = threading.Event()
         self._notify_thread.start()
 
         # SQLite DB path
@@ -481,24 +486,62 @@ class LearningRequestManager:
         self._migrate_json_to_db()
         # Load requests from DB into memory
         self._load_requests()
+        
+    def shutdown(self, wait: bool = True) -> None:
+        """Gracefully stop background notifier and threadpool.
+
+        Call during application shutdown or in tests to avoid background threads
+        leaking. Safe to call multiple times.
+        """
+        try:
+            self._stop_event.set()
+            # Allow the notify thread to exit; it uses a timeout-based get loop
+            if wait and getattr(self, '_notify_thread', None):
+                self._notify_thread.join(timeout=5.0)
+            try:
+                if getattr(self, '_notify_executor', None):
+                    self._notify_executor.shutdown(wait=True)
+            except Exception:
+                logger.exception("Error shutting down notify executor")
+        except Exception:
+            logger.exception("Error during LearningRequestManager.shutdown")
 
     def register_approval_listener(self, callback) -> None:
         """Register a callback to be invoked when a learning request is approved."""
         if callback not in self._approval_listeners:
             self._approval_listeners.append(callback)
 
+    def _notify_approval_listeners(self, req_id: str, request: dict) -> None:
+        """Queue a notification for approval listeners. Non-blocking best-effort put."""
+        try:
+            # Use non-blocking put with small timeout to avoid deadlocks
+            self._notify_queue.put((req_id, request), block=False)
+        except Exception:
+            try:
+                # fallback: attempt with timeout
+                self._notify_queue.put((req_id, request), timeout=0.1)
+            except Exception:
+                logger.exception("Failed to enqueue approval notification for %s", req_id)
+
     def _notify_worker(self) -> None:
         """Background worker that invokes approval listeners from a queue."""
-        while True:
+        while not self._stop_event.is_set():
             try:
-                req_id, request = self._notify_queue.get()
+                try:
+                    req_id, request = self._notify_queue.get(timeout=0.5)
+                except Exception:
+                    # timeout or empty; loop again to check stop event
+                    continue
                 # submit to threadpool for each listener
                 for cb in list(self._approval_listeners):
                     try:
                         self._notify_executor.submit(cb, req_id, request)
                     except Exception:
                         logger.exception("Failed to submit approval listener for %s", req_id)
-                self._notify_queue.task_done()
+                try:
+                    self._notify_queue.task_done()
+                except Exception:
+                    pass
             except Exception:
                 logger.exception("Error in notify worker loop")
                 time.sleep(0.1)

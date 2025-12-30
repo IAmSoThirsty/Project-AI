@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import tempfile
+import platform
 from pathlib import Path
 
 from app.agents.dependency_auditor import DependencyAuditor
@@ -17,6 +18,9 @@ def test_analyze_harmless_module(tmp_path: Path):
     assert report["success"] is True
     assert report["module"].endswith("harmless.py")
     assert "sandbox" in report
+    # On Windows outside containers, sandbox may be declined for safety
+    if platform.system() == "Windows":
+        assert report["sandbox"].get("error") in ("platform_unsafe", None)
     # ensure persisted file exists
     reports = list(Path(str(tmp_path)).glob("sandbox_reports/sandbox_report_harmless_*.json"))
     assert len(reports) >= 1

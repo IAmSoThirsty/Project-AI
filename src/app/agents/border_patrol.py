@@ -55,10 +55,18 @@ class VerifierAgent:
         # Import the worker module and call run_module
         import importlib.util
         spec = importlib.util.spec_from_file_location("sandbox_worker", worker_script)
+        if spec is None or spec.loader is None:
+            return {"error": "failed_to_load_worker_spec", "success": False}
         module = importlib.util.module_from_spec(spec)  # type: ignore
-        spec.loader.exec_module(module)  # type: ignore
+        try:
+            spec.loader.exec_module(module)  # type: ignore
+        except Exception as e:
+            return {"error": f"failed_to_exec_worker: {e}", "success": False}
         # call run_module
-        return module.run_module(module_path)
+        try:
+            return module.run_module(module_path)
+        except Exception as e:
+            return {"error": f"worker_run_exception: {e}", "success": False}
 
     def verify(self, file_path: str) -> dict[str, Any]:
         logger.info("VerifierAgent %s verifying %s", self.agent_id, file_path)
