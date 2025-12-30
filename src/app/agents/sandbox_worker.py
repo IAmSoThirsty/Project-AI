@@ -20,12 +20,18 @@ def apply_limits():
     if resource is None or platform.system() == "Windows":
         return
     try:
-        # 100 MB address space
-        resource.setrlimit(resource.RLIMIT_AS, (100 * 1024 * 1024, resource.RLIM_INFINITY))
-        # 2 seconds CPU time
-        resource.setrlimit(resource.RLIMIT_CPU, (2, 4))
-        # limit file descriptors
-        resource.setrlimit(resource.RLIMIT_NOFILE, (16, 64))
+        setrlimit = getattr(resource, "setrlimit", None)
+        rlimit_as = getattr(resource, "RLIMIT_AS", None)
+        rlim_infty = getattr(resource, "RLIM_INFINITY", None)
+        rlimit_cpu = getattr(resource, "RLIMIT_CPU", None)
+        rlimit_nofile = getattr(resource, "RLIMIT_NOFILE", None)
+
+        if callable(setrlimit) and rlimit_as is not None and rlim_infty is not None:
+            setrlimit(rlimit_as, (100 * 1024 * 1024, rlim_infty))
+        if callable(setrlimit) and rlimit_cpu is not None:
+            setrlimit(rlimit_cpu, (2, 4))
+        if callable(setrlimit) and rlimit_nofile is not None:
+            setrlimit(rlimit_nofile, (16, 64))
     except Exception:
         pass
 
