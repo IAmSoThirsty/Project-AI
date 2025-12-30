@@ -1,0 +1,19 @@
+{
+  "incidents": [
+    {
+      "type": "test_incident",
+      "gate": "g-1",
+      "source": "s-1",
+      "ts": 1766841566.1389797
+    },
+    {
+      "type": "test_incident",
+      "gate": "g-1",
+      "source": "s-1",
+      "ts": 1766841646.0200877
+    }
+  ],
+  "attack_counts": {
+    "s-1": 2
+  }
+}
