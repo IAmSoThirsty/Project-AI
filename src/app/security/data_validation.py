@@ -384,9 +384,19 @@ class DataPoisoningDefense:
             re.compile(r"javascript:", re.IGNORECASE),
             re.compile(r"onerror\s*=", re.IGNORECASE),
             re.compile(r"onclick\s*=", re.IGNORECASE),
+            re.compile(r"onload\s*=", re.IGNORECASE),
+            re.compile(r"onfocus\s*=", re.IGNORECASE),
+            re.compile(r"onstart\s*=", re.IGNORECASE),
+            re.compile(r"<svg.*?onload", re.IGNORECASE),
+            re.compile(r"<iframe", re.IGNORECASE),
+            re.compile(r"<embed", re.IGNORECASE),
+            re.compile(r"<object", re.IGNORECASE),
             re.compile(r"\.\./\.\."),  # Path traversal
             re.compile(r";\s*drop\s+table", re.IGNORECASE),  # SQL injection
             re.compile(r"union\s+select", re.IGNORECASE),  # SQL injection
+            re.compile(r"\$\{jndi:", re.IGNORECASE),  # Log4j injection
+            re.compile(r"\{\{.*?\}\}"),  # Template injection
+            re.compile(r"%0d%0a", re.IGNORECASE),  # CRLF injection
         ]
 
     def check_for_poison(self, data: str) -> tuple[bool, List[str]]:
