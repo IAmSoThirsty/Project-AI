@@ -10,7 +10,7 @@ This module implements:
 
 import json
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -62,7 +62,7 @@ class AWSSecurityManager:
             logger.error("Failed to initialize AWS session: %s", e)
             raise
 
-    def get_secret(self, secret_name: str) -> Dict[str, Any]:
+    def get_secret(self, secret_name: str) -> dict[str, Any]:
         """Retrieve secret from AWS Secrets Manager.
 
         Args:
@@ -89,7 +89,7 @@ class AWSSecurityManager:
             logger.error("Failed to retrieve secret %s: %s", secret_name, e)
             raise
 
-    def put_secret(self, secret_name: str, secret_data: Dict[str, Any]) -> None:
+    def put_secret(self, secret_name: str, secret_data: dict[str, Any]) -> None:
         """Store secret in AWS Secrets Manager.
 
         Args:
@@ -175,7 +175,7 @@ class AWSSecurityManager:
             logger.error("Failed to download from S3: %s", e)
             raise
 
-    def audit_iam_permissions(self, role_arn: Optional[str] = None) -> Dict[str, Any]:
+    def audit_iam_permissions(self, role_arn: str | None = None) -> dict[str, Any]:
         """Audit IAM permissions for current role.
 
         Args:
@@ -239,7 +239,7 @@ class AWSSecurityManager:
             logger.error("IAM audit failed: %s", e)
             return {"error": str(e)}
 
-    def validate_polp(self, required_permissions: List[str]) -> bool:
+    def validate_polp(self, required_permissions: list[str]) -> bool:
         """Validate that current role follows PoLP.
 
         Args:
@@ -304,7 +304,7 @@ class AWSSecurityManager:
 
     def get_temporary_credentials(
         self, role_arn: str, session_name: str, duration: int = 3600
-    ) -> Dict[str, str]:
+    ) -> dict[str, str]:
         """Get temporary credentials via STS AssumeRole.
 
         Args:

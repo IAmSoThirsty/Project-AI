@@ -3,7 +3,6 @@
 import json
 import tempfile
 import threading
-import time
 from pathlib import Path
 
 import numpy as np
@@ -15,7 +14,7 @@ from app.security.agent_security import (
     RuntimeFuzzer,
 )
 from app.security.database_security import SecureDatabaseManager
-from app.security.monitoring import SecurityEvent, SecurityMonitor, StructuredLogger
+from app.security.monitoring import SecurityMonitor, StructuredLogger
 from app.security.web_service import (
     InputValidator,
     RateLimiter,
@@ -190,7 +189,7 @@ class TestRuntimeFuzzer:
         cases = fuzzer.fuzz_input("type_confusion", "string")
 
         # Should have various types
-        types_present = set(type(c) for c in cases)
+        types_present = {type(c) for c in cases}
         assert len(types_present) > 3
 
     def test_overflow_fuzzing(self):
@@ -438,7 +437,7 @@ class TestWebServiceSecurity:
         limiter = RateLimiter(max_requests=5, window=60)
 
         # Make requests
-        for i in range(5):
+        for _i in range(5):
             assert limiter.check_rate_limit("client1")
 
         # 6th request should fail
@@ -499,7 +498,7 @@ class TestAWSIntegration:
         """Test AWS manager initialization."""
         # This will fail without credentials, which is expected in test
         try:
-            manager = AWSSecurityManager(region="us-east-1")
+            AWSSecurityManager(region="us-east-1")
         except Exception:
             pytest.skip("AWS credentials not available")
 

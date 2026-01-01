@@ -12,7 +12,7 @@ import json
 import logging
 import time
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -34,10 +34,10 @@ class SecurityEvent:
     severity: str  # critical, high, medium, low
     source: str
     description: str
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
     timestamp: float = field(default_factory=time.time)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return {
             "event_type": self.event_type,
@@ -55,7 +55,7 @@ class SecurityMonitor:
     def __init__(
         self,
         region: str = "us-east-1",
-        sns_topic_arn: Optional[str] = None,
+        sns_topic_arn: str | None = None,
         cloudwatch_namespace: str = "ProjectAI/Security",
     ):
         """Initialize security monitor.
@@ -69,8 +69,8 @@ class SecurityMonitor:
         self.sns_topic_arn = sns_topic_arn
         self.cloudwatch_namespace = cloudwatch_namespace
 
-        self.event_log: List[SecurityEvent] = []
-        self.threat_signatures: Dict[str, List[str]] = {}
+        self.event_log: list[SecurityEvent] = []
+        self.threat_signatures: dict[str, list[str]] = {}
 
         if BOTO3_AVAILABLE:
             self.cloudwatch = boto3.client("cloudwatch", region_name=region)
@@ -86,7 +86,7 @@ class SecurityMonitor:
         severity: str,
         source: str,
         description: str,
-        metadata: Optional[Dict] = None,
+        metadata: dict | None = None,
     ) -> None:
         """Log security event and send alerts if needed.
 
@@ -217,7 +217,7 @@ Metadata:
 This is an automated security alert from Project-AI
 """
 
-    def add_threat_signature(self, campaign_name: str, indicators: List[str]) -> None:
+    def add_threat_signature(self, campaign_name: str, indicators: list[str]) -> None:
         """Add threat campaign signature.
 
         Args:
@@ -227,7 +227,7 @@ This is an automated security alert from Project-AI
         self.threat_signatures[campaign_name] = indicators
         logger.info("Added threat signature: %s (%d indicators)", campaign_name, len(indicators))
 
-    def check_threat_signatures(self, data: str) -> List[str]:
+    def check_threat_signatures(self, data: str) -> list[str]:
         """Check data against threat signatures.
 
         Args:
@@ -248,8 +248,8 @@ This is an automated security alert from Project-AI
         return matches
 
     def get_event_statistics(
-        self, time_window: Optional[float] = None
-    ) -> Dict[str, Any]:
+        self, time_window: float | None = None
+    ) -> dict[str, Any]:
         """Get event statistics.
 
         Args:
@@ -291,7 +291,7 @@ This is an automated security alert from Project-AI
 
     def detect_anomalies(
         self, time_window: float = 3600, threshold: int = 10
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Detect anomalous event patterns.
 
         Args:

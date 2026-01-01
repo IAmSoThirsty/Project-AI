@@ -11,7 +11,7 @@ import json
 import logging
 import sqlite3
 from contextlib import contextmanager
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -128,8 +128,8 @@ class SecureDatabaseManager:
             conn.close()
 
     def execute_query(
-        self, query: str, params: Tuple = (), fetch: bool = False
-    ) -> Optional[List[sqlite3.Row]]:
+        self, query: str, params: tuple = (), fetch: bool = False
+    ) -> list[sqlite3.Row] | None:
         """Execute parameterized query safely.
 
         Args:
@@ -186,7 +186,7 @@ class SecureDatabaseManager:
         return True
 
     def insert_user(
-        self, username: str, password_hash: str, email: Optional[str] = None
+        self, username: str, password_hash: str, email: str | None = None
     ) -> int:
         """Insert new user with parameterized query.
 
@@ -214,7 +214,7 @@ class SecureDatabaseManager:
         logger.info("User created: %s (id: %d)", username, user_id)
         return user_id
 
-    def get_user(self, username: str) -> Optional[Dict[str, Any]]:
+    def get_user(self, username: str) -> dict[str, Any] | None:
         """Get user by username with parameterized query.
 
         Args:
@@ -243,7 +243,7 @@ class SecureDatabaseManager:
             return
 
         # Build query dynamically with parameters
-        set_clauses = [f"{key} = ?" for key in kwargs.keys()]
+        set_clauses = [f"{key} = ?" for key in kwargs]
         values = list(kwargs.values()) + [user_id]
 
         query = f"""
@@ -257,11 +257,11 @@ class SecureDatabaseManager:
 
     def log_action(
         self,
-        user_id: Optional[int],
+        user_id: int | None,
         action: str,
-        resource: Optional[str] = None,
-        details: Optional[Dict] = None,
-        ip_address: Optional[str] = None,
+        resource: str | None = None,
+        details: dict | None = None,
+        ip_address: str | None = None,
     ) -> None:
         """Log user action to audit log.
 
@@ -284,8 +284,8 @@ class SecureDatabaseManager:
         )
 
     def get_audit_log(
-        self, user_id: Optional[int] = None, limit: int = 100
-    ) -> List[Dict[str, Any]]:
+        self, user_id: int | None = None, limit: int = 100
+    ) -> list[dict[str, Any]]:
         """Get audit log entries.
 
         Args:
@@ -314,7 +314,7 @@ class SecureDatabaseManager:
         rows = self.execute_query(query, params, fetch=True)
         return [dict(row) for row in rows]
 
-    def save_agent_state(self, agent_id: str, state_data: Dict[str, Any]) -> None:
+    def save_agent_state(self, agent_id: str, state_data: dict[str, Any]) -> None:
         """Save agent state to database.
 
         Args:
@@ -334,7 +334,7 @@ class SecureDatabaseManager:
         self.execute_query(query, (agent_id, state_json))
         logger.debug("Agent state saved: %s", agent_id)
 
-    def load_agent_state(self, agent_id: str) -> Optional[Dict[str, Any]]:
+    def load_agent_state(self, agent_id: str) -> dict[str, Any] | None:
         """Load agent state from database.
 
         Args:
@@ -353,7 +353,7 @@ class SecureDatabaseManager:
         return None
 
     def store_knowledge(
-        self, category: str, key: str, value: Any, metadata: Optional[Dict] = None
+        self, category: str, key: str, value: Any, metadata: dict | None = None
     ) -> None:
         """Store knowledge in database.
 
@@ -379,8 +379,8 @@ class SecureDatabaseManager:
         logger.debug("Knowledge stored: %s/%s", category, key)
 
     def get_knowledge(
-        self, category: str, key: Optional[str] = None
-    ) -> List[Dict[str, Any]]:
+        self, category: str, key: str | None = None
+    ) -> list[dict[str, Any]]:
         """Get knowledge from database.
 
         Args:

@@ -11,7 +11,8 @@ This module implements:
 import logging
 import multiprocessing as mp
 import threading
-from typing import Any, Callable, Dict, List, Optional
+from collections.abc import Callable
+from typing import Any
 
 import numpy as np
 
@@ -28,9 +29,9 @@ class AgentEncapsulation:
             agent_id: Unique agent identifier
         """
         self.agent_id = agent_id
-        self._state: Dict[str, Any] = {}
+        self._state: dict[str, Any] = {}
         self._lock = threading.RLock()
-        self._access_log: List[Dict] = []
+        self._access_log: list[dict] = []
         self._allowed_operations = {
             "read": True,
             "write": True,
@@ -95,7 +96,7 @@ class AgentEncapsulation:
             }
             logger.info("Agent %s permissions updated", self.agent_id)
 
-    def get_access_log(self) -> List[Dict]:
+    def get_access_log(self) -> list[dict]:
         """Get access log for auditing.
 
         Returns:
@@ -137,7 +138,7 @@ class NumericalProtection:
         self.clip_range = (-1e6, 1e6)  # Default bounds
         self.outlier_threshold = 3.0  # Standard deviations
 
-    def clip_array(self, arr: np.ndarray, min_val: Optional[float] = None, max_val: Optional[float] = None) -> np.ndarray:
+    def clip_array(self, arr: np.ndarray, min_val: float | None = None, max_val: float | None = None) -> np.ndarray:
         """Clip array values to safe range.
 
         Args:
@@ -159,7 +160,7 @@ class NumericalProtection:
 
         return clipped
 
-    def remove_outliers(self, arr: np.ndarray, threshold: Optional[float] = None) -> np.ndarray:
+    def remove_outliers(self, arr: np.ndarray, threshold: float | None = None) -> np.ndarray:
         """Remove outliers from array using Z-score method.
 
         Args:
@@ -253,13 +254,13 @@ class PluginIsolation:
             timeout: Execution timeout in seconds
         """
         self.timeout = timeout
-        self.execution_log: List[Dict] = []
+        self.execution_log: list[dict] = []
 
     def execute_isolated(
         self,
         plugin_func: Callable,
         args: tuple = (),
-        kwargs: Optional[Dict] = None,
+        kwargs: dict | None = None,
     ) -> Any:
         """Execute plugin in isolated process.
 
@@ -330,7 +331,7 @@ class RuntimeFuzzer:
             "overflow": self._fuzz_overflow,
         }
 
-    def fuzz_input(self, strategy: str, base_input: Any) -> List[Any]:
+    def fuzz_input(self, strategy: str, base_input: Any) -> list[Any]:
         """Generate fuzzed inputs using specified strategy.
 
         Args:
@@ -346,7 +347,7 @@ class RuntimeFuzzer:
 
         return self.fuzz_strategies[strategy](base_input)
 
-    def _fuzz_random_string(self, base_input: Any) -> List[Any]:
+    def _fuzz_random_string(self, base_input: Any) -> list[Any]:
         """Generate random string fuzzing cases.
 
         Args:
@@ -381,7 +382,7 @@ class RuntimeFuzzer:
 
         return cases
 
-    def _fuzz_boundary_values(self, base_input: Any) -> List[Any]:
+    def _fuzz_boundary_values(self, base_input: Any) -> list[Any]:
         """Generate boundary value fuzzing cases.
 
         Args:
@@ -405,7 +406,7 @@ class RuntimeFuzzer:
 
         return cases
 
-    def _fuzz_type_confusion(self, base_input: Any) -> List[Any]:
+    def _fuzz_type_confusion(self, base_input: Any) -> list[Any]:
         """Generate type confusion fuzzing cases.
 
         Args:
@@ -428,7 +429,7 @@ class RuntimeFuzzer:
 
         return cases
 
-    def _fuzz_overflow(self, base_input: Any) -> List[Any]:
+    def _fuzz_overflow(self, base_input: Any) -> list[Any]:
         """Generate overflow fuzzing cases.
 
         Args:
@@ -438,7 +439,7 @@ class RuntimeFuzzer:
             List of overflow cases
         """
         cases = [
-            [i for i in range(10000)],  # Large list
+            list(range(10000)),  # Large list
             {"key" + str(i): i for i in range(1000)},  # Large dict
             "A" * 1000000,  # 1MB string
         ]

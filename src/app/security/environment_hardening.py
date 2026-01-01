@@ -14,7 +14,6 @@ import platform
 import stat
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +39,7 @@ class EnvironmentHardening:
         ]
         self.validation_results = {}
 
-    def validate_environment(self) -> Tuple[bool, List[str]]:
+    def validate_environment(self) -> tuple[bool, list[str]]:
         """Run comprehensive environment validation.
 
         Returns:
@@ -93,7 +92,7 @@ class EnvironmentHardening:
 
         return in_venv
 
-    def _validate_sys_path(self) -> List[str]:
+    def _validate_sys_path(self) -> list[str]:
         """Validate sys.path for security issues.
 
         Returns:
@@ -150,7 +149,7 @@ class EnvironmentHardening:
             True if ASLR is enabled
         """
         try:
-            with open("/proc/sys/kernel/randomize_va_space", "r") as f:
+            with open("/proc/sys/kernel/randomize_va_space") as f:
                 aslr_level = int(f.read().strip())
 
             if aslr_level >= 2:
@@ -183,7 +182,7 @@ class EnvironmentHardening:
         logger.info("macOS detected - ASLR enabled by default")
         return True
 
-    def _validate_directory_permissions(self) -> List[str]:
+    def _validate_directory_permissions(self) -> list[str]:
         """Validate directory permissions for security.
 
         Returns:
@@ -227,7 +226,7 @@ class EnvironmentHardening:
 
         return issues
 
-    def _validate_data_structures(self) -> List[str]:
+    def _validate_data_structures(self) -> list[str]:
         """Validate initial data structures.
 
         Returns:
@@ -293,7 +292,7 @@ class EnvironmentHardening:
 
             logger.info("Secured directory: %s", full_path)
 
-    def get_validation_report(self) -> Dict:
+    def get_validation_report(self) -> dict:
         """Get detailed validation report.
 
         Returns:
