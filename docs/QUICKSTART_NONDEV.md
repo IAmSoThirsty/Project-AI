@@ -4,7 +4,7 @@ This guide helps non-technical users get started with Project-AI (Desktop) quick
 
 Prerequisites:
 - Windows 10/11 or recent macOS
-- Python 3.11 installed (use Microsoft Store or official installer)
+- Python 3.12 installed (use Microsoft Store or official installer)
 
 Steps:
 1. Download the repository ZIP or clone it using GitHub Desktop.

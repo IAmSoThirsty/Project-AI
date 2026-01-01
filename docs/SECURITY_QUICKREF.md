@@ -324,7 +324,7 @@ aws iam simulate-principal-policy \
 # Ensure dependencies installed
 pip install -r requirements.txt
 
-# Check Python version (requires 3.11+)
+# Check Python version (requires 3.12+)
 python --version
 
 # Run with verbose output
