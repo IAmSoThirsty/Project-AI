@@ -3,7 +3,7 @@
 This quickstart helps you run the native desktop (PyQt6) Leather Book interface.
 
 Prerequisites
-- Python 3.11 or newer
+- Python 3.12 or newer
 - Virtualenv (recommended)
 - PyQt6, cryptography, scikit-learn and other dependencies (see requirements.txt)
 

@@ -420,7 +420,7 @@ set -e
 apt-get update && apt-get upgrade -y
 
 # Install Python 3.11
-apt-get install -y python3.11 python3.11-venv python3-pip
+apt-get install -y python3.12 python3.12-venv python3-pip
 
 # Create app user
 useradd -m -s /bin/bash projectai
@@ -431,7 +431,7 @@ git clone https://github.com/yourorg/Project-AI.git
 cd Project-AI
 
 # Setup virtual environment
-python3.11 -m venv venv
+python3.12 -m venv venv
 source venv/bin/activate
 
 # Install dependencies
@@ -453,7 +453,7 @@ systemctl start projectai
 
 Dockerfile:
 ```dockerfile
-FROM python:3.11-slim
+FROM python:3.12-slim
 
 # Security: Run as non-root
 RUN useradd -m -u 1000 projectai
