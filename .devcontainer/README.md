@@ -4,7 +4,7 @@ This directory contains the GitHub Codespaces and VS Code Dev Containers configu
 
 ## What's Included
 
-- **Python 3.11**: Matches the project's Python version requirement
+- **Python 3.12**: Matches the project's Python version requirement
 - **Node.js 18**: For frontend tooling and package management
 - **VS Code Extensions**: Pre-configured extensions for Python development, including:
   - Python language support with Pylance
