@@ -12,7 +12,7 @@ import hashlib
 import hmac
 import logging
 import time
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any
 from xml.etree import ElementTree as ET
 
 logger = logging.getLogger(__name__)
@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 class SOAPClient:
     """Secure SOAP over HTTP client."""
 
-    def __init__(self, endpoint: str, username: Optional[str] = None, password: Optional[str] = None):
+    def __init__(self, endpoint: str, username: str | None = None, password: str | None = None):
         """Initialize SOAP client.
 
         Args:
@@ -32,9 +32,9 @@ class SOAPClient:
         self.endpoint = endpoint
         self.username = username
         self.password = password
-        self.session_token: Optional[str] = None
+        self.session_token: str | None = None
 
-    def call(self, method: str, params: Dict[str, Any]) -> Dict[str, Any]:
+    def call(self, method: str, params: dict[str, Any]) -> dict[str, Any]:
         """Call SOAP method with parameters.
 
         Args:
@@ -65,7 +65,7 @@ class SOAPClient:
         response_xml = "<soap:Envelope><soap:Body><result>success</result></soap:Body></soap:Envelope>"
         return self._parse_response(response_xml)
 
-    def _build_envelope(self, method: str, params: Dict[str, Any]) -> str:
+    def _build_envelope(self, method: str, params: dict[str, Any]) -> str:
         """Build SOAP envelope.
 
         Args:
@@ -160,7 +160,7 @@ class SOAPClient:
 
         return ET.tostring(root, encoding="unicode")
 
-    def _parse_response(self, response_xml: str) -> Dict[str, Any]:
+    def _parse_response(self, response_xml: str) -> dict[str, Any]:
         """Parse SOAP response.
 
         Args:
@@ -186,7 +186,7 @@ class SOAPClient:
 
         except ET.ParseError as e:
             logger.error("Failed to parse SOAP response: %s", e)
-            raise ValueError(f"Invalid SOAP response: {e}")
+            raise ValueError(f"Invalid SOAP response: {e}") from e
 
 
 class SecureWebHandler:
@@ -194,10 +194,10 @@ class SecureWebHandler:
 
     def __init__(self):
         """Initialize secure web handler."""
-        self.capabilities: Dict[str, List[str]] = {}
+        self.capabilities: dict[str, list[str]] = {}
         self.locked_headers = {"X-Frame-Options", "X-Content-Type-Options", "X-XSS-Protection"}
 
-    def register_capability(self, token: str, allowed_actions: List[str]) -> None:
+    def register_capability(self, token: str, allowed_actions: list[str]) -> None:
         """Register capability token with allowed actions.
 
         Args:
@@ -228,7 +228,7 @@ class SecureWebHandler:
 
         return allowed
 
-    def generate_capability_token(self, allowed_actions: List[str]) -> str:
+    def generate_capability_token(self, allowed_actions: list[str]) -> str:
         """Generate new capability token.
 
         Args:
@@ -244,7 +244,7 @@ class SecureWebHandler:
 
         return token
 
-    def validate_headers(self, headers: Dict[str, str]) -> bool:
+    def validate_headers(self, headers: dict[str, str]) -> bool:
         """Validate request headers for security.
 
         Args:
@@ -254,16 +254,15 @@ class SecureWebHandler:
             True if headers are valid
         """
         # Check for required security headers (in responses)
-        if "X-Content-Type-Options" in headers:
-            if headers["X-Content-Type-Options"] != "nosniff":
-                logger.warning("Invalid X-Content-Type-Options header")
-                return False
+        if "X-Content-Type-Options" in headers and headers["X-Content-Type-Options"] != "nosniff":
+            logger.warning("Invalid X-Content-Type-Options header")
+            return False
 
         # Check for locked headers (shouldn't be modified)
         # This is more relevant for response headers
         return True
 
-    def set_secure_headers(self) -> Dict[str, str]:
+    def set_secure_headers(self) -> dict[str, str]:
         """Get secure response headers.
 
         Returns:
@@ -323,7 +322,7 @@ class RateLimiter:
         """
         self.max_requests = max_requests
         self.window = window
-        self.requests: Dict[str, List[float]] = {}
+        self.requests: dict[str, list[float]] = {}
 
     def check_rate_limit(self, identifier: str) -> bool:
         """Check if identifier is within rate limit.

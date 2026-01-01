@@ -6,7 +6,6 @@ into a production application.
 
 import logging
 import os
-from pathlib import Path
 
 from app.security import (
     AgentEncapsulation,

@@ -15,7 +15,7 @@ import logging
 import re
 from dataclasses import dataclass
 from io import StringIO
-from typing import Any, Dict, List, Optional, Set
+from typing import Any
 from xml.etree import ElementTree as ET
 
 logger = logging.getLogger(__name__)
@@ -29,7 +29,7 @@ class ParsedData:
     data_type: str
     hash: str
     validated: bool
-    issues: List[str]
+    issues: list[str]
 
 
 class SecureDataParser:
@@ -41,7 +41,7 @@ class SecureDataParser:
         self.allowed_encodings = {"utf-8", "ascii", "latin-1"}
         self.blocked_xml_features = {"entity", "dtd", "external"}
 
-    def parse_xml(self, xml_data: str, schema: Optional[Dict] = None) -> ParsedData:
+    def parse_xml(self, xml_data: str, schema: dict | None = None) -> ParsedData:
         """Parse XML with security controls.
 
         Args:
@@ -103,7 +103,7 @@ class SecureDataParser:
             )
 
     def parse_csv(
-        self, csv_data: str, schema: Optional[Dict] = None, delimiter: str = ","
+        self, csv_data: str, schema: dict | None = None, delimiter: str = ","
     ) -> ParsedData:
         """Parse CSV with validation and type checking.
 
@@ -151,7 +151,7 @@ class SecureDataParser:
                 data=None, data_type="csv", hash="", validated=False, issues=issues
             )
 
-    def parse_json(self, json_data: str, schema: Optional[Dict] = None) -> ParsedData:
+    def parse_json(self, json_data: str, schema: dict | None = None) -> ParsedData:
         """Parse JSON with validation.
 
         Args:
@@ -241,7 +241,7 @@ class SecureDataParser:
 
         return False
 
-    def _xml_to_dict(self, element: ET.Element) -> Dict:
+    def _xml_to_dict(self, element: ET.Element) -> dict:
         """Convert XML element to dictionary.
 
         Args:
@@ -275,7 +275,7 @@ class SecureDataParser:
 
         return result or element.text
 
-    def _validate_schema(self, data: Any, schema: Dict) -> List[str]:
+    def _validate_schema(self, data: Any, schema: dict) -> list[str]:
         """Validate data against schema.
 
         Args:
@@ -311,7 +311,7 @@ class SecureDataParser:
 
         return issues
 
-    def _validate_csv_row(self, row: Dict, schema: Dict, row_idx: int) -> List[str]:
+    def _validate_csv_row(self, row: dict, schema: dict, row_idx: int) -> list[str]:
         """Validate a CSV row against schema.
 
         Args:
@@ -378,8 +378,8 @@ class DataPoisoningDefense:
 
     def __init__(self):
         """Initialize data poisoning defense."""
-        self.known_poisons: Set[str] = set()
-        self.poison_patterns: List[re.Pattern] = [
+        self.known_poisons: set[str] = set()
+        self.poison_patterns: list[re.Pattern] = [
             re.compile(r"<script.*?>.*?</script>", re.IGNORECASE | re.DOTALL),
             re.compile(r"javascript:", re.IGNORECASE),
             re.compile(r"onerror\s*=", re.IGNORECASE),
@@ -399,7 +399,7 @@ class DataPoisoningDefense:
             re.compile(r"%0d%0a", re.IGNORECASE),  # CRLF injection
         ]
 
-    def check_for_poison(self, data: str) -> tuple[bool, List[str]]:
+    def check_for_poison(self, data: str) -> tuple[bool, list[str]]:
         """Check data for poisoning patterns.
 
         Args:

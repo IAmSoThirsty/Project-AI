@@ -5,9 +5,6 @@ including adversarial inputs, fuzzing, concurrency, and edge cases.
 """
 
 import json
-import multiprocessing as mp
-import random
-import string
 import tempfile
 import threading
 import time
@@ -18,9 +15,7 @@ import pytest
 
 from app.security import (
     AgentEncapsulation,
-    AWSSecurityManager,
     DataPoisoningDefense,
-    EnvironmentHardening,
     SecureDatabaseManager,
     SecureDataParser,
     SecurityMonitor,
@@ -323,7 +318,7 @@ class TestRateLimitingEdgeCases:
         limiter = RateLimiter(max_requests=10, window=1)
 
         # Burst exactly at limit
-        for i in range(10):
+        for _i in range(10):
             assert limiter.check_rate_limit("client1")
 
         # 11th should fail
@@ -382,7 +377,7 @@ class TestEventStormDetection:
         monitor = SecurityMonitor()
 
         # Generate normal traffic
-        for i in range(50):
+        for _ in range(50):
             monitor.log_security_event(
                 event_type="normal_event",
                 severity="low",
@@ -391,7 +386,7 @@ class TestEventStormDetection:
             )
 
         # Generate attack storm
-        for i in range(100):
+        for _ in range(100):
             monitor.log_security_event(
                 event_type="attack_event",
                 severity="high",

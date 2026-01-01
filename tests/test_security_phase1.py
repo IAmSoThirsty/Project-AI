@@ -5,7 +5,6 @@ import platform
 import tempfile
 from pathlib import Path
 
-import numpy as np
 import pytest
 
 from app.security.data_validation import (
