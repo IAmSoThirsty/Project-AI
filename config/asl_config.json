@@ -1,0 +1,7 @@
+{
+  "current_asl_level": "ASL2",
+  "last_evaluation": null,
+  "auto_escalate": true,
+  "require_manual_approval_for_asl4": true,
+  "evaluation_frequency_days": 30
+}
