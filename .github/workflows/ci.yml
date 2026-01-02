@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.11, 3.12]
+        python-version: [3.12, 3.13]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -100,7 +100,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: '3.12'
       - name: Upgrade pip
         run: python -m pip install --upgrade pip
       - name: Install ruff
@@ -117,7 +117,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: '3.12'
       - name: Upgrade pip
         run: python -m pip install --upgrade pip
       - name: Install test deps
@@ -141,7 +141,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: '3.12'
       - name: Install codacy CLI
         run: pip install codacy-cli
       - name: Run Codacy analysis

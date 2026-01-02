@@ -505,7 +505,7 @@ MAX_UPLOAD_SIZE=104857600  # 100MB
 # Install all dependencies
 pip install -r requirements.txt
 
-# Check Python version (requires 3.11+)
+# Check Python version (requires 3.12+)
 python --version
 
 # Run with verbose output
