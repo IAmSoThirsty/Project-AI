@@ -54,7 +54,7 @@ def main():
         print(cyber_knowledge.get_summary())
         print("=" * 80)
         print("\nCybersecurity knowledge successfully integrated!")
-        print(f"Total sections added: 6")
+        print("Total sections added: 6")
         print(f"Export location: {export_path}")
 
         # Verify integration
