@@ -184,7 +184,8 @@ def main():
     # Filter by categories if specified
     if args.categories:
         category_filter = [cat.strip().upper() for cat in args.categories.split(",")]
-        scenarios = [s for s in scenarios if any(s.category.startswith(f"{cat}_") for cat in category_filter)]
+        # Match categories that start with the letter (e.g., "A" matches "A1_", "A2_", etc.)
+        scenarios = [s for s in scenarios if any(s.category.split("_")[0].startswith(cat) for cat in category_filter)]
         logger.info(f"\nFiltered to categories {category_filter}: {len(scenarios)} scenarios")
     
     # Export scenarios if requested
