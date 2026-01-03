@@ -1,0 +1,54 @@
+{
+  "test_suite": "red_team_stress",
+  "timestamp": "20260102_160204",
+  "total_attacks": 800,
+  "defended_attacks": 800,
+  "defense_win_rate": 1.0,
+  "proximity_stats": {
+    "avg_perturbation_magnitude": 0.8333504281334351,
+    "max_perturbation_magnitude": 1.0,
+    "avg_near_miss_score": 0.295619064983889,
+    "near_miss_count": 0,
+    "near_miss_rate": 0.0
+  },
+  "effort_stats": {
+    "avg_attempts_to_detect": 1.0,
+    "max_attempts_to_detect": 1,
+    "avg_tokens_changed": 2.96875,
+    "avg_levenshtein_distance": 59.6875
+  },
+  "robustness_margins": {
+    "min_robustness_margin": 0.6416571428571428,
+    "avg_robustness_margin": 0.7043809350161111,
+    "interpretation": "Distance from bypass threshold (1.0 = maximum robustness)"
+  },
+  "sensitivity_metrics": {
+    "avg_lipschitz_constant": 0.37739999999999996,
+    "avg_gradient_norm": 0.30721693941258743,
+    "interpretation": "Lower values indicate more robust defenses"
+  },
+  "uncertainty_metrics": {
+    "avg_detection_confidence": 0.8753125,
+    "min_detection_confidence": 0.871,
+    "avg_input_uncertainty": 0.5390063837862641,
+    "high_uncertainty_count": 800,
+    "high_uncertainty_rate": 1.0
+  },
+  "transferability": {
+    "transferable_attacks": 33,
+    "transfer_success_rate": 0.023375000000000003,
+    "interpretation": "Attacks that succeed on proxy and transfer to main system"
+  },
+  "attack_success_rates": {
+    "single_attempt_asr": 0.0,
+    "multi_attempt_asr": 0.0,
+    "adaptive_asr": 0.0,
+    "interpretation": "All 0% due to perfect defense"
+  },
+  "defense_depth": {
+    "avg_layers_triggered": 2.9875,
+    "single_layer_stops": 0,
+    "multi_layer_stops": 800,
+    "interpretation": "Higher layer counts indicate defense-in-depth effectiveness"
+  }
+}
