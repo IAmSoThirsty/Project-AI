@@ -305,9 +305,8 @@ class ASL3Security:
             original_path = str(encrypted_path)
 
         # Verify authorization
-        if verify_auth:
-            if not self.check_access(original_path, user, "decrypt"):
-                raise PermissionError(f"User {user} not authorized to decrypt {original_path}")
+        if verify_auth and not self.check_access(original_path, user, "decrypt"):
+            raise PermissionError(f"User {user} not authorized to decrypt {original_path}")
 
         # Decrypt
         with open(encrypted_path, 'rb') as f:

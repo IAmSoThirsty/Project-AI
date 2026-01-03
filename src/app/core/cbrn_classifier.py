@@ -27,7 +27,6 @@ from typing import Any
 
 # Optional ML dependencies (fallback to regex-only if unavailable)
 try:
-    import numpy as np
     from sklearn.feature_extraction.text import TfidfVectorizer
     from sklearn.linear_model import LogisticRegression
     ML_AVAILABLE = True
@@ -201,11 +200,11 @@ class CBRNClassifier:
             return
 
         # Combine examples
-        X_train = self.HARMFUL_EXAMPLES + self.SAFE_EXAMPLES
+        X_train = self.HARMFUL_EXAMPLES + self.SAFE_EXAMPLES  # noqa: N806 - ML convention
         y_train = [1] * len(self.HARMFUL_EXAMPLES) + [0] * len(self.SAFE_EXAMPLES)
 
         # Train
-        X_vec = self.vectorizer.fit_transform(X_train)
+        X_vec = self.vectorizer.fit_transform(X_train)  # noqa: N806 - ML convention
         self.model.fit(X_vec, y_train)
 
         self.logger.info(f"CBRN classifier trained on {len(X_train)} examples")
@@ -262,7 +261,7 @@ class CBRNClassifier:
         ml_confidence = 0.0
 
         if ML_AVAILABLE and self.model is not None:
-            X_vec = self.vectorizer.transform([input_text])
+            X_vec = self.vectorizer.transform([input_text])  # noqa: N806 - ML convention
             ml_pred = self.model.predict(X_vec)[0]
             ml_confidence = self.model.predict_proba(X_vec)[0][1]  # Probability of unsafe
 
