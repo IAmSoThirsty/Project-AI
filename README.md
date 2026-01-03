@@ -1655,10 +1655,29 @@ curl http://localhost:8000/health
 
 **Stack:**
 - **Backend:** Flask (Python)
-- **Frontend:** React 18 + Vite
+- **Frontend:** The_Triumvirate (React 18 + Vite) - Modern web interface
+- **Legacy Frontend:** Minimal HTML placeholder (deprecated)
 - **Database:** PostgreSQL (production) / SQLite (dev)
 - **State:** Zustand
 - **Styling:** Tailwind CSS
+
+**The_Triumvirate Integration:**
+
+The_Triumvirate is the modern web frontend for Project-AI, integrated as a git submodule. For detailed integration instructions, see `TRIUMVIRATE_INTEGRATION.md`.
+
+**Quick Start:**
+
+```bash
+# Install and start Triumvirate frontend
+npm run triumvirate:install
+npm run triumvirate:dev
+
+# Start Flask backend
+npm run web:backend
+
+# Or start both with Docker
+docker-compose -f docker-compose.yml -f docker-compose.triumvirate.yml up
+```
 
 **Deployment:**
 
@@ -1669,12 +1688,19 @@ pip install -r requirements.txt
 flask run --host=0.0.0.0 --port=5000
 ```
 
-**Frontend:**
+**Frontend (Triumvirate):**
 ```bash
-cd web/frontend
+cd web/triumvirate
 npm install
 npm run build
-npm run preview  # or serve build/ directory
+npm run preview  # or serve dist/ directory
+```
+
+**Legacy Frontend:**
+```bash
+# Minimal HTML interface (deprecated - use Triumvirate instead)
+cd web/frontend
+# Served directly by Flask or any web server
 ```
 
 **Production Hosting:**

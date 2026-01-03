@@ -1,0 +1,71 @@
+# Docker Compose configuration for Project-AI with The_Triumvirate integration
+# 
+# This file extends the base docker-compose.yml with Triumvirate-specific services
+# Use: docker-compose -f docker-compose.yml -f docker-compose.triumvirate.yml up
+
+version: '3.8'
+
+services:
+  # Triumvirate Web Frontend
+  triumvirate-frontend:
+    image: node:18-alpine
+    container_name: project-ai-triumvirate-frontend
+    working_dir: /app/web/triumvirate
+    command: npm run dev -- --host 0.0.0.0
+    ports:
+      - "${TRIUMVIRATE_PORT:-3000}:3000"
+    volumes:
+      - ./web/triumvirate:/app/web/triumvirate
+      - triumvirate_node_modules:/app/web/triumvirate/node_modules
+    environment:
+      - VITE_API_URL=${VITE_API_URL:-http://localhost:5000}
+      - VITE_WS_URL=${VITE_WS_URL:-ws://localhost:5000}
+      - NODE_ENV=development
+    depends_on:
+      - web-backend
+    networks:
+      - project-ai-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Enhanced Web Backend (already exists, but with Triumvirate support)
+  web-backend:
+    environment:
+      - ENABLE_TRIUMVIRATE=true
+      - CORS_ORIGINS=http://localhost:3000,http://localhost:5000
+      - FLASK_ENV=development
+    ports:
+      - "5000:5000"
+
+  # Optional: Nginx reverse proxy for production
+  nginx-proxy:
+    image: nginx:alpine
+    container_name: project-ai-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./config/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./web/triumvirate/dist:/usr/share/nginx/html/triumvirate:ro
+      - ./web/frontend:/usr/share/nginx/html/legacy:ro
+    depends_on:
+      - triumvirate-frontend
+      - web-backend
+    networks:
+      - project-ai-network
+    restart: unless-stopped
+    profiles:
+      - production
+
+volumes:
+  triumvirate_node_modules:
+    driver: local
+
+networks:
+  project-ai-network:
+    driver: bridge

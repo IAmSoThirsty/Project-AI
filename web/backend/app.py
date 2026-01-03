@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import os
 
 try:  # pragma: no cover - import guard for environments without Flask
     from flask import Flask, jsonify, request
@@ -12,6 +13,10 @@ except ModuleNotFoundError as exc:  # pragma: no cover
     ) from exc
 
 app = Flask(__name__)
+
+# CORS configuration for Triumvirate integration
+CORS_ORIGINS = os.getenv("CORS_ORIGINS", "http://localhost:3000,http://localhost:5000").split(",")
+ENABLE_TRIUMVIRATE = os.getenv("ENABLE_TRIUMVIRATE", "false").lower() == "true"
 
 
 logger = logging.getLogger(__name__)
@@ -24,10 +29,27 @@ _USERS: dict[str, dict[str, str]] = {
 _TOKENS: dict[str, str] = {}  # token -> username
 
 
+# CORS middleware for Triumvirate frontend
+@app.after_request
+def add_cors_headers(response):
+    """Add CORS headers to allow Triumvirate frontend to communicate."""
+    origin = request.headers.get("Origin")
+    if origin in CORS_ORIGINS or not ENABLE_TRIUMVIRATE:
+        response.headers["Access-Control-Allow-Origin"] = origin or "*"
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type, X-Auth-Token"
+        response.headers["Access-Control-Allow-Credentials"] = "true"
+    return response
+
+
 @app.route("/api/status")
 def status():
     """Return a simple health snapshot."""
-    return jsonify(status="ok", component="web-backend"), 200
+    return jsonify(
+        status="ok", 
+        component="web-backend",
+        triumvirate_enabled=ENABLE_TRIUMVIRATE
+    ), 200
 
 
 @app.route("/api/auth/login", methods=["POST"])

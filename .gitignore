@@ -57,3 +57,10 @@ codacy-analysis-cli-assembly.jar
 *.p12
 secrets.json
 credentials.json
+
+# The_Triumvirate web frontend
+web/triumvirate/node_modules/
+web/triumvirate/dist/
+web/triumvirate/.vite/
+web/triumvirate/.env.local
+web/triumvirate/coverage/

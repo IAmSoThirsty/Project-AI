@@ -11,7 +11,14 @@
     "format": "ruff check . --fix",
     "dev": "docker-compose up",
     "build": "docker build -t project-ai:latest .",
-    "lint:markdown": "markdownlint README.md PROGRAM_SUMMARY.md docs docs/developer --config .markdownlint.json"
+    "lint:markdown": "markdownlint README.md PROGRAM_SUMMARY.md docs docs/developer --config .markdownlint.json",
+    "triumvirate:install": "cd web/triumvirate && npm install",
+    "triumvirate:dev": "cd web/triumvirate && npm run dev",
+    "triumvirate:build": "cd web/triumvirate && npm run build",
+    "triumvirate:preview": "cd web/triumvirate && npm run preview",
+    "triumvirate:test": "cd web/triumvirate && npm run test",
+    "web:backend": "python -m web.backend.app",
+    "web:full": "npm run triumvirate:build && npm run web:backend"
   },
   "keywords": [
     "ai",

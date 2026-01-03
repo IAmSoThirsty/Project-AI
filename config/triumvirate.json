@@ -1,0 +1,57 @@
+{
+  "triumvirate": {
+    "enabled": false,
+    "repository": {
+      "url": "https://github.com/IAmSoThirsty/The_Triumvirate.git",
+      "branch": "main",
+      "integrationMethod": "submodule",
+      "path": "web/triumvirate"
+    },
+    "development": {
+      "frontendPort": 3000,
+      "backendPort": 5000,
+      "hotReload": true,
+      "proxy": {
+        "enabled": true,
+        "target": "http://localhost:5000",
+        "changeOrigin": true
+      }
+    },
+    "build": {
+      "outputDir": "dist",
+      "assetsDir": "assets",
+      "sourcemap": true,
+      "minify": true
+    },
+    "features": {
+      "legacyFrontend": true,
+      "webSockets": true,
+      "authentication": true,
+      "apiVersioning": "v1"
+    },
+    "deployment": {
+      "strategy": "docker",
+      "staticFileServing": "nginx",
+      "cdnEnabled": false
+    },
+    "monitoring": {
+      "enabled": false,
+      "sentryDsn": "",
+      "analyticsId": ""
+    }
+  },
+  "migration": {
+    "phase": "preparation",
+    "backupBeforeIntegration": true,
+    "preserveLegacyFrontend": true,
+    "rollbackSupported": true
+  },
+  "api": {
+    "corsOrigins": [
+      "http://localhost:3000",
+      "http://localhost:5000"
+    ],
+    "allowCredentials": true,
+    "maxRequestSize": "10mb"
+  }
+}
