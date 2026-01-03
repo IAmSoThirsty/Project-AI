@@ -2,11 +2,10 @@ from __future__ import annotations
 
 import json
 import os
+import platform
 import runpy
 import sys
 import traceback
-import platform
-from pathlib import Path
 
 # Optional resource limits (POSIX)
 try:
