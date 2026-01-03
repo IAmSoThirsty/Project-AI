@@ -2,6 +2,8 @@
 
 import base64
 import hashlib
+import importlib
+import importlib.util
 import json
 import logging
 import os
@@ -501,6 +503,25 @@ class LearningRequestManager:
         except Exception:
             logger.exception("Error during LearningRequestManager.shutdown")
 
+    def shutdown(self, wait: bool = True) -> None:
+        """Gracefully stop background notifier and threadpool.
+
+        Call during application shutdown or in tests to avoid background threads
+        leaking. Safe to call multiple times.
+        """
+        try:
+            self._stop_event.set()
+            # Allow the notify thread to exit; it uses a timeout-based get loop
+            if wait and getattr(self, '_notify_thread', None):
+                self._notify_thread.join(timeout=5.0)
+            try:
+                if getattr(self, '_notify_executor', None):
+                    self._notify_executor.shutdown(wait=True)
+            except Exception:
+                logger.exception("Error shutting down notify executor")
+        except Exception:
+            logger.exception("Error during LearningRequestManager.shutdown")
+
     def register_approval_listener(self, callback) -> None:
         """Register a callback to be invoked when a learning request is approved."""
         if callback not in self._approval_listeners:
@@ -561,7 +582,7 @@ class LearningRequestManager:
                     "reason": row[7],
                 }
             cur.execute("SELECT hash FROM black_vault")
-            self.black_vault = set(r[0] for r in cur.fetchall())
+            self.black_vault = {r[0] for r in cur.fetchall()}
             conn.close()
         except Exception as e:
             logger.exception("Error loading requests from DB: %s", e)
@@ -854,7 +875,11 @@ class PluginManager:
                     except TypeError:
                         plugin_instance = plugin_class()
                     # Basic duck-typing check: must have enable()
+<<<<<<< HEAD
                     if hasattr(plugin_instance, "enable") and callable(getattr(plugin_instance, "enable")):
+=======
+                    if hasattr(plugin_instance, "enable") and callable(plugin_instance.enable):
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
                         return self.load_plugin(plugin_instance)
                 except Exception as e:
                     logger.exception("Failed to instantiate plugin class from %s: %s", file_path, e)

@@ -1,10 +1,16 @@
 from __future__ import annotations
 
+<<<<<<< HEAD
 import json
 import tempfile
 from pathlib import Path
 
 from app.agents.border_patrol import build_border_patrol, GateGuardian, VerifierAgent
+=======
+from pathlib import Path
+
+from app.agents.border_patrol import GateGuardian, VerifierAgent, build_border_patrol
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
 
 
 def test_quarantine_and_verify(tmp_path: Path):

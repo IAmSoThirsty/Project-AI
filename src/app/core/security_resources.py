@@ -87,7 +87,7 @@ class SecurityResourceManager:
         """Get detailed information about a GitHub repository"""
         try:
             url = f"https://api.github.com/repos/{repo}"
-            response = requests.get(url)
+            response = requests.get(url, timeout=10)
             if response.status_code == 200:
                 data = response.json()
                 return {

@@ -3,11 +3,18 @@ from __future__ import annotations
 import logging
 import threading
 import time
+<<<<<<< HEAD
 from dataclasses import dataclass
 from queue import Queue
 from typing import Any
 from concurrent.futures import ProcessPoolExecutor, TimeoutError
 from pathlib import Path
+=======
+from concurrent.futures import ProcessPoolExecutor, TimeoutError
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
 
 from app.agents.dependency_auditor import DependencyAuditor
 from app.monitoring.cerberus_dashboard import record_incident
@@ -90,7 +97,11 @@ class GateGuardian:
     and coordinating with a VerifierAgent to allow/deny passage.
     """
 
+<<<<<<< HEAD
     def __init__(self, gate_id: str, verifier: VerifierAgent, watch_tower: "WatchTower"):
+=======
+    def __init__(self, gate_id: str, verifier: VerifierAgent, watch_tower: WatchTower):
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         self.gate_id = gate_id
         self.verifier = verifier
         self.watch_tower = watch_tower
@@ -111,7 +122,11 @@ class GateGuardian:
             raise KeyError("file not found in quarantine")
         # Run verification
         report = self.verifier.verify(file_path)
+<<<<<<< HEAD
         box.verified = True if report.get("success") else False
+=======
+        box.verified = bool(report.get("success"))
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         box.metadata = report
         # Notify watch tower of result
         self.watch_tower.receive_report(self.gate_id, box)
@@ -134,7 +149,11 @@ class GateGuardian:
 
 
 class WatchTower:
+<<<<<<< HEAD
     def __init__(self, tower_id: str, port_admin: "PortAdmin"):
+=======
+    def __init__(self, tower_id: str, port_admin: PortAdmin):
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         self.tower_id = tower_id
         self.port_admin = port_admin
         self.reports: list[QuarantineBox] = []
@@ -161,7 +180,11 @@ class WatchTower:
 
 
 class PortAdmin:
+<<<<<<< HEAD
     def __init__(self, admin_id: str, command_center: "Cerberus"):
+=======
+    def __init__(self, admin_id: str, command_center: Cerberus):
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         self.admin_id = admin_id
         self.command_center = command_center
         self.towers: list[WatchTower] = []
@@ -205,7 +228,11 @@ def build_border_patrol(num_port_admins: int = 1) -> list[PortAdmin]:
             # create 5 gates with verifier/scanner pairs
             for g in range(5):
                 verifier = VerifierAgent(f"v-{a}-{t}-{g}")
+<<<<<<< HEAD
                 gate = GateGuardian(f"g-{a}-{t}-{g}", verifier, wt)
+=======
+                GateGuardian(f"g-{a}-{t}-{g}", verifier, wt)
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
                 wt.reports = []
         admins.append(pa)
     return admins

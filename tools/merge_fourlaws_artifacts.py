@@ -3,7 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 ALLOWED_KEYS = {
@@ -35,7 +35,7 @@ def main(argv: list[str]) -> int:
 
     merged_count = 0
     bad_lines = 0
-    ts_merge = datetime.now(timezone.utc).isoformat()
+    ts_merge = datetime.now(UTC).isoformat()
 
     with out_jsonl.open("w", encoding="utf-8") as out:
         for f in in_files:

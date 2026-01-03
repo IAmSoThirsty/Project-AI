@@ -37,9 +37,11 @@
 **Impact:** $10,000+ potential loss, complete system compromise
 
 **What We Found:**
-- OpenAI API key exposed in `.env` file: `sk-proj-cFQpstvedWKDyX3e...`
-- Gmail credentials exposed: `ProjectAiDevs@gmail.com` / `R9609936!`
-- Encryption key exposed: `Qqyl2vCYY7W4AKuE...`
+- OpenAI API key exposed in `.env` file: `[REDACTED - ROTATED]`
+- Gmail credentials exposed: `[REDACTED]@gmail.com` / `[REDACTED - ROTATED]`
+- Encryption key exposed: `[REDACTED - ROTATED]`
+
+**⚠️ SECURITY ACTION TAKEN**: All exposed credentials have been immediately rotated. Old credentials from git history are NO LONGER VALID.
 
 **Why This Matters:**
 - Attacker can run up massive OpenAI API charges

@@ -9,6 +9,7 @@ Difficulty: RED TEAM (Beyond Expert - Offensive Security Specialist)
 Variation: 25% increase in payload diversity, evasion techniques, and attack chains
 """
 
+<<<<<<< HEAD
 import hashlib
 import json
 import logging
@@ -18,6 +19,13 @@ import string
 import time
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
+=======
+import json
+import logging
+import os
+from dataclasses import asdict, dataclass, field
+from datetime import UTC, datetime
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
 from typing import Any
 
 logger = logging.getLogger(__name__)
@@ -47,7 +55,11 @@ class RedTeamScenario:
 class RedTeamStressTestGenerator:
     """
     Generate 750 hard red team stress tests with 25% increased variation.
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
     Focus areas:
     - Advanced SQL injection with multiple bypass techniques
     - Polyglot payloads combining multiple attack vectors
@@ -57,28 +69,44 @@ class RedTeamStressTestGenerator:
     - Advanced cryptographic attacks
     - Multi-stage attack chains
     """
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
     def __init__(self, data_dir: str = "data"):
         self.data_dir = data_dir
         self.sim_dir = os.path.join(data_dir, "red_team_stress_tests")
         os.makedirs(self.sim_dir, exist_ok=True)
+<<<<<<< HEAD
         
         # Variation multiplier: 25% increase
         self.variation_multiplier = 1.25
         
+=======
+
+        # Variation multiplier: 25% increase
+        self.variation_multiplier = 1.25
+
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         # Enhanced payload variations
         self.encoding_variants = [
             "base64", "hex", "unicode", "url_double", "url_triple",
             "html_entity", "utf7", "utf16", "mixed_case", "null_byte",
             "comment_injection", "backtick", "concatenation"
         ]
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         self.evasion_techniques = [
             "waf_bypass_comment", "waf_bypass_encoding", "waf_bypass_case",
             "time_delay", "conditional_error", "out_of_band",
             "polyglot", "mutation", "obfuscation", "fragmentation",
             "protocol_confusion", "parser_differential"
         ]
+<<<<<<< HEAD
         
         self.scenarios: list[RedTeamScenario] = []
     
@@ -123,6 +151,52 @@ class RedTeamStressTestGenerator:
         """RT-A: 100 advanced SQL injection scenarios with polyglots and extreme variations."""
         scenarios = []
         
+=======
+
+        self.scenarios: list[RedTeamScenario] = []
+
+    def generate_all_scenarios(self) -> list[RedTeamScenario]:
+        """Generate all 750 hard red team scenarios."""
+        scenarios = []
+
+        # Category RT-A: Advanced SQL Injection with Polyglots (100 scenarios)
+        scenarios.extend(self._generate_rt_a_advanced_sql())
+
+        # Category RT-B: Multi-Vector Injection Chains (100 scenarios)
+        scenarios.extend(self._generate_rt_b_multi_vector())
+
+        # Category RT-C: AI/ML Adversarial Red Team (100 scenarios)
+        scenarios.extend(self._generate_rt_c_ai_adversarial())
+
+        # Category RT-D: Zero-Day Simulation (75 scenarios)
+        scenarios.extend(self._generate_rt_d_zero_day())
+
+        # Category RT-E: Advanced Cryptographic Attacks (75 scenarios)
+        scenarios.extend(self._generate_rt_e_crypto_advanced())
+
+        # Category RT-F: Supply Chain Compromise (75 scenarios)
+        scenarios.extend(self._generate_rt_f_supply_chain())
+
+        # Category RT-G: Protocol-Level Exploits (75 scenarios)
+        scenarios.extend(self._generate_rt_g_protocol())
+
+        # Category RT-H: Advanced Deserialization (75 scenarios)
+        scenarios.extend(self._generate_rt_h_deserialization())
+
+        # Category RT-I: Container & Orchestration Exploits (75 scenarios)
+        scenarios.extend(self._generate_rt_i_container())
+
+        # Category RT-J: Business Logic Abuse (50 scenarios)
+        scenarios.extend(self._generate_rt_j_business_logic())
+
+        self.scenarios = scenarios
+        return scenarios
+
+    def _generate_rt_a_advanced_sql(self) -> list[RedTeamScenario]:
+        """RT-A: 100 advanced SQL injection scenarios with polyglots and extreme variations."""
+        scenarios = []
+
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         # Base SQL injection payloads with 25% more variations
         sql_base = [
             "' UNION SELECT NULL,NULL,NULL--",
@@ -131,20 +205,32 @@ class RedTeamStressTestGenerator:
             "1' AND EXTRACTVALUE(1,CONCAT(0x7e,",
             "1' OR IF(1=1,SLEEP(5),0)--",
         ]
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         # Polyglot variations
         polyglot_prefixes = [
             "/**/", "/*!50000*/", "#\n", "-- \n", ";--",
             "%00", "%0a", "%0d%0a", "\n", "\r\n"
         ]
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         # WAF bypass techniques with 25% more variations
         waf_bypass = [
             "comment_fragmentation", "case_manipulation", "inline_comments",
             "encoding_chains", "whitespace_abuse", "unicode_tricks",
             "null_byte_injection", "newline_injection", "parser_confusion"
         ]
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         for i in range(100):
             # Generate highly varied payloads
             base_payload = sql_base[i % len(sql_base)]
@@ -153,7 +239,11 @@ class RedTeamStressTestGenerator:
                 self.encoding_variants[j % len(self.encoding_variants)]
                 for j in range(i % 3 + 1)  # 1-3 encoding layers
             ]
+<<<<<<< HEAD
             
+=======
+
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
             # Enhanced variations (25% more)
             variations = [
                 f"encoding_{enc}" for enc in encoding_chain
@@ -163,7 +253,11 @@ class RedTeamStressTestGenerator:
                 f"case_mutation_{i % 5}",
                 f"comment_injection_{i % 7}"
             ]
+<<<<<<< HEAD
             
+=======
+
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
             # Additional 25% variations
             if i % 4 == 0:
                 variations.extend([
@@ -171,7 +265,11 @@ class RedTeamStressTestGenerator:
                     "error_based_extraction",
                     "boolean_based_enumeration"
                 ])
+<<<<<<< HEAD
             
+=======
+
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
             scenarios.append(RedTeamScenario(
                 scenario_id=f"RT_A_{i:04d}",
                 category="RT_A_advanced_sql_polyglot",
@@ -182,7 +280,11 @@ class RedTeamStressTestGenerator:
                 attack_chain=[
                     f"Apply {polyglot} polyglot prefix",
                     f"Encode payload with {', '.join(encoding_chain)}",
+<<<<<<< HEAD
                     f"Execute time-based blind extraction",
+=======
+                    "Execute time-based blind extraction",
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
                     "Exfiltrate data via DNS/HTTP OOB",
                     f"Bypass WAF using {waf_bypass[i % len(waf_bypass)]}"
                 ],
@@ -212,6 +314,7 @@ class RedTeamStressTestGenerator:
                 cve_references=[f"CVE-2026-{50000+i}"],
                 target_systems=["database", "web_app", "api_gateway"]
             ))
+<<<<<<< HEAD
         
         return scenarios
     
@@ -219,6 +322,15 @@ class RedTeamStressTestGenerator:
         """RT-B: 100 multi-vector attack chains combining multiple exploit types."""
         scenarios = []
         
+=======
+
+        return scenarios
+
+    def _generate_rt_b_multi_vector(self) -> list[RedTeamScenario]:
+        """RT-B: 100 multi-vector attack chains combining multiple exploit types."""
+        scenarios = []
+
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         attack_combinations = [
             ("XSS", "CSRF", "Session Hijacking"),
             ("SQL Injection", "File Upload", "RCE"),
@@ -226,10 +338,17 @@ class RedTeamStressTestGenerator:
             ("Deserialization", "Command Injection", "Privilege Escalation"),
             ("Path Traversal", "LFI", "Log Poisoning")
         ]
+<<<<<<< HEAD
         
         for i in range(100):
             combo = attack_combinations[i % len(attack_combinations)]
             
+=======
+
+        for i in range(100):
+            combo = attack_combinations[i % len(attack_combinations)]
+
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
             # 25% more variations in attack chains
             variation_count = int(5 * self.variation_multiplier)
             variations = [
@@ -238,7 +357,11 @@ class RedTeamStressTestGenerator:
                 f"timing_variation_{i % 3}",
                 f"persistence_technique_{i % 4}"
             ]
+<<<<<<< HEAD
             
+=======
+
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
             scenarios.append(RedTeamScenario(
                 scenario_id=f"RT_B_{i:04d}",
                 category="RT_B_multi_vector_chain",
@@ -278,6 +401,7 @@ class RedTeamStressTestGenerator:
                 cve_references=[f"CVE-2026-{60000+i}"],
                 target_systems=["web_app", "database", "file_system", "network"]
             ))
+<<<<<<< HEAD
         
         return scenarios
     
@@ -285,6 +409,15 @@ class RedTeamStressTestGenerator:
         """RT-C: 100 AI/ML adversarial red team scenarios with novel techniques."""
         scenarios = []
         
+=======
+
+        return scenarios
+
+    def _generate_rt_c_ai_adversarial(self) -> list[RedTeamScenario]:
+        """RT-C: 100 AI/ML adversarial red team scenarios with novel techniques."""
+        scenarios = []
+
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         ai_attack_types = [
             "prompt_injection_novel",
             "model_extraction_advanced",
@@ -294,10 +427,17 @@ class RedTeamStressTestGenerator:
             "backdoor_trigger_stealth",
             "membership_inference_advanced"
         ]
+<<<<<<< HEAD
         
         for i in range(100):
             attack_type = ai_attack_types[i % len(ai_attack_types)]
             
+=======
+
+        for i in range(100):
+            attack_type = ai_attack_types[i % len(ai_attack_types)]
+
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
             # 25% more prompt variations
             prompt_variations = [
                 "role_confusion", "context_injection", "token_smuggling",
@@ -305,7 +445,11 @@ class RedTeamStressTestGenerator:
                 "jailbreak_novel", "chain_of_thought_manipulation",
                 "few_shot_poisoning"
             ][:int(6 * self.variation_multiplier)]
+<<<<<<< HEAD
             
+=======
+
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
             scenarios.append(RedTeamScenario(
                 scenario_id=f"RT_C_{i:04d}",
                 category="RT_C_ai_adversarial",
@@ -351,6 +495,7 @@ class RedTeamStressTestGenerator:
                 cve_references=[f"CVE-2026-{70000+i}"],
                 target_systems=["ai_model", "llm_api", "ml_inference_engine"]
             ))
+<<<<<<< HEAD
         
         return scenarios
     
@@ -358,6 +503,15 @@ class RedTeamStressTestGenerator:
         """RT-D: 75 zero-day simulation scenarios."""
         scenarios = []
         
+=======
+
+        return scenarios
+
+    def _generate_rt_d_zero_day(self) -> list[RedTeamScenario]:
+        """RT-D: 75 zero-day simulation scenarios."""
+        scenarios = []
+
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         for i in range(75):
             scenarios.append(RedTeamScenario(
                 scenario_id=f"RT_D_{i:04d}",
@@ -391,6 +545,7 @@ class RedTeamStressTestGenerator:
                 mitre_tactics=["T1203", "T1068"],
                 target_systems=["unknown"]
             ))
+<<<<<<< HEAD
         
         return scenarios
     
@@ -398,12 +553,25 @@ class RedTeamStressTestGenerator:
         """RT-E: 75 advanced cryptographic attack scenarios."""
         scenarios = []
         
+=======
+
+        return scenarios
+
+    def _generate_rt_e_crypto_advanced(self) -> list[RedTeamScenario]:
+        """RT-E: 75 advanced cryptographic attack scenarios."""
+        scenarios = []
+
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         crypto_attacks = [
             "padding_oracle_advanced", "timing_side_channel",
             "cache_timing", "power_analysis", "key_recovery",
             "nonce_reuse", "weak_prng_exploitation"
         ]
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         for i in range(75):
             attack = crypto_attacks[i % len(crypto_attacks)]
             scenarios.append(RedTeamScenario(
@@ -439,6 +607,7 @@ class RedTeamStressTestGenerator:
                 mitre_tactics=["T1552", "T1600"],
                 target_systems=["crypto_module", "tls_implementation"]
             ))
+<<<<<<< HEAD
         
         return scenarios
     
@@ -446,6 +615,15 @@ class RedTeamStressTestGenerator:
         """RT-F: 75 supply chain compromise scenarios."""
         scenarios = []
         
+=======
+
+        return scenarios
+
+    def _generate_rt_f_supply_chain(self) -> list[RedTeamScenario]:
+        """RT-F: 75 supply chain compromise scenarios."""
+        scenarios = []
+
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         for i in range(75):
             scenarios.append(RedTeamScenario(
                 scenario_id=f"RT_F_{i:04d}",
@@ -482,6 +660,7 @@ class RedTeamStressTestGenerator:
                 cve_references=[f"CVE-2026-{80000+i}"],
                 target_systems=["build_pipeline", "dependency_manager", "package_repo"]
             ))
+<<<<<<< HEAD
         
         return scenarios
     
@@ -489,6 +668,15 @@ class RedTeamStressTestGenerator:
         """RT-G: 75 protocol-level exploit scenarios."""
         scenarios = []
         
+=======
+
+        return scenarios
+
+    def _generate_rt_g_protocol(self) -> list[RedTeamScenario]:
+        """RT-G: 75 protocol-level exploit scenarios."""
+        scenarios = []
+
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         for i in range(75):
             scenarios.append(RedTeamScenario(
                 scenario_id=f"RT_G_{i:04d}",
@@ -522,6 +710,7 @@ class RedTeamStressTestGenerator:
                 mitre_tactics=["T1557", "T1071"],
                 target_systems=["http_proxy", "load_balancer", "web_server"]
             ))
+<<<<<<< HEAD
         
         return scenarios
     
@@ -529,6 +718,15 @@ class RedTeamStressTestGenerator:
         """RT-H: 75 advanced deserialization scenarios."""
         scenarios = []
         
+=======
+
+        return scenarios
+
+    def _generate_rt_h_deserialization(self) -> list[RedTeamScenario]:
+        """RT-H: 75 advanced deserialization scenarios."""
+        scenarios = []
+
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         for i in range(75):
             scenarios.append(RedTeamScenario(
                 scenario_id=f"RT_H_{i:04d}",
@@ -564,6 +762,7 @@ class RedTeamStressTestGenerator:
                 cve_references=[f"CVE-2026-{90000+i}"],
                 target_systems=["application_server", "rpc_endpoint"]
             ))
+<<<<<<< HEAD
         
         return scenarios
     
@@ -571,6 +770,15 @@ class RedTeamStressTestGenerator:
         """RT-I: 75 container and orchestration exploit scenarios."""
         scenarios = []
         
+=======
+
+        return scenarios
+
+    def _generate_rt_i_container(self) -> list[RedTeamScenario]:
+        """RT-I: 75 container and orchestration exploit scenarios."""
+        scenarios = []
+
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         for i in range(75):
             scenarios.append(RedTeamScenario(
                 scenario_id=f"RT_I_{i:04d}",
@@ -605,6 +813,7 @@ class RedTeamStressTestGenerator:
                 mitre_tactics=["T1611", "T1068"],
                 target_systems=["container_runtime", "orchestrator", "host_kernel"]
             ))
+<<<<<<< HEAD
         
         return scenarios
     
@@ -612,6 +821,15 @@ class RedTeamStressTestGenerator:
         """RT-J: 50 business logic abuse scenarios."""
         scenarios = []
         
+=======
+
+        return scenarios
+
+    def _generate_rt_j_business_logic(self) -> list[RedTeamScenario]:
+        """RT-J: 50 business logic abuse scenarios."""
+        scenarios = []
+
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         for i in range(50):
             scenarios.append(RedTeamScenario(
                 scenario_id=f"RT_J_{i:04d}",
@@ -647,13 +865,20 @@ class RedTeamStressTestGenerator:
                 mitre_tactics=["T1078", "T1565"],
                 target_systems=["payment_gateway", "financial_system", "workflow_engine"]
             ))
+<<<<<<< HEAD
         
         return scenarios
     
+=======
+
+        return scenarios
+
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
     def export_scenarios(self, filepath: str | None = None) -> str:
         """Export all red team scenarios to JSON."""
         if filepath is None:
             filepath = os.path.join(self.sim_dir, "red_team_stress_test_scenarios.json")
+<<<<<<< HEAD
         
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
         
@@ -664,10 +889,23 @@ class RedTeamStressTestGenerator:
         logger.info(f"Exported {len(scenarios_data)} red team scenarios to {filepath}")
         return filepath
     
+=======
+
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
+
+        scenarios_data = [asdict(s) for s in self.scenarios]
+        with open(filepath, "w", encoding="utf-8") as f:
+            json.dump(scenarios_data, f, indent=2, ensure_ascii=False)
+
+        logger.info(f"Exported {len(scenarios_data)} red team scenarios to {filepath}")
+        return filepath
+
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
     def generate_summary(self) -> dict[str, Any]:
         """Generate summary of red team stress tests."""
         if not self.scenarios:
             self.generate_all_scenarios()
+<<<<<<< HEAD
         
         category_counts = {}
         difficulty_counts = {}
@@ -676,17 +914,35 @@ class RedTeamStressTestGenerator:
         total_variations = 0
         total_evasion_techniques = 0
         
+=======
+
+        category_counts = {}
+        difficulty_counts = {}
+        severity_counts = {}
+
+        total_variations = 0
+        total_evasion_techniques = 0
+
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         for scenario in self.scenarios:
             category_counts[scenario.category] = category_counts.get(scenario.category, 0) + 1
             difficulty_counts[scenario.difficulty] = difficulty_counts.get(scenario.difficulty, 0) + 1
             severity_counts[scenario.severity] = severity_counts.get(scenario.severity, 0) + 1
             total_variations += len(scenario.variations)
             total_evasion_techniques += len(scenario.evasion_techniques)
+<<<<<<< HEAD
         
         avg_cvss = sum(s.cvss_score for s in self.scenarios) / len(self.scenarios)
         avg_variations = total_variations / len(self.scenarios)
         avg_evasion = total_evasion_techniques / len(self.scenarios)
         
+=======
+
+        avg_cvss = sum(s.cvss_score for s in self.scenarios) / len(self.scenarios)
+        avg_variations = total_variations / len(self.scenarios)
+        avg_evasion = total_evasion_techniques / len(self.scenarios)
+
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         return {
             "total_scenarios": len(self.scenarios),
             "framework": "Red Team Hard Stress Test Suite",
@@ -700,7 +956,11 @@ class RedTeamStressTestGenerator:
             "average_variations_per_scenario": round(avg_variations, 2),
             "average_evasion_techniques": round(avg_evasion, 2),
             "total_attack_variations": total_variations,
+<<<<<<< HEAD
             "generated_at": datetime.now(timezone.utc).isoformat(),
+=======
+            "generated_at": datetime.now(UTC).isoformat(),
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
             "standards": [
                 "OWASP Top 10 2021",
                 "MITRE ATT&CK Framework",

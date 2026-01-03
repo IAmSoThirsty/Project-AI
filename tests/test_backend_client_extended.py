@@ -78,7 +78,7 @@ def test_error_extraction_prefers_payload_message():
 
 
 def test_error_extraction_fallbacks():
-    client = BackendAPIClient(base_url="http://b")
+    BackendAPIClient(base_url="http://b")
     # _extract_error expects HTTPError with response
     resp = DummyResponse(json_data={}, status_code=500, text="Internal failure", reason="Server Error")
     try:
