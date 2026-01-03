@@ -6,29 +6,18 @@ ENV/
 # Visual Studio workspace and CodeLens
 .vs/
 
-# Secrets / local environment
-.env
-.env.*
-
-# Python bytecode
-__pycache__/
-*.py[cod]
-
-# Test artifacts
-test-artifacts/
-
 # Build artifacts
 build/
 dist/
 *.egg-info/
 .eggs/
 
-# Local data/runtime
-logs/
-data/
-data/generated_tests/
-web/backend/uploads/
-web/backend/data/
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
 
 # Documentation
 site/
@@ -39,6 +28,10 @@ docs/_build/
 *.bak
 *.orig
 README_UPDATED.md
+
+# Test and runtime data directories
+data/monitoring/
+data/sandbox_reports/
 
 # Build/analysis artifacts
 *.jar
