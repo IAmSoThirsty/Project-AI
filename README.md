@@ -1311,7 +1311,6 @@ tests/
 ### Test Results (Latest Run)
 
 ```
-================================ test session starts ================================
 platform linux -- Python 3.12.1, pytest-7.4.3
 collected 172 items
 
@@ -1323,7 +1322,6 @@ tests/test_ai_systems.py::TestAIPersona::test_statistics PASSED               [ 
 ...
 tests/security/test_fuzzing.py::test_concurrent_fuzzing PASSED               [99%]
 
-========================== 171 passed, 1 skipped in 12.34s ==========================
 ```
 
 **Pass Rate:** 99.4% (171/172 passing, 1 skipped due to AWS config)

@@ -1,10 +1,7 @@
 from __future__ import annotations
 
 import argparse
-import base64
-import hashlib
 import json
-import os
 import sqlite3
 from pathlib import Path
 
@@ -18,7 +15,7 @@ def upgrade_in_db(db_path: Path) -> int:
     if bcrypt is None:
         raise RuntimeError("bcrypt is required to run this upgrade script")
     conn = sqlite3.connect(db_path)
-    cur = conn.cursor()
+    conn.cursor()
     # This is app-specific: assume overrides stored in a JSON file under overrides/audit.json
     conn.close()
     return 0
