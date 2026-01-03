@@ -197,14 +197,27 @@ If you find a vulnerability in a dependency:
 ### Configuration Security
 
 ```python
-# ✅ DO: Use environment variables
+# ✅ CORRECT: Use environment variables
+import os
 SECRET_KEY = os.getenv('SECRET_KEY')
 DB_PASSWORD = os.getenv('DB_PASSWORD')
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
-# ❌ DON'T: Hardcode secrets
-SECRET_KEY = "my-secret-key-12345"
-DB_PASSWORD = "password123"
+# Validate that required secrets are set
+if not SECRET_KEY or not DB_PASSWORD:
+    raise ValueError("Required environment variables not set. Check .env file.")
+
+# ❌ WRONG: Hardcode secrets (NEVER DO THIS)
+# SECRET_KEY = "my-secret-key-12345"  # SECURITY VIOLATION
+# DB_PASSWORD = "password123"  # SECURITY VIOLATION
 ```
+
+**⚠️ CRITICAL SECURITY RULES:**
+1. **NEVER** commit secrets to version control
+2. **NEVER** hardcode API keys, passwords, or tokens in source code
+3. **ALWAYS** use environment variables via `.env` file (in `.gitignore`)
+4. **ALWAYS** use `.env.example` with placeholder values for documentation
+5. **ALWAYS** rotate credentials immediately if accidentally exposed
 
 ---
 

@@ -37,3 +37,14 @@ data/sandbox_reports/
 *.jar
 screenshots/
 codacy-analysis-cli-assembly.jar
+
+# ⚠️ SECURITY: Sensitive configuration files
+# NEVER commit these files - they contain secrets and credentials
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+*.p12
+secrets.json
+credentials.json
