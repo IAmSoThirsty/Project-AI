@@ -130,12 +130,14 @@ def scan_file(file_path: pathlib.Path) -> List[Dict[str, Any]]:
             for line_num, line in enumerate(lines, start=1):
                 matches = re.finditer(pattern, line, re.IGNORECASE)
                 for match in matches:
+                    matched_text = match.group(0)
+                    display_text = matched_text[:50] + "..." if len(matched_text) > 50 else matched_text
                     findings.append({
                         "file": str(file_path),
                         "line": line_num,
                         "type": pattern_name,
                         "description": description,
-                        "matched_text": match.group(0)[:50] + "..." if len(match.group(0)) > 50 else match.group(0),
+                        "matched_text": display_text,
                         "severity": get_severity(pattern_name),
                     })
     
