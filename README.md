@@ -109,7 +109,7 @@ python tools/enhanced_secret_scan.py
 
 If you find old credentials in git history (commit 144c8fc or earlier):
 - ⚠️ Those credentials are **NO LONGER VALID**
-- See `tools/purge_git_secrets.ps1` for git history cleanup
+- See `tools/purge_git_secrets.ps1` (Windows) or `tools/purge_git_secrets.sh` (Linux/macOS) for git history cleanup
 - See `docs/security/SECRET_MANAGEMENT.md` for rotation procedures
 
 **Regular rotation schedule**: Every 90 days minimum
@@ -121,7 +121,7 @@ If you find old credentials in git history (commit 144c8fc or earlier):
 | `docs/security/SECRET_MANAGEMENT.md` | Complete guide to secret management |
 | `docs/security/SECURITY_AUDIT_REPORT.md` | Security audit findings and remediation |
 | `tools/SECURITY_SCANNING.md` | Guide to security scanning tools |
-| `tools/purge_git_secrets.ps1` | Git history cleanup script |
+| `tools/purge_git_secrets.ps1` / `.sh` | Git history cleanup scripts (Windows/Linux) |
 
 ### Reporting Security Issues
 
