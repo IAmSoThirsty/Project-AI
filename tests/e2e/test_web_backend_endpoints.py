@@ -1,8 +1,5 @@
 from __future__ import annotations
 
-import json
-from flask import Flask
-
 import pytest
 
 from web.backend.app import app as backend_app

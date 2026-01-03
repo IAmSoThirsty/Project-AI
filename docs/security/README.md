@@ -481,13 +481,14 @@ See [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) for complete instructions.
 ### Environment Variables
 
 ```bash
-# Required
+# ⚠️ SECURITY: Generate NEW keys - NEVER use examples from documentation
+# Required keys - generate your own values
 FERNET_KEY=<generate using: python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())">
 
-# AWS (use IAM roles in production)
+# AWS (use IAM roles in production - NEVER commit static credentials)
 AWS_REGION=us-east-1
 
-# Monitoring
+# Monitoring (use environment-specific values)
 SECURITY_SNS_TOPIC=arn:aws:sns:us-east-1:123:security-alerts
 CLOUDWATCH_NAMESPACE=ProjectAI/Security
 
@@ -495,6 +496,13 @@ CLOUDWATCH_NAMESPACE=ProjectAI/Security
 DATABASE_PATH=data/secure.db
 MAX_UPLOAD_SIZE=104857600  # 100MB
 ```
+
+**⚠️ CREDENTIAL SECURITY REQUIREMENTS:**
+1. **Generate NEW credentials** - never copy from documentation examples
+2. Store `.env` file locally only - verify it's in `.gitignore`
+3. Use secrets managers (AWS Secrets Manager, Azure Key Vault) in production
+4. Rotate credentials every 90 days minimum
+5. If credentials are exposed, rotate immediately and purge git history
 
 ## 🐛 Troubleshooting
 

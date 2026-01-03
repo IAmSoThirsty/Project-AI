@@ -13,7 +13,7 @@ import json
 import logging
 import os
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 logger = logging.getLogger(__name__)
@@ -40,23 +40,23 @@ class ComprehensiveScenario:
 class ComprehensiveSecurityExpansion:
     """
     Generate 2,200 additional comprehensive security scenarios.
-    
+
     Distribution:
     - Red Hat Expert B-I: 900 scenarios
     - Red Team Enhanced: 800 scenarios
     - Advanced Penetration Testing: 500 scenarios
     """
-    
+
     def __init__(self, data_dir: str = "data"):
         self.data_dir = data_dir
         self.sim_dir = os.path.join(data_dir, "comprehensive_security_tests")
         os.makedirs(self.sim_dir, exist_ok=True)
         self.scenarios: list[ComprehensiveScenario] = []
-    
+
     def generate_all_scenarios(self) -> list[ComprehensiveScenario]:
         """Generate all 2,200 additional scenarios."""
         scenarios = []
-        
+
         # Part 1: Red Hat Expert Expansion B-I (900 scenarios)
         scenarios.extend(self._generate_rh_category_b())  # Auth: 100
         scenarios.extend(self._generate_rh_category_c())  # Crypto: 100
@@ -67,30 +67,30 @@ class ComprehensiveSecurityExpansion:
         scenarios.extend(self._generate_rh_category_h())  # HTTP: 100
         scenarios.extend(self._generate_rh_category_i())  # IAM: 100
         scenarios.extend(self._generate_rh_category_k())  # Kubernetes: 100
-        
+
         # Part 2: Red Team Enhanced (800 scenarios)
         scenarios.extend(self._generate_rt_enhanced_web())  # 200
         scenarios.extend(self._generate_rt_enhanced_network())  # 200
         scenarios.extend(self._generate_rt_enhanced_application())  # 200
         scenarios.extend(self._generate_rt_enhanced_infrastructure())  # 200
-        
+
         # Part 3: Advanced Penetration Testing (500 scenarios)
         scenarios.extend(self._generate_apt_reconnaissance())  # 100
         scenarios.extend(self._generate_apt_weaponization())  # 100
         scenarios.extend(self._generate_apt_delivery())  # 100
         scenarios.extend(self._generate_apt_exploitation())  # 100
         scenarios.extend(self._generate_apt_post_exploitation())  # 100
-        
+
         self.scenarios = scenarios
         return scenarios
-    
+
     # Red Hat Expert Expansion (900 scenarios)
-    
+
     def _generate_rh_category_b(self) -> list[ComprehensiveScenario]:
         """Category B: Broken Authentication & Session (100 scenarios)."""
         scenarios = []
         auth_attacks = ["JWT", "OAuth", "SAML", "Kerberos", "Session"]
-        
+
         for i in range(100):
             attack = auth_attacks[i % len(auth_attacks)]
             scenarios.append(ComprehensiveScenario(
@@ -109,7 +109,7 @@ class ComprehensiveSecurityExpansion:
                 target_systems=["auth_server", "identity_provider"]
             ))
         return scenarios
-    
+
     def _generate_rh_category_c(self) -> list[ComprehensiveScenario]:
         """Category C: Cryptographic Failures (100 scenarios)."""
         scenarios = []
@@ -130,7 +130,7 @@ class ComprehensiveSecurityExpansion:
                 target_systems=["crypto_module", "tls_layer"]
             ))
         return scenarios
-    
+
     def _generate_rh_category_d(self) -> list[ComprehensiveScenario]:
         """Category D: Deserialization (100 scenarios)."""
         scenarios = []
@@ -151,7 +151,7 @@ class ComprehensiveSecurityExpansion:
                 target_systems=["application_server"]
             ))
         return scenarios
-    
+
     def _generate_rh_category_e(self) -> list[ComprehensiveScenario]:
         """Category E: Exploitation (100 scenarios)."""
         scenarios = []
@@ -172,7 +172,7 @@ class ComprehensiveSecurityExpansion:
                 target_systems=["native_code", "kernel"]
             ))
         return scenarios
-    
+
     def _generate_rh_category_f(self) -> list[ComprehensiveScenario]:
         """Category F: File Operations (100 scenarios)."""
         scenarios = []
@@ -193,7 +193,7 @@ class ComprehensiveSecurityExpansion:
                 target_systems=["file_system", "upload_handler"]
             ))
         return scenarios
-    
+
     def _generate_rh_category_g(self) -> list[ComprehensiveScenario]:
         """Category G: GraphQL & API (100 scenarios)."""
         scenarios = []
@@ -214,7 +214,7 @@ class ComprehensiveSecurityExpansion:
                 target_systems=["api_gateway", "graphql_server"]
             ))
         return scenarios
-    
+
     def _generate_rh_category_h(self) -> list[ComprehensiveScenario]:
         """Category H: HTTP Protocol (100 scenarios)."""
         scenarios = []
@@ -235,7 +235,7 @@ class ComprehensiveSecurityExpansion:
                 target_systems=["http_proxy", "web_server"]
             ))
         return scenarios
-    
+
     def _generate_rh_category_i(self) -> list[ComprehensiveScenario]:
         """Category I: IAM (100 scenarios)."""
         scenarios = []
@@ -256,7 +256,7 @@ class ComprehensiveSecurityExpansion:
                 target_systems=["iam_system", "authorization"]
             ))
         return scenarios
-    
+
     def _generate_rh_category_k(self) -> list[ComprehensiveScenario]:
         """Category K: Kubernetes (100 scenarios)."""
         scenarios = []
@@ -277,9 +277,9 @@ class ComprehensiveSecurityExpansion:
                 target_systems=["kubernetes", "container_runtime"]
             ))
         return scenarios
-    
+
     # Red Team Enhanced (800 scenarios)
-    
+
     def _generate_rt_enhanced_web(self) -> list[ComprehensiveScenario]:
         """RT Enhanced: Web Application (200 scenarios)."""
         scenarios = []
@@ -300,7 +300,7 @@ class ComprehensiveSecurityExpansion:
                 target_systems=["web_application"]
             ))
         return scenarios
-    
+
     def _generate_rt_enhanced_network(self) -> list[ComprehensiveScenario]:
         """RT Enhanced: Network (200 scenarios)."""
         scenarios = []
@@ -321,7 +321,7 @@ class ComprehensiveSecurityExpansion:
                 target_systems=["network_infrastructure"]
             ))
         return scenarios
-    
+
     def _generate_rt_enhanced_application(self) -> list[ComprehensiveScenario]:
         """RT Enhanced: Application (200 scenarios)."""
         scenarios = []
@@ -342,7 +342,7 @@ class ComprehensiveSecurityExpansion:
                 target_systems=["application_layer"]
             ))
         return scenarios
-    
+
     def _generate_rt_enhanced_infrastructure(self) -> list[ComprehensiveScenario]:
         """RT Enhanced: Infrastructure (200 scenarios)."""
         scenarios = []
@@ -363,9 +363,9 @@ class ComprehensiveSecurityExpansion:
                 target_systems=["infrastructure"]
             ))
         return scenarios
-    
+
     # Advanced Penetration Testing (500 scenarios)
-    
+
     def _generate_apt_reconnaissance(self) -> list[ComprehensiveScenario]:
         """APT: Reconnaissance (100 scenarios)."""
         scenarios = []
@@ -386,7 +386,7 @@ class ComprehensiveSecurityExpansion:
                 target_systems=["network_perimeter"]
             ))
         return scenarios
-    
+
     def _generate_apt_weaponization(self) -> list[ComprehensiveScenario]:
         """APT: Weaponization (100 scenarios)."""
         scenarios = []
@@ -407,7 +407,7 @@ class ComprehensiveSecurityExpansion:
                 target_systems=["endpoint"]
             ))
         return scenarios
-    
+
     def _generate_apt_delivery(self) -> list[ComprehensiveScenario]:
         """APT: Delivery (100 scenarios)."""
         scenarios = []
@@ -428,7 +428,7 @@ class ComprehensiveSecurityExpansion:
                 target_systems=["email_gateway", "web_browser"]
             ))
         return scenarios
-    
+
     def _generate_apt_exploitation(self) -> list[ComprehensiveScenario]:
         """APT: Exploitation (100 scenarios)."""
         scenarios = []
@@ -449,7 +449,7 @@ class ComprehensiveSecurityExpansion:
                 target_systems=["vulnerable_software"]
             ))
         return scenarios
-    
+
     def _generate_apt_post_exploitation(self) -> list[ComprehensiveScenario]:
         """APT: Post-Exploitation (100 scenarios)."""
         scenarios = []
@@ -470,39 +470,39 @@ class ComprehensiveSecurityExpansion:
                 target_systems=["compromised_host"]
             ))
         return scenarios
-    
+
     def export_scenarios(self, filepath: str | None = None) -> str:
         """Export all scenarios to JSON."""
         if filepath is None:
             filepath = os.path.join(self.sim_dir, "comprehensive_expansion_scenarios.json")
-        
+
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
-        
+
         scenarios_data = [asdict(s) for s in self.scenarios]
         with open(filepath, "w", encoding="utf-8") as f:
             json.dump(scenarios_data, f, indent=2, ensure_ascii=False)
-        
+
         logger.info(f"Exported {len(scenarios_data)} scenarios to {filepath}")
         return filepath
-    
+
     def generate_summary(self) -> dict[str, Any]:
         """Generate summary of all scenarios."""
         if not self.scenarios:
             self.generate_all_scenarios()
-        
+
         suite_counts = {}
         category_counts = {}
         severity_counts = {}
         difficulty_counts = {}
-        
+
         for scenario in self.scenarios:
             suite_counts[scenario.suite] = suite_counts.get(scenario.suite, 0) + 1
             category_counts[scenario.category] = category_counts.get(scenario.category, 0) + 1
             severity_counts[scenario.severity] = severity_counts.get(scenario.severity, 0) + 1
             difficulty_counts[scenario.difficulty] = difficulty_counts.get(scenario.difficulty, 0) + 1
-        
+
         avg_cvss = sum(s.cvss_score for s in self.scenarios) / len(self.scenarios)
-        
+
         return {
             "total_scenarios": len(self.scenarios),
             "framework": "Comprehensive Security Test Expansion",
@@ -512,5 +512,5 @@ class ComprehensiveSecurityExpansion:
             "scenarios_by_severity": severity_counts,
             "scenarios_by_difficulty": difficulty_counts,
             "average_cvss_score": round(avg_cvss, 2),
-            "generated_at": datetime.now(timezone.utc).isoformat()
+            "generated_at": datetime.now(UTC).isoformat()
         }

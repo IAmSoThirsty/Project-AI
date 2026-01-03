@@ -3,11 +3,10 @@ from __future__ import annotations
 import logging
 import threading
 import time
-from dataclasses import dataclass
-from queue import Queue
-from typing import Any
 from concurrent.futures import ProcessPoolExecutor, TimeoutError
+from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 from app.agents.dependency_auditor import DependencyAuditor
 from app.monitoring.cerberus_dashboard import record_incident
@@ -90,7 +89,7 @@ class GateGuardian:
     and coordinating with a VerifierAgent to allow/deny passage.
     """
 
-    def __init__(self, gate_id: str, verifier: VerifierAgent, watch_tower: "WatchTower"):
+    def __init__(self, gate_id: str, verifier: VerifierAgent, watch_tower: WatchTower):
         self.gate_id = gate_id
         self.verifier = verifier
         self.watch_tower = watch_tower
@@ -111,7 +110,7 @@ class GateGuardian:
             raise KeyError("file not found in quarantine")
         # Run verification
         report = self.verifier.verify(file_path)
-        box.verified = True if report.get("success") else False
+        box.verified = bool(report.get("success"))
         box.metadata = report
         # Notify watch tower of result
         self.watch_tower.receive_report(self.gate_id, box)
@@ -134,7 +133,7 @@ class GateGuardian:
 
 
 class WatchTower:
-    def __init__(self, tower_id: str, port_admin: "PortAdmin"):
+    def __init__(self, tower_id: str, port_admin: PortAdmin):
         self.tower_id = tower_id
         self.port_admin = port_admin
         self.reports: list[QuarantineBox] = []
@@ -161,7 +160,7 @@ class WatchTower:
 
 
 class PortAdmin:
-    def __init__(self, admin_id: str, command_center: "Cerberus"):
+    def __init__(self, admin_id: str, command_center: Cerberus):
         self.admin_id = admin_id
         self.command_center = command_center
         self.towers: list[WatchTower] = []
@@ -205,7 +204,7 @@ def build_border_patrol(num_port_admins: int = 1) -> list[PortAdmin]:
             # create 5 gates with verifier/scanner pairs
             for g in range(5):
                 verifier = VerifierAgent(f"v-{a}-{t}-{g}")
-                gate = GateGuardian(f"g-{a}-{t}-{g}", verifier, wt)
+                GateGuardian(f"g-{a}-{t}-{g}", verifier, wt)
                 wt.reports = []
         admins.append(pa)
     return admins

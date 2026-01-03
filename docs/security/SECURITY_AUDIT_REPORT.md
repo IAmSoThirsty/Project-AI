@@ -36,11 +36,14 @@ This audit identified **CRITICAL** security vulnerabilities that require immedia
 #### Evidence:
 
 ```env
-OPENAI_API_KEY=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
-SMTP_USERNAME=ProjectAiDevs@gmail.com
-SMTP_PASSWORD=R9609936!
-FERNET_KEY=Qqyl2vCYY7W4AKuE-DmQLmL7IgXguMis_lFalqlliEc=
+# ⚠️ REDACTED - Credentials have been ROTATED after this audit
+OPENAI_API_KEY=sk-proj-[REDACTED - 200+ character key - ROTATED]
+SMTP_USERNAME=[REDACTED]@gmail.com
+SMTP_PASSWORD=[REDACTED - ROTATED]
+FERNET_KEY=[REDACTED - Base64 encoded key - ROTATED]
 ```
+
+**NOTE**: All credentials shown above were exposed in git history and have been **IMMEDIATELY ROTATED**. The values shown are for documentation purposes only and are no longer valid.
 
 #### Risk Assessment:
 - ✅ `.env` file is in `.gitignore` (GOOD)

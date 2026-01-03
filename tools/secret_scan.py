@@ -1,5 +1,5 @@
-import re
 import pathlib
+import re
 
 PATTERNS: list[tuple[str, str]] = [
     ("openai", r"sk-(?:proj-)?[A-Za-z0-9_-]{10,}"),

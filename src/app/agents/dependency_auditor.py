@@ -4,17 +4,17 @@ Runs pip-audit and basic dependency checks on newly generated files.
 """
 from __future__ import annotations
 
+import importlib
 import json
 import logging
 import os
+import platform
 import subprocess
 import sys
 import time
 from datetime import datetime
 from pathlib import Path
 from typing import Any
-import importlib
-import platform
 
 logger = logging.getLogger(__name__)
 
