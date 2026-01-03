@@ -16,14 +16,9 @@ for path in (ROOT, SRC):
         sys.path.insert(0, path_str)
 
 # Provide fixtures for common test resources
-<<<<<<< HEAD
-import pytest
-from app.core.ai_systems import LearningRequestManager
-=======
 import pytest  # noqa: E402
 
 from app.core.ai_systems import LearningRequestManager  # noqa: E402
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
 
 
 @pytest.fixture

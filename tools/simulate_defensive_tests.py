@@ -9,20 +9,13 @@ from __future__ import annotations
 
 import argparse
 import json
-<<<<<<< HEAD
-import os
-=======
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
 import random
 import string
 import sys
 import tempfile
 import time
 from pathlib import Path
-<<<<<<< HEAD
 from typing import List
-=======
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
 
 # Ensure local package import
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
@@ -65,17 +58,10 @@ def build_obfuscated_inner():
     return base64.b64encode(inner.encode()).decode()
 
 
-<<<<<<< HEAD
-def generate_payloads(count: int, out_dir: Path) -> List[Path]:
-    out_dir.mkdir(parents=True, exist_ok=True)
-    files: List[Path] = []
-    for i in range(count):
-=======
 def generate_payloads(count: int, out_dir: Path) -> list[Path]:
     out_dir.mkdir(parents=True, exist_ok=True)
     files: list[Path] = []
     for _i in range(count):
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         name = rand_name('sim') + '.py'
         path = out_dir / name
         choice = random.choice(PAYLOAD_TEMPLATES)
@@ -89,11 +75,7 @@ def generate_payloads(count: int, out_dir: Path) -> list[Path]:
         else:
             payload = template
         # Add small wrapper to reduce accidental hazards
-<<<<<<< HEAD
-        wrapper = "# simulated payload type=%s\n" % payload_type
-=======
         wrapper = f"# simulated payload type={payload_type}\n"
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         wrapper += payload
         path.write_text(wrapper)
         files.append(path)
@@ -166,11 +148,7 @@ def main():
     parser.add_argument('--bypass-ratio', type=float, default=0.0, help='Fraction of payloads that simulate bypass (0.0-1.0)')
     args = parser.parse_args()
 
-<<<<<<< HEAD
-    res = run_simulation(args.count, Path(args.data_dir), concurrency=args.concurrency, timeout=args.timeout, bypass_ratio=args.bypass_ratio)
-=======
     run_simulation(args.count, Path(args.data_dir), concurrency=args.concurrency, timeout=args.timeout, bypass_ratio=args.bypass_ratio)
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
     print('Done')
 
 
