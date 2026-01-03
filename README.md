@@ -74,3 +74,59 @@ Project-AI now includes a comprehensive, multi-phase security framework built fo
 > **All these upgrades are now fully implemented, tested, and live as of January 2026.** Project-AI’s security architecture enables a secure, compliant, and production-grade AI deployment from day one.
 
 ---
+
+## 🔐 Security & Secrets Management
+
+### Credential Security
+
+⚠️ **CRITICAL**: This repository uses environment variables for all sensitive credentials. **NEVER commit secrets to version control.**
+
+**Required Setup:**
+1. Copy `.env.example` to `.env`
+2. Generate YOUR OWN credentials (never use examples from docs)
+3. Verify `.env` is in `.gitignore`
+4. See `docs/security/SECRET_MANAGEMENT.md` for complete guide
+
+### Automated Secret Scanning
+
+The repository includes comprehensive secret scanning:
+- **GitHub Actions**: Automated scanning on every PR and push
+- **Pre-commit hooks**: Prevent committing secrets locally
+- **Multiple tools**: Bandit, detect-secrets, TruffleHog, enhanced scanner
+
+**Run security audit:**
+```bash
+# Comprehensive security scan
+./tools/run_security_audit.sh
+
+# Or individual scanner
+python tools/enhanced_secret_scan.py
+```
+
+### Credential Rotation
+
+**All credentials exposed in git history have been ROTATED.**
+
+If you find old credentials in git history (commit 144c8fc or earlier):
+- ⚠️ Those credentials are **NO LONGER VALID**
+- See `tools/purge_git_secrets.ps1` for git history cleanup
+- See `docs/security/SECRET_MANAGEMENT.md` for rotation procedures
+
+**Regular rotation schedule**: Every 90 days minimum
+
+### Security Documentation
+
+| Document | Purpose |
+|----------|---------|
+| `docs/security/SECRET_MANAGEMENT.md` | Complete guide to secret management |
+| `docs/security/SECURITY_AUDIT_REPORT.md` | Security audit findings and remediation |
+| `tools/SECURITY_SCANNING.md` | Guide to security scanning tools |
+| `tools/purge_git_secrets.ps1` | Git history cleanup script |
+
+### Reporting Security Issues
+
+**DO NOT** open public GitHub issues for security vulnerabilities.
+
+Use [GitHub's private vulnerability reporting](https://github.com/IAmSoThirsty/Project-AI/security/advisories/new)
+
+---
