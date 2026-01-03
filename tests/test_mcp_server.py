@@ -5,16 +5,15 @@ This module tests the Project-AI MCP server functionality including
 tool calls, resource access, and prompt generation.
 """
 
-import asyncio
 import json
-import os
+
+# Add project root to path
+import sys
 import tempfile
 from pathlib import Path
 
 import pytest
 
-# Add project root to path
-import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.app.core.mcp_server import ProjectAIMCPServer
@@ -47,11 +46,11 @@ class TestMCPServer:
                 "harms_human": False
             }
         }
-        
+
         result = await server._validate_action(args)
         assert len(result) > 0
         assert result[0].type == "text"
-        
+
         # Check if response is JSON or error message
         try:
             response = json.loads(result[0].text)
@@ -67,7 +66,7 @@ class TestMCPServer:
         result = await server._get_persona_state({})
         assert len(result) > 0
         assert result[0].type == "text"
-        
+
         # Check if response is JSON or error message
         try:
             response = json.loads(result[0].text)
@@ -82,16 +81,16 @@ class TestMCPServer:
         """Test the adjust_persona_trait tool."""
         if not server.persona:
             pytest.skip("Persona system not available")
-        
+
         args = {
             "trait": "curiosity",
             "value": 0.8
         }
-        
+
         result = await server._adjust_persona_trait(args)
         assert len(result) > 0
         assert result[0].type == "text"
-        
+
         # Check if response is JSON or error message
         try:
             response = json.loads(result[0].text)
@@ -106,17 +105,17 @@ class TestMCPServer:
         """Test the add_memory tool."""
         if not server.memory:
             pytest.skip("Memory system not available")
-        
+
         args = {
             "category": "facts",
             "content": "Test memory content",
             "importance": 0.7
         }
-        
+
         result = await server._add_memory(args)
         assert len(result) > 0
         assert result[0].type == "text"
-        
+
         # Check if response is JSON or error message
         try:
             response = json.loads(result[0].text)
@@ -130,20 +129,20 @@ class TestMCPServer:
         """Test the search_memory tool."""
         if not server.memory:
             pytest.skip("Memory system not available")
-        
+
         # First add a memory
         await server._add_memory({
             "category": "facts",
             "content": "Python is a programming language",
             "importance": 0.8
         })
-        
+
         # Then search for it
         args = {
             "query": "Python",
             "category": "facts"
         }
-        
+
         result = await server._search_memory(args)
         assert len(result) > 0
         assert result[0].type == "text"
@@ -153,16 +152,16 @@ class TestMCPServer:
         """Test the submit_learning_request tool."""
         if not server.learning:
             pytest.skip("Learning system not available")
-        
+
         args = {
             "content": "Test learning content",
             "reason": "Test reason"
         }
-        
+
         result = await server._submit_learning_request(args)
         assert len(result) > 0
         assert result[0].type == "text"
-        
+
         # Check if response is JSON or error message
         try:
             response = json.loads(result[0].text)
@@ -176,7 +175,7 @@ class TestMCPServer:
         """Test the list_plugins tool."""
         if not server.plugins:
             pytest.skip("Plugin system not available")
-        
+
         result = await server._list_plugins({})
         assert len(result) > 0
         assert result[0].type == "text"
@@ -186,9 +185,9 @@ class TestMCPServer:
         """Test the track_location tool."""
         if not server.location_tracker:
             pytest.skip("Location tracker not available")
-        
+
         args = {"ip_address": "8.8.8.8"}
-        
+
         result = await server._track_location(args)
         assert len(result) > 0
         assert result[0].type == "text"
@@ -201,7 +200,7 @@ class TestMCPServer:
             "trait": "invalid_trait",
             "value": 0.5
         }
-        
+
         result = await server._adjust_persona_trait(args)
         assert len(result) > 0
         # Should handle gracefully without crashing
@@ -220,33 +219,33 @@ class TestMCPConfiguration:
         mcp_config = Path(__file__).parent.parent / "mcp.json"
         with open(mcp_config) as f:
             config = json.load(f)
-        
+
         assert "mcpServers" in config
         assert "project-ai" in config["mcpServers"]
 
     def test_claude_config_examples_exist(self):
         """Test that Claude Desktop config examples exist."""
         config_dir = Path(__file__).parent.parent / "config"
-        
+
         examples = [
             "claude_desktop_config.example.json",
             "claude_desktop_config.windows.example.json",
             "claude_desktop_config.linux.example.json",
             "claude_desktop_config.macos.example.json"
         ]
-        
+
         for example in examples:
             assert (config_dir / example).exists(), f"Missing {example}"
 
     def test_documentation_exists(self):
         """Test that MCP documentation exists."""
         docs_dir = Path(__file__).parent.parent / "docs"
-        
+
         docs = [
             "MCP_CONFIGURATION.md",
             "MCP_QUICKSTART.md"
         ]
-        
+
         for doc in docs:
             assert (docs_dir / doc).exists(), f"Missing {doc}"
 
@@ -270,19 +269,19 @@ class TestMCPIntegration:
         """Test a complete MCP workflow."""
         with tempfile.TemporaryDirectory() as tmpdir:
             server = ProjectAIMCPServer(data_dir=tmpdir)
-            
+
             # 1. Validate an action
             result = await server._validate_action({
                 "action": "Test action",
                 "context": {"is_user_order": True}
             })
             assert len(result) > 0
-            
+
             # 2. Get persona state
             if server.persona:
                 result = await server._get_persona_state({})
                 assert len(result) > 0
-            
+
             # 3. Add memory
             if server.memory:
                 result = await server._add_memory({
@@ -291,7 +290,7 @@ class TestMCPIntegration:
                     "importance": 0.5
                 })
                 assert len(result) > 0
-            
+
             # 4. Search memory
             if server.memory:
                 result = await server._search_memory({

@@ -14,9 +14,8 @@ def main() -> int:
     class Visitor(ast.NodeVisitor):
         def visit_Call(self, node: ast.Call) -> None:
             nonlocal count
-            if isinstance(node.func, ast.Attribute) and node.func.attr == "parametrize":
-                if len(node.args) >= 2 and isinstance(node.args[1], ast.List):
-                    count = len(node.args[1].elts)
+            if isinstance(node.func, ast.Attribute) and node.func.attr == "parametrize" and len(node.args) >= 2 and isinstance(node.args[1], ast.List):
+                count = len(node.args[1].elts)
             self.generic_visit(node)
 
     Visitor().visit(tree)

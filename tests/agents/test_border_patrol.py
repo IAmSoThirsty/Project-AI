@@ -1,10 +1,8 @@
 from __future__ import annotations
 
-import json
-import tempfile
 from pathlib import Path
 
-from app.agents.border_patrol import build_border_patrol, GateGuardian, VerifierAgent
+from app.agents.border_patrol import GateGuardian, VerifierAgent, build_border_patrol
 
 
 def test_quarantine_and_verify(tmp_path: Path):
