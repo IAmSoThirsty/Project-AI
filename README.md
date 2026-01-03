@@ -26,6 +26,10 @@
 - [GUI Components](#-leather-book-ui-system)
 - [Data Models](#-data-models--persistence)
 - [Feature Catalog](#-complete-feature-catalog)
+<<<<<<< HEAD
+=======
+- [MCP Integration](#-mcp-model-context-protocol-integration)
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
 - [Installation](#-installation)
 - [Usage Commands](#-usage--commands)
 - [Extension Points](#-extension-points--plugin-system)
@@ -51,6 +55,10 @@
 - **📚 Autonomous Learning**: Human-in-the-loop approval workflow with Black Vault for rejected content
 - **🎨 Beautiful UI**: Tron-themed PyQt6 "Leather Book" interface with 6-zone dashboard
 - **🔌 Extensible Architecture**: Plugin system, agent framework, and modular design
+<<<<<<< HEAD
+=======
+- **🔗 MCP Integration**: Full Model Context Protocol support for AI assistant integration
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
 - **☁️ Cloud Ready**: AWS integration, Docker support, web version (React + Flask)
 
 ### 📊 Project Statistics
@@ -884,6 +892,131 @@ data/
 
 ---
 
+<<<<<<< HEAD
+=======
+## 🔗 MCP (Model Context Protocol) Integration
+
+Project-AI provides **comprehensive MCP (Model Context Protocol) support**, enabling seamless integration with AI assistants like Claude Desktop, enabling them to access Project-AI's advanced capabilities.
+
+### What is MCP?
+
+Model Context Protocol is an open standard that allows AI assistants to securely connect to external tools, data sources, and services. Project-AI's MCP server exposes all core functionality through this standardized interface.
+
+### Features Exposed via MCP
+
+#### 🛠️ Tools (14 Available)
+
+| Tool | Description | Category |
+|------|-------------|----------|
+| `validate_action` | Validate actions against AI ethics framework | Ethics |
+| `get_persona_state` | Get current AI personality and mood | Persona |
+| `adjust_persona_trait` | Modify personality traits | Persona |
+| `add_memory` | Add knowledge to memory system | Memory |
+| `search_memory` | Search knowledge base | Memory |
+| `submit_learning_request` | Request AI to learn new content | Learning |
+| `approve_learning_request` | Approve pending learning requests | Learning |
+| `analyze_data` | Analyze CSV/Excel/JSON files | Data Analysis |
+| `track_location` | IP geolocation lookup | Utilities |
+| `send_emergency_alert` | Send emergency notifications | Utilities |
+| `generate_image` | Generate AI images (Stable Diffusion/DALL-E) | Image Gen |
+| `list_plugins` | List available plugins | Plugin Mgmt |
+| `enable_plugin` | Enable a plugin | Plugin Mgmt |
+| `disable_plugin` | Disable a plugin | Plugin Mgmt |
+
+#### 📚 Resources (4 Available)
+
+- `persona://state` - Current AI persona configuration
+- `memory://knowledge` - Complete knowledge base
+- `learning://requests` - All learning requests
+- `plugins://list` - Plugin list and status
+
+#### 💬 Prompts (3 Available)
+
+- `analyze_with_ethics` - Ethical action analysis
+- `persona_interaction` - Persona-guided interaction
+- `memory_guided_response` - Knowledge-based responses
+
+### Quick Setup for Claude Desktop
+
+**1. Install MCP dependencies:**
+```bash
+pip install "mcp[cli]"
+```
+
+**2. Configure Claude Desktop:**
+
+Edit your Claude Desktop configuration file:
+- **macOS/Linux**: `~/.config/Claude/claude_desktop_config.json`
+- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+
+Add Project-AI MCP server:
+```json
+{
+  "mcpServers": {
+    "project-ai": {
+      "command": "python",
+      "args": ["-m", "src.app.core.mcp_server"],
+      "cwd": "/absolute/path/to/Project-AI",
+      "env": {
+        "PYTHONPATH": ".",
+        "OPENAI_API_KEY": "your-key-here",
+        "HUGGINGFACE_API_KEY": "your-key-here"
+      }
+    }
+  }
+}
+```
+
+**3. Restart Claude Desktop**
+
+### Example Usage
+
+Once configured, use Project-AI tools in Claude Desktop:
+
+**Ethics Validation:**
+> "Use validate_action to check if it's ethical to delete user data"
+
+**Persona Management:**
+> "Get the AI's current personality state and adjust curiosity to 0.9"
+
+**Memory System:**
+> "Add to memory that I prefer Python for backend development"
+
+**Image Generation:**
+> "Generate a cyberpunk-style image of a futuristic city"
+
+### Documentation
+
+- **📖 Full MCP Configuration Guide**: [docs/MCP_CONFIGURATION.md](docs/MCP_CONFIGURATION.md)
+- **🚀 Quick Start Guide**: [docs/MCP_QUICKSTART.md](docs/MCP_QUICKSTART.md)
+- **📝 Usage Examples**: [examples/mcp_examples.md](examples/mcp_examples.md)
+- **⚙️ Configuration Templates**: [config/](config/) directory
+
+### Testing MCP Server
+
+```bash
+# Run MCP server directly
+python -m src.app.core.mcp_server
+
+# Use MCP Inspector for testing
+npx @modelcontextprotocol/inspector python -m src.app.core.mcp_server
+
+# Run automated tests
+pytest tests/test_mcp_server.py -v
+```
+
+### Benefits
+
+- ✅ **Standardized Interface**: Use Project-AI from any MCP-compatible client
+- ✅ **Ethical AI**: Built-in ethics validation for all actions
+- ✅ **Persistent Memory**: Knowledge base accessible across sessions
+- ✅ **Human-in-the-Loop**: Supervised learning with approval workflow
+- ✅ **Extensible**: Easy to add custom tools and resources
+- ✅ **Secure**: Environment-based API key management
+
+---
+
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
 ## 🚀 Installation
 
 ### Prerequisites
@@ -1187,7 +1320,10 @@ tests/
 ### Test Results (Latest Run)
 
 ```
+<<<<<<< HEAD
 ================================ test session starts ================================
+=======
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
 platform linux -- Python 3.12.1, pytest-7.4.3
 collected 172 items
 
@@ -1199,7 +1335,10 @@ tests/test_ai_systems.py::TestAIPersona::test_statistics PASSED               [ 
 ...
 tests/security/test_fuzzing.py::test_concurrent_fuzzing PASSED               [99%]
 
+<<<<<<< HEAD
 ========================== 171 passed, 1 skipped in 12.34s ==========================
+=======
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
 ```
 
 **Pass Rate:** 99.4% (171/172 passing, 1 skipped due to AWS config)

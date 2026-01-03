@@ -26,7 +26,11 @@ openai==2.14.0
 packaging==25.0
 pandas==2.3.3
 passlib==1.7.4
+<<<<<<< HEAD
 pip-audit
+=======
+pip-audit==3.0.1
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
 pillow==12.0.0
 pluggy==1.6.0
 pycodestyle==2.14.0
@@ -39,9 +43,15 @@ Pygments==2.19.2
 pyparsing==3.2.5
 # Relaxed PyPDF2 pin to allow newer compatible builds
 PyPDF2>=3.0.0,<4.0.0
+<<<<<<< HEAD
 # Pin PyQt6 and pyqt6-tools to compatible versions
 PyQt6==6.4.2
 pyqt6-tools==6.4.2.3.3
+=======
+PyQt6==6.10.1
+PyQt6-Qt6==6.10.1
+PyQt6_sip==13.10.2
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
 pytest==9.0.2
 python-dateutil==2.9.0.post0
 python-dotenv==1.2.1
@@ -62,5 +72,11 @@ wheel==0.45.1
 boto3==1.42.19
 botocore==1.42.19
 
+<<<<<<< HEAD
+=======
+# MCP (Model Context Protocol) support
+mcp>=1.0.0
+
+>>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
 # Optional design tool for interactive UI creation (Qt Designer)
 pyqt6-tools

@@ -1,8 +1,6 @@
 from __future__ import annotations
 
-import os
 import pytest
-
 from PyQt6.QtWidgets import QApplication
 
 from src.app.gui.leather_book_interface import LeatherBookInterface

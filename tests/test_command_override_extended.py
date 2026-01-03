@@ -87,7 +87,7 @@ def test_system_emergency_lockdown(tmpdir):
     sys.authenticate("pw")
     sys.enable_master_override()
     sys.emergency_lockdown()
-    assert all(sys.is_protocol_enabled(k) is True for k in sys.get_all_protocols().keys())
+    assert all(sys.is_protocol_enabled(k) is True for k in sys.get_all_protocols())
     assert sys.get_status()["authenticated"] is False
 
 
