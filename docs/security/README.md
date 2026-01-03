@@ -481,15 +481,6 @@ See [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) for complete instructions.
 ### Environment Variables
 
 ```bash
-<<<<<<< HEAD
-# Required
-FERNET_KEY=<generate using: python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())">
-
-# AWS (use IAM roles in production)
-AWS_REGION=us-east-1
-
-# Monitoring
-=======
 # ⚠️ SECURITY: Generate NEW keys - NEVER use examples from documentation
 # Required keys - generate your own values
 FERNET_KEY=<generate using: python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())">
@@ -498,7 +489,6 @@ FERNET_KEY=<generate using: python -c "from cryptography.fernet import Fernet; p
 AWS_REGION=us-east-1
 
 # Monitoring (use environment-specific values)
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
 SECURITY_SNS_TOPIC=arn:aws:sns:us-east-1:123:security-alerts
 CLOUDWATCH_NAMESPACE=ProjectAI/Security
 
@@ -507,8 +497,6 @@ DATABASE_PATH=data/secure.db
 MAX_UPLOAD_SIZE=104857600  # 100MB
 ```
 
-<<<<<<< HEAD
-=======
 **⚠️ CREDENTIAL SECURITY REQUIREMENTS:**
 1. **Generate NEW credentials** - never copy from documentation examples
 2. Store `.env` file locally only - verify it's in `.gitignore`
@@ -516,7 +504,6 @@ MAX_UPLOAD_SIZE=104857600  # 100MB
 4. Rotate credentials every 90 days minimum
 5. If credentials are exposed, rotate immediately and purge git history
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
 ## 🐛 Troubleshooting
 
 ### Common Issues

@@ -1,17 +1,9 @@
 from __future__ import annotations
 
-<<<<<<< HEAD
 import json
 import logging
 from pathlib import Path
 from typing import Any
-
-from PyQt6.QtCore import QTimer
-from PyQt6.QtWidgets import (QHBoxLayout, QLabel, QListWidget, QListWidgetItem,
-                             QPushButton, QVBoxLayout, QWidget)
-=======
-import logging
-from pathlib import Path
 
 from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import (
@@ -23,7 +15,6 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
 
 from app.monitoring.cerberus_dashboard import get_metrics, record_incident
 

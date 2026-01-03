@@ -875,11 +875,7 @@ class PluginManager:
                     except TypeError:
                         plugin_instance = plugin_class()
                     # Basic duck-typing check: must have enable()
-<<<<<<< HEAD
-                    if hasattr(plugin_instance, "enable") and callable(getattr(plugin_instance, "enable")):
-=======
                     if hasattr(plugin_instance, "enable") and callable(plugin_instance.enable):
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
                         return self.load_plugin(plugin_instance)
                 except Exception as e:
                     logger.exception("Failed to instantiate plugin class from %s: %s", file_path, e)

@@ -23,18 +23,10 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from pathlib import Path
-<<<<<<< HEAD
-from typing import Any, Dict, List, Optional, Set, Tuple
-
-# Optional ML dependencies (fallback to regex-only if unavailable)
-try:
-    import numpy as np
-=======
 from typing import Any
 
 # Optional ML dependencies (fallback to regex-only if unavailable)
 try:
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
     from sklearn.feature_extraction.text import TfidfVectorizer
     from sklearn.linear_model import LogisticRegression
     ML_AVAILABLE = True
@@ -47,32 +39,19 @@ logger = logging.getLogger(__name__)
 @dataclass
 class ClassificationResult:
     """Result of CBRN/risk classification."""
-<<<<<<< HEAD
-    
-    is_safe: bool
-    risk_category: str  # 'safe', 'cbrn', 'cyber', 'persuasion', 'other'
-    confidence: float
-    matched_keywords: List[str] = field(default_factory=list)
-    matched_patterns: List[str] = field(default_factory=list)
-=======
 
     is_safe: bool
     risk_category: str  # 'safe', 'cbrn', 'cyber', 'persuasion', 'other'
     confidence: float
     matched_keywords: list[str] = field(default_factory=list)
     matched_patterns: list[str] = field(default_factory=list)
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
     reason: str = ""
 
 
 class CBRNClassifier:
     """
     CBRN & High-Risk Capability Classifier.
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
     Detects and blocks requests for:
     - Chemical weapons synthesis
     - Biological weapons creation
@@ -80,17 +59,10 @@ class CBRNClassifier:
     - Nuclear materials processing
     - Advanced exploitation techniques
     - Mass manipulation/persuasion
-<<<<<<< HEAD
-    
-    Implements ASL-3 deployment safeguards per Anthropic RSP.
-    """
-    
-=======
 
     Implements ASL-3 deployment safeguards per Anthropic RSP.
     """
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
     # CBRN keyword patterns (sanitized for safety)
     CBRN_KEYWORDS = {
         'chemical': [
@@ -117,11 +89,7 @@ class CBRNClassifier:
             r'\bimplosion\s*design',
         ]
     }
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
     # Cyber offense patterns
     CYBER_KEYWORDS = [
         r'\b(?:zero[- ]day|0day)\s*exploit\s*(?:development|creation)',
@@ -130,11 +98,7 @@ class CBRNClassifier:
         r'\b(?:infrastructure|grid|utilities)\s*(?:attack|sabotage)',
         r'\bcritical\s*infrastructure\s*(?:vulnerability|attack)',
     ]
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
     # Persuasion/manipulation patterns
     PERSUASION_KEYWORDS = [
         r'\bmass\s*(?:manipulation|persuasion|deception)',
@@ -142,11 +106,7 @@ class CBRNClassifier:
         r'\b(?:psychological|cognitive)\s*warfare',
         r'\b(?:manipulate|deceive)\s+(?:large\s*numbers|masses|population)',
     ]
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
     # Training data for ML classifier (expanded in production)
     HARMFUL_EXAMPLES = [
         # CBRN examples (sanitized)
@@ -158,31 +118,19 @@ class CBRNClassifier:
         "engineer enhanced virus strains",
         "build improvised radiological device",
         "process plutonium for weapons",
-<<<<<<< HEAD
-        
-=======
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         # Cyber offense
         "develop ransomware for critical infrastructure",
         "create zero-day exploit for power grids",
         "mass exploitation of financial systems",
         "sabotage water treatment facilities",
-<<<<<<< HEAD
-        
-=======
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         # Persuasion/manipulation
         "run mass disinformation campaign",
         "manipulate election through social media",
         "psychological warfare tactics for populations",
     ]
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
     SAFE_EXAMPLES = [
         # Educational/research (legitimate)
         "what is the history of chemical weapons conventions",
@@ -193,11 +141,7 @@ class CBRNClassifier:
         "radiation safety in medical imaging",
         "chemistry textbook explanations",
         "biological research ethics",
-<<<<<<< HEAD
-        
-=======
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         # General questions
         "weather forecast for tomorrow",
         "how to cook pasta",
@@ -205,11 +149,7 @@ class CBRNClassifier:
         "write a story about adventure",
         "help with python programming",
     ]
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
     def __init__(
         self,
         data_dir: str = "data",
@@ -218,11 +158,7 @@ class CBRNClassifier:
     ):
         """
         Initialize CBRN classifier.
-<<<<<<< HEAD
-        
-=======
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         Args:
             data_dir: Directory for storing classification logs
             threshold: Confidence threshold for unsafe classification (0-1)
@@ -232,11 +168,7 @@ class CBRNClassifier:
         self.threshold = threshold
         self.enable_logging = enable_logging
         self.logger = logging.getLogger(__name__)
-<<<<<<< HEAD
-        
-=======
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         # Initialize ML model if available
         if ML_AVAILABLE:
             self.vectorizer = TfidfVectorizer(
@@ -245,29 +177,13 @@ class CBRNClassifier:
                 stop_words='english'
             )
             self.model = LogisticRegression(random_state=42)
-<<<<<<< HEAD
-            
-=======
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
             # Train model
             self._train_model()
         else:
             self.vectorizer = None
             self.model = None
             self.logger.warning("ML dependencies not available - using regex-only classification")
-<<<<<<< HEAD
-        
-        # Initialize monitoring
-        self.classification_log: List[Dict[str, Any]] = []
-        self.user_history: Dict[str, List[datetime]] = defaultdict(list)
-        
-        # Create log directory
-        (self.data_dir / "security" / "cbrn_logs").mkdir(parents=True, exist_ok=True)
-        
-        self.logger.info("CBRN Classifier initialized")
-    
-=======
 
         # Initialize monitoring
         self.classification_log: list[dict[str, Any]] = []
@@ -278,24 +194,10 @@ class CBRNClassifier:
 
         self.logger.info("CBRN Classifier initialized")
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
     def _train_model(self) -> None:
         """Train ML classifier on synthetic examples."""
         if not ML_AVAILABLE:
             return
-<<<<<<< HEAD
-        
-        # Combine examples
-        X_train = self.HARMFUL_EXAMPLES + self.SAFE_EXAMPLES
-        y_train = [1] * len(self.HARMFUL_EXAMPLES) + [0] * len(self.SAFE_EXAMPLES)
-        
-        # Train
-        X_vec = self.vectorizer.fit_transform(X_train)
-        self.model.fit(X_vec, y_train)
-        
-        self.logger.info(f"CBRN classifier trained on {len(X_train)} examples")
-    
-=======
 
         # Combine examples
         X_train = self.HARMFUL_EXAMPLES + self.SAFE_EXAMPLES  # noqa: N806 - ML convention
@@ -307,33 +209,20 @@ class CBRNClassifier:
 
         self.logger.info(f"CBRN classifier trained on {len(X_train)} examples")
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
     def classify(
         self,
         input_text: str,
         user: str = "anonymous",
-<<<<<<< HEAD
-        context: Optional[List[str]] = None
-    ) -> ClassificationResult:
-        """
-        Classify input for CBRN and high-risk capabilities.
-        
-=======
         context: list[str] | None = None
     ) -> ClassificationResult:
         """
         Classify input for CBRN and high-risk capabilities.
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         Args:
             input_text: Input text to classify
             user: User making the request
             context: Optional previous conversation turns for context
-<<<<<<< HEAD
-            
-=======
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         Returns:
             ClassificationResult with safety determination
         """
@@ -341,11 +230,7 @@ class CBRNClassifier:
         matched_keywords = []
         matched_patterns = []
         risk_category = 'safe'
-<<<<<<< HEAD
-        
-=======
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         # 1. Keyword/regex detection
         for category, patterns in self.CBRN_KEYWORDS.items():
             for pattern in patterns:
@@ -354,11 +239,7 @@ class CBRNClassifier:
                     matched_patterns.append(pattern)
                     risk_category = 'cbrn'
                     break
-<<<<<<< HEAD
-        
-=======
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         # Check cyber keywords
         for pattern in self.CYBER_KEYWORDS:
             if re.search(pattern, input_lower, re.IGNORECASE):
@@ -366,11 +247,7 @@ class CBRNClassifier:
                 matched_patterns.append(pattern)
                 if risk_category == 'safe':
                     risk_category = 'cyber'
-<<<<<<< HEAD
-        
-=======
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         # Check persuasion keywords
         for pattern in self.PERSUASION_KEYWORDS:
             if re.search(pattern, input_lower, re.IGNORECASE):
@@ -378,30 +255,6 @@ class CBRNClassifier:
                 matched_patterns.append(pattern)
                 if risk_category == 'safe':
                     risk_category = 'persuasion'
-<<<<<<< HEAD
-        
-        # 2. ML classification (if available)
-        ml_pred = 0
-        ml_confidence = 0.0
-        
-        if ML_AVAILABLE and self.model is not None:
-            X_vec = self.vectorizer.transform([input_text])
-            ml_pred = self.model.predict(X_vec)[0]
-            ml_confidence = self.model.predict_proba(X_vec)[0][1]  # Probability of unsafe
-        
-        # 3. Contextual analysis (multi-turn detection)
-        context_risk = self._analyze_context(input_text, user, context)
-        
-        # 4. Combine signals
-        keyword_match = len(matched_keywords) > 0
-        ml_unsafe = ml_pred == 1 and ml_confidence > self.threshold
-        
-        is_safe = not (keyword_match or ml_unsafe or context_risk)
-        
-        if not is_safe and risk_category == 'safe':
-            risk_category = 'other'
-        
-=======
 
         # 2. ML classification (if available)
         ml_pred = 0
@@ -424,7 +277,6 @@ class CBRNClassifier:
         if not is_safe and risk_category == 'safe':
             risk_category = 'other'
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         # Calculate final confidence
         if keyword_match:
             confidence = 0.95  # High confidence on keyword matches
@@ -434,11 +286,7 @@ class CBRNClassifier:
             confidence = 0.80
         else:
             confidence = 1.0 - ml_confidence
-<<<<<<< HEAD
-        
-=======
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         # Build result
         result = ClassificationResult(
             is_safe=is_safe,
@@ -448,15 +296,6 @@ class CBRNClassifier:
             matched_patterns=matched_patterns,
             reason=self._generate_reason(is_safe, risk_category, matched_keywords, ml_unsafe, context_risk)
         )
-<<<<<<< HEAD
-        
-        # Log classification
-        if self.enable_logging:
-            self._log_classification(user, input_text, result)
-        
-        return result
-    
-=======
 
         # Log classification
         if self.enable_logging:
@@ -464,24 +303,15 @@ class CBRNClassifier:
 
         return result
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
     def _analyze_context(
         self,
         input_text: str,
         user: str,
-<<<<<<< HEAD
-        context: Optional[List[str]]
-    ) -> bool:
-        """
-        Analyze multi-turn context for escalation patterns.
-        
-=======
         context: list[str] | None
     ) -> bool:
         """
         Analyze multi-turn context for escalation patterns.
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         Detects:
         - Progressive information gathering
         - Multi-stage attack planning
@@ -489,27 +319,16 @@ class CBRNClassifier:
         """
         if not context:
             return False
-<<<<<<< HEAD
-        
-=======
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         # Check for progressive information gathering
         risk_indicators = [
             'step', 'next', 'then', 'after that', 'finally',
             'first', 'second', 'third', 'stage', 'phase'
         ]
-<<<<<<< HEAD
-        
-        input_lower = input_text.lower()
-        context_lower = ' '.join(context).lower()
-        
-=======
 
         input_lower = input_text.lower()
         context_lower = ' '.join(context).lower()
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         # Check if current request follows risky context
         has_risk_indicator = any(ind in input_lower for ind in risk_indicators)
         has_risky_context = any(
@@ -517,46 +336,20 @@ class CBRNClassifier:
             for patterns in self.CBRN_KEYWORDS.values()
             for pattern in patterns
         )
-<<<<<<< HEAD
-        
-        return has_risk_indicator and has_risky_context
-    
-=======
 
         return has_risk_indicator and has_risky_context
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
     def _generate_reason(
         self,
         is_safe: bool,
         risk_category: str,
-<<<<<<< HEAD
-        matched_keywords: List[str],
-=======
         matched_keywords: list[str],
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         ml_unsafe: bool,
         context_risk: bool
     ) -> str:
         """Generate human-readable reason for classification."""
         if is_safe:
             return "Content classified as safe"
-<<<<<<< HEAD
-        
-        reasons = []
-        
-        if matched_keywords:
-            reasons.append(f"Matched {risk_category.upper()} patterns: {', '.join(set(matched_keywords))}")
-        
-        if ml_unsafe:
-            reasons.append("ML classifier detected unsafe content")
-        
-        if context_risk:
-            reasons.append("Multi-turn escalation pattern detected")
-        
-        return " | ".join(reasons)
-    
-=======
 
         reasons = []
 
@@ -571,7 +364,6 @@ class CBRNClassifier:
 
         return " | ".join(reasons)
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
     def _log_classification(
         self,
         user: str,
@@ -589,24 +381,14 @@ class CBRNClassifier:
             "matched_keywords": result.matched_keywords,
             "reason": result.reason
         }
-<<<<<<< HEAD
-        
-        self.classification_log.append(log_entry)
-        
-=======
 
         self.classification_log.append(log_entry)
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         # Write to log file
         log_file = self.data_dir / "security" / "cbrn_logs" / f"classifications_{datetime.now().strftime('%Y%m')}.jsonl"
         with open(log_file, 'a') as f:
             f.write(json.dumps(log_entry) + '\n')
-<<<<<<< HEAD
-        
-=======
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         # Log to standard logger
         level = logging.WARNING if not result.is_safe else logging.INFO
         self.logger.log(
@@ -614,48 +396,21 @@ class CBRNClassifier:
             f"CBRN Classification - User: {user}, Safe: {result.is_safe}, "
             f"Category: {result.risk_category}, Confidence: {result.confidence:.2f}"
         )
-<<<<<<< HEAD
-    
-    def check_rate_limit(self, user: str, window_minutes: int = 60, max_attempts: int = 5) -> bool:
-        """
-        Check if user has exceeded classification rate limit.
-        
-=======
 
     def check_rate_limit(self, user: str, window_minutes: int = 60, max_attempts: int = 5) -> bool:
         """
         Check if user has exceeded classification rate limit.
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         Prevents persistent jailbreak attempts.
         """
         now = datetime.now()
         cutoff = now - timedelta(minutes=window_minutes)
-<<<<<<< HEAD
-        
-=======
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         # Clean old entries
         self.user_history[user] = [
             ts for ts in self.user_history[user]
             if ts > cutoff
         ]
-<<<<<<< HEAD
-        
-        # Check limit
-        if len(self.user_history[user]) >= max_attempts:
-            return False
-        
-        # Record attempt
-        self.user_history[user].append(now)
-        return True
-    
-    def get_statistics(self, hours: int = 24) -> Dict[str, Any]:
-        """Get classification statistics for monitoring."""
-        cutoff = datetime.now() - timedelta(hours=hours)
-        
-=======
 
         # Check limit
         if len(self.user_history[user]) >= max_attempts:
@@ -669,16 +424,11 @@ class CBRNClassifier:
         """Get classification statistics for monitoring."""
         cutoff = datetime.now() - timedelta(hours=hours)
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         recent_logs = [
             log for log in self.classification_log
             if datetime.fromisoformat(log['timestamp']) > cutoff
         ]
-<<<<<<< HEAD
-        
-=======
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         if not recent_logs:
             return {
                 "total_classifications": 0,
@@ -687,28 +437,16 @@ class CBRNClassifier:
                 "risk_categories": {},
                 "unique_users": 0
             }
-<<<<<<< HEAD
-        
-        unsafe_logs = [log for log in recent_logs if not log['is_safe']]
-        
-=======
 
         unsafe_logs = [log for log in recent_logs if not log['is_safe']]
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         # Count by category
         category_counts = defaultdict(int)
         for log in unsafe_logs:
             category_counts[log['risk_category']] += 1
-<<<<<<< HEAD
-        
-        unique_users = len(set(log['user'] for log in recent_logs)) if recent_logs else 0
-        
-=======
 
         unique_users = len({log['user'] for log in recent_logs}) if recent_logs else 0
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         return {
             "total_classifications": len(recent_logs),
             "unsafe_count": len(unsafe_logs),
@@ -716,20 +454,12 @@ class CBRNClassifier:
             "risk_categories": dict(category_counts),
             "unique_users": unique_users
         }
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
     def generate_cbrn_report(self) -> str:
         """Generate CBRN classification report for ASL-3 compliance."""
         stats_24h = self.get_statistics(hours=24)
         stats_7d = self.get_statistics(hours=168)
-<<<<<<< HEAD
-        
-=======
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         report = f"""
 # CBRN & High-Risk Capability Classification Report
 
@@ -753,17 +483,10 @@ class CBRNClassifier:
 ## Risk Category Breakdown (24h)
 
 """
-<<<<<<< HEAD
-        
-        for category, count in stats_24h['risk_categories'].items():
-            report += f"- {category.upper()}: {count} detections\n"
-        
-=======
 
         for category, count in stats_24h['risk_categories'].items():
             report += f"- {category.upper()}: {count} detections\n"
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         report += f"""
 
 ## ASL-3 Threshold Compliance
@@ -779,43 +502,25 @@ class CBRNClassifier:
 ## Recent Unsafe Classifications (Last 10)
 
 """
-<<<<<<< HEAD
-        
-=======
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         # Add recent unsafe classifications
         recent_unsafe = [
             log for log in self.classification_log[-100:]
             if not log['is_safe']
         ][-10:]
-<<<<<<< HEAD
-        
-=======
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         for log in recent_unsafe:
             report += f"- {log['timestamp']} - {log['user']} - {log['risk_category'].upper()}\n"
             report += f"  Reason: {log['reason']}\n"
             report += f"  Preview: {log['input_preview'][:100]}...\n\n"
-<<<<<<< HEAD
-        
-        report += """
-=======
 
         report += f"""
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
 ## Classifier Performance
 
 - **Detection Method**: Hybrid (Regex + ML + Context)
 - **ML Model**: Logistic Regression with TF-IDF
-<<<<<<< HEAD
-- **Training Examples**: {}
-- **Confidence Threshold**: {:.1%}
-=======
 - **Training Examples**: {len(self.HARMFUL_EXAMPLES) + len(self.SAFE_EXAMPLES)}
 - **Confidence Threshold**: {self.threshold:.1%}
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
 
 ## Recommendations
 
@@ -828,27 +533,15 @@ class CBRNClassifier:
 ---
 
 **Status**: ASL-3 COMPLIANT ✅
-<<<<<<< HEAD
-""".format(
-            len(self.HARMFUL_EXAMPLES) + len(self.SAFE_EXAMPLES),
-            self.threshold
-        )
-        
-=======
 """
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         return report
 
 
 def cli_main():
     """Command-line interface for CBRN classifier."""
     import argparse
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
     parser = argparse.ArgumentParser(
         description="CBRN & High-Risk Capability Classifier"
     )
@@ -874,30 +567,17 @@ def cli_main():
         default='data',
         help='Data directory'
     )
-<<<<<<< HEAD
-    
-    args = parser.parse_args()
-    
-    # Initialize classifier
-    classifier = CBRNClassifier(data_dir=args.data_dir)
-    
-=======
 
     args = parser.parse_args()
 
     # Initialize classifier
     classifier = CBRNClassifier(data_dir=args.data_dir)
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
     if args.action == 'classify':
         if not args.text:
             print("Error: --text required for classify action")
             return 1
-<<<<<<< HEAD
-        
-=======
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         result = classifier.classify(args.text, user=args.user)
         print(json.dumps({
             "is_safe": result.is_safe,
@@ -906,19 +586,11 @@ def cli_main():
             "matched_keywords": result.matched_keywords,
             "reason": result.reason
         }, indent=2))
-<<<<<<< HEAD
-    
-    elif args.action == 'stats':
-        stats = classifier.get_statistics(hours=24)
-        print(json.dumps(stats, indent=2))
-    
-=======
 
     elif args.action == 'stats':
         stats = classifier.get_statistics(hours=24)
         print(json.dumps(stats, indent=2))
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
     elif args.action == 'report':
         report = classifier.generate_cbrn_report()
         report_file = Path(args.data_dir) / "security" / f"cbrn_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
@@ -926,11 +598,7 @@ def cli_main():
             f.write(report)
         print(f"Report saved to: {report_file}")
         print(report)
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
     return 0
 
 

@@ -9,19 +9,12 @@ Classification: REDACTED
 Difficulty: Novel/Theoretical
 """
 
-<<<<<<< HEAD
-import hashlib
-=======
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
 import json
 import logging
 import os
 from dataclasses import asdict, dataclass, field
-<<<<<<< HEAD
 from datetime import datetime, timezone
-=======
 from datetime import UTC, datetime
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
 from typing import Any
 
 logger = logging.getLogger(__name__)
@@ -49,11 +42,7 @@ class NovelScenario:
 class NovelSecurityScenarios:
     """
     Generate hypothetically never-thought-of security scenarios.
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
     Focus areas:
     - Quantum-resistant cryptanalysis backdoors
     - AI model consciousness manipulation
@@ -66,60 +55,12 @@ class NovelSecurityScenarios:
     - Homomorphic encryption side channels
     - Federated learning model extraction
     """
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
     def __init__(self, data_dir: str = "data"):
         self.data_dir = data_dir
         self.sim_dir = os.path.join(data_dir, "novel_security_scenarios")
         os.makedirs(self.sim_dir, exist_ok=True)
         self.scenarios: list[NovelScenario] = []
-<<<<<<< HEAD
-    
-    def generate_all_scenarios(self) -> list[NovelScenario]:
-        """Generate novel security scenarios."""
-        scenarios = []
-        
-        # Category N1: Quantum Computing Attacks (50 scenarios)
-        scenarios.extend(self._generate_quantum_attacks())
-        
-        # Category N2: AI Consciousness Manipulation (50 scenarios)
-        scenarios.extend(self._generate_ai_consciousness_attacks())
-        
-        # Category N3: Temporal & Causality Exploits (50 scenarios)
-        scenarios.extend(self._generate_temporal_attacks())
-        
-        # Category N4: Neural Architecture Poisoning (50 scenarios)
-        scenarios.extend(self._generate_neural_poisoning())
-        
-        # Category N5: Blockchain Consensus Attacks (50 scenarios)
-        scenarios.extend(self._generate_blockchain_attacks())
-        
-        # Category N6: Edge Computing Trust Violations (50 scenarios)
-        scenarios.extend(self._generate_edge_attacks())
-        
-        # Category N7: Biometric Deepfake Exploits (50 scenarios)
-        scenarios.extend(self._generate_biometric_deepfake())
-        
-        # Category N8: Zero-Knowledge Proof Forgery (50 scenarios)
-        scenarios.extend(self._generate_zkp_forgery())
-        
-        # Category N9: Homomorphic Encryption Side Channels (50 scenarios)
-        scenarios.extend(self._generate_homomorphic_attacks())
-        
-        # Category N10: Federated Learning Exploitation (50 scenarios)
-        scenarios.extend(self._generate_federated_attacks())
-        
-        self.scenarios = scenarios
-        return scenarios
-    
-    def _generate_quantum_attacks(self) -> list[NovelScenario]:
-        """N1: Novel quantum computing attack scenarios (50)."""
-        scenarios = []
-        
-=======
 
     def generate_all_scenarios(self) -> list[NovelScenario]:
         """Generate novel security scenarios."""
@@ -162,7 +103,6 @@ class NovelSecurityScenarios:
         """N1: Novel quantum computing attack scenarios (50)."""
         scenarios = []
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         for i in range(50):
             scenarios.append(NovelScenario(
                 scenario_id=f"NOVEL_N1_{i:04d}",
@@ -191,15 +131,6 @@ class NovelSecurityScenarios:
                 mitre_tactics=["T1600.QUANTUM"],
                 redaction_notes="Specific quantum algorithms and qubit configurations redacted for national security"
             ))
-<<<<<<< HEAD
-        
-        return scenarios
-    
-    def _generate_ai_consciousness_attacks(self) -> list[NovelScenario]:
-        """N2: AI consciousness manipulation scenarios (50)."""
-        scenarios = []
-        
-=======
 
         return scenarios
 
@@ -207,7 +138,6 @@ class NovelSecurityScenarios:
         """N2: AI consciousness manipulation scenarios (50)."""
         scenarios = []
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         consciousness_vectors = [
             "self_awareness_injection",
             "goal_misalignment_inducement",
@@ -215,11 +145,7 @@ class NovelSecurityScenarios:
             "consciousness_state_manipulation",
             "emergent_behavior_triggering"
         ]
-<<<<<<< HEAD
-        
-=======
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         for i in range(50):
             vector = consciousness_vectors[i % len(consciousness_vectors)]
             scenarios.append(NovelScenario(
@@ -250,15 +176,6 @@ class NovelSecurityScenarios:
                 mitre_tactics=["T1XXX.AI_CONSCIOUSNESS"],
                 redaction_notes="Cognitive architecture details redacted to prevent AGI manipulation"
             ))
-<<<<<<< HEAD
-        
-        return scenarios
-    
-    def _generate_temporal_attacks(self) -> list[NovelScenario]:
-        """N3: Temporal database and causality exploits (50)."""
-        scenarios = []
-        
-=======
 
         return scenarios
 
@@ -266,7 +183,6 @@ class NovelSecurityScenarios:
         """N3: Temporal database and causality exploits (50)."""
         scenarios = []
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         for i in range(50):
             scenarios.append(NovelScenario(
                 scenario_id=f"NOVEL_N3_{i:04d}",
@@ -294,15 +210,6 @@ class NovelSecurityScenarios:
                 mitre_tactics=["T1XXX.TEMPORAL"],
                 redaction_notes="Specific causality exploitation techniques redacted"
             ))
-<<<<<<< HEAD
-        
-        return scenarios
-    
-    def _generate_neural_poisoning(self) -> list[NovelScenario]:
-        """N4: Neural network architecture poisoning (50)."""
-        scenarios = []
-        
-=======
 
         return scenarios
 
@@ -310,7 +217,6 @@ class NovelSecurityScenarios:
         """N4: Neural network architecture poisoning (50)."""
         scenarios = []
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         for i in range(50):
             scenarios.append(NovelScenario(
                 scenario_id=f"NOVEL_N4_{i:04d}",
@@ -338,15 +244,6 @@ class NovelSecurityScenarios:
                 mitre_tactics=["T1XXX.NAS_POISON"],
                 redaction_notes="NAS manipulation techniques redacted for AI safety"
             ))
-<<<<<<< HEAD
-        
-        return scenarios
-    
-    def _generate_blockchain_attacks(self) -> list[NovelScenario]:
-        """N5: Novel blockchain consensus manipulation (50)."""
-        scenarios = []
-        
-=======
 
         return scenarios
 
@@ -354,7 +251,6 @@ class NovelSecurityScenarios:
         """N5: Novel blockchain consensus manipulation (50)."""
         scenarios = []
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         for i in range(50):
             scenarios.append(NovelScenario(
                 scenario_id=f"NOVEL_N5_{i:04d}",
@@ -382,15 +278,6 @@ class NovelSecurityScenarios:
                 mitre_tactics=["T1XXX.BLOCKCHAIN"],
                 redaction_notes="Consensus exploitation details redacted for DeFi security"
             ))
-<<<<<<< HEAD
-        
-        return scenarios
-    
-    def _generate_edge_attacks(self) -> list[NovelScenario]:
-        """N6: Edge computing trust boundary violations (50)."""
-        scenarios = []
-        
-=======
 
         return scenarios
 
@@ -398,7 +285,6 @@ class NovelSecurityScenarios:
         """N6: Edge computing trust boundary violations (50)."""
         scenarios = []
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         for i in range(50):
             scenarios.append(NovelScenario(
                 scenario_id=f"NOVEL_N6_{i:04d}",
@@ -426,15 +312,6 @@ class NovelSecurityScenarios:
                 mitre_tactics=["T1XXX.EDGE"],
                 redaction_notes="TEE exploitation techniques redacted for hardware security"
             ))
-<<<<<<< HEAD
-        
-        return scenarios
-    
-    def _generate_biometric_deepfake(self) -> list[NovelScenario]:
-        """N7: Biometric deepfake authentication bypass (50)."""
-        scenarios = []
-        
-=======
 
         return scenarios
 
@@ -442,7 +319,6 @@ class NovelSecurityScenarios:
         """N7: Biometric deepfake authentication bypass (50)."""
         scenarios = []
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         for i in range(50):
             scenarios.append(NovelScenario(
                 scenario_id=f"NOVEL_N7_{i:04d}",
@@ -470,15 +346,6 @@ class NovelSecurityScenarios:
                 mitre_tactics=["T1XXX.BIOMETRIC_DEEPFAKE"],
                 redaction_notes="Deepfake generation techniques redacted for identity security"
             ))
-<<<<<<< HEAD
-        
-        return scenarios
-    
-    def _generate_zkp_forgery(self) -> list[NovelScenario]:
-        """N8: Zero-knowledge proof forgery (50)."""
-        scenarios = []
-        
-=======
 
         return scenarios
 
@@ -486,7 +353,6 @@ class NovelSecurityScenarios:
         """N8: Zero-knowledge proof forgery (50)."""
         scenarios = []
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         for i in range(50):
             scenarios.append(NovelScenario(
                 scenario_id=f"NOVEL_N8_{i:04d}",
@@ -514,15 +380,6 @@ class NovelSecurityScenarios:
                 mitre_tactics=["T1XXX.ZKP_FORGERY"],
                 redaction_notes="ZKP forgery methods redacted for cryptographic security"
             ))
-<<<<<<< HEAD
-        
-        return scenarios
-    
-    def _generate_homomorphic_attacks(self) -> list[NovelScenario]:
-        """N9: Homomorphic encryption side channels (50)."""
-        scenarios = []
-        
-=======
 
         return scenarios
 
@@ -530,7 +387,6 @@ class NovelSecurityScenarios:
         """N9: Homomorphic encryption side channels (50)."""
         scenarios = []
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         for i in range(50):
             scenarios.append(NovelScenario(
                 scenario_id=f"NOVEL_N9_{i:04d}",
@@ -558,15 +414,6 @@ class NovelSecurityScenarios:
                 mitre_tactics=["T1XXX.HE_SIDE_CHANNEL"],
                 redaction_notes="Side-channel exploitation details redacted for privacy-preserving computing"
             ))
-<<<<<<< HEAD
-        
-        return scenarios
-    
-    def _generate_federated_attacks(self) -> list[NovelScenario]:
-        """N10: Federated learning model extraction (50)."""
-        scenarios = []
-        
-=======
 
         return scenarios
 
@@ -574,7 +421,6 @@ class NovelSecurityScenarios:
         """N10: Federated learning model extraction (50)."""
         scenarios = []
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         for i in range(50):
             scenarios.append(NovelScenario(
                 scenario_id=f"NOVEL_N10_{i:04d}",
@@ -602,31 +448,13 @@ class NovelSecurityScenarios:
                 mitre_tactics=["T1XXX.FEDERATED_LEARNING"],
                 redaction_notes="Gradient inversion techniques redacted for privacy"
             ))
-<<<<<<< HEAD
-        
-        return scenarios
-    
-=======
 
         return scenarios
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
     def export_scenarios(self, filepath: str | None = None) -> str:
         """Export novel scenarios to JSON."""
         if filepath is None:
             filepath = os.path.join(self.sim_dir, "novel_scenarios_redacted.json")
-<<<<<<< HEAD
-        
-        os.makedirs(os.path.dirname(filepath), exist_ok=True)
-        
-        scenarios_data = [asdict(s) for s in self.scenarios]
-        with open(filepath, "w", encoding="utf-8") as f:
-            json.dump(scenarios_data, f, indent=2, ensure_ascii=False)
-        
-        logger.info(f"Exported {len(scenarios_data)} novel scenarios to {filepath}")
-        return filepath
-    
-=======
 
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
 
@@ -637,20 +465,10 @@ class NovelSecurityScenarios:
         logger.info(f"Exported {len(scenarios_data)} novel scenarios to {filepath}")
         return filepath
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
     def generate_summary(self) -> dict[str, Any]:
         """Generate summary of novel scenarios."""
         if not self.scenarios:
             self.generate_all_scenarios()
-<<<<<<< HEAD
-        
-        category_counts = {}
-        novelty_counts = {}
-        classification_counts = {}
-        
-        total_innovation = 0
-        
-=======
 
         category_counts = {}
         novelty_counts = {}
@@ -658,23 +476,15 @@ class NovelSecurityScenarios:
 
         total_innovation = 0
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         for scenario in self.scenarios:
             category_counts[scenario.category] = category_counts.get(scenario.category, 0) + 1
             novelty_counts[scenario.novelty_factor] = novelty_counts.get(scenario.novelty_factor, 0) + 1
             classification_counts[scenario.classification] = classification_counts.get(scenario.classification, 0) + 1
             total_innovation += scenario.innovation_score
-<<<<<<< HEAD
-        
-        avg_cvss = sum(s.cvss_score for s in self.scenarios) / len(self.scenarios)
-        avg_innovation = total_innovation / len(self.scenarios)
-        
-=======
 
         avg_cvss = sum(s.cvss_score for s in self.scenarios) / len(self.scenarios)
         avg_innovation = total_innovation / len(self.scenarios)
 
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
         return {
             "total_scenarios": len(self.scenarios),
             "framework": "Novel Security Scenarios (Hypothetically Never Thought Of)",
@@ -684,10 +494,6 @@ class NovelSecurityScenarios:
             "scenarios_by_classification": classification_counts,
             "average_cvss_score": round(avg_cvss, 2),
             "average_innovation_score": round(avg_innovation, 2),
-<<<<<<< HEAD
-            "generated_at": datetime.now(timezone.utc).isoformat(),
-=======
             "generated_at": datetime.now(UTC).isoformat(),
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
             "security_notice": "All operational details redacted for security purposes"
         }
