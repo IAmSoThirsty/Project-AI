@@ -4,17 +4,11 @@ Runs pip-audit and basic dependency checks on newly generated files.
 """
 from __future__ import annotations
 
-<<<<<<< HEAD
-import json
-import logging
-import os
-=======
 import importlib
 import json
 import logging
 import os
 import platform
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
 import subprocess
 import sys
 import time

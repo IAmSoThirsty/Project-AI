@@ -2,18 +2,10 @@ from __future__ import annotations
 
 import json
 import os
-<<<<<<< HEAD
-import runpy
-import sys
-import traceback
-import platform
-from pathlib import Path
-=======
 import platform
 import runpy
 import sys
 import traceback
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
 
 # Optional resource limits (POSIX)
 try:
