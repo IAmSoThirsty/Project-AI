@@ -285,7 +285,13 @@ echo "SECRET_NAME=actual_secret_value" >> .env
 echo "SECRET_NAME=your_secret_here" >> .env.example
 
 # 4. If already committed to git history
-./tools/purge_git_secrets.ps1  # See docs/security/SECRET_MANAGEMENT.md
+# Windows PowerShell:
+.\tools\purge_git_secrets.ps1
+
+# Linux/macOS/WSL:
+./tools/purge_git_secrets.sh
+
+# See docs/security/SECRET_MANAGEMENT.md for complete instructions
 
 # 5. Rotate the credential
 #    See credential-specific rotation instructions in SECRET_MANAGEMENT.md

@@ -23,12 +23,24 @@ This PR addresses **CRITICAL security vulnerabilities** in the Project-AI reposi
 
 The `.env` file with real credentials was committed in the git history and needs to be removed.
 
-**Steps:**
+**Steps (choose based on your platform):**
 
+**Option A: Windows PowerShell**
 ```powershell
-# Windows PowerShell
 cd C:\path\to\Project-AI
 .\tools\purge_git_secrets.ps1
+
+# This will:
+# 1. Create backup tag 'pre-secret-purge'
+# 2. Remove .env from ALL git history
+# 3. Repack repository
+# 4. Output next steps
+```
+
+**Option B: Linux/macOS/WSL Bash**
+```bash
+cd /path/to/Project-AI
+./tools/purge_git_secrets.sh
 
 # This will:
 # 1. Create backup tag 'pre-secret-purge'

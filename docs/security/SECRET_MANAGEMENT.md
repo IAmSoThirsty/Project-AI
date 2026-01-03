@@ -289,13 +289,17 @@ repos:
 
 1. **Use BFG Repo-Cleaner or git-filter-repo**
 
-   ```powershell
+   ```bash
    # Using git-filter-repo (recommended)
    pip install git-filter-repo
    git filter-repo --path .env --invert-paths --force
    
-   # Or use provided script
+   # Or use provided scripts:
+   # Windows PowerShell:
    ./tools/purge_git_secrets.ps1
+   
+   # Linux/macOS/WSL:
+   ./tools/purge_git_secrets.sh
    ```
 
 2. **Force push cleaned history**
