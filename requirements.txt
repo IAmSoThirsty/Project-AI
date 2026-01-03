@@ -62,5 +62,8 @@ wheel==0.45.1
 boto3==1.42.19
 botocore==1.42.19
 
+# MCP (Model Context Protocol) support
+mcp>=1.0.0
+
 # Optional design tool for interactive UI creation (Qt Designer)
 pyqt6-tools
