@@ -16,9 +16,13 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from enum import Enum
 from typing import Any
+import importlib.util
+import importlib
 
+# Dynamically import argon2.PasswordHasher if available to avoid hard import-time dependency
 try:
-    from argon2 import PasswordHasher
+    _argon2_mod = importlib.import_module("argon2")
+    PasswordHasher = getattr(_argon2_mod, "PasswordHasher", None)
 except Exception:
     PasswordHasher = None
 
@@ -466,6 +470,8 @@ class LearningRequestManager:
         self._notify_queue: queue.Queue[tuple[str, dict]] = queue.Queue(maxsize=200)
         self._notify_executor = ThreadPoolExecutor(max_workers=4)
         self._notify_thread = threading.Thread(target=self._notify_worker, daemon=True)
+        # Event to control background worker lifecycle
+        self._stop_event = threading.Event()
         self._notify_thread.start()
 
         # SQLite DB path
@@ -475,24 +481,62 @@ class LearningRequestManager:
         self._migrate_json_to_db()
         # Load requests from DB into memory
         self._load_requests()
+        
+    def shutdown(self, wait: bool = True) -> None:
+        """Gracefully stop background notifier and threadpool.
+
+        Call during application shutdown or in tests to avoid background threads
+        leaking. Safe to call multiple times.
+        """
+        try:
+            self._stop_event.set()
+            # Allow the notify thread to exit; it uses a timeout-based get loop
+            if wait and getattr(self, '_notify_thread', None):
+                self._notify_thread.join(timeout=5.0)
+            try:
+                if getattr(self, '_notify_executor', None):
+                    self._notify_executor.shutdown(wait=True)
+            except Exception:
+                logger.exception("Error shutting down notify executor")
+        except Exception:
+            logger.exception("Error during LearningRequestManager.shutdown")
 
     def register_approval_listener(self, callback) -> None:
         """Register a callback to be invoked when a learning request is approved."""
         if callback not in self._approval_listeners:
             self._approval_listeners.append(callback)
 
+    def _notify_approval_listeners(self, req_id: str, request: dict) -> None:
+        """Queue a notification for approval listeners. Non-blocking best-effort put."""
+        try:
+            # Use non-blocking put with small timeout to avoid deadlocks
+            self._notify_queue.put((req_id, request), block=False)
+        except Exception:
+            try:
+                # fallback: attempt with timeout
+                self._notify_queue.put((req_id, request), timeout=0.1)
+            except Exception:
+                logger.exception("Failed to enqueue approval notification for %s", req_id)
+
     def _notify_worker(self) -> None:
         """Background worker that invokes approval listeners from a queue."""
-        while True:
+        while not self._stop_event.is_set():
             try:
-                req_id, request = self._notify_queue.get()
+                try:
+                    req_id, request = self._notify_queue.get(timeout=0.5)
+                except Exception:
+                    # timeout or empty; loop again to check stop event
+                    continue
                 # submit to threadpool for each listener
                 for cb in list(self._approval_listeners):
                     try:
                         self._notify_executor.submit(cb, req_id, request)
                     except Exception:
                         logger.exception("Failed to submit approval listener for %s", req_id)
-                self._notify_queue.task_done()
+                try:
+                    self._notify_queue.task_done()
+                except Exception:
+                    pass
             except Exception:
                 logger.exception("Error in notify worker loop")
                 time.sleep(0.1)
@@ -753,6 +797,64 @@ class PluginManager:
             logger.warning("Plugin %s already loaded; replacing with new instance", plugin.name)
         self.plugins[plugin.name] = plugin
         return plugin.enable()
+
+    def load_plugin_file(self, file_path: str) -> bool:
+        """Load plugin from file.
+
+        Integrates with border_patrol.VerifierAgent and GateGuardian for quarantine.
+
+        Returns:
+        - True if plugin loaded successfully
+        - False if there was an error or the plugin was quarantined
+        """
+        from app.agents.border_patrol import VerifierAgent  # type: ignore[import]
+
+        vg = VerifierAgent(agent_id="plugin-loader")
+
+        # Verify and quarantine if needed
+        verdict_report = vg.verify(file_path)
+        verdict = None
+        if isinstance(verdict_report, dict):
+            verdict = verdict_report.get("verdict")
+        # backward-compatible simple responses
+        if verdict == "malicious":
+            logger.warning("Plugin file %s is malicious and has been quarantined", file_path)
+            return False
+        elif verdict == "suspicious":
+            logger.warning("Plugin file %s is suspicious; further analysis may be required", file_path)
+            # Quarantine suspicious files for admin review
+            return False
+        elif verdict == "clean":
+            logger.info("Plugin file %s is clean", file_path)
+        else:
+            logger.warning("Plugin file %s could not be verified (unknown verdict)", file_path)
+            return False  # Default to deny if unsure
+
+        # If file is clean, proceed to load it as a plugin
+        try:
+            plugin_name = os.path.basename(file_path).rsplit(".", 1)[0]
+            spec = importlib.util.spec_from_file_location(plugin_name, file_path)
+            plugin_module = importlib.util.module_from_spec(spec)  # type: ignore
+            spec.loader.exec_module(plugin_module)
+            # Assume plugin class is named Plugin
+            plugin_class = getattr(plugin_module, "Plugin", None)
+            if isinstance(plugin_class, type):
+                # Accept either a subclass of Plugin or any class that implements `enable()` (duck-typing)
+                try:
+                    # Instantiate with name if constructor accepts it
+                    try:
+                        plugin_instance = plugin_class(plugin_name)
+                    except TypeError:
+                        plugin_instance = plugin_class()
+                    # Basic duck-typing check: must have enable()
+                    if hasattr(plugin_instance, "enable") and callable(getattr(plugin_instance, "enable")):
+                        return self.load_plugin(plugin_instance)
+                except Exception as e:
+                    logger.exception("Failed to instantiate plugin class from %s: %s", file_path, e)
+            logger.warning("No valid plugin class found in %s", file_path)
+        except Exception as e:
+            logger.exception("Error loading plugin from file %s: %s", file_path, e)
+        return False
 
     def get_statistics(self) -> dict[str, Any]:
         """Get stats."""
