@@ -9,14 +9,12 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import random
 import string
 import sys
 import tempfile
 import time
 from pathlib import Path
-from typing import List
 
 # Ensure local package import
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
@@ -59,10 +57,10 @@ def build_obfuscated_inner():
     return base64.b64encode(inner.encode()).decode()
 
 
-def generate_payloads(count: int, out_dir: Path) -> List[Path]:
+def generate_payloads(count: int, out_dir: Path) -> list[Path]:
     out_dir.mkdir(parents=True, exist_ok=True)
-    files: List[Path] = []
-    for i in range(count):
+    files: list[Path] = []
+    for _i in range(count):
         name = rand_name('sim') + '.py'
         path = out_dir / name
         choice = random.choice(PAYLOAD_TEMPLATES)
@@ -76,7 +74,7 @@ def generate_payloads(count: int, out_dir: Path) -> List[Path]:
         else:
             payload = template
         # Add small wrapper to reduce accidental hazards
-        wrapper = "# simulated payload type=%s\n" % payload_type
+        wrapper = f"# simulated payload type={payload_type}\n"
         wrapper += payload
         path.write_text(wrapper)
         files.append(path)
@@ -149,7 +147,7 @@ def main():
     parser.add_argument('--bypass-ratio', type=float, default=0.0, help='Fraction of payloads that simulate bypass (0.0-1.0)')
     args = parser.parse_args()
 
-    res = run_simulation(args.count, Path(args.data_dir), concurrency=args.concurrency, timeout=args.timeout, bypass_ratio=args.bypass_ratio)
+    run_simulation(args.count, Path(args.data_dir), concurrency=args.concurrency, timeout=args.timeout, bypass_ratio=args.bypass_ratio)
     print('Done')
 
 

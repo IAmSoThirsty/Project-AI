@@ -2,6 +2,8 @@
 
 import base64
 import hashlib
+import importlib
+import importlib.util
 import json
 import logging
 import os
@@ -16,8 +18,6 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from enum import Enum
 from typing import Any
-import importlib.util
-import importlib
 
 # Dynamically import argon2.PasswordHasher if available to avoid hard import-time dependency
 try:
@@ -481,7 +481,7 @@ class LearningRequestManager:
         self._migrate_json_to_db()
         # Load requests from DB into memory
         self._load_requests()
-        
+
     def shutdown(self, wait: bool = True) -> None:
         """Gracefully stop background notifier and threadpool.
 
@@ -561,7 +561,7 @@ class LearningRequestManager:
                     "reason": row[7],
                 }
             cur.execute("SELECT hash FROM black_vault")
-            self.black_vault = set(r[0] for r in cur.fetchall())
+            self.black_vault = {r[0] for r in cur.fetchall()}
             conn.close()
         except Exception as e:
             logger.exception("Error loading requests from DB: %s", e)
@@ -847,7 +847,7 @@ class PluginManager:
                     except TypeError:
                         plugin_instance = plugin_class()
                     # Basic duck-typing check: must have enable()
-                    if hasattr(plugin_instance, "enable") and callable(getattr(plugin_instance, "enable")):
+                    if hasattr(plugin_instance, "enable") and callable(plugin_instance.enable):
                         return self.load_plugin(plugin_instance)
                 except Exception as e:
                     logger.exception("Failed to instantiate plugin class from %s: %s", file_path, e)
