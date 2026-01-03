@@ -22,12 +22,11 @@ Features exposed via MCP:
 import json
 import logging
 import os
-from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from mcp.server import Server
 from mcp.server.stdio import stdio_server
-from mcp.types import Tool, TextContent, ImageContent
+from mcp.types import TextContent, Tool
 
 # Configure logging to stderr (required for STDIO transport)
 logging.basicConfig(
@@ -44,7 +43,7 @@ class ProjectAIMCPServer:
     the Model Context Protocol.
     """
 
-    def __init__(self, data_dir: Optional[str] = None):
+    def __init__(self, data_dir: str | None = None):
         """
         Initialize the MCP server with Project-AI components.
 
@@ -53,18 +52,18 @@ class ProjectAIMCPServer:
         """
         self.server = Server("project-ai")
         self.data_dir = data_dir or os.path.join(os.path.dirname(__file__), "../../../data")
-        
+
         # Ensure data directory exists
         os.makedirs(self.data_dir, exist_ok=True)
-        
+
         # Initialize core components
         self._init_core_systems()
-        
+
         # Register all MCP tools, resources, and prompts
         self._register_tools()
         self._register_resources()
         self._register_prompts()
-        
+
         logger.info("Project-AI MCP Server initialized successfully")
 
     def _init_core_systems(self):
@@ -81,22 +80,22 @@ class ProjectAIMCPServer:
         self.location_tracker = None
         self.emergency = None
         self.image_gen = None
-        
+
         try:
             from app.core.ai_systems import (
-                FourLaws,
                 AIPersona,
-                MemoryExpansionSystem,
-                LearningRequestManager,
                 CommandOverrideSystem,
-                PluginManager
+                FourLaws,
+                LearningRequestManager,
+                MemoryExpansionSystem,
+                PluginManager,
             )
-            from app.core.user_manager import UserManager
             from app.core.data_analysis import DataAnalyzer
-            from app.core.location_tracker import LocationTracker
             from app.core.emergency_alert import EmergencyAlertSystem
             from app.core.image_generator import ImageGenerator
-            
+            from app.core.location_tracker import LocationTracker
+            from app.core.user_manager import UserManager
+
             # Initialize systems
             self.four_laws = FourLaws()
             self.persona = AIPersona(data_dir=self.data_dir)
@@ -109,7 +108,7 @@ class ProjectAIMCPServer:
             self.location_tracker = LocationTracker(data_dir=self.data_dir)
             self.emergency = EmergencyAlertSystem(data_dir=self.data_dir)
             self.image_gen = ImageGenerator(data_dir=self.data_dir)
-            
+
             logger.info("Core systems initialized successfully")
         except Exception as e:
             logger.error(f"Error initializing core systems: {e}")
@@ -117,10 +116,10 @@ class ProjectAIMCPServer:
 
     def _register_tools(self):
         """Register all MCP tools."""
-        
+
         # ==================== AI ETHICS TOOLS ====================
         @self.server.list_tools()
-        async def list_tools() -> List[Tool]:
+        async def list_tools() -> list[Tool]:
             """List all available tools."""
             return [
                 Tool(
@@ -362,9 +361,9 @@ class ProjectAIMCPServer:
                     }
                 )
             ]
-        
+
         @self.server.call_tool()
-        async def call_tool(name: str, arguments: Dict[str, Any]) -> List[TextContent]:
+        async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             """Handle tool calls."""
             try:
                 if name == "validate_action":
@@ -403,7 +402,7 @@ class ProjectAIMCPServer:
 
     def _register_resources(self):
         """Register MCP resources."""
-        
+
         @self.server.list_resources()
         async def list_resources():
             """List available resources."""
@@ -433,7 +432,7 @@ class ProjectAIMCPServer:
                     "mimeType": "application/json"
                 }
             ]
-        
+
         @self.server.read_resource()
         async def read_resource(uri: str) -> str:
             """Read a resource."""
@@ -454,7 +453,7 @@ class ProjectAIMCPServer:
 
     def _register_prompts(self):
         """Register MCP prompts."""
-        
+
         @self.server.list_prompts()
         async def list_prompts():
             """List available prompts."""
@@ -493,9 +492,9 @@ class ProjectAIMCPServer:
                     ]
                 }
             ]
-        
+
         @self.server.get_prompt()
-        async def get_prompt(name: str, arguments: Dict[str, str]) -> str:
+        async def get_prompt(name: str, arguments: dict[str, str]) -> str:
             """Get a prompt."""
             try:
                 if name == "analyze_with_ethics":
@@ -517,15 +516,15 @@ class ProjectAIMCPServer:
                 return f"Error: {str(e)}"
 
     # ==================== TOOL IMPLEMENTATIONS ====================
-    
-    async def _validate_action(self, args: Dict[str, Any]) -> List[TextContent]:
+
+    async def _validate_action(self, args: dict[str, Any]) -> list[TextContent]:
         """Validate an action against AI ethics."""
         action = args.get("action", "")
         context = args.get("context", {})
-        
+
         if not self.four_laws:
             return [TextContent(type="text", text="Ethics system not available")]
-        
+
         is_allowed, reason = self.four_laws.validate_action(action, context)
         result = {
             "is_allowed": is_allowed,
@@ -534,23 +533,23 @@ class ProjectAIMCPServer:
             "context": context
         }
         return [TextContent(type="text", text=json.dumps(result, indent=2))]
-    
-    async def _get_persona_state(self, args: Dict[str, Any]) -> List[TextContent]:
+
+    async def _get_persona_state(self, args: dict[str, Any]) -> list[TextContent]:
         """Get current persona state."""
         if not self.persona:
             return [TextContent(type="text", text="Persona system not available")]
-        
+
         state = self.persona.get_state()
         return [TextContent(type="text", text=json.dumps(state, indent=2))]
-    
-    async def _adjust_persona_trait(self, args: Dict[str, Any]) -> List[TextContent]:
+
+    async def _adjust_persona_trait(self, args: dict[str, Any]) -> list[TextContent]:
         """Adjust a persona trait."""
         if not self.persona:
             return [TextContent(type="text", text="Persona system not available")]
-        
+
         trait = args.get("trait")
         value = args.get("value")
-        
+
         self.persona.adjust_trait(trait, value)
         result = {
             "success": True,
@@ -559,16 +558,16 @@ class ProjectAIMCPServer:
             "message": f"Trait '{trait}' adjusted to {value}"
         }
         return [TextContent(type="text", text=json.dumps(result, indent=2))]
-    
-    async def _add_memory(self, args: Dict[str, Any]) -> List[TextContent]:
+
+    async def _add_memory(self, args: dict[str, Any]) -> list[TextContent]:
         """Add a memory to knowledge base."""
         if not self.memory:
             return [TextContent(type="text", text="Memory system not available")]
-        
+
         category = args.get("category")
         content = args.get("content")
         importance = args.get("importance", 0.5)
-        
+
         memory_id = self.memory.add_knowledge(category, content, importance)
         result = {
             "success": True,
@@ -577,26 +576,26 @@ class ProjectAIMCPServer:
             "importance": importance
         }
         return [TextContent(type="text", text=json.dumps(result, indent=2))]
-    
-    async def _search_memory(self, args: Dict[str, Any]) -> List[TextContent]:
+
+    async def _search_memory(self, args: dict[str, Any]) -> list[TextContent]:
         """Search knowledge base."""
         if not self.memory:
             return [TextContent(type="text", text="Memory system not available")]
-        
+
         query = args.get("query")
         category = args.get("category")
-        
+
         results = self.memory.search_knowledge(query, category)
         return [TextContent(type="text", text=json.dumps(results, indent=2))]
-    
-    async def _submit_learning_request(self, args: Dict[str, Any]) -> List[TextContent]:
+
+    async def _submit_learning_request(self, args: dict[str, Any]) -> list[TextContent]:
         """Submit a learning request."""
         if not self.learning:
             return [TextContent(type="text", text="Learning system not available")]
-        
+
         content = args.get("content")
         reason = args.get("reason")
-        
+
         request_id = self.learning.submit_request(content, reason)
         result = {
             "success": True,
@@ -605,14 +604,14 @@ class ProjectAIMCPServer:
             "message": "Learning request submitted for approval"
         }
         return [TextContent(type="text", text=json.dumps(result, indent=2))]
-    
-    async def _approve_learning_request(self, args: Dict[str, Any]) -> List[TextContent]:
+
+    async def _approve_learning_request(self, args: dict[str, Any]) -> list[TextContent]:
         """Approve a learning request."""
         if not self.learning:
             return [TextContent(type="text", text="Learning system not available")]
-        
+
         request_id = args.get("request_id")
-        
+
         success = self.learning.approve_request(request_id)
         result = {
             "success": success,
@@ -620,15 +619,15 @@ class ProjectAIMCPServer:
             "status": "approved" if success else "error"
         }
         return [TextContent(type="text", text=json.dumps(result, indent=2))]
-    
-    async def _analyze_data(self, args: Dict[str, Any]) -> List[TextContent]:
+
+    async def _analyze_data(self, args: dict[str, Any]) -> list[TextContent]:
         """Analyze data file."""
         if not self.data_analyzer:
             return [TextContent(type="text", text="Data analyzer not available")]
-        
+
         file_path = args.get("file_path")
         analysis_type = args.get("analysis_type")
-        
+
         try:
             if analysis_type == "summary":
                 results = self.data_analyzer.get_summary(file_path)
@@ -638,32 +637,32 @@ class ProjectAIMCPServer:
                 results = self.data_analyzer.perform_clustering(file_path)
             else:
                 results = self.data_analyzer.get_statistics(file_path)
-            
+
             return [TextContent(type="text", text=json.dumps(results, indent=2))]
         except Exception as e:
             return [TextContent(type="text", text=f"Analysis error: {str(e)}")]
-    
-    async def _track_location(self, args: Dict[str, Any]) -> List[TextContent]:
+
+    async def _track_location(self, args: dict[str, Any]) -> list[TextContent]:
         """Track location."""
         if not self.location_tracker:
             return [TextContent(type="text", text="Location tracker not available")]
-        
+
         ip_address = args.get("ip_address")
-        
+
         try:
             location = self.location_tracker.get_location(ip_address)
             return [TextContent(type="text", text=json.dumps(location, indent=2))]
         except Exception as e:
             return [TextContent(type="text", text=f"Location tracking error: {str(e)}")]
-    
-    async def _send_emergency_alert(self, args: Dict[str, Any]) -> List[TextContent]:
+
+    async def _send_emergency_alert(self, args: dict[str, Any]) -> list[TextContent]:
         """Send emergency alert."""
         if not self.emergency:
             return [TextContent(type="text", text="Emergency system not available")]
-        
+
         message = args.get("message")
         location = args.get("location", "Unknown")
-        
+
         try:
             success = self.emergency.send_alert(message, location)
             result = {
@@ -673,16 +672,16 @@ class ProjectAIMCPServer:
             return [TextContent(type="text", text=json.dumps(result, indent=2))]
         except Exception as e:
             return [TextContent(type="text", text=f"Emergency alert error: {str(e)}")]
-    
-    async def _generate_image(self, args: Dict[str, Any]) -> List[TextContent]:
+
+    async def _generate_image(self, args: dict[str, Any]) -> list[TextContent]:
         """Generate an image."""
         if not self.image_gen:
             return [TextContent(type="text", text="Image generator not available")]
-        
+
         prompt = args.get("prompt")
         style = args.get("style", "photorealistic")
         backend = args.get("backend", "huggingface")
-        
+
         try:
             image_path, metadata = self.image_gen.generate(prompt, style=style, backend=backend)
             result = {
@@ -693,20 +692,20 @@ class ProjectAIMCPServer:
             return [TextContent(type="text", text=json.dumps(result, indent=2))]
         except Exception as e:
             return [TextContent(type="text", text=f"Image generation error: {str(e)}")]
-    
-    async def _list_plugins(self, args: Dict[str, Any]) -> List[TextContent]:
+
+    async def _list_plugins(self, args: dict[str, Any]) -> list[TextContent]:
         """List all plugins."""
         if not self.plugins:
             return [TextContent(type="text", text="Plugin system not available")]
-        
+
         plugins = self.plugins.list_plugins()
         return [TextContent(type="text", text=json.dumps(plugins, indent=2))]
-    
-    async def _enable_plugin(self, args: Dict[str, Any]) -> List[TextContent]:
+
+    async def _enable_plugin(self, args: dict[str, Any]) -> list[TextContent]:
         """Enable a plugin."""
         if not self.plugins:
             return [TextContent(type="text", text="Plugin system not available")]
-        
+
         plugin_name = args.get("plugin_name")
         success = self.plugins.enable_plugin(plugin_name)
         result = {
@@ -715,12 +714,12 @@ class ProjectAIMCPServer:
             "status": "enabled" if success else "error"
         }
         return [TextContent(type="text", text=json.dumps(result, indent=2))]
-    
-    async def _disable_plugin(self, args: Dict[str, Any]) -> List[TextContent]:
+
+    async def _disable_plugin(self, args: dict[str, Any]) -> list[TextContent]:
         """Disable a plugin."""
         if not self.plugins:
             return [TextContent(type="text", text="Plugin system not available")]
-        
+
         plugin_name = args.get("plugin_name")
         success = self.plugins.disable_plugin(plugin_name)
         result = {
