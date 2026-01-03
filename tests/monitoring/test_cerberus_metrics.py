@@ -3,20 +3,17 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from app.monitoring.cerberus_dashboard import record_incident, get_metrics, set_monitor_path
+from app.monitoring.cerberus_dashboard import get_metrics, record_incident
 
 
-def test_metrics_record_and_read(tmp_path: Path):
-    data_dir = tmp_path / "data_monitor"
-    data_dir.mkdir()
-    # point the cerberus module to this temp directory
-    set_monitor_path(str(data_dir))
-    incidents = data_dir / "cerberus_incidents.json"
-    # ensure initial file exists
-    incidents.write_text(json.dumps({"incidents": [], "attack_counts": {}}))
+def test_metrics_record_and_read(tmp_path: Path, monkeypatch):
+    incidents_file = tmp_path / "cerberus_incidents.json"
+    incidents_file.write_text(json.dumps({"incidents": [], "attack_counts": {}}))
+    monkeypatch.setattr("app.monitoring.cerberus_dashboard.INCIDENTS_FILE", incidents_file)
 
-    # write and read via API
+    # simple test: record incident and read metrics
     record_incident({"type": "test_incident", "gate": "g-1", "source": "s-1"})
     metrics = get_metrics()
     assert "incidents" in metrics
+    assert len(metrics["incidents"]) == 1
     assert metrics["attack_counts"].get("s-1") >= 1

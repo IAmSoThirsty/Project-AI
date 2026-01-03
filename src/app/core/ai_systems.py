@@ -26,11 +26,6 @@ try:
 except Exception:
     PasswordHasher = None
 
-try:
-    import bcrypt
-except Exception:
-    bcrypt = None
-
 from app.core.continuous_learning import (
     ContinuousLearningEngine,
     LearningReport,
@@ -894,29 +889,8 @@ class CommandOverrideSystem:
         self.active_overrides: dict[str, dict[str, Any]] = {}
         self.audit_log: list[dict[str, Any]] = []
         self._audit_path = os.path.join(self.override_dir, "audit.json")
-        self._password_path = os.path.join(self.override_dir, "password.json")
         # load persisted audit if present
         self._load_audit()
-        # load persisted password if present
-        self._load_persisted_password()
-
-    def _load_persisted_password(self) -> None:
-        try:
-            if os.path.exists(self._password_path):
-                with open(self._password_path, encoding="utf-8") as f:
-                    data = json.load(f)
-                    ph = data.get("password_hash")
-                    if ph:
-                        self.password_hash = ph
-        except Exception:
-            logger.exception("Failed to load persisted override password")
-
-    def _persist_password(self) -> None:
-        try:
-            payload = {"password_hash": self.password_hash}
-            _atomic_write_json(self._password_path, payload)
-        except Exception:
-            logger.exception("Failed to persist override password")
 
     def _hash_password(self, password: str) -> str:
         """Hash password. Prefer argon2 if available, otherwise PBKDF2 fallback."""
@@ -940,51 +914,12 @@ class CommandOverrideSystem:
         self.password_hash = self._hash_password(password)
         # persist audit (credentials info only)
         self._save_audit()
-        # persist password securely to overrides directory
-        self._persist_password()
         return True
-
-    def migrate_password(self, current_password: str, new_password: str) -> tuple[bool, str]:
-        """Admin migration: verify current password and replace with bcrypt hash of new_password.
-
-        Returns (success, message).
-        """
-        if bcrypt is None:
-            return False, "bcrypt library not available; install bcrypt to perform migration"
-        # Verify current
-        if not self.verify_password(current_password):
-            return False, "Current password verification failed"
-        try:
-            # create bcrypt hash for new password
-            new_hash = bcrypt.hashpw(new_password.encode(), bcrypt.gensalt()).decode()
-            self.password_hash = new_hash
-            # persist new password
-            self._persist_password()
-            # audit
-            self.audit_log.append({"action": "password_migrated", "timestamp": datetime.now().isoformat()})
-            self._save_audit()
-            return True, "Password migrated to bcrypt successfully"
-        except Exception:
-            logger.exception("Failed to migrate password to bcrypt")
-            return False, "Migration failed due to internal error"
 
     def verify_password(self, password: str) -> bool:
         """Verify password."""
         if self.password_hash is None:
             return False
-
-        # Support bcrypt hashes if present (common in user stores)
-        try:
-            if bcrypt is not None and isinstance(self.password_hash, str) and self.password_hash.startswith("$2"):
-                try:
-                    return bcrypt.checkpw(password.encode(), self.password_hash.encode())
-                except Exception:
-                    # Fall through to other checks
-                    pass
-        except Exception:
-            # Defensive: do not fail verification on unexpected bcrypt errors
-            logger.exception("bcrypt verification failed")
-
         if PasswordHasher is not None:
             try:
                 ph = PasswordHasher()

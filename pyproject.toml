@@ -7,7 +7,7 @@ name = "project-ai"
 version = "1.0.0"
 description = "Comprehensive AI assistant with advanced features"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 license = {text = "MIT"}
 authors = [{name = "Project AI Team"}]
 keywords = ["ai", "assistant", "pyqt6", "machine-learning"]
@@ -61,7 +61,7 @@ exclude = [
 line-length = 88
 
 # Target Python version
-target-version = "py311"
+target-version = "py312"
 
 [tool.ruff.lint]
 # Select rules to check
@@ -97,7 +97,7 @@ markers = [
 
 [tool.black]
 line-length = 88
-target-version = ['py311']
+target-version = ['py312']
 include = '\.pyi?$'
 exclude = '''
 /(
