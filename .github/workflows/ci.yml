@@ -48,7 +48,7 @@ jobs:
           pre-commit run --all-files || true
 
       - name: Lint (ruff)
-        run: ruff check . || true
+        run: ruff check .
 
       - name: Type check (mypy)
         run: mypy src || true
@@ -107,7 +107,7 @@ jobs:
       - name: Install ruff
         run: pip install ruff
       - name: Run ruff
-        run: ruff check . || true
+        run: ruff check .
 
   tests:
     name: Run tests (pytest)

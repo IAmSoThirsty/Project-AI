@@ -17,11 +17,11 @@ jobs:
       - name: Install formatters
         run: python -m pip install black isort ruff
       - name: Run isort
-        run: isort --profile black src tests || true
+        run: isort --profile black . || true
       - name: Run black
-        run: black src tests || true
+        run: black . || true
       - name: Run ruff (auto-fix)
-        run: ruff check src tests --fix || true
+        run: ruff check . --fix || true
       - name: Show diff
         run: git --no-pager diff || true
       - name: Create formatting PR comment
