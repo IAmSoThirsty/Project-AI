@@ -73,7 +73,7 @@ def test_lock_prevents_simultaneous_writes_threaded(tmp_path):
         try:
             data = json.load(f)
         except Exception as e:
-            raise AssertionError(f"Final shared file is not valid JSON: {e}")
+            raise AssertionError(f"Final shared file is not valid JSON: {e}") from e
     assert isinstance(data, (dict, list))
 
 

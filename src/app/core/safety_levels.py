@@ -562,13 +562,12 @@ class ASLMonitor:
 
     def _handle_escalation(self, assessment: ASLAssessment) -> None:
         """Handle ASL level escalation."""
-        if assessment.recommended_level == SafetyLevel.ASL4:
-            if self.config.get("require_manual_approval_for_asl4", True):
-                self.logger.critical(
-                    "ASL-4 escalation required! Manual approval needed. "
-                    "Deployment should be PAUSED pending enhanced safeguards."
-                )
-                return
+        if assessment.recommended_level == SafetyLevel.ASL4 and self.config.get("require_manual_approval_for_asl4", True):
+            self.logger.critical(
+                "ASL-4 escalation required! Manual approval needed. "
+                "Deployment should be PAUSED pending enhanced safeguards."
+            )
+            return
 
         if self.config.get("auto_escalate", True):
             # Update configuration
