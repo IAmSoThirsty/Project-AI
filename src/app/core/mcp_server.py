@@ -69,6 +69,19 @@ class ProjectAIMCPServer:
 
     def _init_core_systems(self):
         """Initialize Project-AI core systems for MCP exposure."""
+        # Initialize all attributes with None first
+        self.four_laws = None
+        self.persona = None
+        self.memory = None
+        self.learning = None
+        self.override = None
+        self.plugins = None
+        self.user_manager = None
+        self.data_analyzer = None
+        self.location_tracker = None
+        self.emergency = None
+        self.image_gen = None
+        
         try:
             from app.core.ai_systems import (
                 FourLaws,
@@ -100,9 +113,7 @@ class ProjectAIMCPServer:
             logger.info("Core systems initialized successfully")
         except Exception as e:
             logger.error(f"Error initializing core systems: {e}")
-            # Initialize with minimal functionality if imports fail
-            self.four_laws = None
-            self.persona = None
+            # Attributes remain None if initialization fails
 
     def _register_tools(self):
         """Register all MCP tools."""
