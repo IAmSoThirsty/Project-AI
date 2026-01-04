@@ -1,0 +1,26 @@
+# Thirsty-lang Core Python Dependencies
+# Python 3.8+ required
+
+# No external dependencies required for core interpreter
+# The interpreter is built using only Python standard library
+
+# Optional dependencies for enhanced features:
+# (Uncomment if you want to add these features)
+
+# For colored terminal output
+# colorama>=0.4.4
+
+# For better REPL experience
+# prompt-toolkit>=3.0.0
+
+# For testing
+# pytest>=7.0.0
+# pytest-cov>=3.0.0
+
+# For linting
+# pylint>=2.12.0
+# flake8>=4.0.0
+# black>=22.0.0
+
+# For type checking
+# mypy>=0.950
