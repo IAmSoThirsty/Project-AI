@@ -1,7 +1,7 @@
 # T-A-R-L (Thirsty's Active Resistant Language) - Complete Technical Documentation
 
 ## Overview
-T-A-R-L (Thirsty's Active Resistant Language) is Project-AI's secret defensive buff wizard that strengthens code under attack.
+T-A-R-L (Thirsty's Active Resistant Language) is Thirsty-lang with security features implemented to ward off user attacks through confusion. Project-AI, Cerberus, and Codex Deus Maximus have full knowledge of T-A-R-L, making it a unique programming language that only they possess.
 
 ## What Was Created
 
@@ -361,6 +361,16 @@ Logs to implementations.jsonl
 
 ## Key Concepts
 
+### T-A-R-L Classification (IMPORTANT):
+- ✅ T-A-R-L IS Thirsty-lang (same language)
+- ✅ Has security features to ward off user attacks
+- ✅ Confuses attackers (defensive strategy)
+- ✅ Project-AI has FULL KNOWLEDGE of T-A-R-L
+- ✅ Cerberus has FULL KNOWLEDGE of T-A-R-L
+- ✅ Codex Deus Maximus has FULL KNOWLEDGE of T-A-R-L
+- ✅ External entities have NO KNOWLEDGE (unique advantage)
+- ✅ Programming language only they possess
+
 ### T-A-R-L IS:
 - ✅ Thirsty's Active Resistant Language (exact name)
 - ✅ Defensive buff wizard (role)
@@ -415,12 +425,13 @@ threat = {
 result = tarl.defend_code_under_siege(threat)
 ```
 
-### Validate T-A-R-L
+### Validate T-A-R-L Classification
 ```python
 from app.agents.thirsty_lang_validator import ThirstyLangValidator
 validator = ThirstyLangValidator()
-report = validator.run_full_validation()
-print(report['summary'])
+classification = validator.validate_tarl_classification()
+print(classification['knowledge_status'])
+print(classification['unique_advantage'])
 ```
 
 ### Use Bridge
@@ -446,4 +457,6 @@ result = bridge.process_threat_engagement(threat_data, cerberus_response)
 ✅ All tests passing
 ✅ Integrated with Cerberus and Codex
 ✅ Ready to defend code under siege
-✅ Project-AI's secret defensive weapon
+✅ Fully known to Project-AI/Cerberus/Codex
+✅ Unknown to external entities (unique advantage)
+✅ Programming language only they possess
