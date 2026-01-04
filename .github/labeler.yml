@@ -1,0 +1,137 @@
+# Configuration for GitHub Actions Labeler
+# See: https://github.com/actions/labeler
+
+# Python core code changes
+python:
+  - changed-files:
+    - any-glob-to-any-file: 
+      - 'src/**/*.py'
+      - '*.py'
+
+# Core AI systems
+core:
+  - changed-files:
+    - any-glob-to-any-file: 'src/app/core/**/*'
+
+# GUI changes
+gui:
+  - changed-files:
+    - any-glob-to-any-file: 'src/app/gui/**/*'
+
+# AI agents
+agents:
+  - changed-files:
+    - any-glob-to-any-file: 'src/app/agents/**/*'
+
+# Web backend
+backend:
+  - changed-files:
+    - any-glob-to-any-file: 'web/backend/**/*'
+
+# Web frontend
+frontend:
+  - changed-files:
+    - any-glob-to-any-file: 'web/frontend/**/*'
+
+# JavaScript/TypeScript
+javascript:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/*.js'
+      - '**/*.ts'
+      - '**/*.jsx'
+      - '**/*.tsx'
+      - '**/*.json'
+      - 'package.json'
+      - 'package-lock.json'
+
+# Tests
+tests:
+  - changed-files:
+    - any-glob-to-any-file: 
+      - 'tests/**/*'
+      - '**/*test*.py'
+
+# Documentation
+documentation:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/*.md'
+      - 'docs/**/*'
+      - 'README*'
+      - 'CONTRIBUTING.md'
+      - 'LICENSE'
+
+# CI/CD and workflows
+github-actions:
+  - changed-files:
+    - any-glob-to-any-file: 
+      - '.github/workflows/**/*'
+      - '.github/**/*.yml'
+      - '.github/**/*.yaml'
+
+# Dependencies
+dependencies:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'requirements*.txt'
+      - 'requirements*.in'
+      - 'requirements*.lock'
+      - 'pyproject.toml'
+      - 'setup.py'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'Pipfile'
+      - 'Pipfile.lock'
+      - 'poetry.lock'
+
+# Security-related changes
+security:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'src/app/security/**/*'
+      - 'SECURITY.md'
+      - 'threat-model.md'
+      - '.github/workflows/*security*'
+      - '.github/workflows/codeql.yml'
+      - '.github/workflows/bandit.yml'
+
+# Docker
+docker:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'Dockerfile*'
+      - 'docker-compose*.yml'
+      - '.dockerignore'
+
+# Android
+android:
+  - changed-files:
+    - any-glob-to-any-file: 'android/**/*'
+
+# Configuration files
+config:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'config/**/*'
+      - '*.toml'
+      - '*.ini'
+      - '*.cfg'
+      - '.editorconfig'
+      - '.flake8'
+      - 'pyrightconfig.json'
+      - 'pytest.ini'
+
+# DevOps/Infrastructure
+devops:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '.devcontainer/**/*'
+      - 'scripts/**/*'
+      - 'Makefile'
+      - '.github/workflows/**/*'
+
+# Examples
+examples:
+  - changed-files:
+    - any-glob-to-any-file: 'examples/**/*'
