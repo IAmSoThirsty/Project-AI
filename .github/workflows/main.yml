@@ -89,13 +89,19 @@ jobs:
           if command -v dotnet &> /dev/null; then
             if find . -name "*.csproj" -o -name "*.sln" | grep -q .; then
               # Find the solution or project file and format it
-              if [ -f "*.sln" ]; then
-                dotnet format *.sln --verbosity diagnostic || true
-              elif [ -f "*.csproj" ]; then
-                dotnet format *.csproj --verbosity diagnostic || true
+              if ls *.sln 2>/dev/null | grep -q .; then
+                for sln in *.sln; do
+                  dotnet format "$sln" --verbosity diagnostic || true
+                done
+              elif ls *.csproj 2>/dev/null | grep -q .; then
+                for proj in *.csproj; do
+                  dotnet format "$proj" --verbosity diagnostic || true
+                done
               else
-                # Try to format any found project/solution
-                dotnet format --verbosity diagnostic || true
+                # Try to format any found project/solution in subdirectories
+                find . -name "*.sln" -o -name "*.csproj" | while read -r file; do
+                  dotnet format "$file" --verbosity diagnostic || true
+                done
               fi
             else
               echo "No C# project or solution files found, skipping C# formatting"
@@ -125,8 +131,8 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "🤖 The Fixer: Cleaned up code style"
-          file_pattern: ". :!.github/workflows/*"
-          # Exclude workflow files to avoid permission issues with workflows: write permission
+          file_pattern: "*.py *.js *.ts *.jsx *.tsx *.java *.c *.cpp *.h *.hpp *.go *.cs *.rb"
+          # Only include source code files, exclude workflow files to avoid workflows:write permission issues
 
   # -----------------------------------------------------------------
   # BOT 2: GRAMMAR POLICE (Super-Linter)
