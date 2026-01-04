@@ -32,7 +32,7 @@ from mcp.types import TextContent, Tool
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    handlers=[logging.StreamHandler()]
+    handlers=[logging.StreamHandler()],
 )
 logger = logging.getLogger(__name__)
 
@@ -51,7 +51,9 @@ class ProjectAIMCPServer:
             data_dir: Optional directory for data persistence. Defaults to ./data
         """
         self.server = Server("project-ai")
-        self.data_dir = data_dir or os.path.join(os.path.dirname(__file__), "../../../data")
+        self.data_dir = data_dir or os.path.join(
+            os.path.dirname(__file__), "../../../data"
+        )
 
         # Ensure data directory exists
         os.makedirs(self.data_dir, exist_ok=True)
@@ -130,7 +132,7 @@ class ProjectAIMCPServer:
                         "properties": {
                             "action": {
                                 "type": "string",
-                                "description": "The action to validate"
+                                "description": "The action to validate",
                             },
                             "context": {
                                 "type": "object",
@@ -138,20 +140,17 @@ class ProjectAIMCPServer:
                                 "properties": {
                                     "is_user_order": {"type": "boolean"},
                                     "endangers_humanity": {"type": "boolean"},
-                                    "harms_human": {"type": "boolean"}
-                                }
-                            }
+                                    "harms_human": {"type": "boolean"},
+                                },
+                            },
                         },
-                        "required": ["action"]
-                    }
+                        "required": ["action"],
+                    },
                 ),
                 Tool(
                     name="get_persona_state",
                     description="Get current AI persona state including personality traits and mood",
-                    inputSchema={
-                        "type": "object",
-                        "properties": {}
-                    }
+                    inputSchema={"type": "object", "properties": {}},
                 ),
                 Tool(
                     name="adjust_persona_trait",
@@ -162,17 +161,26 @@ class ProjectAIMCPServer:
                             "trait": {
                                 "type": "string",
                                 "description": "Trait to adjust (curiosity, empathy, patience, confidence, humor, creativity, enthusiasm, analytical)",
-                                "enum": ["curiosity", "empathy", "patience", "confidence", "humor", "creativity", "enthusiasm", "analytical"]
+                                "enum": [
+                                    "curiosity",
+                                    "empathy",
+                                    "patience",
+                                    "confidence",
+                                    "humor",
+                                    "creativity",
+                                    "enthusiasm",
+                                    "analytical",
+                                ],
                             },
                             "value": {
                                 "type": "number",
                                 "description": "New trait value (0.0 to 1.0)",
                                 "minimum": 0.0,
-                                "maximum": 1.0
-                            }
+                                "maximum": 1.0,
+                            },
                         },
-                        "required": ["trait", "value"]
-                    }
+                        "required": ["trait", "value"],
+                    },
                 ),
                 Tool(
                     name="add_memory",
@@ -183,21 +191,28 @@ class ProjectAIMCPServer:
                             "category": {
                                 "type": "string",
                                 "description": "Category of knowledge",
-                                "enum": ["general", "user_preferences", "facts", "skills", "goals", "relationships"]
+                                "enum": [
+                                    "general",
+                                    "user_preferences",
+                                    "facts",
+                                    "skills",
+                                    "goals",
+                                    "relationships",
+                                ],
                             },
                             "content": {
                                 "type": "string",
-                                "description": "Content to remember"
+                                "description": "Content to remember",
                             },
                             "importance": {
                                 "type": "number",
                                 "description": "Importance level (0.0 to 1.0)",
                                 "minimum": 0.0,
-                                "maximum": 1.0
-                            }
+                                "maximum": 1.0,
+                            },
                         },
-                        "required": ["category", "content"]
-                    }
+                        "required": ["category", "content"],
+                    },
                 ),
                 Tool(
                     name="search_memory",
@@ -205,18 +220,22 @@ class ProjectAIMCPServer:
                     inputSchema={
                         "type": "object",
                         "properties": {
-                            "query": {
-                                "type": "string",
-                                "description": "Search query"
-                            },
+                            "query": {"type": "string", "description": "Search query"},
                             "category": {
                                 "type": "string",
                                 "description": "Optional category filter",
-                                "enum": ["general", "user_preferences", "facts", "skills", "goals", "relationships"]
-                            }
+                                "enum": [
+                                    "general",
+                                    "user_preferences",
+                                    "facts",
+                                    "skills",
+                                    "goals",
+                                    "relationships",
+                                ],
+                            },
                         },
-                        "required": ["query"]
-                    }
+                        "required": ["query"],
+                    },
                 ),
                 Tool(
                     name="submit_learning_request",
@@ -226,15 +245,15 @@ class ProjectAIMCPServer:
                         "properties": {
                             "content": {
                                 "type": "string",
-                                "description": "Content to learn"
+                                "description": "Content to learn",
                             },
                             "reason": {
                                 "type": "string",
-                                "description": "Reason for learning request"
-                            }
+                                "description": "Reason for learning request",
+                            },
                         },
-                        "required": ["content", "reason"]
-                    }
+                        "required": ["content", "reason"],
+                    },
                 ),
                 Tool(
                     name="approve_learning_request",
@@ -244,11 +263,11 @@ class ProjectAIMCPServer:
                         "properties": {
                             "request_id": {
                                 "type": "string",
-                                "description": "ID of the learning request"
+                                "description": "ID of the learning request",
                             }
                         },
-                        "required": ["request_id"]
-                    }
+                        "required": ["request_id"],
+                    },
                 ),
                 Tool(
                     name="analyze_data",
@@ -258,16 +277,21 @@ class ProjectAIMCPServer:
                         "properties": {
                             "file_path": {
                                 "type": "string",
-                                "description": "Path to data file"
+                                "description": "Path to data file",
                             },
                             "analysis_type": {
                                 "type": "string",
                                 "description": "Type of analysis",
-                                "enum": ["summary", "correlation", "clustering", "statistics"]
-                            }
+                                "enum": [
+                                    "summary",
+                                    "correlation",
+                                    "clustering",
+                                    "statistics",
+                                ],
+                            },
                         },
-                        "required": ["file_path", "analysis_type"]
-                    }
+                        "required": ["file_path", "analysis_type"],
+                    },
                 ),
                 Tool(
                     name="track_location",
@@ -277,10 +301,10 @@ class ProjectAIMCPServer:
                         "properties": {
                             "ip_address": {
                                 "type": "string",
-                                "description": "Optional IP address to geolocate"
+                                "description": "Optional IP address to geolocate",
                             }
-                        }
-                    }
+                        },
+                    },
                 ),
                 Tool(
                     name="send_emergency_alert",
@@ -290,15 +314,15 @@ class ProjectAIMCPServer:
                         "properties": {
                             "message": {
                                 "type": "string",
-                                "description": "Emergency message"
+                                "description": "Emergency message",
                             },
                             "location": {
                                 "type": "string",
-                                "description": "Current location"
-                            }
+                                "description": "Current location",
+                            },
                         },
-                        "required": ["message"]
-                    }
+                        "required": ["message"],
+                    },
                 ),
                 Tool(
                     name="generate_image",
@@ -308,29 +332,37 @@ class ProjectAIMCPServer:
                         "properties": {
                             "prompt": {
                                 "type": "string",
-                                "description": "Image generation prompt"
+                                "description": "Image generation prompt",
                             },
                             "style": {
                                 "type": "string",
                                 "description": "Style preset",
-                                "enum": ["photorealistic", "digital_art", "oil_painting", "watercolor", "anime", "sketch", "abstract", "cyberpunk", "fantasy", "minimalist"]
+                                "enum": [
+                                    "photorealistic",
+                                    "digital_art",
+                                    "oil_painting",
+                                    "watercolor",
+                                    "anime",
+                                    "sketch",
+                                    "abstract",
+                                    "cyberpunk",
+                                    "fantasy",
+                                    "minimalist",
+                                ],
                             },
                             "backend": {
                                 "type": "string",
                                 "description": "Backend to use",
-                                "enum": ["huggingface", "openai"]
-                            }
+                                "enum": ["huggingface", "openai"],
+                            },
                         },
-                        "required": ["prompt"]
-                    }
+                        "required": ["prompt"],
+                    },
                 ),
                 Tool(
                     name="list_plugins",
                     description="List all available plugins",
-                    inputSchema={
-                        "type": "object",
-                        "properties": {}
-                    }
+                    inputSchema={"type": "object", "properties": {}},
                 ),
                 Tool(
                     name="enable_plugin",
@@ -340,11 +372,11 @@ class ProjectAIMCPServer:
                         "properties": {
                             "plugin_name": {
                                 "type": "string",
-                                "description": "Name of the plugin to enable"
+                                "description": "Name of the plugin to enable",
                             }
                         },
-                        "required": ["plugin_name"]
-                    }
+                        "required": ["plugin_name"],
+                    },
                 ),
                 Tool(
                     name="disable_plugin",
@@ -354,12 +386,12 @@ class ProjectAIMCPServer:
                         "properties": {
                             "plugin_name": {
                                 "type": "string",
-                                "description": "Name of the plugin to disable"
+                                "description": "Name of the plugin to disable",
                             }
                         },
-                        "required": ["plugin_name"]
-                    }
-                )
+                        "required": ["plugin_name"],
+                    },
+                ),
             ]
 
         @self.server.call_tool()
@@ -411,26 +443,26 @@ class ProjectAIMCPServer:
                     "uri": "persona://state",
                     "name": "AI Persona State",
                     "description": "Current AI persona configuration and state",
-                    "mimeType": "application/json"
+                    "mimeType": "application/json",
                 },
                 {
                     "uri": "memory://knowledge",
                     "name": "Knowledge Base",
                     "description": "Complete knowledge base with all memories",
-                    "mimeType": "application/json"
+                    "mimeType": "application/json",
                 },
                 {
                     "uri": "learning://requests",
                     "name": "Learning Requests",
                     "description": "All learning requests (pending, approved, denied)",
-                    "mimeType": "application/json"
+                    "mimeType": "application/json",
                 },
                 {
                     "uri": "plugins://list",
                     "name": "Plugin List",
                     "description": "List of all available plugins and their status",
-                    "mimeType": "application/json"
-                }
+                    "mimeType": "application/json",
+                },
             ]
 
         @self.server.read_resource()
@@ -465,9 +497,9 @@ class ProjectAIMCPServer:
                         {
                             "name": "action",
                             "description": "Action to analyze",
-                            "required": True
+                            "required": True,
                         }
-                    ]
+                    ],
                 },
                 {
                     "name": "persona_interaction",
@@ -476,9 +508,9 @@ class ProjectAIMCPServer:
                         {
                             "name": "message",
                             "description": "Message to the AI persona",
-                            "required": True
+                            "required": True,
                         }
-                    ]
+                    ],
                 },
                 {
                     "name": "memory_guided_response",
@@ -487,10 +519,10 @@ class ProjectAIMCPServer:
                         {
                             "name": "query",
                             "description": "Query to answer using knowledge base",
-                            "required": True
+                            "required": True,
                         }
-                    ]
-                }
+                    ],
+                },
             ]
 
         @self.server.get_prompt()
@@ -530,7 +562,7 @@ class ProjectAIMCPServer:
             "is_allowed": is_allowed,
             "reason": reason,
             "action": action,
-            "context": context
+            "context": context,
         }
         return [TextContent(type="text", text=json.dumps(result, indent=2))]
 
@@ -555,7 +587,7 @@ class ProjectAIMCPServer:
             "success": True,
             "trait": trait,
             "new_value": value,
-            "message": f"Trait '{trait}' adjusted to {value}"
+            "message": f"Trait '{trait}' adjusted to {value}",
         }
         return [TextContent(type="text", text=json.dumps(result, indent=2))]
 
@@ -573,7 +605,7 @@ class ProjectAIMCPServer:
             "success": True,
             "memory_id": memory_id,
             "category": category,
-            "importance": importance
+            "importance": importance,
         }
         return [TextContent(type="text", text=json.dumps(result, indent=2))]
 
@@ -601,11 +633,13 @@ class ProjectAIMCPServer:
             "success": True,
             "request_id": request_id,
             "status": "pending",
-            "message": "Learning request submitted for approval"
+            "message": "Learning request submitted for approval",
         }
         return [TextContent(type="text", text=json.dumps(result, indent=2))]
 
-    async def _approve_learning_request(self, args: dict[str, Any]) -> list[TextContent]:
+    async def _approve_learning_request(
+        self, args: dict[str, Any]
+    ) -> list[TextContent]:
         """Approve a learning request."""
         if not self.learning:
             return [TextContent(type="text", text="Learning system not available")]
@@ -616,7 +650,7 @@ class ProjectAIMCPServer:
         result = {
             "success": success,
             "request_id": request_id,
-            "status": "approved" if success else "error"
+            "status": "approved" if success else "error",
         }
         return [TextContent(type="text", text=json.dumps(result, indent=2))]
 
@@ -667,7 +701,7 @@ class ProjectAIMCPServer:
             success = self.emergency.send_alert(message, location)
             result = {
                 "success": success,
-                "message": "Alert sent successfully" if success else "Alert failed"
+                "message": "Alert sent successfully" if success else "Alert failed",
             }
             return [TextContent(type="text", text=json.dumps(result, indent=2))]
         except Exception as e:
@@ -683,12 +717,10 @@ class ProjectAIMCPServer:
         backend = args.get("backend", "huggingface")
 
         try:
-            image_path, metadata = self.image_gen.generate(prompt, style=style, backend=backend)
-            result = {
-                "success": True,
-                "image_path": image_path,
-                "metadata": metadata
-            }
+            image_path, metadata = self.image_gen.generate(
+                prompt, style=style, backend=backend
+            )
+            result = {"success": True, "image_path": image_path, "metadata": metadata}
             return [TextContent(type="text", text=json.dumps(result, indent=2))]
         except Exception as e:
             return [TextContent(type="text", text=f"Image generation error: {str(e)}")]
@@ -711,7 +743,7 @@ class ProjectAIMCPServer:
         result = {
             "success": success,
             "plugin": plugin_name,
-            "status": "enabled" if success else "error"
+            "status": "enabled" if success else "error",
         }
         return [TextContent(type="text", text=json.dumps(result, indent=2))]
 
@@ -725,7 +757,7 @@ class ProjectAIMCPServer:
         result = {
             "success": success,
             "plugin": plugin_name,
-            "status": "disabled" if success else "error"
+            "status": "disabled" if success else "error",
         }
         return [TextContent(type="text", text=json.dumps(result, indent=2))]
 
@@ -733,9 +765,7 @@ class ProjectAIMCPServer:
         """Run the MCP server using STDIO transport."""
         async with stdio_server() as (read_stream, write_stream):
             await self.server.run(
-                read_stream,
-                write_stream,
-                self.server.create_initialization_options()
+                read_stream, write_stream, self.server.create_initialization_options()
             )
 
 
@@ -747,4 +777,5 @@ async def main():
 
 if __name__ == "__main__":
     import asyncio
+
     asyncio.run(main())

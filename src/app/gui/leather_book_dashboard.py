@@ -9,6 +9,7 @@ Layout:
 - Top Right: Proactive AI Actions
 - Background: 3D grid visualization
 """
+
 import math
 import random
 
@@ -287,7 +288,8 @@ class ProactiveActionsPanel(QFrame):
 
     def _create_action_scroll(self) -> QScrollArea:
         scroll = QScrollArea()
-        scroll.setStyleSheet("""
+        scroll.setStyleSheet(
+            """
             QScrollArea {
                 background-color: transparent;
                 border: none;
@@ -300,7 +302,8 @@ class ProactiveActionsPanel(QFrame):
             QScrollBar::handle:vertical {
                 background-color: #00ff00;
             }
-        """)
+        """
+        )
         scroll.setWidgetResizable(True)
 
         actions_widget = QWidget()
@@ -344,7 +347,8 @@ class UserChatPanel(QFrame):
         # Chat input
         self.input_text = QTextEdit()
         self.input_text.setPlaceholderText("Enter your message...")
-        self.input_text.setStyleSheet("""
+        self.input_text.setStyleSheet(
+            """
             QTextEdit {
                 background-color: #1a1a1a;
                 border: 2px solid #00ff00;
@@ -356,12 +360,14 @@ class UserChatPanel(QFrame):
             QTextEdit:focus {
                 border: 2px solid #00ffff;
             }
-        """)
+        """
+        )
         layout.addWidget(self.input_text, 1)
 
         # Send button
         send_btn = QPushButton("SEND ▶")
-        send_btn.setStyleSheet("""
+        send_btn.setStyleSheet(
+            """
             QPushButton {
                 background-color: #00ff00;
                 border: 2px solid #00ff00;
@@ -378,7 +384,8 @@ class UserChatPanel(QFrame):
             QPushButton:pressed {
                 background-color: #008800;
             }
-        """)
+        """
+        )
         send_btn.clicked.connect(self._send_message)
         layout.addWidget(send_btn)
 
@@ -395,13 +402,15 @@ class AINeuralHead(QFrame):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setStyleSheet("""
+        self.setStyleSheet(
+            """
             QFrame {
                 background-color: #000000;
                 border: 3px solid #00ffff;
                 border-radius: 10px;
             }
-        """)
+        """
+        )
         self.setMinimumSize(300, 400)
 
         self.animation_frame = 0
@@ -414,8 +423,7 @@ class AINeuralHead(QFrame):
         # Title
         title = QLabel("NEURAL INTERFACE")
         title.setFont(QFont("Courier New", 14, QFont.Weight.Bold))
-        title.setStyleSheet(
-            "color: #00ffff; text-shadow: 0px 0px 10px #00ffff;")
+        title.setStyleSheet("color: #00ffff; text-shadow: 0px 0px 10px #00ffff;")
         title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(title)
 
@@ -426,7 +434,8 @@ class AINeuralHead(QFrame):
         # Status indicator
         self.status_label = QLabel("READY")
         self.status_label.setStyleSheet(
-            "color: #00ff00; text-align: center; font-weight: bold;")
+            "color: #00ff00; text-align: center; font-weight: bold;"
+        )
         self.status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(self.status_label)
 
@@ -436,7 +445,8 @@ class AINeuralHead(QFrame):
         self.thinking_intensity = 0
         self.status_label.setText("THINKING...")
         self.status_label.setStyleSheet(
-            "color: #ffff00; text-align: center; font-weight: bold;")
+            "color: #ffff00; text-align: center; font-weight: bold;"
+        )
 
     def stop_thinking(self):
         """Stop thinking animation."""
@@ -444,7 +454,8 @@ class AINeuralHead(QFrame):
         self.thinking_intensity = 0
         self.status_label.setText("RESPONDING")
         self.status_label.setStyleSheet(
-            "color: #00ff00; text-align: center; font-weight: bold;")
+            "color: #00ff00; text-align: center; font-weight: bold;"
+        )
 
     def paintEvent(self, a0):
         """Paint the neural head."""
@@ -465,8 +476,7 @@ class AIFaceCanvas(QFrame):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.animation_frame = 0
-        self.setStyleSheet(
-            "background-color: #000000; border: 2px solid #00ff00;")
+        self.setStyleSheet("background-color: #000000; border: 2px solid #00ff00;")
 
     def paintEvent(self, a0):
         """Paint the AI face."""
@@ -492,8 +502,12 @@ class AIFaceCanvas(QFrame):
         head_radius = 80
         painter.setPen(QPen(QColor(0, 255, 255), 3))
         painter.setBrush(QBrush(QColor(0, 50, 100, 50)))
-        painter.drawEllipse(center_x - head_radius, center_y - head_radius,
-                            head_radius * 2, head_radius * 2)
+        painter.drawEllipse(
+            center_x - head_radius,
+            center_y - head_radius,
+            head_radius * 2,
+            head_radius * 2,
+        )
 
         # Draw eyes with glow
         eye_y = center_y - 30
@@ -502,21 +516,27 @@ class AIFaceCanvas(QFrame):
         # Left eye
         painter.setPen(QPen(QColor(0, 255, 0), 2))
         painter.setBrush(QBrush(QColor(0, 255, 0)))
-        painter.drawEllipse(center_x - 40 - eye_radius, eye_y - eye_radius,
-                            eye_radius * 2, eye_radius * 2)
+        painter.drawEllipse(
+            center_x - 40 - eye_radius,
+            eye_y - eye_radius,
+            eye_radius * 2,
+            eye_radius * 2,
+        )
 
         # Right eye
-        painter.drawEllipse(center_x + 40 - eye_radius, eye_y - eye_radius,
-                            eye_radius * 2, eye_radius * 2)
+        painter.drawEllipse(
+            center_x + 40 - eye_radius,
+            eye_y - eye_radius,
+            eye_radius * 2,
+            eye_radius * 2,
+        )
 
         # Draw pupil with animation
         pupil_offset = int(10 * math.sin(self.animation_frame * 0.05))
         painter.setPen(QPen(QColor(0, 0, 0), 1))
         painter.setBrush(QBrush(QColor(0, 0, 0)))
-        painter.drawEllipse(center_x - 40 + pupil_offset - 5, eye_y - 5,
-                            10, 10)
-        painter.drawEllipse(center_x + 40 + pupil_offset - 5, eye_y - 5,
-                            10, 10)
+        painter.drawEllipse(center_x - 40 + pupil_offset - 5, eye_y - 5, 10, 10)
+        painter.drawEllipse(center_x + 40 + pupil_offset - 5, eye_y - 5, 10, 10)
 
         # Draw mouth (smile)
         mouth_points = []
@@ -527,8 +547,12 @@ class AIFaceCanvas(QFrame):
 
         painter.setPen(QPen(QColor(0, 255, 100), 2))
         for i in range(len(mouth_points) - 1):
-            painter.drawLine(int(mouth_points[i][0]), int(mouth_points[i][1]), int(
-                mouth_points[i + 1][0]), int(mouth_points[i + 1][1]))
+            painter.drawLine(
+                int(mouth_points[i][0]),
+                int(mouth_points[i][1]),
+                int(mouth_points[i + 1][0]),
+                int(mouth_points[i + 1][1]),
+            )
 
         self.animation_frame += 1
 
@@ -553,7 +577,8 @@ class AIResponsePanel(QFrame):
         # Response display
         self.response_text = QTextEdit()
         self.response_text.setReadOnly(True)
-        self.response_text.setStyleSheet("""
+        self.response_text.setStyleSheet(
+            """
             QTextEdit {
                 background-color: #1a1a1a;
                 border: 2px solid #00ff00;
@@ -562,12 +587,14 @@ class AIResponsePanel(QFrame):
                 font-family: Courier New;
                 font-size: 10px;
             }
-        """)
+        """
+        )
         layout.addWidget(self.response_text, 1)
 
         # Clear button
         clear_btn = QPushButton("CLEAR")
-        clear_btn.setStyleSheet("""
+        clear_btn.setStyleSheet(
+            """
             QPushButton {
                 background-color: #1a1a1a;
                 border: 2px solid #00ff00;
@@ -580,7 +607,8 @@ class AIResponsePanel(QFrame):
                 border: 2px solid #00ffff;
                 color: #00ffff;
             }
-        """)
+        """
+        )
         clear_btn.clicked.connect(self.response_text.clear)
         layout.addWidget(clear_btn)
 

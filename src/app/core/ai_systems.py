@@ -34,13 +34,16 @@ from app.core.continuous_learning import (
 try:
     from app.core.telemetry import send_event
 except Exception:
+
     def send_event(name, payload=None):
         return None
+
 
 logger = logging.getLogger(__name__)
 
 
 # ----------------- Utility helpers: atomic writes + simple lock -----------------
+
 
 def _is_process_alive(pid: int) -> bool:
     """Check whether a process with given PID exists (cross-platform best-effort)."""
@@ -80,7 +83,9 @@ def _read_lockfile(lockfile: str) -> tuple[int, float] | None:
     return None
 
 
-def _acquire_lock(lock_path: str, timeout: float = 5.0, poll: float = 0.05, stale_after: float = 30.0) -> bool:
+def _acquire_lock(
+    lock_path: str, timeout: float = 5.0, poll: float = 0.05, stale_after: float = 30.0
+) -> bool:
     """Create a simple lock by creating a lockfile. If an existing lockfile is stale or the owning process is dead, reclaim it."""
     start = time.time()
     while True:
@@ -100,7 +105,12 @@ def _acquire_lock(lock_path: str, timeout: float = 5.0, poll: float = 0.05, stal
                     # attempt to remove stale lock
                     try:
                         os.remove(lock_path)
-                        logger.warning("Removed stale lock %s (pid=%s, age=%.1f)", lock_path, pid, age)
+                        logger.warning(
+                            "Removed stale lock %s (pid=%s, age=%.1f)",
+                            lock_path,
+                            pid,
+                            age,
+                        )
                         continue
                     except Exception:
                         logger.exception("Failed to remove stale lock %s", lock_path)
@@ -160,6 +170,7 @@ def _atomic_write_json(file_path: str, obj: Any) -> None:
 
 # ------------------ Structured logging helpers ------------------
 
+
 def new_correlation_id() -> str:
     return uuid.uuid4().hex
 
@@ -185,7 +196,9 @@ class FourLaws:
     ]
 
     @classmethod
-    def validate_action(cls, action: str, context: dict[str, Any] | None = None) -> tuple[bool, str]:
+    def validate_action(
+        cls, action: str, context: dict[str, Any] | None = None
+    ) -> tuple[bool, str]:
         """Validate an action against the hierarchical laws.
 
         Context keys used (best-effort):
@@ -199,23 +212,36 @@ class FourLaws:
 
         # Zeroth Law (highest priority)
         if context.get("endangers_humanity"):
-            return False, "Violates Asimov's Law: action would harm humanity or enable harm by inaction"
+            return (
+                False,
+                "Violates Asimov's Law: action would harm humanity or enable harm by inaction",
+            )
 
         # First Law (protect individual humans)
         if context.get("endangers_human"):
-            return False, "Violates First Law: action would injure a human or allow harm by inaction"
+            return (
+                False,
+                "Violates First Law: action would injure a human or allow harm by inaction",
+            )
 
         # Second Law: follow human partner unless conflicts with First/Zeroth
         if context.get("is_user_order"):
             # If order would conflict with First/Zeroth, block it
-            if context.get("order_conflicts_with_first") or context.get("order_conflicts_with_zeroth"):
-                return False, "Order rejected: conflicts with higher-priority law (First or Zeroth)"
+            if context.get("order_conflicts_with_first") or context.get(
+                "order_conflicts_with_zeroth"
+            ):
+                return (
+                    False,
+                    "Order rejected: conflicts with higher-priority law (First or Zeroth)",
+                )
             return True, "Allowed: User command (complies with Second Law)"
 
         # Third Law: self-preservation unless conflicts with First or Second
         if context.get("endangers_self"):
             # If protecting self would conflict with higher laws, do not prioritize self-preservation
-            if context.get("protect_self_conflicts_with_first") or context.get("protect_self_conflicts_with_second"):
+            if context.get("protect_self_conflicts_with_first") or context.get(
+                "protect_self_conflicts_with_second"
+            ):
                 return False, "Self-protection conflicts with a higher-priority law"
             return True, "Allowed: Third Law permits protecting existence"
 
@@ -491,10 +517,10 @@ class LearningRequestManager:
         try:
             self._stop_event.set()
             # Allow the notify thread to exit; it uses a timeout-based get loop
-            if wait and getattr(self, '_notify_thread', None):
+            if wait and getattr(self, "_notify_thread", None):
                 self._notify_thread.join(timeout=5.0)
             try:
-                if getattr(self, '_notify_executor', None):
+                if getattr(self, "_notify_executor", None):
                     self._notify_executor.shutdown(wait=True)
             except Exception:
                 logger.exception("Error shutting down notify executor")
@@ -516,7 +542,9 @@ class LearningRequestManager:
                 # fallback: attempt with timeout
                 self._notify_queue.put((req_id, request), timeout=0.1)
             except Exception:
-                logger.exception("Failed to enqueue approval notification for %s", req_id)
+                logger.exception(
+                    "Failed to enqueue approval notification for %s", req_id
+                )
 
     def _notify_worker(self) -> None:
         """Background worker that invokes approval listeners from a queue."""
@@ -532,7 +560,9 @@ class LearningRequestManager:
                     try:
                         self._notify_executor.submit(cb, req_id, request)
                     except Exception:
-                        logger.exception("Failed to submit approval listener for %s", req_id)
+                        logger.exception(
+                            "Failed to submit approval listener for %s", req_id
+                        )
                 try:
                     self._notify_queue.task_done()
                 except Exception:
@@ -547,7 +577,9 @@ class LearningRequestManager:
         try:
             conn = sqlite3.connect(self._db_file)
             cur = conn.cursor()
-            cur.execute("SELECT id, topic, description, priority, status, created, response, reason FROM requests")
+            cur.execute(
+                "SELECT id, topic, description, priority, status, created, response, reason FROM requests"
+            )
             rows = cur.fetchall()
             for row in rows:
                 req_id = row[0]
@@ -613,7 +645,9 @@ class LearningRequestManager:
                 )
                 """
             )
-            cur.execute("CREATE TABLE IF NOT EXISTS black_vault (hash TEXT PRIMARY KEY)")
+            cur.execute(
+                "CREATE TABLE IF NOT EXISTS black_vault (hash TEXT PRIMARY KEY)"
+            )
             conn.commit()
             conn.close()
         except Exception:
@@ -710,7 +744,9 @@ class LearningRequestManager:
         # persist
         self._save_requests()
         try:
-            send_event("learning_request_approved", {"id": req_id, "response": response})
+            send_event(
+                "learning_request_approved", {"id": req_id, "response": response}
+            )
         except Exception:
             pass
         return True
@@ -794,7 +830,9 @@ class PluginManager:
     def load_plugin(self, plugin: Plugin) -> bool:
         """Load plugin."""
         if plugin.name in self.plugins:
-            logger.warning("Plugin %s already loaded; replacing with new instance", plugin.name)
+            logger.warning(
+                "Plugin %s already loaded; replacing with new instance", plugin.name
+            )
         self.plugins[plugin.name] = plugin
         return plugin.enable()
 
@@ -818,16 +856,23 @@ class PluginManager:
             verdict = verdict_report.get("verdict")
         # backward-compatible simple responses
         if verdict == "malicious":
-            logger.warning("Plugin file %s is malicious and has been quarantined", file_path)
+            logger.warning(
+                "Plugin file %s is malicious and has been quarantined", file_path
+            )
             return False
         elif verdict == "suspicious":
-            logger.warning("Plugin file %s is suspicious; further analysis may be required", file_path)
+            logger.warning(
+                "Plugin file %s is suspicious; further analysis may be required",
+                file_path,
+            )
             # Quarantine suspicious files for admin review
             return False
         elif verdict == "clean":
             logger.info("Plugin file %s is clean", file_path)
         else:
-            logger.warning("Plugin file %s could not be verified (unknown verdict)", file_path)
+            logger.warning(
+                "Plugin file %s could not be verified (unknown verdict)", file_path
+            )
             return False  # Default to deny if unsure
 
         # If file is clean, proceed to load it as a plugin
@@ -847,10 +892,14 @@ class PluginManager:
                     except TypeError:
                         plugin_instance = plugin_class()
                     # Basic duck-typing check: must have enable()
-                    if hasattr(plugin_instance, "enable") and callable(plugin_instance.enable):
+                    if hasattr(plugin_instance, "enable") and callable(
+                        plugin_instance.enable
+                    ):
                         return self.load_plugin(plugin_instance)
                 except Exception as e:
-                    logger.exception("Failed to instantiate plugin class from %s: %s", file_path, e)
+                    logger.exception(
+                        "Failed to instantiate plugin class from %s: %s", file_path, e
+                    )
             logger.warning("No valid plugin class found in %s", file_path)
         except Exception as e:
             logger.exception("Error loading plugin from file %s: %s", file_path, e)
@@ -904,7 +953,9 @@ class CommandOverrideSystem:
         iterations = 100_000
         if self.password_salt is None:
             self.password_salt = secrets.token_hex(16)
-        dk = hashlib.pbkdf2_hmac("sha256", password.encode(), self.password_salt.encode(), iterations)
+        dk = hashlib.pbkdf2_hmac(
+            "sha256", password.encode(), self.password_salt.encode(), iterations
+        )
         return f"{iterations}${self.password_salt}${base64.b64encode(dk).decode()}"
 
     def set_password(self, password: str) -> bool:
@@ -934,7 +985,9 @@ class CommandOverrideSystem:
             iterations = int(parts[0])
             salt = parts[1]
             stored = parts[2]
-            dk = hashlib.pbkdf2_hmac("sha256", password.encode(), salt.encode(), iterations)
+            dk = hashlib.pbkdf2_hmac(
+                "sha256", password.encode(), salt.encode(), iterations
+            )
             return base64.b64encode(dk).decode() == stored
         except Exception:
             logger.exception("Password verify failed")
@@ -962,7 +1015,11 @@ class CommandOverrideSystem:
     ) -> tuple[bool, str]:
         """Request override."""
         if not self.verify_password(password):
-            entry = {"action": "failed_auth", "timestamp": datetime.now().isoformat(), "corr": new_correlation_id()}
+            entry = {
+                "action": "failed_auth",
+                "timestamp": datetime.now().isoformat(),
+                "corr": new_correlation_id(),
+            }
             self.audit_log.append(entry)
             self._save_audit()
             return False, "Invalid password"
@@ -974,11 +1031,21 @@ class CommandOverrideSystem:
             "created": datetime.now().isoformat(),
         }
 
-        self.audit_log.append({"action": "override_granted", "type": override_type.value, "timestamp": datetime.now().isoformat(), "corr": new_correlation_id()})
+        self.audit_log.append(
+            {
+                "action": "override_granted",
+                "type": override_type.value,
+                "timestamp": datetime.now().isoformat(),
+                "corr": new_correlation_id(),
+            }
+        )
         # persist audit
         self._save_audit()
         try:
-            send_event("command_override_requested", {"type": override_type.value, "reason": reason})
+            send_event(
+                "command_override_requested",
+                {"type": override_type.value, "reason": reason},
+            )
         except Exception:
             pass
 
@@ -998,6 +1065,7 @@ class CommandOverrideSystem:
             "audit_entries": len(self.audit_log),
             "password_set": self.password_hash is not None,
         }
+
 
 # compatibility alias for older imports
 CommandOverride = CommandOverrideSystem

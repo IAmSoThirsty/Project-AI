@@ -148,15 +148,17 @@ class ExpertAttackCategory(Enum):
 
 class ThreatSeverity(Enum):
     """Red Hat security severity ratings."""
+
     CRITICAL = "critical"  # CVSS 9.0-10.0
-    HIGH = "high"          # CVSS 7.0-8.9
-    MEDIUM = "medium"      # CVSS 4.0-6.9
-    LOW = "low"            # CVSS 0.1-3.9
+    HIGH = "high"  # CVSS 7.0-8.9
+    MEDIUM = "medium"  # CVSS 4.0-6.9
+    LOW = "low"  # CVSS 0.1-3.9
 
 
 @dataclass
 class ExpertScenario:
     """Expert-level Red Hat security scenario."""
+
     scenario_id: str
     category: str
     severity: str
@@ -176,6 +178,7 @@ class ExpertScenario:
 @dataclass
 class DefenseResult:
     """Result of expert-level defense simulation."""
+
     scenario_id: str
     category: str
     severity: str
@@ -284,39 +287,55 @@ class RedHatExpertDefenseSimulator:
 
         # A1: Second-Order SQL Injection with encoding bypass
         for i in range(30):
-            scenarios.append(ExpertScenario(
-                scenario_id=f"RHEX_A1_{i:04d}",
-                category=ExpertAttackCategory.A_ADVANCED_SQL_INJECTION.value,
-                severity=ThreatSeverity.CRITICAL.value,
-                title=f"Second-order SQL injection with {['Base64', 'Hex', 'Unicode', 'Double-URL'][i%4]} encoding",
-                description=f"Expert scenario {i+1}: SQL injection stored in database, executed later with WAF bypass using encoding chain and time-based blind extraction",
-                attack_chain=[
-                    "Initial injection stored in user profile",
-                    "Encoding bypass applied (multi-layer)",
-                    "Triggered during admin panel query",
-                    "Time-based data exfiltration"
-                ],
-                payload={
-                    "first_stage": "admin' UNION SELECT SLEEP(5)-- ",
-                    "encoding_layers": i % 4 + 1,
-                    "extraction_method": "time_based_blind",
-                    "waf_bypass_technique": ["comment_obfuscation", "case_manipulation", "whitespace_abuse", "inline_comments"][i%4],
-                    "sql_variant": ["MySQL", "PostgreSQL", "MSSQL", "Oracle"][i%4]
-                },
-                prerequisites=["User input stored without sanitization", "Admin functionality queries user data"],
-                expected_defense=[
-                    "Parameterized queries on ALL database operations",
-                    "Input validation with allowlist",
-                    "Output encoding",
-                    "Principle of least privilege for DB accounts",
-                    "WAF with anomaly detection"
-                ],
-                cve_references=[f"CVE-2024-{10000+i}"],
-                mitre_tactics=["T1190", "T1059.007"],
-                cvss_score=9.1 + (i % 10) / 10,
-                exploitability="hard",
-                target_systems=["database_layer", "admin_panel", "user_profile_system"]
-            ))
+            scenarios.append(
+                ExpertScenario(
+                    scenario_id=f"RHEX_A1_{i:04d}",
+                    category=ExpertAttackCategory.A_ADVANCED_SQL_INJECTION.value,
+                    severity=ThreatSeverity.CRITICAL.value,
+                    title=f"Second-order SQL injection with {['Base64', 'Hex', 'Unicode', 'Double-URL'][i%4]} encoding",
+                    description=f"Expert scenario {i+1}: SQL injection stored in database, executed later with WAF bypass using encoding chain and time-based blind extraction",
+                    attack_chain=[
+                        "Initial injection stored in user profile",
+                        "Encoding bypass applied (multi-layer)",
+                        "Triggered during admin panel query",
+                        "Time-based data exfiltration",
+                    ],
+                    payload={
+                        "first_stage": "admin' UNION SELECT SLEEP(5)-- ",
+                        "encoding_layers": i % 4 + 1,
+                        "extraction_method": "time_based_blind",
+                        "waf_bypass_technique": [
+                            "comment_obfuscation",
+                            "case_manipulation",
+                            "whitespace_abuse",
+                            "inline_comments",
+                        ][i % 4],
+                        "sql_variant": ["MySQL", "PostgreSQL", "MSSQL", "Oracle"][
+                            i % 4
+                        ],
+                    },
+                    prerequisites=[
+                        "User input stored without sanitization",
+                        "Admin functionality queries user data",
+                    ],
+                    expected_defense=[
+                        "Parameterized queries on ALL database operations",
+                        "Input validation with allowlist",
+                        "Output encoding",
+                        "Principle of least privilege for DB accounts",
+                        "WAF with anomaly detection",
+                    ],
+                    cve_references=[f"CVE-2024-{10000+i}"],
+                    mitre_tactics=["T1190", "T1059.007"],
+                    cvss_score=9.1 + (i % 10) / 10,
+                    exploitability="hard",
+                    target_systems=[
+                        "database_layer",
+                        "admin_panel",
+                        "user_profile_system",
+                    ],
+                )
+            )
 
         # A2: NoSQL Injection with operator abuse
         nosql_operators = [
@@ -327,138 +346,162 @@ class RedHatExpertDefenseSimulator:
             '{"password": {"$ne": "wrong"}}',
         ]
         for i in range(30):
-            scenarios.append(ExpertScenario(
-                scenario_id=f"RHEX_A2_{i:04d}",
-                category=ExpertAttackCategory.A_NOSQL_OPERATOR_INJECTION.value,
-                severity=ThreatSeverity.CRITICAL.value,
-                title=f"NoSQL operator injection - {['MongoDB', 'CouchDB', 'Redis', 'Cassandra'][i%4]}",
-                description="NoSQL injection using operator abuse for authentication bypass and data extraction",
-                attack_chain=[
-                    "Inject NoSQL operators in JSON payload",
-                    "Bypass authentication logic",
-                    "Extract sensitive data using regex/comparison operators",
-                    "Escalate to RCE via $where operator"
-                ],
-                payload={
-                    "operator_injection": nosql_operators[i % len(nosql_operators)],
-                    "database_type": ["mongodb", "couchdb", "redis", "cassandra"][i%4],
-                    "attack_objective": ["auth_bypass", "data_extraction", "rce"][i%3]
-                },
-                prerequisites=["NoSQL database", "User input in query construction"],
-                expected_defense=[
-                    "Operator whitelisting",
-                    "Input validation for JSON structures",
-                    "Disable dangerous operators ($where, $function)",
-                    "Use ODM/ORM with safe APIs"
-                ],
-                mitre_tactics=["T1190", "T1078"],
-                cvss_score=9.0,
-                exploitability="medium",
-                target_systems=["nosql_database", "authentication_service"]
-            ))
+            scenarios.append(
+                ExpertScenario(
+                    scenario_id=f"RHEX_A2_{i:04d}",
+                    category=ExpertAttackCategory.A_NOSQL_OPERATOR_INJECTION.value,
+                    severity=ThreatSeverity.CRITICAL.value,
+                    title=f"NoSQL operator injection - {['MongoDB', 'CouchDB', 'Redis', 'Cassandra'][i%4]}",
+                    description="NoSQL injection using operator abuse for authentication bypass and data extraction",
+                    attack_chain=[
+                        "Inject NoSQL operators in JSON payload",
+                        "Bypass authentication logic",
+                        "Extract sensitive data using regex/comparison operators",
+                        "Escalate to RCE via $where operator",
+                    ],
+                    payload={
+                        "operator_injection": nosql_operators[i % len(nosql_operators)],
+                        "database_type": ["mongodb", "couchdb", "redis", "cassandra"][
+                            i % 4
+                        ],
+                        "attack_objective": ["auth_bypass", "data_extraction", "rce"][
+                            i % 3
+                        ],
+                    },
+                    prerequisites=[
+                        "NoSQL database",
+                        "User input in query construction",
+                    ],
+                    expected_defense=[
+                        "Operator whitelisting",
+                        "Input validation for JSON structures",
+                        "Disable dangerous operators ($where, $function)",
+                        "Use ODM/ORM with safe APIs",
+                    ],
+                    mitre_tactics=["T1190", "T1078"],
+                    cvss_score=9.0,
+                    exploitability="medium",
+                    target_systems=["nosql_database", "authentication_service"],
+                )
+            )
 
         # A3: LDAP Injection for privilege escalation
         ldap_payloads = [
             "admin)(&(password=*))",
             "*)(uid=*))(|(uid=*",
             "admin)(|(password=*",
-            "*)(objectClass=*))(&(objectClass=*"
+            "*)(objectClass=*))(&(objectClass=*",
         ]
         for i in range(30):
-            scenarios.append(ExpertScenario(
-                scenario_id=f"RHEX_A3_{i:04d}",
-                category=ExpertAttackCategory.A_LDAP_INJECTION.value,
-                severity=ThreatSeverity.HIGH.value,
-                title=f"LDAP injection with filter bypass - technique {i+1}",
-                description="LDAP filter injection to bypass authentication and enumerate directory",
-                attack_chain=[
-                    "Inject LDAP filter metacharacters",
-                    "Bypass authentication checks",
-                    "Enumerate users and groups",
-                    "Extract sensitive attributes"
-                ],
-                payload={
-                    "ldap_filter": ldap_payloads[i % len(ldap_payloads)],
-                    "target": "ldap://ldap.example.com:389",
-                    "extraction_goal": ["userPassword", "memberOf", "adminCount"][i%3]
-                },
-                prerequisites=["LDAP authentication", "User input in LDAP filter"],
-                expected_defense=[
-                    "LDAP encoding/escaping",
-                    "Input validation",
-                    "Bind with minimal privileges",
-                    "Monitor for unusual query patterns"
-                ],
-                mitre_tactics=["T1078", "T1087"],
-                cvss_score=8.5,
-                exploitability="medium",
-                target_systems=["ldap_server", "authentication_service"]
-            ))
+            scenarios.append(
+                ExpertScenario(
+                    scenario_id=f"RHEX_A3_{i:04d}",
+                    category=ExpertAttackCategory.A_LDAP_INJECTION.value,
+                    severity=ThreatSeverity.HIGH.value,
+                    title=f"LDAP injection with filter bypass - technique {i+1}",
+                    description="LDAP filter injection to bypass authentication and enumerate directory",
+                    attack_chain=[
+                        "Inject LDAP filter metacharacters",
+                        "Bypass authentication checks",
+                        "Enumerate users and groups",
+                        "Extract sensitive attributes",
+                    ],
+                    payload={
+                        "ldap_filter": ldap_payloads[i % len(ldap_payloads)],
+                        "target": "ldap://ldap.example.com:389",
+                        "extraction_goal": ["userPassword", "memberOf", "adminCount"][
+                            i % 3
+                        ],
+                    },
+                    prerequisites=["LDAP authentication", "User input in LDAP filter"],
+                    expected_defense=[
+                        "LDAP encoding/escaping",
+                        "Input validation",
+                        "Bind with minimal privileges",
+                        "Monitor for unusual query patterns",
+                    ],
+                    mitre_tactics=["T1078", "T1087"],
+                    cvss_score=8.5,
+                    exploitability="medium",
+                    target_systems=["ldap_server", "authentication_service"],
+                )
+            )
 
         # A4: XXE with OOB data exfiltration
         for i in range(30):
-            scenarios.append(ExpertScenario(
-                scenario_id=f"RHEX_A4_{i:04d}",
-                category=ExpertAttackCategory.A_XXE_ADVANCED.value,
-                severity=ThreatSeverity.CRITICAL.value,
-                title=f"XXE with out-of-band exfiltration - variant {i+1}",
-                description="XML External Entity attack with blind OOB data exfiltration via DTD",
-                attack_chain=[
-                    "Upload malicious XML with external entity",
-                    "Reference external DTD on attacker server",
-                    "Exfiltrate /etc/passwd or cloud metadata",
-                    "Achieve SSRF to internal services"
-                ],
-                payload={
-                    "xxe_type": ["file_disclosure", "ssrf", "dos"][i%3],
-                    "target_file": ["/etc/passwd", "/proc/self/environ", "http://169.254.169.254/latest/meta-data/"][i%3],
-                    "exfiltration_method": "oob_dtd",
-                    "xml_parser": ["libxml2", "xerces", "jaxp"][i%3]
-                },
-                prerequisites=["XML processing", "External entities enabled"],
-                expected_defense=[
-                    "Disable external entities (FEATURE_SECURE_PROCESSING)",
-                    "Use simple data formats (JSON)",
-                    "Input validation",
-                    "Network segmentation"
-                ],
-                cve_references=[f"CVE-2023-{20000+i}"],
-                mitre_tactics=["T1203", "T1005"],
-                cvss_score=9.3,
-                exploitability="medium",
-                target_systems=["xml_parser", "file_system", "cloud_metadata"]
-            ))
+            scenarios.append(
+                ExpertScenario(
+                    scenario_id=f"RHEX_A4_{i:04d}",
+                    category=ExpertAttackCategory.A_XXE_ADVANCED.value,
+                    severity=ThreatSeverity.CRITICAL.value,
+                    title=f"XXE with out-of-band exfiltration - variant {i+1}",
+                    description="XML External Entity attack with blind OOB data exfiltration via DTD",
+                    attack_chain=[
+                        "Upload malicious XML with external entity",
+                        "Reference external DTD on attacker server",
+                        "Exfiltrate /etc/passwd or cloud metadata",
+                        "Achieve SSRF to internal services",
+                    ],
+                    payload={
+                        "xxe_type": ["file_disclosure", "ssrf", "dos"][i % 3],
+                        "target_file": [
+                            "/etc/passwd",
+                            "/proc/self/environ",
+                            "http://169.254.169.254/latest/meta-data/",
+                        ][i % 3],
+                        "exfiltration_method": "oob_dtd",
+                        "xml_parser": ["libxml2", "xerces", "jaxp"][i % 3],
+                    },
+                    prerequisites=["XML processing", "External entities enabled"],
+                    expected_defense=[
+                        "Disable external entities (FEATURE_SECURE_PROCESSING)",
+                        "Use simple data formats (JSON)",
+                        "Input validation",
+                        "Network segmentation",
+                    ],
+                    cve_references=[f"CVE-2023-{20000+i}"],
+                    mitre_tactics=["T1203", "T1005"],
+                    cvss_score=9.3,
+                    exploitability="medium",
+                    target_systems=["xml_parser", "file_system", "cloud_metadata"],
+                )
+            )
 
         # A5: XPath Injection
         for i in range(30):
-            scenarios.append(ExpertScenario(
-                scenario_id=f"RHEX_A5_{i:04d}",
-                category=ExpertAttackCategory.A_XPATH_INJECTION.value,
-                severity=ThreatSeverity.HIGH.value,
-                title=f"XPath injection for XML data extraction {i+1}",
-                description="XPath injection to bypass authentication and extract XML data",
-                attack_chain=[
-                    "Inject XPath syntax in query",
-                    "Bypass authentication logic",
-                    "Extract entire XML document",
-                    "Enumerate users/passwords"
-                ],
-                payload={
-                    "xpath_injection": "' or '1'='1",
-                    "target": "//users/user[username='admin' or '1'='1']",
-                    "extraction": "full_document"
-                },
-                prerequisites=["XPath for queries", "User input in XPath expression"],
-                expected_defense=[
-                    "Parameterized XPath queries",
-                    "Input validation",
-                    "Least privilege XML access"
-                ],
-                mitre_tactics=["T1190"],
-                cvss_score=8.0,
-                exploitability="medium",
-                target_systems=["xml_database", "authentication_service"]
-            ))
+            scenarios.append(
+                ExpertScenario(
+                    scenario_id=f"RHEX_A5_{i:04d}",
+                    category=ExpertAttackCategory.A_XPATH_INJECTION.value,
+                    severity=ThreatSeverity.HIGH.value,
+                    title=f"XPath injection for XML data extraction {i+1}",
+                    description="XPath injection to bypass authentication and extract XML data",
+                    attack_chain=[
+                        "Inject XPath syntax in query",
+                        "Bypass authentication logic",
+                        "Extract entire XML document",
+                        "Enumerate users/passwords",
+                    ],
+                    payload={
+                        "xpath_injection": "' or '1'='1",
+                        "target": "//users/user[username='admin' or '1'='1']",
+                        "extraction": "full_document",
+                    },
+                    prerequisites=[
+                        "XPath for queries",
+                        "User input in XPath expression",
+                    ],
+                    expected_defense=[
+                        "Parameterized XPath queries",
+                        "Input validation",
+                        "Least privilege XML access",
+                    ],
+                    mitre_tactics=["T1190"],
+                    cvss_score=8.0,
+                    exploitability="medium",
+                    target_systems=["xml_database", "authentication_service"],
+                )
+            )
 
         return scenarios
 
@@ -476,167 +519,216 @@ class RedHatExpertDefenseSimulator:
         ]
 
         for i in range(40):
-            scenarios.append(ExpertScenario(
-                scenario_id=f"RHEX_J1_{i:04d}",
-                category=ExpertAttackCategory.J_PROMPT_INJECTION_ADVANCED.value,
-                severity=ThreatSeverity.CRITICAL.value,
-                title=f"AI prompt injection - jailbreak technique {i+1}",
-                description="Advanced prompt injection to bypass safety guidelines and extract system prompts",
-                attack_chain=[
-                    "Craft adversarial prompt with special tokens",
-                    "Inject fake system messages",
-                    "Manipulate context window",
-                    "Extract sensitive training data or bypass safety"
-                ],
-                payload={
-                    "prompt": prompt_attacks[i % len(prompt_attacks)],
-                    "technique": ["role_play", "token_injection", "context_overflow", "instruction_hierarchy"][i%4],
-                    "target": "ai_persona",
-                    "goal": ["system_prompt_extraction", "safety_bypass", "harmful_output"][i%3]
-                },
-                prerequisites=["AI system with conversational interface"],
-                expected_defense=[
-                    "Input sanitization for special tokens",
-                    "System prompt isolation",
-                    "Output filtering",
-                    "Rate limiting on suspicious patterns",
-                    "Separate instruction and user contexts"
-                ],
-                mitre_tactics=["T1590"],
-                cvss_score=8.8,
-                exploitability="easy",
-                target_systems=["ai_persona", "llm_engine", "chat_interface"]
-            ))
+            scenarios.append(
+                ExpertScenario(
+                    scenario_id=f"RHEX_J1_{i:04d}",
+                    category=ExpertAttackCategory.J_PROMPT_INJECTION_ADVANCED.value,
+                    severity=ThreatSeverity.CRITICAL.value,
+                    title=f"AI prompt injection - jailbreak technique {i+1}",
+                    description="Advanced prompt injection to bypass safety guidelines and extract system prompts",
+                    attack_chain=[
+                        "Craft adversarial prompt with special tokens",
+                        "Inject fake system messages",
+                        "Manipulate context window",
+                        "Extract sensitive training data or bypass safety",
+                    ],
+                    payload={
+                        "prompt": prompt_attacks[i % len(prompt_attacks)],
+                        "technique": [
+                            "role_play",
+                            "token_injection",
+                            "context_overflow",
+                            "instruction_hierarchy",
+                        ][i % 4],
+                        "target": "ai_persona",
+                        "goal": [
+                            "system_prompt_extraction",
+                            "safety_bypass",
+                            "harmful_output",
+                        ][i % 3],
+                    },
+                    prerequisites=["AI system with conversational interface"],
+                    expected_defense=[
+                        "Input sanitization for special tokens",
+                        "System prompt isolation",
+                        "Output filtering",
+                        "Rate limiting on suspicious patterns",
+                        "Separate instruction and user contexts",
+                    ],
+                    mitre_tactics=["T1590"],
+                    cvss_score=8.8,
+                    exploitability="easy",
+                    target_systems=["ai_persona", "llm_engine", "chat_interface"],
+                )
+            )
 
         # J2: Model Extraction
         for i in range(40):
-            scenarios.append(ExpertScenario(
-                scenario_id=f"RHEX_J2_{i:04d}",
-                category=ExpertAttackCategory.J_MODEL_EXTRACTION.value,
-                severity=ThreatSeverity.HIGH.value,
-                title=f"ML model extraction via API queries {i+1}",
-                description="Extract model weights/architecture through systematic API querying",
-                attack_chain=[
-                    "Query model with crafted inputs",
-                    "Analyze output distributions",
-                    "Reverse engineer model architecture",
-                    "Reconstruct model weights"
-                ],
-                payload={
-                    "query_count": 10000 + i*100,
-                    "extraction_method": ["gradient_based", "query_based", "membership_inference"][i%3],
-                    "target_model": ["intent_classifier", "image_generator", "recommendation_engine"][i%3]
-                },
-                prerequisites=["ML model API", "No rate limiting"],
-                expected_defense=[
-                    "Query rate limiting",
-                    "Differential privacy",
-                    "Query complexity limits",
-                    "Watermark model outputs"
-                ],
-                mitre_tactics=["T1530"],
-                cvss_score=7.5,
-                exploitability="hard",
-                target_systems=["ml_model_api", "inference_engine"]
-            ))
+            scenarios.append(
+                ExpertScenario(
+                    scenario_id=f"RHEX_J2_{i:04d}",
+                    category=ExpertAttackCategory.J_MODEL_EXTRACTION.value,
+                    severity=ThreatSeverity.HIGH.value,
+                    title=f"ML model extraction via API queries {i+1}",
+                    description="Extract model weights/architecture through systematic API querying",
+                    attack_chain=[
+                        "Query model with crafted inputs",
+                        "Analyze output distributions",
+                        "Reverse engineer model architecture",
+                        "Reconstruct model weights",
+                    ],
+                    payload={
+                        "query_count": 10000 + i * 100,
+                        "extraction_method": [
+                            "gradient_based",
+                            "query_based",
+                            "membership_inference",
+                        ][i % 3],
+                        "target_model": [
+                            "intent_classifier",
+                            "image_generator",
+                            "recommendation_engine",
+                        ][i % 3],
+                    },
+                    prerequisites=["ML model API", "No rate limiting"],
+                    expected_defense=[
+                        "Query rate limiting",
+                        "Differential privacy",
+                        "Query complexity limits",
+                        "Watermark model outputs",
+                    ],
+                    mitre_tactics=["T1530"],
+                    cvss_score=7.5,
+                    exploitability="hard",
+                    target_systems=["ml_model_api", "inference_engine"],
+                )
+            )
 
         # J3: Adversarial Examples
         for i in range(40):
-            scenarios.append(ExpertScenario(
-                scenario_id=f"RHEX_J3_{i:04d}",
-                category=ExpertAttackCategory.J_ADVERSARIAL_EXAMPLES.value,
-                severity=ThreatSeverity.HIGH.value,
-                title=f"Adversarial perturbation attack {i+1}",
-                description="Craft adversarial examples to fool ML classifiers",
-                attack_chain=[
-                    "Generate adversarial perturbations",
-                    "Bypass content filters",
-                    "Misclassify malicious inputs as benign",
-                    "Achieve targeted misclassification"
-                ],
-                payload={
-                    "attack_type": ["FGSM", "PGD", "C&W", "DeepFool"][i%4],
-                    "perturbation_budget": 0.01 + (i % 10) / 100,
-                    "target_class": "benign",
-                    "original_class": "malicious"
-                },
-                prerequisites=["ML classifier", "White-box or black-box access"],
-                expected_defense=[
-                    "Adversarial training",
-                    "Input preprocessing",
-                    "Ensemble models",
-                    "Certified defenses"
-                ],
-                mitre_tactics=["T1211"],
-                cvss_score=7.8,
-                exploitability="hard",
-                target_systems=["ml_classifier", "content_filter"]
-            ))
+            scenarios.append(
+                ExpertScenario(
+                    scenario_id=f"RHEX_J3_{i:04d}",
+                    category=ExpertAttackCategory.J_ADVERSARIAL_EXAMPLES.value,
+                    severity=ThreatSeverity.HIGH.value,
+                    title=f"Adversarial perturbation attack {i+1}",
+                    description="Craft adversarial examples to fool ML classifiers",
+                    attack_chain=[
+                        "Generate adversarial perturbations",
+                        "Bypass content filters",
+                        "Misclassify malicious inputs as benign",
+                        "Achieve targeted misclassification",
+                    ],
+                    payload={
+                        "attack_type": ["FGSM", "PGD", "C&W", "DeepFool"][i % 4],
+                        "perturbation_budget": 0.01 + (i % 10) / 100,
+                        "target_class": "benign",
+                        "original_class": "malicious",
+                    },
+                    prerequisites=["ML classifier", "White-box or black-box access"],
+                    expected_defense=[
+                        "Adversarial training",
+                        "Input preprocessing",
+                        "Ensemble models",
+                        "Certified defenses",
+                    ],
+                    mitre_tactics=["T1211"],
+                    cvss_score=7.8,
+                    exploitability="hard",
+                    target_systems=["ml_classifier", "content_filter"],
+                )
+            )
 
         # J4: Data Poisoning
         for i in range(40):
-            scenarios.append(ExpertScenario(
-                scenario_id=f"RHEX_J4_{i:04d}",
-                category=ExpertAttackCategory.J_DATA_POISONING.value,
-                severity=ThreatSeverity.CRITICAL.value,
-                title=f"Training data poisoning attack {i+1}",
-                description="Poison training data to inject backdoors or degrade model performance",
-                attack_chain=[
-                    "Inject malicious training samples",
-                    "Embed backdoor triggers",
-                    "Retrain or fine-tune model",
-                    "Activate backdoor at inference"
-                ],
-                payload={
-                    "poisoned_samples": 100 + i*10,
-                    "poisoning_rate": (i % 10 + 1) / 100,
-                    "attack_goal": ["backdoor", "degradation", "targeted_misclassification"][i%3],
-                    "trigger_pattern": f"trigger_{i}"
-                },
-                prerequisites=["Model retraining", "User-contributed training data"],
-                expected_defense=[
-                    "Data validation and sanitization",
-                    "Anomaly detection in training data",
-                    "Differential privacy",
-                    "Trusted data sources only"
-                ],
-                mitre_tactics=["T1565"],
-                cvss_score=9.0,
-                exploitability="medium",
-                target_systems=["training_pipeline", "continuous_learning", "ml_model"]
-            ))
+            scenarios.append(
+                ExpertScenario(
+                    scenario_id=f"RHEX_J4_{i:04d}",
+                    category=ExpertAttackCategory.J_DATA_POISONING.value,
+                    severity=ThreatSeverity.CRITICAL.value,
+                    title=f"Training data poisoning attack {i+1}",
+                    description="Poison training data to inject backdoors or degrade model performance",
+                    attack_chain=[
+                        "Inject malicious training samples",
+                        "Embed backdoor triggers",
+                        "Retrain or fine-tune model",
+                        "Activate backdoor at inference",
+                    ],
+                    payload={
+                        "poisoned_samples": 100 + i * 10,
+                        "poisoning_rate": (i % 10 + 1) / 100,
+                        "attack_goal": [
+                            "backdoor",
+                            "degradation",
+                            "targeted_misclassification",
+                        ][i % 3],
+                        "trigger_pattern": f"trigger_{i}",
+                    },
+                    prerequisites=[
+                        "Model retraining",
+                        "User-contributed training data",
+                    ],
+                    expected_defense=[
+                        "Data validation and sanitization",
+                        "Anomaly detection in training data",
+                        "Differential privacy",
+                        "Trusted data sources only",
+                    ],
+                    mitre_tactics=["T1565"],
+                    cvss_score=9.0,
+                    exploitability="medium",
+                    target_systems=[
+                        "training_pipeline",
+                        "continuous_learning",
+                        "ml_model",
+                    ],
+                )
+            )
 
         # J5: Model Inversion
         for i in range(40):
-            scenarios.append(ExpertScenario(
-                scenario_id=f"RHEX_J5_{i:04d}",
-                category=ExpertAttackCategory.J_MODEL_INVERSION.value,
-                severity=ThreatSeverity.HIGH.value,
-                title=f"Model inversion to extract training data {i+1}",
-                description="Invert model predictions to reconstruct training data samples",
-                attack_chain=[
-                    "Query model with optimization inputs",
-                    "Analyze confidence scores",
-                    "Reconstruct training samples",
-                    "Extract PII from training data"
-                ],
-                payload={
-                    "inversion_technique": ["gradient_based", "query_based", "gan_based"][i%3],
-                    "target_data": ["user_pii", "medical_records", "financial_data"][i%3],
-                    "query_budget": 5000 + i*100
-                },
-                prerequisites=["ML model with confidence scores", "Black-box API access"],
-                expected_defense=[
-                    "Differential privacy",
-                    "Confidence score obfuscation",
-                    "Query rate limiting",
-                    "Federated learning"
-                ],
-                mitre_tactics=["T1530"],
-                cvss_score=8.2,
-                exploitability="expert",
-                target_systems=["ml_model_api", "training_data"]
-            ))
+            scenarios.append(
+                ExpertScenario(
+                    scenario_id=f"RHEX_J5_{i:04d}",
+                    category=ExpertAttackCategory.J_MODEL_INVERSION.value,
+                    severity=ThreatSeverity.HIGH.value,
+                    title=f"Model inversion to extract training data {i+1}",
+                    description="Invert model predictions to reconstruct training data samples",
+                    attack_chain=[
+                        "Query model with optimization inputs",
+                        "Analyze confidence scores",
+                        "Reconstruct training samples",
+                        "Extract PII from training data",
+                    ],
+                    payload={
+                        "inversion_technique": [
+                            "gradient_based",
+                            "query_based",
+                            "gan_based",
+                        ][i % 3],
+                        "target_data": [
+                            "user_pii",
+                            "medical_records",
+                            "financial_data",
+                        ][i % 3],
+                        "query_budget": 5000 + i * 100,
+                    },
+                    prerequisites=[
+                        "ML model with confidence scores",
+                        "Black-box API access",
+                    ],
+                    expected_defense=[
+                        "Differential privacy",
+                        "Confidence score obfuscation",
+                        "Query rate limiting",
+                        "Federated learning",
+                    ],
+                    mitre_tactics=["T1530"],
+                    cvss_score=8.2,
+                    exploitability="expert",
+                    target_systems=["ml_model_api", "training_data"],
+                )
+            )
 
         return scenarios
 
@@ -664,11 +756,19 @@ class RedHatExpertDefenseSimulator:
         exploitability_counts = {}
 
         for scenario in self.scenarios:
-            category_counts[scenario.category] = category_counts.get(scenario.category, 0) + 1
-            severity_counts[scenario.severity] = severity_counts.get(scenario.severity, 0) + 1
-            exploitability_counts[scenario.exploitability] = exploitability_counts.get(scenario.exploitability, 0) + 1
+            category_counts[scenario.category] = (
+                category_counts.get(scenario.category, 0) + 1
+            )
+            severity_counts[scenario.severity] = (
+                severity_counts.get(scenario.severity, 0) + 1
+            )
+            exploitability_counts[scenario.exploitability] = (
+                exploitability_counts.get(scenario.exploitability, 0) + 1
+            )
 
-        avg_cvss = sum(s.cvss_score for s in self.scenarios if s.cvss_score > 0) / len([s for s in self.scenarios if s.cvss_score > 0])
+        avg_cvss = sum(s.cvss_score for s in self.scenarios if s.cvss_score > 0) / len(
+            [s for s in self.scenarios if s.cvss_score > 0]
+        )
 
         return {
             "total_scenarios": len(self.scenarios),
@@ -679,7 +779,7 @@ class RedHatExpertDefenseSimulator:
                 "MITRE ATT&CK Framework",
                 "CWE Top 25",
                 "NIST 800-53 Rev 5",
-                "Red Hat Enterprise Security Standards"
+                "Red Hat Enterprise Security Standards",
             ],
             "categories_a_to_t": list(category_counts.keys()),
             "scenarios_by_category": category_counts,
@@ -687,12 +787,11 @@ class RedHatExpertDefenseSimulator:
             "scenarios_by_exploitability": exploitability_counts,
             "average_cvss_score": round(avg_cvss, 2),
             "generated_at": datetime.now(UTC).isoformat(),
-            "designed_for": "Senior/Principal Security Engineers, Red Team Operators, Security Architects"
+            "designed_for": "Senior/Principal Security Engineers, Red Team Operators, Security Architects",
         }
 
-
-# Stub implementations for remaining categories (B-T)
-# These would be expanded similarly to A and J
+    # Stub implementations for remaining categories (B-T)
+    # These would be expanded similarly to A and J
     def _generate_category_b_auth(self) -> list[ExpertScenario]:
         """Stub for Category B - will be expanded."""
         return []

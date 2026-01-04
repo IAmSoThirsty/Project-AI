@@ -114,20 +114,24 @@ data/
 ### Access Control
 
 **for_ai Parameter Pattern**:
+
 - `for_ai=True` (default): AI perspective - pending requests hidden
 - `for_ai=False`: User perspective - all requests visible
 
 **Directory Markers**:
+
 - `.aiignore` files mark AI-restricted directories
 - Security enforced at API level
 
 ### Content Fingerprinting
 
 **Dual Hashing**:
+
 1. Full content hash (exact match)
 2. Normalized hash (case/whitespace insensitive)
 
 **Prevents**:
+
 - Re-submission of denied content
 - Re-discovery with minor formatting changes
 - Bypass attempts
@@ -135,6 +139,7 @@ data/
 ### Subliminal Filtering
 
 **Mechanism**:
+
 1. AI checks `is_content_relevant(content, for_ai=True)`
 2. System generates content fingerprint
 3. Checks against Black Vault fingerprints
@@ -418,7 +423,6 @@ System is ready for immediate use! Recommended actions:
 
 For additional features or enhancements, see the "Future Enhancements" section in
 LEARNING_REQUEST_LOG.md.
-
 
 ---
 

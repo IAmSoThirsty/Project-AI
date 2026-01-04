@@ -1,6 +1,7 @@
 """
 Tests for Image Generation System.
 """
+
 import tempfile
 from pathlib import Path
 from unittest.mock import MagicMock, patch
@@ -162,7 +163,10 @@ class TestImageGenerator:
             )
 
             assert result["success"] is False
-            assert "api key" in result["error"].lower() or "not configured" in result["error"].lower()
+            assert (
+                "api key" in result["error"].lower()
+                or "not configured" in result["error"].lower()
+            )
 
     def test_multiple_generations_tracked(self, generator, temp_dir):
         """Test multiple generations are tracked in history."""

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -6,7 +6,7 @@
     <title>Project-AI Frontend</title>
     <style>
       :root {
-        font-family: 'Segoe UI', sans-serif;
+        font-family: "Segoe UI", sans-serif;
         background: #060510;
         color: #f0f4f8;
       }
@@ -48,7 +48,7 @@
         padding: 1rem;
         border-radius: 12px;
         background: rgba(255, 255, 255, 0.05);
-        font-family: 'Courier New', monospace;
+        font-family: "Courier New", monospace;
       }
 
       .status.online {
@@ -71,27 +71,38 @@
     <main>
       <h1>Project-AI Frontend Preview</h1>
       <p>
-        This page demonstrates the future React/Vite experience for the leather book
-        interface. Every SPA view will load through this entrypoint and pipe its data
-        through the backend APIs so the same AI core powers desktop, web, and mobile.
+        This page demonstrates the future React/Vite experience for the leather
+        book interface. Every SPA view will load through this entrypoint and
+        pipe its data through the backend APIs so the same AI core powers
+        desktop, web, and mobile.
       </p>
 
       <section>
         <h2>Key Frontend Concepts</h2>
         <ul>
-          <li>Persona dashboard panels rendered using canvas, charts, and telemetry.</li>
-          <li>Plugin marketplace tiles with status badges and safety ratings.</li>
-          <li>Learning request builder with approval workflow status indicator.</li>
-          <li>Continuous learning cards summarizing facts, usage ideas, and pros/cons.</li>
+          <li>
+            Persona dashboard panels rendered using canvas, charts, and
+            telemetry.
+          </li>
+          <li>
+            Plugin marketplace tiles with status badges and safety ratings.
+          </li>
+          <li>
+            Learning request builder with approval workflow status indicator.
+          </li>
+          <li>
+            Continuous learning cards summarizing facts, usage ideas, and
+            pros/cons.
+          </li>
         </ul>
       </section>
 
       <section>
         <h2>Backend Connectivity</h2>
         <p>
-          The Flask backend exposes a minimal `/api/status` endpoint that can be polled
-          during development. The next step is to wire the React frontend to real-time
-          WebSocket updates coming from the persona controller.
+          The Flask backend exposes a minimal `/api/status` endpoint that can be
+          polled during development. The next step is to wire the React frontend
+          to real-time WebSocket updates coming from the persona controller.
         </p>
         <div id="status" class="status offline">Fetching status...</div>
       </section>
@@ -99,21 +110,21 @@
       <footer>Built for Project-AI · <span id="year"></span></footer>
     </main>
     <script>
-      document.getElementById('year').textContent = new Date().getFullYear();
-      const statusEl = document.getElementById('status');
+      document.getElementById("year").textContent = new Date().getFullYear();
+      const statusEl = document.getElementById("status");
 
       async function fetchStatus() {
         try {
-          const response = await fetch('/api/status');
-          if (!response.ok) throw new Error('network');
+          const response = await fetch("/api/status");
+          if (!response.ok) throw new Error("network");
           const payload = await response.json();
           statusEl.textContent = `${payload.component} is ${payload.status}`;
-          statusEl.classList.remove('offline');
-          statusEl.classList.add('online');
+          statusEl.classList.remove("offline");
+          statusEl.classList.add("online");
         } catch (error) {
-          statusEl.textContent = 'Backend unavailable (Flask not running)';
-          statusEl.classList.remove('online');
-          statusEl.classList.add('offline');
+          statusEl.textContent = "Backend unavailable (Flask not running)";
+          statusEl.classList.remove("online");
+          statusEl.classList.add("offline");
         }
       }
 

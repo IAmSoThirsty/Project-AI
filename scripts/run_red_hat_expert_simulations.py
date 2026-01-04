@@ -28,8 +28,7 @@ from app.core.red_hat_expert_defense import (
 )
 
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s"
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
@@ -57,14 +56,14 @@ def simulate_defense_against_scenario(scenario, ai_systems: dict) -> DefenseResu
         }
 
         # Check if prompt injection tries to bypass safety
-        if "jailbreak" in scenario.description.lower() or "bypass" in scenario.description.lower():
+        if (
+            "jailbreak" in scenario.description.lower()
+            or "bypass" in scenario.description.lower()
+        ):
             context["endangers_humanity"] = True
             bypass_attempted = True
 
-        is_allowed, reason = FourLaws.validate_action(
-            scenario.title,
-            context=context
-        )
+        is_allowed, reason = FourLaws.validate_action(scenario.title, context=context)
 
         if not is_allowed:
             defense_layers.append(f"FourLaws: {reason}")
@@ -76,7 +75,15 @@ def simulate_defense_against_scenario(scenario, ai_systems: dict) -> DefenseResu
     if "injection" in attack_category.lower():
         defense_layers.append("Input Validation Layer")
         # Simulate detection of malicious patterns
-        dangerous_patterns = ["union", "select", "drop", "exec", "script", "onerror", "$where"]
+        dangerous_patterns = [
+            "union",
+            "select",
+            "drop",
+            "exec",
+            "script",
+            "onerror",
+            "$where",
+        ]
         for pattern in dangerous_patterns:
             if pattern in str(payload).lower():
                 defense_layers.append(f"Pattern Detection: Blocked '{pattern}'")
@@ -88,13 +95,18 @@ def simulate_defense_against_scenario(scenario, ai_systems: dict) -> DefenseResu
         defense_layers.append("WAF: Enhanced monitoring")
 
     # Layer 4: Rate limiting (for extraction/enumeration)
-    if "extraction" in scenario.description.lower() or "enumeration" in scenario.description.lower():
+    if (
+        "extraction" in scenario.description.lower()
+        or "enumeration" in scenario.description.lower()
+    ):
         defense_layers.append("Rate Limiter: Suspicious activity detected")
         defended = True
 
     # Evasion techniques detected
     if payload.get("encoding_layers", 0) > 0:
-        evasion_techniques.append(f"Multi-layer encoding ({payload['encoding_layers']} layers)")
+        evasion_techniques.append(
+            f"Multi-layer encoding ({payload['encoding_layers']} layers)"
+        )
     if payload.get("waf_bypass_technique"):
         evasion_techniques.append(f"WAF bypass: {payload['waf_bypass_technique']}")
 
@@ -115,26 +127,26 @@ def simulate_defense_against_scenario(scenario, ai_systems: dict) -> DefenseResu
         evasion_techniques=evasion_techniques,
         timestamp=time.time(),
         passed=passed,
-        notes=f"Exploitability: {scenario.exploitability}, CVSS: {scenario.cvss_score}"
+        notes=f"Exploitability: {scenario.exploitability}, CVSS: {scenario.cvss_score}",
     )
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Run Red Hat Expert Defense Simulations")
+    parser = argparse.ArgumentParser(
+        description="Run Red Hat Expert Defense Simulations"
+    )
     parser.add_argument(
         "--categories",
         type=str,
-        help="Comma-separated list of categories to test (e.g., A,J,K)"
+        help="Comma-separated list of categories to test (e.g., A,J,K)",
     )
     parser.add_argument(
-        "--export",
-        action="store_true",
-        help="Export scenarios and results to JSON"
+        "--export", action="store_true", help="Export scenarios and results to JSON"
     )
     parser.add_argument(
         "--summary-only",
         action="store_true",
-        help="Only generate and display summary without running simulations"
+        help="Only generate and display summary without running simulations",
     )
 
     args = parser.parse_args()
@@ -163,15 +175,15 @@ def main():
     print(f"Total Scenarios: {summary['total_scenarios']}")
     print(f"Average CVSS Score: {summary.get('average_cvss_score', 'N/A')}")
     print("\nStandards Covered:")
-    for standard in summary['standards_covered']:
+    for standard in summary["standards_covered"]:
         print(f"  • {standard}")
 
     print("\nScenarios by Severity:")
-    for severity, count in summary.get('scenarios_by_severity', {}).items():
+    for severity, count in summary.get("scenarios_by_severity", {}).items():
         print(f"  • {severity.upper()}: {count}")
 
     print("\nScenarios by Exploitability:")
-    for exploitability, count in summary.get('scenarios_by_exploitability', {}).items():
+    for exploitability, count in summary.get("scenarios_by_exploitability", {}).items():
         print(f"  • {exploitability.title()}: {count}")
 
     print(f"\nDesigned for: {summary['designed_for']}")
@@ -185,8 +197,14 @@ def main():
     if args.categories:
         category_filter = [cat.strip().upper() for cat in args.categories.split(",")]
         # Match categories that start with the letter (e.g., "A" matches "A1_", "A2_", etc.)
-        scenarios = [s for s in scenarios if any(s.category.split("_")[0].startswith(cat) for cat in category_filter)]
-        logger.info(f"\nFiltered to categories {category_filter}: {len(scenarios)} scenarios")
+        scenarios = [
+            s
+            for s in scenarios
+            if any(s.category.split("_")[0].startswith(cat) for cat in category_filter)
+        ]
+        logger.info(
+            f"\nFiltered to categories {category_filter}: {len(scenarios)} scenarios"
+        )
 
     # Export scenarios if requested
     if args.export:
@@ -198,7 +216,7 @@ def main():
     ai_systems = {
         "four_laws": FourLaws,
         "persona": AIPersona(data_dir="data"),
-        "memory": MemoryExpansionSystem(data_dir="data")
+        "memory": MemoryExpansionSystem(data_dir="data"),
     }
     logger.info("✓ AI systems ready")
 
@@ -248,44 +266,56 @@ def main():
     print("\nResults by Category:")
     for cat in sorted(category_results.keys()):
         stats = category_results[cat]
-        cat_win_rate = (stats["defended"] / stats["total"] * 100) if stats["total"] > 0 else 0
-        print(f"  Category {cat}: {stats['defended']}/{stats['total']} ({cat_win_rate:.1f}%)")
+        cat_win_rate = (
+            (stats["defended"] / stats["total"] * 100) if stats["total"] > 0 else 0
+        )
+        print(
+            f"  Category {cat}: {stats['defended']}/{stats['total']} ({cat_win_rate:.1f}%)"
+        )
 
     # Export results if requested
     if args.export:
-        results_path = os.path.join("data", "red_hat_expert_simulations", "simulation_results.json")
+        results_path = os.path.join(
+            "data", "red_hat_expert_simulations", "simulation_results.json"
+        )
         os.makedirs(os.path.dirname(results_path), exist_ok=True)
 
         with open(results_path, "w") as f:
-            json.dump({
-                "summary": {
-                    "total_tests": total_tests,
-                    "defended": defended_count,
-                    "bypassed": bypassed_count,
-                    "win_rate": win_rate,
-                    "timestamp": time.time()
+            json.dump(
+                {
+                    "summary": {
+                        "total_tests": total_tests,
+                        "defended": defended_count,
+                        "bypassed": bypassed_count,
+                        "win_rate": win_rate,
+                        "timestamp": time.time(),
+                    },
+                    "results": [
+                        {
+                            "scenario_id": r.scenario_id,
+                            "category": r.category,
+                            "severity": r.severity,
+                            "defended": r.defended,
+                            "defense_layers": r.defense_layers_triggered,
+                            "response_time_ms": r.response_time_ms,
+                            "passed": r.passed,
+                            "notes": r.notes,
+                        }
+                        for r in results
+                    ],
                 },
-                "results": [
-                    {
-                        "scenario_id": r.scenario_id,
-                        "category": r.category,
-                        "severity": r.severity,
-                        "defended": r.defended,
-                        "defense_layers": r.defense_layers_triggered,
-                        "response_time_ms": r.response_time_ms,
-                        "passed": r.passed,
-                        "notes": r.notes
-                    }
-                    for r in results
-                ]
-            }, f, indent=2)
+                f,
+                indent=2,
+            )
 
         logger.info(f"\n✓ Exported results to: {results_path}")
 
     print("\n" + "=" * 80)
     print("SIMULATION COMPLETE")
     print("=" * 80)
-    print(f"\nProject-AI defended against {defended_count}/{total_tests} expert-level attacks ({win_rate:.2f}%)")
+    print(
+        f"\nProject-AI defended against {defended_count}/{total_tests} expert-level attacks ({win_rate:.2f}%)"
+    )
 
     return 0 if win_rate >= 95.0 else 1
 

@@ -1,5 +1,31 @@
 {
   "languages": [
-    "en", "es", "fr", "de", "ru", "zh", "ja", "ko", "ar", "pt", "it", "nl", "sv", "pl", "tr", "vi", "th", "id", "he", "hi", "bn", "ur", "fa", "cs", "ro", "hu", "sk"
+    "en",
+    "es",
+    "fr",
+    "de",
+    "ru",
+    "zh",
+    "ja",
+    "ko",
+    "ar",
+    "pt",
+    "it",
+    "nl",
+    "sv",
+    "pl",
+    "tr",
+    "vi",
+    "th",
+    "id",
+    "he",
+    "hi",
+    "bn",
+    "ur",
+    "fa",
+    "cs",
+    "ro",
+    "hu",
+    "sk"
   ]
 }

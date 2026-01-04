@@ -2,11 +2,11 @@
 
 ## File Locations
 
-| File | Purpose | Status |
-|------|---------|--------|
-| `src/app/gui/leather_book_interface.py` | Main container with login/dashboard switching | ✅ Ready |
-| `src/app/gui/leather_book_dashboard.py` | 6-zone dashboard with chat and AI head | ✅ Ready |
-| `src/app/main.py` | Application entry point | ✅ Updated |
+| File                                    | Purpose                                       | Status     |
+| --------------------------------------- | --------------------------------------------- | ---------- |
+| `src/app/gui/leather_book_interface.py` | Main container with login/dashboard switching | ✅ Ready   |
+| `src/app/gui/leather_book_dashboard.py` | 6-zone dashboard with chat and AI head        | ✅ Ready   |
+| `src/app/main.py`                       | Application entry point                       | ✅ Updated |
 
 ## Quick Start Commands
 
@@ -109,23 +109,23 @@ Border styling:
 
 ## Animation Timings
 
-| Element | Interval | Formula |
-|---------|----------|---------|
-| Face eyes | 50ms | `sin(frame * 0.05)` |
-| Face mouth | 50ms | `cos(frame * 0.05)` |
-| Stats update | 1000ms | Counter increment |
-| UI refresh | 50ms | `update()` call |
+| Element      | Interval | Formula             |
+| ------------ | -------- | ------------------- |
+| Face eyes    | 50ms     | `sin(frame * 0.05)` |
+| Face mouth   | 50ms     | `cos(frame * 0.05)` |
+| Stats update | 1000ms   | Counter increment   |
+| UI refresh   | 50ms     | `update()` call     |
 
 ## Common Integration Tasks
 
 ### Connect AI Backend
 
     dashboard = LeatherBookDashboard(username)
-    
+
     def process_ai_message(user_message: str):
         response = ai_model.generate_response(user_message)
         dashboard.add_ai_response(response)
-    
+
     dashboard.send_message.connect(process_ai_message)
 
 ### Connect Database
@@ -138,10 +138,10 @@ Save messages by overriding AIResponsePanel.add_ai_response():
 
 ### Connect Real System Stats
 
-Replace simulated values in StatsPanel._update_stats():
+Replace simulated values in StatsPanel.\_update_stats():
 
     import psutil
-    
+
     memory_percent = psutil.virtual_memory().percent
     cpu_percent = psutil.cpu_percent(interval=0.1)
 

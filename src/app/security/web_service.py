@@ -21,7 +21,9 @@ logger = logging.getLogger(__name__)
 class SOAPClient:
     """Secure SOAP over HTTP client."""
 
-    def __init__(self, endpoint: str, username: str | None = None, password: str | None = None):
+    def __init__(
+        self, endpoint: str, username: str | None = None, password: str | None = None
+    ):
         """Initialize SOAP client.
 
         Args:
@@ -195,7 +197,11 @@ class SecureWebHandler:
     def __init__(self):
         """Initialize secure web handler."""
         self.capabilities: dict[str, list[str]] = {}
-        self.locked_headers = {"X-Frame-Options", "X-Content-Type-Options", "X-XSS-Protection"}
+        self.locked_headers = {
+            "X-Frame-Options",
+            "X-Content-Type-Options",
+            "X-XSS-Protection",
+        }
 
     def register_capability(self, token: str, allowed_actions: list[str]) -> None:
         """Register capability token with allowed actions.
@@ -254,7 +260,10 @@ class SecureWebHandler:
             True if headers are valid
         """
         # Check for required security headers (in responses)
-        if "X-Content-Type-Options" in headers and headers["X-Content-Type-Options"] != "nosniff":
+        if (
+            "X-Content-Type-Options" in headers
+            and headers["X-Content-Type-Options"] != "nosniff"
+        ):
             logger.warning("Invalid X-Content-Type-Options header")
             return False
 
@@ -378,7 +387,11 @@ class InputValidator:
     def __init__(self):
         """Initialize input validator."""
         self.max_input_length = 10000
-        self.allowed_content_types = {"application/json", "text/plain", "application/xml"}
+        self.allowed_content_types = {
+            "application/json",
+            "text/plain",
+            "application/xml",
+        }
 
     def validate_input(self, data: str, content_type: str) -> bool:
         """Validate input data.

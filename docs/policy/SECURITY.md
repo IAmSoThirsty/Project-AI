@@ -12,10 +12,10 @@ Project-AI takes security seriously. This document outlines our security policie
 
 ## 📋 Supported Versions
 
-| Version | Status | Security Updates |
-|---------|--------|------------------|
-| 1.0.x | Active | ✅ Full support |
-| < 1.0 | Deprecated | ⚠️ Limited support |
+| Version | Status     | Security Updates   |
+| ------- | ---------- | ------------------ |
+| 1.0.x   | Active     | ✅ Full support    |
+| < 1.0   | Deprecated | ⚠️ Limited support |
 
 ---
 

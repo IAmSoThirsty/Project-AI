@@ -6,7 +6,11 @@ from pathlib import Path
 
 
 def main() -> int:
-    path = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("tests/test_four_laws_scenarios.py")
+    path = (
+        Path(sys.argv[1])
+        if len(sys.argv) > 1
+        else Path("tests/test_four_laws_scenarios.py")
+    )
     tree = ast.parse(path.read_text(encoding="utf-8"))
 
     count: int | None = None
@@ -14,7 +18,12 @@ def main() -> int:
     class Visitor(ast.NodeVisitor):
         def visit_Call(self, node: ast.Call) -> None:
             nonlocal count
-            if isinstance(node.func, ast.Attribute) and node.func.attr == "parametrize" and len(node.args) >= 2 and isinstance(node.args[1], ast.List):
+            if (
+                isinstance(node.func, ast.Attribute)
+                and node.func.attr == "parametrize"
+                and len(node.args) >= 2
+                and isinstance(node.args[1], ast.List)
+            ):
                 count = len(node.args[1].elts)
             self.generic_visit(node)
 

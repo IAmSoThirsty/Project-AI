@@ -221,6 +221,7 @@ class DashboardWindow(QMainWindow):
                     return style.standardIcon(fallback_pixmap)  # type: ignore
                 except Exception:
                     from PyQt6.QtGui import QIcon
+
                     return QIcon()
 
             act_home = QAction(
@@ -447,7 +448,12 @@ class DashboardWindow(QMainWindow):
             pass
 
     def _apply_shadow(
-        self, widget, radius: int = 12, dx: int = 0, dy: int = 4, color: QColor | None = None
+        self,
+        widget,
+        radius: int = 12,
+        dx: int = 0,
+        dy: int = 4,
+        color: QColor | None = None,
     ):
         """Apply a subtle QGraphicsDropShadowEffect to the given widget.
 
@@ -470,6 +476,7 @@ class DashboardWindow(QMainWindow):
         current = SettingsDialog.load_settings()
         dlg = SettingsDialog(self, current=current)
         from PyQt6.QtWidgets import QDialog
+
         if dlg.exec() == QDialog.DialogCode.Accepted:  # type: ignore
             new = dlg.get_values()
             ok = SettingsDialog.save_settings(new)
@@ -769,7 +776,9 @@ class DashboardWindow(QMainWindow):
             message = self.emergency_message.toPlainText()
             username = self.user_manager.current_user or "default"
             location_data = self.location_tracker.get_location_from_ip()
-            _, result = self.emergency_alert.send_alert(username, location_data, message)
+            _, result = self.emergency_alert.send_alert(
+                username, location_data, message
+            )
             self.alert_history.addItem(f"Alert: {result}")
             self.emergency_message.clear()
         except Exception as e:
@@ -798,4 +807,3 @@ class DashboardWindow(QMainWindow):
     def add_security_favorite(self):
         """Add a security resource to favorites"""
         pass
-

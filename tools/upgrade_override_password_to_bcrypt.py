@@ -48,7 +48,9 @@ def upgrade_in_file(audit_path: Path) -> int:
     if changed:
         backup = audit_path.with_suffix(".bak.json")
         audit_path.rename(backup)
-        audit_path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+        audit_path.write_text(
+            json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
         print(f"Migration markers written; backup saved to {backup}")
     else:
         print("No entries requiring migration were found")
@@ -56,7 +58,9 @@ def upgrade_in_file(audit_path: Path) -> int:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Upgrade CommandOverride password hashes to bcrypt or mark for manual migration")
+    parser = argparse.ArgumentParser(
+        description="Upgrade CommandOverride password hashes to bcrypt or mark for manual migration"
+    )
     parser.add_argument("--audit-file", default="data/overrides/audit.json")
     args = parser.parse_args()
     raise SystemExit(upgrade_in_file(Path(args.audit_file)))

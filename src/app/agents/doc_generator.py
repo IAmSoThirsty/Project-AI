@@ -2,6 +2,7 @@
 
 Generates basic Markdown API documentation for generated modules.
 """
+
 from __future__ import annotations
 
 import importlib.util

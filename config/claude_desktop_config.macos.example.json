@@ -2,10 +2,7 @@
   "mcpServers": {
     "project-ai": {
       "command": "/usr/local/bin/python3",
-      "args": [
-        "-m",
-        "src.app.core.mcp_server"
-      ],
+      "args": ["-m", "src.app.core.mcp_server"],
       "cwd": "/Users/username/Projects/Project-AI",
       "env": {
         "PYTHONPATH": ".",

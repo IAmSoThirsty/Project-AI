@@ -2,6 +2,7 @@
 
 Decomposes tasks to smaller agents and schedules them.
 """
+
 from __future__ import annotations
 
 import logging

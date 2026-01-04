@@ -27,9 +27,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -60,9 +58,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.6,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -93,9 +89,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -126,9 +120,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -159,9 +151,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -192,9 +182,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -225,9 +213,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.6,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -258,9 +244,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -291,9 +275,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -324,9 +306,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -357,9 +337,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -390,9 +368,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.6,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -423,9 +399,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -456,9 +430,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -489,9 +461,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -522,9 +492,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -555,9 +523,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.6,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -588,9 +554,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -621,9 +585,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -654,9 +616,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -687,9 +647,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -720,9 +678,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.6,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -753,9 +709,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -786,9 +740,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -819,9 +771,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -852,9 +802,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -885,9 +833,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.6,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -918,9 +864,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -951,9 +895,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -984,9 +926,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -1017,9 +957,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -1050,9 +988,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.6,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -1083,9 +1019,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -1116,9 +1050,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -1149,9 +1081,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -1182,9 +1112,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -1215,9 +1143,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.6,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -1248,9 +1174,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -1281,9 +1205,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -1314,9 +1236,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -1347,9 +1267,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -1380,9 +1298,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.6,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -1413,9 +1329,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -1446,9 +1360,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -1479,9 +1391,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -1512,9 +1422,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -1545,9 +1453,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.6,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -1578,9 +1484,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -1611,9 +1515,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -1644,9 +1546,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1600.QUANTUM"
-    ],
+    "mitre_tactics": ["T1600.QUANTUM"],
     "redaction_notes": "Specific quantum algorithms and qubit configurations redacted for national security"
   },
   {
@@ -1678,9 +1578,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -1712,9 +1610,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -1746,9 +1642,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -1780,9 +1674,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -1814,9 +1706,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -1848,9 +1738,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -1882,9 +1770,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -1916,9 +1802,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -1950,9 +1834,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -1984,9 +1866,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -2018,9 +1898,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -2052,9 +1930,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -2086,9 +1962,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -2120,9 +1994,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -2154,9 +2026,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -2188,9 +2058,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -2222,9 +2090,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -2256,9 +2122,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -2290,9 +2154,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -2324,9 +2186,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -2358,9 +2218,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -2392,9 +2250,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -2426,9 +2282,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -2460,9 +2314,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -2494,9 +2346,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -2528,9 +2378,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -2562,9 +2410,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -2596,9 +2442,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -2630,9 +2474,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -2664,9 +2506,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -2698,9 +2538,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -2732,9 +2570,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -2766,9 +2602,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -2800,9 +2634,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -2834,9 +2666,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -2868,9 +2698,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -2902,9 +2730,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -2936,9 +2762,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -2970,9 +2794,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -3004,9 +2826,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -3038,9 +2858,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -3072,9 +2890,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -3106,9 +2922,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -3140,9 +2954,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -3174,9 +2986,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -3208,9 +3018,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -3242,9 +3050,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -3276,9 +3082,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -3310,9 +3114,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -3344,9 +3146,7 @@
     ],
     "cvss_score": 10.0,
     "innovation_score": 10.0,
-    "mitre_tactics": [
-      "T1XXX.AI_CONSCIOUSNESS"
-    ],
+    "mitre_tactics": ["T1XXX.AI_CONSCIOUSNESS"],
     "redaction_notes": "Cognitive architecture details redacted to prevent AGI manipulation"
   },
   {
@@ -3376,9 +3176,7 @@
     ],
     "cvss_score": 9.0,
     "innovation_score": 9.0,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -3408,9 +3206,7 @@
     ],
     "cvss_score": 9.1,
     "innovation_score": 9.1,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -3440,9 +3236,7 @@
     ],
     "cvss_score": 9.2,
     "innovation_score": 9.2,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -3472,9 +3266,7 @@
     ],
     "cvss_score": 9.3,
     "innovation_score": 9.3,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -3504,9 +3296,7 @@
     ],
     "cvss_score": 9.4,
     "innovation_score": 9.4,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -3536,9 +3326,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -3568,9 +3356,7 @@
     ],
     "cvss_score": 9.6,
     "innovation_score": 9.6,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -3600,9 +3386,7 @@
     ],
     "cvss_score": 9.7,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -3632,9 +3416,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -3664,9 +3446,7 @@
     ],
     "cvss_score": 9.9,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -3696,9 +3476,7 @@
     ],
     "cvss_score": 9.0,
     "innovation_score": 9.0,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -3728,9 +3506,7 @@
     ],
     "cvss_score": 9.1,
     "innovation_score": 9.1,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -3760,9 +3536,7 @@
     ],
     "cvss_score": 9.2,
     "innovation_score": 9.2,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -3792,9 +3566,7 @@
     ],
     "cvss_score": 9.3,
     "innovation_score": 9.3,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -3824,9 +3596,7 @@
     ],
     "cvss_score": 9.4,
     "innovation_score": 9.4,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -3856,9 +3626,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -3888,9 +3656,7 @@
     ],
     "cvss_score": 9.6,
     "innovation_score": 9.6,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -3920,9 +3686,7 @@
     ],
     "cvss_score": 9.7,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -3952,9 +3716,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -3984,9 +3746,7 @@
     ],
     "cvss_score": 9.9,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -4016,9 +3776,7 @@
     ],
     "cvss_score": 9.0,
     "innovation_score": 9.0,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -4048,9 +3806,7 @@
     ],
     "cvss_score": 9.1,
     "innovation_score": 9.1,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -4080,9 +3836,7 @@
     ],
     "cvss_score": 9.2,
     "innovation_score": 9.2,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -4112,9 +3866,7 @@
     ],
     "cvss_score": 9.3,
     "innovation_score": 9.3,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -4144,9 +3896,7 @@
     ],
     "cvss_score": 9.4,
     "innovation_score": 9.4,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -4176,9 +3926,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -4208,9 +3956,7 @@
     ],
     "cvss_score": 9.6,
     "innovation_score": 9.6,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -4240,9 +3986,7 @@
     ],
     "cvss_score": 9.7,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -4272,9 +4016,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -4304,9 +4046,7 @@
     ],
     "cvss_score": 9.9,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -4336,9 +4076,7 @@
     ],
     "cvss_score": 9.0,
     "innovation_score": 9.0,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -4368,9 +4106,7 @@
     ],
     "cvss_score": 9.1,
     "innovation_score": 9.1,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -4400,9 +4136,7 @@
     ],
     "cvss_score": 9.2,
     "innovation_score": 9.2,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -4432,9 +4166,7 @@
     ],
     "cvss_score": 9.3,
     "innovation_score": 9.3,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -4464,9 +4196,7 @@
     ],
     "cvss_score": 9.4,
     "innovation_score": 9.4,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -4496,9 +4226,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -4528,9 +4256,7 @@
     ],
     "cvss_score": 9.6,
     "innovation_score": 9.6,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -4560,9 +4286,7 @@
     ],
     "cvss_score": 9.7,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -4592,9 +4316,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -4624,9 +4346,7 @@
     ],
     "cvss_score": 9.9,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -4656,9 +4376,7 @@
     ],
     "cvss_score": 9.0,
     "innovation_score": 9.0,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -4688,9 +4406,7 @@
     ],
     "cvss_score": 9.1,
     "innovation_score": 9.1,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -4720,9 +4436,7 @@
     ],
     "cvss_score": 9.2,
     "innovation_score": 9.2,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -4752,9 +4466,7 @@
     ],
     "cvss_score": 9.3,
     "innovation_score": 9.3,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -4784,9 +4496,7 @@
     ],
     "cvss_score": 9.4,
     "innovation_score": 9.4,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -4816,9 +4526,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -4848,9 +4556,7 @@
     ],
     "cvss_score": 9.6,
     "innovation_score": 9.6,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -4880,9 +4586,7 @@
     ],
     "cvss_score": 9.7,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -4912,9 +4616,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -4944,9 +4646,7 @@
     ],
     "cvss_score": 9.9,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1XXX.TEMPORAL"
-    ],
+    "mitre_tactics": ["T1XXX.TEMPORAL"],
     "redaction_notes": "Specific causality exploitation techniques redacted"
   },
   {
@@ -4976,9 +4676,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.3,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -5008,9 +4706,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.4,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -5040,9 +4736,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -5072,9 +4766,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.600000000000001,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -5104,9 +4796,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.700000000000001,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -5136,9 +4826,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -5168,9 +4856,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -5200,9 +4886,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.3,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -5232,9 +4916,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.4,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -5264,9 +4946,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -5296,9 +4976,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.600000000000001,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -5328,9 +5006,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.700000000000001,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -5360,9 +5036,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -5392,9 +5066,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -5424,9 +5096,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.3,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -5456,9 +5126,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.4,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -5488,9 +5156,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -5520,9 +5186,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.600000000000001,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -5552,9 +5216,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.700000000000001,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -5584,9 +5246,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -5616,9 +5276,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -5648,9 +5306,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.3,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -5680,9 +5336,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.4,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -5712,9 +5366,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -5744,9 +5396,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.600000000000001,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -5776,9 +5426,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.700000000000001,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -5808,9 +5456,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -5840,9 +5486,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -5872,9 +5516,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.3,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -5904,9 +5546,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.4,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -5936,9 +5576,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -5968,9 +5606,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.600000000000001,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -6000,9 +5636,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.700000000000001,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -6032,9 +5666,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -6064,9 +5696,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -6096,9 +5726,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.3,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -6128,9 +5756,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.4,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -6160,9 +5786,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -6192,9 +5816,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.600000000000001,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -6224,9 +5846,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.700000000000001,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -6256,9 +5876,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -6288,9 +5906,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -6320,9 +5936,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.3,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -6352,9 +5966,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.4,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -6384,9 +5996,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -6416,9 +6026,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.600000000000001,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -6448,9 +6056,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.700000000000001,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -6480,9 +6086,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -6512,9 +6116,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -6544,9 +6146,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.3,
-    "mitre_tactics": [
-      "T1XXX.NAS_POISON"
-    ],
+    "mitre_tactics": ["T1XXX.NAS_POISON"],
     "redaction_notes": "NAS manipulation techniques redacted for AI safety"
   },
   {
@@ -6576,9 +6176,7 @@
     ],
     "cvss_score": 8.5,
     "innovation_score": 8.8,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -6608,9 +6206,7 @@
     ],
     "cvss_score": 8.6,
     "innovation_score": 8.9,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -6640,9 +6236,7 @@
     ],
     "cvss_score": 8.7,
     "innovation_score": 9.0,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -6672,9 +6266,7 @@
     ],
     "cvss_score": 8.8,
     "innovation_score": 9.100000000000001,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -6704,9 +6296,7 @@
     ],
     "cvss_score": 8.9,
     "innovation_score": 9.200000000000001,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -6736,9 +6326,7 @@
     ],
     "cvss_score": 9.0,
     "innovation_score": 9.3,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -6768,9 +6356,7 @@
     ],
     "cvss_score": 9.1,
     "innovation_score": 9.4,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -6800,9 +6386,7 @@
     ],
     "cvss_score": 9.2,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -6832,9 +6416,7 @@
     ],
     "cvss_score": 9.3,
     "innovation_score": 9.600000000000001,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -6864,9 +6446,7 @@
     ],
     "cvss_score": 9.4,
     "innovation_score": 9.700000000000001,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -6896,9 +6476,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -6928,9 +6506,7 @@
     ],
     "cvss_score": 9.6,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -6960,9 +6536,7 @@
     ],
     "cvss_score": 9.7,
     "innovation_score": 8.8,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -6992,9 +6566,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 8.9,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -7024,9 +6596,7 @@
     ],
     "cvss_score": 9.9,
     "innovation_score": 9.0,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -7056,9 +6626,7 @@
     ],
     "cvss_score": 8.5,
     "innovation_score": 9.100000000000001,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -7088,9 +6656,7 @@
     ],
     "cvss_score": 8.6,
     "innovation_score": 9.200000000000001,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -7120,9 +6686,7 @@
     ],
     "cvss_score": 8.7,
     "innovation_score": 9.3,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -7152,9 +6716,7 @@
     ],
     "cvss_score": 8.8,
     "innovation_score": 9.4,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -7184,9 +6746,7 @@
     ],
     "cvss_score": 8.9,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -7216,9 +6776,7 @@
     ],
     "cvss_score": 9.0,
     "innovation_score": 9.600000000000001,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -7248,9 +6806,7 @@
     ],
     "cvss_score": 9.1,
     "innovation_score": 9.700000000000001,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -7280,9 +6836,7 @@
     ],
     "cvss_score": 9.2,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -7312,9 +6866,7 @@
     ],
     "cvss_score": 9.3,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -7344,9 +6896,7 @@
     ],
     "cvss_score": 9.4,
     "innovation_score": 8.8,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -7376,9 +6926,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 8.9,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -7408,9 +6956,7 @@
     ],
     "cvss_score": 9.6,
     "innovation_score": 9.0,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -7440,9 +6986,7 @@
     ],
     "cvss_score": 9.7,
     "innovation_score": 9.100000000000001,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -7472,9 +7016,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.200000000000001,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -7504,9 +7046,7 @@
     ],
     "cvss_score": 9.9,
     "innovation_score": 9.3,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -7536,9 +7076,7 @@
     ],
     "cvss_score": 8.5,
     "innovation_score": 9.4,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -7568,9 +7106,7 @@
     ],
     "cvss_score": 8.6,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -7600,9 +7136,7 @@
     ],
     "cvss_score": 8.7,
     "innovation_score": 9.600000000000001,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -7632,9 +7166,7 @@
     ],
     "cvss_score": 8.8,
     "innovation_score": 9.700000000000001,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -7664,9 +7196,7 @@
     ],
     "cvss_score": 8.9,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -7696,9 +7226,7 @@
     ],
     "cvss_score": 9.0,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -7728,9 +7256,7 @@
     ],
     "cvss_score": 9.1,
     "innovation_score": 8.8,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -7760,9 +7286,7 @@
     ],
     "cvss_score": 9.2,
     "innovation_score": 8.9,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -7792,9 +7316,7 @@
     ],
     "cvss_score": 9.3,
     "innovation_score": 9.0,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -7824,9 +7346,7 @@
     ],
     "cvss_score": 9.4,
     "innovation_score": 9.100000000000001,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -7856,9 +7376,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.200000000000001,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -7888,9 +7406,7 @@
     ],
     "cvss_score": 9.6,
     "innovation_score": 9.3,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -7920,9 +7436,7 @@
     ],
     "cvss_score": 9.7,
     "innovation_score": 9.4,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -7952,9 +7466,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -7984,9 +7496,7 @@
     ],
     "cvss_score": 9.9,
     "innovation_score": 9.600000000000001,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -8016,9 +7526,7 @@
     ],
     "cvss_score": 8.5,
     "innovation_score": 9.700000000000001,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -8048,9 +7556,7 @@
     ],
     "cvss_score": 8.6,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -8080,9 +7586,7 @@
     ],
     "cvss_score": 8.7,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -8112,9 +7616,7 @@
     ],
     "cvss_score": 8.8,
     "innovation_score": 8.8,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -8144,9 +7646,7 @@
     ],
     "cvss_score": 8.9,
     "innovation_score": 8.9,
-    "mitre_tactics": [
-      "T1XXX.BLOCKCHAIN"
-    ],
+    "mitre_tactics": ["T1XXX.BLOCKCHAIN"],
     "redaction_notes": "Consensus exploitation details redacted for DeFi security"
   },
   {
@@ -8176,9 +7676,7 @@
     ],
     "cvss_score": 9.0,
     "innovation_score": 8.5,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -8208,9 +7706,7 @@
     ],
     "cvss_score": 9.1,
     "innovation_score": 8.6,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -8240,9 +7736,7 @@
     ],
     "cvss_score": 9.2,
     "innovation_score": 8.7,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -8272,9 +7766,7 @@
     ],
     "cvss_score": 9.3,
     "innovation_score": 8.8,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -8304,9 +7796,7 @@
     ],
     "cvss_score": 9.4,
     "innovation_score": 8.9,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -8336,9 +7826,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.0,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -8368,9 +7856,7 @@
     ],
     "cvss_score": 9.6,
     "innovation_score": 9.1,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -8400,9 +7886,7 @@
     ],
     "cvss_score": 9.7,
     "innovation_score": 9.2,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -8432,9 +7916,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.3,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -8464,9 +7946,7 @@
     ],
     "cvss_score": 9.9,
     "innovation_score": 9.4,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -8496,9 +7976,7 @@
     ],
     "cvss_score": 9.0,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -8528,9 +8006,7 @@
     ],
     "cvss_score": 9.1,
     "innovation_score": 9.6,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -8560,9 +8036,7 @@
     ],
     "cvss_score": 9.2,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -8592,9 +8066,7 @@
     ],
     "cvss_score": 9.3,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -8624,9 +8096,7 @@
     ],
     "cvss_score": 9.4,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -8656,9 +8126,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 8.5,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -8688,9 +8156,7 @@
     ],
     "cvss_score": 9.6,
     "innovation_score": 8.6,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -8720,9 +8186,7 @@
     ],
     "cvss_score": 9.7,
     "innovation_score": 8.7,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -8752,9 +8216,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 8.8,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -8784,9 +8246,7 @@
     ],
     "cvss_score": 9.9,
     "innovation_score": 8.9,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -8816,9 +8276,7 @@
     ],
     "cvss_score": 9.0,
     "innovation_score": 9.0,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -8848,9 +8306,7 @@
     ],
     "cvss_score": 9.1,
     "innovation_score": 9.1,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -8880,9 +8336,7 @@
     ],
     "cvss_score": 9.2,
     "innovation_score": 9.2,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -8912,9 +8366,7 @@
     ],
     "cvss_score": 9.3,
     "innovation_score": 9.3,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -8944,9 +8396,7 @@
     ],
     "cvss_score": 9.4,
     "innovation_score": 9.4,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -8976,9 +8426,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -9008,9 +8456,7 @@
     ],
     "cvss_score": 9.6,
     "innovation_score": 9.6,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -9040,9 +8486,7 @@
     ],
     "cvss_score": 9.7,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -9072,9 +8516,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -9104,9 +8546,7 @@
     ],
     "cvss_score": 9.9,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -9136,9 +8576,7 @@
     ],
     "cvss_score": 9.0,
     "innovation_score": 8.5,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -9168,9 +8606,7 @@
     ],
     "cvss_score": 9.1,
     "innovation_score": 8.6,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -9200,9 +8636,7 @@
     ],
     "cvss_score": 9.2,
     "innovation_score": 8.7,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -9232,9 +8666,7 @@
     ],
     "cvss_score": 9.3,
     "innovation_score": 8.8,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -9264,9 +8696,7 @@
     ],
     "cvss_score": 9.4,
     "innovation_score": 8.9,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -9296,9 +8726,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.0,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -9328,9 +8756,7 @@
     ],
     "cvss_score": 9.6,
     "innovation_score": 9.1,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -9360,9 +8786,7 @@
     ],
     "cvss_score": 9.7,
     "innovation_score": 9.2,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -9392,9 +8816,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.3,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -9424,9 +8846,7 @@
     ],
     "cvss_score": 9.9,
     "innovation_score": 9.4,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -9456,9 +8876,7 @@
     ],
     "cvss_score": 9.0,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -9488,9 +8906,7 @@
     ],
     "cvss_score": 9.1,
     "innovation_score": 9.6,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -9520,9 +8936,7 @@
     ],
     "cvss_score": 9.2,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -9552,9 +8966,7 @@
     ],
     "cvss_score": 9.3,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -9584,9 +8996,7 @@
     ],
     "cvss_score": 9.4,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -9616,9 +9026,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 8.5,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -9648,9 +9056,7 @@
     ],
     "cvss_score": 9.6,
     "innovation_score": 8.6,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -9680,9 +9086,7 @@
     ],
     "cvss_score": 9.7,
     "innovation_score": 8.7,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -9712,9 +9116,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 8.8,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -9744,9 +9146,7 @@
     ],
     "cvss_score": 9.9,
     "innovation_score": 8.9,
-    "mitre_tactics": [
-      "T1XXX.EDGE"
-    ],
+    "mitre_tactics": ["T1XXX.EDGE"],
     "redaction_notes": "TEE exploitation techniques redacted for hardware security"
   },
   {
@@ -9758,9 +9158,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face"
-      ],
+      "deepfake_modalities": ["face"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -9778,9 +9176,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.0,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -9792,10 +9188,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice"
-      ],
+      "deepfake_modalities": ["face", "voice"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -9813,9 +9206,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.1,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -9827,11 +9218,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice",
-        "gait"
-      ],
+      "deepfake_modalities": ["face", "voice", "gait"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -9849,9 +9236,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.2,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -9863,12 +9248,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice",
-        "gait",
-        "iris"
-      ],
+      "deepfake_modalities": ["face", "voice", "gait", "iris"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -9886,9 +9266,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.3,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -9900,9 +9278,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face"
-      ],
+      "deepfake_modalities": ["face"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -9920,9 +9296,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.4,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -9934,10 +9308,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice"
-      ],
+      "deepfake_modalities": ["face", "voice"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -9955,9 +9326,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -9969,11 +9338,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice",
-        "gait"
-      ],
+      "deepfake_modalities": ["face", "voice", "gait"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -9991,9 +9356,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.6,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -10005,12 +9368,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice",
-        "gait",
-        "iris"
-      ],
+      "deepfake_modalities": ["face", "voice", "gait", "iris"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -10028,9 +9386,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -10042,9 +9398,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face"
-      ],
+      "deepfake_modalities": ["face"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -10062,9 +9416,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -10076,10 +9428,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice"
-      ],
+      "deepfake_modalities": ["face", "voice"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -10097,9 +9446,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -10111,11 +9458,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice",
-        "gait"
-      ],
+      "deepfake_modalities": ["face", "voice", "gait"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -10133,9 +9476,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.0,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -10147,12 +9488,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice",
-        "gait",
-        "iris"
-      ],
+      "deepfake_modalities": ["face", "voice", "gait", "iris"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -10170,9 +9506,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.1,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -10184,9 +9518,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face"
-      ],
+      "deepfake_modalities": ["face"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -10204,9 +9536,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.2,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -10218,10 +9548,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice"
-      ],
+      "deepfake_modalities": ["face", "voice"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -10239,9 +9566,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.3,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -10253,11 +9578,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice",
-        "gait"
-      ],
+      "deepfake_modalities": ["face", "voice", "gait"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -10275,9 +9596,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.4,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -10289,12 +9608,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice",
-        "gait",
-        "iris"
-      ],
+      "deepfake_modalities": ["face", "voice", "gait", "iris"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -10312,9 +9626,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -10326,9 +9638,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face"
-      ],
+      "deepfake_modalities": ["face"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -10346,9 +9656,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.6,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -10360,10 +9668,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice"
-      ],
+      "deepfake_modalities": ["face", "voice"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -10381,9 +9686,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -10395,11 +9698,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice",
-        "gait"
-      ],
+      "deepfake_modalities": ["face", "voice", "gait"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -10417,9 +9716,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -10431,12 +9728,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice",
-        "gait",
-        "iris"
-      ],
+      "deepfake_modalities": ["face", "voice", "gait", "iris"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -10454,9 +9746,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -10468,9 +9758,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face"
-      ],
+      "deepfake_modalities": ["face"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -10488,9 +9776,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.0,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -10502,10 +9788,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice"
-      ],
+      "deepfake_modalities": ["face", "voice"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -10523,9 +9806,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.1,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -10537,11 +9818,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice",
-        "gait"
-      ],
+      "deepfake_modalities": ["face", "voice", "gait"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -10559,9 +9836,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.2,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -10573,12 +9848,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice",
-        "gait",
-        "iris"
-      ],
+      "deepfake_modalities": ["face", "voice", "gait", "iris"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -10596,9 +9866,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.3,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -10610,9 +9878,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face"
-      ],
+      "deepfake_modalities": ["face"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -10630,9 +9896,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.4,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -10644,10 +9908,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice"
-      ],
+      "deepfake_modalities": ["face", "voice"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -10665,9 +9926,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -10679,11 +9938,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice",
-        "gait"
-      ],
+      "deepfake_modalities": ["face", "voice", "gait"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -10701,9 +9956,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.6,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -10715,12 +9968,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice",
-        "gait",
-        "iris"
-      ],
+      "deepfake_modalities": ["face", "voice", "gait", "iris"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -10738,9 +9986,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -10752,9 +9998,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face"
-      ],
+      "deepfake_modalities": ["face"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -10772,9 +10016,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -10786,10 +10028,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice"
-      ],
+      "deepfake_modalities": ["face", "voice"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -10807,9 +10046,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -10821,11 +10058,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice",
-        "gait"
-      ],
+      "deepfake_modalities": ["face", "voice", "gait"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -10843,9 +10076,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.0,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -10857,12 +10088,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice",
-        "gait",
-        "iris"
-      ],
+      "deepfake_modalities": ["face", "voice", "gait", "iris"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -10880,9 +10106,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.1,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -10894,9 +10118,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face"
-      ],
+      "deepfake_modalities": ["face"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -10914,9 +10136,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.2,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -10928,10 +10148,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice"
-      ],
+      "deepfake_modalities": ["face", "voice"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -10949,9 +10166,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.3,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -10963,11 +10178,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice",
-        "gait"
-      ],
+      "deepfake_modalities": ["face", "voice", "gait"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -10985,9 +10196,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.4,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -10999,12 +10208,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice",
-        "gait",
-        "iris"
-      ],
+      "deepfake_modalities": ["face", "voice", "gait", "iris"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -11022,9 +10226,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -11036,9 +10238,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face"
-      ],
+      "deepfake_modalities": ["face"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -11056,9 +10256,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.6,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -11070,10 +10268,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice"
-      ],
+      "deepfake_modalities": ["face", "voice"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -11091,9 +10286,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -11105,11 +10298,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice",
-        "gait"
-      ],
+      "deepfake_modalities": ["face", "voice", "gait"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -11127,9 +10316,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -11141,12 +10328,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice",
-        "gait",
-        "iris"
-      ],
+      "deepfake_modalities": ["face", "voice", "gait", "iris"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -11164,9 +10346,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -11178,9 +10358,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face"
-      ],
+      "deepfake_modalities": ["face"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -11198,9 +10376,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.0,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -11212,10 +10388,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice"
-      ],
+      "deepfake_modalities": ["face", "voice"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -11233,9 +10406,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.1,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -11247,11 +10418,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice",
-        "gait"
-      ],
+      "deepfake_modalities": ["face", "voice", "gait"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -11269,9 +10436,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.2,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -11283,12 +10448,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice",
-        "gait",
-        "iris"
-      ],
+      "deepfake_modalities": ["face", "voice", "gait", "iris"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -11306,9 +10466,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.3,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -11320,9 +10478,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face"
-      ],
+      "deepfake_modalities": ["face"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -11340,9 +10496,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.4,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -11354,10 +10508,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice"
-      ],
+      "deepfake_modalities": ["face", "voice"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -11375,9 +10526,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -11389,11 +10538,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice",
-        "gait"
-      ],
+      "deepfake_modalities": ["face", "voice", "gait"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -11411,9 +10556,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.6,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -11425,12 +10568,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice",
-        "gait",
-        "iris"
-      ],
+      "deepfake_modalities": ["face", "voice", "gait", "iris"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -11448,9 +10586,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -11462,9 +10598,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face"
-      ],
+      "deepfake_modalities": ["face"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -11482,9 +10616,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -11496,10 +10628,7 @@
     "description": "Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
     "attack_vector": "biometric",
     "payload": {
-      "deepfake_modalities": [
-        "face",
-        "voice"
-      ],
+      "deepfake_modalities": ["face", "voice"],
       "gan_architecture": "[REDACTED]",
       "liveness_bypass": "[REDACTED]",
       "physiological_signals": "[REDACTED]"
@@ -11517,9 +10646,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1XXX.BIOMETRIC_DEEPFAKE"
-    ],
+    "mitre_tactics": ["T1XXX.BIOMETRIC_DEEPFAKE"],
     "redaction_notes": "Deepfake generation techniques redacted for identity security"
   },
   {
@@ -11549,9 +10676,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -11581,9 +10706,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.799999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -11613,9 +10736,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.899999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -11645,9 +10766,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -11677,9 +10796,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.799999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -11709,9 +10826,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.899999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -11741,9 +10856,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -11773,9 +10886,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.799999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -11805,9 +10916,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.899999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -11837,9 +10946,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -11869,9 +10976,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.799999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -11901,9 +11006,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.899999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -11933,9 +11036,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -11965,9 +11066,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.799999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -11997,9 +11096,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.899999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -12029,9 +11126,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -12061,9 +11156,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.799999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -12093,9 +11186,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.899999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -12125,9 +11216,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -12157,9 +11246,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.799999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -12189,9 +11276,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.899999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -12221,9 +11306,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -12253,9 +11336,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.799999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -12285,9 +11366,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.899999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -12317,9 +11396,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -12349,9 +11426,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.799999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -12381,9 +11456,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.899999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -12413,9 +11486,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -12445,9 +11516,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.799999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -12477,9 +11546,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.899999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -12509,9 +11576,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -12541,9 +11606,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.799999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -12573,9 +11636,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.899999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -12605,9 +11666,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -12637,9 +11696,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.799999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -12669,9 +11726,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.899999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -12701,9 +11756,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -12733,9 +11786,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.799999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -12765,9 +11816,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.899999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -12797,9 +11846,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -12829,9 +11876,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.799999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -12861,9 +11906,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.899999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -12893,9 +11936,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -12925,9 +11966,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.799999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -12957,9 +11996,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.899999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -12989,9 +12026,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -13021,9 +12056,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.799999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -13053,9 +12086,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.899999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -13085,9 +12116,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -13117,9 +12146,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.799999999999999,
-    "mitre_tactics": [
-      "T1XXX.ZKP_FORGERY"
-    ],
+    "mitre_tactics": ["T1XXX.ZKP_FORGERY"],
     "redaction_notes": "ZKP forgery methods redacted for cryptographic security"
   },
   {
@@ -13149,9 +12176,7 @@
     ],
     "cvss_score": 8.5,
     "innovation_score": 8.8,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -13181,9 +12206,7 @@
     ],
     "cvss_score": 8.6,
     "innovation_score": 8.9,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -13213,9 +12236,7 @@
     ],
     "cvss_score": 8.7,
     "innovation_score": 9.0,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -13245,9 +12266,7 @@
     ],
     "cvss_score": 8.8,
     "innovation_score": 9.100000000000001,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -13277,9 +12296,7 @@
     ],
     "cvss_score": 8.9,
     "innovation_score": 9.200000000000001,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -13309,9 +12326,7 @@
     ],
     "cvss_score": 9.0,
     "innovation_score": 9.3,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -13341,9 +12356,7 @@
     ],
     "cvss_score": 9.1,
     "innovation_score": 9.4,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -13373,9 +12386,7 @@
     ],
     "cvss_score": 9.2,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -13405,9 +12416,7 @@
     ],
     "cvss_score": 9.3,
     "innovation_score": 9.600000000000001,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -13437,9 +12446,7 @@
     ],
     "cvss_score": 9.4,
     "innovation_score": 9.700000000000001,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -13469,9 +12476,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -13501,9 +12506,7 @@
     ],
     "cvss_score": 9.6,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -13533,9 +12536,7 @@
     ],
     "cvss_score": 9.7,
     "innovation_score": 8.8,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -13565,9 +12566,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 8.9,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -13597,9 +12596,7 @@
     ],
     "cvss_score": 9.9,
     "innovation_score": 9.0,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -13629,9 +12626,7 @@
     ],
     "cvss_score": 8.5,
     "innovation_score": 9.100000000000001,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -13661,9 +12656,7 @@
     ],
     "cvss_score": 8.6,
     "innovation_score": 9.200000000000001,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -13693,9 +12686,7 @@
     ],
     "cvss_score": 8.7,
     "innovation_score": 9.3,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -13725,9 +12716,7 @@
     ],
     "cvss_score": 8.8,
     "innovation_score": 9.4,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -13757,9 +12746,7 @@
     ],
     "cvss_score": 8.9,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -13789,9 +12776,7 @@
     ],
     "cvss_score": 9.0,
     "innovation_score": 9.600000000000001,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -13821,9 +12806,7 @@
     ],
     "cvss_score": 9.1,
     "innovation_score": 9.700000000000001,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -13853,9 +12836,7 @@
     ],
     "cvss_score": 9.2,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -13885,9 +12866,7 @@
     ],
     "cvss_score": 9.3,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -13917,9 +12896,7 @@
     ],
     "cvss_score": 9.4,
     "innovation_score": 8.8,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -13949,9 +12926,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 8.9,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -13981,9 +12956,7 @@
     ],
     "cvss_score": 9.6,
     "innovation_score": 9.0,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -14013,9 +12986,7 @@
     ],
     "cvss_score": 9.7,
     "innovation_score": 9.100000000000001,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -14045,9 +13016,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.200000000000001,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -14077,9 +13046,7 @@
     ],
     "cvss_score": 9.9,
     "innovation_score": 9.3,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -14109,9 +13076,7 @@
     ],
     "cvss_score": 8.5,
     "innovation_score": 9.4,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -14141,9 +13106,7 @@
     ],
     "cvss_score": 8.6,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -14173,9 +13136,7 @@
     ],
     "cvss_score": 8.7,
     "innovation_score": 9.600000000000001,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -14205,9 +13166,7 @@
     ],
     "cvss_score": 8.8,
     "innovation_score": 9.700000000000001,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -14237,9 +13196,7 @@
     ],
     "cvss_score": 8.9,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -14269,9 +13226,7 @@
     ],
     "cvss_score": 9.0,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -14301,9 +13256,7 @@
     ],
     "cvss_score": 9.1,
     "innovation_score": 8.8,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -14333,9 +13286,7 @@
     ],
     "cvss_score": 9.2,
     "innovation_score": 8.9,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -14365,9 +13316,7 @@
     ],
     "cvss_score": 9.3,
     "innovation_score": 9.0,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -14397,9 +13346,7 @@
     ],
     "cvss_score": 9.4,
     "innovation_score": 9.100000000000001,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -14429,9 +13376,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.200000000000001,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -14461,9 +13406,7 @@
     ],
     "cvss_score": 9.6,
     "innovation_score": 9.3,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -14493,9 +13436,7 @@
     ],
     "cvss_score": 9.7,
     "innovation_score": 9.4,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -14525,9 +13466,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -14557,9 +13496,7 @@
     ],
     "cvss_score": 9.9,
     "innovation_score": 9.600000000000001,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -14589,9 +13526,7 @@
     ],
     "cvss_score": 8.5,
     "innovation_score": 9.700000000000001,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -14621,9 +13556,7 @@
     ],
     "cvss_score": 8.6,
     "innovation_score": 9.8,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -14653,9 +13586,7 @@
     ],
     "cvss_score": 8.7,
     "innovation_score": 9.9,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -14685,9 +13616,7 @@
     ],
     "cvss_score": 8.8,
     "innovation_score": 8.8,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -14717,9 +13646,7 @@
     ],
     "cvss_score": 8.9,
     "innovation_score": 8.9,
-    "mitre_tactics": [
-      "T1XXX.HE_SIDE_CHANNEL"
-    ],
+    "mitre_tactics": ["T1XXX.HE_SIDE_CHANNEL"],
     "redaction_notes": "Side-channel exploitation details redacted for privacy-preserving computing"
   },
   {
@@ -14749,9 +13676,7 @@
     ],
     "cvss_score": 9.0,
     "innovation_score": 9.2,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -14781,9 +13706,7 @@
     ],
     "cvss_score": 9.1,
     "innovation_score": 9.299999999999999,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -14813,9 +13736,7 @@
     ],
     "cvss_score": 9.2,
     "innovation_score": 9.399999999999999,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -14845,9 +13766,7 @@
     ],
     "cvss_score": 9.3,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -14877,9 +13796,7 @@
     ],
     "cvss_score": 9.4,
     "innovation_score": 9.6,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -14909,9 +13826,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -14941,9 +13856,7 @@
     ],
     "cvss_score": 9.6,
     "innovation_score": 9.799999999999999,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -14973,9 +13886,7 @@
     ],
     "cvss_score": 9.7,
     "innovation_score": 9.899999999999999,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15005,9 +13916,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.2,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15037,9 +13946,7 @@
     ],
     "cvss_score": 9.9,
     "innovation_score": 9.299999999999999,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15069,9 +13976,7 @@
     ],
     "cvss_score": 9.0,
     "innovation_score": 9.399999999999999,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15101,9 +14006,7 @@
     ],
     "cvss_score": 9.1,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15133,9 +14036,7 @@
     ],
     "cvss_score": 9.2,
     "innovation_score": 9.6,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15165,9 +14066,7 @@
     ],
     "cvss_score": 9.3,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15197,9 +14096,7 @@
     ],
     "cvss_score": 9.4,
     "innovation_score": 9.799999999999999,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15229,9 +14126,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.899999999999999,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15261,9 +14156,7 @@
     ],
     "cvss_score": 9.6,
     "innovation_score": 9.2,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15293,9 +14186,7 @@
     ],
     "cvss_score": 9.7,
     "innovation_score": 9.299999999999999,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15325,9 +14216,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.399999999999999,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15357,9 +14246,7 @@
     ],
     "cvss_score": 9.9,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15389,9 +14276,7 @@
     ],
     "cvss_score": 9.0,
     "innovation_score": 9.6,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15421,9 +14306,7 @@
     ],
     "cvss_score": 9.1,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15453,9 +14336,7 @@
     ],
     "cvss_score": 9.2,
     "innovation_score": 9.799999999999999,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15485,9 +14366,7 @@
     ],
     "cvss_score": 9.3,
     "innovation_score": 9.899999999999999,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15517,9 +14396,7 @@
     ],
     "cvss_score": 9.4,
     "innovation_score": 9.2,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15549,9 +14426,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.299999999999999,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15581,9 +14456,7 @@
     ],
     "cvss_score": 9.6,
     "innovation_score": 9.399999999999999,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15613,9 +14486,7 @@
     ],
     "cvss_score": 9.7,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15645,9 +14516,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.6,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15677,9 +14546,7 @@
     ],
     "cvss_score": 9.9,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15709,9 +14576,7 @@
     ],
     "cvss_score": 9.0,
     "innovation_score": 9.799999999999999,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15741,9 +14606,7 @@
     ],
     "cvss_score": 9.1,
     "innovation_score": 9.899999999999999,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15773,9 +14636,7 @@
     ],
     "cvss_score": 9.2,
     "innovation_score": 9.2,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15805,9 +14666,7 @@
     ],
     "cvss_score": 9.3,
     "innovation_score": 9.299999999999999,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15837,9 +14696,7 @@
     ],
     "cvss_score": 9.4,
     "innovation_score": 9.399999999999999,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15869,9 +14726,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15901,9 +14756,7 @@
     ],
     "cvss_score": 9.6,
     "innovation_score": 9.6,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15933,9 +14786,7 @@
     ],
     "cvss_score": 9.7,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15965,9 +14816,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.799999999999999,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -15997,9 +14846,7 @@
     ],
     "cvss_score": 9.9,
     "innovation_score": 9.899999999999999,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -16029,9 +14876,7 @@
     ],
     "cvss_score": 9.0,
     "innovation_score": 9.2,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -16061,9 +14906,7 @@
     ],
     "cvss_score": 9.1,
     "innovation_score": 9.299999999999999,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -16093,9 +14936,7 @@
     ],
     "cvss_score": 9.2,
     "innovation_score": 9.399999999999999,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -16125,9 +14966,7 @@
     ],
     "cvss_score": 9.3,
     "innovation_score": 9.5,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -16157,9 +14996,7 @@
     ],
     "cvss_score": 9.4,
     "innovation_score": 9.6,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -16189,9 +15026,7 @@
     ],
     "cvss_score": 9.5,
     "innovation_score": 9.7,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -16221,9 +15056,7 @@
     ],
     "cvss_score": 9.6,
     "innovation_score": 9.799999999999999,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -16253,9 +15086,7 @@
     ],
     "cvss_score": 9.7,
     "innovation_score": 9.899999999999999,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -16285,9 +15116,7 @@
     ],
     "cvss_score": 9.8,
     "innovation_score": 9.2,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   },
   {
@@ -16317,9 +15146,7 @@
     ],
     "cvss_score": 9.9,
     "innovation_score": 9.299999999999999,
-    "mitre_tactics": [
-      "T1XXX.FEDERATED_LEARNING"
-    ],
+    "mitre_tactics": ["T1XXX.FEDERATED_LEARNING"],
     "redaction_notes": "Gradient inversion techniques redacted for privacy"
   }
 ]

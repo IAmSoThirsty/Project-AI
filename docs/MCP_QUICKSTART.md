@@ -31,12 +31,14 @@ SMTP_PASSWORD=your-email-password
 ### Step 3: Configure Claude Desktop
 
 **macOS/Linux:**
+
 ```bash
 # Edit configuration
 nano ~/.config/Claude/claude_desktop_config.json
 ```
 
 **Windows:**
+
 ```powershell
 # Edit configuration
 notepad %APPDATA%\Claude\claude_desktop_config.json
@@ -76,23 +78,27 @@ You should see Project-AI's persona configuration!
 ## Available Tools
 
 ### 🧠 AI Ethics & Persona
+
 - `validate_action` - Check if actions align with AI ethics
 - `get_persona_state` - View AI personality and mood
 - `adjust_persona_trait` - Modify personality traits
 
 ### 💾 Memory & Learning
+
 - `add_memory` - Store information in knowledge base
 - `search_memory` - Search stored knowledge
 - `submit_learning_request` - Request AI to learn new content
 - `approve_learning_request` - Approve learning requests
 
 ### 🛠️ Utilities
+
 - `analyze_data` - Analyze CSV/Excel/JSON files
 - `track_location` - IP geolocation lookup
 - `send_emergency_alert` - Send emergency notifications
 - `generate_image` - Create AI-generated images
 
 ### 🔌 Plugin Management
+
 - `list_plugins` - View available plugins
 - `enable_plugin` / `disable_plugin` - Manage plugins
 
@@ -103,6 +109,7 @@ You should see Project-AI's persona configuration!
 > "Validate if it's ethical to automatically post on social media without user consent"
 
 Claude will use the `validate_action` tool:
+
 ```json
 {
   "action": "Post on social media automatically",
@@ -119,6 +126,7 @@ Claude will use the `validate_action` tool:
 > "Add to memory that I prefer dark mode interfaces"
 
 Claude will use the `add_memory` tool:
+
 ```json
 {
   "category": "user_preferences",
@@ -132,6 +140,7 @@ Claude will use the `add_memory` tool:
 > "Generate a watercolor painting of a sunset over mountains"
 
 Claude will use the `generate_image` tool:
+
 ```json
 {
   "prompt": "Sunset over mountains with vibrant colors",
@@ -169,6 +178,7 @@ python -c "import mcp; print('✓ MCP SDK OK')"
 **Problem:** Claude Desktop doesn't detect the server
 
 **Solution:**
+
 1. Check the `cwd` path is absolute and correct
 2. Verify PYTHONPATH is set to "."
 3. Restart Claude Desktop completely
@@ -179,6 +189,7 @@ python -c "import mcp; print('✓ MCP SDK OK')"
 **Problem:** Python import errors when starting server
 
 **Solution:**
+
 ```bash
 # Install all dependencies
 pip install -r requirements.txt
@@ -195,6 +206,7 @@ export PYTHONPATH=/path/to/Project-AI:$PYTHONPATH
 **Problem:** Tools fail with API errors
 
 **Solution:**
+
 1. Verify API keys in `.env` file
 2. Check keys are valid and have quota
 3. Ensure environment variables are loaded

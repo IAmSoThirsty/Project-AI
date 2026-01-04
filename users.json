@@ -1,1 +1,10 @@
-{"Thirsty": {"password_hash": "$pbkdf2-sha256$29000$Oqf0HkNIqXWu1XpP6d07hw$mJ9mqcLjeNnstQrrfLbOP.Zf3GzlUAQJ7l1LIS6biOs", "persona": "admin", "preferences": {"language": "en", "style": "casual"}, "location_active": false, "approved": true, "role": "user"}}
+{
+  "Thirsty": {
+    "password_hash": "$pbkdf2-sha256$29000$Oqf0HkNIqXWu1XpP6d07hw$mJ9mqcLjeNnstQrrfLbOP.Zf3GzlUAQJ7l1LIS6biOs",
+    "persona": "admin",
+    "preferences": { "language": "en", "style": "casual" },
+    "location_active": false,
+    "approved": true,
+    "role": "user"
+  }
+}

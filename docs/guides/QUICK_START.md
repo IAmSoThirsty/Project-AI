@@ -3,6 +3,7 @@
 ## 🚀 Launch Commands
 
 ### Standard Launch (Windows PowerShell)
+
 ```powershell
 cd C:\Users\Jeremy\Documents\GitHub\Project-AI
 $env:PYTHONPATH='src'
@@ -10,6 +11,7 @@ python src/app/main.py
 ```
 
 ### Alternative Launch Methods
+
 ```powershell
 # Method 1: Using python module execution
 python -m app.main
@@ -106,5 +108,8 @@ Project-AI/
 
 ---
 
-``` 
-``` 
+```
+
+```
+
+```

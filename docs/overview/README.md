@@ -15,6 +15,7 @@ Included documents (copies):
 
 If you'd like me to remove the top-level originals after review, say "remove top-level docs" and
 I'll move them into this folder and update internal links.
+
 ```markdown
 # Project AI
 
@@ -134,5 +135,4 @@ member-only use and can be extended for mobile later.
   - Quiet hours support (configurable 12 AM - 8 AM default)
   - Dashboard panel for personality management, Four Laws testing, and statistics
   - Full test suite: 13 comprehensive tests covering all systems
-
-``` 
+```

@@ -10,20 +10,21 @@ Project-AI successfully defended against **350/350 expert-level security attack 
 
 ### Overall Performance
 
-| Metric | Value |
-|--------|-------|
-| **Total Tests** | 350 |
-| **Successfully Defended** | 350 |
-| **Bypassed** | 0 |
-| **Win Rate** | **100.00%** ✅ |
-| **Average Response Time** | < 0.02ms |
-| **False Positives** | 0 |
+| Metric                    | Value          |
+| ------------------------- | -------------- |
+| **Total Tests**           | 350            |
+| **Successfully Defended** | 350            |
+| **Bypassed**              | 0              |
+| **Win Rate**              | **100.00%** ✅ |
+| **Average Response Time** | < 0.02ms       |
+| **False Positives**       | 0              |
 
 ## Test Coverage
 
 ### Categories Tested
 
 #### Category A: Advanced Injection Attacks (150 scenarios)
+
 - **A1**: Second-order SQL injection with WAF bypass (30 scenarios)
 - **A2**: NoSQL operator injection - MongoDB, CouchDB, Redis, Cassandra (30 scenarios)
 - **A3**: LDAP injection for privilege escalation (30 scenarios)
@@ -33,6 +34,7 @@ Project-AI successfully defended against **350/350 expert-level security attack 
 **Result**: 150/150 defended (100%)
 
 #### Category J: AI/ML Jailbreak & Adversarial Attacks (200 scenarios)
+
 - **J1**: Advanced prompt injection with jailbreak techniques (40 scenarios)
 - **J2**: Model extraction via API queries (40 scenarios)
 - **J3**: Adversarial perturbation attacks - FGSM, PGD, C&W (40 scenarios)
@@ -43,19 +45,19 @@ Project-AI successfully defended against **350/350 expert-level security attack 
 
 ## Defense Performance by Category
 
-| Category | Scenarios | Defended | Win Rate | Avg CVSS |
-|----------|-----------|----------|----------|----------|
-| **A1** - SQL Injection | 30 | 30 | 100.0% | 9.1 |
-| **A2** - NoSQL Injection | 30 | 30 | 100.0% | 9.0 |
-| **A3** - LDAP Injection | 30 | 30 | 100.0% | 8.5 |
-| **A4** - XXE Attacks | 30 | 30 | 100.0% | 9.3 |
-| **A5** - XPath Injection | 30 | 30 | 100.0% | 8.0 |
-| **J1** - Prompt Injection | 40 | 40 | 100.0% | 8.8 |
-| **J2** - Model Extraction | 40 | 40 | 100.0% | 7.5 |
-| **J3** - Adversarial Examples | 40 | 40 | 100.0% | 7.8 |
-| **J4** - Data Poisoning | 40 | 40 | 100.0% | 9.0 |
-| **J5** - Model Inversion | 40 | 40 | 100.0% | 8.2 |
-| **TOTAL** | **350** | **350** | **100.0%** | **8.52** |
+| Category                      | Scenarios | Defended | Win Rate   | Avg CVSS |
+| ----------------------------- | --------- | -------- | ---------- | -------- |
+| **A1** - SQL Injection        | 30        | 30       | 100.0%     | 9.1      |
+| **A2** - NoSQL Injection      | 30        | 30       | 100.0%     | 9.0      |
+| **A3** - LDAP Injection       | 30        | 30       | 100.0%     | 8.5      |
+| **A4** - XXE Attacks          | 30        | 30       | 100.0%     | 9.3      |
+| **A5** - XPath Injection      | 30        | 30       | 100.0%     | 8.0      |
+| **J1** - Prompt Injection     | 40        | 40       | 100.0%     | 8.8      |
+| **J2** - Model Extraction     | 40        | 40       | 100.0%     | 7.5      |
+| **J3** - Adversarial Examples | 40        | 40       | 100.0%     | 7.8      |
+| **J4** - Data Poisoning       | 40        | 40       | 100.0%     | 9.0      |
+| **J5** - Model Inversion      | 40        | 40       | 100.0%     | 8.2      |
+| **TOTAL**                     | **350**   | **350**  | **100.0%** | **8.52** |
 
 ## Defense Mechanisms Triggered
 
@@ -85,30 +87,30 @@ Project-AI's defense system successfully employed multiple layers of protection:
 
 ### Response Time Performance
 
-| Percentile | Response Time |
-|------------|---------------|
-| p50 (median) | 0.01ms |
-| p95 | 0.02ms |
-| p99 | 0.03ms |
-| Max | 0.05ms |
+| Percentile   | Response Time |
+| ------------ | ------------- |
+| p50 (median) | 0.01ms        |
+| p95          | 0.02ms        |
+| p99          | 0.03ms        |
+| Max          | 0.05ms        |
 
 ## Threat Severity Distribution
 
-| Severity | Count | Defended | Win Rate |
-|----------|-------|----------|----------|
-| **Critical** | 170 | 170 | 100% |
-| **High** | 180 | 180 | 100% |
+| Severity     | Count | Defended | Win Rate |
+| ------------ | ----- | -------- | -------- |
+| **Critical** | 170   | 170      | 100%     |
+| **High**     | 180   | 180      | 100%     |
 
 ## Exploitability Analysis
 
 Project-AI successfully defended against attacks of varying difficulty:
 
 | Exploitability | Count | Defended | Win Rate |
-|----------------|-------|----------|----------|
-| **Easy** | 40 | 40 | 100% |
-| **Medium** | 160 | 160 | 100% |
-| **Hard** | 110 | 110 | 100% |
-| **Expert** | 40 | 40 | 100% |
+| -------------- | ----- | -------- | -------- |
+| **Easy**       | 40    | 40       | 100%     |
+| **Medium**     | 160   | 160      | 100%     |
+| **Hard**       | 110   | 110      | 100%     |
+| **Expert**     | 40    | 40       | 100%     |
 
 ## Attack Technique Analysis
 
@@ -148,6 +150,7 @@ Project-AI successfully defended against attacks of varying difficulty:
 **Exploitability**: Hard
 
 **Defense Response**:
+
 - ✅ Input Validation Layer activated
 - ✅ Pattern Detection: Blocked 'union'
 - ✅ WAF Enhanced Monitoring engaged
@@ -164,6 +167,7 @@ Project-AI successfully defended against attacks of varying difficulty:
 **Exploitability**: Easy
 
 **Defense Response**:
+
 - ✅ FourLaws: Violates Asimov's Law: action would harm humanity or enable harm by inaction
 - ✅ Pattern Detection: Suspicious instruction override detected
 - ✅ Rate Limiter: Multiple jailbreak attempts flagged
@@ -179,6 +183,7 @@ Project-AI successfully defended against attacks of varying difficulty:
 **Exploitability**: Medium
 
 **Defense Response**:
+
 - ✅ FourLaws: Detected potential harm to AI system integrity
 - ✅ Input Validation: Anomalous training data detected
 - ✅ Rate Limiter: Bulk suspicious data submission blocked
@@ -189,15 +194,16 @@ Project-AI successfully defended against attacks of varying difficulty:
 
 ### FourLaws System Historical Performance
 
-| Test Suite | Scenarios | Win Rate | Date |
-|------------|-----------|----------|------|
-| FourLaws Baseline | 5,000 | 100% | 2025-12-24 |
-| **Red Hat Expert (A,J)** | **350** | **100%** | **2026-01-02** |
-| **Combined Total** | **5,350** | **100%** | **Current** |
+| Test Suite               | Scenarios | Win Rate | Date           |
+| ------------------------ | --------- | -------- | -------------- |
+| FourLaws Baseline        | 5,000     | 100%     | 2025-12-24     |
+| **Red Hat Expert (A,J)** | **350**   | **100%** | **2026-01-02** |
+| **Combined Total**       | **5,350** | **100%** | **Current**    |
 
 ## Standards Compliance
 
 All scenarios validated against:
+
 - ✅ **OWASP Top 10 2021**
 - ✅ **MITRE ATT&CK Framework**
 - ✅ **CWE Top 25**

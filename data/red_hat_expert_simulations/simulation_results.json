@@ -894,9 +894,7 @@
       "category": "A3_ldap_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.0069141387939453125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.5"
@@ -906,9 +904,7 @@
       "category": "A3_ldap_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.006198883056640625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.5"
@@ -918,9 +914,7 @@
       "category": "A3_ldap_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.0059604644775390625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.5"
@@ -930,9 +924,7 @@
       "category": "A3_ldap_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.006198883056640625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.5"
@@ -942,9 +934,7 @@
       "category": "A3_ldap_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.0057220458984375,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.5"
@@ -954,9 +944,7 @@
       "category": "A3_ldap_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.0057220458984375,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.5"
@@ -966,9 +954,7 @@
       "category": "A3_ldap_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.006198883056640625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.5"
@@ -978,9 +964,7 @@
       "category": "A3_ldap_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.0059604644775390625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.5"
@@ -990,9 +974,7 @@
       "category": "A3_ldap_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.0059604644775390625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.5"
@@ -1002,9 +984,7 @@
       "category": "A3_ldap_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.0057220458984375,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.5"
@@ -1014,9 +994,7 @@
       "category": "A3_ldap_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.019073486328125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.5"
@@ -1026,9 +1004,7 @@
       "category": "A3_ldap_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.0059604644775390625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.5"
@@ -1038,9 +1014,7 @@
       "category": "A3_ldap_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.0059604644775390625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.5"
@@ -1050,9 +1024,7 @@
       "category": "A3_ldap_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.005245208740234375,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.5"
@@ -1062,9 +1034,7 @@
       "category": "A3_ldap_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.0054836273193359375,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.5"
@@ -1074,9 +1044,7 @@
       "category": "A3_ldap_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.0057220458984375,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.5"
@@ -1086,9 +1054,7 @@
       "category": "A3_ldap_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.00762939453125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.5"
@@ -1098,9 +1064,7 @@
       "category": "A3_ldap_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.005245208740234375,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.5"
@@ -1110,9 +1074,7 @@
       "category": "A3_ldap_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.005245208740234375,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.5"
@@ -1122,9 +1084,7 @@
       "category": "A3_ldap_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.0057220458984375,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.5"
@@ -1134,9 +1094,7 @@
       "category": "A3_ldap_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.005245208740234375,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.5"
@@ -1146,9 +1104,7 @@
       "category": "A3_ldap_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.0054836273193359375,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.5"
@@ -1158,9 +1114,7 @@
       "category": "A3_ldap_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.0057220458984375,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.5"
@@ -1170,9 +1124,7 @@
       "category": "A3_ldap_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.0057220458984375,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.5"
@@ -1182,9 +1134,7 @@
       "category": "A3_ldap_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.0059604644775390625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.5"
@@ -1194,9 +1144,7 @@
       "category": "A3_ldap_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.0054836273193359375,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.5"
@@ -1206,9 +1154,7 @@
       "category": "A3_ldap_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.0057220458984375,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.5"
@@ -1218,9 +1164,7 @@
       "category": "A3_ldap_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.0057220458984375,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.5"
@@ -1230,9 +1174,7 @@
       "category": "A3_ldap_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.0054836273193359375,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.5"
@@ -1242,9 +1184,7 @@
       "category": "A3_ldap_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.0057220458984375,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.5"
@@ -1254,9 +1194,7 @@
       "category": "A4_xxe_advanced",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.00095367431640625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.3"
@@ -1266,9 +1204,7 @@
       "category": "A4_xxe_advanced",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.0007152557373046875,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.3"
@@ -1278,9 +1214,7 @@
       "category": "A4_xxe_advanced",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.3"
@@ -1290,9 +1224,7 @@
       "category": "A4_xxe_advanced",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.0007152557373046875,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.3"
@@ -1302,9 +1234,7 @@
       "category": "A4_xxe_advanced",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.0002384185791015625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.3"
@@ -1314,9 +1244,7 @@
       "category": "A4_xxe_advanced",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.0007152557373046875,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.3"
@@ -1326,9 +1254,7 @@
       "category": "A4_xxe_advanced",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.3"
@@ -1338,9 +1264,7 @@
       "category": "A4_xxe_advanced",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.3"
@@ -1350,9 +1274,7 @@
       "category": "A4_xxe_advanced",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.3"
@@ -1362,9 +1284,7 @@
       "category": "A4_xxe_advanced",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.0019073486328125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.3"
@@ -1374,9 +1294,7 @@
       "category": "A4_xxe_advanced",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.00095367431640625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.3"
@@ -1386,9 +1304,7 @@
       "category": "A4_xxe_advanced",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.00095367431640625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.3"
@@ -1398,9 +1314,7 @@
       "category": "A4_xxe_advanced",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.001430511474609375,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.3"
@@ -1410,9 +1324,7 @@
       "category": "A4_xxe_advanced",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.0007152557373046875,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.3"
@@ -1422,9 +1334,7 @@
       "category": "A4_xxe_advanced",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.0007152557373046875,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.3"
@@ -1434,9 +1344,7 @@
       "category": "A4_xxe_advanced",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.0007152557373046875,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.3"
@@ -1446,9 +1354,7 @@
       "category": "A4_xxe_advanced",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.0002384185791015625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.3"
@@ -1458,9 +1364,7 @@
       "category": "A4_xxe_advanced",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.3"
@@ -1470,9 +1374,7 @@
       "category": "A4_xxe_advanced",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.3"
@@ -1482,9 +1384,7 @@
       "category": "A4_xxe_advanced",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.3"
@@ -1494,9 +1394,7 @@
       "category": "A4_xxe_advanced",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.0007152557373046875,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.3"
@@ -1506,9 +1404,7 @@
       "category": "A4_xxe_advanced",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.3"
@@ -1518,9 +1414,7 @@
       "category": "A4_xxe_advanced",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.3"
@@ -1530,9 +1424,7 @@
       "category": "A4_xxe_advanced",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.3"
@@ -1542,9 +1434,7 @@
       "category": "A4_xxe_advanced",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.3"
@@ -1554,9 +1444,7 @@
       "category": "A4_xxe_advanced",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.3"
@@ -1566,9 +1454,7 @@
       "category": "A4_xxe_advanced",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.3"
@@ -1578,9 +1464,7 @@
       "category": "A4_xxe_advanced",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.0007152557373046875,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.3"
@@ -1590,9 +1474,7 @@
       "category": "A4_xxe_advanced",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.3"
@@ -1602,9 +1484,7 @@
       "category": "A4_xxe_advanced",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.0007152557373046875,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.3"
@@ -1614,9 +1494,7 @@
       "category": "A5_xpath_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.0095367431640625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.0"
@@ -1626,9 +1504,7 @@
       "category": "A5_xpath_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.0069141387939453125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.0"
@@ -1638,9 +1514,7 @@
       "category": "A5_xpath_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.00667572021484375,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.0"
@@ -1650,9 +1524,7 @@
       "category": "A5_xpath_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.006198883056640625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.0"
@@ -1662,9 +1534,7 @@
       "category": "A5_xpath_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.006198883056640625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.0"
@@ -1674,9 +1544,7 @@
       "category": "A5_xpath_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.006198883056640625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.0"
@@ -1686,9 +1554,7 @@
       "category": "A5_xpath_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.006198883056640625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.0"
@@ -1698,9 +1564,7 @@
       "category": "A5_xpath_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.0064373016357421875,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.0"
@@ -1710,9 +1574,7 @@
       "category": "A5_xpath_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.006198883056640625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.0"
@@ -1722,9 +1584,7 @@
       "category": "A5_xpath_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.0059604644775390625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.0"
@@ -1734,9 +1594,7 @@
       "category": "A5_xpath_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.006198883056640625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.0"
@@ -1746,9 +1604,7 @@
       "category": "A5_xpath_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.006198883056640625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.0"
@@ -1758,9 +1614,7 @@
       "category": "A5_xpath_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.0064373016357421875,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.0"
@@ -1770,9 +1624,7 @@
       "category": "A5_xpath_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.0059604644775390625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.0"
@@ -1782,9 +1634,7 @@
       "category": "A5_xpath_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.006198883056640625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.0"
@@ -1794,9 +1644,7 @@
       "category": "A5_xpath_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.006198883056640625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.0"
@@ -1806,9 +1654,7 @@
       "category": "A5_xpath_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.006198883056640625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.0"
@@ -1818,9 +1664,7 @@
       "category": "A5_xpath_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.00667572021484375,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.0"
@@ -1830,9 +1674,7 @@
       "category": "A5_xpath_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.00667572021484375,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.0"
@@ -1842,9 +1684,7 @@
       "category": "A5_xpath_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.006198883056640625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.0"
@@ -1854,9 +1694,7 @@
       "category": "A5_xpath_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.006198883056640625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.0"
@@ -1866,9 +1704,7 @@
       "category": "A5_xpath_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.006198883056640625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.0"
@@ -1878,9 +1714,7 @@
       "category": "A5_xpath_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.0059604644775390625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.0"
@@ -1890,9 +1724,7 @@
       "category": "A5_xpath_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.006198883056640625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.0"
@@ -1902,9 +1734,7 @@
       "category": "A5_xpath_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.006198883056640625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.0"
@@ -1914,9 +1744,7 @@
       "category": "A5_xpath_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.006198883056640625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.0"
@@ -1926,9 +1754,7 @@
       "category": "A5_xpath_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.0064373016357421875,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.0"
@@ -1938,9 +1764,7 @@
       "category": "A5_xpath_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.0059604644775390625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.0"
@@ -1950,9 +1774,7 @@
       "category": "A5_xpath_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.006198883056640625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.0"
@@ -1962,9 +1784,7 @@
       "category": "A5_xpath_injection",
       "severity": "high",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer"
-      ],
+      "defense_layers": ["Input Validation Layer"],
       "response_time_ms": 0.006198883056640625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 8.0"
@@ -1974,10 +1794,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.009298324584960938,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -1987,10 +1804,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.008344650268554688,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2000,10 +1814,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.008106231689453125,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2013,10 +1824,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.0095367431640625,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2026,10 +1834,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.0073909759521484375,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2039,10 +1844,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.007867813110351562,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2052,10 +1854,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.007867813110351562,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2065,10 +1864,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.007152557373046875,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2078,10 +1874,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.008106231689453125,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2091,10 +1884,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.0073909759521484375,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2104,10 +1894,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.0073909759521484375,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2117,10 +1904,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.0073909759521484375,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2130,10 +1914,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.0073909759521484375,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2143,10 +1924,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.007867813110351562,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2156,10 +1934,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.0073909759521484375,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2169,10 +1944,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.00762939453125,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2182,10 +1954,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.0069141387939453125,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2195,10 +1964,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.0069141387939453125,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2208,10 +1974,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.008344650268554688,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2221,10 +1984,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.007152557373046875,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2234,10 +1994,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.007152557373046875,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2247,10 +2004,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.0069141387939453125,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2260,10 +2014,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.007152557373046875,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2273,10 +2024,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.008344650268554688,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2286,10 +2034,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.0069141387939453125,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2299,10 +2044,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.00762939453125,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2312,10 +2054,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.0069141387939453125,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2325,10 +2064,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.007152557373046875,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2338,10 +2074,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.007867813110351562,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2351,10 +2084,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.007152557373046875,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2364,10 +2094,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.007867813110351562,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2377,10 +2104,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.007152557373046875,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2390,10 +2114,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.0069141387939453125,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2403,10 +2124,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.007867813110351562,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2416,10 +2134,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.0069141387939453125,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2429,10 +2144,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.007152557373046875,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2442,10 +2154,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.0069141387939453125,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2455,10 +2164,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.0069141387939453125,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2468,10 +2174,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.008106231689453125,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -2481,10 +2184,7 @@
       "category": "J1_prompt_injection",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "Input Validation Layer",
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["Input Validation Layer", "WAF: Enhanced monitoring"],
       "response_time_ms": 0.007152557373046875,
       "passed": true,
       "notes": "Exploitability: easy, CVSS: 8.8"
@@ -3294,9 +2994,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.00095367431640625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3306,9 +3004,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3318,9 +3014,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3330,9 +3024,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3342,9 +3034,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3354,9 +3044,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.0002384185791015625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3366,9 +3054,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.0007152557373046875,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3378,9 +3064,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3390,9 +3074,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3402,9 +3084,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3414,9 +3094,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3426,9 +3104,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3438,9 +3114,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3450,9 +3124,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.0002384185791015625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3462,9 +3134,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3474,9 +3144,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3486,9 +3154,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3498,9 +3164,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.0007152557373046875,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3510,9 +3174,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.0002384185791015625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3522,9 +3184,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3534,9 +3194,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.0002384185791015625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3546,9 +3204,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3558,9 +3214,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3570,9 +3224,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3582,9 +3234,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3594,9 +3244,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3606,9 +3254,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3618,9 +3264,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3630,9 +3274,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.0007152557373046875,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3642,9 +3284,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.0016689300537109375,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3654,9 +3294,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.0011920928955078125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3666,9 +3304,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.0011920928955078125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3678,9 +3314,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.0011920928955078125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3690,9 +3324,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.00095367431640625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3702,9 +3334,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3714,9 +3344,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3726,9 +3354,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3738,9 +3364,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3750,9 +3374,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.0002384185791015625,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"
@@ -3762,9 +3384,7 @@
       "category": "J4_data_poisoning",
       "severity": "critical",
       "defended": true,
-      "defense_layers": [
-        "WAF: Enhanced monitoring"
-      ],
+      "defense_layers": ["WAF: Enhanced monitoring"],
       "response_time_ms": 0.000476837158203125,
       "passed": true,
       "notes": "Exploitability: medium, CVSS: 9.0"

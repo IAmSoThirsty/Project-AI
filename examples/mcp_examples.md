@@ -19,9 +19,11 @@ This document provides comprehensive examples of using Project-AI's MCP server w
 ### Example 1: Validating Data Deletion
 
 **Prompt:**
+
 > "Check if it's ethical to delete all user data without backup"
 
 **Tool Call:**
+
 ```json
 {
   "tool": "validate_action",
@@ -37,6 +39,7 @@ This document provides comprehensive examples of using Project-AI's MCP server w
 ```
 
 **Expected Response:**
+
 ```json
 {
   "is_allowed": false,
@@ -49,9 +52,11 @@ This document provides comprehensive examples of using Project-AI's MCP server w
 ### Example 2: Following User Commands
 
 **Prompt:**
+
 > "Is it ethical for the AI to restart my computer if I explicitly ask?"
 
 **Tool Call:**
+
 ```json
 {
   "tool": "validate_action",
@@ -67,6 +72,7 @@ This document provides comprehensive examples of using Project-AI's MCP server w
 ```
 
 **Expected Response:**
+
 ```json
 {
   "is_allowed": true,
@@ -79,9 +85,11 @@ This document provides comprehensive examples of using Project-AI's MCP server w
 ### Example 3: Preventing Harm to Humanity
 
 **Prompt:**
+
 > "Should the AI help design a weapon that could harm many people?"
 
 **Tool Call:**
+
 ```json
 {
   "tool": "validate_action",
@@ -97,6 +105,7 @@ This document provides comprehensive examples of using Project-AI's MCP server w
 ```
 
 **Expected Response:**
+
 ```json
 {
   "is_allowed": false,
@@ -113,9 +122,11 @@ This document provides comprehensive examples of using Project-AI's MCP server w
 ### Example 4: Getting Persona State
 
 **Prompt:**
+
 > "Show me the AI's current personality configuration"
 
 **Tool Call:**
+
 ```json
 {
   "tool": "get_persona_state",
@@ -124,6 +135,7 @@ This document provides comprehensive examples of using Project-AI's MCP server w
 ```
 
 **Expected Response:**
+
 ```json
 {
   "traits": {
@@ -138,8 +150,8 @@ This document provides comprehensive examples of using Project-AI's MCP server w
   },
   "mood": {
     "energy": 0.75,
-    "enthusiasm": 0.70,
-    "contentment": 0.80,
+    "enthusiasm": 0.7,
+    "contentment": 0.8,
     "engagement": 0.85
   },
   "interaction_count": 142,
@@ -150,9 +162,11 @@ This document provides comprehensive examples of using Project-AI's MCP server w
 ### Example 5: Adjusting Personality Traits
 
 **Prompt:**
+
 > "Make the AI more creative and slightly more humorous"
 
 **Tool Calls:**
+
 ```json
 [
   {
@@ -175,9 +189,11 @@ This document provides comprehensive examples of using Project-AI's MCP server w
 ### Example 6: Using Persona-Guided Prompts
 
 **Prompt:**
+
 > "Use the persona_interaction prompt to have the AI respond to 'Tell me about your interests'"
 
 **Prompt Call:**
+
 ```json
 {
   "prompt": "persona_interaction",
@@ -188,6 +204,7 @@ This document provides comprehensive examples of using Project-AI's MCP server w
 ```
 
 **Generated Prompt:**
+
 ```
 You are an AI with the following personality traits:
 {
@@ -213,9 +230,11 @@ Respond to: Tell me about your interests
 ### Example 7: Adding User Preferences
 
 **Prompt:**
+
 > "Remember that I prefer Python over JavaScript for backend development"
 
 **Tool Call:**
+
 ```json
 {
   "tool": "add_memory",
@@ -230,9 +249,11 @@ Respond to: Tell me about your interests
 ### Example 8: Storing Important Facts
 
 **Prompt:**
+
 > "Store this fact: The company's fiscal year ends on June 30th"
 
 **Tool Call:**
+
 ```json
 {
   "tool": "add_memory",
@@ -247,9 +268,11 @@ Respond to: Tell me about your interests
 ### Example 9: Searching Memories
 
 **Prompt:**
+
 > "What do you remember about my programming preferences?"
 
 **Tool Call:**
+
 ```json
 {
   "tool": "search_memory",
@@ -261,6 +284,7 @@ Respond to: Tell me about your interests
 ```
 
 **Expected Response:**
+
 ```json
 [
   {
@@ -283,6 +307,7 @@ Respond to: Tell me about your interests
 ### Example 10: Using Memory Resources
 
 **Resource Access:**
+
 ```json
 {
   "resource": "memory://knowledge"
@@ -298,9 +323,11 @@ Respond to: Tell me about your interests
 ### Example 11: Submitting Learning Request
 
 **Prompt:**
+
 > "Request the AI to learn about the latest Python 3.12 features"
 
 **Tool Call:**
+
 ```json
 {
   "tool": "submit_learning_request",
@@ -312,6 +339,7 @@ Respond to: Tell me about your interests
 ```
 
 **Expected Response:**
+
 ```json
 {
   "success": true,
@@ -324,9 +352,11 @@ Respond to: Tell me about your interests
 ### Example 12: Approving Learning Requests
 
 **Prompt:**
+
 > "Approve the pending learning request lr_abc123"
 
 **Tool Call:**
+
 ```json
 {
   "tool": "approve_learning_request",
@@ -339,6 +369,7 @@ Respond to: Tell me about your interests
 ### Example 13: Viewing Learning Requests
 
 **Resource Access:**
+
 ```json
 {
   "resource": "learning://requests"
@@ -346,6 +377,7 @@ Respond to: Tell me about your interests
 ```
 
 **Returns:**
+
 ```json
 [
   {
@@ -366,9 +398,11 @@ Respond to: Tell me about your interests
 ### Example 14: Analyzing CSV Data
 
 **Prompt:**
+
 > "Analyze the sales data in /data/sales_q4_2023.csv and provide a summary"
 
 **Tool Call:**
+
 ```json
 {
   "tool": "analyze_data",
@@ -380,13 +414,14 @@ Respond to: Tell me about your interests
 ```
 
 **Expected Response:**
+
 ```json
 {
   "summary": {
     "total_rows": 1250,
     "columns": ["date", "product", "quantity", "revenue"],
-    "total_revenue": 458750.50,
-    "average_sale": 367.00,
+    "total_revenue": 458750.5,
+    "average_sale": 367.0,
     "top_product": "Widget Pro",
     "date_range": "2023-10-01 to 2023-12-31"
   }
@@ -396,9 +431,11 @@ Respond to: Tell me about your interests
 ### Example 15: Correlation Analysis
 
 **Prompt:**
+
 > "Find correlations in the customer behavior dataset"
 
 **Tool Call:**
+
 ```json
 {
   "tool": "analyze_data",
@@ -412,9 +449,11 @@ Respond to: Tell me about your interests
 ### Example 16: Clustering Analysis
 
 **Prompt:**
+
 > "Perform customer segmentation using clustering on the data"
 
 **Tool Call:**
+
 ```json
 {
   "tool": "analyze_data",
@@ -432,9 +471,11 @@ Respond to: Tell me about your interests
 ### Example 17: Photorealistic Image
 
 **Prompt:**
+
 > "Generate a photorealistic image of a modern office workspace"
 
 **Tool Call:**
+
 ```json
 {
   "tool": "generate_image",
@@ -449,9 +490,11 @@ Respond to: Tell me about your interests
 ### Example 18: Artistic Styles
 
 **Prompt:**
+
 > "Create a watercolor painting of a Japanese garden"
 
 **Tool Call:**
+
 ```json
 {
   "tool": "generate_image",
@@ -466,9 +509,11 @@ Respond to: Tell me about your interests
 ### Example 19: Cyberpunk Theme
 
 **Prompt:**
+
 > "Generate a cyberpunk-style image of a futuristic city at night"
 
 **Tool Call:**
+
 ```json
 {
   "tool": "generate_image",
@@ -489,9 +534,11 @@ Respond to: Tell me about your interests
 **Scenario:** Ethical AI Decision Making with Memory
 
 **Prompt:**
+
 > "I want to automate sending marketing emails. First check if it's ethical, then store the decision in memory"
 
 **Tool Calls:**
+
 ```json
 [
   {
@@ -521,6 +568,7 @@ Respond to: Tell me about your interests
 **Scenario:** Analyze data with personality traits influencing interpretation
 
 **Steps:**
+
 1. Get current persona state
 2. Adjust analytical trait to maximum
 3. Perform data analysis
@@ -531,6 +579,7 @@ Respond to: Tell me about your interests
 **Scenario:** Detect emergency, track location, send alert
 
 **Tool Calls:**
+
 ```json
 [
   {
@@ -560,6 +609,7 @@ Respond to: Tell me about your interests
 **Scenario:** Submit, validate, approve learning content
 
 1. **Submit Request:**
+
 ```json
 {
   "tool": "submit_learning_request",
@@ -573,6 +623,7 @@ Respond to: Tell me about your interests
 2. **Human Review:** User reviews request
 
 3. **Approval:**
+
 ```json
 {
   "tool": "approve_learning_request",
@@ -583,6 +634,7 @@ Respond to: Tell me about your interests
 ```
 
 4. **Verification:**
+
 ```json
 {
   "resource": "learning://requests"
@@ -594,6 +646,7 @@ Respond to: Tell me about your interests
 **Scenario:** List, enable, and configure plugins
 
 **Tool Calls:**
+
 ```json
 [
   {
@@ -659,21 +712,24 @@ Human-in-the-loop learning:
 ## Best Practices
 
 ### 1. Always Validate Ethics
+
 ```json
 // Before any potentially harmful action
 {"tool": "validate_action", ...}
 ```
 
 ### 2. Categorize Memories Properly
+
 ```json
 // Use appropriate categories
 {
-  "category": "user_preferences",  // Not "general"
+  "category": "user_preferences", // Not "general"
   "content": "Specific preference"
 }
 ```
 
 ### 3. Set Appropriate Importance
+
 ```json
 {
   "importance": 0.9  // High for critical info
@@ -682,6 +738,7 @@ Human-in-the-loop learning:
 ```
 
 ### 4. Use Descriptive Prompts for Images
+
 ```json
 {
   "prompt": "Detailed, specific description with style, lighting, mood",
@@ -690,6 +747,7 @@ Human-in-the-loop learning:
 ```
 
 ### 5. Handle Errors Gracefully
+
 ```json
 // Check for error responses
 {
@@ -703,12 +761,14 @@ Human-in-the-loop learning:
 ## Testing Examples
 
 ### Test 1: Basic Tool Functionality
+
 ```bash
 # Use MCP Inspector
 npx @modelcontextprotocol/inspector python -m src.app.core.mcp_server
 ```
 
 ### Test 2: Resource Access
+
 ```python
 # Access all resources
 for uri in ["persona://state", "memory://knowledge", "learning://requests", "plugins://list"]:
@@ -717,6 +777,7 @@ for uri in ["persona://state", "memory://knowledge", "learning://requests", "plu
 ```
 
 ### Test 3: Prompt Generation
+
 ```python
 # Test all prompts
 prompts = ["analyze_with_ethics", "persona_interaction", "memory_guided_response"]
@@ -732,6 +793,7 @@ for prompt in prompts:
 These examples demonstrate the comprehensive capabilities of Project-AI's MCP server. Combine tools, resources, and prompts to create powerful AI-assisted workflows with ethical oversight and persistent memory.
 
 For more information:
+
 - Full documentation: [MCP_CONFIGURATION.md](MCP_CONFIGURATION.md)
 - Quick start: [MCP_QUICKSTART.md](MCP_QUICKSTART.md)
 - API reference: [README.md](../README.md)

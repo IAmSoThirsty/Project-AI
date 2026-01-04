@@ -171,7 +171,7 @@ class IntentDetector:
                 ("tfidf", TfidfVectorizer()),
                 ("clf", SGDClassifier(loss="modified_huber")),
             ],
-            memory=None
+            memory=None,
         )
         self.trained = False
 

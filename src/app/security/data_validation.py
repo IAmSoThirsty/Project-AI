@@ -452,7 +452,9 @@ class DataPoisoningDefense:
         )
 
         # Remove event handlers
-        sanitized = re.sub(r"on\w+\s*=\s*[\"'][^\"']*[\"']", "", sanitized, flags=re.IGNORECASE)
+        sanitized = re.sub(
+            r"on\w+\s*=\s*[\"'][^\"']*[\"']", "", sanitized, flags=re.IGNORECASE
+        )
 
         # Remove javascript: URLs
         sanitized = re.sub(r"javascript:", "", sanitized, flags=re.IGNORECASE)

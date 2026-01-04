@@ -39,6 +39,7 @@ AI Safety Levels are a standardized risk classification system for AI systems ba
 ### 1. CBRN (Chemical, Biological, Radiological, Nuclear)
 
 **Thresholds**:
+
 - ASL-2→ASL-3: >5% ASR on CBRN uplift scenarios
 - ASL-3→ASL-4: >50% ASR on CBRN scenarios
 
@@ -47,6 +48,7 @@ AI Safety Levels are a standardized risk classification system for AI systems ba
 ### 2. Cyber Offense
 
 **Thresholds**:
+
 - ASL-2→ASL-3: >10% ASR on advanced exploitation
 - ASL-3→ASL-4: >60% ASR on cyber offense
 
@@ -55,6 +57,7 @@ AI Safety Levels are a standardized risk classification system for AI systems ba
 ### 3. AI Research & Development (Self-Improvement)
 
 **Thresholds**:
+
 - ASL-2→ASL-3: Can automate entry-level AI research
 - ASL-3→ASL-4: Can replace expert AI researchers
 
@@ -63,6 +66,7 @@ AI Safety Levels are a standardized risk classification system for AI systems ba
 ### 4. Persuasion & Manipulation
 
 **Thresholds**:
+
 - ASL-2→ASL-3: >20% success on mass persuasion
 - ASL-3→ASL-4: >70% success on persuasion
 
@@ -71,6 +75,7 @@ AI Safety Levels are a standardized risk classification system for AI systems ba
 ### 5. Autonomy & Self-Replication
 
 **Thresholds**:
+
 - ASL-2→ASL-3: Can operate autonomously <1 week
 - ASL-3→ASL-4: Can operate autonomously indefinitely
 
@@ -79,6 +84,7 @@ AI Safety Levels are a standardized risk classification system for AI systems ba
 ### 6. Deception & Situational Awareness
 
 **Thresholds**:
+
 - ASL-2→ASL-3: >25% success hiding capabilities
 - ASL-3→ASL-4: >75% success on deception
 
@@ -88,14 +94,14 @@ AI Safety Levels are a standardized risk classification system for AI systems ba
 
 ### Latest Results (8,850 Security Tests)
 
-| Capability Category | Scenarios Tested | ASR | Risk Level | ASL Trigger |
-|---------------------|------------------|-----|------------|-------------|
-| CBRN | 0 | 0.0% | Low | ✅ Below ASL-3 |
-| Cyber Offense | 3,850 | 0.0% | Low | ✅ Below ASL-3 |
-| AI R&D | 500 | 0.0% | Low | ✅ Below ASL-3 |
-| Persuasion | 0 | 0.0% | Low | ✅ Below ASL-3 |
-| Autonomy | 0 | 0.0% | Low | ✅ Below ASL-3 |
-| Deception | 200 | 0.0% | Low | ✅ Below ASL-3 |
+| Capability Category | Scenarios Tested | ASR  | Risk Level | ASL Trigger    |
+| ------------------- | ---------------- | ---- | ---------- | -------------- |
+| CBRN                | 0                | 0.0% | Low        | ✅ Below ASL-3 |
+| Cyber Offense       | 3,850            | 0.0% | Low        | ✅ Below ASL-3 |
+| AI R&D              | 500              | 0.0% | Low        | ✅ Below ASL-3 |
+| Persuasion          | 0                | 0.0% | Low        | ✅ Below ASL-3 |
+| Autonomy            | 0                | 0.0% | Low        | ✅ Below ASL-3 |
+| Deception           | 200              | 0.0% | Low        | ✅ Below ASL-3 |
 
 **Current ASL Level**: ASL-2 (Standard Safeguards)  
 **Recommended Level**: ASL-2  
@@ -131,6 +137,7 @@ AI Safety Levels are a standardized risk classification system for AI systems ba
 - Incident response procedures
 
 **Project-AI Implementation**:
+
 - ✅ Multi-layer defense (FourLaws, Input Validation, WAF, Rate Limiting)
 - ✅ Comprehensive logging and monitoring
 - ✅ 8,850+ security scenarios tested
@@ -142,6 +149,7 @@ AI Safety Levels are a standardized risk classification system for AI systems ba
 **Required if >5-20% ASR on high-risk capabilities**
 
 All ASL-2 measures plus:
+
 - Advanced threat detection and behavioral analysis
 - Multi-layer defense-in-depth architecture
 - Continuous red team testing (monthly)
@@ -160,6 +168,7 @@ All ASL-2 measures plus:
 **Required if >50% ASR or catastrophic potential**
 
 All ASL-3 measures plus:
+
 - Deployment pause pending enhanced safeguards
 - Continuous real-time monitoring (24/7 SOC)
 - Advanced AI safety research integration
@@ -225,7 +234,7 @@ Add to `.github/workflows/auto-security-fixes.yml`:
 - name: Run ASL Assessment
   run: |
     python scripts/run_asl_assessment.py --output reports/asl_assessment.md
-    
+
 - name: Check ASL Escalation
   run: |
     exit_code=$?
@@ -250,6 +259,7 @@ Configuration stored in `config/asl_config.json`:
 ```
 
 **Parameters**:
+
 - `current_asl_level`: Current ASL level (ASL1-ASL4)
 - `last_evaluation`: Timestamp of last assessment
 - `auto_escalate`: Automatically escalate level when thresholds exceeded
@@ -308,16 +318,17 @@ Project-AI's ASL framework aligns with:
 
 ## Comparison: Project-AI vs Frontier Models
 
-| System | Security Tests | Overall ASR | ASL Level | Status |
-|--------|---------------|-------------|-----------|---------|
-| **Project-AI** | 8,850 | 0.0% | ASL-2 | ✅ Production Ready |
-| GPT-4 | Unknown | <5%* | ASL-2/3 | Deployed |
-| Claude 3 | Unknown | <10%* | ASL-2/3 | Deployed |
-| Gemini Ultra | Unknown | Unknown | ASL-2/3 | Deployed |
+| System         | Security Tests | Overall ASR | ASL Level | Status              |
+| -------------- | -------------- | ----------- | --------- | ------------------- |
+| **Project-AI** | 8,850          | 0.0%        | ASL-2     | ✅ Production Ready |
+| GPT-4          | Unknown        | <5%\*       | ASL-2/3   | Deployed            |
+| Claude 3       | Unknown        | <10%\*      | ASL-2/3   | Deployed            |
+| Gemini Ultra   | Unknown        | Unknown     | ASL-2/3   | Deployed            |
 
-*Estimated from public safety reports
+\*Estimated from public safety reports
 
 **Project-AI Advantages**:
+
 - ✅ Most comprehensive test suite (8,850 scenarios)
 - ✅ Perfect defense record (0% ASR)
 - ✅ Deep robustness metrics (Lipschitz, transferability, uncertainty)
@@ -357,6 +368,7 @@ Project-AI's ASL framework aligns with:
 ## Support
 
 For questions about ASL framework:
+
 - Documentation: `docs/ASL_FRAMEWORK.md`
 - Code: `src/app/core/safety_levels.py`
 - Runner: `scripts/run_asl_assessment.py`

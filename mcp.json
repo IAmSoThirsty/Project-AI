@@ -2,10 +2,7 @@
   "mcpServers": {
     "project-ai": {
       "command": "python",
-      "args": [
-        "-m",
-        "src.app.core.mcp_server"
-      ],
+      "args": ["-m", "src.app.core.mcp_server"],
       "env": {
         "PYTHONPATH": ".",
         "OPENAI_API_KEY": "${OPENAI_API_KEY}",

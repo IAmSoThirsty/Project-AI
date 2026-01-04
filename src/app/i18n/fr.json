@@ -1,6 +1,32 @@
 {
   "name": "Français",
   "programming_languages": [
-    "Python", "JavaScript", "Java", "C++", "C#", "Go", "Rust", "Ruby", "PHP", "Swift", "Kotlin", "TypeScript", "Scala", "Haskell", "Perl", "Lua", "R", "Elixir", "Clojure", "Objective-C", "Dart", "Shell", "PowerShell", "MATLAB", "Assembly", "Fortran", "COBOL"
+    "Python",
+    "JavaScript",
+    "Java",
+    "C++",
+    "C#",
+    "Go",
+    "Rust",
+    "Ruby",
+    "PHP",
+    "Swift",
+    "Kotlin",
+    "TypeScript",
+    "Scala",
+    "Haskell",
+    "Perl",
+    "Lua",
+    "R",
+    "Elixir",
+    "Clojure",
+    "Objective-C",
+    "Dart",
+    "Shell",
+    "PowerShell",
+    "MATLAB",
+    "Assembly",
+    "Fortran",
+    "COBOL"
   ]
 }

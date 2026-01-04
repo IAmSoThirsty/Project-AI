@@ -5,6 +5,7 @@ random CI checks: pytest, lint (ruff), and static analysis (ruff/pyflakes).
 It attempts to run with minimal external dependencies and writes a report to
 `data/ci_reports/` with a correlation id and timestamp.
 """
+
 from __future__ import annotations
 
 import json
@@ -42,13 +43,21 @@ class CICheckerAgent:
         # run pytest -q (only tests directory)
         try:
             res = subprocess.run(["pytest", "-q"], capture_output=True, text=True)
-            report["results"]["pytest"] = {"rc": res.returncode, "output": res.stdout + res.stderr}
+            report["results"]["pytest"] = {
+                "rc": res.returncode,
+                "output": res.stdout + res.stderr,
+            }
         except Exception as e:
             report["results"]["pytest"] = {"rc": -1, "error": str(e)}
         # run ruff (lint)
         try:
-            res = subprocess.run(["ruff", "check", "src", "tests"], capture_output=True, text=True)
-            report["results"]["ruff"] = {"rc": res.returncode, "output": res.stdout + res.stderr}
+            res = subprocess.run(
+                ["ruff", "check", "src", "tests"], capture_output=True, text=True
+            )
+            report["results"]["ruff"] = {
+                "rc": res.returncode,
+                "output": res.stdout + res.stderr,
+            }
         except Exception as e:
             report["results"]["ruff"] = {"rc": -1, "error": str(e)}
         # write report

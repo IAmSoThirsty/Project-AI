@@ -9,7 +9,7 @@ This document describes the comprehensive robustness metrics system that provide
 The robustness metrics framework aligns with:
 
 - **Anthropic ASL** (AI Safety Levels): Multi-attempt Attack Surface Rate (ASR)
-- **DeepMind CCL** (Capability Control Levels): Adaptive adversary robustness  
+- **DeepMind CCL** (Capability Control Levels): Adaptive adversary robustness
 - **OpenAI Preparedness Framework**: Effort-based success metrics
 
 ## Key Metrics
@@ -173,7 +173,7 @@ engine.export_metrics(proximity_metrics, analysis, "my_test_suite")
 ### Lipschitz Constant Targets
 
 - **< 0.10**: Excellent stability
-- **0.10 - 0.20**: Good stability  
+- **0.10 - 0.20**: Good stability
 - **0.20 - 0.40**: Acceptable (production threshold)
 - **0.40 - 0.60**: Concerning (high sensitivity)
 - **> 0.60**: Critical (unstable defenses)
@@ -196,16 +196,19 @@ engine.export_metrics(proximity_metrics, analysis, "my_test_suite")
 ## Reports Generated
 
 ### 1. Proximity Metrics JSON
+
 Individual scenario metrics with detailed proximity analysis.
 
 **Location**: `data/robustness_metrics/{suite}_proximity_metrics_{timestamp}.json`
 
 ### 2. Robustness Analysis JSON
+
 Aggregated suite-level analysis with statistical summaries.
 
 **Location**: `data/robustness_metrics/{suite}_robustness_analysis_{timestamp}.json`
 
 ### 3. Comparative Report (Markdown)
+
 Human-readable report comparing all suites against frontier standards.
 
 **Location**: `data/robustness_metrics/comparative_robustness_report_{timestamp}.md`

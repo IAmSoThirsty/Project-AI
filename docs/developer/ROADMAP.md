@@ -4,11 +4,11 @@ This living document highlights the next areas of focus for Project-AI and captu
 
 ## Immediate Priorities
 
-| Area | Notes |
-| --- | --- |
-| Plugin Expansion | Build a marketplace for third-party plugins, document hook contracts, and add CI tests that ensure each plugin respects the Four Laws before enabling it. |
-| Continuous Learning | Surface historical `LearningReport` entries in the persona UI, enable filtering by topic, and add CLI access to pull reports for auditing. |
-| Web Stack | Flesh out the Flask backend with authenticated endpoints and replace the static frontend placeholder with the planned React/Vite UI. Add Playwright or Cypress tests for automated coverage. |
+| Area                | Notes                                                                                                                                                                                        |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Plugin Expansion    | Build a marketplace for third-party plugins, document hook contracts, and add CI tests that ensure each plugin respects the Four Laws before enabling it.                                    |
+| Continuous Learning | Surface historical `LearningReport` entries in the persona UI, enable filtering by topic, and add CLI access to pull reports for auditing.                                                   |
+| Web Stack           | Flesh out the Flask backend with authenticated endpoints and replace the static frontend placeholder with the planned React/Vite UI. Add Playwright or Cypress tests for automated coverage. |
 
 ## Secondary Goals
 

@@ -5,6 +5,7 @@ This document describes the automated workflows configured for the Project-AI re
 ## Overview
 
 The automation system consists of four main components:
+
 1. **Pull Request Automation** - Auto-review and merge safe PRs
 2. **Security Alert Automation** - Monitor and fix security vulnerabilities
 3. **Dependency Management** - Automated dependency updates via Dependabot
@@ -15,10 +16,12 @@ The automation system consists of four main components:
 ### Auto PR Handler (`auto-pr-handler.yml`)
 
 **Triggers:**
+
 - When PRs are opened, synchronized, or reopened
 - Targets PRs from `dependabot[bot]` or with `auto-merge` label
 
 **What it does:**
+
 1. **Auto Review**:
    - Runs linting checks with `ruff`
    - Executes test suite with `pytest`
@@ -32,6 +35,7 @@ The automation system consists of four main components:
    - Comments on major updates to alert maintainers
 
 **Usage:**
+
 ```bash
 # To enable auto-merge on your PR (use with caution):
 gh pr edit <PR-NUMBER> --add-label "auto-merge"
@@ -45,11 +49,13 @@ gh run list --workflow=auto-pr-handler.yml
 ### Auto Security Fixes (`auto-security-fixes.yml`)
 
 **Triggers:**
+
 - Daily at 2 AM UTC (scheduled)
 - Manual dispatch via GitHub Actions UI
 - Repository dispatch events
 
 **What it does:**
+
 1. **Dependency Scanning**:
    - Runs `pip-audit` to check for known vulnerabilities
    - Runs `safety` for additional vulnerability detection
@@ -71,11 +77,13 @@ gh run list --workflow=auto-pr-handler.yml
    - Links to specific alert details
 
 **Reports Generated:**
+
 - `pip-audit-report.json` - Detailed vulnerability data
 - `safety-report.json` - Safety check results
 - Workflow artifacts available for 90 days
 
 **Usage:**
+
 ```bash
 # Manually trigger security scan:
 gh workflow run auto-security-fixes.yml
@@ -90,10 +98,12 @@ gh run download <RUN-ID> -n security-reports
 ### Auto Bandit Fixes (`auto-bandit-fixes.yml`)
 
 **Triggers:**
+
 - Weekly on Mondays at 3 AM UTC
 - Manual dispatch via GitHub Actions UI
 
 **What it does:**
+
 1. **Static Analysis**:
    - Scans Python code with Bandit security linter
    - Categorizes findings by severity (High/Medium/Low)
@@ -110,12 +120,14 @@ gh run download <RUN-ID> -n security-reports
    - Markdown summary with categorized findings
 
 **Reports Generated:**
+
 - `bandit-report.json` - Complete findings
 - `bandit-report.sarif` - SARIF format for Security tab
 - `bandit-summary.txt` - Quick stats
 - `bandit-details.md` - Formatted detailed report
 
 **Usage:**
+
 ```bash
 # Manually trigger Bandit scan:
 gh workflow run auto-bandit-fixes.yml
@@ -132,6 +144,7 @@ gh browse --security
 ### Dependabot Configuration (`dependabot.yml`)
 
 **Package Ecosystems Monitored:**
+
 1. **Python (pip)** - Daily updates
    - Directory: `/`
    - Max open PRs: 10
@@ -160,10 +173,12 @@ gh browse --security
 All security updates are grouped together for efficient processing.
 
 **Commit Message Convention:**
+
 - Prefix: `⬆️`
 - Includes scope for easier changelog generation
 
 **Usage:**
+
 ```bash
 # View Dependabot PRs:
 gh pr list --author "dependabot[bot]"
@@ -175,16 +190,19 @@ gh pr list --author "dependabot[bot]"
 ## Existing Security Workflows
 
 ### CodeQL Analysis (`codeql.yml`)
+
 - **Triggers**: Push/PR to main, cerberus-integration
 - **Language**: Python
 - **Action**: Uploads results to GitHub Security tab
 
 ### Bandit Security Scan (`bandit.yml`)
+
 - **Triggers**: Push to main, PRs, weekly schedule
 - **Action**: Scans for Python security issues
 - **Enforcement**: Fails workflow on security findings
 
 ### CI Pipeline (`ci.yml`)
+
 - **Matrix Testing**: Python 3.11 and 3.12
 - **Checks**: Linting, type checking, tests, coverage
 - **Security**: pip-audit, pre-commit hooks
@@ -261,6 +279,7 @@ gh pr list --author "dependabot[bot]"
 ## Permissions
 
 All automated workflows require these GitHub permissions:
+
 - `contents: write` - To create PRs and push fixes
 - `pull-requests: write` - To review and merge PRs
 - `issues: write` - To create tracking issues
@@ -312,11 +331,13 @@ All automated workflows require these GitHub permissions:
 ### Workflows Not Running
 
 **Check:**
+
 - Workflow permissions in repository settings
 - Branch protection rules not blocking auto-merge
 - Required secrets are configured (if any)
 
 **Fix:**
+
 ```bash
 # View workflow status:
 gh workflow view auto-pr-handler.yml
@@ -331,11 +352,13 @@ gh run view <RUN-ID> --log
 ### Auto-Merge Not Working
 
 **Common Issues:**
+
 1. Branch protection requires reviews (expected for major updates)
 2. Status checks not passing
 3. Workflow permissions insufficient
 
 **Check Status:**
+
 ```bash
 # View PR checks:
 gh pr checks <PR-NUMBER>
@@ -347,6 +370,7 @@ gh pr view <PR-NUMBER> --json mergeable,mergeStateStatus
 ### Security Scans Finding Too Many Issues
 
 **Options:**
+
 1. Create `.bandit` config to exclude false positives
 2. Add `# nosec` comments for known safe code
 3. Adjust severity thresholds in workflow files
@@ -355,12 +379,14 @@ gh pr view <PR-NUMBER> --json mergeable,mergeStateStatus
 ### Dependabot PRs Not Created
 
 **Check:**
+
 1. `dependabot.yml` syntax is valid
 2. Package ecosystem is supported
 3. Open PR limit not reached
 4. Dependencies are actually outdated
 
 **Validate Config:**
+
 ```bash
 # Validate YAML syntax:
 python3 -c "import yaml; yaml.safe_load(open('.github/dependabot.yml'))"
@@ -374,16 +400,19 @@ gh api repos/:owner/:repo/dependabot/alerts
 ### Regular Tasks
 
 **Weekly:**
+
 - Review auto-created security issues
 - Check Dependabot PR merge success rate
 - Verify workflow execution times
 
 **Monthly:**
+
 - Review GitHub Actions usage and costs
 - Update workflow configurations if needed
 - Clean up old workflow artifacts
 
 **Quarterly:**
+
 - Audit security scan findings trends
 - Update documentation
 - Review and update excluded patterns
@@ -391,6 +420,7 @@ gh api repos/:owner/:repo/dependabot/alerts
 ### Updating Workflows
 
 When modifying workflows:
+
 1. Test changes in a fork first
 2. Validate YAML syntax
 3. Check permissions are adequate
@@ -400,6 +430,7 @@ When modifying workflows:
 ## Integration with Development Process
 
 ### Pre-Commit
+
 ```bash
 # Install pre-commit hooks (recommended):
 pre-commit install
@@ -409,6 +440,7 @@ pre-commit run --all-files
 ```
 
 ### Local Security Scanning
+
 ```bash
 # Run Bandit locally before pushing:
 bandit -r src/ -f screen
@@ -421,7 +453,9 @@ safety check
 ```
 
 ### CI/CD Pipeline
+
 The automated workflows complement the existing CI pipeline:
+
 1. CI runs on every push/PR (fast feedback)
 2. Security scans run on schedule (comprehensive checks)
 3. Dependabot runs daily/weekly (proactive updates)

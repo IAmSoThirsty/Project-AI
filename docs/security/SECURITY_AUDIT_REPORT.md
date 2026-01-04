@@ -43,27 +43,30 @@ FERNET_KEY=Qqyl2vCYY7W4AKuE-DmQLmL7IgXguMis_lFalqlliEc=
 ```
 
 #### Risk Assessment:
+
 - ✅ `.env` file is in `.gitignore` (GOOD)
 - ❌ **BUT** file currently exists in working directory and contains real credentials
 - ❌ Credentials appear to be production/real values, not examples
 - ❌ If accidentally committed, credentials are publicly exposed on GitHub
 
 #### Immediate Actions Required:
+
 1. **URGENT**: Verify if `.env` has been committed to git history
    ```bash
    git log --all --full-history -- .env
    ```
-2. **If committed**: 
+2. **If committed**:
    - Rotate ALL credentials immediately (OpenAI API key, Gmail password, Fernet key)
    - Use BFG Repo-Cleaner to remove from git history
    - Force push cleaned history
-3. **Regardless**: 
+3. **Regardless**:
    - Move to `.env.example` with placeholder values
    - Create new `.env` with rotated credentials
    - Add `.env` to `.gitignore` (already done, verify)
    - Use environment-specific secrets manager in production
 
 #### Estimated Cost of Breach:
+
 - OpenAI API abuse: $1,000+ in unauthorized charges
 - Email account compromise: Phishing attacks, data theft
 - Encryption key exposure: All encrypted data compromised
@@ -80,15 +83,15 @@ FERNET_KEY=Qqyl2vCYY7W4AKuE-DmQLmL7IgXguMis_lFalqlliEc=
 
 #### Vulnerable Files:
 
-| File | Data Type | Encryption | Risk |
-|------|-----------|-----------|------|
-| `users.json` | User accounts, password hashes | ❌ None | HIGH |
-| `emergency_contacts_{user}.json` | Emergency contact emails/phones | ❌ None | HIGH |
-| `security_favorites_{user}.json` | Security resources | ❌ None | MEDIUM |
-| `learning_paths_{user}.json` | Learning history | ❌ None | LOW |
-| `data/access_control.json` | User roles and permissions | ❌ None | HIGH |
-| `data/command_override_config.json` | Override states, password hash | ❌ None | CRITICAL |
-| `data/command_override_audit.log` | Admin actions | ❌ None | MEDIUM |
+| File                                | Data Type                       | Encryption | Risk     |
+| ----------------------------------- | ------------------------------- | ---------- | -------- |
+| `users.json`                        | User accounts, password hashes  | ❌ None    | HIGH     |
+| `emergency_contacts_{user}.json`    | Emergency contact emails/phones | ❌ None    | HIGH     |
+| `security_favorites_{user}.json`    | Security resources              | ❌ None    | MEDIUM   |
+| `learning_paths_{user}.json`        | Learning history                | ❌ None    | LOW      |
+| `data/access_control.json`          | User roles and permissions      | ❌ None    | HIGH     |
+| `data/command_override_config.json` | Override states, password hash  | ❌ None    | CRITICAL |
+| `data/command_override_audit.log`   | Admin actions                   | ❌ None    | MEDIUM   |
 
 #### Evidence from `emergency_alert.py`:
 
@@ -120,11 +123,13 @@ def save_favorite(self, username, repo):
 ```
 
 #### Compliance Violations:
+
 - **GDPR Article 32**: Failure to implement appropriate security measures
 - **CCPA Section 1798.150**: Inadequate protection of personal information
 - **HIPAA** (if health data): Encryption at rest required
 
 #### Remediation:
+
 ```python
 # Recommended pattern (already used in location_tracker.py):
 from cryptography.fernet import Fernet
@@ -132,13 +137,13 @@ from cryptography.fernet import Fernet
 class SecureStorage:
     def __init__(self, encryption_key):
         self.cipher_suite = Fernet(encryption_key)
-    
+
     def save_encrypted(self, filename, data):
         json_data = json.dumps(data)
         encrypted_data = self.cipher_suite.encrypt(json_data.encode())
         with open(filename, "wb") as f:
             f.write(encrypted_data)
-    
+
     def load_encrypted(self, filename):
         with open(filename, "rb") as f:
             encrypted_data = f.read()
@@ -157,6 +162,7 @@ class SecureStorage:
 #### Vulnerable Code Patterns:
 
 **intelligence_engine.py** - No validation on file paths:
+
 ```python
 def load_data(self, file_path: str) -> bool:
     try:
@@ -165,6 +171,7 @@ def load_data(self, file_path: str) -> bool:
 ```
 
 **Exploit Example:**
+
 ```python
 # Attacker could read any file:
 analyzer.load_data("../../../../etc/passwd")
@@ -172,6 +179,7 @@ analyzer.load_data("C:\\Windows\\System32\\config\\SAM")
 ```
 
 **emergency_alert.py** - No email validation:
+
 ```python
 def send_alert(self, username, location_data, message=None):
     # ...
@@ -179,12 +187,14 @@ def send_alert(self, username, location_data, message=None):
 ```
 
 **Exploit Example:**
+
 ```python
 # Email header injection:
 contacts = {"emails": ["victim@example.com\nBcc: attacker@evil.com"]}
 ```
 
 **location_tracker.py** - External API without timeout:
+
 ```python
 def get_location_from_ip(self):
     try:
@@ -203,7 +213,7 @@ def validate_file_path(file_path: str, allowed_dir: str) -> bool:
         # Resolve to absolute path
         abs_path = Path(file_path).resolve()
         allowed_abs = Path(allowed_dir).resolve()
-        
+
         # Check if path is within allowed directory
         return abs_path.is_relative_to(allowed_abs)
     except Exception:
@@ -270,10 +280,10 @@ def atomic_write(filename: str, data: dict, permissions: int = 0o600):
             json.dump(data, f)
             f.flush()
             os.fsync(f.fileno())
-        
+
         # Set restrictive permissions (owner read/write only)
         os.chmod(tmp_path, permissions)
-        
+
         # Atomic rename
         os.replace(tmp_path, filename)
     except Exception:
@@ -325,6 +335,7 @@ response = requests.get(
 **Impact:** DoS attacks, resource exhaustion, API quota abuse
 
 #### Vulnerable Operations:
+
 - `LearningPathManager.generate_path()` - Calls OpenAI API with no rate limit
 - `SecurityResourceManager.get_repo_details()` - Calls GitHub API with no limit
 - `LocationTracker.get_location_from_ip()` - External API with no limit
@@ -342,24 +353,24 @@ class RateLimiter:
         self.max_calls = max_calls
         self.period = period
         self.calls = defaultdict(list)
-    
+
     def __call__(self, func):
         @wraps(func)
         def wrapper(*args, **kwargs):
             now = time.time()
             user = kwargs.get('username', 'anonymous')
-            
+
             # Clean old calls
             self.calls[user] = [t for t in self.calls[user] if now - t < self.period]
-            
+
             # Check limit
             if len(self.calls[user]) >= self.max_calls:
                 raise Exception(f"Rate limit exceeded: {self.max_calls} calls per {self.period}s")
-            
+
             # Record call
             self.calls[user].append(now)
             return func(*args, **kwargs)
-        
+
         return wrapper
 
 # Usage:
@@ -385,6 +396,7 @@ def create_user(self, username, password, persona: str = "friendly", preferences
 ```
 
 **Problems:**
+
 - No minimum length requirement
 - No complexity requirements (uppercase, digits, special chars)
 - No check against common passwords
@@ -399,24 +411,24 @@ def validate_password_strength(password: str) -> tuple[bool, str]:
     """Validate password meets security requirements."""
     if len(password) < 12:
         return False, "Password must be at least 12 characters"
-    
+
     if not re.search(r"[A-Z]", password):
         return False, "Password must contain uppercase letter"
-    
+
     if not re.search(r"[a-z]", password):
         return False, "Password must contain lowercase letter"
-    
+
     if not re.search(r"\d", password):
         return False, "Password must contain digit"
-    
+
     if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
         return False, "Password must contain special character"
-    
+
     # Check against common passwords (load from file)
     common_passwords = ["password", "123456", "qwerty", ...]
     if password.lower() in common_passwords:
         return False, "Password is too common"
-    
+
     return True, "Password is strong"
 ```
 
@@ -439,6 +451,7 @@ except Exception as e:
 ```
 
 #### Remediation:
+
 - Log detailed errors to secure log file
 - Return generic error messages to users
 - Implement structured logging with severity levels
@@ -458,7 +471,7 @@ from flask import Flask
 from flask_talisman import Talisman
 
 app = Flask(__name__)
-Talisman(app, 
+Talisman(app,
     force_https=True,
     strict_transport_security=True,
     content_security_policy={
@@ -475,24 +488,24 @@ Talisman(app,
 
 ### By Severity:
 
-| Severity | Count | Examples |
-|----------|-------|----------|
-| P0 (Critical) | 1 | Exposed API keys |
-| P1 (High) | 4 | Plaintext storage, no input validation, insecure file ops, no encryption |
-| P2 (Medium) | 3 | No rate limiting, weak passwords, no HTTPS enforcement |
-| P3 (Low) | 2 | Verbose errors, missing security headers |
-| **Total** | **10** | |
+| Severity      | Count  | Examples                                                                 |
+| ------------- | ------ | ------------------------------------------------------------------------ |
+| P0 (Critical) | 1      | Exposed API keys                                                         |
+| P1 (High)     | 4      | Plaintext storage, no input validation, insecure file ops, no encryption |
+| P2 (Medium)   | 3      | No rate limiting, weak passwords, no HTTPS enforcement                   |
+| P3 (Low)      | 2      | Verbose errors, missing security headers                                 |
+| **Total**     | **10** |                                                                          |
 
 ### By Category:
 
-| Category | Issues | Priority |
-|----------|--------|----------|
-| **Credential Management** | 2 | P0, P2 |
-| **Data Protection** | 3 | P1, P1, P1 |
-| **Input Validation** | 2 | P1, P2 |
-| **Access Control** | 1 | P2 |
-| **Error Handling** | 1 | P3 |
-| **Network Security** | 1 | P3 |
+| Category                  | Issues | Priority   |
+| ------------------------- | ------ | ---------- |
+| **Credential Management** | 2      | P0, P2     |
+| **Data Protection**       | 3      | P1, P1, P1 |
+| **Input Validation**      | 2      | P1, P2     |
+| **Access Control**        | 1      | P2         |
+| **Error Handling**        | 1      | P3         |
+| **Network Security**      | 1      | P3         |
 
 ---
 
@@ -500,29 +513,29 @@ Talisman(app,
 
 ### OWASP Top 10 (2021):
 
-| Risk | Status | Findings |
-|------|--------|----------|
-| A01:2021 – Broken Access Control | ⚠️ VULNERABLE | No file permissions, predictable filenames |
-| A02:2021 – Cryptographic Failures | ❌ CRITICAL | Plaintext storage, exposed keys |
-| A03:2021 – Injection | ⚠️ VULNERABLE | No input sanitization |
-| A04:2021 – Insecure Design | ⚠️ PARTIAL | Some security patterns missing |
-| A05:2021 – Security Misconfiguration | ❌ CRITICAL | Exposed credentials |
-| A06:2021 – Vulnerable Components | ✅ OK | Dependencies current |
-| A07:2021 – Authentication Failures | ⚠️ VULNERABLE | Weak password policy |
-| A08:2021 – Software/Data Integrity | ⚠️ VULNERABLE | No atomic writes |
-| A09:2021 – Security Logging | ⚠️ PARTIAL | Logs exist but verbose |
-| A10:2021 – Server-Side Request Forgery | ✅ OK | No SSRF vectors found |
+| Risk                                   | Status        | Findings                                   |
+| -------------------------------------- | ------------- | ------------------------------------------ |
+| A01:2021 – Broken Access Control       | ⚠️ VULNERABLE | No file permissions, predictable filenames |
+| A02:2021 – Cryptographic Failures      | ❌ CRITICAL   | Plaintext storage, exposed keys            |
+| A03:2021 – Injection                   | ⚠️ VULNERABLE | No input sanitization                      |
+| A04:2021 – Insecure Design             | ⚠️ PARTIAL    | Some security patterns missing             |
+| A05:2021 – Security Misconfiguration   | ❌ CRITICAL   | Exposed credentials                        |
+| A06:2021 – Vulnerable Components       | ✅ OK         | Dependencies current                       |
+| A07:2021 – Authentication Failures     | ⚠️ VULNERABLE | Weak password policy                       |
+| A08:2021 – Software/Data Integrity     | ⚠️ VULNERABLE | No atomic writes                           |
+| A09:2021 – Security Logging            | ⚠️ PARTIAL    | Logs exist but verbose                     |
+| A10:2021 – Server-Side Request Forgery | ✅ OK         | No SSRF vectors found                      |
 
 **Overall OWASP Compliance:** **40%** ❌
 
 ### Regulatory Compliance:
 
-| Regulation | Status | Gaps |
-|------------|--------|------|
-| **GDPR** | ❌ NON-COMPLIANT | No encryption at rest, no data retention policy |
-| **CCPA** | ❌ NON-COMPLIANT | Inadequate data protection |
-| **SOC 2** | ❌ NON-COMPLIANT | Missing access controls, logging |
-| **PCI DSS** | ❌ NON-COMPLIANT | Inadequate encryption, key management |
+| Regulation  | Status           | Gaps                                            |
+| ----------- | ---------------- | ----------------------------------------------- |
+| **GDPR**    | ❌ NON-COMPLIANT | No encryption at rest, no data retention policy |
+| **CCPA**    | ❌ NON-COMPLIANT | Inadequate data protection                      |
+| **SOC 2**   | ❌ NON-COMPLIANT | Missing access controls, logging                |
+| **PCI DSS** | ❌ NON-COMPLIANT | Inadequate encryption, key management           |
 
 ---
 
@@ -539,6 +552,7 @@ Talisman(app,
    - Update `.env.example` with placeholders
 
 2. ✅ **Verify `.env` not in git history**
+
    ```bash
    git log --all --full-history -- .env
    ```
@@ -767,16 +781,19 @@ pip list --outdated
 ## 📚 REFERENCES
 
 ### Security Standards:
+
 - OWASP Top 10: https://owasp.org/Top10/
 - CWE Top 25: https://cwe.mitre.org/top25/
 - NIST Cybersecurity Framework: https://www.nist.gov/cyberframework
 
 ### Python Security:
+
 - Python Security Best Practices: https://python.readthedocs.io/en/stable/library/security_warnings.html
 - Bandit Documentation: https://bandit.readthedocs.io/
 - OWASP Python Security Project: https://owasp.org/www-project-python-security/
 
 ### Compliance:
+
 - GDPR: https://gdpr-info.eu/
 - CCPA: https://oag.ca.gov/privacy/ccpa
 - SOC 2: https://www.aicpa.org/interestareas/frc/assuranceadvisoryservices/aicpasoc2report.html
@@ -790,6 +807,7 @@ pip list --outdated
 **Review Frequency:** Quarterly
 
 **Risk Assessment:**
+
 - **Before Remediation:** 8.7/10 (CRITICAL RISK)
 - **After Phase 1:** 5.5/10 (MEDIUM RISK - estimated)
 - **After Phase 2:** 3.0/10 (LOW RISK - estimated)
@@ -805,7 +823,7 @@ This audit has identified critical security vulnerabilities that require immedia
 
 ---
 
-*This report is confidential and should be shared only with authorized personnel.*
+_This report is confidential and should be shared only with authorized personnel._
 
 ---
 

@@ -46,11 +46,11 @@ if issues:
     print("Security issues detected:")
     for issue in issues:
         print(f"  - {issue}")
-    
+
     # Apply fixes
     hardening.harden_sys_path()
     hardening.secure_directory_structure()
-    
+
     print("\nFixes applied. Re-running validation...")
     is_valid, issues = hardening.validate_environment()
 
@@ -70,6 +70,7 @@ with open("security_report.json", "w") as f:
 ```
 
 Run the setup:
+
 ```bash
 python scripts/setup_environment.py
 ```
@@ -77,6 +78,7 @@ python scripts/setup_environment.py
 ### 1.3 Configuration
 
 Create `.env` file:
+
 ```bash
 # Security
 FERNET_KEY=<generate using: python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())">
@@ -129,6 +131,7 @@ open htmlcov/index.html  # Or your browser
 ```
 
 Expected output:
+
 ```
 ======================== 61 passed, 1 skipped in 1.0s =========================
 ```
@@ -149,21 +152,21 @@ from app.security import (
 
 def test_full_security_stack():
     """Test complete security stack integration."""
-    
+
     # 1. Environment
     hardening = EnvironmentHardening()
     assert hardening.validate_environment()[0]
-    
+
     # 2. Data parsing
     parser = SecureDataParser()
     result = parser.parse_json('{"test": "data"}')
     assert result.validated
-    
+
     # 3. Database
     db = SecureDatabaseManager(":memory:")
     user_id = db.insert_user("testuser", "hash")
     assert user_id > 0
-    
+
     # 4. Monitoring
     monitor = SecurityMonitor()
     monitor.log_security_event("test", "low", "test", "Test event")
@@ -211,24 +214,17 @@ Create IAM role with minimal permissions (PoLP):
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": [
-        "s3:GetObject",
-        "s3:PutObject"
-      ],
+      "Action": ["s3:GetObject", "s3:PutObject"],
       "Resource": "arn:aws:s3:::project-ai-data/*"
     },
     {
       "Effect": "Allow",
-      "Action": [
-        "secretsmanager:GetSecretValue"
-      ],
+      "Action": ["secretsmanager:GetSecretValue"],
       "Resource": "arn:aws:secretsmanager:us-east-1:*:secret:project-ai-*"
     },
     {
       "Effect": "Allow",
-      "Action": [
-        "cloudwatch:PutMetricData"
-      ],
+      "Action": ["cloudwatch:PutMetricData"],
       "Resource": "*",
       "Condition": {
         "StringEquals": {
@@ -238,9 +234,7 @@ Create IAM role with minimal permissions (PoLP):
     },
     {
       "Effect": "Allow",
-      "Action": [
-        "sns:Publish"
-      ],
+      "Action": ["sns:Publish"],
       "Resource": "arn:aws:sns:us-east-1:*:security-alerts"
     }
   ]
@@ -248,6 +242,7 @@ Create IAM role with minimal permissions (PoLP):
 ```
 
 Create role:
+
 ```bash
 aws iam create-role \
   --role-name ProjectAI-EC2-Role \
@@ -277,6 +272,7 @@ aws secretsmanager rotate-secret \
 ```
 
 secrets.json:
+
 ```json
 {
   "fernet_key": "...",
@@ -340,6 +336,7 @@ aws cloudwatch put-dashboard \
 ```
 
 cloudwatch-dashboard.json:
+
 ```json
 {
   "widgets": [
@@ -412,6 +409,7 @@ aws ec2 run-instances \
 ```
 
 user-data.sh:
+
 ```bash
 #!/bin/bash
 set -e
@@ -452,6 +450,7 @@ systemctl start projectai
 ### 4.2 Docker Deployment (Alternative)
 
 Dockerfile:
+
 ```dockerfile
 FROM python:3.12-slim
 
@@ -482,6 +481,7 @@ CMD ["python", "-m", "app.main"]
 ```
 
 Build and deploy:
+
 ```bash
 # Build
 docker build -t project-ai:latest .
@@ -501,6 +501,7 @@ docker run -d \
 ### 4.3 Kubernetes Deployment (Optional)
 
 deployment.yaml:
+
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -522,43 +523,43 @@ spec:
         runAsUser: 1000
         fsGroup: 1000
       containers:
-      - name: project-ai
-        image: project-ai:latest
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          capabilities:
-            drop:
-            - ALL
-        env:
-        - name: AWS_REGION
-          value: us-east-1
-        volumeMounts:
-        - name: data
-          mountPath: /app/data
-        - name: tmp
-          mountPath: /tmp
-        resources:
-          limits:
-            memory: "2Gi"
-            cpu: "1000m"
-          requests:
-            memory: "1Gi"
-            cpu: "500m"
-        livenessProbe:
-          exec:
-            command:
-            - python
-            - -c
-            - "from app.security import EnvironmentHardening; EnvironmentHardening().validate_environment()"
-          initialDelaySeconds: 30
-          periodSeconds: 60
+        - name: project-ai
+          image: project-ai:latest
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: AWS_REGION
+              value: us-east-1
+          volumeMounts:
+            - name: data
+              mountPath: /app/data
+            - name: tmp
+              mountPath: /tmp
+          resources:
+            limits:
+              memory: "2Gi"
+              cpu: "1000m"
+            requests:
+              memory: "1Gi"
+              cpu: "500m"
+          livenessProbe:
+            exec:
+              command:
+                - python
+                - -c
+                - "from app.security import EnvironmentHardening; EnvironmentHardening().validate_environment()"
+            initialDelaySeconds: 30
+            periodSeconds: 60
       volumes:
-      - name: data
-        persistentVolumeClaim:
-          claimName: project-ai-data
-      - name: tmp
-        emptyDir: {}
+        - name: data
+          persistentVolumeClaim:
+            claimName: project-ai-data
+        - name: tmp
+          emptyDir: {}
 ```
 
 ---
@@ -600,6 +601,7 @@ EOF
 ### 5.2 CloudWatch Verification
 
 Check CloudWatch console:
+
 ```bash
 # View metrics
 aws cloudwatch get-metric-statistics \
@@ -667,11 +669,13 @@ else:
 ### 6.1 Daily Tasks
 
 **Automated Monitoring** (via CloudWatch/SNS):
+
 - Check security event dashboard
 - Review critical/high severity alerts
 - Verify backup completion
 
 **Manual Checks**:
+
 ```bash
 # Check application health
 curl https://api.example.com/health
@@ -683,6 +687,7 @@ curl https://api.example.com/health
 ### 6.2 Weekly Tasks
 
 **Security Log Review**:
+
 ```python
 # scripts/weekly_review.py
 from app.security import SecurityMonitor
@@ -712,6 +717,7 @@ if anomalies:
 ```
 
 **Database Audit**:
+
 ```python
 # scripts/audit_database.py
 from app.security import SecureDatabaseManager
@@ -737,6 +743,7 @@ for action, count in sorted(actions.items(), key=lambda x: x[1], reverse=True):
 ### 6.3 Monthly Tasks
 
 - **Dependency Updates**: Review and update dependencies
+
 ```bash
 pip list --outdated
 pip install --upgrade package-name
@@ -744,6 +751,7 @@ pytest  # Re-run tests
 ```
 
 - **Threat Signature Updates**: Add new threat indicators
+
 ```python
 from app.security import SecurityMonitor
 
@@ -757,6 +765,7 @@ monitor.add_threat_signature(
 ```
 
 - **Secret Rotation**: Rotate sensitive credentials
+
 ```bash
 # Rotate secrets
 aws secretsmanager rotate-secret --secret-id project-ai-secrets
@@ -768,6 +777,7 @@ systemctl reload projectai
 ### 6.4 Quarterly Tasks
 
 - **IAM Permission Review**: Audit and minimize permissions
+
 ```python
 from app.security import AWSSecurityManager
 
@@ -780,6 +790,7 @@ for policy in audit['attached_policies']:
 ```
 
 - **Penetration Testing**: Run comprehensive security tests
+
 ```bash
 # Full test suite
 pytest tests/test_security_*.py -v
@@ -831,14 +842,14 @@ for anomaly in anomalies:
             e for e in monitor.event_log
             if e.event_type == 'authentication_failure'
         ]
-        
+
         attacker_ips = set()
         for event in recent_events[-20:]:  # Last 20 failures
             if 'ip' in event.metadata:
                 attacker_ips.add(event.metadata['ip'])
-        
+
         print(f"Attacker IPs: {attacker_ips}")
-        
+
         # Block at firewall (manual or automated)
         for ip in attacker_ips:
             print(f"Block IP: {ip}")
@@ -852,6 +863,7 @@ for anomaly in anomalies:
 ### Common Issues
 
 **Issue**: CloudWatch metrics not appearing
+
 ```bash
 # Check IAM permissions
 aws iam simulate-principal-policy \
@@ -863,6 +875,7 @@ grep "CloudWatch" /var/log/projectai.log
 ```
 
 **Issue**: SNS alerts not received
+
 ```bash
 # Check subscription
 aws sns list-subscriptions-by-topic \
@@ -874,6 +887,7 @@ aws sns get-subscription-attributes \
 ```
 
 **Issue**: High false positive rate
+
 ```python
 # Adjust thresholds
 from app.security import SecurityMonitor
@@ -891,6 +905,7 @@ anomalies = monitor.detect_anomalies(threshold=20)  # Was 10
 Following this deployment guide ensures Project-AI is deployed with comprehensive security controls at every phase. Regular monitoring and maintenance are essential to maintaining a strong security posture.
 
 For questions or issues, consult:
+
 - `/docs/SECURITY_FRAMEWORK.md` - Security framework documentation
 - `/tests/test_security_*.py` - Security test examples
 - Internal security team or security@example.com

@@ -3,6 +3,7 @@
 Conservatively deduplicates, annotates and tags continuous learning reports.
 Provides a small API used by CouncilHub and other agents.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -17,7 +18,9 @@ logger = logging.getLogger(__name__)
 class KnowledgeCurator:
     def __init__(self, data_dir: str = "data") -> None:
         self.data_dir = data_dir
-        self.curated_path = os.path.join(self.data_dir, "continuous_learning", "curated.json")
+        self.curated_path = os.path.join(
+            self.data_dir, "continuous_learning", "curated.json"
+        )
         os.makedirs(os.path.dirname(self.curated_path), exist_ok=True)
         self.curated: list[dict[str, Any]] = []
         self._load()
@@ -48,7 +51,12 @@ class KnowledgeCurator:
             h = hashlib.sha256(content.encode()).hexdigest()
             if any(entry.get("fingerprint") == h for entry in self.curated):
                 continue
-            entry = {"fingerprint": h, "topic": r.get("topic"), "summary": r.get("neutral_summary"), "raw": r}
+            entry = {
+                "fingerprint": h,
+                "topic": r.get("topic"),
+                "summary": r.get("neutral_summary"),
+                "raw": r,
+            }
             self.curated.append(entry)
             added += 1
         if added:

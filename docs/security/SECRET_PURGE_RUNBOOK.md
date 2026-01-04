@@ -65,4 +65,3 @@ git rev-list --all | git grep -n "OPENAI_API_KEY" || true
 - After force-push, all collaborators must:
   - re-clone, or
   - hard reset to the new history and prune old references.
-

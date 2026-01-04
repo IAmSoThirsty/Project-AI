@@ -3,6 +3,7 @@
 Generates basic pytest stubs for generated modules and runs pytest to validate.
 Conservative: it only creates simple asserts reflecting generated function signatures.
 """
+
 from __future__ import annotations
 
 import logging
@@ -30,7 +31,11 @@ class TestQAGenerator:
         try:
             with open(module_path, encoding="utf-8") as f:
                 src = f.read()
-            funcs = [line.split("def ")[1].split("(")[0] for line in src.splitlines() if line.strip().startswith("def ")]
+            funcs = [
+                line.split("def ")[1].split("(")[0]
+                for line in src.splitlines()
+                if line.strip().startswith("def ")
+            ]
             # Build a test that imports the module and calls functions that accept no required args
             lines = [
                 "import importlib.util",
@@ -48,9 +53,13 @@ class TestQAGenerator:
                 lines.append("try:")
                 lines.append("    sig = inspect.signature(_fn)")
                 lines.append("    # count required params (no defaults)")
-                lines.append("    req = [p for p in sig.parameters.values() if p.default is inspect._empty and p.kind in (p.POSITIONAL_ONLY, p.POSITIONAL_OR_KEYWORD)]")
+                lines.append(
+                    "    req = [p for p in sig.parameters.values() if p.default is inspect._empty and p.kind in (p.POSITIONAL_ONLY, p.POSITIONAL_OR_KEYWORD)]"
+                )
                 lines.append("    if len(req) == 0:")
-                lines.append("        # call the function and assert it does not raise and returns a truthy value")
+                lines.append(
+                    "        # call the function and assert it does not raise and returns a truthy value"
+                )
                 lines.append("        res = _fn()")
                 lines.append("        assert res or res is None or res == True")
                 lines.append("except Exception:")
@@ -68,12 +77,22 @@ class TestQAGenerator:
 
     def run_tests(self, tests_dir: str | None = None) -> dict[str, Any]:
         # Prefer running only the latest generated test directory to avoid unrelated tests
-        run_dir = tests_dir or self._last_test_dir or os.path.join(self.data_dir, "generated_tests")
+        run_dir = (
+            tests_dir
+            or self._last_test_dir
+            or os.path.join(self.data_dir, "generated_tests")
+        )
         if not os.path.exists(run_dir):
             return {"success": True, "ran": 0}
         try:
-            res = subprocess.run(["pytest", run_dir, "-q"], capture_output=True, text=True)
-            return {"success": res.returncode == 0, "output": res.stdout + res.stderr, "returncode": res.returncode}
+            res = subprocess.run(
+                ["pytest", run_dir, "-q"], capture_output=True, text=True
+            )
+            return {
+                "success": res.returncode == 0,
+                "output": res.stdout + res.stderr,
+                "returncode": res.returncode,
+            }
         except Exception as e:
             logger.exception("Failed to run tests: %s", e)
             return {"success": False, "error": str(e)}

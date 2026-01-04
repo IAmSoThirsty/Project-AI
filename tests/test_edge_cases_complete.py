@@ -428,7 +428,9 @@ class TestImageGeneratorEdgeCases:
         """Test checking different backends."""
         assert generator.backend == ImageGenerationBackend.HUGGINGFACE
         # Backend is set at initialization, cannot switch without reinitializing
-        generator2 = ImageGenerator(backend=ImageGenerationBackend.OPENAI, data_dir=generator.data_dir)
+        generator2 = ImageGenerator(
+            backend=ImageGenerationBackend.OPENAI, data_dir=generator.data_dir
+        )
         assert generator2.backend == ImageGenerationBackend.OPENAI
 
     def test_generator_history_empty(self, generator):

@@ -138,7 +138,9 @@ class DashboardMainWindow(QMainWindow):
 
             hub = HubCoordinator()
             status = hub.get_status()
-            self.cerberus_status_label.setText(f"Cerberus status: {status.get('hub_status')}, guardians: {status.get('guardian_count')}")
+            self.cerberus_status_label.setText(
+                f"Cerberus status: {status.get('hub_status')}, guardians: {status.get('guardian_count')}"
+            )
         except Exception as e:
             self.cerberus_status_label.setText(f"Cerberus not available: {e}")
 
@@ -166,7 +168,11 @@ class DashboardMainWindow(QMainWindow):
             # Use codex instance
             codex = adapter.codex
             res = codex.fix_repo(root=os.getcwd())
-            QMessageBox.information(self, "Codex Fix Report", f"Fixed: {len(res.get('fixed', []))}, Errors: {len(res.get('errors', []))}")
+            QMessageBox.information(
+                self,
+                "Codex Fix Report",
+                f"Fixed: {len(res.get('fixed', []))}, Errors: {len(res.get('errors', []))}",
+            )
         except Exception as e:
             QMessageBox.critical(self, "Codex Error", str(e))
 
@@ -222,13 +228,17 @@ class DashboardMainWindow(QMainWindow):
     def grant_integrator(self) -> None:
         ac = get_access_control()
         ac.grant_role("system", "integrator")
-        QMessageBox.information(self, "Access Control", "Granted 'integrator' role to 'system'")
+        QMessageBox.information(
+            self, "Access Control", "Granted 'integrator' role to 'system'"
+        )
 
     def export_audit(self) -> None:
         expert = ExpertAgent(name="admin_expert")
         res = expert.export_and_review(self.codex_adapter.codex)
         if res.get("success"):
-            QMessageBox.information(self, "Export", f"Audit exported to {res.get('out')}")
+            QMessageBox.information(
+                self, "Export", f"Audit exported to {res.get('out')}"
+            )
         else:
             QMessageBox.critical(self, "Export Failed", str(res))
 
@@ -274,7 +284,9 @@ class DashboardMainWindow(QMainWindow):
         # Attempt activation as 'system' (automatic integrator path)
         res = self.codex_adapter.codex.activate_staged(staged_path, requester="system")
         if res.get("success"):
-            QMessageBox.information(self, "Activated", "Staged artifact activated and integrated")
+            QMessageBox.information(
+                self, "Activated", "Staged artifact activated and integrated"
+            )
             self.refresh_waiting()
         else:
             QMessageBox.critical(self, "Activation Failed", str(res))
@@ -309,7 +321,11 @@ class DashboardMainWindow(QMainWindow):
             else:
                 run_res = {"success": False, "detail": qa_res}
 
-            QMessageBox.information(self, "QA Results", f"Dependency: {dep_res.get('success')}, Tests: {run_res.get('success')}")
+            QMessageBox.information(
+                self,
+                "QA Results",
+                f"Dependency: {dep_res.get('success')}, Tests: {run_res.get('success')}",
+            )
         except Exception as e:
             QMessageBox.critical(self, "QA Error", str(e))
 
@@ -319,4 +335,6 @@ class DashboardMainWindow(QMainWindow):
         current = hub._agents_enabled.get("qa_generator", True)
         hub._agents_enabled["qa_generator"] = not current
         hub._agents_enabled["dependency_auditor"] = not current
-        QMessageBox.information(self, "Agents", f"QA/Dependency agents enabled: {not current}")
+        QMessageBox.information(
+            self, "Agents", f"QA/Dependency agents enabled: {not current}"
+        )

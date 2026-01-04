@@ -279,9 +279,7 @@ class SecureDatabaseManager:
 
         details_json = json.dumps(details) if details else None
 
-        self.execute_query(
-            query, (user_id, action, resource, details_json, ip_address)
-        )
+        self.execute_query(query, (user_id, action, resource, details_json, ip_address))
 
     def get_audit_log(
         self, user_id: int | None = None, limit: int = 100

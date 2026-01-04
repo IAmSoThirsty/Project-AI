@@ -2,6 +2,7 @@
 
 Runs generated code in a lightweight subprocess sandbox (best-effort).
 """
+
 from __future__ import annotations
 
 import logging
@@ -17,8 +18,14 @@ class SandboxRunner:
 
     def run_in_sandbox(self, module_path: str, timeout: int = 5) -> dict[str, Any]:
         try:
-            res = subprocess.run(["python", module_path], capture_output=True, text=True, timeout=timeout)
-            return {"success": res.returncode == 0, "stdout": res.stdout, "stderr": res.stderr}
+            res = subprocess.run(
+                ["python", module_path], capture_output=True, text=True, timeout=timeout
+            )
+            return {
+                "success": res.returncode == 0,
+                "stdout": res.stdout,
+                "stderr": res.stderr,
+            }
         except subprocess.TimeoutExpired:
             return {"success": False, "error": "timeout"}
         except Exception as e:

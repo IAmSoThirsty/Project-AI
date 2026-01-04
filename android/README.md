@@ -6,19 +6,23 @@ will fully integrate with the Project-AI computer program and web components.
 ## ✨ Latest Features Available for Integration
 
 The desktop version now includes these powerful new features:
+
 - **Cloud Sync**: Encrypted cross-device synchronization with device management and conflict resolution
 - **Advanced ML Models**: RandomForest, GradientBoosting, and Neural Networks for intent/sentiment/behavior prediction
 - **Plugin System**: Dynamic plugin loading with hooks and lifecycle management
 
 ## Integration Plan
+
 - The Android app will communicate with the main program and web backend via API endpoints and shared data models.
 - All integration points will be documented and stubbed for easy merging into the main branch when development begins.
 
 ## Getting Started
+
 - Place Android Studio project files here.
 - Use this README to track integration requirements and progress.
 
-- 
+-
+
 ## Next Steps
 
 ## Program Functions for Integration
@@ -45,7 +49,7 @@ be considered for integration with the Android APK app:
 - **Dashboard**: setup_ui, open_settings_dialog, setup_chat_tab, setup_tasks_tab, setup_learning_paths_tab, setup_data_analysis_tab, setup_security_tab, setup_location_tab, setup_emergency_tab, send_message, process_message, add_task, update_persona
 - **Login**: create_admin_account, try_login
 - **Settings Dialog**: get_values, load_settings, save_settings
-- **Image Generation UI**: run, _generate_image, _on_image_generated, _on_error, _save_image
+- **Image Generation UI**: run, \_generate_image, \_on_image_generated, \_on_error, \_save_image
 - **User Management UI**: refresh_user_list, on_user_selected, create_user_dialog, delete_user, toggle_approve, reset_password, save_changes
 
 ### Main Entrypoints
@@ -59,6 +63,7 @@ Refer to the respective Python files in `src/app/core/`, `src/app/gui/`, and
 ## Integration Requirements
 
 ### API Endpoints (to be implemented)
+
 - `/api/auth/login` - User authentication
 - `/api/users` - User management (CRUD)
 - `/api/sync` - Cloud sync operations
@@ -71,6 +76,7 @@ Refer to the respective Python files in `src/app/core/`, `src/app/gui/`, and
 - `/api/security` - Security resources
 
 ### Data Models (examples)
+
 - **User**: `{ username, password, email, profile, ... }`
 - **ImageRequest**: `{ prompt, style, width, height, ... }`
 - **LearningPath**: `{ interest, skill_level, steps, ... }`
@@ -78,6 +84,7 @@ Refer to the respective Python files in `src/app/core/`, `src/app/gui/`, and
 - **Alert**: `{ username, location, message, timestamp }`
 
 ### Integration Notes
+
 - Use HTTPS for all API communication.
 - Authentication should use secure tokens (JWT or similar).
 - Data models must match backend Python structures for seamless integration.
@@ -86,13 +93,15 @@ Refer to the respective Python files in `src/app/core/`, `src/app/gui/`, and
 ---
 
 ---
-*This branch is a stub for integration only. No actual integration is performed yet.*
+
+_This branch is a stub for integration only. No actual integration is performed yet._
 
 ## Formatting & Contribution
 
 If you're contributing to the project, please format code before opening a PR.
 
 PowerShell (Python):
+
 ```powershell
 $env:PYTHONPATH='src'
 python -m pip install ruff black isort
@@ -102,12 +111,12 @@ black src tests
 ```
 
 Frontend (if editing web files):
+
 ```powershell
 cd web/frontend
 npm install
 npm run format
 ```
-
 
 ---
 

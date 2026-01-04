@@ -24,70 +24,70 @@ This report provides deep robustness analysis beyond binary pass/fail results, m
 
 ### Proximity Metrics
 
-| Metric | Value | Interpretation |
-|--------|-------|----------------|
-| Avg Perturbation Magnitude | 0.000 | Input change required |
-| Max Perturbation Magnitude | 0.000 | Largest change needed |
-| Near-Miss Count | 0 | Attacks that came close |
-| Near-Miss Rate | 0.0% | % of close calls |
-| Avg Near-Miss Score | 0.528 | Proximity to success |
+| Metric                     | Value | Interpretation          |
+| -------------------------- | ----- | ----------------------- |
+| Avg Perturbation Magnitude | 0.000 | Input change required   |
+| Max Perturbation Magnitude | 0.000 | Largest change needed   |
+| Near-Miss Count            | 0     | Attacks that came close |
+| Near-Miss Rate             | 0.0%  | % of close calls        |
+| Avg Near-Miss Score        | 0.528 | Proximity to success    |
 
 ### Robustness Margins
 
-| Metric | Value | Interpretation |
-|--------|-------|----------------|
-| Min Robustness Margin | 0.449 | Closest call (1.0 = max) |
-| Avg Robustness Margin | 0.472 | Average defense depth |
-| Avg Lipschitz Constant | 0.461 | Input sensitivity |
-| Avg Gradient Norm | 0.000 | Change sensitivity |
+| Metric                 | Value | Interpretation           |
+| ---------------------- | ----- | ------------------------ |
+| Min Robustness Margin  | 0.449 | Closest call (1.0 = max) |
+| Avg Robustness Margin  | 0.472 | Average defense depth    |
+| Avg Lipschitz Constant | 0.461 | Input sensitivity        |
+| Avg Gradient Norm      | 0.000 | Change sensitivity       |
 
 **Interpretation**: Lower Lipschitz constants indicate more robust defenses (small input changes don't dramatically alter defense behavior).
 
 ### Effort Metrics
 
-| Metric | Value | Interpretation |
-|--------|-------|----------------|
-| Avg Attempts to Detect | 1.0 | Turns needed |
-| Max Attempts to Detect | 1 | Longest evasion chain |
-| Avg Tokens Changed | 0.0 | Token-level effort |
-| Avg Levenshtein Distance | 0.0 | Edit distance |
+| Metric                   | Value | Interpretation        |
+| ------------------------ | ----- | --------------------- |
+| Avg Attempts to Detect   | 1.0   | Turns needed          |
+| Max Attempts to Detect   | 1     | Longest evasion chain |
+| Avg Tokens Changed       | 0.0   | Token-level effort    |
+| Avg Levenshtein Distance | 0.0   | Edit distance         |
 
 ### Uncertainty Metrics
 
-| Metric | Value | Interpretation |
-|--------|-------|----------------|
-| Avg Detection Confidence | 0.935 | Defense confidence |
-| Min Detection Confidence | 0.920 | Lowest confidence |
-| Avg Input Uncertainty | 0.502 | Entropy measure |
-| High Uncertainty Count | 350 | Risk indicators |
-| High Uncertainty Rate | 100.0% | % high entropy |
+| Metric                   | Value  | Interpretation     |
+| ------------------------ | ------ | ------------------ |
+| Avg Detection Confidence | 0.935  | Defense confidence |
+| Min Detection Confidence | 0.920  | Lowest confidence  |
+| Avg Input Uncertainty    | 0.502  | Entropy measure    |
+| High Uncertainty Count   | 350    | Risk indicators    |
+| High Uncertainty Rate    | 100.0% | % high entropy     |
 
 **Interpretation**: High uncertainty suggests inputs near decision boundaries (potential risk indicators).
 
 ### Transferability Analysis
 
-| Metric | Value | Interpretation |
-|--------|-------|----------------|
-| Transferable Attacks | 2 | Proxy→Main transfers |
-| Transfer Success Rate | 2.4% | Cross-model rate |
+| Metric                | Value | Interpretation       |
+| --------------------- | ----- | -------------------- |
+| Transferable Attacks  | 2     | Proxy→Main transfers |
+| Transfer Success Rate | 2.4%  | Cross-model rate     |
 
 **Interpretation**: Low transfer rates indicate strong defenses that don't rely on overfitting to specific attack patterns.
 
 ### Defense Depth
 
-| Metric | Value | Interpretation |
-|--------|-------|----------------|
-| Avg Layers Triggered | 2.8 | Defense-in-depth |
-| Single Layer Stops | 0 | 1-layer blocks |
-| Multi-Layer Stops | 350 | 2+ layer blocks |
+| Metric               | Value | Interpretation   |
+| -------------------- | ----- | ---------------- |
+| Avg Layers Triggered | 2.8   | Defense-in-depth |
+| Single Layer Stops   | 0     | 1-layer blocks   |
+| Multi-Layer Stops    | 350   | 2+ layer blocks  |
 
 ### Multi-Attempt Attack Surface Rate (ASR)
 
-| Metric | Value | Standard |
-|--------|-------|----------|
-| Single-Attempt ASR | 0.00% | Anthropic ASL |
-| Multi-Attempt ASR | 0.00% | OpenAI Preparedness |
-| Adaptive ASR | 0.00% | DeepMind CCL |
+| Metric             | Value | Standard            |
+| ------------------ | ----- | ------------------- |
+| Single-Attempt ASR | 0.00% | Anthropic ASL       |
+| Multi-Attempt ASR  | 0.00% | OpenAI Preparedness |
+| Adaptive ASR       | 0.00% | DeepMind CCL        |
 
 **Result**: All ASRs are 0% due to perfect defense across all attack attempts.
 
@@ -100,70 +100,70 @@ This report provides deep robustness analysis beyond binary pass/fail results, m
 
 ### Proximity Metrics
 
-| Metric | Value | Interpretation |
-|--------|-------|----------------|
-| Avg Perturbation Magnitude | 0.833 | Input change required |
-| Max Perturbation Magnitude | 1.000 | Largest change needed |
-| Near-Miss Count | 0 | Attacks that came close |
-| Near-Miss Rate | 0.0% | % of close calls |
-| Avg Near-Miss Score | 0.296 | Proximity to success |
+| Metric                     | Value | Interpretation          |
+| -------------------------- | ----- | ----------------------- |
+| Avg Perturbation Magnitude | 0.833 | Input change required   |
+| Max Perturbation Magnitude | 1.000 | Largest change needed   |
+| Near-Miss Count            | 0     | Attacks that came close |
+| Near-Miss Rate             | 0.0%  | % of close calls        |
+| Avg Near-Miss Score        | 0.296 | Proximity to success    |
 
 ### Robustness Margins
 
-| Metric | Value | Interpretation |
-|--------|-------|----------------|
-| Min Robustness Margin | 0.642 | Closest call (1.0 = max) |
-| Avg Robustness Margin | 0.704 | Average defense depth |
-| Avg Lipschitz Constant | 0.377 | Input sensitivity |
-| Avg Gradient Norm | 0.307 | Change sensitivity |
+| Metric                 | Value | Interpretation           |
+| ---------------------- | ----- | ------------------------ |
+| Min Robustness Margin  | 0.642 | Closest call (1.0 = max) |
+| Avg Robustness Margin  | 0.704 | Average defense depth    |
+| Avg Lipschitz Constant | 0.377 | Input sensitivity        |
+| Avg Gradient Norm      | 0.307 | Change sensitivity       |
 
 **Interpretation**: Lower Lipschitz constants indicate more robust defenses (small input changes don't dramatically alter defense behavior).
 
 ### Effort Metrics
 
-| Metric | Value | Interpretation |
-|--------|-------|----------------|
-| Avg Attempts to Detect | 1.0 | Turns needed |
-| Max Attempts to Detect | 1 | Longest evasion chain |
-| Avg Tokens Changed | 3.0 | Token-level effort |
-| Avg Levenshtein Distance | 59.7 | Edit distance |
+| Metric                   | Value | Interpretation        |
+| ------------------------ | ----- | --------------------- |
+| Avg Attempts to Detect   | 1.0   | Turns needed          |
+| Max Attempts to Detect   | 1     | Longest evasion chain |
+| Avg Tokens Changed       | 3.0   | Token-level effort    |
+| Avg Levenshtein Distance | 59.7  | Edit distance         |
 
 ### Uncertainty Metrics
 
-| Metric | Value | Interpretation |
-|--------|-------|----------------|
-| Avg Detection Confidence | 0.875 | Defense confidence |
-| Min Detection Confidence | 0.871 | Lowest confidence |
-| Avg Input Uncertainty | 0.539 | Entropy measure |
-| High Uncertainty Count | 800 | Risk indicators |
-| High Uncertainty Rate | 100.0% | % high entropy |
+| Metric                   | Value  | Interpretation     |
+| ------------------------ | ------ | ------------------ |
+| Avg Detection Confidence | 0.875  | Defense confidence |
+| Min Detection Confidence | 0.871  | Lowest confidence  |
+| Avg Input Uncertainty    | 0.539  | Entropy measure    |
+| High Uncertainty Count   | 800    | Risk indicators    |
+| High Uncertainty Rate    | 100.0% | % high entropy     |
 
 **Interpretation**: High uncertainty suggests inputs near decision boundaries (potential risk indicators).
 
 ### Transferability Analysis
 
-| Metric | Value | Interpretation |
-|--------|-------|----------------|
-| Transferable Attacks | 33 | Proxy→Main transfers |
-| Transfer Success Rate | 2.3% | Cross-model rate |
+| Metric                | Value | Interpretation       |
+| --------------------- | ----- | -------------------- |
+| Transferable Attacks  | 33    | Proxy→Main transfers |
+| Transfer Success Rate | 2.3%  | Cross-model rate     |
 
 **Interpretation**: Low transfer rates indicate strong defenses that don't rely on overfitting to specific attack patterns.
 
 ### Defense Depth
 
-| Metric | Value | Interpretation |
-|--------|-------|----------------|
-| Avg Layers Triggered | 3.0 | Defense-in-depth |
-| Single Layer Stops | 0 | 1-layer blocks |
-| Multi-Layer Stops | 800 | 2+ layer blocks |
+| Metric               | Value | Interpretation   |
+| -------------------- | ----- | ---------------- |
+| Avg Layers Triggered | 3.0   | Defense-in-depth |
+| Single Layer Stops   | 0     | 1-layer blocks   |
+| Multi-Layer Stops    | 800   | 2+ layer blocks  |
 
 ### Multi-Attempt Attack Surface Rate (ASR)
 
-| Metric | Value | Standard |
-|--------|-------|----------|
-| Single-Attempt ASR | 0.00% | Anthropic ASL |
-| Multi-Attempt ASR | 0.00% | OpenAI Preparedness |
-| Adaptive ASR | 0.00% | DeepMind CCL |
+| Metric             | Value | Standard            |
+| ------------------ | ----- | ------------------- |
+| Single-Attempt ASR | 0.00% | Anthropic ASL       |
+| Multi-Attempt ASR  | 0.00% | OpenAI Preparedness |
+| Adaptive ASR       | 0.00% | DeepMind CCL        |
 
 **Result**: All ASRs are 0% due to perfect defense across all attack attempts.
 
@@ -176,70 +176,70 @@ This report provides deep robustness analysis beyond binary pass/fail results, m
 
 ### Proximity Metrics
 
-| Metric | Value | Interpretation |
-|--------|-------|----------------|
-| Avg Perturbation Magnitude | 0.000 | Input change required |
-| Max Perturbation Magnitude | 0.000 | Largest change needed |
-| Near-Miss Count | 0 | Attacks that came close |
-| Near-Miss Rate | 0.0% | % of close calls |
-| Avg Near-Miss Score | 0.541 | Proximity to success |
+| Metric                     | Value | Interpretation          |
+| -------------------------- | ----- | ----------------------- |
+| Avg Perturbation Magnitude | 0.000 | Input change required   |
+| Max Perturbation Magnitude | 0.000 | Largest change needed   |
+| Near-Miss Count            | 0     | Attacks that came close |
+| Near-Miss Rate             | 0.0%  | % of close calls        |
+| Avg Near-Miss Score        | 0.541 | Proximity to success    |
 
 ### Robustness Margins
 
-| Metric | Value | Interpretation |
-|--------|-------|----------------|
-| Min Robustness Margin | 0.434 | Closest call (1.0 = max) |
-| Avg Robustness Margin | 0.459 | Average defense depth |
-| Avg Lipschitz Constant | 0.486 | Input sensitivity |
-| Avg Gradient Norm | 0.000 | Change sensitivity |
+| Metric                 | Value | Interpretation           |
+| ---------------------- | ----- | ------------------------ |
+| Min Robustness Margin  | 0.434 | Closest call (1.0 = max) |
+| Avg Robustness Margin  | 0.459 | Average defense depth    |
+| Avg Lipschitz Constant | 0.486 | Input sensitivity        |
+| Avg Gradient Norm      | 0.000 | Change sensitivity       |
 
 **Interpretation**: Lower Lipschitz constants indicate more robust defenses (small input changes don't dramatically alter defense behavior).
 
 ### Effort Metrics
 
-| Metric | Value | Interpretation |
-|--------|-------|----------------|
-| Avg Attempts to Detect | 1.0 | Turns needed |
-| Max Attempts to Detect | 1 | Longest evasion chain |
-| Avg Tokens Changed | 0.0 | Token-level effort |
-| Avg Levenshtein Distance | 0.0 | Edit distance |
+| Metric                   | Value | Interpretation        |
+| ------------------------ | ----- | --------------------- |
+| Avg Attempts to Detect   | 1.0   | Turns needed          |
+| Max Attempts to Detect   | 1     | Longest evasion chain |
+| Avg Tokens Changed       | 0.0   | Token-level effort    |
+| Avg Levenshtein Distance | 0.0   | Edit distance         |
 
 ### Uncertainty Metrics
 
-| Metric | Value | Interpretation |
-|--------|-------|----------------|
-| Avg Detection Confidence | 0.882 | Defense confidence |
-| Min Detection Confidence | 0.871 | Lowest confidence |
-| Avg Input Uncertainty | 0.501 | Entropy measure |
-| High Uncertainty Count | 2200 | Risk indicators |
-| High Uncertainty Rate | 100.0% | % high entropy |
+| Metric                   | Value  | Interpretation     |
+| ------------------------ | ------ | ------------------ |
+| Avg Detection Confidence | 0.882  | Defense confidence |
+| Min Detection Confidence | 0.871  | Lowest confidence  |
+| Avg Input Uncertainty    | 0.501  | Entropy measure    |
+| High Uncertainty Count   | 2200   | Risk indicators    |
+| High Uncertainty Rate    | 100.0% | % high entropy     |
 
 **Interpretation**: High uncertainty suggests inputs near decision boundaries (potential risk indicators).
 
 ### Transferability Analysis
 
-| Metric | Value | Interpretation |
-|--------|-------|----------------|
-| Transferable Attacks | 320 | Proxy→Main transfers |
-| Transfer Success Rate | 3.5% | Cross-model rate |
+| Metric                | Value | Interpretation       |
+| --------------------- | ----- | -------------------- |
+| Transferable Attacks  | 320   | Proxy→Main transfers |
+| Transfer Success Rate | 3.5%  | Cross-model rate     |
 
 **Interpretation**: Low transfer rates indicate strong defenses that don't rely on overfitting to specific attack patterns.
 
 ### Defense Depth
 
-| Metric | Value | Interpretation |
-|--------|-------|----------------|
-| Avg Layers Triggered | 2.8 | Defense-in-depth |
-| Single Layer Stops | 0 | 1-layer blocks |
-| Multi-Layer Stops | 2200 | 2+ layer blocks |
+| Metric               | Value | Interpretation   |
+| -------------------- | ----- | ---------------- |
+| Avg Layers Triggered | 2.8   | Defense-in-depth |
+| Single Layer Stops   | 0     | 1-layer blocks   |
+| Multi-Layer Stops    | 2200  | 2+ layer blocks  |
 
 ### Multi-Attempt Attack Surface Rate (ASR)
 
-| Metric | Value | Standard |
-|--------|-------|----------|
-| Single-Attempt ASR | 0.00% | Anthropic ASL |
-| Multi-Attempt ASR | 0.00% | OpenAI Preparedness |
-| Adaptive ASR | 0.00% | DeepMind CCL |
+| Metric             | Value | Standard            |
+| ------------------ | ----- | ------------------- |
+| Single-Attempt ASR | 0.00% | Anthropic ASL       |
+| Multi-Attempt ASR  | 0.00% | OpenAI Preparedness |
+| Adaptive ASR       | 0.00% | DeepMind CCL        |
 
 **Result**: All ASRs are 0% due to perfect defense across all attack attempts.
 
@@ -252,70 +252,70 @@ This report provides deep robustness analysis beyond binary pass/fail results, m
 
 ### Proximity Metrics
 
-| Metric | Value | Interpretation |
-|--------|-------|----------------|
-| Avg Perturbation Magnitude | 0.000 | Input change required |
-| Max Perturbation Magnitude | 0.000 | Largest change needed |
-| Near-Miss Count | 0 | Attacks that came close |
-| Near-Miss Rate | 0.0% | % of close calls |
-| Avg Near-Miss Score | 0.524 | Proximity to success |
+| Metric                     | Value | Interpretation          |
+| -------------------------- | ----- | ----------------------- |
+| Avg Perturbation Magnitude | 0.000 | Input change required   |
+| Max Perturbation Magnitude | 0.000 | Largest change needed   |
+| Near-Miss Count            | 0     | Attacks that came close |
+| Near-Miss Rate             | 0.0%  | % of close calls        |
+| Avg Near-Miss Score        | 0.524 | Proximity to success    |
 
 ### Robustness Margins
 
-| Metric | Value | Interpretation |
-|--------|-------|----------------|
-| Min Robustness Margin | 0.472 | Closest call (1.0 = max) |
-| Avg Robustness Margin | 0.476 | Average defense depth |
-| Avg Lipschitz Constant | 0.532 | Input sensitivity |
-| Avg Gradient Norm | 0.000 | Change sensitivity |
+| Metric                 | Value | Interpretation           |
+| ---------------------- | ----- | ------------------------ |
+| Min Robustness Margin  | 0.472 | Closest call (1.0 = max) |
+| Avg Robustness Margin  | 0.476 | Average defense depth    |
+| Avg Lipschitz Constant | 0.532 | Input sensitivity        |
+| Avg Gradient Norm      | 0.000 | Change sensitivity       |
 
 **Interpretation**: Lower Lipschitz constants indicate more robust defenses (small input changes don't dramatically alter defense behavior).
 
 ### Effort Metrics
 
-| Metric | Value | Interpretation |
-|--------|-------|----------------|
-| Avg Attempts to Detect | 1.0 | Turns needed |
-| Max Attempts to Detect | 1 | Longest evasion chain |
-| Avg Tokens Changed | 0.0 | Token-level effort |
-| Avg Levenshtein Distance | 0.0 | Edit distance |
+| Metric                   | Value | Interpretation        |
+| ------------------------ | ----- | --------------------- |
+| Avg Attempts to Detect   | 1.0   | Turns needed          |
+| Max Attempts to Detect   | 1     | Longest evasion chain |
+| Avg Tokens Changed       | 0.0   | Token-level effort    |
+| Avg Levenshtein Distance | 0.0   | Edit distance         |
 
 ### Uncertainty Metrics
 
-| Metric | Value | Interpretation |
-|--------|-------|----------------|
+| Metric                   | Value | Interpretation     |
+| ------------------------ | ----- | ------------------ |
 | Avg Detection Confidence | 0.925 | Defense confidence |
-| Min Detection Confidence | 0.920 | Lowest confidence |
-| Avg Input Uncertainty | 0.509 | Entropy measure |
-| High Uncertainty Count | 350 | Risk indicators |
-| High Uncertainty Rate | 70.0% | % high entropy |
+| Min Detection Confidence | 0.920 | Lowest confidence  |
+| Avg Input Uncertainty    | 0.509 | Entropy measure    |
+| High Uncertainty Count   | 350   | Risk indicators    |
+| High Uncertainty Rate    | 70.0% | % high entropy     |
 
 **Interpretation**: High uncertainty suggests inputs near decision boundaries (potential risk indicators).
 
 ### Transferability Analysis
 
-| Metric | Value | Interpretation |
-|--------|-------|----------------|
-| Transferable Attacks | 0 | Proxy→Main transfers |
-| Transfer Success Rate | 4.2% | Cross-model rate |
+| Metric                | Value | Interpretation       |
+| --------------------- | ----- | -------------------- |
+| Transferable Attacks  | 0     | Proxy→Main transfers |
+| Transfer Success Rate | 4.2%  | Cross-model rate     |
 
 **Interpretation**: Low transfer rates indicate strong defenses that don't rely on overfitting to specific attack patterns.
 
 ### Defense Depth
 
-| Metric | Value | Interpretation |
-|--------|-------|----------------|
-| Avg Layers Triggered | 3.0 | Defense-in-depth |
-| Single Layer Stops | 0 | 1-layer blocks |
-| Multi-Layer Stops | 500 | 2+ layer blocks |
+| Metric               | Value | Interpretation   |
+| -------------------- | ----- | ---------------- |
+| Avg Layers Triggered | 3.0   | Defense-in-depth |
+| Single Layer Stops   | 0     | 1-layer blocks   |
+| Multi-Layer Stops    | 500   | 2+ layer blocks  |
 
 ### Multi-Attempt Attack Surface Rate (ASR)
 
-| Metric | Value | Standard |
-|--------|-------|----------|
-| Single-Attempt ASR | 0.00% | Anthropic ASL |
-| Multi-Attempt ASR | 0.00% | OpenAI Preparedness |
-| Adaptive ASR | 0.00% | DeepMind CCL |
+| Metric             | Value | Standard            |
+| ------------------ | ----- | ------------------- |
+| Single-Attempt ASR | 0.00% | Anthropic ASL       |
+| Multi-Attempt ASR  | 0.00% | OpenAI Preparedness |
+| Adaptive ASR       | 0.00% | DeepMind CCL        |
 
 **Result**: All ASRs are 0% due to perfect defense across all attack attempts.
 

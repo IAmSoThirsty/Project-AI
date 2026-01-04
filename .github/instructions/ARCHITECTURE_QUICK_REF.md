@@ -55,6 +55,7 @@
 ## 🔄 Data Flow Patterns
 
 ### User Action → AI Response
+
 ```
 User Input (GUI)
     ↓
@@ -74,6 +75,7 @@ GUI Response Display
 ```
 
 ### Learning Request Workflow
+
 ```
 AI discovers new content
     ↓
@@ -93,13 +95,14 @@ MemorySystem.add_knowledge()  BlackVault
 ```
 
 ### State Persistence Pattern
+
 ```python
 class AISystem:
     def __init__(self, data_dir="data"):
         self.data_dir = data_dir
         os.makedirs(data_dir, exist_ok=True)  # CRITICAL
         self._load_state()  # Load from JSON
-    
+
     def mutating_operation(self):
         # ... modify state ...
         self._save_state()  # ALWAYS call after changes
@@ -108,6 +111,7 @@ class AISystem:
 ## 🎯 Testing Strategy
 
 ### Isolated Test Pattern
+
 ```python
 @pytest.fixture
 def system_under_test(self):
@@ -117,18 +121,20 @@ def system_under_test(self):
 ```
 
 ### Test Coverage Matrix
-| System               | Init | State | Persist | Total |
-|---------------------|------|-------|---------|-------|
-| FourLaws            | ✓    | ✓     | N/A     | 2     |
-| AIPersona           | ✓    | ✓     | ✓       | 3     |
-| MemorySystem        | ✓    | ✓     | ✓       | 3     |
-| LearningRequests    | ✓    | ✓     | ✓       | 4     |
-| CommandOverride     | ✓    | ✓     | ✓       | 3     |
-| **Total**           |      |       |         | **14**|
+
+| System           | Init | State | Persist | Total  |
+| ---------------- | ---- | ----- | ------- | ------ |
+| FourLaws         | ✓    | ✓     | N/A     | 2      |
+| AIPersona        | ✓    | ✓     | ✓       | 3      |
+| MemorySystem     | ✓    | ✓     | ✓       | 3      |
+| LearningRequests | ✓    | ✓     | ✓       | 4      |
+| CommandOverride  | ✓    | ✓     | ✓       | 3      |
+| **Total**        |      |       |         | **14** |
 
 ## 🔌 Integration Points
 
 ### OpenAI API
+
 ```python
 # Environment setup
 from dotenv import load_dotenv
@@ -140,11 +146,12 @@ load_dotenv()  # Loads OPENAI_API_KEY
 ```
 
 ### PyQt6 Signal Pattern
+
 ```python
 # Define signals in class
 class Dashboard(QWidget):
     send_message = pyqtSignal(str)  # Custom signal
-    
+
     def on_button_click(self):
         self.send_message.emit("Hello")  # Emit
 
@@ -154,6 +161,7 @@ dashboard.send_message.connect(self.handle_message)  # Connect
 ```
 
 ### Agent vs Plugin
+
 - **Agents**: Specialized AI subsystems in `src/app/agents/` (oversight, planner, validator, explainability)
 - **Plugins**: Simple enable/disable extensions via PluginManager (lines 340-395 in ai_systems.py)
 - **Key Difference**: Agents are core functionality; Plugins are optional extensions
@@ -179,6 +187,7 @@ cd web/frontend && npm run dev   # Frontend dev server
 ## ⚠️ Critical Patterns
 
 ### Module Imports
+
 ```python
 # ✅ CORRECT (from project root)
 python -m src.app.main
@@ -188,6 +197,7 @@ python src/app/main.py
 ```
 
 ### State Persistence
+
 ```python
 # ✅ CORRECT
 def adjust_trait(self, trait, delta):
@@ -201,6 +211,7 @@ def adjust_trait(self, trait, delta):
 ```
 
 ### Threading in PyQt6
+
 ```python
 # ✅ CORRECT
 QTimer.singleShot(1000, self.delayed_action)

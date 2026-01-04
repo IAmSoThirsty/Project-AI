@@ -9,6 +9,7 @@ Project-AI provides a comprehensive MCP (Model Context Protocol) server implemen
 The Project-AI MCP server provides access to:
 
 ### 🧠 AI Systems
+
 - **AI Ethics Framework (Asimov's Laws)**: Validate actions against ethical guidelines
 - **AI Persona**: Manage personality traits and emotional states
 - **Memory System**: Store and retrieve knowledge across sessions
@@ -78,6 +79,7 @@ print(Fernet.generate_key().decode())
 ### macOS/Linux
 
 1. Locate Claude Desktop configuration file:
+
    ```bash
    ~/.config/Claude/claude_desktop_config.json
    ```
@@ -105,6 +107,7 @@ print(Fernet.generate_key().decode())
 ### Windows
 
 1. Locate Claude Desktop configuration file:
+
    ```
    %APPDATA%\Claude\claude_desktop_config.json
    ```
@@ -239,7 +242,7 @@ For web-based clients, you can modify the server to use HTTP transport:
 async def run(self):
     """Run the MCP server using HTTP transport."""
     from mcp.server.sse import sse_server
-    
+
     app = sse_server(self.server)
     # Run with uvicorn or another ASGI server
 ```
@@ -325,6 +328,7 @@ self.learning.approve_request(request_id)
 **Issue**: MCP server fails to start
 
 **Solutions**:
+
 1. Check Python version: `python --version` (requires 3.12+)
 2. Verify dependencies: `pip install "mcp[cli]"`
 3. Check PYTHONPATH: Should include project root
@@ -335,6 +339,7 @@ self.learning.approve_request(request_id)
 **Issue**: Tools return errors
 
 **Solutions**:
+
 1. Verify environment variables are set correctly
 2. Check data directory permissions
 3. Ensure required API keys are valid
@@ -345,6 +350,7 @@ self.learning.approve_request(request_id)
 **Issue**: Claude Desktop doesn't show MCP tools
 
 **Solutions**:
+
 1. Verify configuration file path is correct
 2. Check JSON syntax in `claude_desktop_config.json`
 3. Restart Claude Desktop after configuration changes
@@ -355,6 +361,7 @@ self.learning.approve_request(request_id)
 **Issue**: Python import errors for core systems
 
 **Solutions**:
+
 1. Ensure PYTHONPATH includes project root
 2. Verify all dependencies are installed: `pip install -r requirements.txt`
 3. Check that Project-AI is properly installed

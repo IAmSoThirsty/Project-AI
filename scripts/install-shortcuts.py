@@ -24,13 +24,23 @@ def get_app_root():
 def get_desktop_path():
     """Get Windows Desktop path"""
     from pathlib import Path
+
     return Path.home() / "Desktop"
 
 
 def get_start_menu_path():
     """Get Windows Start Menu path"""
     from pathlib import Path
-    appdata = Path.home() / "AppData" / "Roaming" / "Microsoft" / "Windows" / "Start Menu" / "Programs"
+
+    appdata = (
+        Path.home()
+        / "AppData"
+        / "Roaming"
+        / "Microsoft"
+        / "Windows"
+        / "Start Menu"
+        / "Programs"
+    )
     return appdata
 
 
@@ -90,7 +100,7 @@ def install_desktop_shortcuts():
         launcher_bat,
         desktop_link,
         icon_path,
-        desktop_config.get("description", "Project-AI Dashboard")
+        desktop_config.get("description", "Project-AI Dashboard"),
     ):
         print(f"✓ Desktop shortcut created: {desktop_link}")
     else:
@@ -108,7 +118,7 @@ def install_desktop_shortcuts():
         launcher_bat,
         start_menu_link,
         icon_path,
-        desktop_config.get("description", "Project-AI Dashboard")
+        desktop_config.get("description", "Project-AI Dashboard"),
     ):
         print(f"✓ Start Menu shortcut created: {start_menu_link}")
     else:

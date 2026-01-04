@@ -156,7 +156,7 @@ Animation Update Flow:
 QTimer (50ms interval)
         ↓
 LeatherBookDashboard._update_animations()
-    ├── Call ai_head.update() 
+    ├── Call ai_head.update()
     │   └── Increments animation_frame
     │       └── Triggers paintEvent() on canvas
     │           ├── Draw grid background (updated)
@@ -209,7 +209,6 @@ Main Thread
     ├── Text input → QTextEdit.textChanged events
     └── Window events → resizeEvent, closeEvent, etc.
 ```
-
 
 ## Color Coding Reference
 
@@ -267,7 +266,7 @@ class LeatherBookDashboard(QWidget):
     def __init__(self, username: str, ai_backend, parent=None):
         self.ai = ai_backend  # E.g., OpenAI API, local LLM, etc.
         self.send_message.connect(self._process_message)
-    
+
     def _process_message(self, message: str):
         response = self.ai.generate_response(message)
         self.add_ai_response(response)
@@ -279,8 +278,8 @@ class LeatherBookDashboard(QWidget):
 def add_ai_response(self, response: str):
     self.ai_response.add_ai_response(response)
     # Save to database
-    self.db.save_message(user=self.username, 
-                        content=response, 
+    self.db.save_message(user=self.username,
+                        content=response,
                         is_ai=True)
 ```
 

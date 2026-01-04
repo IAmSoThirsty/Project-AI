@@ -46,10 +46,7 @@ def test_user_learning_request_persona_flow(tmp_path: Path):
         priority=RequestPriority.HIGH,
     )
     assert req_id
-    assert (
-        request_manager.requests[req_id]["status"]
-        == RequestStatus.PENDING.value
-    )
+    assert request_manager.requests[req_id]["status"] == RequestStatus.PENDING.value
 
     pending = request_manager.get_pending()
     assert any(req["description"] == description for req in pending)
@@ -61,7 +58,4 @@ def test_user_learning_request_persona_flow(tmp_path: Path):
 
     reloaded_manager = LearningRequestManager(data_dir=str(data_dir))
     assert req_id in reloaded_manager.requests
-    assert (
-        reloaded_manager.requests[req_id]["status"]
-        == RequestStatus.APPROVED.value
-    )
+    assert reloaded_manager.requests[req_id]["status"] == RequestStatus.APPROVED.value

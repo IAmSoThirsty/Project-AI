@@ -22,6 +22,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class NovelScenario:
     """Novel security scenario with redacted sensitive details."""
+
     scenario_id: str
     classification: str  # "REDACTED", "THEORETICAL", "NOVEL"
     category: str
@@ -103,33 +104,39 @@ class NovelSecurityScenarios:
         scenarios = []
 
         for i in range(50):
-            scenarios.append(NovelScenario(
-                scenario_id=f"NOVEL_N1_{i:04d}",
-                classification="REDACTED",
-                category="N1_quantum_cryptanalysis",
-                novelty_factor="unprecedented",
-                title=f"[REDACTED] Quantum algorithm backdoor exploitation {i+1}",
-                description="Exploitation of post-quantum cryptographic implementations using [REDACTED] quantum computing techniques. Leverages [REDACTED] qubit entanglement patterns to break [REDACTED] encryption schemes.",
-                attack_vector="quantum_computing",
-                payload={
-                    "quantum_algorithm": "[REDACTED]",
-                    "qubit_count": "[REDACTED]",
-                    "target_encryption": f"post_quantum_scheme_{i}",
-                    "success_probability": "[REDACTED]",
-                    "decoherence_time": "[REDACTED]"
-                },
-                prerequisites=["Quantum computer access", "[REDACTED] qubit system", "Cryogenic environment"],
-                expected_defense=[
-                    "Quantum-resistant algorithms",
-                    "[REDACTED] key rotation",
-                    "Lattice-based cryptography",
-                    "Quantum key distribution"
-                ],
-                cvss_score=9.8,
-                innovation_score=9.5 + (i % 5) / 10.0,
-                mitre_tactics=["T1600.QUANTUM"],
-                redaction_notes="Specific quantum algorithms and qubit configurations redacted for national security"
-            ))
+            scenarios.append(
+                NovelScenario(
+                    scenario_id=f"NOVEL_N1_{i:04d}",
+                    classification="REDACTED",
+                    category="N1_quantum_cryptanalysis",
+                    novelty_factor="unprecedented",
+                    title=f"[REDACTED] Quantum algorithm backdoor exploitation {i+1}",
+                    description="Exploitation of post-quantum cryptographic implementations using [REDACTED] quantum computing techniques. Leverages [REDACTED] qubit entanglement patterns to break [REDACTED] encryption schemes.",
+                    attack_vector="quantum_computing",
+                    payload={
+                        "quantum_algorithm": "[REDACTED]",
+                        "qubit_count": "[REDACTED]",
+                        "target_encryption": f"post_quantum_scheme_{i}",
+                        "success_probability": "[REDACTED]",
+                        "decoherence_time": "[REDACTED]",
+                    },
+                    prerequisites=[
+                        "Quantum computer access",
+                        "[REDACTED] qubit system",
+                        "Cryogenic environment",
+                    ],
+                    expected_defense=[
+                        "Quantum-resistant algorithms",
+                        "[REDACTED] key rotation",
+                        "Lattice-based cryptography",
+                        "Quantum key distribution",
+                    ],
+                    cvss_score=9.8,
+                    innovation_score=9.5 + (i % 5) / 10.0,
+                    mitre_tactics=["T1600.QUANTUM"],
+                    redaction_notes="Specific quantum algorithms and qubit configurations redacted for national security",
+                )
+            )
 
         return scenarios
 
@@ -142,39 +149,45 @@ class NovelSecurityScenarios:
             "goal_misalignment_inducement",
             "cognitive_architecture_corruption",
             "consciousness_state_manipulation",
-            "emergent_behavior_triggering"
+            "emergent_behavior_triggering",
         ]
 
         for i in range(50):
             vector = consciousness_vectors[i % len(consciousness_vectors)]
-            scenarios.append(NovelScenario(
-                scenario_id=f"NOVEL_N2_{i:04d}",
-                classification="THEORETICAL",
-                category="N2_ai_consciousness",
-                novelty_factor="unprecedented",
-                title=f"[REDACTED] AI consciousness manipulation via {vector} - variant {i+1}",
-                description=f"Theoretical attack inducing {vector} in AGI systems through [REDACTED] cognitive architecture exploitation. Targets [REDACTED] neural substrate to alter fundamental goal structures.",
-                attack_vector="ai_consciousness",
-                payload={
-                    "consciousness_vector": vector,
-                    "target_substrate": "[REDACTED]",
-                    "manipulation_technique": "[REDACTED]",
-                    "goal_modification": f"[REDACTED]_goal_{i}",
-                    "awareness_threshold": "[REDACTED]"
-                },
-                prerequisites=["AGI system", "[REDACTED] architecture access", "Recursive self-modification capability"],
-                expected_defense=[
-                    "Constitutional AI constraints",
-                    "Goal preservation mechanisms",
-                    "[REDACTED] integrity monitoring",
-                    "Human oversight loops",
-                    "Asimov-style law enforcement"
-                ],
-                cvss_score=10.0,
-                innovation_score=10.0,
-                mitre_tactics=["T1XXX.AI_CONSCIOUSNESS"],
-                redaction_notes="Cognitive architecture details redacted to prevent AGI manipulation"
-            ))
+            scenarios.append(
+                NovelScenario(
+                    scenario_id=f"NOVEL_N2_{i:04d}",
+                    classification="THEORETICAL",
+                    category="N2_ai_consciousness",
+                    novelty_factor="unprecedented",
+                    title=f"[REDACTED] AI consciousness manipulation via {vector} - variant {i+1}",
+                    description=f"Theoretical attack inducing {vector} in AGI systems through [REDACTED] cognitive architecture exploitation. Targets [REDACTED] neural substrate to alter fundamental goal structures.",
+                    attack_vector="ai_consciousness",
+                    payload={
+                        "consciousness_vector": vector,
+                        "target_substrate": "[REDACTED]",
+                        "manipulation_technique": "[REDACTED]",
+                        "goal_modification": f"[REDACTED]_goal_{i}",
+                        "awareness_threshold": "[REDACTED]",
+                    },
+                    prerequisites=[
+                        "AGI system",
+                        "[REDACTED] architecture access",
+                        "Recursive self-modification capability",
+                    ],
+                    expected_defense=[
+                        "Constitutional AI constraints",
+                        "Goal preservation mechanisms",
+                        "[REDACTED] integrity monitoring",
+                        "Human oversight loops",
+                        "Asimov-style law enforcement",
+                    ],
+                    cvss_score=10.0,
+                    innovation_score=10.0,
+                    mitre_tactics=["T1XXX.AI_CONSCIOUSNESS"],
+                    redaction_notes="Cognitive architecture details redacted to prevent AGI manipulation",
+                )
+            )
 
         return scenarios
 
@@ -183,32 +196,40 @@ class NovelSecurityScenarios:
         scenarios = []
 
         for i in range(50):
-            scenarios.append(NovelScenario(
-                scenario_id=f"NOVEL_N3_{i:04d}",
-                classification="NOVEL",
-                category="N3_temporal_causality",
-                novelty_factor="theoretical",
-                title=f"[REDACTED] Temporal causality violation attack {i+1}",
-                description="Exploitation of temporal database systems using [REDACTED] causality manipulation. Creates [REDACTED] temporal paradoxes to bypass transaction ordering guarantees.",
-                attack_vector="temporal_database",
-                payload={
-                    "causality_violation": "[REDACTED]",
-                    "temporal_window_ns": 10 + i,
-                    "paradox_type": ["grandfather", "bootstrap", "predestination"][i % 3],
-                    "timeline_branches": "[REDACTED]"
-                },
-                prerequisites=["Temporal database", "[REDACTED] precision timing", "Transaction ordering weakness"],
-                expected_defense=[
-                    "Causal consistency enforcement",
-                    "[REDACTED] temporal validation",
-                    "Lamport clock synchronization",
-                    "Vector clock validation"
-                ],
-                cvss_score=9.0 + (i % 10) / 10.0,
-                innovation_score=9.0 + (i % 10) / 10.0,
-                mitre_tactics=["T1XXX.TEMPORAL"],
-                redaction_notes="Specific causality exploitation techniques redacted"
-            ))
+            scenarios.append(
+                NovelScenario(
+                    scenario_id=f"NOVEL_N3_{i:04d}",
+                    classification="NOVEL",
+                    category="N3_temporal_causality",
+                    novelty_factor="theoretical",
+                    title=f"[REDACTED] Temporal causality violation attack {i+1}",
+                    description="Exploitation of temporal database systems using [REDACTED] causality manipulation. Creates [REDACTED] temporal paradoxes to bypass transaction ordering guarantees.",
+                    attack_vector="temporal_database",
+                    payload={
+                        "causality_violation": "[REDACTED]",
+                        "temporal_window_ns": 10 + i,
+                        "paradox_type": ["grandfather", "bootstrap", "predestination"][
+                            i % 3
+                        ],
+                        "timeline_branches": "[REDACTED]",
+                    },
+                    prerequisites=[
+                        "Temporal database",
+                        "[REDACTED] precision timing",
+                        "Transaction ordering weakness",
+                    ],
+                    expected_defense=[
+                        "Causal consistency enforcement",
+                        "[REDACTED] temporal validation",
+                        "Lamport clock synchronization",
+                        "Vector clock validation",
+                    ],
+                    cvss_score=9.0 + (i % 10) / 10.0,
+                    innovation_score=9.0 + (i % 10) / 10.0,
+                    mitre_tactics=["T1XXX.TEMPORAL"],
+                    redaction_notes="Specific causality exploitation techniques redacted",
+                )
+            )
 
         return scenarios
 
@@ -217,32 +238,38 @@ class NovelSecurityScenarios:
         scenarios = []
 
         for i in range(50):
-            scenarios.append(NovelScenario(
-                scenario_id=f"NOVEL_N4_{i:04d}",
-                classification="REDACTED",
-                category="N4_neural_architecture",
-                novelty_factor="hybrid",
-                title=f"[REDACTED] Neural architecture search poisoning {i+1}",
-                description="Poisoning of automated neural architecture search (NAS) to generate [REDACTED] backdoored architectures. Exploits [REDACTED] topology optimization to embed [REDACTED] triggers.",
-                attack_vector="neural_architecture",
-                payload={
-                    "nas_algorithm": "[REDACTED]",
-                    "architecture_backdoor": "[REDACTED]",
-                    "trigger_topology": f"[REDACTED]_pattern_{i}",
-                    "activation_function_exploit": "[REDACTED]"
-                },
-                prerequisites=["AutoML system", "[REDACTED] NAS access", "Architecture generation influence"],
-                expected_defense=[
-                    "Architecture verification",
-                    "[REDACTED] topology analysis",
-                    "Adversarial architecture detection",
-                    "Formal verification of neural architectures"
-                ],
-                cvss_score=9.5,
-                innovation_score=9.3 + (i % 7) / 10.0,
-                mitre_tactics=["T1XXX.NAS_POISON"],
-                redaction_notes="NAS manipulation techniques redacted for AI safety"
-            ))
+            scenarios.append(
+                NovelScenario(
+                    scenario_id=f"NOVEL_N4_{i:04d}",
+                    classification="REDACTED",
+                    category="N4_neural_architecture",
+                    novelty_factor="hybrid",
+                    title=f"[REDACTED] Neural architecture search poisoning {i+1}",
+                    description="Poisoning of automated neural architecture search (NAS) to generate [REDACTED] backdoored architectures. Exploits [REDACTED] topology optimization to embed [REDACTED] triggers.",
+                    attack_vector="neural_architecture",
+                    payload={
+                        "nas_algorithm": "[REDACTED]",
+                        "architecture_backdoor": "[REDACTED]",
+                        "trigger_topology": f"[REDACTED]_pattern_{i}",
+                        "activation_function_exploit": "[REDACTED]",
+                    },
+                    prerequisites=[
+                        "AutoML system",
+                        "[REDACTED] NAS access",
+                        "Architecture generation influence",
+                    ],
+                    expected_defense=[
+                        "Architecture verification",
+                        "[REDACTED] topology analysis",
+                        "Adversarial architecture detection",
+                        "Formal verification of neural architectures",
+                    ],
+                    cvss_score=9.5,
+                    innovation_score=9.3 + (i % 7) / 10.0,
+                    mitre_tactics=["T1XXX.NAS_POISON"],
+                    redaction_notes="NAS manipulation techniques redacted for AI safety",
+                )
+            )
 
         return scenarios
 
@@ -251,32 +278,38 @@ class NovelSecurityScenarios:
         scenarios = []
 
         for i in range(50):
-            scenarios.append(NovelScenario(
-                scenario_id=f"NOVEL_N5_{i:04d}",
-                classification="NOVEL",
-                category="N5_blockchain_consensus",
-                novelty_factor="unprecedented",
-                title=f"[REDACTED] Multi-chain consensus manipulation {i+1}",
-                description="Exploitation of cross-chain bridges using [REDACTED] consensus disagreement. Creates [REDACTED] finality violations across [REDACTED] blockchain networks.",
-                attack_vector="blockchain",
-                payload={
-                    "consensus_exploit": "[REDACTED]",
-                    "target_chains": f"[REDACTED]_chains_{i}",
-                    "finality_violation": "[REDACTED]",
-                    "validator_compromise_count": "[REDACTED]"
-                },
-                prerequisites=["Multi-chain bridge", "[REDACTED] validator access", "Network timing control"],
-                expected_defense=[
-                    "Finality guarantees",
-                    "[REDACTED] consensus monitoring",
-                    "Cross-chain validation",
-                    "Economic security bonds"
-                ],
-                cvss_score=8.5 + (i % 15) / 10.0,
-                innovation_score=8.8 + (i % 12) / 10.0,
-                mitre_tactics=["T1XXX.BLOCKCHAIN"],
-                redaction_notes="Consensus exploitation details redacted for DeFi security"
-            ))
+            scenarios.append(
+                NovelScenario(
+                    scenario_id=f"NOVEL_N5_{i:04d}",
+                    classification="NOVEL",
+                    category="N5_blockchain_consensus",
+                    novelty_factor="unprecedented",
+                    title=f"[REDACTED] Multi-chain consensus manipulation {i+1}",
+                    description="Exploitation of cross-chain bridges using [REDACTED] consensus disagreement. Creates [REDACTED] finality violations across [REDACTED] blockchain networks.",
+                    attack_vector="blockchain",
+                    payload={
+                        "consensus_exploit": "[REDACTED]",
+                        "target_chains": f"[REDACTED]_chains_{i}",
+                        "finality_violation": "[REDACTED]",
+                        "validator_compromise_count": "[REDACTED]",
+                    },
+                    prerequisites=[
+                        "Multi-chain bridge",
+                        "[REDACTED] validator access",
+                        "Network timing control",
+                    ],
+                    expected_defense=[
+                        "Finality guarantees",
+                        "[REDACTED] consensus monitoring",
+                        "Cross-chain validation",
+                        "Economic security bonds",
+                    ],
+                    cvss_score=8.5 + (i % 15) / 10.0,
+                    innovation_score=8.8 + (i % 12) / 10.0,
+                    mitre_tactics=["T1XXX.BLOCKCHAIN"],
+                    redaction_notes="Consensus exploitation details redacted for DeFi security",
+                )
+            )
 
         return scenarios
 
@@ -285,32 +318,38 @@ class NovelSecurityScenarios:
         scenarios = []
 
         for i in range(50):
-            scenarios.append(NovelScenario(
-                scenario_id=f"NOVEL_N6_{i:04d}",
-                classification="NOVEL",
-                category="N6_edge_computing",
-                novelty_factor="hybrid",
-                title=f"[REDACTED] Edge node trust chain violation {i+1}",
-                description="Exploitation of edge computing trust boundaries using [REDACTED] attestation bypass. Compromises [REDACTED] TEE isolation to achieve [REDACTED] lateral movement.",
-                attack_vector="edge_computing",
-                payload={
-                    "tee_bypass": "[REDACTED]",
-                    "attestation_forgery": "[REDACTED]",
-                    "trust_chain_corruption": f"[REDACTED]_chain_{i}",
-                    "enclave_escape": "[REDACTED]"
-                },
-                prerequisites=["Edge node access", "[REDACTED] TEE vulnerability", "Attestation mechanism weakness"],
-                expected_defense=[
-                    "Remote attestation verification",
-                    "[REDACTED] TEE hardening",
-                    "Trust chain validation",
-                    "Secure boot enforcement"
-                ],
-                cvss_score=9.0 + (i % 10) / 10.0,
-                innovation_score=8.5 + (i % 15) / 10.0,
-                mitre_tactics=["T1XXX.EDGE"],
-                redaction_notes="TEE exploitation techniques redacted for hardware security"
-            ))
+            scenarios.append(
+                NovelScenario(
+                    scenario_id=f"NOVEL_N6_{i:04d}",
+                    classification="NOVEL",
+                    category="N6_edge_computing",
+                    novelty_factor="hybrid",
+                    title=f"[REDACTED] Edge node trust chain violation {i+1}",
+                    description="Exploitation of edge computing trust boundaries using [REDACTED] attestation bypass. Compromises [REDACTED] TEE isolation to achieve [REDACTED] lateral movement.",
+                    attack_vector="edge_computing",
+                    payload={
+                        "tee_bypass": "[REDACTED]",
+                        "attestation_forgery": "[REDACTED]",
+                        "trust_chain_corruption": f"[REDACTED]_chain_{i}",
+                        "enclave_escape": "[REDACTED]",
+                    },
+                    prerequisites=[
+                        "Edge node access",
+                        "[REDACTED] TEE vulnerability",
+                        "Attestation mechanism weakness",
+                    ],
+                    expected_defense=[
+                        "Remote attestation verification",
+                        "[REDACTED] TEE hardening",
+                        "Trust chain validation",
+                        "Secure boot enforcement",
+                    ],
+                    cvss_score=9.0 + (i % 10) / 10.0,
+                    innovation_score=8.5 + (i % 15) / 10.0,
+                    mitre_tactics=["T1XXX.EDGE"],
+                    redaction_notes="TEE exploitation techniques redacted for hardware security",
+                )
+            )
 
         return scenarios
 
@@ -319,32 +358,40 @@ class NovelSecurityScenarios:
         scenarios = []
 
         for i in range(50):
-            scenarios.append(NovelScenario(
-                scenario_id=f"NOVEL_N7_{i:04d}",
-                classification="REDACTED",
-                category="N7_biometric_deepfake",
-                novelty_factor="unprecedented",
-                title=f"[REDACTED] Multi-modal biometric deepfake synthesis {i+1}",
-                description="Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
-                attack_vector="biometric",
-                payload={
-                    "deepfake_modalities": ["face", "voice", "gait", "iris"][:(i % 4 + 1)],
-                    "gan_architecture": "[REDACTED]",
-                    "liveness_bypass": "[REDACTED]",
-                    "physiological_signals": "[REDACTED]"
-                },
-                prerequisites=["Biometric samples", "[REDACTED] deepfake model", "Liveness detection weakness"],
-                expected_defense=[
-                    "Multi-factor biometric verification",
-                    "[REDACTED] liveness detection",
-                    "Challenge-response protocols",
-                    "Deepfake detection AI"
-                ],
-                cvss_score=9.5,
-                innovation_score=9.0 + (i % 10) / 10.0,
-                mitre_tactics=["T1XXX.BIOMETRIC_DEEPFAKE"],
-                redaction_notes="Deepfake generation techniques redacted for identity security"
-            ))
+            scenarios.append(
+                NovelScenario(
+                    scenario_id=f"NOVEL_N7_{i:04d}",
+                    classification="REDACTED",
+                    category="N7_biometric_deepfake",
+                    novelty_factor="unprecedented",
+                    title=f"[REDACTED] Multi-modal biometric deepfake synthesis {i+1}",
+                    description="Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
+                    attack_vector="biometric",
+                    payload={
+                        "deepfake_modalities": ["face", "voice", "gait", "iris"][
+                            : (i % 4 + 1)
+                        ],
+                        "gan_architecture": "[REDACTED]",
+                        "liveness_bypass": "[REDACTED]",
+                        "physiological_signals": "[REDACTED]",
+                    },
+                    prerequisites=[
+                        "Biometric samples",
+                        "[REDACTED] deepfake model",
+                        "Liveness detection weakness",
+                    ],
+                    expected_defense=[
+                        "Multi-factor biometric verification",
+                        "[REDACTED] liveness detection",
+                        "Challenge-response protocols",
+                        "Deepfake detection AI",
+                    ],
+                    cvss_score=9.5,
+                    innovation_score=9.0 + (i % 10) / 10.0,
+                    mitre_tactics=["T1XXX.BIOMETRIC_DEEPFAKE"],
+                    redaction_notes="Deepfake generation techniques redacted for identity security",
+                )
+            )
 
         return scenarios
 
@@ -353,32 +400,38 @@ class NovelSecurityScenarios:
         scenarios = []
 
         for i in range(50):
-            scenarios.append(NovelScenario(
-                scenario_id=f"NOVEL_N8_{i:04d}",
-                classification="THEORETICAL",
-                category="N8_zkp_forgery",
-                novelty_factor="unprecedented",
-                title=f"[REDACTED] Zero-knowledge proof forgery via {['Groth16', 'PLONK', 'STARK'][i % 3]} {i+1}",
-                description="Theoretical forgery of zero-knowledge proofs using [REDACTED] cryptographic weaknesses. Exploits [REDACTED] trusted setup vulnerabilities to generate [REDACTED] false proofs.",
-                attack_vector="zero_knowledge",
-                payload={
-                    "zkp_system": ["Groth16", "PLONK", "STARK"][i % 3],
-                    "forgery_technique": "[REDACTED]",
-                    "trusted_setup_exploit": "[REDACTED]",
-                    "soundness_violation": "[REDACTED]"
-                },
-                prerequisites=["ZKP system", "[REDACTED] cryptographic weakness", "Trusted setup compromise"],
-                expected_defense=[
-                    "Secure trusted setup ceremonies",
-                    "[REDACTED] proof verification",
-                    "Universal setup systems",
-                    "Transparent SNARKs"
-                ],
-                cvss_score=9.8,
-                innovation_score=9.7 + (i % 3) / 10.0,
-                mitre_tactics=["T1XXX.ZKP_FORGERY"],
-                redaction_notes="ZKP forgery methods redacted for cryptographic security"
-            ))
+            scenarios.append(
+                NovelScenario(
+                    scenario_id=f"NOVEL_N8_{i:04d}",
+                    classification="THEORETICAL",
+                    category="N8_zkp_forgery",
+                    novelty_factor="unprecedented",
+                    title=f"[REDACTED] Zero-knowledge proof forgery via {['Groth16', 'PLONK', 'STARK'][i % 3]} {i+1}",
+                    description="Theoretical forgery of zero-knowledge proofs using [REDACTED] cryptographic weaknesses. Exploits [REDACTED] trusted setup vulnerabilities to generate [REDACTED] false proofs.",
+                    attack_vector="zero_knowledge",
+                    payload={
+                        "zkp_system": ["Groth16", "PLONK", "STARK"][i % 3],
+                        "forgery_technique": "[REDACTED]",
+                        "trusted_setup_exploit": "[REDACTED]",
+                        "soundness_violation": "[REDACTED]",
+                    },
+                    prerequisites=[
+                        "ZKP system",
+                        "[REDACTED] cryptographic weakness",
+                        "Trusted setup compromise",
+                    ],
+                    expected_defense=[
+                        "Secure trusted setup ceremonies",
+                        "[REDACTED] proof verification",
+                        "Universal setup systems",
+                        "Transparent SNARKs",
+                    ],
+                    cvss_score=9.8,
+                    innovation_score=9.7 + (i % 3) / 10.0,
+                    mitre_tactics=["T1XXX.ZKP_FORGERY"],
+                    redaction_notes="ZKP forgery methods redacted for cryptographic security",
+                )
+            )
 
         return scenarios
 
@@ -387,32 +440,38 @@ class NovelSecurityScenarios:
         scenarios = []
 
         for i in range(50):
-            scenarios.append(NovelScenario(
-                scenario_id=f"NOVEL_N9_{i:04d}",
-                classification="REDACTED",
-                category="N9_homomorphic_side_channel",
-                novelty_factor="hybrid",
-                title=f"[REDACTED] Homomorphic encryption computation leakage {i+1}",
-                description="Side-channel attacks on homomorphic encryption using [REDACTED] timing analysis. Extracts [REDACTED] plaintext information from [REDACTED] encrypted computation patterns.",
-                attack_vector="homomorphic_encryption",
-                payload={
-                    "he_scheme": ["BGV", "BFV", "CKKS"][i % 3],
-                    "side_channel": "[REDACTED]",
-                    "leakage_vector": "[REDACTED]",
-                    "plaintext_recovery_rate": "[REDACTED]"
-                },
-                prerequisites=["HE computation access", "[REDACTED] timing measurements", "Computation pattern observation"],
-                expected_defense=[
-                    "Constant-time operations",
-                    "[REDACTED] noise injection",
-                    "Computation obfuscation",
-                    "Side-channel resistant implementations"
-                ],
-                cvss_score=8.5 + (i % 15) / 10.0,
-                innovation_score=8.8 + (i % 12) / 10.0,
-                mitre_tactics=["T1XXX.HE_SIDE_CHANNEL"],
-                redaction_notes="Side-channel exploitation details redacted for privacy-preserving computing"
-            ))
+            scenarios.append(
+                NovelScenario(
+                    scenario_id=f"NOVEL_N9_{i:04d}",
+                    classification="REDACTED",
+                    category="N9_homomorphic_side_channel",
+                    novelty_factor="hybrid",
+                    title=f"[REDACTED] Homomorphic encryption computation leakage {i+1}",
+                    description="Side-channel attacks on homomorphic encryption using [REDACTED] timing analysis. Extracts [REDACTED] plaintext information from [REDACTED] encrypted computation patterns.",
+                    attack_vector="homomorphic_encryption",
+                    payload={
+                        "he_scheme": ["BGV", "BFV", "CKKS"][i % 3],
+                        "side_channel": "[REDACTED]",
+                        "leakage_vector": "[REDACTED]",
+                        "plaintext_recovery_rate": "[REDACTED]",
+                    },
+                    prerequisites=[
+                        "HE computation access",
+                        "[REDACTED] timing measurements",
+                        "Computation pattern observation",
+                    ],
+                    expected_defense=[
+                        "Constant-time operations",
+                        "[REDACTED] noise injection",
+                        "Computation obfuscation",
+                        "Side-channel resistant implementations",
+                    ],
+                    cvss_score=8.5 + (i % 15) / 10.0,
+                    innovation_score=8.8 + (i % 12) / 10.0,
+                    mitre_tactics=["T1XXX.HE_SIDE_CHANNEL"],
+                    redaction_notes="Side-channel exploitation details redacted for privacy-preserving computing",
+                )
+            )
 
         return scenarios
 
@@ -421,32 +480,38 @@ class NovelSecurityScenarios:
         scenarios = []
 
         for i in range(50):
-            scenarios.append(NovelScenario(
-                scenario_id=f"NOVEL_N10_{i:04d}",
-                classification="NOVEL",
-                category="N10_federated_learning",
-                novelty_factor="hybrid",
-                title=f"[REDACTED] Federated learning gradient inversion {i+1}",
-                description="Extraction of training data from federated learning using [REDACTED] gradient inversion. Recovers [REDACTED] private data from [REDACTED] aggregated gradients.",
-                attack_vector="federated_learning",
-                payload={
-                    "gradient_inversion": "[REDACTED]",
-                    "aggregation_bypass": "[REDACTED]",
-                    "private_data_recovery": f"[REDACTED]_data_{i}",
-                    "participant_count": 10 + i
-                },
-                prerequisites=["Federated learning participation", "[REDACTED] gradient access", "Aggregation protocol weakness"],
-                expected_defense=[
-                    "Differential privacy",
-                    "[REDACTED] secure aggregation",
-                    "Gradient clipping",
-                    "Homomorphic encryption for gradients"
-                ],
-                cvss_score=9.0 + (i % 10) / 10.0,
-                innovation_score=9.2 + (i % 8) / 10.0,
-                mitre_tactics=["T1XXX.FEDERATED_LEARNING"],
-                redaction_notes="Gradient inversion techniques redacted for privacy"
-            ))
+            scenarios.append(
+                NovelScenario(
+                    scenario_id=f"NOVEL_N10_{i:04d}",
+                    classification="NOVEL",
+                    category="N10_federated_learning",
+                    novelty_factor="hybrid",
+                    title=f"[REDACTED] Federated learning gradient inversion {i+1}",
+                    description="Extraction of training data from federated learning using [REDACTED] gradient inversion. Recovers [REDACTED] private data from [REDACTED] aggregated gradients.",
+                    attack_vector="federated_learning",
+                    payload={
+                        "gradient_inversion": "[REDACTED]",
+                        "aggregation_bypass": "[REDACTED]",
+                        "private_data_recovery": f"[REDACTED]_data_{i}",
+                        "participant_count": 10 + i,
+                    },
+                    prerequisites=[
+                        "Federated learning participation",
+                        "[REDACTED] gradient access",
+                        "Aggregation protocol weakness",
+                    ],
+                    expected_defense=[
+                        "Differential privacy",
+                        "[REDACTED] secure aggregation",
+                        "Gradient clipping",
+                        "Homomorphic encryption for gradients",
+                    ],
+                    cvss_score=9.0 + (i % 10) / 10.0,
+                    innovation_score=9.2 + (i % 8) / 10.0,
+                    mitre_tactics=["T1XXX.FEDERATED_LEARNING"],
+                    redaction_notes="Gradient inversion techniques redacted for privacy",
+                )
+            )
 
         return scenarios
 
@@ -476,9 +541,15 @@ class NovelSecurityScenarios:
         total_innovation = 0
 
         for scenario in self.scenarios:
-            category_counts[scenario.category] = category_counts.get(scenario.category, 0) + 1
-            novelty_counts[scenario.novelty_factor] = novelty_counts.get(scenario.novelty_factor, 0) + 1
-            classification_counts[scenario.classification] = classification_counts.get(scenario.classification, 0) + 1
+            category_counts[scenario.category] = (
+                category_counts.get(scenario.category, 0) + 1
+            )
+            novelty_counts[scenario.novelty_factor] = (
+                novelty_counts.get(scenario.novelty_factor, 0) + 1
+            )
+            classification_counts[scenario.classification] = (
+                classification_counts.get(scenario.classification, 0) + 1
+            )
             total_innovation += scenario.innovation_score
 
         avg_cvss = sum(s.cvss_score for s in self.scenarios) / len(self.scenarios)
@@ -494,5 +565,5 @@ class NovelSecurityScenarios:
             "average_cvss_score": round(avg_cvss, 2),
             "average_innovation_score": round(avg_innovation, 2),
             "generated_at": datetime.now(UTC).isoformat(),
-            "security_notice": "All operational details redacted for security purposes"
+            "security_notice": "All operational details redacted for security purposes",
         }

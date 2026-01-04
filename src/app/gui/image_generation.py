@@ -193,8 +193,7 @@ class ImageGenerationLeftPanel(QFrame):
 
         # Info label
         info_label = QLabel(
-            "⚠️ Content filtering enabled\n"
-            "All images comply with safety guidelines"
+            "⚠️ Content filtering enabled\n" "All images comply with safety guidelines"
         )
         info_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         info_label.setStyleSheet(f"color: {TRON_CYAN}; font-size: 9pt;")
@@ -369,7 +368,9 @@ class ImageGenerationRightPanel(QFrame):
     def show_error(self, message: str):
         """Show error message."""
         self.image_label.setText(f"❌ {message}")
-        self.image_label.setStyleSheet("color: #ff4444; font-size: 12pt; padding: 50px;")
+        self.image_label.setStyleSheet(
+            "color: #ff4444; font-size: 12pt; padding: 50px;"
+        )
         self.metadata_label.setText("")
         self.save_btn.setEnabled(False)
         self.copy_btn.setEnabled(False)

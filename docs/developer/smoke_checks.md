@@ -12,7 +12,6 @@ This checklist helps you verify the key stacks quickly before opening a full iss
    ```
 
 2. Confirm `.env` keys are present:
-
    - `PYTHONPATH=src` before running the app or tests
    - Optional secrets: `OPENAI_API_KEY`, `HUGGINGFACE_API_KEY`, `FERNET_KEY`
 

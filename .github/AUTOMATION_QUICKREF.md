@@ -5,12 +5,14 @@
 ## 🤖 What's Automated?
 
 ### Pull Requests
+
 - ✅ **Auto-review** all PRs with lint + tests
 - ✅ **Auto-approve** PRs that pass checks
 - ✅ **Auto-merge** Dependabot patch/minor updates
 - ✅ **Comment** with check results
 
 ### Security Scanning
+
 - 🔍 **Daily** dependency scans (pip-audit, safety)
 - 🔍 **Weekly** code scans (Bandit)
 - 🔍 **Continuous** CodeQL analysis
@@ -18,6 +20,7 @@
 - 🔍 **Auto-fix PRs** when possible
 
 ### Dependencies
+
 - 📦 **Daily** Python updates
 - 📦 **Weekly** npm, GitHub Actions, Docker updates
 - 📦 **Grouped** security updates
@@ -50,22 +53,23 @@ gh pr edit <PR-NUMBER> --add-label "auto-merge"
 
 ## 📊 Workflow Schedule
 
-| Workflow | Trigger | Frequency |
-|----------|---------|-----------|
-| Auto PR Handler | PR events | On PR activity |
-| Auto Security Fixes | Scheduled | Daily @ 2 AM UTC |
-| Auto Bandit Fixes | Scheduled | Weekly (Mon @ 3 AM) |
-| CodeQL | Push/PR | On code changes |
-| Bandit | Push/PR | On code changes |
-| CI Pipeline | Push/PR | On code changes |
-| Dependabot (Python) | Scheduled | Daily @ 2 AM |
-| Dependabot (npm) | Scheduled | Weekly @ 3 AM |
-| Dependabot (Actions) | Scheduled | Weekly @ 4 AM |
-| Dependabot (Docker) | Scheduled | Weekly @ 5 AM |
+| Workflow             | Trigger   | Frequency           |
+| -------------------- | --------- | ------------------- |
+| Auto PR Handler      | PR events | On PR activity      |
+| Auto Security Fixes  | Scheduled | Daily @ 2 AM UTC    |
+| Auto Bandit Fixes    | Scheduled | Weekly (Mon @ 3 AM) |
+| CodeQL               | Push/PR   | On code changes     |
+| Bandit               | Push/PR   | On code changes     |
+| CI Pipeline          | Push/PR   | On code changes     |
+| Dependabot (Python)  | Scheduled | Daily @ 2 AM        |
+| Dependabot (npm)     | Scheduled | Weekly @ 3 AM       |
+| Dependabot (Actions) | Scheduled | Weekly @ 4 AM       |
+| Dependabot (Docker)  | Scheduled | Weekly @ 5 AM       |
 
 ## 🔧 When to Intervene
 
 ### Auto-merge Not Working?
+
 ```bash
 # Check PR status
 gh pr checks <PR-NUMBER>
@@ -75,6 +79,7 @@ gh pr view <PR-NUMBER> --json mergeable
 ```
 
 ### Too Many Security Issues?
+
 ```bash
 # View Bandit report locally
 bandit -r src/ -f screen
@@ -84,6 +89,7 @@ pip-audit --desc <package-name>
 ```
 
 ### Workflow Failed?
+
 ```bash
 # View logs
 gh run view <RUN-ID> --log
@@ -107,14 +113,14 @@ gh run rerun <RUN-ID> --failed
 
 ## 📂 Key Files
 
-| File | Purpose |
-|------|---------|
-| `.github/workflows/auto-pr-handler.yml` | PR automation |
-| `.github/workflows/auto-security-fixes.yml` | Security scanning |
-| `.github/workflows/auto-bandit-fixes.yml` | Bandit scanning |
-| `.github/dependabot.yml` | Dependabot config |
-| `.github/AUTOMATION.md` | Full documentation |
-| `.github/scripts/test-automation.sh` | Validation script |
+| File                                        | Purpose            |
+| ------------------------------------------- | ------------------ |
+| `.github/workflows/auto-pr-handler.yml`     | PR automation      |
+| `.github/workflows/auto-security-fixes.yml` | Security scanning  |
+| `.github/workflows/auto-bandit-fixes.yml`   | Bandit scanning    |
+| `.github/dependabot.yml`                    | Dependabot config  |
+| `.github/AUTOMATION.md`                     | Full documentation |
+| `.github/scripts/test-automation.sh`        | Validation script  |
 
 ## 🛠️ Local Testing
 
@@ -137,6 +143,7 @@ pytest -v
 ## 📖 Full Documentation
 
 For complete details, workflows, troubleshooting, and architecture diagrams, see:
+
 - [.github/AUTOMATION.md](.github/AUTOMATION.md) - Complete guide
 - [CONTRIBUTING.md](../CONTRIBUTING.md) - Contribution workflow
 - [.github/copilot-instructions.md](.github/copilot-instructions.md) - Copilot context
@@ -144,7 +151,7 @@ For complete details, workflows, troubleshooting, and architecture diagrams, see
 ## 🆘 Support
 
 - 📝 **Issues**: GitHub Issues with `question` label
-- 🔒 **Security**: GitHub Issues with `security` label  
+- 🔒 **Security**: GitHub Issues with `security` label
 - 📊 **Logs**: GitHub Actions tab (90 day retention)
 - 📚 **Docs**: `.github/AUTOMATION.md`
 

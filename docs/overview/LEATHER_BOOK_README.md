@@ -16,8 +16,6 @@ cd c:\Users\Jeremy\Documents\GitHub\Project-AI
 python -m src.app.main
 ```
 
-
-
 ### What You'll See
 
 1. **Login Screen**: Right page shows login form with username/password fields
@@ -69,16 +67,15 @@ src/app/gui/
 - Easy to extend and customize
 - Production-ready code quality
 
-
 ## Documentation
 
 Read the documentation for detailed information:
 
-| File | Purpose |
-|------|---------|
-| LEATHER_BOOK_UI_COMPLETE.md | Implementation overview and features |
-| LEATHER_BOOK_ARCHITECTURE.md | Technical architecture and design |
-| DEVELOPER_QUICK_REFERENCE.md | Quick reference for developers |
+| File                         | Purpose                              |
+| ---------------------------- | ------------------------------------ |
+| LEATHER_BOOK_UI_COMPLETE.md  | Implementation overview and features |
+| LEATHER_BOOK_ARCHITECTURE.md | Technical architecture and design    |
+| DEVELOPER_QUICK_REFERENCE.md | Quick reference for developers       |
 
 ## Common Tasks
 
@@ -94,7 +91,7 @@ window = LeatherBookInterface()
 def process_user_message(message: str):
     response = your_ai_model.generate_response(message)
     # The dashboard will show the response
-    
+
 # Hook into the system when dashboard is ready
 ```
 
@@ -137,7 +134,6 @@ LeatherBookInterface (Main Window)
         │   └── AIFaceCanvas (Animated Face)
         └── AIResponsePanel (Bottom Right)
 ```
-
 
 ## Performance
 
@@ -193,7 +189,6 @@ middle_layout.addWidget(self.my_panel, 1)
 **Cause**: Stats timer not started
 
 **Fix**: Check `self.stats_timer.start(1000)` in StatsPanel.`__init__`
-
 
 ### Messages don't appear
 
@@ -274,7 +269,6 @@ For detailed technical information, see:
 - **Architecture Details**: LEATHER_BOOK_ARCHITECTURE.md
 - **Developer Reference**: DEVELOPER_QUICK_REFERENCE.md
 - **Implementation Guide**: LEATHER_BOOK_UI_COMPLETE.md
-
 
 ## Future Enhancements
 

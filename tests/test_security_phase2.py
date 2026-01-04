@@ -213,9 +213,7 @@ class TestSecureDatabaseManager:
             # Should create tables
             with db._get_connection() as conn:
                 cursor = conn.cursor()
-                cursor.execute(
-                    "SELECT name FROM sqlite_master WHERE type='table'"
-                )
+                cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
                 tables = [row[0] for row in cursor.fetchall()]
 
             assert "users" in tables
@@ -356,9 +354,7 @@ class TestSecurityMonitor:
 
         # Generate many events of same type
         for i in range(15):
-            monitor.log_security_event(
-                "repeated_event", "low", "test", f"Event {i}"
-            )
+            monitor.log_security_event("repeated_event", "low", "test", f"Event {i}")
 
         # Should detect anomaly (threshold=10)
         anomalies = monitor.detect_anomalies(time_window=60, threshold=10)

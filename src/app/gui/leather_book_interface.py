@@ -127,7 +127,9 @@ class LeatherBookInterface(QMainWindow):
         from app.gui.leather_book_dashboard import LeatherBookDashboard
 
         dashboard = LeatherBookDashboard(username)
-        dashboard.actions_panel.image_gen_requested.connect(self.switch_to_image_generation)
+        dashboard.actions_panel.image_gen_requested.connect(
+            self.switch_to_image_generation
+        )
 
         self._set_stack_page(dashboard, 1)
 

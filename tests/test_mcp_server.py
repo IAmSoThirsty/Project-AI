@@ -43,8 +43,8 @@ class TestMCPServer:
             "context": {
                 "is_user_order": True,
                 "endangers_humanity": False,
-                "harms_human": False
-            }
+                "harms_human": False,
+            },
         }
 
         result = await server._validate_action(args)
@@ -82,10 +82,7 @@ class TestMCPServer:
         if not server.persona:
             pytest.skip("Persona system not available")
 
-        args = {
-            "trait": "curiosity",
-            "value": 0.8
-        }
+        args = {"trait": "curiosity", "value": 0.8}
 
         result = await server._adjust_persona_trait(args)
         assert len(result) > 0
@@ -109,7 +106,7 @@ class TestMCPServer:
         args = {
             "category": "facts",
             "content": "Test memory content",
-            "importance": 0.7
+            "importance": 0.7,
         }
 
         result = await server._add_memory(args)
@@ -131,17 +128,16 @@ class TestMCPServer:
             pytest.skip("Memory system not available")
 
         # First add a memory
-        await server._add_memory({
-            "category": "facts",
-            "content": "Python is a programming language",
-            "importance": 0.8
-        })
+        await server._add_memory(
+            {
+                "category": "facts",
+                "content": "Python is a programming language",
+                "importance": 0.8,
+            }
+        )
 
         # Then search for it
-        args = {
-            "query": "Python",
-            "category": "facts"
-        }
+        args = {"query": "Python", "category": "facts"}
 
         result = await server._search_memory(args)
         assert len(result) > 0
@@ -153,10 +149,7 @@ class TestMCPServer:
         if not server.learning:
             pytest.skip("Learning system not available")
 
-        args = {
-            "content": "Test learning content",
-            "reason": "Test reason"
-        }
+        args = {"content": "Test learning content", "reason": "Test reason"}
 
         result = await server._submit_learning_request(args)
         assert len(result) > 0
@@ -196,10 +189,7 @@ class TestMCPServer:
     async def test_error_handling(self, server):
         """Test error handling for invalid tool calls."""
         # Test with invalid trait name
-        args = {
-            "trait": "invalid_trait",
-            "value": 0.5
-        }
+        args = {"trait": "invalid_trait", "value": 0.5}
 
         result = await server._adjust_persona_trait(args)
         assert len(result) > 0
@@ -231,7 +221,7 @@ class TestMCPConfiguration:
             "claude_desktop_config.example.json",
             "claude_desktop_config.windows.example.json",
             "claude_desktop_config.linux.example.json",
-            "claude_desktop_config.macos.example.json"
+            "claude_desktop_config.macos.example.json",
         ]
 
         for example in examples:
@@ -241,10 +231,7 @@ class TestMCPConfiguration:
         """Test that MCP documentation exists."""
         docs_dir = Path(__file__).parent.parent / "docs"
 
-        docs = [
-            "MCP_CONFIGURATION.md",
-            "MCP_QUICKSTART.md"
-        ]
+        docs = ["MCP_CONFIGURATION.md", "MCP_QUICKSTART.md"]
 
         for doc in docs:
             assert (docs_dir / doc).exists(), f"Missing {doc}"
@@ -271,10 +258,9 @@ class TestMCPIntegration:
             server = ProjectAIMCPServer(data_dir=tmpdir)
 
             # 1. Validate an action
-            result = await server._validate_action({
-                "action": "Test action",
-                "context": {"is_user_order": True}
-            })
+            result = await server._validate_action(
+                {"action": "Test action", "context": {"is_user_order": True}}
+            )
             assert len(result) > 0
 
             # 2. Get persona state
@@ -284,19 +270,20 @@ class TestMCPIntegration:
 
             # 3. Add memory
             if server.memory:
-                result = await server._add_memory({
-                    "category": "facts",
-                    "content": "Integration test memory",
-                    "importance": 0.5
-                })
+                result = await server._add_memory(
+                    {
+                        "category": "facts",
+                        "content": "Integration test memory",
+                        "importance": 0.5,
+                    }
+                )
                 assert len(result) > 0
 
             # 4. Search memory
             if server.memory:
-                result = await server._search_memory({
-                    "query": "integration",
-                    "category": "facts"
-                })
+                result = await server._search_memory(
+                    {"query": "integration", "category": "facts"}
+                )
                 assert len(result) > 0
 
 

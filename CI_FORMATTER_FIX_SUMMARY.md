@@ -1,14 +1,17 @@
 # CI Formatter Job Failures - Fix Summary
 
 ## Overview
+
 This document summarizes the fixes applied to resolve CI formatter job failures in the GitHub Actions workflow file `.github/workflows/main.yml`.
 
 ## Issues Fixed
 
 ### 1. Google Java Format - Exit Code 2 Error
+
 **Problem**: The `axel-op/googlejavaformat-action@v3` action was causing failures when using `--lines`, `--offset`, or `--length` flags with multiple files simultaneously.
 
 **Solution**:
+
 - Replaced the GitHub Action with a manual approach
 - Check if Java files exist before attempting to format
 - Download google-java-format JAR manually
@@ -16,6 +19,7 @@ This document summarizes the fixes applied to resolve CI formatter job failures 
 - Skip the step entirely if no Java files are found
 
 **Code Changes**:
+
 ```yaml
 # Before
 - name: Fix Java
@@ -42,15 +46,18 @@ This document summarizes the fixes applied to resolve CI formatter job failures 
 ```
 
 ### 2. .NET Formatting - Missing Project Files
+
 **Problem**: `dotnet format` was running without checking if a `.csproj` or `.sln` file exists, causing failures when no C# projects are present.
 
 **Solution**:
+
 - Check if dotnet CLI is installed
 - Check if `.csproj` or `.sln` files exist before running `dotnet format`
 - Provide informative messages when skipping
 - Try to find and specify the project/solution file if available
 
 **Code Changes**:
+
 ```yaml
 # Before
 - name: Fix C#
@@ -85,15 +92,18 @@ This document summarizes the fixes applied to resolve CI formatter job failures 
 ```
 
 ### 3. Rubocop Permission Issues
+
 **Problem**: Installing rubocop with `gem install rubocop` (without `--user-install`) requires sudo permissions, and the rubocop binary was not in the PATH.
 
 **Solution**:
+
 - Install rubocop with `--user-install` flag to avoid permission issues
 - Dynamically detect Ruby version and add the correct gem path to PATH
 - Check if Ruby files exist before running rubocop
 - Provide informative messages when skipping
 
 **Code Changes**:
+
 ```yaml
 # Before
 - name: Fix Ruby
@@ -119,13 +129,16 @@ This document summarizes the fixes applied to resolve CI formatter job failures 
 ```
 
 ### 4. GitHub Actions Push Permissions
+
 **Problem**: Auto-committing changes to `.github/workflows/*` files requires the `workflows: write` permission, which may not be granted, causing push failures.
 
 **Solution**:
+
 - Exclude `.github/workflows/*` from the file pattern in the auto-commit action
 - Added a comment explaining why workflow files are excluded
 
 **Code Changes**:
+
 ```yaml
 # Before
 - name: Commit & Push Fixes
@@ -156,6 +169,7 @@ This document summarizes the fixes applied to resolve CI formatter job failures 
 ## Testing
 
 All fixes were validated locally:
+
 - ✅ YAML syntax is valid
 - ✅ Java formatter logic skips when no `.java` files found
 - ✅ C# formatter logic skips when no `.csproj` or `.sln` files found

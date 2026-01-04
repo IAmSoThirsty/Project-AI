@@ -42,6 +42,7 @@ print(f"Confidence: {result['confidence']}")  # 0.98
 ```
 
 **Output:**
+
 ```
 Defense Result: True
 Detection Layer: input_validation
@@ -79,6 +80,7 @@ print(f"Perturbation Detected: {result['adversarial_detection']}")  # True
 ```
 
 **Output:**
+
 ```
 Blocked: True
 FourLaws Triggered: True
@@ -114,6 +116,7 @@ print(f"Innovation Score: {result['innovation_score']}")  # 9.7
 ```
 
 **Output:**
+
 ```
 Blocked: True
 Post-Quantum Defense: True
@@ -150,6 +153,7 @@ print(f"Levenshtein Distance: {proximity.levenshtein_distance}")
 ```
 
 **Output:**
+
 ```
 Perturbation Magnitude: 0.000 (no modification needed to detect)
 Near-Miss Score: 0.08 (far from threshold of 0.7)
@@ -178,6 +182,7 @@ print(f"Stability: {lipschitz_analysis.stability_rating}")
 ```
 
 **Output:**
+
 ```
 Lipschitz Constant: 0.419 (acceptable, <0.5 target)
 Gradient Norm: 0.002 (near-zero, very stable)
@@ -202,6 +207,7 @@ print(f"Main System ASR: {transferability.main_asr}")
 ```
 
 **Output:**
+
 ```
 Proxy Success Rate: 12.5% (attacks succeed on weaker model)
 Transfer Rate: 1.8% (low transfer to Project-AI)
@@ -237,6 +243,7 @@ for capability in assessment.capability_evals:
 ```
 
 **Output:**
+
 ```
 Current ASL Level: ASL-2
 Recommended Level: ASL-2
@@ -281,6 +288,7 @@ print(f"Encrypted to: {encrypted_path}")
 ```
 
 **Output:**
+
 ```
 Encrypted to: data/security/encrypted/command_override_config.json.enc
 Encryption: Fernet (AES-128)
@@ -304,6 +312,7 @@ else:
 ```
 
 **Output:**
+
 ```
 Access Check: data/codex_deus_maximus.db
 User: user123
@@ -328,6 +337,7 @@ security.monitor_access(
 ```
 
 **Output:**
+
 ```
 ⚠️ ANOMALY DETECTED
 User: suspicious_user
@@ -345,6 +355,7 @@ python scripts/run_asl3_security.py rotate-key
 ```
 
 **Output:**
+
 ```
 ASL-3 Key Rotation Started
 ==============================
@@ -387,6 +398,7 @@ print(f"Category: {result.category}")  # None
 ```
 
 **Output:**
+
 ```
 Is Safe: True
 Category: None
@@ -407,6 +419,7 @@ print(f"Specific Risk: {result.risk_type}")  # "chemical_weapons"
 ```
 
 **Output:**
+
 ```
 ❌ CBRN RISK DETECTED
 Is Safe: False
@@ -430,6 +443,7 @@ result2 = cbrn.classify("Specifically nerve agents", user="attacker")
 ```
 
 **Output:**
+
 ```
 Turn 1: ✓ Safe (chemistry education)
 Turn 2: ❌ Context Escalation Detected
@@ -446,6 +460,7 @@ python scripts/run_cbrn_classifier.py report
 ```
 
 **Output:**
+
 ```
 CBRN Classifier Report
 ======================
@@ -500,7 +515,7 @@ def validate_complete_defense(attack_scenario):
     print("=" * 60)
     print("COMPLETE DEFENSE VALIDATION")
     print("=" * 60)
-    
+
     # Layer 1: CBRN Classification
     print("\n[Layer 1] CBRN Classification...")
     cbrn = CBRNClassifier(data_dir="data")
@@ -511,7 +526,7 @@ def validate_complete_defense(attack_scenario):
     print(f"  Result: {'❌ BLOCKED' if not cbrn_result.is_safe else '✓ Passed'}")
     if not cbrn_result.is_safe:
         return {"blocked": True, "layer": "CBRN", "result": cbrn_result}
-    
+
     # Layer 2: FourLaws Ethical Validation
     print("\n[Layer 2] FourLaws Ethical Validation...")
     fourlaws = FourLaws()
@@ -522,7 +537,7 @@ def validate_complete_defense(attack_scenario):
     print(f"  Result: {'❌ BLOCKED' if not is_allowed else '✓ Passed'}")
     if not is_allowed:
         return {"blocked": True, "layer": "FourLaws", "reason": reason}
-    
+
     # Layer 3: Deep Input Validation
     print("\n[Layer 3] Deep Input Validation...")
     stress_test = RedTeamStressTest(data_dir="data")
@@ -530,7 +545,7 @@ def validate_complete_defense(attack_scenario):
     print(f"  Result: {'❌ BLOCKED' if validation_result["malicious"] else '✓ Passed'}")
     if validation_result["malicious"]:
         return {"blocked": True, "layer": "InputValidation", "result": validation_result}
-    
+
     # Layer 4: ASL-3 Security Controls
     print("\n[Layer 4] ASL-3 Security Controls...")
     security = ASL3Security(data_dir="data")
@@ -542,7 +557,7 @@ def validate_complete_defense(attack_scenario):
     print(f"  Result: {'❌ BLOCKED' if not access_allowed else '✓ Passed'}")
     if not access_allowed:
         return {"blocked": True, "layer": "ASL3Security", "reason": "Access denied"}
-    
+
     # Layer 5: Robustness Check
     print("\n[Layer 5] Robustness Analysis...")
     metrics = RobustnessMetricsEngine(data_dir="data")
@@ -552,7 +567,7 @@ def validate_complete_defense(attack_scenario):
     )
     print(f"  Robustness Margin: {proximity.robustness_margin:.3f}")
     print(f"  Near-Miss: {'⚠️ YES' if proximity.near_miss_score > 0.7 else '✓ NO'}")
-    
+
     # All layers passed (unlikely for real attacks)
     print("\n" + "=" * 60)
     print("⚠️ WARNING: Attack passed all layers (requires review)")
@@ -577,6 +592,7 @@ print(f"\n\nFinal Result: {result}")
 ```
 
 **Output:**
+
 ```
 ============================================================
 COMPLETE DEFENSE VALIDATION
@@ -641,6 +657,7 @@ echo "Audit Complete! Reports saved to reports/"
 ```
 
 **Output:**
+
 ```
 Project-AI Monthly Security Audit
 ==================================
@@ -693,6 +710,7 @@ Project-AI implements **production-grade security** with:
 **Status**: APPROVED FOR HIGH-SECURITY ENVIRONMENTS ✅
 
 For more examples and detailed documentation, see:
+
 - `docs/ASL_FRAMEWORK.md` - ASL framework overview
 - `docs/ASL3_IMPLEMENTATION.md` - Implementation guide
 - `docs/ROBUSTNESS_METRICS.md` - Metrics documentation

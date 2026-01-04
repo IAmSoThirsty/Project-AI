@@ -11,6 +11,7 @@
 ### ⚠️ P0 - CRITICAL (Complete within 48 hours)
 
 - [ ] **VERIFY** `.env` file is NOT in git history
+
   ```bash
   git log --all --full-history -- .env
   ```
@@ -23,6 +24,7 @@
   - [ ] Verify `.env` is in `.gitignore`
 
 - [ ] **CREATE** `.env.example` with placeholder values:
+
   ```env
   OPENAI_API_KEY=sk-proj-YOUR_KEY_HERE
   SMTP_USERNAME=your-email@example.com
@@ -62,18 +64,21 @@
 ### P1 - Input Validation
 
 - [ ] **Implement path traversal protection**
+
   ```python
   def validate_file_path(path, allowed_dir):
       # Verify path is within allowed directory
   ```
 
 - [ ] **Add email validation**
+
   ```python
   def validate_email(email):
       # Regex validation + format check
   ```
 
 - [ ] **Add input sanitization**
+
   ```python
   def sanitize_input(text, max_length=1000):
       # Remove dangerous characters
@@ -102,6 +107,7 @@
 ### P2 - Rate Limiting
 
 - [ ] **Add rate limiting decorator**
+
   ```python
   @RateLimiter(max_calls=10, period=60)
   def api_call(...):
@@ -117,6 +123,7 @@
 ### P2 - Network Security
 
 - [ ] **Add timeout to all HTTP requests**
+
   ```python
   requests.get(url, timeout=5, verify=True)
   ```
@@ -147,11 +154,12 @@
 ### P3 - Error Handling
 
 - [ ] **Replace verbose error messages**
+
   ```python
   # BAD
   except Exception as e:
       return f"Error: {str(e)}"
-  
+
   # GOOD
   except Exception as e:
       logger.error(f"Operation failed: {e}")
@@ -172,6 +180,7 @@
 ### P3 - Dependency Security
 
 - [ ] **Regular dependency audits**
+
   ```bash
   pip-audit --desc
   ```
@@ -189,18 +198,18 @@
 
 ### OWASP Top 10 (2021)
 
-| Risk | Status | Action Items |
-|------|--------|--------------|
-| A01 - Broken Access Control | ⚠️ | File permissions, RBAC |
-| A02 - Cryptographic Failures | ❌ | Encrypt all sensitive data |
-| A03 - Injection | ⚠️ | Input validation, sanitization |
-| A04 - Insecure Design | ⚠️ | Security architecture review |
-| A05 - Security Misconfiguration | ❌ | Rotate credentials, secure defaults |
-| A06 - Vulnerable Components | ✅ | Regular updates |
-| A07 - Authentication Failures | ⚠️ | Password policy, MFA |
-| A08 - Software/Data Integrity | ⚠️ | Atomic writes, file locking |
-| A09 - Security Logging | ⚠️ | Comprehensive audit logging |
-| A10 - SSRF | ✅ | No vectors identified |
+| Risk                            | Status | Action Items                        |
+| ------------------------------- | ------ | ----------------------------------- |
+| A01 - Broken Access Control     | ⚠️     | File permissions, RBAC              |
+| A02 - Cryptographic Failures    | ❌     | Encrypt all sensitive data          |
+| A03 - Injection                 | ⚠️     | Input validation, sanitization      |
+| A04 - Insecure Design           | ⚠️     | Security architecture review        |
+| A05 - Security Misconfiguration | ❌     | Rotate credentials, secure defaults |
+| A06 - Vulnerable Components     | ✅     | Regular updates                     |
+| A07 - Authentication Failures   | ⚠️     | Password policy, MFA                |
+| A08 - Software/Data Integrity   | ⚠️     | Atomic writes, file locking         |
+| A09 - Security Logging          | ⚠️     | Comprehensive audit logging         |
+| A10 - SSRF                      | ✅     | No vectors identified               |
 
 ### GDPR Compliance
 
@@ -229,11 +238,13 @@
 ### Static Analysis
 
 - [ ] **Run Bandit**
+
   ```bash
   bandit -r src/ -f json -o bandit_report.json
   ```
 
 - [ ] **Run Semgrep**
+
   ```bash
   semgrep --config=auto src/
   ```
@@ -246,6 +257,7 @@
 ### Dynamic Analysis
 
 - [ ] **Run pip-audit** (dependency vulnerabilities)
+
   ```bash
   pip-audit --desc
   ```
@@ -404,4 +416,4 @@
 
 ---
 
-*For questions or security concerns, contact: [security@project-ai.example.com]*
+_For questions or security concerns, contact: [security@project-ai.example.com]_

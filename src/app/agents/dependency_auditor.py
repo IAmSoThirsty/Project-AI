@@ -2,6 +2,7 @@
 
 Runs pip-audit and basic dependency checks on newly generated files.
 """
+
 from __future__ import annotations
 
 import importlib
@@ -51,7 +52,8 @@ class DependencyAuditor:
             imports = [
                 line
                 for line in txt.splitlines()
-                if line.strip().startswith("import ") or line.strip().startswith("from ")
+                if line.strip().startswith("import ")
+                or line.strip().startswith("from ")
             ]
 
             # Try programmatic pip-audit if available
@@ -70,6 +72,7 @@ class DependencyAuditor:
                     elif hasattr(pip_audit, "main"):
                         # capture stdout of main
                         import io
+
                         old_stdout = sys.stdout
                         buf = io.StringIO()
                         sys.stdout = buf
@@ -92,7 +95,11 @@ class DependencyAuditor:
             except Exception:
                 # fall back to subprocess if import fails
                 try:
-                    res = subprocess.run([sys.executable, "-m", "pip_audit", "--format", "json"], capture_output=True, text=True)
+                    res = subprocess.run(
+                        [sys.executable, "-m", "pip_audit", "--format", "json"],
+                        capture_output=True,
+                        text=True,
+                    )
                     audit_json = res.stdout
                 except Exception:
                     audit_json = None
@@ -106,12 +113,14 @@ class DependencyAuditor:
                     try:
                         from app.monitoring.cerberus_dashboard import record_incident
 
-                        record_incident({
-                            "type": "sandbox_declined",
-                            "reason": "unsafe_platform",
-                            "platform": "Windows",
-                            "message": "Sandbox limits unavailable on Windows; run inside container or enable ALLOW_UNSAFE_SANDBOX",
-                        })
+                        record_incident(
+                            {
+                                "type": "sandbox_declined",
+                                "reason": "unsafe_platform",
+                                "platform": "Windows",
+                                "message": "Sandbox limits unavailable on Windows; run inside container or enable ALLOW_UNSAFE_SANDBOX",
+                            }
+                        )
                     except Exception:
                         pass
                     sandbox_output = {
@@ -119,14 +128,27 @@ class DependencyAuditor:
                         "message": "Sandbox limits unavailable on Windows; run inside container or set environment to allow unsafe sandbox",
                     }
                 else:
-                    worker = Path(__file__).parent.parent / "agents" / "sandbox_worker.py"
-                    cmd = [sys.executable, str(worker), str(Path(module_path).resolve())]
-                    proc = subprocess.run(cmd, capture_output=True, text=True, timeout=10)
+                    worker = (
+                        Path(__file__).parent.parent / "agents" / "sandbox_worker.py"
+                    )
+                    cmd = [
+                        sys.executable,
+                        str(worker),
+                        str(Path(module_path).resolve()),
+                    ]
+                    proc = subprocess.run(
+                        cmd, capture_output=True, text=True, timeout=10
+                    )
                     # sandbox_worker prints JSON to stdout
                     try:
-                        sandbox_output = json.loads(proc.stdout) if proc.stdout else None
+                        sandbox_output = (
+                            json.loads(proc.stdout) if proc.stdout else None
+                        )
                     except Exception:
-                        sandbox_output = {"raw_stdout": proc.stdout, "raw_stderr": proc.stderr}
+                        sandbox_output = {
+                            "raw_stdout": proc.stdout,
+                            "raw_stderr": proc.stderr,
+                        }
             except subprocess.TimeoutExpired:
                 sandbox_output = {"error": "timeout"}
             except Exception as e:
@@ -142,7 +164,10 @@ class DependencyAuditor:
             }
 
             # Persist report
-            report_name = Path(self.reports_dir) / f"sandbox_report_{Path(module_path).stem}_{int(time.time())}.json"
+            report_name = (
+                Path(self.reports_dir)
+                / f"sandbox_report_{Path(module_path).stem}_{int(time.time())}.json"
+            )
             try:
                 with open(report_name, "w", encoding="utf-8") as rf:
                     json.dump(report, rf, ensure_ascii=False, indent=2)

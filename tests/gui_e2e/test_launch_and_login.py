@@ -20,7 +20,9 @@ def test_launch_and_close(qapp):
     win.close()
 
 
-@pytest.mark.skip(reason="Interactive login requires mocking; scaffold added for future tests")
+@pytest.mark.skip(
+    reason="Interactive login requires mocking; scaffold added for future tests"
+)
 def test_login_flow(qapp):
     # Placeholder: implement with pytest-qt to simulate button clicks and text entry
     pass

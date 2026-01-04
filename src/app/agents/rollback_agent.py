@@ -2,6 +2,7 @@
 
 Monitors integrations and can automatically rollback if failures observed.
 """
+
 from __future__ import annotations
 
 import logging
@@ -15,7 +16,9 @@ class RollbackAgent:
     def __init__(self, data_dir: str = "data") -> None:
         self.data_dir = data_dir
 
-    def monitor_and_rollback(self, integration_report: dict[str, Any]) -> dict[str, Any]:
+    def monitor_and_rollback(
+        self, integration_report: dict[str, Any]
+    ) -> dict[str, Any]:
         # If integration_report contains errors, attempt rollback
         try:
             errors = integration_report.get("report", {}).get("errors", [])

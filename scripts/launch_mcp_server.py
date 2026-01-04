@@ -34,7 +34,7 @@ def setup_logging(log_level: str):
     logging.basicConfig(
         level=numeric_level,
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        handlers=[logging.StreamHandler(sys.stderr)]
+        handlers=[logging.StreamHandler(sys.stderr)],
     )
 
 
@@ -56,14 +56,14 @@ Examples:
 
   # Launch with all options
   python scripts/launch_mcp_server.py --data-dir /path/to/data --log-level INFO
-        """
+        """,
     )
 
     parser.add_argument(
         "--data-dir",
         type=str,
         default=None,
-        help="Directory for data persistence (default: ./data)"
+        help="Directory for data persistence (default: ./data)",
     )
 
     parser.add_argument(
@@ -71,13 +71,11 @@ Examples:
         type=str,
         default="INFO",
         choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
-        help="Logging level (default: INFO)"
+        help="Logging level (default: INFO)",
     )
 
     parser.add_argument(
-        "--check-deps",
-        action="store_true",
-        help="Check dependencies and exit"
+        "--check-deps", action="store_true", help="Check dependencies and exit"
     )
 
     return parser.parse_args()
@@ -118,13 +116,13 @@ def check_environment():
 
     required = {
         "OPENAI_API_KEY": "OpenAI API key",
-        "HUGGINGFACE_API_KEY": "Hugging Face API key"
+        "HUGGINGFACE_API_KEY": "Hugging Face API key",
     }
 
     optional = {
         "FERNET_KEY": "Encryption key",
         "SMTP_USERNAME": "Email username",
-        "SMTP_PASSWORD": "Email password"
+        "SMTP_PASSWORD": "Email password",
     }
 
     missing_required = []

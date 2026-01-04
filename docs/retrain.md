@@ -49,7 +49,6 @@ explainability tokens, but the Four Laws remain the authoritative control mechan
 the Learning Request Log and Black Vault for human-in-the-loop approvals prior to
 persistent learning.
 
-
 ---
 
 **Repository note:** Last updated: 2025-11-26 (automated)

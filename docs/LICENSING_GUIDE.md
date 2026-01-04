@@ -29,32 +29,32 @@ All dependencies in `pyproject.toml` are compatible with MIT licensing:
 
 ### Core Dependencies
 
-| Package | License | Compatible | Purpose |
-|---------|---------|-----------|---------|
-| PyQt6 | GPL v3 / Commercial | ✅ Yes | GUI Framework |
-| scikit-learn | BSD 3-Clause | ✅ Yes | Machine Learning |
-| numpy | BSD 3-Clause | ✅ Yes | Numerical Computing |
-| pandas | BSD 3-Clause | ✅ Yes | Data Analysis |
-| matplotlib | PSF | ✅ Yes | Data Visualization |
-| cryptography | Apache 2.0 / BSD 3-Clause | ✅ Yes | Encryption |
-| openai | Apache 2.0 | ✅ Yes | AI API Client |
-| requests | Apache 2.0 | ✅ Yes | HTTP Client |
-| geopy | MIT | ✅ Yes | Geolocation |
-| python-dotenv | BSD 3-Clause | ✅ Yes | Environment Config |
-| passlib | BSD | ✅ Yes | Password Hashing |
-| bcrypt | Apache 2.0 | ✅ Yes | Bcrypt Hashing |
-| PyPDF2 | BSD | ✅ Yes | PDF Processing |
-| httpx | BSD | ✅ Yes | Async HTTP |
+| Package       | License                   | Compatible | Purpose             |
+| ------------- | ------------------------- | ---------- | ------------------- |
+| PyQt6         | GPL v3 / Commercial       | ✅ Yes     | GUI Framework       |
+| scikit-learn  | BSD 3-Clause              | ✅ Yes     | Machine Learning    |
+| numpy         | BSD 3-Clause              | ✅ Yes     | Numerical Computing |
+| pandas        | BSD 3-Clause              | ✅ Yes     | Data Analysis       |
+| matplotlib    | PSF                       | ✅ Yes     | Data Visualization  |
+| cryptography  | Apache 2.0 / BSD 3-Clause | ✅ Yes     | Encryption          |
+| openai        | Apache 2.0                | ✅ Yes     | AI API Client       |
+| requests      | Apache 2.0                | ✅ Yes     | HTTP Client         |
+| geopy         | MIT                       | ✅ Yes     | Geolocation         |
+| python-dotenv | BSD 3-Clause              | ✅ Yes     | Environment Config  |
+| passlib       | BSD                       | ✅ Yes     | Password Hashing    |
+| bcrypt        | Apache 2.0                | ✅ Yes     | Bcrypt Hashing      |
+| PyPDF2        | BSD                       | ✅ Yes     | PDF Processing      |
+| httpx         | BSD                       | ✅ Yes     | Async HTTP          |
 
 ### Development Dependencies
 
-| Package | License | Purpose |
-|---------|---------|---------|
-| ruff | MIT | Code Linting |
-| pytest | MIT | Testing Framework |
-| pytest-cov | MIT | Coverage Reporting |
-| black | MIT | Code Formatter |
-| flake8 | MIT | Style Guide |
+| Package    | License | Purpose            |
+| ---------- | ------- | ------------------ |
+| ruff       | MIT     | Code Linting       |
+| pytest     | MIT     | Testing Framework  |
+| pytest-cov | MIT     | Coverage Reporting |
+| black      | MIT     | Code Formatter     |
+| flake8     | MIT     | Style Guide        |
 
 All dependencies are compatible with MIT licensing
 

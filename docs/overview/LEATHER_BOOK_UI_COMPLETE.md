@@ -64,7 +64,7 @@ Updated application entry point:
 │   (40% width)        │  ┌──────────────────────────────┤
 │                      │  │ Uptime, Memory, CPU, Session │
 │   - Neural Face      │  └──────────────────────────────┤
-│   - Grid Background  │  
+│   - Grid Background  │
 │   - Status LEDs      │  CENTER: AI NEURAL HEAD        │
 │   - Animation        │  ┌──────────────────────────────┤
 │                      │  │ Animated Face (eyes, mouth)  │
@@ -178,11 +178,11 @@ app.exec()
 
 ## Files Modified Summary
 
-| File | Type | Status | Changes |
-|------|------|--------|---------|
-| leather_book_dashboard.py | NEW | Created | 650+ lines, 6 classes |
-| leather_book_interface.py | MODIFIED | Updated | switch_to_main_dashboard() method |
-| main.py | MODIFIED | Updated | Entry point to use LeatherBookInterface |
+| File                      | Type     | Status  | Changes                                 |
+| ------------------------- | -------- | ------- | --------------------------------------- |
+| leather_book_dashboard.py | NEW      | Created | 650+ lines, 6 classes                   |
+| leather_book_interface.py | MODIFIED | Updated | switch_to_main_dashboard() method       |
+| main.py                   | MODIFIED | Updated | Entry point to use LeatherBookInterface |
 
 ---
 

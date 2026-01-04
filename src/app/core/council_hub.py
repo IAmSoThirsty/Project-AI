@@ -107,9 +107,14 @@ class CouncilHub:
         if self._autolearn_thread and self._autolearn_thread.is_alive():
             return
         self._autolearn_stop.clear()
-        self._autolearn_thread = threading.Thread(target=self._autolearn_loop, daemon=True)
+        self._autolearn_thread = threading.Thread(
+            target=self._autolearn_loop, daemon=True
+        )
         self._autolearn_thread.start()
-        logger.info("CouncilHub autonomous learning started (interval=%s)", self._autolearn_interval)
+        logger.info(
+            "CouncilHub autonomous learning started (interval=%s)",
+            self._autolearn_interval,
+        )
 
     def stop_autonomous_learning(self) -> None:
         if self._autolearn_thread:
@@ -143,8 +148,12 @@ class CouncilHub:
                 with open(path, encoding="utf-8") as f:
                     content = f.read()
                 topic = os.path.splitext(fn)[0]
-                report = engine.absorb_information(topic, content, metadata={"source": "autolearn"})
-                logger.info("Autolearn absorbed %s -> report facts=%s", fn, report.facts)
+                report = engine.absorb_information(
+                    topic, content, metadata={"source": "autolearn"}
+                )
+                logger.info(
+                    "Autolearn absorbed %s -> report facts=%s", fn, report.facts
+                )
                 # Optionally archive consumed file
                 archive = path + ".consumed"
                 os.rename(path, archive)
@@ -159,14 +168,24 @@ class CouncilHub:
                         # locate latest generated artifact and run QA pipeline
                         gen_dir = os.path.join("src", "app", "generated", topic)
                         if os.path.exists(gen_dir):
-                            files = sorted([os.path.join(gen_dir, f) for f in os.listdir(gen_dir) if f.endswith('.py')])
+                            files = sorted(
+                                [
+                                    os.path.join(gen_dir, f)
+                                    for f in os.listdir(gen_dir)
+                                    if f.endswith(".py")
+                                ]
+                            )
                             if files:
                                 latest = files[-1]
                                 # Only run if agents enabled
                                 if self._agents_enabled.get("dependency_auditor", True):
-                                    self._project["dependency_auditor"].analyze_new_module(latest)
+                                    self._project[
+                                        "dependency_auditor"
+                                    ].analyze_new_module(latest)
                                 if self._agents_enabled.get("qa_generator", True):
-                                    self._project["qa_generator"].generate_test_for_module(latest)
+                                    self._project[
+                                        "qa_generator"
+                                    ].generate_test_for_module(latest)
                 except Exception:
                     logger.exception("Post-curation QA pipeline failed")
             except Exception as e:
@@ -198,23 +217,51 @@ class CouncilHub:
                         try:
                             dep_res = dep.analyze_new_module(path)
                             if not dep_res.get("success"):
-                                failures.append({"module": path, "stage": "dependency", "detail": dep_res})
+                                failures.append(
+                                    {
+                                        "module": path,
+                                        "stage": "dependency",
+                                        "detail": dep_res,
+                                    }
+                                )
                         except Exception as e:
-                            logger.exception("Dependency check exception for %s: %s", path, e)
-                            failures.append({"module": path, "stage": "dependency_exception", "detail": str(e)})
+                            logger.exception(
+                                "Dependency check exception for %s: %s", path, e
+                            )
+                            failures.append(
+                                {
+                                    "module": path,
+                                    "stage": "dependency_exception",
+                                    "detail": str(e),
+                                }
+                            )
                     # QA
                     if self._agents_enabled.get("qa_generator", True) and qa:
                         try:
                             gen = qa.generate_test_for_module(path)
                             if not gen.get("success"):
-                                failures.append({"module": path, "stage": "qa_generate", "detail": gen})
+                                failures.append(
+                                    {
+                                        "module": path,
+                                        "stage": "qa_generate",
+                                        "detail": gen,
+                                    }
+                                )
                                 continue
                             run = qa.run_tests()
                             if not run.get("success"):
-                                failures.append({"module": path, "stage": "qa_run", "detail": run})
+                                failures.append(
+                                    {"module": path, "stage": "qa_run", "detail": run}
+                                )
                         except Exception as e:
                             logger.exception("QA check exception for %s: %s", path, e)
-                            failures.append({"module": path, "stage": "qa_exception", "detail": str(e)})
+                            failures.append(
+                                {
+                                    "module": path,
+                                    "stage": "qa_exception",
+                                    "detail": str(e),
+                                }
+                            )
 
             if failures:
                 return {"success": False, "failures": failures}
@@ -227,7 +274,11 @@ class CouncilHub:
         cerberus_result = self._consult_cerberus(message)
         if not cerberus_result.get("is_safe", True):
             # If unsafe, cut communication and optionally shutdown the sender
-            logger.warning("Cerberus flagged message from %s as unsafe: %s", from_id, cerberus_result)
+            logger.warning(
+                "Cerberus flagged message from %s as unsafe: %s",
+                from_id,
+                cerberus_result,
+            )
             self._cut_communication(from_id)
             return {"delivered": False, "reason": "unsafe", "cerberus": cerberus_result}
 
@@ -247,7 +298,9 @@ class CouncilHub:
                 recipient.receive_message(from_id, message)
             return {"delivered": True}
         except Exception as e:
-            logger.exception("Failed to deliver message from %s to %s: %s", from_id, to_id, e)
+            logger.exception(
+                "Failed to deliver message from %s to %s: %s", from_id, to_id, e
+            )
             return {"delivered": False, "error": str(e)}
 
     def _consult_cerberus(self, content: str) -> dict[str, Any]:
@@ -277,9 +330,14 @@ class CouncilHub:
                         obj.deactivate()
                 except Exception:
                     logger.exception("Failed to gracefully deactivate %s", agent_id)
-                logger.warning("Agent %s communication cut by CouncilHub due to Cerberus alert", agent_id)
+                logger.warning(
+                    "Agent %s communication cut by CouncilHub due to Cerberus alert",
+                    agent_id,
+                )
             else:
-                logger.warning("Attempted to cut communication for unknown agent %s", agent_id)
+                logger.warning(
+                    "Attempted to cut communication for unknown agent %s", agent_id
+                )
 
     def enable_agent(self, agent_id: str) -> None:
         """Enable an optional agent."""

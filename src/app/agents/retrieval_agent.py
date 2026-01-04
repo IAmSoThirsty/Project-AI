@@ -2,6 +2,7 @@
 
 Builds embeddings (placeholder) and provides retrieve function for QA.
 """
+
 from __future__ import annotations
 
 import json

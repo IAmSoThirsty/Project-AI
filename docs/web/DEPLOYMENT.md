@@ -7,7 +7,7 @@
 Create `docker-compose.yml` in the web directory:
 
 ```yaml
-version: '3.8'
+version: "3.8"
 
 services:
   backend:
@@ -41,6 +41,7 @@ volumes:
 ```
 
 Run with:
+
 ```bash
 docker-compose up -d
 ```
@@ -48,11 +49,13 @@ docker-compose up -d
 ## Cloud Deployment Options
 
 ### Vercel (Frontend)
+
 1. Connect your GitHub repo to Vercel
 2. Set root directory to `web/frontend`
 3. Deploy automatically on push
 
 ### Heroku (Full Stack)
+
 ```bash
 heroku create project-ai-web
 heroku addons:create heroku-postgresql:hobby-dev
@@ -60,11 +63,13 @@ git push heroku feature/web-conversion:main
 ```
 
 ### AWS (Production)
+
 - **Frontend**: S3 + CloudFront
 - **Backend**: EC2 or ECS
 - **Database**: RDS PostgreSQL
 
 ### DigitalOcean App Platform
+
 1. Connect GitHub repository
 2. Configure build settings
 3. Deploy with auto-scaling
@@ -94,7 +99,6 @@ GEMINI_API_KEY=<your-key>
 - [ ] Use environment variables for sensitive data
 - [ ] Set up database backups
 - [ ] Configure logging and monitoring
-
 
 ---
 

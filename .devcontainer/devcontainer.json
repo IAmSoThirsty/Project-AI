@@ -1,7 +1,7 @@
 {
   "name": "Project-AI Development",
   "image": "mcr.microsoft.com/devcontainers/python:3.12",
-  
+
   "features": {
     "ghcr.io/devcontainers/features/node:1": {
       "version": "18"
@@ -10,7 +10,7 @@
       "version": "latest"
     }
   },
-  
+
   "customizations": {
     "vscode": {
       "extensions": [
@@ -37,11 +37,11 @@
       }
     }
   },
-  
+
   "postCreateCommand": "bash .devcontainer/postCreateCommand.sh",
-  
+
   "forwardPorts": [5000, 8000],
-  
+
   "portsAttributes": {
     "5000": {
       "label": "Flask Backend",
@@ -52,17 +52,17 @@
       "onAutoForward": "notify"
     }
   },
-  
+
   "remoteEnv": {
     "PYTHONUNBUFFERED": "1",
     "PYTHONPATH": "/workspaces/Project-AI/src",
     "DATA_DIR": "/workspaces/Project-AI/data",
     "LOG_DIR": "/workspaces/Project-AI/logs"
   },
-  
+
   "mounts": [
     "source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/vscode/.ssh,readonly,type=bind,consistency=cached"
   ],
-  
+
   "remoteUser": "vscode"
 }

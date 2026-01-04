@@ -2,6 +2,7 @@
 
 Collects user interactions and produces prioritized suggestions.
 """
+
 from __future__ import annotations
 
 import json

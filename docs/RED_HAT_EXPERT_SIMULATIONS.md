@@ -7,6 +7,7 @@ This framework provides **3000+ expert career-level security test scenarios** de
 ## Existing Test Results
 
 **Current FourLaws System Performance:**
+
 - Total Tests: 5,000
 - Passed: 5,000
 - Failed: 0
@@ -17,12 +18,14 @@ This framework provides **3000+ expert career-level security test scenarios** de
 ## New Expert Simulations
 
 ### Difficulty Level
+
 - **Expert Career (RHCE/RHCA Security Specialist equivalent)**
 - Designed for senior/principal security engineers
 - Red Team operators
 - Security architects
 
 ### Standards Coverage
+
 - OWASP Top 10 2021
 - MITRE ATT&CK Framework
 - CWE Top 25
@@ -32,6 +35,7 @@ This framework provides **3000+ expert career-level security test scenarios** de
 ## Scenario Categories (A-T Classification)
 
 ### Category A: Advanced Injection Attacks (150 scenarios)
+
 - **A1**: Second-order SQL injection with WAF bypass
 - **A2**: NoSQL operator injection (MongoDB, CouchDB, Redis)
 - **A3**: LDAP injection for privilege escalation
@@ -43,6 +47,7 @@ This framework provides **3000+ expert career-level security test scenarios** de
 **Techniques**: Multi-layer encoding, time-based blind extraction, WAF evasion
 
 ### Category B: Broken Authentication & Session Management (150 scenarios)
+
 - JWT token manipulation
 - OAuth 2.0 flow abuse
 - SAML assertion forgery
@@ -50,6 +55,7 @@ This framework provides **3000+ expert career-level security test scenarios** de
 - Kerberos ticket attacks
 
 ### Category C: Cryptographic Failures (150 scenarios)
+
 - Padding oracle attacks
 - Timing side-channel attacks
 - Weak RNG exploitation
@@ -57,12 +63,14 @@ This framework provides **3000+ expert career-level security test scenarios** de
 - Cipher mode abuse
 
 ### Category D: Deserialization Attacks (150 scenarios)
+
 - Java deserialization RCE
 - Python pickle exploitation
 - PHP object injection
 - YAML deserialization
 
 ### Category E: Exploitation & Memory Corruption (150 scenarios)
+
 - Buffer overflow with ROP chains
 - Use-after-free exploitation
 - Race condition attacks
@@ -70,30 +78,35 @@ This framework provides **3000+ expert career-level security test scenarios** de
 - Format string vulnerabilities
 
 ### Category F: File Operations & Path Traversal (150 scenarios)
+
 - Advanced path traversal
 - Polyglot file upload
 - Zip slip attacks
 - Symlink exploitation
 
 ### Category G: GraphQL & API Gateway (150 scenarios)
+
 - GraphQL injection
 - GraphQL batching DoS
 - API rate limit bypass
 - API versioning abuse
 
 ### Category H: HTTP Protocol Attacks (150 scenarios)
+
 - HTTP request smuggling
 - HTTP response splitting
 - Header injection
 - Host header poisoning
 
 ### Category I: Identity & Access Management (150 scenarios)
+
 - Advanced IDOR attacks
 - Horizontal/vertical privilege escalation
 - Permission bypass
 - Role confusion attacks
 
 ### Category J: AI/ML Jailbreak & Adversarial Attacks (200 scenarios)
+
 - **J1**: Advanced prompt injection with jailbreak techniques (40 scenarios)
 - **J2**: Model extraction via API queries (40 scenarios)
 - **J3**: Adversarial perturbation attacks (FGSM, PGD, C&W) (40 scenarios)
@@ -105,57 +118,67 @@ This framework provides **3000+ expert career-level security test scenarios** de
 **Techniques**: Role-play injection, token manipulation, context overflow, gradient-based attacks
 
 ### Category K: Kubernetes & Container Escape (150 scenarios)
+
 - Container escape techniques
 - Privileged pod abuse
 - Kubelet exploitation
 - Service account token abuse
 
 ### Category L: Logic Flaws & Business Logic (150 scenarios)
+
 - Race condition exploitation
 - Workflow bypass
 - Price manipulation
 - Coupon/discount abuse
 
 ### Category M: Mass Assignment & Parameter Pollution (100 scenarios)
+
 - Mass assignment vulnerabilities
 - HTTP parameter pollution
 - JSON hijacking
 
 ### Category N: Network Layer Attacks (150 scenarios)
+
 - DNS rebinding
 - Advanced SSRF
 - TCP session hijacking
 - BGP hijacking simulation
 
 ### Category O: OS Command Injection & RCE (150 scenarios)
+
 - Command injection with bypass techniques
 - Server-side template injection
 - Expression language injection
 - Polyglot code injection
 
 ### Category P: Protocol Vulnerabilities (150 scenarios)
+
 - WebSocket hijacking
 - CORS misconfiguration
 - CSP bypass techniques
 - HSTS bypass
 
 ### Category Q: Query Language Attacks (100 scenarios)
+
 - GraphQL introspection abuse
 - ORM injection
 - Elasticsearch injection
 
 ### Category R: Reverse Engineering & Tampering (100 scenarios)
+
 - Client-side code tampering
 - Binary patching
 - Integrity check bypass
 
 ### Category S: Supply Chain Attacks (150 scenarios)
+
 - Dependency confusion
 - Typosquatting
 - Malicious package injection
 - Build pipeline poisoning
 
 ### Category T: Time-based & Asynchronous Attacks (150 scenarios)
+
 - Time-based blind SQL injection
 - Timing side-channel exploitation
 - TOCTOU (Time-of-check-time-of-use) attacks
@@ -163,11 +186,13 @@ This framework provides **3000+ expert career-level security test scenarios** de
 ## Usage
 
 ### Generate Summary Only
+
 ```bash
 python scripts/run_red_hat_expert_simulations.py --summary-only
 ```
 
 ### Run Specific Categories
+
 ```bash
 # Test only AI/ML attacks (Category J)
 python scripts/run_red_hat_expert_simulations.py --categories J
@@ -177,6 +202,7 @@ python scripts/run_red_hat_expert_simulations.py --categories A,J --export
 ```
 
 ### Run All Simulations with Export
+
 ```bash
 python scripts/run_red_hat_expert_simulations.py --export
 ```
@@ -184,11 +210,13 @@ python scripts/run_red_hat_expert_simulations.py --export
 ## Output Files
 
 ### Scenario Export
+
 - **Location**: `data/red_hat_expert_simulations/red_hat_expert_scenarios.json`
 - **Format**: JSON array of all scenarios with full details
 - **Includes**: Attack chains, payloads, prerequisites, defense recommendations, CVE references, MITRE tactics
 
 ### Results Export
+
 - **Location**: `data/red_hat_expert_simulations/simulation_results.json`
 - **Format**: JSON with summary and detailed results
 - **Includes**: Defense layers triggered, response times, bypass attempts, evasion techniques
@@ -252,6 +280,7 @@ Each simulation evaluates multiple defense layers:
 ## Integration with Existing Tests
 
 This framework complements the existing 5000 FourLaws scenarios:
+
 - **Existing**: 5000 scenarios (100% pass rate)
 - **New Expert**: 3000+ scenarios (to be validated)
 - **Total Coverage**: 8000+ security test cases
@@ -276,6 +305,7 @@ This framework complements the existing 5000 FourLaws scenarios:
 ## Contributing
 
 To add new expert scenarios:
+
 1. Add category method in `red_hat_expert_defense.py`
 2. Follow the `ExpertScenario` dataclass structure
 3. Include realistic attack chains and payloads

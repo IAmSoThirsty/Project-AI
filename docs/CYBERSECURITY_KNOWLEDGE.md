@@ -35,6 +35,7 @@ python scripts/populate_cybersecurity_knowledge.py
 ```
 
 This will:
+
 - Create `data/cybersecurity_knowledge.json` with the complete content
 - Integrate all sections into the `MemoryExpansionSystem`
 - Verify the integration was successful
@@ -150,6 +151,7 @@ python scripts/demo_cybersecurity_knowledge.py
 ```
 
 This demonstrates:
+
 - Querying specific sections
 - Accessing case studies
 - Searching for keywords
