@@ -53,9 +53,18 @@ jobs:
 
       # 3. JAVA FIXER (Google Format)
       - name: Fix Java
-        uses: axel-op/googlejavaformat-action@v3
-        with:
-          args: "--replace"
+        run: |
+          # Check if Java files exist before attempting to format
+          if find . -name "*.java" -type f -print -quit | grep -q .; then
+            # Install google-java-format
+            wget https://github.com/google/google-java-format/releases/download/v1.17.0/google-java-format-1.17.0-all-deps.jar -O /tmp/google-java-format.jar
+            # Format each Java file individually to avoid multi-file issues with --lines/--offset/--length
+            find . -name "*.java" -type f -print0 | while IFS= read -r -d '' file; do
+              java -jar /tmp/google-java-format.jar --replace "$file" || true
+            done
+          else
+            echo "No Java files found, skipping Java formatting"
+          fi
         continue-on-error: true
 
       # 4. C/C++ FIXER (Clang-Format)
@@ -76,16 +85,39 @@ jobs:
       # 6. C# FIXER (dotnet format)
       - name: Fix C#
         run: |
+          # Check if dotnet is installed and if C# project files exist
           if command -v dotnet &> /dev/null; then
-            dotnet format --verbosity diagnostic || true
+            if find . -name "*.csproj" -o -name "*.sln" | grep -q .; then
+              # Find the solution or project file and format it
+              if [ -f "*.sln" ]; then
+                dotnet format *.sln --verbosity diagnostic || true
+              elif [ -f "*.csproj" ]; then
+                dotnet format *.csproj --verbosity diagnostic || true
+              else
+                # Try to format any found project/solution
+                dotnet format --verbosity diagnostic || true
+              fi
+            else
+              echo "No C# project or solution files found, skipping C# formatting"
+            fi
+          else
+            echo "dotnet CLI not installed, skipping C# formatting"
           fi
         continue-on-error: true
 
       # 7. RUBY FIXER (Rubocop)
       - name: Fix Ruby
         run: |
-          gem install rubocop
-          rubocop --autocorrect-all || true
+          # Install rubocop with --user-install to avoid permission issues
+          gem install rubocop --user-install
+          # Add user gem path to PATH for the current shell
+          export PATH="$HOME/.gem/ruby/$(ruby -e 'puts RUBY_VERSION')/bin:$PATH"
+          # Run rubocop if Ruby files exist
+          if find . -name "*.rb" -type f -print -quit | grep -q .; then
+            rubocop --autocorrect-all || true
+          else
+            echo "No Ruby files found, skipping Rubocop"
+          fi
         continue-on-error: true
 
       # COMMIT CHANGES
@@ -93,7 +125,8 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "🤖 The Fixer: Cleaned up code style"
-          file_pattern: "."
+          file_pattern: ". :!.github/workflows/*"
+          # Exclude workflow files to avoid permission issues with workflows: write permission
 
   # -----------------------------------------------------------------
   # BOT 2: GRAMMAR POLICE (Super-Linter)
