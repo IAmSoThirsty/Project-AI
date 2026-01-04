@@ -1,0 +1,10 @@
+{
+  "src/app/core/ai_systems.py": {
+    "buff_type": "defensive",
+    "buff_level": "maximum",
+    "backup": "src/app/core/ai_systems.py.tarl_prebuff",
+    "timestamp": "2026-01-04T18:54:36.202886+00:00",
+    "tarl_mode": "ACTIVE_RESISTANCE",
+    "buff_multiplier": 10
+  }
+}
