@@ -64,12 +64,12 @@ jobs:
               curl -L "https://github.com/google/google-java-format/releases/download/v${GOOGLE_JAVA_FORMAT_VERSION}/google-java-format-${GOOGLE_JAVA_FORMAT_VERSION}-all-deps.jar" -o /tmp/google-java-format.jar
             fi
             # Format Java files one at a time to avoid --lines/--offset/--length issues
-            find . -name "*.java" -type f -exec java --add-exports jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED \
-                 --add-exports jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED \
-                 --add-exports jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED \
-                 --add-exports jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED \
-                 --add-exports jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED \
-                 -jar /tmp/google-java-format.jar --replace {} \; || true
+            JAVA_EXPORTS="--add-exports jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED"
+            JAVA_EXPORTS="$JAVA_EXPORTS --add-exports jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED"
+            JAVA_EXPORTS="$JAVA_EXPORTS --add-exports jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED"
+            JAVA_EXPORTS="$JAVA_EXPORTS --add-exports jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED"
+            JAVA_EXPORTS="$JAVA_EXPORTS --add-exports jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED"
+            find . -name "*.java" -type f -exec java $JAVA_EXPORTS -jar /tmp/google-java-format.jar --replace {} \; || true
           else
             echo "No Java files found, skipping Java formatting"
           fi
