@@ -1105,6 +1105,7 @@ cp .env.example .env
    - Add to `.env`: `HUGGINGFACE_API_KEY=hf_...`
 
 3. **Fernet Key** (for encryption)
+
    ```python
    from cryptography.fernet import Fernet
    print(Fernet.generate_key().decode())
