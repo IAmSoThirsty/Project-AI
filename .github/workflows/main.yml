@@ -30,6 +30,8 @@ jobs:
   fix_code:
     name: The Fixer (Auto-Format)
     runs-on: ubuntu-latest
+    env:
+      GOOGLE_JAVA_FORMAT_VERSION: "1.33.0"
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -52,10 +54,25 @@ jobs:
         continue-on-error: true 
 
       # 3. JAVA FIXER (Google Format)
+      # Note: Only runs when Java files exist to avoid errors
       - name: Fix Java
-        uses: axel-op/googlejavaformat-action@v3
-        with:
-          args: "--replace"
+        run: |
+          if find . -name "*.java" -print -quit | grep -q .; then
+            echo "Java files found, formatting..."
+            # Download google-java-format if not cached
+            if [ ! -f /tmp/google-java-format.jar ]; then
+              curl -L "https://github.com/google/google-java-format/releases/download/v${GOOGLE_JAVA_FORMAT_VERSION}/google-java-format-${GOOGLE_JAVA_FORMAT_VERSION}-all-deps.jar" -o /tmp/google-java-format.jar
+            fi
+            # Format Java files one at a time to avoid --lines/--offset/--length issues
+            JAVA_EXPORTS="--add-exports jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED"
+            JAVA_EXPORTS="$JAVA_EXPORTS --add-exports jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED"
+            JAVA_EXPORTS="$JAVA_EXPORTS --add-exports jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED"
+            JAVA_EXPORTS="$JAVA_EXPORTS --add-exports jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED"
+            JAVA_EXPORTS="$JAVA_EXPORTS --add-exports jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED"
+            find . -name "*.java" -type f -exec java $JAVA_EXPORTS -jar /tmp/google-java-format.jar --replace {} \; || true
+          else
+            echo "No Java files found, skipping Java formatting"
+          fi
         continue-on-error: true
 
       # 4. C/C++ FIXER (Clang-Format)
@@ -77,15 +94,28 @@ jobs:
       - name: Fix C#
         run: |
           if command -v dotnet &> /dev/null; then
-            dotnet format --verbosity diagnostic || true
+            # Check if there's a .csproj or .sln file before running dotnet format
+            if find . -name "*.csproj" -o -name "*.sln" | grep -q .; then
+              dotnet format --verbosity diagnostic || true
+            else
+              echo "No C# project or solution files found, skipping dotnet format"
+            fi
           fi
         continue-on-error: true
 
       # 7. RUBY FIXER (Rubocop)
       - name: Fix Ruby
         run: |
-          gem install rubocop
-          rubocop --autocorrect-all || true
+          # Install rubocop to user directory to avoid permission issues
+          gem install --user-install rubocop || true
+          # Add user gem bin to PATH (dynamically detect gem directory)
+          export PATH="$(ruby -e 'puts Gem.user_dir')/bin:$PATH"
+          # Run rubocop if Ruby files exist
+          if find . -name "*.rb" -print -quit | grep -q .; then
+            rubocop --autocorrect-all || true
+          else
+            echo "No Ruby files found, skipping Rubocop"
+          fi
         continue-on-error: true
 
       # COMMIT CHANGES
@@ -94,6 +124,9 @@ jobs:
         with:
           commit_message: "🤖 The Fixer: Cleaned up code style"
           file_pattern: "."
+          # Use PAT with workflow scope to allow committing changes to workflow files
+          # Repository secret PAT_WITH_WORKFLOW_SCOPE must be configured with 'workflow' scope
+          token: ${{ secrets.PAT_WITH_WORKFLOW_SCOPE || secrets.GITHUB_TOKEN }}
 
   # -----------------------------------------------------------------
   # BOT 2: GRAMMAR POLICE (Super-Linter)
