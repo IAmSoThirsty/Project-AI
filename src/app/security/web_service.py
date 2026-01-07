@@ -13,7 +13,7 @@ import hmac
 import logging
 import time
 from typing import Any
-from xml.etree.ElementTree import Element, SubElement, tostring
+from xml.etree.ElementTree import Element, SubElement, tostring  # nosec B405 - Only used for building XML, not parsing
 
 import defusedxml.ElementTree as DefusedET
 

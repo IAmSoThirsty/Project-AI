@@ -261,7 +261,7 @@ class SecureDatabaseManager:
             UPDATE users
             SET {', '.join(set_clauses)}, updated_at = CURRENT_TIMESTAMP
             WHERE id = ?
-        """
+        """  # nosec B608 - Column names are validated against whitelist above, parameters are properly escaped
 
         self.execute_query(query, tuple(values))
         logger.info("User %d updated", user_id)
