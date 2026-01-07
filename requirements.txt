@@ -1,7 +1,7 @@
 -e external/Cerberus
 
 annotated-types==0.7.0
-anyio==4.11.0
+anyio==4.12.0
 bcrypt==5.0.0
 certifi==2025.10.5
 cffi==2.0.0
@@ -60,7 +60,7 @@ tqdm==4.67.1
 typing-inspection==0.4.2
 typing_extensions==4.15.0
 tzdata==2025.2
-urllib3==2.6.0
+urllib3==2.6.2
 wheel==0.45.1
 
 # Optional design tool for interactive UI creation (Qt Designer)
