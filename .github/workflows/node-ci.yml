@@ -124,7 +124,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install pytest flake8 pytest-cov
-          
+
           # Install project dependencies
           if [ -f requirements.txt ]; then
             pip install -r requirements.txt || echo "Warning: Some requirements failed to install"
