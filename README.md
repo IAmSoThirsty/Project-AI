@@ -1,462 +1,288 @@
 # Project AI
 
-This repository contains a Python desktop application that provides a personal AI
-assistant with **offline-first architecture** for mobile and desktop. The app features
-RAG (Retrieval-Augmented Generation), optical flow detection, and local fallback
-offline (FBO) systems that ensure full functionality without internet connectivity.
-
-## Designer & Qt notes (updated)
-
-This project supports both `PyQt6` and `PySide6` for Qt tooling. For development we recommend `PySide6` because prebuilt wheels with `pyside6-designer` are commonly available and avoid requiring a system Qt `qmake` toolchain during a `pip install`.
-
-If you prefer `PyQt6`, you must ensure a working Qt toolchain (providing `qmake`) is available on PATH before installing `pyqt6` from source. On Windows, install the Qt development tools or use the official Qt installer. In CI, prefer `pyside6` or preinstall Qt build dependencies.
-
-Quick steps to set up Designer (Windows PowerShell):
-
-```powershell
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-.\tools\setup_designer_env.ps1
-```
-
-This will create `venv-designer` in the repo root, try to install developer requirements (if present) or `pyqt6` (fallbacks to `pyside6`), and launch the Qt Designer (`pyside6-designer.exe` when available).
-
-
-## Smoke checks & quick verification
-
-Key resources live under `docs/developer/` (smoke checks, troubleshooting, coverage notes). The quick checklist below mirrors those docs so you can run a single command snapshot.
-
-1. **Prepare the environment**
-
-  ```powershell
-  python -m pip install --upgrade pip
-  pip install -r requirements.txt
-  npm install
-  ```
-
-1. **Run the baseline tests & coverage**
-
-  ```powershell
-  $env:PYTHONPATH='src'
-  python -m pytest tests/test_data_analysis.py -q
-  python -m pytest tests/ --cov=src/app/core --cov-report=term-missing --cov-report=xml:reports/coverage.xml --cov-report=html:htmlcov -q
-  ```
-
-1. **Lint documentation + formatting**
-
-  ```powershell
-  isort src tests --profile black
-  ruff check src tests
-  black --check src tests
-  npm run lint:markdown
-  ```
-
-1. **Start the apps for manual verification**
-
-  ```powershell
-  $env:PYTHONPATH='src'; python -m src.app.main
-  cd web/backend
-  flask run
-  cd ../frontend
-  npm run dev
-  ```
-
-- Detailed steps and troubleshooting tips live in `docs/developer/smoke_checks.md` and `docs/developer/troubleshooting.md` if you need full context.
-
-- GradientBoosting for sentiment analysis
- - Neural Network (MLPClassifier) for user behavior prediction
- - Model training, persistence, and real-time predictions
- - PyTorch-based ThreatDetector (optional) for ethical checks
-    - Detects potential Zeroth/First-law conflicts using a small neural detector
-    - Falls back to keyword heuristics when `torch` is not installed
-    - Models and vocab are persisted to `data/ai_persona/` when trained or saved
-    - Use the persona UI to view ML scores (if enabled) and run supervised retraining
-
-- **Plugin System** (✅ IMPLEMENTED)
-  - Dynamic plugin discovery and loading from `src/app/agents/` directory
-  - Hook-based extension system with 8 built-in hooks (message_received, message_sent, before_action, after_action, persona_updated, conversation_started, conversation_ended, error_occurred)
-  - Plugin lifecycle management (enable, disable, reload, unload)
-  - JSON-based plugin configuration with metadata
-  - Plugin isolation and error handling
-  - Extensible hook registry for third-party plugins
-  - Full test coverage with mock plugins
-
-- **Command Override System** (✅ IMPLEMENTED)
-  - Master password protected control system (SHA-256 hashing)
-  - Override types: CONTENT_FILTER, RATE_LIMITING, FOUR_LAWS, LEARNING_BLOCK, EMERGENCY_MODE
-  - Override duration tracking (temporary vs. persistent)
-  - Audit logging with timestamps for all override operations
-  - Emergency lockdown capability
-  - Graceful fallback when overrides expire
-  - Full test coverage with password verification
-
-- **Memory Expansion System** (✅ IMPLEMENTED)
-  - Self-organizing memory database with JSON persistence
-  - Automatic conversation logging with metadata (topics, participants, sentiment)
-  - Knowledge base with semantic categorization (general, technical, user_preferences, patterns, insights, web_learned)
-  - Pattern recognition and autonomous learning
-  - Semantic memory retrieval with context matching
-  - Background learning processes
-  - Statistics tracking (conversation count, memory size, knowledge base growth)
-  - Full test coverage with knowledge retrieval
-
-- **Learning Request Log** (✅ IMPLEMENTED)
-  - AI-initiated learning request system with priority levels (LOW, MEDIUM, HIGH, CRITICAL)
-  - Human-in-the-loop approval workflow (pending → approved/denied)
-  - Black Vault for permanently denied content with SHA-256 fingerprinting
-  - Content fingerprinting prevents re-discovery of denied requests
-  - Subliminal filtering makes denied content invisible to AI
-  - Auto-integration of approved content
-  - Request status tracking with timestamps
-  - Full test coverage with vault integration
-
-- **AI Persona & Four Laws** (✅ IMPLEMENTED)
-  - Self-aware AI with 8 adjustable personality traits (curiosity, patience, empathy, helpfulness, playfulness, formality, assertiveness, thoughtfulness)
-  - Proactive conversation initiation with intelligent idle detection (respects user availability)
-  - Four Laws of AI Ethics (immutable, hierarchical: Asimov's Law → First Law → Second Law → Third Law)
-  - Patient and understanding of user time with response tracking
-  - Emotional awareness and mood tracking (energy, enthusiasm, contentment, engagement)
-  - Personality evolution based on interaction data
-  - Quiet hours support (configurable 12 AM - 8 AM default)
-  - Dashboard panel for personality management, Four Laws testing, and statistics
-  - Full test suite: 13 comprehensive tests covering all systems
-
-### ML ThreatDetector notes
-
-The AI persona now includes an optional PyTorch-based ThreatDetector used to augment
-Four Laws enforcement:
-
-- If you install `torch` and `numpy`, the persona will build or load tiny neural detectors at startup.
-- If `torch` is not available the persona uses a safe keyword-based fallback to flag obvious threats.
-- Model artifacts (detector weights) and the small vocabulary are stored under `data/ai_persona/` as:
-  - `zeroth_detector.pt`, `first_detector.pt` (model weights)
-  - `ml_vocab.json` (token vocabulary)
-
-### Training & retraining
-
-The repository includes a minimal bootstrapping routine that trains tiny detectors on
-synthetic examples for quick startup. For real usage you should:
-
-1. Gather labeled examples (human-labeled) for `zeroth` (humanity-level harm) and `first` (individual human harm) categories.
-1. Store examples in a directory or in the `memory_system` so the persona can load them for supervised retraining.
-1. Call the persona retrain flow (UI or CLI) to persist updated model weights.
-
-See documentation for retraining and the CLI helper in the repository docs:
-
-[Retraining & CLI helper documentation](docs/retrain.md)
-
-## Code formatting and linters
-
-This project uses the following formatting and linting tools:
-
-- Python: ruff, black, isort
-- Frontend: Prettier (in `web/frontend`), ESLint
-- Markdown: markdownlint-cli (uses `.markdownlint.json`)
-
-Run formatters locally before committing changes:
-
-PowerShell (Python):
-
-```powershell
-$env:PYTHONPATH='src'
-python -m pip install -r requirements.txt
-python -m pip install ruff black isort
-isort src tests --profile black
-ruff check src tests --fix
-black src tests
-npm install
-npm run lint:markdown
-```
-
-PowerShell (Web frontend):
-
-```powershell
-cd web/frontend
-npm install
-npm run format
-npm run lint
-```
-
-The docs contain usage examples, retrain behavior, audit logging, and security notes.
-
-### Security and safety notes
-
-Retraining is considered an administrative action: always verify training examples and
-keep an audit trail of changes. The ML detectors augment the Four Laws — they provide
-scores and explainability tokens, but the Four Laws remain the authoritative control
-mechanism. Use the Learning Request Log and Black Vault workflows to maintain human-in-
-the-loop approvals for all persistent learning.
-
-### Security & safety
-
-The Four Laws remain the authoritative decision mechanism; ML detectors only provide
-scores which are used to annotate the decision context. Human-in-the-loop approvals
-(Learning Request Log) and the Black Vault remain the final gatekeepers for what the AI
-may integrate.
-
-## Project-AI — Offline-First AI Assistant
-
-A Python desktop and mobile AI assistant with **offline-first architecture**. Provides
-full AI functionality without internet connectivity through local knowledge bases,
-RAG systems, and intelligent caching. The application features a beautiful PyQt6
-"Leather Book" UI and comprehensive mobile optimization.
-
-### Highlights
-
-**🌐 Offline-First Features (NEW)**
-- RAG System (Retrieval-Augmented Generation with local embeddings)
-- Optical Flow Detection (motion epicenter analysis for video streams)
-- Local FBO (Fallback Offline system with knowledge persistence)
-- AI Reflection Engine (pattern recognition and self-learning)
-- Smart Response Caching (intelligent offline query handling)
-- Automatic Sync (seamless online/offline transitions)
-
-**🎯 Core Features**
-- Local user management (JSON-backed, hashed passwords)
-- Command Override System (master password control over safety protocols)
-- Memory Expansion (self-organizing AI memory with autonomous web learning)
-- Cloud Sync (encrypted cross-device synchronization with conflict resolution)
-- Advanced ML Models (RandomForest, GradientBoosting, Neural Networks)
-- Plugin System (extensible architecture with dynamic plugin loading and hooks)
-- Learning Paths (personalized generation via OpenAI)
-- Data Analysis (CSV/XLSX/JSON support, visualizations, clustering)
-- Security Resources (curated repo lists and favorites)
-- Location Tracking (encrypted history and reverse-geocoding)
-- Emergency Alerts (send email alerts to registered contacts)
-
-### Quick setup (Windows, PowerShell)
-
-1. Create and activate a virtual environment (recommended):
-
-```powershell
-python -m venv .venv
-& .\.venv\Scripts\Activate.ps1
-```
-
-1. Install dependencies (use the repo `requirements.txt`):
-
-```powershell
-pip install -r requirements.txt
-```
-
-1. Create a `.env` file in the repository root (or set OS environment variables). Minimal
-recommended variables:
-
-- `OPENAI_API_KEY` — optional, for the learning-paths and any OpenAI calls
-- `SMTP_USERNAME` / `SMTP_PASSWORD` — for sending emergency alert emails
-- `FERNET_KEY` — base64-encoded Fernet key (if omitted, a runtime key will be generated)
-- `CLOUD_SYNC_URL` — optional, API endpoint for cloud sync
-- `DATA_DIR` / `LOG_DIR` — optional directories (defaults: `data`, `logs`)
-
-Example `.env` lines (do not commit real secrets):
-
-```text
-OPENAI_API_KEY=sk-...
-SMTP_USERNAME=you@example.com
-SMTP_PASSWORD=<app-password>
-FERNET_KEY=<base64-key>
-```
-
-## Offline-First Architecture (NEW)
-
-Project-AI now features comprehensive offline capabilities:
-
-### RAG System
-```python
-from app.core.rag_system import RAGSystem
-
-rag = RAGSystem()
-rag.ingest_directory('knowledge_base/')  # Load local documents
-results = rag.retrieve("your query", top_k=3)  # Semantic search
-```
-
-### Optical Flow Detection
-```python
-from app.core.optical_flow import OpticalFlowDetector
-
-detector = OpticalFlowDetector()
-result = detector.analyze_video('video.mp4')  # Detect motion epicenters
-```
-
-### Local FBO System
-```python
-from app.core.local_fbo import LocalFBOSystem
-
-fbo = LocalFBOSystem(enable_rag=True, enable_reflection=True)
-fbo.add_offline_knowledge("key", "value", "category")
-result = fbo.query_offline("question")  # Works without internet
-```
-
-**See `docs/OFFLINE_FIRST_ARCHITECTURE.md` for complete documentation.**
-
-1. Run tests and lint (recommended before running the app):
-
-```powershell
-$env:PYTHONPATH='src'; .\.venv\Scripts\Activate.ps1; python -m pytest -q
-$env:PYTHONPATH='src'; .\.venv\Scripts\Activate.ps1; flake8 src tests setup.py
-```
-
-## Run the application (PowerShell)
-
-Start the app from the repository root (ensure the venv is activated and PYTHONPATH is
-set):
-
-```powershell
-$env:PYTHONPATH='src'; .\.venv\Scripts\Activate.ps1; python src/app/main.py
-```
-
-Notes:
-
-- On first run the app will prompt to create an admin account (first-run onboarding).
-- The GUI uses PyQt6; the app expects a graphical desktop environment.
-
-## Dashboard Integration & GUI Features
-
-The dashboard now includes comprehensive AI Persona integration:
-
-### AI Persona Panel (`src/app/gui/persona_panel.py`)
-
-- **Four Laws Display Tab**: View the hierarchical Four Laws and test actions against them
-- **Personality Management Tab**: Adjust 8 personality traits with real-time sliders
-- **Proactive Settings Tab**: Configure conversation frequency, idle thresholds, quiet hours
-- **Statistics Tab**: Monitor AI mood (energy, enthusiasm, contentment, engagement) and conversation metrics
-- **Action Testing**: Validate any action against the Four Laws with context parameters
-
-### Dashboard Utilities (`src/app/gui/dashboard_utils.py`)
-
-- **DashboardErrorHandler**: Centralized error handling with logging and optional dialogs
-- **DashboardAsyncManager**: Thread pool management for long-running operations without blocking UI
-- **DashboardValidationManager**: Input validation for username, email, password, and sanitization
-- **DashboardLogger**: Enhanced logging for operations, user actions, and performance tracking
-- **DashboardConfiguration**: Configuration management with sensible defaults
-
-### Error Handling & Async Operations
-
-- All dashboard operations use try-catch with comprehensive logging
-- Long-running tasks run in thread pool (AsyncWorker) to maintain UI responsiveness
-- Input validation prevents invalid data from reaching core systems
-- Performance tracking alerts on slow operations (>500ms warning, >1000ms alert)
-
-## Migration and utilities
-
-- `tools/migrate_users.py` — preview/apply migration of plaintext `password` fields in an
-  existing `users.json` into `password_hash` entries. It creates a `.bak` when applying
-  changes.
-
-Example preview:
-
-```powershell
-python tools/migrate_users.py --users-file src/app/users.json
-```
-
-Apply migration:
-
-```powershell
-python tools/migrate_users.py --users-file src/app/users.json --apply
-```
-
-## Security notes
-
-- Do not commit API keys, passwords, or private Fernet keys to source control.
-- Use OS-level secrets or a secrets manager for production deployments.
-- The app uses pbkdf2_sha256 as the preferred hashing scheme and accepts bcrypt for
-  legacy verification.
-
-## Developer notes
-
-- Entry point: `src/app/main.py` (loads `.env` and starts the PyQt application).
-- Core modules live under `src/app/core/` and GUI components under `src/app/gui/`.
-- Tests: `tests/` (run with `python -m pytest` using PYTHONPATH=src).
-
-## Implementation Status
-
-### ✅ Completed Features
-
-**Core Systems (6/6):**
-
-- ✅ AI Persona with Four Laws (immutable ethics engine)
-- ✅ Memory Expansion System (self-organizing knowledge base)
-- ✅ Learning Request Manager (human-in-the-loop approval)
-- ✅ Command Override System (master password protection)
-- ✅ Plugin Manager (extensible hook system)
-- ✅ Consolidated `ai_systems.py` module (490 lines, production-ready)
-
-**Testing & Validation:**
-
-- ✅ Comprehensive test suite: 13 tests passing (100% success rate)
-- ✅ Tests cover all 6 core systems with state persistence and error handling
-- ✅ Dashboard integration with persona panel
-
-**Dashboard & GUI:**
-
-- ✅ AI Persona Panel with 4 tabs (Four Laws, Personality, Proactive, Statistics)
-- ✅ Personality trait sliders for real-time adjustment
-- ✅ Four Laws action validation UI
-- ✅ Dashboard utilities for error handling, async operations, validation
-
-### ⏳ Next Steps
-
-- Integration tests (E2E validation of all systems)
-- Performance profiling and optimization
-- Security audit and hardening
-- Final documentation polish
-
-## CI artifacts
-
-Our GitHub Actions CI uploads test and coverage artifacts for each run so you can
-download and inspect them when a job completes. The important artifacts are:
-
-- `junit-report` — contains `reports/junit.xml` (JUnit-format test report). Useful for
-  test failure parsing and integrations.
-- `coverage-report` — contains `reports/coverage.xml` (coverage.py XML). Useful for
-  uploading to coverage services or offline inspection.
-
-When running locally, generate the JUnit report with pytest:
-
-```powershell
-pytest --junitxml=reports/junit.xml --cov=src --cov-report=xml:reports/coverage.xml -q
-```
-
-## GUI Prototype — 3D / Neumorphic theme
-
-A prototype 3D / neumorphic visual style has been added on a feature branch
-`feature/gui-3d-prototype`. The prototype includes:
-
-- Updated QSS styles (`src/app/gui/styles.qss` and `styles_dark.qss`) with
-  card and floating panel styles and button gradients.
-- Subtle drop-shadow effects applied in code (`QGraphicsDropShadowEffect`) to
-  the main window and dialogs to create real depth (not just QSS).
-- Hover "lift" animations and a small tab-change parallax effect for tactile
-  feedback (implemented in `src/app/gui/dashboard.py`).
-
-To try the prototype locally:
-
-```powershell
-$env:PYTHONPATH='src'
-git fetch origin feature/gui-3d-prototype
-git checkout feature/gui-3d-prototype
-python -m pytest -q
-python src/app/main.py
-```
-
-If you'd like me to merge or split the prototype into smaller PRs, I can do that next.
-
-## Advanced Features Documentation
-
-For detailed documentation on advanced features:
-
-- **Command Override & Memory Expansion**: See [COMMAND_MEMORY_FEATURES.md](COMMAND_MEMORY_FEATURES.md)
-- **Learning Request Log**: See [LEARNING_REQUEST_LOG.md](LEARNING_REQUEST_LOG.md)
-- **AI Persona & Four Laws**: See [AI_PERSONA_FOUR_LAWS.md](AI_PERSONA_FOUR_LAWS.md)
-- **Quick Start Guide**: See [QUICK_START.md](QUICK_START.md)
-- **Integration Summary**: See [INTEGRATION_SUMMARY.md](INTEGRATION_SUMMARY.md)
-
-If you want, I can:
-
-- Add a GitHub Actions CI workflow to run pytest + flake8 on push/PR
-- Commit these README changes and create a branch with the lint fixes I made
+<p align="center">
+  <img src="![image1](image1)" alt="Project-AI Hero Image" width="500"/><br>
+  <b>Project AI • Codex Deus Maximus • Founder/Architect</b>
+</p>
 
 ---
 
-**Repository note:** Last updated: 2025-11-26 (automated)
+### 🏅 Badges & Logos
 
-<!-- last-updated-marker -->
+<p align="center">
+  <a href="https://github.com/IAmSoThirsty/Project-AI/actions">
+    <img alt="CI Status" src="https://img.shields.io/github/actions/workflow/status/IAmSoThirsty/Project-AI/ci.yml?branch=main&logo=githubactions&label=CI%20Pipeline">
+  </a>
+  <a href="https://github.com/IAmSoThirsty/Project-AI/tree/main/tests">
+    <img alt="Test Coverage" src="https://img.shields.io/badge/tests-100%2B-green?logo=pytest&label=Test%20Coverage">
+  </a>
+  <a href="LICENSE">
+    <img alt="License: MIT" src="https://img.shields.io/github/license/IAmSoThirsty/Project-AI?color=orange&logo=open-source-initiative&label=License">
+  </a>
+  <img alt="Python: 3.10+" src="https://img.shields.io/badge/python-3.10+-blue?logo=python&label=Python">
+  <a href="Dockerfile">
+    <img alt="Docker Ready" src="https://img.shields.io/badge/docker-ready-blue?logo=docker">
+  </a>
+  <a href="https://iamsothirsty.github.io/Project-AI/">
+    <img alt="Project Website" src="https://img.shields.io/badge/website-live-green?logo=githubpages">
+  </a>
+  <a href="https://github.com/IAmSoThirsty/Project-AI/discussions">
+    <img alt="Discussions" src="https://img.shields.io/github/discussions/IAmSoThirsty/Project-AI?label=Join%20Community&color=brightgreen">
+  </a>
+  <a href="SECURITY.md">
+    <img alt="Security Policy" src="https://img.shields.io/badge/security-Policy-blueviolet?logo=security">
+  </a>
+  <img alt="Code Style: Ruff" src="https://img.shields.io/badge/code%20style-ruff-9644fa?logo=python">
+  <a href="https://github.com/IAmSoThirsty/Project-AI/graphs/contributors">
+    <img alt="Contributors" src="https://img.shields.io/github/contributors/IAmSoThirsty/Project-AI?colorB=dc143c">
+  </a>
+</p>
+
+---
+
+**Project AI** is a modular, self-aware AI platform with autonomous agent orchestration, AI persona, advanced memory, ethics via Asimov’s Four Laws, and defense-in-depth security.  
+Experience the engineered fusion of “Project” — the agent core, Cerberus — the defensive overseer, and “Codex Deus Maximus” — the grand knowledge engine.  
+Built for extensibility, robustness, explainability, and uncompromising defensive posture.
+
+---
+
+## 💡 Key Features
+
+- ✅ Four Laws-Driven AI Core (Prime Directive + Asimov’s Laws)
+- ✅ Self-aware Persona & Mood (8 traits, proactive chat, mood, stats)
+- ✅ Command Override (Full audit, emergency lockdown, privileged controls)
+- ✅ Memory Expansion (Long-term, conversational, encoded knowledge)
+- ✅ Security Layers (30+ managed controls, ASL-3 compliance, encryption)
+- ✅ Agent/Plugin Framework (Cerberus, Verifier, Explainability, CI, dynamic plugins)
+- ✅ PyQt6 Dashboard UI ("Leather Book", Four Laws, persona editor, agent console)
+- ✅ Defensive Agents (Black Vault, plugin sandboxing, malware/code audit)
+- ✅ Data Science Tools (CSV/XLSX/JSON analysis, clustering, viz)
+- ✅ Web API & Frontend (Flask+React, Docker-ready)
+- ✅ Offline/Resilience (Local RAG, reflection, sync, mobile-friendly)
+- ✅ Emergency Protocols (Email/SMS alerts, lockout, incident logs)
+- ✅ CI/CD, Test, & Code Quality (100+ tests, Github Actions, full coverage, ruff)
+
+---
+
+## 🏛️ Architecture Overview
+
+```
+src/app/
+├── main.py
+├── core/
+│   ├── ai_systems.py
+│   ├── safety_levels.py
+│   ├── command_override.py
+│   ├── red_hat_expert_defense.py
+│   ├── data_analysis.py
+│   ├── security_enforcer.py
+│   ├── continuous_learning.py
+│   ├── user_manager.py
+│   ├── local_fbo.py
+│   ├── emergency_alert.py
+│   └── ... more ...
+├── agents/
+│   ├── cerberus.py
+│   ├── border_patrol.py
+│   ├── planner.py
+│   ├── doc_generator.py
+│   ├── dependency_auditor.py
+│   ├── retrieval_agent.py
+│   ├── sandbox_worker.py
+│   ├── ci_checker_agent.py
+│   └── ... extra ...
+├── gui/
+│   ├── leather_book_interface.py
+│   ├── persona_panel.py
+│   └── ... dialogs, event handlers, image ui ...
+├── web/  # Flask backend, React frontend
+├── data/, config/, tools/, examples/
+```
+
+---
+
+## 🏛️ Core Systems
+
+- **Main Coordinator:** Integrates memory, persona, agent, UI, security
+- **FourLaws Module:** Immutable ethical decision at every privileged/agent operation
+- **MemoryExpansion:** Multi-category, persistent, smart knowledge
+- **LearningRequests:** Human-in-the-loop, Black Vault for blocked
+- **AIPersona:** 8 traits with mood, proactive chat, real-time UI, explainability
+- **PluginManager:** Sandboxed, hooks, isolation, error recovery
+- **CommandOverride:** Password-protected, full audit, master override, lockdown
+
+---
+
+## 🦾 Cerberus (Defensive Overseer Agent)
+
+- Blocks unsafe actions, enforces Prime Directive and Four Laws
+- Monitors and approves/disapproves command overrides
+- Guards Black Vault (denied content is inaccessible)
+- Integrates threat detection, plugin scan, geo/IP history
+- Maintains tamper-proof audit log, triggers emergency protocols
+
+---
+
+## 📖 Codex Deus Maximus (Knowledge Engine)
+
+- Curates memory, learning, orchestrates agent council
+- Ranks and approves/denies learning via agent/human review
+- Exports knowledge/decision audit for compliant integrations
+- Explainability engine: rationales in UI/log/response
+
+---
+
+## 🤖 Agents
+
+| Agent         | Role                     | Features                         |
+|---------------|--------------------------|-----------------------------------|
+| Cerberus      | Defensive/Priority check | Four Laws, override/audit, vault  |
+| Planner       | Task/workflow builder    | Decomposition, scheduling         |
+| Validator     | Input/output sanity      | Health/pre-action validation      |
+| Explainability| Reasoning & transparency | UI/log rationales, audit trail    |
+| DocGenerator  | Markdown docs            | Code structure/usage pipelines    |
+| RetrievalAgent| Embedding/QA             | Vector search, document QA        |
+| VerifierAgent | Sandbox checker          | Plugin, malware, dep, CI audits   |
+| BorderPatrol  | Quarantine/audit         | Vault escalation, file quarantine |
+| ExpertAgent   | Integration signoff      | Review & compliance, expert role  |
+| CIChecker     | CI/test/lint/audit       | GH Actions, ci_reports            |
+| ...           | Extendable plugins       | Extensible, modular architecture  |
+
+---
+
+## 🦺 Defensive & Security Layer Highlights
+
+- Four Laws enforced everywhere, prime check
+- CommandOverride system: hashed auth, lockdown, audit, session
+- Black Vault: unreachable storage for denied/unsafe content
+- ASL-2/3 compliance enforced, threat monitor, quarterly report
+- Emergency triggers: email/SMS, fail-safe reset, geo/IP logs
+- Full audit trail, tamper-evident, incident tracking
+- Plugins sandboxed + audited prior to execution (CI, dependency auditor)
+- Comprehensive security tooling: pip-audit, bandit, detect-secrets, truffleHog
+- Test coverage: 100+ full-feature tests, CI generates artifacts
+- Documentation: SECURITY.md, CONTRIBUTING.md, full docs
+
+---
+
+## 📚 Memory, Persona & Learning
+
+- JSON-based, modular knowledge with categories, smart retrieval
+- Persona: 8 traits, mood state, proactive suggestions, dashboard, explainability
+- Learning: Human-in-loop for all new requests, Black Vault for denial
+- Learning fingerprinting: SHA256 for denied, status for audit
+
+---
+
+## 🖥️ User Interface & CLI
+
+- PyQt6 "Leather Book": persona panel, Four Laws tab, trait sliders, stats
+- Action validator: Four Laws tested before execution (UI field)
+- Async management: thread pooling, performance alerts, input validation
+- Error handling: central logs, incident dashboard
+- Migration utilities for users/settings/plugins (helpers/scripts)
+- Flask backend/React frontend for web deployment
+- Fully local, cloud, and Docker-ready options
+
+---
+
+## ML & Data Science Highlights
+
+- Scikit-learn, PyTorch, pandas, MLPClassifier, GradientBoosting, clustering
+- Optional ThreatDetector using neural nets with retraining CLI/UI
+- Plugin system hooks: message/validation/action/conversation/errors
+- Pattern recognition and autonomous learning expansion
+
+---
+
+## Install & Run
+
+**Requirements:**  
+- Python 3.10+  
+- Node.js (web UI optional)  
+- Docker/docker-compose (optional)
+
+### Quickstart
+
+```bash
+git clone https://github.com/IAmSoThirsty/Project-AI.git
+cd Project-AI
+pip install -r requirements.txt
+npm install && npm run build
+python -m src.app.main             # launch PyQt UI
+docker compose up                  # full stack
+pytest -v                          # tests
+```
+
+**Config:**  
+- All state: data/, config/, .env (never commit secrets; use `.env.example`!)  
+- Plugins: src/app/core/plugins/
+
+**Designer:**  
+- PyQt6 & PySide6 supported (Designer scripts available for rapid UI prototyping)
+
+---
+
+## Testing, CI & Linting
+
+- Pytest, hypothesis, code coverage (ci_reports, junit XML)
+- ruff, black, isort, markdownlint, prettier, ESLint
+- Full test artifacts for local and CI inspection
+
+---
+
+## Security & Advanced Features
+
+- Full-featured command override/audit/lockdown
+- Extensive scenario/fuzz/adversarial test suite (8,850+ security tests)
+- Bandit/static/dynamic/secret/coverage scan
+- Plugin quarantine, Vault enforcement
+- AI Persona threat detection: explainability, emotion scoring, retraining
+- Guided retraining, CLI helper scripts, plugin and system audit
+
+---
+
+## Offline-First Architecture
+
+- Local knowledge base, RAG, Reflection & Learning
+- Query/analysis, video motion/optical flow, offline memory/response cache
+- Smart sync for online/offline cross-device transitions
+
+---
+
+## Best Practices
+
+- Always save state after edits
+- Use official plugin directory for add-ons
+- Rotate keys, audit override logs often
+- Use CI, pre-commit, and security scan tools before merge
+- Prioritize human-in-the-loop and Black Vault workflows for all learning and persistent data
+
+---
+
+## Contributor Notes
+
+- Please see CONTRIBUTING.md, CODE_OF_CONDUCT.md, open Issues
+
+---
+
+## License
+MIT License. See LICENSE.
+
+---
+
+> For docs, onboarding, and architecture, see:
+> - COMMAND_MEMORY_FEATURES.md
+> - LEARNING_REQUEST_LOG.md
+> - AI_PERSONA_FOUR_LAWS.md
+> - QUICK_START.md
+> - INTEGRATION_SUMMARY.md
+> - Docs: https://iamsothirsty.github.io/Project-AI/
+
+---
+
+<sub>
+<sup>
+*This README is reorganized for clarity, completeness, and developer onboarding. It merges every detail from prior versions, and adds new badge/demo support for full technical, security, and feature reference.*
+</sup>
+</sub>
