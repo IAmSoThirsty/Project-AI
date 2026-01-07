@@ -1,0 +1,369 @@
+name: Comprehensive PR Automation
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number to process (leave empty for all open PRs)'
+        required: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  checks: write
+  statuses: write
+
+jobs:
+  # Job 1: Run all required checks
+  run-checks:
+    name: Run All Required Checks
+    runs-on: ubuntu-latest
+    if: '!github.event.pull_request.draft'
+    outputs:
+      lint-status: ${{ steps.lint.outcome }}
+      test-status: ${{ steps.test.outcome }}
+      security-status: ${{ steps.security.outcome }}
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install ruff pytest pytest-cov pip-audit bandit mypy black isort
+
+      - name: Run linting (ruff)
+        id: lint
+        run: |
+          echo "Running ruff check..."
+          ruff check . --output-format=github
+        continue-on-error: true
+
+      - name: Run tests (pytest)
+        id: test
+        run: |
+          echo "Running pytest..."
+          pytest -v --maxfail=1 --tb=short
+        continue-on-error: true
+
+      - name: Run security audit
+        id: security
+        run: |
+          echo "Running security checks..."
+          pip-audit --format json -o pip-audit-report.json || true
+          bandit -r src -f json -o bandit-report.json || true
+        continue-on-error: true
+
+      - name: Upload check artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: check-reports
+          path: |
+            pip-audit-report.json
+            bandit-report.json
+
+  # Job 2: Auto-fix failures
+  auto-fix:
+    name: Auto-Fix Failures
+    runs-on: ubuntu-latest
+    needs: run-checks
+    if: needs.run-checks.outputs.lint-status == 'failure'
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff black isort
+
+      - name: Auto-fix linting issues
+        run: |
+          echo "Attempting auto-fix..."
+          ruff check . --fix --unsafe-fixes || true
+          black . || true
+          isort . || true
+
+      - name: Commit fixes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: auto-fix linting issues"
+            git push
+          fi
+
+  # Job 3: Re-run checks after fixes
+  verify-fixes:
+    name: Verify Fixes
+    runs-on: ubuntu-latest
+    needs: auto-fix
+    outputs:
+      all-passed: ${{ steps.final-check.outputs.passed }}
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install ruff pytest pytest-cov
+
+      - name: Run all checks
+        id: final-check
+        run: |
+          echo "Running final verification..."
+          PASSED=true
+          
+          echo "1. Linting..."
+          if ! ruff check .; then
+            echo "Linting failed"
+            PASSED=false
+          fi
+          
+          echo "2. Tests..."
+          if ! pytest -v --maxfail=1; then
+            echo "Tests failed"
+            PASSED=false
+          fi
+          
+          echo "passed=$PASSED" >> $GITHUB_OUTPUT
+
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const passed = '${{ steps.final-check.outputs.passed }}' === 'true';
+            const body = passed 
+              ? '✅ All checks passed after auto-fix! Ready to merge.'
+              : '⚠️ Some checks still failing after auto-fix. Manual intervention required.';
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+
+  # Job 4: Auto-merge
+  auto-merge:
+    name: Auto-Merge PR
+    runs-on: ubuntu-latest
+    needs: [run-checks, verify-fixes]
+    if: |
+      (needs.run-checks.outputs.lint-status == 'success' && 
+       needs.run-checks.outputs.test-status == 'success') ||
+      needs.verify-fixes.outputs.all-passed == 'true'
+    steps:
+      - name: Approve PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            try {
+              await github.rest.pulls.createReview({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.issue.number,
+                event: 'APPROVE',
+                body: '✅ Automated approval: All required checks passed!'
+              });
+            } catch (error) {
+              console.log('Could not approve (may already be approved):', error.message);
+            }
+
+      - name: Enable auto-merge
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr merge --auto --squash ${{ github.event.pull_request.number }} || \
+          echo "Could not enable auto-merge. May require branch protection rules or administrator approval."
+
+      - name: Comment merge status
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '🚀 Auto-merge enabled. PR will merge automatically when all required checks pass and branch protection rules are satisfied.'
+            });
+
+  # Job 5: Post-merge validation
+  post-merge-validation:
+    name: Validate Main Branch
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest ruff
+
+      - name: Validate main branch
+        id: validate
+        run: |
+          echo "Validating main branch health..."
+          HEALTHY=true
+          
+          echo "1. Check for conflicts..."
+          if git ls-files -u | grep -q .; then
+            echo "❌ Conflicts detected"
+            HEALTHY=false
+          else
+            echo "✅ No conflicts"
+          fi
+          
+          echo "2. Run tests..."
+          if ! pytest -v; then
+            echo "❌ Tests failing"
+            HEALTHY=false
+          else
+            echo "✅ Tests passing"
+          fi
+          
+          echo "3. Run linting..."
+          if ! ruff check .; then
+            echo "❌ Linting issues"
+            HEALTHY=false
+          else
+            echo "✅ Linting clean"
+          fi
+          
+          echo "healthy=$HEALTHY" >> $GITHUB_OUTPUT
+
+      - name: Generate summary report
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const healthy = '${{ steps.validate.outputs.healthy }}' === 'true';
+            const report = `
+            ## 📊 Post-Merge Validation Report
+            
+            **PR #${{ github.event.pull_request.number }}** merged into main
+            
+            ### Main Branch Health Status: ${healthy ? '✅ HEALTHY' : '⚠️ ISSUES DETECTED'}
+            
+            #### Checks Performed:
+            - **Merge Conflicts**: ${healthy ? '✅ None' : '❌ Detected'}
+            - **Test Suite**: ${healthy ? '✅ Passing' : '❌ Failing'}
+            - **Linting**: ${healthy ? '✅ Clean' : '❌ Issues'}
+            
+            #### Summary:
+            ${healthy ? 
+              '✅ Main branch is healthy with zero conflicts and zero failing tests.' :
+              '⚠️ Issues detected on main branch. Immediate attention required.'}
+            
+            ---
+            *Generated by Comprehensive PR Automation*
+            `;
+            
+            // Create issue if main is unhealthy
+            if (!healthy) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: `🚨 Main Branch Health Check Failed After PR #${{ github.event.pull_request.number }}`,
+                body: report,
+                labels: ['urgent', 'main-branch-health']
+              });
+            }
+            
+            // Comment on the merged PR
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: report
+            });
+
+# Separate workflow for processing all open PRs
+  process-all-prs:
+    name: Process All Open PRs
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get all open PRs
+        id: get-prs
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: prs } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              per_page: 100
+            });
+            
+            console.log(`Found ${prs.length} open PRs`);
+            return prs.map(pr => pr.number);
+
+      - name: Trigger checks for each PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumbers = ${{ steps.get-prs.outputs.result }};
+            
+            for (const prNumber of prNumbers) {
+              console.log(`Triggering workflow for PR #${prNumber}`);
+              
+              try {
+                await github.rest.actions.createWorkflowDispatch({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  workflow_id: 'comprehensive-pr-automation.yml',
+                  ref: 'main',
+                  inputs: {
+                    pr_number: prNumber.toString()
+                  }
+                });
+              } catch (error) {
+                console.log(`Failed to trigger for PR #${prNumber}:`, error.message);
+              }
+            }
