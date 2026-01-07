@@ -41,7 +41,7 @@ jobs:
         run: ruff check .
 
       - name: Type check (mypy)
-        run: mypy src --ignore-missing-imports
+        run: mypy src
 
       - name: Check required secrets (non-fatal)
         run: |
