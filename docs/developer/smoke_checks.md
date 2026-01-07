@@ -4,7 +4,7 @@ This checklist helps you verify the key stacks quickly before opening a full iss
 
 ## Desktop / Core app
 
-1. Ensure Python 3.12 and dependencies are setup:
+1. Ensure Python 3.11 and dependencies are setup:
 
    ```powershell
    python -m pip install --upgrade pip

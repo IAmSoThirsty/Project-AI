@@ -1,0 +1,8 @@
+{
+  "theme": "light",
+  "ui_scale": 10,
+  "content_filter": true,
+  "content_filtering_enabled": true,
+  "default_image_style": "Photorealistic",
+  "api_keys": {}
+}
