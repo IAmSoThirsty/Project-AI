@@ -201,9 +201,9 @@ If you find a vulnerability in a dependency:
 SECRET_KEY = os.getenv('SECRET_KEY')
 DB_PASSWORD = os.getenv('DB_PASSWORD')
 
-# ❌ DON'T: Hardcode secrets
-SECRET_KEY = "my-secret-key-12345"
-DB_PASSWORD = "password123"
+# ❌ DON'T: Hardcode secrets (example of INSECURE code - never do this!)
+# SECRET_KEY = "my-secret-key-12345"  # INSECURE - for demonstration only
+# DB_PASSWORD = "password123"  # INSECURE - for demonstration only
 ```
 
 ---
