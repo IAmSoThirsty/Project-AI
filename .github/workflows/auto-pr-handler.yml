@@ -34,6 +34,30 @@ jobs:
           ruff check . --output-format=github
         continue-on-error: true
 
+      - name: Auto-fix linting issues if failed
+        if: steps.lint.outputs.LINT_FAILED == 'true'
+        run: |
+          echo "Attempting to auto-fix linting issues..."
+          ruff check . --fix --unsafe-fixes || true
+          
+      - name: Re-run linting after fixes
+        if: steps.lint.outputs.LINT_FAILED == 'true'
+        id: lint-recheck
+        run: |
+          ruff check . --output-format=github || echo "LINT_STILL_FAILED=true" >> $GITHUB_OUTPUT
+        continue-on-error: true
+
+      - name: Commit auto-fixes
+        if: steps.lint.outputs.LINT_FAILED == 'true' && steps.lint-recheck.outputs.LINT_STILL_FAILED != 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: auto-fix linting issues"
+            git push
+          fi
+
       - name: Run tests
         id: test
         run: |
@@ -53,9 +77,13 @@ jobs:
               comment += '✅ All checks passed! This PR is safe to merge.\n\n';
               comment += '- ✅ Linting passed\n';
               comment += '- ✅ Tests passed\n';
+            } else if (lintFailed && !lintStillFailed && !testFailed) {
+              comment += '✅ All checks passed after auto-fix!\n\n';
+              comment += '- ✅ Linting auto-fixed and passing\n';
+              comment += '- ✅ Tests passed\n';
             } else {
               comment += '⚠️ Some checks failed:\n\n';
-              if (lintFailed) comment += '- ❌ Linting failed\n';
+              if (lintStillFailed) comment += '- ❌ Linting failed (even after auto-fix)\n';
               if (testFailed) comment += '- ❌ Tests failed\n';
               comment += '\nPlease review the workflow logs for details.';
             }

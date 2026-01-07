@@ -16,7 +16,6 @@ may be intermittent or unavailable.
 
 import json
 import logging
-import os
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
@@ -216,7 +215,7 @@ class LocalFBOSystem:
             # Try to connect to a reliable server
             socket.create_connection(("8.8.8.8", 53), timeout=2)
             return True
-        except (socket.error, OSError):
+        except OSError:
             return False
 
     def get_context(self) -> OfflineContext:

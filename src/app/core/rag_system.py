@@ -220,7 +220,7 @@ class RAGSystem:
             )
 
             # Convert numpy arrays to lists for JSON serialization
-            for chunk, embedding in zip(chunks, embeddings):
+            for chunk, embedding in zip(chunks, embeddings, strict=False):
                 chunk.embedding = embedding.tolist()
 
             logger.info("Embeddings generated successfully")
@@ -523,7 +523,7 @@ Answer:"""
 
     def get_statistics(self) -> dict[str, Any]:
         """Get statistics about the RAG index."""
-        sources = set(chunk.source for chunk in self.chunks)
+        sources = {chunk.source for chunk in self.chunks}
         embedded_count = sum(
             1 for chunk in self.chunks if chunk.embedding is not None
         )
