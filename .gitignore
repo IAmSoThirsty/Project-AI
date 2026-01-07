@@ -75,3 +75,6 @@ venv.bak/
 # OS
 .DS_Store
 Thumbs.db
+
+# Generated test data
+data/generated_tests/

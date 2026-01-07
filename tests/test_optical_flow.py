@@ -305,7 +305,7 @@ class TestOpticalFlowDetector:
         epicenters = detector._detect_epicenters(flow, 1, 0.0)
 
         # Should detect multiple types
-        types_found = set(e.flow_type for e in epicenters)
+        types_found = {e.flow_type for e in epicenters}
         assert len(types_found) >= 1  # At least one type detected
 
     def test_sensitivity_affects_detection(self, temp_dir):

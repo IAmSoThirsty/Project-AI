@@ -517,7 +517,7 @@ class LearningRequestManager:
                     "reason": row[7],
                 }
             cur.execute("SELECT hash FROM black_vault")
-            self.black_vault = set(r[0] for r in cur.fetchall())
+            self.black_vault = {r[0] for r in cur.fetchall()}
             conn.close()
         except Exception as e:
             logger.exception("Error loading requests from DB: %s", e)
