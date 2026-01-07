@@ -4,17 +4,25 @@ This agent is deployed as a smaller agent under CouncilHub and runs periodic
 random CI checks: pytest, lint (ruff), and static analysis (ruff/pyflakes).
 It attempts to run with minimal external dependencies and writes a report to
 `data/ci_reports/` with a correlation id and timestamp.
+
+Security Note: This agent uses subprocess to run trusted development tools
+(pytest, ruff) that are part of the project's dependencies. All commands
+are hardcoded and do not accept external input.
 """
 from __future__ import annotations
 
 import json
+import logging
 import os
-import subprocess
+import shutil
+import subprocess  # nosec B404 - subprocess usage for trusted dev tools only
 import time
 from datetime import datetime
 from typing import Any
 
 from app.core.ai_systems import new_correlation_id
+
+logger = logging.getLogger(__name__)
 
 
 class CICheckerAgent:
@@ -36,21 +44,53 @@ class CICheckerAgent:
         return True
 
     def run_one(self) -> dict[str, Any]:
+        """Run CI checks using trusted development tools.
+
+        Security: Commands are hardcoded and use only trusted tools from
+        project dependencies. No external input is used in commands.
+        """
         corr = new_correlation_id()
         ts = datetime.utcnow().isoformat()
         report = {"corr": corr, "timestamp": ts, "results": {}}
+
+        # Resolve tool paths (try to use absolute paths when possible)
+        pytest_cmd = shutil.which("pytest") or "pytest"
+        ruff_cmd = shutil.which("ruff") or "ruff"
+
         # run pytest -q (only tests directory)
         try:
-            res = subprocess.run(["pytest", "-q"], capture_output=True, text=True)
+            # nosec B603 B607 - pytest is a trusted dev tool, command is hardcoded
+            res = subprocess.run(
+                [pytest_cmd, "-q"],
+                capture_output=True,
+                text=True,
+                timeout=300,  # 5 minute timeout
+            )
             report["results"]["pytest"] = {"rc": res.returncode, "output": res.stdout + res.stderr}
+        except subprocess.TimeoutExpired:
+            logger.warning("pytest command timed out after 300 seconds")
+            report["results"]["pytest"] = {"rc": -1, "error": "timeout"}
         except Exception as e:
+            logger.error("pytest execution failed: %s", e)
             report["results"]["pytest"] = {"rc": -1, "error": str(e)}
+
         # run ruff (lint)
         try:
-            res = subprocess.run(["ruff", "check", "src", "tests"], capture_output=True, text=True)
+            # nosec B603 B607 - ruff is a trusted dev tool, command is hardcoded
+            res = subprocess.run(
+                [ruff_cmd, "check", "src", "tests"],
+                capture_output=True,
+                text=True,
+                timeout=300,  # 5 minute timeout
+            )
             report["results"]["ruff"] = {"rc": res.returncode, "output": res.stdout + res.stderr}
+        except subprocess.TimeoutExpired:
+            logger.warning("ruff command timed out after 300 seconds")
+            report["results"]["ruff"] = {"rc": -1, "error": "timeout"}
         except Exception as e:
+            logger.error("ruff execution failed: %s", e)
             report["results"]["ruff"] = {"rc": -1, "error": str(e)}
+
         # write report
         out = os.path.join(self.reports_dir, f"ci_{corr}.json")
         with open(out, "w", encoding="utf-8") as f:
