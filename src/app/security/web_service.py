@@ -13,7 +13,9 @@ import hmac
 import logging
 import time
 from typing import Any
-from xml.etree import ElementTree as ET
+from xml.etree.ElementTree import Element, SubElement, tostring  # nosec B405 - Only used for building XML, not parsing
+
+import defusedxml.ElementTree as DefusedET
 
 logger = logging.getLogger(__name__)
 
@@ -75,18 +77,18 @@ class SOAPClient:
         Returns:
             SOAP envelope XML
         """
-        root = ET.Element("{http://schemas.xmlsoap.org/soap/envelope/}Envelope")
+        root = Element("{http://schemas.xmlsoap.org/soap/envelope/}Envelope")
         root.set("xmlns:soap", "http://schemas.xmlsoap.org/soap/envelope/")
 
-        body = ET.SubElement(root, "{http://schemas.xmlsoap.org/soap/envelope/}Body")
-        method_elem = ET.SubElement(body, method)
+        body = SubElement(root, "{http://schemas.xmlsoap.org/soap/envelope/}Body")
+        method_elem = SubElement(body, method)
 
         # Add parameters
         for key, value in params.items():
-            param = ET.SubElement(method_elem, key)
+            param = SubElement(method_elem, key)
             param.text = str(value)
 
-        return ET.tostring(root, encoding="unicode")
+        return tostring(root, encoding="unicode")
 
     def _validate_envelope(self, envelope: str) -> bool:
         """Validate SOAP envelope structure.
@@ -98,7 +100,8 @@ class SOAPClient:
             True if valid
         """
         try:
-            root = ET.fromstring(envelope)
+            # Use defusedxml for parsing untrusted XML
+            root = DefusedET.fromstring(envelope)
 
             # Check for soap/envelope in tag
             tag_lower = root.tag.lower()
@@ -137,28 +140,28 @@ class SOAPClient:
         Returns:
             Envelope with authentication
         """
-        # Parse envelope
-        root = ET.fromstring(envelope)
+        # Parse envelope - using defusedxml since this is untrusted input
+        root = DefusedET.fromstring(envelope)
 
         # Add security header
-        header = ET.Element("{http://schemas.xmlsoap.org/soap/envelope/}Header")
-        security = ET.SubElement(
+        header = Element("{http://schemas.xmlsoap.org/soap/envelope/}Header")
+        security = SubElement(
             header,
             "{http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd}Security",
         )
 
-        username_token = ET.SubElement(security, "UsernameToken")
+        username_token = SubElement(security, "UsernameToken")
 
-        username_elem = ET.SubElement(username_token, "Username")
+        username_elem = SubElement(username_token, "Username")
         username_elem.text = self.username
 
-        password_elem = ET.SubElement(username_token, "Password")
+        password_elem = SubElement(username_token, "Password")
         password_elem.text = self.password
 
         # Insert header before body
         root.insert(0, header)
 
-        return ET.tostring(root, encoding="unicode")
+        return tostring(root, encoding="unicode")
 
     def _parse_response(self, response_xml: str) -> dict[str, Any]:
         """Parse SOAP response.
@@ -170,7 +173,8 @@ class SOAPClient:
             Response dictionary
         """
         try:
-            root = ET.fromstring(response_xml)
+            # Use defusedxml for parsing untrusted XML responses
+            root = DefusedET.fromstring(response_xml)
             body = root.find(".//{http://schemas.xmlsoap.org/soap/envelope/}Body")
 
             if body is None:
@@ -184,7 +188,7 @@ class SOAPClient:
 
             return result
 
-        except ET.ParseError as e:
+        except DefusedET.ParseError as e:
             logger.error("Failed to parse SOAP response: %s", e)
             raise ValueError(f"Invalid SOAP response: {e}") from e
 
