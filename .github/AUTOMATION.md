@@ -4,11 +4,72 @@ This document describes the automated workflows configured for the Project-AI re
 
 ## Overview
 
-The automation system consists of four main components:
-1. **Pull Request Automation** - Auto-review and merge safe PRs
-2. **Security Alert Automation** - Monitor and fix security vulnerabilities
-3. **Dependency Management** - Automated dependency updates via Dependabot
-4. **Code Security Scanning** - Continuous security analysis
+The automation system consists of five main components:
+1. **Security Orchestrator** - Comprehensive automated security resolution (NEW)
+2. **Pull Request Automation** - Auto-review and merge safe PRs
+3. **Security Alert Automation** - Monitor and fix security vulnerabilities
+4. **Dependency Management** - Automated dependency updates via Dependabot
+5. **Code Security Scanning** - Continuous security analysis
+
+## Security Orchestrator (NEW)
+
+### Comprehensive Security Automation (`security-orchestrator.yml`)
+
+**Status**: ✅ ACTIVE - Zero manual approval required
+
+**Purpose**: Complete automated security issue resolution system that handles ALL security-related items without human intervention.
+
+**Triggers**:
+- Every 6 hours (continuous monitoring)
+- Manual dispatch via GitHub Actions UI
+- Repository dispatch on security alerts
+- Push to main (dependency changes)
+- Pull requests to main
+
+**What it does**:
+1. **Comprehensive Scanning**:
+   - Dependency vulnerabilities (pip-audit)
+   - Code security issues (Bandit)
+   - Secret exposure (detect-secrets)
+   - Severity assessment and triage
+
+2. **Automatic Remediation**:
+   - Upgrades vulnerable dependencies
+   - Creates tracking issues for code security
+   - Alerts on secret exposure
+   - Verifies all fixes applied
+
+3. **Zero-Approval Deployment**:
+   - Creates PRs with `auto-merge` label
+   - Automatically merges after CI passes
+   - No manual review required
+   - Post-merge verification
+
+4. **Compliance Reporting**:
+   - Generates security compliance reports
+   - Confirms zero outstanding issues
+   - Tracks remediation history
+
+**Key Features**:
+- 🤖 Fully automated - no manual intervention
+- 🔄 Continuous - runs every 6 hours
+- ✅ Zero-approval - security fixes auto-merge
+- 📊 Comprehensive reporting
+- 🛡️ Complete coverage of security issues
+
+**Usage**:
+```bash
+# Manually trigger comprehensive security scan
+gh workflow run security-orchestrator.yml
+
+# View security compliance status
+gh run list --workflow=security-orchestrator.yml
+
+# Download compliance report
+gh run download <RUN-ID> -n security-compliance-report
+```
+
+**Documentation**: See `.github/SECURITY_AUTOMATION.md` for complete details.
 
 ## Pull Request Automation
 
