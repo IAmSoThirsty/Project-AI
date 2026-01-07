@@ -5,7 +5,7 @@ Runs generated code in a lightweight subprocess sandbox (best-effort).
 from __future__ import annotations
 
 import logging
-import subprocess
+import subprocess  # nosec B404 - Used for sandboxed code execution only
 from typing import Any
 
 logger = logging.getLogger(__name__)
@@ -17,7 +17,7 @@ class SandboxRunner:
 
     def run_in_sandbox(self, module_path: str, timeout: int = 5) -> dict[str, Any]:
         try:
-            res = subprocess.run(["python", module_path], capture_output=True, text=True, timeout=timeout)
+            res = subprocess.run(["python", module_path], capture_output=True, text=True, timeout=timeout)  # nosec B603, B607
             return {"success": res.returncode == 0, "stdout": res.stdout, "stderr": res.stderr}
         except subprocess.TimeoutExpired:
             return {"success": False, "error": "timeout"}

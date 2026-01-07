@@ -5,7 +5,7 @@ Runs pip-audit and basic dependency checks on newly generated files.
 from __future__ import annotations
 
 import logging
-import subprocess
+import subprocess  # nosec B404 - Used for internal security audit tools only
 from typing import Any
 
 logger = logging.getLogger(__name__)
@@ -23,7 +23,7 @@ class DependencyAuditor:
             imports = [line for line in txt.splitlines() if line.strip().startswith("import ") or line.strip().startswith("from ")]
             # Run pip-audit (best-effort)
             try:
-                res = subprocess.run(["pip-audit", "--format", "json"], capture_output=True, text=True)
+                res = subprocess.run(["pip-audit", "--format", "json"], capture_output=True, text=True)  # nosec B603, B607
                 audit_json = res.stdout
             except Exception:
                 audit_json = None

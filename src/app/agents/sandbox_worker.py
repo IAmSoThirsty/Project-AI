@@ -31,7 +31,8 @@ def apply_limits():
             setrlimit(rlimit_cpu, (2, 4))
         if callable(setrlimit) and rlimit_nofile is not None:
             setrlimit(rlimit_nofile, (16, 64))
-    except Exception:
+    except Exception:  # nosec B110
+        # Resource limits are best-effort on non-POSIX systems
         pass
 
 

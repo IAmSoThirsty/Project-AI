@@ -31,8 +31,9 @@ class CodexDeusMaximus:
         # Ensure legacy method binding for compatibility
         try:
             self.auto_fix_file = types.MethodType(self.__class__.auto_fix_file, self)
-        except Exception:
-            pass
+        except Exception as e:  # nosec B110
+            # Expected failure on some Python versions or configurations
+            logger.debug("Method binding compatibility check failed (non-critical): %s", e)
 
     def initialize(self) -> bool:
         logger.info("Schematic Guardian initialized. Mode: STRICT ENFORCEMENT.")
