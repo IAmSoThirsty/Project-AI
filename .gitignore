@@ -71,6 +71,17 @@ venv.bak/
 # IDEs
 .vscode/
 .idea/
+.vs/
+
+# Secrets and credentials (additional safeguards)
+.env.local
+.env.*.local
+*.key
+*.pem
+*.p12
+secrets.json
+credentials.json
+secret_scan_report.json
 
 # OS
 .DS_Store
