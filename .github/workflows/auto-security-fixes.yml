@@ -40,7 +40,23 @@ jobs:
         run: |
           pip-audit --format json -o pip-audit-report.json || true
           if [ -s pip-audit-report.json ]; then
-            echo "VULNERABILITIES_FOUND=true" >> $GITHUB_OUTPUT
+            # Check if there are actual vulnerabilities
+            VULN_COUNT=$(python3 -c "
+import json
+try:
+    with open('pip-audit-report.json', 'r') as f:
+        data = json.load(f)
+    count = sum(len(dep.get('vulns', [])) for dep in data.get('dependencies', []))
+    print(count)
+except:
+    print(0)
+")
+            if [ "$VULN_COUNT" -gt 0 ]; then
+              echo "VULNERABILITIES_FOUND=true" >> $GITHUB_OUTPUT
+              echo "VULNERABILITY_COUNT=$VULN_COUNT" >> $GITHUB_OUTPUT
+            else
+              echo "No vulnerabilities found"
+            fi
           fi
         continue-on-error: true
 
@@ -66,14 +82,30 @@ jobs:
             try {
               const pipAudit = JSON.parse(fs.readFileSync('pip-audit-report.json', 'utf8'));
               if (pipAudit.dependencies && pipAudit.dependencies.length > 0) {
-                issueBody += '### pip-audit findings:\n\n';
-                pipAudit.dependencies.forEach(dep => {
-                  issueBody += `- **${dep.name}** (${dep.version}): ${dep.vulns.length} vulnerability(ies)\n`;
-                });
-                issueBody += '\n';
+                // Filter to only show packages WITH vulnerabilities
+                const vulnPackages = pipAudit.dependencies.filter(dep => dep.vulns && dep.vulns.length > 0);
+                
+                if (vulnPackages.length > 0) {
+                  issueBody += '### pip-audit findings:\n\n';
+                  issueBody += `Found **${vulnPackages.length}** package(s) with vulnerabilities:\n\n`;
+                  
+                  vulnPackages.forEach(dep => {
+                    issueBody += `- **${dep.name}** (${dep.version}): ${dep.vulns.length} vulnerability(ies)\n`;
+                    dep.vulns.forEach(vuln => {
+                      issueBody += `  - ${vuln.id}`;
+                      if (vuln.fix_versions && vuln.fix_versions.length > 0) {
+                        issueBody += ` (fixed in: ${vuln.fix_versions.join(', ')})`;
+                      }
+                      issueBody += '\n';
+                    });
+                  });
+                  issueBody += '\n';
+                } else {
+                  console.log('No vulnerabilities found in pip-audit results');
+                }
               }
             } catch (e) {
-              console.log('No pip-audit results or parsing error');
+              console.log('No pip-audit results or parsing error:', e.message);
             }
             
             // Check safety results
