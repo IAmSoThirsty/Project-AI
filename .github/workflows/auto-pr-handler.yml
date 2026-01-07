@@ -13,7 +13,7 @@ jobs:
   auto-review:
     name: Auto Review PR
     runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]' || contains(github.event.pull_request.labels.*.name, 'auto-merge')
+    # Run for all PRs - this is now the default behavior
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -31,21 +31,21 @@ jobs:
       - name: Run linting
         id: lint
         run: |
-          ruff check . --output-format=github || echo "LINT_FAILED=true" >> $GITHUB_OUTPUT
+          ruff check . --output-format=github
         continue-on-error: true
 
       - name: Run tests
         id: test
         run: |
-          pytest -v --maxfail=1 || echo "TEST_FAILED=true" >> $GITHUB_OUTPUT
+          pytest -v --maxfail=1
         continue-on-error: true
 
       - name: Comment on PR
         uses: actions/github-script@v7
         with:
           script: |
-            const lintFailed = '${{ steps.lint.outputs.LINT_FAILED }}' === 'true';
-            const testFailed = '${{ steps.test.outputs.TEST_FAILED }}' === 'true';
+            const lintFailed = '${{ steps.lint.outcome }}' === 'failure';
+            const testFailed = '${{ steps.test.outcome }}' === 'failure';
             
             let comment = '## Automated PR Review\n\n';
             
@@ -68,7 +68,7 @@ jobs:
             });
 
       - name: Approve PR if checks pass
-        if: steps.lint.outputs.LINT_FAILED != 'true' && steps.test.outputs.TEST_FAILED != 'true'
+        if: steps.lint.outcome == 'success' && steps.test.outcome == 'success'
         uses: actions/github-script@v7
         with:
           script: |
@@ -79,6 +79,43 @@ jobs:
               event: 'APPROVE',
               body: '✅ Automated approval: All safety checks passed!'
             });
+
+  auto-merge-all-passing:
+    name: Auto Merge Passing PRs
+    runs-on: ubuntu-latest
+    needs: auto-review
+    # Auto-merge all PRs that pass checks, not just Dependabot
+    steps:
+      - name: Check all required checks passed
+        id: check-status
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+            
+            const { data: checks } = await github.rest.checks.listForRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: pr.head.sha
+            });
+            
+            const allPassed = checks.check_runs.every(check => 
+              check.conclusion === 'success' || check.conclusion === 'skipped'
+            );
+            
+            core.setOutput('all_passed', allPassed.toString());
+            return allPassed;
+
+      - name: Enable auto-merge
+        if: steps.check-status.outputs.all_passed == 'true'
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   auto-merge-dependabot:
     name: Auto Merge Dependabot PRs
