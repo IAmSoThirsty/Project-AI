@@ -19,6 +19,12 @@ __pycache__/
 *.so
 .Python
 
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
 # Documentation
 site/
 docs/_build/
@@ -32,15 +38,12 @@ README_UPDATED.md
 # Test and runtime data directories
 data/monitoring/
 data/sandbox_reports/
-<<<<<<< HEAD
-=======
 data/comprehensive_security_tests/
 data/robustness_metrics/
 data/red_team_stress_tests/
 
 # Large test artifacts and data files
 docs/security/fourlaws-test-runs-latest.jsonl
->>>>>>> 7680383fa2faae70c9879322f0f88b29211a4015
 
 # Build/analysis artifacts
 *.jar
