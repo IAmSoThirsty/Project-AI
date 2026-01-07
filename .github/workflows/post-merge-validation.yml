@@ -49,9 +49,12 @@ jobs:
         id: lint
         run: |
           echo "Running linting checks..."
-          ruff check . --output-format=github > lint_output.txt 2>&1 || true
+          set +e
+          ruff check . --output-format=github > lint_output.txt 2>&1
+          LINT_EXIT=$?
+          set -e
           
-          if [ $? -eq 0 ]; then
+          if [ $LINT_EXIT -eq 0 ]; then
             echo "lint_passed=true" >> $GITHUB_OUTPUT
             echo "✅ Linting passed"
           else
@@ -64,9 +67,12 @@ jobs:
         id: tests
         run: |
           echo "Running complete test suite..."
-          pytest -v --tb=short --maxfail=0 > test_output.txt 2>&1 || true
+          set +e
+          pytest -v --tb=short --maxfail=0 > test_output.txt 2>&1
+          TEST_EXIT=$?
+          set -e
           
-          if [ $? -eq 0 ]; then
+          if [ $TEST_EXIT -eq 0 ]; then
             echo "tests_passed=true" >> $GITHUB_OUTPUT
             PASSED=$(grep -c "PASSED" test_output.txt || echo "0")
             echo "test_count=$PASSED" >> $GITHUB_OUTPUT
@@ -82,10 +88,11 @@ jobs:
       - name: Generate health report
         id: report
         run: |
-          cat > main_health_report.md << 'EOF'
+          REPORT_DATE=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          cat > main_health_report.md << EOF
           # Main Branch Health Report
           
-          **Generated:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          **Generated:** ${REPORT_DATE}
           **Commit:** ${{ github.sha }}
           **Triggered by:** ${{ github.event.head_commit.message }}
           

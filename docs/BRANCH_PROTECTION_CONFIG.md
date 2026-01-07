@@ -85,6 +85,40 @@ The following workflows enforce these requirements automatically:
 - Creates urgent issues if main branch is unhealthy
 - Comments on merged PRs with validation results
 
+## Security Considerations
+
+### Workflow File Protection
+
+⚠️ **IMPORTANT**: While this automation provides significant efficiency, consider these security best practices:
+
+1. **Workflow File Changes**: PRs that modify `.github/workflows/` files should be reviewed manually before merge
+   - Add a required review for workflow changes via CODEOWNERS file
+   - Example CODEOWNERS entry: `.github/workflows/* @IAmSoThirsty`
+
+2. **External Contributors**: Consider requiring manual approval for PRs from external contributors
+   - Can be configured in branch protection: "Require approval from specific users"
+   - Protects against malicious PRs from unknown sources
+
+3. **Sensitive Code Areas**: High-security code (authentication, encryption, payment processing) should have:
+   - Required code owner reviews
+   - Additional manual validation
+   - Separate security scanning workflows
+
+### Recommended CODEOWNERS Configuration
+
+Create `.github/CODEOWNERS` file:
+
+```
+# Workflow files require owner review
+/.github/workflows/ @IAmSoThirsty
+
+# Security-sensitive code requires review
+/src/app/core/user_manager.py @IAmSoThirsty
+/src/app/core/command_override.py @IAmSoThirsty
+```
+
+This allows automation for most PRs while protecting critical files.
+
 ## Configuration Instructions
 
 ### Step 1: Configure Branch Protection via GitHub UI
