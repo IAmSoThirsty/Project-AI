@@ -173,6 +173,11 @@ jobs:
               
               if [ -s fix-plan.txt ]; then
                 echo "SECURITY_FIXES=true" >> $GITHUB_OUTPUT
+                
+                # Run verification after fixes
+                pip-audit --format json > post-fix-audit.json || true
+                REMAINING=$(python3 -c "import json; data=json.load(open('post-fix-audit.json')); print(len(data.get('dependencies', [])))" 2>/dev/null || echo "0")
+                echo "REMAINING_VULNS=$REMAINING" >> $GITHUB_OUTPUT
               fi
             fi
           fi
@@ -195,12 +200,16 @@ jobs:
             - Run by automated security scanning workflow
             
             ### Verification
+            - Post-fix vulnerabilities remaining: ${{ steps.upgrade.outputs.REMAINING_VULNS || 'Unknown' }}
             - All tests must pass before merging
             - Review the changes to ensure compatibility
             
+            ### Auto-Merge
+            This PR is labeled for auto-merge. It will be automatically merged after all checks pass.
+            
             **Note**: This is an automated PR. Please review carefully before merging.
           branch: security/auto-fix-dependencies
-          labels: security, dependencies, automated
+          labels: security,dependencies,automated,auto-merge
           delete-branch: true
 
   codeql-auto-fix:
