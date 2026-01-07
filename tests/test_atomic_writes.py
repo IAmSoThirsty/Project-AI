@@ -73,8 +73,8 @@ def test_lock_prevents_simultaneous_writes_threaded(tmp_path):
         try:
             data = json.load(f)
         except Exception as e:
-            raise AssertionError(f"Final shared file is not valid JSON: {e}") from e
-    assert isinstance(data, (dict, list))
+            raise AssertionError(f"Final shared file is not valid JSON: {e}")
+    assert isinstance(data, dict) or isinstance(data, list)
 
 
 def test_lock_prevents_simultaneous_writes_multiprocess(tmp_path):
@@ -94,7 +94,7 @@ def test_lock_prevents_simultaneous_writes_multiprocess(tmp_path):
             raise AssertionError("Memory writer process did not exit in time")
 
     # Ensure knowledge files were created
-    os.path.join(data_dir, "knowledge.json")
+    kb_file = os.path.join(data_dir, "knowledge.json")
     # It's acceptable if implementation stores differently; just ensure no crashes occurred
     # at minimum the directory should exist
     assert os.path.isdir(data_dir)
@@ -112,7 +112,7 @@ def test_persona_save_runs_atomically(tmp_path):
 
 def test_memory_add_knowledge_persists_atomically(tmp_path):
     data_dir = str(tmp_path / "data")
-    MemoryExpansionSystem(data_dir=data_dir)
+    mem = MemoryExpansionSystem(data_dir=data_dir)
     # Run a few concurrent writers using multiprocessing
     procs = []
     for i in range(6):
@@ -125,7 +125,7 @@ def test_memory_add_knowledge_persists_atomically(tmp_path):
             # Ensure we don't leave orphan processes; terminate and fail the test
             p.terminate()
             p.join(timeout=1)
-            raise AssertionError("Memory writer process did not exit in time")
+            assert False, "Memory writer process did not exit in time"
 
     kb_file = os.path.join(data_dir, "memory", "knowledge.json")
     with open(kb_file, encoding="utf-8") as f:
