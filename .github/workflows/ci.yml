@@ -38,10 +38,10 @@ jobs:
           pre-commit run --all-files || true
 
       - name: Lint (ruff)
-        run: ruff check . || true
+        run: ruff check .
 
       - name: Type check (mypy)
-        run: mypy src || true
+        run: mypy src
 
       - name: Check required secrets (non-fatal)
         run: |
@@ -61,7 +61,7 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          pytest --cov=src --cov-report=xml:reports/coverage.xml -q || true
+          pytest --cov=src --cov-report=xml:reports/coverage.xml -q
 
       - name: Upload coverage report
         if: always()
@@ -96,7 +96,7 @@ jobs:
       - name: Install ruff
         run: pip install ruff
       - name: Run ruff
-        run: ruff check . || true
+        run: ruff check .
 
   tests:
     name: Run tests (pytest)
