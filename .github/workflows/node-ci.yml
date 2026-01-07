@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  contents: read
+  pull-requests: read
+
 jobs:
   node-checks:
     name: Node.js checks (install, typecheck, test, coverage, build, audit)
@@ -25,7 +29,24 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            echo "No package-lock.json found, falling back to npm install"
+            npm install
+          fi
+
+      - name: Detect JS test files
+        id: detect_js_tests
+        run: |
+          if [ -d "src" ]; then
+            count=$(find src -type f -name '*.test.js' 2>/dev/null | wc -l)
+          else
+            count=0
+          fi
+          echo "found=$count" >> $GITHUB_OUTPUT
+          echo "Found $count JS test file(s)"
 
       - name: Run type checking (if available)
         run: |
@@ -36,12 +57,12 @@ jobs:
           fi
 
       - name: Run tests (if available)
-        run: |
-          if npm run -s test >/dev/null 2>&1; then
-            npm test;
-          else
-            echo "No test script defined — skipping";
-          fi
+        if: steps.detect_js_tests.outputs.found != '0'
+        run: npm test
+
+      - name: No JS tests found
+        if: steps.detect_js_tests.outputs.found == '0'
+        run: echo "No JS test files found in src/ — skipping JS tests."
 
       - name: Run tests with coverage (if available)
         run: |
@@ -103,6 +124,14 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install pytest flake8 pytest-cov
+          
+          # Install project dependencies
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt || echo "Warning: Some requirements failed to install"
+          fi
+          if [ -f setup.py ]; then
+            pip install -e . || echo "Warning: Setup.py install failed"
+          fi
 
       - name: Run flake8
         if: steps.detect_py.outputs.found != '0'
