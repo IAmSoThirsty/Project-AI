@@ -40,6 +40,11 @@ pydantic-settings>=0.1.0
 pyflakes==3.4.0
 Pygments==2.19.2
 pyparsing==3.2.5
+
+# AI Security & MLOps
+paho-mqtt>=1.6.1  # MQTT for OTA deployment
+jax>=0.4.0  # JAX framework support (optional)
+jaxlib>=0.4.0  # JAX library (optional)
 # Relaxed PyPDF2 pin to allow newer compatible builds
 PyPDF2>=3.0.0,<4.0.0
 PyQt6==6.10.0
