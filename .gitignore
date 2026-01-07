@@ -19,6 +19,9 @@ __pycache__/
 *.so
 .Python
 
+# Node.js dependencies
+node_modules/
+
 # Documentation
 site/
 docs/_build/
