@@ -19,6 +19,9 @@ logger = logging.getLogger(__name__)
 class SecureDatabaseManager:
     """Secure database operations with SQL injection prevention."""
 
+    # Whitelist of allowed columns for user updates
+    ALLOWED_USER_COLUMNS = {"username", "password_hash", "email"}
+
     def __init__(self, db_path: str = "data/secure.db"):
         """Initialize secure database manager.
 
@@ -245,11 +248,8 @@ class SecureDatabaseManager:
         if not kwargs:
             return
 
-        # Whitelist of allowed columns to prevent SQL injection
-        allowed_columns = {"username", "password_hash", "email"}
-
         # Validate all column names against whitelist
-        invalid_columns = set(kwargs.keys()) - allowed_columns
+        invalid_columns = set(kwargs.keys()) - self.ALLOWED_USER_COLUMNS
         if invalid_columns:
             raise ValueError(f"Invalid column names: {invalid_columns}")
 
