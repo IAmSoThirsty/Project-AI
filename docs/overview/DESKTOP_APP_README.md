@@ -8,7 +8,7 @@ Welcome to **Project-AI**, an advanced AI dashboard with command override and me
 
 1. **Double-click** `setup-desktop.bat` in the Project-AI folder
 2. The setup will:
-   - Check for Python 3.12+
+   - Check for Python 3.11+
    - Create a virtual environment
    - Install all dependencies
    - Launch the application
@@ -45,7 +45,7 @@ python install-shortcuts.py uninstall
 ## System Requirements
 
 - **Windows 7** or later (Windows 10/11 recommended)
-- **Python 3.12+** (download from [python.org](https://www.python.org/downloads/))
+- **Python 3.11+** (download from [python.org](https://www.python.org/downloads/))
 - **4GB RAM** (8GB recommended)
 - **500MB** free disk space for installation
 
