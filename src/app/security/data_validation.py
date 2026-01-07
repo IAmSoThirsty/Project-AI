@@ -16,7 +16,7 @@ import re
 from dataclasses import dataclass
 from io import StringIO
 from typing import Any
-from xml.etree.ElementTree import Element
+from xml.etree.ElementTree import Element  # nosec B405 - Only used for type hints, not parsing
 
 import defusedxml.ElementTree as ET
 
