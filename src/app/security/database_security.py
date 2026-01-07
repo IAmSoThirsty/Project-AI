@@ -19,6 +19,9 @@ logger = logging.getLogger(__name__)
 class SecureDatabaseManager:
     """Secure database operations with SQL injection prevention."""
 
+    # Whitelist of allowed columns for user updates
+    ALLOWED_USER_COLUMNS = {"username", "password_hash", "email"}
+
     def __init__(self, db_path: str = "data/secure.db"):
         """Initialize secure database manager.
 
@@ -238,11 +241,19 @@ class SecureDatabaseManager:
         Args:
             user_id: User ID
             **kwargs: Fields to update
+
+        Raises:
+            ValueError: If invalid column name provided
         """
         if not kwargs:
             return
 
-        # Build query dynamically with parameters
+        # Validate all column names against whitelist
+        invalid_columns = set(kwargs.keys()) - self.ALLOWED_USER_COLUMNS
+        if invalid_columns:
+            raise ValueError(f"Invalid column names: {invalid_columns}")
+
+        # Build query dynamically with parameters - safe now since columns are validated
         set_clauses = [f"{key} = ?" for key in kwargs]
         values = list(kwargs.values()) + [user_id]
 
@@ -250,7 +261,7 @@ class SecureDatabaseManager:
             UPDATE users
             SET {', '.join(set_clauses)}, updated_at = CURRENT_TIMESTAMP
             WHERE id = ?
-        """
+        """  # nosec B608 - Column names are validated against whitelist above, parameters are properly escaped
 
         self.execute_query(query, tuple(values))
         logger.info("User %d updated", user_id)

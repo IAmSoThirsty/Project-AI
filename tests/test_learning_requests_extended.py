@@ -68,7 +68,7 @@ def test_deny_flow_without_vault(lr_tmpdir):
 def test_get_pending_filters_status(lr_tmpdir):
     mgr = LearningRequestManager(data_dir=lr_tmpdir)
     r1 = mgr.create_request("t1", "d1")
-    mgr.create_request("t2", "d2")
+    r2 = mgr.create_request("t2", "d2")
     mgr.approve_request(r1, "resp")
     pending = mgr.get_pending()
     assert all(r["status"] == "pending" for r in pending)
