@@ -64,5 +64,25 @@ tzdata==2025.2
 urllib3==2.6.0
 wheel==0.45.1
 
+# Streaming & Analytics Databases
+psycopg2-binary>=2.9.0          # PostgreSQL driver (for RisingWave)
+clickhouse-driver>=0.2.6        # ClickHouse Python driver for 1B+ rows/sec
+clickhouse-connect>=0.6.0       # Modern ClickHouse client
+
+# Spiking Neural Networks (SNNs)
+torch>=2.0.0                    # PyTorch for neural network backends
+bindsnet>=0.3.0                 # RL on SNNs with continual learning support
+sinabs>=1.2.0                   # Vision-optimized SNN with hardware compatibility
+snntorch>=0.7.0                 # PyTorch-based SNN library with tutorials
+spikingjelly>=0.0.0.0.14        # Deep learning framework for SNNs
+norse>=0.0.7                    # Deep learning with SNNs in PyTorch
+brian2>=2.5.0                   # Simulator for spiking neural networks
+lava-nc>=0.8.0                  # Intel's Neuromorphic Computing framework
+rockpool>=2.0.0                 # SNN training and deployment library
+nengo>=3.2.0                    # Neural engineering framework for neuromorphic computing
+nir>=0.4.0                      # Neuromorphic Intermediate Representation
+# neurocorex                    # NeurocoreX - uncomment if available
+# ranc                          # RANC - Reconfigurable Architecture for Neuromorphic Computing
+
 # Optional design tool for interactive UI creation (Qt Designer)
 pyqt6-tools
