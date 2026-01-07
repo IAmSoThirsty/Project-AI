@@ -28,6 +28,7 @@ dependencies = [
     "passlib>=1.7.0",
     "bcrypt>=5.0.0",
     "httpx>=0.24.0",
+    "defusedxml>=0.7.0",
 ]
 
 [project.optional-dependencies]

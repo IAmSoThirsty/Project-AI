@@ -238,11 +238,22 @@ class SecureDatabaseManager:
         Args:
             user_id: User ID
             **kwargs: Fields to update
+
+        Raises:
+            ValueError: If invalid column name provided
         """
         if not kwargs:
             return
 
-        # Build query dynamically with parameters
+        # Whitelist of allowed columns to prevent SQL injection
+        allowed_columns = {"username", "password_hash", "email"}
+
+        # Validate all column names against whitelist
+        invalid_columns = set(kwargs.keys()) - allowed_columns
+        if invalid_columns:
+            raise ValueError(f"Invalid column names: {invalid_columns}")
+
+        # Build query dynamically with parameters - safe now since columns are validated
         set_clauses = [f"{key} = ?" for key in kwargs]
         values = list(kwargs.values()) + [user_id]
 
