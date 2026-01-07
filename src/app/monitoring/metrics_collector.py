@@ -14,7 +14,6 @@ to record metrics without major refactoring.
 
 import json
 import logging
-import time
 from pathlib import Path
 from typing import Any
 
@@ -28,18 +27,18 @@ class MetricsCollector:
 
     def __init__(self, data_dir: str = "data"):
         """Initialize metrics collector.
-        
+
         Args:
             data_dir: Base data directory for Project-AI
         """
         self.data_dir = Path(data_dir)
         self._last_update = {}
-        
+
     # ==================== AI PERSONA METRICS ====================
-    
+
     def collect_persona_metrics(self, persona_state: dict[str, Any]) -> None:
         """Collect AI persona metrics from state.
-        
+
         Args:
             persona_state: AI persona state dictionary
         """
@@ -50,13 +49,13 @@ class MetricsCollector:
             metrics.persona_mood_enthusiasm.set(mood.get('enthusiasm', 0.5))
             metrics.persona_mood_contentment.set(mood.get('contentment', 0.5))
             metrics.persona_mood_engagement.set(mood.get('engagement', 0.5))
-            
+
             # Trait metrics
             traits = persona_state.get('traits', {})
             for trait_name, trait_value in traits.items():
                 if isinstance(trait_value, (int, float)):
                     metrics.persona_trait_value.labels(trait=trait_name).set(trait_value)
-            
+
             # Interaction count
             interaction_counts = persona_state.get('interaction_counts', {})
             for interaction_type, count in interaction_counts.items():
@@ -68,13 +67,13 @@ class MetricsCollector:
                         interaction_type=interaction_type
                     ).inc(count - last_count)
                     self._last_update[key] = count
-                    
+
         except Exception as e:
             logger.error(f"Error collecting persona metrics: {e}")
 
     def update_persona_interaction(self, interaction_type: str) -> None:
         """Record a persona interaction.
-        
+
         Args:
             interaction_type: Type of interaction (chat, config_change, etc.)
         """
@@ -83,15 +82,15 @@ class MetricsCollector:
         ).inc()
 
     # ==================== FOUR LAWS METRICS ====================
-    
+
     def record_four_laws_validation(
-        self, 
-        is_allowed: bool, 
+        self,
+        is_allowed: bool,
         law_violated: str | None = None,
         severity: str = "medium"
     ) -> None:
         """Record a Four Laws validation.
-        
+
         Args:
             is_allowed: Whether action was allowed
             law_violated: Which law was violated (if denied)
@@ -99,25 +98,25 @@ class MetricsCollector:
         """
         result = "allowed" if is_allowed else "denied"
         metrics.four_laws_validations_total.labels(result=result).inc()
-        
+
         if not is_allowed and law_violated:
             metrics.four_laws_denials_total.labels(
                 law_violated=law_violated,
                 severity=severity
             ).inc()
-            
+
             if severity == "critical":
                 metrics.four_laws_critical_denials_total.labels(
                     law_violated=law_violated
                 ).inc()
 
     def record_four_laws_override(
-        self, 
-        success: bool, 
+        self,
+        success: bool,
         user: str = "unknown"
     ) -> None:
         """Record a Four Laws override attempt.
-        
+
         Args:
             success: Whether override was successful
             user: User attempting override
@@ -129,10 +128,10 @@ class MetricsCollector:
         ).inc()
 
     # ==================== MEMORY SYSTEM METRICS ====================
-    
+
     def collect_memory_metrics(self, memory_state: dict[str, Any]) -> None:
         """Collect memory system metrics.
-        
+
         Args:
             memory_state: Memory system state
         """
@@ -144,24 +143,24 @@ class MetricsCollector:
                     metrics.memory_knowledge_entries.labels(
                         category=category
                     ).set(len(entries))
-            
+
             # Total storage size
             memory_file = self.data_dir / "memory" / "knowledge.json"
             if memory_file.exists():
                 size_bytes = memory_file.stat().st_size
                 metrics.memory_storage_bytes.set(size_bytes)
-                
+
         except Exception as e:
             logger.error(f"Error collecting memory metrics: {e}")
 
     def record_memory_query(
-        self, 
-        query_type: str, 
+        self,
+        query_type: str,
         status: str = "success",
         duration_seconds: float | None = None
     ) -> None:
         """Record a memory query.
-        
+
         Args:
             query_type: Type of query (search, retrieve, add, etc.)
             status: Query status (success, error)
@@ -171,7 +170,7 @@ class MetricsCollector:
             query_type=query_type,
             status=status
         ).inc()
-        
+
         if duration_seconds is not None:
             metrics.memory_query_duration_seconds.labels(
                 query_type=query_type
@@ -179,7 +178,7 @@ class MetricsCollector:
 
     def record_memory_error(self, error_type: str) -> None:
         """Record a memory system error.
-        
+
         Args:
             error_type: Type of error
         """
@@ -188,7 +187,7 @@ class MetricsCollector:
         ).inc()
 
     # ==================== LEARNING REQUEST METRICS ====================
-    
+
     def collect_learning_metrics(self) -> None:
         """Collect learning request metrics from disk."""
         try:
@@ -196,13 +195,13 @@ class MetricsCollector:
             if requests_file.exists():
                 data = json.loads(requests_file.read_text())
                 requests_list = data.get('requests', [])
-                
+
                 # Count by status
                 status_counts = {}
                 for req in requests_list:
                     status = req.get('status', 'unknown')
                     status_counts[status] = status_counts.get(status, 0) + 1
-                
+
                 # Update counters (only increment changes)
                 for status, count in status_counts.items():
                     key = f"learning_{status}"
@@ -212,17 +211,17 @@ class MetricsCollector:
                             status=status
                         ).inc(count - last_count)
                         self._last_update[key] = count
-                
+
                 # Pending requests gauge
                 pending = status_counts.get('pending', 0)
                 metrics.learning_pending_requests.set(pending)
-                
+
         except Exception as e:
             logger.error(f"Error collecting learning metrics: {e}")
 
     def record_black_vault_addition(self, reason: str = "denied") -> None:
         """Record addition to Black Vault.
-        
+
         Args:
             reason: Reason for denial
         """
@@ -231,16 +230,16 @@ class MetricsCollector:
         ).inc()
 
     # ==================== COMMAND OVERRIDE METRICS ====================
-    
+
     def record_command_override_attempt(
-        self, 
+        self,
         user: str = "unknown",
         success: bool = False,
         command: str = "",
         failure_reason: str = ""
     ) -> None:
         """Record command override attempt.
-        
+
         Args:
             user: User attempting override
             success: Whether attempt succeeded
@@ -248,7 +247,7 @@ class MetricsCollector:
             failure_reason: Reason for failure
         """
         metrics.command_override_attempts_total.labels(user=user).inc()
-        
+
         if success:
             metrics.command_override_successes_total.labels(
                 user=user,
@@ -261,14 +260,14 @@ class MetricsCollector:
 
     def set_command_override_active(self, active: bool) -> None:
         """Set command override active status.
-        
+
         Args:
             active: Whether override is active
         """
         metrics.command_override_active.set(1 if active else 0)
 
     # ==================== SECURITY METRICS ====================
-    
+
     def record_security_incident(
         self,
         severity: str,
@@ -276,7 +275,7 @@ class MetricsCollector:
         source: str = "unknown"
     ) -> None:
         """Record a security incident.
-        
+
         Args:
             severity: Incident severity (info, low, medium, high, critical)
             event_type: Type of security event
@@ -294,7 +293,7 @@ class MetricsCollector:
         gate: str = "unknown"
     ) -> None:
         """Record Cerberus blocking an action.
-        
+
         Args:
             attack_type: Type of attack blocked
             gate: Which gate blocked it
@@ -306,7 +305,7 @@ class MetricsCollector:
 
     def record_threat_score(self, threat_type: str, score: float) -> None:
         """Update threat detection score.
-        
+
         Args:
             threat_type: Type of threat
             score: Threat score (0-1)
@@ -316,10 +315,10 @@ class MetricsCollector:
         ).set(score)
 
     # ==================== PLUGIN METRICS ====================
-    
+
     def set_plugin_count(self, count: int) -> None:
         """Set number of loaded plugins.
-        
+
         Args:
             count: Number of plugins loaded
         """
@@ -333,7 +332,7 @@ class MetricsCollector:
         error_type: str | None = None
     ) -> None:
         """Record plugin execution.
-        
+
         Args:
             plugin_name: Name of plugin
             status: Execution status
@@ -344,12 +343,12 @@ class MetricsCollector:
             plugin_name=plugin_name,
             status=status
         ).inc()
-        
+
         if duration_seconds is not None:
             metrics.plugin_execution_duration_seconds.labels(
                 plugin_name=plugin_name
             ).observe(duration_seconds)
-        
+
         if error_type:
             metrics.plugin_execution_errors_total.labels(
                 plugin_name=plugin_name,
@@ -362,7 +361,7 @@ class MetricsCollector:
         reason: str
     ) -> None:
         """Record plugin load failure.
-        
+
         Args:
             plugin_name: Name of plugin
             reason: Failure reason
@@ -373,7 +372,7 @@ class MetricsCollector:
         ).inc()
 
     # ==================== SYSTEM PERFORMANCE METRICS ====================
-    
+
     def record_api_request(
         self,
         method: str,
@@ -382,7 +381,7 @@ class MetricsCollector:
         duration_seconds: float
     ) -> None:
         """Record API request.
-        
+
         Args:
             method: HTTP method
             endpoint: API endpoint
@@ -394,7 +393,7 @@ class MetricsCollector:
             endpoint=endpoint,
             status=str(status)
         ).inc()
-        
+
         metrics.api_request_duration_seconds.labels(
             method=method,
             endpoint=endpoint
@@ -402,14 +401,14 @@ class MetricsCollector:
 
     def set_active_users(self, count: int) -> None:
         """Set number of active users.
-        
+
         Args:
             count: Number of active users
         """
         metrics.active_users.set(count)
 
     # ==================== PERIODIC COLLECTION ====================
-    
+
     def collect_all_metrics(self) -> None:
         """Collect all available metrics from disk."""
         try:
@@ -418,16 +417,16 @@ class MetricsCollector:
             if persona_state_file.exists():
                 persona_state = json.loads(persona_state_file.read_text())
                 self.collect_persona_metrics(persona_state)
-            
+
             # Collect Memory metrics
             memory_file = self.data_dir / "memory" / "knowledge.json"
             if memory_file.exists():
                 memory_state = json.loads(memory_file.read_text())
                 self.collect_memory_metrics(memory_state)
-            
+
             # Collect Learning metrics
             self.collect_learning_metrics()
-            
+
             # Collect Cerberus metrics
             cerberus_file = self.data_dir / "monitoring" / "cerberus_incidents.json"
             if cerberus_file.exists():
@@ -442,7 +441,7 @@ class MetricsCollector:
                             gate=source
                         )
                         self._last_update[key] = count
-                        
+
         except Exception as e:
             logger.error(f"Error in periodic metrics collection: {e}")
 

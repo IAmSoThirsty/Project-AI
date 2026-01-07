@@ -256,23 +256,23 @@ class OpticalFlowDetector:
         elif self.algorithm == "lucas_kanade":
             # For Lucas-Kanade, we need feature points
             # Use Shi-Tomasi corner detection
-            feature_params = dict(
-                maxCorners=100, qualityLevel=0.3, minDistance=7, blockSize=7
-            )
+            feature_params = {
+                "maxCorners": 100, "qualityLevel": 0.3, "minDistance": 7, "blockSize": 7
+            }
             p0 = self.cv2.goodFeaturesToTrack(
                 prev_gray, mask=None, **feature_params
             )
 
             if p0 is not None:
-                lk_params = dict(
-                    winSize=(15, 15),
-                    maxLevel=2,
-                    criteria=(
+                lk_params = {
+                    "winSize": (15, 15),
+                    "maxLevel": 2,
+                    "criteria": (
                         self.cv2.TERM_CRITERIA_EPS | self.cv2.TERM_CRITERIA_COUNT,
                         10,
                         0.03,
                     ),
-                )
+                }
 
                 p1, st, err = self.cv2.calcOpticalFlowPyrLK(
                     prev_gray, gray, p0, None, **lk_params
@@ -301,7 +301,7 @@ class OpticalFlowDetector:
         good_new = p1[status == 1]
 
         # Compute flow vectors
-        for old, new in zip(good_old, good_new):
+        for old, new in zip(good_old, good_new, strict=False):
             x, y = old.ravel()
             flow[int(y), int(x)] = new.ravel() - old.ravel()
 
@@ -349,37 +349,34 @@ class OpticalFlowDetector:
             """Find local maxima/minima in field with spatial suppression."""
             candidates = []
             abs_field = np.abs(field)
-            
+
             # Find pixels above threshold
-            if is_minimum:
-                mask = field < -threshold
-            else:
-                mask = field > threshold
-                
+            mask = field < -threshold if is_minimum else field > threshold
+
             y_coords, x_coords = np.where(mask)
-            
+
             # Sort by strength
             strengths = abs_field[y_coords, x_coords]
             sorted_indices = np.argsort(strengths)[::-1]
-            
+
             # Apply non-maximum suppression
             for idx in sorted_indices:
                 y, x = y_coords[idx], x_coords[idx]
-                
+
                 # Check if this location is too close to existing candidates
                 is_too_close = False
                 for cy, cx in candidates:
                     if abs(y - cy) < kernel_size and abs(x - cx) < kernel_size:
                         is_too_close = True
                         break
-                
+
                 if not is_too_close:
                     candidates.append((y, x))
-                    
+
                 # Limit candidates
                 if len(candidates) >= 10:
                     break
-                    
+
             return candidates
 
         # Convergent points (negative divergence) with spatial filtering
@@ -422,33 +419,33 @@ class OpticalFlowDetector:
 
         # Vortex points (high curl) with spatial filtering
         curl_threshold = self.sensitivity * np.std(curl)
-        
+
         # Find vortex candidates
         vortex_candidates = []
         abs_curl = np.abs(curl)
         mask = abs_curl > curl_threshold
         y_coords, x_coords = np.where(mask)
-        
+
         if len(y_coords) > 0:
             strengths = abs_curl[y_coords, x_coords]
             sorted_indices = np.argsort(strengths)[::-1]
-            
+
             for idx in sorted_indices:
                 y, x = y_coords[idx], x_coords[idx]
-                
+
                 # Check spatial suppression
                 is_too_close = False
                 for cy, cx in vortex_candidates:
                     if abs(y - cy) < kernel_size and abs(x - cx) < kernel_size:
                         is_too_close = True
                         break
-                
+
                 if not is_too_close:
                     vortex_candidates.append((y, x))
-                    
+
                 if len(vortex_candidates) >= 10:
                     break
-        
+
         for y, x in vortex_candidates:
             strength = abs(float(curl[y, x]))
             epicenters.append(

@@ -35,7 +35,7 @@ jobs:
 
       - name: Run pre-commit hooks
         run: |
-          pre-commit run --all-files || true
+          pre-commit run --all-files
 
       - name: Lint (ruff)
         run: ruff check .
@@ -52,8 +52,9 @@ jobs:
 
       - name: Security audit (pip-audit)
         run: |
-          pip-audit --format json -o pip_audit_report.json || true
+          pip-audit --format json -o pip_audit_report.json
       - name: Upload pip-audit report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: pip-audit-report
@@ -68,11 +69,11 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: reports/coverage.xml || true
+          path: reports/coverage.xml
 
       - name: Run tests (Cerberus)
         working-directory: external/Cerberus
-        run: pytest -q || true
+        run: pytest -q
 
   dependabot:
     runs-on: ubuntu-latest
@@ -139,7 +140,7 @@ jobs:
           CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
         run: |
           if [ -z "${CODACY_PROJECT_TOKEN}" ]; then echo "CODACY_PROJECT_TOKEN not set, skipping"; exit 0; fi
-          codacy analyze --directory . || true
+          codacy analyze --directory .
 
   docker-build:
     name: Build Docker image and smoke test
