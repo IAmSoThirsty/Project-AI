@@ -24,6 +24,7 @@ joblib==1.5.2
 kiwisolver==1.4.9
 matplotlib==3.10.7
 mccabe==0.7.0
+mcp
 numpy==2.3.4
 opencv-python==4.10.0.84
 openai==2.7.1
