@@ -272,7 +272,7 @@ class CloudSyncManager:
 
         Args:
             username: Username for sync
-            local_data: Current local data
+            local_data: Current local data (should include 'timestamp' field)
 
         Returns:
             dict: Resolved data after sync
@@ -291,13 +291,42 @@ class CloudSyncManager:
                 self.sync_upload(username, local_data)
                 return local_data
 
-            # Resolve conflict
-            resolved_data = self.resolve_conflict(local_data, cloud_data)
+            # Extract the actual data from cloud response (which includes metadata)
+            # sync_download returns the full decrypted payload with username, device_id, timestamp, data
+            cloud_timestamp = cloud_data.get("timestamp")
+            local_timestamp = local_data.get("timestamp")
 
-            # Upload resolved data to ensure sync
-            self.sync_upload(username, resolved_data)
+            # Compare timestamps to determine which data is newer
+            if local_timestamp and cloud_timestamp:
+                from datetime import datetime
+                try:
+                    local_dt = datetime.fromisoformat(local_timestamp)
+                    cloud_dt = datetime.fromisoformat(cloud_timestamp)
 
-            return resolved_data
+                    if local_dt >= cloud_dt:
+                        # Local is newer or same, upload only if needed
+                        logger.info("Local data is current or newer")
+                        if local_dt > cloud_dt:
+                            # Only upload if local is strictly newer
+                            self.sync_upload(username, local_data)
+                        return local_data
+                    else:
+                        # Cloud is newer, extract and upload to ensure consistency
+                        logger.info("Cloud data is newer, using cloud version")
+                        resolved_data = cloud_data.get("data", cloud_data)
+                        return resolved_data
+                except (ValueError, TypeError) as e:
+                    logger.warning(f"Error comparing timestamps: {e}, defaulting to local data")
+                    return local_data
+            else:
+                # Fallback: use timestamp-based conflict resolution
+                resolved_data = self.resolve_conflict(local_data, cloud_data)
+
+                # Only upload if resolved data is different from cloud
+                if resolved_data == local_data:
+                    self.sync_upload(username, resolved_data)
+
+                return resolved_data
 
         except Exception as e:
             logger.error(f"Error during bidirectional sync: {e}")
