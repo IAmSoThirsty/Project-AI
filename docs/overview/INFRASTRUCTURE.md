@@ -55,7 +55,7 @@ Project-AI/
 - **`pyproject.toml`**: Main project configuration (PEP 517/518)
   - Project metadata (name, version, dependencies)
   - Tool configurations (ruff, pytest, black)
-  - Python version requirement: 3.12+
+  - Python version requirement: 3.11+
 
 - **`setup.py`**: Installation entry point
   - Minimal configuration (delegates to pyproject.toml)
@@ -365,7 +365,7 @@ docker ps  # Shows health status
 
 ```bash
 # Verify Python version
-python --version  # Should be 3.12+
+python --version  # Should be 3.11+
 
 # Check virtual environment
 which python  # Should show .venv path
