@@ -2,7 +2,7 @@
 
 ## Environment sanity
 
-- Confirm you are on Python 3.12 and the virtual environment is activated:
+- Confirm you are on Python 3.11 and the virtual environment is activated:
 
   ```powershell
   python --version
