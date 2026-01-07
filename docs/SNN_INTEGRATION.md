@@ -2,10 +2,20 @@
 
 ## Overview
 
-Project-AI now supports **Spiking Neural Networks (SNNs)** for neuromorphic computing with two powerful libraries:
+Project-AI now supports **Spiking Neural Networks (SNNs)** for neuromorphic computing with **10 production-ready libraries**:
 
-1. **BindsNet** - Reinforcement Learning on SNNs with continual learning
-2. **Sinabs** - Vision-optimized SNN library with hardware compatibility
+1. **BindsNet** - Reinforcement Learning on SNNs with continual learning ✅
+2. **Sinabs** - Vision-optimized SNN library with hardware compatibility ✅
+3. **snnTorch** - PyTorch-based SNN with excellent tutorials ✅
+4. **SpikingJelly** - Deep learning framework for SNNs ✅
+5. **Norse** - Deep learning with SNNs in PyTorch ✅
+6. **Brian2** - Simulator for spiking neural networks ✅
+7. **Lava** - Intel's Neuromorphic Computing framework (Loihi) ✅
+8. **Rockpool** - SNN training and deployment ✅
+9. **Nengo** - Neural engineering framework ✅
+10. **NIR** - Neuromorphic Intermediate Representation ✅
+
+**Note:** All libraries listed above are **available on PyPI** and **ready to use**. NeurocoreX and RANC are research platforms that require custom installation from source and are not included in the standard installation.
 
 ## Why SNNs?
 

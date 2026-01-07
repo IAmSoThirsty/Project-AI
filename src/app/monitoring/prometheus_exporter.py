@@ -34,9 +34,10 @@ class PrometheusMetrics:
         """Initialize Prometheus metrics.
         
         Args:
-            registry: Prometheus registry (uses default if None)
+            registry: Prometheus registry (creates new if None to avoid conflicts)
         """
-        self.registry = registry or REGISTRY
+        # Create a new registry to avoid duplicate metric registration
+        self.registry = registry if registry is not None else CollectorRegistry()
         self._initialize_metrics()
 
     def _initialize_metrics(self) -> None:

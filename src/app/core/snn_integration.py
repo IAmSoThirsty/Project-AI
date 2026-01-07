@@ -119,19 +119,10 @@ except ImportError:
     NIR_AVAILABLE = False
     logger.warning("NIR (Neuromorphic Intermediate Representation) not available")
 
-try:
-    import neurocorex
-    NEUROCOREX_AVAILABLE = True
-except ImportError:
-    NEUROCOREX_AVAILABLE = False
-    logger.warning("NeurocoreX not available")
-
-try:
-    import ranc
-    RANC_AVAILABLE = True
-except ImportError:
-    RANC_AVAILABLE = False
-    logger.warning("RANC not available")
+# Note: NeurocoreX and RANC are not available on PyPI as standard packages
+# They may require custom installation from source repositories
+NEUROCOREX_AVAILABLE = False
+RANC_AVAILABLE = False
 
 
 class BindsNetRLAgent:
