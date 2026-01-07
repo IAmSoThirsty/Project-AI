@@ -42,7 +42,7 @@ jobs:
       - name: Install frontend dependencies
         run: |
           if [ -f package-lock.json ]; then 
-            npm ci --prefer-offline || { echo "npm ci failed, falling back to npm install"; npm install; }
+            npm ci
           elif [ -f package.json ]; then 
             npm install
           else 
