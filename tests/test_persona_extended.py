@@ -119,7 +119,7 @@ def test_validate_action_allows_user_order_when_safe(persona_tmpdir):
 def test_statistics_contains_expected_keys(persona_tmpdir):
     p = AIPersona(data_dir=persona_tmpdir)
     stats = p.get_statistics()
-    assert {"personality", "mood", "interactions"}.issubset(stats.keys())
+    assert set(["personality", "mood", "interactions"]).issubset(stats.keys())
 
 
 def test_four_laws_consistency_with_persona(persona_tmpdir):
