@@ -65,11 +65,11 @@ class CICheckerAgent:
                     [pytest_cmd, "-q"],
                     capture_output=True,
                     text=True,
-                    timeout=300,  # 5 minute timeout
+                    timeout=180,  # 3 minute timeout for CI checks
                 )
                 report["results"]["pytest"] = {"rc": res.returncode, "output": res.stdout + res.stderr}
             except subprocess.TimeoutExpired:
-                logger.warning("pytest command timed out after 300 seconds")
+                logger.warning("pytest command timed out after 180 seconds")
                 report["results"]["pytest"] = {"rc": -1, "error": "timeout"}
             except Exception as e:
                 logger.error("pytest execution failed: %s", e)
@@ -86,11 +86,11 @@ class CICheckerAgent:
                     [ruff_cmd, "check", "src", "tests"],
                     capture_output=True,
                     text=True,
-                    timeout=300,  # 5 minute timeout
+                    timeout=60,  # 1 minute timeout (ruff is fast)
                 )
                 report["results"]["ruff"] = {"rc": res.returncode, "output": res.stdout + res.stderr}
             except subprocess.TimeoutExpired:
-                logger.warning("ruff command timed out after 300 seconds")
+                logger.warning("ruff command timed out after 60 seconds")
                 report["results"]["ruff"] = {"rc": -1, "error": "timeout"}
             except Exception as e:
                 logger.error("ruff execution failed: %s", e)
