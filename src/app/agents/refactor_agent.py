@@ -38,15 +38,14 @@ class RefactorAgent:
         cwd = os.getcwd()
         try:
             # Check that the resolved path is within current working directory
-            # This prevents path traversal attacks
-            common = os.path.commonpath([abs_path, cwd])
-            if not abs_path.startswith(common + os.sep) and abs_path != common:
+            # or is the working directory itself
+            if not (abs_path.startswith(cwd + os.sep) or abs_path == cwd):
                 logger.error("Path traversal detected: %s not within %s", abs_path, cwd)
                 return {"success": False, "error": "path_traversal"}
         except ValueError:
-            # Different drives on Windows or no common path
-            logger.error("Path traversal detected: %s", path)
-            return {"success": False, "error": "path_traversal"}
+            # Should not happen with abspath, but handle gracefully
+            logger.error("Path validation failed: %s", path)
+            return {"success": False, "error": "path_validation_failed"}
 
         # Resolve tool paths - validate they exist
         black_cmd = shutil.which("black")
@@ -71,7 +70,11 @@ class RefactorAgent:
                 text=True,
                 timeout=60,
             )
-            return {"black_check": res_black.returncode == 0, "ruff_out": res_ruff.stdout}
+            return {
+                "success": True,
+                "black_check": res_black.returncode == 0,
+                "ruff_out": res_ruff.stdout,
+            }
         except subprocess.TimeoutExpired:
             logger.warning("Refactor check timed out for %s", path)
             return {"success": False, "error": "timeout"}
