@@ -479,6 +479,7 @@ Secure web services with SOAP, HTTP, and capability-based access control.
 - **XXE Prevention**: Secure XML parsing
 
 ```python
+import os
 from app.security.web_service import SOAPClient
 
 # Example SOAP client connection

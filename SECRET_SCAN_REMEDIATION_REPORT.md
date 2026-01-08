@@ -156,10 +156,10 @@ The most serious finding was NOT in the automated scan report but discovered dur
 - **File**: `.env` (root directory)
 - **Status**: ✅ **REMOVED FROM TRACKING**
 - **Exposed Credentials**:
-  - ✅ OpenAI API Key: `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`
+  - ✅ OpenAI API Key: `sk-proj-XXXXXXXX...` (REDACTED - full key exposed in git history)
   - ✅ SMTP Username: `ProjectAiDevs@gmail.com`
-  - ✅ SMTP Password: `R9609936!`
-  - ✅ Fernet Encryption Key: `Qqyl2vCYY7W4AKuE-DmQLmL7IgXguMis_lFalqlliEc=`
+  - ✅ SMTP Password: `XXXXXXXX` (REDACTED - real password exposed in git history)
+  - ✅ Fernet Encryption Key: `XXXXXXXX...` (REDACTED - real key exposed in git history)
 
 **Actions Taken**:
 1. ✅ Removed `.env` from git tracking immediately

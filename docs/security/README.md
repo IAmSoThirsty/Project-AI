@@ -307,6 +307,7 @@ stats = monitor.get_event_statistics(time_window=3600)
 HTTP/SOAP security:
 
 ```python
+import os
 from app.security.web_service import (
     SOAPClient,
     SecureWebHandler,

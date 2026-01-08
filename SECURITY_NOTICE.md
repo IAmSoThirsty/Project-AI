@@ -16,9 +16,9 @@ A security scan detected that the `.env` file containing real credentials was ac
 
 The following credentials were exposed in git history:
 
-1. **OpenAI API Key** - `sk-proj-cFQp...` (partial)
-2. **SMTP Password** - Email alert credentials
-3. **Fernet Encryption Key** - Used for location history encryption
+1. **OpenAI API Key** - `sk-proj-XXXXXXXX...` (redacted - real key exposed in git history)
+2. **SMTP Password** - Email alert credentials (redacted - real password exposed)
+3. **Fernet Encryption Key** - Used for location history encryption (redacted - real key exposed)
 4. **SMTP Username** - `ProjectAiDevs@gmail.com`
 
 ---
