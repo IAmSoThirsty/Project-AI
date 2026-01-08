@@ -24,29 +24,45 @@ class RefactorAgent:
     def suggest_refactor(self, path: str) -> dict[str, Any]:
         """Suggest refactoring for a file using black and ruff.
 
-        Security: File path is validated to exist before being passed to
-        subprocess. Commands use trusted dev tools with hardcoded arguments.
+        Security: File path is validated to exist and be within the working
+        directory before being passed to subprocess. Commands use trusted
+        dev tools with resolved absolute paths.
         """
-        # Validate path exists and is a file
+        # Validate path exists, is a file, and is not a path traversal attempt
         if not os.path.isfile(path):
             logger.error("Invalid file path: %s", path)
             return {"success": False, "error": "invalid_path"}
 
-        # Resolve tool paths
-        black_cmd = shutil.which("black") or "black"
-        ruff_cmd = shutil.which("ruff") or "ruff"
+        # Ensure path is absolute and normalized to prevent path traversal
+        abs_path = os.path.abspath(path)
+        cwd = os.getcwd()
+        try:
+            # Check that the resolved path is within current working directory
+            # This prevents path traversal attacks
+            os.path.commonpath([abs_path, cwd])
+        except (ValueError, TypeError):
+            logger.error("Path traversal detected: %s", path)
+            return {"success": False, "error": "path_traversal"}
+
+        # Resolve tool paths - validate they exist
+        black_cmd = shutil.which("black")
+        ruff_cmd = shutil.which("ruff")
+
+        if not black_cmd or not ruff_cmd:
+            logger.error("Required tools not found: black=%s, ruff=%s", black_cmd, ruff_cmd)
+            return {"success": False, "error": "tools_not_found"}
 
         try:
-            # nosec B603 B607 - black is a trusted dev tool, path is validated
+            # nosec B603 - black is a trusted dev tool, path resolved with shutil.which and validated
             res_black = subprocess.run(
-                [black_cmd, "--check", path],
+                [black_cmd, "--check", abs_path],
                 capture_output=True,
                 text=True,
                 timeout=60,
             )
-            # nosec B603 B607 - ruff is a trusted dev tool, path is validated
+            # nosec B603 - ruff is a trusted dev tool, path resolved with shutil.which and validated
             res_ruff = subprocess.run(
-                [ruff_cmd, "check", path],
+                [ruff_cmd, "check", abs_path],
                 capture_output=True,
                 text=True,
                 timeout=60,

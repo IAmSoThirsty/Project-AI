@@ -31,22 +31,26 @@ class DependencyAuditor:
                 txt = f.read()
             imports = [line for line in txt.splitlines() if line.strip().startswith("import ") or line.strip().startswith("from ")]
 
-            # Run pip-audit (best-effort) with resolved path
-            pip_audit_cmd = shutil.which("pip-audit") or "pip-audit"
-            try:
-                # nosec B603 B607 - pip-audit is a trusted security tool, args are hardcoded
-                res = subprocess.run(
-                    [pip_audit_cmd, "--format", "json"],
-                    capture_output=True,
-                    text=True,
-                    timeout=60,  # 1 minute timeout
-                )
-                audit_json = res.stdout
-            except subprocess.TimeoutExpired:
-                logger.warning("pip-audit command timed out after 60 seconds")
-                audit_json = None
-            except Exception as e:
-                logger.debug("pip-audit not available or failed: %s", e)
+            # Run pip-audit (best-effort) - validate tool exists
+            pip_audit_cmd = shutil.which("pip-audit")
+            if pip_audit_cmd:
+                try:
+                    # nosec B603 - pip-audit is a trusted security tool, path resolved with shutil.which
+                    res = subprocess.run(
+                        [pip_audit_cmd, "--format", "json"],
+                        capture_output=True,
+                        text=True,
+                        timeout=60,  # 1 minute timeout
+                    )
+                    audit_json = res.stdout
+                except subprocess.TimeoutExpired:
+                    logger.warning("pip-audit command timed out after 60 seconds")
+                    audit_json = None
+                except Exception as e:
+                    logger.debug("pip-audit execution failed: %s", e)
+                    audit_json = None
+            else:
+                logger.debug("pip-audit not found in PATH, skipping audit")
                 audit_json = None
             return {"success": True, "imports": imports, "pip_audit": audit_json}
         except Exception as e:
