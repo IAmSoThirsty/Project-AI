@@ -1,0 +1,20 @@
+// Thirsty-lang Security Example: Attack Mitigation
+// Demonstrates protection against common attacks
+
+shield attackMitigation {
+  // SQL Injection Protection
+  drink sqlQuery = sip "Enter search term"
+  sanitize sqlQuery
+  pour "Safe query: " + sqlQuery
+  
+  // XSS Protection
+  drink htmlContent = sip "Enter content"
+  sanitize htmlContent
+  pour "Safe HTML: " + htmlContent
+  
+  // Buffer Overflow Protection
+  drink largeInput = sip "Enter data"
+  sanitize largeInput
+  armor largeInput
+  pour "Protected data length checked"
+}
