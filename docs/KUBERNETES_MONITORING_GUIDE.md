@@ -93,7 +93,22 @@ helm repo add zabbix https://zabbix.github.io/helm-charts
 helm repo update
 ```
 
-### 2. Install Complete Stack (One Command!)
+### 2. Create Secrets (Production)
+
+For production deployments, create Kubernetes secrets for sensitive data:
+
+```bash
+# Create Grafana admin credentials secret
+kubectl create secret generic grafana-admin-credentials \
+  --namespace monitoring \
+  --from-literal=admin-user=admin \
+  --from-literal=admin-password=$(openssl rand -base64 32)
+
+# Verify secret was created
+kubectl get secret grafana-admin-credentials -n monitoring
+```
+
+### 3. Install Complete Stack (One Command!)
 
 ```bash
 # Install full observability stack
@@ -109,7 +124,7 @@ kubectl get pods -n monitoring -w
 
 **That's it!** The entire stack is now deploying. Typical deployment time: 3-5 minutes.
 
-### 3. Access Services
+### 4. Access Services
 
 Get access URLs:
 
@@ -185,7 +200,11 @@ kube-prometheus-stack:
           memory: 16Gi
   
   grafana:
-    adminPassword: "CHANGE_ME_IN_PRODUCTION"  # Use secrets management
+    # Use Kubernetes secrets for password management
+    admin:
+      existingSecret: grafana-admin-credentials
+      userKey: admin-user
+      passwordKey: admin-password
     ingress:
       enabled: true
       ingressClassName: nginx
