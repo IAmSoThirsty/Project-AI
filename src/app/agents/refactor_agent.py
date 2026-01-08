@@ -36,16 +36,19 @@ class RefactorAgent:
         # Ensure path is absolute and normalized to prevent path traversal
         abs_path = os.path.abspath(path)
         cwd = os.getcwd()
+
+        # Check that the resolved path is within current working directory
+        # Uses os.path.commonpath for robust cross-platform validation
         try:
-            # Check that the resolved path is within current working directory
-            # or is the working directory itself
-            if not (abs_path.startswith(cwd + os.sep) or abs_path == cwd):
+            common = os.path.commonpath([abs_path, cwd])
+            # Path is valid if common path is cwd (abs_path is under cwd or is cwd)
+            if common != cwd:
                 logger.error("Path traversal detected: %s not within %s", abs_path, cwd)
                 return {"success": False, "error": "path_traversal"}
         except ValueError:
-            # Should not happen with abspath, but handle gracefully
-            logger.error("Path validation failed: %s", path)
-            return {"success": False, "error": "path_validation_failed"}
+            # Different drives on Windows or no common path
+            logger.error("Path traversal detected: %s on different drive from %s", abs_path, cwd)
+            return {"success": False, "error": "path_traversal"}
 
         # Resolve tool paths - validate they exist
         black_cmd = shutil.which("black")
