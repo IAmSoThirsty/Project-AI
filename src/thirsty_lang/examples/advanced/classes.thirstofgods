@@ -1,0 +1,51 @@
+// ThirstOfGods Example - Ultimate Power
+// This showcases the most advanced features
+
+// Import modules (future feature)
+import hydration from "thirsty-utils"
+
+// Class definition
+fountain WaterTracker
+  drink total_intake = 0
+  drink goal = 8
+  
+  // Constructor
+  glass init(goal_liters)
+    this.goal = goal_liters
+  
+  // Method to add water
+  glass addWater(amount)
+    this.total_intake = this.total_intake + amount
+    pour "Added: " + amount + " liters"
+  
+  // Method to check progress
+  glass checkProgress()
+    drink percentage = (this.total_intake / this.goal) * 100
+    return percentage
+  
+  // Async method to fetch weather
+  cascade glass getWeatherAdvice()
+    drink weather = await fetchWeather()
+    
+    thirsty weather.temperature > 30
+      return "Hot day! Drink extra water!"
+    hydrated
+      return "Normal hydration is fine"
+
+// Error handling
+spillage
+  drink tracker = new WaterTracker(8)
+  tracker.addWater(2.5)
+  tracker.addWater(1.5)
+  
+  drink progress = tracker.checkProgress()
+  pour "Hydration progress: " + progress + "%"
+  
+  // Async call
+  drink advice = await tracker.getWeatherAdvice()
+  pour advice
+  
+cleanup error
+  pour "Error occurred: " + error.message
+
+// Stay divinely hydrated! ⚡💧
