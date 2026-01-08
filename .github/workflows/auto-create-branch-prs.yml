@@ -321,7 +321,7 @@ jobs:
           
           ### Automated Workflow
           1. ✅ PR created automatically
-          2. ⏳ Linting and tests will run via auto-pr-handler workflow
+          2. ⏳ Linting and tests will run via comprehensive-pr-automation and auto-pr-handler workflows
           3. ⏳ Security checks will be performed
           4. ⏳ Auto-merge will be enabled if all checks pass
           5. ⏳ Post-merge validation and summary will be generated
