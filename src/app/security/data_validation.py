@@ -16,7 +16,11 @@ import re
 from dataclasses import dataclass
 from io import StringIO
 from typing import Any
-from xml.etree import ElementTree as ET
+from xml.etree.ElementTree import (
+    Element,  # nosec B405 - Only used for type hints, not parsing
+)
+
+import defusedxml.ElementTree as ET
 
 logger = logging.getLogger(__name__)
 
@@ -69,14 +73,10 @@ class SecureDataParser:
                 data=None, data_type="xml", hash="", validated=False, issues=issues
             )
 
-        # Parse with defusedxml-like protections
+        # Parse with defusedxml for secure XML parsing
         try:
-            # Create parser with entity resolution disabled
-            # Note: Python's ElementTree doesn't resolve external entities by default
-            # For additional security, use defusedxml in production
-            parser = ET.XMLParser()
-
-            tree = ET.fromstring(xml_data, parser=parser)
+            # defusedxml prevents XXE attacks by disabling external entity resolution
+            tree = ET.fromstring(xml_data)
             data = self._xml_to_dict(tree)
 
             # Validate against schema if provided
@@ -241,7 +241,7 @@ class SecureDataParser:
 
         return False
 
-    def _xml_to_dict(self, element: ET.Element) -> dict:
+    def _xml_to_dict(self, element: Element) -> dict:
         """Convert XML element to dictionary.
 
         Args:

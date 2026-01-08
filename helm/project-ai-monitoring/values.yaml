@@ -1,0 +1,232 @@
+# Project-AI Monitoring Stack - Helm Values
+# Complete observability configuration for AI systems at exabyte scale
+
+# ============================================================================
+# GLOBAL CONFIGURATION
+# ============================================================================
+global:
+  projectName: project-ai
+  environment: production
+  imagePullSecrets: []
+  storageClass: "standard"
+  fullStack: true
+
+# ============================================================================
+# PROJECT-AI APPLICATION
+# ============================================================================
+projectAI:
+  enabled: true
+  replicaCount: 1
+  
+  image:
+    repository: project-ai
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  
+  service:
+    type: ClusterIP
+    port: 5000
+    metricsPort: 8000
+  
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      interval: 15s
+  
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 4Gi
+    requests:
+      cpu: 500m
+      memory: 1Gi
+
+# ============================================================================
+# PROMETHEUS STACK
+# ============================================================================
+prometheus:
+  enabled: true
+
+kube-prometheus-stack:
+  prometheus:
+    prometheusSpec:
+      retention: 15d
+      retentionSize: "50GB"
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 50Gi
+      resources:
+        requests:
+          cpu: 1000m
+          memory: 4Gi
+        limits:
+          cpu: 2000m
+          memory: 8Gi
+  
+  grafana:
+    enabled: true
+    adminPassword: "change_me_in_production"
+    persistence:
+      enabled: true
+      size: 10Gi
+    plugins:
+      - grafana-clock-panel
+      - grafana-piechart-panel
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+  
+  alertmanager:
+    enabled: true
+    persistence:
+      enabled: true
+      size: 5Gi
+
+# ============================================================================
+# ELASTICSEARCH (1M+ events/sec)
+# ============================================================================
+elasticsearch:
+  enabled: true
+  replicas: 3
+  minimumMasterNodes: 2
+  
+  resources:
+    requests:
+      cpu: 2000m
+      memory: 8Gi
+    limits:
+      cpu: 4000m
+      memory: 16Gi
+  
+  volumeClaimTemplate:
+    resources:
+      requests:
+        storage: 500Gi
+  
+  esJavaOpts: "-Xms8g -Xmx8g"
+
+# ============================================================================
+# LOGSTASH
+# ============================================================================
+logstash:
+  enabled: true
+  replicas: 2
+  
+  resources:
+    requests:
+      cpu: 1000m
+      memory: 4Gi
+    limits:
+      cpu: 2000m
+      memory: 8Gi
+  
+  logstashJavaOpts: "-Xms4g -Xmx4g"
+
+# ============================================================================
+# KIBANA
+# ============================================================================
+kibana:
+  enabled: true
+  replicas: 1
+  
+  resources:
+    requests:
+      cpu: 500m
+      memory: 2Gi
+    limits:
+      cpu: 1000m
+      memory: 4Gi
+  
+  ingress:
+    enabled: true
+    hosts:
+      - host: kibana.project-ai.local
+
+# ============================================================================
+# NETDATA (1000s FPS, zero config)
+# ============================================================================
+netdata:
+  enabled: true
+  
+  parent:
+    enabled: true
+    replicaCount: 1
+    resources:
+      requests:
+        cpu: 1000m
+        memory: 2Gi
+    claiming:
+      enabled: true
+      token: ""
+  
+  child:
+    enabled: true
+    updateStrategy: RollingUpdate
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+
+# ============================================================================
+# OPENTELEMETRY COLLECTOR (Full-stack observability)
+# ============================================================================
+opentelemetry:
+  enabled: true
+
+opentelemetry-collector:
+  mode: deployment
+  replicaCount: 2
+  
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+
+# ============================================================================
+# CILIUM + HUBBLE (eBPF kernel observability)
+# ============================================================================
+cilium:
+  enabled: true
+  kubeProxyReplacement: "strict"
+  
+  hubble:
+    enabled: true
+    relay:
+      enabled: true
+      replicas: 2
+    ui:
+      enabled: true
+      ingress:
+        enabled: true
+        hosts:
+          - hubble.project-ai.local
+    metrics:
+      enabled:
+        - dns:query
+        - drop
+        - tcp
+        - flow
+        - http
+  
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+    limits:
+      cpu: 2000m
+      memory: 2Gi
+
+# ============================================================================
+# ZABBIX (Optional)
+# ============================================================================
+zabbix:
+  enabled: false
