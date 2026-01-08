@@ -63,32 +63,16 @@ Individual control over:
 #### Setting Master Password
 ```python
 from app.core.command_override import CommandOverrideSystem
-import os
 
-# Load master password from environment variable - NEVER hardcode
 cmd_system = CommandOverrideSystem()
-master_password = os.getenv("COMMAND_OVERRIDE_PASSWORD")
-if master_password:
-    cmd_system.set_master_password(master_password)
-else:
-    print("ERROR: COMMAND_OVERRIDE_PASSWORD not set in environment")
+cmd_system.set_master_password("your_secure_password")
 ```
-
-**⚠️ SECURITY WARNING**: NEVER hardcode passwords in code. Always use environment variables or secure secrets management.
 
 #### Authenticating
 ```python
-import os
-
-# Load password from secure source - NEVER hardcode
-master_password = os.getenv("COMMAND_OVERRIDE_PASSWORD")
-if cmd_system.authenticate(master_password):
+if cmd_system.authenticate("your_secure_password"):
     print("Authenticated successfully")
-else:
-    print("Authentication failed")
 ```
-
-**⚠️ SECURITY**: Always load passwords from environment variables or secure vaults.
 
 #### Override Individual Protocol
 ```python
@@ -442,10 +426,9 @@ data/
 3. ✅ Use tags for better categorization
 4. ✅ Monitor disk usage
 5. ✅ Review learned content periodically
-6. ❌ **NEVER store passwords, API keys, or secrets in memory**
-7. ❌ **NEVER store PII without encryption and user consent**
-8. ❌ Don't set learning intervals too short
-9. ❌ Don't ignore disk space warnings
+6. ❌ Don't store sensitive passwords in memory
+7. ❌ Don't set learning intervals too short
+8. ❌ Don't ignore disk space warnings
 
 ---
 
