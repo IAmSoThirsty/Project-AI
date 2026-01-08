@@ -53,43 +53,51 @@ class CICheckerAgent:
         ts = datetime.utcnow().isoformat()
         report = {"corr": corr, "timestamp": ts, "results": {}}
 
-        # Resolve tool paths (try to use absolute paths when possible)
-        pytest_cmd = shutil.which("pytest") or "pytest"
-        ruff_cmd = shutil.which("ruff") or "ruff"
+        # Resolve tool paths - validate they exist
+        pytest_cmd = shutil.which("pytest")
+        ruff_cmd = shutil.which("ruff")
 
         # run pytest -q (only tests directory)
-        try:
-            # nosec B603 B607 - pytest is a trusted dev tool, command is hardcoded
-            res = subprocess.run(
-                [pytest_cmd, "-q"],
-                capture_output=True,
-                text=True,
-                timeout=300,  # 5 minute timeout
-            )
-            report["results"]["pytest"] = {"rc": res.returncode, "output": res.stdout + res.stderr}
-        except subprocess.TimeoutExpired:
-            logger.warning("pytest command timed out after 300 seconds")
-            report["results"]["pytest"] = {"rc": -1, "error": "timeout"}
-        except Exception as e:
-            logger.error("pytest execution failed: %s", e)
-            report["results"]["pytest"] = {"rc": -1, "error": str(e)}
+        if pytest_cmd:
+            try:
+                # nosec B603 - pytest is a trusted dev tool, path resolved with shutil.which
+                res = subprocess.run(
+                    [pytest_cmd, "-q"],
+                    capture_output=True,
+                    text=True,
+                    timeout=300,  # 5 minute timeout
+                )
+                report["results"]["pytest"] = {"rc": res.returncode, "output": res.stdout + res.stderr}
+            except subprocess.TimeoutExpired:
+                logger.warning("pytest command timed out after 300 seconds")
+                report["results"]["pytest"] = {"rc": -1, "error": "timeout"}
+            except Exception as e:
+                logger.error("pytest execution failed: %s", e)
+                report["results"]["pytest"] = {"rc": -1, "error": str(e)}
+        else:
+            logger.warning("pytest command not found in PATH")
+            report["results"]["pytest"] = {"rc": -1, "error": "pytest not found"}
 
         # run ruff (lint)
-        try:
-            # nosec B603 B607 - ruff is a trusted dev tool, command is hardcoded
-            res = subprocess.run(
-                [ruff_cmd, "check", "src", "tests"],
-                capture_output=True,
-                text=True,
-                timeout=300,  # 5 minute timeout
-            )
-            report["results"]["ruff"] = {"rc": res.returncode, "output": res.stdout + res.stderr}
-        except subprocess.TimeoutExpired:
-            logger.warning("ruff command timed out after 300 seconds")
-            report["results"]["ruff"] = {"rc": -1, "error": "timeout"}
-        except Exception as e:
-            logger.error("ruff execution failed: %s", e)
-            report["results"]["ruff"] = {"rc": -1, "error": str(e)}
+        if ruff_cmd:
+            try:
+                # nosec B603 - ruff is a trusted dev tool, path resolved with shutil.which
+                res = subprocess.run(
+                    [ruff_cmd, "check", "src", "tests"],
+                    capture_output=True,
+                    text=True,
+                    timeout=300,  # 5 minute timeout
+                )
+                report["results"]["ruff"] = {"rc": res.returncode, "output": res.stdout + res.stderr}
+            except subprocess.TimeoutExpired:
+                logger.warning("ruff command timed out after 300 seconds")
+                report["results"]["ruff"] = {"rc": -1, "error": "timeout"}
+            except Exception as e:
+                logger.error("ruff execution failed: %s", e)
+                report["results"]["ruff"] = {"rc": -1, "error": str(e)}
+        else:
+            logger.warning("ruff command not found in PATH")
+            report["results"]["ruff"] = {"rc": -1, "error": "ruff not found"}
 
         # write report
         out = os.path.join(self.reports_dir, f"ci_{corr}.json")
