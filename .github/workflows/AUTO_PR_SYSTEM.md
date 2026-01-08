@@ -329,7 +329,9 @@ strategy:
 - Daily runs process all branches without PRs
 - Each branch triggers multiple workflow runs
 - Approximate GitHub Actions minutes per day: 50-100 (for 40+ branches)
-- Stays well within free tier limits (2000 minutes/month for free accounts)
+- **Free tier**: Stays within free tier limits (2000 minutes/month for public repos, 2000 minutes/month for private repos on free plan)
+- **Paid accounts**: Enterprise/Team accounts have higher limits and different pricing. Check your organization's specific limits and costs at: https://github.com/pricing
+- **Optimization tip**: Adjust the schedule frequency based on your branch activity to optimize minute usage
 
 ## Future Enhancements
 

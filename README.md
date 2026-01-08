@@ -275,7 +275,7 @@ gh run list --workflow=auto-create-branch-prs.yml --limit 5
 
 ⚠️ Merge conflicts that can't be auto-resolved (labeled `needs-manual-review`)
 
-All other operations are fully automated! The system processes ~40+ active branches and maintains zero conflicts in main.
+All other operations are fully automated! The system processes ~40+ active branches and prevents unresolved conflicts in main.
 
 ---
 
