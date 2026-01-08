@@ -39,8 +39,12 @@ class RefactorAgent:
         try:
             # Check that the resolved path is within current working directory
             # This prevents path traversal attacks
-            os.path.commonpath([abs_path, cwd])
-        except (ValueError, TypeError):
+            common = os.path.commonpath([abs_path, cwd])
+            if not abs_path.startswith(common + os.sep) and abs_path != common:
+                logger.error("Path traversal detected: %s not within %s", abs_path, cwd)
+                return {"success": False, "error": "path_traversal"}
+        except ValueError:
+            # Different drives on Windows or no common path
             logger.error("Path traversal detected: %s", path)
             return {"success": False, "error": "path_traversal"}
 
