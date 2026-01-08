@@ -174,7 +174,7 @@ A comprehensive PyQt6 widget for AI Persona configuration with 4 tabs:
 
 ### **Test Coverage**
 
-- **Total Tests:** 23 passing (100%)
+- **Total Tests:** 23/23 Tests Passing
 - **Success Rate:** 100%
 - **Execution Time:** ~0.7 seconds
 - **Framework:** pytest 9.0.1
