@@ -185,7 +185,7 @@ kube-prometheus-stack:
           memory: 16Gi
   
   grafana:
-    adminPassword: "super_secret_password_here"
+    adminPassword: "CHANGE_ME_IN_PRODUCTION"  # Use secrets management
     ingress:
       enabled: true
       ingressClassName: nginx

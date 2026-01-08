@@ -86,6 +86,9 @@ ALLOWED_FILES = [
     "DEPLOYMENT.md",
     "SECURITY_FRAMEWORK.md",
     "README.md",
+    "secret_scan_report.json",
+    "CREDENTIAL_ROTATION.md",
+    "SECURITY_REMEDIATION_PLAN.md",
 ]
 
 # Directories that contain documentation/examples (more lenient checking)
