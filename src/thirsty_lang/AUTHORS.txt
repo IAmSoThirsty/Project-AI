@@ -1,0 +1,24 @@
+# Thirsty-lang Authors and Contributors
+
+## Project Creator
+- IAmSoThirsty - Original author and maintainer
+
+## Core Team
+- IAmSoThirsty - Lead Developer
+
+## Contributors
+This project welcomes contributions from the community. 
+To contribute, please see CONTRIBUTING.md.
+
+Thank you to all who have contributed to making Thirsty-lang better!
+
+## Special Thanks
+- Everyone who believes coding should be refreshing
+- The open source community
+- Node.js and Python communities
+- All users who have tried Thirsty-lang
+
+---
+
+Want to see your name here? Contribute to Thirsty-lang!
+See CONTRIBUTING.md for guidelines.
