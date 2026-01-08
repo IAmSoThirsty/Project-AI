@@ -88,17 +88,17 @@ Add these to your `.env` file for enhanced features:
 
 ```env
 # OpenAI Integration (for learning paths & chat)
-OPENAI_API_KEY=sk-your-key-here
+OPENAI_API_KEY=
 
 # Email Alerts (for emergency features)
-SMTP_USERNAME=your-email@example.com
-SMTP_PASSWORD=your-app-password
+SMTP_USERNAME=
+SMTP_PASSWORD=
 
 # Encryption (auto-generated if not provided)
-FERNET_KEY=your-base64-key-here
+FERNET_KEY=
 
 # Cloud Sync (NEW!)
-CLOUD_SYNC_URL=https://your-api.com/sync
+CLOUD_SYNC_URL=
 
 # Directories (optional)
 DATA_DIR=data

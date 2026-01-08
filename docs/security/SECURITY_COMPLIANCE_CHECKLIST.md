@@ -25,10 +25,10 @@
 - [ ] **CREATE** `.env.example` with placeholder values:
   ```env
   # Use placeholder values only - NEVER commit real credentials
-  OPENAI_API_KEY=sk-proj-YOUR_KEY_HERE
-  SMTP_USERNAME=your-email@example.com
-  SMTP_PASSWORD=your-app-password-here
-  FERNET_KEY=your-base64-fernet-key-here
+  OPENAI_API_KEY=
+  SMTP_USERNAME=
+  SMTP_PASSWORD=
+  FERNET_KEY=
   ```
 
 - [ ] **ENCRYPT** sensitive JSON files:
