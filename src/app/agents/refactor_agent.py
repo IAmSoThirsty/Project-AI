@@ -65,14 +65,14 @@ class RefactorAgent:
                 capture_output=True,
                 text=True,
                 timeout=60,
-            )
+            )  # nosec B603
             # nosec B603 - ruff is a trusted dev tool, path resolved with shutil.which and validated
             res_ruff = subprocess.run(
                 [ruff_cmd, "check", abs_path],
                 capture_output=True,
                 text=True,
                 timeout=60,
-            )
+            )  # nosec B603
             return {
                 "success": True,
                 "black_check": res_black.returncode == 0,

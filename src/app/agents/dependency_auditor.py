@@ -41,7 +41,7 @@ class DependencyAuditor:
                         capture_output=True,
                         text=True,
                         timeout=60,  # 1 minute timeout
-                    )
+                    )  # nosec B603
                     audit_json = res.stdout
                 except subprocess.TimeoutExpired:
                     logger.warning("pip-audit command timed out after 60 seconds")
