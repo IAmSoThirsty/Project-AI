@@ -60,8 +60,7 @@ class CICheckerAgent:
         # run pytest -q (only tests directory)
         if pytest_cmd:
             try:
-                # nosec B603 - pytest is a trusted dev tool, path resolved with shutil.which
-                res = subprocess.run(
+                res = subprocess.run(  # nosec B603 - pytest is a trusted dev tool, path resolved with shutil.which
                     [pytest_cmd, "-q"],
                     capture_output=True,
                     text=True,
@@ -81,8 +80,7 @@ class CICheckerAgent:
         # run ruff (lint)
         if ruff_cmd:
             try:
-                # nosec B603 - ruff is a trusted dev tool, path resolved with shutil.which
-                res = subprocess.run(
+                res = subprocess.run(  # nosec B603 - ruff is a trusted dev tool, path resolved with shutil.which
                     [ruff_cmd, "check", "src", "tests"],
                     capture_output=True,
                     text=True,
