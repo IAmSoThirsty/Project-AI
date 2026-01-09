@@ -59,6 +59,7 @@ Experience the next generation of AI orchestration—engineered from the ground 
 - ✅ **PyQt6 Dashboard** — "Leather Book" UI, persona panel, Four Laws validator, agent console, stats dashboard
 - ✅ **Defensive Agents** — Black Vault, plugin sandboxing, malware/code audit, geo/IP anomaly tracking
 - ✅ **Data Science & ML** — Clustering, sentiment analysis, real-time prediction, pandas support
+- ✅ **DeepSeek V3.2 Integration** — Mixture-of-Experts language model, chat/completion, GPU-accelerated inference
 - ✅ **Web API & Frontend** — Flask+React, fast API, containerized deployment
 - ✅ **Offline-First Design** — Fallback RAG, local reflection, caching, streaming sync
 - ✅ **Neuromorphic SNN Support** — 10 SNN stack, continual edge learning, ANN→SNN pipeline
@@ -84,6 +85,7 @@ src/app/
 │   ├─ local_fbo.py             # Offline-first fallback, RAG, reflection
 │   ├─ emergency_alert.py       # Alerts/Emergency comms
 │   ├─ data_analysis.py         # Pandas, sklearn, clustering
+│   ├─ deepseek_v32_inference.py# DeepSeek V3.2 MoE language model
 │   ├─ snn_integration.py, snn_mlops.py, ai_security_framework.py, etc.
 ├─ agents/
 │   ├─ cerberus.py              # Defensive overseer
@@ -146,6 +148,101 @@ Curates persistent and streaming knowledge, orchestrates agent council (planning
 - **Plugin & Dependency Security:** Sandbox, audit, malware, dependency checks on all loaded code
 - **Streaming/Analytics:** Prometheus, Netdata, ClickHouse, RisingWave
 - **eBPF/Cilium/Hubble:** Agentless kernel-level network monitoring for all deployments
+
+---
+
+## 🧠 DeepSeek V3.2 Language Model Integration
+
+**Project-AI** now includes integrated support for **DeepSeek V3.2**, a cutting-edge Mixture-of-Experts (MoE) language model from DeepSeek-AI. The MoE architecture enables efficient scaling with sparse activation, providing state-of-the-art performance for chat and completion tasks.
+
+### Features
+- ✅ **Chat & Completion Modes** — Full support for conversational AI and text generation
+- ✅ **GPU Acceleration** — Automatic device detection (CUDA, MPS, CPU) with optimized inference
+- ✅ **Content Filtering** — Built-in safety checks with configurable keyword blocking
+- ✅ **Flexible Parameters** — Temperature, top-p, top-k, max tokens all configurable
+- ✅ **Command-Line Interface** — Interactive and single-shot inference modes
+- ✅ **HuggingFace Integration** — Uses transformers library for seamless model loading
+
+### Quick Start
+
+#### Python Module Usage
+
+```python
+from app.core.deepseek_v32_inference import DeepSeekV32
+
+# Initialize model (auto-detects GPU/CPU)
+deepseek = DeepSeekV32()
+
+# Generate text completion
+result = deepseek.generate_completion(
+    prompt="Explain quantum computing in simple terms",
+    max_new_tokens=256,
+    temperature=0.7
+)
+print(result["text"])
+
+# Chat mode
+messages = [
+    {"role": "user", "content": "What is machine learning?"}
+]
+result = deepseek.generate_chat(messages)
+print(result["text"])
+```
+
+#### Command-Line Interface
+
+```bash
+# Simple completion
+python -m scripts.deepseek_v32_cli "Explain artificial intelligence"
+
+# Chat mode with custom parameters
+python -m scripts.deepseek_v32_cli --mode chat --temperature 0.8 "Hello!"
+
+# Interactive chat session
+python -m scripts.deepseek_v32_cli --mode chat --interactive
+
+# Advanced usage with all options
+python -m scripts.deepseek_v32_cli \
+  --mode chat \
+  --max-tokens 512 \
+  --temperature 0.9 \
+  --top-p 0.95 \
+  --device cuda \
+  "Tell me about deep learning"
+```
+
+### Configuration
+
+Set your Hugging Face API key in `.env` (optional, for API access):
+
+```bash
+HUGGINGFACE_API_KEY=your_api_key_here
+```
+
+### Requirements
+
+DeepSeek V3.2 requires:
+- `torch>=2.0.0` (already in Project-AI)
+- `transformers>=4.35.0` (automatically installed)
+- `accelerate>=0.25.0` (for optimized inference)
+
+Install with: `pip install -r requirements.txt`
+
+### Model Information
+
+- **Model Name:** `deepseek-ai/deepseek-v3` (Hugging Face)
+- **Architecture:** Mixture-of-Experts (MoE) Transformer
+- **Use Cases:** Text completion, conversational AI, code generation, reasoning tasks
+- **Device Support:** CUDA (NVIDIA), MPS (Apple Silicon), CPU
+- **Content Safety:** Built-in keyword filtering aligned with Project-AI security standards
+
+### Integration with Project-AI
+
+DeepSeek V3.2 integrates seamlessly with:
+- **Four Laws AI Core** — All outputs validated against ethical constraints
+- **Memory System** — Conversation history can be stored and retrieved
+- **Agent Council** — Can be used by autonomous agents for reasoning
+- **Security Framework** — Content filtering, audit logging, ASL compliance
 
 ---
 
