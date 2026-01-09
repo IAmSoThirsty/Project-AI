@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 import json
+import logging
 import os
 import platform
 import runpy
 import sys
 import traceback
+
+logger = logging.getLogger(__name__)
 
 # Optional resource limits (POSIX)
 try:
@@ -31,8 +34,10 @@ def apply_limits():
             setrlimit(rlimit_cpu, (2, 4))
         if callable(setrlimit) and rlimit_nofile is not None:
             setrlimit(rlimit_nofile, (16, 64))
-    except Exception:
-        pass
+    except Exception as e:
+        # Resource limits are best-effort on POSIX systems
+        # Failure to set limits does not prevent sandbox execution
+        logger.debug("Failed to set resource limits: %s", e)  # nosec B110 - intentional pass with logging
 
 
 def run_module(module_path: str) -> dict:
