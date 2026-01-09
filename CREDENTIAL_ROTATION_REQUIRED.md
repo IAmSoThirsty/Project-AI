@@ -14,7 +14,7 @@ The `.env` file containing **real production credentials** was tracked in git hi
 
 The following types of credentials were committed to git history:
 
-1. **OpenAI API Key** - `sk-proj-[REDACTED - 200+ characters]` (revoke at https://platform.openai.com/api-keys)
+1. **OpenAI API Key** - `[REDACTED - 200+ characters]` (revoke at https://platform.openai.com/api-keys)
 2. **SMTP Email** - `[REDACTED]@gmail.com`
 3. **SMTP Password** - `[REDACTED]` (revoke at Google App Passwords)
 4. **Fernet Encryption Key** - `[REDACTED - Base64 encoded]`
@@ -172,8 +172,8 @@ All team members should:
 # Install git-filter-repo
 pip install git-filter-repo
 
-# Remove .env from all history (CAUTION: rewrites history)
-git filter-repo --path .env --invert-paths --force
+# Remove .env and .vs/ from all history (CAUTION: rewrites history)
+git filter-repo --path .env --path .vs --invert-paths --force
 
 # Force push to update remote
 git push --force --all origin
