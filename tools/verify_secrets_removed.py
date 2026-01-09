@@ -122,7 +122,8 @@ def check_env_file() -> bool:
             for line in content.split("\n"):
                 if pattern in line and "=" in line:
                     parts = line.split("=", 1)
-                    if len(parts) > 1 and parts[1].strip() and parts[1].strip() not in ["", "<", ">"]:
+                    # Check if there's a value after the equals sign (not just whitespace or angle brackets)
+                    if len(parts) > 1 and parts[1].strip() and not parts[1].strip().startswith(('<', '>')):
                         issues.append(f"  ⚠️  Potential {description} found in .env")
     
     if issues:
