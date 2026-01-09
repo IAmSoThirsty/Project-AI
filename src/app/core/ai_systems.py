@@ -198,8 +198,8 @@ def _atomic_write_json(file_path: str, obj: Any) -> None:
             if os.path.exists(tmp_path):
                 try:
                     os.remove(tmp_path)
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.warning("Failed to remove temporary file %s: %s", tmp_path, e)
     finally:
         _release_lock(lockfile)
 
@@ -793,8 +793,8 @@ class LearningRequestManager:
                 conn.close()
                 try:
                     os.remove(legacy)
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.warning("Failed to remove legacy JSON file %s: %s", legacy, e)
         except Exception:
             logger.exception("Migration from JSON to DB failed")
 

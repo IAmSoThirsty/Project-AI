@@ -324,7 +324,8 @@ Strategic defensive protection active
         
         for identifier in identifiers:
             if identifier not in skip_words and len(identifier) > 2:
-                obfuscated = f"_{hashlib.md5(identifier.encode()).hexdigest()[:8]}"
+                # MD5 used for obfuscation only, not cryptographic security
+                obfuscated = f"_{hashlib.md5(identifier.encode(), usedforsecurity=False).hexdigest()[:8]}"
                 identifier_map[identifier] = obfuscated
                 morphed_code = re.sub(r'\b' + identifier + r'\b', obfuscated, morphed_code)
         
