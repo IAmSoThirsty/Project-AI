@@ -141,7 +141,7 @@ class TestCommandOverride:
     def test_request_override(self, override):
         """Test requesting override."""
         success, _ = override.request_override(
-            password="test123",
+            password="test_password_123",  # Test password only
             override_type=OverrideType.CONTENT_FILTER,
         )
         assert success
@@ -149,7 +149,7 @@ class TestCommandOverride:
     def test_override_active(self, override):
         """Test checking override active."""
         override.request_override(
-            password="test123",
+            password="test_password_123",  # Test password only
             override_type=OverrideType.CONTENT_FILTER,
         )
         is_active = override.is_override_active(OverrideType.CONTENT_FILTER)

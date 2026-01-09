@@ -9,9 +9,9 @@ def test_sha256_to_bcrypt_migration(tmp_path):
     data_dir.mkdir()
 
     # create legacy config with sha256 password
-    password = "s3cret!"
-    # Precomputed legacy SHA-256 of "s3cret!", do not compute password hashes with SHA256 in new code
-    legacy_hash = "98830ed5c6d7d22ef9dcf6a236aa93a3c81f57ea5483cfa0409643bd5be5b92e"
+    password = "test_legacy_password"  # Test password only
+    # Precomputed legacy SHA-256 of "test_legacy_password", do not compute password hashes with SHA256 in new code
+    legacy_hash = "46c111cf0c65eadb909d854f3dde471934fbc2211c860546572dea36107d4891"
     config = {"master_password_hash": legacy_hash, "safety_protocols": {}}
     cfg_file = data_dir / "command_override_config.json"
     with open(cfg_file, "w", encoding="utf-8") as f:

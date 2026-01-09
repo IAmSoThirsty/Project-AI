@@ -82,8 +82,8 @@ def test_list_users(tmpdir):
 def test_update_user_password_via_update(tmpdir):
     f = os.path.join(tmpdir, "users.json")
     um = UserManager(users_file=f)
-    um.create_user("g", "pw")
-    um.update_user("g", password="new")
+    um.create_user("g", "pw")  # Test password
+    um.update_user("g", password="new")  # Test password
     assert um.authenticate("g", "new") is True
 
 
