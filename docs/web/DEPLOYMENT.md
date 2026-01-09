@@ -16,7 +16,7 @@ services:
       - "5000:5000"
     environment:
       - FLASK_ENV=production
-      - DATABASE_URL=postgresql://DB_USER:DB_PASSWORD@db:5432/projectai
+      - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/projectai
     depends_on:
       - db
 
