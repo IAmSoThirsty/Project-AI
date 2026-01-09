@@ -61,6 +61,8 @@ cover/
 
 # Environments
 .env
+.env.local
+.env.*.local
 .venv
 env/
 venv/
@@ -68,8 +70,29 @@ ENV/
 env.bak/
 venv.bak/
 
+# Secrets and credentials
+*.key
+*.pem
+*.p12
+*.pfx
+secrets.json
+credentials.json
+*secrets.json
+*secrets.yaml
+*secrets.yml
+*credentials.json
+*credentials.yaml
+*credentials.yml
+secret_*.txt
+credential_*.txt
+!.pre-commit-config.yaml
+!docs/**/*
+!tests/**/*
+!*.md
+
 # IDEs
 .vscode/
+.vs/
 .idea/
 
 # OS
