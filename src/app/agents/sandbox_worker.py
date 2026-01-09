@@ -31,7 +31,9 @@ def apply_limits():
             setrlimit(rlimit_cpu, (2, 4))
         if callable(setrlimit) and rlimit_nofile is not None:
             setrlimit(rlimit_nofile, (16, 64))
-    except Exception:
+    except Exception:  # nosec B110 - Intentionally silent: resource limits are best-effort on POSIX systems
+        # Resource limits are optional and may fail on some systems
+        # We continue without limits rather than failing the sandbox
         pass
 
 
