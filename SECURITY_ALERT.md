@@ -18,10 +18,10 @@ The following sensitive files were previously committed to the git repository:
 
 The following credentials were exposed in the repository history:
 
-- ✗ **OpenAI API Key**: `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`
+- ✗ **OpenAI API Key**: `sk-proj-cFQpstvedWKDyX...REDACTED...h9MA` (full key in git history)
 - ✗ **SMTP Username**: `ProjectAiDevs@gmail.com`
-- ✗ **SMTP Password**: `R9609936!`
-- ✗ **Fernet Encryption Key**: `Qqyl2vCYY7W4AKuE-DmQLmL7IgXguMis_lFalqlliEc=`
+- ✗ **SMTP Password**: `R96...REDACTED...6!` (full password in git history)
+- ✗ **Fernet Encryption Key**: `Qqyl2vCYY...REDACTED...iEc=` (full key in git history)
 
 ---
 

@@ -26,7 +26,7 @@ The following security remediations have been completed in this PR:
 All team members and the repository owner MUST rotate the following credentials immediately:
 
 #### OpenAI API Key
-- **Action**: Revoke `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`
+- **Action**: Revoke `sk-proj-cFQpstvedWKDyX...REDACTED...h9MA`
 - **Platform**: https://platform.openai.com/api-keys
 - **Steps**:
   1. Log into OpenAI dashboard
@@ -36,7 +36,7 @@ All team members and the repository owner MUST rotate the following credentials 
 
 #### SMTP Credentials
 - **Username**: `ProjectAiDevs@gmail.com`
-- **Password**: `R9609936!` (exposed)
+- **Password**: `R96...REDACTED...6!` (exposed)
 - **Action**: Revoke app-specific password
 - **Platform**: https://myaccount.google.com/apppasswords
 - **Steps**:
@@ -47,7 +47,7 @@ All team members and the repository owner MUST rotate the following credentials 
   5. Update your local `.env` file
 
 #### Fernet Encryption Key
-- **Exposed Key**: `Qqyl2vCYY7W4AKuE-DmQLmL7IgXguMis_lFalqlliEc=`
+- **Exposed Key**: `Qqyl2vCYY...REDACTED...iEc=`
 - **Action**: Generate new key (optional if no encrypted data exists)
 - **Command**: `python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"`
 - **Note**: Rotating this key makes old encrypted data unreadable

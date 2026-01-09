@@ -134,10 +134,10 @@ secret_scan_report.json
 
 ### 🔴 CRITICAL - Must Rotate Immediately:
 
-1. **OpenAI API Key**: `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`
+1. **OpenAI API Key**: `sk-proj-cFQpstvedWKDyX...REDACTED...h9MA` (full key in git history)
 2. **SMTP Username**: `ProjectAiDevs@gmail.com`
-3. **SMTP Password**: `R9609936!`
-4. **Fernet Key**: `Qqyl2vCYY7W4AKuE-DmQLmL7IgXguMis_lFalqlliEc=`
+3. **SMTP Password**: `R96...REDACTED...6!` (full password in git history)
+4. **Fernet Key**: `Qqyl2vCYY...REDACTED...iEc=` (full key in git history)
 
 ---
 
