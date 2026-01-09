@@ -16,6 +16,8 @@ The following sensitive files were previously committed to the git repository:
 
 ### Exposed Credentials
 
+**⚠️ IMPORTANT**: These credentials are already compromised and publicly visible in git history. The partial values shown here help identify which specific credentials need rotation. These MUST be rotated immediately.
+
 The following credentials were exposed in the repository history:
 
 - ✗ **OpenAI API Key**: `sk-proj-cFQpstvedWKDyX...REDACTED...h9MA` (full key in git history)

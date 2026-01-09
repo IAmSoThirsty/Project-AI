@@ -132,6 +132,8 @@ secret_scan_report.json
 
 ## Exposed Credentials Requiring Rotation
 
+**⚠️ IMPORTANT**: These credentials are already compromised and publicly visible in git history. The partial values help identify which specific credentials to rotate.
+
 ### 🔴 CRITICAL - Must Rotate Immediately:
 
 1. **OpenAI API Key**: `sk-proj-cFQpstvedWKDyX...REDACTED...h9MA` (full key in git history)
