@@ -17,11 +17,14 @@ Metrics Categories:
 
 import logging
 import time
-from pathlib import Path
-from typing import Any
 
-from prometheus_client import Counter, Gauge, Histogram, Info, Summary
-from prometheus_client import generate_latest, REGISTRY
+from prometheus_client import (
+    Counter,
+    Gauge,
+    Histogram,
+    Info,
+    generate_latest,
+)
 from prometheus_client.core import CollectorRegistry
 
 logger = logging.getLogger(__name__)
@@ -32,7 +35,7 @@ class PrometheusMetrics:
 
     def __init__(self, registry: CollectorRegistry | None = None):
         """Initialize Prometheus metrics.
-        
+
         Args:
             registry: Prometheus registry (creates new if None to avoid conflicts)
         """
@@ -42,7 +45,7 @@ class PrometheusMetrics:
 
     def _initialize_metrics(self) -> None:
         """Initialize all Prometheus metrics."""
-        
+
         # ==================== AI PERSONA METRICS ====================
         self.persona_mood_energy = Gauge(
             'project_ai_persona_mood_energy',
@@ -344,7 +347,7 @@ class PrometheusMetrics:
             'Application uptime in seconds',
             registry=self.registry
         )
-        
+
         # Store start time for uptime calculation
         self._start_time = time.time()
 
@@ -355,7 +358,7 @@ class PrometheusMetrics:
 
     def generate_metrics(self) -> bytes:
         """Generate Prometheus metrics in text format.
-        
+
         Returns:
             Metrics in Prometheus exposition format
         """
