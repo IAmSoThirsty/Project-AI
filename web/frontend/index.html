@@ -65,11 +65,28 @@
         margin-top: 2rem;
         text-align: right;
       }
+
+      .badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+      }
+
+      .badge.spa {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
     </style>
   </head>
   <body>
     <main>
-      <h1>Project-AI Frontend Preview</h1>
+      <h1>
+        Project-AI Frontend Preview
+        <span class="badge spa">SPA Enhanced</span>
+      </h1>
       <p>
         This page demonstrates the future React/Vite experience for the leather book
         interface. Every SPA view will load through this entrypoint and pipe its data
@@ -83,6 +100,8 @@
           <li>Plugin marketplace tiles with status badges and safety ratings.</li>
           <li>Learning request builder with approval workflow status indicator.</li>
           <li>Continuous learning cards summarizing facts, usage ideas, and pros/cons.</li>
+          <li><strong>NEW:</strong> Component-based architecture with state management</li>
+          <li><strong>NEW:</strong> Modular JavaScript components for reusability</li>
         </ul>
       </section>
 
@@ -98,27 +117,7 @@
 
       <footer>Built for Project-AI · <span id="year"></span></footer>
     </main>
-    <script>
-      document.getElementById('year').textContent = new Date().getFullYear();
-      const statusEl = document.getElementById('status');
-
-      async function fetchStatus() {
-        try {
-          const response = await fetch('/api/status');
-          if (!response.ok) throw new Error('network');
-          const payload = await response.json();
-          statusEl.textContent = `${payload.component} is ${payload.status}`;
-          statusEl.classList.remove('offline');
-          statusEl.classList.add('online');
-        } catch (error) {
-          statusEl.textContent = 'Backend unavailable (Flask not running)';
-          statusEl.classList.remove('online');
-          statusEl.classList.add('offline');
-        }
-      }
-
-      fetchStatus();
-      setInterval(fetchStatus, 5000);
-    </script>
+    <!-- SPA Application JavaScript -->
+    <script src="app.js"></script>
   </body>
 </html>
