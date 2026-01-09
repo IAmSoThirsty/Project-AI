@@ -314,8 +314,8 @@ from app.security.web_service import (
     InputValidator,
 )
 
-# SOAP client
-client = SOAPClient("https://api.example.com/soap", username="user", password="pass")
+# Example SOAP client (DO NOT use these example credentials in production)
+client = SOAPClient("https://api.example.com/soap", username="EXAMPLE_USER", password="EXAMPLE_PASS")
 response = client.call("GetData", {"id": "123"})
 
 # Capability tokens
