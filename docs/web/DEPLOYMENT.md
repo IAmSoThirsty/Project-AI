@@ -16,7 +16,7 @@ services:
       - "5000:5000"
     environment:
       - FLASK_ENV=production
-      - DATABASE_URL=postgresql://user:pass@db:5432/projectai
+      - DATABASE_URL=${DATABASE_URL}  # Set via environment or secrets manager
     depends_on:
       - db
 
@@ -30,8 +30,8 @@ services:
   db:
     image: postgres:15
     environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=pass
+      - POSTGRES_USER=${POSTGRES_USER}  # Set via .env file (not committed)
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}  # Set via .env file (not committed)
       - POSTGRES_DB=projectai
     volumes:
       - postgres_data:/var/lib/postgresql/data

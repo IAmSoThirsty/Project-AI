@@ -198,12 +198,20 @@ If you find a vulnerability in a dependency:
 
 ```python
 # ✅ DO: Use environment variables
+import os
+from dotenv import load_dotenv
+
+load_dotenv()  # Load from .env file (not committed)
 SECRET_KEY = os.getenv('SECRET_KEY')
 DB_PASSWORD = os.getenv('DB_PASSWORD')
 
-# ❌ DON'T: Hardcode secrets
-SECRET_KEY = "my-secret-key-12345"
-DB_PASSWORD = "password123"
+# Validate required secrets are set
+if not SECRET_KEY or not DB_PASSWORD:
+    raise ValueError("Required secrets not set in environment")
+
+# ❌ DON'T: Hardcode secrets (example only - NEVER use in real code)
+# SECRET_KEY = "my-secret-key-12345"  # INSECURE!
+# DB_PASSWORD = "password123"         # INSECURE!
 ```
 
 ---

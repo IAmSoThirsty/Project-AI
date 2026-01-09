@@ -69,7 +69,7 @@ All credentials below were exposed in git commit `144c8fc` and earlier:
 
 #### A. OpenAI API Key
 
-**Exposed value**: `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`
+**Exposed value**: `sk-proj-cFQp...***[REDACTED - See commit 144c8fc]`
 
 **Actions:**
 1. Go to: https://platform.openai.com/api-keys
@@ -89,7 +89,7 @@ All credentials below were exposed in git commit `144c8fc` and earlier:
 
 **Exposed values**:
 - Username: `ProjectAiDevs@gmail.com`
-- Password: `R9609936!`
+- Password: `R960****! [REDACTED]`
 
 **Actions:**
 1. Go to: https://myaccount.google.com/apppasswords
@@ -111,7 +111,7 @@ All credentials below were exposed in git commit `144c8fc` and earlier:
 
 #### C. Fernet Encryption Key
 
-**Exposed value**: `Qqyl2vCYY7W4AKuE-DmQLmL7IgXguMis_lFalqlliEc=`
+**Exposed value**: `Qqyl2vCY...***[REDACTED]`
 
 ⚠️ **CRITICAL**: This key encrypts location history and other sensitive data.
 
@@ -127,7 +127,7 @@ All credentials below were exposed in git commit `144c8fc` and earlier:
    from cryptography.fernet import Fernet
    import json
    
-   old_key = "Qqyl2vCYY7W4AKuE-DmQLmL7IgXguMis_lFalqlliEc="
+   old_key = "[REDACTED - Use exposed key from commit 144c8fc]"
    new_key = "YOUR_NEW_KEY_HERE"
    
    old_cipher = Fernet(old_key.encode())
