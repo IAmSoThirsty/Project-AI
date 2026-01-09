@@ -3,11 +3,13 @@
 This module validates that Thirsty-lang functions as T-A-R-L (Thirsty's Active Resistant Language),
 testing its defensive programming and threat resistance capabilities as a code-based
 defense system that only Project-AI knows about.
+
+Security Note: This agent uses subprocess to run npm and node commands for testing
+the Thirsty-lang implementation. Commands are hardcoded and run in the trusted
+Thirsty-lang directory.
 """
-import json
 import logging
-import os
-import subprocess
+import subprocess  # nosec B404 - subprocess usage for trusted dev tools npm/node only
 from datetime import UTC, datetime
 from typing import Any
 
@@ -63,12 +65,16 @@ class ThirstyLangValidator:
         return report
     
     def _test_basic_language(self) -> dict[str, Any]:
-        """Test basic Thirsty-lang functionality."""
+        """Test basic Thirsty-lang functionality.
+        
+        Security: Runs npm test in the validated Thirsty-lang directory.
+        """
         logger.info("Testing basic T-A-R-L language features")
         
         try:
             # Run the language's built-in tests
-            result = subprocess.run(
+            # nosec B603, B607 - npm is a trusted dev tool, cwd is validated
+            result = subprocess.run(  # nosec B603, B607
                 ["npm", "test"],
                 cwd=self.thirsty_lang_path,
                 capture_output=True,
@@ -89,12 +95,16 @@ class ThirstyLangValidator:
             }
     
     def _test_security_features(self) -> dict[str, Any]:
-        """Test T-A-R-L security and defensive features."""
+        """Test T-A-R-L security and defensive features.
+        
+        Security: Runs node with security test script in validated Thirsty-lang directory.
+        """
         logger.info("Testing T-A-R-L security features")
         
         try:
             # Run security tests
-            result = subprocess.run(
+            # nosec B603, B607 - node is a trusted dev tool, cwd is validated
+            result = subprocess.run(  # nosec B603, B607
                 ["node", "src/test/security-tests.js"],
                 cwd=self.thirsty_lang_path,
                 capture_output=True,

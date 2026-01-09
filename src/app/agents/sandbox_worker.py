@@ -32,6 +32,8 @@ def apply_limits():
         if callable(setrlimit) and rlimit_nofile is not None:
             setrlimit(rlimit_nofile, (16, 64))
     except Exception:
+        # nosec B110 - Resource limits are optional and platform-specific
+        # Failure to set limits is acceptable as this is best-effort sandboxing
         pass
 
 
