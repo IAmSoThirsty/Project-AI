@@ -21,20 +21,20 @@ The following real credentials were found in the `.env` file (now removed from t
 
 ### 1. OpenAI API Key
 - **Type**: API Key
-- **Pattern**: `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`
+- **Pattern**: `sk-proj-[REDACTED]` (148 characters total)
 - **File**: `.env` (line 5)
 - **Risk**: Unauthorized access to OpenAI API, potential cost implications
 - **Action Required**: ✅ ROTATE IMMEDIATELY
 
 ### 2. SMTP Credentials
 - **Email**: `ProjectAiDevs@gmail.com`
-- **Password**: `R9609936!`
+- **Password**: `[REDACTED]` (10 characters)
 - **File**: `.env` (lines 8-9)
 - **Risk**: Unauthorized email sending, account compromise
 - **Action Required**: ✅ ROTATE IMMEDIATELY
 
 ### 3. Fernet Encryption Key
-- **Key**: `Qqyl2vCYY7W4AKuE-DmQLmL7IgXguMis_lFalqlliEc=`
+- **Key**: `[REDACTED]` (44 characters, base64-encoded)
 - **File**: `.env` (line 13)
 - **Risk**: Decrypt sensitive location history and other encrypted data
 - **Action Required**: ✅ ROTATE (requires data migration)
@@ -73,7 +73,7 @@ The following real credentials were found in the `.env` file (now removed from t
 
 ```bash
 # 1. Go to https://platform.openai.com/api-keys
-# 2. Find and REVOKE the exposed key (sk-proj-cFQp...)
+# 2. Find and REVOKE the exposed key (starts with sk-proj-****...)
 # 3. Create a NEW API key with appropriate permissions
 # 4. Update your local .env file:
 OPENAI_API_KEY=sk-proj-NEW_KEY_HERE
@@ -89,7 +89,7 @@ python -m src.app.main
 For Gmail App Passwords:
 ```bash
 # 1. Go to https://myaccount.google.com/apppasswords
-# 2. REVOKE the old app password (R9609936!)
+# 2. REVOKE the exposed app password
 # 3. Generate a NEW app password
 # 4. Update your local .env file:
 SMTP_USERNAME=ProjectAiDevs@gmail.com
