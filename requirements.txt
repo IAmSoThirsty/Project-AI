@@ -75,8 +75,10 @@ psycopg2-binary>=2.9.0          # PostgreSQL driver (for RisingWave)
 clickhouse-driver>=0.2.6        # ClickHouse Python driver for 1B+ rows/sec
 clickhouse-connect>=0.6.0       # Modern ClickHouse client
 
-# Spiking Neural Networks (SNNs)
+# Spiking Neural Networks (SNNs) & Transformers
 torch>=2.0.0                    # PyTorch for neural network backends
+transformers>=4.35.0            # Hugging Face Transformers for DeepSeek V3.2 and other LLMs
+accelerate>=0.25.0              # Optimized inference and training acceleration
 bindsnet>=0.3.0                 # RL on SNNs with continual learning support
 sinabs>=1.2.0                   # Vision-optimized SNN with hardware compatibility
 snntorch>=0.7.0                 # PyTorch-based SNN library with tutorials
