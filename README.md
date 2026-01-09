@@ -53,6 +53,20 @@
 
 ---
 
+## 🚨 SECURITY ALERT
+
+**⚠️ CRITICAL: If you cloned this repository before January 9, 2026:**
+
+Real API keys and credentials were accidentally committed to the repository. **All exposed credentials have been rotated**, but you must take action:
+
+1. **Pull the latest changes**: `git pull origin main`
+2. **Create your own `.env` file**: Copy `.env.example` to `.env` and add YOUR OWN credentials
+3. **DO NOT use any credentials from git history** - they have been revoked
+
+📋 See `SECURITY_ALERT.md` for complete details and remediation steps.
+
+---
+
 ## 📑 Table of Contents
 
 <details>
@@ -804,18 +818,25 @@ alerts = monitor.detect_anomalies()
 
 **Environment Variables Required:**
 ```bash
-# .env file (never commit)
-OPENAI_API_KEY=sk-...
-HUGGINGFACE_API_KEY=hf_...
-FERNET_KEY=<generated_key>
+# .env file (NEVER commit to git - already in .gitignore)
+# Copy .env.example to .env and fill with YOUR credentials
 
-# Optional: Email alerts
-SMTP_USERNAME=<email>
-SMTP_PASSWORD=<password>
+# Get from https://platform.openai.com/api-keys
+OPENAI_API_KEY=sk-proj-YOUR_ACTUAL_KEY_HERE
 
-# Optional: AWS
-AWS_ACCESS_KEY_ID=<key>
-AWS_SECRET_ACCESS_KEY=<secret>
+# Get from https://huggingface.co/settings/tokens
+HUGGINGFACE_API_KEY=hf_YOUR_ACTUAL_TOKEN_HERE
+
+# Generate with: python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+FERNET_KEY=YOUR_GENERATED_KEY_HERE
+
+# Optional: Email alerts (use app-specific passwords)
+SMTP_USERNAME=your-email@example.com
+SMTP_PASSWORD=YOUR_APP_SPECIFIC_PASSWORD
+
+# Optional: AWS credentials
+AWS_ACCESS_KEY_ID=YOUR_AWS_KEY
+AWS_SECRET_ACCESS_KEY=YOUR_AWS_SECRET
 AWS_DEFAULT_REGION=us-east-1
 ```
 

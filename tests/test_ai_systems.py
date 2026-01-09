@@ -140,6 +140,7 @@ class TestCommandOverride:
 
     def test_request_override(self, override):
         """Test requesting override."""
+        # Note: "test123" is a test password for unit testing only, not a real secret
         success, _ = override.request_override(
             password="test123",
             override_type=OverrideType.CONTENT_FILTER,
@@ -148,6 +149,7 @@ class TestCommandOverride:
 
     def test_override_active(self, override):
         """Test checking override active."""
+        # Note: "test123" is a test password for unit testing only, not a real secret
         override.request_override(
             password="test123",
             override_type=OverrideType.CONTENT_FILTER,

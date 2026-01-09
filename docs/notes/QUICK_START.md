@@ -88,16 +88,18 @@ Add these to your `.env` file for enhanced features:
 
 ```env
 # OpenAI Integration (for learning paths & chat)
-OPENAI_API_KEY=sk-your-key-here
+# Get your key from: https://platform.openai.com/api-keys
+OPENAI_API_KEY=sk-proj-YOUR_ACTUAL_KEY_HERE
 
-# Email Alerts (for emergency features)
+# Email Alerts (for emergency features - optional)
+# For Gmail, use app-specific password from: https://myaccount.google.com/apppasswords
 SMTP_USERNAME=your-email@example.com
-SMTP_PASSWORD=your-app-password
+SMTP_PASSWORD=YOUR_APP_SPECIFIC_PASSWORD_HERE
 
-# Encryption (auto-generated if not provided)
-FERNET_KEY=your-base64-key-here
+# Encryption (generate with: python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())")
+FERNET_KEY=YOUR_GENERATED_FERNET_KEY_HERE
 
-# Cloud Sync (NEW!)
+# Cloud Sync (NEW! - optional)
 CLOUD_SYNC_URL=https://your-api.com/sync
 
 # Directories (optional)
