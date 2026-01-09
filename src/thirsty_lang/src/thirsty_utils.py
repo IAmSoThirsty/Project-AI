@@ -6,7 +6,6 @@ Common utility functions for Thirsty-lang Python implementation
 
 import os
 import sys
-from typing import List, Optional
 
 
 def read_file(filename: str) -> str:
@@ -22,7 +21,7 @@ def read_file(filename: str) -> str:
     Raises:
         FileNotFoundError: If file doesn't exist
     """
-    with open(filename, 'r', encoding='utf-8') as f:
+    with open(filename, encoding='utf-8') as f:
         return f.read()
 
 
@@ -58,7 +57,7 @@ def is_thirsty_file(filename: str) -> bool:
     return get_file_extension(filename).lower() in valid_extensions
 
 
-def find_thirsty_files(directory: str) -> List[str]:
+def find_thirsty_files(directory: str) -> list[str]:
     """
     Find all Thirsty-lang files in a directory
     
@@ -77,7 +76,7 @@ def find_thirsty_files(directory: str) -> List[str]:
     return thirsty_files
 
 
-def format_error(message: str, line_num: Optional[int] = None) -> str:
+def format_error(message: str, line_num: int | None = None) -> str:
     """
     Format an error message
     
