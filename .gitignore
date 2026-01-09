@@ -70,6 +70,7 @@ venv.bak/
 
 # IDEs
 .vscode/
+.vs/
 .idea/
 
 # OS
