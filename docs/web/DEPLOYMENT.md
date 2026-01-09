@@ -6,6 +6,13 @@
 
 Create `docker-compose.yml` in the web directory:
 
+**Note**: Replace `${DB_USER}` and `${DB_PASSWORD}` with your actual database credentials, or create a `.env` file with these variables (never commit .env files to version control):
+
+```env
+DB_USER=your_db_username
+DB_PASSWORD=your_secure_password_here
+```
+
 ```yaml
 version: '3.8'
 
@@ -16,7 +23,7 @@ services:
       - "5000:5000"
     environment:
       - FLASK_ENV=production
-      - DATABASE_URL=postgresql://user:pass@db:5432/projectai
+      - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/projectai
     depends_on:
       - db
 
@@ -30,8 +37,8 @@ services:
   db:
     image: postgres:15
     environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=pass
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=projectai
     volumes:
       - postgres_data:/var/lib/postgresql/data

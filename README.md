@@ -138,6 +138,8 @@ Curates persistent and streaming knowledge, orchestrates agent council (planning
 
 ## 🦺 Security & Defense
 
+> **🚨 SECURITY NOTICE (Jan 2026)**: A `.env` file with real credentials was accidentally committed. All exposed credentials have been rotated. See [`SECURITY_NOTICE.md`](SECURITY_NOTICE.md) for details. Contributors: **DO NOT** use any credentials found in git history - they are compromised and revoked.
+
 - **Four Laws/Prime Directive:** Non-bypassable, ALL actions checked
 - **CommandOverride:** Auth, session management, persistent or master disable, audit, emergency lockdown
 - **Black Vault:** Inaccessible storage for unsafe/denied content (SHA256 fingerprinting, AI cannot recover)
