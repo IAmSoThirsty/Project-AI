@@ -78,7 +78,6 @@ venv.bak/
 *.pfx
 secrets.json
 credentials.json
-secret_scan_report.json
 
 # IDEs
 .vscode/
