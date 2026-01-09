@@ -17,13 +17,13 @@ A security scan detected that the `.env` file containing real API keys and passw
 
 1. **Rotate OpenAI API Key** (Do this NOW)
    - Go to https://platform.openai.com/api-keys
-   - REVOKE the key starting with `sk-proj-cFQp...`
+   - REVOKE the exposed key (starts with `sk-proj-****...`)
    - Create a NEW key
    - Update your local `.env` file
 
 2. **Rotate SMTP Credentials** (Do this NOW)
    - Go to https://myaccount.google.com/apppasswords
-   - REVOKE the app password `R9609936!`
+   - REVOKE the exposed app password
    - Generate a NEW app password
    - Update your local `.env` file
 
