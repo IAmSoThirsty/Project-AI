@@ -197,6 +197,12 @@ class ThirstyLangValidator:
                 "message": "T-A-R-L defensive capabilities validated",
                 "test_summary": result.stdout[-300:] if result.stdout else ""
             }
+        except subprocess.TimeoutExpired:
+            return {
+                "status": "failed",
+                "error": "Security test execution timed out after 30 seconds",
+                "message": "T-A-R-L security test timeout"
+            }
         except Exception as e:
             return {
                 "status": "failed",
