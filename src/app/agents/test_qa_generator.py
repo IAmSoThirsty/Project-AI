@@ -2,12 +2,16 @@
 
 Generates basic pytest stubs for generated modules and runs pytest to validate.
 Conservative: it only creates simple asserts reflecting generated function signatures.
+
+Security Note: Uses subprocess to run pytest, a trusted development tool.
+pytest command is resolved via shutil.which for security.
 """
 from __future__ import annotations
 
 import logging
 import os
-import subprocess
+import shutil
+import subprocess  # nosec B404 - subprocess used for trusted pytest execution
 import time
 from typing import Any
 
@@ -67,13 +71,27 @@ class TestQAGenerator:
             return {"success": False, "error": str(e)}
 
     def run_tests(self, tests_dir: str | None = None) -> dict[str, Any]:
+        """Run pytest on generated tests.
+        
+        Security: pytest command resolved via shutil.which for security.
+        """
         # Prefer running only the latest generated test directory to avoid unrelated tests
         run_dir = tests_dir or self._last_test_dir or os.path.join(self.data_dir, "generated_tests")
         if not os.path.exists(run_dir):
             return {"success": True, "ran": 0}
         try:
-            res = subprocess.run(["pytest", run_dir, "-q"], capture_output=True, text=True)
+            # Resolve pytest path for security
+            pytest_cmd = shutil.which("pytest")
+            if not pytest_cmd:
+                return {"success": False, "error": "pytest not found"}
+
+            # nosec B603, B607 - pytest is a trusted dev tool, path resolved via shutil.which
+            res = subprocess.run(
+                [pytest_cmd, run_dir, "-q"], capture_output=True, text=True, timeout=60
+            )  # nosec B603, B607
             return {"success": res.returncode == 0, "output": res.stdout + res.stderr, "returncode": res.returncode}
+        except subprocess.TimeoutExpired:
+            return {"success": False, "error": "timeout"}
         except Exception as e:
             logger.exception("Failed to run tests: %s", e)
             return {"success": False, "error": str(e)}

@@ -66,7 +66,7 @@ class CICheckerAgent:
                     capture_output=True,
                     text=True,
                     timeout=180,  # 3 minute timeout for CI checks
-                )
+                )  # nosec B603
                 report["results"]["pytest"] = {"rc": res.returncode, "output": res.stdout + res.stderr}
             except subprocess.TimeoutExpired:
                 logger.warning("pytest command timed out after 180 seconds")
@@ -87,7 +87,7 @@ class CICheckerAgent:
                     capture_output=True,
                     text=True,
                     timeout=60,  # 1 minute timeout (ruff is fast)
-                )
+                )  # nosec B603
                 report["results"]["ruff"] = {"rc": res.returncode, "output": res.stdout + res.stderr}
             except subprocess.TimeoutExpired:
                 logger.warning("ruff command timed out after 60 seconds")

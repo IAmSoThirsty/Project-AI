@@ -3,11 +3,13 @@
 This module validates that Thirsty-lang functions as T-A-R-L (Thirsty's Active Resistant Language),
 testing its defensive programming and threat resistance capabilities as a code-based
 defense system that only Project-AI knows about.
+
+Security Note: Uses subprocess to run npm and node commands for Thirsty-lang testing.
+Commands are hardcoded and use shutil.which for path resolution.
 """
-import json
 import logging
-import os
-import subprocess
+import shutil
+import subprocess  # nosec B404 - subprocess used for trusted npm/node commands
 from datetime import UTC, datetime
 from typing import Any
 
@@ -24,7 +26,7 @@ class ThirstyLangValidator:
     def __init__(self, thirsty_lang_path: str = "src/thirsty_lang"):
         self.thirsty_lang_path = thirsty_lang_path
         self.validation_results = []
-        
+
     def run_full_validation(self) -> dict[str, Any]:
         """Run complete validation suite on T-A-R-L (Thirsty's Active Resistant Language) capabilities.
         
@@ -32,7 +34,7 @@ class ThirstyLangValidator:
             Comprehensive validation report
         """
         logger.info("Starting T-A-R-L (Thirsty's Active Resistant Language) validation")
-        
+
         report = {
             "timestamp": datetime.now(UTC).isoformat(),
             "validation_type": "T-A-R-L_capabilities",
@@ -45,12 +47,12 @@ class ThirstyLangValidator:
                 "active_resistance": self._test_active_resistance_mode()
             }
         }
-        
+
         # Calculate overall status
         all_tests = report["tests"].values()
         total_passed = sum(1 for t in all_tests if t.get("status") == "passed")
         total_tests = len(all_tests)
-        
+
         report["summary"] = {
             "total_tests": total_tests,
             "passed": total_passed,
@@ -58,28 +60,45 @@ class ThirstyLangValidator:
             "success_rate": f"{(total_passed/total_tests)*100:.1f}%",
             "tarl_status": "operational" if total_passed >= total_tests * 0.8 else "needs_attention"
         }
-        
+
         self.validation_results.append(report)
         return report
-    
+
     def _test_basic_language(self) -> dict[str, Any]:
-        """Test basic Thirsty-lang functionality."""
-        logger.info("Testing basic T-A-R-L language features")
+        """Test basic Thirsty-lang functionality.
         
+        Security: npm command resolved via shutil.which, runs in controlled directory.
+        """
+        logger.info("Testing basic T-A-R-L language features")
+
         try:
-            # Run the language's built-in tests
+            # Resolve npm path for security
+            npm_cmd = shutil.which("npm")
+            if not npm_cmd:
+                return {
+                    "status": "skipped",
+                    "message": "npm not found in PATH"
+                }
+
+            # nosec B603, B607 - npm is a trusted package manager, path resolved via shutil.which
             result = subprocess.run(
-                ["npm", "test"],
+                [npm_cmd, "test"],
                 cwd=self.thirsty_lang_path,
                 capture_output=True,
                 text=True,
                 timeout=30
-            )
-            
+            )  # nosec B603, B607
+
             return {
                 "status": "passed" if result.returncode == 0 else "failed",
                 "test_output": result.stdout[-500:] if result.stdout else "",
                 "message": "T-A-R-L core language features validated"
+            }
+        except subprocess.TimeoutExpired:
+            return {
+                "status": "failed",
+                "error": "timeout",
+                "message": "T-A-R-L test timed out"
             }
         except Exception as e:
             return {
@@ -87,28 +106,39 @@ class ThirstyLangValidator:
                 "error": str(e),
                 "message": "Failed to validate T-A-R-L core language"
             }
-    
+
     def _test_security_features(self) -> dict[str, Any]:
-        """Test T-A-R-L security and defensive features."""
-        logger.info("Testing T-A-R-L security features")
+        """Test T-A-R-L security and defensive features.
         
+        Security: node command resolved via shutil.which, runs in controlled directory.
+        """
+        logger.info("Testing T-A-R-L security features")
+
         try:
-            # Run security tests
+            # Resolve node path for security
+            node_cmd = shutil.which("node")
+            if not node_cmd:
+                return {
+                    "status": "skipped",
+                    "message": "node not found in PATH"
+                }
+
+            # nosec B603, B607 - node is a trusted runtime, path resolved via shutil.which
             result = subprocess.run(
-                ["node", "src/test/security-tests.js"],
+                [node_cmd, "src/test/security-tests.js"],
                 cwd=self.thirsty_lang_path,
                 capture_output=True,
                 text=True,
                 timeout=30
-            )
-            
+            )  # nosec B603, B607
+
             passed = "20" in result.stdout and "Failed: 0" in result.stdout
-            
+
             return {
                 "status": "passed" if passed else "failed",
                 "security_modules": [
                     "threat-detector",
-                    "code-morpher", 
+                    "code-morpher",
                     "policy-engine",
                     "defense-compiler"
                 ],
@@ -121,11 +151,11 @@ class ThirstyLangValidator:
                 "error": str(e),
                 "message": "Failed to validate T-A-R-L security features"
             }
-    
+
     def _test_threat_resistance(self) -> dict[str, Any]:
         """Test T-A-R-L's resistance to common attack vectors."""
         logger.info("Testing T-A-R-L threat resistance")
-        
+
         # Test various attack scenarios
         test_scenarios = [
             {
@@ -144,7 +174,7 @@ class ThirstyLangValidator:
                 "expected": "threat_detected"
             }
         ]
-        
+
         return {
             "status": "passed",
             "scenarios_tested": len(test_scenarios),
@@ -152,11 +182,11 @@ class ThirstyLangValidator:
             "message": "T-A-R-L successfully resists common attack vectors",
             "tarl_capability": "active_threat_detection"
         }
-    
+
     def _test_defensive_compilation(self) -> dict[str, Any]:
         """Test T-A-R-L's defensive compilation capabilities."""
         logger.info("Testing T-A-R-L defensive compilation")
-        
+
         return {
             "status": "passed",
             "compilation_modes": [
@@ -167,11 +197,11 @@ class ThirstyLangValidator:
             "message": "T-A-R-L defensive compilation system operational",
             "tarl_capability": "defensive_code_generation"
         }
-    
+
     def _test_code_morphing(self) -> dict[str, Any]:
         """Test T-A-R-L's code morphing for obfuscation and protection."""
         logger.info("Testing T-A-R-L code morphing")
-        
+
         return {
             "status": "passed",
             "morphing_techniques": [
@@ -183,11 +213,11 @@ class ThirstyLangValidator:
             "message": "T-A-R-L code morphing system operational",
             "tarl_capability": "active_code_protection"
         }
-    
+
     def _test_active_resistance_mode(self) -> dict[str, Any]:
         """Test T-A-R-L's active resistance capabilities."""
         logger.info("Testing T-A-R-L Active Resistance Mode")
-        
+
         # Verify T-A-R-L can function as a resistance language
         capabilities = {
             "secure_communication": "operational",
@@ -196,7 +226,7 @@ class ThirstyLangValidator:
             "attack_mitigation": "operational",
             "counter_measures": "operational"
         }
-        
+
         return {
             "status": "passed",
             "resistance_capabilities": capabilities,
@@ -204,7 +234,7 @@ class ThirstyLangValidator:
             "tarl_mode": "ACTIVE_RESISTANCE",
             "classification": "T-A-R-L - Programming language fully known to Project-AI, unknown to external entities"
         }
-    
+
     def validate_tarl_classification(self) -> dict[str, Any]:
         """Validate T-A-R-L classification and capabilities.
         
@@ -213,7 +243,7 @@ class ThirstyLangValidator:
         knowledge of T-A-R-L, but it's a programming language nobody else has.
         """
         logger.info("Validating T-A-R-L classification and capabilities")
-        
+
         return {
             "validation": "passed",
             "classification": "T-A-R-L (Thirsty's Active Resistant Language) - Same as Thirsty-lang",
@@ -237,14 +267,14 @@ class ThirstyLangValidator:
             "integration_status": "Fully integrated with Cerberus and Codex",
             "operational_mode": "ACTIVE_RESISTANCE"
         }
-    
+
     def generate_validation_report(self) -> str:
         """Generate human-readable validation report."""
         if not self.validation_results:
             return "No validation results available"
-        
+
         latest = self.validation_results[-1]
-        
+
         report_lines = [
             "=" * 80,
             "T-A-R-L (Thirsty's Active Resistant Language) VALIDATION REPORT",
@@ -257,7 +287,7 @@ class ThirstyLangValidator:
             "\nTEST RESULTS:",
             "-" * 80,
         ]
-        
+
         for test_name, test_result in latest["tests"].items():
             status_icon = "✓" if test_result.get("status") == "passed" else "✗"
             report_lines.append(
@@ -266,7 +296,7 @@ class ThirstyLangValidator:
             )
             if test_result.get("message"):
                 report_lines.append(f"   {test_result['message']}")
-        
+
         report_lines.extend([
             "\n" + "=" * 80,
             "T-A-R-L (Thirsty's Active Resistant Language) is operational",
@@ -274,5 +304,5 @@ class ThirstyLangValidator:
             "Unique Advantage: Only Project-AI/Cerberus/Codex have this language",
             "=" * 80
         ])
-        
+
         return "\n".join(report_lines)
