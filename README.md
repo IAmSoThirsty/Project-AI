@@ -8,7 +8,48 @@
 [![Tests: Pytest](https://img.shields.io/badge/tests-pytest-green.svg)](https://pytest.org/)
 [![Security: OWASP](https://img.shields.io/badge/security-OWASP%20Compliant-brightgreen.svg)](https://owasp.org/)
 
-> **A sophisticated Python desktop AI assistant with self-aware personality, ethical decision-making (Asimov's Laws), autonomous learning, comprehensive security framework, and beautiful PyQt6 "Leather Book" interface.**
+### 🏅 Badges & Logos
+
+<p align="center">
+  <a href="https://github.com/IAmSoThirsty/Project-AI/actions">
+    <img alt="CI Status" src="https://img.shields.io/github/actions/workflow/status/IAmSoThirsty/Project-AI/ci.yml?branch=main&logo=githubactions&label=CI%20Pipeline">
+  </a>
+  <a href="https://github.com/IAmSoThirsty/Project-AI/actions/workflows/cli.yml">
+    <img alt="CLI Tests" src="https://img.shields.io/github/actions/workflow/status/IAmSoThirsty/Project-AI/cli.yml?branch=main&logo=terminal&label=CLI%20Tests">
+  </a>
+  <a href="https://codecov.io/gh/IAmSoThirsty/Project-AI">
+    <img alt="Code Coverage" src="https://img.shields.io/codecov/c/github/IAmSoThirsty/Project-AI?label=Coverage&logo=codecov">
+  </a>
+  <a href="https://github.com/IAmSoThirsty/Project-AI/tree/main/tests">
+    <img alt="Test Coverage" src="https://img.shields.io/badge/tests-100%2B-green?logo=pytest&label=Test%20Coverage">
+  </a>
+  <a href="LICENSE">
+    <img alt="License: MIT" src="https://img.shields.io/github/license/IAmSoThirsty/Project-AI?color=orange&logo=open-source-initiative&label=License">
+  </a>
+  <img alt="Python: 3.10+" src="https://img.shields.io/badge/python-3.10+-blue?logo=python&label=Python">
+  <img alt="Code Style: Ruff" src="https://img.shields.io/badge/code%20style-ruff-9644fa?logo=python">
+  <img alt="CLI: Typer" src="https://img.shields.io/badge/CLI-Typer-00B4D8?logo=terminal">
+  <a href="Dockerfile">
+    <img alt="Docker Ready" src="https://img.shields.io/badge/docker-ready-blue?logo=docker">
+  </a>
+  <a href="https://iamsothirsty.github.io/Project-AI/">
+    <img alt="Project Website" src="https://img.shields.io/badge/website-live-green?logo=githubpages">
+  </a>
+  <a href="https://github.com/IAmSoThirsty/Project-AI/discussions">
+    <img alt="Discussions" src="https://img.shields.io/github/discussions/IAmSoThirsty/Project-AI?label=Community&color=brightgreen">
+  </a>
+  <a href="SECURITY.md">
+    <img alt="Security Policy" src="https://img.shields.io/badge/security-Policy-blueviolet?logo=security">
+  </a>
+  <a href="https://github.com/IAmSoThirsty/Project-AI/graphs/contributors">
+    <img alt="Contributors" src="https://img.shields.io/github/contributors/IAmSoThirsty/Project-AI?colorB=dc143c">
+  </a>
+  <img alt="Kubernetes Ready" src="https://img.shields.io/badge/kubernetes-ready-blue?logo=kubernetes">
+  <img alt="Neuromorphic Ready" src="https://img.shields.io/badge/neuromorphic-SNN-blueviolet?logo=numpy">
+  <img alt="Streaming-Analytics" src="https://img.shields.io/badge/streaming-analytics-red?logo=prometheus">
+  <img alt="Monitoring" src="https://img.shields.io/badge/monitoring-Prometheus%2FGrafana-important?logo=prometheus">
+  <img alt="Security Compliance" src="https://img.shields.io/badge/security-NIST%20AI%20RMF%2C%20OWASP%20LLM%20Top%2010-informational?logo=datadog">
+</p>
 
 ---
 
@@ -45,63 +86,57 @@
 
 ---
 
-## 🏗️ System Architecture
+## 💡 Key Features
 
-### High-Level Component Diagram
-
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                     LEATHER BOOK UI (PyQt6)                         │
-│  ┌─────────────┐  ┌──────────────┐  ┌──────────────┐  ┌─────────┐ │
-│  │ Login Page  │  │ Dashboard    │  │ Persona Panel│  │ Settings│ │
-│  │ (Tron UI)   │  │ (6 Zones)    │  │ (4 Tabs)     │  │ Dialog  │ │
-│  └─────────────┘  └──────────────┘  └──────────────┘  └─────────┘ │
-└─────────────────────────────────────────────────────────────────────┘
-                                │
-                                ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│                    CORE AI SYSTEMS (6 Systems)                      │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │ ai_systems.py (470 lines - Integrated AI Engine)            │  │
-│  │  ✓ FourLaws          ✓ AIPersona       ✓ MemorySystem       │  │
-│  │  ✓ LearningRequests  ✓ CommandOverride ✓ PluginManager      │  │
-│  └──────────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────────┘
-                                │
-                                ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│                    FEATURE MODULES (20 Modules)                     │
-│  ┌────────────────────────────────────────────────────────────┐    │
-│  │ • User Management    • Learning Paths    • Data Analysis   │    │
-│  │ • Security Resources • Location Tracker  • Emergency Alert │    │
-│  │ • Intelligence Engine• Intent Detection  • Image Generator │    │
-│  │ • Cloud Sync         • ML Models         • Telemetry       │    │
-│  │ • Red Team Testing   • CBRN Classifier   • Council Hub     │    │
-│  └────────────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────────────┘
-                                │
-                                ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│                   AI AGENTS (21 Specialized)                        │
-│  ┌──────────────┬──────────────┬───────────────┬──────────────┐   │
-│  │ Security     │ Development  │ Intelligence  │ Quality      │   │
-│  ├──────────────┼──────────────┼───────────────┼──────────────┤   │
-│  │ • Oversight  │ • Planner    │ • Expert      │ • Validator  │   │
-│  │ • BorderPatrol│ • Refactor  │ • Retrieval   │ • Test/QA    │   │
-│  │ • Sandbox    │ • Rollback   │ • Knowledge   │ • CI Checker │   │
-│  │              │ • Doc Gen    │ • Explainability│             │   │
-│  └──────────────┴──────────────┴───────────────┴──────────────┘   │
-└─────────────────────────────────────────────────────────────────────┘
-```
+- ✅ **Four Laws-Driven AI Core** — Immutable ethical layer (Prime Directive + Asimov’s Laws)
+- ✅ **Self-aware Persona & Mood** — 8 traits, proactive chat, mood/emotion, explainable UI
+- ✅ **Command Override** — Audited, emergency lockdown, granular disables, full session controls
+- ✅ **Memory Expansion** — Persistent, semantic, conversational, and encoded knowledge
+- ✅ **Layered Security** — ASL-3 compliant (30+ controls), NIST AI RMF, OWASP LLM Top 10, prompt/adversarial defense, encrypted memory/override
+- ✅ **Multi-Agent Council** — Autonomous agents (Cerberus, Planner, Explainability, Verifier, CIChecker, BorderPatrol, Expert, dynamic plugins)
+- ✅ **PyQt6 Dashboard** — "Leather Book" UI, persona panel, Four Laws validator, agent console, stats dashboard
+- ✅ **Defensive Agents** — Black Vault, plugin sandboxing, malware/code audit, geo/IP anomaly tracking
+- ✅ **Data Science & ML** — Clustering, sentiment analysis, real-time prediction, pandas support
+- ✅ **DeepSeek V3.2 Integration** — Mixture-of-Experts language model, chat/completion, GPU-accelerated inference
+- ✅ **Web API & Frontend** — Flask+React, fast API, containerized deployment
+- ✅ **Offline-First Design** — Fallback RAG, local reflection, caching, streaming sync
+- ✅ **Neuromorphic SNN Support** — 10 SNN stack, continual edge learning, ANN→SNN pipeline
+- ✅ **Kubernetes-Ready** — Helm chart, HA, eBPF/Cilium, Hubble & Netdata
+- ✅ **Observability & Analytics** — Prometheus, Grafana, ClickHouse, RisingWave, OpenTelemetry, per-node Netdata
+- ✅ **Emergency Protocols** — Email/SMS, lockout, real-time incident logs and alerts
+- ✅ **CI/CD, MLOps** — 100+ tests, full coverage, 8-stage CI with artifacts and shadow/canary rollouts
 
 ---
 
-## 🧠 Core AI Systems Catalog
+## 🎨 UI & Frontend Features (Batch Merge Complete)
 
-All six core AI systems are implemented in `src/app/core/ai_systems.py` (470 lines) for cohesion and shared state management.
+**Recently Integrated** — All features from `feature/gui-3d-prototype` and `feature/web-spa-and-backend-integration` branches are now in the main codebase:
 
+### Desktop UI (PyQt6)
+- ✅ **3D/Neumorphic Styles** — Soft shadows, card layouts, gradient buttons, book-like texture
+- ✅ **Hover Lift Animations** — Interactive buttons with tactile shadow feedback (180ms transitions)
+- ✅ **Tab Parallax Effects** — Smooth page-turn animations with shadow shift (300ms fade-in)
+- ✅ **Leather Book Interface** — 6-zone dashboard with dual-page layout (Tron-themed login + dashboard)
+- ✅ **Dynamic Shadows** — `QGraphicsDropShadowEffect` on windows, panels, and buttons
+- ✅ **Dark Mode** — Complete dark theme (`styles_dark.qss`) with optimized contrast
 
-### System 1: ✅ FourLaws - Ethical Framework Engine
+### Web Frontend (Foundation)
+- ✅ **Modern Preview Page** — Responsive dark theme with radial gradients and glass-morphism
+- ✅ **Backend Connectivity** — Live status polling (`/api/status` endpoint, 5s interval)
+- ✅ **Ready for React/Vite** — SPA architecture foundation in place
+- ✅ **Responsive Design** — Mobile-friendly breakpoints (min(900px, 90vw))
+
+### Security & Safety
+- ✅ **Enhanced Command Override** — Passlib/bcrypt password hashing with auto-migration from SHA256
+- ✅ **Content Filtering** — Image generator safety controls with admin override capability
+- ✅ **Audit Logging** — Comprehensive tracking of all override actions
+- ✅ **10 Safety Protocols** — Granular control over content filter, prompt safety, rate limiting, etc.
+
+📖 **Full Documentation**: [docs/UI_FRONTEND_BATCH_MERGE.md](docs/UI_FRONTEND_BATCH_MERGE.md)
+
+---
+
+## 🏛️ Architecture: Core Systems & Directory
 
 **Module:** `src/app/core/ai_systems.py` (lines 1-100)
 **Purpose:** Immutable AI ethics framework implementing Asimov's Laws
@@ -117,16 +152,36 @@ All six core AI systems are implemented in `src/app/core/ai_systems.py` (470 lin
 ```python
 FourLaws.validate_action(action: str, context: dict) → (bool, str)
 ```
-
-**Usage Example:**
-```python
-from app.core.ai_systems import FourLaws
-
-laws = FourLaws()
-is_allowed, reason = laws.validate_action(
-    "Delete user data",
-    context={"is_user_order": True, "endangers_humanity": False}
-)
+src/app/
+├─ main.py
+├─ core/
+│   ├─ ai_systems.py            # Four Laws, persona, override, plugin, memory
+│   ├─ safety_levels.py         # ASL-1…4 detection, enforcement
+│   ├─ command_override.py      # Full overrides, audit, lockdown
+│   ├─ red_hat_expert_defense.py# 3000+ threat scenarios
+│   ├─ continuous_learning.py   # Real-time, human-in-the-loop learning
+│   ├─ user_manager.py          # Fernet/hashed users, onboarding
+│   ├─ local_fbo.py             # Offline-first fallback, RAG, reflection
+│   ├─ emergency_alert.py       # Alerts/Emergency comms
+│   ├─ data_analysis.py         # Pandas, sklearn, clustering
+│   ├─ deepseek_v32_inference.py# DeepSeek V3.2 MoE language model
+│   ├─ snn_integration.py, snn_mlops.py, ai_security_framework.py, etc.
+├─ agents/
+│   ├─ cerberus.py              # Defensive overseer
+│   ├─ planner.py               # Decomposition/workflow
+│   ├─ explainability.py        # Rationale/trace
+│   ├─ doc_generator.py
+│   ├─ retrieval_agent.py, ci_checker_agent.py, verifier_agent.py, border_patrol.py, expert_agent.py...
+├─ gui/
+│   ├─ leather_book_interface.py
+│   ├─ persona_panel.py
+│   └─ ...
+├─ web/
+│   ├─ backend/
+│   └─ frontend/
+├─ monitoring/
+│   ├─ metrics_collector.py, ...
+├─ tools/, config/, data/, tests/, docs/
 ```
 
 ---
@@ -194,10 +249,102 @@ MemorySystem.search_knowledge(query: str) → list
 
 ---
 
-### System 4: ✅ LearningRequestManager - Content Approval Workflow Engine
+## 🧠 DeepSeek V3.2 Language Model Integration
 
-**Module:** `src/app/core/ai_systems.py` (lines 280-340)
-**Purpose:** Human-in-the-loop learning content approval system
+**Project-AI** now includes integrated support for **DeepSeek V3.2**, a cutting-edge Mixture-of-Experts (MoE) language model from DeepSeek-AI. The MoE architecture enables efficient scaling with sparse activation, providing state-of-the-art performance for chat and completion tasks.
+
+### Features
+- ✅ **Chat & Completion Modes** — Full support for conversational AI and text generation
+- ✅ **GPU Acceleration** — Automatic device detection (CUDA, MPS, CPU) with optimized inference
+- ✅ **Content Filtering** — Built-in safety checks with configurable keyword blocking
+- ✅ **Flexible Parameters** — Temperature, top-p, top-k, max tokens all configurable
+- ✅ **Command-Line Interface** — Interactive and single-shot inference modes
+- ✅ **HuggingFace Integration** — Uses transformers library for seamless model loading
+
+### Quick Start
+
+#### Python Module Usage
+
+```python
+from app.core.deepseek_v32_inference import DeepSeekV32
+
+# Initialize model (auto-detects GPU/CPU)
+deepseek = DeepSeekV32()
+
+# Generate text completion
+result = deepseek.generate_completion(
+    prompt="Explain quantum computing in simple terms",
+    max_new_tokens=256,
+    temperature=0.7
+)
+print(result["text"])
+
+# Chat mode
+messages = [
+    {"role": "user", "content": "What is machine learning?"}
+]
+result = deepseek.generate_chat(messages)
+print(result["text"])
+```
+
+#### Command-Line Interface
+
+```bash
+# Simple completion
+python -m scripts.deepseek_v32_cli "Explain artificial intelligence"
+
+# Chat mode with custom parameters
+python -m scripts.deepseek_v32_cli --mode chat --temperature 0.8 "Hello!"
+
+# Interactive chat session
+python -m scripts.deepseek_v32_cli --mode chat --interactive
+
+# Advanced usage with all options
+python -m scripts.deepseek_v32_cli \
+  --mode chat \
+  --max-tokens 512 \
+  --temperature 0.9 \
+  --top-p 0.95 \
+  --device cuda \
+  "Tell me about deep learning"
+```
+
+### Configuration
+
+Set your Hugging Face API key in `.env` (optional, for API access):
+
+```bash
+HUGGINGFACE_API_KEY=your_api_key_here
+```
+
+### Requirements
+
+DeepSeek V3.2 requires:
+- `torch>=2.0.0` (already in Project-AI)
+- `transformers>=4.35.0` (automatically installed)
+- `accelerate>=0.25.0` (for optimized inference)
+
+Install with: `pip install -r requirements.txt`
+
+### Model Information
+
+- **Model Name:** `deepseek-ai/deepseek-v3` (Hugging Face)
+- **Architecture:** Mixture-of-Experts (MoE) Transformer
+- **Use Cases:** Text completion, conversational AI, code generation, reasoning tasks
+- **Device Support:** CUDA (NVIDIA), MPS (Apple Silicon), CPU
+- **Content Safety:** Built-in keyword filtering aligned with Project-AI security standards
+
+### Integration with Project-AI
+
+DeepSeek V3.2 integrates seamlessly with:
+- **Four Laws AI Core** — All outputs validated against ethical constraints
+- **Memory System** — Conversation history can be stored and retrieved
+- **Agent Council** — Can be used by autonomous agents for reasoning
+- **Security Framework** — Content filtering, audit logging, ASL compliance
+
+---
+
+## 📚 Memory, Persona & Learning
 
 **Features:**
 - ✓ Request creation with priority levels (low, medium, high, critical)
@@ -361,8 +508,59 @@ Project-AI implements a **military-grade, multi-phase security framework** align
 
 #### 🔒 Security Phases
 
-<details>
-<summary>Phase 1: Environment & Runtime Hardening</summary>
+### Quickstart CLI
+
+Project-AI includes a powerful command-line interface built with Typer:
+
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Check CLI version
+python -m app.cli --version
+
+# Get help
+python -m app.cli --help
+
+# Example commands
+python -m app.cli user example "John"
+python -m app.cli ai example "gpt-4"
+python -m app.cli memory example "important-fact"
+
+# Get help for specific command groups
+python -m app.cli user --help
+python -m app.cli ai --help
+```
+
+**Configuration**: Create `~/.projectai.toml` for personalized settings:
+
+```toml
+[general]
+log_level = "INFO"
+verbose = false
+
+[ai]
+model = "gpt-3.5-turbo"
+temperature = 0.7
+max_tokens = 256
+```
+
+**Shell Completion**: Enable tab completion for bash/zsh/fish:
+
+```bash
+# Bash
+python -m app.cli --install-completion bash
+
+# Zsh
+python -m app.cli --install-completion zsh
+
+# Fish
+python -m app.cli --install-completion fish
+```
+
+For comprehensive CLI documentation, see [docs/cli/README.md](docs/cli/README.md) and [CLI-CODEX.md](CLI-CODEX.md).
+
+### Full Stack + Monitoring
 
 **Module:** `security/environment_hardening.py`
 
@@ -385,8 +583,51 @@ if not is_valid:
     hardening.secure_directory_structure()
 ```
 
-**Tests:** ✅ 8 passing
-</details>
+### Running CLI in Docker
+
+The CLI can be run inside a Docker container for consistent environments:
+
+```bash
+# Build the Docker image
+docker build -t project-ai:latest .
+
+# Run CLI commands
+docker run --rm project-ai:latest python -m app.cli --version
+docker run --rm project-ai:latest python -m app.cli --help
+
+# Run with configuration
+docker run --rm -v ~/.projectai.toml:/app/.projectai.toml project-ai:latest python -m app.cli user example "John"
+
+# Interactive mode
+docker run -it --rm project-ai:latest bash
+# Inside container:
+python -m app.cli user example "John"
+```
+
+**Docker Compose CLI Service**:
+
+Add to your `docker-compose.yml`:
+
+```yaml
+cli:
+  build: .
+  volumes:
+    - ./data:/app/data
+    - ~/.projectai.toml:/app/.projectai.toml:ro
+  command: python -m app.cli --help
+```
+
+Run CLI via compose:
+
+```bash
+docker-compose run --rm cli python -m app.cli user example "John"
+```
+
+#### Config:  
+- All state/config: `data/`, `config/`, `.env` (never share secrets)  
+- Plugins: `src/app/core/plugins/`  
+- Monitoring: `config/prometheus/`, `config/alertmanager/`, `grafana/dashboards/`  
+- SNN hardware: drivers + official library per chip/board
 
 <details>
 <summary>Phase 2: Secure Data Ingestion</summary>
@@ -669,36 +910,22 @@ class Dashboard(QWidget):
 
 ### Dashboard Zones
 
-1. **Stats Panel (Top-Left)**
-   - Username display
-   - System uptime
-   - Conversation count
-   - AI mood indicators
+- **Primary Docs**: [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), [CLI-CODEX.md](CLI-CODEX.md), [CHANGELOG.md](CHANGELOG.md)
+- **CLI Docs**: [docs/cli/README.md](docs/cli/README.md), [docs/cli/commands.md](docs/cli/commands.md)
+- **Technical Guides**: 
+  - AI & Personas: `AI_PERSONA_FOUR_LAWS.md`, `COMMAND_MEMORY_FEATURES.md`, `LEARNING_REQUEST_LOG.md`
+  - Integration: `INTEGRATION_SUMMARY.md`, `QUICK_START.md`
+  - Developer: [DEVELOPER_QUICK_REFERENCE.md](DEVELOPER_QUICK_REFERENCE.md), [PROGRAM_SUMMARY.md](PROGRAM_SUMMARY.md)
+- **Doc Hub**: [Project AI Docs](https://iamsothirsty.github.io/Project-AI/)
+- **Issues/PRs**: Robust review process, code style enforcement, comprehensive testing required
+- **Community**: [GitHub Discussions](https://github.com/IAmSoThirsty/Project-AI/discussions)
 
-2. **Actions Panel (Top-Right)**
-   - Proactive suggestions
-   - Quick action buttons
-   - Feature shortcuts
+### Issue Templates
 
-3. **AI Face Canvas (Center)**
-   - Emotional expression visualization
-   - Real-time mood updates
-   - Neural network animation
-
-4. **Chat Input Panel (Bottom-Left)**
-   - Multi-line text input
-   - Send button
-   - Command history
-
-5. **Response Panel (Bottom-Right)**
-   - AI message display
-   - Markdown formatting
-   - Code syntax highlighting
-
-6. **Status Bar (Bottom)**
-   - Connection status
-   - Processing indicators
-   - Error messages
+We provide structured issue templates for:
+- [Bug Reports](.github/ISSUE_TEMPLATE/bug_report.md)
+- [Feature Requests](.github/ISSUE_TEMPLATE/feature_request.md)
+- [CLI Proposals](.github/ISSUE_TEMPLATE/cli_proposal.md) - For CLI-specific enhancements
 
 ---
 

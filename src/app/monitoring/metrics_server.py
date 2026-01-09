@@ -53,10 +53,10 @@ class MetricsHandler(BaseHTTPRequestHandler):
         """Serve main application metrics."""
         # Collect latest metrics from disk
         collector.collect_all_metrics()
-        
+
         # Generate metrics
         metrics_output = metrics.generate_metrics()
-        
+
         # Send response
         self.send_response(200)
         self.send_header('Content-Type', 'text/plain; version=0.0.4')
@@ -67,10 +67,10 @@ class MetricsHandler(BaseHTTPRequestHandler):
         """Serve AI system specific metrics."""
         # Collect AI-specific metrics
         collector.collect_all_metrics()
-        
+
         # Generate metrics (same as main, but different endpoint for organization)
         metrics_output = metrics.generate_metrics()
-        
+
         self.send_response(200)
         self.send_header('Content-Type', 'text/plain; version=0.0.4')
         self.end_headers()
@@ -79,9 +79,9 @@ class MetricsHandler(BaseHTTPRequestHandler):
     def _serve_security_metrics(self) -> None:
         """Serve security and Cerberus metrics."""
         collector.collect_all_metrics()
-        
+
         metrics_output = metrics.generate_metrics()
-        
+
         self.send_response(200)
         self.send_header('Content-Type', 'text/plain; version=0.0.4')
         self.end_headers()
@@ -90,9 +90,9 @@ class MetricsHandler(BaseHTTPRequestHandler):
     def _serve_plugin_metrics(self) -> None:
         """Serve plugin system metrics."""
         collector.collect_all_metrics()
-        
+
         metrics_output = metrics.generate_metrics()
-        
+
         self.send_response(200)
         self.send_header('Content-Type', 'text/plain; version=0.0.4')
         self.end_headers()
@@ -105,10 +105,10 @@ class MetricsHandler(BaseHTTPRequestHandler):
             'timestamp': time.time(),
             'service': 'project-ai-metrics'
         }
-        
+
         import json
         response = json.dumps(health_status).encode('utf-8')
-        
+
         self.send_response(200)
         self.send_header('Content-Type', 'application/json')
         self.end_headers()
@@ -120,7 +120,7 @@ class MetricsServer:
 
     def __init__(self, host: str = '0.0.0.0', port: int = 8000):
         """Initialize metrics server.
-        
+
         Args:
             host: Host to bind to
             port: Port to listen on
@@ -133,7 +133,7 @@ class MetricsServer:
 
     def start(self, daemon: bool = True) -> None:
         """Start the metrics server in a background thread.
-        
+
         Args:
             daemon: Whether to run as daemon thread
         """
@@ -144,17 +144,17 @@ class MetricsServer:
         try:
             self.server = HTTPServer((self.host, self.port), MetricsHandler)
             self._running = True
-            
+
             self.thread = threading.Thread(
                 target=self._run_server,
                 daemon=daemon,
                 name="PrometheusMetricsServer"
             )
             self.thread.start()
-            
+
             logger.info(f"Prometheus metrics server started on {self.host}:{self.port}")
             logger.info(f"Metrics available at http://{self.host}:{self.port}/metrics")
-            
+
         except Exception as e:
             logger.error(f"Failed to start metrics server: {e}")
             self._running = False
@@ -176,18 +176,18 @@ class MetricsServer:
             return
 
         self._running = False
-        
+
         if self.server:
             self.server.shutdown()
             self.server.server_close()
             logger.info("Prometheus metrics server stopped")
-        
+
         if self.thread and self.thread.is_alive():
             self.thread.join(timeout=5)
 
     def is_running(self) -> bool:
         """Check if server is running.
-        
+
         Returns:
             True if server is running
         """
@@ -196,11 +196,11 @@ class MetricsServer:
 
 def start_metrics_server(host: str = '0.0.0.0', port: int = 8000) -> MetricsServer:
     """Start Prometheus metrics server.
-    
+
     Args:
         host: Host to bind to
         port: Port to listen on
-        
+
     Returns:
         Running MetricsServer instance
     """
@@ -215,9 +215,9 @@ if __name__ == '__main__':
         level=logging.INFO,
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     )
-    
+
     server = start_metrics_server(port=8000)
-    
+
     try:
         print("Metrics server running. Press Ctrl+C to stop.")
         print("Available endpoints:")
@@ -226,11 +226,11 @@ if __name__ == '__main__':
         print("  http://localhost:8000/security-metrics - Security metrics")
         print("  http://localhost:8000/plugin-metrics - Plugin metrics")
         print("  http://localhost:8000/health - Health check")
-        
+
         # Keep main thread alive
         while server.is_running():
             time.sleep(1)
-            
+
     except KeyboardInterrupt:
         print("\nShutting down...")
         server.stop()
