@@ -23,7 +23,7 @@ class SandboxRunner:
     def run_in_sandbox(self, module_path: str, timeout: int = 5) -> dict[str, Any]:
         """Run a Python module in a sandboxed subprocess.
 
-        Security: Module path is validated to ensure it exists and is a file.
+        Security: Module path is validated to ensure it exists, is a file, and is a Python file.
         Python executable path is resolved using shutil.which for safety.
         """
         # Validate module path exists and is a file
@@ -31,14 +31,19 @@ class SandboxRunner:
             logger.error("Invalid module path: %s", module_path)
             return {"success": False, "error": "invalid_path"}
 
+        # Validate it's a Python file
+        if not module_path.endswith('.py'):
+            logger.error("Module path must be a Python file: %s", module_path)
+            return {"success": False, "error": "not_python_file"}
+
         # Ensure path is absolute and normalized to prevent path traversal
-        abs_path = os.path.abspath(module_path)
+        abs_path = os.path.normpath(os.path.abspath(module_path))
         
         # Get the absolute path to the Python executable
-        python_cmd = shutil.which("python")
+        # Check for python3 first as it's more common on modern systems
+        python_cmd = shutil.which("python3")
         if not python_cmd:
-            # Fallback to python3 if python not found
-            python_cmd = shutil.which("python3")
+            python_cmd = shutil.which("python")
         
         if not python_cmd:
             logger.error("Python executable not found in PATH")
