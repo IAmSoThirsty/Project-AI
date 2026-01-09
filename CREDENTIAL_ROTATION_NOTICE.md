@@ -12,12 +12,12 @@ Real secrets were accidentally committed to the repository in the `.env` file an
 
 ### Exposed Credentials
 
-The following credentials were found in commit history and **MUST BE ROTATED IMMEDIATELY**:
+The following types of credentials were found in commit history and **MUST BE ROTATED IMMEDIATELY**:
 
-1. **OpenAI API Key**: `sk-proj-cFQpst...` (full key was exposed)
+1. **OpenAI API Key**: Pattern `sk-proj-***` (full key was exposed in commit history)
 2. **SMTP Email Account**: `ProjectAiDevs@gmail.com`
-3. **SMTP Password**: `R9609936!`
-4. **Fernet Encryption Key**: `Qqyl2vCYY7W4AKuE-DmQLmL7IgXguMis_lFalqlliEc=`
+3. **SMTP Password**: (redacted - full password was exposed)
+4. **Fernet Encryption Key**: (redacted - full key was exposed)
 
 ### Immediate Actions Taken
 
@@ -39,7 +39,7 @@ The following credentials were found in commit history and **MUST BE ROTATED IMM
 # Step 1: Go to OpenAI API Keys page
 https://platform.openai.com/api-keys
 
-# Step 2: Find the exposed key (starts with sk-proj-cFQpst...)
+# Step 2: Find the exposed key (search for keys created around the exposure date)
 # Step 3: Click "Revoke" to invalidate it immediately
 
 # Step 4: Create a NEW API key with appropriate permissions
