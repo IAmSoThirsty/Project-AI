@@ -8,6 +8,9 @@
   <a href="https://github.com/IAmSoThirsty/Project-AI/actions">
     <img alt="CI Status" src="https://img.shields.io/github/actions/workflow/status/IAmSoThirsty/Project-AI/ci.yml?branch=main&logo=githubactions&label=CI%20Pipeline">
   </a>
+  <a href="https://github.com/IAmSoThirsty/Project-AI/actions/workflows/cli.yml">
+    <img alt="CLI Tests" src="https://img.shields.io/github/actions/workflow/status/IAmSoThirsty/Project-AI/cli.yml?branch=main&logo=terminal&label=CLI%20Tests">
+  </a>
   <a href="https://codecov.io/gh/IAmSoThirsty/Project-AI">
     <img alt="Code Coverage" src="https://img.shields.io/codecov/c/github/IAmSoThirsty/Project-AI?label=Coverage&logo=codecov">
   </a>
@@ -18,6 +21,8 @@
     <img alt="License: MIT" src="https://img.shields.io/github/license/IAmSoThirsty/Project-AI?color=orange&logo=open-source-initiative&label=License">
   </a>
   <img alt="Python: 3.10+" src="https://img.shields.io/badge/python-3.10+-blue?logo=python&label=Python">
+  <img alt="Code Style: Ruff" src="https://img.shields.io/badge/code%20style-ruff-9644fa?logo=python">
+  <img alt="CLI: Typer" src="https://img.shields.io/badge/CLI-Typer-00B4D8?logo=terminal">
   <a href="Dockerfile">
     <img alt="Docker Ready" src="https://img.shields.io/badge/docker-ready-blue?logo=docker">
   </a>
@@ -30,7 +35,6 @@
   <a href="SECURITY.md">
     <img alt="Security Policy" src="https://img.shields.io/badge/security-Policy-blueviolet?logo=security">
   </a>
-  <img alt="Code Style: Ruff" src="https://img.shields.io/badge/code%20style-ruff-9644fa?logo=python">
   <a href="https://github.com/IAmSoThirsty/Project-AI/graphs/contributors">
     <img alt="Contributors" src="https://img.shields.io/github/contributors/IAmSoThirsty/Project-AI?colorB=dc143c">
   </a>
@@ -67,6 +71,34 @@ Experience the next generation of AI orchestration—engineered from the ground 
 - ✅ **Observability & Analytics** — Prometheus, Grafana, ClickHouse, RisingWave, OpenTelemetry, per-node Netdata
 - ✅ **Emergency Protocols** — Email/SMS, lockout, real-time incident logs and alerts
 - ✅ **CI/CD, MLOps** — 100+ tests, full coverage, 8-stage CI with artifacts and shadow/canary rollouts
+
+---
+
+## 🎨 UI & Frontend Features (Batch Merge Complete)
+
+**Recently Integrated** — All features from `feature/gui-3d-prototype` and `feature/web-spa-and-backend-integration` branches are now in the main codebase:
+
+### Desktop UI (PyQt6)
+- ✅ **3D/Neumorphic Styles** — Soft shadows, card layouts, gradient buttons, book-like texture
+- ✅ **Hover Lift Animations** — Interactive buttons with tactile shadow feedback (180ms transitions)
+- ✅ **Tab Parallax Effects** — Smooth page-turn animations with shadow shift (300ms fade-in)
+- ✅ **Leather Book Interface** — 6-zone dashboard with dual-page layout (Tron-themed login + dashboard)
+- ✅ **Dynamic Shadows** — `QGraphicsDropShadowEffect` on windows, panels, and buttons
+- ✅ **Dark Mode** — Complete dark theme (`styles_dark.qss`) with optimized contrast
+
+### Web Frontend (Foundation)
+- ✅ **Modern Preview Page** — Responsive dark theme with radial gradients and glass-morphism
+- ✅ **Backend Connectivity** — Live status polling (`/api/status` endpoint, 5s interval)
+- ✅ **Ready for React/Vite** — SPA architecture foundation in place
+- ✅ **Responsive Design** — Mobile-friendly breakpoints (min(900px, 90vw))
+
+### Security & Safety
+- ✅ **Enhanced Command Override** — Passlib/bcrypt password hashing with auto-migration from SHA256
+- ✅ **Content Filtering** — Image generator safety controls with admin override capability
+- ✅ **Audit Logging** — Comprehensive tracking of all override actions
+- ✅ **10 Safety Protocols** — Granular control over content filter, prompt safety, rate limiting, etc.
+
+📖 **Full Documentation**: [docs/UI_FRONTEND_BATCH_MERGE.md](docs/UI_FRONTEND_BATCH_MERGE.md)
 
 ---
 
@@ -310,11 +342,103 @@ npm install && npm run build
 python -m src.app.main
 ```
 
+### Quickstart CLI
+
+Project-AI includes a powerful command-line interface built with Typer:
+
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Check CLI version
+python -m app.cli --version
+
+# Get help
+python -m app.cli --help
+
+# Example commands
+python -m app.cli user example "John"
+python -m app.cli ai example "gpt-4"
+python -m app.cli memory example "important-fact"
+
+# Get help for specific command groups
+python -m app.cli user --help
+python -m app.cli ai --help
+```
+
+**Configuration**: Create `~/.projectai.toml` for personalized settings:
+
+```toml
+[general]
+log_level = "INFO"
+verbose = false
+
+[ai]
+model = "gpt-3.5-turbo"
+temperature = 0.7
+max_tokens = 256
+```
+
+**Shell Completion**: Enable tab completion for bash/zsh/fish:
+
+```bash
+# Bash
+python -m app.cli --install-completion bash
+
+# Zsh
+python -m app.cli --install-completion zsh
+
+# Fish
+python -m app.cli --install-completion fish
+```
+
+For comprehensive CLI documentation, see [docs/cli/README.md](docs/cli/README.md) and [CLI-CODEX.md](CLI-CODEX.md).
+
 ### Full Stack + Monitoring
 
 ```bash
 docker compose up       # Full container/image stack
 ./scripts/deploy-monitoring.sh  # (Interactive; see docs for Helm option)
+```
+
+### Running CLI in Docker
+
+The CLI can be run inside a Docker container for consistent environments:
+
+```bash
+# Build the Docker image
+docker build -t project-ai:latest .
+
+# Run CLI commands
+docker run --rm project-ai:latest python -m app.cli --version
+docker run --rm project-ai:latest python -m app.cli --help
+
+# Run with configuration
+docker run --rm -v ~/.projectai.toml:/app/.projectai.toml project-ai:latest python -m app.cli user example "John"
+
+# Interactive mode
+docker run -it --rm project-ai:latest bash
+# Inside container:
+python -m app.cli user example "John"
+```
+
+**Docker Compose CLI Service**:
+
+Add to your `docker-compose.yml`:
+
+```yaml
+cli:
+  build: .
+  volumes:
+    - ./data:/app/data
+    - ~/.projectai.toml:/app/.projectai.toml:ro
+  command: python -m app.cli --help
+```
+
+Run CLI via compose:
+
+```bash
+docker-compose run --rm cli python -m app.cli user example "John"
 ```
 
 #### Config:  
@@ -434,9 +558,22 @@ config/
 
 ## Contribution & Docs
 
-- See: `CONTRIBUTING.md`, `SECURITY.md`, `AI_PERSONA_FOUR_LAWS.md`, `COMMAND_MEMORY_FEATURES.md`, `LEARNING_REQUEST_LOG.md`, `QUICK_START.md`, `INTEGRATION_SUMMARY.md`  
-- Doc hub: [Project AI Docs](https://iamsothirsty.github.io/Project-AI/)
-- Issues/PRs welcome: robust review, code style, and test required
+- **Primary Docs**: [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), [CLI-CODEX.md](CLI-CODEX.md), [CHANGELOG.md](CHANGELOG.md)
+- **CLI Docs**: [docs/cli/README.md](docs/cli/README.md), [docs/cli/commands.md](docs/cli/commands.md)
+- **Technical Guides**: 
+  - AI & Personas: `AI_PERSONA_FOUR_LAWS.md`, `COMMAND_MEMORY_FEATURES.md`, `LEARNING_REQUEST_LOG.md`
+  - Integration: `INTEGRATION_SUMMARY.md`, `QUICK_START.md`
+  - Developer: [DEVELOPER_QUICK_REFERENCE.md](DEVELOPER_QUICK_REFERENCE.md), [PROGRAM_SUMMARY.md](PROGRAM_SUMMARY.md)
+- **Doc Hub**: [Project AI Docs](https://iamsothirsty.github.io/Project-AI/)
+- **Issues/PRs**: Robust review process, code style enforcement, comprehensive testing required
+- **Community**: [GitHub Discussions](https://github.com/IAmSoThirsty/Project-AI/discussions)
+
+### Issue Templates
+
+We provide structured issue templates for:
+- [Bug Reports](.github/ISSUE_TEMPLATE/bug_report.md)
+- [Feature Requests](.github/ISSUE_TEMPLATE/feature_request.md)
+- [CLI Proposals](.github/ISSUE_TEMPLATE/cli_proposal.md) - For CLI-specific enhancements
 
 ---
 
