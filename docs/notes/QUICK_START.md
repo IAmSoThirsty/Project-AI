@@ -92,7 +92,7 @@ OPENAI_API_KEY=sk-your-key-here
 
 # Email Alerts (for emergency features)
 SMTP_USERNAME=your-email@example.com
-SMTP_PASSWORD=your-app-password
+SMTP_PASSWORD=your_app_password_here  # Replace with your actual app password
 
 # Encryption (auto-generated if not provided)
 FERNET_KEY=your-base64-key-here

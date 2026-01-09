@@ -315,7 +315,7 @@ from app.security.web_service import (
 )
 
 # SOAP client
-client = SOAPClient("https://api.example.com/soap", username="user", password="pass")
+client = SOAPClient("https://api.example.com/soap", username="example_user", password="example_password_not_real")
 response = client.call("GetData", {"id": "123"})
 
 # Capability tokens
