@@ -1,1 +1,27 @@
-{"incidents": [], "attack_counts": {}}
+{
+  "incidents": [
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "0",
+        "gate": "test-gate-2",
+        "ts": 1767990366.1917682
+      },
+      "ts": 1767990366.1918695
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "0",
+        "gate": "test-gate-2",
+        "ts": 1767990366.192101
+      },
+      "ts": 1767990366.1921782
+    }
+  ],
+  "attack_counts": {
+    "unknown": 2
+  }
+}
