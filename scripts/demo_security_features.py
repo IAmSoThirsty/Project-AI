@@ -24,14 +24,14 @@ def demo_security_scenarios():
     print("\n" + "=" * 70)
     print("DEMO 1: Security Test Scenarios (8,850 Total)")
     print("=" * 70)
-    
+
     # Note: Using simulated results for demonstration
     # Actual classes: RedHatExpertDefenseSimulator, RedTeamStressTestGenerator, NovelSecenarioGenerator
-    
+
     # Example 1: Red Hat Expert - SQL Injection
     print("\n[Example 1] Red Hat Expert - Advanced SQL Injection")
     print("-" * 70)
-    
+
 
     # Note: Using simulated results for demonstration
     # Actual classes: RedHatExpertDefenseSimulator, RedTeamStressTestGenerator, NovelSecenarioGenerator
