@@ -27,7 +27,7 @@ The following real credentials were found in the `.env` file (now removed from t
 - **Action Required**: ✅ ROTATE IMMEDIATELY
 
 ### 2. SMTP Credentials
-- **Email**: `ProjectAiDevs@gmail.com`
+- **Email**: `[REDACTED]@gmail.com`
 - **Password**: `[REDACTED]` (10 characters)
 - **File**: `.env` (lines 8-9)
 - **Risk**: Unauthorized email sending, account compromise
@@ -73,7 +73,7 @@ The following real credentials were found in the `.env` file (now removed from t
 
 ```bash
 # 1. Go to https://platform.openai.com/api-keys
-# 2. Find and REVOKE the exposed key (starts with sk-proj-****...)
+# 2. Find and REVOKE the exposed key (starts with sk-proj-XXXX...)
 # 3. Create a NEW API key with appropriate permissions
 # 4. Update your local .env file:
 OPENAI_API_KEY=sk-proj-NEW_KEY_HERE
@@ -92,7 +92,7 @@ For Gmail App Passwords:
 # 2. REVOKE the exposed app password
 # 3. Generate a NEW app password
 # 4. Update your local .env file:
-SMTP_USERNAME=ProjectAiDevs@gmail.com
+SMTP_USERNAME=YOUR_EMAIL@gmail.com
 SMTP_PASSWORD=NEW_APP_PASSWORD_HERE
 
 # 5. Test email functionality if used
