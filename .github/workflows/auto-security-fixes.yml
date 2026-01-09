@@ -35,6 +35,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install pip-audit safety bandit
 
+      - name: Install project dependencies
+        run: |
+          # Install project dependencies to audit them instead of system packages
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+        continue-on-error: true
+
       - name: Run pip-audit
         id: pip-audit
         run: |
