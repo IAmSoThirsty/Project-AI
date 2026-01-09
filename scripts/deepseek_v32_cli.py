@@ -26,7 +26,7 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root / "src"))
 
-from app.core.deepseek_v32_inference import DeepSeekV32
+from app.core.deepseek_v32_inference import DeepSeekV32  # noqa: E402
 
 # Configure logging
 logging.basicConfig(
