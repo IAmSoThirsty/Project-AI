@@ -40,7 +40,19 @@ class SandboxRunner:
             return {"success": False, "error": "invalid_path"}
 
         # Ensure path is absolute and normalized to prevent path traversal
-        abs_path = os.path.abspath(module_path)
+        abs_path = os.path.abspath(os.path.normpath(module_path))
+
+        # Validate the path is within the working directory (prevents traversal attacks)
+        cwd = os.path.abspath(os.getcwd())
+        try:
+            common = os.path.commonpath([abs_path, cwd])
+            if common != cwd:
+                logger.error("Path traversal attempt detected: %s not within %s", abs_path, cwd)
+                return {"success": False, "error": "path_traversal"}
+        except ValueError:
+            # Different drives on Windows or no common path
+            logger.error("Path traversal attempt: %s on different drive from %s", abs_path, cwd)
+            return {"success": False, "error": "path_traversal"}
 
         # Resolve Python executable - use shutil.which for security
         python_cmd = shutil.which("python") or shutil.which("python3")

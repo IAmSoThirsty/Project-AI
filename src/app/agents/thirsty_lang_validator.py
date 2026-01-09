@@ -145,8 +145,27 @@ class ThirstyLangValidator:
                 "message": "Node.js not available for T-A-R-L security testing"
             }
 
-        # Validate security test script exists
-        script_path = os.path.join(self.thirsty_lang_path, "src/test/security-tests.js")
+        # Validate security test script exists and is within expected directory
+        script_path = os.path.normpath(os.path.join(self.thirsty_lang_path, "src/test/security-tests.js"))
+        abs_script_path = os.path.abspath(script_path)
+        abs_base_path = os.path.abspath(self.thirsty_lang_path)
+
+        # Ensure script is within the thirsty_lang directory (prevent path traversal)
+        try:
+            common = os.path.commonpath([abs_script_path, abs_base_path])
+            if common != abs_base_path:
+                return {
+                    "status": "failed",
+                    "error": f"Path traversal detected: {script_path}",
+                    "message": "Invalid security test script path"
+                }
+        except ValueError:
+            return {
+                "status": "failed",
+                "error": f"Invalid script path: {script_path}",
+                "message": "Security test script path validation failed"
+            }
+
         if not os.path.isfile(script_path):
             return {
                 "status": "failed",
