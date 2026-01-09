@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import os
 import platform
 import runpy
@@ -31,8 +32,11 @@ def apply_limits():
             setrlimit(rlimit_cpu, (2, 4))
         if callable(setrlimit) and rlimit_nofile is not None:
             setrlimit(rlimit_nofile, (16, 64))
-    except Exception:
-        pass
+    except Exception as e:
+        # Log resource limit application failure but continue
+        # Resource limits are best-effort and may not be available on all platforms
+        logger = logging.getLogger(__name__)
+        logger.debug("Failed to apply resource limits: %s", e)
 
 
 def run_module(module_path: str) -> dict:
