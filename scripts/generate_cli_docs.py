@@ -8,10 +8,9 @@ the output of --help for each command and subcommand.
 import subprocess
 import sys
 from pathlib import Path
-from typing import List, Tuple
 
 
-def run_cli_help(args: List[str]) -> Tuple[str, int]:
+def run_cli_help(args: list[str]) -> tuple[str, int]:
     """Run CLI command with --help and capture output.
 
     Args:
@@ -32,7 +31,7 @@ def run_cli_help(args: List[str]) -> Tuple[str, int]:
         return f"Error: {e}", 1
 
 
-def generate_command_doc(command: str, subcommands: List[str]) -> str:
+def generate_command_doc(command: str, subcommands: list[str]) -> str:
     """Generate documentation for a command and its subcommands.
 
     Args:

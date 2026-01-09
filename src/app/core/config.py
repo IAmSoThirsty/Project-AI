@@ -14,7 +14,7 @@ Configuration priority (highest to lowest):
 
 import os
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 try:
     import tomllib  # Python 3.11+
@@ -48,17 +48,17 @@ class Config:
         },
     }
 
-    def __init__(self, config_path: Optional[Path] = None):
+    def __init__(self, config_path: Path | None = None):
         """Initialize configuration.
 
         Args:
             config_path: Optional path to config file. If not provided,
                         will search in standard locations.
         """
-        self.config: Dict[str, Any] = {}
+        self.config: dict[str, Any] = {}
         self._load_config(config_path)
 
-    def _load_config(self, config_path: Optional[Path] = None) -> None:
+    def _load_config(self, config_path: Path | None = None) -> None:
         """Load configuration from file(s).
 
         Args:
@@ -84,7 +84,7 @@ class Config:
         # Apply environment variable overrides
         self._apply_env_overrides()
 
-    def _read_toml(self, path: Path) -> Dict[str, Any]:
+    def _read_toml(self, path: Path) -> dict[str, Any]:
         """Read and parse a TOML file.
 
         Args:
@@ -100,7 +100,7 @@ class Config:
             print(f"Warning: Failed to read config from {path}: {e}")
             return {}
 
-    def _merge_config(self, new_config: Dict[str, Any]) -> None:
+    def _merge_config(self, new_config: dict[str, Any]) -> None:
         """Merge new configuration into existing config.
 
         Args:
@@ -153,7 +153,7 @@ class Config:
         """
         return self.config.get(section, {}).get(key, default)
 
-    def get_section(self, section: str) -> Dict[str, Any]:
+    def get_section(self, section: str) -> dict[str, Any]:
         """Get entire configuration section.
 
         Args:
@@ -166,7 +166,7 @@ class Config:
 
 
 # Global config instance
-_config: Optional[Config] = None
+_config: Config | None = None
 
 
 def get_config(reload: bool = False) -> Config:
