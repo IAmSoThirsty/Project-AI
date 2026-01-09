@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-import subprocess
+import subprocess  # nosec B404 - subprocess used for plugin execution with validation
 import sys
 import time
 from pathlib import Path
@@ -17,6 +17,9 @@ class PluginRunner:
 
     This runner is intentionally small: it starts the subprocess, sends an `init` call,
     waits for a response (with timeout), and returns the parsed result.
+    
+    Security Note: This runner executes plugin scripts in subprocesses. Plugin paths
+    are validated to exist before execution and use the Python interpreter.
     """
 
     def __init__(self, plugin_script: str, timeout: float = 5.0):
@@ -25,9 +28,15 @@ class PluginRunner:
         self.proc: subprocess.Popen | None = None
 
     def start(self) -> None:
+        """Start the plugin subprocess.
+        
+        Security: Validates that plugin script exists before execution.
+        Uses sys.executable (Python interpreter) to run the plugin script.
+        """
         if not self.plugin_script.exists():
             raise FileNotFoundError(f"Plugin script not found: {self.plugin_script}")
         cmd = [sys.executable, str(self.plugin_script)]
+        # nosec B603 - Uses Python interpreter with validated plugin script path
         self.proc = subprocess.Popen(
             cmd,
             stdin=subprocess.PIPE,

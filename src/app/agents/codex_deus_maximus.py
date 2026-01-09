@@ -31,8 +31,9 @@ class CodexDeusMaximus:
         # Ensure legacy method binding for compatibility
         try:
             self.auto_fix_file = types.MethodType(self.__class__.auto_fix_file, self)
-        except Exception as e:
+        except (AttributeError, TypeError) as e:
             # Log binding failure for debugging but continue initialization
+            # Method binding may fail if auto_fix_file is missing or incompatible
             logger.warning("Failed to bind auto_fix_file method: %s", e)
 
     def initialize(self) -> bool:

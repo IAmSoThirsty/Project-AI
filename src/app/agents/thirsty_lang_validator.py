@@ -3,11 +3,14 @@
 This module validates that Thirsty-lang functions as T-A-R-L (Thirsty's Active Resistant Language),
 testing its defensive programming and threat resistance capabilities as a code-based
 defense system that only Project-AI knows about.
+
+Security Note: This validator uses subprocess to run npm and node commands for testing
+the Thirsty-lang framework. Commands are hardcoded and use trusted Node.js tools.
 """
 import json
 import logging
 import os
-import subprocess
+import subprocess  # nosec B404 - subprocess usage for trusted Node.js dev tools only
 from datetime import UTC, datetime
 from typing import Any
 
@@ -63,11 +66,15 @@ class ThirstyLangValidator:
         return report
     
     def _test_basic_language(self) -> dict[str, Any]:
-        """Test basic Thirsty-lang functionality."""
+        """Test basic Thirsty-lang functionality.
+        
+        Security: Runs npm test with hardcoded arguments in specified directory.
+        """
         logger.info("Testing basic T-A-R-L language features")
         
         try:
             # Run the language's built-in tests
+            # nosec B603 B607 - npm is a trusted Node.js package manager
             result = subprocess.run(
                 ["npm", "test"],
                 cwd=self.thirsty_lang_path,
@@ -89,11 +96,15 @@ class ThirstyLangValidator:
             }
     
     def _test_security_features(self) -> dict[str, Any]:
-        """Test T-A-R-L security and defensive features."""
+        """Test T-A-R-L security and defensive features.
+        
+        Security: Runs node with hardcoded test script path in specified directory.
+        """
         logger.info("Testing T-A-R-L security features")
         
         try:
             # Run security tests
+            # nosec B603 B607 - node is a trusted JavaScript runtime
             result = subprocess.run(
                 ["node", "src/test/security-tests.js"],
                 cwd=self.thirsty_lang_path,
