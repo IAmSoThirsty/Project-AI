@@ -313,6 +313,7 @@ from app.security.web_service import (
     RateLimiter,
     InputValidator,
 )
+import os
 
 # SOAP client - Use environment variables for credentials
 client = SOAPClient(
