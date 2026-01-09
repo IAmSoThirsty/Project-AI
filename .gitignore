@@ -84,7 +84,12 @@ credentials.json
 
 # IDEs
 .vscode/
+.vs/
 .idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
 
 # OS
 .DS_Store
