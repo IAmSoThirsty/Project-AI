@@ -16,7 +16,6 @@ import hashlib
 import json
 import logging
 import os
-import random
 import re
 from datetime import UTC, datetime
 from typing import Any
@@ -86,7 +85,7 @@ class TARLCodeProtector:
             return {"success": False, "error": "File not found"}
         
         try:
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, encoding='utf-8') as f:
                 original_code = f.read()
             
             # Apply protection strategy based on file type
@@ -324,7 +323,8 @@ Strategic defensive protection active
         
         for identifier in identifiers:
             if identifier not in skip_words and len(identifier) > 2:
-                obfuscated = f"_{hashlib.md5(identifier.encode()).hexdigest()[:8]}"
+                # nosec B324 - MD5 used for obfuscation only, not security
+                obfuscated = f"_{hashlib.md5(identifier.encode(), usedforsecurity=False).hexdigest()[:8]}"
                 identifier_map[identifier] = obfuscated
                 morphed_code = re.sub(r'\b' + identifier + r'\b', obfuscated, morphed_code)
         
@@ -350,7 +350,7 @@ Strategic defensive protection active
         try:
             registry = {}
             if os.path.exists(self.protection_registry):
-                with open(self.protection_registry, 'r') as f:
+                with open(self.protection_registry) as f:
                     registry = json.load(f)
             
             registry[file_path] = {

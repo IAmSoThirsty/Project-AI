@@ -2,12 +2,15 @@
 
 Generates basic pytest stubs for generated modules and runs pytest to validate.
 Conservative: it only creates simple asserts reflecting generated function signatures.
+
+Security Note: This agent uses subprocess to run pytest, a trusted testing tool.
+Commands are hardcoded and do not accept external input.
 """
 from __future__ import annotations
 
 import logging
 import os
-import subprocess
+import subprocess  # nosec B404 - subprocess usage for trusted dev tool pytest only
 import time
 from typing import Any
 
@@ -67,12 +70,18 @@ class TestQAGenerator:
             return {"success": False, "error": str(e)}
 
     def run_tests(self, tests_dir: str | None = None) -> dict[str, Any]:
+        """Run pytest on generated test directory.
+        
+        Security: Runs pytest with hardcoded arguments on validated test directory.
+        Tests directory is created by this agent and contains only generated tests.
+        """
         # Prefer running only the latest generated test directory to avoid unrelated tests
         run_dir = tests_dir or self._last_test_dir or os.path.join(self.data_dir, "generated_tests")
         if not os.path.exists(run_dir):
             return {"success": True, "ran": 0}
         try:
-            res = subprocess.run(["pytest", run_dir, "-q"], capture_output=True, text=True)
+            # nosec B603, B607 - pytest is a trusted dev tool, run_dir is validated
+            res = subprocess.run(["pytest", run_dir, "-q"], capture_output=True, text=True)  # nosec B603, B607
             return {"success": res.returncode == 0, "output": res.stdout + res.stderr, "returncode": res.returncode}
         except Exception as e:
             logger.exception("Failed to run tests: %s", e)

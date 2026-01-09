@@ -32,8 +32,9 @@ class CodexDeusMaximus:
         try:
             self.auto_fix_file = types.MethodType(self.__class__.auto_fix_file, self)
         except Exception as e:
-            # Log binding failure for debugging but continue initialization
+            # nosec B110 - Intentional fallback: method is already bound via class inheritance
             logger.warning("Failed to bind auto_fix_file method: %s", e)
+            # Method is still accessible via class inheritance, so this is safe to ignore
 
     def initialize(self) -> bool:
         logger.info("Schematic Guardian initialized. Mode: STRICT ENFORCEMENT.")
