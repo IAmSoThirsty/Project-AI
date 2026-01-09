@@ -202,8 +202,9 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DB_PASSWORD = os.getenv('DB_PASSWORD')
 
 # ❌ DON'T: Hardcode secrets
-SECRET_KEY = "my-secret-key-12345"
-DB_PASSWORD = "password123"
+# ❌ BAD: Hardcoded secrets (NEVER do this - example only)
+SECRET_KEY = "EXAMPLE_KEY_12345"  # DO NOT use example values
+DB_PASSWORD = "EXAMPLE_PASS_123"  # DO NOT use example values
 ```
 
 ---

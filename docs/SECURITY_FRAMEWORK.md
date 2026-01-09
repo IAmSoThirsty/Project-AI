@@ -481,10 +481,11 @@ Secure web services with SOAP, HTTP, and capability-based access control.
 ```python
 from app.security.web_service import SOAPClient
 
+# Example SOAP client configuration (DO NOT use these example credentials)
 client = SOAPClient(
     endpoint="https://api.example.com/soap",
-    username="user",
-    password="pass"
+    username="EXAMPLE_USER",  # Replace with actual username
+    password="EXAMPLE_PASS"   # Replace with actual password
 )
 
 # Make SOAP call

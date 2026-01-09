@@ -59,14 +59,25 @@ cover/
 # Ruff
 .ruff_cache/
 
-# Environments
+# Environments and Secrets
 .env
+.env.local
+.env.*.local
+.env.backup
 .venv
 env/
 venv/
 ENV/
 env.bak/
 venv.bak/
+
+# Secret files (never commit)
+*.key
+*.pem
+*.p12
+*.pfx
+secrets.json
+credentials.json
 
 # IDEs
 .vscode/

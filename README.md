@@ -311,11 +311,21 @@ python -m scripts.deepseek_v32_cli \
 
 ### Configuration
 
+⚠️ **IMPORTANT**: Never commit secrets to git. See [SECRETS_WARNING.md](SECRETS_WARNING.md) for details.
+
 Set your Hugging Face API key in `.env` (optional, for API access):
 
 ```bash
-HUGGINGFACE_API_KEY=your_api_key_here
+# Copy the template first
+cp .env.example .env
+
+# Then add your own API key
+HUGGINGFACE_API_KEY=your_api_key_here  # Get from https://huggingface.co/settings/tokens
 ```
+
+📚 For complete secret management guidance, see:
+- [SECRETS_WARNING.md](SECRETS_WARNING.md) - Quick reference
+- [docs/security/SECRET_MANAGEMENT.md](docs/security/SECRET_MANAGEMENT.md) - Full guide
 
 ### Requirements
 
