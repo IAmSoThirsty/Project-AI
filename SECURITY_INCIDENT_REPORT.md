@@ -22,7 +22,7 @@ The following credentials were exposed in the `.env` file:
 
 2. **SMTP Credentials**
    - **Username**: ProjectAiDevs@gmail.com
-   - **Password**: R9609936!
+   - **Password**: R960****! [REDACTED]
    - **Exposure**: Committed to git history
    - **Risk Level**: HIGH
    - **Required Action**: IMMEDIATE ROTATION

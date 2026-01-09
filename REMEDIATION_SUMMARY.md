@@ -32,9 +32,9 @@ git rm --cached .env
 
 **2. Sanitized `.env` File**
 - Removed all real credentials:
-  - OpenAI API key (sk-proj-cFQp...)
-  - SMTP credentials (ProjectAiDevs@gmail.com / R9609936!)
-  - Fernet encryption key (Qqyl2vCY...)
+  - OpenAI API key (sk-proj-cFQp...***[REDACTED])
+  - SMTP credentials (ProjectAiDevs@gmail.com / R960****! [REDACTED])
+  - Fernet encryption key (Qqyl2vCY...***[REDACTED])
 - Replaced with placeholder values
 - Added warning message about credential rotation
 - Status: ✅ Complete
@@ -112,7 +112,7 @@ Status: ✅ Complete
 #### OpenAI API Key
 ```bash
 # 1. Visit https://platform.openai.com/api-keys
-# 2. Revoke key: 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
+# 2. Revoke key: sk-proj-cFQp...***[REDACTED]
 # 3. Generate NEW key
 # 4. Update .env locally
 ```
@@ -120,7 +120,7 @@ Status: ✅ Complete
 #### SMTP Credentials
 ```bash
 # 1. Visit https://myaccount.google.com/apppasswords
-# 2. Revoke password: R9609936!
+# 2. Revoke password: R960****! [REDACTED]
 # 3. Generate NEW app password
 # 4. Update .env locally with:
 #    SMTP_USERNAME=ProjectAiDevs@gmail.com
