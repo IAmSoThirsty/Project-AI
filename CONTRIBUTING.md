@@ -10,10 +10,65 @@ Thank you for your interest. To contribute:
 
 Development setup:
 
-```
+```bash
 python -m venv .venv
 source .venv/bin/activate  # windows: .venv\Scripts\activate
 python -m pip install -r requirements.txt
+python -m pip install -r requirements-dev.txt
+```
+
+## CLI Development Guidelines
+
+### Adding New CLI Commands
+
+When adding new CLI commands or modifying existing ones:
+
+1. **Follow the CLI-CODEX**: Review [CLI-CODEX.md](CLI-CODEX.md) for best practices
+2. **Use Command Groups**: Organize commands into logical groups (user, memory, learning, plugin, system, ai)
+3. **Add Tests**: Create tests in `tests/test_cli.py` using Typer's CliRunner
+4. **Update Documentation**: Run `python scripts/generate_cli_docs.py` to update auto-generated docs
+5. **Add Examples**: Include usage examples in `docs/cli/README.md`
+
+### CLI Testing Checklist
+
+Before submitting a PR with CLI changes:
+
+- [ ] Run CLI tests: `pytest tests/test_cli.py -v`
+- [ ] Test help output: `python -m app.cli [command] --help`
+- [ ] Test with various inputs (valid, invalid, edge cases)
+- [ ] Generate updated docs: `python scripts/generate_cli_docs.py`
+- [ ] Update `CHANGELOG.md` with CLI changes
+- [ ] Test shell completion (if modified)
+- [ ] Test configuration file loading (if modified)
+
+### CLI Code Style
+
+- Use descriptive command and option names
+- Provide clear help text for all commands and options
+- Include docstrings for all command functions
+- Use type hints for all parameters
+- Handle errors gracefully with informative messages
+
+### Example CLI Command
+
+```python
+@user_app.command()
+def create(
+    username: str = typer.Argument(..., help="Username to create."),
+    email: str = typer.Option(..., "--email", "-e", help="User email address."),
+    admin: bool = typer.Option(False, "--admin", help="Create as admin user."),
+):
+    """Create a new user account.
+    
+    This command creates a new user with the specified username and email.
+    Optionally, the user can be created with admin privileges.
+    """
+    try:
+        # Implementation here
+        typer.echo(f"✓ Created user: {username}")
+    except Exception as e:
+        typer.echo(f"✗ Error: {e}", err=True)
+        raise typer.Exit(1)
 ```
 
 ## Automated Workflows

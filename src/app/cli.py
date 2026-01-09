@@ -1,6 +1,34 @@
 import typer
+from typing import Optional
+
+# Version information
+__version__ = "1.0.0"
+
+def version_callback(value: bool):
+    """Print version and exit."""
+    if value:
+        typer.echo(f"Project-AI CLI v{__version__}")
+        raise typer.Exit()
 
 app = typer.Typer(help="Project-AI Command Line Interface (CLI)")
+
+@app.callback()
+def main(
+    version: Optional[bool] = typer.Option(
+        None,
+        "--version",
+        "-v",
+        help="Show version and exit.",
+        callback=version_callback,
+        is_eager=True,
+    )
+):
+    """
+    Project-AI CLI - A comprehensive AI assistant platform.
+    
+    Run commands with --help for detailed information.
+    """
+    pass
 
 # CLI-CODEX best practices: Clear help, command groups, modular, extensible.
 
