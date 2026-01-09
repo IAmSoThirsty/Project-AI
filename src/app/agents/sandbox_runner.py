@@ -23,37 +23,38 @@ class SandboxRunner:
     def run_in_sandbox(self, module_path: str, timeout: int = 5) -> dict[str, Any]:
         """Run a Python module in a sandboxed subprocess.
 
-        Security: Module path is validated to ensure it exists, is a file, is a Python file,
-        and is within the current working directory to prevent directory traversal attacks.
+        Security: Module path is normalized first, then validated to ensure it exists,
+        is a file, is a Python file, and is within the current working directory.
+        All validations are performed on the normalized path that will be executed.
         Python executable path is resolved using shutil.which for safety.
         """
-        # Validate module path exists and is a file
-        if not os.path.isfile(module_path):
-            logger.error("Invalid module path: %s", module_path)
-            return {"success": False, "error": "invalid_path"}
-
-        # Validate it's a Python file using splitext for robust extension checking
-        _, ext = os.path.splitext(module_path)
-        if ext.lower() != '.py':
-            logger.error("Module path must be a Python file: %s", module_path)
-            return {"success": False, "error": "not_python_file"}
-
-        # Ensure path is absolute and normalized to prevent path traversal
+        # Normalize and resolve path first to prevent manipulation
         abs_path = os.path.normpath(os.path.abspath(module_path))
         
         # Validate the resolved path is within the current working directory
-        # This prevents directory traversal even after path normalization
+        # This prevents directory traversal attacks
         cwd = os.path.abspath(os.getcwd())
         try:
-            # Check if abs_path is under cwd using os.path.commonpath
-            common = os.path.commonpath([abs_path, cwd])
-            if common != cwd:
+            # Check if abs_path is under cwd or is cwd itself
+            # Use startswith with os.sep to prevent partial path matches
+            if not (abs_path == cwd or abs_path.startswith(cwd + os.sep)):
                 logger.error("Path traversal detected: %s not within %s", abs_path, cwd)
                 return {"success": False, "error": "path_traversal"}
-        except ValueError:
-            # Different drives on Windows or no common path
-            logger.error("Path traversal detected: %s on different drive from %s", abs_path, cwd)
-            return {"success": False, "error": "path_traversal"}
+        except Exception as e:
+            # Handle any path comparison errors
+            logger.error("Path validation error: %s", e)
+            return {"success": False, "error": "path_validation_error"}
+        
+        # Validate normalized path exists and is a file
+        if not os.path.isfile(abs_path):
+            logger.error("Invalid module path: %s", abs_path)
+            return {"success": False, "error": "invalid_path"}
+
+        # Validate it's a Python file using splitext on the normalized path
+        _, ext = os.path.splitext(abs_path)
+        if ext.lower() != '.py':
+            logger.error("Module path must be a Python file: %s", abs_path)
+            return {"success": False, "error": "not_python_file"}
         
         # Get the absolute path to the Python executable
         # Check for python3 first as it's more common on modern systems
