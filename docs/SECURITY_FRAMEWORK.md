@@ -481,10 +481,12 @@ Secure web services with SOAP, HTTP, and capability-based access control.
 ```python
 from app.security.web_service import SOAPClient
 
+# Example SOAP client configuration
+# WARNING: Never hardcode credentials - use environment variables
 client = SOAPClient(
     endpoint="https://api.example.com/soap",
-    username="user",
-    password="pass"
+    username=os.getenv("SOAP_USERNAME"),  # Use environment variables
+    password=os.getenv("SOAP_PASSWORD")   # Never hardcode passwords
 )
 
 # Make SOAP call

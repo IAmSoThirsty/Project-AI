@@ -59,8 +59,12 @@ cover/
 # Ruff
 .ruff_cache/
 
-# Environments
+# Environments and Secrets
 .env
+.env.local
+.env.*.local
+.env.production
+.env.development
 .venv
 env/
 venv/
@@ -68,9 +72,31 @@ ENV/
 env.bak/
 venv.bak/
 
+# Secret files - NEVER commit
+*.key
+*.pem
+*.p12
+*.pfx
+secrets.json
+credentials.json
+service-account.json
+*-credentials.json
+.secrets
+secret_*
+secrets/
+
+# Security scan reports (these may contain sensitive info)
+secret_scan_report.json
+*_scan_report.json
+
 # IDEs
 .vscode/
 .idea/
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
 
 # OS
 .DS_Store

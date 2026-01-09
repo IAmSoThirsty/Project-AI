@@ -77,6 +77,7 @@ jobs:
         uses: 'docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567' # docker/login-action@v3
         with:
           username: 'oauth2accesstoken'
+          # Using GitHub Actions secret - NOT a hardcoded password
           password: '${{ steps.auth.outputs.auth_token }}'
           registry: '${{ env.GAR_LOCATION }}-docker.pkg.dev'
 
