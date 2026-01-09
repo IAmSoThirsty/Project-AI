@@ -127,12 +127,12 @@ class TestCommandOverride:
         """Create override system."""
         with tempfile.TemporaryDirectory() as tmpdir:
             system = CommandOverride(data_dir=tmpdir)
-            system.set_password("test123")
+            system.set_password("test_password_123")  # Test password only
             yield system
 
     def test_password_verification(self, override):
         """Test password verification."""
-        verified = override.verify_password("test123")
+        verified = override.verify_password("test_password_123")  # Test password only
         assert verified
 
         verified = override.verify_password("wrong")
