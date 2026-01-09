@@ -200,12 +200,12 @@ If you find a vulnerability in a dependency:
 # ✅ DO: Use environment variables
 SECRET_KEY = os.getenv('SECRET_KEY')
 DB_PASSWORD = os.getenv('DB_PASSWORD')
-PASSWORD = os.getenv('PASSWORD')
+API_PASSWORD = os.getenv('API_PASSWORD')
 
 # ❌ DON'T: Hardcode secrets
 SECRET_KEY = "my-secret-key-12345"  # NEVER DO THIS
 DB_PASSWORD = "password123"  # NEVER DO THIS
-PASSWORD = "password123"  # NEVER DO THIS
+API_PASSWORD = "password123"  # NEVER DO THIS
 ```
 
 ---
