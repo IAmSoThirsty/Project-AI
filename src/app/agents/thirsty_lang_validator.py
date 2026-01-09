@@ -7,7 +7,7 @@ defense system that only Project-AI knows about.
 import json
 import logging
 import os
-import subprocess
+import subprocess  # nosec B404 - subprocess used with hardcoded commands only
 from datetime import UTC, datetime
 from typing import Any
 
@@ -68,7 +68,9 @@ class ThirstyLangValidator:
         
         try:
             # Run the language's built-in tests
-            result = subprocess.run(
+            # Security: Using hardcoded command 'npm test' with fixed cwd path
+            # No user input is passed to subprocess, shell=False prevents injection
+            result = subprocess.run(  # nosec B603 B607 - hardcoded safe command
                 ["npm", "test"],
                 cwd=self.thirsty_lang_path,
                 capture_output=True,
@@ -94,7 +96,9 @@ class ThirstyLangValidator:
         
         try:
             # Run security tests
-            result = subprocess.run(
+            # Security: Using hardcoded command with fixed file path and cwd
+            # No user input is passed to subprocess, shell=False prevents injection
+            result = subprocess.run(  # nosec B603 B607 - hardcoded safe command
                 ["node", "src/test/security-tests.js"],
                 cwd=self.thirsty_lang_path,
                 capture_output=True,
