@@ -30,20 +30,20 @@ A critical security incident was detected where real production credentials were
 ## Exposed Credentials
 
 ### 1. OpenAI API Key ⚠️ CRITICAL
-- **Key**: `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`
+- **Key**: `sk-proj-cFQpstvedW...kEFfH6S2xvaZh9MA` (redacted, see git history for full key)
 - **Used for**: OpenAI API access (GPT models, DALL-E)
 - **Risk**: Unauthorized usage, API quota exhaustion, potential billing fraud
 - **Action**: REVOKE IMMEDIATELY at https://platform.openai.com/api-keys
 
 ### 2. SMTP Credentials ⚠️ HIGH
 - **Username**: `ProjectAiDevs@gmail.com`
-- **Password**: `R9609936!`
+- **Password**: `R960****!` (redacted, see git history for full password)
 - **Used for**: Emergency email alerts
 - **Risk**: Unauthorized email sending, account compromise, spam abuse
 - **Action**: Change password and revoke all app passwords
 
 ### 3. Fernet Encryption Key ⚠️ HIGH
-- **Key**: `Qqyl2vCYY7W4AKuE-DmQLmL7IgXguMis_lFalqlliEc=`
+- **Key**: `Qqyl2vCYY...alqlliEc=` (redacted, see git history for full key)
 - **Used for**: Encrypting location history and sensitive data
 - **Risk**: Decryption of encrypted user data, privacy breach
 - **Action**: Rotate key (requires data migration)

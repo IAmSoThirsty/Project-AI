@@ -77,8 +77,14 @@ venv.bak/
 *.pfx
 secrets.json
 credentials.json
-*secret*
-*credential*
+*secrets.json
+*secrets.yaml
+*secrets.yml
+*credentials.json
+*credentials.yaml
+*credentials.yml
+secret_*.txt
+credential_*.txt
 !.pre-commit-config.yaml
 !docs/**/*
 !tests/**/*

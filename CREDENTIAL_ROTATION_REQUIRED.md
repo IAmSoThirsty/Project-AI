@@ -16,10 +16,10 @@ Real secrets were detected in the repository's `.env` file which was tracked by 
 
 The following credentials were exposed in the repository:
 
-1. **OpenAI API Key**: `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`
+1. **OpenAI API Key**: `sk-proj-cFQpstvedW...kEFfH6S2xvaZh9MA` (full key in original .env file, commit 6ff0c3e)
 2. **SMTP Username**: `ProjectAiDevs@gmail.com`
-3. **SMTP Password**: `R9609936!`
-4. **Fernet Encryption Key**: `Qqyl2vCYY7W4AKuE-DmQLmL7IgXguMis_lFalqlliEc=`
+3. **SMTP Password**: `R960****!` (full password in original .env file)
+4. **Fernet Encryption Key**: `Qqyl2vCYY...alqlliEc=` (full key in original .env file)
 
 ---
 
@@ -31,7 +31,8 @@ The following credentials were exposed in the repository:
 
 1. Go to https://platform.openai.com/api-keys
 2. **REVOKE** the exposed key immediately:
-   - Find key starting with `sk-proj-cFQpstvedW...`
+   - Find the key that was created/used recently (check creation date)
+   - Look for key starting with `sk-proj-`
    - Click "Revoke" or "Delete"
 3. **Generate NEW key** with appropriate permissions
 4. Update your local `.env` file with the new key
@@ -47,8 +48,7 @@ For the Gmail account `ProjectAiDevs@gmail.com`:
 
 1. **Change the account password immediately**:
    - Go to https://myaccount.google.com/security
-   - Change password
-   - Current password: `R9609936!` (COMPROMISED)
+   - Change password (current password was exposed in commit history)
    
 2. **Revoke all app passwords**:
    - Go to https://myaccount.google.com/apppasswords
@@ -67,7 +67,7 @@ For the Gmail account `ProjectAiDevs@gmail.com`:
 
 **WARNING: This will invalidate encrypted data**
 
-The exposed Fernet key: `Qqyl2vCYY7W4AKuE-DmQLmL7IgXguMis_lFalqlliEc=`
+The Fernet key was exposed in the commit history.
 
 **Important**: Rotating the Fernet key will make existing encrypted data unreadable. Check what data uses this key:
 
@@ -87,7 +87,8 @@ grep -r ".enc" data/
    ```python
    from cryptography.fernet import Fernet
    
-   old_key = b"Qqyl2vCYY7W4AKuE-DmQLmL7IgXguMis_lFalqlliEc="
+   # Get old key from .env file backup or git history
+   old_key = b"YOUR_OLD_FERNET_KEY_HERE"
    cipher = Fernet(old_key)
    
    # Decrypt each file
