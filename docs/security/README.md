@@ -313,9 +313,14 @@ from app.security.web_service import (
     RateLimiter,
     InputValidator,
 )
+import os
 
-# SOAP client
-client = SOAPClient("https://api.example.com/soap", username="user", password="pass")
+# SOAP client - Use environment variables for credentials
+client = SOAPClient(
+    "https://api.example.com/soap",
+    username=os.getenv("SOAP_USERNAME"),
+    password=os.getenv("SOAP_PASSWORD")
+)
 response = client.call("GetData", {"id": "123"})
 
 # Capability tokens

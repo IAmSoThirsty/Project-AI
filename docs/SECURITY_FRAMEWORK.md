@@ -480,11 +480,12 @@ Secure web services with SOAP, HTTP, and capability-based access control.
 
 ```python
 from app.security.web_service import SOAPClient
+import os
 
 client = SOAPClient(
     endpoint="https://api.example.com/soap",
-    username="user",
-    password="pass"
+    username=os.getenv("SOAP_USERNAME"),
+    password=os.getenv("SOAP_PASSWORD")
 )
 
 # Make SOAP call
@@ -697,6 +698,7 @@ from app.security import (
     SecurityMonitor,
     SecureDatabaseManager,
 )
+import os
 
 # 1. Environment hardening
 hardening = EnvironmentHardening()

@@ -61,6 +61,8 @@ cover/
 
 # Environments
 .env
+.env.local
+.env.*.local
 .venv
 env/
 venv/
@@ -68,9 +70,18 @@ ENV/
 env.bak/
 venv.bak/
 
+# Secret files
+*.key
+*.pem
+*.p12
+secrets.json
+credentials.json
+secret_scan_report.json
+
 # IDEs
 .vscode/
 .idea/
+.vs/
 
 # OS
 .DS_Store
