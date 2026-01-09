@@ -81,6 +81,7 @@ secrets.json
 credentials.json
 *_secrets.json
 *_credentials.json
+secret_scan_report_old.json
 
 # IDEs
 .vscode/

@@ -8,9 +8,12 @@
 
 ## Overview
 
-Real credentials were discovered in the `.env` file that was previously committed to git history (commit `6ff0c3e5bae216c2f12da69c0f9d8c07a61d1bf9` from 2026-01-09).
+Real credentials were discovered in multiple files that were previously committed to git history:
 
-Even though `.env` is now removed from git tracking, these credentials exist in the repository history and must be considered **COMPROMISED**.
+1. **`.env` file** - Commit `6ff0c3e5bae216c2f12da69c0f9d8c07a61d1bf9` (2026-01-09)
+2. **`.vs/` directory** - Visual Studio/Copilot session files containing secret references
+
+Even though these files are now removed from git tracking, the credentials exist in the repository history and must be considered **COMPROMISED**.
 
 ---
 
@@ -73,8 +76,8 @@ The following credentials were found in git history and **MUST BE ROTATED IMMEDI
 # Install git-filter-repo
 pip install git-filter-repo
 
-# Remove .env from entire git history
-git filter-repo --path .env --invert-paths --force
+# Remove .env and .vs/ from entire git history
+git filter-repo --path .env --path .vs --invert-paths --force
 
 # Force push to all branches
 git push --force --all origin
@@ -85,8 +88,9 @@ git push --force --tags origin
 
 ```bash
 # Download BFG from https://rtyley.github.io/bfg-repo-cleaner/
-# Remove .env from history
+# Remove .env and .vs/ from history
 java -jar bfg.jar --delete-files .env
+java -jar bfg.jar --delete-folders .vs
 
 # Clean reflog and force push
 git reflog expire --expire=now --all
@@ -130,7 +134,9 @@ After completing credential rotation and git cleanup:
 - [ ] Verify Gmail app password is revoked
 - [ ] Verify application works with new credentials
 - [ ] Verify `.env` is not in git tracking: `git ls-files | grep .env` (should be empty)
+- [ ] Verify `.vs/` is not in git tracking: `git ls-files | grep .vs` (should be empty)
 - [ ] Verify `.env` is not in git history: `git log --all -- .env` (should be empty)
+- [ ] Verify `.vs/` is not in git history: `git log --all -- .vs` (should be empty)
 - [ ] Run secret scanner to verify no secrets remain:
   ```bash
   python tools/secret_scan.py
@@ -143,10 +149,12 @@ After completing credential rotation and git cleanup:
 The following changes have been made to prevent future credential exposure:
 
 ✅ `.env` removed from git tracking  
-✅ `.gitignore` strengthened with additional patterns  
+✅ `.vs/` IDE directory removed from git tracking  
+✅ `.gitignore` strengthened with additional patterns (secrets, IDE files, key files)  
 ✅ `.env` file sanitized (removed real credentials)  
 ✅ Documentation examples updated to use clearly fake credentials  
-✅ Instructions added to `.env.example` warning against committing secrets
+✅ Instructions added to `.env.example` warning against committing secrets  
+✅ Visual Studio IDE patterns added to .gitignore
 
 ---
 
