@@ -17,7 +17,7 @@ A security scan detected that the `.env` file containing real API keys and passw
 
 1. **Rotate OpenAI API Key** (Do this NOW)
    - Go to https://platform.openai.com/api-keys
-   - REVOKE the exposed key (starts with `sk-proj-****...`)
+   - REVOKE the exposed key (starts with `sk-proj-XXXX...`)
    - Create a NEW key
    - Update your local `.env` file
 
