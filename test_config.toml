@@ -1,0 +1,7 @@
+[general]
+log_level = "DEBUG"
+verbose = true
+
+[ai]
+model = "gpt-4"
+temperature = 0.9

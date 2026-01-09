@@ -1,5 +1,5 @@
+
 import typer
-from typing import Optional
 
 # Version information
 __version__ = "1.0.0"
@@ -14,7 +14,7 @@ app = typer.Typer(help="Project-AI Command Line Interface (CLI)")
 
 @app.callback()
 def main(
-    version: Optional[bool] = typer.Option(
+    version: bool | None = typer.Option(
         None,
         "--version",
         "-v",
@@ -25,7 +25,7 @@ def main(
 ):
     """
     Project-AI CLI - A comprehensive AI assistant platform.
-    
+
     Run commands with --help for detailed information.
     """
     pass
@@ -35,8 +35,8 @@ def main(
 # User Command Group
 user_app = typer.Typer(help="Commands for user management.")
 
-@user_app.command()
-def example(
+@user_app.command(name="example")
+def user_example(
     name: str = typer.Argument(..., help="User name to greet."),
 ):
     """Example user command."""
@@ -47,8 +47,8 @@ app.add_typer(user_app, name="user")
 # Memory Command Group
 memory_app = typer.Typer(help="Commands for memory operations.")
 
-@memory_app.command()
-def example(
+@memory_app.command(name="example")
+def memory_example(
     item: str = typer.Argument(..., help="Memory item example."),
 ):
     """Example memory command."""
@@ -59,8 +59,8 @@ app.add_typer(memory_app, name="memory")
 # Learning Command Group
 learning_app = typer.Typer(help="Commands for learning features.")
 
-@learning_app.command()
-def example(
+@learning_app.command(name="example")
+def learning_example(
     topic: str = typer.Argument(..., help="Learning topic example."),
 ):
     """Example learning command."""
@@ -71,8 +71,8 @@ app.add_typer(learning_app, name="learning")
 # Plugin Command Group
 plugin_app = typer.Typer(help="Commands for managing plugins.")
 
-@plugin_app.command()
-def example(
+@plugin_app.command(name="example")
+def plugin_example(
     plugin: str = typer.Argument(..., help="Plugin name example."),
 ):
     """Example plugin command."""
@@ -83,8 +83,8 @@ app.add_typer(plugin_app, name="plugin")
 # System Command Group
 system_app = typer.Typer(help="Commands for system operations.")
 
-@system_app.command()
-def example(
+@system_app.command(name="example")
+def system_example(
     param: str = typer.Argument(..., help="System parameter example."),
 ):
     """Example system command."""
@@ -95,8 +95,8 @@ app.add_typer(system_app, name="system")
 # AI Command Group
 ai_app = typer.Typer(help="Commands for AI functionalities.")
 
-@ai_app.command()
-def example(
+@ai_app.command(name="example")
+def ai_example(
     model: str = typer.Argument(..., help="AI model example."),
 ):
     """Example AI command."""

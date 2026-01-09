@@ -3,7 +3,6 @@
 This module tests all CLI commands using Typer's CliRunner.
 """
 
-import pytest
 from typer.testing import CliRunner
 
 from app.cli import app
