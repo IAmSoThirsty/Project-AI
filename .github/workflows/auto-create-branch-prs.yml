@@ -344,12 +344,14 @@ jobs:
         env:
           PR_TITLE: ${{ steps.pr-content.outputs.title }}
           PR_BODY: ${{ steps.pr-content.outputs.body }}
+          BRANCH_NAME: ${{ matrix.branch }}
+          CONFLICTS_PRESENT: ${{ env.CONFLICTS_PRESENT }}
         with:
           script: |
-            const branch = '${{ matrix.branch }}';
+            const branch = process.env.BRANCH_NAME;
             const title = process.env.PR_TITLE;
             const body = process.env.PR_BODY;
-            const hasConflicts = '${{ env.CONFLICTS_PRESENT }}' === 'true';
+            const hasConflicts = process.env.CONFLICTS_PRESENT === 'true';
             
             try {
               // Create the PR
