@@ -307,6 +307,7 @@ stats = monitor.get_event_statistics(time_window=3600)
 HTTP/SOAP security:
 
 ```python
+import os  # ⚠️ NEVER hardcode credentials - use environment variables
 from app.security.web_service import (
     SOAPClient,
     SecureWebHandler,
@@ -314,8 +315,12 @@ from app.security.web_service import (
     InputValidator,
 )
 
-# SOAP client
-client = SOAPClient("https://api.example.com/soap", username="user", password="pass")
+# SOAP client with credentials from environment
+client = SOAPClient(
+    "https://api.example.com/soap",
+    username=os.getenv("SOAP_USERNAME"),
+    password=os.getenv("SOAP_PASSWORD")
+)
 response = client.call("GetData", {"id": "123"})
 
 # Capability tokens
