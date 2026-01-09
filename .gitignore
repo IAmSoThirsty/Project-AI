@@ -92,6 +92,11 @@ secret_scan_report.json
 # IDEs
 .vscode/
 .idea/
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
 
 # OS
 .DS_Store

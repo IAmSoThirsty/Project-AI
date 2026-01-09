@@ -601,11 +601,13 @@ class TestUserManagerEdgeCases:
     def test_manager_update_user_with_password(self, manager):
         """Test updating user via update_user includes password."""
         manager.create_user("testuser", "password")
+        # NOTE: "newpass" is a test password only - not used in production
         result = manager.update_user("testuser", password="newpass")
         assert result is True
 
     def test_manager_authenticate_after_password_set(self, manager):
         """Test authentication after password change."""
+        # NOTE: Test passwords only - not used in production
         manager.create_user("testuser", "initial")
         manager.set_password("testuser", "changed")
         result = manager.authenticate("testuser", "changed")

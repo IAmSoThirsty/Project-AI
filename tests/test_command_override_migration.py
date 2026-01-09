@@ -8,7 +8,8 @@ def test_sha256_to_bcrypt_migration(tmp_path):
     data_dir = tmp_path / "data"
     data_dir.mkdir()
 
-    # create legacy config with sha256 password
+    # Create legacy config with sha256 password for migration testing
+    # NOTE: "s3cret!" is a test password only - not used in production
     password = "s3cret!"
     # Precomputed legacy SHA-256 of "s3cret!", do not compute password hashes with SHA256 in new code
     legacy_hash = "98830ed5c6d7d22ef9dcf6a236aa93a3c81f57ea5483cfa0409643bd5be5b92e"
