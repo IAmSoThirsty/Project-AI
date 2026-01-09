@@ -45,8 +45,8 @@ class SandboxRunner:
             return {"success": False, "error": "python_not_found"}
 
         try:
-            # nosec B603 - Python path resolved with shutil.which, module path validated
-            res = subprocess.run(
+            # Python path resolved with shutil.which, module path validated
+            res = subprocess.run(  # nosec B603
                 [python_cmd, abs_path],
                 capture_output=True,
                 text=True,
