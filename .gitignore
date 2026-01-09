@@ -59,8 +59,12 @@ cover/
 # Ruff
 .ruff_cache/
 
-# Environments
+# Environments and Secrets
 .env
+.env.local
+.env.*.local
+.env.backup
+.env.bak
 .venv
 env/
 venv/
@@ -68,9 +72,25 @@ ENV/
 env.bak/
 venv.bak/
 
+# Secret files
+*.key
+*.pem
+*.p12
+*.pfx
+secrets.json
+credentials.json
+*_secrets.json
+*_credentials.json
+secret_scan_report_old.json
+
 # IDEs
 .vscode/
+.vs/
 .idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
 
 # OS
 .DS_Store

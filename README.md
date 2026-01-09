@@ -811,7 +811,7 @@ FERNET_KEY=<generated_key>
 
 # Optional: Email alerts
 SMTP_USERNAME=<email>
-SMTP_PASSWORD=<password>
+SMTP_PASSWORD=your_app_password  # Replace with actual password
 
 # Optional: AWS
 AWS_ACCESS_KEY_ID=<key>

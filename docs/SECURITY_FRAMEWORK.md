@@ -483,8 +483,8 @@ from app.security.web_service import SOAPClient
 
 client = SOAPClient(
     endpoint="https://api.example.com/soap",
-    username="user",
-    password="pass"
+    username="example_user",
+    password="example_password_not_real"
 )
 
 # Make SOAP call

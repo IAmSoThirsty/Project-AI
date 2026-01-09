@@ -299,7 +299,7 @@ OPENAI_API_KEY=sk-...           # For GPT models and DALL-E 3
 HUGGINGFACE_API_KEY=hf_...      # For Stable Diffusion 2.1 (get from https://huggingface.co/settings/tokens)
 FERNET_KEY=<generated_key>      # For encryption
 SMTP_USERNAME=<optional>        # For email alerts
-SMTP_PASSWORD=<optional>        # For email alerts
+SMTP_PASSWORD=<optional>  # Your actual app password here        # For email alerts
 ```
 
 Generate Fernet key:
