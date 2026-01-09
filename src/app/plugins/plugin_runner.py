@@ -36,7 +36,7 @@ class PluginRunner:
         if not self.plugin_script.exists():
             raise FileNotFoundError(f"Plugin script not found: {self.plugin_script}")
         cmd = [sys.executable, str(self.plugin_script)]
-        # nosec B603 - Uses Python interpreter with validated plugin script path
+        # nosec B603 B607 - Uses Python interpreter with validated plugin script path
         self.proc = subprocess.Popen(
             cmd,
             stdin=subprocess.PIPE,
