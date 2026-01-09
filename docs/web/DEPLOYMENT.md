@@ -16,7 +16,7 @@ services:
       - "5000:5000"
     environment:
       - FLASK_ENV=production
-      - DATABASE_URL=postgresql://user:pass@db:5432/projectai
+      - DATABASE_URL=postgresql://YOUR_USERNAME:YOUR_PASSWORD@db:5432/projectai
     depends_on:
       - db
 
@@ -30,8 +30,8 @@ services:
   db:
     image: postgres:15
     environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=pass
+      - POSTGRES_USER=YOUR_USERNAME
+      - POSTGRES_PASSWORD=YOUR_PASSWORD
       - POSTGRES_DB=projectai
     volumes:
       - postgres_data:/var/lib/postgresql/data
