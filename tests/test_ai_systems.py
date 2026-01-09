@@ -127,12 +127,12 @@ class TestCommandOverride:
         """Create override system."""
         with tempfile.TemporaryDirectory() as tmpdir:
             system = CommandOverride(data_dir=tmpdir)
-            system.set_password("test123")
+            system.set_password("test_password_123")  # Test password only
             yield system
 
     def test_password_verification(self, override):
         """Test password verification."""
-        verified = override.verify_password("test123")
+        verified = override.verify_password("test_password_123")  # Test password only
         assert verified
 
         verified = override.verify_password("wrong")
@@ -141,7 +141,7 @@ class TestCommandOverride:
     def test_request_override(self, override):
         """Test requesting override."""
         success, _ = override.request_override(
-            password="test123",
+            password="test_password_123",  # Test password only
             override_type=OverrideType.CONTENT_FILTER,
         )
         assert success
@@ -149,7 +149,7 @@ class TestCommandOverride:
     def test_override_active(self, override):
         """Test checking override active."""
         override.request_override(
-            password="test123",
+            password="test_password_123",  # Test password only
             override_type=OverrideType.CONTENT_FILTER,
         )
         is_active = override.is_override_active(OverrideType.CONTENT_FILTER)
