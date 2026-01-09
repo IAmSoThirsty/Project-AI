@@ -69,7 +69,7 @@ All credentials below were exposed in git commit `144c8fc` and earlier:
 
 #### A. OpenAI API Key
 
-**Exposed value**: `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`
+**Exposed value**: `sk-proj-[REDACTED - 172 characters - ALREADY ROTATED]`
 
 **Actions:**
 1. Go to: https://platform.openai.com/api-keys
@@ -88,8 +88,8 @@ All credentials below were exposed in git commit `144c8fc` and earlier:
 #### B. SMTP/Gmail Credentials
 
 **Exposed values**:
-- Username: `ProjectAiDevs@gmail.com`
-- Password: `R9609936!`
+- Username: `[REDACTED - @gmail.com - ROTATED]`
+- Password: `[REDACTED - App password - ROTATED]`
 
 **Actions:**
 1. Go to: https://myaccount.google.com/apppasswords
@@ -97,7 +97,7 @@ All credentials below were exposed in git commit `144c8fc` and earlier:
 3. Generate **NEW** app password
 4. Update `.env` file:
    ```
-   SMTP_USERNAME=ProjectAiDevs@gmail.com
+   SMTP_USERNAME=[YOUR-EMAIL]@gmail.com
    SMTP_PASSWORD=NEW_PASSWORD_HERE
    ```
 5. **Consider**: Creating a new email account if username is also sensitive
@@ -111,7 +111,7 @@ All credentials below were exposed in git commit `144c8fc` and earlier:
 
 #### C. Fernet Encryption Key
 
-**Exposed value**: `Qqyl2vCYY7W4AKuE-DmQLmL7IgXguMis_lFalqlliEc=`
+**Exposed value**: `[REDACTED - 44 character base64 Fernet key - ROTATED]`
 
 ⚠️ **CRITICAL**: This key encrypts location history and other sensitive data.
 
@@ -127,7 +127,7 @@ All credentials below were exposed in git commit `144c8fc` and earlier:
    from cryptography.fernet import Fernet
    import json
    
-   old_key = "Qqyl2vCYY7W4AKuE-DmQLmL7IgXguMis_lFalqlliEc="
+   old_key = "[REDACTED - OLD KEY - DO NOT USE]"
    new_key = "YOUR_NEW_KEY_HERE"
    
    old_cipher = Fernet(old_key.encode())

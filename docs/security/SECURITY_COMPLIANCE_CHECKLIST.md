@@ -27,8 +27,8 @@
   # Use placeholder values only - NEVER commit real credentials
   OPENAI_API_KEY=sk-proj-YOUR_KEY_HERE
   SMTP_USERNAME=your-email@example.com
-  SMTP_PASSWORD=your-app-password-here
-  FERNET_KEY=your-base64-fernet-key-here
+  SMTP_PASSWORD=<generate-app-specific-password>
+  FERNET_KEY=<generate-with-fernet.generate_key()>
   ```
 
 - [ ] **ENCRYPT** sensitive JSON files:
