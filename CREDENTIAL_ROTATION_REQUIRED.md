@@ -12,12 +12,14 @@ The `.env` file containing **real production credentials** was tracked in git hi
 
 ## Exposed Credentials
 
-The following credentials were committed to git history:
+The following types of credentials were committed to git history:
 
-1. **OpenAI API Key** - `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`
-2. **SMTP Email** - `ProjectAiDevs@gmail.com`
-3. **SMTP Password** - `R9609936!`
-4. **Fernet Encryption Key** - `Qqyl2vCYY7W4AKuE-DmQLmL7IgXguMis_lFalqlliEc=`
+1. **OpenAI API Key** - `sk-proj-[REDACTED - 200+ characters]` (revoke at https://platform.openai.com/api-keys)
+2. **SMTP Email** - `[REDACTED]@gmail.com`
+3. **SMTP Password** - `[REDACTED]` (revoke at Google App Passwords)
+4. **Fernet Encryption Key** - `[REDACTED - Base64 encoded]`
+
+**Note**: The actual credential values were visible in the committed `.env` file in git history. Repository owners have access to the original values in the git history for identification during rotation.
 
 ## Immediate Actions Required
 
@@ -28,7 +30,7 @@ The following credentials were committed to git history:
 ```bash
 # Steps:
 1. Go to https://platform.openai.com/api-keys
-2. Find the key starting with "sk-proj-cFQpstvedWKD..."
+2. Find and identify the compromised key in your key list
 3. Click "Revoke" to invalidate the old key
 4. Create a NEW API key with appropriate permissions
 5. Update your local .env file with the new key
@@ -45,10 +47,10 @@ The following credentials were committed to git history:
 **⏰ Do this immediately within 1 hour:**
 
 ```bash
-# For Gmail account ProjectAiDevs@gmail.com:
+# For Gmail account:
 1. Log in to https://myaccount.google.com
 2. Go to Security > 2-Step Verification > App passwords
-3. REVOKE the existing app password "R9609936!"
+3. REVOKE the existing app password (check git history for email address)
 4. Generate a NEW app password
 5. Update your local .env file with the new password
 6. Test email functionality to ensure it works
