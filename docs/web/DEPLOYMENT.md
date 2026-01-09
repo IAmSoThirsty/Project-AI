@@ -16,7 +16,9 @@ services:
       - "5000:5000"
     environment:
       - FLASK_ENV=production
-      - DATABASE_URL=postgresql://user:pass@db:5432/projectai
+      # ⚠️ DO NOT use these example credentials in production!
+      # Use environment variables or secrets management instead
+      - DATABASE_URL=postgresql://dbuser:CHANGE_THIS_PASSWORD@db:5432/projectai
     depends_on:
       - db
 
@@ -30,8 +32,9 @@ services:
   db:
     image: postgres:15
     environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=pass
+      # ⚠️ CHANGE THESE CREDENTIALS before deploying!
+      - POSTGRES_USER=dbuser
+      - POSTGRES_PASSWORD=CHANGE_THIS_PASSWORD
       - POSTGRES_DB=projectai
     volumes:
       - postgres_data:/var/lib/postgresql/data
