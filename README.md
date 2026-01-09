@@ -70,6 +70,34 @@ Experience the next generation of AI orchestration—engineered from the ground 
 
 ---
 
+## 🎨 UI & Frontend Features (Batch Merge Complete)
+
+**Recently Integrated** — All features from `feature/gui-3d-prototype` and `feature/web-spa-and-backend-integration` branches are now in the main codebase:
+
+### Desktop UI (PyQt6)
+- ✅ **3D/Neumorphic Styles** — Soft shadows, card layouts, gradient buttons, book-like texture
+- ✅ **Hover Lift Animations** — Interactive buttons with tactile shadow feedback (180ms transitions)
+- ✅ **Tab Parallax Effects** — Smooth page-turn animations with shadow shift (300ms fade-in)
+- ✅ **Leather Book Interface** — 6-zone dashboard with dual-page layout (Tron-themed login + dashboard)
+- ✅ **Dynamic Shadows** — `QGraphicsDropShadowEffect` on windows, panels, and buttons
+- ✅ **Dark Mode** — Complete dark theme (`styles_dark.qss`) with optimized contrast
+
+### Web Frontend (Foundation)
+- ✅ **Modern Preview Page** — Responsive dark theme with radial gradients and glass-morphism
+- ✅ **Backend Connectivity** — Live status polling (`/api/status` endpoint, 5s interval)
+- ✅ **Ready for React/Vite** — SPA architecture foundation in place
+- ✅ **Responsive Design** — Mobile-friendly breakpoints (min(900px, 90vw))
+
+### Security & Safety
+- ✅ **Enhanced Command Override** — Passlib/bcrypt password hashing with auto-migration from SHA256
+- ✅ **Content Filtering** — Image generator safety controls with admin override capability
+- ✅ **Audit Logging** — Comprehensive tracking of all override actions
+- ✅ **10 Safety Protocols** — Granular control over content filter, prompt safety, rate limiting, etc.
+
+📖 **Full Documentation**: [docs/UI_FRONTEND_BATCH_MERGE.md](docs/UI_FRONTEND_BATCH_MERGE.md)
+
+---
+
 ## 🏛️ Architecture: Core Systems & Directory
 
 ```
