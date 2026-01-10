@@ -24,6 +24,9 @@ jobs:
           ref: ${{ github.head_ref }}
           fetch-depth: 0
 
+      - name: Update submodules
+        run: git submodule update --init --recursive
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -62,6 +65,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Update submodules
+        run: git submodule update --init --recursive
       
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v2
@@ -86,6 +92,9 @@ jobs:
         language: [python, node, android]
     steps:
       - uses: actions/checkout@v4
+
+      - name: Update submodules
+        run: git submodule update --init --recursive
 
       - name: Python Tests
         if: matrix.language == 'python'

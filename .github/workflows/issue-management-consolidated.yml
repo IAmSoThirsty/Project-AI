@@ -1,10 +1,10 @@
-name: Auto Issue Triage and Resolution
+name: Issue Management - Consolidated
 
 on:
   issues:
     types: [opened, reopened, labeled]
   schedule:
-    # Run daily at 3 AM UTC to check all open issues
+    # Run daily at 3 AM UTC
     - cron: '0 3 * * *'
   workflow_dispatch:
 
@@ -15,14 +15,20 @@ permissions:
   security-events: read
 
 jobs:
-  triage-and-resolve:
-    name: Triage and Resolve Issues
+  # =========================================================================
+  # TRIAGE AND CATEGORIZE ISSUES
+  # =========================================================================
+  triage-issues:
+    name: Triage Issues
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Update submodules
+        run: git submodule update --init --recursive
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -34,7 +40,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install PyGithub requests pip-audit safety
 
-      - name: Triage and Resolve Issues
+      - name: Triage and resolve issues
         uses: actions/github-script@v7
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -82,19 +88,16 @@ jobs:
                 if (issueBodyLower.includes('0 vulnerability(ies)') || 
                     issueBodyLower.includes('0 vulnerabilities')) {
                   
-                  // Count how many packages have 0 vulnerabilities
                   const zeroVulnMatches = issueBody.match(/0 vulnerability\(ies\)/g) || [];
                   const packageMatches = issueBody.match(/\*\*[^*]+\*\*/g) || [];
                   
-                  // If most/all packages show 0 vulnerabilities, it's likely a false positive
                   if (zeroVulnMatches.length >= 10 && zeroVulnMatches.length >= packageMatches.length * 0.8) {
                     shouldClose = true;
-                    closeReason = 'False positive: Security scan reported 0 vulnerabilities for all packages. This issue was created by an automated workflow with a reporting bug. No action required.';
+                    closeReason = 'False positive: Security scan reported 0 vulnerabilities for all packages. No action required.';
                     shouldLabel.push('false-positive', 'automated');
                     console.log(`  Detected false positive security report`);
                   }
                 } else if (issueBodyLower.includes('vulnerability') || issueBodyLower.includes('cve-')) {
-                  // Real security issue - mark as high priority
                   priority = 'high';
                   console.log(`  Real security vulnerability detected - high priority`);
                 }
@@ -127,6 +130,12 @@ jobs:
               if (daysOld > 30 && !shouldClose) {
                 shouldLabel.push('stale');
                 console.log(`  Issue is ${daysOld} days old without updates`);
+                
+                // Auto-close stale issues after 60 days
+                if (daysOld > 60) {
+                  shouldClose = true;
+                  closeReason = 'Stale: This issue has been inactive for over 60 days and is being automatically closed. If this is still relevant, please reopen.';
+                }
               }
               
               // Apply labels
@@ -151,7 +160,7 @@ jobs:
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   issue_number: issue.number,
-                  body: `🤖 **Automated Resolution**\n\n${closeReason}\n\n---\n*This issue was automatically triaged and resolved by the automated issue management system.*`
+                  body: `🤖 **Automated Resolution**\n\n${closeReason}\n\n---\n*Automatically triaged by issue management system.*`
                 });
                 
                 await github.rest.issues.update({
@@ -178,8 +187,7 @@ jobs:
                     `**Category**: ${category}\n` +
                     `**Priority**: ${priority}\n` +
                     `**Labels**: ${shouldLabel.join(', ') || 'none'}\n\n` +
-                    `This issue has been automatically categorized and labeled. ` +
-                    `The automated system will continue monitoring for resolution opportunities.\n\n` +
+                    `This issue has been automatically categorized and labeled.\n\n` +
                     `---\n*Automated by issue management system*`;
                   
                   await github.rest.issues.createComment({
@@ -196,7 +204,16 @@ jobs:
             
             console.log('\n✅ Issue triage complete');
 
-      - name: Generate Summary Report
+  # =========================================================================
+  # GENERATE SUMMARY REPORT
+  # =========================================================================
+  generate-summary:
+    name: Generate Summary
+    runs-on: ubuntu-latest
+    needs: triage-issues
+    if: always()
+    steps:
+      - name: Generate summary report
         uses: actions/github-script@v7
         with:
           script: |
