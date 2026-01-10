@@ -1,9 +1,5 @@
 # Project AI
 
-<p align="center">
-  <img src="![image1](image1)" alt="Project-AI Hero Image" width="500"/><br>
-  <b>Project AI • Codex Deus Maximus • Founder/Architect</b>
-</p>
 
 ---
 
