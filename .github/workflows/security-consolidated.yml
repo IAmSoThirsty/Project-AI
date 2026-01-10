@@ -1,0 +1,421 @@
+name: Security - Consolidated
+
+on:
+  push:
+    branches: [main, develop, cerberus-integration, 'copilot/**']
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    # Run daily at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  security-events: write
+  actions: read
+
+jobs:
+  # =========================================================================
+  # CODEQL ANALYSIS (SAST)
+  # =========================================================================
+  codeql:
+    name: CodeQL Security Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Update submodules
+        run: git submodule update --init --recursive
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: python, javascript
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v2
+
+      - name: Run CodeQL analysis
+        uses: github/codeql-action/analyze@v2
+
+  # =========================================================================
+  # BANDIT PYTHON SECURITY SCANNER
+  # =========================================================================
+  bandit:
+    name: Bandit Python Security
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Update submodules
+        run: git submodule update --init --recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Bandit
+        run: |
+          python -m pip install --upgrade pip
+          pip install bandit[sarif]
+
+      - name: Run Bandit scan
+        id: bandit
+        run: |
+          bandit -r src/ -f json -o bandit-report.json || true
+          bandit -r src/ -f sarif -o bandit-report.sarif || true
+          
+          # Check if issues were found
+          if [ -s bandit-report.json ]; then
+            ISSUES=$(python -c "import json; data=json.load(open('bandit-report.json')); print(len(data.get('results', [])))")
+            echo "ISSUES_FOUND=$ISSUES" >> $GITHUB_OUTPUT
+            
+            if [ "$ISSUES" -gt "0" ]; then
+              echo "BANDIT_ISSUES=true" >> $GITHUB_OUTPUT
+            fi
+          fi
+        continue-on-error: true
+
+      - name: Upload SARIF results
+        if: steps.bandit.outputs.BANDIT_ISSUES == 'true'
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: bandit-report.sarif
+        continue-on-error: true
+
+      - name: Parse and categorize issues
+        if: steps.bandit.outputs.BANDIT_ISSUES == 'true'
+        id: parse
+        run: |
+          python3 << 'EOF'
+          import json
+          import os
+          
+          with open('bandit-report.json', 'r') as f:
+              data = json.load(f)
+          
+          results = data.get('results', [])
+          
+          # Categorize by severity
+          high = [r for r in results if r.get('issue_severity') == 'HIGH']
+          medium = [r for r in results if r.get('issue_severity') == 'MEDIUM']
+          low = [r for r in results if r.get('issue_severity') == 'LOW']
+          
+          # Create detailed report
+          with open('bandit-details.md', 'w') as f:
+              f.write("## Bandit Security Scan Results\n\n")
+              f.write(f"**Total Issues**: {len(results)}\n\n")
+              
+              if high:
+                  f.write("### 🔴 High Severity Issues\n\n")
+                  for issue in high[:5]:
+                      f.write(f"- **{issue.get('test_name')}** in `{issue.get('filename')}:{issue.get('line_number')}`\n")
+                      f.write(f"  - {issue.get('issue_text')}\n")
+                      f.write(f"  - CWE: {issue.get('issue_cwe', {}).get('id', 'N/A')}\n\n")
+              
+              if medium:
+                  f.write("### 🟡 Medium Severity Issues\n\n")
+                  for issue in medium[:5]:
+                      f.write(f"- **{issue.get('test_name')}** in `{issue.get('filename')}:{issue.get('line_number')}`\n")
+                      f.write(f"  - {issue.get('issue_text')}\n\n")
+              
+              if low:
+                  f.write(f"### 🟢 Low Severity Issues: {len(low)} found\n\n")
+          
+          print("Bandit report parsed successfully")
+          EOF
+
+      - name: Create issue for findings
+        if: steps.bandit.outputs.BANDIT_ISSUES == 'true' && github.event_name == 'schedule'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            let issueBody = '## 🔒 Bandit Security Scan Results\n\n';
+            issueBody += 'Automated Bandit scan detected security issues.\n\n';
+            
+            try {
+              const details = fs.readFileSync('bandit-details.md', 'utf8');
+              issueBody += details;
+            } catch (e) {
+              issueBody += 'Could not read detailed report. Check workflow artifacts.\n';
+            }
+            
+            issueBody += '\n### Action Required\n\n';
+            issueBody += '1. Review the security findings\n';
+            issueBody += '2. Fix high severity issues first\n';
+            issueBody += '3. Use `# nosec` comments only for false positives\n';
+            issueBody += '4. Re-run scan after fixes\n';
+            
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🔒 Bandit detected security issues',
+              body: issueBody,
+              labels: ['security', 'bandit', 'automated']
+            });
+
+      - name: Upload Bandit reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bandit-reports
+          path: |
+            bandit-report.json
+            bandit-report.sarif
+            bandit-details.md
+
+  # =========================================================================
+  # SECRET SCANNING
+  # =========================================================================
+  secret-scan:
+    name: Scan for Hardcoded Secrets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Update submodules
+        run: git submodule update --init --recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install bandit detect-secrets truffleHog3
+
+      - name: Run Bandit for secrets
+        continue-on-error: true
+        run: |
+          echo "🔍 Running Bandit security linter..."
+          bandit -r src/ tools/ scripts/ -f json -o bandit-secrets.json || true
+          bandit -r src/ tools/ scripts/ -f txt || true
+
+      - name: Run detect-secrets
+        continue-on-error: true
+        run: |
+          echo "🔍 Running detect-secrets scanner..."
+          detect-secrets scan --all-files --force-use-all-plugins \
+            --exclude-files '\.lock$' \
+            --exclude-files '\.pyc$' \
+            --exclude-files 'node_modules/' \
+            --exclude-files '\.git/' \
+            > .secrets.baseline || true
+
+      - name: Run TruffleHog
+        continue-on-error: true
+        run: |
+          echo "🔍 Running TruffleHog on git history..."
+          trufflehog3 -v -r https://github.com/${{ github.repository }} \
+            --branch ${{ github.ref_name }} \
+            --max-depth 100 || true
+
+      - name: Run enhanced secret scanner
+        id: enhanced-scan
+        continue-on-error: true
+        run: |
+          echo "🔍 Running enhanced secret scanner..."
+          if [ -f tools/enhanced_secret_scan.py ]; then
+            python tools/enhanced_secret_scan.py --report enhanced-scan-report.json
+            EXIT_CODE=$?
+            
+            if [ $EXIT_CODE -eq 2 ]; then
+              echo "❌ CRITICAL secrets found!"
+              echo "critical_found=true" >> $GITHUB_OUTPUT
+            elif [ $EXIT_CODE -eq 1 ]; then
+              echo "⚠️  Secrets found"
+              echo "secrets_found=true" >> $GITHUB_OUTPUT
+            else
+              echo "✅ No secrets found"
+              echo "secrets_found=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "Enhanced scanner not found, skipping"
+          fi
+
+      - name: Upload scan reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: secret-scan-reports
+          path: |
+            bandit-secrets.json
+            .secrets.baseline
+            enhanced-scan-report.json
+          retention-days: 30
+
+      - name: Check for critical findings
+        if: steps.enhanced-scan.outputs.critical_found == 'true'
+        run: |
+          echo "::error::CRITICAL secrets detected! Immediate action required."
+          echo "Review the scan reports and rotate exposed credentials immediately."
+          exit 1
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request' && steps.enhanced-scan.outputs.secrets_found == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const comment = '## ⚠️ Security Alert: Potential Secrets Detected\n\n' +
+              'The secret scanner has detected potential secrets in this PR.\n\n' +
+              '**Action Required:**\n' +
+              '1. Review the scan results in the workflow artifacts\n' +
+              '2. Remove any hardcoded secrets\n' +
+              '3. Use environment variables instead\n' +
+              '4. See `docs/security/SECRET_MANAGEMENT.md` for guidance\n';
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+  # =========================================================================
+  # DEPENDENCY SECURITY AUDIT
+  # =========================================================================
+  dependency-audit:
+    name: Dependency Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Update submodules
+        run: git submodule update --init --recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pip-audit safety
+
+      - name: Run pip-audit
+        id: pip_audit
+        run: |
+          pip-audit --format json -o pip-audit-report.json || true
+          pip-audit --format cyclonedx-json -o pip-audit-sbom.json || true
+          pip-audit || true
+        continue-on-error: true
+
+      - name: Run safety check
+        id: safety
+        run: |
+          safety check --json --output safety-report.json || true
+          safety check || true
+        continue-on-error: true
+
+      - name: Parse vulnerability reports
+        id: parse_vulns
+        run: |
+          python3 << 'EOF'
+          import json
+          import os
+          
+          vulns_found = False
+          critical_vulns = False
+          
+          # Parse pip-audit report
+          try:
+              with open('pip-audit-report.json', 'r') as f:
+                  audit_data = json.load(f)
+                  if audit_data.get('dependencies', []):
+                      vulns_found = True
+                      for dep in audit_data['dependencies']:
+                          for vuln in dep.get('vulns', []):
+                              if vuln.get('severity', '').lower() in ['high', 'critical']:
+                                  critical_vulns = True
+          except: pass
+          
+          # Parse safety report
+          try:
+              with open('safety-report.json', 'r') as f:
+                  safety_data = json.load(f)
+                  if safety_data:
+                      vulns_found = True
+          except: pass
+          
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              f.write(f"vulns_found={'true' if vulns_found else 'false'}\n")
+              f.write(f"critical_vulns={'true' if critical_vulns else 'false'}\n")
+          EOF
+
+      - name: Upload audit reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-audit-reports
+          path: |
+            pip-audit-report.json
+            pip-audit-sbom.json
+            safety-report.json
+
+      - name: Create issue for vulnerabilities
+        if: steps.parse_vulns.outputs.vulns_found == 'true' && github.event_name == 'schedule'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const criticalLabel = '${{ steps.parse_vulns.outputs.critical_vulns }}' === 'true' ? '🔴 CRITICAL' : '🟡';
+            
+            const issueBody = `## ${criticalLabel} Dependency Vulnerabilities Detected\n\n` +
+              'Automated security audit found vulnerabilities in dependencies.\n\n' +
+              '### Action Required\n' +
+              '1. Review the audit reports in workflow artifacts\n' +
+              '2. Update vulnerable packages: `pip install --upgrade <package>`\n' +
+              '3. Test after updates\n' +
+              '4. Re-run security scan to verify fixes\n\n' +
+              '**Reports**: pip-audit and safety scan results attached to workflow artifacts.';
+            
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `${criticalLabel} Dependency vulnerabilities detected`,
+              body: issueBody,
+              labels: ['security', 'dependencies', 'automated']
+            });
+
+  # =========================================================================
+  # SECURITY SUMMARY
+  # =========================================================================
+  security-summary:
+    name: Security Summary
+    runs-on: ubuntu-latest
+    needs: [codeql, bandit, secret-scan, dependency-audit]
+    if: always()
+    steps:
+      - name: Generate summary
+        run: |
+          echo "## 🔐 Security Scan Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Scanner | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|---------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| CodeQL | ${{ needs.codeql.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Bandit | ${{ needs.bandit.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Secret Scan | ${{ needs.secret-scan.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Dependency Audit | ${{ needs.dependency-audit.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "View detailed reports in workflow artifacts." >> $GITHUB_STEP_SUMMARY
