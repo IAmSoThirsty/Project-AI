@@ -1,13 +1,9 @@
-name: Comprehensive PR Automation
+name: PR Automation - Consolidated
 
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
-    inputs:
-      pr_number:
-        description: 'PR number to process (leave empty for all open PRs)'
-        required: false
 
 permissions:
   contents: write
@@ -17,9 +13,11 @@ permissions:
   statuses: write
 
 jobs:
-  # Job 1: Run all required checks
-  run-checks:
-    name: Run All Required Checks
+  # =========================================================================
+  # AUTO-REVIEW & LINT/TEST
+  # =========================================================================
+  auto-review:
+    name: Auto Review & Check
     runs-on: ubuntu-latest
     if: '!github.event.pull_request.draft'
     outputs:
@@ -32,6 +30,9 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
+
+      - name: Update submodules
+        run: git submodule update --init --recursive
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -75,18 +76,23 @@ jobs:
             pip-audit-report.json
             bandit-report.json
 
-  # Job 2: Auto-fix failures
+  # =========================================================================
+  # AUTO-FIX FAILURES
+  # =========================================================================
   auto-fix:
-    name: Auto-Fix Failures
+    name: Auto-Fix Issues
     runs-on: ubuntu-latest
-    needs: run-checks
-    if: needs.run-checks.outputs.lint-status == 'failure'
+    needs: auto-review
+    if: needs.auto-review.outputs.lint-status == 'failure'
     steps:
       - name: Checkout PR code
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update submodules
+        run: git submodule update --init --recursive
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -117,7 +123,9 @@ jobs:
             git push
           fi
 
-  # Job 3: Re-run checks after fixes
+  # =========================================================================
+  # VERIFY FIXES
+  # =========================================================================
   verify-fixes:
     name: Verify Fixes
     runs-on: ubuntu-latest
@@ -129,6 +137,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Update submodules
+        run: git submodule update --init --recursive
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -177,15 +188,18 @@ jobs:
               body: body
             });
 
-  # Job 4: Auto-merge
-  auto-merge:
-    name: Auto-Merge PR
+  # =========================================================================
+  # APPROVAL & AUTO-MERGE
+  # =========================================================================
+  auto-approve-and-merge:
+    name: Auto-Approve & Merge
     runs-on: ubuntu-latest
-    needs: [run-checks, verify-fixes]
+    needs: [auto-review, verify-fixes]
     if: |
-      (needs.run-checks.outputs.lint-status == 'success' && 
-       needs.run-checks.outputs.test-status == 'success') ||
-      needs.verify-fixes.outputs.all-passed == 'true'
+      !cancelled() &&
+      ((needs.auto-review.outputs.lint-status == 'success' && 
+        needs.auto-review.outputs.test-status == 'success') ||
+       needs.verify-fixes.outputs.all-passed == 'true')
     steps:
       - name: Approve PR
         uses: actions/github-script@v7
@@ -203,14 +217,67 @@ jobs:
               console.log('Could not approve (may already be approved):', error.message);
             }
 
-      - name: Enable auto-merge
+      - name: Enable auto-merge (if Dependabot or auto-merge label)
+        if: |
+          github.actor == 'dependabot[bot]' || 
+          contains(github.event.pull_request.labels.*.name, 'auto-merge')
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr merge --auto --squash ${{ github.event.pull_request.number }} || \
-          echo "Could not enable auto-merge. May require branch protection rules or administrator approval."
+          echo "Could not enable auto-merge. May require branch protection rules."
 
       - name: Comment merge status
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const actor = '${{ github.actor }}';
+            const isDependabot = actor === 'dependabot[bot]';
+            const hasAutoMergeLabel = ${{ contains(github.event.pull_request.labels.*.name, 'auto-merge') }};
+            
+            let body = '✅ All checks passed!\n\n';
+            
+            if (isDependabot || hasAutoMergeLabel) {
+              body += '🚀 Auto-merge enabled. PR will merge automatically when all required checks pass.';
+            } else {
+              body += '👍 Ready for manual review and merge.';
+            }
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+
+  # =========================================================================
+  # DEPENDABOT SPECIFIC HANDLING
+  # =========================================================================
+  dependabot-auto-merge:
+    name: Dependabot Auto-Merge
+    runs-on: ubuntu-latest
+    needs: auto-review
+    if: |
+      github.actor == 'dependabot[bot]' &&
+      needs.auto-review.outputs.lint-status == 'success' && 
+      needs.auto-review.outputs.test-status == 'success'
+    steps:
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v1
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Enable auto-merge for patch/minor updates
+        if: |
+          steps.metadata.outputs.update-type == 'version-update:semver-patch' || 
+          steps.metadata.outputs.update-type == 'version-update:semver-minor'
+        run: gh pr merge --auto --squash "${{ github.event.pull_request.html_url }}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Comment on major update
+        if: steps.metadata.outputs.update-type == 'version-update:semver-major'
         uses: actions/github-script@v7
         with:
           script: |
@@ -218,152 +285,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '🚀 Auto-merge enabled. PR will merge automatically when all required checks pass and branch protection rules are satisfied.'
+              body: '⚠️ Major version update detected. Please review manually before merging.'
             });
-
-  # Job 5: Post-merge validation
-  post-merge-validation:
-    name: Validate Main Branch
-    runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
-    steps:
-      - name: Checkout main
-        uses: actions/checkout@v4
-        with:
-          ref: main
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pytest ruff
-
-      - name: Validate main branch
-        id: validate
-        run: |
-          echo "Validating main branch health..."
-          HEALTHY=true
-          
-          echo "1. Check for conflicts..."
-          if git ls-files -u | grep -q .; then
-            echo "❌ Conflicts detected"
-            HEALTHY=false
-          else
-            echo "✅ No conflicts"
-          fi
-          
-          echo "2. Run tests..."
-          if ! pytest -v; then
-            echo "❌ Tests failing"
-            HEALTHY=false
-          else
-            echo "✅ Tests passing"
-          fi
-          
-          echo "3. Run linting..."
-          if ! ruff check .; then
-            echo "❌ Linting issues"
-            HEALTHY=false
-          else
-            echo "✅ Linting clean"
-          fi
-          
-          echo "healthy=$HEALTHY" >> $GITHUB_OUTPUT
-
-      - name: Generate summary report
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const healthy = '${{ steps.validate.outputs.healthy }}' === 'true';
-            const report = `
-            ## 📊 Post-Merge Validation Report
-            
-            **PR #${{ github.event.pull_request.number }}** merged into main
-            
-            ### Main Branch Health Status: ${healthy ? '✅ HEALTHY' : '⚠️ ISSUES DETECTED'}
-            
-            #### Checks Performed:
-            - **Merge Conflicts**: ${healthy ? '✅ None' : '❌ Detected'}
-            - **Test Suite**: ${healthy ? '✅ Passing' : '❌ Failing'}
-            - **Linting**: ${healthy ? '✅ Clean' : '❌ Issues'}
-            
-            #### Summary:
-            ${healthy ? 
-              '✅ Main branch is healthy with zero conflicts and zero failing tests.' :
-              '⚠️ Issues detected on main branch. Immediate attention required.'}
-            
-            ---
-            *Generated by Comprehensive PR Automation*
-            `;
-            
-            // Create issue if main is unhealthy
-            if (!healthy) {
-              await github.rest.issues.create({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title: `🚨 Main Branch Health Check Failed After PR #${{ github.event.pull_request.number }}`,
-                body: report,
-                labels: ['urgent', 'main-branch-health']
-              });
-            }
-            
-            // Comment on the merged PR
-            await github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: report
-            });
-
-# Separate workflow for processing all open PRs
-  process-all-prs:
-    name: Process All Open PRs
-    runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Get all open PRs
-        id: get-prs
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const { data: prs } = await github.rest.pulls.list({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              state: 'open',
-              per_page: 100
-            });
-            
-            console.log(`Found ${prs.length} open PRs`);
-            return prs.map(pr => pr.number);
-
-      - name: Trigger checks for each PR
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const prNumbers = ${{ steps.get-prs.outputs.result }};
-            
-            for (const prNumber of prNumbers) {
-              console.log(`Triggering workflow for PR #${prNumber}`);
-              
-              try {
-                await github.rest.actions.createWorkflowDispatch({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  workflow_id: 'comprehensive-pr-automation.yml',
-                  ref: 'main',
-                  inputs: {
-                    pr_number: prNumber.toString()
-                  }
-                });
-              } catch (error) {
-                console.log(`Failed to trigger for PR #${prNumber}:`, error.message);
-              }
-            }

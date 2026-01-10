@@ -17,6 +17,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Update submodules
+        run: git submodule update --init --recursive
       
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -167,6 +170,9 @@ with tempfile.TemporaryDirectory() as tmpdir:
     needs: test-cpu
     steps:
       - uses: actions/checkout@v4
+
+      - name: Update submodules
+        run: git submodule update --init --recursive
       
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -212,6 +218,9 @@ print(f'  Binary path: {binary}')
     needs: test-cpu
     steps:
       - uses: actions/checkout@v4
+
+      - name: Update submodules
+        run: git submodule update --init --recursive
       
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -258,6 +267,9 @@ print(f'  Binary path: {binary}')
     needs: [compile-loihi, compile-speck]
     steps:
       - uses: actions/checkout@v4
+
+      - name: Update submodules
+        run: git submodule update --init --recursive
       
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -324,6 +336,9 @@ print('\\n✓ Emulator validation complete')
     needs: validate-emulator
     steps:
       - uses: actions/checkout@v4
+
+      - name: Update submodules
+        run: git submodule update --init --recursive
       
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -396,6 +411,9 @@ with tempfile.TemporaryDirectory() as tmpdir:
     needs: test-ota-deployment
     steps:
       - uses: actions/checkout@v4
+
+      - name: Update submodules
+        run: git submodule update --init --recursive
       
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -444,6 +462,9 @@ print(f'  Production metrics collected: {len(canary.production_metrics)}')
     needs: test-canary-rollout
     steps:
       - uses: actions/checkout@v4
+
+      - name: Update submodules
+        run: git submodule update --init --recursive
       
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -489,6 +510,9 @@ print(f'  Currently using shadow: {shadow.is_using_shadow}')
     needs: [test-shadow-fallback]
     steps:
       - uses: actions/checkout@v4
+
+      - name: Update submodules
+        run: git submodule update --init --recursive
       
       - name: Setup Python
         uses: actions/setup-python@v4
