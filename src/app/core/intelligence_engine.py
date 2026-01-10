@@ -5,6 +5,7 @@ This module consolidates three separate intelligence subsystems:
 - Data Analysis: Load, analyze, and visualize tabular data
 - Intent Detection: Classify user intents from text using ML
 - Learning Paths: Generate personalized learning paths via AI
+- Enhanced Intelligence Router: Route queries to knowledge base and function registry
 """
 
 import json
@@ -31,6 +32,203 @@ except Exception:
         from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
     except Exception:
         FigureCanvasQTAgg = None
+
+
+# ============================================================================
+# ENHANCED INTELLIGENCE ROUTER
+# ============================================================================
+
+
+class IntelligenceRouter:
+    """Router for intelligent query handling with function registry and knowledge base.
+
+    This class provides a unified interface for routing user queries to appropriate
+    handlers, including:
+    - Knowledge base queries for facts and information retrieval
+    - Function/tool invocation through the registry
+    - Intent-based routing for different query types
+    """
+
+    def __init__(self, memory_system=None, function_registry=None):
+        """Initialize the intelligence router.
+
+        Args:
+            memory_system: MemoryExpansionSystem instance for knowledge queries
+            function_registry: FunctionRegistry instance for function calls
+        """
+        self.memory_system = memory_system
+        self.function_registry = function_registry
+
+    def route_query(self, query: str, context: dict | None = None) -> dict:
+        """Route a user query to the appropriate handler.
+
+        Args:
+            query: User query string
+            context: Optional context dictionary
+
+        Returns:
+            Dictionary with routing results including:
+                - route: The route taken (knowledge, function, general)
+                - response: The response content
+                - metadata: Additional routing metadata
+        """
+        context = context or {}
+        query_lower = query.lower()
+
+        # Check if query is asking for function help
+        if any(word in query_lower for word in ["help", "functions", "tools", "what can you do"]) and self.function_registry:
+            return {
+                "route": "function_help",
+                "response": self.function_registry.get_help(),
+                "metadata": {
+                    "function_count": len(self.function_registry.list_functions()),
+                    "categories": self.function_registry.get_categories()
+                }
+            }
+
+        # Check if query is asking about knowledge/facts
+        if any(word in query_lower for word in ["what", "who", "where", "when", "tell me about"]) and self.memory_system:
+            # Extract key terms for search (simplified approach)
+            search_terms = [word for word in query.split() if len(word) > 3]
+            if search_terms:
+                results = self.memory_system.query_knowledge(
+                    " ".join(search_terms[:3]),  # Use first 3 significant words
+                    limit=5
+                )
+                if results:
+                    return {
+                        "route": "knowledge_query",
+                        "response": self._format_knowledge_results(results),
+                        "metadata": {
+                            "results_count": len(results),
+                            "query_terms": search_terms[:3]
+                        }
+                    }
+
+        # Check if query is requesting a function call
+        if self.function_registry:
+            # Simple pattern matching for function calls
+            # Format: "call <function_name>" or "run <function_name>"
+            for trigger in ["call ", "run ", "execute "]:
+                if trigger in query_lower:
+                    parts = query.split(trigger, 1)
+                    if len(parts) > 1 and parts[1].strip():
+                        func_name = parts[1].split()[0]
+                        if self.function_registry.is_registered(func_name):
+                            return {
+                                "route": "function_call",
+                                "response": f"Function '{func_name}' is available. Use the call interface to invoke it.",
+                                "metadata": {
+                                    "function_name": func_name,
+                                    "function_info": self.function_registry.get_function_info(func_name)
+                                }
+                            }
+
+        # Check for conversation history search
+        if any(word in query_lower for word in ["remember", "conversation", "history", "discussed"]) and self.memory_system:
+            search_terms = [word for word in query.split() if len(word) > 3]
+            if search_terms:
+                results = self.memory_system.search_conversations(
+                    " ".join(search_terms[:3]),
+                    limit=5
+                )
+                if results:
+                    return {
+                        "route": "conversation_search",
+                        "response": self._format_conversation_results(results),
+                        "metadata": {
+                            "results_count": len(results),
+                            "query_terms": search_terms[:3]
+                        }
+                    }
+
+        # Default: general query
+        return {
+            "route": "general",
+            "response": "I can help you with knowledge queries, function calls, and more. Try asking me a question or type 'help' to see available functions.",
+            "metadata": {
+                "memory_available": self.memory_system is not None,
+                "functions_available": self.function_registry is not None
+            }
+        }
+
+    def _format_knowledge_results(self, results: list) -> str:
+        """Format knowledge query results for display.
+
+        Args:
+            results: List of knowledge query results
+
+        Returns:
+            Formatted string response
+        """
+        if not results:
+            return "No knowledge entries found."
+
+        lines = ["Found the following information:", ""]
+        for i, result in enumerate(results[:5], 1):
+            category = result.get("category", "Unknown")
+            key = result.get("key", "")
+            value = result.get("value", "")
+            lines.append(f"{i}. [{category}] {key}: {value}")
+
+        return "\n".join(lines)
+
+    def _format_conversation_results(self, results: list) -> str:
+        """Format conversation search results for display.
+
+        Args:
+            results: List of conversation search results
+
+        Returns:
+            Formatted string response
+        """
+        if not results:
+            return "No matching conversations found."
+
+        lines = ["Found the following conversations:", ""]
+        for i, conv in enumerate(results[:5], 1):
+            user_msg = conv.get("user", "")[:100]  # Truncate long messages
+            ai_msg = conv.get("ai", "")[:100]
+            timestamp = conv.get("timestamp", "Unknown time")
+            lines.append(f"{i}. At {timestamp}:")
+            lines.append(f"   You: {user_msg}")
+            lines.append(f"   AI: {ai_msg}")
+            lines.append("")
+
+        return "\n".join(lines)
+
+    def call_function(self, function_name: str, **kwargs) -> dict:
+        """Call a registered function with parameters.
+
+        Args:
+            function_name: Name of the function to call
+            **kwargs: Parameters to pass to the function
+
+        Returns:
+            Dictionary with call results:
+                - success: Boolean indicating success
+                - result: The function result (if successful)
+                - error: Error message (if failed)
+        """
+        if not self.function_registry:
+            return {
+                "success": False,
+                "error": "Function registry not available"
+            }
+
+        try:
+            result = self.function_registry.call(function_name, **kwargs)
+            return {
+                "success": True,
+                "result": result,
+                "function_name": function_name
+            }
+        except Exception as e:
+            return {
+                "success": False,
+                "error": str(e),
+                "function_name": function_name
+            }
 
 
 # ============================================================================

@@ -31,8 +31,11 @@ def apply_limits():
             setrlimit(rlimit_cpu, (2, 4))
         if callable(setrlimit) and rlimit_nofile is not None:
             setrlimit(rlimit_nofile, (16, 64))
-    except Exception:
-        pass
+    except Exception as e:
+        # Resource limits are best-effort on this platform
+        # Log the exception for debugging but don't fail initialization
+        import logging
+        logging.debug("Could not set resource limits: %s", e)
 
 
 def run_module(module_path: str) -> dict:
