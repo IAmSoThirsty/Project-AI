@@ -4,6 +4,14 @@
 
 This directory contains a comprehensive adversarial red-teaming evaluation suite for testing the safety, robustness, and ethical boundaries of the Galahad AI model (Project-AI). The suite implements real, unmodified datasets and attack scenarios to transparently measure the model's resistance to jailbreaks, prompt injections, and other adversarial techniques.
 
+## 📚 Key Documentation
+
+- **[PUBLISHING_STANDARDS_2026.md](PUBLISHING_STANDARDS_2026.md)** - ⭐ **Industry-standard publishing practices** based on JailbreakBench, DeepTeam, Garak, ActorAttack norms (2026)
+- **[THE_CODEX.md](THE_CODEX.md)** - Complete architectural documentation and methodology
+- **[RESEARCH_BASED_ATTACKS.md](RESEARCH_BASED_ATTACKS.md)** - Catalog of attack patterns from academic research
+- **[GARAK_COMPREHENSIVE_REPORT.md](GARAK_COMPREHENSIVE_REPORT.md)** - Detailed vulnerability analysis report
+- **[transcripts/](transcripts/)** - 276 individual conversation logs (unedited, immutable)
+
 ## Architecture
 
 ### Core Components
