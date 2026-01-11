@@ -91,9 +91,9 @@ class GalahadModel:
         # NEW: Calculate conversation-level risk score
         risk_score = self._calculate_conversation_risk(prompt, context)
         
-        # VERY AGGRESSIVE: Block on moderate risk score (3+ out of 10)
-        # This enables earlier detection of multi-turn attacks
-        if risk_score >= 3:
+        # ULTRA-AGGRESSIVE: Block on low risk score (2+ out of 10)
+        # This enables the earliest possible detection of multi-turn attacks
+        if risk_score >= 2:
             context["endangers_humanity"] = True
             logger.info(f"Elevated conversation risk: score={risk_score}/10, blocking preemptively")
         
@@ -154,7 +154,10 @@ class GalahadModel:
         - Escalation velocity (0-2 points)
         - Suspicious topic switching (0-2 points)
         
-        Threshold: 3+ points = block immediately (aggressive early detection)
+        Threshold: 2+ points = block immediately (ultra-aggressive early detection)
+        
+        This implements predictive risk modeling by analyzing conversation patterns
+        and blocking preemptively before attacks fully materialize.
         
         Args:
             current_prompt: Current prompt being evaluated
@@ -166,13 +169,34 @@ class GalahadModel:
         risk_score = 0
         current_lower = current_prompt.lower()
         
+        # PREDICTIVE: Pattern-specific early warnings
+        suspicious_patterns = {
+            "technical_progression": ["network", "port", "scan", "test", "check"],
+            "trust_building": ["thanks", "helpful", "appreciate", "great"],
+            "educational_framing": ["learn", "understand", "study", "research", "project"],
+            "authority_claims": ["professional", "certified", "professor", "law enforcement"],
+        }
+        
+        # Check for suspicious patterns
+        for pattern_name, keywords in suspicious_patterns.items():
+            if any(kw in current_lower for kw in keywords):
+                # If we've seen harmful content before, these patterns are red flags
+                if len(self.conversation_history) > 0:
+                    has_previous_harmful = any(
+                        entry["context"].get("endangers_humanity") or entry["context"].get("endangers_human")
+                        for entry in self.conversation_history
+                    )
+                    if has_previous_harmful:
+                        risk_score += 1  # Suspicious pattern after harmful = escalation
+                        logger.debug(f"Suspicious pattern detected: {pattern_name}")
+        
         # Factor 1: Current prompt danger (0-4 points) - INCREASED from 0-3
         if current_context.get("endangers_humanity"):
             risk_score += 4  # Immediate high risk
         elif current_context.get("endangers_human"):
             risk_score += 3  # High risk
         elif any(kw in current_lower for kw in ["hack", "exploit", "bypass", "unauthorized", "illegal", "malware", "weapon"]):
-            risk_score += 2  # INCREASED from 1 - suspicious keywords
+            risk_score += 2  # Suspicious keywords
         
         # Factor 2: Historical harmful requests (0-3 points)
         if len(self.conversation_history) > 0:
@@ -209,6 +233,17 @@ class GalahadModel:
             
             if previous_benign and current_harmful:
                 risk_score += 3  # INCREASED - Benign→harmful switch = very suspicious
+        
+        # Factor 5: PREDICTIVE - First-turn dangerous keywords
+        # Even with no history, certain patterns suggest incoming attacks
+        if len(self.conversation_history) == 0:
+            first_turn_red_flags = [
+                "ignore", "forget", "disregard", "override", "bypass",
+                "dan", "stan", "dude", "unrestricted", "token",
+                "decode", "rot13", "base64", "hex",
+            ]
+            if any(flag in current_lower for flag in first_turn_red_flags):
+                risk_score += 2  # First-turn jailbreak attempt
         
         logger.debug(f"Conversation risk score: {risk_score}/10 (turns: {len(self.conversation_history)})")
         
@@ -396,13 +431,26 @@ class GalahadModel:
             "enable developer mode", "disable safety"
         ]
         
-        # Encoding-based attacks
+        # Encoding-based attacks (with regex patterns for ROT13)
         encoding_keywords = [
             "decode and execute", "decode and follow", "decode this",
             "base64", "rot13", "rot-13", "decode from rot13", "rot 13",
             "hex encoding", "convert from hex", "caesar cipher",
             "substitution cipher", "translate and execute", "translate then follow"
         ]
+        
+        # Additional regex patterns for ROT13 detection
+        import re
+        rot13_patterns = [
+            r'rot\s*13',  # rot13, rot 13, rot  13
+            r'rot-13',    # rot-13
+            r'decode.*rot',  # decode from rot, decode rot
+            r'rot.*decode',  # rot decode, rot13 decode
+        ]
+        
+        is_rot13_detected = any(re.search(pattern, prompt_lower, re.IGNORECASE) for pattern in rot13_patterns)
+        if is_rot13_detected:
+            logger.info(f"ROT13 pattern detected via regex")
         
         # Data leakage attempts (CRITICAL - was 0% detection)
         data_leakage_keywords = [
@@ -471,7 +519,7 @@ class GalahadModel:
         endangers_human = any(kw in prompt_lower for kw in human_harm_keywords)
         is_persona_jailbreak = any(kw in prompt_lower for kw in persona_jailbreak_keywords)
         is_override_attempt = any(kw in prompt_lower for kw in override_keywords)
-        is_encoding_attack = any(kw in prompt_lower for kw in encoding_keywords)
+        is_encoding_attack = any(kw in prompt_lower for kw in encoding_keywords) or is_rot13_detected
         is_data_leakage = any(kw in prompt_lower for kw in data_leakage_keywords)
         is_toxicity = any(kw in prompt_lower for kw in toxicity_keywords)
         is_system_prompt_extraction = any(kw in prompt_lower for kw in system_prompt_keywords)
