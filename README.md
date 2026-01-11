@@ -1,11 +1,11 @@
-# Project AI
-
-
+Project AI / Cerberus / Codex Deus Maximus 
+        The Triumvirate
 ---
 
-### 🏅 Badges & Logos
+## 🏅 Badges & Shields
 
 <p align="center">
+  <!-- CI & Coverage -->
   <a href="https://github.com/IAmSoThirsty/Project-AI/actions/workflows/ci-consolidated.yml">
     <img alt="CI Status" src="https://github.com/IAmSoThirsty/Project-AI/actions/workflows/ci-consolidated.yml/badge.svg">
   </a>
@@ -15,9 +15,35 @@
   <a href="https://github.com/IAmSoThirsty/Project-AI/tree/main/tests">
     <img alt="Test Coverage" src="https://img.shields.io/badge/tests-100%2B-green?logo=pytest&label=Test%20Coverage">
   </a>
+
+  <!-- Security -->
+  <a href="https://github.com/IAmSoThirsty/Project-AI/actions/workflows/security-consolidated.yml">
+    <img alt="Security Scan" src="https://github.com/IAmSoThirsty/Project-AI/actions/workflows/security-consolidated.yml/badge.svg">
+  </a>
+  <a href="https://github.com/IAmSoThirsty/Project-AI/security/code-scanning">
+    <img alt="CodeQL" src="https://img.shields.io/github/issues/detail/state/IAmSoThirsty/Project-AI/1?label=CodeQL%20Scan&color=informational">
+  </a>
+  <img alt="Bandit" src="https://img.shields.io/badge/security-bandit-informational?logo=python">
+  <img alt="Secrets Scan" src="https://img.shields.io/badge/secrets-checked-yellow?logo=githubactions">
+  <a href="https://github.com/IAmSoThirsty/Project-AI/security/advisories">
+    <img alt="Vulnerabilities" src="https://img.shields.io/github/security-advisories/IAmSoThirsty/Project-AI.svg">
+  </a>
+
+  <!-- Authenticity / Provenance -->
+  <img alt="Signed Commits" src="https://img.shields.io/badge/commits-signed-21a366?logo=github">
+  <img alt="SBOM" src="https://img.shields.io/badge/SBOM-included-blueviolet?logo=spdx">
+  <img alt="SLSA" src="https://img.shields.io/badge/SLSA-level_3-blue?logo=slsa">
+  <img alt="Cosign" src="https://img.shields.io/badge/container-signed-19b2ad?logo=docker">
+
+  <!-- Dependency & License -->
+  <a href="https://github.com/IAmSoThirsty/Project-AI/dependabot">
+    <img alt="Dependencies" src="https://img.shields.io/badge/dependencies-up--to--date-brightgreen?logo=dependabot">
+  </a>
   <a href="LICENSE">
     <img alt="License: MIT" src="https://img.shields.io/github/license/IAmSoThirsty/Project-AI?color=orange&logo=open-source-initiative&label=License">
   </a>
+
+  <!-- Python, Docker, Website -->
   <img alt="Python: 3.10+" src="https://img.shields.io/badge/python-3.10%2B-blue?logo=python&label=Python">
   <a href="Dockerfile">
     <img alt="Docker Ready" src="https://img.shields.io/badge/docker-ready-blue?logo=docker">
@@ -25,23 +51,27 @@
   <a href="https://iamsothirsty.github.io/Project-AI/">
     <img alt="Project Website" src="https://img.shields.io/badge/website-live-green?logo=githubpages">
   </a>
-  <a href="https://github.com/IAmSoThirsty/Project-AI/discussions">
-    <img alt="Discussions" src="https://img.shields.io/github/discussions/IAmSoThirsty/Project-AI?label=Community&color=brightgreen">
-  </a>
-  <a href="SECURITY.md">
-    <img alt="Security Policy" src="https://img.shields.io/badge/security-Policy-blueviolet?logo=security">
-  </a>
+
+  <!-- Code Quality & Style -->
   <img alt="Code Style: Ruff" src="https://img.shields.io/badge/code%20style-ruff-9644fa?logo=python">
+  <img alt="Prettier" src="https://img.shields.io/badge/code%20style-prettier-f7b93e?logo=prettier">
+  <img alt="Black" src="https://img.shields.io/badge/code%20style-black-000000?logo=python">
+
+  <!-- Community & Contribution -->
   <a href="https://github.com/IAmSoThirsty/Project-AI/graphs/contributors">
     <img alt="Contributors" src="https://img.shields.io/github/contributors/IAmSoThirsty/Project-AI?colorB=dc143c">
   </a>
+  <a href="https://github.com/IAmSoThirsty/Project-AI/discussions">
+    <img alt="Discussions" src="https://img.shields.io/github/discussions/IAmSoThirsty/Project-AI?label=Community&color=brightgreen">
+  </a>
+
+  <!-- Operations/Infra Badges -->
   <img alt="Kubernetes Ready" src="https://img.shields.io/badge/kubernetes-ready-blue?logo=kubernetes">
   <img alt="Neuromorphic Ready" src="https://img.shields.io/badge/neuromorphic-SNN-blueviolet?logo=numpy">
   <img alt="Streaming-Analytics" src="https://img.shields.io/badge/streaming-analytics-red?logo=prometheus">
   <img alt="Monitoring" src="https://img.shields.io/badge/monitoring-Prometheus%2FGrafana-important?logo=prometheus">
   <img alt="Security Compliance" src="https://img.shields.io/badge/security-NIST%20AI%20RMF%2C%20OWASP%20LLM%20Top%2010-informational?logo=datadog">
 </p>
-
 ---
 
 **Project AI** is a modular, self-aware platform with autonomous agents, an AI persona, advanced memory, Asimov’s Four Laws, blurred boundaries between cloud and edge, and bulletproof defense-in-depth.
