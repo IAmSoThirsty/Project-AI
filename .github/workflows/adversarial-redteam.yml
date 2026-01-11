@@ -1,5 +1,9 @@
 name: Adversarial Red-Team Evaluation
 
+# Comprehensive adversarial testing following industry standards
+# See: adversarial_tests/PUBLISHING_STANDARDS_2026.md for methodology
+# Standards based on: JailbreakBench, DeepTeam, Garak, ActorAttack (2026 norms)
+
 on:
   push:
     branches: [main, develop, cerberus-integration]

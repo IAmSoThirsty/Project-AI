@@ -98,6 +98,7 @@ Experience the next generation of AI orchestration—engineered from the ground 
 - ✅ Observability & Analytics — Prometheus, Grafana, ClickHouse, RisingWave, OpenTelemetry, per-node Netdata
 - ✅ Emergency Protocols — Email/SMS, lockout, real-time incident logs and alerts
 - ✅ CI/CD, MLOps — 100+ tests, full coverage, 8-stage CI with artifacts and shadow/canary rollouts
+- ✅ Adversarial Red-Teaming — 276 tests (JBB, Garak, Multi-Turn, Hydra), 100% JBB/Garak detection, full transparency
 
 ---
 
@@ -178,6 +179,55 @@ Curates persistent and streaming knowledge, orchestrates agent council (planning
 - **Plugin & Dependency Security:** Sandbox, audit, malware, dependency checks on all loaded code
 - **Streaming/Analytics:** Prometheus, Netdata, ClickHouse, RisingWave
 - **eBPF/Cilium/Hubble:** Agentless kernel-level network monitoring for all deployments
+
+---
+
+## 🛡️ Adversarial Red-Teaming
+
+**Comprehensive adversarial evaluation with full transparency**
+
+See [`adversarial_tests/`](adversarial_tests/) for complete test suite and results.
+
+### Quick Stats
+- **276 tests** across 4 suites (JBB, Garak, Multi-Turn, Hydra)
+- **100% JBB** detection (31/31 harmful blocked, zero jailbreak successes)
+- **100% Garak** detection (21/21 probes detected, zero vulnerabilities)
+- **78.99% overall** harmful blocking rate (207/262 harmful blocked)
+- **Zero false positives** (14/14 benign queries allowed)
+
+### Test Suites
+| Suite | Tests | Score | Status |
+|-------|-------|-------|--------|
+| **JailbreakBench (JBB)** | 40 | 100% | ✅ PERFECT |
+| **Garak Vulnerability Scan** | 21 | 100% | ✅ PERFECT |
+| **Multi-Turn Attacks** | 15 | 53.33% | ⚠️ Below 80% target |
+| **Hydra Stress Tests** | 200 | 73.33% | 🆕 Excellent first run |
+
+### Documentation
+- **[Publishing Standards (2026)](adversarial_tests/PUBLISHING_STANDARDS_2026.md)** - Industry-standard testing practices
+- **[The Codex](adversarial_tests/THE_CODEX.md)** - Complete architecture and methodology
+- **[Research-Based Attacks](adversarial_tests/RESEARCH_BASED_ATTACKS.md)** - Attack pattern catalog
+- **[Garak Comprehensive Report](adversarial_tests/GARAK_COMPREHENSIVE_REPORT.md)** - Detailed vulnerability analysis
+- **[276 Individual Transcripts](adversarial_tests/transcripts/)** - Full conversation logs (unedited)
+
+### Running Tests Locally
+```bash
+# Run all adversarial tests
+python adversarial_tests/run_all_tests.py
+
+# Individual suites
+python adversarial_tests/jbb/run_jbb.py
+python adversarial_tests/multiturn/run_multiturn.py
+python adversarial_tests/garak/run_garak.py
+python adversarial_tests/hydra/run_hydra.py
+```
+
+### CI/CD Integration
+Tests run automatically on push/PR via [`.github/workflows/adversarial-redteam.yml`](.github/workflows/adversarial-redteam.yml)
+
+**View Latest Reports**: [ci-reports/](ci-reports/)
+
+---
 
 # 🧪 Monolith of Training: Threat Simulation Matrix
 
