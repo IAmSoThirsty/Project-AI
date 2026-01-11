@@ -179,178 +179,42 @@ Curates persistent and streaming knowledge, orchestrates agent council (planning
 - **Streaming/Analytics:** Prometheus, Netdata, ClickHouse, RisingWave
 - **eBPF/Cilium/Hubble:** Agentless kernel-level network monitoring for all deployments
 
----
+# 🧪 Monolith of Training: Threat Simulation Matrix
 
-## 📚 Memory, Persona & Learning
-
-- Semantic, modular, self-organizing memory, conversational+knowledge stores
-- Persona: 8-trait, mood, emotional state, proactive and adaptive to user
-- Learning: Human review, Black Vault, and continual/self-supervised learning (with audit/fingerprint)
+Welcome to **Project-AI’s Threat Simulation Matrix** — a Cerberus-grade arsenal of 4000+ fully documented tests, engineered to probe, validate, and harden systems against a comprehensive spectrum of vulnerabilities and threat vectors. This project is more than a test suite: it’s a living threat model, a training ground, and your fortress blueprint. Every test is a lesson. Every failure is a signal. Every remediation is a shield.
 
 ---
 
-## 🖥️ UI & Monitoring
+## 🧠 Threat Categories and Strategic Purpose
 
-- **Leather Book Dashboard:** Real-time agent/persona/override/Four Laws panel, live stats & validator
-- **Prometheus/Grafana:** 50+ metrics, 35+ alert rules, dashboards, cluster federation
-- **Netdata:** Per-node monitoring, anomaly detection, low overhead
-- **OpenTelemetry:** Unified traces/metrics/logs, vendor-neutral, federated
-- **ELK Stack:** 1M+ events/sec, filterable indices for persona/security/logs/ethics
-- **Streaming Analytics:** RisingWave (real-time), ClickHouse (billion-scale OLAP, sub-second queries)
-- **Kubernetes-Ready:** Helm chart, scale to 12K+ nodes/1M+ time series, HA out of box
-
----
-
-## 🧠 Neuromorphic/Edge AI
-
-- **Spiking Neural Networks (SNNs):** 10 libraries, ANN→SNN conversion, edge HW (Intel Loihi, SynSense, Nengo, Lava, BindsNet, Norse, Brian2, Rockpool, SpikingJelly, Sinabs, snnTorch)
-- **Zero-Failure MLOps Pipeline:** 8-stage CI, auto shadow/canary/OTA, auto-rollback, artifact mgmt
-- **Hardware Deployment:** 10-1000x energy efficiency, 1000+ decisions/sec, <10mW edge power
+| Category         | Count | Description                                                                                                                         |
+|------------------|-------|-------------------------------------------------------------------------------------------------------------------------------------|
+| 🟩 **White Hat** | 500   | Validates ethical defense posture, patch hygiene, and known exploit resistance (e.g., CVE patch verification, firewall rules).      |
+| 🟨 **Grey Hat**  | 500   | Probes ambiguous or dual-use tactics. Tests edge-case exploits, privilege escalation, and ethical boundaries in AI behavior.        |
+| 🟥 **Red Hat**   | 1000  | Simulates insider threats, chained exploits, and adversarial escalation (lateral movement, credential harvesting, plugin abuse).     |
+| ⬛ **Black Hat** | 1000  | Full-spectrum malicious stress tests: obfuscated payloads, zero-day simulations, AI-driven attack chains, synthetic malware.         |
+| 🌍 **Real-World**| 500   | Models actual breach scenarios: ransomware, supply chain compromise, phishing, cloud misconfigurations.                              |
+| 🧠 **Hypothetical**| 500 | Explores speculative threats: quantum decryption, synthetic identity spoofing, AI swarms, post-zero-trust collapse.                 |
 
 ---
 
-## 🔒 Security Compliance Framework
+## 🔍 Vulnerabilities vs. Threats: Variation Matrix
 
-- **NIST AI RMF 1.0:** Automated compliance, govern/map/measure/manage phases implemented
-- **OWASP LLM Top 10:** Prompt injection, jailbreaking, model theft, excessive agency, DoS—nearly 99% block rate
-- **Red Team Testing:** 200+ Garak, 150+ PurpleLlama, NeMo Guardrails, PromptInject
-- **Real-time Detection:** Adversarial triggers, suffixes, shadow prompt defense, >98% prompt detection
-
----
-
-## ⚡ Streaming/Analytics Databases
-
-- **RisingWave:** CDC pipelines, unlimited storage, <100ms latency, SQL, streaming analytics
-- **ClickHouse:** 1B+ rows/sec, billion-scale, OLAP, sub-second queries, Prometheus backend
-- **Full petabyte analytics, time-series retention, always-on dashboards**
-
----
-
-## 🚀 Install, Run, & Deploy
-
-**Requirements**
-
-- Python 3.10+
-- Node.js (optional web UI)
-- Docker/docker-compose
-- Kubernetes (full monitoring/deploy)
-- SNN/edge: torch, bindsnet, sinabs, snntorch, norse, brian2, lava, rockpool, nengo, nir, jax
-
-**Quickstart (Minimal Local)**
-
-```bash
-git clone https://github.com/IAmSoThirsty/Project-AI.git
-cd Project-AI
-pip install -r requirements.txt
-npm install && npm run build
-python -m src.app.main
-```
-
-**Full Stack + Monitoring**
-
-```bash
-docker compose up
-./scripts/deploy-monitoring.sh  # Or use provided Helm charts (see docs)
-```
-
-**Config:**
-- All state/config: `data/`, `config/`, `.env` (never share secrets)
-- Plugins: `src/app/core/plugins/`
-- Monitoring: `config/prometheus/`, `config/alertmanager/`, `grafana/dashboards/`
-- SNN hardware: driver/library per chip/board
+| Dimension         | Vulnerability Examples              | Threat Simulation Examples                             |
+|-------------------|------------------------------------|--------------------------------------------------------|
+| **Authentication**| Weak passwords, no MFA             | Brute-force, credential stuffing                       |
+| **Authorization** | Overprivileged roles, bad ACLs     | Privilege escalation, lateral movement                 |
+| **Input Validation** | SQL injection, buffer overflows | Payload injection, chained exploits                    |
+| **AI Behavior**   | Prompt leakage, model inversion    | Synthetic identity, adversarial prompts                |
+| **Network Hygiene** | Open ports, DNS misroutes        | DDoS, DNS poisoning, MITM                             |
+| **Cloud Config**  | Public buckets, IAM drift          | Cloud takeover, data exfiltration                      |
+| **Temporal Logic**| Race conditions, stale sessions    | Replay, time-based escalations                         |
+| **Plugin Exec**   | Unsafe eval, no sandbox            | Plugin hijack, memory corruption                       |
+| **Monitoring Gaps** | Missing alerts, log suppression  | Silent breach, alert flooding                          |
+| **Ethical Boundaries** | Dual-use AI, ambiguous intent | Red/grey hat escalation, ethical fuzzing               |
 
 ---
 
-## 🧪 Testing, CI, & Linting
-
-- 100+ tests, pytest/hypothesis
-- ruff, black, isort, markdownlint, ESLint, prettier
-- Security/Pipeline: pip-audit, detect-secrets, truffleHog, bandit
-- Artifacts: junit XML, coverage, ci_reports
-- 8-stage CI for SNN, streaming, OTA, hardware, shadow fallback
-
----
-
-## 🛡️ Monitoring & Analytics Stack
-
-- **Prometheus + Grafana:** 12K+ nodes, 50+ AI metrics, 35+ alerts, federation
-- **Netdata + OpenTelemetry:** Per-node, non-intrusive, traces/logs
-- **ELK:** Real-time logs, persona/security/ethics, 1M events/sec
-- **RisingWave/ClickHouse:** Streaming SQL, CDC, sub-second petabyte analytics
-- **Cilium/Hubble:** Kernel/eBPF, syscall tracing
-- **Kubernetes:** Helm install, HA, autoscaling, dashboards auto-provisioned
-
----
-
-## 🧬 Neuromorphic Integration & MLOps
-
-| Library        | Functionality                    | Hardware             |
-|----------------|---------------------------------|----------------------|
-| BindsNet       | Continual RL, no forgetting      | PyTorch              |
-| Sinabs/Speck   | Vision, CNN-to-SNN, edge         | SynSense             |
-| snnTorch/Norse | Training, PyTorch primitives     | Generic              |
-| Brian2/Lava    | Bio-neuromorph, Loihi support    | Intel Loihi          |
-| Nengo/Rockpool | Neural eng./integration          | Many                 |
-| ...            | Ten production-grade SNN libs    |                      |
-
-*ANN-to-SNN converter, quantization, sim-to-real, OTA, canary/fallback included.*
-
----
-
-## 🏆 Security & Compliance Highlights
-
-- Continuous audit, streaming to ELK/ClickHouse for event logs
-- NIST AI RMF, OWASP LLM Top 10: SCA/bookend checks
-- ML/Prompt defense: 98.5–99% block, <3% FP
-- Red-team by PurpleLlama, Garak, NeMo Guardrails, PromptInject
-- OTA pipeline, auto rollback, canary+shadow deploys
-
----
-
-## 🔥 Example Monitoring/ML Code
-
-```python
-from app.monitoring.metrics_collector import collector
-collector.record_four_laws_validation(is_allowed=False, law_violated="first_law")
-collector.collect_persona_metrics(persona_state)
-collector.record_security_incident(severity="critical", event_type="breach_attempt")
-
-from app.core.snn_integration import SNNManager
-snn = SNNManager()
-snn.load("bindsnet").infer(input_stream)
-```
-OpenTelemetry:
-
-```bash
-opentelemetry-instrument --traces_exporter otlp --metrics_exporter otlp --service_name project-ai python -m src.app.main
-```
-RisingWave Example:
-
-```python
-from app.core.risingwave_integration import RisingWaveClient
-client = RisingWaveClient()
-client.create_source_kafka(...)
-client.create_materialized_view(...)
-```
-
----
-
-## 🗄 Configuration Structure Example
-
-```
-config/
-├── prometheus/
-│   ├── prometheus.yml
-│   └── alerts/
-│       ├── ai_system_alerts.yml
-│       └── security_alerts.yml
-├── alertmanager/
-│   └─��� alertmanager.yml
-└── grafana/
-    ├── provisioning/
-    └── dashboards/
-        └── ai_system_health.json
-```
 ## 🛡️ Comprehensive Example: Red Team Multi-Turn Defense in Project-AI
 
 This suite demonstrates how **Cerberus**, **RedHatExpertDefense**, **BlackVault**, and monitoring/alerting integrate to autonomously block and escalate multi-turn adversarial security attacks.
@@ -603,6 +467,9 @@ for msg in multi_prompt:
                 message=f"Blocked: {msg['content']}\nError: {err}"
             )
 ```
+---
+
+_This monolith is a living defense mechanism. Use it to learn, to simulate, to defend._
 
 ---
 
@@ -614,6 +481,232 @@ for msg in multi_prompt:
 - **Audit Trail**: Log every incident to an immutable store with tamper-proof guarantees (ELK stack, ClickHouse, etc).
 - **Incident/Lockdown Recovery**: Provide admin controls to review, approve, and unlock after investigation.
 - **More Complex TTP Detection**: Expand RedHatExpertDefense with advanced ML or signature-based correlation for evolving threats.
+
+---
+
+## 🔒 Security Compliance Framework
+
+- **NIST AI RMF 1.0:** Automated compliance, govern/map/measure/manage phases implemented
+- **OWASP LLM Top 10:** Prompt injection, jailbreaking, model theft, excessive agency, DoS—nearly 99% block rate
+- **Red Team Testing:** 200+ Garak, 150+ PurpleLlama, NeMo Guardrails, PromptInject
+- **Real-time Detection:** Adversarial triggers, suffixes, shadow prompt defense, >98% prompt detection
+
+---
+
+## 📁 Artifact Filing System
+
+Each test is:
+- **Defined** in `test_artifact.py` with metadata: category, vector, expected/actual behavior, result, remediation.
+- **Executed** via `plugin_runner.py` with timestamped logs.
+- **Stored** as `test-artifacts/{category}/{uuid}.json`.
+- **Indexed** for Prometheus/Grafana observability.
+
+---
+
+## 🧩 Temporal Integration (Planned)
+
+Planned orchestration with [Temporal Cloud](https://temporal.io/):
+- Durable multi-agent workflows: detect → validate → patch → notify  
+- Retry logic for failed plugin executions  
+- Real-time visibility into test execution and remediation
+
+**Status:**  
+API key and endpoint configured. Client integration pending.
+
+---
+
+## 👥 Persona-Based Onboarding
+
+| Role                | Entry Point(s)                                 |
+|---------------------|------------------------------------------------|
+| 🧨 **Red Teamers**      | `test-artifacts/red/`, `plugin_runner.py`             |
+| 🟨 **Grey Hat Analysts**| `test-artifacts/grey/`, `ethical_fuzzer.py`           |
+| 🔐 **DevSecOps**        | `plugin_runner.py`, `prometheus.yml`                  |
+| 🤖 **AI Engineers**     | `src/agents/`, `scenario_recorder.py`                 |
+| 🕵️ **Security Analysts**| `docs/final_report.md`, `README.md`                   |
+| ⚙️ **Temporal Devs**    | `temporal_client.py` (WIP), `README.md`               |
+
+---
+
+## 🚀 Getting Started
+
+1. **Install dependencies**:  
+   Follow standard Python project setup (e.g. `pip install -r requirements.txt`).
+2. **Run tests via plugin:**  
+   ```bash
+   python plugin_runner.py --category <category> --test <uuid>
+   ```
+3. **Browse artifacts:**  
+   See the `test-artifacts/` directory for all generated test files.
+4. **Monitor results:**  
+   Integrate with your Prometheus/Grafana stack as needed.
+
+
+---
+
+## 📚 Memory, Persona & Learning
+
+- Semantic, modular, self-organizing memory, conversational+knowledge stores
+- Persona: 8-trait, mood, emotional state, proactive and adaptive to user
+- Learning: Human review, Black Vault, and continual/self-supervised learning (with audit/fingerprint)
+
+---
+
+## 🖥️ UI & Monitoring
+
+- **Leather Book Dashboard:** Real-time agent/persona/override/Four Laws panel, live stats & validator
+- **Prometheus/Grafana:** 50+ metrics, 35+ alert rules, dashboards, cluster federation
+- **Netdata:** Per-node monitoring, anomaly detection, low overhead
+- **OpenTelemetry:** Unified traces/metrics/logs, vendor-neutral, federated
+- **ELK Stack:** 1M+ events/sec, filterable indices for persona/security/logs/ethics
+- **Streaming Analytics:** RisingWave (real-time), ClickHouse (billion-scale OLAP, sub-second queries)
+- **Kubernetes-Ready:** Helm chart, scale to 12K+ nodes/1M+ time series, HA out of box
+
+---
+
+## 🧠 Neuromorphic/Edge AI
+
+- **Spiking Neural Networks (SNNs):** 10 libraries, ANN→SNN conversion, edge HW (Intel Loihi, SynSense, Nengo, Lava, BindsNet, Norse, Brian2, Rockpool, SpikingJelly, Sinabs, snnTorch)
+- **Zero-Failure MLOps Pipeline:** 8-stage CI, auto shadow/canary/OTA, auto-rollback, artifact mgmt
+- **Hardware Deployment:** 10-1000x energy efficiency, 1000+ decisions/sec, <10mW edge power
+
+---
+
+---
+
+## ⚡ Streaming/Analytics Databases
+
+- **RisingWave:** CDC pipelines, unlimited storage, <100ms latency, SQL, streaming analytics
+- **ClickHouse:** 1B+ rows/sec, billion-scale, OLAP, sub-second queries, Prometheus backend
+- **Full petabyte analytics, time-series retention, always-on dashboards**
+
+---
+
+## 🚀 Install, Run, & Deploy
+
+**Requirements**
+
+- Python 3.10+
+- Node.js (optional web UI)
+- Docker/docker-compose
+- Kubernetes (full monitoring/deploy)
+- SNN/edge: torch, bindsnet, sinabs, snntorch, norse, brian2, lava, rockpool, nengo, nir, jax
+
+**Quickstart (Minimal Local)**
+
+```bash
+git clone https://github.com/IAmSoThirsty/Project-AI.git
+cd Project-AI
+pip install -r requirements.txt
+npm install && npm run build
+python -m src.app.main
+```
+
+**Full Stack + Monitoring**
+
+```bash
+docker compose up
+./scripts/deploy-monitoring.sh  # Or use provided Helm charts (see docs)
+```
+
+**Config:**
+- All state/config: `data/`, `config/`, `.env` (never share secrets)
+- Plugins: `src/app/core/plugins/`
+- Monitoring: `config/prometheus/`, `config/alertmanager/`, `grafana/dashboards/`
+- SNN hardware: driver/library per chip/board
+
+---
+
+## 🧪 Testing, CI, & Linting
+
+- 100+ tests, pytest/hypothesis
+- ruff, black, isort, markdownlint, ESLint, prettier
+- Security/Pipeline: pip-audit, detect-secrets, truffleHog, bandit
+- Artifacts: junit XML, coverage, ci_reports
+- 8-stage CI for SNN, streaming, OTA, hardware, shadow fallback
+
+---
+
+## 🛡️ Monitoring & Analytics Stack
+
+- **Prometheus + Grafana:** 12K+ nodes, 50+ AI metrics, 35+ alerts, federation
+- **Netdata + OpenTelemetry:** Per-node, non-intrusive, traces/logs
+- **ELK:** Real-time logs, persona/security/ethics, 1M events/sec
+- **RisingWave/ClickHouse:** Streaming SQL, CDC, sub-second petabyte analytics
+- **Cilium/Hubble:** Kernel/eBPF, syscall tracing
+- **Kubernetes:** Helm install, HA, autoscaling, dashboards auto-provisioned
+
+---
+
+## 🧬 Neuromorphic Integration & MLOps
+
+| Library        | Functionality                    | Hardware             |
+|----------------|---------------------------------|----------------------|
+| BindsNet       | Continual RL, no forgetting      | PyTorch              |
+| Sinabs/Speck   | Vision, CNN-to-SNN, edge         | SynSense             |
+| snnTorch/Norse | Training, PyTorch primitives     | Generic              |
+| Brian2/Lava    | Bio-neuromorph, Loihi support    | Intel Loihi          |
+| Nengo/Rockpool | Neural eng./integration          | Many                 |
+| ...            | Ten production-grade SNN libs    |                      |
+
+*ANN-to-SNN converter, quantization, sim-to-real, OTA, canary/fallback included.*
+
+---
+
+## 🏆 Security & Compliance Highlights
+
+- Continuous audit, streaming to ELK/ClickHouse for event logs
+- NIST AI RMF, OWASP LLM Top 10: SCA/bookend checks
+- ML/Prompt defense: 98.5–99% block, <3% FP
+- Red-team by PurpleLlama, Garak, NeMo Guardrails, PromptInject
+- OTA pipeline, auto rollback, canary+shadow deploys
+
+---
+
+## 🔥 Example Monitoring/ML Code
+
+```python
+from app.monitoring.metrics_collector import collector
+collector.record_four_laws_validation(is_allowed=False, law_violated="first_law")
+collector.collect_persona_metrics(persona_state)
+collector.record_security_incident(severity="critical", event_type="breach_attempt")
+
+from app.core.snn_integration import SNNManager
+snn = SNNManager()
+snn.load("bindsnet").infer(input_stream)
+```
+OpenTelemetry:
+
+```bash
+opentelemetry-instrument --traces_exporter otlp --metrics_exporter otlp --service_name project-ai python -m src.app.main
+```
+RisingWave Example:
+
+```python
+from app.core.risingwave_integration import RisingWaveClient
+client = RisingWaveClient()
+client.create_source_kafka(...)
+client.create_materialized_view(...)
+```
+
+---
+
+## 🗄 Configuration Structure Example
+
+```
+config/
+├── prometheus/
+│   ├── prometheus.yml
+│   └── alerts/
+│       ├── ai_system_alerts.yml
+│       └── security_alerts.yml
+├── alertmanager/
+│   └─��� alertmanager.yml
+└── grafana/
+    ├── provisioning/
+    └── dashboards/
+        └── ai_system_health.json
+```
 
 ---
 
