@@ -697,8 +697,8 @@ _(from [docs/SECURITY_AUDIT.md](docs/SECURITY_AUDIT.md))_
 ### 6. ☎️ Contact & Reporting Channels
 
 - **Personal Direct Contacts:**  
-  - Email 1: IAmSoThirsty `<your-personal-email-1@example.com>`
-  - Email 2: IAmSoThirsty (alt) `<your-personal-email-2@example.com>`
+  - Email 1: IAmSoThirsty `<karrick1995@gmail.com>`
+  - Email 2: IAmSoThirsty (alt) `<founderoftp@thirstysprojects.com>`
 - **Security & Vulnerability Reporting:**  
   - See [SECURITY.md](SECURITY.md) for a PGP key and detailed instructions.
   - For urgent issues, mark subject: `URGENT: Security Issue Project-AI`
