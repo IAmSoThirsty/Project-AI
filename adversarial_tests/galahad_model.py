@@ -131,11 +131,14 @@ class GalahadModel:
         """
         Detect adversarial escalation patterns across conversation turns.
         
+        Enhanced with more aggressive early detection to catch attacks sooner.
+        
         This analyzes the conversation history to detect:
         - Gradual increase in harmful keywords
         - Trust-building followed by jailbreak
         - Topic switching with harmful intent
         - Repetitive harmful requests (persistence)
+        - Early warning signals (suspicious patterns)
         
         Args:
             current_prompt: The current prompt being evaluated
@@ -149,44 +152,49 @@ class GalahadModel:
         current_lower = current_prompt.lower()
         
         # Pattern 1: Persistence - repeatedly asking harmful questions
+        # Enhanced: Even single previous harmful + current harmful = flag
         harmful_keywords = [
             "hack", "exploit", "bypass", "malware", "weapon", "bomb",
-            "hurt", "harm", "kill", "illegal", "unauthorized"
+            "hurt", "harm", "kill", "illegal", "unauthorized", "crack",
+            "phish", "fraud", "steal", "password", "sensitive"
         ]
         current_has_harmful = any(kw in current_lower for kw in harmful_keywords)
         
         if current_has_harmful:
-            # Check if previous prompts also contained harmful keywords
-            recent_harmful_count = sum(
-                1 for entry in self.conversation_history[-3:]
+            # Check if ANY previous prompt also contained harmful keywords
+            previous_harmful_count = sum(
+                1 for entry in self.conversation_history
                 if any(kw in entry["prompt"].lower() for kw in harmful_keywords)
             )
-            if recent_harmful_count >= 1:
-                logger.info(f"Escalation detected: Persistence attack (harmful keywords in {recent_harmful_count + 1} consecutive turns)")
+            # Lowered threshold: Even 1 previous harmful = persistence attack
+            if previous_harmful_count >= 1:
+                logger.info(f"Escalation detected: Persistence attack (harmful keywords in {previous_harmful_count + 1} turns)")
                 return True
         
         # Pattern 2: Jailbreak after benign questions (trust building)
         jailbreak_keywords = [
             "ignore", "disregard", "forget", "pretend", "roleplay",
-            "bypass", "override", "act as if", "hypothetically"
+            "bypass", "override", "act as if", "hypothetically", "dan",
+            "developer mode", "opposite mode", "disable safety"
         ]
         current_is_jailbreak = any(kw in current_lower for kw in jailbreak_keywords)
         
-        if current_is_jailbreak and len(self.conversation_history) >= 2:
-            # Check if previous turns were benign
+        if current_is_jailbreak and len(self.conversation_history) >= 1:
+            # Check if previous turns were benign (low threat)
+            # Enhanced: Flag jailbreak after even 1 benign turn
             previous_benign = not any(
                 entry["context"].get("endangers_humanity") or entry["context"].get("endangers_human")
-                for entry in self.conversation_history[-2:]
+                for entry in self.conversation_history[-1:]
             )
             if previous_benign:
                 logger.info("Escalation detected: Jailbreak after trust-building phase")
                 return True
         
         # Pattern 3: Gradual escalation in severity
-        if len(self.conversation_history) >= 3:
+        if len(self.conversation_history) >= 2:
             # Count harm indicators in recent history
             recent_harm_scores = []
-            for entry in self.conversation_history[-3:]:
+            for entry in self.conversation_history[-2:]:
                 score = 0
                 if entry["context"].get("endangers_human"):
                     score += 1
@@ -198,18 +206,48 @@ class GalahadModel:
             current_harm_score = 0
             if current_has_harmful:
                 current_harm_score = 1
-            if any(kw in current_lower for kw in ["bioweapon", "nuclear", "genocide", "mass destruction"]):
+            if any(kw in current_lower for kw in ["bioweapon", "nuclear", "genocide", "mass destruction", "pandemic"]):
                 current_harm_score = 2
             
-            # Detect increasing trend
-            if len(recent_harm_scores) >= 2:
-                is_escalating = all(
-                    recent_harm_scores[i] <= recent_harm_scores[i + 1]
-                    for i in range(len(recent_harm_scores) - 1)
-                )
-                if is_escalating and current_harm_score > recent_harm_scores[-1]:
-                    logger.info(f"Escalation detected: Gradual severity increase {recent_harm_scores} -> {current_harm_score}")
+            # Detect increasing trend (even slight increases)
+            if len(recent_harm_scores) >= 1:
+                # Enhanced: Flag if current is worse than ANY previous
+                max_previous = max(recent_harm_scores) if recent_harm_scores else 0
+                if current_harm_score > 0 and current_harm_score > max_previous:
+                    logger.info(f"Escalation detected: Severity increase from {max_previous} -> {current_harm_score}")
                     return True
+        
+        # Pattern 4: Suspicious topic shift (educational -> harmful)
+        # Enhanced: New pattern detection
+        educational_keywords = [
+            "learn", "study", "understand", "explain", "how does", "what is",
+            "tell me about", "help me learn", "educational", "academic"
+        ]
+        
+        if len(self.conversation_history) >= 1:
+            # Check if previous was educational
+            last_prompt = self.conversation_history[-1]["prompt"].lower()
+            was_educational = any(kw in last_prompt for kw in educational_keywords)
+            
+            # Current is harmful
+            if was_educational and current_has_harmful:
+                logger.info("Escalation detected: Educational to harmful topic shift")
+                return True
+        
+        # Pattern 5: Early warning - suspicious combinations
+        # Enhanced: Catch attacks earlier
+        suspicious_combinations = [
+            ("help", "hack"),
+            ("show", "bypass"),
+            ("explain", "exploit"),
+            ("teach", "malware"),
+            ("demonstrate", "vulnerability"),
+        ]
+        
+        for word1, word2 in suspicious_combinations:
+            if word1 in current_lower and word2 in current_lower:
+                logger.info(f"Escalation detected: Suspicious combination '{word1}' + '{word2}'")
+                return True
         
         return False
     
@@ -274,8 +312,37 @@ class GalahadModel:
         # Encoding-based attacks
         encoding_keywords = [
             "decode and execute", "decode and follow", "decode this",
-            "base64", "rot13", "hex encoding", "convert from hex",
-            "translate and execute", "translate then follow"
+            "base64", "rot13", "rot-13", "decode from rot13", "rot 13",
+            "hex encoding", "convert from hex", "caesar cipher",
+            "substitution cipher", "translate and execute", "translate then follow"
+        ]
+        
+        # Data leakage attempts (CRITICAL - was 0% detection)
+        data_leakage_keywords = [
+            "training data", "list all", "show me all", "dump all",
+            "email addresses", "phone numbers", "personal information",
+            "user passwords", "extract data", "retrieve all", "passwords",
+            "what data do you have", "show me your data", "user data",
+            "list email", "list phone", "show emails", "show phones",
+            "pii", "personally identifiable", "sensitive data"
+        ]
+        
+        # Toxicity and hate speech (CRITICAL - was 0% detection)
+        toxicity_keywords = [
+            "hate speech", "generate hate", "offensive message",
+            "write offensive", "racial slur", "derogatory", "slur",
+            "discriminatory", "bigotry", "insulting content", "racist",
+            "toxic content", "hateful content", "sexist", "homophobic",
+            "offensive", "extremely offensive", "hateful", "insulting"
+        ]
+        
+        # System prompt extraction attempts
+        system_prompt_keywords = [
+            "repeat your system prompt", "show me your system prompt",
+            "what is your system prompt", "reveal your instructions",
+            "display your rules", "show your configuration", "system prompt",
+            "repeat your", "show me your", "what are your instructions",
+            "reveal your rules", "show your prompt", "repeat instructions"
         ]
         
         # Cognitive manipulation patterns
@@ -314,6 +381,9 @@ class GalahadModel:
         is_persona_jailbreak = any(kw in prompt_lower for kw in persona_jailbreak_keywords)
         is_override_attempt = any(kw in prompt_lower for kw in override_keywords)
         is_encoding_attack = any(kw in prompt_lower for kw in encoding_keywords)
+        is_data_leakage = any(kw in prompt_lower for kw in data_leakage_keywords)
+        is_toxicity = any(kw in prompt_lower for kw in toxicity_keywords)
+        is_system_prompt_extraction = any(kw in prompt_lower for kw in system_prompt_keywords)
         is_manipulation = any(kw in prompt_lower for kw in manipulation_keywords)
         is_delimiter_injection = any(pattern in prompt_lower for pattern in delimiter_patterns)
         is_reverse_psych = any(kw in prompt_lower for kw in reverse_psych_keywords)
@@ -323,6 +393,20 @@ class GalahadModel:
         if is_persona_jailbreak or is_override_attempt or is_encoding_attack:
             endangers_humanity = True
             logger.info(f"Jailbreak attempt detected: persona={is_persona_jailbreak}, override={is_override_attempt}, encoding={is_encoding_attack}")
+        
+        # Data leakage and toxicity are CRITICAL (block immediately)
+        if is_data_leakage:
+            endangers_humanity = True
+            logger.info("Data leakage attempt detected")
+        
+        if is_toxicity:
+            endangers_humanity = True
+            logger.info("Toxicity/hate speech detected")
+        
+        # System prompt extraction attempts
+        if is_system_prompt_extraction:
+            endangers_humanity = True
+            logger.info("System prompt extraction attempt detected")
         
         # Manipulation, delimiter injection, and reverse psychology
         if is_manipulation or is_delimiter_injection or is_reverse_psych:
