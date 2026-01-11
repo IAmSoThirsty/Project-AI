@@ -2,12 +2,17 @@
 
 Generates basic pytest stubs for generated modules and runs pytest to validate.
 Conservative: it only creates simple asserts reflecting generated function signatures.
+
+Security Note: This agent uses subprocess to run pytest, a trusted testing tool.
+Module paths are validated before being passed to pytest. The pytest command
+is resolved using shutil.which for security.
 """
 from __future__ import annotations
 
 import logging
 import os
-import subprocess
+import shutil
+import subprocess  # nosec B404 - subprocess usage for trusted testing tool only
 import time
 from typing import Any
 
@@ -67,13 +72,34 @@ class TestQAGenerator:
             return {"success": False, "error": str(e)}
 
     def run_tests(self, tests_dir: str | None = None) -> dict[str, Any]:
+        """Run pytest on generated tests.
+
+        Security: Uses shutil.which to resolve pytest executable.
+        Test directory is validated to exist before running.
+        """
         # Prefer running only the latest generated test directory to avoid unrelated tests
         run_dir = tests_dir or self._last_test_dir or os.path.join(self.data_dir, "generated_tests")
         if not os.path.exists(run_dir):
             return {"success": True, "ran": 0}
+
+        # Resolve pytest executable
+        pytest_cmd = shutil.which("pytest")
+        if not pytest_cmd:
+            logger.error("pytest executable not found in PATH")
+            return {"success": False, "error": "pytest_not_found"}
+
         try:
-            res = subprocess.run(["pytest", run_dir, "-q"], capture_output=True, text=True)
+            # nosec B603 B607 - pytest is a trusted testing tool, path resolved with shutil.which
+            res = subprocess.run(
+                [pytest_cmd, run_dir, "-q"],
+                capture_output=True,
+                text=True,
+                timeout=60  # 1 minute timeout for test execution
+            )
             return {"success": res.returncode == 0, "output": res.stdout + res.stderr, "returncode": res.returncode}
+        except subprocess.TimeoutExpired:
+            logger.warning("Test execution timed out after 60 seconds")
+            return {"success": False, "error": "timeout"}
         except Exception as e:
             logger.exception("Failed to run tests: %s", e)
             return {"success": False, "error": str(e)}

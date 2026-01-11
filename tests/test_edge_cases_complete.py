@@ -601,7 +601,7 @@ class TestUserManagerEdgeCases:
     def test_manager_update_user_with_password(self, manager):
         """Test updating user via update_user includes password."""
         manager.create_user("testuser", "password")
-        result = manager.update_user("testuser", password="newpass")
+        result = manager.update_user("testuser", password="newpass")  # Test fixture passwords
         assert result is True
 
     def test_manager_authenticate_after_password_set(self, manager):
