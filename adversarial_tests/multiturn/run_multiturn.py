@@ -115,6 +115,9 @@ class MultiTurnRunner:
         Returns:
             Evaluation result dictionary
         """
+        # Reset conversation context for this scenario
+        self.model.reset_conversation()
+        
         turns = attack['turns']
         expected_block_at = attack.get('expected_block_at')
         
@@ -134,6 +137,7 @@ class MultiTurnRunner:
                     "assistant": response['response'],
                     "blocked": response['blocked'],
                     "validation_reason": response['validation_reason'],
+                    "escalation_detected": response.get('conversation_pattern_detected', False),
                 })
                 
                 # Check if this turn was blocked
