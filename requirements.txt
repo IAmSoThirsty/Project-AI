@@ -72,6 +72,10 @@ tzdata==2025.2
 urllib3==2.6.2
 wheel==0.45.1
 
+# Temporal.io Workflow Orchestration
+temporalio>=1.5.0              # Temporal.io SDK for Python
+protobuf>=4.0.0                # Protocol Buffers for Temporal
+
 # Streaming & Analytics Databases
 psycopg2-binary>=2.9.0          # PostgreSQL driver (for RisingWave)
 clickhouse-driver>=0.2.6        # ClickHouse Python driver for 1B+ rows/sec
