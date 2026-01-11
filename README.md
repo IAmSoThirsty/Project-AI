@@ -71,6 +71,24 @@ Project AI / Cerberus / Codex Deus Maximus
   <img alt="Streaming-Analytics" src="https://img.shields.io/badge/streaming-analytics-red?logo=prometheus">
   <img alt="Monitoring" src="https://img.shields.io/badge/monitoring-Prometheus%2FGrafana-important?logo=prometheus">
   <img alt="Security Compliance" src="https://img.shields.io/badge/security-NIST%20AI%20RMF%2C%20OWASP%20LLM%20Top%2010-informational?logo=datadog">
+
+  <!-- NEW Feature Badges (added, none removed) -->
+  <img alt="Cloud Sync" src="https://img.shields.io/badge/cloud%20sync-live-1e90ff?logo=cloud">
+  <img alt="Advanced ML Models" src="https://img.shields.io/badge/ML%20models-live-33c59a?logo=scikit-learn">
+  <img alt="Plugin System" src="https://img.shields.io/badge/plugin%20system-stable-6f42c1?logo=plug">
+  <img alt="3D Visualization" src="https://img.shields.io/badge/3D%20viz-beta-5f9ea0?logo=unity&label=3D%20Visualization">
+  <img alt="Leather Book UI" src="https://img.shields.io/badge/leather%20book%20UI-complete-8b4513?logo=book">
+  <img alt="Emergency Alerts" src="https://img.shields.io/badge/emergency%20alerts-enabled-ff1a1a?logo=alert">
+  <img alt="Security Framework" src="https://img.shields.io/badge/security%20framework-compliant-ffc300?logo=shield">
+  <img alt="Image Generation" src="https://img.shields.io/badge/image%20generation-live-f50a8a?logo=artstation">
+  <img alt="Location Tracking" src="https://img.shields.io/badge/location%20tracking-enabled-00bfff?logo=location">
+  <img alt="Learning Paths" src="https://img.shields.io/badge/learning%20paths-enabled-ffd700?logo=ai">
+  <img alt="API Endpoints" src="https://img.shields.io/badge/API%20endpoints-live-0082c2?logo=flask">
+  <img alt="Web Frontend" src="https://img.shields.io/badge/web%20frontend-beta-42a5f5?logo=react">
+  <img alt="Security Resources" src="https://img.shields.io/badge/security%20resources-enabled-dc143c?logo=github">
+  <img alt="Desktop Shortcuts" src="https://img.shields.io/badge/desktop%20shortcuts-stable-c0c0c0?logo=windows">
+  <img alt="Persona System" src="https://img.shields.io/badge/persona%20system-complete-9644fa?logo=python">
+  <img alt="ThreatDetector" src="https://img.shields.io/badge/threat%20detector-beta-db4437?logo=pytorch">
 </p>
 ---
 
