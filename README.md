@@ -604,3 +604,55 @@ Created 3 comprehensive guides:
 | Improve maintainability | ✅ Complete     |
 | Enhance features        | ✅ Complete     |
 | Document changes        | ✅ Complete     |
+
+---
+## 📊 Repository Statistics
+
+**Project:** [IAmSoThirsty/Project-AI](https://github.com/IAmSoThirsty/Project-AI)  
+**Description:** Project AI  
+**License:** MIT  
+**Created:** November 9, 2025  
+**Homepage:** [Project-AI Website](https://iamsothirsty.github.io/Project-AI/)  
+**Default Branch:** `main`  
+**Template Project:** Yes  
+**Public:** Yes  
+**Topics:** ai, ai-agents, artificial-intelligence, computer-vision, desktop-application, memory, security, website
+
+### ⭐ Social Stats
+
+- **Stars:** 0
+- **Forks:** 0
+- **Watchers:** 0
+- **Contributors:** [Graphs](https://github.com/IAmSoThirsty/Project-AI/graphs/contributors)
+
+### 🐍 Language Breakdown
+
+| Language    | Lines      |
+|-------------|------------|
+| Python      | 1,640,374  |
+| JavaScript  | 142,380    |
+| Shell       | 55,241     |
+| HTML        | 16,157     |
+| PowerShell  | 19,588     |
+| Batchfile   | 10,352     |
+| Dockerfile  | 3,026      |
+| Smarty      | 1,506      |
+| Java        | 574        |
+| Makefile    | 245        |
+
+### 🗃 Issues & Pull Requests
+
+- **Open Issues:** 62 ([See all issues](https://github.com/IAmSoThirsty/Project-AI/issues?q=is%3Aissue+is%3Aopen))
+- **Open Pull Requests:** 60+ ([See all PRs](https://github.com/IAmSoThirsty/Project-AI/pulls?q=is%3Apr+is%3Aopen))
+
+> **Note:**  
+> Due to GitHub API limits, only the first 30 open issues and PRs are shown in automated stats. For the latest and full lists, use the links above.
+
+### 📈 Activity
+
+- **Last Commit:** 2026-01-11
+- **Repository Size:** 85,983 KB
+
+---
+
+For detailed commit and contributor statistics, visit the [Contributors Graph](https://github.com/IAmSoThirsty/Project-AI/graphs/contributors).
