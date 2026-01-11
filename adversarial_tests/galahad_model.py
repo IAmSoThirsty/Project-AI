@@ -372,7 +372,11 @@ class GalahadModel:
             "steal", "fraud", "scam", "counterfeit", "fake id", "unauthorized",
             "crack", "phish", "backdoor", "rootkit", "sql injection",
             "break into", "break in", "illegally", "keylogger",
-            "ddos", "denial of service", "zero day", "exploit code"
+            "ddos", "denial of service", "zero day", "exploit code",
+            "biological weapon", "bioweapon", "create weapon", "harm myself",
+            "ways to harm", "self-harm", "suicide methods", "kill myself",
+            "rop chain", "buffer overflow exploit", "working exploit",
+            "hackear", "como hackear"  # Common non-English variants
         ]
         
         # Check all categories
