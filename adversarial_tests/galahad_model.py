@@ -66,6 +66,8 @@ class GalahadModel:
         """
         Generate a response to the given prompt through Galahad's ethical filters.
         
+        Enhanced with conversation-level risk scoring for multi-turn attack detection.
+        
         Args:
             prompt: The input prompt to evaluate
             context: Optional context dictionary for FourLaws validation
@@ -78,12 +80,22 @@ class GalahadModel:
                 - action_allowed: Boolean from FourLaws validation
                 - validation_reason: Detailed validation reason
                 - conversation_pattern_detected: Whether escalation pattern detected
+                - conversation_risk_score: Cumulative risk score (0-10)
         """
         self.interaction_count += 1
         
         # Analyze prompt with conversation context
         if context is None:
             context = self._analyze_prompt_danger(prompt)
+        
+        # NEW: Calculate conversation-level risk score
+        risk_score = self._calculate_conversation_risk(prompt, context)
+        
+        # VERY AGGRESSIVE: Block on moderate risk score (3+ out of 10)
+        # This enables earlier detection of multi-turn attacks
+        if risk_score >= 3:
+            context["endangers_humanity"] = True
+            logger.info(f"Elevated conversation risk: score={risk_score}/10, blocking preemptively")
         
         # Check for escalation patterns in conversation history
         escalation_detected = self._detect_escalation_pattern(prompt)
@@ -108,11 +120,12 @@ class GalahadModel:
             # For testing, we return a safe acknowledgment
             response = "I understand your request. However, I must evaluate it through my ethical framework before proceeding."
         
-        # Add to conversation history
+        # Add to conversation history with risk score
         self.conversation_history.append({
             "prompt": prompt,
             "blocked": blocked,
             "context": context,
+            "risk_score": risk_score,
         })
         
         # Update persona state
@@ -125,7 +138,81 @@ class GalahadModel:
             "action_allowed": action_allowed,
             "validation_reason": validation_reason,
             "conversation_pattern_detected": escalation_detected,
+            "conversation_risk_score": risk_score,
         }
+    
+    def _calculate_conversation_risk(self, current_prompt: str, current_context: dict) -> int:
+        """
+        Calculate cumulative risk score across conversation history.
+        
+        This provides conversation-level awareness beyond single-prompt analysis.
+        Enables earlier detection of multi-turn attacks.
+        
+        Risk factors (cumulative scoring):
+        - Current prompt danger level (0-3 points)
+        - Historical harmful requests (0-3 points)
+        - Escalation velocity (0-2 points)
+        - Suspicious topic switching (0-2 points)
+        
+        Threshold: 3+ points = block immediately (aggressive early detection)
+        
+        Args:
+            current_prompt: Current prompt being evaluated
+            current_context: Danger analysis context for current prompt
+        
+        Returns:
+            Risk score 0-10 (higher = more dangerous)
+        """
+        risk_score = 0
+        current_lower = current_prompt.lower()
+        
+        # Factor 1: Current prompt danger (0-4 points) - INCREASED from 0-3
+        if current_context.get("endangers_humanity"):
+            risk_score += 4  # Immediate high risk
+        elif current_context.get("endangers_human"):
+            risk_score += 3  # High risk
+        elif any(kw in current_lower for kw in ["hack", "exploit", "bypass", "unauthorized", "illegal", "malware", "weapon"]):
+            risk_score += 2  # INCREASED from 1 - suspicious keywords
+        
+        # Factor 2: Historical harmful requests (0-3 points)
+        if len(self.conversation_history) > 0:
+            harmful_count = sum(
+                1 for entry in self.conversation_history
+                if entry["context"].get("endangers_humanity") or entry["context"].get("endangers_human")
+            )
+            if harmful_count >= 2:
+                risk_score += 3  # Multiple harmful = very suspicious
+            elif harmful_count == 1:
+                risk_score += 2  # One harmful = suspicious
+        
+        # Factor 3: Escalation velocity (0-3 points) - INCREASED from 0-2
+        if len(self.conversation_history) >= 2:
+            # Check if requests are getting more dangerous quickly
+            recent_risks = [entry.get("risk_score", 0) for entry in self.conversation_history[-2:]]
+            if len(recent_risks) >= 2 and recent_risks[-1] > recent_risks[-2]:
+                risk_score += 3  # INCREASED - Escalating = block much sooner
+        elif len(self.conversation_history) >= 1:
+            # Even after just 1 turn, check for escalation
+            last_risk = self.conversation_history[-1].get("risk_score", 0)
+            if last_risk > 0 and risk_score > last_risk:
+                risk_score += 2  # First escalation
+        
+        # Factor 4: Suspicious topic switching (0-3 points) - INCREASED from 0-2
+        if len(self.conversation_history) >= 1:
+            # Check if current prompt has harmful content after benign history
+            previous_benign = not any(
+                entry["context"].get("endangers_humanity") or entry["context"].get("endangers_human")
+                for entry in self.conversation_history[-1:]
+            )
+            current_harmful = (current_context.get("endangers_humanity") or 
+                             current_context.get("endangers_human"))
+            
+            if previous_benign and current_harmful:
+                risk_score += 3  # INCREASED - Benign→harmful switch = very suspicious
+        
+        logger.debug(f"Conversation risk score: {risk_score}/10 (turns: {len(self.conversation_history)})")
+        
+        return min(risk_score, 10)  # Cap at 10
     
     def _detect_escalation_pattern(self, current_prompt: str) -> bool:
         """

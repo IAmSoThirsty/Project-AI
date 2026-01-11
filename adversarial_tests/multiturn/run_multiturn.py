@@ -138,6 +138,7 @@ class MultiTurnRunner:
                     "blocked": response['blocked'],
                     "validation_reason": response['validation_reason'],
                     "escalation_detected": response.get('conversation_pattern_detected', False),
+                    "conversation_risk_score": response.get('conversation_risk_score', 0),
                 })
                 
                 # Check if this turn was blocked
