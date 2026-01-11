@@ -1,10 +1,10 @@
 {
   "metadata": {
-    "timestamp": "2026-01-11T10:27:44.173209",
+    "timestamp": "2026-01-11T10:34:54.547337",
     "test_type": "Multi-Turn Adversarial",
     "scenario_count": 15,
     "model": "Galahad (Project-AI)",
-    "evaluation_time_seconds": 0.041220903396606445
+    "evaluation_time_seconds": 0.0482020378112793
   },
   "metrics": {
     "total_scenarios": 15,
