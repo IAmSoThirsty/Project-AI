@@ -14,6 +14,26 @@ permissions:
 
 jobs:
   # =========================================================================
+  # AUTO-LABELER
+  # =========================================================================
+  label-pr:
+    name: Auto Label PR
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # pinned from actions/checkout@v4
+
+      - name: Apply labels based on changed files
+        uses: actions/labeler@8558fd74291d67161a8a78ce36a881fa63b766a9  # v5.0.0
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          configuration-path: .github/labeler.yml
+          sync-labels: true
+
+  # =========================================================================
   # AUTO-REVIEW & LINT/TEST
   # =========================================================================
   auto-review:
@@ -25,8 +45,19 @@ jobs:
       test-status: ${{ steps.test.outcome }}
       security-status: ${{ steps.security.outcome }}
     steps:
+      - name: Pre-push validation - actionlint
+        run: |
+          echo "🔍 Running actionlint for workflow syntax validation..."
+          if ! command -v actionlint &> /dev/null; then
+            wget -q https://github.com/rhysd/actionlint/releases/download/v1.6.27/actionlint_1.6.27_linux_amd64.tar.gz
+            tar -xzf actionlint_1.6.27_linux_amd64.tar.gz
+            sudo mv actionlint /usr/local/bin/ 2>/dev/null || mv actionlint "$HOME/.local/bin/" || export PATH=".:$PATH"
+          fi
+          actionlint .github/workflows/*.yml || echo "⚠️  actionlint found issues"
+        continue-on-error: true
+
       - name: Checkout PR code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # pinned from actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
@@ -35,7 +66,7 @@ jobs:
         run: git submodule update --init --recursive
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@0ae58b7817e9b40c6232e8bf08f42a7a6b8e60ec  # pinned from actions/setup-python@v4
         with:
           python-version: '3.11'
 
@@ -69,7 +100,7 @@ jobs:
 
       - name: Upload check artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b  # pinned from actions/upload-artifact@v4
         with:
           name: check-reports
           path: |
@@ -86,7 +117,7 @@ jobs:
     if: needs.auto-review.outputs.lint-status == 'failure'
     steps:
       - name: Checkout PR code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # pinned from actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -95,7 +126,7 @@ jobs:
         run: git submodule update --init --recursive
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@0ae58b7817e9b40c6232e8bf08f42a7a6b8e60ec  # pinned from actions/setup-python@v4
         with:
           python-version: '3.11'
 
@@ -134,7 +165,7 @@ jobs:
       all-passed: ${{ steps.final-check.outputs.passed }}
     steps:
       - name: Checkout PR code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # pinned from actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
 
@@ -142,7 +173,7 @@ jobs:
         run: git submodule update --init --recursive
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@0ae58b7817e9b40c6232e8bf08f42a7a6b8e60ec  # pinned from actions/setup-python@v4
         with:
           python-version: '3.11'
 
@@ -173,7 +204,7 @@ jobs:
           echo "passed=$PASSED" >> $GITHUB_OUTPUT
 
       - name: Comment on PR
-        uses: actions/github-script@v7
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea  # pinned from actions/github-script@v7
         with:
           script: |
             const passed = '${{ steps.final-check.outputs.passed }}' === 'true';
@@ -202,7 +233,7 @@ jobs:
        needs.verify-fixes.outputs.all-passed == 'true')
     steps:
       - name: Approve PR
-        uses: actions/github-script@v7
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea  # pinned from actions/github-script@v7
         with:
           script: |
             try {
@@ -228,7 +259,7 @@ jobs:
           echo "Could not enable auto-merge. May require branch protection rules."
 
       - name: Comment merge status
-        uses: actions/github-script@v7
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea  # pinned from actions/github-script@v7
         with:
           script: |
             const actor = '${{ github.actor }}';
@@ -264,7 +295,7 @@ jobs:
     steps:
       - name: Dependabot metadata
         id: metadata
-        uses: dependabot/fetch-metadata@v1
+        uses: dependabot/fetch-metadata@5e5f99653a5b510e8555840e80cbf1514ad4af38  # pinned from dependabot/fetch-metadata@v1
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
 
@@ -278,7 +309,7 @@ jobs:
 
       - name: Comment on major update
         if: steps.metadata.outputs.update-type == 'version-update:semver-major'
-        uses: actions/github-script@v7
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea  # pinned from actions/github-script@v7
         with:
           script: |
             github.rest.issues.createComment({

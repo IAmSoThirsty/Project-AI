@@ -25,8 +25,19 @@ jobs:
     name: CodeQL Security Analysis
     runs-on: ubuntu-latest
     steps:
+      - name: Pre-push validation - actionlint
+        run: |
+          echo "🔍 Running actionlint for workflow syntax validation..."
+          if ! command -v actionlint &> /dev/null; then
+            wget -q https://github.com/rhysd/actionlint/releases/download/v1.6.27/actionlint_1.6.27_linux_amd64.tar.gz
+            tar -xzf actionlint_1.6.27_linux_amd64.tar.gz
+            sudo mv actionlint /usr/local/bin/ 2>/dev/null || mv actionlint "$HOME/.local/bin/" || export PATH=".:$PATH"
+          fi
+          actionlint .github/workflows/*.yml || echo "⚠️  actionlint found issues"
+        continue-on-error: true
+
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # pinned from actions/checkout@v4
         with:
           submodules: recursive
 
@@ -34,15 +45,15 @@ jobs:
         run: git submodule update --init --recursive
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
+        uses: github/codeql-action/init@ea9e4e37992a54ee68a9622e985e60c8e8f12d9f  # pinned from github/codeql-action/init@v2
         with:
           languages: python, javascript
 
       - name: Autobuild
-        uses: github/codeql-action/autobuild@v2
+        uses: github/codeql-action/autobuild@ea9e4e37992a54ee68a9622e985e60c8e8f12d9f  # pinned from github/codeql-action/autobuild@v2
 
       - name: Run CodeQL analysis
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@ea9e4e37992a54ee68a9622e985e60c8e8f12d9f  # pinned from github/codeql-action/analyze@v2
 
   # =========================================================================
   # BANDIT PYTHON SECURITY SCANNER
@@ -52,7 +63,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # pinned from actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -60,7 +71,7 @@ jobs:
         run: git submodule update --init --recursive
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@0ae58b7817e9b40c6232e8bf08f42a7a6b8e60ec  # pinned from actions/setup-python@v4
         with:
           python-version: '3.11'
 
@@ -88,7 +99,7 @@ jobs:
 
       - name: Upload SARIF results
         if: steps.bandit.outputs.BANDIT_ISSUES == 'true'
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@ea9e4e37992a54ee68a9622e985e60c8e8f12d9f  # pinned from github/codeql-action/upload-sarif@v2
         with:
           sarif_file: bandit-report.sarif
         continue-on-error: true
@@ -137,7 +148,7 @@ jobs:
 
       - name: Create issue for findings
         if: steps.bandit.outputs.BANDIT_ISSUES == 'true' && github.event_name == 'schedule'
-        uses: actions/github-script@v7
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea  # pinned from actions/github-script@v7
         with:
           script: |
             const fs = require('fs');
@@ -168,7 +179,7 @@ jobs:
 
       - name: Upload Bandit reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b  # pinned from actions/upload-artifact@v4
         with:
           name: bandit-reports
           path: |
@@ -184,7 +195,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # pinned from actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -192,7 +203,7 @@ jobs:
         run: git submodule update --init --recursive
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@0ae58b7817e9b40c6232e8bf08f42a7a6b8e60ec  # pinned from actions/setup-python@v4
         with:
           python-version: '3.12'
 
@@ -251,7 +262,7 @@ jobs:
           fi
 
       - name: Upload scan reports
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b  # pinned from actions/upload-artifact@v4
         if: always()
         with:
           name: secret-scan-reports
@@ -270,7 +281,7 @@ jobs:
 
       - name: Comment on PR
         if: github.event_name == 'pull_request' && steps.enhanced-scan.outputs.secrets_found == 'true'
-        uses: actions/github-script@v7
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea  # pinned from actions/github-script@v7
         with:
           script: |
             const comment = '## ⚠️ Security Alert: Potential Secrets Detected\n\n' +
@@ -296,7 +307,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # pinned from actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -304,7 +315,7 @@ jobs:
         run: git submodule update --init --recursive
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@0ae58b7817e9b40c6232e8bf08f42a7a6b8e60ec  # pinned from actions/setup-python@v4
         with:
           python-version: '3.11'
 
@@ -366,7 +377,7 @@ jobs:
 
       - name: Upload audit reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b  # pinned from actions/upload-artifact@v4
         with:
           name: dependency-audit-reports
           path: |
@@ -376,7 +387,7 @@ jobs:
 
       - name: Create issue for vulnerabilities
         if: steps.parse_vulns.outputs.vulns_found == 'true' && github.event_name == 'schedule'
-        uses: actions/github-script@v7
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea  # pinned from actions/github-script@v7
         with:
           script: |
             const criticalLabel = '${{ steps.parse_vulns.outputs.critical_vulns }}' === 'true' ? '🔴 CRITICAL' : '🟡';

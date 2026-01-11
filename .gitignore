@@ -109,3 +109,13 @@ out/
 captures/
 .externalNativeBuild
 .cxx
+
+# Workflow backup files
+*.bak
+
+# Downloaded tools and binaries
+actionlint
+actionlint_*.tar.gz
+
+# Reports directory (temp)
+reports/

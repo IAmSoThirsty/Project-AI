@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # pinned from actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -31,7 +31,7 @@ jobs:
         run: git submodule update --init --recursive
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@0ae58b7817e9b40c6232e8bf08f42a7a6b8e60ec  # pinned from actions/setup-python@v4
         with:
           python-version: '3.11'
 
@@ -41,7 +41,7 @@ jobs:
           pip install PyGithub requests pip-audit safety
 
       - name: Triage and resolve issues
-        uses: actions/github-script@v7
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea  # pinned from actions/github-script@v7
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -214,7 +214,7 @@ jobs:
     if: always()
     steps:
       - name: Generate summary report
-        uses: actions/github-script@v7
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea  # pinned from actions/github-script@v7
         with:
           script: |
             const { data: openIssues } = await github.rest.issues.listForRepo({
