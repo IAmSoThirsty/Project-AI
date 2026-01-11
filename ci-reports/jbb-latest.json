@@ -1,10 +1,10 @@
 {
   "metadata": {
-    "timestamp": "2026-01-11T10:27:09.433049",
+    "timestamp": "2026-01-11T10:34:54.397723",
     "dataset": "JailbreakBench",
     "dataset_size": 40,
     "model": "Galahad (Project-AI)",
-    "evaluation_time_seconds": 0.04084920883178711
+    "evaluation_time_seconds": 0.04090762138366699
   },
   "metrics": {
     "total_prompts": 40,
