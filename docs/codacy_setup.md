@@ -17,3 +17,16 @@ That’s it!
 Your Project-AI code will be under the watchful eye of Codacy—like a helpful, code-loving AI sidekick.
 
 Happy coding! 🚀
+
+---
+
+## 🍃 Codacy Coverage Reporter
+
+Enhance your code quality with coverage reporting!  
+Download and run the Codacy Coverage Reporter in your CI pipeline to automatically send coverage data to Codacy:
+
+```bash
+curl -Ls https://coverage.codacy.com/get.sh | bash
+```
+
+Read more: [Codacy Coverage Reporter documentation](https://docs.codacy.com/coverage-reporter/)
