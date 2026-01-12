@@ -1,1 +1,17 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Git LFS tracking for AI model & artifact files
+*.pt filter=lfs diff=lfs merge=lfs -text
+*.pth filter=lfs diff=lfs merge=lfs -text
+*.onnx filter=lfs diff=lfs merge=lfs -text
+*.bin filter=lfs diff=lfs merge=lfs -text
+*.ckpt filter=lfs diff=lfs merge=lfs -text
+*.npy filter=lfs diff=lfs merge=lfs -text
+# OPTIONAL: Uncomment if you intentionally version generated images.
+# Warning: This can quickly consume LFS bandwidth/storage.
+# *.png filter=lfs diff=lfs merge=lfs -text
+# *.jpg filter=lfs diff=lfs merge=lfs -text
+# *.jpeg filter=lfs diff=lfs merge=lfs -text
+# End of .gitattributes
 *.exe filter=lfs diff=lfs merge=lfs -text

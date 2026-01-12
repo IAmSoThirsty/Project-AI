@@ -1,0 +1,117 @@
+/* Lightweight "book" stylesheet. Replace texture paths with real assets to improve realism. */
+
+/* Modernized book-like stylesheet: larger, clearer typography and spacing */
+QMainWindow {
+    background-color: #f6efe0; /* warm parchment fallback */
+    background-image: url("{PARCHMENT}");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 11pt;
+}
+
+QTabWidget::pane {
+    border: 2px solid #c7b495;
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #fffdf6, stop:1 #f7f0df);
+    padding: 8px;
+}
+
+QTabBar::tab {
+    background: #e7dcc5 url("{LEATHER}") center/cover no-repeat;
+    color: #2b1e10;
+    padding: 14px 20px;
+    margin: 4px;
+    border-radius: 8px;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-size: 10pt;
+}
+
+QTabBar::tab:selected {
+    background: #fffef8;
+    font-weight: bold;
+}
+
+/* Modern button styling */
+QPushButton {
+    background-color: #6f4a2a;
+    color: #fffef6;
+    border: 1px solid rgba(0,0,0,0.12);
+    border-radius: 6px;
+    padding: 8px 12px;
+    min-height: 28px;
+}
+
+QPushButton:hover {
+    background-color: #7f5a38;
+}
+
+QPushButton#alert_button {
+    background-color: #c0392b;
+    color: white;
+    font-weight: 600;
+    padding: 10px 14px;
+}
+
+QStatusBar {
+    background: transparent;
+    color: #5b4636;
+    padding: 6px;
+}
+
+/* Neumorphic / subtle 3D additions */
+.card {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #fcfbf8, stop:1 #f2ece0);
+    border-radius: 12px;
+    border: 1px solid rgba(110,80,50,0.12);
+    padding: 12px;
+}
+
+/* Floating / raised panels */
+.floating {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ffffff, stop:1 #f6efe0);
+    border-radius: 10px;
+    border: 1px solid rgba(0,0,0,0.06);
+}
+
+QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #7a5a38, stop:1 #6f4a2a);
+    color: #fffef6;
+    border: 1px solid rgba(0,0,0,0.12);
+    border-radius: 8px;
+    padding: 8px 12px;
+    min-height: 28px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #886143, stop:1 #7f5a38);
+}
+
+QPushButton:pressed {
+    padding-top: 10px; /* subtle press feedback */
+}
+
+/* Card-like list (e.g., TOC) */
+QListWidget.cardList {
+    background: transparent;
+    border: none;
+}
+
+/* Compatibility selectors for Qt dynamic properties */
+QWidget[class="card"] {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #fcfbf8, stop:1 #f2ece0);
+    border-radius: 12px;
+    border: 1px solid rgba(110,80,50,0.12);
+    padding: 12px;
+}
+
+QWidget[class="floating"] {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ffffff, stop:1 #f6efe0);
+    border-radius: 10px;
+    border: 1px solid rgba(0,0,0,0.06);
+}
+
+QListWidget[class="cardList"] {
+    background: transparent;
+    border: none;
+}
