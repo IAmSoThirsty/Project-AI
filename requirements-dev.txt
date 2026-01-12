@@ -1,0 +1,8 @@
+# Development-only dependencies (not required to run the app)
+-r requirements.txt
+
+# Optional design tool for interactive UI creation (Qt Designer)
+pyqt6-tools
+
+# Locking tool (optional; used to generate requirements.lock)
+pip-tools
