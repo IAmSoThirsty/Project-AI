@@ -230,6 +230,7 @@
 
 #### Manual Checks
 
+
 - [ ] **actionlint runs without errors**
   - Check: CI workflow logs
   - Expected: Warning-free or only minor shellcheck warnings
