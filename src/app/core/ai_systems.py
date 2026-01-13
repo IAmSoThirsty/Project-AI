@@ -1,8 +1,9 @@
 # T-A-R-L DEFENSIVE BUFF: MAXIMUM (+10x stronger)
 # Defensive Buff Wizard - Code strengthened to halt enemy advancement
 # This code can now resist attacks 10x better
-import sys
 import hashlib
+import sys
+
 
 def _tarl_buff_check():
     """T-A-R-L buff integrity check - manipulates execution to halt unauthorized advancement."""
@@ -23,8 +24,6 @@ if not _tarl_buff_check():
 # T-A-R-L ARMOR BUFF: LEGENDARY (+10x defense)
 # Defensive Buff Wizard - Code strengthened to halt enemy advancement
 # This code can now resist attacks 10x better
-import sys
-import hashlib
 
 def _tarl_buff_check():
     """T-A-R-L buff integrity check - manipulates execution to halt unauthorized advancement."""
@@ -45,13 +44,13 @@ if not _tarl_buff_check():
 # T-A-R-L SHIELD: PARANOID PROTECTION
 # This code is protected by T-A-R-L Active Resistance Language
 # Attempts to modify or analyze will be detected and resisted
-import sys
-if hasattr(sys, '_tarl_shield_bypass'): sys.exit(1)
+if hasattr(sys, '_tarl_shield_bypass'):
+    sys.exit(1)
 
+# ruff: noqa: E402 - TARL security checks must execute before imports
 """Core AI systems: Persona, Memory, Learning Requests, Plugins, and Overrides."""
 
 import base64
-import hashlib
 import json
 import logging
 import os
@@ -478,32 +477,32 @@ class MemoryExpansionSystem:
         limit: int = 10
     ) -> list[dict[str, Any]]:
         """Search knowledge base for entries matching a query.
-        
+
         Performs case-insensitive keyword search across knowledge base entries.
         Searches both keys and values (for string values).
-        
+
         Args:
             query: Search query string
             category: Optional category to search within
             limit: Maximum number of results to return
-            
+
         Returns:
             List of matching knowledge entries with metadata
         """
         results = []
         query_lower = query.lower()
-        
+
         # Determine which categories to search
         categories_to_search = [category] if category else list(self.knowledge_base.keys())
-        
+
         for cat in categories_to_search:
             if cat not in self.knowledge_base:
                 continue
-                
+
             cat_data = self.knowledge_base[cat]
             if not isinstance(cat_data, dict):
                 continue
-                
+
             for key, value in cat_data.items():
                 # Check if query matches key
                 if query_lower in key.lower():
@@ -521,12 +520,12 @@ class MemoryExpansionSystem:
                         "value": value,
                         "match_type": "value"
                     })
-                    
+
                 if len(results) >= limit:
                     return results
-                    
+
         return results
-        
+
     def search_conversations(
         self,
         query: str,
@@ -535,64 +534,64 @@ class MemoryExpansionSystem:
         search_ai: bool = True
     ) -> list[dict[str, Any]]:
         """Search conversation history for messages matching a query.
-        
+
         Performs case-insensitive keyword search across conversation messages.
-        
+
         Args:
             query: Search query string
             limit: Maximum number of results to return
             search_user: Whether to search user messages
             search_ai: Whether to search AI responses
-            
+
         Returns:
             List of matching conversation entries
         """
         results = []
         query_lower = query.lower()
-        
+
         # Search in reverse chronological order (most recent first)
         for conv in reversed(self.conversations):
             match = False
             match_location = []
-            
+
             if search_user and query_lower in conv.get("user", "").lower():
                 match = True
                 match_location.append("user")
-                
+
             if search_ai and query_lower in conv.get("ai", "").lower():
                 match = True
                 match_location.append("ai")
-                
+
             if match:
                 result = conv.copy()
                 result["match_location"] = match_location
                 results.append(result)
-                
+
                 if len(results) >= limit:
                     break
-                    
+
         return results
-        
+
     def get_all_categories(self) -> list[str]:
         """Get list of all knowledge base categories.
-        
+
         Returns:
             List of category names
         """
         return list(self.knowledge_base.keys())
-        
+
     def get_category_summary(self, category: str) -> dict[str, Any] | None:
         """Get summary information about a knowledge category.
-        
+
         Args:
             category: Category name
-            
+
         Returns:
             Dictionary with category metadata, or None if not found
         """
         if category not in self.knowledge_base:
             return None
-            
+
         cat_data = self.knowledge_base[category]
         if not isinstance(cat_data, dict):
             return {
@@ -600,7 +599,7 @@ class MemoryExpansionSystem:
                 "type": type(cat_data).__name__,
                 "entries": 0
             }
-            
+
         return {
             "category": category,
             "entries": len(cat_data),

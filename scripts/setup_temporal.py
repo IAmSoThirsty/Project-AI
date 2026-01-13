@@ -8,7 +8,6 @@ It can run Temporal locally via Docker or connect to Temporal Cloud.
 
 import argparse
 import logging
-import os
 import subprocess
 import sys
 from pathlib import Path
@@ -55,10 +54,10 @@ def check_docker_compose():
 def start_temporal_local():
     """Start Temporal server locally using Docker Compose."""
     logger.info("Starting Temporal server locally...")
-    
+
     if not check_docker() or not check_docker_compose():
         return False
-    
+
     try:
         # Start Temporal services
         subprocess.run(
@@ -83,7 +82,7 @@ def start_temporal_local():
 def start_worker():
     """Start Temporal worker."""
     logger.info("Starting Temporal worker...")
-    
+
     try:
         # Start worker via Docker Compose
         subprocess.run(
@@ -100,7 +99,7 @@ def start_worker():
 def stop_temporal():
     """Stop Temporal services."""
     logger.info("Stopping Temporal services...")
-    
+
     try:
         subprocess.run(
             [
@@ -122,7 +121,7 @@ def stop_temporal():
 def show_status():
     """Show status of Temporal services."""
     logger.info("Checking Temporal services status...")
-    
+
     try:
         result = subprocess.run(
             ["docker-compose", "ps"],
@@ -142,18 +141,18 @@ def create_env_file():
     """Create .env.temporal file if it doesn't exist."""
     env_file = Path(".env.temporal")
     env_example = Path(".env.temporal.example")
-    
+
     if env_file.exists():
         logger.info(".env.temporal file already exists")
         return True
-    
+
     if env_example.exists():
         logger.info("Creating .env.temporal from example file...")
         env_example.read_text()
         env_file.write_text(env_example.read_text())
         logger.info("Created .env.temporal - please review and update as needed")
         return True
-    
+
     logger.warning("No .env.temporal.example found")
     return False
 
@@ -162,7 +161,7 @@ def setup_workspace_reference():
     """Create workspace reference file."""
     workspace_file = Path("config/temporal/workspace_info.txt")
     workspace_file.parent.mkdir(parents=True, exist_ok=True)
-    
+
     workspace_content = """
 Temporal.io Workspace Information for Project-AI
 ================================================
@@ -180,7 +179,7 @@ Setup Instructions:
 - Use scripts/setup_temporal.py to start local Temporal server
 - Review config/temporal/ for configuration files
 """.strip()
-    
+
     workspace_file.write_text(workspace_content)
     logger.info(f"Created workspace reference: {workspace_file}")
 
@@ -195,36 +194,36 @@ def main():
         choices=["start", "stop", "status", "worker", "init"],
         help="Command to execute",
     )
-    
+
     args = parser.parse_args()
-    
+
     if args.command == "init":
         logger.info("Initializing Temporal configuration...")
         create_env_file()
         setup_workspace_reference()
         logger.info("Initialization complete!")
         return 0
-    
+
     elif args.command == "start":
         if not start_temporal_local():
             return 1
         return 0
-    
+
     elif args.command == "worker":
         if not start_worker():
             return 1
         return 0
-    
+
     elif args.command == "stop":
         if not stop_temporal():
             return 1
         return 0
-    
+
     elif args.command == "status":
         if not show_status():
             return 1
         return 0
-    
+
     return 0
 
 

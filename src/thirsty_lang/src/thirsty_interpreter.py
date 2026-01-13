@@ -6,52 +6,52 @@ A Python implementation of the Thirsty-lang interpreter
 
 import re
 import sys
-from typing import Dict, Any, List, Optional
+from typing import Any
 
 
 class ThirstyInterpreter:
     """Main interpreter class for Thirsty-lang"""
-    
+
     def __init__(self):
-        self.variables: Dict[str, Any] = {}
-        self.output: List[str] = []
-    
-    def interpret(self, code: str) -> List[str]:
+        self.variables: dict[str, Any] = {}
+        self.output: list[str] = []
+
+    def interpret(self, code: str) -> list[str]:
         """
         Interpret Thirsty-lang code and return output
-        
+
         Args:
             code: Thirsty-lang source code as a string
-            
+
         Returns:
             List of output strings
         """
         self.output = []
         lines = code.strip().split('\n')
-        
+
         for line_num, line in enumerate(lines, 1):
             line = line.strip()
-            
+
             # Skip empty lines and comments
             if not line or line.startswith('//') or line.startswith('#'):
                 continue
-            
+
             try:
                 self._execute_line(line)
             except Exception as e:
                 error_msg = f"Error on line {line_num}: {str(e)}"
                 print(error_msg, file=sys.stderr)
                 self.output.append(f"ERROR: {error_msg}")
-        
+
         return self.output
-    
+
     def execute_line(self, line: str):
         """Execute a single line of Thirsty-lang code (public interface)"""
         return self._execute_line(line)
-    
+
     def _execute_line(self, line: str):
         """Execute a single line of Thirsty-lang code"""
-        
+
         # Variable declaration: drink varname = value
         drink_match = re.match(r'drink\s+(\w+)\s*=\s*(.+)', line)
         if drink_match:
@@ -59,7 +59,7 @@ class ThirstyInterpreter:
             value_expr = drink_match.group(2).strip()
             self.variables[var_name] = self._evaluate_expression(value_expr)
             return
-        
+
         # Output statement: pour expression
         pour_match = re.match(r'pour\s+(.+)', line)
         if pour_match:
@@ -69,7 +69,7 @@ class ThirstyInterpreter:
             print(output_str)
             self.output.append(output_str)
             return
-        
+
         # Input statement: sip varname
         sip_match = re.match(r'sip\s+(\w+)', line)
         if sip_match:
@@ -77,18 +77,18 @@ class ThirstyInterpreter:
             user_input = input(f"Enter value for {var_name}: ")
             self.variables[var_name] = user_input
             return
-        
+
         raise SyntaxError(f"Unknown statement: {line}")
-    
+
     def _evaluate_expression(self, expr: str) -> Any:
         """Evaluate an expression and return its value"""
         expr = expr.strip()
-        
+
         # String literal
         if (expr.startswith('"') and expr.endswith('"')) or \
            (expr.startswith("'") and expr.endswith("'")):
             return expr[1:-1]
-        
+
         # Number literal
         try:
             if '.' in expr:
@@ -96,21 +96,21 @@ class ThirstyInterpreter:
             return int(expr)
         except ValueError:
             pass
-        
+
         # Variable reference
         if expr in self.variables:
             return self.variables[expr]
-        
+
         # Boolean literals
         if expr.lower() == 'true':
             return True
         if expr.lower() == 'false':
             return False
-        
+
         # If we can't evaluate, return as string
         return expr
-    
-    def get_variables(self) -> Dict[str, Any]:
+
+    def get_variables(self) -> dict[str, Any]:
         """Return current variable state"""
         return self.variables.copy()
 
@@ -118,9 +118,9 @@ class ThirstyInterpreter:
 def run_file(filename: str):
     """Run a Thirsty-lang file"""
     try:
-        with open(filename, 'r', encoding='utf-8') as f:
+        with open(filename, encoding='utf-8') as f:
             code = f.read()
-        
+
         interpreter = ThirstyInterpreter()
         interpreter.interpret(code)
     except FileNotFoundError:
@@ -136,7 +136,7 @@ def main():
     if len(sys.argv) < 2:
         print("Usage: python3 thirsty_interpreter.py <file.thirsty>")
         sys.exit(1)
-    
+
     filename = sys.argv[1]
     run_file(filename)
 

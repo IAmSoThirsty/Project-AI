@@ -5,7 +5,6 @@ Example script demonstrating cloud sync integration with Project-AI.
 This script shows how to use CloudSyncManager for cross-device synchronization.
 """
 
-import json
 import os
 import sys
 from datetime import datetime
@@ -55,9 +54,9 @@ def main():
     print("2. Testing encryption...")
     encrypted = sync_manager.encrypt_data(user_data)
     print(f"   ✓ Data encrypted ({len(encrypted)} bytes)")
-    
+
     decrypted = sync_manager.decrypt_data(encrypted)
-    print(f"   ✓ Data decrypted successfully")
+    print("   ✓ Data decrypted successfully")
     print(f"   ✓ Data integrity verified: {decrypted['username'] == username}")
     print()
 
@@ -73,7 +72,7 @@ def main():
     # Enable auto-sync
     print("4. Configuring auto-sync...")
     sync_manager.enable_auto_sync(interval=600)  # 10 minutes
-    print(f"   ✓ Auto-sync enabled with 600s interval")
+    print("   ✓ Auto-sync enabled with 600s interval")
     print()
 
     # Test conflict resolution

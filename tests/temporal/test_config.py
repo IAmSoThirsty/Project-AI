@@ -2,10 +2,8 @@
 Tests for Temporal.io configuration.
 """
 
-import pytest
-from pathlib import Path
 
-from app.temporal.config import TemporalConfig, get_temporal_config, reload_temporal_config
+from app.temporal.config import TemporalConfig, get_temporal_config
 
 
 class TestTemporalConfig:
@@ -14,7 +12,7 @@ class TestTemporalConfig:
     def test_default_values(self):
         """Test default configuration values."""
         config = TemporalConfig()
-        
+
         assert config.host == "localhost:7233"
         assert config.namespace == "default"
         assert config.task_queue == "project-ai-tasks"
@@ -28,7 +26,7 @@ class TestTemporalConfig:
             namespace="custom-namespace",
             task_queue="custom-queue",
         )
-        
+
         assert config.host == "custom-host:7233"
         assert config.namespace == "custom-namespace"
         assert config.task_queue == "custom-queue"
@@ -47,7 +45,7 @@ class TestTemporalConfig:
         """Test connection string for local server."""
         config = TemporalConfig(host="localhost:7233")
         conn_str = config.get_connection_string()
-        
+
         assert "Temporal Server" in conn_str
         assert "localhost:7233" in conn_str
 
@@ -55,5 +53,5 @@ class TestTemporalConfig:
         """Test that get_temporal_config returns singleton."""
         config1 = get_temporal_config()
         config2 = get_temporal_config()
-        
+
         assert config1 is config2

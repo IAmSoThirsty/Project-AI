@@ -8,7 +8,6 @@ memory expansion, image generation, and data analysis.
 import logging
 from dataclasses import dataclass
 from datetime import timedelta
-from typing import Any, Optional
 
 from temporalio import workflow
 from temporalio.common import RetryPolicy
@@ -23,15 +22,15 @@ class LearningRequest:
     content: str
     source: str
     category: str
-    user_id: Optional[str] = None
+    user_id: str | None = None
 
 
 @dataclass
 class LearningResult:
     """Result from AI learning workflow."""
     success: bool
-    knowledge_id: Optional[str] = None
-    error: Optional[str] = None
+    knowledge_id: str | None = None
+    error: str | None = None
 
 
 @dataclass
@@ -41,16 +40,16 @@ class ImageGenerationRequest:
     style: str = "photorealistic"
     size: str = "1024x1024"
     backend: str = "huggingface"
-    user_id: Optional[str] = None
+    user_id: str | None = None
 
 
 @dataclass
 class ImageGenerationResult:
     """Result from image generation workflow."""
     success: bool
-    image_path: Optional[str] = None
-    metadata: Optional[dict] = None
-    error: Optional[str] = None
+    image_path: str | None = None
+    metadata: dict | None = None
+    error: str | None = None
 
 
 @dataclass
@@ -58,16 +57,16 @@ class DataAnalysisRequest:
     """Input for data analysis workflow."""
     file_path: str
     analysis_type: str  # 'clustering', 'statistics', 'visualization'
-    user_id: Optional[str] = None
+    user_id: str | None = None
 
 
 @dataclass
 class DataAnalysisResult:
     """Result from data analysis workflow."""
     success: bool
-    results: Optional[dict] = None
-    output_path: Optional[str] = None
-    error: Optional[str] = None
+    results: dict | None = None
+    output_path: str | None = None
+    error: str | None = None
 
 
 @dataclass
@@ -75,7 +74,7 @@ class MemoryExpansionRequest:
     """Input for memory expansion workflow."""
     conversation_id: str
     messages: list[dict]
-    user_id: Optional[str] = None
+    user_id: str | None = None
 
 
 @dataclass
@@ -83,7 +82,7 @@ class MemoryExpansionResult:
     """Result from memory expansion workflow."""
     success: bool
     memory_count: int = 0
-    error: Optional[str] = None
+    error: str | None = None
 
 
 # Workflow Definitions
@@ -92,7 +91,7 @@ class MemoryExpansionResult:
 class AILearningWorkflow:
     """
     Durable workflow for AI learning requests.
-    
+
     Handles the complete learning pipeline including:
     - Content validation
     - Black Vault checks
@@ -175,7 +174,7 @@ class AILearningWorkflow:
 class ImageGenerationWorkflow:
     """
     Durable workflow for image generation.
-    
+
     Handles:
     - Content filtering
     - Style processing
@@ -247,7 +246,7 @@ class ImageGenerationWorkflow:
 class DataAnalysisWorkflow:
     """
     Durable workflow for data analysis tasks.
-    
+
     Handles:
     - File validation
     - Data loading and preprocessing
@@ -326,7 +325,7 @@ class DataAnalysisWorkflow:
 class MemoryExpansionWorkflow:
     """
     Durable workflow for memory expansion.
-    
+
     Handles:
     - Conversation processing
     - Knowledge extraction

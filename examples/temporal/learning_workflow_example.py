@@ -20,11 +20,11 @@ logger = logging.getLogger(__name__)
 async def main():
     """Run AI learning workflow example."""
     logger.info("Starting AI Learning Workflow example")
-    
+
     # Create and connect client
     manager = TemporalClientManager()
     await manager.connect()
-    
+
     try:
         # Create learning request
         request = LearningRequest(
@@ -40,12 +40,12 @@ async def main():
             category="programming",
             user_id="example_user",
         )
-        
+
         # Generate unique workflow ID
         workflow_id = f"learning-{datetime.now().timestamp()}"
-        
+
         logger.info(f"Starting workflow: {workflow_id}")
-        
+
         # Start workflow
         handle = await manager.client.start_workflow(
             AILearningWorkflow.run,
@@ -53,21 +53,21 @@ async def main():
             id=workflow_id,
             task_queue="project-ai-tasks",
         )
-        
+
         logger.info("Workflow started, waiting for result...")
-        
+
         # Wait for result (this is durable - survives crashes)
         result = await handle.result()
-        
+
         if result.success:
-            logger.info(f"✓ Learning successful!")
+            logger.info("✓ Learning successful!")
             logger.info(f"  Knowledge ID: {result.knowledge_id}")
         else:
             logger.error(f"✗ Learning failed: {result.error}")
-        
+
     finally:
         await manager.disconnect()
-    
+
     logger.info("Example complete")
 
 
