@@ -131,7 +131,7 @@ with:
     issueBody += '**Triggered by:** ${{ github.event.head_commit.message }}\n\n';
 ```
 
-#### After (SECURE):
+#### After (SECURE)
 ```yaml
 env:
   COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
