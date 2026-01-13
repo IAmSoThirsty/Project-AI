@@ -82,6 +82,7 @@ Added actionlint validation to 4 critical workflows:
 4. **snn-mlops-cicd.yml** - ML/Ops pipeline
 
 #### Implementation
+
 ```yaml
 - name: Pre-push validation - actionlint
   run: |
