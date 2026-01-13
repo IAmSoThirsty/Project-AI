@@ -86,6 +86,7 @@ Key names are basically case sensitive (though some specific key names are case 
 case-sensitivity mistakes.
 
 <a name="check-missing-required-duplicate-keys"></a>
+
 ## Missing required keys and key duplicates
 
 Example input:
