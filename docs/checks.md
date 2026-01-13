@@ -153,6 +153,7 @@ actionlint checks such mappings and sequences are not empty while parsing, and r
 error.
 
 <a name="check-mapping-values"></a>
+
 ## Unexpected mapping values
 
 Example input:
