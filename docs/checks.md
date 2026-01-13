@@ -1898,6 +1898,7 @@ and the value should be expanded with `${{ }}` syntax at `password:`. actionlint
 them as an error.
 
 <a name="check-env-var-names"></a>
+
 ## Environment variable names
 
 Example input:
