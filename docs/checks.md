@@ -2575,6 +2575,7 @@ actionlint detects these commands are used in `run:` and reports them as errors 
 [the official document][workflow-commands-doc] for the comprehensive list of workflow commands to know the usage.
 
 <a name="if-cond-always-true"></a>
+
 ## Conditions always evaluated to true at `if:`
 
 Example input:
