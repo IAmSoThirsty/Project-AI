@@ -8,15 +8,18 @@ Flow:
    exposes selected_tab and username for the caller.
 """
 
+from PyQt6.QtGui import QColor
 from PyQt6.QtWidgets import (
     QDialog,
-    QVBoxLayout,
+    QGraphicsDropShadowEffect,
     QLabel,
     QLineEdit,
-    QPushButton,
     QListWidget,
     QMessageBox,
+    QPushButton,
+    QVBoxLayout,
 )
+
 from app.core.user_manager import UserManager
 
 
@@ -65,6 +68,30 @@ class LoginDialog(QDialog):
 
         self.open_button = QPushButton("Open Chapter")
         self.open_button.clicked.connect(self.open_chapter)
+        # style the TOC list as a card-list
+        try:
+            self.toc.setProperty("class", "cardList")
+        except Exception:
+            pass
+        # Apply a subtle shadow to the dialog to create a raised card look
+        try:
+            self._apply_shadow(self, radius=16, dx=0, dy=6, color=QColor(0, 0, 0, 110))
+        except Exception:
+            pass
+
+    def _apply_shadow(
+        self, widget, radius: int = 12, dx: int = 0, dy: int = 4, color: QColor = None
+    ):
+        try:
+            eff = QGraphicsDropShadowEffect(widget)
+            eff.setBlurRadius(radius)
+            eff.setOffset(dx, dy)
+            if color is None:
+                color = QColor(0, 0, 0, 120)
+            eff.setColor(color)
+            widget.setGraphicsEffect(eff)
+        except Exception:
+            pass
 
     def _onboard_admin(self):
         """Prompt the user to create an admin account on first run."""
@@ -95,18 +122,27 @@ class LoginDialog(QDialog):
         username = self.admin_user.text().strip()
         password = self.admin_pass.text().strip()
         if not username or not password:
-            QMessageBox.warning(self, "Onboarding", "Provide username and password for admin")
+            QMessageBox.warning(
+                self,
+                "Onboarding",
+                "Provide username and password for admin",
+            )
             return
         ok = self.user_manager.create_user(username, password, persona="admin")
         if ok:
-            QMessageBox.information(self, "Onboarding", "Admin account created — please log in.")
+            info_msg = "Admin account created — please log in."
+            QMessageBox.information(self, "Onboarding", info_msg)
             # Remove admin creation widgets and show login
             for w in (self.admin_user, self.admin_pass, self.create_admin_btn):
                 w.hide()
             for w in (self.user_input, self.pass_input, self.login_button):
                 w.show()
         else:
-            QMessageBox.warning(self, "Onboarding", "Username already exists — choose another")
+            QMessageBox.warning(
+                self,
+                "Onboarding",
+                "Username already exists — choose another",
+            )
 
     def try_login(self):
         username = self.user_input.text().strip()
@@ -132,7 +168,11 @@ class LoginDialog(QDialog):
     def open_chapter(self):
         idx = self.toc.currentRow()
         if idx < 0:
-            QMessageBox.warning(self, "Select Chapter", "Please select a chapter from the Table of Contents")
+            QMessageBox.warning(
+                self,
+                "Select Chapter",
+                "Please select a chapter from the Table of Contents",
+            )
             return
         self.selected_tab = idx
         self.accept()

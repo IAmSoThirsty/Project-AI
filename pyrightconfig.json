@@ -1,0 +1,27 @@
+{
+  "typeCheckingMode": "standard",
+  "pythonVersion": "3.11",
+  "pythonPath": "src",
+  "include": ["src", "tests"],
+  "exclude": [
+    "**/node_modules",
+    "**/__pycache__",
+    ".venv",
+    "venv",
+    "build",
+    "dist"
+  ],
+  "reportOptionalMemberAccess": "warning",
+  "reportOptionalSubscript": "warning",
+  "reportOptionalCallable": "warning",
+  "reportOptionalOperand": "warning",
+  "reportOptionalIterable": "warning",
+  "reportOptionalContextManager": "warning",
+  "reportOptionalArgumentType": "warning",
+  "reportOptionalAssignment": "warning",
+  "reportOptionalFunctionMemberAccess": "warning",
+  "reportUnusedImport": "information",
+  "reportUnusedVariable": "information",
+  "reportPrivateUsage": "information",
+  "reportConstantRedefinition": "warning"
+}
