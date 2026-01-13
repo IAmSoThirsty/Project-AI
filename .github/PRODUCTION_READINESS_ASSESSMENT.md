@@ -58,6 +58,7 @@
 - **Backward Compatibility**: No breaking changes to workflows
 
 #### Improvements ⚠️
+
 - Could add integration tests for workflows (-5 points)
 - Could implement canary deployments for workflow changes (-3 points)
 - Could add workflow dry-run with `act` tool (-2 points)
