@@ -245,6 +245,7 @@
 ### Short-term Validation (1-7 days)
 
 #### Performance Monitoring
+
 - [ ] **No significant regression in workflow execution times**
   - Baseline: Current average times per workflow
   - Threshold: <60s increase acceptable
