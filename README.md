@@ -115,6 +115,7 @@ Experience the next generation of AI orchestration—engineered for extensibilit
 - ✅ Kubernetes-Ready — Helm chart, HA, eBPF/Cilium, Hubble & Netdata
 - ✅ Observability & Analytics — Prometheus, Grafana, ClickHouse, RisingWave, OpenTelemetry, per-node Netdata
 - ✅ Emergency Protocols — Email/SMS, lockout, real-time incident logs and alerts
+- ✅ Temporal.io Workflows — Durable execution for long-running AI operations (learning, image generation, data analysis), automatic retries, distributed coordination
 - ✅ CI/CD, MLOps — 100+ tests, full coverage, 8-stage CI with artifacts and shadow/canary rollouts
 - ✅ Adversarial Red-Teaming — 4250+ tests (JBB, Garak, Multi-Turn, Hydra, LLM-in-the-loop), 100% JBB/Garak detection, full transparency
 
@@ -136,6 +137,12 @@ src/app/
 │   ├─ emergency_alert.py       # Alerts/Emergency comms
 │   ├─ data_analysis.py         # Pandas, sklearn, clustering
 │   ├─ snn_integration.py, snn_mlops.py, ai_security_framework.py, etc.
+├─ temporal/
+│   ├─ client.py                # Temporal connection & worker lifecycle
+│   ├─ workflows.py             # Durable workflow definitions
+│   ├─ activities.py            # Activity implementations
+│   ├─ worker.py                # Worker process
+│   └─ config.py                # Temporal configuration
 ├─ agents/
 │   ├─ cerberus.py              # Defensive overseer
 │   ├─ planner.py               # Decomposition/workflow
@@ -246,6 +253,78 @@ See [`adversarial_tests/`](adversarial_tests/) and `ci-reports/` for the complet
 - **False Positives**: <3% (all test suites)
 - **Automated CI Integration**: All tests with full logging and reporting
 - **Artifact Directory Update:** 2026-01-11 12:19 UTC
+
+---
+
+## ⏱️ Temporal.io Workflow Orchestration
+
+**Project-AI integrates Temporal.io for durable, fault-tolerant execution of long-running AI operations.**
+
+### What is Temporal.io?
+
+Temporal provides workflow orchestration that guarantees completion even when failures occur. Workflows can run for days or weeks, automatically retrying failed activities and recovering from infrastructure outages.
+
+### Key Benefits
+
+- **Durable Execution**: Workflows survive process crashes, network failures, and infrastructure issues
+- **Automatic Retries**: Configurable retry policies for failed operations
+- **Visibility**: Web UI for monitoring all workflows, debugging failures, and tracking execution history
+- **Distributed Coordination**: Multiple workers process tasks in parallel
+- **Versioning**: Deploy workflow changes without disrupting running instances
+
+### Integrated Workflows
+
+| Workflow | Purpose | Duration | Retries |
+|----------|---------|----------|---------|
+| `AILearningWorkflow` | Process learning requests with Black Vault validation | 1-5 min | 3 attempts |
+| `ImageGenerationWorkflow` | Generate images with safety checks | 5-15 min | 3 attempts |
+| `DataAnalysisWorkflow` | Analyze datasets with clustering/stats | 10-30 min | 2 attempts |
+| `MemoryExpansionWorkflow` | Extract and store conversation memories | 1-3 min | 3 attempts |
+
+### Quick Start
+
+```bash
+# Start Temporal server
+python scripts/setup_temporal.py start
+
+# Start worker
+python scripts/setup_temporal.py worker
+
+# View Temporal Web UI
+open http://localhost:8233
+```
+
+### Usage Example
+
+```python
+from app.temporal.client import TemporalClientManager
+from app.temporal.workflows import AILearningWorkflow, LearningRequest
+
+async def run_workflow():
+    manager = TemporalClientManager()
+    await manager.connect()
+    
+    handle = await manager.client.start_workflow(
+        AILearningWorkflow.run,
+        LearningRequest(
+            content="Python best practices",
+            source="docs",
+            category="programming"
+        ),
+        id=f"learning-{timestamp}",
+        task_queue="project-ai-tasks",
+    )
+    
+    result = await handle.result()  # Durable execution!
+```
+
+### Workspace Origin
+
+This integration was developed in the **"Expert space waddle"** workspace and synced to this repository for team collaboration.
+
+**📚 Full Documentation**: [docs/TEMPORAL_SETUP.md](docs/TEMPORAL_SETUP.md)  
+**📂 Example Scripts**: [examples/temporal/](examples/temporal/)  
+**🧪 Tests**: [tests/temporal/](tests/temporal/)
 
 ---
 
