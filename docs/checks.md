@@ -1936,6 +1936,7 @@ cases they are mistakes and they may cause some issues on using them in shell si
 actionlint checks environment variable names are correct in `env:` configuration.
 
 <a name="permissions"></a>
+
 ## Permissions
 
 Example input:
