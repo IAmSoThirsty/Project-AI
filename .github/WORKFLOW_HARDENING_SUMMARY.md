@@ -144,6 +144,7 @@ with:
 ```
 
 **Benefits**:
+
 - Prevents code injection via commit messages
 - Follows GitHub security best practices
 - Passes actionlint security checks
