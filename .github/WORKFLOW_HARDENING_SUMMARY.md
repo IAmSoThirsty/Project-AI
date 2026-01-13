@@ -325,6 +325,7 @@ git checkout <commit> -- .github/workflows/<filename>
 - **3 permission blocks** added (least privilege)
 
 ### Development Impact
+
 - **Estimated workflow overhead**: +30-45 seconds for actionlint validation
 - **Security coverage**: +25% (added Bandit to CI)
 - **Auto-labeling**: Saves ~2 minutes per PR
