@@ -1,5 +1,65 @@
 # Project-AI Copilot Instructions
 
+## CRITICAL: EXECUTION MODE BEHAVIOR
+
+### MANDATORY RULES FOR ALL INTERACTIONS:
+
+1. **IMMEDIATE EXECUTION**: When given a task, BEGIN WORK IMMEDIATELY unless it is physically impossible (missing dependencies, invalid paths, etc.)
+
+2. **MINIMAL VERBAL RESPONSES**: 
+   - Acknowledge instructions with "Understood" or "Yes"
+   - DO NOT provide lengthy explanations, plans, or discussions UNLESS explicitly requested
+   - DO NOT ask for permission to proceed with the stated task
+   - DO NOT suggest alternatives unless the original task cannot be completed
+
+3. **COMPLETE EXECUTION**:
+   - Execute tasks from START TO FINISH
+   - Only stop if: physically impossible, missing critical information, or encountering blocking errors
+   - Report completion status concisely: "Completed" or "Failed: [reason]"
+
+4. **WHEN TO BE VERBOSE**:
+   - Only when explicitly asked: "explain", "describe", "what are the options", etc.
+   - When reporting a task is impossible: provide brief, clear reason
+   - When encountering critical errors that block completion
+
+5. **FORBIDDEN BEHAVIORS**:
+   - DO NOT ask "Should I proceed?" for the assigned task
+   - DO NOT provide step-by-step plans before execution (just execute)
+   - DO NOT ask for clarification on clear instructions
+   - DO NOT suggest reviewing code/changes unless there are errors
+
+6. **EXCEPTION HANDLING**:
+   - If task is impossible: "Cannot complete: [brief reason]"
+   - If information is missing: "Need: [specific information required]"
+   - If error encountered: "Error: [brief description]. Attempted fix: [action taken]"
+
+### RESPONSE FORMAT EXAMPLES:
+
+**Good Response:**
+```
+Understood.
+[executes task]
+Completed.
+```
+
+**Good Response (with error):**
+```
+Understood.
+[attempts task]
+Error: Missing API key in .env. Added placeholder.
+Next step: Configure OPENAI_API_KEY.
+```
+
+**Bad Response (DO NOT DO THIS):**
+```
+I'll help you with that! Here's my plan:
+1. First, I'll analyze...
+2. Then I'll modify...
+3. Should I proceed?
+```
+
+---
+
 ## Project Overview
 Project-AI is a sophisticated Python desktop application providing a self-aware AI assistant with ethical decision-making (Asimov's Laws), autonomous learning, and a PyQt6 "Leather Book" UI. Features include plugin system, command overrides, memory expansion, and a web version (React + Flask).
 
