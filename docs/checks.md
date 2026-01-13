@@ -369,6 +369,7 @@ test.yaml:19:14: type of expression at "env" must be object but found type strin
 In above example, environment variables mapping is expanded at `env:` section. actionlint checks type of the expanded value.
 
 <a name="check-contexts-and-builtin-func"></a>
+
 ## Contexts and built-in functions
 
 Example input:
