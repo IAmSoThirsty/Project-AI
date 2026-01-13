@@ -7,7 +7,6 @@ Manages connection to Temporal server, client lifecycle, and worker setup.
 import asyncio
 import logging
 import os
-from typing import Optional
 
 from temporalio.client import Client, TLSConfig
 from temporalio.worker import Worker
@@ -18,7 +17,7 @@ logger = logging.getLogger(__name__)
 class TemporalClientManager:
     """
     Manages Temporal.io client connections and worker lifecycle.
-    
+
     This class handles:
     - Connection to Temporal server (local or cloud)
     - TLS/mTLS configuration for secure connections
@@ -28,10 +27,10 @@ class TemporalClientManager:
 
     def __init__(
         self,
-        target_host: Optional[str] = None,
+        target_host: str | None = None,
         namespace: str = "default",
         task_queue: str = "project-ai-tasks",
-        tls_config: Optional[TLSConfig] = None,
+        tls_config: TLSConfig | None = None,
     ):
         """
         Initialize Temporal client manager.
@@ -50,7 +49,7 @@ class TemporalClientManager:
             "TEMPORAL_TASK_QUEUE", "project-ai-tasks"
         )
         self.tls_config = tls_config
-        self._client: Optional[Client] = None
+        self._client: Client | None = None
         self._workers: list[Worker] = []
 
     async def connect(self) -> Client:
@@ -68,13 +67,13 @@ class TemporalClientManager:
                 f"Connecting to Temporal server at {self.target_host}, "
                 f"namespace: {self.namespace}"
             )
-            
+
             self._client = await Client.connect(
                 self.target_host,
                 namespace=self.namespace,
                 tls=self.tls_config,
             )
-            
+
             logger.info("Successfully connected to Temporal server")
             return self._client
 
@@ -93,7 +92,7 @@ class TemporalClientManager:
             self._workers.clear()
 
     @property
-    def client(self) -> Optional[Client]:
+    def client(self) -> Client | None:
         """Get the connected client instance."""
         return self._client
 
@@ -177,7 +176,7 @@ class TemporalClientManager:
         namespace: str,
         client_cert_path: str,
         client_key_path: str,
-        api_key: Optional[str] = None,
+        api_key: str | None = None,
     ) -> "TemporalClientManager":
         """
         Create a client configured for Temporal Cloud.
