@@ -1,0 +1,302 @@
+/* 
+ * Modern UI Stylesheet for Project-AI
+ * Enhanced with glassmorphism, modern gradients, and accessibility improvements
+ */
+
+/* === Main Window === */
+QMainWindow {
+    background: qlineargradient(
+        x1:0, y1:0, x2:1, y2:1,
+        stop:0 #0a0e27,
+        stop:0.5 #16213e,
+        stop:1 #0a0e27
+    );
+    font-family: 'Inter', 'Segoe UI', -apple-system, system-ui, sans-serif;
+    font-size: 11pt;
+    color: #e8eaf6;
+}
+
+/* === Glassmorphism Panels === */
+QFrame.glass-panel {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+}
+
+/* === Tab Widget === */
+QTabWidget::pane {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(22, 33, 62, 0.6);
+    border-radius: 12px;
+    padding: 12px;
+}
+
+QTabBar::tab {
+    background: rgba(255, 255, 255, 0.05);
+    color: #b0bec5;
+    padding: 12px 24px;
+    margin: 2px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 10pt;
+    min-width: 100px;
+    transition: all 0.3s ease;
+}
+
+QTabBar::tab:selected {
+    background: qlineargradient(
+        x1:0, y1:0, x2:1, y2:0,
+        stop:0 #667eea,
+        stop:1 #764ba2
+    );
+    color: #ffffff;
+    font-weight: 600;
+}
+
+QTabBar::tab:hover:!selected {
+    background: rgba(255, 255, 255, 0.08);
+    color: #e8eaf6;
+}
+
+/* === Modern Buttons === */
+QPushButton {
+    background: qlineargradient(
+        x1:0, y1:0, x2:1, y2:0,
+        stop:0 #667eea,
+        stop:1 #764ba2
+    );
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    min-height: 36px;
+    font-weight: 600;
+    font-size: 10pt;
+}
+
+QPushButton:hover {
+    background: qlineargradient(
+        x1:0, y1:0, x2:1, y2:0,
+        stop:0 #7c8ef7,
+        stop:1 #8d5cb4
+    );
+}
+
+QPushButton:pressed {
+    background: qlineargradient(
+        x1:0, y1:0, x2:1, y2:0,
+        stop:0 #5568d3,
+        stop:1 #633a8f
+    );
+    padding-top: 12px;
+}
+
+QPushButton:disabled {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* === Alert/Danger Button === */
+QPushButton#alert_button,
+QPushButton.danger {
+    background: qlineargradient(
+        x1:0, y1:0, x2:1, y2:0,
+        stop:0 #fc466b,
+        stop:1 #3f5efb
+    );
+}
+
+QPushButton#alert_button:hover,
+QPushButton.danger:hover {
+    background: qlineargradient(
+        x1:0, y1:0, x2:1, y2:0,
+        stop:0 #fd5a7c,
+        stop:1 #4f6ffd
+    );
+}
+
+/* === Success Button === */
+QPushButton.success {
+    background: qlineargradient(
+        x1:0, y1:0, x2:1, y2:0,
+        stop:0 #11998e,
+        stop:1 #38ef7d
+    );
+}
+
+QPushButton.success:hover {
+    background: qlineargradient(
+        x1:0, y1:0, x2:1, y2:0,
+        stop:0 #1ba89f,
+        stop:1 #4fff8e
+    );
+}
+
+/* === Input Fields === */
+QLineEdit, QTextEdit {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 10px;
+    color: #e8eaf6;
+    selection-background-color: #667eea;
+}
+
+QLineEdit:focus, QTextEdit:focus {
+    border: 1px solid #667eea;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* === Labels === */
+QLabel {
+    color: #e8eaf6;
+    font-weight: 400;
+}
+
+QLabel.title {
+    font-size: 18pt;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+QLabel.subtitle {
+    font-size: 14pt;
+    font-weight: 600;
+    color: #b0bec5;
+}
+
+/* === Status Bar === */
+QStatusBar {
+    background: rgba(0, 0, 0, 0.2);
+    color: #90a4ae;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 8px;
+}
+
+/* === Scroll Bars === */
+QScrollBar:vertical {
+    background: rgba(255, 255, 255, 0.02);
+    width: 12px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    min-height: 30px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+QScrollBar:horizontal {
+    background: rgba(255, 255, 255, 0.02);
+    height: 12px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:horizontal {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    min-width: 30px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* === Card Components === */
+QWidget[class="card"] {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 16px;
+}
+
+QWidget[class="card-elevated"] {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    padding: 16px;
+}
+
+/* === List Widget === */
+QListWidget {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    color: #e8eaf6;
+}
+
+QListWidget::item {
+    padding: 8px;
+    border-radius: 4px;
+}
+
+QListWidget::item:selected {
+    background: rgba(102, 126, 234, 0.3);
+}
+
+QListWidget::item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* === Menu === */
+QMenu {
+    background: rgba(22, 33, 62, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 8px;
+}
+
+QMenu::item {
+    padding: 8px 24px;
+    border-radius: 4px;
+    color: #e8eaf6;
+}
+
+QMenu::item:selected {
+    background: rgba(102, 126, 234, 0.3);
+}
+
+/* === Tooltips === */
+QToolTip {
+    background: rgba(22, 33, 62, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 8px;
+    color: #e8eaf6;
+}
+
+/* === Progress Bar === */
+QProgressBar {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    text-align: center;
+    color: #e8eaf6;
+    height: 24px;
+}
+
+QProgressBar::chunk {
+    background: qlineargradient(
+        x1:0, y1:0, x2:1, y2:0,
+        stop:0 #667eea,
+        stop:1 #764ba2
+    );
+    border-radius: 7px;
+}
+
+/* === Accessibility === */
+*:focus {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+}
+
+/* === Animation Support === */
+/* Note: CSS animations in Qt are limited, but transitions work on hover states */
+QPushButton, QTabBar::tab {
+    /* Smooth transitions handled by Qt's animation framework */
+}

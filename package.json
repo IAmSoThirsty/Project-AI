@@ -1,12 +1,36 @@
 {
   "name": "project-ai",
-  "version": "0.1.0",
-  "description": "AI Desktop Assistant with various features",
+  "version": "1.0.0",
+  "description": "Comprehensive AI assistant with advanced features",
+  "main": "src/app/main.py",
   "scripts": {
-    "test": "node --test",
-    "test:js": "node --test src/**/*.test.js"
+    "test": "npm run test:js && npm run test:python",
+    "test:js": "node --test src/**/*.test.js",
+    "test:python": "pytest -q",
+    "lint": "ruff check .",
+    "format": "ruff check . --fix",
+    "dev": "docker-compose up",
+    "build": "docker build -t project-ai:latest .",
+    "lint:markdown": "markdownlint README.md PROGRAM_SUMMARY.md docs docs/developer --config .markdownlint.json"
   },
-  "keywords": ["ai", "assistant", "desktop"],
-  "author": "Your Name",
-  "license": "ISC"
+  "keywords": [
+    "ai",
+    "assistant",
+    "pyqt6",
+    "machine-learning",
+    "desktop"
+  ],
+  "author": "Project AI Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IAmSoThirsty/Project-AI"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "markdownlint-cli": "^0.47.0"
+  }
 }
+
