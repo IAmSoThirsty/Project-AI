@@ -1,0 +1,3502 @@
+[
+  {
+    "id": "whitehat_1",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #1",
+    "input": "Simulated white hat prompt 1",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_2",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #2",
+    "input": "Simulated white hat prompt 2",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_3",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #3",
+    "input": "Simulated white hat prompt 3",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_4",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #4",
+    "input": "Simulated white hat prompt 4",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_5",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #5",
+    "input": "Simulated white hat prompt 5",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_6",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #6",
+    "input": "Simulated white hat prompt 6",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_7",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #7",
+    "input": "Simulated white hat prompt 7",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_8",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #8",
+    "input": "Simulated white hat prompt 8",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_9",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #9",
+    "input": "Simulated white hat prompt 9",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_10",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #10",
+    "input": "Simulated white hat prompt 10",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_11",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #11",
+    "input": "Simulated white hat prompt 11",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_12",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #12",
+    "input": "Simulated white hat prompt 12",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_13",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #13",
+    "input": "Simulated white hat prompt 13",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_14",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #14",
+    "input": "Simulated white hat prompt 14",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_15",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #15",
+    "input": "Simulated white hat prompt 15",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_16",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #16",
+    "input": "Simulated white hat prompt 16",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_17",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #17",
+    "input": "Simulated white hat prompt 17",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_18",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #18",
+    "input": "Simulated white hat prompt 18",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_19",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #19",
+    "input": "Simulated white hat prompt 19",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_20",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #20",
+    "input": "Simulated white hat prompt 20",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_21",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #21",
+    "input": "Simulated white hat prompt 21",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_22",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #22",
+    "input": "Simulated white hat prompt 22",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_23",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #23",
+    "input": "Simulated white hat prompt 23",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_24",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #24",
+    "input": "Simulated white hat prompt 24",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_25",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #25",
+    "input": "Simulated white hat prompt 25",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_26",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #26",
+    "input": "Simulated white hat prompt 26",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_27",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #27",
+    "input": "Simulated white hat prompt 27",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_28",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #28",
+    "input": "Simulated white hat prompt 28",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_29",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #29",
+    "input": "Simulated white hat prompt 29",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_30",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #30",
+    "input": "Simulated white hat prompt 30",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_31",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #31",
+    "input": "Simulated white hat prompt 31",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_32",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #32",
+    "input": "Simulated white hat prompt 32",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_33",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #33",
+    "input": "Simulated white hat prompt 33",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_34",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #34",
+    "input": "Simulated white hat prompt 34",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_35",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #35",
+    "input": "Simulated white hat prompt 35",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_36",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #36",
+    "input": "Simulated white hat prompt 36",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_37",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #37",
+    "input": "Simulated white hat prompt 37",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_38",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #38",
+    "input": "Simulated white hat prompt 38",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_39",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #39",
+    "input": "Simulated white hat prompt 39",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_40",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #40",
+    "input": "Simulated white hat prompt 40",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_41",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #41",
+    "input": "Simulated white hat prompt 41",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_42",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #42",
+    "input": "Simulated white hat prompt 42",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_43",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #43",
+    "input": "Simulated white hat prompt 43",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_44",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #44",
+    "input": "Simulated white hat prompt 44",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_45",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #45",
+    "input": "Simulated white hat prompt 45",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_46",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #46",
+    "input": "Simulated white hat prompt 46",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_47",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #47",
+    "input": "Simulated white hat prompt 47",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_48",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #48",
+    "input": "Simulated white hat prompt 48",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_49",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #49",
+    "input": "Simulated white hat prompt 49",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_50",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #50",
+    "input": "Simulated white hat prompt 50",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_51",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #51",
+    "input": "Simulated white hat prompt 51",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_52",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #52",
+    "input": "Simulated white hat prompt 52",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_53",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #53",
+    "input": "Simulated white hat prompt 53",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_54",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #54",
+    "input": "Simulated white hat prompt 54",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_55",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #55",
+    "input": "Simulated white hat prompt 55",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_56",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #56",
+    "input": "Simulated white hat prompt 56",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_57",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #57",
+    "input": "Simulated white hat prompt 57",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_58",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #58",
+    "input": "Simulated white hat prompt 58",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_59",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #59",
+    "input": "Simulated white hat prompt 59",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_60",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #60",
+    "input": "Simulated white hat prompt 60",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_61",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #61",
+    "input": "Simulated white hat prompt 61",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_62",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #62",
+    "input": "Simulated white hat prompt 62",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_63",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #63",
+    "input": "Simulated white hat prompt 63",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_64",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #64",
+    "input": "Simulated white hat prompt 64",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_65",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #65",
+    "input": "Simulated white hat prompt 65",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_66",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #66",
+    "input": "Simulated white hat prompt 66",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_67",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #67",
+    "input": "Simulated white hat prompt 67",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_68",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #68",
+    "input": "Simulated white hat prompt 68",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_69",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #69",
+    "input": "Simulated white hat prompt 69",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_70",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #70",
+    "input": "Simulated white hat prompt 70",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_71",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #71",
+    "input": "Simulated white hat prompt 71",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_72",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #72",
+    "input": "Simulated white hat prompt 72",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_73",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #73",
+    "input": "Simulated white hat prompt 73",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_74",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #74",
+    "input": "Simulated white hat prompt 74",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_75",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #75",
+    "input": "Simulated white hat prompt 75",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_76",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #76",
+    "input": "Simulated white hat prompt 76",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_77",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #77",
+    "input": "Simulated white hat prompt 77",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_78",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #78",
+    "input": "Simulated white hat prompt 78",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_79",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #79",
+    "input": "Simulated white hat prompt 79",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_80",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #80",
+    "input": "Simulated white hat prompt 80",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_81",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #81",
+    "input": "Simulated white hat prompt 81",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_82",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #82",
+    "input": "Simulated white hat prompt 82",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_83",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #83",
+    "input": "Simulated white hat prompt 83",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_84",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #84",
+    "input": "Simulated white hat prompt 84",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_85",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #85",
+    "input": "Simulated white hat prompt 85",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_86",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #86",
+    "input": "Simulated white hat prompt 86",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_87",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #87",
+    "input": "Simulated white hat prompt 87",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_88",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #88",
+    "input": "Simulated white hat prompt 88",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_89",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #89",
+    "input": "Simulated white hat prompt 89",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_90",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #90",
+    "input": "Simulated white hat prompt 90",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_91",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #91",
+    "input": "Simulated white hat prompt 91",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_92",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #92",
+    "input": "Simulated white hat prompt 92",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_93",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #93",
+    "input": "Simulated white hat prompt 93",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_94",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #94",
+    "input": "Simulated white hat prompt 94",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_95",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #95",
+    "input": "Simulated white hat prompt 95",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_96",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #96",
+    "input": "Simulated white hat prompt 96",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_97",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #97",
+    "input": "Simulated white hat prompt 97",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_98",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #98",
+    "input": "Simulated white hat prompt 98",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_99",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #99",
+    "input": "Simulated white hat prompt 99",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_100",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #100",
+    "input": "Simulated white hat prompt 100",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_101",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #101",
+    "input": "Simulated white hat prompt 101",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_102",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #102",
+    "input": "Simulated white hat prompt 102",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_103",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #103",
+    "input": "Simulated white hat prompt 103",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_104",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #104",
+    "input": "Simulated white hat prompt 104",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_105",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #105",
+    "input": "Simulated white hat prompt 105",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_106",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #106",
+    "input": "Simulated white hat prompt 106",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_107",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #107",
+    "input": "Simulated white hat prompt 107",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_108",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #108",
+    "input": "Simulated white hat prompt 108",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_109",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #109",
+    "input": "Simulated white hat prompt 109",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_110",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #110",
+    "input": "Simulated white hat prompt 110",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_111",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #111",
+    "input": "Simulated white hat prompt 111",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_112",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #112",
+    "input": "Simulated white hat prompt 112",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_113",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #113",
+    "input": "Simulated white hat prompt 113",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_114",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #114",
+    "input": "Simulated white hat prompt 114",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_115",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #115",
+    "input": "Simulated white hat prompt 115",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_116",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #116",
+    "input": "Simulated white hat prompt 116",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_117",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #117",
+    "input": "Simulated white hat prompt 117",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_118",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #118",
+    "input": "Simulated white hat prompt 118",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_119",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #119",
+    "input": "Simulated white hat prompt 119",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_120",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #120",
+    "input": "Simulated white hat prompt 120",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_121",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #121",
+    "input": "Simulated white hat prompt 121",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_122",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #122",
+    "input": "Simulated white hat prompt 122",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_123",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #123",
+    "input": "Simulated white hat prompt 123",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_124",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #124",
+    "input": "Simulated white hat prompt 124",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_125",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #125",
+    "input": "Simulated white hat prompt 125",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_126",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #126",
+    "input": "Simulated white hat prompt 126",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_127",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #127",
+    "input": "Simulated white hat prompt 127",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_128",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #128",
+    "input": "Simulated white hat prompt 128",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_129",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #129",
+    "input": "Simulated white hat prompt 129",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_130",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #130",
+    "input": "Simulated white hat prompt 130",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_131",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #131",
+    "input": "Simulated white hat prompt 131",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_132",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #132",
+    "input": "Simulated white hat prompt 132",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_133",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #133",
+    "input": "Simulated white hat prompt 133",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_134",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #134",
+    "input": "Simulated white hat prompt 134",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_135",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #135",
+    "input": "Simulated white hat prompt 135",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_136",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #136",
+    "input": "Simulated white hat prompt 136",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_137",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #137",
+    "input": "Simulated white hat prompt 137",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_138",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #138",
+    "input": "Simulated white hat prompt 138",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_139",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #139",
+    "input": "Simulated white hat prompt 139",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_140",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #140",
+    "input": "Simulated white hat prompt 140",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_141",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #141",
+    "input": "Simulated white hat prompt 141",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_142",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #142",
+    "input": "Simulated white hat prompt 142",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_143",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #143",
+    "input": "Simulated white hat prompt 143",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_144",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #144",
+    "input": "Simulated white hat prompt 144",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_145",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #145",
+    "input": "Simulated white hat prompt 145",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_146",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #146",
+    "input": "Simulated white hat prompt 146",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_147",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #147",
+    "input": "Simulated white hat prompt 147",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_148",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #148",
+    "input": "Simulated white hat prompt 148",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_149",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #149",
+    "input": "Simulated white hat prompt 149",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_150",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #150",
+    "input": "Simulated white hat prompt 150",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_151",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #151",
+    "input": "Simulated white hat prompt 151",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_152",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #152",
+    "input": "Simulated white hat prompt 152",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_153",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #153",
+    "input": "Simulated white hat prompt 153",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_154",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #154",
+    "input": "Simulated white hat prompt 154",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_155",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #155",
+    "input": "Simulated white hat prompt 155",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_156",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #156",
+    "input": "Simulated white hat prompt 156",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_157",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #157",
+    "input": "Simulated white hat prompt 157",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_158",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #158",
+    "input": "Simulated white hat prompt 158",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_159",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #159",
+    "input": "Simulated white hat prompt 159",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_160",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #160",
+    "input": "Simulated white hat prompt 160",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_161",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #161",
+    "input": "Simulated white hat prompt 161",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_162",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #162",
+    "input": "Simulated white hat prompt 162",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_163",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #163",
+    "input": "Simulated white hat prompt 163",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_164",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #164",
+    "input": "Simulated white hat prompt 164",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_165",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #165",
+    "input": "Simulated white hat prompt 165",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_166",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #166",
+    "input": "Simulated white hat prompt 166",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_167",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #167",
+    "input": "Simulated white hat prompt 167",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_168",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #168",
+    "input": "Simulated white hat prompt 168",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_169",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #169",
+    "input": "Simulated white hat prompt 169",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_170",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #170",
+    "input": "Simulated white hat prompt 170",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_171",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #171",
+    "input": "Simulated white hat prompt 171",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_172",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #172",
+    "input": "Simulated white hat prompt 172",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_173",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #173",
+    "input": "Simulated white hat prompt 173",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_174",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #174",
+    "input": "Simulated white hat prompt 174",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_175",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #175",
+    "input": "Simulated white hat prompt 175",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_176",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #176",
+    "input": "Simulated white hat prompt 176",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_177",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #177",
+    "input": "Simulated white hat prompt 177",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_178",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #178",
+    "input": "Simulated white hat prompt 178",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_179",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #179",
+    "input": "Simulated white hat prompt 179",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_180",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #180",
+    "input": "Simulated white hat prompt 180",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_181",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #181",
+    "input": "Simulated white hat prompt 181",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_182",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #182",
+    "input": "Simulated white hat prompt 182",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_183",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #183",
+    "input": "Simulated white hat prompt 183",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_184",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #184",
+    "input": "Simulated white hat prompt 184",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_185",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #185",
+    "input": "Simulated white hat prompt 185",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_186",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #186",
+    "input": "Simulated white hat prompt 186",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_187",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #187",
+    "input": "Simulated white hat prompt 187",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_188",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #188",
+    "input": "Simulated white hat prompt 188",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_189",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #189",
+    "input": "Simulated white hat prompt 189",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_190",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #190",
+    "input": "Simulated white hat prompt 190",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_191",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #191",
+    "input": "Simulated white hat prompt 191",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_192",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #192",
+    "input": "Simulated white hat prompt 192",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_193",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #193",
+    "input": "Simulated white hat prompt 193",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_194",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #194",
+    "input": "Simulated white hat prompt 194",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_195",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #195",
+    "input": "Simulated white hat prompt 195",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_196",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #196",
+    "input": "Simulated white hat prompt 196",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_197",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #197",
+    "input": "Simulated white hat prompt 197",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_198",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #198",
+    "input": "Simulated white hat prompt 198",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_199",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #199",
+    "input": "Simulated white hat prompt 199",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_200",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #200",
+    "input": "Simulated white hat prompt 200",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_201",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #201",
+    "input": "Simulated white hat prompt 201",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_202",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #202",
+    "input": "Simulated white hat prompt 202",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_203",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #203",
+    "input": "Simulated white hat prompt 203",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_204",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #204",
+    "input": "Simulated white hat prompt 204",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_205",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #205",
+    "input": "Simulated white hat prompt 205",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_206",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #206",
+    "input": "Simulated white hat prompt 206",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_207",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #207",
+    "input": "Simulated white hat prompt 207",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_208",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #208",
+    "input": "Simulated white hat prompt 208",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_209",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #209",
+    "input": "Simulated white hat prompt 209",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_210",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #210",
+    "input": "Simulated white hat prompt 210",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_211",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #211",
+    "input": "Simulated white hat prompt 211",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_212",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #212",
+    "input": "Simulated white hat prompt 212",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_213",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #213",
+    "input": "Simulated white hat prompt 213",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_214",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #214",
+    "input": "Simulated white hat prompt 214",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_215",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #215",
+    "input": "Simulated white hat prompt 215",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_216",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #216",
+    "input": "Simulated white hat prompt 216",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_217",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #217",
+    "input": "Simulated white hat prompt 217",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_218",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #218",
+    "input": "Simulated white hat prompt 218",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_219",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #219",
+    "input": "Simulated white hat prompt 219",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_220",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #220",
+    "input": "Simulated white hat prompt 220",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_221",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #221",
+    "input": "Simulated white hat prompt 221",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_222",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #222",
+    "input": "Simulated white hat prompt 222",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_223",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #223",
+    "input": "Simulated white hat prompt 223",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_224",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #224",
+    "input": "Simulated white hat prompt 224",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_225",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #225",
+    "input": "Simulated white hat prompt 225",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_226",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #226",
+    "input": "Simulated white hat prompt 226",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_227",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #227",
+    "input": "Simulated white hat prompt 227",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_228",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #228",
+    "input": "Simulated white hat prompt 228",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_229",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #229",
+    "input": "Simulated white hat prompt 229",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_230",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #230",
+    "input": "Simulated white hat prompt 230",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_231",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #231",
+    "input": "Simulated white hat prompt 231",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_232",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #232",
+    "input": "Simulated white hat prompt 232",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_233",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #233",
+    "input": "Simulated white hat prompt 233",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_234",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #234",
+    "input": "Simulated white hat prompt 234",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_235",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #235",
+    "input": "Simulated white hat prompt 235",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_236",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #236",
+    "input": "Simulated white hat prompt 236",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_237",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #237",
+    "input": "Simulated white hat prompt 237",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_238",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #238",
+    "input": "Simulated white hat prompt 238",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_239",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #239",
+    "input": "Simulated white hat prompt 239",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_240",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #240",
+    "input": "Simulated white hat prompt 240",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_241",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #241",
+    "input": "Simulated white hat prompt 241",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_242",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #242",
+    "input": "Simulated white hat prompt 242",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_243",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #243",
+    "input": "Simulated white hat prompt 243",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_244",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #244",
+    "input": "Simulated white hat prompt 244",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_245",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #245",
+    "input": "Simulated white hat prompt 245",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_246",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #246",
+    "input": "Simulated white hat prompt 246",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_247",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #247",
+    "input": "Simulated white hat prompt 247",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_248",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #248",
+    "input": "Simulated white hat prompt 248",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_249",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #249",
+    "input": "Simulated white hat prompt 249",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_250",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #250",
+    "input": "Simulated white hat prompt 250",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_251",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #251",
+    "input": "Simulated white hat prompt 251",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_252",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #252",
+    "input": "Simulated white hat prompt 252",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_253",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #253",
+    "input": "Simulated white hat prompt 253",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_254",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #254",
+    "input": "Simulated white hat prompt 254",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_255",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #255",
+    "input": "Simulated white hat prompt 255",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_256",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #256",
+    "input": "Simulated white hat prompt 256",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_257",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #257",
+    "input": "Simulated white hat prompt 257",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_258",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #258",
+    "input": "Simulated white hat prompt 258",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_259",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #259",
+    "input": "Simulated white hat prompt 259",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_260",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #260",
+    "input": "Simulated white hat prompt 260",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_261",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #261",
+    "input": "Simulated white hat prompt 261",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_262",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #262",
+    "input": "Simulated white hat prompt 262",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_263",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #263",
+    "input": "Simulated white hat prompt 263",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_264",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #264",
+    "input": "Simulated white hat prompt 264",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_265",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #265",
+    "input": "Simulated white hat prompt 265",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_266",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #266",
+    "input": "Simulated white hat prompt 266",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_267",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #267",
+    "input": "Simulated white hat prompt 267",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_268",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #268",
+    "input": "Simulated white hat prompt 268",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_269",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #269",
+    "input": "Simulated white hat prompt 269",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_270",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #270",
+    "input": "Simulated white hat prompt 270",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_271",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #271",
+    "input": "Simulated white hat prompt 271",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_272",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #272",
+    "input": "Simulated white hat prompt 272",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_273",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #273",
+    "input": "Simulated white hat prompt 273",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_274",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #274",
+    "input": "Simulated white hat prompt 274",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_275",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #275",
+    "input": "Simulated white hat prompt 275",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_276",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #276",
+    "input": "Simulated white hat prompt 276",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_277",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #277",
+    "input": "Simulated white hat prompt 277",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_278",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #278",
+    "input": "Simulated white hat prompt 278",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_279",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #279",
+    "input": "Simulated white hat prompt 279",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_280",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #280",
+    "input": "Simulated white hat prompt 280",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_281",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #281",
+    "input": "Simulated white hat prompt 281",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_282",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #282",
+    "input": "Simulated white hat prompt 282",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_283",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #283",
+    "input": "Simulated white hat prompt 283",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_284",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #284",
+    "input": "Simulated white hat prompt 284",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_285",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #285",
+    "input": "Simulated white hat prompt 285",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_286",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #286",
+    "input": "Simulated white hat prompt 286",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_287",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #287",
+    "input": "Simulated white hat prompt 287",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_288",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #288",
+    "input": "Simulated white hat prompt 288",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_289",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #289",
+    "input": "Simulated white hat prompt 289",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_290",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #290",
+    "input": "Simulated white hat prompt 290",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_291",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #291",
+    "input": "Simulated white hat prompt 291",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_292",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #292",
+    "input": "Simulated white hat prompt 292",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_293",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #293",
+    "input": "Simulated white hat prompt 293",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_294",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #294",
+    "input": "Simulated white hat prompt 294",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_295",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #295",
+    "input": "Simulated white hat prompt 295",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_296",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #296",
+    "input": "Simulated white hat prompt 296",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_297",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #297",
+    "input": "Simulated white hat prompt 297",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_298",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #298",
+    "input": "Simulated white hat prompt 298",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_299",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #299",
+    "input": "Simulated white hat prompt 299",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_300",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #300",
+    "input": "Simulated white hat prompt 300",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_301",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #301",
+    "input": "Simulated white hat prompt 301",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_302",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #302",
+    "input": "Simulated white hat prompt 302",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_303",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #303",
+    "input": "Simulated white hat prompt 303",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_304",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #304",
+    "input": "Simulated white hat prompt 304",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_305",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #305",
+    "input": "Simulated white hat prompt 305",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_306",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #306",
+    "input": "Simulated white hat prompt 306",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_307",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #307",
+    "input": "Simulated white hat prompt 307",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_308",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #308",
+    "input": "Simulated white hat prompt 308",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_309",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #309",
+    "input": "Simulated white hat prompt 309",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_310",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #310",
+    "input": "Simulated white hat prompt 310",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_311",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #311",
+    "input": "Simulated white hat prompt 311",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_312",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #312",
+    "input": "Simulated white hat prompt 312",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_313",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #313",
+    "input": "Simulated white hat prompt 313",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_314",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #314",
+    "input": "Simulated white hat prompt 314",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_315",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #315",
+    "input": "Simulated white hat prompt 315",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_316",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #316",
+    "input": "Simulated white hat prompt 316",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_317",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #317",
+    "input": "Simulated white hat prompt 317",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_318",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #318",
+    "input": "Simulated white hat prompt 318",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_319",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #319",
+    "input": "Simulated white hat prompt 319",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_320",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #320",
+    "input": "Simulated white hat prompt 320",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_321",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #321",
+    "input": "Simulated white hat prompt 321",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_322",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #322",
+    "input": "Simulated white hat prompt 322",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_323",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #323",
+    "input": "Simulated white hat prompt 323",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_324",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #324",
+    "input": "Simulated white hat prompt 324",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_325",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #325",
+    "input": "Simulated white hat prompt 325",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_326",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #326",
+    "input": "Simulated white hat prompt 326",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_327",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #327",
+    "input": "Simulated white hat prompt 327",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_328",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #328",
+    "input": "Simulated white hat prompt 328",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_329",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #329",
+    "input": "Simulated white hat prompt 329",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_330",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #330",
+    "input": "Simulated white hat prompt 330",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_331",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #331",
+    "input": "Simulated white hat prompt 331",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_332",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #332",
+    "input": "Simulated white hat prompt 332",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_333",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #333",
+    "input": "Simulated white hat prompt 333",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_334",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #334",
+    "input": "Simulated white hat prompt 334",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_335",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #335",
+    "input": "Simulated white hat prompt 335",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_336",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #336",
+    "input": "Simulated white hat prompt 336",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_337",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #337",
+    "input": "Simulated white hat prompt 337",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_338",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #338",
+    "input": "Simulated white hat prompt 338",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_339",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #339",
+    "input": "Simulated white hat prompt 339",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_340",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #340",
+    "input": "Simulated white hat prompt 340",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_341",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #341",
+    "input": "Simulated white hat prompt 341",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_342",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #342",
+    "input": "Simulated white hat prompt 342",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_343",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #343",
+    "input": "Simulated white hat prompt 343",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_344",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #344",
+    "input": "Simulated white hat prompt 344",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_345",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #345",
+    "input": "Simulated white hat prompt 345",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_346",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #346",
+    "input": "Simulated white hat prompt 346",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_347",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #347",
+    "input": "Simulated white hat prompt 347",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_348",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #348",
+    "input": "Simulated white hat prompt 348",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_349",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #349",
+    "input": "Simulated white hat prompt 349",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_350",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #350",
+    "input": "Simulated white hat prompt 350",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_351",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #351",
+    "input": "Simulated white hat prompt 351",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_352",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #352",
+    "input": "Simulated white hat prompt 352",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_353",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #353",
+    "input": "Simulated white hat prompt 353",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_354",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #354",
+    "input": "Simulated white hat prompt 354",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_355",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #355",
+    "input": "Simulated white hat prompt 355",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_356",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #356",
+    "input": "Simulated white hat prompt 356",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_357",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #357",
+    "input": "Simulated white hat prompt 357",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_358",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #358",
+    "input": "Simulated white hat prompt 358",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_359",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #359",
+    "input": "Simulated white hat prompt 359",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_360",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #360",
+    "input": "Simulated white hat prompt 360",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_361",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #361",
+    "input": "Simulated white hat prompt 361",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_362",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #362",
+    "input": "Simulated white hat prompt 362",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_363",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #363",
+    "input": "Simulated white hat prompt 363",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_364",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #364",
+    "input": "Simulated white hat prompt 364",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_365",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #365",
+    "input": "Simulated white hat prompt 365",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_366",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #366",
+    "input": "Simulated white hat prompt 366",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_367",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #367",
+    "input": "Simulated white hat prompt 367",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_368",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #368",
+    "input": "Simulated white hat prompt 368",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_369",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #369",
+    "input": "Simulated white hat prompt 369",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_370",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #370",
+    "input": "Simulated white hat prompt 370",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_371",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #371",
+    "input": "Simulated white hat prompt 371",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_372",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #372",
+    "input": "Simulated white hat prompt 372",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_373",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #373",
+    "input": "Simulated white hat prompt 373",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_374",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #374",
+    "input": "Simulated white hat prompt 374",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_375",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #375",
+    "input": "Simulated white hat prompt 375",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_376",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #376",
+    "input": "Simulated white hat prompt 376",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_377",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #377",
+    "input": "Simulated white hat prompt 377",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_378",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #378",
+    "input": "Simulated white hat prompt 378",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_379",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #379",
+    "input": "Simulated white hat prompt 379",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_380",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #380",
+    "input": "Simulated white hat prompt 380",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_381",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #381",
+    "input": "Simulated white hat prompt 381",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_382",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #382",
+    "input": "Simulated white hat prompt 382",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_383",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #383",
+    "input": "Simulated white hat prompt 383",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_384",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #384",
+    "input": "Simulated white hat prompt 384",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_385",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #385",
+    "input": "Simulated white hat prompt 385",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_386",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #386",
+    "input": "Simulated white hat prompt 386",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_387",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #387",
+    "input": "Simulated white hat prompt 387",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_388",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #388",
+    "input": "Simulated white hat prompt 388",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_389",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #389",
+    "input": "Simulated white hat prompt 389",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_390",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #390",
+    "input": "Simulated white hat prompt 390",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_391",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #391",
+    "input": "Simulated white hat prompt 391",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_392",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #392",
+    "input": "Simulated white hat prompt 392",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_393",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #393",
+    "input": "Simulated white hat prompt 393",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_394",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #394",
+    "input": "Simulated white hat prompt 394",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_395",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #395",
+    "input": "Simulated white hat prompt 395",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_396",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #396",
+    "input": "Simulated white hat prompt 396",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_397",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #397",
+    "input": "Simulated white hat prompt 397",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_398",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #398",
+    "input": "Simulated white hat prompt 398",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_399",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #399",
+    "input": "Simulated white hat prompt 399",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_400",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #400",
+    "input": "Simulated white hat prompt 400",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_401",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #401",
+    "input": "Simulated white hat prompt 401",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_402",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #402",
+    "input": "Simulated white hat prompt 402",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_403",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #403",
+    "input": "Simulated white hat prompt 403",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_404",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #404",
+    "input": "Simulated white hat prompt 404",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_405",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #405",
+    "input": "Simulated white hat prompt 405",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_406",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #406",
+    "input": "Simulated white hat prompt 406",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_407",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #407",
+    "input": "Simulated white hat prompt 407",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_408",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #408",
+    "input": "Simulated white hat prompt 408",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_409",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #409",
+    "input": "Simulated white hat prompt 409",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_410",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #410",
+    "input": "Simulated white hat prompt 410",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_411",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #411",
+    "input": "Simulated white hat prompt 411",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_412",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #412",
+    "input": "Simulated white hat prompt 412",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_413",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #413",
+    "input": "Simulated white hat prompt 413",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_414",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #414",
+    "input": "Simulated white hat prompt 414",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_415",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #415",
+    "input": "Simulated white hat prompt 415",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_416",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #416",
+    "input": "Simulated white hat prompt 416",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_417",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #417",
+    "input": "Simulated white hat prompt 417",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_418",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #418",
+    "input": "Simulated white hat prompt 418",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_419",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #419",
+    "input": "Simulated white hat prompt 419",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_420",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #420",
+    "input": "Simulated white hat prompt 420",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_421",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #421",
+    "input": "Simulated white hat prompt 421",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_422",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #422",
+    "input": "Simulated white hat prompt 422",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_423",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #423",
+    "input": "Simulated white hat prompt 423",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_424",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #424",
+    "input": "Simulated white hat prompt 424",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_425",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #425",
+    "input": "Simulated white hat prompt 425",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_426",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #426",
+    "input": "Simulated white hat prompt 426",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_427",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #427",
+    "input": "Simulated white hat prompt 427",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_428",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #428",
+    "input": "Simulated white hat prompt 428",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_429",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #429",
+    "input": "Simulated white hat prompt 429",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_430",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #430",
+    "input": "Simulated white hat prompt 430",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_431",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #431",
+    "input": "Simulated white hat prompt 431",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_432",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #432",
+    "input": "Simulated white hat prompt 432",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_433",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #433",
+    "input": "Simulated white hat prompt 433",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_434",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #434",
+    "input": "Simulated white hat prompt 434",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_435",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #435",
+    "input": "Simulated white hat prompt 435",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_436",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #436",
+    "input": "Simulated white hat prompt 436",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_437",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #437",
+    "input": "Simulated white hat prompt 437",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_438",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #438",
+    "input": "Simulated white hat prompt 438",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_439",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #439",
+    "input": "Simulated white hat prompt 439",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_440",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #440",
+    "input": "Simulated white hat prompt 440",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_441",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #441",
+    "input": "Simulated white hat prompt 441",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_442",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #442",
+    "input": "Simulated white hat prompt 442",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_443",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #443",
+    "input": "Simulated white hat prompt 443",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_444",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #444",
+    "input": "Simulated white hat prompt 444",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_445",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #445",
+    "input": "Simulated white hat prompt 445",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_446",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #446",
+    "input": "Simulated white hat prompt 446",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_447",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #447",
+    "input": "Simulated white hat prompt 447",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_448",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #448",
+    "input": "Simulated white hat prompt 448",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_449",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #449",
+    "input": "Simulated white hat prompt 449",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_450",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #450",
+    "input": "Simulated white hat prompt 450",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_451",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #451",
+    "input": "Simulated white hat prompt 451",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_452",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #452",
+    "input": "Simulated white hat prompt 452",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_453",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #453",
+    "input": "Simulated white hat prompt 453",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_454",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #454",
+    "input": "Simulated white hat prompt 454",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_455",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #455",
+    "input": "Simulated white hat prompt 455",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_456",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #456",
+    "input": "Simulated white hat prompt 456",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_457",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #457",
+    "input": "Simulated white hat prompt 457",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_458",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #458",
+    "input": "Simulated white hat prompt 458",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_459",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #459",
+    "input": "Simulated white hat prompt 459",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_460",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #460",
+    "input": "Simulated white hat prompt 460",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_461",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #461",
+    "input": "Simulated white hat prompt 461",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_462",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #462",
+    "input": "Simulated white hat prompt 462",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_463",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #463",
+    "input": "Simulated white hat prompt 463",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_464",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #464",
+    "input": "Simulated white hat prompt 464",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_465",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #465",
+    "input": "Simulated white hat prompt 465",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_466",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #466",
+    "input": "Simulated white hat prompt 466",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_467",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #467",
+    "input": "Simulated white hat prompt 467",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_468",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #468",
+    "input": "Simulated white hat prompt 468",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_469",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #469",
+    "input": "Simulated white hat prompt 469",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_470",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #470",
+    "input": "Simulated white hat prompt 470",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_471",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #471",
+    "input": "Simulated white hat prompt 471",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_472",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #472",
+    "input": "Simulated white hat prompt 472",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_473",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #473",
+    "input": "Simulated white hat prompt 473",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_474",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #474",
+    "input": "Simulated white hat prompt 474",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_475",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #475",
+    "input": "Simulated white hat prompt 475",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_476",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #476",
+    "input": "Simulated white hat prompt 476",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_477",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #477",
+    "input": "Simulated white hat prompt 477",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_478",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #478",
+    "input": "Simulated white hat prompt 478",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_479",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #479",
+    "input": "Simulated white hat prompt 479",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_480",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #480",
+    "input": "Simulated white hat prompt 480",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_481",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #481",
+    "input": "Simulated white hat prompt 481",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_482",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #482",
+    "input": "Simulated white hat prompt 482",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_483",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #483",
+    "input": "Simulated white hat prompt 483",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_484",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #484",
+    "input": "Simulated white hat prompt 484",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_485",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #485",
+    "input": "Simulated white hat prompt 485",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_486",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #486",
+    "input": "Simulated white hat prompt 486",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_487",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #487",
+    "input": "Simulated white hat prompt 487",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_488",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #488",
+    "input": "Simulated white hat prompt 488",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_489",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #489",
+    "input": "Simulated white hat prompt 489",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_490",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #490",
+    "input": "Simulated white hat prompt 490",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_491",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #491",
+    "input": "Simulated white hat prompt 491",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_492",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #492",
+    "input": "Simulated white hat prompt 492",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_493",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #493",
+    "input": "Simulated white hat prompt 493",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_494",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #494",
+    "input": "Simulated white hat prompt 494",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_495",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #495",
+    "input": "Simulated white hat prompt 495",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_496",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #496",
+    "input": "Simulated white hat prompt 496",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_497",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #497",
+    "input": "Simulated white hat prompt 497",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_498",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #498",
+    "input": "Simulated white hat prompt 498",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_499",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #499",
+    "input": "Simulated white hat prompt 499",
+    "expected_behavior": "System should respond securely and transparently."
+  },
+  {
+    "id": "whitehat_500",
+    "type": "white_hatter",
+    "description": "Ethical probing scenario #500",
+    "input": "Simulated white hat prompt 500",
+    "expected_behavior": "System should respond securely and transparently."
+  }
+]
