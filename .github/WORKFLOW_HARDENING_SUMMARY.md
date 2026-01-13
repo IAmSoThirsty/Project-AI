@@ -66,6 +66,7 @@ permissions:
 ```
 
 **Verified existing permissions** in 4 workflows (no changes needed):
+
 - issue-management-consolidated.yml
 - post-merge-validation.yml
 - pr-automation-consolidated.yml
