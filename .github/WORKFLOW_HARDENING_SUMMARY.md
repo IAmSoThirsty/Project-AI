@@ -113,6 +113,7 @@ Added Bandit Python security scanner to CI workflow:
 ```
 
 **Scans for**:
+
 - Hardcoded secrets and passwords
 - SQL injection vulnerabilities
 - Insecure cryptographic usage
