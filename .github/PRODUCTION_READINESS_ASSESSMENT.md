@@ -63,6 +63,7 @@
 - Could add workflow dry-run with `act` tool (-2 points)
 
 #### Failure Modes
+
 1. **actionlint installation failure**: MITIGATED - Multiple fallback paths
 2. **Bandit scan failure**: HANDLED - Continue-on-error flag set
 3. **Labeler failure**: ISOLATED - Does not block other jobs
