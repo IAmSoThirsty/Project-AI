@@ -315,6 +315,7 @@ git checkout <commit> -- .github/workflows/<filename>
 ## Metrics & Impact
 
 ### Security Improvements
+
 - **72 actions** now pinned for immutability
 - **4 workflows** with pre-push validation
 - **100%** of secrets via GitHub Secrets
