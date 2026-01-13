@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 class CerberusCodexBridge:
     """Bridge between Cerberus threat detection and Codex defense implementation.
-    
+
     When Cerberus detects threats, this bridge:
     1. Analyzes threat patterns for defensive opportunities
     2. Alerts Codex of potential security upgrades
@@ -28,38 +28,38 @@ class CerberusCodexBridge:
     def __init__(self, data_dir: str = "data/cerberus_codex_bridge"):
         self.data_dir = data_dir
         os.makedirs(self.data_dir, exist_ok=True)
-        
+
         self.alert_log_path = os.path.join(self.data_dir, "defense_alerts.jsonl")
         self.implementation_log_path = os.path.join(self.data_dir, "implementations.jsonl")
-        
+
         # Track defense upgrades
         self.pending_upgrades = []
         self.implemented_upgrades = []
-        
+
     def process_threat_engagement(
-        self, 
-        threat_data: dict[str, Any], 
+        self,
+        threat_data: dict[str, Any],
         cerberus_response: dict[str, Any]
     ) -> dict[str, Any]:
         """Process active threat engagement from Cerberus.
-        
+
         Args:
             threat_data: Information about the detected threat
             cerberus_response: Cerberus's analysis and response
-            
+
         Returns:
             Dictionary with analysis results and recommended upgrades
         """
         logger.info(f"Processing threat engagement: {threat_data.get('threat_type', 'unknown')}")
-        
+
         # Analyze threat for defensive opportunities
         opportunities = self._identify_defense_opportunities(threat_data, cerberus_response)
-        
+
         if opportunities:
             # Alert Codex of potential upgrades
             alert = self._create_codex_alert(threat_data, opportunities)
             self._log_alert(alert)
-            
+
             # Add to pending upgrades
             self.pending_upgrades.append({
                 "timestamp": datetime.now(UTC).isoformat(),
@@ -67,32 +67,32 @@ class CerberusCodexBridge:
                 "opportunities": opportunities,
                 "status": "pending_codex_review"
             })
-            
+
             return {
                 "status": "opportunities_identified",
                 "alert_sent": True,
                 "opportunities": opportunities,
                 "recommendation": "Codex should review and implement defense upgrades"
             }
-        
+
         return {
             "status": "no_opportunities",
             "alert_sent": False,
             "opportunities": []
         }
-    
+
     def _identify_defense_opportunities(
-        self, 
+        self,
         threat_data: dict[str, Any],
         cerberus_response: dict[str, Any]
     ) -> list[dict[str, Any]]:
         """Identify defense upgrade opportunities from threat patterns.
-        
+
         Analyzes threats to determine what defensive measures could be improved.
         """
         opportunities = []
         threat_type = threat_data.get("threat_type", "")
-        
+
         # Map threat types to Thirsty-lang security features
         thirsty_lang_mapping = {
             "injection": {
@@ -116,7 +116,7 @@ class CerberusCodexBridge:
                 "description": "Apply Thirsty-lang defensive compilation"
             }
         }
-        
+
         # Check if threat type has corresponding Thirsty-lang feature
         for pattern, feature_info in thirsty_lang_mapping.items():
             if pattern.lower() in threat_type.lower():
@@ -128,7 +128,7 @@ class CerberusCodexBridge:
                     "priority": "high",
                     "source": "cerberus_threat_analysis"
                 })
-        
+
         # General defensive opportunities based on threat severity
         severity = cerberus_response.get("severity", "medium")
         if severity in ["high", "critical"]:
@@ -138,7 +138,7 @@ class CerberusCodexBridge:
                 "priority": "high",
                 "thirsty_integration": "Use Thirsty-lang secure-interpreter for sandboxing"
             })
-        
+
         # If Cerberus found patterns that could be used defensively
         if cerberus_response.get("patterns_found"):
             opportunities.append({
@@ -147,11 +147,11 @@ class CerberusCodexBridge:
                 "priority": "medium",
                 "thirsty_integration": "Integrate patterns into Thirsty-lang threat-detector"
             })
-        
+
         return opportunities
-    
+
     def _create_codex_alert(
-        self, 
+        self,
         threat_data: dict[str, Any],
         opportunities: list[dict[str, Any]]
     ) -> dict[str, Any]:
@@ -174,7 +174,7 @@ class CerberusCodexBridge:
                 if opp.get("upgrade_type") == "thirsty_lang_integration"
             ]
         }
-    
+
     def _log_alert(self, alert: dict[str, Any]) -> None:
         """Log alert to persistent storage."""
         try:
@@ -183,27 +183,27 @@ class CerberusCodexBridge:
             logger.info(f"Alert logged: {alert['alert_type']}")
         except Exception as e:
             logger.error(f"Failed to log alert: {e}")
-    
+
     def codex_implement_upgrade(
         self,
         upgrade_spec: dict[str, Any],
         codex_instance: Any = None
     ) -> dict[str, Any]:
         """Called by Codex to implement approved defense upgrades.
-        
+
         Args:
             upgrade_spec: Specification of the upgrade to implement
             codex_instance: Instance of CodexDeusMaximus (optional)
-            
+
         Returns:
             Implementation result with status and details
         """
         logger.info(f"Codex implementing upgrade: {upgrade_spec.get('upgrade_type')}")
-        
+
         try:
             # Determine implementation strategy
             upgrade_type = upgrade_spec.get("upgrade_type")
-            
+
             if upgrade_type == "thirsty_lang_integration":
                 result = self._implement_thirsty_lang_feature(upgrade_spec)
             elif upgrade_type == "enhanced_monitoring":
@@ -215,7 +215,7 @@ class CerberusCodexBridge:
                     "success": False,
                     "error": f"Unknown upgrade type: {upgrade_type}"
                 }
-            
+
             # Log implementation
             implementation_record = {
                 "timestamp": datetime.now(UTC).isoformat(),
@@ -223,29 +223,29 @@ class CerberusCodexBridge:
                 "result": result,
                 "implemented_by": "codex_deus_maximus"
             }
-            
+
             with open(self.implementation_log_path, "a", encoding="utf-8") as f:
                 f.write(json.dumps(implementation_record) + "\n")
-            
+
             if result.get("success"):
                 self.implemented_upgrades.append(implementation_record)
-            
+
             return result
-            
+
         except Exception as e:
             logger.error(f"Failed to implement upgrade: {e}")
             return {
                 "success": False,
                 "error": str(e)
             }
-    
+
     def _implement_thirsty_lang_feature(self, spec: dict[str, Any]) -> dict[str, Any]:
         """Implement Thirsty-lang security feature integration."""
         feature = spec.get("thirsty_feature")
         module = spec.get("thirsty_module")
-        
+
         logger.info(f"Integrating Thirsty-lang feature: {feature} from {module}")
-        
+
         # Verify Thirsty-lang module exists
         thirsty_path = f"src/thirsty_lang/src/security/{module}.js"
         if not os.path.exists(thirsty_path):
@@ -253,7 +253,7 @@ class CerberusCodexBridge:
                 "success": False,
                 "error": f"Thirsty-lang module not found: {thirsty_path}"
             }
-        
+
         # Create integration point
         integration_spec = {
             "feature": feature,
@@ -261,36 +261,36 @@ class CerberusCodexBridge:
             "integration_method": "dynamic_import",
             "status": "active"
         }
-        
+
         return {
             "success": True,
             "integration": integration_spec,
             "message": f"Thirsty-lang {feature} feature integrated",
             "module": module
         }
-    
+
     def _implement_enhanced_monitoring(self, spec: dict[str, Any]) -> dict[str, Any]:
         """Implement enhanced monitoring based on threat patterns."""
         logger.info("Implementing enhanced monitoring")
-        
+
         return {
             "success": True,
             "monitoring_level": "elevated",
             "thirsty_integration": spec.get("thirsty_integration"),
             "message": "Enhanced monitoring activated"
         }
-    
+
     def _implement_pattern_learning(self, spec: dict[str, Any]) -> dict[str, Any]:
         """Implement pattern learning from attack attempts."""
         logger.info("Implementing pattern learning")
-        
+
         return {
             "success": True,
             "patterns_learned": "active",
             "thirsty_integration": spec.get("thirsty_integration"),
             "message": "Pattern learning system updated"
         }
-    
+
     def get_status(self) -> dict[str, Any]:
         """Get current status of the bridge."""
         return {

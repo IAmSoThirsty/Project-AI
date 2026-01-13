@@ -61,7 +61,7 @@ echo ""
 
 # Create namespace
 echo -e "${YELLOW}Creating namespace: ${NAMESPACE}${NC}"
-kubectl create namespace ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
+kubectl create namespace "${NAMESPACE}" --dry-run=client -o yaml | kubectl apply -f -
 
 echo -e "${GREEN}✓ Namespace ready${NC}"
 echo ""
@@ -71,7 +71,7 @@ echo -e "${YELLOW}Select deployment mode:${NC}"
 echo "1) Full Stack (Prometheus, Grafana, ELK, Netdata, OpenTelemetry, Cilium)"
 echo "2) Minimal (Prometheus + Grafana only)"
 echo "3) Production (Full stack with HA and tuning)"
-read -p "Enter choice [1-3] (default: 1): " DEPLOY_MODE
+read -r -p "Enter choice [1-3] (default: 1): " DEPLOY_MODE
 DEPLOY_MODE=${DEPLOY_MODE:-1}
 
 # Set deployment parameters based on mode
@@ -110,13 +110,11 @@ echo -e "${YELLOW}Installing ${RELEASE_NAME} in namespace ${NAMESPACE}...${NC}"
 echo -e "${YELLOW}This may take 5-10 minutes...${NC}"
 echo ""
 
-helm install ${RELEASE_NAME} ./helm/project-ai-monitoring \
-    --namespace ${NAMESPACE} \
-    --timeout ${TIMEOUT} \
+if helm install "${RELEASE_NAME}" ./helm/project-ai-monitoring \
+    --namespace "${NAMESPACE}" \
+    --timeout "${TIMEOUT}" \
     --wait \
-    ${EXTRA_ARGS}
-
-if [ $? -eq 0 ]; then
+    ${EXTRA_ARGS}; then
     echo ""
     echo -e "${GREEN}================================${NC}"
     echo -e "${GREEN}✓ Deployment Successful!${NC}"
@@ -129,7 +127,7 @@ fi
 
 # Wait for pods to be ready
 echo -e "${YELLOW}Waiting for pods to be ready...${NC}"
-kubectl wait --for=condition=Ready pods --all -n ${NAMESPACE} --timeout=300s || true
+kubectl wait --for=condition=Ready pods --all -n "${NAMESPACE}" --timeout=300s || true
 
 # Display access information
 echo ""
@@ -140,7 +138,7 @@ echo ""
 
 # Get service info
 echo -e "${YELLOW}Services:${NC}"
-kubectl get svc -n ${NAMESPACE} | grep -E "NAME|prometheus|grafana|elasticsearch|kibana|netdata|hubble|jaeger"
+kubectl get svc -n "${NAMESPACE}" | grep -E "NAME|prometheus|grafana|elasticsearch|kibana|netdata|hubble|jaeger"
 
 echo ""
 echo -e "${YELLOW}To access services locally, run:${NC}"
@@ -154,7 +152,7 @@ fi
 
 echo "# Grafana"
 echo "kubectl port-forward -n ${NAMESPACE} svc/prometheus-grafana 3000:80 &"
-GRAFANA_PASS=$(kubectl get secret -n ${NAMESPACE} prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 --decode)
+GRAFANA_PASS=$(kubectl get secret -n "${NAMESPACE}" prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 --decode)
 echo "  URL: http://localhost:3000"
 echo "  Username: admin"
 echo "  Password: ${GRAFANA_PASS}"
