@@ -5,9 +5,7 @@ Contains settings for Temporal server connection, worker configuration,
 and workflow/activity parameters.
 """
 
-import os
 from pathlib import Path
-from typing import Optional
 
 from pydantic import Field
 from pydantic_settings import BaseSettings
@@ -31,19 +29,19 @@ class TemporalConfig(BaseSettings):
     )
 
     # Cloud Configuration
-    cloud_namespace: Optional[str] = Field(
+    cloud_namespace: str | None = Field(
         default=None,
         description="Temporal Cloud namespace (e.g., my-namespace.a2b3c)",
     )
-    cloud_cert_path: Optional[Path] = Field(
+    cloud_cert_path: Path | None = Field(
         default=None,
         description="Path to client certificate for Temporal Cloud",
     )
-    cloud_key_path: Optional[Path] = Field(
+    cloud_key_path: Path | None = Field(
         default=None,
         description="Path to client private key for Temporal Cloud",
     )
-    cloud_api_key: Optional[str] = Field(
+    cloud_api_key: str | None = Field(
         default=None,
         description="API key for Temporal Cloud",
     )
@@ -110,7 +108,7 @@ class TemporalConfig(BaseSettings):
 
 
 # Global configuration instance
-_config: Optional[TemporalConfig] = None
+_config: TemporalConfig | None = None
 
 
 def get_temporal_config() -> TemporalConfig:

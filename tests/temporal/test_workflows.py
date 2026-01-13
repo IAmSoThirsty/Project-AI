@@ -2,16 +2,12 @@
 Tests for Temporal.io workflow definitions.
 """
 
-import pytest
 
 from app.temporal.workflows import (
+    DataAnalysisRequest,
+    ImageGenerationRequest,
     LearningRequest,
     LearningResult,
-    ImageGenerationRequest,
-    ImageGenerationResult,
-    DataAnalysisRequest,
-    DataAnalysisResult,
-    MemoryExpansionRequest,
     MemoryExpansionResult,
 )
 
@@ -27,7 +23,7 @@ class TestWorkflowDataClasses:
             category="programming",
             user_id="user123",
         )
-        
+
         assert request.content == "Test content"
         assert request.source == "test_source"
         assert request.category == "programming"
@@ -39,7 +35,7 @@ class TestWorkflowDataClasses:
             success=True,
             knowledge_id="kb123",
         )
-        
+
         assert result.success is True
         assert result.knowledge_id == "kb123"
         assert result.error is None
@@ -50,7 +46,7 @@ class TestWorkflowDataClasses:
             prompt="A beautiful sunset",
             style="photorealistic",
         )
-        
+
         assert request.prompt == "A beautiful sunset"
         assert request.style == "photorealistic"
         assert request.size == "1024x1024"
@@ -62,7 +58,7 @@ class TestWorkflowDataClasses:
             file_path="/data/file.csv",
             analysis_type="clustering",
         )
-        
+
         assert request.file_path == "/data/file.csv"
         assert request.analysis_type == "clustering"
 
@@ -72,7 +68,7 @@ class TestWorkflowDataClasses:
             success=True,
             memory_count=5,
         )
-        
+
         assert result.success is True
         assert result.memory_count == 5
         assert result.error is None

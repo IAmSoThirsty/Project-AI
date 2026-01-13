@@ -27,26 +27,26 @@ logger = logging.getLogger(__name__)
 
 # Framework availability checks
 try:
-    import torch
+    import torch  # noqa: F401
     import torch.nn as nn
-    import torch.quantization as quant
+    import torch.quantization as quant  # noqa: F401
     TORCH_AVAILABLE = True
 except ImportError:
     TORCH_AVAILABLE = False
     logger.warning("PyTorch not available - SNN training disabled")
 
 try:
-    import jax
-    import jax.numpy as jnp
-    from jax import grad, jit, vmap
+    import jax  # noqa: F401
+    import jax.numpy as jnp  # noqa: F401
+    from jax import grad, jit, vmap  # noqa: F401
     JAX_AVAILABLE = True
 except ImportError:
     JAX_AVAILABLE = False
     logger.warning("JAX not available - JAX training disabled")
 
 try:
-    import nir
-    from nir import NIRGraph
+    import nir  # noqa: F401
+    from nir import NIRGraph  # noqa: F401
     NIR_AVAILABLE = True
 except ImportError:
     NIR_AVAILABLE = False
