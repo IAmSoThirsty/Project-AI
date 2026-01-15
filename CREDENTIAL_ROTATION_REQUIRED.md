@@ -42,7 +42,7 @@ The following credentials were found in git history and **MUST BE ROTATED IMMEDI
   6. Review account activity for unauthorized access
 
 ### 3. Fernet Encryption Key ⚠️
-- **Key**: `Qqyl2vCYY7W4AKuE-DmQLmL7IgXguMis_lFalqlliEc=`
+- **Key**: `Qqyl...liEc=`
 - **Action Required**:
   1. Generate a new Fernet key:
      ```bash
