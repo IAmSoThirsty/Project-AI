@@ -166,6 +166,7 @@ git log --all --oneline -- .vs
 ## 🆘 Need Help?
 
 **Quick References:**
+
 - Full details: `CREDENTIAL_ROTATION_REQUIRED.md`
 - Summary: `SECRET_REMEDIATION_SUMMARY.md`
 - Best practices: `docs/security/SECRET_MANAGEMENT.md`
