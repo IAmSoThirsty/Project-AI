@@ -183,6 +183,7 @@ git ls-files | grep .env         # Shows tracked .env files
 ```
 
 **Can't Access Accounts?**
+
 - OpenAI: Account recovery at https://platform.openai.com
 - Gmail: Account recovery at https://accounts.google.com/recovery
 
