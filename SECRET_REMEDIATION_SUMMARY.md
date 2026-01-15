@@ -340,6 +340,7 @@ python tools/enhanced_secret_scan.py
 ## Resources
 
 ### Documentation
+
 - [CREDENTIAL_ROTATION_REQUIRED.md](CREDENTIAL_ROTATION_REQUIRED.md) - Detailed rotation guide
 - [docs/security/SECRET_MANAGEMENT.md](docs/security/SECRET_MANAGEMENT.md) - Best practices
 - [docs/security/SECRET_PURGE_RUNBOOK.md](docs/security/SECRET_PURGE_RUNBOOK.md) - Git cleanup
