@@ -193,6 +193,7 @@ git push --force --tags origin
 #### 4. Notify Team
 
 **Required Actions:**
+
 1. Notify all contributors that git history has been rewritten
 2. All team members MUST:
    - Delete local repository clones
