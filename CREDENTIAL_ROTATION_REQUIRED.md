@@ -22,7 +22,7 @@ Even though these files are now removed from git tracking, the credentials exist
 The following credentials were found in git history and **MUST BE ROTATED IMMEDIATELY**:
 
 ### 1. OpenAI API Key ⚠️
-- **Key Pattern**: `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`
+- **Key Pattern**: `sk-proj-cFQpstv...xvaZh9MA`
 - **Action Required**: 
   1. Go to https://platform.openai.com/api-keys
   2. **REVOKE** this key immediately

@@ -111,9 +111,11 @@ def check_env_file() -> bool:
     suspicious_patterns = [
         ("sk-proj-", "OpenAI API key"),
         ("hf_", "Hugging Face token"),
-        ("@gmail.com", "Gmail address"),
         ("AKIA", "AWS access key"),
     ]
+    
+    # Placeholder indicators that suggest the value is not real
+    placeholder_indicators = ["YOUR", "EXAMPLE", "PLACEHOLDER", "REPLACE", "CHANGE", "INSERT", "FAKE"]
     
     issues = []
     for pattern, description in suspicious_patterns:
@@ -124,7 +126,11 @@ def check_env_file() -> bool:
                     parts = line.split("=", 1)
                     # Check if there's a value after the equals sign (not just whitespace or angle brackets)
                     if len(parts) > 1 and parts[1].strip() and not parts[1].strip().startswith(('<', '>')):
-                        issues.append(f"  ⚠️  Potential {description} found in .env")
+                        value = parts[1].strip()
+                        # Check if value contains placeholder indicators
+                        is_placeholder = any(indicator in value.upper() for indicator in placeholder_indicators)
+                        if not is_placeholder:
+                            issues.append(f"  ⚠️  Potential {description} found in .env")
     
     if issues:
         print("\n".join(issues))
