@@ -32,7 +32,7 @@ The following credentials were found in git history and **MUST BE ROTATED IMMEDI
 
 ### 2. SMTP Credentials (Gmail) ⚠️
 - **Username**: `ProjectAiDevs@gmail.com`
-- **Password**: `R9609936!`
+- **Password**: `R96...36!`  <!-- redacted for security; do not store real passwords in docs -->
 - **Action Required**:
   1. Change the Gmail account password immediately at https://myaccount.google.com/security
   2. Revoke all app passwords at https://myaccount.google.com/apppasswords
