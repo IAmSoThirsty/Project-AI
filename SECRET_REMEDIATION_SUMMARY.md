@@ -346,6 +346,7 @@ python tools/enhanced_secret_scan.py
 - [docs/security/SECRET_PURGE_RUNBOOK.md](docs/security/SECRET_PURGE_RUNBOOK.md) - Git cleanup
 
 ### Tools
+
 - [tools/verify_secrets_removed.py](tools/verify_secrets_removed.py) - Verification script
 - [tools/enhanced_secret_scan.py](tools/enhanced_secret_scan.py) - Secret scanner
 - [tools/purge_git_secrets.sh](tools/purge_git_secrets.sh) - Cleanup script (Unix)
