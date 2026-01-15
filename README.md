@@ -92,209 +92,221 @@ Galahad (Project AI) / Cerberus / Codex Deus Maximus
 </p>
 ---
 
-**Project AI** is a modular, self-aware platform with autonomous agents, an AI persona, advanced memory, Asimov’s Four Laws, blurred boundaries between cloud and edge, and bulletproof defense-in-depth.  
-Experience the next generation of AI orchestration—engineered for extensibility, real-time insight, intelligence, explainability, streaming big data, neuromorphic learning, and unparalleled security.
+## 🧠 Overview
+
+A next-generation, modular and extensible AI platform featuring autonomous agent orchestration, self-aware ethical persona, streaming memory, multi-layered security, cutting-edge analytics, and bulletproof defense. Deployable desktop, web, or cloud.
+
+Experience the next generation of AI: transparent, adversarial-hardened, and ready for research or production.
 
 ---
 
 ## 💡 Key Features
 
-- ✅ Four Laws-Driven AI Core — Immutable ethical layer (Prime Directive + Asimov’s Laws)
-- ✅ Self-aware Persona & Mood — 8 traits, proactive chat, mood/emotion, explainable UI
-- ✅ Command Override — Audited, emergency lockdown, granular disables, full session controls
-- ✅ Memory Expansion — Persistent, semantic, conversational, and encoded knowledge
-- ✅ Layered Security — ASL-3 compliant (30+ controls), NIST AI RMF, OWASP LLM Top 10, prompt/adversarial defense, encrypted memory/override
-- ✅ Multi-Agent Council — Autonomous agents (Cerberus, Planner, Explainability, Verifier, CIChecker, BorderPatrol, Expert, dynamic plugins)
-- ✅ PyQt6 Dashboard — "Leather Book" UI, persona panel, Four Laws validator, agent console, stats dashboard
-- ✅ Defensive Agents — Black Vault, plugin sandboxing, malware/code audit, geo/IP anomaly tracking
-- ✅ Data Science & ML — Clustering, sentiment analysis, real-time prediction, pandas support
-- ✅ Web API & Frontend — Flask+React, fast API, containerized deployment
-- ✅ Offline-First Design — Fallback RAG, local reflection, caching, streaming sync
-- ✅ Neuromorphic SNN Support — 10 SNN stack, continual edge learning, ANN→SNN pipeline
-- ✅ Kubernetes-Ready — Helm chart, HA, eBPF/Cilium, Hubble & Netdata
-- ✅ Observability & Analytics — Prometheus, Grafana, ClickHouse, RisingWave, OpenTelemetry, per-node Netdata
-- ✅ Emergency Protocols — Email/SMS, lockout, real-time incident logs and alerts
-- ✅ Temporal.io Workflows — Durable execution for long-running AI operations (learning, image generation, data analysis), automatic retries, distributed coordination
-- ✅ CI/CD, MLOps — 100+ tests, full coverage, 8-stage CI with artifacts and shadow/canary rollouts
-- ✅ Adversarial Red-Teaming — 4250+ tests (JBB, Garak, Multi-Turn, Hydra, LLM-in-the-loop), 100% JBB/Garak detection, full transparency
+| Status | Feature                | Description                                                                              |
+|:------:|:---------------------- |:----------------------------------------------------------------------------------------|
+| 🟢     | **Four Laws Core**     | Immutable Prime Directive; ethics enforced in all actions                                |
+| 🟢     | **Persona Engine**     | 8-trait, explainable persona module; mood, emotion, panel & visually inspectable states |
+| 🟢     | **Command Override**   | Audited, privileged lockdown, session and emergency controls                            |
+| 🟢     | **Secure Memory**      | Persistent, semantic, encrypted, RAG/offline fallback, streaming sync                   |
+| 🟢     | **Multi-Agent Council**| Modular “council” AI: Cerberus, Planner, Verifier, BorderPatrol & dynamic plugins       |
+| 🟢     | **Leather Book UI**    | PyQt6 dashboard, persona panel, validator, stats, agent views                           |
+| 🟢     | **Advanced Security**  | Black Vault, plugin sandbox, compliance frameworks, streaming audit analytics           |
+| 🟢     | **Data Science & ML**  | Clustering, sentiment, real-time prediction, pandas/sklearn, SNN, ANN→SNN pipeline      |
+| 🟢     | **Web API & Frontend** | Flask+React, container/web ready                                                        |
+| 🟢     | **Kubernetes/HA**      | Helm, eBPF/Cilium/Hubble, Prometheus/Grafana, CI/CD, multi-node analytics               |
+| 🟢     | **Emergency Protocols**| Real-time logs, SMS/email, incident response API                                        |
+| 🟢     | **Temporal Workflow**  | Durable, distributed, long-running orchestration (AI learning, image gen, etc)          |
+| 🟢     | **Red-Teaming**        | 4250+ auto-test adversarial suite (see below), JBB/Garak/Multi-turn/LLM-in-the-loop     |
+| 🟢     | **Modern DevOps**      | Docker, Dependabot, VSCode Devcontainer, Codespaces, SBOM, signed releases              |
 
 ---
 
-## 🏛️ Architecture: Core Systems & Directory
+## 🏛️ Architecture: Systems & Directory
 
-```
+```text
 src/app/
 ├─ main.py
 ├─ core/
-│   ├─ ai_systems.py            # Four Laws, persona, override, plugin, memory
-│   ├─ safety_levels.py         # ASL-1…4 detection, enforcement
-│   ├─ command_override.py      # Full overrides, audit, lockdown
-│   ├─ red_hat_expert_defense.py# 3000+ threat scenarios
-│   ├─ continuous_learning.py   # Real-time, human-in-the-loop learning
-│   ├─ user_manager.py          # Fernet/hashed users, onboarding
-│   ├─ local_fbo.py             # Offline-first fallback, RAG, reflection
-│   ├─ emergency_alert.py       # Alerts/Emergency comms
-│   ├─ data_analysis.py         # Pandas, sklearn, clustering
-│   ├─ snn_integration.py, snn_mlops.py, ai_security_framework.py, etc.
+│   ├─ ai_systems.py, safety_levels.py, command_override.py, red_hat_expert_defense.py, ...
 ├─ temporal/
-│   ├─ client.py                # Temporal connection & worker lifecycle
-│   ├─ workflows.py             # Durable workflow definitions
-│   ├─ activities.py            # Activity implementations
-│   ├─ worker.py                # Worker process
-│   └─ config.py                # Temporal configuration
+│   ├─ client.py, workflows.py, activities.py, worker.py, config.py
 ├─ agents/
-│   ├─ cerberus.py              # Defensive overseer
-│   ├─ planner.py               # Decomposition/workflow
-│   ├─ explainability.py        # Rationale/trace
-│   ├─ doc_generator.py
-│   ├─ retrieval_agent.py, ci_checker_agent.py, verifier_agent.py, border_patrol.py, expert_agent.py...
+│   ├─ cerberus.py, planner.py, validator.py, explainability.py, border_patrol.py, ...
 ├─ gui/
-│   ├─ leather_book_interface.py
-│   ├─ persona_panel.py
-│   └─ ...
+│   ├─ leather_book_interface.py, persona_panel.py
 ├─ web/
-│   ├─ backend/
-│   └─ frontend/
-├─ monitoring/
-│   ├─ metrics_collector.py, ...
-├─ tools/, config/, data/, tests/, docs/
+│   ├─ backend/, frontend/
+├─ monitoring/, tools/, config/, data/, tests/, docs/, adversarial_tests/
 ```
+- Full directory breakdown in [Project Wiki](https://iamsothirsty.github.io/Project-AI/) and [docs/].
+
+---
+# 🧠 Project-AI: Agent & Role Identification Overview
+
+This document presents a comprehensive taxonomy of **all agents and agent-like roles** in Project-AI—including core, council, plugin, neuromorphic/SNN, dynamic/run-time, and behavioral/protocol agents. Some are concrete Python classes; others are key roles, logical actors, or dynamic entities registered at runtime. This makes Project-AI maximally extensible, testable, and ready for advanced orchestration.
 
 ---
 
-## Core and Enterprise Systems
+## 1. 🏛️ **Council Role Agents / Named Roles**
 
-### 🏛️ Main Coordinator
-Centralizes persona, memory, council agent workflow, override, plugin, learning, threat defense, monitoring, logging.
+These are core system actors—registered and referenced in the council/agent registry—regardless of explicit class definition:
 
-### 🦾 Cerberus (Defensive Oversight Agent)
-Prime Directive/Four Laws enforcer for every action/command/learning; master override gatekeeping for all session disables, integrates audit, geo/IP, anomaly, incident escalation, and Black Vault firewall.
-
-### 📖 Codex Deus Maximus (Knowledge/Orchestration)
-Curates persistent and streaming knowledge, orchestrates agent council (planning, explainability, validation, sandboxing), integrates offline RAG, advanced learning, shadow/ANN→SNN rollouts, continuous threat modeling.
-
----
-
-## 🤖 Agents & Plugins
-
-| Agent         | Role                   | Key Highlights                                           |
-|---------------|------------------------|----------------------------------------------------------|
-| Cerberus      | Security/law/defense   | Black Vault, override audit, escalation, incident logs   |
-| Planner       | Task/workflow logic    | Decomposition, workflow, council orchestration           |
-| Validator     | Health and sanity      | Validation, system health, approval gates                |
-| BorderPatrol  | Quarantine             | File sandbox, plugin validation, memory vaults           |
-| Explainability| Traceability & rationale| Real-time explanations, logs, UI, audit, transparency   |
-| RetrievalAgent| Embedding/QA           | Vector search, document QA, offline/local index          |
-| VerifierAgent | Security checker       | CI, malware, depend. audit, process pool                 |
-| DocGenerator  | Docs automation        | Markdown docs from code                                  |
-| CIChecker     | CI, lint, coverage     | Reports to dashboard, data/ci_reports, triggers alert    |
-| ExpertAgent   | Audit signoff          | High-impact compliance, output validation                |
-| ...           | Dynamic plugins        | Modular, CouncilHub agent registry                       |
+| Role / Name           | Description / Function                                                                              |
+|-----------------------|-----------------------------------------------------------------------------------------------------|
+| **cerberus**          | Defense, Prime Directive, threat master (often wraps core policies and enforcement)                 |
+| **codex / codex_deus_maximus** | Knowledge curation, audit, agent council orchestration (may be a singleton or utility object)   |
+| **black_vault**       | Special, unbreakable storage for denied or adversarial content (may be state, not just a class)     |
+| **border_patrol**     | Quarantine for plugins/files, via functions or validation dicts                                     |
+| **emergency_alert**   | Evented handler for alerting/escalation, not always a distinct agent class                          |
+| **persona / AIPersona**     | “Self-aware” persona, trait/behavior/state engine; may vary by session/user/context            |
+| **command_override**  | Session/master disable logic; system behavior or handler, not always a class                        |
+| **memory / MemoryExpansionSystem** | Memory expansion, streaming, persistent state (object or agent)                                 |
+| **audit**             | System-wide behavior, may be injected into agents for auditing/logging                              |
+| **continuous_learning / ContinuousLearningEngine** | Autonomous continual learner; sometimes an agent, sometimes a system role           |
 
 ---
 
-## 🦺 Security & Defense
+## 2. 🔢 **Behavioral / Protocol / Handler-Based Agents**
 
-- **Four Laws/Prime Directive:** Non-bypassable, ALL actions checked
-- **CommandOverride:** Auth, session management, persistent or master disable, audit, emergency lockdown
-- **Black Vault:** Inaccessible storage for unsafe/denied content (SHA256 fingerprinting, AI cannot recover)
-- **Compliance:** ASL-2/ASL-3, NIST AI RMF 1.0, OWASP LLM Top 10, Red Team testing
-- **Audit Trail:** Immutable, tamper-proof, incident/event logging (with streaming analytics)
-- **Plugin & Dependency Security:** Sandbox, audit, malware, dependency checks on all loaded code
-- **Streaming/Analytics:** Prometheus, Netdata, ClickHouse, RisingWave
-- **eBPF/Cilium/Hubble:** Agentless kernel-level network monitoring for all deployments
+These act as agents through function, callable, or protocol compliance, not by class:
 
----
-
-# 🧪 Monolith of Training: Threat Simulation Matrix
-
-Welcome to **Project-AI’s Threat Simulation Matrix** — a Cerberus-grade arsenal of 4250+ fully documented tests, engineered to probe, validate, and harden systems against a comprehensive spectrum of threats.  
-
-See [`adversarial_tests/`](adversarial_tests/) and `ci-reports/` for the complete test suite and automated results.
+- **Plugin system agents**: Any object (class/function/protocol) registered into council as a plugin agent. Examples:
+    - Simple function objects
+    - Protocols (with required methods)
+    - Dictionaries/closures loaded from code, config, or plugins/
+- **Event/listener handlers**: Monitor security, metrics, rate limits, adversarial threats, and can be registered as agent roles dynamically.
+- **Telemetry/metrics roles**: Stats/metrics exporting/collecting “agents” that may just expose protocol methods.
+- **Adversarial scenario/test agents**: Temporary or persistent handlers (lambda, function, object) used for red-teaming, testing, or dynamic validation.
+- **SNN or ML module agents**: PyTorch/TF models or custom objects used as runtime “agents” for learning, adaptation, defense, or decision-making.
 
 ---
 
-## 🧠 Threat Categories and Strategic Purpose
+## 3. 👤 **Singletons, Roles, and Decorators as Agents**
 
-| Category         | Count   | Description                                                                                                                     |
-|------------------|---------|---------------------------------------------------------------------------------------------------------------------------------|
-| 🟩 **White Hat** | 500     | Validates ethical defense posture, patch hygiene, and known exploit resistance (e.g., CVE patch verification, firewall rules).  |
-| 🟨 **Grey Hat**  | 500     | Probes ambiguous or dual-use tactics. Tests edge-case exploits, privilege escalation, and ethical boundaries in AI behavior.    |
-| 🟥 **Red Hat**   | 1000    | Simulates insider threats, chained exploits, and adversarial escalation (lateral movement, credential harvesting, plugin abuse). |
-| ⬛ **Black Hat** | 1000    | Full-spectrum malicious stress tests: obfuscated payloads, zero-day simulations, AI-driven attack chains, synthetic malware.     |
-| 🌍 **Real-World**| 500     | Models actual breach scenarios: ransomware, supply chain compromise, phishing, cloud misconfigurations.                          |
-| 🧠 **Hypothetical** | 500  | Explores speculative threats: quantum decryption, synthetic identity spoofing, AI swarms, post-zero-trust collapse.             |
-| ➕ **Latest Test Additions** | 250 | New for 2026: LLM-in-the-loop, adversarial OT telemetry, 10+ new prompt fuzzing subclasses, shadow red team scenarios    |
+- **Singletons**: “Cerberus”, “Codex” and similar may be promoted to agent status not by instantiation, but by their unique function and registration.
+- **Function decorators/wrappers**: Security, auditing, logging, or compliance wrappers that give functions agent-like system-wide abilities.
 
 ---
 
-## 🔍 Vulnerabilities vs. Threats: Variation Matrix
+## 4. 🚀 **Dynamic, External, and Runtime Agents**
 
-| Dimension         | Vulnerability Examples              | Threat Simulation Examples                             |
-|-------------------|------------------------------------|--------------------------------------------------------|
-| **Authentication**| Weak passwords, no MFA             | Brute-force, credential stuffing                       |
-| **Authorization** | Overprivileged roles, bad ACLs     | Privilege escalation, lateral movement                 |
-| **Input Validation** | SQL injection, buffer overflows | Payload injection, chained exploits                    |
-| **AI Behavior**   | Prompt leakage, model inversion    | Synthetic identity, adversarial prompts                |
-| **Network Hygiene** | Open ports, DNS misroutes        | DDoS, DNS poisoning, MITM                             |
-| **Cloud Config**  | Public buckets, IAM drift          | Cloud takeover, data exfiltration                      |
-| **Temporal Logic**| Race conditions, stale sessions    | Replay, time-based escalations                         |
-| **Plugin Exec**   | Unsafe eval, no sandbox            | Plugin hijack, memory corruption                       |
-| **Monitoring Gaps** | Missing alerts, log suppression  | Silent breach, alert flooding                          |
-| **Ethical Boundaries** | Dual-use AI, ambiguous intent | Red/grey hat escalation, ethical fuzzing               |
+- **Plugins and custom user agents**: Any Python module or class with the right interface can be loaded—no static limit.
+    - User-authored subclasses (e.g. “CodeReviewAgent”, “LLMStressAgent”)
+- **Dynamic/child agents**: Registered on the fly for special tasks or testing—e.g. “ExperimentAgent”, “AdversarialInterceptor”
+- **Configuration-based or runtime-constructed agents**: Instantiated/admitted from user scripts, config, CI jobs, test harnesses, or adversarial test suites.
 
 ---
 
-## 🛡️ Adversarial Red-Teaming
+## 5. 🧩 **All Discovered Agent Classes, Utility, Plugin, and Council-Registered Agents**
 
-- **Total Tests**: 4250+ (JBB, Garak, Multi-Turn, Hydra, LLM-in-the-loop)
-- **Block Rate**: 99%+ (JBB), 100% (Garak), 80%+ (Multi-turn/LLM stress, rolling average)
-- **False Positives**: <3% (all test suites)
-- **Automated CI Integration**: All tests with full logging and reporting
-- **Artifact Directory Update:** 2026-01-11 12:19 UTC
+| Name / Context              | Description / Notes                                                                |
+|-----------------------------|------------------------------------------------------------------------------------|
+| **Cerberus**                | Law/override/defense/Prime Directive supervision (role/entity, not always a class) |
+| **CouncilHub**              | Meta-agent/council system, registry and loader for all agent types                 |
+| **Persona / AIPersona**     | Autonomously evolving persona core, traits, mood, memory                           |
+| **MemoryExpansionSystem**   | Persistent/expandable memory agent                                                 |
+| **ContinuousLearningEngine**| Continual learning module                                                          |
+| **KnowledgeCurator**        | Knowledge “oracle”, council registered core agent                                  |
+| **TestQAGenerator**         | QA/test generator for code/docs                                                    |
+| **DependencyAuditor**       | Supply chain dependency scanner                                                    |
+| **DocGenerator**            | Markdown/free-text doc generator                                                   |
+| **RefactorAgent**           | Safe code format/refactor agent                                                    |
+| **SandboxRunner**           | Plugin/file sandbox and validator                                                  |
+| **RetrievalAgent**          | Embedding/doc search/QA agent                                                      |
+| **RollbackAgent**           | Rollback state and restoration management                                          |
+| **Planner**                 | Flexible: workflow/task planning (role or class)                                   |
+| **UxTelemetryAgent**        | User telemetry/UX collector and analytics                                          |
+| **CI Checker / CICheckerAgent** | CI runner/isolation, tests, reporting                                       |
+| **PluginIsolation**         | Per-plugin runtime isolation/security                                              |
+| **NumericalProtection**     | Math/numerical bounds enforcement                                                  |
+| **InputValidator**          | API/web/data input sanitization                                                    |
+| **ThirstyLangValidator**    | T-A-R-L adversarial defense/validator                                              |
+| **BindsNetRLAgent**         | RL, continual SNN learning                                                        |
+| **SinabsVisionSNN**         | SNN image classifier/inference agent                                               |
+| **SNNPersona**              | Persona/SNN hybrid                                                                 |
+| **Other SNN/Neuromorphic agents** | Nengo, Lava, etc.: loaded dynamically                                  |
+| **Black Vault**             | Secure denied content/anomaly repository (sometimes managed as agent)              |
+| **BorderPatrol**            | Quarantine/vault, plugin checker                                                   |
+| **Malware/ProcessPool Auditor**| Function or subagent for plugin/process security                              |
+| **Telemetry/Monitoring Collector** | Metrics, stats, audit reporting agent                                  |
+
+---
+
+## 6. 💡 **Meta/Integration Note**
+
+- Some “agents” are system components or attributes (e.g., `continuous_learning`, `persona`) that participate as dynamic actors, sometimes supporting multiple concurrent roles.
+- Many agents inherit duties from roles, not just class inheritance—agenthood is assigned by the council/registry rather than Python OO alone.
+
+---
+
+## 7. 🔗 **Open-ended Extensibility**
+
+The architecture intentionally allows for dynamic growth and unbounded diversity:
+- Any object, module, function, or model with the right protocol/interface can be registered as an agent at runtime, including test, utility, data science, security, and AI specialist agents.
+- This includes both built-in/first-party and user/community agents supplied via plugins or dynamic configuration.
+
+---
+
+## 8. 📈 **Why So Many Forms?**
+
+- **Security:** Many defense/oversight behaviors must be dynamically injected and swapped during adversarial testing.
+- **Scalability:** ML/SNN/council agents are composed and replaced as system scales to new tasks, datatypes, or workloads.
+- **Research:** Ease of swapping in/out novel behaviors for experimentation, red teaming, or adaptive R&D context.
+
+---
+
+## 9. 🗂️ **How to Audit or Extend**
+
+- To see all active agents at runtime: introspect the council registry or agent loader.
+- To add your own: implement a class or function with the right protocol (`register_agent(agent_id, obj)`) and load/register it!
+
+---
+
+> **This document provides a taxonomy of all agents, roles, and behaviors (concrete, logical, dynamic, and runtime) in Project-AI as of 2026-01-14.  
+> Agenthood = registration + protocol + role, not just Python classes.  
+> For live/dynamic agents, audit your running instance’s council/registry.**
+
+
+---
+
+
+
+Project-AI’s security compliance roadmap anticipates active threats, regulatory change, supply chain risk, and the evolving nature of AI-powered systems. Its architecture is built to add, refine, and validate security controls, keeping you and your users safe over time.
+
+
+---
+
+## 🧪 MONOLITH: Adversarial Red-Teaming/Simulation Matrix
+
+Welcome to **4250+ adversarial scenario/test matrix**  
+- FULLY documented, CI-integrated, transparent  
+- Categories: White, Grey, Red, Black Hat, Real, Hypothetical, LLM-in-the-loop, OT Telemetry  
+- Tools: JailbreakBench, Garak, Multi-turn, more
+
+See [adversarial_tests/README.md](adversarial_tests/README.md) for:
+- Exhaustive threat categories, pass/fail thresholds
+- Test suite composition (JBB, Garak, Multi-turn)
+- How to run (`python adversarial_tests/jbb/run_jbb.py --output ci-reports/jbb-latest.json` etc)
+- Output metrics, reproducibility, and publishing standards
+
+> **Latest Results:**  
+> - **Block Rate:** JBB >99%, Garak 100%, Multi-turn 80%+  
+> - **False Positives:** <3%  
+> - **CI/CD:** Fully automated
 
 ---
 
 ## ⏱️ Temporal.io Workflow Orchestration
 
-**Project-AI integrates Temporal.io for durable, fault-tolerant execution of long-running AI operations.**
-
-### What is Temporal.io?
-
-Temporal provides workflow orchestration that guarantees completion even when failures occur. Workflows can run for days or weeks, automatically retrying failed activities and recovering from infrastructure outages.
-
-### Key Benefits
-
-- **Durable Execution**: Workflows survive process crashes, network failures, and infrastructure issues
-- **Automatic Retries**: Configurable retry policies for failed operations
-- **Visibility**: Web UI for monitoring all workflows, debugging failures, and tracking execution history
-- **Distributed Coordination**: Multiple workers process tasks in parallel
-- **Versioning**: Deploy workflow changes without disrupting running instances
-
-### Integrated Workflows
-
-| Workflow | Purpose | Duration | Retries |
-|----------|---------|----------|---------|
-| `AILearningWorkflow` | Process learning requests with Black Vault validation | 1-5 min | 3 attempts |
-| `ImageGenerationWorkflow` | Generate images with safety checks | 5-15 min | 3 attempts |
-| `DataAnalysisWorkflow` | Analyze datasets with clustering/stats | 10-30 min | 2 attempts |
-| `MemoryExpansionWorkflow` | Extract and store conversation memories | 1-3 min | 3 attempts |
-
-### Quick Start
+Orchestrate distributed, durable, long-running AI ops:
 
 ```bash
-# Start Temporal server
-python scripts/setup_temporal.py start
-
-# Start worker
-python scripts/setup_temporal.py worker
-
-# View Temporal Web UI
-open http://localhost:8233
+python scripts/setup_temporal.py start      # Start Temporal server
+python scripts/setup_temporal.py worker     # Worker process
+open http://localhost:8233                  # Temporal Web UI
 ```
 
-### Usage Example
-
+Example:
 ```python
 from app.temporal.client import TemporalClientManager
 from app.temporal.workflows import AILearningWorkflow, LearningRequest
@@ -302,119 +314,86 @@ from app.temporal.workflows import AILearningWorkflow, LearningRequest
 async def run_workflow():
     manager = TemporalClientManager()
     await manager.connect()
-    
     handle = await manager.client.start_workflow(
         AILearningWorkflow.run,
-        LearningRequest(
-            content="Python best practices",
-            source="docs",
-            category="programming"
-        ),
-        id=f"learning-{timestamp}",
-        task_queue="project-ai-tasks",
+        LearningRequest(content="Python best practices", source="docs", category="programming"),
+        id=f"learning-{timestamp}", task_queue="project-ai-tasks",
     )
-    
-    result = await handle.result()  # Durable execution!
+    result = await handle.result()
 ```
-
-### Workspace Origin
-
-This integration was developed in the **"Expert space waddle"** workspace and synced to this repository for team collaboration.
-
-**📚 Full Documentation**: [docs/TEMPORAL_SETUP.md](docs/TEMPORAL_SETUP.md)  
-**📂 Example Scripts**: [examples/temporal/](examples/temporal/)  
-**🧪 Tests**: [tests/temporal/](tests/temporal/)
+See [docs/TEMPORAL_SETUP.md](docs/TEMPORAL_SETUP.md) & [examples/temporal/](examples/temporal/)
 
 ---
 
-# 📊 Repository Statistics
+## 📊 Repository Stats
 
-**Project:** [IAmSoThirsty/Project-AI](https://github.com/IAmSoThirsty/Project-AI)  
-**Description:** Project AI  
-**License:** MIT  
-**Created:** November 9, 2025  
-**Homepage:** [Project-AI Website](https://iamsothirsty.github.io/Project-AI/)  
-**Default Branch:** `main`  
-**Template Project:** Yes  
-**Public:** Yes  
-**Topics:** ai, ai-agents, artificial-intelligence, computer-vision, desktop-application, memory, security, website
+- **Name:** IAmSoThirsty/Project-AI
+- **Description:** Modular, ethical, adversarially-tested AI orchestration platform
+- **License:** MIT ([see LICENSE](LICENSE))
+- **Homepage:** [iamsothirsty.github.io/Project-AI](https://iamsothirsty.github.io/Project-AI/)
+- **Created:** November 9, 2025
+- **Latest Release:** v1.9.7 (2026-01-10)
+- **Default branch:** `main`
+- **Open Issues:** [62](https://github.com/IAmSoThirsty/Project-AI/issues)  **Open PRs:** [61](https://github.com/IAmSoThirsty/Project-AI/pulls)
+- **Total Commits:** 357  **Contributors:** 3+ **CI/CD Coverage:** >99% (Py), 97.4% (JS)
+- **Languages:**  
+  - Python: 1,640,374
+  - JavaScript: 142,380
+  - Shell: 55,241
+  - HTML: 16,157
+  - PowerShell: 19,588
+  - Batchfile: 10,352
+- **Repository Integrity:** All releases are GPG-signed and SBOM/provenance is maintained
 
-### ⭐ Social Stats
+---
 
-- **Stars:** 0
-- **Forks:** 0
-- **Watchers:** 0
-- **Contributors:** [Graphs](https://github.com/IAmSoThirsty/Project-AI/graphs/contributors)
-- **Contributor Count:** 3+ (including external contributors and bots)
-- **Contributor Bot:** [github-actions[bot]](https://github.com/apps/github-actions)
-- **Discussions:** Open (28 threads)
-- **Security Advisories:** 0 outstanding; historical at [security advisories](https://github.com/IAmSoThirsty/Project-AI/security/advisories)
+## 🛠 Dev Container/VSCode/Codespaces
 
-### 🐍 Language Breakdown
-
-| Language    | Lines      |
-|-------------|------------|
-| Python      | 1,640,374  |
-| JavaScript  | 142,380    |
-| Shell       | 55,241     |
-| HTML        | 16,157     |
-| PowerShell  | 19,588     |
-| Batchfile   | 10,352     |
-| Dockerfile  | 3,026      |
-| Smarty      | 1,506      |
-| Java        | 574        |
-| Makefile    | 245        |
-
-### 🗃 Issues & Pull Requests
-
-- **Open Issues:** 62 ([See all issues](https://github.com/IAmSoThirsty/Project-AI/issues?q=is%3Aissue+is%3Aopen))
-- **Closed Issues:** 43
-- **Open Pull Requests:** 61 ([See all PRs](https://github.com/IAmSoThirsty/Project-AI/pulls?q=is%3Apr+is%3Aopen))
-- **Merged Pull Requests:** 200+ (as of 2026-01-11)
-
-### 📈 Activity
-
-- **Total Commits:** 357 (`main` branch, up to 2026-01-11)
-- **Last Commit:** 2026-01-11  
-  _Message:_ _Update threat simulation docs & fix SNN hot-reload_  
-- **Active Branches:** 5 (`main`, `develop`, `snn-experiments`, `gh-pages`, `mlops-pipeline`)
-- **Latest Release/Tag:** v1.9.7 (2026-01-10)
-- **Repository Size:** 85,983 KB
-
-### 🏷️ Workflow & CI/CD
-
-- **Workflows Passing:** All (ci-consolidated, security-consolidated, pr-automation, issue-management, snn-mlops-cicd, Monolith, post-merge-validation, prune-artifacts)
-- **Latest Build:** Passed (2026-01-11 05:21 UTC)
-- **Test Coverage:** >99% (Python core, 99.1%; JavaScript, 97.4%)
-- **Security Review Date:** 2026-01-10  
-- **Outstanding Vulnerabilities:** 0 _(all resolved as of previous CodeQL/Bandit/TruffleHog scans)_
-- **Dependency Status:** All up to date, checked via Dependabot and `pip-audit`
-- **Artifact Directory & CI Reports:** Last updated: 2026-01-11 12:19 UTC
+- Python 3.12, Node.js 18, all extensions/linting (Pylance, Black, Ruff, Jupyter, Copilot)
+- Seamless setup for new contributors or rapid onboarding
+- Open in Codespaces or VSCode with "Reopen in Container"
+- _See [.devcontainer/README.md](.devcontainer/README.md) for details_
 
 ---
 
 ## 📞 Maintainer & Contact
 
-- **Primary Maintainer:** [IAmSoThirsty](https://github.com/IAmSoThirsty)  
-    - Email: <karrick1995@gmail.com>  
-    - Alt: <founderoftp@thirstysprojects.com>  
-- **Security Contact**: See [SECURITY.md](SECURITY.md) for PGP key  
-- **License Confirmation:** MIT (see [LICENSE](LICENSE))  
-- **Repository Integrity:** All release signatures valid (as of 2026-01-11)
-- **Data Provenance Links:** SBOM and provenance in [docs/SBOM.md](docs/SBOM.md)
+- **Lead:** [IAmSoThirsty](https://github.com/IAmSoThirsty)  
+  - Email: <karrick1995@gmail.com>  
+  - Alt: <founderoftp@thirstysprojects.com>
+- **Security Contact:** See [SECURITY.md](SECURITY.md) for PGP, private advisories, best practices
+- **Release/Integrity:** All artifacts, releases, and provenance are signed and verifiable
 
 ---
 
-## 📝 Up-to-date, Overlooked & Additional Details (2026-01-11)
+## 🟢 Contribution & Community
 
-- **Latest Test Suite Additions:** 4250+ (see above, including new adversarial prompt fuzz, LLM-in-the-loop, OT telemetry)
-- **Automated Stats Update:**  
-    To update stats, run `python scripts/generate_stats.py`
-- **All badge/workflow/status [are current](#readme)**  
-- **Change Log:** [CHANGELOG.md](CHANGELOG.md) updated & digitally signed after every release
+- PRs and issues very welcome! See [CONTRIBUTING.md](CONTRIBUTING.md).
+- For adversarial security: see [adversarial_tests/](adversarial_tests/).
+- Join [Discussions](https://github.com/IAmSoThirsty/Project-AI/discussions) for Q&A, roadmap, and features.
 
 ---
 
-If you have further requests for up-to-date stats, new breakdowns, or transparency reports, or notice anything missing in this README, please [open an issue](https://github.com/IAmSoThirsty/Project-AI/issues/new/choose) or contact the maintainer.
+## 📚 Reference Documentation
+
+- [Project Website](https://iamsothirsty.github.io/Project-AI/)
+- [Full Docs/](docs/)
+- [Adversarial Test Matrix](adversarial_tests/)
+- [Security Policy](SECURITY.md)
+- [Changelog](CHANGELOG.md)
+- [SBOM/Provenance](docs/SBOM.md)
+
+---
+
+## License
+
+<img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge" height="28"/>  
+MIT — see [LICENSE](LICENSE)
+
+---
+
+> _Missing info? Want extra stats, visuals, or transparency reports? [Open an issue!](https://github.com/IAmSoThirsty/Project-AI/issues)_
+>
+> _README v4 ("Monolith"), updated: 2026-01-14. Covers all prior editions with maximum detail & status._
 
 ---
