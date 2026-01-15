@@ -32,6 +32,7 @@ python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().d
 ```
 
 ### Step 4: Update Local .env
+
 ```bash
 # Edit .env file with new credentials
 nano .env  # or your preferred editor
