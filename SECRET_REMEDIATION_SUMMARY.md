@@ -364,6 +364,7 @@ python tools/enhanced_secret_scan.py
 - Create issue with `security` label
 
 **Technical Help:**
+
 - Review documentation in `docs/security/`
 - Check verification script output
 - Review secret scan reports
