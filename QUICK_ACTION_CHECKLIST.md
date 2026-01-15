@@ -80,6 +80,7 @@ git push --force --tags origin
 ```
 
 ### Step 7: Notify Team
+
 Send this message to all contributors:
 ```
 ⚠️ URGENT: Git history has been rewritten to remove exposed secrets.
