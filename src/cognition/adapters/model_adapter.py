@@ -165,9 +165,15 @@ class PyTorchAdapter(ModelAdapter):
 class DummyAdapter(ModelAdapter):
     """Dummy adapter for testing without actual models."""
 
-    def __init__(self):
-        """Initialize dummy adapter."""
+    def __init__(self, device: str = "cpu"):
+        """
+        Initialize dummy adapter.
+
+        Args:
+            device: Device parameter (ignored, for compatibility)
+        """
         self.loaded = False
+        self.device = device
 
     def load_model(self, model_path: str, **kwargs) -> Any:
         """Simulate model loading."""
