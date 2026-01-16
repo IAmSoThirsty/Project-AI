@@ -73,7 +73,7 @@ async def main():
             },
         ]
 
-        logger.info(f"\n[2] Crisis scenario defined:")
+        logger.info("\n[2] Crisis scenario defined:")
         logger.info(f"    Target: {target_member}")
         logger.info(f"    Mission phases: {len(missions)}")
         for mission in missions:

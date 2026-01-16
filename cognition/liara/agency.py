@@ -7,8 +7,12 @@ crisis response coordination.
 """
 
 import logging
-from dataclasses import asdict
+import sys
 from datetime import datetime
+from pathlib import Path
+
+# Add src to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
 
 from app.temporal.client import TemporalClientManager
 from app.temporal.workflows import CrisisRequest, CrisisResponseWorkflow, MissionPhase
@@ -142,7 +146,7 @@ class LiaraTemporalAgency:
 
         # Start workflow (non-blocking)
         workflow_id = f"crisis-workflow-{crisis_id}"
-        handle = await self._manager.client.start_workflow(
+        await self._manager.client.start_workflow(
             CrisisResponseWorkflow.run,
             request,
             id=workflow_id,

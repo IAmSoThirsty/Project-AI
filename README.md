@@ -364,6 +364,21 @@ async with LiaraTemporalAgency() as agency:
     print(f"Completed phases: {result['completed_phases']}")
 ```
 
+#### CLI Tool
+
+Quick command-line interface for crisis management:
+
+```bash
+# Trigger crisis response with mission phases
+python cognition/liara/cli.py trigger target-alpha recon secure extract cleanup
+
+# Check workflow status
+python cognition/liara/cli.py status crisis-workflow-<id>
+
+# Wait for completion
+python cognition/liara/cli.py wait crisis-workflow-<id>
+```
+
 #### Key Features
 - ✓ **Persistent State**: Workflow execution state persisted in Temporal
 - ✓ **Automatic Retries**: Configurable retry policies for failed mission phases
