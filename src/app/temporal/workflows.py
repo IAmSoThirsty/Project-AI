@@ -387,3 +387,177 @@ class MemoryExpansionWorkflow:
         except Exception as e:
             workflow.logger.error(f"Memory expansion workflow failed: {e}")
             return MemoryExpansionResult(success=False, error=str(e))
+
+
+# Crisis Response Workflow Data Classes
+
+@dataclass
+class MissionPhase:
+    """Represents a single mission phase in crisis response."""
+    phase_id: str
+    agent_id: str
+    action: str
+    target: str
+    priority: int = 1
+
+
+@dataclass
+class CrisisRequest:
+    """Input for crisis response workflow."""
+    target_member: str
+    missions: list[MissionPhase]
+    crisis_id: str | None = None
+    initiated_by: str | None = None
+
+
+@dataclass
+class CrisisResult:
+    """Result from crisis response workflow."""
+    success: bool
+    crisis_id: str | None = None
+    completed_phases: int = 0
+    failed_phases: list[str] | None = None
+    error: str | None = None
+
+
+@workflow.defn
+class CrisisResponseWorkflow:
+    """
+    Production-grade crisis response workflow for agent deployment.
+
+    Handles:
+    - Crisis validation and initialization
+    - Sequential mission phase execution
+    - Agent deployment coordination
+    - Failure tracking and retry logic
+    - Persistent state management
+    """
+
+    @workflow.run
+    async def run(self, request: CrisisRequest) -> CrisisResult:
+        """
+        Execute crisis response workflow.
+
+        Orchestrates agent deployment through multiple mission phases
+        with deterministic execution and automatic retries.
+
+        Args:
+            request: Crisis request with target member and mission phases
+
+        Returns:
+            Crisis result with completion status and metrics
+        """
+        workflow.logger.info(
+            f"Starting crisis response workflow for target: {request.target_member}"
+        )
+
+        crisis_id = request.crisis_id or f"crisis-{workflow.now().timestamp()}"
+        completed_phases = 0
+        failed_phases = []
+
+        try:
+            # Activity 1: Validate crisis request
+            is_valid = await workflow.execute_activity(
+                "validate_crisis_request",
+                request,
+                start_to_close_timeout=timedelta(seconds=30),
+                retry_policy=RetryPolicy(maximum_attempts=3),
+            )
+
+            if not is_valid:
+                return CrisisResult(
+                    success=False,
+                    crisis_id=crisis_id,
+                    error="Crisis request validation failed"
+                )
+
+            # Activity 2: Initialize crisis response
+            await workflow.execute_activity(
+                "initialize_crisis_response",
+                {"crisis_id": crisis_id, "target": request.target_member},
+                start_to_close_timeout=timedelta(seconds=30),
+            )
+
+            # Activity 3: Execute each mission phase sequentially
+            for mission in sorted(request.missions, key=lambda m: m.priority):
+                workflow.logger.info(
+                    f"Executing mission phase: {mission.phase_id} "
+                    f"(Agent: {mission.agent_id})"
+                )
+
+                try:
+                    # Execute agent mission with retries
+                    await workflow.execute_activity(
+                        "perform_agent_mission",
+                        mission,
+                        start_to_close_timeout=timedelta(minutes=5),
+                        retry_policy=RetryPolicy(
+                            maximum_attempts=3,
+                            initial_interval=timedelta(seconds=2),
+                            maximum_interval=timedelta(seconds=30),
+                        ),
+                    )
+
+                    # Log successful phase completion
+                    await workflow.execute_activity(
+                        "log_mission_phase",
+                        {
+                            "crisis_id": crisis_id,
+                            "phase_id": mission.phase_id,
+                            "status": "completed",
+                        },
+                        start_to_close_timeout=timedelta(seconds=10),
+                    )
+
+                    completed_phases += 1
+
+                except Exception as e:
+                    workflow.logger.error(
+                        f"Mission phase {mission.phase_id} failed: {e}"
+                    )
+                    failed_phases.append(mission.phase_id)
+
+                    # Log failure but continue with remaining phases
+                    await workflow.execute_activity(
+                        "log_mission_phase",
+                        {
+                            "crisis_id": crisis_id,
+                            "phase_id": mission.phase_id,
+                            "status": "failed",
+                            "error": str(e),
+                        },
+                        start_to_close_timeout=timedelta(seconds=10),
+                    )
+
+            # Activity 4: Finalize crisis response
+            await workflow.execute_activity(
+                "finalize_crisis_response",
+                {
+                    "crisis_id": crisis_id,
+                    "completed": completed_phases,
+                    "failed": len(failed_phases),
+                },
+                start_to_close_timeout=timedelta(seconds=30),
+            )
+
+            workflow.logger.info(
+                f"Crisis response completed: {completed_phases}/{len(request.missions)} "
+                f"phases successful"
+            )
+
+            return CrisisResult(
+                success=len(failed_phases) == 0,
+                crisis_id=crisis_id,
+                completed_phases=completed_phases,
+                failed_phases=failed_phases if failed_phases else None,
+            )
+
+        except Exception as e:
+            workflow.logger.error(f"Crisis response workflow failed: {e}")
+            return CrisisResult(
+                success=False,
+                crisis_id=crisis_id,
+                completed_phases=completed_phases,
+                failed_phases=failed_phases,
+                error=str(e),
+            )

@@ -1,7 +1,8 @@
 """
-Temporal Worker for Project-AI.
+Liara Temporal Agency Worker.
 
-Starts a worker that processes workflows and activities for the Project-AI application.
+Dedicated worker process for Liara crisis response and agent mission
+orchestration workflows.
 """
 
 import asyncio
@@ -13,21 +14,9 @@ from pathlib import Path
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from app.temporal.activities import (
-    crisis_activities,
-    data_activities,
-    image_activities,
-    learning_activities,
-    memory_activities,
-)
+from app.temporal.activities import crisis_activities
 from app.temporal.client import TemporalClientManager
-from app.temporal.workflows import (
-    AILearningWorkflow,
-    CrisisResponseWorkflow,
-    DataAnalysisWorkflow,
-    ImageGenerationWorkflow,
-    MemoryExpansionWorkflow,
-)
+from app.temporal.workflows import CrisisResponseWorkflow
 
 # Configure logging
 logging.basicConfig(
@@ -39,15 +28,16 @@ logger = logging.getLogger(__name__)
 
 async def main():
     """
-    Main worker entry point.
+    Liara worker entry point.
 
-    Connects to Temporal server, registers workflows and activities,
-    and starts processing tasks.
+    Connects to Temporal server and processes crisis response workflows.
     """
-    logger.info("Starting Project-AI Temporal Worker")
+    logger.info("Starting Liara Temporal Agency Worker")
 
     # Create client manager
-    manager = TemporalClientManager()
+    manager = TemporalClientManager(
+        task_queue="liara-crisis-tasks"
+    )
 
     # Handle graceful shutdown
     shutdown_event = asyncio.Event()
@@ -64,38 +54,26 @@ async def main():
         await manager.connect()
         logger.info("Connected to Temporal server")
 
-        # Collect all workflows and activities
-        workflows = [
-            AILearningWorkflow,
-            ImageGenerationWorkflow,
-            DataAnalysisWorkflow,
-            MemoryExpansionWorkflow,
-            CrisisResponseWorkflow,
-        ]
-
-        activities = (
-            learning_activities +
-            image_activities +
-            data_activities +
-            memory_activities +
-            crisis_activities
-        )
+        # Register crisis response workflows and activities
+        workflows = [CrisisResponseWorkflow]
+        activities = crisis_activities
 
         # Create worker
         worker = manager.create_worker(
             workflows=workflows,
             activities=activities,
-            max_concurrent_activities=50,
-            max_concurrent_workflow_tasks=50,
+            max_concurrent_activities=20,
+            max_concurrent_workflow_tasks=10,
         )
 
         logger.info(
-            f"Worker created with {len(workflows)} workflows "
+            f"Liara worker created with {len(workflows)} workflows "
             f"and {len(activities)} activities"
         )
+        logger.info("Task queue: liara-crisis-tasks")
 
         # Run worker
-        logger.info("Worker is running. Press Ctrl+C to stop.")
+        logger.info("Liara worker is running. Press Ctrl+C to stop.")
 
         # Run worker in background
         worker_task = asyncio.create_task(manager.run_worker(worker))
@@ -116,7 +94,7 @@ async def main():
     finally:
         # Cleanup
         await manager.disconnect()
-        logger.info("Worker shutdown complete")
+        logger.info("Liara worker shutdown complete")
 
     return 0
 
