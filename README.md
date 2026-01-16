@@ -255,7 +255,9 @@ See [adversarial_tests/README.md](adversarial_tests/README.md) for:
 
 ## ⏱️ Temporal.io Workflow Orchestration
 
-Orchestrate distributed, durable, long-running AI ops:
+Orchestrate distributed, durable, long-running AI ops with production-grade persistence:
+
+### Standard Workflows
 
 ```bash
 python scripts/setup_temporal.py start      # Start Temporal server
@@ -267,6 +269,184 @@ Example:
 ```python
 from app.temporal.client import TemporalClientManager
 from app.temporal.workflows import AILearningWorkflow, LearningRequest
+
+async with TemporalClientManager() as manager:
+    request = LearningRequest(
+        content="Machine learning best practices",
+        source="documentation",
+        category="programming",
+    )
+    
+    handle = await manager.client.start_workflow(
+        AILearningWorkflow.run,
+        request,
+        id="learning-workflow-123",
+        task_queue="project-ai-tasks",
+    )
+    
+    result = await handle.result()
+```
+
+### Liara Temporal Agency - Crisis Response Orchestration
+
+Production-grade distributed agent mission management with persistent state, automatic retries, and horizontal scalability:
+
+#### Architecture
+- **Workflow**: `CrisisResponseWorkflow` - Sequential mission phase execution
+- **Activities**: Agent deployment, validation, logging, finalization
+- **Worker**: Dedicated `cognition/liara/worker.py` for crisis workflows
+- **Task Queue**: `liara-crisis-tasks` for isolated processing
+- **State Persistence**: JSON records in `data/crises/`
+
+#### Setup & Launch
+
+1. **Start Temporal Server** (Docker Compose):
+```bash
+docker-compose up -d temporal temporal-postgresql
+# Or using setup script:
+python scripts/setup_temporal.py start
+```
+
+2. **Verify Temporal UI** (optional):
+```bash
+open http://localhost:8233
+# Namespace: default
+# Task Queue: liara-crisis-tasks
+```
+
+3. **Start Liara Worker**:
+```bash
+# Terminal 1: Start dedicated worker for crisis workflows
+python cognition/liara/worker.py
+# Output: "Liara worker is running. Press Ctrl+C to stop."
+# Output: "Task queue: liara-crisis-tasks"
+```
+
+4. **Trigger Crisis Response Workflow**:
+```python
+# Terminal 2: Run example or use in application
+python examples/temporal/liara_crisis_example.py
+
+# Or integrate in your code:
+from cognition.liara.agency import LiaraTemporalAgency
+
+async with LiaraTemporalAgency() as agency:
+    missions = [
+        {
+            "phase_id": "recon-phase-1",
+            "agent_id": "recon-agent-001",
+            "action": "reconnaissance",
+            "target": "target-alpha",
+            "priority": 1,
+        },
+        {
+            "phase_id": "secure-phase-2",
+            "agent_id": "security-agent-002",
+            "action": "secure_perimeter",
+            "target": "target-alpha",
+            "priority": 2,
+        },
+    ]
+    
+    workflow_id = await agency.trigger_crisis_response(
+        target_member="target-alpha",
+        missions=missions,
+        initiated_by="user-123",
+    )
+    
+    # Non-blocking: workflow executes asynchronously
+    # Persistent: survives crashes and restarts
+    # Observable: view in Temporal Web UI
+    
+    # Wait for completion (optional)
+    result = await agency.wait_for_crisis_completion(workflow_id)
+    print(f"Success: {result['success']}")
+    print(f"Completed phases: {result['completed_phases']}")
+```
+
+#### Key Features
+- ✓ **Persistent State**: Workflow execution state persisted in Temporal
+- ✓ **Automatic Retries**: Configurable retry policies for failed mission phases
+- ✓ **Horizontal Scalability**: Add more workers for increased throughput
+- ✓ **Observable Execution**: Monitor workflows in Temporal Web UI
+- ✓ **Deterministic**: Workflow code is deterministic and versioned
+- ✓ **Crash Recovery**: Workflows resume from last checkpoint after failures
+
+#### Observability
+
+Monitor workflow execution via Temporal Web UI:
+```
+http://localhost:8233/namespaces/default/workflows
+```
+
+Filter by:
+- **Workflow Type**: `CrisisResponseWorkflow`
+- **Task Queue**: `liara-crisis-tasks`
+- **Workflow ID**: `crisis-workflow-*`
+
+View detailed execution history:
+- Activity execution times
+- Retry attempts and failures
+- Input/output payloads
+- Event timeline
+
+Check persistent state:
+```bash
+ls -la data/crises/
+cat data/crises/crisis-<id>.json
+```
+
+#### Production Deployment
+
+For production environments:
+
+1. **Use Temporal Cloud** (managed service):
+```python
+agency = LiaraTemporalAgency(
+    temporal_host="<namespace>.<account>.tmprl.cloud:7233",
+    namespace="<namespace>.<account>",
+    task_queue="liara-crisis-tasks",
+)
+```
+
+2. **Deploy Multiple Workers** (horizontal scaling):
+```bash
+# Deploy N workers across different machines/containers
+# All connect to same task queue for work distribution
+docker-compose up -d --scale temporal-worker=5
+```
+
+3. **Configure Retry Policies** (in workflows.py):
+```python
+retry_policy=RetryPolicy(
+    maximum_attempts=3,
+    initial_interval=timedelta(seconds=2),
+    maximum_interval=timedelta(seconds=30),
+)
+```
+
+4. **Monitor Metrics** (via Temporal metrics):
+- Workflow success/failure rates
+- Activity execution times
+- Task queue backlog
+- Worker health status
+
+#### Testing
+
+Run tests:
+```bash
+# Unit tests (no Temporal server required)
+pytest tests/temporal/test_liara_workflows.py -k "not integration"
+
+# Integration tests (requires running Temporal server)
+pytest tests/temporal/test_liara_workflows.py -m integration
+```
+
+#### Examples
+
+See `examples/temporal/liara_crisis_example.py` for complete end-to-end demonstration.
+
+
 
 async def run_workflow():
     manager = TemporalClientManager()

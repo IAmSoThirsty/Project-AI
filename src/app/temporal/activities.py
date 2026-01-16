@@ -465,6 +465,222 @@ async def update_memory_indexes(conversation_id: str) -> bool:
     return True
 
 
+# Crisis Response Activities
+
+@activity.defn
+async def validate_crisis_request(request: dict) -> bool:
+    """
+    Validate crisis request parameters.
+
+    Args:
+        request: Crisis request dictionary with target and missions
+
+    Returns:
+        True if request is valid, False otherwise
+    """
+    activity.logger.info(f"Validating crisis request for target: {request.get('target_member')}")
+
+    # Validate target member
+    target = request.get("target_member")
+    if not target or len(target) < 3:
+        activity.logger.warning("Invalid target member")
+        return False
+
+    # Validate missions list
+    missions = request.get("missions", [])
+    if not missions or len(missions) == 0:
+        activity.logger.warning("No missions provided")
+        return False
+
+    # Validate each mission has required fields
+    for mission in missions:
+        if not all(key in mission for key in ["phase_id", "agent_id", "action", "target"]):
+            activity.logger.warning(f"Invalid mission structure: {mission}")
+            return False
+
+    activity.logger.info(f"Crisis request validated: {len(missions)} mission phases")
+    return True
+
+
+@activity.defn
+async def initialize_crisis_response(data: dict) -> bool:
+    """
+    Initialize crisis response tracking.
+
+    Args:
+        data: Dictionary with crisis_id and target
+
+    Returns:
+        True if initialized successfully
+    """
+    crisis_id = data.get("crisis_id")
+    target = data.get("target")
+
+    activity.logger.info(f"Initializing crisis response: {crisis_id} for target: {target}")
+
+    # Ensure data directory exists
+    crisis_path = Path("data/crises")
+    crisis_path.mkdir(parents=True, exist_ok=True)
+
+    # Create crisis record
+    crisis_file = crisis_path / f"{crisis_id}.json"
+    crisis_data = {
+        "crisis_id": crisis_id,
+        "target": target,
+        "status": "initiated",
+        "started_at": datetime.now().isoformat(),
+        "phases": [],
+    }
+
+    try:
+        with open(crisis_file, "w") as f:
+            json.dump(crisis_data, f, indent=2)
+        activity.logger.info(f"Crisis response initialized: {crisis_id}")
+        return True
+    except Exception as e:
+        activity.logger.error(f"Error initializing crisis: {e}")
+        return False
+
+
+@activity.defn
+async def perform_agent_mission(mission: dict) -> bool:
+    """
+    Execute agent mission deployment.
+
+    This activity represents the core agent deployment action.
+    In production, this would interface with actual agent systems.
+
+    Args:
+        mission: Mission phase dictionary with agent_id, action, target, etc.
+
+    Returns:
+        True if mission completed successfully
+    """
+    phase_id = mission.get("phase_id")
+    agent_id = mission.get("agent_id")
+    action = mission.get("action")
+    target = mission.get("target")
+
+    activity.logger.info(
+        f"AGENT DEPLOYMENT - Phase: {phase_id} | "
+        f"Agent: {agent_id} | Action: {action} | Target: {target}"
+    )
+
+    # Simulate agent mission execution
+    # In production, this would:
+    # - Deploy agent to execution environment
+    # - Execute mission-specific actions
+    # - Monitor agent progress
+    # - Handle agent-specific errors
+
+    activity.logger.info(
+        f"Agent {agent_id} deployed successfully for mission phase {phase_id}"
+    )
+
+    return True
+
+
+@activity.defn
+async def log_mission_phase(data: dict) -> bool:
+    """
+    Log mission phase completion or failure.
+
+    Args:
+        data: Dictionary with crisis_id, phase_id, status, and optional error
+
+    Returns:
+        True if logged successfully
+    """
+    crisis_id = data.get("crisis_id")
+    phase_id = data.get("phase_id")
+    status = data.get("status")
+    error = data.get("error")
+
+    activity.logger.info(
+        f"Logging mission phase: {phase_id} - Status: {status}"
+    )
+
+    # Load crisis record
+    crisis_file = Path("data/crises") / f"{crisis_id}.json"
+    if not crisis_file.exists():
+        activity.logger.warning(f"Crisis file not found: {crisis_id}")
+        return False
+
+    try:
+        with open(crisis_file) as f:
+            crisis_data = json.load(f)
+
+        # Add phase log entry
+        phase_log = {
+            "phase_id": phase_id,
+            "status": status,
+            "timestamp": datetime.now().isoformat(),
+        }
+        if error:
+            phase_log["error"] = error
+
+        crisis_data["phases"].append(phase_log)
+
+        # Save updated record
+        with open(crisis_file, "w") as f:
+            json.dump(crisis_data, f, indent=2)
+
+        activity.logger.info(f"Mission phase logged: {phase_id}")
+        return True
+    except Exception as e:
+        activity.logger.error(f"Error logging phase: {e}")
+        return False
+
+
+@activity.defn
+async def finalize_crisis_response(data: dict) -> bool:
+    """
+    Finalize crisis response and update status.
+
+    Args:
+        data: Dictionary with crisis_id, completed count, and failed count
+
+    Returns:
+        True if finalized successfully
+    """
+    crisis_id = data.get("crisis_id")
+    completed = data.get("completed", 0)
+    failed = data.get("failed", 0)
+
+    activity.logger.info(
+        f"Finalizing crisis response: {crisis_id} "
+        f"(Completed: {completed}, Failed: {failed})"
+    )
+
+    crisis_file = Path("data/crises") / f"{crisis_id}.json"
+    if not crisis_file.exists():
+        activity.logger.warning(f"Crisis file not found: {crisis_id}")
+        return False
+
+    try:
+        with open(crisis_file) as f:
+            crisis_data = json.load(f)
+
+        # Update crisis status
+        crisis_data["status"] = "completed" if failed == 0 else "partial_failure"
+        crisis_data["completed_at"] = datetime.now().isoformat()
+        crisis_data["summary"] = {
+            "completed_phases": completed,
+            "failed_phases": failed,
+            "total_phases": completed + failed,
+        }
+
+        # Save final record
+        with open(crisis_file, "w") as f:
+            json.dump(crisis_data, f, indent=2)
+
+        activity.logger.info(f"Crisis response finalized: {crisis_id}")
+        return True
+    except Exception as e:
+        activity.logger.error(f"Error finalizing crisis: {e}")
+        return False
+
+
 # Export all activities
 learning_activities = [
     validate_learning_content,
@@ -490,4 +706,12 @@ memory_activities = [
     extract_memory_information,
     store_memories,
     update_memory_indexes,
+]
+
+crisis_activities = [
+    validate_crisis_request,
+    initialize_crisis_response,
+    perform_agent_mission,
+    log_mission_phase,
+    finalize_crisis_response,
 ]
