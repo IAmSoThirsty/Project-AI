@@ -5,45 +5,60 @@
 
 ---
 
+<!-- 
+  BADGE POLICY: Only live, verifiable, and earned badges are shown below.
+  Commented-out badges can be enabled when their respective services/features are deployed.
+  All badge URLs are verified for the IAmSoThirsty/Project-AI repository.
+-->
+
 <div align="center">
 
-<img src="https://img.shields.io/github/actions/workflow/status/IAmSoThirsty/Project-AI/ci-consolidated.yml?branch=main&style=for-the-badge" alt="CI Status" height="34">
-<img src="https://codecov.io/gh/IAmSoThirsty/Project-AI/branch/main/graph/badge.svg?style=for-the-badge" alt="Coverage" height="34">
-<img src="https://img.shields.io/badge/tests-100%2B-green?logo=pytest&label=Test%20Coverage&style=for-the-badge" alt="Test Coverage" height="34">
-<img src="https://img.shields.io/github/last-commit/IAmSoThirsty/Project-AI?style=for-the-badge" alt="Last Commit" height="34">
-<img src="https://img.shields.io/github/license/IAmSoThirsty/Project-AI?style=for-the-badge" alt="License" height="34">
+<!-- Build & CI Status -->
+<img src="https://img.shields.io/github/actions/workflow/status/IAmSoThirsty/Project-AI/ci-consolidated.yml?branch=main&style=for-the-badge&logo=github-actions&logoColor=white" alt="CI Status" height="34">
+<img src="https://img.shields.io/github/actions/workflow/status/IAmSoThirsty/Project-AI/security-consolidated.yml?branch=main&style=for-the-badge&logo=github-actions&logoColor=white&label=security" alt="Security Workflow" height="34">
+<img src="https://img.shields.io/github/last-commit/IAmSoThirsty/Project-AI?style=for-the-badge&logo=github" alt="Last Commit" height="34">
 
-<img src="https://img.shields.io/github/security-advisories/IAmSoThirsty/Project-AI?style=for-the-badge" alt="Security Advisories" height="34">
-<img src="https://img.shields.io/badge/security-NIST%20AI%20RMF,%20OWASP%20LLM%20Top%2010-informational?logo=datadog&style=for-the-badge" alt="Compliance" height="34">
-<img src="https://img.shields.io/badge/security-bandit-informational?logo=python&style=for-the-badge" alt="Bandit Security" height="34">
-<img src="https://img.shields.io/badge/sbom-included-blueviolet?style=for-the-badge" alt="SBOM" height="34">
+<!-- License & Legal -->
+<img src="https://img.shields.io/github/license/IAmSoThirsty/Project-AI?style=for-the-badge" alt="License: MIT" height="34">
+<img src="https://img.shields.io/badge/code%20of%20conduct-contributor%20covenant-purple?style=for-the-badge" alt="Code of Conduct" height="34">
 
-<img src="https://img.shields.io/badge/python-3.10%2B-blue?logo=python&style=for-the-badge" alt="Python" height="34">
-<img src="https://img.shields.io/badge/javascript-ES2020+-yellow?logo=javascript&style=for-the-badge" alt="JavaScript" height="34">
-<img src="https://img.shields.io/badge/docker-ready-blue?logo=docker&style=for-the-badge" alt="Docker Ready" height="34">
-<img src="https://img.shields.io/badge/kubernetes-ready-blue?logo=kubernetes&style=for-the-badge" alt="Kubernetes Ready" height="34">
-<img src="https://img.shields.io/badge/api-live-0082c2?logo=flask&style=for-the-badge" alt="API" height="34">
-<img src="https://img.shields.io/badge/web%20frontend-beta-42a5f5?logo=react&style=for-the-badge" alt="Web Frontend" height="34">
+<!-- Language & Platform -->
+<img src="https://img.shields.io/badge/python-3.11%2B-blue?logo=python&logoColor=white&style=for-the-badge" alt="Python 3.11+" height="34">
+<img src="https://img.shields.io/badge/docker-ready-2496ED?logo=docker&logoColor=white&style=for-the-badge" alt="Docker Ready" height="34">
+<img src="https://img.shields.io/badge/PyQt6-UI-41CD52?logo=qt&logoColor=white&style=for-the-badge" alt="PyQt6" height="34">
 
-<img src="https://img.shields.io/badge/persona%20system-complete-9644fa?logo=python&style=for-the-badge" alt="Persona System" height="34">
-<img src="https://img.shields.io/badge/leather%20book%20UI-complete-8b4513?logo=book&style=for-the-badge" alt="Leather Book UI" height="34">
-<img src="https://img.shields.io/badge/black%20vault-secure-black?style=for-the-badge" alt="Black Vault" height="34">
-<img src="https://img.shields.io/badge/plugin%20system-stable-6f42c1?logo=plug&style=for-the-badge" alt="Plugin System" height="34">
-<img src="https://img.shields.io/badge/emergency%20alerts-enabled-ff1a1a?logo=alert&style=for-the-badge" alt="Emergency Alerts" height="34">
-<img src="https://img.shields.io/badge/ML%20models-live-33c59a?logo=scikit-learn&style=for-the-badge" alt="ML Models" height="34">
-<img src="https://img.shields.io/badge/neuromorphic-SNN-blueviolet?logo=numpy&style=for-the-badge" alt="Neuromorphic SNN" height="34">
-<img src="https://img.shields.io/badge/monitoring-Prometheus%2FGrafana-important?logo=prometheus&style=for-the-badge" alt="Prometheus Monitoring" height="34">
-<img src="https://img.shields.io/badge/web%20frontend-beta-42a5f5?logo=react&style=for-the-badge" alt="Web Frontend" height="34">
-<img src="https://img.shields.io/badge/threat%20detector-beta-db4437?logo=pytorch&style=for-the-badge" alt="Threat Detector" height="34">
-<img src="https://img.shields.io/badge/cloud%20sync-live-1e90ff?logo=cloud&style=for-the-badge" alt="Cloud Sync" height="34">
-<img src="https://img.shields.io/badge/3D%20viz-beta-5f9ea0?logo=unity&label=3D%20Visualization&style=for-the-badge" alt="3D Visualization" height="34">
-<img src="https://img.shields.io/badge/desktop%20shortcuts-stable-c0c0c0?logo=windows&style=for-the-badge" alt="Desktop Shortcuts" height="34">
+<!-- Security & Compliance -->
+<img src="https://img.shields.io/github/security-advisories/IAmSoThirsty/Project-AI?style=for-the-badge&logo=dependabot" alt="Security Advisories" height="34">
+<img src="https://img.shields.io/badge/security-bandit%20scanned-yellow?logo=python&logoColor=white&style=for-the-badge" alt="Bandit Security Scanning" height="34">
+<img src="https://img.shields.io/badge/dependency-automated-success?logo=dependabot&logoColor=white&style=for-the-badge" alt="Dependabot" height="34">
 
-<img src="https://img.shields.io/badge/contributors-3%2B-dc143c?style=for-the-badge" alt="Contributors" height="34">
-<img src="https://img.shields.io/github/stars/IAmSoThirsty/Project-AI?style=for-the-badge" alt="Stars" height="34">
-<img src="https://img.shields.io/github/issues/IAmSoThirsty/Project-AI?style=for-the-badge" alt="Issues" height="34">
-<img src="https://img.shields.io/badge/website-live-green?logo=githubpages&style=for-the-badge" alt="Website" height="34">
-<img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge" alt="MIT License" height="34">
+<!-- Community & Engagement -->
+<img src="https://img.shields.io/github/stars/IAmSoThirsty/Project-AI?style=for-the-badge&logo=github" alt="GitHub Stars" height="34">
+<img src="https://img.shields.io/github/issues/IAmSoThirsty/Project-AI?style=for-the-badge&logo=github" alt="Open Issues" height="34">
+<img src="https://img.shields.io/github/issues-pr/IAmSoThirsty/Project-AI?style=for-the-badge&logo=github" alt="Pull Requests" height="34">
+<img src="https://img.shields.io/github/forks/IAmSoThirsty/Project-AI?style=for-the-badge&logo=github" alt="Forks" height="34">
+
+<!-- Documentation & Website -->
+<img src="https://img.shields.io/badge/docs-github%20pages-blue?logo=github&logoColor=white&style=for-the-badge" alt="Documentation" height="34">
+<img src="https://img.shields.io/badge/contributing-welcome-brightgreen?style=for-the-badge" alt="Contributions Welcome" height="34">
+
+<!-- 
+  OPTIONAL BADGES - Enable when services are configured:
+  
+  PyPI Package (when published):
+  <img src="https://img.shields.io/pypi/v/project-ai?style=for-the-badge&logo=pypi&logoColor=white" alt="PyPI version" height="34">
+  <img src="https://img.shields.io/pypi/dm/project-ai?style=for-the-badge&logo=pypi&logoColor=white" alt="PyPI downloads" height="34">
+  
+  Docker Hub (when images published):
+  <img src="https://img.shields.io/docker/v/iamsothirsty/project-ai?style=for-the-badge&logo=docker&logoColor=white&label=docker%20hub" alt="Docker Hub" height="34">
+  <img src="https://img.shields.io/docker/pulls/iamsothirsty/project-ai?style=for-the-badge&logo=docker&logoColor=white" alt="Docker Pulls" height="34">
+  
+  Code Coverage (when Codecov configured):
+  <img src="https://img.shields.io/codecov/c/github/IAmSoThirsty/Project-AI?style=for-the-badge&logo=codecov&logoColor=white" alt="Code Coverage" height="34">
+  
+  REUSE Compliance (when implemented):
+  <img src="https://api.reuse.software/badge/github.com/IAmSoThirsty/Project-AI" alt="REUSE status" height="34">
+-->
 
 </div>
 
