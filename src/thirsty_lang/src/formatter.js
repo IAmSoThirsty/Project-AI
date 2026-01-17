@@ -46,8 +46,8 @@ class ThirstyFormatter {
       formatted.push(this.indent(indentLevel) + formattedLine);
 
       // Handle block start (future: for control structures)
-      if (line.startsWith('thirsty ') || line.startsWith('glass ') || 
-          line.startsWith('fountain ') || line.startsWith('refill ')) {
+      if (line.startsWith('thirsty ') || line.startsWith('glass ') ||
+        line.startsWith('fountain ') || line.startsWith('refill ')) {
         indentLevel++;
       }
     }
@@ -73,7 +73,7 @@ class ThirstyFormatter {
     // Format pour statements
     if (line.startsWith('pour ')) {
       const expr = line.substring(5).trim();
-      return `pour ${expr}`;
+      return "pour " + expr;
     }
 
     return line;
@@ -89,7 +89,7 @@ class ThirstyFormatter {
   formatFile(inputPath, outputPath = null) {
     const code = fs.readFileSync(inputPath, 'utf-8');
     const formatted = this.format(code);
-    
+
     if (outputPath) {
       fs.writeFileSync(outputPath, formatted);
       console.log(`✓ Formatted ${inputPath} -> ${outputPath}`);
@@ -120,7 +120,7 @@ function main() {
 
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
-    
+
     if (arg === '--indent-size') {
       options.indentSize = parseInt(args[++i]);
     } else if (arg === '--use-tabs') {
@@ -144,7 +144,7 @@ function main() {
   if (checkMode) {
     const code = fs.readFileSync(inputFile, 'utf-8');
     const formatted = formatter.format(code);
-    
+
     if (code === formatted) {
       console.log('✓ File is properly formatted');
       process.exit(0);

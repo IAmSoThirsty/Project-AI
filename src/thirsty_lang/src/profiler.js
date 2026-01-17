@@ -19,13 +19,13 @@ class ThirstyProfiler extends ThirstyInterpreter {
     this.startTime = process.hrtime.bigint();
     const startMemory = process.memoryUsage();
 
-    const lines = code.split('\n').map(line => line.trim()).filter(line => line && !line.startsWith('//'));
-    
+    const lines = code.split('\n').map(function (line) { return line.trim() }).filter(line => line && !line.startsWith('//'));
+
     for (let i = 0; i < lines.length; i++) {
       const lineStartTime = process.hrtime.bigint();
-      
+
       this.executeLine(lines[i]);
-      
+
       const lineEndTime = process.hrtime.bigint();
       const executionTime = Number(lineEndTime - lineStartTime) / 1000000; // Convert to ms
 
@@ -38,7 +38,7 @@ class ThirstyProfiler extends ThirstyInterpreter {
 
     const endTime = process.hrtime.bigint();
     const endMemory = process.memoryUsage();
-    
+
     this.totalTime = Number(endTime - this.startTime) / 1000000;
     this.memoryDelta = {
       heapUsed: endMemory.heapUsed - startMemory.heapUsed,
@@ -62,7 +62,7 @@ class ThirstyProfiler extends ThirstyInterpreter {
     console.log('\n🐌 Slowest Lines:');
     const sorted = [...this.executionTimes].sort((a, b) => b.time - a.time).slice(0, 5);
     sorted.forEach((item, index) => {
-      console.log(`   ${index + 1}. Line ${item.line}: ${item.time.toFixed(3)} ms`);
+      console.log("   " + index + 1 + ". Line " + item.line + ": " + item.time.toFixed(3) + " ms");
       console.log(`      ${item.code}`);
     });
 
@@ -100,7 +100,7 @@ function main() {
   }
 
   const filename = args[0];
-  
+
   if (!fs.existsSync(filename)) {
     console.error(`Error: File '${filename}' not found`);
     process.exit(1);
@@ -108,7 +108,7 @@ function main() {
 
   const code = fs.readFileSync(filename, 'utf-8');
   const profiler = new ThirstyProfiler();
-  
+
   console.log('⚡ Profiling execution...\n');
   profiler.execute(code);
   profiler.generateReport();

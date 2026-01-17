@@ -1,3 +1,5 @@
+/* eslint-env node */
+/* global require, module, console, process */
 /**
  * Thirsty-lang Package Manager
  * Manage dependencies and packages for your Thirsty projects!
@@ -47,17 +49,17 @@ class ThirstyPackageManager {
 
     if (packageName) {
       // Install specific package
-      console.log(`📥 Installing ${packageName}...`);
-      
+      console.log("ð¥ Installing " + packageName + "...");
+
       const deps = options.dev ? config.devDependencies : config.dependencies;
       deps[packageName] = options.version || 'latest';
-      
+
       fs.writeFileSync(this.configFile, JSON.stringify(config, null, 2));
       console.log(`✓ Added ${packageName} to ${options.dev ? 'devDependencies' : 'dependencies'}`);
     } else {
       // Install all dependencies
       console.log('📥 Installing all dependencies...');
-      
+
       if (!fs.existsSync(this.packagesDir)) {
         fs.mkdirSync(this.packagesDir);
       }
@@ -87,7 +89,7 @@ class ThirstyPackageManager {
     }
 
     const config = JSON.parse(fs.readFileSync(this.configFile, 'utf-8'));
-    
+
     let found = false;
     if (config.dependencies[packageName]) {
       delete config.dependencies[packageName];
@@ -113,7 +115,7 @@ class ThirstyPackageManager {
     }
 
     const config = JSON.parse(fs.readFileSync(this.configFile, 'utf-8'));
-    
+
     console.log(`\n📦 ${config.name}@${config.version}`);
     console.log('═'.repeat(60));
 
@@ -131,15 +133,15 @@ class ThirstyPackageManager {
       }
     }
 
-    if (Object.keys(config.dependencies).length === 0 && 
-        Object.keys(config.devDependencies).length === 0) {
+    if (Object.keys(config.dependencies).length === 0 &&
+      Object.keys(config.devDependencies).length === 0) {
       console.log('\n  No dependencies installed');
     }
   }
 
   search(query) {
     console.log(`🔍 Searching for "${query}"...`);
-    
+
     // Simulated package registry
     const packages = [
       { name: 'thirsty-http', description: 'HTTP server for Thirsty-lang', version: '1.0.0' },
@@ -149,7 +151,7 @@ class ThirstyPackageManager {
       { name: 'hydration-utils', description: 'Common utilities', version: '3.0.0' }
     ];
 
-    const results = packages.filter(pkg => 
+    const results = packages.filter(pkg =>
       pkg.name.includes(query) || pkg.description.toLowerCase().includes(query.toLowerCase())
     );
 
@@ -173,7 +175,7 @@ class ThirstyPackageManager {
     }
 
     const config = JSON.parse(fs.readFileSync(this.configFile, 'utf-8'));
-    
+
     console.log(`📤 Publishing ${config.name}@${config.version}...`);
     console.log('✓ Package published successfully!');
     console.log('\n📦 Your package is now available in the Thirsty registry!');
@@ -204,14 +206,15 @@ function main() {
     case 'init':
       pm.init(commandArgs[0]);
       break;
-    
+
     case 'install':
-    case 'i':
+    case 'i': {
       const isDev = commandArgs.includes('--save-dev') || commandArgs.includes('-D');
       const packageName = commandArgs.find(arg => !arg.startsWith('-'));
       pm.install(packageName, { dev: isDev });
       break;
-    
+    }
+
     case 'uninstall':
     case 'remove':
       if (commandArgs.length === 0) {
@@ -220,12 +223,12 @@ function main() {
         pm.uninstall(commandArgs[0]);
       }
       break;
-    
+
     case 'list':
     case 'ls':
       pm.list();
       break;
-    
+
     case 'search':
       if (commandArgs.length === 0) {
         console.log('Usage: thirsty-pkg search <query>');
@@ -233,11 +236,11 @@ function main() {
         pm.search(commandArgs[0]);
       }
       break;
-    
+
     case 'publish':
       pm.publish();
       break;
-    
+
     default:
       console.log(`Unknown command: ${command}`);
       console.log('Run "thirsty-pkg" for usage information');
