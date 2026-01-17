@@ -16,7 +16,7 @@ class ThirstyREPL {
     this.history = [];
     this.historyFile = path.join(process.env.HOME || process.env.USERPROFILE, '.thirsty_history');
     this.loadHistory();
-    
+
     this.rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout,
@@ -72,7 +72,7 @@ class ThirstyREPL {
     } else {
       console.log('\n📊 Current Variables:');
       for (const [name, value] of Object.entries(vars)) {
-        console.log(`  ${name} = ${JSON.stringify(value)}`);
+        console.log("  " + name + " = " + JSON.stringify(value));
       }
       console.log();
     }
@@ -96,12 +96,12 @@ class ThirstyREPL {
 
   async start() {
     this.showWelcome();
-    
+
     this.rl.prompt();
 
     this.rl.on('line', async (line) => {
       const input = line.trim();
-      
+
       if (!input) {
         this.rl.prompt();
         return;
@@ -129,9 +129,9 @@ class ThirstyREPL {
         };
 
         this.interpreter.executeLine(input);
-        
+
         console.log = oldLog;
-        
+
         if (output) {
           console.log(output);
         }
@@ -158,26 +158,26 @@ class ThirstyREPL {
       case '.help':
         this.showHelp();
         break;
-      
+
       case '.exit':
       case '.quit':
         this.rl.close();
         break;
-      
+
       case '.clear':
         this.interpreter.variables = {};
         console.log('✓ All variables cleared');
         break;
-      
+
       case '.vars':
       case '.variables':
         this.showVariables();
         break;
-      
+
       case '.history':
         this.showHistory();
         break;
-      
+
       case '.save':
         if (args.length === 0) {
           console.log('Usage: .save <filename>');
@@ -185,7 +185,7 @@ class ThirstyREPL {
           this.saveSession(args[0]);
         }
         break;
-      
+
       case '.load':
         if (args.length === 0) {
           console.log('Usage: .load <filename>');
@@ -193,20 +193,20 @@ class ThirstyREPL {
           this.loadFile(args[0]);
         }
         break;
-      
+
       case '.version':
         console.log('Thirsty-lang v1.0.0');
         console.log('Node.js ' + process.version);
         break;
-      
+
       case '.examples':
         this.showExamples();
         break;
-      
+
       case '.docs':
         console.log('\n📖 Documentation: https://github.com/IAmSoThirsty/Thirsty-lang/blob/main/docs/');
         break;
-      
+
       default:
         console.log(`Unknown command: ${command}`);
         console.log('Type .help for available commands');

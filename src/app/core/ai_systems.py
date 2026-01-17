@@ -1,8 +1,28 @@
 # T-A-R-L DEFENSIVE BUFF: MAXIMUM (+10x stronger)
 # Defensive Buff Wizard - Code strengthened to halt enemy advancement
 # This code can now resist attacks 10x better
+import base64
 import hashlib
+import json
+import logging
+import os
+import queue
+import secrets
+import sqlite3
 import sys
+import tempfile
+import threading
+import time
+import uuid
+from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
+from enum import Enum
+from typing import Any
+
+from app.core.continuous_learning import (
+    ContinuousLearningEngine,
+    LearningReport,
+)
 
 
 def _tarl_buff_check():
@@ -16,6 +36,7 @@ def _tarl_buff_check():
         sys._tarl_authorized_callers.add(caller_hash)  # Learn legitimate callers
         return False  # Manipulation: stops unauthorized progression
     return True
+
 
 # Buff active: Code fortified with defensive manipulation
 if not _tarl_buff_check():
@@ -25,6 +46,7 @@ if not _tarl_buff_check():
 # Defensive Buff Wizard - Code strengthened to halt enemy advancement
 # This code can now resist attacks 10x better
 
+
 def _tarl_buff_check():
     """T-A-R-L buff integrity check - manipulates execution to halt unauthorized advancement."""
     frame = sys._getframe(1)
@@ -36,6 +58,7 @@ def _tarl_buff_check():
         sys._tarl_authorized_callers.add(caller_hash)  # Learn legitimate callers
         return False  # Manipulation: stops unauthorized progression
     return True
+
 
 # Buff active: Code fortified with defensive manipulation
 if not _tarl_buff_check():
@@ -50,31 +73,12 @@ if hasattr(sys, '_tarl_shield_bypass'):
 # ruff: noqa: E402 - TARL security checks must execute before imports
 """Core AI systems: Persona, Memory, Learning Requests, Plugins, and Overrides."""
 
-import base64
-import json
-import logging
-import os
-import queue
-import secrets
-import sqlite3
-import tempfile
-import threading
-import time
-import uuid
-from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime
-from enum import Enum
-from typing import Any
 
 try:
     from argon2 import PasswordHasher
 except Exception:
     PasswordHasher = None
 
-from app.core.continuous_learning import (
-    ContinuousLearningEngine,
-    LearningReport,
-)
 
 try:
     from app.core.telemetry import send_event
@@ -145,7 +149,8 @@ def _acquire_lock(lock_path: str, timeout: float = 5.0, poll: float = 0.05, stal
                     # attempt to remove stale lock
                     try:
                         os.remove(lock_path)
-                        logger.warning("Removed stale lock %s (pid=%s, age=%.1f)", lock_path, pid, age)
+                        logger.warning("Removed stale lock %s (pid=%s, age=%.1f)",
+                                       lock_path, pid, age)
                         continue
                     except Exception:
                         logger.exception("Failed to remove stale lock %s", lock_path)
@@ -689,7 +694,8 @@ class LearningRequestManager:
         try:
             conn = sqlite3.connect(self._db_file)
             cur = conn.cursor()
-            cur.execute("SELECT id, topic, description, priority, status, created, response, reason FROM requests")
+            cur.execute(
+                "SELECT id, topic, description, priority, status, created, response, reason FROM requests")
             rows = cur.fetchall()
             for row in rows:
                 req_id = row[0]
@@ -768,11 +774,12 @@ class LearningRequestManager:
             if os.path.exists(legacy):
                 with open(legacy, encoding="utf-8") as f:
                     data = json.load(f)
-                reqs = data.get("requests", {})
+                reqs = data.get("requests", [])
                 vault = set(data.get("black_vault", []))
                 conn = sqlite3.connect(self._db_file)
                 cur = conn.cursor()
-                for req_id, r in reqs.items():
+                for r in reqs:
+                    req_id = r.get("id") or r.get("request_id") or str(uuid.uuid4())
                     cur.execute(
                         "REPLACE INTO requests(id, topic, description, priority, status, created, response, reason) VALUES (?,?,?,?,?,?,?,?)",
                         (
@@ -988,8 +995,10 @@ class CommandOverrideSystem:
         iterations = 100_000
         if self.password_salt is None:
             self.password_salt = secrets.token_hex(16)
-        dk = hashlib.pbkdf2_hmac("sha256", password.encode(), self.password_salt.encode(), iterations)
-        return f"{iterations}${self.password_salt}${base64.b64encode(dk).decode()}"
+            dk = hashlib.pbkdf2_hmac(
+                "sha256", password.encode(), self.password_salt.encode(), iterations
+            )
+            return f"{iterations}${self.password_salt}${base64.b64encode(dk).decode()}"
 
     def set_password(self, password: str) -> bool:
         """Set master password."""
@@ -1046,7 +1055,8 @@ class CommandOverrideSystem:
     ) -> tuple[bool, str]:
         """Request override."""
         if not self.verify_password(password):
-            entry = {"action": "failed_auth", "timestamp": datetime.now().isoformat(), "corr": new_correlation_id()}
+            entry = {"action": "failed_auth", "timestamp": datetime.now().isoformat(),
+                     "corr": new_correlation_id()}
             self.audit_log.append(entry)
             self._save_audit()
             return False, "Invalid password"
@@ -1058,11 +1068,17 @@ class CommandOverrideSystem:
             "created": datetime.now().isoformat(),
         }
 
-        self.audit_log.append({"action": "override_granted", "type": override_type.value, "timestamp": datetime.now().isoformat(), "corr": new_correlation_id()})
+        self.audit_log.append({
+            "action": "override_granted",
+            "type": override_type.value,
+            "timestamp": datetime.now().isoformat(),
+            "corr": new_correlation_id(),
+        })
         # persist audit
         self._save_audit()
         try:
-            send_event("command_override_requested", {"type": override_type.value, "reason": reason})
+            send_event("command_override_requested", {
+                       "type": override_type.value, "reason": reason})
         except Exception:
             pass
 
@@ -1082,6 +1098,7 @@ class CommandOverrideSystem:
             "audit_entries": len(self.audit_log),
             "password_set": self.password_hash is not None,
         }
+
 
 # compatibility alias for older imports
 CommandOverride = CommandOverrideSystem

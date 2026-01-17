@@ -67,8 +67,8 @@ class SecurityPolicyEngine {
 
       // Response actions
       responses: {
-        log: (threat) => this.logThreat(threat),
-        warn: (threat) => this.warnThreat(threat),
+        log: function (threat) { return this.logThreat(threat) }.bind(this),
+        warn: function (threat) { return this.warnThreat(threat) }.bind(this),
         block: (threat) => this.blockThreat(threat),
         counterstrike: (threat) => this.counterStrike(threat)
       }
@@ -101,7 +101,7 @@ class SecurityPolicyEngine {
 
     return {
       original: input,
-      sanitized,
+      sanitized: sanitized,
       modified: input !== sanitized,
       policy: sanitizationLevel
     };
@@ -119,10 +119,10 @@ class SecurityPolicyEngine {
    */
   standardSanitize(input) {
     let sanitized = this.basicSanitize(input);
-    
+
     // Remove null bytes
     sanitized = sanitized.replace(/\0/g, '');
-    
+
     // Escape HTML special characters
     sanitized = sanitized
       .replace(/&/g, '&amp;')
@@ -141,7 +141,7 @@ class SecurityPolicyEngine {
     let sanitized = this.standardSanitize(input);
 
     // Remove all blocked patterns
-    this.policies.validation.blockedPatterns.forEach(pattern => {
+    for (const pattern of this.policies.validation.blockedPatterns) {
       sanitized = sanitized.replace(pattern, '');
     });
 
@@ -186,13 +186,13 @@ class SecurityPolicyEngine {
   logThreat(threat) {
     const response = {
       action: 'log',
-      threat,
+      threat: threat,
       timestamp: Date.now(),
       securityLevel: this.securityLevel
     };
 
     this.responseLog.push(response);
-    
+
     return { ...response, blocked: false };
   }
 
@@ -209,7 +209,7 @@ class SecurityPolicyEngine {
     };
 
     this.responseLog.push(response);
-    
+
     return { ...response, blocked: false };
   }
 
@@ -222,11 +222,11 @@ class SecurityPolicyEngine {
       threat,
       timestamp: Date.now(),
       securityLevel: this.securityLevel,
-      message: `Access denied: ${threat.attack} blocked`
+      message: "Access denied: " + threat.attack + " blocked"
     };
 
     this.responseLog.push(response);
-    
+
     throw new Error(response.message);
   }
 
@@ -249,7 +249,7 @@ class SecurityPolicyEngine {
     response.countermeasures.push(this.launchCounterExploit(threat));
 
     this.responseLog.push(response);
-    
+
     throw new Error(`Security breach detected and countered: ${threat.attack}`);
   }
 

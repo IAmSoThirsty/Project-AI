@@ -1,6 +1,6 @@
 /**
  * Project-AI Web SPA - Main Application Entry Point
- * 
+ *
  * This file provides the foundation for a React-like SPA experience
  * with component-based architecture and state management.
  */
@@ -75,7 +75,7 @@ class StatusComponent extends Component {
       const data = await response.json();
       this.setState({
         status: 'online',
-        message: `${data.component} is ${data.status}`,
+        message: "" + data.component + " is " + data.status,
       });
       AppState.isOnline = true;
     } catch (error) {
@@ -95,7 +95,7 @@ class StatusComponent extends Component {
 
   render() {
     if (!this.element) return;
-    
+
     const statusClass = this.state.status === 'online' ? 'status online' : 'status offline';
     this.element.className = statusClass;
     this.element.textContent = this.state.message;
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Register components
   const statusComponent = new StatusComponent();
   registry.register('status', statusComponent);
-  
+
   // Mount components
   const statusEl = document.getElementById('status');
   if (statusEl) {
