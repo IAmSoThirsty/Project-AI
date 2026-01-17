@@ -43,7 +43,6 @@
 <img src="https://img.shields.io/badge/ML%20models-live-33c59a?logo=scikit-learn&style=for-the-badge" alt="ML Models" height="34">
 <img src="https://img.shields.io/badge/neuromorphic-SNN-blueviolet?logo=numpy&style=for-the-badge" alt="Neuromorphic SNN" height="34">
 <img src="https://img.shields.io/badge/monitoring-Prometheus%2FGrafana-important?logo=prometheus&style=for-the-badge" alt="Prometheus Monitoring" height="34">
-<img src="https://img.shields.io/badge/web%20frontend-beta-42a5f5?logo=react&style=for-the-badge" alt="Web Frontend" height="34">
 <img src="https://img.shields.io/badge/threat%20detector-beta-db4437?logo=pytorch&style=for-the-badge" alt="Threat Detector" height="34">
 <img src="https://img.shields.io/badge/cloud%20sync-live-1e90ff?logo=cloud&style=for-the-badge" alt="Cloud Sync" height="34">
 <img src="https://img.shields.io/badge/3D%20viz-beta-5f9ea0?logo=unity&label=3D%20Visualization&style=for-the-badge" alt="3D Visualization" height="34">
