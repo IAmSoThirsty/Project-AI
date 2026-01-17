@@ -40,7 +40,7 @@
 
 <!-- Documentation & Website -->
 <img src="https://img.shields.io/badge/docs-github%20pages-blue?logo=github&logoColor=white&style=for-the-badge" alt="Documentation" height="34">
-<img src="https://img.shields.io/badge/contributing-welcome-brightgreen?style=for-the-badge" alt="Contributions Welcome" height="34">
+<img src="https://img.shields.io/github/contributors/IAmSoThirsty/Project-AI?style=for-the-badge&logo=github" alt="Contributors" height="34">
 
 <!-- 
   OPTIONAL BADGES - Enable when services are configured:
