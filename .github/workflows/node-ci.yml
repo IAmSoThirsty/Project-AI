@@ -30,12 +30,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-          if [ -f package-lock.json ]; then
-            npm ci
-          else
-            echo "No package-lock.json found, falling back to npm install"
-            npm install
+          if [ ! -f package-lock.json ]; then
+            echo "Error: package-lock.json not found. Failing CI to avoid non-deterministic npm installs."
+            exit 1
           fi
+          npm ci
 
       - name: Detect JS test files
         id: detect_js_tests
@@ -62,7 +61,7 @@ jobs:
 
       - name: No JS tests found
         if: steps.detect_js_tests.outputs.found == '0'
-        run: echo "No JS test files found in src/ — skipping JS tests."
+        run: echo "No JS test files found — skipping JS tests."
 
       - name: Run tests with coverage (if available)
         run: |
@@ -127,10 +126,10 @@ jobs:
 
           # Install project dependencies
           if [ -f requirements.txt ]; then
-            pip install -r requirements.txt || echo "Warning: Some requirements failed to install"
+            pip install -r requirements.txt
           fi
           if [ -f setup.py ]; then
-            pip install -e . || echo "Warning: Setup.py install failed"
+            pip install -e .
           fi
 
       - name: Run flake8

@@ -4,8 +4,8 @@
   "description": "Comprehensive AI assistant with advanced features",
   "main": "src/app/main.py",
   "scripts": {
-    "test": "node --test",
-    "test:js": "node --test src/**/*.test.js",
+    "test": "node --test src",
+    "test:js": "node --test src",
     "lint": "ruff check .",
     "format": "ruff check . --fix",
     "dev": "docker-compose up",
