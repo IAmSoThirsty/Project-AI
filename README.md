@@ -5,6 +5,12 @@
 
 ---
 
+<!-- 
+  Badge Section: Displays both live/active badges and aspirational badges for future integrations.
+  Users should validate live status of aspirational badges after each new release, registry setup, or service integration.
+  Aspirational badges marked below are for: PyPI (package publishing), DockerHub (image registry), and REUSE (license compliance).
+-->
+
 <div align="center">
 
 <img src="https://img.shields.io/github/actions/workflow/status/IAmSoThirsty/Project-AI/ci-consolidated.yml?branch=main&style=for-the-badge" alt="CI Status" height="34">
@@ -12,14 +18,18 @@
 <img src="https://img.shields.io/badge/tests-100%2B-green?logo=pytest&label=Test%20Coverage&style=for-the-badge" alt="Test Coverage" height="34">
 <img src="https://img.shields.io/github/last-commit/IAmSoThirsty/Project-AI?style=for-the-badge" alt="Last Commit" height="34">
 <img src="https://img.shields.io/github/license/IAmSoThirsty/Project-AI?style=for-the-badge" alt="License" height="34">
+<img src="https://img.shields.io/pypi/v/project-ai?style=for-the-badge&logo=pypi&logoColor=white" alt="PyPI Version" height="34">
+<img src="https://img.shields.io/docker/v/iamsothirsty/project-ai?style=for-the-badge&logo=docker&logoColor=white&label=docker" alt="Docker Image" height="34">
 
 <img src="https://img.shields.io/github/security-advisories/IAmSoThirsty/Project-AI?style=for-the-badge" alt="Security Advisories" height="34">
 <img src="https://img.shields.io/badge/security-NIST%20AI%20RMF,%20OWASP%20LLM%20Top%2010-informational?logo=datadog&style=for-the-badge" alt="Compliance" height="34">
 <img src="https://img.shields.io/badge/security-bandit-informational?logo=python&style=for-the-badge" alt="Bandit Security" height="34">
 <img src="https://img.shields.io/badge/sbom-included-blueviolet?style=for-the-badge" alt="SBOM" height="34">
+<img src="https://api.reuse.software/badge/github.com/IAmSoThirsty/Project-AI" alt="REUSE Compliance" height="34">
 
 <img src="https://img.shields.io/badge/python-3.10%2B-blue?logo=python&style=for-the-badge" alt="Python" height="34">
 <img src="https://img.shields.io/badge/javascript-ES2020+-yellow?logo=javascript&style=for-the-badge" alt="JavaScript" height="34">
+<img src="https://img.shields.io/badge/CLI-Typer-orange?logo=gnometerminal&style=for-the-badge" alt="Typer CLI" height="34">
 <img src="https://img.shields.io/badge/docker-ready-blue?logo=docker&style=for-the-badge" alt="Docker Ready" height="34">
 <img src="https://img.shields.io/badge/kubernetes-ready-blue?logo=kubernetes&style=for-the-badge" alt="Kubernetes Ready" height="34">
 <img src="https://img.shields.io/badge/api-live-0082c2?logo=flask&style=for-the-badge" alt="API" height="34">
