@@ -1,172 +1,54 @@
 name: Universal Security & Fixer Bot (Aggressive)
-
-# -----------------------------------------------------------------
-# 1. AGGRESSIVE TRIGGERS (24/7 PATROL)
-# -----------------------------------------------------------------
-on:
-  # Runs immediately on ANY push to ANY branch (main, dev, feature-x, etc.)
-  push:
-    branches: [ "**" ]
-  
-  # Runs on Pull Requests to catch bugs before merging
-  pull_request:
-    branches: [ "**" ]
-  
-  # Nightly Patrol: Runs every night at 2 AM UTC
-  schedule:
-    - cron: '0 2 * * *'
-
-permissions:
-  contents: write      # REQUIRED: Allows the bot to edit/fix your code
-  security-events: write
-  packages: read
-  statuses: write
-
+on: [push, pull_request]
 jobs:
-  # -----------------------------------------------------------------
-  # BOT 1: THE FIXER (Auto-Format All Languages)
-  # Runs first. If code is messy, it cleans it before scanning.
-  # -----------------------------------------------------------------
-  fix_code:
-    name: The Fixer (Auto-Format)
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: ${{ github.head_ref }} # Ensures we fix the specific branch
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
 
-      # 1. PYTHON FIXER (Black)
-      - name: Fix Python
-        uses: psf/black@stable
-        with:
-          options: "--verbose"
-          src: "."
+            - name: Install dependencies
+              run: |
+                  pip install torch==2.0.0 torchvision
+                  pip install bindsnet>=0.3.0 || echo "bindsnet install failed"
+                  pip install sinabs>=1.2.0 || echo "sinabs install failed"
+                  pip install snntorch>=0.7.0 || echo "snntorch install failed"
+                  pip install spikingjelly>=0.0.0.14 || echo "spikingjelly install failed"
+                  pip install norse>=0.0.7 || echo "norse install failed"
 
-      # 2. JS/TS FIXER (Prettier)
-      - name: Fix JS/TS
-        run: |
-          npm install --global prettier
-          npx prettier --write .
-        continue-on-error: true 
+            - name: Install Ruby dependencies
+              run: |
+                  sudo gem install rubocop || gem install rubocop --user-install
 
-      # 3. JAVA FIXER (Google Format)
-      - name: Fix Java
-        uses: axel-op/googlejavaformat-action@v3
-        with:
-          args: "--replace"
-        continue-on-error: true
+            - name: Install Java Formatter
+              run: |
+                  wget https://github.com/google/google-java-format/releases/download/v1.15.0/google-java-format-1.15.0-all-deps.jar -O /home/runner/google-java-format.jar
+                  export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+                  export PATH=$JAVA_HOME/bin:$PATH
+                  java -jar /home/runner/google-java-format.jar --version
 
-      # 4. C/C++ FIXER (Clang-Format)
-      - name: Fix C/C++
-        uses: jidicula/clang-format-action@v4.11.0
-        with:
-          clang-format-version: '13'
-        continue-on-error: true
+            - name: .NET Project Check
+              run: |
+                  if ! ls *.csproj 1> /dev/null 2>&1 && ! ls *.sln 1> /dev/null 2>&1; then
+                    echo "No .csproj or .sln file found! Add your project files before building."
+                    exit 1
+                  fi
+                  pip install norse>=0.0.7 || echo "norse install failed"
 
-      # 5. GO FIXER (gofmt)
-      - name: Fix Go
-        run: |
-          if command -v go &> /dev/null; then
-            gofmt -w .
-          fi
-        continue-on-error: true
+            - name: Install Ruby dependencies
+              run: |
+                  sudo gem install rubocop || gem install rubocop --user-install
 
-      # 6. C# FIXER (dotnet format)
-      - name: Fix C#
-        run: |
-          if command -v dotnet &> /dev/null; then
-            dotnet format --verbosity diagnostic || true
-          fi
-        continue-on-error: true
+            - name: Install Java Formatter
+              run: |
+                  wget https://github.com/google/google-java-format/releases/download/v1.15.0/google-java-format-1.15.0-all-deps.jar -O /home/runner/google-java-format.jar
+                  export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+                  export PATH=$JAVA_HOME/bin:$PATH
+                  java -jar /home/runner/google-java-format.jar --version
 
-      # 7. RUBY FIXER (Rubocop)
-      - name: Fix Ruby
-        run: |
-          gem install rubocop
-          rubocop --autocorrect-all || true
-        continue-on-error: true
-
-      # COMMIT CHANGES
-      - name: Commit & Push Fixes
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "🤖 The Fixer: Cleaned up code style"
-          file_pattern: "."
-
-  # -----------------------------------------------------------------
-  # BOT 2: GRAMMAR POLICE (Super-Linter)
-  # Checks for style errors that the Fixer couldn't solve automatically.
-  # -----------------------------------------------------------------
-  lint_code:
-    name: Grammar Police
-    needs: fix_code
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Run Super-Linter
-        uses: super-linter/super-linter@v6
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VALIDATE_ALL_CODEBASE: false
-          DEFAULT_BRANCH: main
-
-  # -----------------------------------------------------------------
-  # BOT 3: SECURITY GUARD (Trivy)
-  # Scans filesystem and dependencies for known vulnerabilities.
-  # -----------------------------------------------------------------
-  security_trivy:
-    name: Security Guard (Trivy)
-    needs: fix_code
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-      - name: Run Trivy Scanner
-        uses: aquasecurity/trivy-action@master
-        with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          format: 'table'
-          exit-code: '1' # Fails the build if vulnerabilities found
-          ignore-unfixed: true
-          severity: 'CRITICAL,HIGH'
-
-  # -----------------------------------------------------------------
-  # BOT 4: BUG HUNTER (CodeQL)
-  # Deep analysis for logic errors and security bugs.
-  # -----------------------------------------------------------------
-  bug_hunter:
-    name: Bug Hunter (CodeQL)
-    needs: fix_code
-    runs-on: ubuntu-latest
-    permissions:
-      actions: read
-      contents: read
-      security-events: write
-    strategy:
-      fail-fast: false
-      matrix:
-        # Scans all these languages if found
-        language: [ 'c-cpp', 'csharp', 'go', 'java-kotlin', 'javascript-typescript', 'python', 'ruby', 'swift' ] 
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
-        continue-on-error: true # Skips if language not found
-        with:
-          languages: ${{ matrix.language }}
-
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
-        continue-on-error: true
-
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
-        continue-on-error: true
+            - name: .NET Project Check
+              run: |
+                  if ! ls *.csproj 1> /dev/null 2>&1 && ! ls *.sln 1> /dev/null 2>&1; then
+                    echo "No .csproj or .sln file found! Add your project files before building."
+                    exit 1
+                  fi

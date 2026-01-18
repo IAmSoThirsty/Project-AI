@@ -1,0 +1,54 @@
+# Temporal Dynamic Configuration for Development
+# This file contains runtime configuration for Temporal server
+
+# Frontend service configuration
+frontend.enableClientVersionCheck:
+  - value: true
+    constraints: {}
+
+# History service configuration
+history.persistenceMaxQPS:
+  - value: 3000
+    constraints: {}
+
+# Matching service configuration
+matching.numTaskqueueReadPartitions:
+  - value: 5
+    constraints: {}
+
+matching.numTaskqueueWritePartitions:
+  - value: 5
+    constraints: {}
+
+# Worker service configuration
+worker.enableReplicator:
+  - value: false
+    constraints: {}
+
+# Namespace cache settings
+system.namespaceRefreshRate:
+  - value: 10s
+    constraints: {}
+
+# Activity and workflow limits
+limit.maxIDLength:
+  - value: 255
+    constraints: {}
+
+limit.blobSizeLimitError:
+  - value: 2097152  # 2MB
+    constraints: {}
+
+limit.blobSizeLimitWarn:
+  - value: 1048576  # 1MB
+    constraints: {}
+
+# Retention settings
+retention.retentionDays:
+  - value: 7
+    constraints: {}
+
+# Search attributes
+frontend.enableServerVersionCheck:
+  - value: true
+    constraints: {}

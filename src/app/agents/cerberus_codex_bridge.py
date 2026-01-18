@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 class CerberusCodexBridge:
     """Bridge between Cerberus threat detection and Codex defense implementation.
-    
+
     When Cerberus detects threats, this bridge:
     1. Analyzes threat patterns for defensive opportunities
     2. Alerts Codex of potential security upgrades
@@ -42,11 +42,11 @@ class CerberusCodexBridge:
         cerberus_response: dict[str, Any]
     ) -> dict[str, Any]:
         """Process active threat engagement from Cerberus.
-        
+
         Args:
             threat_data: Information about the detected threat
             cerberus_response: Cerberus's analysis and response
-            
+
         Returns:
             Dictionary with analysis results and recommended upgrades
         """
@@ -87,7 +87,7 @@ class CerberusCodexBridge:
         cerberus_response: dict[str, Any]
     ) -> list[dict[str, Any]]:
         """Identify defense upgrade opportunities from threat patterns.
-        
+
         Analyzes threats to determine what defensive measures could be improved.
         """
         opportunities = []
@@ -190,11 +190,11 @@ class CerberusCodexBridge:
         codex_instance: Any = None
     ) -> dict[str, Any]:
         """Called by Codex to implement approved defense upgrades.
-        
+
         Args:
             upgrade_spec: Specification of the upgrade to implement
             codex_instance: Instance of CodexDeusMaximus (optional)
-            
+
         Returns:
             Implementation result with status and details
         """

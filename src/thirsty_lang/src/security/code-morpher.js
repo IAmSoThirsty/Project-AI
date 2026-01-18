@@ -19,21 +19,21 @@ class CodeMorpher {
     return {
       // Identifier obfuscation
       identifierMorphing: true,
-      
+
       // Control flow obfuscation
       controlFlowFlattening: true,
       opaquePredicates: true,
-      
+
       // String obfuscation
       stringEncryption: true,
       stringArray: true,
-      
+
       // Dead code injection
       deadCodeInjection: true,
-      
+
       // Code virtualization
       codeVirtualization: false, // Advanced feature
-      
+
       // Anti-debugging
       antiDebugChecks: true,
       selfModifyingCode: true
@@ -73,7 +73,7 @@ class CodeMorpher {
       timestamp: Date.now(),
       originalLength: code.length,
       morphedLength: morphedCode.length,
-      techniques: Object.keys(morphOptions).filter(k => morphOptions[k])
+      techniques: Object.keys(morphOptions).filter(function (k) { return morphOptions[k] })
     });
 
     return morphedCode;
@@ -88,7 +88,7 @@ class CodeMorpher {
 
     // Find all identifiers (simplified pattern)
     const identifierPattern = /\b(drink|glass)\s+([a-zA-Z_][a-zA-Z0-9_]*)/g;
-    
+
     let match;
     while ((match = identifierPattern.exec(code)) !== null) {
       const identifier = match[2];
@@ -99,7 +99,7 @@ class CodeMorpher {
 
     // Replace identifiers
     let morphedCode = code;
-    identifierMap.forEach((obfuscated, original) => {
+    for (const [original, obfuscated] of identifierMap.entries()) {
       const regex = new RegExp(`\\b${original}\\b`, 'g');
       morphedCode = morphedCode.replace(regex, obfuscated);
     });
@@ -113,20 +113,20 @@ class CodeMorpher {
   generateObfuscatedName(index) {
     const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const confusingChars = ['O0', 'I1', 'l1', 'S5', 'Z2'];
-    
+
     let name = '_';
     let num = index;
-    
+
     // Generate confusing identifier
     while (num >= 0) {
       name += chars[num % chars.length];
       num = Math.floor(num / chars.length) - 1;
     }
-    
+
     // Add confusing characters
     const confusing = confusingChars[index % confusingChars.length];
     name += confusing;
-    
+
     return name;
   }
 
@@ -136,7 +136,7 @@ class CodeMorpher {
   encryptStrings(code) {
     const stringPattern = /(["'])(?:(?=(\\?))\2.)*?\1/g;
     const strings = [];
-    
+
     // Extract strings
     let match;
     while ((match = stringPattern.exec(code)) !== null) {
@@ -145,7 +145,7 @@ class CodeMorpher {
 
     // Replace with encrypted versions
     let morphedCode = code;
-    strings.forEach((str, index) => {
+    for (const [index, str] of strings.entries()) {
       const encrypted = this.encryptString(str.slice(1, -1));
       const quote = str[0];
       const decryptCall = `_decrypt${index}(${quote}${encrypted}${quote})`;
@@ -270,7 +270,7 @@ const _timing = Date.now();
     const lines = code.split('\n');
     const commentLines = lines.filter(l => l.trim().startsWith('//'));
     const nonCommentLines = lines.filter(l => !l.trim().startsWith('//'));
-    
+
     return [...commentLines.reverse(), ...nonCommentLines].join('\n');
   }
 
@@ -301,13 +301,13 @@ const _timing = Date.now();
   substituteOperators(code) {
     // Replace simple operators with complex equivalents
     let morphed = code;
-    
+
     // Example: x + 1 => x - (-1)
     morphed = morphed.replace(/\+\s*1(?!\d)/g, '- (-1)');
-    
+
     // Example: x * 2 => x << 1
     morphed = morphed.replace(/\*\s*2(?!\d)/g, '<< 1');
-    
+
     return morphed;
   }
 
@@ -316,7 +316,7 @@ const _timing = Date.now();
    */
   generateSelfModifyingWrapper(code) {
     const encoded = Buffer.from(code).toString('base64');
-    
+
     return `
 // Self-modifying code wrapper
 (function() {
@@ -333,7 +333,7 @@ const _timing = Date.now();
   getMorphStats() {
     return {
       totalMorphs: this.morphHistory.length,
-      avgSizeIncrease: this.morphHistory.reduce((acc, m) => 
+      avgSizeIncrease: this.morphHistory.reduce((acc, m) =>
         acc + (m.morphedLength - m.originalLength), 0) / this.morphHistory.length || 0,
       techniques: this.obfuscationTechniques
     };

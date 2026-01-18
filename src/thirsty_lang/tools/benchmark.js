@@ -1,3 +1,5 @@
+/* eslint-env node */
+/* global require, module, console, process */
 /**
  * Thirsty-lang Benchmark Tool
  * Compare performance across different implementations and optimizations
@@ -50,7 +52,7 @@ class ThirstyBenchmark {
 
     console.log(`   ✓ Average: ${avg.toFixed(3)} ms`);
     console.log(`   ✓ Min: ${min.toFixed(3)} ms`);
-    console.log(`   ✓ Max: ${max.toFixed(3)} ms`);
+    console.log("   ✓ Max: " + max.toFixed(3) + " ms");
     console.log(`   ✓ Median: ${median.toFixed(3)} ms`);
 
     return result;

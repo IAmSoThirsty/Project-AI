@@ -85,6 +85,14 @@ secret_scan_report.json
 .idea/
 .vs/
 
+# Secrets and credentials (additional security)
+*.key
+*.pem
+*.p12
+secrets.json
+credentials.json
+secret_scan_report.json
+
 # OS
 .DS_Store
 Thumbs.db
@@ -111,3 +119,8 @@ out/
 captures/
 .externalNativeBuild
 .cxx
+
+# Temporal.io
+.env.temporal
+config/temporal/*.local
+data/temporal/

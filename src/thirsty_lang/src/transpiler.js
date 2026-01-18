@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+
 
 /**
  * Thirsty-lang Transpiler
@@ -15,7 +15,7 @@ class ThirstyTranspiler {
 
   transpile(code) {
     this.output = [];
-    
+
     const lines = code.split('\n')
       .map(line => line.trim())
       .filter(line => line);
@@ -54,16 +54,16 @@ class ThirstyTranspiler {
   transpileVariableDeclaration(name, value) {
     switch (this.target) {
       case 'javascript':
-        this.output.push(`const ${name} = ${value};`);
+        this.output.push("const " + name + " = " + value + ";");
         break;
       case 'python':
-        this.output.push(`${name} = ${value}`);
+        this.output.push("" + name + " = " + value);
         break;
       case 'go':
         // Determine type
         const isString = value.startsWith('"') || value.startsWith("'");
         const type = isString ? 'string' : 'float64';
-        this.output.push(`var ${name} ${type} = ${value}`);
+        this.output.push("var " + name + " " + type + " = " + value);
         break;
       case 'rust':
         this.output.push(`let ${name} = ${value};`);
@@ -81,7 +81,7 @@ class ThirstyTranspiler {
   transpileOutput(expr) {
     switch (this.target) {
       case 'javascript':
-        this.output.push(`console.log(${expr});`);
+        this.output.push("console.log(" + expr + ");");
         break;
       case 'python':
         this.output.push(`print(${expr})`);
@@ -90,13 +90,13 @@ class ThirstyTranspiler {
         this.output.push(`fmt.Println(${expr})`);
         break;
       case 'rust':
-        this.output.push(`println!("{}", ${expr});`);
+        this.output.push("println!(\"{}\", " + expr + ");");
         break;
       case 'java':
-        this.output.push(`System.out.println(${expr});`);
+        this.output.push("System.out.println(" + expr + ");");
         break;
       case 'c':
-        this.output.push(`printf("%s\\n", ${expr});`);
+        this.output.push("printf(\"%s\\n\", " + expr + ");");
         break;
       default:
         this.output.push(`print(${expr})`);
@@ -135,7 +135,7 @@ function main() {
   }
 
   const filename = args[0];
-  
+
   if (!fs.existsSync(filename)) {
     console.error(`Error: File '${filename}' not found`);
     process.exit(1);
