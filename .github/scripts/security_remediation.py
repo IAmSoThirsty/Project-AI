@@ -27,10 +27,10 @@ class SecurityRemediator:
     def remediate_dependencies(self, audit_report: str = "pip-audit.json") -> bool:
         """
         Automatically remediate vulnerable dependencies.
-        
+
         Args:
             audit_report: Path to pip-audit JSON report
-            
+
         Returns:
             True if fixes were applied, False otherwise
         """
@@ -110,7 +110,7 @@ class SecurityRemediator:
                 cmd = ['pip', 'install', '--upgrade', package]
                 print("   Upgrading to latest version...")
 
-            result = subprocess.run(
+            subprocess.run(
                 cmd,
                 capture_output=True,
                 text=True,
@@ -145,10 +145,10 @@ class SecurityRemediator:
     def remediate_code_issues(self, bandit_report: str = "bandit.json") -> bool:
         """
         Analyze code security issues for potential auto-fixes.
-        
+
         Args:
             bandit_report: Path to Bandit JSON report
-            
+
         Returns:
             True if analysis completed, False otherwise
         """
@@ -228,10 +228,10 @@ class SecurityRemediator:
     def check_for_secrets(self, secrets_report: str = "secrets.json") -> bool:
         """
         Check for exposed secrets and create alerts.
-        
+
         Args:
             secrets_report: Path to detect-secrets JSON report
-            
+
         Returns:
             True if secrets found, False otherwise
         """

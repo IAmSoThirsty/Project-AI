@@ -2,7 +2,7 @@
 
 T-A-R-L implements defensive security strategies through code transformation:
 - Runtime execution monitoring and access control
-- Static code obfuscation and morphing  
+- Static code obfuscation and morphing
 - Dynamic threat response and mitigation
 - Multi-layer defensive programming techniques
 - Integration with Cerberus (threat detection) and Codex (permanent fixes)
@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 class TARLCodeProtector:
     """T-A-R-L Strategic Code Protection Agent.
-    
+
     Implements defensive security strategies:
     1. Runtime Access Control: Frame inspection and caller authentication
     2. Code Obfuscation: Identifier morphing and control flow transformation
@@ -65,17 +65,17 @@ class TARLCodeProtector:
         protection_level: str = "standard"
     ) -> dict[str, Any]:
         """Apply defensive protections to code file.
-        
+
         Implements multiple security strategies:
         - Runtime access control via frame inspection
         - Caller authentication using cryptographic hashing
         - Unauthorized execution prevention
         - Pattern learning for legitimate access paths
-        
+
         Args:
             file_path: Path to code file requiring protection
             protection_level: "minimal", "standard", or "maximum"
-            
+
         Returns:
             Protection application result with metrics
         """
@@ -134,12 +134,12 @@ class TARLCodeProtector:
         cerberus_threat: dict[str, Any]
     ) -> dict[str, Any]:
         """Respond to detected threat with appropriate protections.
-        
+
         Analyzes threat severity and applies corresponding protection strategies.
-        
+
         Args:
             cerberus_threat: Threat data from Cerberus
-            
+
         Returns:
             Defense response metrics
         """
@@ -178,17 +178,17 @@ class TARLCodeProtector:
         language: str = "python"
     ) -> dict[str, Any]:
         """Apply code obfuscation strategies.
-        
+
         Implements multi-layer obfuscation:
         - Identifier morphing (variable/function name hashing)
         - Control flow transformation
         - String encoding
         - Decoy code injection
-        
+
         Args:
             code: Source code to obfuscate
             language: Programming language
-            
+
         Returns:
             Obfuscation result with transformed code
         """
@@ -230,7 +230,7 @@ class TARLCodeProtector:
 
     def _apply_python_protection(self, code: str, level: str) -> str:
         """Apply Python-specific runtime access control.
-        
+
         Implements:
         - Frame inspection for caller identification
         - SHA-256 hashing of caller paths
@@ -265,7 +265,7 @@ if not _tarl_access_control():
 
     def _apply_javascript_protection(self, code: str, level: str) -> str:
         """Apply JavaScript-specific stack trace analysis.
-        
+
         Implements:
         - Stack trace inspection
         - Pattern-based authentication
@@ -284,7 +284,7 @@ if not _tarl_access_control():
         }}
         return true;
     }};
-    
+
     // Stack analysis active
     if (!_tarlStackAnalysis()) {{
         // Execution prevented
@@ -323,7 +323,8 @@ Strategic defensive protection active
 
         for identifier in identifiers:
             if identifier not in skip_words and len(identifier) > 2:
-                obfuscated = f"_{hashlib.md5(identifier.encode()).hexdigest()[:8]}"
+                # nosec B324 - MD5 used for non-security identifier obfuscation, not cryptographic security
+                obfuscated = f"_{hashlib.md5(identifier.encode(), usedforsecurity=False).hexdigest()[:8]}"
                 identifier_map[identifier] = obfuscated
                 morphed_code = re.sub(r'\b' + identifier + r'\b', obfuscated, morphed_code)
 

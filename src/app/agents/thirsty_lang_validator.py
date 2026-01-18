@@ -3,9 +3,15 @@
 This module validates that Thirsty-lang functions as T-A-R-L (Thirsty's Active Resistant Language),
 testing its defensive programming and threat resistance capabilities as a code-based
 defense system that only Project-AI knows about.
+
+Security Note: This validator uses subprocess to run npm and node commands for testing
+the Thirsty-lang implementation. Commands are hardcoded and use tools resolved with
+shutil.which for security.
 """
 import logging
-import subprocess
+import os
+import shutil
+import subprocess  # nosec B404 - subprocess usage for trusted Node.js testing tools only
 from datetime import UTC, datetime
 from typing import Any
 
@@ -14,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 class ThirstyLangValidator:
     """Validates Thirsty-lang as T-A-R-L (Thirsty's Active Resistant Language).
-    
+
     Tests the language's capabilities as a defensive coding system,
     verifying it can be used as a secure communication and defense layer.
     """
@@ -25,7 +31,7 @@ class ThirstyLangValidator:
 
     def run_full_validation(self) -> dict[str, Any]:
         """Run complete validation suite on T-A-R-L (Thirsty's Active Resistant Language) capabilities.
-        
+
         Returns:
             Comprehensive validation report
         """
@@ -61,13 +67,35 @@ class ThirstyLangValidator:
         return report
 
     def _test_basic_language(self) -> dict[str, Any]:
-        """Test basic Thirsty-lang functionality."""
+        """Test basic Thirsty-lang functionality.
+
+        Security: Uses shutil.which to resolve npm executable.
+        Working directory is validated before execution.
+        """
         logger.info("Testing basic T-A-R-L language features")
+
+        # Validate working directory exists
+        if not os.path.isdir(self.thirsty_lang_path):
+            return {
+                "status": "failed",
+                "error": f"Thirsty-lang path not found: {self.thirsty_lang_path}",
+                "message": "T-A-R-L directory not found"
+            }
+
+        # Resolve npm executable
+        npm_cmd = shutil.which("npm")
+        if not npm_cmd:
+            return {
+                "status": "failed",
+                "error": "npm executable not found in PATH",
+                "message": "npm not available for T-A-R-L testing"
+            }
 
         try:
             # Run the language's built-in tests
+            # nosec B603 B607 - npm is a trusted dev tool, path resolved with shutil.which
             result = subprocess.run(
-                ["npm", "test"],
+                [npm_cmd, "test"],
                 cwd=self.thirsty_lang_path,
                 capture_output=True,
                 text=True,
@@ -79,6 +107,12 @@ class ThirstyLangValidator:
                 "test_output": result.stdout[-500:] if result.stdout else "",
                 "message": "T-A-R-L core language features validated"
             }
+        except subprocess.TimeoutExpired:
+            return {
+                "status": "failed",
+                "error": "Test execution timed out after 30 seconds",
+                "message": "T-A-R-L core language test timeout"
+            }
         except Exception as e:
             return {
                 "status": "failed",
@@ -87,13 +121,63 @@ class ThirstyLangValidator:
             }
 
     def _test_security_features(self) -> dict[str, Any]:
-        """Test T-A-R-L security and defensive features."""
+        """Test T-A-R-L security and defensive features.
+
+        Security: Uses shutil.which to resolve node executable.
+        Script path is validated before execution.
+        """
         logger.info("Testing T-A-R-L security features")
+
+        # Validate working directory exists
+        if not os.path.isdir(self.thirsty_lang_path):
+            return {
+                "status": "failed",
+                "error": f"Thirsty-lang path not found: {self.thirsty_lang_path}",
+                "message": "T-A-R-L directory not found"
+            }
+
+        # Resolve node executable
+        node_cmd = shutil.which("node")
+        if not node_cmd:
+            return {
+                "status": "failed",
+                "error": "node executable not found in PATH",
+                "message": "Node.js not available for T-A-R-L security testing"
+            }
+
+        # Validate security test script exists and is within expected directory
+        script_path = os.path.normpath(os.path.join(self.thirsty_lang_path, "src/test/security-tests.js"))
+        abs_script_path = os.path.abspath(script_path)
+        abs_base_path = os.path.abspath(self.thirsty_lang_path)
+
+        # Ensure script is within the thirsty_lang directory (prevent path traversal)
+        try:
+            common = os.path.commonpath([abs_script_path, abs_base_path])
+            if common != abs_base_path:
+                return {
+                    "status": "failed",
+                    "error": f"Path traversal detected: {script_path}",
+                    "message": "Invalid security test script path"
+                }
+        except ValueError:
+            return {
+                "status": "failed",
+                "error": f"Invalid script path: {script_path}",
+                "message": "Security test script path validation failed"
+            }
+
+        if not os.path.isfile(script_path):
+            return {
+                "status": "failed",
+                "error": f"Security test script not found: {script_path}",
+                "message": "T-A-R-L security tests not available"
+            }
 
         try:
             # Run security tests
+            # nosec B603 B607 - node is a trusted dev tool, path resolved with shutil.which
             result = subprocess.run(
-                ["node", "src/test/security-tests.js"],
+                [node_cmd, "src/test/security-tests.js"],
                 cwd=self.thirsty_lang_path,
                 capture_output=True,
                 text=True,
@@ -112,6 +196,12 @@ class ThirstyLangValidator:
                 ],
                 "message": "T-A-R-L defensive capabilities validated",
                 "test_summary": result.stdout[-300:] if result.stdout else ""
+            }
+        except subprocess.TimeoutExpired:
+            return {
+                "status": "failed",
+                "error": "Security test execution timed out after 30 seconds",
+                "message": "T-A-R-L security test timeout"
             }
         except Exception as e:
             return {
@@ -205,7 +295,7 @@ class ThirstyLangValidator:
 
     def validate_tarl_classification(self) -> dict[str, Any]:
         """Validate T-A-R-L classification and capabilities.
-        
+
         T-A-R-L is Thirsty-lang with security features implemented to ward off
         user attacks by confusing them. Project-AI/Cerberus/Codex have full
         knowledge of T-A-R-L, but it's a programming language nobody else has.

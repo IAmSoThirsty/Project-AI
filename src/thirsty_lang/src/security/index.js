@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+
 
 /**
  * Thirsty-lang Security Module
@@ -19,7 +19,7 @@ class SecurityManager {
     this.codeMorpher = new CodeMorpher(options.morph);
     this.policyEngine = new SecurityPolicyEngine(options.policy);
     this.defenseCompiler = new DefenseCompiler(options);
-    
+
     this.enabled = options.enabled !== false;
     this.mode = options.mode || 'defensive'; // defensive, offensive, adaptive
   }
@@ -29,7 +29,7 @@ class SecurityManager {
    */
   secureExecute(code, context = {}) {
     if (!this.enabled) {
-      return { code, secure: false };
+      return { code: code, secure: false };
     }
 
     // Compile with security features
@@ -47,10 +47,10 @@ class SecurityManager {
   secureInput(input, context = {}) {
     // Detect threats
     const threats = this.threatDetector.detectInputThreats(input, context);
-    
+
     // Apply policy
     const sanitized = this.policyEngine.applyInputPolicy(input, context);
-    
+
     // Handle threats if found
     if (threats.length > 0) {
       threats.forEach(threat => {
@@ -101,7 +101,7 @@ class SecurityManager {
 // Export all security modules
 module.exports = {
   SecurityManager,
-  ThreatDetector,
+  ThreatDetector: ThreatDetector,
   CodeMorpher,
   SecurityPolicyEngine,
   DefenseCompiler

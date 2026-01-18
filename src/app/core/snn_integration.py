@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 
 # Check for optional SNN dependencies
 try:
-    import torch
+    import torch  # noqa: F401
     import torch.nn as nn
     TORCH_AVAILABLE = True
 except ImportError:
@@ -36,9 +36,9 @@ except ImportError:
     logger.warning("PyTorch not available - SNN features disabled")
 
 try:
-    import bindsnet
+    import bindsnet  # noqa: F401
     from bindsnet.encoding import PoissonEncoder
-    from bindsnet.learning import PostPre, WeightDependentPostPre
+    from bindsnet.learning import PostPre, WeightDependentPostPre  # noqa: F401
     from bindsnet.network import Network
     from bindsnet.network.nodes import Input, LIFNodes
     from bindsnet.network.topology import Connection
@@ -48,7 +48,7 @@ except ImportError:
     logger.warning("BindsNet not available - RL SNN features disabled")
 
 try:
-    import sinabs
+    import sinabs  # noqa: F401
     import sinabs.layers as sl
     from sinabs.from_torch import from_model
     SINABS_AVAILABLE = True
@@ -57,62 +57,62 @@ except ImportError:
     logger.warning("Sinabs not available - Vision SNN features disabled")
 
 try:
-    import snntorch as snn
-    import snntorch.functional as SF
+    import snntorch as snn  # noqa: F401 - Imported to check availability
+    import snntorch.functional as SF  # noqa: F401, N812 - Standard snnTorch alias
     SNNTORCH_AVAILABLE = True
 except ImportError:
     SNNTORCH_AVAILABLE = False
     logger.warning("snnTorch not available")
 
 try:
-    import spikingjelly
-    from spikingjelly.activation_based import functional, layer, neuron
+    import spikingjelly  # noqa: F401
+    from spikingjelly.activation_based import functional, layer, neuron  # noqa: F401
     SPIKINGJELLY_AVAILABLE = True
 except ImportError:
     SPIKINGJELLY_AVAILABLE = False
     logger.warning("SpikingJelly not available")
 
 try:
-    import norse
-    from norse.torch import LIFCell, LIFParameters
+    import norse  # noqa: F401
+    from norse.torch import LIFCell, LIFParameters  # noqa: F401
     NORSE_AVAILABLE = True
 except ImportError:
     NORSE_AVAILABLE = False
     logger.warning("Norse not available")
 
 try:
-    import brian2
+    import brian2  # noqa: F401
     BRIAN2_AVAILABLE = True
 except ImportError:
     BRIAN2_AVAILABLE = False
     logger.warning("Brian2 not available")
 
 try:
-    import lava
-    from lava.magma.core.model.py.model import PyLoihiProcessModel
-    from lava.magma.core.process.process import AbstractProcess
+    import lava  # noqa: F401
+    from lava.magma.core.model.py.model import PyLoihiProcessModel  # noqa: F401
+    from lava.magma.core.process.process import AbstractProcess  # noqa: F401
     LAVA_AVAILABLE = True
 except ImportError:
     LAVA_AVAILABLE = False
     logger.warning("Lava (Intel) not available")
 
 try:
-    import rockpool
-    from rockpool.nn.modules import LIF
+    import rockpool  # noqa: F401
+    from rockpool.nn.modules import LIF  # noqa: F401
     ROCKPOOL_AVAILABLE = True
 except ImportError:
     ROCKPOOL_AVAILABLE = False
     logger.warning("Rockpool not available")
 
 try:
-    import nengo
+    import nengo  # noqa: F401
     NENGO_AVAILABLE = True
 except ImportError:
     NENGO_AVAILABLE = False
     logger.warning("Nengo not available")
 
 try:
-    import nir
+    import nir  # noqa: F401
     NIR_AVAILABLE = True
 except ImportError:
     NIR_AVAILABLE = False

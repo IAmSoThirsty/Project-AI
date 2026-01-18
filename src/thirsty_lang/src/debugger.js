@@ -17,7 +17,7 @@ class ThirstyDebugger extends ThirstyInterpreter {
     this.stepping = false;
     this.watchVariables = new Set();
     this.callStack = [];
-    
+
     this.rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout
@@ -28,7 +28,7 @@ class ThirstyDebugger extends ThirstyInterpreter {
     this.lines = code.split('\n').map((line, i) => ({
       number: i + 1,
       code: line.trim()
-    })).filter(line => line.code && !line.code.startsWith('//'));
+    })).filter(function (line) { return line.code && !line.code.startsWith('//') });
 
     console.log('🐛 Thirsty-lang Debugger');
     console.log('Type "help" for debugger commands\n');
@@ -68,7 +68,7 @@ class ThirstyDebugger extends ThirstyInterpreter {
     // Show nearby lines
     const start = Math.max(0, this.currentLine - 3);
     const end = Math.min(this.lines.length, this.currentLine + 2);
-    
+
     console.log('\nCode context:');
     for (let i = start; i < end; i++) {
       const line = this.lines[i];

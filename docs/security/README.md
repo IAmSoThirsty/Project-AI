@@ -314,10 +314,10 @@ from app.security.web_service import (
     InputValidator,
 )
 
-# SOAP client - EXAMPLE ONLY: Use environment variables for real credentials
+# SOAP client
 client = SOAPClient(
-    "https://api.example.com/soap",
-    username=os.getenv("SOAP_USERNAME"),
+    "https://api.example.com/soap", 
+    username=os.getenv("SOAP_USERNAME"), 
     password=os.getenv("SOAP_PASSWORD")
 )
 response = client.call("GetData", {"id": "123"})

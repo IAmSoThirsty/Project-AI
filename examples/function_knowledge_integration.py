@@ -21,6 +21,7 @@ from pathlib import Path
 src_path = Path(__file__).parent.parent / "src"
 sys.path.insert(0, str(src_path))
 
+# ruff: noqa: E402 - Path manipulation required before imports
 from app.core.ai_systems import MemoryExpansionSystem
 from app.core.function_registry import FunctionRegistry
 from app.core.intelligence_engine import IntelligenceRouter

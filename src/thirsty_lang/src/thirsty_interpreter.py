@@ -19,10 +19,10 @@ class ThirstyInterpreter:
     def interpret(self, code: str) -> list[str]:
         """
         Interpret Thirsty-lang code and return output
-        
+
         Args:
             code: Thirsty-lang source code as a string
-            
+
         Returns:
             List of output strings
         """
