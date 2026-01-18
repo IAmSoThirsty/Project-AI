@@ -84,8 +84,12 @@ def test_update_user_password_via_update(tmpdir):
     f = os.path.join(tmpdir, "users.json")
     um = UserManager(users_file=f)
     um.create_user("g", "pw")
-    # NOTE: "new" is a test password only - not used in production
+<<<<<<< HEAD
+    # NOTE: test password only - not used in production
     um.update_user("g", password="new")
+=======
+    um.update_user("g", password="new")  # Test fixture passwords
+>>>>>>> origin/main
     assert um.authenticate("g", "new") is True
 
 

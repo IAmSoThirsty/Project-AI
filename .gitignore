@@ -84,10 +84,12 @@ service-account.json
 .secrets
 secret_*
 secrets/
-
 # Security scan reports (these may contain sensitive info)
 secret_scan_report.json
 *_scan_report.json
+# Additional patterns from main
+*secret*scan*.json
+*secret*scan*.txt
 
 # IDEs
 .vscode/
@@ -124,3 +126,8 @@ out/
 captures/
 .externalNativeBuild
 .cxx
+
+# Temporal.io
+.env.temporal
+config/temporal/*.local
+data/temporal/

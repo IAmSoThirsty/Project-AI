@@ -30,8 +30,8 @@ services:
   db:
     image: postgres:15
     environment:
-      - POSTGRES_USER=${DB_USER:-projectai}
-      - POSTGRES_PASSWORD=${DB_PASSWORD:?Database password required}
+  - POSTGRES_USER=${DB_USER:-projectai}
+  - POSTGRES_PASSWORD=${DB_PASSWORD:?Database password required}
       - POSTGRES_DB=projectai
     volumes:
       - postgres_data:/var/lib/postgresql/data

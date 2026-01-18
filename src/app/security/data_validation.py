@@ -20,7 +20,7 @@ from xml.etree.ElementTree import (
     Element,  # nosec B405 - Only used for type hints, not parsing
 )
 
-import defusedxml.ElementTree as ET
+import defusedxml.ElementTree as ET  # noqa: N817 - Standard ElementTree alias
 
 logger = logging.getLogger(__name__)
 

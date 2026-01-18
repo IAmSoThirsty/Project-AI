@@ -142,7 +142,7 @@ class TestCommandOverride:
         """Test requesting override."""
         # NOTE: "test123" is a test password only - not used in production
         success, _ = override.request_override(
-            password="test123",
+            password="test123",  # Test fixture password - intentional for testing
             override_type=OverrideType.CONTENT_FILTER,
         )
         assert success
@@ -151,7 +151,7 @@ class TestCommandOverride:
         """Test checking override active."""
         # NOTE: "test123" is a test password only - not used in production
         override.request_override(
-            password="test123",
+            password="test123",  # Test fixture password - intentional for testing
             override_type=OverrideType.CONTENT_FILTER,
         )
         is_active = override.is_override_active(OverrideType.CONTENT_FILTER)

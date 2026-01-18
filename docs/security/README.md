@@ -314,7 +314,7 @@ from app.security.web_service import (
     InputValidator,
 )
 
-# SOAP client example - use environment variables for credentials
+ # SOAP client example - use environment variables for credentials
 client = SOAPClient(
     "https://api.example.com/soap",
     username=os.getenv("SOAP_USERNAME"),

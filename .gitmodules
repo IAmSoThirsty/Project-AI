@@ -1,3 +1,7 @@
+
+[submodule "Project-AI"]
+	path = Project-AI
+	url = https://github.com/IAmSoThirsty/Project-AI.git
 [submodule "external/Cerberus"]
 	path = external/Cerberus
 	url = https://github.com/IAmSoThirsty/Cerberus
