@@ -28,13 +28,13 @@ Project-AI takes security seriously. This document outlines our security policie
 Instead, please follow this process:
 
 1. **GitHub Security Advisory**: Use [GitHub's private vulnerability reporting](https://github.com/IAmSoThirsty/Project-AI/security/advisories/new)
-2. **Private Discussion** (if needed): Open a [GitHub Discussions thread](https://github.com/IAmSoThirsty/Project-AI/discussions) marked as private
-3. **Include**:
+1. **Private Discussion** (if needed): Open a [GitHub Discussions thread](https://github.com/IAmSoThirsty/Project-AI/discussions) marked as private
+1. **Include**:
    - Description of the vulnerability
    - Steps to reproduce
    - Potential impact
    - Suggested fix (if available)
-4. **Timeline**: We aim to respond within 48 hours
+1. **Timeline**: We aim to respond within 48 hours
 
 ### What to Expect
 
@@ -64,22 +64,22 @@ Security fixes will be communicated through:
    pip install --upgrade -r requirements.txt
    ```
 
-2. **Use Environment Variables**
+1. **Use Environment Variables**
    - Store sensitive data in `.env` files
    - Never commit `.env` to version control
    - Use `.env.example` as template
 
-3. **Access Control**
+1. **Access Control**
    - Implement proper authentication
    - Use strong passwords
    - Enable MFA where applicable
 
-4. **Data Protection**
+1. **Data Protection**
    - Encrypt sensitive data at rest and in transit
    - Use HTTPS for all network communications
    - Implement proper access controls
 
-5. **Regular Updates**
+1. **Regular Updates**
    - Subscribe to security notifications
    - Test updates in staging before production
    - Keep Python and OS updated
@@ -92,17 +92,17 @@ Security fixes will be communicated through:
    - Avoid hardcoding secrets
    - Use type hints for code safety
 
-2. **Code Review**
+1. **Code Review**
    - All security-related code is reviewed
    - Multiple reviewers for sensitive changes
    - Security-focused peer review process
 
-3. **Testing**
+1. **Testing**
    - Security tests included in CI/CD
    - Dependency vulnerability scanning
    - Static security analysis
 
-4. **Dependency Management**
+1. **Dependency Management**
    - Regular dependency audits
    - Minimize external dependencies
    - Use verified, maintained packages
@@ -165,9 +165,9 @@ All dependencies are regularly audited:
 If you find a vulnerability in a dependency:
 
 1. Check if updated version exists
-2. Report to dependency maintainer
-3. Notify us if Project-AI is affected
-4. We'll patch or mitigate
+1. Report to dependency maintainer
+1. Notify us if Project-AI is affected
+1. We'll patch or mitigate
 
 ---
 
@@ -179,17 +179,17 @@ If you find a vulnerability in a dependency:
    - Use separate `.env` files per environment
    - Never mix production and development credentials
 
-2. **Access Control**
+1. **Access Control**
    - Restrict file permissions appropriately
    - Use authentication for admin functions
    - Implement role-based access control
 
-3. **Monitoring**
+1. **Monitoring**
    - Log security-relevant events
    - Monitor for suspicious activity
    - Alert on security events
 
-4. **Backup & Recovery**
+1. **Backup & Recovery**
    - Regular encrypted backups
    - Test recovery procedures
    - Document disaster recovery plan
@@ -230,23 +230,23 @@ DB_PASSWORD = os.getenv('DB_PASSWORD')
 ### Completed ✅
 
 1. ✅ MIT License (permissive, auditable)
-2. ✅ Dependency verification (all compatible)
-3. ✅ Code linting (ruff - all passing)
-4. ✅ Type checking (Pylance strict mode)
-5. ✅ Testing (14/14 tests passing)
+1. ✅ Dependency verification (all compatible)
+1. ✅ Code linting (ruff - all passing)
+1. ✅ Type checking (Pylance strict mode)
+1. ✅ Testing (14/14 tests passing)
 
 ### In Progress ⏳
 
 1. ⏳ SBOM generation (supply chain transparency)
-2. ⏳ Automated security scanning (CI/CD)
-3. ⏳ Regular dependency audits
+1. ⏳ Automated security scanning (CI/CD)
+1. ⏳ Regular dependency audits
 
 ### Planned 🗺️
 
 1. 🗺️ Security.txt file (security contact info)
-2. 🗺️ Regular security assessments
-3. 🗺️ Penetration testing (if applicable)
-4. 🗺️ Bug bounty program (future consideration)
+1. 🗺️ Regular security assessments
+1. 🗺️ Penetration testing (if applicable)
+1. 🗺️ Bug bounty program (future consideration)
 
 ---
 

@@ -428,7 +428,8 @@ class TestImageGeneratorEdgeCases:
         """Test checking different backends."""
         assert generator.backend == ImageGenerationBackend.HUGGINGFACE
         # Backend is set at initialization, cannot switch without reinitializing
-        generator2 = ImageGenerator(backend=ImageGenerationBackend.OPENAI, data_dir=generator.data_dir)
+        generator2 = ImageGenerator(backend=ImageGenerationBackend.OPENAI,
+                                    data_dir=generator.data_dir)
         assert generator2.backend == ImageGenerationBackend.OPENAI
 
     def test_generator_history_empty(self, generator):
@@ -472,7 +473,7 @@ class TestImageGeneratorEdgeCases:
 
     def test_generator_check_content_filter_safe(self, generator):
         """Test safe content passes filter."""
-        is_safe, msg = generator.check_content_filter("a beautiful landscape")
+        is_safe, _ = generator.check_content_filter("a beautiful landscape")
         assert is_safe is True
 
     def test_generator_check_content_filter_unsafe(self, generator):

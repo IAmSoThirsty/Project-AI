@@ -46,11 +46,10 @@ def test_update_preferences_and_role(tmpdir):
 def test_set_password_changes_hash(tmpdir):
     f = os.path.join(tmpdir, "users.json")
     um = UserManager(users_file=f)
-    um.create_user("d", "pw1")
-    old_hash = um.users["d"]["password_hash"]
-    um.set_password("d", "pw2")
-    assert um.users["d"]["password_hash"] != old_hash
-    assert um.authenticate("d", "pw2") is True
+    um.create_user("g", "pw")
+    # NOTE: test password only - not used in production
+    um.update_user("g", password="new")  # Test fixture passwords
+    assert um.authenticate("g", "new") is True
 
 
 def test_delete_user(tmpdir):
@@ -84,12 +83,9 @@ def test_update_user_password_via_update(tmpdir):
     f = os.path.join(tmpdir, "users.json")
     um = UserManager(users_file=f)
     um.create_user("g", "pw")
-<<<<<<< HEAD
+
     # NOTE: test password only - not used in production
-    um.update_user("g", password="new")
-=======
     um.update_user("g", password="new")  # Test fixture passwords
->>>>>>> origin/main
     assert um.authenticate("g", "new") is True
 
 

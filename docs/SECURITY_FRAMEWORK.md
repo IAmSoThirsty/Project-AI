@@ -7,41 +7,46 @@ This document provides comprehensive documentation for Project-AI's security fra
 ## Table of Contents
 
 1. [Environment Hardening](#environment-hardening)
-2. [Data Validation & Parsing](#data-validation--parsing)
-3. [AWS Cloud Integration](#aws-cloud-integration)
-4. [Agent Security](#agent-security)
-5. [Database Security](#database-security)
-6. [Security Monitoring](#security-monitoring)
-7. [Web Service Security](#web-service-security)
-8. [Testing Infrastructure](#testing-infrastructure)
-9. [Standards Compliance](#standards-compliance)
-10. [Deployment Checklist](#deployment-checklist)
+1. [Data Validation & Parsing](#data-validation--parsing)
+1. [AWS Cloud Integration](#aws-cloud-integration)
+1. [Agent Security](#agent-security)
+1. [Database Security](#database-security)
+1. [Security Monitoring](#security-monitoring)
+1. [Web Service Security](#web-service-security)
+1. [Testing Infrastructure](#testing-infrastructure)
+1. [Standards Compliance](#standards-compliance)
+1. [Deployment Checklist](#deployment-checklist)
 
 ---
 
 ## Environment Hardening
 
 ### Purpose
+
 Validates and hardens the runtime environment to prevent common security vulnerabilities.
 
 ### Features
 
 #### Virtualenv Validation
+
 - Detects if application is running in a virtual environment
 - Prevents system-wide Python pollution
 - Ensures dependency isolation
 
 #### sys.path Hardening
+
 - Removes dangerous paths (".", "") from sys.path
 - Prevents current directory code injection
 - Validates path permissions on Unix systems
 
 #### ASLR/SSP Verification
+
 - **Linux**: Checks `/proc/sys/kernel/randomize_va_space`
 - **Windows**: Assumes ASLR/DEP enabled (default)
 - **macOS**: ASLR enabled by default
 
 #### Directory Security
+
 - Creates required directories with 0700 permissions (owner-only)
 - Validates existing directory permissions
 - Fixes insecure permissions automatically
@@ -69,6 +74,7 @@ report = hardening.get_validation_report()
 ```
 
 ### Standards Compliance
+
 - **OWASP**: Addresses insecure platform use (M10)
 - **CERT**: SEI CERT Secure Coding Standards (Python)
 
@@ -77,11 +83,13 @@ report = hardening.get_validation_report()
 ## Data Validation & Parsing
 
 ### Purpose
+
 Secure parsing of XML, CSV, and JSON data with defense against common attacks.
 
 ### Features
 
 #### XML Parsing
+
 - **XXE Prevention**: Blocks external entity references
 - **DTD Blocking**: Rejects DTD declarations
 - **Schema Validation**: Optional schema enforcement
@@ -103,6 +111,7 @@ else:
 ```
 
 #### CSV Parsing
+
 - **Formula Injection Prevention**: Detects =, +, -, @ prefixes
 - **Type Validation**: Enforces column types
 - **Size Limits**: Prevents DoS via large files
@@ -115,11 +124,13 @@ result = parser.parse_csv(csv_data, schema=schema)
 ```
 
 #### JSON Parsing
+
 - **Schema Validation**: Required fields and types
 - **Size Limiting**: 100 MB default limit
 - **Deep Nesting**: Handles nested structures safely
 
 #### Data Poisoning Defense
+
 - **Pattern Detection**: XSS, SQL injection, path traversal
 - **Signature Blacklist**: SHA-256 hash-based blocking
 - **Sanitization**: Removes dangerous content
@@ -138,6 +149,7 @@ if is_poisoned:
 ```
 
 ### Standards Compliance
+
 - **OWASP Top 10**: A03:2021 Injection, A05:2021 Security Misconfiguration
 - **CWE-91**: XML Injection (XEE)
 - **CWE-89**: SQL Injection (detection)
@@ -147,11 +159,13 @@ if is_poisoned:
 ## AWS Cloud Integration
 
 ### Purpose
+
 Secure AWS resource access following Principle of Least Privilege (PoLP).
 
 ### Features
 
 #### IAM Role-Based Authentication
+
 - **No Static Credentials**: Uses IAM roles for EC2/ECS
 - **Temporary Credentials**: STS AssumeRole support
 - **Permission Auditing**: Lists and validates IAM policies
@@ -174,6 +188,7 @@ if aws.validate_polp(required_perms):
 ```
 
 #### Secrets Manager
+
 - **Encrypted Storage**: AES-256 encryption at rest
 - **Access Control**: IAM policy-based access
 - **Rotation**: Supports automatic secret rotation
@@ -188,6 +203,7 @@ secret = aws.get_secret("my-api-key")
 ```
 
 #### S3 Secure Storage
+
 - **Server-Side Encryption**: AES-256 by default
 - **Versioning**: Track object changes
 - **MFA Delete**: Protect critical data
@@ -207,6 +223,7 @@ aws.enable_mfa_delete("my-bucket")
 ```
 
 #### Temporary Credentials
+
 ```python
 # Assume role for limited access
 creds = aws.get_temporary_credentials(
@@ -217,6 +234,7 @@ creds = aws.get_temporary_credentials(
 ```
 
 ### Standards Compliance
+
 - **AWS Well-Architected**: Security Pillar
 - **CIS AWS Foundations Benchmark**: IAM best practices
 - **NIST CSF**: PR.AC-4 (Access permissions)
@@ -226,11 +244,13 @@ creds = aws.get_temporary_credentials(
 ## Agent Security
 
 ### Purpose
+
 Isolate and protect AI agent state and operations from adversarial attacks.
 
 ### Features
 
 #### Agent Encapsulation
+
 - **State Isolation**: Thread-safe state management
 - **Access Control**: Read/write/execute permissions
 - **Audit Logging**: All state accesses logged
@@ -252,6 +272,7 @@ log = agent.get_access_log()
 ```
 
 #### Numerical Protection
+
 - **Bounds Clipping**: Prevents overflow attacks
 - **Outlier Removal**: Z-score based filtering
 - **Safe Division**: Zero handling
@@ -273,6 +294,7 @@ result = protection.safe_divide(numerator, denominator, default=0.0)
 ```
 
 #### Plugin Isolation
+
 - **Process Isolation**: Runs plugins in separate processes
 - **Timeout Protection**: Kills runaway plugins
 - **Memory Isolation**: Prevents memory corruption
@@ -291,6 +313,7 @@ result = isolation.execute_isolated(
 ```
 
 #### Runtime Fuzzing
+
 - **Multiple Strategies**: Random strings, boundary values, type confusion, overflow
 - **Automated Testing**: Generate test cases automatically
 
@@ -311,6 +334,7 @@ for test_case in test_cases:
 ```
 
 ### Standards Compliance
+
 - **OWASP**: ML Security (adversarial robustness)
 - **NIST AI RMF**: Trustworthy AI principles
 
@@ -319,11 +343,13 @@ for test_case in test_cases:
 ## Database Security
 
 ### Purpose
+
 Secure database operations with SQL injection prevention.
 
 ### Features
 
 #### Parameterized Queries
+
 - **Prepared Statements**: All queries use ? placeholders
 - **Query Validation**: Detects dangerous patterns
 - **Type Safety**: Parameters properly escaped
@@ -341,6 +367,7 @@ user = db.get_user("alice")
 ```
 
 #### Transaction Management
+
 - **Automatic Rollback**: Errors trigger rollback
 - **Context Manager**: Clean transaction handling
 
@@ -354,6 +381,7 @@ with db.transaction() as conn:
 ```
 
 #### Audit Logging
+
 - **Action Tracking**: All database operations logged
 - **User Association**: Links actions to users
 - **IP Tracking**: Records client IP addresses
@@ -373,11 +401,13 @@ log = db.get_audit_log(user_id=123, limit=100)
 ```
 
 #### Schema Design
+
 - **Foreign Keys**: Enforce referential integrity
 - **Constraints**: Prevent invalid data
 - **Indexes**: Optimize queries
 
 ### Standards Compliance
+
 - **OWASP A03:2021**: Injection prevention
 - **CWE-89**: SQL Injection mitigation
 - **NIST 800-53**: SC-23 Session Authenticity
@@ -387,11 +417,13 @@ log = db.get_audit_log(user_id=123, limit=100)
 ## Security Monitoring
 
 ### Purpose
+
 Continuous monitoring and alerting for security threats.
 
 ### Features
 
 #### Event Logging
+
 - **Structured Format**: JSON event data
 - **Severity Levels**: Critical, high, medium, low
 - **Metadata**: Rich context for investigations
@@ -416,16 +448,19 @@ monitor.log_security_event(
 ```
 
 #### CloudWatch Integration
+
 - **Metrics**: Event counts by type and severity
 - **Dashboards**: Visualize security posture
 - **Alarms**: Automated alerting
 
 #### SNS Alerting
+
 - **Multi-Channel**: Email, SMS, HTTP endpoints
 - **Severity Filtering**: Only critical/high by default
 - **Rich Formatting**: Detailed alert messages
 
 #### Threat Signatures
+
 - **Campaign Tracking**: Track known threat actors
 - **Indicator Matching**: IOCs (IPs, hashes, patterns)
 - **Automated Blocking**: Integrate with WAF/firewall
@@ -444,6 +479,7 @@ if matches:
 ```
 
 #### Anomaly Detection
+
 - **Threshold-Based**: Unusual event volumes
 - **Time Windows**: Configurable detection periods
 - **Automated Response**: Trigger alerts/blocks
@@ -460,6 +496,7 @@ for anomaly in anomalies:
 ```
 
 ### Standards Compliance
+
 - **NIST CSF**: DE.CM (Continuous Monitoring)
 - **PCI DSS**: Requirement 10 (Logging and Monitoring)
 - **SOC 2**: CC7.2 (Monitoring)
@@ -469,11 +506,13 @@ for anomaly in anomalies:
 ## Web Service Security
 
 ### Purpose
+
 Secure web services with SOAP, HTTP, and capability-based access control.
 
 ### Features
 
 #### SOAP Client
+
 - **Envelope Validation**: Verifies SOAP structure
 - **WS-Security**: Username token authentication
 - **XXE Prevention**: Secure XML parsing
@@ -495,6 +534,7 @@ response = client.call("GetData", {"id": "123"})
 ```
 
 #### Capability-Based Access Control
+
 - **Token-Based**: Generate capability tokens
 - **Fine-Grained**: Per-action permissions
 - **Time-Limited**: Optional expiration
@@ -514,6 +554,7 @@ if handler.check_capability(token, "read"):
 ```
 
 #### Secure Headers
+
 - **X-Frame-Options**: Clickjacking prevention
 - **CSP**: Content Security Policy
 - **HSTS**: HTTP Strict Transport Security
@@ -525,6 +566,7 @@ headers = handler.set_secure_headers()
 ```
 
 #### Request Signing
+
 - **HMAC-SHA256**: Cryptographic signatures
 - **Replay Prevention**: Timestamp validation
 - **Constant-Time Comparison**: Timing attack prevention
@@ -540,6 +582,7 @@ if handler.verify_signature(request_data, signature, secret_key):
 ```
 
 #### Rate Limiting
+
 - **Token Bucket**: Configurable limits
 - **Per-Client**: Track by IP/user ID
 - **Sliding Window**: Time-based limits
@@ -558,12 +601,14 @@ else:
 ```
 
 #### Input Validation
+
 - **Length Limits**: Prevent DoS
 - **Content-Type**: Whitelist allowed types
 - **Null Byte Detection**: Path traversal prevention
 - **Filename Sanitization**: Directory traversal prevention
 
 ### Standards Compliance
+
 - **OWASP Top 10**: A01:2021 Broken Access Control, A05:2021 Security Misconfiguration
 - **OWASP API Security**: API1:2019 Broken Object Level Authorization
 
@@ -574,12 +619,14 @@ else:
 ### Test Coverage
 
 #### Phase 1 Tests (27 tests)
+
 - Environment hardening (8 tests)
 - Data parsing and validation (11 tests)
 - Data poisoning defense (6 tests)
 - Stress tests (4 tests)
 
 #### Phase 2 Tests (34 tests)
+
 - Agent security (13 tests)
 - Database security (6 tests)
 - Monitoring (4 tests)
@@ -806,11 +853,13 @@ def handle_request(client_ip: str, user_input: str):
 ## Support and Resources
 
 ### Internal Resources
+
 - `/src/app/security/` - Security module source code
 - `/tests/test_security_*.py` - Comprehensive test suite
 - `/docs/security/` - Additional security documentation
 
 ### External Resources
+
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/)
 - [AWS Security Best Practices](https://docs.aws.amazon.com/security/)
 - [NIST Cybersecurity Framework](https://www.nist.gov/cyberframework)
