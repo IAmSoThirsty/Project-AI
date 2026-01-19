@@ -916,6 +916,74 @@ def handle_request(client_ip: str, user_input: str):
 
 ---
 
+## Future Work and Security Roadmap
+
+This security framework is continuously evolving. The following areas are under active development or planned for future implementation:
+
+### Planned Enhancements
+
+For detailed information about planned security enhancements, see **[Security Roadmap](security/SECURITY_ROADMAP.md)**.
+
+The roadmap covers:
+
+1. **Build-Time Code Injection Protection** (SLSA Provenance)
+   - Status: Planned for Q2 2026
+   - SLSA Level 2-4 implementation
+   - Hardened build environments
+   - Reproducible builds
+
+2. **Malicious Dependency Injection** (Enhanced Dependency Review)
+   - Status: Planned for Q2 2026
+   - GitHub Dependency Review workflow
+   - Private package registry
+   - Supply chain verification
+
+3. **Model Backdoors in Weights** (ML Security)
+   - Status: In Progress
+   - Model provenance tracking
+   - Behavioral testing suite
+   - Runtime anomaly detection
+
+4. **Adversarial Examples** (Runtime Defense)
+   - Status: Planned for Q2 2026
+   - Enhanced input validation
+   - Adversarial robustness testing
+   - Runtime attack detection
+
+5. **Runtime Vulnerabilities** (DAST/RASP)
+   - Status: Planned for Q2 2026
+   - Dynamic Application Security Testing
+   - Runtime Application Self-Protection
+   - Penetration testing program
+
+### Current Coverage Status
+
+| Security Area | Coverage | Status |
+|---------------|----------|--------|
+| Static Analysis | 90% | ✅ Implemented |
+| Supply Chain Security | 70% | 🟡 Partial |
+| Build Security | 40% | 🟠 Planned |
+| Model Security | 50% | 🟡 In Progress |
+| Runtime Security | 60% | 🟡 Partial |
+
+### Integration Points
+
+The Security Roadmap is integrated with:
+- **[Threat Model](security/THREAT_MODEL_SECURITY_WORKFLOWS.md)** - Maps roadmap items to threat coverage
+- **[Security Governance](security/SECURITY_GOVERNANCE.md)** - Defines ownership and review cycles
+- **[AGI Charter](AGI_CHARTER.md)** - Ensures enhancements preserve identity protections
+
+### Tracking and Accountability
+
+- **Owner:** Security Guardian (@org/security-guardians)
+- **Review Cycle:** Quarterly
+- **Progress Tracking:** Monthly security team meetings
+- **Escalation:** Via Security Governance escalation matrix
+
+See **[SECURITY_ROADMAP.md](security/SECURITY_ROADMAP.md)** for complete details, timelines, and implementation plans.
+
+---
+
 ## Support and Resources
 
 ### Internal Resources
