@@ -1,0 +1,458 @@
+name: AI/ML Model Security Scanning
+
+on:
+  pull_request:
+    paths:
+      - 'data/ai_persona/**'
+      - 'data/**/*.pkl'
+      - 'data/**/*.h5'
+      - 'data/**/*.pt'
+      - 'data/**/*.pth'
+      - 'data/**/*.pb'
+      - 'data/**/*.onnx'
+      - 'src/**'
+      - 'tools/**'
+      - 'scripts/**'
+  push:
+    branches: [main, develop]
+    paths:
+      - 'data/ai_persona/**'
+      - 'data/**/*.pkl'
+      - 'data/**/*.h5'
+      - 'data/**/*.pt'
+      - 'data/**/*.pth'
+      - 'data/**/*.pb'
+      - 'data/**/*.onnx'
+      - 'src/**'
+      - 'tools/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+  security-events: write
+  issues: write
+
+jobs:
+  ai-model-security:
+    name: AI/ML Security Threat Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@0ae58b7817e9b40c6232e8bf08f42a7a6b8e60ec  # v4
+        with:
+          python-version: '3.11'
+
+      - name: Install security scanning tools
+        run: |
+          python -m pip install --upgrade pip
+          # Install ModelScan for AI/ML model security
+          pip install modelscan
+          # Install additional security tools
+          pip install safety bandit pylint
+
+      - name: Create AI/ML security scan script
+        run: |
+          cat > ai_ml_security_scan.py << 'EOF'
+          #!/usr/bin/env python3
+          """
+          AI/ML Model Security Scanner
+          
+          Scans for:
+          - Malicious model files (pickle exploits, code injection)
+          - Unsafe deserialization patterns
+          - Data poisoning indicators
+          - Model file integrity issues
+          - Unsafe AI/ML library usage
+          """
+          import os
+          import sys
+          import json
+          import pickle
+          import hashlib
+          from pathlib import Path
+          from typing import List, Dict, Any
+
+          class AIMLSecurityScanner:
+              def __init__(self):
+                  self.findings = []
+                  self.critical_count = 0
+                  self.high_count = 0
+                  self.medium_count = 0
+                  self.low_count = 0
+
+              def scan_pickle_files(self, directory: str) -> None:
+                  """Scan for potentially malicious pickle files."""
+                  print(f"🔍 Scanning pickle files in {directory}...")
+                  
+                  pickle_files = list(Path(directory).rglob("*.pkl"))
+                  if not pickle_files:
+                      print("  No pickle files found")
+                      return
+                  
+                  for pkl_file in pickle_files:
+                      try:
+                          # Check file size (unusually large pickles are suspicious)
+                          size_mb = pkl_file.stat().st_size / (1024 * 1024)
+                          if size_mb > 100:
+                              self.add_finding(
+                                  "high",
+                                  f"Large pickle file detected: {pkl_file} ({size_mb:.2f} MB)",
+                                  "Large pickle files may contain malicious payloads or data exfiltration code",
+                                  str(pkl_file)
+                              )
+                          
+                          # Check for suspicious patterns in pickle bytecode
+                          with open(pkl_file, 'rb') as f:
+                              content = f.read()
+                              
+                              # Look for dangerous operations
+                              dangerous_patterns = [
+                                  b'__reduce__',
+                                  b'__setstate__',
+                                  b'eval',
+                                  b'exec',
+                                  b'compile',
+                                  b'os.system',
+                                  b'subprocess',
+                                  b'__import__'
+                              ]
+                              
+                              for pattern in dangerous_patterns:
+                                  if pattern in content:
+                                      self.add_finding(
+                                          "critical",
+                                          f"Dangerous pattern '{pattern.decode()}' found in {pkl_file}",
+                                          "Pickle file may contain code execution payloads",
+                                          str(pkl_file)
+                                      )
+                      except Exception as e:
+                          self.add_finding(
+                              "medium",
+                              f"Error scanning {pkl_file}: {str(e)}",
+                              "Unable to fully analyze pickle file",
+                              str(pkl_file)
+                          )
+
+              def scan_model_files(self, directory: str) -> None:
+                  """Scan various model file formats for security issues."""
+                  print(f"🔍 Scanning model files in {directory}...")
+                  
+                  model_patterns = ["*.h5", "*.pt", "*.pth", "*.pb", "*.onnx"]
+                  model_files = []
+                  
+                  for pattern in model_patterns:
+                      model_files.extend(Path(directory).rglob(pattern))
+                  
+                  if not model_files:
+                      print("  No model files found")
+                      return
+                  
+                  for model_file in model_files:
+                      # Check if model file has checksum or signature
+                      checksum_file = Path(str(model_file) + ".sha256")
+                      if not checksum_file.exists():
+                          self.add_finding(
+                              "medium",
+                              f"Model file missing integrity checksum: {model_file}",
+                              "Model files should have SHA-256 checksums for integrity verification",
+                              str(model_file)
+                          )
+                      
+                      # Check file permissions
+                      mode = model_file.stat().st_mode
+                      if mode & 0o111:  # Executable bit set
+                          self.add_finding(
+                              "high",
+                              f"Model file has executable permissions: {model_file}",
+                              "Model files should not be executable",
+                              str(model_file)
+                          )
+
+              def scan_data_poisoning(self, directory: str) -> None:
+                  """Check for potential data poisoning indicators."""
+                  print(f"🔍 Checking for data poisoning indicators in {directory}...")
+                  
+                  json_files = list(Path(directory).rglob("*.json"))
+                  
+                  for json_file in json_files:
+                      try:
+                          with open(json_file, 'r') as f:
+                              data = json.load(f)
+                              
+                              # Check for suspicious patterns
+                              data_str = json.dumps(data).lower()
+                              
+                              suspicious_keywords = [
+                                  'exploit', 'payload', 'shell', 'inject',
+                                  'backdoor', 'trojan', 'malware'
+                              ]
+                              
+                              for keyword in suspicious_keywords:
+                                  if keyword in data_str:
+                                      self.add_finding(
+                                          "medium",
+                                          f"Suspicious keyword '{keyword}' in {json_file}",
+                                          "Data files should be reviewed for potential poisoning",
+                                          str(json_file)
+                                      )
+                      except Exception:
+                          pass  # Skip invalid JSON
+
+              def scan_unsafe_deserialization(self, directory: str) -> None:
+                  """Scan Python source for unsafe deserialization patterns."""
+                  print(f"🔍 Scanning source code for unsafe deserialization...")
+                  
+                  py_files = list(Path(directory).rglob("*.py"))
+                  
+                  unsafe_patterns = {
+                      'pickle.loads(': 'Use pickle with caution, prefer safer alternatives',
+                      'pickle.load(': 'Validate pickle source before loading',
+                      'yaml.load(': 'Use yaml.safe_load() instead of yaml.load()',
+                      'eval(': 'eval() is dangerous, avoid using it',
+                      'exec(': 'exec() can execute arbitrary code',
+                      'joblib.load(': 'joblib uses pickle internally, ensure safe source',
+                      'torch.load(': 'torch.load uses pickle, set weights_only=True',
+                  }
+                  
+                  for py_file in py_files:
+                      try:
+                          with open(py_file, 'r') as f:
+                              content = f.read()
+                              
+                              for pattern, message in unsafe_patterns.items():
+                                  if pattern in content:
+                                      # Count occurrences
+                                      count = content.count(pattern)
+                                      severity = "high" if pattern in ['eval(', 'exec('] else "medium"
+                                      
+                                      self.add_finding(
+                                          severity,
+                                          f"Unsafe deserialization in {py_file}: {pattern} ({count} occurrence(s))",
+                                          message,
+                                          str(py_file)
+                                      )
+                      except Exception:
+                          pass
+
+              def add_finding(self, severity: str, title: str, description: str, location: str) -> None:
+                  """Add a security finding."""
+                  finding = {
+                      "severity": severity,
+                      "title": title,
+                      "description": description,
+                      "location": location
+                  }
+                  self.findings.append(finding)
+                  
+                  if severity == "critical":
+                      self.critical_count += 1
+                  elif severity == "high":
+                      self.high_count += 1
+                  elif severity == "medium":
+                      self.medium_count += 1
+                  else:
+                      self.low_count += 1
+
+              def generate_report(self) -> Dict[str, Any]:
+                  """Generate security scan report."""
+                  return {
+                      "summary": {
+                          "total_findings": len(self.findings),
+                          "critical": self.critical_count,
+                          "high": self.high_count,
+                          "medium": self.medium_count,
+                          "low": self.low_count
+                      },
+                      "findings": self.findings,
+                      "scan_complete": True
+                  }
+
+              def scan_all(self) -> int:
+                  """Run all scans and return exit code."""
+                  print("🚀 Starting AI/ML Security Scan...")
+                  print("=" * 60)
+                  
+                  # Scan different directories
+                  self.scan_pickle_files("data")
+                  self.scan_model_files("data")
+                  self.scan_data_poisoning("data")
+                  self.scan_unsafe_deserialization("src")
+                  self.scan_unsafe_deserialization("tools")
+                  
+                  # Generate report
+                  report = self.generate_report()
+                  
+                  # Save report
+                  with open("ai_ml_security_report.json", "w") as f:
+                      json.dump(report, f, indent=2)
+                  
+                  # Print summary
+                  print("=" * 60)
+                  print("📊 Security Scan Summary")
+                  print("=" * 60)
+                  print(f"Total findings: {report['summary']['total_findings']}")
+                  print(f"  🔴 Critical: {report['summary']['critical']}")
+                  print(f"  🟠 High:     {report['summary']['high']}")
+                  print(f"  🟡 Medium:   {report['summary']['medium']}")
+                  print(f"  🔵 Low:      {report['summary']['low']}")
+                  print()
+                  
+                  # Print findings
+                  if self.findings:
+                      print("🔍 Findings:")
+                      for finding in self.findings:
+                          icon = {"critical": "🔴", "high": "🟠", "medium": "🟡", "low": "🔵"}.get(finding["severity"], "⚪")
+                          print(f"\n{icon} [{finding['severity'].upper()}] {finding['title']}")
+                          print(f"   Location: {finding['location']}")
+                          print(f"   {finding['description']}")
+                  
+                  # Return exit code (fail if critical or high findings)
+                  if self.critical_count > 0 or self.high_count > 0:
+                      print("\n❌ Security scan FAILED: Critical or high severity issues found")
+                      return 1
+                  elif self.medium_count > 0:
+                      print("\n⚠️  Security scan completed with warnings")
+                      return 0
+                  else:
+                      print("\n✅ Security scan PASSED: No significant issues found")
+                      return 0
+
+          if __name__ == "__main__":
+              scanner = AIMLSecurityScanner()
+              exit_code = scanner.scan_all()
+              sys.exit(exit_code)
+          EOF
+          
+          chmod +x ai_ml_security_scan.py
+
+      - name: Run ModelScan on model files
+        run: |
+          echo "🔍 Running ModelScan for AI/ML model security..."
+          if [ -d "data/ai_persona" ]; then
+            modelscan scan -p data/ai_persona -o modelscan-report.json || true
+            modelscan scan -p data/ai_persona || true
+          fi
+          
+          # Scan all model files
+          find data -type f \( -name "*.pkl" -o -name "*.h5" -o -name "*.pt" -o -name "*.pth" \) -exec echo "Scanning: {}" \; -exec modelscan scan -p {} \; || true
+        continue-on-error: true
+
+      - name: Run custom AI/ML security scan
+        id: security_scan
+        run: |
+          python ai_ml_security_scan.py
+          echo "SCAN_EXIT_CODE=$?" >> $GITHUB_OUTPUT
+
+      - name: Upload security scan report
+        uses: actions/upload-artifact@ea3d6fb60d47c0a8aab02e95a1c69d16b0f24c1e  # v4
+        if: always()
+        with:
+          name: ai-ml-security-report-${{ github.sha }}
+          path: |
+            ai_ml_security_report.json
+            modelscan-report.json
+          retention-days: 90
+
+      - name: Comment scan results on PR
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea  # v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            let comment = '## 🤖 AI/ML Security Scan Results\n\n';
+            
+            try {
+              const report = JSON.parse(fs.readFileSync('ai_ml_security_report.json', 'utf8'));
+              const summary = report.summary;
+              
+              comment += `**Scan Status:** ${summary.critical > 0 || summary.high > 0 ? '❌ FAILED' : summary.medium > 0 ? '⚠️ WARNINGS' : '✅ PASSED'}\n\n`;
+              comment += `| Severity | Count |\n`;
+              comment += `|----------|-------|\n`;
+              comment += `| 🔴 Critical | ${summary.critical} |\n`;
+              comment += `| 🟠 High | ${summary.high} |\n`;
+              comment += `| 🟡 Medium | ${summary.medium} |\n`;
+              comment += `| 🔵 Low | ${summary.low} |\n`;
+              comment += `| **Total** | **${summary.total_findings}** |\n\n`;
+              
+              if (report.findings.length > 0) {
+                comment += `### Findings\n\n`;
+                const maxFindings = 10;
+                report.findings.slice(0, maxFindings).forEach(finding => {
+                  const icon = {critical: '🔴', high: '🟠', medium: '🟡', low: '🔵'}[finding.severity] || '⚪';
+                  comment += `${icon} **[${finding.severity.toUpperCase()}]** ${finding.title}\n`;
+                  comment += `- Location: \`${finding.location}\`\n`;
+                  comment += `- ${finding.description}\n\n`;
+                });
+                
+                if (report.findings.length > maxFindings) {
+                  comment += `_... and ${report.findings.length - maxFindings} more findings_\n\n`;
+                }
+              }
+              
+              comment += `\n📄 Full report available in workflow artifacts.`;
+              
+            } catch (error) {
+              comment += '⚠️ Unable to parse security scan report.\n';
+              comment += `Error: ${error.message}\n`;
+            }
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+      - name: Fail workflow if critical issues found
+        if: steps.security_scan.outputs.SCAN_EXIT_CODE != '0'
+        run: |
+          echo "❌ AI/ML security scan failed with critical or high severity issues"
+          echo "Please review the findings and address security concerns before merging"
+          exit 1
+
+      - name: Create security issue for findings
+        if: failure() && github.event_name == 'push'
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea  # v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            try {
+              const report = JSON.parse(fs.readFileSync('ai_ml_security_report.json', 'utf8'));
+              
+              if (report.summary.critical > 0 || report.summary.high > 0) {
+                const body = `## 🚨 AI/ML Security Issues Detected
+
+            **Commit:** ${context.sha}
+            **Branch:** ${context.ref}
+
+            ### Summary
+            - 🔴 Critical: ${report.summary.critical}
+            - 🟠 High: ${report.summary.high}
+            - 🟡 Medium: ${report.summary.medium}
+            - 🔵 Low: ${report.summary.low}
+
+            ### Action Required
+            Please review and address these security findings immediately.
+
+            See workflow run for full details: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}
+            `;
+                
+                await github.rest.issues.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title: `🔴 AI/ML Security Issues Detected in ${context.ref}`,
+                  body: body,
+                  labels: ['security', 'ai-ml', 'automated']
+                });
+              }
+            } catch (error) {
+              console.log('Could not create issue:', error);
+            }

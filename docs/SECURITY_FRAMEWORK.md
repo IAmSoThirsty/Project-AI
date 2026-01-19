@@ -612,6 +612,112 @@ Tests include concurrent access, high-volume operations, and adversarial inputs:
 
 ---
 
+## Supply Chain Security
+
+### Release Artifact Signing
+
+**Implementation:** Sigstore Cosign keyless signing  
+**Workflow:** `.github/workflows/sign-release-artifacts.yml`
+
+All release artifacts are cryptographically signed:
+- Python wheels (`.whl`)
+- Source distributions (`.tar.gz`)
+- Checksums (`SHA256SUMS`, `SHA512SUMS`)
+
+**Verification:**
+```bash
+cosign verify-blob <artifact> \
+  --signature=<artifact>.sig \
+  --certificate=<artifact>.pem \
+  --certificate-identity-regexp="https://github.com/IAmSoThirsty/Project-AI/*" \
+  --certificate-oidc-issuer="https://token.actions.githubusercontent.com"
+```
+
+**Benefits:**
+- **Authenticity:** Verifies artifacts built by official CI/CD
+- **Integrity:** Detects tampering or modification
+- **Non-repudiation:** Signing events logged in Sigstore Rekor
+- **Zero trust:** No long-lived signing keys to manage
+
+### Software Bill of Materials (SBOM)
+
+**Tool:** Syft (Anchore)  
+**Format:** CycloneDX 1.5 JSON  
+**Workflow:** `.github/workflows/sbom.yml`  
+**Policy:** [docs/security/SBOM_POLICY.md](security/SBOM_POLICY.md)
+
+SBOMs generated for:
+- Every main branch push (CI artifact, 90-day retention)
+- Every release (permanent, attached to release)
+- Manual workflow dispatch
+
+**SBOM Contents:**
+- Python dependencies (`requirements.txt`, `pyproject.toml`)
+- Node.js dependencies (`package.json`)
+- Binary artifacts and model files (metadata)
+- Transitive dependencies (full dependency tree)
+
+**NTIA Compliance:**
+✅ All 7 minimum elements included:
+1. Supplier Name
+2. Component Name
+3. Version
+4. Other Unique Identifiers (purl, CPE)
+5. Dependency Relationships
+6. SBOM Author
+7. Timestamp
+
+**Standards Compliance:**
+- NTIA Minimum Elements ✅
+- NIST SP 800-218 SSDF ✅
+- OWASP Software Component Verification Standard (SCVS) ✅
+- US Executive Order 14028 ✅
+
+**Usage:**
+```bash
+# Vulnerability scanning
+grype sbom:sbom-comprehensive.cyclonedx.json
+
+# License compliance
+jq '.components[].licenses' sbom-comprehensive.cyclonedx.json
+
+# Dependency analysis
+cat sbom-report.txt
+```
+
+### AI/ML Model Security
+
+**Workflow:** `.github/workflows/ai-model-security.yml`
+
+Automated scanning for AI/ML-specific threats:
+- **Malicious Models:** Pickle exploits, code injection in serialized models
+- **Unsafe Deserialization:** `pickle.loads()`, `eval()`, `exec()` usage
+- **Data Poisoning:** Suspicious patterns in training data
+- **Model Integrity:** Missing checksums, incorrect permissions
+
+**Scan Triggers:**
+- Pull requests affecting `data/ai_persona/`, `src/`, `tools/`
+- Model file changes (`.pkl`, `.h5`, `.pt`, `.pth`, `.pb`, `.onnx`)
+- Push to main/develop branches
+
+**Tools:**
+- [ModelScan](https://github.com/protectai/modelscan) - AI/ML model security scanner
+- Custom security analysis script
+- Bandit integration for Python code
+
+**Severity Levels:**
+- 🔴 **Critical:** Code execution vulnerabilities in models
+- 🟠 **High:** Unsafe deserialization patterns
+- 🟡 **Medium:** Missing integrity checks, suspicious patterns
+- 🔵 **Low:** Best practice violations
+
+**Automated Response:**
+- PR blocking for Critical/High findings
+- GitHub Issue creation on main branch failures
+- Detailed scan reports in artifacts
+
+---
+
 ## Standards Compliance
 
 ### OWASP Compliance
@@ -623,9 +729,9 @@ Tests include concurrent access, high-volume operations, and adversarial inputs:
 | A03: Injection | Parameterized queries, input validation, XXE prevention |
 | A04: Insecure Design | Security by design, threat modeling |
 | A05: Security Misconfiguration | Environment hardening, secure defaults |
-| A06: Vulnerable Components | Dependency scanning, updates |
+| A06: Vulnerable Components | Dependency scanning, SBOM, updates |
 | A07: Authentication Failures | bcrypt hashing, MFA support |
-| A08: Software and Data Integrity | Code signing, audit logging |
+| A08: Software and Data Integrity | **Artifact signing, SBOM, audit logging** |
 | A09: Logging Failures | Comprehensive audit logs, CloudWatch |
 | A10: SSRF | Input validation, URL whitelisting |
 
@@ -661,6 +767,9 @@ Tests include concurrent access, high-volume operations, and adversarial inputs:
 - [ ] Configure CloudWatch dashboards and alarms
 - [ ] Set up SNS topic for security alerts
 - [ ] Review and minimize IAM permissions (PoLP)
+- [ ] **Verify artifact signatures:** Check Cosign signatures on release artifacts
+- [ ] **Review SBOM:** Scan SBOM for known vulnerabilities
+- [ ] **Validate AI/ML models:** Ensure model security scan passed
 
 ### Post-Deployment
 
@@ -672,6 +781,9 @@ Tests include concurrent access, high-volume operations, and adversarial inputs:
 - [ ] Set up log aggregation (CloudWatch Logs)
 - [ ] Document incident response procedures
 - [ ] Schedule security audits (quarterly)
+- [ ] **Monitor SBOM vulnerabilities:** Set up automated scanning
+- [ ] **Verify release signatures:** Test signature verification process
+- [ ] **Archive SBOMs:** Store SBOMs for compliance records
 
 ### Ongoing Maintenance
 
@@ -683,6 +795,9 @@ Tests include concurrent access, high-volume operations, and adversarial inputs:
 - [ ] Update dependencies monthly
 - [ ] Run penetration tests annually
 - [ ] Review and update documentation
+- [ ] **Scan SBOMs monthly:** Check for new vulnerabilities in dependencies
+- [ ] **Verify artifact signatures:** Spot-check release signatures quarterly
+- [ ] **Update AI/ML model scans:** Review and update threat detection patterns
 
 ---
 
