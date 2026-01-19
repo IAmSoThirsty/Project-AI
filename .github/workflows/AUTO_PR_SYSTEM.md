@@ -21,15 +21,17 @@ The automation system consists of three interconnected workflows:
 **Process**:
 1. Discovers all branches without open PRs
 2. Checks each branch for merge conflicts with main
-3. Attempts to auto-resolve conflicts
-4. Generates descriptive PR titles and bodies
-5. Creates PRs with appropriate labels (`automated`, `auto-created`, `auto-merge`)
-6. Generates summary reports
+3. Identifies branches with merge conflicts and marks them for manual resolution
+4. Merges main into conflict-free branches to keep them updated
+5. Generates descriptive PR titles and bodies
+6. Creates PRs with appropriate labels (`automated`, `auto-created`, `auto-merge`)
+7. Generates summary reports
 
 **Conflict Handling**:
-- Attempts automatic conflict resolution using merge strategies
+- Detects merge conflicts between branch heads and the `main` branch
 - Labels conflicted PRs with `conflicts` and `needs-manual-review`
 - Non-conflicted PRs get `auto-merge` and `ready-for-review` labels
+- Merges main into conflict-free branches (with `[skip ci]` to prevent re-triggering)
 
 ### 2. Comprehensive PR Automation (`comprehensive-pr-automation.yml`)
 
