@@ -172,10 +172,10 @@ jobs:
           ref: ${{ matrix.branch }}
           fetch-depth: 0
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
+      - name: Set up Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Check for merge conflicts with main
         id: conflict-check
@@ -188,41 +188,34 @@ jobs:
           # Check if there are unmerged files (conflicts)
           if git diff --name-only --diff-filter=U | grep -q .; then
             echo "conflict=true" >> $GITHUB_OUTPUT
+            echo "CONFLICTS_PRESENT=true" >> $GITHUB_ENV
             echo "⚠️ Merge conflicts detected with main"
             # Abort the merge attempt
             git merge --abort
           else
             echo "conflict=false" >> $GITHUB_OUTPUT
+            echo "CONFLICTS_PRESENT=false" >> $GITHUB_ENV
             echo "✅ No conflicts with main"
             # Abort the merge if we started one
             git merge --abort 2>/dev/null || true
           fi
 
-      - name: Attempt auto-resolve conflicts
-        if: steps.conflict-check.outputs.conflict == 'true'
+      - name: Merge main into branch (if no conflicts)
+        if: steps.conflict-check.outputs.conflict == 'false'
         run: |
-          echo "Attempting to auto-resolve conflicts..."
+          echo "No conflicts detected, merging main to keep branch up-to-date..."
           
           # Merge main into current branch
           git merge origin/main --no-commit --no-ff || true
           
-          # Check for conflicts
+          # Check for conflicts (should not happen, but defensive check)
           if git diff --name-only --diff-filter=U | grep -q .; then
-            echo "CONFLICTS_PRESENT=true" >> $GITHUB_ENV
-            
-            # List conflicted files
-            echo "Conflicted files:"
-            git diff --name-only --diff-filter=U
-            
-            # Abort the merge
+            echo "Unexpected conflicts appeared, aborting merge"
             git merge --abort
           else
-            echo "CONFLICTS_PRESENT=false" >> $GITHUB_ENV
-            echo "Conflicts auto-resolved successfully"
-            
-            # Commit the merge
-            git commit -m "chore: merge main to resolve conflicts [automated]"
-            git push origin ${{ matrix.branch }}
+            # Commit the merge with [skip ci] to prevent re-triggering this workflow
+            git commit -m "chore: merge main to keep branch updated [skip ci]" || echo "Nothing to merge"
+            git push origin ${{ matrix.branch }} || echo "Nothing to push"
           fi
 
       - name: Get branch info
@@ -277,16 +270,24 @@ jobs:
           LAST_COMMIT="${{ steps.branch-info.outputs.last_commit_message }}"
           CONFLICTS="${{ env.CONFLICTS_PRESENT }}"
           
-          # Generate title based on branch name
-          if [[ "$BRANCH" == copilot/* ]]; then
-            TITLE="[Auto] Merge ${BRANCH#copilot/}"
-          elif [[ "$BRANCH" == feature/* ]]; then
-            TITLE="[Auto] Feature: ${BRANCH#feature/}"
-          elif [[ "$BRANCH" == fix/* ]]; then
-            TITLE="[Auto] Fix: ${BRANCH#fix/}"
-          else
-            TITLE="[Auto] Merge branch: $BRANCH"
-          fi
+          # Generate title based on branch name using case statement for safety
+          case "$BRANCH" in
+            copilot)
+              TITLE="[Auto] Merge $BRANCH"
+              ;;
+            copilot/*)
+              TITLE="[Auto] Merge ${BRANCH#copilot/}"
+              ;;
+            feature/*)
+              TITLE="[Auto] Feature: ${BRANCH#feature/}"
+              ;;
+            fix/*)
+              TITLE="[Auto] Fix: ${BRANCH#fix/}"
+              ;;
+            *)
+              TITLE="[Auto] Merge branch: $BRANCH"
+              ;;
+          esac
           
           # Generate body
           BODY="## 🤖 Automated Pull Request
@@ -340,13 +341,18 @@ jobs:
 
       - name: Create Pull Request
         id: create-pr
+        env:
+          BRANCH: ${{ matrix.branch }}
+          PR_TITLE: ${{ steps.pr-content.outputs.title }}
+          PR_BODY: ${{ steps.pr-content.outputs.body }}
+          CONFLICTS_PRESENT: ${{ env.CONFLICTS_PRESENT }}
         uses: actions/github-script@v7
         with:
           script: |
-            const branch = '${{ matrix.branch }}';
-            const title = `${{ steps.pr-content.outputs.title }}`;
-            const body = `${{ steps.pr-content.outputs.body }}`;
-            const hasConflicts = '${{ env.CONFLICTS_PRESENT }}' === 'true';
+            const branch = process.env.BRANCH;
+            const title = process.env.PR_TITLE || '';
+            const body = process.env.PR_BODY || '';
+            const hasConflicts = process.env.CONFLICTS_PRESENT === 'true';
             
             try {
               // Create the PR
