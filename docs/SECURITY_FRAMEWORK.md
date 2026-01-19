@@ -481,6 +481,7 @@ Secure web services with SOAP, HTTP, and capability-based access control.
 ```python
 from app.security.web_service import SOAPClient
 
+# EXAMPLE ONLY - Use environment variables for real credentials
 client = SOAPClient(
     endpoint="https://api.example.com/soap",
     username=os.getenv("SOAP_USERNAME"),
