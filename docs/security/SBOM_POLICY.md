@@ -353,6 +353,7 @@ If SBOM integrity is compromised:
 ### 11.2 Vulnerability Discovery
 
 When vulnerability is found via SBOM:
+
 1. **Assess:** Determine impact and exploitability
 2. **Prioritize:** Assign severity (Critical/High/Medium/Low)
 3. **Patch:** Update vulnerable dependency
