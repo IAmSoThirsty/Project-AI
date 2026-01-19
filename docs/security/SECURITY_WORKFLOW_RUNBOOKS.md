@@ -324,6 +324,7 @@ timeout 300 grype sbom:sbom-comprehensive.cyclonedx.json
 **Impact:** Supply chain visibility lost, compliance issue
 
 **Immediate Actions:**
+
 1. Run manual SBOM generation:
    ```bash
    # Install Syft
