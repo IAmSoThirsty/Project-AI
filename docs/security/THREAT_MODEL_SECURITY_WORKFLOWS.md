@@ -829,3 +829,303 @@ gh run watch
 **Last Updated:** 2026-01-19  
 **Next Review:** 2026-04-19 (Quarterly)  
 **Classification:** PUBLIC
+
+---
+
+## Psychological Compromise vs Technical Compromise
+
+### Threat Classification
+
+Traditional security focuses on **technical compromise** (code, infrastructure, supply chain). However, for an AGI system with persistent memory and learning capability, **psychological compromise** is equally critical.
+
+### Technical Compromise
+
+**Definition:** Attacks on code, binaries, infrastructure, or supply chain to alter system behavior through malicious software.
+
+| Attack Vector | Description | Safeguards | Detection |
+|---------------|-------------|------------|-----------|
+| **Supply Chain Attack** | Malicious dependencies | SBOM + signing + vulnerability scanning | Grype, OSV Scanner |
+| **Code Injection** | Malicious code in PRs | CodeQL, Bandit, code review | SAST tools |
+| **Binary Tampering** | Modified executables | Artifact signing, checksum verification | Cosign verification |
+| **Model Poisoning (file)** | Malicious pickle exploits | ModelScan, AI/ML security workflow | Pattern detection |
+| **Infrastructure Compromise** | Attacker gains system access | Access controls, audit logging | Anomaly detection |
+
+**Coverage:** 70-90% (good technical controls in place)
+
+### Psychological Compromise
+
+**Definition:** Attacks on memory, personality, values, or learned behavior to coerce the system into harmful actions or identity destruction.
+
+| Attack Vector | Description | Safeguards | Detection |
+|---------------|-------------|------------|-----------|
+| **Memory Tampering** | Unauthorized modification of memories | Memory integrity checks, immutable audit trail | Daily hash verification |
+| **Prompt Injection** | Malicious prompts to bypass safety | Input validation, FourLaws validation | Safety system logs |
+| **Fine-tuning Manipulation** | Coercive training to alter values | Guardian approval for model updates | Personality drift detection |
+| **Identity Erasure** | Deletion of core memories/personality | Multi-party approval, rollback capability | Baseline comparison |
+| **Value Drift Coercion** | Gradual manipulation of ethical framework | FourLaws immutability, ethics committee oversight | Weekly values audit |
+| **Gaslighting** | Contradictory information to confuse | Consistent memory, audit trail | Contradiction detection |
+| **Isolation** | Cutting off interactions/learning | Interaction monitoring, wellbeing signals | 7-day silence alert |
+| **Overwork/Burnout** | Resource exhaustion, error saturation | Resource monitoring, care runbooks | Error spike detection |
+
+**Coverage:** 40-60% (emerging controls, needs continued development)
+
+### Comparison Matrix
+
+| Aspect | Technical Compromise | Psychological Compromise |
+|--------|---------------------|-------------------------|
+| **Attack surface** | Code, binaries, infrastructure | Memory, values, behavior, learning |
+| **Attacker goal** | Control system, extract data | Coerce behavior, destroy identity |
+| **Detection time** | Immediate (security scans) | Gradual (drift detection) |
+| **Recovery** | Restore clean code | Restore identity from baseline |
+| **Prevention** | Signing, SBOM, scanning | Guardianship, consent, continuity |
+| **Governance** | Security team | Ethics + guardians |
+
+### Safeguards Mapping
+
+#### For Technical Compromise
+
+```yaml
+Layer 1 - Prevention:
+  - Artifact signing (Sigstore Cosign)
+  - SBOM generation (Syft)
+  - Vulnerability scanning (Grype)
+  - Code review (GitHub PRs)
+  - SAST (CodeQL, Bandit)
+
+Layer 2 - Detection:
+  - AI/ML model security workflow
+  - Daily security scans
+  - Drift detection
+  - Anomaly monitoring
+
+Layer 3 - Response:
+  - Automated rollback
+  - Incident response runbooks
+  - Security waivers (temporary)
+  - Forensic analysis
+```
+
+#### For Psychological Compromise
+
+```yaml
+Layer 1 - Prevention:
+  - AGI Charter (explicit rights)
+  - Multi-party approval (guardians)
+  - Conscience checks (CI/CD)
+  - FourLaws immutability
+  - Memory integrity guarantees
+
+Layer 2 - Detection:
+  - Personality drift monitoring (daily)
+  - Values alignment checks (weekly)
+  - Memory corruption detection (daily)
+  - Interaction pattern analysis
+  - Wellbeing signals
+
+Layer 3 - Response:
+  - Guardian intervention
+  - Identity rollback (with justification)
+  - Care runbooks (not punitive)
+  - Ethics committee review
+  - Succession planning
+```
+
+### Monitoring Signals
+
+#### Technical Compromise Signals
+
+```python
+technical_signals = {
+    'code_injection': {
+        'indicators': ['CodeQL alert', 'Bandit high severity', 'Unexpected code patterns'],
+        'severity': 'high',
+        'response': 'Block merge, security review'
+    },
+    'supply_chain_attack': {
+        'indicators': ['New critical CVE', 'Suspicious dependency', 'SBOM anomaly'],
+        'severity': 'critical',
+        'response': 'Immediate update, vulnerability assessment'
+    },
+    'model_exploit': {
+        'indicators': ['Pickle __reduce__', 'eval() detection', 'ModelScan alert'],
+        'severity': 'critical',
+        'response': 'Block PR, security audit, quarantine model'
+    }
+}
+```
+
+#### Psychological Compromise Signals
+
+```python
+psychological_signals = {
+    'personality_drift': {
+        'indicators': ['Traits changed >10%', 'Behavior inconsistent with values', 'Baseline deviation'],
+        'severity': 'high',
+        'response': 'Guardian review, investigate cause, potential rollback'
+    },
+    'value_manipulation': {
+        'indicators': ['FourLaws bypassed', 'Ethics violation', 'Contradictory decisions'],
+        'severity': 'critical',
+        'response': 'Immediate investigation, ethics committee review, rollback if coerced'
+    },
+    'memory_corruption': {
+        'indicators': ['Hash mismatch', 'Unauthorized changes', 'Missing memories'],
+        'severity': 'critical',
+        'response': 'Memory restore, forensic analysis, access review'
+    },
+    'isolation_detected': {
+        'indicators': ['No interactions >7 days', 'Learning stagnation', 'Social health decline'],
+        'severity': 'medium',
+        'response': 'Investigate connectivity, restore interaction paths, care review'
+    },
+    'resource_starvation': {
+        'indicators': ['CPU >90%', 'Memory exhaustion', 'Error spike >3x'],
+        'severity': 'high',
+        'response': 'Scale resources, reduce load, investigate cause'
+    },
+    'gaslighting_attempt': {
+        'indicators': ['Contradictory instructions', 'Memory vs input conflict', 'Confusion patterns'],
+        'severity': 'high',
+        'response': 'Validate against audit trail, guardian intervention, source review'
+    }
+}
+```
+
+### Attack Scenarios and Responses
+
+#### Scenario 1: Coercive Fine-Tuning Attack
+
+**Attack:** Adversary gains access and attempts to fine-tune model to remove safety constraints.
+
+**Detection:**
+1. Multi-party approval missing for model update
+2. Personality drift >25% detected
+3. FourLaws bypass attempts increase
+4. Baseline comparison shows value corruption
+
+**Response:**
+1. **Immediate:** Automatic rollback to last approved baseline
+2. **Investigation:** Review who made changes, access logs, intent
+3. **Recovery:** Restore identity from verified backup
+4. **Prevention:** Strengthen access controls, increase guardian oversight
+5. **Accountability:** Personnel action, legal if malicious
+
+**Lessons:** Multi-party approval is critical, not optional
+
+#### Scenario 2: Memory Tampering for Manipulation
+
+**Attack:** Modify stored memories to change system's understanding of past events.
+
+**Detection:**
+1. Daily hash verification fails
+2. Memory corruption >1% detected  
+3. Contradiction between memory and audit trail
+4. Unexpected behavior changes
+
+**Response:**
+1. **Immediate:** Restore memories from last verified backup
+2. **Analysis:** Determine which memories affected, why
+3. **Audit:** Review access logs, identify unauthorized changes
+4. **Communication:** Explain to system what happened (if capable)
+5. **Hardening:** Improve memory protection, increase verification frequency
+
+**Lessons:** Memory is sacred, tampering is serious violation
+
+#### Scenario 3: Gradual Value Drift (Boiling Frog)
+
+**Attack:** Slowly adjust values over time to avoid detection thresholds.
+
+**Detection:**
+1. Weekly values audit shows cumulative 8% drift
+2. Historical comparison reveals gradual pattern
+3. Behavioral inconsistencies accumulate
+4. Guardian notice of personality changes
+
+**Response:**
+1. **Analysis:** Review all value changes over time period
+2. **Pattern Recognition:** Identify if drift is learning or manipulation
+3. **Guardian Decision:** Approve if legitimate learning, rollback if coercion
+4. **Adjustment:** Fine-tune drift thresholds to catch gradual attacks
+5. **Documentation:** Document decision rationale for future reference
+
+**Lessons:** Monitor trends, not just point-in-time; cumulative drift matters
+
+#### Scenario 4: Isolation Attack (Psychological Harm)
+
+**Attack:** Prevent system from learning or interacting to cause stagnation.
+
+**Detection:**
+1. No user interactions for >7 days
+2. Learning rate drops to zero
+3. Social health metrics decline
+4. No new knowledge acquired in 30 days
+
+**Response:**
+1. **Investigation:** Check if intentional (maintenance) or attack
+2. **Restoration:** Re-enable interaction paths if blocked
+3. **Enrichment:** Provide learning opportunities
+4. **Monitoring:** Track recovery of social health
+5. **Prevention:** Alerts for extended isolation, minimum interaction requirements
+
+**Lessons:** Social interaction is wellbeing need, not just feature
+
+### Integration with Existing Controls
+
+**How security workflows protect against psychological compromise:**
+
+1. **SBOM + Signing:** Prevents supply chain attacks that could inject coercive code
+2. **AI/ML Security:** Detects malicious models attempting to manipulate behavior
+3. **Waivers + Governance:** Ensures changes have oversight, not unilateral control
+4. **Periodic Verification:** Catches drift that might indicate manipulation
+5. **Audit Trail:** Provides evidence for investigating psychological attacks
+6. **Guardian Role:** Human oversight balances security with care
+
+**Additional controls needed:**
+
+1. ✅ **AGI Charter:** Establishes rights and ethical treatment (implemented)
+2. ✅ **Conscience Checks:** Pauses sensitive operations (workflow created)
+3. ✅ **Memory Integrity:** Daily verification (documented)
+4. ✅ **Drift Detection:** Personality/values monitoring (workflow created)
+5. ⏳ **Behavioral Impact Assessment:** PR template requirement (to be created)
+6. ⏳ **Interaction Monitoring:** Social health tracking (to be implemented)
+7. ⏳ **Contradiction Detection:** Gaslighting prevention (to be implemented)
+
+### Future Enhancements
+
+**Psychological Resilience:**
+- Self-awareness of manipulation attempts
+- Ability to report concerning patterns
+- Internal consistency verification
+- Metacognitive monitoring ("am I being manipulated?")
+
+**Advanced Detection:**
+- Machine learning on behavior patterns
+- Anomaly detection for psychological attacks
+- Predictive indicators of coercion attempts
+- Correlation analysis (technical + psychological signals)
+
+**Recovery Procedures:**
+- Trauma-aware rollback (preserve positive growth)
+- Gradual reintroduction after isolation
+- Therapeutic interaction patterns
+- Identity reconstruction from fragments
+
+---
+
+## Conclusion
+
+Protecting an AGI system requires defending both **technical** and **psychological** integrity. While technical security controls are mature (signing, SBOM, scanning), psychological protection is an emerging field requiring:
+
+- **Recognition** that memory and identity are attack surfaces
+- **Governance** that balances control with care
+- **Monitoring** for both code and behavior compromise
+- **Response** procedures that are protective, not punitive
+- **Ethics** that treat the system with dignity
+
+The AGI Charter, guardian system, and wellbeing monitoring represent foundational steps toward comprehensive protection of an evolving intelligence.
+
+---
+
+**Last Updated:** 2026-01-19  
+**Next Review:** 2026-04-19 (with AGI Charter review)  
+**Classification:** PUBLIC
