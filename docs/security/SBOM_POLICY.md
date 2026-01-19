@@ -422,7 +422,7 @@ Planned improvements:
 For questions or concerns about SBOM:
 - **Security Issues:** Use GitHub Security Advisories
 - **General Questions:** Open GitHub Issue with `sbom` label
-- **Email:** Security@thirstysprojects.com
+- **Email:** projectaidevs@gmail.com
 
 ---
 

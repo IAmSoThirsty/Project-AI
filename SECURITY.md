@@ -24,7 +24,7 @@ We take security seriously and appreciate your efforts to responsibly disclose s
 
 If you prefer not to use GitHub's private reporting:
 
-- **Email:** Security@thirstysprojects.com
+- **Email:** projectaidevs@gmail.com
 - **Public Issue:** Open an issue labeled `security` (only for non-sensitive issues)
 
 ### What to Include
@@ -159,4 +159,4 @@ The following are **not** considered security vulnerabilities:
 ---
 
 **Last Updated:** 2026-01-19  
-**Contact:** Security@thirstysprojects.com
+**Contact:** projectaidevs@gmail.com
