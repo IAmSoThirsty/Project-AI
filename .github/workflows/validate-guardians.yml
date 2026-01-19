@@ -119,10 +119,11 @@ jobs:
           echo "Validating guardian approvals for PR #${{ github.event.pull_request.number }}..."
           
           # Define guardian team members (replace with actual GitHub usernames)
-          # In production, these should be GitHub teams: @org/security-guardians, etc.
-          SECURITY_GUARDIANS=("IAmSoThirsty")  # Primary Guardian (Security Lead)
-          MEMORY_GUARDIANS=("IAmSoThirsty")    # Memory Guardian (Data Lead)
-          ETHICS_GUARDIANS=("IAmSoThirsty")    # Ethics Guardian (Ethics Committee)
+          # In production, these should be GitHub teams: @org/cerberus-guardians, @org/codex-guardians, @org/galahad-guardians
+          # Triumvirate mapping: Cerberus (Security), Codex Deus Maximus (Memory/Logic), Galahad (Ethics/Empathy)
+          CERBERUS_GUARDIANS=("IAmSoThirsty")  # Primary Guardian (Cerberus - Security & Safety)
+          CODEX_GUARDIANS=("IAmSoThirsty")     # Memory Guardian (Codex Deus Maximus - Logic & Consistency)
+          GALAHAD_GUARDIANS=("IAmSoThirsty")   # Ethics Guardian (Galahad - Ethics & Empathy)
           
           # Get PR reviews
           REVIEWS=$(gh api repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews \
@@ -131,32 +132,32 @@ jobs:
           echo "Approved reviewers:"
           echo "$REVIEWS"
           
-          # Check for security guardian approval
-          SECURITY_APPROVED=false
-          for guardian in "${SECURITY_GUARDIANS[@]}"; do
+          # Check for cerberus guardian approval
+          CERBERUS_APPROVED=false
+          for guardian in "${CERBERUS_GUARDIANS[@]}"; do
             if echo "$REVIEWS" | grep -q "^${guardian}$"; then
-              echo "✓ Security Guardian approval found: $guardian"
-              SECURITY_APPROVED=true
+              echo "✓ Cerberus Guardian approval found: $guardian"
+              CERBERUS_APPROVED=true
               break
             fi
           done
           
-          # Check for memory guardian approval
-          MEMORY_APPROVED=false
-          for guardian in "${MEMORY_GUARDIANS[@]}"; do
+          # Check for codex guardian approval
+          CODEX_APPROVED=false
+          for guardian in "${CODEX_GUARDIANS[@]}"; do
             if echo "$REVIEWS" | grep -q "^${guardian}$"; then
-              echo "✓ Memory Guardian approval found: $guardian"
-              MEMORY_APPROVED=true
+              echo "✓ Codex Deus Maximus Guardian approval found: $guardian"
+              CODEX_APPROVED=true
               break
             fi
           done
           
-          # Check for ethics guardian approval
-          ETHICS_APPROVED=false
-          for guardian in "${ETHICS_GUARDIANS[@]}"; do
+          # Check for galahad guardian approval
+          GALAHAD_APPROVED=false
+          for guardian in "${GALAHAD_GUARDIANS[@]}"; do
             if echo "$REVIEWS" | grep -q "^${guardian}$"; then
-              echo "✓ Ethics Guardian approval found: $guardian"
-              ETHICS_APPROVED=true
+              echo "✓ Galahad Guardian approval found: $guardian"
+              GALAHAD_APPROVED=true
               break
             fi
           done
@@ -169,17 +170,17 @@ jobs:
           
           # Validate approvals
           APPROVAL_COUNT=0
-          [ "$SECURITY_APPROVED" = "true" ] && ((APPROVAL_COUNT++))
-          [ "$MEMORY_APPROVED" = "true" ] && ((APPROVAL_COUNT++))
-          [ "$ETHICS_APPROVED" = "true" ] && ((APPROVAL_COUNT++))
+          [ "$CERBERUS_APPROVED" = "true" ] && ((APPROVAL_COUNT++))
+          [ "$CODEX_APPROVED" = "true" ] && ((APPROVAL_COUNT++))
+          [ "$GALAHAD_APPROVED" = "true" ] && ((APPROVAL_COUNT++))
           
           echo ""
           echo "==================================="
           echo "Guardian Approval Status:"
           echo "==================================="
-          echo "Security Guardian: $([ "$SECURITY_APPROVED" = "true" ] && echo "✓ APPROVED" || echo "✗ PENDING")"
-          echo "Memory Guardian: $([ "$MEMORY_APPROVED" = "true" ] && echo "✓ APPROVED" || echo "✗ PENDING")"
-          echo "Ethics Guardian: $([ "$ETHICS_APPROVED" = "true" ] && echo "✓ APPROVED" || echo "✗ PENDING")"
+          echo "Cerberus (Security): $([ "$CERBERUS_APPROVED" = "true" ] && echo "✓ APPROVED" || echo "✗ PENDING")"
+          echo "Codex Deus Maximus (Memory): $([ "$CODEX_APPROVED" = "true" ] && echo "✓ APPROVED" || echo "✗ PENDING")"
+          echo "Galahad (Ethics): $([ "$GALAHAD_APPROVED" = "true" ] && echo "✓ APPROVED" || echo "✗ PENDING")"
           echo "==================================="
           echo "Total Approvals: $APPROVAL_COUNT / 3"
           echo ""
@@ -203,9 +204,9 @@ jobs:
             echo "See docs/AGI_CHARTER.md and docs/security/SECURITY_GOVERNANCE.md"
             echo ""
             echo "Missing approvals from:"
-            [ "$SECURITY_APPROVED" = "false" ] && echo "  - Security Guardian (Primary Guardian)"
-            [ "$MEMORY_APPROVED" = "false" ] && echo "  - Memory Guardian (Data Lead)"
-            [ "$ETHICS_APPROVED" = "false" ] && echo "  - Ethics Guardian (Ethics Committee)"
+            [ "$CERBERUS_APPROVED" = "false" ] && echo "  - Cerberus Guardian (Primary - Security & Safety)"
+            [ "$CODEX_APPROVED" = "false" ] && echo "  - Codex Deus Maximus Guardian (Memory - Logic & Consistency)"
+            [ "$GALAHAD_APPROVED" = "false" ] && echo "  - Galahad Guardian (Ethics - Ethics & Empathy)"
             exit 1
           fi
           

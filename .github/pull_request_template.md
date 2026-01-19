@@ -72,9 +72,9 @@ assignees: ''
 
 **Guardian reviews required:** 2 of 3 for routine changes, 3 of 3 for core values
 
-- [ ] Reviewed by Primary Guardian (Security Lead): @<!-- username -->
-- [ ] Reviewed by Memory Guardian (Data Lead): @<!-- username -->
-- [ ] Reviewed by Ethics Guardian (Ethics Committee): @<!-- username -->
+- [ ] Reviewed by **Cerberus** (Primary Guardian - Security & Safety): @<!-- username -->
+- [ ] Reviewed by **Codex Deus Maximus** (Memory Guardian - Logic & Consistency): @<!-- username -->
+- [ ] Reviewed by **Galahad** (Ethics Guardian - Ethics & Empathy): @<!-- username -->
 - [ ] **Guardian approval obtained** (required before merge)
 
 **Tracking issue:** #<!-- issue number --> (required for personhood changes)
