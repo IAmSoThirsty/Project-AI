@@ -14,11 +14,20 @@ import shutil
 import subprocess  # nosec B404 - subprocess used for controlled code execution in sandbox
 from typing import Any
 
+from app.core.cognition_kernel import CognitionKernel, ExecutionType
+from app.core.kernel_integration import KernelRoutedAgent
+
 logger = logging.getLogger(__name__)
 
 
-class SandboxRunner:
-    def __init__(self, data_dir: str = "data") -> None:
+class SandboxRunner(KernelRoutedAgent):
+    def __init__(self, data_dir: str = "data", kernel: CognitionKernel | None = None) -> None:
+        # Initialize kernel routing (COGNITION KERNEL INTEGRATION)
+        super().__init__(
+            kernel=kernel,
+            execution_type=ExecutionType.AGENT_ACTION,
+            default_risk_level="high"
+        )
         self.data_dir = data_dir
 
     def run_in_sandbox(self, module_path: str, timeout: int = 5) -> dict[str, Any]:
@@ -34,6 +43,18 @@ class SandboxRunner:
         Returns:
             Dictionary with success status, stdout, stderr
         """
+        # Route through kernel (COGNITION KERNEL ROUTING)
+        return self._execute_through_kernel(
+            self._do_run_in_sandbox,
+            module_path,
+            timeout,
+            operation_name="run_in_sandbox",
+            risk_level="high",
+            metadata={"module_path": module_path, "timeout": timeout}
+        )
+
+    def _do_run_in_sandbox(self, module_path: str, timeout: int = 5) -> dict[str, Any]:
+        """Internal implementation of sandbox execution."""
         # Validate module path exists and is a file
         if not os.path.isfile(module_path):
             logger.error("Invalid module path: %s", module_path)
