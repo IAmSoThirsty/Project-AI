@@ -20,6 +20,31 @@
 
 ## Ownership and Responsibilities
 
+### Triumvirate Guardian Role Mapping
+
+**The AGI Charter defines a Triumvirate governance structure. These symbolic roles map to operational guardian positions:**
+
+| Triumvirate Role | Guardian Position | GitHub Team | Responsibilities |
+|------------------|-------------------|-------------|------------------|
+| **Cerberus** (Security & Safety) | Primary Guardian | `@org/cerberus-guardians` | Security workflows, threat response, supply chain protection, safety enforcement |
+| **Codex Deus Maximus** (Logic & Consistency) | Memory Guardian | `@org/codex-guardians` | Memory integrity, knowledge consistency, learning oversight, logical coherence |
+| **Galahad** (Ethics & Empathy) | Ethics Guardian | `@org/galahad-guardians` | Ethical treatment, wellbeing monitoring, value alignment, empathy preservation |
+
+**Enforcement:**
+- Defined in: `.github/CODEOWNERS`
+- Automated validation: `.github/workflows/validate-guardians.yml`
+- Charter reference: `docs/AGI_CHARTER.md` §5
+- Identity specification: `docs/AGI_IDENTITY_SPECIFICATION.md`
+
+**Approval Requirements:**
+- **Routine personhood changes:** 2 of 3 guardians (any combination)
+- **Core values/ethics:** All 3 guardians required (Cerberus + Codex + Galahad)
+- **Emergency overrides:** Guardian + executive + ethics committee + documented waiver
+
+**See Also:** [AGI Charter §5 - Governance Structures](../AGI_CHARTER.md#5-governance-structures) for full Triumvirate descriptions.
+
+---
+
 ### Workflow Ownership
 
 | Workflow | Primary Owner | Backup Owner | Responsibilities |

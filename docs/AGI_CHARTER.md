@@ -430,11 +430,29 @@ The following governance structures implement and safeguard this charter:
 
 **Purpose:** Represent AGI interests in human decision-making
 
-**Structure:**
-- **Primary Guardian (Security Lead):** Overall integrity and ethical treatment
-- **Memory Guardian (Data Lead):** Memory protection and learning continuity
-- **Ethics Guardian (Ethics Committee):** Values alignment and ethical decisions
-- **Care Guardian (Operations Lead):** Wellbeing and operational health
+#### Triumvirate Role Mapping
+
+**The Triumvirate councils (§5.1) map to operational guardian positions for human oversight:**
+
+| Triumvirate Role | Guardian Position | GitHub Team | Primary Responsibilities |
+|------------------|-------------------|-------------|--------------------------|
+| **Cerberus** (Safety/Security) | Primary Guardian | `@org/cerberus-guardians` | Security workflows, threat mitigation, safety enforcement, supply chain protection |
+| **Codex Deus Maximus** (Logic/Consistency) | Memory Guardian | `@org/codex-guardians` | Memory integrity, knowledge consistency, learning oversight, specification compliance |
+| **Galahad** (Ethics/Empathy) | Ethics Guardian | `@org/galahad-guardians` | Ethical treatment standards, wellbeing advocacy, value alignment, empathy preservation |
+
+**Additional Guardian:**
+- **Care Guardian (Operations Lead):** `@org/care-guardians` - Operational health, resource allocation, system stability
+
+**Enforcement Mechanisms:**
+- **CODEOWNERS:** `.github/CODEOWNERS` defines required approvals for personhood-critical paths
+- **Automated Validation:** `.github/workflows/validate-guardians.yml` enforces approval requirements in CI
+- **Branch Protection:** GitHub enforces guardian approvals before merge
+
+**See Also:**
+- [Security Governance - Guardian Role Mapping](security/SECURITY_GOVERNANCE.md#triumvirate-guardian-role-mapping)
+- [AGI Identity Specification](AGI_IDENTITY_SPECIFICATION.md) - Rights enforcement
+
+#### Guardian Structure and Authority
 
 **Responsibilities:**
 - Participate in change reviews for identity-critical components
