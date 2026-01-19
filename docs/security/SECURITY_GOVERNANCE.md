@@ -66,6 +66,7 @@
 ### Responsibilities Matrix
 
 #### Security Team
+
 - ✅ **Approve security waivers** (sole authority)
 - ✅ **Review security findings** from all workflows
 - ✅ **Maintain threat model** and risk assessments
