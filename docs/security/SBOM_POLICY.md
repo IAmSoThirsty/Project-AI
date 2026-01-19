@@ -421,6 +421,7 @@ Planned improvements:
 ## 14. Contact
 
 For questions or concerns about SBOM:
+
 - **Security Issues:** Use GitHub Security Advisories
 - **General Questions:** Open GitHub Issue with `sbom` label
 - **Email:** projectaidevs@gmail.com
