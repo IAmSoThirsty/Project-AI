@@ -5,47 +5,100 @@
 
 ---
 
-<div align="center">
-
-<img src="https://img.shields.io/github/actions/workflow/status/IAmSoThirsty/Project-AI/ci-consolidated.yml?branch=main&style=for-the-badge" alt="CI Status" height="34">
-<img src="https://codecov.io/gh/IAmSoThirsty/Project-AI/branch/main/graph/badge.svg?style=for-the-badge" alt="Coverage" height="34">
-<img src="https://img.shields.io/badge/tests-100%2B-green?logo=pytest&label=Test%20Coverage&style=for-the-badge" alt="Test Coverage" height="34">
-<img src="https://img.shields.io/github/last-commit/IAmSoThirsty/Project-AI?style=for-the-badge" alt="Last Commit" height="34">
-<img src="https://img.shields.io/github/license/IAmSoThirsty/Project-AI?style=for-the-badge" alt="License" height="34">
-
-<img src="https://img.shields.io/github/security-advisories/IAmSoThirsty/Project-AI?style=for-the-badge" alt="Security Advisories" height="34">
-<img src="https://img.shields.io/badge/security-NIST%20AI%20RMF,%20OWASP%20LLM%20Top%2010-informational?logo=datadog&style=for-the-badge" alt="Compliance" height="34">
-<img src="https://img.shields.io/badge/security-bandit-informational?logo=python&style=for-the-badge" alt="Bandit Security" height="34">
-<img src="https://img.shields.io/badge/sbom-included-blueviolet?style=for-the-badge" alt="SBOM" height="34">
-
-<img src="https://img.shields.io/badge/python-3.10%2B-blue?logo=python&style=for-the-badge" alt="Python" height="34">
-<img src="https://img.shields.io/badge/javascript-ES2020+-yellow?logo=javascript&style=for-the-badge" alt="JavaScript" height="34">
-<img src="https://img.shields.io/badge/docker-ready-blue?logo=docker&style=for-the-badge" alt="Docker Ready" height="34">
-<img src="https://img.shields.io/badge/kubernetes-ready-blue?logo=kubernetes&style=for-the-badge" alt="Kubernetes Ready" height="34">
-<img src="https://img.shields.io/badge/api-live-0082c2?logo=flask&style=for-the-badge" alt="API" height="34">
-<img src="https://img.shields.io/badge/web%20frontend-beta-42a5f5?logo=react&style=for-the-badge" alt="Web Frontend" height="34">
-
-<img src="https://img.shields.io/badge/persona%20system-complete-9644fa?logo=python&style=for-the-badge" alt="Persona System" height="34">
-<img src="https://img.shields.io/badge/leather%20book%20UI-complete-8b4513?logo=book&style=for-the-badge" alt="Leather Book UI" height="34">
-<img src="https://img.shields.io/badge/black%20vault-secure-black?style=for-the-badge" alt="Black Vault" height="34">
-<img src="https://img.shields.io/badge/plugin%20system-stable-6f42c1?logo=plug&style=for-the-badge" alt="Plugin System" height="34">
-<img src="https://img.shields.io/badge/emergency%20alerts-enabled-ff1a1a?logo=alert&style=for-the-badge" alt="Emergency Alerts" height="34">
-<img src="https://img.shields.io/badge/ML%20models-live-33c59a?logo=scikit-learn&style=for-the-badge" alt="ML Models" height="34">
-<img src="https://img.shields.io/badge/neuromorphic-SNN-blueviolet?logo=numpy&style=for-the-badge" alt="Neuromorphic SNN" height="34">
-<img src="https://img.shields.io/badge/monitoring-Prometheus%2FGrafana-important?logo=prometheus&style=for-the-badge" alt="Prometheus Monitoring" height="34">
-<img src="https://img.shields.io/badge/web%20frontend-beta-42a5f5?logo=react&style=for-the-badge" alt="Web Frontend" height="34">
-<img src="https://img.shields.io/badge/threat%20detector-beta-db4437?logo=pytorch&style=for-the-badge" alt="Threat Detector" height="34">
-<img src="https://img.shields.io/badge/cloud%20sync-live-1e90ff?logo=cloud&style=for-the-badge" alt="Cloud Sync" height="34">
-<img src="https://img.shields.io/badge/3D%20viz-beta-5f9ea0?logo=unity&label=3D%20Visualization&style=for-the-badge" alt="3D Visualization" height="34">
-<img src="https://img.shields.io/badge/desktop%20shortcuts-stable-c0c0c0?logo=windows&style=for-the-badge" alt="Desktop Shortcuts" height="34">
-
-<img src="https://img.shields.io/badge/contributors-3%2B-dc143c?style=for-the-badge" alt="Contributors" height="34">
-<img src="https://img.shields.io/github/stars/IAmSoThirsty/Project-AI?style=for-the-badge" alt="Stars" height="34">
-<img src="https://img.shields.io/github/issues/IAmSoThirsty/Project-AI?style=for-the-badge" alt="Issues" height="34">
-<img src="https://img.shields.io/badge/website-live-green?logo=githubpages&style=for-the-badge" alt="Website" height="34">
-<img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge" alt="MIT License" height="34">
-
-</div>
+![Codacy](https://img.shields.io/badge/Codacy-configured-blue?logo=codacy)
+![Dev Container](https://img.shields.io/badge/DevContainer-Ready-0078d4?logo=visualstudiocode)
+![Githooks](https://img.shields.io/badge/GitHooks-enabled-blueviolet?logo=git)
+![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-Automation-2088FF?logo=githubactions)
+![Hypothesis](https://img.shields.io/badge/Hypothesis-property--based%20testing-20c997)
+![VS Code](https://img.shields.io/badge/VSCode-Config-0078d7?logo=visualstudiocode)
+![Adversarial Testing](https://img.shields.io/badge/Adversarial_Tests-AI%20Defense-dd2e44)
+![Android](https://img.shields.io/badge/Android-Supported-3DDC84?logo=android)
+![App](https://img.shields.io/badge/App-Core-0078d4)
+![CI Reports](https://img.shields.io/badge/CI_Reports-generated-brightgreen?logo=githubactions)
+![Cognition](https://img.shields.io/badge/Cognition-Module-6200ea)
+![Config](https://img.shields.io/badge/Config-Managed-4078c0)
+![Data](https://img.shields.io/badge/Data-Storage-faa916)
+![Docs](https://img.shields.io/badge/Docs-Available-4e8cff)
+![Examples](https://img.shields.io/badge/Examples-Code_Ready-ffc432)
+![External](https://img.shields.io/badge/External-Integrations-00bcd4)
+![Gradle](https://img.shields.io/badge/Gradle-Build-02303a?logo=gradle)
+![Helm](https://img.shields.io/badge/Helm-Charts-0f1689?logo=helm)
+![Man Pages](https://img.shields.io/badge/Man-Pages-grey)
+![Scripts](https://img.shields.io/badge/Scripts-Available-%23f98e2b)
+![Source](https://img.shields.io/badge/Source-src-7952b3)
+![Temporal](https://img.shields.io/badge/Temporal-Workflow-0747a6)
+![Test Artifacts](https://img.shields.io/badge/Test_Artifacts-included-lightgrey)
+![Tests](https://img.shields.io/badge/Tests-Pytest-informational?logo=pytest)
+![Tools](https://img.shields.io/badge/Tools-Assorted-9575cd)
+![Web](https://img.shields.io/badge/Web-Frontend-2196f3)
+![Coverage](https://img.shields.io/badge/Coverage-Report-yellowgreen)
+![Docker](https://img.shields.io/badge/Docker-Supported-2496ed?logo=docker)
+![EditorConfig](https://img.shields.io/badge/EditorConfig-Compliant-blue)
+![Markdown Lint](https://img.shields.io/badge/MarkdownLint-enforced-52c41a)
+![Pre-Commit](https://img.shields.io/badge/Pre--Commit-Enabled-ef5350?logo=pre-commit)
+![Python Version](https://img.shields.io/badge/Python-3.8%2B-blue?logo=python)
+![ProjectAI-Config](https://img.shields.io/badge/ProjectAI-Config-blue)
+![Batch Merge Checklist](https://img.shields.io/badge/Batch_Merge-Checklist-7e3ff2)
+![Batch Merge Summary](https://img.shields.io/badge/Batch_Merge-Summary-3a86ff)
+![Batch Merge Visualization](https://img.shields.io/badge/Batch_Merge-Visualization-00b4d8)
+![Changelog](https://img.shields.io/badge/Changelog-Updated-orange)
+![CI Check Issues](https://img.shields.io/badge/CI-Check_Issues-red)
+![CLI-Codex](https://img.shields.io/badge/CLI-Codex-ffb300)
+![CLI Enhancements](https://img.shields.io/badge/CLI-Enhancements-fd7e14)
+![Codeowners](https://img.shields.io/badge/Codeowners-Present-cc0066)
+![Code of Conduct](https://img.shields.io/badge/Code_of_Conduct-Enforced-e4405f)
+![Contributing](https://img.shields.io/badge/Contributing-Guidelines-8dc149)
+![Critical Secret Exposure](https://img.shields.io/badge/Critical_Secret_Exposure-Audited-c0392b)
+![Deployment Guide](https://img.shields.io/badge/Deployment-Guide-85c1e9)
+![Developer Quick Ref](https://img.shields.io/badge/Developer-Quick_Reference-cd6133)
+![Integration Guide](https://img.shields.io/badge/Integration-Guide-59b300)
+![Integration Summary](https://img.shields.io/badge/Integration-Summary-76448a)
+![LICENSE](https://img.shields.io/github/license/IAmSoThirsty/Project-AI)
+![Manifest](https://img.shields.io/badge/Manifest-included-95a5a6)
+![Makefile](https://img.shields.io/badge/Makefile-BuildSystem-ffbb00)
+![Program Summary](https://img.shields.io/badge/Program-Summary-3867d6)
+![PR Overseer](https://img.shields.io/badge/PR-Overseer-blue)
+![Workspace](https://img.shields.io/badge/VSCode-Workspace-0078d7)
+![README](https://img.shields.io/badge/README-Doc-4e8cff)
+![Secret Removal](https://img.shields.io/badge/Secret-Removal-Summary-8e44ad)
+![Security Policy](https://img.shields.io/badge/Security-md-brightgreen)
+![Security Fixes](https://img.shields.io/badge/Security_Fix-Summary-44bd32)
+![Security Incidents](https://img.shields.io/badge/Security-Incident_Report-yellow)
+![Remediation Plan](https://img.shields.io/badge/Remediation-Plan-orange)
+![Security Update](https://img.shields.io/badge/Security-Update-blue)
+![Urgent Security](https://img.shields.io/badge/Urgent-Security_Update-red)
+![Threat Model](https://img.shields.io/badge/Threat_Model-Active-d35400)
+![Code Examples](https://img.shields.io/badge/TARL-Code%20Examples-8e44ad)
+![Refactoring](https://img.shields.io/badge/TARL-Refactoring-c39bd3)
+![Technical Docs](https://img.shields.io/badge/TARL-TechnicalDocs-5dade2)
+![Usage Scenarios](https://img.shields.io/badge/TARL-Usage_Scenarios-117a65)
+![Temporal Integration](https://img.shields.io/badge/Temporal-Integration-154360)
+![ThirstyLang](https://img.shields.io/badge/ThirstyLang-Integration-1abc9c)
+![Triumvirate Integration](https://img.shields.io/badge/Triumvirate-Integration-0078d4)
+![Triumvirate Quickstart](https://img.shields.io/badge/Triumvirate-Quickstart-219150)
+![App Config](https://img.shields.io/badge/App-Config-json-2196f3)
+![Build Gradle](https://img.shields.io/badge/Build-Gradle-02303a?logo=gradle)
+![Debug Py](https://img.shields.io/badge/Debug-Python-254d86?logo=python)
+![Docker Compose](https://img.shields.io/badge/Docker-Compose-2496ed?logo=docker)
+![Gradle Properties](https://img.shields.io/badge/Gradle-Properties-34495e)
+![Gradlew](https://img.shields.io/badge/Gradlew-Unix-23b698)
+![Gradlew Bat](https://img.shields.io/badge/Gradlew-Windows-0078d4)
+![MCP JSON](https://img.shields.io/badge/MCP-JSON-blue)
+![NPM Lock](https://img.shields.io/badge/NPM-Lock-yellow?logo=npm)
+![NPM Package](https://img.shields.io/badge/NPM-Package-yellow?logo=npm)
+![Pip Audit](https://img.shields.io/badge/Pip-Audit-green)
+![Pyproject](https://img.shields.io/badge/Pyproject-toml-blue)
+![Pyrightconfig](https://img.shields.io/badge/Pyright-Config-4078c0)
+![Pytest](https://img.shields.io/badge/Pytest-INI-purple?logo=pytest)
+![Requirements Dev](https://img.shields.io/badge/Requirements-Dev-f8ba13)
+![Requirements In](https://img.shields.io/badge/Requirements-in-blue)
+![Requirements Lock](https://img.shields.io/badge/Requirements-lock-green)
+![Requirements Txt](https://img.shields.io/badge/Requirements-txt-blue)
+![Settings Gradle](https://img.shields.io/badge/Settings-Gradle-02303a?logo=gradle)
+![Setup Py](https://img.shields.io/badge/Python-Setup_py-3776ab?logo=python)
+![Users JSON](https://img.shields.io/badge/Users-JSON-16a085)
+![White Hatter](https://img.shields.io/badge/White_Hatter-Scenarios-5d6d7e)
+![Project-AI Folder](https://img.shields.io/badge/Project-AI-folder-2d3436)
 
 ---
 
