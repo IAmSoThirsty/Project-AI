@@ -48,9 +48,9 @@ jobs:
         id: tag
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "RELEASE_TAG=${{ inputs.tag }}" >> $GITHUB_OUTPUT
+            echo "RELEASE_TAG=${{ inputs.tag }}" >> "$GITHUB_OUTPUT"
           else
-            echo "RELEASE_TAG=${{ github.event.release.tag_name }}" >> $GITHUB_OUTPUT
+            echo "RELEASE_TAG=${{ github.event.release.tag_name }}" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Sign Python wheels and source distributions
@@ -76,8 +76,8 @@ jobs:
       - name: Generate artifact checksums
         run: |
           cd dist
-          sha256sum * > SHA256SUMS
-          sha512sum * > SHA512SUMS
+          sha256sum ./* > SHA256SUMS
+          sha512sum ./* > SHA512SUMS
           cd ..
 
       - name: Sign checksums
@@ -90,7 +90,8 @@ jobs:
 
       - name: Create signing report
         run: |
-          cat > dist/SIGNING_REPORT.md << 'EOF'
+          {
+            cat << 'EOF'
           # Release Artifact Signing Report
 
           **Release:** ${{ steps.tag.outputs.RELEASE_TAG }}  
@@ -112,13 +113,13 @@ jobs:
           for artifact in dist/*.whl dist/*.tar.gz; do
             if [ -f "$artifact" ]; then
               filename=$(basename "$artifact")
-              echo "- \`$filename\`" >> dist/SIGNING_REPORT.md
-              echo "  - Signature: \`${filename}.sig\`" >> dist/SIGNING_REPORT.md
-              echo "  - Certificate: \`${filename}.pem\`" >> dist/SIGNING_REPORT.md
+              echo "- \`$filename\`"
+              echo "  - Signature: \`${filename}.sig\`"
+              echo "  - Certificate: \`${filename}.pem\`"
             fi
           done
           
-          cat >> dist/SIGNING_REPORT.md << 'EOF'
+          cat << 'EOF'
 
           ## Verification Instructions
 
@@ -167,6 +168,7 @@ jobs:
           - [Cosign GitHub Repository](https://github.com/sigstore/cosign)
           - [Rekor Transparency Log](https://rekor.sigstore.dev/)
           EOF
+          } > dist/SIGNING_REPORT.md
 
       - name: Upload signed artifacts to release
         uses: softprops/action-gh-release@e7a8f85e1c67a31e6ed99a94b41bd0b71bbee6b8  # v2.2.0

@@ -347,7 +347,7 @@ jobs:
         id: security_scan
         run: |
           python ai_ml_security_scan.py
-          echo "SCAN_EXIT_CODE=$?" >> $GITHUB_OUTPUT
+          echo "SCAN_EXIT_CODE=$?" >> "$GITHUB_OUTPUT"
 
       - name: Upload security scan report
         uses: actions/upload-artifact@ea3d6fb60d47c0a8aab02e95a1c69d16b0f24c1e  # v4
