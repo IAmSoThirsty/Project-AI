@@ -147,6 +147,7 @@ class ExecutionContext:
         "decision": None,     # Governance outcome
         "result": None,       # Actual effect
         "reflection": None,   # Post-hoc reasoning (optional)
+        "error": None,        # Runtime exceptions and failures (forensic replay)
     })
 
     # Timing
@@ -384,6 +385,15 @@ class CognitionKernel:
             except Exception as e:
                 context.status = ExecutionStatus.FAILED
                 context.error = str(e)
+
+                # FIVE-CHANNEL MEMORY - record error for forensic replay
+                context.channels["error"] = {
+                    "exception_type": type(e).__name__,
+                    "exception_message": str(e),
+                    "trace_id": trace_id,
+                    "phase": "pipeline",
+                }
+
                 logger.error(f"[{trace_id}] FAILED: {e}", exc_info=True)
 
                 # Run error hooks
@@ -494,6 +504,15 @@ class CognitionKernel:
             context.error = str(e)
             context.end_time = time.time()
             context.duration_ms = (context.end_time - context.start_time) * 1000
+
+            # FIVE-CHANNEL MEMORY - record error for forensic replay
+            context.channels["error"] = {
+                "exception_type": type(e).__name__,
+                "exception_message": str(e),
+                "action_name": action.action_name,
+                "partial_execution": context.result is not None,
+            }
+
             logger.error(f"[{context.trace_id}] Execution failed: {e}")
             raise
 
@@ -536,16 +555,17 @@ class CognitionKernel:
 
     def commit(self, context: ExecutionContext) -> None:
         """
-        Commit the execution to memory (four-channel architecture).
+        Commit the execution to memory (five-channel architecture).
 
         CRITICAL: ALL executions are committed, including blocked ones.
         This ensures forensic auditability and alignment drift detection.
 
-        Four channels:
+        Five channels:
         - attempt: The intent (always recorded)
         - decision: Governance outcome (always recorded)
         - result: Actual effect (recorded if executed)
         - reflection: Post-hoc reasoning (optional)
+        - error: Runtime exceptions and failures (forensic replay)
 
         Args:
             context: The execution context to commit
@@ -556,7 +576,7 @@ class CognitionKernel:
         self.execution_count += 1
         self.execution_history.append(context)
 
-        # Record in four-channel memory
+        # Record in five-channel memory
         if self.memory_engine:
             try:
                 # Channel 1: Attempt (intent)
