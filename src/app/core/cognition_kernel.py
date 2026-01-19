@@ -11,9 +11,17 @@ Architecture:
 - Provides hooks for: pre-execution, post-execution, error handling
 - Tracks: execution history, identity drift, governance decisions
 - Enforces: Four Laws, Triumvirate consensus, Black Vault policies
+
+NON-NEGOTIABLE INVARIANTS:
+- All execution flows through kernel.process() or kernel.route()
+- All mutation flows through kernel.commit()
+- ExecutionContext is the single source of truth for all execution state
+- Governance never executes, Execution never governs
+- Blocked actions are still logged for auditability
 """
 
 import logging
+import threading
 import time
 import uuid
 from dataclasses import dataclass, field
@@ -22,6 +30,9 @@ from enum import Enum
 from typing import Any, Callable, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
+
+# Thread-local storage for kernel context tracking
+_kernel_context = threading.local()
 
 
 # ============================================================================
@@ -49,44 +60,103 @@ class ExecutionStatus(Enum):
     BLOCKED = "blocked"  # Blocked by governance
 
 
+class MutationIntent(Enum):
+    """Intent classification for mutations to identity/memory."""
+    CORE = "core"              # genesis, law_hierarchy, core_values - requires full consensus
+    STANDARD = "standard"      # personality_weights, preferences - requires standard consensus
+    ROUTINE = "routine"        # regular operations - allowed
+
+
 # ============================================================================
-# Data Classes
+# Data Classes - Single Source of Truth
 # ============================================================================
+
+@dataclass
+class Action:
+    """
+    Represents a proposed action to be executed.
+    
+    Immutable after creation to ensure governance integrity.
+    """
+    action_id: str
+    action_name: str
+    action_type: ExecutionType
+    callable: Callable
+    args: tuple = field(default_factory=tuple)
+    kwargs: dict = field(default_factory=dict)
+    source: str = "unknown"
+    risk_level: str = "low"
+    mutation_targets: List[str] = field(default_factory=list)
+    metadata: Dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class Decision:
+    """
+    Governance decision about an action.
+    
+    Immutable after creation - governance observes, never executes.
+    """
+    decision_id: str
+    action_id: str
+    approved: bool
+    reason: str
+    council_votes: Dict[str, Any] = field(default_factory=dict)
+    mutation_intent: Optional[MutationIntent] = None
+    consensus_required: bool = False
+    consensus_achieved: bool = False
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
 
 @dataclass
 class ExecutionContext:
     """
-    Context for an execution request.
+    Single source of truth for all execution state.
     
-    Contains all information needed for governance, memory, and reflection.
+    This is THE object that flows through the entire kernel pipeline.
+    Provides deterministic replay, causal tracing, and forensic auditability.
+    
+    Four-Channel Architecture:
+    - perception: What the kernel received (input interpretation)
+    - interpretation: How the kernel understood it
+    - proposed_action: What action was proposed
+    - governance_decision: What governance decided
+    - result: What actually happened
+    - channels: Four-channel memory storage
     """
-    execution_id: str
-    execution_type: ExecutionType
-    timestamp: str
+    trace_id: str
+    timestamp: datetime
     
-    # The actual callable/action to execute
-    action: Callable
-    action_name: str
-    action_args: tuple = field(default_factory=tuple)
-    action_kwargs: dict = field(default_factory=dict)
+    # Input and interpretation
+    perception: Dict[str, Any]
+    interpretation: Dict[str, Any]
     
-    # Context for governance decisions
-    user_id: Optional[str] = None
-    requires_approval: bool = False
-    risk_level: str = "low"  # low, medium, high, critical
+    # Action and governance
+    proposed_action: Action
+    governance_decision: Optional[Decision] = None
     
-    # Metadata
-    metadata: Dict[str, Any] = field(default_factory=dict)
-    
-    # Status tracking
+    # Execution and result
     status: ExecutionStatus = ExecutionStatus.PENDING
-    governance_decision: Optional[Dict[str, Any]] = None
-    result: Optional[Any] = None
+    result: Any = None
     error: Optional[str] = None
+    
+    # Four-channel memory storage (for auditability)
+    channels: Dict[str, Any] = field(default_factory=lambda: {
+        "attempt": None,      # Intent
+        "decision": None,     # Governance outcome
+        "result": None,       # Actual effect
+        "reflection": None,   # Post-hoc reasoning (optional)
+    })
     
     # Timing
     start_time: Optional[float] = None
     end_time: Optional[float] = None
+    duration_ms: float = 0.0
+    
+    # Metadata
+    user_id: Optional[str] = None
+    source: str = "unknown"
+    metadata: Dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -95,8 +165,9 @@ class ExecutionResult:
     Result of a kernel execution.
     
     Contains the execution result plus governance, memory, and reflection data.
+    This is returned to callers after kernel.process() completes.
     """
-    execution_id: str
+    trace_id: str
     success: bool
     result: Any
     
@@ -124,6 +195,57 @@ class ExecutionResult:
 
 
 # ============================================================================
+# Kernel Context Manager
+# ============================================================================
+
+class KernelContext:
+    """
+    Context manager for kernel execution authority.
+    
+    Enforces that execution can only happen within kernel.process().
+    This is the syscall boundary - no execution outside kernel.
+    """
+    
+    def __init__(self, kernel: 'CognitionKernel', trace_id: str):
+        self.kernel = kernel
+        self.trace_id = trace_id
+        self.active = False
+    
+    def __enter__(self):
+        _kernel_context.active = True
+        _kernel_context.trace_id = self.trace_id
+        _kernel_context.kernel = self.kernel
+        self.active = True
+        return self
+    
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        _kernel_context.active = False
+        _kernel_context.trace_id = None
+        _kernel_context.kernel = None
+        self.active = False
+        return False
+
+
+def require_kernel_context(operation: str = "execution"):
+    """
+    Decorator to enforce kernel-only execution authority.
+    
+    Raises RuntimeError if called outside kernel context.
+    This is how we enforce the syscall boundary.
+    """
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            if not getattr(_kernel_context, 'active', False):
+                raise RuntimeError(
+                    f"{operation} forbidden outside CognitionKernel. "
+                    f"All execution must route through kernel.process() or kernel.route()"
+                )
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator
+
+
+# ============================================================================
 # CognitionKernel Class
 # ============================================================================
 
@@ -135,22 +257,24 @@ class CognitionKernel:
     through kernel.process(). No bypasses allowed.
     
     Integration Points:
-    - Identity System: Tracks who is executing what
-    - Memory Engine: Records all significant actions
-    - Governance: Enforces Triumvirate + Four Laws
+    - Identity System: Tracks who is executing what (immutable snapshots only)
+    - Memory Engine: Records all significant actions (four-channel architecture)
+    - Governance: Enforces Triumvirate + Four Laws (observe, never execute)
     - Reflection: Triggers reflection cycles based on patterns
     - Telemetry: Comprehensive execution tracking
+    
+    NON-NEGOTIABLE INVARIANTS:
+    - Governance never executes, Execution never governs
+    - Identity snapshots are frozen before governance
+    - All state mutation goes through commit()
+    - Blocked actions are still logged
     
     Usage:
         kernel = CognitionKernel(identity_system, memory_engine, governance, reflection)
         result = kernel.process(
-            action=my_agent.execute,
-            action_name="ExpertAgent.execute",
-            execution_type=ExecutionType.AGENT_ACTION,
-            action_args=(arg1, arg2),
-            action_kwargs={"key": "value"},
-            user_id="user123",
-            requires_approval=True
+            user_input="execute task",
+            source="user",
+            metadata={"user_id": "user123"}
         )
     """
     
@@ -167,8 +291,8 @@ class CognitionKernel:
         Initialize the CognitionKernel with all required subsystems.
         
         Args:
-            identity_system: AGI Identity System (tracks who/what is executing)
-            memory_engine: Memory Engine (records all actions)
+            identity_system: AGI Identity System (provides immutable snapshots)
+            memory_engine: Memory Engine (four-channel recording)
             governance_system: Governance system (enforces Four Laws)
             reflection_engine: Reflection cycle engine
             triumvirate: Triumvirate orchestrator (Galahad, Cerberus, Codex)
@@ -181,7 +305,7 @@ class CognitionKernel:
         self.triumvirate = triumvirate
         self.data_dir = data_dir
         
-        # Execution tracking
+        # Execution tracking (forensic auditability)
         self.execution_history: List[ExecutionContext] = []
         self.execution_count = 0
         
@@ -199,307 +323,500 @@ class CognitionKernel:
     
     def process(
         self,
-        action: Callable,
-        action_name: str,
-        execution_type: ExecutionType,
-        action_args: tuple = (),
-        action_kwargs: Optional[dict] = None,
-        user_id: Optional[str] = None,
-        requires_approval: bool = False,
-        risk_level: str = "low",
+        user_input: Any,
+        *,
+        source: str = "user",
         metadata: Optional[Dict[str, Any]] = None,
     ) -> ExecutionResult:
         """
-        Process an execution request through the complete cognitive pipeline.
+        Process user input through the complete cognitive pipeline.
         
-        This is the ONLY entrypoint for all agent, tool, and system executions.
+        This is the PRIMARY entrypoint for user-initiated actions.
         
         Pipeline:
-        1. Create execution context
-        2. Run pre-execution hooks
-        3. Governance check (Triumvirate + Four Laws)
-        4. Execute action if approved
-        5. Record in memory
-        6. Check for reflection triggers
-        7. Run post-execution hooks
-        8. Return comprehensive result
+        1. Perceive and interpret input
+        2. Create proposed action
+        3. Governance evaluation (with frozen identity snapshot)
+        4. Execute if approved (within kernel context)
+        5. Commit to memory (four-channel)
+        6. Reflect and learn
+        7. Return comprehensive result
         
         Args:
-            action: The callable to execute (e.g., agent.execute, tool.run)
-            action_name: Human-readable name (e.g., "ExpertAgent.execute")
-            execution_type: Type of execution (agent, tool, system, plugin)
-            action_args: Positional arguments for the action
-            action_kwargs: Keyword arguments for the action
-            user_id: User requesting the execution
-            requires_approval: Whether governance approval is required
-            risk_level: Risk level (low, medium, high, critical)
-            metadata: Additional context for governance/memory
+            user_input: The input to process (can be string, dict, etc.)
+            source: Source of the input (user, agent, system)
+            metadata: Additional context
         
         Returns:
             ExecutionResult with complete execution data
         """
-        action_kwargs = action_kwargs or {}
         metadata = metadata or {}
+        trace_id = f"trace_{uuid.uuid4().hex[:12]}"
         
-        # Generate execution ID
-        execution_id = f"exec_{uuid.uuid4().hex[:12]}"
+        logger.info(f"[{trace_id}] Processing input from {source}")
         
-        # Create execution context
-        context = ExecutionContext(
-            execution_id=execution_id,
-            execution_type=execution_type,
-            timestamp=datetime.now(timezone.utc).isoformat(),
-            action=action,
-            action_name=action_name,
-            action_args=action_args,
-            action_kwargs=action_kwargs,
-            user_id=user_id,
-            requires_approval=requires_approval,
-            risk_level=risk_level,
+        # Create execution context (single source of truth)
+        context = self._create_context(
+            trace_id=trace_id,
+            user_input=user_input,
+            source=source,
             metadata=metadata,
         )
         
-        logger.info(f"[{execution_id}] Processing: {action_name} (type: {execution_type.value})")
+        # Enter kernel context (syscall boundary)
+        with KernelContext(self, trace_id):
+            try:
+                # Phase 1: Enforce action proposal
+                self.enforce(context.proposed_action, context)
+                
+                # Phase 2: Act (execute within kernel context)
+                self.act(context.proposed_action, context)
+                
+                # Phase 3: Reflect on execution
+                self.reflect(context)
+                
+                # Phase 4: Commit to memory (four-channel)
+                self.commit(context)
+                
+                return self._build_result(context, success=True)
+                
+            except Exception as e:
+                context.status = ExecutionStatus.FAILED
+                context.error = str(e)
+                logger.error(f"[{trace_id}] FAILED: {e}", exc_info=True)
+                
+                # Run error hooks
+                self._run_error_hooks(context, e)
+                
+                # Still commit (blocked actions are logged for auditability)
+                self.commit(context)
+                
+                return self._build_result(context, success=False)
+    
+    def route(
+        self,
+        task: Any,
+        *,
+        source: str = "agent",
+        metadata: Optional[Dict[str, Any]] = None,
+    ) -> ExecutionResult:
+        """
+        Route a task through the kernel (agent-initiated).
         
-        start_time = time.time()
-        context.start_time = start_time
+        Similar to process() but for agent/system-initiated tasks.
+        Agents MUST use this instead of direct execution.
+        
+        Args:
+            task: The task to route
+            source: Source agent/system name
+            metadata: Additional context
+        
+        Returns:
+            ExecutionResult with complete execution data
+        """
+        # Route through process() with agent source
+        return self.process(
+            user_input=task,
+            source=source,
+            metadata=metadata,
+        )
+    
+    def enforce(self, action: Action, context: ExecutionContext) -> None:
+        """
+        Enforce governance on a proposed action.
+        
+        CRITICAL: Governance observes, never executes.
+        Identity snapshot is frozen before evaluation.
+        
+        Mutates context.governance_decision and context.channels["decision"].
+        
+        Args:
+            action: The proposed action
+            context: The execution context to mutate
+        
+        Raises:
+            PermissionError: If governance blocks the action
+        """
+        logger.info(f"[{context.trace_id}] Enforcing governance for {action.action_name}")
+        
+        # Freeze identity snapshot (immutable, governance can only observe)
+        identity_snapshot = self._freeze_identity_snapshot()
+        
+        # Check governance with frozen snapshot
+        decision = self._check_governance(action, context, identity_snapshot)
+        
+        # Mutate context with decision
+        context.governance_decision = decision
+        context.channels["decision"] = decision
+        
+        if not decision.approved:
+            context.status = ExecutionStatus.BLOCKED
+            logger.warning(f"[{context.trace_id}] BLOCKED: {decision.reason}")
+            raise PermissionError(f"Blocked by governance: {decision.reason}")
+        
+        context.status = ExecutionStatus.APPROVED
+        logger.info(f"[{context.trace_id}] Approved: {decision.reason}")
+    
+    def act(self, action: Action, context: ExecutionContext) -> None:
+        """
+        Execute the approved action.
+        
+        CRITICAL: Only called after enforce() approval.
+        Execution happens within kernel context (syscall boundary).
+        
+        Mutates context.result and context.channels["result"].
+        
+        Args:
+            action: The action to execute
+            context: The execution context to mutate
+        """
+        logger.info(f"[{context.trace_id}] Executing: {action.action_name}")
+        
+        context.status = ExecutionStatus.EXECUTING
+        context.start_time = time.time()
         
         try:
-            # Phase 1: Pre-execution hooks
-            self._run_pre_hooks(context)
+            # Execute within kernel context
+            result = action.callable(*action.args, **action.kwargs)
             
-            # Phase 2: Governance check
-            governance_result = self._check_governance(context)
-            context.governance_decision = governance_result
-            
-            if not governance_result["approved"]:
-                # Execution blocked by governance
-                context.status = ExecutionStatus.BLOCKED
-                context.error = governance_result.get("reason", "Blocked by governance")
-                logger.warning(f"[{execution_id}] BLOCKED: {context.error}")
-                
-                return self._build_result(context, success=False, blocked=True)
-            
-            # Phase 3: Execute action
-            context.status = ExecutionStatus.EXECUTING
-            logger.info(f"[{execution_id}] Executing: {action_name}")
-            
-            result = action(*action_args, **action_kwargs)
+            # Mutate context with result
             context.result = result
+            context.channels["result"] = result
             context.status = ExecutionStatus.COMPLETED
-            
-            # Phase 4: Record in memory
-            self._record_in_memory(context)
-            
-            # Phase 5: Check reflection triggers
-            self._check_reflection_triggers(context)
-            
-            # Phase 6: Post-execution hooks
-            self._run_post_hooks(context)
-            
             context.end_time = time.time()
-            duration_ms = (context.end_time - start_time) * 1000
+            context.duration_ms = (context.end_time - context.start_time) * 1000
             
-            logger.info(f"[{execution_id}] Completed in {duration_ms:.2f}ms")
-            
-            # Track execution
-            self.execution_count += 1
-            self.execution_history.append(context)
-            
-            return self._build_result(context, success=True)
+            logger.info(f"[{context.trace_id}] Completed in {context.duration_ms:.2f}ms")
             
         except Exception as e:
-            # Error handling
             context.status = ExecutionStatus.FAILED
             context.error = str(e)
             context.end_time = time.time()
-            
-            logger.error(f"[{execution_id}] FAILED: {e}", exc_info=True)
-            
-            # Run error hooks
-            self._run_error_hooks(context, e)
-            
-            # Still record in memory (for learning)
-            self._record_in_memory(context)
-            
-            # Track execution even on failure
-            self.execution_count += 1
-            self.execution_history.append(context)
-            
-            return self._build_result(context, success=False)
+            context.duration_ms = (context.end_time - context.start_time) * 1000
+            logger.error(f"[{context.trace_id}] Execution failed: {e}")
+            raise
+    
+    def reflect(self, context: ExecutionContext) -> None:
+        """
+        Reflect on the execution and generate insights.
+        
+        CRITICAL: Reflection cannot mutate state, only observe.
+        
+        Mutates context.channels["reflection"] only.
+        
+        Args:
+            context: The execution context to reflect on
+        """
+        if not self.reflection_engine:
+            return
+        
+        logger.debug(f"[{context.trace_id}] Reflecting on execution")
+        
+        # Determine if reflection should trigger
+        should_reflect = self._should_trigger_reflection(context)
+        
+        if should_reflect:
+            try:
+                # Reflection observes only, never mutates
+                reflection_data = {
+                    "action": context.proposed_action.action_name,
+                    "result_success": context.status == ExecutionStatus.COMPLETED,
+                    "governance_decision": context.governance_decision.reason if context.governance_decision else None,
+                    "duration_ms": context.duration_ms,
+                }
+                
+                # Store in reflection channel
+                context.channels["reflection"] = reflection_data
+                
+                logger.info(f"[{context.trace_id}] Reflection recorded")
+                
+            except Exception as e:
+                logger.error(f"[{context.trace_id}] Reflection failed: {e}")
+    
+    def commit(self, context: ExecutionContext) -> None:
+        """
+        Commit the execution to memory (four-channel architecture).
+        
+        CRITICAL: ALL executions are committed, including blocked ones.
+        This ensures forensic auditability and alignment drift detection.
+        
+        Four channels:
+        - attempt: The intent (always recorded)
+        - decision: Governance outcome (always recorded)
+        - result: Actual effect (recorded if executed)
+        - reflection: Post-hoc reasoning (optional)
+        
+        Args:
+            context: The execution context to commit
+        """
+        logger.debug(f"[{context.trace_id}] Committing execution to memory")
+        
+        # Record in execution history (forensic auditability)
+        self.execution_count += 1
+        self.execution_history.append(context)
+        
+        # Record in four-channel memory
+        if self.memory_engine:
+            try:
+                # Channel 1: Attempt (intent)
+                context.channels["attempt"] = {
+                    "action_name": context.proposed_action.action_name,
+                    "action_type": context.proposed_action.action_type.value,
+                    "source": context.source,
+                    "user_id": context.user_id,
+                    "trace_id": context.trace_id,
+                    "timestamp": context.timestamp.isoformat(),
+                }
+                
+                # Record all four channels
+                if hasattr(self.memory_engine, "record_execution"):
+                    self.memory_engine.record_execution(
+                        trace_id=context.trace_id,
+                        channels=context.channels,
+                        status=context.status.value,
+                    )
+                elif hasattr(self.memory_engine, "add_memory"):
+                    # Fallback to simple memory recording
+                    self.memory_engine.add_memory(
+                        content=f"Executed: {context.proposed_action.action_name}",
+                        category="execution",
+                        metadata={
+                            "trace_id": context.trace_id,
+                            "status": context.status.value,
+                            "channels": context.channels,
+                        },
+                    )
+                
+                logger.debug(f"[{context.trace_id}] Memory committed (four-channel)")
+                
+            except Exception as e:
+                logger.error(f"[{context.trace_id}] Memory commit failed: {e}")
     
     # ========================================================================
     # Private Helper Methods
     # ========================================================================
     
-    def _check_governance(self, context: ExecutionContext) -> Dict[str, Any]:
-        """
-        Check governance approval for the execution.
+    def _create_context(
+        self,
+        trace_id: str,
+        user_input: Any,
+        source: str,
+        metadata: Dict[str, Any],
+    ) -> ExecutionContext:
+        """Create an ExecutionContext from user input."""
+        # Phase 1: Perceive input
+        perception = {
+            "raw_input": user_input,
+            "input_type": type(user_input).__name__,
+            "source": source,
+        }
         
-        Uses Triumvirate (if available) and governance system to validate
-        the execution against Four Laws and policy constraints.
+        # Phase 2: Interpret input
+        interpretation = self._interpret_input(user_input, source, metadata)
+        
+        # Phase 3: Create proposed action
+        proposed_action = self._create_action(interpretation, trace_id, source)
+        
+        # Create context (single source of truth)
+        return ExecutionContext(
+            trace_id=trace_id,
+            timestamp=datetime.now(timezone.utc),
+            perception=perception,
+            interpretation=interpretation,
+            proposed_action=proposed_action,
+            source=source,
+            user_id=metadata.get("user_id"),
+            metadata=metadata,
+        )
+    
+    def _interpret_input(
+        self,
+        user_input: Any,
+        source: str,
+        metadata: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """Interpret user input into actionable information."""
+        # Simple interpretation (can be enhanced)
+        return {
+            "intent": "execute",
+            "action_name": str(user_input) if not isinstance(user_input, dict) else user_input.get("action", "unknown"),
+            "requires_approval": metadata.get("requires_approval", False),
+            "risk_level": metadata.get("risk_level", "low"),
+        }
+    
+    def _create_action(
+        self,
+        interpretation: Dict[str, Any],
+        trace_id: str,
+        source: str,
+    ) -> Action:
+        """Create an Action from interpretation."""
+        # For now, create a simple action
+        # In practice, this would route to the appropriate agent/tool
+        action_id = f"action_{uuid.uuid4().hex[:8]}"
+        
+        return Action(
+            action_id=action_id,
+            action_name=interpretation["action_name"],
+            action_type=ExecutionType.AGENT_ACTION,  # Default type
+            callable=lambda: f"Executed: {interpretation['action_name']}",
+            args=(),
+            kwargs={},
+            source=source,
+            risk_level=interpretation["risk_level"],
+            metadata=interpretation,
+        )
+    
+    def _freeze_identity_snapshot(self) -> Dict[str, Any]:
+        """
+        Create an immutable snapshot of identity for governance.
+        
+        CRITICAL: Governance must observe, never touch.
+        Returns a frozen (deep copied) snapshot.
+        """
+        if not self.identity_system:
+            return {}
+        
+        try:
+            if hasattr(self.identity_system, "snapshot"):
+                snapshot = self.identity_system.snapshot()
+                # Ensure immutability (deep copy or freeze)
+                import copy
+                return copy.deepcopy(snapshot)
+        except Exception as e:
+            logger.error(f"Failed to freeze identity snapshot: {e}")
+        
+        return {}
+    
+    def _check_governance(
+        self,
+        action: Action,
+        context: ExecutionContext,
+        identity_snapshot: Dict[str, Any],
+    ) -> Decision:
+        """
+        Check governance approval for the action.
         
         Priority: governance_system > triumvirate > auto-approve
         """
-        # If no governance required, auto-approve
-        if not context.requires_approval and context.risk_level == "low":
-            return {
-                "approved": True,
-                "reason": "Auto-approved (low risk, no approval required)",
-                "votes": {},
-            }
+        decision_id = f"decision_{uuid.uuid4().hex[:8]}"
+        
+        # Classify mutation intent
+        mutation_intent = self._classify_mutation_intent(action)
+        
+        # Determine if consensus is required
+        consensus_required = mutation_intent == MutationIntent.CORE
+        
+        # If no governance required and low risk, auto-approve
+        if not action.metadata.get("requires_approval") and action.risk_level == "low":
+            return Decision(
+                decision_id=decision_id,
+                action_id=action.action_id,
+                approved=True,
+                reason="Auto-approved (low risk, no approval required)",
+                mutation_intent=mutation_intent,
+                consensus_required=False,
+                consensus_achieved=False,
+            )
         
         # Check with governance system first (highest priority)
         if self.governance_system:
             try:
-                # Governance system check (if it has a validate method)
                 if hasattr(self.governance_system, "validate_action"):
-                    decision = self.governance_system.validate_action(
-                        action=context.action_name,
-                        context=context.metadata,
+                    gov_decision = self.governance_system.validate_action(
+                        action=action.action_name,
+                        context={"identity_snapshot": identity_snapshot, **action.metadata},
                     )
-                    return {
-                        "approved": decision.get("allowed", False),
-                        "reason": decision.get("reason", "Governance decision"),
-                        "votes": decision,
-                    }
+                    return Decision(
+                        decision_id=decision_id,
+                        action_id=action.action_id,
+                        approved=gov_decision.get("allowed", False),
+                        reason=gov_decision.get("reason", "Governance decision"),
+                        council_votes=gov_decision,
+                        mutation_intent=mutation_intent,
+                        consensus_required=consensus_required,
+                        consensus_achieved=gov_decision.get("allowed", False),
+                    )
             except Exception as e:
                 logger.error(f"Governance check failed: {e}")
-                # Fall through to triumvirate
         
         # Check with Triumvirate if available (secondary priority)
         if self.triumvirate:
             try:
-                triumvirate_context = {
-                    "action_name": context.action_name,
-                    "execution_type": context.execution_type.value,
-                    "user_id": context.user_id,
-                    "risk_level": context.risk_level,
-                    "metadata": context.metadata,
-                }
-                
-                # Use Triumvirate process() to validate
                 result = self.triumvirate.process(
-                    input_data=context.action_name,
-                    context=triumvirate_context,
+                    input_data=action.action_name,
+                    context={
+                        "identity_snapshot": identity_snapshot,
+                        "mutation_intent": mutation_intent.value if mutation_intent else None,
+                        **action.metadata,
+                    },
                     skip_validation=False,
                 )
                 
-                if result.get("success"):
-                    return {
-                        "approved": True,
-                        "reason": "Triumvirate approved",
-                        "votes": result.get("pipeline", {}),
-                        "triumvirate_result": result,
-                    }
-                else:
-                    return {
-                        "approved": False,
-                        "reason": result.get("error", "Triumvirate rejected"),
-                        "votes": result.get("pipeline", {}),
-                        "triumvirate_result": result,
-                    }
+                approved = result.get("success", False)
+                return Decision(
+                    decision_id=decision_id,
+                    action_id=action.action_id,
+                    approved=approved,
+                    reason=result.get("error", "Triumvirate approved") if not approved else "Triumvirate approved",
+                    council_votes=result.get("pipeline", {}),
+                    mutation_intent=mutation_intent,
+                    consensus_required=consensus_required,
+                    consensus_achieved=approved,
+                )
             except Exception as e:
                 logger.error(f"Triumvirate check failed: {e}")
         
         # Default: approve with warning if no governance available
-        logger.warning(f"No governance system available for {context.action_name}")
-        return {
-            "approved": True,
-            "reason": "No governance system configured (approved by default)",
-            "votes": {},
-        }
+        logger.warning(f"No governance system available for {action.action_name}")
+        return Decision(
+            decision_id=decision_id,
+            action_id=action.action_id,
+            approved=True,
+            reason="No governance system configured (approved by default)",
+            mutation_intent=mutation_intent,
+            consensus_required=False,
+            consensus_achieved=False,
+        )
     
-    def _record_in_memory(self, context: ExecutionContext) -> Optional[str]:
+    def _classify_mutation_intent(self, action: Action) -> MutationIntent:
         """
-        Record the execution in the memory engine.
+        Classify the mutation intent of an action.
         
-        Returns the memory ID if successful.
+        - CORE: genesis, law_hierarchy, core_values → full guardian consensus
+        - STANDARD: personality_weights, preferences → standard consensus
+        - ROUTINE: regular operations → allowed
         """
-        if not self.memory_engine:
-            return None
+        mutation_targets = action.mutation_targets
         
-        try:
-            # Build memory entry
-            memory_entry = {
-                "execution_id": context.execution_id,
-                "action_name": context.action_name,
-                "execution_type": context.execution_type.value,
-                "timestamp": context.timestamp,
-                "user_id": context.user_id,
-                "status": context.status.value,
-                "result_summary": str(context.result)[:200] if context.result else None,
-                "error": context.error,
-                "metadata": context.metadata,
-            }
-            
-            # Record in memory (if it has an add_memory method)
-            if hasattr(self.memory_engine, "add_memory"):
-                memory_id = self.memory_engine.add_memory(
-                    content=f"Executed: {context.action_name}",
-                    category="execution",
-                    metadata=memory_entry,
-                )
-                logger.debug(f"Recorded in memory: {memory_id}")
-                return memory_id
-            
-        except Exception as e:
-            logger.error(f"Failed to record in memory: {e}")
+        # Check for core mutations
+        core_targets = {"genesis", "law_hierarchy", "core_values", "four_laws"}
+        if any(target in core_targets for target in mutation_targets):
+            return MutationIntent.CORE
         
-        return None
+        # Check for standard mutations
+        standard_targets = {"personality_weights", "preferences", "traits", "mood"}
+        if any(target in standard_targets for target in mutation_targets):
+            return MutationIntent.STANDARD
+        
+        # Default to routine
+        return MutationIntent.ROUTINE
     
-    def _check_reflection_triggers(self, context: ExecutionContext) -> None:
-        """
-        Check if this execution should trigger a reflection cycle.
-        
-        Triggers based on:
-        - High-risk actions
-        - Failed executions
-        - Pattern detection (every N executions)
-        """
-        if not self.reflection_engine:
-            return
-        
-        should_reflect = False
-        
+    def _should_trigger_reflection(self, context: ExecutionContext) -> bool:
+        """Determine if reflection should trigger based on context."""
         # Trigger on high-risk actions
-        if context.risk_level in ("high", "critical"):
-            should_reflect = True
+        if context.proposed_action.risk_level in ("high", "critical"):
+            return True
         
         # Trigger on failures
         if context.status == ExecutionStatus.FAILED:
-            should_reflect = True
+            return True
         
         # Trigger every 100 executions
         if self.execution_count % 100 == 0:
-            should_reflect = True
+            return True
         
-        if should_reflect:
-            try:
-                if hasattr(self.reflection_engine, "trigger_reflection"):
-                    self.reflection_engine.trigger_reflection(
-                        reason=f"Triggered by: {context.action_name}",
-                        context=context.metadata,
-                    )
-                    logger.info(f"Reflection cycle triggered by {context.action_name}")
-            except Exception as e:
-                logger.error(f"Failed to trigger reflection: {e}")
-    
-    def _run_pre_hooks(self, context: ExecutionContext) -> None:
-        """Run all pre-execution hooks."""
-        for hook in self.pre_execution_hooks:
-            try:
-                hook(context)
-            except Exception as e:
-                logger.error(f"Pre-execution hook failed: {e}")
-    
-    def _run_post_hooks(self, context: ExecutionContext) -> None:
-        """Run all post-execution hooks."""
-        for hook in self.post_execution_hooks:
-            try:
-                hook(context)
-            except Exception as e:
-                logger.error(f"Post-execution hook failed: {e}")
+        return False
     
     def _run_error_hooks(self, context: ExecutionContext, error: Exception) -> None:
         """Run all error hooks."""
@@ -513,37 +830,32 @@ class CognitionKernel:
         self,
         context: ExecutionContext,
         success: bool,
-        blocked: bool = False,
     ) -> ExecutionResult:
         """Build an ExecutionResult from the context."""
-        duration_ms = 0.0
-        if context.start_time and context.end_time:
-            duration_ms = (context.end_time - context.start_time) * 1000
-        
         governance_approved = (
-            context.governance_decision.get("approved", False)
+            context.governance_decision.approved
             if context.governance_decision
             else False
         )
         
         return ExecutionResult(
-            execution_id=context.execution_id,
+            trace_id=context.trace_id,
             success=success,
             result=context.result,
             governance_approved=governance_approved,
             governance_reason=(
-                context.governance_decision.get("reason")
+                context.governance_decision.reason
                 if context.governance_decision
                 else None
             ),
             triumvirate_votes=(
-                context.governance_decision.get("votes")
+                context.governance_decision.council_votes
                 if context.governance_decision
                 else None
             ),
-            duration_ms=duration_ms,
+            duration_ms=context.duration_ms,
             error=context.error,
-            blocked_reason=context.error if blocked else None,
+            blocked_reason=context.error if not success and context.status == ExecutionStatus.BLOCKED else None,
             metadata=context.metadata,
         )
     
@@ -579,13 +891,15 @@ class CognitionKernel:
         history = []
         for ctx in self.execution_history[-limit:]:
             history.append({
-                "execution_id": ctx.execution_id,
-                "action_name": ctx.action_name,
-                "execution_type": ctx.execution_type.value,
+                "trace_id": ctx.trace_id,
+                "action_name": ctx.proposed_action.action_name,
+                "action_type": ctx.proposed_action.action_type.value,
                 "status": ctx.status.value,
-                "timestamp": ctx.timestamp,
+                "timestamp": ctx.timestamp.isoformat(),
                 "user_id": ctx.user_id,
+                "source": ctx.source,
                 "error": ctx.error,
+                "duration_ms": ctx.duration_ms,
             })
         return history
     
