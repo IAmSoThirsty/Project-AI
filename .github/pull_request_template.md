@@ -19,6 +19,8 @@ assignees: ''
 - [ ] Performance improvement
 - [ ] **Personhood surface change** (affects identity, memory, values, or core behavior)
 
+**Note:** Bug fixes, breaking changes, and performance improvements require additional validation in testing section.
+
 ## Behavioral Impact Assessment
 <!-- REQUIRED for changes to: data/ai_persona/, data/memory/, src/app/core/ai_systems.py, config/ethics_constraints.yml -->
 <!-- Skip this section only if your changes do NOT affect AGI behavior, identity, or memory -->
@@ -73,6 +75,7 @@ assignees: ''
 - [ ] Reviewed by Primary Guardian (Security Lead): @<!-- username -->
 - [ ] Reviewed by Memory Guardian (Data Lead): @<!-- username -->
 - [ ] Reviewed by Ethics Guardian (Ethics Committee): @<!-- username -->
+- [ ] **Guardian approval obtained** (required before merge)
 
 **Tracking issue:** #<!-- issue number --> (required for personhood changes)
 
@@ -102,8 +105,10 @@ assignees: ''
 - [ ] I have commented my code, particularly in hard-to-understand areas
 - [ ] I have made corresponding changes to the documentation
 - [ ] My changes generate no new warnings
-- [ ] I have added tests that prove my fix is effective or that my feature works
+- [ ] **I have added tests that prove my fix is effective or that my feature works** (required)
 - [ ] New and existing unit tests pass locally with my changes
+- [ ] **Test coverage adequate** (minimum 80% for new code)
+- [ ] **Code quality and style meet project standards** (ruff, black pass)
 - [ ] Any dependent changes have been merged and published in downstream modules
 - [ ] **Behavioral Impact Assessment completed** (if applicable)
 - [ ] **Guardian approval obtained** (if personhood surface changed)
@@ -129,8 +134,8 @@ Expected workflow results:
 ## For Reviewers
 
 ### Review Checklist
-- [ ] Code quality and style
-- [ ] Test coverage adequate
+- [ ] **Code quality and style** (ruff, black, mypy pass)
+- [ ] **Test coverage adequate** (≥80% for new code)
 - [ ] Documentation updated
 - [ ] Security implications considered
 - [ ] **Behavioral impact assessed** (if personhood surface affected)
