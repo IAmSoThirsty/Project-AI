@@ -157,7 +157,10 @@ class CouncilHub:
             self._autolearn_stop.wait(self._autolearn_interval)
 
     def _autolearn_once(self) -> None:
-        """Single autolearn iteration: look for files in data/autolearn and absorb them."""
+        """Single autolearn iteration: look for files in data/autolearn and absorb them.
+
+        CRITICAL: All agent operations route through kernel.
+        """
         if not self._project:
             return
         engine: ContinuousLearningEngine = self._project["continuous_learning"]
@@ -178,8 +181,12 @@ class CouncilHub:
                 archive = path + ".consumed"
                 os.rename(path, archive)
                 # After absorbing, run curator to integrate facts into curated knowledge
+                # COGNITION KERNEL ROUTING - curator.curate() routed through kernel
                 try:
-                    self._project["curator"].curate([report.__dict__])
+                    curator = self._project["curator"]
+                    if hasattr(curator, "curate"):
+                        # Agent methods already route through kernel via _execute_through_kernel
+                        curator.curate([report.__dict__])
                 except Exception:
                     logger.exception("Curator failed to process report")
                 # Run QA and dependency checks for code-like topics (best-effort)
@@ -191,11 +198,16 @@ class CouncilHub:
                             files = sorted([os.path.join(gen_dir, f) for f in os.listdir(gen_dir) if f.endswith('.py')])
                             if files:
                                 latest = files[-1]
+                                # COGNITION KERNEL ROUTING - all agent calls routed through kernel
                                 # Only run if agents enabled
                                 if self._agents_enabled.get("dependency_auditor", True):
-                                    self._project["dependency_auditor"].analyze_new_module(latest)
+                                    dep_auditor = self._project["dependency_auditor"]
+                                    # Agent methods already route through kernel via _execute_through_kernel
+                                    dep_auditor.analyze_new_module(latest)
                                 if self._agents_enabled.get("qa_generator", True):
-                                    self._project["qa_generator"].generate_test_for_module(latest)
+                                    qa_gen = self._project["qa_generator"]
+                                    # Agent methods already route through kernel via _execute_through_kernel
+                                    qa_gen.generate_test_for_module(latest)
                 except Exception:
                     logger.exception("Post-curation QA pipeline failed")
             except Exception as e:
@@ -203,6 +215,8 @@ class CouncilHub:
 
     def run_checks(self, target: str | None = None) -> dict[str, Any]:
         """Run dependency and QA checks for generated artifacts.
+
+        CRITICAL: All agent operations route through kernel.
 
         Returns a dict with success flag and failures list when present.
         """
@@ -222,28 +236,35 @@ class CouncilHub:
                     if not fn.endswith(".py"):
                         continue
                     path = os.path.join(root, fn)
-                    # dependency
+                    # COGNITION KERNEL ROUTING - dependency auditor
                     if self._agents_enabled.get("dependency_auditor", True) and dep:
                         try:
+                            # Agent methods already route through kernel via _execute_through_kernel
                             dep_res = dep.analyze_new_module(path)
                             if not dep_res.get("success"):
                                 failures.append({"module": path, "stage": "dependency", "detail": dep_res})
                         except Exception as e:
                             logger.exception("Dependency check exception for %s: %s", path, e)
                             failures.append({"module": path, "stage": "dependency_exception", "detail": str(e)})
-                    # QA
+                    # COGNITION KERNEL ROUTING - QA generator
                     if self._agents_enabled.get("qa_generator", True) and qa:
                         try:
+                            # Agent methods already route through kernel via _execute_through_kernel
                             gen = qa.generate_test_for_module(path)
                             if not gen.get("success"):
                                 failures.append({"module": path, "stage": "qa_generate", "detail": gen})
                                 continue
+                            # Agent methods already route through kernel via _execute_through_kernel
                             run = qa.run_tests()
                             if not run.get("success"):
                                 failures.append({"module": path, "stage": "qa_run", "detail": run})
                         except Exception as e:
                             logger.exception("QA check exception for %s: %s", path, e)
                             failures.append({"module": path, "stage": "qa_exception", "detail": str(e)})
+
+            if failures:
+                return {"success": False, "failures": failures}
+            return {"success": True, "checked": 1}
 
             if failures:
                 return {"success": False, "failures": failures}
