@@ -12,10 +12,13 @@ import os
 from datetime import UTC, datetime
 from typing import Any
 
+from app.core.cognition_kernel import CognitionKernel, ExecutionType
+from app.core.kernel_integration import KernelRoutedAgent
+
 logger = logging.getLogger(__name__)
 
 
-class CerberusCodexBridge:
+class CerberusCodexBridge(KernelRoutedAgent):
     """Bridge between Cerberus threat detection and Codex defense implementation.
 
     When Cerberus detects threats, this bridge:
@@ -25,7 +28,13 @@ class CerberusCodexBridge:
     4. Integrates Thirsty-lang security features as a defense mechanism
     """
 
-    def __init__(self, data_dir: str = "data/cerberus_codex_bridge"):
+    def __init__(self, data_dir: str = "data/cerberus_codex_bridge", kernel: CognitionKernel | None = None):
+        # Initialize kernel routing (COGNITION KERNEL INTEGRATION)
+        super().__init__(
+            kernel=kernel,
+            execution_type=ExecutionType.AGENT_ACTION,
+            default_risk_level="high"
+        )
         self.data_dir = data_dir
         os.makedirs(self.data_dir, exist_ok=True)
 
@@ -50,6 +59,22 @@ class CerberusCodexBridge:
         Returns:
             Dictionary with analysis results and recommended upgrades
         """
+        # Route through kernel (COGNITION KERNEL ROUTING)
+        return self._execute_through_kernel(
+            self._do_process_threat_engagement,
+            threat_data,
+            cerberus_response,
+            operation_name="process_threat_engagement",
+            risk_level="high",
+            metadata={"threat_type": threat_data.get("threat_type", "unknown")}
+        )
+
+    def _do_process_threat_engagement(
+        self,
+        threat_data: dict[str, Any],
+        cerberus_response: dict[str, Any]
+    ) -> dict[str, Any]:
+        """Internal implementation of threat engagement processing."""
         logger.info(f"Processing threat engagement: {threat_data.get('threat_type', 'unknown')}")
 
         # Analyze threat for defensive opportunities
@@ -198,6 +223,22 @@ class CerberusCodexBridge:
         Returns:
             Implementation result with status and details
         """
+        # Route through kernel (COGNITION KERNEL ROUTING)
+        return self._execute_through_kernel(
+            self._do_codex_implement_upgrade,
+            upgrade_spec,
+            codex_instance,
+            operation_name="implement_upgrade",
+            risk_level="high",
+            metadata={"upgrade_type": upgrade_spec.get("upgrade_type")}
+        )
+
+    def _do_codex_implement_upgrade(
+        self,
+        upgrade_spec: dict[str, Any],
+        codex_instance: Any = None
+    ) -> dict[str, Any]:
+        """Internal implementation of upgrade."""
         logger.info(f"Codex implementing upgrade: {upgrade_spec.get('upgrade_type')}")
 
         try:
