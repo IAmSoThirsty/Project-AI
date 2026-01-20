@@ -15,17 +15,26 @@ import subprocess  # nosec B404 - subprocess usage for trusted Node.js testing t
 from datetime import UTC, datetime
 from typing import Any
 
+from app.core.cognition_kernel import CognitionKernel, ExecutionType
+from app.core.kernel_integration import KernelRoutedAgent
+
 logger = logging.getLogger(__name__)
 
 
-class ThirstyLangValidator:
+class ThirstyLangValidator(KernelRoutedAgent):
     """Validates Thirsty-lang as T-A-R-L (Thirsty's Active Resistant Language).
 
     Tests the language's capabilities as a defensive coding system,
     verifying it can be used as a secure communication and defense layer.
     """
 
-    def __init__(self, thirsty_lang_path: str = "src/thirsty_lang"):
+    def __init__(self, thirsty_lang_path: str = "src/thirsty_lang", kernel: CognitionKernel | None = None):
+        # Initialize kernel routing (COGNITION KERNEL INTEGRATION)
+        super().__init__(
+            kernel=kernel,
+            execution_type=ExecutionType.AGENT_ACTION,
+            default_risk_level="medium"
+        )
         self.thirsty_lang_path = thirsty_lang_path
         self.validation_results = []
 
@@ -35,6 +44,16 @@ class ThirstyLangValidator:
         Returns:
             Comprehensive validation report
         """
+        # Route through kernel (COGNITION KERNEL ROUTING)
+        return self._execute_through_kernel(
+            self._do_run_full_validation,
+            operation_name="validate_tarl",
+            risk_level="medium",
+            metadata={"thirsty_lang_path": self.thirsty_lang_path}
+        )
+
+    def _do_run_full_validation(self) -> dict[str, Any]:
+        """Internal implementation of full validation."""
         logger.info("Starting T-A-R-L (Thirsty's Active Resistant Language) validation")
 
         report = {

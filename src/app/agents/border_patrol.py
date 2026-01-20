@@ -9,6 +9,8 @@ from pathlib import Path
 from typing import Any
 
 from app.agents.dependency_auditor import DependencyAuditor
+from app.core.cognition_kernel import CognitionKernel, ExecutionType
+from app.core.kernel_integration import KernelRoutedAgent
 from app.monitoring.cerberus_dashboard import record_incident
 
 logger = logging.getLogger(__name__)
@@ -23,13 +25,26 @@ class QuarantineBox:
     metadata: dict[str, Any] | None = None
 
 
-class VerifierAgent:
+class VerifierAgent(KernelRoutedAgent):
     """VerifierAgent executes audits in a sandbox and reports results.
 
     Uses a ProcessPoolExecutor to run sandbox executions in isolated processes with a configurable timeout.
     """
 
-    def __init__(self, agent_id: str, data_dir: str = "data", max_workers: int = 2, timeout: int = 8):
+    def __init__(
+        self,
+        agent_id: str,
+        data_dir: str = "data",
+        max_workers: int = 2,
+        timeout: int = 8,
+        kernel: CognitionKernel | None = None
+    ):
+        # Initialize kernel routing (COGNITION KERNEL INTEGRATION)
+        super().__init__(
+            kernel=kernel,
+            execution_type=ExecutionType.AGENT_ACTION,
+            default_risk_level="high"
+        )
         self.agent_id = agent_id
         self.auditor = DependencyAuditor(data_dir=data_dir)
         self.executor = ProcessPoolExecutor(max_workers=max_workers)
@@ -68,6 +83,17 @@ class VerifierAgent:
             return {"error": f"worker_run_exception: {e}", "success": False}
 
     def verify(self, file_path: str) -> dict[str, Any]:
+        # Route through kernel (COGNITION KERNEL ROUTING)
+        return self._execute_through_kernel(
+            self._do_verify,
+            file_path,
+            operation_name="verify_file",
+            risk_level="high",
+            metadata={"file_path": file_path, "agent_id": self.agent_id}
+        )
+
+    def _do_verify(self, file_path: str) -> dict[str, Any]:
+        """Internal implementation of file verification."""
         logger.info("VerifierAgent %s verifying %s", self.agent_id, file_path)
         # quick dependency scan
         deps_report = self.auditor.analyze_new_module(file_path)
