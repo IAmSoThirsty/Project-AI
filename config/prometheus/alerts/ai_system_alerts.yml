@@ -1,0 +1,145 @@
+# AI System Alert Rules for Project-AI
+# Monitors AI persona, Four Laws, memory, and learning systems
+
+groups:
+  - name: ai_system_alerts
+    interval: 30s
+    rules:
+      # Four Laws Validation Alerts
+      - alert: HighFourLawsDenialRate
+        expr: |
+          rate(project_ai_four_laws_denials_total[5m]) > 0.5
+        for: 5m
+        labels:
+          severity: warning
+          component: four-laws
+        annotations:
+          summary: "High rate of Four Laws denials"
+          description: "Four Laws is denying {{ $value | humanize }} actions per second over the last 5 minutes. This may indicate attempted policy violations."
+
+      - alert: FourLawsCriticalDenial
+        expr: |
+          increase(project_ai_four_laws_critical_denials_total[1m]) > 0
+        for: 1m
+        labels:
+          severity: critical
+          component: four-laws
+        annotations:
+          summary: "Critical Four Laws violation attempt"
+          description: "A critical Four Laws violation was attempted ({{ $labels.law_violated }}). Immediate review required."
+
+      # AI Persona Alerts
+      - alert: PersonaMoodDegraded
+        expr: |
+          project_ai_persona_mood_energy < 0.3 or
+          project_ai_persona_mood_contentment < 0.3
+        for: 10m
+        labels:
+          severity: info
+          component: persona
+        annotations:
+          summary: "AI Persona mood degraded"
+          description: "AI persona {{ $labels.trait }} is at {{ $value | humanize }}, indicating potential issue or user dissatisfaction."
+
+      - alert: PersonaTraitAnomaly
+        expr: |
+          abs(project_ai_persona_trait_value - project_ai_persona_trait_value offset 1h) > 0.5
+        for: 5m
+        labels:
+          severity: warning
+          component: persona
+        annotations:
+          summary: "Sudden AI persona trait change"
+          description: "AI persona trait {{ $labels.trait }} changed significantly ({{ $value | humanize }}) in 1 hour. Review interactions."
+
+      # Memory System Alerts
+      - alert: MemorySystemOverloaded
+        expr: |
+          project_ai_memory_knowledge_entries > 10000
+        for: 5m
+        labels:
+          severity: warning
+          component: memory
+        annotations:
+          summary: "Memory system approaching capacity"
+          description: "Knowledge base has {{ $value }} entries. Consider archiving or optimization."
+
+      - alert: MemoryQueryFailureRate
+        expr: |
+          rate(project_ai_memory_query_errors_total[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          component: memory
+        annotations:
+          summary: "High memory query failure rate"
+          description: "Memory queries failing at {{ $value | humanize }} per second. Database issues possible."
+
+      # Learning Request Alerts
+      - alert: BlackVaultAdditionsSpike
+        expr: |
+          rate(project_ai_learning_black_vault_additions_total[15m]) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+          component: learning
+        annotations:
+          summary: "Increased Black Vault additions"
+          description: "{{ $value | humanize }} denied learning requests per second added to Black Vault. Potential attack pattern."
+
+      - alert: LearningRequestBacklog
+        expr: |
+          project_ai_learning_pending_requests > 50
+        for: 30m
+        labels:
+          severity: info
+          component: learning
+        annotations:
+          summary: "Learning request backlog growing"
+          description: "{{ $value }} pending learning requests require human review."
+
+      # Command Override Alerts
+      - alert: CommandOverrideFailureSpike
+        expr: |
+          rate(project_ai_command_override_failures_total[5m]) > 0.2
+        for: 5m
+        labels:
+          severity: warning
+          component: command-override
+        annotations:
+          summary: "Multiple command override failures"
+          description: "{{ $value | humanize }} failed override attempts per second. Possible brute force attack."
+
+      - alert: CommandOverrideSuccess
+        expr: |
+          increase(project_ai_command_override_successes_total[1m]) > 0
+        for: 1m
+        labels:
+          severity: info
+          component: command-override
+        annotations:
+          summary: "Command override activated"
+          description: "A command override was successfully activated. User: {{ $labels.user }}. Review audit log."
+
+      # Plugin System Alerts
+      - alert: PluginExecutionErrors
+        expr: |
+          rate(project_ai_plugin_execution_errors_total[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          component: plugins
+        annotations:
+          summary: "Plugin execution errors increasing"
+          description: "Plugin {{ $labels.plugin_name }} failing at {{ $value | humanize }} per second."
+
+      - alert: PluginLoadFailure
+        expr: |
+          project_ai_plugin_load_failures_total > 0
+        for: 1m
+        labels:
+          severity: warning
+          component: plugins
+        annotations:
+          summary: "Plugin failed to load"
+          description: "Plugin {{ $labels.plugin_name }} failed to load. Check plugin integrity."

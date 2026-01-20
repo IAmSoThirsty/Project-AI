@@ -1,59 +1,127 @@
-# Virtual environments
-.venv/
-venv/
-env/
-ENV/
-# Visual Studio workspace and CodeLens
-.vs/
-
-# Build artifacts
-build/
-dist/
-*.egg-info/
-.eggs/
-
-# Python cache
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
+
+# C extensions
 *.so
+
+# Distribution / packaging
 .Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
 
-# Node.js dependencies
-node_modules/
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
 
-# Documentation
-site/
-docs/_build/
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
 
-# Miscellaneous
-.DS_Store
-*.bak
-*.orig
-README_UPDATED.md
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
 
-# Test and runtime data directories
-data/monitoring/
-data/sandbox_reports/
-data/comprehensive_security_tests/
-data/robustness_metrics/
-data/red_team_stress_tests/
+# mypy
+.mypy_cache/
+.dmypy.json
 
-# Large test artifacts and data files
-docs/security/fourlaws-test-runs-latest.jsonl
+# Pyre
+.pyre/
 
-# Build/analysis artifacts
-*.jar
-screenshots/
-codacy-analysis-cli-assembly.jar
+# Ruff
+.ruff_cache/
 
-# ⚠️ SECURITY: Sensitive configuration files
-# NEVER commit these files - they contain secrets and credentials
+# Environments
 .env
 .env.local
 .env.*.local
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Security and secrets
 *.key
 *.pem
 *.p12
 secrets.json
 credentials.json
+secret_scan_report.json
+*secret*scan*.json
+*secret*scan*.txt
+
+# IDEs
+.vscode/
+.idea/
+.vs/
+
+# Secrets and credentials (additional security)
+*.key
+*.pem
+*.p12
+secrets.json
+credentials.json
+secret_scan_report.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Generated test data
+data/generated_tests/
+
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+*.iml
+local.properties
+
+# Android
+*.apk
+*.ap_
+*.aab
+*.dex
+*.class
+bin/
+gen/
+out/
+captures/
+.externalNativeBuild
+.cxx
+
+# Temporal.io
+.env.temporal
+config/temporal/*.local
+data/temporal/
+actionlint*

@@ -7,7 +7,7 @@
 **Double-click `setup-desktop.bat`**
 
 This will:
-✓ Check for Python 3.12+  
+✓ Check for Python 3.11+  
 ✓ Create virtual environment  
 ✓ Install all dependencies  
 ✓ Launch the application  
@@ -42,7 +42,7 @@ This creates:
 ## System Requirements
 
 ✓ Windows 7+  
-✓ Python 3.12+  
+✓ Python 3.11+  
 ✓ 4GB RAM (8GB recommended)  
 ✓ 500MB disk space  
 

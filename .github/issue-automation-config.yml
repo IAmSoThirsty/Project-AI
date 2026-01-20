@@ -1,0 +1,197 @@
+# Automated Issue Triage and Resolution Configuration
+# This file controls the behavior of the automated issue management system
+
+# Enable/disable automation features
+enabled: true
+
+# Auto-labeling rules
+auto_labeling:
+  enabled: true
+  rules:
+    security:
+      keywords: ['security', 'vulnerability', 'cve-', 'exploit', 'malicious']
+      labels: ['security']
+      priority: 'high'
+    
+    bug:
+      keywords: ['bug', 'error', 'issue', 'problem', 'broken', 'crash', 'fail']
+      labels: ['bug']
+      priority: 'medium'
+    
+    feature:
+      keywords: ['feature', 'enhancement', 'request', 'improve']
+      labels: ['enhancement']
+      priority: 'low'
+    
+    documentation:
+      keywords: ['documentation', 'docs', 'readme', 'guide', 'tutorial']
+      labels: ['documentation']
+      priority: 'low'
+    
+    dependencies:
+      keywords: ['dependency', 'dependencies', 'upgrade', 'update', 'package']
+      labels: ['dependencies']
+      priority: 'medium'
+
+# Auto-closing rules
+auto_closing:
+  enabled: true
+  
+  # Close stale issues
+  stale_issues:
+    enabled: true
+    days_inactive: 30
+    warning_days: 7  # Warn before closing
+    exempt_labels: ['security', 'critical', 'pinned']
+    close_message: |
+      🤖 This issue has been automatically closed due to inactivity.
+      
+      This issue has not been updated in over 30 days and appears to be inactive.
+      If you believe this issue should remain open, please reopen it with updated information.
+      
+      ---
+      *Automated by issue management system*
+  
+  # Close false positive security reports
+  false_positive_security:
+    enabled: true
+    detection_threshold: 0.8  # 80% of packages showing 0 vulnerabilities
+    close_message: |
+      🤖 **Automated Resolution - False Positive**
+      
+      This security report has been identified as a false positive.
+      The automated security scan reported 0 vulnerabilities for all/most packages,
+      indicating a reporting issue rather than actual security concerns.
+      
+      The workflow has been fixed to prevent similar false positives in the future.
+      
+      ---
+      *Automated by issue management system*
+  
+  # Close duplicate issues
+  duplicate_detection:
+    enabled: true
+    similarity_threshold: 0.85
+    close_message: |
+      🤖 **Automated Resolution - Duplicate**
+      
+      This issue appears to be a duplicate of an existing issue.
+      Please refer to the linked issue for updates and discussions.
+      
+      ---
+      *Automated by issue management system*
+
+# Auto-assignment rules
+auto_assignment:
+  enabled: false  # Disabled by default - requires team configuration
+  rules:
+    security:
+      assign_to: []  # Add GitHub usernames
+    bug:
+      assign_to: []
+    feature:
+      assign_to: []
+
+# Auto-resolution attempts
+auto_resolution:
+  enabled: true
+  
+  # Automatically update dependencies for security issues
+  dependency_updates:
+    enabled: true
+    create_pr: true
+    auto_merge_minor: false  # Require manual review
+  
+  # Attempt to fix simple documentation issues
+  documentation_fixes:
+    enabled: true
+    create_pr: true
+  
+  # Run tests before creating resolution PRs
+  run_tests: true
+
+# Notification settings
+notifications:
+  enabled: true
+  
+  # Comment on issues with triage information
+  triage_comments: true
+  
+  # Generate summary reports
+  summary_reports: true
+  
+  # Notify on resolution
+  resolution_comments: true
+
+# Monitoring and reporting
+monitoring:
+  enabled: true
+  
+  # Track metrics
+  track_metrics: true
+  metrics:
+    - time_to_triage
+    - time_to_resolution
+    - auto_resolution_rate
+    - false_positive_rate
+  
+  # Generate periodic reports
+  periodic_reports:
+    enabled: true
+    frequency: 'weekly'  # daily, weekly, monthly
+    include:
+      - open_issues_count
+      - closed_issues_count
+      - resolution_rate
+      - category_breakdown
+      - priority_breakdown
+
+# Security-specific settings
+security_handling:
+  # Always treat security issues as high priority
+  high_priority: true
+  
+  # Require verification before closing security issues
+  require_verification: true
+  
+  # Automatically create PRs for security fixes
+  auto_create_fix_prs: true
+  
+  # Scan frequency
+  scan_schedule: 'daily'
+
+# Integration settings
+integrations:
+  # GitHub Projects integration
+  projects:
+    enabled: false
+    project_id: null
+  
+  # GitHub Actions integration
+  actions:
+    enabled: true
+  
+  # External tools
+  external:
+    codeql: true
+    dependabot: true
+    bandit: true
+
+# Advanced settings
+advanced:
+  # Maximum issues to process per run
+  max_issues_per_run: 100
+  
+  # Retry failed operations
+  retry_failed: true
+  max_retries: 3
+  
+  # Rate limiting
+  respect_rate_limits: true
+  
+  # Debug mode
+  debug: false
+
+# Version
+version: '1.0.0'
+last_updated: '2026-01-07'

@@ -15,7 +15,6 @@ import sys
 import tempfile
 import time
 from pathlib import Path
-from typing import List
 
 # Ensure local package import
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
