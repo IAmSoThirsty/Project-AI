@@ -88,18 +88,23 @@ jobs:
           echo "🔍 Failsafe: Scanning codebase for any missing dependencies..."
           python -m pip install pipreqs || true
           
-          # Generate requirements from actual imports
-          pipreqs . --force --savepath /tmp/discovered_requirements.txt 2>/dev/null || true
-          
-          if [ -f /tmp/discovered_requirements.txt ]; then
-            echo "📋 Discovered dependencies:"
-            cat /tmp/discovered_requirements.txt
+          # Only run pipreqs if it was successfully installed
+          if command -v pipreqs &> /dev/null; then
+            # Generate requirements from actual imports
+            pipreqs . --force --savepath /tmp/discovered_requirements.txt 2>/dev/null || true
             
-            echo "📦 Installing discovered dependencies..."
-            python -m pip install -r /tmp/discovered_requirements.txt || true
-            echo "✅ Failsafe installation complete"
+            if [ -f /tmp/discovered_requirements.txt ]; then
+              echo "📋 Discovered dependencies:"
+              cat /tmp/discovered_requirements.txt
+              
+              echo "📦 Installing discovered dependencies..."
+              python -m pip install -r /tmp/discovered_requirements.txt || true
+              echo "✅ Failsafe installation complete"
+            else
+              echo "⚠️  No additional dependencies discovered"
+            fi
           else
-            echo "⚠️  No additional dependencies discovered"
+            echo "⚠️  pipreqs not available, skipping failsafe scan"
           fi
 
       - name: Install dev tools
@@ -236,10 +241,12 @@ jobs:
           
           # Failsafe with pipreqs
           pip install pipreqs || true
-          pipreqs . --force --savepath /tmp/discovered_requirements.txt 2>/dev/null || true
-          if [ -f /tmp/discovered_requirements.txt ]; then
-            pip install -r /tmp/discovered_requirements.txt || true
-            echo "✅ Installed discovered dependencies"
+          if command -v pipreqs &> /dev/null; then
+            pipreqs . --force --savepath /tmp/discovered_requirements.txt 2>/dev/null || true
+            if [ -f /tmp/discovered_requirements.txt ]; then
+              pip install -r /tmp/discovered_requirements.txt || true
+              echo "✅ Installed discovered dependencies"
+            fi
           fi
           
           # Install test tools
@@ -388,10 +395,12 @@ jobs:
           
           # Failsafe with pipreqs
           pip install pipreqs || true
-          pipreqs . --force --savepath /tmp/discovered_requirements.txt 2>/dev/null || true
-          if [ -f /tmp/discovered_requirements.txt ]; then
-            pip install -r /tmp/discovered_requirements.txt || true
-            echo "✅ Installed discovered dependencies"
+          if command -v pipreqs &> /dev/null; then
+            pipreqs . --force --savepath /tmp/discovered_requirements.txt 2>/dev/null || true
+            if [ -f /tmp/discovered_requirements.txt ]; then
+              pip install -r /tmp/discovered_requirements.txt || true
+              echo "✅ Installed discovered dependencies"
+            fi
           fi
           
           # Install test tools
