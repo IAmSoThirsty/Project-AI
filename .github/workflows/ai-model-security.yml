@@ -42,12 +42,7 @@ env:
   # PERMISSIVE: Feature branches - faster feedback, blocks only critical
   # STANDARD: Default - blocks critical + high
   # STRICT: Main/release branches - blocks critical + high + medium
-  SECURITY_PROFILE: ${{ 
-    (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')) && 'strict' ||
-    github.event_name == 'workflow_dispatch' && inputs.strictness ||
-    github.event_name == 'pull_request' && github.base_ref == 'main' && 'standard' ||
-    'permissive' 
-  }}
+  SECURITY_PROFILE: ${{ (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')) && 'strict' || github.event_name == 'workflow_dispatch' && inputs.strictness || github.event_name == 'pull_request' && github.base_ref == 'main' && 'standard' || 'permissive' }}
 
 permissions:
   contents: read
