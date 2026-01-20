@@ -12,8 +12,7 @@ def test_content_filter_blocked_lines_269_270():
     """
     with tempfile.TemporaryDirectory() as tmpdir:
         generator = ImageGenerator(
-            backend=ImageGenerationBackend.OPENAI,
-            data_dir=tmpdir
+            backend=ImageGenerationBackend.OPENAI, data_dir=tmpdir
         )
 
         # Ensure content filter is enabled

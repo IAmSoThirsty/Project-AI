@@ -6,7 +6,6 @@ and supports interpretability for user trust and debugging.
 All explanation operations route through CognitionKernel.
 """
 
-
 from app.core.cognition_kernel import CognitionKernel, ExecutionType
 from app.core.kernel_integration import KernelRoutedAgent
 
@@ -31,7 +30,7 @@ class ExplainabilityAgent(KernelRoutedAgent):
         super().__init__(
             kernel=kernel,
             execution_type=ExecutionType.AGENT_ACTION,
-            default_risk_level="low"  # Explanation generation is low risk
+            default_risk_level="low",  # Explanation generation is low risk
         )
 
         # State initialization: The explainability agent state is initialized

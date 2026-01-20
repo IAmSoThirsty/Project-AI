@@ -9,13 +9,9 @@ import logging
 import time
 
 from app.core.ai_systems import AIPersona
-from app.gui.dashboard_utils import (
-    DashboardAsyncManager,
-    DashboardConfiguration,
-    DashboardErrorHandler,
-    DashboardLogger,
-    DashboardValidationManager,
-)
+from app.gui.dashboard_utils import (DashboardAsyncManager, DashboardConfiguration,
+                                     DashboardErrorHandler, DashboardLogger,
+                                     DashboardValidationManager)
 from app.gui.persona_panel import PersonaPanel
 
 logger = logging.getLogger(__name__)
@@ -48,14 +44,14 @@ def setup_ui(self):
     # Add as a tab or dialog
     self.tabs.addTab(self.persona_panel, "🤖 AI Persona")
 
+
 # Add event handlers:
 def on_personality_changed(self, personality_traits):
     """Handle personality trait changes."""
     logger.info(f"Personality updated: {personality_traits}")
     # Save to user preferences
-    self.user_manager.save_user_preferences({
-        'persona_traits': personality_traits
-    })
+    self.user_manager.save_user_preferences({"persona_traits": personality_traits})
+
 
 def on_proactive_changed(self, settings):
     """Handle proactive settings changes."""
@@ -78,18 +74,13 @@ def risky_operation(self):
         return result
     except ValueError as e:
         DashboardErrorHandler.handle_exception(
-            e,
-            context="Operation Failed",
-            show_dialog=True,
-            parent=self
+            e, context="Operation Failed", show_dialog=True, parent=self
         )
     except Exception as e:
         DashboardErrorHandler.handle_exception(
-            e,
-            context="Unexpected Error",
-            show_dialog=True,
-            parent=self
+            e, context="Unexpected Error", show_dialog=True, parent=self
         )
+
 
 # Validate user input:
 def save_user_settings(self):
@@ -97,10 +88,7 @@ def save_user_settings(self):
 
     # Process valid username only
     return DashboardErrorHandler.validate_input(
-        username,
-        str,
-        required=True,
-        context="Username"
+        username, str, required=True, context="Username"
     )
 
 
@@ -113,34 +101,36 @@ def __init__(self):
     # ... existing code ...
     self.async_manager = DashboardAsyncManager()
 
+
 def load_data_async(self):
     """Load data without blocking UI."""
     self.async_manager.run_async(
         task_id="load_data",
         func=self.load_heavy_data,
         on_result=self.on_data_loaded,
-        on_error=self.on_data_error
+        on_error=self.on_data_error,
     )
+
 
 def load_heavy_data(self):
     """Simulate heavy data loading."""
     import time
+
     time.sleep(2)  # Heavy operation
     return {"status": "success", "data": []}
+
 
 def on_data_loaded(self, result):
     """Handle loaded data."""
     logger.info(f"Data loaded: {result}")
     self.update_ui(result)
 
+
 def on_data_error(self, error):
     """Handle loading error."""
     logger.error(f"Error loading data: {error}")
     DashboardErrorHandler.handle_exception(
-        error,
-        context="Data Loading Failed",
-        show_dialog=True,
-        parent=self
+        error, context="Data Loading Failed", show_dialog=True, parent=self
     )
 
 
@@ -176,6 +166,7 @@ def validate_user_registration(self):
     # All valid
     return True
 
+
 # Sanitize user input
 def save_user_comment(self):
     comment = self.comment_field.toPlainText()
@@ -203,6 +194,7 @@ def expensive_operation(self):
 
     return result
 
+
 def user_action_performed(self, user, action):
     """Log user actions."""
     logger.info(f"User action: {user} performed {action}")
@@ -217,32 +209,36 @@ def config_init(self):
     # ... existing code ...
 
     # Create or load configuration
-    config = DashboardConfiguration({
-        'window_width': 1600,
-        'window_height': 1000,
-        'theme': 'dark',
-    })
+    config = DashboardConfiguration(
+        {
+            "window_width": 1600,
+            "window_height": 1000,
+            "theme": "dark",
+        }
+    )
 
     # Apply configuration
     self.setGeometry(
-        config.get('window_x', 80),
-        config.get('window_y', 60),
-        config.get('window_width', 1400),
-        config.get('window_height', 900),
+        config.get("window_x", 80),
+        config.get("window_y", 60),
+        config.get("window_width", 1400),
+        config.get("window_height", 900),
     )
+
 
 def save_window_state(self):
     """Save window state to configuration."""
     geom = self.geometry()
-    self.config.set('window_width', geom.width())
-    self.config.set('window_height', geom.height())
-    self.config.set('window_x', geom.x())
-    self.config.set('window_y', geom.y())
+    self.config.set("window_width", geom.width())
+    self.config.set("window_height", geom.height())
+    self.config.set("window_x", geom.x())
+    self.config.set("window_y", geom.y())
 
 
 # ============================================================================
 # 7. COMPLETE EXAMPLE: INTEGRATED FEATURE
 # ============================================================================
+
 
 class PersonaFeatureExample:
     """Complete example showing all components working together."""
@@ -262,13 +258,14 @@ class PersonaFeatureExample:
             task_id="load_persona",
             func=self._load_persona_data,
             on_result=self._on_persona_loaded,
-            on_error=self._on_persona_error
+            on_error=self._on_persona_error,
         )
 
     def _load_persona_data(self):
         """Load persona data (potentially from file)."""
         # Simulate loading
         import time
+
         time.sleep(0.5)
 
         stats = self.ai_persona.get_statistics()
@@ -293,19 +290,18 @@ class PersonaFeatureExample:
             error,
             context="Failed to Load AI Persona",
             show_dialog=True,
-            parent=self.dashboard
+            parent=self.dashboard,
         )
 
     def _on_personality_changed(self, traits):
         """Handle personality change."""
         self.logger.log_user_action(
-            user="User",
-            action="Adjusted Personality",
-            details=traits
+            user="User", action="Adjusted Personality", details=traits
         )
 
         # Save to configuration
-        self.config.set('personality_traits', traits)
+        self.config.set("personality_traits", traits)
+
 
 # Usage:
 # feature = PersonaFeatureExample(dashboard_window)

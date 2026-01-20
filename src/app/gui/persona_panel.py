@@ -4,21 +4,9 @@ import logging
 
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont
-from PyQt6.QtWidgets import (
-    QCheckBox,
-    QGroupBox,
-    QHBoxLayout,
-    QLabel,
-    QMessageBox,
-    QPushButton,
-    QScrollArea,
-    QSlider,
-    QSpinBox,
-    QTabWidget,
-    QTextEdit,
-    QVBoxLayout,
-    QWidget,
-)
+from PyQt6.QtWidgets import (QCheckBox, QGroupBox, QHBoxLayout, QLabel, QMessageBox,
+                             QPushButton, QScrollArea, QSlider, QSpinBox, QTabWidget,
+                             QTextEdit, QVBoxLayout, QWidget)
 
 from app.core.ai_systems import AIPersona, FourLaws
 
@@ -67,8 +55,7 @@ class PersonaPanel(QWidget):
         # Laws display
         laws_text = QTextEdit()
         laws_text.setReadOnly(True)
-        laws_text.setMarkdown(
-            """# Asimov's Law (Prime Directive)
+        laws_text.setMarkdown("""# Asimov's Law (Prime Directive)
 *A.I. may not harm Humanity, or, by inaction, allow Humanity to come to harm.*
 
 ## First Law
@@ -86,8 +73,7 @@ conflict with the First or Second Law.*
 ---
 
 These laws are **immutable and hierarchical**. They cannot be overridden or modified.
-"""
-        )
+""")
         layout.addWidget(laws_text)
 
         # Action test

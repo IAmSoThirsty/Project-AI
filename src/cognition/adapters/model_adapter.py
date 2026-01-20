@@ -122,7 +122,9 @@ class PyTorchAdapter(ModelAdapter):
                 self.device = device
             self.model = None
         except ImportError as e:
-            raise ImportError("PyTorch not available. Install with: pip install torch") from e
+            raise ImportError(
+                "PyTorch not available. Install with: pip install torch"
+            ) from e
 
     def load_model(self, model_path: str, **kwargs) -> Any:
         """Load a PyTorch model."""

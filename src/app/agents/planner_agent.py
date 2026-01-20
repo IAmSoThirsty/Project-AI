@@ -4,6 +4,7 @@ Decomposes tasks to smaller agents and schedules them.
 
 All task scheduling and execution routes through CognitionKernel.
 """
+
 from __future__ import annotations
 
 import logging
@@ -33,7 +34,7 @@ class PlannerAgent(KernelRoutedAgent):
         super().__init__(
             kernel=kernel,
             execution_type=ExecutionType.AGENT_ACTION,
-            default_risk_level="low"  # Planning is typically low risk
+            default_risk_level="low",  # Planning is typically low risk
         )
 
         self.queue: list[dict[str, Any]] = []
@@ -51,7 +52,7 @@ class PlannerAgent(KernelRoutedAgent):
             action_args=(task,),
             requires_approval=False,
             risk_level="low",
-            metadata={"task_name": task.get("name"), "operation": "schedule"}
+            metadata={"task_name": task.get("name"), "operation": "schedule"},
         )
 
     def _do_schedule(self, task: dict[str, Any]) -> None:
@@ -71,7 +72,7 @@ class PlannerAgent(KernelRoutedAgent):
             action_name="PlannerAgent.run_next",
             requires_approval=False,
             risk_level="medium",  # Task execution has moderate risk
-            metadata={"operation": "run_next"}
+            metadata={"operation": "run_next"},
         )
 
     def _do_run_next(self) -> dict[str, Any]:

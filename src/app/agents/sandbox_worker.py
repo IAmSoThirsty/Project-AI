@@ -35,6 +35,7 @@ def apply_limits():
         # Resource limits are best-effort on this platform
         # Log the exception for debugging but don't fail initialization
         import logging
+
         logging.debug("Could not set resource limits: %s", e)
 
 

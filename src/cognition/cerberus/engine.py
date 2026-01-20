@@ -166,7 +166,11 @@ class CerberusEngine:
 
         except Exception as e:
             logger.error(f"Output enforcement error: {e}")
-            return {"allowed": False, "output": None, "reason": f"Enforcement error: {e}"}
+            return {
+                "allowed": False,
+                "output": None,
+                "reason": f"Enforcement error: {e}",
+            }
 
     def check_pre_persistence(self, data: Any, context: dict | None = None) -> dict:
         """

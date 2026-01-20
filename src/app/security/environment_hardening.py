@@ -203,7 +203,9 @@ class EnvironmentHardening:
                     full_path.mkdir(parents=True, exist_ok=True)
                     # Set restrictive permissions (owner only)
                     os.chmod(full_path, 0o700)
-                    logger.info("Created directory with secure permissions: %s", full_path)
+                    logger.info(
+                        "Created directory with secure permissions: %s", full_path
+                    )
                 except OSError as e:
                     issues.append(f"Cannot create directory {full_path}: {e}")
                     continue

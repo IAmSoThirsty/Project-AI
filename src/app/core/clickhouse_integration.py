@@ -42,7 +42,7 @@ class ClickHouseClient:
         database: str = "default",
         user: str = "default",
         password: str = "",
-        compression: bool = True
+        compression: bool = True,
     ):
         """Initialize ClickHouse client.
 
@@ -65,7 +65,7 @@ class ClickHouseClient:
             database=database,
             user=user,
             password=password,
-            compression=compression
+            compression=compression,
         )
 
         logger.info(f"ClickHouse client initialized: {host}:{port}/{database}")
@@ -121,6 +121,7 @@ class ClickHouseClient:
         """
         try:
             import pandas as pd
+
             result = self.execute(query)
 
             # Get column names from query
@@ -132,10 +133,7 @@ class ClickHouseClient:
             logger.error("pandas not installed - cannot return DataFrame")
             return self.execute(query)
 
-    def create_metrics_table(
-        self,
-        table_name: str = "project_ai_metrics"
-    ):
+    def create_metrics_table(self, table_name: str = "project_ai_metrics"):
         """Create table for Project-AI metrics storage.
 
         Args:
@@ -158,10 +156,7 @@ class ClickHouseClient:
         self.execute(query)
         logger.info(f"Created metrics table: {table_name}")
 
-    def create_logs_table(
-        self,
-        table_name: str = "project_ai_logs"
-    ):
+    def create_logs_table(self, table_name: str = "project_ai_logs"):
         """Create table for high-volume log storage.
 
         Args:
@@ -185,10 +180,7 @@ class ClickHouseClient:
         self.execute(query)
         logger.info(f"Created logs table: {table_name}")
 
-    def create_events_table(
-        self,
-        table_name: str = "project_ai_events"
-    ):
+    def create_events_table(self, table_name: str = "project_ai_events"):
         """Create table for AI system events.
 
         Args:
@@ -218,7 +210,7 @@ class ClickHouseClient:
         value: float,
         component: str = "unknown",
         labels: dict | None = None,
-        timestamp: datetime | None = None
+        timestamp: datetime | None = None,
     ):
         """Insert single metric.
 
@@ -232,21 +224,26 @@ class ClickHouseClient:
         ts = timestamp or datetime.now()
         labels = labels or {}
 
-        self.insert("project_ai_metrics", [{
-            "timestamp": ts,
-            "metric_name": metric_name,
-            "metric_value": value,
-            "labels": labels,
-            "component": component,
-            "severity": "info"
-        }])
+        self.insert(
+            "project_ai_metrics",
+            [
+                {
+                    "timestamp": ts,
+                    "metric_name": metric_name,
+                    "metric_value": value,
+                    "labels": labels,
+                    "component": component,
+                    "severity": "info",
+                }
+            ],
+        )
 
     def query_metrics_aggregated(
         self,
         metric_name: str,
         start_time: datetime,
         end_time: datetime,
-        interval: str = "1m"
+        interval: str = "1m",
     ) -> list[tuple]:
         """Query aggregated metrics over time windows.
 
@@ -276,9 +273,7 @@ class ClickHouseClient:
         return self.execute(query)
 
     def get_top_components_by_events(
-        self,
-        limit: int = 10,
-        hours: int = 24
+        self, limit: int = 10, hours: int = 24
     ) -> list[tuple]:
         """Get components with most events in last N hours.
 
@@ -317,11 +312,7 @@ class ProjectAIAnalytics:
     Provides billion-scale analytics on AI system data.
     """
 
-    def __init__(
-        self,
-        clickhouse_host: str = "localhost",
-        clickhouse_port: int = 9000
-    ):
+    def __init__(self, clickhouse_host: str = "localhost", clickhouse_port: int = 9000):
         """Initialize analytics layer.
 
         Args:
@@ -329,9 +320,7 @@ class ProjectAIAnalytics:
             clickhouse_port: ClickHouse port
         """
         self.client = ClickHouseClient(
-            host=clickhouse_host,
-            port=clickhouse_port,
-            database="project_ai"
+            host=clickhouse_host, port=clickhouse_port, database="project_ai"
         )
 
         # Create database if not exists
@@ -382,11 +371,7 @@ class ProjectAIAnalytics:
         """
         self.client.insert("project_ai_metrics", metrics_batch)
 
-    def analyze_persona_evolution(
-        self,
-        trait_name: str,
-        days: int = 30
-    ) -> list[tuple]:
+    def analyze_persona_evolution(self, trait_name: str, days: int = 30) -> list[tuple]:
         """Analyze AI persona trait evolution over time.
 
         Args:
@@ -411,10 +396,7 @@ class ProjectAIAnalytics:
 
         return self.client.execute(query)
 
-    def get_security_incident_trends(
-        self,
-        hours: int = 24
-    ) -> list[tuple]:
+    def get_security_incident_trends(self, hours: int = 24) -> list[tuple]:
         """Get security incident trends.
 
         Args:
@@ -443,9 +425,7 @@ class ProjectAIAnalytics:
 
 
 def create_clickhouse_client(
-    host: str = "localhost",
-    port: int = 9000,
-    database: str = "default"
+    host: str = "localhost", port: int = 9000, database: str = "default"
 ) -> ClickHouseClient:
     """Create ClickHouse client for Project-AI.
 

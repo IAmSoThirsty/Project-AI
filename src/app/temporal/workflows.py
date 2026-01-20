@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class LearningRequest:
     """Input for AI learning workflow."""
+
     content: str
     source: str
     category: str
@@ -28,6 +29,7 @@ class LearningRequest:
 @dataclass
 class LearningResult:
     """Result from AI learning workflow."""
+
     success: bool
     knowledge_id: str | None = None
     error: str | None = None
@@ -36,6 +38,7 @@ class LearningResult:
 @dataclass
 class ImageGenerationRequest:
     """Input for image generation workflow."""
+
     prompt: str
     style: str = "photorealistic"
     size: str = "1024x1024"
@@ -46,6 +49,7 @@ class ImageGenerationRequest:
 @dataclass
 class ImageGenerationResult:
     """Result from image generation workflow."""
+
     success: bool
     image_path: str | None = None
     metadata: dict | None = None
@@ -55,6 +59,7 @@ class ImageGenerationResult:
 @dataclass
 class DataAnalysisRequest:
     """Input for data analysis workflow."""
+
     file_path: str
     analysis_type: str  # 'clustering', 'statistics', 'visualization'
     user_id: str | None = None
@@ -63,6 +68,7 @@ class DataAnalysisRequest:
 @dataclass
 class DataAnalysisResult:
     """Result from data analysis workflow."""
+
     success: bool
     results: dict | None = None
     output_path: str | None = None
@@ -72,6 +78,7 @@ class DataAnalysisResult:
 @dataclass
 class MemoryExpansionRequest:
     """Input for memory expansion workflow."""
+
     conversation_id: str
     messages: list[dict]
     user_id: str | None = None
@@ -80,12 +87,14 @@ class MemoryExpansionRequest:
 @dataclass
 class MemoryExpansionResult:
     """Result from memory expansion workflow."""
+
     success: bool
     memory_count: int = 0
     error: str | None = None
 
 
 # Workflow Definitions
+
 
 @workflow.defn
 class AILearningWorkflow:
@@ -125,10 +134,7 @@ class AILearningWorkflow:
             )
 
             if not is_valid:
-                return LearningResult(
-                    success=False,
-                    error="Content validation failed"
-                )
+                return LearningResult(success=False, error="Content validation failed")
 
             # Activity 2: Check Black Vault
             is_allowed = await workflow.execute_activity(
@@ -139,8 +145,7 @@ class AILearningWorkflow:
 
             if not is_allowed:
                 return LearningResult(
-                    success=False,
-                    error="Content blocked by Black Vault"
+                    success=False, error="Content blocked by Black Vault"
                 )
 
             # Activity 3: Process learning request
@@ -193,9 +198,7 @@ class ImageGenerationWorkflow:
         Returns:
             Generation result with image path and metadata
         """
-        workflow.logger.info(
-            f"Starting image generation workflow: {request.backend}"
-        )
+        workflow.logger.info(f"Starting image generation workflow: {request.backend}")
 
         try:
             # Activity 1: Content filtering
@@ -207,8 +210,7 @@ class ImageGenerationWorkflow:
 
             if not is_safe:
                 return ImageGenerationResult(
-                    success=False,
-                    error="Prompt failed content safety check"
+                    success=False, error="Prompt failed content safety check"
                 )
 
             # Activity 2: Generate image (long-running, needs retries)
@@ -278,10 +280,7 @@ class DataAnalysisWorkflow:
             )
 
             if not is_valid:
-                return DataAnalysisResult(
-                    success=False,
-                    error="File validation failed"
-                )
+                return DataAnalysisResult(success=False, error="File validation failed")
 
             # Activity 2: Load data
             data = await workflow.execute_activity(
@@ -391,9 +390,11 @@ class MemoryExpansionWorkflow:
 
 # Crisis Response Workflow Data Classes
 
+
 @dataclass
 class MissionPhase:
     """Represents a single mission phase in crisis response."""
+
     phase_id: str
     agent_id: str
     action: str
@@ -404,6 +405,7 @@ class MissionPhase:
 @dataclass
 class CrisisRequest:
     """Input for crisis response workflow."""
+
     target_member: str
     missions: list[MissionPhase]
     crisis_id: str | None = None
@@ -413,6 +415,7 @@ class CrisisRequest:
 @dataclass
 class CrisisResult:
     """Result from crisis response workflow."""
+
     success: bool
     crisis_id: str | None = None
     completed_phases: int = 0
@@ -468,7 +471,7 @@ class CrisisResponseWorkflow:
                 return CrisisResult(
                     success=False,
                     crisis_id=crisis_id,
-                    error="Crisis request validation failed"
+                    error="Crisis request validation failed",
                 )
 
             # Activity 2: Initialize crisis response

@@ -7,6 +7,7 @@ Security Note: This agent uses subprocess to run pytest, a trusted testing tool.
 Module paths are validated before being passed to pytest. The pytest command
 is resolved using shutil.which for security.
 """
+
 from __future__ import annotations
 
 import logging
@@ -23,12 +24,14 @@ logger = logging.getLogger(__name__)
 
 
 class TestQAGenerator(KernelRoutedAgent):
-    def __init__(self, data_dir: str = "data", kernel: CognitionKernel | None = None) -> None:
+    def __init__(
+        self, data_dir: str = "data", kernel: CognitionKernel | None = None
+    ) -> None:
         # Initialize kernel routing (COGNITION KERNEL INTEGRATION)
         super().__init__(
             kernel=kernel,
             execution_type=ExecutionType.AGENT_ACTION,
-            default_risk_level="medium"
+            default_risk_level="medium",
         )
         self.data_dir = data_dir
         self._last_test_dir: str | None = None
@@ -40,7 +43,7 @@ class TestQAGenerator(KernelRoutedAgent):
             module_path,
             operation_name="generate_test",
             risk_level="medium",
-            metadata={"module_path": module_path}
+            metadata={"module_path": module_path},
         )
 
     def _do_generate_test_for_module(self, module_path: str) -> dict[str, Any]:
@@ -55,7 +58,11 @@ class TestQAGenerator(KernelRoutedAgent):
         try:
             with open(module_path, encoding="utf-8") as f:
                 src = f.read()
-            funcs = [line.split("def ")[1].split("(")[0] for line in src.splitlines() if line.strip().startswith("def ")]
+            funcs = [
+                line.split("def ")[1].split("(")[0]
+                for line in src.splitlines()
+                if line.strip().startswith("def ")
+            ]
             # Build a test that imports the module and calls functions that accept no required args
             lines = [
                 "import importlib.util",
@@ -73,9 +80,13 @@ class TestQAGenerator(KernelRoutedAgent):
                 lines.append("try:")
                 lines.append("    sig = inspect.signature(_fn)")
                 lines.append("    # count required params (no defaults)")
-                lines.append("    req = [p for p in sig.parameters.values() if p.default is inspect._empty and p.kind in (p.POSITIONAL_ONLY, p.POSITIONAL_OR_KEYWORD)]")
+                lines.append(
+                    "    req = [p for p in sig.parameters.values() if p.default is inspect._empty and p.kind in (p.POSITIONAL_ONLY, p.POSITIONAL_OR_KEYWORD)]"
+                )
                 lines.append("    if len(req) == 0:")
-                lines.append("        # call the function and assert it does not raise and returns a truthy value")
+                lines.append(
+                    "        # call the function and assert it does not raise and returns a truthy value"
+                )
                 lines.append("        res = _fn()")
                 lines.append("        assert res or res is None or res == True")
                 lines.append("except Exception:")
@@ -103,13 +114,17 @@ class TestQAGenerator(KernelRoutedAgent):
             tests_dir,
             operation_name="run_tests",
             risk_level="medium",
-            metadata={"tests_dir": tests_dir or self._last_test_dir}
+            metadata={"tests_dir": tests_dir or self._last_test_dir},
         )
 
     def _do_run_tests(self, tests_dir: str | None = None) -> dict[str, Any]:
         """Internal implementation of test execution."""
         # Prefer running only the latest generated test directory to avoid unrelated tests
-        run_dir = tests_dir or self._last_test_dir or os.path.join(self.data_dir, "generated_tests")
+        run_dir = (
+            tests_dir
+            or self._last_test_dir
+            or os.path.join(self.data_dir, "generated_tests")
+        )
         if not os.path.exists(run_dir):
             return {"success": True, "ran": 0}
 
@@ -125,9 +140,13 @@ class TestQAGenerator(KernelRoutedAgent):
                 [pytest_cmd, run_dir, "-q"],
                 capture_output=True,
                 text=True,
-                timeout=60  # 1 minute timeout for test execution
+                timeout=60,  # 1 minute timeout for test execution
             )
-            return {"success": res.returncode == 0, "output": res.stdout + res.stderr, "returncode": res.returncode}
+            return {
+                "success": res.returncode == 0,
+                "output": res.stdout + res.stderr,
+                "returncode": res.returncode,
+            }
         except subprocess.TimeoutExpired:
             logger.warning("Test execution timed out after 60 seconds")
             return {"success": False, "error": "timeout"}

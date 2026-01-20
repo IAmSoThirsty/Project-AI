@@ -7,21 +7,11 @@ into a production application.
 import logging
 import os
 
-from app.security import (
-    AgentEncapsulation,
-    AWSSecurityManager,
-    DataPoisoningDefense,
-    EnvironmentHardening,
-    SecureDatabaseManager,
-    SecureDataParser,
-    SecurityMonitor,
-)
+from app.security import (AgentEncapsulation, AWSSecurityManager, DataPoisoningDefense,
+                          EnvironmentHardening, SecureDatabaseManager, SecureDataParser,
+                          SecurityMonitor)
 from app.security.agent_security import NumericalProtection, PluginIsolation
-from app.security.web_service import (
-    InputValidator,
-    RateLimiter,
-    SecureWebHandler,
-)
+from app.security.web_service import InputValidator, RateLimiter, SecureWebHandler
 
 # Configure logging
 logging.basicConfig(
@@ -223,9 +213,7 @@ class SecureAIApplication:
         logger.info(f"✓ Created agent: {agent_id}")
         return agent
 
-    def process_user_input(
-        self, user_input: str, client_ip: str, user_id: int
-    ) -> dict:
+    def process_user_input(self, user_input: str, client_ip: str, user_id: int) -> dict:
         """Process user input with full security validation.
 
         Args:
@@ -418,7 +406,8 @@ def main():
 
     # Create an AI agent
     agent = app.create_agent(
-        agent_id="assistant_1", permissions={"read": True, "write": True, "execute": False}
+        agent_id="assistant_1",
+        permissions={"read": True, "write": True, "execute": False},
     )
 
     # Store some state

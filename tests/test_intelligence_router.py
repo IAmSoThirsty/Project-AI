@@ -77,8 +77,7 @@ class TestIntelligenceRouter:
         """Test routing conversation search query."""
         # Add a conversation first
         router_with_components.memory_system.log_conversation(
-            "test message",
-            "test response"
+            "test message", "test response"
         )
 
         result = router_with_components.route_query("remember test")
@@ -126,7 +125,7 @@ class TestIntelligenceRouter:
         """Test formatting knowledge results."""
         results = [
             {"category": "test", "key": "key1", "value": "value1"},
-            {"category": "test", "key": "key2", "value": "value2"}
+            {"category": "test", "key": "key2", "value": "value2"},
         ]
 
         formatted = router_with_components._format_knowledge_results(results)
@@ -146,7 +145,7 @@ class TestIntelligenceRouter:
             {
                 "user": "test user message",
                 "ai": "test ai response",
-                "timestamp": "2024-01-01T12:00:00"
+                "timestamp": "2024-01-01T12:00:00",
             }
         ]
 
@@ -164,8 +163,7 @@ class TestIntelligenceRouter:
     def test_route_query_with_context(self, router_with_components):
         """Test routing query with context."""
         result = router_with_components.route_query(
-            "test query",
-            context={"user": "test_user"}
+            "test query", context={"user": "test_user"}
         )
 
         assert "route" in result
@@ -177,7 +175,7 @@ class TestIntelligenceRouter:
             "what can you do",
             "tell me about test",
             "remember our conversation",
-            "run test_func"
+            "run test_func",
         ]
 
         for query in queries:

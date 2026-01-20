@@ -26,35 +26,61 @@ PATTERNS: list[tuple[str, str, str]] = [
     ("openai_api_key", r"sk-(?:proj-)?[A-Za-z0-9_-]{20,200}", "OpenAI API Key"),
     ("huggingface_token", r"hf_[A-Za-z0-9]{34,}", "Hugging Face Token"),
     ("aws_access_key", r"AKIA[0-9A-Z]{16}", "AWS Access Key"),
-    ("aws_secret_key", r"aws_secret_access_key\s*=\s*['\"][A-Za-z0-9/+=]{40}['\"]", "AWS Secret Key"),
-
+    (
+        "aws_secret_key",
+        r"aws_secret_access_key\s*=\s*['\"][A-Za-z0-9/+=]{40}['\"]",
+        "AWS Secret Key",
+    ),
     # Generic secrets
-    ("generic_api_key", r"api[_-]?key\s*[=:]\s*['\"][A-Za-z0-9_-]{20,}['\"]", "Generic API Key"),
+    (
+        "generic_api_key",
+        r"api[_-]?key\s*[=:]\s*['\"][A-Za-z0-9_-]{20,}['\"]",
+        "Generic API Key",
+    ),
     ("bearer_token", r"bearer\s+[A-Za-z0-9_-]{20,}", "Bearer Token"),
-    ("auth_token", r"auth[_-]?token\s*[=:]\s*['\"][A-Za-z0-9_-]{20,}['\"]", "Auth Token"),
-
+    (
+        "auth_token",
+        r"auth[_-]?token\s*[=:]\s*['\"][A-Za-z0-9_-]{20,}['\"]",
+        "Auth Token",
+    ),
     # Passwords
-    ("password_assignment", r"password\s*[=:]\s*['\"][^'\"]{3,}['\"]", "Hardcoded Password"),
+    (
+        "password_assignment",
+        r"password\s*[=:]\s*['\"][^'\"]{3,}['\"]",
+        "Hardcoded Password",
+    ),
     ("smtp_password", r"SMTP_PASSWORD\s*=\s*['\"]?[^'\"\s]+['\"]?", "SMTP Password"),
-    ("db_password", r"(?:DATABASE|DB)_PASSWORD\s*=\s*['\"][^'\"]+['\"]", "Database Password"),
-
+    (
+        "db_password",
+        r"(?:DATABASE|DB)_PASSWORD\s*=\s*['\"][^'\"]+['\"]",
+        "Database Password",
+    ),
     # Encryption keys
-    ("fernet_key", r"FERNET_KEY\s*=\s*['\"]?[A-Za-z0-9+/=]{44}['\"]?", "Fernet Encryption Key"),
+    (
+        "fernet_key",
+        r"FERNET_KEY\s*=\s*['\"]?[A-Za-z0-9+/=]{44}['\"]?",
+        "Fernet Encryption Key",
+    ),
     ("jwt_secret", r"JWT_SECRET\s*=\s*['\"][^'\"]{10,}['\"]", "JWT Secret"),
     ("secret_key", r"SECRET_KEY\s*=\s*['\"][^'\"]{10,}['\"]", "Secret Key"),
-
     # Private keys
     ("rsa_private_key", r"-----BEGIN (?:RSA |)PRIVATE KEY-----", "RSA Private Key"),
     ("ssh_private_key", r"-----BEGIN OPENSSH PRIVATE KEY-----", "SSH Private Key"),
     ("pgp_private_key", r"-----BEGIN PGP PRIVATE KEY BLOCK-----", "PGP Private Key"),
-
     # Cloud credentials
     ("google_api_key", r"AIza[0-9A-Za-z_-]{35}", "Google API Key"),
     ("github_token", r"gh[pousr]_[A-Za-z0-9]{36,}", "GitHub Token"),
-    ("slack_token", r"xox[baprs]-[0-9]{10,13}-[0-9]{10,13}-[A-Za-z0-9]{24,}", "Slack Token"),
-
+    (
+        "slack_token",
+        r"xox[baprs]-[0-9]{10,13}-[0-9]{10,13}-[A-Za-z0-9]{24,}",
+        "Slack Token",
+    ),
     # Connection strings
-    ("connection_string", r"(?:mongodb|mysql|postgresql)://[^'\"\s]+:[^'\"\s]+@", "Database Connection String"),
+    (
+        "connection_string",
+        r"(?:mongodb|mysql|postgresql)://[^'\"\s]+:[^'\"\s]+@",
+        "Database Connection String",
+    ),
 ]
 
 # Files to exclude from scanning
@@ -127,15 +153,21 @@ def scan_file(file_path: pathlib.Path) -> list[dict[str, Any]]:
                 matches = re.finditer(pattern, line, re.IGNORECASE)
                 for match in matches:
                     matched_text = match.group(0)
-                    display_text = matched_text[:50] + "..." if len(matched_text) > 50 else matched_text
-                    findings.append({
-                        "file": str(file_path),
-                        "line": line_num,
-                        "type": pattern_name,
-                        "description": description,
-                        "matched_text": display_text,
-                        "severity": get_severity(pattern_name),
-                    })
+                    display_text = (
+                        matched_text[:50] + "..."
+                        if len(matched_text) > 50
+                        else matched_text
+                    )
+                    findings.append(
+                        {
+                            "file": str(file_path),
+                            "line": line_num,
+                            "type": pattern_name,
+                            "description": description,
+                            "matched_text": display_text,
+                            "severity": get_severity(pattern_name),
+                        }
+                    )
 
     except Exception as e:
         print(f"Error scanning {file_path}: {e}", file=sys.stderr)
@@ -145,10 +177,22 @@ def scan_file(file_path: pathlib.Path) -> list[dict[str, Any]]:
 
 def get_severity(pattern_name: str) -> str:
     """Determine severity level of finding."""
-    critical = ["openai_api_key", "aws_access_key", "aws_secret_key", "rsa_private_key",
-                "ssh_private_key", "connection_string"]
-    high = ["huggingface_token", "fernet_key", "password_assignment", "bearer_token",
-            "github_token", "google_api_key"]
+    critical = [
+        "openai_api_key",
+        "aws_access_key",
+        "aws_secret_key",
+        "rsa_private_key",
+        "ssh_private_key",
+        "connection_string",
+    ]
+    high = [
+        "huggingface_token",
+        "fernet_key",
+        "password_assignment",
+        "bearer_token",
+        "github_token",
+        "google_api_key",
+    ]
 
     if pattern_name in critical:
         return "CRITICAL"
@@ -220,7 +264,9 @@ def print_report(report: dict[str, Any]) -> None:
     print("\n" + "-" * 80)
     print("FINDINGS BY TYPE:")
     print("-" * 80)
-    for finding_type, count in sorted(report["by_type"].items(), key=lambda x: x[1], reverse=True):
+    for finding_type, count in sorted(
+        report["by_type"].items(), key=lambda x: x[1], reverse=True
+    ):
         print(f"  {finding_type}: {count}")
 
     print("\n" + "-" * 80)
@@ -245,7 +291,9 @@ def print_report(report: dict[str, Any]) -> None:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Enhanced secret scanner for Project-AI")
+    parser = argparse.ArgumentParser(
+        description="Enhanced secret scanner for Project-AI"
+    )
     parser.add_argument("--report", help="Output JSON report to file")
     parser.add_argument("--root", default=".", help="Root directory to scan")
     args = parser.parse_args()
