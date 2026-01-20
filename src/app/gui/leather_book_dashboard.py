@@ -9,21 +9,14 @@ Layout:
 - Top Right: Proactive AI Actions
 - Background: 3D grid visualization
 """
+
 import math
 import random
 
 from PyQt6.QtCore import QDateTime, Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QBrush, QColor, QFont, QPainter, QPen
-from PyQt6.QtWidgets import (
-    QFrame,
-    QHBoxLayout,
-    QLabel,
-    QPushButton,
-    QScrollArea,
-    QTextEdit,
-    QVBoxLayout,
-    QWidget,
-)
+from PyQt6.QtWidgets import (QFrame, QHBoxLayout, QLabel, QPushButton, QScrollArea,
+                             QTextEdit, QVBoxLayout, QWidget)
 
 # ============================================================================
 # STYLE CONSTANTS
@@ -414,8 +407,7 @@ class AINeuralHead(QFrame):
         # Title
         title = QLabel("NEURAL INTERFACE")
         title.setFont(QFont("Courier New", 14, QFont.Weight.Bold))
-        title.setStyleSheet(
-            "color: #00ffff; text-shadow: 0px 0px 10px #00ffff;")
+        title.setStyleSheet("color: #00ffff; text-shadow: 0px 0px 10px #00ffff;")
         title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(title)
 
@@ -426,7 +418,8 @@ class AINeuralHead(QFrame):
         # Status indicator
         self.status_label = QLabel("READY")
         self.status_label.setStyleSheet(
-            "color: #00ff00; text-align: center; font-weight: bold;")
+            "color: #00ff00; text-align: center; font-weight: bold;"
+        )
         self.status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(self.status_label)
 
@@ -436,7 +429,8 @@ class AINeuralHead(QFrame):
         self.thinking_intensity = 0
         self.status_label.setText("THINKING...")
         self.status_label.setStyleSheet(
-            "color: #ffff00; text-align: center; font-weight: bold;")
+            "color: #ffff00; text-align: center; font-weight: bold;"
+        )
 
     def stop_thinking(self):
         """Stop thinking animation."""
@@ -444,7 +438,8 @@ class AINeuralHead(QFrame):
         self.thinking_intensity = 0
         self.status_label.setText("RESPONDING")
         self.status_label.setStyleSheet(
-            "color: #00ff00; text-align: center; font-weight: bold;")
+            "color: #00ff00; text-align: center; font-weight: bold;"
+        )
 
     def paintEvent(self, a0):
         """Paint the neural head."""
@@ -465,8 +460,7 @@ class AIFaceCanvas(QFrame):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.animation_frame = 0
-        self.setStyleSheet(
-            "background-color: #000000; border: 2px solid #00ff00;")
+        self.setStyleSheet("background-color: #000000; border: 2px solid #00ff00;")
 
     def paintEvent(self, a0):
         """Paint the AI face."""
@@ -492,8 +486,12 @@ class AIFaceCanvas(QFrame):
         head_radius = 80
         painter.setPen(QPen(QColor(0, 255, 255), 3))
         painter.setBrush(QBrush(QColor(0, 50, 100, 50)))
-        painter.drawEllipse(center_x - head_radius, center_y - head_radius,
-                            head_radius * 2, head_radius * 2)
+        painter.drawEllipse(
+            center_x - head_radius,
+            center_y - head_radius,
+            head_radius * 2,
+            head_radius * 2,
+        )
 
         # Draw eyes with glow
         eye_y = center_y - 30
@@ -502,21 +500,27 @@ class AIFaceCanvas(QFrame):
         # Left eye
         painter.setPen(QPen(QColor(0, 255, 0), 2))
         painter.setBrush(QBrush(QColor(0, 255, 0)))
-        painter.drawEllipse(center_x - 40 - eye_radius, eye_y - eye_radius,
-                            eye_radius * 2, eye_radius * 2)
+        painter.drawEllipse(
+            center_x - 40 - eye_radius,
+            eye_y - eye_radius,
+            eye_radius * 2,
+            eye_radius * 2,
+        )
 
         # Right eye
-        painter.drawEllipse(center_x + 40 - eye_radius, eye_y - eye_radius,
-                            eye_radius * 2, eye_radius * 2)
+        painter.drawEllipse(
+            center_x + 40 - eye_radius,
+            eye_y - eye_radius,
+            eye_radius * 2,
+            eye_radius * 2,
+        )
 
         # Draw pupil with animation
         pupil_offset = int(10 * math.sin(self.animation_frame * 0.05))
         painter.setPen(QPen(QColor(0, 0, 0), 1))
         painter.setBrush(QBrush(QColor(0, 0, 0)))
-        painter.drawEllipse(center_x - 40 + pupil_offset - 5, eye_y - 5,
-                            10, 10)
-        painter.drawEllipse(center_x + 40 + pupil_offset - 5, eye_y - 5,
-                            10, 10)
+        painter.drawEllipse(center_x - 40 + pupil_offset - 5, eye_y - 5, 10, 10)
+        painter.drawEllipse(center_x + 40 + pupil_offset - 5, eye_y - 5, 10, 10)
 
         # Draw mouth (smile)
         mouth_points = []
@@ -527,8 +531,12 @@ class AIFaceCanvas(QFrame):
 
         painter.setPen(QPen(QColor(0, 255, 100), 2))
         for i in range(len(mouth_points) - 1):
-            painter.drawLine(int(mouth_points[i][0]), int(mouth_points[i][1]), int(
-                mouth_points[i + 1][0]), int(mouth_points[i + 1][1]))
+            painter.drawLine(
+                int(mouth_points[i][0]),
+                int(mouth_points[i][1]),
+                int(mouth_points[i + 1][0]),
+                int(mouth_points[i + 1][1]),
+            )
 
         self.animation_frame += 1
 

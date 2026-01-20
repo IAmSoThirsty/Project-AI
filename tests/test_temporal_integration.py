@@ -8,17 +8,13 @@ including workflows, activities, and the AI controller.
 import pytest
 
 # Import all components to test
-from integrations.temporal.activities.core_tasks import (
-    process_ai_task,
-    simulate_ai_call,
-    validate_input,
-)
+from integrations.temporal.activities.core_tasks import (process_ai_task,
+                                                         simulate_ai_call,
+                                                         validate_input)
 from integrations.temporal.client import TemporalClient
-from integrations.temporal.workflows.example_workflow import (
-    ExampleWorkflow,
-    WorkflowInput,
-    WorkflowOutput,
-)
+from integrations.temporal.workflows.example_workflow import (ExampleWorkflow,
+                                                              WorkflowInput,
+                                                              WorkflowOutput)
 
 
 class TestTemporalClient:

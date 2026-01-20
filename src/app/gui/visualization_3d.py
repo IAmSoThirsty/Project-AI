@@ -14,13 +14,7 @@ import math
 from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import QPointF, QRectF, Qt, QTimer
-from PyQt6.QtGui import (
-    QBrush,
-    QColor,
-    QPainter,
-    QPen,
-    QRadialGradient,
-)
+from PyQt6.QtGui import QBrush, QColor, QPainter, QPen, QRadialGradient
 from PyQt6.QtWidgets import QWidget
 
 if TYPE_CHECKING:
@@ -50,15 +44,13 @@ class Visualization3DWidget(QWidget):
         self.rotation_angle = (self.rotation_angle + 1) % 360
         self.update()
 
-    def add_node(self, x: float, y: float, z: float, label: str = "", color: QColor = None):
+    def add_node(
+        self, x: float, y: float, z: float, label: str = "", color: QColor = None
+    ):
         """Add a 3D node to the visualization."""
         if color is None:
             color = QColor(0, 255, 255)  # Tron cyan
-        self.nodes.append({
-            'x': x, 'y': y, 'z': z,
-            'label': label,
-            'color': color
-        })
+        self.nodes.append({"x": x, "y": y, "z": z, "label": label, "color": color})
 
     def add_connection(self, from_idx: int, to_idx: int):
         """Add a connection between two nodes."""
@@ -97,7 +89,7 @@ class Visualization3DWidget(QWidget):
         # Background
         bg_gradient = QRadialGradient(
             QPointF(self.width() / 2, self.height() / 2),
-            max(self.width(), self.height()) / 2
+            max(self.width(), self.height()) / 2,
         )
         bg_gradient.setColorAt(0, QColor(20, 30, 60))
         bg_gradient.setColorAt(1, QColor(5, 10, 20))
@@ -111,44 +103,52 @@ class Visualization3DWidget(QWidget):
                 to_node = self.nodes[to_idx]
 
                 from_x, from_y = self._project_3d_to_2d(
-                    from_node['x'], from_node['y'], from_node['z']
+                    from_node["x"], from_node["y"], from_node["z"]
                 )
                 to_x, to_y = self._project_3d_to_2d(
-                    to_node['x'], to_node['y'], to_node['z']
+                    to_node["x"], to_node["y"], to_node["z"]
                 )
 
-                painter.drawLine(
-                    int(from_x), int(from_y),
-                    int(to_x), int(to_y)
-                )
+                painter.drawLine(int(from_x), int(from_y), int(to_x), int(to_y))
 
         # Draw nodes
         for node in self.nodes:
-            screen_x, screen_y = self._project_3d_to_2d(
-                node['x'], node['y'], node['z']
-            )
+            screen_x, screen_y = self._project_3d_to_2d(node["x"], node["y"], node["z"])
 
             # Create glow effect
             glow = QRadialGradient(QPointF(screen_x, screen_y), 20)
-            glow.setColorAt(0, node['color'])
-            glow.setColorAt(0.5, QColor(node['color'].red(), node['color'].green(), node['color'].blue(), 150))
-            glow.setColorAt(1, QColor(node['color'].red(), node['color'].green(), node['color'].blue(), 0))
+            glow.setColorAt(0, node["color"])
+            glow.setColorAt(
+                0.5,
+                QColor(
+                    node["color"].red(),
+                    node["color"].green(),
+                    node["color"].blue(),
+                    150,
+                ),
+            )
+            glow.setColorAt(
+                1,
+                QColor(
+                    node["color"].red(), node["color"].green(), node["color"].blue(), 0
+                ),
+            )
 
             painter.setBrush(QBrush(glow))
             painter.setPen(Qt.PenStyle.NoPen)
             painter.drawEllipse(QPointF(screen_x, screen_y), 15, 15)
 
             # Draw node core
-            painter.setBrush(QBrush(node['color']))
+            painter.setBrush(QBrush(node["color"]))
             painter.drawEllipse(QPointF(screen_x, screen_y), 8, 8)
 
             # Draw label
-            if node['label']:
+            if node["label"]:
                 painter.setPen(QPen(QColor(255, 255, 255)))
                 painter.drawText(
                     QRectF(screen_x - 50, screen_y + 20, 100, 20),
                     Qt.AlignmentFlag.AlignCenter,
-                    node['label']
+                    node["label"],
                 )
 
         painter.end()

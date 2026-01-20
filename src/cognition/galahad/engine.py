@@ -100,7 +100,10 @@ class GalahadEngine:
                 "explanation": explanation,
                 "contradictions": contradictions,
                 "curiosity_score": self.curiosity_score,
-                "metadata": {"depth": self.config.reasoning_depth, "context": context or {}},
+                "metadata": {
+                    "depth": self.config.reasoning_depth,
+                    "context": context or {},
+                },
             }
 
         except Exception as e:
@@ -233,7 +236,10 @@ class GalahadEngine:
             return {"decision": None, "reason": "No inputs"}
 
         # Assign weights based on confidence or order
-        weights = [inp.get("confidence", 1.0) if isinstance(inp, dict) else 1.0 for inp in inputs]
+        weights = [
+            inp.get("confidence", 1.0) if isinstance(inp, dict) else 1.0
+            for inp in inputs
+        ]
 
         total_weight = sum(weights)
         if total_weight == 0:

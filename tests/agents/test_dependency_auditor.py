@@ -21,7 +21,9 @@ def test_analyze_harmless_module(tmp_path: Path):
     if platform.system() == "Windows":
         assert report["sandbox"].get("error") in ("platform_unsafe", None)
     # ensure persisted file exists
-    reports = list(Path(str(tmp_path)).glob("sandbox_reports/sandbox_report_harmless_*.json"))
+    reports = list(
+        Path(str(tmp_path)).glob("sandbox_reports/sandbox_report_harmless_*.json")
+    )
     assert len(reports) >= 1
     # load and check json
     r = json.loads(reports[0].read_text(encoding="utf-8"))

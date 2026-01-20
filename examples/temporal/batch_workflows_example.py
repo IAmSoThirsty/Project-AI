@@ -11,10 +11,7 @@ import logging
 from datetime import datetime
 
 from app.temporal.client import TemporalClientManager
-from app.temporal.workflows import (
-    AILearningWorkflow,
-    LearningRequest,
-)
+from app.temporal.workflows import AILearningWorkflow, LearningRequest
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -60,7 +57,9 @@ async def main():
                 task_queue="project-ai-tasks",
             )
             handles.append(handle)
-            logger.info(f"Started workflow {i+1}/{len(learning_requests)}: {workflow_id}")
+            logger.info(
+                f"Started workflow {i+1}/{len(learning_requests)}: {workflow_id}"
+            )
 
         logger.info(f"All {len(handles)} workflows started, waiting for results...")
 

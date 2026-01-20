@@ -149,9 +149,7 @@ class TestRAGSystem:
         rag_system.ingest_directory(sample_knowledge_base)
 
         # Query with high minimum score
-        results = rag_system.retrieve(
-            "Who is the CEO?", top_k=10, min_score=0.5
-        )
+        results = rag_system.retrieve("Who is the CEO?", top_k=10, min_score=0.5)
 
         # All results should have score >= 0.5
         for result in results:
@@ -176,9 +174,7 @@ class TestRAGSystem:
         """Test index persistence."""
         # Create and populate RAG system
         rag1 = RAGSystem(data_dir=temp_dir)
-        rag1.ingest_text(
-            "Test document for persistence", "persistence_test.txt"
-        )
+        rag1.ingest_text("Test document for persistence", "persistence_test.txt")
 
         original_chunks = len(rag1.chunks)
         assert original_chunks > 0
@@ -280,15 +276,9 @@ class TestRAGSystem:
     def test_retrieve_ranking(self, rag_system):
         """Test that retrieval results are properly ranked."""
         # Add documents with varying relevance
-        rag_system.ingest_text(
-            "Python programming language is great", "doc1.txt"
-        )
-        rag_system.ingest_text(
-            "Java is also a programming language", "doc2.txt"
-        )
-        rag_system.ingest_text(
-            "Python is used for data science and AI", "doc3.txt"
-        )
+        rag_system.ingest_text("Python programming language is great", "doc1.txt")
+        rag_system.ingest_text("Java is also a programming language", "doc2.txt")
+        rag_system.ingest_text("Python is used for data science and AI", "doc3.txt")
 
         results = rag_system.retrieve("Python programming", top_k=3)
 

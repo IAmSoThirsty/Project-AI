@@ -58,28 +58,61 @@ def _request_with_retries(method: str, url: str, **kwargs) -> requests.Response:
                         ra = None
                     if ra is not None:
                         if attempt > MAX_API_RETRIES:
-                            logger.error("Max retries reached for %s %s (status=%s)", method, url, resp.status_code)
+                            logger.error(
+                                "Max retries reached for %s %s (status=%s)",
+                                method,
+                                url,
+                                resp.status_code,
+                            )
                             resp.raise_for_status()
                             return resp
-                        logger.warning("Received Retry-After=%s for %s %s - sleeping %ds (attempt %d)", retry_after, method, url, ra, attempt)
+                        logger.warning(
+                            "Received Retry-After=%s for %s %s - sleeping %ds (attempt %d)",
+                            retry_after,
+                            method,
+                            url,
+                            ra,
+                            attempt,
+                        )
                         time.sleep(ra)
                         continue
                 if attempt > MAX_API_RETRIES:
-                    logger.error("Max retries reached for %s %s (status=%s)", method, url, resp.status_code)
+                    logger.error(
+                        "Max retries reached for %s %s (status=%s)",
+                        method,
+                        url,
+                        resp.status_code,
+                    )
                     resp.raise_for_status()
                     return resp
                 backoff = BACKOFF_FACTOR * (2 ** (attempt - 1)) + random.random() * 0.1
-                logger.warning("Transient status %s for %s %s - retrying in %.2fs (attempt %d)", resp.status_code, method, url, backoff, attempt)
+                logger.warning(
+                    "Transient status %s for %s %s - retrying in %.2fs (attempt %d)",
+                    resp.status_code,
+                    method,
+                    url,
+                    backoff,
+                    attempt,
+                )
                 time.sleep(backoff)
                 continue
             return resp
         except requests.RequestException as exc:
             attempt += 1
             if attempt > MAX_API_RETRIES:
-                logger.exception("Request failed after %d attempts: %s %s", attempt, method, url)
+                logger.exception(
+                    "Request failed after %d attempts: %s %s", attempt, method, url
+                )
                 raise
             backoff = BACKOFF_FACTOR * (2 ** (attempt - 1)) + random.random() * 0.1
-            logger.warning("Request exception for %s %s: %s - retrying in %.2fs (attempt %d)", method, url, exc, backoff, attempt)
+            logger.warning(
+                "Request exception for %s %s: %s - retrying in %.2fs (attempt %d)",
+                method,
+                url,
+                exc,
+                backoff,
+                attempt,
+            )
             time.sleep(backoff)
 
 
@@ -216,7 +249,9 @@ class ImageGenerator:
         }
 
         try:
-            response = _request_with_retries("POST", api_url, headers=headers, json=payload, timeout=60)
+            response = _request_with_retries(
+                "POST", api_url, headers=headers, json=payload, timeout=60
+            )
             response.raise_for_status()
 
             # Save image
@@ -277,10 +312,19 @@ class ImageGenerator:
                 except Exception as exc:
                     attempt += 1
                     if attempt > MAX_API_RETRIES:
-                        logger.exception("OpenAI generate failed after %d attempts", attempt)
+                        logger.exception(
+                            "OpenAI generate failed after %d attempts", attempt
+                        )
                         raise
-                    backoff = BACKOFF_FACTOR * (2 ** (attempt - 1)) + random.random() * 0.1
-                    logger.warning("OpenAI transient error: %s - retrying in %.2fs (attempt %d)", exc, backoff, attempt)
+                    backoff = (
+                        BACKOFF_FACTOR * (2 ** (attempt - 1)) + random.random() * 0.1
+                    )
+                    logger.warning(
+                        "OpenAI transient error: %s - retrying in %.2fs (attempt %d)",
+                        exc,
+                        backoff,
+                        attempt,
+                    )
                     time.sleep(backoff)
 
             # Validate response

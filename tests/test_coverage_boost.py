@@ -2,17 +2,13 @@
 Additional tests to boost code coverage to 90%+.
 Focuses on untested code paths and edge cases.
 """
+
 import tempfile
 
 import pytest
 
-from app.core.ai_systems import (
-    AIPersona,
-    FourLaws,
-    LearningRequestManager,
-    MemoryExpansionSystem,
-    PluginManager,
-)
+from app.core.ai_systems import (AIPersona, FourLaws, LearningRequestManager,
+                                 MemoryExpansionSystem, PluginManager)
 from app.core.image_generator import ImageGenerator, ImageStyle
 from app.core.user_manager import UserManager
 
@@ -127,10 +123,13 @@ class TestLearningCoverage:
     def test_request_lifecycle(self, temp_dir):
         """Test full request lifecycle."""
         from app.core.ai_systems import RequestPriority
+
         manager = LearningRequestManager(data_dir=temp_dir)
 
         # Create request
-        req_id = manager.create_request("Learn Python", "programming basics", RequestPriority.HIGH)
+        req_id = manager.create_request(
+            "Learn Python", "programming basics", RequestPriority.HIGH
+        )
         assert req_id is not None
 
         # Check pending
@@ -151,10 +150,13 @@ class TestLearningCoverage:
         import hashlib
 
         from app.core.ai_systems import RequestPriority
+
         manager = LearningRequestManager(data_dir=temp_dir)
 
         # Deny content to Black Vault
-        req_id = manager.create_request("Harmful content", "test description", RequestPriority.HIGH)
+        req_id = manager.create_request(
+            "Harmful content", "test description", RequestPriority.HIGH
+        )
         manager.deny_request(req_id, "Inappropriate content", to_vault=True)
 
         # Verify it's in the vault by computing the hash ourselves
@@ -164,11 +166,16 @@ class TestLearningCoverage:
     def test_statistics_tracking(self, temp_dir):
         """Test request statistics."""
         from app.core.ai_systems import RequestPriority
+
         manager = LearningRequestManager(data_dir=temp_dir)
 
         # Create multiple requests
-        req1 = manager.create_request("Content 1", "description 1", RequestPriority.HIGH)
-        req2 = manager.create_request("Content 2", "description 2", RequestPriority.MEDIUM)
+        req1 = manager.create_request(
+            "Content 1", "description 1", RequestPriority.HIGH
+        )
+        req2 = manager.create_request(
+            "Content 2", "description 2", RequestPriority.MEDIUM
+        )
         manager.create_request("Content 3", "description 3", RequestPriority.LOW)
 
         # Process them differently
@@ -299,6 +306,7 @@ class TestUserManagerCoverage:
     def test_empty_credentials(self, temp_dir):
         """Test validation with empty credentials."""
         import os
+
         manager = UserManager(users_file=os.path.join(temp_dir, "users.json"))
 
         # Test authentication with non-existent user
@@ -313,6 +321,7 @@ class TestUserManagerCoverage:
     def test_user_persistence_across_instances(self, temp_dir):
         """Test users persist across manager instances."""
         import os
+
         users_file = os.path.join(temp_dir, "users.json")
 
         # Create user with first manager
@@ -327,6 +336,7 @@ class TestUserManagerCoverage:
     def test_list_multiple_users(self, temp_dir):
         """Test listing multiple users."""
         import os
+
         manager = UserManager(users_file=os.path.join(temp_dir, "users.json"))
 
         # Create several users
@@ -340,6 +350,7 @@ class TestUserManagerCoverage:
     def test_wrong_password_attempt(self, temp_dir):
         """Test authentication with wrong password."""
         import os
+
         manager = UserManager(users_file=os.path.join(temp_dir, "users.json"))
 
         manager.create_user("testuser", "correctpass")
@@ -349,6 +360,7 @@ class TestUserManagerCoverage:
     def test_get_user_details(self, temp_dir):
         """Test getting user details."""
         import os
+
         manager = UserManager(users_file=os.path.join(temp_dir, "users.json"))
 
         manager.create_user("testuser", "password")

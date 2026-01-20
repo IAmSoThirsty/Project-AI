@@ -13,11 +13,7 @@ import uuid
 from dataclasses import dataclass
 from typing import Any
 
-from app.core.cognition_kernel import (
-    Action,
-    CognitionKernel,
-    ExecutionType,
-)
+from app.core.cognition_kernel import Action, CognitionKernel, ExecutionType
 
 
 @dataclass

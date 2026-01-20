@@ -4,16 +4,8 @@ import math
 
 from PyQt6.QtCore import QTimer
 from PyQt6.QtGui import QBrush, QColor, QFont, QPainter, QPen
-from PyQt6.QtWidgets import (
-    QFrame,
-    QHBoxLayout,
-    QLabel,
-    QLineEdit,
-    QPushButton,
-    QStackedWidget,
-    QVBoxLayout,
-    QWidget,
-)
+from PyQt6.QtWidgets import (QFrame, QHBoxLayout, QLabel, QLineEdit, QPushButton,
+                             QStackedWidget, QVBoxLayout, QWidget)
 
 from app.core.backend_client import BackendAPIClient
 
@@ -191,15 +183,13 @@ class StatusIndicator(QFrame):
         layout.setContentsMargins(5, 5, 5, 5)
         led = QLabel("●")
         led_color = "#00ff00" if status else "#ff0000"
-        led.setStyleSheet(
-            f"""
+        led.setStyleSheet(f"""
             QLabel {{
                 color: {led_color};
                 font-size: 14px;
                 text-shadow: 0px 0px 5px {led_color};
             }}
-        """
-        )
+        """)
         led.setMaximumWidth(20)
         layout.addWidget(led)
         name_label = QLabel(name)
@@ -315,9 +305,7 @@ class IntroInfoPage(QFrame):
     def _add_login_header(self, layout: QVBoxLayout):
         """Render the welcome copy above the login form."""
         welcome = QLabel("Welcome to Project-AI")
-        welcome.setStyleSheet(
-            "color: #8b7355; font-size: 18px; font-weight: bold;"
-        )
+        welcome.setStyleSheet("color: #8b7355; font-size: 18px; font-weight: bold;")
         layout.addWidget(welcome)
         description = QLabel(
             "An advanced neural intelligence system featuring integrated "
@@ -326,9 +314,7 @@ class IntroInfoPage(QFrame):
             "precision and intuitive design."
         )
         description.setWordWrap(True)
-        description.setStyleSheet(
-            "color: #a0a0a0; font-size: 11px; line-height: 1.6;"
-        )
+        description.setStyleSheet("color: #a0a0a0; font-size: 11px; line-height: 1.6;")
         layout.addWidget(description)
         layout.addSpacing(20)
 
@@ -401,12 +387,24 @@ class IntroInfoPage(QFrame):
     def _create_glossary_page(self) -> QWidget:
         """Create the glossary tab listing key definitions."""
         glossary_items = [
-            ("Neural Interface", "Core system for AI communication and decision processing"),
-            ("Intent Detector", "Analyzes user input to determine underlying intentions"),
-            ("Learning Paths", "Personalized educational sequences adapted to user progress"),
+            (
+                "Neural Interface",
+                "Core system for AI communication and decision processing",
+            ),
+            (
+                "Intent Detector",
+                "Analyzes user input to determine underlying intentions",
+            ),
+            (
+                "Learning Paths",
+                "Personalized educational sequences adapted to user progress",
+            ),
             ("Data Analyzer", "Processes and visualizes complex datasets in real-time"),
             ("Security Manager", "Maintains system integrity and access controls"),
-            ("Memory Expansion", "Extends processing capabilities through dynamic memory allocation"),
+            (
+                "Memory Expansion",
+                "Extends processing capabilities through dynamic memory allocation",
+            ),
             ("Command Override", "Emergency system control for critical situations"),
             ("Location Tracker", "Geographic and contextual position monitoring"),
         ]
