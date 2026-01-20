@@ -169,6 +169,7 @@ This document describes the Temporal integration architecture for Project-AI.
 - Failed activities don't fail entire workflow
 
 ### Observability
+
 - Full execution history in Temporal Web UI
 - Detailed logs at each step
 - Query workflow state programmatically
