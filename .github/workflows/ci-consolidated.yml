@@ -86,17 +86,17 @@ jobs:
       - name: Failsafe - Scan and install missing dependencies with pipreqs
         run: |
           echo "🔍 Failsafe: Scanning codebase for any missing dependencies..."
-          python -m pip install pipreqs || echo "pipreqs installation failed"
+          python -m pip install pipreqs || true
           
           # Generate requirements from actual imports
-          pipreqs . --force --savepath /tmp/discovered_requirements.txt 2>/dev/null || echo "pipreqs scan completed with warnings"
+          pipreqs . --force --savepath /tmp/discovered_requirements.txt 2>/dev/null || true
           
           if [ -f /tmp/discovered_requirements.txt ]; then
             echo "📋 Discovered dependencies:"
             cat /tmp/discovered_requirements.txt
             
             echo "📦 Installing discovered dependencies..."
-            python -m pip install -r /tmp/discovered_requirements.txt || echo "Some discovered dependencies may already be installed"
+            python -m pip install -r /tmp/discovered_requirements.txt || true
             echo "✅ Failsafe installation complete"
           else
             echo "⚠️  No additional dependencies discovered"
@@ -235,7 +235,7 @@ jobs:
           fi
           
           # Failsafe with pipreqs
-          pip install pipreqs || echo "pipreqs installation failed"
+          pip install pipreqs || true
           pipreqs . --force --savepath /tmp/discovered_requirements.txt 2>/dev/null || true
           if [ -f /tmp/discovered_requirements.txt ]; then
             pip install -r /tmp/discovered_requirements.txt || true
@@ -387,7 +387,7 @@ jobs:
           fi
           
           # Failsafe with pipreqs
-          pip install pipreqs || echo "pipreqs installation failed"
+          pip install pipreqs || true
           pipreqs . --force --savepath /tmp/discovered_requirements.txt 2>/dev/null || true
           if [ -f /tmp/discovered_requirements.txt ]; then
             pip install -r /tmp/discovered_requirements.txt || true
