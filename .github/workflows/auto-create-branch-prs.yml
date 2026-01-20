@@ -268,7 +268,7 @@ jobs:
           BEHIND_BY="${{ steps.branch-info.outputs.behind_by }}"
           DAYS_OLD="${{ steps.branch-info.outputs.days_old }}"
           LAST_COMMIT="${{ steps.branch-info.outputs.last_commit_message }}"
-          CONFLICTS="${{ env.CONFLICTS_PRESENT }}"
+          CONFLICTS="${{ env.CONFLICTS_PRESENT || 'false' }}"
           
           # Generate title based on branch name using case statement for safety
           case "$BRANCH" in
