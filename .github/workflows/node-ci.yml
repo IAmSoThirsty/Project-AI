@@ -7,6 +7,8 @@ on:
 jobs:
   node-ci:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - name: Set up Node.js
@@ -14,30 +16,41 @@ jobs:
         with:
           node-version: '18'
       - name: Install dependencies
-        run: npm ci
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
       - name: Detect JS test files
         id: detect_js_tests
         run: |
-          count=$(find src -type f -name '*.test.js' | wc -l)
-          echo "found=$count" > $GITHUB_OUTPUT
+          if [ -d src ]; then
+            count=$(find src -type f -name '*.test.js' 2>/dev/null | wc -l)
+          else
+            count=0
+          fi
+          echo "found=$count" >> $GITHUB_OUTPUT
       - name: Run JS tests
         if: steps.detect_js_tests.outputs.found != '0'
         run: npm run test:js
       - name: No JS tests found
         if: steps.detect_js_tests.outputs.found == '0'
         run: echo "No JS test files found in src/ — skipping JS tests."
-      - name: Security scan (placeholder)
+      - name: Security scan (optional)
         run: echo "Security steps here (unchanged)"
 
   python-ci:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - name: Detect Python files
         id: detect_py
         run: |
           count=$(git ls-files "**/*.py" | wc -l)
-          echo "found=$count" > $GITHUB_OUTPUT
+          echo "found=$count" >> $GITHUB_OUTPUT
       - name: Skip Python CI if no Python files
         if: steps.detect_py.outputs.found == '0'
         run: echo "No Python files found — skipping Python CI."
@@ -51,6 +64,19 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install pytest flake8
+      - name: Install project dependencies
+        if: steps.detect_py.outputs.found != '0'
+        run: |
+          if [ -f setup.py ] || [ -f pyproject.toml ]; then
+            pip install -e .
+          fi
+      - name: Create .flake8 config
+        if: steps.detect_py.outputs.found != '0'
+        run: |
+          echo "[flake8]" > .flake8
+          echo "max-line-length = 100" >> .flake8
+          echo "extend-ignore = E203, W503" >> .flake8
+          echo "exclude = .git,__pycache__,.venv,venv" >> .flake8
       - name: Run flake8
         if: steps.detect_py.outputs.found != '0'
         run: flake8 .

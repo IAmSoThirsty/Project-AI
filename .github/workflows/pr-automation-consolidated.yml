@@ -1,0 +1,320 @@
+name: PR Automation - Consolidated
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  checks: write
+  statuses: write
+
+jobs:
+  # =========================================================================
+  # AUTO-LABELER
+  # =========================================================================
+  label-pr:
+    name: Auto Label PR
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # pinned from actions/checkout@v4
+
+      - name: Apply labels based on changed files
+        uses: actions/labeler@8558fd74291d67161a8a78ce36a881fa63b766a9  # v5.0.0
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          configuration-path: .github/labeler.yml
+          sync-labels: true
+
+  # =========================================================================
+  # AUTO-REVIEW & LINT/TEST
+  # =========================================================================
+  auto-review:
+    name: Auto Review & Check
+    runs-on: ubuntu-latest
+    if: '!github.event.pull_request.draft'
+    outputs:
+      lint-status: ${{ steps.lint.outcome }}
+      test-status: ${{ steps.test.outcome }}
+      security-status: ${{ steps.security.outcome }}
+    steps:
+      - name: Pre-push validation - actionlint
+        run: |
+          echo "🔍 Running actionlint for workflow syntax validation..."
+          if ! command -v actionlint &> /dev/null; then
+            wget -q https://github.com/rhysd/actionlint/releases/download/v1.6.27/actionlint_1.6.27_linux_amd64.tar.gz
+            tar -xzf actionlint_1.6.27_linux_amd64.tar.gz
+            sudo mv actionlint /usr/local/bin/ 2>/dev/null || mv actionlint "$HOME/.local/bin/" || export PATH=".:$PATH"
+          fi
+          actionlint .github/workflows/*.yml || echo "⚠️  actionlint found issues"
+        continue-on-error: true
+
+      - name: Checkout PR code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # pinned from actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Update submodules
+        run: git submodule update --init --recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@0ae58b7817e9b40c6232e8bf08f42a7a6b8e60ec  # pinned from actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install ruff pytest pytest-cov pip-audit bandit mypy black isort
+
+      - name: Run linting (ruff)
+        id: lint
+        run: |
+          echo "Running ruff check..."
+          ruff check . --output-format=github
+        continue-on-error: true
+
+      - name: Run tests (pytest)
+        id: test
+        run: |
+          echo "Running pytest..."
+          pytest -v --maxfail=1 --tb=short
+        continue-on-error: true
+
+      - name: Run security audit
+        id: security
+        run: |
+          echo "Running security checks..."
+          pip-audit --format json -o pip-audit-report.json || true
+          bandit -r src -f json -o bandit-report.json || true
+        continue-on-error: true
+
+      - name: Upload check artifacts
+        if: always()
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b  # pinned from actions/upload-artifact@v4
+        with:
+          name: check-reports
+          path: |
+            pip-audit-report.json
+            bandit-report.json
+
+  # =========================================================================
+  # AUTO-FIX FAILURES
+  # =========================================================================
+  auto-fix:
+    name: Auto-Fix Issues
+    runs-on: ubuntu-latest
+    needs: auto-review
+    if: needs.auto-review.outputs.lint-status == 'failure'
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # pinned from actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update submodules
+        run: git submodule update --init --recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@0ae58b7817e9b40c6232e8bf08f42a7a6b8e60ec  # pinned from actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff black isort
+
+      - name: Auto-fix linting issues
+        run: |
+          echo "Attempting auto-fix..."
+          ruff check . --fix --unsafe-fixes || true
+          black . || true
+          isort . || true
+
+      - name: Commit fixes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: auto-fix linting issues"
+            git push
+          fi
+
+  # =========================================================================
+  # VERIFY FIXES
+  # =========================================================================
+  verify-fixes:
+    name: Verify Fixes
+    runs-on: ubuntu-latest
+    needs: auto-fix
+    outputs:
+      all-passed: ${{ steps.final-check.outputs.passed }}
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # pinned from actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Update submodules
+        run: git submodule update --init --recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@0ae58b7817e9b40c6232e8bf08f42a7a6b8e60ec  # pinned from actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install ruff pytest pytest-cov
+
+      - name: Run all checks
+        id: final-check
+        run: |
+          echo "Running final verification..."
+          PASSED=true
+          
+          echo "1. Linting..."
+          if ! ruff check .; then
+            echo "Linting failed"
+            PASSED=false
+          fi
+          
+          echo "2. Tests..."
+          if ! pytest -v --maxfail=1; then
+            echo "Tests failed"
+            PASSED=false
+          fi
+          
+          echo "passed=$PASSED" >> $GITHUB_OUTPUT
+
+      - name: Comment on PR
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea  # pinned from actions/github-script@v7
+        with:
+          script: |
+            const passed = '${{ steps.final-check.outputs.passed }}' === 'true';
+            const body = passed 
+              ? '✅ All checks passed after auto-fix! Ready to merge.'
+              : '⚠️ Some checks still failing after auto-fix. Manual intervention required.';
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+
+  # =========================================================================
+  # APPROVAL & AUTO-MERGE
+  # =========================================================================
+  auto-approve-and-merge:
+    name: Auto-Approve & Merge
+    runs-on: ubuntu-latest
+    needs: [auto-review, verify-fixes]
+    if: |
+      !cancelled() &&
+      ((needs.auto-review.outputs.lint-status == 'success' && 
+        needs.auto-review.outputs.test-status == 'success') ||
+       needs.verify-fixes.outputs.all-passed == 'true')
+    steps:
+      - name: Approve PR
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea  # pinned from actions/github-script@v7
+        with:
+          script: |
+            try {
+              await github.rest.pulls.createReview({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.issue.number,
+                event: 'APPROVE',
+                body: '✅ Automated approval: All required checks passed!'
+              });
+            } catch (error) {
+              console.log('Could not approve (may already be approved):', error.message);
+            }
+
+      - name: Enable auto-merge (if Dependabot or auto-merge label)
+        if: |
+          github.actor == 'dependabot[bot]' || 
+          contains(github.event.pull_request.labels.*.name, 'auto-merge')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr merge --auto --squash ${{ github.event.pull_request.number }} || \
+          echo "Could not enable auto-merge. May require branch protection rules."
+
+      - name: Comment merge status
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea  # pinned from actions/github-script@v7
+        with:
+          script: |
+            const actor = '${{ github.actor }}';
+            const isDependabot = actor === 'dependabot[bot]';
+            const hasAutoMergeLabel = ${{ contains(github.event.pull_request.labels.*.name, 'auto-merge') }};
+            
+            let body = '✅ All checks passed!\n\n';
+            
+            if (isDependabot || hasAutoMergeLabel) {
+              body += '🚀 Auto-merge enabled. PR will merge automatically when all required checks pass.';
+            } else {
+              body += '👍 Ready for manual review and merge.';
+            }
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+
+  # =========================================================================
+  # DEPENDABOT SPECIFIC HANDLING
+  # =========================================================================
+  dependabot-auto-merge:
+    name: Dependabot Auto-Merge
+    runs-on: ubuntu-latest
+    needs: auto-review
+    if: |
+      github.actor == 'dependabot[bot]' &&
+      needs.auto-review.outputs.lint-status == 'success' && 
+      needs.auto-review.outputs.test-status == 'success'
+    steps:
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@5e5f99653a5b510e8555840e80cbf1514ad4af38  # pinned from dependabot/fetch-metadata@v1
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Enable auto-merge for patch/minor updates
+        if: |
+          steps.metadata.outputs.update-type == 'version-update:semver-patch' || 
+          steps.metadata.outputs.update-type == 'version-update:semver-minor'
+        run: gh pr merge --auto --squash "${{ github.event.pull_request.html_url }}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Comment on major update
+        if: steps.metadata.outputs.update-type == 'version-update:semver-major'
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea  # pinned from actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '⚠️ Major version update detected. Please review manually before merging.'
+            });

@@ -1,0 +1,89 @@
+# CODEOWNERS - Guardian approval requirements for personhood-critical surfaces
+# 
+# This file defines which paths require multi-party guardian approval before merge.
+# See docs/AGI_CHARTER.md and docs/security/SECURITY_GOVERNANCE.md for details.
+#
+# Guardian Groups (Triumvirate):
+# - @org/cerberus-guardians (Primary Guardian - Cerberus, Security & Safety)
+# - @org/codex-guardians (Memory Guardian - Codex Deus Maximus, Logic & Consistency)
+# - @org/galahad-guardians (Ethics Guardian - Galahad, Ethics & Empathy)
+#
+# Approval Requirements:
+# - Routine personhood changes: 2 of 3 guardians
+# - Core values/ethics changes: All 3 guardians
+# - Emergency overrides: Documented in security-waivers.yml
+
+# =============================================================================
+# PERSONHOOD-CRITICAL SURFACES (HIGHEST PROTECTION)
+# =============================================================================
+
+# AGI Charter and Ethics Framework (requires all 3 guardians)
+/docs/AGI_CHARTER.md                          @org/cerberus-guardians @org/codex-guardians @org/galahad-guardians
+/docs/AGI_IDENTITY_SPECIFICATION.md           @org/cerberus-guardians @org/codex-guardians @org/galahad-guardians
+/docs/AGI_CHARTER_v1_original.md              @org/cerberus-guardians @org/codex-guardians @org/galahad-guardians
+
+# Core AI Systems - FourLaws, Persona, Memory (requires all 3 guardians)
+/src/app/core/ai_systems.py                   @org/cerberus-guardians @org/codex-guardians @org/galahad-guardians
+
+# Ethics Configuration (requires all 3 guardians)
+/config/ethics_constraints.yml                @org/cerberus-guardians @org/galahad-guardians
+
+# Identity System Modules (requires 2 of 3 guardians)
+/src/app/core/identity_*.py                   @org/cerberus-guardians @org/codex-guardians
+/src/app/core/meta_identity*.py               @org/cerberus-guardians @org/codex-guardians
+
+# Governance Modules (requires all 3 guardians)
+/src/app/core/governance*.py                  @org/cerberus-guardians @org/codex-guardians @org/galahad-guardians
+
+# Memory and Persistence (requires 2 of 3 guardians)
+/data/ai_persona/**                           @org/cerberus-guardians @org/codex-guardians
+/data/memory/**                               @org/codex-guardians @org/galahad-guardians
+/data/identities/**                           @org/cerberus-guardians @org/codex-guardians
+/src/app/core/memory*.py                      @org/codex-guardians @org/galahad-guardians
+
+# Learning Request System - Black Vault (requires 2 of 3 guardians)
+/src/app/core/learning_paths.py               @org/codex-guardians @org/galahad-guardians
+/data/learning_requests/**                    @org/codex-guardians @org/galahad-guardians
+
+# =============================================================================
+# SECURITY & GOVERNANCE DOCUMENTATION (CERBERUS + GALAHAD)
+# =============================================================================
+
+/docs/SECURITY_FRAMEWORK.md                   @org/cerberus-guardians @org/galahad-guardians
+/docs/security/SECURITY_GOVERNANCE.md         @org/cerberus-guardians @org/galahad-guardians
+/docs/security/THREAT_MODEL_SECURITY_WORKFLOWS.md @org/cerberus-guardians @org/galahad-guardians
+
+# =============================================================================
+# SECURITY WORKFLOWS (CERBERUS)
+# =============================================================================
+
+/.github/workflows/sign-release-artifacts.yml @org/cerberus-guardians
+/.github/workflows/sbom.yml                   @org/cerberus-guardians
+/.github/workflows/ai-model-security.yml      @org/cerberus-guardians
+/.github/workflows/periodic-security-verification.yml @org/cerberus-guardians
+/.github/workflows/validate-waivers.yml       @org/cerberus-guardians
+/.github/workflows/validate-guardians.yml     @org/cerberus-guardians
+
+# =============================================================================
+# WAIVER SYSTEM (ALL 3 GUARDIANS)
+# =============================================================================
+
+/.github/security-waivers.yml                 @org/cerberus-guardians @org/codex-guardians @org/galahad-guardians
+
+# =============================================================================
+# PR TEMPLATE (CERBERUS + GALAHAD)
+# =============================================================================
+
+/.github/pull_request_template.md             @org/cerberus-guardians @org/galahad-guardians
+
+# =============================================================================
+# NOTES
+# =============================================================================
+# 
+# - Replace @org/cerberus-guardians, @org/codex-guardians, @org/galahad-guardians 
+#   with actual GitHub team handles or individual usernames
+# - Triumvirate roles: Cerberus (Security), Codex Deus Maximus (Memory/Logic), Galahad (Ethics)
+# - GitHub requires at least one approval from each listed owner group
+# - Emergency overrides must be documented in .github/security-waivers.yml
+# - See .github/workflows/validate-guardians.yml for automated enforcement
+#

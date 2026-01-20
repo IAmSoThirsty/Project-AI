@@ -1,0 +1,9 @@
+{
+  "name": "marketplace_sample_plugin",
+  "version": "0.1.0",
+  "author": "Project-AI Team",
+  "description": "Demonstrates how to validate Four Laws before enabling a plugin and publish metadata to the marketplace.",
+  "hooks": ["before_action"],
+  "four_laws_safe": true,
+  "safe_for_learning": false
+}

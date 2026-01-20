@@ -1,0 +1,54 @@
+name: Universal Security & Fixer Bot (Aggressive)
+on: [push, pull_request]
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Install dependencies
+              run: |
+                  pip install torch==2.0.0 torchvision
+                  pip install bindsnet>=0.3.0 || echo "bindsnet install failed"
+                  pip install sinabs>=1.2.0 || echo "sinabs install failed"
+                  pip install snntorch>=0.7.0 || echo "snntorch install failed"
+                  pip install spikingjelly>=0.0.0.14 || echo "spikingjelly install failed"
+                  pip install norse>=0.0.7 || echo "norse install failed"
+
+            - name: Install Ruby dependencies
+              run: |
+                  sudo gem install rubocop || gem install rubocop --user-install
+
+            - name: Install Java Formatter
+              run: |
+                  wget https://github.com/google/google-java-format/releases/download/v1.15.0/google-java-format-1.15.0-all-deps.jar -O /home/runner/google-java-format.jar
+                  export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+                  export PATH=$JAVA_HOME/bin:$PATH
+                  java -jar /home/runner/google-java-format.jar --version
+
+            - name: .NET Project Check
+              run: |
+                  if ! ls *.csproj 1> /dev/null 2>&1 && ! ls *.sln 1> /dev/null 2>&1; then
+                    echo "No .csproj or .sln file found! Add your project files before building."
+                    exit 1
+                  fi
+                  pip install norse>=0.0.7 || echo "norse install failed"
+
+            - name: Install Ruby dependencies
+              run: |
+                  sudo gem install rubocop || gem install rubocop --user-install
+
+            - name: Install Java Formatter
+              run: |
+                  wget https://github.com/google/google-java-format/releases/download/v1.15.0/google-java-format-1.15.0-all-deps.jar -O /home/runner/google-java-format.jar
+                  export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+                  export PATH=$JAVA_HOME/bin:$PATH
+                  java -jar /home/runner/google-java-format.jar --version
+
+            - name: .NET Project Check
+              run: |
+                  if ! ls *.csproj 1> /dev/null 2>&1 && ! ls *.sln 1> /dev/null 2>&1; then
+                    echo "No .csproj or .sln file found! Add your project files before building."
+                    exit 1
+                  fi
