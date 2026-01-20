@@ -13,12 +13,14 @@ The automation system consists of three interconnected workflows:
 **Purpose**: Automatically discovers non-main branches and creates pull requests for them.
 
 **Triggers**:
+
 - **Daily Schedule**: Runs at 2 AM UTC every day
 - **Manual Dispatch**: Can be triggered manually for all branches or a specific branch
 - **Push Events**: Triggers when new branches are pushed (except main and dependabot branches)
 - **PR Closure**: Re-runs after PRs are closed to check for new branches
 
 **Process**:
+
 1. Discovers all branches without open PRs
 2. Checks each branch for merge conflicts with main
 3. Identifies branches with merge conflicts and marks them for manual resolution
@@ -38,10 +40,12 @@ The automation system consists of three interconnected workflows:
 **Purpose**: Manages the review, testing, and merging process for all PRs (including auto-created ones).
 
 **Triggers**:
+
 - PR opened, synchronized, reopened, or ready for review
 - Manual workflow dispatch
 
 **Process**:
+
 1. **Run Checks**: Executes linting (ruff), tests (pytest), and security audits
 2. **Auto-Fix**: Automatically fixes linting issues if checks fail
 3. **Verify Fixes**: Re-runs all checks after auto-fixes
@@ -49,6 +53,7 @@ The automation system consists of three interconnected workflows:
 5. **Post-Merge Validation**: Validates main branch health after merge
 
 **Key Features**:
+
 - Auto-fixes linting issues with ruff, black, and isort
 - Runs security checks with pip-audit and bandit
 - Creates detailed comments on PR status
@@ -60,9 +65,11 @@ The automation system consists of three interconnected workflows:
 **Purpose**: Provides additional safety checks and handles special cases (Dependabot, security PRs).
 
 **Triggers**:
+
 - PR opened, synchronized, or reopened
 
 **Process**:
+
 - Runs linting and tests
 - Auto-fixes issues
 - Comments on PR with results
@@ -176,6 +183,7 @@ The system generates several types of summary reports:
 ### 1. Daily Summary Issue
 
 Created daily with:
+
 - Number of branches discovered
 - Number of PRs created
 - List of created PRs with links
@@ -184,6 +192,7 @@ Created daily with:
 ### 2. Post-Merge Validation Report
 
 Created as a comment on each merged PR with:
+
 - Main branch health status
 - Conflict detection results
 - Test suite status
@@ -192,6 +201,7 @@ Created as a comment on each merged PR with:
 ### 3. Workflow Failure Alerts
 
 Created as issues when workflows fail:
+
 - Timestamp of failure
 - Link to failed workflow run
 - Urgently labeled for quick response
@@ -265,6 +275,7 @@ git push
 ### PRs Not Being Created
 
 **Check**:
+
 1. Workflow is enabled in repository settings
 2. Workflow has necessary permissions (contents: write, pull-requests: write)
 3. Branch doesn't already have an open PR
@@ -273,6 +284,7 @@ git push
 ### Auto-Merge Not Working
 
 **Check**:
+
 1. All required checks have passed
 2. Branch protection rules allow auto-merge
 3. PR has `auto-merge` label
@@ -281,6 +293,7 @@ git push
 ### Checks Failing
 
 **Check**:
+
 1. View workflow logs: `gh run view <RUN_ID> --log`
 2. Check if auto-fix ran: Look for "auto-fix" commits
 3. Review test failures in pytest output
@@ -332,7 +345,7 @@ strategy:
 - Each branch triggers multiple workflow runs
 - Approximate GitHub Actions minutes per day: 50-100 (for 40+ branches)
 - **Free tier**: Stays within free tier limits (2000 minutes/month for public repos, 2000 minutes/month for private repos on free plan)
-- **Paid accounts**: Enterprise/Team accounts have higher limits and different pricing. Check your organization's specific limits and costs at: https://github.com/pricing
+- **Paid accounts**: Enterprise/Team accounts have higher limits and different pricing. Check your organization's specific limits and costs at: <https://github.com/pricing>
 - **Optimization tip**: Adjust the schedule frequency based on your branch activity to optimize minute usage
 
 ## Future Enhancements
@@ -349,6 +362,7 @@ Potential improvements to consider:
 ## Support
 
 For issues or questions:
+
 1. Check workflow logs: `gh run view <RUN_ID> --log`
 2. Review summary issues created by automation
 3. Check workflow failure alerts
