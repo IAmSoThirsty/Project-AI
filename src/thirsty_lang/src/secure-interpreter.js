@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+
 
 /**
  * Thirsty-lang Secure Interpreter
@@ -16,7 +16,7 @@ class SecureThirstyInterpreter {
       mode: options.securityMode || 'defensive',
       policy: { securityLevel: options.securityLevel || 'moderate' }
     });
-    
+
     // Security context
     this.shieldBlocks = [];
     this.morphEnabled = false;
@@ -35,10 +35,10 @@ class SecureThirstyInterpreter {
         filename: 'anonymous',
         mode: this.securityManager.mode
       });
-      
+
       // Execute the secured code
       this.executeSecured(secured.code);
-      
+
       return {
         executed: true,
         security: secured.securityLayers,
@@ -47,8 +47,8 @@ class SecureThirstyInterpreter {
     }
 
     // Execute without security
-    const lines = code.split('\n').map(line => line.trim()).filter(line => line && !line.startsWith('//'));
-    
+    const lines = code.split('\n').map(function (line) { return line.trim() }).filter(line => line && !line.startsWith('//'));
+
     for (const line of lines) {
       this.executeLine(line);
     }
@@ -61,7 +61,7 @@ class SecureThirstyInterpreter {
    */
   executeSecured(code) {
     const lines = code.split('\n').map(line => line.trim()).filter(line => line && !line.startsWith('//'));
-    
+
     for (const line of lines) {
       this.executeLine(line);
     }
@@ -109,9 +109,9 @@ class SecureThirstyInterpreter {
     }
     else {
       // Ignore other lines (like comments, security checks)
-      if (!line.startsWith('//') && !line.startsWith('const ') && !line.startsWith('if ') && 
-          !line.startsWith('Object.') && !line.startsWith('try ') && !line.startsWith('catch ') &&
-          !line.startsWith('finally ') && !line.startsWith('(function') && line.length > 0) {
+      if (!line.startsWith('//') && !line.startsWith('const ') && !line.startsWith('if ') &&
+        !line.startsWith('Object.') && !line.startsWith('try ') && !line.startsWith('catch ') &&
+        !line.startsWith('finally ') && !line.startsWith('(function') && line.length > 0) {
         // Only throw for genuine unknown statements
         if (!line.includes('Security:') && !line.includes('===') && !line.includes('=====')) {
           // Skip security infrastructure lines
@@ -127,14 +127,14 @@ class SecureThirstyInterpreter {
     // Extract shield block name or anonymous
     const match = line.match(/shield\s+(\w+)?/);
     const shieldName = match && match[1] ? match[1] : 'anonymous';
-    
+
     this.shieldBlocks.push({
       name: shieldName,
       active: true,
       timestamp: Date.now()
     });
 
-    console.log(`[SECURITY] Shield '${shieldName}' activated`);
+    console.log("[SECURITY] Shield '" + shieldName + "' activated");
   }
 
   /**
@@ -178,7 +178,7 @@ class SecureThirstyInterpreter {
     if (match) {
       this.defendStrategy = match[1];
       this.securityManager.policyEngine.setSecurityLevel(this.defendStrategy);
-      console.log(`[SECURITY] Defense strategy: ${this.defendStrategy}`);
+      console.log("[SECURITY] Defense strategy: " + this.defendStrategy);
     }
   }
 
@@ -222,16 +222,16 @@ class SecureThirstyInterpreter {
     if (!match) {
       throw new Error(`Invalid drink statement: ${line}`);
     }
-    
+
     const varName = match[1];
     let value = this.evaluateExpression(match[2]);
-    
+
     // Apply security sanitization if enabled
     if (this.securityEnabled && typeof value === 'string') {
       const sanitized = this.securityManager.secureInput(value, { variable: varName });
       value = sanitized.sanitized;
     }
-    
+
     this.variables[varName] = value;
   }
 
@@ -241,13 +241,13 @@ class SecureThirstyInterpreter {
   handlePour(line) {
     const expression = line.substring(5).trim(); // Remove 'pour '
     let value = this.evaluateExpression(expression);
-    
+
     // Apply output sanitization if enabled
     if (this.securityEnabled && typeof value === 'string') {
       const sanitized = this.securityManager.secureInput(value, { output: true });
       value = sanitized.sanitized;
     }
-    
+
     console.log(value);
   }
 
@@ -260,17 +260,17 @@ class SecureThirstyInterpreter {
     if (match) {
       const prompt = match[1];
       console.log(`[INPUT] ${prompt}`);
-      
+
       // In a real implementation, this would get actual user input
       // For now, simulate with a safe default
       const simulatedInput = 'safe_input';
-      
+
       // Apply security if enabled
       if (this.securityEnabled) {
         const sanitized = this.securityManager.secureInput(simulatedInput, { prompt });
         return sanitized.sanitized;
       }
-      
+
       return simulatedInput;
     }
   }
@@ -280,29 +280,29 @@ class SecureThirstyInterpreter {
    */
   evaluateExpression(expr) {
     expr = expr.trim();
-    
+
     // String literal
-    if ((expr.startsWith('"') && expr.endsWith('"')) || 
-        (expr.startsWith("'") && expr.endsWith("'"))) {
+    if ((expr.startsWith('"') && expr.endsWith('"')) ||
+      (expr.startsWith("'") && expr.endsWith("'"))) {
       return expr.slice(1, -1);
     }
-    
+
     // Number literal
     if (!isNaN(expr)) {
       return parseFloat(expr);
     }
-    
+
     // Variable reference
     if (this.variables.hasOwnProperty(expr)) {
       return this.variables[expr];
     }
-    
+
     // String concatenation with +
     if (expr.includes(' + ')) {
       const parts = expr.split(' + ').map(p => this.evaluateExpression(p.trim()));
       return parts.join('');
     }
-    
+
     throw new Error(`Unknown expression: ${expr}`);
   }
 
@@ -313,7 +313,7 @@ class SecureThirstyInterpreter {
     if (!this.securityEnabled) {
       return { enabled: false };
     }
-    
+
     return {
       enabled: true,
       shields: this.shieldBlocks,

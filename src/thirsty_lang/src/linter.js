@@ -13,7 +13,7 @@ class ThirstyLinter {
       noUnusedVariables: options.noUnusedVariables !== false,
       namingConvention: options.namingConvention || 'snake_case'
     };
-    
+
     this.errors = [];
     this.warnings = [];
   }
@@ -21,12 +21,12 @@ class ThirstyLinter {
   lint(code, filename = '<input>') {
     this.errors = [];
     this.warnings = [];
-    
+
     const lines = code.split('\n');
     const declaredVars = new Set();
     const usedVars = new Set();
 
-    lines.forEach((line, index) => {
+    for (const [index, line] of lines.entries()) {
       const lineNum = index + 1;
       const trimmed = line.trim();
 
@@ -54,7 +54,7 @@ class ThirstyLinter {
       // Check drink statements
       if (trimmed.startsWith('drink ')) {
         const match = trimmed.match(/drink\s+(\w+)\s*=\s*(.+)/);
-        
+
         if (!match) {
           this.errors.push({
             line: lineNum,
@@ -71,7 +71,7 @@ class ThirstyLinter {
         if (!this.checkNamingConvention(varName)) {
           this.warnings.push({
             line: lineNum,
-            message: `Variable '${varName}' doesn't follow ${this.options.namingConvention} convention`,
+            message: "Variable '" + varName + "' doesn't follow " + this.options.namingConvention + " convention",
             severity: 'warning'
           });
         }
@@ -91,19 +91,19 @@ class ThirstyLinter {
       // Check pour statements and track variable usage
       if (trimmed.startsWith('pour ')) {
         const expr = trimmed.substring(5).trim();
-        
+
         // Check if it's a variable reference
         if (!expr.startsWith('"') && !expr.startsWith("'") && isNaN(expr)) {
           usedVars.add(expr);
-          
+
           // This will be checked later after all declarations
         }
       }
 
       // Check for unknown statements
       const knownKeywords = ['drink', 'pour', 'sip', 'thirsty', 'hydrated', 'refill', 'glass', 'fountain'];
-      const startsWithKnown = knownKeywords.some(kw => trimmed.startsWith(kw + ' '));
-      
+      const startsWithKnown = knownKeywords.some(function (kw) { return trimmed.startsWith(kw + ' ') });
+
       if (!startsWithKnown && !trimmed.startsWith('//')) {
         this.errors.push({
           line: lineNum,
@@ -119,7 +119,7 @@ class ThirstyLinter {
         if (!usedVars.has(varName)) {
           this.warnings.push({
             line: 0,
-            message: `Variable '${varName}' is declared but never used`,
+            message: "Variable '" + varName + "' is declared but never used",
             severity: 'warning'
           });
         }
@@ -159,7 +159,7 @@ class ThirstyLinter {
     // Print errors
     if (results.errors.length > 0) {
       console.log('\n❌ Errors:');
-      results.errors.forEach(err => {
+      for (const err of results.errors) {
         console.log(`  Line ${err.line}: ${err.message}`);
       });
     }
@@ -205,7 +205,7 @@ function main() {
 
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
-    
+
     if (arg === '--max-line-length') {
       options.maxLineLength = parseInt(args[++i]);
     } else if (arg === '--naming') {

@@ -21,12 +21,20 @@ from datetime import datetime
 from typing import Any
 
 from app.core.ai_systems import new_correlation_id
+from app.core.cognition_kernel import CognitionKernel, ExecutionType
+from app.core.kernel_integration import KernelRoutedAgent
 
 logger = logging.getLogger(__name__)
 
 
-class CICheckerAgent:
-    def __init__(self, data_dir: str = "data") -> None:
+class CICheckerAgent(KernelRoutedAgent):
+    def __init__(self, data_dir: str = "data", kernel: CognitionKernel | None = None) -> None:
+        # Initialize kernel routing (COGNITION KERNEL INTEGRATION)
+        super().__init__(
+            kernel=kernel,
+            execution_type=ExecutionType.AGENT_ACTION,
+            default_risk_level="medium"
+        )
         self.data_dir = data_dir
         self.reports_dir = os.path.join(data_dir, "ci_reports")
         os.makedirs(self.reports_dir, exist_ok=True)
@@ -49,6 +57,16 @@ class CICheckerAgent:
         Security: Commands are hardcoded and use only trusted tools from
         project dependencies. No external input is used in commands.
         """
+        # Route through kernel (COGNITION KERNEL ROUTING)
+        return self._execute_through_kernel(
+            self._do_run_one,
+            operation_name="run_ci_checks",
+            risk_level="medium",
+            metadata={"check_type": "pytest_and_ruff"}
+        )
+
+    def _do_run_one(self) -> dict[str, Any]:
+        """Internal implementation of CI check execution."""
         corr = new_correlation_id()
         ts = datetime.utcnow().isoformat()
         report = {"corr": corr, "timestamp": ts, "results": {}}
