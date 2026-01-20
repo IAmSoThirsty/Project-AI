@@ -11,11 +11,20 @@ import logging
 import os
 from typing import Any
 
+from app.core.cognition_kernel import CognitionKernel, ExecutionType
+from app.core.kernel_integration import KernelRoutedAgent
+
 logger = logging.getLogger(__name__)
 
 
-class KnowledgeCurator:
-    def __init__(self, data_dir: str = "data") -> None:
+class KnowledgeCurator(KernelRoutedAgent):
+    def __init__(self, data_dir: str = "data", kernel: CognitionKernel | None = None) -> None:
+        # Initialize kernel routing (COGNITION KERNEL INTEGRATION)
+        super().__init__(
+            kernel=kernel,
+            execution_type=ExecutionType.AGENT_ACTION,
+            default_risk_level="low"
+        )
         self.data_dir = data_dir
         self.curated_path = os.path.join(self.data_dir, "continuous_learning", "curated.json")
         os.makedirs(os.path.dirname(self.curated_path), exist_ok=True)
@@ -42,6 +51,17 @@ class KnowledgeCurator:
 
         Returns a summary of actions taken.
         """
+        # Route through kernel (COGNITION KERNEL ROUTING)
+        return self._execute_through_kernel(
+            self._do_curate,
+            reports,
+            operation_name="curate_reports",
+            risk_level="low",
+            metadata={"report_count": len(reports)}
+        )
+
+    def _do_curate(self, reports: list[dict[str, Any]]) -> dict[str, Any]:
+        """Internal implementation of report curation."""
         added = 0
         for r in reports:
             content = json.dumps(r, sort_keys=True)

@@ -144,12 +144,89 @@ services:
       - project-ai-network
     restart: unless-stopped
 
+  # Temporal.io Server - Workflow orchestration
+  temporal:
+    image: temporalio/auto-setup:latest
+    container_name: project-ai-temporal
+    ports:
+      - "7233:7233"   # gRPC
+      - "8233:8233"   # Web UI
+    environment:
+      - DB=postgresql
+      - DB_PORT=5432
+      - POSTGRES_USER=temporal
+      - POSTGRES_PWD=temporal
+      - POSTGRES_SEEDS=temporal-postgresql
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development.yaml
+    volumes:
+      - ./config/temporal:/etc/temporal/config/dynamicconfig
+    networks:
+      - project-ai-network
+    depends_on:
+      - temporal-postgresql
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "tctl", "--address", "temporal:7233", "cluster", "health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # PostgreSQL for Temporal
+  temporal-postgresql:
+    image: postgres:13
+    container_name: project-ai-temporal-db
+    environment:
+      - POSTGRES_USER=temporal
+      - POSTGRES_PASSWORD=temporal
+      - POSTGRES_DB=temporal
+    volumes:
+      - temporal-postgresql-data:/var/lib/postgresql/data
+    networks:
+      - project-ai-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U temporal"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Temporal Worker - Processes workflows and activities
+  temporal-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: project-ai-temporal-worker
+    command: python -m app.temporal.worker
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=/app/src
+      - TEMPORAL_HOST=temporal:7233
+      - TEMPORAL_NAMESPACE=default
+      - TEMPORAL_TASK_QUEUE=project-ai-tasks
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - HUGGINGFACE_API_KEY=${HUGGINGFACE_API_KEY}
+      - FERNET_KEY=${FERNET_KEY}
+    volumes:
+      - ./src:/app/src
+      - ./data:/app/data
+      - ./logs:/app/logs
+    networks:
+      - project-ai-network
+    depends_on:
+      - temporal
+    restart: unless-stopped
+    env_file:
+      - .env
+
 volumes:
   prometheus-data:
     driver: local
   alertmanager-data:
     driver: local
   grafana-data:
+    driver: local
+  temporal-postgresql-data:
     driver: local
 
 networks:

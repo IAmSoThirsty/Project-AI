@@ -1,0 +1,151 @@
+name: Validate Security Waivers
+
+# Validates security-waivers.yml format and expiry dates
+# Runs on PR changes to waiver file and daily
+
+on:
+  pull_request:
+    paths:
+      - '.github/security-waivers.yml'
+  schedule:
+    - cron: '0 4 * * *'  # Daily at 4 AM UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  validate-waivers:
+    name: Validate Waiver Configuration
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install PyYAML
+        run: pip install pyyaml
+
+      - name: Validate waiver file
+        run: |
+          python << 'PYTHON'
+          import yaml
+          from datetime import datetime, timedelta
+          import sys
+
+          try:
+              with open('.github/security-waivers.yml', 'r') as f:
+                  config = yaml.safe_load(f)
+          except Exception as e:
+              print(f"❌ Failed to parse YAML: {e}")
+              sys.exit(1)
+
+          if 'waivers' not in config:
+              print("❌ Missing 'waivers' key in configuration")
+              sys.exit(1)
+
+          waivers = config.get('waivers', [])
+          today = datetime.now().date()
+          errors = []
+          warnings = []
+          expired = []
+
+          for i, waiver in enumerate(waivers):
+              # Required fields
+              required = ['id', 'type', 'scope', 'justification', 'approver', 'created', 'expires']
+              missing = [f for f in required if f not in waiver]
+              if missing:
+                  errors.append(f"Waiver {i}: Missing required fields: {', '.join(missing)}")
+                  continue
+
+              # Validate dates
+              try:
+                  created = datetime.strptime(waiver['created'], '%Y-%m-%d').date()
+                  expires = datetime.strptime(waiver['expires'], '%Y-%m-%d').date()
+              except ValueError as e:
+                  errors.append(f"Waiver {waiver['id']}: Invalid date format: {e}")
+                  continue
+
+              # Check expiry
+              if expires < today:
+                  expired.append(f"Waiver {waiver['id']}: Expired on {waiver['expires']}")
+
+              # Check max duration (90 days)
+              duration = (expires - created).days
+              if duration > 90:
+                  errors.append(f"Waiver {waiver['id']}: Duration {duration} days exceeds max 90 days")
+
+              # Check future-dated creation
+              if created > today:
+                  errors.append(f"Waiver {waiver['id']}: Created date is in the future")
+
+              # Validate type
+              valid_types = ['signing', 'sbom', 'ai-model']
+              if waiver['type'] not in valid_types:
+                  errors.append(f"Waiver {waiver['id']}: Invalid type '{waiver['type']}'. Must be one of: {valid_types}")
+
+              # Check for tracking issue
+              if 'issue' not in waiver:
+                  warnings.append(f"Waiver {waiver['id']}: No tracking issue specified (recommended)")
+
+          # Print results
+          print(f"\n📋 Waiver Validation Report")
+          print(f"=" * 60)
+          print(f"Total waivers: {len(waivers)}")
+          print(f"Active waivers: {len(waivers) - len(expired)}")
+          print(f"Expired waivers: {len(expired)}")
+          print(f"Errors: {len(errors)}")
+          print(f"Warnings: {len(warnings)}")
+
+          if expired:
+              print(f"\n⏰ Expired Waivers (must be removed or renewed):")
+              for exp in expired:
+                  print(f"  - {exp}")
+
+          if errors:
+              print(f"\n❌ Validation Errors:")
+              for err in errors:
+                  print(f"  - {err}")
+
+          if warnings:
+              print(f"\n⚠️  Warnings:")
+              for warn in warnings:
+                  print(f"  - {warn}")
+
+          if errors or expired:
+              print(f"\n❌ Validation FAILED")
+              sys.exit(1)
+          else:
+              print(f"\n✅ Validation PASSED")
+          PYTHON
+
+      - name: Create issue for expired waivers
+        if: failure() && github.event_name == 'schedule'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '⏰ Expired Security Waivers Detected',
+              body: `## Expired Security Waivers
+
+              The daily waiver validation found expired waivers in \`.github/security-waivers.yml\`.
+
+              **Action Required:**
+              1. Review expired waivers
+              2. Either fix the underlying issues OR
+              3. Request renewal through security team
+
+              See validation workflow for details: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}
+
+              **Process:** [Security Waiver Lifecycle](docs/security/SECURITY_WORKFLOW_RUNBOOKS.md#security-waiver-lifecycle)
+              `,
+              labels: ['security', 'waiver-expired', 'automated']
+            });
