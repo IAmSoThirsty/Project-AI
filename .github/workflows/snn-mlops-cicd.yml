@@ -58,110 +58,110 @@ jobs:
       - name: Test ANN to SNN conversion
         run: |
           python -c "
-from src.app.core.snn_mlops import ANNToSNNConverter
-import torch.nn as nn
-
-converter = ANNToSNNConverter('pytorch')
-ann_model = nn.Sequential(nn.Linear(784, 128), nn.ReLU(), nn.Linear(128, 10))
-snn_model = converter.convert_pytorch_to_snn(ann_model, time_steps=100)
-assert snn_model is not None, 'ANN→SNN conversion failed'
-print('✓ ANN→SNN conversion test passed')
-"
+          from src.app.core.snn_mlops import ANNToSNNConverter
+          import torch.nn as nn
+          
+          converter = ANNToSNNConverter('pytorch')
+          ann_model = nn.Sequential(nn.Linear(784, 128), nn.ReLU(), nn.Linear(128, 10))
+          snn_model = converter.convert_pytorch_to_snn(ann_model, time_steps=100)
+          assert snn_model is not None, 'ANN→SNN conversion failed'
+          print('✓ ANN→SNN conversion test passed')
+          "
       
       - name: Test quantization with guardrails
         run: |
           python -c "
-from src.app.core.snn_mlops import ModelQuantizer, AccuracyGuardrails, QuantizationMode
-
-guardrails = AccuracyGuardrails(min_accuracy=0.90, max_accuracy_drop=0.05)
-quantizer = ModelQuantizer(guardrails)
-
-# Test quantization
-model = {'test': 'model'}
-quantized, metrics = quantizer.quantize_weights(model, QuantizationMode.INT8, baseline_accuracy=0.95)
-assert quantized is not None, 'Quantization failed'
-assert metrics.accuracy >= guardrails.min_accuracy, f'Accuracy {metrics.accuracy} below minimum'
-print(f'✓ Quantization test passed: {metrics.accuracy:.2%} accuracy')
-"
+          from src.app.core.snn_mlops import ModelQuantizer, AccuracyGuardrails, QuantizationMode
+          
+          guardrails = AccuracyGuardrails(min_accuracy=0.90, max_accuracy_drop=0.05)
+          quantizer = ModelQuantizer(guardrails)
+          
+          # Test quantization
+          model = {'test': 'model'}
+          quantized, metrics = quantizer.quantize_weights(model, QuantizationMode.INT8, baseline_accuracy=0.95)
+          assert quantized is not None, 'Quantization failed'
+          assert metrics.accuracy >= guardrails.min_accuracy, f'Accuracy {metrics.accuracy} below minimum'
+          print(f'✓ Quantization test passed: {metrics.accuracy:.2%} accuracy')
+          "
       
       - name: Test NIR compilation
         run: |
           python -c "
-from src.app.core.snn_mlops import NIRCompiler
-from pathlib import Path
-import tempfile
-
-with tempfile.TemporaryDirectory() as tmpdir:
-    compiler = NIRCompiler('loihi')
-    snn_model = {'layers': [], 'time_steps': 100}
-    success, binary = compiler.compile_to_nir(snn_model, Path(tmpdir))
-    assert success, 'NIR compilation failed'
-    assert binary is not None, 'No binary generated'
-    print(f'✓ NIR compilation test passed: {binary}')
-"
+          from src.app.core.snn_mlops import NIRCompiler
+          from pathlib import Path
+          import tempfile
+          
+          with tempfile.TemporaryDirectory() as tmpdir:
+              compiler = NIRCompiler('loihi')
+              snn_model = {'layers': [], 'time_steps': 100}
+              success, binary = compiler.compile_to_nir(snn_model, Path(tmpdir))
+              assert success, 'NIR compilation failed'
+              assert binary is not None, 'No binary generated'
+              print(f'✓ NIR compilation test passed: {binary}')
+          "
       
       - name: Test sim-to-real validation
         run: |
           python -c "
-from src.app.core.snn_mlops import NIRCompiler
-import numpy as np
-from pathlib import Path
-import tempfile
-
-with tempfile.TemporaryDirectory() as tmpdir:
-    compiler = NIRCompiler('loihi')
-    snn_model = {'layers': []}
-    binary_path = Path(tmpdir)
-    success, binary = compiler.compile_to_nir(snn_model, binary_path)
-    
-    # Validate sim-to-real match
-    test_inputs = np.random.rand(10, 784).astype(np.float32)
-    expected = np.random.rand(10, 10).astype(np.float32)
-    is_valid, mismatch = compiler.validate_sim_to_real(binary, test_inputs, expected)
-    
-    print(f'✓ Sim-to-real validation: {is_valid}, Mismatch: {mismatch:.2%}')
-    assert mismatch < 0.20, f'Mismatch {mismatch:.2%} too high'
-"
+          from src.app.core.snn_mlops import NIRCompiler
+          import numpy as np
+          from pathlib import Path
+          import tempfile
+          
+          with tempfile.TemporaryDirectory() as tmpdir:
+              compiler = NIRCompiler('loihi')
+              snn_model = {'layers': []}
+              binary_path = Path(tmpdir)
+              success, binary = compiler.compile_to_nir(snn_model, binary_path)
+              
+              # Validate sim-to-real match
+              test_inputs = np.random.rand(10, 784).astype(np.float32)
+              expected = np.random.rand(10, 10).astype(np.float32)
+              is_valid, mismatch = compiler.validate_sim_to_real(binary, test_inputs, expected)
+              
+              print(f'✓ Sim-to-real validation: {is_valid}, Mismatch: {mismatch:.2%}')
+              assert mismatch < 0.20, f'Mismatch {mismatch:.2%} too high'
+          "
       
       - name: Run full pipeline test
         run: |
           python -c "
-from src.app.core.snn_mlops import SNNMLOpsPipeline, DeploymentConfig, QuantizationMode
-import torch.nn as nn
-import numpy as np
-import tempfile
-
-with tempfile.TemporaryDirectory() as tmpdir:
-    config = DeploymentConfig(
-        model_name='test_model',
-        version='1.0.0',
-        quantization=QuantizationMode.INT8,
-        canary_percentage=0.05,
-        enable_shadow_model=True,
-    )
-    
-    pipeline = SNNMLOpsPipeline(config, data_dir=tmpdir)
-    
-    # Create dummy model
-    ann_model = nn.Sequential(
-        nn.Linear(784, 128),
-        nn.ReLU(),
-        nn.Linear(128, 10),
-    )
-    
-    # Create validation data
-    validation_data = (
-        np.random.rand(100, 784).astype(np.float32),
-        np.random.rand(100, 10).astype(np.float32),
-    )
-    
-    # Run pipeline
-    target_devices = ['device_001', 'device_002']
-    success, results = pipeline.run_full_pipeline(ann_model, validation_data, target_devices)
-    
-    print(f'\\n✓ Pipeline test: {results[\"status\"]}')
-    assert results['status'] == 'success', 'Pipeline failed'
-"
+          from src.app.core.snn_mlops import SNNMLOpsPipeline, DeploymentConfig, QuantizationMode
+          import torch.nn as nn
+          import numpy as np
+          import tempfile
+          
+          with tempfile.TemporaryDirectory() as tmpdir:
+              config = DeploymentConfig(
+                  model_name='test_model',
+                  version='1.0.0',
+                  quantization=QuantizationMode.INT8,
+                  canary_percentage=0.05,
+                  enable_shadow_model=True,
+              )
+              
+              pipeline = SNNMLOpsPipeline(config, data_dir=tmpdir)
+              
+              # Create dummy model
+              ann_model = nn.Sequential(
+                  nn.Linear(784, 128),
+                  nn.ReLU(),
+                  nn.Linear(128, 10),
+              )
+              
+              # Create validation data
+              validation_data = (
+                  np.random.rand(100, 784).astype(np.float32),
+                  np.random.rand(100, 10).astype(np.float32),
+              )
+              
+              # Run pipeline
+              target_devices = ['device_001', 'device_002']
+              success, results = pipeline.run_full_pipeline(ann_model, validation_data, target_devices)
+              
+              print(f'\\n✓ Pipeline test: {results[\"status\"]}')
+              assert results['status'] == 'success', 'Pipeline failed'
+          "
 
   test-gpu:
     name: Test SNN on GPU (Optional)
@@ -204,22 +204,22 @@ with tempfile.TemporaryDirectory() as tmpdir:
       - name: Compile model to Loihi NIR
         run: |
           python -c "
-from src.app.core.snn_mlops import NIRCompiler
-from pathlib import Path
-
-compiler = NIRCompiler('loihi')
-snn_model = {
-    'framework': 'pytorch_snn',
-    'layers': [
-        {'type': 'linear', 'weight': [[1,2],[3,4]]},
-    ],
-    'time_steps': 100,
-}
-
-success, binary = compiler.compile_to_nir(snn_model, Path('data/snn_mlops/models'))
-print(f'✓ Loihi compilation: {success}')
-print(f'  Binary path: {binary}')
-"
+          from src.app.core.snn_mlops import NIRCompiler
+          from pathlib import Path
+          
+          compiler = NIRCompiler('loihi')
+          snn_model = {
+              'framework': 'pytorch_snn',
+              'layers': [
+                  {'type': 'linear', 'weight': [[1,2],[3,4]]},
+              ],
+              'time_steps': 100,
+          }
+          
+          success, binary = compiler.compile_to_nir(snn_model, Path('data/snn_mlops/models'))
+          print(f'✓ Loihi compilation: {success}')
+          print(f'  Binary path: {binary}')
+          "
       
       - name: Upload Loihi binary
         uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b  # pinned from actions/upload-artifact@v4
@@ -253,22 +253,22 @@ print(f'  Binary path: {binary}')
       - name: Compile model to Speck NIR
         run: |
           python -c "
-from src.app.core.snn_mlops import NIRCompiler
-from pathlib import Path
-
-compiler = NIRCompiler('speck')
-snn_model = {
-    'framework': 'pytorch_snn',
-    'layers': [
-        {'type': 'conv2d', 'weight': [[[[1]]]]},
-    ],
-    'time_steps': 100,
-}
-
-success, binary = compiler.compile_to_nir(snn_model, Path('data/snn_mlops/models'))
-print(f'✓ Speck compilation: {success}')
-print(f'  Binary path: {binary}')
-"
+          from src.app.core.snn_mlops import NIRCompiler
+          from pathlib import Path
+          
+          compiler = NIRCompiler('speck')
+          snn_model = {
+              'framework': 'pytorch_snn',
+              'layers': [
+                  {'type': 'conv2d', 'weight': [[[[1]]]]},
+              ],
+              'time_steps': 100,
+          }
+          
+          success, binary = compiler.compile_to_nir(snn_model, Path('data/snn_mlops/models'))
+          print(f'✓ Speck compilation: {success}')
+          print(f'  Binary path: {binary}')
+          "
       
       - name: Upload Speck binary
         uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b  # pinned from actions/upload-artifact@v4
@@ -313,38 +313,38 @@ print(f'  Binary path: {binary}')
       - name: Run emulator validation
         run: |
           python -c "
-from src.app.core.snn_mlops import NIRCompiler
-import numpy as np
-from pathlib import Path
-
-# Test validation logic
-compiler = NIRCompiler('loihi')
-test_inputs = np.random.rand(10, 784).astype(np.float32)
-expected = np.random.rand(10, 10).astype(np.float32)
-
-# Check if binaries exist
-loihi_binaries = list(Path('loihi-models').glob('*.nir'))
-speck_binaries = list(Path('speck-models').glob('*.nir'))
-
-if loihi_binaries:
-    binary = loihi_binaries[0]
-    is_valid, mismatch = compiler.validate_sim_to_real(binary, test_inputs, expected)
-    print(f'✓ Loihi validation: {is_valid}, Mismatch: {mismatch:.2%}')
-    assert mismatch < 0.15, f'Loihi mismatch {mismatch:.2%} too high'
-else:
-    print('⚠ No Loihi binary found - skipping validation')
-
-if speck_binaries:
-    compiler_speck = NIRCompiler('speck')
-    binary = speck_binaries[0]
-    is_valid, mismatch = compiler_speck.validate_sim_to_real(binary, test_inputs, expected)
-    print(f'✓ Speck validation: {is_valid}, Mismatch: {mismatch:.2%}')
-    assert mismatch < 0.15, f'Speck mismatch {mismatch:.2%} too high'
-else:
-    print('⚠ No Speck binary found - skipping validation')
-
-print('\\n✓ Emulator validation complete')
-"
+          from src.app.core.snn_mlops import NIRCompiler
+          import numpy as np
+          from pathlib import Path
+          
+          # Test validation logic
+          compiler = NIRCompiler('loihi')
+          test_inputs = np.random.rand(10, 784).astype(np.float32)
+          expected = np.random.rand(10, 10).astype(np.float32)
+          
+          # Check if binaries exist
+          loihi_binaries = list(Path('loihi-models').glob('*.nir'))
+          speck_binaries = list(Path('speck-models').glob('*.nir'))
+          
+          if loihi_binaries:
+              binary = loihi_binaries[0]
+              is_valid, mismatch = compiler.validate_sim_to_real(binary, test_inputs, expected)
+              print(f'✓ Loihi validation: {is_valid}, Mismatch: {mismatch:.2%}')
+              assert mismatch < 0.15, f'Loihi mismatch {mismatch:.2%} too high'
+          else:
+              print('⚠ No Loihi binary found - skipping validation')
+          
+          if speck_binaries:
+              compiler_speck = NIRCompiler('speck')
+              binary = speck_binaries[0]
+              is_valid, mismatch = compiler_speck.validate_sim_to_real(binary, test_inputs, expected)
+              print(f'✓ Speck validation: {is_valid}, Mismatch: {mismatch:.2%}')
+              assert mismatch < 0.15, f'Speck mismatch {mismatch:.2%} too high'
+          else:
+              print('⚠ No Speck binary found - skipping validation')
+          
+          print('\\n✓ Emulator validation complete')
+          "
 
   test-ota-deployment:
     name: Test OTA Deployment
@@ -369,57 +369,57 @@ print('\\n✓ Emulator validation complete')
       - name: Test MQTT deployment
         run: |
           python -c "
-from src.app.core.snn_mlops import OTADeployer, DeploymentConfig
-from pathlib import Path
-import tempfile
-
-with tempfile.TemporaryDirectory() as tmpdir:
-    config = DeploymentConfig(
-        model_name='test',
-        version='1.0.0',
-        mqtt_broker='localhost',
-        mqtt_port=1883,
-    )
-    
-    deployer = OTADeployer(config)
-    
-    # Create dummy binary
-    binary = Path(tmpdir) / 'model.nir'
-    binary.write_text('test binary')
-    
-    # Test deployment (will simulate if MQTT not available)
-    devices = ['device_001', 'device_002', 'device_003']
-    results = deployer.deploy_via_mqtt(binary, devices)
-    
-    print(f'✓ MQTT deployment test: {sum(results.values())}/{len(results)} devices')
-"
+          from src.app.core.snn_mlops import OTADeployer, DeploymentConfig
+          from pathlib import Path
+          import tempfile
+          
+          with tempfile.TemporaryDirectory() as tmpdir:
+              config = DeploymentConfig(
+                  model_name='test',
+                  version='1.0.0',
+                  mqtt_broker='localhost',
+                  mqtt_port=1883,
+              )
+              
+              deployer = OTADeployer(config)
+              
+              # Create dummy binary
+              binary = Path(tmpdir) / 'model.nir'
+              binary.write_text('test binary')
+              
+              # Test deployment (will simulate if MQTT not available)
+              devices = ['device_001', 'device_002', 'device_003']
+              results = deployer.deploy_via_mqtt(binary, devices)
+              
+              print(f'✓ MQTT deployment test: {sum(results.values())}/{len(results)} devices')
+          "
       
       - name: Test CoAP deployment
         run: |
           python -c "
-from src.app.core.snn_mlops import OTADeployer, DeploymentConfig
-from pathlib import Path
-import tempfile
-
-with tempfile.TemporaryDirectory() as tmpdir:
-    config = DeploymentConfig(
-        model_name='test',
-        version='1.0.0',
-        coap_endpoint='coap://localhost:5683',
-    )
-    
-    deployer = OTADeployer(config)
-    
-    # Create dummy binary
-    binary = Path(tmpdir) / 'model.nir'
-    binary.write_text('test binary')
-    
-    # Test deployment
-    endpoints = ['coap://device1:5683', 'coap://device2:5683']
-    results = deployer.deploy_via_coap(binary, endpoints)
-    
-    print(f'✓ CoAP deployment test: {sum(results.values())}/{len(results)} endpoints')
-"
+          from src.app.core.snn_mlops import OTADeployer, DeploymentConfig
+          from pathlib import Path
+          import tempfile
+          
+          with tempfile.TemporaryDirectory() as tmpdir:
+              config = DeploymentConfig(
+                  model_name='test',
+                  version='1.0.0',
+                  coap_endpoint='coap://localhost:5683',
+              )
+              
+              deployer = OTADeployer(config)
+              
+              # Create dummy binary
+              binary = Path(tmpdir) / 'model.nir'
+              binary.write_text('test binary')
+              
+              # Test deployment
+              endpoints = ['coap://device1:5683', 'coap://device2:5683']
+              results = deployer.deploy_via_coap(binary, endpoints)
+              
+              print(f'✓ CoAP deployment test: {sum(results.values())}/{len(results)} endpoints')
+          "
 
   test-canary-rollout:
     name: Test Canary Rollout
@@ -443,34 +443,34 @@ with tempfile.TemporaryDirectory() as tmpdir:
       - name: Test canary deployment
         run: |
           python -c "
-from src.app.core.snn_mlops import CanaryDeployment, DeploymentConfig
-import time
-
-config = DeploymentConfig(
-    model_name='test',
-    version='1.0.0',
-    canary_percentage=0.05,
-    canary_duration_sec=10,  # Short for CI
-    rollback_threshold=0.10,
-)
-
-canary = CanaryDeployment(config)
-
-# Test with dummy models
-canary_model = {'version': '2.0'}
-production_model = {'version': '1.0'}
-
-print('Starting canary rollout (5% traffic, 10s duration)...')
-success = canary.start_canary(canary_model, production_model)
-
-if success:
-    print('✓ Canary rollout succeeded - promoting to 100%')
-else:
-    print('⚠ Canary rolled back (this can happen randomly in tests)')
-
-print(f'  Canary metrics collected: {len(canary.canary_metrics)}')
-print(f'  Production metrics collected: {len(canary.production_metrics)}')
-"
+          from src.app.core.snn_mlops import CanaryDeployment, DeploymentConfig
+          import time
+          
+          config = DeploymentConfig(
+              model_name='test',
+              version='1.0.0',
+              canary_percentage=0.05,
+              canary_duration_sec=10,  # Short for CI
+              rollback_threshold=0.10,
+          )
+          
+          canary = CanaryDeployment(config)
+          
+          # Test with dummy models
+          canary_model = {'version': '2.0'}
+          production_model = {'version': '1.0'}
+          
+          print('Starting canary rollout (5% traffic, 10s duration)...')
+          success = canary.start_canary(canary_model, production_model)
+          
+          if success:
+              print('✓ Canary rollout succeeded - promoting to 100%')
+          else:
+              print('⚠ Canary rolled back (this can happen randomly in tests)')
+          
+          print(f'  Canary metrics collected: {len(canary.canary_metrics)}')
+          print(f'  Production metrics collected: {len(canary.production_metrics)}')
+          "
 
   test-shadow-fallback:
     name: Test Shadow Model Fallback
@@ -494,31 +494,31 @@ print(f'  Production metrics collected: {len(canary.production_metrics)}')
       - name: Test ANN shadow fallback
         run: |
           python -c "
-from src.app.core.snn_mlops import ShadowModelFallback, DeploymentConfig
-import numpy as np
-
-config = DeploymentConfig(
-    model_name='test',
-    version='1.0.0',
-    enable_shadow_model=True,
-    shadow_switchover_ms=100.0,
-)
-
-shadow = ShadowModelFallback(config)
-shadow.set_models(snn_model={'snn': True}, ann_shadow={'ann': True})
-
-# Test predictions with fallback
-for i in range(10):
-    input_data = np.random.rand(1, 784).astype(np.float32)
-    prediction, model_used, latency_ms = shadow.predict_with_fallback(input_data)
-    
-    assert latency_ms < 200, f'Latency {latency_ms:.1f}ms too high'
-    print(f'  Prediction {i+1}: {model_used}, latency={latency_ms:.1f}ms')
-
-print(f'\\n✓ Shadow model test complete')
-print(f'  Total switchovers: {shadow.switchover_count}')
-print(f'  Currently using shadow: {shadow.is_using_shadow}')
-"
+          from src.app.core.snn_mlops import ShadowModelFallback, DeploymentConfig
+          import numpy as np
+          
+          config = DeploymentConfig(
+              model_name='test',
+              version='1.0.0',
+              enable_shadow_model=True,
+              shadow_switchover_ms=100.0,
+          )
+          
+          shadow = ShadowModelFallback(config)
+          shadow.set_models(snn_model={'snn': True}, ann_shadow={'ann': True})
+          
+          # Test predictions with fallback
+          for i in range(10):
+              input_data = np.random.rand(1, 784).astype(np.float32)
+              prediction, model_used, latency_ms = shadow.predict_with_fallback(input_data)
+              
+              assert latency_ms < 200, f'Latency {latency_ms:.1f}ms too high'
+              print(f'  Prediction {i+1}: {model_used}, latency={latency_ms:.1f}ms')
+          
+          print(f'\\n✓ Shadow model test complete')
+          print(f'  Total switchovers: {shadow.switchover_count}')
+          print(f'  Currently using shadow: {shadow.is_using_shadow}')
+          "
 
   integration-test:
     name: Full Integration Test
