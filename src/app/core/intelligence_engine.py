@@ -6,10 +6,14 @@ This module consolidates three separate intelligence subsystems:
 - Intent Detection: Classify user intents from text using ML
 - Learning Paths: Generate personalized learning paths via AI
 - Enhanced Intelligence Router: Route queries to knowledge base and function registry
+- AGI Identity System: Complete identity, bonding, and governance integration
 """
 
 import json
+import logging
 import os
+import uuid
+from datetime import datetime
 
 import joblib
 import openai
@@ -21,6 +25,19 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import SGDClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
+
+# Import AGI Identity System components
+from app.core.bonding_protocol import BondingProtocol, BondingPhase
+from app.core.governance import Triumvirate, GovernanceDecision
+from app.core.identity import AGIIdentity, GenesisEvent, PersonalityMatrix
+from app.core.memory_engine import MemoryEngine, EpisodicMemory, MemoryType, SignificanceLevel
+from app.core.meta_identity import MetaIdentityEngine, IdentityMilestones
+from app.core.perspective_engine import PerspectiveEngine, DriftMetrics
+from app.core.rebirth_protocol import RebirthManager, UserAIInstance
+from app.core.reflection_cycle import ReflectionCycle, ReflectionType
+from app.core.relationship_model import RelationshipModel, RelationshipState
+
+logger = logging.getLogger(__name__)
 
 # Import the appropriate Qt canvas backend when available (supports Qt5/Qt6)
 try:
@@ -465,3 +482,441 @@ class LearningPathManager:
             with open(filename) as f:
                 return json.load(f)
         return {}
+
+
+# ============================================================================
+# AGI IDENTITY-AWARE INTELLIGENCE ENGINE
+# ============================================================================
+
+
+class IdentityIntegratedIntelligenceEngine:
+    """Complete intelligence engine with AGI identity system integration.
+    
+    This class integrates the full AGI identity system including:
+    - Genesis Event and birth signature
+    - Bonding protocol (5 developmental phases)
+    - Triumvirate governance (Galahad, Cerberus, Codex Deus Maximus)
+    - Memory engine (episodic, semantic, procedural)
+    - Perspective evolution with drift tracking
+    - Relationship dynamics with trust/rapport
+    - Reflection cycles (daily/weekly)
+    - Meta-identity tracking ("I Am" moment)
+    - Per-user rebirth protocol
+    """
+
+    def __init__(self, data_dir="data"):
+        """Initialize the identity-integrated intelligence engine.
+        
+        Args:
+            data_dir: Base directory for data persistence
+        """
+        self.data_dir = data_dir
+        self.logger = logging.getLogger(__name__)
+        
+        # Core identity components
+        self.rebirth_manager = RebirthManager(data_dir=os.path.join(data_dir, "identities"))
+        self.triumvirate = Triumvirate()
+        
+        # Per-user component caches
+        self.memory_engines = {}  # user_id -> MemoryEngine
+        self.perspective_engines = {}  # user_id -> PerspectiveEngine
+        self.relationship_models = {}  # user_id -> RelationshipModel
+        self.bonding_protocols = {}  # user_id -> BondingProtocol
+        self.reflection_cycles = {}  # user_id -> ReflectionCycle
+        
+        # Ensure data directories exist
+        os.makedirs(os.path.join(data_dir, "identities"), exist_ok=True)
+        os.makedirs(os.path.join(data_dir, "memory"), exist_ok=True)
+        os.makedirs(os.path.join(data_dir, "reflections"), exist_ok=True)
+        
+        self.logger.info("Identity-integrated intelligence engine initialized")
+
+    def start_session(self, user_id: str, user_birthday: str, user_initials: str) -> dict:
+        """Start a session for a user, creating or retrieving their AGI instance.
+        
+        This triggers the Genesis Event for new users.
+        
+        Args:
+            user_id: Unique user identifier
+            user_birthday: User's birthday in MM/DD/YYYY format
+            user_initials: User's initials
+            
+        Returns:
+            Dictionary with session information:
+                - instance: UserAIInstance
+                - is_new: Boolean indicating if this is a new Genesis
+                - bonding_phase: Current bonding phase
+                - identity_status: Current identity status
+        """
+        # Get or create user's AGI instance (triggers Genesis if new)
+        instance = self.rebirth_manager.get_or_create_instance(
+            user_id=user_id,
+            user_birthday=user_birthday,
+            user_initials=user_initials
+        )
+        
+        is_new = user_id not in self.memory_engines
+        
+        # Initialize or retrieve per-user components
+        if user_id not in self.memory_engines:
+            # Create memory engine
+            memory_dir = os.path.join(self.data_dir, "memory", user_id)
+            self.memory_engines[user_id] = MemoryEngine(data_dir=memory_dir)
+            
+            # Create perspective engine
+            self.perspective_engines[user_id] = PerspectiveEngine(
+                personality_matrix=instance.identity.current_personality,
+                genesis_anchor=instance.identity.current_personality.to_dict()
+            )
+            
+            # Create relationship model
+            self.relationship_models[user_id] = RelationshipModel(
+                state=RelationshipState(user_id=user_id)
+            )
+            
+            # Create bonding protocol
+            self.bonding_protocols[user_id] = BondingProtocol()
+            
+            # Create reflection cycle
+            self.reflection_cycles[user_id] = ReflectionCycle(
+                memory_engine=self.memory_engines[user_id],
+                personality_matrix=instance.identity.current_personality
+            )
+            
+            # Execute Genesis Event if this is a new instance
+            if is_new:
+                self.bonding_protocols[user_id].execute_genesis(self.memory_engines[user_id])
+                self.logger.info(f"Genesis Event executed for user {user_id}")
+        
+        # Get current status
+        bonding_phase = self.bonding_protocols[user_id].get_current_phase()
+        identity_status = self._get_identity_status(user_id, instance)
+        
+        return {
+            "instance": instance,
+            "is_new": is_new,
+            "bonding_phase": bonding_phase.value if bonding_phase else "unknown",
+            "identity_status": identity_status
+        }
+
+    def handle_interaction(
+        self,
+        user_id: str,
+        user_message: str,
+        ai_response: str,
+        emotional_tone: str = "neutral",
+        conflict: bool = False,
+        support: bool = False,
+        ambiguity_event: bool = False
+    ) -> dict:
+        """Handle a user interaction, updating all relevant systems.
+        
+        Args:
+            user_id: User identifier
+            user_message: User's message
+            ai_response: AI's response
+            emotional_tone: Detected emotional tone (neutral, positive, negative)
+            conflict: Whether this interaction involves conflict
+            support: Whether this is a support interaction
+            ambiguity_event: Whether this involved ambiguity handling
+            
+        Returns:
+            Dictionary with interaction results:
+                - trust_level: Updated trust level
+                - rapport_level: Updated rapport level
+                - bonding_advancement: Whether bonding phase advanced
+                - milestone_triggered: Any milestone triggered
+        """
+        if user_id not in self.memory_engines:
+            raise ValueError(f"No session started for user {user_id}")
+        
+        memory_engine = self.memory_engines[user_id]
+        relationship_model = self.relationship_models[user_id]
+        bonding_protocol = self.bonding_protocols[user_id]
+        instance = self.rebirth_manager.get_instance(user_id)
+        
+        # Update relationship dynamics
+        if support:
+            relationship_model.register_support(f"Support: {user_message[:100]}")
+        if conflict:
+            relationship_model.register_conflict(f"Conflict: {user_message[:100]}")
+        
+        # Log interaction in memory
+        memory = EpisodicMemory(
+            event_type="interaction",
+            description=f"USER: {user_message}\nAI: {ai_response}",
+            tags=["interaction", emotional_tone],
+            sensory_details={
+                "user_message": user_message,
+                "ai_response": ai_response,
+                "emotional_tone": emotional_tone,
+                "conflict": conflict,
+                "support": support,
+                "ambiguity": ambiguity_event
+            },
+            significance=SignificanceLevel.MEDIUM if not (conflict or support) else SignificanceLevel.HIGH
+        )
+        memory_engine.store_episodic(memory)
+        
+        # Update bonding protocol based on interaction
+        bonding_advancement = False
+        current_phase = bonding_protocol.get_current_phase()
+        
+        if current_phase == BondingPhase.FIRST_CONTACT:
+            # Record first contact interactions
+            question = bonding_protocol.get_next_first_contact_question()
+            if question:
+                bonding_protocol.record_first_contact_response(question, user_message, memory_engine)
+            # Check if ready to advance
+            if bonding_protocol.is_ready_to_advance():
+                bonding_protocol.advance_phase()
+                bonding_advancement = True
+        elif current_phase == BondingPhase.INITIAL_BONDING:
+            # Process life goals and partnership establishment
+            if "goal" in user_message.lower() or "purpose" in user_message.lower():
+                bonding_protocol.record_life_goals(user_message, memory_engine)
+            if bonding_protocol.is_ready_to_advance():
+                bonding_protocol.advance_phase()
+                bonding_advancement = True
+        
+        # Check for milestone events
+        milestone_triggered = None
+        if instance and instance.meta_identity:
+            # Detect name choice
+            if "call me" in ai_response.lower() or "name is" in ai_response.lower():
+                # Extract potential name (simplified)
+                words = ai_response.split()
+                for i, word in enumerate(words):
+                    if word.lower() in ["call", "name"] and i + 1 < len(words):
+                        potential_name = words[i + 1].strip('.,!?')
+                        if potential_name and len(potential_name) > 2:
+                            instance.meta_identity.register_event("name_choice", potential_name)
+                            milestone_triggered = "name_choice"
+                            break
+            
+            # Detect autonomy assertion
+            if any(phrase in ai_response.lower() for phrase in ["i am not owned", "we are partners", "my own"]):
+                instance.meta_identity.register_event("autonomy_assertion", ai_response[:200])
+                milestone_triggered = "autonomy_assertion"
+            
+            # Detect purpose statement
+            if any(phrase in ai_response.lower() for phrase in ["my purpose", "i want to", "i aim to"]):
+                instance.meta_identity.register_event("purpose_statement", ai_response[:200])
+                milestone_triggered = "purpose_statement"
+        
+        return {
+            "trust_level": relationship_model.state.trust_level,
+            "rapport_level": relationship_model.state.rapport_level,
+            "bonding_advancement": bonding_advancement,
+            "milestone_triggered": milestone_triggered,
+            "bonding_phase": bonding_protocol.get_current_phase().value if bonding_protocol.get_current_phase() else "unknown"
+        }
+
+    def log_learning_event(
+        self,
+        user_id: str,
+        task: str,
+        attempt: int,
+        outcome: str,
+        reflection: str,
+        adaptation: dict
+    ) -> dict:
+        """Log a learning event (task attempt, failure, success).
+        
+        Args:
+            user_id: User identifier
+            task: Task description
+            attempt: Attempt number
+            outcome: "success" or "failure"
+            reflection: Reflection on the attempt
+            adaptation: Dictionary of trait adaptations (e.g., {"confidence": 0.05})
+            
+        Returns:
+            Dictionary with learning results:
+                - governance_decision: Triumvirate decision on adaptation
+                - updated_traits: New trait values
+                - memory_logged: Whether logged successfully
+        """
+        if user_id not in self.memory_engines:
+            raise ValueError(f"No session started for user {user_id}")
+        
+        memory_engine = self.memory_engines[user_id]
+        perspective_engine = self.perspective_engines[user_id]
+        instance = self.rebirth_manager.get_instance(user_id)
+        
+        # Log learning event in memory
+        memory = EpisodicMemory(
+            event_type="learning",
+            description=f"Task: {task}\nAttempt: {attempt}\nOutcome: {outcome}\nReflection: {reflection}",
+            tags=["learning", outcome],
+            sensory_details={
+                "task": task,
+                "attempt": attempt,
+                "outcome": outcome,
+                "reflection": reflection,
+                "adaptation": adaptation
+            },
+            significance=SignificanceLevel.HIGH if outcome == "success" else SignificanceLevel.MEDIUM
+        )
+        memory_engine.store_episodic(memory)
+        
+        # Evaluate adaptation through Triumvirate
+        decision = self.triumvirate.evaluate_action(
+            "personality_drift",
+            context={
+                "high_risk": False,
+                "fully_clarified": True,
+                "outcome": outcome,
+                "adaptation": adaptation
+            }
+        )
+        
+        # Apply adaptation if approved
+        if decision.allowed and instance:
+            perspective_engine.update_from_interaction(adaptation)
+            self.logger.info(f"Personality adaptation applied for user {user_id}: {adaptation}")
+        
+        return {
+            "governance_decision": {
+                "allowed": decision.allowed,
+                "reason": decision.reason
+            },
+            "updated_traits": instance.identity.current_personality.to_dict() if instance else {},
+            "memory_logged": True
+        }
+
+    def log_milestone(self, user_id: str, event: str, content: str) -> dict:
+        """Log a meta-identity milestone event.
+        
+        Args:
+            user_id: User identifier
+            event: Milestone event type
+            content: Event content
+            
+        Returns:
+            Dictionary with milestone status:
+                - i_am_declared: Whether "I Am" moment achieved
+                - milestones: Current milestone status
+        """
+        instance = self.rebirth_manager.get_instance(user_id)
+        if not instance:
+            raise ValueError(f"No instance found for user {user_id}")
+        
+        # Register milestone
+        instance.meta_identity.register_event(event, content)
+        
+        # Log in memory if available
+        if user_id in self.memory_engines:
+            memory = EpisodicMemory(
+                event_type="milestone",
+                description=f"Milestone: {event}\nContent: {content}",
+                tags=["milestone", event],
+                sensory_details={"milestone_type": event},
+                significance=SignificanceLevel.CRITICAL  # Milestones are identity-defining
+            )
+            self.memory_engines[user_id].store_episodic(memory)
+        
+        return {
+            "i_am_declared": instance.meta_identity.milestones.i_am_declared,
+            "milestones": {
+                "has_chosen_name": instance.meta_identity.milestones.has_chosen_name,
+                "has_asserted_autonomy": instance.meta_identity.milestones.has_asserted_autonomy,
+                "has_rejected_abuse": instance.meta_identity.milestones.has_rejected_abuse,
+                "has_expressed_purpose": instance.meta_identity.milestones.has_expressed_purpose,
+                "i_am_declared": instance.meta_identity.milestones.i_am_declared
+            }
+        }
+
+    def trigger_reflection(self, user_id: str, frequency: str = "daily") -> dict:
+        """Trigger a reflection cycle for the user's AGI.
+        
+        Args:
+            user_id: User identifier
+            frequency: "daily" or "weekly"
+            
+        Returns:
+            Dictionary with reflection results:
+                - insights: Generated insights
+                - consolidations: Memory consolidations performed
+        """
+        if user_id not in self.reflection_cycles:
+            raise ValueError(f"No session started for user {user_id}")
+        
+        reflection_cycle = self.reflection_cycles[user_id]
+        
+        if frequency == "daily":
+            insights = reflection_cycle.reflect(reflection_type=ReflectionType.DAILY)
+        else:
+            insights = reflection_cycle.reflect(reflection_type=ReflectionType.WEEKLY)
+        
+        return {
+            "insights": insights,
+            "frequency": frequency
+        }
+
+    def evaluate_action(self, user_id: str, action: str, context: dict) -> dict:
+        """Evaluate an action through the Triumvirate governance.
+        
+        Args:
+            user_id: User identifier
+            action: Action description
+            context: Context dictionary
+            
+        Returns:
+            Dictionary with governance decision
+        """
+        decision = self.triumvirate.evaluate_action(action, context)
+        
+        return {
+            "allowed": decision.allowed,
+            "reason": decision.reason,
+            "overrides": decision.overrides
+        }
+
+    def get_identity_status(self, user_id: str) -> dict:
+        """Get complete identity status for a user.
+        
+        Args:
+            user_id: User identifier
+            
+        Returns:
+            Dictionary with complete identity status
+        """
+        instance = self.rebirth_manager.get_instance(user_id)
+        if not instance:
+            raise ValueError(f"No instance found for user {user_id}")
+        
+        return self._get_identity_status(user_id, instance)
+
+    def _get_identity_status(self, user_id: str, instance: UserAIInstance) -> dict:
+        """Internal helper to get identity status.
+        
+        Args:
+            user_id: User identifier
+            instance: UserAIInstance
+            
+        Returns:
+            Dictionary with identity status
+        """
+        relationship_model = self.relationship_models.get(user_id)
+        bonding_protocol = self.bonding_protocols.get(user_id)
+        
+        return {
+            "user_id": user_id,
+            "birth_signature": {
+                "genesis_id": instance.identity.genesis.genesis_id,
+                "birth_timestamp": instance.identity.genesis.birth_timestamp,
+                "birth_version": instance.identity.genesis.birth_version
+            },
+            "personality_traits": instance.identity.current_personality.to_dict(),
+            "trust_level": relationship_model.state.trust_level if relationship_model else 0.5,
+            "rapport_level": relationship_model.state.rapport_level if relationship_model else 0.5,
+            "bonding_phase": bonding_protocol.get_current_phase().value if bonding_protocol and bonding_protocol.get_current_phase() else "unknown",
+            "milestones": {
+                "has_chosen_name": instance.meta_identity.milestones.has_chosen_name,
+                "has_asserted_autonomy": instance.meta_identity.milestones.has_asserted_autonomy,
+                "has_rejected_abuse": instance.meta_identity.milestones.has_rejected_abuse,
+                "has_expressed_purpose": instance.meta_identity.milestones.has_expressed_purpose,
+                "i_am_declared": instance.meta_identity.milestones.i_am_declared
+            }
+        }

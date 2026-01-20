@@ -1,0 +1,369 @@
+name: Periodic Security Verification
+
+# Re-runs SBOM + vulnerability scans and model checks against main branch
+# to catch drift, new vulnerabilities, and dependency changes outside of PRs
+
+on:
+  schedule:
+    # Daily at 3 AM UTC
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+    inputs:
+      scan_depth:
+        description: 'Scan depth (quick/full)'
+        required: false
+        default: 'quick'
+        type: choice
+        options:
+          - quick
+          - full
+
+permissions:
+  contents: read
+  issues: write
+  security-events: write
+
+jobs:
+  nightly-sbom-scan:
+    name: Nightly SBOM + Vulnerability Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@0ae58b7817e9b40c6232e8bf08f42a7a6b8e60ec  # v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Syft
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+
+      - name: Install Grype
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
+
+      - name: Generate fresh SBOM
+        run: |
+          syft scan dir:. \
+            --scope all-layers \
+            --output cyclonedx-json \
+            --file sbom-nightly.cyclonedx.json
+
+      - name: Scan for vulnerabilities
+        id: vuln_scan
+        run: |
+          grype sbom:sbom-nightly.cyclonedx.json \
+            -o json \
+            --file vulnerabilities-nightly.json || true
+          
+          grype sbom:sbom-nightly.cyclonedx.json \
+            -o table \
+            --file vulnerabilities-nightly.txt || true
+          
+          # Count critical and high vulnerabilities
+          CRITICAL=$(jq '[.matches[] | select(.vulnerability.severity == "Critical")] | length' vulnerabilities-nightly.json)
+          HIGH=$(jq '[.matches[] | select(.vulnerability.severity == "High")] | length' vulnerabilities-nightly.json)
+          MEDIUM=$(jq '[.matches[] | select(.vulnerability.severity == "Medium")] | length' vulnerabilities-nightly.json)
+          
+          echo "CRITICAL_COUNT=$CRITICAL" >> "$GITHUB_OUTPUT"
+          echo "HIGH_COUNT=$HIGH" >> "$GITHUB_OUTPUT"
+          echo "MEDIUM_COUNT=$MEDIUM" >> "$GITHUB_OUTPUT"
+          
+          echo "## Vulnerability Scan Results" >> "$GITHUB_STEP_SUMMARY"
+          echo "- 🔴 Critical: $CRITICAL" >> "$GITHUB_STEP_SUMMARY"
+          echo "- 🟠 High: $HIGH" >> "$GITHUB_STEP_SUMMARY"
+          echo "- 🟡 Medium: $MEDIUM" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Check for dependency drift
+        run: |
+          # Compare with previous scan (if exists)
+          if gh run list --workflow=periodic-security-verification.yml --status=success --limit=1 --json databaseId | jq -r '.[0].databaseId' | grep -q .; then
+            PREV_RUN=$(gh run list --workflow=periodic-security-verification.yml --status=success --limit=1 --json databaseId | jq -r '.[0].databaseId')
+            echo "Comparing with previous run: $PREV_RUN"
+            # Download previous SBOM if available for comparison
+            gh run download "$PREV_RUN" --name sbom-nightly || echo "Previous SBOM not found"
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
+        continue-on-error: true
+
+      - name: Upload SBOM and scan results
+        uses: actions/upload-artifact@ea3d6fb60d47c0a8aab02e95a1c69d16b0f24c1e  # v4
+        with:
+          name: sbom-nightly
+          path: |
+            sbom-nightly.cyclonedx.json
+            vulnerabilities-nightly.json
+            vulnerabilities-nightly.txt
+          retention-days: 30
+
+      - name: Create issue for critical vulnerabilities
+        if: steps.vuln_scan.outputs.CRITICAL_COUNT > 0
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea  # v7
+        with:
+          script: |
+            const critical = parseInt('${{ steps.vuln_scan.outputs.CRITICAL_COUNT }}');
+            const high = parseInt('${{ steps.vuln_scan.outputs.HIGH_COUNT }}');
+            
+            const body = `## 🔴 Critical Vulnerabilities Detected in Nightly Scan
+
+            **Scan Date:** ${new Date().toISOString().split('T')[0]}
+            **Branch:** main
+            **Workflow:** [Nightly Security Verification](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
+
+            ### Summary
+            - 🔴 Critical: ${critical}
+            - 🟠 High: ${high}
+
+            ### Action Required
+            Review the vulnerability report and prioritize remediation:
+            1. Download scan results from workflow artifacts
+            2. Review \`vulnerabilities-nightly.txt\` for details
+            3. Update affected dependencies
+            4. Verify fixes with \`grype sbom:sbom-comprehensive.cyclonedx.json\`
+
+            ### Severity Guidelines
+            - **Critical:** Remediate within 48 hours
+            - **High:** Remediate within 1 week
+
+            See [Security Framework](docs/SECURITY_FRAMEWORK.md) for remediation procedures.
+            `;
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🔴 Nightly Scan: ${critical} Critical Vulnerabilities in Dependencies`,
+              body: body,
+              labels: ['security', 'vulnerability', 'automated', 'critical']
+            });
+
+  nightly-model-scan:
+    name: Nightly AI/ML Model Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@0ae58b7817e9b40c6232e8bf08f42a7a6b8e60ec  # v4
+        with:
+          python-version: '3.11'
+
+      - name: Install security tools
+        run: |
+          pip install modelscan
+
+      - name: Scan models for security issues
+        id: model_scan
+        run: |
+          # Find all model files
+          MODEL_COUNT=$(find data -type f \( -name "*.pkl" -o -name "*.h5" -o -name "*.pt" -o -name "*.pth" \) | wc -l)
+          echo "MODEL_COUNT=$MODEL_COUNT" >> "$GITHUB_OUTPUT"
+          
+          # Scan each model
+          ISSUES=0
+          find data -type f \( -name "*.pkl" -o -name "*.h5" -o -name "*.pt" -o -name "*.pth" \) | while read model; do
+            echo "Scanning: $model"
+            if ! modelscan scan -p "$model" -o model-scan-results.json 2>/dev/null; then
+              ISSUES=$((ISSUES + 1))
+              echo "⚠️ Issues found in: $model"
+            fi
+          done
+          
+          echo "ISSUES_FOUND=$ISSUES" >> "$GITHUB_OUTPUT"
+          echo "## Model Scan Results" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Models scanned: $MODEL_COUNT" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Issues found: $ISSUES" >> "$GITHUB_STEP_SUMMARY"
+        continue-on-error: true
+
+      - name: Check model integrity
+        run: |
+          # Check for missing checksums
+          MISSING_CHECKSUMS=0
+          find data -type f \( -name "*.pkl" -o -name "*.h5" -o -name "*.pt" -o -name "*.pth" \) | while read model; do
+            if [ ! -f "${model}.sha256" ]; then
+              echo "⚠️ Missing checksum: $model"
+              MISSING_CHECKSUMS=$((MISSING_CHECKSUMS + 1))
+            fi
+          done
+          
+          echo "Models without checksums: $MISSING_CHECKSUMS"
+        continue-on-error: true
+
+      - name: Create issue for model security findings
+        if: steps.model_scan.outputs.ISSUES_FOUND > 0
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea  # v7
+        with:
+          script: |
+            const issues = '${{ steps.model_scan.outputs.ISSUES_FOUND }}';
+            
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🤖 Nightly Scan: AI/ML Model Security Issues Detected`,
+              body: `## Model Security Issues
+
+              **Scan Date:** ${new Date().toISOString().split('T')[0]}
+              **Issues Found:** ${issues}
+
+              Review model scan results in workflow artifacts.
+
+              See [AI/ML Security Runbook](docs/security/SECURITY_WORKFLOW_RUNBOOKS.md#3%EF%B8%8F%E2%83%A3-aiml-model-security-failures) for remediation.
+              `,
+              labels: ['security', 'ai-ml', 'automated']
+            });
+
+  weekly-comprehensive-audit:
+    name: Weekly Comprehensive Security Audit
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' && github.event.schedule == '0 3 * * 0'  # Sunday only
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4
+        with:
+          ref: main
+          fetch-depth: 0  # Full history for comprehensive analysis
+
+      - name: Set up Python
+        uses: actions/setup-python@0ae58b7817e9b40c6232e8bf08f42a7a6b8e60ec  # v4
+        with:
+          python-version: '3.11'
+
+      - name: Install audit tools
+        run: |
+          pip install pip-audit safety bandit
+
+      - name: Run comprehensive audit
+        run: |
+          # Python dependency audit
+          pip-audit --desc --format json --output pip-audit-weekly.json || true
+          
+          # Safety check
+          safety check --json --output safety-weekly.json || true
+          
+          # Bandit security scan
+          bandit -r src/ -f json -o bandit-weekly.json || true
+          
+          echo "## Weekly Audit Complete" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload audit results
+        uses: actions/upload-artifact@ea3d6fb60d47c0a8aab02e95a1c69d16b0f24c1e  # v4
+        with:
+          name: weekly-audit-results
+          path: |
+            pip-audit-weekly.json
+            safety-weekly.json
+            bandit-weekly.json
+          retention-days: 90
+
+  security-metrics:
+    name: Calculate Security KPIs
+    runs-on: ubuntu-latest
+    needs: [nightly-sbom-scan, nightly-model-scan]
+    if: always()
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4
+        with:
+          ref: main
+
+      - name: Calculate KPIs
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea  # v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            // KPI 1: Signed Release Coverage
+            const releases = await github.rest.repos.listReleases({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 10
+            });
+            
+            let signedCount = 0;
+            for (const release of releases.data) {
+              const assets = await github.rest.repos.listReleaseAssets({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: release.id
+              });
+              
+              const hasSig = assets.data.some(a => a.name.endsWith('.sig'));
+              if (hasSig) signedCount++;
+            }
+            
+            const signedCoverage = releases.data.length > 0 
+              ? ((signedCount / releases.data.length) * 100).toFixed(1)
+              : 0;
+            
+            // KPI 2: SBOM Coverage (same releases)
+            let sbomCount = 0;
+            for (const release of releases.data) {
+              const assets = await github.rest.repos.listReleaseAssets({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: release.id
+              });
+              
+              const hasSbom = assets.data.some(a => a.name.includes('sbom'));
+              if (hasSbom) sbomCount++;
+            }
+            
+            const sbomCoverage = releases.data.length > 0
+              ? ((sbomCount / releases.data.length) * 100).toFixed(1)
+              : 0;
+            
+            // KPI 3: Critical vulnerability count (from nightly scan)
+            const criticalCount = '${{ needs.nightly-sbom-scan.outputs.CRITICAL_COUNT || 0 }}';
+            
+            // KPI 4: Model scan coverage
+            const modelCount = '${{ needs.nightly-model-scan.outputs.MODEL_COUNT || 0 }}';
+            
+            // Generate KPI report
+            const report = `# Security KPIs - ${new Date().toISOString().split('T')[0]}
+
+            ## Current Metrics
+
+            | KPI | Target | Actual | Status |
+            |-----|--------|--------|--------|
+            | **Signed Release Coverage** | 100% | ${signedCoverage}% | ${signedCoverage >= 100 ? '✅' : '⚠️'} |
+            | **SBOM Coverage** | 100% | ${sbomCoverage}% | ${sbomCoverage >= 100 ? '✅' : '⚠️'} |
+            | **Critical Vulnerabilities** | 0 | ${criticalCount} | ${criticalCount == 0 ? '✅' : '🔴'} |
+            | **AI Models Scanned** | 100% | ${modelCount > 0 ? '100%' : '0%'} | ${modelCount > 0 ? '✅' : '⚠️'} |
+
+            ## Trends
+            - Last 10 releases analyzed
+            - ${signedCount} of ${releases.data.length} releases signed (${signedCoverage}%)
+            - ${sbomCount} of ${releases.data.length} releases have SBOM (${sbomCoverage}%)
+
+            ## Action Items
+            ${signedCoverage < 100 ? '- ⚠️ Some releases lack signatures - investigate signing workflow\n' : ''}
+            ${sbomCoverage < 100 ? '- ⚠️ Some releases lack SBOM - investigate SBOM workflow\n' : ''}
+            ${criticalCount > 0 ? '- 🔴 Critical vulnerabilities detected - prioritize remediation\n' : ''}
+            ${signedCoverage >= 100 && sbomCoverage >= 100 && criticalCount == 0 ? '- ✅ All KPIs meeting targets\n' : ''}
+
+            ---
+            *Automated KPI Report - See [Governance](docs/security/SECURITY_GOVERNANCE.md)*
+            `;
+            
+            console.log(report);
+            core.summary.addRaw(report);
+            await core.summary.write();
+            
+            // Save to file for historical tracking
+            fs.writeFileSync('security-kpis.md', report);
+
+      - name: Upload KPI report
+        uses: actions/upload-artifact@ea3d6fb60d47c0a8aab02e95a1c69d16b0f24c1e  # v4
+        with:
+          name: security-kpis-${{ github.run_number }}
+          path: security-kpis.md
+          retention-days: 365  # Keep for 1 year

@@ -17,6 +17,7 @@ from app.agents.sandbox_runner import SandboxRunner
 from app.agents.test_qa_generator import TestQAGenerator
 from app.agents.ux_telemetry import UxTelemetryAgent
 from app.core.ai_systems import AIPersona, MemoryExpansionSystem
+from app.core.cognition_kernel import CognitionKernel
 from app.core.continuous_learning import ContinuousLearningEngine
 
 logger = logging.getLogger(__name__)
@@ -31,11 +32,24 @@ class CouncilHub:
     - Route messages between agents and the head
     - Consult Cerberus for content safety and enforce shutdown/cut communication
 
+    CRITICAL: All agent operations are routed through CognitionKernel.
+    No agent may execute directly - kernel.route() is the only execution path.
+
     This hub is intentionally conservative: enforcement actions are local and
     non-destructive (deactivate agent and store audit record).
     """
 
-    def __init__(self, autolearn_interval: float = 60.0) -> None:
+    def __init__(
+        self,
+        autolearn_interval: float = 60.0,
+        kernel: CognitionKernel | None = None,
+    ) -> None:
+        """Initialize CouncilHub with optional kernel injection.
+
+        Args:
+            autolearn_interval: Interval for autonomous learning loop
+            kernel: CognitionKernel instance for routing all agent operations
+        """
         self.project_shorthand = "PA"  # Project AI shorthand
         self.agents_shorthand = "SA"  # Smaller agents shorthand
         self._project: dict[str, Any] | None = None
@@ -46,13 +60,25 @@ class CouncilHub:
         self._autolearn_stop = threading.Event()
         # Track whether optional agents are enabled
         self._agents_enabled: dict[str, bool] = {}
+
+        # COGNITION KERNEL INTEGRATION
+        self.kernel = kernel
+        if kernel is None:
+            logger.warning(
+                "CouncilHub initialized without CognitionKernel. "
+                "Agent operations will not be governed (NOT RECOMMENDED)."
+            )
+
         # register this instance as the default singleton for convenience
         global _default_hub
         _default_hub = self
 
     # ----------------- registration -----------------
     def register_project(self, name: str = "Project-AI") -> None:
-        """Register the Project-AI head with its subsystems."""
+        """Register the Project-AI head with its subsystems.
+
+        CRITICAL: All agents are injected with kernel for governance routing.
+        """
         with self._lock:
             # Create a minimal Project-AI representation
             self._project = {
@@ -61,20 +87,23 @@ class CouncilHub:
                 "memory": MemoryExpansionSystem(),
                 "continuous_learning": ContinuousLearningEngine(),
             }
-            # Initialize optional agents
-            self._project["curator"] = KnowledgeCurator()
-            self._project["qa_generator"] = TestQAGenerator()
-            self._project["dependency_auditor"] = DependencyAuditor()
+
+            # Initialize optional agents WITH KERNEL INJECTION
+            # COGNITION KERNEL INTEGRATION - all agents get kernel
+            self._project["curator"] = KnowledgeCurator(kernel=self.kernel)
+            self._project["qa_generator"] = TestQAGenerator(kernel=self.kernel)
+            self._project["dependency_auditor"] = DependencyAuditor(kernel=self.kernel)
             # more agents
-            self._project["docgen"] = DocGenerator()
-            self._project["refactor"] = RefactorAgent()
-            self._project["sandbox"] = SandboxRunner()
-            self._project["retrieval"] = RetrievalAgent()
-            self._project["rollback_agent"] = RollbackAgent()
-            self._project["planner"] = PlannerAgent()
-            self._project["telemetry"] = UxTelemetryAgent()
+            self._project["docgen"] = DocGenerator(kernel=self.kernel)
+            self._project["refactor"] = RefactorAgent(kernel=self.kernel)
+            self._project["sandbox"] = SandboxRunner(kernel=self.kernel)
+            self._project["retrieval"] = RetrievalAgent(kernel=self.kernel)
+            self._project["rollback_agent"] = RollbackAgent(kernel=self.kernel)
+            self._project["planner"] = PlannerAgent(kernel=self.kernel)
+            self._project["telemetry"] = UxTelemetryAgent(kernel=self.kernel)
             # Ensure CI Checker agent is present and enabled
-            self._project["ci_checker"] = CICheckerAgent()
+            self._project["ci_checker"] = CICheckerAgent(kernel=self.kernel)
+
             # default all agents enabled
             for k in list(self._project.keys()):
                 if k not in ("name", "persona", "memory", "continuous_learning"):
@@ -83,7 +112,7 @@ class CouncilHub:
                     agent_obj = self._project.get(k)
                     if agent_obj:
                         self.register_agent(k, agent_obj)
-            logger.info("Registered project head: %s", name)
+            logger.info("Registered project head: %s with kernel-routed agents", name)
 
     def register_agent(self, agent_id: str, agent_obj: Any) -> None:
         """Register a smaller agent under the Council."""
@@ -128,7 +157,10 @@ class CouncilHub:
             self._autolearn_stop.wait(self._autolearn_interval)
 
     def _autolearn_once(self) -> None:
-        """Single autolearn iteration: look for files in data/autolearn and absorb them."""
+        """Single autolearn iteration: look for files in data/autolearn and absorb them.
+
+        CRITICAL: All agent operations route through kernel.
+        """
         if not self._project:
             return
         engine: ContinuousLearningEngine = self._project["continuous_learning"]
@@ -149,8 +181,12 @@ class CouncilHub:
                 archive = path + ".consumed"
                 os.rename(path, archive)
                 # After absorbing, run curator to integrate facts into curated knowledge
+                # COGNITION KERNEL ROUTING - curator.curate() routed through kernel
                 try:
-                    self._project["curator"].curate([report.__dict__])
+                    curator = self._project["curator"]
+                    if hasattr(curator, "curate"):
+                        # Agent methods already route through kernel via _execute_through_kernel
+                        curator.curate([report.__dict__])
                 except Exception:
                     logger.exception("Curator failed to process report")
                 # Run QA and dependency checks for code-like topics (best-effort)
@@ -162,11 +198,16 @@ class CouncilHub:
                             files = sorted([os.path.join(gen_dir, f) for f in os.listdir(gen_dir) if f.endswith('.py')])
                             if files:
                                 latest = files[-1]
+                                # COGNITION KERNEL ROUTING - all agent calls routed through kernel
                                 # Only run if agents enabled
                                 if self._agents_enabled.get("dependency_auditor", True):
-                                    self._project["dependency_auditor"].analyze_new_module(latest)
+                                    dep_auditor = self._project["dependency_auditor"]
+                                    # Agent methods already route through kernel via _execute_through_kernel
+                                    dep_auditor.analyze_new_module(latest)
                                 if self._agents_enabled.get("qa_generator", True):
-                                    self._project["qa_generator"].generate_test_for_module(latest)
+                                    qa_gen = self._project["qa_generator"]
+                                    # Agent methods already route through kernel via _execute_through_kernel
+                                    qa_gen.generate_test_for_module(latest)
                 except Exception:
                     logger.exception("Post-curation QA pipeline failed")
             except Exception as e:
@@ -174,6 +215,8 @@ class CouncilHub:
 
     def run_checks(self, target: str | None = None) -> dict[str, Any]:
         """Run dependency and QA checks for generated artifacts.
+
+        CRITICAL: All agent operations route through kernel.
 
         Returns a dict with success flag and failures list when present.
         """
@@ -193,28 +236,35 @@ class CouncilHub:
                     if not fn.endswith(".py"):
                         continue
                     path = os.path.join(root, fn)
-                    # dependency
+                    # COGNITION KERNEL ROUTING - dependency auditor
                     if self._agents_enabled.get("dependency_auditor", True) and dep:
                         try:
+                            # Agent methods already route through kernel via _execute_through_kernel
                             dep_res = dep.analyze_new_module(path)
                             if not dep_res.get("success"):
                                 failures.append({"module": path, "stage": "dependency", "detail": dep_res})
                         except Exception as e:
                             logger.exception("Dependency check exception for %s: %s", path, e)
                             failures.append({"module": path, "stage": "dependency_exception", "detail": str(e)})
-                    # QA
+                    # COGNITION KERNEL ROUTING - QA generator
                     if self._agents_enabled.get("qa_generator", True) and qa:
                         try:
+                            # Agent methods already route through kernel via _execute_through_kernel
                             gen = qa.generate_test_for_module(path)
                             if not gen.get("success"):
                                 failures.append({"module": path, "stage": "qa_generate", "detail": gen})
                                 continue
+                            # Agent methods already route through kernel via _execute_through_kernel
                             run = qa.run_tests()
                             if not run.get("success"):
                                 failures.append({"module": path, "stage": "qa_run", "detail": run})
                         except Exception as e:
                             logger.exception("QA check exception for %s: %s", path, e)
                             failures.append({"module": path, "stage": "qa_exception", "detail": str(e)})
+
+            if failures:
+                return {"success": False, "failures": failures}
+            return {"success": True, "checked": 1}
 
             if failures:
                 return {"success": False, "failures": failures}

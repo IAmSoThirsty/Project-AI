@@ -1,0 +1,89 @@
+# Security Check Waivers
+
+# This file defines temporary waivers for security check failures.
+# Each waiver must have:
+# - Justification: Clear explanation of why the waiver is needed
+# - Expiry date: Auto-expiry to prevent permanent bypasses
+# - Approver: Security team member who approved the waiver
+# - Scope: Specific to a file, check, or finding
+
+# IMPORTANT: Waivers are temporary exceptions, not permanent solutions.
+# They should be used sparingly and only after proper security review.
+
+# Format:
+# waivers:
+#   - id: unique-waiver-id
+#     type: signing|sbom|ai-model
+#     scope: file-path or check-name
+#     justification: Why this waiver is needed
+#     approver: github-username
+#     created: YYYY-MM-DD
+#     expires: YYYY-MM-DD (max 90 days from creation)
+#     issue: link to tracking issue
+
+waivers: []
+
+# Example waivers (remove before use):
+#
+# - id: legacy-model-pickle-2026-01
+#   type: ai-model
+#   scope: data/ai_persona/legacy_model_v1.pkl
+#   justification: |
+#     Legacy model uses __reduce__ for numpy array serialization.
+#     Audited by security team on 2026-01-15. Model is read-only,
+#     loaded from trusted local storage, and uses simple numpy dtypes.
+#     Migration to ONNX format tracked in #123.
+#   approver: security-lead
+#   created: 2026-01-19
+#   expires: 2026-04-19
+#   issue: https://github.com/IAmSoThirsty/Project-AI/issues/123
+#
+# - id: sbom-generation-timeout-2026-01
+#   type: sbom
+#   scope: workflow
+#   justification: |
+#     Syft occasionally times out on large dependency trees.
+#     Issue reported upstream. Using cached SBOM as fallback.
+#   approver: security-lead
+#   created: 2026-01-19
+#   expires: 2026-02-19
+#   issue: https://github.com/anchore/syft/issues/XXXX
+
+# Allowed failure modes (not waivers - these are permanent suppression patterns):
+allowed_failures:
+  ai_model:
+    # Known false positives in AI/ML scanner
+    - pattern: "torch.load.*weights_only=True"
+      reason: "PyTorch safe loading with weights_only=True is secure"
+      severity: medium
+    
+    - pattern: "joblib.load.*from trusted_models/"
+      reason: "Joblib loading from trusted internal directory with checksums"
+      severity: medium
+    
+    # Files that legitimately use __reduce__ (very rare)
+    - file: "data/test_fixtures/safe_pickle_example.pkl"
+      reason: "Test fixture, not used in production"
+      severity: low
+  
+  sbom:
+    # Known SBOM generation issues
+    - pattern: "No package manager files found in"
+      reason: "Some directories intentionally have no dependencies"
+      paths:
+        - "docs/"
+        - "examples/"
+        - "tests/fixtures/"
+  
+  signing:
+    # No known permanent suppressions - signing should always succeed or fail
+
+# Waiver expiry check:
+# This file is automatically validated by CI. Expired waivers cause build failures.
+# To renew a waiver, security team must review and create a new waiver entry.
+
+# Governance:
+# - Only security team can approve waivers
+# - All waivers must have tracking issues
+# - Waivers are audited monthly
+# - Expired waivers are automatically rejected by CI

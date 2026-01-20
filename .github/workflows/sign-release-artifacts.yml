@@ -1,0 +1,229 @@
+name: Sign Release Artifacts
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to sign artifacts for'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  id-token: write  # Required for Sigstore OIDC
+  packages: read
+
+jobs:
+  sign-artifacts:
+    name: Sign Release Artifacts with Sigstore
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@0ae58b7817e9b40c6232e8bf08f42a7a6b8e60ec  # v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install build dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install build wheel setuptools
+
+      - name: Build Python packages
+        run: |
+          python -m build
+          ls -lh dist/
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@dc72c7d5c4d10cd6bcb8cf6e3fd625a9e5e537da  # v3.7.0
+
+      - name: Determine release tag
+        id: tag
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "RELEASE_TAG=${{ inputs.tag }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "RELEASE_TAG=${{ github.event.release.tag_name }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Sign Python wheels and source distributions
+        run: |
+          for artifact in dist/*.whl dist/*.tar.gz; do
+            if [ -f "$artifact" ]; then
+              echo "Signing $artifact..."
+              cosign sign-blob --yes "$artifact" \
+                --output-signature="${artifact}.sig" \
+                --output-certificate="${artifact}.pem"
+              
+              # Verify signature
+              cosign verify-blob "$artifact" \
+                --signature="${artifact}.sig" \
+                --certificate="${artifact}.pem" \
+                --certificate-identity-regexp="https://github.com/${{ github.repository }}/*" \
+                --certificate-oidc-issuer="https://token.actions.githubusercontent.com"
+              
+              echo "✓ Signed and verified: $artifact"
+            fi
+          done
+
+      - name: Generate artifact checksums
+        run: |
+          cd dist
+          sha256sum ./* > SHA256SUMS
+          sha512sum ./* > SHA512SUMS
+          cd ..
+
+      - name: Sign checksums
+        run: |
+          for checksum_file in dist/SHA256SUMS dist/SHA512SUMS; do
+            cosign sign-blob --yes "$checksum_file" \
+              --output-signature="${checksum_file}.sig" \
+              --output-certificate="${checksum_file}.pem"
+          done
+
+      - name: Create signing report
+        run: |
+          {
+            cat << 'EOF'
+          # Release Artifact Signing Report
+
+          **Release:** ${{ steps.tag.outputs.RELEASE_TAG }}  
+          **Date:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")  
+          **Repository:** ${{ github.repository }}  
+          **Commit:** ${{ github.sha }}
+
+          ## Signing Method
+
+          All artifacts were signed using [Sigstore Cosign](https://www.sigstore.dev/) with keyless signing:
+          - **Identity Provider:** GitHub Actions OIDC
+          - **Certificate Authority:** Sigstore Fulcio
+          - **Transparency Log:** Sigstore Rekor
+
+          ## Signed Artifacts
+
+          EOF
+          
+          for artifact in dist/*.whl dist/*.tar.gz; do
+            if [ -f "$artifact" ]; then
+              filename=$(basename "$artifact")
+              echo "- \`$filename\`"
+              echo "  - Signature: \`${filename}.sig\`"
+              echo "  - Certificate: \`${filename}.pem\`"
+            fi
+          done
+          
+          cat << 'EOF'
+
+          ## Verification Instructions
+
+          ### Prerequisites
+          ```bash
+          # Install Cosign
+          curl -O -L "https://github.com/sigstore/cosign/releases/latest/download/cosign-linux-amd64"
+          sudo mv cosign-linux-amd64 /usr/local/bin/cosign
+          sudo chmod +x /usr/local/bin/cosign
+          ```
+
+          ### Verify Artifacts
+          ```bash
+          # Download artifact, signature, and certificate
+          # Then verify:
+          cosign verify-blob <artifact> \
+            --signature=<artifact>.sig \
+            --certificate=<artifact>.pem \
+            --certificate-identity-regexp="https://github.com/${{ github.repository }}/*" \
+            --certificate-oidc-issuer="https://token.actions.githubusercontent.com"
+          ```
+
+          ### Verify Checksums
+          ```bash
+          # Verify checksum signatures first
+          cosign verify-blob SHA256SUMS \
+            --signature=SHA256SUMS.sig \
+            --certificate=SHA256SUMS.pem \
+            --certificate-identity-regexp="https://github.com/${{ github.repository }}/*" \
+            --certificate-oidc-issuer="https://token.actions.githubusercontent.com"
+
+          # Then verify artifact checksums
+          sha256sum -c SHA256SUMS
+          ```
+
+          ## Security Guarantees
+
+          - **Authenticity:** Artifacts were built and signed by GitHub Actions for this repository
+          - **Integrity:** Signatures ensure artifacts haven't been modified since signing
+          - **Non-repudiation:** Signing certificates are logged in Sigstore's transparency log
+          - **Auditability:** All signing operations are recorded in the immutable Rekor transparency log
+
+          ## Additional Information
+
+          - [Sigstore Documentation](https://docs.sigstore.dev/)
+          - [Cosign GitHub Repository](https://github.com/sigstore/cosign)
+          - [Rekor Transparency Log](https://rekor.sigstore.dev/)
+          EOF
+          } > dist/SIGNING_REPORT.md
+
+      - name: Upload signed artifacts to release
+        uses: softprops/action-gh-release@e7a8f85e1c67a31e6ed99a94b41bd0b71bbee6b8  # v2.2.0
+        if: github.event_name == 'release'
+        with:
+          files: |
+            dist/*.whl
+            dist/*.tar.gz
+            dist/*.sig
+            dist/*.pem
+            dist/SHA256SUMS
+            dist/SHA256SUMS.sig
+            dist/SHA256SUMS.pem
+            dist/SHA512SUMS
+            dist/SHA512SUMS.sig
+            dist/SHA512SUMS.pem
+            dist/SIGNING_REPORT.md
+          fail_on_unmatched_files: false
+
+      - name: Upload signed artifacts for workflow_dispatch
+        uses: softprops/action-gh-release@e7a8f85e1c67a31e6ed99a94b41bd0b71bbee6b8  # v2.2.0
+        if: github.event_name == 'workflow_dispatch'
+        with:
+          tag_name: ${{ inputs.tag }}
+          files: |
+            dist/*.whl
+            dist/*.tar.gz
+            dist/*.sig
+            dist/*.pem
+            dist/SHA256SUMS
+            dist/SHA256SUMS.sig
+            dist/SHA256SUMS.pem
+            dist/SHA512SUMS
+            dist/SHA512SUMS.sig
+            dist/SHA512SUMS.pem
+            dist/SIGNING_REPORT.md
+          fail_on_unmatched_files: false
+
+      - name: Upload signing artifacts
+        uses: actions/upload-artifact@ea3d6fb60d47c0a8aab02e95a1c69d16b0f24c1e  # v4
+        with:
+          name: signed-artifacts-${{ steps.tag.outputs.RELEASE_TAG }}
+          path: |
+            dist/*.whl
+            dist/*.tar.gz
+            dist/*.sig
+            dist/*.pem
+            dist/SHA*SUMS*
+            dist/SIGNING_REPORT.md
+          retention-days: 90
+
+      - name: Log Rekor transparency entries
+        run: |
+          echo "🔍 Signed artifacts are logged in Sigstore Rekor transparency log"
+          echo "View entries at: https://rekor.sigstore.dev/"
+          echo ""
+          echo "Search for this repository: ${{ github.repository }}"
+          echo "Commit SHA: ${{ github.sha }}"
