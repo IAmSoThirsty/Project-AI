@@ -14,11 +14,20 @@ import shutil
 import subprocess  # nosec B404 - subprocess usage for trusted dev tools only
 from typing import Any
 
+from app.core.cognition_kernel import CognitionKernel, ExecutionType
+from app.core.kernel_integration import KernelRoutedAgent
+
 logger = logging.getLogger(__name__)
 
 
-class RefactorAgent:
-    def __init__(self, data_dir: str = "data") -> None:
+class RefactorAgent(KernelRoutedAgent):
+    def __init__(self, data_dir: str = "data", kernel: CognitionKernel | None = None) -> None:
+        # Initialize kernel routing (COGNITION KERNEL INTEGRATION)
+        super().__init__(
+            kernel=kernel,
+            execution_type=ExecutionType.AGENT_ACTION,
+            default_risk_level="medium"
+        )
         self.data_dir = data_dir
 
     def suggest_refactor(self, path: str) -> dict[str, Any]:
@@ -28,6 +37,17 @@ class RefactorAgent:
         directory before being passed to subprocess. Commands use trusted
         dev tools with resolved absolute paths.
         """
+        # Route through kernel (COGNITION KERNEL ROUTING)
+        return self._execute_through_kernel(
+            self._do_suggest_refactor,
+            path,
+            operation_name="suggest_refactor",
+            risk_level="medium",
+            metadata={"file_path": path}
+        )
+
+    def _do_suggest_refactor(self, path: str) -> dict[str, Any]:
+        """Internal implementation of refactor suggestion."""
         # Validate path exists, is a file, and is not a path traversal attempt
         if not os.path.isfile(path):
             logger.error("Invalid file path: %s", path)

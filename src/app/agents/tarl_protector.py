@@ -20,10 +20,13 @@ import re
 from datetime import UTC, datetime
 from typing import Any
 
+from app.core.cognition_kernel import CognitionKernel, ExecutionType
+from app.core.kernel_integration import KernelRoutedAgent
+
 logger = logging.getLogger(__name__)
 
 
-class TARLCodeProtector:
+class TARLCodeProtector(KernelRoutedAgent):
     """T-A-R-L Strategic Code Protection Agent.
 
     Implements defensive security strategies:
@@ -34,7 +37,13 @@ class TARLCodeProtector:
     5. Integration: Coordinates with Cerberus and Codex for comprehensive defense
     """
 
-    def __init__(self, data_dir: str = "data/tarl_protection"):
+    def __init__(self, data_dir: str = "data/tarl_protection", kernel: CognitionKernel | None = None):
+        # Initialize kernel routing (COGNITION KERNEL INTEGRATION)
+        super().__init__(
+            kernel=kernel,
+            execution_type=ExecutionType.AGENT_ACTION,
+            default_risk_level="high"
+        )
         self.data_dir = data_dir
         os.makedirs(self.data_dir, exist_ok=True)
 
@@ -79,6 +88,22 @@ class TARLCodeProtector:
         Returns:
             Protection application result with metrics
         """
+        # Route through kernel (COGNITION KERNEL ROUTING)
+        return self._execute_through_kernel(
+            self._do_apply_protection,
+            file_path,
+            protection_level,
+            operation_name="apply_tarl_protection",
+            risk_level="high",
+            metadata={"file_path": file_path, "protection_level": protection_level}
+        )
+
+    def _do_apply_protection(
+        self,
+        file_path: str,
+        protection_level: str = "standard"
+    ) -> dict[str, Any]:
+        """Internal implementation of protection application."""
         logger.info(f"T-A-R-L: Applying {protection_level} protection to {file_path}")
 
         if not os.path.exists(file_path):
@@ -143,6 +168,20 @@ class TARLCodeProtector:
         Returns:
             Defense response metrics
         """
+        # Route through kernel (COGNITION KERNEL ROUTING)
+        return self._execute_through_kernel(
+            self._do_respond_to_threat,
+            cerberus_threat,
+            operation_name="respond_to_threat",
+            risk_level="high",
+            metadata={"severity": cerberus_threat.get("severity", "medium")}
+        )
+
+    def _do_respond_to_threat(
+        self,
+        cerberus_threat: dict[str, Any]
+    ) -> dict[str, Any]:
+        """Internal implementation of threat response."""
         logger.info("T-A-R-L: Responding to detected threat with protection strategies")
 
         target_files = cerberus_threat.get("target_files", [])

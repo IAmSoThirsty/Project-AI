@@ -70,6 +70,16 @@ ENV/
 env.bak/
 venv.bak/
 
+# Security and secrets
+*.key
+*.pem
+*.p12
+secrets.json
+credentials.json
+secret_scan_report.json
+*secret*scan*.json
+*secret*scan*.txt
+
 # IDEs
 .vscode/
 .idea/
@@ -114,3 +124,4 @@ captures/
 .env.temporal
 config/temporal/*.local
 data/temporal/
+actionlint*

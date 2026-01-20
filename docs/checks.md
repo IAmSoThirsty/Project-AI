@@ -86,7 +86,6 @@ Key names are basically case sensitive (though some specific key names are case 
 case-sensitivity mistakes.
 
 <a name="check-missing-required-duplicate-keys"></a>
-
 ## Missing required keys and key duplicates
 
 Example input:
@@ -154,7 +153,6 @@ actionlint checks such mappings and sequences are not empty while parsing, and r
 error.
 
 <a name="check-mapping-values"></a>
-
 ## Unexpected mapping values
 
 Example input:
@@ -371,7 +369,6 @@ test.yaml:19:14: type of expression at "env" must be object but found type strin
 In above example, environment variables mapping is expanded at `env:` section. actionlint checks type of the expanded value.
 
 <a name="check-contexts-and-builtin-func"></a>
-
 ## Contexts and built-in functions
 
 Example input:
@@ -1898,7 +1895,6 @@ and the value should be expanded with `${{ }}` syntax at `password:`. actionlint
 them as an error.
 
 <a name="check-env-var-names"></a>
-
 ## Environment variable names
 
 Example input:
@@ -1936,7 +1932,6 @@ cases they are mistakes and they may cause some issues on using them in shell si
 actionlint checks environment variable names are correct in `env:` configuration.
 
 <a name="permissions"></a>
-
 ## Permissions
 
 Example input:
@@ -2578,7 +2573,6 @@ actionlint detects these commands are used in `run:` and reports them as errors 
 [the official document][workflow-commands-doc] for the comprehensive list of workflow commands to know the usage.
 
 <a name="if-cond-always-true"></a>
-
 ## Conditions always evaluated to true at `if:`
 
 Example input:

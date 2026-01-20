@@ -20,7 +20,7 @@ class ThirstyAST {
       .map((line, idx) => ({ line: line.trim(), lineNumber: idx + 1 }))
       .filter(item => item.line && !item.line.startsWith('//'));
 
-    for (const {line, lineNumber} of lines) {
+    for (const { line, lineNumber } of lines) {
       const node = this.parseStatement(line, lineNumber);
       if (node) {
         this.ast.body.push(node);
@@ -66,7 +66,7 @@ class ThirstyAST {
 
     // String literal
     if ((expr.startsWith('"') && expr.endsWith('"')) ||
-        (expr.startsWith("'") && expr.endsWith("'"))) {
+      (expr.startsWith("'") && expr.endsWith("'"))) {
       return {
         type: 'StringLiteral',
         value: expr.slice(1, -1)
@@ -99,18 +99,18 @@ class ThirstyAST {
 
     if (node.type === 'Program') {
       console.log('Program');
-      node.body.forEach((child, index) => {
+      for (const [index, child] of node.body.entries()) {
         const childIsLast = index === node.body.length - 1;
         const childPrefix = '';
         this.visualizeTree(child, childPrefix, childIsLast);
       });
     } else if (node.type === 'VariableDeclaration') {
-      console.log(`${line}VariableDeclaration (line ${node.lineNumber})`);
+      console.log("" + line + "VariableDeclaration (line " + node.lineNumber + ")");
       console.log(`${prefix}${isLast ? '    ' : '│   '}├── name: ${node.name}`);
       console.log(`${prefix}${isLast ? '    ' : '│   '}└── value: ${this.formatExpression(node.value)}`);
     } else if (node.type === 'OutputStatement') {
       console.log(`${line}OutputStatement (line ${node.lineNumber})`);
-      console.log(`${prefix}${isLast ? '    ' : '│   '}└── expression: ${this.formatExpression(node.expression)}`);
+      console.log("" + prefix + isLast ? '    ' : '│   ' + "└── expression: " + this.formatExpression(node.expression));
     }
   }
 
@@ -147,7 +147,7 @@ function main() {
   }
 
   const filename = args[0];
-  
+
   if (!fs.existsSync(filename)) {
     console.error(`Error: File '${filename}' not found`);
     process.exit(1);

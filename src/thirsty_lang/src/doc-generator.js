@@ -36,7 +36,7 @@ class ThirstyDocGenerator {
             });
           }
         }
-        
+
         currentComment = [];
       }
     });
@@ -49,13 +49,13 @@ class ThirstyDocGenerator {
 
     if (this.variables.length > 0) {
       md += '## Variables\n\n';
-      
-      this.variables.forEach(v => {
-        md += `### \`${v.name}\`\n\n`;
+
+      for (const v of this.variables) {
+        md += "### `" + v.name + "`\n\n";
         if (v.comment) {
-          md += `${v.comment}\n\n`;
+          md += "" + v.comment + "\n\n";
         }
-        md += `**Initial Value:** \`${v.value}\`\n\n`;
+        md += "**Initial Value:** `" + v.value + "`\n\n";
         md += `**Defined at:** Line ${v.line}\n\n`;
         md += '---\n\n';
       });
@@ -129,16 +129,16 @@ class ThirstyDocGenerator {
 
     if (this.variables.length > 0) {
       html += '        <h2>Variables</h2>\n';
-      
+
       this.variables.forEach(v => {
         html += `        <div class="variable">\n`;
-        html += `            <div class="variable-name">${v.name}</div>\n`;
+        html += "            <div class=\"variable-name\">" + v.name + "</div>\n";
         if (v.comment) {
           html += `            <p>${v.comment}</p>\n`;
         }
-        html += `            <p><strong>Initial Value:</strong> <code>${v.value}</code></p>\n`;
-        html += `            <p><strong>Defined at:</strong> Line ${v.line}</p>\n`;
-        html += `        </div>\n`;
+        html += "            <p><strong>Initial Value:</strong> <code>" + v.value + "</code></p>\n";
+        html += "            <p><strong>Defined at:</strong> Line " + v.line + "</p>\n";
+        html += "        </div>\n";
       });
     }
 

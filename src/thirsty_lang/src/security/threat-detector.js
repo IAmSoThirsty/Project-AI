@@ -27,7 +27,7 @@ class ThreatDetector {
         prototypePollution: /(__proto__|constructor\[|prototype\[)/gi,
         xxeInjection: /(<!DOCTYPE|<!ENTITY|SYSTEM|PUBLIC)/gi
       },
-      
+
       // Grey Box Attacks (Partial Knowledge)
       greyBox: {
         timingAttack: { threshold: 1000, variance: 100 }, // ms
@@ -35,7 +35,7 @@ class ThreatDetector {
         bruteForce: { threshold: 10, timeWindow: 60000 }, // attempts per minute
         enumeration: { threshold: 50, timeWindow: 60000 }
       },
-      
+
       // Black Box Attacks (Behavioral)
       blackBox: {
         bufferOverflow: { maxLength: 8192, patterns: [/A{100,}/, /(.)\1{100,}/] },
@@ -44,7 +44,7 @@ class ThreatDetector {
         integerOverflow: { min: -2147483648, max: 2147483647 },
         typeConfusion: { strictTypes: true }
       },
-      
+
       // Red Team Attacks (Penetration Testing)
       redTeam: {
         reverseEngineering: { obfuscationLevel: 'high' },
@@ -63,7 +63,7 @@ class ThreatDetector {
     const inputStr = String(input);
 
     // White Box Detection
-    Object.entries(this.attackPatterns.whiteBox).forEach(([type, pattern]) => {
+    for (const [type, pattern] of Object.entries(this.attackPatterns.whiteBox)) {
       if (pattern.test(inputStr)) {
         threats.push({
           type: 'whiteBox',
@@ -71,7 +71,7 @@ class ThreatDetector {
           severity: this.calculateSeverity(type),
           input: this.sanitizeForLog(inputStr),
           timestamp: Date.now(),
-          context
+          context: context
         });
       }
     });
@@ -114,7 +114,7 @@ class ThreatDetector {
    */
   detectRuntimeThreats(metrics) {
     const threats = [];
-    
+
     // Timing attack detection
     if (metrics.executionTime && metrics.expectedTime) {
       const variance = Math.abs(metrics.executionTime - metrics.expectedTime);
@@ -203,7 +203,7 @@ class ThreatDetector {
   isDebuggerPresent() {
     // In Node.js, check for debugger flags
     if (typeof process !== 'undefined') {
-      return process.execArgv.some(arg => 
+      return process.execArgv.some(arg =>
         arg.includes('--inspect') || arg.includes('--debug')
       );
     }
@@ -218,7 +218,7 @@ class ThreatDetector {
       // Check for common VM indicators
       const platform = process.platform;
       const env = process.env;
-      
+
       return !!(
         env.VM_DETECTED ||
         env.DOCKER_CONTAINER ||
