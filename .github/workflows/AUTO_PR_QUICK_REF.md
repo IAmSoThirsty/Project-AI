@@ -18,6 +18,7 @@ The repository automatically creates and manages PRs for all non-main branches. 
 ### What Requires Manual Action?
 
 ⚠️ **Only when conflicts exist:**
+
 - PRs with merge conflicts get labeled `needs-manual-review`
 - You'll be notified via PR comment
 - Resolve conflicts, push, and automation continues
@@ -89,6 +90,7 @@ gh run view <RUN_ID> --log
 ### PR Not Created?
 
 **Check:**
+
 - Does branch already have an open PR?
 - Is branch name `main` or starts with `dependabot/`?
 - Run manually: `gh workflow run auto-create-branch-prs.yml -f target_branch=YOUR_BRANCH`
@@ -96,6 +98,7 @@ gh run view <RUN_ID> --log
 ### Checks Failing?
 
 **Check:**
+
 - View PR comments for details
 - Auto-fix should run automatically
 - If auto-fix fails, check workflow logs
