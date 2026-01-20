@@ -78,7 +78,9 @@ class DeterministicReplayTool:
             Path to saved execution log
         """
         # Create filename from trace_id and timestamp
-        filename = f"{context.trace_id}_{context.timestamp.isoformat().replace(':', '-')}.json"
+        filename = (
+            f"{context.trace_id}_{context.timestamp.isoformat().replace(':', '-')}.json"
+        )
         filepath = self.replay_dir / filename
 
         # Serialize context (excluding non-serializable callables)
@@ -301,9 +303,7 @@ class DeterministicReplayTool:
 
         return analysis
 
-    def replay_chain(
-        self, start_trace_id: str, max_depth: int = 100
-    ) -> dict[str, Any]:
+    def replay_chain(self, start_trace_id: str, max_depth: int = 100) -> dict[str, Any]:
         """
         Replay an entire execution chain.
 
@@ -349,20 +349,11 @@ class DeterministicReplayTool:
         """Analyze an execution chain."""
         return {
             "total_executions": len(chain),
-            "blocked_count": sum(
-                1 for c in chain if c["analysis"]["was_blocked"]
-            ),
+            "blocked_count": sum(1 for c in chain if c["analysis"]["was_blocked"]),
             "error_count": sum(1 for c in chain if c["analysis"]["had_error"]),
-            "total_duration_ms": sum(
-                c["analysis"]["duration_ms"] for c in chain
-            ),
+            "total_duration_ms": sum(c["analysis"]["duration_ms"] for c in chain),
             "approval_rate": (
-                sum(
-                    1
-                    for c in chain
-                    if c["analysis"]["was_approved"]
-                )
-                / len(chain)
+                sum(1 for c in chain if c["analysis"]["was_approved"]) / len(chain)
                 if chain
                 else 0
             ),
@@ -397,7 +388,10 @@ class DeterministicReplayTool:
                     execution = json.load(f)
 
                 # Apply filters
-                if action_name and execution["proposed_action"]["action_name"] != action_name:
+                if (
+                    action_name
+                    and execution["proposed_action"]["action_name"] != action_name
+                ):
                     continue
 
                 if status and execution["status"] != status:

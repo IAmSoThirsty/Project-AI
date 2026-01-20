@@ -7,11 +7,7 @@ from unittest.mock import patch
 
 import pytest
 
-from app.core.ai_systems import (
-    AIPersona,
-    LearningRequestManager,
-    MemoryExpansionSystem,
-)
+from app.core.ai_systems import AIPersona, LearningRequestManager, MemoryExpansionSystem
 from app.core.image_generator import ImageGenerator
 from app.core.user_manager import UserManager
 

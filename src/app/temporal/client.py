@@ -41,9 +41,7 @@ class TemporalClientManager:
             task_queue: Task queue name for workers
             tls_config: Optional TLS configuration for secure connections
         """
-        self.target_host = target_host or os.getenv(
-            "TEMPORAL_HOST", "localhost:7233"
-        )
+        self.target_host = target_host or os.getenv("TEMPORAL_HOST", "localhost:7233")
         self.namespace = namespace or os.getenv("TEMPORAL_NAMESPACE", "default")
         self.task_queue = task_queue or os.getenv(
             "TEMPORAL_TASK_QUEUE", "project-ai-tasks"
@@ -116,9 +114,7 @@ class TemporalClientManager:
             Configured Worker instance
         """
         if not self._client:
-            raise RuntimeError(
-                "Client not connected. Call connect() first."
-            )
+            raise RuntimeError("Client not connected. Call connect() first.")
 
         worker = Worker(
             self._client,

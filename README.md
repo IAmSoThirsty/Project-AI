@@ -586,7 +586,47 @@ INFO - Worker is ready to process tasks...
 
 #### 3. Start a Workflow from Code
 
-**Using the AI Controller** (recommended):
+## 🤖 Automated PR System
+
+**Fully automated branch-to-main PR workflow** - zero manual intervention for standard merges!
+
+### What It Does
+
+- 🔍 **Auto-Discovery**: Scans for branches without PRs (daily at 2 AM UTC + on push)
+- 📝 **Auto-Create**: Creates PRs with descriptive titles and comprehensive info
+- 🔧 **Auto-Fix**: Automatically resolves linting issues and minor conflicts
+- ✅ **Auto-Test**: Runs full test suite, linting, and security checks
+- 🔀 **Auto-Merge**: Merges to main when all checks pass
+- 📊 **Auto-Report**: Generates summary reports and health checks
+
+### Quick Commands
+
+```bash
+# Trigger automation now (all branches)
+gh workflow run auto-create-branch-prs.yml
+
+# Create PR for specific branch
+gh workflow run auto-create-branch-prs.yml -f target_branch=feature/my-branch
+
+# View auto-created PRs
+gh pr list --label "auto-created"
+
+# Check automation status
+gh run list --workflow=auto-create-branch-prs.yml --limit 5
+```
+
+### Documentation
+
+- 📖 **Complete Guide**: `.github/workflows/AUTO_PR_SYSTEM.md`
+- ⚡ **Quick Reference**: `.github/workflows/AUTO_PR_QUICK_REF.md`
+
+### Manual Intervention Only Needed For
+
+⚠️ Merge conflicts that can't be auto-resolved (labeled `needs-manual-review`)
+
+All other operations are fully automated! The system processes ~40+ active branches and ensures only conflict-free PRs are auto-merged to main.
+
+---
 
 ```python
 import asyncio

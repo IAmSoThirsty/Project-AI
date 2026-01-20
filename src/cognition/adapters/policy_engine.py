@@ -179,7 +179,9 @@ class PolicyEngine:
                 policies = []
 
         self.policies = policies
-        logger.info(f"PolicyEngine initialized with {len(policies)} policies (mode: {mode})")
+        logger.info(
+            f"PolicyEngine initialized with {len(policies)} policies (mode: {mode})"
+        )
 
     def add_policy(self, policy: Policy):
         """Add a policy to the engine."""
@@ -202,7 +204,9 @@ class PolicyEngine:
             Aggregated PolicyResult
         """
         if not self.policies:
-            return PolicyResult(decision=PolicyDecision.ALLOW, reason="No policies defined")
+            return PolicyResult(
+                decision=PolicyDecision.ALLOW, reason="No policies defined"
+            )
 
         # Evaluate all policies
         results = []
@@ -228,7 +232,10 @@ class PolicyEngine:
                     )
 
                 # Handle MODIFY decision (apply modification)
-                if result.decision == PolicyDecision.MODIFY and result.modified_output is not None:
+                if (
+                    result.decision == PolicyDecision.MODIFY
+                    and result.modified_output is not None
+                ):
                     current_output = result.modified_output
 
             except Exception as e:

@@ -65,11 +65,11 @@ def main():
 
     malware = cyber_knowledge.get_section("malware")
     if malware:
-        print(
-            f"\nStrategic Importance:\n{malware['strategic_importance'][:200]}...\n"
-        )
+        print(f"\nStrategic Importance:\n{malware['strategic_importance'][:200]}...\n")
         print("Virus Lifecycle Phases:")
-        print(f"  • Infection: {malware['virus_lifecycle']['infection_phase'][:100]}...")
+        print(
+            f"  • Infection: {malware['virus_lifecycle']['infection_phase'][:100]}..."
+        )
         print(f"  • Attack: {malware['virus_lifecycle']['attack_phase'][:100]}...")
 
     # Example 2: Query case study

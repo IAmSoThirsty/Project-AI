@@ -1,0 +1,402 @@
+name: Coverage Threshold Enforcement
+
+on:
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - '**.py'
+      - '**.js'
+      - '**.ts'
+      - '**.tsx'
+      - 'pyproject.toml'
+      - 'package.json'
+      - 'jest.config.js'
+      - 'pytest.ini'
+      - '.coveragerc'
+  push:
+    branches: [main, develop]
+    paths:
+      - '**.py'
+      - '**.js'
+      - '**.ts'
+      - '**.tsx'
+  workflow_dispatch:
+    inputs:
+      minimum_coverage:
+        description: 'Minimum coverage percentage required'
+        required: false
+        default: '80'
+        type: choice
+        options:
+          - '70'
+          - '75'
+          - '80'
+          - '85'
+          - '90'
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+  issues: write
+
+env:
+  MIN_COVERAGE: ${{ github.event.inputs.minimum_coverage || '80' }}
+  PYTHON_MIN_COVERAGE: '80'
+  JS_MIN_COVERAGE: '75'
+
+jobs:
+  python-coverage:
+    name: Python Coverage Check
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.12']
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest pytest-cov coverage[toml]
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+
+      - name: Run tests with coverage
+        id: pytest
+        run: |
+          pytest --cov=src --cov-report=term --cov-report=xml --cov-report=html \
+            --cov-fail-under=${{ env.PYTHON_MIN_COVERAGE }} \
+            || echo "coverage_failed=true" >> $GITHUB_OUTPUT
+
+      - name: Generate coverage report
+        if: always()
+        run: |
+          coverage report --precision=2 > coverage-report.txt
+          COVERAGE=$(coverage report --precision=2 | grep TOTAL | awk '{print $4}' | sed 's/%//')
+          echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
+          echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
+        id: coverage
+
+      - name: Upload coverage reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-coverage-${{ matrix.python-version }}
+          path: |
+            coverage-report.txt
+            coverage.xml
+            htmlcov/
+          retention-days: 30
+
+      - name: Coverage badge
+        if: always()
+        run: |
+          COVERAGE=${{ steps.coverage.outputs.coverage }}
+          COLOR="red"
+          if (( $(echo "$COVERAGE >= 90" | bc -l) )); then COLOR="brightgreen"
+          elif (( $(echo "$COVERAGE >= 80" | bc -l) )); then COLOR="green"
+          elif (( $(echo "$COVERAGE >= 70" | bc -l) )); then COLOR="yellow"
+          elif (( $(echo "$COVERAGE >= 60" | bc -l) )); then COLOR="orange"
+          fi
+          
+          echo "Coverage: $COVERAGE% (Color: $COLOR)"
+          echo "coverage_color=$COLOR" >> $GITHUB_ENV
+
+      - name: Comment coverage on PR
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const coverage = '${{ steps.coverage.outputs.coverage }}';
+            const minCoverage = '${{ env.PYTHON_MIN_COVERAGE }}';
+            const passed = parseFloat(coverage) >= parseFloat(minCoverage);
+            const emoji = passed ? '✅' : '❌';
+            
+            const comment = `## ${emoji} Python Coverage Report - Python ${{ matrix.python-version }}
+            
+            **Current Coverage**: ${coverage}%
+            **Minimum Required**: ${minCoverage}%
+            **Status**: ${passed ? '✅ **PASSED**' : '❌ **FAILED - Below Threshold**'}
+            
+            ${passed ? '' : '⚠️ **Action Required**: Increase test coverage to meet the minimum threshold of ' + minCoverage + '%'}
+            
+            ### Coverage by Module
+            
+            View detailed coverage report in the workflow artifacts.
+            
+            ---
+            *Automated by Coverage Threshold Enforcement*`;
+            
+            const comments = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number
+            });
+            
+            const botComment = comments.data.find(c => 
+              c.body.includes('Python Coverage Report - Python ${{ matrix.python-version }}')
+            );
+            
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: comment
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: comment
+              });
+            }
+
+      - name: Fail if coverage below threshold
+        if: steps.pytest.outputs.coverage_failed == 'true'
+        run: |
+          echo "❌ Coverage is below the minimum threshold of ${{ env.PYTHON_MIN_COVERAGE }}%"
+          echo "Current coverage: ${{ steps.coverage.outputs.coverage }}%"
+          exit 1
+
+  javascript-coverage:
+    name: JavaScript Coverage Check
+    runs-on: ubuntu-latest
+    if: hashFiles('package.json') != ''
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests with coverage
+        id: jest
+        run: |
+          npm test -- --coverage --coverageReporters=text --coverageReporters=lcov --coverageReporters=html \
+            || echo "coverage_failed=true" >> $GITHUB_OUTPUT
+
+      - name: Check coverage threshold
+        if: always()
+        run: |
+          if [ -f coverage/lcov.info ]; then
+            # Calculate coverage percentage
+            COVERED=$(grep -o 'LF:[0-9]*' coverage/lcov.info | cut -d':' -f2 | awk '{s+=$1} END {print s}')
+            TOTAL=$(grep -o 'LH:[0-9]*' coverage/lcov.info | cut -d':' -f2 | awk '{s+=$1} END {print s}')
+            
+            if [ "$TOTAL" -gt 0 ]; then
+              COVERAGE=$(awk "BEGIN {printf \"%.2f\", ($TOTAL/$COVERED)*100}")
+            else
+              COVERAGE="0"
+            fi
+            
+            echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
+            echo "JS Coverage: $COVERAGE%"
+            
+            if (( $(echo "$COVERAGE < ${{ env.JS_MIN_COVERAGE }}" | bc -l) )); then
+              echo "❌ JavaScript coverage ($COVERAGE%) is below threshold (${{ env.JS_MIN_COVERAGE }}%)"
+              echo "coverage_failed=true" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "No coverage data found"
+            echo "coverage=0" >> $GITHUB_OUTPUT
+          fi
+        id: js-coverage
+
+      - name: Upload coverage reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: javascript-coverage
+          path: |
+            coverage/
+          retention-days: 30
+
+      - name: Comment coverage on PR
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const coverage = '${{ steps.js-coverage.outputs.coverage }}' || '0';
+            const minCoverage = '${{ env.JS_MIN_COVERAGE }}';
+            const passed = parseFloat(coverage) >= parseFloat(minCoverage);
+            const emoji = passed ? '✅' : '❌';
+            
+            const comment = `## ${emoji} JavaScript/TypeScript Coverage Report
+            
+            **Current Coverage**: ${coverage}%
+            **Minimum Required**: ${minCoverage}%
+            **Status**: ${passed ? '✅ **PASSED**' : '❌ **FAILED - Below Threshold**'}
+            
+            ${passed ? '' : '⚠️ **Action Required**: Increase test coverage to meet the minimum threshold of ' + minCoverage + '%'}
+            
+            ### Coverage Details
+            
+            View detailed coverage report in the workflow artifacts.
+            
+            ---
+            *Automated by Coverage Threshold Enforcement*`;
+            
+            const comments = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number
+            });
+            
+            const botComment = comments.data.find(c => 
+              c.body.includes('JavaScript/TypeScript Coverage Report')
+            );
+            
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: comment
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: comment
+              });
+            }
+
+  coverage-summary:
+    name: Generate Coverage Summary
+    runs-on: ubuntu-latest
+    needs: [python-coverage, javascript-coverage]
+    if: always()
+    steps:
+      - name: Generate summary
+        run: |
+          cat << 'EOF' >> $GITHUB_STEP_SUMMARY
+          # 📊 Code Coverage Summary
+          
+          **Repository**: ${{ github.repository }}
+          **Date**: $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          **Minimum Threshold**: ${{ env.MIN_COVERAGE }}%
+          
+          ## Coverage by Language
+          
+          | Language | Status | Threshold |
+          |----------|--------|-----------|
+          | Python 3.11 | ${{ needs.python-coverage.result == 'success' && '✅ Passed' || '❌ Failed' }} | ${{ env.PYTHON_MIN_COVERAGE }}% |
+          | Python 3.12 | ${{ needs.python-coverage.result == 'success' && '✅ Passed' || '❌ Failed' }} | ${{ env.PYTHON_MIN_COVERAGE }}% |
+          | JavaScript/TypeScript | ${{ needs.javascript-coverage.result == 'success' && '✅ Passed' || needs.javascript-coverage.result == 'skipped' && '⏭️ Skipped' || '❌ Failed' }} | ${{ env.JS_MIN_COVERAGE }}% |
+          
+          ## Coverage Best Practices
+          
+          ✅ **Write meaningful tests** - Focus on testing business logic, not just increasing numbers  
+          ✅ **Test edge cases** - Cover error conditions and boundary cases  
+          ✅ **Integration tests** - Test component interactions, not just units  
+          ✅ **Maintain over time** - Coverage should not decrease with new code  
+          
+          ## Resources
+          
+          - [pytest Coverage Documentation](https://pytest-cov.readthedocs.io/)
+          - [Jest Coverage Documentation](https://jestjs.io/docs/configuration#collectcoverage-boolean)
+          - [Code Coverage Best Practices](https://martinfowler.com/bliki/TestCoverage.html)
+          
+          ---
+          *Automated by Coverage Threshold Enforcement workflow*
+          EOF
+
+  coverage-failure-issue:
+    name: Create Issue for Coverage Failure
+    runs-on: ubuntu-latest
+    needs: [python-coverage, javascript-coverage]
+    if: |
+      always() && 
+      (needs.python-coverage.result == 'failure' || needs.javascript-coverage.result == 'failure')
+    steps:
+      - name: Create or update coverage issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `📊 Code Coverage Below Threshold - Action Required`;
+            const body = `## Code Coverage Alert
+            
+            One or more code coverage checks failed to meet the minimum threshold.
+            
+            **Workflow Run**: ${context.payload.repository.html_url}/actions/runs/${context.runId}
+            **Branch**: ${context.ref}
+            **Commit**: ${context.sha}
+            
+            ### Coverage Status
+            
+            - Python Coverage: ${{ needs.python-coverage.result }}
+            - JavaScript Coverage: ${{ needs.javascript-coverage.result }}
+            
+            ### Required Thresholds
+            
+            - Python: ${{ env.PYTHON_MIN_COVERAGE }}%
+            - JavaScript: ${{ env.JS_MIN_COVERAGE }}%
+            
+            ### Action Required
+            
+            1. Review uncovered code in the coverage reports (workflow artifacts)
+            2. Add tests for untested code paths
+            3. Focus on critical business logic first
+            4. Run tests locally: \`pytest --cov=src --cov-report=html\`
+            5. View coverage: Open \`htmlcov/index.html\` in browser
+            
+            ### Tips for Improving Coverage
+            
+            - Identify missing test cases with coverage reports
+            - Test error handling and edge cases
+            - Use parametrized tests for multiple scenarios
+            - Mock external dependencies appropriately
+            - Consider property-based testing for complex logic
+            
+            ### Resources
+            
+            - [Writing Effective Tests](https://docs.pytest.org/en/stable/goodpractices.html)
+            - [Test-Driven Development](https://martinfowler.com/bliki/TestDrivenDevelopment.html)
+            
+            ---
+            *This issue was created automatically by the Coverage Threshold Enforcement workflow*`;
+            
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: 'testing,coverage,automated',
+              state: 'open'
+            });
+            
+            const existingIssue = issues.data.find(issue => 
+              issue.title.includes('Code Coverage Below Threshold')
+            );
+            
+            if (!existingIssue) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: title,
+                body: body,
+                labels: ['testing', 'coverage', 'automated', 'priority']
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existingIssue.number,
+                body: `Coverage still below threshold. Latest run: [${context.runId}](${context.payload.repository.html_url}/actions/runs/${context.runId})`
+              });
+            }

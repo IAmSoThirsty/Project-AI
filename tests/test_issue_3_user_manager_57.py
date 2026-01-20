@@ -21,6 +21,7 @@ def test_invalid_fernet_key_fallback_line_57():
 
             # Now import/reload UserManager with no FERNET_KEY set
             import app.core.user_manager as um_module
+
             reload(um_module)
 
             # Initialize UserManager - should use the else clause (line 57)
@@ -28,7 +29,9 @@ def test_invalid_fernet_key_fallback_line_57():
 
             # Should have a valid cipher_suite (generated at line 57)
             assert manager.cipher_suite is not None
-            assert hasattr(manager.cipher_suite, 'decrypt')  # Verify it's a Fernet object
+            assert hasattr(
+                manager.cipher_suite, "decrypt"
+            )  # Verify it's a Fernet object
 
             # Test that it works
             manager.create_user("test_user", "test_password")

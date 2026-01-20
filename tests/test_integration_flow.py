@@ -40,4 +40,3 @@ def test_end_to_end_user_learning_persona_flow():
         user_record = user_manager2.users.get("integration")
         assert user_record is not None
         assert "password_hash" in user_record
-

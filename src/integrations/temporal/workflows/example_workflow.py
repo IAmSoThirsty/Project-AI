@@ -24,11 +24,9 @@ from temporalio.common import RetryPolicy
 
 # Import activities (use with_start_workflow to avoid circular imports)
 with workflow.unsafe.imports_passed_through():
-    from integrations.temporal.activities.core_tasks import (
-        process_ai_task,
-        simulate_ai_call,
-        validate_input,
-    )
+    from integrations.temporal.activities.core_tasks import (process_ai_task,
+                                                             simulate_ai_call,
+                                                             validate_input)
 
 logger = logging.getLogger(__name__)
 

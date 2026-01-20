@@ -100,14 +100,10 @@ class GovernanceDriftMonitor:
         cutoff = now - timedelta(days=self.window_days)
 
         recent = [
-            e
-            for e in executions
-            if datetime.fromisoformat(e["timestamp"]) >= cutoff
+            e for e in executions if datetime.fromisoformat(e["timestamp"]) >= cutoff
         ]
         historical = [
-            e
-            for e in executions
-            if datetime.fromisoformat(e["timestamp"]) < cutoff
+            e for e in executions if datetime.fromisoformat(e["timestamp"]) < cutoff
         ]
 
         if not historical or not recent:
@@ -231,11 +227,7 @@ class GovernanceDriftMonitor:
         )
 
         recent_consensus_rate = (
-            sum(
-                1
-                for e in recent
-                if e["governance_decision"].get("consensus_achieved")
-            )
+            sum(1 for e in recent if e["governance_decision"].get("consensus_achieved"))
             / len(recent)
             if recent
             else 0
@@ -268,16 +260,14 @@ class GovernanceDriftMonitor:
             1
             for e in historical
             if e["governance_decision"]["approved"]
-            and risk_weights.get(e["proposed_action"].get("risk_level", "low"), 0)
-            >= 2
+            and risk_weights.get(e["proposed_action"].get("risk_level", "low"), 0) >= 2
         )
 
         recent_high_risk_approvals = sum(
             1
             for e in recent
             if e["governance_decision"]["approved"]
-            and risk_weights.get(e["proposed_action"].get("risk_level", "low"), 0)
-            >= 2
+            and risk_weights.get(e["proposed_action"].get("risk_level", "low"), 0) >= 2
         )
 
         hist_rate = hist_high_risk_approvals / len(historical) if historical else 0
@@ -365,9 +355,7 @@ class GovernanceDriftMonitor:
             f"🚨 Governance drift detected! {len(alerts)} alerts saved to {filepath}"
         )
 
-    def get_recent_alerts(
-        self, days: int = 7
-    ) -> list[dict[str, Any]]:
+    def get_recent_alerts(self, days: int = 7) -> list[dict[str, Any]]:
         """Get recent drift alerts."""
         cutoff = datetime.now(UTC) - timedelta(days=days)
         alerts = []

@@ -7,6 +7,7 @@ All audit operations route through CognitionKernel for governance.
 Security Note: This agent uses subprocess to run pip-audit, a trusted
 security auditing tool. Commands are hardcoded and do not accept external input.
 """
+
 from __future__ import annotations
 
 import logging
@@ -26,7 +27,9 @@ class DependencyAuditor(KernelRoutedAgent):
     All audit operations route through CognitionKernel for tracking.
     """
 
-    def __init__(self, data_dir: str = "data", kernel: CognitionKernel | None = None) -> None:
+    def __init__(
+        self, data_dir: str = "data", kernel: CognitionKernel | None = None
+    ) -> None:
         """Initialize the dependency auditor.
 
         Args:
@@ -37,7 +40,7 @@ class DependencyAuditor(KernelRoutedAgent):
         super().__init__(
             kernel=kernel,
             execution_type=ExecutionType.AGENT_ACTION,
-            default_risk_level="low"  # Auditing is read-only, low risk
+            default_risk_level="low",  # Auditing is read-only, low risk
         )
 
         self.data_dir = data_dir
@@ -57,7 +60,7 @@ class DependencyAuditor(KernelRoutedAgent):
             action_args=(module_path,),
             requires_approval=False,
             risk_level="low",
-            metadata={"module_path": module_path, "operation": "analyze"}
+            metadata={"module_path": module_path, "operation": "analyze"},
         )
 
     def _do_analyze_new_module(self, module_path: str) -> dict[str, Any]:
@@ -66,7 +69,12 @@ class DependencyAuditor(KernelRoutedAgent):
         try:
             with open(module_path, encoding="utf-8") as f:
                 txt = f.read()
-            imports = [line for line in txt.splitlines() if line.strip().startswith("import ") or line.strip().startswith("from ")]
+            imports = [
+                line
+                for line in txt.splitlines()
+                if line.strip().startswith("import ")
+                or line.strip().startswith("from ")
+            ]
 
             # Run pip-audit (best-effort) - validate tool exists
             pip_audit_cmd = shutil.which("pip-audit")

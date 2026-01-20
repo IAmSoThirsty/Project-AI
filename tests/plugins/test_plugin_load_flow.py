@@ -6,7 +6,7 @@ from app.core.ai_systems import PluginManager
 
 
 def create_sample_plugin(path: Path):
-    code = '''
+    code = """
 class Plugin:
     def __init__(self, name=None):
         self.name = name or 'sample'
@@ -16,7 +16,7 @@ class Plugin:
     def enable(self):
         self.enabled = True
         return True
-'''
+"""
     path.write_text(code)
 
 

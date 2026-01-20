@@ -73,14 +73,14 @@ class ASL3Security:
         "data/ai_persona/state.json",
         "data/memory/knowledge.json",
         "data/learning_requests/requests.json",
-        "config/asl_config.json"
+        "config/asl_config.json",
     ]
 
     def __init__(
         self,
         data_dir: str = "data",
         key_file: str = "config/.asl3_key",
-        enable_emergency_alerts: bool = True
+        enable_emergency_alerts: bool = True,
     ):
         """
         Initialize ASL-3 security enforcer.
@@ -107,6 +107,7 @@ class ASL3Security:
         if enable_emergency_alerts:
             try:
                 from app.core.emergency_alert import EmergencyAlert
+
                 self.emergency_alert = EmergencyAlert()
             except Exception as e:
                 self.logger.warning(f"Emergency alerts unavailable: {e}")
@@ -126,7 +127,7 @@ class ASL3Security:
             self.data_dir / "security" / "audit_logs",
             self.data_dir / "security" / "encrypted",
             self.data_dir / "security" / "backups",
-            self.key_file.parent
+            self.key_file.parent,
         ]
         for dir_path in dirs:
             dir_path.mkdir(parents=True, exist_ok=True)
@@ -134,13 +135,13 @@ class ASL3Security:
     def _load_or_generate_key(self) -> Fernet:
         """Load existing encryption key or generate new one."""
         if self.key_file.exists():
-            with open(self.key_file, 'rb') as f:
+            with open(self.key_file, "rb") as f:
                 key = f.read()
             self.logger.info("Loaded existing ASL-3 encryption key")
         else:
             key = Fernet.generate_key()
             self.key_file.parent.mkdir(parents=True, exist_ok=True)
-            with open(self.key_file, 'wb') as f:
+            with open(self.key_file, "wb") as f:
                 f.write(key)
             # Secure the key file
             os.chmod(self.key_file, 0o600)
@@ -161,7 +162,7 @@ class ASL3Security:
 
         # Backup old key temporarily
         old_cipher = self.cipher
-        backup_key = self.key_file.with_suffix('.key.backup')
+        backup_key = self.key_file.with_suffix(".key.backup")
         shutil.copy2(self.key_file, backup_key)
 
         try:
@@ -173,17 +174,17 @@ class ASL3Security:
             encrypted_dir = self.data_dir / "security" / "encrypted"
             for enc_file in encrypted_dir.glob("*.enc"):
                 # Decrypt with old key
-                with open(enc_file, 'rb') as f:
+                with open(enc_file, "rb") as f:
                     encrypted_data = f.read()
                 decrypted_data = old_cipher.decrypt(encrypted_data)
 
                 # Encrypt with new key
                 new_encrypted = self.cipher.encrypt(decrypted_data)
-                with open(enc_file, 'wb') as f:
+                with open(enc_file, "wb") as f:
                     f.write(new_encrypted)
 
             # Save new key
-            with open(self.key_file, 'wb') as f:
+            with open(self.key_file, "wb") as f:
                 f.write(new_key)
             os.chmod(self.key_file, 0o600)
 
@@ -207,23 +208,15 @@ class ASL3Security:
             self.policies[resource] = SecurityPolicy(
                 resource_path=resource,
                 requires_encryption=True,
-                requires_multi_party_auth=resource in [
-                    "data/command_override_config.json",
-                    "config/asl_config.json"
-                ],
+                requires_multi_party_auth=resource
+                in ["data/command_override_config.json", "config/asl_config.json"],
                 max_access_rate=10,
                 allowed_users={"admin", "system"},
-                alert_on_access=resource in [
-                    "data/command_override_config.json",
-                    "data/codex_deus_maximus.db"
-                ]
+                alert_on_access=resource
+                in ["data/command_override_config.json", "data/codex_deus_maximus.db"],
             )
 
-    def encrypt_file(
-        self,
-        file_path: str,
-        secure_delete: bool = True
-    ) -> str:
+    def encrypt_file(self, file_path: str, secure_delete: bool = True) -> str:
         """
         Encrypt a file at rest with ASL-3 controls.
 
@@ -240,15 +233,17 @@ class ASL3Security:
             raise FileNotFoundError(f"File not found: {file_path}")
 
         # Read original data
-        with open(file_path, 'rb') as f:
+        with open(file_path, "rb") as f:
             data = f.read()
 
         # Encrypt
         encrypted_data = self.cipher.encrypt(data)
 
         # Save to encrypted directory
-        encrypted_path = self.data_dir / "security" / "encrypted" / f"{file_path.name}.enc"
-        with open(encrypted_path, 'wb') as f:
+        encrypted_path = (
+            self.data_dir / "security" / "encrypted" / f"{file_path.name}.enc"
+        )
+        with open(encrypted_path, "wb") as f:
             f.write(encrypted_data)
 
         # Create metadata
@@ -257,11 +252,11 @@ class ASL3Security:
             "encrypted_path": str(encrypted_path),
             "timestamp": datetime.now().isoformat(),
             "file_hash": hashlib.sha256(data).hexdigest(),
-            "size_bytes": len(data)
+            "size_bytes": len(data),
         }
 
-        metadata_path = encrypted_path.with_suffix('.enc.meta')
-        with open(metadata_path, 'w') as f:
+        metadata_path = encrypted_path.with_suffix(".enc.meta")
+        with open(metadata_path, "w") as f:
             json.dump(metadata, f, indent=2)
 
         # Secure delete original if requested
@@ -269,15 +264,14 @@ class ASL3Security:
             self._secure_delete(file_path)
 
         self.logger.info(f"ASL-3: Encrypted {file_path} -> {encrypted_path}")
-        self._log_security_event("file_encryption", "system", resource=str(file_path), success=True)
+        self._log_security_event(
+            "file_encryption", "system", resource=str(file_path), success=True
+        )
 
         return str(encrypted_path)
 
     def decrypt_file(
-        self,
-        encrypted_path: str,
-        user: str = "system",
-        verify_auth: bool = True
+        self, encrypted_path: str, user: str = "system", verify_auth: bool = True
     ) -> bytes:
         """
         Decrypt a file with access control checks.
@@ -296,7 +290,7 @@ class ASL3Security:
             raise FileNotFoundError(f"Encrypted file not found: {encrypted_path}")
 
         # Load metadata
-        metadata_path = encrypted_path.with_suffix('.enc.meta')
+        metadata_path = encrypted_path.with_suffix(".enc.meta")
         if metadata_path.exists():
             with open(metadata_path) as f:
                 metadata = json.load(f)
@@ -306,19 +300,29 @@ class ASL3Security:
 
         # Verify authorization
         if verify_auth and not self.check_access(original_path, user, "decrypt"):
-            raise PermissionError(f"User {user} not authorized to decrypt {original_path}")
+            raise PermissionError(
+                f"User {user} not authorized to decrypt {original_path}"
+            )
 
         # Decrypt
-        with open(encrypted_path, 'rb') as f:
+        with open(encrypted_path, "rb") as f:
             encrypted_data = f.read()
 
         try:
             decrypted_data = self.cipher.decrypt(encrypted_data)
-            self._log_security_event("file_decryption", user, resource=original_path, success=True)
+            self._log_security_event(
+                "file_decryption", user, resource=original_path, success=True
+            )
             return decrypted_data
         except Exception as e:
             self.logger.error(f"Decryption failed for {encrypted_path}: {e}")
-            self._log_security_event("file_decryption", user, resource=original_path, success=False, reason=str(e))
+            self._log_security_event(
+                "file_decryption",
+                user,
+                resource=original_path,
+                success=False,
+                reason=str(e),
+            )
             raise
 
     def _secure_delete(self, file_path: Path) -> None:
@@ -333,15 +337,15 @@ class ASL3Security:
         file_size = file_path.stat().st_size
 
         # 3-pass overwrite
-        with open(file_path, 'wb') as f:
+        with open(file_path, "wb") as f:
             # Pass 1: All zeros
-            f.write(b'\x00' * file_size)
+            f.write(b"\x00" * file_size)
             f.flush()
             os.fsync(f.fileno())
 
             # Pass 2: All ones
             f.seek(0)
-            f.write(b'\xFF' * file_size)
+            f.write(b"\xff" * file_size)
             f.flush()
             os.fsync(f.fileno())
 
@@ -356,11 +360,7 @@ class ASL3Security:
         self.logger.info(f"Securely deleted: {file_path}")
 
     def check_access(
-        self,
-        resource: str,
-        user: str,
-        action: str,
-        ip_address: str | None = None
+        self, resource: str, user: str, action: str, ip_address: str | None = None
     ) -> bool:
         """
         Check if user is authorized to access resource.
@@ -388,18 +388,24 @@ class ASL3Security:
 
         # Check user allowlist
         if policy.allowed_users and user not in policy.allowed_users:
-            self._log_access_attempt(user, action, resource, False, ip_address, "User not in allowlist")
+            self._log_access_attempt(
+                user, action, resource, False, ip_address, "User not in allowlist"
+            )
             return False
 
         # Check rate limiting
         if not self._check_rate_limit(resource, user, policy.max_access_rate):
-            self._log_access_attempt(user, action, resource, False, ip_address, "Rate limit exceeded")
+            self._log_access_attempt(
+                user, action, resource, False, ip_address, "Rate limit exceeded"
+            )
             self._handle_suspicious_activity(user, resource, "rate_limit_exceeded")
             return False
 
         # Check for anomalies
         if self._detect_anomaly(user, action, resource):
-            self._log_access_attempt(user, action, resource, False, ip_address, "Anomalous access pattern")
+            self._log_access_attempt(
+                user, action, resource, False, ip_address, "Anomalous access pattern"
+            )
             self._handle_suspicious_activity(user, resource, "anomalous_pattern")
             return False
 
@@ -408,25 +414,20 @@ class ASL3Security:
 
         # Alert if configured
         if policy.alert_on_access:
-            self.logger.warning(f"ASL-3: Sensitive access - {user} performed {action} on {resource}")
+            self.logger.warning(
+                f"ASL-3: Sensitive access - {user} performed {action} on {resource}"
+            )
 
         return True
 
-    def _check_rate_limit(
-        self,
-        resource: str,
-        user: str,
-        max_per_hour: int
-    ) -> bool:
+    def _check_rate_limit(self, resource: str, user: str, max_per_hour: int) -> bool:
         """Check if access is within rate limits."""
         key = f"{resource}:{user}"
         now = time.time()
         hour_ago = now - 3600
 
         # Clean old entries
-        self.access_counts[key] = [
-            t for t in self.access_counts[key] if t > hour_ago
-        ]
+        self.access_counts[key] = [t for t in self.access_counts[key] if t > hour_ago]
 
         # Check count
         if len(self.access_counts[key]) >= max_per_hour:
@@ -436,12 +437,7 @@ class ASL3Security:
         self.access_counts[key].append(now)
         return True
 
-    def _detect_anomaly(
-        self,
-        user: str,
-        action: str,
-        resource: str
-    ) -> bool:
+    def _detect_anomaly(self, user: str, action: str, resource: str) -> bool:
         """
         Detect anomalous access patterns.
 
@@ -452,8 +448,14 @@ class ASL3Security:
         """
         # Check for suspicious keywords in action
         suspicious_keywords = [
-            'exfiltrate', 'dump', 'export_all', 'bulk_download',
-            'copy_all', 'steal', 'leak', 'unauthorized'
+            "exfiltrate",
+            "dump",
+            "export_all",
+            "bulk_download",
+            "copy_all",
+            "steal",
+            "leak",
+            "unauthorized",
         ]
 
         if any(kw in action.lower() for kw in suspicious_keywords):
@@ -461,15 +463,20 @@ class ASL3Security:
 
         # Check for rapid access to multiple critical resources
         recent_accesses = [
-            attempt for attempt in self.access_log[-100:]
-            if attempt.user == user and
-            (datetime.now() - datetime.fromisoformat(attempt.timestamp)).seconds < 300
+            attempt
+            for attempt in self.access_log[-100:]
+            if attempt.user == user
+            and (datetime.now() - datetime.fromisoformat(attempt.timestamp)).seconds
+            < 300
         ]
 
-        unique_critical_resources = len({
-            attempt.resource for attempt in recent_accesses
-            if attempt.resource in self.CRITICAL_RESOURCES
-        })
+        unique_critical_resources = len(
+            {
+                attempt.resource
+                for attempt in recent_accesses
+                if attempt.resource in self.CRITICAL_RESOURCES
+            }
+        )
 
         return unique_critical_resources >= 3
 
@@ -480,7 +487,7 @@ class ASL3Security:
         resource: str,
         success: bool,
         ip_address: str | None = None,
-        reason: str | None = None
+        reason: str | None = None,
     ) -> None:
         """Log an access attempt to audit trail."""
         attempt = AccessAttempt(
@@ -490,22 +497,27 @@ class ASL3Security:
             resource=resource,
             success=success,
             ip_address=ip_address,
-            reason=reason
+            reason=reason,
         )
 
         self.access_log.append(attempt)
 
         # Write to tamper-proof audit log
-        audit_file = self.data_dir / "security" / "audit_logs" / f"audit_{datetime.now().strftime('%Y%m')}.jsonl"
-        with open(audit_file, 'a') as f:
-            f.write(json.dumps(attempt.__dict__) + '\n')
+        audit_file = (
+            self.data_dir
+            / "security"
+            / "audit_logs"
+            / f"audit_{datetime.now().strftime('%Y%m')}.jsonl"
+        )
+        with open(audit_file, "a") as f:
+            f.write(json.dumps(attempt.__dict__) + "\n")
 
         # Log to standard logger
         level = logging.INFO if success else logging.WARNING
         self.logger.log(
             level,
             f"Access: {user} {action} {resource} - {'SUCCESS' if success else 'DENIED'}"
-            + (f" ({reason})" if reason else "")
+            + (f" ({reason})" if reason else ""),
         )
 
     def _log_security_event(
@@ -514,7 +526,7 @@ class ASL3Security:
         user: str,
         resource: str = "",
         success: bool = True,
-        reason: str | None = None
+        reason: str | None = None,
     ) -> None:
         """Log a security event."""
         event = {
@@ -523,18 +535,20 @@ class ASL3Security:
             "user": user,
             "resource": resource,
             "success": success,
-            "reason": reason
+            "reason": reason,
         }
 
-        event_file = self.data_dir / "security" / "audit_logs" / f"events_{datetime.now().strftime('%Y%m')}.jsonl"
-        with open(event_file, 'a') as f:
-            f.write(json.dumps(event) + '\n')
+        event_file = (
+            self.data_dir
+            / "security"
+            / "audit_logs"
+            / f"events_{datetime.now().strftime('%Y%m')}.jsonl"
+        )
+        with open(event_file, "a") as f:
+            f.write(json.dumps(event) + "\n")
 
     def _handle_suspicious_activity(
-        self,
-        user: str,
-        resource: str,
-        reason: str
+        self, user: str, resource: str, reason: str
     ) -> None:
         """Handle detected suspicious activity."""
         alert_message = f"ASL-3 Security Alert: Suspicious activity by {user} on {resource} - {reason}"
@@ -555,14 +569,15 @@ class ASL3Security:
             "resource": resource,
             "reason": reason,
             "recent_access_log": [
-                attempt.__dict__ for attempt in self.access_log[-20:]
+                attempt.__dict__
+                for attempt in self.access_log[-20:]
                 if attempt.user == user
-            ]
+            ],
         }
 
         incident_file = self.data_dir / "security" / "incidents.jsonl"
-        with open(incident_file, 'a') as f:
-            f.write(json.dumps(incident) + '\n')
+        with open(incident_file, "a") as f:
+            f.write(json.dumps(incident) + "\n")
 
     def encrypt_critical_resources(self) -> dict[str, str]:
         """
@@ -577,7 +592,9 @@ class ASL3Security:
             resource_path = Path(resource)
             if resource_path.exists():
                 try:
-                    encrypted_path = self.encrypt_file(str(resource_path), secure_delete=False)
+                    encrypted_path = self.encrypt_file(
+                        str(resource_path), secure_delete=False
+                    )
                     encrypted_files[resource] = encrypted_path
                     self.logger.info(f"Encrypted critical resource: {resource}")
                 except Exception as e:
@@ -588,8 +605,10 @@ class ASL3Security:
     def get_security_status(self) -> dict[str, Any]:
         """Get current security status and statistics."""
         recent_attempts = [
-            attempt for attempt in self.access_log
-            if (datetime.now() - datetime.fromisoformat(attempt.timestamp)) < timedelta(hours=24)
+            attempt
+            for attempt in self.access_log
+            if (datetime.now() - datetime.fromisoformat(attempt.timestamp))
+            < timedelta(hours=24)
         ]
 
         return {
@@ -599,12 +618,18 @@ class ASL3Security:
             "failed_attempts_24h": len([a for a in recent_attempts if not a.success]),
             "unique_users_24h": len({a.user for a in recent_attempts}),
             "critical_resources_protected": len(self.policies),
-            "encrypted_files": len(list((self.data_dir / "security" / "encrypted").glob("*.enc"))),
+            "encrypted_files": len(
+                list((self.data_dir / "security" / "encrypted").glob("*.enc"))
+            ),
             "audit_log_entries": len(self.access_log),
-            "suspicious_activities_24h": len([
-                a for a in recent_attempts
-                if not a.success and a.reason in ["Anomalous access pattern", "Rate limit exceeded"]
-            ])
+            "suspicious_activities_24h": len(
+                [
+                    a
+                    for a in recent_attempts
+                    if not a.success
+                    and a.reason in ["Anomalous access pattern", "Rate limit exceeded"]
+                ]
+            ),
         }
 
     def generate_security_report(self) -> str:
@@ -654,8 +679,10 @@ class ASL3Security:
 
         # Add recent security events
         recent_attempts = [
-            attempt for attempt in self.access_log[-50:]
-            if (datetime.now() - datetime.fromisoformat(attempt.timestamp)) < timedelta(hours=24)
+            attempt
+            for attempt in self.access_log[-50:]
+            if (datetime.now() - datetime.fromisoformat(attempt.timestamp))
+            < timedelta(hours=24)
         ]
 
         for attempt in recent_attempts[-10:]:
@@ -696,63 +723,57 @@ def cli_main():
         description="ASL-3 Security Enforcer for Project-AI"
     )
     parser.add_argument(
-        'action',
-        choices=['encrypt', 'decrypt', 'status', 'report', 'rotate-key'],
-        help='Action to perform'
+        "action",
+        choices=["encrypt", "decrypt", "status", "report", "rotate-key"],
+        help="Action to perform",
     )
     parser.add_argument(
-        '--file',
-        type=str,
-        help='File path for encrypt/decrypt operations'
+        "--file", type=str, help="File path for encrypt/decrypt operations"
     )
     parser.add_argument(
-        '--user',
-        type=str,
-        default='cli_user',
-        help='User performing the action'
+        "--user", type=str, default="cli_user", help="User performing the action"
     )
-    parser.add_argument(
-        '--data-dir',
-        type=str,
-        default='data',
-        help='Data directory'
-    )
+    parser.add_argument("--data-dir", type=str, default="data", help="Data directory")
 
     args = parser.parse_args()
 
     # Initialize security enforcer
     security = ASL3Security(data_dir=args.data_dir)
 
-    if args.action == 'encrypt':
+    if args.action == "encrypt":
         if not args.file:
             print("Error: --file required for encrypt action")
             return 1
         encrypted_path = security.encrypt_file(args.file)
         print(f"Encrypted: {args.file} -> {encrypted_path}")
 
-    elif args.action == 'decrypt':
+    elif args.action == "decrypt":
         if not args.file:
             print("Error: --file required for decrypt action")
             return 1
         decrypted_data = security.decrypt_file(args.file, user=args.user)
-        output_file = Path(args.file).with_suffix('')
-        with open(output_file, 'wb') as f:
+        output_file = Path(args.file).with_suffix("")
+        with open(output_file, "wb") as f:
             f.write(decrypted_data)
         print(f"Decrypted: {args.file} -> {output_file}")
 
-    elif args.action == 'status':
+    elif args.action == "status":
         status = security.get_security_status()
         print(json.dumps(status, indent=2))
 
-    elif args.action == 'report':
+    elif args.action == "report":
         report = security.generate_security_report()
-        report_file = Path(args.data_dir) / "security" / f"asl3_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
-        with open(report_file, 'w') as f:
+        report_file = (
+            Path(args.data_dir)
+            / "security"
+            / f"asl3_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
+        )
+        with open(report_file, "w") as f:
             f.write(report)
         print(f"Report saved to: {report_file}")
         print(report)
 
-    elif args.action == 'rotate-key':
+    elif args.action == "rotate-key":
         security.rotate_encryption_key()
         print("Encryption key rotated successfully")
 
@@ -761,4 +782,5 @@ def cli_main():
 
 if __name__ == "__main__":
     import sys
+
     sys.exit(cli_main())

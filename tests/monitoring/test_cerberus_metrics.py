@@ -3,17 +3,16 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from app.monitoring.cerberus_dashboard import (
-    INCIDENTS_FILE,
-    get_metrics,
-    record_incident,
-)
+from app.monitoring.cerberus_dashboard import (INCIDENTS_FILE, get_metrics,
+                                               record_incident)
 
 
 def test_metrics_record_and_read(tmp_path: Path, monkeypatch):
     incidents_file = tmp_path / "cerberus_incidents.json"
     incidents_file.write_text(json.dumps({"incidents": [], "attack_counts": {}}))
-    monkeypatch.setattr("app.monitoring.cerberus_dashboard.INCIDENTS_FILE", incidents_file)
+    monkeypatch.setattr(
+        "app.monitoring.cerberus_dashboard.INCIDENTS_FILE", incidents_file
+    )
 
     # simple test: record incident and read metrics
     record_incident({"type": "test_incident", "gate": "g-1", "source": "s-1"})
@@ -32,7 +31,9 @@ def test_global_file_not_affected(tmp_path: Path, monkeypatch):
     # Create isolated test file
     incidents_file = tmp_path / "cerberus_incidents.json"
     incidents_file.write_text(json.dumps({"incidents": [], "attack_counts": {}}))
-    monkeypatch.setattr("app.monitoring.cerberus_dashboard.INCIDENTS_FILE", incidents_file)
+    monkeypatch.setattr(
+        "app.monitoring.cerberus_dashboard.INCIDENTS_FILE", incidents_file
+    )
 
     # Perform test operations
     record_incident({"type": "test_isolation", "gate": "g-test", "source": "s-test"})

@@ -15,7 +15,11 @@ def main() -> int:
     tracked_file_list = root / "docs" / "security" / "tracked-files.txt"
     out_path = root / "docs" / "security" / "secret-scan-findings.txt"
 
-    files = [p.strip() for p in tracked_file_list.read_text(encoding="utf-8").splitlines() if p.strip()]
+    files = [
+        p.strip()
+        for p in tracked_file_list.read_text(encoding="utf-8").splitlines()
+        if p.strip()
+    ]
 
     findings: list[tuple[str, str]] = []
     for f in files:

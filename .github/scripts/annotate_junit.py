@@ -15,6 +15,7 @@ The script prints lines like:
 
 GitHub Actions will convert those into annotations in the Checks view.
 """
+
 import re
 import sys
 import xml.etree.ElementTree as ET
@@ -39,8 +40,8 @@ def annotate_failure(message):
     # attempt to find file/line from traceback
     m = TRACE_RE.search(message)
     if m:
-        file = m.group('file')
-        line = m.group('line')
+        file = m.group("file")
+        line = m.group("line")
         # ensure file path is repository-relative if possible
         p = Path(file)
         file_path = str(p) if p.exists() else file
@@ -71,20 +72,20 @@ def main():
     root = tree.getroot()
     # Support both <testsuites> and single <testsuite>
     suites = []
-    if root.tag == 'testsuites':
-        suites.extend(root.findall('testsuite'))
-    elif root.tag == 'testsuite':
+    if root.tag == "testsuites":
+        suites.extend(root.findall("testsuite"))
+    elif root.tag == "testsuite":
         suites.append(root)
     else:
-        suites.extend(root.findall('.//testsuite'))
+        suites.extend(root.findall(".//testsuite"))
 
     for suite in suites:
-        for case in suite.findall('testcase'):
-            failures = case.findall('failure') + case.findall('error')
+        for case in suite.findall("testcase"):
+            failures = case.findall("failure") + case.findall("error")
             for f in failures:
-                text = f.text or ''
+                text = f.text or ""
                 annotate_failure(text)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

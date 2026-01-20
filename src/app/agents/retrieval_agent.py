@@ -4,6 +4,7 @@ Builds embeddings (placeholder) and provides retrieve function for QA.
 
 All indexing and retrieval operations route through CognitionKernel.
 """
+
 from __future__ import annotations
 
 import json
@@ -23,7 +24,9 @@ class RetrievalAgent(KernelRoutedAgent):
     All operations route through CognitionKernel for governance.
     """
 
-    def __init__(self, data_dir: str = "data", kernel: CognitionKernel | None = None) -> None:
+    def __init__(
+        self, data_dir: str = "data", kernel: CognitionKernel | None = None
+    ) -> None:
         """Initialize the retrieval agent.
 
         Args:
@@ -34,7 +37,7 @@ class RetrievalAgent(KernelRoutedAgent):
         super().__init__(
             kernel=kernel,
             execution_type=ExecutionType.AGENT_ACTION,
-            default_risk_level="low"  # Retrieval is typically low risk
+            default_risk_level="low",  # Retrieval is typically low risk
         )
 
         self.data_dir = data_dir
@@ -56,7 +59,7 @@ class RetrievalAgent(KernelRoutedAgent):
             action_args=(docs,),
             requires_approval=False,
             risk_level="low",
-            metadata={"doc_count": len(docs), "operation": "index"}
+            metadata={"doc_count": len(docs), "operation": "index"},
         )
 
     def _do_index_documents(self, docs: list[dict[str, Any]]) -> dict[str, Any]:
@@ -84,7 +87,7 @@ class RetrievalAgent(KernelRoutedAgent):
             action_args=(query, top_k),
             requires_approval=False,
             risk_level="low",
-            metadata={"query": query, "top_k": top_k, "operation": "retrieve"}
+            metadata={"query": query, "top_k": top_k, "operation": "retrieve"},
         )
 
     def _do_retrieve(self, query: str, top_k: int = 3) -> dict[str, Any]:

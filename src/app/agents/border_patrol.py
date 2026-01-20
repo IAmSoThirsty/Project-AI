@@ -37,13 +37,13 @@ class VerifierAgent(KernelRoutedAgent):
         data_dir: str = "data",
         max_workers: int = 2,
         timeout: int = 8,
-        kernel: CognitionKernel | None = None
+        kernel: CognitionKernel | None = None,
     ):
         # Initialize kernel routing (COGNITION KERNEL INTEGRATION)
         super().__init__(
             kernel=kernel,
             execution_type=ExecutionType.AGENT_ACTION,
-            default_risk_level="high"
+            default_risk_level="high",
         )
         self.agent_id = agent_id
         self.auditor = DependencyAuditor(data_dir=data_dir)
@@ -55,7 +55,9 @@ class VerifierAgent(KernelRoutedAgent):
         worker = Path(__file__).parent.parent / "agents" / "sandbox_worker.py"
         # Use ProcessPoolExecutor to call run_module by import
         try:
-            future = self.executor.submit(self._call_worker_run, str(worker), str(Path(module_path).resolve()))
+            future = self.executor.submit(
+                self._call_worker_run, str(worker), str(Path(module_path).resolve())
+            )
             return future.result(timeout=self.timeout)
         except TimeoutError:
             logger.exception("Sandbox execution timed out for %s", module_path)
@@ -68,6 +70,7 @@ class VerifierAgent(KernelRoutedAgent):
     def _call_worker_run(worker_script: str, module_path: str) -> dict[str, Any]:
         # Import the worker module and call run_module
         import importlib.util
+
         spec = importlib.util.spec_from_file_location("sandbox_worker", worker_script)
         if spec is None or spec.loader is None:
             return {"error": "failed_to_load_worker_spec", "success": False}
@@ -89,7 +92,7 @@ class VerifierAgent(KernelRoutedAgent):
             file_path,
             operation_name="verify_file",
             risk_level="high",
-            metadata={"file_path": file_path, "agent_id": self.agent_id}
+            metadata={"file_path": file_path, "agent_id": self.agent_id},
         )
 
     def _do_verify(self, file_path: str) -> dict[str, Any]:
@@ -142,7 +145,14 @@ class GateGuardian:
         self.watch_tower.receive_report(self.gate_id, box)
         # record incident for monitoring if suspicious
         if not box.verified:
-            record_incident({"type": "suspicious_plugin", "gate": self.gate_id, "module": file_path, "metadata": report})
+            record_incident(
+                {
+                    "type": "suspicious_plugin",
+                    "gate": self.gate_id,
+                    "module": file_path,
+                    "metadata": report,
+                }
+            )
         return report
 
     def activate_force_field(self) -> None:
@@ -155,7 +165,9 @@ class GateGuardian:
         with self.lock:
             if file_path in self.quarantine:
                 del self.quarantine[file_path]
-                logger.info("Gate %s released %s from quarantine", self.gate_id, file_path)
+                logger.info(
+                    "Gate %s released %s from quarantine", self.gate_id, file_path
+                )
 
 
 class WatchTower:
@@ -166,7 +178,9 @@ class WatchTower:
         self.attack_counts: dict[str, int] = {}
 
     def receive_report(self, gate_id: str, box: QuarantineBox) -> None:
-        logger.info("WatchTower %s received report from gate %s", self.tower_id, gate_id)
+        logger.info(
+            "WatchTower %s received report from gate %s", self.tower_id, gate_id
+        )
         self.reports.append(box)
         # Evaluate report & escalate if necessary
         src = box.metadata.get("sandbox", {}).get("source") if box.metadata else None
@@ -175,13 +189,22 @@ class WatchTower:
         # If repeated attacks from same source, escalate
         if self.attack_counts[src_id] > 3:
             self.port_admin.notify_incident(self.tower_id, gate_id, box)
-            record_incident({"type": "repeated_attacks", "tower": self.tower_id, "gate": gate_id, "source": src_id})
+            record_incident(
+                {
+                    "type": "repeated_attacks",
+                    "tower": self.tower_id,
+                    "gate": gate_id,
+                    "source": src_id,
+                }
+            )
         # If sandbox crashed or exception, escalate immediately
         if box.metadata and box.metadata.get("sandbox", {}).get("exception"):
             self.port_admin.notify_incident(self.tower_id, gate_id, box)
 
     def signal_emergency(self, gate_id: str) -> None:
-        logger.critical("WatchTower %s: emergency signaled by gate %s", self.tower_id, gate_id)
+        logger.critical(
+            "WatchTower %s: emergency signaled by gate %s", self.tower_id, gate_id
+        )
         self.port_admin.handle_emergency(self.tower_id, gate_id)
 
 
@@ -192,12 +215,24 @@ class PortAdmin:
         self.towers: list[WatchTower] = []
 
     def notify_incident(self, tower_id: str, gate_id: str, box: QuarantineBox) -> None:
-        logger.warning("PortAdmin %s notified of incident at tower %s gate %s", self.admin_id, tower_id, gate_id)
+        logger.warning(
+            "PortAdmin %s notified of incident at tower %s gate %s",
+            self.admin_id,
+            tower_id,
+            gate_id,
+        )
         # create incident report and pass to Cerberus
-        self.command_center.record_incident({"tower": tower_id, "gate": gate_id, "box": box})
+        self.command_center.record_incident(
+            {"tower": tower_id, "gate": gate_id, "box": box}
+        )
 
     def handle_emergency(self, tower_id: str, gate_id: str) -> None:
-        logger.critical("PortAdmin %s handling emergency at tower %s gate %s", self.admin_id, tower_id, gate_id)
+        logger.critical(
+            "PortAdmin %s handling emergency at tower %s gate %s",
+            self.admin_id,
+            tower_id,
+            gate_id,
+        )
         # instruct Cerberus to quarantine/obliterate box contents safely
         self.command_center.execute_lockdown(tower_id, gate_id)
 
@@ -213,9 +248,18 @@ class Cerberus:
         self.incidents.append(incident)
 
     def execute_lockdown(self, tower_id: str, gate_id: str) -> None:
-        logger.critical("Cerberus executing lockdown for tower %s, gate %s", tower_id, gate_id)
+        logger.critical(
+            "Cerberus executing lockdown for tower %s, gate %s", tower_id, gate_id
+        )
         # Non-destructive approach: mark box sealed and create audit entry
-        self.record_incident({"action": "lockdown", "tower": tower_id, "gate": gate_id, "ts": time.time()})
+        self.record_incident(
+            {
+                "action": "lockdown",
+                "tower": tower_id,
+                "gate": gate_id,
+                "ts": time.time(),
+            }
+        )
 
 
 # Helper: build the hierarchy
