@@ -1,86 +1,70 @@
-# Documentation
+# Project-AI Documentation
 
-Project-AI documentation is organized into two main sections to keep the repository root clean and improve navigation.
+Welcome to **Project-AI** — an extensible, secure AGI operations stack for building, running, and monitoring advanced intelligent agents with robust safety and identity management.
 
-## Directory Structure
+## What is Project-AI?
 
-### `docs/overview/`
+_Project-AI is an open, extensible platform for operating, securing, and researching AGI systems. It integrates state-of-the-art scheduling (Temporal), monitoring, modular cognitive processing (MCP tools), Spiking Neural Network co-processors, and end-to-end security/identity for both production and experimental deployments._
 
-Primary documentation, architecture guides, and user-facing quick-start materials:
-
-- **AI_PERSONA_FOUR_LAWS.md** — Asimov's Laws framework and ethical decision-making
-- **AI_PERSONA_IMPLEMENTATION.md** — Persona system architecture and state management
-- **LEATHER_BOOK_ARCHITECTURE.md** — PyQt6 UI architecture and design patterns
-- **LEATHER_BOOK_README.md** — Leather Book interface overview
-- **LEATHER_BOOK_UI_COMPLETE.md** — UI completion status and component reference
-- **DESKTOP_APP_QUICKSTART.md** — Quick-start guide for desktop application
-- **DESKTOP_APP_README.md** — Desktop app features and setup
-- **IMAGE_GENERATION_QUICKSTART.md** — Image generation features and usage
-- **IMAGE_GENERATION_RESTORATION.md** — Image generation system restoration notes
-- **PROGRAM_SUMMARY.md** — Complete architecture and program summary
-- **INTEGRATION_GUIDE.md** — Integration points and component coupling
-- **INTEGRATION_SUMMARY.md** — Integration summary and API reference
-- **IMPLEMENTATION_COMPLETE.md** — Implementation completion status
-- **INFRASTRUCTURE.md** — Infrastructure and deployment architecture
-
-### `docs/notes/`
-
-Auxiliary notes, session reports, test results, and reference materials:
-
-- Session and completion summaries
-- Test reports and coverage reports
-- Fixes and improvements audit logs
-- Feature summaries and branch notes
-- Quick reference guides and troubleshooting
-
-### `docs/developer/`
-
-Developer-focused guides, implementation details, and technical references:
-
-- **DEVELOPER_QUICK_REFERENCE.md** — Quick reference for developers
-- **COMMAND_MEMORY_FEATURES.md** — Command memory and feature descriptions
-- **LEARNING_REQUEST_IMPLEMENTATION.md** — Learning request system implementation
-- **LEARNING_REQUEST_LOG.md** — Learning request logs and status
-- **DOCKER_WSL_SETUP.md** — Docker and WSL setup guide for development
-
-### `docs/policy/`
-
-Project policies, contributing guidelines, and code of conduct:
-
-- **CODE_OF_CONDUCT.md** — Community code of conduct
-- **CONTRIBUTING.md** — Contribution guidelines and workflow
-- **SECURITY.md** — Security policy and vulnerability reporting
-
-### `docs/web/`
-
-Web version documentation and deployment guides:
-
-- **WEB_README.md** — Web application overview and features
-- **DEPLOYMENT.md** — Web deployment and infrastructure setup
-
-## Key Files at Repository Root
-
-- **README.md** — Primary entry point (kept at root per GitHub convention)
-- **PROGRAM_SUMMARY.md** — Also available in docs/overview/ for reference
-- **pyproject.toml**, **requirements.txt** — Dependency and project configuration
-- **Dockerfile**, **docker-compose.yml** — Container configuration
-- **src/**, **tests/**, **web/** — Source code and test suites
-
-## Navigation Tips
-
-- Start with [README.md](../README.md) for project overview
-- Review [docs/overview/PROGRAM_SUMMARY.md](overview/PROGRAM_SUMMARY.md) for complete architecture
-- Check [docs/overview/DESKTOP_APP_QUICKSTART.md](overview/DESKTOP_APP_QUICKSTART.md) to run the app locally
-- See [docs/overview/LEATHER_BOOK_ARCHITECTURE.md](overview/LEATHER_BOOK_ARCHITECTURE.md) for UI implementation details
-- Developer setup: [docs/developer/DOCKER_WSL_SETUP.md](developer/DOCKER_WSL_SETUP.md)
-- Web app docs: [docs/web/WEB_README.md](web/WEB_README.md) and [docs/web/DEPLOYMENT.md](web/DEPLOYMENT.md)
-- Contributing: [docs/policy/CONTRIBUTING.md](policy/CONTRIBUTING.md)
-- Security: [docs/policy/SECURITY.md](policy/SECURITY.md)
-
-## Document Cross-References
-
-Internal links use relative paths. When a document is moved from root to `docs/overview/` or `docs/notes/`, relative links like `[link](../OTHER_FILE.md)` point back to the root if needed.
+## What Can You Do With Project-AI?
+- **Run a full AGI stack** with guarded workflows, SNN co-processors, MCP tools, and built-in monitoring.
+- **Deploy and monitor** production or research systems with layered safety, identity, and observability.
+- **Prototype and extend** new AGI modules, security policies, or research ideas in a modular, testable sandbox.
 
 ---
 
-Last updated: November 2025
+## Start Here (Choose Your Role)
+
+| If you're an...     | Start Here                                                                  |
+|---------------------|-----------------------------------------------------------------------------|
+| **Operator**        | [Quickstart for Operators](../QUICKSTART_NONDEV.md) _(Coming soon)_         |
+| **Infrastructure Engineer** | [Production Deployment Checklist](../DEPLOYMENT_GUIDE.md) _(Coming soon)_<br>[Prometheus Monitoring](../PROMETHEUS_INTEGRATION.md) _(Coming soon)_<br>[Kubernetes Guide](../KUBERNETES_MONITORING_GUIDE.md) _(Coming soon)_|
+| **AI Safety/Research** | [AI Safety Overview](../AI_SECURITY_FRAMEWORK.md) _(Coming soon)_<br>[Robustness Metrics](../ROBUSTNESS_METRICS.md) _(Coming soon)_<br>[Read the AGI Charter](../AGI_CHARTER.md) _(Coming soon)_|
+| **Contributor**     | [Code Contribution Guide](../CONTRIBUTING.md) _(Coming soon)_<br>[Docs Contribution Guide](CONTRIBUTING_DOCS.md) _(Coming soon)_ |
+
+---
+
+## Overview & Roadmap
+
+- [Project Vision & Roadmap](overview/ROADMAP.md) _(Coming soon)_
+
+---
+
+## Example Deployments (Happy Paths)
+**(All coming soon — see `examples/` directory)**
+- Minimal deployment example
+- Advanced secured deployment
+- Research sandbox
+- [First Workflow: Temporal → Monitoring](../TEMPORAL_SETUP.md) + [Integration Steps](../NEW_TEMPORAL_INTEGRATION_SUMMARY.md) _(Coming soon)_
+
+---
+
+## Document Taxonomy / Index
+
+**Identity Docs:**  
+- AGI Identity Spec _(Coming soon)_
+
+**Security Docs:**  
+- Security Frameworks, Red Team Results, Robustness Metrics _(Coming soon)_
+
+**Infrastructure Docs:**  
+- Deployment, Monitoring, Cloud/Offline Sync _(Coming soon)_
+
+---
+
+## Reference (`actionlint` Docs)
+
+- [Checks](checks.md): Full list of all checks done by actionlint with example inputs, outputs, and playground links.
+- [Installation](install.md): Installation instructions for prebuilt binaries, Homebrew, Docker image, building from source, or CI script.
+- [Usage](usage.md): How to use `actionlint` locally, in CI, or with Docker and integrations (reviewdog, Problem Matchers, pre-commit, etc.).
+- [Configuration](config.md): How to configure `actionlint`. (Currently only self-hosted runner labels.)
+- [Go API](api.md): Using actionlint as a Go library.
+- [References](reference.md): Further resources.
+
+---
+
+**See the [project root README](../README.md) for repo-wide notes and status.**
+
+---
+
+_This README provides narrative structure and discoverable entry points. As more guides/docs are added, update the links above to remove "_(Coming soon)_" and set desired onboarding flow._

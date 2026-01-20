@@ -61,6 +61,8 @@ cover/
 
 # Environments
 .env
+.env.local
+.env.*.local
 .venv
 env/
 venv/
@@ -68,9 +70,28 @@ ENV/
 env.bak/
 venv.bak/
 
+# Security and secrets
+*.key
+*.pem
+*.p12
+secrets.json
+credentials.json
+secret_scan_report.json
+*secret*scan*.json
+*secret*scan*.txt
+
 # IDEs
 .vscode/
 .idea/
+.vs/
+
+# Secrets and credentials (additional security)
+*.key
+*.pem
+*.p12
+secrets.json
+credentials.json
+secret_scan_report.json
 
 # OS
 .DS_Store
@@ -78,3 +99,29 @@ Thumbs.db
 
 # Generated test data
 data/generated_tests/
+
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+*.iml
+local.properties
+
+# Android
+*.apk
+*.ap_
+*.aab
+*.dex
+*.class
+bin/
+gen/
+out/
+captures/
+.externalNativeBuild
+.cxx
+
+# Temporal.io
+.env.temporal
+config/temporal/*.local
+data/temporal/
+actionlint*

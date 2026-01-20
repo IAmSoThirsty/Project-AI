@@ -1,15 +1,35 @@
 {
-  "typeCheckingMode": "standard",
+  "typeCheckingMode": "strict",
   "pythonVersion": "3.11",
   "pythonPath": "src",
-  "include": ["src", "tests"],
+  "include": [
+    "src",
+    "tests"
+  ],
   "exclude": [
     "**/node_modules",
     "**/__pycache__",
     ".venv",
     "venv",
     "build",
-    "dist"
+    "dist",
+    ".vs",
+    "logs",
+    "external",
+    "android",
+    "web",
+    "test-artifacts",
+    "ci-reports",
+    "data",
+    "docs",
+    "examples",
+    "scripts",
+    "helm",
+    "gradle",
+    "config",
+    "man",
+    "Project-AI",
+    "tools"
   ],
   "reportOptionalMemberAccess": "warning",
   "reportOptionalSubscript": "warning",
