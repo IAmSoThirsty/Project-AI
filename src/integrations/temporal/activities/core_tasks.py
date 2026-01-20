@@ -98,7 +98,7 @@ async def simulate_ai_call(prompt: str) -> str:
         f"Timestamp: {datetime.now().isoformat()}"
     )
 
-    activity.logger.info(f"AI call completed successfully")
+    activity.logger.info("AI call completed successfully")
     return response
 
 
