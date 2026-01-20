@@ -790,6 +790,7 @@ The Temporal integration connects with Project-AI's core systems:
 - Verify activities are properly registered in worker
 
 **Database connection errors?**
+
 - Ensure PostgreSQL is running: `docker-compose ps temporal-postgresql`
 - Temporal server depends on PostgreSQL being healthy
 
