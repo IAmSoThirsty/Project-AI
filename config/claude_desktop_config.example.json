@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "project-ai": {
+      "command": "python",
+      "args": [
+        "-m",
+        "src.app.core.mcp_server"
+      ],
+      "cwd": "/absolute/path/to/Project-AI",
+      "env": {
+        "PYTHONPATH": ".",
+        "OPENAI_API_KEY": "${OPENAI_API_KEY}",
+        "HUGGINGFACE_API_KEY": "${HUGGINGFACE_API_KEY}",
+        "FERNET_KEY": "${FERNET_KEY}",
+        "SMTP_USERNAME": "${SMTP_USERNAME}",
+        "SMTP_PASSWORD": "${SMTP_PASSWORD}"
+      }
+    }
+  },
+  "globalShortcut": "CommandOrControl+Shift+Space",
+  "logLevel": "info"
+}

@@ -1,4 +1,5 @@
-"""Simple script to trim trailing whitespace and ensure EOF newline for project files.
+"""Simple script to trim trailing whitespace and ensure EOF newline.
+
 Targets: src/, tests/, setup.py, tools/.
 
 Run from repository root. Prints modified files.

@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thirsty-lang Playground 💧</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1em;
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .editor-panel {
+            flex: 1;
+        }
+
+        .output-panel {
+            flex: 1;
+        }
+
+        .panel-header {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-content {
+            flex: 1;
+            padding: 0;
+            overflow: auto;
+        }
+
+        #editor {
+            width: 100%;
+            height: 100%;
+            border: none;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: none;
+            outline: none;
+        }
+
+        #output {
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            background: #f8f9fa;
+            height: 100%;
+            overflow: auto;
+        }
+
+        .toolbar {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .examples {
+            flex: 1;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        select {
+            padding: 10px;
+            border: 2px solid #667eea;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            background: white;
+        }
+
+        .error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .success {
+            color: #28a745;
+        }
+
+        .line-numbers {
+            float: left;
+            padding: 20px 10px 20px 20px;
+            background: #f0f0f0;
+            color: #999;
+            text-align: right;
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>💧 Thirsty-lang Playground</h1>
+        <p>Write, run, and experiment with Thirsty-lang code in your browser!</p>
+    </div>
+
+    <div class="container">
+        <div class="panel editor-panel">
+            <div class="panel-header">
+                <span>Code Editor</span>
+                <span id="line-count">Line: 1</span>
+            </div>
+            <div class="panel-content">
+                <textarea id="editor" spellcheck="false">// Welcome to Thirsty-lang! 💧
+// Try editing the code below and click Run
+
+drink message = "Hello, Thirsty World!"
+pour message
+
+drink water_intake = 8
+pour water_intake
+
+// Stay hydrated!</textarea>
+            </div>
+        </div>
+
+        <div class="panel output-panel">
+            <div class="panel-header">
+                <span>Output</span>
+                <span id="status">Ready</span>
+            </div>
+            <div class="panel-content">
+                <div id="output">Click "Run" to execute your code...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toolbar">
+        <button onclick="runCode()">▶️ Run</button>
+        <button onclick="clearOutput()">🗑️ Clear Output</button>
+        <button onclick="formatCode()">✨ Format</button>
+        <button onclick="shareCode()">🔗 Share</button>
+        
+        <div class="examples">
+            <label for="examples">Load Example:</label>
+            <select id="examples" onchange="loadExample(this.value)">
+                <option value="">-- Select Example --</option>
+                <option value="hello">Hello World</option>
+                <option value="variables">Variables</option>
+                <option value="numbers">Numbers</option>
+                <option value="comments">Comments</option>
+            </select>
+        </div>
+        
+        <button onclick="downloadCode()">💾 Download</button>
+    </div>
+
+    <script>
+        const examples = {
+            hello: `// Hello World Example
+drink greeting = "Hello, Thirsty World!"
+pour greeting`,
+            
+            variables: `// Working with Variables
+drink water = "H2O"
+drink temperature = 25
+drink is_cold = "yes"
+
+pour water
+pour temperature
+pour is_cold`,
+            
+            numbers: `// Number Operations
+drink glasses = 8
+drink liters = 2.5
+drink total = 64
+
+pour glasses
+pour liters
+pour total`,
+            
+            comments: `// This is a comment
+// Comments are ignored by the interpreter
+
+drink hydration = "essential"
+// You can explain your code
+pour hydration
+
+// Stay hydrated! 💧`
+        };
+
+        const editor = document.getElementById('editor');
+        const output = document.getElementById('output');
+        const statusEl = document.getElementById('status');
+        const lineCount = document.getElementById('line-count');
+
+        // Simple Thirsty-lang interpreter for the browser
+        class BrowserThirstyInterpreter {
+            constructor() {
+                this.variables = {};
+                this.output = [];
+            }
+
+            execute(code) {
+                this.variables = {};
+                this.output = [];
+
+                const lines = code.split('\n')
+                    .map(line => line.trim())
+                    .filter(line => line && !line.startsWith('//'));
+
+                for (const line of lines) {
+                    this.executeLine(line);
+                }
+
+                return this.output.join('\n');
+            }
+
+            executeLine(line) {
+                if (line.startsWith('drink ')) {
+                    const match = line.match(/drink\s+(\w+)\s*=\s*(.+)/);
+                    if (!match) {
+                        throw new Error(`Invalid drink statement: ${line}`);
+                    }
+                    const varName = match[1];
+                    const value = this.evaluateExpression(match[2]);
+                    this.variables[varName] = value;
+                }
+                else if (line.startsWith('pour ')) {
+                    const expression = line.substring(5).trim();
+                    const value = this.evaluateExpression(expression);
+                    this.output.push(value);
+                }
+                else {
+                    throw new Error(`Unknown statement: ${line}`);
+                }
+            }
+
+            evaluateExpression(expr) {
+                expr = expr.trim();
+
+                if ((expr.startsWith('"') && expr.endsWith('"')) ||
+                    (expr.startsWith("'") && expr.endsWith("'"))) {
+                    return expr.slice(1, -1);
+                }
+
+                if (!isNaN(expr)) {
+                    return parseFloat(expr);
+                }
+
+                if (this.variables.hasOwnProperty(expr)) {
+                    return this.variables[expr];
+                }
+
+                throw new Error(`Unknown expression: ${expr}`);
+            }
+        }
+
+        const interpreter = new BrowserThirstyInterpreter();
+
+        function runCode() {
+            const code = editor.value;
+            
+            try {
+                statusEl.textContent = 'Running...';
+                statusEl.className = '';
+                
+                const result = interpreter.execute(code);
+                
+                output.innerHTML = result || '(no output)';
+                output.className = 'success';
+                statusEl.textContent = '✓ Success';
+                statusEl.className = 'success';
+            } catch (error) {
+                output.innerHTML = `<span class="error">❌ Error: ${error.message}</span>`;
+                statusEl.textContent = '✗ Error';
+                statusEl.className = 'error';
+            }
+        }
+
+        function clearOutput() {
+            output.innerHTML = 'Output cleared. Click "Run" to execute your code.';
+            output.className = '';
+            statusEl.textContent = 'Ready';
+            statusEl.className = '';
+        }
+
+        function formatCode() {
+            let code = editor.value;
+            const lines = code.split('\n');
+            const formatted = lines.map(line => {
+                const trimmed = line.trim();
+                if (trimmed.startsWith('drink ') && !trimmed.includes(' = ')) {
+                    return trimmed.replace(/=/g, ' = ');
+                }
+                return trimmed;
+            }).join('\n');
+            
+            editor.value = formatted;
+            statusEl.textContent = '✓ Code formatted';
+        }
+
+        function shareCode() {
+            const code = editor.value;
+            const encoded = btoa(encodeURIComponent(code));
+            const url = `${window.location.href.split('?')[0]}?code=${encoded}`;
+            
+            navigator.clipboard.writeText(url).then(() => {
+                alert('🔗 Share link copied to clipboard!');
+            });
+        }
+
+        function downloadCode() {
+            const code = editor.value;
+            const blob = new Blob([code], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'program.thirsty';
+            a.click();
+            URL.revokeObjectURL(url);
+            statusEl.textContent = '💾 Downloaded';
+        }
+
+        function loadExample(key) {
+            if (key && examples[key]) {
+                editor.value = examples[key];
+                clearOutput();
+            }
+        }
+
+        // Update line count
+        editor.addEventListener('input', () => {
+            const lines = editor.value.split('\n').length;
+            lineCount.textContent = `Lines: ${lines}`;
+        });
+
+        // Load code from URL if present
+        const urlParams = new URLSearchParams(window.location.search);
+        const sharedCode = urlParams.get('code');
+        if (sharedCode) {
+            try {
+                editor.value = decodeURIComponent(atob(sharedCode));
+            } catch (e) {
+                console.error('Failed to load shared code');
+            }
+        }
+
+        // Keyboard shortcuts
+        editor.addEventListener('keydown', (e) => {
+            // Ctrl/Cmd + Enter to run
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                runCode();
+            }
+            
+            // Tab key for indentation
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                const start = editor.selectionStart;
+                const end = editor.selectionEnd;
+                editor.value = editor.value.substring(0, start) + '  ' + editor.value.substring(end);
+                editor.selectionStart = editor.selectionEnd = start + 2;
+            }
+        });
+    </script>
+</body>
+</html>
