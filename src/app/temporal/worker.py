@@ -14,6 +14,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from app.temporal.activities import (
+    crisis_activities,
     data_activities,
     image_activities,
     learning_activities,
@@ -22,6 +23,7 @@ from app.temporal.activities import (
 from app.temporal.client import TemporalClientManager
 from app.temporal.workflows import (
     AILearningWorkflow,
+    CrisisResponseWorkflow,
     DataAnalysisWorkflow,
     ImageGenerationWorkflow,
     MemoryExpansionWorkflow,
@@ -68,13 +70,15 @@ async def main():
             ImageGenerationWorkflow,
             DataAnalysisWorkflow,
             MemoryExpansionWorkflow,
+            CrisisResponseWorkflow,
         ]
 
         activities = (
             learning_activities +
             image_activities +
             data_activities +
-            memory_activities
+            memory_activities +
+            crisis_activities
         )
 
         # Create worker

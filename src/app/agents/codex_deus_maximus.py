@@ -12,6 +12,9 @@ import types
 from datetime import UTC, datetime
 from typing import Any
 
+from app.core.cognition_kernel import CognitionKernel, ExecutionType
+from app.core.kernel_integration import KernelRoutedAgent
+
 # --- CONFIGURATION ---
 logger = logging.getLogger("SchematicGuardian")
 logging.basicConfig(level=logging.INFO)
@@ -22,10 +25,16 @@ REQUIRED_DIRS = [
     "src",
 ]
 
-class CodexDeusMaximus:
+class CodexDeusMaximus(KernelRoutedAgent):
     """Schematic Guardian AI that enforces repository structure and code standards."""
 
-    def __init__(self, data_dir: str = "data") -> None:
+    def __init__(self, data_dir: str = "data", kernel: CognitionKernel | None = None) -> None:
+        # Initialize kernel routing (COGNITION KERNEL INTEGRATION)
+        super().__init__(
+            kernel=kernel,
+            execution_type=ExecutionType.AGENT_ACTION,
+            default_risk_level="medium"
+        )
         self.data_dir = data_dir
         self.audit_path = os.path.join(self.data_dir, "schematic_audit.json")
         # Ensure legacy method binding for compatibility
@@ -55,6 +64,17 @@ class CodexDeusMaximus:
 
     def run_schematic_enforcement(self, root: str | None = None) -> dict[str, Any]:
         """The Main Routine: Validates structure and fixes files."""
+        # Route through kernel (COGNITION KERNEL ROUTING)
+        return self._execute_through_kernel(
+            self._do_run_schematic_enforcement,
+            root,
+            operation_name="run_schematic_enforcement",
+            risk_level="medium",
+            metadata={"root": root or os.getcwd()}
+        )
+
+    def _do_run_schematic_enforcement(self, root: str | None = None) -> dict[str, Any]:
+        """Internal implementation of schematic enforcement."""
         root = root or os.getcwd()
         report = {
             "structure_check": self._validate_structure(root),
@@ -99,6 +119,17 @@ class CodexDeusMaximus:
 
     def auto_fix_file(self, path: str) -> dict[str, Any]:
         """Strictly enforces formatting standards (Tabs->Spaces, EOF Newline, Syntax Check)."""
+        # Route through kernel (COGNITION KERNEL ROUTING)
+        return self._execute_through_kernel(
+            self._do_auto_fix_file,
+            path,
+            operation_name="auto_fix_file",
+            risk_level="medium",
+            metadata={"file_path": path}
+        )
+
+    def _do_auto_fix_file(self, path: str) -> dict[str, Any]:
+        """Internal implementation of auto fix."""
         if not os.path.exists(path):
             return {"success": False, "error": "missing"}
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+
 
 /**
  * Thirsty-lang Defense Compiler
@@ -14,7 +14,7 @@ class DefenseCompiler {
     this.threatDetector = new ThreatDetector(options.threat || {});
     this.codeMorpher = new CodeMorpher(options.morph || {});
     this.policyEngine = new SecurityPolicyEngine(options.policy || {});
-    
+
     this.defenseEnabled = options.defenseEnabled !== false;
     this.morphingEnabled = options.morphingEnabled !== false;
     this.compilationLog = [];
@@ -88,10 +88,10 @@ class DefenseCompiler {
 
       // Log compilation
       this.logCompilation({
-        context,
+        context: context,
         originalSize: code.length,
         compiledSize: compiled.length,
-        securityLayers,
+        securityLayers: securityLayers,
         duration: Date.now() - compilationStart,
         success: true
       });
@@ -122,7 +122,7 @@ class DefenseCompiler {
 
     // Check for malicious patterns
     const lines = code.split('\n');
-    lines.forEach((line, index) => {
+    for (const [index, line] of lines.entries()) {
       const inputThreats = this.threatDetector.detectInputThreats(line, {
         ...context,
         line: index + 1
@@ -188,7 +188,7 @@ class DefenseCompiler {
     const match = line.match(/sip\s+"([^"]+)"/);
     if (match) {
       const prompt = match[1];
-      return `sip __secure_input("${prompt}")`;
+      return "sip __secure_input(\"" + prompt + "\")";
     }
     return line;
   }
@@ -223,7 +223,7 @@ class DefenseCompiler {
 
 (function() {
   'use strict';
-  
+
   // Anti-debugging
   const _debugCheck = setInterval(() => {
     const start = Date.now();
@@ -248,29 +248,29 @@ class DefenseCompiler {
   const __secure_input = (prompt) => {
     _checkIntegrity();
     const input = prompt; // Placeholder for actual input
-    
+
     // Validate input
     if (typeof input !== 'string') {
       throw new Error('Invalid input type');
     }
-    
+
     if (input.length > 8192) {
       throw new Error('Input too long - potential buffer overflow');
     }
-    
+
     // Sanitize input
     const sanitized = input
       .replace(/[<>]/g, '')
       .replace(/script/gi, '')
       .replace(/eval/gi, '');
-    
+
     return sanitized;
   };
 
   // Runtime protection
   Object.freeze(Object.prototype);
   Object.freeze(Array.prototype);
-  
+
   // Execute protected code
   try {
     ${code.split('\n').map(l => '    ' + l).join('\n')}
@@ -316,7 +316,7 @@ class DefenseCompiler {
     };
 
     const profile = profiles[profileName] || profiles.standard;
-    
+
     // Create new compiler with profile settings
     const compiler = new DefenseCompiler(profile);
     return compiler.compile(code);
@@ -337,11 +337,11 @@ class DefenseCompiler {
       totalCompilations: this.compilationLog.length,
       successfulCompilations: this.compilationLog.filter(e => e.success).length,
       failedCompilations: this.compilationLog.filter(e => !e.success).length,
-      avgDuration: this.compilationLog.reduce((acc, e) => acc + e.duration, 0) / 
-                   this.compilationLog.length || 0,
+      avgDuration: this.compilationLog.reduce((acc, e) => acc + e.duration, 0) /
+        this.compilationLog.length || 0,
       avgSizeIncrease: this.compilationLog
         .filter(e => e.success)
-        .reduce((acc, e) => acc + (e.compiledSize - e.originalSize), 0) / 
+        .reduce((acc, e) => acc + (e.compiledSize - e.originalSize), 0) /
         this.compilationLog.filter(e => e.success).length || 0
     };
   }

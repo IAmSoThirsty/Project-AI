@@ -56,14 +56,14 @@ function showHelp() {
 
 function showVersion() {
   const pkg = require('../package.json');
-  console.log(`Thirsty-lang v${pkg.version}`);
+  console.log("Thirsty-lang v" + pkg.version);
   console.log(`Node.js ${process.version}`);
   console.log('Stay hydrated! 💧');
 }
 
 function initProject(name = 'my-thirsty-project') {
   const projectDir = path.join(process.cwd(), name);
-  
+
   if (fs.existsSync(projectDir)) {
     console.error(`❌ Directory '${name}' already exists`);
     process.exit(1);
