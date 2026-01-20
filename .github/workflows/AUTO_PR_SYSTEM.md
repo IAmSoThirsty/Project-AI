@@ -30,6 +30,7 @@ The automation system consists of three interconnected workflows:
 7. Generates summary reports
 
 **Conflict Handling**:
+
 - Detects merge conflicts between branch heads and the `main` branch
 - Labels conflicted PRs with `conflicts` and `needs-manual-review`
 - Non-conflicted PRs get `auto-merge` and `ready-for-review` labels
