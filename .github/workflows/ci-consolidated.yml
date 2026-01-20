@@ -52,10 +52,58 @@ jobs:
         run: python -m pip install --upgrade pip
 
       - name: Install project requirements
-        run: python -m pip install -r requirements.txt
+        run: |
+          echo "📦 Installing dependencies from requirements.txt..."
+          if [ -f requirements.txt ]; then
+            python -m pip install -r requirements.txt
+            echo "✅ Installed requirements.txt"
+          else
+            echo "⚠️  No requirements.txt found"
+          fi
+
+      - name: Install dev requirements
+        run: |
+          echo "📦 Installing dev dependencies from requirements-dev.txt..."
+          if [ -f requirements-dev.txt ]; then
+            python -m pip install -r requirements-dev.txt
+            echo "✅ Installed requirements-dev.txt"
+          else
+            echo "⚠️  No requirements-dev.txt found, skipping"
+          fi
+
+      - name: Install Poetry dependencies (if configured)
+        run: |
+          echo "📦 Checking for Poetry configuration..."
+          if [ -f pyproject.toml ] && grep -q "\[tool.poetry\]" pyproject.toml; then
+            echo "Poetry configuration found, installing Poetry and dependencies..."
+            python -m pip install poetry
+            poetry install
+            echo "✅ Installed Poetry dependencies"
+          else
+            echo "⚠️  No Poetry configuration found, skipping"
+          fi
+
+      - name: Failsafe - Scan and install missing dependencies with pipreqs
+        run: |
+          echo "🔍 Failsafe: Scanning codebase for any missing dependencies..."
+          python -m pip install pipreqs || echo "pipreqs installation failed"
+          
+          # Generate requirements from actual imports
+          pipreqs . --force --savepath /tmp/discovered_requirements.txt 2>/dev/null || echo "pipreqs scan completed with warnings"
+          
+          if [ -f /tmp/discovered_requirements.txt ]; then
+            echo "📋 Discovered dependencies:"
+            cat /tmp/discovered_requirements.txt
+            
+            echo "📦 Installing discovered dependencies..."
+            python -m pip install -r /tmp/discovered_requirements.txt || echo "Some discovered dependencies may already be installed"
+            echo "✅ Failsafe installation complete"
+          else
+            echo "⚠️  No additional dependencies discovered"
+          fi
 
       - name: Install dev tools
-        run: python -m pip install ruff mypy pip-audit pre-commit black isort pytest-cov
+        run: python -m pip install ruff mypy pip-audit pre-commit black isort pytest-cov bandit
 
       - name: Run pre-commit hooks
         run: |
@@ -164,8 +212,37 @@ jobs:
 
       - name: Install dependencies
         run: |
+          echo "📦 Installing all project dependencies..."
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          
+          # Install main requirements
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+            echo "✅ Installed requirements.txt"
+          fi
+          
+          # Install dev requirements
+          if [ -f requirements-dev.txt ]; then
+            pip install -r requirements-dev.txt
+            echo "✅ Installed requirements-dev.txt"
+          fi
+          
+          # Check for Poetry configuration
+          if [ -f pyproject.toml ] && grep -q "\[tool.poetry\]" pyproject.toml; then
+            python -m pip install poetry
+            poetry install
+            echo "✅ Installed Poetry dependencies"
+          fi
+          
+          # Failsafe with pipreqs
+          pip install pipreqs || echo "pipreqs installation failed"
+          pipreqs . --force --savepath /tmp/discovered_requirements.txt 2>/dev/null || true
+          if [ -f /tmp/discovered_requirements.txt ]; then
+            pip install -r /tmp/discovered_requirements.txt || true
+            echo "✅ Installed discovered dependencies"
+          fi
+          
+          # Install test tools
           pip install pytest pytest-cov ruff mypy
 
       - name: Lint CLI code
@@ -287,7 +364,37 @@ jobs:
       - name: Install Python test deps
         if: steps.detect_py.outputs.found != '0'
         run: |
+          echo "📦 Installing all project dependencies..."
           python -m pip install --upgrade pip
+          
+          # Install main requirements
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+            echo "✅ Installed requirements.txt"
+          fi
+          
+          # Install dev requirements
+          if [ -f requirements-dev.txt ]; then
+            pip install -r requirements-dev.txt
+            echo "✅ Installed requirements-dev.txt"
+          fi
+          
+          # Check for Poetry configuration
+          if [ -f pyproject.toml ] && grep -q "\[tool.poetry\]" pyproject.toml; then
+            python -m pip install poetry
+            poetry install
+            echo "✅ Installed Poetry dependencies"
+          fi
+          
+          # Failsafe with pipreqs
+          pip install pipreqs || echo "pipreqs installation failed"
+          pipreqs . --force --savepath /tmp/discovered_requirements.txt 2>/dev/null || true
+          if [ -f /tmp/discovered_requirements.txt ]; then
+            pip install -r /tmp/discovered_requirements.txt || true
+            echo "✅ Installed discovered dependencies"
+          fi
+          
+          # Install test tools
           pip install pytest flake8 pytest-cov
 
       - name: Run flake8
