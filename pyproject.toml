@@ -7,20 +7,19 @@ name = "project-ai"
 version = "1.0.0"
 description = "Comprehensive AI assistant with advanced features"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.11"
 license = {text = "MIT"}
 authors = [{name = "Project AI Team"}]
 keywords = ["ai", "assistant", "pyqt6", "machine-learning"]
 
 dependencies = [
-    "PyQt6>=6.0.0",
     "Flask>=3.0.0",
     "scikit-learn>=1.0.0",
     "geopy>=2.0.0",
-    "cryptography>=3.4.0",
+    "cryptography>=43.0.1",
     "openai>=0.27.0",
     "python-dotenv>=0.19.0",
-    "requests>=2.28.0",
+    "requests>=2.32.4",
     "numpy>=1.20.0",
     "pandas>=1.0.0",
     "matplotlib>=3.5.0",
@@ -28,6 +27,10 @@ dependencies = [
     "passlib>=1.7.0",
     "bcrypt>=5.0.0",
     "httpx>=0.24.0",
+    "defusedxml>=0.7.0",
+    "typer>=0.9.0",
+    "temporalio>=1.5.0",
+    "protobuf>=4.0.0",
 ]
 
 [project.optional-dependencies]
@@ -61,7 +64,7 @@ exclude = [
 line-length = 88
 
 # Target Python version
-target-version = "py312"
+target-version = "py311"
 
 [tool.ruff.lint]
 # Select rules to check
@@ -97,7 +100,7 @@ markers = [
 
 [tool.black]
 line-length = 88
-target-version = ['py312']
+target-version = ['py311']
 include = '\.pyi?$'
 exclude = '''
 /(

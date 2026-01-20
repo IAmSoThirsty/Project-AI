@@ -1,0 +1,241 @@
+name: Validate Guardian Approvals
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited, review_requested]
+  pull_request_review:
+    types: [submitted]
+
+permissions:
+  contents: read
+  pull-requests: read
+  issues: read
+
+jobs:
+  validate-guardian-approvals:
+    name: Validate Guardian Approvals
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check if PR affects personhood-critical surfaces
+        id: check_surfaces
+        run: |
+          echo "Checking if PR affects personhood-critical surfaces..."
+          
+          # Get list of changed files
+          git fetch origin ${{ github.base_ref }}
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD || echo "")
+          
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+          
+          # Define personhood-critical path patterns
+          CRITICAL_PATTERNS=(
+            "docs/AGI_CHARTER.md"
+            "docs/AGI_IDENTITY_SPECIFICATION.md"
+            "src/app/core/ai_systems.py"
+            "config/ethics_constraints.yml"
+            "data/ai_persona/"
+            "data/memory/"
+            "data/identities/"
+            "src/app/core/identity"
+            "src/app/core/meta_identity"
+            "src/app/core/governance"
+            "src/app/core/memory"
+            "data/learning_requests/"
+          )
+          
+          AFFECTS_PERSONHOOD=false
+          for pattern in "${CRITICAL_PATTERNS[@]}"; do
+            if echo "$CHANGED_FILES" | grep -q "$pattern"; then
+              echo "⚠️  PR affects personhood-critical surface: $pattern"
+              AFFECTS_PERSONHOOD=true
+            fi
+          done
+          
+          echo "affects_personhood=$AFFECTS_PERSONHOOD" >> $GITHUB_OUTPUT
+
+      - name: Check PR body for breaking change or personhood surface declaration
+        id: check_pr_body
+        run: |
+          PR_BODY=$(cat <<'EOF'
+          ${{ github.event.pull_request.body }}
+          EOF
+          )
+          
+          echo "Checking PR body..."
+          
+          # Check if PR declares breaking change
+          BREAKING_CHANGE=false
+          if echo "$PR_BODY" | grep -q "\[x\].*Breaking change"; then
+            echo "✓ PR declares breaking change"
+            BREAKING_CHANGE=true
+          fi
+          
+          # Check if PR declares personhood surface change
+          PERSONHOOD_CHANGE=false
+          if echo "$PR_BODY" | grep -q "\[x\].*Personhood surface change"; then
+            echo "✓ PR declares personhood surface change"
+            PERSONHOOD_CHANGE=true
+          fi
+          
+          # Check if behavioral impact assessment is completed
+          BEHAVIORAL_ASSESSMENT=false
+          if echo "$PR_BODY" | grep -q "\[x\].*Behavioral Impact Assessment completed"; then
+            echo "✓ Behavioral impact assessment completed"
+            BEHAVIORAL_ASSESSMENT=true
+          fi
+          
+          echo "breaking_change=$BREAKING_CHANGE" >> $GITHUB_OUTPUT
+          echo "personhood_change=$PERSONHOOD_CHANGE" >> $GITHUB_OUTPUT
+          echo "behavioral_assessment=$BEHAVIORAL_ASSESSMENT" >> $GITHUB_OUTPUT
+
+      - name: Determine if guardian approvals are required
+        id: require_guardians
+        run: |
+          AFFECTS_PERSONHOOD="${{ steps.check_surfaces.outputs.affects_personhood }}"
+          BREAKING_CHANGE="${{ steps.check_pr_body.outputs.breaking_change }}"
+          PERSONHOOD_CHANGE="${{ steps.check_pr_body.outputs.personhood_change }}"
+          
+          REQUIRE_GUARDIANS=false
+          if [ "$AFFECTS_PERSONHOOD" = "true" ] || [ "$BREAKING_CHANGE" = "true" ] || [ "$PERSONHOOD_CHANGE" = "true" ]; then
+            echo "🔒 Guardian approvals REQUIRED"
+            REQUIRE_GUARDIANS=true
+          else
+            echo "✓ Guardian approvals NOT required (no personhood surfaces affected)"
+          fi
+          
+          echo "require_guardians=$REQUIRE_GUARDIANS" >> $GITHUB_OUTPUT
+
+      - name: Validate guardian approvals
+        if: steps.require_guardians.outputs.require_guardians == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "Validating guardian approvals for PR #${{ github.event.pull_request.number }}..."
+          
+          # Define guardian team members (replace with actual GitHub usernames)
+          # In production, these should be GitHub teams: @org/cerberus-guardians, @org/codex-guardians, @org/galahad-guardians
+          # Triumvirate mapping: Cerberus (Security), Codex Deus Maximus (Memory/Logic), Galahad (Ethics/Empathy)
+          CERBERUS_GUARDIANS=("IAmSoThirsty")  # Primary Guardian (Cerberus - Security & Safety)
+          CODEX_GUARDIANS=("IAmSoThirsty")     # Memory Guardian (Codex Deus Maximus - Logic & Consistency)
+          GALAHAD_GUARDIANS=("IAmSoThirsty")   # Ethics Guardian (Galahad - Ethics & Empathy)
+          
+          # Get PR reviews
+          REVIEWS=$(gh api repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews \
+            --jq '.[] | select(.state == "APPROVED") | .user.login' || echo "")
+          
+          echo "Approved reviewers:"
+          echo "$REVIEWS"
+          
+          # Check for cerberus guardian approval
+          CERBERUS_APPROVED=false
+          for guardian in "${CERBERUS_GUARDIANS[@]}"; do
+            if echo "$REVIEWS" | grep -q "^${guardian}$"; then
+              echo "✓ Cerberus Guardian approval found: $guardian"
+              CERBERUS_APPROVED=true
+              break
+            fi
+          done
+          
+          # Check for codex guardian approval
+          CODEX_APPROVED=false
+          for guardian in "${CODEX_GUARDIANS[@]}"; do
+            if echo "$REVIEWS" | grep -q "^${guardian}$"; then
+              echo "✓ Codex Deus Maximus Guardian approval found: $guardian"
+              CODEX_APPROVED=true
+              break
+            fi
+          done
+          
+          # Check for galahad guardian approval
+          GALAHAD_APPROVED=false
+          for guardian in "${GALAHAD_GUARDIANS[@]}"; do
+            if echo "$REVIEWS" | grep -q "^${guardian}$"; then
+              echo "✓ Galahad Guardian approval found: $guardian"
+              GALAHAD_APPROVED=true
+              break
+            fi
+          done
+          
+          # Determine required approval count based on change type
+          AFFECTS_CORE_VALUES=false
+          if git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -q "src/app/core/ai_systems.py\|docs/AGI_CHARTER.md\|config/ethics_constraints.yml"; then
+            AFFECTS_CORE_VALUES=true
+          fi
+          
+          # Validate approvals
+          APPROVAL_COUNT=0
+          [ "$CERBERUS_APPROVED" = "true" ] && ((APPROVAL_COUNT++))
+          [ "$CODEX_APPROVED" = "true" ] && ((APPROVAL_COUNT++))
+          [ "$GALAHAD_APPROVED" = "true" ] && ((APPROVAL_COUNT++))
+          
+          echo ""
+          echo "==================================="
+          echo "Guardian Approval Status:"
+          echo "==================================="
+          echo "Cerberus (Security): $([ "$CERBERUS_APPROVED" = "true" ] && echo "✓ APPROVED" || echo "✗ PENDING")"
+          echo "Codex Deus Maximus (Memory): $([ "$CODEX_APPROVED" = "true" ] && echo "✓ APPROVED" || echo "✗ PENDING")"
+          echo "Galahad (Ethics): $([ "$GALAHAD_APPROVED" = "true" ] && echo "✓ APPROVED" || echo "✗ PENDING")"
+          echo "==================================="
+          echo "Total Approvals: $APPROVAL_COUNT / 3"
+          echo ""
+          
+          # Determine if sufficient approvals exist
+          if [ "$AFFECTS_CORE_VALUES" = "true" ]; then
+            echo "⚠️  This PR affects CORE VALUES - requires ALL 3 guardian approvals"
+            REQUIRED_APPROVALS=3
+          else
+            echo "ℹ️  This PR affects personhood surfaces - requires 2 of 3 guardian approvals"
+            REQUIRED_APPROVALS=2
+          fi
+          
+          if [ $APPROVAL_COUNT -lt $REQUIRED_APPROVALS ]; then
+            echo ""
+            echo "❌ FAILED: Insufficient guardian approvals"
+            echo "   Required: $REQUIRED_APPROVALS"
+            echo "   Current: $APPROVAL_COUNT"
+            echo ""
+            echo "This PR requires guardian approval before merge."
+            echo "See docs/AGI_CHARTER.md and docs/security/SECURITY_GOVERNANCE.md"
+            echo ""
+            echo "Missing approvals from:"
+            [ "$CERBERUS_APPROVED" = "false" ] && echo "  - Cerberus Guardian (Primary - Security & Safety)"
+            [ "$CODEX_APPROVED" = "false" ] && echo "  - Codex Deus Maximus Guardian (Memory - Logic & Consistency)"
+            [ "$GALAHAD_APPROVED" = "false" ] && echo "  - Galahad Guardian (Ethics - Ethics & Empathy)"
+            exit 1
+          fi
+          
+          echo "✅ SUCCESS: Guardian approval requirements met ($APPROVAL_COUNT/$REQUIRED_APPROVALS)"
+
+      - name: Check behavioral impact assessment
+        if: steps.require_guardians.outputs.require_guardians == 'true'
+        run: |
+          BEHAVIORAL_ASSESSMENT="${{ steps.check_pr_body.outputs.behavioral_assessment }}"
+          
+          if [ "$BEHAVIORAL_ASSESSMENT" != "true" ]; then
+            echo "❌ FAILED: Behavioral Impact Assessment not completed"
+            echo ""
+            echo "PRs affecting personhood surfaces must complete the Behavioral Impact Assessment."
+            echo "Please update the PR description using the template."
+            exit 1
+          fi
+          
+          echo "✅ Behavioral Impact Assessment completed"
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "==================================="
+          echo "Guardian Validation Summary"
+          echo "==================================="
+          echo "Affects personhood: ${{ steps.check_surfaces.outputs.affects_personhood }}"
+          echo "Breaking change: ${{ steps.check_pr_body.outputs.breaking_change }}"
+          echo "Personhood declared: ${{ steps.check_pr_body.outputs.personhood_change }}"
+          echo "Guardians required: ${{ steps.require_guardians.outputs.require_guardians }}"
+          echo "Behavioral assessment: ${{ steps.check_pr_body.outputs.behavioral_assessment }}"
+          echo "==================================="

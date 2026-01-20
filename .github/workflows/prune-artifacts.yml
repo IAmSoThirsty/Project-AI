@@ -5,13 +5,21 @@ on:
     - cron: '0 5 * * 0' # Weekly on Sunday at 05:00 UTC
   workflow_dispatch: {}
 
+permissions:
+  contents: read
+  actions: write
+
 jobs:
   prune:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # pinned from actions/checkout@v4
+
+      - name: Update submodules
+        run: git submodule update --init --recursive
+
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@0ae58b7817e9b40c6232e8bf08f42a7a6b8e60ec  # pinned from actions/setup-python@v4
         with:
           python-version: '3.11'
       - name: Install tools
@@ -25,7 +33,7 @@ jobs:
           python tools/prune_test_artifacts.py --dir test-artifacts --days 90 --delete
       - name: Upload pruned list
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b  # pinned from actions/upload-artifact@v4
         with:
           name: pruned-artifacts-list
           path: test-artifacts

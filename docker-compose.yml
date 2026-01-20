@@ -16,14 +16,21 @@ services:
       - FERNET_KEY=${FERNET_KEY}
       - DATA_DIR=/app/data
       - LOG_DIR=/app/logs
+      - ENABLE_METRICS=true
+      - METRICS_PORT=8000
     volumes:
       - ./src:/app/src
       - ./data:/app/data
       - ./logs:/app/logs
+      - ./config:/app/config
     ports:
-      # Adjust if your app exposes web ports
+      # Main application
       - "5000:5000"
+      # Prometheus metrics endpoints
       - "8000:8000"
+      - "8001:8001"
+      - "8002:8002"
+      - "8003:8003"
     # Uncomment for interactive terminal
     # stdin_open: true
     # tty: true
@@ -32,6 +39,195 @@ services:
     networks:
       - project-ai-network
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Prometheus - Time series database and monitoring
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: project-ai-prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=15d'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    volumes:
+      - ./config/prometheus:/etc/prometheus
+      - prometheus-data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - project-ai-network
+    restart: unless-stopped
+    depends_on:
+      - project-ai
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # AlertManager - Alert routing and management
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: project-ai-alertmanager
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'
+    volumes:
+      - ./config/alertmanager:/etc/alertmanager
+      - alertmanager-data:/alertmanager
+    ports:
+      - "9093:9093"
+    networks:
+      - project-ai-network
+    restart: unless-stopped
+    environment:
+      - SMTP_HOST=${SMTP_HOST:-smtp.gmail.com}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - ALERT_EMAIL_DEFAULT=${ALERT_EMAIL_DEFAULT:-admin@project-ai.local}
+      - ALERT_EMAIL_CRITICAL=${ALERT_EMAIL_CRITICAL:-admin@project-ai.local}
+      - ALERT_EMAIL_ETHICS=${ALERT_EMAIL_ETHICS:-admin@project-ai.local}
+      - ALERT_EMAIL_SECURITY=${ALERT_EMAIL_SECURITY:-admin@project-ai.local}
+      - ALERT_EMAIL_AI_HEALTH=${ALERT_EMAIL_AI_HEALTH:-admin@project-ai.local}
+      - ALERT_EMAIL_PLUGINS=${ALERT_EMAIL_PLUGINS:-admin@project-ai.local}
+
+  # Grafana - Metrics visualization and dashboards
+  grafana:
+    image: grafana/grafana:latest
+    container_name: project-ai-grafana
+    volumes:
+      - ./config/grafana:/etc/grafana/provisioning
+      - grafana-data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - project-ai-network
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+      - GF_SERVER_ROOT_URL=http://localhost:3000
+    depends_on:
+      - prometheus
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Node Exporter - System metrics (optional)
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: project-ai-node-exporter
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    ports:
+      - "9100:9100"
+    networks:
+      - project-ai-network
+    restart: unless-stopped
+
+  # Temporal.io Server - Workflow orchestration
+  temporal:
+    image: temporalio/auto-setup:latest
+    container_name: project-ai-temporal
+    ports:
+      - "7233:7233"   # gRPC
+      - "8233:8233"   # Web UI
+    environment:
+      - DB=postgresql
+      - DB_PORT=5432
+      - POSTGRES_USER=temporal
+      - POSTGRES_PWD=temporal
+      - POSTGRES_SEEDS=temporal-postgresql
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development.yaml
+    volumes:
+      - ./config/temporal:/etc/temporal/config/dynamicconfig
+    networks:
+      - project-ai-network
+    depends_on:
+      - temporal-postgresql
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "tctl", "--address", "temporal:7233", "cluster", "health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # PostgreSQL for Temporal
+  temporal-postgresql:
+    image: postgres:13
+    container_name: project-ai-temporal-db
+    environment:
+      - POSTGRES_USER=temporal
+      - POSTGRES_PASSWORD=temporal
+      - POSTGRES_DB=temporal
+    volumes:
+      - temporal-postgresql-data:/var/lib/postgresql/data
+    networks:
+      - project-ai-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U temporal"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Temporal Worker - Processes workflows and activities
+  temporal-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: project-ai-temporal-worker
+    command: python -m app.temporal.worker
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=/app/src
+      - TEMPORAL_HOST=temporal:7233
+      - TEMPORAL_NAMESPACE=default
+      - TEMPORAL_TASK_QUEUE=project-ai-tasks
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - HUGGINGFACE_API_KEY=${HUGGINGFACE_API_KEY}
+      - FERNET_KEY=${FERNET_KEY}
+    volumes:
+      - ./src:/app/src
+      - ./data:/app/data
+      - ./logs:/app/logs
+    networks:
+      - project-ai-network
+    depends_on:
+      - temporal
+    restart: unless-stopped
+    env_file:
+      - .env
+
+volumes:
+  prometheus-data:
+    driver: local
+  alertmanager-data:
+    driver: local
+  grafana-data:
+    driver: local
+  temporal-postgresql-data:
+    driver: local
 
 networks:
   project-ai-network:
