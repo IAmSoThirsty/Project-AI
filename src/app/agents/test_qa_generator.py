@@ -16,15 +16,35 @@ import subprocess  # nosec B404 - subprocess usage for trusted testing tool only
 import time
 from typing import Any
 
+from app.core.cognition_kernel import CognitionKernel, ExecutionType
+from app.core.kernel_integration import KernelRoutedAgent
+
 logger = logging.getLogger(__name__)
 
 
-class TestQAGenerator:
-    def __init__(self, data_dir: str = "data") -> None:
+class TestQAGenerator(KernelRoutedAgent):
+    def __init__(self, data_dir: str = "data", kernel: CognitionKernel | None = None) -> None:
+        # Initialize kernel routing (COGNITION KERNEL INTEGRATION)
+        super().__init__(
+            kernel=kernel,
+            execution_type=ExecutionType.AGENT_ACTION,
+            default_risk_level="medium"
+        )
         self.data_dir = data_dir
         self._last_test_dir: str | None = None
 
     def generate_test_for_module(self, module_path: str) -> dict[str, Any]:
+        # Route through kernel (COGNITION KERNEL ROUTING)
+        return self._execute_through_kernel(
+            self._do_generate_test_for_module,
+            module_path,
+            operation_name="generate_test",
+            risk_level="medium",
+            metadata={"module_path": module_path}
+        )
+
+    def _do_generate_test_for_module(self, module_path: str) -> dict[str, Any]:
+        """Internal implementation of test generation."""
         # Create a unique subdirectory for this generation to avoid colliding with other test artifacts
         base = os.path.basename(module_path)
         modname = os.path.splitext(base)[0]
@@ -77,6 +97,17 @@ class TestQAGenerator:
         Security: Uses shutil.which to resolve pytest executable.
         Test directory is validated to exist before running.
         """
+        # Route through kernel (COGNITION KERNEL ROUTING)
+        return self._execute_through_kernel(
+            self._do_run_tests,
+            tests_dir,
+            operation_name="run_tests",
+            risk_level="medium",
+            metadata={"tests_dir": tests_dir or self._last_test_dir}
+        )
+
+    def _do_run_tests(self, tests_dir: str | None = None) -> dict[str, Any]:
+        """Internal implementation of test execution."""
         # Prefer running only the latest generated test directory to avoid unrelated tests
         run_dir = tests_dir or self._last_test_dir or os.path.join(self.data_dir, "generated_tests")
         if not os.path.exists(run_dir):
