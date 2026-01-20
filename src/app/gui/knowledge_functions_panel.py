@@ -9,19 +9,9 @@ This module provides PyQt6 UI components for:
 
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont
-from PyQt6.QtWidgets import (
-    QComboBox,
-    QFrame,
-    QHBoxLayout,
-    QLabel,
-    QLineEdit,
-    QListWidget,
-    QListWidgetItem,
-    QPushButton,
-    QTextEdit,
-    QVBoxLayout,
-    QWidget,
-)
+from PyQt6.QtWidgets import (QComboBox, QFrame, QHBoxLayout, QLabel, QLineEdit,
+                             QListWidget, QListWidgetItem, QPushButton, QTextEdit,
+                             QVBoxLayout, QWidget)
 
 # ============================================================================
 # STYLE CONSTANTS

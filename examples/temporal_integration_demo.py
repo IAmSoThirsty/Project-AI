@@ -18,13 +18,12 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from app.service.ai_controller import AIController
-from integrations.temporal.workflows.example_workflow import WorkflowInput
 
 
 async def demo_without_server():
     """
     Demonstrate the integration structure (will fail without Temporal server).
-    
+
     This shows the proper way to use the controller even if server is not running.
     """
     print("=" * 70)
@@ -49,33 +48,33 @@ async def demo_without_server():
     try:
         await controller.connect()
         print("   ✓ Connected to Temporal server")
-        
+
         print()
         print("2. Starting an example workflow...")
         result = await controller.process_ai_request(
             data="Explain the concept of machine learning",
             user_id="demo_user",
-            workflow_id="demo-workflow-test"
+            workflow_id="demo-workflow-test",
         )
-        
-        print(f"   ✓ Workflow completed")
+
+        print("   ✓ Workflow completed")
         print(f"   - Success: {result.success}")
-        
+
         if result.success:
             print(f"   - Result: {result.result}")
             print(f"   - Steps completed: {result.steps_completed}")
         else:
             print(f"   - Error: {result.error}")
-            
+
     except ConnectionError as e:
         print(f"   ✗ Connection failed: {e}")
         print()
         print("   This is expected if Temporal server is not running.")
         print("   Start it with: docker-compose up -d temporal")
-        
+
     except Exception as e:
         print(f"   ✗ Unexpected error: {e}")
-        
+
     finally:
         await controller.close()
         print()
@@ -91,17 +90,17 @@ async def demo_workflow_structure():
     print("Workflow Structure Information")
     print("=" * 70)
     print()
-    
+
     print("Available Workflows:")
     print("  - ExampleWorkflow: Multi-step AI processing")
     print()
-    
+
     print("Available Activities:")
     print("  - validate_input: Validate request data")
     print("  - simulate_ai_call: Simulate AI API call")
     print("  - process_ai_task: Process results")
     print()
-    
+
     print("Usage Example:")
     print("""
 from app.service.ai_controller import AIController

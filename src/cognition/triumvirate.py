@@ -171,14 +171,19 @@ class Triumvirate:
             if self.config.enable_telemetry:
                 self._record_telemetry_event("process_complete", result)
 
-            logger.info(f"Triumvirate processing complete [{correlation_id}] in {duration_ms:.2f}ms")
+            logger.info(
+                f"Triumvirate processing complete [{correlation_id}] in {duration_ms:.2f}ms"
+            )
 
             return result
 
         except Exception as e:
             logger.error(f"Triumvirate processing error [{correlation_id}]: {e}")
             return self._build_error_response(
-                correlation_id, f"Processing error: {e}", {"exception": str(e)}, start_time
+                correlation_id,
+                f"Processing error: {e}",
+                {"exception": str(e)},
+                start_time,
             )
 
     def get_status(self) -> dict:

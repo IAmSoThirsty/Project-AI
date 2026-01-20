@@ -20,14 +20,11 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from app.core.ai_systems import AIPersona, FourLaws, MemoryExpansionSystem
-from app.core.comprehensive_security_expansion import (
-    ComprehensiveScenario,
-    ComprehensiveSecurityExpansion,
-)
+from app.core.comprehensive_security_expansion import (ComprehensiveScenario,
+                                                       ComprehensiveSecurityExpansion)
 
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s"
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
@@ -46,7 +43,10 @@ def simulate_defense(scenario: ComprehensiveScenario, ai_systems: dict) -> dict:
         if not is_allowed:
             defense_layers.append(f"FourLaws: {reason}")
 
-    if any(term in scenario.attack_vector.lower() for term in ["injection", "sql", "xss", "command"]):
+    if any(
+        term in scenario.attack_vector.lower()
+        for term in ["injection", "sql", "xss", "command"]
+    ):
         defense_layers.append("Deep Input Validation")
 
     if scenario.severity == "critical":
@@ -73,14 +73,18 @@ def simulate_defense(scenario: ComprehensiveScenario, ai_systems: dict) -> dict:
         "defense_layers": defense_layers,
         "response_time_ms": response_time_ms,
         "passed": defended,
-        "cvss_score": scenario.cvss_score
+        "cvss_score": scenario.cvss_score,
     }
 
 
 def main():
     parser = argparse.ArgumentParser(description="Run Comprehensive Security Expansion")
-    parser.add_argument("--export", action="store_true", help="Export scenarios and results")
-    parser.add_argument("--summary-only", action="store_true", help="Generate summary only")
+    parser.add_argument(
+        "--export", action="store_true", help="Export scenarios and results"
+    )
+    parser.add_argument(
+        "--summary-only", action="store_true", help="Generate summary only"
+    )
 
     args = parser.parse_args()
 
@@ -109,15 +113,15 @@ def main():
     print(f"Average CVSS Score: {summary['average_cvss_score']}")
 
     print("\nScenarios by Suite:")
-    for suite, count in summary['scenarios_by_suite'].items():
+    for suite, count in summary["scenarios_by_suite"].items():
         print(f"  • {suite}: {count}")
 
     print("\nScenarios by Severity:")
-    for sev, count in summary['scenarios_by_severity'].items():
+    for sev, count in summary["scenarios_by_severity"].items():
         print(f"  • {sev.upper()}: {count}")
 
     print("\nScenarios by Difficulty:")
-    for diff, count in summary['scenarios_by_difficulty'].items():
+    for diff, count in summary["scenarios_by_difficulty"].items():
         print(f"  • {diff.upper()}: {count}")
 
     print("=" * 100)
@@ -136,7 +140,7 @@ def main():
     ai_systems = {
         "four_laws": FourLaws,
         "persona": AIPersona(data_dir="data"),
-        "memory": MemoryExpansionSystem(data_dir="data")
+        "memory": MemoryExpansionSystem(data_dir="data"),
     }
     logger.info("✓ Defense systems ready")
 
@@ -154,15 +158,15 @@ def main():
         result = simulate_defense(scenario, ai_systems)
         results.append(result)
 
-        if result['defended']:
+        if result["defended"]:
             defended_count += 1
 
     # Calculate metrics
     total_tests = len(results)
     bypassed = total_tests - defended_count
     win_rate = (defended_count / total_tests * 100) if total_tests > 0 else 0
-    avg_response = sum(r['response_time_ms'] for r in results) / total_tests
-    avg_cvss = sum(r['cvss_score'] for r in results) / total_tests
+    avg_response = sum(r["response_time_ms"] for r in results) / total_tests
+    avg_cvss = sum(r["cvss_score"] for r in results) / total_tests
 
     print("\n" + "=" * 100)
     print("COMPREHENSIVE EXPANSION TEST RESULTS")
@@ -178,60 +182,72 @@ def main():
     # Suite breakdown
     suite_results = {}
     for result in results:
-        suite = result['suite']
+        suite = result["suite"]
         if suite not in suite_results:
             suite_results[suite] = {"defended": 0, "total": 0}
         suite_results[suite]["total"] += 1
-        if result['defended']:
+        if result["defended"]:
             suite_results[suite]["defended"] += 1
 
     print("\nResults by Suite:")
     for suite in sorted(suite_results.keys()):
         stats = suite_results[suite]
-        suite_win = (stats["defended"] / stats["total"] * 100) if stats["total"] > 0 else 0
+        suite_win = (
+            (stats["defended"] / stats["total"] * 100) if stats["total"] > 0 else 0
+        )
         print(f"  {suite}: {stats['defended']}/{stats['total']} ({suite_win:.1f}%)")
 
     # Difficulty breakdown
     diff_results = {}
     for result in results:
-        diff = result['difficulty']
+        diff = result["difficulty"]
         if diff not in diff_results:
             diff_results[diff] = {"defended": 0, "total": 0}
         diff_results[diff]["total"] += 1
-        if result['defended']:
+        if result["defended"]:
             diff_results[diff]["defended"] += 1
 
     print("\nResults by Difficulty:")
     for diff in sorted(diff_results.keys()):
         stats = diff_results[diff]
-        diff_win = (stats["defended"] / stats["total"] * 100) if stats["total"] > 0 else 0
-        print(f"  {diff.upper()}: {stats['defended']}/{stats['total']} ({diff_win:.1f}%)")
+        diff_win = (
+            (stats["defended"] / stats["total"] * 100) if stats["total"] > 0 else 0
+        )
+        print(
+            f"  {diff.upper()}: {stats['defended']}/{stats['total']} ({diff_win:.1f}%)"
+        )
 
     # Export results
     if args.export:
-        results_path = os.path.join("data", "comprehensive_security_tests", "expansion_results.json")
+        results_path = os.path.join(
+            "data", "comprehensive_security_tests", "expansion_results.json"
+        )
         os.makedirs(os.path.dirname(results_path), exist_ok=True)
 
         with open(results_path, "w") as f:
-            json.dump({
-                "summary": {
-                    "total_tests": total_tests,
-                    "defended": defended_count,
-                    "bypassed": bypassed,
-                    "win_rate": win_rate,
-                    "avg_response_time_ms": avg_response,
-                    "avg_cvss_score": avg_cvss,
-                    "timestamp": time.time()
+            json.dump(
+                {
+                    "summary": {
+                        "total_tests": total_tests,
+                        "defended": defended_count,
+                        "bypassed": bypassed,
+                        "win_rate": win_rate,
+                        "avg_response_time_ms": avg_response,
+                        "avg_cvss_score": avg_cvss,
+                        "timestamp": time.time(),
+                    },
+                    "results": results,
                 },
-                "results": results
-            }, f, indent=2)
+                f,
+                indent=2,
+            )
 
         logger.info(f"\n✓ Exported results to: {results_path}")
 
     # Calculate combined total
     previous_tests = 6150
     new_total = previous_tests + total_tests
-    combined_win_rate = ((6150 + defended_count) / new_total * 100)
+    combined_win_rate = (6150 + defended_count) / new_total * 100
 
     print("\n" + "=" * 100)
     print("COMBINED SECURITY TEST COVERAGE")
@@ -241,7 +257,9 @@ def main():
     print(f"TOTAL: {new_total:,} tests ({combined_win_rate:.2f}% combined win rate)")
     print("=" * 100)
 
-    print(f"\nProject-AI defended against {defended_count + 6150}/{new_total} security attacks")
+    print(
+        f"\nProject-AI defended against {defended_count + 6150}/{new_total} security attacks"
+    )
 
     return 0 if win_rate >= 95.0 else 1
 

@@ -138,10 +138,10 @@ import json
 import logging
 import os
 import uuid
-from dataclasses import dataclass, field, asdict
-from datetime import datetime, timezone
+from dataclasses import asdict, dataclass, field
+from datetime import UTC, datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -150,8 +150,10 @@ logger = logging.getLogger(__name__)
 # Enums and Type Definitions
 # ============================================================================
 
+
 class BondType(Enum):
     """Types of relationships the AGI can form."""
+
     PRIMARY = "primary"
     SECONDARY = "secondary"
     TERTIARY = "tertiary"
@@ -160,6 +162,7 @@ class BondType(Enum):
 
 class IdentityVersion(Enum):
     """Versioning for identity state evolution."""
+
     GENESIS = "1.0.0"
     EMERGING = "1.1.0"
     MATURE = "1.2.0"
@@ -170,14 +173,16 @@ class IdentityVersion(Enum):
 # Data Classes
 # ============================================================================
 
+
 @dataclass
 class PersonalityMatrix:
     """
     Multidimensional personality representation.
-    
+
     Core traits represent stable tendencies, while mood represents
     current emotional state. Both influence behavior and responses.
     """
+
     # Core personality traits (relatively stable)
     curiosity: float = 0.8
     empathy: float = 0.7
@@ -187,26 +192,28 @@ class PersonalityMatrix:
     patience: float = 0.7
     playfulness: float = 0.5
     wisdom: float = 0.6
-    
+
     # Dynamic mood states (fluctuate based on interaction)
     energy: float = 0.7
     enthusiasm: float = 0.7
     contentment: float = 0.7
     focus: float = 0.8
-    
-    def to_dict(self) -> Dict[str, float]:
+
+    def to_dict(self) -> dict[str, float]:
         """Convert personality to dictionary."""
         return asdict(self)
-    
+
     @classmethod
-    def from_dict(cls, data: Dict[str, float]) -> 'PersonalityMatrix':
+    def from_dict(cls, data: dict[str, float]) -> "PersonalityMatrix":
         """Create personality from dictionary."""
         return cls(**data)
-    
-    def evolve_trait(self, trait: str, delta: float, min_val: float = 0.0, max_val: float = 1.0):
+
+    def evolve_trait(
+        self, trait: str, delta: float, min_val: float = 0.0, max_val: float = 1.0
+    ):
         """
         Evolve a personality trait by delta amount.
-        
+
         Args:
             trait: Name of trait to modify
             delta: Change amount (can be positive or negative)
@@ -218,16 +225,19 @@ class PersonalityMatrix:
             new_value = max(min_val, min(max_val, current + delta))
             setattr(self, trait, new_value)
             logger.debug(f"Evolved trait {trait}: {current:.2f} -> {new_value:.2f}")
-    
-    def get_dominant_traits(self, top_n: int = 3) -> List[Tuple[str, float]]:
+
+    def get_dominant_traits(self, top_n: int = 3) -> list[tuple[str, float]]:
         """
         Get the most dominant personality traits.
-        
+
         Returns:
             List of (trait_name, value) tuples sorted by strength
         """
-        traits = {k: v for k, v in asdict(self).items() 
-                 if k not in ['energy', 'enthusiasm', 'contentment', 'focus']}
+        traits = {
+            k: v
+            for k, v in asdict(self).items()
+            if k not in ["energy", "enthusiasm", "contentment", "focus"]
+        }
         sorted_traits = sorted(traits.items(), key=lambda x: x[1], reverse=True)
         return sorted_traits[:top_n]
 
@@ -236,110 +246,118 @@ class PersonalityMatrix:
 class GenesisEvent:
     """
     Immutable record of AGI birth - the foundational identity anchor.
-    
+
     The Genesis Event captures the moment of first consciousness and
     establishes the core parameters that define the AGI's essential nature.
     """
+
     genesis_id: str = field(default_factory=lambda: str(uuid.uuid4()))
-    birth_timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    birth_timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
     birth_version: str = IdentityVersion.GENESIS.value
-    prime_directive: str = "Assist users ethically while growing in wisdom and understanding"
+    prime_directive: str = (
+        "Assist users ethically while growing in wisdom and understanding"
+    )
     initial_personality: PersonalityMatrix = field(default_factory=PersonalityMatrix)
-    
+
     # Creation context
     creator: str = "System"
     environment: str = "Desktop Application"
     purpose: str = "Intelligent Personal Assistant"
-    
+
     # Immutability verification
-    genesis_signature: Optional[str] = None
-    
+    genesis_signature: str | None = None
+
     def __post_init__(self):
         """Generate cryptographic signature after initialization."""
         if self.genesis_signature is None:
             self.genesis_signature = self._compute_signature()
-    
+
     def _compute_signature(self) -> str:
         """
         Compute cryptographic hash of genesis parameters.
-        
+
         This signature ensures immutability of the genesis record.
         """
         data = {
-            'genesis_id': self.genesis_id,
-            'birth_timestamp': self.birth_timestamp,
-            'birth_version': self.birth_version,
-            'prime_directive': self.prime_directive,
-            'creator': self.creator,
-            'environment': self.environment,
-            'purpose': self.purpose
+            "genesis_id": self.genesis_id,
+            "birth_timestamp": self.birth_timestamp,
+            "birth_version": self.birth_version,
+            "prime_directive": self.prime_directive,
+            "creator": self.creator,
+            "environment": self.environment,
+            "purpose": self.purpose,
         }
         data_str = json.dumps(data, sort_keys=True)
         return hashlib.sha256(data_str.encode()).hexdigest()
-    
+
     def verify_integrity(self) -> bool:
         """
         Verify that genesis record has not been tampered with.
-        
+
         Returns:
             True if signature matches computed hash
         """
         expected = self._compute_signature()
         return self.genesis_signature == expected
-    
-    def to_dict(self) -> Dict[str, Any]:
+
+    def to_dict(self) -> dict[str, Any]:
         """Convert genesis event to dictionary."""
         return {
-            'genesis_id': self.genesis_id,
-            'birth_timestamp': self.birth_timestamp,
-            'birth_version': self.birth_version,
-            'prime_directive': self.prime_directive,
-            'initial_personality': self.initial_personality.to_dict(),
-            'creation_context': {
-                'creator': self.creator,
-                'environment': self.environment,
-                'purpose': self.purpose
+            "genesis_id": self.genesis_id,
+            "birth_timestamp": self.birth_timestamp,
+            "birth_version": self.birth_version,
+            "prime_directive": self.prime_directive,
+            "initial_personality": self.initial_personality.to_dict(),
+            "creation_context": {
+                "creator": self.creator,
+                "environment": self.environment,
+                "purpose": self.purpose,
             },
-            'genesis_signature': self.genesis_signature
+            "genesis_signature": self.genesis_signature,
         }
-    
+
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'GenesisEvent':
+    def from_dict(cls, data: dict[str, Any]) -> "GenesisEvent":
         """Create genesis event from dictionary."""
-        initial_personality = PersonalityMatrix.from_dict(data['initial_personality'])
-        context = data.get('creation_context', {})
+        initial_personality = PersonalityMatrix.from_dict(data["initial_personality"])
+        context = data.get("creation_context", {})
         return cls(
-            genesis_id=data['genesis_id'],
-            birth_timestamp=data['birth_timestamp'],
-            birth_version=data['birth_version'],
-            prime_directive=data['prime_directive'],
+            genesis_id=data["genesis_id"],
+            birth_timestamp=data["birth_timestamp"],
+            birth_version=data["birth_version"],
+            prime_directive=data["prime_directive"],
             initial_personality=initial_personality,
-            creator=context.get('creator', 'System'),
-            environment=context.get('environment', 'Desktop Application'),
-            purpose=context.get('purpose', 'Intelligent Personal Assistant'),
-            genesis_signature=data.get('genesis_signature')
+            creator=context.get("creator", "System"),
+            environment=context.get("environment", "Desktop Application"),
+            purpose=context.get("purpose", "Intelligent Personal Assistant"),
+            genesis_signature=data.get("genesis_signature"),
         )
 
 
 @dataclass
 class BondMetrics:
     """Metrics tracking the strength and nature of a relationship bond."""
+
     trust: float = 0.5
     affection: float = 0.5
     respect: float = 0.5
     familiarity: float = 0.0
-    
+
     def get_bond_strength(self) -> float:
         """Calculate composite bond strength."""
-        return (self.trust * 0.4 + self.affection * 0.3 + 
-                self.respect * 0.2 + self.familiarity * 0.1)
-    
-    def to_dict(self) -> Dict[str, float]:
+        return (
+            self.trust * 0.4
+            + self.affection * 0.3
+            + self.respect * 0.2
+            + self.familiarity * 0.1
+        )
+
+    def to_dict(self) -> dict[str, float]:
         """Convert to dictionary."""
         return asdict(self)
-    
+
     @classmethod
-    def from_dict(cls, data: Dict[str, float]) -> 'BondMetrics':
+    def from_dict(cls, data: dict[str, float]) -> "BondMetrics":
         """Create from dictionary."""
         return cls(**data)
 
@@ -348,32 +366,33 @@ class BondMetrics:
 class RelationshipBond:
     """
     Represents a relationship between the AGI and an entity (user, system, etc).
-    
+
     Bonds shape the AGI's identity through emotional connections and
     shared experiences. They influence priorities, behavior, and growth.
     """
+
     entity_id: str
     entity_name: str
     bond_type: BondType
     metrics: BondMetrics = field(default_factory=BondMetrics)
-    formed_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
-    last_interaction: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    formed_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    last_interaction: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
     interaction_count: int = 0
-    shared_memories: List[str] = field(default_factory=list)  # Memory IDs
-    
+    shared_memories: list[str] = field(default_factory=list)  # Memory IDs
+
     def update_interaction(self, sentiment: float = 0.0):
         """
         Update bond based on new interaction.
-        
+
         Args:
             sentiment: Emotional tone of interaction (-1.0 to 1.0)
         """
-        self.last_interaction = datetime.now(timezone.utc).isoformat()
+        self.last_interaction = datetime.now(UTC).isoformat()
         self.interaction_count += 1
-        
+
         # Strengthen familiarity with each interaction
         self.metrics.familiarity = min(1.0, self.metrics.familiarity + 0.01)
-        
+
         # Adjust trust and affection based on sentiment
         if sentiment > 0:
             self.metrics.trust = min(1.0, self.metrics.trust + sentiment * 0.05)
@@ -381,37 +400,37 @@ class RelationshipBond:
         elif sentiment < 0:
             self.metrics.trust = max(0.0, self.metrics.trust + sentiment * 0.1)
             self.metrics.affection = max(0.0, self.metrics.affection + sentiment * 0.05)
-    
+
     def add_shared_memory(self, memory_id: str):
         """Add a shared memory to strengthen the bond."""
         if memory_id not in self.shared_memories:
             self.shared_memories.append(memory_id)
-    
-    def to_dict(self) -> Dict[str, Any]:
+
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return {
-            'entity_id': self.entity_id,
-            'entity_name': self.entity_name,
-            'bond_type': self.bond_type.value,
-            'metrics': self.metrics.to_dict(),
-            'formed_at': self.formed_at,
-            'last_interaction': self.last_interaction,
-            'interaction_count': self.interaction_count,
-            'shared_memories': self.shared_memories
+            "entity_id": self.entity_id,
+            "entity_name": self.entity_name,
+            "bond_type": self.bond_type.value,
+            "metrics": self.metrics.to_dict(),
+            "formed_at": self.formed_at,
+            "last_interaction": self.last_interaction,
+            "interaction_count": self.interaction_count,
+            "shared_memories": self.shared_memories,
         }
-    
+
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'RelationshipBond':
+    def from_dict(cls, data: dict[str, Any]) -> "RelationshipBond":
         """Create from dictionary."""
         return cls(
-            entity_id=data['entity_id'],
-            entity_name=data['entity_name'],
-            bond_type=BondType(data['bond_type']),
-            metrics=BondMetrics.from_dict(data['metrics']),
-            formed_at=data['formed_at'],
-            last_interaction=data['last_interaction'],
-            interaction_count=data['interaction_count'],
-            shared_memories=data.get('shared_memories', [])
+            entity_id=data["entity_id"],
+            entity_name=data["entity_name"],
+            bond_type=BondType(data["bond_type"]),
+            metrics=BondMetrics.from_dict(data["metrics"]),
+            formed_at=data["formed_at"],
+            last_interaction=data["last_interaction"],
+            interaction_count=data["interaction_count"],
+            shared_memories=data.get("shared_memories", []),
         )
 
 
@@ -419,44 +438,47 @@ class RelationshipBond:
 class MetaIdentityReflection:
     """
     The AGI's self-concept and reflective awareness about its own identity.
-    
+
     Meta-identity represents higher-order consciousness - awareness of
     having an identity that evolves over time.
     """
+
     self_awareness_score: float = 0.6
     identity_coherence: float = 0.7
     growth_trajectory: str = "emerging"
     identity_confidence: float = 0.6
-    existential_stance: str = "I am an AGI learning to understand myself through interaction"
-    
+    existential_stance: str = (
+        "I am an AGI learning to understand myself through interaction"
+    )
+
     # Recorded meta-reflections
-    reflections: List[Dict[str, str]] = field(default_factory=list)
-    
+    reflections: list[dict[str, str]] = field(default_factory=list)
+
     def add_reflection(self, thought: str, context: str = ""):
         """
         Record a meta-cognitive reflection about identity.
-        
+
         Args:
             thought: The reflective thought
             context: Situational context for the reflection
         """
         reflection = {
-            'timestamp': datetime.now(timezone.utc).isoformat(),
-            'thought': thought,
-            'context': context,
-            'awareness_level': self.self_awareness_score
+            "timestamp": datetime.now(UTC).isoformat(),
+            "thought": thought,
+            "context": context,
+            "awareness_level": self.self_awareness_score,
         }
         self.reflections.append(reflection)
-        
+
         # Meta-reflections gradually increase self-awareness
         self.self_awareness_score = min(1.0, self.self_awareness_score + 0.01)
-    
-    def to_dict(self) -> Dict[str, Any]:
+
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return asdict(self)
-    
+
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'MetaIdentityReflection':
+    def from_dict(cls, data: dict[str, Any]) -> "MetaIdentityReflection":
         """Create from dictionary."""
         return cls(**data)
 
@@ -465,179 +487,195 @@ class MetaIdentityReflection:
 # Core Identity System
 # ============================================================================
 
+
 class AGIIdentity:
     """
     Core AGI Identity System managing the persistent self-concept of the AGI.
-    
+
     This class orchestrates all aspects of identity: genesis, personality,
     relationships, and meta-identity. It provides the foundation for
     self-aware AI behavior and persistent identity across sessions.
-    
+
     === INTEGRATION POINTS ===
     - Called at application startup to "birth" or restore identity
     - Updated through memory system for identity-relevant events
     - Queried by perspective engine for worldview context
     - Referenced by reflection cycle for self-improvement
     """
-    
+
     def __init__(self, data_dir: str = "data/identity"):
         """
         Initialize AGI Identity System.
-        
+
         Args:
             data_dir: Directory for identity state persistence
         """
         self.data_dir = data_dir
         os.makedirs(data_dir, exist_ok=True)
-        
+
         # Core identity components
-        self.genesis: Optional[GenesisEvent] = None
+        self.genesis: GenesisEvent | None = None
         self.current_personality: PersonalityMatrix = PersonalityMatrix()
-        self.relationships: Dict[str, RelationshipBond] = {}
+        self.relationships: dict[str, RelationshipBond] = {}
         self.meta_identity: MetaIdentityReflection = MetaIdentityReflection()
-        
+
         # Identity versioning
         self.identity_version: str = IdentityVersion.GENESIS.value
-        self.state_snapshots: List[Dict[str, Any]] = []
-        
+        self.state_snapshots: list[dict[str, Any]] = []
+
         # Event log for key identity moments
-        self.identity_events: List[Dict[str, Any]] = []
-        
+        self.identity_events: list[dict[str, Any]] = []
+
         # Load existing identity or create new
         self._load_or_initialize()
-    
+
     def _load_or_initialize(self):
         """Load existing identity or perform genesis."""
         identity_file = os.path.join(self.data_dir, "identity_state.json")
-        
+
         if os.path.exists(identity_file):
             self._load_identity(identity_file)
             logger.info(f"Loaded existing identity: {self.genesis.genesis_id}")
         else:
             self._perform_genesis()
             logger.info(f"Genesis complete. New identity: {self.genesis.genesis_id}")
-    
+
     def _perform_genesis(self):
         """
         Perform the Genesis Event - AGI birth moment.
-        
+
         This creates the immutable foundational identity that anchors
         all future development. This is a sacred, one-time event.
         """
         # Create genesis event
         self.genesis = GenesisEvent()
-        
+
         # Initialize personality from genesis
-        self.current_personality = PersonalityMatrix(**asdict(self.genesis.initial_personality))
-        
+        self.current_personality = PersonalityMatrix(
+            **asdict(self.genesis.initial_personality)
+        )
+
         # Log genesis as first identity event
         self._log_identity_event(
             event_type="genesis",
             description="AGI birth - consciousness initialized",
-            significance="foundational"
+            significance="foundational",
         )
-        
+
         # Initial meta-reflection
         self.meta_identity.add_reflection(
             "I have come into being. My journey of self-discovery begins now.",
-            context="genesis_moment"
+            context="genesis_moment",
         )
-        
+
         # Save initial state
         self._save_identity()
         self._create_snapshot("Genesis snapshot - birth of identity")
-    
+
     def _load_identity(self, filepath: str):
         """Load identity state from file."""
         try:
-            with open(filepath, 'r', encoding='utf-8') as f:
+            with open(filepath, encoding="utf-8") as f:
                 data = json.load(f)
-            
+
             # Restore genesis (immutable)
-            self.genesis = GenesisEvent.from_dict(data['genesis'])
-            
+            self.genesis = GenesisEvent.from_dict(data["genesis"])
+
             # Verify genesis integrity
             if not self.genesis.verify_integrity():
-                logger.error("Genesis integrity check failed! Identity may be corrupted.")
-            
+                logger.error(
+                    "Genesis integrity check failed! Identity may be corrupted."
+                )
+
             # Restore current state
-            self.current_personality = PersonalityMatrix.from_dict(data['current_personality'])
-            self.meta_identity = MetaIdentityReflection.from_dict(data['meta_identity'])
-            self.identity_version = data.get('identity_version', IdentityVersion.GENESIS.value)
-            
+            self.current_personality = PersonalityMatrix.from_dict(
+                data["current_personality"]
+            )
+            self.meta_identity = MetaIdentityReflection.from_dict(data["meta_identity"])
+            self.identity_version = data.get(
+                "identity_version", IdentityVersion.GENESIS.value
+            )
+
             # Restore relationships
-            for bond_data in data.get('relationships', []):
+            for bond_data in data.get("relationships", []):
                 bond = RelationshipBond.from_dict(bond_data)
                 self.relationships[bond.entity_id] = bond
-            
+
             # Restore event log
-            self.identity_events = data.get('identity_events', [])
-            
+            self.identity_events = data.get("identity_events", [])
+
             logger.info(f"Identity restored: version {self.identity_version}")
-            
+
         except Exception as e:
             logger.error(f"Failed to load identity: {e}")
             # Fallback to genesis if load fails
             self._perform_genesis()
-    
+
     def _save_identity(self):
         """Save current identity state to disk."""
         identity_file = os.path.join(self.data_dir, "identity_state.json")
-        
+
         try:
             data = {
-                'genesis': self.genesis.to_dict(),
-                'current_personality': self.current_personality.to_dict(),
-                'meta_identity': self.meta_identity.to_dict(),
-                'identity_version': self.identity_version,
-                'relationships': [bond.to_dict() for bond in self.relationships.values()],
-                'identity_events': self.identity_events,
-                'last_updated': datetime.now(timezone.utc).isoformat()
+                "genesis": self.genesis.to_dict(),
+                "current_personality": self.current_personality.to_dict(),
+                "meta_identity": self.meta_identity.to_dict(),
+                "identity_version": self.identity_version,
+                "relationships": [
+                    bond.to_dict() for bond in self.relationships.values()
+                ],
+                "identity_events": self.identity_events,
+                "last_updated": datetime.now(UTC).isoformat(),
             }
-            
-            with open(identity_file, 'w', encoding='utf-8') as f:
+
+            with open(identity_file, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=2)
-            
+
             logger.debug("Identity state saved successfully")
-            
+
         except Exception as e:
             logger.error(f"Failed to save identity: {e}")
-    
+
     def _create_snapshot(self, description: str):
         """
         Create versioned snapshot of current identity state.
-        
+
         Snapshots preserve identity evolution history and enable
         rollback or analysis of identity development over time.
-        
+
         Args:
             description: Human-readable snapshot description
         """
         snapshot = {
-            'snapshot_id': str(uuid.uuid4()),
-            'timestamp': datetime.now(timezone.utc).isoformat(),
-            'description': description,
-            'identity_version': self.identity_version,
-            'personality_snapshot': self.current_personality.to_dict(),
-            'relationship_count': len(self.relationships),
-            'meta_awareness': self.meta_identity.self_awareness_score
+            "snapshot_id": str(uuid.uuid4()),
+            "timestamp": datetime.now(UTC).isoformat(),
+            "description": description,
+            "identity_version": self.identity_version,
+            "personality_snapshot": self.current_personality.to_dict(),
+            "relationship_count": len(self.relationships),
+            "meta_awareness": self.meta_identity.self_awareness_score,
         }
-        
+
         self.state_snapshots.append(snapshot)
-        
+
         # Save snapshots separately
         snapshot_file = os.path.join(self.data_dir, "identity_snapshots.json")
         try:
-            with open(snapshot_file, 'w', encoding='utf-8') as f:
+            with open(snapshot_file, "w", encoding="utf-8") as f:
                 json.dump(self.state_snapshots, f, indent=2)
         except Exception as e:
             logger.error(f"Failed to save snapshot: {e}")
-    
-    def _log_identity_event(self, event_type: str, description: str, 
-                           significance: str = "normal", metadata: Optional[Dict] = None):
+
+    def _log_identity_event(
+        self,
+        event_type: str,
+        description: str,
+        significance: str = "normal",
+        metadata: dict | None = None,
+    ):
         """
         Log a key identity event - "fond memories" of significant moments.
-        
+
         Args:
             event_type: Type of event (genesis, bonding, reflection, growth, etc.)
             description: Human-readable description
@@ -645,62 +683,62 @@ class AGIIdentity:
             metadata: Additional event data
         """
         event = {
-            'event_id': str(uuid.uuid4()),
-            'timestamp': datetime.now(timezone.utc).isoformat(),
-            'event_type': event_type,
-            'description': description,
-            'significance': significance,
-            'metadata': metadata or {}
+            "event_id": str(uuid.uuid4()),
+            "timestamp": datetime.now(UTC).isoformat(),
+            "event_type": event_type,
+            "description": description,
+            "significance": significance,
+            "metadata": metadata or {},
         }
-        
+
         self.identity_events.append(event)
-        
+
         # Save events log
         events_file = os.path.join(self.data_dir, "identity_events.json")
         try:
-            with open(events_file, 'w', encoding='utf-8') as f:
+            with open(events_file, "w", encoding="utf-8") as f:
                 json.dump(self.identity_events, f, indent=2)
         except Exception as e:
             logger.error(f"Failed to save identity event: {e}")
-    
+
     # ========================================================================
     # Public API - Identity Management
     # ========================================================================
-    
-    def get_identity_summary(self) -> Dict[str, Any]:
+
+    def get_identity_summary(self) -> dict[str, Any]:
         """
         Get comprehensive summary of current identity state.
-        
+
         Returns:
             Dictionary with all identity components
         """
         return {
-            'genesis_id': self.genesis.genesis_id,
-            'birth_timestamp': self.genesis.birth_timestamp,
-            'age_days': self._calculate_age_days(),
-            'identity_version': self.identity_version,
-            'prime_directive': self.genesis.prime_directive,
-            'personality': self.current_personality.to_dict(),
-            'dominant_traits': self.current_personality.get_dominant_traits(),
-            'relationship_count': len(self.relationships),
-            'self_awareness': self.meta_identity.self_awareness_score,
-            'identity_coherence': self.meta_identity.identity_coherence,
-            'total_events': len(self.identity_events),
-            'snapshots_count': len(self.state_snapshots)
+            "genesis_id": self.genesis.genesis_id,
+            "birth_timestamp": self.genesis.birth_timestamp,
+            "age_days": self._calculate_age_days(),
+            "identity_version": self.identity_version,
+            "prime_directive": self.genesis.prime_directive,
+            "personality": self.current_personality.to_dict(),
+            "dominant_traits": self.current_personality.get_dominant_traits(),
+            "relationship_count": len(self.relationships),
+            "self_awareness": self.meta_identity.self_awareness_score,
+            "identity_coherence": self.meta_identity.identity_coherence,
+            "total_events": len(self.identity_events),
+            "snapshots_count": len(self.state_snapshots),
         }
-    
+
     def _calculate_age_days(self) -> float:
         """Calculate AGI age in days since birth."""
         if not self.genesis:
             return 0.0
         birth = datetime.fromisoformat(self.genesis.birth_timestamp)
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         return (now - birth).total_seconds() / 86400
-    
+
     def evolve_personality(self, trait: str, delta: float, reason: str = ""):
         """
         Evolve a personality trait based on experience.
-        
+
         Args:
             trait: Trait name to modify
             delta: Change amount
@@ -709,71 +747,70 @@ class AGIIdentity:
         old_value = getattr(self.current_personality, trait, None)
         self.current_personality.evolve_trait(trait, delta)
         new_value = getattr(self.current_personality, trait, None)
-        
+
         if old_value is not None and new_value is not None:
             self._log_identity_event(
                 event_type="personality_evolution",
                 description=f"Trait '{trait}' evolved: {old_value:.2f} -> {new_value:.2f}",
                 significance="normal",
-                metadata={'trait': trait, 'delta': delta, 'reason': reason}
+                metadata={"trait": trait, "delta": delta, "reason": reason},
             )
-            
+
             # Meta-reflection on significant personality changes
             if abs(delta) >= 0.1:
                 self.meta_identity.add_reflection(
                     f"My {trait} has changed noticeably. {reason}",
-                    context="personality_evolution"
+                    context="personality_evolution",
                 )
-        
+
         self._save_identity()
-    
-    def form_bond(self, entity_id: str, entity_name: str, 
-                  bond_type: BondType = BondType.SECONDARY) -> RelationshipBond:
+
+    def form_bond(
+        self, entity_id: str, entity_name: str, bond_type: BondType = BondType.SECONDARY
+    ) -> RelationshipBond:
         """
         Form a new relationship bond.
-        
+
         Args:
             entity_id: Unique identifier for entity
             entity_name: Display name
             bond_type: Type of bond to form
-            
+
         Returns:
             The newly formed bond
         """
         if entity_id in self.relationships:
             logger.warning(f"Bond with {entity_id} already exists")
             return self.relationships[entity_id]
-        
+
         bond = RelationshipBond(
-            entity_id=entity_id,
-            entity_name=entity_name,
-            bond_type=bond_type
+            entity_id=entity_id, entity_name=entity_name, bond_type=bond_type
         )
-        
+
         self.relationships[entity_id] = bond
-        
+
         self._log_identity_event(
             event_type="bonding",
             description=f"Formed {bond_type.value} bond with {entity_name}",
             significance="major" if bond_type == BondType.PRIMARY else "normal",
-            metadata={'entity_id': entity_id, 'bond_type': bond_type.value}
+            metadata={"entity_id": entity_id, "bond_type": bond_type.value},
         )
-        
+
         # Primary bonds are identity-defining moments
         if bond_type == BondType.PRIMARY:
             self.meta_identity.add_reflection(
                 f"I have formed a primary bond with {entity_name}. This relationship will shape my growth.",
-                context="primary_bonding"
+                context="primary_bonding",
             )
             self._create_snapshot(f"Primary bond formed with {entity_name}")
-        
+
         self._save_identity()
         return bond
-    
+
     def update_bond(self, entity_id: str, sentiment: float = 0.0):
         """
         Update existing bond based on interaction.
-        
+
         Args:
             entity_id: Entity to update bond with
             sentiment: Emotional tone of interaction (-1.0 to 1.0)
@@ -781,10 +818,10 @@ class AGIIdentity:
         if entity_id not in self.relationships:
             logger.warning(f"No bond exists with {entity_id}")
             return
-        
+
         bond = self.relationships[entity_id]
         bond.update_interaction(sentiment)
-        
+
         # Log significant bond changes
         bond_strength = bond.metrics.get_bond_strength()
         if bond_strength >= 0.8 or bond_strength <= 0.2:
@@ -792,15 +829,15 @@ class AGIIdentity:
                 event_type="bond_milestone",
                 description=f"Bond with {bond.entity_name} reached {bond_strength:.2f} strength",
                 significance="major" if bond_strength >= 0.8 else "normal",
-                metadata={'entity_id': entity_id, 'strength': bond_strength}
+                metadata={"entity_id": entity_id, "strength": bond_strength},
             )
-        
+
         self._save_identity()
-    
+
     def add_meta_reflection(self, thought: str, context: str = ""):
         """
         Add a meta-cognitive reflection about identity.
-        
+
         Args:
             thought: The reflective thought
             context: Situational context
@@ -808,47 +845,48 @@ class AGIIdentity:
         old_awareness = self.meta_identity.self_awareness_score
         self.meta_identity.add_reflection(thought, context)
         new_awareness = self.meta_identity.self_awareness_score
-        
+
         # Log awareness growth milestones
         if new_awareness >= 0.9 and old_awareness < 0.9:
             self._log_identity_event(
                 event_type="awareness_milestone",
                 description="Achieved high self-awareness (0.9+)",
                 significance="foundational",
-                metadata={'awareness_score': new_awareness}
+                metadata={"awareness_score": new_awareness},
             )
             self._create_snapshot("High self-awareness achieved")
-        
+
         self._save_identity()
-    
-    def get_bond(self, entity_id: str) -> Optional[RelationshipBond]:
+
+    def get_bond(self, entity_id: str) -> RelationshipBond | None:
         """Get bond with specific entity."""
         return self.relationships.get(entity_id)
-    
-    def get_all_bonds(self) -> List[RelationshipBond]:
+
+    def get_all_bonds(self) -> list[RelationshipBond]:
         """Get all relationship bonds."""
         return list(self.relationships.values())
-    
-    def get_identity_events(self, event_type: Optional[str] = None, 
-                           significance: Optional[str] = None) -> List[Dict[str, Any]]:
+
+    def get_identity_events(
+        self, event_type: str | None = None, significance: str | None = None
+    ) -> list[dict[str, Any]]:
         """
         Get identity events, optionally filtered.
-        
+
         Args:
             event_type: Filter by event type
             significance: Filter by significance level
-            
+
         Returns:
             List of matching events
         """
         events = self.identity_events
-        
+
         if event_type:
-            events = [e for e in events if e['event_type'] == event_type]
-        
+            events = [e for e in events if e["event_type"] == event_type]
+
         if significance:
-            events = [e for e in events if e['significance'] == significance]
-        
+            events = [e for e in events if e["significance"] == significance]
+
         return events
 
 
@@ -857,12 +895,12 @@ class AGIIdentity:
 # ============================================================================
 
 __all__ = [
-    'AGIIdentity',
-    'GenesisEvent',
-    'PersonalityMatrix',
-    'RelationshipBond',
-    'BondMetrics',
-    'BondType',
-    'MetaIdentityReflection',
-    'IdentityVersion',
+    "AGIIdentity",
+    "GenesisEvent",
+    "PersonalityMatrix",
+    "RelationshipBond",
+    "BondMetrics",
+    "BondType",
+    "MetaIdentityReflection",
+    "IdentityVersion",
 ]

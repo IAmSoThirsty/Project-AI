@@ -31,7 +31,9 @@ class MemoryRecord:
         return {
             "id": self.id,
             "content": self.content,
-            "embedding": self.embedding.tolist() if self.embedding is not None else None,
+            "embedding": (
+                self.embedding.tolist() if self.embedding is not None else None
+            ),
             "metadata": self.metadata or {},
             "timestamp": self.timestamp or datetime.now().isoformat(),
         }
@@ -148,7 +150,9 @@ class MemoryAdapter:
         logger.info(f"Added memory: {memory_id}")
         return memory_id
 
-    def search(self, query: str, top_k: int = 5, min_similarity: float = 0.0) -> list[dict]:
+    def search(
+        self, query: str, top_k: int = 5, min_similarity: float = 0.0
+    ) -> list[dict]:
         """
         Search for similar memories using semantic similarity.
 
@@ -171,9 +175,7 @@ class MemoryAdapter:
             logger.warning("No embeddings available for search")
             return []
 
-        similarities = self._cosine_similarity(
-            query_embedding, self.embeddings_matrix
-        )
+        similarities = self._cosine_similarity(query_embedding, self.embeddings_matrix)
 
         # Get top-k indices
         top_indices = np.argsort(similarities)[::-1][:top_k]

@@ -46,6 +46,7 @@ class TestAISystemsRemaining:
 
             # Verify content added to black vault
             import hashlib
+
             content = learning.requests[req_id]["description"]
             content_hash = hashlib.sha256(content.encode()).hexdigest()
             assert content_hash in learning.black_vault
@@ -141,7 +142,9 @@ class TestUserManagerRemaining:
 
                 result = manager._hash_and_store_password("user", "password")
                 # Should fall back to pbkdf2
-                assert result is True or result is False  # Depends on exception handling
+                assert (
+                    result is True or result is False
+                )  # Depends on exception handling
 
     def test_authenticate_user_not_found(self, manager):
         """Test authentication returns False for non-existent user (line 84)."""
@@ -199,9 +202,7 @@ class TestIntegrationEdgeCases:
             persona_obj = AIPersona(data_dir=tmpdir)
 
             # Create request
-            req_id = learning.create_request(
-                "Python", "Learn list comprehensions"
-            )
+            req_id = learning.create_request("Python", "Learn list comprehensions")
             assert req_id != ""
 
             # Update persona interactions
@@ -223,10 +224,15 @@ class TestIntegrationEdgeCases:
 
             # Build prompt with persona awareness
             base_prompt = "a beautiful landscape"
-            enhanced = generator.build_enhanced_prompt(base_prompt, ImageStyle.PHOTOREALISTIC)
+            enhanced = generator.build_enhanced_prompt(
+                base_prompt, ImageStyle.PHOTOREALISTIC
+            )
 
             assert len(enhanced) > len(base_prompt)
-            assert "photorealistic" in enhanced.lower() or "professional" in enhanced.lower()
+            assert (
+                "photorealistic" in enhanced.lower()
+                or "professional" in enhanced.lower()
+            )
 
             os.environ.pop("HUGGINGFACE_API_KEY", None)
 

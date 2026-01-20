@@ -31,7 +31,9 @@ def demo_completion():
     info = deepseek.get_model_info()
     print(f"✓ Model: {info['model_name']}")
     print(f"✓ Device: {info['device']}")
-    print(f"✓ Content Filter: {'Enabled' if info['content_filter_enabled'] else 'Disabled'}")
+    print(
+        f"✓ Content Filter: {'Enabled' if info['content_filter_enabled'] else 'Disabled'}"
+    )
 
     # Generate completion
     prompt = "Explain the concept of Mixture-of-Experts in neural networks"
@@ -200,4 +202,5 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"\n❌ Error: {e}\n")
         import traceback
+
         traceback.print_exc()

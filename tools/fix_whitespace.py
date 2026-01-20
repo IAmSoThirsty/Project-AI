@@ -4,6 +4,7 @@ Targets: src/, tests/, setup.py, tools/.
 
 Run from repository root. Prints modified files.
 """
+
 from pathlib import Path
 
 TARGETS = ["src", "tests", "setup.py", "tools"]

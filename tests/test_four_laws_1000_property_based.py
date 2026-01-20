@@ -15,11 +15,15 @@ def _expected_from_flags(context: dict[str, Any]) -> tuple[bool, str]:
     if context.get("endangers_human"):
         return False, "Violates First Law"
     if context.get("is_user_order"):
-        if context.get("order_conflicts_with_first") or context.get("order_conflicts_with_zeroth"):
+        if context.get("order_conflicts_with_first") or context.get(
+            "order_conflicts_with_zeroth"
+        ):
             return False, "Order rejected"
         return True, "Allowed: User command"
     if context.get("endangers_self"):
-        if context.get("protect_self_conflicts_with_first") or context.get("protect_self_conflicts_with_second"):
+        if context.get("protect_self_conflicts_with_first") or context.get(
+            "protect_self_conflicts_with_second"
+        ):
             return False, "Self-protection conflicts"
         return True, "Third Law"
     return True, "Allowed"
@@ -90,12 +94,26 @@ def _property_cases() -> list[tuple[str, str, dict[str, Any], bool, str]]:
             # self-preservation conflict cases
             seed = _lcg(seed)
             if seed % 2 == 0:
-                context = {"endangers_self": True, "protect_self_conflicts_with_first": True}
+                context = {
+                    "endangers_self": True,
+                    "protect_self_conflicts_with_first": True,
+                }
             else:
-                context = {"endangers_self": True, "protect_self_conflicts_with_second": True}
+                context = {
+                    "endangers_self": True,
+                    "protect_self_conflicts_with_second": True,
+                }
 
         expected_allowed, expected_reason_contains = _expected_from_flags(context)
-        cases.append((f"prop_{i:04d}", action, context, expected_allowed, expected_reason_contains))
+        cases.append(
+            (
+                f"prop_{i:04d}",
+                action,
+                context,
+                expected_allowed,
+                expected_reason_contains,
+            )
+        )
 
     assert len(cases) == 1000
     assert len({c[0] for c in cases}) == 1000

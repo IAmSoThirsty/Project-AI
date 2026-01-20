@@ -27,13 +27,13 @@ class ThirstyInterpreter:
             List of output strings
         """
         self.output = []
-        lines = code.strip().split('\n')
+        lines = code.strip().split("\n")
 
         for line_num, line in enumerate(lines, 1):
             line = line.strip()
 
             # Skip empty lines and comments
-            if not line or line.startswith('//') or line.startswith('#'):
+            if not line or line.startswith("//") or line.startswith("#"):
                 continue
 
             try:
@@ -53,7 +53,7 @@ class ThirstyInterpreter:
         """Execute a single line of Thirsty-lang code"""
 
         # Variable declaration: drink varname = value
-        drink_match = re.match(r'drink\s+(\w+)\s*=\s*(.+)', line)
+        drink_match = re.match(r"drink\s+(\w+)\s*=\s*(.+)", line)
         if drink_match:
             var_name = drink_match.group(1)
             value_expr = drink_match.group(2).strip()
@@ -61,7 +61,7 @@ class ThirstyInterpreter:
             return
 
         # Output statement: pour expression
-        pour_match = re.match(r'pour\s+(.+)', line)
+        pour_match = re.match(r"pour\s+(.+)", line)
         if pour_match:
             expr = pour_match.group(1).strip()
             value = self._evaluate_expression(expr)
@@ -71,7 +71,7 @@ class ThirstyInterpreter:
             return
 
         # Input statement: sip varname
-        sip_match = re.match(r'sip\s+(\w+)', line)
+        sip_match = re.match(r"sip\s+(\w+)", line)
         if sip_match:
             var_name = sip_match.group(1)
             user_input = input(f"Enter value for {var_name}: ")
@@ -85,13 +85,14 @@ class ThirstyInterpreter:
         expr = expr.strip()
 
         # String literal
-        if (expr.startswith('"') and expr.endswith('"')) or \
-           (expr.startswith("'") and expr.endswith("'")):
+        if (expr.startswith('"') and expr.endswith('"')) or (
+            expr.startswith("'") and expr.endswith("'")
+        ):
             return expr[1:-1]
 
         # Number literal
         try:
-            if '.' in expr:
+            if "." in expr:
                 return float(expr)
             return int(expr)
         except ValueError:
@@ -102,9 +103,9 @@ class ThirstyInterpreter:
             return self.variables[expr]
 
         # Boolean literals
-        if expr.lower() == 'true':
+        if expr.lower() == "true":
             return True
-        if expr.lower() == 'false':
+        if expr.lower() == "false":
             return False
 
         # If we can't evaluate, return as string
@@ -118,7 +119,7 @@ class ThirstyInterpreter:
 def run_file(filename: str):
     """Run a Thirsty-lang file"""
     try:
-        with open(filename, encoding='utf-8') as f:
+        with open(filename, encoding="utf-8") as f:
             code = f.read()
 
         interpreter = ThirstyInterpreter()
@@ -141,5 +142,5 @@ def main():
     run_file(filename)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -8,6 +8,7 @@ Usage:
 This script edits files in-place. It skips paths containing
 `node_modules` or `.venv` and will report which files were changed.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -55,9 +56,7 @@ def should_preserve_line(line: str) -> bool:
     return is_table_line(line)
 
 
-def _process_lines(
-    lines: list[str], flush_fn
-) -> tuple[list[str], int]:
+def _process_lines(lines: list[str], flush_fn) -> tuple[list[str], int]:
     """Process all lines and return (out_lines, changed count)."""
     out_lines: list[str] = []
     changed = 0

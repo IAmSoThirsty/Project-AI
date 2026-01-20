@@ -109,9 +109,7 @@ def demonstrate_reflection_system(fbo):
     ]
 
     for content, category, tags in reflections_data:
-        fbo.add_reflection(
-            content, category=category, confidence=0.8, tags=tags
-        )
+        fbo.add_reflection(content, category=category, confidence=0.8, tags=tags)
 
     print(f"✅ Added {len(reflections_data)} reflections\n")
 
@@ -139,9 +137,7 @@ def demonstrate_optical_flow_integration(flow_detector):
     print(f"   • Algorithm: {stats['algorithm']}")
     print(f"   • Sensitivity: {stats['sensitivity']}")
     print(f"   • Data Directory: {stats['data_directory']}")
-    print(
-        f"   • Previous Analyses: {stats['total_analyses']}"
-    )
+    print(f"   • Previous Analyses: {stats['total_analyses']}")
     print()
 
     print("   Note: To analyze a video, use:")

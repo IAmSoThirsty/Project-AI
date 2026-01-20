@@ -13,19 +13,10 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from app.security import (
-    AgentEncapsulation,
-    DataPoisoningDefense,
-    SecureDatabaseManager,
-    SecureDataParser,
-    SecurityMonitor,
-)
+from app.security import (AgentEncapsulation, DataPoisoningDefense,
+                          SecureDatabaseManager, SecureDataParser, SecurityMonitor)
 from app.security.agent_security import NumericalProtection, RuntimeFuzzer
-from app.security.web_service import (
-    InputValidator,
-    RateLimiter,
-    SecureWebHandler,
-)
+from app.security.web_service import InputValidator, RateLimiter, SecureWebHandler
 
 
 class TestMassiveDataParsing:
@@ -269,7 +260,9 @@ class TestNumericalAdversaries:
 class TestFuzzingCampaigns:
     """Comprehensive fuzzing tests."""
 
-    @pytest.mark.parametrize("strategy", ["random_string", "boundary_values", "type_confusion", "overflow"])
+    @pytest.mark.parametrize(
+        "strategy", ["random_string", "boundary_values", "type_confusion", "overflow"]
+    )
     @pytest.mark.parametrize("iterations", [10, 20, 50])
     def test_fuzzing_strategies(self, strategy, iterations):
         """Test different fuzzing strategies."""

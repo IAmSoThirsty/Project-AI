@@ -26,8 +26,13 @@ class TestMemoryQueryCapabilities:
 
             # Add some test conversations
             mem.log_conversation("What is Python?", "Python is a programming language.")
-            mem.log_conversation("Tell me about Paris", "Paris is the capital of France.")
-            mem.log_conversation("How do I learn Python?", "Start with the basics and practice regularly.")
+            mem.log_conversation(
+                "Tell me about Paris", "Paris is the capital of France."
+            )
+            mem.log_conversation(
+                "How do I learn Python?",
+                "Start with the basics and practice regularly.",
+            )
 
             yield mem
 
@@ -94,7 +99,9 @@ class TestMemoryQueryCapabilities:
 
     def test_search_conversations_in_user_messages(self, memory):
         """Test searching conversation user messages."""
-        results = memory.search_conversations("Python", search_user=True, search_ai=False)
+        results = memory.search_conversations(
+            "Python", search_user=True, search_ai=False
+        )
 
         assert len(results) >= 1
         # Should find "What is Python?" and "How do I learn Python?"
@@ -103,7 +110,9 @@ class TestMemoryQueryCapabilities:
 
     def test_search_conversations_in_ai_responses(self, memory):
         """Test searching conversation AI responses."""
-        results = memory.search_conversations("programming", search_user=False, search_ai=True)
+        results = memory.search_conversations(
+            "programming", search_user=False, search_ai=True
+        )
 
         assert len(results) >= 1
         assert any("programming" in r["ai"] for r in results)

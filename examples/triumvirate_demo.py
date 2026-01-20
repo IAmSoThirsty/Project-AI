@@ -106,9 +106,7 @@ def demo_semantic_memory():
 
         print(f"\n📊 Found {len(results)} results:")
         for i, result in enumerate(results, 1):
-            print(
-                f"   {i}. [{result['similarity']:.3f}] {result['content']}"
-            )
+            print(f"   {i}. [{result['similarity']:.3f}] {result['content']}")
 
 
 def demo_policy_enforcement():

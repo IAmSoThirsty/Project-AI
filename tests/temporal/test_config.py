@@ -2,7 +2,6 @@
 Tests for Temporal.io configuration.
 """
 
-
 from app.temporal.config import TemporalConfig, get_temporal_config
 
 

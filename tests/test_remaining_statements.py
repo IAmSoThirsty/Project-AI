@@ -20,7 +20,9 @@ class TestRemainingAISystems:
         with tempfile.TemporaryDirectory() as tmpdir:
             memory = MemoryExpansionSystem(data_dir=tmpdir)
             # Add knowledge to a category
-            memory.add_knowledge("security", "sql_injection", {"details": "SQLi attack"})
+            memory.add_knowledge(
+                "security", "sql_injection", {"details": "SQLi attack"}
+            )
 
             # Retrieve with specific key (line 202)
             result = memory.get_knowledge("security", "sql_injection")
@@ -86,6 +88,7 @@ class TestRemainingAISystems:
 
             # Verify it's in the black vault
             import hashlib
+
             content = learning.requests[req_id]["description"]
             content_hash = hashlib.sha256(content.encode()).hexdigest()
             assert content_hash in learning.black_vault
@@ -107,6 +110,7 @@ class TestRemainingAISystems:
 
             # Should not be in black vault
             import hashlib
+
             content = learning.requests[req_id]["description"]
             content_hash = hashlib.sha256(content.encode()).hexdigest()
             assert content_hash not in learning.black_vault
@@ -122,8 +126,7 @@ class TestRemainingImageGenerator:
         """
         with tempfile.TemporaryDirectory() as tmpdir:
             generator = ImageGenerator(
-                backend=ImageGenerationBackend.HUGGINGFACE,
-                data_dir=tmpdir
+                backend=ImageGenerationBackend.HUGGINGFACE, data_dir=tmpdir
             )
 
             # Mock the HF API to raise an exception
@@ -145,8 +148,7 @@ class TestRemainingImageGenerator:
         """
         with tempfile.TemporaryDirectory() as tmpdir:
             generator = ImageGenerator(
-                backend=ImageGenerationBackend.OPENAI,
-                data_dir=tmpdir
+                backend=ImageGenerationBackend.OPENAI, data_dir=tmpdir
             )
 
             # Make output_dir inaccessible (simulate permission error)
@@ -167,8 +169,7 @@ class TestRemainingImageGenerator:
         """
         with tempfile.TemporaryDirectory() as tmpdir:
             generator = ImageGenerator(
-                backend=ImageGenerationBackend.OPENAI,
-                data_dir=tmpdir
+                backend=ImageGenerationBackend.OPENAI, data_dir=tmpdir
             )
 
             # Make output_dir temporarily inaccessible
@@ -188,8 +189,7 @@ class TestRemainingImageGenerator:
         """Test OpenAI size validation edge cases."""
         with tempfile.TemporaryDirectory() as tmpdir:
             generator = ImageGenerator(
-                backend=ImageGenerationBackend.OPENAI,
-                data_dir=tmpdir
+                backend=ImageGenerationBackend.OPENAI, data_dir=tmpdir
             )
 
             # Test with invalid size format - should still work with defaults
@@ -371,7 +371,7 @@ class TestCrossModuleCoverage:
             manager1 = UserManager(users_file=users_file)
             manager1.users["frank"] = {
                 "password": "plaintext_pwd",  # No password_hash
-                "persona": "default"
+                "persona": "default",
             }
             manager1.save_users()
 
@@ -387,8 +387,7 @@ class TestCrossModuleCoverage:
         """Test image generator handles all error paths."""
         with tempfile.TemporaryDirectory() as tmpdir:
             generator = ImageGenerator(
-                backend=ImageGenerationBackend.HUGGINGFACE,
-                data_dir=tmpdir
+                backend=ImageGenerationBackend.HUGGINGFACE, data_dir=tmpdir
             )
 
             # Test with network error
@@ -429,6 +428,7 @@ class TestFinal7Remaining:
 
             # Verify in black vault
             import hashlib
+
             content = learning.requests[req_ids[0]]["description"]
             content_hash = hashlib.sha256(content.encode()).hexdigest()
             assert content_hash in learning.black_vault
@@ -446,8 +446,7 @@ class TestFinal7Remaining:
         with tempfile.TemporaryDirectory() as tmpdir:
             # Test HUGGINGFACE backend error (lines 269-270)
             hf_gen = ImageGenerator(
-                backend=ImageGenerationBackend.HUGGINGFACE,
-                data_dir=tmpdir
+                backend=ImageGenerationBackend.HUGGINGFACE, data_dir=tmpdir
             )
 
             # Test network error
@@ -460,7 +459,9 @@ class TestFinal7Remaining:
             # Test HTTP error
             with patch("requests.post") as mock_post:
                 mock_response = MagicMock()
-                mock_response.raise_for_status.side_effect = Exception("400 Bad Request")
+                mock_response.raise_for_status.side_effect = Exception(
+                    "400 Bad Request"
+                )
                 mock_post.return_value = mock_response
 
                 result = hf_gen.generate_with_huggingface("test", "", 512, 512)
@@ -474,8 +475,7 @@ class TestFinal7Remaining:
         """
         with tempfile.TemporaryDirectory() as tmpdir:
             generator = ImageGenerator(
-                backend=ImageGenerationBackend.OPENAI,
-                data_dir=tmpdir
+                backend=ImageGenerationBackend.OPENAI, data_dir=tmpdir
             )
 
             # Mock os.listdir to raise exception (line 282 exception handler)
@@ -510,7 +510,10 @@ class TestFinal7Remaining:
                     # Try to hash a password - should use fallback
                     result = manager._hash_and_store_password("user1", "newpass")
                     assert result is True
-                    assert manager.users["user1"]["password_hash"] == "pbkdf2_fallback_hash"
+                    assert (
+                        manager.users["user1"]["password_hash"]
+                        == "pbkdf2_fallback_hash"
+                    )
 
     def test_user_manager_verify_exception_line_84(self):
         """Test verify exception handling (line 84).
@@ -534,8 +537,7 @@ class TestFinal7Remaining:
         with tempfile.TemporaryDirectory() as tmpdir:
             # Test with OPENAI which goes through elif path
             openai_gen = ImageGenerator(
-                backend=ImageGenerationBackend.OPENAI,
-                data_dir=tmpdir
+                backend=ImageGenerationBackend.OPENAI, data_dir=tmpdir
             )
 
             result = openai_gen.generate("test")
@@ -556,6 +558,7 @@ class TestFinal7Remaining:
             # Reload and check vault persists
             learning2 = LearningRequestManager(data_dir=tmpdir)
             import hashlib
+
             content_hash = hashlib.sha256(b"vault_content").hexdigest()
             assert content_hash in learning2.black_vault
 
@@ -565,6 +568,7 @@ class TestFinal7Remaining:
         Ensure last_user_message_time is properly updated.
         """
         import time as time_module
+
         with tempfile.TemporaryDirectory() as tmpdir:
             persona = AIPersona(data_dir=tmpdir)
 
@@ -635,7 +639,10 @@ class TestUserManagerLine57:
                     # Should succeed with fallback
                     assert result is True
                     # Should have pbkdf2 hash
-                    assert manager.users["testuser"]["password_hash"] == "pbkdf2_fallback_hash_xyz"
+                    assert (
+                        manager.users["testuser"]["password_hash"]
+                        == "pbkdf2_fallback_hash_xyz"
+                    )
                     # Should not have plaintext password
                     assert "password" not in manager.users["testuser"]
 
@@ -655,7 +662,9 @@ class TestUserManagerLine84:
 
             # Mock pwd_context.verify to raise exception
             with patch("app.core.user_manager.pwd_context") as mock_pwd:
-                mock_pwd.verify.side_effect = RuntimeError("Hash verification backend failed")
+                mock_pwd.verify.side_effect = RuntimeError(
+                    "Hash verification backend failed"
+                )
 
                 # Call authenticate - should catch exception and return False
                 result = manager.authenticate("testuser", "password123")
