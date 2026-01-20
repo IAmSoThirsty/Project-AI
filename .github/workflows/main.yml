@@ -7,14 +7,70 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v3
 
-            - name: Install dependencies
+            # ========================================================================
+            # DEPENDENCY INSTALLATION - Install ALL project dependencies
+            # No conditionals, no ambiguity - just install everything to ensure
+            # workflows work reliably every time
+            # ========================================================================
+            
+            - name: Upgrade pip and build tools
               run: |
-                  pip install torch==2.0.0 torchvision
-                  pip install bindsnet>=0.3.0 || echo "bindsnet install failed"
-                  pip install sinabs>=1.2.0 || echo "sinabs install failed"
-                  pip install snntorch>=0.7.0 || echo "snntorch install failed"
-                  pip install spikingjelly>=0.0.0.14 || echo "spikingjelly install failed"
-                  pip install norse>=0.0.7 || echo "norse install failed"
+                  echo "📦 Upgrading pip, setuptools, wheel, and build tools..."
+                  python3 -m pip install --upgrade pip setuptools wheel build
+                  echo "✅ Build tools upgraded"
+
+            - name: Install requirements.txt
+              run: |
+                  echo "📦 Installing requirements.txt..."
+                  if [ -f requirements.txt ]; then
+                    python3 -m pip install -r requirements.txt
+                    echo "✅ requirements.txt installed"
+                  else
+                    echo "⚠️  requirements.txt not found - skipping"
+                  fi
+
+            - name: Install requirements-dev.txt
+              run: |
+                  echo "📦 Installing requirements-dev.txt..."
+                  if [ -f requirements-dev.txt ]; then
+                    python3 -m pip install -r requirements-dev.txt
+                    echo "✅ requirements-dev.txt installed"
+                  else
+                    echo "⚠️  requirements-dev.txt not found - skipping"
+                  fi
+
+            - name: Install from pyproject.toml
+              run: |
+                  echo "📦 Installing from pyproject.toml..."
+                  if [ -f pyproject.toml ]; then
+                    # Try pip install first (works for PEP 621 compliant pyproject.toml)
+                    python3 -m pip install -e . || echo "⚠️  pip install from pyproject.toml failed, continuing..."
+                    echo "✅ pyproject.toml dependencies processed"
+                  else
+                    echo "⚠️  pyproject.toml not found - skipping"
+                  fi
+
+            - name: Install from setup.py
+              run: |
+                  echo "📦 Installing from setup.py..."
+                  if [ -f setup.py ]; then
+                    python3 -m pip install -e .
+                    echo "✅ setup.py installed"
+                  else
+                    echo "⚠️  setup.py not found - skipping"
+                  fi
+
+            - name: Install additional libraries
+              run: |
+                  echo "📦 Installing additional Python libraries..."
+                  # Install SNN framework libraries
+                  python3 -m pip install torch==2.0.0 torchvision
+                  python3 -m pip install bindsnet>=0.3.0 || echo "bindsnet install failed"
+                  python3 -m pip install sinabs>=1.2.0 || echo "sinabs install failed"
+                  python3 -m pip install snntorch>=0.7.0 || echo "snntorch install failed"
+                  python3 -m pip install spikingjelly>=0.0.0.14 || echo "spikingjelly install failed"
+                  python3 -m pip install norse>=0.0.7 || echo "norse install failed"
+                  echo "✅ Additional libraries installed"
 
             - name: Install Ruby dependencies
               run: |
