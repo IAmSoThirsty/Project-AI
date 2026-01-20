@@ -13,7 +13,11 @@ import hmac
 import logging
 import time
 from typing import Any
-from xml.etree.ElementTree import Element, SubElement, tostring  # nosec B405 - Only used for building XML, not parsing
+from xml.etree.ElementTree import (  # nosec B405 - Only used for building XML, not parsing
+    Element,
+    SubElement,
+    tostring,
+)
 
 import defusedxml.ElementTree as DefusedET
 
@@ -127,7 +131,7 @@ class SOAPClient:
 
             return True
 
-        except ET.ParseError as e:
+        except DefusedET.ParseError as e:
             logger.error("Invalid SOAP envelope XML: %s", e)
             return False
 

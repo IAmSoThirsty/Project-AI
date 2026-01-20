@@ -18,12 +18,8 @@ Key Features:
 """
 
 import logging
-from datetime import datetime
-from pathlib import Path
-from typing import Any, Optional
 
 import psycopg2
-from psycopg2 import sql
 from psycopg2.extras import RealDictCursor
 
 logger = logging.getLogger(__name__)
@@ -32,14 +28,14 @@ logger = logging.getLogger(__name__)
 class RisingWaveClient:
     """
     Client for RisingWave streaming database.
-    
+
     Provides high-level interface for:
     - Stream ingestion (Kafka, Pulsar, Kinesis)
     - Materialized views for real-time aggregations
     - CDC integration (MySQL, PostgreSQL)
     - Event-driven data pipelines
     """
-    
+
     def __init__(
         self,
         host: str = "localhost",
@@ -50,7 +46,7 @@ class RisingWaveClient:
         connect_timeout: int = 10
     ):
         """Initialize RisingWave client.
-        
+
         Args:
             host: RisingWave server host
             port: RisingWave server port (default: 4566)
@@ -67,11 +63,11 @@ class RisingWaveClient:
             "password": password,
             "connect_timeout": connect_timeout
         }
-        self.conn: Optional[psycopg2.extensions.connection] = None
+        self.conn: psycopg2.extensions.connection | None = None
         self._connect()
-        
+
         logger.info(f"RisingWave client initialized: {host}:{port}/{database}")
-    
+
     def _connect(self):
         """Establish connection to RisingWave."""
         try:
@@ -81,43 +77,43 @@ class RisingWaveClient:
         except psycopg2.Error as e:
             logger.error(f"Failed to connect to RisingWave: {e}")
             raise
-    
+
     def execute(self, query: str, params: tuple = None) -> list[dict]:
         """Execute SQL query and return results.
-        
+
         Args:
             query: SQL query string
             params: Query parameters
-            
+
         Returns:
             List of result rows as dictionaries
         """
         if not self.conn or self.conn.closed:
             self._connect()
-        
+
         try:
             with self.conn.cursor(cursor_factory=RealDictCursor) as cursor:
                 cursor.execute(query, params)
-                
+
                 # Check if query returns results
                 if cursor.description:
                     return [dict(row) for row in cursor.fetchall()]
                 return []
-                
+
         except psycopg2.Error as e:
             logger.error(f"Query execution failed: {e}")
             raise
-    
+
     def create_source_kafka(
         self,
         source_name: str,
         topic: str,
         bootstrap_servers: str,
         schema_definition: str,
-        properties: Optional[dict] = None
+        properties: dict | None = None
     ):
         """Create Kafka source for stream ingestion.
-        
+
         Args:
             source_name: Name of the source
             topic: Kafka topic name
@@ -127,7 +123,7 @@ class RisingWaveClient:
         """
         props = properties or {}
         props_str = ", ".join([f"'{k}' = '{v}'" for k, v in props.items()])
-        
+
         query = f"""
         CREATE SOURCE IF NOT EXISTS {source_name} (
             {schema_definition}
@@ -138,10 +134,10 @@ class RisingWaveClient:
             {', ' + props_str if props_str else ''}
         ) FORMAT PLAIN ENCODE JSON;
         """
-        
+
         self.execute(query)
         logger.info(f"Created Kafka source: {source_name}")
-    
+
     def create_source_cdc_postgres(
         self,
         source_name: str,
@@ -154,7 +150,7 @@ class RisingWaveClient:
         password: str
     ):
         """Create CDC source for PostgreSQL table.
-        
+
         Args:
             source_name: Name of the CDC source
             host: PostgreSQL host
@@ -178,19 +174,19 @@ class RisingWaveClient:
             table.name = '{table}'
         );
         """
-        
+
         self.execute(query)
         logger.info(f"Created CDC source: {source_name} from {host}:{port}/{database}")
-    
+
     def create_materialized_view(
         self,
         view_name: str,
         query: str
     ):
         """Create materialized view for real-time aggregations.
-        
+
         Materialized views are incrementally updated as new data arrives.
-        
+
         Args:
             view_name: Name of the materialized view
             query: SELECT query defining the view
@@ -199,20 +195,20 @@ class RisingWaveClient:
         CREATE MATERIALIZED VIEW IF NOT EXISTS {view_name} AS
         {query};
         """
-        
+
         self.execute(mv_query)
         logger.info(f"Created materialized view: {view_name}")
-    
+
     def create_sink_kafka(
         self,
         sink_name: str,
         from_source: str,
         topic: str,
         bootstrap_servers: str,
-        properties: Optional[dict] = None
+        properties: dict | None = None
     ):
         """Create Kafka sink to publish processed data.
-        
+
         Args:
             sink_name: Name of the sink
             from_source: Source table/view to publish from
@@ -222,7 +218,7 @@ class RisingWaveClient:
         """
         props = properties or {}
         props_str = ", ".join([f"'{k}' = '{v}'" for k, v in props.items()])
-        
+
         query = f"""
         CREATE SINK IF NOT EXISTS {sink_name}
         FROM {from_source}
@@ -233,10 +229,10 @@ class RisingWaveClient:
             {', ' + props_str if props_str else ''}
         ) FORMAT PLAIN ENCODE JSON;
         """
-        
+
         self.execute(query)
         logger.info(f"Created Kafka sink: {sink_name}")
-    
+
     def query_stream(
         self,
         table_or_view: str,
@@ -244,12 +240,12 @@ class RisingWaveClient:
         limit: int = 100
     ) -> list[dict]:
         """Query streaming data.
-        
+
         Args:
             table_or_view: Table or materialized view name
             where_clause: Optional WHERE clause
             limit: Result limit
-            
+
         Returns:
             Query results
         """
@@ -257,29 +253,29 @@ class RisingWaveClient:
         if where_clause:
             query += f" WHERE {where_clause}"
         query += f" LIMIT {limit};"
-        
+
         return self.execute(query)
-    
+
     def get_stream_stats(self, source_name: str) -> dict:
         """Get statistics for a streaming source.
-        
+
         Args:
             source_name: Name of the source
-            
+
         Returns:
             Statistics dictionary
         """
         query = f"""
-        SELECT 
+        SELECT
             COUNT(*) as row_count,
             MIN(event_time) as earliest_event,
             MAX(event_time) as latest_event
         FROM {source_name};
         """
-        
+
         results = self.execute(query)
         return results[0] if results else {}
-    
+
     def close(self):
         """Close connection to RisingWave."""
         if self.conn and not self.conn.closed:
@@ -290,11 +286,11 @@ class RisingWaveClient:
 class ProjectAIEventStream:
     """
     Event streaming pipeline for Project-AI using RisingWave.
-    
+
     Streams AI system events (persona changes, security incidents, etc.)
     for real-time analytics and monitoring.
     """
-    
+
     def __init__(
         self,
         risingwave_host: str = "localhost",
@@ -302,7 +298,7 @@ class ProjectAIEventStream:
         kafka_bootstrap: str = "localhost:9092"
     ):
         """Initialize Project-AI event streaming.
-        
+
         Args:
             risingwave_host: RisingWave host
             risingwave_port: RisingWave port
@@ -313,14 +309,14 @@ class ProjectAIEventStream:
             port=risingwave_port
         )
         self.kafka_bootstrap = kafka_bootstrap
-        
+
         self._setup_streams()
-        
+
         logger.info("Project-AI event streaming initialized")
-    
+
     def _setup_streams(self):
         """Set up streaming tables and views for Project-AI."""
-        
+
         # AI Persona events stream
         self.client.create_source_kafka(
             source_name="ai_persona_events",
@@ -335,7 +331,7 @@ class ProjectAIEventStream:
                 trigger VARCHAR
             """
         )
-        
+
         # Security events stream
         self.client.create_source_kafka(
             source_name="security_events",
@@ -350,7 +346,7 @@ class ProjectAIEventStream:
                 description TEXT
             """
         )
-        
+
         # Four Laws events stream
         self.client.create_source_kafka(
             source_name="four_laws_events",
@@ -365,15 +361,15 @@ class ProjectAIEventStream:
                 reason TEXT
             """
         )
-        
+
         # Real-time aggregations
         self._create_analytics_views()
-        
+
         logger.info("Event streams configured")
-    
+
     def _create_analytics_views(self):
         """Create materialized views for real-time analytics."""
-        
+
         # Persona trait trends (1-minute windows)
         self.client.create_materialized_view(
             view_name="persona_trait_trends",
@@ -389,7 +385,7 @@ class ProjectAIEventStream:
             GROUP BY trait_name, window_start
             """
         )
-        
+
         # Security incident counts by severity
         self.client.create_materialized_view(
             view_name="security_incidents_by_severity",
@@ -403,7 +399,7 @@ class ProjectAIEventStream:
             GROUP BY severity, window_start
             """
         )
-        
+
         # Four Laws denial rate
         self.client.create_materialized_view(
             view_name="four_laws_denial_rate",
@@ -417,16 +413,16 @@ class ProjectAIEventStream:
             GROUP BY window_start
             """
         )
-        
+
         logger.info("Analytics views created")
-    
+
     def get_persona_trends(self, trait_name: str, limit: int = 10) -> list[dict]:
         """Get recent persona trait trends.
-        
+
         Args:
             trait_name: Name of personality trait
             limit: Number of results
-            
+
         Returns:
             Trend data
         """
@@ -435,14 +431,14 @@ class ProjectAIEventStream:
             where_clause=f"trait_name = '{trait_name}'",
             limit=limit
         )
-    
+
     def get_security_alerts(self, severity: str = "critical", limit: int = 50) -> list[dict]:
         """Get recent security alerts.
-        
+
         Args:
             severity: Alert severity level
             limit: Number of results
-            
+
         Returns:
             Security alerts
         """
@@ -451,13 +447,13 @@ class ProjectAIEventStream:
             where_clause=f"severity = '{severity}'",
             limit=limit
         )
-    
+
     def get_ethics_violations(self, limit: int = 100) -> list[dict]:
         """Get Four Laws violation attempts.
-        
+
         Args:
             limit: Number of results
-            
+
         Returns:
             Ethics violation data
         """
@@ -466,7 +462,7 @@ class ProjectAIEventStream:
             where_clause="denial_rate > 0",
             limit=limit
         )
-    
+
     def close(self):
         """Close streaming connection."""
         self.client.close()
@@ -478,12 +474,12 @@ def create_risingwave_client(
     database: str = "dev"
 ) -> RisingWaveClient:
     """Create RisingWave client for Project-AI.
-    
+
     Args:
         host: RisingWave host
         port: RisingWave port
         database: Database name
-        
+
     Returns:
         RisingWaveClient instance
     """
