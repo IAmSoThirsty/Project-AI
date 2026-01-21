@@ -204,16 +204,12 @@ class OpticalFlowDetector:
         cap.release()
 
         # Find peak motion frame
-        peak_frame = (
-            int(np.argmax(motion_magnitudes)) if motion_magnitudes else 0
-        )
+        peak_frame = int(np.argmax(motion_magnitudes)) if motion_magnitudes else 0
 
         result = FlowAnalysisResult(
             epicenters=epicenters,
             total_frames=processed_frames,
-            avg_motion=float(np.mean(motion_magnitudes))
-            if motion_magnitudes
-            else 0.0,
+            avg_motion=float(np.mean(motion_magnitudes)) if motion_magnitudes else 0.0,
             peak_motion_frame=peak_frame,
             video_source=video_path,
             analysis_timestamp=datetime.now().isoformat(),
@@ -257,11 +253,12 @@ class OpticalFlowDetector:
             # For Lucas-Kanade, we need feature points
             # Use Shi-Tomasi corner detection
             feature_params = {
-                "maxCorners": 100, "qualityLevel": 0.3, "minDistance": 7, "blockSize": 7
+                "maxCorners": 100,
+                "qualityLevel": 0.3,
+                "minDistance": 7,
+                "blockSize": 7,
             }
-            p0 = self.cv2.goodFeaturesToTrack(
-                prev_gray, mask=None, **feature_params
-            )
+            p0 = self.cv2.goodFeaturesToTrack(prev_gray, mask=None, **feature_params)
 
             if p0 is not None:
                 lk_params = {
@@ -279,9 +276,7 @@ class OpticalFlowDetector:
                 )
 
                 # Create dense flow field from sparse points
-                flow = self._sparse_to_dense_flow(
-                    p0, p1, st, prev_gray.shape
-                )
+                flow = self._sparse_to_dense_flow(p0, p1, st, prev_gray.shape)
             else:
                 # No features found, return zero flow
                 flow = np.zeros((prev_gray.shape[0], prev_gray.shape[1], 2))
@@ -333,9 +328,7 @@ class OpticalFlowDetector:
         divergence = dx + dy
 
         # Compute curl (vorticity/rotation points)
-        curl = np.gradient(flow[..., 1], axis=1) - np.gradient(
-            flow[..., 0], axis=0
-        )
+        curl = np.gradient(flow[..., 1], axis=1) - np.gradient(flow[..., 0], axis=0)
 
         # Find local extrema in divergence (convergent/divergent epicenters)
         threshold = self.sensitivity * np.std(divergence)
@@ -471,9 +464,7 @@ class OpticalFlowDetector:
 
         return epicenters
 
-    def analyze_image_sequence(
-        self, image_paths: list[str]
-    ) -> FlowAnalysisResult:
+    def analyze_image_sequence(self, image_paths: list[str]) -> FlowAnalysisResult:
         """
         Analyze sequence of images for optical flow.
 
@@ -518,24 +509,18 @@ class OpticalFlowDetector:
 
             prev_gray = gray
 
-        peak_frame = (
-            int(np.argmax(motion_magnitudes)) if motion_magnitudes else 0
-        )
+        peak_frame = int(np.argmax(motion_magnitudes)) if motion_magnitudes else 0
 
         result = FlowAnalysisResult(
             epicenters=epicenters,
             total_frames=len(image_paths),
-            avg_motion=float(np.mean(motion_magnitudes))
-            if motion_magnitudes
-            else 0.0,
+            avg_motion=float(np.mean(motion_magnitudes)) if motion_magnitudes else 0.0,
             peak_motion_frame=peak_frame,
             video_source=f"image_sequence_{len(image_paths)}_frames",
             analysis_timestamp=datetime.now().isoformat(),
         )
 
-        logger.info(
-            f"Analysis complete: {len(epicenters)} epicenters detected"
-        )
+        logger.info(f"Analysis complete: {len(epicenters)} epicenters detected")
 
         return result
 
@@ -577,9 +562,7 @@ class OpticalFlowDetector:
         writer = None
         if output_path:
             fourcc = self.cv2.VideoWriter_fourcc(*"mp4v")
-            writer = self.cv2.VideoWriter(
-                output_path, fourcc, fps, (width, height)
-            )
+            writer = self.cv2.VideoWriter(output_path, fourcc, fps, (width, height))
 
         ret, prev_frame = cap.read()
         if not ret:
@@ -608,11 +591,13 @@ class OpticalFlowDetector:
                     color = (
                         (0, 255, 0)
                         if epi.flow_type == "convergent"
-                        else (0, 0, 255) if epi.flow_type == "divergent" else (255, 0, 255)
+                        else (
+                            (0, 0, 255)
+                            if epi.flow_type == "divergent"
+                            else (255, 0, 255)
+                        )
                     )
-                    self.cv2.circle(
-                        frame, (int(epi.x), int(epi.y)), 5, color, -1
-                    )
+                    self.cv2.circle(frame, (int(epi.x), int(epi.y)), 5, color, -1)
                     self.cv2.putText(
                         frame,
                         epi.flow_type[0].upper(),
@@ -643,9 +628,9 @@ class OpticalFlowDetector:
                 writer.write(frame)
             else:
                 # Display mode when no output path provided
-                self.cv2.imshow('Optical Flow Visualization', frame)
+                self.cv2.imshow("Optical Flow Visualization", frame)
                 # Wait 1ms and check if user pressed 'q' to quit
-                if self.cv2.waitKey(1) & 0xFF == ord('q'):
+                if self.cv2.waitKey(1) & 0xFF == ord("q"):
                     break
 
             prev_gray = gray

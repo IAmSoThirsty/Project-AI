@@ -40,19 +40,24 @@ _kernel_context = threading.local()
 # Enums and Type Definitions
 # ============================================================================
 
+
 class ExecutionType(Enum):
     """Types of executions that can be processed by the kernel."""
-    AGENT_ACTION = "agent_action"           # Agent execution (e.g., ExpertAgent, PlannerAgent)
-    TOOL_INVOCATION = "tool_invocation"     # Tool/utility execution
-    SYSTEM_OPERATION = "system_operation"   # Core system operation (Persona, Memory, etc.)
-    PLUGIN_EXECUTION = "plugin_execution"   # Plugin runner execution
-    COUNCIL_DECISION = "council_decision"   # Council/governance decision
-    LEARNING_REQUEST = "learning_request"   # Learning engine request
-    REFLECTION = "reflection"               # Reflection cycle execution
+
+    AGENT_ACTION = "agent_action"  # Agent execution (e.g., ExpertAgent, PlannerAgent)
+    TOOL_INVOCATION = "tool_invocation"  # Tool/utility execution
+    SYSTEM_OPERATION = (
+        "system_operation"  # Core system operation (Persona, Memory, etc.)
+    )
+    PLUGIN_EXECUTION = "plugin_execution"  # Plugin runner execution
+    COUNCIL_DECISION = "council_decision"  # Council/governance decision
+    LEARNING_REQUEST = "learning_request"  # Learning engine request
+    REFLECTION = "reflection"  # Reflection cycle execution
 
 
 class ExecutionStatus(Enum):
     """Status of an execution."""
+
     PENDING = "pending"
     APPROVED = "approved"
     EXECUTING = "executing"
@@ -63,14 +68,18 @@ class ExecutionStatus(Enum):
 
 class MutationIntent(Enum):
     """Intent classification for mutations to identity/memory."""
-    CORE = "core"              # genesis, law_hierarchy, core_values - requires full consensus
-    STANDARD = "standard"      # personality_weights, preferences - requires standard consensus
-    ROUTINE = "routine"        # regular operations - allowed
+
+    CORE = "core"  # genesis, law_hierarchy, core_values - requires full consensus
+    STANDARD = (
+        "standard"  # personality_weights, preferences - requires standard consensus
+    )
+    ROUTINE = "routine"  # regular operations - allowed
 
 
 # ============================================================================
 # Data Classes - Single Source of Truth
 # ============================================================================
+
 
 @dataclass
 class Action:
@@ -79,6 +88,7 @@ class Action:
 
     Immutable after creation to ensure governance integrity.
     """
+
     action_id: str
     action_name: str
     action_type: ExecutionType
@@ -98,6 +108,7 @@ class Decision:
 
     Immutable after creation - governance observes, never executes.
     """
+
     decision_id: str
     action_id: str
     approved: bool
@@ -125,6 +136,7 @@ class ExecutionContext:
     - result: What actually happened
     - channels: Four-channel memory storage
     """
+
     trace_id: str
     timestamp: datetime
 
@@ -142,13 +154,15 @@ class ExecutionContext:
     error: str | None = None
 
     # Four-channel memory storage (for auditability)
-    channels: dict[str, Any] = field(default_factory=lambda: {
-        "attempt": None,      # Intent
-        "decision": None,     # Governance outcome
-        "result": None,       # Actual effect
-        "reflection": None,   # Post-hoc reasoning (optional)
-        "error": None,        # Runtime exceptions and failures (forensic replay)
-    })
+    channels: dict[str, Any] = field(
+        default_factory=lambda: {
+            "attempt": None,  # Intent
+            "decision": None,  # Governance outcome
+            "result": None,  # Actual effect
+            "reflection": None,  # Post-hoc reasoning (optional)
+            "error": None,  # Runtime exceptions and failures (forensic replay)
+        }
+    )
 
     # Timing
     start_time: float | None = None
@@ -169,6 +183,7 @@ class ExecutionResult:
     Contains the execution result plus governance, memory, and reflection data.
     This is returned to callers after kernel.process() completes.
     """
+
     trace_id: str
     success: bool
     result: Any
@@ -200,6 +215,7 @@ class ExecutionResult:
 # Kernel Context Manager
 # ============================================================================
 
+
 class KernelContext:
     """
     Context manager for kernel execution authority.
@@ -208,7 +224,7 @@ class KernelContext:
     This is the syscall boundary - no execution outside kernel.
     """
 
-    def __init__(self, kernel: 'CognitionKernel', trace_id: str):
+    def __init__(self, kernel: "CognitionKernel", trace_id: str):
         self.kernel = kernel
         self.trace_id = trace_id
         self.active = False
@@ -235,21 +251,25 @@ def require_kernel_context(operation: str = "execution"):
     Raises RuntimeError if called outside kernel context.
     This is how we enforce the syscall boundary.
     """
+
     def decorator(func):
         def wrapper(*args, **kwargs):
-            if not getattr(_kernel_context, 'active', False):
+            if not getattr(_kernel_context, "active", False):
                 raise RuntimeError(
                     f"{operation} forbidden outside CognitionKernel. "
                     f"All execution must route through kernel.process() or kernel.route()"
                 )
             return func(*args, **kwargs)
+
         return wrapper
+
     return decorator
 
 
 # ============================================================================
 # CognitionKernel Class
 # ============================================================================
+
 
 class CognitionKernel:
     """
@@ -448,7 +468,9 @@ class CognitionKernel:
         Raises:
             PermissionError: If governance blocks the action
         """
-        logger.info(f"[{context.trace_id}] Enforcing governance for {action.action_name}")
+        logger.info(
+            f"[{context.trace_id}] Enforcing governance for {action.action_name}"
+        )
 
         # Freeze identity snapshot (immutable, governance can only observe)
         identity_snapshot = self._freeze_identity_snapshot()
@@ -497,7 +519,9 @@ class CognitionKernel:
             context.end_time = time.time()
             context.duration_ms = (context.end_time - context.start_time) * 1000
 
-            logger.info(f"[{context.trace_id}] Completed in {context.duration_ms:.2f}ms")
+            logger.info(
+                f"[{context.trace_id}] Completed in {context.duration_ms:.2f}ms"
+            )
 
         except Exception as e:
             context.status = ExecutionStatus.FAILED
@@ -541,7 +565,11 @@ class CognitionKernel:
                 reflection_data = {
                     "action": context.proposed_action.action_name,
                     "result_success": context.status == ExecutionStatus.COMPLETED,
-                    "governance_decision": context.governance_decision.reason if context.governance_decision else None,
+                    "governance_decision": (
+                        context.governance_decision.reason
+                        if context.governance_decision
+                        else None
+                    ),
                     "duration_ms": context.duration_ms,
                 }
 
@@ -677,7 +705,11 @@ class CognitionKernel:
         # Simple interpretation for user/system input
         return {
             "intent": "execute",
-            "action_name": str(user_input) if not isinstance(user_input, dict) else user_input.get("action", "unknown"),
+            "action_name": (
+                str(user_input)
+                if not isinstance(user_input, dict)
+                else user_input.get("action", "unknown")
+            ),
             "requires_approval": metadata.get("requires_approval", False),
             "risk_level": metadata.get("risk_level", "low"),
         }
@@ -697,7 +729,9 @@ class CognitionKernel:
             return Action(
                 action_id=action_id,
                 action_name=interpretation["action_name"],
-                action_type=ExecutionType[interpretation.get("execution_type", "AGENT_ACTION").upper()],
+                action_type=ExecutionType[
+                    interpretation.get("execution_type", "AGENT_ACTION").upper()
+                ],
                 callable=interpretation["_callable"],
                 args=interpretation.get("_args", ()),
                 kwargs=interpretation.get("_kwargs", {}),
@@ -736,6 +770,7 @@ class CognitionKernel:
                 snapshot = self.identity_system.snapshot()
                 # Ensure immutability (deep copy or freeze)
                 import copy
+
                 return copy.deepcopy(snapshot)
         except Exception as e:
             logger.error(f"Failed to freeze identity snapshot: {e}")
@@ -779,7 +814,10 @@ class CognitionKernel:
                 if hasattr(self.governance_system, "validate_action"):
                     gov_decision = self.governance_system.validate_action(
                         action=action.action_name,
-                        context={"identity_snapshot": identity_snapshot, **action.metadata},
+                        context={
+                            "identity_snapshot": identity_snapshot,
+                            **action.metadata,
+                        },
                     )
                     return Decision(
                         decision_id=decision_id,
@@ -801,7 +839,9 @@ class CognitionKernel:
                     input_data=action.action_name,
                     context={
                         "identity_snapshot": identity_snapshot,
-                        "mutation_intent": mutation_intent.value if mutation_intent else None,
+                        "mutation_intent": (
+                            mutation_intent.value if mutation_intent else None
+                        ),
                         **action.metadata,
                     },
                     skip_validation=False,
@@ -812,7 +852,11 @@ class CognitionKernel:
                     decision_id=decision_id,
                     action_id=action.action_id,
                     approved=approved,
-                    reason=result.get("error", "Triumvirate approved") if not approved else "Triumvirate approved",
+                    reason=(
+                        result.get("error", "Triumvirate approved")
+                        if not approved
+                        else "Triumvirate approved"
+                    ),
                     council_votes=result.get("pipeline", {}),
                     mutation_intent=mutation_intent,
                     consensus_required=consensus_required,
@@ -906,7 +950,11 @@ class CognitionKernel:
             ),
             duration_ms=context.duration_ms,
             error=context.error,
-            blocked_reason=context.error if not success and context.status == ExecutionStatus.BLOCKED else None,
+            blocked_reason=(
+                context.error
+                if not success and context.status == ExecutionStatus.BLOCKED
+                else None
+            ),
             metadata=context.metadata,
         )
 
@@ -941,25 +989,35 @@ class CognitionKernel:
         """
         history = []
         for ctx in self.execution_history[-limit:]:
-            history.append({
-                "trace_id": ctx.trace_id,
-                "action_name": ctx.proposed_action.action_name,
-                "action_type": ctx.proposed_action.action_type.value,
-                "status": ctx.status.value,
-                "timestamp": ctx.timestamp.isoformat(),
-                "user_id": ctx.user_id,
-                "source": ctx.source,
-                "error": ctx.error,
-                "duration_ms": ctx.duration_ms,
-            })
+            history.append(
+                {
+                    "trace_id": ctx.trace_id,
+                    "action_name": ctx.proposed_action.action_name,
+                    "action_type": ctx.proposed_action.action_type.value,
+                    "status": ctx.status.value,
+                    "timestamp": ctx.timestamp.isoformat(),
+                    "user_id": ctx.user_id,
+                    "source": ctx.source,
+                    "error": ctx.error,
+                    "duration_ms": ctx.duration_ms,
+                }
+            )
         return history
 
     def get_statistics(self) -> dict[str, Any]:
         """Get kernel execution statistics."""
         total = len(self.execution_history)
-        completed = sum(1 for ctx in self.execution_history if ctx.status == ExecutionStatus.COMPLETED)
-        failed = sum(1 for ctx in self.execution_history if ctx.status == ExecutionStatus.FAILED)
-        blocked = sum(1 for ctx in self.execution_history if ctx.status == ExecutionStatus.BLOCKED)
+        completed = sum(
+            1
+            for ctx in self.execution_history
+            if ctx.status == ExecutionStatus.COMPLETED
+        )
+        failed = sum(
+            1 for ctx in self.execution_history if ctx.status == ExecutionStatus.FAILED
+        )
+        blocked = sum(
+            1 for ctx in self.execution_history if ctx.status == ExecutionStatus.BLOCKED
+        )
 
         return {
             "total_executions": total,

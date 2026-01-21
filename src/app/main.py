@@ -94,20 +94,26 @@ def initialize_kernel() -> CognitionKernel:
         try:
             governance_system = GovernanceTriumvirate()
         except Exception as e:
-            logger.warning(f"GovernanceTriumvirate initialization failed: {e}, using fallback")
+            logger.warning(
+                f"GovernanceTriumvirate initialization failed: {e}, using fallback"
+            )
             governance_system = None
 
         # 4. Reflection Engine (post-hoc reasoning)
         try:
             reflection_engine = ReflectionCycle(data_dir="data")
         except Exception as e:
-            logger.warning(f"ReflectionCycle initialization failed: {e}, using fallback")
+            logger.warning(
+                f"ReflectionCycle initialization failed: {e}, using fallback"
+            )
             reflection_engine = None
 
         # 5. Triumvirate (Galahad, Cerberus, Codex)
         try:
             triumvirate = Triumvirate()
-            logger.info("Triumvirate initialized: Galahad, Cerberus, Codex Deus Maximus")
+            logger.info(
+                "Triumvirate initialized: Galahad, Cerberus, Codex Deus Maximus"
+            )
         except Exception as e:
             logger.warning(f"Triumvirate initialization failed: {e}, using fallback")
             triumvirate = None
@@ -183,11 +189,8 @@ def setup_environment():
     # Set up logging
     logging.basicConfig(
         level=logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-        handlers=[
-            logging.FileHandler('logs/app.log'),
-            logging.StreamHandler()
-        ]
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        handlers=[logging.FileHandler("logs/app.log"), logging.StreamHandler()],
     )
 
     logger.info("Environment setup complete")
@@ -235,11 +238,11 @@ def main():
     app_window = DashboardMainWindow()
 
     # Make subsystems accessible to the dashboard
-    if hasattr(app_window, 'set_identity_engine'):
+    if hasattr(app_window, "set_identity_engine"):
         app_window.set_identity_engine(get_identity_engine())
-    if hasattr(app_window, 'set_cognition_kernel'):
+    if hasattr(app_window, "set_cognition_kernel"):
         app_window.set_cognition_kernel(kernel)
-    if hasattr(app_window, 'set_council_hub'):
+    if hasattr(app_window, "set_council_hub"):
         app_window.set_council_hub(council_hub)
 
     app_window.show()

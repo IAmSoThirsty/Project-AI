@@ -6,7 +6,6 @@ policy constraints and security requirements.
 All operations route through CognitionKernel for governance tracking.
 """
 
-
 from app.core.cognition_kernel import CognitionKernel, ExecutionType
 from app.core.kernel_integration import KernelRoutedAgent
 
@@ -31,7 +30,7 @@ class OversightAgent(KernelRoutedAgent):
         super().__init__(
             kernel=kernel,
             execution_type=ExecutionType.AGENT_ACTION,
-            default_risk_level="medium"
+            default_risk_level="medium",
         )
 
         # State initialization: The oversight agent state is initialized

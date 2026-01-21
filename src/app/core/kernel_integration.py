@@ -81,6 +81,7 @@ def route_through_kernel(
     Returns:
         Decorated function that routes through kernel
     """
+
     def decorator(func: Callable) -> Callable:
         # Auto-generate action name if not provided
         actual_action_name = action_name or f"{func.__qualname__}"
@@ -120,7 +121,9 @@ def route_through_kernel(
                 # If execution failed, raise an exception
                 error_msg = result.error or "Execution failed"
                 if result.blocked_reason:
-                    raise PermissionError(f"Blocked by governance: {result.blocked_reason}")
+                    raise PermissionError(
+                        f"Blocked by governance: {result.blocked_reason}"
+                    )
                 raise RuntimeError(error_msg)
 
         # Mark function as kernel-routed for introspection
@@ -332,7 +335,9 @@ class KernelRoutedTool:
             raise RuntimeError(result.error or "Invocation failed")
 
 
-def kernel_safe_wrapper(func: Callable, kernel: CognitionKernel | None = None) -> Callable:
+def kernel_safe_wrapper(
+    func: Callable, kernel: CognitionKernel | None = None
+) -> Callable:
     """
     Create a wrapper function that routes through kernel without modifying original.
 
@@ -359,7 +364,9 @@ def kernel_safe_wrapper(func: Callable, kernel: CognitionKernel | None = None) -
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         if kernel is None:
-            logger.warning(f"No kernel available for {func.__qualname__}, executing directly")
+            logger.warning(
+                f"No kernel available for {func.__qualname__}, executing directly"
+            )
             return func(*args, **kwargs)
 
         result = kernel.process(
@@ -383,7 +390,9 @@ def kernel_safe_wrapper(func: Callable, kernel: CognitionKernel | None = None) -
 
 
 # Convenience function for dynamic kernel injection
-def inject_kernel_into_object(obj: Any, kernel: CognitionKernel, method_names: list[str]) -> None:
+def inject_kernel_into_object(
+    obj: Any, kernel: CognitionKernel, method_names: list[str]
+) -> None:
     """
     Inject kernel routing into specific methods of an object instance.
 
@@ -414,6 +423,8 @@ def inject_kernel_into_object(obj: Any, kernel: CognitionKernel, method_names: l
         if callable(original_method):
             wrapped_method = kernel_safe_wrapper(original_method, kernel)
             setattr(obj, method_name, wrapped_method)
-            logger.info(f"Injected kernel routing into {obj.__class__.__name__}.{method_name}")
+            logger.info(
+                f"Injected kernel routing into {obj.__class__.__name__}.{method_name}"
+            )
         else:
             logger.warning(f"{obj.__class__.__name__}.{method_name} is not callable")

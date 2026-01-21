@@ -6,12 +6,8 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from app.core.optical_flow import (
-    FlowAnalysisResult,
-    FlowEpicenter,
-    OpticalFlowDetector,
-    create_flow_detector,
-)
+from app.core.optical_flow import (FlowAnalysisResult, FlowEpicenter,
+                                   OpticalFlowDetector, create_flow_detector)
 
 
 class TestFlowEpicenter:
@@ -186,9 +182,7 @@ class TestOpticalFlowDetector:
 
     def test_compute_flow_lucas_kanade(self, temp_dir):
         """Test Lucas-Kanade optical flow."""
-        detector = OpticalFlowDetector(
-            data_dir=temp_dir, algorithm="lucas_kanade"
-        )
+        detector = OpticalFlowDetector(data_dir=temp_dir, algorithm="lucas_kanade")
 
         # Create frames with features
         frame1 = np.zeros((100, 100), dtype=np.uint8)
@@ -311,12 +305,8 @@ class TestOpticalFlowDetector:
     def test_sensitivity_affects_detection(self, temp_dir):
         """Test that sensitivity affects epicenter detection."""
         # Create two detectors with different sensitivities
-        detector_low = OpticalFlowDetector(
-            data_dir=temp_dir, sensitivity=0.1
-        )
-        detector_high = OpticalFlowDetector(
-            data_dir=temp_dir, sensitivity=0.9
-        )
+        detector_low = OpticalFlowDetector(data_dir=temp_dir, sensitivity=0.1)
+        detector_high = OpticalFlowDetector(data_dir=temp_dir, sensitivity=0.9)
 
         # Create simple flow
         flow = np.random.randn(100, 100, 2).astype(np.float32) * 0.1
@@ -331,7 +321,12 @@ class TestOpticalFlowDetector:
         """Test FlowAnalysisResult serialization."""
         epicenters = [
             FlowEpicenter(
-                x=1.0, y=2.0, strength=0.5, frame_number=1, timestamp=0.1, flow_type="convergent"
+                x=1.0,
+                y=2.0,
+                strength=0.5,
+                frame_number=1,
+                timestamp=0.1,
+                flow_type="convergent",
             )
         ]
 
@@ -369,9 +364,7 @@ class TestConvenienceFunctions:
 
     def test_create_flow_detector_custom_algorithm(self, temp_dir):
         """Test creating detector with custom algorithm."""
-        detector = create_flow_detector(
-            data_dir=temp_dir, algorithm="lucas_kanade"
-        )
+        detector = create_flow_detector(data_dir=temp_dir, algorithm="lucas_kanade")
 
         assert detector.algorithm == "lucas_kanade"
 

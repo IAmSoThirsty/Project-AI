@@ -11,8 +11,8 @@ setup(
     packages=find_packages(where="src"),
     package_dir={"": "src"},
     entry_points={
-        'console_scripts': [
-            'project-ai=app.main:main',
+        "console_scripts": [
+            "project-ai=app.main:main",
         ],
     },
 )

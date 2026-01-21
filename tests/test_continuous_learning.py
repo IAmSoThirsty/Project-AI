@@ -29,4 +29,7 @@ def test_continuous_learning_highlights_controversy(tmp_path):
 
     assert report.pros_cons["pros"]
     assert report.pros_cons["cons"]
-    assert "pros" in report.neutral_summary.lower() or "cons" in report.neutral_summary.lower()
+    assert (
+        "pros" in report.neutral_summary.lower()
+        or "cons" in report.neutral_summary.lower()
+    )

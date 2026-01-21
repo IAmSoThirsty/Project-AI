@@ -2,6 +2,7 @@
 
 This adds the project root to sys.path so tests can import the top-level `web` package.
 """
+
 from __future__ import annotations
 
 import sys

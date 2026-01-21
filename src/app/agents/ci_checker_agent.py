@@ -9,6 +9,7 @@ Security Note: This agent uses subprocess to run trusted development tools
 (pytest, ruff) that are part of the project's dependencies. All commands
 are hardcoded and do not accept external input.
 """
+
 from __future__ import annotations
 
 import json
@@ -28,12 +29,14 @@ logger = logging.getLogger(__name__)
 
 
 class CICheckerAgent(KernelRoutedAgent):
-    def __init__(self, data_dir: str = "data", kernel: CognitionKernel | None = None) -> None:
+    def __init__(
+        self, data_dir: str = "data", kernel: CognitionKernel | None = None
+    ) -> None:
         # Initialize kernel routing (COGNITION KERNEL INTEGRATION)
         super().__init__(
             kernel=kernel,
             execution_type=ExecutionType.AGENT_ACTION,
-            default_risk_level="medium"
+            default_risk_level="medium",
         )
         self.data_dir = data_dir
         self.reports_dir = os.path.join(data_dir, "ci_reports")
@@ -62,7 +65,7 @@ class CICheckerAgent(KernelRoutedAgent):
             self._do_run_one,
             operation_name="run_ci_checks",
             risk_level="medium",
-            metadata={"check_type": "pytest_and_ruff"}
+            metadata={"check_type": "pytest_and_ruff"},
         )
 
     def _do_run_one(self) -> dict[str, Any]:
@@ -85,7 +88,10 @@ class CICheckerAgent(KernelRoutedAgent):
                     text=True,
                     timeout=180,  # 3 minute timeout for CI checks
                 )
-                report["results"]["pytest"] = {"rc": res.returncode, "output": res.stdout + res.stderr}
+                report["results"]["pytest"] = {
+                    "rc": res.returncode,
+                    "output": res.stdout + res.stderr,
+                }
             except subprocess.TimeoutExpired:
                 logger.warning("pytest command timed out after 180 seconds")
                 report["results"]["pytest"] = {"rc": -1, "error": "timeout"}
@@ -106,7 +112,10 @@ class CICheckerAgent(KernelRoutedAgent):
                     text=True,
                     timeout=60,  # 1 minute timeout (ruff is fast)
                 )
-                report["results"]["ruff"] = {"rc": res.returncode, "output": res.stdout + res.stderr}
+                report["results"]["ruff"] = {
+                    "rc": res.returncode,
+                    "output": res.stdout + res.stderr,
+                }
             except subprocess.TimeoutExpired:
                 logger.warning("ruff command timed out after 60 seconds")
                 report["results"]["ruff"] = {"rc": -1, "error": "timeout"}

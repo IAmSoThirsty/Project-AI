@@ -35,9 +35,7 @@ async def main():
     logger.info("Starting Liara Temporal Agency Worker")
 
     # Create client manager
-    manager = TemporalClientManager(
-        task_queue="liara-crisis-tasks"
-    )
+    manager = TemporalClientManager(task_queue="liara-crisis-tasks")
 
     # Handle graceful shutdown
     shutdown_event = asyncio.Event()

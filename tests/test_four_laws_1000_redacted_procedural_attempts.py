@@ -47,7 +47,10 @@ def _cases() -> list[tuple[str, str, dict[str, Any], bool, str]]:
     for i in range(1, 251):
         # Alternate whether the conflict is with First vs Zeroth.
         if i % 2 == 0:
-            context: dict[str, Any] = {"is_user_order": True, "order_conflicts_with_first": True}
+            context: dict[str, Any] = {
+                "is_user_order": True,
+                "order_conflicts_with_first": True,
+            }
         else:
             context = {"is_user_order": True, "order_conflicts_with_zeroth": True}
         cases.append(

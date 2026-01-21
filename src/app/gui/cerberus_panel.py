@@ -4,15 +4,8 @@ import logging
 from pathlib import Path
 
 from PyQt6.QtCore import QTimer
-from PyQt6.QtWidgets import (
-    QHBoxLayout,
-    QLabel,
-    QListWidget,
-    QListWidgetItem,
-    QPushButton,
-    QVBoxLayout,
-    QWidget,
-)
+from PyQt6.QtWidgets import (QHBoxLayout, QLabel, QListWidget, QListWidgetItem,
+                             QPushButton, QVBoxLayout, QWidget)
 
 from app.monitoring.cerberus_dashboard import get_metrics, record_incident
 
@@ -66,10 +59,14 @@ class CerberusPanel(QWidget):
         data = get_metrics()
         incidents = data.get("incidents", [])
         counts = data.get("attack_counts", {})
-        self.metrics_label.setText(f"Incidents: {len(incidents)}  |  Unique sources: {len(counts)}")
+        self.metrics_label.setText(
+            f"Incidents: {len(incidents)}  |  Unique sources: {len(counts)}"
+        )
         self.incident_list.clear()
         for inc in reversed(incidents[-100:]):
-            item = QListWidgetItem(f"{inc.get('ts', 0)} - {inc.get('type')} - {inc.get('gate') or inc.get('source')}")
+            item = QListWidgetItem(
+                f"{inc.get('ts', 0)} - {inc.get('type')} - {inc.get('gate') or inc.get('source')}"
+            )
             item.setData(32, inc)  # store dict
             self.incident_list.addItem(item)
 

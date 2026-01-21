@@ -90,6 +90,7 @@ class TemporalConfig(BaseSettings):
 
     class Config:
         """Pydantic config."""
+
         env_prefix = "TEMPORAL_"
         env_file = ".env.temporal"
         env_file_encoding = "utf-8"

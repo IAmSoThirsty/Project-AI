@@ -3,6 +3,7 @@
 This module provides a thin wrapper around the Cerberus HubCoordinator so the
 main application can initialize and use the guard bot safely.
 """
+
 import logging
 import os
 from typing import Any
@@ -36,22 +37,33 @@ class CerberusAdapter:
 
                 configure_logging()
             except Exception:
-                logger.debug("Cerberus logging_config not available or failed to configure")
+                logger.debug(
+                    "Cerberus logging_config not available or failed to configure"
+                )
 
             from cerberus.hub import HubCoordinator
 
             self._hub = HubCoordinator()
-            logger.info("Cerberus hub initialized", guardian_count=self._hub.guardian_count)
+            logger.info(
+                "Cerberus hub initialized", guardian_count=self._hub.guardian_count
+            )
             return True
         except Exception as exc:  # pragma: no cover - runtime integration
             logger.exception("Failed to initialize Cerberus: %s", exc)
             self._hub = None
             return False
 
-    def analyze(self, content: str, context: dict[str, Any] | None = None) -> dict[str, Any]:
+    def analyze(
+        self, content: str, context: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
         """Analyze content via Cerberus hub. If not enabled, return a permissive result."""
         if not self.enabled or self._hub is None:
-            return {"decision": "allowed", "is_safe": True, "guardian_count": 0, "results": []}
+            return {
+                "decision": "allowed",
+                "is_safe": True,
+                "guardian_count": 0,
+                "results": [],
+            }
         return self._hub.analyze(content, context)
 
     def get_status(self) -> dict[str, Any]:

@@ -51,7 +51,9 @@ class AgentEncapsulation:
         """
         if not self._allowed_operations["write"]:
             logger.warning("Write denied for %s by %s", key, caller)
-            raise PermissionError(f"Write operation not allowed for agent {self.agent_id}")
+            raise PermissionError(
+                f"Write operation not allowed for agent {self.agent_id}"
+            )
 
         with self._lock:
             self._state[key] = value
@@ -74,13 +76,17 @@ class AgentEncapsulation:
         """
         if not self._allowed_operations["read"]:
             logger.warning("Read denied for %s by %s", key, caller)
-            raise PermissionError(f"Read operation not allowed for agent {self.agent_id}")
+            raise PermissionError(
+                f"Read operation not allowed for agent {self.agent_id}"
+            )
 
         with self._lock:
             self._log_access("read", key, caller)
             return self._state[key]
 
-    def set_permissions(self, read: bool = True, write: bool = True, execute: bool = False) -> None:
+    def set_permissions(
+        self, read: bool = True, write: bool = True, execute: bool = False
+    ) -> None:
         """Set allowed operations for agent.
 
         Args:
@@ -138,7 +144,12 @@ class NumericalProtection:
         self.clip_range = (-1e6, 1e6)  # Default bounds
         self.outlier_threshold = 3.0  # Standard deviations
 
-    def clip_array(self, arr: np.ndarray, min_val: float | None = None, max_val: float | None = None) -> np.ndarray:
+    def clip_array(
+        self,
+        arr: np.ndarray,
+        min_val: float | None = None,
+        max_val: float | None = None,
+    ) -> np.ndarray:
         """Clip array values to safe range.
 
         Args:
@@ -156,11 +167,15 @@ class NumericalProtection:
 
         # Log if clipping occurred
         if not np.array_equal(arr, clipped):
-            logger.warning("Array clipped: %d values out of bounds", np.sum(arr != clipped))
+            logger.warning(
+                "Array clipped: %d values out of bounds", np.sum(arr != clipped)
+            )
 
         return clipped
 
-    def remove_outliers(self, arr: np.ndarray, threshold: float | None = None) -> np.ndarray:
+    def remove_outliers(
+        self, arr: np.ndarray, threshold: float | None = None
+    ) -> np.ndarray:
         """Remove outliers from array using Z-score method.
 
         Args:
@@ -190,11 +205,15 @@ class NumericalProtection:
 
         removed = len(arr) - len(filtered)
         if removed > 0:
-            logger.info("Removed %d outliers from array (threshold: %.1f)", removed, threshold)
+            logger.info(
+                "Removed %d outliers from array (threshold: %.1f)", removed, threshold
+            )
 
         return filtered
 
-    def safe_divide(self, numerator: np.ndarray, denominator: np.ndarray, default: float = 0.0) -> np.ndarray:
+    def safe_divide(
+        self, numerator: np.ndarray, denominator: np.ndarray, default: float = 0.0
+    ) -> np.ndarray:
         """Perform safe division with zero handling.
 
         Args:

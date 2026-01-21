@@ -23,8 +23,12 @@ def prune(dir_path: Path, days: int, dry_run: bool = True):
 def main():
     parser = argparse.ArgumentParser(description="Prune old test-artifacts files")
     parser.add_argument("--dir", default="test-artifacts", help="Artifacts directory")
-    parser.add_argument("--days", type=int, default=30, help="Prune files older than DAYS")
-    parser.add_argument("--delete", action="store_true", help="Actually delete files (default: dry-run)")
+    parser.add_argument(
+        "--days", type=int, default=30, help="Prune files older than DAYS"
+    )
+    parser.add_argument(
+        "--delete", action="store_true", help="Actually delete files (default: dry-run)"
+    )
     args = parser.parse_args()
 
     d = Path(args.dir)
