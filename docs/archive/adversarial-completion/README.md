@@ -5,6 +5,7 @@ This folder contains completion reports and comprehensive analysis from the adve
 ## Contents
 
 ### Main Completion Report
+
 - **FINAL_SUMMARY.md** (16KB) - Comprehensive wrap-up of all red-teaming work, including:
   - Test suite overview
   - Vulnerability findings
