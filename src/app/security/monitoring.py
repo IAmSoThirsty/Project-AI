@@ -225,7 +225,9 @@ This is an automated security alert from Project-AI
             indicators: List of indicators (IPs, hashes, patterns)
         """
         self.threat_signatures[campaign_name] = indicators
-        logger.info("Added threat signature: %s (%d indicators)", campaign_name, len(indicators))
+        logger.info(
+            "Added threat signature: %s (%d indicators)", campaign_name, len(indicators)
+        )
 
     def check_threat_signatures(self, data: str) -> list[str]:
         """Check data against threat signatures.
@@ -242,14 +244,16 @@ This is an automated security alert from Project-AI
             for indicator in indicators:
                 if indicator in data:
                     matches.append(campaign_name)
-                    logger.warning("Threat signature matched: %s (indicator: %s)", campaign_name, indicator[:50])
+                    logger.warning(
+                        "Threat signature matched: %s (indicator: %s)",
+                        campaign_name,
+                        indicator[:50],
+                    )
                     break
 
         return matches
 
-    def get_event_statistics(
-        self, time_window: float | None = None
-    ) -> dict[str, Any]:
+    def get_event_statistics(self, time_window: float | None = None) -> dict[str, Any]:
         """Get event statistics.
 
         Args:
@@ -350,7 +354,13 @@ This is an automated security alert from Project-AI
                 if not self.event_log:
                     return
 
-                fieldnames = ["timestamp", "event_type", "severity", "source", "description"]
+                fieldnames = [
+                    "timestamp",
+                    "event_type",
+                    "severity",
+                    "source",
+                    "description",
+                ]
                 writer = csv.DictWriter(f, fieldnames=fieldnames)
                 writer.writeheader()
 
@@ -381,6 +391,7 @@ class StructuredLogger:
 
         # Ensure directory exists
         import os
+
         os.makedirs(os.path.dirname(log_path), exist_ok=True)
 
     def log(self, level: str, message: str, **kwargs) -> None:

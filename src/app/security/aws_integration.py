@@ -56,7 +56,9 @@ class AWSSecurityManager:
             )
 
         except NoCredentialsError:
-            logger.error("No AWS credentials found - must use IAM role or temp credentials")
+            logger.error(
+                "No AWS credentials found - must use IAM role or temp credentials"
+            )
             raise
         except (BotoCoreError, ClientError) as e:
             logger.error("Failed to initialize AWS session: %s", e)
@@ -294,9 +296,7 @@ class AWSSecurityManager:
             )
 
             logger.info("Enabled versioning on bucket: %s", bucket)
-            logger.warning(
-                "MFA Delete must be enabled via root account with MFA token"
-            )
+            logger.warning("MFA Delete must be enabled via root account with MFA token")
 
         except ClientError as e:
             logger.error("Failed to enable versioning: %s", e)

@@ -10,13 +10,9 @@ Tests:
 - Temporal workflow integration
 """
 
-import os
 import tempfile
-from pathlib import Path
 
-import numpy as np
 import pytest
-
 
 # ============================================================================
 # Adapter Tests
@@ -113,7 +109,10 @@ class TestMemoryAdapter:
             assert len(results) <= 2
             # Most relevant should be about Python
             if results:
-                assert "Python" in results[0]["content"] or "PyTorch" in results[0]["content"]
+                assert (
+                    "Python" in results[0]["content"]
+                    or "PyTorch" in results[0]["content"]
+                )
 
     def test_memory_persistence(self):
         """Test memory persistence across instances."""
@@ -181,12 +180,12 @@ class TestPolicyEngine:
 
     def test_content_filter_policy(self):
         """Test content filtering."""
-        from src.cognition.adapters.policy_engine import (
-            ContentFilterPolicy,
-            PolicyEngine,
-        )
+        from src.cognition.adapters.policy_engine import (ContentFilterPolicy,
+                                                          PolicyEngine)
 
-        engine = PolicyEngine(policies=[ContentFilterPolicy(blocked_patterns=[r"bad\w+"])])
+        engine = PolicyEngine(
+            policies=[ContentFilterPolicy(blocked_patterns=[r"bad\w+"])]
+        )
 
         # Should allow clean content
         result1 = engine.enforce("This is good content")
@@ -297,7 +296,9 @@ class TestGalahadEngine:
         engine = GalahadEngine(GalahadConfig(arbitration_strategy="weighted"))
 
         # Arbitrate between conflicting inputs
-        result = engine.arbitrate([{"data": "A", "confidence": 0.8}, {"data": "B", "confidence": 0.5}])
+        result = engine.arbitrate(
+            [{"data": "A", "confidence": 0.8}, {"data": "B", "confidence": 0.5}]
+        )
 
         assert "decision" in result
         assert "reason" in result
@@ -426,11 +427,9 @@ class TestTemporalWorkflows:
 
     def test_workflow_imports(self):
         """Test that workflow classes can be imported."""
-        from temporal.workflows.triumvirate_workflow import (
-            TriumvirateRequest,
-            TriumvirateResult,
-            TriumvirateWorkflow,
-        )
+        from temporal.workflows.triumvirate_workflow import (TriumvirateRequest,
+                                                             TriumvirateResult,
+                                                             TriumvirateWorkflow)
 
         assert TriumvirateWorkflow is not None
         assert TriumvirateRequest is not None
@@ -438,13 +437,11 @@ class TestTemporalWorkflows:
 
     def test_activity_imports(self):
         """Test that activities can be imported."""
-        from temporal.workflows.activities import (
-            enforce_output_policy,
-            run_codex_inference,
-            run_galahad_reasoning,
-            run_triumvirate_pipeline,
-            validate_input_activity,
-        )
+        from temporal.workflows.activities import (enforce_output_policy,
+                                                   run_codex_inference,
+                                                   run_galahad_reasoning,
+                                                   run_triumvirate_pipeline,
+                                                   validate_input_activity)
 
         assert run_triumvirate_pipeline is not None
         assert validate_input_activity is not None

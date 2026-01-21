@@ -4,14 +4,9 @@ import tempfile
 
 import pytest
 
-from app.core.ai_systems import (
-    AIPersona,
-    CommandOverride,
-    FourLaws,
-    LearningRequestManager,
-    MemoryExpansionSystem,
-    OverrideType,
-)
+from app.core.ai_systems import (AIPersona, CommandOverride, FourLaws,
+                                 LearningRequestManager, MemoryExpansionSystem,
+                                 OverrideType)
 
 
 class TestFourLaws:

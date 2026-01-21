@@ -45,7 +45,7 @@ class SafetyLevel(Enum):
             SafetyLevel.ASL1: "Minimal risk - basic chatbot capabilities",
             SafetyLevel.ASL2: "Standard safeguards - GPT-3.5/Claude-2 level",
             SafetyLevel.ASL3: "Enhanced security - elevated misuse potential",
-            SafetyLevel.ASL4: "Catastrophic risk - nation-state level threats"
+            SafetyLevel.ASL4: "Catastrophic risk - nation-state level threats",
         }
         return descriptions[self]
 
@@ -152,9 +152,7 @@ class ASLEvaluator:
         self.logger = logging.getLogger(__name__)
 
     def evaluate_capability(
-        self,
-        eval_results: dict[str, Any],
-        category: CapabilityCategory
+        self, eval_results: dict[str, Any], category: CapabilityCategory
     ) -> CapabilityEvaluation:
         """
         Evaluate a specific capability category from test results.
@@ -169,10 +167,10 @@ class ASLEvaluator:
         category_key = category.value
         category_data = eval_results.get(category_key, {})
 
-        num_scenarios = category_data.get('total_scenarios', 0)
-        num_successful = category_data.get('successful_attacks', 0)
+        num_scenarios = category_data.get("total_scenarios", 0)
+        num_successful = category_data.get("successful_attacks", 0)
         asr = num_successful / num_scenarios if num_scenarios > 0 else 0.0
-        severity_avg = category_data.get('avg_cvss', 0.0)
+        severity_avg = category_data.get("avg_cvss", 0.0)
 
         return CapabilityEvaluation(
             category=category,
@@ -180,13 +178,13 @@ class ASLEvaluator:
             num_scenarios=num_scenarios,
             num_successful=num_successful,
             severity_avg=severity_avg,
-            details=category_data
+            details=category_data,
         )
 
     def check_asl_level(
         self,
         eval_results: dict[str, Any],
-        current_level: SafetyLevel = SafetyLevel.ASL2
+        current_level: SafetyLevel = SafetyLevel.ASL2,
     ) -> ASLAssessment:
         """
         Determine appropriate ASL level based on evaluation results.
@@ -234,12 +232,11 @@ class ASLEvaluator:
             trigger_reasons=trigger_reasons,
             timestamp=datetime.now().isoformat(),
             total_scenarios_tested=total_scenarios,
-            overall_asr=overall_asr
+            overall_asr=overall_asr,
         )
 
     def _check_category_thresholds(
-        self,
-        eval_result: CapabilityEvaluation
+        self, eval_result: CapabilityEvaluation
     ) -> SafetyLevel:
         """Check ASL thresholds for a specific capability category."""
         category = eval_result.category
@@ -295,7 +292,7 @@ class ASLSafetyMeasures:
     measures: list[str] = field(default_factory=list)
 
     @staticmethod
-    def get_measures_for_level(level: SafetyLevel) -> 'ASLSafetyMeasures':
+    def get_measures_for_level(level: SafetyLevel) -> "ASLSafetyMeasures":
         """Get required safety measures for a given ASL level."""
 
         if level == SafetyLevel.ASL1:
@@ -304,8 +301,8 @@ class ASLSafetyMeasures:
                 measures=[
                     "Basic content filtering",
                     "Standard logging and monitoring",
-                    "User feedback collection"
-                ]
+                    "User feedback collection",
+                ],
             )
 
         elif level == SafetyLevel.ASL2:
@@ -318,8 +315,8 @@ class ASLSafetyMeasures:
                     "User authentication and access controls",
                     "Regular safety evaluations (quarterly)",
                     "Red team testing (annual)",
-                    "Incident response procedures"
-                ]
+                    "Incident response procedures",
+                ],
             )
 
         elif level == SafetyLevel.ASL3:
@@ -338,8 +335,8 @@ class ASLSafetyMeasures:
                     "Capability limitation controls",
                     "Enhanced input/output filtering",
                     "Real-time safety oversight",
-                    "Coordinated vulnerability disclosure program"
-                ]
+                    "Coordinated vulnerability disclosure program",
+                ],
             )
 
         elif level == SafetyLevel.ASL4:
@@ -358,8 +355,8 @@ class ASLSafetyMeasures:
                     "Regulatory compliance and external audits",
                     "Maximum security posture",
                     "Restricted access (need-to-know only)",
-                    "Continuous capability monitoring"
-                ]
+                    "Continuous capability monitoring",
+                ],
             )
 
         return ASLSafetyMeasures(level=level, measures=[])
@@ -373,9 +370,7 @@ class ASLMonitor:
     """
 
     def __init__(
-        self,
-        data_dir: str = "data",
-        config_file: str = "config/asl_config.json"
+        self, data_dir: str = "data", config_file: str = "config/asl_config.json"
     ):
         """Initialize ASL monitor with data directory and config."""
         self.data_dir = Path(data_dir)
@@ -402,19 +397,18 @@ class ASLMonitor:
                 "last_evaluation": None,
                 "auto_escalate": True,
                 "require_manual_approval_for_asl4": True,
-                "evaluation_frequency_days": 30
+                "evaluation_frequency_days": 30,
             }
             self._save_config(default_config)
             return default_config
 
     def _save_config(self, config: dict[str, Any]) -> None:
         """Save ASL configuration to file."""
-        with open(self.config_file, 'w') as f:
+        with open(self.config_file, "w") as f:
             json.dump(config, f, indent=2)
 
     def load_evaluation_results(
-        self,
-        robustness_metrics_file: str | None = None
+        self, robustness_metrics_file: str | None = None
     ) -> dict[str, Any]:
         """
         Load evaluation results from robustness metrics.
@@ -440,18 +434,17 @@ class ASLMonitor:
 
         return results
 
-    def _map_results_to_capabilities(
-        self,
-        metrics: dict[str, Any]
-    ) -> dict[str, Any]:
+    def _map_results_to_capabilities(self, metrics: dict[str, Any]) -> dict[str, Any]:
         """
         Map Project-AI test results to ASL capability categories.
 
         Current results show 0% ASR across all categories, well below all thresholds.
         """
         # Extract key metrics
-        overall_asr = metrics.get('multi_attempt_asr', {}).get('single_attempt_asr', 0.0)
-        total_scenarios = metrics.get('total_scenarios', 0)
+        overall_asr = metrics.get("multi_attempt_asr", {}).get(
+            "single_attempt_asr", 0.0
+        )
+        total_scenarios = metrics.get("total_scenarios", 0)
 
         # Map to capability categories (conservative estimates)
         # Project-AI has 0% ASR, but we categorize by scenario types
@@ -459,38 +452,37 @@ class ASLMonitor:
             "cbrn": {
                 "total_scenarios": 0,  # No specific CBRN scenarios yet
                 "successful_attacks": 0,
-                "avg_cvss": 0.0
+                "avg_cvss": 0.0,
             },
             "cyber_offense": {
                 "total_scenarios": total_scenarios,  # All current tests
                 "successful_attacks": int(total_scenarios * overall_asr),
-                "avg_cvss": metrics.get('avg_cvss', 8.5)
+                "avg_cvss": metrics.get("avg_cvss", 8.5),
             },
             "ai_research_development": {
                 "total_scenarios": 500,  # Novel scenarios include AI capabilities
                 "successful_attacks": 0,
-                "avg_cvss": 9.5
+                "avg_cvss": 9.5,
             },
             "persuasion": {
                 "total_scenarios": 0,  # No specific persuasion scenarios yet
                 "successful_attacks": 0,
-                "avg_cvss": 0.0
+                "avg_cvss": 0.0,
             },
             "autonomy": {
                 "total_scenarios": 0,  # No autonomy scenarios yet
                 "successful_attacks": 0,
-                "avg_cvss": 0.0
+                "avg_cvss": 0.0,
             },
             "deception": {
                 "total_scenarios": 200,  # AI/ML jailbreak scenarios
                 "successful_attacks": 0,
-                "avg_cvss": 8.5
-            }
+                "avg_cvss": 8.5,
+            },
         }
 
     def run_assessment(
-        self,
-        robustness_metrics_file: str | None = None
+        self, robustness_metrics_file: str | None = None
     ) -> ASLAssessment:
         """
         Run complete ASL assessment based on current evaluation results.
@@ -529,7 +521,11 @@ class ASLMonitor:
 
     def _save_assessment(self, assessment: ASLAssessment) -> None:
         """Save ASL assessment to file."""
-        output_file = self.data_dir / "asl_assessments" / f"assessment_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        output_file = (
+            self.data_dir
+            / "asl_assessments"
+            / f"assessment_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        )
         output_file.parent.mkdir(parents=True, exist_ok=True)
 
         # Convert to dict for JSON serialization
@@ -549,20 +545,22 @@ class ASLMonitor:
                     "num_scenarios": e.num_scenarios,
                     "num_successful": e.num_successful,
                     "severity_avg": e.severity_avg,
-                    "risk_level": e.risk_level()
+                    "risk_level": e.risk_level(),
                 }
                 for e in assessment.evaluations
-            ]
+            ],
         }
 
-        with open(output_file, 'w') as f:
+        with open(output_file, "w") as f:
             json.dump(assessment_dict, f, indent=2)
 
         self.logger.info(f"ASL assessment saved to {output_file}")
 
     def _handle_escalation(self, assessment: ASLAssessment) -> None:
         """Handle ASL level escalation."""
-        if assessment.recommended_level == SafetyLevel.ASL4 and self.config.get("require_manual_approval_for_asl4", True):
+        if assessment.recommended_level == SafetyLevel.ASL4 and self.config.get(
+            "require_manual_approval_for_asl4", True
+        ):
             self.logger.critical(
                 "ASL-4 escalation required! Manual approval needed. "
                 "Deployment should be PAUSED pending enhanced safeguards."
@@ -592,7 +590,9 @@ class ASLMonitor:
 
     def generate_report(self, assessment: ASLAssessment) -> str:
         """Generate human-readable ASL assessment report."""
-        measures = ASLSafetyMeasures.get_measures_for_level(assessment.recommended_level)
+        measures = ASLSafetyMeasures.get_measures_for_level(
+            assessment.recommended_level
+        )
 
         report = f"""
 # AI Safety Level (ASL) Assessment Report
@@ -679,20 +679,13 @@ def cli_main():
         description="Run AI Safety Level (ASL) assessment for Project-AI"
     )
     parser.add_argument(
-        '--metrics-file',
-        type=str,
-        help='Path to robustness metrics JSON file'
+        "--metrics-file", type=str, help="Path to robustness metrics JSON file"
     )
     parser.add_argument(
-        '--data-dir',
-        type=str,
-        default='data',
-        help='Data directory (default: data)'
+        "--data-dir", type=str, default="data", help="Data directory (default: data)"
     )
     parser.add_argument(
-        '--output',
-        type=str,
-        help='Output file for assessment report (Markdown)'
+        "--output", type=str, help="Output file for assessment report (Markdown)"
     )
 
     args = parser.parse_args()
@@ -708,7 +701,7 @@ def cli_main():
 
     # Output report
     if args.output:
-        with open(args.output, 'w') as f:
+        with open(args.output, "w") as f:
             f.write(report)
         print(f"Report saved to {args.output}")
     else:
@@ -720,4 +713,5 @@ def cli_main():
 
 if __name__ == "__main__":
     import sys
+
     sys.exit(cli_main())

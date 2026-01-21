@@ -16,12 +16,14 @@ class ExpertAgent(KernelRoutedAgent):
     All actions are routed through CognitionKernel for governance, memory, and reflection.
     """
 
-    def __init__(self, name: str = "expert", kernel: CognitionKernel | None = None) -> None:
+    def __init__(
+        self, name: str = "expert", kernel: CognitionKernel | None = None
+    ) -> None:
         # Initialize kernel routing (COGNITION KERNEL INTEGRATION)
         super().__init__(
             kernel=kernel,
             execution_type=ExecutionType.AGENT_ACTION,
-            default_risk_level="medium"  # Expert actions have moderate risk
+            default_risk_level="medium",  # Expert actions have moderate risk
         )
 
         self.name = name
@@ -41,7 +43,7 @@ class ExpertAgent(KernelRoutedAgent):
             action_args=(codex,),
             requires_approval=True,  # Expert actions require approval
             risk_level="medium",
-            metadata={"agent_name": self.name, "operation": "export_and_review"}
+            metadata={"agent_name": self.name, "operation": "export_and_review"},
         )
 
     def _do_export_and_review(self, codex) -> dict[str, Any]:

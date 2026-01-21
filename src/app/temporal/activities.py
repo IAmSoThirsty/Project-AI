@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 
 # Learning Activities
 
+
 @activity.defn
 async def validate_learning_content(request: dict) -> bool:
     """
@@ -29,7 +30,9 @@ async def validate_learning_content(request: dict) -> bool:
     Returns:
         True if content is valid, False otherwise
     """
-    activity.logger.info(f"Validating learning content for category: {request.get('category')}")
+    activity.logger.info(
+        f"Validating learning content for category: {request.get('category')}"
+    )
 
     content = request.get("content", "")
 
@@ -43,7 +46,14 @@ async def validate_learning_content(request: dict) -> bool:
         return False
 
     # Check for valid category
-    valid_categories = ["security", "programming", "data_science", "general", "tips", "facts"]
+    valid_categories = [
+        "security",
+        "programming",
+        "data_science",
+        "general",
+        "tips",
+        "facts",
+    ]
     if request.get("category") not in valid_categories:
         activity.logger.warning(f"Invalid category: {request.get('category')}")
         return False
@@ -142,13 +152,15 @@ async def store_knowledge(data: dict) -> bool:
     if category not in knowledge_base:
         knowledge_base[category] = []
 
-    knowledge_base[category].append({
-        "id": knowledge_id,
-        "content": request.get("content"),
-        "source": request.get("source"),
-        "timestamp": datetime.now().isoformat(),
-        "user_id": request.get("user_id"),
-    })
+    knowledge_base[category].append(
+        {
+            "id": knowledge_id,
+            "content": request.get("content"),
+            "source": request.get("source"),
+            "timestamp": datetime.now().isoformat(),
+            "user_id": request.get("user_id"),
+        }
+    )
 
     # Save updated knowledge base
     try:
@@ -162,6 +174,7 @@ async def store_knowledge(data: dict) -> bool:
 
 
 # Image Generation Activities
+
 
 @activity.defn
 async def check_content_safety(prompt: str) -> bool:
@@ -178,8 +191,15 @@ async def check_content_safety(prompt: str) -> bool:
 
     # Blocked keywords (simplified version)
     blocked_keywords = [
-        "explicit", "nude", "nsfw", "violent", "gore",
-        "weapon", "drug", "hate", "offensive"
+        "explicit",
+        "nude",
+        "nsfw",
+        "violent",
+        "gore",
+        "weapon",
+        "drug",
+        "hate",
+        "offensive",
     ]
 
     prompt_lower = prompt.lower()
@@ -222,7 +242,7 @@ async def generate_image(request: dict) -> dict:
             "size": request.get("size"),
             "backend": request.get("backend"),
             "timestamp": datetime.now().isoformat(),
-        }
+        },
     }
 
     activity.logger.info(f"Image generation completed: {image_path}")
@@ -269,6 +289,7 @@ async def store_image_metadata(result: dict) -> bool:
 
 
 # Data Analysis Activities
+
 
 @activity.defn
 async def validate_data_file(file_path: str) -> bool:
@@ -373,6 +394,7 @@ async def generate_visualizations(results: dict) -> str:
 
 # Memory Expansion Activities
 
+
 @activity.defn
 async def extract_memory_information(messages: list) -> list:
     """
@@ -390,11 +412,13 @@ async def extract_memory_information(messages: list) -> list:
     extracted = []
     for i, msg in enumerate(messages):
         if len(msg.get("content", "")) > 20:  # Only meaningful messages
-            extracted.append({
-                "index": i,
-                "content": msg.get("content"),
-                "timestamp": msg.get("timestamp", datetime.now().isoformat()),
-            })
+            extracted.append(
+                {
+                    "index": i,
+                    "content": msg.get("content"),
+                    "timestamp": msg.get("timestamp", datetime.now().isoformat()),
+                }
+            )
 
     activity.logger.info(f"Extracted {len(extracted)} items")
     return extracted
@@ -414,7 +438,9 @@ async def store_memories(data: dict) -> int:
     conversation_id = data.get("conversation_id")
     info = data.get("info", [])
 
-    activity.logger.info(f"Storing {len(info)} memories for conversation: {conversation_id}")
+    activity.logger.info(
+        f"Storing {len(info)} memories for conversation: {conversation_id}"
+    )
 
     memory_path = Path("data/memory/conversations.json")
     memory_path.parent.mkdir(parents=True, exist_ok=True)
@@ -467,6 +493,7 @@ async def update_memory_indexes(conversation_id: str) -> bool:
 
 # Crisis Response Activities
 
+
 @activity.defn
 async def validate_crisis_request(request: dict) -> bool:
     """
@@ -478,7 +505,9 @@ async def validate_crisis_request(request: dict) -> bool:
     Returns:
         True if request is valid, False otherwise
     """
-    activity.logger.info(f"Validating crisis request for target: {request.get('target_member')}")
+    activity.logger.info(
+        f"Validating crisis request for target: {request.get('target_member')}"
+    )
 
     # Validate target member
     target = request.get("target_member")
@@ -494,7 +523,9 @@ async def validate_crisis_request(request: dict) -> bool:
 
     # Validate each mission has required fields
     for mission in missions:
-        if not all(key in mission for key in ["phase_id", "agent_id", "action", "target"]):
+        if not all(
+            key in mission for key in ["phase_id", "agent_id", "action", "target"]
+        ):
             activity.logger.warning(f"Invalid mission structure: {mission}")
             return False
 
@@ -516,7 +547,9 @@ async def initialize_crisis_response(data: dict) -> bool:
     crisis_id = data.get("crisis_id")
     target = data.get("target")
 
-    activity.logger.info(f"Initializing crisis response: {crisis_id} for target: {target}")
+    activity.logger.info(
+        f"Initializing crisis response: {crisis_id} for target: {target}"
+    )
 
     # Ensure data directory exists
     crisis_path = Path("data/crises")
@@ -596,9 +629,7 @@ async def log_mission_phase(data: dict) -> bool:
     status = data.get("status")
     error = data.get("error")
 
-    activity.logger.info(
-        f"Logging mission phase: {phase_id} - Status: {status}"
-    )
+    activity.logger.info(f"Logging mission phase: {phase_id} - Status: {status}")
 
     # Load crisis record
     crisis_file = Path("data/crises") / f"{crisis_id}.json"

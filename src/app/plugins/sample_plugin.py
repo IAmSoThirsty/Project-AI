@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 try:
     from app.core.observability import emit_event
 except ImportError:
+
     def emit_event(event_name: str, metadata: dict[str, Any] | None = None) -> None:
         logger.debug("Observability stub for %s: %s", event_name, metadata)
 

@@ -33,15 +33,15 @@ class MetricsHandler(BaseHTTPRequestHandler):
     def do_GET(self) -> None:
         """Handle GET requests."""
         try:
-            if self.path == '/metrics':
+            if self.path == "/metrics":
                 self._serve_metrics()
-            elif self.path == '/ai-metrics':
+            elif self.path == "/ai-metrics":
                 self._serve_ai_metrics()
-            elif self.path == '/security-metrics':
+            elif self.path == "/security-metrics":
                 self._serve_security_metrics()
-            elif self.path == '/plugin-metrics':
+            elif self.path == "/plugin-metrics":
                 self._serve_plugin_metrics()
-            elif self.path == '/health':
+            elif self.path == "/health":
                 self._serve_health()
             else:
                 self.send_error(404, "Endpoint not found")
@@ -59,7 +59,7 @@ class MetricsHandler(BaseHTTPRequestHandler):
 
         # Send response
         self.send_response(200)
-        self.send_header('Content-Type', 'text/plain; version=0.0.4')
+        self.send_header("Content-Type", "text/plain; version=0.0.4")
         self.end_headers()
         self.wfile.write(metrics_output)
 
@@ -72,7 +72,7 @@ class MetricsHandler(BaseHTTPRequestHandler):
         metrics_output = metrics.generate_metrics()
 
         self.send_response(200)
-        self.send_header('Content-Type', 'text/plain; version=0.0.4')
+        self.send_header("Content-Type", "text/plain; version=0.0.4")
         self.end_headers()
         self.wfile.write(metrics_output)
 
@@ -83,7 +83,7 @@ class MetricsHandler(BaseHTTPRequestHandler):
         metrics_output = metrics.generate_metrics()
 
         self.send_response(200)
-        self.send_header('Content-Type', 'text/plain; version=0.0.4')
+        self.send_header("Content-Type", "text/plain; version=0.0.4")
         self.end_headers()
         self.wfile.write(metrics_output)
 
@@ -94,23 +94,24 @@ class MetricsHandler(BaseHTTPRequestHandler):
         metrics_output = metrics.generate_metrics()
 
         self.send_response(200)
-        self.send_header('Content-Type', 'text/plain; version=0.0.4')
+        self.send_header("Content-Type", "text/plain; version=0.0.4")
         self.end_headers()
         self.wfile.write(metrics_output)
 
     def _serve_health(self) -> None:
         """Serve health check endpoint."""
         health_status = {
-            'status': 'healthy',
-            'timestamp': time.time(),
-            'service': 'project-ai-metrics'
+            "status": "healthy",
+            "timestamp": time.time(),
+            "service": "project-ai-metrics",
         }
 
         import json
-        response = json.dumps(health_status).encode('utf-8')
+
+        response = json.dumps(health_status).encode("utf-8")
 
         self.send_response(200)
-        self.send_header('Content-Type', 'application/json')
+        self.send_header("Content-Type", "application/json")
         self.end_headers()
         self.wfile.write(response)
 
@@ -118,7 +119,7 @@ class MetricsHandler(BaseHTTPRequestHandler):
 class MetricsServer:
     """Prometheus metrics HTTP server."""
 
-    def __init__(self, host: str = '0.0.0.0', port: int = 8000):
+    def __init__(self, host: str = "0.0.0.0", port: int = 8000):
         """Initialize metrics server.
 
         Args:
@@ -146,9 +147,7 @@ class MetricsServer:
             self._running = True
 
             self.thread = threading.Thread(
-                target=self._run_server,
-                daemon=daemon,
-                name="PrometheusMetricsServer"
+                target=self._run_server, daemon=daemon, name="PrometheusMetricsServer"
             )
             self.thread.start()
 
@@ -194,7 +193,7 @@ class MetricsServer:
         return self._running
 
 
-def start_metrics_server(host: str = '0.0.0.0', port: int = 8000) -> MetricsServer:
+def start_metrics_server(host: str = "0.0.0.0", port: int = 8000) -> MetricsServer:
     """Start Prometheus metrics server.
 
     Args:
@@ -209,11 +208,11 @@ def start_metrics_server(host: str = '0.0.0.0', port: int = 8000) -> MetricsServ
     return server
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Standalone mode for testing
     logging.basicConfig(
         level=logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
 
     server = start_metrics_server(port=8000)

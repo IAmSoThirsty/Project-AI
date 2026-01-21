@@ -6,7 +6,6 @@ processing tasks or making decisions.
 All validations route through CognitionKernel for governance tracking.
 """
 
-
 from app.core.cognition_kernel import CognitionKernel, ExecutionType
 from app.core.kernel_integration import KernelRoutedAgent
 
@@ -31,7 +30,7 @@ class ValidatorAgent(KernelRoutedAgent):
         super().__init__(
             kernel=kernel,
             execution_type=ExecutionType.AGENT_ACTION,
-            default_risk_level="low"  # Validation is typically low risk
+            default_risk_level="low",  # Validation is typically low risk
         )
 
         # State initialization: The validator agent state is initialized

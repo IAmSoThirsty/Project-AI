@@ -9,17 +9,8 @@ import logging
 
 from PyQt6.QtCore import Qt, QThread, pyqtSignal
 from PyQt6.QtGui import QFont, QPixmap
-from PyQt6.QtWidgets import (
-    QComboBox,
-    QFrame,
-    QHBoxLayout,
-    QLabel,
-    QPushButton,
-    QScrollArea,
-    QTextEdit,
-    QVBoxLayout,
-    QWidget,
-)
+from PyQt6.QtWidgets import (QComboBox, QFrame, QHBoxLayout, QLabel, QPushButton,
+                             QScrollArea, QTextEdit, QVBoxLayout, QWidget)
 
 from app.core.image_generator import ImageGenerationBackend, ImageGenerator, ImageStyle
 
@@ -64,8 +55,7 @@ class ImageGenerationLeftPanel(QFrame):
     def __init__(self, parent=None):
         """Initialize left panel."""
         super().__init__(parent)
-        self.setStyleSheet(
-            f"""
+        self.setStyleSheet(f"""
             QFrame {{
                 background-color: {TRON_BLACK};
                 border-right: 2px solid {TRON_CYAN};
@@ -117,8 +107,7 @@ class ImageGenerationLeftPanel(QFrame):
                 border-right: 5px solid transparent;
                 border-top: 5px solid {TRON_CYAN};
             }}
-        """
-        )
+        """)
 
         self.setup_ui()
 
@@ -193,8 +182,7 @@ class ImageGenerationLeftPanel(QFrame):
 
         # Info label
         info_label = QLabel(
-            "⚠️ Content filtering enabled\n"
-            "All images comply with safety guidelines"
+            "⚠️ Content filtering enabled\n" "All images comply with safety guidelines"
         )
         info_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         info_label.setStyleSheet(f"color: {TRON_CYAN}; font-size: 9pt;")
@@ -241,8 +229,7 @@ class ImageGenerationRightPanel(QFrame):
     def __init__(self, parent=None):
         """Initialize right panel."""
         super().__init__(parent)
-        self.setStyleSheet(
-            """
+        self.setStyleSheet("""
             QFrame {
                 background-color: #1a1a1a;
                 border-left: 2px solid #00ffff;
@@ -250,8 +237,7 @@ class ImageGenerationRightPanel(QFrame):
             QLabel {
                 color: #00ffff;
             }
-        """
-        )
+        """)
 
         self.setup_ui()
 
@@ -304,8 +290,7 @@ class ImageGenerationRightPanel(QFrame):
 
         self.save_btn = QPushButton("💾 Save")
         self.save_btn.setEnabled(False)
-        self.save_btn.setStyleSheet(
-            f"""
+        self.save_btn.setStyleSheet(f"""
             QPushButton {{
                 background-color: {TRON_DARK};
                 color: {TRON_CYAN};
@@ -322,8 +307,7 @@ class ImageGenerationRightPanel(QFrame):
                 color: #555555;
                 border-color: #555555;
             }}
-        """
-        )
+        """)
         buttons_layout.addWidget(self.save_btn)
 
         self.copy_btn = QPushButton("📋 Copy")
@@ -369,7 +353,9 @@ class ImageGenerationRightPanel(QFrame):
     def show_error(self, message: str):
         """Show error message."""
         self.image_label.setText(f"❌ {message}")
-        self.image_label.setStyleSheet("color: #ff4444; font-size: 12pt; padding: 50px;")
+        self.image_label.setStyleSheet(
+            "color: #ff4444; font-size: 12pt; padding: 50px;"
+        )
         self.metadata_label.setText("")
         self.save_btn.setEnabled(False)
         self.copy_btn.setEnabled(False)

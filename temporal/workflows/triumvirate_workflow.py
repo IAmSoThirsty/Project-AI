@@ -261,7 +261,9 @@ class TriumvirateStepWorkflow:
                 output=enforcement_result.get("output"),
                 correlation_id=correlation_id,
                 pipeline_details={
-                    "validation": validation_result if not request.skip_validation else None,
+                    "validation": (
+                        validation_result if not request.skip_validation else None
+                    ),
                     "codex": codex_result,
                     "galahad": galahad_result,
                     "cerberus": enforcement_result,

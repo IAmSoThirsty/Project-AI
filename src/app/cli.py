@@ -1,8 +1,8 @@
-
 import typer
 
 # Version information
 __version__ = "1.0.0"
+
 
 def version_callback(value: bool):
     """Print version and exit."""
@@ -10,7 +10,9 @@ def version_callback(value: bool):
         typer.echo(f"Project-AI CLI v{__version__}")
         raise typer.Exit()
 
+
 app = typer.Typer(help="Project-AI Command Line Interface (CLI)")
+
 
 @app.callback()
 def main(
@@ -30,10 +32,12 @@ def main(
     """
     pass
 
+
 # CLI-CODEX best practices: Clear help, command groups, modular, extensible.
 
 # User Command Group
 user_app = typer.Typer(help="Commands for user management.")
+
 
 @user_app.command(name="example")
 def user_example(
@@ -42,10 +46,12 @@ def user_example(
     """Example user command."""
     typer.echo(f"Hello, {name}! (from user command)")
 
+
 app.add_typer(user_app, name="user")
 
 # Memory Command Group
 memory_app = typer.Typer(help="Commands for memory operations.")
+
 
 @memory_app.command(name="example")
 def memory_example(
@@ -54,10 +60,12 @@ def memory_example(
     """Example memory command."""
     typer.echo(f"Remember: {item}")
 
+
 app.add_typer(memory_app, name="memory")
 
 # Learning Command Group
 learning_app = typer.Typer(help="Commands for learning features.")
+
 
 @learning_app.command(name="example")
 def learning_example(
@@ -66,10 +74,12 @@ def learning_example(
     """Example learning command."""
     typer.echo(f"Learning about: {topic}")
 
+
 app.add_typer(learning_app, name="learning")
 
 # Plugin Command Group
 plugin_app = typer.Typer(help="Commands for managing plugins.")
+
 
 @plugin_app.command(name="example")
 def plugin_example(
@@ -78,10 +88,12 @@ def plugin_example(
     """Example plugin command."""
     typer.echo(f"Plugin selected: {plugin}")
 
+
 app.add_typer(plugin_app, name="plugin")
 
 # System Command Group
 system_app = typer.Typer(help="Commands for system operations.")
+
 
 @system_app.command(name="example")
 def system_example(
@@ -90,10 +102,12 @@ def system_example(
     """Example system command."""
     typer.echo(f"System parameter: {param}")
 
+
 app.add_typer(system_app, name="system")
 
 # AI Command Group
 ai_app = typer.Typer(help="Commands for AI functionalities.")
+
 
 @ai_app.command(name="example")
 def ai_example(
@@ -101,6 +115,7 @@ def ai_example(
 ):
     """Example AI command."""
     typer.echo(f"Using AI model: {model}")
+
 
 app.add_typer(ai_app, name="ai")
 

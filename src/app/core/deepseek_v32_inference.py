@@ -255,7 +255,9 @@ class DeepSeekV32:
             gen_temp = temperature if temperature is not None else self.temperature
             gen_top_p = top_p if top_p is not None else self.top_p
             gen_top_k = top_k if top_k is not None else self.top_k
-            gen_max_new = max_new_tokens if max_new_tokens is not None else self.max_length
+            gen_max_new = (
+                max_new_tokens if max_new_tokens is not None else self.max_length
+            )
 
             # Generate
             outputs = self._model.generate(
@@ -270,7 +272,9 @@ class DeepSeekV32:
             )
 
             # Decode output
-            generated_text = self._tokenizer.decode(outputs[0], skip_special_tokens=True)
+            generated_text = self._tokenizer.decode(
+                outputs[0], skip_special_tokens=True
+            )
 
             return {
                 "success": True,

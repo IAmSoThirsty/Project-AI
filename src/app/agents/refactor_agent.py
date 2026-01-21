@@ -6,6 +6,7 @@ Security Note: This agent uses subprocess to run black and ruff, which are
 trusted code formatting tools. Commands are hardcoded and do not accept
 external input beyond validated file paths.
 """
+
 from __future__ import annotations
 
 import logging
@@ -21,12 +22,14 @@ logger = logging.getLogger(__name__)
 
 
 class RefactorAgent(KernelRoutedAgent):
-    def __init__(self, data_dir: str = "data", kernel: CognitionKernel | None = None) -> None:
+    def __init__(
+        self, data_dir: str = "data", kernel: CognitionKernel | None = None
+    ) -> None:
         # Initialize kernel routing (COGNITION KERNEL INTEGRATION)
         super().__init__(
             kernel=kernel,
             execution_type=ExecutionType.AGENT_ACTION,
-            default_risk_level="medium"
+            default_risk_level="medium",
         )
         self.data_dir = data_dir
 
@@ -43,7 +46,7 @@ class RefactorAgent(KernelRoutedAgent):
             path,
             operation_name="suggest_refactor",
             risk_level="medium",
-            metadata={"file_path": path}
+            metadata={"file_path": path},
         )
 
     def _do_suggest_refactor(self, path: str) -> dict[str, Any]:
@@ -67,7 +70,9 @@ class RefactorAgent(KernelRoutedAgent):
                 return {"success": False, "error": "path_traversal"}
         except ValueError:
             # Different drives on Windows or no common path
-            logger.error("Path traversal detected: %s on different drive from %s", abs_path, cwd)
+            logger.error(
+                "Path traversal detected: %s on different drive from %s", abs_path, cwd
+            )
             return {"success": False, "error": "path_traversal"}
 
         # Resolve tool paths - validate they exist
@@ -75,7 +80,9 @@ class RefactorAgent(KernelRoutedAgent):
         ruff_cmd = shutil.which("ruff")
 
         if not black_cmd or not ruff_cmd:
-            logger.error("Required tools not found: black=%s, ruff=%s", black_cmd, ruff_cmd)
+            logger.error(
+                "Required tools not found: black=%s, ruff=%s", black_cmd, ruff_cmd
+            )
             return {"success": False, "error": "tools_not_found"}
 
         try:

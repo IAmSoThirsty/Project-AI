@@ -21,7 +21,7 @@ def read_file(filename: str) -> str:
     Raises:
         FileNotFoundError: If file doesn't exist
     """
-    with open(filename, encoding='utf-8') as f:
+    with open(filename, encoding="utf-8") as f:
         return f.read()
 
 
@@ -48,12 +48,7 @@ def is_thirsty_file(filename: str) -> bool:
     Returns:
         True if file has Thirsty-lang extension
     """
-    valid_extensions = [
-        '.thirsty',
-        '.thirstyplus',
-        '.thirstyplusplus',
-        '.thirstofgods'
-    ]
+    valid_extensions = [".thirsty", ".thirstyplus", ".thirstyplusplus", ".thirstofgods"]
     return get_file_extension(filename).lower() in valid_extensions
 
 
@@ -114,11 +109,13 @@ def check_version() -> str:
     Returns:
         Version string
     """
-    python_version = f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
+    python_version = (
+        f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
+    )
     return f"Python {python_version} | Thirsty-lang 1.0.0"
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Test utilities
     print_banner("Thirsty-lang Python Utilities")
     print(f"\n{check_version()}\n")

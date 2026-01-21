@@ -13,6 +13,7 @@ new patterns or move artifacts elsewhere.
 
 This does NOT auto-track files (avoids accidental pointer churn), it is a guardrail.
 """
+
 from __future__ import annotations
 
 import os
@@ -36,7 +37,9 @@ def is_lfs_pointer(file_path: Path) -> bool:
 
 def _should_skip_dir(dirpath: str) -> bool:
     """Return True if directory should be skipped during scan."""
-    return any(skip in dirpath for skip in (".git", "__pycache__", "node_modules", "htmlcov"))
+    return any(
+        skip in dirpath for skip in (".git", "__pycache__", "node_modules", "htmlcov")
+    )
 
 
 def _should_warn(path: Path) -> bool:
@@ -69,11 +72,15 @@ def main(argv: list[str]) -> int:
     if not large_files:
         print("[LFS CHECK] OK: No large untracked files above threshold.")
         return 0
-    print("[LFS CHECK] WARNING: The following files exceed 2MB and are not covered by LFS patterns:")
+    print(
+        "[LFS CHECK] WARNING: The following files exceed 2MB and are not covered by LFS patterns:"
+    )
     for f in large_files:
         size_mb = f.stat().st_size / (1024 * 1024)
         print(f"  - {f} ({size_mb:.2f} MB)")
-    print("Consider adding a pattern to .gitattributes or relocating large generated artifacts.")
+    print(
+        "Consider adding a pattern to .gitattributes or relocating large generated artifacts."
+    )
     return 0  # non-fatal, informational
 
 

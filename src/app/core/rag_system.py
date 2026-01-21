@@ -119,9 +119,7 @@ class RAGSystem:
                 "sentence-transformers not installed. "
                 "Install with: pip install sentence-transformers"
             )
-            raise ImportError(
-                "sentence-transformers required for RAG system"
-            ) from e
+            raise ImportError("sentence-transformers required for RAG system") from e
         except Exception as e:
             logger.error(f"Error loading embedding model: {e}")
             raise
@@ -183,9 +181,7 @@ class RAGSystem:
                 continue
 
             # Create unique chunk ID based on content hash
-            chunk_id = hashlib.sha256(
-                f"{source}:{i}:{chunk_text}".encode()
-            ).hexdigest()
+            chunk_id = hashlib.sha256(f"{source}:{i}:{chunk_text}".encode()).hexdigest()
 
             chunk = TextChunk(
                 text=chunk_text,
@@ -261,9 +257,7 @@ class RAGSystem:
                     file_chunks = self._chunk_text(text, source)
                     new_chunks.extend(file_chunks)
 
-                    logger.info(
-                        f"Processed {filepath.name}: {len(file_chunks)} chunks"
-                    )
+                    logger.info(f"Processed {filepath.name}: {len(file_chunks)} chunks")
                 except Exception as e:
                     logger.error(f"Error processing {filepath}: {e}")
 
@@ -332,9 +326,7 @@ class RAGSystem:
             from sentence_transformers import util
 
             # Embed the query
-            query_embedding = self.model.encode(
-                query, convert_to_tensor=False
-            )
+            query_embedding = self.model.encode(query, convert_to_tensor=False)
 
             # Calculate similarities
             results = []
@@ -343,9 +335,7 @@ class RAGSystem:
                     continue
 
                 # Compute cosine similarity
-                score = util.cos_sim(
-                    query_embedding, chunk.embedding
-                ).item()
+                score = util.cos_sim(query_embedding, chunk.embedding).item()
 
                 if score >= min_score:
                     results.append((chunk, score))
@@ -366,9 +356,7 @@ class RAGSystem:
             logger.error(f"Error during retrieval: {e}")
             return []
 
-    def build_context(
-        self, query: str, top_k: int = 3, max_length: int = 2000
-    ) -> str:
+    def build_context(self, query: str, top_k: int = 3, max_length: int = 2000) -> str:
         """
         Build context string for LLM augmentation.
 
@@ -524,9 +512,7 @@ Answer:"""
     def get_statistics(self) -> dict[str, Any]:
         """Get statistics about the RAG index."""
         sources = {chunk.source for chunk in self.chunks}
-        embedded_count = sum(
-            1 for chunk in self.chunks if chunk.embedding is not None
-        )
+        embedded_count = sum(1 for chunk in self.chunks if chunk.embedding is not None)
 
         return {
             "total_chunks": len(self.chunks),
