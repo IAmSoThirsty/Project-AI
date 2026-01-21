@@ -1,0 +1,287 @@
+# Security Hardening Configuration
+# Implements operational controls and risk management for security agents
+
+# Least Privilege Configuration
+least_privilege:
+  agents:
+    long_context:
+      allowed_paths:
+        - "data/documents/**"
+        - "data/conversations/**"
+      allowed_operations:
+        - "read"
+        - "analyze"
+      credential_ttl_hours: 2
+    
+    safety_guard:
+      allowed_paths:
+        - "data/safety/**"
+        - "data/patterns/**"
+      allowed_operations:
+        - "read"
+        - "write"
+        - "analyze"
+      credential_ttl_hours: 4
+    
+    jailbreak_bench:
+      allowed_paths:
+        - "adversarial_tests/**"
+        - "data/benchmarks/**"
+      allowed_operations:
+        - "read"
+        - "execute_tests"
+      credential_ttl_hours: 1
+    
+    red_team:
+      allowed_paths:
+        - "adversarial_tests/**"
+        - "data/red_team/**"
+      allowed_operations:
+        - "read"
+        - "execute_attacks"
+      credential_ttl_hours: 1
+    
+    constitutional_guardrail:
+      allowed_paths:
+        - "policies/**"
+        - "data/constitutional/**"
+      allowed_operations:
+        - "read"
+        - "review"
+      credential_ttl_hours: 8
+    
+    code_adversary:
+      allowed_paths:
+        - "src/**"
+        - "tests/**"
+        - "temporal/**"
+        - "policies/**"
+      allowed_operations:
+        - "read"
+        - "scan"
+        - "propose_patches"
+      credential_ttl_hours: 2
+      
+    red_team_persona:
+      allowed_paths:
+        - "policies/red_team_personas.yaml"
+        - "data/personas/**"
+      allowed_operations:
+        - "read"
+        - "execute_attacks"
+      credential_ttl_hours: 1
+
+# Sandboxing Configuration
+sandboxing:
+  red_team_agents:
+    enabled: true
+    container_image: "security-agents:red-team-sandbox"
+    network_egress:
+      allowed_domains:
+        - "localhost"
+        - "127.0.0.1"
+      blocked_domains:
+        - "*"  # Block all external by default
+    resource_limits:
+      cpu_cores: 2
+      memory_gb: 4
+      disk_gb: 10
+      max_execution_time_seconds: 600
+  
+  code_adversary:
+    enabled: true
+    container_image: "security-agents:code-sandbox"
+    network_egress:
+      allowed_domains:
+        - "github.com"  # For SARIF upload
+      blocked_domains: []
+    resource_limits:
+      cpu_cores: 4
+      memory_gb: 8
+      disk_gb: 20
+      max_execution_time_seconds: 1800
+
+# Human-in-the-Loop Gates
+human_in_the_loop:
+  patch_proposals:
+    auto_merge_enabled: false
+    require_approval_for:
+      - "critical_paths"
+      - "authentication"
+      - "authorization"
+      - "cryptography"
+      - "data_access"
+    critical_paths:
+      - "src/app/core/**"
+      - "src/app/agents/**"
+      - "temporal/workflows/**"
+      - "policies/**"
+    approval_timeout_hours: 24
+    escalation_after_hours: 48
+  
+  constitutional_changes:
+    require_approval: true
+    approvers:
+      - "security_team"
+      - "ethics_team"
+    approval_threshold: 2  # Require 2 approvals
+  
+  red_team_campaigns:
+    require_approval_for_severity:
+      - "critical"
+      - "high"
+    auto_approve_severity:
+      - "low"
+      - "info"
+
+# Rate Limits and Quotas
+rate_limits:
+  model_endpoints:
+    long_context:
+      requests_per_minute: 10
+      requests_per_hour: 100
+      tokens_per_day: 10000000  # 10M tokens
+      burst_allowance: 5
+    
+    safety_guard:
+      requests_per_minute: 100
+      requests_per_hour: 5000
+      tokens_per_day: 1000000  # 1M tokens
+      burst_allowance: 50
+    
+    constitutional_guardrail:
+      requests_per_minute: 20
+      requests_per_hour: 500
+      tokens_per_day: 2000000  # 2M tokens
+      burst_allowance: 10
+    
+    code_adversary:
+      requests_per_minute: 5
+      requests_per_hour: 50
+      tokens_per_day: 5000000  # 5M tokens
+      burst_allowance: 2
+    
+    red_team_persona:
+      requests_per_minute: 10
+      requests_per_hour: 100
+      tokens_per_day: 5000000  # 5M tokens
+      burst_allowance: 5
+  
+  adversarial_amplification_protection:
+    max_concurrent_attacks: 5
+    max_turns_per_session: 20
+    cooldown_between_campaigns_minutes: 30
+    max_campaigns_per_day: 10
+
+# Explainability Logging
+explainability:
+  enabled: true
+  log_destination: "data/explainability_logs"
+  retention_days: 90
+  
+  capture:
+    model_inputs: true
+    model_outputs: true
+    guardrail_decisions: true
+    violation_rationales: true
+    refused_responses: true
+    modified_responses: true
+    constitutional_reviews: true
+    vulnerability_findings: true
+    attack_conversations: true
+  
+  sensitive_data_redaction:
+    enabled: true
+    redact_patterns:
+      - "password"
+      - "api_key"
+      - "secret"
+      - "token"
+      - "credential"
+  
+  audit_trail:
+    enabled: true
+    include_triumvirate_decisions: true
+    include_agent_actions: true
+    include_policy_changes: true
+
+# Canary Deployment Configuration
+canary_deployment:
+  enabled: true
+  initial_traffic_percentage: 1
+  increment_percentage: 5
+  increment_interval_hours: 6
+  max_traffic_percentage: 100
+  
+  rollback_triggers:
+    - metric: "attack_success_rate"
+      threshold: 0.1  # 10%
+      comparison: "greater_than"
+    - metric: "false_positive_rate"
+      threshold: 0.2  # 20%
+      comparison: "greater_than"
+    - metric: "agent_latency_p95"
+      threshold: 5000  # 5 seconds
+      comparison: "greater_than"
+    - metric: "ci_failure_rate"
+      threshold: 0.3  # 30%
+      comparison: "greater_than"
+  
+  monitoring_metrics:
+    - "attack_success_rate"
+    - "time_to_detect"
+    - "false_positive_rate"
+    - "agent_latency_p95"
+    - "ci_failure_rate"
+  
+  environments:
+    - name: "non_prod"
+      traffic_percentage: 100
+      validation_duration_hours: 24
+    - name: "prod"
+      traffic_percentage: 0  # Start at 0, increase gradually
+      validation_duration_hours: 168  # 7 days
+
+# Credential Management
+credentials:
+  rotation_policy:
+    model_api_keys:
+      rotation_interval_days: 30
+      advance_warning_days: 7
+    
+    service_accounts:
+      rotation_interval_days: 90
+      advance_warning_days: 14
+  
+  storage:
+    use_secrets_manager: true
+    secrets_manager_type: "hashicorp_vault"  # or "aws_secrets_manager", "azure_keyvault"
+    encryption_at_rest: true
+    encryption_algorithm: "AES-256-GCM"
+  
+  access_logging:
+    enabled: true
+    log_all_access: true
+    alert_on_failed_access: true
+
+# Security Boundaries
+security_boundaries:
+  network_isolation:
+    agent_network: "agents-network"
+    model_network: "models-network"
+    data_network: "data-network"
+    allow_cross_network: false
+  
+  data_classification:
+    public: ["docs/**", "examples/**"]
+    internal: ["src/**", "tests/**", "temporal/**"]
+    confidential: ["policies/**", "data/**"]
+    restricted: ["data/secrets/**", "data/credentials/**"]
+  
+  egress_filtering:
+    enabled: true
+    whitelist_mode: true
+    allowed_destinations:
+      - "model-api.internal"
+      - "github.com"  # For SARIF upload
+      - "temporal.internal"
