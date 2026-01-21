@@ -68,9 +68,7 @@ class OSINTLoader:
             self.tools = data.get("categories", {})
 
             tool_count = sum(len(tools) for tools in self.tools.values())
-            logger.info(
-                f"Loaded {tool_count} tools from {len(self.tools)} categories"
-            )
+            logger.info(f"Loaded {tool_count} tools from {len(self.tools)} categories")
             return True
 
         except json.JSONDecodeError as e:
