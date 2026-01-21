@@ -232,13 +232,6 @@ jobs:
             echo "✅ Installed requirements-dev.txt"
           fi
           
-          # Check for Poetry configuration
-          if [ -f pyproject.toml ] && grep -q "\[tool.poetry\]" pyproject.toml; then
-            python -m pip install poetry
-            poetry install
-            echo "✅ Installed Poetry dependencies"
-          fi
-          
           # Failsafe with pipreqs
           python -m pip install pipreqs || true
           if command -v pipreqs &> /dev/null; then
