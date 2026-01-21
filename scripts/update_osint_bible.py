@@ -22,7 +22,6 @@ Future Enhancements:
 import argparse
 import json
 import logging
-import os
 import re
 from datetime import datetime
 from pathlib import Path
@@ -180,8 +179,7 @@ class OSINTBibleFetcher:
         # Process README.md for main content (stub)
         for md_file in markdown_files[:5]:  # Limit to first 5 files for now
             try:
-                content = self.fetch_file_content(md_file)
-                # In production, decode base64 content returned by GitHub API
+                # Fetch content - in production, decode base64 content from GitHub API
                 # For now, we'll create a placeholder
                 category_name = Path(md_file).stem
                 categories[category_name] = []

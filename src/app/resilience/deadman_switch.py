@@ -25,8 +25,9 @@ Future Enhancements:
 import logging
 import threading
 import time
+from collections.abc import Callable
 from datetime import datetime, timedelta
-from typing import Any, Callable
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -167,10 +168,10 @@ class DeadmanSwitch:
         logger.critical(f"DEADMAN SWITCH TRIGGERED: {reason} at {trigger_time}")
 
         # Stub: Execute failsafe actions
-        for i, action in enumerate(self.failsafe_actions):
+        for i, _action in enumerate(self.failsafe_actions):
             try:
                 logger.info(f"Executing failsafe action {i + 1}")
-                # action()  # Would execute in production
+                # _action()  # Would execute in production
                 logger.info("Failsafe action stub - not executed")
             except Exception as e:
                 logger.error(f"Failsafe action {i + 1} failed: {e}")
