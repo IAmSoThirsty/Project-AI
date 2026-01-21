@@ -30,6 +30,7 @@ from app.core.intelligence_engine import IntelligenceRouter
 # PART 1: Function Registry - Registering Custom Functions
 # ============================================================================
 
+
 def example_function_registry():
     """Demonstrate function registry capabilities."""
     print("=" * 70)
@@ -51,10 +52,7 @@ def example_function_registry():
 
     def get_system_info() -> dict:
         """Get basic system information."""
-        return {
-            "platform": sys.platform,
-            "python_version": sys.version.split()[0]
-        }
+        return {"platform": sys.platform, "python_version": sys.version.split()[0]}
 
     # Register functions with different categories
     print("Registering functions...")
@@ -100,6 +98,7 @@ def example_function_registry():
 # ============================================================================
 # PART 2: Knowledge Base Queries
 # ============================================================================
+
 
 def example_knowledge_base_queries():
     """Demonstrate knowledge base query capabilities."""
@@ -147,7 +146,9 @@ def example_knowledge_base_queries():
 
         # Search within category
         results = memory.query_knowledge("programming", category="skills")
-        print(f"  Query 'programming' in category 'skills': Found {len(results)} results")
+        print(
+            f"  Query 'programming' in category 'skills': Found {len(results)} results"
+        )
         for r in results:
             print(f"    - {r['key']} = {r['value']}")
         print()
@@ -162,16 +163,13 @@ def example_knowledge_base_queries():
         # Log some conversations
         print("Logging conversations...")
         memory.log_conversation(
-            "What is Python?",
-            "Python is a high-level programming language."
+            "What is Python?", "Python is a high-level programming language."
         )
         memory.log_conversation(
-            "Who created Python?",
-            "Python was created by Guido van Rossum."
+            "Who created Python?", "Python was created by Guido van Rossum."
         )
         memory.log_conversation(
-            "Tell me about AI",
-            "AI stands for Artificial Intelligence."
+            "Tell me about AI", "AI stands for Artificial Intelligence."
         )
         print("✓ Logged 3 conversations")
         print()
@@ -191,6 +189,7 @@ def example_knowledge_base_queries():
 # ============================================================================
 # PART 3: Intelligence Router Integration
 # ============================================================================
+
 
 def example_intelligence_router():
     """Demonstrate intelligence router capabilities."""
@@ -215,10 +214,7 @@ def example_intelligence_router():
         registry.register("add_numbers", add_numbers, category="math")
 
         # Create router
-        router = IntelligenceRouter(
-            memory_system=memory,
-            function_registry=registry
-        )
+        router = IntelligenceRouter(memory_system=memory, function_registry=registry)
 
         print("Testing intelligent query routing:")
         print()
@@ -255,6 +251,7 @@ def example_intelligence_router():
 # ============================================================================
 # PART 4: Complete Integration Example
 # ============================================================================
+
 
 def example_complete_integration():
     """Demonstrate complete integration pattern."""
@@ -299,7 +296,7 @@ def example_complete_integration():
         result = router.call_function(
             "save_note",
             title="python_info",
-            content="Python is a versatile programming language"
+            content="Python is a versatile programming language",
         )
         print(f"System: {result['result']}")
         print()
@@ -313,8 +310,8 @@ def example_complete_integration():
         # Search notes
         print("User: Search my notes for Python")
         result = router.call_function("search_notes", query="python")
-        if result['success']:
-            notes = result['result']
+        if result["success"]:
+            notes = result["result"]
             print(f"System: Found {len(notes)} note(s):")
             for note in notes:
                 print(f"  - {note['key']}: {note['value']}")
@@ -325,11 +322,18 @@ def example_complete_integration():
 # MAIN EXECUTION
 # ============================================================================
 
+
 def main():
     """Run all examples."""
     print()
     print("╔" + "═" * 68 + "╗")
-    print("║" + " " * 10 + "Function Registry & Knowledge Base Integration" + " " * 11 + "║")
+    print(
+        "║"
+        + " " * 10
+        + "Function Registry & Knowledge Base Integration"
+        + " " * 11
+        + "║"
+    )
     print("║" + " " * 24 + "Project-AI Demo" + " " * 29 + "║")
     print("╚" + "═" * 68 + "╝")
     print()
@@ -361,6 +365,7 @@ def main():
     except Exception as e:
         print(f"\n❌ Error running examples: {e}")
         import traceback
+
         traceback.print_exc()
         return 1
 

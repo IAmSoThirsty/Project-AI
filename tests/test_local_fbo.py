@@ -5,13 +5,8 @@ import tempfile
 
 import pytest
 
-from app.core.local_fbo import (
-    LocalFBOSystem,
-    OfflineContext,
-    ReflectionEntry,
-    create_local_fbo,
-    quick_offline_query,
-)
+from app.core.local_fbo import (LocalFBOSystem, OfflineContext, ReflectionEntry,
+                                create_local_fbo, quick_offline_query)
 
 
 class TestReflectionEntry:
@@ -103,15 +98,11 @@ class TestLocalFBOSystem:
 
     def test_add_offline_knowledge(self, fbo_system):
         """Test adding offline knowledge."""
-        fbo_system.add_offline_knowledge(
-            "test_key", "test_value", category="test"
-        )
+        fbo_system.add_offline_knowledge("test_key", "test_value", category="test")
 
         assert "test" in fbo_system.offline_knowledge
         assert "test_key" in fbo_system.offline_knowledge["test"]
-        assert (
-            fbo_system.offline_knowledge["test"]["test_key"] == "test_value"
-        )
+        assert fbo_system.offline_knowledge["test"]["test_key"] == "test_value"
 
     def test_offline_knowledge_persistence(self, temp_dir):
         """Test that offline knowledge persists."""
@@ -291,9 +282,7 @@ class TestLocalFBOSystem:
     def test_ingest_for_offline_no_rag(self, fbo_system):
         """Test ingest when RAG not available."""
         # Should not raise error
-        fbo_system.ingest_for_offline(
-            "Some text", "source", {"key": "value"}
-        )
+        fbo_system.ingest_for_offline("Some text", "source", {"key": "value"})
 
     def test_multiple_reflections_same_category(self, fbo_system):
         """Test adding multiple reflections in same category."""
@@ -302,9 +291,7 @@ class TestLocalFBOSystem:
                 f"Learning {i}", category="learning", confidence=0.7 + i * 0.01
             )
 
-        learning_reflections = fbo_system.search_reflections(
-            category="learning"
-        )
+        learning_reflections = fbo_system.search_reflections(category="learning")
         assert len(learning_reflections) == 10
 
     def test_reflection_tags(self, fbo_system):
@@ -404,9 +391,7 @@ class TestIntegration:
         fbo.add_reflection(
             "User prefers Python", category="preference", tags=["python"]
         )
-        fbo.add_reflection(
-            "Interest in AI topics", category="interest", tags=["ai"]
-        )
+        fbo.add_reflection("Interest in AI topics", category="interest", tags=["ai"])
 
         # Query
         result = fbo.query_offline("python")

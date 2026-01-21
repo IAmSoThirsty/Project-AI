@@ -59,7 +59,9 @@ def main():
 
         # Verify integration
         logger.info("Verifying integration...")
-        stored_malware = memory_system.get_knowledge("cybersecurity_education", "malware")
+        stored_malware = memory_system.get_knowledge(
+            "cybersecurity_education", "malware"
+        )
         if stored_malware:
             logger.info("✓ Malware section verified")
             print("\n✓ Knowledge base integration verified successfully")

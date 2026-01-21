@@ -2,6 +2,7 @@
 
 Collects user interactions and produces prioritized suggestions.
 """
+
 from __future__ import annotations
 
 import json
@@ -16,12 +17,14 @@ logger = logging.getLogger(__name__)
 
 
 class UxTelemetryAgent(KernelRoutedAgent):
-    def __init__(self, data_dir: str = "data", kernel: CognitionKernel | None = None) -> None:
+    def __init__(
+        self, data_dir: str = "data", kernel: CognitionKernel | None = None
+    ) -> None:
         # Initialize kernel routing (COGNITION KERNEL INTEGRATION)
         super().__init__(
             kernel=kernel,
             execution_type=ExecutionType.AGENT_ACTION,
-            default_risk_level="low"
+            default_risk_level="low",
         )
         self.data_dir = data_dir
         self.telemetry_path = os.path.join(self.data_dir, "telemetry.json")
@@ -37,7 +40,7 @@ class UxTelemetryAgent(KernelRoutedAgent):
             evt,
             operation_name="record_telemetry_event",
             risk_level="low",
-            metadata={"event_type": evt.get("type", "unknown")}
+            metadata={"event_type": evt.get("type", "unknown")},
         )
 
     def _do_record_event(self, evt: dict[str, Any]) -> None:

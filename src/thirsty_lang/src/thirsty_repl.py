@@ -36,23 +36,23 @@ class ThirstyREPL:
                     continue
 
                 # Handle special commands
-                if line.lower() in ('exit', 'quit'):
+                if line.lower() in ("exit", "quit"):
                     print("Stay hydrated! 💧")
                     break
 
-                if line.lower() == 'help':
+                if line.lower() == "help":
                     self._show_help()
                     continue
 
-                if line.lower() == 'vars':
+                if line.lower() == "vars":
                     self._show_variables()
                     continue
 
-                if line.lower() == 'clear':
-                    os.system('clear' if os.name != 'nt' else 'cls')
+                if line.lower() == "clear":
+                    os.system("clear" if os.name != "nt" else "cls")
                     continue
 
-                if line.lower() == 'history':
+                if line.lower() == "history":
                     self._show_history()
                     continue
 
@@ -112,5 +112,5 @@ def main():
     repl.run()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

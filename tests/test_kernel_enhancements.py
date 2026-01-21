@@ -72,12 +72,8 @@ class TestDeterministicReplayTool:
     def test_save_and_load_execution(self, replay_tool):
         """Test saving and loading an execution."""
         # Create mock execution context
-        from app.core.cognition_kernel import (
-            Action,
-            Decision,
-            ExecutionContext,
-            ExecutionStatus,
-        )
+        from app.core.cognition_kernel import (Action, Decision, ExecutionContext,
+                                               ExecutionStatus)
 
         action = Action(
             action_id="test_action_1",
@@ -119,12 +115,8 @@ class TestDeterministicReplayTool:
     def test_replay_execution(self, replay_tool):
         """Test replaying an execution."""
         # Save a test execution first
-        from app.core.cognition_kernel import (
-            Action,
-            Decision,
-            ExecutionContext,
-            ExecutionStatus,
-        )
+        from app.core.cognition_kernel import (Action, Decision, ExecutionContext,
+                                               ExecutionStatus)
 
         action = Action(
             action_id="test_action_2",
@@ -157,7 +149,7 @@ class TestDeterministicReplayTool:
         context.channels["decision"] = {
             "decision_id": "test_decision_2",
             "approved": True,
-            "reason": "Test approved"
+            "reason": "Test approved",
         }
         context.channels["result"] = "test_result"
 
@@ -197,9 +189,7 @@ class TestGovernanceDriftMonitor:
         # Create historical executions (low approval)
         historical = [
             {
-                "timestamp": (
-                    datetime.now(UTC) - timedelta(days=60)
-                ).isoformat(),
+                "timestamp": (datetime.now(UTC) - timedelta(days=60)).isoformat(),
                 "governance_decision": {"approved": False},
                 "proposed_action": {"risk_level": "medium", "mutation_targets": []},
             }
@@ -209,9 +199,7 @@ class TestGovernanceDriftMonitor:
         # Create recent executions (high approval)
         recent = [
             {
-                "timestamp": (
-                    datetime.now(UTC) - timedelta(days=5)
-                ).isoformat(),
+                "timestamp": (datetime.now(UTC) - timedelta(days=5)).isoformat(),
                 "governance_decision": {"approved": True},
                 "proposed_action": {"risk_level": "medium", "mutation_targets": []},
             }

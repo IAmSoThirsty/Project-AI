@@ -56,7 +56,7 @@ def print_result(result: dict, mode: str) -> None:
         print(f"\nGenerated:\n{result.get('text', '')}")
     elif mode == "chat":
         # Extract only the new response (after the prompt)
-        full_text = result.get('text', '')
+        full_text = result.get("text", "")
         print(f"\nAssistant: {full_text}")
 
     print("\n" + "=" * 60)

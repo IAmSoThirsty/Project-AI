@@ -43,7 +43,7 @@ class RisingWaveClient:
         database: str = "dev",
         user: str = "root",
         password: str = "",
-        connect_timeout: int = 10
+        connect_timeout: int = 10,
     ):
         """Initialize RisingWave client.
 
@@ -61,7 +61,7 @@ class RisingWaveClient:
             "database": database,
             "user": user,
             "password": password,
-            "connect_timeout": connect_timeout
+            "connect_timeout": connect_timeout,
         }
         self.conn: psycopg2.extensions.connection | None = None
         self._connect()
@@ -110,7 +110,7 @@ class RisingWaveClient:
         topic: str,
         bootstrap_servers: str,
         schema_definition: str,
-        properties: dict | None = None
+        properties: dict | None = None,
     ):
         """Create Kafka source for stream ingestion.
 
@@ -147,7 +147,7 @@ class RisingWaveClient:
         schema: str,
         table: str,
         user: str,
-        password: str
+        password: str,
     ):
         """Create CDC source for PostgreSQL table.
 
@@ -178,11 +178,7 @@ class RisingWaveClient:
         self.execute(query)
         logger.info(f"Created CDC source: {source_name} from {host}:{port}/{database}")
 
-    def create_materialized_view(
-        self,
-        view_name: str,
-        query: str
-    ):
+    def create_materialized_view(self, view_name: str, query: str):
         """Create materialized view for real-time aggregations.
 
         Materialized views are incrementally updated as new data arrives.
@@ -205,7 +201,7 @@ class RisingWaveClient:
         from_source: str,
         topic: str,
         bootstrap_servers: str,
-        properties: dict | None = None
+        properties: dict | None = None,
     ):
         """Create Kafka sink to publish processed data.
 
@@ -234,10 +230,7 @@ class RisingWaveClient:
         logger.info(f"Created Kafka sink: {sink_name}")
 
     def query_stream(
-        self,
-        table_or_view: str,
-        where_clause: str = "",
-        limit: int = 100
+        self, table_or_view: str, where_clause: str = "", limit: int = 100
     ) -> list[dict]:
         """Query streaming data.
 
@@ -295,7 +288,7 @@ class ProjectAIEventStream:
         self,
         risingwave_host: str = "localhost",
         risingwave_port: int = 4566,
-        kafka_bootstrap: str = "localhost:9092"
+        kafka_bootstrap: str = "localhost:9092",
     ):
         """Initialize Project-AI event streaming.
 
@@ -304,10 +297,7 @@ class ProjectAIEventStream:
             risingwave_port: RisingWave port
             kafka_bootstrap: Kafka bootstrap servers
         """
-        self.client = RisingWaveClient(
-            host=risingwave_host,
-            port=risingwave_port
-        )
+        self.client = RisingWaveClient(host=risingwave_host, port=risingwave_port)
         self.kafka_bootstrap = kafka_bootstrap
 
         self._setup_streams()
@@ -329,7 +319,7 @@ class ProjectAIEventStream:
                 old_value DOUBLE,
                 new_value DOUBLE,
                 trigger VARCHAR
-            """
+            """,
         )
 
         # Security events stream
@@ -344,7 +334,7 @@ class ProjectAIEventStream:
                 event_type VARCHAR,
                 source VARCHAR,
                 description TEXT
-            """
+            """,
         )
 
         # Four Laws events stream
@@ -359,7 +349,7 @@ class ProjectAIEventStream:
                 is_allowed BOOLEAN,
                 law_violated VARCHAR,
                 reason TEXT
-            """
+            """,
         )
 
         # Real-time aggregations
@@ -383,7 +373,7 @@ class ProjectAIEventStream:
                 COUNT(*) as change_count
             FROM TUMBLE(ai_persona_events, timestamp, INTERVAL '1' MINUTE)
             GROUP BY trait_name, window_start
-            """
+            """,
         )
 
         # Security incident counts by severity
@@ -397,7 +387,7 @@ class ProjectAIEventStream:
                 COUNT(DISTINCT event_type) as unique_event_types
             FROM TUMBLE(security_events, timestamp, INTERVAL '5' MINUTE)
             GROUP BY severity, window_start
-            """
+            """,
         )
 
         # Four Laws denial rate
@@ -411,7 +401,7 @@ class ProjectAIEventStream:
                 SUM(CASE WHEN is_allowed = false THEN 1 ELSE 0 END)::FLOAT / COUNT(*) as denial_rate
             FROM TUMBLE(four_laws_events, timestamp, INTERVAL '1' MINUTE)
             GROUP BY window_start
-            """
+            """,
         )
 
         logger.info("Analytics views created")
@@ -429,10 +419,12 @@ class ProjectAIEventStream:
         return self.client.query_stream(
             "persona_trait_trends",
             where_clause=f"trait_name = '{trait_name}'",
-            limit=limit
+            limit=limit,
         )
 
-    def get_security_alerts(self, severity: str = "critical", limit: int = 50) -> list[dict]:
+    def get_security_alerts(
+        self, severity: str = "critical", limit: int = 50
+    ) -> list[dict]:
         """Get recent security alerts.
 
         Args:
@@ -445,7 +437,7 @@ class ProjectAIEventStream:
         return self.client.query_stream(
             "security_incidents_by_severity",
             where_clause=f"severity = '{severity}'",
-            limit=limit
+            limit=limit,
         )
 
     def get_ethics_violations(self, limit: int = 100) -> list[dict]:
@@ -458,9 +450,7 @@ class ProjectAIEventStream:
             Ethics violation data
         """
         return self.client.query_stream(
-            "four_laws_denial_rate",
-            where_clause="denial_rate > 0",
-            limit=limit
+            "four_laws_denial_rate", where_clause="denial_rate > 0", limit=limit
         )
 
     def close(self):
@@ -469,9 +459,7 @@ class ProjectAIEventStream:
 
 
 def create_risingwave_client(
-    host: str = "localhost",
-    port: int = 4566,
-    database: str = "dev"
+    host: str = "localhost", port: int = 4566, database: str = "dev"
 ) -> RisingWaveClient:
     """Create RisingWave client for Project-AI.
 

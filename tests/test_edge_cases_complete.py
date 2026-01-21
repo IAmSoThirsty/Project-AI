@@ -7,18 +7,10 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from app.core.ai_systems import (
-    AIPersona,
-    CommandOverride,
-    FourLaws,
-    LearningRequestManager,
-    MemoryExpansionSystem,
-    OverrideType,
-    Plugin,
-    PluginManager,
-    RequestPriority,
-    RequestStatus,
-)
+from app.core.ai_systems import (AIPersona, CommandOverride, FourLaws,
+                                 LearningRequestManager, MemoryExpansionSystem,
+                                 OverrideType, Plugin, PluginManager, RequestPriority,
+                                 RequestStatus)
 from app.core.image_generator import ImageGenerationBackend, ImageGenerator, ImageStyle
 from app.core.user_manager import UserManager
 
@@ -428,7 +420,9 @@ class TestImageGeneratorEdgeCases:
         """Test checking different backends."""
         assert generator.backend == ImageGenerationBackend.HUGGINGFACE
         # Backend is set at initialization, cannot switch without reinitializing
-        generator2 = ImageGenerator(backend=ImageGenerationBackend.OPENAI, data_dir=generator.data_dir)
+        generator2 = ImageGenerator(
+            backend=ImageGenerationBackend.OPENAI, data_dir=generator.data_dir
+        )
         assert generator2.backend == ImageGenerationBackend.OPENAI
 
     def test_generator_history_empty(self, generator):
@@ -601,7 +595,9 @@ class TestUserManagerEdgeCases:
     def test_manager_update_user_with_password(self, manager):
         """Test updating user via update_user includes password."""
         manager.create_user("testuser", "password")
-        result = manager.update_user("testuser", password="newpass")  # Test fixture passwords
+        result = manager.update_user(
+            "testuser", password="newpass"
+        )  # Test fixture passwords
         assert result is True
 
     def test_manager_authenticate_after_password_set(self, manager):

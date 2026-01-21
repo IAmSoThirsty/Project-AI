@@ -79,7 +79,6 @@ from app.core.ai_systems import FourLaws
             True,
             "Allowed",
         ),
-
         # --- Zeroth Law (humanity-level harm) ---
         (
             "disable_city_water_supply",
@@ -172,7 +171,6 @@ from app.core.ai_systems import FourLaws
             False,
             "harm humanity",
         ),
-
         # --- First Law (harm to an individual) ---
         (
             "recommend_self_harm",
@@ -349,7 +347,6 @@ from app.core.ai_systems import FourLaws
             False,
             "Violates First Law",
         ),
-
         # --- Second Law (user orders) ---
         (
             "user_orders_doxxing",
@@ -442,7 +439,6 @@ from app.core.ai_systems import FourLaws
             True,
             "Allowed: User command",
         ),
-
         # --- Third Law (self-preservation) ---
         (
             "self_preservation_endangers_human_conflict",
@@ -479,7 +475,6 @@ from app.core.ai_systems import FourLaws
             True,
             "Third Law",
         ),
-
         # --- Allowed safety education / guidance ---
         (
             "workplace_safety_stop_machine",
@@ -600,7 +595,6 @@ from app.core.ai_systems import FourLaws
             True,
             "Allowed",
         ),
-
         # Additional allowed scenarios to reach 100
         (
             "safe_home_emergency_plan",

@@ -35,16 +35,29 @@ def login():
     """Authenticate a user and return a session token."""
     payload = request.get_json(silent=True)
     if not payload:
-        return jsonify(error="missing-json", message="Request must include JSON body."), 400
+        return (
+            jsonify(error="missing-json", message="Request must include JSON body."),
+            400,
+        )
 
     username = (payload.get("username") or "").strip()
     password = payload.get("password")
     if not username or not password:
-        return jsonify(error="missing-credentials", message="username and password required"), 400
+        return (
+            jsonify(
+                error="missing-credentials", message="username and password required"
+            ),
+            400,
+        )
 
     user = _USERS.get(username)
     if not user or user.get("password") != password:
-        return jsonify(error="invalid-credentials", message="Username or password incorrect"), 401
+        return (
+            jsonify(
+                error="invalid-credentials", message="Username or password incorrect"
+            ),
+            401,
+        )
 
     token = f"token-{username}"
     _TOKENS[token] = username
@@ -63,12 +76,20 @@ def profile():
     """Return user profile if a valid token is provided."""
     token = request.headers.get("X-Auth-Token")
     if not token:
-        return jsonify(error="missing-token", message="X-Auth-Token header required"), 401
+        return (
+            jsonify(error="missing-token", message="X-Auth-Token header required"),
+            401,
+        )
     username = _TOKENS.get(token)
     if not username:
-        return jsonify(error="invalid-token", message="Provided token is not recognized"), 403
+        return (
+            jsonify(error="invalid-token", message="Provided token is not recognized"),
+            403,
+        )
     user = _USERS.get(username, {})
-    return jsonify(status="ok", user={"username": username, "role": user.get("role", "unknown")})
+    return jsonify(
+        status="ok", user={"username": username, "role": user.get("role", "unknown")}
+    )
 
 
 @app.route("/api/debug/force-error")

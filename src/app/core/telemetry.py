@@ -4,6 +4,7 @@ Telemetry is disabled by default. Enable by setting TELEMETRY_ENABLED=true in th
 or `.env` file. Events are recorded to `logs/telemetry.json` using atomic writes to avoid
 corruption from concurrent writers.
 """
+
 from __future__ import annotations
 
 import json
@@ -13,7 +14,11 @@ from typing import Any
 
 from app.core.ai_systems import _atomic_write_json
 
-TELEMETRY_ENABLED = os.getenv("TELEMETRY_ENABLED", "false").lower() in ("1", "true", "yes")
+TELEMETRY_ENABLED = os.getenv("TELEMETRY_ENABLED", "false").lower() in (
+    "1",
+    "true",
+    "yes",
+)
 TELEMETRY_FILE = os.getenv("TELEMETRY_FILE", os.path.join("logs", "telemetry.json"))
 TELEMETRY_MAX_EVENTS = int(os.getenv("TELEMETRY_MAX_EVENTS", "1000"))
 
