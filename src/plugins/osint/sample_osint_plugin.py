@@ -93,12 +93,16 @@ class SampleOSINTPlugin(Plugin):
 
         if not allowed:
             logger.warning(f"OSINT plugin initialization blocked: {reason}")
-            emit_event("plugin.osint.blocked", {"reason": reason, "tool": self.tool_name})
+            emit_event(
+                "plugin.osint.blocked", {"reason": reason, "tool": self.tool_name}
+            )
             return False
 
         # Check if user authorization is required
         if context.get("requires_explicit_order") and not context.get("is_user_order"):
-            logger.warning(f"OSINT tool requires explicit user authorization: {self.tool_name}")
+            logger.warning(
+                f"OSINT tool requires explicit user authorization: {self.tool_name}"
+            )
             emit_event(
                 "plugin.osint.blocked",
                 {"reason": "requires_explicit_order", "tool": self.tool_name},

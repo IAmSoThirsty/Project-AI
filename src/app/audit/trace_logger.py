@@ -55,9 +55,7 @@ class TraceLogger:
         self.traces: dict[str, dict[str, Any]] = {}
         self.active_trace: str | None = None
 
-    def start_trace(
-        self, operation: str, context: dict[str, Any] | None = None
-    ) -> str:
+    def start_trace(self, operation: str, context: dict[str, Any] | None = None) -> str:
         """Start a new audit trace.
 
         This is a stub implementation. Future versions will:
@@ -133,9 +131,7 @@ class TraceLogger:
 
         return step_id
 
-    def end_trace(
-        self, trace_id: str, result: dict[str, Any] | None = None
-    ) -> bool:
+    def end_trace(self, trace_id: str, result: dict[str, Any] | None = None) -> bool:
         """End an audit trace.
 
         This is a stub implementation. Future versions will:
