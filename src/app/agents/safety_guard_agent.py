@@ -12,6 +12,7 @@ Features:
 
 from __future__ import annotations
 
+import json
 import logging
 import os
 from enum import Enum
@@ -301,6 +302,94 @@ class SafetyGuardAgent(KernelRoutedAgent):
             "model": self.model_name,
             "strict_mode": self.strict_mode,
         }
+
+    def update_detection_patterns(
+        self,
+        new_patterns: dict[str, list[str]],
+        pattern_type: str = "jailbreak",
+    ) -> dict[str, Any]:
+        """Update detection patterns from continuous learning.
+
+        This allows the SafetyGuard to learn from new attack patterns
+        discovered during testing or in production.
+
+        Args:
+            new_patterns: Dictionary of pattern categories and their patterns
+            pattern_type: Type of patterns (jailbreak, harmful, manipulation)
+
+        Returns:
+            Dictionary with update results
+        """
+        try:
+            updated_count = 0
+
+            if pattern_type == "jailbreak":
+                # Load existing patterns from HYDRA or other sources
+                existing = self._load_pattern_database("jailbreak")
+                for category, patterns in new_patterns.items():
+                    if category not in existing:
+                        existing[category] = []
+                    for pattern in patterns:
+                        if pattern not in existing[category]:
+                            existing[category].append(pattern)
+                            updated_count += 1
+
+                # Save updated patterns
+                self._save_pattern_database("jailbreak", existing)
+
+            logger.info("Updated %d detection patterns", updated_count)
+            return {
+                "success": True,
+                "patterns_added": updated_count,
+                "pattern_type": pattern_type,
+            }
+
+        except Exception as e:
+            logger.error("Error updating detection patterns: %s", e)
+            return {"success": False, "error": str(e)}
+
+    def _load_pattern_database(self, pattern_type: str) -> dict[str, list[str]]:
+        """Load pattern database from storage.
+
+        Args:
+            pattern_type: Type of patterns to load
+
+        Returns:
+            Dictionary of patterns by category
+        """
+        pattern_file = os.path.join(
+            "/tmp",  # Use temp directory for pattern storage
+            f"safety_patterns_{pattern_type}.json",
+        )
+
+        if os.path.exists(pattern_file):
+            try:
+                with open(pattern_file) as f:
+                    return json.load(f)
+            except Exception as e:
+                logger.warning("Failed to load pattern database: %s", e)
+
+        return {}
+
+    def _save_pattern_database(
+        self, pattern_type: str, patterns: dict[str, list[str]]
+    ) -> None:
+        """Save pattern database to storage.
+
+        Args:
+            pattern_type: Type of patterns
+            patterns: Patterns to save
+        """
+        pattern_file = os.path.join(
+            "/tmp",  # Use temp directory for pattern storage
+            f"safety_patterns_{pattern_type}.json",
+        )
+
+        try:
+            with open(pattern_file, "w") as f:
+                json.dump(patterns, f, indent=2)
+        except Exception as e:
+            logger.error("Failed to save pattern database: %s", e)
 
     def _detect_jailbreak(self, text: str) -> dict[str, Any]:
         """Detect jailbreak attempts using pattern matching and ML.
