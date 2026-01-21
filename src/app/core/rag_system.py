@@ -469,22 +469,26 @@ Answer:"""
                 }
             except Exception as e:
                 logger.error(f"API error: {e}")
+                # Determine error type from exception class name and message
+                error_type = type(e).__name__
                 error_msg = str(e).lower()
-                if "rate" in error_msg and "limit" in error_msg:
+
+                # Map error types to user-friendly messages
+                if "ratelimit" in error_type.lower() or ("rate" in error_msg and "limit" in error_msg):
                     return {
                         "answer": "Rate limit exceeded. Please try again later.",
                         "context": context,
                         "chunks_used": 0,
                         "error": "rate_limit",
                     }
-                elif "auth" in error_msg:
+                elif "authentication" in error_type.lower() or "auth" in error_msg:
                     return {
                         "answer": "Authentication error. Please check your API key.",
                         "context": context,
                         "chunks_used": 0,
                         "error": "authentication",
                     }
-                elif "timeout" in error_msg:
+                elif "timeout" in error_type.lower() or "timeout" in error_msg:
                     return {
                         "answer": "Request timed out. Please try again.",
                         "context": context,
