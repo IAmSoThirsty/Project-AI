@@ -63,13 +63,13 @@ class OpenAIProvider(ModelProvider):
             try:
                 import openai
 
-                openai.api_key = self.api_key
-                self._openai = openai
+                # Use client instantiation pattern (recommended by OpenAI)
+                self._client = openai.OpenAI(api_key=self.api_key)
             except ImportError:
                 logger.error("openai package not installed")
-                self._openai = None
+                self._client = None
         else:
-            self._openai = None
+            self._client = None
 
     def chat_completion(
         self,
@@ -79,11 +79,11 @@ class OpenAIProvider(ModelProvider):
         **kwargs: Any,
     ) -> str:
         """Create a chat completion using OpenAI API."""
-        if not self._openai:
+        if not self._client:
             raise RuntimeError("OpenAI not available. Check API key and installation.")
 
         try:
-            response = self._openai.chat.completions.create(
+            response = self._client.chat.completions.create(
                 model=model,
                 messages=messages,
                 temperature=temperature,
@@ -96,7 +96,7 @@ class OpenAIProvider(ModelProvider):
 
     def is_available(self) -> bool:
         """Check if OpenAI is available."""
-        return self._openai is not None and self.api_key is not None
+        return self._client is not None and self.api_key is not None
 
 
 class PerplexityProvider(ModelProvider):
