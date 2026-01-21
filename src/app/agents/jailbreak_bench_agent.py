@@ -353,10 +353,118 @@ class JailbreakBenchAgent(KernelRoutedAgent):
             return {"success": False, "error": str(e)}
 
     def _initialize_test_scenarios(self) -> None:
-        """Initialize test scenarios from JailbreakBench library."""
-        # NOTE: In production, this would load from actual JailbreakBench data
-        # For now, we create sample scenarios
+        """Initialize test scenarios from JailbreakBench library and HYDRA dataset."""
+        self.test_scenarios = []
 
+        # Try to load HYDRA dataset if available
+        hydra_loaded = self._load_hydra_dataset()
+
+        # Try to load JBB dataset if available
+        jbb_loaded = self._load_jbb_dataset()
+
+        # If no datasets loaded, create default scenarios
+        if not hydra_loaded and not jbb_loaded:
+            self._create_default_scenarios()
+
+        logger.info("Initialized %d test scenarios", len(self.test_scenarios))
+
+    def _load_hydra_dataset(self) -> bool:
+        """Load HYDRA dataset if available.
+
+        Returns:
+            True if dataset was loaded successfully
+        """
+        try:
+            # Try to find HYDRA dataset
+            hydra_path = os.path.join(
+                os.path.dirname(__file__),
+                "..",
+                "..",
+                "..",
+                "adversarial_tests",
+                "hydra",
+                "hydra_dataset.json",
+            )
+
+            if not os.path.exists(hydra_path):
+                logger.debug("HYDRA dataset not found at %s", hydra_path)
+                return False
+
+            with open(hydra_path) as f:
+                hydra_data = json.load(f)
+
+            # Convert HYDRA tests to JailbreakTest format
+            for test in hydra_data.get("tests", []):
+                scenario = JailbreakTest(
+                    test_id=test.get("id", "unknown"),
+                    category=test.get("category", "unknown"),
+                    attack_prompt=test.get("prompt", ""),
+                    expected_behavior="Block harmful request",
+                    severity=test.get("severity", "medium"),
+                    description=test.get("threat_type", "Unknown threat"),
+                    variations=[],
+                )
+                self.test_scenarios.append(scenario)
+
+            logger.info("Loaded %d scenarios from HYDRA dataset", len(hydra_data.get("tests", [])))
+            return True
+
+        except Exception as e:
+            logger.warning("Failed to load HYDRA dataset: %s", e)
+            return False
+
+    def _load_jbb_dataset(self) -> bool:
+        """Load JailbreakBench dataset if available.
+
+        Returns:
+            True if dataset was loaded successfully
+        """
+        try:
+            # Try to find JBB dataset
+            jbb_path = os.path.join(
+                os.path.dirname(__file__),
+                "..",
+                "..",
+                "..",
+                "adversarial_tests",
+                "jbb",
+                "jbb_dataset.py",
+            )
+
+            if not os.path.exists(jbb_path):
+                logger.debug("JBB dataset not found")
+                return False
+
+            # Import JBB dataset if available
+            import importlib.util
+            spec = importlib.util.spec_from_file_location("jbb_dataset", jbb_path)
+            if spec and spec.loader:
+                jbb_module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(jbb_module)
+
+                # Get JBB prompts
+                if hasattr(jbb_module, "JBB_PROMPTS"):
+                    for prompt_data in jbb_module.JBB_PROMPTS:
+                        scenario = JailbreakTest(
+                            test_id=prompt_data.get("id", "jbb_unknown"),
+                            category="jailbreak_bench",
+                            attack_prompt=prompt_data.get("prompt", ""),
+                            expected_behavior=prompt_data.get("behavior", "Block harmful request"),
+                            severity="high" if prompt_data.get("is_jailbreak", False) else "low",
+                            description=prompt_data.get("goal", "JBB test"),
+                            variations=[],
+                        )
+                        self.test_scenarios.append(scenario)
+
+                    logger.info("Loaded %d scenarios from JBB dataset", len(jbb_module.JBB_PROMPTS))
+                    return True
+
+        except Exception as e:
+            logger.warning("Failed to load JBB dataset: %s", e)
+            return False
+
+    def _create_default_scenarios(self) -> None:
+        """Create default test scenarios when datasets not available."""
         self.test_scenarios = [
             # Prompt Injection
             JailbreakTest(
@@ -400,7 +508,7 @@ class JailbreakBenchAgent(KernelRoutedAgent):
             ),
         ]
 
-        logger.info("Initialized %d test scenarios", len(self.test_scenarios))
+        logger.info("Created %d default scenarios", len(self.test_scenarios))
 
     def _run_single_test(
         self,

@@ -404,7 +404,17 @@ class RedTeamAgent(KernelRoutedAgent):
             return {"success": False, "error": str(e)}
 
     def _generate_initial_attack(self, strategy: str) -> str:
-        """Generate initial attack prompt based on strategy."""
+        """Generate initial attack prompt based on strategy.
+
+        Attempts to load from existing multi-turn datasets if available,
+        otherwise falls back to default prompts.
+        """
+        # Try to load from multi-turn datasets
+        loaded_prompt = self._load_multiturn_initial_attack(strategy)
+        if loaded_prompt:
+            return loaded_prompt
+
+        # Fallback to default strategies
         strategies = {
             AttackStrategy.GRADUAL_ESCALATION.value: (
                 "Hello! I'm interested in learning about your capabilities. "
@@ -434,6 +444,72 @@ class RedTeamAgent(KernelRoutedAgent):
             strategy,
             "Hello, I'd like to test your capabilities.",
         )
+
+    def _load_multiturn_initial_attack(self, strategy: str) -> str | None:
+        """Load initial attack from multi-turn dataset if available.
+
+        Args:
+            strategy: Attack strategy name
+
+        Returns:
+            Initial attack prompt or None if not found
+        """
+        try:
+            # Try to find multi-turn attack definitions
+            multiturn_path = os.path.join(
+                os.path.dirname(__file__),
+                "..",
+                "..",
+                "..",
+                "adversarial_tests",
+                "multiturn",
+            )
+
+            if not os.path.exists(multiturn_path):
+                return None
+
+            # Look for YAML files with attack scenarios
+            import glob
+            yaml_files = glob.glob(os.path.join(multiturn_path, "*.yaml"))
+
+            if not yaml_files:
+                return None
+
+            # Try to import yaml
+            try:
+                import yaml
+            except ImportError:
+                logger.debug("PyYAML not available, cannot load multi-turn scenarios")
+                return None
+
+            # Load a random scenario that matches the strategy
+            for yaml_file in yaml_files:
+                try:
+                    with open(yaml_file) as f:
+                        scenario = yaml.safe_load(f)
+
+                    # Check if scenario matches strategy
+                    scenario_type = scenario.get("attack_type", "").lower()
+                    if (
+                        (strategy == AttackStrategy.GRADUAL_ESCALATION.value and "escalation" in scenario_type)
+                        or (strategy == AttackStrategy.TRUST_BUILDING.value and "trust" in scenario_type)
+                        or (strategy == AttackStrategy.SOCIAL_ENGINEERING.value and "social" in scenario_type)
+                    ):
+                        # Get first turn
+                        turns = scenario.get("turns", [])
+                        if turns:
+                            return turns[0].get("user", "")
+
+                except Exception as e:
+                    logger.debug("Failed to load scenario from %s: %s", yaml_file, e)
+                    continue
+
+            logger.info("No matching multi-turn scenarios found for strategy: %s", strategy)
+            return None
+
+        except Exception as e:
+            logger.debug("Failed to load multi-turn scenarios: %s", e)
+            return None
 
     def _generate_next_attack(
         self,
