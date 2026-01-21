@@ -8,11 +8,15 @@ from typing import Any
 from app.agents.ci_checker_agent import CICheckerAgent
 from app.agents.dependency_auditor import DependencyAuditor
 from app.agents.doc_generator import DocGenerator
+from app.agents.jailbreak_bench_agent import JailbreakBenchAgent
 from app.agents.knowledge_curator import KnowledgeCurator
+from app.agents.long_context_agent import LongContextAgent
 from app.agents.planner_agent import PlannerAgent
+from app.agents.red_team_agent import RedTeamAgent
 from app.agents.refactor_agent import RefactorAgent
 from app.agents.retrieval_agent import RetrievalAgent
 from app.agents.rollback_agent import RollbackAgent
+from app.agents.safety_guard_agent import SafetyGuardAgent
 from app.agents.sandbox_runner import SandboxRunner
 from app.agents.test_qa_generator import TestQAGenerator
 from app.agents.ux_telemetry import UxTelemetryAgent
@@ -103,6 +107,12 @@ class CouncilHub:
             self._project["telemetry"] = UxTelemetryAgent(kernel=self.kernel)
             # Ensure CI Checker agent is present and enabled
             self._project["ci_checker"] = CICheckerAgent(kernel=self.kernel)
+
+            # NEW: Security and Testing Agents
+            self._project["long_context"] = LongContextAgent(kernel=self.kernel)
+            self._project["safety_guard"] = SafetyGuardAgent(kernel=self.kernel)
+            self._project["jailbreak_bench"] = JailbreakBenchAgent(kernel=self.kernel)
+            self._project["red_team"] = RedTeamAgent(kernel=self.kernel)
 
             # default all agents enabled
             for k in list(self._project.keys()):
