@@ -121,6 +121,7 @@ Each archive includes a README.md explaining the context, why files were archive
 - **Impact**: Organized historical context without cluttering active docs
 
 ### Temporary Files (2 files)
+
 - **Issue**: Debug scripts and misplaced code examples
 - **Action**: Deleted/relocated
 - **Impact**: Better organization
