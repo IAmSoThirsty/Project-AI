@@ -126,9 +126,8 @@ class TamperproofLog:
                 errors.append(f"Entry {i} has invalid hash")
 
             # Verify chain link
-            if i > 0:
-                if entry["previous_hash"] != self.entries[i - 1]["hash"]:
-                    errors.append(f"Entry {i} has broken chain link")
+            if i > 0 and entry["previous_hash"] != self.entries[i - 1]["hash"]:
+                errors.append(f"Entry {i} has broken chain link")
 
         is_valid = len(errors) == 0
         if is_valid:
