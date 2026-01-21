@@ -107,7 +107,7 @@ Each archive includes a README.md explaining the context, why files were archive
 ### Duplicate Documentation (5 files)
 - **Issue**: Files with >80% content overlap
 - **Action**: Deleted (kept authoritative versions)
-- **Examples**: 
+- **Examples**:
   - `docs/overview/PROGRAM_SUMMARY.md` was 95% duplicate of root version
   - Multiple README variants in adversarial_tests/ were 70-75% similar
 
