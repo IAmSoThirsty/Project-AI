@@ -22,12 +22,19 @@ The automation system consists of three interconnected workflows:
 **Process**:
 
 1. Discovers all branches without open PRs
-2. Checks each branch for merge conflicts with main
-3. Identifies branches with merge conflicts and marks them for manual resolution
-4. Merges main into conflict-free branches to keep them updated
-5. Generates descriptive PR titles and bodies
-6. Creates PRs with appropriate labels (`automated`, `auto-created`, `auto-merge`)
-7. Generates summary reports
+2. Validates branch relationship with main
+3. Checks each branch for merge conflicts with main
+4. Identifies branches with merge conflicts and marks them for manual resolution
+5. Merges main into conflict-free branches to keep them updated
+6. Generates descriptive PR titles and bodies
+7. Creates PRs with appropriate labels (`automated`, `auto-created`, `auto-merge`)
+8. Generates summary reports
+
+**Branch Validation**:
+
+- **No Common Ancestor**: Skips branches that were created independently without being based on main
+- **No Commits Ahead**: Skips branches that have no unique commits compared to main
+- **Valid Branches**: Proceeds with PR creation for branches with commits ahead of main
 
 **Conflict Handling**:
 
@@ -281,6 +288,13 @@ git push
 2. Workflow has necessary permissions (contents: write, pull-requests: write)
 3. Branch doesn't already have an open PR
 4. Branch is not protected (main, dependabot branches are excluded)
+5. Branch has commits ahead of main (branches with no unique commits are skipped)
+6. Branch shares a common ancestor with main (independently created branches are skipped)
+
+**Common Skip Reasons**:
+
+- **"No common ancestor"**: Branch was created independently without being based on main. This usually means the branch has a completely separate history. To fix, rebase the branch onto main or create a new branch from main and cherry-pick the changes.
+- **"No commits ahead"**: Branch is identical to or behind main. Ensure the branch has unique commits before expecting a PR.
 
 ### Auto-Merge Not Working
 
