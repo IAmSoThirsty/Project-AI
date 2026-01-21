@@ -474,7 +474,9 @@ Answer:"""
                 error_msg = str(e).lower()
 
                 # Map error types to user-friendly messages
-                if "ratelimit" in error_type.lower() or ("rate" in error_msg and "limit" in error_msg):
+                if "ratelimit" in error_type.lower() or (
+                    "rate" in error_msg and "limit" in error_msg
+                ):
                     return {
                         "answer": "Rate limit exceeded. Please try again later.",
                         "context": context,
