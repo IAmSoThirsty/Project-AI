@@ -12,6 +12,7 @@ This folder contains completion reports and comprehensive analysis from the adve
   - Lessons learned
 
 ### Technical Analysis
+
 - **GARAK_COMPREHENSIVE_REPORT.md** (15KB) - Detailed vulnerability analysis using Garak framework:
   - Attack taxonomy
   - Test results
