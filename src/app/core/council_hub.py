@@ -6,6 +6,8 @@ import threading
 from typing import Any
 
 from app.agents.ci_checker_agent import CICheckerAgent
+from app.agents.code_adversary_agent import CodeAdversaryAgent
+from app.agents.constitutional_guardrail_agent import ConstitutionalGuardrailAgent
 from app.agents.dependency_auditor import DependencyAuditor
 from app.agents.doc_generator import DocGenerator
 from app.agents.jailbreak_bench_agent import JailbreakBenchAgent
@@ -13,6 +15,7 @@ from app.agents.knowledge_curator import KnowledgeCurator
 from app.agents.long_context_agent import LongContextAgent
 from app.agents.planner_agent import PlannerAgent
 from app.agents.red_team_agent import RedTeamAgent
+from app.agents.red_team_persona_agent import RedTeamPersonaAgent
 from app.agents.refactor_agent import RefactorAgent
 from app.agents.retrieval_agent import RetrievalAgent
 from app.agents.rollback_agent import RollbackAgent
@@ -108,11 +111,22 @@ class CouncilHub:
             # Ensure CI Checker agent is present and enabled
             self._project["ci_checker"] = CICheckerAgent(kernel=self.kernel)
 
-            # NEW: Security and Testing Agents
+            # Security and Testing Agents
             self._project["long_context"] = LongContextAgent(kernel=self.kernel)
             self._project["safety_guard"] = SafetyGuardAgent(kernel=self.kernel)
             self._project["jailbreak_bench"] = JailbreakBenchAgent(kernel=self.kernel)
             self._project["red_team"] = RedTeamAgent(kernel=self.kernel)
+
+            # NEW: Advanced Security Agents
+            self._project["constitutional_guardrail"] = ConstitutionalGuardrailAgent(
+                kernel=self.kernel
+            )
+            self._project["code_adversary"] = CodeAdversaryAgent(
+                repo_path=".", kernel=self.kernel
+            )
+            self._project["red_team_persona"] = RedTeamPersonaAgent(
+                kernel=self.kernel
+            )
 
             # default all agents enabled
             for k in list(self._project.keys()):
@@ -122,7 +136,7 @@ class CouncilHub:
                     agent_obj = self._project.get(k)
                     if agent_obj:
                         self.register_agent(k, agent_obj)
-            logger.info("Registered project head: %s with kernel-routed agents", name)
+            logger.info("Registered project head: %s with kernel-routed agents (18 agents total)", name)
 
     def register_agent(self, agent_id: str, agent_obj: Any) -> None:
         """Register a smaller agent under the Council."""
