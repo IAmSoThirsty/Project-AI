@@ -80,8 +80,8 @@ class DependencyAuditor(KernelRoutedAgent):
             pip_audit_cmd = shutil.which("pip-audit")
             if pip_audit_cmd:
                 try:
-                    # nosec B603 B607 - pip-audit is a trusted security tool, path resolved with shutil.which
-                    res = subprocess.run(
+                    # pip-audit is a trusted security tool, path resolved with shutil.which
+                    res = subprocess.run(  # nosec B603 B607
                         [pip_audit_cmd, "--format", "json"],
                         capture_output=True,
                         text=True,

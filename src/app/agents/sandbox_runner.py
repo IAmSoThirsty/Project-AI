@@ -89,8 +89,8 @@ class SandboxRunner(KernelRoutedAgent):
             return {"success": False, "error": "python_not_found"}
 
         try:
-            # nosec B603 B607 - Python executable resolved with shutil.which, module path validated
-            res = subprocess.run(
+            # Python executable resolved with shutil.which, module path validated
+            res = subprocess.run(  # nosec B603 B607
                 [python_cmd, abs_path], capture_output=True, text=True, timeout=timeout
             )
             return {
