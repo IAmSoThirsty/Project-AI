@@ -86,15 +86,13 @@ class RefactorAgent(KernelRoutedAgent):
             return {"success": False, "error": "tools_not_found"}
 
         try:
-            # nosec B603 B607 - black is a trusted dev tool, path resolved with shutil.which and validated
-            res_black = subprocess.run(
+            res_black = subprocess.run(  # nosec B603 B607 - black is a trusted dev tool, path resolved with shutil.which and validated
                 [black_cmd, "--check", abs_path],
                 capture_output=True,
                 text=True,
                 timeout=60,
             )
-            # nosec B603 B607 - ruff is a trusted dev tool, path resolved with shutil.which and validated
-            res_ruff = subprocess.run(
+            res_ruff = subprocess.run(  # nosec B603 B607 - ruff is a trusted dev tool, path resolved with shutil.which and validated
                 [ruff_cmd, "check", abs_path],
                 capture_output=True,
                 text=True,
