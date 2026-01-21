@@ -132,9 +132,7 @@ class SelfRepairAgent(KernelRoutedAgent):
             "suggested_fixes": [],
         }
 
-    def apply_repair(
-        self, component: str, repair_strategy: dict[str, Any]
-    ) -> bool:
+    def apply_repair(self, component: str, repair_strategy: dict[str, Any]) -> bool:
         """Apply a repair strategy to fix a problem.
 
         This is a stub implementation. Future versions will:
