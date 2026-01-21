@@ -483,13 +483,32 @@ jobs:
             
             // Create an issue with the summary
             if (automatedPRs.length > 0) {
-              await github.rest.issues.create({
+              const { data: issue } = await github.rest.issues.create({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 title: `📊 Auto-PR Creation Summary - ${new Date().toISOString().split('T')[0]}`,
                 body: report,
                 labels: ['automated', 'summary', 'documentation']
               });
+              
+              // Add a comment explaining auto-close
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                body: '✅ This summary report is automatically closed as it is informational only. The report remains searchable in closed issues.'
+              });
+              
+              // Automatically close the summary issue since it's informational only
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                state: 'closed',
+                state_reason: 'completed'
+              });
+              
+              console.log(`✅ Created and closed summary issue #${issue.number}`);
             }
             
             console.log(report);
