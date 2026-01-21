@@ -52,6 +52,7 @@ For current adversarial testing documentation, see:
 ## Historical Reference
 
 These files are kept for:
+
 - Audit trail of security testing completion
 - Historical reference for vulnerability research
 - Context for understanding security decisions
