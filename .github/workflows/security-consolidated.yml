@@ -45,15 +45,15 @@ jobs:
         run: git submodule update --init --recursive
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@ea9e4e37992a54ee68a9622e985e60c8e8f12d9f  # pinned from github/codeql-action/init@v2
+        uses: github/codeql-action/init@72b8d8e576df932148cfec6c2e1cfab486787484  # pinned from github/codeql-action/init@v3.28.3
         with:
           languages: python, javascript
 
       - name: Autobuild
-        uses: github/codeql-action/autobuild@ea9e4e37992a54ee68a9622e985e60c8e8f12d9f  # pinned from github/codeql-action/autobuild@v2
+        uses: github/codeql-action/autobuild@72b8d8e576df932148cfec6c2e1cfab486787484  # pinned from github/codeql-action/autobuild@v3.28.3
 
       - name: Run CodeQL analysis
-        uses: github/codeql-action/analyze@ea9e4e37992a54ee68a9622e985e60c8e8f12d9f  # pinned from github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@72b8d8e576df932148cfec6c2e1cfab486787484  # pinned from github/codeql-action/analyze@v3.28.3
 
   # =========================================================================
   # BANDIT PYTHON SECURITY SCANNER
@@ -153,7 +153,7 @@ jobs:
 
       - name: Upload SARIF results
         if: steps.bandit.outputs.BANDIT_ISSUES == 'true'
-        uses: github/codeql-action/upload-sarif@ea9e4e37992a54ee68a9622e985e60c8e8f12d9f  # pinned from github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@72b8d8e576df932148cfec6c2e1cfab486787484  # pinned from github/codeql-action/upload-sarif@v3.28.3
         with:
           sarif_file: bandit-report.sarif
         continue-on-error: true

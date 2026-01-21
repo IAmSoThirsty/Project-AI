@@ -6,11 +6,8 @@ from unittest.mock import Mock
 
 import pytest
 
-from app.core.cognition_kernel import (
-    CognitionKernel,
-    ExecutionResult,
-    require_kernel_context,
-)
+from app.core.cognition_kernel import (CognitionKernel, ExecutionResult,
+                                       require_kernel_context)
 
 
 class TestCognitionKernel:
@@ -21,10 +18,14 @@ class TestCognitionKernel:
         """Create mock subsystems for testing."""
         identity = Mock()
         identity.snapshot = Mock(return_value={"personality": "test"})
-        memory = Mock(spec=["add_memory"])  # Only expose add_memory, not record_execution
+        memory = Mock(
+            spec=["add_memory"]
+        )  # Only expose add_memory, not record_execution
         memory.add_memory = Mock(return_value="mem_123")
         governance = Mock()
-        governance.validate_action = Mock(return_value={"allowed": True, "reason": "Test approved"})
+        governance.validate_action = Mock(
+            return_value={"allowed": True, "reason": "Test approved"}
+        )
         reflection = Mock()
         triumvirate = Mock()
         triumvirate.process = Mock(return_value={"success": True, "output": "approved"})
@@ -61,6 +62,7 @@ class TestCognitionKernel:
 
     def test_simple_execution(self, kernel):
         """Test a simple execution through the kernel using new API."""
+
         # Define a test action
         def test_action(x, y):
             return x + y
@@ -77,7 +79,9 @@ class TestCognitionKernel:
         }
 
         # Process through kernel using route()
-        result = kernel.route(task, source="test_agent", metadata={"user_id": "test_user"})
+        result = kernel.route(
+            task, source="test_agent", metadata={"user_id": "test_user"}
+        )
 
         # Verify result
         assert isinstance(result, ExecutionResult)
@@ -92,6 +96,7 @@ class TestCognitionKernel:
 
     def test_execution_with_kwargs(self, kernel):
         """Test execution with keyword arguments using new API."""
+
         def test_action(name, greeting="Hello"):
             return f"{greeting}, {name}"
 
@@ -168,6 +173,7 @@ class TestCognitionKernel:
 
     def test_execution_failure_handling(self, kernel):
         """Test that execution failures are properly handled."""
+
         def failing_action():
             raise ValueError("Test error")
 
@@ -193,6 +199,7 @@ class TestCognitionKernel:
 
     def test_memory_recording(self, kernel, mock_subsystems):
         """Test that executions are recorded in memory."""
+
         def test_action():
             return "test result"
 
@@ -305,6 +312,7 @@ class TestCognitionKernel:
 
     def test_execution_history(self, kernel):
         """Test execution history tracking."""
+
         def test_action(value):
             return value * 2
 
@@ -330,6 +338,7 @@ class TestCognitionKernel:
 
     def test_statistics(self, kernel):
         """Test kernel statistics."""
+
         def success_action():
             return "success"
 
@@ -358,7 +367,11 @@ class TestCognitionKernel:
         }
 
         kernel.route(success_task, source="test_agent", metadata={})
-        kernel.route({**success_task, "action_name": "success_2"}, source="test_agent", metadata={})
+        kernel.route(
+            {**success_task, "action_name": "success_2"},
+            source="test_agent",
+            metadata={},
+        )
         kernel.route(fail_task, source="test_agent", metadata={})
 
         # Get statistics
@@ -367,12 +380,13 @@ class TestCognitionKernel:
         assert stats["total_executions"] == 3
         assert stats["completed"] == 2
         assert stats["failed"] == 1
-        assert stats["success_rate"] == pytest.approx(2/3)
+        assert stats["success_rate"] == pytest.approx(2 / 3)
         assert stats["subsystems"]["identity"] is True
         assert stats["subsystems"]["memory"] is True
 
     def test_low_risk_auto_approval(self, kernel):
         """Test that low-risk actions are auto-approved."""
+
         def test_action():
             return "auto_approved"
 
@@ -394,6 +408,7 @@ class TestCognitionKernel:
 
     def test_metadata_preservation(self, kernel):
         """Test that metadata is preserved through execution."""
+
         def test_action():
             return "test"
 
@@ -417,6 +432,7 @@ class TestCognitionKernel:
 
     def test_bypass_detection(self):
         """Test that direct execution outside kernel context is detected and blocked."""
+
         # Define a function that tries to execute outside kernel context
         @require_kernel_context("test_operation")
         def protected_function():
@@ -427,7 +443,9 @@ class TestCognitionKernel:
             protected_function()
 
         assert "forbidden outside CognitionKernel" in str(exc_info.value)
-        assert "kernel.process()" in str(exc_info.value) or "kernel.route()" in str(exc_info.value)
+        assert "kernel.process()" in str(exc_info.value) or "kernel.route()" in str(
+            exc_info.value
+        )
 
 
 class TestCognitionKernelWithoutSubsystems:

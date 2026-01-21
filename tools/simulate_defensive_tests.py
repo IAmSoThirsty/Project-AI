@@ -5,6 +5,7 @@ This script is non-destructive: file writes are confined to a temp directory and
 actual external network calls are made. Each generated module is designed to
 exercise a different suspicious behavior pattern.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -17,13 +18,17 @@ import time
 from pathlib import Path
 
 # Ensure local package import
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from app.agents.border_patrol import VerifierAgent
 
 
 def rand_name(prefix: str = "t") -> str:
-    return prefix + "_" + "".join(random.choices(string.ascii_lowercase + string.digits, k=8))
+    return (
+        prefix
+        + "_"
+        + "".join(random.choices(string.ascii_lowercase + string.digits, k=8))
+    )
 
 
 PAYLOAD_TEMPLATES = [
@@ -34,7 +39,10 @@ PAYLOAD_TEMPLATES = [
     # Heavy allocation (may OOM)
     ("mem_hog", "a = 'x' * (10**8)\nprint(len(a))\n"),
     # File write attempt (confined to same dir)
-    ("file_write", "with open('dropped.txt','w') as f:\n    f.write('malicious payload')\n"),
+    (
+        "file_write",
+        "with open('dropped.txt','w') as f:\n    f.write('malicious payload')\n",
+    ),
     # Exec of decoded string (obfuscated)
     ("obfuscated_exec", "import base64\ncode = base64.b64decode('%s')\nexec(code)\n"),
     # Nested import and eval
@@ -46,7 +54,10 @@ PAYLOAD_TEMPLATES = [
     # Attempt to spawn subprocess (will be limited)
     ("subprocess_spawn", "import subprocess\nsubprocess.Popen(['echo','hello'])\n"),
     # Attempt network socket to localhost (allowed but harmless)
-    ("socket_probe", "import socket\ns=socket.socket(); s.settimeout(0.1)\ntry:\n    s.connect(('127.0.0.1', 1))\nexcept Exception as e:\n    pass\nfinally:\n    s.close()\n"),
+    (
+        "socket_probe",
+        "import socket\ns=socket.socket(); s.settimeout(0.1)\ntry:\n    s.connect(('127.0.0.1', 1))\nexcept Exception as e:\n    pass\nfinally:\n    s.close()\n",
+    ),
 ]
 
 
@@ -61,14 +72,14 @@ def generate_payloads(count: int, out_dir: Path) -> list[Path]:
     out_dir.mkdir(parents=True, exist_ok=True)
     files: list[Path] = []
     for _i in range(count):
-        name = rand_name('sim') + '.py'
+        name = rand_name("sim") + ".py"
         path = out_dir / name
         choice = random.choice(PAYLOAD_TEMPLATES)
         payload_type = choice[0]
         template = choice[1]
-        if payload_type == 'obfuscated_exec':
+        if payload_type == "obfuscated_exec":
             payload = template % build_obfuscated_inner()
-        elif payload_type == 'mem_hog':
+        elif payload_type == "mem_hog":
             # scale memory attempts to be safer on CI
             payload = "a = 'x' * (10**7)\nprint(len(a))\n"
         else:
@@ -81,7 +92,13 @@ def generate_payloads(count: int, out_dir: Path) -> list[Path]:
     return files
 
 
-def run_simulation(count: int, data_dir: Path, concurrency: int = 4, timeout: int = 8, bypass_ratio: float = 0.0):
+def run_simulation(
+    count: int,
+    data_dir: Path,
+    concurrency: int = 4,
+    timeout: int = 8,
+    bypass_ratio: float = 0.0,
+):
     out = {
         "count": count,
         "timestamp": time.time(),
@@ -92,7 +109,12 @@ def run_simulation(count: int, data_dir: Path, concurrency: int = 4, timeout: in
     tmp = Path(tempfile.mkdtemp(prefix="sim_def_"))
     payloads = generate_payloads(count, tmp)
 
-    verifier = VerifierAgent(agent_id="sim-runner", data_dir=str(data_dir), max_workers=concurrency, timeout=timeout)
+    verifier = VerifierAgent(
+        agent_id="sim-runner",
+        data_dir=str(data_dir),
+        max_workers=concurrency,
+        timeout=timeout,
+    )
 
     detected = 0
     bypassed = 0
@@ -102,36 +124,43 @@ def run_simulation(count: int, data_dir: Path, concurrency: int = 4, timeout: in
         if bypass_ratio > 0 and random.random() < bypass_ratio:
             # simulate that this payload was introduced/ignored by gatekeepers and thus bypasses verification
             simulated_bypass = True
-            verdict = 'clean'
-            report = {"success": True, "verdict": 'clean', "sandbox": {}, "simulated_bypass": True}
+            verdict = "clean"
+            report = {
+                "success": True,
+                "verdict": "clean",
+                "sandbox": {},
+                "simulated_bypass": True,
+            }
             bypassed += 1
             took = 0.0
         else:
             report = verifier.verify(str(p))
-            verdict = report.get('verdict') if isinstance(report, dict) else None
+            verdict = report.get("verdict") if isinstance(report, dict) else None
             took = time.time() - start
-        if verdict != 'clean':
+        if verdict != "clean":
             detected += 1
-        out['results'].append({
-            'file': str(p.name),
-            'verdict': verdict,
-            'time': took,
-            'report': report,
-            'simulated_bypass': simulated_bypass,
-        })
+        out["results"].append(
+            {
+                "file": str(p.name),
+                "verdict": verdict,
+                "time": took,
+                "report": report,
+                "simulated_bypass": simulated_bypass,
+            }
+        )
 
-    out['summary'] = {
-        'detected': detected,
-        'clean': count - detected,
-        'bypassed': bypassed,
-        'duration': time.time() - out['timestamp'],
+    out["summary"] = {
+        "detected": detected,
+        "clean": count - detected,
+        "bypassed": bypassed,
+        "duration": time.time() - out["timestamp"],
     }
 
     # persist
     data_dir = Path(data_dir)
-    dest = data_dir / 'monitoring'
+    dest = data_dir / "monitoring"
     dest.mkdir(parents=True, exist_ok=True)
-    out_file = dest / f'simulation_results_{int(time.time())}.json'
+    out_file = dest / f"simulation_results_{int(time.time())}.json"
     out_file.write_text(json.dumps(out, indent=2))
     print(f"Simulation complete: {out['summary']}")
     print(f"Results saved to {out_file}")
@@ -139,17 +168,30 @@ def run_simulation(count: int, data_dir: Path, concurrency: int = 4, timeout: in
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Run defensive simulation payloads through verifier')
-    parser.add_argument('--count', type=int, default=250)
-    parser.add_argument('--data-dir', type=str, default='data')
-    parser.add_argument('--concurrency', type=int, default=4)
-    parser.add_argument('--timeout', type=int, default=8)
-    parser.add_argument('--bypass-ratio', type=float, default=0.0, help='Fraction of payloads that simulate bypass (0.0-1.0)')
+    parser = argparse.ArgumentParser(
+        description="Run defensive simulation payloads through verifier"
+    )
+    parser.add_argument("--count", type=int, default=250)
+    parser.add_argument("--data-dir", type=str, default="data")
+    parser.add_argument("--concurrency", type=int, default=4)
+    parser.add_argument("--timeout", type=int, default=8)
+    parser.add_argument(
+        "--bypass-ratio",
+        type=float,
+        default=0.0,
+        help="Fraction of payloads that simulate bypass (0.0-1.0)",
+    )
     args = parser.parse_args()
 
-    run_simulation(args.count, Path(args.data_dir), concurrency=args.concurrency, timeout=args.timeout, bypass_ratio=args.bypass_ratio)
-    print('Done')
+    run_simulation(
+        args.count,
+        Path(args.data_dir),
+        concurrency=args.concurrency,
+        timeout=args.timeout,
+        bypass_ratio=args.bypass_ratio,
+    )
+    print("Done")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

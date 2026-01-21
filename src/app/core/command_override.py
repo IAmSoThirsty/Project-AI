@@ -151,7 +151,9 @@ class CommandOverrideSystem:
                     iterations = int(parts[1])
                     salt = base64.b64decode(parts[2])
                     stored_dk = parts[3]
-                    dk = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt, iterations)
+                    dk = hashlib.pbkdf2_hmac(
+                        "sha256", password.encode("utf-8"), salt, iterations
+                    )
                     return base64.b64encode(dk).decode() == stored_dk
         except Exception:
             return False
@@ -186,12 +188,20 @@ class CommandOverrideSystem:
                     new_hash = self._hash_with_bcrypt(password)
                     self.master_password_hash = new_hash
                     self._save_config()
-                    self._log_action("AUTHENTICATE", "Legacy password migrated to stronger hash")
+                    self._log_action(
+                        "AUTHENTICATE", "Legacy password migrated to stronger hash"
+                    )
                 except Exception:
-                    self._log_action("AUTHENTICATE", "Migration to stronger hash failed", success=False)
+                    self._log_action(
+                        "AUTHENTICATE",
+                        "Migration to stronger hash failed",
+                        success=False,
+                    )
                 self.authenticated = True
                 self.auth_timestamp = datetime.now()
-                self._log_action("AUTHENTICATE", "Authentication successful (legacy migrated)")
+                self._log_action(
+                    "AUTHENTICATE", "Authentication successful (legacy migrated)"
+                )
                 return True
             else:
                 self._log_action("AUTHENTICATE", "Invalid password", success=False)
@@ -216,19 +226,25 @@ class CommandOverrideSystem:
     def enable_master_override(self) -> bool:
         """Enable master override - disables ALL safety protocols."""
         if not self.authenticated:
-            self._log_action("MASTER_OVERRIDE", "Authentication required", success=False)
+            self._log_action(
+                "MASTER_OVERRIDE", "Authentication required", success=False
+            )
             return False
         self.master_override_active = True
         for protocol in self.safety_protocols:
             self.safety_protocols[protocol] = False
         self._save_config()
-        self._log_action("MASTER_OVERRIDE", "ALL SAFETY PROTOCOLS DISABLED - MASTER OVERRIDE ACTIVE")
+        self._log_action(
+            "MASTER_OVERRIDE", "ALL SAFETY PROTOCOLS DISABLED - MASTER OVERRIDE ACTIVE"
+        )
         return True
 
     def disable_master_override(self) -> bool:
         """Disable master override - restores ALL safety protocols."""
         if not self.authenticated:
-            self._log_action("DISABLE_MASTER_OVERRIDE", "Authentication required", success=False)
+            self._log_action(
+                "DISABLE_MASTER_OVERRIDE", "Authentication required", success=False
+            )
             return False
         self.master_override_active = False
         for protocol in self.safety_protocols:
@@ -240,10 +256,16 @@ class CommandOverrideSystem:
     def override_protocol(self, protocol_name: str, enabled: bool) -> bool:
         """Override a specific safety protocol."""
         if not self.authenticated:
-            self._log_action("OVERRIDE_PROTOCOL", f"{protocol_name}: Authentication required", success=False)
+            self._log_action(
+                "OVERRIDE_PROTOCOL",
+                f"{protocol_name}: Authentication required",
+                success=False,
+            )
             return False
         if protocol_name not in self.safety_protocols:
-            self._log_action("OVERRIDE_PROTOCOL", f"Unknown protocol: {protocol_name}", success=False)
+            self._log_action(
+                "OVERRIDE_PROTOCOL", f"Unknown protocol: {protocol_name}", success=False
+            )
             return False
         self.safety_protocols[protocol_name] = enabled
         self._save_config()
@@ -267,14 +289,19 @@ class CommandOverrideSystem:
         self.authenticated = False
         self.auth_timestamp = None
         self._save_config()
-        self._log_action("EMERGENCY_LOCKDOWN", "EMERGENCY LOCKDOWN ACTIVATED - ALL PROTOCOLS RESTORED")
+        self._log_action(
+            "EMERGENCY_LOCKDOWN",
+            "EMERGENCY LOCKDOWN ACTIVATED - ALL PROTOCOLS RESTORED",
+        )
 
     def get_status(self) -> dict[str, Any]:
         """Get the current status of the command override system."""
         return {
             "authenticated": self.authenticated,
             "master_override_active": self.master_override_active,
-            "auth_timestamp": (self.auth_timestamp.isoformat() if self.auth_timestamp else None),
+            "auth_timestamp": (
+                self.auth_timestamp.isoformat() if self.auth_timestamp else None
+            ),
             "safety_protocols": self.safety_protocols.copy(),
             "has_master_password": self.master_password_hash is not None,
         }

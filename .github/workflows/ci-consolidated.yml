@@ -60,52 +60,64 @@ jobs:
           python -m pip install --upgrade pip setuptools wheel build
           echo "✅ Build tools upgraded"
 
-      - name: Install requirements.txt
+      - name: Install project requirements
         run: |
-          echo "📦 Installing requirements.txt..."
+          echo "📦 Installing dependencies from requirements.txt..."
           if [ -f requirements.txt ]; then
             python -m pip install -r requirements.txt
-            echo "✅ requirements.txt installed"
+            echo "✅ Installed requirements.txt"
           else
-            echo "⚠️  requirements.txt not found - skipping"
+            echo "⚠️  No requirements.txt found"
           fi
 
-      - name: Install requirements-dev.txt
+      - name: Install dev requirements
         run: |
-          echo "📦 Installing requirements-dev.txt..."
+          echo "📦 Installing dev dependencies from requirements-dev.txt..."
           if [ -f requirements-dev.txt ]; then
             python -m pip install -r requirements-dev.txt
-            echo "✅ requirements-dev.txt installed"
+            echo "✅ Installed requirements-dev.txt"
           else
-            echo "⚠️  requirements-dev.txt not found - skipping"
+            echo "⚠️  No requirements-dev.txt found, skipping"
           fi
 
-      - name: Install from pyproject.toml
+      - name: Install Poetry dependencies (if configured)
         run: |
-          echo "📦 Installing from pyproject.toml..."
-          if [ -f pyproject.toml ]; then
-            # Try pip install first (works for PEP 621 compliant pyproject.toml)
-            python -m pip install -e . || echo "⚠️  pip install from pyproject.toml failed, continuing..."
-            echo "✅ pyproject.toml dependencies processed"
+          echo "📦 Checking for Poetry configuration..."
+          if [ -f pyproject.toml ] && grep -q "\[tool.poetry\]" pyproject.toml; then
+            echo "Poetry configuration found, installing Poetry and dependencies..."
+            python -m pip install poetry
+            poetry install
+            echo "✅ Installed Poetry dependencies"
           else
-            echo "⚠️  pyproject.toml not found - skipping"
+            echo "⚠️  No Poetry configuration found, skipping"
           fi
 
-      - name: Install from setup.py
+      - name: Failsafe - Scan and install missing dependencies with pipreqs
         run: |
-          echo "📦 Installing from setup.py..."
-          if [ -f setup.py ]; then
-            python -m pip install -e .
-            echo "✅ setup.py installed"
+          echo "🔍 Failsafe: Scanning codebase for any missing dependencies..."
+          python -m pip install pipreqs || true
+          
+          # Only run pipreqs if it was successfully installed
+          if command -v pipreqs &> /dev/null; then
+            # Generate requirements from actual imports
+            pipreqs . --force --savepath /tmp/discovered_requirements.txt 2>/dev/null || true
+            
+            if [ -f /tmp/discovered_requirements.txt ]; then
+              echo "📋 Discovered dependencies:"
+              cat /tmp/discovered_requirements.txt
+              
+              echo "📦 Installing discovered dependencies..."
+              python -m pip install -r /tmp/discovered_requirements.txt || true
+              echo "✅ Failsafe installation complete"
+            else
+              echo "⚠️  No additional dependencies discovered"
+            fi
           else
-            echo "⚠️  setup.py not found - skipping"
+            echo "⚠️  pipreqs not available, skipping failsafe scan"
           fi
 
-      - name: Install additional dev tools
-        run: |
-          echo "📦 Installing additional development tools..."
-          python -m pip install ruff mypy pip-audit pre-commit black isort pytest-cov bandit
-          echo "✅ Dev tools installed"
+      - name: Install dev tools
+        run: python -m pip install ruff mypy pip-audit pre-commit black isort pytest-cov bandit
 
       - name: Run pre-commit hooks
         run: |
@@ -257,19 +269,33 @@ jobs:
 
       - name: Install from setup.py
         run: |
-          echo "📦 Installing from setup.py..."
-          if [ -f setup.py ]; then
-            python -m pip install -e .
-            echo "✅ setup.py installed"
-          else
-            echo "⚠️  setup.py not found - skipping"
+          echo "📦 Installing all project dependencies..."
+          python -m pip install --upgrade pip
+          
+          # Install main requirements
+          if [ -f requirements.txt ]; then
+            python -m pip install -r requirements.txt
+            echo "✅ Installed requirements.txt"
           fi
-
-      - name: Install additional dev tools
-        run: |
-          echo "📦 Installing additional development tools..."
+          
+          # Install dev requirements
+          if [ -f requirements-dev.txt ]; then
+            python -m pip install -r requirements-dev.txt
+            echo "✅ Installed requirements-dev.txt"
+          fi
+          
+          # Failsafe with pipreqs
+          python -m pip install pipreqs || true
+          if command -v pipreqs &> /dev/null; then
+            pipreqs . --force --savepath /tmp/discovered_requirements.txt 2>/dev/null || true
+            if [ -f /tmp/discovered_requirements.txt ]; then
+              python -m pip install -r /tmp/discovered_requirements.txt || true
+              echo "✅ Installed discovered dependencies"
+            fi
+          fi
+          
+          # Install test tools
           python -m pip install pytest pytest-cov ruff mypy
-          echo "✅ Dev tools installed"
 
       - name: Lint CLI code
         run: |
@@ -448,9 +474,40 @@ jobs:
       - name: Install additional dev tools
         if: steps.detect_py.outputs.found != '0'
         run: |
-          echo "📦 Installing additional development tools..."
+          echo "📦 Installing all project dependencies..."
+          python -m pip install --upgrade pip
+          
+          # Install main requirements
+          if [ -f requirements.txt ]; then
+            python -m pip install -r requirements.txt
+            echo "✅ Installed requirements.txt"
+          fi
+          
+          # Install dev requirements
+          if [ -f requirements-dev.txt ]; then
+            python -m pip install -r requirements-dev.txt
+            echo "✅ Installed requirements-dev.txt"
+          fi
+          
+          # Check for Poetry configuration
+          if [ -f pyproject.toml ] && grep -q "\[tool.poetry\]" pyproject.toml; then
+            python -m pip install poetry
+            poetry install
+            echo "✅ Installed Poetry dependencies"
+          fi
+          
+          # Failsafe with pipreqs
+          python -m pip install pipreqs || true
+          if command -v pipreqs &> /dev/null; then
+            pipreqs . --force --savepath /tmp/discovered_requirements.txt 2>/dev/null || true
+            if [ -f /tmp/discovered_requirements.txt ]; then
+              python -m pip install -r /tmp/discovered_requirements.txt || true
+              echo "✅ Installed discovered dependencies"
+            fi
+          fi
+          
+          # Install test tools
           python -m pip install pytest flake8 pytest-cov
-          echo "✅ Dev tools installed"
 
       - name: Run flake8
         if: steps.detect_py.outputs.found != '0'

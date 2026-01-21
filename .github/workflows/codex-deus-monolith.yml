@@ -1,0 +1,860 @@
+name: Codex Deus Monolith - Ultimate Workflow
+# The ultimate consolidated workflow merging all repository workflows into one comprehensive system
+# Combines security scanning, CI/CD, automation, deployment, and monitoring into a single orchestrated workflow
+
+on:
+  # Push events
+  push:
+    branches: 
+      - main
+      - develop
+      - cerberus-integration
+      - 'copilot/**'
+      - 'feature/**'
+      - 'fix/**'
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+  
+  # Pull request events
+  pull_request:
+    branches: [main, develop]
+    types: [opened, synchronize, reopened, ready_for_review]
+  
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
+  
+  # Issue events
+  issues:
+    types: [opened, labeled, reopened, edited]
+  
+  # Comprehensive scheduled runs
+  schedule:
+    # Every 2 hours - Security Orchestrator
+    - cron: '0 */6 * * *'
+    # Daily 2 AM UTC - Security scans, auto-fixes, branch PRs
+    - cron: '0 2 * * *'
+    # Daily 3 AM UTC - Issue triage, Bandit fixes
+    - cron: '0 3 * * *'
+    # Weekly Sunday 5 AM - Artifact cleanup
+    - cron: '0 5 * * 0'
+    # Weekly Thursday 6:43 PM - Black Duck scan
+    - cron: '43 18 * * 4'
+    # Weekly Saturday 9:33 PM - Bandit scan
+    - cron: '33 21 * * 6'
+    # Weekly Monday 3 AM - Auto Bandit fixes
+    - cron: '0 3 * * 1'
+    # Nightly 10:20 PM - Stale issues
+    - cron: '20 22 * * *'
+  
+  # Manual trigger with options
+  workflow_dispatch:
+    inputs:
+      run_security_only:
+        description: 'Run only security scans'
+        required: false
+        default: 'false'
+      run_tests_only:
+        description: 'Run only tests'
+        required: false
+        default: 'false'
+      skip_deployment:
+        description: 'Skip deployment steps'
+        required: false
+        default: 'true'
+      target_branch:
+        description: 'Specific branch for auto-PR creation'
+        required: false
+        default: ''
+
+# Comprehensive permissions for all operations
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  checks: write
+  statuses: write
+  security-events: write
+  actions: read
+  id-token: write
+  deployments: write
+  packages: write
+
+# Environment variables shared across all jobs
+env:
+  PYTHON_VERSION: '3.12'
+  NODE_VERSION: '20'
+  JAVA_VERSION: '17'
+
+jobs:
+  # =============================================================================
+  # PHASE 1: PRE-FLIGHT CHECKS & INITIALIZATION
+  # =============================================================================
+  
+  initialization:
+    name: Initialize Monolith Workflow
+    runs-on: ubuntu-latest
+    outputs:
+      should_run_security: ${{ steps.decide.outputs.security }}
+      should_run_tests: ${{ steps.decide.outputs.tests }}
+      should_run_deployment: ${{ steps.decide.outputs.deployment }}
+      python_version: ${{ steps.decide.outputs.python_version }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Decide what to run
+        id: decide
+        run: |
+          echo "security=true" >> $GITHUB_OUTPUT
+          echo "tests=true" >> $GITHUB_OUTPUT
+          echo "deployment=false" >> $GITHUB_OUTPUT
+          echo "python_version=3.12" >> $GITHUB_OUTPUT
+          
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "security=${{ inputs.run_security_only || 'true' }}" >> $GITHUB_OUTPUT
+            echo "tests=${{ inputs.run_tests_only || 'true' }}" >> $GITHUB_OUTPUT
+            echo "deployment=${{ inputs.skip_deployment == 'false' }}" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Display workflow plan
+        run: |
+          echo "🚀 Codex Deus Monolith Workflow Initialized"
+          echo "================================================"
+          echo "Event: ${{ github.event_name }}"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Security Scans: ${{ steps.decide.outputs.security }}"
+          echo "Tests: ${{ steps.decide.outputs.tests }}"
+          echo "Deployment: ${{ steps.decide.outputs.deployment }}"
+          echo "================================================"
+
+  # =============================================================================
+  # PHASE 2: SECURITY SCANNING SUITE
+  # =============================================================================
+  
+  codeql-analysis:
+    name: CodeQL Security Analysis
+    needs: initialization
+    if: needs.initialization.outputs.should_run_security == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: python, javascript
+      
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v2
+      
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+
+  bandit-security-scan:
+    name: Bandit Python Security Linting
+    needs: initialization
+    if: needs.initialization.outputs.should_run_security == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Bandit Scan
+        uses: shundor/python-bandit-scan@ab1d87dfccc5a0ffab88be3aaac6ffe35c10d6cd
+        with:
+          exit_zero: false
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Upload SARIF results
+        if: always()
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: results.sarif
+
+  secret-scanning:
+    name: Secret & Credential Scanning
+    needs: initialization
+    if: needs.initialization.outputs.should_run_security == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ needs.initialization.outputs.python_version }}
+      
+      - name: Install security scanners
+        run: |
+          python -m pip install --upgrade pip
+          pip install bandit detect-secrets truffleHog3 safety pip-audit
+      
+      - name: Run Bandit
+        continue-on-error: true
+        run: |
+          echo "🔍 Running Bandit security linter..."
+          bandit -r src/ tools/ scripts/ -f json -o bandit-report.json || true
+          bandit -r src/ tools/ scripts/ -f txt || true
+      
+      - name: Run detect-secrets
+        continue-on-error: true
+        run: |
+          echo "🔍 Running detect-secrets scanner..."
+          detect-secrets scan --all-files --force-use-all-plugins \
+            --exclude-files '\.lock$' \
+            --exclude-files '\.pyc$' \
+            --exclude-files 'node_modules/' \
+            --exclude-files '\.git/' \
+            > .secrets.baseline || true
+      
+      - name: Run TruffleHog
+        continue-on-error: true
+        run: |
+          echo "🔍 Running TruffleHog..."
+          trufflehog3 -v -r . --format json -o trufflehog-report.json || true
+      
+      - name: Upload scan results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: security-scan-results
+          path: |
+            bandit-report.json
+            .secrets.baseline
+            trufflehog-report.json
+
+  dependency-vulnerability-scan:
+    name: Dependency Vulnerability Scanning
+    needs: initialization
+    if: needs.initialization.outputs.should_run_security == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ needs.initialization.outputs.python_version }}
+      
+      - name: Install tools
+        run: |
+          pip install pip-audit safety
+      
+      - name: Run pip-audit
+        continue-on-error: true
+        run: |
+          echo "🔍 Running pip-audit..."
+          pip-audit --format json > pip-audit-report.json || true
+          pip-audit || true
+      
+      - name: Run safety check
+        continue-on-error: true
+        run: |
+          echo "🔍 Running safety check..."
+          safety check --json > safety-report.json || true
+          safety check || true
+      
+      - name: Upload vulnerability reports
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: dependency-vulnerability-reports
+          path: |
+            pip-audit-report.json
+            safety-report.json
+
+  # =============================================================================
+  # PHASE 3: CODE QUALITY & LINTING
+  # =============================================================================
+  
+  super-linter:
+    name: Super Linter - Multi-Language
+    needs: initialization
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Run Super-Linter
+        uses: github/super-linter@v5
+        env:
+          VALIDATE_ALL_CODEBASE: false
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_PYTHON_BLACK: true
+          VALIDATE_PYTHON_FLAKE8: true
+          VALIDATE_PYTHON_ISORT: true
+          VALIDATE_MARKDOWN: true
+          VALIDATE_YAML: true
+          VALIDATE_JSON: true
+
+  ruff-linting:
+    name: Ruff Python Linting
+    needs: initialization
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ needs.initialization.outputs.python_version }}
+      
+      - name: Install Ruff
+        run: pip install ruff
+      
+      - name: Run Ruff
+        run: |
+          ruff check . --output-format=github
+          ruff format --check .
+
+  mypy-type-checking:
+    name: MyPy Type Checking
+    needs: initialization
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ needs.initialization.outputs.python_version }}
+      
+      - name: Install dependencies
+        run: |
+          pip install mypy
+          pip install -r requirements.txt || echo "No requirements.txt"
+      
+      - name: Run MyPy
+        continue-on-error: true
+        run: mypy src/ || true
+
+  # =============================================================================
+  # PHASE 4: TESTING SUITE
+  # =============================================================================
+  
+  pytest-tests:
+    name: PyTest Test Suite
+    needs: initialization
+    if: needs.initialization.outputs.should_run_tests == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      
+      - name: Install dependencies
+        run: |
+          pip install pytest pytest-cov pytest-xdist
+          pip install -r requirements.txt || echo "No requirements.txt"
+      
+      - name: Run tests with coverage
+        run: |
+          pytest -v --cov=src --cov-report=xml --cov-report=html --cov-report=term
+      
+      - name: Upload coverage reports
+        if: matrix.python-version == '3.12'
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+
+  node-tests:
+    name: Node.js Testing
+    needs: initialization
+    if: needs.initialization.outputs.should_run_tests == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      
+      - name: Install dependencies
+        run: |
+          if [ -f package.json ]; then
+            npm ci || npm install
+          fi
+      
+      - name: Run tests
+        run: |
+          if [ -f package.json ]; then
+            npm test || echo "No tests configured"
+          fi
+
+  # =============================================================================
+  # PHASE 5: BUILD & COMPILATION
+  # =============================================================================
+  
+  python-build:
+    name: Python Build & Package
+    needs: [initialization, pytest-tests]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ needs.initialization.outputs.python_version }}
+      
+      - name: Install build tools
+        run: |
+          pip install build wheel setuptools
+      
+      - name: Build package
+        run: |
+          if [ -f setup.py ] || [ -f pyproject.toml ]; then
+            python -m build
+          fi
+      
+      - name: Upload build artifacts
+        if: success()
+        uses: actions/upload-artifact@v3
+        with:
+          name: python-dist
+          path: dist/
+
+  docker-build:
+    name: Docker Build & Scan
+    needs: initialization
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Build Docker image
+        if: hashFiles('Dockerfile') != ''
+        run: |
+          docker build -t project-ai:${{ github.sha }} .
+      
+      - name: Run Trivy vulnerability scanner
+        if: hashFiles('Dockerfile') != ''
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'project-ai:${{ github.sha }}'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+      
+      - name: Upload Trivy results
+        if: hashFiles('Dockerfile') != ''
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  # =============================================================================
+  # PHASE 6: AUTO-FIXING & REMEDIATION
+  # =============================================================================
+  
+  auto-fix-issues:
+    name: Auto-Fix Code Issues
+    needs: [ruff-linting, super-linter]
+    if: github.event_name == 'pull_request' && failure()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+      
+      - name: Install tools
+        run: |
+          pip install ruff black isort autopep8
+      
+      - name: Run auto-fixes
+        run: |
+          echo "🔧 Running automated fixes..."
+          ruff check . --fix || true
+          black . || true
+          isort . || true
+      
+      - name: Commit fixes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --staged --quiet || git commit -m "style: auto-fix linting issues [skip ci]"
+          git push || echo "Nothing to push"
+
+  auto-security-fixes:
+    name: Auto-Fix Security Issues
+    needs: [dependency-vulnerability-scan, bandit-security-scan]
+    if: always() && github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+      
+      - name: Install tools
+        run: |
+          pip install pip-audit safety pip-upgrader
+      
+      - name: Scan for vulnerabilities
+        id: scan
+        continue-on-error: true
+        run: |
+          pip-audit --format json > vulnerabilities.json || true
+          
+      - name: Attempt auto-remediation
+        if: steps.scan.outcome == 'failure'
+        run: |
+          echo "🔧 Attempting to upgrade vulnerable packages..."
+          pip-upgrader requirements.txt || true
+      
+      - name: Create PR if fixes available
+        if: steps.scan.outcome == 'failure'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "security: auto-fix dependency vulnerabilities"
+          title: "[Security] Auto-fix dependency vulnerabilities"
+          body: |
+            🔒 Automated security fix
+            
+            This PR contains automated fixes for dependency vulnerabilities detected by pip-audit.
+            
+            Please review the changes and merge if appropriate.
+          branch: security/auto-fix-dependencies
+          labels: security, automated
+
+  # =============================================================================
+  # PHASE 7: ISSUE & PR AUTOMATION
+  # =============================================================================
+  
+  auto-create-branch-prs:
+    name: Auto-Create Branch PRs
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Set up Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      
+      - name: Discover branches without PRs
+        id: discover
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const branches = await github.paginate(github.rest.repos.listBranches, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 100
+            });
+            
+            const prs = await github.paginate(github.rest.pulls.list, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              per_page: 100
+            });
+            
+            const prBranches = new Set(prs.map(pr => pr.head.ref));
+            const noPRBranches = branches
+              .map(b => b.name)
+              .filter(name => !name.match(/^(main|dependabot\/|renovate\/|snyk-)/))
+              .filter(name => !prBranches.has(name));
+            
+            core.setOutput('branches', JSON.stringify(noPRBranches));
+            core.setOutput('count', noPRBranches.length);
+      
+      - name: Create PRs for branches
+        if: fromJson(steps.discover.outputs.count) > 0
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const branches = JSON.parse('${{ steps.discover.outputs.branches }}');
+            
+            for (const branch of branches.slice(0, 10)) {  // Limit to 10 per run
+              try {
+                await github.rest.pulls.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title: `[Auto] Merge ${branch}`,
+                  head: branch,
+                  base: 'main',
+                  body: `🤖 Automatically created PR for branch \`${branch}\`\n\nThis PR was created by the Codex Deus Monolith workflow.`,
+                  draft: false
+                });
+                console.log(`✅ Created PR for ${branch}`);
+              } catch (error) {
+                console.log(`❌ Failed to create PR for ${branch}: ${error.message}`);
+              }
+            }
+
+  auto-issue-triage:
+    name: Auto Issue Triage
+    if: github.event_name == 'issues' || github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Label issues
+        uses: actions/github-script@v7
+        with:
+          script: |
+            if (context.eventName === 'issues' && context.payload.action === 'opened') {
+              const issue = context.payload.issue;
+              const labels = [];
+              
+              // Auto-label based on content
+              if (issue.title.toLowerCase().includes('bug')) labels.push('bug');
+              if (issue.title.toLowerCase().includes('feature')) labels.push('enhancement');
+              if (issue.title.toLowerCase().includes('security')) labels.push('security');
+              if (issue.title.toLowerCase().includes('documentation')) labels.push('documentation');
+              
+              if (labels.length > 0) {
+                await github.rest.issues.addLabels({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  labels: labels
+                });
+              }
+            }
+
+  greetings:
+    name: Greet New Contributors
+    if: github.event_name == 'pull_request_target' || github.event_name == 'issues'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/first-interaction@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-message: |
+            👋 Welcome to Project-AI! Thanks for opening your first issue. 
+            We'll review it as soon as possible.
+          pr-message: |
+            🎉 Thanks for your first contribution to Project-AI! 
+            We'll review your PR shortly.
+
+  stale-management:
+    name: Manage Stale Issues & PRs
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/stale@v8
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          stale-issue-message: 'This issue has been automatically marked as stale due to inactivity.'
+          stale-pr-message: 'This PR has been automatically marked as stale due to inactivity.'
+          days-before-stale: 60
+          days-before-close: 7
+
+  # =============================================================================
+  # PHASE 8: POST-MERGE VALIDATION
+  # =============================================================================
+  
+  post-merge-validation:
+    name: Post-Merge Validation
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [codeql-analysis, pytest-tests]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+      
+      - name: Validate main branch health
+        run: |
+          echo "🏥 Validating main branch health..."
+          
+          # Check for conflicts
+          git fetch origin
+          git merge-base --is-ancestor HEAD origin/main || echo "⚠️ Branch may have issues"
+          
+          # Run quick tests
+          pip install pytest
+          pip install -r requirements.txt || true
+          pytest tests/ -v --maxfail=1 || echo "⚠️ Some tests failed"
+      
+      - name: Create validation report
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request?.number || 1,
+              body: `✅ Post-merge validation completed for commit ${context.sha.substring(0, 7)}`
+            });
+
+  # =============================================================================
+  # PHASE 9: DEPLOYMENT (Conditional)
+  # =============================================================================
+  
+  deploy-staging:
+    name: Deploy to Staging
+    needs: [post-merge-validation, python-build]
+    if: |
+      needs.initialization.outputs.should_run_deployment == 'true' && 
+      github.event_name == 'push' && 
+      github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: https://staging.project-ai.example.com
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Deploy to staging
+        run: |
+          echo "🚀 Deploying to staging environment..."
+          # Add actual deployment commands here
+
+  deploy-production:
+    name: Deploy to Production
+    needs: [post-merge-validation, python-build]
+    if: |
+      needs.initialization.outputs.should_run_deployment == 'true' && 
+      github.event_name == 'push' && 
+      github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://project-ai.example.com
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Deploy to production
+        run: |
+          echo "🚀 Deploying to production environment..."
+          # Add actual deployment commands here
+
+  # =============================================================================
+  # PHASE 10: CLEANUP & MAINTENANCE
+  # =============================================================================
+  
+  cleanup-artifacts:
+    name: Cleanup Old Artifacts
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Delete old artifacts
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const daysToKeep = 30;
+            const cutoff = Date.now() - (daysToKeep * 24 * 60 * 60 * 1000);
+            
+            const artifacts = await github.paginate(github.rest.actions.listArtifactsForRepo, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 100
+            });
+            
+            for (const artifact of artifacts) {
+              if (Date.parse(artifact.created_at) < cutoff) {
+                await github.rest.actions.deleteArtifact({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  artifact_id: artifact.id
+                });
+                console.log(`Deleted artifact: ${artifact.name}`);
+              }
+            }
+
+  # =============================================================================
+  # PHASE 11: REPORTING & SUMMARY
+  # =============================================================================
+  
+  generate-summary:
+    name: Generate Workflow Summary
+    needs: [
+      codeql-analysis, 
+      bandit-security-scan, 
+      secret-scanning,
+      pytest-tests,
+      super-linter
+    ]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create summary
+        run: |
+          echo "# 🏛️ Codex Deus Monolith - Execution Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Workflow Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Phase | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Security Scanning | ${{ needs.codeql-analysis.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Code Quality | ${{ needs.super-linter.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Testing | ${{ needs.pytest-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Event**: ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "*Generated by Codex Deus Monolith v1.0*" >> $GITHUB_STEP_SUMMARY

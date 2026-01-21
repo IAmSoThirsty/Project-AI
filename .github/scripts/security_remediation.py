@@ -44,7 +44,7 @@ class SecurityRemediator:
             with open(report_path) as f:
                 data = json.load(f)
 
-            dependencies = data.get('dependencies', [])
+            dependencies = data.get("dependencies", [])
 
             if not dependencies:
                 print("✅ No vulnerable dependencies found")
@@ -53,9 +53,9 @@ class SecurityRemediator:
             print(f"📦 Found {len(dependencies)} vulnerable packages")
 
             for dep in dependencies:
-                pkg_name = dep.get('name')
-                current_version = dep.get('version')
-                vulns = dep.get('vulns', [])
+                pkg_name = dep.get("name")
+                current_version = dep.get("version")
+                vulns = dep.get("vulns", [])
 
                 if not vulns:
                     continue
@@ -63,8 +63,8 @@ class SecurityRemediator:
                 # Get fixed versions
                 fixed_versions = []
                 for vuln in vulns:
-                    if vuln.get('fix_versions'):
-                        fixed_versions.extend(vuln['fix_versions'])
+                    if vuln.get("fix_versions"):
+                        fixed_versions.extend(vuln["fix_versions"])
 
                 print(f"\n🔧 Remediating {pkg_name} (current: {current_version})")
                 print(f"   Vulnerabilities: {len(vulns)}")
@@ -78,16 +78,17 @@ class SecurityRemediator:
                     success = self._upgrade_package(pkg_name)
 
                 if success:
-                    self.fixes_applied.append({
-                        'package': pkg_name,
-                        'from_version': current_version,
-                        'vulnerabilities': len(vulns)
-                    })
+                    self.fixes_applied.append(
+                        {
+                            "package": pkg_name,
+                            "from_version": current_version,
+                            "vulnerabilities": len(vulns),
+                        }
+                    )
                 else:
-                    self.fixes_failed.append({
-                        'package': pkg_name,
-                        'reason': 'Upgrade failed'
-                    })
+                    self.fixes_failed.append(
+                        {"package": pkg_name, "reason": "Upgrade failed"}
+                    )
 
             # Update requirements.txt
             if self.fixes_applied:
@@ -104,18 +105,13 @@ class SecurityRemediator:
         """Upgrade a package to a specific version or latest."""
         try:
             if version:
-                cmd = ['pip', 'install', '--upgrade', f'{package}=={version}']
+                cmd = ["pip", "install", "--upgrade", f"{package}=={version}"]
                 print(f"   Upgrading to version {version}...")
             else:
-                cmd = ['pip', 'install', '--upgrade', package]
+                cmd = ["pip", "install", "--upgrade", package]
                 print("   Upgrading to latest version...")
 
-            subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                check=True
-            )
+            subprocess.run(cmd, capture_output=True, text=True, check=True)
             print(f"   ✅ Successfully upgraded {package}")
             return True
 
@@ -128,13 +124,10 @@ class SecurityRemediator:
         try:
             print("\n📝 Updating requirements.txt...")
             result = subprocess.run(
-                ['pip', 'freeze'],
-                capture_output=True,
-                text=True,
-                check=True
+                ["pip", "freeze"], capture_output=True, text=True, check=True
             )
 
-            with open('requirements.txt', 'w') as f:
+            with open("requirements.txt", "w") as f:
                 f.write(result.stdout)
 
             print("   ✅ requirements.txt updated")
@@ -162,7 +155,7 @@ class SecurityRemediator:
             with open(report_path) as f:
                 data = json.load(f)
 
-            results = data.get('results', [])
+            results = data.get("results", [])
 
             if not results:
                 print("✅ No code security issues found")
@@ -175,11 +168,11 @@ class SecurityRemediator:
             requires_review = []
 
             for issue in results:
-                test_id = issue.get('test_id', '')
-                severity = issue.get('issue_severity', '')
+                test_id = issue.get("test_id", "")
+                severity = issue.get("issue_severity", "")
 
                 # Determine if auto-fixable
-                if severity == 'LOW' and test_id in ['B101', 'B601', 'B602']:
+                if severity == "LOW" and test_id in ["B101", "B601", "B602"]:
                     # These are potentially auto-fixable
                     auto_fixable.append(issue)
                 else:
@@ -200,28 +193,34 @@ class SecurityRemediator:
 
     def _create_code_issues_report(self, issues: list[dict]):
         """Create a markdown report of code security issues."""
-        report_path = Path('code-security-issues.md')
+        report_path = Path("code-security-issues.md")
 
-        with open(report_path, 'w') as f:
+        with open(report_path, "w") as f:
             f.write("# Code Security Issues Report\n\n")
             f.write(f"Total issues: {len(issues)}\n\n")
 
             # Group by severity
             by_severity = {}
             for issue in issues:
-                severity = issue.get('issue_severity', 'UNKNOWN')
+                severity = issue.get("issue_severity", "UNKNOWN")
                 by_severity.setdefault(severity, []).append(issue)
 
-            for severity in ['HIGH', 'MEDIUM', 'LOW']:
+            for severity in ["HIGH", "MEDIUM", "LOW"]:
                 if severity in by_severity:
-                    f.write(f"## {severity} Severity ({len(by_severity[severity])} issues)\n\n")
+                    f.write(
+                        f"## {severity} Severity ({len(by_severity[severity])} issues)\n\n"
+                    )
 
                     for issue in by_severity[severity][:10]:  # Limit to 10 per severity
                         f.write(f"### {issue.get('test_name', 'Unknown')}\n")
                         f.write(f"- **File**: `{issue.get('filename', 'unknown')}`\n")
                         f.write(f"- **Line**: {issue.get('line_number', 0)}\n")
-                        f.write(f"- **Issue**: {issue.get('issue_text', 'No description')}\n")
-                        f.write(f"- **CWE**: {issue.get('issue_cwe', {}).get('id', 'N/A')}\n\n")
+                        f.write(
+                            f"- **Issue**: {issue.get('issue_text', 'No description')}\n"
+                        )
+                        f.write(
+                            f"- **CWE**: {issue.get('issue_cwe', {}).get('id', 'N/A')}\n\n"
+                        )
 
         print(f"   📄 Report created: {report_path}")
 
@@ -245,7 +244,7 @@ class SecurityRemediator:
             with open(report_path) as f:
                 data = json.load(f)
 
-            results = data.get('results', {})
+            results = data.get("results", {})
 
             if not results or len(results) == 0:
                 print("✅ No secrets detected")
@@ -254,7 +253,7 @@ class SecurityRemediator:
             print(f"🚨 CRITICAL: Detected potential secrets in {len(results)} files")
 
             # Create critical alert file
-            with open('SECRETS_ALERT.txt', 'w') as f:
+            with open("SECRETS_ALERT.txt", "w") as f:
                 f.write("CRITICAL SECURITY ALERT\n")
                 f.write("=" * 50 + "\n\n")
                 f.write("Potential secrets detected in the following files:\n\n")
@@ -278,14 +277,14 @@ class SecurityRemediator:
     def generate_summary(self) -> dict:
         """Generate a summary of all remediation actions."""
         summary = {
-            'fixes_applied': len(self.fixes_applied),
-            'fixes_failed': len(self.fixes_failed),
-            'applied_details': self.fixes_applied,
-            'failed_details': self.fixes_failed
+            "fixes_applied": len(self.fixes_applied),
+            "fixes_failed": len(self.fixes_failed),
+            "applied_details": self.fixes_applied,
+            "failed_details": self.fixes_failed,
         }
 
         # Write summary to file
-        with open('remediation-summary.json', 'w') as f:
+        with open("remediation-summary.json", "w") as f:
             json.dump(summary, f, indent=2)
 
         print("\n" + "=" * 50)
@@ -304,30 +303,22 @@ def main():
         description="Automated security vulnerability remediation"
     )
     parser.add_argument(
-        '--report-dir',
-        default='security-reports',
-        help='Directory containing security scan reports'
+        "--report-dir",
+        default="security-reports",
+        help="Directory containing security scan reports",
     )
     parser.add_argument(
-        '--dependencies',
-        action='store_true',
-        help='Remediate dependency vulnerabilities'
+        "--dependencies",
+        action="store_true",
+        help="Remediate dependency vulnerabilities",
     )
     parser.add_argument(
-        '--code',
-        action='store_true',
-        help='Analyze code security issues'
+        "--code", action="store_true", help="Analyze code security issues"
     )
     parser.add_argument(
-        '--secrets',
-        action='store_true',
-        help='Check for exposed secrets'
+        "--secrets", action="store_true", help="Check for exposed secrets"
     )
-    parser.add_argument(
-        '--all',
-        action='store_true',
-        help='Run all remediation tasks'
-    )
+    parser.add_argument("--all", action="store_true", help="Run all remediation tasks")
 
     args = parser.parse_args()
 
@@ -337,26 +328,22 @@ def main():
 
     remediator = SecurityRemediator(report_dir=args.report_dir)
 
-    results = {
-        'dependencies': False,
-        'code': False,
-        'secrets': False
-    }
+    results = {"dependencies": False, "code": False, "secrets": False}
 
     if args.all or args.dependencies:
         print("\n🔧 REMEDIATING DEPENDENCIES")
         print("=" * 50)
-        results['dependencies'] = remediator.remediate_dependencies()
+        results["dependencies"] = remediator.remediate_dependencies()
 
     if args.all or args.code:
         print("\n🔍 ANALYZING CODE SECURITY")
         print("=" * 50)
-        results['code'] = remediator.remediate_code_issues()
+        results["code"] = remediator.remediate_code_issues()
 
     if args.all or args.secrets:
         print("\n🔐 CHECKING FOR SECRETS")
         print("=" * 50)
-        results['secrets'] = remediator.check_for_secrets()
+        results["secrets"] = remediator.check_for_secrets()
 
     # Generate final summary
     print("\n📊 GENERATING SUMMARY")
@@ -364,13 +351,13 @@ def main():
     summary = remediator.generate_summary()
 
     # Exit with appropriate code
-    if results['secrets']:
+    if results["secrets"]:
         print("\n🚨 CRITICAL: Secrets detected!")
         sys.exit(2)
-    elif summary['fixes_applied'] > 0:
+    elif summary["fixes_applied"] > 0:
         print("\n✅ Remediation completed successfully")
         sys.exit(0)
-    elif summary['fixes_failed'] > 0:
+    elif summary["fixes_failed"] > 0:
         print("\n⚠️ Some fixes failed")
         sys.exit(1)
     else:
@@ -378,5 +365,5 @@ def main():
         sys.exit(0)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -30,6 +30,7 @@ logger = logging.getLogger(__name__)
 try:
     import torch  # noqa: F401
     import torch.nn as nn
+
     TORCH_AVAILABLE = True
 except ImportError:
     TORCH_AVAILABLE = False
@@ -42,6 +43,7 @@ try:
     from bindsnet.network import Network
     from bindsnet.network.nodes import Input, LIFNodes
     from bindsnet.network.topology import Connection
+
     BINDSNET_AVAILABLE = True
 except ImportError:
     BINDSNET_AVAILABLE = False
@@ -51,6 +53,7 @@ try:
     import sinabs  # noqa: F401
     import sinabs.layers as sl
     from sinabs.from_torch import from_model
+
     SINABS_AVAILABLE = True
 except ImportError:
     SINABS_AVAILABLE = False
@@ -59,6 +62,7 @@ except ImportError:
 try:
     import snntorch as snn  # noqa: F401 - Imported to check availability
     import snntorch.functional as SF  # noqa: F401, N812 - Standard snnTorch alias
+
     SNNTORCH_AVAILABLE = True
 except ImportError:
     SNNTORCH_AVAILABLE = False
@@ -67,6 +71,7 @@ except ImportError:
 try:
     import spikingjelly  # noqa: F401
     from spikingjelly.activation_based import functional, layer, neuron  # noqa: F401
+
     SPIKINGJELLY_AVAILABLE = True
 except ImportError:
     SPIKINGJELLY_AVAILABLE = False
@@ -75,6 +80,7 @@ except ImportError:
 try:
     import norse  # noqa: F401
     from norse.torch import LIFCell, LIFParameters  # noqa: F401
+
     NORSE_AVAILABLE = True
 except ImportError:
     NORSE_AVAILABLE = False
@@ -82,6 +88,7 @@ except ImportError:
 
 try:
     import brian2  # noqa: F401
+
     BRIAN2_AVAILABLE = True
 except ImportError:
     BRIAN2_AVAILABLE = False
@@ -91,6 +98,7 @@ try:
     import lava  # noqa: F401
     from lava.magma.core.model.py.model import PyLoihiProcessModel  # noqa: F401
     from lava.magma.core.process.process import AbstractProcess  # noqa: F401
+
     LAVA_AVAILABLE = True
 except ImportError:
     LAVA_AVAILABLE = False
@@ -99,6 +107,7 @@ except ImportError:
 try:
     import rockpool  # noqa: F401
     from rockpool.nn.modules import LIF  # noqa: F401
+
     ROCKPOOL_AVAILABLE = True
 except ImportError:
     ROCKPOOL_AVAILABLE = False
@@ -106,6 +115,7 @@ except ImportError:
 
 try:
     import nengo  # noqa: F401
+
     NENGO_AVAILABLE = True
 except ImportError:
     NENGO_AVAILABLE = False
@@ -113,6 +123,7 @@ except ImportError:
 
 try:
     import nir  # noqa: F401
+
     NIR_AVAILABLE = True
 except ImportError:
     NIR_AVAILABLE = False
@@ -145,7 +156,7 @@ class BindsNetRLAgent:
         output_size: int = 10,
         dt: float = 1.0,
         learning_rate: float = 0.01,
-        data_dir: str = "data/snn"
+        data_dir: str = "data/snn",
     ):
         """Initialize BindsNet RL agent.
 
@@ -174,8 +185,7 @@ class BindsNetRLAgent:
 
         # Input layer (Poisson encoding)
         self.network.add_layer(
-            Input(n=input_size, traces=True, trace_tc=5e-2),
-            name="input"
+            Input(n=input_size, traces=True, trace_tc=5e-2), name="input"
         )
 
         # Hidden layer (Leaky Integrate-and-Fire neurons)
@@ -188,9 +198,9 @@ class BindsNetRLAgent:
                 thresh=-52.0,
                 refrac=5,
                 tc_decay=100.0,
-                trace_tc=5e-2
+                trace_tc=5e-2,
             ),
-            name="hidden"
+            name="hidden",
         )
 
         # Output layer
@@ -203,9 +213,9 @@ class BindsNetRLAgent:
                 thresh=-52.0,
                 refrac=5,
                 tc_decay=100.0,
-                trace_tc=5e-2
+                trace_tc=5e-2,
             ),
-            name="output"
+            name="output",
         )
 
         # Connections with STDP learning
@@ -218,10 +228,10 @@ class BindsNetRLAgent:
                 update_rule=PostPre,
                 nu=(learning_rate, learning_rate),
                 wmin=0.0,
-                wmax=1.0
+                wmax=1.0,
             ),
             source="input",
-            target="hidden"
+            target="hidden",
         )
 
         w_hidden_output = 0.3 * torch.rand(hidden_size, output_size)
@@ -233,18 +243,22 @@ class BindsNetRLAgent:
                 update_rule=PostPre,
                 nu=(learning_rate, learning_rate),
                 wmin=0.0,
-                wmax=1.0
+                wmax=1.0,
             ),
             source="hidden",
-            target="output"
+            target="output",
         )
 
         # Poisson encoder for input spikes
         self.encoder = PoissonEncoder(time=100, dt=dt)
 
-        logger.info(f"BindsNet RL agent initialized: {input_size}→{hidden_size}→{output_size}")
+        logger.info(
+            f"BindsNet RL agent initialized: {input_size}→{hidden_size}→{output_size}"
+        )
 
-    def process_observation(self, observation: np.ndarray, time: int = 100) -> torch.Tensor:
+    def process_observation(
+        self, observation: np.ndarray, time: int = 100
+    ) -> torch.Tensor:
         """
         Process observation through SNN and return spike outputs.
 
@@ -256,7 +270,9 @@ class BindsNetRLAgent:
             Output spike trains
         """
         # Normalize observation
-        obs_normalized = (observation - observation.min()) / (observation.max() - observation.min() + 1e-8)
+        obs_normalized = (observation - observation.min()) / (
+            observation.max() - observation.min() + 1e-8
+        )
         obs_tensor = torch.from_numpy(obs_normalized).float().flatten()
 
         # Encode as spikes
@@ -302,7 +318,7 @@ class BindsNetRLAgent:
         if reward > 0:
             # Strengthen connections that led to positive reward
             for _conn_name, conn in self.network.connections.items():
-                if hasattr(conn, 'update_rule') and conn.update_rule is not None:
+                if hasattr(conn, "update_rule") and conn.update_rule is not None:
                     # Apply reward modulation
                     conn.w.data += reward * 0.01 * torch.sign(conn.w.data)
                     conn.w.data.clamp_(0.0, 1.0)
@@ -366,7 +382,7 @@ class SinabsVisionSNN:
         self,
         input_shape: tuple = (1, 28, 28),
         num_classes: int = 10,
-        data_dir: str = "data/snn"
+        data_dir: str = "data/snn",
     ):
         """Initialize Sinabs vision SNN.
 
@@ -388,7 +404,9 @@ class SinabsVisionSNN:
         # Build SNN model
         self.model = self._build_model()
 
-        logger.info(f"Sinabs vision SNN initialized: {input_shape} → {num_classes} classes")
+        logger.info(
+            f"Sinabs vision SNN initialized: {input_shape} → {num_classes} classes"
+        )
 
     def _build_model(self) -> nn.Module:
         """Build Sinabs SNN model for vision tasks."""
@@ -400,19 +418,16 @@ class SinabsVisionSNN:
             nn.Conv2d(c, 32, kernel_size=3, padding=1),
             sl.IAFSqueeze(batch_size=1, min_v_mem=-1.0),  # Spiking activation
             nn.AvgPool2d(2),
-
             # Conv block 2
             nn.Conv2d(32, 64, kernel_size=3, padding=1),
             sl.IAFSqueeze(batch_size=1, min_v_mem=-1.0),
             nn.AvgPool2d(2),
-
             # Flatten and FC
             nn.Flatten(),
             nn.Linear((h // 4) * (w // 4) * 64, 128),
             sl.IAFSqueeze(batch_size=1, min_v_mem=-1.0),
-
             nn.Linear(128, self.num_classes),
-            sl.IAFSqueeze(batch_size=1, min_v_mem=-1.0)
+            sl.IAFSqueeze(batch_size=1, min_v_mem=-1.0),
         )
 
         return model
@@ -430,7 +445,7 @@ class SinabsVisionSNN:
         """
         # Reset neuron states
         for layer in self.model:
-            if hasattr(layer, 'reset_states'):
+            if hasattr(layer, "reset_states"):
                 layer.reset_states()
 
         # Accumulate spikes over time
@@ -487,7 +502,7 @@ class SinabsVisionSNN:
             pytorch_model,
             input_shape=(1, 28, 28),  # Adjust based on model
             add_spiking_output=True,
-            batch_size=1
+            batch_size=1,
         )
 
         logger.info("Converted PyTorch model to Sinabs SNN")
@@ -533,11 +548,14 @@ class SinabsVisionSNN:
 
         # Export model in hardware-compatible format
         # Note: Actual hardware deployment requires SynSense SDK
-        torch.save({
-            'model': self.model.state_dict(),
-            'input_shape': self.input_shape,
-            'num_classes': self.num_classes
-        }, path)
+        torch.save(
+            {
+                "model": self.model.state_dict(),
+                "input_shape": self.input_shape,
+                "num_classes": self.num_classes,
+            },
+            path,
+        )
 
         logger.info(f"Model exported for hardware deployment: {path}")
         logger.info("Note: Use SynSense SDK for actual hardware deployment")
@@ -568,10 +586,7 @@ class SNNManager:
         logger.info("SNNManager initialized")
 
     def create_rl_agent(
-        self,
-        input_size: int = 784,
-        hidden_size: int = 400,
-        output_size: int = 10
+        self, input_size: int = 784, hidden_size: int = 400, output_size: int = 10
     ) -> BindsNetRLAgent:
         """Create BindsNet RL agent for continual learning.
 
@@ -587,14 +602,12 @@ class SNNManager:
             input_size=input_size,
             hidden_size=hidden_size,
             output_size=output_size,
-            data_dir=str(self.data_dir)
+            data_dir=str(self.data_dir),
         )
         return self.bindsnet_agent
 
     def create_vision_snn(
-        self,
-        input_shape: tuple = (1, 28, 28),
-        num_classes: int = 10
+        self, input_shape: tuple = (1, 28, 28), num_classes: int = 10
     ) -> SinabsVisionSNN:
         """Create Sinabs vision SNN.
 
@@ -608,7 +621,7 @@ class SNNManager:
         self.sinabs_vision = SinabsVisionSNN(
             input_shape=input_shape,
             num_classes=num_classes,
-            data_dir=str(self.data_dir)
+            data_dir=str(self.data_dir),
         )
         return self.sinabs_vision
 
@@ -621,7 +634,6 @@ class SNNManager:
         return {
             # Core dependencies
             "pytorch": TORCH_AVAILABLE,
-
             # SNN Libraries
             "bindsnet": BINDSNET_AVAILABLE,
             "sinabs": SINABS_AVAILABLE,
@@ -635,16 +647,17 @@ class SNNManager:
             "nir": NIR_AVAILABLE,
             "neurocorex": NEUROCOREX_AVAILABLE,
             "ranc": RANC_AVAILABLE,
-
             # Feature capabilities
             "rl_continual_learning": BINDSNET_AVAILABLE,
             "vision_snn": SINABS_AVAILABLE or SNNTORCH_AVAILABLE,
-            "hardware_deployment": SINABS_AVAILABLE or LAVA_AVAILABLE or ROCKPOOL_AVAILABLE,
+            "hardware_deployment": SINABS_AVAILABLE
+            or LAVA_AVAILABLE
+            or ROCKPOOL_AVAILABLE,
             "neural_engineering": NENGO_AVAILABLE,
             "intermediate_representation": NIR_AVAILABLE,
             "intel_loihi": LAVA_AVAILABLE,
             "synsense_hardware": SINABS_AVAILABLE,
-            "brain_simulation": BRIAN2_AVAILABLE or NENGO_AVAILABLE
+            "brain_simulation": BRIAN2_AVAILABLE or NENGO_AVAILABLE,
         }
 
 

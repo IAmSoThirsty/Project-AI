@@ -13,7 +13,9 @@ def test_quarantine_and_verify(tmp_path: Path):
     admins = build_border_patrol(1)
     pa = admins[0]
     wt = pa.towers[0]
-    gate = GateGuardian("test-gate", VerifierAgent("test-verifier", data_dir=str(tmp_path)), wt)
+    gate = GateGuardian(
+        "test-gate", VerifierAgent("test-verifier", data_dir=str(tmp_path)), wt
+    )
 
     box = gate.ingest(str(mod))
     assert box.sealed
@@ -29,7 +31,9 @@ def test_emergency_path(tmp_path: Path):
     admins = build_border_patrol(1)
     pa = admins[0]
     wt = pa.towers[0]
-    gate = GateGuardian("test-gate-2", VerifierAgent("test-verifier-2", data_dir=str(tmp_path)), wt)
+    gate = GateGuardian(
+        "test-gate-2", VerifierAgent("test-verifier-2", data_dir=str(tmp_path)), wt
+    )
 
     # simulate emergency
     gate.activate_force_field()

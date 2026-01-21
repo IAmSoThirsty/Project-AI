@@ -19,6 +19,7 @@ class TestFunctionRegistry:
 
     def test_register_function(self, registry):
         """Test registering a function."""
+
         def sample_func(x: int) -> int:
             """Sample function."""
             return x * 2
@@ -28,6 +29,7 @@ class TestFunctionRegistry:
 
     def test_register_duplicate_raises(self, registry):
         """Test registering duplicate function raises error."""
+
         def func1():
             pass
 
@@ -58,6 +60,7 @@ class TestFunctionRegistry:
 
     def test_call_function(self, registry):
         """Test calling a registered function."""
+
         def add(a: int, b: int) -> int:
             """Add two numbers."""
             return a + b
@@ -68,6 +71,7 @@ class TestFunctionRegistry:
 
     def test_call_with_defaults(self, registry):
         """Test calling function with default parameters."""
+
         def greet(name: str, greeting: str = "Hello") -> str:
             return f"{greeting}, {name}!"
 
@@ -85,6 +89,7 @@ class TestFunctionRegistry:
 
     def test_call_invalid_params_raises(self, registry):
         """Test calling with invalid parameters raises error."""
+
         def func(x: int) -> int:
             return x
 
@@ -95,6 +100,7 @@ class TestFunctionRegistry:
 
     def test_get_function_info(self, registry):
         """Test getting function metadata."""
+
         def multiply(x: int, y: int) -> int:
             """Multiply two numbers."""
             return x * y
@@ -128,6 +134,7 @@ class TestFunctionRegistry:
 
     def test_list_functions_with_schema(self, registry):
         """Test listing functions with schema included."""
+
         def func(x: int) -> int:
             return x
 
@@ -153,6 +160,7 @@ class TestFunctionRegistry:
 
     def test_schema_generation(self, registry):
         """Test automatic schema generation from function signature."""
+
         def func(a: int, b: str, c: float = 3.14, d: bool = True) -> str:
             """Test function."""
             return f"{a}-{b}"
@@ -185,6 +193,7 @@ class TestFunctionRegistry:
 
     def test_get_help_specific_function(self, registry):
         """Test getting help for specific function."""
+
         def add(x: int, y: int) -> int:
             """Add two integers."""
             return x + y
@@ -201,6 +210,7 @@ class TestFunctionRegistry:
 
     def test_get_help_with_optional_params(self, registry):
         """Test help display for functions with optional parameters."""
+
         def greet(name: str, prefix: str = "Hello") -> str:
             """Greet someone."""
             return f"{prefix}, {name}"
@@ -219,8 +229,12 @@ class TestFunctionRegistry:
 
     def test_get_help_all_functions(self, registry):
         """Test getting help for all functions."""
-        registry.register("func1", lambda: 1, description="First function", category="cat1")
-        registry.register("func2", lambda: 2, description="Second function", category="cat2")
+        registry.register(
+            "func1", lambda: 1, description="First function", category="cat1"
+        )
+        registry.register(
+            "func2", lambda: 2, description="Second function", category="cat2"
+        )
 
         help_text = registry.get_help()
 
@@ -237,6 +251,7 @@ class TestFunctionRegistry:
 
     def test_to_openai_function_schema(self, registry):
         """Test converting function to OpenAI format."""
+
         def calculate(x: int, y: int, operation: str = "add") -> int:
             """Perform calculation on two numbers."""
             return x + y if operation == "add" else x - y
@@ -267,6 +282,7 @@ class TestFunctionRegistry:
 
     def test_custom_description_and_schema(self, registry):
         """Test registering with custom description and schema."""
+
         def func(x):
             """Original docstring."""
             return x
@@ -274,10 +290,8 @@ class TestFunctionRegistry:
         custom_desc = "Custom description"
         custom_schema = {
             "type": "object",
-            "properties": {
-                "x": {"type": "number", "description": "Input value"}
-            },
-            "required": ["x"]
+            "properties": {"x": {"type": "number", "description": "Input value"}},
+            "required": ["x"],
         }
 
         registry.register("func", func, description=custom_desc, schema=custom_schema)
@@ -288,6 +302,7 @@ class TestFunctionRegistry:
 
     def test_function_without_type_annotations(self, registry):
         """Test registering function without type annotations."""
+
         def no_types(x, y):
             """Function without types."""
             return x + y

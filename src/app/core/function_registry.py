@@ -44,7 +44,7 @@ class FunctionRegistry:
         func: Callable,
         description: str | None = None,
         schema: dict[str, Any] | None = None,
-        category: str = "general"
+        category: str = "general",
     ) -> None:
         """Register a function with the registry.
 
@@ -79,7 +79,7 @@ class FunctionRegistry:
             "description": description,
             "schema": schema,
             "category": category,
-            "name": name
+            "name": name,
         }
         logger.info(f"Registered function: {name} (category: {category})")
 
@@ -117,11 +117,7 @@ class FunctionRegistry:
 
             parameters[param_name] = param_info
 
-        return {
-            "type": "object",
-            "properties": parameters,
-            "required": required
-        }
+        return {"type": "object", "properties": parameters, "required": required}
 
     def _python_type_to_json_type(self, python_type: type) -> str:
         """Convert Python type to JSON schema type.
@@ -139,7 +135,7 @@ class FunctionRegistry:
             bool: "boolean",
             list: "array",
             dict: "object",
-            type(None): "null"
+            type(None): "null",
         }
 
         # Handle typing module types (e.g., Optional, Union)
@@ -193,9 +189,7 @@ class FunctionRegistry:
         return func_data
 
     def list_functions(
-        self,
-        category: str | None = None,
-        include_schema: bool = False
+        self, category: str | None = None, include_schema: bool = False
     ) -> list[dict[str, Any]]:
         """List all registered functions.
 
@@ -214,7 +208,7 @@ class FunctionRegistry:
             info = {
                 "name": name,
                 "description": func_data["description"],
-                "category": func_data["category"]
+                "category": func_data["category"],
             }
 
             if include_schema:
@@ -290,8 +284,12 @@ class FunctionRegistry:
                     required = param_name in schema.get("required", [])
                     req_str = " (required)" if required else " (optional)"
                     default = param_info.get("default")
-                    default_str = f" [default: {default}]" if default is not None else ""
-                    help_text += f"  - {param_name}: {param_type}{req_str}{default_str}\n"
+                    default_str = (
+                        f" [default: {default}]" if default is not None else ""
+                    )
+                    help_text += (
+                        f"  - {param_name}: {param_type}{req_str}{default_str}\n"
+                    )
             else:
                 help_text += "Parameters: None\n"
 
@@ -312,7 +310,7 @@ class FunctionRegistry:
                 for func_info in funcs:
                     help_lines.append(f"  {func_info['name']}")
                     # Truncate long descriptions
-                    desc = func_info['description']
+                    desc = func_info["description"]
                     if len(desc) > 60:
                         desc = desc[:57] + "..."
                     help_lines.append(f"    {desc}")
@@ -335,12 +333,11 @@ class FunctionRegistry:
         return {
             "name": name,
             "description": func_data["description"],
-            "parameters": func_data["schema"]
+            "parameters": func_data["schema"],
         }
 
     def to_openai_function_schemas(
-        self,
-        category: str | None = None
+        self, category: str | None = None
     ) -> list[dict[str, Any]]:
         """Get all functions as OpenAI function calling schemas.
 

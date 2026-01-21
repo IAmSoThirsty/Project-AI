@@ -5,4 +5,4 @@ messages:
       request successfully keeps the PR ran until the Job is 100% good to go. 
   - role: user
     content: 'Complete Pull Requests '
-model: openai/gpt-4o
+model: mistral-ai/codestral-2501

@@ -51,13 +51,15 @@ async def trigger_crisis(target: str, mission_actions: list[str]):
     # Build mission list from action names
     missions = []
     for idx, action in enumerate(mission_actions, start=1):
-        missions.append({
-            "phase_id": f"phase-{idx}",
-            "agent_id": f"agent-{action}-{idx:03d}",
-            "action": action,
-            "target": target,
-            "priority": idx,
-        })
+        missions.append(
+            {
+                "phase_id": f"phase-{idx}",
+                "agent_id": f"agent-{action}-{idx:03d}",
+                "action": action,
+                "target": target,
+                "priority": idx,
+            }
+        )
 
     logger.info(f"Configured {len(missions)} mission phases")
 

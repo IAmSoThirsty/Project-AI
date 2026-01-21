@@ -1,0 +1,265 @@
+name: Trivy Container Security Scanning
+
+on:
+  push:
+    branches: [main, develop, 'release/**']
+    paths:
+      - 'Dockerfile*'
+      - 'docker-compose*.yml'
+      - '.dockerignore'
+      - '.github/workflows/trivy-container-security.yml'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'Dockerfile*'
+      - 'docker-compose*.yml'
+      - '.dockerignore'
+  schedule:
+    # Daily at 3 AM UTC
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+    inputs:
+      severity:
+        description: 'Minimum severity to report'
+        required: false
+        default: 'MEDIUM,HIGH,CRITICAL'
+        type: choice
+        options:
+          - 'LOW,MEDIUM,HIGH,CRITICAL'
+          - 'MEDIUM,HIGH,CRITICAL'
+          - 'HIGH,CRITICAL'
+          - 'CRITICAL'
+
+permissions:
+  contents: read
+  security-events: write
+  issues: write
+  pull-requests: write
+
+env:
+  SEVERITY: ${{ github.event.inputs.severity || 'MEDIUM,HIGH,CRITICAL' }}
+
+jobs:
+  trivy-filesystem-scan:
+    name: Trivy Filesystem Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner in fs mode
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-fs-results.sarif'
+          severity: ${{ env.SEVERITY }}
+          ignore-unfixed: true
+
+      - name: Upload Trivy results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-fs-results.sarif'
+          category: 'trivy-filesystem'
+
+      - name: Run Trivy vulnerability scanner (table output)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'table'
+          severity: ${{ env.SEVERITY }}
+          ignore-unfixed: true
+
+  trivy-docker-scan:
+    name: Trivy Docker Image Scan
+    runs-on: ubuntu-latest
+    if: hashFiles('Dockerfile') != ''
+    strategy:
+      matrix:
+        dockerfile:
+          - Dockerfile
+          - web/backend/Dockerfile
+          - web/frontend/Dockerfile
+      fail-fast: false
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check if Dockerfile exists
+        id: check-dockerfile
+        run: |
+          if [ -f "${{ matrix.dockerfile }}" ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "Dockerfile found: ${{ matrix.dockerfile }}"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "Dockerfile not found: ${{ matrix.dockerfile }}"
+          fi
+
+      - name: Build Docker image
+        if: steps.check-dockerfile.outputs.exists == 'true'
+        run: |
+          DOCKERFILE="${{ matrix.dockerfile }}"
+          IMAGE_NAME="trivy-scan-$(echo $DOCKERFILE | tr '/' '-' | sed 's/Dockerfile/image/g')"
+          docker build -f "$DOCKERFILE" -t "$IMAGE_NAME:${{ github.sha }}" "$(dirname $DOCKERFILE)"
+          echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
+
+      - name: Run Trivy vulnerability scanner on Docker image
+        if: steps.check-dockerfile.outputs.exists == 'true'
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{ env.IMAGE_NAME }}:${{ github.sha }}'
+          format: 'sarif'
+          output: 'trivy-docker-${{ matrix.dockerfile }}.sarif'
+          severity: ${{ env.SEVERITY }}
+          ignore-unfixed: true
+
+      - name: Upload Trivy Docker results to GitHub Security tab
+        if: steps.check-dockerfile.outputs.exists == 'true' && always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-docker-${{ matrix.dockerfile }}.sarif'
+          category: 'trivy-docker-${{ matrix.dockerfile }}'
+
+      - name: Run Trivy vulnerability scanner (table output)
+        if: steps.check-dockerfile.outputs.exists == 'true'
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{ env.IMAGE_NAME }}:${{ github.sha }}'
+          format: 'table'
+          severity: ${{ env.SEVERITY }}
+          ignore-unfixed: true
+
+  trivy-config-scan:
+    name: Trivy Configuration Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy configuration scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'config'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-config-results.sarif'
+          severity: ${{ env.SEVERITY }}
+          ignore-unfixed: true
+
+      - name: Upload Trivy config results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-config-results.sarif'
+          category: 'trivy-config'
+
+      - name: Run Trivy configuration scanner (table output)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'config'
+          scan-ref: '.'
+          format: 'table'
+          severity: ${{ env.SEVERITY }}
+          ignore-unfixed: true
+
+  trivy-report:
+    name: Generate Trivy Summary Report
+    runs-on: ubuntu-latest
+    needs: [trivy-filesystem-scan, trivy-docker-scan, trivy-config-scan]
+    if: always()
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate summary
+        run: |
+          cat << 'EOF' >> $GITHUB_STEP_SUMMARY
+          # 🔒 Trivy Container Security Scan Report
+          
+          **Repository**: ${{ github.repository }}
+          **Scan Date**: $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          **Triggered by**: ${{ github.event_name }}
+          **Severity Filter**: ${{ env.SEVERITY }}
+          
+          ## Scan Results
+          
+          | Scan Type | Status |
+          |-----------|--------|
+          | Filesystem | ${{ needs.trivy-filesystem-scan.result == 'success' && '✅ Passed' || '❌ Failed' }} |
+          | Docker Images | ${{ needs.trivy-docker-scan.result == 'success' && '✅ Passed' || needs.trivy-docker-scan.result == 'skipped' && '⏭️ Skipped' || '❌ Failed' }} |
+          | Configuration | ${{ needs.trivy-config-scan.result == 'success' && '✅ Passed' || '❌ Failed' }} |
+          
+          ## Next Steps
+          
+          - View detailed results in the [Security tab](/${{ github.repository }}/security)
+          - Review SARIF files uploaded to CodeQL
+          - Address HIGH and CRITICAL vulnerabilities first
+          - Check [Trivy documentation](https://aquasecurity.github.io/trivy/) for remediation guidance
+          
+          ---
+          *Automated by Trivy Container Security Scanning workflow*
+          EOF
+
+      - name: Create issue for critical findings
+        if: needs.trivy-filesystem-scan.result == 'failure' || needs.trivy-docker-scan.result == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `🚨 Trivy Security Scan Detected Critical Vulnerabilities - ${new Date().toISOString().split('T')[0]}`;
+            const body = `## Trivy Container Security Scan Alert
+            
+            Critical vulnerabilities were detected during the Trivy security scan.
+            
+            **Workflow Run**: ${context.payload.repository.html_url}/actions/runs/${context.runId}
+            **Branch**: ${context.ref}
+            **Commit**: ${context.sha}
+            
+            ### Scan Results
+            - Filesystem Scan: ${{ needs.trivy-filesystem-scan.result }}
+            - Docker Scan: ${{ needs.trivy-docker-scan.result }}
+            - Config Scan: ${{ needs.trivy-config-scan.result }}
+            
+            ### Action Required
+            1. Review the [Security tab](${context.payload.repository.html_url}/security) for detailed findings
+            2. Prioritize HIGH and CRITICAL vulnerabilities
+            3. Update vulnerable dependencies or base images
+            4. Re-run scan after fixes
+            
+            ### Resources
+            - [Trivy Documentation](https://aquasecurity.github.io/trivy/)
+            - [Container Security Best Practices](https://kubernetes.io/docs/concepts/security/pod-security-standards/)
+            
+            ---
+            *This issue was created automatically by the Trivy Container Security workflow*`;
+            
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: 'security,trivy,automated',
+              state: 'open'
+            });
+            
+            const existingIssue = issues.data.find(issue => 
+              issue.title.includes('Trivy Security Scan Detected Critical Vulnerabilities')
+            );
+            
+            if (!existingIssue) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: title,
+                body: body,
+                labels: ['security', 'trivy', 'automated', 'urgent']
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existingIssue.number,
+                body: `New scan run detected additional issues. See [workflow run](${context.payload.repository.html_url}/actions/runs/${context.runId}) for details.`
+              });
+            }

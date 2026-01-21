@@ -144,9 +144,7 @@ class LocalFBOSystem:
             try:
                 with open(cache_file, encoding="utf-8") as f:
                     self.response_cache = json.load(f)
-                logger.info(
-                    f"Loaded {len(self.response_cache)} cached responses"
-                )
+                logger.info(f"Loaded {len(self.response_cache)} cached responses")
             except Exception as e:
                 logger.error(f"Error loading cache: {e}")
 
@@ -167,9 +165,7 @@ class LocalFBOSystem:
             try:
                 with open(reflections_file, encoding="utf-8") as f:
                     data = json.load(f)
-                    self.reflections = [
-                        ReflectionEntry.from_dict(r) for r in data
-                    ]
+                    self.reflections = [ReflectionEntry.from_dict(r) for r in data]
                 logger.info(f"Loaded {len(self.reflections)} reflections")
             except Exception as e:
                 logger.error(f"Error loading reflections: {e}")
@@ -274,9 +270,7 @@ class LocalFBOSystem:
                 if results:
                     context = "\n\n".join([r.chunk.text for r in results])
                     response = {
-                        "answer": self._generate_offline_response(
-                            query, context
-                        ),
+                        "answer": self._generate_offline_response(query, context),
                         "context": context,
                         "source": "offline_rag",
                         "confidence": results[0].score if results else 0.0,
@@ -300,9 +294,7 @@ class LocalFBOSystem:
 
         return hashlib.md5(query.lower().strip().encode()).hexdigest()
 
-    def _generate_offline_response(
-        self, query: str, context: str
-    ) -> str:
+    def _generate_offline_response(self, query: str, context: str) -> str:
         """
         Generate response using offline context.
 
@@ -412,9 +404,7 @@ class LocalFBOSystem:
 
         if query:
             query_lower = query.lower()
-            results = [
-                r for r in results if query_lower in r.content.lower()
-            ]
+            results = [r for r in results if query_lower in r.content.lower()]
 
         # Sort by timestamp (newest first)
         results.sort(key=lambda r: r.timestamp, reverse=True)
@@ -440,9 +430,7 @@ class LocalFBOSystem:
 
         for cat, count in categories.items():
             if count > 3:
-                patterns.append(
-                    f"Frequent {cat} reflections ({count} instances)"
-                )
+                patterns.append(f"Frequent {cat} reflections ({count} instances)")
 
         # Analyze tags
         tag_counts = {}
@@ -450,9 +438,9 @@ class LocalFBOSystem:
             for tag in r.tags:
                 tag_counts[tag] = tag_counts.get(tag, 0) + 1
 
-        for tag, count in sorted(
-            tag_counts.items(), key=lambda x: x[1], reverse=True
-        )[:5]:
+        for tag, count in sorted(tag_counts.items(), key=lambda x: x[1], reverse=True)[
+            :5
+        ]:
             patterns.append(f"Common theme: {tag} ({count} occurrences)")
 
         # Analyze confidence trends
@@ -481,9 +469,7 @@ class LocalFBOSystem:
         sync_file = self.data_dir / "last_sync.json"
         try:
             with open(sync_file, "w", encoding="utf-8") as f:
-                json.dump(
-                    {"timestamp": datetime.now().isoformat()}, f, indent=2
-                )
+                json.dump({"timestamp": datetime.now().isoformat()}, f, indent=2)
         except Exception as e:
             logger.error(f"Error saving sync time: {e}")
 
@@ -520,9 +506,7 @@ class LocalFBOSystem:
             "timestamp": datetime.now().isoformat(),
         }
 
-    def add_offline_knowledge(
-        self, key: str, value: Any, category: str = "general"
-    ):
+    def add_offline_knowledge(self, key: str, value: Any, category: str = "general"):
         """
         Add knowledge that will be available offline.
 
@@ -539,9 +523,7 @@ class LocalFBOSystem:
 
         logger.info(f"Added offline knowledge: {key} in {category}")
 
-    def ingest_for_offline(
-        self, text: str, source: str, metadata: dict = None
-    ):
+    def ingest_for_offline(self, text: str, source: str, metadata: dict = None):
         """
         Ingest text into offline RAG system.
 

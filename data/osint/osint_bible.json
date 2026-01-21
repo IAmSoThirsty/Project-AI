@@ -1,0 +1,19 @@
+{
+  "metadata": {
+    "source": "osint-bible",
+    "owner": "frankielaguerraYT",
+    "repo": "OSINT-Bible",
+    "last_updated": "2026-01-21T06:54:00.000Z",
+    "status": "placeholder",
+    "description": "Placeholder OSINT data. Run scripts/update_osint_bible.py to fetch real data."
+  },
+  "categories": {
+    "search_engines": [],
+    "social_media": [],
+    "data_breaches": [],
+    "domain_investigation": [],
+    "email_investigation": [],
+    "image_analysis": [],
+    "geolocation": []
+  }
+}

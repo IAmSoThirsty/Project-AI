@@ -539,43 +539,316 @@ Agents via function, protocol, or callable—“agenthood” by registration or 
 
 ## ⏱️ Temporal Workflow Orchestration
 
-- **Production-grade, distributed agent mission management**
-  - Durable, observable state; automatic retries; horizontal scalability
-  - Temporal workflows for learning, defense, crisis response, agent deployment
+Project-AI uses [Temporal.io](https://temporal.io) as its central orchestration layer for durable, fault-tolerant execution of AI operations. Temporal provides production-grade workflow management with automatic retries, observable state, and crash recovery.
 
-**Example:**
-```python
-from app.temporal.client import TemporalClientManager
-from app.temporal.workflows import AILearningWorkflow, LearningRequest
+### 🚀 Quick Start
 
-async with TemporalClientManager() as manager:
-    request = LearningRequest(content="Machine learning best practices", source="documentation", category="programming")
-    handle = await manager.client.start_workflow(
-        AILearningWorkflow.run,
-        request,
-        id="learning-workflow-123",
-        task_queue="project-ai-tasks",
-    )
-    result = await handle.result()
-```
+#### 1. Start Temporal Server
 
-### CLI Tools
+The project includes a complete Docker Compose setup with Temporal server, Web UI, and PostgreSQL:
 
 ```bash
-python cognition/liara/cli.py trigger target-alpha recon secure extract cleanup
-python cognition/liara/cli.py status crisis-workflow-<id>
-python cognition/liara/cli.py wait crisis-workflow-<id>
+# Start all services (includes Temporal server + worker)
+docker-compose up -d
+
+# Or start just Temporal and its dependencies
+docker-compose up -d temporal temporal-postgresql
 ```
 
-### Key Features
+**Temporal Web UI**: Once running, access the Temporal Web UI at [http://localhost:8233](http://localhost:8233) to view workflows, monitor execution, and debug issues.
 
-- ✓ **Persistent State:** All workflows checkpointed and survived server restarts
-- ✓ **Automatic Retries:** Robust error handling, retry, and alert mechanisms
-- ✓ **Observable:** Full UI and JSON state tracking; browse at `http://localhost:8233`
-- ✓ **Scalable:** Add more workers for parallel agent execution
-- ✓ **Crash Recovery:** Deterministic workflows resume flawlessly
+#### 2. Start the Worker
 
-See [temporal/README.md](temporal/README.md) and [examples/](examples/) for full setup, monitoring, and deployment instructions.
+The worker processes workflows and activities. You can run it:
+
+**Inside Docker** (already running if you used `docker-compose up`):
+```bash
+docker-compose logs -f temporal-worker
+```
+
+**Locally** (for development):
+```bash
+# Set environment variables (or use .env file)
+export TEMPORAL_HOST=localhost:7233
+export TEMPORAL_NAMESPACE=default
+export TEMPORAL_TASK_QUEUE=project-ai-tasks
+
+# Start the worker
+python -m integrations.temporal.worker
+```
+
+You should see output like:
+```
+INFO - Starting Temporal worker for queue: project-ai-tasks
+INFO - Successfully connected to Temporal server
+INFO - Worker is ready to process tasks...
+```
+
+#### 3. Start a Workflow from Code
+
+## 🤖 Automated PR System
+
+**Fully automated branch-to-main PR workflow** - zero manual intervention for standard merges!
+
+### What It Does
+
+- 🔍 **Auto-Discovery**: Scans for branches without PRs (daily at 2 AM UTC + on push)
+- 📝 **Auto-Create**: Creates PRs with descriptive titles and comprehensive info
+- 🔧 **Auto-Fix**: Automatically resolves linting issues and minor conflicts
+- ✅ **Auto-Test**: Runs full test suite, linting, and security checks
+- 🔀 **Auto-Merge**: Merges to main when all checks pass
+- 📊 **Auto-Report**: Generates summary reports and health checks
+
+### Quick Commands
+
+```bash
+# Trigger automation now (all branches)
+gh workflow run auto-create-branch-prs.yml
+
+# Create PR for specific branch
+gh workflow run auto-create-branch-prs.yml -f target_branch=feature/my-branch
+
+# View auto-created PRs
+gh pr list --label "auto-created"
+
+# Check automation status
+gh run list --workflow=auto-create-branch-prs.yml --limit 5
+```
+
+### Documentation
+
+- 📖 **Complete Guide**: `.github/workflows/AUTO_PR_SYSTEM.md`
+- ⚡ **Quick Reference**: `.github/workflows/AUTO_PR_QUICK_REF.md`
+
+### Manual Intervention Only Needed For
+
+⚠️ Merge conflicts that can't be auto-resolved (labeled `needs-manual-review`)
+
+All other operations are fully automated! The system processes ~40+ active branches and ensures only conflict-free PRs are auto-merged to main.
+
+---
+
+```python
+import asyncio
+from app.service.ai_controller import AIController
+
+async def main():
+    controller = AIController()
+    
+    # Process an AI request using Temporal workflow
+    result = await controller.process_ai_request(
+        data="Explain machine learning concepts",
+        user_id="user123"
+    )
+    
+    if result.success:
+        print(f"Success! Result: {result.result}")
+        print(f"Steps completed: {result.steps_completed}")
+    else:
+        print(f"Error: {result.error}")
+    
+    await controller.close()
+
+asyncio.run(main())
+```
+
+**Using the Temporal Client directly**:
+
+```python
+import asyncio
+from integrations.temporal.client import TemporalClient
+from integrations.temporal.workflows.example_workflow import (
+    ExampleWorkflow,
+    WorkflowInput
+)
+
+async def main():
+    async with TemporalClient() as client:
+        # Start workflow
+        handle = await client.start_workflow(
+            workflow=ExampleWorkflow.run,
+            args=WorkflowInput(
+                data="Sample input data",
+                user_id="user123"
+            ),
+            workflow_id="example-workflow-123"
+        )
+        
+        # Wait for result
+        result = await handle.result()
+        print(f"Workflow result: {result}")
+
+asyncio.run(main())
+```
+
+#### 4. Monitor Workflows
+
+**Web UI**: Visit [http://localhost:8233](http://localhost:8233) to:
+- View all workflow executions
+- See detailed execution history
+- Debug failed workflows
+- Inspect activity retries
+
+**Programmatically**:
+```python
+from app.service.ai_controller import AIController
+
+controller = AIController()
+status = await controller.get_workflow_status("example-workflow-123")
+print(f"Workflow status: {status}")
+```
+
+### 📁 Integration Structure
+
+The Temporal integration is organized as follows:
+
+```
+src/integrations/temporal/
+├── __init__.py                    # Module exports
+├── client.py                      # Temporal client connection and helpers
+├── worker.py                      # Worker entrypoint (run this to process workflows)
+├── workflows/
+│   ├── __init__.py
+│   └── example_workflow.py        # Example multi-step AI workflow
+└── activities/
+    ├── __init__.py
+    └── core_tasks.py              # Atomic task implementations
+
+src/app/service/
+└── ai_controller.py               # High-level AI service using Temporal
+```
+
+### 🔧 Configuration
+
+Configure Temporal connection via environment variables:
+
+```bash
+# .env file
+TEMPORAL_HOST=localhost:7233           # Temporal server address
+TEMPORAL_NAMESPACE=default             # Namespace (use 'default' for local dev)
+TEMPORAL_TASK_QUEUE=project-ai-tasks  # Task queue name
+```
+
+Or in code:
+```python
+from integrations.temporal.client import TemporalClient
+
+client = TemporalClient(
+    host="localhost:7233",
+    namespace="default",
+    task_queue="project-ai-tasks"
+)
+```
+
+### 🎯 Extending the Integration
+
+#### Adding a New Workflow
+
+1. Create a workflow file in `src/integrations/temporal/workflows/`:
+
+```python
+from dataclasses import dataclass
+from datetime import timedelta
+from temporalio import workflow
+
+@dataclass
+class MyWorkflowInput:
+    data: str
+
+@workflow.defn
+class MyWorkflow:
+    @workflow.run
+    async def run(self, input_data: MyWorkflowInput) -> str:
+        # Your workflow logic here
+        result = await workflow.execute_activity(
+            my_activity,
+            input_data.data,
+            start_to_close_timeout=timedelta(seconds=30)
+        )
+        return result
+```
+
+2. Register it in the worker (`integrations/temporal/worker.py`):
+
+```python
+from integrations.temporal.workflows.my_workflow import MyWorkflow
+
+worker = Worker(
+    client,
+    task_queue=task_queue,
+    workflows=[ExampleWorkflow, MyWorkflow],  # Add your workflow
+    activities=[...],
+)
+```
+
+#### Adding a New Activity
+
+1. Define it in `src/integrations/temporal/activities/`:
+
+```python
+from temporalio import activity
+
+@activity.defn
+async def my_activity(data: str) -> str:
+    # Your activity logic here
+    activity.logger.info(f"Processing: {data}")
+    return f"Processed: {data}"
+```
+
+2. Register it in the worker:
+
+```python
+from integrations.temporal.activities.core_tasks import my_activity
+
+worker = Worker(
+    client,
+    task_queue=task_queue,
+    workflows=[...],
+    activities=[..., my_activity],  # Add your activity
+)
+```
+
+### 🏛️ Architecture Integration
+
+The Temporal integration connects with Project-AI's core systems:
+
+- **AI Controller** (`src/app/service/ai_controller.py`): High-level interface for starting workflows
+- **Core AI Systems** (`src/app/core/`): Can be called from activities for learning, memory, etc.
+- **Agents** (`src/app/agents/`): Can be orchestrated via workflows for multi-agent coordination
+- **Monitoring** (`config/prometheus/`): Temporal metrics exported to Prometheus
+
+### 🔍 Troubleshooting
+
+**Worker not connecting?**
+- Verify Temporal server is running: `docker-compose ps temporal`
+- Check connection settings in environment variables
+- View worker logs: `docker-compose logs temporal-worker`
+
+**Workflows not executing?**
+- Ensure worker is running and registered for the correct task queue
+- Check Temporal Web UI for workflow status and errors
+- Verify activities are properly registered in worker
+
+**Database connection errors?**
+
+- Ensure PostgreSQL is running: `docker-compose ps temporal-postgresql`
+- Temporal server depends on PostgreSQL being healthy
+
+### 📚 Additional Resources
+
+- **Temporal Documentation**: [https://docs.temporal.io/docs/python](https://docs.temporal.io/docs/python)
+- **Sample Workflows**: [https://github.com/temporalio/samples-python](https://github.com/temporalio/samples-python)
+- **Advanced Features**: See `src/app/temporal/` for production workflows (learning, image generation, crisis response)
+- **CLI Tools**: See `cognition/liara/cli.py` for CLI-based workflow management
+
+### ✨ Key Features
+
+- ✓ **Durable Execution**: Workflows survive process crashes and restarts
+- ✓ **Automatic Retries**: Built-in retry policies with exponential backoff
+- ✓ **Observable State**: Full execution history and debugging via Web UI
+- ✓ **Scalable**: Horizontal scaling by adding more workers
+- ✓ **Type Safe**: Full Python type hints for workflows and activities
+- ✓ **Developer Friendly**: Simple, readable code with comprehensive examples
 
 ---
 

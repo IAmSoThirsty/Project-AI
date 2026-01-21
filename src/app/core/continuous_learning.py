@@ -89,7 +89,11 @@ class ContinuousLearningEngine:
 
     def _extract_facts(self, content: str) -> list[str]:
         """Find up to three meaningful facts in the text."""
-        candidates = [s.strip() for s in re.split(r"(?<=[.!?])\s+", content) if len(s.strip()) >= 20]
+        candidates = [
+            s.strip()
+            for s in re.split(r"(?<=[.!?])\s+", content)
+            if len(s.strip()) >= 20
+        ]
         if not candidates:
             return [content.strip()]
         return candidates[:3]
@@ -109,7 +113,14 @@ class ContinuousLearningEngine:
     def _evaluate_pros_cons(self, content: str) -> dict[str, list[str]]:
         """Detect whether the content outlines a controversy and mirror both perspectives."""
         normalized = content.lower()
-        controversy_markers = ["controversy", "debate", "pro", "con", "opposition", "split"]
+        controversy_markers = [
+            "controversy",
+            "debate",
+            "pro",
+            "con",
+            "opposition",
+            "split",
+        ]
         pros_cons = {"pros": [], "cons": []}
         if any(marker in normalized for marker in controversy_markers):
             pros_cons["pros"].append(
