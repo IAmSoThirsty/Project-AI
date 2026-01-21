@@ -34,6 +34,7 @@ class Config:
         },
         "ai": {
             "model": "gpt-3.5-turbo",
+            "provider": "openai",  # Options: 'openai', 'perplexity'
             "temperature": 0.7,
             "max_tokens": 256,
         },
