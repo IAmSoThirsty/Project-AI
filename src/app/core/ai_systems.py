@@ -214,8 +214,9 @@ def _atomic_write_json(file_path: str, obj: Any) -> None:
             if os.path.exists(tmp_path):
                 try:
                     os.remove(tmp_path)
-                except Exception:
-                    pass
+                except Exception as e:
+                    # Best effort cleanup - log but don't fail if removal fails
+                    logger.debug("Failed to remove temporary file %s: %s", tmp_path, e)
     finally:
         _release_lock(lockfile)
 

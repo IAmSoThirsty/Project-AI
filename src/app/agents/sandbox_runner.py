@@ -90,7 +90,7 @@ class SandboxRunner(KernelRoutedAgent):
 
         try:
             # nosec B603 B607 - Python executable resolved with shutil.which, module path validated
-            res = subprocess.run(
+            res = subprocess.run(  # nosec B603
                 [python_cmd, abs_path], capture_output=True, text=True, timeout=timeout
             )
             return {
