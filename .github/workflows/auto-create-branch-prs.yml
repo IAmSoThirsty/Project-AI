@@ -225,43 +225,74 @@ jobs:
           script: |
             const branch = '${{ matrix.branch }}';
             
-            // Get commits on this branch not in main
-            const { data: comparison } = await github.rest.repos.compareCommits({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              base: 'main',
-              head: branch
-            });
-            
-            const commitCount = comparison.ahead_by;
-            const behindBy = comparison.behind_by;
-            
-            // Get last commit on branch
-            const { data: commits } = await github.rest.repos.listCommits({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              sha: branch,
-              per_page: 1
-            });
-            
-            const lastCommit = commits[0];
-            const lastCommitDate = new Date(lastCommit.commit.author.date);
-            const daysSinceLastCommit = Math.floor((Date.now() - lastCommitDate) / (1000 * 60 * 60 * 24));
-            
-            core.setOutput('commit_count', commitCount);
-            core.setOutput('behind_by', behindBy);
-            core.setOutput('days_old', daysSinceLastCommit);
-            core.setOutput('last_commit_message', lastCommit.commit.message.split('\n')[0]);
-            
-            return {
-              commitCount,
-              behindBy,
-              daysSinceLastCommit,
-              lastCommitMessage: lastCommit.commit.message.split('\n')[0]
-            };
+            try {
+              // Get commits on this branch not in main
+              const { data: comparison } = await github.rest.repos.compareCommits({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                base: 'main',
+                head: branch
+              });
+              
+              const commitCount = comparison.ahead_by;
+              const behindBy = comparison.behind_by;
+              
+              // Check if there are no commits ahead (branch is identical or behind)
+              if (commitCount === 0) {
+                console.log(`⚠️ Branch ${branch} has no commits ahead of main. Skipping PR creation.`);
+                core.setOutput('skip_pr', 'true');
+                core.setOutput('skip_reason', 'no_commits_ahead');
+                core.setOutput('commit_count', 0);
+                core.setOutput('behind_by', behindBy);
+                core.setOutput('days_old', 0);
+                core.setOutput('last_commit_message', '');
+                return { skip: true, reason: 'no_commits_ahead' };
+              }
+              
+              // Get last commit on branch
+              const { data: commits } = await github.rest.repos.listCommits({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                sha: branch,
+                per_page: 1
+              });
+              
+              const lastCommit = commits[0];
+              const lastCommitDate = new Date(lastCommit.commit.author.date);
+              const daysSinceLastCommit = Math.floor((Date.now() - lastCommitDate) / (1000 * 60 * 60 * 24));
+              
+              core.setOutput('skip_pr', 'false');
+              core.setOutput('commit_count', commitCount);
+              core.setOutput('behind_by', behindBy);
+              core.setOutput('days_old', daysSinceLastCommit);
+              core.setOutput('last_commit_message', lastCommit.commit.message.split('\n')[0]);
+              
+              return {
+                commitCount,
+                behindBy,
+                daysSinceLastCommit,
+                lastCommitMessage: lastCommit.commit.message.split('\n')[0]
+              };
+            } catch (error) {
+              // Handle errors like "No common ancestor"
+              if (error.message && error.message.includes('No common ancestor')) {
+                console.log(`⚠️ Branch ${branch} has no common ancestor with main. This likely means it was created independently.`);
+                console.log('Skipping PR creation for this branch.');
+                core.setOutput('skip_pr', 'true');
+                core.setOutput('skip_reason', 'no_common_ancestor');
+                core.setOutput('commit_count', 0);
+                core.setOutput('behind_by', 0);
+                core.setOutput('days_old', 0);
+                core.setOutput('last_commit_message', '');
+                return { skip: true, reason: 'no_common_ancestor' };
+              }
+              // Re-throw other errors
+              throw error;
+            }
 
       - name: Generate PR title and body
         id: pr-content
+        if: steps.branch-info.outputs.skip_pr != 'true'
         run: |
           BRANCH="${{ matrix.branch }}"
           COMMIT_COUNT="${{ steps.branch-info.outputs.commit_count }}"
@@ -341,6 +372,7 @@ jobs:
 
       - name: Create Pull Request
         id: create-pr
+        if: steps.branch-info.outputs.skip_pr != 'true'
         env:
           BRANCH: ${{ matrix.branch }}
           PR_TITLE: ${{ steps.pr-content.outputs.title }}
@@ -413,7 +445,16 @@ jobs:
         if: always()
         run: |
           echo "### PR Created: ${{ matrix.branch }}" >> $GITHUB_STEP_SUMMARY
-          if [ "${{ steps.create-pr.outputs.skipped }}" = "true" ]; then
+          if [ "${{ steps.branch-info.outputs.skip_pr }}" = "true" ]; then
+            SKIP_REASON="${{ steps.branch-info.outputs.skip_reason }}"
+            if [ "$SKIP_REASON" = "no_common_ancestor" ]; then
+              echo "⚠️ Skipped - Branch has no common ancestor with main (likely created independently)" >> $GITHUB_STEP_SUMMARY
+            elif [ "$SKIP_REASON" = "no_commits_ahead" ]; then
+              echo "ℹ️ Skipped - Branch has no commits ahead of main" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "ℹ️ Skipped - $SKIP_REASON" >> $GITHUB_STEP_SUMMARY
+            fi
+          elif [ "${{ steps.create-pr.outputs.skipped }}" = "true" ]; then
             echo "ℹ️ Skipped (PR already exists)" >> $GITHUB_STEP_SUMMARY
           elif [ -n "${{ steps.create-pr.outputs.pr_number }}" ]; then
             echo "✅ PR #${{ steps.create-pr.outputs.pr_number }}" >> $GITHUB_STEP_SUMMARY
