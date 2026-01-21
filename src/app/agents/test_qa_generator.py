@@ -135,8 +135,8 @@ class TestQAGenerator(KernelRoutedAgent):
             return {"success": False, "error": "pytest_not_found"}
 
         try:
-            # nosec B603 B607 - pytest is a trusted testing tool, path resolved with shutil.which
-            res = subprocess.run(
+            # pytest is a trusted testing tool, path resolved with shutil.which
+            res = subprocess.run(  # nosec B603 B607
                 [pytest_cmd, run_dir, "-q"],
                 capture_output=True,
                 text=True,

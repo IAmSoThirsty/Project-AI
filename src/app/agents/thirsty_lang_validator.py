@@ -121,8 +121,8 @@ class ThirstyLangValidator(KernelRoutedAgent):
 
         try:
             # Run the language's built-in tests
-            # nosec B603 B607 - npm is a trusted dev tool, path resolved with shutil.which
-            result = subprocess.run(
+            # npm is a trusted dev tool, path resolved with shutil.which
+            result = subprocess.run(  # nosec B603 B607
                 [npm_cmd, "test"],
                 cwd=self.thirsty_lang_path,
                 capture_output=True,
@@ -205,8 +205,8 @@ class ThirstyLangValidator(KernelRoutedAgent):
 
         try:
             # Run security tests
-            # nosec B603 B607 - node is a trusted dev tool, path resolved with shutil.which
-            result = subprocess.run(
+            # node is a trusted dev tool, path resolved with shutil.which
+            result = subprocess.run(  # nosec B603 B607
                 [node_cmd, "src/test/security-tests.js"],
                 cwd=self.thirsty_lang_path,
                 capture_output=True,

@@ -81,8 +81,8 @@ class CICheckerAgent(KernelRoutedAgent):
         # run pytest -q (only tests directory)
         if pytest_cmd:
             try:
-                # nosec B603 B607 - pytest is a trusted dev tool, path resolved with shutil.which
-                res = subprocess.run(
+                # pytest is a trusted dev tool, path resolved with shutil.which
+                res = subprocess.run(  # nosec B603 B607
                     [pytest_cmd, "-q"],
                     capture_output=True,
                     text=True,
@@ -105,8 +105,8 @@ class CICheckerAgent(KernelRoutedAgent):
         # run ruff (lint)
         if ruff_cmd:
             try:
-                # nosec B603 B607 - ruff is a trusted dev tool, path resolved with shutil.which
-                res = subprocess.run(
+                # ruff is a trusted dev tool, path resolved with shutil.which
+                res = subprocess.run(  # nosec B603 B607
                     [ruff_cmd, "check", "src", "tests"],
                     capture_output=True,
                     text=True,
