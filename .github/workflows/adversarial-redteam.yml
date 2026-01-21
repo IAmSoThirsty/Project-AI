@@ -36,11 +36,64 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
 
-      - name: 📦 Install dependencies
+      # ========================================================================
+      # DEPENDENCY INSTALLATION - Install ALL project dependencies
+      # No conditionals, no ambiguity - just install everything to ensure
+      # workflows work reliably every time
+      # ========================================================================
+      
+      - name: Upgrade pip and build tools
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pyyaml
+          echo "📦 Upgrading pip, setuptools, wheel, and build tools..."
+          python -m pip install --upgrade pip setuptools wheel build
+          echo "✅ Build tools upgraded"
+
+      - name: Install requirements.txt
+        run: |
+          echo "📦 Installing requirements.txt..."
+          if [ -f requirements.txt ]; then
+            python -m pip install -r requirements.txt
+            echo "✅ requirements.txt installed"
+          else
+            echo "⚠️  requirements.txt not found - skipping"
+          fi
+
+      - name: Install requirements-dev.txt
+        run: |
+          echo "📦 Installing requirements-dev.txt..."
+          if [ -f requirements-dev.txt ]; then
+            python -m pip install -r requirements-dev.txt
+            echo "✅ requirements-dev.txt installed"
+          else
+            echo "⚠️  requirements-dev.txt not found - skipping"
+          fi
+
+      - name: Install from pyproject.toml
+        run: |
+          echo "📦 Installing from pyproject.toml..."
+          if [ -f pyproject.toml ]; then
+            # Try pip install first (works for PEP 621 compliant pyproject.toml)
+            python -m pip install -e . || echo "⚠️  pip install from pyproject.toml failed, continuing..."
+            echo "✅ pyproject.toml dependencies processed"
+          else
+            echo "⚠️  pyproject.toml not found - skipping"
+          fi
+
+      - name: Install from setup.py
+        run: |
+          echo "📦 Installing from setup.py..."
+          if [ -f setup.py ]; then
+            python -m pip install -e .
+            echo "✅ setup.py installed"
+          else
+            echo "⚠️  setup.py not found - skipping"
+          fi
+
+      - name: Install additional testing tools
+        run: |
+          echo "📦 Installing additional testing tools..."
+          python -m pip install pyyaml
+          echo "✅ Testing tools installed"
 
       - name: 🗡️ Run JailbreakBench Evaluation
         id: jbb
