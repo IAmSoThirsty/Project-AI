@@ -959,3 +959,329 @@ All integrations enforce the following security measures:
 
 ---
 
+
+## 6. Data Structures and Storage Details
+
+### 6.1 SQLite Database Schema
+
+**File:** `data/core.db`  
+**Purpose:** Core relational storage for persistent state
+
+#### 6.1.1 Primary Tables
+
+**four_laws_state:**
+```sql
+CREATE TABLE four_laws_state (
+    id INTEGER PRIMARY KEY,
+    law_hierarchy JSON NOT NULL,  -- [1, 2, 3, 4] immutable
+    override_policies JSON,
+    audit_log_path TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+**identity_snapshots:**
+```sql
+CREATE TABLE identity_snapshots (
+    snapshot_id TEXT PRIMARY KEY,
+    genesis TEXT NOT NULL,  -- Core identity
+    personality_weights JSON NOT NULL,
+    core_values JSON NOT NULL,
+    timestamp TIMESTAMP NOT NULL,
+    mutation_log JSON,
+    INDEX idx_timestamp (timestamp)
+);
+```
+
+**command_overrides:**
+```sql
+CREATE TABLE command_overrides (
+    override_id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    command TEXT NOT NULL,
+    reason TEXT,
+    granted_at TIMESTAMP NOT NULL,
+    expires_at TIMESTAMP,
+    revoked BOOLEAN DEFAULT 0,
+    INDEX idx_user (user_id),
+    INDEX idx_expires (expires_at)
+);
+```
+
+**episodic_events:**
+```sql
+CREATE TABLE episodic_events (
+    event_id TEXT PRIMARY KEY,
+    event_type TEXT NOT NULL,
+    timestamp TIMESTAMP NOT NULL,
+    data JSON NOT NULL,
+    strength REAL DEFAULT 1.0,
+    tags TEXT,  -- Comma-separated
+    INDEX idx_timestamp (timestamp),
+    INDEX idx_strength (strength),
+    INDEX idx_type (event_type)
+);
+```
+
+**users:**
+```sql
+CREATE TABLE users (
+    user_id TEXT PRIMARY KEY,
+    username TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,  -- bcrypt hashed
+    email TEXT,
+    role TEXT DEFAULT 'user',  -- user, admin, system
+    preferences JSON,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_login TIMESTAMP
+);
+```
+
+**audit_log:**
+```sql
+CREATE TABLE audit_log (
+    log_id TEXT PRIMARY KEY,
+    timestamp TIMESTAMP NOT NULL,
+    user_id TEXT,
+    action TEXT NOT NULL,
+    status TEXT NOT NULL,  -- ALLOWED, BLOCKED, FAILED
+    reason TEXT,
+    context JSON,
+    INDEX idx_timestamp (timestamp),
+    INDEX idx_user (user_id),
+    INDEX idx_status (status)
+);
+```
+
+#### 6.1.2 Performance Indexes
+
+```sql
+-- Composite index for audit queries
+CREATE INDEX idx_audit_user_time 
+ON audit_log(user_id, timestamp DESC);
+
+-- Full-text search on episodic events
+CREATE VIRTUAL TABLE episodic_fts USING fts5(
+    event_id, 
+    event_type, 
+    data,
+    content=episodic_events
+);
+```
+
+### 6.2 ClickHouse Analytics Schema
+
+**Database:** `project_ai`
+
+**executions table:**
+```sql
+CREATE TABLE executions (
+    execution_id UUID,
+    action_name LowCardinality(String),
+    action_type LowCardinality(String),
+    status Enum('pending', 'executing', 'completed', 'failed', 'blocked'),
+    duration_ms UInt32,
+    timestamp DateTime,
+    user_id String,
+    risk_level LowCardinality(String),
+    error_message String,
+    INDEX idx_timestamp timestamp TYPE minmax GRANULARITY 1,
+    INDEX idx_action action_name TYPE bloom_filter GRANULARITY 1
+) ENGINE = MergeTree()
+PARTITION BY toYYYYMM(timestamp)
+ORDER BY (timestamp, execution_id)
+SETTINGS index_granularity = 8192;
+```
+
+**governance_decisions table:**
+```sql
+CREATE TABLE governance_decisions (
+    decision_id UUID,
+    action_name String,
+    is_allowed UInt8,
+    law_violated Nullable(UInt8),
+    reason String,
+    override_used UInt8,
+    timestamp DateTime,
+    context JSON
+) ENGINE = MergeTree()
+PARTITION BY toYYYYMM(timestamp)
+ORDER BY (timestamp, decision_id);
+```
+
+**Materialized View for Metrics:**
+```sql
+CREATE MATERIALIZED VIEW execution_metrics_hourly
+ENGINE = SummingMergeTree()
+PARTITION BY toYYYYMM(hour)
+ORDER BY (hour, action_name)
+AS SELECT
+    toStartOfHour(timestamp) as hour,
+    action_name,
+    count() as execution_count,
+    avg(duration_ms) as avg_duration_ms,
+    quantile(0.95)(duration_ms) as p95_duration_ms,
+    quantile(0.99)(duration_ms) as p99_duration_ms,
+    countIf(status = 'completed') as success_count,
+    countIf(status = 'failed') as failure_count
+FROM executions
+GROUP BY hour, action_name;
+```
+
+### 6.3 File-Based Storage Structure
+
+```
+data/
+├── config/
+│   ├── .projectai.toml          # User/project configuration
+│   ├── app-config.json          # Application settings
+│   └── mcp.json                 # Model Context Protocol config
+├── core.db                       # SQLite database
+├── command_override_config.json # Override states
+├── learning_requests/           # Learning request archives
+│   └── requests.json
+├── black_vault_secure/          # Rejected content
+│   └── vault.json.encrypted     # Fernet encrypted
+├── memory/
+│   ├── episodic.db              # Episodic memory
+│   ├── semantic.json            # Knowledge base
+│   └── procedural.json          # Skills database
+└── settings.json                # Runtime settings
+```
+
+#### 6.3.1 Configuration File Format
+
+**`.projectai.toml` Example:**
+```toml
+[identity]
+genesis = "I am an ethical AI assistant committed to user safety and transparency"
+core_values = ["transparency", "safety", "user-empowerment", "continuous-learning"]
+
+[personality]
+curiosity = 0.8
+empathy = 0.9
+patience = 0.7
+assertiveness = 0.6
+creativity = 0.75
+
+[governance]
+four_laws_enabled = true
+triumvirate_consensus = "standard"  # full, standard, minimal
+audit_log_retention_days = 365
+
+[memory]
+episodic_decay_rate = 0.1  # 10% per day
+semantic_confidence_threshold = 0.7
+procedural_success_weight = 0.3
+max_episodic_events = 10000
+
+[integrations]
+openai_model = "gpt-4"
+clickhouse_enabled = true
+risingwave_enabled = false
+temporal_enabled = true
+aws_enabled = false
+```
+
+### 6.4 In-Memory Caching
+
+**Multi-Tier Caching Strategy:**
+
+```
+L1 Cache (Python LRU)
+├── Size: 1000 entries
+├── TTL: Process lifetime
+└── Eviction: LRU
+
+L2 Cache (Redis)
+├── Size: Unlimited (memory-based)
+├── TTL: 1 hour (configurable)
+└── Eviction: TTL-based
+
+Persistent Storage
+├── SQLite (Core data)
+├── ClickHouse (Analytics)
+└── File System (Config)
+```
+
+**Cache Hit Rates (Typical):**
+- L1: 60-70%
+- L2: 20-25%
+- Miss (database): 10-15%
+
+### 6.5 Encryption and Security
+
+#### 6.5.1 Black Vault Encryption
+
+Uses Fernet symmetric encryption for rejected content:
+
+```python
+from cryptography.fernet import Fernet
+
+# Key generation (done once)
+key = Fernet.generate_key()
+fernet = Fernet(key)
+
+# Encryption
+encrypted_data = fernet.encrypt(json.dumps(vault_data).encode())
+
+# Decryption
+decrypted_data = fernet.decrypt(encrypted_data)
+vault_data = json.loads(decrypted_data)
+```
+
+#### 6.5.2 Password Hashing
+
+Uses bcrypt for user passwords:
+
+```python
+import bcrypt
+
+# Hashing
+password_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+
+# Verification
+is_valid = bcrypt.checkpw(password.encode(), stored_hash)
+```
+
+### 6.6 Data Flow Diagram
+
+```
+User Request
+    ↓
+┌─────────────────────┐
+│  L1 Cache (LRU)     │ → HIT: Return (60-70%)
+│  1000 entries       │
+└─────────────────────┘
+    ↓ MISS
+┌─────────────────────┐
+│  L2 Cache (Redis)   │ → HIT: Promote to L1, return (20-25%)
+│  TTL: 1 hour        │
+└─────────────────────┘
+    ↓ MISS
+┌─────────────────────┐
+│  SQLite Database    │ → Read, cache in L1+L2 (10-15%)
+│  Indexed queries    │
+└─────────────────────┘
+    ↓ (Analytics queries)
+┌─────────────────────┐
+│  ClickHouse OLAP    │ → Aggregated metrics
+│  Columnar storage   │
+└─────────────────────┘
+```
+
+### 6.7 Data Retention Policies
+
+| Data Type | Retention | Policy |
+|-----------|-----------|--------|
+| **Audit Logs** | 365 days | Required for compliance |
+| **Episodic Memory** | Decay-based | Strength-based pruning |
+| **Semantic Memory** | Indefinite | Confidence-based retention |
+| **Procedural Memory** | Indefinite | Performance-based |
+| **Execution Metrics** | 90 days | Partitioned by month |
+| **Governance Decisions** | 365 days | Full history preserved |
+| **User Data** | User-controlled | GDPR compliant |
+
+---
+
