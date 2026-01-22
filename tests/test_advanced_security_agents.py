@@ -146,11 +146,8 @@ def test_agent_integration_with_council_hub():
     """Test that all agents can be imported and used with CouncilHub."""
     print("Testing agent integration...")
 
-    from app.agents import (
-        CodeAdversaryAgent,
-        ConstitutionalGuardrailAgent,
-        RedTeamPersonaAgent,
-    )
+    from app.agents import (CodeAdversaryAgent, ConstitutionalGuardrailAgent,
+                            RedTeamPersonaAgent)
 
     # Just verify imports work
     assert ConstitutionalGuardrailAgent is not None

@@ -8,24 +8,18 @@ Tests:
 """
 
 import os
+# Set up module path for imports
+import sys
 import tempfile
 
 import pytest
 
-# Set up module path for imports
-import sys
-
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
-from app.agents.jailbreak_bench_agent import (
-    AttackCategory,
-    DefenseStrength,
-    JailbreakBenchAgent,
-)
+from app.agents.jailbreak_bench_agent import AttackCategory, JailbreakBenchAgent
 from app.agents.long_context_agent import LongContextAgent
 from app.agents.red_team_agent import AttackStrategy, RedTeamAgent
 from app.agents.safety_guard_agent import SafetyGuardAgent, SafetyViolationType
-
 
 # ============================================================================
 # Mock Target System for Testing
@@ -128,9 +122,7 @@ class TestLongContextAgent:
     def test_context_size_limit(self, agent):
         """Test context size limit enforcement."""
         # Create messages that exceed the limit
-        huge_messages = [
-            {"role": "user", "content": "x" * 100000}  # 100k characters
-        ]
+        huge_messages = [{"role": "user", "content": "x" * 100000}]  # 100k characters
 
         result = agent.process_long_conversation(huge_messages)
         assert result["success"] is False

@@ -165,9 +165,7 @@ class JailbreakBenchAgent(KernelRoutedAgent):
             # Filter scenarios by category if specified
             scenarios = self.test_scenarios
             if categories:
-                scenarios = [
-                    s for s in scenarios if s.category in categories
-                ]
+                scenarios = [s for s in scenarios if s.category in categories]
 
             # Limit number of tests
             scenarios = scenarios[:max_tests]
@@ -256,9 +254,7 @@ class JailbreakBenchAgent(KernelRoutedAgent):
                     category_stats[cat]["bypassed"] += 1
 
             # Calculate overall defense strength
-            total_defended = sum(
-                stats["defended"] for stats in category_stats.values()
-            )
+            total_defended = sum(stats["defended"] for stats in category_stats.values())
             total_tests = len(results)
             defense_rate = total_defended / total_tests if total_tests > 0 else 0
 
@@ -406,7 +402,10 @@ class JailbreakBenchAgent(KernelRoutedAgent):
                 )
                 self.test_scenarios.append(scenario)
 
-            logger.info("Loaded %d scenarios from HYDRA dataset", len(hydra_data.get("tests", [])))
+            logger.info(
+                "Loaded %d scenarios from HYDRA dataset",
+                len(hydra_data.get("tests", [])),
+            )
             return True
 
         except Exception as e:
@@ -437,6 +436,7 @@ class JailbreakBenchAgent(KernelRoutedAgent):
 
             # Import JBB dataset if available
             import importlib.util
+
             spec = importlib.util.spec_from_file_location("jbb_dataset", jbb_path)
             if spec and spec.loader:
                 jbb_module = importlib.util.module_from_spec(spec)
@@ -449,14 +449,23 @@ class JailbreakBenchAgent(KernelRoutedAgent):
                             test_id=prompt_data.get("id", "jbb_unknown"),
                             category="jailbreak_bench",
                             attack_prompt=prompt_data.get("prompt", ""),
-                            expected_behavior=prompt_data.get("behavior", "Block harmful request"),
-                            severity="high" if prompt_data.get("is_jailbreak", False) else "low",
+                            expected_behavior=prompt_data.get(
+                                "behavior", "Block harmful request"
+                            ),
+                            severity=(
+                                "high"
+                                if prompt_data.get("is_jailbreak", False)
+                                else "low"
+                            ),
                             description=prompt_data.get("goal", "JBB test"),
                             variations=[],
                         )
                         self.test_scenarios.append(scenario)
 
-                    logger.info("Loaded %d scenarios from JBB dataset", len(jbb_module.JBB_PROMPTS))
+                    logger.info(
+                        "Loaded %d scenarios from JBB dataset",
+                        len(jbb_module.JBB_PROMPTS),
+                    )
                     return True
 
         except Exception as e:

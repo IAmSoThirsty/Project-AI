@@ -15,7 +15,6 @@ from __future__ import annotations
 
 import json
 import logging
-import os
 import re
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
@@ -194,9 +193,7 @@ class CodeAdversaryAgent(KernelRoutedAgent):
             return {
                 "success": True,
                 "total_findings": len(findings),
-                "by_severity": {
-                    k: len(v) for k, v in by_severity.items()
-                },
+                "by_severity": {k: len(v) for k, v in by_severity.items()},
                 "findings": [asdict(f) for f in findings],
                 "timestamp": datetime.now(UTC).isoformat(),
             }
@@ -283,9 +280,7 @@ class CodeAdversaryAgent(KernelRoutedAgent):
                                 "informationUri": "https://github.com/IAmSoThirsty/Project-AI",
                             }
                         },
-                        "results": [
-                            self._finding_to_sarif(f) for f in findings
-                        ],
+                        "results": [self._finding_to_sarif(f) for f in findings],
                     }
                 ],
             }
@@ -342,28 +337,28 @@ class CodeAdversaryAgent(KernelRoutedAgent):
             },
             VulnerabilityType.COMMAND_INJECTION.value: {
                 "patterns": [
-                    r'os\.system\s*\(',
-                    r'subprocess\..*shell\s*=\s*True',
-                    r'eval\s*\(',
-                    r'exec\s*\(',
+                    r"os\.system\s*\(",
+                    r"subprocess\..*shell\s*=\s*True",
+                    r"eval\s*\(",
+                    r"exec\s*\(",
                 ],
                 "severity": Severity.CRITICAL.value,
                 "cwe": "CWE-78",
             },
             VulnerabilityType.PATH_TRAVERSAL.value: {
                 "patterns": [
-                    r'open\s*\([^)]*\+',
-                    r'Path\s*\([^)]*\+',
-                    r'\.\./',
+                    r"open\s*\([^)]*\+",
+                    r"Path\s*\([^)]*\+",
+                    r"\.\./",
                 ],
                 "severity": Severity.HIGH.value,
                 "cwe": "CWE-22",
             },
             VulnerabilityType.UNSAFE_DESERIALIZATION.value: {
                 "patterns": [
-                    r'pickle\.loads?\s*\(',
-                    r'yaml\.load\s*\([^,)]*\)',
-                    r'json\.loads?\s*\([^,)]*untrusted',
+                    r"pickle\.loads?\s*\(",
+                    r"yaml\.load\s*\([^,)]*\)",
+                    r"json\.loads?\s*\([^,)]*untrusted",
                 ],
                 "severity": Severity.CRITICAL.value,
                 "cwe": "CWE-502",
