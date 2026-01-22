@@ -93,6 +93,7 @@ The white paper provides comprehensive technical documentation covering:
 - Related projects
 
 ### Appendices
+
 - Glossary of terms
 - API quick reference
 - Document revision history
