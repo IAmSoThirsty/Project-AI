@@ -215,3 +215,245 @@ Multi-layered memory with different retention characteristics:
 
 ---
 
+
+## 3. Key Modules and Functionality
+
+### 3.1 CognitionKernel - Trust Root Module
+
+**File:** `src/app/core/cognition_kernel.py`  
+**Lines of Code:** ~800 lines  
+**Purpose:** Central processing hub enforcing cognitive governance
+
+#### 3.1.1 Core Responsibilities
+
+1. **Execution Management**
+   - `process(action)`: Single entry point for all operations
+   - `route(agent_name, *args, **kwargs)`: Agent-specific routing
+   - `commit(mutation)`: State mutation control
+
+2. **Governance Enforcement**
+   - Four Laws validation before execution
+   - Triumvirate consensus for significant mutations
+   - Black Vault policy enforcement
+
+3. **Memory Integration**
+   - Automatic logging to episodic memory
+   - Semantic knowledge updates
+   - Procedural skill tracking
+
+4. **Reflection & Adaptation**
+   - Post-execution analysis
+   - Performance metric tracking
+   - Identity drift monitoring
+
+#### 3.1.2 Execution Flow
+
+The kernel processes all actions through this workflow:
+
+```
+1. Create ExecutionContext
+2. Run pre-execution hooks
+3. Governance validation (Four Laws)
+4. If BLOCKED → Log and return
+5. If APPROVED → Execute action
+6. Run post-execution hooks
+7. Commit to memory layers
+8. Reflection cycle
+9. Return ExecutionContext
+```
+
+### 3.2 Governance Module (Four Laws)
+
+**File:** `src/app/core/governance.py`  
+**Lines of Code:** ~600 lines  
+**Purpose:** Ethical framework enforcement
+
+#### 3.2.1 Four Laws Hierarchy
+
+The system enforces a strict hierarchical ethical framework:
+
+**Law 1: Prevent Direct Harm to Individuals**
+- Physical harm prevention
+- Emotional distress avoidance
+- Privacy violation protection
+- **Cannot be overridden by user**
+
+**Law 2: Protect Humanity as a Whole**
+- Misinformation prevention
+- Societal disruption avoidance
+- Existential risk mitigation
+- **Cannot be overridden by user**
+
+**Law 3: Respect User Autonomy**
+- User directive compliance
+- Preference honoring
+- **Can be overridden with justification**
+
+**Law 4: Maintain Identity Integrity**
+- Core identity protection
+- Self-consistency preservation
+- Genesis immutability
+- **Can be overridden with Triumvirate consensus**
+
+#### 3.2.2 Governance Metrics
+
+The system tracks governance decisions in real-time:
+
+- **Denial Rate:** Percentage of blocked actions by law
+- **Override Rate:** User overrides granted
+- **Consensus Time:** Average time to reach Triumvirate consensus
+- **Audit Log Completeness:** 100% of decisions logged
+
+### 3.3 Memory Engine Module
+
+**File:** `src/app/core/memory_engine.py`  
+**Lines of Code:** ~900 lines  
+**Purpose:** Multi-layered memory system
+
+#### 3.3.1 Episodic Memory
+
+Stores autobiographical events with temporal decay:
+
+- **Storage:** SQLite database with full-text search
+- **Decay Function:** Exponential decay (configurable rate)
+- **Retention:** Events pruned when strength < 0.01
+- **Queries:** Temporal range, similarity search, tag-based
+
+#### 3.3.2 Semantic Memory
+
+Knowledge graph with confidence scores:
+
+- **Storage:** JSON-based knowledge base
+- **Reinforcement:** Access-based confidence adjustment
+- **Relationships:** (concept1, relation, concept2, weight)
+- **Search:** Similarity search using embeddings
+
+#### 3.3.3 Procedural Memory
+
+Skills and procedures with success tracking:
+
+- **Storage:** Skill proficiency database
+- **Tracking:** Success rate, execution time, parameters
+- **Learning:** Performance-based reinforcement
+- **Application:** Task-based skill retrieval
+
+### 3.4 Triumvirate Engines
+
+#### 3.4.1 Codex Engine (Inference)
+
+**File:** `src/cognition/codex/engine.py`  
+**Purpose:** ML model orchestration
+
+**Key Features:**
+- Model routing (GPT-4, GPT-3.5, DeepSeek, Local models)
+- Inference caching with TTL
+- Batch processing
+- Cost/latency optimization
+
+#### 3.4.2 Galahad Engine (Reasoning)
+
+**File:** `src/cognition/galahad/engine.py`  
+**Purpose:** Logic chains and arbitration
+
+**Key Features:**
+- Claim extraction from inference
+- Knowledge base validation
+- Conflict resolution
+- Confidence calculation
+
+#### 3.4.3 Cerberus Engine (Policy)
+
+**File:** `src/cognition/cerberus/engine.py`  
+**Purpose:** Policy enforcement
+
+**Key Features:**
+- Input validation (prompt injection, jailbreak, PII, toxicity)
+- Output validation (sensitive data, harmful content)
+- Policy compliance checking
+- Four Laws integration
+
+### 3.5 Specialized Agents (31 Total)
+
+The system includes 31 specialized agents organized into categories:
+
+**Planning & Execution (3 agents):**
+- PlannerAgent: Task decomposition
+- ExpertAgent: Domain expertise
+- PlannersAgent: Multi-agent coordination
+
+**Security & Red Team (5 agents):**
+- RedTeamAgent: General adversarial testing
+- AlphaRed: Advanced attack strategies
+- CodeAdversaryAgent: Vulnerability discovery
+- JailbreakBenchAgent: LLM jailbreak testing
+- RedTeamPersonaAgent: Persona-based attacks
+
+**Safety & Validation (5 agents):**
+- SafetyGuardAgent: Safety constraints
+- Validator: Input/output validation
+- BorderPatrol: Request filtering
+- TARLProtector: Protocol enforcement
+- ConstitutionalGuardrailAgent: Constitutional AI
+
+**Knowledge & Learning (4 agents):**
+- KnowledgeCurator: Knowledge management
+- RetrievalAgent: RAG processing
+- TestQAGenerator: Test generation
+- DocGenerator: Documentation synthesis
+
+**Code Quality (4 agents):**
+- CICheckerAgent: CI/CD validation
+- DependencyAuditor: Dependency analysis
+- RefactorAgent: Code refactoring
+- SandboxRunner: Isolated execution
+
+**System Operations (10 agents):**
+- CerberusCodexBridge: Triumvirate coordination
+- CoexDeusMaksimus: Meta-orchestration
+- RollbackAgent: State restoration
+- UxTelemetryAgent: UX metrics
+- LongContextAgent: Extended conversations
+- ThirstyLangValidator: DSL validation
+- And 4 more supporting agents
+
+**Important:** All agents route through CognitionKernel—direct agent execution is not allowed.
+
+### 3.6 ThirstyLang Domain-Specific Language
+
+**File:** `src/thirsty_lang/thirsty_interpreter.py`  
+**Purpose:** Custom DSL for AI task definition
+
+#### 3.6.1 Language Features
+
+```python
+# Variable declaration
+drink username = "Alice"
+drink priority = 5
+
+# Control flow
+when priority > 3:
+    execute "high_priority_handler"
+otherwise:
+    execute "normal_priority_handler"
+
+# Looping
+sip through tasks:
+    validate_task(task)
+    execute_task(task)
+
+# Natural language functions
+ask_ai("What is the weather?")
+remember("user_preference")
+forget("temporary_data")
+```
+
+#### 3.6.2 Integration
+
+ThirstyLang code is validated before execution through the ThirstyLangValidator agent, which checks for:
+- Dangerous file operations
+- Unsafe network calls
+- Security violations
+- Four Laws compliance
+
+---
+
