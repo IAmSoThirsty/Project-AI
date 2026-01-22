@@ -1,3 +1,4 @@
+# Trigger CI
 <h1 align="center">
   Galahad (Project-AI) / Cerberus / Codex Deus Maximus<br>
   <small>The Triumvirate: Ethics, Defense, Orchestration</small>
