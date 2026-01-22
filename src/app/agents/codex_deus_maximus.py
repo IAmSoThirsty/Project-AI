@@ -14,8 +14,6 @@ from datetime import UTC, datetime
 from typing import Any
 
 # Lazy imports for GPT‑OSS 1208 are performed inside _load_gpt_oss_model()
-
-
 from app.core.cognition_kernel import CognitionKernel, ExecutionType
 from app.core.kernel_integration import KernelRoutedAgent
 
@@ -106,9 +104,13 @@ class CodexDeusMaximus(KernelRoutedAgent):
                 if fn.endswith((".py", ".md", ".json", ".yml", ".yaml")):
                     res = self.auto_fix_file(path)
                     if res.get("success") and res.get("action") == "fixed":
-                        report["fixes"].append({"path": path, "backup": res.get("backup")})
+                        report["fixes"].append(
+                            {"path": path, "backup": res.get("backup")}
+                        )
                     elif not res.get("success"):
-                        report["errors"].append({"path": path, "error": res.get("error")})
+                        report["errors"].append(
+                            {"path": path, "error": res.get("error")}
+                        )
 
         self._audit("enforcement_run", report)
         return report
@@ -191,8 +193,8 @@ class CodexDeusMaximus(KernelRoutedAgent):
         if self._gpt_model is None or self._gpt_tokenizer is None:
             try:
                 # Local imports – they only happen when we actually need the model
-                from transformers import AutoModelForCausalLM, AutoTokenizer
                 import torch
+                from transformers import AutoModelForCausalLM, AutoTokenizer
 
                 logger.info("Loading GPT‑OSS 1208 model…")
                 model_name = "gpt-oss-120b"
@@ -244,9 +246,8 @@ class CodexDeusMaximus(KernelRoutedAgent):
         response = self._gpt_tokenizer.decode(output[0], skip_special_tokens=True)
         # Remove the original prompt from the output
         if response.startswith(prompt):
-            response = response[len(prompt):]
+            response = response[len(prompt) :]
         return response.strip()
-
 
 
 # Factory

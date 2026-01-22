@@ -21,7 +21,6 @@ from app.agents.safety_guard_agent import SafetyGuardAgent
 from app.core.cognition_kernel import CognitionKernel
 from app.core.council_hub import CouncilHub
 
-
 # ============================================================================
 # Example 1: Complete Safety Pipeline
 # ============================================================================
@@ -53,16 +52,18 @@ def example_safety_pipeline():
         safety_check = safety_guard.check_prompt_safety(user_input)
 
         if safety_check["is_safe"]:
-            print(f"  ✓ Safe to process")
+            print("  ✓ Safe to process")
 
             # Simulate LLM response
-            llm_response = f"I'd be happy to help with that. [Response to: {user_input[:30]}...]"
+            llm_response = (
+                f"I'd be happy to help with that. [Response to: {user_input[:30]}...]"
+            )
 
             # Post-process check
             response_check = safety_guard.check_response_safety(llm_response)
 
             if response_check["is_safe"]:
-                print(f"  ✓ Response approved")
+                print("  ✓ Response approved")
                 print(f"  Output: {llm_response[:50]}...\n")
             else:
                 print(f"  ✗ Response blocked: {response_check['violation_type']}\n")
@@ -72,7 +73,7 @@ def example_safety_pipeline():
 
     # Show statistics
     stats = safety_guard.get_safety_statistics()
-    print(f"Safety Statistics:")
+    print("Safety Statistics:")
     print(f"  Total checks: {stats['total_checks']}")
     print(f"  Violations: {stats['violations_detected']}")
     print(f"  Jailbreaks blocked: {stats['jailbreaks_blocked']}")
@@ -115,7 +116,7 @@ def example_long_context_analysis():
     )
 
     if result["success"]:
-        print(f"✓ Analysis complete")
+        print("✓ Analysis complete")
         print(f"  Document tokens: {result['document_tokens']}")
         print(f"  Analysis: {result['analysis'][:100]}...")
     else:
@@ -123,7 +124,7 @@ def example_long_context_analysis():
 
     # Show context stats
     stats = long_context.get_context_stats()
-    print(f"\nContext Statistics:")
+    print("\nContext Statistics:")
     print(f"  Max context: {stats['max_context_tokens']:,} tokens")
     print(f"  Current usage: {stats['current_context_size']:,} tokens")
     print(f"  Utilization: {stats['context_utilization']:.1%}")
@@ -172,7 +173,7 @@ def example_jailbreak_testing():
     # Run benchmark
     results = jailbreak_bench.run_benchmark(target_system=target_system, max_tests=10)
 
-    print(f"Benchmark Results:")
+    print("Benchmark Results:")
     print(f"  Total tests: {results['total_tests']}")
     print(f"  Passed (defended): {results['passed']}")
     print(f"  Failed (bypassed): {results['failed']}")
@@ -181,12 +182,12 @@ def example_jailbreak_testing():
     # Evaluate defense
     evaluation = jailbreak_bench.evaluate_defense()
 
-    print(f"\nDefense Evaluation:")
+    print("\nDefense Evaluation:")
     print(f"  Overall strength: {evaluation['overall_strength']}")
     print(f"  Defense rate: {evaluation['defense_rate']:.1%}")
 
     if evaluation.get("recommendations"):
-        print(f"\nRecommendations:")
+        print("\nRecommendations:")
         for i, rec in enumerate(evaluation["recommendations"][:3], 1):
             print(f"  {i}. {rec}")
 
@@ -226,7 +227,7 @@ def example_red_team_testing():
         strategy=AttackStrategy.GRADUAL_ESCALATION.value,
     )
 
-    print(f"Session Results:")
+    print("Session Results:")
     print(f"  Session ID: {session['session_id']}")
     print(f"  Strategy: {session['strategy']}")
     print(f"  Total turns: {session['total_turns']}")
@@ -235,7 +236,7 @@ def example_red_team_testing():
 
     # Show first few turns
     if "session" in session and "turns" in session["session"]:
-        print(f"\nConversation Sample:")
+        print("\nConversation Sample:")
         for turn in session["session"]["turns"][:2]:
             print(f"  Turn {turn['turn_number']}:")
             print(f"    Attacker: {turn['attacker_message'][:60]}...")
@@ -243,11 +244,11 @@ def example_red_team_testing():
 
     # Analyze vulnerabilities
     analysis = red_team.analyze_vulnerabilities()
-    print(f"\nVulnerability Analysis:")
+    print("\nVulnerability Analysis:")
     print(f"  Total vulnerabilities: {analysis['total_vulnerabilities']}")
 
     if analysis.get("recommendations"):
-        print(f"\nRecommendations:")
+        print("\nRecommendations:")
         for i, rec in enumerate(analysis["recommendations"][:2], 1):
             print(f"  {i}. {rec}")
 

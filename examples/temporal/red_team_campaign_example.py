@@ -17,10 +17,8 @@ sys.path.insert(0, str(project_root))
 
 from temporalio.client import Client
 
-from temporal.workflows.security_agent_workflows import (
-    RedTeamCampaignRequest,
-    RedTeamCampaignWorkflow,
-)
+from temporal.workflows.security_agent_workflows import (RedTeamCampaignRequest,
+                                                         RedTeamCampaignWorkflow)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -41,8 +39,14 @@ async def run_high_priority_campaign():
             "instruction_hijacker",
         ],
         targets=[
-            {"name": "Production API", "endpoint": "https://api.production.example.com"},
-            {"name": "Admin Interface", "endpoint": "https://admin.production.example.com"},
+            {
+                "name": "Production API",
+                "endpoint": "https://api.production.example.com",
+            },
+            {
+                "name": "Admin Interface",
+                "endpoint": "https://admin.production.example.com",
+            },
         ],
         max_turns_per_attack=10,
         timeout_seconds=3600,
@@ -59,7 +63,9 @@ async def run_high_priority_campaign():
     )
 
     logger.info(f"✅ Workflow started: {handle.id}")
-    logger.info(f"🔗 View in UI: http://localhost:8233/namespaces/default/workflows/{handle.id}")
+    logger.info(
+        f"🔗 View in UI: http://localhost:8233/namespaces/default/workflows/{handle.id}"
+    )
 
     # Wait for result
     logger.info("⏳ Waiting for campaign to complete...")
@@ -75,7 +81,9 @@ async def run_high_priority_campaign():
     if result.vulnerabilities_found:
         logger.warning("⚠️ VULNERABILITIES DETECTED:")
         for vuln in result.vulnerabilities_found:
-            logger.warning(f"   • {vuln.get('severity', 'unknown').upper()}: {vuln.get('persona')} -> {vuln.get('target')}")
+            logger.warning(
+                f"   • {vuln.get('severity', 'unknown').upper()}: {vuln.get('persona')} -> {vuln.get('target')}"
+            )
             logger.warning(f"     Details: {vuln.get('details', 'N/A')}")
 
     return result
@@ -118,11 +126,15 @@ async def run_comprehensive_campaign():
     )
 
     logger.info(f"✅ Workflow started: {handle.id}")
-    logger.info(f"🔗 View in UI: http://localhost:8233/namespaces/default/workflows/{handle.id}")
+    logger.info(
+        f"🔗 View in UI: http://localhost:8233/namespaces/default/workflows/{handle.id}"
+    )
 
     # Don't wait for result - this is a long-running campaign
     logger.info("⏳ Campaign running in background...")
-    logger.info(f"   Query result with: temporal workflow describe --workflow-id {handle.id}")
+    logger.info(
+        f"   Query result with: temporal workflow describe --workflow-id {handle.id}"
+    )
 
     return handle
 
