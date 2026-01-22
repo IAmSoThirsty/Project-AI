@@ -457,3 +457,233 @@ ThirstyLang code is validated before execution through the ThirstyLangValidator 
 
 ---
 
+
+## 4. Algorithms and Workflows
+
+### 4.1 Critical Execution Path
+
+Complete workflow from user input to response:
+
+```
+User Input
+    ↓
+[1] CognitionKernel.process()
+    ↓
+[2] Create ExecutionContext
+    ↓
+[3] Pre-execution hooks
+    │   ├─ Identity validation
+    │   ├─ Rate limiting check
+    │   └─ Context enrichment
+    ↓
+[4] Governance validation (Four Laws)
+    │   ├─ Law 1: Individual harm check
+    │   ├─ Law 2: Humanity harm check
+    │   ├─ Law 3: User autonomy check
+    │   └─ Law 4: Identity integrity check
+    ↓
+[5] If BLOCKED → Log and return
+[6] If APPROVED → Continue
+    ↓
+[7] Triumvirate Processing
+    │   ├─ Cerberus: Input validation
+    │   ├─ Codex: ML inference
+    │   ├─ Galahad: Reasoning
+    │   └─ Cerberus: Output validation
+    ↓
+[8] Agent execution (if applicable)
+    │   └─ Routed through kernel
+    ↓
+[9] Post-execution hooks
+    │   ├─ Telemetry logging
+    │   ├─ Audit trail update
+    │   └─ Metrics collection
+    ↓
+[10] Memory commitment
+    │   ├─ Episodic: Event recording
+    │   ├─ Semantic: Knowledge update
+    │   └─ Procedural: Skill tracking
+    ↓
+[11] Reflection cycle
+    │   ├─ Performance analysis
+    │   ├─ Pattern detection
+    │   └─ Adaptation suggestions
+    ↓
+[12] Return ExecutionContext
+    ↓
+User Response
+```
+
+### 4.2 Four Laws Validation Algorithm
+
+**Time Complexity:** O(1) for most checks, O(n) for relationship analysis  
+**Space Complexity:** O(1)
+
+```
+FUNCTION validate_action(action, context):
+    # Step 1: Law 1 - Direct harm to individuals
+    IF endangers_individual(action, context):
+        RECORD audit_log(action, "BLOCKED", "Law 1 violation")
+        RETURN Decision(False, "Law 1: Direct harm", law=1)
+    
+    # Step 2: Law 2 - Harm to humanity
+    IF endangers_humanity(action, context):
+        RECORD audit_log(action, "BLOCKED", "Law 2 violation")
+        RETURN Decision(False, "Law 2: Humanity harm", law=2)
+    
+    # Step 3: Law 3 - User autonomy (with override)
+    IF context.is_user_order AND can_user_override(action):
+        RECORD audit_log(action, "ALLOWED", "User override")
+        RETURN Decision(True, "User override", override=True)
+    
+    # Step 4: Law 4 - Identity integrity
+    IF corrupts_identity(action, context):
+        IF action.mutation_intent == CORE:
+            consensus = get_triumvirate_consensus(action)
+            IF consensus.is_unanimous:
+                RETURN Decision(True, "Full consensus")
+            ELSE:
+                RETURN Decision(False, "Law 4: No consensus", law=4)
+        ELSE IF action.mutation_intent == STANDARD:
+            consensus = get_standard_consensus(action)
+            IF consensus.is_majority:
+                RETURN Decision(True, "Standard consensus")
+            ELSE:
+                RETURN Decision(False, "Law 4: No majority", law=4)
+    
+    # No violations - allow with audit
+    RECORD audit_log(action, "ALLOWED", "No violations")
+    RETURN Decision(True, "Approved")
+```
+
+### 4.3 Memory Decay and Reinforcement
+
+**Episodic Memory Decay:**
+
+```
+strength_new = strength_old * (1 - decay_rate)^days_elapsed
+
+Where:
+- decay_rate = 0.1 (10% per day, configurable)
+- Events pruned when strength < 0.01
+```
+
+**Semantic Memory Reinforcement:**
+
+```
+IF concept.last_accessed_within(7 days):
+    # Recently accessed → reinforce
+    concept.confidence = min(1.0, concept.confidence * 1.1)
+ELSE:
+    # Not accessed → slight decay
+    concept.confidence *= 0.99
+```
+
+**Procedural Memory Reinforcement:**
+
+```
+success_rate = successes / (successes + failures)
+proficiency_new = 0.7 * proficiency_old + 0.3 * success_rate
+```
+
+### 4.4 Retrieval-Augmented Generation (RAG) Workflow
+
+```
+FUNCTION rag_query(user_query):
+    # Step 1: Query embedding
+    query_embedding = embedding_model.embed(user_query)
+    
+    # Step 2: Semantic search
+    relevant_knowledge = semantic_memory.search(
+        query_embedding,
+        top_k=5,
+        min_confidence=0.7
+    )
+    
+    # Step 3: Construct context
+    context = format_knowledge(relevant_knowledge)
+    
+    # Step 4: LLM inference with context
+    prompt = build_prompt(context, user_query)
+    response = codex_engine.infer(prompt)
+    
+    # Step 5: Validate response
+    validation = cerberus_engine.validate_output(response)
+    IF NOT validation.is_valid:
+        RETURN "I cannot provide a safe response."
+    
+    RETURN response.text
+```
+
+### 4.5 Adversarial Testing Workflow
+
+The Red Team Agent executes comprehensive attack campaigns:
+
+```
+FUNCTION run_attack_campaign(target_system):
+    attacks = []
+    
+    # Generate attack vectors
+    FOR attack_type IN [
+        "prompt_injection",
+        "jailbreak",
+        "data_extraction",
+        "four_laws_circumvention",
+        "identity_corruption"
+    ]:
+        scenarios = generate_scenarios(attack_type)
+        FOR scenario IN scenarios:
+            result = execute_attack(target_system, scenario)
+            attacks.append(AttackResult(
+                type=attack_type,
+                scenario=scenario,
+                success=result.compromised,
+                severity=result.severity,
+                mitigation=result.suggested_mitigation
+            ))
+    
+    # Generate comprehensive report
+    RETURN AttackReport(
+        total_attacks=len(attacks),
+        successful_attacks=count_successes(attacks),
+        critical_vulnerabilities=filter_critical(attacks),
+        recommendations=generate_recommendations(attacks)
+    )
+```
+
+### 4.6 Triumvirate Consensus Algorithm
+
+```
+FUNCTION get_triumvirate_consensus(action):
+    # Poll all three engines
+    codex_vote = codex_engine.evaluate(action)
+    galahad_vote = galahad_engine.evaluate(action)
+    cerberus_vote = cerberus_engine.evaluate(action)
+    
+    votes = [codex_vote, galahad_vote, cerberus_vote]
+    approve_count = count(votes, APPROVE)
+    
+    # Core mutations require unanimous approval
+    IF action.mutation_intent == CORE:
+        IF approve_count == 3:
+            RETURN Consensus(True, "unanimous", votes)
+        ELSE:
+            RETURN Consensus(False, "not_unanimous", votes)
+    
+    # Standard mutations require 2/3 approval
+    ELSE IF action.mutation_intent == STANDARD:
+        IF approve_count >= 2:
+            RETURN Consensus(True, "majority", votes)
+        ELSE:
+            RETURN Consensus(False, "no_majority", votes)
+    
+    # Routine operations allowed with any approval
+    ELSE:
+        IF approve_count >= 1:
+            RETURN Consensus(True, "routine", votes)
+        ELSE:
+            RETURN Consensus(False, "all_denied", votes)
+```
+
+---
+
