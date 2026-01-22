@@ -66,15 +66,15 @@ The system represents a significant achievement in responsible AI development by
 
 | Metric | Value |
 |--------|-------|
-| **Total Python Files** | 180+ files |
-| **Lines of Code** | 33,000+ lines |
+| **Total Python Files** | 169 files |
+| **Lines of Code** | 53,000+ lines |
 | **Core Modules** | 51 modules |
-| **GUI Components** | 14 PyQt6 modules |
-| **Specialized Agents** | 31 agents |
-| **Test Files** | 68 comprehensive tests |
+| **GUI Components** | 15 PyQt6 modules |
+| **Specialized Agents** | 32 agents |
+| **Test Files** | 87 test files |
 | **External Integrations** | 6+ major services |
 | **Storage Systems** | SQLite, ClickHouse, File-based |
-| **Supported Platforms** | Desktop, Web, Mobile (Android) |
+| **Supported Platforms** | Desktop, Web, Android |
 
 ### 1.4 Target Use Cases
 
