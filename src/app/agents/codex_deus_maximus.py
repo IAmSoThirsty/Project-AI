@@ -13,6 +13,9 @@ import types
 from datetime import UTC, datetime
 from typing import Any
 
+# Lazy imports for GPT‑OSS 1208 are performed inside _load_gpt_oss_model()
+
+
 from app.core.cognition_kernel import CognitionKernel, ExecutionType
 from app.core.kernel_integration import KernelRoutedAgent
 
@@ -47,6 +50,9 @@ class CodexDeusMaximus(KernelRoutedAgent):
         except Exception as e:
             # Log binding failure for debugging but continue initialization
             logger.warning("Failed to bind auto_fix_file method: %s", e)
+        # Initialize GPT-OSS 1208 model placeholder (lazy load)
+        self._gpt_model = None
+        self._gpt_tokenizer = None
 
     def initialize(self) -> bool:
         logger.info("Schematic Guardian initialized. Mode: STRICT ENFORCEMENT.")
@@ -69,13 +75,8 @@ class CodexDeusMaximus(KernelRoutedAgent):
     def run_schematic_enforcement(self, root: str | None = None) -> dict[str, Any]:
         """The Main Routine: Validates structure and fixes files."""
         # Route through kernel (COGNITION KERNEL ROUTING)
-        return self._execute_through_kernel(
-            self._do_run_schematic_enforcement,
-            root,
-            operation_name="run_schematic_enforcement",
-            risk_level="medium",
-            metadata={"root": root or os.getcwd()},
-        )
+        logger.debug("Calling _execute_through_kernel for run_schematic_enforcement")
+        return self._execute_through_kernel(self._do_run_schematic_enforcement, root)
 
     def _do_run_schematic_enforcement(self, root: str | None = None) -> dict[str, Any]:
         """Internal implementation of schematic enforcement."""
@@ -105,13 +106,9 @@ class CodexDeusMaximus(KernelRoutedAgent):
                 if fn.endswith((".py", ".md", ".json", ".yml", ".yaml")):
                     res = self.auto_fix_file(path)
                     if res.get("success") and res.get("action") == "fixed":
-                        report["fixes"].append(
-                            {"path": path, "backup": res.get("backup")}
-                        )
+                        report["fixes"].append({"path": path, "backup": res.get("backup")})
                     elif not res.get("success"):
-                        report["errors"].append(
-                            {"path": path, "error": res.get("error")}
-                        )
+                        report["errors"].append({"path": path, "error": res.get("error")})
 
         self._audit("enforcement_run", report)
         return report
@@ -132,13 +129,8 @@ class CodexDeusMaximus(KernelRoutedAgent):
     def auto_fix_file(self, path: str) -> dict[str, Any]:
         """Strictly enforces formatting standards (Tabs->Spaces, EOF Newline, Syntax Check)."""
         # Route through kernel (COGNITION KERNEL ROUTING)
-        return self._execute_through_kernel(
-            self._do_auto_fix_file,
-            path,
-            operation_name="auto_fix_file",
-            risk_level="medium",
-            metadata={"file_path": path},
-        )
+        logger.debug("Calling _execute_through_kernel for auto_fix_file")
+        return self._execute_through_kernel(self._do_auto_fix_file, path)
 
     def _do_auto_fix_file(self, path: str) -> dict[str, Any]:
         """Internal implementation of auto fix."""
@@ -184,6 +176,77 @@ class CodexDeusMaximus(KernelRoutedAgent):
 
         except Exception as e:
             return {"success": False, "error": str(e)}
+
+    # ---------------------------------------------------------------------
+    # GPT-OSS 1208 integration
+    # ---------------------------------------------------------------------
+    def _load_gpt_oss_model(self) -> None:
+        """Lazy‑load the GPT‑OSS 1208 model and tokenizer.
+
+        The heavy `torch` and `transformers` imports are performed **inside**
+        this method so that the rest of the agent can be used without pulling
+        in those large libraries. If the import or download fails we fall
+        back to a dummy response.
+        """
+        if self._gpt_model is None or self._gpt_tokenizer is None:
+            try:
+                # Local imports – they only happen when we actually need the model
+                from transformers import AutoModelForCausalLM, AutoTokenizer
+                import torch
+
+                logger.info("Loading GPT‑OSS 1208 model…")
+                model_name = "gpt-oss-120b"
+                self._gpt_tokenizer = AutoTokenizer.from_pretrained(
+                    model_name, trust_remote_code=True
+                )
+                self._gpt_model = AutoModelForCausalLM.from_pretrained(
+                    model_name,
+                    device_map="auto",
+                    torch_dtype=torch.float16,
+                    trust_remote_code=True,
+                )
+                self._gpt_model.eval()
+                logger.info("GPT‑OSS 1208 model loaded successfully.")
+            except Exception as e:
+                logger.warning(
+                    "Failed to load GPT‑OSS 1208 model (%s). Falling back to dummy response.",
+                    e,
+                )
+                self._gpt_model = None
+                self._gpt_tokenizer = None
+
+    def generate_gpt_oss(self, prompt: str, max_new_tokens: int = 512) -> str:
+        """Generate a response from GPT‑OSS 1208.
+
+        Parameters
+        ----------
+        prompt: str
+            The user prompt or system instruction.
+        max_new_tokens: int, optional
+            Maximum number of tokens to generate (default 512).
+        """
+        self._load_gpt_oss_model()
+        # If loading failed, return a simple placeholder response.
+        if self._gpt_model is None or self._gpt_tokenizer is None:
+            logger.info("Returning dummy GPT‑OSS response (model not loaded).")
+            return f"[Dummy GPT‑OSS response] {prompt}"
+        inputs = self._gpt_tokenizer(prompt, return_tensors="pt")
+        inputs = {k: v.to(self._gpt_model.device) for k, v in inputs.items()}
+        with torch.no_grad():
+            output = self._gpt_model.generate(
+                **inputs,
+                max_new_tokens=max_new_tokens,
+                do_sample=True,
+                temperature=0.7,
+                top_p=0.9,
+                pad_token_id=self._gpt_tokenizer.eos_token_id,
+            )
+        response = self._gpt_tokenizer.decode(output[0], skip_special_tokens=True)
+        # Remove the original prompt from the output
+        if response.startswith(prompt):
+            response = response[len(prompt):]
+        return response.strip()
+
 
 
 # Factory
