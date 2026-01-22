@@ -687,3 +687,275 @@ FUNCTION get_triumvirate_consensus(action):
 
 ---
 
+
+## 5. Integration Points and API Usage
+
+### 5.1 External Service Integrations
+
+#### 5.1.1 OpenAI GPT Models
+
+**Integration File:** `src/app/core/intelligence_engine.py`
+
+**Configuration:**
+```python
+import openai
+from dotenv import load_dotenv
+
+load_dotenv()  # Loads OPENAI_API_KEY
+openai.api_key = os.getenv("OPENAI_API_KEY")
+```
+
+**API Endpoints Used:**
+- `https://api.openai.com/v1/chat/completions` - Chat completion
+- `https://api.openai.com/v1/embeddings` - Text embeddings  
+- `https://api.openai.com/v1/images/generations` - DALL-E image generation
+
+**Rate Limits:** Respects OpenAI tier limits (configurable per installation)
+
+**Models Supported:**
+- GPT-4 (primary reasoning model)
+- GPT-3.5-turbo (fast inference)
+- text-embedding-ada-002 (embeddings)
+- DALL-E 3 (image generation)
+
+#### 5.1.2 GitHub API
+
+**Integration File:** `src/app/core/security_resources.py`
+
+**Purpose:** Fetches security repositories and vulnerability data
+
+**API Endpoints Used:**
+- `https://api.github.com/search/repositories` - Repository search
+- `https://api.github.com/repos/{owner}/{repo}` - Repository details
+- `https://api.github.com/repos/{owner}/{repo}/contents` - File contents
+
+**Authentication:** GitHub Personal Access Token (optional but recommended)
+
+**Use Cases:**
+- CTF resource discovery
+- Security tool repositories
+- Vulnerability databases
+- Training material curation
+
+#### 5.1.3 AWS Services
+
+**Integration File:** `src/app/security/aws_integration.py`
+
+**Services Integrated:**
+
+**S3 (Simple Storage Service):**
+- Encrypted data storage with versioning
+- Server-side encryption (AES-256)
+- Bucket policies enforcing least privilege
+
+**Secrets Manager:**
+- API key storage
+- Credential rotation
+- Secure retrieval
+
+**IAM (Identity and Access Management):**
+- Principle of Least Privilege (PoLP) enforcement
+- Role-based access control
+- Temporary credentials
+
+**Configuration:**
+```python
+import boto3
+
+s3_client = boto3.client('s3')
+secrets_client = boto3.client('secretsmanager')
+```
+
+#### 5.1.4 Temporal Workflows
+
+**Integration Directory:** `temporal/`
+
+**Purpose:** Distributed workflow orchestration for long-running tasks
+
+**Key Features:**
+- Durable execution (survives failures)
+- Automatic retries with exponential backoff
+- State persistence across restarts
+- Activity timeouts and deadlines
+
+**Example Workflow:**
+```python
+@workflow.defn
+class LearningWorkflow:
+    @workflow.run
+    async def run(self, request: LearningRequest):
+        # Step 1: Fetch data (5 min timeout)
+        data = await workflow.execute_activity(
+            fetch_learning_data,
+            request.data_source,
+            start_to_close_timeout=timedelta(minutes=5)
+        )
+        
+        # Step 2: Train model (1 hour timeout)
+        model = await workflow.execute_activity(
+            train_model,
+            data,
+            start_to_close_timeout=timedelta(hours=1)
+        )
+        
+        # Step 3: Validate model (10 min timeout)
+        validation = await workflow.execute_activity(
+            validate_model,
+            model,
+            start_to_close_timeout=timedelta(minutes=10)
+        )
+        
+        return LearningResult(model=model, validation=validation)
+```
+
+#### 5.1.5 ClickHouse Analytics
+
+**Integration File:** `src/app/core/clickhouse_integration.py`
+
+**Purpose:** OLAP analytics and time-series data
+
+**Key Features:**
+- Columnar storage for fast analytics
+- Real-time data ingestion
+- Materialized views for aggregations
+- Partition pruning for performance
+
+**Schema Example:**
+```sql
+CREATE TABLE executions (
+    execution_id UUID,
+    action_name LowCardinality(String),
+    status Enum('pending', 'executing', 'completed', 'failed', 'blocked'),
+    duration_ms UInt32,
+    timestamp DateTime,
+    INDEX idx_timestamp timestamp TYPE minmax GRANULARITY 1
+) ENGINE = MergeTree()
+PARTITION BY toYYYYMM(timestamp)
+ORDER BY (timestamp, execution_id);
+```
+
+**Queries:**
+- Performance metrics (avg, p95, p99 latencies)
+- Execution counts by action type
+- Failure rate analysis
+- Time-series trends
+
+#### 5.1.6 RisingWave Streaming
+
+**Integration File:** `src/app/core/risingwave_integration.py`
+
+**Purpose:** Real-time streaming SQL for governance monitoring
+
+**Key Features:**
+- Streaming materialized views
+- Real-time aggregations
+- Event-time processing
+- Exactly-once semantics
+
+**Four Laws Monitoring:**
+```sql
+CREATE MATERIALIZED VIEW four_laws_denials AS
+SELECT 
+    law_violated,
+    COUNT(*) as denial_count,
+    window_start,
+    window_end
+FROM hop(
+    governance_events, 
+    event_time, 
+    INTERVAL '1' MINUTE, 
+    INTERVAL '5' MINUTE
+)
+WHERE is_allowed = false
+GROUP BY law_violated, window_start, window_end;
+```
+
+### 5.2 Model Context Protocol (MCP)
+
+**Integration File:** `src/app/core/mcp_server.py`
+
+**Purpose:** Tool integration for LLM access
+
+**Key Features:**
+- Tool registration with JSON schemas
+- Context management
+- Execution routing through CognitionKernel
+- Security validation
+
+**Tool Registration Example:**
+```python
+mcp_server.register_tool(
+    name="web_search",
+    func=web_search_function,
+    schema={
+        "type": "function",
+        "function": {
+            "name": "web_search",
+            "description": "Searches the web for information",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "Search query"
+                    }
+                },
+                "required": ["query"]
+            }
+        }
+    }
+)
+```
+
+### 5.3 DeepSeek-V3.2 Integration
+
+**Integration File:** `src/app/core/deepseek_v32_inference.py`
+
+**Purpose:** Advanced reasoning model for complex tasks
+
+**Capabilities:**
+- Extended context windows
+- Advanced mathematical reasoning
+- Code generation and analysis
+- Multi-step problem solving
+
+**Usage:**
+```python
+response = deepseek_inference.query(
+    prompt="Analyze this complex algorithm...",
+    max_tokens=2000,
+    temperature=0.7
+)
+```
+
+### 5.4 Integration Security
+
+All integrations enforce the following security measures:
+
+1. **API Key Management:** 
+   - Stored in environment variables or AWS Secrets Manager
+   - Never hardcoded in source code
+   - Rotated regularly
+
+2. **Rate Limiting:**
+   - Respects provider rate limits
+   - Implements exponential backoff
+   - Queues requests when necessary
+
+3. **Error Handling:**
+   - Graceful degradation
+   - Retry logic with limits
+   - Comprehensive logging
+
+4. **Data Validation:**
+   - Input sanitization
+   - Output validation
+   - Schema enforcement
+
+5. **Audit Logging:**
+   - All API calls logged
+   - Response status tracking
+   - Error rate monitoring
+
+---
+
