@@ -3,6 +3,7 @@
   <small>The Triumvirate: Ethics, Defense, Orchestration</small>
 </h1>
 
+![GPT‑OSS Integration](https://github.com/IAmSoThirsty/Project-AI/actions/workflows/gpt_oss_integration.yml/badge.svg)
 ---
 
 ![Codacy](https://img.shields.io/badge/Codacy-configured-blue?logo=codacy)
