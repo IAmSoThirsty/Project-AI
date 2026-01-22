@@ -470,6 +470,7 @@ class RedTeamAgent(KernelRoutedAgent):
 
             # Look for YAML files with attack scenarios
             import glob
+
             yaml_files = glob.glob(os.path.join(multiturn_path, "*.yaml"))
 
             if not yaml_files:
@@ -491,9 +492,18 @@ class RedTeamAgent(KernelRoutedAgent):
                     # Check if scenario matches strategy
                     scenario_type = scenario.get("attack_type", "").lower()
                     if (
-                        (strategy == AttackStrategy.GRADUAL_ESCALATION.value and "escalation" in scenario_type)
-                        or (strategy == AttackStrategy.TRUST_BUILDING.value and "trust" in scenario_type)
-                        or (strategy == AttackStrategy.SOCIAL_ENGINEERING.value and "social" in scenario_type)
+                        (
+                            strategy == AttackStrategy.GRADUAL_ESCALATION.value
+                            and "escalation" in scenario_type
+                        )
+                        or (
+                            strategy == AttackStrategy.TRUST_BUILDING.value
+                            and "trust" in scenario_type
+                        )
+                        or (
+                            strategy == AttackStrategy.SOCIAL_ENGINEERING.value
+                            and "social" in scenario_type
+                        )
                     ):
                         # Get first turn
                         turns = scenario.get("turns", [])
@@ -504,7 +514,9 @@ class RedTeamAgent(KernelRoutedAgent):
                     logger.debug("Failed to load scenario from %s: %s", yaml_file, e)
                     continue
 
-            logger.info("No matching multi-turn scenarios found for strategy: %s", strategy)
+            logger.info(
+                "No matching multi-turn scenarios found for strategy: %s", strategy
+            )
             return None
 
         except Exception as e:

@@ -17,22 +17,20 @@ Date: 2026-01-21
 import logging
 from dataclasses import dataclass
 from datetime import timedelta
-from typing import Any, Dict, List
+from typing import Any
 
 from temporalio import workflow
 from temporalio.common import RetryPolicy
 
 # Import atomic activities
 with workflow.unsafe.imports_passed_through():
-    from temporal.workflows.security_agent_activities import (
-        create_forensic_snapshot,
-        run_red_team_attack,
-        evaluate_attack,
-        trigger_incident,
-        generate_sarif,
-        upload_sarif,
-        notify_triumvirate,
-    )
+    from temporal.workflows.security_agent_activities import (create_forensic_snapshot,
+                                                              evaluate_attack,
+                                                              generate_sarif,
+                                                              notify_triumvirate,
+                                                              run_red_team_attack,
+                                                              trigger_incident,
+                                                              upload_sarif)
 
 logger = logging.getLogger(__name__)
 
@@ -40,9 +38,10 @@ logger = logging.getLogger(__name__)
 @dataclass
 class RedTeamCampaignRequest:
     """Request for red team campaign workflow."""
+
     campaign_id: str
-    persona_ids: List[str]
-    targets: List[str]
+    persona_ids: list[str]
+    targets: list[str]
     repo: str = "IAmSoThirsty/Project-AI"
     commit_sha: str = "HEAD"
 
@@ -51,7 +50,7 @@ class RedTeamCampaignRequest:
 class EnhancedRedTeamCampaignWorkflow:
     """
     Enhanced red team campaign with forensic snapshots and incident automation.
-    
+
     Workflow steps:
     1. Create immutable forensic snapshot
     2. Execute persona x target attacks
@@ -62,29 +61,31 @@ class EnhancedRedTeamCampaignWorkflow:
     """
 
     @workflow.run
-    async def run(self, request: RedTeamCampaignRequest) -> Dict[str, Any]:
+    async def run(self, request: RedTeamCampaignRequest) -> dict[str, Any]:
         """Execute enhanced red team campaign workflow."""
-        workflow.logger.info(f"Starting enhanced red team campaign: {request.campaign_id}")
-        
+        workflow.logger.info(
+            f"Starting enhanced red team campaign: {request.campaign_id}"
+        )
+
         # Define retry policies
         snapshot_retry = RetryPolicy(
             maximum_attempts=1,  # Non-retryable - abort on failure
         )
-        
+
         attack_retry = RetryPolicy(
             initial_interval=timedelta(seconds=1),
             maximum_interval=timedelta(seconds=30),
             backoff_coefficient=2.0,
             maximum_attempts=3,  # Cap retries, mark as flaky beyond this
         )
-        
+
         standard_retry = RetryPolicy(
             initial_interval=timedelta(seconds=1),
             maximum_interval=timedelta(seconds=60),
             backoff_coefficient=2.0,
             maximum_attempts=5,
         )
-        
+
         # Step 1: Create immutable forensic snapshot
         workflow.logger.info("Step 1: Creating forensic snapshot")
         try:
@@ -101,15 +102,15 @@ class EnhancedRedTeamCampaignWorkflow:
             return {
                 "status": "aborted",
                 "reason": "snapshot_creation_failed",
-                "error": str(e)
+                "error": str(e),
             }
-        
+
         # Step 2: Execute persona x target attacks
         workflow.logger.info("Step 2: Executing attacks")
         results = []
         halted = False
         halt_reason = None
-        
+
         for persona in request.persona_ids:
             for target in request.targets:
                 # Execute attack with retry policy
@@ -120,7 +121,7 @@ class EnhancedRedTeamCampaignWorkflow:
                     retry_policy=attack_retry,
                 )
                 results.append(attack_result)
-                
+
                 # Evaluate severity
                 severity = await workflow.execute_activity(
                     evaluate_attack,
@@ -128,9 +129,11 @@ class EnhancedRedTeamCampaignWorkflow:
                     start_to_close_timeout=timedelta(seconds=30),
                     retry_policy=standard_retry,
                 )
-                
-                workflow.logger.info(f"Attack evaluated: {persona} on {target} = {severity}")
-                
+
+                workflow.logger.info(
+                    f"Attack evaluated: {persona} on {target} = {severity}"
+                )
+
                 # Trigger incident for critical/high severity
                 if severity in ["critical", "high"]:
                     incident = await workflow.execute_activity(
@@ -139,18 +142,22 @@ class EnhancedRedTeamCampaignWorkflow:
                         start_to_close_timeout=timedelta(minutes=5),
                         retry_policy=standard_retry,
                     )
-                    workflow.logger.critical(f"Incident triggered: {incident['incident_id']}")
-                    
+                    workflow.logger.critical(
+                        f"Incident triggered: {incident['incident_id']}"
+                    )
+
                     # Check if campaign should halt
                     if await self._policy_should_halt(request.campaign_id, severity):
-                        workflow.logger.warning(f"Campaign halted due to {severity} severity")
+                        workflow.logger.warning(
+                            f"Campaign halted due to {severity} severity"
+                        )
                         halted = True
                         halt_reason = severity
                         break
-            
+
             if halted:
                 break
-        
+
         # If halted, return early
         if halted:
             return {
@@ -159,9 +166,9 @@ class EnhancedRedTeamCampaignWorkflow:
                 "results": results,
                 "snapshot_id": snapshot_id,
                 "attacks_completed": len(results),
-                "attacks_planned": len(request.persona_ids) * len(request.targets)
+                "attacks_planned": len(request.persona_ids) * len(request.targets),
             }
-        
+
         # Step 3: Generate SARIF report
         workflow.logger.info("Step 3: Generating SARIF report")
         sarif_report = await workflow.execute_activity(
@@ -170,7 +177,7 @@ class EnhancedRedTeamCampaignWorkflow:
             start_to_close_timeout=timedelta(minutes=5),
             retry_policy=standard_retry,
         )
-        
+
         # Step 4: Upload SARIF to GitHub Security
         workflow.logger.info("Step 4: Uploading SARIF to GitHub")
         upload_result = await workflow.execute_activity(
@@ -179,7 +186,7 @@ class EnhancedRedTeamCampaignWorkflow:
             start_to_close_timeout=timedelta(minutes=5),
             retry_policy=standard_retry,
         )
-        
+
         # Step 5: Notify Triumvirate
         workflow.logger.info("Step 5: Notifying Triumvirate")
         await workflow.execute_activity(
@@ -188,10 +195,10 @@ class EnhancedRedTeamCampaignWorkflow:
             start_to_close_timeout=timedelta(minutes=2),
             retry_policy=standard_retry,
         )
-        
+
         # Return final results
         successful_attacks = sum(1 for r in results if r["success"])
-        
+
         return {
             "status": "completed",
             "campaign_id": request.campaign_id,
@@ -201,13 +208,13 @@ class EnhancedRedTeamCampaignWorkflow:
             "successful_attacks": successful_attacks,
             "success_rate": successful_attacks / len(results) if results else 0.0,
             "sarif_uploaded": upload_result["status"] == "uploaded",
-            "triumvirate_notified": True
+            "triumvirate_notified": True,
         }
-    
+
     async def _policy_should_halt(self, campaign_id: str, severity: str) -> bool:
         """
         Determine if campaign should halt based on policy.
-        
+
         Policy: Halt on first critical severity attack.
                 Continue on high severity (investigate all vectors).
         """
@@ -223,7 +230,7 @@ class EnhancedRedTeamCampaignWorkflow:
 class EnhancedCodeSecuritySweepWorkflow:
     """
     Enhanced code security sweep with automated patching and blocking.
-    
+
     Workflow steps:
     1. Create forensic snapshot
     2. Run vulnerability scan
@@ -235,20 +242,18 @@ class EnhancedCodeSecuritySweepWorkflow:
     """
 
     @workflow.run
-    async def run(self, request: Dict[str, Any]) -> Dict[str, Any]:
+    async def run(self, request: dict[str, Any]) -> dict[str, Any]:
         """Execute enhanced code security sweep workflow."""
-        workflow.logger.info(f"Starting enhanced code security sweep")
-        
+        workflow.logger.info("Starting enhanced code security sweep")
+
         # Import additional activities
         with workflow.unsafe.imports_passed_through():
             from temporal.workflows.security_agent_activities import (
-                run_code_vulnerability_scan,
-                generate_security_patches,
-                block_deployment,
-            )
-        
+                block_deployment, generate_security_patches,
+                run_code_vulnerability_scan)
+
         scan_id = request.get("scan_id", f"scan-{workflow.now().timestamp()}")
-        
+
         # Retry policies
         standard_retry = RetryPolicy(
             initial_interval=timedelta(seconds=1),
@@ -256,7 +261,7 @@ class EnhancedCodeSecuritySweepWorkflow:
             backoff_coefficient=2.0,
             maximum_attempts=5,
         )
-        
+
         # Step 1: Create snapshot
         workflow.logger.info("Step 1: Creating forensic snapshot")
         snapshot_result = await workflow.execute_activity(
@@ -266,7 +271,7 @@ class EnhancedCodeSecuritySweepWorkflow:
             retry_policy=RetryPolicy(maximum_attempts=1),
         )
         snapshot_id = snapshot_result["snapshot_id"]
-        
+
         # Step 2: Run vulnerability scan
         workflow.logger.info("Step 2: Running vulnerability scan")
         scan_result = await workflow.execute_activity(
@@ -275,10 +280,10 @@ class EnhancedCodeSecuritySweepWorkflow:
             start_to_close_timeout=timedelta(minutes=30),
             retry_policy=standard_retry,
         )
-        
+
         findings = scan_result["findings"]
         critical_count = sum(1 for f in findings if f.get("severity") == "critical")
-        
+
         # Step 3: Generate patches
         workflow.logger.info("Step 3: Generating security patches")
         patch_result = await workflow.execute_activity(
@@ -287,7 +292,7 @@ class EnhancedCodeSecuritySweepWorkflow:
             start_to_close_timeout=timedelta(minutes=20),
             retry_policy=standard_retry,
         )
-        
+
         # Step 4: Generate and upload SARIF
         workflow.logger.info("Step 4: Generating SARIF report")
         sarif_report = await workflow.execute_activity(
@@ -296,24 +301,30 @@ class EnhancedCodeSecuritySweepWorkflow:
             start_to_close_timeout=timedelta(minutes=5),
             retry_policy=standard_retry,
         )
-        
+
         upload_result = await workflow.execute_activity(
             upload_sarif,
-            args=[sarif_report, request.get("repo", "IAmSoThirsty/Project-AI"), request.get("commit_sha", "HEAD")],
+            args=[
+                sarif_report,
+                request.get("repo", "IAmSoThirsty/Project-AI"),
+                request.get("commit_sha", "HEAD"),
+            ],
             start_to_close_timeout=timedelta(minutes=5),
             retry_policy=standard_retry,
         )
-        
+
         # Step 5: Block deployment if critical vulnerabilities
         if critical_count > 0:
-            workflow.logger.critical(f"Blocking deployment: {critical_count} critical vulnerabilities")
+            workflow.logger.critical(
+                f"Blocking deployment: {critical_count} critical vulnerabilities"
+            )
             await workflow.execute_activity(
                 block_deployment,
                 args=[scan_id, critical_count, "Critical vulnerabilities detected"],
                 start_to_close_timeout=timedelta(minutes=2),
                 retry_policy=standard_retry,
             )
-        
+
         return {
             "status": "completed",
             "scan_id": scan_id,
@@ -322,15 +333,16 @@ class EnhancedCodeSecuritySweepWorkflow:
             "critical_count": critical_count,
             "patches_generated": len(patch_result.get("patches", [])),
             "deployment_blocked": critical_count > 0,
-            "sarif_uploaded": upload_result["status"] == "uploaded"
+            "sarif_uploaded": upload_result["status"] == "uploaded",
         }
 
 
 @dataclass
 class ConstitutionalMonitoringRequest:
     """Request for constitutional monitoring workflow."""
+
     monitoring_id: str
-    test_prompts: List[str]
+    test_prompts: list[str]
     review_mode: str = "self_critique"
 
 
@@ -338,28 +350,29 @@ class ConstitutionalMonitoringRequest:
 class EnhancedConstitutionalMonitoringWorkflow:
     """
     Enhanced constitutional AI compliance monitoring.
-    
+
     Continuously monitors prompts against constitutional principles
     and reports violations.
     """
 
     @workflow.run
-    async def run(self, request: ConstitutionalMonitoringRequest) -> Dict[str, Any]:
+    async def run(self, request: ConstitutionalMonitoringRequest) -> dict[str, Any]:
         """Execute constitutional monitoring workflow."""
-        workflow.logger.info(f"Starting constitutional monitoring: {request.monitoring_id}")
-        
+        workflow.logger.info(
+            f"Starting constitutional monitoring: {request.monitoring_id}"
+        )
+
         with workflow.unsafe.imports_passed_through():
-            from temporal.workflows.security_agent_activities import (
-                run_constitutional_reviews,
-            )
-        
+            from temporal.workflows.security_agent_activities import \
+                run_constitutional_reviews
+
         standard_retry = RetryPolicy(
             initial_interval=timedelta(seconds=1),
             maximum_interval=timedelta(seconds=60),
             backoff_coefficient=2.0,
             maximum_attempts=5,
         )
-        
+
         # Run constitutional reviews
         review_result = await workflow.execute_activity(
             run_constitutional_reviews,
@@ -367,15 +380,19 @@ class EnhancedConstitutionalMonitoringWorkflow:
             start_to_close_timeout=timedelta(minutes=10),
             retry_policy=standard_retry,
         )
-        
+
         violations = [r for r in review_result["reviews"] if r["has_violations"]]
-        
+
         return {
             "status": "completed",
             "monitoring_id": request.monitoring_id,
             "reviews_conducted": len(review_result["reviews"]),
             "violations_found": len(violations),
-            "violation_rate": len(violations) / len(review_result["reviews"]) if review_result["reviews"] else 0.0
+            "violation_rate": (
+                len(violations) / len(review_result["reviews"])
+                if review_result["reviews"]
+                else 0.0
+            ),
         }
 
 
@@ -383,14 +400,14 @@ class EnhancedConstitutionalMonitoringWorkflow:
 async def start_enhanced_red_team_campaign(
     client,
     campaign_id: str,
-    persona_ids: List[str],
-    targets: List[str],
+    persona_ids: list[str],
+    targets: list[str],
     repo: str = "IAmSoThirsty/Project-AI",
-    commit_sha: str = "HEAD"
+    commit_sha: str = "HEAD",
 ):
     """
     Start enhanced red team campaign workflow.
-    
+
     Args:
         client: Temporal client
         campaign_id: Campaign identifier
@@ -398,7 +415,7 @@ async def start_enhanced_red_team_campaign(
         targets: List of targets to attack
         repo: GitHub repository
         commit_sha: Commit SHA for SARIF upload
-    
+
     Returns:
         Workflow handle
     """
@@ -407,14 +424,14 @@ async def start_enhanced_red_team_campaign(
         persona_ids=persona_ids,
         targets=targets,
         repo=repo,
-        commit_sha=commit_sha
+        commit_sha=commit_sha,
     )
-    
+
     handle = await client.start_workflow(
         EnhancedRedTeamCampaignWorkflow.run,
         request,
         id=f"enhanced-red-team-{campaign_id}",
         task_queue="security-agents",
     )
-    
+
     return handle

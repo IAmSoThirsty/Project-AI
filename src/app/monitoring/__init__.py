@@ -7,4 +7,4 @@ for security agents.
 
 from .security_metrics import SecurityMetricsCollector
 
-__all__ = ['SecurityMetricsCollector']
+__all__ = ["SecurityMetricsCollector"]
