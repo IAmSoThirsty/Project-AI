@@ -66,8 +66,14 @@ The system represents a significant achievement in responsible AI development by
 
 | Metric | Value |
 |--------|-------|
-| **Total Python Files** | 169 files |
-| **Lines of Code** | 53,000+ lines |
+| **Total Repository Files** | 1,172 files |
+| **Total Lines (All Files)** | 532,000+ lines |
+| **Python Files** | 338 files |
+| **Python Code** | 85,500+ lines |
+| **JavaScript/TypeScript** | 25 files (5,500+ lines) |
+| **Total Code (Python + JS/TS)** | 91,000+ lines |
+| **Configuration (JSON/YAML/TOML)** | 303,000+ lines |
+| **Documentation (Markdown)** | 518 files (102,000+ lines) |
 | **Core Modules** | 51 modules |
 | **GUI Components** | 15 PyQt6 modules |
 | **Specialized Agents** | 32 agents |
