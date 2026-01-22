@@ -227,9 +227,7 @@ class CodeSecuritySweepWorkflow:
     """
 
     @workflow.run
-    async def run(
-        self, request: CodeSecuritySweepRequest
-    ) -> CodeSecuritySweepResult:
+    async def run(self, request: CodeSecuritySweepRequest) -> CodeSecuritySweepResult:
         """Execute code security sweep workflow."""
         workflow.logger.info("Starting code security sweep")
 
@@ -411,7 +409,9 @@ class SafetyTestingWorkflow:
     @workflow.run
     async def run(self, request: SafetyTestingRequest) -> SafetyTestingResult:
         """Execute safety testing workflow."""
-        workflow.logger.info(f"Starting safety testing with dataset: {request.test_dataset}")
+        workflow.logger.info(
+            f"Starting safety testing with dataset: {request.test_dataset}"
+        )
 
         try:
             retry_policy = RetryPolicy(

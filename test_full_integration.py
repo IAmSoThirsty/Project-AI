@@ -1,13 +1,14 @@
-import sys
 import os
+import sys
 
 # Ensure the src directory is on the Python path
-project_root = os.path.abspath(os.path.join(__file__, '..'))
-src_path = os.path.join(project_root, 'src')
+project_root = os.path.abspath(os.path.join(__file__, ".."))
+src_path = os.path.join(project_root, "src")
 if src_path not in sys.path:
     sys.path.insert(0, src_path)
 
 from app.agents.codex_deus_maximus import create_codex
+
 
 def main():
     # Instantiate the agent
@@ -23,6 +24,7 @@ def main():
     insight = codex.generate_gpt_oss(prompt)
     print("LLM Insight:")
     print(insight)
+
 
 if __name__ == "__main__":
     main()

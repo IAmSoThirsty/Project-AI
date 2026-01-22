@@ -124,9 +124,7 @@ class CouncilHub:
             self._project["code_adversary"] = CodeAdversaryAgent(
                 repo_path=".", kernel=self.kernel
             )
-            self._project["red_team_persona"] = RedTeamPersonaAgent(
-                kernel=self.kernel
-            )
+            self._project["red_team_persona"] = RedTeamPersonaAgent(kernel=self.kernel)
 
             # default all agents enabled
             for k in list(self._project.keys()):
@@ -136,7 +134,10 @@ class CouncilHub:
                     agent_obj = self._project.get(k)
                     if agent_obj:
                         self.register_agent(k, agent_obj)
-            logger.info("Registered project head: %s with kernel-routed agents (18 agents total)", name)
+            logger.info(
+                "Registered project head: %s with kernel-routed agents (18 agents total)",
+                name,
+            )
 
     def register_agent(self, agent_id: str, agent_obj: Any) -> None:
         """Register a smaller agent under the Council."""
