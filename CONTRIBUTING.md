@@ -17,7 +17,7 @@ python -m pip install -r requirements.txt
 python -m pip install -r requirements-dev.txt
 ```
 
-### Windows Developers: Cygwin Installation (Optional but Recommended)
+## Windows Developers: Cygwin Installation (Optional but Recommended)
 
 For Windows contributors, installing Cygwin provides unified GNU toolchain access and compatibility with Unix-based development workflows. This is **optional** but recommended for better development experience.
 
@@ -36,14 +36,14 @@ Invoke-WebRequest -Uri https://www.cygwin.com/setup-x86_64.exe -OutFile setup-x8
 **Manual Installation**:
 
 1. Download Cygwin installer from <https://www.cygwin.com/>
-2. Run the installer and select the following packages:
+1. Run the installer and select the following packages:
    - `git` - Version control
    - `make` - Build automation
    - `gcc-core` - C compiler
    - `python39` - Python 3.9
    - `python39-pip` - Python package manager
    - `bash` - Unix shell
-3. Add `C:\cygwin64\bin` to your system PATH
+1. Add `C:\cygwin64\bin` to your system PATH
 
 **Important Notes**:
 
