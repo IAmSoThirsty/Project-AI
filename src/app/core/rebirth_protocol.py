@@ -179,10 +179,10 @@ class RebirthManager:
                     )
                     self._instances[user_id] = instance
 
-                logger.info(f"Loaded {len(self._instances)} instances from registry")
+                logger.info("Loaded %s instances from registry", len(self._instances))
 
             except Exception as e:
-                logger.error(f"Failed to load instance registry: {e}")
+                logger.error("Failed to load instance registry: %s", e)
 
     def _save_registry(self):
         """Save instance registry to disk."""
@@ -200,7 +200,7 @@ class RebirthManager:
             logger.debug("Instance registry saved")
 
         except Exception as e:
-            logger.error(f"Failed to save instance registry: {e}")
+            logger.error("Failed to save instance registry: %s", e)
 
     def _save_instance_meta_identity(self, user_id: str):
         """Save meta-identity for specific instance."""
@@ -217,7 +217,7 @@ class RebirthManager:
             with open(meta_file, "w", encoding="utf-8") as f:
                 json.dump(instance.meta_identity.to_dict(), f, indent=2)
         except Exception as e:
-            logger.error(f"Failed to save meta-identity for {user_id}: {e}")
+            logger.error("Failed to save meta-identity for %s: %s", user_id, e)
 
     def _generate_birth_signature_suffix(self) -> str:
         """
@@ -264,8 +264,8 @@ class RebirthManager:
         # Store birth signature in genesis metadata
         # (In practice, you'd extend GenesisEvent to have a birth_signature field)
 
-        logger.info(f"Genesis Event created for {user_id}")
-        logger.info(f"Birth Signature: {birth_signature_str}")
+        logger.info("Genesis Event created for %s", user_id)
+        logger.info("Birth Signature: %s", birth_signature_str)
 
         return genesis
 
@@ -311,11 +311,11 @@ class RebirthManager:
             instance.last_accessed = datetime.now(UTC).isoformat()
             self._save_registry()
 
-            logger.info(f"Retrieved existing instance for {user_id}")
+            logger.info("Retrieved existing instance for %s", user_id)
             return instance
 
         # Create new instance with Genesis Event
-        logger.info(f"Creating new AI instance for {user_id}")
+        logger.info("Creating new AI instance for %s", user_id)
 
         # Create genesis event
         genesis = self._create_genesis_event(user_id, user_birthday, user_initials)
@@ -469,7 +469,7 @@ class RebirthManager:
         """
         instance = self._instances.get(user_id)
         if not instance:
-            logger.warning(f"Cannot save instance {user_id} - not found")
+            logger.warning("Cannot save instance %s - not found", user_id)
             return
 
         # Save identity
@@ -482,7 +482,7 @@ class RebirthManager:
         instance.last_accessed = datetime.now(UTC).isoformat()
         self._save_registry()
 
-        logger.debug(f"Instance {user_id} saved")
+        logger.debug("Instance %s saved", user_id)
 
 
 # ============================================================================

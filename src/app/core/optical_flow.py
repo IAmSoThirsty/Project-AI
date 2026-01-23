@@ -123,7 +123,7 @@ class OpticalFlowDetector:
             import cv2
 
             self.cv2 = cv2
-            logger.info(f"OpenCV version: {cv2.__version__}")
+            logger.info("OpenCV version: %s", cv2.__version__)
         except ImportError as e:
             logger.error(
                 "OpenCV not installed. Install with: pip install opencv-python"
@@ -150,7 +150,7 @@ class OpticalFlowDetector:
         if not Path(video_path).exists():
             raise FileNotFoundError(f"Video not found: {video_path}")
 
-        logger.info(f"Analyzing video: {video_path}")
+        logger.info("Analyzing video: %s", video_path)
 
         cap = self.cv2.VideoCapture(video_path)
         if not cap.isOpened():
@@ -477,7 +477,7 @@ class OpticalFlowDetector:
         if not image_paths:
             raise ValueError("No images provided")
 
-        logger.info(f"Analyzing {len(image_paths)} images")
+        logger.info("Analyzing %s images", len(image_paths))
 
         epicenters = []
         motion_magnitudes = []
@@ -491,7 +491,7 @@ class OpticalFlowDetector:
         for i, img_path in enumerate(image_paths[1:], start=1):
             img = self.cv2.imread(img_path)
             if img is None:
-                logger.warning(f"Cannot read image: {img_path}, skipping")
+                logger.warning("Cannot read image: %s, skipping", img_path)
                 continue
 
             gray = self.cv2.cvtColor(img, self.cv2.COLOR_BGR2GRAY)
@@ -520,7 +520,7 @@ class OpticalFlowDetector:
             analysis_timestamp=datetime.now().isoformat(),
         )
 
-        logger.info(f"Analysis complete: {len(epicenters)} epicenters detected")
+        logger.info("Analysis complete: %s epicenters detected", len(epicenters))
 
         return result
 
@@ -531,9 +531,9 @@ class OpticalFlowDetector:
         try:
             with open(output_file, "w", encoding="utf-8") as f:
                 json.dump(result.to_dict(), f, indent=2)
-            logger.info(f"Results saved to: {output_file}")
+            logger.info("Results saved to: %s", output_file)
         except Exception as e:
-            logger.error(f"Error saving results: {e}")
+            logger.error("Error saving results: %s", e)
 
     def visualize_flow(
         self, video_path: str, output_path: str = None, show_epicenters: bool = True
@@ -638,7 +638,7 @@ class OpticalFlowDetector:
         cap.release()
         if writer:
             writer.release()
-            logger.info(f"Visualization saved to: {output_path}")
+            logger.info("Visualization saved to: %s", output_path)
         else:
             self.cv2.destroyAllWindows()
             logger.info("Visualization display closed")

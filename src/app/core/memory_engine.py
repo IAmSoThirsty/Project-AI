@@ -436,9 +436,9 @@ class MemoryEngine:
                         memory = EpisodicMemory.from_dict(mem_data)
                         self.episodic_memories[memory.memory_id] = memory
                         self._index_episodic_memory(memory)
-                logger.info(f"Loaded {len(self.episodic_memories)} episodic memories")
+                logger.info("Loaded %s episodic memories", len(self.episodic_memories))
             except Exception as e:
-                logger.error(f"Failed to load episodic memories: {e}")
+                logger.error("Failed to load episodic memories: %s", e)
 
         # Load semantic concepts
         semantic_file = os.path.join(self.data_dir, "semantic_concepts.json")
@@ -449,9 +449,9 @@ class MemoryEngine:
                     for concept_data in data:
                         concept = SemanticConcept.from_dict(concept_data)
                         self.semantic_concepts[concept.concept_id] = concept
-                logger.info(f"Loaded {len(self.semantic_concepts)} semantic concepts")
+                logger.info("Loaded %s semantic concepts", len(self.semantic_concepts))
             except Exception as e:
-                logger.error(f"Failed to load semantic concepts: {e}")
+                logger.error("Failed to load semantic concepts: %s", e)
 
         # Load procedural skills
         procedural_file = os.path.join(self.data_dir, "procedural_skills.json")
@@ -462,9 +462,9 @@ class MemoryEngine:
                     for skill_data in data:
                         skill = ProceduralSkill.from_dict(skill_data)
                         self.procedural_skills[skill.skill_id] = skill
-                logger.info(f"Loaded {len(self.procedural_skills)} procedural skills")
+                logger.info("Loaded %s procedural skills", len(self.procedural_skills))
             except Exception as e:
-                logger.error(f"Failed to load procedural skills: {e}")
+                logger.error("Failed to load procedural skills: %s", e)
 
     def _save_memories(self):
         """Save all memory types to disk."""
@@ -475,7 +475,7 @@ class MemoryEngine:
                 data = [mem.to_dict() for mem in self.episodic_memories.values()]
                 json.dump(data, f, indent=2)
         except Exception as e:
-            logger.error(f"Failed to save episodic memories: {e}")
+            logger.error("Failed to save episodic memories: %s", e)
 
         # Save semantic concepts
         semantic_file = os.path.join(self.data_dir, "semantic_concepts.json")
@@ -486,7 +486,7 @@ class MemoryEngine:
                 ]
                 json.dump(data, f, indent=2)
         except Exception as e:
-            logger.error(f"Failed to save semantic concepts: {e}")
+            logger.error("Failed to save semantic concepts: %s", e)
 
         # Save procedural skills
         procedural_file = os.path.join(self.data_dir, "procedural_skills.json")
@@ -495,7 +495,7 @@ class MemoryEngine:
                 data = [skill.to_dict() for skill in self.procedural_skills.values()]
                 json.dump(data, f, indent=2)
         except Exception as e:
-            logger.error(f"Failed to save procedural skills: {e}")
+            logger.error("Failed to save procedural skills: %s", e)
 
     def _index_episodic_memory(self, memory: EpisodicMemory):
         """Add memory to search indices."""
@@ -562,7 +562,7 @@ class MemoryEngine:
         self._index_episodic_memory(memory)
         self._save_memories()
 
-        logger.debug(f"Stored episodic memory: {memory.memory_id}")
+        logger.debug("Stored episodic memory: %s", memory.memory_id)
         return memory.memory_id
 
     def retrieve_episodic_memory(self, memory_id: str) -> EpisodicMemory | None:
@@ -703,7 +703,7 @@ class MemoryEngine:
         # Check if concept already exists by name
         existing = self.find_concept_by_name(name)
         if existing:
-            logger.debug(f"Concept '{name}' already exists: {existing.concept_id}")
+            logger.debug("Concept '%s' already exists: %s", name, existing.concept_id)
             return existing.concept_id
 
         concept = SemanticConcept(
@@ -717,7 +717,7 @@ class MemoryEngine:
         self.semantic_concepts[concept.concept_id] = concept
         self._save_memories()
 
-        logger.debug(f"Stored semantic concept: {name}")
+        logger.debug("Stored semantic concept: %s", name)
         return concept.concept_id
 
     def find_concept_by_name(self, name: str) -> SemanticConcept | None:
@@ -743,7 +743,7 @@ class MemoryEngine:
         """
         concept = self.semantic_concepts.get(source_concept_id)
         if not concept:
-            logger.warning(f"Concept {source_concept_id} not found")
+            logger.warning("Concept %s not found", source_concept_id)
             return
 
         concept.add_relationship(relation_type, target_concept_id)
@@ -759,7 +759,7 @@ class MemoryEngine:
         """
         concept = self.semantic_concepts.get(concept_id)
         if not concept:
-            logger.warning(f"Concept {concept_id} not found")
+            logger.warning("Concept %s not found", concept_id)
             return
 
         concept.add_evidence(memory_id)
@@ -830,7 +830,7 @@ class MemoryEngine:
         self.procedural_skills[skill.skill_id] = skill
         self._save_memories()
 
-        logger.debug(f"Stored procedural skill: {name}")
+        logger.debug("Stored procedural skill: %s", name)
         return skill.skill_id
 
     def record_skill_execution(
@@ -847,7 +847,7 @@ class MemoryEngine:
         """
         skill = self.procedural_skills.get(skill_id)
         if not skill:
-            logger.warning(f"Skill {skill_id} not found")
+            logger.warning("Skill %s not found", skill_id)
             return
 
         skill.record_execution(success, duration, notes)

@@ -28,7 +28,7 @@ class MetricsHandler(BaseHTTPRequestHandler):
 
     def log_message(self, format: str, *args: Any) -> None:
         """Override to use Python logging instead of printing."""
-        logger.debug(f"{self.address_string()} - {format % args}")
+        logger.debug("%s - %s", self.address_string(), format % args)
 
     def do_GET(self) -> None:
         """Handle GET requests."""
@@ -46,7 +46,7 @@ class MetricsHandler(BaseHTTPRequestHandler):
             else:
                 self.send_error(404, "Endpoint not found")
         except Exception as e:
-            logger.error(f"Error handling request {self.path}: {e}")
+            logger.error("Error handling request %s: %s", self.path, e)
             self.send_error(500, str(e))
 
     def _serve_metrics(self) -> None:
@@ -119,11 +119,11 @@ class MetricsHandler(BaseHTTPRequestHandler):
 class MetricsServer:
     """Prometheus metrics HTTP server."""
 
-    def __init__(self, host: str = "0.0.0.0", port: int = 8000):
+    def __init__(self, host: str = "127.0.0.1", port: int = 8000):
         """Initialize metrics server.
 
         Args:
-            host: Host to bind to
+            host: Host to bind to (default: 127.0.0.1 for localhost only)
             port: Port to listen on
         """
         self.host = host
@@ -151,11 +151,11 @@ class MetricsServer:
             )
             self.thread.start()
 
-            logger.info(f"Prometheus metrics server started on {self.host}:{self.port}")
-            logger.info(f"Metrics available at http://{self.host}:{self.port}/metrics")
+            logger.info("Prometheus metrics server started on %s:%s", self.host, self.port)
+            logger.info("Metrics available at http://%s:%s/metrics", self.host, self.port)
 
         except Exception as e:
-            logger.error(f"Failed to start metrics server: {e}")
+            logger.error("Failed to start metrics server: %s", e)
             self._running = False
             raise
 
@@ -165,7 +165,7 @@ class MetricsServer:
             try:
                 self.server.serve_forever()
             except Exception as e:
-                logger.error(f"Metrics server error: {e}")
+                logger.error("Metrics server error: %s", e)
             finally:
                 self._running = False
 
@@ -193,11 +193,11 @@ class MetricsServer:
         return self._running
 
 
-def start_metrics_server(host: str = "0.0.0.0", port: int = 8000) -> MetricsServer:
+def start_metrics_server(host: str = "127.0.0.1", port: int = 8000) -> MetricsServer:
     """Start Prometheus metrics server.
 
     Args:
-        host: Host to bind to
+        host: Host to bind to (default: 127.0.0.1 for localhost only)
         port: Port to listen on
 
     Returns:

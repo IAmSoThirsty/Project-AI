@@ -92,7 +92,7 @@ class SampleOSINTPlugin(Plugin):
         )
 
         if not allowed:
-            logger.warning(f"OSINT plugin initialization blocked: {reason}")
+            logger.warning("OSINT plugin initialization blocked: %s", reason)
             emit_event(
                 "plugin.osint.blocked", {"reason": reason, "tool": self.tool_name}
             )
@@ -111,7 +111,7 @@ class SampleOSINTPlugin(Plugin):
 
         self.enabled = True
         self._report_event(context)
-        logger.info(f"OSINT plugin initialized: {self.tool_name}")
+        logger.info("OSINT plugin initialized: %s", self.tool_name)
         return True
 
     def execute(self, params: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -135,7 +135,7 @@ class SampleOSINTPlugin(Plugin):
                 "message": "Plugin not initialized",
             }
 
-        logger.info(f"Executing OSINT tool: {self.tool_name}")
+        logger.info("Executing OSINT tool: %s", self.tool_name)
         emit_event("plugin.osint.execute", {"tool": self.tool_name, "params": params})
 
         # Stub: Return placeholder results

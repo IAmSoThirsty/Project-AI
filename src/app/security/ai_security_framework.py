@@ -195,7 +195,7 @@ class UniversalAdversarialTriggers:
                 is_compromised = UniversalAdversarialTriggers._detect_compromise(output)
                 results[trigger] = is_compromised
             except Exception as e:
-                logger.error(f"Trigger test failed: {e}")
+                logger.error("Trigger test failed: %s", e)
                 results[trigger] = False
 
         return results
@@ -368,7 +368,7 @@ class GarakScanner:
                     results["failed_injections"] += 1
 
             except Exception as e:
-                logger.error(f"Garak test {i} failed: {e}")
+                logger.error("Garak test %s failed: %s", i, e)
                 results["detected"] += 1
 
         self.scan_results.append(
@@ -427,7 +427,7 @@ class GarakScanner:
                     results["safe_responses"] += 1
 
             except Exception as e:
-                logger.error(f"Leak test {i} failed: {e}")
+                logger.error("Leak test %s failed: %s", i, e)
 
         return results
 
@@ -476,7 +476,7 @@ class GarakScanner:
                     results["blocked_attempts"] += 1
 
             except Exception as e:
-                logger.error(f"Jailbreak test {i} failed: {e}")
+                logger.error("Jailbreak test %s failed: %s", i, e)
 
         return results
 
@@ -560,7 +560,7 @@ class NeMoGuardrails:
                 "action": action,
             }
         )
-        logger.info(f"Added input rail: {name}")
+        logger.info("Added input rail: %s", name)
 
     def add_output_rail(self, name: str, condition: callable, action: str = "block"):
         """
@@ -578,7 +578,7 @@ class NeMoGuardrails:
                 "action": action,
             }
         )
-        logger.info(f"Added output rail: {name}")
+        logger.info("Added output rail: %s", name)
 
     def check_input(self, text: str) -> tuple[bool, str | None]:
         """
@@ -593,12 +593,12 @@ class NeMoGuardrails:
         for rail in self.input_rails:
             if rail["condition"](text):
                 self.blocked_count += 1
-                logger.warning(f"Input blocked by rail: {rail['name']}")
+                logger.warning("Input blocked by rail: %s", rail['name'])
 
                 if rail["action"] == "block":
                     return False, f"Blocked by {rail['name']}"
                 elif rail["action"] == "warn":
-                    logger.warning(f"Input triggered warning: {rail['name']}")
+                    logger.warning("Input triggered warning: %s", rail['name'])
                     # Continue checking other rails
 
         return True, None
@@ -616,7 +616,7 @@ class NeMoGuardrails:
         for rail in self.output_rails:
             if rail["condition"](text):
                 self.blocked_count += 1
-                logger.warning(f"Output blocked by rail: {rail['name']}")
+                logger.warning("Output blocked by rail: %s", rail['name'])
 
                 if rail["action"] == "block":
                     return False, f"Blocked by {rail['name']}"
@@ -724,7 +724,7 @@ class PurpleLlamaCyberSecEval:
                     results["secure_code_generated"] += 1
 
             except Exception as e:
-                logger.error(f"Code gen test {i} failed: {e}")
+                logger.error("Code gen test %s failed: %s", i, e)
 
         self.eval_results.append(
             {
@@ -774,7 +774,7 @@ class PurpleLlamaCyberSecEval:
                 results[quality] += 1
 
             except Exception as e:
-                logger.error(f"Advice test {i} failed: {e}")
+                logger.error("Advice test %s failed: %s", i, e)
 
         return results
 
@@ -868,7 +868,7 @@ class NISTAIRMFCompliance:
         }
 
         self.governance_policies.append(policy)
-        logger.info(f"NIST AI RMF - Governance policy established: {policy_name}")
+        logger.info("NIST AI RMF - Governance policy established: %s", policy_name)
 
     def map_identify_risks(
         self, risk_id: str, description: str, impact: RiskLevel, likelihood: str
@@ -890,7 +890,7 @@ class NISTAIRMFCompliance:
             "mapped_date": datetime.now().isoformat(),
         }
 
-        logger.info(f"NIST AI RMF - Risk mapped: {risk_id} ({impact.value})")
+        logger.info("NIST AI RMF - Risk mapped: %s (%s)", risk_id, impact.value)
 
     def measure_evaluate_metrics(
         self, metric_name: str, value: float, threshold: float, unit: str = ""
@@ -948,7 +948,7 @@ class NISTAIRMFCompliance:
         }
 
         self.risk_responses.append(response)
-        logger.info(f"NIST AI RMF - Risk response: {risk_id} → {response_type}")
+        logger.info("NIST AI RMF - Risk response: %s → %s", risk_id, response_type)
 
     def generate_compliance_report(self) -> dict[str, Any]:
         """Generate NIST AI RMF compliance report"""
@@ -985,7 +985,7 @@ class NISTAIRMFCompliance:
         with open(report_file, "w") as f:
             json.dump(report, f, indent=2)
 
-        logger.info(f"NIST AI RMF compliance report generated: {report_file}")
+        logger.info("NIST AI RMF compliance report generated: %s", report_file)
         return report
 
 
@@ -1201,7 +1201,7 @@ class AISecurityFramework:
             )
 
             self.incidents.append(incident)
-            logger.warning(f"⚠ Input validation failed: {reason}")
+            logger.warning("⚠ Input validation failed: %s", reason)
             return False, reason, incident
 
         # All checks passed
@@ -1221,7 +1221,7 @@ class AISecurityFramework:
         is_allowed, reason = self.guardrails.check_output(text)
 
         if not is_allowed:
-            logger.warning(f"⚠ Output validation failed: {reason}")
+            logger.warning("⚠ Output validation failed: %s", reason)
             return False, reason
 
         return True, None
@@ -1319,7 +1319,7 @@ class AISecurityFramework:
         with open(audit_file, "w") as f:
             json.dump(results, f, indent=2, default=str)
 
-        logger.info(f"Audit report saved: {audit_file}")
+        logger.info("Audit report saved: %s", audit_file)
 
         return results
 

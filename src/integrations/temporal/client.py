@@ -77,7 +77,7 @@ class TemporalClient:
             return self._client
 
         except Exception as e:
-            logger.error(f"Failed to connect to Temporal: {e}")
+            logger.error("Failed to connect to Temporal: %s", e)
             raise ConnectionError(f"Could not connect to Temporal server: {e}") from e
 
     async def start_workflow(
@@ -114,18 +114,18 @@ class TemporalClient:
         task_queue = task_queue or self.task_queue
 
         try:
-            logger.info(f"Starting workflow {workflow_id} on queue {task_queue}")
+            logger.info("Starting workflow %s on queue %s", workflow_id, task_queue)
             handle = await self._client.start_workflow(
                 workflow,
                 args,
                 id=workflow_id,
                 task_queue=task_queue,
             )
-            logger.info(f"Workflow {workflow_id} started successfully")
+            logger.info("Workflow %s started successfully", workflow_id)
             return handle
 
         except Exception as e:
-            logger.error(f"Failed to start workflow {workflow_id}: {e}")
+            logger.error("Failed to start workflow %s: %s", workflow_id, e)
             raise
 
     async def close(self) -> None:
