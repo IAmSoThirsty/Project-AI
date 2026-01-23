@@ -866,6 +866,69 @@ The Temporal integration connects with Project-AI's core systems:
 
 ---
 
+## 🛠️ **Developer Setup**
+
+### Prerequisites
+
+- Python 3.8 or higher
+- pip (Python package manager)
+- Git
+
+### Basic Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/IAmSoThirsty/Project-AI.git
+cd Project-AI
+
+# Create and activate virtual environment
+python -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+
+# Install dependencies
+python -m pip install -r requirements.txt
+python -m pip install -r requirements-dev.txt
+
+# Run tests
+pytest -q
+
+# Run linters
+ruff check .
+mypy src
+```
+
+### Windows Developers: Cygwin (Optional)
+
+For Windows contributors, Cygwin provides unified GNU toolchain access for better compatibility with Unix-based workflows. This is **optional** but recommended.
+
+**Quick Install (PowerShell - Headless)**:
+
+```powershell
+# Download Cygwin installer
+Invoke-WebRequest -Uri https://www.cygwin.com/setup-x86_64.exe -OutFile setup-x86_64.exe
+
+# Install with development packages (silent/non-interactive)
+.\setup-x86_64.exe --quiet-mode --no-shortcuts --no-desktop --no-startmenu `
+  --site https://mirrors.kernel.org/sourceware/cygwin/ `
+  --root C:\cygwin64 --packages git,make,gcc-core,python39,bash
+```
+
+**Manual Installation**:
+
+1. Download installer from <https://www.cygwin.com/>
+2. Select packages: `git`, `make`, `gcc-core`, `python39`, `bash`
+3. Add `C:\cygwin64\bin` to system PATH
+
+**Platform Notes**:
+
+- Linux/macOS: Native tools work out of the box (no Cygwin needed)
+- CI/CD: Automatically detects platform and uses appropriate tools
+- Alternatives: Git Bash, PowerShell, or WSL2 work fine if you prefer
+
+For complete contributing guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+---
+
 ## 🧑‍💻 **Production Readiness, Compliance, and CI**
 
 - **80%+ test coverage** (unit + adversarial)
