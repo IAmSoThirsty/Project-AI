@@ -19,14 +19,17 @@ This is the foundational trust model for Project-AI.
 
 import json
 import argparse
-from datetime import datetime
+from datetime import datetime, UTC
 
 # ---------------------------------------------------------------------------
 # 0. Core utilities: time & logging
 # ---------------------------------------------------------------------------
 
 def timestamp_now():
-    return datetime.utcnow().isoformat() + "Z"
+    try:
+        return datetime.now(UTC).isoformat() + "Z"
+    except (AttributeError, NameError):
+        return datetime.utcnow().isoformat() + "Z"
 
 
 def log_event(event_type, device_id, outcome, ts=None, details=None,
@@ -288,6 +291,12 @@ class SimGateway:
 
 
 def run_simulated_secure_call():
+    import tempfile
+    import os
+    
+    # Use temporary log file for simulation
+    temp_log = os.path.join(tempfile.gettempdir(), "h323_sim_ops.log")
+    
     trust_store = SimTrustStore()
     crl_ocsp = SimCRLOCSP()
 
@@ -295,14 +304,23 @@ def run_simulated_secure_call():
     gw = SimGateway("gw-sim-1", gk)
     ep = SimEndpoint("ep-sim-1")
 
-    assert validate_certificate_chain(ep.certificate, trust_store, crl_ocsp)
-    call = secure_h323_call_setup(ep, gw, "+18005551234", trust_store, crl_ocsp)
-    assert call.media_negotiated is True
+    # Temporarily override log_event to use temp file
+    original_log_event = globals()['log_event']
+    def temp_log_event(event_type, device_id, outcome, ts=None, details=None):
+        original_log_event(event_type, device_id, outcome, ts, details, logfile=temp_log)
+    globals()['log_event'] = temp_log_event
 
-    ep2 = SimEndpoint("ep-sim-2")
-    setup_srtp_media(ep, ep2)
+    try:
+        assert validate_certificate_chain(ep.certificate, trust_store, crl_ocsp)
+        call = secure_h323_call_setup(ep, gw, "+18005551234", trust_store, crl_ocsp)
+        assert call.media_negotiated is True
 
-    return "SIM_OK"
+        ep2 = SimEndpoint("ep-sim-2")
+        setup_srtp_media(ep, ep2)
+
+        return "SIM_OK"
+    finally:
+        globals()['log_event'] = original_log_event
 
 
 # ---------------------------------------------------------------------------
