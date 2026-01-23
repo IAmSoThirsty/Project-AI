@@ -14,18 +14,18 @@ class CerberusGuardAgent {
         this.status = "active";
     }
     
-    log(messageKey) {
-        const messages = {
-            "en": {
-                "started": `Agent ${this.agentId} started - Protecting ${this.lockedSection}`,
-                "monitoring": `Monitoring section: ${this.lockedSection}`,
-                "breach_detected": `BREACH DETECTED in ${this.lockedSection}!`,
+    log(messageKey) {{
+        const messages = {{
+            "en": {{
+                "started": `Agent ${{this.agentId}} started - Protecting ${{this.lockedSection}}`,
+                "monitoring": `Monitoring section: ${{this.lockedSection}}`,
+                "breach_detected": `BREACH DETECTED in ${{this.lockedSection}}!`,
                 "spawning_reinforcements": `Spawning 3 reinforcement agents...`,
-            }
-        };
+            }}
+        }};
         const msg = messages[this.humanLang]?.[messageKey] || messageKey;
-        console.log(`[${new Date().toISOString()}] [${this.agentId}] ${msg}`);
-    }
+        console.log(`[${{new Date().toISOString()}}] [${{this.agentId}}] ${{msg}}`);
+    }}
     
     monitor() {
         this.log("started");
