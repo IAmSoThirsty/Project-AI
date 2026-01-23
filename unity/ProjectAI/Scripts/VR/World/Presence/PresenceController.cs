@@ -80,15 +80,13 @@ namespace ProjectAI.VR.World.Presence
         /// </summary>
         private void HandleGenesisStateChanged(object sender, GenesisStateChangedEventArgs e)
         {
-            switch (e.NewState)
+            if (e.NewState == GenesisState.OrbForming)
             {
-                case GenesisState.OrbForming:
-                    StartOrbFormation();
-                    break;
-
-                case GenesisState.PresenceStabilizing:
-                    StartPresenceStabilization();
-                    break;
+                StartOrbFormation();
+            }
+            else if (e.NewState == GenesisState.PresenceStabilizing)
+            {
+                StartPresenceStabilization();
             }
         }
 

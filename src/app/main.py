@@ -54,7 +54,6 @@ def get_cognition_kernel() -> CognitionKernel:
     Returns:
         CognitionKernel: Global kernel instance
     """
-    global _global_cognition_kernel
     if _global_cognition_kernel is None:
         logger.error("CognitionKernel not initialized. Call initialize_kernel() first.")
         raise RuntimeError("CognitionKernel not initialized")
