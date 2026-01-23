@@ -257,7 +257,9 @@ class RAGSystem:
                     file_chunks = self._chunk_text(text, source)
                     new_chunks.extend(file_chunks)
 
-                    logger.info("Processed %s: %s chunks", filepath.name, len(file_chunks))
+                    logger.info(
+                        "Processed %s: %s chunks", filepath.name, len(file_chunks)
+                    )
                 except Exception as e:
                     logger.error("Error processing %s: %s", filepath, e)
 

@@ -9,9 +9,9 @@ and produces explanations.
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from ..capabilities.capability_invoker import CapabilityInvoker
     from ..policy.policy_engine import PolicyEngine
     from ..state.state_manager import StateManager
-    from ..capabilities.capability_invoker import CapabilityInvoker
 
 
 class DeliberationEngine:
@@ -33,11 +33,11 @@ class DeliberationEngine:
     def interpret_goal(self, payload: dict, identity_phase: str) -> dict:
         """
         Interpret goal from input payload.
-        
+
         Args:
             payload: Input payload
             identity_phase: Current identity phase
-            
+
         Returns:
             Goal dictionary
         """
@@ -51,11 +51,11 @@ class DeliberationEngine:
     def assemble_context(self, goal: dict, identity_phase: str) -> dict:
         """
         Assemble context for planning.
-        
+
         Args:
             goal: Goal dictionary
             identity_phase: Current identity phase
-            
+
         Returns:
             Context dictionary
         """
@@ -67,11 +67,11 @@ class DeliberationEngine:
     def generate_plan(self, goal: dict, context: dict) -> dict:
         """
         Generate a plan to achieve the goal.
-        
+
         Args:
             goal: Goal to plan for
             context: Planning context
-            
+
         Returns:
             Plan dictionary with steps
         """
@@ -116,11 +116,11 @@ class DeliberationEngine:
     def score_plan(self, plan: dict, policy_context: dict) -> dict:
         """
         Score a plan based on risk and policy.
-        
+
         Args:
             plan: Plan to score
             policy_context: Policy context
-            
+
         Returns:
             Scored plan
         """
@@ -136,13 +136,13 @@ class DeliberationEngine:
     ) -> str:
         """
         Generate explanation for a decision.
-        
+
         Args:
             goal: Goal that was handled
             plan: Plan that was executed
             result: Execution result
             identity_phase: Identity phase during execution
-            
+
         Returns:
             Human-readable explanation
         """

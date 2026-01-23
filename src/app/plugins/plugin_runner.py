@@ -48,6 +48,7 @@ class PluginRunner:
                 except Exception as e:
                     # Log if kill also fails
                     import logging
+
                     logging.warning("Failed to kill plugin process: %s", e)
         self.proc = None
 

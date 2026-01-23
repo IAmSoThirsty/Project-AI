@@ -37,8 +37,8 @@ if __name__ == "__main__":
         "message": "Check current state and summarize recent activity.",
     }
     response = engine.handle_input("cli", payload)
-    
-    print(f"\n✓ Response received:")
+
+    print("\n✓ Response received:")
     print(f"  Identity Phase: {response['identity_phase']}")
     print(f"  Explanation: {response['explanation']}")
     print(f"  Result: {response['result']}")

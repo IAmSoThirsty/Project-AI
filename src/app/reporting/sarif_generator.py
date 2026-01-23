@@ -403,10 +403,13 @@ class SARIFGenerator:
 
         # Save report temporarily using secure temp file
         import tempfile
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as temp_file:
+
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".json", delete=False
+        ) as temp_file:
             temp_filename = temp_file.name
             json.dump(report, temp_file, indent=2)
-        
+
         try:
             # Upload via GitHub API
             url = f"https://api.github.com/repos/{repo}/code-scanning/sarifs"

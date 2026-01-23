@@ -58,6 +58,7 @@ class SettingsDialog(QDialog):
         except Exception as e:
             # Log the error instead of silently passing
             import logging
+
             logging.warning("Failed to load settings: %s", e)
         return {"theme": "light", "ui_scale": 10}
 
@@ -72,5 +73,6 @@ class SettingsDialog(QDialog):
         except Exception as e:
             # Log the error
             import logging
+
             logging.error("Failed to save settings: %s", e)
             return False

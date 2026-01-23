@@ -131,11 +131,15 @@ class TestSpawnConstraintBehaviors:
             factor = constraints.compute_adaptive_spawn_factor(risk, conf, load, gen)
 
             # Assert bounds
-            assert 1 <= factor <= 5, f"Factor {factor} out of bounds for risk={risk}, gen={gen}"
+            assert (
+                1 <= factor <= 5
+            ), f"Factor {factor} out of bounds for risk={risk}, gen={gen}"
 
     def test_budget_tracking_prevents_overrun(self):
         """Assert: Resource budgets prevent spawning when exceeded."""
-        constraints = SpawnConstraints(max_concurrent_agents=100)  # Higher than incident budget
+        constraints = SpawnConstraints(
+            max_concurrent_agents=100
+        )  # Higher than incident budget
 
         incident_id = "budget-test"
 
@@ -239,7 +243,9 @@ class TestLockdownBehaviors:
 
         for risk, depth in test_cases:
             stage = controller.compute_lockdown_stage(risk, depth)
-            assert 0 <= stage <= 25, f"Stage {stage} out of bounds for risk={risk}, depth={depth}"
+            assert (
+                0 <= stage <= 25
+            ), f"Stage {stage} out of bounds for risk={risk}, depth={depth}"
 
     def test_sections_lock_progressively(self, lockdown_controller):
         """Assert: Higher stages lock more sections (monotonic)."""
@@ -357,15 +363,13 @@ class TestIntegrationBehaviors:
             for generation in range(20):  # Try way more than max depth
                 try:
                     # This should eventually stop due to constraints
-                    cerberus.detect_bypass(
-                        bypass_type=f"rapid_attack_{generation}"
-                    )
+                    cerberus.detect_bypass(bypass_type=f"rapid_attack_{generation}")
                     current_count = len(cerberus.agents)
 
                     # Verify growth is controlled
                     assert current_count <= 50  # Hard cap
-                    assert (
-                        current_count - initial_count <= 3 * (generation + 1)
+                    assert current_count - initial_count <= 3 * (
+                        generation + 1
                     )  # 3x per gen max
 
                     initial_count = current_count

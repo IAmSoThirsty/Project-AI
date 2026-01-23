@@ -503,7 +503,9 @@ class PerspectiveEngine:
         self.last_update = datetime.now(UTC).isoformat()
         self._save_state()
 
-        logger.debug("Perspective updated from %s: %s", influence_source, changes_applied)
+        logger.debug(
+            "Perspective updated from %s: %s", influence_source, changes_applied
+        )
         return changes_applied
 
     def get_perspective_summary(self) -> dict[str, Any]:

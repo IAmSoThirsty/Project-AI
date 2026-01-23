@@ -316,9 +316,7 @@ class CerberusObservability:
             "outcome": graph.outcome,
             "resolved": graph.resolution_time is not None,
             "nodes": graph.nodes,
-            "edges": [
-                {"from": f, "to": t, "metadata": m} for f, t, m in graph.edges
-            ],
+            "edges": [{"from": f, "to": t, "metadata": m} for f, t, m in graph.edges],
         }
 
     def get_slo_report(self) -> dict[str, Any]:

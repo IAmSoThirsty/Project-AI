@@ -151,8 +151,12 @@ class MetricsServer:
             )
             self.thread.start()
 
-            logger.info("Prometheus metrics server started on %s:%s", self.host, self.port)
-            logger.info("Metrics available at http://%s:%s/metrics", self.host, self.port)
+            logger.info(
+                "Prometheus metrics server started on %s:%s", self.host, self.port
+            )
+            logger.info(
+                "Metrics available at http://%s:%s/metrics", self.host, self.port
+            )
 
         except Exception as e:
             logger.error("Failed to start metrics server: %s", e)
