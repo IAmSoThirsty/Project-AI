@@ -44,7 +44,7 @@ class ThirstyDebugger extends ThirstyInterpreter {
       try {
         this.executeLine(line);
       } catch (error) {
-        console.error(`❌ Error at line ${this.currentLine}: ${error.message}`);
+        console.error('❌ Error at line ' + this.currentLine + ': ' + error.message);
         await this.pause(line);
       }
     }
@@ -54,7 +54,7 @@ class ThirstyDebugger extends ThirstyInterpreter {
   }
 
   async pause(line) {
-    console.log(`\n⏸️  Paused at line ${this.currentLine}: ${line}`);
+    console.log('\n⏸️  Paused at line ' + this.currentLine + ': ' + line);
     this.showContext();
 
     let continuing = false;
@@ -74,7 +74,7 @@ class ThirstyDebugger extends ThirstyInterpreter {
       const line = this.lines[i];
       const marker = line.number === this.currentLine ? '→' : ' ';
       const bp = this.breakpoints.has(line.number) ? '🔴' : '  ';
-      console.log(`${bp} ${marker} ${line.number}: ${line.code}`);
+      console.log(bp + ' ' + marker + ' ' + line.number + ': ' + line.code);
     }
 
     // Show watched variables
@@ -82,7 +82,7 @@ class ThirstyDebugger extends ThirstyInterpreter {
       console.log('\nWatched variables:');
       for (const varName of this.watchVariables) {
         const value = this.variables[varName];
-        console.log(`  ${varName} = ${JSON.stringify(value)}`);
+        console.log('  ' + varName + ' = ' + JSON.stringify(value));
       }
     }
   }
@@ -125,7 +125,7 @@ class ThirstyDebugger extends ThirstyInterpreter {
         if (args.length > 0) {
           const lineNum = parseInt(args[0]);
           this.breakpoints.add(lineNum);
-          console.log(`✓ Breakpoint set at line ${lineNum}`);
+          console.log('✓ Breakpoint set at line ' + lineNum);
         } else {
           console.log('Usage: break <line_number>');
         }
@@ -135,7 +135,7 @@ class ThirstyDebugger extends ThirstyInterpreter {
         if (args.length > 0) {
           const lineNum = parseInt(args[0]);
           this.breakpoints.delete(lineNum);
-          console.log(`✓ Breakpoint cleared at line ${lineNum}`);
+          console.log('✓ Breakpoint cleared at line ' + lineNum);
         } else {
           console.log('Usage: clear <line_number>');
         }
@@ -145,7 +145,7 @@ class ThirstyDebugger extends ThirstyInterpreter {
       case 'w':
         if (args.length > 0) {
           this.watchVariables.add(args[0]);
-          console.log(`✓ Watching variable: ${args[0]}`);
+          console.log('✓ Watching variable: ' + args[0]);
         } else {
           console.log('Usage: watch <variable_name>');
         }
@@ -154,15 +154,18 @@ class ThirstyDebugger extends ThirstyInterpreter {
       case 'unwatch':
         if (args.length > 0) {
           this.watchVariables.delete(args[0]);
-          console.log(`✓ Stopped watching: ${args[0]}`);
+          console.log('✓ Stopped watching: ' + args[0]);
         }
         return false;
 
       case 'vars':
       case 'v':
         console.log('\nVariables:');
-        for (const [name, value] of Object.entries(this.variables)) {
-          console.log(`  ${name} = ${JSON.stringify(value)}`);
+        for (const name in this.variables) {
+          if (this.variables.hasOwnProperty(name)) {
+            const value = this.variables[name];
+            console.log('  ' + name + ' = ' + JSON.stringify(value));
+          }
         }
         return false;
 
@@ -172,7 +175,7 @@ class ThirstyDebugger extends ThirstyInterpreter {
         } else {
           console.log('Breakpoints:');
           for (const bp of this.breakpoints) {
-            console.log(`  Line ${bp}`);
+            console.log('  Line ' + bp);
           }
         }
         return false;
@@ -217,7 +220,7 @@ async function main() {
 
   const filename = args[0];
   if (!fs.existsSync(filename)) {
-    console.error(`Error: File '${filename}' not found`);
+    console.error("Error: File '" + filename + "' not found");
     process.exit(1);
   }
 

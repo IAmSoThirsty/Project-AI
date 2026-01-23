@@ -53,31 +53,33 @@ class ThirstyProfiler extends ThirstyInterpreter {
 
     // Overall stats
     console.log('\n📊 Overall Statistics:');
-    console.log(`   Total Execution Time: ${this.totalTime.toFixed(3)} ms`);
-    console.log(`   Lines Executed: ${this.executionTimes.length}`);
-    console.log(`   Average Time per Line: ${(this.totalTime / this.executionTimes.length).toFixed(3)} ms`);
-    console.log(`   Memory Delta: ${(this.memoryDelta.heapUsed / 1024).toFixed(2)} KB`);
+    console.log('   Total Execution Time: ' + this.totalTime.toFixed(3) + ' ms');
+    console.log('   Lines Executed: ' + this.executionTimes.length);
+    console.log('   Average Time per Line: ' + (this.totalTime / this.executionTimes.length).toFixed(3) + ' ms');
+    console.log('   Memory Delta: ' + (this.memoryDelta.heapUsed / 1024).toFixed(2) + ' KB');
 
     // Slowest lines
     console.log('\n🐌 Slowest Lines:');
-    const sorted = [...this.executionTimes].sort((a, b) => b.time - a.time).slice(0, 5);
-    sorted.forEach((item, index) => {
-      console.log("   " + index + 1 + ". Line " + item.line + ": " + item.time.toFixed(3) + " ms");
-      console.log(`      ${item.code}`);
-    });
+    const sorted = [...this.executionTimes].sort(function(a, b) { return b.time - a.time; }).slice(0, 5);
+    for (let index = 0; index < sorted.length; index++) {
+      const item = sorted[index];
+      console.log("   " + (index + 1) + ". Line " + item.line + ": " + item.time.toFixed(3) + " ms");
+      console.log("      " + item.code);
+    }
 
     // Time distribution
     console.log('\n📈 Execution Time per Line:');
-    this.executionTimes.forEach(item => {
+    for (let i = 0; i < this.executionTimes.length; i++) {
+      const item = this.executionTimes[i];
       const bar = '█'.repeat(Math.max(1, Math.floor(item.time * 10)));
-      console.log(`   Line ${item.line.toString().padStart(3)}: ${bar} ${item.time.toFixed(3)} ms`);
-    });
+      console.log('   Line ' + item.line.toString().padStart(3) + ': ' + bar + ' ' + item.time.toFixed(3) + ' ms');
+    }
 
     // Recommendations
     console.log('\n💡 Optimization Suggestions:');
-    const slowLines = this.executionTimes.filter(t => t.time > 1);
+    const slowLines = this.executionTimes.filter(function(t) { return t.time > 1; });
     if (slowLines.length > 0) {
-      console.log(`   • ${slowLines.length} line(s) took longer than 1ms to execute`);
+      console.log('   • ' + slowLines.length + ' line(s) took longer than 1ms to execute');
       console.log('   • Consider optimizing these lines for better performance');
     } else {
       console.log('   • Your code is well optimized! Keep it up! 💧');
@@ -102,7 +104,7 @@ function main() {
   const filename = args[0];
 
   if (!fs.existsSync(filename)) {
-    console.error(`Error: File '${filename}' not found`);
+    console.error("Error: File '" + filename + "' not found");
     process.exit(1);
   }
 
