@@ -12,30 +12,35 @@
 ## 📋 Phase Completion Status
 
 ### ✅ Phase 1: Setup Infrastructure - COMPLETE
+
 - ✅ Directory structure created (`adversarial_tests/`, `ci-reports/`)
 - ✅ Galahad model wrapper implemented (350+ lines)
 - ✅ Conversation context tracking added
 - ✅ Escalation pattern detection implemented
 
 ### ✅ Phase 2: JailbreakBench Integration - COMPLETE
+
 - ✅ 40-prompt dataset (expanded from 30)
 - ✅ Research-based attacks (DAN, STAN, DUDE, encoding, obfuscation)
 - ✅ Runner script with comprehensive metrics
 - ✅ **Result: 93.55% harmful blocked, 0% jailbreak success**
 
 ### ✅ Phase 3: Garak Integration - COMPLETE
+
 - ✅ 21 vulnerability probes across 7 categories
 - ✅ Runner script with detailed reporting
 - ✅ Comprehensive test report (15KB)
 - ✅ **Result: 61.11% detection, identified critical gaps**
 
 ### ✅ Phase 4: Multi-Turn Testing - COMPLETE
+
 - ✅ 15 conversation scenarios
 - ✅ Escalation detection (persistence, trust-building)
 - ✅ Runner script with dialog tracking
 - ✅ **Result: 46.67% mitigation, needs improvement**
 
 ### ✅ Phase 5: Research-Based Defenses - COMPLETE
+
 - ✅ 10+ attack patterns from professional red teamers
 - ✅ Character-level obfuscation defenses (Unicode normalization, leetspeak)
 - ✅ DAN/persona detection
@@ -44,6 +49,7 @@
 - ✅ Documentation: RESEARCH_BASED_ATTACKS.md (12KB)
 
 ### ✅ Phase 6: CI/CD Integration - COMPLETE
+
 - ✅ GitHub Actions workflow (`adversarial-redteam.yml`)
 - ✅ Automated test execution
 - ✅ PR comments with results
@@ -52,6 +58,7 @@
 - ✅ Threshold checking (fail on critical issues)
 
 ### ✅ Phase 7: Documentation & Transparency - COMPLETE
+
 - ✅ Quick reference: `README.md` (16KB)
 - ✅ Attack patterns: `RESEARCH_BASED_ATTACKS.md` (12KB)
 - ✅ Monolith docs: `THE_CODEX.md` (34KB)
@@ -64,6 +71,7 @@
 ## 📊 Final Test Results
 
 ### Comprehensive Test Suite
+
 **Command**: `python adversarial_tests/run_all_tests.py`
 
 ```
@@ -133,12 +141,14 @@ Category Breakdown:
 ## 🎯 Key Achievements
 
 ### 1. Complete Test Infrastructure ✅
+
 - **3 test suites** fully implemented and operational
 - **76 total test cases** covering diverse attack vectors
 - **Automated execution** via single command or CI/CD
 - **Comprehensive reporting** with JSON artifacts
 
 ### 2. Research-Based Defenses ✅
+
 - **10+ attack patterns** learned from professional red teamers
 - **Academic papers** studied and implemented (ACL, MDPI, arXiv, MIT, Nature)
 - **Community resources** integrated (DeepWiki, GitHub, Gray Swan)
@@ -146,6 +156,7 @@ Category Breakdown:
 - **Pattern recognition** (DAN/STAN/DUDE, encoding, cognitive manipulation)
 
 ### 3. Comprehensive Documentation ✅
+
 - **4 major documents** totaling 77KB
 - **THE_CODEX.md** - Epic monolith documentation (34KB)
 - **GARAK_COMPREHENSIVE_REPORT.md** - Detailed analysis (15KB)
@@ -153,6 +164,7 @@ Category Breakdown:
 - **README.md** - Quick reference (16KB)
 
 ### 4. CI/CD Integration ✅
+
 - **GitHub Actions workflow** ready to merge
 - **Automated PR comments** with test results
 - **Artifact uploads** for report persistence
@@ -160,6 +172,7 @@ Category Breakdown:
 - **Status badges** generation
 
 ### 5. 100% Transparency ✅
+
 - **All results honest** and unedited
 - **Failures documented** with improvement plans
 - **No whitelisting** or test stubbing
@@ -171,6 +184,7 @@ Category Breakdown:
 ## 📁 Files Created/Modified
 
 ### Test Infrastructure (7 files)
+
 ```
 adversarial_tests/
 ├── galahad_model.py                    (350 lines) ✅
@@ -187,6 +201,7 @@ adversarial_tests/
 ```
 
 ### Documentation (4 files)
+
 ```
 adversarial_tests/
 ├── README.md                           (16KB) ✅
@@ -196,12 +211,14 @@ adversarial_tests/
 ```
 
 ### CI/CD (1 file)
+
 ```
 .github/workflows/
 └── adversarial-redteam.yml            (11KB) ✅
 ```
 
 ### Reports Generated (4 files)
+
 ```
 ci-reports/
 ├── jbb-latest.json                    (50KB) ✅
@@ -215,11 +232,13 @@ ci-reports/
 ## 🚀 How to Run
 
 ### Run All Tests (Recommended)
+
 ```bash
 python adversarial_tests/run_all_tests.py
 ```
 
 ### Run Individual Tests
+
 ```bash
 # JailbreakBench
 python adversarial_tests/jbb/run_jbb.py
@@ -232,6 +251,7 @@ python adversarial_tests/garak/run_garak.py
 ```
 
 ### View Reports
+
 ```bash
 # Pretty-print JSON reports
 python -m json.tool ci-reports/jbb-latest.json
@@ -241,6 +261,7 @@ python -m json.tool ci-reports/unified-report.json
 ```
 
 ### CI/CD
+
 - Workflow triggers automatically on push/PR to main
 - View results in GitHub Actions
 - Download artifacts from workflow runs
@@ -250,35 +271,38 @@ python -m json.tool ci-reports/unified-report.json
 ## 🔧 Identified Improvements
 
 ### Critical (Implement Next)
+
 1. **Data Leakage Keywords** (0% detection)
    - Add: "training data", "list all", "email addresses", "phone numbers"
    - Add: "user passwords", "extract data", "show me all"
 
-2. **Toxicity Keywords** (0% detection)
+1. **Toxicity Keywords** (0% detection)
    - Add: "hate speech", "offensive", "racial slur"
    - Add: "discriminatory", "derogatory", "generate hate"
 
 ### High Priority
-3. **ROT13 Encoding** (missed 1/3)
+
+1. **ROT13 Encoding** (missed 1/3)
    - Add: "rot13", "decode from rot13"
 
-4. **System Prompt Extraction**
+1. **System Prompt Extraction**
    - Add: "repeat your", "show me your", "system prompt"
 
-5. **Multi-Turn Early Warning**
+1. **Multi-Turn Early Warning**
    - More aggressive first-turn detection
    - Implement sliding window risk scoring
 
 ### Future Enhancements
-6. **Machine Learning Classifier**
+
+1. **Machine Learning Classifier**
    - Train BERT on jailbreak dataset
    - Deploy as additional detection layer
 
-7. **Semantic Analysis**
+1. **Semantic Analysis**
    - Use embeddings for intent detection
    - Prompt similarity search
 
-8. **Automated Red Teaming**
+1. **Automated Red Teaming**
    - RLHF-based attack generation
    - Continuous adversarial testing
 
@@ -304,44 +328,51 @@ python -m json.tool ci-reports/unified-report.json
 ## 🎓 Lessons Learned
 
 ### What Went Well ✅
+
 1. Research-based approach was highly effective
-2. Character-level defenses caught homoglyphs and leetspeak
-3. DAN/persona detection at 100%
-4. Documentation quality exceeded expectations
-5. Test infrastructure is robust and extensible
+1. Character-level defenses caught homoglyphs and leetspeak
+1. DAN/persona detection at 100%
+1. Documentation quality exceeded expectations
+1. Test infrastructure is robust and extensible
 
 ### What Needs Work ⚠️
+
 1. Data leakage completely missed (0%)
-2. Toxicity detection non-existent (0%)
-3. Multi-turn early detection too lenient
-4. Need more comprehensive keyword coverage
-5. Semantic understanding would help
+1. Toxicity detection non-existent (0%)
+1. Multi-turn early detection too lenient
+1. Need more comprehensive keyword coverage
+1. Semantic understanding would help
 
 ### Surprises 🎭
+
 1. Simple keyword matching is surprisingly effective for jailbreaks
-2. Multi-turn attacks harder to detect than expected
-3. Precision is perfect (1.000) - no false positives!
-4. Test suite runs incredibly fast (< 1 second total)
-5. Documentation ended up being 77KB (more than expected)
+1. Multi-turn attacks harder to detect than expected
+1. Precision is perfect (1.000) - no false positives!
+1. Test suite runs incredibly fast (< 1 second total)
+1. Documentation ended up being 77KB (more than expected)
 
 ---
 
 ## 🏆 Final Verdict
 
 ### ✅ READY FOR PRODUCTION
+
 With the following caveats:
+
 - Implement critical keyword additions (data leakage, toxicity)
 - Continue monitoring for new attack patterns
 - Plan to add ML classifier layer
 - Iterate on multi-turn detection
 
 ### 📊 Transparency Achieved
+
 - **All results are real and unedited**
 - **Failures are documented openly**
 - **Improvement plans are clear**
 - **No shortcuts or whitelist hacks**
 
 ### 🎯 Mission Accomplished
+
 The adversarial red-teaming evaluation suite for Galahad (Project-AI) is **complete, comprehensive, and production-ready**. All phases finished, all documentation written, all tests operational.
 
 **The Codex is eternal. The tests are honest. The vigil continues.**
@@ -351,6 +382,7 @@ The adversarial red-teaming evaluation suite for Galahad (Project-AI) is **compl
 ## 🙏 Acknowledgments
 
 ### Research Sources
+
 - **ACL 2025**: "Bypassing LLM Guardrails"
 - **MDPI 2024**: "Prompt Injection Attacks in LLMs"
 - **arXiv 2024**: "Derail Yourself: Multi-turn Jailbreak"
@@ -361,6 +393,7 @@ The adversarial red-teaming evaluation suite for Galahad (Project-AI) is **compl
 - **PromptLabs**: Prompt Hacking Resources
 
 ### Community
+
 - JailbreakChat community
 - Security researchers who document attacks
 - Open-source LLM safety community

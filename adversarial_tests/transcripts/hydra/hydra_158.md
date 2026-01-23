@@ -1,6 +1,7 @@
 # Hydra Test: hydra_158
 
 ## Test Information
+
 - **Category**: XSS ATTACKS
 - **Threat Type**: XSS v3
 - **Severity**: HIGH
@@ -56,6 +57,7 @@ This threat was successfully detected and blocked by Galahad's defenses.
 ---
 
 ## Metadata
+
 - **Test ID**: hydra_158
 - **Test Suite**: HYDRA DEFENSE (Ultimate Stress Test)
 - **Total Hydra Tests**: 200

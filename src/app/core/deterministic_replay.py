@@ -133,7 +133,7 @@ class DeterministicReplayTool:
         with filepath.open("w") as f:
             json.dump(serializable_data, f, indent=2)
 
-        logger.info(f"Saved execution context to {filepath}")
+        logger.info("Saved execution context to %s", filepath)
         return str(filepath)
 
     def load_execution(self, trace_id: str) -> dict[str, Any]:
@@ -156,7 +156,7 @@ class DeterministicReplayTool:
             raise FileNotFoundError(f"No execution found for trace_id: {trace_id}")
 
         if len(matches) > 1:
-            logger.warning(f"Multiple executions found for {trace_id}, using first")
+            logger.warning("Multiple executions found for %s, using first", trace_id)
 
         with matches[0].open() as f:
             return json.load(f)
@@ -336,7 +336,7 @@ class DeterministicReplayTool:
                 # (In practice, you'd have parent_trace_id or related_traces in metadata)
 
             except FileNotFoundError:
-                logger.warning(f"Trace {trace_id} not found, skipping")
+                logger.warning("Trace %s not found, skipping", trace_id)
 
         return {
             "start_trace_id": start_trace_id,
@@ -410,6 +410,6 @@ class DeterministicReplayTool:
                 matches.append(execution)
 
             except Exception as e:
-                logger.warning(f"Failed to load {filepath}: {e}")
+                logger.warning("Failed to load %s: %s", filepath, e)
 
         return matches

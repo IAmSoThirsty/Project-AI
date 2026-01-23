@@ -7,6 +7,7 @@ Welcome to **Project-AI** — an extensible, secure AGI operations stack for bui
 _Project-AI is an open, extensible platform for operating, securing, and researching AGI systems. It integrates state-of-the-art scheduling (Temporal), monitoring, modular cognitive processing (MCP tools), Spiking Neural Network co-processors, and end-to-end security/identity for both production and experimental deployments._
 
 ## What Can You Do With Project-AI?
+
 - **Run a full AGI stack** with guarded workflows, SNN co-processors, MCP tools, and built-in monitoring.
 - **Deploy and monitor** production or research systems with layered safety, identity, and observability.
 - **Prototype and extend** new AGI modules, security policies, or research ideas in a modular, testable sandbox.
@@ -31,7 +32,9 @@ _Project-AI is an open, extensible platform for operating, securing, and researc
 ---
 
 ## Example Deployments (Happy Paths)
+
 **(All coming soon — see `examples/` directory)**
+
 - Minimal deployment example
 - Advanced secured deployment
 - Research sandbox
@@ -42,12 +45,15 @@ _Project-AI is an open, extensible platform for operating, securing, and researc
 ## Document Taxonomy / Index
 
 **Identity Docs:**  
+
 - AGI Identity Spec _(Coming soon)_
 
 **Security Docs:**  
+
 - Security Frameworks, Red Team Results, Robustness Metrics _(Coming soon)_
 
 **Infrastructure Docs:**  
+
 - Deployment, Monitoring, Cloud/Offline Sync _(Coming soon)_
 
 ---

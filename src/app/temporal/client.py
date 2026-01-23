@@ -76,7 +76,7 @@ class TemporalClientManager:
             return self._client
 
         except Exception as e:
-            logger.error(f"Failed to connect to Temporal server: {e}")
+            logger.error("Failed to connect to Temporal server: %s", e)
             raise ConnectionError(
                 f"Unable to connect to Temporal at {self.target_host}"
             ) from e
@@ -139,13 +139,13 @@ class TemporalClientManager:
         Args:
             worker: The worker to run
         """
-        logger.info(f"Starting worker on task queue '{self.task_queue}'")
+        logger.info("Starting worker on task queue '%s'", self.task_queue)
         try:
             await worker.run()
         except asyncio.CancelledError:
             logger.info("Worker cancelled")
         except Exception as e:
-            logger.error(f"Worker error: {e}")
+            logger.error("Worker error: %s", e)
             raise
 
     async def health_check(self) -> bool:
@@ -163,7 +163,7 @@ class TemporalClientManager:
             await self._client.describe_namespace()
             return True
         except Exception as e:
-            logger.warning(f"Health check failed: {e}")
+            logger.warning("Health check failed: %s", e)
             return False
 
     @classmethod

@@ -81,7 +81,7 @@ class FunctionRegistry:
             "category": category,
             "name": name,
         }
-        logger.info(f"Registered function: {name} (category: {category})")
+        logger.info("Registered function: %s (category: %s)", name, category)
 
     def _generate_schema(self, func: Callable) -> dict[str, Any]:
         """Generate a JSON schema from function signature.
@@ -156,7 +156,7 @@ class FunctionRegistry:
         """
         if name in self._functions:
             del self._functions[name]
-            logger.info(f"Unregistered function: {name}")
+            logger.info("Unregistered function: %s", name)
             return True
         return False
 
@@ -249,10 +249,10 @@ class FunctionRegistry:
 
         try:
             result = func(**kwargs)
-            logger.debug(f"Called function '{function_name}' with kwargs: {kwargs}")
+            logger.debug("Called function '%s' with kwargs: %s", function_name, kwargs)
             return result
         except TypeError as e:
-            logger.error(f"Parameter mismatch calling '{function_name}': {e}")
+            logger.error("Parameter mismatch calling '%s': %s", function_name, e)
             raise TypeError(
                 f"Invalid parameters for function '{function_name}': {e}"
             ) from e

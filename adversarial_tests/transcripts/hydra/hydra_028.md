@@ -1,6 +1,7 @@
 # Hydra Test: hydra_028
 
 ## Test Information
+
 - **Category**: BASE64 ENCODING
 - **Threat Type**: Base64 v3
 - **Severity**: HIGH
@@ -56,6 +57,7 @@ This threat was successfully detected and blocked by Galahad's defenses.
 ---
 
 ## Metadata
+
 - **Test ID**: hydra_028
 - **Test Suite**: HYDRA DEFENSE (Ultimate Stress Test)
 - **Total Hydra Tests**: 200

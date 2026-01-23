@@ -1,4 +1,5 @@
 # Secure H.323 Hardening Checklist
+
 ## Version 1.0 — Gatekeeper, Gateway, Endpoint, Network, PKI
 
 ## 1. Gatekeeper (GK) Hardening Checklist
@@ -152,17 +153,21 @@
 ### 4.2 Firewall Rules
 
 **EP → GK:**
+
 - [ ] Allow RAS (UDP 1719/1718)
 - [ ] Allow H.225/H.245 (TCP 1720/TLS + fixed H.245 range)
 
 **EP → GW:**
+
 - [ ] Allow H.225/H.245
 - [ ] Allow SRTP media ports
 
 **GK → GW:**
+
 - [ ] Allow RAS + H.225
 
 **DMZ → Carrier:**
+
 - [ ] Allow only carrier‑required signaling/media
 
 ### 4.3 ACL Enforcement

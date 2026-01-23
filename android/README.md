@@ -5,6 +5,7 @@ This repository now includes a minimal Android project setup for CI/CD integrati
 ## 🎯 Current Status
 
 The Android project structure is now complete with:
+
 - ✅ Gradle build system (v8.5)
 - ✅ Minimal Android app module with MainActivity
 - ✅ AndroidX support enabled
@@ -49,11 +50,13 @@ chmod +x gradlew
 ## ✨ Latest Features Available for Integration
 
 The desktop version now includes these powerful new features:
+
 - **Cloud Sync**: Encrypted cross-device synchronization with device management and conflict resolution
 - **Advanced ML Models**: RandomForest, GradientBoosting, and Neural Networks for intent/sentiment/behavior prediction
 - **Plugin System**: Dynamic plugin loading with hooks and lifecycle management
 
 ## 🔧 Integration Plan
+
 - The Android app will communicate with the main program and web backend via API endpoints and shared data models.
 - All integration points will be documented and stubbed for easy merging into the main branch when development begins.
 
@@ -97,6 +100,7 @@ Refer to the respective Python files in `src/app/core/`, `src/app/gui/`, and
 ## Integration Requirements
 
 ### API Endpoints (to be implemented)
+
 - `/api/auth/login` - User authentication
 - `/api/users` - User management (CRUD)
 - `/api/sync` - Cloud sync operations
@@ -109,6 +113,7 @@ Refer to the respective Python files in `src/app/core/`, `src/app/gui/`, and
 - `/api/security` - Security resources
 
 ### Data Models (examples)
+
 - **User**: `{ username, password, email, profile, ... }`
 - **ImageRequest**: `{ prompt, style, width, height, ... }`
 - **LearningPath**: `{ interest, skill_level, steps, ... }`
@@ -116,6 +121,7 @@ Refer to the respective Python files in `src/app/core/`, `src/app/gui/`, and
 - **Alert**: `{ username, location, message, timestamp }`
 
 ### Integration Notes
+
 - Use HTTPS for all API communication.
 - Authentication should use secure tokens (JWT or similar).
 - Data models must match backend Python structures for seamless integration.

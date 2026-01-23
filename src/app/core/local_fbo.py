@@ -128,7 +128,7 @@ class LocalFBOSystem:
                 self.rag_system = RAGSystem(data_dir=str(rag_dir))
                 logger.info("RAG system initialized for offline use")
             except Exception as e:
-                logger.warning(f"RAG system not available: {e}")
+                logger.warning("RAG system not available: %s", e)
                 self.rag_system = None
 
         # Initialize reflection system
@@ -144,9 +144,9 @@ class LocalFBOSystem:
             try:
                 with open(cache_file, encoding="utf-8") as f:
                     self.response_cache = json.load(f)
-                logger.info(f"Loaded {len(self.response_cache)} cached responses")
+                logger.info("Loaded %s cached responses", len(self.response_cache))
             except Exception as e:
-                logger.error(f"Error loading cache: {e}")
+                logger.error("Error loading cache: %s", e)
 
         # Load offline knowledge
         knowledge_file = self.data_dir / "offline_knowledge.json"
@@ -156,7 +156,7 @@ class LocalFBOSystem:
                     self.offline_knowledge = json.load(f)
                 logger.info("Loaded offline knowledge base")
             except Exception as e:
-                logger.error(f"Error loading knowledge: {e}")
+                logger.error("Error loading knowledge: %s", e)
 
     def _load_reflections(self):
         """Load reflection entries from disk."""
@@ -166,9 +166,9 @@ class LocalFBOSystem:
                 with open(reflections_file, encoding="utf-8") as f:
                     data = json.load(f)
                     self.reflections = [ReflectionEntry.from_dict(r) for r in data]
-                logger.info(f"Loaded {len(self.reflections)} reflections")
+                logger.info("Loaded %s reflections", len(self.reflections))
             except Exception as e:
-                logger.error(f"Error loading reflections: {e}")
+                logger.error("Error loading reflections: %s", e)
 
     def _save_reflections(self):
         """Save reflections to disk."""
@@ -176,9 +176,9 @@ class LocalFBOSystem:
         try:
             with open(reflections_file, "w", encoding="utf-8") as f:
                 json.dump([r.to_dict() for r in self.reflections], f, indent=2)
-            logger.info(f"Saved {len(self.reflections)} reflections")
+            logger.info("Saved %s reflections", len(self.reflections))
         except Exception as e:
-            logger.error(f"Error saving reflections: {e}")
+            logger.error("Error saving reflections: %s", e)
 
     def _save_cache(self):
         """Save response cache to disk."""
@@ -187,7 +187,7 @@ class LocalFBOSystem:
             with open(cache_file, "w", encoding="utf-8") as f:
                 json.dump(self.response_cache, f, indent=2)
         except Exception as e:
-            logger.error(f"Error saving cache: {e}")
+            logger.error("Error saving cache: %s", e)
 
     def _save_knowledge(self):
         """Save offline knowledge to disk."""
@@ -196,7 +196,7 @@ class LocalFBOSystem:
             with open(knowledge_file, "w", encoding="utf-8") as f:
                 json.dump(self.offline_knowledge, f, indent=2)
         except Exception as e:
-            logger.error(f"Error saving knowledge: {e}")
+            logger.error("Error saving knowledge: %s", e)
 
     def check_connectivity(self) -> bool:
         """
@@ -253,7 +253,7 @@ class LocalFBOSystem:
         Returns:
             Response dictionary with answer and metadata
         """
-        logger.info(f"Processing offline query: {query}")
+        logger.info("Processing offline query: %s", query)
 
         # Check cache first
         cache_key = self._generate_cache_key(query)
@@ -281,7 +281,7 @@ class LocalFBOSystem:
                     self._cache_response(cache_key, response)
                     return response
             except Exception as e:
-                logger.error(f"RAG query failed: {e}")
+                logger.error("RAG query failed: %s", e)
 
         # Fallback to basic knowledge lookup
         response = self._basic_knowledge_lookup(query)
@@ -380,7 +380,7 @@ class LocalFBOSystem:
         self.reflections.append(reflection)
         self._save_reflections()
 
-        logger.info(f"Added reflection: {category} from {source}")
+        logger.info("Added reflection: %s from %s", category, source)
         return reflection
 
     def search_reflections(
@@ -471,7 +471,7 @@ class LocalFBOSystem:
             with open(sync_file, "w", encoding="utf-8") as f:
                 json.dump({"timestamp": datetime.now().isoformat()}, f, indent=2)
         except Exception as e:
-            logger.error(f"Error saving sync time: {e}")
+            logger.error("Error saving sync time: %s", e)
 
         logger.info("System prepared for offline operation")
 
@@ -497,7 +497,7 @@ class LocalFBOSystem:
         # For now, we just mark it as synced
         self.prepare_for_offline()
 
-        logger.info(f"Sync complete: {synced} items synced")
+        logger.info("Sync complete: %s items synced", synced)
 
         return {
             "success": True,
@@ -521,7 +521,7 @@ class LocalFBOSystem:
         self.offline_knowledge[category][key] = value
         self._save_knowledge()
 
-        logger.info(f"Added offline knowledge: {key} in {category}")
+        logger.info("Added offline knowledge: %s in %s", key, category)
 
     def ingest_for_offline(self, text: str, source: str, metadata: dict = None):
         """
@@ -538,9 +538,9 @@ class LocalFBOSystem:
 
         try:
             self.rag_system.ingest_text(text, source, metadata)
-            logger.info(f"Ingested text from {source} for offline use")
+            logger.info("Ingested text from %s for offline use", source)
         except Exception as e:
-            logger.error(f"Error ingesting text: {e}")
+            logger.error("Error ingesting text: %s", e)
 
     def get_statistics(self) -> dict[str, Any]:
         """Get FBO system statistics."""

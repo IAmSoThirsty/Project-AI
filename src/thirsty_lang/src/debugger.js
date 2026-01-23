@@ -33,9 +33,9 @@ class ThirstyDebugger extends ThirstyInterpreter {
     console.log('🐛 Thirsty-lang Debugger');
     console.log('Type "help" for debugger commands\n');
 
-    for (let i = 0; i < this.lines.length; i++) {
-      this.currentLine = this.lines[i].number;
-      const line = this.lines[i].code;
+    for (const lineObj of this.lines) {
+      this.currentLine = lineObj.number;
+      const line = lineObj.code;
 
       if (this.breakpoints.has(this.currentLine) || this.stepping) {
         await this.pause(line);

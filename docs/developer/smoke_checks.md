@@ -11,19 +11,19 @@ This checklist helps you verify the key stacks quickly before opening a full iss
    pip install -r requirements.txt
    ```
 
-2. Confirm `.env` keys are present:
+1. Confirm `.env` keys are present:
 
    - `PYTHONPATH=src` before running the app or tests
    - Optional secrets: `OPENAI_API_KEY`, `HUGGINGFACE_API_KEY`, `FERNET_KEY`
 
-3. Run the smoke test suite:
+1. Run the smoke test suite:
 
    ```powershell
    $env:PYTHONPATH='src'
    python -m pytest tests/test_data_analysis.py -q
    ```
 
-4. Start the desktop UI (will surface missing config early):
+1. Start the desktop UI (will surface missing config early):
 
    ```powershell
    $env:PYTHONPATH='src'; python -m src.app.main
@@ -38,7 +38,7 @@ This checklist helps you verify the key stacks quickly before opening a full iss
    flask run
    ```
 
-2. Start the React frontend (requires Node):
+1. Start the React frontend (requires Node):
 
    ```powershell
    cd ../frontend
@@ -46,7 +46,7 @@ This checklist helps you verify the key stacks quickly before opening a full iss
    npm run dev
    ```
 
-3. Verify shared modules load by running the backend tests (when available).
+1. Verify shared modules load by running the backend tests (when available).
 
 ## Coverage artifacts
 

@@ -85,7 +85,7 @@ class CodexDeusMaximus(KernelRoutedAgent):
             "errors": [],
         }
 
-        logger.info(f"Enforcing schematics on {root}...")
+        logger.info("Enforcing schematics on %s...", root)
 
         # Walk the repo to fix code files
         for dirpath, _, filenames in os.walk(root):
@@ -124,7 +124,7 @@ class CodexDeusMaximus(KernelRoutedAgent):
 
         status = "HEALTHY" if not missing else "BROKEN"
         if missing:
-            logger.warning(f"Schematic Violation: Missing directories {missing}")
+            logger.warning("Schematic Violation: Missing directories %s", missing)
 
         return {"status": status, "missing_directories": missing}
 

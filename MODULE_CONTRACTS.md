@@ -827,18 +827,18 @@ class MyComponent(Component):
 All module implementations must provide:
 
 1. **Unit tests**: Test individual methods in isolation
-2. **Integration tests**: Test interaction with other modules
-3. **Contract tests**: Verify interface compliance
-4. **Performance tests**: Verify latency and throughput targets
+1. **Integration tests**: Test interaction with other modules
+1. **Contract tests**: Verify interface compliance
+1. **Performance tests**: Verify latency and throughput targets
 
 ## Documentation Requirements
 
 All module implementations must provide:
 
 1. **API documentation**: Complete docstrings for all public methods
-2. **Usage examples**: Example code for common use cases
-3. **Configuration guide**: Explanation of configuration options
-4. **Migration guide**: Guide for upgrading from previous versions
+1. **Usage examples**: Example code for common use cases
+1. **Configuration guide**: Explanation of configuration options
+1. **Migration guide**: Guide for upgrading from previous versions
 
 ## See Also
 

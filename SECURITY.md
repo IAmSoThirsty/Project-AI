@@ -9,12 +9,13 @@ We take security seriously and appreciate your efforts to responsibly disclose s
 **For sensitive security issues, please use GitHub's Private Vulnerability Reporting:**
 
 1. Navigate to the [Security tab](https://github.com/IAmSoThirsty/Project-AI/security) of this repository
-2. Click on **"Advisories"** in the left sidebar
-3. Click **"New draft security advisory"** or **"Report a vulnerability"**
-4. Fill in the details of the vulnerability
-5. Click **"Submit report"**
+1. Click on **"Advisories"** in the left sidebar
+1. Click **"New draft security advisory"** or **"Report a vulnerability"**
+1. Fill in the details of the vulnerability
+1. Click **"Submit report"**
 
 **Why use private reporting?**
+
 - Your report remains confidential until we publish an advisory
 - We can collaborate privately to understand and fix the issue
 - Prevents public disclosure before a patch is available
@@ -30,6 +31,7 @@ If you prefer not to use GitHub's private reporting:
 ### What to Include
 
 When reporting a vulnerability, please provide:
+
 - **Description:** Clear explanation of the vulnerability
 - **Impact:** What could an attacker accomplish?
 - **Steps to Reproduce:** Detailed reproduction steps
@@ -58,6 +60,7 @@ When reporting a vulnerability, please provide:
 ### Dependency Scanning
 
 We continuously monitor dependencies for known vulnerabilities:
+
 - **pip-audit** - Python dependency vulnerability scanning
 - **GitHub Dependabot** - Automated dependency updates and alerts
 - **Bandit** - Python code security analysis
@@ -82,12 +85,13 @@ We continuously monitor dependencies for known vulnerabilities:
 ### Coordinated Disclosure
 
 We follow responsible disclosure principles:
+
 1. **Report Received:** Acknowledge within 72 hours
-2. **Verification:** Confirm vulnerability (1-5 days)
-3. **Fix Development:** Develop and test patch
-4. **Private Testing:** Share patch with reporter for validation
-5. **Public Disclosure:** Publish advisory and release patch
-6. **CVE Assignment:** Request CVE if applicable
+1. **Verification:** Confirm vulnerability (1-5 days)
+1. **Fix Development:** Develop and test patch
+1. **Private Testing:** Share patch with reporter for validation
+1. **Public Disclosure:** Publish advisory and release patch
+1. **CVE Assignment:** Request CVE if applicable
 
 ### Credit and Recognition
 
@@ -119,26 +123,26 @@ The following are **not** considered security vulnerabilities:
 ### For Developers
 
 1. **Never commit secrets** - Use `.env` files (not in git)
-2. **Keep dependencies updated** - Review Dependabot PRs
-3. **Run security tests** - Use `pytest tests/test_security*.py`
-4. **Validate inputs** - Use provided security modules
-5. **Review security docs** - See `docs/SECURITY_FRAMEWORK.md`
+1. **Keep dependencies updated** - Review Dependabot PRs
+1. **Run security tests** - Use `pytest tests/test_security*.py`
+1. **Validate inputs** - Use provided security modules
+1. **Review security docs** - See `docs/SECURITY_FRAMEWORK.md`
 
 ### For Deployment
 
 1. **Use HTTPS/TLS** - Never deploy without encryption
-2. **Rotate credentials** - Change default passwords immediately
-3. **Enable 2FA/MFA** - For all service accounts
-4. **Monitor logs** - Watch for suspicious activity
-5. **Verify signatures** - Check SBOM and release signatures
+1. **Rotate credentials** - Change default passwords immediately
+1. **Enable 2FA/MFA** - For all service accounts
+1. **Monitor logs** - Watch for suspicious activity
+1. **Verify signatures** - Check SBOM and release signatures
 
 ### For End Users
 
 1. **Download from official sources** - GitHub releases only
-2. **Verify signatures** - Use Cosign to verify artifacts
-3. **Check SBOM** - Review dependencies for known issues
-4. **Keep updated** - Install security patches promptly
-5. **Report issues** - Use private reporting for security concerns
+1. **Verify signatures** - Use Cosign to verify artifacts
+1. **Check SBOM** - Review dependencies for known issues
+1. **Keep updated** - Install security patches promptly
+1. **Report issues** - Use private reporting for security concerns
 
 ## Additional Resources
 

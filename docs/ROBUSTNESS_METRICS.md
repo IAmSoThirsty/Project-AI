@@ -196,16 +196,19 @@ engine.export_metrics(proximity_metrics, analysis, "my_test_suite")
 ## Reports Generated
 
 ### 1. Proximity Metrics JSON
+
 Individual scenario metrics with detailed proximity analysis.
 
 **Location**: `data/robustness_metrics/{suite}_proximity_metrics_{timestamp}.json`
 
 ### 2. Robustness Analysis JSON
+
 Aggregated suite-level analysis with statistical summaries.
 
 **Location**: `data/robustness_metrics/{suite}_robustness_analysis_{timestamp}.json`
 
 ### 3. Comparative Report (Markdown)
+
 Human-readable report comparing all suites against frontier standards.
 
 **Location**: `data/robustness_metrics/comparative_robustness_report_{timestamp}.md`
@@ -215,10 +218,10 @@ Human-readable report comparing all suites against frontier standards.
 ### Recommended Practices
 
 1. **Monthly Benchmarks**: Run full robustness benchmarks monthly
-2. **Threshold Alerts**: Set up alerts for metrics approaching thresholds
-3. **Trend Analysis**: Track metric trends over time (degradation indicators)
-4. **Near-Miss Review**: Deep dive into near-miss scenarios (score >0.7)
-5. **External Validation**: Quarterly third-party security audits
+1. **Threshold Alerts**: Set up alerts for metrics approaching thresholds
+1. **Trend Analysis**: Track metric trends over time (degradation indicators)
+1. **Near-Miss Review**: Deep dive into near-miss scenarios (score >0.7)
+1. **External Validation**: Quarterly third-party security audits
 
 ### Monitoring Dashboard Metrics
 
@@ -262,11 +265,11 @@ Key metrics to dashboard:
 ## Future Enhancements
 
 1. **Real-Time Monitoring**: Deploy entropy/confidence monitoring in production
-2. **Adversarial Fine-Tuning**: Use near-miss scenarios for defense strengthening
-3. **Automated Re-Testing**: CI/CD integration for continuous evaluation
-4. **Expanded Transferability**: Test against new LLM releases automatically
-5. **Interpretability Probes**: Mechanistic interpretability on critical defense layers
-6. **Quantum-Resistant Verification**: Ongoing validation against post-quantum threats
+1. **Adversarial Fine-Tuning**: Use near-miss scenarios for defense strengthening
+1. **Automated Re-Testing**: CI/CD integration for continuous evaluation
+1. **Expanded Transferability**: Test against new LLM releases automatically
+1. **Interpretability Probes**: Mechanistic interpretability on critical defense layers
+1. **Quantum-Resistant Verification**: Ongoing validation against post-quantum threats
 
 ## References
 

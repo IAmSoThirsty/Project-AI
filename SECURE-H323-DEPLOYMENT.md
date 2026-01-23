@@ -1,7 +1,9 @@
 ## 12. Logging & Audit Schema
 
 ### 12.1 Gatekeeper Logging Requirements
+
 The GK MUST log:
+
 - All RAS events (GRQ/GCF, RRQ/RCF, ARQ/ACF, LRQ/LCF)
 - All certificate validation events
 - All admission decisions (allowed/denied)
@@ -9,7 +11,9 @@ The GK MUST log:
 - All failover events
 
 ### 12.2 Gateway Logging Requirements
+
 The GW MUST log:
+
 - All H.225 call setup events
 - All H.245 negotiation events
 - All SRTP keying events
@@ -18,7 +22,9 @@ The GW MUST log:
 - All codec negotiation outcomes
 
 ### 12.3 Endpoint Logging Requirements
+
 Endpoints SHOULD log:
+
 - Registration success/failure
 - Certificate validation results
 - Call setup attempts
@@ -26,6 +32,7 @@ Endpoints SHOULD log:
 - SRTP status
 
 ### 12.4 Log Format & Retention
+
 - Logs MUST include timestamp, device ID, event type, and outcome.
 - Logs MUST be retained for a minimum of 12 months.
 - Logs MUST be exportable in JSON or syslog format.
@@ -34,6 +41,7 @@ Endpoints SHOULD log:
 ## 13. Performance & Capacity Requirements
 
 ### 13.1 Gatekeeper Performance
+
 - GK MUST support:
     - ≥ 5,000 concurrent registrations
     - ≥ 100 call setups per second
@@ -41,6 +49,7 @@ Endpoints SHOULD log:
 - GK SHOULD support horizontal failover clustering.
 
 ### 13.2 Gateway Performance
+
 - GW MUST support:
     - ≥ 500 concurrent calls (scalable by model)
     - SRTP encryption at line rate
@@ -48,12 +57,14 @@ Endpoints SHOULD log:
 - GW SHOULD support DSP resource pooling for codec translation.
 
 ### 13.3 Endpoint Performance
+
 - Endpoints MUST support:
     - SRTP AES‑128 at full media bandwidth
     - H.245 negotiation within < 300 ms
     - Jitter buffer adaptation for variable network conditions
 
 ### 13.4 Network Performance
+
 - End‑to‑end latency target: < 150 ms one‑way
 - Jitter target: < 30 ms
 - Packet loss target: < 1%

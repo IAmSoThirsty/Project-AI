@@ -15,6 +15,7 @@ The Agent Model defines how intelligent agents are created, coordinated, and man
 ### What is an Agent?
 
 An **agent** in the PACE system is an autonomous entity that:
+
 - Has specific capabilities and skills
 - Can execute tasks independently
 - Can communicate and collaborate with other agents
@@ -24,9 +25,9 @@ An **agent** in the PACE system is an autonomous entity that:
 ### Agent Types
 
 1. **Task Agents**: Execute specific, well-defined tasks
-2. **Coordinator Agents**: Coordinate the work of other agents
-3. **Monitor Agents**: Monitor system state and trigger actions
-4. **Learning Agents**: Adapt and improve based on experience
+1. **Coordinator Agents**: Coordinate the work of other agents
+1. **Monitor Agents**: Monitor system state and trigger actions
+1. **Learning Agents**: Adapt and improve based on experience
 
 ## Architecture
 

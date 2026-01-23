@@ -1,4 +1,5 @@
 # Gateway Interworking Security Profile
+
 ## Version 1.0 — H.323 ↔ H.320 / PSTN / SIP Security Specification
 
 ## 1. Purpose
@@ -11,6 +12,7 @@ This document defines the security, signaling, media, PKI, and operational requi
 - Other H.323 zones
 
 It ensures that:
+
 - The IP side of the gateway is fully protected by H.235
 - The legacy side is treated as untrusted and isolated
 - The gateway acts as a cryptographic boundary
@@ -21,6 +23,7 @@ It ensures that:
 ### 2.1 Functional Role
 
 The gateway:
+
 - Terminates secure H.323 on the enterprise side
 - Terminates legacy signaling/media on the external side
 - Performs codec translation, protocol conversion, and media transcoding
@@ -31,6 +34,7 @@ The gateway:
 The gateway is the trust boundary:
 
 **Inside (enterprise):**
+
 - H.235.2 (RAS auth)
 - H.235.3 (H.225 integrity/encryption)
 - H.235.4 (H.245 integrity/encryption)
@@ -38,6 +42,7 @@ The gateway is the trust boundary:
 - TLS/IPsec transport
 
 **Outside (legacy):**
+
 - Clear TDM/H.320/SIP depending on carrier
 - Protected by physical, logical, and carrier‑grade controls
 
@@ -53,6 +58,7 @@ The gateway is the trust boundary:
 | RTP/Media | H.235.6 (SRTP) | UDP | AES-128+ |
 
 **Enforcement:**
+
 - All IP-side signaling and media **MUST** use the profiles above
 - Downgrade to insecure mode **MUST** be rejected
 - Security negotiation failures **MUST** be logged and alerted
@@ -70,6 +76,7 @@ The gateway is the trust boundary:
 ### 4.1 H.323 ↔ PSTN
 
 **Signaling Mapping:**
+
 - H.225/Q.931 ↔ ISDN Q.931
 - H.245 ↔ ISDN bearer capability negotiation
 - SRTP ↔ PCM (G.711)
@@ -85,6 +92,7 @@ SRTP Media → Gateway → PCM → PSTN
 ```
 
 **Security Considerations:**
+
 - H.225 SETUP from EP is encrypted (H.235.3)
 - Gateway decrypts, validates, converts to Q.931
 - Gateway ensures no H.323 security tokens leak to PSTN
@@ -93,6 +101,7 @@ SRTP Media → Gateway → PCM → PSTN
 ### 4.2 H.323 ↔ H.320
 
 **Signaling Mapping:**
+
 - H.225/H.245 ↔ H.221/H.230/H.242
 - Video: H.263/H.261 transcoding
 - Audio: G.711/G.722 ↔ H.320 audio formats
@@ -107,6 +116,7 @@ SRTP Media → Gateway → H.221 Mux → H.320 EP
 ```
 
 **Security Considerations:**
+
 - Full H.235 stack on H.323 side
 - H.320 side uses H.221 security (if any)
 - Gateway is crypto boundary
@@ -115,6 +125,7 @@ SRTP Media → Gateway → H.221 Mux → H.320 EP
 ### 4.3 H.323 ↔ SIP
 
 **Signaling Mapping:**
+
 - H.225 ↔ SIP INVITE/200/ACK
 - H.245 ↔ SDP negotiation
 - SRTP ↔ SRTP (if carrier supports)
@@ -131,6 +142,7 @@ SRTP → Gateway → SRTP/RTP → SIP Trunk
 ```
 
 **Security Considerations:**
+
 - H.323 side always uses H.235
 - SIP side may use SRTP (preferred) or RTP (if required)
 - If SIP carrier doesn't support SRTP, gateway transcodes SRTP ↔ RTP
@@ -141,6 +153,7 @@ SRTP → Gateway → SRTP/RTP → SIP Trunk
 ### 5.1 IP Side (Enterprise)
 
 **Mandatory Requirements:**
+
 - SRTP mandatory
 - AES‑128 or AES‑256
 - SRTCP integrity required
@@ -152,17 +165,20 @@ SRTP → Gateway → SRTP/RTP → SIP Trunk
 **Protocol-Specific:**
 
 **PSTN:**
+
 - PCM (G.711 µ‑law/A‑law)
 - 64 kbps per channel
 - No encryption
 
 **ISDN/H.320:**
+
 - H.221 multiplexed media
 - Video: H.261/H.263
 - Audio: G.711/G.722/G.728
 - Data: T.120 (optional)
 
 **SIP:**
+
 - RTP or SRTP depending on carrier capability
 - Codecs negotiated via SDP
 - DTMF via RFC 2833
@@ -170,21 +186,25 @@ SRTP → Gateway → SRTP/RTP → SIP Trunk
 ### 5.3 Transcoding Requirements
 
 **Audio Transcoding:**
+
 - G.711 ↔ PCM (passthrough)
 - G.729 ↔ PCM (transcode required)
 - G.722 ↔ PCM (transcode required)
 - AMR ↔ G.711 (for SIP carriers)
 
 **Video Transcoding:**
+
 - H.263/H.264 ↔ H.261/H.263 (H.320)
 - Resolution scaling as needed
 - Bitrate adaptation based on trunk capacity
 
 **Data Passthrough:**
+
 - T.120 passthrough where supported
 - FECC (Far End Camera Control) in H.320
 
 **Performance Requirements:**
+
 - Transcoding latency < 50ms
 - No audio/video sync issues
 - CPU/DSP resources monitored
@@ -194,31 +214,37 @@ SRTP → Gateway → SRTP/RTP → SIP Trunk
 ### 6.1 Certificates
 
 **Gateway Certificate Requirements:**
+
 - Device certificate issued by Voice/Video CA
 - Key strength: RSA 2048+ or ECC P-256+
 - Validity period: Per enterprise policy (typically 1 year)
 
 **SAN Extensions Must Include:**
+
 - FQDN (e.g., gw1.voice.example.com)
 - Gateway role identifier (e.g., h323-pstn-gateway)
 - IP address (optional, for legacy compatibility)
 
 **Key Usage:**
+
 - Digital Signature
 - Key Encipherment
 
 **Extended Key Usage:**
+
 - Server Authentication
 - Client Authentication
 
 ### 6.2 Trust Stores
 
 **Trusted CAs:**
+
 - Enterprise Root CA
 - Voice/Video Intermediate CA
 - No third-party CAs on inside interface
 
 **Revocation Checking:**
+
 - CRL distribution point configured
 - OCSP responder configured
 - Revocation checking **MUST NOT** be disabled
@@ -227,16 +253,19 @@ SRTP → Gateway → SRTP/RTP → SIP Trunk
 ### 6.3 Mutual Authentication
 
 **Gateway ↔ Gatekeeper:**
+
 - Mutual TLS/IPsec required
 - Certificate-based authentication
 - H.235.2 tokens for RAS
 
 **Gateway ↔ Endpoint (if direct):**
+
 - Mutual TLS/IPsec required
 - H.235.3/4 for signaling
 - H.235.6 for media
 
 **Gateway ↔ Carrier:**
+
 - Per carrier requirements
 - May use IP ACLs, shared secrets, or certificates
 - Document carrier authentication method
@@ -281,6 +310,7 @@ SRTP → Gateway → SRTP/RTP → SIP Trunk
 ```
 
 **Requirements:**
+
 - Gateway must reside in Voice/Video DMZ (VLAN 200)
 - Inside interface connects to H.323 zone
 - Outside interface connects to PSTN/ISDN/SIP carrier
@@ -310,6 +340,7 @@ SRTP → Gateway → SRTP/RTP → SIP Trunk
 | Gateway | Carrier | PRI/T1 | N/A | ISDN signaling |
 
 **Deny Rules:**
+
 - Block all enterprise IP ranges from outside interface
 - Block all carrier IP ranges from inside interface
 - Drop all traffic not explicitly allowed
@@ -317,11 +348,13 @@ SRTP → Gateway → SRTP/RTP → SIP Trunk
 ### 7.3 VLAN Segmentation
 
 **Requirements:**
+
 - Gateway must not share VLANs with endpoints
 - Management VLAN must be isolated from production
 - No routing between EP VLAN and carrier directly
 
 **VLAN Assignment:**
+
 - VLAN 100: Secure H.323 Zone (Endpoints, GK, MCU)
 - VLAN 200: Voice/Video DMZ (Gateways)
 - VLAN 300: Management (Admin access only)
@@ -331,6 +364,7 @@ SRTP → Gateway → SRTP/RTP → SIP Trunk
 ### 8.1 Monitoring
 
 **Required Logging:**
+
 - RAS events (RRQ, ARQ, DRQ, RCF, ACF, DCF)
 - H.225/H.245 security mode negotiation
 - SRTP negotiation status
@@ -341,6 +375,7 @@ SRTP → Gateway → SRTP/RTP → SIP Trunk
 - Security downgrade attempts
 
 **Log Destinations:**
+
 - Local syslog
 - Centralized SIEM
 - CDR repository
@@ -364,6 +399,7 @@ SRTP → Gateway → SRTP/RTP → SIP Trunk
 ### 8.2 Health Checks
 
 **Daily Checks:**
+
 - Trunk status (all trunks operational)
 - Secure signaling status (H.235 active)
 - SRTP active on IP side
@@ -372,12 +408,14 @@ SRTP → Gateway → SRTP/RTP → SIP Trunk
 - CPU/memory utilization < 80%
 
 **Weekly Checks:**
+
 - Log review for security events
 - Certificate expiry check (alert if <30 days)
 - Firmware version check
 - Backup configuration
 
 **Monthly Checks:**
+
 - Full security audit
 - PKI validation test
 - Failover test
@@ -403,10 +441,11 @@ curl -X GET "http://localhost:8080/registration/status?device_ip=<gateway-ip>&..
 **Scenario:** Endpoint or carrier attempts insecure signaling
 
 **Response:**
+
 1. Gateway rejects connection
-2. GK logs downgrade attempt
-3. SOC alerted immediately
-4. Incident investigation initiated
+1. GK logs downgrade attempt
+1. SOC alerted immediately
+1. Incident investigation initiated
 
 **Logging:**
 ```bash
@@ -421,11 +460,12 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 **Scenario:** Primary trunk fails
 
 **Response:**
+
 1. Failover to secondary trunk (automatic)
-2. GK reroutes new calls to alternate gateway
-3. Active calls continue on remaining trunks
-4. NOC alerted
-5. Carrier notified
+1. GK reroutes new calls to alternate gateway
+1. Active calls continue on remaining trunks
+1. NOC alerted
+1. Carrier notified
 
 **Validation:**
 ```bash
@@ -438,13 +478,15 @@ snmpwalk -v3 -u admin <gateway-ip> trunkStatus
 **Scenario:** Gateway certificate expires or is revoked
 
 **Response:**
+
 1. Gateway fails closed (reject all calls)
-2. SOC alerted immediately
-3. PKI team notified
-4. Certificate renewed/reissued
-5. Gateway restarted after cert installation
+1. SOC alerted immediately
+1. PKI team notified
+1. Certificate renewed/reissued
+1. Gateway restarted after cert installation
 
 **Prevention:**
+
 - Certificate expiry monitoring (30-day alert)
 - Automated renewal process
 - Test certificates in staging first
@@ -543,43 +585,49 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py check-compliance \
 ### Issue: Gateway Cannot Register with Gatekeeper
 
 **Symptoms:**
+
 - RRQ rejected
 - H.235.2 token validation fails
 
 **Resolution:**
+
 1. Verify gateway certificate validity
-2. Check time synchronization (NTP)
-3. Validate CRL/OCSP reachability
-4. Review GK logs for rejection reason
-5. Test mutual TLS connectivity
+1. Check time synchronization (NTP)
+1. Validate CRL/OCSP reachability
+1. Review GK logs for rejection reason
+1. Test mutual TLS connectivity
 
 ### Issue: Calls Fail at Gateway
 
 **Symptoms:**
+
 - SETUP rejected
 - No media path established
 
 **Resolution:**
+
 1. Check trunk status
-2. Verify codec compatibility
-3. Validate firewall rules
-4. Check SRTP negotiation
-5. Review cause codes in logs
+1. Verify codec compatibility
+1. Validate firewall rules
+1. Check SRTP negotiation
+1. Review cause codes in logs
 
 ### Issue: Poor Call Quality Through Gateway
 
 **Symptoms:**
+
 - Choppy audio
 - Video artifacts
 - Echo
 
 **Resolution:**
+
 1. Check jitter/latency
-2. Verify QoS markings
-3. Review codec selection
-4. Check transcoding CPU load
-5. Tune echo cancellation
-6. Validate bandwidth allocation
+1. Verify QoS markings
+1. Review codec selection
+1. Check transcoding CPU load
+1. Tune echo cancellation
+1. Validate bandwidth allocation
 
 ## Appendix C: Gateway Configuration Templates
 

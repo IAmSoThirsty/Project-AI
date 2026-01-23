@@ -3,6 +3,7 @@
 ## 5-Minute Setup
 
 ### Prerequisites
+
 - Python 3.11+
 - pip
 
@@ -280,10 +281,10 @@ export PYTHONPATH=/path/to/Project-AI:$PYTHONPATH
 ## Next Steps
 
 1. Read full documentation: `TRIUMVIRATE_INTEGRATION.md`
-2. Run demos: `python examples/triumvirate_demo.py`
-3. Explore tests: `tests/test_complete_system.py`
-4. Check API reference in documentation
-5. Join community discussions
+1. Run demos: `python examples/triumvirate_demo.py`
+1. Explore tests: `tests/test_complete_system.py`
+1. Check API reference in documentation
+1. Join community discussions
 
 ## Resources
 
@@ -296,7 +297,8 @@ export PYTHONPATH=/path/to/Project-AI:$PYTHONPATH
 ## Support
 
 For issues:
+
 1. Check documentation
-2. Run tests to verify setup
-3. Check environment variables
-4. Create GitHub issue with details
+1. Run tests to verify setup
+1. Check environment variables
+1. Create GitHub issue with details

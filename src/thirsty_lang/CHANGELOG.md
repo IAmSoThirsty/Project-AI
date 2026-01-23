@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2024-12-28
 
 ### Added
+
 - Initial release of Thirsty-lang programming language
 - Core interpreter with water-themed syntax
 - Variable declarations using `drink`
@@ -32,12 +33,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Benchmark suite for performance testing
 
 ### Language Features
+
 - 💧 **Base Thirsty-lang**: Core features for beginners
 - 💧+ **Thirsty Plus**: Control flow and conditionals
 - 💧++ **Thirsty Plus Plus**: Functions, loops, and arrays
 - ⚡ **ThirstOfGods**: Advanced OOP and async features
 
 ### Tools & Infrastructure
+
 - Node.js implementation (primary)
 - Python implementation (added)
 - Docker and Docker Compose support
@@ -46,6 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Comprehensive .gitignore for clean repository
 
 ### Documentation
+
 - README.md with getting started guide
 - Language specification (SPECIFICATION.md)
 - Expansions guide (EXPANSIONS.md)
@@ -57,6 +61,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Project summary (PROJECT_SUMMARY.md)
 
 ### Examples
+
 - hello.thirsty - Hello World program
 - variables.thirsty - Variable demonstrations
 - hydration.thirsty - More examples
@@ -65,6 +70,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Planned
+
 - Standard library expansion
 - Network and HTTP support
 - File I/O operations

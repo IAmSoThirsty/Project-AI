@@ -92,11 +92,13 @@ This document describes the Temporal integration architecture for Project-AI.
 ### Temporal Integration Layer
 
 #### Client (`src/integrations/temporal/client.py`)
+
 - Manages connection to Temporal server
 - Provides helper methods to start workflows
 - Handles connection lifecycle
 
 #### Workflows (`src/integrations/temporal/workflows/`)
+
 - **ExampleWorkflow**: Demonstrates multi-step AI processing
   - Step 1: Validate input
   - Step 2: Call AI system
@@ -105,11 +107,13 @@ This document describes the Temporal integration architecture for Project-AI.
 - Automatic retries with exponential backoff
 
 #### Activities (`src/integrations/temporal/activities/`)
+
 - **validate_input**: Validates request data before processing
 - **simulate_ai_call**: Simulates AI API call (replace with real AI)
 - **process_ai_task**: Processes AI results and updates state
 
 #### Worker (`src/integrations/temporal/worker.py`)
+
 - Connects to Temporal server
 - Registers workflows and activities
 - Polls task queue for work
@@ -159,11 +163,13 @@ This document describes the Temporal integration architecture for Project-AI.
 ## Key Features
 
 ### Durability
+
 - Workflows survive process crashes
 - State is checkpointed after each step
 - Can resume from last checkpoint
 
 ### Retries
+
 - Automatic retry with exponential backoff
 - Configurable retry policies per activity
 - Failed activities don't fail entire workflow
@@ -175,6 +181,7 @@ This document describes the Temporal integration architecture for Project-AI.
 - Query workflow state programmatically
 
 ### Scalability
+
 - Horizontal scaling by adding workers
 - Workers can be distributed across machines
 - Load balancing handled by Temporal
@@ -184,16 +191,16 @@ This document describes the Temporal integration architecture for Project-AI.
 ### Adding a New Workflow
 
 1. Create workflow file in `src/integrations/temporal/workflows/`
-2. Define workflow class with `@workflow.defn`
-3. Implement `@workflow.run` method
-4. Register in worker.py
+1. Define workflow class with `@workflow.defn`
+1. Implement `@workflow.run` method
+1. Register in worker.py
 
 ### Adding a New Activity
 
 1. Create activity in `src/integrations/temporal/activities/`
-2. Decorate with `@activity.defn`
-3. Implement async function
-4. Register in worker.py
+1. Decorate with `@activity.defn`
+1. Implement async function
+1. Register in worker.py
 
 ### Integration with Existing Code
 
@@ -230,6 +237,7 @@ TEMPORAL_TASK_QUEUE=project-ai-tasks
 ### Docker Compose
 
 The integration is pre-configured in `docker-compose.yml`:
+
 - Temporal server on port 7233 (gRPC)
 - Web UI on port 8233
 - PostgreSQL for persistence
@@ -238,32 +246,38 @@ The integration is pre-configured in `docker-compose.yml`:
 ## Monitoring
 
 ### Web UI
+
 - Visit http://localhost:8233
 - View all workflow executions
 - Inspect execution history
 - Debug failures
 
 ### Logs
+
 - Worker logs: `docker-compose logs temporal-worker`
 - Server logs: `docker-compose logs temporal`
 
 ### Metrics
+
 - Temporal exposes Prometheus metrics
 - Integration with existing monitoring stack
 
 ## Production Considerations
 
 ### High Availability
+
 - Run multiple workers for redundancy
 - Use Temporal Cloud for managed service
 - Configure PostgreSQL for HA
 
 ### Security
+
 - Use mTLS for production
 - Configure namespace-level permissions
 - Secure PostgreSQL connections
 
 ### Performance
+
 - Tune worker concurrency
 - Configure activity timeouts appropriately
 - Monitor task queue depth

@@ -21,13 +21,13 @@ A security scan detected that the `.env` file containing real API keys and passw
    - Create a NEW key
    - Update your local `.env` file
 
-2. **Rotate SMTP Credentials** (Do this NOW)
+1. **Rotate SMTP Credentials** (Do this NOW)
    - Go to https://myaccount.google.com/apppasswords
    - REVOKE the exposed app password
    - Generate a NEW app password
    - Update your local `.env` file
 
-3. **Review Full Incident Report**
+1. **Review Full Incident Report**
    - Read `SECURITY_INCIDENT_REPORT.md` for complete details
    - Follow all remediation steps
 
@@ -53,6 +53,7 @@ cp .env.example .env
 ## 🛡️ How to Set Up .env Safely
 
 ### Step 1: Copy Template
+
 ```bash
 cp .env.example .env
 ```
@@ -60,11 +61,13 @@ cp .env.example .env
 ### Step 2: Generate Credentials
 
 **OpenAI API Key** (Optional)
+
 - Sign up at https://platform.openai.com/api-keys
 - Create a new API key
 - Add to `.env`: `OPENAI_API_KEY=sk-proj-YOUR_KEY_HERE`
 
 **Hugging Face API Key** (Optional)
+
 - Sign up at https://huggingface.co/settings/tokens
 - Create a new token
 - Add to `.env`: `HUGGINGFACE_API_KEY=hf_YOUR_TOKEN_HERE`
@@ -79,14 +82,17 @@ FERNET_KEY=YOUR_GENERATED_KEY_HERE
 ```
 
 **SMTP Credentials** (Optional - for email alerts)
+
 - For Gmail: Create app password at https://myaccount.google.com/apppasswords
 - Add to `.env`:
+
   ```
   SMTP_USERNAME=your-email@gmail.com
   SMTP_PASSWORD=your-app-password
   ```
 
 ### Step 3: Verify .env is Ignored
+
 ```bash
 # This should show nothing (or show as untracked)
 git status .env
