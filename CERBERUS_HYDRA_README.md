@@ -128,7 +128,7 @@ from app.core.cerberus_hydra import CerberusHydraDefense
 cerberus = CerberusHydraDefense(
     data_dir="data",
     enable_polyglot_execution=True,
-    max_agents=1000
+    max_agents=50
 )
 
 # Spawn initial agents
@@ -219,7 +219,7 @@ Agent templates are in `data/cerberus/agent_templates/`:
 |-----------|---------|-------------|
 | `data_dir` | `"data"` | Base data directory |
 | `enable_polyglot_execution` | `True` | Actually execute agents in their languages |
-| `max_agents` | `1000` | Maximum concurrent agents (prevents resource exhaustion) |
+| `max_agents` | `50` | Maximum concurrent agents (prevents resource exhaustion) |
 | `SPAWN_FACTOR` | `3` | Number of agents spawned per bypass |
 
 ## Examples
@@ -349,7 +349,7 @@ Test coverage includes:
 
 ### Resource Management
 - **Max agents limit**: Prevents resource exhaustion from exponential growth
-- **Default limit**: 1000 concurrent agents
+- **Default limit**: 50 concurrent agents
 - **Configurable**: Adjust based on system capacity
 
 ### Language Safety
@@ -372,11 +372,11 @@ Test coverage includes:
 ### Benchmarks
 - **Agent spawn time**: ~5ms per agent (template-only mode)
 - **Bypass detection**: ~10ms including 3x spawn
-- **Registry query**: <1ms for <1000 agents
+- **Registry query**: <1ms for <50 agents
 - **State persistence**: ~20ms for full state save
 
 ### Scalability
-- **Tested up to**: 1000 concurrent agents
+- **Tested up to**: 50 concurrent agents
 - **Memory footprint**: ~1KB per agent (metadata only)
 - **Polyglot overhead**: +50-200ms per agent (actual execution)
 

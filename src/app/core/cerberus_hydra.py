@@ -107,7 +107,7 @@ class CerberusHydraDefense:
         self,
         data_dir: str = "data",
         enable_polyglot_execution: bool = True,
-        max_agents: int = 1000,
+        max_agents: int = 50,
         security_enforcer=None,
     ):
         """

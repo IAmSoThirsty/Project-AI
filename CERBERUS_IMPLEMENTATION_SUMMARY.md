@@ -49,7 +49,7 @@ Successfully implemented a production-ready exponential multi-implementation spa
 
 7. **Spawn Constraints** (`cerberus_spawn_constraints.py` - 400+ lines)
    - **Hard Caps**:
-     - Max concurrent agents (default: 1000)
+     - Max concurrent agents (default: 50)
      - Max spawn depth (default: 5 generations)
      - Max spawns per minute (default: 100)
    - **Budget Tracking**:
@@ -179,7 +179,7 @@ report = cerberus.generate_audit_report()
 ### Benchmarks
 - Agent spawn time: ~5ms (template-only mode)
 - Bypass detection + 3x spawn: ~10ms
-- Registry query: <1ms (up to 1000 agents)
+- Registry query: <1ms (up to 50 agents)
 - State persistence: ~20ms (full save)
 
 ### Resource Usage
@@ -188,8 +188,8 @@ report = cerberus.generate_audit_report()
 - Polyglot mode: +50-200ms per agent (actual execution)
 
 ### Scalability
-- Tested: Up to 1000 concurrent agents
-- Max agents: Configurable (default: 1000)
+- Tested: Up to 50 concurrent agents
+- Max agents: Configurable (default: 50)
 - Max spawn depth: Configurable (default: 5 generations)
 - Rate limiting: 100 spawns/minute (configurable)
 
@@ -255,7 +255,7 @@ from app.core.cerberus_hydra import CerberusHydraDefense
 cerberus = CerberusHydraDefense(
     data_dir="data",
     enable_polyglot_execution=False,  # Template-only mode
-    max_agents=1000
+    max_agents=50
 )
 
 # Deploy initial defenses
