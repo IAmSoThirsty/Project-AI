@@ -25,7 +25,7 @@ Returns:
 import logging
 import os
 from pathlib import Path
-from zipfile import ZipFile
+from zipfile import BadZipFile, ZipFile  # noqa: F401
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -49,7 +49,7 @@ def extract_with_permissions(zip_path, destination):
 
     Raises:
         FileNotFoundError: If the ZIP archive does not exist
-        zipfile.BadZipFile: If the file is not a valid ZIP archive
+        BadZipFile: If the file is not a valid ZIP archive
     """
     # Convert to Path objects for consistent handling
     zip_path = Path(zip_path)
@@ -68,32 +68,26 @@ def extract_with_permissions(zip_path, destination):
         for zip_info in zip_file.infolist():
             # Extract the file
             extracted_path = zip_file.extract(zip_info, destination)
+            extracted_file_path = Path(extracted_path)
+            extracted_files.append(extracted_file_path)
 
-            # Only process files that were actually extracted
-            if extracted_path:
-                extracted_file_path = Path(extracted_path)
-                extracted_files.append(extracted_file_path)
+            # Check if the entry has UNIX permission information
+            # The external_attr field stores file attributes from the creating system
+            # For UNIX systems, permissions are in the high 16 bits
+            unix_permissions = zip_info.external_attr >> 16
 
-                # Check if the entry has UNIX permission information
-                # The external_attr field stores file attributes from the creating system
-                # For UNIX systems, permissions are in the high 16 bits
-                unix_permissions = zip_info.external_attr >> 16
-
-                # Only apply permissions if they exist (non-zero) and the extracted
-                # path is a file (not a directory)
-                if unix_permissions and extracted_file_path.is_file():
-                    try:
-                        os.chmod(extracted_file_path, unix_permissions)
-                        logger.debug(
-                            f"Applied permissions {oct(unix_permissions)} to {extracted_file_path}"
-                        )
-                    except (OSError, PermissionError) as e:
-                        # Log warning but continue with other files
-                        logger.warning(
-                            f"Failed to apply permissions to {extracted_file_path}: {e}"
-                        )
-                        print(
-                            f"Warning: Could not set permissions for {extracted_file_path}: {e}"
-                        )
+            # Only apply permissions if they exist (non-zero) and the extracted
+            # path is a file (not a directory)
+            if unix_permissions and extracted_file_path.is_file():
+                try:
+                    os.chmod(extracted_file_path, unix_permissions)
+                    logger.debug(
+                        f"Applied permissions {oct(unix_permissions)} to {extracted_file_path}"
+                    )
+                except (OSError, PermissionError) as e:
+                    # Log warning but continue with other files
+                    logger.warning(
+                        f"Failed to apply permissions to {extracted_file_path}: {e}"
+                    )
 
     return extracted_files

@@ -1,7 +1,7 @@
 import os
 import stat
-import zipfile
 from pathlib import Path
+from zipfile import BadZipFile, ZipFile
 
 import pytest
 
@@ -28,19 +28,21 @@ def test_zip_with_permissions(tmp_path):
 
     # Create ZIP with UNIX permissions
     zip_path = tmp_path / "test.zip"
-    with zipfile.ZipFile(zip_path, "w") as zf:
+    with ZipFile(zip_path, "w") as zf:
         # Add file1 with permissions 0o644 (rw-r--r--)
-        info1 = zipfile.ZipInfo("file1.txt")
+        from zipfile import ZipInfo
+
+        info1 = ZipInfo("file1.txt")
         info1.external_attr = 0o644 << 16
         zf.writestr(info1, file1.read_bytes())
 
         # Add file2 with permissions 0o755 (rwxr-xr-x)
-        info2 = zipfile.ZipInfo("file2.txt")
+        info2 = ZipInfo("file2.txt")
         info2.external_attr = 0o755 << 16
         zf.writestr(info2, file2.read_bytes())
 
         # Add file3 with permissions 0o600 (rw-------)
-        info3 = zipfile.ZipInfo("subdir/file3.txt")
+        info3 = ZipInfo("subdir/file3.txt")
         info3.external_attr = 0o600 << 16
         zf.writestr(info3, file3.read_bytes())
 
@@ -57,7 +59,7 @@ def test_zip_without_permissions(tmp_path):
     file1.write_text("Content without permissions")
 
     zip_path = tmp_path / "test_no_perms.zip"
-    with zipfile.ZipFile(zip_path, "w") as zf:
+    with ZipFile(zip_path, "w") as zf:
         zf.write(file1, "file1.txt")
 
     return zip_path
@@ -140,7 +142,7 @@ def test_invalid_zip_raises_error(tmp_path):
     invalid_zip = tmp_path / "invalid.zip"
     invalid_zip.write_text("Not a ZIP file")
 
-    with pytest.raises(zipfile.BadZipFile):
+    with pytest.raises(BadZipFile):
         extract_with_permissions(invalid_zip, tmp_path / "dest")
 
 
