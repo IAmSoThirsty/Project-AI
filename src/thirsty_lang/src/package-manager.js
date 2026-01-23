@@ -35,7 +35,7 @@ class ThirstyPackageManager {
     fs.writeFileSync(this.configFile, JSON.stringify(config, null, 2));
     console.log('✓ Created thirsty.json');
     console.log('\n📦 Your Thirsty project is ready!');
-    console.log(`   Project: ${projectName}`);
+    console.log('   Project: ' + projectName);
     console.log('   Run "thirsty-pkg install" to set up dependencies');
   }
 
@@ -55,7 +55,7 @@ class ThirstyPackageManager {
       deps[packageName] = options.version || 'latest';
 
       fs.writeFileSync(this.configFile, JSON.stringify(config, null, 2));
-      console.log(`✓ Added ${packageName} to ${options.dev ? 'devDependencies' : 'dependencies'}`);
+      console.log('✓ Added ' + packageName + ' to ' + (options.dev ? 'devDependencies' : 'dependencies'));
     } else {
       // Install all dependencies
       console.log('📥 Installing all dependencies...');
@@ -74,8 +74,11 @@ class ThirstyPackageManager {
         return;
       }
 
-      for (const [pkg, version] of Object.entries(allDeps)) {
-        console.log(`  • ${pkg}@${version}`);
+      for (const pkg in allDeps) {
+        if (allDeps.hasOwnProperty(pkg)) {
+          const version = allDeps[pkg];
+          console.log('  • ' + pkg + '@' + version);
+        }
       }
 
       console.log('✓ All dependencies installed!');
@@ -102,9 +105,9 @@ class ThirstyPackageManager {
 
     if (found) {
       fs.writeFileSync(this.configFile, JSON.stringify(config, null, 2));
-      console.log(`✓ Removed ${packageName}`);
+      console.log('✓ Removed ' + packageName);
     } else {
-      console.log(`❌ Package ${packageName} not found`);
+      console.log('❌ Package ' + packageName + ' not found');
     }
   }
 
@@ -116,20 +119,26 @@ class ThirstyPackageManager {
 
     const config = JSON.parse(fs.readFileSync(this.configFile, 'utf-8'));
 
-    console.log(`\n📦 ${config.name}@${config.version}`);
+    console.log('\n📦 ' + config.name + '@' + config.version);
     console.log('═'.repeat(60));
 
     if (Object.keys(config.dependencies).length > 0) {
       console.log('\n Dependencies:');
-      for (const [pkg, version] of Object.entries(config.dependencies)) {
-        console.log(`  • ${pkg}@${version}`);
+      for (const pkg in config.dependencies) {
+        if (config.dependencies.hasOwnProperty(pkg)) {
+          const version = config.dependencies[pkg];
+          console.log('  • ' + pkg + '@' + version);
+        }
       }
     }
 
     if (Object.keys(config.devDependencies).length > 0) {
       console.log('\n DevDependencies:');
-      for (const [pkg, version] of Object.entries(config.devDependencies)) {
-        console.log(`  • ${pkg}@${version}`);
+      for (const pkg in config.devDependencies) {
+        if (config.devDependencies.hasOwnProperty(pkg)) {
+          const version = config.devDependencies[pkg];
+          console.log('  • ' + pkg + '@' + version);
+        }
       }
     }
 
@@ -140,7 +149,7 @@ class ThirstyPackageManager {
   }
 
   search(query) {
-    console.log(`🔍 Searching for "${query}"...`);
+    console.log('🔍 Searching for "' + query + '"...');
 
     // Simulated package registry
     const packages = [
@@ -151,21 +160,22 @@ class ThirstyPackageManager {
       { name: 'hydration-utils', description: 'Common utilities', version: '3.0.0' }
     ];
 
-    const results = packages.filter(pkg =>
-      pkg.name.includes(query) || pkg.description.toLowerCase().includes(query.toLowerCase())
-    );
+    const results = packages.filter(function(pkg) {
+      return pkg.name.includes(query) || pkg.description.toLowerCase().includes(query.toLowerCase());
+    });
 
     if (results.length === 0) {
       console.log('No packages found');
       return;
     }
 
-    console.log(`\nFound ${results.length} package(s):\n`);
-    results.forEach(pkg => {
-      console.log(`  ${pkg.name}@${pkg.version}`);
-      console.log(`    ${pkg.description}`);
+    console.log('\nFound ' + results.length + ' package(s):\n');
+    for (let i = 0; i < results.length; i++) {
+      const pkg = results[i];
+      console.log('  ' + pkg.name + '@' + pkg.version);
+      console.log('    ' + pkg.description);
       console.log();
-    });
+    }
   }
 
   publish() {
@@ -176,7 +186,7 @@ class ThirstyPackageManager {
 
     const config = JSON.parse(fs.readFileSync(this.configFile, 'utf-8'));
 
-    console.log(`📤 Publishing ${config.name}@${config.version}...`);
+    console.log('📤 Publishing ' + config.name + '@' + config.version + '...');
     console.log('✓ Package published successfully!');
     console.log('\n📦 Your package is now available in the Thirsty registry!');
   }
@@ -210,7 +220,7 @@ function main() {
     case 'install':
     case 'i': {
       const isDev = commandArgs.includes('--save-dev') || commandArgs.includes('-D');
-      const packageName = commandArgs.find(arg => !arg.startsWith('-'));
+      const packageName = commandArgs.find(function(arg) { return !arg.startsWith('-'); });
       pm.install(packageName, { dev: isDev });
       break;
     }
@@ -242,7 +252,7 @@ function main() {
       break;
 
     default:
-      console.log(`Unknown command: ${command}`);
+      console.log('Unknown command: ' + command);
       console.log('Run "thirsty-pkg" for usage information');
   }
 }

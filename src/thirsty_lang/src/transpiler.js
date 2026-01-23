@@ -17,8 +17,8 @@ class ThirstyTranspiler {
     this.output = [];
 
     const lines = code.split('\n')
-      .map(line => line.trim())
-      .filter(line => line);
+      .map(function(line) { return line.trim(); })
+      .filter(function(line) { return line; });
 
     for (const line of lines) {
       this.transpileLine(line);
@@ -66,15 +66,15 @@ class ThirstyTranspiler {
         this.output.push("var " + name + " " + type + " = " + value);
         break;
       case 'rust':
-        this.output.push(`let ${name} = ${value};`);
+        this.output.push('let ' + name + ' = ' + value + ';');
         break;
       case 'java':
         const isStr = value.startsWith('"') || value.startsWith("'");
         const javaType = isStr ? 'String' : 'double';
-        this.output.push(`${javaType} ${name} = ${value};`);
+        this.output.push(javaType + ' ' + name + ' = ' + value + ';');
         break;
       default:
-        this.output.push(`${name} = ${value}`);
+        this.output.push(name + ' = ' + value);
     }
   }
 
@@ -84,10 +84,10 @@ class ThirstyTranspiler {
         this.output.push("console.log(" + expr + ");");
         break;
       case 'python':
-        this.output.push(`print(${expr})`);
+        this.output.push('print(' + expr + ')');
         break;
       case 'go':
-        this.output.push(`fmt.Println(${expr})`);
+        this.output.push('fmt.Println(' + expr + ')');
         break;
       case 'rust':
         this.output.push("println!(\"{}\", " + expr + ");");
@@ -96,30 +96,30 @@ class ThirstyTranspiler {
         this.output.push("System.out.println(" + expr + ");");
         break;
       case 'c':
-        this.output.push("printf(\"%s\\n\", " + expr + ");");
+        this.output.push('printf("%s\\n", ' + expr + ');');
         break;
       default:
-        this.output.push(`print(${expr})`);
+        this.output.push('print(' + expr + ')');
     }
   }
 
   generateWrapper() {
     switch (this.target) {
       case 'go':
-        return `package main\n\nimport "fmt"\n\nfunc main() {\n${this.indentCode(this.output.join('\n'))}\n}`;
+        return 'package main\n\nimport "fmt"\n\nfunc main() {\n' + this.indentCode(this.output.join('\n')) + '\n}';
       case 'rust':
-        return `fn main() {\n${this.indentCode(this.output.join('\n'))}\n}`;
+        return 'fn main() {\n' + this.indentCode(this.output.join('\n')) + '\n}';
       case 'java':
-        return `public class ThirstyProgram {\n  public static void main(String[] args) {\n${this.indentCode(this.output.join('\n'), 4)}\n  }\n}`;
+        return 'public class ThirstyProgram {\n  public static void main(String[] args) {\n' + this.indentCode(this.output.join('\n'), 4) + '\n  }\n}';
       case 'c':
-        return `#include <stdio.h>\n\nint main() {\n${this.indentCode(this.output.join('\n'))}\n  return 0;\n}`;
+        return '#include <stdio.h>\n\nint main() {\n' + this.indentCode(this.output.join('\n')) + '\n  return 0;\n}';
       default:
         return this.output.join('\n');
     }
   }
 
   indentCode(code, spaces = 2) {
-    return code.split('\n').map(line => ' '.repeat(spaces) + line).join('\n');
+    return code.split('\n').map(function(line) { return ' '.repeat(spaces) + line; }).join('\n');
   }
 }
 
@@ -137,7 +137,7 @@ function main() {
   const filename = args[0];
 
   if (!fs.existsSync(filename)) {
-    console.error(`Error: File '${filename}' not found`);
+    console.error("Error: File '" + filename + "' not found");
     process.exit(1);
   }
 
@@ -165,9 +165,9 @@ function main() {
 
   if (outputFile) {
     fs.writeFileSync(outputFile, finalCode);
-    console.log(`✓ Transpiled to ${targetLanguage} and saved to ${outputFile}`);
+    console.log('✓ Transpiled to ' + targetLanguage + ' and saved to ' + outputFile);
   } else {
-    console.log(`// Transpiled to ${targetLanguage}\n`);
+    console.log('// Transpiled to ' + targetLanguage + '\n');
     console.log(finalCode);
   }
 }

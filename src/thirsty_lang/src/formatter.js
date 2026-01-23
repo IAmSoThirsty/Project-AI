@@ -66,7 +66,7 @@ class ThirstyFormatter {
     if (line.startsWith('drink ')) {
       const match = line.match(/drink\s+(\w+)\s*=\s*(.+)/);
       if (match) {
-        return `drink ${match[1]} = ${match[2].trim()}`;
+        return 'drink ' + match[1] + ' = ' + match[2].trim();
       }
     }
 
@@ -92,10 +92,10 @@ class ThirstyFormatter {
 
     if (outputPath) {
       fs.writeFileSync(outputPath, formatted);
-      console.log(`✓ Formatted ${inputPath} -> ${outputPath}`);
+      console.log('✓ Formatted ' + inputPath + ' -> ' + outputPath);
     } else {
       fs.writeFileSync(inputPath, formatted);
-      console.log(`✓ Formatted ${inputPath}`);
+      console.log('✓ Formatted ' + inputPath);
     }
   }
 }
