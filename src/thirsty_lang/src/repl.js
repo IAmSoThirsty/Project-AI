@@ -73,7 +73,7 @@ class ThirstyREPL {
       console.log('\n📊 Current Variables:');
       for (var name in vars) {
         if (vars.hasOwnProperty(name)) {
-          const value = vars[name];
+          var value = vars[name];
           console.log("  " + name + " = " + JSON.stringify(value));
         }
       }

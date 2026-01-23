@@ -34,9 +34,9 @@ class ThirstyDebugger extends ThirstyInterpreter {
     console.log('Type "help" for debugger commands\n');
 
     for (var i = 0; i < this.lines.length; i++) {
-      const lineObj = this.lines[i];
+      var lineObj = this.lines[i];
       this.currentLine = lineObj.number;
-      const line = lineObj.code;
+      var line = lineObj.code;
 
       if (this.breakpoints.has(this.currentLine) || this.stepping) {
         await this.pause(line);
@@ -72,19 +72,22 @@ class ThirstyDebugger extends ThirstyInterpreter {
 
     console.log('\nCode context:');
     for (var i = start; i < end; i++) {
-      const line = this.lines[i];
-      const marker = line.number === this.currentLine ? '→' : ' ';
-      const bp = this.breakpoints.has(line.number) ? '🔴' : '  ';
+      var line = this.lines[i];
+      var marker = line.number === this.currentLine ? '→' : ' ';
+      var bp = this.breakpoints.has(line.number) ? '🔴' : '  ';
       console.log(bp + ' ' + marker + ' ' + line.number + ': ' + line.code);
     }
 
     // Show watched variables
     if (this.watchVariables.size > 0) {
       console.log('\nWatched variables:');
-      var watchedVars = Array.from(this.watchVariables);
-      for (var i = 0; i < watchedVars.length; i++) {
-        const varName = watchedVars[i];
-        const value = this.variables[varName];
+      var watchedVars = [];
+      this.watchVariables.forEach(function(item) {
+        watchedVars.push(item);
+      });
+      for (var j = 0; j < watchedVars.length; j++) {
+        var varName = watchedVars[j];
+        var value = this.variables[varName];
         console.log('  ' + varName + ' = ' + JSON.stringify(value));
       }
     }
@@ -166,7 +169,7 @@ class ThirstyDebugger extends ThirstyInterpreter {
         console.log('\nVariables:');
         for (var name in this.variables) {
           if (this.variables.hasOwnProperty(name)) {
-            const value = this.variables[name];
+            var value = this.variables[name];
             console.log('  ' + name + ' = ' + JSON.stringify(value));
           }
         }
@@ -177,9 +180,12 @@ class ThirstyDebugger extends ThirstyInterpreter {
           console.log('No breakpoints set');
         } else {
           console.log('Breakpoints:');
-          var breakpointArray = Array.from(this.breakpoints);
-          for (var i = 0; i < breakpointArray.length; i++) {
-            const bp = breakpointArray[i];
+          var breakpointArray = [];
+          this.breakpoints.forEach(function(item) {
+            breakpointArray.push(item);
+          });
+          for (var j = 0; j < breakpointArray.length; j++) {
+            var bp = breakpointArray[j];
             console.log('  Line ' + bp);
           }
         }
