@@ -1,0 +1,456 @@
+{
+  "runtimes": {
+    "python": {
+      "name": "Python",
+      "version": "3.11+",
+      "exec_path": "python3",
+      "category": "interpreted",
+      "health_check_cmd": "python3 --version",
+      "verified": true,
+      "priority": 10
+    },
+    "javascript": {
+      "name": "JavaScript (Node.js)",
+      "version": "18+",
+      "exec_path": "node",
+      "category": "interpreted",
+      "health_check_cmd": "node --version",
+      "verified": true,
+      "priority": 10
+    },
+    "go": {
+      "name": "Go",
+      "version": "1.20+",
+      "exec_path": "go",
+      "category": "compiled",
+      "health_check_cmd": "go version",
+      "verified": true,
+      "priority": 9
+    },
+    "rust": {
+      "name": "Rust",
+      "version": "1.70+",
+      "exec_path": "rustc",
+      "category": "compiled",
+      "health_check_cmd": "rustc --version",
+      "verified": true,
+      "priority": 9
+    },
+    "java": {
+      "name": "Java",
+      "version": "11+",
+      "exec_path": "java",
+      "category": "compiled",
+      "health_check_cmd": "java --version",
+      "verified": true,
+      "priority": 8
+    },
+    "cpp": {
+      "name": "C++",
+      "version": "C++17+",
+      "exec_path": "g++",
+      "category": "compiled",
+      "health_check_cmd": "g++ --version",
+      "verified": true,
+      "priority": 8
+    },
+    "c": {
+      "name": "C",
+      "version": "C11+",
+      "exec_path": "gcc",
+      "category": "compiled",
+      "health_check_cmd": "gcc --version",
+      "verified": true,
+      "priority": 8
+    },
+    "ruby": {
+      "name": "Ruby",
+      "version": "3.0+",
+      "exec_path": "ruby",
+      "category": "interpreted",
+      "health_check_cmd": "ruby --version",
+      "verified": true,
+      "priority": 7
+    },
+    "php": {
+      "name": "PHP",
+      "version": "8.0+",
+      "exec_path": "php",
+      "category": "interpreted",
+      "health_check_cmd": "php --version",
+      "verified": true,
+      "priority": 7
+    },
+    "perl": {
+      "name": "Perl",
+      "version": "5.30+",
+      "exec_path": "perl",
+      "category": "interpreted",
+      "health_check_cmd": "perl --version",
+      "verified": true,
+      "priority": 6
+    },
+    "csharp": {
+      "name": "C# (.NET)",
+      "version": "6.0+",
+      "exec_path": "dotnet",
+      "category": "compiled",
+      "health_check_cmd": "dotnet --version",
+      "verified": true,
+      "priority": 8
+    },
+    "bash": {
+      "name": "Bash",
+      "version": "5.0+",
+      "exec_path": "bash",
+      "category": "script",
+      "health_check_cmd": "bash --version",
+      "verified": true,
+      "priority": 9
+    },
+    "typescript": {
+      "name": "TypeScript",
+      "version": "5.0+",
+      "exec_path": "npx ts-node",
+      "category": "interpreted",
+      "health_check_cmd": "npx tsc --version",
+      "verified": false,
+      "priority": 7
+    },
+    "kotlin": {
+      "name": "Kotlin",
+      "version": "1.9+",
+      "exec_path": "kotlin",
+      "category": "compiled",
+      "health_check_cmd": "kotlin -version",
+      "verified": false,
+      "priority": 6
+    },
+    "swift": {
+      "name": "Swift",
+      "version": "5.5+",
+      "exec_path": "swift",
+      "category": "compiled",
+      "health_check_cmd": "swift --version",
+      "verified": false,
+      "priority": 6
+    },
+    "scala": {
+      "name": "Scala",
+      "version": "3.0+",
+      "exec_path": "scala",
+      "category": "compiled",
+      "health_check_cmd": "scala -version",
+      "verified": false,
+      "priority": 5
+    },
+    "lua": {
+      "name": "Lua",
+      "version": "5.4+",
+      "exec_path": "lua",
+      "category": "interpreted",
+      "health_check_cmd": "lua -v",
+      "verified": false,
+      "priority": 5
+    },
+    "r": {
+      "name": "R",
+      "version": "4.0+",
+      "exec_path": "Rscript",
+      "category": "interpreted",
+      "health_check_cmd": "R --version",
+      "verified": false,
+      "priority": 4
+    },
+    "haskell": {
+      "name": "Haskell",
+      "version": "9.0+",
+      "exec_path": "runhaskell",
+      "category": "compiled",
+      "health_check_cmd": "ghc --version",
+      "verified": false,
+      "priority": 5
+    },
+    "elixir": {
+      "name": "Elixir",
+      "version": "1.14+",
+      "exec_path": "elixir",
+      "category": "interpreted",
+      "health_check_cmd": "elixir --version",
+      "verified": false,
+      "priority": 5
+    },
+    "erlang": {
+      "name": "Erlang",
+      "version": "25+",
+      "exec_path": "erl",
+      "category": "compiled",
+      "health_check_cmd": "erl -version",
+      "verified": false,
+      "priority": 5
+    },
+    "clojure": {
+      "name": "Clojure",
+      "version": "1.11+",
+      "exec_path": "clojure",
+      "category": "interpreted",
+      "health_check_cmd": "clojure --version",
+      "verified": false,
+      "priority": 5
+    },
+    "dart": {
+      "name": "Dart",
+      "version": "3.0+",
+      "exec_path": "dart",
+      "category": "compiled",
+      "health_check_cmd": "dart --version",
+      "verified": false,
+      "priority": 5
+    },
+    "groovy": {
+      "name": "Groovy",
+      "version": "4.0+",
+      "exec_path": "groovy",
+      "category": "interpreted",
+      "health_check_cmd": "groovy --version",
+      "verified": false,
+      "priority": 4
+    },
+    "julia": {
+      "name": "Julia",
+      "version": "1.9+",
+      "exec_path": "julia",
+      "category": "compiled",
+      "health_check_cmd": "julia --version",
+      "verified": false,
+      "priority": 5
+    },
+    "fsharp": {
+      "name": "F#",
+      "version": "6.0+",
+      "exec_path": "dotnet fsi",
+      "category": "compiled",
+      "health_check_cmd": "dotnet fsi --version",
+      "verified": false,
+      "priority": 6
+    },
+    "ocaml": {
+      "name": "OCaml",
+      "version": "4.14+",
+      "exec_path": "ocaml",
+      "category": "compiled",
+      "health_check_cmd": "ocaml -version",
+      "verified": false,
+      "priority": 4
+    },
+    "nim": {
+      "name": "Nim",
+      "version": "2.0+",
+      "exec_path": "nim",
+      "category": "compiled",
+      "health_check_cmd": "nim --version",
+      "verified": false,
+      "priority": 4
+    },
+    "crystal": {
+      "name": "Crystal",
+      "version": "1.9+",
+      "exec_path": "crystal",
+      "category": "compiled",
+      "health_check_cmd": "crystal --version",
+      "verified": false,
+      "priority": 4
+    },
+    "zig": {
+      "name": "Zig",
+      "version": "0.11+",
+      "exec_path": "zig",
+      "category": "compiled",
+      "health_check_cmd": "zig version",
+      "verified": false,
+      "priority": 5
+    },
+    "d": {
+      "name": "D",
+      "version": "2.100+",
+      "exec_path": "dmd",
+      "category": "compiled",
+      "health_check_cmd": "dmd --version",
+      "verified": false,
+      "priority": 3
+    },
+    "fortran": {
+      "name": "Fortran",
+      "version": "95+",
+      "exec_path": "gfortran",
+      "category": "compiled",
+      "health_check_cmd": "gfortran --version",
+      "verified": false,
+      "priority": 3
+    },
+    "cobol": {
+      "name": "COBOL",
+      "version": "3.0+",
+      "exec_path": "cobc",
+      "category": "compiled",
+      "health_check_cmd": "cobc --version",
+      "verified": false,
+      "priority": 2
+    },
+    "ada": {
+      "name": "Ada",
+      "version": "2012+",
+      "exec_path": "gnatmake",
+      "category": "compiled",
+      "health_check_cmd": "gnatmake --version",
+      "verified": false,
+      "priority": 3
+    },
+    "pascal": {
+      "name": "Pascal",
+      "version": "3.2+",
+      "exec_path": "fpc",
+      "category": "compiled",
+      "health_check_cmd": "fpc -version",
+      "verified": false,
+      "priority": 2
+    },
+    "lisp": {
+      "name": "Common Lisp",
+      "version": "SBCL 2.0+",
+      "exec_path": "sbcl",
+      "category": "interpreted",
+      "health_check_cmd": "sbcl --version",
+      "verified": false,
+      "priority": 3
+    },
+    "scheme": {
+      "name": "Scheme",
+      "version": "Guile 3.0+",
+      "exec_path": "guile",
+      "category": "interpreted",
+      "health_check_cmd": "guile --version",
+      "verified": false,
+      "priority": 3
+    },
+    "prolog": {
+      "name": "Prolog",
+      "version": "SWI 8.0+",
+      "exec_path": "swipl",
+      "category": "interpreted",
+      "health_check_cmd": "swipl --version",
+      "verified": false,
+      "priority": 3
+    },
+    "racket": {
+      "name": "Racket",
+      "version": "8.0+",
+      "exec_path": "racket",
+      "category": "interpreted",
+      "health_check_cmd": "racket --version",
+      "verified": false,
+      "priority": 3
+    },
+    "tcl": {
+      "name": "Tcl",
+      "version": "8.6+",
+      "exec_path": "tclsh",
+      "category": "interpreted",
+      "health_check_cmd": "echo 'puts [info patchlevel]' | tclsh",
+      "verified": false,
+      "priority": 2
+    },
+    "vb": {
+      "name": "Visual Basic .NET",
+      "version": "16+",
+      "exec_path": "dotnet",
+      "category": "compiled",
+      "health_check_cmd": "dotnet --version",
+      "verified": false,
+      "priority": 4
+    },
+    "smalltalk": {
+      "name": "Smalltalk",
+      "version": "3.2+",
+      "exec_path": "gst",
+      "category": "interpreted",
+      "health_check_cmd": "gst --version",
+      "verified": false,
+      "priority": 2
+    },
+    "powershell": {
+      "name": "PowerShell",
+      "version": "7.0+",
+      "exec_path": "pwsh",
+      "category": "script",
+      "health_check_cmd": "pwsh --version",
+      "verified": false,
+      "priority": 6
+    },
+    "assembly": {
+      "name": "Assembly (NASM)",
+      "version": "2.15+",
+      "exec_path": "nasm",
+      "category": "compiled",
+      "health_check_cmd": "nasm -version",
+      "verified": false,
+      "priority": 4
+    },
+    "v": {
+      "name": "V",
+      "version": "0.4+",
+      "exec_path": "v",
+      "category": "compiled",
+      "health_check_cmd": "v version",
+      "verified": false,
+      "priority": 3
+    },
+    "hack": {
+      "name": "Hack",
+      "version": "4.0+",
+      "exec_path": "hhvm",
+      "category": "interpreted",
+      "health_check_cmd": "hhvm --version",
+      "verified": false,
+      "priority": 3
+    },
+    "objectivec": {
+      "name": "Objective-C",
+      "version": "2.0+",
+      "exec_path": "gcc",
+      "category": "compiled",
+      "health_check_cmd": "gcc --version",
+      "verified": false,
+      "priority": 4
+    },
+    "vhdl": {
+      "name": "VHDL",
+      "version": "2008+",
+      "exec_path": "ghdl",
+      "category": "compiled",
+      "health_check_cmd": "ghdl --version",
+      "verified": false,
+      "priority": 2
+    },
+    "verilog": {
+      "name": "Verilog",
+      "version": "2005+",
+      "exec_path": "iverilog",
+      "category": "compiled",
+      "health_check_cmd": "iverilog -V",
+      "verified": false,
+      "priority": 2
+    }
+  },
+  "metadata": {
+    "total_runtimes": 50,
+    "verified_runtimes": 12,
+    "categories": {
+      "compiled": 26,
+      "interpreted": 21,
+      "script": 3
+    },
+    "created": "2026-01-23",
+    "version": "1.0.0"
+  }
+}

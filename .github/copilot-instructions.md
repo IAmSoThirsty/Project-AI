@@ -1,5 +1,29 @@
 # Project-AI Copilot Instructions
 
+> **⚠️ GOVERNANCE POLICY SUPERSEDED**  
+> This file contains legacy technical instructions. All AI assistants MUST follow the comprehensive governance policy in [copilot_workspace_profile.md](./copilot_workspace_profile.md).  
+> **The Workspace Profile takes precedence over all instructions in this file.**
+
+---
+
+## 🔒 MANDATORY: Read Governance Profile First
+
+Before proceeding, all AI assistants MUST read and comply with:
+
+**[.github/copilot_workspace_profile.md](./copilot_workspace_profile.md)**
+
+This profile establishes:
+
+- Maximal completeness requirements (no minimal/skeleton/partial code)
+- Production-grade standards for all artifacts
+- Full system wiring and integration mandates
+- Security, testing, and documentation requirements
+- Peer-level communication style
+
+**Failure to comply with the Workspace Profile is a policy violation.**
+
+---
+
 ## Project Overview
 
 Project-AI is a sophisticated Python desktop application providing a self-aware AI assistant with ethical decision-making (Asimov's Laws), autonomous learning, and a PyQt6 "Leather Book" UI. Features include plugin system, command overrides, memory expansion, and a web version (React + Flask).
@@ -452,3 +476,23 @@ Security issues are tracked through:
 1. **Use workflow artifacts** for detailed security scan results
 1. **Label PRs with `auto-merge`** to trigger automated approval (only for safe changes)
 1. **Monitor GitHub Actions usage** as security scans count toward monthly limits
+
+---
+
+## 🚨 REMINDER: Governance Policy Compliance
+
+All outputs generated using these technical instructions MUST comply with the standards defined in:
+
+**[.github/copilot_workspace_profile.md](./copilot_workspace_profile.md)**
+
+Key requirements:
+- ✅ Production-ready code (no prototypes, examples, or skeletons)
+- ✅ Full error handling, logging, and testing
+- ✅ Complete system integration (no isolated components)
+- ✅ Security hardening (input validation, encryption, auth/authz)
+- ✅ Comprehensive documentation with examples
+- ✅ Deterministic, config-driven architecture
+- ✅ 80%+ test coverage with unit/integration/e2e tests
+- ✅ Peer-level communication (not instructional)
+
+**Non-compliance will result in PR rejection and regeneration requirement.**

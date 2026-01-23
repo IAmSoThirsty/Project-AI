@@ -970,7 +970,21 @@ Audit, extend, and orchestrate with powerful council-driven agents and full tran
 - **Guardian Teams:**  
   - Cerberus (Security): `@org/cerberus-guardians`  
   - Codex Deus Maximus (Memory): `@org/codex-guardians`  
-  - Galahad (Ethics): `@org/galahad-guardians`  
+  - Galahad (Ethics): `@org/galahad-guardians`
+
+### 📋 AI Workspace Governance
+
+All AI assistants and contributors MUST comply with the **[Copilot Workspace Profile](.github/copilot_workspace_profile.md)**, which enforces:
+
+- ✅ **Maximal completeness** - No minimal/skeleton/partial code
+- ✅ **Production-grade artifacts** - Full error handling, logging, testing
+- ✅ **Complete system integration** - No isolated components
+- ✅ **Security hardening** - Validation, encryption, auth/authz
+- ✅ **Comprehensive documentation** - With examples and troubleshooting
+- ✅ **80%+ test coverage** - Unit, integration, and e2e tests
+- ✅ **Peer-level communication** - Professional, not instructional
+
+**Non-compliant contributions will be rejected.** See also: [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ---
 
