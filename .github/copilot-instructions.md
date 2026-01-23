@@ -13,6 +13,7 @@ Before proceeding, all AI assistants MUST read and comply with:
 **[.github/copilot_workspace_profile.md](./copilot_workspace_profile.md)**
 
 This profile establishes:
+
 - Maximal completeness requirements (no minimal/skeleton/partial code)
 - Production-grade standards for all artifacts
 - Full system wiring and integration mandates

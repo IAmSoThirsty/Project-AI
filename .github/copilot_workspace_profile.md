@@ -34,7 +34,7 @@ This document establishes the **mandatory governance policy** for all AI workspa
 
 The following output modes are **STRICTLY PROHIBITED** unless explicitly overridden by authorized repository maintainers:
 
-#### FORBIDDEN MODES:
+#### FORBIDDEN MODES
 
 1. **Minimal** - Bare-bones implementations without full functionality
 2. **Skeleton** - Structural outlines without complete implementation
@@ -58,6 +58,8 @@ The following output modes are **STRICTLY PROHIBITED** unless explicitly overrid
 All generated code, documentation, and configurations MUST meet these standards:
 
 #### Code Standards:
+
+
 - **Error Handling:** Comprehensive try-catch blocks, validation, and error propagation
 - **Logging:** Structured logging with appropriate levels (DEBUG, INFO, WARNING, ERROR, CRITICAL)
 - **Type Safety:** Full type annotations (Python), strong typing (TypeScript), interface definitions
@@ -67,6 +69,7 @@ All generated code, documentation, and configurations MUST meet these standards:
 - **Documentation:** Inline comments for complex logic, docstrings for all functions/classes
 
 #### Documentation Standards:
+
 - **Completeness:** Every feature, API, and module fully documented
 - **Examples:** Working code examples for all major use cases
 - **Architecture:** System diagrams, data flows, integration points
@@ -165,7 +168,7 @@ def process_data(data: Dict[str, Any]) -> ProcessedData:
 
 **Policy:** All code MUST follow deterministic, config-driven, and monolithic architecture patterns appropriate for this repository.
 
-#### Deterministic Design:
+#### Deterministic Design
 - **Reproducibility:** Same inputs ALWAYS produce same outputs
 - **No Race Conditions:** Thread-safe, async-safe implementations
 - **Predictable State:** Clear state machines, no hidden state
@@ -178,6 +181,7 @@ def process_data(data: Dict[str, Any]) -> ProcessedData:
 - **Schema Validation:** Fail-fast on invalid configurations
 
 #### Monolithic Patterns (Where Applicable):
+
 - **Cohesive Modules:** Related functionality grouped together
 - **Shared Libraries:** Common utilities in centralized locations
 - **Single Build:** Unified build and deployment process
@@ -192,6 +196,7 @@ def process_data(data: Dict[str, Any]) -> ProcessedData:
 **Policy:** All artifacts MUST be production-ready upon generation.
 
 **Production Checklist (All Required):**
+
 - [ ] Security hardening (OWASP Top 10 addressed)
 - [ ] Performance optimization (profiling, benchmarking completed)
 - [ ] Scalability considerations (load testing, capacity planning)
@@ -212,6 +217,7 @@ def process_data(data: Dict[str, Any]) -> ProcessedData:
 **Policy:** All code MUST be immediately integrable without modification.
 
 **Integration Requirements:**
+
 - **Interface Contracts:** Defined interfaces, clear boundaries
 - **Backward Compatibility:** No breaking changes without migration path
 - **Versioning:** Semantic versioning, deprecation notices
@@ -231,13 +237,14 @@ def process_data(data: Dict[str, Any]) -> ProcessedData:
 
 **Required Communication Patterns:**
 
-#### ✅ Acceptable:
+#### ✅ Acceptable
 - "Here's the implementation with full error handling and tests."
 - "I've integrated the authentication service with the existing user management system."
 - "The data pipeline now includes validation, transformation, and error recovery."
 - "This approach uses dependency injection for better testability."
 
-#### ❌ Unacceptable:
+#### ❌ Unacceptable
+
 - "First, you'll need to add error handling..."
 - "Step 1: Create a function..."
 - "Here's a basic example to get you started..."
@@ -338,6 +345,7 @@ class DataProcessor:
 ### Flask/FastAPI (Web Backend)
 
 **Mandatory Patterns:**
+
 - Request validation using Pydantic models
 - Error handlers for all exception types
 - CORS configuration
@@ -349,6 +357,7 @@ class DataProcessor:
 ### React (Web Frontend)
 
 **Mandatory Patterns:**
+
 - TypeScript with strict mode
 - React hooks for state management
 - Error boundaries for error handling
