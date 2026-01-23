@@ -1,6 +1,7 @@
 # Project-AI CLI-CODEX
 
 ## Overview
+
 This document outlines best practices, structure recommendations, and guidelines for CLI (Command-Line Interface) development specifically for Project-AI. It serves as the definitive reference for contributors to create, maintain, and expand CLI features in a robust, scalable, and user-friendly manner.
 
 ---
@@ -8,16 +9,19 @@ This document outlines best practices, structure recommendations, and guidelines
 ## Best Practices
 
 ### 1. Consistent User Experience
+
 - Use clear, concise command and option names.
 - Ensure help (`--help`) and version (`--version`) flags are supported on all commands.
 - Provide meaningful error messages and actionable feedback for users.
 
 ### 2. Structure
+
 - Follow a modular command structure (see **Structure** section below).
 - Place CLI code in `src/app/cli.py` and related modules.
 - Isolate core business logic from CLI argument parsing so business features can be reused elsewhere (e.g., API, UI).
 
 ### 3. Documentation
+
 - Every new command or breaking change must be documented in:
   - `CLI-CODEX.md` (this file)
   - `docs/cli/README.md` (user-facing documentation)
@@ -26,18 +30,21 @@ This document outlines best practices, structure recommendations, and guidelines
 - Annotate commands with concise docstrings or descriptions visible in `--help`.
 
 ### 4. Testing & QA
+
 - Thoroughly test CLI commands with various input permutations (valid, invalid, edge cases).
 - Use Typer's `CliRunner` for automated testing (see `tests/test_cli.py`).
 - Manual QA should include installation, upgrade, and downgrade scenarios where appropriate.
 - All CLI changes must pass CI checks in `.github/workflows/cli.yml`.
 
 ### 5. Configuration Management
+
 - Support configuration files: `~/.projectai.toml` (user) and `.projectai.toml` (project).
 - Allow environment variable overrides: `PROJECTAI_SECTION_KEY=value`.
 - Configuration priority: Environment variables > Project config > User config > Defaults.
 - See `src/app/core/config.py` for implementation details.
 
 ### 6. Shell Completion
+
 - Support tab completion for bash, zsh, and fish shells.
 - Typer provides built-in completion support via `--install-completion`.
 - Document completion installation in `docs/cli/README.md`.
@@ -77,11 +84,11 @@ Project-AI/
 Project-AI CLI is organized into six command groups:
 
 1. **user** - User management and authentication
-2. **memory** - Memory operations and knowledge base
-3. **learning** - Learning requests and training
-4. **plugin** - Plugin management and configuration
-5. **system** - System-level operations
-6. **ai** - AI model interaction and configuration
+1. **memory** - Memory operations and knowledge base
+1. **learning** - Learning requests and training
+1. **plugin** - Plugin management and configuration
+1. **system** - System-level operations
+1. **ai** - AI model interaction and configuration
 
 Each group should follow the pattern:
 
@@ -154,9 +161,9 @@ def test_command():
 ### Test Categories
 
 1. **Help Tests** - Verify `--help` output for all commands
-2. **Functionality Tests** - Test command execution with valid inputs
-3. **Error Tests** - Test error handling with invalid inputs
-4. **Integration Tests** - Test commands that interact with other systems
+1. **Functionality Tests** - Test command execution with valid inputs
+1. **Error Tests** - Test error handling with invalid inputs
+1. **Integration Tests** - Test commands that interact with other systems
 
 ### Running Tests
 
@@ -190,9 +197,9 @@ This updates `docs/cli/commands.md` with current `--help` output.
 When adding new features, update:
 
 1. **docs/cli/README.md** - Add examples and usage patterns
-2. **CLI-CODEX.md** - Update guidelines and best practices
-3. **CHANGELOG.md** - Document changes for version tracking
-4. **CONTRIBUTING.md** - Update if development workflow changes
+1. **CLI-CODEX.md** - Update guidelines and best practices
+1. **CHANGELOG.md** - Document changes for version tracking
+1. **CONTRIBUTING.md** - Update if development workflow changes
 
 ---
 
@@ -234,13 +241,13 @@ export PROJECTAI_SECURITY_ENABLE_AUDIT_LOG=true
 ## Future Guidelines
 
 1. **Plugin Support**: Design CLI for extensibility—prefer sub-command registries or plugin loaders for future third-party commands.
-2. **Cross-platform Compatibility**: Always test in supported shells and environments (Linux, macOS, Windows PowerShell, etc.).
-3. **Output Formats**: Consider adding `--output json|yaml|table` for programmatic consumption.
-4. **Batch Operations**: Consider `--batch` mode for processing multiple commands from file.
-5. **Telemetry/Analytics**: If telemetry is added, provide clear opt-in/opt-out mechanisms and respect user privacy.
-6. **Accessibility**: Ensure outputs (including colored outputs) are usable with screen readers and accessible terminals.
-7. **Continuous Integration**: Integrate CLI testing into CI/CD pipelines for every push & PR (see `.github/workflows/cli.yml`).
-8. **Deprecation Policy**: Announce and document deprecated commands/options; maintain backward compatibility where feasible.
+1. **Cross-platform Compatibility**: Always test in supported shells and environments (Linux, macOS, Windows PowerShell, etc.).
+1. **Output Formats**: Consider adding `--output json|yaml|table` for programmatic consumption.
+1. **Batch Operations**: Consider `--batch` mode for processing multiple commands from file.
+1. **Telemetry/Analytics**: If telemetry is added, provide clear opt-in/opt-out mechanisms and respect user privacy.
+1. **Accessibility**: Ensure outputs (including colored outputs) are usable with screen readers and accessible terminals.
+1. **Continuous Integration**: Integrate CLI testing into CI/CD pipelines for every push & PR (see `.github/workflows/cli.yml`).
+1. **Deprecation Policy**: Announce and document deprecated commands/options; maintain backward compatibility where feasible.
 
 ---
 
@@ -249,16 +256,18 @@ export PROJECTAI_SECURITY_ENABLE_AUDIT_LOG=true
 ### CLI Workflow
 
 The `.github/workflows/cli.yml` workflow runs on:
+
 - Push to main/cerberus-integration branches
 - Pull requests
 - Manual trigger (workflow_dispatch)
 
 It includes:
+
 1. **Linting** - Ruff and mypy checks
-2. **Tests** - Pytest with coverage on Python 3.11 and 3.12
-3. **Smoke Tests** - Basic functionality verification
-4. **Documentation** - Auto-generation and validation
-5. **Config Tests** - Configuration file and environment variable testing
+1. **Tests** - Pytest with coverage on Python 3.11 and 3.12
+1. **Smoke Tests** - Basic functionality verification
+1. **Documentation** - Auto-generation and validation
+1. **Config Tests** - Configuration file and environment variable testing
 
 ### Local Pre-commit Checks
 

@@ -1,4 +1,5 @@
 # H.323 Security Architecture Diagram Specification
+
 ## Version 1.0 — Structural, Logical, and Data‑Flow Blueprint
 
 ## 1. Purpose
@@ -20,13 +21,14 @@ These specifications allow architects, engineers, and vendors to produce consist
 This specification defines six required diagram types:
 
 1. **Logical Architecture Diagram**
-2. **Physical Network Topology Diagram**
-3. **Security Trust Boundary Diagram**
-4. **Signaling Flow Diagram** (RAS + H.225 + H.245)
-5. **Media Flow Diagram** (SRTP + Legacy Interworking)
-6. **PKI Trust & Certificate Flow Diagram**
+1. **Physical Network Topology Diagram**
+1. **Security Trust Boundary Diagram**
+1. **Signaling Flow Diagram** (RAS + H.225 + H.245)
+1. **Media Flow Diagram** (SRTP + Legacy Interworking)
+1. **PKI Trust & Certificate Flow Diagram**
 
 Each diagram type is defined below with:
+
 - Required components
 - Required relationships
 - Required annotations
@@ -47,15 +49,18 @@ Each diagram type is defined below with:
 ### 3.2 Required Logical Groupings
 
 **H.323 Zone containing:**
+
 - EPs
 - GK
 - MCUs
 
 **Voice/Video DMZ containing:**
+
 - Gateways
 - SBCs (if SIP interworking exists)
 
 **Carrier / Legacy Domain containing:**
+
 - PSTN
 - ISDN/H.320
 - SIP trunks
@@ -271,15 +276,18 @@ Enterprise Network Physical Topology
 ### 5.1 Required Trust Zones
 
 **Trusted Zone:**
+
 - EPs
 - GK
 - MCUs
 
 **Semi‑Trusted Zone:**
+
 - Gateways
 - SBCs
 
 **Untrusted Zone:**
+
 - PSTN
 - ISDN/H.320
 - Carrier SIP
@@ -383,6 +391,7 @@ This diagram must show all signaling flows:
 - DRQ/DCF
 
 **Annotations:**
+
 - "Protected by H.235.2 (auth + integrity + anti‑replay)"
 
 ### 6.2 H.225 (Q.931‑like)
@@ -394,6 +403,7 @@ This diagram must show all signaling flows:
 - RELEASE COMPLETE
 
 **Annotations:**
+
 - "Protected by H.235.3 or TLS/IPsec"
 
 ### 6.3 H.245
@@ -405,6 +415,7 @@ This diagram must show all signaling flows:
 - EndSessionCommand
 
 **Annotations:**
+
 - "Protected by H.235.4 (integrity + encryption)"
 - "OLC carries SRTP keying (H.235.6)"
 
@@ -480,6 +491,7 @@ Legend:
 - SRTCP control
 
 **Annotations:**
+
 - "Encrypted media (H.235.6)"
 - "AES‑based cipher suite"
 
@@ -763,6 +775,7 @@ A diagram is compliant when:
 ### Version Control
 
 All diagrams should be:
+
 - Version controlled (Git recommended)
 - Reviewed during architecture changes
 - Updated within 30 days of implementation changes

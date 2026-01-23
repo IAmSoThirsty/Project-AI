@@ -1,7 +1,9 @@
 # H.323 Lifecycle & Decommissioning Standard
+
 Version 1.0 — Deployment, Maintenance, Retirement
 
 ## 1. Purpose
+
 Defines the full lifecycle of H.323 components from deployment to retirement, ensuring security and operational integrity throughout.
 
 ---
@@ -9,13 +11,16 @@ Defines the full lifecycle of H.323 components from deployment to retirement, en
 ## 2. Lifecycle Phases
 
 ### 2.1 Deployment
+
 **Certificate issuance**
+
 - Request X.509 certificate from Voice/Video CA
 - Install certificate on component
 - Validate certificate chain
 - Configure CRL/OCSP
 
 **Secure configuration**
+
 - Apply hardening baseline (see Hardening Checklist)
 - Enable H.235.2/3/4/6
 - Configure SRTP mandatory mode
@@ -23,12 +28,14 @@ Defines the full lifecycle of H.323 components from deployment to retirement, en
 - Set strong passwords
 
 **Baseline documentation**
+
 - Record component details (model, serial, IP, MAC)
 - Document configuration parameters
 - Capture initial baseline config
 - Add to asset inventory
 
 **Monitoring integration**
+
 - Configure syslog export to SIEM
 - Enable SNMP monitoring
 - Configure health check endpoints
@@ -36,17 +43,21 @@ Defines the full lifecycle of H.323 components from deployment to retirement, en
 - Enable alerting rules
 
 ### 2.2 Operation
+
 **Daily/weekly/monthly maintenance**
+
 - Daily: Health checks, registration validation
 - Weekly: Certificate expiry checks, log review
 - Monthly: Firmware review, PKI audit, capacity review
 
 **PKI renewals**
+
 - Certificate renewal 30 days before expiry
 - CRL/OCSP availability validation
 - Trust chain verification
 
 **Firmware updates**
+
 - Review security advisories
 - Test updates in lab environment
 - Schedule maintenance window
@@ -54,34 +65,41 @@ Defines the full lifecycle of H.323 components from deployment to retirement, en
 - Validate secure operation post-update
 
 **Capacity planning**
+
 - Monitor call volume trends
 - Review bandwidth utilization
 - Plan gateway trunk expansion
 - Plan endpoint additions
 
 ### 2.3 Decommissioning
+
 **Revoke certificates**
+
 - Submit revocation request to PKI team
 - Validate certificate appears in CRL
 - Confirm OCSP returns "revoked" status
 
 **Wipe configuration**
+
 - Factory reset device
 - Overwrite flash/storage (DoD 5220.22-M standard)
 - Validate no configuration remnants
 
 **Remove from GK**
+
 - Delete endpoint aliases from Gatekeeper
 - Remove E.164 routing entries
 - Remove from admission control policies
 
 **Remove from monitoring**
+
 - Delete SIEM log source
 - Remove SNMP targets
 - Delete dashboard entries
 - Disable alerting rules
 
 **Update diagrams and inventory**
+
 - Remove component from network diagrams
 - Update asset inventory
 - Archive decommissioning documentation
@@ -91,6 +109,7 @@ Defines the full lifecycle of H.323 components from deployment to retirement, en
 ## 3. Decommissioning Checklist
 
 ### 3.1 Pre-Decommissioning
+
 - [ ] Change request approved
 - [ ] Maintenance window scheduled
 - [ ] Replacement component deployed (if applicable)
@@ -98,6 +117,7 @@ Defines the full lifecycle of H.323 components from deployment to retirement, en
 - [ ] Users notified
 
 ### 3.2 Decommissioning Steps
+
 - [ ] **Certificate revoked** (PKI team confirms)
 - [ ] **Device configuration backed up** (final backup)
 - [ ] **Device unregistered from GK**
@@ -110,6 +130,7 @@ Defines the full lifecycle of H.323 components from deployment to retirement, en
 - [ ] **Documentation archived** (config, logs, certificates)
 
 ### 3.3 Post-Decommissioning Validation
+
 - [ ] Certificate confirmed in CRL
 - [ ] No log traffic from decommissioned device
 - [ ] No alerts referencing device
@@ -146,82 +167,92 @@ Planned → Deployed → Operational → Maintenance → Operational
 ### 5.1 Endpoint Lifecycle
 
 **Deployment**:
+
 1. Issue certificate
-2. Install certificate
-3. Configure GK address
-4. Enable H.235.2/3/4
-5. Enable SRTP
-6. Lock admin UI
-7. Register with GK
-8. Add to monitoring
+1. Install certificate
+1. Configure GK address
+1. Enable H.235.2/3/4
+1. Enable SRTP
+1. Lock admin UI
+1. Register with GK
+1. Add to monitoring
 
 **Operation**:
+
 - Daily: Validate registration status
 - Weekly: Check certificate expiry
 - Monthly: Firmware review
 
 **Decommissioning**:
+
 1. Revoke certificate
-2. Unregister from GK
-3. Factory reset
-4. Remove from inventory
+1. Unregister from GK
+1. Factory reset
+1. Remove from inventory
 
 ### 5.2 Gatekeeper Lifecycle
 
 **Deployment**:
+
 1. Issue certificate
-2. Install GK software/appliance
-3. Configure H.235.2/3/4
-4. Configure routing rules
-5. Configure admission control
-6. Enable logging to SIEM
-7. Configure redundancy (active/standby)
-8. Validate failover
+1. Install GK software/appliance
+1. Configure H.235.2/3/4
+1. Configure routing rules
+1. Configure admission control
+1. Enable logging to SIEM
+1. Configure redundancy (active/standby)
+1. Validate failover
 
 **Operation**:
+
 - Daily: Health check, registration counts
 - Weekly: Log review, certificate check
 - Monthly: Capacity review, PKI audit
 
 **Decommissioning**:
+
 1. Migrate endpoints to secondary GK
-2. Validate no active registrations
-3. Revoke certificate
-4. Wipe configuration
-5. Remove from monitoring
-6. Update diagrams
+1. Validate no active registrations
+1. Revoke certificate
+1. Wipe configuration
+1. Remove from monitoring
+1. Update diagrams
 
 ### 5.3 Gateway Lifecycle
 
 **Deployment**:
+
 1. Issue certificate
-2. Install gateway in DMZ
-3. Configure trunks (PSTN/H.320/SIP)
-4. Configure H.235.2/3/4/6
-5. Configure codec mapping
-6. Enable CDR export
-7. Validate trunk status
-8. Test call flows
+1. Install gateway in DMZ
+1. Configure trunks (PSTN/H.320/SIP)
+1. Configure H.235.2/3/4/6
+1. Configure codec mapping
+1. Enable CDR export
+1. Validate trunk status
+1. Test call flows
 
 **Operation**:
+
 - Daily: Trunk status, active calls
 - Weekly: CDR review, certificate check
 - Monthly: Trunk utilization, firmware review
 
 **Decommissioning**:
+
 1. Migrate calls to secondary gateway
-2. Validate no active calls
-3. Disconnect trunks (coordinate with carrier)
-4. Revoke certificate
-5. Wipe configuration
-6. Remove from monitoring
-7. Update diagrams
+1. Validate no active calls
+1. Disconnect trunks (coordinate with carrier)
+1. Revoke certificate
+1. Wipe configuration
+1. Remove from monitoring
+1. Update diagrams
 
 ---
 
 ## 6. Certificate Lifecycle Management
 
 ### 6.1 Certificate Issuance
+
 - Request CSR from component
 - Submit to Voice/Video CA
 - Validate certificate fields (SAN, validity period)
@@ -229,6 +260,7 @@ Planned → Deployed → Operational → Maintenance → Operational
 - Validate trust chain
 
 ### 6.2 Certificate Renewal
+
 - **Trigger**: 30 days before expiry
 - Generate new CSR
 - Submit to CA
@@ -237,6 +269,7 @@ Planned → Deployed → Operational → Maintenance → Operational
 - Revoke old certificate (after grace period)
 
 ### 6.3 Certificate Revocation
+
 - **Triggers**: Component decommissioned, key compromise, policy violation
 - Submit revocation request to PKI team
 - Validate CRL updated within 4 hours
@@ -246,6 +279,7 @@ Planned → Deployed → Operational → Maintenance → Operational
 ### 6.4 Certificate Expiry Monitoring
 
 **Alerting Thresholds**:
+
 - 30 days: WARN (schedule renewal)
 - 14 days: ERROR (urgent renewal required)
 - 7 days: CRITICAL (component will fail soon)
@@ -256,11 +290,13 @@ Planned → Deployed → Operational → Maintenance → Operational
 ## 7. Configuration Management
 
 ### 7.1 Baseline Configuration
+
 - Capture initial configuration post-deployment
 - Store in version control (Git)
 - Tag with version number and date
 
 ### 7.2 Configuration Changes
+
 - All changes via change control process
 - Backup current configuration before change
 - Apply change
@@ -268,12 +304,14 @@ Planned → Deployed → Operational → Maintenance → Operational
 - Update baseline if change permanent
 
 ### 7.3 Configuration Backups
+
 - **Frequency**: Daily (automated)
 - **Retention**: 90 days
 - **Location**: Secure backup storage
 - **Encryption**: AES-256
 
 ### 7.4 Configuration Drift Detection
+
 - Automated comparison vs. baseline
 - Alert on unauthorized changes
 - Investigate and remediate drift
@@ -283,21 +321,24 @@ Planned → Deployed → Operational → Maintenance → Operational
 ## 8. Firmware & Software Lifecycle
 
 ### 8.1 Firmware Review Cycle
+
 - **Monthly**: Check vendor security advisories
 - **Quarterly**: Review firmware versions vs. latest
 - **Annually**: Mandatory firmware update cycle
 
 ### 8.2 Firmware Update Process
+
 1. Review release notes
-2. Test in lab environment
-3. Schedule maintenance window
-4. Backup current configuration
-5. Apply firmware update
-6. Validate operation (registration, secure call setup, SRTP)
-7. Monitor for 48 hours
-8. Document results
+1. Test in lab environment
+1. Schedule maintenance window
+1. Backup current configuration
+1. Apply firmware update
+1. Validate operation (registration, secure call setup, SRTP)
+1. Monitor for 48 hours
+1. Document results
 
 ### 8.3 Firmware Rollback
+
 - **Trigger**: Update causes operational failure
 - Restore previous firmware version
 - Restore configuration backup
@@ -309,21 +350,25 @@ Planned → Deployed → Operational → Maintenance → Operational
 ## 9. Disposal & Data Sanitization
 
 ### 9.1 Data Sanitization Requirements
+
 - **Level 1** (low sensitivity): Single-pass overwrite
 - **Level 2** (medium sensitivity): DoD 5220.22-M (3-pass)
 - **Level 3** (high sensitivity): DoD 5220.22-M (7-pass) + physical destruction
 
 ### 9.2 H.323 Component Disposal
+
 **All components**: Minimum Level 2 (DoD 5220.22-M)
 
 **Process**:
+
 1. Revoke certificates
-2. Factory reset
-3. Secure erase (3-pass minimum)
-4. Validate no data recoverable
-5. Physical disposal or redeployment
+1. Factory reset
+1. Secure erase (3-pass minimum)
+1. Validate no data recoverable
+1. Physical disposal or redeployment
 
 ### 9.3 Certificate & Key Material Disposal
+
 - Delete private keys
 - Overwrite key storage (secure erase)
 - Revoke certificates
@@ -334,6 +379,7 @@ Planned → Deployed → Operational → Maintenance → Operational
 ## 10. Lifecycle Documentation Requirements
 
 ### 10.1 Deployment Documentation
+
 - Asset tag and serial number
 - Certificate serial number
 - Initial configuration
@@ -341,6 +387,7 @@ Planned → Deployed → Operational → Maintenance → Operational
 - Baseline test results
 
 ### 10.2 Operational Documentation
+
 - Change history
 - Incident history
 - Firmware update history
@@ -348,6 +395,7 @@ Planned → Deployed → Operational → Maintenance → Operational
 - Performance metrics
 
 ### 10.3 Decommissioning Documentation
+
 - Decommissioning date and engineer
 - Reason for decommissioning
 - Certificate revocation confirmation
@@ -359,6 +407,7 @@ Planned → Deployed → Operational → Maintenance → Operational
 ## 11. Lifecycle Audit Requirements
 
 ### 11.1 Quarterly Lifecycle Audit
+
 - [ ] All components in inventory have valid certificates
 - [ ] All components registered in monitoring
 - [ ] All baselines current (< 90 days old)
@@ -366,6 +415,7 @@ Planned → Deployed → Operational → Maintenance → Operational
 - [ ] All decommissioned components wiped
 
 ### 11.2 Annual Lifecycle Audit
+
 - [ ] Full inventory reconciliation
 - [ ] Firmware versions compliant
 - [ ] Certificate lifecycle compliance
@@ -377,6 +427,7 @@ Planned → Deployed → Operational → Maintenance → Operational
 ## 12. Completion Criteria
 
 A component lifecycle is considered compliant when:
+
 - All phases documented
 - Certificates managed throughout lifecycle
 - Configurations backed up regularly

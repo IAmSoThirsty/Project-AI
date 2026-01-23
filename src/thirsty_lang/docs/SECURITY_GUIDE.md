@@ -25,6 +25,7 @@ shield protectionName {
 ```
 
 **Features**:
+
 - Automatic threat monitoring
 - Memory protection
 - Integrity checking
@@ -39,6 +40,7 @@ morph on: ["injection", "overflow", "timing"]
 ```
 
 **Capabilities**:
+
 - Identifier obfuscation
 - Control flow flattening
 - Dead code injection
@@ -57,6 +59,7 @@ detect attacks {
 ```
 
 **Detection Levels**:
+
 - **White Box**: Source code analysis threats
 - **Grey Box**: Partial knowledge attacks
 - **Black Box**: Behavioral attacks
@@ -71,6 +74,7 @@ defend with: "paranoid"
 ```
 
 **Defense Levels**:
+
 - `passive` - Log threats only
 - `moderate` - Warn and sanitize
 - `aggressive` - Block threats
@@ -86,6 +90,7 @@ sanitize userInput
 ```
 
 **Sanitization Features**:
+
 - HTML entity encoding
 - SQL injection prevention
 - XSS attack blocking
@@ -103,6 +108,7 @@ armor secretKey
 ```
 
 **Protection**:
+
 - Immutability enforcement
 - Memory freezing
 - Type safety
@@ -123,6 +129,7 @@ shield sqlProtection {
 ```
 
 **Blocked Patterns**:
+
 - `OR`, `AND`, `UNION`, `SELECT`, `DROP`, `INSERT`, `UPDATE`, `DELETE`
 - String concatenation attacks
 - Comment-based injections
@@ -140,6 +147,7 @@ shield xssProtection {
 ```
 
 **Blocked Elements**:
+
 - `<script>` tags
 - `javascript:` protocol
 - Event handlers (`onerror`, `onload`)
@@ -161,6 +169,7 @@ shield commandProtection {
 ```
 
 **Blocked Characters**:
+
 - `;`, `|`, `&`, `` ` ``, `$(`, `&&`, `||`
 - Shell metacharacters
 - Escape sequences
@@ -181,6 +190,7 @@ shield bufferProtection {
 ```
 
 **Limits**:
+
 - Maximum input length: 8192 bytes (configurable)
 - Pattern-based overflow detection
 - Automatic truncation
@@ -201,6 +211,7 @@ shield timingProtection {
 ```
 
 **Features**:
+
 - Execution time normalization
 - Variance detection
 - Random delays
@@ -267,6 +278,7 @@ const interpreter = new SecureThirstyInterpreter({
 ### White Box Attacks
 
 Detects threats through source code analysis:
+
 - SQL injection patterns
 - XSS vulnerabilities
 - Command injection attempts
@@ -278,6 +290,7 @@ Detects threats through source code analysis:
 ### Grey Box Attacks
 
 Detects attacks with partial knowledge:
+
 - Timing attacks
 - Side-channel attacks
 - Brute force attempts
@@ -286,6 +299,7 @@ Detects attacks with partial knowledge:
 ### Black Box Attacks
 
 Detects behavioral threats:
+
 - Buffer overflows
 - DoS attacks
 - Format string vulnerabilities
@@ -295,6 +309,7 @@ Detects behavioral threats:
 ### Red Team Attacks
 
 Defends against penetration testing:
+
 - Reverse engineering attempts
 - Memory dump analysis
 - Dynamic analysis (VM/Sandbox detection)
@@ -523,12 +538,12 @@ See [PROJECT_AI_INTEGRATION.md](../PROJECT_AI_INTEGRATION.md) for details.
 ## Best Practices
 
 1. **Always use `shield` blocks** for sensitive operations
-2. **Sanitize all user input** with the `sanitize` keyword
-3. **Armor sensitive data** like passwords and API keys
-4. **Configure detection** appropriate to your threat model
-5. **Use paranoid mode** for high-value targets
-6. **Regularly review** security reports
-7. **Integrate with Project-AI** for advanced protection
+1. **Sanitize all user input** with the `sanitize` keyword
+1. **Armor sensitive data** like passwords and API keys
+1. **Configure detection** appropriate to your threat model
+1. **Use paranoid mode** for high-value targets
+1. **Regularly review** security reports
+1. **Integrate with Project-AI** for advanced protection
 
 ## Security Report
 

@@ -13,6 +13,7 @@ This guide explains how to integrate the Project-AI VR module into a Unity VR pr
 ## Step 1: Import the VR Module
 
 1. Copy the entire `unity/` directory into your Unity project's `Assets/` folder:
+
    ```
    YourProject/
    └── Assets/
@@ -24,7 +25,7 @@ This guide explains how to integrate the Project-AI VR module into a Unity VR pr
                └── ProjectAI/
    ```
 
-2. Unity will automatically compile all C# scripts.
+1. Unity will automatically compile all C# scripts.
 
 ## Step 2: Scene Setup
 
@@ -53,6 +54,7 @@ Scene Root
 ### Configure Components
 
 #### SceneInitializer
+
 ```csharp
 // In Unity Inspector:
 - Skip Genesis For Testing: false (uncheck for production)
@@ -60,6 +62,7 @@ Scene Root
 ```
 
 #### PresenceController
+
 ```csharp
 // In Unity Inspector:
 - Orb Object: Drag your AI orb GameObject here
@@ -70,6 +73,7 @@ Scene Root
 ```
 
 #### LightingController
+
 ```csharp
 // In Unity Inspector:
 - Room Lights: Drag all room Light components here (array)
@@ -83,6 +87,7 @@ Scene Root
 ```
 
 #### VRBridgeClient
+
 ```csharp
 // In Unity Inspector:
 - Backend URL: "http://localhost:5000" (adjust for your Python backend)
@@ -461,10 +466,10 @@ private IEnumerator SendActionToBackend(VRActionPacket packet)
 ### Editor Testing
 
 1. Open your scene in Unity Editor
-2. Press Play
-3. Check Console for initialization messages
-4. If first-time user, Genesis should start automatically
-5. Use test input methods to send commands
+1. Press Play
+1. Check Console for initialization messages
+1. If first-time user, Genesis should start automatically
+1. Use test input methods to send commands
 
 ### Genesis Testing
 
@@ -579,17 +584,17 @@ private void ExecuteCustomEffect(VRActionPacket packet)
    - Verify SceneInitializer is active
    - Check console for initialization errors
 
-2. **Commands not working**
+1. **Commands not working**
    - Verify RoleManager has correct role set
    - Check if Genesis is active (blocks commands)
    - Enable debug logging in components
 
-3. **Lighting not animating**
+1. **Lighting not animating**
    - Ensure Light components are assigned in LightingController
    - Check that lights exist in scene
    - Verify Genesis RoomAwakening state is reached
 
-4. **Orb not visible**
+1. **Orb not visible**
    - Check PresenceController.orbObject assignment
    - Verify orb GameObject is active
    - Check camera can see orb position

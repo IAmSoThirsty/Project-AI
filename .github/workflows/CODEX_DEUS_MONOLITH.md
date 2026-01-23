@@ -39,6 +39,7 @@ Phase 11: Reporting & Summary
 ### Phase 1: Pre-Flight Checks
 
 **Job: initialization**
+
 - Determines what should run based on event type and manual inputs
 - Sets output variables for conditional job execution
 - Displays workflow execution plan
@@ -47,24 +48,28 @@ Phase 11: Reporting & Summary
 ### Phase 2: Security Scanning Suite (4 Jobs)
 
 **Job: codeql-analysis**
+
 - Runs GitHub's CodeQL security analysis
 - Languages: Python, JavaScript
 - SARIF results uploaded to Security tab
 - **Merged from**: `codeql.yml`
 
 **Job: bandit-security-scan**
+
 - Python-specific security linting
 - Detects common security issues
 - SARIF format for GitHub Security integration
 - **Merged from**: `bandit.yml`
 
 **Job: secret-scanning**
+
 - Multiple tools: Bandit, detect-secrets, TruffleHog
 - Scans for hardcoded credentials and secrets
 - Full git history scanning
 - **Merged from**: `security-secret-scan.yml`
 
 **Job: dependency-vulnerability-scan**
+
 - pip-audit and safety checks
 - Identifies vulnerable dependencies
 - JSON reports for analysis
@@ -73,18 +78,21 @@ Phase 11: Reporting & Summary
 ### Phase 3: Code Quality & Linting (3 Jobs)
 
 **Job: super-linter**
+
 - Multi-language linting
 - Validates: Python, Markdown, YAML, JSON
 - Incremental mode (only changed files)
 - **Merged from**: `super-linter.yml`
 
 **Job: ruff-linting**
+
 - Fast Python linting and formatting
 - Replaces Flake8, isort, Black in one tool
 - GitHub-formatted output
 - **Merged from**: `ci.yml`, `format-and-fix.yml`
 
 **Job: mypy-type-checking**
+
 - Static type checking for Python
 - Catches type-related bugs early
 - **Merged from**: `ci.yml`
@@ -92,12 +100,14 @@ Phase 11: Reporting & Summary
 ### Phase 4: Testing Suite (2 Jobs)
 
 **Job: pytest-tests**
+
 - Matrix strategy: Python 3.11 and 3.12
 - Full test coverage with pytest-cov
 - Coverage reports to Codecov
 - **Merged from**: `ci.yml`, `node-ci.yml`
 
 **Job: node-tests**
+
 - Node.js testing
 - npm test execution
 - **Merged from**: `node-ci.yml`
@@ -105,12 +115,14 @@ Phase 11: Reporting & Summary
 ### Phase 5: Build & Compilation (2 Jobs)
 
 **Job: python-build**
+
 - Python package building
 - Wheel and source distribution creation
 - Artifact upload for deployment
 - **Merged from**: `deploy.yml`, `ci.yml`
 
 **Job: docker-build**
+
 - Docker image building
 - Trivy vulnerability scanning
 - Container security validation
@@ -119,12 +131,14 @@ Phase 11: Reporting & Summary
 ### Phase 6: Auto-Fixing & Remediation (2 Jobs)
 
 **Job: auto-fix-issues**
+
 - Automatically fixes linting issues
 - Applies: Ruff, Black, isort, autopep8
 - Commits fixes back to PRs
 - **Merged from**: `auto-fix-failures.yml`, `format-and-fix.yml`, `comprehensive-pr-automation.yml`
 
 **Job: auto-security-fixes**
+
 - Detects and fixes security vulnerabilities
 - Creates PRs for dependency updates
 - **Merged from**: `auto-security-fixes.yml`, `auto-bandit-fixes.yml`
@@ -132,22 +146,26 @@ Phase 11: Reporting & Summary
 ### Phase 7: Issue & PR Automation (4 Jobs)
 
 **Job: auto-create-branch-prs**
+
 - Discovers branches without PRs
 - Creates PRs automatically
 - Batch processing (10 per run)
 - **Merged from**: `auto-create-branch-prs.yml`
 
 **Job: auto-issue-triage**
+
 - Automatically labels new issues
 - Keyword-based classification
 - **Merged from**: `auto-issue-triage.yml`, `auto-issue-resolution.yml`
 
 **Job: greetings**
+
 - Welcomes first-time contributors
 - Friendly messages on first issue/PR
 - **Merged from**: `greetings.yml`
 
 **Job: stale-management**
+
 - Marks inactive issues/PRs as stale
 - Auto-closes after grace period
 - **Merged from**: `stale.yml`
@@ -155,6 +173,7 @@ Phase 11: Reporting & Summary
 ### Phase 8: Post-Merge Validation (1 Job)
 
 **Job: post-merge-validation**
+
 - Validates main branch health after merge
 - Quick test execution
 - Health reports on PRs
@@ -163,11 +182,13 @@ Phase 11: Reporting & Summary
 ### Phase 9: Deployment (2 Jobs)
 
 **Job: deploy-staging**
+
 - Deploys to staging environment
 - Conditional on develop branch
 - **Merged from**: `deploy.yml`, `google-cloudrun-source.yml`
 
 **Job: deploy-production**
+
 - Deploys to production environment
 - Conditional on main branch
 - **Merged from**: `deploy.yml`, `google.yml`
@@ -175,6 +196,7 @@ Phase 11: Reporting & Summary
 ### Phase 10: Cleanup & Maintenance (1 Job)
 
 **Job: cleanup-artifacts**
+
 - Removes artifacts older than 30 days
 - Reduces storage costs
 - **Merged from**: `prune-artifacts.yml`
@@ -182,6 +204,7 @@ Phase 11: Reporting & Summary
 ### Phase 11: Reporting & Summary (1 Job)
 
 **Job: generate-summary**
+
 - Creates comprehensive workflow summary
 - Reports on all phase results
 - Markdown summary in GitHub UI
@@ -233,11 +256,13 @@ Instead of 35+ workflows with their own schedules, we now have 9 consolidated sc
 ### 1. Resource Efficiency
 
 **Before**: 35+ workflows running independently, often duplicating work
+
 - Multiple checkouts of the same code
 - Redundant dependency installations
 - Overlapping security scans
 
 **After**: Single workflow with intelligent dependency management
+
 - Shared initialization phase
 - Cached dependencies across jobs
 - Deduplicated security scans
@@ -246,11 +271,13 @@ Instead of 35+ workflows with their own schedules, we now have 9 consolidated sc
 ### 2. Better Dependency Management
 
 **Before**: Complex inter-workflow dependencies via `workflow_run`
+
 - Race conditions
 - Unclear execution order
 - Difficult troubleshooting
 
 **After**: Explicit job dependencies with `needs`
+
 - Clear execution flow
 - Guaranteed ordering
 - Easy debugging
@@ -258,11 +285,13 @@ Instead of 35+ workflows with their own schedules, we now have 9 consolidated sc
 ### 3. Unified Configuration
 
 **Before**: Permissions, environment variables scattered across files
+
 - Inconsistent Python versions
 - Different checkout strategies
 - Duplicated secrets management
 
 **After**: Single source of truth
+
 - Centralized environment variables
 - Consistent tooling versions
 - Unified permissions model
@@ -270,10 +299,12 @@ Instead of 35+ workflows with their own schedules, we now have 9 consolidated sc
 ### 4. Conditional Execution
 
 **Before**: All-or-nothing workflow execution
+
 - Security scans run on documentation changes
 - Tests run on README edits
 
 **After**: Intelligent conditional logic
+
 - `paths-ignore` for documentation
 - Manual dispatch controls
 - Event-based job filtering
@@ -281,11 +312,13 @@ Instead of 35+ workflows with their own schedules, we now have 9 consolidated sc
 ### 5. Easier Maintenance
 
 **Before**: Update the same step in 15 different files
+
 - Error-prone
 - Easy to miss workflows
 - Version drift
 
 **After**: Update once in the monolith
+
 - Single file to maintain
 - No version drift
 - Consistent updates
@@ -324,6 +357,7 @@ gh workflow run codex-deus-monolith.yml \
 ### Monitoring Execution
 
 View the workflow in GitHub UI:
+
 - Navigate to Actions tab
 - Select "Codex Deus Monolith" workflow
 - See all 23 jobs and their status in one view
@@ -333,6 +367,7 @@ View the workflow in GitHub UI:
 ### Execution Time
 
 **Typical Full Run** (all jobs):
+
 - Phase 1 (Init): ~30 seconds
 - Phase 2 (Security): ~5-10 minutes (parallel)
 - Phase 3 (Quality): ~3-5 minutes (parallel)
@@ -347,6 +382,7 @@ View the workflow in GitHub UI:
 **Total**: 20-40 minutes depending on conditions
 
 **Optimized Run** (e.g., docs-only change):
+
 - Only runs relevant phases: ~5 minutes
 
 ### Cost Optimization
@@ -383,18 +419,19 @@ View the workflow in GitHub UI:
 ### Gradual Migration Strategy
 
 1. **Phase 1**: Enable Codex Deus Monolith alongside existing workflows
-2. **Phase 2**: Monitor for 1 week, verify all jobs execute correctly
-3. **Phase 3**: Disable overlapping individual workflows
-4. **Phase 4**: Archive old workflows (keep as backup)
-5. **Phase 5**: Full cutover to Monolith
+1. **Phase 2**: Monitor for 1 week, verify all jobs execute correctly
+1. **Phase 3**: Disable overlapping individual workflows
+1. **Phase 4**: Archive old workflows (keep as backup)
+1. **Phase 5**: Full cutover to Monolith
 
 ### Rollback Plan
 
 If issues arise:
+
 1. Disable Codex Deus Monolith workflow
-2. Re-enable individual workflows
-3. Investigate issues
-4. Fix and re-deploy Monolith
+1. Re-enable individual workflows
+1. Investigate issues
+1. Fix and re-deploy Monolith
 
 ## Advanced Features
 
@@ -417,6 +454,7 @@ if: needs.initialization.outputs.should_run_security == 'true'
 ### Artifact Management
 
 Jobs that produce artifacts:
+
 - Security scan reports
 - Test coverage data
 - Build packages
@@ -427,6 +465,7 @@ All accessible from the workflow run page.
 ### Environment Management
 
 Conditional deployment based on environments:
+
 - **staging**: develop branch only
 - **production**: main branch only
 - Requires approval (can be configured)
@@ -436,21 +475,24 @@ Conditional deployment based on environments:
 ### Job Failed - What Now?
 
 1. **Check job logs**: Click on failed job for details
-2. **Review summary**: Phase 11 generates comprehensive report
-3. **Re-run specific phase**: Use workflow_dispatch with targeted options
-4. **Check dependencies**: Verify all `needs` jobs passed
+1. **Review summary**: Phase 11 generates comprehensive report
+1. **Re-run specific phase**: Use workflow_dispatch with targeted options
+1. **Check dependencies**: Verify all `needs` jobs passed
 
 ### Common Issues
 
 **Issue**: "Job skipped"
+
 - **Cause**: Conditional `if` statement evaluated to false
 - **Solution**: Check initialization outputs or event type
 
 **Issue**: "Permission denied"
+
 - **Cause**: Insufficient permissions
 - **Solution**: Verify `permissions:` block includes required scope
 
 **Issue**: "Timeout"
+
 - **Cause**: Job exceeded 6-hour limit (unlikely)
 - **Solution**: Split into smaller jobs or optimize
 
@@ -459,11 +501,11 @@ Conditional deployment based on environments:
 ### Planned Improvements
 
 1. **Phase-level caching** for faster re-runs
-2. **Job-level retry logic** for flaky tests
-3. **Dynamic matrix generation** based on changed files
-4. **Cloud deployment integration** (AWS, Azure, GCP)
-5. **Performance metrics tracking** across runs
-6. **Cost optimization insights** per phase
+1. **Job-level retry logic** for flaky tests
+1. **Dynamic matrix generation** based on changed files
+1. **Cloud deployment integration** (AWS, Azure, GCP)
+1. **Performance metrics tracking** across runs
+1. **Cost optimization insights** per phase
 
 ### Integration Opportunities
 
@@ -477,6 +519,7 @@ Conditional deployment based on environments:
 ### Key Performance Indicators
 
 Track these metrics:
+
 - **Success Rate**: % of successful workflow runs
 - **Mean Time to Complete**: Average execution time
 - **Cost per Run**: GitHub Actions minutes consumed
@@ -485,6 +528,7 @@ Track these metrics:
 ### Recommended Dashboards
 
 Create GitHub Actions dashboards showing:
+
 - Workflow run frequency
 - Success/failure trends
 - Phase-by-phase timing
@@ -498,6 +542,7 @@ The **Codex Deus Monolith** represents a paradigm shift in workflow management:
 **To**: 1 unified workflow, 860 lines, clear orchestration
 
 **Benefits**:
+
 - ✅ 40% reduction in GitHub Actions minutes
 - ✅ Single file to maintain
 - ✅ Clear execution flow
@@ -506,6 +551,7 @@ The **Codex Deus Monolith** represents a paradigm shift in workflow management:
 - ✅ Comprehensive reporting
 
 **Trade-offs**:
+
 - ⚠️ Single point of failure (mitigated by robust error handling)
 - ⚠️ Larger YAML file (but better organized)
 - ⚠️ Learning curve for new contributors (offset by excellent documentation)

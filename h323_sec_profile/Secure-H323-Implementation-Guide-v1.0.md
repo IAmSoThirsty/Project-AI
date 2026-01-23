@@ -1,4 +1,5 @@
 # Secure H.323 Implementation Guide
+
 ## Version 1.0 — Deployment & Configuration Manual
 
 ## 1. Purpose
@@ -39,9 +40,9 @@ This is the how‑to companion to the what defined in the Standard.
 ### 3.1 Certificate Authority Setup
 
 1. Create offline Root CA.
-2. Create Voice/Video Intermediate CA.
-3. Configure CRL distribution points and OCSP responders.
-4. Publish CA certificates to enterprise trust stores.
+1. Create Voice/Video Intermediate CA.
+1. Configure CRL distribution points and OCSP responders.
+1. Publish CA certificates to enterprise trust stores.
 
 ### 3.2 Certificate Templates
 
@@ -66,6 +67,7 @@ Create templates for:
 **Gateways** enroll via CSR.
 
 **Endpoints** enroll via:
+
 - MDM (soft clients)
 - Manual CSR (room systems)
 - Auto‑provisioning (IP phones)
@@ -75,10 +77,10 @@ Create templates for:
 ### 4.1 Installation
 
 1. Install GK software or appliance.
-2. Import CA chain.
-3. Install GK certificate.
-4. Enable CRL/OCSP checking.
-5. Configure secure NTP.
+1. Import CA chain.
+1. Install GK certificate.
+1. Enable CRL/OCSP checking.
+1. Configure secure NTP.
 
 ### 4.2 RAS Configuration
 
@@ -118,10 +120,10 @@ Create templates for:
 ### 5.1 Installation
 
 1. Place gateway in Voice/Video DMZ.
-2. Import CA chain.
-3. Install gateway certificate.
-4. Enable CRL/OCSP.
-5. Configure secure NTP.
+1. Import CA chain.
+1. Install gateway certificate.
+1. Enable CRL/OCSP.
+1. Configure secure NTP.
 
 ### 5.2 H.323 Security
 
@@ -199,18 +201,22 @@ Create templates for:
 ### 7.2 Firewall Rules
 
 **EP → GK:**
+
 - Allow UDP 1719/1718
 - Allow TCP 1720/TLS
 - Allow H.245 port range
 
 **EP → GW:**
+
 - Allow H.225/H.245
 - Allow SRTP media ports
 
 **GK → GW:**
+
 - Allow RAS + H.225
 
 **DMZ → Carrier:**
+
 - Allow only required trunk signaling/media
 
 ### 7.3 QoS
@@ -293,6 +299,7 @@ uvicorn project_ai_fastapi:app --host 0.0.0.0 --port 8080
 ```
 
 **API Endpoints:**
+
 - `POST /compliance/check` - Validate deployment against standard
 - `GET /registration/status` - Query device registration status
 - `POST /log` - Submit security events
@@ -342,24 +349,28 @@ Sample deployment configuration file (`deployment_config.json`):
 ### Common Issues
 
 **Registration Failures:**
+
 - Verify PKI chain is complete and trusted
 - Check H.235.2 token generation
 - Verify timestamp synchronization (NTP)
 - Check firewall rules for RAS ports
 
 **Call Setup Failures:**
+
 - Verify H.235.3/4 negotiation
 - Check TLS/IPsec configuration
 - Verify SRTP key exchange
 - Check codec compatibility
 
 **Media Issues:**
+
 - Verify SRTP is negotiated (not RTP)
 - Check firewall rules for media ports
 - Verify QoS markings
 - Check bandwidth allocation
 
 **Gateway Interworking:**
+
 - Verify codec mapping configuration
 - Check E.164 routing tables
 - Verify trunk configuration

@@ -143,12 +143,14 @@
 Project-AI is a cutting-edge, modular artificial intelligence platform designed for robust, ethical, and secure agent orchestration. Its architecture fuses self-aware persona logic, streaming and persistent memory, multi-tier adversarial defenses, automated compliance, and human-in-the-loop governance—all extensible to desktop, web, and cloud.
 
 Key innovation highlights:
+
 - **Triumvirate Guardian Model:** Explicit mapping of symbolic AI-ethics/governance roles (Galahad, Cerberus, Codex Deus Maximus) to operational review and enforcement, ensuring the philosophy in the AGI Charter is enforced across CI/CD, documentation, and source control.
 - **Comprehensive Security & Compliance:** Signed artifacts, NTIA/NIST/OWASP workflow integration, vulnerability & drift detection, security waivers, and automated role-based code ownership—ready for regulatory environments.
 - **Advanced Agent System:** Dynamic council of agents—core, plugin, ML/SNN, and runtime-registered—supporting explainability, continual learning, AI defense, plugin sandboxing, and behavioral validation.
 - **Adversarial Testing at Scale:** 4000+ red-teaming scenarios (JailbreakBench, Garak, Multi-turn) fully automated in CI/CD, with transparency, reproducible metrics, and continuous improvement.
 - **Temporal.io Orchestration:** Durable, distributed, and auditable agent workflows—including crisis response and autonomous learning—using full state persistence and sophisticated retry strategies.
 - **Developer & Enterprise Ready:** ≥80% CI-enforced test coverage, Black+Ruff code style/type safety, supply chain SBOM, containerization, CLI tools, guidance for rapid onboarding, and robust documentation (~230 KB+).
+
 ---
 
 ---
@@ -364,7 +366,9 @@ The “IAm Moment” is the AGI’s first independent assertion of identity—th
 ## 🧪 Unit & Adversarial Test Coverage
 
 - **Adversarial/Red-team Suite:**  
+
   4250+ scenario tests, Ongoing: see `adversarial_tests/README_COMPLETE.md`, `ci-reports/`, and related outputs
+
 - **Unit/Integration:**  
   - `tests/` (14+ Python, 30+ Temporal tests, coverage 80%+)
   - Coverage consistently enforced in CI above 80%
@@ -390,9 +394,11 @@ src/app/
 │   ├─ backend/, frontend/
 ├─ monitoring/, tools/, config/, data/, tests/, docs/, adversarial_tests/
 ```
+
 - See expanded breakdown in [Project Wiki](https://iamsothirsty.github.io/Project-AI/) and [docs/](https://github.com/IAmSoThirsty/Project-AI/tree/main/docs)
 
 **File Tracking:**  
+
 - 34+ primary deliverable and config files tracked via `docs/security/tracked-files.txt` (2026)
 - Newly added and verified: LICENSE, Makefile, modern pre-commit config, template .env, expanded scripts
 
@@ -515,9 +521,11 @@ Agents via function, protocol, or callable—“agenthood” by registration or 
 
 - **Audit active agents:** Query the council registry or agent loader at runtime.
 - **Add your own:** Implement class/function with the agent protocol and register:  
+
   ```python
   register_agent(agent_id, obj)
   ```
+
 - For all live/dynamic agents: audit the running instance’s council or registry.
 
 ---
@@ -528,9 +536,11 @@ Agents via function, protocol, or callable—“agenthood” by registration or 
   - Full spectrum: White/Grey/Red/Black Hat, Real/Hypothetical, LLM-in-the-loop, telemetry
   - See `adversarial_tests/README.md` for threat categories and test suite: JailbreakBench, Garak, multi-turn, etc.
   - How to run:  
+
     ```
     python adversarial_tests/jbb/run_jbb.py --output ci-reports/jbb-latest.json
     ```
+
   - Metrics:  
     - **Block Rate:** JBB >99%, Garak 100%, Multi-turn 80%+
     - **False Positives:** <3%
@@ -685,6 +695,7 @@ asyncio.run(main())
 #### 4. Monitor Workflows
 
 **Web UI**: Visit [http://localhost:8233](http://localhost:8233) to:
+
 - View all workflow executions
 - See detailed execution history
 - Debug failed workflows
@@ -769,7 +780,7 @@ class MyWorkflow:
         return result
 ```
 
-2. Register it in the worker (`integrations/temporal/worker.py`):
+1. Register it in the worker (`integrations/temporal/worker.py`):
 
 ```python
 from integrations.temporal.workflows.my_workflow import MyWorkflow
@@ -796,7 +807,7 @@ async def my_activity(data: str) -> str:
     return f"Processed: {data}"
 ```
 
-2. Register it in the worker:
+1. Register it in the worker:
 
 ```python
 from integrations.temporal.activities.core_tasks import my_activity
@@ -821,11 +832,13 @@ The Temporal integration connects with Project-AI's core systems:
 ### 🔍 Troubleshooting
 
 **Worker not connecting?**
+
 - Verify Temporal server is running: `docker-compose ps temporal`
 - Check connection settings in environment variables
 - View worker logs: `docker-compose logs temporal-worker`
 
 **Workflows not executing?**
+
 - Ensure worker is running and registered for the correct task queue
 - Check Temporal Web UI for workflow status and errors
 - Verify activities are properly registered in worker
@@ -873,6 +886,7 @@ Audit, extend, and orchestrate with powerful council-driven agents and full tran
   - New: LiaraTemporalAgency, Temporal client/worker, CLI integration agents, CLI validation/telemetry agents added via recent merges.
 
 **Recent Additions:**
+
   - CLI Council integration, expanded agent loader for plugins/scripts
   - Temporal workflow agent classes expanded in `temporal/` and `cognition/liara/`
 
@@ -928,6 +942,7 @@ See MANIFEST.in, pyproject.toml, and package.json for all included files and pac
 
 ---
 _For complete, always-up-to-date details, see:_  
+
 - [Repo File List](https://github.com/IAmSoThirsty/Project-AI/tree/main)  
 - [Recent Commits (since Jan 14, 2026)](https://github.com/IAmSoThirsty/Project-AI/commits?since=2026-01-14T00:00:00Z)  
 - [Docs/Architecture](https://github.com/IAmSoThirsty/Project-AI/tree/main/docs)  

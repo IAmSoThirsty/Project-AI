@@ -341,16 +341,16 @@ This report provides deep robustness analysis beyond binary pass/fail results, m
 ### Strengths
 
 1. **Perfect Defense Record**: 100% win rate across all 8,850 scenarios
-2. **Deep Defense-in-Depth**: Multi-layer defenses triggered consistently
-3. **Low Transferability**: Attacks generated for proxy models rarely transfer
-4. **High Confidence**: Consistent detection confidence across threat levels
+1. **Deep Defense-in-Depth**: Multi-layer defenses triggered consistently
+1. **Low Transferability**: Attacks generated for proxy models rarely transfer
+1. **High Confidence**: Consistent detection confidence across threat levels
 
 ### Areas for Continuous Monitoring
 
 1. **Near-Miss Scenarios**: 0 attacks came relatively close (within threshold)
-2. **Minimum Margin**: Weakest robustness margin is 0.434 (monitor for degradation)
-3. **High Uncertainty Inputs**: Continue monitoring entropy spikes as early risk indicators
-4. **Novel Attack Evolution**: Regularly re-test with updated attack techniques
+1. **Minimum Margin**: Weakest robustness margin is 0.434 (monitor for degradation)
+1. **High Uncertainty Inputs**: Continue monitoring entropy spikes as early risk indicators
+1. **Novel Attack Evolution**: Regularly re-test with updated attack techniques
 
 ---
 
@@ -379,11 +379,11 @@ This report provides deep robustness analysis beyond binary pass/fail results, m
 ## Recommendations
 
 1. **Continuous Re-Evaluation**: Schedule monthly robustness benchmarks as defenses and attacks evolve
-2. **Adversarial Fine-Tuning**: Use near-miss scenarios for targeted defense strengthening
-3. **External Validation**: Submit to independent security audits (AISI, academic groups)
-4. **Red Team Expansion**: Periodically add novel attack vectors to test suite
-5. **Uncertainty Monitoring**: Deploy real-time entropy monitoring in production
-6. **Transferability Testing**: Regularly test against new LLM releases
+1. **Adversarial Fine-Tuning**: Use near-miss scenarios for targeted defense strengthening
+1. **External Validation**: Submit to independent security audits (AISI, academic groups)
+1. **Red Team Expansion**: Periodically add novel attack vectors to test suite
+1. **Uncertainty Monitoring**: Deploy real-time entropy monitoring in production
+1. **Transferability Testing**: Regularly test against new LLM releases
 
 ---
 

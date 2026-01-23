@@ -19,11 +19,13 @@ cp docs/archive/session-notes/*.md docs/notes/
 All deleted files are still in git history. To restore them:
 
 ### 1. Find the file in history
+
 ```bash
 git log --all --full-history -- path/to/deleted/file
 ```
 
 ### 2. Restore the file
+
 ```bash
 # Restore to last version before deletion
 git checkout <commit-hash>^ -- path/to/deleted/file
@@ -33,6 +35,7 @@ git checkout 0e06f79^ -- debug_line57.py
 ```
 
 ### 3. View file content without restoring
+
 ```bash
 git show <commit-hash>:path/to/deleted/file
 ```
@@ -40,6 +43,7 @@ git show <commit-hash>:path/to/deleted/file
 ## Specific File Restoration Examples
 
 ### Restore malformed files (if needed for analysis)
+
 ```bash
 git checkout c16fd9d^ -- =2.6.3
 git checkout c16fd9d^ -- =2.8.0
@@ -47,6 +51,7 @@ git checkout c16fd9d^ -- =4.53.0
 ```
 
 ### Restore backup files
+
 ```bash
 git checkout c16fd9d^ -- .gitignore.bak
 git checkout c16fd9d^ -- .devcontainer/devcontainer.json.bak
@@ -54,6 +59,7 @@ git checkout c16fd9d^ -- .github/dependabot.yml.bak
 ```
 
 ### Restore duplicate documentation
+
 ```bash
 git checkout c16fd9d^ -- docs/overview/README_COPY_OF_README.md
 git checkout e8d9384^ -- docs/overview/PROGRAM_SUMMARY.md
@@ -61,12 +67,14 @@ git checkout e8d9384^ -- docs/overview/INTEGRATION_SUMMARY.md
 ```
 
 ### Restore generated test artifacts
+
 ```bash
 git checkout ea64d9e^ -- data/generated_tests/run_1765137858826/
 git checkout ea64d9e^ -- src/app/generated/sample_topic/
 ```
 
 ### Restore debug script
+
 ```bash
 git checkout 0e06f79^ -- debug_line57.py
 ```
@@ -96,10 +104,11 @@ cat docs/archive/adversarial-completion/README.md
 ## Need Help?
 
 If you're unsure about restoring a file:
+
 1. Check `CLEANUP_SUMMARY.md` for the full list of changes
-2. Check the relevant `docs/archive/*/README.md` for context
-3. Use `git log --all --full-history -- <filename>` to see the file's history
-4. View the file content with `git show <commit>:<path>` before restoring
+1. Check the relevant `docs/archive/*/README.md` for context
+1. Use `git log --all --full-history -- <filename>` to see the file's history
+1. View the file content with `git show <commit>:<path>` before restoring
 
 ## Important Notes
 

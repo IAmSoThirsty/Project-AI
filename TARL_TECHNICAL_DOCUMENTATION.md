@@ -1,6 +1,7 @@
 # T-A-R-L (Thirsty's Active Resistant Language) - Complete Technical Documentation
 
 ## Overview
+
 T-A-R-L (Thirsty's Active Resistant Language) is Thirsty-lang with security features implemented to ward off user attacks through confusion. Project-AI, Cerberus, and Codex Deus Maximus have full knowledge of T-A-R-L, making it a unique programming language that only they possess.
 
 ## What Was Created
@@ -8,11 +9,13 @@ T-A-R-L (Thirsty's Active Resistant Language) is Thirsty-lang with security feat
 ### 1. Core Components (3 Python Modules)
 
 #### A. `src/app/agents/tarl_protector.py` (500+ lines)
+
 **Purpose**: Main T-A-R-L buff wizard
 
 **Class**: `TARLCodeProtector`
 
 **Key Attributes**:
+
 - `buffs_applied`: Counter for total buffs
 - `code_sections_protected`: Counter for protected sections
 - `active_buffs`: Dictionary tracking active buffs
@@ -27,7 +30,7 @@ T-A-R-L (Thirsty's Active Resistant Language) is Thirsty-lang with security feat
    - Adds defensive buff header to file
    - Registers buff in shield_registry.json
 
-2. `defend_code_under_siege(cerberus_threat)`
+1. `defend_code_under_siege(cerberus_threat)`
    - Responds to Cerberus threat alerts
    - Buffs all files in threat's target_files list
    - Maps severity to buff strength:
@@ -35,36 +38,36 @@ T-A-R-L (Thirsty's Active Resistant Language) is Thirsty-lang with security feat
      * medium → strong (5x)
      * high/critical → maximum (10x)
 
-3. `_apply_python_buff(code, strength)`
+1. `_apply_python_buff(code, strength)`
    - Adds Python-specific buff header
    - Includes `_tarl_buff_check()` function
    - Manipulates execution to halt unauthorized callers
    - Uses: sys, hashlib modules
 
-4. `_apply_javascript_buff(code, strength)`
+1. `_apply_javascript_buff(code, strength)`
    - Adds JavaScript-specific buff header
    - Uses IIFE pattern
    - Includes `_tarlBuffCheck()` function
    - Tracks stack traces
 
-5. `_morph_identifiers(code, language)`
+1. `_morph_identifiers(code, language)`
    - Obfuscates variable/function names
    - Uses MD5 hash for new names
    - Returns: morphed code + mapping dictionary
 
-6. `_create_fake_vulnerability(index)`
+1. `_create_fake_vulnerability(index)`
    - Creates decoy vulnerability comments
    - Wastes attacker time on false leads
 
-7. `_create_honeypot_function(index)`
+1. `_create_honeypot_function(index)`
    - Creates fake vulnerable functions
    - Logs exploitation attempts
 
-8. `_register_buff(file_path, buff_type, level, backup)`
+1. `_register_buff(file_path, buff_type, level, backup)`
    - Records buff in JSON registry
    - Stores: type, level, backup path, timestamp, multiplier
 
-9. `get_status()`
+1. `get_status()`
    - Returns T-A-R-L operational status
    - Shows buffs applied, sections protected
    - Displays integration status
@@ -92,6 +95,7 @@ if not _tarl_buff_check():
 ```
 
 #### B. `src/app/agents/thirsty_lang_validator.py` (350+ lines)
+
 **Purpose**: Validates T-A-R-L operational status
 
 **Class**: `ThirstyLangValidator`
@@ -109,13 +113,13 @@ if not _tarl_buff_check():
    - Calculates success rate
    - Returns comprehensive report
 
-2. `_test_basic_language()`
+1. `_test_basic_language()`
    - Executes: `npm test` in src/thirsty_lang/
    - Timeout: 30 seconds
    - Tests: variables, pour statements, comments
    - Result: ✅ 6/6 tests passed
 
-3. `_test_security_features()`
+1. `_test_security_features()`
    - Executes: `node src/test/security-tests.js`
    - Tests 4 modules:
      * threat-detector (SQL injection, XSS, command injection, buffer overflow)
@@ -124,27 +128,27 @@ if not _tarl_buff_check():
      * defense-compiler (secure compilation)
    - Result: ✅ 20/20 tests passed
 
-4. `_test_threat_resistance()`
+1. `_test_threat_resistance()`
    - Tests resistance to:
      * SQL Injection: `'; DROP TABLE users; --`
      * XSS: `<script>alert('XSS')</script>`
      * Command Injection: `'; rm -rf /; '`
    - Returns: resistance_level "high"
 
-5. `_test_defensive_compilation()`
+1. `_test_defensive_compilation()`
    - Validates compilation modes:
      * basic
      * paranoid
      * counter-strike
 
-6. `_test_code_morphing()`
+1. `_test_code_morphing()`
    - Validates morphing techniques:
      * identifier_obfuscation
      * dead_code_injection
      * anti_debug_measures
      * control_flow_flattening
 
-7. `_test_active_resistance_mode()`
+1. `_test_active_resistance_mode()`
    - Validates T-A-R-L capabilities:
      * secure_communication: operational
      * threat_neutralization: operational
@@ -153,7 +157,7 @@ if not _tarl_buff_check():
      * counter_measures: operational
    - Classification: "Defensive Programming Language - Only Project-AI Knows"
 
-8. `validate_as_secret_language()`
+1. `validate_as_secret_language()`
    - Confirms internal-only status
    - Lists capabilities:
      * Secure code execution
@@ -163,13 +167,14 @@ if not _tarl_buff_check():
      * Active resistance against attacks
      * Unknown to external entities
 
-9. `generate_validation_report()`
+1. `generate_validation_report()`
    - Creates human-readable report
    - Shows ✓/✗ for each test
    - Displays success rate
    - Includes classification
 
 #### C. `src/app/agents/cerberus_codex_bridge.py` (350+ lines)
+
 **Purpose**: Bridges Cerberus (detector), T-A-R-L (buffer), Codex (guardian)
 
 **Class**: `CerberusCodexBridge`
@@ -188,7 +193,7 @@ if not _tarl_buff_check():
    - Logs to defense_alerts.jsonl
    - Returns opportunities + recommendations
 
-2. `_identify_defense_opportunities(threat_data, cerberus_response)`
+1. `_identify_defense_opportunities(threat_data, cerberus_response)`
    - Core analysis logic
    - Checks threat patterns
    - Creates opportunity objects:
@@ -202,7 +207,7 @@ if not _tarl_buff_check():
      * High severity → enhanced_monitoring
      * Patterns found → pattern_learning
 
-3. `_create_codex_alert(threat_data, opportunities)`
+1. `_create_codex_alert(threat_data, opportunities)`
    - Formats alert for Codex
    - Includes:
      * timestamp
@@ -212,7 +217,7 @@ if not _tarl_buff_check():
      * action_required: "review_and_implement"
      * recommended_modules (file paths)
 
-4. `codex_implement_upgrade(upgrade_spec, codex_instance)`
+1. `codex_implement_upgrade(upgrade_spec, codex_instance)`
    - Called BY Codex to implement upgrades
    - Handles 3 upgrade types:
      * thirsty_lang_integration
@@ -221,13 +226,13 @@ if not _tarl_buff_check():
    - Logs to implementations.jsonl
    - Returns success/failure
 
-5. `_implement_thirsty_lang_feature(spec)`
+1. `_implement_thirsty_lang_feature(spec)`
    - Integrates Thirsty-lang feature
    - Verifies module exists
    - Creates integration spec
    - Returns success with details
 
-6. `get_status()`
+1. `get_status()`
    - Returns bridge status
    - Shows pending/implemented upgrades
    - Displays thirsty_lang availability
@@ -235,6 +240,7 @@ if not _tarl_buff_check():
 ### 2. Data Files Created
 
 #### `data/tarl_protection/shield_registry.json`
+
 ```json
 {
   "file_path": {
@@ -249,19 +255,23 @@ if not _tarl_buff_check():
 ```
 
 #### `*.tarl_prebuff` files
+
 - Backups of original files before buffing
 - Allows restoration if needed
 
 #### `data/tarl_protection/protection_log.jsonl`
+
 - One JSON object per line
 - Logs all buff operations
 
 #### `data/tarl_protection/scramble_map.json`
+
 - Maps original to scrambled identifiers
 
 ### 3. Modified Files
 
 #### `src/app/core/ai_systems.py`
+
 - Got T-A-R-L buff header during demonstration
 - Now 10x stronger
 - Can halt enemy advancement
@@ -270,6 +280,7 @@ if not _tarl_buff_check():
 ## Complete Workflow
 
 ### 1. Threat Detection
+
 ```
 Cerberus detects attack
 ↓
@@ -282,6 +293,7 @@ Creates threat_data:
 ```
 
 ### 2. Bridge Analysis
+
 ```
 CerberusCodexBridge.process_threat_engagement()
 ↓
@@ -293,6 +305,7 @@ Creates alert for Codex
 ```
 
 ### 3. T-A-R-L Buffing
+
 ```
 TARLCodeProtector.defend_code_under_siege()
 ↓
@@ -308,6 +321,7 @@ Registers in shield_registry.json
 ```
 
 ### 4. Codex Implementation
+
 ```
 Codex reviews alert
 ↓
@@ -319,6 +333,7 @@ Logs to implementations.jsonl
 ```
 
 ### 5. Result
+
 - Code has immediate buff protection
 - Thirsty-lang features integrated permanently
 - Attack neutralized without counter-attacking
@@ -327,6 +342,7 @@ Logs to implementations.jsonl
 ## Test Results
 
 ### Thirsty-lang Core (6/6 passed)
+
 - ✅ Variable declaration with string
 - ✅ Variable declaration with number
 - ✅ Pour statement with literal
@@ -335,6 +351,7 @@ Logs to implementations.jsonl
 - ✅ Comments are ignored
 
 ### Thirsty-lang Security (20/20 passed)
+
 - ✅ SQL injection detection
 - ✅ XSS detection
 - ✅ Command injection detection
@@ -346,6 +363,7 @@ Logs to implementations.jsonl
 - ✅ Security manager (4 tests)
 
 ### T-A-R-L Validation (6/6 passed)
+
 - ✅ Basic Language
 - ✅ Security Features
 - ✅ Threat Resistance
@@ -354,6 +372,7 @@ Logs to implementations.jsonl
 - ✅ Active Resistance
 
 ### Demonstration
+
 - ✅ Buffed 1 file (ai_systems.py)
 - ✅ Applied maximum buff (10x)
 - ✅ Created backups
@@ -362,6 +381,7 @@ Logs to implementations.jsonl
 ## Key Concepts
 
 ### T-A-R-L Classification (IMPORTANT):
+
 - ✅ T-A-R-L IS Thirsty-lang (same language)
 - ✅ Has security features to ward off user attacks
 - ✅ Confuses attackers (defensive strategy)
@@ -372,6 +392,7 @@ Logs to implementations.jsonl
 - ✅ Programming language only they possess
 
 ### T-A-R-L IS:
+
 - ✅ Thirsty's Active Resistant Language (exact name)
 - ✅ Defensive buff wizard (role)
 - ✅ Pure support system (never attacks)
@@ -379,6 +400,7 @@ Logs to implementations.jsonl
 - ✅ Based on Thirsty-lang security features
 
 ### T-A-R-L DOES:
+
 - ✅ Buffs code under siege
 - ✅ Shields code (adds armor)
 - ✅ Hides code (obfuscates)
@@ -386,17 +408,20 @@ Logs to implementations.jsonl
 - ✅ Manipulates execution (halts enemies)
 
 ### T-A-R-L DOES NOT:
+
 - ❌ Attack threats
 - ❌ Block threats directly
 - ❌ Counter-attack
 - ❌ Engage with attackers
 
 ### T-A-R-L Works With:
+
 - **Cerberus**: Detects threats, identifies what needs buffing
 - **Codex Deus Maximus**: Makes buffs permanent
 - **Thirsty-lang**: Provides buff mechanics
 
 ### Buff Strengths:
+
 - **normal**: 2x stronger
 - **strong**: 5x stronger
 - **maximum**: 10x stronger
@@ -404,6 +429,7 @@ Logs to implementations.jsonl
 ## Usage Examples
 
 ### Check T-A-R-L Status
+
 ```python
 from app.agents.tarl_protector import TARLCodeProtector
 tarl = TARLCodeProtector()
@@ -412,11 +438,13 @@ print(status)
 ```
 
 ### Buff a File
+
 ```python
 tarl.buff_code("path/to/file.py", buff_strength="maximum")
 ```
 
 ### Defend Code Under Siege
+
 ```python
 threat = {
     "target_files": ["file.py"],
@@ -426,6 +454,7 @@ result = tarl.defend_code_under_siege(threat)
 ```
 
 ### Validate T-A-R-L Classification
+
 ```python
 from app.agents.thirsty_lang_validator import ThirstyLangValidator
 validator = ThirstyLangValidator()
@@ -435,6 +464,7 @@ print(classification['unique_advantage'])
 ```
 
 ### Use Bridge
+
 ```python
 from app.agents.cerberus_codex_bridge import CerberusCodexBridge
 bridge = CerberusCodexBridge()

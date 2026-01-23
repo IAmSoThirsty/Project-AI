@@ -1,7 +1,9 @@
 # H.323 Configuration Baselines
+
 Version 1.0 — Standardized Secure Configurations (GK, GW, EP)
 
 ## 1. Purpose
+
 Defines standardized, secure configuration baselines for all H.323 components to ensure consistent security posture, operational reliability, and compliance across the enterprise.
 
 ---
@@ -416,6 +418,7 @@ config-audit --baseline /baselines/gk-baseline.xml --current /etc/gk/config.xml
 ```
 
 **Manual Inspection**:
+
 - Quarterly configuration audits
 - Review change logs
 - Validate against hardening checklist
@@ -423,15 +426,17 @@ config-audit --baseline /baselines/gk-baseline.xml --current /etc/gk/config.xml
 ### 6.2 Remediating Deviations
 
 **Unauthorized Changes**:
+
 1. Investigate change (who, when, why)
-2. Assess security impact
-3. Revert to baseline (if unauthorized)
-4. Update baseline (if authorized change)
+1. Assess security impact
+1. Revert to baseline (if unauthorized)
+1. Update baseline (if authorized change)
 
 **Configuration Drift**:
+
 1. Detect drift via automated scan
-2. Remediate via configuration management tool
-3. Validate compliance post-remediation
+1. Remediate via configuration management tool
+1. Validate compliance post-remediation
 
 ---
 
@@ -440,27 +445,31 @@ config-audit --baseline /baselines/gk-baseline.xml --current /etc/gk/config.xml
 ### 7.1 Baseline Updates
 
 **Triggers for Baseline Updates**:
+
 - Security advisory (vendor or enterprise)
 - New feature deployment
 - Regulatory requirement change
 - Incident response recommendation
 
 **Update Process**:
+
 1. Propose baseline change
-2. Review by architecture board
-3. Test in lab environment
-4. Update baseline documentation
-5. Roll out to production (change control)
+1. Review by architecture board
+1. Test in lab environment
+1. Update baseline documentation
+1. Roll out to production (change control)
 
 ### 7.2 Baseline Versioning
 
 **Version Numbering**:
+
 - Major.Minor.Patch (e.g., 1.2.3)
 - Major: Significant security or architecture change
 - Minor: Feature addition or enhancement
 - Patch: Bug fix or minor adjustment
 
 **Version Control**:
+
 - Store baselines in Git
 - Tag each version
 - Maintain change log
@@ -470,6 +479,7 @@ config-audit --baseline /baselines/gk-baseline.xml --current /etc/gk/config.xml
 ## 8. Completion Criteria
 
 Baseline configurations are considered compliant when:
+
 - All components configured per baseline
 - All security controls validated
 - All functional tests pass

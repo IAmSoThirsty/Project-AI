@@ -1,4 +1,5 @@
 # H.323 Security Capability Profile System
+
 ## Complete Enterprise Documentation Suite
 
 This directory contains the complete H.323/H.235 Security Capability Profile implementation with comprehensive enterprise documentation covering philosophy, requirements, implementation, operations, testing, compliance, and automation.
@@ -6,33 +7,40 @@ This directory contains the complete H.323/H.235 Security Capability Profile imp
 ## 📚 Documentation Index
 
 ### Core Implementation (Code)
+
 - **H323_SEC_PROFILE_v1.py** - Complete Python implementation (v1/v2/v3) with CLI tool `h323secctl`
 - **project_ai_fastapi.py** - REST API service with 5 endpoints for compliance and policy management
 
 ### Philosophy & Principles
+
 - **PROJECT-AI-Security-Philosophy.txt** - Security philosophy, guiding principles, and profile evolution
 
 ### Requirements & Standards (What)
+
 - **Secure-H323-Zone-Standard-v1.0.md** - Enterprise architecture specification with mandatory requirements
 - **H323-H235-Compliance-Matrix-v1.0.md** - 80+ compliance requirements with pass/fail criteria
 - **Gateway-Interworking-Security-Profile-v1.0.md** - H.323 ↔ H.320/PSTN/SIP security specification
 
 ### Implementation Guides (How)
+
 - **Secure-H323-Implementation-Guide-v1.0.md** - Step-by-step deployment procedures for GK/GW/EP
 - **H323-Security-Architecture-Diagrams-v1.0.md** - 6 diagram types with ASCII templates
 - **Secure-H323-Hardening-Checklist-v1.0.md** - Copy-paste ready hardening checklist (100+ items)
 
 ### Operations & Maintenance (Maintain)
+
 - **Secure-H323-Operational-Runbook-v1.0.md** - Daily/weekly/monthly operations and troubleshooting
 - **H323-Incident-Response-Playbook-v1.0.md** - IR workflow with P1-P4 classification and 6 playbooks
 - **H323-Monitoring-Telemetry-Specification-v1.0.md** - Monitoring framework with 50+ metrics and 8 dashboards
 
 ### Testing & Validation (Verify)
+
 - **H323-H235-Security-Test-Plan-v1.0.md** - 10 test categories with 65+ validation procedures
 
 ## 🚀 Quick Start
 
 ### CLI Operations
+
 ```bash
 # Run security simulation
 python h323_sec_profile/H323_SEC_PROFILE_v1.py run-sim
@@ -50,6 +58,7 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 ```
 
 ### API Operations
+
 ```bash
 # Start REST service
 cd h323_sec_profile
@@ -99,6 +108,7 @@ Layer 6: AUTOMATION (Tools)
 ## 🔒 Security Profiles
 
 ### V1 - Baseline Security
+
 - PKI chain validation (SAN, CRL/OCSP)
 - RAS authentication (H.235.2)
 - Signaling security (H.235.3/4 + TLS)
@@ -107,6 +117,7 @@ Layer 6: AUTOMATION (Tools)
 - CLI and simulation harness
 
 ### V2 - Adaptive Trust
+
 - Certificate pinning
 - Anomaly detection and automatic quarantine
 - Multi-GK consensus validation
@@ -114,6 +125,7 @@ Layer 6: AUTOMATION (Tools)
 - Encrypted audit logging
 
 ### V3 - Self-Evolving Security
+
 - Autonomous policy generation from telemetry
 - Predictive threat modeling
 - Self-healing trust boundaries

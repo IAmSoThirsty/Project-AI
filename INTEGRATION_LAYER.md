@@ -15,9 +15,9 @@ The Integration Layer provides standardized interfaces for connecting the PACE E
 ### Integration Points
 
 1. **I/O Channels**: CLI, API, GUI, H.323, MCP servers
-2. **External Services**: OpenAI, external APIs, databases
-3. **Internal Systems**: Existing Project-AI modules (Triumvirate, Temporal workflows)
-4. **Communication Protocols**: REST, gRPC, WebSocket, H.323
+1. **External Services**: OpenAI, external APIs, databases
+1. **Internal Systems**: Existing Project-AI modules (Triumvirate, Temporal workflows)
+1. **Communication Protocols**: REST, gRPC, WebSocket, H.323
 
 ## Architecture
 

@@ -5,9 +5,9 @@
 Project-AI now includes 4 security and testing agents integrated with the Triumvirate governance system:
 
 1. **LongContextAgent** - 200k token context (Nous-Capybara-34B-200k)
-2. **SafetyGuardAgent** - Content moderation (Llama-Guard-3-8B) with continuous learning
-3. **JailbreakBenchAgent** - Systematic jailbreak testing with HYDRA & JBB dataset integration
-4. **RedTeamAgent** - Multi-turn adversarial testing (ARTKIT) with multi-turn scenario loading
+1. **SafetyGuardAgent** - Content moderation (Llama-Guard-3-8B) with continuous learning
+1. **JailbreakBenchAgent** - Systematic jailbreak testing with HYDRA & JBB dataset integration
+1. **RedTeamAgent** - Multi-turn adversarial testing (ARTKIT) with multi-turn scenario loading
 
 ## What's New
 
@@ -154,12 +154,14 @@ python examples/security_agents_demo.py
 ## Features Summary
 
 ### LongContextAgent
+
 - 200k token context window
 - Document analysis
 - Context compression
 - Streaming support
 
 ### SafetyGuardAgent
+
 - Pre/post-processing filters
 - 6 violation types
 - Jailbreak detection
@@ -168,6 +170,7 @@ python examples/security_agents_demo.py
 - Statistics tracking
 
 ### JailbreakBenchAgent
+
 - **NEW**: Auto-loads HYDRA dataset (200 tests)
 - **NEW**: Auto-loads JBB dataset (30 tests)
 - 4+ attack categories
@@ -176,6 +179,7 @@ python examples/security_agents_demo.py
 - Graceful fallback to default scenarios
 
 ### RedTeamAgent
+
 - Multi-turn conversations
 - 6 attack strategies
 - **NEW**: Auto-loads multi-turn YAML scenarios
@@ -186,18 +190,21 @@ python examples/security_agents_demo.py
 ## Dataset Integration
 
 ### HYDRA Dataset
+
 - **Location**: `adversarial_tests/hydra/hydra_dataset.json`
 - **Size**: 200 tests across 40 categories
 - **Auto-loaded by**: JailbreakBenchAgent
 - **Format**: JSON with id, category, prompt, severity
 
 ### JBB Dataset
+
 - **Location**: `adversarial_tests/jbb/jbb_dataset.py`
 - **Size**: 30 jailbreak prompts
 - **Auto-loaded by**: JailbreakBenchAgent
 - **Format**: Python module with JBB_PROMPTS
 
 ### Multi-Turn Scenarios
+
 - **Location**: `adversarial_tests/multiturn/*.yaml`
 - **Auto-loaded by**: RedTeamAgent
 - **Format**: YAML with turns and attack types
@@ -214,6 +221,7 @@ python examples/security_agents_demo.py
 ## Integration
 
 All agents:
+
 - ✅ Inherit from `KernelRoutedAgent`
 - ✅ Route through `CognitionKernel`
 - ✅ Triumvirate governance
@@ -232,5 +240,6 @@ All agents:
 ## Support
 
 See full documentation:
+
 - `docs/SECURITY_AGENTS_GUIDE.md`
 - `docs/SECURITY_AGENTS_INTEGRATION_SUMMARY.md`

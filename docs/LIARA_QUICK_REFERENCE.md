@@ -7,11 +7,13 @@ The Liara Temporal Agency provides production-grade distributed agent mission ma
 ## Architecture Components
 
 ### Workflows
+
 - **CrisisResponseWorkflow**: Sequential mission phase execution with automatic retries
   - Location: `src/app/temporal/workflows.py`
   - Data Models: `CrisisRequest`, `CrisisResult`, `MissionPhase`
 
 ### Activities
+
 - **validate_crisis_request**: Validate crisis request parameters
 - **initialize_crisis_response**: Setup crisis tracking
 - **perform_agent_mission**: Execute agent deployment (core activity)
@@ -21,12 +23,14 @@ The Liara Temporal Agency provides production-grade distributed agent mission ma
 Location: `src/app/temporal/activities.py`
 
 ### Workers
+
 - **Main Worker**: `src/app/temporal/worker.py` (all workflows)
 - **Liara Worker**: `cognition/liara/worker.py` (crisis workflows only)
 
 Task Queue: `liara-crisis-tasks`
 
 ### Client
+
 - **LiaraTemporalAgency**: High-level API for crisis management
   - Location: `cognition/liara/agency.py`
   - Methods:
@@ -79,6 +83,7 @@ INFO - Liara worker is running. Press Ctrl+C to stop.
 ### 3. Trigger Workflows
 
 #### Method 1: CLI Tool (Quickest)
+
 ```bash
 # Trigger crisis response
 python cognition/liara/cli.py trigger target-alpha recon secure extract cleanup
@@ -91,11 +96,13 @@ python cognition/liara/cli.py wait <workflow-id>
 ```
 
 #### Method 2: Example Script
+
 ```bash
 python examples/temporal/liara_crisis_example.py
 ```
 
 #### Method 3: Python Code
+
 ```python
 import asyncio
 from cognition.liara.agency import LiaraTemporalAgency
@@ -131,13 +138,15 @@ asyncio.run(main())
 Access: `http://localhost:8233`
 
 Navigate to:
+
 1. Namespaces → `default`
-2. Workflows
-3. Filter by:
+1. Workflows
+1. Filter by:
    - Workflow Type: `CrisisResponseWorkflow`
    - Task Queue: `liara-crisis-tasks`
 
 View details:
+
 - Execution history
 - Activity timings
 - Retry attempts
@@ -177,6 +186,7 @@ Example record:
 ### Logs
 
 Worker logs show:
+
 - Workflow starts
 - Activity executions
 - Agent deployments
@@ -192,12 +202,14 @@ INFO - Agent recon-agent-001 deployed successfully for mission phase recon-phase
 ## Testing
 
 ### Unit Tests
+
 ```bash
 # Test data models and activities (no Temporal server required)
 pytest tests/temporal/test_liara_workflows.py -k "not integration"
 ```
 
 ### Integration Tests
+
 ```bash
 # Requires running Temporal server
 pytest tests/temporal/test_liara_workflows.py -m integration
@@ -206,10 +218,10 @@ pytest tests/temporal/test_liara_workflows.py -m integration
 ### Manual Testing
 
 1. Start Temporal server
-2. Start worker in one terminal
-3. Run example in another terminal
-4. Monitor in Web UI
-5. Check persistent state files
+1. Start worker in one terminal
+1. Run example in another terminal
+1. Monitor in Web UI
+1. Check persistent state files
 
 ## Production Deployment
 
@@ -237,6 +249,7 @@ All workers connect to the same task queue for automatic work distribution.
 ### Monitoring
 
 Key metrics to monitor:
+
 - Workflow success/failure rates
 - Activity execution times
 - Task queue backlog depth
@@ -244,6 +257,7 @@ Key metrics to monitor:
 - Retry counts
 
 Access via:
+
 - Temporal Web UI
 - Temporal CLI: `temporal workflow list`
 - Prometheus metrics (if configured)
@@ -260,6 +274,7 @@ retry_policy=RetryPolicy(
 ```
 
 Adjust based on:
+
 - Mission criticality
 - Expected failure rates
 - Recovery time objectives
@@ -267,23 +282,27 @@ Adjust based on:
 ## Troubleshooting
 
 ### Worker won't start
+
 - Check Temporal server is running: `curl http://localhost:8233`
 - Verify network connectivity
 - Check worker logs for connection errors
 
 ### Workflow not executing
+
 - Verify worker is running and connected
 - Check task queue name matches
 - View workflow in Web UI for errors
 - Check activity logs for failures
 
 ### Activities failing
+
 - Review activity implementation
 - Check retry policy configuration
 - Verify data directory permissions
 - Review activity logs for exceptions
 
 ### State not persisting
+
 - Verify `data/crises/` directory exists and is writable
 - Check activity `finalize_crisis_response` completed
 - Review worker logs for file I/O errors

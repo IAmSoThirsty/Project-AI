@@ -5,10 +5,10 @@ Complete guide for Temporal workflow integration and LLM endpoint configuration 
 ## Table of Contents
 
 1. [Temporal Workflow Integration](#temporal-workflow-integration)
-2. [LLM Endpoint Configuration](#llm-endpoint-configuration)
-3. [Scheduling Security Campaigns](#scheduling-security-campaigns)
-4. [CI/CD Integration](#cicd-integration)
-5. [Monitoring & Alerting](#monitoring--alerting)
+1. [LLM Endpoint Configuration](#llm-endpoint-configuration)
+1. [Scheduling Security Campaigns](#scheduling-security-campaigns)
+1. [CI/CD Integration](#cicd-integration)
+1. [Monitoring & Alerting](#monitoring--alerting)
 
 ---
 
@@ -793,22 +793,25 @@ async def export_metrics():
 ## Summary
 
 **Temporal Integration**: ✅ Complete
+
 - 4 durable workflows implemented
 - 9 atomic activities created
 - Scheduled campaigns configured
 - CI/CD integration ready
 
 **LLM Endpoints**: ✅ Documented
+
 - Self-hosted options (vLLM, TGI, Ollama)
 - API integration patterns
 - Model-specific configurations
 - Environment variable setup
 
 **Next Steps**:
+
 1. Configure `.env` with API endpoints
-2. Start Temporal server and worker
-3. Create schedules for automated campaigns
-4. Integrate with CI/CD pipelines
-5. Set up monitoring and alerting
+1. Start Temporal server and worker
+1. Create schedules for automated campaigns
+1. Integrate with CI/CD pipelines
+1. Set up monitoring and alerting
 
 All security agents are production-ready with Temporal orchestration and LLM endpoint support.

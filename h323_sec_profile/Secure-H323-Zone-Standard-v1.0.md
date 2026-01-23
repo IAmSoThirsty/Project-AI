@@ -1,4 +1,5 @@
 # Secure H.323 Zone Standard
+
 ## Version 1.0 — Enterprise Architecture Specification
 
 ## 1. Purpose
@@ -34,15 +35,15 @@ This standard governs:
    - Support H.225, H.245, RAS, RTP/SRTP, H.235
    - Identified by H.323 ID and/or E.164 alias
 
-2. **Gatekeeper (GK)**
+1. **Gatekeeper (GK)**
    - Central authority for address resolution, admission control, bandwidth management
    - Enforces H.235 security policies
 
-3. **Gateway (GW)**
+1. **Gateway (GW)**
    - Interworks H.323 ↔ PSTN/ISDN/H.320/SIP
    - Acts as the cryptographic boundary between secure IP and legacy domains
 
-4. **MCU**
+1. **MCU**
    - Multipoint control; treated as a secure endpoint
 
 ### 3.2 Zone Definition
@@ -69,6 +70,7 @@ All components must comply with this standard.
 | RTP (Media) | H.235.6 (SRTP) | Encryption and integrity of voice/video streams |
 
 **Transport Security:**
+
 - H.225/H.245 **MUST** use TLS or IPsec
 - SRTP **MUST** use AES-128 or stronger
 
@@ -108,17 +110,21 @@ All H.323 components must have:
 ### 6.2 Firewall Requirements
 
 **EP VLAN → GK:**
+
 - Allow RAS (UDP 1719/1718)
 - Allow H.225/H.245 (TCP 1720/TLS + fixed H.245 range)
 
 **EP VLAN → GW (inside interface):**
+
 - Allow H.225/H.245
 - Allow SRTP media ports (fixed UDP range)
 
 **GK → GW:**
+
 - Allow RAS, H.225
 
 **DMZ → Carrier/Legacy:**
+
 - Only carrier‑required signaling/media
 
 ### 6.3 QoS

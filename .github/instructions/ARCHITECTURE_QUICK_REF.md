@@ -55,6 +55,7 @@
 ## 🔄 Data Flow Patterns
 
 ### User Action → AI Response
+
 ```
 User Input (GUI)
     ↓
@@ -74,6 +75,7 @@ GUI Response Display
 ```
 
 ### Learning Request Workflow
+
 ```
 AI discovers new content
     ↓
@@ -93,6 +95,7 @@ MemorySystem.add_knowledge()  BlackVault
 ```
 
 ### State Persistence Pattern
+
 ```python
 class AISystem:
     def __init__(self, data_dir="data"):
@@ -108,6 +111,7 @@ class AISystem:
 ## 🎯 Testing Strategy
 
 ### Isolated Test Pattern
+
 ```python
 @pytest.fixture
 def system_under_test(self):
@@ -117,6 +121,7 @@ def system_under_test(self):
 ```
 
 ### Test Coverage Matrix
+
 | System               | Init | State | Persist | Total |
 |---------------------|------|-------|---------|-------|
 | FourLaws            | ✓    | ✓     | N/A     | 2     |
@@ -129,6 +134,7 @@ def system_under_test(self):
 ## 🔌 Integration Points
 
 ### OpenAI API
+
 ```python
 # Environment setup
 from dotenv import load_dotenv
@@ -140,6 +146,7 @@ load_dotenv()  # Loads OPENAI_API_KEY
 ```
 
 ### PyQt6 Signal Pattern
+
 ```python
 # Define signals in class
 class Dashboard(QWidget):
@@ -154,6 +161,7 @@ dashboard.send_message.connect(self.handle_message)  # Connect
 ```
 
 ### Agent vs Plugin
+
 - **Agents**: Specialized AI subsystems in `src/app/agents/` (oversight, planner, validator, explainability)
 - **Plugins**: Simple enable/disable extensions via PluginManager (lines 340-395 in ai_systems.py)
 - **Key Difference**: Agents are core functionality; Plugins are optional extensions
@@ -179,6 +187,7 @@ cd web/frontend && npm run dev   # Frontend dev server
 ## ⚠️ Critical Patterns
 
 ### Module Imports
+
 ```python
 # ✅ CORRECT (from project root)
 python -m src.app.main
@@ -188,6 +197,7 @@ python src/app/main.py
 ```
 
 ### State Persistence
+
 ```python
 # ✅ CORRECT
 def adjust_trait(self, trait, delta):
@@ -201,6 +211,7 @@ def adjust_trait(self, trait, delta):
 ```
 
 ### Threading in PyQt6
+
 ```python
 # ✅ CORRECT
 QTimer.singleShot(1000, self.delayed_action)
@@ -228,13 +239,13 @@ threading.Thread(target=self.delayed_action).start()
 ## 📚 Documentation Hierarchy
 
 1. **Quick Start**: `DESKTOP_APP_QUICKSTART.md` - Installation & launch
-2. **Architecture**: `PROGRAM_SUMMARY.md` - Complete system overview (600+ lines)
-3. **Components**: `DEVELOPER_QUICK_REFERENCE.md` - GUI API reference
-4. **Features**:
+1. **Architecture**: `PROGRAM_SUMMARY.md` - Complete system overview (600+ lines)
+1. **Components**: `DEVELOPER_QUICK_REFERENCE.md` - GUI API reference
+1. **Features**:
    - `AI_PERSONA_IMPLEMENTATION.md` - Personality system
    - `LEARNING_REQUEST_IMPLEMENTATION.md` - Learning workflow
    - `COMMAND_MEMORY_FEATURES.md` - Memory system specs
-5. **This File**: Architecture patterns and data flows
+1. **This File**: Architecture patterns and data flows
 
 ---
 

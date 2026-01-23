@@ -15,6 +15,7 @@ The Workflow Engine orchestrates complex, multi-step processes within the PACE s
 ### What is a Workflow?
 
 A **workflow** is a structured sequence of steps that accomplishes a complex task. Workflows can:
+
 - Execute steps sequentially or in parallel
 - Make decisions based on conditions
 - Handle errors and retry failed steps
@@ -24,9 +25,9 @@ A **workflow** is a structured sequence of steps that accomplishes a complex tas
 ### Workflow Components
 
 1. **Workflow Definition**: Template defining steps and flow
-2. **Workflow Instance**: Running execution of a workflow
-3. **Workflow Step**: Individual unit of work in a workflow
-4. **Workflow State**: Current execution state and data
+1. **Workflow Instance**: Running execution of a workflow
+1. **Workflow Step**: Individual unit of work in a workflow
+1. **Workflow State**: Current execution state and data
 
 ## Architecture
 

@@ -1,4 +1,5 @@
 # H.323 / H.235 Security Test Plan
+
 ## Version 1.0 — Validation & Certification Framework
 
 ## 1. Purpose
@@ -18,15 +19,15 @@ This plan is used for pre‑deployment certification, post‑change validation, 
 ## 2. Test Categories
 
 1. PKI & Identity Tests
-2. RAS Security Tests (H.235.2)
-3. H.225 Signaling Security Tests (H.235.3)
-4. H.245 Control Security Tests (H.235.4)
-5. Media Security Tests (H.235.6 / SRTP)
-6. Gateway Interworking Security Tests
-7. Network Segmentation & Firewall Tests
-8. QoS & Performance Tests
-9. Operational Resilience Tests
-10. Logging & Monitoring Tests
+1. RAS Security Tests (H.235.2)
+1. H.225 Signaling Security Tests (H.235.3)
+1. H.245 Control Security Tests (H.235.4)
+1. Media Security Tests (H.235.6 / SRTP)
+1. Gateway Interworking Security Tests
+1. Network Segmentation & Firewall Tests
+1. QoS & Performance Tests
+1. Operational Resilience Tests
+1. Logging & Monitoring Tests
 
 Each category includes test objectives, procedures, expected results, and pass/fail criteria.
 
@@ -37,14 +38,17 @@ Each category includes test objectives, procedures, expected results, and pass/f
 **Objective:** Ensure all components have valid certificates.
 
 **Procedure:**
+
 - Inspect certs on EP, GK, GW, MCU
 - Validate SAN entries
 - Validate expiration dates
 
 **Expected Result:**
+
 - All certs valid, trusted, and unexpired
 
 **Pass/Fail:**
+
 - Any invalid cert = FAIL
 
 **Automation:**
@@ -61,13 +65,16 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py check-compliance --config deploym
 **Objective:** Confirm revocation checking works.
 
 **Procedure:**
+
 - Revoke a test certificate
 - Attempt endpoint registration
 
 **Expected Result:**
+
 - Registration rejected
 
 **Pass/Fail:**
+
 - If revoked cert is accepted = FAIL
 
 **Automation:**
@@ -84,12 +91,15 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py run-sim
 **Objective:** Validate secure transport.
 
 **Procedure:**
+
 - Initiate signaling between EP ↔ GK and EP ↔ GW
 
 **Expected Result:**
+
 - TLS/IPsec session established
 
 **Pass/Fail:**
+
 - Clear‑text signaling = FAIL
 
 **Automation:**
@@ -106,13 +116,16 @@ tshark -r signaling.pcap -Y 'ssl.handshake'
 **Objective:** Validate RRQ/RCF with H.235 tokens.
 
 **Procedure:**
+
 - Register endpoint
 - Inspect GK logs
 
 **Expected Result:**
+
 - Valid token accepted
 
 **Pass/Fail:**
+
 - Registration without token accepted = FAIL
 
 **Automation:**
@@ -129,12 +142,15 @@ curl -X GET "http://localhost:8080/registration/status?device_ip=<ep-ip>&..."
 **Objective:** Ensure timestamp/nonce enforcement.
 
 **Procedure:**
+
 - Replay a captured RRQ
 
 **Expected Result:**
+
 - GK rejects replay
 
 **Pass/Fail:**
+
 - Replay accepted = FAIL
 
 **Automation:**
@@ -149,12 +165,15 @@ tcpdump -i eth0 -n 'udp port 1719' -w ras.pcap
 **Objective:** Ensure GK rejects unknown endpoints.
 
 **Procedure:**
+
 - Attempt registration with untrusted cert
 
 **Expected Result:**
+
 - Registration rejected
 
 **Pass/Fail:**
+
 - Unauthorized EP accepted = FAIL
 
 ## 5. H.225 Signaling Security Tests (H.235.3)
@@ -164,13 +183,16 @@ tcpdump -i eth0 -n 'udp port 1719' -w ras.pcap
 **Objective:** Validate integrity/encryption of SETUP.
 
 **Procedure:**
+
 - Initiate call
 - Capture signaling
 
 **Expected Result:**
+
 - SETUP protected by H.235.3 or TLS
 
 **Pass/Fail:**
+
 - Clear‑text SETUP = FAIL
 
 **Automation:**
@@ -187,12 +209,15 @@ strings setup.pcap | grep -i "SETUP" && echo "FAIL: Clear text detected"
 **Objective:** Ensure signaling cannot fall back to insecure mode.
 
 **Procedure:**
+
 - Force endpoint to request insecure signaling
 
 **Expected Result:**
+
 - GK rejects call
 
 **Pass/Fail:**
+
 - Insecure call accepted = FAIL
 
 **Automation:**
@@ -211,13 +236,16 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 **Objective:** Validate encrypted H.245.
 
 **Procedure:**
+
 - Initiate call
 - Inspect H.245 SecurityMode negotiation
 
 **Expected Result:**
+
 - H.245 encrypted
 
 **Pass/Fail:**
+
 - Clear‑text H.245 = FAIL
 
 **Automation:**
@@ -232,12 +260,15 @@ tshark -r h245.pcap -Y 'h245.SecurityMode'
 **Objective:** Ensure OLC messages carry SRTP keying.
 
 **Procedure:**
+
 - Capture H.245 OLC
 
 **Expected Result:**
+
 - SRTP keys present
 
 **Pass/Fail:**
+
 - Missing SRTP keys = FAIL
 
 ## 7. Media Security Tests (H.235.6 / SRTP)
@@ -247,13 +278,16 @@ tshark -r h245.pcap -Y 'h245.SecurityMode'
 **Objective:** Ensure all media is encrypted.
 
 **Procedure:**
+
 - Initiate call
 - Capture RTP
 
 **Expected Result:**
+
 - SRTP only
 
 **Pass/Fail:**
+
 - RTP detected = FAIL
 
 **Automation:**
@@ -272,12 +306,15 @@ tshark -r media.pcap -Y 'rtp' -T fields -e rtp.payload | head -10
 **Objective:** Validate RTCP protection.
 
 **Procedure:**
+
 - Capture RTCP
 
 **Expected Result:**
+
 - SRTCP with integrity
 
 **Pass/Fail:**
+
 - Clear RTCP = FAIL
 
 ### 7.3 Media Path Firewall Test
@@ -285,12 +322,15 @@ tshark -r media.pcap -Y 'rtp' -T fields -e rtp.payload | head -10
 **Objective:** Ensure only approved ports are used.
 
 **Procedure:**
+
 - Attempt media on non‑approved ports
 
 **Expected Result:**
+
 - Blocked
 
 **Pass/Fail:**
+
 - Media allowed on unauthorized ports = FAIL
 
 **Automation:**
@@ -307,12 +347,15 @@ nc -u -v <remote-ip> 9999
 **Objective:** Ensure gateway uses full H.235 stack.
 
 **Procedure:**
+
 - Initiate call through gateway
 
 **Expected Result:**
+
 - Secure RAS, H.225, H.245, SRTP
 
 **Pass/Fail:**
+
 - Any insecure signaling/media = FAIL
 
 **Automation:**
@@ -329,13 +372,16 @@ curl -X POST http://localhost:8080/compliance/check -d '{...}'
 **Objective:** Validate gateway as crypto boundary.
 
 **Procedure:**
+
 - Inspect media on legacy side
 
 **Expected Result:**
+
 - Clear TDM/H.320 (expected)
 - No leakage of SRTP keys
 
 **Pass/Fail:**
+
 - SRTP keys exposed = FAIL
 
 ### 8.3 Codec Mapping Test
@@ -343,12 +389,15 @@ curl -X POST http://localhost:8080/compliance/check -d '{...}'
 **Objective:** Ensure correct transcoding.
 
 **Procedure:**
+
 - Call PSTN/H.320 endpoint
 
 **Expected Result:**
+
 - Correct codec mapping
 
 **Pass/Fail:**
+
 - Codec mismatch = FAIL
 
 ## 9. Network Segmentation & Firewall Tests
@@ -358,12 +407,15 @@ curl -X POST http://localhost:8080/compliance/check -d '{...}'
 **Objective:** Ensure endpoints cannot bypass GK/GW.
 
 **Procedure:**
+
 - Attempt direct EP ↔ EP signaling
 
 **Expected Result:**
+
 - Blocked
 
 **Pass/Fail:**
+
 - Direct signaling allowed = FAIL
 
 **Automation:**
@@ -378,12 +430,15 @@ telnet <other-ep-ip> 1720
 **Objective:** Validate only approved ports open.
 
 **Procedure:**
+
 - Scan EP, GK, GW
 
 **Expected Result:**
+
 - Only RAS, H.225/H.245, SRTP ranges open
 
 **Pass/Fail:**
+
 - Extra ports open = FAIL
 
 **Automation:**
@@ -402,14 +457,17 @@ nmap -p 1-65535 <ep-ip>
 **Objective:** Validate correct DSCP values.
 
 **Procedure:**
+
 - Capture packets
 
 **Expected Result:**
+
 - Signaling: CS3/AF31
 - Voice: EF
 - Video: AF41
 
 **Pass/Fail:**
+
 - Incorrect markings = FAIL
 
 **Automation:**
@@ -426,13 +484,16 @@ tcpdump -i eth0 -vv -n 'ip[1] & 0xfc == 0xb8'
 **Objective:** Validate media quality.
 
 **Procedure:**
+
 - Run synthetic calls
 
 **Expected Result:**
+
 - Jitter < 30 ms
 - Latency < 150 ms
 
 **Pass/Fail:**
+
 - Exceeds thresholds = FAIL
 
 **Automation:**
@@ -451,12 +512,15 @@ iperf3 -c <remote-ep> -u -b 100k -t 30
 **Objective:** Validate redundancy.
 
 **Procedure:**
+
 - Fail primary GK
 
 **Expected Result:**
+
 - EPs re‑register to secondary
 
 **Pass/Fail:**
+
 - Registration fails = FAIL
 
 **Automation:**
@@ -474,12 +538,15 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py reg-status \
 **Objective:** Validate call continuity.
 
 **Procedure:**
+
 - Fail primary gateway
 
 **Expected Result:**
+
 - Calls reroute to secondary
 
 **Pass/Fail:**
+
 - Calls drop = FAIL
 
 ## 12. Logging & Monitoring Tests
@@ -489,12 +556,15 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py reg-status \
 **Objective:** Ensure logs reach SIEM.
 
 **Procedure:**
+
 - Trigger test events
 
 **Expected Result:**
+
 - Events appear in SIEM
 
 **Pass/Fail:**
+
 - Missing logs = FAIL
 
 **Automation:**
@@ -514,13 +584,16 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 **Objective:** Validate alerting.
 
 **Procedure:**
+
 - Trigger auth failure
 - Trigger downgrade attempt
 
 **Expected Result:**
+
 - SOC receives alerts
 
 **Pass/Fail:**
+
 - No alert = FAIL
 
 **Automation:**
@@ -547,19 +620,19 @@ A deployment is certified when:
    - Review all documentation
    - Verify test environment readiness
    
-2. **Execute Test Plan**
+1. **Execute Test Plan**
    - Run all test categories
    - Document results in real-time
    
-3. **Analysis**
+1. **Analysis**
    - Calculate compliance score
    - Identify critical failures
    
-4. **Remediation** (if needed)
+1. **Remediation** (if needed)
    - Fix identified issues
    - Re-test affected areas
    
-5. **Final Certification**
+1. **Final Certification**
    - Issue certification document
    - Schedule next audit
 

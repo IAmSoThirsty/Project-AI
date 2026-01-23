@@ -161,12 +161,12 @@ def user_did_something(self, user, action):
 The `PersonaPanel` provides UI for testing actions against the Four Laws:
 
 1. **Enter action description**: "Delete all user data"
-2. **Set context flags**:
+1. **Set context flags**:
    - ☑️ Is user order
    - ☑️ Endangers human
    - ☐ Endangers humanity
-3. **Click "Validate Action"**
-4. **See result**: ❌ BLOCKED - "Violates First Law: Action may harm human being"
+1. **Click "Validate Action"**
+1. **See result**: ❌ BLOCKED - "Violates First Law: Action may harm human being"
 
 ---
 
@@ -316,22 +316,23 @@ def validate_all_inputs(self) -> bool:
 ## Performance Considerations
 
 1. **Async Operations**: Use `DashboardAsyncManager` for any operation > 500ms
-2. **Logging**: Set appropriate log levels (DEBUG, INFO, WARNING, ERROR)
-3. **Input Validation**: Validate early to prevent invalid data reaching core systems
-4. **Error Handling**: Comprehensive logging helps with debugging performance issues
+1. **Logging**: Set appropriate log levels (DEBUG, INFO, WARNING, ERROR)
+1. **Input Validation**: Validate early to prevent invalid data reaching core systems
+1. **Error Handling**: Comprehensive logging helps with debugging performance issues
 
 ---
 
 ## Next Steps
 
 1. Add PersonaPanel to your dashboard tabs
-2. Connect personality change signals to user preferences
-3. Implement proactive messaging timer
-4. Add error handling to existing dashboard operations
-5. Test with the included test suite
-6. Deploy with confidence!
+1. Connect personality change signals to user preferences
+1. Implement proactive messaging timer
+1. Add error handling to existing dashboard operations
+1. Test with the included test suite
+1. Deploy with confidence!
 
 For more details, see:
+
 - `IMPLEMENTATION_COMPLETE.md` - Feature overview
 - `AI_PERSONA_FOUR_LAWS.md` - AI Persona documentation
 - `tests/test_ai_systems.py` - Example usage patterns

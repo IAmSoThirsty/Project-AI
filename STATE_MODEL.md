@@ -15,9 +15,9 @@ The State Model defines how system state is managed, persisted, and recovered wi
 ### State Types
 
 1. **Short-Term State**: Active workflow state, session data, temporary variables
-2. **Long-Term Memory**: Persistent knowledge, learned patterns, historical data
-3. **Episodic Logs**: Recorded episodes of interactions and executions
-4. **Introspection Records**: System self-monitoring and reflection data
+1. **Long-Term Memory**: Persistent knowledge, learned patterns, historical data
+1. **Episodic Logs**: Recorded episodes of interactions and executions
+1. **Introspection Records**: System self-monitoring and reflection data
 
 ### State Lifecycle
 

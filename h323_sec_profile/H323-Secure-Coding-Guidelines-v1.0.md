@@ -1,7 +1,9 @@
 # H.323 Secure Coding & Extension Development Guidelines
+
 Version 1.0 — Developer Standards for Custom H.323 Extensions
 
 ## 1. Purpose
+
 Defines secure development practices for custom H.323 extensions, plugins, or integrations to ensure they do not compromise the security posture of the H.323 deployment.
 
 ---
@@ -215,6 +217,7 @@ def get_endpoint_by_id(h323_id):
 ### 3.1 Must Not Weaken H.235
 
 **Prohibited Actions**:
+
 - Disabling H.235.2/3/4/6
 - Allowing RTP fallback
 - Bypassing certificate validation
@@ -243,6 +246,7 @@ class H323Extension:
 ### 3.2 Must Not Bypass Gatekeeper
 
 **Prohibited Actions**:
+
 - Direct endpoint-to-endpoint signaling without GK knowledge
 - Accepting calls without ARQ/ACF
 - Bypassing admission control
@@ -265,6 +269,7 @@ def initiate_call(source_ep, dest_ep):
 ### 3.3 Must Not Expose SRTP Keys
 
 **Prohibited Actions**:
+
 - Logging SRTP keys
 - Transmitting keys in cleartext
 - Storing keys on disk unencrypted
@@ -476,6 +481,7 @@ fuzz_h225_setup()
 ## 7. Completion Criteria
 
 Extension development is considered compliant when:
+
 - All secure coding requirements met
 - H.235 enforcement validated
 - PKI integration correct

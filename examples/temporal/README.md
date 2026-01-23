@@ -5,11 +5,13 @@ This directory contains example scripts demonstrating how to use Temporal.io wor
 ## Prerequisites
 
 1. Start Temporal server:
+
    ```bash
    python scripts/setup_temporal.py start
    ```
 
-2. Start Temporal worker:
+1. Start Temporal worker:
+
    ```bash
    python scripts/setup_temporal.py worker
    ```
@@ -26,6 +28,7 @@ PYTHONPATH=src python examples/temporal/learning_workflow_example.py
 ```
 
 **Features:**
+
 - Content validation
 - Black Vault filtering
 - Knowledge extraction and storage
@@ -40,6 +43,7 @@ PYTHONPATH=src python examples/temporal/image_generation_example.py
 ```
 
 **Features:**
+
 - Content safety checks
 - Automatic retries on failure
 - Long-running task support (10+ minutes)
@@ -54,6 +58,7 @@ PYTHONPATH=src python examples/temporal/batch_workflows_example.py
 ```
 
 **Features:**
+
 - Parallel workflow execution
 - Aggregated results
 - Efficient resource utilization
@@ -61,6 +66,7 @@ PYTHONPATH=src python examples/temporal/batch_workflows_example.py
 ## Monitoring
 
 View workflow execution in the Temporal Web UI:
+
 - **URL**: http://localhost:8233
 - **Namespace**: default
 - **Task Queue**: project-ai-tasks
@@ -91,8 +97,8 @@ export PYTHONPATH=src
 ## Creating Your Own Workflows
 
 1. Define workflow in `src/app/temporal/workflows.py`
-2. Implement activities in `src/app/temporal/activities.py`
-3. Register in worker (`src/app/temporal/worker.py`)
-4. Create client code following the examples above
+1. Implement activities in `src/app/temporal/activities.py`
+1. Register in worker (`src/app/temporal/worker.py`)
+1. Create client code following the examples above
 
 See `docs/TEMPORAL_SETUP.md` for detailed documentation.

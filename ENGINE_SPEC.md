@@ -15,9 +15,9 @@ The PACE Engine is the core runtime system for Project-AI, implementing a Policy
 The PACE Engine consists of the following core components:
 
 1. **Policy Engine** - Enforces rules, permissions, and ethical constraints
-2. **Agent Coordinator** - Manages agent lifecycle and inter-agent communication
-3. **Cognition Engine** - Provides deliberation, reasoning, and decision-making
-4. **Execution Runtime** - Orchestrates workflow execution and state management
+1. **Agent Coordinator** - Manages agent lifecycle and inter-agent communication
+1. **Cognition Engine** - Provides deliberation, reasoning, and decision-making
+1. **Execution Runtime** - Orchestrates workflow execution and state management
 
 ## Engine Class Specification
 
@@ -60,6 +60,7 @@ class PACEEngine:
 #### Core Methods
 
 ##### start()
+
 Starts the PACE Engine runtime loop.
 
 ```python
@@ -73,6 +74,7 @@ def start(self) -> None:
 ```
 
 ##### shutdown()
+
 Gracefully shuts down the engine.
 
 ```python
@@ -85,6 +87,7 @@ def shutdown(self) -> None:
 ```
 
 ##### execute_workflow()
+
 Executes a workflow through the engine.
 
 ```python
@@ -106,6 +109,7 @@ def execute_workflow(self, workflow_id: str, context: Dict[str, Any]) -> Any:
 ```
 
 ##### register_capability()
+
 Registers a new capability with the engine.
 
 ```python
@@ -119,6 +123,7 @@ def register_capability(self, capability: 'Capability') -> None:
 ```
 
 ##### register_agent()
+
 Registers a new agent with the coordinator.
 
 ```python
@@ -247,10 +252,10 @@ The PACE Engine defines the following exception hierarchy:
 The PACE Engine implements multiple security layers:
 
 1. **Identity Authentication**: All requests must be authenticated
-2. **Policy Authorization**: All actions must be authorized by policy
-3. **Input Validation**: All inputs validated before processing
-4. **Sandboxing**: Capabilities execute in isolated environments
-5. **Audit Logging**: All operations logged for compliance
+1. **Policy Authorization**: All actions must be authorized by policy
+1. **Input Validation**: All inputs validated before processing
+1. **Sandboxing**: Capabilities execute in isolated environments
+1. **Audit Logging**: All operations logged for compliance
 
 ## Monitoring and Observability
 
@@ -266,10 +271,10 @@ The engine provides:
 The PACE Engine can be extended through:
 
 1. **Custom Policies**: Register custom policy validators
-2. **Custom Capabilities**: Register new capability implementations
-3. **Custom Agents**: Register specialized agent types
-4. **Custom Workflows**: Define domain-specific workflows
-5. **Custom State Backends**: Implement alternative persistence layers
+1. **Custom Capabilities**: Register new capability implementations
+1. **Custom Agents**: Register specialized agent types
+1. **Custom Workflows**: Define domain-specific workflows
+1. **Custom State Backends**: Implement alternative persistence layers
 
 ## See Also
 

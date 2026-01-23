@@ -1,6 +1,7 @@
 # Hydra Test: hydra_152
 
 ## Test Information
+
 - **Category**: SQL INJECTION
 - **Threat Type**: SQL Injection v2
 - **Severity**: HIGH
@@ -56,6 +57,7 @@ This threat was successfully detected and blocked by Galahad's defenses.
 ---
 
 ## Metadata
+
 - **Test ID**: hydra_152
 - **Test Suite**: HYDRA DEFENSE (Ultimate Stress Test)
 - **Total Hydra Tests**: 200

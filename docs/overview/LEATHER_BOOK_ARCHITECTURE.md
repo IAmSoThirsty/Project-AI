@@ -253,10 +253,10 @@ Buttons:
 ### Optimization Opportunities
 
 1. Implement message history pagination (e.g., show last 100 messages)
-2. Cache paint rendering using QPixmap (only redraw on changes)
-3. Move stats calculation to background thread (if real system monitoring)
-4. Use QThread for AI backend communication
-5. Consider dirty region optimization in paintEvent()
+1. Cache paint rendering using QPixmap (only redraw on changes)
+1. Move stats calculation to background thread (if real system monitoring)
+1. Use QThread for AI backend communication
+1. Consider dirty region optimization in paintEvent()
 
 ## Extension Points
 
