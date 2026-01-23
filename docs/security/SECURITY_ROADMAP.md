@@ -653,7 +653,7 @@ All roadmap items transition from:
 
 **Questions or Suggestions:**
 
-- Email: projectaidevs@gmail.com
+- Email: <projectaidevs@gmail.com>
 - GitHub Issues: Use `security-roadmap` label
 - Security Advisory: For private vulnerability disclosure
 

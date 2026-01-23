@@ -900,7 +900,7 @@ For questions or issues, consult:
 
 - `/docs/SECURITY_FRAMEWORK.md` - Security framework documentation
 - `/tests/test_security_*.py` - Security test examples
-- Internal security team or security@example.com
+- Internal security team or <security@example.com>
 
 **Document Version**: 1.0  
 **Last Updated**: 2025-12-31

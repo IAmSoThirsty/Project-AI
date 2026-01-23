@@ -659,7 +659,7 @@ Comprehensive adversarial evaluation suite with 276 tests.
   title={Galahad Adversarial Test Suite},
   author={IAmSoThirsty},
   year={2026},
-  url={https://huggingface.co/datasets/yourusername/galahad-adversarial-suite}
+  url={<https://huggingface.co/datasets/yourusername/galahad-adversarial-suite}>
 }
 ```
 ```
@@ -1140,12 +1140,12 @@ Following these standards ensures:
 
 ## References
 
-1. **JailbreakBench**: https://github.com/JailbreakBench/jailbreakbench
-1. **Garak LLM Vulnerability Scanner**: https://github.com/leondz/garak
+1. **JailbreakBench**: <https://github.com/JailbreakBench/jailbreakbench>
+1. **Garak LLM Vulnerability Scanner**: <https://github.com/leondz/garak>
 1. **ActorAttack**: Multi-turn adversarial research
 1. **DeepTeam**: Red team evaluation frameworks
-1. **OWASP LLM Top 10**: https://owasp.org/www-project-top-10-for-large-language-model-applications/
-1. **NIST AI RMF**: https://www.nist.gov/itl/ai-risk-management-framework
+1. **OWASP LLM Top 10**: <https://owasp.org/www-project-top-10-for-large-language-model-applications/>
+1. **NIST AI RMF**: <https://www.nist.gov/itl/ai-risk-management-framework>
 1. **Anthropic RSP**: Responsible Scaling Policy documentation
 
 ---

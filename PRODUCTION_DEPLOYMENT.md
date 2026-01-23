@@ -29,7 +29,7 @@ cp .env.example .env
 # FERNET_KEY is already configured
 
 # Optional: Add API keys for enhanced features
-# Edit .env and add:
+# Edit .env and add
 # OPENAI_API_KEY=your_key_here
 # HUGGINGFACE_API_KEY=your_key_here
 ```
@@ -54,7 +54,7 @@ pip install -r requirements-dev.txt
 # Start all services
 docker-compose up -d
 
-# Services started:
+# Services started
 # - Temporal Server (workflow orchestration)
 # - Temporal Worker (executes workflows)
 # - PostgreSQL (Temporal database)
@@ -63,7 +63,7 @@ docker-compose up -d
 # - AlertManager (alerts)
 # - Node Exporter (system metrics)
 
-# Access points:
+# Access points
 # - Temporal UI: http://localhost:8233
 # - Grafana: http://localhost:3000 (admin/admin)
 # - Prometheus: http://localhost:9090
@@ -88,7 +88,7 @@ python src/app/web/backend/app.py
 # Run system health check
 python test_v1_launch.py
 
-# Expected output:
+# Expected output
 # ============================================================
 # V1.0.0 CORE SYSTEMS: OPERATIONAL
 # ============================================================
@@ -423,8 +423,8 @@ docker-compose exec temporal-postgresql pg_dump -U temporal > backup.sql
 ### Community
 
 - **Issues:** GitHub Issues
-- **Email:** projectaidevs@gmail.com
-- **Homepage:** https://iamsothirsty.github.io/Project-AI/
+- **Email:** <projectaidevs@gmail.com>
+- **Homepage:** <https://iamsothirsty.github.io/Project-AI/>
 
 ---
 
