@@ -134,10 +134,10 @@ def initialize_kernel() -> CognitionKernel:
 
         logger.info("✅ CognitionKernel initialized successfully")
         logger.info("   - Identity: ✓")
-        logger.info("   - Memory: %s", '✓' if memory_engine else '✗ (fallback)')
-        logger.info("   - Governance: %s", '✓' if governance_system else '✗ (fallback)')
-        logger.info("   - Reflection: %s", '✓' if reflection_engine else '✗ (fallback)')
-        logger.info("   - Triumvirate: %s", '✓' if triumvirate else '✗ (fallback)')
+        logger.info("   - Memory: %s", "✓" if memory_engine else "✗ (fallback)")
+        logger.info("   - Governance: %s", "✓" if governance_system else "✗ (fallback)")
+        logger.info("   - Reflection: %s", "✓" if reflection_engine else "✗ (fallback)")
+        logger.info("   - Triumvirate: %s", "✓" if triumvirate else "✗ (fallback)")
         logger.info("🔒 Kernel syscall boundary active - all execution governed")
 
         return kernel

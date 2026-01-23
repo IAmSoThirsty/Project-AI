@@ -51,6 +51,7 @@ class ThirstyREPL:
                 if line.lower() == "clear":
                     # Use subprocess instead of os.system to avoid shell injection
                     import subprocess
+
                     clear_cmd = "cls" if os.name == "nt" else "clear"
                     subprocess.run([clear_cmd], shell=False, check=False)
                     continue

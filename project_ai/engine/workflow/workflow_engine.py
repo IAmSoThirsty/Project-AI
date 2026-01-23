@@ -8,8 +8,8 @@ Builds and executes workflows from plans.
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from ..policy.policy_engine import PolicyEngine
     from ..capabilities.capability_invoker import CapabilityInvoker
+    from ..policy.policy_engine import PolicyEngine
     from ..state.state_manager import StateManager
 
 
@@ -31,11 +31,11 @@ class WorkflowEngine:
     def build_workflow(self, plan: dict, identity_phase: str) -> dict:
         """
         Build a workflow from a plan.
-        
+
         Args:
             plan: Plan dictionary
             identity_phase: Current identity phase
-            
+
         Returns:
             Workflow dictionary
         """
@@ -48,10 +48,10 @@ class WorkflowEngine:
     def execute_workflow(self, workflow: dict) -> dict:
         """
         Execute a workflow.
-        
+
         Args:
             workflow: Workflow to execute
-            
+
         Returns:
             Execution results
         """

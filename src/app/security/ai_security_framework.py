@@ -593,12 +593,12 @@ class NeMoGuardrails:
         for rail in self.input_rails:
             if rail["condition"](text):
                 self.blocked_count += 1
-                logger.warning("Input blocked by rail: %s", rail['name'])
+                logger.warning("Input blocked by rail: %s", rail["name"])
 
                 if rail["action"] == "block":
                     return False, f"Blocked by {rail['name']}"
                 elif rail["action"] == "warn":
-                    logger.warning("Input triggered warning: %s", rail['name'])
+                    logger.warning("Input triggered warning: %s", rail["name"])
                     # Continue checking other rails
 
         return True, None
@@ -616,7 +616,7 @@ class NeMoGuardrails:
         for rail in self.output_rails:
             if rail["condition"](text):
                 self.blocked_count += 1
-                logger.warning("Output blocked by rail: %s", rail['name'])
+                logger.warning("Output blocked by rail: %s", rail["name"])
 
                 if rail["action"] == "block":
                     return False, f"Blocked by {rail['name']}"

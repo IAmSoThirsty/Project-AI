@@ -47,7 +47,7 @@ class PolicyEngine:
     def get_policy_context(self) -> dict:
         """
         Get current policy context.
-        
+
         Returns:
             Policy context including phase, mode, and rules
         """
@@ -60,10 +60,10 @@ class PolicyEngine:
     def is_capability_allowed(self, capability_meta: dict) -> bool:
         """
         Check if a capability is allowed by current policy.
-        
+
         Args:
             capability_meta: Capability metadata with risk_level, requires_external
-            
+
         Returns:
             True if allowed, False otherwise
         """

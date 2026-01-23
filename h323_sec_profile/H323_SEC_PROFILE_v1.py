@@ -17,13 +17,14 @@ This version includes:
 This is the foundational trust model for Project-AI.
 """
 
-import json
 import argparse
-from datetime import datetime, UTC
+import json
+from datetime import UTC, datetime
 
 # ---------------------------------------------------------------------------
 # 0. Core utilities: time & logging
 # ---------------------------------------------------------------------------
+
 
 def timestamp_now():
     try:
@@ -32,8 +33,14 @@ def timestamp_now():
         return datetime.utcnow().isoformat() + "Z"
 
 
-def log_event(event_type, device_id, outcome, ts=None, details=None,
-              logfile="/var/log/h323_ops.log"):
+def log_event(
+    event_type,
+    device_id,
+    outcome,
+    ts=None,
+    details=None,
+    logfile="/var/log/h323_ops.log",
+):
     if ts is None:
         ts = timestamp_now()
     entry = {
@@ -51,6 +58,7 @@ def log_event(event_type, device_id, outcome, ts=None, details=None,
 # ---------------------------------------------------------------------------
 # 1. PKI / Certificate validation
 # ---------------------------------------------------------------------------
+
 
 def validate_certificate_chain(device_cert, trust_store, crl_ocsp_client):
     """
@@ -82,6 +90,7 @@ def validate_certificate_chain(device_cert, trust_store, crl_ocsp_client):
 # 2. Gatekeeper registration & failover
 # ---------------------------------------------------------------------------
 
+
 def register_endpoint_with_gk(endpoint, gk):
     ras_token = endpoint.create_h235_token()
     reg_msg = {
@@ -107,7 +116,10 @@ def gk_failover_registration(endpoint, gk_list):
 # 3. Secure call setup (H.225 + H.235.3 + SRTP/H.235.6)
 # ---------------------------------------------------------------------------
 
-def secure_h323_call_setup(endpoint, gateway, dest_number, trust_store, crl_ocsp_client):
+
+def secure_h323_call_setup(
+    endpoint, gateway, dest_number, trust_store, crl_ocsp_client
+):
     """
     Baseline secure call setup:
     - Certificate validation
@@ -116,7 +128,9 @@ def secure_h323_call_setup(endpoint, gateway, dest_number, trust_store, crl_ocsp
     - SRTP via H.245/H.235.6 (AES-256)
     """
     # PKI
-    if not validate_certificate_chain(endpoint.certificate, trust_store, crl_ocsp_client):
+    if not validate_certificate_chain(
+        endpoint.certificate, trust_store, crl_ocsp_client
+    ):
         raise Exception("Endpoint certificate invalid")
 
     # Registration
@@ -134,8 +148,12 @@ def secure_h323_call_setup(endpoint, gateway, dest_number, trust_store, crl_ocsp
     # SRTP via H.245/H.235.6
     call.negotiate_media(use_srtp=True, aes_strength=256)
 
-    log_event("call_setup", endpoint.id, "success",
-              details={"gateway_id": gateway.id, "dest": dest_number})
+    log_event(
+        "call_setup",
+        endpoint.id,
+        "success",
+        details={"gateway_id": gateway.id, "dest": dest_number},
+    )
 
     return call
 
@@ -143,6 +161,7 @@ def secure_h323_call_setup(endpoint, gateway, dest_number, trust_store, crl_ocsp
 # ---------------------------------------------------------------------------
 # 4. SRTP keying / rotation
 # ---------------------------------------------------------------------------
+
 
 def exchange_keys_securely(ep_a, ep_b, key_a, key_b):
     assert key_a and key_b  # placeholder
@@ -159,6 +178,7 @@ def setup_srtp_media(ep_a, ep_b):
 # 5. Config change logging
 # ---------------------------------------------------------------------------
 
+
 def log_config_change(admin_id, device_id, change_desc):
     log_event(
         "config_change",
@@ -172,6 +192,7 @@ def log_config_change(admin_id, device_id, change_desc):
 # 6. Compliance evaluation
 # ---------------------------------------------------------------------------
 
+
 def check_compliance(deployment_config):
     checks = []
 
@@ -184,7 +205,9 @@ def check_compliance(deployment_config):
     if not deployment_config.get("has_logging", False):
         checks.append("FAIL: Not all required events are logged.")
     if not deployment_config.get("pki_enforced", False):
-        checks.append("FAIL: PKI-based mutual authentication not enforced for all devices.")
+        checks.append(
+            "FAIL: PKI-based mutual authentication not enforced for all devices."
+        )
 
     return "PASS" if not checks else "\n".join(checks)
 
@@ -193,17 +216,11 @@ def check_compliance(deployment_config):
 # 7. SNMP registration status
 # ---------------------------------------------------------------------------
 
+
 def get_registration_status_snmp(device_ip, snmp_user, auth_key, priv_key):
     try:
-        from pysnmp.hlapi import (
-            SnmpEngine,
-            UdpTransportTarget,
-            UsmUserData,
-            ContextData,
-            ObjectType,
-            ObjectIdentity,
-            getCmd,
-        )
+        from pysnmp.hlapi import (ContextData, ObjectIdentity, ObjectType, SnmpEngine,
+                                  UdpTransportTarget, UsmUserData, getCmd)
     except ImportError:
         return "unknown"
 
@@ -229,6 +246,7 @@ def get_registration_status_snmp(device_ip, snmp_user, auth_key, priv_key):
 # ---------------------------------------------------------------------------
 # 8. Simulation harness
 # ---------------------------------------------------------------------------
+
 
 class SimCert:
     def __init__(self, subject, issuer, san=True):
@@ -291,12 +309,12 @@ class SimGateway:
 
 
 def run_simulated_secure_call():
-    import tempfile
     import os
-    
+    import tempfile
+
     # Use temporary log file for simulation
     temp_log = os.path.join(tempfile.gettempdir(), "h323_sim_ops.log")
-    
+
     trust_store = SimTrustStore()
     crl_ocsp = SimCRLOCSP()
 
@@ -305,10 +323,14 @@ def run_simulated_secure_call():
     ep = SimEndpoint("ep-sim-1")
 
     # Temporarily override log_event to use temp file
-    original_log_event = globals()['log_event']
+    original_log_event = globals()["log_event"]
+
     def temp_log_event(event_type, device_id, outcome, ts=None, details=None):
-        original_log_event(event_type, device_id, outcome, ts, details, logfile=temp_log)
-    globals()['log_event'] = temp_log_event
+        original_log_event(
+            event_type, device_id, outcome, ts, details, logfile=temp_log
+        )
+
+    globals()["log_event"] = temp_log_event
 
     try:
         assert validate_certificate_chain(ep.certificate, trust_store, crl_ocsp)
@@ -320,15 +342,16 @@ def run_simulated_secure_call():
 
         return "SIM_OK"
     finally:
-        globals()['log_event'] = original_log_event
+        globals()["log_event"] = original_log_event
 
 
 # ---------------------------------------------------------------------------
 # 9. CLI interface
 # ---------------------------------------------------------------------------
 
+
 def cli_check_compliance(args):
-    with open(args.config, "r") as f:
+    with open(args.config) as f:
         cfg = json.load(f)
     print(check_compliance(cfg))
 
@@ -350,8 +373,7 @@ def cli_run_sim(args):
 
 def build_cli_parser():
     parser = argparse.ArgumentParser(
-        prog="h323secctl",
-        description="Project-AI H.323 Security Capability Profile v1"
+        prog="h323secctl", description="Project-AI H.323 Security Capability Profile v1"
     )
     sub = parser.add_subparsers(dest="command", required=True)
 
@@ -430,6 +452,7 @@ except ImportError:
 # Adaptive Trust Extensions
 # ============================
 
+
 # 1. Certificate Pinning
 class CertificatePinStore:
     def __init__(self):
@@ -445,6 +468,7 @@ class CertificatePinStore:
             return True
         return self.pins[device_id] == fp
 
+
 PIN_STORE = CertificatePinStore()
 
 
@@ -456,6 +480,7 @@ PIN_STORE = CertificatePinStore()
 class AnomalyDetector:
     def is_anomalous(self, device_id, context):
         return False  # placeholder
+
 
 ANOMALY_DETECTOR = AnomalyDetector()
 
@@ -471,6 +496,7 @@ class QuarantineManager:
 
     def is_quarantined(self, device_id):
         return device_id in self.quarantined
+
 
 QUARANTINE_MANAGER = QuarantineManager()
 
@@ -492,7 +518,9 @@ class PolicyEngine:
 
     def set_threat_level(self, level):
         self.threat_level = level
-        log_event("policy_change", "global", "threat_level_set", details={"level": level})
+        log_event(
+            "policy_change", "global", "threat_level_set", details={"level": level}
+        )
 
     def choose_aes_strength(self):
         if self.threat_level == "critical":
@@ -500,6 +528,7 @@ class PolicyEngine:
         if self.threat_level == "elevated":
             return 192
         return 128
+
 
 POLICY_ENGINE = PolicyEngine()
 
@@ -511,12 +540,20 @@ def gk_multi_consensus_registration(endpoint, gk_list, required_consensus=2):
         if register_endpoint_with_gk(endpoint, gk):
             success_count += 1
         if success_count >= required_consensus:
-            log_event("registration_consensus", endpoint.id, "success",
-                      details={"consensus": success_count})
+            log_event(
+                "registration_consensus",
+                endpoint.id,
+                "success",
+                details={"consensus": success_count},
+            )
             return True
 
-    log_event("registration_consensus", endpoint.id, "failed",
-              details={"consensus": success_count})
+    log_event(
+        "registration_consensus",
+        endpoint.id,
+        "failed",
+        details={"consensus": success_count},
+    )
     return False
 
 
@@ -538,6 +575,7 @@ class LogBackend:
         with open(self.logfile, "a") as f:
             f.write(data.decode("utf-8") + "\n")
 
+
 LOG_BACKEND = LogBackend()
 
 
@@ -546,10 +584,12 @@ LOG_BACKEND = LogBackend()
 # Self-Evolving Security Extensions
 # ============================
 
+
 # 1. Autonomous Policy Generation
 class PolicyGenerator:
     def generate(self, telemetry):
         return {"suggested_threat_level": "normal"}  # placeholder
+
 
 POLICY_GENERATOR = PolicyGenerator()
 
@@ -559,6 +599,7 @@ class ThreatModeler:
     def predict(self, telemetry):
         return "normal"  # placeholder
 
+
 THREAT_MODELER = ThreatModeler()
 
 
@@ -566,6 +607,7 @@ THREAT_MODELER = ThreatModeler()
 class TrustBoundaryHealer:
     def heal(self, issue):
         log_event("trust_heal", "global", "attempted", details={"issue": issue})
+
 
 TRUST_HEALER = TrustBoundaryHealer()
 
@@ -585,6 +627,7 @@ def choose_crypto_algorithm(threat_level):
 class IdentityCorrelator:
     def correlate(self, identities):
         return {"correlated": True, "entities": identities}
+
 
 IDENTITY_CORRELATOR = IdentityCorrelator()
 

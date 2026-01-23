@@ -194,7 +194,9 @@ class DeadmanSwitch:
             True if registered successfully, False otherwise
         """
         self.failsafe_actions.append(action)
-        logger.info("Registered failsafe action (total: %s)", len(self.failsafe_actions))
+        logger.info(
+            "Registered failsafe action (total: %s)", len(self.failsafe_actions)
+        )
 
         return True
 

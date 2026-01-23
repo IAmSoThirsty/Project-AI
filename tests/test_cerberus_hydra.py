@@ -11,11 +11,7 @@ from pathlib import Path
 
 import pytest
 
-from app.core.cerberus_hydra import (
-    AgentRecord,
-    BypassEvent,
-    CerberusHydraDefense,
-)
+from app.core.cerberus_hydra import AgentRecord, BypassEvent, CerberusHydraDefense
 
 
 class TestCerberusHydraDefense:
@@ -135,17 +131,13 @@ print("Agent {agent_id} active")
         assert len(cerberus.agents) == 1
 
         # First bypass - should spawn 3 agents
-        cerberus.detect_bypass(
-            agent_id=initial_ids[0], bypass_type="test_bypass"
-        )
+        cerberus.detect_bypass(agent_id=initial_ids[0], bypass_type="test_bypass")
 
         assert cerberus.total_bypasses == 1
         assert len(cerberus.agents) == 4  # 1 initial + 3 spawned
 
         # Check generation 1 agents
-        gen1_agents = [
-            a for a in cerberus.agents.values() if a.generation == 1
-        ]
+        gen1_agents = [a for a in cerberus.agents.values() if a.generation == 1]
         assert len(gen1_agents) == 3
 
         # Second bypass - should spawn 3 more agents
@@ -157,9 +149,7 @@ print("Agent {agent_id} active")
         assert len(cerberus.agents) == 7  # 1 + 3 + 3
 
         # Check generation 2 agents
-        gen2_agents = [
-            a for a in cerberus.agents.values() if a.generation == 2
-        ]
+        gen2_agents = [a for a in cerberus.agents.values() if a.generation == 2]
         assert len(gen2_agents) == 3
 
     def test_language_randomization(self, cerberus):
@@ -189,7 +179,9 @@ print("Agent {agent_id} active")
 
         # Trigger multiple bypasses
         for i in range(5):
-            cerberus.detect_bypass(bypass_type=f"bypass_{i}", risk_score=0.5, bypass_depth=1)
+            cerberus.detect_bypass(
+                bypass_type=f"bypass_{i}", risk_score=0.5, bypass_depth=1
+            )
 
         # Lockdown stage should increase
         assert cerberus.lockdown_controller.current_stage > initial_stage
@@ -201,12 +193,13 @@ print("Agent {agent_id} active")
         spawned_ids = cerberus.spawn_initial_agents(count=5)
 
         # Each agent should lock a section
-        locked_sections = [
-            cerberus.agents[aid].locked_section for aid in spawned_ids
-        ]
+        locked_sections = [cerberus.agents[aid].locked_section for aid in spawned_ids]
 
         # Sections should exist
-        assert all(section in cerberus.lockdown_controller.LOCKABLE_SECTIONS for section in locked_sections)
+        assert all(
+            section in cerberus.lockdown_controller.LOCKABLE_SECTIONS
+            for section in locked_sections
+        )
 
         # Sections should be unique or nearly unique
         assert len(set(locked_sections)) >= 3  # At least some diversity
@@ -321,7 +314,14 @@ print("Agent {agent_id} active")
         monkeypatch.setattr(
             sys,
             "argv",
-            ["cerberus_hydra.py", "init", "--initial-agents", "5", "--data-dir", temp_data_dir],
+            [
+                "cerberus_hydra.py",
+                "init",
+                "--initial-agents",
+                "5",
+                "--data-dir",
+                temp_data_dir,
+            ],
         )
 
         from app.core.cerberus_hydra import cli_main
@@ -332,6 +332,7 @@ print("Agent {agent_id} active")
 
     def test_integration_with_security_enforcer(self, cerberus):
         """Test integration with ASL3Security."""
+
         # Mock security enforcer
         class MockSecurityEnforcer:
             def __init__(self):
@@ -355,7 +356,9 @@ print("Agent {agent_id} active")
         # Security enforcer should be notified
         assert len(mock_enforcer.suspicious_activities) == 1
         assert mock_enforcer.suspicious_activities[0]["user"] == "attacker-456"
-        assert mock_enforcer.suspicious_activities[0]["reason"] == "agent_bypass_injection"
+        assert (
+            mock_enforcer.suspicious_activities[0]["reason"] == "agent_bypass_injection"
+        )
 
     def test_agent_record_dataclass(self):
         """Test AgentRecord dataclass."""
@@ -533,7 +536,9 @@ class TestLanguageDatabase:
             assert "agent_spawned" in lang_data
 
         # Check programming language structure
-        for _lang_code, lang_data in cerberus.languages["programming_languages"].items():
+        for _lang_code, lang_data in cerberus.languages[
+            "programming_languages"
+        ].items():
             assert "name" in lang_data
             assert "executable" in lang_data
             assert "extension" in lang_data

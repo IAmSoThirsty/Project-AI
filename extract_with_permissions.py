@@ -64,7 +64,7 @@ def extract_with_permissions(zip_path, destination):
 
     extracted_files = []
 
-    with ZipFile(zip_path, 'r') as zip_file:
+    with ZipFile(zip_path, "r") as zip_file:
         for zip_info in zip_file.infolist():
             # Extract the file
             extracted_path = zip_file.extract(zip_info, destination)

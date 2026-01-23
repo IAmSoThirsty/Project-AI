@@ -99,7 +99,9 @@ class TemplateRenderer:
                 )
 
         # Apply escaping if language specified
-        escaped_context = self._escape_context(context, language) if language else context
+        escaped_context = (
+            self._escape_context(context, language) if language else context
+        )
 
         # Perform substitution
         rendered = template_content
@@ -194,9 +196,7 @@ class TemplateRenderer:
         missing = placeholders - set(context.keys())
         return missing
 
-    def _escape_context(
-        self, context: dict[str, Any], language: str
-    ) -> dict[str, Any]:
+    def _escape_context(self, context: dict[str, Any], language: str) -> dict[str, Any]:
         """
         Apply language-specific escaping to context values.
 

@@ -176,7 +176,9 @@ class RisingWaveClient:
         """
 
         self.execute(query)
-        logger.info("Created CDC source: %s from %s:%s/%s", source_name, host, port, database)
+        logger.info(
+            "Created CDC source: %s from %s:%s/%s", source_name, host, port, database
+        )
 
     def create_materialized_view(self, view_name: str, query: str):
         """Create materialized view for real-time aggregations.

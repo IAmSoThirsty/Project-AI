@@ -31,7 +31,7 @@ class IdentityManager:
     def load_identity(self) -> dict:
         """
         Load current identity profile.
-        
+
         Returns:
             Current identity (bonded or bootstrap)
         """
@@ -42,7 +42,7 @@ class IdentityManager:
     def get_identity_phase(self) -> str:
         """
         Get current identity phase.
-        
+
         Returns:
             Identity phase ('unbonded' or 'bonded')
         """
@@ -51,7 +51,7 @@ class IdentityManager:
     def apply_bonding_profile(self, profile: dict) -> None:
         """
         Apply a bonded identity profile and switch to bonded phase.
-        
+
         Args:
             profile: Bonding profile containing name, values, temperament, etc.
         """
@@ -70,7 +70,7 @@ class IdentityManager:
         High-level bonding protocol hook.
         In practice, this would be a guided, multi-step process.
         Here we treat bonding_input as the final profile.
-        
+
         Args:
             bonding_input: Bonding profile data
         """

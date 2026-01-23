@@ -5,10 +5,11 @@
 # Spawn Generation: 1
 # Locked Section: credential_storage
 
+import hashlib
 import sys
 import time
-import hashlib
 from datetime import datetime
+
 
 class CerberusGuardAgent:
     def __init__(self, agent_id, human_lang, locked_section, generation):
