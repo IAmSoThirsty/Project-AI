@@ -57,15 +57,17 @@ class LockdownController:
         "token_management",
     ]
 
-    def __init__(self, data_dir: str = "data"):
+    def __init__(self, data_dir: str = "data", observation_only: bool = False):
         """
         Initialize LockdownController.
 
         Args:
             data_dir: Base data directory for state persistence
+            observation_only: If True, only observe/log without actually locking
         """
         self.data_dir = Path(data_dir)
         self.lockdown_dir = self.data_dir / "cerberus" / "lockdown"
+        self.observation_only = observation_only
 
         # Lockdown state
         self.current_stage = 0  # 0-25
@@ -77,6 +79,9 @@ class LockdownController:
 
         # Load existing state
         self._load_state()
+
+        if self.observation_only:
+            logger.warning("⚠️ LockdownController in OBSERVATION-ONLY mode - no actual lockdowns will be applied")
 
     def _load_state(self) -> None:
         """Load lockdown state from disk."""
@@ -180,11 +185,29 @@ class LockdownController:
                 "newly_locked": [],
                 "total_locked": len(self.locked_sections),
                 "action": "no_change",
+                "observation_only": self.observation_only,
             }
 
         # Determine sections to lock
         sections_to_lock = self.LOCKABLE_SECTIONS[:stage]
         newly_locked = [s for s in sections_to_lock if s not in self.locked_sections]
+
+        # Observation-only mode: log but don't actually lock
+        if self.observation_only:
+            logger.warning(
+                f"📊 OBSERVATION MODE - Would lock stage {stage}: "
+                f"{len(newly_locked)} sections ({', '.join(newly_locked[:3])}{'...' if len(newly_locked) > 3 else ''})"
+            )
+            return {
+                "success": True,
+                "previous_stage": self.current_stage,
+                "new_stage": self.current_stage,  # Don't change stage in observation mode
+                "newly_locked": [],
+                "would_lock": newly_locked,
+                "total_locked": len(self.locked_sections),
+                "action": "observed_only",
+                "observation_only": True,
+            }
 
         # Lock sections
         previous_stage = self.current_stage
@@ -217,7 +240,8 @@ class LockdownController:
             "new_stage": stage,
             "newly_locked": newly_locked,
             "total_locked": len(self.locked_sections),
-            "action": "escalated",
+            "action": "locked",
+            "observation_only": False,
         }
 
     def is_section_locked(self, section: str) -> bool:

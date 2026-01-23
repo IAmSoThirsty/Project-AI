@@ -139,7 +139,7 @@ class SpawnConstraints:
 
     def __init__(
         self,
-        max_concurrent_agents: int = 1000,
+        max_concurrent_agents: int = 50,
         max_spawn_depth: int = 5,
         max_spawns_per_minute: int = 100,
         default_spawn_factor: int = 3,
