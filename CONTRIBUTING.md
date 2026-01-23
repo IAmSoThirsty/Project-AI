@@ -16,6 +16,7 @@ All contributions—whether from humans or AI assistants—MUST comply with:
 **[.github/copilot_workspace_profile.md](.github/copilot_workspace_profile.md)**
 
 This governance profile enforces:
+
 - ✅ Maximal completeness (no minimal/skeleton/partial code)
 - ✅ Production-ready artifacts (full error handling, logging, testing)
 - ✅ Complete system integration (no isolated components)
