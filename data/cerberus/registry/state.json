@@ -1,0 +1,55 @@
+{
+  "agents": [
+    {
+      "agent_id": "cerberus-1-54219efb",
+      "human_language": "si",
+      "human_language_name": "Sinhala",
+      "programming_language": "c",
+      "programming_language_name": "C",
+      "locked_section": "encryption_keys",
+      "generation": 1,
+      "spawned_at": "2026-01-23T15:22:58.773989",
+      "parent_agent_id": "cerberus-0-2b3dc44a",
+      "status": "active",
+      "process_id": null,
+      "log_file": "data/cerberus/agents/cerberus-1-54219efb.log"
+    },
+    {
+      "agent_id": "cerberus-1-f697ab49",
+      "human_language": "ar",
+      "human_language_name": "Arabic",
+      "programming_language": "rust",
+      "programming_language_name": "Rust",
+      "locked_section": "audit_logs",
+      "generation": 1,
+      "spawned_at": "2026-01-23T15:22:58.774301",
+      "parent_agent_id": "cerberus-0-2b3dc44a",
+      "status": "active",
+      "process_id": null,
+      "log_file": "data/cerberus/agents/cerberus-1-f697ab49.log"
+    },
+    {
+      "agent_id": "cerberus-1-bfb84de5",
+      "human_language": "fr",
+      "human_language_name": "French",
+      "programming_language": "bash",
+      "programming_language_name": "Bash",
+      "locked_section": "user_sessions",
+      "generation": 1,
+      "spawned_at": "2026-01-23T15:22:58.774548",
+      "parent_agent_id": "cerberus-0-2b3dc44a",
+      "status": "active",
+      "process_id": null,
+      "log_file": "data/cerberus/agents/cerberus-1-bfb84de5.log"
+    }
+  ],
+  "locked_sections": [
+    "user_sessions",
+    "encryption_keys",
+    "audit_logs"
+  ],
+  "lockdown_level": 1,
+  "total_spawns": 3,
+  "total_bypasses": 1,
+  "last_updated": "2026-01-23T15:22:58.774894"
+}

@@ -1,0 +1,1 @@
+{"event_id": "e1bb7cd4-bfec-4638-8ccf-bc528ced41ce", "timestamp": "2026-01-23T15:22:58.773840", "bypassed_agent_id": "cerberus-0-2b3dc44a", "bypass_type": "sql_injection", "attacker_signature": null, "spawned_agents": ["cerberus-1-54219efb", "cerberus-1-f697ab49", "cerberus-1-bfb84de5"], "lockdown_level": 0}

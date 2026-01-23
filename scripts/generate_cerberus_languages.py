@@ -128,17 +128,17 @@ def generate_language_database():
             "purpose": "Cerberus Hydra Defense Mechanism - Multi-language agent spawning"
         }
     }
-    
+
     output_path = Path(__file__).parent.parent / "data" / "cerberus" / "languages.json"
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
-    
+
     print(f"✓ Generated language database: {output_path}")
     print(f"  - {len(HUMAN_LANGUAGES)} human languages")
     print(f"  - {len(PROGRAMMING_LANGUAGES)} programming languages")
-    
+
     return output_path
 
 

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # Cerberus Hydra Guard Agent - Python Template
-# Language: {human_lang} ({human_lang_name})
-# Agent ID: {agent_id}
-# Spawn Generation: {generation}
-# Locked Section: {locked_section}
+# Language: fr (French)
+# Agent ID: cerberus-1-bfb84de5
+# Spawn Generation: 1
+# Locked Section: user_sessions
 
 import sys
 import time
@@ -21,17 +21,17 @@ class CerberusGuardAgent:
         
     def log(self, message_key, **kwargs):
         """Log in configured human language."""
-        messages = {{
-            "en": {{
-                "started": f"Agent {{self.agent_id}} started - Protecting {{self.locked_section}}",
-                "monitoring": f"Monitoring section: {{self.locked_section}}",
-                "breach_detected": f"BREACH DETECTED in {{self.locked_section}}!",
+        messages = {
+            "en": {
+                "started": f"Agent {self.agent_id} started - Protecting {self.locked_section}",
+                "monitoring": f"Monitoring section: {self.locked_section}",
+                "breach_detected": f"BREACH DETECTED in {self.locked_section}!",
                 "spawning_reinforcements": f"Spawning 3 reinforcement agents...",
-            }}
-        }}
+            }
+        }
         # Additional language support would go here
         msg = messages.get(self.human_lang, messages["en"]).get(message_key, message_key)
-        print(f"[{{datetime.now().isoformat()}}] [{{self.agent_id}}] {{msg}}", **kwargs)
+        print(f"[{datetime.now().isoformat()}] [{self.agent_id}] {msg}", **kwargs)
     
     def monitor(self):
         """Monitor assigned section for threats."""
@@ -48,9 +48,9 @@ class CerberusGuardAgent:
 
 if __name__ == "__main__":
     agent = CerberusGuardAgent(
-        agent_id="{agent_id}",
-        human_lang="{human_lang}",
-        locked_section="{locked_section}",
-        generation={generation}
+        agent_id="cerberus-1-bfb84de5",
+        human_lang="fr",
+        locked_section="user_sessions",
+        generation=1
     )
     agent.monitor()

@@ -31,16 +31,16 @@ func NewAgent(agentID, humanLang, lockedSection string, generation int) *Cerberu
 	}
 }
 
-func (a *CerberusGuardAgent) Log(messageKey string) {
-	messages := map[string]map[string]string{
-		"en": {
+func (a *CerberusGuardAgent) Log(messageKey string) {{
+	messages := map[string]map[string]string{{
+		"en": {{
 			"started":    fmt.Sprintf("Agent %s started - Protecting %s", a.AgentID, a.LockedSection),
 			"monitoring": fmt.Sprintf("Monitoring section: %s", a.LockedSection),
-		},
-	}
+		}},
+	}}
 	msg := messages[a.HumanLang][messageKey]
 	fmt.Printf("[%s] [%s] %s\n", time.Now().Format(time.RFC3339), a.AgentID, msg)
-}
+}}
 
 func (a *CerberusGuardAgent) Monitor() {
 	a.Log("started")
