@@ -1,8 +1,8 @@
 // Cerberus Hydra Guard Agent - Go Template
-// Language: {human_lang} ({human_lang_name})
-// Agent ID: {agent_id}
-// Spawn Generation: {generation}
-// Locked Section: {locked_section}
+// Language: {{human_lang}} ({{human_lang_name}})
+// Agent ID: {{agent_id}}
+// Spawn Generation: {{generation}}
+// Locked Section: {{locked_section}}
 
 package main
 
@@ -53,6 +53,6 @@ func (a *CerberusGuardAgent) Monitor() {
 }
 
 func main() {
-	agent := NewAgent("{agent_id}", "{human_lang}", "{locked_section}", {generation})
+	agent := NewAgent("{{agent_id}}", "{{human_lang}}", "{{locked_section}}", {{generation}})
 	agent.Monitor()
 }

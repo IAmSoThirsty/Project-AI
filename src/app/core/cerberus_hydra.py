@@ -9,43 +9,64 @@ each in a random combination of human language and programming language.
 Features:
 - Exponential spawning (3x on each bypass)
 - Multi-language agent implementation (50 human × 50 programming languages)
-- Progressive system lockdown
+- Progressive system lockdown with 25 stages
+- Deterministic language selection (seeded by incident ID)
+- Runtime health verification and management
+- Safe template rendering with injection prevention
+- Agent process lifecycle management
 - Integration with ASL3Security and anomaly detection
 - Comprehensive audit logging and registry
 
 Based on the mythological Hydra: cut off one head, three more grow back.
 """
 
+import hashlib
 import json
 import logging
 import os
 import random
 import uuid
-from collections import defaultdict
+from collections import defaultdict, deque
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+try:
+    from app.core.cerberus_agent_process import AgentProcess
+    from app.core.cerberus_lockdown_controller import LockdownController
+    from app.core.cerberus_runtime_manager import RuntimeManager
+    from app.core.cerberus_template_renderer import TemplateRenderer
+except ImportError:
+    # For testing/standalone usage
+    from src.app.core.cerberus_agent_process import AgentProcess
+    from src.app.core.cerberus_lockdown_controller import LockdownController
+    from src.app.core.cerberus_runtime_manager import RuntimeManager
+    from src.app.core.cerberus_template_renderer import TemplateRenderer
+
 logger = logging.getLogger(__name__)
 
 
 @dataclass
-class DefenseAgent:
-    """A Cerberus defense agent with language configuration."""
+class AgentRecord:
+    """Enhanced Cerberus defense agent record with full lifecycle tracking."""
 
     agent_id: str
-    human_language: str
-    human_language_name: str
+    spawn_time: str
+    source_event: str
     programming_language: str
     programming_language_name: str
+    human_language: str
+    human_language_name: str
+    runtime_path: str
     locked_section: str
     generation: int
-    spawned_at: str
+    lockdown_stage_at_spawn: int
     parent_agent_id: str | None = None
+    pid: int | None = None
     status: str = "active"
-    process_id: int | None = None
     log_file: str | None = None
+    process: AgentProcess | None = None
 
 
 @dataclass
@@ -56,9 +77,11 @@ class BypassEvent:
     timestamp: str
     bypassed_agent_id: str
     bypass_type: str
+    risk_score: float = 0.5
+    bypass_depth: int = 1
     attacker_signature: str | None = None
     spawned_agents: list[str] = field(default_factory=list)
-    lockdown_level: int = 0
+    lockdown_stage: int = 0
 
 
 class CerberusHydraDefense:
@@ -67,38 +90,18 @@ class CerberusHydraDefense:
 
     When a guard is bypassed, spawn 3 new guards in random language combinations.
     Each guard locks a distinct section of the system for progressive containment.
+
+    Enhanced with:
+    - RuntimeManager for runtime health verification and selection
+    - TemplateRenderer for safe code generation
+    - LockdownController for deterministic lockdown stages
+    - AgentProcess for cross-language process management
+    - Deterministic language selection seeded by incident ID
+    - Rolling window for language diversity tracking
     """
 
-    # System sections that can be locked down
-    LOCKABLE_SECTIONS = [
-        "authentication",
-        "authorization",
-        "data_access",
-        "file_operations",
-        "network_egress",
-        "api_endpoints",
-        "admin_functions",
-        "user_sessions",
-        "encryption_keys",
-        "audit_logs",
-        "configuration",
-        "model_weights",
-        "training_data",
-        "inference_engine",
-        "memory_management",
-        "process_execution",
-        "system_calls",
-        "database_access",
-        "cache_operations",
-        "backup_systems",
-        "monitoring_systems",
-        "alert_systems",
-        "logging_systems",
-        "credential_storage",
-        "token_management",
-    ]
-
     SPAWN_FACTOR = 3  # Number of agents spawned per bypass
+    LANGUAGE_DIVERSITY_WINDOW = 20  # Track last N agents for diversity
 
     def __init__(
         self,
@@ -121,16 +124,20 @@ class CerberusHydraDefense:
         self.max_agents = max_agents
         self.security_enforcer = security_enforcer
 
+        # Initialize new subsystems
+        self.runtime_manager = RuntimeManager(data_dir=str(self.data_dir))
+        self.template_renderer = TemplateRenderer()
+        self.lockdown_controller = LockdownController(data_dir=str(self.data_dir))
+
         # Load language database
         self.languages = self._load_language_database()
 
-        # Agent registry
-        self.agents: dict[str, DefenseAgent] = {}
+        # Agent registry (updated to use AgentRecord)
+        self.agents: dict[str, AgentRecord] = {}
         self.bypass_events: list[BypassEvent] = []
 
-        # Lockdown state
-        self.locked_sections: set[str] = set()
-        self.lockdown_level = 0  # 0-10 scale
+        # Language diversity tracking
+        self.recent_languages: deque = deque(maxlen=self.LANGUAGE_DIVERSITY_WINDOW)
 
         # Statistics
         self.total_spawns = 0
@@ -140,14 +147,33 @@ class CerberusHydraDefense:
         # Initialize directories
         self._initialize_directories()
 
+        # Verify runtimes at startup
+        self._verify_runtimes()
+
         # Load existing state
         self._load_state()
 
         logger.info(
             "Cerberus Hydra Defense initialized: "
             f"{len(self.languages['human_languages'])} human languages, "
-            f"{len(self.languages['programming_languages'])} programming languages"
+            f"{len(self.languages['programming_languages'])} programming languages, "
+            f"{len(self.runtime_manager.runtimes)} runtimes"
         )
+
+    def _verify_runtimes(self) -> None:
+        """Verify runtime health at startup."""
+        logger.info("Verifying runtime health...")
+        summary = self.runtime_manager.verify_runtimes(timeout=5)
+
+        logger.info(
+            f"Runtime verification complete: {summary['healthy']} healthy, "
+            f"{summary['degraded']} degraded, {summary['unavailable']} unavailable"
+        )
+
+        if summary['healthy'] < 3:
+            logger.warning(
+                "Less than 3 healthy runtimes available. Polyglot execution may be limited."
+            )
 
     def _initialize_directories(self) -> None:
         """Create necessary directories."""
@@ -197,14 +223,27 @@ class CerberusHydraDefense:
                 with open(state_file) as f:
                     state = json.load(f)
 
-                # Restore agents
+                # Restore agents (update to use AgentRecord fields)
                 for agent_data in state.get("agents", []):
-                    agent = DefenseAgent(**agent_data)
+                    # Convert old DefenseAgent format to new AgentRecord format
+                    agent = AgentRecord(
+                        agent_id=agent_data["agent_id"],
+                        spawn_time=agent_data.get("spawned_at", agent_data.get("spawn_time", datetime.now().isoformat())),
+                        source_event=agent_data.get("source_event", "restored_from_state"),
+                        programming_language=agent_data["programming_language"],
+                        programming_language_name=agent_data["programming_language_name"],
+                        human_language=agent_data["human_language"],
+                        human_language_name=agent_data["human_language_name"],
+                        runtime_path=agent_data.get("runtime_path", "python3"),
+                        locked_section=agent_data["locked_section"],
+                        generation=agent_data["generation"],
+                        lockdown_stage_at_spawn=agent_data.get("lockdown_stage_at_spawn", 0),
+                        parent_agent_id=agent_data.get("parent_agent_id"),
+                        pid=agent_data.get("process_id") or agent_data.get("pid"),
+                        status=agent_data.get("status", "active"),
+                        log_file=agent_data.get("log_file"),
+                    )
                     self.agents[agent.agent_id] = agent
-
-                # Restore locked sections
-                self.locked_sections = set(state.get("locked_sections", []))
-                self.lockdown_level = state.get("lockdown_level", 0)
 
                 logger.info(f"Restored {len(self.agents)} agents from state")
             except Exception as e:
@@ -214,10 +253,30 @@ class CerberusHydraDefense:
         """Persist Cerberus state."""
         state_file = self.data_dir / "cerberus" / "registry" / "state.json"
 
+        # Convert AgentRecord to serializable format
+        agents_data = []
+        for agent in self.agents.values():
+            agent_dict = {
+                "agent_id": agent.agent_id,
+                "spawn_time": agent.spawn_time,
+                "source_event": agent.source_event,
+                "programming_language": agent.programming_language,
+                "programming_language_name": agent.programming_language_name,
+                "human_language": agent.human_language,
+                "human_language_name": agent.human_language_name,
+                "runtime_path": agent.runtime_path,
+                "locked_section": agent.locked_section,
+                "generation": agent.generation,
+                "lockdown_stage_at_spawn": agent.lockdown_stage_at_spawn,
+                "parent_agent_id": agent.parent_agent_id,
+                "pid": agent.pid,
+                "status": agent.status,
+                "log_file": agent.log_file,
+            }
+            agents_data.append(agent_dict)
+
         state = {
-            "agents": [agent.__dict__ for agent in self.agents.values()],
-            "locked_sections": list(self.locked_sections),
-            "lockdown_level": self.lockdown_level,
+            "agents": agents_data,
             "total_spawns": self.total_spawns,
             "total_bypasses": self.total_bypasses,
             "last_updated": datetime.now().isoformat(),
@@ -250,21 +309,115 @@ class CerberusHydraDefense:
 
         return spawned_ids
 
+    def on_anomaly(self, event: dict[str, Any]) -> None:
+        """
+        Handle anomaly detection event.
+
+        API:
+            event (dict): Anomaly event with keys:
+                - event_id (str): Unique event identifier
+                - timestamp (str): ISO format timestamp
+                - anomaly_type (str): Type of anomaly detected
+                - severity (str): low, medium, high, critical
+                - details (dict): Additional context
+
+        Returns:
+            None
+        """
+        event_id = event.get("event_id", str(uuid.uuid4()))
+        anomaly_type = event.get("anomaly_type", "unknown")
+        severity = event.get("severity", "medium")
+
+        logger.warning(
+            f"⚠️ ANOMALY DETECTED: {anomaly_type} (severity: {severity}, event: {event_id})"
+        )
+
+        # Map severity to risk score
+        severity_map = {
+            "low": 0.2,
+            "medium": 0.4,
+            "high": 0.7,
+            "critical": 0.9,
+        }
+        risk_score = severity_map.get(severity, 0.5)
+
+        # For high/critical anomalies, trigger agent spawning
+        if severity in ["high", "critical"]:
+            logger.info("High severity anomaly, spawning defensive agents...")
+            self.detect_bypass(
+                agent_id=None,
+                bypass_type=f"anomaly_{anomaly_type}",
+                attacker_signature=event.get("source", "anomaly_detector"),
+                risk_score=risk_score,
+                bypass_depth=1,
+            )
+        else:
+            # Log for monitoring but don't spawn agents
+            self._emit_structured_log(
+                event_type="anomaly_detected",
+                details={
+                    "event_id": event_id,
+                    "anomaly_type": anomaly_type,
+                    "severity": severity,
+                    "risk_score": risk_score,
+                },
+            )
+
+    def on_bypass_detected(self, event: dict[str, Any]) -> str:
+        """
+        Handle security bypass detection event.
+
+        API:
+            event (dict): Bypass event with keys:
+                - event_id (str): Unique event identifier
+                - timestamp (str): ISO format timestamp
+                - agent_id (str, optional): Bypassed agent ID
+                - bypass_type (str): Type of bypass
+                - risk_score (float): Risk score 0.0-1.0
+                - bypass_depth (int): Layers of security bypassed
+                - attacker_signature (str, optional): Attacker identifier
+
+        Returns:
+            str: Event ID of bypass response
+        """
+        agent_id = event.get("agent_id")
+        bypass_type = event.get("bypass_type", "unknown")
+        risk_score = event.get("risk_score", 0.7)
+        bypass_depth = event.get("bypass_depth", 1)
+        attacker_signature = event.get("attacker_signature")
+
+        logger.critical(
+            f"🚨 BYPASS DETECTED via API: {bypass_type} "
+            f"(agent: {agent_id}, risk: {risk_score}, depth: {bypass_depth})"
+        )
+
+        return self.detect_bypass(
+            agent_id=agent_id,
+            bypass_type=bypass_type,
+            attacker_signature=attacker_signature,
+            risk_score=risk_score,
+            bypass_depth=bypass_depth,
+        )
+
     def detect_bypass(
         self,
         agent_id: str | None = None,
         bypass_type: str = "unknown",
         attacker_signature: str | None = None,
+        risk_score: float = 0.5,
+        bypass_depth: int = 1,
     ) -> str:
         """
         Detect and respond to a security bypass.
 
-        Spawns 3 new agents in response, each with random language combination.
+        Spawns 3 new agents in response, applies lockdown, uses deterministic selection.
 
         Args:
             agent_id: ID of bypassed agent (if known)
             bypass_type: Type of bypass detected
             attacker_signature: Signature of attacker (for tracking)
+            risk_score: Risk score from 0.0 to 1.0
+            bypass_depth: Number of security layers bypassed
 
         Returns:
             Event ID of bypass event
@@ -272,44 +425,76 @@ class CerberusHydraDefense:
         event_id = str(uuid.uuid4())
         self.total_bypasses += 1
 
+        # Compute lockdown stage based on risk and depth
+        lockdown_stage = self.lockdown_controller.compute_lockdown_stage(
+            risk_score=risk_score,
+            bypass_depth=bypass_depth,
+        )
+
+        # Apply lockdown
+        self.lockdown_controller.apply_lockdown(
+            stage=lockdown_stage,
+            reason=f"bypass_{bypass_type}",
+        )
+
         # Log bypass event
         bypass_event = BypassEvent(
             event_id=event_id,
             timestamp=datetime.now().isoformat(),
             bypassed_agent_id=agent_id or "unknown",
             bypass_type=bypass_type,
+            risk_score=risk_score,
+            bypass_depth=bypass_depth,
             attacker_signature=attacker_signature,
+            lockdown_stage=lockdown_stage,
         )
 
         logger.critical(
             f"🚨 CERBERUS BYPASS DETECTED: {bypass_type} "
-            f"(agent: {agent_id}, attacker: {attacker_signature})"
+            f"(agent: {agent_id}, risk: {risk_score:.2f}, depth: {bypass_depth}, "
+            f"lockdown: {lockdown_stage})"
         )
 
         # Determine parent agent and generation
         parent_agent = self.agents.get(agent_id) if agent_id else None
         generation = (parent_agent.generation + 1) if parent_agent else 1
 
-        # Spawn SPAWN_FACTOR new agents
+        # Spawn SPAWN_FACTOR new agents with deterministic selection
         spawned_ids = []
-        for _i in range(self.SPAWN_FACTOR):
+        for i in range(self.SPAWN_FACTOR):
+            # Use incident ID + index as seed for deterministic selection
+            seed = int(hashlib.sha256(f"{event_id}-{i}".encode()).hexdigest()[:8], 16)
+
             new_agent_id = self._spawn_single_agent(
                 generation=generation,
                 parent_agent_id=agent_id,
                 reason=f"bypass_{bypass_type}",
+                incident_id=event_id,
+                lockdown_stage=lockdown_stage,
+                seed=seed,
             )
             if new_agent_id:
                 spawned_ids.append(new_agent_id)
 
         bypass_event.spawned_agents = spawned_ids
-        bypass_event.lockdown_level = self.lockdown_level
         self.bypass_events.append(bypass_event)
 
         # Log bypass to audit trail
         self._log_bypass_event(bypass_event)
 
-        # Increase lockdown level
-        self._escalate_lockdown()
+        # Emit structured log
+        self._emit_structured_log(
+            event_type="bypass_detected",
+            details={
+                "event_id": event_id,
+                "bypass_type": bypass_type,
+                "risk_score": risk_score,
+                "bypass_depth": bypass_depth,
+                "lockdown_stage": lockdown_stage,
+                "spawned_agents": spawned_ids,
+                "generation": generation,
+            },
+        )
 
         # Notify security enforcer if available
         if self.security_enforcer:
@@ -330,14 +515,22 @@ class CerberusHydraDefense:
         generation: int,
         parent_agent_id: str | None,
         reason: str,
+        incident_id: str | None = None,
+        lockdown_stage: int = 0,
+        seed: int | None = None,
     ) -> str | None:
         """
-        Spawn a single defense agent with random language combination.
+        Spawn a single defense agent with deterministic language selection.
+
+        Uses RuntimeManager, TemplateRenderer, and AgentProcess for enhanced spawning.
 
         Args:
             generation: Generation number (0 = initial, 1+ = spawned)
             parent_agent_id: ID of parent agent (if spawned in response)
             reason: Reason for spawning
+            incident_id: Incident ID for deterministic selection
+            lockdown_stage: Lockdown stage at time of spawn
+            seed: Random seed for deterministic language selection
 
         Returns:
             Agent ID if successful, None otherwise
@@ -353,48 +546,61 @@ class CerberusHydraDefense:
         # Generate agent ID
         agent_id = f"cerberus-{generation}-{uuid.uuid4().hex[:8]}"
 
-        # Select random human language
+        # Select runtime using RuntimeManager with deterministic selection
+        runtime = self.runtime_manager.get_random_runtime(
+            prefer_verified=True,
+            seed=seed,
+        )
+
+        if not runtime:
+            logger.error("No suitable runtime found for agent spawning")
+            return None
+
+        # Select human language (deterministic if seed provided)
         human_langs = list(self.languages["human_languages"].keys())
-        human_lang = random.choice(human_langs)
+
+        if seed is not None:
+            random.seed(seed + 1000)  # Different seed for human language
+
+        # Avoid recently used languages for diversity
+        recent_human_langs = [lang for _, lang in self.recent_languages if lang in human_langs]
+        available_human_langs = [lang for lang in human_langs if lang not in recent_human_langs[-10:]]
+
+        if not available_human_langs:
+            available_human_langs = human_langs
+
+        human_lang = random.choice(available_human_langs)
         human_lang_data = self.languages["human_languages"][human_lang]
 
-        # Select random programming language (prefer installed ones)
-        prog_langs = list(self.languages["programming_languages"].keys())
-        installed_prog_langs = [
-            lang
-            for lang in prog_langs
-            if self.languages["programming_languages"][lang].get("installed", False)
-        ]
+        # Track language usage for diversity
+        self.recent_languages.append((runtime.language_key, human_lang))
 
-        # 80% chance to use installed language, 20% any language
-        if installed_prog_langs and random.random() < 0.8:
-            prog_lang = random.choice(installed_prog_langs)
-        else:
-            prog_lang = random.choice(prog_langs)
+        # Select section to lock from available sections
+        available_sections = self.lockdown_controller.get_available_sections()
 
-        prog_lang_data = self.languages["programming_languages"][prog_lang]
-
-        # Select section to lock (avoid already locked sections when possible)
-        available_sections = [
-            s for s in self.LOCKABLE_SECTIONS if s not in self.locked_sections
-        ]
         if not available_sections:
-            # All sections locked, start over with higher priority
-            available_sections = self.LOCKABLE_SECTIONS
+            # All sections locked, reuse sections
+            available_sections = self.lockdown_controller.LOCKABLE_SECTIONS
+
+        if seed is not None:
+            random.seed(seed + 2000)  # Different seed for section
 
         locked_section = random.choice(available_sections)
-        self.locked_sections.add(locked_section)
 
-        # Create agent
-        agent = DefenseAgent(
+        # Create agent record
+        spawn_time = datetime.now().isoformat()
+        agent = AgentRecord(
             agent_id=agent_id,
+            spawn_time=spawn_time,
+            source_event=incident_id or reason,
+            programming_language=runtime.language_key,
+            programming_language_name=runtime.name,
             human_language=human_lang,
             human_language_name=human_lang_data["name"],
-            programming_language=prog_lang,
-            programming_language_name=prog_lang_data["name"],
+            runtime_path=runtime.exec_path,
             locked_section=locked_section,
             generation=generation,
-            spawned_at=datetime.now().isoformat(),
+            lockdown_stage_at_spawn=lockdown_stage,
             parent_agent_id=parent_agent_id,
         )
 
@@ -403,81 +609,193 @@ class CerberusHydraDefense:
         self.total_spawns += 1
         self.generation_counts[generation] += 1
 
-        # Generate agent code
+        # Generate agent code using TemplateRenderer
         if self.enable_polyglot_execution:
-            self._generate_agent_code(agent)
+            success = self._generate_agent_code(agent, incident_id or "initial")
+            if not success:
+                logger.error(f"Failed to generate agent code for {agent_id}")
+                return None
+
+        # Emit structured log
+        self._emit_structured_log(
+            event_type="agent_spawned",
+            details={
+                "agent_id": agent_id,
+                "generation": generation,
+                "programming_language": runtime.name,
+                "human_language": human_lang_data["name"],
+                "locked_section": locked_section,
+                "lockdown_stage": lockdown_stage,
+                "reason": reason,
+                "runtime_health": runtime.health_status,
+            },
+        )
 
         # Log spawning
         logger.info(
             f"✨ Spawned agent {agent_id}: "
-            f"{human_lang_data['name']} + {prog_lang_data['name']} "
+            f"{human_lang_data['name']} + {runtime.name} "
             f"→ locking {locked_section} "
-            f"(gen {generation}, reason: {reason})"
+            f"(gen {generation}, lockdown {lockdown_stage}, reason: {reason})"
         )
 
         return agent_id
 
-    def _generate_agent_code(self, agent: DefenseAgent) -> None:
-        """Generate executable code for agent in its programming language."""
+    def _generate_agent_code(self, agent: AgentRecord, incident_id: str) -> bool:
+        """
+        Generate executable code for agent using TemplateRenderer and AgentProcess.
+
+        Args:
+            agent: Agent record
+            incident_id: Incident ID for logging
+
+        Returns:
+            True if successful, False otherwise
+        """
         template_dir = self.data_dir / "cerberus" / "agent_templates"
         agent_dir = self.data_dir / "cerberus" / "agents"
 
-        # Get template file
-        template_file = template_dir / f"{agent.programming_language}_template{self.languages['programming_languages'][agent.programming_language]['extension']}"
+        # Get runtime descriptor
+        runtime = self.runtime_manager.get_runtime(agent.programming_language)
 
-        if not template_file.exists():
-            logger.warning(
-                f"No template for {agent.programming_language}, using Python fallback"
-            )
-            template_file = template_dir / "python_template.py"
+        if not runtime:
+            logger.error(f"Runtime not found for {agent.programming_language}")
+            return False
 
-        # Read template
+        # Get template file based on programming language
+        # Try language-specific template first, then fall back to python
+        template_candidates = [
+            template_dir / f"{agent.programming_language}_template{self.languages['programming_languages'].get(agent.programming_language, {}).get('extension', '.py')}",
+            template_dir / "python_template.py",
+        ]
+
+        template_file = None
+        for candidate in template_candidates:
+            if candidate.exists():
+                template_file = candidate
+                break
+
+        if not template_file:
+            logger.error(f"No template found for {agent.programming_language}")
+            return False
+
+        # Prepare template context
+        context = {
+            "agent_id": agent.agent_id,
+            "human_lang": agent.human_language,
+            "human_lang_name": agent.human_language_name,
+            "programming_lang": agent.programming_language,
+            "programming_lang_name": agent.programming_language_name,
+            "locked_section": agent.locked_section,
+            "generation": str(agent.generation),
+            "spawn_time": agent.spawn_time,
+            "incident_id": incident_id,
+            "runtime_path": agent.runtime_path,
+        }
+
+        # Render template using TemplateRenderer
         try:
-            with open(template_file, encoding="utf-8") as f:
-                template_code = f.read()
-        except Exception as e:
-            logger.error(f"Failed to read template {template_file}: {e}")
-            return
+            rendered_code = self.template_renderer.render_from_file(
+                template_path=str(template_file),
+                context=context,
+                language=agent.programming_language,
+                validate_required=False,  # Use flexible validation
+                cache=True,
+            )
 
-        # Substitute placeholders
-        agent_code = template_code.format(
-            agent_id=agent.agent_id,
-            human_lang=agent.human_language,
-            human_lang_name=agent.human_language_name,
-            programming_lang=agent.programming_language,
-            programming_lang_name=agent.programming_language_name,
-            locked_section=agent.locked_section,
-            generation=agent.generation,
-        )
+        except Exception as e:
+            logger.error(f"Failed to render template for {agent.agent_id}: {e}")
+            return False
 
         # Write agent code
-        extension = self.languages["programming_languages"][agent.programming_language][
-            "extension"
-        ]
+        extension = self.languages["programming_languages"].get(
+            agent.programming_language, {}
+        ).get("extension", ".py")
+
         agent_file = agent_dir / f"{agent.agent_id}{extension}"
 
-        with open(agent_file, "w", encoding="utf-8") as f:
-            f.write(agent_code)
+        try:
+            with open(agent_file, "w", encoding="utf-8") as f:
+                f.write(rendered_code)
 
-        # Make executable if shell script
-        if extension == ".sh":
-            os.chmod(agent_file, 0o755)
+            # Make executable if shell script
+            if extension == ".sh":
+                os.chmod(agent_file, 0o755)
 
-        agent.log_file = str(agent_dir / f"{agent.agent_id}.log")
+            agent.log_file = str(agent_dir / f"{agent.agent_id}.log")
 
-        logger.debug(f"Generated agent code: {agent_file}")
+            logger.debug(f"Generated agent code: {agent_file}")
 
-    def _escalate_lockdown(self) -> None:
-        """Escalate system lockdown level based on bypass count."""
-        # Lockdown level increases with number of bypasses
-        new_level = min(10, self.total_bypasses)
+            # Optionally spawn agent process (disabled by default for safety)
+            # self._spawn_agent_process(agent, str(agent_file))
 
-        if new_level > self.lockdown_level:
-            self.lockdown_level = new_level
-            logger.critical(
-                f"🔒 LOCKDOWN ESCALATION: Level {self.lockdown_level}/10 "
-                f"({len(self.locked_sections)}/{len(self.LOCKABLE_SECTIONS)} sections locked)"
+            return True
+
+        except Exception as e:
+            logger.error(f"Failed to write agent code for {agent.agent_id}: {e}")
+            return False
+
+    def _spawn_agent_process(self, agent: AgentRecord, script_path: str) -> bool:
+        """
+        Spawn agent as a running process using AgentProcess.
+
+        Args:
+            agent: Agent record
+            script_path: Path to agent script
+
+        Returns:
+            True if spawn successful, False otherwise
+        """
+        try:
+            log_dir = str(self.data_dir / "cerberus" / "logs")
+
+            agent_process = AgentProcess(
+                agent_id=agent.agent_id,
+                runtime_path=agent.runtime_path,
+                script_path=script_path,
+                log_dir=log_dir,
             )
+
+            success = agent_process.spawn(timeout=10)
+
+            if success:
+                agent.process = agent_process
+                agent.pid = agent_process.info.pid
+                agent.status = "running"
+
+                logger.info(
+                    f"Agent process spawned: {agent.agent_id} (PID: {agent.pid})"
+                )
+
+                return True
+
+            else:
+                logger.error(f"Failed to spawn agent process: {agent.agent_id}")
+                agent.status = "failed"
+                return False
+
+        except Exception as e:
+            logger.error(f"Exception spawning agent process {agent.agent_id}: {e}")
+            agent.status = "failed"
+            return False
+
+    def _emit_structured_log(self, event_type: str, details: dict[str, Any]) -> None:
+        """
+        Emit structured JSON log for lifecycle events.
+
+        Args:
+            event_type: Type of event
+            details: Event details
+        """
+        log_entry = {
+            "timestamp": datetime.now().isoformat(),
+            "event_type": event_type,
+            "system": "cerberus_hydra",
+        }
+        log_entry.update(details)
+
+        # Log as JSON
+        logger.info(json.dumps(log_entry))
 
     def _log_bypass_event(self, event: BypassEvent) -> None:
         """Log bypass event to audit trail."""
@@ -522,16 +840,18 @@ class CerberusHydraDefense:
         for agent in active_agents:
             by_human_lang[agent.human_language] += 1
 
+        # Get lockdown status
+        lockdown_status = self.lockdown_controller.get_lockdown_status()
+
         return {
             "total_agents": len(self.agents),
             "active_agents": len(active_agents),
             "total_spawns": self.total_spawns,
             "total_bypasses": self.total_bypasses,
-            "lockdown_level": self.lockdown_level,
-            "locked_sections": list(self.locked_sections),
-            "sections_remaining": len(self.LOCKABLE_SECTIONS) - len(
-                self.locked_sections
-            ),
+            "lockdown_stage": lockdown_status["current_stage"],
+            "lockdown_severity": lockdown_status["severity"],
+            "locked_sections": lockdown_status["locked_sections"],
+            "sections_remaining": lockdown_status["remaining_count"],
             "by_generation": {
                 f"gen_{gen}": len(agents) for gen, agents in by_generation.items()
             },
@@ -543,6 +863,8 @@ class CerberusHydraDefense:
                     "timestamp": e.timestamp,
                     "bypass_type": e.bypass_type,
                     "spawned_count": len(e.spawned_agents),
+                    "risk_score": e.risk_score,
+                    "lockdown_stage": e.lockdown_stage,
                 }
                 for e in self.bypass_events[-10:]
             ],
@@ -551,20 +873,40 @@ class CerberusHydraDefense:
     def generate_audit_report(self) -> str:
         """Generate comprehensive audit report."""
         registry = self.get_agent_registry()
+        lockdown_status = self.lockdown_controller.get_lockdown_status()
+        runtime_health = self.runtime_manager.get_health_summary()
+
+        severity_emoji = {
+            "low": "🟢",
+            "moderate": "🟡",
+            "elevated": "🟡",
+            "high": "🟠",
+            "critical": "🔴",
+        }
+        status_emoji = severity_emoji.get(lockdown_status["severity"], "⚪")
 
         report = f"""
 # Cerberus Hydra Defense - Audit Report
 
 **Generated**: {datetime.now().isoformat()}
-**Status**: {"🔴 LOCKDOWN" if self.lockdown_level >= 5 else "🟡 ELEVATED" if self.lockdown_level > 0 else "🟢 NORMAL"}
+**Status**: {status_emoji} {lockdown_status["severity"].upper()}
 
 ## Defense Statistics
 
 - **Total Agents Spawned**: {registry['total_spawns']}
 - **Currently Active**: {registry['active_agents']}
 - **Security Bypasses**: {registry['total_bypasses']}
-- **Lockdown Level**: {registry['lockdown_level']}/10
-- **Sections Locked**: {len(registry['locked_sections'])}/{len(self.LOCKABLE_SECTIONS)}
+- **Lockdown Stage**: {lockdown_status['current_stage']}/25
+- **Sections Locked**: {lockdown_status['locked_count']}/{lockdown_status['total_sections']}
+- **Lockdown Percentage**: {lockdown_status['lockdown_percentage']:.1f}%
+
+## Runtime Health
+
+- **Total Runtimes**: {runtime_health['total_runtimes']}
+- **Healthy**: {runtime_health['by_status']['healthy']}
+- **Degraded**: {runtime_health['by_status']['degraded']}
+- **Unavailable**: {runtime_health['by_status']['unavailable']}
+- **Verified**: {runtime_health['verified_count']}
 
 ## Agent Distribution
 
@@ -579,7 +921,7 @@ class CerberusHydraDefense:
             registry["by_programming_language"].items(), key=lambda x: x[1], reverse=True
         )
         for lang, count in sorted_prog[:10]:
-            lang_name = self.languages["programming_languages"][lang]["name"]
+            lang_name = self.languages["programming_languages"].get(lang, {}).get("name", lang)
             report += f"- {lang_name}: {count} agents\n"
 
         report += "\n### By Human Language (Top 10)\n"
@@ -587,7 +929,7 @@ class CerberusHydraDefense:
             registry["by_human_language"].items(), key=lambda x: x[1], reverse=True
         )
         for lang, count in sorted_human[:10]:
-            lang_name = self.languages["human_languages"][lang]["name"]
+            lang_name = self.languages["human_languages"].get(lang, {}).get("name", lang)
             report += f"- {lang_name}: {count} agents\n"
 
         report += "\n## Locked Sections\n\n"
@@ -596,7 +938,11 @@ class CerberusHydraDefense:
 
         report += "\n## Recent Bypass Events\n\n"
         for event in registry["recent_bypasses"]:
-            report += f"- [{event['timestamp']}] {event['bypass_type']} → spawned {event['spawned_count']} agents\n"
+            report += (
+                f"- [{event['timestamp']}] {event['bypass_type']} "
+                f"(risk: {event['risk_score']:.2f}, stage: {event['lockdown_stage']}) "
+                f"→ spawned {event['spawned_count']} agents\n"
+            )
 
         report += f"""
 
@@ -605,21 +951,27 @@ class CerberusHydraDefense:
 - **ASL3 Security**: {"✅ Connected" if self.security_enforcer else "❌ Not connected"}
 - **Polyglot Execution**: {"✅ Enabled" if self.enable_polyglot_execution else "❌ Disabled"}
 - **Max Agents Limit**: {self.max_agents}
+- **Runtime Manager**: ✅ Active
+- **Template Renderer**: ✅ Active
+- **Lockdown Controller**: ✅ Active (Stage {lockdown_status['current_stage']})
 
 ## Recommendations
 
 """
 
-        if registry["lockdown_level"] >= 7:
-            report += "- 🚨 **CRITICAL**: Lockdown level critical. Immediate investigation required.\n"
-        elif registry["lockdown_level"] >= 4:
+        if lockdown_status["severity"] == "critical":
+            report += "- 🚨 **CRITICAL**: Lockdown at critical level. Immediate investigation required.\n"
+        elif lockdown_status["severity"] == "high":
             report += "- ⚠️ **WARNING**: Elevated lockdown level. Monitor for continued attacks.\n"
 
         if registry["active_agents"] > self.max_agents * 0.8:
             report += f"- ⚠️ **WARNING**: Approaching max agents limit ({registry['active_agents']}/{self.max_agents}).\n"
 
-        if len(registry["locked_sections"]) >= len(self.LOCKABLE_SECTIONS) * 0.8:
+        if lockdown_status["lockdown_percentage"] >= 80:
             report += "- ⚠️ **WARNING**: Most system sections locked. Consider agent cleanup.\n"
+
+        if runtime_health['by_status']['healthy'] < 5:
+            report += "- ⚠️ **WARNING**: Few healthy runtimes available. Polyglot diversity limited.\n"
 
         report += "\n---\n**Cerberus Hydra Defense System**: When one guard falls, three rise to replace it.\n"
 
@@ -665,8 +1017,9 @@ def cli_main():
         event_id = cerberus.detect_bypass(
             agent_id=args.agent_id, bypass_type=args.bypass_type
         )
+        lockdown_status = cerberus.lockdown_controller.get_lockdown_status()
         print(f"✅ Bypass handled: {event_id}")
-        print(f"Lockdown level: {cerberus.lockdown_level}/10")
+        print(f"Lockdown stage: {lockdown_status['current_stage']}/25")
 
     elif args.action == "status":
         registry = cerberus.get_agent_registry()
