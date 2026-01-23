@@ -916,8 +916,8 @@ Invoke-WebRequest -Uri https://www.cygwin.com/setup-x86_64.exe -OutFile setup-x8
 **Manual Installation**:
 
 1. Download installer from <https://www.cygwin.com/>
-2. Select packages: `git`, `make`, `gcc-core`, `python39`, `bash`
-3. Add `C:\cygwin64\bin` to system PATH
+1. Select packages: `git`, `make`, `gcc-core`, `python39`, `bash`
+1. Add `C:\cygwin64\bin` to system PATH
 
 **Platform Notes**:
 
