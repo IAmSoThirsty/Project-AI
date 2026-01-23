@@ -27,9 +27,9 @@ class ThirstyBenchmark {
 
     // Actual benchmark
     for (var i = 0; i < iterations; i++) {
-      const start = process.hrtime.bigint();
+      var start = process.hrtime.bigint();
       interpreter.execute(code);
-      const end = process.hrtime.bigint();
+      var end = process.hrtime.bigint();
       times.push(Number(end - start) / 1000000); // Convert to ms
     }
 
@@ -68,7 +68,7 @@ class ThirstyBenchmark {
     const sorted = [...this.results].sort(function(a, b) { return a.average - b.average; });
 
     for (var index = 0; index < sorted.length; index++) {
-      const result = sorted[index];
+      var result = sorted[index];
       console.log((index + 1) + '. ' + result.name);
       console.log('   Average: ' + result.average.toFixed(3) + ' ms');
       console.log('   Median: ' + result.median.toFixed(3) + ' ms');
@@ -81,12 +81,12 @@ class ThirstyBenchmark {
       console.log('Performance Comparison:');
       const fastest = sorted[0];
       for (var index = 0; index < sorted.length; index++) {
-        const result = sorted[index];
+        var result = sorted[index];
         if (index === 0) {
           console.log('  ' + result.name + ': Baseline (fastest)');
         } else {
-          const ratio = (result.average / fastest.average).toFixed(2);
-          const percent = ((result.average - fastest.average) / fastest.average * 100).toFixed(1);
+          var ratio = (result.average / fastest.average).toFixed(2);
+          var percent = ((result.average - fastest.average) / fastest.average * 100).toFixed(1);
           console.log('  ' + result.name + ': ' + ratio + 'x slower (+' + percent + '%)');
         }
       }
