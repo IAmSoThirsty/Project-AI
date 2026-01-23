@@ -43,14 +43,14 @@ project_ai/
 The architecture is fully documented in the repository root:
 
 1. **[ENGINE_SPEC.md](../ENGINE_SPEC.md)** - Engine specification and runtime loop
-2. **[PACE_ARCHITECTURE.md](../PACE_ARCHITECTURE.md)** - Overall architecture design
-3. **[MODULE_CONTRACTS.md](../MODULE_CONTRACTS.md)** - Module interface contracts
-4. **[IDENTITY_ENGINE.md](../IDENTITY_ENGINE.md)** - Identity management specification
-5. **[CAPABILITY_MODEL.md](../CAPABILITY_MODEL.md)** - Capability system design
-6. **[AGENT_MODEL.md](../AGENT_MODEL.md)** - Agent coordination model
-7. **[WORKFLOW_ENGINE.md](../WORKFLOW_ENGINE.md)** - Workflow execution engine
-8. **[STATE_MODEL.md](../STATE_MODEL.md)** - State management model
-9. **[INTEGRATION_LAYER.md](../INTEGRATION_LAYER.md)** - Integration interfaces
+1. **[PACE_ARCHITECTURE.md](../PACE_ARCHITECTURE.md)** - Overall architecture design
+1. **[MODULE_CONTRACTS.md](../MODULE_CONTRACTS.md)** - Module interface contracts
+1. **[IDENTITY_ENGINE.md](../IDENTITY_ENGINE.md)** - Identity management specification
+1. **[CAPABILITY_MODEL.md](../CAPABILITY_MODEL.md)** - Capability system design
+1. **[AGENT_MODEL.md](../AGENT_MODEL.md)** - Agent coordination model
+1. **[WORKFLOW_ENGINE.md](../WORKFLOW_ENGINE.md)** - Workflow execution engine
+1. **[STATE_MODEL.md](../STATE_MODEL.md)** - State management model
+1. **[INTEGRATION_LAYER.md](../INTEGRATION_LAYER.md)** - Integration interfaces
 
 ## Quick Start
 
@@ -72,9 +72,10 @@ python3 -m project_ai.main
 ```
 
 This will demonstrate:
+
 1. Engine initialization
-2. Bonding protocol execution
-3. Handling a diagnostic request
+1. Bonding protocol execution
+1. Handling a diagnostic request
 
 ### Basic Usage
 
@@ -112,21 +113,21 @@ print(f"Explanation: {response['explanation']}")
 The PACE engine operates in two identity phases:
 
 1. **Unbonded** - Bootstrap mode with conservative policies
-2. **Bonded** - Full identity active with bonding relationship
+1. **Bonded** - Full identity active with bonding relationship
 
 ### Main Runtime Loop
 
 Every input goes through this flow:
 
 1. **Input** → I/O Router
-2. **Authentication** → Identity Manager
-3. **Policy Validation** → Policy Engine
-4. **Cognitive Planning** → Deliberation Engine
-5. **Workflow Construction** → Workflow Engine
-6. **Agent Assignment** → Agent Coordinator
-7. **Execution** → Capability Invoker
-8. **State Recording** → State Manager
-9. **Output** → I/O Router
+1. **Authentication** → Identity Manager
+1. **Policy Validation** → Policy Engine
+1. **Cognitive Planning** → Deliberation Engine
+1. **Workflow Construction** → Workflow Engine
+1. **Agent Assignment** → Agent Coordinator
+1. **Execution** → Capability Invoker
+1. **State Recording** → State Manager
+1. **Output** → I/O Router
 
 ### Built-in Capabilities
 
@@ -288,10 +289,10 @@ assert "explanation" in response
 The PACE architecture follows these key principles:
 
 1. **Separation of Concerns** - Each module has a single responsibility
-2. **Composability** - Components can be combined and configured
-3. **Extensibility** - New capabilities, policies, and agents can be added
-4. **Observability** - All operations are logged and traceable
-5. **Safety by Design** - Multiple validation and policy enforcement layers
+1. **Composability** - Components can be combined and configured
+1. **Extensibility** - New capabilities, policies, and agents can be added
+1. **Observability** - All operations are logged and traceable
+1. **Safety by Design** - Multiple validation and policy enforcement layers
 
 ## Performance Targets
 
@@ -305,10 +306,10 @@ The PACE architecture follows these key principles:
 The PACE engine implements multiple security layers:
 
 1. **Identity Authentication** - All requests authenticated
-2. **Policy Authorization** - All actions authorized
-3. **Input Validation** - All inputs validated
-4. **Sandboxing** - Capabilities execute in isolation
-5. **Audit Logging** - All operations logged
+1. **Policy Authorization** - All actions authorized
+1. **Input Validation** - All inputs validated
+1. **Sandboxing** - Capabilities execute in isolation
+1. **Audit Logging** - All operations logged
 
 ## Troubleshooting
 
@@ -351,9 +352,9 @@ print(list(engine.capability_invoker.registry.keys()))
 When contributing to the PACE architecture:
 
 1. Follow the existing code structure
-2. Add docstrings to all public methods
-3. Update documentation if changing interfaces
-4. Test all changes before submitting
+1. Add docstrings to all public methods
+1. Update documentation if changing interfaces
+1. Test all changes before submitting
 
 ## License
 

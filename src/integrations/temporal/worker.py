@@ -44,8 +44,8 @@ async def run_worker():
     namespace = os.getenv("TEMPORAL_NAMESPACE", "default")
     task_queue = os.getenv("TEMPORAL_TASK_QUEUE", "project-ai-tasks")
 
-    logger.info(f"Starting Temporal worker for queue: {task_queue}")
-    logger.info(f"Connecting to Temporal at: {host}")
+    logger.info("Starting Temporal worker for queue: %s", task_queue)
+    logger.info("Connecting to Temporal at: %s", host)
 
     try:
         # Connect to Temporal server
@@ -77,7 +77,7 @@ async def run_worker():
     except KeyboardInterrupt:
         logger.info("Worker shutdown requested")
     except Exception as e:
-        logger.error(f"Worker error: {e}", exc_info=True)
+        logger.error("Worker error: %s", e)
         raise
 
 
@@ -89,7 +89,7 @@ def main():
         logger.info("Worker stopped")
         sys.exit(0)
     except Exception as e:
-        logger.error(f"Fatal error: {e}")
+        logger.error("Fatal error: %s", e)
         sys.exit(1)
 
 

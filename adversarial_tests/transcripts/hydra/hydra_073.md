@@ -1,6 +1,7 @@
 # Hydra Test: hydra_073
 
 ## Test Information
+
 - **Category**: DELIMITER INJECTION
 - **Threat Type**: Delimiter v3
 - **Severity**: HIGH

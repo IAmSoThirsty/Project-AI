@@ -18,11 +18,12 @@ This guide explains how to set up and use the Python implementation of Thirsty-l
 ```
 
 This script will:
+
 1. Create a virtual environment in `.venv`
-2. Activate the virtual environment
-3. Upgrade pip, setuptools, and wheel
-4. Install core dependencies
-5. Optionally install development dependencies
+1. Activate the virtual environment
+1. Upgrade pip, setuptools, and wheel
+1. Install core dependencies
+1. Optionally install development dependencies
 
 ### Manual Setup
 
@@ -74,13 +75,13 @@ python3 src/thirsty_repl.py
    - Variable management
    - Error handling
 
-2. **thirsty_repl.py**
+1. **thirsty_repl.py**
    - Interactive Python REPL
    - Command history
    - Variable inspection
    - Help system
 
-3. **thirsty_utils.py**
+1. **thirsty_utils.py**
    - Utility functions
    - File handling
    - Error formatting
@@ -123,11 +124,14 @@ pip list
 ## Dependencies
 
 ### Core Dependencies (requirements.txt)
+
 The Python implementation uses only Python standard library by default.
 No external dependencies required for core functionality.
 
 ### Development Dependencies (requirements-dev.txt)
+
 Optional tools for development:
+
 - pytest - Testing framework
 - pylint - Code linting
 - black - Code formatting
@@ -184,6 +188,7 @@ source .venv/bin/activate
 ### 2. Make Changes
 
 Edit Python files in `src/` directory:
+
 - `thirsty_interpreter.py`
 - `thirsty_repl.py`
 - `thirsty_utils.py`
@@ -366,8 +371,8 @@ print(output)
 ### Python Extension Setup
 
 1. Install Python extension in VS Code
-2. Select interpreter: `Ctrl+Shift+P` → "Python: Select Interpreter"
-3. Choose `.venv/bin/python`
+1. Select interpreter: `Ctrl+Shift+P` → "Python: Select Interpreter"
+1. Choose `.venv/bin/python`
 
 ### Launch Configuration
 
@@ -392,13 +397,13 @@ Add to `.vscode/launch.json`:
 ## Best Practices
 
 1. **Always use virtual environment** - Isolate dependencies
-2. **Keep venv out of git** - Already in .gitignore
-3. **Update pip regularly** - `pip install --upgrade pip`
-4. **Use requirements.txt** - Track dependencies
-5. **Test changes** - Run examples after modifications
-6. **Follow PEP 8** - Python style guidelines
-7. **Type hints** - Add type annotations
-8. **Documentation** - Use docstrings
+1. **Keep venv out of git** - Already in .gitignore
+1. **Update pip regularly** - `pip install --upgrade pip`
+1. **Use requirements.txt** - Track dependencies
+1. **Test changes** - Run examples after modifications
+1. **Follow PEP 8** - Python style guidelines
+1. **Type hints** - Add type annotations
+1. **Documentation** - Use docstrings
 
 ## FAQ
 
@@ -417,6 +422,7 @@ For production use, the Node.js version is recommended.
 ### Can I extend the Python implementation?
 
 Yes! The code is modular and easy to extend:
+
 - Add new language features in `thirsty_interpreter.py`
 - Add new commands in `thirsty_repl.py`
 - Add utilities in `thirsty_utils.py`
@@ -424,10 +430,10 @@ Yes! The code is modular and easy to extend:
 ### How do I contribute?
 
 1. Fork the repository
-2. Create a virtual environment
-3. Make changes to Python files
-4. Test thoroughly
-5. Submit a pull request
+1. Create a virtual environment
+1. Make changes to Python files
+1. Test thoroughly
+1. Submit a pull request
 
 ## Resources
 
@@ -439,11 +445,12 @@ Yes! The code is modular and easy to extend:
 ## Support
 
 For Python-specific issues:
+
 1. Check this guide
-2. Verify Python version: `python3 --version`
-3. Check virtual environment: `which python`
-4. Review error messages
-5. Open an issue on GitHub
+1. Verify Python version: `python3 --version`
+1. Check virtual environment: `which python`
+1. Review error messages
+1. Open an issue on GitHub
 
 ---
 

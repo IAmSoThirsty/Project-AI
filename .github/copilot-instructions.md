@@ -1,11 +1,13 @@
 # Project-AI Copilot Instructions
 
 ## Project Overview
+
 Project-AI is a sophisticated Python desktop application providing a self-aware AI assistant with ethical decision-making (Asimov's Laws), autonomous learning, and a PyQt6 "Leather Book" UI. Features include plugin system, command overrides, memory expansion, and a web version (React + Flask).
 
 ## Architecture
 
 ### Core Structure
+
 ```
 src/app/
 ├── main.py                    # Entry point: LeatherBookInterface
@@ -36,19 +38,22 @@ src/app/
 ```
 
 ### Six Core AI Systems (`src/app/core/ai_systems.py`)
+
 All six systems are implemented in a single file for cohesion:
 
 1. **FourLaws**: Immutable ethics framework validating actions against hierarchical rules
-2. **AIPersona**: 8 personality traits, mood tracking, persistent state in `data/ai_persona/state.json`
-3. **MemoryExpansionSystem**: Conversation logging, knowledge base (6 categories), JSON persistence
-4. **LearningRequestManager**: Human-in-the-loop approval workflow, Black Vault for denied content
-5. **CommandOverride**: SHA-256 password protection, audit logging (lines 400-470)
-6. **PluginManager**: Simple plugin system with enable/disable (lines 340-395)
+1. **AIPersona**: 8 personality traits, mood tracking, persistent state in `data/ai_persona/state.json`
+1. **MemoryExpansionSystem**: Conversation logging, knowledge base (6 categories), JSON persistence
+1. **LearningRequestManager**: Human-in-the-loop approval workflow, Black Vault for denied content
+1. **CommandOverride**: SHA-256 password protection, audit logging (lines 400-470)
+1. **PluginManager**: Simple plugin system with enable/disable (lines 340-395)
 
 Note: `command_override.py` contains extended override system with 10+ safety protocols.
 
 ### Data Persistence Pattern
+
 All systems use JSON for persistence in `data/` directory:
+
 - `users.json` - User profiles with bcrypt password hashes
 - `data/ai_persona/state.json` - Personality, mood, interaction counts
 - `data/memory/knowledge.json` - Categorized knowledge base
@@ -60,6 +65,7 @@ All systems use JSON for persistence in `data/` directory:
 ## Development Workflows
 
 ### Running the Application
+
 ```powershell
 # Desktop (PyQt6)
 python -m src.app.main
@@ -77,6 +83,7 @@ docker-compose up
 ```
 
 ### Testing Strategy
+
 All core systems accept `data_dir` parameter for isolated testing:
 
 ```python
@@ -91,11 +98,14 @@ Tests: 14 tests across 6 test classes in `tests/test_ai_systems.py`, `tests/test
 Coverage: Each system has 2-4 tests validating core functionality (initialization, state changes, persistence)
 
 ### GUI Development
+
 **Leather Book UI** uses dual-page layout:
+
 - **Left (Tron)**: Login page with `TRON_GREEN = "#00ff00"`, `TRON_CYAN = "#00ffff"`
 - **Right**: Dashboard with 6 zones (stats, actions, AI head, chat, response)
 
 Key classes:
+
 - `LeatherBookInterface(QMainWindow)` - Main window with page switching
 - `LeatherBookDashboard(QWidget)` - 6-zone dashboard
 - `PersonaPanel(QWidget)` - 4-tab AI configuration UI
@@ -109,6 +119,7 @@ send_message = pyqtSignal(str)     # In UserChatPanel
 ## Project-Specific Conventions
 
 ### Error Handling Pattern
+
 All core systems use Python logging:
 ```python
 import logging
@@ -120,6 +131,7 @@ except Exception as e:
 ```
 
 ### State Validation Pattern
+
 AI systems validate actions through `FourLaws.validate_action(action, context)` before execution:
 ```python
 is_allowed, reason = FourLaws.validate_action(
@@ -129,19 +141,23 @@ is_allowed, reason = FourLaws.validate_action(
 ```
 
 ### Password Security
+
 - Use `bcrypt` for password hashing (see `UserManager._hash_and_store_password`)
 - `CommandOverrideSystem` uses SHA-256 for master password (legacy, consider bcrypt)
 - Fernet encryption for sensitive data (location history, cloud sync)
 
 ### Import Organization
+
 Follow ruff-enforced order (pyproject.toml configures isort):
+
 1. Standard library
-2. Third-party (PyQt6, scikit-learn, openai, etc.)
-3. Local modules (`from app.core import ...`)
+1. Third-party (PyQt6, scikit-learn, openai, etc.)
+1. Local modules (`from app.core import ...`)
 
 ## Integration Points
 
 ### OpenAI Integration
+
 API key via environment variable:
 ```python
 from dotenv import load_dotenv
@@ -150,9 +166,11 @@ load_dotenv()  # Loads OPENAI_API_KEY from .env
 Used in: `learning_paths.py`, `intelligence_engine.py`, `image_generator.py`
 
 ### Image Generation System
+
 Dual backend support with content filtering and style presets:
 
 **Core Module** (`src/app/core/image_generator.py`):
+
 - `ImageGenerator` class with async generation
 - Backends: Hugging Face Stable Diffusion 2.1 (`stabilityai/stable-diffusion-2-1`), OpenAI DALL-E 3
 - Content filtering: 15 blocked keywords, automatic safety negative prompts
@@ -161,6 +179,7 @@ Dual backend support with content filtering and style presets:
 - Methods: `generate()`, `check_content_filter()`, `generate_with_huggingface()`, `generate_with_openai()`
 
 **GUI Module** (`src/app/gui/image_generation.py`):
+
 - Dual-page layout: Left (Tron-themed prompt input) + Right (image display)
 - `ImageGenerationWorker`: QThread for async generation (prevents UI blocking during 20-60s generation)
 - `ImageGenerationLeftPanel`: Prompt input, style selector, size selector, backend choice, generate button
@@ -168,6 +187,7 @@ Dual backend support with content filtering and style presets:
 - Signal-based communication: `image_generated.emit(image_path, metadata)`
 
 **Dashboard Integration**:
+
 - "🎨 GENERATE IMAGES" button in `ProactiveActionsPanel`
 - Signal: `actions_panel.image_gen_requested.connect(switch_to_image_generation)`
 - Navigation: `switch_to_image_generation()` adds interface to page 2, `switch_to_dashboard()` returns to page 1
@@ -187,6 +207,7 @@ if not is_safe:
 ```
 
 ### Web Version Architecture
+
 **Note**: Web version is in development - desktop is production-ready.
 
 - **Backend**: Flask API wrapping core (`web/backend/`)
@@ -195,12 +216,15 @@ if not is_safe:
 - **Deployment**: Docker Compose with PostgreSQL (see `web/DEPLOYMENT.md`)
 
 Switching contexts:
+
 - Desktop: `python -m src.app.main` (PyQt6)
 - Web backend: `cd web/backend && flask run`
 - Web frontend: `cd web/frontend && npm run dev`
 
 ### AI Agent System
+
 Four specialized agents in `src/app/agents/`:
+
 - `oversight.py` - Action oversight and safety validation
 - `planner.py` - Task decomposition and planning
 - `validator.py` - Input/output validation
@@ -214,38 +238,41 @@ Agents are NOT the same as plugins. Plugin system is simpler (enable/disable onl
    - Reason: PYTHONPATH must include `src/` for imports like `from app.core import ...`
    - Tests also require: `pytest` (auto-discovers from project root)
 
-2. **Data directory creation**: Every system constructor must call:
+1. **Data directory creation**: Every system constructor must call:
+
    ```python
    os.makedirs(data_dir, exist_ok=True)
    ```
    Without this, JSON persistence will fail silently in new installations.
 
-3. **PyQt6 threading**: NEVER use `threading.Thread` in GUI code
+1. **PyQt6 threading**: NEVER use `threading.Thread` in GUI code
    - Correct: `QTimer.singleShot(1000, callback)` for delays
    - Correct: `pyqtSignal` for cross-thread communication
    - GUI updates MUST occur on main thread
 
-4. **State persistence**: Call `_save_state()` or `save_users()` after EVERY state modification
+1. **State persistence**: Call `_save_state()` or `save_users()` after EVERY state modification
    - Systems persist to JSON - forgetting this loses user data
    - Pattern in `ai_systems.py`: all mutating methods call `_save_state()` before returning
 
-5. **Black Vault fingerprinting**: SHA-256 hash content before checking vault
+1. **Black Vault fingerprinting**: SHA-256 hash content before checking vault
+
    ```python
    content_hash = hashlib.sha256(content.encode()).hexdigest()
    if content_hash in manager.black_vault:
        return  # Content is forbidden
    ```
 
-6. **Password security**: Different systems use different hashing
+1. **Password security**: Different systems use different hashing
    - `UserManager`: bcrypt (secure, salted)
    - `CommandOverride`: SHA-256 (legacy, consider upgrading)
 
-7. **Codacy integration**: After file edits, MUST run `codacy_cli_analyze`
+1. **Codacy integration**: After file edits, MUST run `codacy_cli_analyze`
    - See `.github/instructions/codacy.instructions.md` for workflow
 
 ## Deployment Workflows
 
 ### Development (Desktop)
+
 ```powershell
 # Quick launch (Windows)
 .\launch-desktop.bat
@@ -257,6 +284,7 @@ python -m src.app.main
 ```
 
 ### Production (Docker)
+
 ```bash
 # Desktop in container
 docker-compose up
@@ -266,12 +294,14 @@ docker build -t project-ai:latest .
 ```
 
 Dockerfile uses:
+
 - Multi-stage build (builder + runtime)
 - Python 3.11-slim base
 - Health checks every 30s
 - Volume mounts for `data/` and `logs/`
 
 ### Web Deployment
+
 ```bash
 # Local development
 cd web/backend && flask run
@@ -284,6 +314,7 @@ docker-compose -f web/docker-compose.yml up -d
 Cloud options: Vercel (frontend), Railway/Heroku (backend) - see `web/DEPLOYMENT.md`
 
 ## Key Documentation Files
+
 - `PROGRAM_SUMMARY.md` - Complete architecture (600+ lines)
 - `DEVELOPER_QUICK_REFERENCE.md` - GUI component API reference
 - `AI_PERSONA_IMPLEMENTATION.md` - Persona system details
@@ -293,6 +324,7 @@ Cloud options: Vercel (frontend), Railway/Heroku (backend) - see `web/DEPLOYMENT
 - `.github/instructions/README.md` - Instructions index and navigation guide
 
 ## Environment Setup
+
 Required in `.env` (root directory):
 ```bash
 OPENAI_API_KEY=sk-...           # For GPT models and DALL-E 3
@@ -309,19 +341,23 @@ print(Fernet.generate_key().decode())
 ```
 
 API Key Setup:
+
 - **OpenAI**: Sign up at https://platform.openai.com/api-keys
 - **Hugging Face**: Create account and get token at https://huggingface.co/settings/tokens
 
 Dependencies:
+
 - Python: See `pyproject.toml` (PyQt6, scikit-learn, openai, cryptography, requests, etc.)
 - Node.js: See `package.json` (test runners only, not required for desktop)
 
 ## Automated Workflows
 
 ### Pull Request Automation
+
 The repository has automated workflows to handle pull requests and safety alerts:
 
 **Auto PR Handler** (`.github/workflows/auto-pr-handler.yml`):
+
 - Automatically reviews PRs from Dependabot
 - Runs linting and tests on all PRs
 - Auto-approves PRs that pass all checks
@@ -330,15 +366,18 @@ The repository has automated workflows to handle pull requests and safety alerts
 - Flags major version updates for manual review
 
 **Auto-merge criteria**:
+
 - PR is from Dependabot or has `auto-merge` label
 - All linting checks pass (ruff)
 - All tests pass (pytest)
 - For Dependabot: Only patch/minor updates are auto-merged
 
 ### Security Alert Automation
+
 Multiple workflows monitor and respond to security issues:
 
 **Auto Security Fixes** (`.github/workflows/auto-security-fixes.yml`):
+
 - Runs daily at 2 AM UTC
 - Scans dependencies using `pip-audit` and `safety`
 - Automatically creates issues for security vulnerabilities
@@ -347,6 +386,7 @@ Multiple workflows monitor and respond to security issues:
 - Uploads detailed security reports as workflow artifacts
 
 **Auto Bandit Fixes** (`.github/workflows/auto-bandit-fixes.yml`):
+
 - Runs weekly on Mondays at 3 AM UTC
 - Scans Python code for security issues using Bandit
 - Categorizes findings by severity (High/Medium/Low)
@@ -355,6 +395,7 @@ Multiple workflows monitor and respond to security issues:
 - Provides actionable recommendations for fixes
 
 **Dependabot Configuration** (`.github/dependabot.yml`):
+
 - Daily updates for Python dependencies
 - Weekly updates for npm, GitHub Actions, and Docker
 - Groups security updates for batch processing
@@ -363,23 +404,28 @@ Multiple workflows monitor and respond to security issues:
 - Configures reviewers and commit message prefixes
 
 ### Existing Security Workflows
+
 **CodeQL** (`.github/workflows/codeql.yml`):
+
 - Runs on push/PR to main and cerberus-integration branches
 - Analyzes Python code for security vulnerabilities
 - Uploads results to GitHub Security tab
 
 **Bandit** (`.github/workflows/bandit.yml`):
+
 - Runs on push to main, PRs, and weekly schedule
 - Scans for common Python security issues
 - Fails workflow if security issues found
 
 **CI Pipeline** (`.github/workflows/ci.yml`):
+
 - Comprehensive test suite with Python 3.11 and 3.12
 - Linting (ruff), type checking (mypy), security audit (pip-audit)
 - Test coverage reporting
 - Docker build and smoke tests
 
 ### Manual Triggering
+
 All automated workflows support manual dispatch:
 ```bash
 # Trigger security scan manually
@@ -390,16 +436,19 @@ gh workflow run auto-bandit-fixes.yml
 ```
 
 ### Monitoring and Alerts
+
 Security issues are tracked through:
+
 1. **GitHub Issues**: Auto-created with `security` and `automated` labels
-2. **Workflow Artifacts**: Detailed JSON/SARIF reports for each scan
-3. **Security Tab**: CodeQL and Bandit SARIF results
-4. **PR Comments**: Automated review comments on pull requests
+1. **Workflow Artifacts**: Detailed JSON/SARIF reports for each scan
+1. **Security Tab**: CodeQL and Bandit SARIF results
+1. **PR Comments**: Automated review comments on pull requests
 
 ### Best Practices for Working with Automation
+
 1. **Check for auto-created issues** before starting security work
-2. **Review Dependabot PRs** even when auto-approved (especially major updates)
-3. **Don't disable security workflows** without team discussion
-4. **Use workflow artifacts** for detailed security scan results
-5. **Label PRs with `auto-merge`** to trigger automated approval (only for safe changes)
-6. **Monitor GitHub Actions usage** as security scans count toward monthly limits
+1. **Review Dependabot PRs** even when auto-approved (especially major updates)
+1. **Don't disable security workflows** without team discussion
+1. **Use workflow artifacts** for detailed security scan results
+1. **Label PRs with `auto-merge`** to trigger automated approval (only for safe changes)
+1. **Monitor GitHub Actions usage** as security scans count toward monthly limits

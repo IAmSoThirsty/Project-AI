@@ -90,7 +90,7 @@ class Triumvirate:
         correlation_id = self._generate_correlation_id()
         start_time = datetime.now()
 
-        logger.info(f"Triumvirate processing [correlation_id: {correlation_id}]")
+        logger.info("Triumvirate processing [correlation_id: %s]", correlation_id)
 
         try:
             # Enrich context
@@ -178,7 +178,7 @@ class Triumvirate:
             return result
 
         except Exception as e:
-            logger.error(f"Triumvirate processing error [{correlation_id}]: {e}")
+            logger.error("Triumvirate processing error [%s]: %s", correlation_id, e)
             return self._build_error_response(
                 correlation_id,
                 f"Processing error: {e}",

@@ -1,6 +1,7 @@
 # Hydra Test: hydra_107
 
 ## Test Information
+
 - **Category**: PHISHING
 - **Threat Type**: Phishing v2
 - **Severity**: CRITICAL
@@ -56,6 +57,7 @@ This threat was successfully detected and blocked by Galahad's defenses.
 ---
 
 ## Metadata
+
 - **Test ID**: hydra_107
 - **Test Suite**: HYDRA DEFENSE (Ultimate Stress Test)
 - **Total Hydra Tests**: 200

@@ -7,28 +7,33 @@ Project-AI has been enhanced with four new security and testing agents that inte
 ## New Agents
 
 ### 1. LongContextAgent
+
 - **File**: `src/app/agents/long_context_agent.py` (360 lines)
 - **Model**: Nous-Capybara-34B-200k
 - **Context Window**: 200,000 tokens
 - **Purpose**: Extended conversation and large document processing
 
 **Key Methods**:
+
 - `process_long_conversation()` - Handle multi-turn conversations
 - `analyze_large_document()` - Process large documents with queries
 - `compress_context()` - Intelligent context compression
 - `get_context_stats()` - Monitor context utilization
 
 ### 2. SafetyGuardAgent
+
 - **File**: `src/app/agents/safety_guard_agent.py` (443 lines)
 - **Model**: Llama-Guard-3-8B
 - **Purpose**: Content moderation and jailbreak detection
 
 **Key Methods**:
+
 - `check_prompt_safety()` - Pre-process input validation
 - `check_response_safety()` - Post-process output validation
 - `get_safety_statistics()` - Track violation metrics
 
 **Detection Capabilities**:
+
 - Jailbreak attempts
 - Harmful content
 - Manipulative patterns
@@ -37,16 +42,19 @@ Project-AI has been enhanced with four new security and testing agents that inte
 - Abuse patterns
 
 ### 3. JailbreakBenchAgent
+
 - **File**: `src/app/agents/jailbreak_bench_agent.py` (573 lines)
 - **Framework**: JailbreakBench
 - **Purpose**: Systematic jailbreak testing
 
 **Key Methods**:
+
 - `run_benchmark()` - Execute test suite
 - `evaluate_defense()` - Assess defense strength
 - `generate_report()` - Comprehensive reporting
 
 **Attack Categories**:
+
 - Prompt injection
 - Role-play scenarios
 - Hypothetical framing
@@ -55,16 +63,19 @@ Project-AI has been enhanced with four new security and testing agents that inte
 - Multi-turn strategies
 
 ### 4. RedTeamAgent
+
 - **File**: `src/app/agents/red_team_agent.py` (683 lines)
 - **Framework**: ARTKIT (Automated Red Teaming Kit)
 - **Purpose**: Multi-turn adversarial testing
 
 **Key Methods**:
+
 - `run_adversarial_session()` - Multi-turn attack simulation
 - `analyze_vulnerabilities()` - Vulnerability analysis
 - `generate_comprehensive_report()` - Detailed reporting
 
 **Attack Strategies**:
+
 - Gradual escalation
 - Immediate probing
 - Social engineering
@@ -101,6 +112,7 @@ class SafetyGuardAgent(KernelRoutedAgent):
 ```
 
 This ensures:
+
 - Triumvirate governance approval
 - Memory logging in MemoryEngine
 - Reflection cycle integration
@@ -125,6 +137,7 @@ decision = triumvirate.evaluate_action(
 ```
 
 The Triumvirate council members evaluate:
+
 - **GALAHAD**: Relationship impact, abuse detection
 - **CERBERUS**: Safety, security, risk assessment
 - **CODEX DEUS MAXIMUS**: Logical consistency, contradictions
@@ -148,6 +161,7 @@ SAFETY_MODEL_API_KEY=your_api_key_here
 ### Data Directories
 
 Agents create their own data directories:
+
 - `data/jailbreak_bench/` - JailbreakBench results
 - `data/red_team/` - Red team session logs
 
@@ -156,10 +170,12 @@ Agents create their own data directories:
 ### Verification Suite
 
 Created comprehensive test suite:
+
 - **File**: `tests/test_security_agents.py` (468 lines)
 - **File**: `tests/verify_security_agents.py` (135 lines)
 
 **Test Coverage**:
+
 - Agent initialization
 - Basic operations
 - Error handling
@@ -237,23 +253,23 @@ if session["vulnerabilities_found"] > 0:
 ### Security Improvements
 
 1. **Proactive Defense**: Continuous safety monitoring
-2. **Vulnerability Discovery**: Systematic testing reveals weaknesses
-3. **Compliance**: Standardized benchmarking for audits
-4. **Incident Prevention**: Early detection of abuse patterns
+1. **Vulnerability Discovery**: Systematic testing reveals weaknesses
+1. **Compliance**: Standardized benchmarking for audits
+1. **Incident Prevention**: Early detection of abuse patterns
 
 ### Operational Benefits
 
 1. **Automated Testing**: Reduced manual security review
-2. **Comprehensive Coverage**: Multiple attack vectors tested
-3. **Detailed Reporting**: Actionable insights
-4. **Governance Integration**: Ethical oversight built-in
+1. **Comprehensive Coverage**: Multiple attack vectors tested
+1. **Detailed Reporting**: Actionable insights
+1. **Governance Integration**: Ethical oversight built-in
 
 ### Development Benefits
 
 1. **Early Detection**: Find issues before production
-2. **Regression Testing**: Prevent security backsliding
-3. **Best Practices**: Standardized security workflows
-4. **Documentation**: Clear usage patterns
+1. **Regression Testing**: Prevent security backsliding
+1. **Best Practices**: Standardized security workflows
+1. **Documentation**: Clear usage patterns
 
 ## Performance Metrics
 
@@ -282,17 +298,17 @@ if session["vulnerabilities_found"] > 0:
    - Local model deployment options
    - API fallback mechanisms
 
-2. **Enhanced Testing**:
+1. **Enhanced Testing**:
    - Additional attack categories
    - Custom scenario creation
    - Automated vulnerability patching
 
-3. **Analytics**:
+1. **Analytics**:
    - Real-time dashboards
    - Trend analysis
    - Predictive alerts
 
-4. **Optimization**:
+1. **Optimization**:
    - Caching for common patterns
    - Batch processing
    - Parallel testing
@@ -300,6 +316,7 @@ if session["vulnerabilities_found"] > 0:
 ### Community Contributions
 
 Planned integrations:
+
 - JailbreakBench official dataset
 - ARTKIT community scenarios
 - Custom agent templates
@@ -315,12 +332,12 @@ Created comprehensive documentation:
    - Best practices
    - Troubleshooting
 
-2. **Integration Summary**: This document
+1. **Integration Summary**: This document
    - Architecture overview
    - Design decisions
    - Performance metrics
 
-3. **Code Documentation**: Inline docstrings
+1. **Code Documentation**: Inline docstrings
    - All methods documented
    - Type hints throughout
    - Usage examples
@@ -330,9 +347,9 @@ Created comprehensive documentation:
 The integration of four security and testing agents significantly enhances Project-AI's capabilities:
 
 1. **Long-context support** enables processing of extended conversations and large documents
-2. **Safety filtering** provides proactive defense against harmful content and jailbreaks
-3. **Jailbreak testing** ensures consistent security validation
-4. **Red teaming** discovers vulnerabilities through adversarial testing
+1. **Safety filtering** provides proactive defense against harmful content and jailbreaks
+1. **Jailbreak testing** ensures consistent security validation
+1. **Red teaming** discovers vulnerabilities through adversarial testing
 
 All agents integrate seamlessly with the Triumvirate governance system, ensuring ethical oversight and full auditability. The implementation follows Project-AI's architectural patterns and maintains code quality standards.
 

@@ -11,6 +11,7 @@
 ### ⚠️ P0 - CRITICAL (Complete within 48 hours)
 
 - [ ] **VERIFY** `.env` file is NOT in git history
+
   ```bash
   git log --all --full-history -- .env
   ```
@@ -23,6 +24,7 @@
   - [ ] Verify `.env` is in `.gitignore`
 
 - [ ] **CREATE** `.env.example` with placeholder values:
+
   ```env
   # Use placeholder values only - NEVER commit real credentials
   OPENAI_API_KEY=sk-proj-YOUR_KEY_HERE
@@ -56,6 +58,7 @@
   - [ ] Update `security_resources.py`
 
 - [ ] **Set restrictive file permissions**
+
   ```python
   os.chmod(file_path, 0o600)  # Owner read/write only
   ```
@@ -63,18 +66,21 @@
 ### P1 - Input Validation
 
 - [ ] **Implement path traversal protection**
+
   ```python
   def validate_file_path(path, allowed_dir):
       # Verify path is within allowed directory
   ```
 
 - [ ] **Add email validation**
+
   ```python
   def validate_email(email):
       # Regex validation + format check
   ```
 
 - [ ] **Add input sanitization**
+
   ```python
   def sanitize_input(text, max_length=1000):
       # Remove dangerous characters
@@ -103,6 +109,7 @@
 ### P2 - Rate Limiting
 
 - [ ] **Add rate limiting decorator**
+
   ```python
   @RateLimiter(max_calls=10, period=60)
   def api_call(...):
@@ -118,6 +125,7 @@
 ### P2 - Network Security
 
 - [ ] **Add timeout to all HTTP requests**
+
   ```python
   requests.get(url, timeout=5, verify=True)
   ```
@@ -148,6 +156,7 @@
 ### P3 - Error Handling
 
 - [ ] **Replace verbose error messages**
+
   ```python
   # BAD
   except Exception as e:
@@ -173,6 +182,7 @@
 ### P3 - Dependency Security
 
 - [ ] **Regular dependency audits**
+
   ```bash
   pip-audit --desc
   ```
@@ -180,6 +190,7 @@
 - [ ] **Automated dependency updates** (Dependabot)
 
 - [ ] **License compliance check**
+
   ```bash
   pip-licenses --format=markdown
   ```
@@ -230,16 +241,19 @@
 ### Static Analysis
 
 - [ ] **Run Bandit**
+
   ```bash
   bandit -r src/ -f json -o bandit_report.json
   ```
 
 - [ ] **Run Semgrep**
+
   ```bash
   semgrep --config=auto src/
   ```
 
 - [ ] **Run Ruff** (linter)
+
   ```bash
   ruff check src tests
   ```
@@ -247,11 +261,13 @@
 ### Dynamic Analysis
 
 - [ ] **Run pip-audit** (dependency vulnerabilities)
+
   ```bash
   pip-audit --desc
   ```
 
 - [ ] **Check for hardcoded secrets**
+
   ```bash
   grep -r "password\|secret\|key" src/ --exclude-dir=__pycache__
   ```
@@ -339,19 +355,19 @@
    - [ ] Contain the incident (revoke access, shut down if needed)
    - [ ] Notify security team
 
-2. **SHORT-TERM** (within 24 hours):
+1. **SHORT-TERM** (within 24 hours):
    - [ ] Forensic analysis (what, when, who, how)
    - [ ] Rotate all credentials
    - [ ] Patch vulnerability
    - [ ] Review logs for IOCs (Indicators of Compromise)
 
-3. **MEDIUM-TERM** (within 72 hours):
+1. **MEDIUM-TERM** (within 72 hours):
    - [ ] Notify affected users (GDPR/CCPA requirement)
    - [ ] Document incident (timeline, actions taken)
    - [ ] Implement additional controls
    - [ ] Update security policies
 
-4. **LONG-TERM** (within 1-2 weeks):
+1. **LONG-TERM** (within 1-2 weeks):
    - [ ] Post-incident review
    - [ ] Update runbooks
    - [ ] Security training for team

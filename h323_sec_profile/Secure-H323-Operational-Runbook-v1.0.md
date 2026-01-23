@@ -1,4 +1,5 @@
 # Secure H.323 Operational Runbook
+
 ## Version 1.0 — Operations, Maintenance, and Troubleshooting Manual
 
 ## 1. Purpose
@@ -174,16 +175,18 @@ curl -X POST "http://localhost:8080/compliance/check" \
 ### 6.1 Authentication Failures (H.235.2)
 
 **Symptoms:**
+
 - RRQ rejected
 - ARQ rejected
 - "Invalid token" or "timestamp mismatch"
 
 **Actions:**
+
 1. Check endpoint certificate validity
-2. Verify endpoint time sync
-3. Confirm GK time sync
-4. Validate CRL/OCSP availability
-5. Re‑register endpoint
+1. Verify endpoint time sync
+1. Confirm GK time sync
+1. Validate CRL/OCSP availability
+1. Re‑register endpoint
 
 **Diagnostic Commands:**
 
@@ -201,16 +204,18 @@ openssl ocsp -issuer ca.crt -cert endpoint.crt -url http://ocsp.example.com
 ### 6.2 Signaling Security Failures (H.235.3/4)
 
 **Symptoms:**
+
 - SETUP rejected
 - H.245 SecurityMode negotiation fails
 - Calls downgraded to non‑secure signaling
 
 **Actions:**
+
 1. Verify endpoint supports required H.235 profiles
-2. Confirm TLS/IPsec is enabled
-3. Check cipher suite compatibility
-4. Review GK logs for policy enforcement
-5. Restart signaling stack if needed
+1. Confirm TLS/IPsec is enabled
+1. Check cipher suite compatibility
+1. Review GK logs for policy enforcement
+1. Restart signaling stack if needed
 
 **Using Project-AI Tools:**
 
@@ -222,16 +227,18 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py run-sim
 ### 6.3 Media Security Failures (H.235.6 / SRTP)
 
 **Symptoms:**
+
 - RTP instead of SRTP
 - One‑way audio/video
 - Media path blocked
 
 **Actions:**
+
 1. Confirm SRTP is enabled on EP and GW
-2. Validate H.245 OLC includes SRTP keys
-3. Check firewall for blocked SRTP ports
-4. Verify NAT traversal (if applicable)
-5. Restart media channels
+1. Validate H.245 OLC includes SRTP keys
+1. Check firewall for blocked SRTP ports
+1. Verify NAT traversal (if applicable)
+1. Restart media channels
 
 **Diagnostic Commands:**
 
@@ -246,30 +253,34 @@ tshark -r media.pcap -Y 'rtp'
 ### 6.4 Gateway Interworking Failures
 
 **Symptoms:**
+
 - PSTN/H.320 calls fail
 - Codec mismatch
 - Trunk congestion
 
 **Actions:**
+
 1. Check trunk status (ISDN/H.320/SIP)
-2. Validate codec mapping
-3. Confirm GK routing rules
-4. Review gateway logs for cause codes
-5. Test call from gateway directly
+1. Validate codec mapping
+1. Confirm GK routing rules
+1. Review gateway logs for cause codes
+1. Test call from gateway directly
 
 ### 6.5 QoS or Network Degradation
 
 **Symptoms:**
+
 - Choppy audio
 - Video artifacts
 - High jitter
 
 **Actions:**
+
 1. Check DSCP markings
-2. Validate queue utilization
-3. Check for WAN congestion
-4. Review switch port errors
-5. Run packet captures if needed
+1. Validate queue utilization
+1. Check for WAN congestion
+1. Review switch port errors
+1. Run packet captures if needed
 
 **Diagnostic Commands:**
 
@@ -291,30 +302,34 @@ tcpdump -i eth0 -vv -n 'ip[1] & 0xfc == 0xb8'  # EF marking
 **Troubleshooting Steps:**
 
 1. **Ping GK**
+
    ```bash
    ping gk.voice.example.com
    ```
 
-2. **Validate certificate**
+1. **Validate certificate**
+
    ```bash
    openssl x509 -in endpoint.crt -text -noout | grep -E "(Subject|Not)"
    ```
 
-3. **Check CRL/OCSP**
+1. **Check CRL/OCSP**
+
    ```bash
    openssl ocsp -issuer ca.crt -cert endpoint.crt -url http://ocsp.example.com
    ```
 
-4. **Confirm H.235 token generation**
+1. **Confirm H.235 token generation**
    - Check endpoint logs for token creation
    - Verify shared secrets or certificates
 
-5. **Review GK logs**
+1. **Review GK logs**
+
    ```bash
    tail -f /var/log/gatekeeper.log | grep RRQ
    ```
 
-6. **Reboot endpoint**
+1. **Reboot endpoint**
    - Power cycle or soft reboot
    - Monitor registration process
 
@@ -323,10 +338,10 @@ tcpdump -i eth0 -vv -n 'ip[1] & 0xfc == 0xb8'  # EF marking
 **Troubleshooting Steps:**
 
 1. Check SETUP/CONNECT logs
-2. Validate H.225 security
-3. Confirm GK routing
-4. Check gateway availability
-5. Validate endpoint codec support
+1. Validate H.225 security
+1. Confirm GK routing
+1. Check gateway availability
+1. Validate endpoint codec support
 
 **Using Project-AI Tools:**
 
@@ -345,21 +360,23 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 1. **Validate SRTP negotiation**
    - Check H.245 logs for SRTP key exchange
    
-2. **Check firewall for blocked media ports**
+1. **Check firewall for blocked media ports**
+
    ```bash
    # Test media port connectivity
    nc -u -v <remote-ip> 16384
    ```
 
-3. **Confirm NAT traversal**
+1. **Confirm NAT traversal**
    - Check for STUN/TURN configuration
    - Verify port forwarding rules
 
-4. **Validate gateway media mapping**
+1. **Validate gateway media mapping**
    - Review gateway media configuration
    - Check codec transcoding settings
 
-5. **Run packet capture**
+1. **Run packet capture**
+
    ```bash
    tcpdump -i eth0 -n 'udp and port > 16383 and port < 32768' -w media-debug.pcap
    ```
@@ -369,28 +386,31 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 **Troubleshooting Steps:**
 
 1. **Check QoS**
+
    ```bash
    # Verify DSCP markings
    tcpdump -i eth0 -vv -n 'udp and host <endpoint-ip>'
    ```
 
-2. **Validate bandwidth availability**
+1. **Validate bandwidth availability**
    - Check link utilization
    - Review bandwidth allocation
 
-3. **Review jitter/latency**
+1. **Review jitter/latency**
+
    ```bash
    # Continuous ping test
    ping -i 0.02 <remote-endpoint> | awk '{print $7}' | cut -d= -f2
    ```
 
-4. **Check for duplex mismatches**
+1. **Check for duplex mismatches**
+
    ```bash
    # Check interface status
    ethtool eth0
    ```
 
-5. **Validate endpoint CPU load**
+1. **Validate endpoint CPU load**
    - Check endpoint system resources
    - Review background processes
 
@@ -410,7 +430,8 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
    - Send advance notice (24-48 hours)
    - Schedule maintenance window
 
-2. **Backup GK/GW configs**
+1. **Backup GK/GW configs**
+
    ```bash
    # Backup gatekeeper config
    tar czf gk-backup-$(date +%Y%m%d).tar.gz /etc/gatekeeper/
@@ -419,11 +440,12 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
    tar czf gw-backup-$(date +%Y%m%d).tar.gz /etc/gateway/
    ```
 
-3. **Apply changes**
+1. **Apply changes**
    - Execute planned changes
    - Document each step
 
-4. **Validate registration**
+1. **Validate registration**
+
    ```bash
    python h323_sec_profile/H323_SEC_PROFILE_v1.py reg-status \
        --device-ip <endpoint-ip> \
@@ -432,15 +454,16 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
        --priv-key <key>
    ```
 
-5. **Validate secure call setup**
+1. **Validate secure call setup**
    - Make test calls between endpoints
    - Verify H.235.3/4 negotiation
 
-6. **Validate SRTP media**
+1. **Validate SRTP media**
    - Confirm media encryption
    - Check audio/video quality
 
-7. **Document results**
+1. **Document results**
+
    ```bash
    python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
        --event-type maintenance_completed \

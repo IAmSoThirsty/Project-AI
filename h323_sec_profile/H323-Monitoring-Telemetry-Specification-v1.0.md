@@ -1,4 +1,5 @@
 # Monitoring & Telemetry Specification for Secure H.323 Deployments
+
 ## Version 1.0 — Observability, Metrics, Alerts, and Data Flows
 
 ## 1. Purpose
@@ -340,6 +341,7 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 ### 9.2 Required Alerts
 
 **Critical:**
+
 - Clear‑text H.225 or H.245 detected
 - RTP detected instead of SRTP
 - PKI compromise indicators
@@ -348,6 +350,7 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 - Firewall bypass successful
 
 **High:**
+
 - Repeated H.235 failures (> 5 in 5 min)
 - Gateway trunk anomalies
 - Certificate expiration < 24 hours
@@ -355,12 +358,14 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 - Unusual call patterns
 
 **Medium:**
+
 - CRL/OCSP unreachable
 - NTP drift > 1 second
 - Single H.235 failure
 - Configuration drift detected
 
 **Low:**
+
 - Endpoint misconfigurations
 - Non-critical log anomalies
 - Minor QoS variations
@@ -370,6 +375,7 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 ### 10.1 Mandatory Sensors
 
 **Packet Capture Sensors:**
+
 - EP VLAN (sample 1% of traffic or full for security events)
 - GK interface (full capture of signaling)
 - GW inside interface (full capture)
@@ -377,11 +383,13 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 - DMZ firewall (full capture)
 
 **Syslog Collection:**
+
 - All H.323 components → Centralized syslog
 - Firewall logs → SIEM
 - Network device logs → NMS
 
 **SNMP Collection:**
+
 - Interface statistics (all network devices)
 - H.323 component health (GK, GW, EP where supported)
 - QoS queue statistics
@@ -403,6 +411,7 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 ### 11.1 Required Dashboards
 
 **1. Secure Call Success Rate Dashboard**
+
 - Total calls (last hour, day, week)
 - Success rate
 - Failure breakdown (RAS, signaling, media, PKI)
@@ -410,6 +419,7 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 - SRTP usage rate (should be 100%)
 
 **2. Registration Health Dashboard**
+
 - Total registered endpoints
 - Registration success rate
 - H.235.2 token validation rate
@@ -417,6 +427,7 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 - Failed registrations (real-time)
 
 **3. SRTP Enforcement Dashboard**
+
 - Active SRTP sessions
 - RTP sessions (should be 0)
 - SRTP negotiation success rate
@@ -424,6 +435,7 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 - Media encryption compliance
 
 **4. Gateway Trunk Utilization Dashboard**
+
 - Trunk usage per gateway
 - Active calls per trunk
 - Codec distribution
@@ -431,6 +443,7 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 - Trunk failure events
 
 **5. PKI Certificate Expiry Dashboard**
+
 - Certificates expiring < 90 days
 - Certificates expiring < 30 days
 - Certificates expiring < 7 days
@@ -438,6 +451,7 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 - Recent revocations
 
 **6. QoS Health Dashboard**
+
 - Packet loss trends
 - Jitter trends
 - Latency trends
@@ -445,6 +459,7 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 - Queue utilization
 
 **7. Security Events Overview Dashboard**
+
 - H.235 failures (last hour, day)
 - Downgrade attempts
 - Certificate failures
@@ -452,6 +467,7 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 - Anomalous patterns
 
 **8. Endpoint Compliance Status Dashboard**
+
 - Registered endpoints
 - Firmware compliance
 - Certificate validity

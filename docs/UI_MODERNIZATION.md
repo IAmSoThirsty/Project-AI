@@ -11,17 +11,20 @@ This document describes the modern UI enhancements added to Project-AI's interfa
 A completely redesigned stylesheet featuring:
 
 #### Glassmorphism Design
+
 - Semi-transparent panels with backdrop blur effects
 - Layered depth with subtle borders
 - Modern aesthetic aligned with current design trends
 
 #### Enhanced Color Palette
+
 - Dark mode optimized with gradient backgrounds
 - Purple-blue gradient accents (#667eea → #764ba2)
 - Danger gradients (red-blue: #fc466b → #3f5efb)
 - Success gradients (teal-green: #11998e → #38ef7d)
 
 #### Improved Components
+
 - **Buttons**: Gradient backgrounds with hover states
 - **Input Fields**: Glass panels with focus states
 - **Tabs**: Modern rounded design with smooth transitions
@@ -114,18 +117,23 @@ body = QLabel("Regular text content")
 ## Design Principles
 
 ### 1. Visual Hierarchy
+
 Clear distinction between primary, secondary, and tertiary UI elements through size, color, and weight.
 
 ### 2. Consistency
+
 Uniform spacing (8px grid system), border-radius (8px standard, 16px for cards), and color application.
 
 ### 3. Feedback
+
 All interactive elements provide visual feedback:
+
 - Hover states (brightness +10%)
 - Active/pressed states (brightness -10%, subtle shift)
 - Focus indicators (outline)
 
 ### 4. Performance
+
 - Lightweight gradients (2-3 stops max)
 - CSS-based styling (no image assets for basic UI)
 - Hardware-accelerated where possible
@@ -135,9 +143,9 @@ All interactive elements provide visual feedback:
 ### Replacing `styles.qss` with `styles_modern.qss`
 
 1. **Backup current style**: Keep `styles.qss` for reference
-2. **Update imports**: Change stylesheet path to `styles_modern.qss`
-3. **Test components**: Verify all UI elements render correctly
-4. **Adjust custom widgets**: Update any hardcoded colors/styles
+1. **Update imports**: Change stylesheet path to `styles_modern.qss`
+1. **Test components**: Verify all UI elements render correctly
+1. **Adjust custom widgets**: Update any hardcoded colors/styles
 
 ### Compatibility Notes
 
@@ -148,17 +156,20 @@ All interactive elements provide visual feedback:
 ## Color Reference
 
 ### Primary Colors
+
 - **Brand Purple**: #667eea
 - **Brand Violet**: #764ba2
 - **Background Dark**: #0a0e27
 - **Background Mid**: #16213e
 
 ### Text Colors
+
 - **Primary Text**: #e8eaf6
 - **Secondary Text**: #b0bec5
 - **Muted Text**: #90a4ae
 
 ### Semantic Colors
+
 - **Success**: #11998e → #38ef7d
 - **Danger**: #fc466b → #3f5efb
 - **Warning**: #f7971e → #ffd200
@@ -167,15 +178,18 @@ All interactive elements provide visual feedback:
 ## Browser/Platform Support
 
 ### Desktop (PyQt6)
+
 - ✅ Windows 10/11
 - ✅ macOS 10.15+
 - ✅ Linux (X11/Wayland)
 
 ### Web (CSS Export)
+
 The stylesheet can be adapted for web use by:
+
 1. Converting Qt-specific properties to standard CSS
-2. Using CSS variables for color management
-3. Adding vendor prefixes for gradients
+1. Using CSS variables for color management
+1. Adding vendor prefixes for gradients
 
 ## Future Enhancements
 

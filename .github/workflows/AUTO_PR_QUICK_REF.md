@@ -9,11 +9,11 @@ The repository automatically creates and manages PRs for all non-main branches. 
 ### What Happens Automatically?
 
 1. **Every Day at 2 AM UTC**: System scans for branches without PRs
-2. **New PRs Created**: Automatically creates PRs for discovered branches
-3. **Checks Run**: Linting, tests, and security scans execute
-4. **Auto-Fix**: Issues are automatically fixed where possible
-5. **Auto-Merge**: PRs passing all checks are automatically merged
-6. **Reports**: Summary reports posted as issues
+1. **New PRs Created**: Automatically creates PRs for discovered branches
+1. **Checks Run**: Linting, tests, and security scans execute
+1. **Auto-Fix**: Issues are automatically fixed where possible
+1. **Auto-Merge**: PRs passing all checks are automatically merged
+1. **Reports**: Summary reports posted as issues
 
 ### What Requires Manual Action?
 
@@ -158,17 +158,17 @@ Edit branch filtering in workflow:
 ## 🎯 Best Practices
 
 1. **Let It Run**: Trust the automation for standard changes
-2. **Monitor Labels**: Check `needs-manual-review` PRs daily
-3. **Review Reports**: Read daily summary issues
-4. **Quick Fixes**: For conflicts, fix quickly to unblock automation
-5. **Test Locally**: Before pushing to branches, test locally
+1. **Monitor Labels**: Check `needs-manual-review` PRs daily
+1. **Review Reports**: Read daily summary issues
+1. **Quick Fixes**: For conflicts, fix quickly to unblock automation
+1. **Test Locally**: Before pushing to branches, test locally
 
 ## 📞 Getting Help
 
 1. **Check Logs**: `gh run view <RUN_ID> --log`
-2. **View Documentation**: `.github/workflows/AUTO_PR_SYSTEM.md`
-3. **Create Issue**: Use `automation` label
-4. **Check Summary**: Review daily summary issues
+1. **View Documentation**: `.github/workflows/AUTO_PR_SYSTEM.md`
+1. **Create Issue**: Use `automation` label
+1. **Check Summary**: Review daily summary issues
 
 ## 🔑 Key Files
 

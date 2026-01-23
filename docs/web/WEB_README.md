@@ -6,6 +6,7 @@ application into a modern web application with React frontend and Flask backend.
 ## ✨ New Features (Latest Update)
 
 The desktop version now includes:
+
 - **Cloud Sync**: Encrypted cross-device synchronization with device management
 - **Advanced ML Models**: RandomForest, GradientBoosting, and Neural Networks
 - **Plugin System**: Dynamic plugin loading with hooks and lifecycle management
@@ -15,12 +16,14 @@ These features are being integrated into the web version.
 ## 🌐 Architecture
 
 ### Backend (Flask API)
+
 - **Location**: `web/backend/`
 - **Framework**: Flask with CORS support
 - **Purpose**: RESTful API that wraps the existing Project-AI core functionality
 - **Port**: 5000 (default)
 
 ### Frontend (React + Vite)
+
 - **Location**: `web/frontend/`
 - **Framework**: React 18 with Vite
 - **Routing**: React Router v6
@@ -30,6 +33,7 @@ These features are being integrated into the web version.
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Python 3.8+
 - Node.js 18+
 - npm or yarn
@@ -37,16 +41,19 @@ These features are being integrated into the web version.
 ### Backend Setup
 
 1. Navigate to backend directory:
+
 ```bash
 cd web/backend
 ```
 
-2. Create virtual environment:
+1. Create virtual environment:
+
 ```bash
 python -m venv venv
 ```
 
-3. Activate virtual environment:
+1. Activate virtual environment:
+
 ```bash
 # Windows
 venv\Scripts\activate
@@ -55,19 +62,22 @@ venv\Scripts\activate
 source venv/bin/activate
 ```
 
-4. Install dependencies:
+1. Install dependencies:
+
 ```bash
 pip install -r requirements.txt
 pip install -r ../../requirements.txt  # Install core Project-AI dependencies
 ```
 
-5. Configure environment:
+1. Configure environment:
+
 ```bash
 cp .env.example .env
 # Edit .env with your configuration
 ```
 
-6. Run the backend:
+1. Run the backend:
+
 ```bash
 python app.py
 ```
@@ -77,16 +87,19 @@ Backend will be available at `http://localhost:5000`
 ### Frontend Setup
 
 1. Navigate to frontend directory:
+
 ```bash
 cd web/frontend
 ```
 
-2. Install dependencies:
+1. Install dependencies:
+
 ```bash
 npm install
 ```
 
-3. Run development server:
+1. Run development server:
+
 ```bash
 npm run dev
 ```
@@ -128,22 +141,27 @@ web/
 ## 🔌 API Endpoints
 
 ### Authentication
+
 - `POST /api/auth/login` - User login
 - `POST /api/auth/register` - User registration
 
 ### User Management
+
 - `GET /api/users` - Get all users
 
 ### AI Features
+
 - `POST /api/intent` - Detect user intent
 - `POST /api/image/generate` - Generate images
 - `POST /api/analysis` - Analyze data
 
 ### Learning & Resources
+
 - `GET /api/learning-paths` - Get learning paths
 - `GET /api/security-resources` - Get security resources
 
 ### Emergency
+
 - `POST /api/emergency/alert` - Send emergency alert
 
 ## 🎨 Features Converted from Desktop to Web
@@ -188,12 +206,12 @@ npm run format
 ## 🌟 Next Steps for Integration
 
 1. **Connect Backend to Core Logic**: Wire up the Flask API endpoints to the actual `src/app/core/` modules
-2. **Implement Authentication**: Add JWT-based authentication system
-3. **Database Integration**: Set up SQLAlchemy models for persistent storage
-4. **Complete Frontend Components**: Flesh out the template components with full functionality
-5. **State Management**: Implement Zustand stores for global state
-6. **Testing**: Add unit and integration tests
-7. **Deployment**: Configure for production deployment (Docker, cloud hosting)
+1. **Implement Authentication**: Add JWT-based authentication system
+1. **Database Integration**: Set up SQLAlchemy models for persistent storage
+1. **Complete Frontend Components**: Flesh out the template components with full functionality
+1. **State Management**: Implement Zustand stores for global state
+1. **Testing**: Add unit and integration tests
+1. **Deployment**: Configure for production deployment (Docker, cloud hosting)
 
 ## 📝 Notes
 
@@ -205,10 +223,11 @@ npm run format
 ## 🤝 Integration with Project-AI
 
 When ready to integrate:
+
 1. Merge this branch into main
-2. Desktop app continues to work from `src/app/main.py`
-3. Web app runs from `web/backend/app.py`
-4. Both share the same core functionality in `src/app/core/`
+1. Desktop app continues to work from `src/app/main.py`
+1. Web app runs from `web/backend/app.py`
+1. Both share the same core functionality in `src/app/core/`
 
 ## 📄 License
 

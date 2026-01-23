@@ -7,12 +7,12 @@ Welcome to **Project-AI**, an advanced AI dashboard with command override and me
 ### Option 1: Automatic Setup (Recommended)
 
 1. **Double-click** `setup-desktop.bat` in the Project-AI folder
-2. The setup will:
+1. The setup will:
    - Check for Python 3.11+
    - Create a virtual environment
    - Install all dependencies
    - Launch the application
-3. Follow the on-screen prompts
+1. Follow the on-screen prompts
 
 ### Option 2: Manual Launch
 
@@ -21,7 +21,7 @@ Welcome to **Project-AI**, an advanced AI dashboard with command override and me
 ### Option 3: PowerShell Launch
 
 1. Right-click `launch-desktop.ps1`
-2. Select "Run with PowerShell"
+1. Select "Run with PowerShell"
 
 ## Creating Desktop Shortcuts
 
@@ -90,16 +90,16 @@ python install-shortcuts.py uninstall
 **Solution**:
 
 1. Check that you have administrator privileges
-2. Run `setup-desktop.bat` to repair the installation
-3. Check the console output for specific errors
+1. Run `setup-desktop.bat` to repair the installation
+1. Check the console output for specific errors
 
 ### Shortcuts not created
 
 **Solution**:
 
 1. Run Command Prompt as Administrator
-2. Navigate to Project-AI folder
-3. Run: `python install-shortcuts.py`
+1. Navigate to Project-AI folder
+1. Run: `python install-shortcuts.py`
 
 ## File Structure
 
