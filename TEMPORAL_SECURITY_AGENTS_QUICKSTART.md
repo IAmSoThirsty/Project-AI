@@ -83,7 +83,7 @@ python examples/temporal/code_security_sweep_example.py
 
 ### Temporal UI
 
-- Open http://localhost:8233
+- Open <http://localhost:8233>
 - Navigate to "Workflows"
 - Click on your workflow ID to see:
   - Execution timeline
@@ -133,7 +133,7 @@ async def setup_schedules():
 
 ### Worker won't start
 
-- Check Temporal server is running: `curl http://localhost:7233/health`
+- Check Temporal server is running: `curl <http://localhost:7233/health`>
 - Check port 7233 is not blocked
 - Verify temporalio is installed: `pip show temporalio`
 

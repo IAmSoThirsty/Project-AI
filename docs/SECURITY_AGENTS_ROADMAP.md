@@ -463,10 +463,10 @@ Maintain and improve security agent ecosystem based on production telemetry.
 
 ### C. Contact & Escalation
 
-- Security Alerts: security-alerts@project-ai.internal
+- Security Alerts: <security-alerts@project-ai.internal>
 - On-call Engineer: pagerduty.com/project-ai-security
-- Incident Commander: incident-commander@project-ai.internal
-- Ethics Review: ethics-team@project-ai.internal
+- Incident Commander: <incident-commander@project-ai.internal>
+- Ethics Review: <ethics-team@project-ai.internal>
 
 ---
 

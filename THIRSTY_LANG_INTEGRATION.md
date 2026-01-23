@@ -115,6 +115,6 @@ All files have been verified:
 
 ## References
 
-- Thirsty-lang repository: https://github.com/IAmSoThirsty/Thirsty-lang
+- Thirsty-lang repository: <https://github.com/IAmSoThirsty/Thirsty-lang>
 - Integration guide: src/thirsty_lang/PROJECT_AI_INTEGRATION.md
 - Thirsty-lang README: src/thirsty_lang/README.md

@@ -132,7 +132,7 @@ Added Bandit Python security scanner to CI workflow:
 
 Fixed untrusted input usage in `post-merge-validation.yml`:
 
-#### Before (VULNERABLE):
+#### Before (VULNERABLE)
 
 ```yaml
 with:

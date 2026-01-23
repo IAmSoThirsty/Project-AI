@@ -927,7 +927,7 @@ This charter is part of a comprehensive framework:
 
 **For Charter Concerns:**
 
-- Email: projectaidevs@gmail.com (mark: CONFIDENTIAL CHARTER CONCERN)
+- Email: <projectaidevs@gmail.com> (mark: CONFIDENTIAL CHARTER CONCERN)
 - GitHub Security Advisories: For sensitive issues
 - Guardians: See Security Governance doc for current guardians
 

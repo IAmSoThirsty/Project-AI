@@ -16,13 +16,13 @@ A security scan detected that the `.env` file containing real API keys and passw
 **CRITICAL**: Your API keys were exposed in git history and must be rotated immediately:
 
 1. **Rotate OpenAI API Key** (Do this NOW)
-   - Go to https://platform.openai.com/api-keys
+   - Go to <https://platform.openai.com/api-keys>
    - REVOKE the exposed key (starts with `sk-proj-XXXX...`)
    - Create a NEW key
    - Update your local `.env` file
 
 1. **Rotate SMTP Credentials** (Do this NOW)
-   - Go to https://myaccount.google.com/apppasswords
+   - Go to <https://myaccount.google.com/apppasswords>
    - REVOKE the exposed app password
    - Generate a NEW app password
    - Update your local `.env` file
@@ -62,13 +62,13 @@ cp .env.example .env
 
 **OpenAI API Key** (Optional)
 
-- Sign up at https://platform.openai.com/api-keys
+- Sign up at <https://platform.openai.com/api-keys>
 - Create a new API key
 - Add to `.env`: `OPENAI_API_KEY=sk-proj-YOUR_KEY_HERE`
 
 **Hugging Face API Key** (Optional)
 
-- Sign up at https://huggingface.co/settings/tokens
+- Sign up at <https://huggingface.co/settings/tokens>
 - Create a new token
 - Add to `.env`: `HUGGINGFACE_API_KEY=hf_YOUR_TOKEN_HERE`
 
@@ -83,7 +83,7 @@ FERNET_KEY=YOUR_GENERATED_KEY_HERE
 
 **SMTP Credentials** (Optional - for email alerts)
 
-- For Gmail: Create app password at https://myaccount.google.com/apppasswords
+- For Gmail: Create app password at <https://myaccount.google.com/apppasswords>
 - Add to `.env`:
 
   ```
@@ -97,7 +97,7 @@ FERNET_KEY=YOUR_GENERATED_KEY_HERE
 # This should show nothing (or show as untracked)
 git status .env
 
-# Your .env file should NEVER appear in:
+# Your .env file should NEVER appear in
 git status
 git diff
 git add .

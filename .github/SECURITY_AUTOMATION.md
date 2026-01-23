@@ -557,7 +557,7 @@ To update automation logic:
 
 For critical security issues:
 
-- **Email**: Security@thirstysprojects.com
+- **Email**: <Security@thirstysprojects.com>
 - **GitHub**: Create issue with `security` label
 - **Response Time**: 72 hours
 
