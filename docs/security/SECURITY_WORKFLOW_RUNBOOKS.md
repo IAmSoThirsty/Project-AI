@@ -638,7 +638,7 @@ Next Steps:
 - Full audit of model pipeline
 - Review of access controls
 
-Contact: projectaidevs@gmail.com for questions
+Contact: <projectaidevs@gmail.com> for questions
 ```
 
 ---
