@@ -591,7 +591,7 @@ class ComprehensiveSecurityExpansion:
         with open(filepath, "w", encoding="utf-8") as f:
             json.dump(scenarios_data, f, indent=2, ensure_ascii=False)
 
-        logger.info(f"Exported {len(scenarios_data)} scenarios to {filepath}")
+        logger.info("Exported %s scenarios to %s", len(scenarios_data), filepath)
         return filepath
 
     def generate_summary(self) -> dict[str, Any]:

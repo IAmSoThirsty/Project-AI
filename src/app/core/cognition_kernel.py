@@ -337,11 +337,11 @@ class CognitionKernel:
         self.error_hooks: list[Callable] = []
 
         logger.info("CognitionKernel initialized with integrated subsystems")
-        logger.info(f"Identity: {identity_system is not None}")
-        logger.info(f"Memory: {memory_engine is not None}")
-        logger.info(f"Governance: {governance_system is not None}")
-        logger.info(f"Reflection: {reflection_engine is not None}")
-        logger.info(f"Triumvirate: {triumvirate is not None}")
+        logger.info("Identity: %s", identity_system is not None)
+        logger.info("Memory: %s", memory_engine is not None)
+        logger.info("Governance: %s", governance_system is not None)
+        logger.info("Reflection: %s", reflection_engine is not None)
+        logger.info("Triumvirate: %s", triumvirate is not None)
 
     def process(
         self,
@@ -375,7 +375,7 @@ class CognitionKernel:
         metadata = metadata or {}
         trace_id = f"trace_{uuid.uuid4().hex[:12]}"
 
-        logger.info(f"[{trace_id}] Processing input from {source}")
+        logger.info("[%s] Processing input from %s", trace_id, source)
 
         # Create execution context (single source of truth)
         context = self._create_context(
@@ -414,7 +414,7 @@ class CognitionKernel:
                     "phase": "pipeline",
                 }
 
-                logger.error(f"[{trace_id}] FAILED: {e}", exc_info=True)
+                logger.error("[%s] FAILED: %s", trace_id, e)
 
                 # Run error hooks
                 self._run_error_hooks(context, e)
@@ -484,11 +484,11 @@ class CognitionKernel:
 
         if not decision.approved:
             context.status = ExecutionStatus.BLOCKED
-            logger.warning(f"[{context.trace_id}] BLOCKED: {decision.reason}")
+            logger.warning("[%s] BLOCKED: %s", context.trace_id, decision.reason)
             raise PermissionError(f"Blocked by governance: {decision.reason}")
 
         context.status = ExecutionStatus.APPROVED
-        logger.info(f"[{context.trace_id}] Approved: {decision.reason}")
+        logger.info("[%s] Approved: %s", context.trace_id, decision.reason)
 
     def act(self, action: Action, context: ExecutionContext) -> None:
         """
@@ -503,7 +503,7 @@ class CognitionKernel:
             action: The action to execute
             context: The execution context to mutate
         """
-        logger.info(f"[{context.trace_id}] Executing: {action.action_name}")
+        logger.info("[%s] Executing: %s", context.trace_id, action.action_name)
 
         context.status = ExecutionStatus.EXECUTING
         context.start_time = time.time()
@@ -537,7 +537,7 @@ class CognitionKernel:
                 "partial_execution": context.result is not None,
             }
 
-            logger.error(f"[{context.trace_id}] Execution failed: {e}")
+            logger.error("[%s] Execution failed: %s", context.trace_id, e)
             raise
 
     def reflect(self, context: ExecutionContext) -> None:
@@ -554,7 +554,7 @@ class CognitionKernel:
         if not self.reflection_engine:
             return
 
-        logger.debug(f"[{context.trace_id}] Reflecting on execution")
+        logger.debug("[%s] Reflecting on execution", context.trace_id)
 
         # Determine if reflection should trigger
         should_reflect = self._should_trigger_reflection(context)
@@ -576,10 +576,10 @@ class CognitionKernel:
                 # Store in reflection channel
                 context.channels["reflection"] = reflection_data
 
-                logger.info(f"[{context.trace_id}] Reflection recorded")
+                logger.info("[%s] Reflection recorded", context.trace_id)
 
             except Exception as e:
-                logger.error(f"[{context.trace_id}] Reflection failed: {e}")
+                logger.error("[%s] Reflection failed: %s", context.trace_id, e)
 
     def commit(self, context: ExecutionContext) -> None:
         """
@@ -598,7 +598,7 @@ class CognitionKernel:
         Args:
             context: The execution context to commit
         """
-        logger.debug(f"[{context.trace_id}] Committing execution to memory")
+        logger.debug("[%s] Committing execution to memory", context.trace_id)
 
         # Record in execution history (forensic auditability)
         self.execution_count += 1
@@ -636,10 +636,10 @@ class CognitionKernel:
                         },
                     )
 
-                logger.debug(f"[{context.trace_id}] Memory committed (four-channel)")
+                logger.debug("[%s] Memory committed (four-channel)", context.trace_id)
 
             except Exception as e:
-                logger.error(f"[{context.trace_id}] Memory commit failed: {e}")
+                logger.error("[%s] Memory commit failed: %s", context.trace_id, e)
 
     # ========================================================================
     # Private Helper Methods
@@ -773,7 +773,7 @@ class CognitionKernel:
 
                 return copy.deepcopy(snapshot)
         except Exception as e:
-            logger.error(f"Failed to freeze identity snapshot: {e}")
+            logger.error("Failed to freeze identity snapshot: %s", e)
 
         return {}
 
@@ -830,7 +830,7 @@ class CognitionKernel:
                         consensus_achieved=gov_decision.get("allowed", False),
                     )
             except Exception as e:
-                logger.error(f"Governance check failed: {e}")
+                logger.error("Governance check failed: %s", e)
 
         # Check with Triumvirate if available (secondary priority)
         if self.triumvirate:
@@ -863,10 +863,10 @@ class CognitionKernel:
                     consensus_achieved=approved,
                 )
             except Exception as e:
-                logger.error(f"Triumvirate check failed: {e}")
+                logger.error("Triumvirate check failed: %s", e)
 
         # Default: approve with warning if no governance available
-        logger.warning(f"No governance system available for {action.action_name}")
+        logger.warning("No governance system available for %s", action.action_name)
         return Decision(
             decision_id=decision_id,
             action_id=action.action_id,
@@ -919,7 +919,7 @@ class CognitionKernel:
             try:
                 hook(context, error)
             except Exception as e:
-                logger.error(f"Error hook failed: {e}")
+                logger.error("Error hook failed: %s", e)
 
     def _build_result(
         self,
@@ -965,17 +965,17 @@ class CognitionKernel:
     def add_pre_hook(self, hook: Callable) -> None:
         """Add a pre-execution hook."""
         self.pre_execution_hooks.append(hook)
-        logger.info(f"Added pre-execution hook: {hook.__name__}")
+        logger.info("Added pre-execution hook: %s", hook.__name__)
 
     def add_post_hook(self, hook: Callable) -> None:
         """Add a post-execution hook."""
         self.post_execution_hooks.append(hook)
-        logger.info(f"Added post-execution hook: {hook.__name__}")
+        logger.info("Added post-execution hook: %s", hook.__name__)
 
     def add_error_hook(self, hook: Callable) -> None:
         """Add an error hook."""
         self.error_hooks.append(hook)
-        logger.info(f"Added error hook: {hook.__name__}")
+        logger.info("Added error hook: %s", hook.__name__)
 
     def get_execution_history(self, limit: int = 100) -> list[dict[str, Any]]:
         """

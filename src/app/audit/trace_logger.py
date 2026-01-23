@@ -84,7 +84,7 @@ class TraceLogger:
         }
 
         self.traces[trace_id] = trace_data
-        logger.debug(f"Started trace: {trace_id} for operation: {operation}")
+        logger.debug("Started trace: %s for operation: %s", trace_id, operation)
 
         return trace_id
 
@@ -113,7 +113,7 @@ class TraceLogger:
             Step ID for referencing this step
         """
         if trace_id not in self.traces:
-            logger.error(f"Trace ID not found: {trace_id}")
+            logger.error("Trace ID not found: %s", trace_id)
             return ""
 
         step_id = str(uuid4())
@@ -127,7 +127,7 @@ class TraceLogger:
         }
 
         self.traces[trace_id]["steps"].append(step_data)
-        logger.debug(f"Logged step {step_id} in trace {trace_id}: {step_name}")
+        logger.debug("Logged step %s in trace %s: %s", step_id, trace_id, step_name)
 
         return step_id
 
@@ -148,7 +148,7 @@ class TraceLogger:
             True if ended successfully, False otherwise
         """
         if trace_id not in self.traces:
-            logger.error(f"Trace ID not found: {trace_id}")
+            logger.error("Trace ID not found: %s", trace_id)
             return False
 
         self.traces[trace_id]["end_time"] = datetime.now().isoformat()
@@ -158,7 +158,7 @@ class TraceLogger:
         if self.active_trace == trace_id:
             self.active_trace = None
 
-        logger.info(f"Ended trace: {trace_id}")
+        logger.info("Ended trace: %s", trace_id)
         return True
 
     def get_trace(self, trace_id: str) -> dict[str, Any] | None:

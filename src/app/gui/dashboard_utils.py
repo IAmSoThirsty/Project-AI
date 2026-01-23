@@ -36,7 +36,7 @@ class DashboardErrorHandler:
         parent=None,
     ) -> None:
         """Handle a warning with logging and optional dialog."""
-        logger.warning(f"{context}: {message}")
+        logger.warning("%s: %s", context, message)
         if show_dialog:
             QMessageBox.warning(parent, context, message)
 
@@ -85,7 +85,7 @@ class AsyncWorker(QRunnable):
             result = self.func(*self.args, **self.kwargs)
             self.signals.result.emit(result)
         except Exception as e:
-            logger.error(f"AsyncWorker error: {e}", exc_info=True)
+            logger.error("AsyncWorker error: %s", e)
             self.signals.error.emit(e)
         finally:
             self.signals.finished.emit()
@@ -118,19 +118,19 @@ class DashboardAsyncManager:
 
         def on_finished():
             self.active_tasks.pop(task_id, None)
-            logger.debug(f"Async task {task_id} finished")
+            logger.debug("Async task %s finished", task_id)
 
         worker.signals.finished.connect(on_finished)
         self.active_tasks[task_id] = worker
         self.thread_pool.start(worker)
-        logger.debug(f"Started async task {task_id}")
+        logger.debug("Started async task %s", task_id)
 
     def wait_for_task(self, task_id: str, timeout_ms: int = 5000) -> bool:
         """Wait for a specific task to complete."""
         start_time = 0
         while task_id in self.active_tasks:
             if start_time > timeout_ms:
-                logger.warning(f"Task {task_id} timeout after {timeout_ms}ms")
+                logger.warning("Task %s timeout after %sms", task_id, timeout_ms)
                 return False
             asyncio.sleep(0.1)
             start_time += 100

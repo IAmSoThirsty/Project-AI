@@ -66,7 +66,7 @@ class RisingWaveClient:
         self.conn: psycopg2.extensions.connection | None = None
         self._connect()
 
-        logger.info(f"RisingWave client initialized: {host}:{port}/{database}")
+        logger.info("RisingWave client initialized: %s:%s/%s", host, port, database)
 
     def _connect(self):
         """Establish connection to RisingWave."""
@@ -75,7 +75,7 @@ class RisingWaveClient:
             self.conn.autocommit = True
             logger.info("Connected to RisingWave")
         except psycopg2.Error as e:
-            logger.error(f"Failed to connect to RisingWave: {e}")
+            logger.error("Failed to connect to RisingWave: %s", e)
             raise
 
     def execute(self, query: str, params: tuple = None) -> list[dict]:
@@ -101,7 +101,7 @@ class RisingWaveClient:
                 return []
 
         except psycopg2.Error as e:
-            logger.error(f"Query execution failed: {e}")
+            logger.error("Query execution failed: %s", e)
             raise
 
     def create_source_kafka(
@@ -136,7 +136,7 @@ class RisingWaveClient:
         """
 
         self.execute(query)
-        logger.info(f"Created Kafka source: {source_name}")
+        logger.info("Created Kafka source: %s", source_name)
 
     def create_source_cdc_postgres(
         self,
@@ -176,7 +176,7 @@ class RisingWaveClient:
         """
 
         self.execute(query)
-        logger.info(f"Created CDC source: {source_name} from {host}:{port}/{database}")
+        logger.info("Created CDC source: %s from %s:%s/%s", source_name, host, port, database)
 
     def create_materialized_view(self, view_name: str, query: str):
         """Create materialized view for real-time aggregations.
@@ -193,7 +193,7 @@ class RisingWaveClient:
         """
 
         self.execute(mv_query)
-        logger.info(f"Created materialized view: {view_name}")
+        logger.info("Created materialized view: %s", view_name)
 
     def create_sink_kafka(
         self,
@@ -227,7 +227,7 @@ class RisingWaveClient:
         """
 
         self.execute(query)
-        logger.info(f"Created Kafka sink: {sink_name}")
+        logger.info("Created Kafka sink: %s", sink_name)
 
     def query_stream(
         self, table_or_view: str, where_clause: str = "", limit: int = 100

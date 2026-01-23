@@ -212,9 +212,9 @@ class CerberusCodexBridge(KernelRoutedAgent):
         try:
             with open(self.alert_log_path, "a", encoding="utf-8") as f:
                 f.write(json.dumps(alert) + "\n")
-            logger.info(f"Alert logged: {alert['alert_type']}")
+            logger.info("Alert logged: %s", alert['alert_type'])
         except Exception as e:
-            logger.error(f"Failed to log alert: {e}")
+            logger.error("Failed to log alert: %s", e)
 
     def codex_implement_upgrade(
         self, upgrade_spec: dict[str, Any], codex_instance: Any = None
@@ -242,7 +242,7 @@ class CerberusCodexBridge(KernelRoutedAgent):
         self, upgrade_spec: dict[str, Any], codex_instance: Any = None
     ) -> dict[str, Any]:
         """Internal implementation of upgrade."""
-        logger.info(f"Codex implementing upgrade: {upgrade_spec.get('upgrade_type')}")
+        logger.info("Codex implementing upgrade: %s", upgrade_spec.get('upgrade_type'))
 
         try:
             # Determine implementation strategy
@@ -277,7 +277,7 @@ class CerberusCodexBridge(KernelRoutedAgent):
             return result
 
         except Exception as e:
-            logger.error(f"Failed to implement upgrade: {e}")
+            logger.error("Failed to implement upgrade: %s", e)
             return {"success": False, "error": str(e)}
 
     def _implement_thirsty_lang_feature(self, spec: dict[str, Any]) -> dict[str, Any]:
@@ -285,7 +285,7 @@ class CerberusCodexBridge(KernelRoutedAgent):
         feature = spec.get("thirsty_feature")
         module = spec.get("thirsty_module")
 
-        logger.info(f"Integrating Thirsty-lang feature: {feature} from {module}")
+        logger.info("Integrating Thirsty-lang feature: %s from %s", feature, module)
 
         # Verify Thirsty-lang module exists
         thirsty_path = f"src/thirsty_lang/src/security/{module}.js"

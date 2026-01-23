@@ -208,7 +208,7 @@ class AlertManager:
                 if rule.should_fire(metrics):
                     self._fire_alert(rule, metrics)
             except Exception as e:
-                logger.error(f"Error evaluating rule {rule.name}: {e}")
+                logger.error("Error evaluating rule %s: %s", rule.name, e)
 
     def _fire_alert(self, rule: AlertRule, metrics: dict[str, Any]):
         """Fire an alert."""
@@ -222,7 +222,7 @@ class AlertManager:
         try:
             message = rule.format_message(metrics)
         except Exception as e:
-            logger.error(f"Error formatting alert message for {rule.name}: {e}")
+            logger.error("Error formatting alert message for %s: %s", rule.name, e)
             message = f"Alert: {rule.name} (message formatting failed)"
 
         # Create alert
@@ -237,7 +237,7 @@ class AlertManager:
 
         # Log alert
         self.alert_history.append(alert)
-        logger.warning(f"[{rule.severity.value.upper()}] {message}")
+        logger.warning("[%s] %s", rule.severity.value.upper(), message)
 
         # Send notifications
         for channel in rule.channels:
@@ -256,23 +256,23 @@ class AlertManager:
     def _send_notification(self, channel: AlertChannel, alert: dict[str, Any]):
         """Send alert notification to specified channel."""
         if channel == AlertChannel.PAGER:
-            logger.critical(f"PAGER ALERT: {alert['message']}")
+            logger.critical("PAGER ALERT: %s", alert['message'])
             # In production: integrate with PagerDuty/Opsgenie
 
         elif channel == AlertChannel.EMAIL:
-            logger.info(f"EMAIL ALERT: {alert['message']}")
+            logger.info("EMAIL ALERT: %s", alert['message'])
             # In production: send email via SMTP
 
         elif channel == AlertChannel.SLACK:
-            logger.info(f"SLACK ALERT: {alert['message']}")
+            logger.info("SLACK ALERT: %s", alert['message'])
             # In production: send to Slack webhook
 
         elif channel == AlertChannel.TICKET:
-            logger.info(f"TICKET CREATED: {alert['message']}")
+            logger.info("TICKET CREATED: %s", alert['message'])
             # In production: create Jira/GitHub issue
 
         elif channel == AlertChannel.LOG:
-            logger.warning(f"LOG ALERT: {alert['message']}")
+            logger.warning("LOG ALERT: %s", alert['message'])
 
     def _create_incident(
         self, rule: AlertRule, alert: dict[str, Any], metrics: dict[str, Any]
@@ -303,7 +303,7 @@ class AlertManager:
 
     def _trigger_incident_workflow(self, incident: dict[str, Any]):
         """Trigger automated incident response workflow."""
-        logger.info(f"Triggering incident workflow for {incident['incident_id']}")
+        logger.info("Triggering incident workflow for %s", incident['incident_id'])
 
         # In production: integrate with Temporal workflow
         # Example actions:
@@ -323,11 +323,11 @@ class AlertManager:
                 incident["status"] = "resolved"
                 incident["resolved_at"] = datetime.now().isoformat()
                 incident["resolution_notes"] = resolution_notes
-                logger.info(f"Incident resolved: {incident_id}")
+                logger.info("Incident resolved: %s", incident_id)
                 self._save_incident_log()
                 return
 
-        logger.warning(f"Incident not found: {incident_id}")
+        logger.warning("Incident not found: %s", incident_id)
 
     def get_alert_summary(self, hours: int = 24) -> dict[str, Any]:
         """Get summary of alerts in the last N hours."""
@@ -363,14 +363,14 @@ class AlertManager:
                 with open(history_file) as f:
                     self.alert_history = json.load(f)
             except Exception as e:
-                logger.error(f"Could not load alert history: {e}")
+                logger.error("Could not load alert history: %s", e)
 
         if incident_file.exists():
             try:
                 with open(incident_file) as f:
                     self.incident_log = json.load(f)
             except Exception as e:
-                logger.error(f"Could not load incident log: {e}")
+                logger.error("Could not load incident log: %s", e)
 
     def _save_alert_history(self):
         """Save alert history to disk."""
@@ -381,7 +381,7 @@ class AlertManager:
             with open(history_file, "w") as f:
                 json.dump(self.alert_history[-10000:], f, indent=2)
         except Exception as e:
-            logger.error(f"Could not save alert history: {e}")
+            logger.error("Could not save alert history: %s", e)
 
     def _save_incident_log(self):
         """Save incident log to disk."""
@@ -391,4 +391,4 @@ class AlertManager:
             with open(incident_file, "w") as f:
                 json.dump(self.incident_log, f, indent=2)
         except Exception as e:
-            logger.error(f"Could not save incident log: {e}")
+            logger.error("Could not save incident log: %s", e)

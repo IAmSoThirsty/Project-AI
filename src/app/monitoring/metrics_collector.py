@@ -71,7 +71,7 @@ class MetricsCollector:
                     self._last_update[key] = count
 
         except Exception as e:
-            logger.error(f"Error collecting persona metrics: {e}")
+            logger.error("Error collecting persona metrics: %s", e)
 
     def update_persona_interaction(self, interaction_type: str) -> None:
         """Record a persona interaction.
@@ -145,7 +145,7 @@ class MetricsCollector:
                 metrics.memory_storage_bytes.set(size_bytes)
 
         except Exception as e:
-            logger.error(f"Error collecting memory metrics: {e}")
+            logger.error("Error collecting memory metrics: %s", e)
 
     def record_memory_query(
         self,
@@ -206,7 +206,7 @@ class MetricsCollector:
                 metrics.learning_pending_requests.set(pending)
 
         except Exception as e:
-            logger.error(f"Error collecting learning metrics: {e}")
+            logger.error("Error collecting learning metrics: %s", e)
 
     def record_black_vault_addition(self, reason: str = "denied") -> None:
         """Record addition to Black Vault.
@@ -396,7 +396,7 @@ class MetricsCollector:
                         self._last_update[key] = count
 
         except Exception as e:
-            logger.error(f"Error in periodic metrics collection: {e}")
+            logger.error("Error in periodic metrics collection: %s", e)
 
 
 # Global collector instance

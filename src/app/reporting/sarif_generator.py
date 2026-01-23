@@ -401,33 +401,38 @@ class SARIFGenerator:
         if not token:
             raise ValueError("GITHUB_TOKEN environment variable required")
 
-        # Save report temporarily
-        temp_file = f"/tmp/sarif-{datetime.now().timestamp()}.json"
-        self.save_report(report, temp_file)
+        # Save report temporarily using secure temp file
+        import tempfile
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as temp_file:
+            temp_filename = temp_file.name
+            json.dump(report, temp_file, indent=2)
+        
+        try:
+            # Upload via GitHub API
+            url = f"https://api.github.com/repos/{repo}/code-scanning/sarifs"
+            headers = {
+                "Authorization": f"token {token}",
+                "Accept": "application/vnd.github.v3+json",
+            }
 
-        # Upload via GitHub API
-        url = f"https://api.github.com/repos/{repo}/code-scanning/sarifs"
-        headers = {
-            "Authorization": f"token {token}",
-            "Accept": "application/vnd.github.v3+json",
-        }
+            with open(temp_filename) as f:
+                sarif_content = f.read()
 
-        with open(temp_file) as f:
-            sarif_content = f.read()
+            sarif_b64 = base64.b64encode(sarif_content.encode()).decode()
 
-        sarif_b64 = base64.b64encode(sarif_content.encode()).decode()
+            data = {
+                "commit_sha": commit_sha,
+                "ref": "refs/heads/main",
+                "sarif": sarif_b64,
+                "tool_name": self.tool_name,
+            }
 
-        data = {
-            "commit_sha": commit_sha,
-            "ref": "refs/heads/main",
-            "sarif": sarif_b64,
-            "tool_name": self.tool_name,
-        }
+            # Add timeout to prevent hanging
+            response = requests.post(url, headers=headers, json=data, timeout=30)
+            response.raise_for_status()
 
-        response = requests.post(url, headers=headers, json=data)
-        response.raise_for_status()
-
-        # Clean up
-        os.remove(temp_file)
-
-        return response.json()
+            return response.json()
+        finally:
+            # Clean up temp file
+            if os.path.exists(temp_filename):
+                os.remove(temp_filename)

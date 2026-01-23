@@ -89,7 +89,8 @@ async def simulate_ai_call(prompt: str) -> str:
     await asyncio.sleep(2)
 
     # Generate a deterministic response based on the input
-    prompt_hash = hashlib.md5(prompt.encode()).hexdigest()[:8]
+    # Using MD5 only for non-security purposes (generating a unique ID)
+    prompt_hash = hashlib.md5(prompt.encode(), usedforsecurity=False).hexdigest()[:8]
 
     response = (
         f"AI Response (id: {prompt_hash}): "
