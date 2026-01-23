@@ -53,7 +53,7 @@ class SecurityManager {
 
     // Handle threats if found
     if (threats.length > 0) {
-      for (let i = 0; i < threats.length; i++) {
+      for (var i = 0; i < threats.length; i++) {
         this.policyEngine.handleThreat(threats[i]);
       }
     }

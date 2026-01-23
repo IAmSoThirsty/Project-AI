@@ -74,7 +74,7 @@ class ThirstyPackageManager {
         return;
       }
 
-      for (const pkg in allDeps) {
+      for (var pkg in allDeps) {
         if (allDeps.hasOwnProperty(pkg)) {
           const version = allDeps[pkg];
           console.log('  • ' + pkg + '@' + version);
@@ -124,7 +124,7 @@ class ThirstyPackageManager {
 
     if (Object.keys(config.dependencies).length > 0) {
       console.log('\n Dependencies:');
-      for (const pkg in config.dependencies) {
+      for (var pkg in config.dependencies) {
         if (config.dependencies.hasOwnProperty(pkg)) {
           const version = config.dependencies[pkg];
           console.log('  • ' + pkg + '@' + version);
@@ -134,7 +134,7 @@ class ThirstyPackageManager {
 
     if (Object.keys(config.devDependencies).length > 0) {
       console.log('\n DevDependencies:');
-      for (const pkg in config.devDependencies) {
+      for (var pkg in config.devDependencies) {
         if (config.devDependencies.hasOwnProperty(pkg)) {
           const version = config.devDependencies[pkg];
           console.log('  • ' + pkg + '@' + version);
@@ -170,7 +170,7 @@ class ThirstyPackageManager {
     }
 
     console.log('\nFound ' + results.length + ' package(s):\n');
-    for (let i = 0; i < results.length; i++) {
+    for (var i = 0; i < results.length; i++) {
       const pkg = results[i];
       console.log('  ' + pkg.name + '@' + pkg.version);
       console.log('    ' + pkg.description);

@@ -33,7 +33,8 @@ class ThirstyDebugger extends ThirstyInterpreter {
     console.log('🐛 Thirsty-lang Debugger');
     console.log('Type "help" for debugger commands\n');
 
-    for (const lineObj of this.lines) {
+    for (var i = 0; i < this.lines.length; i++) {
+      const lineObj = this.lines[i];
       this.currentLine = lineObj.number;
       const line = lineObj.code;
 
@@ -70,7 +71,7 @@ class ThirstyDebugger extends ThirstyInterpreter {
     const end = Math.min(this.lines.length, this.currentLine + 2);
 
     console.log('\nCode context:');
-    for (let i = start; i < end; i++) {
+    for (var i = start; i < end; i++) {
       const line = this.lines[i];
       const marker = line.number === this.currentLine ? '→' : ' ';
       const bp = this.breakpoints.has(line.number) ? '🔴' : '  ';
@@ -80,7 +81,9 @@ class ThirstyDebugger extends ThirstyInterpreter {
     // Show watched variables
     if (this.watchVariables.size > 0) {
       console.log('\nWatched variables:');
-      for (const varName of this.watchVariables) {
+      var watchedVars = Array.from(this.watchVariables);
+      for (var i = 0; i < watchedVars.length; i++) {
+        const varName = watchedVars[i];
         const value = this.variables[varName];
         console.log('  ' + varName + ' = ' + JSON.stringify(value));
       }
@@ -161,7 +164,7 @@ class ThirstyDebugger extends ThirstyInterpreter {
       case 'vars':
       case 'v':
         console.log('\nVariables:');
-        for (const name in this.variables) {
+        for (var name in this.variables) {
           if (this.variables.hasOwnProperty(name)) {
             const value = this.variables[name];
             console.log('  ' + name + ' = ' + JSON.stringify(value));
@@ -174,7 +177,9 @@ class ThirstyDebugger extends ThirstyInterpreter {
           console.log('No breakpoints set');
         } else {
           console.log('Breakpoints:');
-          for (const bp of this.breakpoints) {
+          var breakpointArray = Array.from(this.breakpoints);
+          for (var i = 0; i < breakpointArray.length; i++) {
+            const bp = breakpointArray[i];
             console.log('  Line ' + bp);
           }
         }

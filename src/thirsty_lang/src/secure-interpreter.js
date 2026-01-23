@@ -49,8 +49,8 @@ class SecureThirstyInterpreter {
     // Execute without security
     const lines = code.split('\n').map(function (line) { return line.trim() }).filter(function(line) { return line && !line.startsWith('//') });
 
-    for (const line of lines) {
-      this.executeLine(line);
+    for (var i = 0; i < lines.length; i++) {
+      this.executeLine(lines[i]);
     }
 
     return { executed: true, security: null };
@@ -62,8 +62,8 @@ class SecureThirstyInterpreter {
   executeSecured(code) {
     const lines = code.split('\n').map(function(line) { return line.trim(); }).filter(function(line) { return line && !line.startsWith('//'); });
 
-    for (const line of lines) {
-      this.executeLine(line);
+    for (var i = 0; i < lines.length; i++) {
+      this.executeLine(lines[i]);
     }
   }
 

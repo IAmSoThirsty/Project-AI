@@ -21,12 +21,12 @@ class ThirstyBenchmark {
     const interpreter = new ThirstyInterpreter();
 
     // Warmup
-    for (let i = 0; i < 10; i++) {
+    for (var i = 0; i < 10; i++) {
       interpreter.execute(code);
     }
 
     // Actual benchmark
-    for (let i = 0; i < iterations; i++) {
+    for (var i = 0; i < iterations; i++) {
       const start = process.hrtime.bigint();
       interpreter.execute(code);
       const end = process.hrtime.bigint();
@@ -67,7 +67,7 @@ class ThirstyBenchmark {
 
     const sorted = [...this.results].sort(function(a, b) { return a.average - b.average; });
 
-    for (let index = 0; index < sorted.length; index++) {
+    for (var index = 0; index < sorted.length; index++) {
       const result = sorted[index];
       console.log((index + 1) + '. ' + result.name);
       console.log('   Average: ' + result.average.toFixed(3) + ' ms');
@@ -80,7 +80,7 @@ class ThirstyBenchmark {
     if (sorted.length > 1) {
       console.log('Performance Comparison:');
       const fastest = sorted[0];
-      for (let index = 0; index < sorted.length; index++) {
+      for (var index = 0; index < sorted.length; index++) {
         const result = sorted[index];
         if (index === 0) {
           console.log('  ' + result.name + ': Baseline (fastest)');
