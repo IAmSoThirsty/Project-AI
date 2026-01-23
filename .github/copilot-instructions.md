@@ -343,7 +343,7 @@ print(Fernet.generate_key().decode())
 API Key Setup:
 
 - **OpenAI**: Sign up at <https://platform.openai.com/api-keys>
-- **Hugging Face**: Create account and get token at <https://huggingface.co/settings/tokens>
+- **Hugging Face**: Create account and get token at <a href="https://huggingface.co/settings/tokens">https://huggingface.co/settings/tokens</a>
 
 Dependencies:
 
