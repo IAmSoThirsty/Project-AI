@@ -1,13 +1,22 @@
-# Secure H.323 Enterprise Architecture & Deployment Specification
+## 2. Architecture Overview
 
-## 1. Scope & Objectives
+### 2.1 Core Components
 
-This specification defines a secure H.323 enterprise deployment with the following properties:
-- **Comprehensive H.235 protection:** All signaling (RAS, H.225, H.245) and media (RTP) protected with H.235 mechanisms.
-- **Gateway interworking:** Interoperability with legacy H.320/ISDN/PSTN via secure, policy-enforcing gateways.
-- **Gatekeeper-centric zone model:** All endpoints, MCUs, and gateways operate within a managed zone, with the Gatekeeper (GK) as security and routing authority.
-- **PKI-based identity:** All H.323 devices authenticate and authorize via enterprise PKI with X.509 certificates.
-- **SRTP media protection:** All voice/video is protected using Secure RTP (SRTP) negotiated by H.245/H.235.
-- **Strict admission, monitoring, and lifecycle management:** Gatekeeper enforces access, policies, and maintains logging for compliance and operational reliability.
+- **Gatekeeper (GK):** Central policy engine for the zone, handles endpoint registration, call admission, address resolution, and bandwidth/security enforcement.
+- **Gateways (GW):** Bridges the H.323 zone with external networks (PSTN, ISDN/H.320). Responsible for protocol, codec, signaling, and security boundary translation.
+- **Endpoints (EP):** User devices—their signaling, authentication, and media handling must fully support H.323 and H.235.
+- **MCU (Multipoint Control Unit):** Optional, hosts multi-party conferences securely within the zone.
 
-This specification is suitable for production, security review, and certification.
+### 2.2 Zone Model
+
+A **zone** contains:
+- All endpoints, gateways, MCUs
+- ≥1 Gatekeeper (high-availability recommended)
+- Gatekeepers are solely responsible for:
+    - Address mapping (H.323 IDs, E.164 aliases)
+    - Admission control (policy, authorization, CAC [Call Admission Control])
+    - Security enforcement (H.235 profiles, PKI validation)
+    - Bandwidth/resource management
+- Gateways enforce security boundary between:
+    - Secure IP (H.323) and TDM (H.320/ISDN/PSTN, etc.)
+    - Interworking and codec translation
