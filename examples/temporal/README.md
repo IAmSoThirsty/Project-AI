@@ -67,7 +67,7 @@ PYTHONPATH=src python examples/temporal/batch_workflows_example.py
 
 View workflow execution in the Temporal Web UI:
 
-- **URL**: http://localhost:8233
+- **URL**: <http://localhost:8233>
 - **Namespace**: default
 - **Task Queue**: project-ai-tasks
 

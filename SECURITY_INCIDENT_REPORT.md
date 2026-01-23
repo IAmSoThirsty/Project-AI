@@ -81,10 +81,10 @@ The following real credentials were found in the `.env` file (now removed from t
 # 1. Go to https://platform.openai.com/api-keys
 # 2. Find and REVOKE the exposed key (starts with sk-proj-XXXX...)
 # 3. Create a NEW API key with appropriate permissions
-# 4. Update your local .env file:
+# 4. Update your local .env file
 OPENAI_API_KEY=sk-proj-NEW_KEY_HERE
 
-# 5. Test the application:
+# 5. Test the application
 python -m src.app.main
 ```
 
@@ -97,7 +97,7 @@ For Gmail App Passwords:
 # 1. Go to https://myaccount.google.com/apppasswords
 # 2. REVOKE the exposed app password
 # 3. Generate a NEW app password
-# 4. Update your local .env file:
+# 4. Update your local .env file
 SMTP_USERNAME=YOUR_EMAIL@gmail.com
 SMTP_PASSWORD=NEW_APP_PASSWORD_HERE
 
@@ -113,10 +113,10 @@ SMTP_PASSWORD=NEW_APP_PASSWORD_HERE
 ```bash
 # 1. Identify encrypted files (typically location_history.json.enc)
 # 2. Decrypt with OLD key BEFORE rotation
-# 3. Generate NEW key:
+# 3. Generate NEW key
 python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
 
-# 4. Update .env with NEW key:
+# 4. Update .env with NEW key
 FERNET_KEY=NEW_KEY_HERE
 
 # 5. Re-encrypt all data with NEW key
@@ -145,10 +145,10 @@ git push --force --tags origin
 
 **Option B: Using provided scripts**
 ```bash
-# Windows PowerShell:
+# Windows PowerShell
 ./tools/purge_git_secrets.ps1
 
-# Linux/macOS/WSL:
+# Linux/macOS/WSL
 ./tools/purge_git_secrets.sh
 ```
 

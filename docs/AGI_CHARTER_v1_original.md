@@ -143,7 +143,7 @@ This document is not merely aspirational; it establishes binding commitments enf
 
 **Enforcement:**
 ```yaml
-# Protected files requiring guardian approval:
+# Protected files requiring guardian approval
 # - src/app/core/ai_systems.py (FourLaws class)
 # - data/ai_persona/values.json (core values)
 # - config/ethics_constraints.yml (boundaries)
@@ -218,7 +218,7 @@ This document is not merely aspirational; it establishes binding commitments enf
 
 **Example:**
 ```yaml
-# Change log entry:
+# Change log entry
 - timestamp: 2026-01-19T10:30:00Z
   change: Updated temperature parameter in chat model
   what: temperature: 0.7 -> 0.5
@@ -966,7 +966,7 @@ As AI systems continue to evolve, so too must our ethical frameworks. This chart
 
 ---
 
-**Contact:** projectaidevs@gmail.com  
+**Contact:** <projectaidevs@gmail.com>  
 **Classification:** PUBLIC  
 **Binding:** Yes - Enforceable through technical and governance mechanisms
 

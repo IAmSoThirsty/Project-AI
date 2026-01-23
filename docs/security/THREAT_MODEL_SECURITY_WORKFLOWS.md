@@ -92,7 +92,7 @@ We use **STRIDE** (Microsoft) + **OWASP Top 10** + **MITRE ATT&CK** for categori
 - **Description:** Dispute over who released specific artifacts
 - **Mitigation:** Rekor transparency log provides immutable audit trail
 - **Coverage:** 100% - All signatures logged permanently
-- **Verification:** Check Rekor log at https://rekor.sigstore.dev/
+- **Verification:** Check Rekor log at <https://rekor.sigstore.dev/>
 - **Residual Risk:** None - transparency log is immutable
 
 #### 4. **Integrity Attack - Artifact Corruption** 🟠 HIGH
@@ -387,10 +387,10 @@ Goal: Exploit Vulnerable Dependency
 
 **For lower false positives (more permissive):**
 ```yaml
-# In workflow file, set environment variable:
+# In workflow file, set environment variable
 AI_SECURITY_MODE: "permissive"
 
-# Permissive mode:
+# Permissive mode
 - Ignores medium-severity findings
 - Requires critical + high for PR blocking
 - Reduces keyword list for poisoning detection
@@ -400,7 +400,7 @@ AI_SECURITY_MODE: "permissive"
 ```yaml
 AI_SECURITY_MODE: "strict"
 
-# Strict mode:
+# Strict mode
 - Blocks on medium severity
 - Expands keyword detection
 - Requires checksums for all models
@@ -409,7 +409,7 @@ AI_SECURITY_MODE: "strict"
 
 **Custom allowlist (for known safe patterns):**
 ```python
-# Add to ai_ml_security_scan.py:
+# Add to ai_ml_security_scan.py
 ALLOWED_REDUCE_USES = [
     "data/ai_persona/legacy_model.pkl",  # Legacy model, audited safe
     "data/vectors/embeddings.pkl",       # Simple numpy arrays only
@@ -488,7 +488,7 @@ graph LR
 - **Solution:** Deduplicate in PR comment, show single alert with both sources
 
 ```python
-# In PR comment aggregation:
+# In PR comment aggregation
 findings = {
     "eval() in model_loader.py:42": {
         "sources": ["Bandit B307", "AI/ML Security"],
@@ -804,7 +804,7 @@ tools:
 
 **Example: Override mechanism**
 ```yaml
-# In PR description, security team can add:
+# In PR description, security team can add
 [security-override: ai-ml-false-positive]
 Reason: Legacy model using __reduce__ for numpy serialization
 Approved-by: @security-team
@@ -878,10 +878,10 @@ gh run watch
 
 ### Tools and Projects
 
-- **Sigstore:** https://www.sigstore.dev/
-- **Syft:** https://github.com/anchore/syft
-- **ModelScan:** https://github.com/protectai/modelscan
-- **Grype:** https://github.com/anchore/grype
+- **Sigstore:** <https://www.sigstore.dev/>
+- **Syft:** <https://github.com/anchore/syft>
+- **ModelScan:** <https://github.com/protectai/modelscan>
+- **Grype:** <https://github.com/anchore/grype>
 
 ### Related Documentation
 
@@ -897,7 +897,7 @@ gh run watch
 **Questions or concerns about threat coverage?**
 
 - Open GitHub issue with label `threat-model`
-- Email: projectaidevs@gmail.com
+- Email: <projectaidevs@gmail.com>
 - Security advisories: Use GitHub Security tab
 
 ---

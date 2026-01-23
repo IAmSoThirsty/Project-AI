@@ -17,11 +17,11 @@ The following credentials were found in git history and **MUST BE ROTATED IMMEDI
 1. **OpenAI API Key**: `sk-proj-[REDACTED]...`
    - **Location**: Commit `6ff0c3e5bae216c2f12da69c0f9d8c07a61d1bf9`, file `.env`
    - **Risk**: High - Can be used to make OpenAI API calls on your account
-   - **Action**: REVOKE immediately at https://platform.openai.com/api-keys
+   - **Action**: REVOKE immediately at <https://platform.openai.com/api-keys>
    - **Key Pattern**: Starts with `sk-proj-cFQpst...` (first 15 chars for identification)
 
 1. **SMTP Credentials**:
-   - **Username**: `ProjectAiDevs@gmail.com`
+   - **Username**: `<ProjectAiDevs@gmail.com>`
    - **Password**: `[REDACTED]` (starts with `R960...`)
    - **Location**: Same commit, file `.env`
    - **Risk**: Critical - Full email account access
@@ -53,7 +53,7 @@ The following credentials were found in git history and **MUST BE ROTATED IMMEDI
 ### 2. Secure Email Account
 
 ```bash
-# For Gmail:
+# For Gmail
 # 1. Go to: https://myaccount.google.com/security
 # 2. Change account password immediately
 # 3. Revoke all app passwords: https://myaccount.google.com/apppasswords
@@ -315,9 +315,9 @@ These are not actual secrets and are safe to remain in the codebase.
 
 - **Secret Management Guide**: `docs/security/SECRET_MANAGEMENT.md`
 - **Purge Runbook**: `docs/security/SECRET_PURGE_RUNBOOK.md`
-- **OpenAI API Keys**: https://platform.openai.com/api-keys
-- **Google Account Security**: https://myaccount.google.com/security
-- **GitHub Secret Scanning**: https://docs.github.com/en/code-security/secret-scanning
+- **OpenAI API Keys**: <https://platform.openai.com/api-keys>
+- **Google Account Security**: <https://myaccount.google.com/security>
+- **GitHub Secret Scanning**: <https://docs.github.com/en/code-security/secret-scanning>
 
 ---
 

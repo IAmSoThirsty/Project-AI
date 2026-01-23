@@ -80,10 +80,10 @@ This starts:
 
 1. **Access the services:**
 
-- **Grafana**: http://localhost:3000 (admin/admin)
-- **Prometheus**: http://localhost:9090
-- **AlertManager**: http://localhost:9093
-- **Metrics**: http://localhost:8000/metrics
+- **Grafana**: <http://localhost:3000> (admin/admin)
+- **Prometheus**: <http://localhost:9090>
+- **AlertManager**: <http://localhost:9093>
+- **Metrics**: <http://localhost:8000/metrics>
 
 1. **View pre-configured dashboards:**
 
@@ -101,7 +101,7 @@ pip install prometheus-client
 python -m src.app.monitoring.metrics_server
 ```
 
-Server will be available at http://localhost:8000/metrics
+Server will be available at <http://localhost:8000/metrics>
 
 ---
 
@@ -355,7 +355,7 @@ Located in `config/grafana/dashboards/`:
 
 ### Accessing Dashboards
 
-1. Navigate to http://localhost:3000
+1. Navigate to <http://localhost:3000>
 1. Login (default: admin/admin)
 1. Go to Dashboards → Browse → Project-AI folder
 1. Select "AI System Health"
@@ -433,7 +433,7 @@ curl -X POST http://localhost:9093/api/v1/alerts \
 
 During maintenance:
 
-1. Navigate to http://localhost:9093
+1. Navigate to <http://localhost:9093>
 1. Click "Silences" → "New Silence"
 1. Add matchers (e.g., `alertname="MemorySystemOverloaded"`)
 1. Set duration and comment
@@ -510,7 +510,7 @@ metrics.custom_metric.labels(label1='value1', label2='value2').inc()
    ```
 
 1. **Verify Prometheus is scraping:**
-   - Navigate to http://localhost:9090/targets
+   - Navigate to <http://localhost:9090/targets>
    - Check if `project-ai-app` target is UP
    - If DOWN, check container networking
 
@@ -524,11 +524,11 @@ metrics.custom_metric.labels(label1='value1', label2='value2').inc()
 ### Alerts Not Firing
 
 1. **Verify alert rules loaded:**
-   - Navigate to http://localhost:9090/alerts
+   - Navigate to <http://localhost:9090/alerts>
    - Check if rules are present
 
 1. **Check AlertManager:**
-   - Navigate to http://localhost:9093
+   - Navigate to <http://localhost:9093>
    - Verify configuration and status
 
 1. **Test email configuration:**
@@ -720,10 +720,10 @@ if __name__ == '__main__':
 
 ## Support and Resources
 
-- **Prometheus Documentation**: https://prometheus.io/docs/
-- **Grafana Documentation**: https://grafana.com/docs/
-- **PromQL Guide**: https://prometheus.io/docs/prometheus/latest/querying/basics/
-- **Project-AI Issues**: https://github.com/IAmSoThirsty/Project-AI/issues
+- **Prometheus Documentation**: <https://prometheus.io/docs/>
+- **Grafana Documentation**: <https://grafana.com/docs/>
+- **PromQL Guide**: <https://prometheus.io/docs/prometheus/latest/querying/basics/>
+- **Project-AI Issues**: <https://github.com/IAmSoThirsty/Project-AI/issues>
 
 ---
 

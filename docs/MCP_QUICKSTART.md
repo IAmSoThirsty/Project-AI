@@ -215,9 +215,9 @@ export PYTHONPATH=/path/to/Project-AI:$PYTHONPATH
 ## Support
 
 - 📖 Documentation: `/docs/MCP_CONFIGURATION.md`
-- 🐛 Issues: https://github.com/IAmSoThirsty/Project-AI/issues
-- 💬 Discussions: https://github.com/IAmSoThirsty/Project-AI/discussions
-- 📧 MCP Protocol: https://modelcontextprotocol.io/
+- 🐛 Issues: <https://github.com/IAmSoThirsty/Project-AI/issues>
+- 💬 Discussions: <https://github.com/IAmSoThirsty/Project-AI/discussions>
+- 📧 MCP Protocol: <https://modelcontextprotocol.io/>
 
 ---
 
