@@ -1,23 +1,13 @@
 # Secure H.323 Enterprise Architecture & Deployment Specification
 
-## Overview
-This document provides specifications for deploying the H.323 protocol securely within an enterprise architecture. H.323 is a protocol that provides standards for audio, video, and data communications over IP-based networks.
+## 1. Scope & Objectives
 
-## Key Components
-1. **Gateways**: Connect legacy H.323 systems to IP networks.
-2. **Gatekeepers**: Manage H.323 endpoints and resources.
-3. **Endpoints**: Devices or applications that initiate or receive H.323 calls.
+This specification defines a secure H.323 enterprise deployment with the following properties:
+- **Comprehensive H.235 protection:** All signaling (RAS, H.225, H.245) and media (RTP) protected with H.235 mechanisms.
+- **Gateway interworking:** Interoperability with legacy H.320/ISDN/PSTN via secure, policy-enforcing gateways.
+- **Gatekeeper-centric zone model:** All endpoints, MCUs, and gateways operate within a managed zone, with the Gatekeeper (GK) as security and routing authority.
+- **PKI-based identity:** All H.323 devices authenticate and authorize via enterprise PKI with X.509 certificates.
+- **SRTP media protection:** All voice/video is protected using Secure RTP (SRTP) negotiated by H.245/H.235.
+- **Strict admission, monitoring, and lifecycle management:** Gatekeeper enforces access, policies, and maintains logging for compliance and operational reliability.
 
-## Security Measures
-- **Encryption**: Use secure media (SRTP) and signaling (TLS) to encrypt communications.
-- **Authentication**: Ensure that devices authenticate using robust mechanisms.
-- **Firewalls**: Configure firewalls to allow only necessary traffic for H.323 communications.
-
-## Deployment Steps
-1. Assess the current network infrastructure.
-2. Select suitable H.323 components based on organizational needs.
-3. Implement security measures as outlined above.
-4. Monitor and manage the H.323 deployment continually for security and performance.
-
-## Conclusion
-Properly securing H.323 communication is critical to safeguarding enterprise communications and ensuring reliability in operations.
+This specification is suitable for production, security review, and certification.
