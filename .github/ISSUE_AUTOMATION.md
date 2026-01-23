@@ -9,6 +9,7 @@ The Project-AI repository now includes a comprehensive automated issue managemen
 ### 1. Automatic Issue Triage
 
 Every new issue is automatically:
+
 - **Categorized** into one of: security, bug, feature, documentation, or other
 - **Labeled** with appropriate tags based on content analysis
 - **Prioritized** as high, medium, or low priority
@@ -17,6 +18,7 @@ Every new issue is automatically:
 ### 2. Automatic Issue Resolution
 
 The system attempts to automatically resolve issues when possible:
+
 - **Security Issues**: Creates PRs to update vulnerable dependencies
 - **False Positives**: Identifies and closes issues created by buggy workflows
 - **Documentation Issues**: Attempts to fix simple documentation problems
@@ -25,6 +27,7 @@ The system attempts to automatically resolve issues when possible:
 ### 3. Automatic Issue Closing
 
 Issues are automatically closed when:
+
 - **Stale**: No activity for 30+ days (configurable, with exemptions)
 - **False Positive**: Security scans reporting incorrect information
 - **Duplicate**: Same issue already exists
@@ -33,6 +36,7 @@ Issues are automatically closed when:
 ### 4. Monitoring and Reporting
 
 The system provides:
+
 - **Daily Summary Reports**: Statistics on open/closed issues
 - **Category Breakdown**: Issues grouped by type
 - **Priority Analysis**: Distribution of issue priorities
@@ -43,20 +47,22 @@ The system provides:
 ### Auto Issue Triage and Resolution (`auto-issue-triage.yml`)
 
 **Triggers:**
+
 - When issues are opened, reopened, or labeled
 - Daily at 3 AM UTC (scheduled)
 - Manual dispatch via GitHub Actions UI
 
 **Actions:**
+
 1. Fetches all open issues
-2. Analyzes each issue's title and body
-3. Detects category (security, bug, feature, documentation)
-4. Determines priority (high, medium, low)
-5. Applies appropriate labels
-6. Identifies false positives and stale issues
-7. Closes issues that should be auto-resolved
-8. Adds triage comments for transparency
-9. Generates summary report
+1. Analyzes each issue's title and body
+1. Detects category (security, bug, feature, documentation)
+1. Determines priority (high, medium, low)
+1. Applies appropriate labels
+1. Identifies false positives and stale issues
+1. Closes issues that should be auto-resolved
+1. Adds triage comments for transparency
+1. Generates summary report
 
 **False Positive Detection:**
 The system specifically detects security reports that incorrectly show "0 vulnerability(ies)" for all packages, which indicates a workflow bug rather than a real security scan result.
@@ -64,12 +70,14 @@ The system specifically detects security reports that incorrectly show "0 vulner
 ### Auto Security Fixes (`auto-security-fixes.yml`)
 
 **Enhanced with Bug Fixes:**
+
 - Now correctly counts actual vulnerabilities before creating issues
 - Only reports packages that have vulnerabilities (not all packages)
 - Includes fix versions in issue descriptions
 - Provides detailed vulnerability information
 
 **Workflow Fix Applied:**
+
 - ✅ Only creates issues when vulnerabilities are actually found
 - ✅ Filters to show only packages with vulnerabilities
 - ✅ Includes CVE IDs and fix versions
@@ -107,6 +115,7 @@ auto_resolution:
 ### Customization
 
 You can customize:
+
 - **Keywords** for category detection
 - **Labels** applied to each category
 - **Priority levels** for different issue types
@@ -120,9 +129,9 @@ You can customize:
 ### For Users Creating Issues
 
 1. **Create an issue normally** - The system will automatically triage it
-2. **Wait for triage comment** - The bot will categorize and label your issue
-3. **Check for auto-resolution** - Simple issues may be auto-resolved with a PR
-4. **Monitor for updates** - The system tracks progress automatically
+1. **Wait for triage comment** - The bot will categorize and label your issue
+1. **Check for auto-resolution** - Simple issues may be auto-resolved with a PR
+1. **Monitor for updates** - The system tracks progress automatically
 
 ### For Maintainers
 
@@ -154,10 +163,11 @@ gh workflow run auto-security-fixes.yml
 #### Monitoring Reports
 
 The system generates summary reports in GitHub Actions:
+
 1. Go to **Actions** tab
-2. Select **Auto Issue Triage and Resolution** workflow
-3. Click on the latest run
-4. View **Summary** section for statistics
+1. Select **Auto Issue Triage and Resolution** workflow
+1. Click on the latest run
+1. View **Summary** section for statistics
 
 ### Disabling Automation
 
@@ -176,24 +186,28 @@ rm .github/workflows/auto-issue-triage.yml
 ## Issue Categories
 
 ### Security Issues
+
 - **Keywords**: security, vulnerability, CVE, exploit
 - **Labels**: `security`, `dependencies`, `automated`
 - **Priority**: High
 - **Auto-resolution**: Yes (creates PRs to update dependencies)
 
 ### Bug Reports
+
 - **Keywords**: bug, error, issue, problem, broken
 - **Labels**: `bug`
 - **Priority**: Medium
 - **Auto-resolution**: Attempted for simple cases
 
 ### Feature Requests
+
 - **Keywords**: feature, enhancement, request, improve
 - **Labels**: `enhancement`
 - **Priority**: Low
 - **Auto-resolution**: No (requires design discussion)
 
 ### Documentation Issues
+
 - **Keywords**: documentation, docs, readme, guide
 - **Labels**: `documentation`
 - **Priority**: Low
@@ -204,28 +218,28 @@ rm .github/workflows/auto-issue-triage.yml
 ### Security Issues
 
 1. **Vulnerability Detection**: System checks pip-audit and safety reports
-2. **Package Identification**: Identifies packages with vulnerabilities
-3. **Fix Availability**: Checks for available fixed versions
-4. **PR Creation**: Creates PR to update vulnerable packages
-5. **Testing**: Runs tests on the PR
-6. **Auto-merge**: Optional, based on configuration
-7. **Issue Closure**: Closes original issue when fix is merged
+1. **Package Identification**: Identifies packages with vulnerabilities
+1. **Fix Availability**: Checks for available fixed versions
+1. **PR Creation**: Creates PR to update vulnerable packages
+1. **Testing**: Runs tests on the PR
+1. **Auto-merge**: Optional, based on configuration
+1. **Issue Closure**: Closes original issue when fix is merged
 
 ### False Positive Issues
 
 1. **Detection**: Analyzes issue body for "0 vulnerability(ies)" pattern
-2. **Verification**: Checks if 80%+ of packages show 0 vulnerabilities
-3. **Immediate Closure**: Closes issue with explanation
-4. **Label Application**: Adds `false-positive` and `automated` labels
-5. **Comment**: Explains why it was closed
+1. **Verification**: Checks if 80%+ of packages show 0 vulnerabilities
+1. **Immediate Closure**: Closes issue with explanation
+1. **Label Application**: Adds `false-positive` and `automated` labels
+1. **Comment**: Explains why it was closed
 
 ### Stale Issues
 
 1. **Age Check**: Identifies issues >30 days old
-2. **Label Application**: Adds `stale` label
-3. **Warning Period**: 7-day warning before closure
-4. **Exemptions**: Security and critical issues never stale
-5. **Closure**: Closes with reopen instructions
+1. **Label Application**: Adds `stale` label
+1. **Warning Period**: 7-day warning before closure
+1. **Exemptions**: Security and critical issues never stale
+1. **Closure**: Closes with reopen instructions
 
 ## Integration with Existing Workflows
 
@@ -269,9 +283,10 @@ Report generated at 2026-01-07T03:00:00Z
 ### Issue Not Auto-Triaged
 
 **Check:**
+
 1. Workflow permissions are correct
-2. Issue was created after workflow deployment
-3. Issue is not a pull request
+1. Issue was created after workflow deployment
+1. Issue is not a pull request
 
 **Solution:**
 ```bash
@@ -282,9 +297,10 @@ gh workflow run auto-issue-triage.yml
 ### False Positive Not Detected
 
 **Check:**
+
 1. Issue body contains "0 vulnerability(ies)" text
-2. At least 10 packages are listed
-3. 80%+ show 0 vulnerabilities
+1. At least 10 packages are listed
+1. 80%+ show 0 vulnerabilities
 
 **Solution:**
 Manually close with label `false-positive`
@@ -292,9 +308,10 @@ Manually close with label `false-positive`
 ### Security Issues Not Auto-Resolved
 
 **Check:**
+
 1. Fix versions available for vulnerabilities
-2. Auto-resolution enabled in config
-3. Tests pass on fix PR
+1. Auto-resolution enabled in config
+1. Tests pass on fix PR
 
 **Solution:**
 Check workflow logs for errors in dependency update step
@@ -304,17 +321,17 @@ Check workflow logs for errors in dependency update step
 ### For Issue Reporters
 
 1. **Clear Titles**: Use descriptive titles with keywords
-2. **Detailed Descriptions**: Include reproduction steps, error messages
-3. **Labels**: The system will add labels, but you can add custom ones
-4. **Check for Duplicates**: Search before creating new issues
+1. **Detailed Descriptions**: Include reproduction steps, error messages
+1. **Labels**: The system will add labels, but you can add custom ones
+1. **Check for Duplicates**: Search before creating new issues
 
 ### For Maintainers
 
 1. **Review Auto-Closed Issues**: Periodically check auto-closed issues
-2. **Tune Configuration**: Adjust thresholds based on project needs
-3. **Monitor Metrics**: Track false positive and resolution rates
-4. **Exempt Important Issues**: Use labels to prevent auto-closure
-5. **Update Keywords**: Add project-specific keywords to config
+1. **Tune Configuration**: Adjust thresholds based on project needs
+1. **Monitor Metrics**: Track false positive and resolution rates
+1. **Exempt Important Issues**: Use labels to prevent auto-closure
+1. **Update Keywords**: Add project-specific keywords to config
 
 ## Security Considerations
 
@@ -334,6 +351,7 @@ Check workflow logs for errors in dependency update step
 ## Version History
 
 ### v1.0.0 (2026-01-07)
+
 - Initial release
 - Automated triage and categorization
 - False positive detection

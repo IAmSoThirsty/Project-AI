@@ -29,10 +29,12 @@ The issue was caused by **outdated system-wide Python packages** in the CI/CD en
 ## Changes Made
 
 ### 1. `requirements.txt`
+
 - Fixed incorrect version `pip-audit==3.0.1` → `pip-audit==2.10.0` (3.0.1 doesn't exist on PyPI)
 - All other packages already had secure versions specified
 
 ### 2. `pyproject.toml`
+
 - Updated minimum version constraints:
   - `cryptography>=3.4.0` → `cryptography>=43.0.1`
   - `requests>=2.28.0` → `requests>=2.32.4`
@@ -71,10 +73,11 @@ pip-audit
 ## CI/CD Considerations
 
 For CI/CD pipelines:
+
 1. Always use fresh virtual environments for each build
-2. Install from `requirements.txt`, not system packages
-3. Run `pip-audit` as part of the security check phase
-4. Use `pip install --upgrade pip setuptools wheel` before installing dependencies
+1. Install from `requirements.txt`, not system packages
+1. Run `pip-audit` as part of the security check phase
+1. Use `pip install --upgrade pip setuptools wheel` before installing dependencies
 
 ## Notes
 

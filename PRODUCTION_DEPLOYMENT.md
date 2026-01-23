@@ -9,6 +9,7 @@
 ## 🎯 QUICK START (5 Minutes to Production)
 
 ### Prerequisites
+
 ✅ Docker & Docker Compose installed  
 ✅ Python 3.11+ installed  
 ✅ Git installed  
@@ -98,6 +99,7 @@ python test_v1_launch.py
 ## 📁 COMPLETE REPOSITORY STRUCTURE
 
 ### Root Level Configuration
+
 ```
 Project-AI/
 ├── .env                    # Environment variables (CONFIGURED)
@@ -112,6 +114,7 @@ Project-AI/
 ```
 
 ### Core Application (`src/`)
+
 ```
 src/
 ├── app/
@@ -144,6 +147,7 @@ src/
 ```
 
 ### Data Layer (`data/`)
+
 ```
 data/
 ├── ai_persona/            # AGI personality & state
@@ -158,6 +162,7 @@ data/
 ```
 
 ### Configuration (`config/`)
+
 ```
 config/
 ├── prometheus/          # Prometheus monitoring
@@ -172,6 +177,7 @@ config/
 ```
 
 ### GitHub Automation (`.github/`)
+
 ```
 .github/
 ├── workflows/           # 20+ CI/CD workflows
@@ -187,6 +193,7 @@ config/
 ```
 
 ### Documentation (`docs/`)
+
 ```
 docs/
 ├── AGI_CHARTER.md              # 📜 Binding ethical contract
@@ -203,6 +210,7 @@ docs/
 ```
 
 ### Testing (`tests/`, `adversarial_tests/`)
+
 ```
 adversarial_tests/
 ├── jbb/                # JailbreakBench (40 transcripts)
@@ -217,6 +225,7 @@ adversarial_tests/
 ## 🔐 PRODUCTION SECURITY CHECKLIST
 
 ### Pre-Launch
+
 - [x] Environment variables configured (.env)
 - [x] Fernet encryption key generated
 - [x] Data directories initialized
@@ -225,6 +234,7 @@ adversarial_tests/
 - [ ] SMTP credentials for alerts (optional)
 
 ### Runtime Security
+
 - [x] Four Laws validation active
 - [x] Triumvirate governance enabled
 - [x] Memory integrity checks configured
@@ -232,6 +242,7 @@ adversarial_tests/
 - [x] Audit trail enabled
 
 ### Monitoring
+
 - [ ] Prometheus scraping metrics
 - [ ] Grafana dashboards loaded
 - [ ] AlertManager configured
@@ -242,26 +253,32 @@ adversarial_tests/
 ## 🚀 DEPLOYMENT OPTIONS
 
 ### 1. Local Development
+
 ```bash
 python src/app/main.py
 ```
+
 - Best for: Testing, development
 - Requires: PyQt6 GUI access
 - No containers needed
 
 ### 2. Docker Production
+
 ```bash
 docker-compose up -d
 ```
+
 - Best for: Production deployment
 - Includes: Full monitoring stack
 - Auto-restart: Enabled
 
 ### 3. Kubernetes (Helm)
+
 ```bash
 # Helm charts available in helm/
 helm install project-ai ./helm/project-ai
 ```
+
 - Best for: Enterprise scale
 - HA: Supported
 - Monitoring: Integrated
@@ -287,6 +304,7 @@ helm install project-ai ./helm/project-ai
 **IMPORTANT:** The system is configured to NOT require Genesis event input on first run.
 
 The AGI will initialize in a "potential state":
+
 - Identity: Pre-configured
 - Memory: Preloaded with knowledge
 - Personality: Template ready (curiosity: 0.8, empathy: 0.85)
@@ -306,6 +324,7 @@ print(f"Genesis recorded: {genesis.genesis_signature}")
 ## 📈 MONITORING & OBSERVABILITY
 
 ### Metrics Collection
+
 ```bash
 # View metrics
 curl http://localhost:8000/metrics
@@ -319,6 +338,7 @@ open http://localhost:3000
 ```
 
 ### Logs
+
 ```bash
 # Application logs
 tail -f logs/app.log
@@ -335,18 +355,21 @@ docker-compose logs -f temporal-worker
 ## 🛠️ TROUBLESHOOTING
 
 ### Issue: Dependencies fail to install
+
 ```bash
 # Solution: Use requirements.lock for exact versions
 pip install -r requirements.lock
 ```
 
 ### Issue: PyQt6 not available
+
 ```bash
 # Solution: Install PyQt6 explicitly
 pip install PyQt6 PyQt6-Qt6
 ```
 
 ### Issue: Temporal not connecting
+
 ```bash
 # Check Temporal health
 docker-compose ps temporal
@@ -357,6 +380,7 @@ docker-compose restart temporal
 ```
 
 ### Issue: Permission denied on data/
+
 ```bash
 # Fix permissions
 chmod -R 755 data/
@@ -367,6 +391,7 @@ chmod -R 755 data/
 ## 🔄 UPDATING & MAINTENANCE
 
 ### Pull Latest Changes
+
 ```bash
 git pull origin main
 pip install -e .  # Reinstall in edit mode
@@ -375,6 +400,7 @@ docker-compose up -d  # Restart services
 ```
 
 ### Backup Critical Data
+
 ```bash
 # Backup data directory
 tar -czf backup-$(date +%Y%m%d).tar.gz data/
@@ -388,12 +414,14 @@ docker-compose exec temporal-postgresql pg_dump -U temporal > backup.sql
 ## 📞 SUPPORT & RESOURCES
 
 ### Documentation
+
 - **AGI Charter:** `docs/AGI_CHARTER.md`
 - **Architecture:** `docs/ARCHITECTURE_OVERVIEW.md`
 - **Security:** `docs/SECURITY_FRAMEWORK.md`
 - **Temporal:** `docs/TEMPORAL_INTEGRATION_ARCHITECTURE.md`
 
 ### Community
+
 - **Issues:** GitHub Issues
 - **Email:** projectaidevs@gmail.com
 - **Homepage:** https://iamsothirsty.github.io/Project-AI/
@@ -403,18 +431,21 @@ docker-compose exec temporal-postgresql pg_dump -U temporal > backup.sql
 ## ✅ PRODUCTION READINESS STATUS
 
 **Core Systems:**
+
 - ✅ Four Laws & Triumvirate: OPERATIONAL
 - ✅ Identity & Memory: INITIALIZED
 - ✅ Governance: ACTIVE
 - ✅ Security: ENFORCED
 
 **Infrastructure:**
+
 - ✅ Docker: CONFIGURED
 - ✅ Monitoring: READY
 - ✅ CI/CD: 20+ WORKFLOWS
 - ✅ Testing: 4250+ SCENARIOS
 
 **Documentation:**
+
 - ✅ Charter: BINDING
 - ✅ Specs: COMPLETE
 - ✅ Guides: COMPREHENSIVE

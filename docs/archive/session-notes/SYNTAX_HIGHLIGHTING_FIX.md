@@ -31,13 +31,13 @@ Pylance was reporting issues because:
    - Tools like `import_test.py` tried to import from `app.*` without proper path setup
    - The venv Python path wasn't configured in VS Code settings
 
-2. **Type Checking Warnings** - Pylance's "basic" type checking mode was reporting:
+1. **Type Checking Warnings** - Pylance's "basic" type checking mode was reporting:
 
    - Optional member access warnings
    - Optional subscript warnings
    - Unresolved import warnings
 
-3. **Missing Configuration** - Pylance didn't know:
+1. **Missing Configuration** - Pylance didn't know:
 
    - Where the Python interpreter was (`src/` directory)
    - The extra paths to search for modules
@@ -117,12 +117,12 @@ If you still see highlights after these changes:
    - Type "Developer: Reload Window"
    - Press Enter
 
-2. **Restart Pylance**
+1. **Restart Pylance**
    - Press `Ctrl+Shift+P`
    - Type "Pylance: Restart Pylance"
    - Press Enter
 
-3. **Clear Python Cache**
+1. **Clear Python Cache**
    - Delete `.venv/__pycache__` directories
    - Delete `.venv/Lib/site-packages/__pycache__`
    - Close and reopen VS Code

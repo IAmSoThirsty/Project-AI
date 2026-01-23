@@ -88,12 +88,15 @@ All releases are cryptographically signed and include SBOM. See [Security Framew
 ## Badge Placement Recommendations
 
 ### Option 1: Top of README (After Title)
+
 Place badges immediately after the project title and description for maximum visibility.
 
 ### Option 2: Security Section
+
 Create a dedicated "Security & Compliance" section in the README with badges and detailed information.
 
 ### Option 3: Shields.io Badges in Table
+
 Use a table format for organized presentation:
 
 ```markdown
@@ -115,17 +118,18 @@ Use a table format for organized presentation:
 ## Notes
 
 1. **Dynamic Badges:** Some badges (like CodeQL status) will update automatically based on workflow status
-2. **Static Badges:** Compliance badges are static and should be updated if compliance status changes
-3. **Links:** All badges link to relevant documentation or releases
-4. **Customization:** Feel free to adjust colors, styles, and wording to match project branding
+1. **Static Badges:** Compliance badges are static and should be updated if compliance status changes
+1. **Links:** All badges link to relevant documentation or releases
+1. **Customization:** Feel free to adjust colors, styles, and wording to match project branding
 
 ## Testing Badges
 
 Before adding badges to README.md:
+
 1. Ensure workflows have run successfully at least once
-2. Verify release has been published with signed artifacts and SBOM
-3. Check that badge URLs resolve correctly
-4. Test badge links point to correct documentation
+1. Verify release has been published with signed artifacts and SBOM
+1. Check that badge URLs resolve correctly
+1. Test badge links point to correct documentation
 
 ---
 

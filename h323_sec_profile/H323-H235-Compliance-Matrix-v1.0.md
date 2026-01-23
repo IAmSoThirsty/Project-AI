@@ -1,4 +1,5 @@
 # H.323 / H.235 Compliance Matrix
+
 ## Version 1.0 — Enterprise Certification Grid
 
 ## 1. Purpose
@@ -12,6 +13,7 @@ This matrix defines every requirement an H.323 deployment must meet to be consid
 - Enterprise PKI and network security policies
 
 Each requirement is mapped to:
+
 - Component (EP, GK, GW, MCU, Network, PKI)
 - Requirement Type (Security, PKI, Network, Operational)
 - Mandatory/Optional

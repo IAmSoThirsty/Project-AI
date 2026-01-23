@@ -13,10 +13,10 @@ The Identity Engine is responsible for managing user identities, authentication,
 ## Core Responsibilities
 
 1. **Authentication**: Verify user credentials and issue tokens
-2. **Authorization**: Validate user permissions for actions
-3. **Session Management**: Track active user sessions
-4. **Identity Storage**: Persist user identity data
-5. **Token Management**: Issue, validate, and revoke tokens
+1. **Authorization**: Validate user permissions for actions
+1. **Session Management**: Track active user sessions
+1. **Identity Storage**: Persist user identity data
+1. **Token Management**: Issue, validate, and revoke tokens
 
 ## Architecture
 
@@ -432,22 +432,26 @@ class TokenManager:
 ## Security Considerations
 
 ### Password Security
+
 - Passwords hashed using bcrypt or Argon2
 - Minimum password strength requirements enforced
 - Password history maintained (prevent reuse)
 
 ### Token Security
+
 - Tokens signed with strong secret key
 - Short token lifetime (1 hour default)
 - Token refresh mechanism for long sessions
 - Token revocation support
 
 ### Rate Limiting
+
 - Failed authentication attempts limited
 - Progressive backoff on repeated failures
 - IP-based rate limiting
 
 ### Session Security
+
 - Session IDs cryptographically random
 - Session timeout enforced
 - Concurrent session limits
@@ -479,18 +483,20 @@ identity:
 The Identity Engine works closely with the Policy Engine:
 
 1. **Authentication Policies**: Policy engine validates authentication attempts
-2. **Authorization Policies**: Policy engine checks user permissions for actions
-3. **Session Policies**: Policy engine enforces session limits and timeout rules
+1. **Authorization Policies**: Policy engine checks user permissions for actions
+1. **Session Policies**: Policy engine enforces session limits and timeout rules
 
 ## Monitoring and Logging
 
 ### Metrics
+
 - Authentication success/failure rates
 - Active session count
 - Token issuance rate
 - Failed authentication attempts by user/IP
 
 ### Logging
+
 - All authentication attempts (success and failure)
 - Session creation and termination
 - Token issuance and revocation
@@ -498,6 +504,7 @@ The Identity Engine works closely with the Policy Engine:
 - Rate limit violations
 
 ### Audit Trail
+
 - User login/logout events
 - Permission changes
 - Failed access attempts

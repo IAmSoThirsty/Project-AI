@@ -15,6 +15,7 @@ The Capability Model defines how discrete, executable units of functionality are
 ### What is a Capability?
 
 A **capability** is a discrete, well-defined unit of functionality that:
+
 - Has a clear interface (inputs and outputs)
 - Can be invoked independently
 - Executes in a sandboxed environment
@@ -24,9 +25,9 @@ A **capability** is a discrete, well-defined unit of functionality that:
 ### Capability Types
 
 1. **System Capabilities**: Core functionality (file I/O, network, etc.)
-2. **Domain Capabilities**: Domain-specific operations (data analysis, ML inference, etc.)
-3. **Integration Capabilities**: External system integrations (APIs, databases, etc.)
-4. **Agent Capabilities**: Agent-specific skills and actions
+1. **Domain Capabilities**: Domain-specific operations (data analysis, ML inference, etc.)
+1. **Integration Capabilities**: External system integrations (APIs, databases, etc.)
+1. **Agent Capabilities**: Agent-specific skills and actions
 
 ## Architecture
 
@@ -576,14 +577,15 @@ class DataAnalysisCapability(Capability):
 Capabilities can be discovered through:
 
 1. **Static Registration**: Capabilities registered at startup
-2. **Dynamic Discovery**: Capabilities discovered from plugins
-3. **Remote Registration**: Capabilities from external services
+1. **Dynamic Discovery**: Capabilities discovered from plugins
+1. **Remote Registration**: Capabilities from external services
 
 ## Resource Management
 
 ### Resource Limits
 
 Per-capability resource limits:
+
 - **Execution Time**: Maximum execution time
 - **Memory**: Maximum memory usage
 - **CPU**: CPU time limits

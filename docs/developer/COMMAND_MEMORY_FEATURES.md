@@ -11,10 +11,12 @@
 Two powerful new features have been added to Project-AI:
 
 ### 1. Command Override System
+
 A privileged control system that allows authorized users to disable any and all safety
 protocols in the application.
 
 ### 2. Memory Expansion System
+
 A self-organizing memory database that gives the AI the ability to remember everything,
 learn autonomously, and expand its knowledge base.
 
@@ -23,6 +25,7 @@ learn autonomously, and expand its knowledge base.
 ## ⚠️ Command Override System
 
 ### Purpose
+
 The Command Override System provides master control over all safety mechanisms in the
 application. This allows you to bypass content filtering, rate limiting, and other
 protective measures when needed.
@@ -30,12 +33,15 @@ protective measures when needed.
 ### Features
 
 #### 🔐 Authentication
+
 - **Master Password Protection**: Set a master password to control access
 - **Session Management**: Login/logout with timeout
 - **Audit Logging**: All override actions are logged with timestamps
 
 #### 🛡️ Safety Protocol Control
+
 Individual control over:
+
 - **Content Filtering** - Image generation content checks
 - **Prompt Safety** - Prompt safety validation
 - **Data Validation** - Input data validation
@@ -48,6 +54,7 @@ Individual control over:
 - **Emergency Restrictions** - Emergency alert limitations
 
 #### 🔴 Master Override
+
 - **Enable**: Disables ALL safety protocols with one command
 - **Disable**: Restores ALL safety protocols instantly
 - **Emergency Lockdown**: Panic button to immediately restore all protections
@@ -55,12 +62,14 @@ Individual control over:
 ### Usage
 
 #### Access from Dashboard
+
 1. Click the **⚠️ Command Override** button in the toolbar
-2. Set your master password on first use
-3. Authenticate with your password
-4. Control individual protocols or use master override
+1. Set your master password on first use
+1. Authenticate with your password
+1. Control individual protocols or use master override
 
 #### Setting Master Password
+
 ```python
 from app.core.command_override import CommandOverrideSystem
 
@@ -69,12 +78,14 @@ cmd_system.set_master_password("your_secure_password")
 ```
 
 #### Authenticating
+
 ```python
 if cmd_system.authenticate("your_secure_password"):
     print("Authenticated successfully")
 ```
 
 #### Override Individual Protocol
+
 ```python
 # Disable content filtering
 cmd_system.override_protocol("content_filter", False)
@@ -84,6 +95,7 @@ cmd_system.override_protocol("content_filter", True)
 ```
 
 #### Master Override
+
 ```python
 # Disable ALL safety protocols
 cmd_system.enable_master_override()
@@ -93,18 +105,21 @@ cmd_system.disable_master_override()
 ```
 
 #### Emergency Lockdown
+
 ```python
 # Immediately restore all protocols and revoke auth
 cmd_system.emergency_lockdown()
 ```
 
 #### Check Protocol Status
+
 ```python
 if cmd_system.is_protocol_enabled("content_filter"):
     print("Content filtering is active")
 ```
 
 ### Audit Log
+
 All override actions are logged to `data/command_override_audit.log`:
 
 ```
@@ -116,6 +131,7 @@ All override actions are logged to `data/command_override_audit.log`:
 ### Security Considerations
 
 ⚠️ **IMPORTANT WARNINGS**:
+
 - Master override disables **ALL** safety mechanisms
 - Use with extreme caution
 - Keep your master password secure
@@ -127,6 +143,7 @@ All override actions are logged to `data/command_override_audit.log`:
 ## 🧠 Memory Expansion System
 
 ### Purpose
+
 The Memory Expansion System gives the AI persistent, expandable memory capabilities. It
 can remember all conversations, actions, and learned information, and can autonomously
 explore and learn new things.
@@ -134,24 +151,28 @@ explore and learn new things.
 ### Features
 
 #### 📚 Memory Storage
+
 - **Conversations**: Every chat interaction stored with context
 - **Actions**: All system actions logged
 - **Knowledge**: Organized knowledge base by category
 - **Auto-Organization**: Daily/weekly/monthly file structure
 
 #### 🔍 Memory Retrieval
+
 - **Semantic Search**: Search across all memory types
 - **Tag-Based Filtering**: Categorize and filter memories
 - **Timeline View**: Chronological memory access
 - **Fast Indexing**: JSON-based index for quick retrieval
 
 #### 🤖 Autonomous Learning
+
 - **Background Learning**: Run learning processes in background
 - **Web Exploration**: Search engines and web content
 - **Knowledge Extraction**: Process and store learned information
 - **Configurable Intervals**: Set learning frequency (default: 1 hour)
 
 #### 📊 Memory Organization
+
 - **Automatic Categorization**: Technical, general, user preferences, etc.
 - **Archiving**: Old data automatically archived
 - **Compression**: Memory optimization
@@ -160,12 +181,14 @@ explore and learn new things.
 ### Usage
 
 #### Access from Dashboard
+
 1. Click the **🧠 Memory** button in the toolbar
-2. View statistics, search memory, control learning
-3. Start/stop autonomous learning
-4. Organize and optimize memory
+1. View statistics, search memory, control learning
+1. Start/stop autonomous learning
+1. Organize and optimize memory
 
 #### Initialize Memory System
+
 ```python
 from app.core.memory_expansion import MemoryExpansionSystem
 
@@ -173,6 +196,7 @@ memory = MemoryExpansionSystem(memory_dir="data/memory")
 ```
 
 #### Store a Conversation
+
 ```python
 memory_id = memory.store_conversation(
     user_message="What is machine learning?",
@@ -183,6 +207,7 @@ memory_id = memory.store_conversation(
 ```
 
 #### Store an Action
+
 ```python
 memory_id = memory.store_action(
     action_type='image_generation',
@@ -193,6 +218,7 @@ memory_id = memory.store_action(
 ```
 
 #### Store Knowledge
+
 ```python
 memory_id = memory.store_knowledge(
     category='technical',
@@ -204,6 +230,7 @@ memory_id = memory.store_knowledge(
 ```
 
 #### Search Memory
+
 ```python
 results = memory.search_memory(
     query="machine learning",
@@ -217,12 +244,14 @@ for result in results:
 ```
 
 #### Retrieve Specific Memory
+
 ```python
 memory_item = memory.get_memory_by_id(memory_id)
 print(memory_item)
 ```
 
 #### Start Autonomous Learning
+
 ```python
 # Start background learning (runs every hour by default)
 memory.start_autonomous_learning()
@@ -233,11 +262,13 @@ memory.start_autonomous_learning()
 ```
 
 #### Stop Autonomous Learning
+
 ```python
 memory.stop_autonomous_learning()
 ```
 
 #### Get Statistics
+
 ```python
 stats = memory.get_statistics()
 print(f"Total conversations: {stats['total_conversations']}")
@@ -247,6 +278,7 @@ print(f"Learning enabled: {stats['learning_enabled']}")
 ```
 
 #### Organize Memory
+
 ```python
 results = memory.organize_memory()
 print(f"Archived {results['archived_conversations']} conversations")
@@ -284,13 +316,15 @@ data/memory/
 ### Autonomous Learning
 
 When enabled, the AI will:
+
 1. **Explore** - Search engines for relevant topics
-2. **Extract** - Process and extract knowledge
-3. **Store** - Save learned information to knowledge base
-4. **Index** - Update search index for retrieval
-5. **Repeat** - Continue learning at configured intervals
+1. **Extract** - Process and extract knowledge
+1. **Store** - Save learned information to knowledge base
+1. **Index** - Update search index for retrieval
+1. **Repeat** - Continue learning at configured intervals
 
 **Learning Topics** (configurable):
+
 - Latest AI developments
 - Programming best practices
 - Technology trends
@@ -300,6 +334,7 @@ When enabled, the AI will:
 ### Integration with Command Override
 
 The Memory Expansion System respects command override settings:
+
 - When `ml_safety` is disabled, autonomous learning has fewer restrictions
 - Command override status logged in memory actions
 - Safety protocol changes stored in action log
@@ -315,12 +350,12 @@ The Memory Expansion System respects command override settings:
    - Generate uncensored images or text
    - Access full API capabilities
 
-2. **Development & Testing**
+1. **Development & Testing**
    - Bypass rate limiting for testing
    - Disable validation for edge case testing
    - Test emergency scenarios
 
-3. **Advanced Operations**
+1. **Advanced Operations**
    - Bulk operations without approval prompts
    - Direct plugin execution without sandbox
    - Raw ML model access
@@ -332,17 +367,17 @@ The Memory Expansion System respects command override settings:
    - Recall past conversations for context
    - Learn user patterns and habits
 
-2. **Knowledge Building**
+1. **Knowledge Building**
    - Build comprehensive knowledge base
    - Learn from web continuously
    - Create searchable memory archive
 
-3. **Behavior Analysis**
+1. **Behavior Analysis**
    - Track interaction patterns
    - Analyze usage statistics
    - Improve responses over time
 
-4. **Research & Documentation**
+1. **Research & Documentation**
    - Store research findings
    - Organize project knowledge
    - Create searchable documentation
@@ -378,12 +413,14 @@ data/
 ## 📊 Statistics & Monitoring
 
 ### Command Override
+
 - View audit log in real-time
 - Check authentication status
 - Monitor protocol states
 - Review override history
 
 ### Memory Expansion
+
 - Total conversations stored
 - Total actions logged
 - Knowledge base size
@@ -395,46 +432,51 @@ data/
 ## ⚡ Performance Tips
 
 ### Memory System
+
 1. **Periodic Organization** - Run memory organization weekly
-2. **Archive Old Data** - Move old conversations to archive
-3. **Index Optimization** - Rebuild index if searches slow down
-4. **Learning Intervals** - Adjust based on usage (1-24 hours)
+1. **Archive Old Data** - Move old conversations to archive
+1. **Index Optimization** - Rebuild index if searches slow down
+1. **Learning Intervals** - Adjust based on usage (1-24 hours)
 
 ### Command Override
+
 1. **Master Override** - Only use when absolutely necessary
-2. **Individual Protocols** - Override only what you need
-3. **Regular Lockdowns** - Reset to safe defaults periodically
-4. **Audit Review** - Check logs for unexpected overrides
+1. **Individual Protocols** - Override only what you need
+1. **Regular Lockdowns** - Reset to safe defaults periodically
+1. **Audit Review** - Check logs for unexpected overrides
 
 ---
 
 ## 🚨 Safety & Best Practices
 
 ### Command Override Best Practices
+
 1. ✅ Set a strong master password
-2. ✅ Use individual protocol overrides when possible
-3. ✅ Re-enable protocols when finished
-4. ✅ Review audit logs regularly
-5. ✅ Use emergency lockdown if unsure
-6. ❌ Don't share your master password
-7. ❌ Don't leave master override enabled
-8. ❌ Don't ignore audit log warnings
+1. ✅ Use individual protocol overrides when possible
+1. ✅ Re-enable protocols when finished
+1. ✅ Review audit logs regularly
+1. ✅ Use emergency lockdown if unsure
+1. ❌ Don't share your master password
+1. ❌ Don't leave master override enabled
+1. ❌ Don't ignore audit log warnings
 
 ### Memory Expansion Best Practices
+
 1. ✅ Regular memory organization
-2. ✅ Set appropriate learning intervals
-3. ✅ Use tags for better categorization
-4. ✅ Monitor disk usage
-5. ✅ Review learned content periodically
-6. ❌ Don't store sensitive passwords in memory
-7. ❌ Don't set learning intervals too short
-8. ❌ Don't ignore disk space warnings
+1. ✅ Set appropriate learning intervals
+1. ✅ Use tags for better categorization
+1. ✅ Monitor disk usage
+1. ✅ Review learned content periodically
+1. ❌ Don't store sensitive passwords in memory
+1. ❌ Don't set learning intervals too short
+1. ❌ Don't ignore disk space warnings
 
 ---
 
 ## 📝 API Reference
 
 See module documentation:
+
 - `src/app/core/command_override.py` - Command Override System
 - `src/app/core/memory_expansion.py` - Memory Expansion System
 - `src/app/gui/command_memory_ui.py` - GUI Components
@@ -444,6 +486,7 @@ See module documentation:
 ## 🎉 Summary
 
 You now have:
+
 - **Full control** over all safety mechanisms
 - **Persistent memory** for the AI
 - **Autonomous learning** capabilities
@@ -451,6 +494,7 @@ You now have:
 - **Easy-to-use** GUI interfaces
 
 **The AI can now:**
+
 - ✅ Remember everything
 - ✅ Learn continuously
 - ✅ Operate without restrictions (when you allow it)

@@ -9,16 +9,19 @@ This document outlines the required branch protection rules for the `main` branc
 These settings must be configured in the GitHub repository settings under **Settings → Branches → Branch protection rules**.
 
 #### 1. Require a pull request before merging
+
 - ✅ **Enabled**
 - Number of required approvals: 1 (automated by workflow)
 - Dismiss stale pull request approvals when new commits are pushed: ✅ Enabled
 - Require review from Code Owners: ⬜ Optional
 
 #### 2. Require status checks to pass before merging
+
 - ✅ **Enabled** (CRITICAL)
 - Require branches to be up to date before merging: ✅ Enabled
 
 **Required status checks:**
+
 - `test` (from ci.yml)
 - `lint` (from ci.yml)  
 - `tests` (from ci.yml)
@@ -26,28 +29,35 @@ These settings must be configured in the GitHub repository settings under **Sett
 - `Validate Main Branch Health` (from post-merge-validation.yml)
 
 #### 3. Require conversation resolution before merging
+
 - ✅ **Enabled**
 - All review comments must be resolved before merge
 
 #### 4. Require signed commits
+
 - ⬜ Optional (recommended for security)
 
 #### 5. Require linear history
+
 - ✅ **Enabled**
 - Enforces squash merging or rebase, preventing merge commits
 - Ensures clean, linear git history
 
 #### 6. Include administrators
+
 - ✅ **Enabled** (enforce rules for administrators too)
 
 #### 7. Restrict who can push to matching branches
+
 - ⬜ Optional (leave open for automated workflows)
 
 #### 8. Allow force pushes
+
 - ❌ **Disabled** (CRITICAL)
 - Prevents force pushes that could break history
 
 #### 9. Allow deletions
+
 - ❌ **Disabled** (CRITICAL)
 - Prevents accidental branch deletion
 
@@ -56,17 +66,20 @@ These settings must be configured in the GitHub repository settings under **Sett
 The following workflows enforce these requirements automatically:
 
 ### 1. **CI Workflow** (`ci.yml`)
+
 - Runs comprehensive tests, linting, and type checking
 - NO LONGER uses `|| true` - failures will properly block merges
 - Status checks are now mandatory
 
 ### 2. **Auto PR Handler** (`auto-pr-handler.yml`)
+
 - Automatically reviews ALL pull requests
 - Runs tests and linting checks
 - Auto-approves PRs that pass all checks
 - Auto-merges passing PRs to main (no manual intervention)
 
 ### 3. **Auto-Fix Failures** (`auto-fix-failures.yml`)
+
 - Detects failing CI checks
 - Automatically applies fixes for:
   - Linting issues (ruff)
@@ -76,6 +89,7 @@ The following workflows enforce these requirements automatically:
 - Retries until checks pass
 
 ### 4. **Post-Merge Validation** (`post-merge-validation.yml`)
+
 - Runs immediately after every merge to main
 - Validates:
   - ✅ Zero merge conflicts
@@ -95,11 +109,11 @@ The following workflows enforce these requirements automatically:
    - Add a required review for workflow changes via CODEOWNERS file
    - Example CODEOWNERS entry: `.github/workflows/* @IAmSoThirsty`
 
-2. **External Contributors**: Consider requiring manual approval for PRs from external contributors
+1. **External Contributors**: Consider requiring manual approval for PRs from external contributors
    - Can be configured in branch protection: "Require approval from specific users"
    - Protects against malicious PRs from unknown sources
 
-3. **Sensitive Code Areas**: High-security code (authentication, encryption, payment processing) should have:
+1. **Sensitive Code Areas**: High-security code (authentication, encryption, payment processing) should have:
    - Required code owner reviews
    - Additional manual validation
    - Separate security scanning workflows
@@ -124,14 +138,15 @@ This allows automation for most PRs while protecting critical files.
 ### Step 1: Configure Branch Protection via GitHub UI
 
 1. Navigate to: `https://github.com/IAmSoThirsty/Project-AI/settings/branches`
-2. Click "Add branch protection rule"
-3. Enter branch name pattern: `main`
-4. Configure all settings as listed above
-5. Click "Create" or "Save changes"
+1. Click "Add branch protection rule"
+1. Enter branch name pattern: `main`
+1. Configure all settings as listed above
+1. Click "Create" or "Save changes"
 
 ### Step 2: Verify Automated Workflows
 
 All workflows are already deployed in `.github/workflows/`:
+
 - ✅ `ci.yml` - Enhanced with mandatory checks
 - ✅ `auto-pr-handler.yml` - Enhanced for all PRs with auto-merge
 - ✅ `auto-fix-failures.yml` - NEW: Automatic failure remediation
@@ -140,10 +155,10 @@ All workflows are already deployed in `.github/workflows/`:
 ### Step 3: Test the Configuration
 
 1. Create a test PR with intentional linting errors
-2. Verify auto-fix workflow detects and fixes errors
-3. Verify CI blocks merge until fixes are applied
-4. Verify auto-merge occurs after checks pass
-5. Verify post-merge validation runs and reports health
+1. Verify auto-fix workflow detects and fixes errors
+1. Verify CI blocks merge until fixes are applied
+1. Verify auto-merge occurs after checks pass
+1. Verify post-merge validation runs and reports health
 
 ## Workflow Behavior
 
@@ -155,18 +170,18 @@ All workflows are already deployed in `.github/workflows/`:
    - Comments with results
    - Approves if all checks pass
 
-2. **CI Failures Detected**
+1. **CI Failures Detected**
    - `auto-fix-failures.yml` triggers
    - Attempts automatic fixes
    - Commits fixes to PR branch
    - CI re-runs automatically
 
-3. **All Checks Pass**
+1. **All Checks Pass**
    - Auto-approval granted
    - Auto-merge enabled
    - PR merges to main automatically (NO MANUAL APPROVAL NEEDED)
 
-4. **Merge Complete**
+1. **Merge Complete**
    - `post-merge-validation.yml` triggers on main
    - Validates main branch health
    - Reports:
@@ -178,28 +193,33 @@ All workflows are already deployed in `.github/workflows/`:
 ### Failure Recovery:
 
 If main branch becomes unhealthy:
+
 1. Post-merge validation detects issue
-2. Creates urgent GitHub issue with details
-3. Auto-fix workflow attempts remediation
-4. Issue closed automatically when health restored
+1. Creates urgent GitHub issue with details
+1. Auto-fix workflow attempts remediation
+1. Issue closed automatically when health restored
 
 ## Benefits
 
 ### ✅ Requirement 1: Automatic Review & Merge
+
 - All PRs automatically reviewed with full CI/CD
 - Auto-merge on passing checks (no manual approval)
 
 ### ✅ Requirement 2: Automatic Failure Fixing
+
 - Auto-fix workflow remediates common issues
 - Authorized to modify code, config, workflows
 - Retries until successful
 
 ### ✅ Requirement 3: Branch Protection
+
 - Main branch protected with mandatory status checks
 - Direct merges only (no intermediate branches via linear history)
 - Main never has test failures or conflicts
 
 ### ✅ Requirement 4: Post-Merge Validation
+
 - Automatic conflict detection
 - Zero failing tests guarantee
 - Comprehensive health reports
@@ -208,11 +228,14 @@ If main branch becomes unhealthy:
 ## Monitoring
 
 ### Health Dashboard
+
 View real-time status:
+
 - Actions tab: `https://github.com/IAmSoThirsty/Project-AI/actions`
 - Filter by workflow to see individual automation runs
 
 ### Reports
+
 - Main health reports: Artifacts from post-merge-validation workflow
 - Auto-fix summaries: Comments on PRs from auto-fix workflow
 - Merge confirmations: Comments on PRs after successful validation
@@ -220,12 +243,15 @@ View real-time status:
 ## Maintenance
 
 ### Updating Required Checks
+
 When adding new CI checks, update:
+
 1. Branch protection rules in GitHub UI
-2. Status check requirements in `auto-pr-handler.yml`
-3. This documentation
+1. Status check requirements in `auto-pr-handler.yml`
+1. This documentation
 
 ### Workflow Dependencies
+
 - All workflows use `actions/checkout@v4`
 - Python 3.11 is standard across workflows
 - Dependencies installed from `requirements.txt`
@@ -233,16 +259,19 @@ When adding new CI checks, update:
 ## Troubleshooting
 
 ### Issue: PR not auto-merging
+
 - Verify all required status checks pass
 - Check branch protection rules are configured
 - Ensure `auto-pr-handler.yml` workflow completed successfully
 
 ### Issue: Auto-fix not triggering
+
 - Verify `auto-fix-failures.yml` workflow is enabled
 - Check PR has failures that trigger the workflow
 - Review workflow run logs in Actions tab
 
 ### Issue: Main branch unhealthy after merge
+
 - Check post-merge validation workflow logs
 - Review created GitHub issue for details
 - Auto-fix will attempt remediation automatically

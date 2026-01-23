@@ -24,10 +24,10 @@ python -m pip install -r requirements-dev.txt
 When adding new CLI commands or modifying existing ones:
 
 1. **Follow the CLI-CODEX**: Review [CLI-CODEX.md](CLI-CODEX.md) for best practices
-2. **Use Command Groups**: Organize commands into logical groups (user, memory, learning, plugin, system, ai)
-3. **Add Tests**: Create tests in `tests/test_cli.py` using Typer's CliRunner
-4. **Update Documentation**: Run `python scripts/generate_cli_docs.py` to update auto-generated docs
-5. **Add Examples**: Include usage examples in `docs/cli/README.md`
+1. **Use Command Groups**: Organize commands into logical groups (user, memory, learning, plugin, system, ai)
+1. **Add Tests**: Create tests in `tests/test_cli.py` using Typer's CliRunner
+1. **Update Documentation**: Run `python scripts/generate_cli_docs.py` to update auto-generated docs
+1. **Add Examples**: Include usage examples in `docs/cli/README.md`
 
 ### CLI Testing Checklist
 

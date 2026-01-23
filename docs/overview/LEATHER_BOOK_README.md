@@ -21,7 +21,7 @@ python -m src.app.main
 ### What You'll See
 
 1. **Login Screen**: Right page shows login form with username/password fields
-2. **After Login**: Dashboard with 6 zones:
+1. **After Login**: Dashboard with 6 zones:
    - Top Left: System stats (uptime, memory, CPU)
    - Top Right: Proactive AI actions running in background
    - Center: Animated AI neural head
@@ -31,10 +31,10 @@ python -m src.app.main
 ### Try It Out
 
 1. Enter any username and click "ENTER SYSTEM"
-2. Watch the animated AI face come to life
-3. Type a message and click "SEND"
-4. See stats update every second
-5. Watch the AI head animate as it processes your message
+1. Watch the animated AI face come to life
+1. Type a message and click "SEND"
+1. See stats update every second
+1. Watch the AI head animate as it processes your message
 
 ## File Structure
 
@@ -292,9 +292,9 @@ For detailed technical information, see:
 The UI system is modular and extensible. To add new features:
 
 1. Create new panel class inheriting from QFrame
-2. Add to LeatherBookDashboard layout
-3. Connect signals as needed
-4. Update documentation
+1. Add to LeatherBookDashboard layout
+1. Connect signals as needed
+1. Update documentation
 
 ## License
 

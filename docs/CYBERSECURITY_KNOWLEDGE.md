@@ -7,10 +7,10 @@ This module provides comprehensive educational content about digital threats, at
 The **Cybersecurity Knowledge** module contains structured educational content covering:
 
 1. **Malware Analysis**: Viruses, worms, trojans, and their evolution
-2. **System Exploitation**: Buffer overflows, shellcode, format string vulnerabilities
-3. **Web-Based Attacks**: Reconnaissance, scanning, and proxy exploitation
-4. **Proactive Defense**: Security frameworks and defensive policies
-5. **Secure Implementation**: Data integrity and secure coding practices
+1. **System Exploitation**: Buffer overflows, shellcode, format string vulnerabilities
+1. **Web-Based Attacks**: Reconnaissance, scanning, and proxy exploitation
+1. **Proactive Defense**: Security frameworks and defensive policies
+1. **Secure Implementation**: Data integrity and secure coding practices
 
 ## Features
 
@@ -35,6 +35,7 @@ python scripts/populate_cybersecurity_knowledge.py
 ```
 
 This will:
+
 - Create `data/cybersecurity_knowledge.json` with the complete content
 - Integrate all sections into the `MemoryExpansionSystem`
 - Verify the integration was successful
@@ -150,6 +151,7 @@ python scripts/demo_cybersecurity_knowledge.py
 ```
 
 This demonstrates:
+
 - Querying specific sections
 - Accessing case studies
 - Searching for keywords
@@ -202,9 +204,9 @@ python -m unittest tests.test_cybersecurity_knowledge
 The cybersecurity knowledge integrates with:
 
 1. **Learning Paths** (`learning_paths.py`) - Can generate custom security learning paths
-2. **Security Resources** (`security_resources.py`) - Complements CTF and security repos
-3. **AI Persona** - Knowledge available for AI responses and education
-4. **Memory System** - Persistent storage in knowledge base
+1. **Security Resources** (`security_resources.py`) - Complements CTF and security repos
+1. **AI Persona** - Knowledge available for AI responses and education
+1. **Memory System** - Persistent storage in knowledge base
 
 ## File Locations
 
@@ -220,20 +222,20 @@ The cybersecurity knowledge integrates with:
 Potential improvements:
 
 1. **Interactive Tutorials**: Step-by-step exploitation demos
-2. **Quiz System**: Test knowledge retention
-3. **Lab Exercises**: Hands-on practice environments
-4. **Real-time Updates**: Integration with CVE databases
-5. **Visualization**: Attack flow diagrams and network maps
+1. **Quiz System**: Test knowledge retention
+1. **Lab Exercises**: Hands-on practice environments
+1. **Real-time Updates**: Integration with CVE databases
+1. **Visualization**: Attack flow diagrams and network maps
 
 ## Contributing
 
 To add new educational content:
 
 1. Update the `_get_structured_content()` method in `cybersecurity_knowledge.py`
-2. Maintain the nested dictionary structure
-3. Run the population script to update the knowledge base
-4. Add corresponding tests
-5. Update this README
+1. Maintain the nested dictionary structure
+1. Run the population script to update the knowledge base
+1. Add corresponding tests
+1. Update this README
 
 ## License
 

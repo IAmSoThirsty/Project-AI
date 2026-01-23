@@ -9,6 +9,7 @@ Project-AI provides a comprehensive MCP (Model Context Protocol) server implemen
 The Project-AI MCP server provides access to:
 
 ### 🧠 AI Systems
+
 - **AI Ethics Framework (Asimov's Laws)**: Validate actions against ethical guidelines
 - **AI Persona**: Manage personality traits and emotional states
 - **Memory System**: Store and retrieve knowledge across sessions
@@ -17,40 +18,40 @@ The Project-AI MCP server provides access to:
 ### 🛠️ Tools (14 Available)
 
 1. **validate_action** - Validate actions against AI ethics framework
-2. **get_persona_state** - Get current AI personality and mood
-3. **adjust_persona_trait** - Modify personality traits (curiosity, empathy, patience, etc.)
-4. **add_memory** - Add knowledge to the memory system
-5. **search_memory** - Search the knowledge base
-6. **submit_learning_request** - Request AI to learn new content
-7. **approve_learning_request** - Approve pending learning requests
-8. **analyze_data** - Analyze CSV, Excel, or JSON files
-9. **track_location** - Get IP geolocation information
-10. **send_emergency_alert** - Send emergency notifications
-11. **generate_image** - Generate images using Stable Diffusion or DALL-E
-12. **list_plugins** - List available plugins
-13. **enable_plugin** - Enable a plugin
-14. **disable_plugin** - Disable a plugin
+1. **get_persona_state** - Get current AI personality and mood
+1. **adjust_persona_trait** - Modify personality traits (curiosity, empathy, patience, etc.)
+1. **add_memory** - Add knowledge to the memory system
+1. **search_memory** - Search the knowledge base
+1. **submit_learning_request** - Request AI to learn new content
+1. **approve_learning_request** - Approve pending learning requests
+1. **analyze_data** - Analyze CSV, Excel, or JSON files
+1. **track_location** - Get IP geolocation information
+1. **send_emergency_alert** - Send emergency notifications
+1. **generate_image** - Generate images using Stable Diffusion or DALL-E
+1. **list_plugins** - List available plugins
+1. **enable_plugin** - Enable a plugin
+1. **disable_plugin** - Disable a plugin
 
 ### 📚 Resources (4 Available)
 
 1. **persona://state** - Current AI persona configuration
-2. **memory://knowledge** - Complete knowledge base
-3. **learning://requests** - All learning requests
-4. **plugins://list** - Plugin list and status
+1. **memory://knowledge** - Complete knowledge base
+1. **learning://requests** - All learning requests
+1. **plugins://list** - Plugin list and status
 
 ### 💬 Prompts (3 Available)
 
 1. **analyze_with_ethics** - Ethical action analysis
-2. **persona_interaction** - Persona-guided interaction
-3. **memory_guided_response** - Knowledge-based responses
+1. **persona_interaction** - Persona-guided interaction
+1. **memory_guided_response** - Knowledge-based responses
 
 ## Installation
 
 ### Prerequisites
 
 1. Python 3.12+ installed
-2. Project-AI repository cloned
-3. Required dependencies installed:
+1. Project-AI repository cloned
+1. Required dependencies installed:
 
 ```bash
 pip install "mcp[cli]"
@@ -78,11 +79,12 @@ print(Fernet.generate_key().decode())
 ### macOS/Linux
 
 1. Locate Claude Desktop configuration file:
+
    ```bash
    ~/.config/Claude/claude_desktop_config.json
    ```
 
-2. Add Project-AI MCP server configuration:
+1. Add Project-AI MCP server configuration:
 
 ```json
 {
@@ -105,11 +107,12 @@ print(Fernet.generate_key().decode())
 ### Windows
 
 1. Locate Claude Desktop configuration file:
+
    ```
    %APPDATA%\Claude\claude_desktop_config.json
    ```
 
-2. Add Project-AI MCP server configuration:
+1. Add Project-AI MCP server configuration:
 
 ```json
 {
@@ -129,7 +132,7 @@ print(Fernet.generate_key().decode())
 }
 ```
 
-3. Restart Claude Desktop
+1. Restart Claude Desktop
 
 ## Usage Examples
 
@@ -264,7 +267,7 @@ Tool(
 )
 ```
 
-2. Add tool implementation:
+1. Add tool implementation:
 
 ```python
 async def _custom_tool(self, args: Dict[str, Any]) -> List[TextContent]:
@@ -275,7 +278,7 @@ async def _custom_tool(self, args: Dict[str, Any]) -> List[TextContent]:
     return [TextContent(type="text", text=json.dumps(result, indent=2))]
 ```
 
-3. Add handler in `call_tool()`:
+1. Add handler in `call_tool()`:
 
 ```python
 elif name == "custom_tool":
@@ -325,39 +328,43 @@ self.learning.approve_request(request_id)
 **Issue**: MCP server fails to start
 
 **Solutions**:
+
 1. Check Python version: `python --version` (requires 3.12+)
-2. Verify dependencies: `pip install "mcp[cli]"`
-3. Check PYTHONPATH: Should include project root
-4. Review logs in stderr
+1. Verify dependencies: `pip install "mcp[cli]"`
+1. Check PYTHONPATH: Should include project root
+1. Review logs in stderr
 
 ### Tool Execution Errors
 
 **Issue**: Tools return errors
 
 **Solutions**:
+
 1. Verify environment variables are set correctly
-2. Check data directory permissions
-3. Ensure required API keys are valid
-4. Review tool-specific error messages
+1. Check data directory permissions
+1. Ensure required API keys are valid
+1. Review tool-specific error messages
 
 ### Claude Desktop Not Detecting Server
 
 **Issue**: Claude Desktop doesn't show MCP tools
 
 **Solutions**:
+
 1. Verify configuration file path is correct
-2. Check JSON syntax in `claude_desktop_config.json`
-3. Restart Claude Desktop after configuration changes
-4. Check server logs for initialization errors
+1. Check JSON syntax in `claude_desktop_config.json`
+1. Restart Claude Desktop after configuration changes
+1. Check server logs for initialization errors
 
 ### Import Errors
 
 **Issue**: Python import errors for core systems
 
 **Solutions**:
+
 1. Ensure PYTHONPATH includes project root
-2. Verify all dependencies are installed: `pip install -r requirements.txt`
-3. Check that Project-AI is properly installed
+1. Verify all dependencies are installed: `pip install -r requirements.txt`
+1. Check that Project-AI is properly installed
 
 ## Performance Optimization
 
@@ -508,17 +515,17 @@ All tools return consistent error format:
 To contribute to the MCP server:
 
 1. Fork the repository
-2. Create a feature branch
-3. Add tests for new tools/resources
-4. Submit a pull request
+1. Create a feature branch
+1. Add tests for new tools/resources
+1. Submit a pull request
 
 ### Adding New Tools
 
 1. Define tool schema in `_register_tools()`
-2. Implement tool handler method
-3. Add tool to `call_tool()` dispatcher
-4. Update documentation
-5. Add tests
+1. Implement tool handler method
+1. Add tool to `call_tool()` dispatcher
+1. Update documentation
+1. Add tests
 
 ### Testing Guidelines
 

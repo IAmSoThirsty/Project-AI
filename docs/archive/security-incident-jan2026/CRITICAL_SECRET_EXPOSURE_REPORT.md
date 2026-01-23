@@ -20,7 +20,7 @@ The following credentials were found in git history and **MUST BE ROTATED IMMEDI
    - **Action**: REVOKE immediately at https://platform.openai.com/api-keys
    - **Key Pattern**: Starts with `sk-proj-cFQpst...` (first 15 chars for identification)
 
-2. **SMTP Credentials**:
+1. **SMTP Credentials**:
    - **Username**: `ProjectAiDevs@gmail.com`
    - **Password**: `[REDACTED]` (starts with `R960...`)
    - **Location**: Same commit, file `.env`
@@ -31,7 +31,7 @@ The following credentials were found in git history and **MUST BE ROTATED IMMEDI
      - Enable 2FA if not already enabled
      - Review account activity logs
 
-3. **Fernet Encryption Key**: `[REDACTED - Base64 string starting with Qqyl...]`
+1. **Fernet Encryption Key**: `[REDACTED - Base64 string starting with Qqyl...]`
    - **Location**: Same commit, file `.env`
    - **Risk**: Medium - Can decrypt location history and other encrypted data
    - **Action**: Generate new key (see instructions below)
@@ -191,8 +191,8 @@ pre-commit run --all-files
 ### 3. Enable GitHub Secret Scanning
 
 1. Go to repository Settings > Security > Code security and analysis
-2. Enable "Secret scanning"
-3. Enable "Push protection" to block commits with secrets
+1. Enable "Secret scanning"
+1. Enable "Push protection" to block commits with secrets
 
 ### 4. Add CI/CD Secret Scanning
 
@@ -212,32 +212,41 @@ Add to `.github/workflows/security.yml`:
 The following documentation has been updated to prevent future exposure:
 
 ✅ **docs/web/DEPLOYMENT.md**
+
    - Changed hardcoded connection string to environment variable
 
 ✅ **docs/policy/SECURITY.md**
+
    - Updated example passwords to clearly marked placeholders
 
 ✅ **docs/SECURITY_FRAMEWORK.md**
+
    - Changed hardcoded credentials to environment variables
 
 ✅ **docs/security/README.md**
+
    - Updated SOAP client example to use environment variables
 
 ✅ **docs/guides/QUICK_START.md**
+
    - Improved SMTP password placeholder text
 
 ✅ **docs/security/SECURITY_COMPLIANCE_CHECKLIST.md**
+
    - Enhanced placeholder text for credentials
 
 ✅ **docs/notes/QUICK_START.md**
+
    - Improved SMTP password placeholder text
 
 ✅ **.gitignore**
+
    - Added comprehensive secret patterns
    - Added .vs/ directory exclusion
    - Added secret scan report exclusions
 
 ✅ **Removed from repository**:
+
    - `secret_scan_report.json` (now in .gitignore)
    - `.vs/` directory with copilot chat sessions
 
@@ -315,6 +324,7 @@ These are not actual secrets and are safe to remain in the codebase.
 ## Contact
 
 For questions or assistance:
+
 - **Security Team**: Contact immediately via secure channel
 - **Emergency**: Follow incident response procedures
 

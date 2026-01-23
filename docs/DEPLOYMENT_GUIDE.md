@@ -7,11 +7,11 @@ This guide provides step-by-step instructions for deploying Project-AI with comp
 ## Table of Contents
 
 1. [Phase 1: Local Development Setup](#phase-1-local-development-setup)
-2. [Phase 2: Testing and Validation](#phase-2-testing-and-validation)
-3. [Phase 3: Cloud Deployment Preparation](#phase-3-cloud-deployment-preparation)
-4. [Phase 4: Production Deployment](#phase-4-production-deployment)
-5. [Phase 5: Post-Deployment Monitoring](#phase-5-post-deployment-monitoring)
-6. [Phase 6: Ongoing Maintenance](#phase-6-ongoing-maintenance)
+1. [Phase 2: Testing and Validation](#phase-2-testing-and-validation)
+1. [Phase 3: Cloud Deployment Preparation](#phase-3-cloud-deployment-preparation)
+1. [Phase 4: Production Deployment](#phase-4-production-deployment)
+1. [Phase 5: Post-Deployment Monitoring](#phase-5-post-deployment-monitoring)
+1. [Phase 6: Ongoing Maintenance](#phase-6-ongoing-maintenance)
 
 ---
 
@@ -667,6 +667,7 @@ else:
 ### 6.1 Daily Tasks
 
 **Automated Monitoring** (via CloudWatch/SNS):
+
 - Check security event dashboard
 - Review critical/high severity alerts
 - Verify backup completion
@@ -737,6 +738,7 @@ for action, count in sorted(actions.items(), key=lambda x: x[1], reverse=True):
 ### 6.3 Monthly Tasks
 
 - **Dependency Updates**: Review and update dependencies
+
 ```bash
 pip list --outdated
 pip install --upgrade package-name
@@ -744,6 +746,7 @@ pytest  # Re-run tests
 ```
 
 - **Threat Signature Updates**: Add new threat indicators
+
 ```python
 from app.security import SecurityMonitor
 
@@ -757,6 +760,7 @@ monitor.add_threat_signature(
 ```
 
 - **Secret Rotation**: Rotate sensitive credentials
+
 ```bash
 # Rotate secrets
 aws secretsmanager rotate-secret --secret-id project-ai-secrets
@@ -768,6 +772,7 @@ systemctl reload projectai
 ### 6.4 Quarterly Tasks
 
 - **IAM Permission Review**: Audit and minimize permissions
+
 ```python
 from app.security import AWSSecurityManager
 
@@ -780,6 +785,7 @@ for policy in audit['attached_policies']:
 ```
 
 - **Penetration Testing**: Run comprehensive security tests
+
 ```bash
 # Full test suite
 pytest tests/test_security_*.py -v
@@ -807,11 +813,11 @@ pytest --cov=app --cov-report=html
 ### Security Incident Procedure
 
 1. **Detection**: CloudWatch alarm or SNS alert
-2. **Analysis**: Review logs and metrics
-3. **Containment**: Isolate affected resources
-4. **Eradication**: Remove threat
-5. **Recovery**: Restore normal operations
-6. **Lessons Learned**: Update procedures
+1. **Analysis**: Review logs and metrics
+1. **Containment**: Isolate affected resources
+1. **Eradication**: Remove threat
+1. **Recovery**: Restore normal operations
+1. **Lessons Learned**: Update procedures
 
 ### Example Incident: Authentication Attack
 
@@ -891,6 +897,7 @@ anomalies = monitor.detect_anomalies(threshold=20)  # Was 10
 Following this deployment guide ensures Project-AI is deployed with comprehensive security controls at every phase. Regular monitoring and maintenance are essential to maintaining a strong security posture.
 
 For questions or issues, consult:
+
 - `/docs/SECURITY_FRAMEWORK.md` - Security framework documentation
 - `/tests/test_security_*.py` - Security test examples
 - Internal security team or security@example.com

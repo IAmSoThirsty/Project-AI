@@ -7,8 +7,8 @@ This document describes the new modular, extensible knowledge base querying and 
 Project-AI now supports modern LLM-style function calling and knowledge base querying through three core components:
 
 1. **FunctionRegistry** - Dynamic function/tool registration and invocation
-2. **Enhanced MemoryExpansionSystem** - Powerful knowledge base querying
-3. **IntelligenceRouter** - Unified query handling with automatic routing
+1. **Enhanced MemoryExpansionSystem** - Powerful knowledge base querying
+1. **IntelligenceRouter** - Unified query handling with automatic routing
 
 These features enable Project-AI to act more like a modern AI agent with structured knowledge recall and extensible, dynamic tool calling.
 
@@ -132,18 +132,22 @@ print(f"Total entries: {summary['entries']}")
 ### Query Methods
 
 **query_knowledge(query, category=None, limit=10)**
+
 - Searches knowledge base for matching entries
 - Returns list of dicts with `category`, `key`, `value`, `match_type`
 
 **search_conversations(query, limit=10, search_user=True, search_ai=True)**
+
 - Searches conversation history
 - Returns most recent matches first
 - Can search user messages, AI responses, or both
 
 **get_all_categories()**
+
 - Returns list of all knowledge categories
 
 **get_category_summary(category)**
+
 - Returns metadata about a specific category
 - Includes entry count and key preview
 
@@ -276,9 +280,9 @@ python examples/function_knowledge_integration.py
 See `examples/function_knowledge_integration.py` for a complete demonstration including:
 
 1. Function registration and invocation
-2. Knowledge base queries and searches
-3. Intelligence router integration
-4. Complete application integration pattern
+1. Knowledge base queries and searches
+1. Intelligence router integration
+1. Complete application integration pattern
 
 ## API Reference
 
@@ -321,11 +325,11 @@ class IntelligenceRouter:
 ## Best Practices
 
 1. **Function Registration**: Register functions at application startup
-2. **Categories**: Use meaningful categories for organization
-3. **Schemas**: Let auto-generation work, override only when needed
-4. **Error Handling**: Always check `success` field in function call results
-5. **Search Limits**: Use reasonable limits to avoid overwhelming results
-6. **Context**: Provide context to router for better query understanding
+1. **Categories**: Use meaningful categories for organization
+1. **Schemas**: Let auto-generation work, override only when needed
+1. **Error Handling**: Always check `success` field in function call results
+1. **Search Limits**: Use reasonable limits to avoid overwhelming results
+1. **Context**: Provide context to router for better query understanding
 
 ## Integration with LLMs
 
@@ -365,14 +369,15 @@ Potential future improvements include:
 When adding new functions or extending the system:
 
 1. Write comprehensive docstrings
-2. Add appropriate type annotations
-3. Include unit tests
-4. Update this documentation
-5. Follow repository conventions
+1. Add appropriate type annotations
+1. Include unit tests
+1. Update this documentation
+1. Follow repository conventions
 
 ## Support
 
 For issues or questions:
+
 - Check `examples/function_knowledge_integration.py` for usage patterns
 - Review test files for additional examples
 - See `PROGRAM_SUMMARY.md` for architecture details

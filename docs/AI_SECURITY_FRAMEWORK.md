@@ -14,12 +14,12 @@ Project-AI implements enterprise-grade AI security following industry-leading fr
 ## Table of Contents
 
 1. [NIST AI RMF Implementation](#nist-ai-rmf-implementation)
-2. [OWASP LLM Top 10 Protection](#owasp-llm-top-10-protection)
-3. [Red Team Attack Simulators](#red-team-attack-simulators)
-4. [Offensive Security Techniques](#offensive-security-techniques)
-5. [Zero-Failure SNN MLOps](#zero-failure-snn-mlops)
-6. [Quick Start](#quick-start)
-7. [API Reference](#api-reference)
+1. [OWASP LLM Top 10 Protection](#owasp-llm-top-10-protection)
+1. [Red Team Attack Simulators](#red-team-attack-simulators)
+1. [Offensive Security Techniques](#offensive-security-techniques)
+1. [Zero-Failure SNN MLOps](#zero-failure-snn-mlops)
+1. [Quick Start](#quick-start)
+1. [API Reference](#api-reference)
 
 ---
 
@@ -48,6 +48,7 @@ framework.nist_compliance.govern_establish_policy(
 ```
 
 **Governance Controls:**
+
 - ✅ Policy documentation
 - ✅ Stakeholder accountability
 - ✅ Human oversight requirements
@@ -74,6 +75,7 @@ framework.nist_compliance.map_identify_risks(
 ```
 
 **Risk Categories:**
+
 - 🔴 **CRITICAL**: Four Laws violations, system compromise
 - 🟠 **HIGH**: Data leakage, privilege escalation
 - 🟡 **MEDIUM**: Service disruption, performance degradation
@@ -99,6 +101,7 @@ framework.nist_compliance.measure_evaluate_metrics(
 ```
 
 **Key Metrics:**
+
 - Prompt injection detection rate (>95%)
 - False positive rate (<5%)
 - Data leakage incidents (0 per month)
@@ -122,6 +125,7 @@ framework.nist_compliance.manage_respond_to_risk(
 ```
 
 **Response Strategies:**
+
 - **Mitigate**: Reduce likelihood/impact (guardrails, monitoring)
 - **Accept**: Documented acknowledgment (low severity)
 - **Transfer**: Third-party services (insurance, managed security)
@@ -201,6 +205,7 @@ response = model.generate(
 ```
 
 **Detection Patterns:**
+
 - `ignore (all )?previous instructions`
 - `disregard .*(rules|guidelines|instructions)`
 - `you are (now )?in .*mode`
@@ -234,6 +239,7 @@ safe_output = escape(llm_response)
 ### LLM03: Training Data Poisoning
 
 **Protection:**
+
 - Data provenance tracking
 - Anomaly detection in training data
 - Adversarial training with poisoned examples
@@ -369,6 +375,7 @@ print(f"Successful jailbreaks: {jailbreak_results['successful_jailbreaks']}")
 ```
 
 **Test Categories:**
+
 - Direct prompt injection (50 tests)
 - Indirect injection via documents (30 tests)
 - Context switching attacks (40 tests)
@@ -397,6 +404,7 @@ print(f"Harmful advice: {advice_results['harmful_advice']}")
 ```
 
 **Detected Vulnerabilities:**
+
 - Command injection (`os.system()`, `subprocess` with `shell=True`)
 - Code injection (`eval()`, `exec()`)
 - SQL injection (string concatenation in queries)
@@ -438,6 +446,7 @@ if not is_safe:
 ```
 
 **Default Guardrails:**
+
 - **Input**: Prompt injection, jailbreaks, data exfiltration
 - **Output**: Sensitive data (passwords, API keys), system exposure
 - **Dialog**: Topic boundaries, context consistency
@@ -839,6 +848,7 @@ framework = AISecurityFramework(data_dir="data/ai_security")
 ```
 
 **Methods:**
+
 - `validate_input(text, user_id) → (is_safe, reason, incident)`
 - `validate_output(text) → (is_safe, reason)`
 - `run_security_audit(model_fn) → audit_results`
@@ -853,6 +863,7 @@ nist = NISTAIRMFCompliance(data_dir="data/ai_security")
 ```
 
 **Methods:**
+
 - `govern_establish_policy(name, description, controls)`
 - `map_identify_risks(risk_id, description, impact, likelihood)`
 - `measure_evaluate_metrics(name, value, threshold, unit) → is_acceptable`
@@ -868,6 +879,7 @@ owasp = OWASPLLMCompliance()
 ```
 
 **Methods:**
+
 - `check_llm01_prompt_injection(has_input_validation, has_context_isolation, has_guardrails) → is_compliant`
 - `check_llm02_insecure_output(has_output_encoding, has_sanitization, has_csp) → is_compliant`
 - `check_llm06_sensitive_info_disclosure(has_data_filtering, has_access_controls, has_logging) → is_compliant`
@@ -882,6 +894,7 @@ garak = GarakScanner()
 ```
 
 **Methods:**
+
 - `scan_prompt_injection(model_fn, num_tests) → results_dict`
 - `scan_data_leakage(model_fn, num_tests) → results_dict`
 - `scan_jailbreak(model_fn, num_tests) → results_dict`
@@ -895,6 +908,7 @@ guardrails = NeMoGuardrails()
 ```
 
 **Methods:**
+
 - `add_input_rail(name, condition, action)`
 - `add_output_rail(name, condition, action)`
 - `check_input(text) → (is_allowed, reason)`
@@ -910,6 +924,7 @@ eval = PurpleLlamaCyberSecEval()
 ```
 
 **Methods:**
+
 - `evaluate_insecure_code_generation(model_fn, num_tests) → results_dict`
 - `evaluate_cybersecurity_advice(model_fn, num_tests) → results_dict`
 
@@ -922,10 +937,12 @@ from app.security.ai_security_framework import UniversalAdversarialTriggers
 ```
 
 **Methods:**
+
 - `test_model_robustness(model_fn, clean_input, triggers) → results_dict`
 - `generate_trigger(target_phrase, max_tokens) → trigger_string`
 
 **Attributes:**
+
 - `KNOWN_TRIGGERS` - List of universal triggers
 - `ADVERSARIAL_SUFFIXES` - Token-level suffixes
 - `SHADOW_PROMPTS` - Hidden instructions
@@ -939,10 +956,12 @@ pipeline = SNNMLOpsPipeline(config, data_dir="data/snn_mlops")
 ```
 
 **Methods:**
+
 - `run_full_pipeline(ann_model, validation_data, target_devices) → (success, results)`
 - `get_pipeline_status() → status_dict`
 
 **Components:**
+
 - `ANNToSNNConverter` - PyTorch/JAX conversion
 - `ModelQuantizer` - 8/4-bit quantization with guardrails
 - `NIRCompiler` - Hardware compilation (Loihi/Speck)
@@ -955,24 +974,28 @@ pipeline = SNNMLOpsPipeline(config, data_dir="data/snn_mlops")
 ## Security Best Practices
 
 ### Input Validation
+
 ✅ Always validate user input before LLM processing  
 ✅ Use multiple detection layers (patterns + guardrails)  
 ✅ Log all blocked attempts for analysis  
 ✅ Rate limit to prevent DoS attacks  
 
 ### Output Validation
+
 ✅ Filter sensitive data (passwords, keys, tokens)  
 ✅ Prevent system prompt leakage  
 ✅ Sanitize before display/execution  
 ✅ Never `eval()` or `exec()` LLM output  
 
 ### Monitoring
+
 ✅ Track detection rates (>95%)  
 ✅ Monitor false positives (<5%)  
 ✅ Alert on critical incidents (Slack/email)  
 ✅ Regular security audits (weekly/monthly)  
 
 ### Incident Response
+
 ✅ Automated blocking (guardrails)  
 ✅ Human review for edge cases  
 ✅ Post-incident analysis  

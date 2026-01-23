@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - CLI best-practice enhancements
 - Comprehensive CLI documentation and auto-generation
 - CLI-specific CI workflow for testing and validation
@@ -18,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Version flag (--version) for CLI
 
 ### Changed
+
 - Enhanced README.md with CLI quickstart section and badges
 - Updated CONTRIBUTING.md with CLI-specific guidelines
 - Improved pre-commit hooks configuration
@@ -25,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2026-01-09
 
 ### Added
+
 - Initial CLI implementation with Typer framework
 - Six command groups: user, memory, learning, plugin, system, ai
 - PyQt6 "Leather Book" desktop interface
@@ -45,6 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pre-commit hooks for code quality
 
 ### Security
+
 - ASL-3 compliance with 30+ security controls
 - Black Vault for denied content storage
 - Encrypted memory and location tracking

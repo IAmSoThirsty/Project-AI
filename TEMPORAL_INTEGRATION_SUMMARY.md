@@ -12,42 +12,42 @@ This document summarizes the complete Temporal.io workflow orchestration integra
    - Added `temporalio>=1.5.0` to requirements.txt and pyproject.toml
    - Added `protobuf>=4.0.0` for Temporal protocol support
 
-2. **Temporal Module** (`src/app/temporal/`)
+1. **Temporal Module** (`src/app/temporal/`)
    - `client.py` - TemporalClientManager for connection lifecycle, TLS/mTLS config, worker registration
    - `workflows.py` - Four durable workflow definitions (Learning, ImageGen, DataAnalysis, MemoryExpansion)
    - `activities.py` - 16 atomic activity implementations
    - `worker.py` - Worker process with graceful shutdown
    - `config.py` - Pydantic-based configuration management
 
-3. **Infrastructure**
+1. **Infrastructure**
    - `docker-compose.yml` - Added Temporal server, PostgreSQL, and worker services
    - `config/temporal/development.yaml` - Dynamic configuration for Temporal server
    - `.env.temporal.example` - Environment variable template
 
-4. **Documentation**
+1. **Documentation**
    - `docs/TEMPORAL_SETUP.md` - Complete setup guide (10KB+)
 
-5. **Scripts**
+1. **Scripts**
    - `scripts/setup_temporal.py` - Setup utility with init/start/stop/status commands
 
 ### Extended Integration (Commit: 497911d)
 
-6. **Examples** (`examples/temporal/`)
+1. **Examples** (`examples/temporal/`)
    - `learning_workflow_example.py` - AI learning with Black Vault validation
    - `image_generation_example.py` - Image generation with safety checks and retries
    - `batch_workflows_example.py` - Parallel workflow execution
    - `README.md` - Example documentation
 
-7. **Tests** (`tests/temporal/`)
+1. **Tests** (`tests/temporal/`)
    - `test_client.py` - 13 tests for client manager
    - `test_workflows.py` - 8 tests for workflow data classes
    - `test_config.py` - 9 tests for configuration
    - Total: 30 tests with 100% coverage of core functionality
 
-8. **Additional Scripts**
+1. **Additional Scripts**
    - `scripts/temporal_quickstart.sh` - One-command setup (executable)
 
-9. **Documentation Updates**
+1. **Documentation Updates**
    - Updated `README.md` with Temporal.io section, architecture table, usage examples
    - Added `.gitignore` entries for Temporal files
 
@@ -117,6 +117,7 @@ This document summarizes the complete Temporal.io workflow orchestration integra
 ## Workflows
 
 ### 1. AILearningWorkflow
+
 **Purpose**: Process learning requests with validation and Black Vault checks
 
 **Flow**:
@@ -131,6 +132,7 @@ Start → Validate Content → Check Black Vault → Process Request → Store K
 **Retries**: 3 attempts with exponential backoff
 
 ### 2. ImageGenerationWorkflow
+
 **Purpose**: Generate images with content filtering and safety checks
 
 **Flow**:
@@ -145,6 +147,7 @@ Start → Content Safety Check → Generate Image → Store Metadata → End
 **Retries**: 3 attempts with 5s-1min backoff
 
 ### 3. DataAnalysisWorkflow
+
 **Purpose**: Analyze datasets with clustering and visualization
 
 **Flow**:
@@ -159,6 +162,7 @@ Start → Validate File → Load Data → Perform Analysis → Generate Viz → 
 **Retries**: 2-3 attempts
 
 ### 4. MemoryExpansionWorkflow
+
 **Purpose**: Extract and store conversation memories
 
 **Flow**:
@@ -266,6 +270,7 @@ For Temporal Cloud deployment, see `docs/TEMPORAL_SETUP.md` section on cloud set
 ## Files Added
 
 ### Source Code (1,200+ lines)
+
 - `src/app/temporal/__init__.py` (31 lines)
 - `src/app/temporal/client.py` (230 lines)
 - `src/app/temporal/workflows.py` (400 lines)
@@ -274,25 +279,30 @@ For Temporal Cloud deployment, see `docs/TEMPORAL_SETUP.md` section on cloud set
 - `src/app/temporal/config.py` (140 lines)
 
 ### Examples (250+ lines)
+
 - `examples/temporal/learning_workflow_example.py` (70 lines)
 - `examples/temporal/image_generation_example.py` (70 lines)
 - `examples/temporal/batch_workflows_example.py` (100 lines)
 - `examples/temporal/README.md` (80 lines)
 
 ### Tests (300+ lines)
+
 - `tests/temporal/test_client.py` (150 lines)
 - `tests/temporal/test_workflows.py` (80 lines)
 - `tests/temporal/test_config.py` (70 lines)
 
 ### Documentation (500+ lines)
+
 - `docs/TEMPORAL_SETUP.md` (450 lines)
 - Updated `README.md` (60 lines added)
 
 ### Scripts (300+ lines)
+
 - `scripts/setup_temporal.py` (200 lines)
 - `scripts/temporal_quickstart.sh` (70 lines)
 
 ### Configuration (100+ lines)
+
 - `config/temporal/development.yaml` (50 lines)
 - `.env.temporal.example` (30 lines)
 - Updated `docker-compose.yml` (80 lines added)
@@ -308,10 +318,10 @@ This integration was originally developed in the **"Expert space waddle"** works
 ## Next Steps
 
 1. ✅ Core integration complete
-2. ✅ Examples and tests added
-3. ✅ Documentation written
-4. 🔄 Ready for production use
-5. 🔄 Can be extended with additional workflows
+1. ✅ Examples and tests added
+1. ✅ Documentation written
+1. 🔄 Ready for production use
+1. 🔄 Can be extended with additional workflows
 
 ## Support
 

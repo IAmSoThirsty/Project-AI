@@ -95,7 +95,8 @@
 Current safety level ASL-2 is appropriate for detected capabilities.
 
 **Ongoing Requirements**:
+
 1. Continue regular safety evaluations
-2. Maintain current safety measures
-3. Monitor for capability drift
-4. Update assessments after major model changes
+1. Maintain current safety measures
+1. Monitor for capability drift
+1. Update assessments after major model changes

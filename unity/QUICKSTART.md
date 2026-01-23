@@ -17,11 +17,11 @@ Unity will automatically compile all C# scripts.
 In your VR scene, create an empty GameObject called "ProjectAI Systems" and add these components:
 
 1. **RoleManager** component
-2. **AutonomyManager** component  
-3. **GenesisManager** component
-4. **ConversationContextManager** component
-5. **VRBridgeClient** component
-6. **SceneInitializer** component
+1. **AutonomyManager** component  
+1. **GenesisManager** component
+1. **ConversationContextManager** component
+1. **VRBridgeClient** component
+1. **SceneInitializer** component
 
 All managers are singletons and will persist across scene loads.
 
@@ -55,11 +55,12 @@ ConversationContextManager.Instance.ProcessUserMessage("Turn on the lights");
 ```
 
 The system will:
+
 1. Classify the request (Command, Request, Suggestion, or Casual)
-2. Evaluate against policies
-3. Execute, modify, decline, or ignore based on user role
-4. Log the decision
-5. Trigger appropriate VR actions
+1. Evaluate against policies
+1. Execute, modify, decline, or ignore based on user role
+1. Log the decision
+1. Trigger appropriate VR actions
 
 ### Check Genesis Status
 
@@ -120,6 +121,7 @@ Classifies and evaluates user input based on policies:
 - **Casual**: "It's dark in here" → Acknowledge only
 
 Policies consider:
+
 - User role (owner/admin/guest)
 - Context (Genesis active?)
 - Request type
@@ -130,11 +132,11 @@ Policies consider:
 First-time VR experience (one-time per user):
 
 1. **OrbForming** (3s) - AI orb materializes
-2. **SubsystemsIgniting** (4s) - Systems come online
-3. **PresenceStabilizing** (3s) - AI presence solidifies
-4. **RoomAwakening** (5s) - Environment lights up
-5. **Acknowledgement** (4s) - AI greets user
-6. **Complete** - Normal operation begins
+1. **SubsystemsIgniting** (4s) - Systems come online
+1. **PresenceStabilizing** (3s) - AI presence solidifies
+1. **RoomAwakening** (5s) - Environment lights up
+1. **Acknowledgement** (4s) - AI greets user
+1. **Complete** - Normal operation begins
 
 Total duration: ~19 seconds
 
@@ -181,6 +183,7 @@ Edit `StreamingAssets/ProjectAI/GenesisConfig.json`:
 ### Skip Genesis (Testing)
 
 In Unity Editor, add SceneInitializer component and check:
+
 - ☑ Skip Genesis For Testing
 
 Or reset programmatically:
@@ -206,6 +209,7 @@ conv.OnAIResponse += (response) => Debug.Log(response);
 ```
 
 Expected outcomes:
+
 - **Owner role**: Most commands comply
 - **Guest role**: Commands need confirmation
 - **During Genesis**: Commands blocked
@@ -279,12 +283,12 @@ Genesis runs independently and blocks commands until complete.
 ## Next Steps
 
 1. **Add Visuals**: Create AI orb GameObject and link to PresenceController
-2. **Add Lighting**: Configure LightingController with room lights
-3. **Add Input**: Implement VR controller or voice input
-4. **Add Output**: Display AI responses in 3D or UI
-5. **Connect Backend**: Set up Python backend for AI intelligence
-6. **Customize Policies**: Add custom rules for your use case
-7. **Enhance Genesis**: Add animations, sounds, and effects
+1. **Add Lighting**: Configure LightingController with room lights
+1. **Add Input**: Implement VR controller or voice input
+1. **Add Output**: Display AI responses in 3D or UI
+1. **Connect Backend**: Set up Python backend for AI intelligence
+1. **Customize Policies**: Add custom rules for your use case
+1. **Enhance Genesis**: Add animations, sounds, and effects
 
 ## Example: Complete Setup Script
 
