@@ -2,13 +2,32 @@
 
 Thank you for your interest. To contribute:
 
+- **Read the [Copilot Workspace Profile](.github/copilot_workspace_profile.md)** - All contributions must meet production-grade standards
 - Fork the repository.
 - Create a branch with a descriptive name.
 - Run tests locally: `pytest -q`.
 - Run linters: `ruff check .` and `mypy src`.
 - Open a pull request describing your changes.
 
-Development setup:
+## 🚨 Governance & Standards
+
+All contributions—whether from humans or AI assistants—MUST comply with:
+
+**[.github/copilot_workspace_profile.md](.github/copilot_workspace_profile.md)**
+
+This governance profile enforces:
+- ✅ Maximal completeness (no minimal/skeleton/partial code)
+- ✅ Production-ready artifacts (full error handling, logging, testing)
+- ✅ Complete system integration (no isolated components)
+- ✅ Security hardening (validation, encryption, auth/authz)
+- ✅ Comprehensive documentation with examples
+- ✅ 80%+ test coverage
+
+**Non-compliant contributions will be rejected.**
+
+---
+
+## Development Setup
 
 ```bash
 python -m venv .venv
