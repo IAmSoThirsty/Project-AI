@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # Cerberus Hydra Guard Agent - Python Template
-# Language: {{human_lang}} ({{human_lang_name}})
-# Agent ID: {{agent_id}}
-# Spawn Generation: {{generation}}
-# Locked Section: {{locked_section}}
+# Language: ja (Japanese)
+# Agent ID: cerberus-1-ad17413a
+# Spawn Generation: 1
+# Locked Section: inference_engine
 
 import sys
 import time
@@ -48,9 +48,9 @@ class CerberusGuardAgent:
 
 if __name__ == "__main__":
     agent = CerberusGuardAgent(
-        agent_id="{{agent_id}}",
-        human_lang="{{human_lang}}",
-        locked_section="{{locked_section}}",
-        generation={{generation}}
+        agent_id="cerberus-1-ad17413a",
+        human_lang="ja",
+        locked_section="inference_engine",
+        generation=1
     )
     agent.monitor()

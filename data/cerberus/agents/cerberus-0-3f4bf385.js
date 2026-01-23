@@ -1,8 +1,8 @@
 // Cerberus Hydra Guard Agent - JavaScript Template
-// Language: {{human_lang}} ({{human_lang_name}})
-// Agent ID: {{agent_id}}
-// Spawn Generation: {{generation}}
-// Locked Section: {{locked_section}}
+// Language: mn (Mongolian)
+// Agent ID: cerberus-0-3f4bf385
+// Spawn Generation: 0
+// Locked Section: token_management
 
 class CerberusGuardAgent {
     constructor(agentId, humanLang, lockedSection, generation) {
@@ -41,9 +41,9 @@ class CerberusGuardAgent {
 }
 
 const agent = new CerberusGuardAgent(
-    "{{agent_id}}",
-    "{{human_lang}}",
-    "{{locked_section}}",
-    {{generation}}
+    "cerberus-0-3f4bf385",
+    "mn",
+    "token_management",
+    0
 );
 agent.monitor();
