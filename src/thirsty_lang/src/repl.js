@@ -71,7 +71,7 @@ class ThirstyREPL {
       console.log('No variables defined.');
     } else {
       console.log('\n📊 Current Variables:');
-      for (const name in vars) {
+      for (var name in vars) {
         if (vars.hasOwnProperty(name)) {
           const value = vars[name];
           console.log("  " + name + " = " + JSON.stringify(value));
@@ -84,7 +84,7 @@ class ThirstyREPL {
   showHistory() {
     console.log('\n📜 Command History:');
     const recentHistory = this.history.slice(-20);
-    for (let i = 0; i < recentHistory.length; i++) {
+    for (var i = 0; i < recentHistory.length; i++) {
       console.log('  ' + (i + 1) + '. ' + recentHistory[i]);
     }
     console.log();

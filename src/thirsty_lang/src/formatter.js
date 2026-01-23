@@ -17,12 +17,12 @@ class ThirstyFormatter {
   }
 
   format(code) {
-    let lines = code.split('\n');
-    let formatted = [];
-    let indentLevel = 0;
+    var lines = code.split('\n');
+    var formatted = [];
+    var indentLevel = 0;
 
-    for (let line of lines) {
-      line = line.trim();
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i].trim();
 
       // Skip empty lines
       if (!line) {
@@ -42,7 +42,7 @@ class ThirstyFormatter {
       }
 
       // Format the line
-      let formattedLine = this.formatLine(line);
+      var formattedLine = this.formatLine(line);
       formatted.push(this.indent(indentLevel) + formattedLine);
 
       // Handle block start (future: for control structures)
@@ -52,7 +52,7 @@ class ThirstyFormatter {
       }
     }
 
-    let result = formatted.join('\n');
+    var result = formatted.join('\n');
 
     if (this.options.insertFinalNewline && !result.endsWith('\n')) {
       result += '\n';
@@ -114,11 +114,11 @@ function main() {
   }
 
   const options = {};
-  let inputFile = null;
-  let outputFile = null;
-  let checkMode = false;
+  var inputFile = null;
+  var outputFile = null;
+  var checkMode = false;
 
-  for (let i = 0; i < args.length; i++) {
+  for (var i = 0; i < args.length; i++) {
     const arg = args[i];
 
     if (arg === '--indent-size') {

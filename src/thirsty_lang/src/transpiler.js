@@ -20,8 +20,8 @@ class ThirstyTranspiler {
       .map(function(line) { return line.trim(); })
       .filter(function(line) { return line; });
 
-    for (const line of lines) {
-      this.transpileLine(line);
+    for (var i = 0; i < lines.length; i++) {
+      this.transpileLine(lines[i]);
     }
 
     return this.output.join('\n');
@@ -146,7 +146,7 @@ function main() {
   let wrapMain = false;
 
   // Parse arguments
-  for (let i = 1; i < args.length; i++) {
+  for (var i = 1; i < args.length; i++) {
     if (args[i] === '--target' && args[i + 1]) {
       targetLanguage = args[i + 1];
       i++;

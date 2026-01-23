@@ -19,9 +19,9 @@ class ThirstyProfiler extends ThirstyInterpreter {
     this.startTime = process.hrtime.bigint();
     const startMemory = process.memoryUsage();
 
-    const lines = code.split('\n').map(function (line) { return line.trim() }).filter(line => line && !line.startsWith('//'));
+    const lines = code.split('\n').map(function (line) { return line.trim() }).filter(function(line) { return line && !line.startsWith('//') });
 
-    for (let i = 0; i < lines.length; i++) {
+    for (var i = 0; i < lines.length; i++) {
       const lineStartTime = process.hrtime.bigint();
 
       this.executeLine(lines[i]);
@@ -61,7 +61,7 @@ class ThirstyProfiler extends ThirstyInterpreter {
     // Slowest lines
     console.log('\n🐌 Slowest Lines:');
     const sorted = [...this.executionTimes].sort(function(a, b) { return b.time - a.time; }).slice(0, 5);
-    for (let index = 0; index < sorted.length; index++) {
+    for (var index = 0; index < sorted.length; index++) {
       const item = sorted[index];
       console.log("   " + (index + 1) + ". Line " + item.line + ": " + item.time.toFixed(3) + " ms");
       console.log("      " + item.code);
@@ -69,7 +69,7 @@ class ThirstyProfiler extends ThirstyInterpreter {
 
     // Time distribution
     console.log('\n📈 Execution Time per Line:');
-    for (let i = 0; i < this.executionTimes.length; i++) {
+    for (var i = 0; i < this.executionTimes.length; i++) {
       const item = this.executionTimes[i];
       const bar = '█'.repeat(Math.max(1, Math.floor(item.time * 10)));
       console.log('   Line ' + item.line.toString().padStart(3) + ': ' + bar + ' ' + item.time.toFixed(3) + ' ms');
