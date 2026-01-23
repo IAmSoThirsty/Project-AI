@@ -74,7 +74,7 @@ if hasattr(sys, "_tarl_shield_bypass"):
     sys.exit(1)
 
 # ruff: noqa: E402 - TARL security checks must execute before imports
-"""Core AI systems: Persona, Memory, Learning Requests, Plugins, and Overrides."""
+# Core AI systems: Persona, Memory, Learning Requests, Plugins, and Overrides.
 
 
 try:
