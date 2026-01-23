@@ -60,10 +60,10 @@
 
 | Role | GitHub Handle | Email | Escalation Path |
 |------|---------------|-------|-----------------|
-| **Security Lead** | @security-lead | projectaidevs@gmail.com | CTO → CEO |
-| **DevOps Lead** | @devops-lead | projectaidevs@gmail.com | Engineering Director |
-| **ML Lead** | @ml-lead | projectaidevs@gmail.com | Principal Engineer |
-| **Release Manager** | @release-manager | projectaidevs@gmail.com | Engineering Director |
+| **Security Lead** | @security-lead | <projectaidevs@gmail.com> | CTO → CEO |
+| **DevOps Lead** | @devops-lead | <projectaidevs@gmail.com> | Engineering Director |
+| **ML Lead** | @ml-lead | <projectaidevs@gmail.com> | Principal Engineer |
+| **Release Manager** | @release-manager | <projectaidevs@gmail.com> | Engineering Director |
 
 ### Responsibilities Matrix
 
@@ -821,7 +821,7 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 
 ---
 
-**Contact:** projectaidevs@gmail.com  
+**Contact:** <projectaidevs@gmail.com>  
 **Classification:** INTERNAL
 
 ---
@@ -1394,7 +1394,7 @@ If all guardians unavailable (disaster scenario):
 - Independent investigation guaranteed
 - Corrective action required
 
-**Contact:** projectaidevs@gmail.com (mark: CONFIDENTIAL GUARDIAN CONCERN)
+**Contact:** <projectaidevs@gmail.com> (mark: CONFIDENTIAL GUARDIAN CONCERN)
 
 ---
 

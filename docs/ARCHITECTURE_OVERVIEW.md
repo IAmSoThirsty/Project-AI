@@ -489,19 +489,19 @@ python scripts/scan_ai_threats.py --path data/
 ### For Security Workflows
 
 - **Runbooks:** [SECURITY_WORKFLOW_RUNBOOKS.md](security/SECURITY_WORKFLOW_RUNBOOKS.md)
-- **Email:** projectaidevs@gmail.com
+- **Email:** <projectaidevs@gmail.com>
 - **Label:** `security` on GitHub issues
 
 ### For AGI Charter Concerns
 
 - **Charter:** [AGI_CHARTER.md](AGI_CHARTER.md)
 - **Guardians:** See [SECURITY_GOVERNANCE.md](security/SECURITY_GOVERNANCE.md)
-- **Confidential:** projectaidevs@gmail.com (mark: CHARTER CONCERN)
+- **Confidential:** <projectaidevs@gmail.com> (mark: CHARTER CONCERN)
 
 ### For Vulnerability Reports
 
 - **Preferred:** GitHub Security Advisories (private)
-- **Alternative:** projectaidevs@gmail.com
+- **Alternative:** <projectaidevs@gmail.com>
 - **See:** [SECURITY.md](../SECURITY.md) for full process
 
 ---
@@ -639,7 +639,7 @@ This framework is continuously evolving. We welcome feedback on:
 **How to provide feedback:**
 
 - Open issue with `security-feedback` label
-- Email: projectaidevs@gmail.com
+- Email: <projectaidevs@gmail.com>
 - Discussions: GitHub Discussions (planned)
 
 ---

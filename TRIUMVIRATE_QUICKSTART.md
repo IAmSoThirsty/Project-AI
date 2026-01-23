@@ -291,8 +291,8 @@ export PYTHONPATH=/path/to/Project-AI:$PYTHONPATH
 - Full Documentation: `TRIUMVIRATE_INTEGRATION.md`
 - Demo Scripts: `examples/triumvirate_demo.py`
 - Test Suite: `tests/test_complete_system.py`
-- Temporal Docs: https://docs.temporal.io/
-- Project Repository: https://github.com/IAmSoThirsty/Project-AI
+- Temporal Docs: <https://docs.temporal.io/>
+- Project Repository: <https://github.com/IAmSoThirsty/Project-AI>
 
 ## Support
 

@@ -105,7 +105,7 @@ gh run view <run-id>
 1. **DO NOT BYPASS VERIFICATION** - This is a security control
 1. Check if workflow ran from a fork (should use fork's identity)
 1. Verify `permissions: id-token: write` is set in workflow
-1. Check Rekor transparency log: https://rekor.sigstore.dev/
+1. Check Rekor transparency log: <https://rekor.sigstore.dev/>
 1. If legitimate failure, re-run workflow to get fresh OIDC token
 
 **Prevention:** Test signing in non-prod branch first
@@ -638,7 +638,7 @@ Next Steps:
 - Full audit of model pipeline
 - Review of access controls
 
-Contact: projectaidevs@gmail.com for questions
+Contact: <projectaidevs@gmail.com> for questions
 ```
 
 ---
@@ -710,7 +710,7 @@ grype sbom:sbom-comprehensive.cyclonedx.json
 - **Security Framework:** [docs/SECURITY_FRAMEWORK.md](../docs/SECURITY_FRAMEWORK.md)
 - **SBOM Policy:** [docs/security/SBOM_POLICY.md](../docs/security/SBOM_POLICY.md)
 - **Threat Model:** [docs/security/THREAT_MODEL_SECURITY_WORKFLOWS.md](../docs/security/THREAT_MODEL_SECURITY_WORKFLOWS.md)
-- **Incident Response:** Contact projectaidevs@gmail.com
+- **Incident Response:** Contact <projectaidevs@gmail.com>
 
 ---
 

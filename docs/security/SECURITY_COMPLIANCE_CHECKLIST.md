@@ -17,7 +17,7 @@
   ```
 
 - [ ] **ROTATE** all exposed credentials:
-  - [ ] OpenAI API key (get new from https://platform.openai.com/api-keys)
+  - [ ] OpenAI API key (get new from <https://platform.openai.com/api-key>s)
   - [ ] Gmail app password (revoke and create new)
   - [ ] Fernet encryption key (generate new)
   - [ ] Update `.env` with new credentials
@@ -348,7 +348,7 @@
 
 ## 📞 INCIDENT RESPONSE
 
-### If Security Incident Occurs:
+### If Security Incident Occurs
 
 1. **IMMEDIATE** (within 1 hour):
    - [ ] Identify scope of breach
@@ -379,23 +379,23 @@
 
 ### Tools
 
-- **Bandit**: https://bandit.readthedocs.io/
-- **Semgrep**: https://semgrep.dev/
-- **pip-audit**: https://pypi.org/project/pip-audit/
-- **OWASP ZAP**: https://www.zaproxy.org/
-- **Trivy**: https://github.com/aquasecurity/trivy
+- **Bandit**: <https://bandit.readthedocs.io/>
+- **Semgrep**: <https://semgrep.dev/>
+- **pip-audit**: <https://pypi.org/project/pip-audit/>
+- **OWASP ZAP**: <https://www.zaproxy.org/>
+- **Trivy**: <https://github.com/aquasecurity/trivy>
 
 ### Documentation
 
-- **OWASP Cheat Sheets**: https://cheatsheetseries.owasp.org/
-- **Python Security**: https://python.readthedocs.io/en/stable/library/security_warnings.html
-- **NIST Guidelines**: https://www.nist.gov/cyberframework
+- **OWASP Cheat Sheets**: <https://cheatsheetseries.owasp.org/>
+- **Python Security**: <https://python.readthedocs.io/en/stable/library/security_warnings.html>
+- **NIST Guidelines**: <https://www.nist.gov/cyberframework>
 
 ### Training
 
-- **OWASP Top 10**: https://owasp.org/www-project-top-ten/
-- **Security Training**: https://application.security/ (free courses)
-- **HackTheBox**: https://www.hackthebox.com/
+- **OWASP Top 10**: <https://owasp.org/www-project-top-ten/>
+- **Security Training**: <https://application.security/> (free courses)
+- **HackTheBox**: <https://www.hackthebox.com/>
 
 ---
 
@@ -421,4 +421,4 @@
 
 ---
 
-*For questions or security concerns, contact: [security@project-ai.example.com]*
+*For questions or security concerns, contact: [<security@project-ai.example.com>]*
