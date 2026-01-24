@@ -34,6 +34,7 @@ Successfully integrated a complete deterministic AI orchestration layer into Pro
 - Graph pattern (DAG execution)
 
 ✅ **Capability engine and declarative policy language**
+
 - Structured `Capability(name, resource, constraints)`
 - Declarative `Policy(name, capability_name, constraints)`
 - Compile-time verification via `verify_workflow()`
