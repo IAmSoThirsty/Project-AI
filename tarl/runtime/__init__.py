@@ -61,11 +61,23 @@ class BytecodeVM:
             
         Returns:
             Execution result
+            
+        Raises:
+            NotImplementedError: Full bytecode interpretation not yet implemented
         """
-        # Placeholder: Basic bytecode execution
+        # Validate bytecode format
+        if not bytecode.startswith(b"TARL_BYTECODE_V1\x00"):
+            raise ValueError("Invalid bytecode format: missing header")
+        
         logger.debug(f"Executing {len(bytecode)} bytes of bytecode")
         
-        # Simulate execution result
+        # TODO: Full bytecode interpretation pending
+        # This placeholder returns success to allow system integration testing
+        logger.warning(
+            "Full bytecode execution not yet implemented. "
+            "Returning placeholder result."
+        )
+        
         return {"status": "success", "result": None}
 
 

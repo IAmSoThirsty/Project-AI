@@ -34,8 +34,12 @@ class LSPServer:
         self.port = config.get("tooling.lsp_port", 9898)
     
     def start(self) -> None:
-        """Start LSP server"""
-        logger.info(f"LSP server would start on port {self.port}")
+        """Start LSP server (NOT YET IMPLEMENTED)"""
+        logger.warning(
+            f"LSP server not yet implemented (would start on port {self.port}). "
+            "This is a placeholder for future implementation."
+        )
+        raise NotImplementedError("LSP server implementation pending")
 
 
 class REPL:
@@ -46,8 +50,12 @@ class REPL:
         self.history = []
     
     def run(self) -> None:
-        """Run REPL"""
-        logger.info("REPL would start interactive session")
+        """Run REPL (NOT YET IMPLEMENTED)"""
+        logger.warning(
+            "REPL not yet implemented (would start interactive session). "
+            "This is a placeholder for future implementation."
+        )
+        raise NotImplementedError("REPL implementation pending")
 
 
 class Debugger:
@@ -58,8 +66,12 @@ class Debugger:
         self.port = config.get("tooling.debugger_port", 9899)
     
     def attach(self) -> None:
-        """Attach debugger"""
-        logger.info(f"Debugger would attach on port {self.port}")
+        """Attach debugger (NOT YET IMPLEMENTED)"""
+        logger.warning(
+            f"Debugger not yet implemented (would attach on port {self.port}). "
+            "This is a placeholder for future implementation."
+        )
+        raise NotImplementedError("Debugger implementation pending")
 
 
 class BuildSystem:

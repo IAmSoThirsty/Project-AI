@@ -26,6 +26,17 @@ import os
 from pathlib import Path
 from typing import Any, Dict, Optional
 
+# Try to import tomllib (Python 3.11+) or fallback to toml
+try:
+    import tomllib
+    TOML_READER = lambda path: tomllib.load(open(path, "rb"))
+except ImportError:
+    try:
+        import toml
+        TOML_READER = lambda path: toml.load(open(path, "r"))
+    except ImportError:
+        TOML_READER = None
+
 logger = logging.getLogger(__name__)
 
 
@@ -226,17 +237,12 @@ class ConfigRegistry:
         Returns:
             Configuration dictionary
         """
+        if TOML_READER is None:
+            logger.error("No TOML library available (tomllib or toml)")
+            return {}
+        
         try:
-            # Try tomllib (Python 3.11+) first
-            try:
-                import tomllib
-                with open(path, "rb") as f:
-                    return tomllib.load(f)
-            except ImportError:
-                # Fallback to toml package
-                import toml
-                with open(path, "r") as f:
-                    return toml.load(f)
+            return TOML_READER(path)
         except Exception as e:
             logger.error(f"Failed to load configuration file: {e}")
             return {}

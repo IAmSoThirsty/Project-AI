@@ -153,11 +153,24 @@ class CodeGenerator:
         Returns:
             Bytecode bytes
         """
-        # Placeholder: Simple bytecode generation
-        # In production, this would emit actual VM bytecode
-        bytecode = b"TARL_BYTECODE_V1\x00"
-        logger.debug(f"Generated {len(bytecode)} bytes of bytecode")
-        return bytecode
+        # Bytecode header (version marker)
+        bytecode = bytearray(b"TARL_BYTECODE_V1\x00")
+        
+        # TODO: Full code generation pending
+        # For now, emit a simple NOP instruction to make bytecode valid
+        # Opcode format: [opcode, operand_count, ...operands]
+        bytecode.extend([
+            0x00,  # NOP opcode
+            0x00,  # No operands
+        ])
+        
+        logger.debug(f"Generated {len(bytecode)} bytes of bytecode (placeholder)")
+        logger.warning(
+            "Full code generation not yet implemented. "
+            "Bytecode contains only header and NOP instruction."
+        )
+        
+        return bytes(bytecode)
 
 
 class CompilerFrontend:
