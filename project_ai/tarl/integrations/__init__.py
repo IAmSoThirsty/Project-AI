@@ -25,52 +25,22 @@ Golden Path Recipes & Configuration Presets:
 - Quick-start one-line configuration
 """
 
-from .orchestration import (
-    AgentOrchestrator,
-    Artifact,
-    ArtifactRelationship,
-    Capability,
-    CapabilityEngine,
-    DeterministicVM,
-    EventRecorder,
-    Policy,
-    ProvenanceManager,
-    TarlStackBox,
-    Workflow,
-    WorkflowEventKind,
-)
-from .orchestration_extended import (
-    Activity,
-    ActivityExecutor,
-    ExtendedTarlStackBox,
-    HumanInTheLoopManager,
-    LongRunningWorkflowManager,
-    MetaOrchestrator,
-    MultiTenantManager,
-    TaskQueue,
-    TaskQueuePriority,
-    ResourceQuota,
-    WorkerPool,
-    WorkflowHierarchyManager,
-)
-from .orchestration_governance import (
-    AIProvenanceManager,
-    CICDEnforcementManager,
-    ComplianceManager,
-    ComplianceFramework,
-    FullGovernanceStack,
-    GovernanceEngine,
-    RuntimeSafetyManager,
-)
+from .config_presets import (ComplianceProfile, ConfigBuilder, ConfigPresets,
+                             DeploymentProfile, TarlConfig, quick_start)
 from .golden_paths import GoldenPathRecipes
-from .config_presets import (
-    ConfigPresets,
-    ConfigBuilder,
-    TarlConfig,
-    DeploymentProfile,
-    ComplianceProfile,
-    quick_start,
-)
+from .orchestration import (AgentOrchestrator, Artifact, ArtifactRelationship,
+                            Capability, CapabilityEngine, DeterministicVM,
+                            EventRecorder, Policy, ProvenanceManager, TarlStackBox,
+                            Workflow, WorkflowEventKind)
+from .orchestration_extended import (Activity, ActivityExecutor, ExtendedTarlStackBox,
+                                     HumanInTheLoopManager, LongRunningWorkflowManager,
+                                     MetaOrchestrator, MultiTenantManager,
+                                     ResourceQuota, TaskQueue, TaskQueuePriority,
+                                     WorkerPool, WorkflowHierarchyManager)
+from .orchestration_governance import (AIProvenanceManager, CICDEnforcementManager,
+                                       ComplianceFramework, ComplianceManager,
+                                       FullGovernanceStack, GovernanceEngine,
+                                       RuntimeSafetyManager)
 
 __all__ = [
     # Core orchestration

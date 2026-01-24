@@ -20,17 +20,15 @@ Addresses architectural gaps identified in code review:
 """
 
 import asyncio
-import hashlib
-import json
 import logging
 import uuid
 from abc import ABC, abstractmethod
 from collections import defaultdict, deque
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta
 from enum import Enum, auto
 from pathlib import Path
-from typing import Any, Callable, Generic, TypeVar
+from typing import Any, TypeVar
 
 logger = logging.getLogger(__name__)
 
@@ -128,9 +126,7 @@ class TaskQueue:
         logger.debug(f"Task {task_id} enqueued with priority {priority.name}")
         return task_id
 
-    def lease_task(
-        self, worker_id: str, lease_duration: int = 300
-    ) -> Task | None:
+    def lease_task(self, worker_id: str, lease_duration: int = 300) -> Task | None:
         """
         Lease a task for processing
 
@@ -193,7 +189,9 @@ class TaskQueue:
             # Move to dead letter queue
             self._dlq.append(task)
             self._metrics["tasks_failed"] += 1
-            logger.error(f"Task {task_id} failed permanently after {task.attempts} attempts")
+            logger.error(
+                f"Task {task_id} failed permanently after {task.attempts} attempts"
+            )
 
     def register_worker(
         self, worker_id: str, capabilities: list[str], metadata: dict[str, Any]
@@ -338,9 +336,7 @@ class LongRunningWorkflowManager:
 
         return fired
 
-    def acquire_lease(
-        self, workflow_id: str, holder: str, duration: int = 300
-    ) -> bool:
+    def acquire_lease(self, workflow_id: str, holder: str, duration: int = 300) -> bool:
         """Acquire execution lease for a workflow"""
         # Check if lease already exists and is not expired
         if workflow_id in self._leases:
@@ -511,9 +507,7 @@ class ActivityExecutor:
             idempotency_token=idempotency_token,
         )
 
-        logger.error(
-            f"Activity {activity.activity_id} failed after {attempt} attempts"
-        )
+        logger.error(f"Activity {activity.activity_id} failed after {attempt} attempts")
         return activity_result
 
 
@@ -595,7 +589,10 @@ class MultiTenantManager:
         if resource == "workflows":
             return usage["workflows"] + amount <= quota.max_workflows
         elif resource == "concurrent_executions":
-            return usage["concurrent_executions"] + amount <= quota.max_concurrent_executions
+            return (
+                usage["concurrent_executions"] + amount
+                <= quota.max_concurrent_executions
+            )
         elif resource == "queue_depth":
             return usage["queue_depth"] + amount <= quota.max_queue_depth
 
@@ -829,9 +826,7 @@ class MetaOrchestrator:
             return None
 
         # Select node with highest priority and lowest load
-        best_node = max(
-            candidates, key=lambda n: (n.priority, -n.load)
-        )
+        best_node = max(candidates, key=lambda n: (n.priority, -n.load))
 
         best_node.load += 1
         logger.debug(f"Task {task_type} routed to {best_node.node_id}")
@@ -849,11 +844,13 @@ class MetaOrchestrator:
         priority: int = 0,
     ) -> None:
         """Add a routing rule"""
-        self._routing_rules.append({
-            "pattern": pattern,
-            "target": target_node,
-            "priority": priority,
-        })
+        self._routing_rules.append(
+            {
+                "pattern": pattern,
+                "target": target_node,
+                "priority": priority,
+            }
+        )
 
         # Sort by priority
         self._routing_rules.sort(key=lambda r: -r["priority"])
@@ -927,7 +924,11 @@ class WorkflowHierarchyManager:
         """Wait for child workflow to complete"""
         for child in self._children[parent_id]:
             if child.child_id == child_id:
-                return child if child.status in ["completed", "failed", "cancelled"] else None
+                return (
+                    child
+                    if child.status in ["completed", "failed", "cancelled"]
+                    else None
+                )
 
         return None
 
@@ -977,8 +978,12 @@ class ExtendedTarlStackBox:
         self.config = config or {}
 
         # Initialize all subsystems
-        self.task_queue = TaskQueue("main", data_dir=self.config.get("queue_dir", "data/tarl_queues"))
-        self.worker_pool = WorkerPool(self.task_queue, worker_count=self.config.get("workers", 4))
+        self.task_queue = TaskQueue(
+            "main", data_dir=self.config.get("queue_dir", "data/tarl_queues")
+        )
+        self.worker_pool = WorkerPool(
+            self.task_queue, worker_count=self.config.get("workers", 4)
+        )
         self.long_running = LongRunningWorkflowManager(
             data_dir=self.config.get("long_running_dir", "data/tarl_long_running")
         )
@@ -1094,7 +1099,7 @@ async def demo_extended_features():
     print(f"   📝 Approval requested: {approval_id}")
 
     stack.hitl.approve(approval_id, "alice")
-    print(f"   ✅ Approved by alice")
+    print("   ✅ Approved by alice")
     print(f"   Status: {stack.hitl._approval_requests[approval_id].status}\n")
 
     # 5. Meta-Orchestration
@@ -1110,8 +1115,10 @@ async def demo_extended_features():
     child_id = stack.workflow_hierarchy.spawn_child("parent_wf", "data_processing")
     print(f"   ✅ Child workflow spawned: {child_id}")
 
-    stack.workflow_hierarchy.update_child_status(child_id, "completed", result="Success")
-    print(f"   ✅ Child completed\n")
+    stack.workflow_hierarchy.update_child_status(
+        child_id, "completed", result="Success"
+    )
+    print("   ✅ Child completed\n")
 
     # Status
     print("📊 System Status:")

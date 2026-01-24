@@ -5,31 +5,12 @@ Achieves 100% code coverage for orchestration_governance.py
 """
 
 import tempfile
-from unittest.mock import Mock
 
 import pytest
 
 from project_ai.tarl.integrations.orchestration_governance import (
-    AIProvenanceManager,
-    CICDEnforcementManager,
-    ComplianceFramework,
-    ComplianceManager,
-    ComplianceMapping,
-    ComplianceRequirement,
-    DatasetProvenance,
-    EvaluationProvenance,
-    FullGovernanceStack,
-    GovernanceEngine,
-    HumanDecisionProvenance,
-    ModelProvenance,
-    PolicyVersion,
-    PolicyViolation,
-    PromotionGate,
-    PromotionRequest,
-    RuntimeSafetyManager,
-    SafetyGuardrail,
-)
-
+    AIProvenanceManager, CICDEnforcementManager, ComplianceFramework, ComplianceManager,
+    FullGovernanceStack, GovernanceEngine, RuntimeSafetyManager)
 
 # ============================================================================
 # TEST GOVERNANCE ENGINE
@@ -57,9 +38,7 @@ class TestGovernanceEngine:
         """Test getting active policy for environment"""
         engine = GovernanceEngine(data_dir=tempfile.mkdtemp())
 
-        engine.register_policy_version(
-            "policy_1", "1.0.0", "prod", {"rule": "strict"}
-        )
+        engine.register_policy_version("policy_1", "1.0.0", "prod", {"rule": "strict"})
 
         policy = engine.get_active_policy("policy_1", "prod")
 
@@ -212,9 +191,7 @@ class TestComplianceManager:
         """Test compliance verification"""
         manager = ComplianceManager(data_dir=tempfile.mkdtemp())
 
-        manager.map_component(
-            "wf_001", "workflow", requirement_ids=["eu_ai_act_1"]
-        )
+        manager.map_component("wf_001", "workflow", requirement_ids=["eu_ai_act_1"])
 
         result = manager.verify_compliance("wf_001")
 
@@ -419,7 +396,9 @@ class TestRuntimeSafetyManager:
         """Test tool abuse detection within limits"""
         manager = RuntimeSafetyManager(data_dir=tempfile.mkdtemp())
 
-        is_abuse, message = manager.detect_tool_abuse("tool_1", call_count=50, time_window=60)
+        is_abuse, message = manager.detect_tool_abuse(
+            "tool_1", call_count=50, time_window=60
+        )
 
         assert is_abuse is False
 
@@ -427,7 +406,9 @@ class TestRuntimeSafetyManager:
         """Test tool abuse detection when limit exceeded"""
         manager = RuntimeSafetyManager(data_dir=tempfile.mkdtemp())
 
-        is_abuse, message = manager.detect_tool_abuse("tool_1", call_count=150, time_window=60)
+        is_abuse, message = manager.detect_tool_abuse(
+            "tool_1", call_count=150, time_window=60
+        )
 
         assert is_abuse is True
         assert "Rate limit exceeded" in message
@@ -567,7 +548,15 @@ class TestAIProvenanceManager:
             "ds_001", "Data", "1.0.0", "source", 1024, 100, "hash", "MIT"
         )
         manager.register_model(
-            "model_001", "Model", "1.0.0", "arch", "pytorch", "ds_001", {}, "hash", {"acc": 0.95}
+            "model_001",
+            "Model",
+            "1.0.0",
+            "arch",
+            "pytorch",
+            "ds_001",
+            {},
+            "hash",
+            {"acc": 0.95},
         )
         manager.register_evaluation(
             "eval_001", "model_001", "ds_001", {"acc": 0.95}, {}, {}
@@ -612,9 +601,7 @@ class TestCICDEnforcementManager:
         """Test component registration"""
         manager = CICDEnforcementManager(data_dir=tempfile.mkdtemp())
 
-        manager.register_component(
-            "comp_001", "workflow", "dev", {"version": "1.0.0"}
-        )
+        manager.register_component("comp_001", "workflow", "dev", {"version": "1.0.0"})
 
         assert "comp_001" in manager._component_registry
 
@@ -697,7 +684,11 @@ class TestCICDEnforcementManager:
 
         # Gate only for prod
         manager.register_gate(
-            "prod_gate", "Prod Only", lambda c, e: False, required=True, environment="prod"
+            "prod_gate",
+            "Prod Only",
+            lambda c, e: False,
+            required=True,
+            environment="prod",
         )
         manager.register_component("comp_001", "workflow", "dev", {})
 
@@ -763,13 +754,14 @@ class TestDemo:
 
     def test_demo_governance_features(self):
         """Test that demo runs without errors"""
-        from project_ai.tarl.integrations.orchestration_governance import (
-            demo_governance_features,
-        )
+        from project_ai.tarl.integrations.orchestration_governance import \
+            demo_governance_features
 
         # Should complete without exceptions
         demo_governance_features()
 
 
 if __name__ == "__main__":
-    pytest.main([__file__, "-v", "--cov=project_ai.tarl.integrations.orchestration_governance"])
+    pytest.main(
+        [__file__, "-v", "--cov=project_ai.tarl.integrations.orchestration_governance"]
+    )

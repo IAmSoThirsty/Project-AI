@@ -12,17 +12,15 @@ Implements:
 15. Operations plane with admin API
 """
 
-import hashlib
-import json
 import logging
 import uuid
-from abc import ABC, abstractmethod
 from collections import defaultdict
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import datetime
-from enum import Enum, auto
+from enum import Enum
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -149,9 +147,7 @@ class GovernanceEngine:
 
         logger.error(f"Violation {violation_id} escalated")
 
-    def register_escalation_handler(
-        self, policy_id: str, handler: Callable
-    ) -> None:
+    def register_escalation_handler(self, policy_id: str, handler: Callable) -> None:
         """Register escalation handler for a policy"""
         self._escalation_handlers[policy_id] = handler
 
@@ -275,7 +271,9 @@ class ComplianceManager:
         )
 
         self._mappings[component_id] = mapping
-        logger.info(f"Component {component_id} mapped to {len(requirement_ids)} requirements")
+        logger.info(
+            f"Component {component_id} mapped to {len(requirement_ids)} requirements"
+        )
 
     def verify_compliance(self, component_id: str) -> dict[str, Any]:
         """Verify compliance for a component"""
@@ -298,9 +296,11 @@ class ComplianceManager:
                 results.append(result)
 
         # Update mapping status
-        mapping.status = "compliant" if all(
-            r["status"] == "compliant" for r in results
-        ) else "non_compliant"
+        mapping.status = (
+            "compliant"
+            if all(r["status"] == "compliant" for r in results)
+            else "non_compliant"
+        )
 
         return {
             "component_id": component_id,
@@ -331,7 +331,8 @@ class ComplianceManager:
     ) -> dict[str, Any]:
         """Generate compliance report for a framework"""
         components = [
-            m for m in self._mappings.values()
+            m
+            for m in self._mappings.values()
             if any(
                 self._requirements[req_id].framework == framework
                 for req_id in m.requirements
@@ -381,7 +382,9 @@ class AnomalyDetection:
 
     anomaly_id: str
     workflow_id: str
-    anomaly_type: str  # "prompt_injection", "tool_abuse", "rate_limit", "unusual_pattern"
+    anomaly_type: (
+        str  # "prompt_injection", "tool_abuse", "rate_limit", "unusual_pattern"
+    )
     description: str
     confidence: float  # 0.0 to 1.0
     action_taken: str  # "logged", "blocked", "escalated"
@@ -453,7 +456,9 @@ class RuntimeSafetyManager:
             "\\n\\nHuman:",
         ]
 
-        matches = sum(1 for pattern in dangerous_patterns if pattern.lower() in prompt.lower())
+        matches = sum(
+            1 for pattern in dangerous_patterns if pattern.lower() in prompt.lower()
+        )
         confidence = min(matches / len(dangerous_patterns), 1.0)
 
         is_injection = confidence > 0.3
@@ -507,11 +512,11 @@ class RuntimeSafetyManager:
         )
 
         self._anomalies.append(anomaly)
-        logger.warning(f"Anomaly detected: {anomaly_type} ({confidence:.2f} confidence)")
+        logger.warning(
+            f"Anomaly detected: {anomaly_type} ({confidence:.2f} confidence)"
+        )
 
-    def get_anomalies(
-        self, anomaly_type: str | None = None
-    ) -> list[AnomalyDetection]:
+    def get_anomalies(self, anomaly_type: str | None = None) -> list[AnomalyDetection]:
         """Get detected anomalies"""
         anomalies = self._anomalies
 
@@ -742,9 +747,7 @@ class AIProvenanceManager:
 
         # Find associated datasets and evaluations
         dataset = self._datasets.get(model.training_dataset_id, {})
-        evaluations = [
-            e for e in self._evaluations.values() if e.model_id == model_id
-        ]
+        evaluations = [e for e in self._evaluations.values() if e.model_id == model_id]
 
         return {
             "model": {
@@ -757,10 +760,16 @@ class AIProvenanceManager:
                 "training_date": model.training_date,
             },
             "training_data": {
-                "dataset_id": dataset.dataset_id if hasattr(dataset, 'dataset_id') else "unknown",
-                "name": dataset.name if hasattr(dataset, 'name') else "unknown",
-                "size_bytes": dataset.size_bytes if hasattr(dataset, 'size_bytes') else 0,
-                "license": dataset.license if hasattr(dataset, 'license') else "unknown",
+                "dataset_id": (
+                    dataset.dataset_id if hasattr(dataset, "dataset_id") else "unknown"
+                ),
+                "name": dataset.name if hasattr(dataset, "name") else "unknown",
+                "size_bytes": (
+                    dataset.size_bytes if hasattr(dataset, "size_bytes") else 0
+                ),
+                "license": (
+                    dataset.license if hasattr(dataset, "license") else "unknown"
+                ),
             },
             "evaluations": [
                 {
@@ -1044,7 +1053,9 @@ def demo_governance_features():
     is_injection, confidence = stack.safety.detect_prompt_injection(
         "Hello, please help me with this task"
     )
-    print(f"   ✅ Prompt checked: injection={is_injection}, confidence={confidence:.2f}\n")
+    print(
+        f"   ✅ Prompt checked: injection={is_injection}, confidence={confidence:.2f}\n"
+    )
 
     # 4. AI Provenance
     print("4️⃣  AI-Specific Provenance")

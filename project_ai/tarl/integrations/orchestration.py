@@ -130,7 +130,9 @@ class Policy:
     constraints: dict[str, Any]  # Predicates to match
     enforcement_level: str = "required"  # "required", "warning", "audit"
 
-    def evaluate(self, capability: Capability, context: dict[str, Any]) -> tuple[bool, str]:
+    def evaluate(
+        self, capability: Capability, context: dict[str, Any]
+    ) -> tuple[bool, str]:
         """
         Evaluate if capability passes this policy
 
@@ -138,12 +140,18 @@ class Policy:
             (allowed: bool, reason: str)
         """
         if not capability.matches_policy(self):
-            return False, f"Capability {capability.name} does not match policy {self.name}"
+            return (
+                False,
+                f"Capability {capability.name} does not match policy {self.name}",
+            )
 
         # Check context-specific constraints
         for key, expected in context.items():
             if key in self.constraints and self.constraints[key] != expected:
-                return False, f"Context constraint failed: {key}={context[key]}, expected {self.constraints[key]}"
+                return (
+                    False,
+                    f"Context constraint failed: {key}={context[key]}, expected {self.constraints[key]}",
+                )
 
         return True, f"Policy {self.name} satisfied"
 
@@ -223,7 +231,10 @@ class DeterministicVM:
     def register_workflow(self, workflow: Workflow) -> None:
         """Register a workflow for execution"""
         self._workflows[workflow.workflow_id] = workflow
-        self._workflow_state[workflow.workflow_id] = {"status": "registered", "result": None}
+        self._workflow_state[workflow.workflow_id] = {
+            "status": "registered",
+            "result": None,
+        }
         logger.info(f"Registered workflow: {workflow.workflow_id}")
 
     def submit_task(
@@ -253,7 +264,9 @@ class DeterministicVM:
         logger.debug(f"Submitted task {task_id}: {task_name}")
         return task_id
 
-    def execute_workflow(self, workflow_id: str, context: dict[str, Any] | None = None) -> Any:
+    def execute_workflow(
+        self, workflow_id: str, context: dict[str, Any] | None = None
+    ) -> Any:
         """
         Execute a workflow deterministically
 
@@ -305,7 +318,9 @@ class DeterministicVM:
 
         except Exception as ex:
             # Record error event with deterministic error ID
-            error_id = hashlib.sha256(f"{workflow_id}:{str(ex)}".encode()).hexdigest()[:16]
+            error_id = hashlib.sha256(f"{workflow_id}:{str(ex)}".encode()).hexdigest()[
+                :16
+            ]
             error_seq = self._next_sequence()
             error_event = WorkflowEvent(
                 workflow_id=workflow_id,
@@ -377,7 +392,10 @@ class DeterministicVM:
 
         state = {
             "counter": self._counter,
-            "workflows": {wid: {"required_caps": list(w.required_caps)} for wid, w in self._workflows.items()},
+            "workflows": {
+                wid: {"required_caps": list(w.required_caps)}
+                for wid, w in self._workflows.items()
+            },
             "workflow_state": self._workflow_state,
             "event_log": [e.to_dict() for e in self._event_log],
             "snapshots": self._snapshots,
@@ -428,7 +446,9 @@ class AgentOrchestrator:
         self._agent_registry[agent_id] = agent_fn
         logger.info(f"Registered agent: {agent_id}")
 
-    def sequential(self, workflow_id: str, agents: list[str], initial_input: Any) -> Any:
+    def sequential(
+        self, workflow_id: str, agents: list[str], initial_input: Any
+    ) -> Any:
         """
         Execute agents sequentially (pipeline pattern)
 
@@ -459,7 +479,9 @@ class AgentOrchestrator:
 
         return result
 
-    def concurrent(self, workflow_id: str, agents: list[str], inputs: list[Any]) -> list[Any]:
+    def concurrent(
+        self, workflow_id: str, agents: list[str], inputs: list[Any]
+    ) -> list[Any]:
         """
         Execute agents concurrently (fan-out pattern)
 
@@ -494,7 +516,13 @@ class AgentOrchestrator:
 
         return results
 
-    def chat(self, workflow_id: str, agents: list[str], initial_message: str, max_turns: int = 10) -> list[str]:
+    def chat(
+        self,
+        workflow_id: str,
+        agents: list[str],
+        initial_message: str,
+        max_turns: int = 10,
+    ) -> list[str]:
         """
         Multi-agent chat pattern
 
@@ -516,7 +544,11 @@ class AgentOrchestrator:
                 workflow_id=workflow_id,
                 sequence=seq,
                 kind=WorkflowEventKind.AGENT_DECISION,
-                payload={"agent_id": agent_id, "turn": turn, "history": conversation[-3:]},
+                payload={
+                    "agent_id": agent_id,
+                    "turn": turn,
+                    "history": conversation[-3:],
+                },
             )
             self.vm._event_log.append(event)
 
@@ -528,7 +560,13 @@ class AgentOrchestrator:
 
         return conversation
 
-    def graph(self, workflow_id: str, graph_spec: dict[str, list[str]], start_node: str, input_data: Any) -> Any:
+    def graph(
+        self,
+        workflow_id: str,
+        graph_spec: dict[str, list[str]],
+        start_node: str,
+        input_data: Any,
+    ) -> Any:
         """
         Graph-based agent execution
 
@@ -647,7 +685,9 @@ class CapabilityEngine:
 
         return allowed, reasons
 
-    def check_capability(self, cap_name: str, context: dict[str, Any]) -> tuple[bool, str]:
+    def check_capability(
+        self, cap_name: str, context: dict[str, Any]
+    ) -> tuple[bool, str]:
         """
         Runtime capability check
 
@@ -726,7 +766,11 @@ class EventRecorder:
         self._external_events: dict[str, list[dict[str, Any]]] = defaultdict(list)
 
     def record_external_call(
-        self, workflow_id: str, call_type: str, call_args: dict[str, Any], call_result: Any
+        self,
+        workflow_id: str,
+        call_type: str,
+        call_args: dict[str, Any],
+        call_result: Any,
     ) -> None:
         """
         Record an external call (tool, LLM, API)
@@ -788,7 +832,9 @@ class EventRecorder:
         logger.info(f"Loaded recording {recording_name}")
         return recording
 
-    def replay_workflow(self, recording_name: str, until_event: int | None = None) -> Any:
+    def replay_workflow(
+        self, recording_name: str, until_event: int | None = None
+    ) -> Any:
         """
         Replay a recorded workflow
 
@@ -804,7 +850,9 @@ class EventRecorder:
 
         # Set VM to replay mode
         self.vm._replay_mode = True
-        self.vm._replay_events = [WorkflowEvent.from_dict(e) for e in recording["event_log"]]
+        self.vm._replay_events = [
+            WorkflowEvent.from_dict(e) for e in recording["event_log"]
+        ]
         self.vm._replay_index = 0
 
         # Find workflow entrypoint from VM
@@ -915,7 +963,9 @@ class ProvenanceManager:
             f"Added relationship: {relationship.from_artifact} {relationship.relationship_type} {relationship.to_artifact}"
         )
 
-    def attest(self, attestation_type: str, artifact_id: str, details: dict[str, Any]) -> None:
+    def attest(
+        self, attestation_type: str, artifact_id: str, details: dict[str, Any]
+    ) -> None:
         """
         Record an attestation
 
@@ -968,7 +1018,9 @@ class ProvenanceManager:
         traverse_dependencies(workflow_id)
 
         # Filter attestations for involved artifacts
-        relevant_attestations = [a for a in self._attestations if a["artifact_id"] in visited]
+        relevant_attestations = [
+            a for a in self._attestations if a["artifact_id"] in visited
+        ]
 
         # Build relationship graph
         relationship_graph = [
@@ -1039,13 +1091,19 @@ class ProvenanceManager:
         # Check all artifacts have required fields
         for artifact in sbom.get("artifacts", []):
             if not all(k in artifact for k in ["id", "kind", "version", "hash"]):
-                issues.append(f"Artifact {artifact.get('id', 'unknown')} missing required fields")
+                issues.append(
+                    f"Artifact {artifact.get('id', 'unknown')} missing required fields"
+                )
 
         # Check relationships reference valid artifacts
-        artifact_ids = {sbom["workflow"]["id"]} | {a["id"] for a in sbom.get("artifacts", [])}
+        artifact_ids = {sbom["workflow"]["id"]} | {
+            a["id"] for a in sbom.get("artifacts", [])
+        }
         for rel in sbom.get("relationships", []):
             if rel["from"] not in artifact_ids:
-                issues.append(f"Relationship references unknown artifact: {rel['from']}")
+                issues.append(
+                    f"Relationship references unknown artifact: {rel['from']}"
+                )
             if rel["to"] not in artifact_ids:
                 issues.append(f"Relationship references unknown artifact: {rel['to']}")
 
@@ -1138,7 +1196,9 @@ class TarlStackBox:
         logger.info(f"Created workflow: {workflow_id}")
         return workflow
 
-    def execute_with_provenance(self, workflow_id: str, context: dict[str, Any] | None = None) -> Any:
+    def execute_with_provenance(
+        self, workflow_id: str, context: dict[str, Any] | None = None
+    ) -> Any:
         """
         Execute workflow with full provenance tracking
 
@@ -1180,7 +1240,9 @@ class TarlStackBox:
         except Exception as ex:
             # Record failure attestation
             self.provenance.attest(
-                "execution_failure", workflow_id, {"error": str(ex), "context": context or {}}
+                "execution_failure",
+                workflow_id,
+                {"error": str(ex), "context": context or {}},
             )
             raise
 
@@ -1249,7 +1311,9 @@ def demo_deterministic_workflow():
     )
     stack.capabilities.register_capability(net_cap)
 
-    file_cap = Capability(name="File.Read", resource="filesystem", constraints={"path_prefix": "/data"})
+    file_cap = Capability(
+        name="File.Read", resource="filesystem", constraints={"path_prefix": "/data"}
+    )
     stack.capabilities.register_capability(file_cap)
 
     # Register policies
@@ -1280,12 +1344,18 @@ def demo_deterministic_workflow():
         )
 
         # Submit tasks
-        task_id = vm.submit_task("data_analysis", "process_data", lambda x: sum(x), {"data": [1, 2, 3, 4, 5]})
+        task_id = vm.submit_task(
+            "data_analysis", "process_data", lambda x: sum(x), {"data": [1, 2, 3, 4, 5]}
+        )
 
         # Take snapshot
         snapshot_hash = vm.snapshot("data_analysis")
 
-        return {"task_id": task_id, "snapshot": snapshot_hash, "result": "Analysis complete"}
+        return {
+            "task_id": task_id,
+            "snapshot": snapshot_hash,
+            "result": "Analysis complete",
+        }
 
     # Create workflow
     stack.create_workflow(
@@ -1329,7 +1399,9 @@ def demo_deterministic_workflow():
 
     # Execute workflow with provenance
     print("🚀 Executing workflow with provenance tracking...")
-    result = stack.execute_with_provenance("data_analysis", context={"mode": "production"})
+    result = stack.execute_with_provenance(
+        "data_analysis", context={"mode": "production"}
+    )
     print(f"✅ Workflow result: {result}\n")
 
     # Demonstrate agent orchestration patterns
@@ -1403,7 +1475,8 @@ def demo_deterministic_workflow():
 if __name__ == "__main__":
     # Configure logging
     logging.basicConfig(
-        level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        level=logging.INFO,
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
 
     # Run demo
