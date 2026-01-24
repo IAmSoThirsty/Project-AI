@@ -240,6 +240,7 @@ provenance.add_relationship(
 - ✅ SBOM persistence
 
 ### TarlStackBox (4 tests)
+
 - ✅ Initialization
 - ✅ Workflow creation
 - ✅ Execution with provenance
