@@ -36,9 +36,9 @@ class TestConfigurationSubsystem:
         config = ConfigRegistry()
         config.load()
         
-        assert config.get("compiler.debug_mode") == False
+        assert config.get("compiler.debug_mode") is False
         assert config.get("runtime.stack_size") == 1048576
-        assert config.get("stdlib.auto_import_builtins") == True
+        assert config.get("stdlib.auto_import_builtins") is True
     
     def test_config_get_with_default(self):
         """Test configuration get with default value"""
@@ -46,7 +46,7 @@ class TestConfigurationSubsystem:
         config.load()
         
         # Existing key
-        assert config.get("compiler.debug_mode") == False
+        assert config.get("compiler.debug_mode") is False
         
         # Non-existent key with default
         assert config.get("nonexistent.key", default=42) == 42
@@ -84,7 +84,7 @@ class TestDiagnosticsSubsystem:
     
     def test_diagnostics_initialization(self, diagnostics):
         """Test diagnostics engine initialization"""
-        assert diagnostics._initialized == True
+        assert diagnostics._initialized is True
         assert diagnostics.error_count == 0
         assert diagnostics.warning_count == 0
     
@@ -98,7 +98,7 @@ class TestDiagnosticsSubsystem:
         )
         
         assert diagnostics.error_count == 1
-        assert diagnostics.has_errors() == True
+        assert diagnostics.has_errors() is True
         
         errors = diagnostics.get_diagnostics(severity=Severity.ERROR)
         assert len(errors) == 1
@@ -114,7 +114,7 @@ class TestDiagnosticsSubsystem:
         )
         
         assert diagnostics.warning_count == 1
-        assert diagnostics.has_warnings() == True
+        assert diagnostics.has_warnings() is True
     
     def test_clear_diagnostics(self, diagnostics):
         """Test clearing diagnostics"""
@@ -149,7 +149,7 @@ class TestStandardLibrarySubsystem:
     def test_stdlib_initialization(self, stdlib):
         """Test standard library initialization"""
         assert len(stdlib.builtins) > 0
-        assert stdlib._initialized == True
+        assert stdlib._initialized is True
     
     def test_get_builtin(self, stdlib):
         """Test getting built-in function"""
@@ -194,7 +194,7 @@ class TestCompilerSubsystem:
     
     def test_compiler_initialization(self, compiler):
         """Test compiler initialization"""
-        assert compiler._initialized == True
+        assert compiler._initialized is True
         assert compiler.lexer is not None
         assert compiler.parser is not None
         assert compiler.semantic is not None
@@ -213,7 +213,7 @@ class TestCompilerSubsystem:
         status = compiler.get_status()
         assert isinstance(status, dict)
         assert "initialized" in status
-        assert status["initialized"] == True
+        assert status["initialized"] is True
 
 
 class TestRuntimeSubsystem:
@@ -237,7 +237,7 @@ class TestRuntimeSubsystem:
     
     def test_runtime_initialization(self, runtime):
         """Test runtime VM initialization"""
-        assert runtime._initialized == True
+        assert runtime._initialized is True
         assert runtime.vm is not None
     
     def test_execute_bytecode(self, runtime):
@@ -253,7 +253,7 @@ class TestRuntimeSubsystem:
         status = runtime.get_status()
         assert isinstance(status, dict)
         assert "initialized" in status
-        assert status["initialized"] == True
+        assert status["initialized"] is True
 
 
 class TestTARLSystemIntegration:
@@ -264,7 +264,7 @@ class TestTARLSystemIntegration:
         system = TARLSystem()
         system.initialize()
         
-        assert system._initialized == True
+        assert system._initialized is True
         assert system.config is not None
         assert system.diagnostics is not None
         assert system.stdlib is not None
@@ -307,7 +307,7 @@ class TestTARLSystemIntegration:
         status = system.get_status()
         
         assert isinstance(status, dict)
-        assert status["initialized"] == True
+        assert status["initialized"] is True
         assert "subsystems" in status
         assert "version" in status
     
@@ -316,11 +316,11 @@ class TestTARLSystemIntegration:
         system = TARLSystem()
         system.initialize()
         
-        assert system._initialized == True
+        assert system._initialized is True
         
         system.shutdown()
         
-        assert system._initialized == False
+        assert system._initialized is False
         assert len(system._subsystems_loaded) == 0
     
     def test_get_system_singleton(self):

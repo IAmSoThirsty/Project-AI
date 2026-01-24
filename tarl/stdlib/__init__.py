@@ -26,6 +26,7 @@ Architecture Contract:
     - MUST be FFI-compatible
 """
 
+import functools
 import logging
 from typing import Any, Callable, Dict
 
@@ -75,12 +76,12 @@ class StandardLibrary:
         # Functional
         "map": lambda f, it: list(map(f, it)),
         "filter": lambda f, it: list(filter(f, it)),
-        "reduce": lambda f, it, init=None: __import__("functools").reduce(f, it, init) if init else __import__("functools").reduce(f, it),
+        "reduce": lambda f, it, init=None: functools.reduce(f, it, init) if init is not None else functools.reduce(f, it),
         
-        # I/O
+        # I/O (with proper resource management)
         "open": open,
-        "read": lambda path: open(path).read(),
-        "write": lambda path, data: open(path, "w").write(data),
+        "read": lambda path: (lambda f: f.read() if not f.close() else None)(open(path, "r")),
+        "write": lambda path, data: (lambda f: f.write(data) if not f.close() else len(data))(open(path, "w")),
         
         # Utility
         "range": lambda *args: list(range(*args)),
