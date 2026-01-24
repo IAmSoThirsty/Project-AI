@@ -375,7 +375,6 @@ class RuntimeFuzzer:
         Returns:
             List of fuzzed strings
         """
-        import random
         import string
 
         cases = []
@@ -394,9 +393,11 @@ class RuntimeFuzzer:
 
         # Random strings (using secrets for cryptographically secure randomness)
         import secrets
+
         for length in [1, 10, 100, 1000]:
             random_str = "".join(
-                secrets.choice(string.ascii_letters + string.digits) for _ in range(length)
+                secrets.choice(string.ascii_letters + string.digits)
+                for _ in range(length)
             )
             cases.append(random_str)
 

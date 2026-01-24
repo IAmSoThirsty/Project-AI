@@ -107,7 +107,9 @@ class TARLCodeProtector(KernelRoutedAgent):
         self, file_path: str, protection_level: str = "standard"
     ) -> dict[str, Any]:
         """Internal implementation of protection application."""
-        logger.info("T-A-R-L: Applying %s protection to %s", protection_level, file_path)
+        logger.info(
+            "T-A-R-L: Applying %s protection to %s", protection_level, file_path
+        )
 
         if not os.path.exists(file_path):
             return {"success": False, "error": "File not found"}

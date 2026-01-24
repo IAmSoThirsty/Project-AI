@@ -70,8 +70,10 @@ class HuggingFaceAdapter(ModelAdapter):
 
             logger.info("Loading HuggingFace model: %s", model_path)
             # Pin to a specific revision for security (use 'main' or specific commit hash)
-            revision = kwargs.pop('revision', 'main')
-            self.tokenizer = AutoTokenizer.from_pretrained(model_path, revision=revision)
+            revision = kwargs.pop("revision", "main")
+            self.tokenizer = AutoTokenizer.from_pretrained(
+                model_path, revision=revision
+            )
             self.model = AutoModel.from_pretrained(
                 model_path, device_map=self.device, revision=revision, **kwargs
             )
@@ -136,10 +138,7 @@ class PyTorchAdapter(ModelAdapter):
             logger.info("Loading PyTorch model: %s", model_path)
             # Use weights_only=True to prevent arbitrary code execution
             self.model = torch.load(
-                model_path, 
-                map_location=self.device, 
-                weights_only=True,
-                **kwargs
+                model_path, map_location=self.device, weights_only=True, **kwargs
             )
             self.model.eval()
             return self.model

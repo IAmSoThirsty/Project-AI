@@ -9,10 +9,10 @@ For now, this is a thin layer that tags workflows with roles.
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from ..policy.policy_engine import PolicyEngine
-    from ..workflow.workflow_engine import WorkflowEngine
     from ..capabilities.capability_invoker import CapabilityInvoker
+    from ..policy.policy_engine import PolicyEngine
     from ..state.state_manager import StateManager
+    from ..workflow.workflow_engine import WorkflowEngine
 
 
 class AgentCoordinator:
@@ -36,9 +36,9 @@ class AgentCoordinator:
     def assign_roles(self, workflow: dict, identity_phase: str) -> None:
         """
         Assign agent roles to workflow.
-        
+
         This is where you could route steps to different logical agents.
-        
+
         Args:
             workflow: Workflow to assign roles to
             identity_phase: Current identity phase

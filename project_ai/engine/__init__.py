@@ -5,14 +5,14 @@ Project-AI Core Engine (PACE)
 Orchestrates identity, cognition, workflow, capabilities, agents, state, and IO.
 """
 
-from .identity.identity_manager import IdentityManager
-from .policy.policy_engine import PolicyEngine
-from .state.state_manager import StateManager
+from .agents.agent_coordinator import AgentCoordinator
 from .capabilities.capability_invoker import CapabilityInvoker
 from .cognition.deliberation_engine import DeliberationEngine
-from .workflow.workflow_engine import WorkflowEngine
-from .agents.agent_coordinator import AgentCoordinator
+from .identity.identity_manager import IdentityManager
 from .io.io_router import IORouter
+from .policy.policy_engine import PolicyEngine
+from .state.state_manager import StateManager
+from .workflow.workflow_engine import WorkflowEngine
 
 
 class PACEEngine:
