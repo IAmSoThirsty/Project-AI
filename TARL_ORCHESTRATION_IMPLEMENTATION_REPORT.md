@@ -347,6 +347,7 @@ T.A.R.L. DETERMINISTIC WORKFLOW DEMO
 - ✅ Error events recorded in event log
 
 ### Logging
+
 - ✅ All subsystems use Python logging
 - ✅ Structured log messages with context
 - ✅ DEBUG, INFO, WARNING, ERROR levels
