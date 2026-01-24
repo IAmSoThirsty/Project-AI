@@ -5,7 +5,8 @@ Capability Invoker
 Mediates capability calls, enforcing policy and logging usage.
 """
 
-from typing import Any, Callable, Dict, TYPE_CHECKING
+from collections.abc import Callable
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from ..policy.policy_engine import PolicyEngine
@@ -22,19 +23,19 @@ class CapabilityInvoker:
     ):
         self.policy_engine = policy_engine
         self.state_manager = state_manager
-        self.registry: Dict[str, Dict[str, Any]] = self._load_registry(config)
+        self.registry: dict[str, dict[str, Any]] = self._load_registry(config)
 
-    def _load_registry(self, config: dict) -> Dict[str, Dict[str, Any]]:
+    def _load_registry(self, config: dict) -> dict[str, dict[str, Any]]:
         """
         Load capability registry.
-        
+
         Args:
             config: Configuration dict
-            
+
         Returns:
             Registry of capabilities
         """
-        registry: Dict[str, Dict[str, Any]] = {}
+        registry: dict[str, dict[str, Any]] = {}
 
         # Core built-in capabilities
         registry["analyze_goal"] = {
@@ -93,14 +94,14 @@ class CapabilityInvoker:
     def invoke(self, capability_name: str, inputs: dict) -> Any:
         """
         Invoke a capability.
-        
+
         Args:
             capability_name: Name of capability to invoke
             inputs: Input parameters
-            
+
         Returns:
             Capability result
-            
+
         Raises:
             ValueError: If capability not found
             PermissionError: If capability not allowed by policy
@@ -109,7 +110,9 @@ class CapabilityInvoker:
         if not cap:
             raise ValueError(f"Unknown capability: {capability_name}")
         if not self.policy_engine.is_capability_allowed(cap):
-            raise PermissionError(f"Capability not allowed by policy: {capability_name}")
+            raise PermissionError(
+                f"Capability not allowed by policy: {capability_name}"
+            )
         fn: Callable[[dict], Any] = cap["fn"]
         return fn(inputs)
 

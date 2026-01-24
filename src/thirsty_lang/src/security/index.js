@@ -53,9 +53,9 @@ class SecurityManager {
 
     // Handle threats if found
     if (threats.length > 0) {
-      threats.forEach(threat => {
-        this.policyEngine.handleThreat(threat);
-      });
+      for (var i = 0; i < threats.length; i++) {
+        this.policyEngine.handleThreat(threats[i]);
+      }
     }
 
     return sanitized;
@@ -83,7 +83,7 @@ class SecurityManager {
   setMode(mode) {
     const validModes = ['defensive', 'offensive', 'adaptive'];
     if (!validModes.includes(mode)) {
-      throw new Error(`Invalid security mode: ${mode}`);
+      throw new Error('Invalid security mode: ' + mode);
     }
     this.mode = mode;
     return { mode: this.mode };
@@ -100,9 +100,9 @@ class SecurityManager {
 
 // Export all security modules
 module.exports = {
-  SecurityManager,
+  SecurityManager: SecurityManager,
   ThreatDetector: ThreatDetector,
-  CodeMorpher,
-  SecurityPolicyEngine,
-  DefenseCompiler
+  CodeMorpher: CodeMorpher,
+  SecurityPolicyEngine: SecurityPolicyEngine,
+  DefenseCompiler: DefenseCompiler
 };

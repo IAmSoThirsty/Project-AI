@@ -256,23 +256,23 @@ class AlertManager:
     def _send_notification(self, channel: AlertChannel, alert: dict[str, Any]):
         """Send alert notification to specified channel."""
         if channel == AlertChannel.PAGER:
-            logger.critical("PAGER ALERT: %s", alert['message'])
+            logger.critical("PAGER ALERT: %s", alert["message"])
             # In production: integrate with PagerDuty/Opsgenie
 
         elif channel == AlertChannel.EMAIL:
-            logger.info("EMAIL ALERT: %s", alert['message'])
+            logger.info("EMAIL ALERT: %s", alert["message"])
             # In production: send email via SMTP
 
         elif channel == AlertChannel.SLACK:
-            logger.info("SLACK ALERT: %s", alert['message'])
+            logger.info("SLACK ALERT: %s", alert["message"])
             # In production: send to Slack webhook
 
         elif channel == AlertChannel.TICKET:
-            logger.info("TICKET CREATED: %s", alert['message'])
+            logger.info("TICKET CREATED: %s", alert["message"])
             # In production: create Jira/GitHub issue
 
         elif channel == AlertChannel.LOG:
-            logger.warning("LOG ALERT: %s", alert['message'])
+            logger.warning("LOG ALERT: %s", alert["message"])
 
     def _create_incident(
         self, rule: AlertRule, alert: dict[str, Any], metrics: dict[str, Any]
@@ -303,7 +303,7 @@ class AlertManager:
 
     def _trigger_incident_workflow(self, incident: dict[str, Any]):
         """Trigger automated incident response workflow."""
-        logger.info("Triggering incident workflow for %s", incident['incident_id'])
+        logger.info("Triggering incident workflow for %s", incident["incident_id"])
 
         # In production: integrate with Temporal workflow
         # Example actions:

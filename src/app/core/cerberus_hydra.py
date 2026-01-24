@@ -170,7 +170,7 @@ class CerberusHydraDefense:
             f"{summary['degraded']} degraded, {summary['unavailable']} unavailable"
         )
 
-        if summary['healthy'] < 3:
+        if summary["healthy"] < 3:
             logger.warning(
                 "Less than 3 healthy runtimes available. Polyglot execution may be limited."
             )
@@ -228,16 +228,25 @@ class CerberusHydraDefense:
                     # Convert old DefenseAgent format to new AgentRecord format
                     agent = AgentRecord(
                         agent_id=agent_data["agent_id"],
-                        spawn_time=agent_data.get("spawned_at", agent_data.get("spawn_time", datetime.now().isoformat())),
-                        source_event=agent_data.get("source_event", "restored_from_state"),
+                        spawn_time=agent_data.get(
+                            "spawned_at",
+                            agent_data.get("spawn_time", datetime.now().isoformat()),
+                        ),
+                        source_event=agent_data.get(
+                            "source_event", "restored_from_state"
+                        ),
                         programming_language=agent_data["programming_language"],
-                        programming_language_name=agent_data["programming_language_name"],
+                        programming_language_name=agent_data[
+                            "programming_language_name"
+                        ],
                         human_language=agent_data["human_language"],
                         human_language_name=agent_data["human_language_name"],
                         runtime_path=agent_data.get("runtime_path", "python3"),
                         locked_section=agent_data["locked_section"],
                         generation=agent_data["generation"],
-                        lockdown_stage_at_spawn=agent_data.get("lockdown_stage_at_spawn", 0),
+                        lockdown_stage_at_spawn=agent_data.get(
+                            "lockdown_stage_at_spawn", 0
+                        ),
                         parent_agent_id=agent_data.get("parent_agent_id"),
                         pid=agent_data.get("process_id") or agent_data.get("pid"),
                         status=agent_data.get("status", "active"),
@@ -538,9 +547,7 @@ class CerberusHydraDefense:
         # Check max agents limit
         active_agents = len([a for a in self.agents.values() if a.status == "active"])
         if active_agents >= self.max_agents:
-            logger.error(
-                f"Cannot spawn agent: max agents ({self.max_agents}) reached"
-            )
+            logger.error(f"Cannot spawn agent: max agents ({self.max_agents}) reached")
             return None
 
         # Generate agent ID
@@ -563,8 +570,12 @@ class CerberusHydraDefense:
             random.seed(seed + 1000)  # Different seed for human language
 
         # Avoid recently used languages for diversity
-        recent_human_langs = [lang for _, lang in self.recent_languages if lang in human_langs]
-        available_human_langs = [lang for lang in human_langs if lang not in recent_human_langs[-10:]]
+        recent_human_langs = [
+            lang for _, lang in self.recent_languages if lang in human_langs
+        ]
+        available_human_langs = [
+            lang for lang in human_langs if lang not in recent_human_langs[-10:]
+        ]
 
         if not available_human_langs:
             available_human_langs = human_langs
@@ -665,7 +676,8 @@ class CerberusHydraDefense:
         # Get template file based on programming language
         # Try language-specific template first, then fall back to python
         template_candidates = [
-            template_dir / f"{agent.programming_language}_template{self.languages['programming_languages'].get(agent.programming_language, {}).get('extension', '.py')}",
+            template_dir
+            / f"{agent.programming_language}_template{self.languages['programming_languages'].get(agent.programming_language, {}).get('extension', '.py')}",
             template_dir / "python_template.py",
         ]
 
@@ -708,9 +720,11 @@ class CerberusHydraDefense:
             return False
 
         # Write agent code
-        extension = self.languages["programming_languages"].get(
-            agent.programming_language, {}
-        ).get("extension", ".py")
+        extension = (
+            self.languages["programming_languages"]
+            .get(agent.programming_language, {})
+            .get("extension", ".py")
+        )
 
         agent_file = agent_dir / f"{agent.agent_id}{extension}"
 
@@ -918,10 +932,14 @@ class CerberusHydraDefense:
 
         report += "\n### By Programming Language (Top 10)\n"
         sorted_prog = sorted(
-            registry["by_programming_language"].items(), key=lambda x: x[1], reverse=True
+            registry["by_programming_language"].items(),
+            key=lambda x: x[1],
+            reverse=True,
         )
         for lang, count in sorted_prog[:10]:
-            lang_name = self.languages["programming_languages"].get(lang, {}).get("name", lang)
+            lang_name = (
+                self.languages["programming_languages"].get(lang, {}).get("name", lang)
+            )
             report += f"- {lang_name}: {count} agents\n"
 
         report += "\n### By Human Language (Top 10)\n"
@@ -929,7 +947,9 @@ class CerberusHydraDefense:
             registry["by_human_language"].items(), key=lambda x: x[1], reverse=True
         )
         for lang, count in sorted_human[:10]:
-            lang_name = self.languages["human_languages"].get(lang, {}).get("name", lang)
+            lang_name = (
+                self.languages["human_languages"].get(lang, {}).get("name", lang)
+            )
             report += f"- {lang_name}: {count} agents\n"
 
         report += "\n## Locked Sections\n\n"
@@ -970,7 +990,7 @@ class CerberusHydraDefense:
         if lockdown_status["lockdown_percentage"] >= 80:
             report += "- ⚠️ **WARNING**: Most system sections locked. Consider agent cleanup.\n"
 
-        if runtime_health['by_status']['healthy'] < 5:
+        if runtime_health["by_status"]["healthy"] < 5:
             report += "- ⚠️ **WARNING**: Few healthy runtimes available. Polyglot diversity limited.\n"
 
         report += "\n---\n**Cerberus Hydra Defense System**: When one guard falls, three rise to replace it.\n"
@@ -990,9 +1010,7 @@ def cli_main():
         choices=["init", "bypass", "status", "report"],
         help="Action to perform",
     )
-    parser.add_argument(
-        "--agent-id", type=str, help="Agent ID for bypass detection"
-    )
+    parser.add_argument("--agent-id", type=str, help="Agent ID for bypass detection")
     parser.add_argument(
         "--bypass-type", type=str, default="unknown", help="Type of bypass"
     )
@@ -1007,7 +1025,9 @@ def cli_main():
     cerberus = CerberusHydraDefense(data_dir=args.data_dir)
 
     if args.action == "init":
-        print(f"🐍 Initializing Cerberus Hydra Defense with {args.initial_agents} agents...")
+        print(
+            f"🐍 Initializing Cerberus Hydra Defense with {args.initial_agents} agents..."
+        )
         spawned = cerberus.spawn_initial_agents(count=args.initial_agents)
         print(f"✅ Spawned {len(spawned)} initial agents")
         print(f"Agent IDs: {', '.join(spawned)}")

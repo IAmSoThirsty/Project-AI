@@ -212,7 +212,7 @@ class CerberusCodexBridge(KernelRoutedAgent):
         try:
             with open(self.alert_log_path, "a", encoding="utf-8") as f:
                 f.write(json.dumps(alert) + "\n")
-            logger.info("Alert logged: %s", alert['alert_type'])
+            logger.info("Alert logged: %s", alert["alert_type"])
         except Exception as e:
             logger.error("Failed to log alert: %s", e)
 
@@ -242,7 +242,7 @@ class CerberusCodexBridge(KernelRoutedAgent):
         self, upgrade_spec: dict[str, Any], codex_instance: Any = None
     ) -> dict[str, Any]:
         """Internal implementation of upgrade."""
-        logger.info("Codex implementing upgrade: %s", upgrade_spec.get('upgrade_type'))
+        logger.info("Codex implementing upgrade: %s", upgrade_spec.get("upgrade_type"))
 
         try:
             # Determine implementation strategy

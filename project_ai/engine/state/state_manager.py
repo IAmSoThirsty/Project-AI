@@ -5,7 +5,7 @@ State Manager
 Manages short-term state, long-term memory, episodic logs, and introspection records.
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 class StateManager:
@@ -15,13 +15,13 @@ class StateManager:
 
     def __init__(self, config: dict):
         self.config = config
-        self.episodes: List[Dict[str, Any]] = []
-        self.memory_store: Dict[str, Any] = {}
+        self.episodes: list[dict[str, Any]] = []
+        self.memory_store: dict[str, Any] = {}
 
     def save_state(self, key: str, value: Any) -> None:
         """
         Save a state value.
-        
+
         Args:
             key: State key
             value: Value to store
@@ -31,11 +31,11 @@ class StateManager:
     def load_state(self, key: str, default=None) -> Any:
         """
         Load a state value.
-        
+
         Args:
             key: State key
             default: Default value if key not found
-            
+
         Returns:
             Stored value or default
         """
@@ -44,19 +44,19 @@ class StateManager:
     def record_episode(self, data: dict) -> None:
         """
         Record an episode.
-        
+
         Args:
             data: Episode data to record
         """
         self.episodes.append(data)
 
-    def get_recent_episodes(self, limit: int = 5) -> List[Dict[str, Any]]:
+    def get_recent_episodes(self, limit: int = 5) -> list[dict[str, Any]]:
         """
         Get recent episodes.
-        
+
         Args:
             limit: Maximum number of episodes to return
-            
+
         Returns:
             List of recent episodes
         """

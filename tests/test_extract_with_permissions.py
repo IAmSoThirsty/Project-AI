@@ -149,15 +149,15 @@ def test_invalid_zip_raises_error(tmp_path):
 def test_accepts_string_paths(test_zip_with_permissions, tmp_path):
     """Test that function accepts string paths as well as Path objects."""
     dest = tmp_path / "extracted"
-    extracted = extract_with_permissions(
-        str(test_zip_with_permissions), str(dest)
-    )
+    extracted = extract_with_permissions(str(test_zip_with_permissions), str(dest))
 
     assert len(extracted) == 3
     assert all(isinstance(path, Path) for path in extracted)
 
 
-def test_chmod_failure_continues_extraction(test_zip_with_permissions, tmp_path, monkeypatch):
+def test_chmod_failure_continues_extraction(
+    test_zip_with_permissions, tmp_path, monkeypatch
+):
     """Test that extraction continues even if chmod fails."""
     dest = tmp_path / "extracted"
     chmod_calls = []

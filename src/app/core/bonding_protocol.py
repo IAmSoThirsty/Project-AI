@@ -306,7 +306,9 @@ class BondingProtocol:
         self.state.current_phase = new_phase
         self.state.phase_start_time = datetime.now(UTC).isoformat()
 
-        logger.info("Bonding phase transition: %s → %s", old_phase.value, new_phase.value)
+        logger.info(
+            "Bonding phase transition: %s → %s", old_phase.value, new_phase.value
+        )
         self._save_state()
 
     def _check_phase_advancement(self) -> bool:

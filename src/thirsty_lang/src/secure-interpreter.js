@@ -47,10 +47,10 @@ class SecureThirstyInterpreter {
     }
 
     // Execute without security
-    const lines = code.split('\n').map(function (line) { return line.trim() }).filter(line => line && !line.startsWith('//'));
+    const lines = code.split('\n').map(function (line) { return line.trim() }).filter(function(line) { return line && !line.startsWith('//') });
 
-    for (const line of lines) {
-      this.executeLine(line);
+    for (var i = 0; i < lines.length; i++) {
+      this.executeLine(lines[i]);
     }
 
     return { executed: true, security: null };
@@ -60,10 +60,10 @@ class SecureThirstyInterpreter {
    * Execute secured code
    */
   executeSecured(code) {
-    const lines = code.split('\n').map(line => line.trim()).filter(line => line && !line.startsWith('//'));
+    const lines = code.split('\n').map(function(line) { return line.trim(); }).filter(function(line) { return line && !line.startsWith('//'); });
 
-    for (const line of lines) {
-      this.executeLine(line);
+    for (var i = 0; i < lines.length; i++) {
+      this.executeLine(lines[i]);
     }
   }
 
@@ -144,9 +144,9 @@ class SecureThirstyInterpreter {
     // Extract morph configuration
     const match = line.match(/morph\s+on:\s*\[([^\]]+)\]/);
     if (match) {
-      const threats = match[1].split(',').map(t => t.trim().replace(/['"]/g, ''));
+      const threats = match[1].split(',').map(function(t) { return t.trim().replace(/['"]/g, ''); });
       this.morphEnabled = true;
-      console.log(`[SECURITY] Morphing enabled for: ${threats.join(', ')}`);
+      console.log('[SECURITY] Morphing enabled for: ' + threats.join(', '));
     } else {
       this.morphEnabled = true;
       console.log('[SECURITY] Morphing enabled');
@@ -193,7 +193,7 @@ class SecureThirstyInterpreter {
       if (this.variables.hasOwnProperty(varName)) {
         const sanitized = this.securityManager.secureInput(this.variables[varName]);
         this.variables[varName] = sanitized.sanitized;
-        console.log(`[SECURITY] Sanitized variable: ${varName}`);
+        console.log('[SECURITY] Sanitized variable: ' + varName);
       }
     }
   }
@@ -209,7 +209,7 @@ class SecureThirstyInterpreter {
       if (this.variables.hasOwnProperty(varName)) {
         // Freeze the variable to prevent modification
         Object.freeze(this.variables[varName]);
-        console.log(`[SECURITY] Armored variable: ${varName}`);
+        console.log('[SECURITY] Armored variable: ' + varName);
       }
     }
   }
@@ -220,7 +220,7 @@ class SecureThirstyInterpreter {
   handleDrink(line) {
     const match = line.match(/drink\s+(\w+)\s*=\s*(.+)/);
     if (!match) {
-      throw new Error(`Invalid drink statement: ${line}`);
+      throw new Error('Invalid drink statement: ' + line);
     }
 
     const varName = match[1];
@@ -259,7 +259,7 @@ class SecureThirstyInterpreter {
     const match = line.match(/sip\s+"([^"]+)"/);
     if (match) {
       const prompt = match[1];
-      console.log(`[INPUT] ${prompt}`);
+      console.log('[INPUT] ' + prompt);
 
       // In a real implementation, this would get actual user input
       // For now, simulate with a safe default
@@ -299,11 +299,11 @@ class SecureThirstyInterpreter {
 
     // String concatenation with +
     if (expr.includes(' + ')) {
-      const parts = expr.split(' + ').map(p => this.evaluateExpression(p.trim()));
+      const parts = expr.split(' + ').map(function(p) { return this.evaluateExpression(p.trim()); }.bind(this));
       return parts.join('');
     }
 
-    throw new Error(`Unknown expression: ${expr}`);
+    throw new Error('Unknown expression: ' + expr);
   }
 
   /**
