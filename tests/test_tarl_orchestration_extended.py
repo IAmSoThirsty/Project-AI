@@ -4,34 +4,14 @@ Comprehensive tests for T.A.R.L. Extended Orchestration Features
 Achieves 100% code coverage for orchestration_extended.py
 """
 
-import asyncio
 import tempfile
-from unittest.mock import Mock
 
 import pytest
 
 from project_ai.tarl.integrations.orchestration_extended import (
-    Activity,
-    ActivityExecutor,
-    ActivityResult,
-    ChildWorkflow,
-    DurableTimer,
-    ExtendedTarlStackBox,
-    HumanInTheLoopManager,
-    LongRunningWorkflowManager,
-    MetaOrchestrator,
-    MultiTenantManager,
-    Namespace,
-    OrchestratorNode,
-    ResourceQuota,
-    Task,
-    TaskQueue,
-    TaskQueuePriority,
-    WorkerPool,
-    WorkflowHierarchyManager,
-    WorkflowLease,
-)
-
+    Activity, ActivityExecutor, ExtendedTarlStackBox, HumanInTheLoopManager,
+    LongRunningWorkflowManager, MetaOrchestrator, MultiTenantManager, ResourceQuota,
+    TaskQueue, TaskQueuePriority, WorkerPool, WorkflowHierarchyManager)
 
 # ============================================================================
 # TEST TASK QUEUE AND WORKER POOL
@@ -529,9 +509,7 @@ class TestHumanInTheLoopManager:
         """Test approval"""
         manager = HumanInTheLoopManager(data_dir=tempfile.mkdtemp())
 
-        request_id = manager.request_approval(
-            "wf_001", "Deploy", ["alice"], context={}
-        )
+        request_id = manager.request_approval("wf_001", "Deploy", ["alice"], context={})
 
         result = manager.approve(request_id, "alice")
 
@@ -558,9 +536,7 @@ class TestHumanInTheLoopManager:
         """Test approval by invalid approver"""
         manager = HumanInTheLoopManager(data_dir=tempfile.mkdtemp())
 
-        request_id = manager.request_approval(
-            "wf_001", "Deploy", ["alice"], context={}
-        )
+        request_id = manager.request_approval("wf_001", "Deploy", ["alice"], context={})
 
         result = manager.approve(request_id, "charlie")
         assert result is False
@@ -569,9 +545,7 @@ class TestHumanInTheLoopManager:
         """Test rejection"""
         manager = HumanInTheLoopManager(data_dir=tempfile.mkdtemp())
 
-        request_id = manager.request_approval(
-            "wf_001", "Deploy", ["alice"], context={}
-        )
+        request_id = manager.request_approval("wf_001", "Deploy", ["alice"], context={})
 
         result = manager.reject(request_id, "alice")
 
@@ -582,9 +556,7 @@ class TestHumanInTheLoopManager:
         """Test approval status check"""
         manager = HumanInTheLoopManager(data_dir=tempfile.mkdtemp())
 
-        request_id = manager.request_approval(
-            "wf_001", "Deploy", ["alice"], context={}
-        )
+        request_id = manager.request_approval("wf_001", "Deploy", ["alice"], context={})
 
         assert manager.is_approved(request_id) is False
 
@@ -604,9 +576,7 @@ class TestMetaOrchestrator:
         """Test orchestrator node registration"""
         meta = MetaOrchestrator()
 
-        meta.register_orchestrator(
-            "orch_1", capabilities=["ml", "data"], priority=10
-        )
+        meta.register_orchestrator("orch_1", capabilities=["ml", "data"], priority=10)
 
         assert "orch_1" in meta._nodes
 
@@ -651,7 +621,9 @@ class TestMetaOrchestrator:
         """Test routing respects max load"""
         meta = MetaOrchestrator()
 
-        meta.register_orchestrator("orch_1", capabilities=["ml"], priority=10, max_load=1)
+        meta.register_orchestrator(
+            "orch_1", capabilities=["ml"], priority=10, max_load=1
+        )
 
         # First task should succeed
         node_id1 = meta.route_task("ml_task", ["ml"])
@@ -834,13 +806,14 @@ class TestDemo:
     @pytest.mark.asyncio
     async def test_demo_extended_features(self):
         """Test that demo runs without errors"""
-        from project_ai.tarl.integrations.orchestration_extended import (
-            demo_extended_features,
-        )
+        from project_ai.tarl.integrations.orchestration_extended import \
+            demo_extended_features
 
         # Should complete without exceptions
         await demo_extended_features()
 
 
 if __name__ == "__main__":
-    pytest.main([__file__, "-v", "--cov=project_ai.tarl.integrations.orchestration_extended"])
+    pytest.main(
+        [__file__, "-v", "--cov=project_ai.tarl.integrations.orchestration_extended"]
+    )

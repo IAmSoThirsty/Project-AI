@@ -5,13 +5,14 @@ Improved UX with opinionated defaults for different deployment scenarios.
 Makes it easy to get started with T.A.R.L. without configuring every knob.
 """
 
-from typing import Dict, Any, Optional
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
+from typing import Any
 
 
 class DeploymentProfile(Enum):
     """Pre-configured deployment profiles"""
+
     DEVELOPMENT = "development"
     STAGING = "staging"
     PRODUCTION = "production"
@@ -22,6 +23,7 @@ class DeploymentProfile(Enum):
 
 class ComplianceProfile(Enum):
     """Pre-configured compliance profiles"""
+
     NONE = "none"
     BASIC = "basic"
     HEALTHCARE = "healthcare"  # HIPAA, GDPR
@@ -33,50 +35,50 @@ class ComplianceProfile(Enum):
 @dataclass
 class TarlConfig:
     """Unified configuration for T.A.R.L. with smart defaults"""
-    
+
     # Deployment settings
     deployment_profile: DeploymentProfile = DeploymentProfile.DEVELOPMENT
     compliance_profile: ComplianceProfile = ComplianceProfile.NONE
-    
+
     # Worker settings
     workers: int = 4
     max_workers: int = 16
     worker_timeout: int = 300
-    
+
     # Storage settings
     data_dir: str = "data/tarl"
     enable_persistence: bool = True
     snapshot_interval: int = 60
-    
+
     # Observability settings
     enable_metrics: bool = True
     enable_tracing: bool = False
     log_level: str = "INFO"
     structured_logging: bool = True
-    
+
     # Security settings
     enable_capability_checks: bool = True
     enable_guardrails: bool = True
     require_attestations: bool = False
-    
+
     # Performance settings
     enable_caching: bool = True
     enable_compression: bool = False
     max_queue_depth: int = 1000
-    
+
     # Feature flags
     enable_multi_tenant: bool = False
     enable_ai_provenance: bool = False
     enable_compliance_enforcement: bool = False
     enable_recording: bool = False
-    
+
     # Advanced settings (usually don't need to change)
     heartbeat_interval: int = 30
     lease_duration: int = 300
     max_retries: int = 3
     retry_backoff_factor: float = 2.0
-    
-    def to_dict(self) -> Dict[str, Any]:
+
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for stack initialization"""
         return {
             "workers": self.workers,
@@ -92,7 +94,7 @@ class TarlConfig:
 
 class ConfigPresets:
     """Pre-configured settings for common scenarios"""
-    
+
     @staticmethod
     def development() -> TarlConfig:
         """Development environment - fast feedback, minimal overhead"""
@@ -107,9 +109,9 @@ class ConfigPresets:
             snapshot_interval=30,
             require_attestations=False,
             enable_capability_checks=False,  # Faster iteration
-            enable_guardrails=False
+            enable_guardrails=False,
         )
-    
+
     @staticmethod
     def testing() -> TarlConfig:
         """Testing environment - isolated, reproducible"""
@@ -123,9 +125,9 @@ class ConfigPresets:
             data_dir="/tmp/tarl_test",
             enable_capability_checks=True,
             enable_guardrails=True,
-            max_queue_depth=100
+            max_queue_depth=100,
         )
-    
+
     @staticmethod
     def staging() -> TarlConfig:
         """Staging environment - production-like"""
@@ -141,9 +143,9 @@ class ConfigPresets:
             enable_guardrails=True,
             require_attestations=True,
             enable_compliance_enforcement=True,
-            enable_ai_provenance=True
+            enable_ai_provenance=True,
         )
-    
+
     @staticmethod
     def production() -> TarlConfig:
         """Production environment - optimized, secure"""
@@ -166,9 +168,9 @@ class ConfigPresets:
             structured_logging=True,
             max_queue_depth=10000,
             heartbeat_interval=60,
-            lease_duration=600
+            lease_duration=600,
         )
-    
+
     @staticmethod
     def high_availability() -> TarlConfig:
         """High availability - maximum redundancy"""
@@ -191,9 +193,9 @@ class ConfigPresets:
             heartbeat_interval=30,
             lease_duration=600,
             max_retries=5,
-            retry_backoff_factor=1.5
+            retry_backoff_factor=1.5,
         )
-    
+
     @staticmethod
     def low_resource() -> TarlConfig:
         """Low resource - minimal memory/CPU footprint"""
@@ -211,9 +213,9 @@ class ConfigPresets:
             max_queue_depth=100,
             enable_capability_checks=True,
             enable_guardrails=False,
-            require_attestations=False
+            require_attestations=False,
         )
-    
+
     @staticmethod
     def healthcare_compliant() -> TarlConfig:
         """Healthcare compliance (HIPAA, GDPR)"""
@@ -225,7 +227,7 @@ class ConfigPresets:
         config.enable_guardrails = True
         config.structured_logging = True
         return config
-    
+
     @staticmethod
     def financial_compliant() -> TarlConfig:
         """Financial compliance (SOC2, PCI-DSS)"""
@@ -237,7 +239,7 @@ class ConfigPresets:
         config.enable_guardrails = True
         config.structured_logging = True
         return config
-    
+
     @staticmethod
     def eu_regulated() -> TarlConfig:
         """EU regulation compliance (EU AI Act, GDPR)"""
@@ -254,8 +256,8 @@ class ConfigPresets:
 
 class ConfigBuilder:
     """Fluent builder for custom configurations"""
-    
-    def __init__(self, base_preset: Optional[str] = None):
+
+    def __init__(self, base_preset: str | None = None):
         if base_preset:
             preset_method = getattr(ConfigPresets, base_preset, None)
             if preset_method:
@@ -264,20 +266,20 @@ class ConfigBuilder:
                 self._config = TarlConfig()
         else:
             self._config = TarlConfig()
-    
-    def with_workers(self, count: int) -> 'ConfigBuilder':
+
+    def with_workers(self, count: int) -> "ConfigBuilder":
         """Set number of workers"""
         self._config.workers = count
         return self
-    
-    def with_compliance(self, profile: ComplianceProfile) -> 'ConfigBuilder':
+
+    def with_compliance(self, profile: ComplianceProfile) -> "ConfigBuilder":
         """Set compliance profile"""
         self._config.compliance_profile = profile
         self._config.require_attestations = True
         self._config.enable_compliance_enforcement = True
         return self
-    
-    def enable_feature(self, feature: str) -> 'ConfigBuilder':
+
+    def enable_feature(self, feature: str) -> "ConfigBuilder":
         """Enable a specific feature"""
         feature_map = {
             "multi_tenant": "enable_multi_tenant",
@@ -290,13 +292,13 @@ class ConfigBuilder:
             "compression": "enable_compression",
             "guardrails": "enable_guardrails",
         }
-        
+
         attr = feature_map.get(feature)
         if attr:
             setattr(self._config, attr, True)
         return self
-    
-    def disable_feature(self, feature: str) -> 'ConfigBuilder':
+
+    def disable_feature(self, feature: str) -> "ConfigBuilder":
         """Disable a specific feature"""
         feature_map = {
             "multi_tenant": "enable_multi_tenant",
@@ -309,50 +311,48 @@ class ConfigBuilder:
             "compression": "enable_compression",
             "guardrails": "enable_guardrails",
         }
-        
+
         attr = feature_map.get(feature)
         if attr:
             setattr(self._config, attr, False)
         return self
-    
-    def with_log_level(self, level: str) -> 'ConfigBuilder':
+
+    def with_log_level(self, level: str) -> "ConfigBuilder":
         """Set log level"""
         self._config.log_level = level
         return self
-    
-    def with_data_dir(self, path: str) -> 'ConfigBuilder':
+
+    def with_data_dir(self, path: str) -> "ConfigBuilder":
         """Set data directory"""
         self._config.data_dir = path
         return self
-    
+
     def build(self) -> TarlConfig:
         """Build the configuration"""
         return self._config
 
 
 def quick_start(
-    profile: str = "development",
-    compliance: Optional[str] = None,
-    **overrides
-) -> Dict[str, Any]:
+    profile: str = "development", compliance: str | None = None, **overrides
+) -> dict[str, Any]:
     """
     Quick start configuration - get started with one line
-    
+
     Examples:
         # Development
         config = quick_start("development")
-        
+
         # Production with EU compliance
         config = quick_start("production", compliance="eu_regulated")
-        
+
         # Staging with custom workers
         config = quick_start("staging", workers=8)
-    
+
     Args:
         profile: Deployment profile (development, staging, production, etc.)
         compliance: Compliance profile (healthcare, financial, eu_regulated, etc.)
         **overrides: Additional configuration overrides
-    
+
     Returns:
         dict: Configuration dictionary ready for stack initialization
     """
@@ -360,9 +360,9 @@ def quick_start(
     preset_method = getattr(ConfigPresets, profile, None)
     if not preset_method:
         raise ValueError(f"Unknown profile: {profile}")
-    
+
     config = preset_method()
-    
+
     # Apply compliance if specified
     if compliance:
         compliance_method = getattr(ConfigPresets, f"{compliance}_compliant", None)
@@ -376,12 +376,12 @@ def quick_start(
                 config.enable_compliance_enforcement = True
             except KeyError:
                 pass
-    
+
     # Apply overrides
     for key, value in overrides.items():
         if hasattr(config, key):
             setattr(config, key, value)
-    
+
     return config.to_dict()
 
 
@@ -393,7 +393,7 @@ def print_preset_guide():
     print()
     print("Get started quickly with opinionated defaults for your use case.")
     print()
-    
+
     presets = [
         ("development", "Fast feedback, debugging enabled, minimal security"),
         ("testing", "Isolated, reproducible, deterministic execution"),
@@ -405,10 +405,10 @@ def print_preset_guide():
         ("financial_compliant", "SOC2 + PCI-DSS compliance"),
         ("eu_regulated", "EU AI Act + GDPR compliance"),
     ]
-    
+
     for name, desc in presets:
         print(f"{name:25s} - {desc}")
-    
+
     print()
     print("=" * 80)
     print()

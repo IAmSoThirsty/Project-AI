@@ -13,20 +13,13 @@ import tempfile
 
 import pytest
 
-from project_ai.tarl.integrations.orchestration import (
-    AgentOrchestrator,
-    Artifact,
-    ArtifactRelationship,
-    Capability,
-    CapabilityEngine,
-    DeterministicVM,
-    EventRecorder,
-    Policy,
-    ProvenanceManager,
-    TarlStackBox,
-    Workflow,
-    WorkflowEventKind,
-)
+from project_ai.tarl.integrations.orchestration import (AgentOrchestrator, Artifact,
+                                                        ArtifactRelationship,
+                                                        Capability, CapabilityEngine,
+                                                        DeterministicVM, EventRecorder,
+                                                        Policy, ProvenanceManager,
+                                                        TarlStackBox, Workflow,
+                                                        WorkflowEventKind)
 
 
 class TestDeterministicVM:
@@ -205,8 +198,12 @@ class TestStructuredCapabilities:
 
     def test_capability_hash_determinism(self):
         """Test capability hash is deterministic"""
-        cap1 = Capability(name="Test.Cap", resource="test", constraints={"key": "value"})
-        cap2 = Capability(name="Test.Cap", resource="test", constraints={"key": "value"})
+        cap1 = Capability(
+            name="Test.Cap", resource="test", constraints={"key": "value"}
+        )
+        cap2 = Capability(
+            name="Test.Cap", resource="test", constraints={"key": "value"}
+        )
 
         # Same content = same hash
         assert hash(cap1) == hash(cap2)
@@ -214,7 +211,9 @@ class TestStructuredCapabilities:
     def test_policy_evaluation(self):
         """Test declarative policy evaluation"""
         cap = Capability(
-            name="File.Read", resource="filesystem", constraints={"path_prefix": "/data"}
+            name="File.Read",
+            resource="filesystem",
+            constraints={"path_prefix": "/data"},
         )
 
         policy = Policy(
@@ -230,7 +229,9 @@ class TestStructuredCapabilities:
 
     def test_policy_rejection(self):
         """Test policy rejection"""
-        cap = Capability(name="File.Read", resource="filesystem", constraints={"path_prefix": "/tmp"})
+        cap = Capability(
+            name="File.Read", resource="filesystem", constraints={"path_prefix": "/tmp"}
+        )
 
         policy = Policy(
             name="RestrictFileAccess",
@@ -296,7 +297,10 @@ class TestCapabilityEngine:
         engine.register_capability(cap)
 
         policy = Policy(
-            name="AllowAPI", capability_name="API.Call", constraints={}, enforcement_level="required"
+            name="AllowAPI",
+            capability_name="API.Call",
+            constraints={},
+            enforcement_level="required",
         )
         engine.register_policy(policy)
 
@@ -360,7 +364,9 @@ class TestAgentOrchestrator:
         orch.register_agent("agent1", lambda x: f"A1({x})")
         orch.register_agent("agent2", lambda x: f"A2({x})")
 
-        results = orch.concurrent("conc_test", ["agent1", "agent2"], ["input1", "input2"])
+        results = orch.concurrent(
+            "conc_test", ["agent1", "agent2"], ["input1", "input2"]
+        )
 
         assert results == ["A1(input1)", "A2(input2)"]
 
@@ -375,7 +381,9 @@ class TestAgentOrchestrator:
         orch.register_agent("agent1", lambda history: f"A1 response to: {history[-1]}")
         orch.register_agent("agent2", lambda history: f"A2 response to: {history[-1]}")
 
-        conversation = orch.chat("chat_test", ["agent1", "agent2"], "Hello", max_turns=4)
+        conversation = orch.chat(
+            "chat_test", ["agent1", "agent2"], "Hello", max_turns=4
+        )
 
         assert len(conversation) == 5  # Initial + 4 turns
         assert conversation[0] == "Hello"
@@ -394,7 +402,11 @@ class TestAgentOrchestrator:
         orch.register_agent("executor", lambda x: f"Execute({x})")
         orch.register_agent("validator", lambda x: f"Validate({x})")
 
-        graph_spec = {"planner": ["executor"], "executor": ["validator"], "validator": []}
+        graph_spec = {
+            "planner": ["executor"],
+            "executor": ["validator"],
+            "validator": [],
+        }
 
         result = orch.graph("graph_test", graph_spec, "planner", "start")
 
@@ -428,7 +440,9 @@ class TestEventRecorder:
         vm = DeterministicVM(data_dir=tempfile.mkdtemp())
         recorder = EventRecorder(vm, data_dir=temp_dir)
 
-        workflow = Workflow(workflow_id="persist_rec_test", entrypoint=lambda vm, ctx: "result")
+        workflow = Workflow(
+            workflow_id="persist_rec_test", entrypoint=lambda vm, ctx: "result"
+        )
         vm.register_workflow(workflow)
         vm.execute_workflow("persist_rec_test")
 
@@ -496,11 +510,16 @@ class TestProvenanceManager:
         prov = ProvenanceManager(data_dir=tempfile.mkdtemp())
 
         artifact = Artifact(
-            artifact_id="test_artifact", kind="workflow", version="1.0.0", content_hash="hash123"
+            artifact_id="test_artifact",
+            kind="workflow",
+            version="1.0.0",
+            content_hash="hash123",
         )
         prov.register_artifact(artifact)
 
-        prov.attest("tests_passed", "test_artifact", {"test_count": 10, "success": True})
+        prov.attest(
+            "tests_passed", "test_artifact", {"test_count": 10, "success": True}
+        )
 
         assert len(prov._attestations) == 1
         assert prov._attestations[0]["type"] == "tests_passed"
@@ -520,7 +539,10 @@ class TestProvenanceManager:
 
         # Register module
         module_artifact = Artifact(
-            artifact_id="test_module", kind="module", version="1.0.0", content_hash="mod_hash"
+            artifact_id="test_module",
+            kind="module",
+            version="1.0.0",
+            content_hash="mod_hash",
         )
         prov.register_artifact(module_artifact)
 
@@ -549,7 +571,10 @@ class TestProvenanceManager:
         prov = ProvenanceManager(data_dir=tempfile.mkdtemp())
 
         workflow_artifact = Artifact(
-            artifact_id="verify_wf", kind="workflow", version="1.0.0", content_hash="hash"
+            artifact_id="verify_wf",
+            kind="workflow",
+            version="1.0.0",
+            content_hash="hash",
         )
         prov.register_artifact(workflow_artifact)
 
@@ -567,7 +592,10 @@ class TestProvenanceManager:
         prov = ProvenanceManager(data_dir=temp_dir)
 
         workflow_artifact = Artifact(
-            artifact_id="persist_wf", kind="workflow", version="1.0.0", content_hash="hash"
+            artifact_id="persist_wf",
+            kind="workflow",
+            version="1.0.0",
+            content_hash="hash",
         )
         prov.register_artifact(workflow_artifact)
 
@@ -633,14 +661,18 @@ class TestTarlStackBox:
             return {"status": "executed"}
 
         stack.create_workflow(
-            workflow_id="prov_test", entrypoint=test_workflow, required_caps={"Exec.Test"}
+            workflow_id="prov_test",
+            entrypoint=test_workflow,
+            required_caps={"Exec.Test"},
         )
 
         # Execute
         result = stack.execute_with_provenance("prov_test")
 
         assert result["status"] == "executed"
-        assert len(stack.provenance._attestations) >= 2  # capability_check + execution_success
+        assert (
+            len(stack.provenance._attestations) >= 2
+        )  # capability_check + execution_success
 
     def test_full_status(self):
         """Test comprehensive status reporting"""
@@ -669,11 +701,15 @@ class TestIntegration:
         )
 
         # Setup capabilities
-        cap = Capability(name="Full.Test", resource="test", constraints={"level": "high"})
+        cap = Capability(
+            name="Full.Test", resource="test", constraints={"level": "high"}
+        )
         stack.capabilities.register_capability(cap)
 
         policy = Policy(
-            name="TestPolicy", capability_name="Full.Test", constraints={"level": "high"}
+            name="TestPolicy",
+            capability_name="Full.Test",
+            constraints={"level": "high"},
         )
         stack.capabilities.register_policy(policy)
 
@@ -684,12 +720,16 @@ class TestIntegration:
         # Create workflow
         def full_workflow(vm, context):
             # Check capability
-            allowed, _ = stack.capabilities.check_capability("Full.Test", {"level": "high"})
+            allowed, _ = stack.capabilities.check_capability(
+                "Full.Test", {"level": "high"}
+            )
             if not allowed:
                 raise PermissionError("Capability check failed")
 
             # Use orchestrator
-            result = stack.orchestrator.sequential("full_test", ["agent1", "agent2"], "data")
+            result = stack.orchestrator.sequential(
+                "full_test", ["agent1", "agent2"], "data"
+            )
 
             # Record external call
             stack.recorder.record_external_call(

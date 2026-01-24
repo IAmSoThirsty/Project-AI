@@ -11,17 +11,12 @@ import random
 import tempfile
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import List, Dict, Any
+from typing import Any, Dict, List
 
 import pytest
 
-from project_ai.tarl.integrations import (
-    ExtendedTarlStackBox,
-    TaskQueuePriority,
-    ResourceQuota,
-    Capability,
-    Policy,
-)
+from project_ai.tarl.integrations import (Capability, ExtendedTarlStackBox, Policy,
+                                          ResourceQuota, TaskQueuePriority)
 
 logger = logging.getLogger(__name__)
 
@@ -152,9 +147,7 @@ class TestLoadTesting:
     async def test_async_activity_execution_at_scale(self):
         """Test async activity execution with many concurrent activities"""
         from project_ai.tarl.integrations.orchestration_extended import (
-            Activity,
-            ActivityExecutor
-        )
+            Activity, ActivityExecutor)
         
         class FastActivity(Activity):
             async def execute(self, **kwargs):

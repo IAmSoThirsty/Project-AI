@@ -59,7 +59,9 @@ class ThirstyLangValidator(KernelRoutedAgent):
 
     def _do_run_full_validation(self) -> dict[str, Any]:
         """Internal implementation of full validation."""
-        logger.info("Starting T-A-R-L (Thirsty's Active Resistance Language) validation")
+        logger.info(
+            "Starting T-A-R-L (Thirsty's Active Resistance Language) validation"
+        )
 
         report = {
             "timestamp": datetime.now(UTC).isoformat(),
