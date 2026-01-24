@@ -1,4 +1,4 @@
-# T.A.R.L. (Thirsty's Active Resistant Language)
+# T.A.R.L. (Thirsty's Active Resistance Language)
 
 **Version:** 1.0.0  
 **Status:** Production Implementation  
