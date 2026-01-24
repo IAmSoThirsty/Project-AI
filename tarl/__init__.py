@@ -1,5 +1,5 @@
 """
-T.A.R.L. (Thirsty's Active Resistant Language) - Monolithic Root Package
+T.A.R.L. (Thirsty's Active Resistance Language) - Monolithic Root Package
 
 This is the sovereign entry point for the T.A.R.L. language implementation.
 All subsystems are integrated through this monolithic root module following

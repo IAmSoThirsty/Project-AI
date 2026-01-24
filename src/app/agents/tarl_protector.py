@@ -1,4 +1,4 @@
-"""T-A-R-L (Thirsty's Active Resistant Language) - Strategic Code Protection Agent.
+"""T-A-R-L (Thirsty's Active Resistance Language) - Strategic Code Protection Agent.
 
 T-A-R-L implements defensive security strategies through code transformation:
 - Runtime execution monitoring and access control

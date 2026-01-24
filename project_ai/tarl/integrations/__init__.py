@@ -17,17 +17,27 @@ Extended features include:
 - Runtime safety hooks
 - AI-specific provenance
 - CI/CD enforcement
+
+Golden Path Recipes & Configuration Presets:
+- Pre-configured deployment profiles (dev, staging, prod, HA)
+- Compliance-specific configurations (healthcare, financial, EU)
+- Golden path recipes for common use cases
+- Quick-start one-line configuration
 """
 
 from .orchestration import (
     AgentOrchestrator,
+    Artifact,
+    ArtifactRelationship,
     Capability,
     CapabilityEngine,
     DeterministicVM,
     EventRecorder,
+    Policy,
     ProvenanceManager,
     TarlStackBox,
     Workflow,
+    WorkflowEventKind,
 )
 from .orchestration_extended import (
     Activity,
@@ -38,6 +48,8 @@ from .orchestration_extended import (
     MetaOrchestrator,
     MultiTenantManager,
     TaskQueue,
+    TaskQueuePriority,
+    ResourceQuota,
     WorkerPool,
     WorkflowHierarchyManager,
 )
@@ -45,9 +57,19 @@ from .orchestration_governance import (
     AIProvenanceManager,
     CICDEnforcementManager,
     ComplianceManager,
+    ComplianceFramework,
     FullGovernanceStack,
     GovernanceEngine,
     RuntimeSafetyManager,
+)
+from .golden_paths import GoldenPathRecipes
+from .config_presets import (
+    ConfigPresets,
+    ConfigBuilder,
+    TarlConfig,
+    DeploymentProfile,
+    ComplianceProfile,
+    quick_start,
 )
 
 __all__ = [
@@ -55,14 +77,20 @@ __all__ = [
     "TarlStackBox",
     "Workflow",
     "Capability",
+    "Policy",
     "DeterministicVM",
     "AgentOrchestrator",
     "CapabilityEngine",
     "EventRecorder",
     "ProvenanceManager",
+    "WorkflowEventKind",
+    "Artifact",
+    "ArtifactRelationship",
     # Extended features
     "ExtendedTarlStackBox",
     "TaskQueue",
+    "TaskQueuePriority",
+    "ResourceQuota",
     "WorkerPool",
     "LongRunningWorkflowManager",
     "Activity",
@@ -75,7 +103,16 @@ __all__ = [
     "FullGovernanceStack",
     "GovernanceEngine",
     "ComplianceManager",
+    "ComplianceFramework",
     "RuntimeSafetyManager",
     "AIProvenanceManager",
     "CICDEnforcementManager",
+    # Golden Paths & Configuration
+    "GoldenPathRecipes",
+    "ConfigPresets",
+    "ConfigBuilder",
+    "TarlConfig",
+    "DeploymentProfile",
+    "ComplianceProfile",
+    "quick_start",
 ]
