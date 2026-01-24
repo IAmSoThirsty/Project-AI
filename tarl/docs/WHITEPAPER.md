@@ -1,6 +1,6 @@
 # T.A.R.L. Technical Whitepaper
 
-**Thirsty's Active Resistant Language - A Production-Grade Language Implementation**
+**Thirsty's Active Resistance Language - A Production-Grade Language Implementation**
 
 **Version:** 1.0.0  
 **Date:** January 24, 2026  
@@ -11,7 +11,7 @@
 
 ## Abstract
 
-T.A.R.L. (Thirsty's Active Resistant Language) is a complete programming language implementation designed for integration with the Project-AI ecosystem. Built with a monolithic, sovereign architecture and zero circular dependencies, T.A.R.L. provides a production-grade language runtime from source code compilation to bytecode execution, with comprehensive tooling and security features.
+T.A.R.L. (Thirsty's Active Resistance Language) is a complete programming language implementation designed for integration with the Project-AI ecosystem. Built with a monolithic, sovereign architecture and zero circular dependencies, T.A.R.L. provides a production-grade language runtime from source code compilation to bytecode execution, with comprehensive tooling and security features.
 
 This whitepaper describes the architectural design, implementation details, security model, and integration strategies for T.A.R.L. within the Project-AI framework.
 

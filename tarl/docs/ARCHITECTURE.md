@@ -1,4 +1,4 @@
-# T.A.R.L. (Thirsty's Active Resistant Language) - Complete Architecture
+# T.A.R.L. (Thirsty's Active Resistance Language) - Complete Architecture
 
 **Version:** 1.0.0  
 **Status:** Production Implementation  
