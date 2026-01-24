@@ -122,6 +122,7 @@ result = recorder.replay_workflow("recording_v1", until_event=42)
 - **SBOM Generation**: Full dependency graph with attestations for compliance
 
 **Artifact Kinds**:
+
 - `workflow`: Executable workflow
 - `module`: Code module/library
 - `binary`: Compiled artifact
