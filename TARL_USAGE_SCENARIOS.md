@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-T-A-R-L (Thirsty's Active Resistant Language) is Thirsty-lang with defensive security features that ward off user attacks through confusion. This report provides detailed scenarios showing exactly how T-A-R-L works in real-world attack situations.
+T-A-R-L (Thirsty's Active Resistance Language) is Thirsty-lang with defensive security features that ward off user attacks through confusion. This report provides detailed scenarios showing exactly how T-A-R-L works in real-world attack situations.
 
 ---
 
@@ -735,7 +735,7 @@ print(f"Integration Status: {status['integration']}")
 
 ## Summary
 
-T-A-R-L (Thirsty's Active Resistant Language) provides multi-layered defensive protection through:
+T-A-R-L (Thirsty's Active Resistance Language) provides multi-layered defensive protection through:
 
 1. **Immediate Response**: Buffs code under active attack
 1. **Confusion Tactics**: Misleads attackers with fake vulnerabilities

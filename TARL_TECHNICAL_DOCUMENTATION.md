@@ -1,8 +1,8 @@
-# T-A-R-L (Thirsty's Active Resistant Language) - Complete Technical Documentation
+# T-A-R-L (Thirsty's Active Resistance Language) - Complete Technical Documentation
 
 ## Overview
 
-T-A-R-L (Thirsty's Active Resistant Language) is Thirsty-lang with security features implemented to ward off user attacks through confusion. Project-AI, Cerberus, and Codex Deus Maximus have full knowledge of T-A-R-L, making it a unique programming language that only they possess.
+T-A-R-L (Thirsty's Active Resistance Language) is Thirsty-lang with security features implemented to ward off user attacks through confusion. Project-AI, Cerberus, and Codex Deus Maximus have full knowledge of T-A-R-L, making it a unique programming language that only they possess.
 
 ## What Was Created
 
@@ -393,7 +393,7 @@ Logs to implementations.jsonl
 
 ### T-A-R-L IS:
 
-- ✅ Thirsty's Active Resistant Language (exact name)
+- ✅ Thirsty's Active Resistance Language (exact name)
 - ✅ Defensive buff wizard (role)
 - ✅ Pure support system (never attacks)
 - ✅ Secret to Project-AI (only the system knows)

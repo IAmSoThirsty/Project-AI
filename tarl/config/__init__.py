@@ -29,11 +29,13 @@ from typing import Any, Dict, Optional
 # Try to import tomllib (Python 3.11+) or fallback to toml
 try:
     import tomllib
+
     TOML_READER = lambda path: tomllib.load(open(path, "rb"))
 except ImportError:
     try:
         import toml
-        TOML_READER = lambda path: toml.load(open(path, "r"))
+
+        TOML_READER = lambda path: toml.load(open(path))
     except ImportError:
         TOML_READER = None
 
@@ -43,19 +45,19 @@ logger = logging.getLogger(__name__)
 class ConfigRegistry:
     """
     Central configuration registry for T.A.R.L. system
-    
+
     Manages hierarchical configuration from multiple sources:
     1. Default configuration (embedded)
     2. Configuration file (TOML)
     3. Environment variables (TARL_* prefix)
     4. Programmatic overrides
-    
+
     Example:
         >>> config = ConfigRegistry("config/tarl.toml")
         >>> config.load()
         >>> debug_mode = config.get("compiler.debug_mode", default=False)
     """
-    
+
     DEFAULT_CONFIG = {
         "compiler": {
             "debug_mode": False,
@@ -107,28 +109,30 @@ class ConfigRegistry:
             "max_memory": 64 * 1024 * 1024,  # 64MB
             "disable_file_io": False,
             "disable_network_io": False,
-        }
+        },
     }
-    
-    def __init__(self, config_path: Optional[str] = None, overrides: Optional[Dict[str, Any]] = None):
+
+    def __init__(
+        self, config_path: str | None = None, overrides: dict[str, Any] | None = None
+    ):
         """
         Initialize configuration registry
-        
+
         Args:
             config_path: Path to TOML configuration file
             overrides: Dictionary of configuration overrides
         """
         self.config_path = config_path
         self.overrides = overrides or {}
-        self._config: Dict[str, Any] = {}
+        self._config: dict[str, Any] = {}
         self._loaded = False
-        
+
         logger.info(f"ConfigRegistry created with path: {config_path}")
-    
+
     def load(self) -> None:
         """
         Load configuration from all sources
-        
+
         Loading order (later sources override earlier):
         1. DEFAULT_CONFIG (embedded defaults)
         2. Configuration file (if exists)
@@ -138,10 +142,10 @@ class ConfigRegistry:
         if self._loaded:
             logger.warning("Configuration already loaded")
             return
-        
+
         # Start with defaults
         self._config = self._deep_copy(self.DEFAULT_CONFIG)
-        
+
         # Load from file if provided
         if self.config_path and Path(self.config_path).exists():
             file_config = self._load_file(self.config_path)
@@ -149,28 +153,28 @@ class ConfigRegistry:
             logger.info(f"Loaded configuration from {self.config_path}")
         else:
             logger.info("No configuration file found, using defaults")
-        
+
         # Apply environment variables
         env_config = self._load_environment()
         self._merge_config(self._config, env_config)
-        
+
         # Apply programmatic overrides
         self._merge_config(self._config, self.overrides)
-        
+
         self._loaded = True
         logger.info("Configuration loaded successfully")
-    
+
     def get(self, key: str, default: Any = None) -> Any:
         """
         Get configuration value by dot-notation key
-        
+
         Args:
             key: Dot-separated configuration key (e.g., "compiler.debug_mode")
             default: Default value if key not found
-            
+
         Returns:
             Configuration value or default
-            
+
         Example:
             >>> config.get("runtime.stack_size")
             1048576
@@ -179,96 +183,96 @@ class ConfigRegistry:
         """
         if not self._loaded:
             raise RuntimeError("Configuration not loaded. Call load() first.")
-        
+
         parts = key.split(".")
         value = self._config
-        
+
         for part in parts:
             if isinstance(value, dict) and part in value:
                 value = value[part]
             else:
                 return default
-        
+
         return value
-    
+
     def set(self, key: str, value: Any) -> None:
         """
         Set configuration value (runtime override)
-        
+
         Args:
             key: Dot-separated configuration key
             value: Value to set
         """
         if not self._loaded:
             raise RuntimeError("Configuration not loaded. Call load() first.")
-        
+
         parts = key.split(".")
         config = self._config
-        
+
         # Navigate to parent
         for part in parts[:-1]:
             if part not in config:
                 config[part] = {}
             config = config[part]
-        
+
         # Set value
         config[parts[-1]] = value
         logger.info(f"Configuration updated: {key} = {value}")
-    
-    def get_section(self, section: str) -> Dict[str, Any]:
+
+    def get_section(self, section: str) -> dict[str, Any]:
         """
         Get entire configuration section
-        
+
         Args:
             section: Section name (e.g., "compiler")
-            
+
         Returns:
             Dictionary of section configuration
         """
         return self.get(section, default={})
-    
-    def _load_file(self, path: str) -> Dict[str, Any]:
+
+    def _load_file(self, path: str) -> dict[str, Any]:
         """
         Load configuration from TOML file
-        
+
         Args:
             path: Path to TOML file
-            
+
         Returns:
             Configuration dictionary
         """
         if TOML_READER is None:
             logger.error("No TOML library available (tomllib or toml)")
             return {}
-        
+
         try:
             return TOML_READER(path)
         except Exception as e:
             logger.error(f"Failed to load configuration file: {e}")
             return {}
-    
-    def _load_environment(self) -> Dict[str, Any]:
+
+    def _load_environment(self) -> dict[str, Any]:
         """
         Load configuration from environment variables
-        
+
         Looks for variables with TARL_ prefix and converts to nested dict:
         TARL_COMPILER_DEBUG_MODE=true -> {"compiler": {"debug_mode": True}}
-        
+
         Returns:
             Configuration dictionary from environment
         """
         config = {}
         prefix = "TARL_"
-        
+
         for key, value in os.environ.items():
             if key.startswith(prefix):
                 # Remove prefix and convert to lowercase
-                config_key = key[len(prefix):].lower()
+                config_key = key[len(prefix) :].lower()
                 parts = config_key.split("_")
-                
+
                 # Convert string value to appropriate type
                 typed_value = self._parse_env_value(value)
-                
+
                 # Build nested dict
                 current = config
                 for part in parts[:-1]:
@@ -276,16 +280,16 @@ class ConfigRegistry:
                         current[part] = {}
                     current = current[part]
                 current[parts[-1]] = typed_value
-        
+
         return config
-    
+
     def _parse_env_value(self, value: str) -> Any:
         """
         Parse environment variable value to appropriate type
-        
+
         Args:
             value: String value from environment
-            
+
         Returns:
             Typed value (bool, int, float, or str)
         """
@@ -294,26 +298,26 @@ class ConfigRegistry:
             return True
         if value.lower() in ("false", "no", "0", "off"):
             return False
-        
+
         # Integer
         try:
             return int(value)
         except ValueError:
             pass
-        
+
         # Float
         try:
             return float(value)
         except ValueError:
             pass
-        
+
         # String
         return value
-    
-    def _merge_config(self, base: Dict[str, Any], override: Dict[str, Any]) -> None:
+
+    def _merge_config(self, base: dict[str, Any], override: dict[str, Any]) -> None:
         """
         Recursively merge override config into base config
-        
+
         Args:
             base: Base configuration (modified in-place)
             override: Override configuration
@@ -323,7 +327,7 @@ class ConfigRegistry:
                 self._merge_config(base[key], value)
             else:
                 base[key] = value
-    
+
     def _deep_copy(self, obj: Any) -> Any:
         """Deep copy configuration object"""
         if isinstance(obj, dict):
@@ -332,7 +336,7 @@ class ConfigRegistry:
             return [self._deep_copy(item) for item in obj]
         else:
             return obj
-    
+
     def shutdown(self) -> None:
         """Shutdown configuration registry"""
         self._loaded = False
