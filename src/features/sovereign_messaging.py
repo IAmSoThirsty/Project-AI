@@ -48,7 +48,7 @@ class SovereignMessaging:
     - User ↔ User
     - User ↔ AI
     - AI ↔ AI
-    
+
     Uses RSA-2048 + AES-256-CBC hybrid encryption for end-to-end security.
     """
 
@@ -156,7 +156,7 @@ class SovereignMessaging:
         identity_file = self.identity_file
         with open(identity_file, "w", encoding="utf-8") as f:
             json.dump(identity, f, indent=2)
-        
+
         # Set file permissions to 0o600 (owner read/write only) on Unix systems
         try:
             import os
@@ -389,18 +389,18 @@ class SovereignMessaging:
         # Validate and remove PKCS7 padding
         if len(padded_plaintext) == 0:
             raise ValueError("Decrypted data is empty")
-        
+
         padding_length = padded_plaintext[-1]
-        
+
         # Validate padding length
         if padding_length < 1 or padding_length > 16:
             raise ValueError(f"Invalid padding length: {padding_length}")
-        
+
         # Validate all padding bytes have the same value
         for i in range(padding_length):
             if padded_plaintext[-(i + 1)] != padding_length:
                 raise ValueError("Invalid PKCS7 padding")
-        
+
         plaintext_bytes = padded_plaintext[:-padding_length]
 
         return plaintext_bytes.decode("utf-8")
