@@ -124,6 +124,7 @@ result = rag.query_with_llm(
 ## Backward Compatibility
 
 ✅ **Full backward compatibility maintained**
+
 - Default provider is OpenAI (same as before)
 - All existing code works without changes
 - Provider parameter is optional everywhere
