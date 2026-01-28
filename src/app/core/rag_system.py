@@ -397,7 +397,7 @@ class RAGSystem:
         return "\n\n---\n\n".join(context_parts)
 
     def query_with_llm(
-        self, query: str, top_k: int = 3, model: str = "gpt-4"
+        self, query: str, top_k: int = 3, model: str = "gpt-4", provider: str = "openai"
     ) -> dict[str, Any]:
         """
         Query using RAG + LLM generation.
@@ -405,13 +405,25 @@ class RAGSystem:
         Args:
             query: User's question
             top_k: Number of context chunks to retrieve
-            model: OpenAI model to use
+            model: Model name to use
+            provider: Provider to use ('openai' or 'perplexity')
 
         Returns:
             Dictionary with answer, context, and metadata
         """
         try:
-            import openai
+            from app.core.model_providers import get_provider
+
+            # Get the model provider
+            model_provider = get_provider(provider)
+
+            if not model_provider.is_available():
+                return {
+                    "answer": f"Error: {provider} provider is not available. Please check API key.",
+                    "context": "",
+                    "chunks_used": 0,
+                    "error": "provider_unavailable",
+                }
 
             # Retrieve relevant context
             context = self.build_context(query, top_k=top_k)
@@ -434,28 +446,28 @@ Question: {query}
 
 Answer:"""
 
-            # Call OpenAI API with timeout and error handling
+            # Call model provider API with error handling
             try:
-                response = openai.chat.completions.create(
-                    model=model,
-                    messages=[
-                        {
-                            "role": "system",
-                            "content": "You are a helpful assistant that answers questions based on provided context.",
-                        },
-                        {"role": "user", "content": prompt},
-                    ],
-                    temperature=0.3,
-                    timeout=30,  # 30 second timeout
-                )
+                messages = [
+                    {
+                        "role": "system",
+                        "content": "You are a helpful assistant that answers questions based on provided context.",
+                    },
+                    {"role": "user", "content": prompt},
+                ]
 
-                answer = response.choices[0].message.content
+                answer = model_provider.chat_completion(
+                    messages=messages,
+                    model=model,
+                    temperature=0.3,
+                )
 
                 return {
                     "answer": answer,
                     "context": context,
                     "chunks_used": top_k,
                     "model": model,
+                    "provider": provider,
                 }
             except openai.RateLimitError as e:
                 logger.error("OpenAI rate limit exceeded: %s", e)
@@ -490,10 +502,10 @@ Answer:"""
                     "error": "api_error",
                 }
 
-        except ImportError:
-            logger.error("OpenAI not installed")
+        except ImportError as e:
+            logger.error(f"Import error: {e}")
             return {
-                "answer": "OpenAI integration not available",
+                "answer": f"Integration not available: {str(e)}",
                 "context": context if "context" in locals() else "",
                 "chunks_used": 0,
             }

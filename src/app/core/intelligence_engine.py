@@ -14,7 +14,6 @@ import logging
 import os
 
 import joblib
-import openai
 import pandas as pd
 from matplotlib.figure import Figure
 from sklearn.cluster import KMeans
@@ -423,13 +422,34 @@ class IntentDetector:
 class LearningPathManager:
     """Learning path generator and manager using AI."""
 
-    def __init__(self, api_key=None):
-        self.api_key = api_key or os.getenv("OPENAI_API_KEY")
-        if self.api_key:
-            openai.api_key = self.api_key
+    def __init__(self, api_key=None, provider="openai"):
+        """
+        Initialize learning path manager.
 
-    def generate_path(self, interest, skill_level="beginner"):
-        """Generate a personalized learning path."""
+        Args:
+            api_key: API key for the model provider
+            provider: Model provider to use ('openai' or 'perplexity')
+        """
+        from app.core.model_providers import get_provider
+
+        self.provider_name = provider
+        self.provider = get_provider(provider, api_key=api_key)
+
+    def generate_path(self, interest, skill_level="beginner", model=None):
+        """
+        Generate a personalized learning path.
+
+        Args:
+            interest: Topic of interest
+            skill_level: User's skill level (beginner/intermediate/advanced)
+            model: Optional model name override
+
+        Returns:
+            Generated learning path content or error message
+        """
+        if not self.provider.is_available():
+            return f"Error: {self.provider_name} provider is not available. Please check API key."
+
         try:
             # Build a prompt without long indented triple-quoted literal
             # to satisfy linters
@@ -444,20 +464,24 @@ class LearningPathManager:
                 "5. Milestones and checkpoints"
             )
 
-            response = openai.chat.completions.create(
-                model="gpt-3.5-turbo",
-                messages=[
-                    {
-                        "role": "system",
-                        "content": (
-                            "You are an educational expert creating learning paths."
-                        ),
-                    },
-                    {"role": "user", "content": prompt},
-                ],
-            )
+            messages = [
+                {
+                    "role": "system",
+                    "content": "You are an educational expert creating learning paths.",
+                },
+                {"role": "user", "content": prompt},
+            ]
 
-            return response.choices[0].message.content
+            # Use default model based on provider if not specified
+            if model is None:
+                model = (
+                    "gpt-3.5-turbo"
+                    if self.provider_name == "openai"
+                    else "llama-3.1-sonar-small-128k-online"
+                )
+
+            response = self.provider.chat_completion(messages=messages, model=model)
+            return response
         except Exception as e:
             return f"Error generating learning path: {str(e)}"
 
