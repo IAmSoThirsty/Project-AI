@@ -30,10 +30,15 @@ class ReleaseValidator:
 
     def validate_all(self) -> Tuple[bool, Dict]:
         """Run all validations and return results."""
-        print(f"\n{BLUE}{'=' * 70}{RESET}")
-        print(f"{BLUE}Project-AI v{self.version} Release Validation{RESET}")
-        print(f"{BLUE}{'=' * 70}{RESET}\n")
-        print(f"📦 Release directory: {self.release_dir}\n")
+        # Only print if not in JSON mode (checked later in main)
+        if not hasattr(self, '_json_mode'):
+            self._json_mode = False
+        
+        if not self._json_mode:
+            print(f"\n{BLUE}{'=' * 70}{RESET}")
+            print(f"{BLUE}Project-AI v{self.version} Release Validation{RESET}")
+            print(f"{BLUE}{'=' * 70}{RESET}\n")
+            print(f"📦 Release directory: {self.release_dir}\n")
 
         # Run validation checks
         self._validate_directory_structure()
@@ -47,13 +52,16 @@ class ReleaseValidator:
 
         # Generate report
         report = self._generate_report()
-        self._print_summary()
+        
+        if not self._json_mode:
+            self._print_summary()
 
         return len(self.errors) == 0, report
 
     def _validate_directory_structure(self):
         """Validate basic directory structure."""
-        print(f"{BLUE}[1/8] Validating directory structure...{RESET}")
+        if not self._json_mode:
+            print(f"{BLUE}[1/8] Validating directory structure...{RESET}")
 
         required_dirs = ["backend", "web", "android", "desktop", "docs"]
 
@@ -61,19 +69,23 @@ class ReleaseValidator:
             dir_path = self.release_dir / dir_name
             if dir_path.exists() and dir_path.is_dir():
                 self.info.append(f"✓ Found directory: {dir_name}/")
-                print(f"  {GREEN}✓{RESET} {dir_name}/")
+                if not self._json_mode:
+                    print(f"  {GREEN}✓{RESET} {dir_name}/")
             else:
                 self.warnings.append(f"Missing directory: {dir_name}/")
-                print(f"  {YELLOW}⚠{RESET} {dir_name}/ (missing)")
+                if not self._json_mode:
+                    print(f"  {YELLOW}⚠{RESET} {dir_name}/ (missing)")
 
     def _validate_backend(self):
         """Validate backend artifacts."""
-        print(f"\n{BLUE}[2/8] Validating backend...{RESET}")
+        if not self._json_mode:
+            print(f"\n{BLUE}[2/8] Validating backend...{RESET}")
 
         backend_dir = self.release_dir / "backend"
         if not backend_dir.exists():
             self.errors.append("Backend directory missing")
-            print(f"  {RED}✗{RESET} Backend directory not found")
+            if not self._json_mode:
+                print(f"  {RED}✗{RESET} Backend directory not found")
             return
 
         # Check required files and directories
@@ -93,26 +105,32 @@ class ReleaseValidator:
             item_path = backend_dir / item_name
             if item_path.exists():
                 if is_dir and item_path.is_dir():
-                    print(f"  {GREEN}✓{RESET} {item_name}/")
+                    if not self._json_mode:
+                        print(f"  {GREEN}✓{RESET} {item_name}/")
                 elif not is_dir and item_path.is_file():
-                    print(f"  {GREEN}✓{RESET} {item_name}")
+                    if not self._json_mode:
+                        print(f"  {GREEN}✓{RESET} {item_name}")
                 else:
                     self.errors.append(
                         f"Backend: {item_name} type mismatch (expected {'dir' if is_dir else 'file'})"
                     )
-                    print(f"  {RED}✗{RESET} {item_name} (type mismatch)")
+                    if not self._json_mode:
+                        print(f"  {RED}✗{RESET} {item_name} (type mismatch)")
             else:
                 self.errors.append(f"Backend: Missing {item_name}")
-                print(f"  {RED}✗{RESET} {item_name} (missing)")
+                if not self._json_mode:
+                    print(f"  {RED}✗{RESET} {item_name} (missing)")
 
     def _validate_web(self):
         """Validate web frontend artifacts."""
-        print(f"\n{BLUE}[3/8] Validating web frontend...{RESET}")
+        if not self._json_mode:
+            print(f"\n{BLUE}[3/8] Validating web frontend...{RESET}")
 
         web_dir = self.release_dir / "web"
         if not web_dir.exists():
             self.warnings.append("Web directory missing")
-            print(f"  {YELLOW}⚠{RESET} Web directory not found")
+            if not self._json_mode:
+                print(f"  {YELLOW}⚠{RESET} Web directory not found")
             return
 
         # Check for essential web files
@@ -120,25 +138,30 @@ class ReleaseValidator:
         for file_name in essential_files:
             file_path = web_dir / file_name
             if file_path.exists():
-                print(f"  {GREEN}✓{RESET} {file_name}")
+                if not self._json_mode:
+                    print(f"  {GREEN}✓{RESET} {file_name}")
             else:
                 self.warnings.append(f"Web: Missing {file_name}")
-                print(f"  {YELLOW}⚠{RESET} {file_name} (missing)")
+                if not self._json_mode:
+                    print(f"  {YELLOW}⚠{RESET} {file_name} (missing)")
 
         # Check if DEPLOY.md exists
         if (web_dir / "DEPLOY.md").exists():
-            print(f"  {GREEN}✓{RESET} DEPLOY.md")
+            if not self._json_mode:
+                print(f"  {GREEN}✓{RESET} DEPLOY.md")
         else:
             self.info.append("Web: DEPLOY.md not found")
 
     def _validate_android(self):
         """Validate Android artifacts."""
-        print(f"\n{BLUE}[4/8] Validating Android app...{RESET}")
+        if not self._json_mode:
+            print(f"\n{BLUE}[4/8] Validating Android app...{RESET}")
 
         android_dir = self.release_dir / "android"
         if not android_dir.exists():
             self.warnings.append("Android directory missing")
-            print(f"  {YELLOW}⚠{RESET} Android directory not found")
+            if not self._json_mode:
+                print(f"  {YELLOW}⚠{RESET} Android directory not found")
             return
 
         # Check for APK
@@ -146,26 +169,31 @@ class ReleaseValidator:
         for apk_file in android_dir.glob("*.apk"):
             apk_found = True
             size = apk_file.stat().st_size / (1024 * 1024)
-            print(f"  {GREEN}✓{RESET} {apk_file.name} ({size:.2f} MB)")
+            if not self._json_mode:
+                print(f"  {GREEN}✓{RESET} {apk_file.name} ({size:.2f} MB)")
 
         if not apk_found:
             self.warnings.append("Android: No APK found")
-            print(f"  {YELLOW}⚠{RESET} No APK files found")
+            if not self._json_mode:
+                print(f"  {YELLOW}⚠{RESET} No APK files found")
 
         # Check for INSTALL.md
         if (android_dir / "INSTALL.md").exists():
-            print(f"  {GREEN}✓{RESET} INSTALL.md")
+            if not self._json_mode:
+                print(f"  {GREEN}✓{RESET} INSTALL.md")
         else:
             self.info.append("Android: INSTALL.md not found")
 
     def _validate_desktop(self):
         """Validate desktop artifacts."""
-        print(f"\n{BLUE}[5/8] Validating desktop apps...{RESET}")
+        if not self._json_mode:
+            print(f"\n{BLUE}[5/8] Validating desktop apps...{RESET}")
 
         desktop_dir = self.release_dir / "desktop"
         if not desktop_dir.exists():
             self.warnings.append("Desktop directory missing")
-            print(f"  {YELLOW}⚠{RESET} Desktop directory not found")
+            if not self._json_mode:
+                print(f"  {YELLOW}⚠{RESET} Desktop directory not found")
             return
 
         # Check for any desktop build artifacts
@@ -176,21 +204,25 @@ class ReleaseValidator:
             for installer in desktop_dir.glob(pattern):
                 installers_found = True
                 size = installer.stat().st_size / (1024 * 1024)
-                print(f"  {GREEN}✓{RESET} {installer.name} ({size:.2f} MB)")
+                if not self._json_mode:
+                    print(f"  {GREEN}✓{RESET} {installer.name} ({size:.2f} MB)")
 
         if not installers_found:
             self.warnings.append("Desktop: No installers found")
-            print(f"  {YELLOW}⚠{RESET} No desktop installers found")
+            if not self._json_mode:
+                print(f"  {YELLOW}⚠{RESET} No desktop installers found")
 
         # Check for INSTALL.md
         if (desktop_dir / "INSTALL.md").exists():
-            print(f"  {GREEN}✓{RESET} INSTALL.md")
+            if not self._json_mode:
+                print(f"  {GREEN}✓{RESET} INSTALL.md")
         else:
             self.info.append("Desktop: INSTALL.md not found")
 
     def _validate_docs(self):
         """Validate documentation."""
-        print(f"\n{BLUE}[6/8] Validating documentation...{RESET}")
+        if not self._json_mode:
+            print(f"\n{BLUE}[6/8] Validating documentation...{RESET}")
 
         # Check root-level docs
         required_docs = [
@@ -204,44 +236,53 @@ class ReleaseValidator:
         for doc_name in required_docs:
             doc_path = self.release_dir / doc_name
             if doc_path.exists():
-                print(f"  {GREEN}✓{RESET} {doc_name}")
+                if not self._json_mode:
+                    print(f"  {GREEN}✓{RESET} {doc_name}")
             else:
                 self.warnings.append(f"Documentation: Missing {doc_name}")
-                print(f"  {YELLOW}⚠{RESET} {doc_name} (missing)")
+                if not self._json_mode:
+                    print(f"  {YELLOW}⚠{RESET} {doc_name} (missing)")
 
         # Check docs directory
         docs_dir = self.release_dir / "docs"
         if docs_dir.exists() and docs_dir.is_dir():
             doc_count = len(list(docs_dir.glob("**/*.md")))
-            print(f"  {GREEN}✓{RESET} docs/ directory ({doc_count} files)")
+            if not self._json_mode:
+                print(f"  {GREEN}✓{RESET} docs/ directory ({doc_count} files)")
         else:
             self.warnings.append("docs/ directory missing")
-            print(f"  {YELLOW}⚠{RESET} docs/ directory (missing)")
+            if not self._json_mode:
+                print(f"  {YELLOW}⚠{RESET} docs/ directory (missing)")
 
     def _validate_manifest(self):
         """Validate against MANIFEST.in."""
-        print(f"\n{BLUE}[7/8] Validating against MANIFEST.in...{RESET}")
+        if not self._json_mode:
+            print(f"\n{BLUE}[7/8] Validating against MANIFEST.in...{RESET}")
 
         # Find MANIFEST.in in project root (parent of release dir)
         manifest_path = Path(__file__).parent.parent / "MANIFEST.in"
 
         if not manifest_path.exists():
             self.warnings.append("MANIFEST.in not found")
-            print(f"  {YELLOW}⚠{RESET} MANIFEST.in not found in project root")
+            if not self._json_mode:
+                print(f"  {YELLOW}⚠{RESET} MANIFEST.in not found in project root")
             return
 
         # Just verify we can read it
         try:
             with open(manifest_path) as f:
                 lines = f.readlines()
-            print(f"  {GREEN}✓{RESET} MANIFEST.in readable ({len(lines)} lines)")
+            if not self._json_mode:
+                print(f"  {GREEN}✓{RESET} MANIFEST.in readable ({len(lines)} lines)")
         except Exception as e:
             self.errors.append(f"MANIFEST.in read error: {e}")
-            print(f"  {RED}✗{RESET} Failed to read MANIFEST.in")
+            if not self._json_mode:
+                print(f"  {RED}✗{RESET} Failed to read MANIFEST.in")
 
     def _validate_dependencies(self):
         """Check for dependency files."""
-        print(f"\n{BLUE}[8/8] Validating dependencies...{RESET}")
+        if not self._json_mode:
+            print(f"\n{BLUE}[8/8] Validating dependencies...{RESET}")
 
         backend_dir = self.release_dir / "backend"
         if backend_dir.exists():
@@ -254,7 +295,8 @@ class ReleaseValidator:
                             for line in f
                             if line.strip() and not line.startswith("#")
                         ]
-                    print(f"  {GREEN}✓{RESET} Backend requirements.txt ({len(deps)} dependencies)")
+                    if not self._json_mode:
+                        print(f"  {GREEN}✓{RESET} Backend requirements.txt ({len(deps)} dependencies)")
                 except Exception as e:
                     self.warnings.append(f"Could not parse requirements.txt: {e}")
             else:
@@ -344,6 +386,7 @@ def main():
 
     # Create validator
     validator = ReleaseValidator(args.release_dir, args.version)
+    validator._json_mode = args.json or args.output is not None
 
     # Run validation
     passed, report = validator.validate_all()
@@ -354,7 +397,9 @@ def main():
         if args.output:
             with open(args.output, "w") as f:
                 f.write(json_output)
-            print(f"\n📄 Report written to: {args.output}")
+            if not args.json:
+                # Only print message if not in JSON-to-stdout mode
+                print(f"\n📄 Report written to: {args.output}")
         else:
             print(json_output)
 

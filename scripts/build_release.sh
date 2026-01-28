@@ -8,7 +8,6 @@ VERSION="1.0.0"
 RELEASE_DIR="releases/project-ai-v${VERSION}"
 DATE=$(date +%Y-%m-%d)
 BUILD_START=$(date +%s)
-BUILD_LOG="releases/build_${VERSION}_$(date +%Y%m%d_%H%M%S).log"
 
 echo "========================================="
 echo "Project AI v${VERSION} Release Builder"
