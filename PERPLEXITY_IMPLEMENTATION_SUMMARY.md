@@ -70,6 +70,7 @@ Created a provider abstraction layer with three main components:
 
 #### New: `docs/PERPLEXITY_INTEGRATION.md` (231 lines)
 Comprehensive guide covering:
+
 - Configuration setup
 - Usage examples for all components
 - Available Perplexity models
