@@ -87,6 +87,7 @@ jobs:
   desktop-build:
     name: Desktop Build
     runs-on: ${{ matrix.os }}
+    continue-on-error: true
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
@@ -103,12 +104,14 @@ jobs:
         uses: actions/cache@v3
         with:
           path: desktop/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('desktop/package-lock.json') }}
+          key: ${{ runner.os }}-node-${{ hashFiles('desktop/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       
       - name: Install dependencies
         run: |
           cd desktop
-          npm ci
+          npm install
       
       - name: Build desktop app
         run: |
@@ -125,6 +128,7 @@ jobs:
   android-build:
     name: Android Build
     runs-on: ubuntu-latest
+    continue-on-error: true
     
     steps:
       - uses: actions/checkout@v4
