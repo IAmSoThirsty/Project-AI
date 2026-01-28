@@ -1,0 +1,30 @@
+[
+  {
+    "message_id": "50bb912ccaa53cc4",
+    "sender_code": "REX7-QCAI-SHVM-Y5G9",
+    "sender_name": "Alice",
+    "recipient_code": "UQVB-2CRN-KQLI-HMZP",
+    "recipient_name": "ProjectAI_Assistant",
+    "encrypted_aes_key": "714f17341a31e9ec055fd74b176c6182e39e6cc6c953fa3ea5eb191d138a1ec9a60af6a2f021310076fb4e16ce363245a905e7e984864627a3648aaf157e256f1cca7ae125d0ecea8735a19e28ccdb896171abff48dd8480982758aa9a280aa0c820f53b2bbd7200e66d149799c5cc25fa73b512d694fc2f839ea62770a7a26a93f88cdf745f8070545e32aab054e14d181a2ed0504bb1292473e02432de3ecc80255be3875f9e9956841924c4b126d2ed3168ad684cc36c928eb14c4d1bc40c8ddf769a458b184fa9288ae14a8dfcdd497415cd9e0c977f2901271074ab083829a92c5a88c6c6b974915f44dd8185572fce39fedffe74069b38e1c663d5be52",
+    "iv": "094a8795eba8c7a7138fdffb46e95915",
+    "ciphertext": "cb52a45f9f547782a4e1103c7b6ac2a3eed869b78394183e92cfa398407738c9",
+    "status": "\ud83d\udce4 SENT",
+    "sent_at": "2026-01-28T21:05:22.912112",
+    "delivered_at": null,
+    "seen_at": null,
+    "delete_at": null
+  },
+  {
+    "message_id": "2dd4da5f8043a7e9",
+    "sender_code": "UQVB-2CRN-KQLI-HMZP",
+    "sender_name": "ProjectAI_Assistant",
+    "recipient_code": "REX7-QCAI-SHVM-Y5G9",
+    "recipient_name": "Alice",
+    "content": "42 - The answer to life, the universe, and everything!",
+    "status": "\ud83d\udc41\ufe0f SEEN",
+    "sent_at": null,
+    "delivered_at": "2026-01-28T21:05:22.998989",
+    "seen_at": "2026-01-28T21:05:22.999284",
+    "delete_at": "2026-01-28T22:05:22.999288"
+  }
+]
