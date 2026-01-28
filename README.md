@@ -2,6 +2,16 @@
 
 > **Not a chatbot. Not a toy. A governed intelligence framework built for humans who expect systems to be accountable.**
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![CI/CD Pipeline](https://github.com/IAmSoThirsty/Project-AI/workflows/Project%20AI%20-%20CI%2FCD%20Pipeline/badge.svg)](https://github.com/IAmSoThirsty/Project-AI/actions/workflows/ci.yml)
+[![Governance-First](https://img.shields.io/badge/Governance-First-slategrey)](https://github.com/IAmSoThirsty/Project-AI#governance-first-design)
+
+---
+
+## Governance-First Design
+
+Project-AI is built with governance as a first-class system component. Policies for security, licensing, contribution, testing, release management, and auditability are enforced through documentation, automation, and CI/CD — not post-hoc review.
+
 ---
 
 ## 🎯 Overview
