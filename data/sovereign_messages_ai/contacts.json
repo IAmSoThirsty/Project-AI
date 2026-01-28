@@ -1,9 +1,0 @@
-{
-  "REX7-QCAI-SHVM-Y5G9": {
-    "name": "Alice",
-    "code": "REX7-QCAI-SHVM-Y5G9",
-    "public_key": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxB2fqi1naer23R0OfRaG\nrGEAp1h0TDibknSN6gaj8C6ozBHnoQngoG2nJabd5eW9BSOjAEJig8nDCmaWb9ua\n6cTmXMh9E8cVCLwDZyQIlQAL+3AzlDmZQZthd0mRwjXXM8jFXAOgd77EISvs3O1o\npkH1CyiW7haeyYWn47fM5hesUmEjOXetFJVH7ZonHaWZZx0sr+V9jtd4ycrBHry9\n/HNf9Y4D/GoFJarVn+sVIEc30I6+keCvjEqAdszma32r06IVr/Mct4VgxLQiQtiz\ncXEyk0bJwh3FE0G6nSfvD7hBH3GjR/pEGjomEoK4UyE5ccAun7LIDM+MQW3M3tR3\newIDAQAB\n-----END PUBLIC KEY-----\n",
-    "participant_type": "user",
-    "paired_at": "2026-01-28T21:05:22.910907"
-  }
-}
