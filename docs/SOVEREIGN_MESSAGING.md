@@ -4,7 +4,7 @@
 
 ## Overview
 
-The Sovereign Messaging System provides military-grade end-to-end encrypted communication between users and AI agents with complete privacy and sovereignty. Messages self-destruct after being read, leaving no traces.
+The Sovereign Messaging System provides industry-standard end-to-end encrypted communication between users and AI agents with complete privacy and sovereignty. Messages self-destruct after being read, leaving no traces.
 
 ### Key Features
 
@@ -47,7 +47,7 @@ The Sovereign Messaging System provides military-grade end-to-end encrypted comm
 ```
 
 - **Algorithm**: RSA-2048 + AES-256 hybrid
-- **Strength**: Military-grade encryption
+- **Strength**: Industry-standard encryption
 - **Keys**: 2048-bit RSA keypair per participant
 - **Message**: AES-256-CBC per message  
 - **Padding**: OAEP + PKCS7
@@ -81,6 +81,8 @@ data/sovereign_messages/
 - ✅ No Accounts Required
 - ✅ No Cloud Sync
 - ✅ Maximum Privacy
+
+**⚠️ Important**: No backup means no disaster recovery. If you lose your device or the data directory, all messages and contacts are permanently lost. This is by design for maximum privacy, but consider the implications for your use case.
 
 ## Communication Code Format
 
@@ -244,18 +246,21 @@ Potential additions (not yet implemented):
 
 ### What This System Provides
 
-✅ End-to-end encryption  
-✅ Forward secrecy through per-message AES keys  
-✅ No server-side storage  
-✅ Self-destructing messages  
-✅ Local-only data storage
+✅ **Forward secrecy through per-message AES keys** - Each message uses a unique encryption key  
+✅ **No server-side storage** - All data stays on your device  
+✅ **Self-destructing messages** - Auto-deletion after reading  
+✅ **Local-only data storage** - Never transmitted to third parties  
+✅ **PKCS7 padding validation** - Protects against padding oracle attacks  
+✅ **File permission protection** - Private keys stored with 0o600 permissions on Unix systems
 
 ### What This System Does NOT Provide
 
 ❌ **Network transport** - You must implement message delivery (P2P, local network, etc.)  
-❌ **Key rotation** - RSA keys are static per identity  
+❌ **Key rotation** - RSA keys are static per identity (consider creating new identities periodically)  
 ❌ **Multi-device sync** - Each device has its own identity  
-❌ **Backup/recovery** - Data loss is permanent by design
+❌ **Backup/recovery** - Data loss is permanent by design  
+❌ **Message authentication codes** - Relies on encryption for integrity  
+❌ **Password-protected private keys** - Private keys are stored unencrypted locally (ensure device security)
 
 ### Best Practices
 

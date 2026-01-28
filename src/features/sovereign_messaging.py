@@ -42,12 +42,14 @@ class ParticipantType(Enum):
 
 class SovereignMessaging:
     """
-    Sovereign messaging system with military-grade encryption.
+    Sovereign messaging system with industry-standard encryption.
 
     Supports secure communication between:
     - User ↔ User
     - User ↔ AI
     - AI ↔ AI
+    
+    Uses RSA-2048 + AES-256-CBC hybrid encryption for end-to-end security.
     """
 
     def __init__(self, data_dir: str | None = None, participant_name: str = "default"):
@@ -134,7 +136,7 @@ class SovereignMessaging:
             Identity dictionary with keys, code, and metadata
         """
         if self.identity_file.exists():
-            with open(self.identity_file) as f:
+            with open(self.identity_file, encoding="utf-8") as f:
                 return json.load(f)
 
         # Create new identity
@@ -150,40 +152,49 @@ class SovereignMessaging:
             "participant_type": ParticipantType.USER.value  # Can be changed to AI
         }
 
-        # Save identity
-        with open(self.identity_file, "w") as f:
+        # Save identity with restrictive permissions (owner read/write only)
+        identity_file = self.identity_file
+        with open(identity_file, "w", encoding="utf-8") as f:
             json.dump(identity, f, indent=2)
+        
+        # Set file permissions to 0o600 (owner read/write only) on Unix systems
+        try:
+            import os
+            os.chmod(identity_file, 0o600)
+        except (AttributeError, OSError):
+            # Windows or permission error - continue anyway
+            pass
 
         return identity
 
     def _load_contacts(self) -> dict:
         """Load contacts from file."""
         if self.contacts_file.exists():
-            with open(self.contacts_file) as f:
+            with open(self.contacts_file, encoding="utf-8") as f:
                 return json.load(f)
         # Create empty contacts file
-        with open(self.contacts_file, "w") as f:
+        with open(self.contacts_file, "w", encoding="utf-8") as f:
             json.dump({}, f)
         return {}
 
     def _save_contacts(self):
         """Save contacts to file."""
-        with open(self.contacts_file, "w") as f:
+        with open(self.contacts_file, "w", encoding="utf-8") as f:
             json.dump(self.contacts, f, indent=2)
 
     def _load_messages(self) -> list[dict]:
         """Load messages from file."""
         if self.messages_file.exists():
-            with open(self.messages_file) as f:
+            with open(self.messages_file, encoding="utf-8") as f:
                 return json.load(f)
         # Create empty messages file
-        with open(self.messages_file, "w") as f:
+        with open(self.messages_file, "w", encoding="utf-8") as f:
             json.dump([], f)
         return []
 
     def _save_messages(self):
         """Save messages to file."""
-        with open(self.messages_file, "w") as f:
+        with open(self.messages_file, "w", encoding="utf-8") as f:
             json.dump(self.messages, f, indent=2)
 
     def get_communication_code(self) -> str:
@@ -375,8 +386,21 @@ class SovereignMessaging:
         decryptor = cipher.decryptor()
         padded_plaintext = decryptor.update(ciphertext) + decryptor.finalize()
 
-        # Remove PKCS7 padding
+        # Validate and remove PKCS7 padding
+        if len(padded_plaintext) == 0:
+            raise ValueError("Decrypted data is empty")
+        
         padding_length = padded_plaintext[-1]
+        
+        # Validate padding length
+        if padding_length < 1 or padding_length > 16:
+            raise ValueError(f"Invalid padding length: {padding_length}")
+        
+        # Validate all padding bytes have the same value
+        for i in range(padding_length):
+            if padded_plaintext[-(i + 1)] != padding_length:
+                raise ValueError("Invalid PKCS7 padding")
+        
         plaintext_bytes = padded_plaintext[:-padding_length]
 
         return plaintext_bytes.decode("utf-8")
@@ -409,10 +433,10 @@ class SovereignMessaging:
         # Step 2: Encrypt AES key with recipient's RSA public key
         encrypted_aes_key = self._encrypt_with_rsa(aes_key, contact["public_key"])
 
-        # Generate message ID
+        # Generate message ID (use 32 chars for better collision resistance)
         message_id = hashlib.sha256(
             f"{self.identity['communication_code']}{recipient_code}{datetime.now().isoformat()}".encode()
-        ).hexdigest()[:16]
+        ).hexdigest()[:32]
 
         # Create message record
         message = {
@@ -472,10 +496,10 @@ class SovereignMessaging:
             ciphertext = bytes.fromhex(ciphertext_hex)
             plaintext = self._decrypt_with_aes(aes_key, iv, ciphertext)
 
-            # Generate message ID
+            # Generate message ID (use 32 chars for better collision resistance)
             message_id = hashlib.sha256(
                 f"{sender_code}{self.identity['communication_code']}{datetime.now().isoformat()}".encode()
-            ).hexdigest()[:16]
+            ).hexdigest()[:32]
 
             # Create received message record
             message = {
@@ -498,7 +522,10 @@ class SovereignMessaging:
 
             return message
 
-        except Exception:
+        except Exception as e:
+            # Log error without exposing sensitive data
+            import logging
+            logging.error(f"Failed to decrypt message from {sender_code}: {type(e).__name__}")
             return None
 
     def mark_message_seen(self, message_id: str) -> bool:

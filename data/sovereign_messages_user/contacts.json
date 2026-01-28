@@ -1,9 +1,0 @@
-{
-  "UQVB-2CRN-KQLI-HMZP": {
-    "name": "ProjectAI_Assistant",
-    "code": "UQVB-2CRN-KQLI-HMZP",
-    "public_key": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA07I28eqtbVsCAnTrRkPl\n7PRigDVwkxrtJK3MaUlMy8bwKmT24jufQ4Nzc38kwbXP6342m+dMZwKIpYNRz/7C\nbCmdsV4GqSOE2bqawNTOSZ/wcqFBUM6/xuixl8VT55ux8WNQVG/XKyfzqUtzynBa\niBSR2vU9XM25FufDb70HYEj/TV7u6V5WI07fbRts64hZHgU4V532sl0wbS1MkAQP\nYiwfVTfLE6Ej6C4TAan4VQNh/Qg34rF5sGLgq0ZeBwlTTodIHPlv1KGvTWI416ri\njyLWBR1+OcEa9yc02XiYK1Z/9QspiV9EFFay8rA0oQFj4EfmT9qGMvkWrQUF1sI6\nnwIDAQAB\n-----END PUBLIC KEY-----\n",
-    "participant_type": "ai",
-    "paired_at": "2026-01-28T21:05:22.910776"
-  }
-}
