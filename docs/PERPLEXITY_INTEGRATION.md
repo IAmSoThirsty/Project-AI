@@ -179,6 +179,7 @@ If you encounter rate limits:
 ### Model Not Found
 
 If you get a model not found error:
+
 - Check the model name spelling
 - Verify the model is available in your Perplexity plan
 - Refer to Perplexity's documentation for current model names
