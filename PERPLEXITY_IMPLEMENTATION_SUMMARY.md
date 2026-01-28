@@ -20,6 +20,7 @@ Created a provider abstraction layer with three main components:
 - Methods: `__init__()`, `chat_completion()`, `is_available()`
 
 **OpenAIProvider**
+
 - Wraps OpenAI API
 - Supports environment variable or explicit API key
 - Compatible with existing OpenAI code
