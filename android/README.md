@@ -1,154 +1,96 @@
-`# Android APK Integration
+# Project AI - Android Application
 
-This repository now includes a minimal Android project setup for CI/CD integration and future development.
+## Overview
 
-## 🎯 Current Status
+Production-ready Android application for interacting with the **Project AI Governance Kernel**. Built with Jetpack Compose, Material Design 3, and TARL governance enforcement.
 
-The Android project structure is now complete with:
-- ✅ Gradle build system (v8.5)
-- ✅ Minimal Android app module with MainActivity
-- ✅ AndroidX support enabled
-- ✅ CI/CD workflow integration (`.github/workflows/android.yml`)
-- ✅ Cross-platform build scripts (gradlew/gradlew.bat)
+## Features
 
-## 📂 Project Structure
+✅ **Triumvirate Dashboard**
+- Real-time kernel status monitoring
+- Pillar health visualization (Galahad, Cerberus, Codex Deus)
+- Recent governance decisions
 
-```
-Project-AI/
-├── build.gradle              # Root build configuration
-├── settings.gradle           # Project settings
-├── gradle.properties         # Gradle properties (AndroidX enabled)
-├── gradlew                   # Unix build script
-├── gradlew.bat              # Windows build script
-├── gradle/wrapper/          # Gradle wrapper files
-└── app/                     # Main Android app module
-    ├── build.gradle         # App module build config
-    ├── proguard-rules.pro   # ProGuard configuration
-    └── src/main/
-        ├── AndroidManifest.xml
-        ├── java/com/projectai/app/MainActivity.java
-        └── res/values/strings.xml
-```
+✅ **Intent Submission**
+- Submit requests for Triumvirate evaluation
+- Actor type selection (Human, Agent, System)
+- Action type selection (Read, Write, Execute, Mutate)
+- Real-time governance verdict display
 
-## 🚀 Building the Project
+✅ **Audit Log Viewer**
+- Immutable decision history
+- Cryptographic intent hashing
+- Timestamp tracking
+
+✅ **TARL Rule Explorer**
+- View governance policies
+- Risk level indicators
+- Allowed actor permissions
+
+## Technology Stack
+
+- **Language**: Kotlin
+- **UI**: Jetpack Compose + Material Design 3
+- **Architecture**: MVVM + Clean Architecture
+- **DI**: Hilt (Dagger)
+- **Networking**: Retrofit + OkHttp
+- **Async**: Kotlin Coroutines + Flow
+- **Navigation**: Jetpack Navigation
+
+## Prerequisites
+
+- Android Studio Hedgehog (2023.1.1) or later
+- JDK 17
+- Android SDK 34
+- Minimum Android 8.0 (API 26)
+
+## Setup
+
+### 1. Configure Backend URL
+
+The app connects to the Governance Kernel API. By default:
+- **Emulator**: `http://10.0.2.2:8001`
+- **Physical Device**: Update `API_BASE_URL` in `app/build.gradle`
+
+### 2. Start Backend Server
 
 ```bash
-# Grant execute permission (Linux/Mac)
-chmod +x gradlew
+cd ..
+python start_api.py
+```
 
-# Build the project
-./gradlew build
+### 3. Build & Run
 
-# Build APK
+```bash
 ./gradlew assembleDebug
-
-# Install to connected device
 ./gradlew installDebug
 ```
 
-## ✨ Latest Features Available for Integration
+## API Integration
 
-The desktop version now includes these powerful new features:
-- **Cloud Sync**: Encrypted cross-device synchronization with device management and conflict resolution
-- **Advanced ML Models**: RandomForest, GradientBoosting, and Neural Networks for intent/sentiment/behavior prediction
-- **Plugin System**: Dynamic plugin loading with hooks and lifecycle management
-
-## 🔧 Integration Plan
-- The Android app will communicate with the main program and web backend via API endpoints and shared data models.
-- All integration points will be documented and stubbed for easy merging into the main branch when development begins.
-
-## 📋 Next Steps for Full Integration
-
-## Program Functions for Integration
-
-Below is a list of core functions and features from the Project-AI program that should
-be considered for integration with the Android APK app:
-
-### Core Modules
-
-- **User Management**: authenticate, create_user, get_user_data, list_users, delete_user, set_password, update_user
-- **Cloud Sync**: sync_user_data, fetch_user_data, list_user_devices, resolve_conflicts, auto_sync
-- **ML Models**: train_intent_classifier, predict_intent, analyze_sentiment, predict_user_behavior, save_model, load_model, get_model_info
-- **Image Generation**: generate_image, get_available_styles, get_style_description, set_content_filtering
-- **Learning Paths**: generate_path, save_path, get_saved_paths
-- **Location Tracker**: encrypt_location, decrypt_location, get_location_from_ip, get_location_from_coords, save_location_history, get_location_history, clear_location_history
-- **Intent Detection**: train, predict, save_model, load_model
-- **Emergency Alert**: add_emergency_contact, send_alert, log_alert, get_alert_history
-- **Data Analysis**: load_data, get_summary_stats, create_visualization, perform_clustering
-- **Security Resources**: get_resources_by_category, get_all_categories, get_repo_details, save_favorite, get_favorites
-- **Plugin System**: initialize_plugin, execute_plugin, register_hook, trigger_hook, list_plugins, unload_plugin, reload_plugin, get_plugin_config, save_plugin_config
-
-### GUI Modules (for reference)
-
-- **Dashboard**: setup_ui, open_settings_dialog, setup_chat_tab, setup_tasks_tab, setup_learning_paths_tab, setup_data_analysis_tab, setup_security_tab, setup_location_tab, setup_emergency_tab, send_message, process_message, add_task, update_persona
-- **Login**: create_admin_account, try_login
-- **Settings Dialog**: get_values, load_settings, save_settings
-- **Image Generation UI**: run, _generate_image, _on_image_generated, _on_error, _save_image
-- **User Management UI**: refresh_user_list, on_user_selected, create_user_dialog, delete_user, toggle_approve, reset_password, save_changes
-
-### Main Entrypoints
-
-- setup_environment
-- main
-
-Refer to the respective Python files in `src/app/core/`, `src/app/gui/`, and
-`src/app/main.py` for implementation details.
-
-## Integration Requirements
-
-### API Endpoints (to be implemented)
-- `/api/auth/login` - User authentication
-- `/api/users` - User management (CRUD)
-- `/api/sync` - Cloud sync operations
-- `/api/ml/predict` - ML model predictions
-- `/api/image/generate` - Image generation
-- `/api/learning-paths` - Learning path management
-- `/api/location` - Location tracking
-- `/api/emergency` - Emergency alerts
-- `/api/data-analysis` - Data analysis operations
-- `/api/security` - Security resources
-
-### Data Models (examples)
-- **User**: `{ username, password, email, profile, ... }`
-- **ImageRequest**: `{ prompt, style, width, height, ... }`
-- **LearningPath**: `{ interest, skill_level, steps, ... }`
-- **Location**: `{ latitude, longitude, timestamp, ... }`
-- **Alert**: `{ username, location, message, timestamp }`
-
-### Integration Notes
-- Use HTTPS for all API communication.
-- Authentication should use secure tokens (JWT or similar).
-- Data models must match backend Python structures for seamless integration.
-- Document any changes to API contracts in this README.
-
----
-
----
-*This branch is a stub for integration only. No actual integration is performed yet.*
-
-## Formatting & Contribution
-
-If you're contributing to the project, please format code before opening a PR.
-
-PowerShell (Python):
-```powershell
-$env:PYTHONPATH='src'
-python -m pip install ruff black isort
-isort src tests --profile black
-ruff check src tests --fix
-black src tests
+### Endpoints
+```
+GET  /health    - Kernel status
+GET  /tarl      - Governance rules
+GET  /audit     - Decision history
+POST /intent    - Submit for evaluation
+POST /execute   - Execute under governance
 ```
 
-Frontend (if editing web files):
-```powershell
-cd web/frontend
-npm install
-npm run format
-```
+## Screens
 
+1. **Dashboard** - Kernel status & Triumvirate visualization
+2. **Submit Intent** - Governance request submission
+3. **Audit Log** - Decision history viewer
+4. **TARL Rules** - Policy explorer
+
+## Security
+
+- TARL enforcement on all requests
+- Cryptographic intent hashing
+- Immutable audit logging
+- Fail-closed architecture
 
 ---
 
-**Repository note:** Last updated: 2025-11-26 (automated)
-
-<!-- last-updated-marker -->
+**Production-ready governed mobile interface.**

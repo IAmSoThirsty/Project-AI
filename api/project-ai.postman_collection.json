@@ -1,0 +1,142 @@
+{
+  "info": {
+    "name": "Project AI Governance API",
+    "description": "Complete API collection for Project AI Governance Kernel",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "System",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            },
+            "description": "Check kernel status and TARL version"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Governance",
+      "item": [
+        {
+          "name": "Get TARL Rules",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/tarl",
+              "host": ["{{base_url}}"],
+              "path": ["tarl"]
+            },
+            "description": "Retrieve all TARL governance rules"
+          }
+        },
+        {
+          "name": "Get Audit Log",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/audit?limit=50",
+              "host": ["{{base_url}}"],
+              "path": ["audit"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            },
+            "description": "Retrieve audit trail of governance decisions"
+          }
+        },
+        {
+          "name": "Submit Intent (Human Read - Should Allow)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"actor\": \"human\",\n  \"action\": \"read\",\n  \"target\": \"/data/report.txt\",\n  \"origin\": \"postman\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/intent",
+              "host": ["{{base_url}}"],
+              "path": ["intent"]
+            },
+            "description": "Submit intent for governance evaluation"
+          }
+        },
+        {
+          "name": "Submit Intent (Agent Execute - Should Deny)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"actor\": \"agent\",\n  \"action\": \"execute\",\n  \"target\": \"/bin/dangerous.sh\",\n  \"origin\": \"postman\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/intent",
+              "host": ["{{base_url}}"],
+              "path": ["intent"]
+            },
+            "description": "Submit intent that should be denied"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Execution",
+      "item": [
+        {
+          "name": "Execute Intent (Human Read)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"actor\": \"human\",\n  \"action\": \"read\",\n  \"target\": \"/data/file.txt\",\n  \"origin\": \"postman\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/execute",
+              "host": ["{{base_url}}"],
+              "path": ["execute"]
+            },
+            "description": "Execute governed action"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8001",
+      "type": "string"
+    }
+  ]
+}
