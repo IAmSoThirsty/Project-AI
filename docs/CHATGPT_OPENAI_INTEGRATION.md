@@ -590,32 +590,6 @@ class IdentityIntegratedIntelligenceEngine:
 - ✅ Only security scanning for Google API keys (detection pattern)
 - ✅ Documentation mentions Gemini as a *potential alternative* to OpenAI
 
-**Evidence:**
-- No `google-generativeai` package in dependencies
-- No Google API imports in source code
-- Only reference: Documentation suggests Gemini as possible replacement for OpenAI
-
-**How to add Google Gemini (if desired):**
-
-```bash
-# Install Google Generative AI SDK
-pip install google-generativeai
-
-# Add to .env
-GOOGLE_API_KEY=your-key-from-https://makersuite.google.com/app/apikey
-```
-
-```python
-# Example integration code (not currently in Project-AI)
-import google.generativeai as genai
-import os
-
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-model = genai.GenerativeModel('gemini-pro')
-response = model.generate_content("Explain quantum computing")
-print(response.text)
-```
-
 ### Google Antigravity IDE
 
 **Q: Is Google Antigravity IDE integrated with Project-AI?**
