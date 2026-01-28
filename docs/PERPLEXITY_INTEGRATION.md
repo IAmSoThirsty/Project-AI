@@ -172,6 +172,7 @@ pytest tests/test_model_providers.py -v
 ### Rate Limiting
 
 If you encounter rate limits:
+
 - Wait before retrying
 - Consider upgrading your Perplexity plan
 - Implement exponential backoff in your application
