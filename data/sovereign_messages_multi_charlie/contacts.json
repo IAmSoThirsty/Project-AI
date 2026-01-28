@@ -1,0 +1,9 @@
+{
+  "ZPEB-28UQ-SB0J-U5NR": {
+    "name": "ProjectAI_Hub",
+    "code": "ZPEB-28UQ-SB0J-U5NR",
+    "public_key": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwSi5ht7Hw1tYALiHZEXK\nbbkzB5snubHTMyWOOmH/mpQRiH59IIM8YhndUgzj4S3cUMbKEQVwtQptqvevDL4n\ncI5vntZ5YATN6ymxBdFoDy2wlZOXnjPDK7kcIPQsHesYDtcVJVzfPS3PE34gCZBA\nMk+a8rSSXVB5RfjMaf2Sqo+06jXOQLlmE8KL8XmUv9eAGlRa4c6zLl64+dQYIo4R\ngOfTjmhNhYtuj59/2ddxkzbjR7687kS9W1cRcBbG81f3PKA7w2Jb+kdGeHME14LL\nByRH+Xmg3ZlkxzfDYqnKvp5uHTkHwLQgcrl5uqlUi1vkjAzmqt7MTsF3LYMHWQo3\nHwIDAQAB\n-----END PUBLIC KEY-----\n",
+    "participant_type": "ai",
+    "paired_at": "2026-01-28T21:05:23.899245"
+  }
+}

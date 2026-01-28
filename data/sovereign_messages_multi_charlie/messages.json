@@ -1,0 +1,17 @@
+[
+  {
+    "message_id": "99973e5304866489",
+    "sender_code": "4UYR-VN3X-HO1C-GR1U",
+    "sender_name": "Charlie",
+    "recipient_code": "ZPEB-28UQ-SB0J-U5NR",
+    "recipient_name": "ProjectAI_Hub",
+    "encrypted_aes_key": "7d5cfe4f1b95fe17eca7c0caa0c7220772d3dab28d18694cc3e91641c803176e352fcb54e544820896e01b7f166406d3b9eba647c479e899e7c0d48792a89d3f17403af902edd7e253ad46f4cb7d347887c5d07c2a64886e0b1949b6f945c4489fb9e4e5200c15bc5131f88f554cd3d35016edd9a863d460d46d7eccec12cc707953ec9eed093b726c0a2ef0f53aebba9560f0dc8e1a457b3a5fc270536097e36bb0fb080ee0e8f18919bdcdd4022725a2bc372e377208dfec5a6da34e0dda1bffaf69ae8cdeb0e57bea574fee3aeea8e9802e90a53965a4c9a523efd7ee03d016c29f5f05ab8f7e5245f30fc488580cc595780fd05014c164b5a9b1105a5d7e",
+    "iv": "c05a4ad6668172effe800db4ef2e6db9",
+    "ciphertext": "c233917d3b6b08c307fce2e8828b7725dc9740a294ba66f86b0c9bd50af4ab6d330788cc809f875e7c66eba0c5232e22",
+    "status": "\ud83d\udce4 SENT",
+    "sent_at": "2026-01-28T21:05:23.901500",
+    "delivered_at": null,
+    "seen_at": null,
+    "delete_at": null
+  }
+]

@@ -1,0 +1,17 @@
+[
+  {
+    "message_id": "018a257cdea5468e",
+    "sender_code": "D6UD-6LJ2-7IEI-GEW5",
+    "sender_name": "Bob",
+    "recipient_code": "ZPEB-28UQ-SB0J-U5NR",
+    "recipient_name": "ProjectAI_Hub",
+    "encrypted_aes_key": "65dae5859660894e7a8ce7dca3eba7193724e922835d5d7430cb773313901c007f6febabe8af3e18949f3e081647678f6ed826bce916d3fe20f257076bdecb1f342deac4d3462d62b93ac254dc4893643751a34a2f68fb83d9aa21b3321193add6d8e735df05ddb973d9845003adb347ce43f97dfc4c6c959bebadc3058e55ba22265f030bdd21d05f1d061ca6fdcb3c84c9880b7ccfc6808f6853d59df57787f494cd94dbf6ef5dcd7f9bdcdc87cf140597b3442283f8238c70f27bea7e59ea4bb34de8821f85a4262540c89cae6d2ac74eb9519b8c3eccce5d591c4df24a5e9fe5b28a8e11eeb8fa61184f8275e59bbec6415979162ad98cbc7b58c58ff5d0",
+    "iv": "3dfd8bcecb575c60418cac50ffe6f31a",
+    "ciphertext": "935af54337efd2867bc8442e2b11f10c8b1cecc99326f49916574883c33049b7440e81216a8e917b3d17ae0d4c40ccb0",
+    "status": "\ud83d\udce4 SENT",
+    "sent_at": "2026-01-28T21:05:23.900901",
+    "delivered_at": null,
+    "seen_at": null,
+    "delete_at": null
+  }
+]

@@ -103,6 +103,9 @@ Thumbs.db
 # Generated test data
 data/generated_tests/
 
+# Sovereign messaging data (contains private keys)
+data/sovereign_messages/
+
 # Gradle
 .gradle/
 build/
