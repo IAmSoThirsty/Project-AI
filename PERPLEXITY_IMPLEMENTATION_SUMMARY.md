@@ -105,6 +105,7 @@ path = manager.generate_path("Python", skill_level="beginner")
 ```
 
 ### RAG System
+
 ```python
 from app.core.rag_system import RAGSystem
 
