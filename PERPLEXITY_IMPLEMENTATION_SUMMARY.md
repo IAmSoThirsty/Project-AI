@@ -16,6 +16,7 @@ Successfully added Perplexity AI as an alternative model provider to Project-AI,
 Created a provider abstraction layer with three main components:
 
 **ModelProvider (Abstract Base Class)**
+
 - Defines the interface for all AI providers
 - Methods: `__init__()`, `chat_completion()`, `is_available()`
 
