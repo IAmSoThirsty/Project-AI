@@ -10,13 +10,14 @@ This test suite verifies the complete TARL integration including:
 """
 
 import pytest
-from tarl.runtime import TarlRuntime
-from tarl.policies.default import DEFAULT_POLICIES
-from tarl.spec import TarlVerdict, TarlDecision
-from kernel.execution import ExecutionKernel
-from kernel.tarl_gate import TarlGate, TarlEnforcementError
+
 from governance.core import GovernanceCore
-from src.cognition.codex.escalation import CodexDeus, EscalationLevel
+from kernel.execution import ExecutionKernel
+from kernel.tarl_gate import TarlEnforcementError, TarlGate
+from src.cognition.codex.escalation import CodexDeus
+from tarl.policies.default import DEFAULT_POLICIES
+from tarl.runtime import TarlRuntime
+from tarl.spec import TarlVerdict
 
 
 def test_tarl_allow_policy():
@@ -62,13 +63,13 @@ def test_tarl_gate_enforce_allow():
     runtime = TarlRuntime(DEFAULT_POLICIES)
     codex = CodexDeus()
     gate = TarlGate(runtime, codex)
-    
+
     context = {
         "agent": "test_agent",
         "mutation": False,
         "mutation_allowed": False,
     }
-    
+
     decision = gate.enforce(context)
     assert decision.verdict == TarlVerdict.ALLOW
 
@@ -78,13 +79,13 @@ def test_tarl_gate_enforce_deny():
     runtime = TarlRuntime(DEFAULT_POLICIES)
     codex = CodexDeus()
     gate = TarlGate(runtime, codex)
-    
+
     context = {
         "agent": "test_agent",
         "mutation": True,
         "mutation_allowed": False,
     }
-    
+
     with pytest.raises(TarlEnforcementError) as exc_info:
         gate.enforce(context)
     assert "Denied" in str(exc_info.value)
@@ -95,13 +96,13 @@ def test_tarl_gate_enforce_escalate():
     runtime = TarlRuntime(DEFAULT_POLICIES)
     codex = CodexDeus()
     gate = TarlGate(runtime, codex)
-    
+
     context = {
         "agent": None,
         "mutation": False,
         "mutation_allowed": False,
     }
-    
+
     # This should raise SystemExit due to HIGH escalation level
     with pytest.raises(SystemExit) as exc_info:
         gate.enforce(context)
@@ -114,14 +115,14 @@ def test_execution_kernel_integration():
     codex = CodexDeus()
     governance = GovernanceCore()
     kernel = ExecutionKernel(governance, runtime, codex)
-    
+
     # Valid context should succeed
     context = {
         "agent": "test_agent",
         "mutation": False,
         "mutation_allowed": False,
     }
-    
+
     result = kernel.execute("test_action", context)
     assert result["status"] == "success"
 
@@ -132,14 +133,14 @@ def test_execution_kernel_deny():
     codex = CodexDeus()
     governance = GovernanceCore()
     kernel = ExecutionKernel(governance, runtime, codex)
-    
+
     # Invalid context should raise error
     context = {
         "agent": "test_agent",
         "mutation": True,
         "mutation_allowed": False,
     }
-    
+
     with pytest.raises(TarlEnforcementError):
         kernel.execute("test_action", context)
 
@@ -147,11 +148,11 @@ def test_execution_kernel_deny():
 def test_governance_core():
     """Test governance core functionality."""
     governance = GovernanceCore()
-    
+
     # Test policy management
     governance.add_policy("test_policy")
     assert len(governance.policies) == 1
-    
+
     # Test audit logging
     governance.audit({"event": "test_event"})
     audit_log = governance.get_audit_log()
@@ -162,7 +163,7 @@ def test_governance_core():
 if __name__ == "__main__":
     # Run tests manually without pytest
     print("Running TARL integration tests...")
-    
+
     tests = [
         test_tarl_allow_policy,
         test_tarl_deny_unauthorized_mutation,
@@ -173,10 +174,10 @@ if __name__ == "__main__":
         test_execution_kernel_deny,
         test_governance_core,
     ]
-    
+
     passed = 0
     failed = 0
-    
+
     for test in tests:
         try:
             test()
@@ -185,9 +186,9 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"✗ {test.__name__}: {e}")
             failed += 1
-    
+
     print(f"\nResults: {passed} passed, {failed} failed")
-    
+
     if failed == 0:
         print("✓ All tests passed!")
     else:

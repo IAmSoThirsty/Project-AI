@@ -24,13 +24,15 @@ from temporalio.common import RetryPolicy
 
 # Import atomic activities
 with workflow.unsafe.imports_passed_through():
-    from temporal.workflows.security_agent_activities import (create_forensic_snapshot,
-                                                              evaluate_attack,
-                                                              generate_sarif,
-                                                              notify_triumvirate,
-                                                              run_red_team_attack,
-                                                              trigger_incident,
-                                                              upload_sarif)
+    from temporal.workflows.security_agent_activities import (
+        create_forensic_snapshot,
+        evaluate_attack,
+        generate_sarif,
+        notify_triumvirate,
+        run_red_team_attack,
+        trigger_incident,
+        upload_sarif,
+    )
 
 logger = logging.getLogger(__name__)
 
@@ -249,8 +251,10 @@ class EnhancedCodeSecuritySweepWorkflow:
         # Import additional activities
         with workflow.unsafe.imports_passed_through():
             from temporal.workflows.security_agent_activities import (
-                block_deployment, generate_security_patches,
-                run_code_vulnerability_scan)
+                block_deployment,
+                generate_security_patches,
+                run_code_vulnerability_scan,
+            )
 
         scan_id = request.get("scan_id", f"scan-{workflow.now().timestamp()}")
 
@@ -363,8 +367,9 @@ class EnhancedConstitutionalMonitoringWorkflow:
         )
 
         with workflow.unsafe.imports_passed_through():
-            from temporal.workflows.security_agent_activities import \
-                run_constitutional_reviews
+            from temporal.workflows.security_agent_activities import (
+                run_constitutional_reviews,
+            )
 
         standard_retry = RetryPolicy(
             initial_interval=timedelta(seconds=1),

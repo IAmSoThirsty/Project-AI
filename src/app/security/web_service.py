@@ -14,7 +14,10 @@ import logging
 import time
 from typing import Any
 from xml.etree.ElementTree import (  # nosec B405 - Only used for building XML, not parsing
-    Element, SubElement, tostring)
+    Element,
+    SubElement,
+    tostring,
+)
 
 import defusedxml.ElementTree as DefusedET
 

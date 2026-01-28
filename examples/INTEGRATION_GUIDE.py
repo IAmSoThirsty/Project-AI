@@ -9,9 +9,13 @@ import logging
 import time
 
 from app.core.ai_systems import AIPersona
-from app.gui.dashboard_utils import (DashboardAsyncManager, DashboardConfiguration,
-                                     DashboardErrorHandler, DashboardLogger,
-                                     DashboardValidationManager)
+from app.gui.dashboard_utils import (
+    DashboardAsyncManager,
+    DashboardConfiguration,
+    DashboardErrorHandler,
+    DashboardLogger,
+    DashboardValidationManager,
+)
 from app.gui.persona_panel import PersonaPanel
 
 logger = logging.getLogger(__name__)

@@ -6,8 +6,12 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from app.core.optical_flow import (FlowAnalysisResult, FlowEpicenter,
-                                   OpticalFlowDetector, create_flow_detector)
+from app.core.optical_flow import (
+    FlowAnalysisResult,
+    FlowEpicenter,
+    OpticalFlowDetector,
+    create_flow_detector,
+)
 
 
 class TestFlowEpicenter:

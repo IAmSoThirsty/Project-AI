@@ -1,13 +1,14 @@
-from typing import List, Dict, Any
-from .spec import TarlDecision, TarlVerdict
+from typing import Any
+
 from .policy import TarlPolicy
+from .spec import TarlDecision, TarlVerdict
 
 
 class TarlRuntime:
-    def __init__(self, policies: List[TarlPolicy]):
+    def __init__(self, policies: list[TarlPolicy]):
         self.policies = policies
 
-    def evaluate(self, context: Dict[str, Any]) -> TarlDecision:
+    def evaluate(self, context: dict[str, Any]) -> TarlDecision:
         for policy in self.policies:
             decision = policy.evaluate(context)
             if decision.is_terminal():

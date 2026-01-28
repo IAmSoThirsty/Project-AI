@@ -2,8 +2,12 @@
 
 from pathlib import Path
 
-from app.core.ai_systems import (AIPersona, LearningRequestManager, RequestPriority,
-                                 RequestStatus)
+from app.core.ai_systems import (
+    AIPersona,
+    LearningRequestManager,
+    RequestPriority,
+    RequestStatus,
+)
 from app.core.user_manager import UserManager
 
 

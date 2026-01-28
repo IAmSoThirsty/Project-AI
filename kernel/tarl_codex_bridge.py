@@ -1,5 +1,5 @@
-from tarl.spec import TarlVerdict
 from src.cognition.codex.escalation import CodexDeus, EscalationEvent, EscalationLevel
+from tarl.spec import TarlVerdict
 
 
 class TarlCodexBridge:

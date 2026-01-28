@@ -11,20 +11,20 @@ class ExecutionKernel:
     def execute(self, action, context=None):
         """
         Execute an action through the kernel with TARL enforcement.
-        
+
         Args:
             action: The action to execute
             context: Execution context for TARL evaluation
-            
+
         Returns:
             Result of the action execution
         """
         if context is None:
             context = {}
-        
+
         # Enforce TARL policies
         self.tarl_gate.enforce(context)
-        
+
         # Execute the action (placeholder for actual execution logic)
         return {
             "status": "success",

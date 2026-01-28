@@ -9,8 +9,13 @@ Creates an old leather book aesthetic with:
 
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QColor
-from PyQt6.QtWidgets import (QGraphicsDropShadowEffect, QHBoxLayout, QMainWindow,
-                             QStackedWidget, QWidget)
+from PyQt6.QtWidgets import (
+    QGraphicsDropShadowEffect,
+    QHBoxLayout,
+    QMainWindow,
+    QStackedWidget,
+    QWidget,
+)
 
 from app.gui.leather_book_panels import IntroInfoPage, TronFacePage
 
