@@ -321,7 +321,7 @@ These laws are **immutable and hierarchical**. They cannot be overridden or modi
             )
             self.action_result.setMarkdown(result)
         except Exception as e:
-            logger.error(f"Error validating action: {e}")
+            logger.error("Error validating action: %s", e)
             self.action_result.setText(f"Error: {str(e)}")
 
     def reset_personality(self):
@@ -379,7 +379,7 @@ These laws are **immutable and hierarchical**. They cannot be overridden or modi
 
             self.stats_text.setMarkdown(text)
         except Exception as e:
-            logger.error(f"Error updating statistics: {e}")
+            logger.error("Error updating statistics: %s", e)
             self.stats_text.setText(f"Error: {str(e)}")
 
     def set_persona(self, persona: AIPersona):

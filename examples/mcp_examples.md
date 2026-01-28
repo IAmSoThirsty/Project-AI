@@ -5,12 +5,12 @@ This document provides comprehensive examples of using Project-AI's MCP server w
 ## Table of Contents
 
 1. [Ethics Framework Examples](#ethics-framework-examples)
-2. [Persona Management Examples](#persona-management-examples)
-3. [Memory System Examples](#memory-system-examples)
-4. [Learning System Examples](#learning-system-examples)
-5. [Data Analysis Examples](#data-analysis-examples)
-6. [Image Generation Examples](#image-generation-examples)
-7. [Advanced Use Cases](#advanced-use-cases)
+1. [Persona Management Examples](#persona-management-examples)
+1. [Memory System Examples](#memory-system-examples)
+1. [Learning System Examples](#learning-system-examples)
+1. [Data Analysis Examples](#data-analysis-examples)
+1. [Image Generation Examples](#image-generation-examples)
+1. [Advanced Use Cases](#advanced-use-cases)
 
 ---
 
@@ -521,10 +521,11 @@ Respond to: Tell me about your interests
 **Scenario:** Analyze data with personality traits influencing interpretation
 
 **Steps:**
+
 1. Get current persona state
-2. Adjust analytical trait to maximum
-3. Perform data analysis
-4. Restore original trait values
+1. Adjust analytical trait to maximum
+1. Perform data analysis
+1. Restore original trait values
 
 ### Example 22: Emergency Workflow
 
@@ -560,6 +561,7 @@ Respond to: Tell me about your interests
 **Scenario:** Submit, validate, approve learning content
 
 1. **Submit Request:**
+
 ```json
 {
   "tool": "submit_learning_request",
@@ -570,9 +572,10 @@ Respond to: Tell me about your interests
 }
 ```
 
-2. **Human Review:** User reviews request
+1. **Human Review:** User reviews request
 
-3. **Approval:**
+1. **Approval:**
+
 ```json
 {
   "tool": "approve_learning_request",
@@ -582,7 +585,8 @@ Respond to: Tell me about your interests
 }
 ```
 
-4. **Verification:**
+1. **Verification:**
+
 ```json
 {
   "resource": "learning://requests"
@@ -659,12 +663,14 @@ Human-in-the-loop learning:
 ## Best Practices
 
 ### 1. Always Validate Ethics
+
 ```json
 // Before any potentially harmful action
 {"tool": "validate_action", ...}
 ```
 
 ### 2. Categorize Memories Properly
+
 ```json
 // Use appropriate categories
 {
@@ -674,6 +680,7 @@ Human-in-the-loop learning:
 ```
 
 ### 3. Set Appropriate Importance
+
 ```json
 {
   "importance": 0.9  // High for critical info
@@ -682,6 +689,7 @@ Human-in-the-loop learning:
 ```
 
 ### 4. Use Descriptive Prompts for Images
+
 ```json
 {
   "prompt": "Detailed, specific description with style, lighting, mood",
@@ -690,6 +698,7 @@ Human-in-the-loop learning:
 ```
 
 ### 5. Handle Errors Gracefully
+
 ```json
 // Check for error responses
 {
@@ -703,12 +712,14 @@ Human-in-the-loop learning:
 ## Testing Examples
 
 ### Test 1: Basic Tool Functionality
+
 ```bash
 # Use MCP Inspector
 npx @modelcontextprotocol/inspector python -m src.app.core.mcp_server
 ```
 
 ### Test 2: Resource Access
+
 ```python
 # Access all resources
 for uri in ["persona://state", "memory://knowledge", "learning://requests", "plugins://list"]:
@@ -717,6 +728,7 @@ for uri in ["persona://state", "memory://knowledge", "learning://requests", "plu
 ```
 
 ### Test 3: Prompt Generation
+
 ```python
 # Test all prompts
 prompts = ["analyze_with_ethics", "persona_interaction", "memory_guided_response"]
@@ -732,6 +744,7 @@ for prompt in prompts:
 These examples demonstrate the comprehensive capabilities of Project-AI's MCP server. Combine tools, resources, and prompts to create powerful AI-assisted workflows with ethical oversight and persistent memory.
 
 For more information:
+
 - Full documentation: [MCP_CONFIGURATION.md](MCP_CONFIGURATION.md)
 - Quick start: [MCP_QUICKSTART.md](MCP_QUICKSTART.md)
 - API reference: [README.md](../README.md)

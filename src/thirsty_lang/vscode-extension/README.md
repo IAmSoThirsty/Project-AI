@@ -7,12 +7,12 @@ This directory contains the VS Code extension for Thirsty-lang with syntax highl
 ### Manual Installation
 
 1. Copy this entire `vscode-extension` folder
-2. Paste it into your VS Code extensions directory:
+1. Paste it into your VS Code extensions directory:
    - **Windows**: `%USERPROFILE%\.vscode\extensions\thirsty-lang\`
    - **macOS**: `~/.vscode/extensions/thirsty-lang/`
    - **Linux**: `~/.vscode/extensions/thirsty-lang/`
-3. Reload VS Code
-4. Open any `.thirsty` file to see syntax highlighting!
+1. Reload VS Code
+1. Open any `.thirsty` file to see syntax highlighting!
 
 ### Alternative: Symlink (Advanced)
 
@@ -54,8 +54,8 @@ Type these prefixes and press Tab:
 If syntax highlighting doesn't work:
 
 1. Make sure the extension is in the correct location
-2. Reload VS Code (Ctrl/Cmd + Shift + P → "Reload Window")
-3. Check that you're opening a `.thirsty` file
+1. Reload VS Code (Ctrl/Cmd + Shift + P → "Reload Window")
+1. Check that you're opening a `.thirsty` file
 
 ## Contributing
 

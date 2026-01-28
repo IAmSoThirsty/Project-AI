@@ -42,9 +42,10 @@ curl -I https://github.com/sigstore/cosign/releases/latest
 ```
 
 **Fix:**
+
 1. Check if Cosign action version is outdated in workflow (line 26)
-2. Update to latest: `sigstore/cosign-installer@v3.x.x`
-3. Re-run workflow
+1. Update to latest: `sigstore/cosign-installer@v3.x.x`
+1. Re-run workflow
 
 **Prevention:** Pin to stable Cosign action version, not `@latest`
 
@@ -70,10 +71,11 @@ gh run view <run-id> --log
 ```
 
 **Fix:**
+
 1. Review "Build Python packages" step logs
-2. Fix any build errors (missing dependencies, syntax errors)
-3. Verify `python -m build` succeeds locally
-4. Push fix and re-run
+1. Fix any build errors (missing dependencies, syntax errors)
+1. Verify `python -m build` succeeds locally
+1. Push fix and re-run
 
 **Prevention:** Add build verification in CI before signing step
 
@@ -99,11 +101,12 @@ gh run view <run-id>
 ```
 
 **Fix:**
+
 1. **DO NOT BYPASS VERIFICATION** - This is a security control
-2. Check if workflow ran from a fork (should use fork's identity)
-3. Verify `permissions: id-token: write` is set in workflow
-4. Check Rekor transparency log: https://rekor.sigstore.dev/
-5. If legitimate failure, re-run workflow to get fresh OIDC token
+1. Check if workflow ran from a fork (should use fork's identity)
+1. Verify `permissions: id-token: write` is set in workflow
+1. Check Rekor transparency log: <https://rekor.sigstore.dev/>
+1. If legitimate failure, re-run workflow to get fresh OIDC token
 
 **Prevention:** Test signing in non-prod branch first
 
@@ -129,10 +132,11 @@ gh release view <tag>
 ```
 
 **Fix:**
+
 1. Verify release was published before workflow ran
-2. Check workflow has `contents: write` permission
-3. For `workflow_dispatch`: ensure tag exists
-4. Re-run workflow after confirming release exists
+1. Check workflow has `contents: write` permission
+1. For `workflow_dispatch`: ensure tag exists
+1. Re-run workflow after confirming release exists
 
 **Prevention:** Use `release: published` trigger, not `release: created`
 
@@ -145,22 +149,26 @@ gh release view <tag>
 **Impact:** Users cannot verify artifact authenticity
 
 **Immediate Actions:**
+
 1. **DO NOT DELETE RELEASE** - This breaks existing installations
-2. Run manual signing workflow:
+1. Run manual signing workflow:
+
    ```bash
    gh workflow run sign-release-artifacts.yml \
      --ref main \
      -f tag=v1.0.0
    ```
-3. Monitor workflow completion
-4. Verify signatures uploaded to release
-5. Post comment on release with verification instructions
+
+1. Monitor workflow completion
+1. Verify signatures uploaded to release
+1. Post comment on release with verification instructions
 
 **Post-Incident:**
+
 1. Document why automatic signing failed
-2. Add monitoring for signing workflow failures
-3. Consider adding signing as branch protection rule
-4. Update release checklist to verify signatures
+1. Add monitoring for signing workflow failures
+1. Consider adding signing as branch protection rule
+1. Update release checklist to verify signatures
 
 ---
 
@@ -228,10 +236,11 @@ curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -
 ```
 
 **Fix:**
+
 1. Retry workflow (transient network issue)
-2. If persistent, check Anchore status page
-3. Alternative: Install via GitHub release directly
-4. Update workflow to use pre-built binaries
+1. If persistent, check Anchore status page
+1. Alternative: Install via GitHub release directly
+1. Update workflow to use pre-built binaries
 
 **Prevention:** Consider caching Syft binary in Actions cache
 
@@ -257,10 +266,11 @@ syft scan dir:. --scope all-layers
 ```
 
 **Fix:**
+
 1. Verify `requirements.txt`, `pyproject.toml`, and `package.json` exist
-2. Check Syft is scanning from repo root (`dir:.`)
-3. Ensure `--scope all-layers` is used
-4. Check for Syft version compatibility issues
+1. Check Syft is scanning from repo root (`dir:.`)
+1. Ensure `--scope all-layers` is used
+1. Check for Syft version compatibility issues
 
 **Prevention:** Add SBOM validation step to check component count > 0
 
@@ -279,10 +289,11 @@ Signature generation failed
 **Resolution:** See "Release Artifact Signing Failures" section above
 
 **Fix:**
+
 1. Verify `id-token: write` permission
-2. Check OIDC token validity
-3. Re-run workflow for fresh token
-4. Verify SBOM files exist before signing step
+1. Check OIDC token validity
+1. Re-run workflow for fresh token
+1. Verify SBOM files exist before signing step
 
 **Prevention:** Add pre-signing validation
 
@@ -308,10 +319,11 @@ timeout 300 grype sbom:sbom-comprehensive.cyclonedx.json
 ```
 
 **Fix:**
+
 1. Increase workflow timeout (default: 30 minutes)
-2. Use `continue-on-error: true` for vulnerability scan step (already set)
-3. Consider splitting scans (Python vs Node.js)
-4. Update Grype to latest version
+1. Use `continue-on-error: true` for vulnerability scan step (already set)
+1. Consider splitting scans (Python vs Node.js)
+1. Update Grype to latest version
 
 **Prevention:** This is marked as `continue-on-error`, should not fail workflow
 
@@ -326,6 +338,7 @@ timeout 300 grype sbom:sbom-comprehensive.cyclonedx.json
 **Immediate Actions:**
 
 1. Run manual SBOM generation:
+
    ```bash
    # Install Syft
    curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
@@ -348,14 +361,15 @@ timeout 300 grype sbom:sbom-comprehensive.cyclonedx.json
    gh release upload v1.0.0 sbom-comprehensive.cyclonedx.json*
    ```
 
-2. Document in release notes that SBOM was generated manually
-3. Verify SBOM signature works
-4. Notify security team
+1. Document in release notes that SBOM was generated manually
+1. Verify SBOM signature works
+1. Notify security team
 
 **Post-Incident:**
+
 1. Root cause analysis of SBOM workflow failure
-2. Add monitoring for SBOM generation
-3. Update release checklist to verify SBOM presence
+1. Add monitoring for SBOM generation
+1. Update release checklist to verify SBOM presence
 
 ---
 
@@ -385,10 +399,11 @@ pip install modelscan
 ```
 
 **Fix:**
+
 1. Retry workflow (transient issue)
-2. Check for dependency conflicts in workflow logs
-3. Pin ModelScan version if unstable
-4. Use alternative installation method
+1. Check for dependency conflicts in workflow logs
+1. Pin ModelScan version if unstable
+1. Use alternative installation method
 
 **Prevention:** Pin ModelScan version in workflow
 
@@ -419,24 +434,28 @@ git log --all --full-history -- <model-file>
 ```
 
 **Fix - DO NOT SKIP THIS:**
+
 1. **BLOCK PR IMMEDIATELY** - Do not merge
-2. Review model file provenance (where did it come from?)
-3. Check if model uses `__reduce__` legitimately (rare but possible)
-4. Scan model file locally:
+1. Review model file provenance (where did it come from?)
+1. Check if model uses `__reduce__` legitimately (rare but possible)
+1. Scan model file locally:
+
    ```bash
    modelscan scan -p data/ai_persona/model.pkl
    ```
-5. If legitimate:
+
+1. If legitimate:
    - Document why `__reduce__` is needed
    - Add exception with security review approval
    - Implement additional controls (integrity checks, runtime monitoring)
-6. If malicious:
+1. If malicious:
    - Remove model file immediately
    - Check for other suspicious files in PR
    - Report to security team
    - Review author's other contributions
 
 **Prevention:** 
+
 - Require model files to have checksums
 - Document model sources and training provenance
 - Use safer serialization formats (ONNX, TensorFlow SavedModel)
@@ -462,7 +481,9 @@ git show <commit>:src/app/core/model_loader.py
 ```
 
 **Fix:**
+
 1. **If possible, replace pickle with safer alternative:**
+
    ```python
    # Instead of pickle, use:
    import joblib
@@ -473,7 +494,8 @@ git show <commit>:src/app/core/model_loader.py
    model = torch.load(path, weights_only=True)  # Safer
    ```
 
-2. **If pickle is required, add validation:**
+1. **If pickle is required, add validation:**
+
    ```python
    import pickle
    import hashlib
@@ -488,12 +510,13 @@ git show <commit>:src/app/core/model_loader.py
        model = pickle.load(f)
    ```
 
-3. **If it's a false positive (loading from trusted source):**
+1. **If it's a false positive (loading from trusted source):**
    - Document why pickle is safe in this context
    - Add comment explaining trust model
    - Consider adding to allowlist (with security approval)
 
 **Prevention:**
+
 - Prefer ONNX, TensorFlow SavedModel, or HuggingFace formats
 - Always verify model checksums
 - Load models from trusted sources only
@@ -521,10 +544,11 @@ python ai_ml_security_scan.py
 ```
 
 **Fix:**
+
 1. Check Python version in workflow (should be 3.11)
-2. Verify script dependencies are installed
-3. Check for syntax errors in embedded script
-4. Test script locally before pushing
+1. Verify script dependencies are installed
+1. Check for syntax errors in embedded script
+1. Test script locally before pushing
 
 **Prevention:** Add script validation tests
 
@@ -540,7 +564,8 @@ python ai_ml_security_scan.py
 
 1. **STOP ALL DEPLOYMENTS** - Halt production rollouts immediately
 
-2. **Quarantine the model:**
+1. **Quarantine the model:**
+
    ```bash
    # Create incident branch
    git checkout -b incident/malicious-model-$(date +%Y%m%d)
@@ -553,7 +578,8 @@ python ai_ml_security_scan.py
    git push origin incident/malicious-model-$(date +%Y%m%d)
    ```
 
-3. **Create security advisory:**
+1. **Create security advisory:**
+
    ```bash
    gh api repos/IAmSoThirsty/Project-AI/security-advisories \
      --method POST \
@@ -561,12 +587,13 @@ python ai_ml_security_scan.py
      --field severity="critical"
    ```
 
-4. **Notify stakeholders:**
+1. **Notify stakeholders:**
    - Security team (immediate)
    - Engineering leadership (within 1 hour)
    - Affected users (after mitigation)
 
-5. **Forensic analysis:**
+1. **Forensic analysis:**
+
    ```bash
    # Who added the model?
    git log --all --full-history -- data/ai_persona/suspicious_model.pkl
@@ -578,18 +605,19 @@ python ai_ml_security_scan.py
    grep -r "__reduce__\|__setstate__\|exec\|eval" data/
    ```
 
-6. **Containment:**
+1. **Containment:**
    - Revoke commit author's access if necessary
    - Review all PRs from same author
    - Scan all model files in repository
    - Check production systems for indicators of compromise
 
 **Post-Incident (within 24 hours):**
+
 1. Full security audit of model pipeline
-2. Implement model signing and verification
-3. Add model provenance tracking
-4. Review access controls for model uploads
-5. Incident report and lessons learned
+1. Implement model signing and verification
+1. Add model provenance tracking
+1. Review access controls for model uploads
+1. Incident report and lessons learned
 
 **Communication Template:**
 ```
@@ -610,7 +638,7 @@ Next Steps:
 - Full audit of model pipeline
 - Review of access controls
 
-Contact: projectaidevs@gmail.com for questions
+Contact: <projectaidevs@gmail.com> for questions
 ```
 
 ---
@@ -629,6 +657,7 @@ Contact: projectaidevs@gmail.com for questions
 ## 🔧 Useful Commands
 
 ### Check Workflow Status
+
 ```bash
 # List recent workflow runs
 gh run list --workflow=sign-release-artifacts.yml --limit 5
@@ -641,6 +670,7 @@ gh run download <run-id>
 ```
 
 ### Manual Workflow Triggers
+
 ```bash
 # Trigger signing workflow
 gh workflow run sign-release-artifacts.yml -f tag=v1.0.0
@@ -653,6 +683,7 @@ gh workflow run ai-model-security.yml
 ```
 
 ### Verification Commands
+
 ```bash
 # Verify artifact signature
 cosign verify-blob artifact.whl \
@@ -679,17 +710,18 @@ grype sbom:sbom-comprehensive.cyclonedx.json
 - **Security Framework:** [docs/SECURITY_FRAMEWORK.md](../docs/SECURITY_FRAMEWORK.md)
 - **SBOM Policy:** [docs/security/SBOM_POLICY.md](../docs/security/SBOM_POLICY.md)
 - **Threat Model:** [docs/security/THREAT_MODEL_SECURITY_WORKFLOWS.md](../docs/security/THREAT_MODEL_SECURITY_WORKFLOWS.md)
-- **Incident Response:** Contact projectaidevs@gmail.com
+- **Incident Response:** Contact <projectaidevs@gmail.com>
 
 ---
 
 ## 🔄 Continuous Improvement
 
 **After each incident:**
+
 1. Update this runbook with new scenarios
-2. Add automation to prevent recurrence
-3. Review and improve workflow error messages
-4. Update monitoring and alerting
+1. Add automation to prevent recurrence
+1. Review and improve workflow error messages
+1. Update monitoring and alerting
 
 **Feedback:** Open issue with label `runbook-improvement`
 

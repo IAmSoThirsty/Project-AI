@@ -43,6 +43,7 @@ actionlint -shellcheck= -pyflakes=
 ```
 
 <a name="format"></a>
+
 ### Format error messages
 
 `-format` option can flexibly format error messages with [Go template syntax][go-template].
@@ -190,6 +191,7 @@ Note that special characters escaped with back slash like `\n` in the format str
 | `3`    | The command failed due to some fatal error              |
 
 <a name="on-github-actions"></a>
+
 ## Use actionlint on GitHub Actions
 
 Preparing `actionlint` executable with the download script is recommended. See [the instruction](install.md#download-script) for
@@ -264,6 +266,7 @@ the workflow content in the code editor, the results will be updated on the fly.
 table moves a cursor to position of the error in the code editor.
 
 <a name="docker"></a>
+
 ## [Docker][docker] image
 
 [Official Docker image][docker-image] is available. The image contains `actionlint` executable and all dependencies (shellcheck
@@ -305,6 +308,7 @@ Go APIs are available. See [the Go API document](api.md) for more details.
 
 
 <a name="tools-integ"></a>
+
 ## Tools integration
 
 ### reviewdog
@@ -326,6 +330,7 @@ jobs:
 ```
 
 <a name="problem-matchers"></a>
+
 ### Problem Matchers
 
 [Problem Matchers][problem-matchers] is a feature to extract GitHub Actions annotations from terminal outputs of linters.

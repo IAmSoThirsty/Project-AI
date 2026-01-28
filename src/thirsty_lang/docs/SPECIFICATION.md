@@ -72,12 +72,12 @@ sip username
 The following features are planned for future releases:
 
 1. Control flow (`thirsty`/`hydrated` for if/else)
-2. Loops (`refill` keyword)
-3. Functions (`glass` keyword)
-4. Arithmetic operations
-5. String concatenation
-6. Comparison operators
-7. Boolean logic
+1. Loops (`refill` keyword)
+1. Functions (`glass` keyword)
+1. Arithmetic operations
+1. String concatenation
+1. Comparison operators
+1. Boolean logic
 
 ## Examples
 
@@ -117,6 +117,7 @@ comment     ::= "//" [^\n]*
 ## Error Handling
 
 The interpreter will report errors for:
+
 - Unknown statements
 - Invalid syntax
 - Undefined variables

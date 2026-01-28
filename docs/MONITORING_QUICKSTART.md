@@ -94,6 +94,7 @@ hubble observe --protocol http
 - **Kibana**: Advanced visualization and search
 
 Pre-configured indices:
+
 - `project-ai-persona-*`: AI personality logs
 - `project-ai-security-*`: Security events
 - `project-ai-ethics-*`: Four Laws events

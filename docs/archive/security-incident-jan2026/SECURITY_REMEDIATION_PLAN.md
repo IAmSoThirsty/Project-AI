@@ -11,9 +11,9 @@
 This PR addresses **CRITICAL security vulnerabilities** in the Project-AI repository:
 
 1. ✅ **Exposed credentials in `.env` file have been ROTATED**
-2. ✅ **All hardcoded secrets removed from code and documentation**
-3. ✅ **Comprehensive secret management infrastructure created**
-4. ⚠️ **Git history still contains exposed credentials** (requires owner action)
+1. ✅ **All hardcoded secrets removed from code and documentation**
+1. ✅ **Comprehensive secret management infrastructure created**
+1. ⚠️ **Git history still contains exposed credentials** (requires owner action)
 
 ---
 
@@ -30,7 +30,7 @@ The `.env` file with real credentials was committed in the git history and needs
 cd C:\path\to\Project-AI
 .\tools\purge_git_secrets.ps1
 
-# This will:
+# This will
 # 1. Create backup tag 'pre-secret-purge'
 # 2. Remove .env from ALL git history
 # 3. Repack repository
@@ -42,7 +42,7 @@ cd C:\path\to\Project-AI
 cd /path/to/Project-AI
 ./tools/purge_git_secrets.sh
 
-# This will:
+# This will
 # 1. Create backup tag 'pre-secret-purge'
 # 2. Remove .env from ALL git history
 # 3. Repack repository
@@ -72,14 +72,16 @@ All credentials below were exposed in git commit `144c8fc` and earlier:
 **Exposed value**: `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`
 
 **Actions:**
-1. Go to: https://platform.openai.com/api-keys
-2. Find and **REVOKE** the exposed key
-3. Create a **NEW** API key
-4. Update `.env` file with new key
-5. Test application: `python -m src.app.main`
+
+1. Go to: <https://platform.openai.com/api-keys>
+1. Find and **REVOKE** the exposed key
+1. Create a **NEW** API key
+1. Update `.env` file with new key
+1. Test application: `python -m src.app.main`
 
 **Check for abuse:**
-- Review usage logs at: https://platform.openai.com/usage
+
+- Review usage logs at: <https://platform.openai.com/usage>
 - Check for suspicious activity or unexpected charges
 - Set up billing alerts if not already enabled
 
@@ -88,22 +90,27 @@ All credentials below were exposed in git commit `144c8fc` and earlier:
 #### B. SMTP/Gmail Credentials
 
 **Exposed values**:
-- Username: `ProjectAiDevs@gmail.com`
+
+- Username: `<ProjectAiDevs@gmail.com>`
 - Password: `R9609936!`
 
 **Actions:**
-1. Go to: https://myaccount.google.com/apppasswords
-2. **REVOKE** the old app password
-3. Generate **NEW** app password
-4. Update `.env` file:
+
+1. Go to: <https://myaccount.google.com/apppasswords>
+1. **REVOKE** the old app password
+1. Generate **NEW** app password
+1. Update `.env` file:
+
    ```
    SMTP_USERNAME=ProjectAiDevs@gmail.com
    SMTP_PASSWORD=NEW_PASSWORD_HERE
    ```
-5. **Consider**: Creating a new email account if username is also sensitive
+
+1. **Consider**: Creating a new email account if username is also sensitive
 
 **Check for abuse:**
-- Review Gmail activity: https://myaccount.google.com/notifications
+
+- Review Gmail activity: <https://myaccount.google.com/notifications>
 - Check sent items for unauthorized emails
 - Review account access logs
 
@@ -116,12 +123,15 @@ All credentials below were exposed in git commit `144c8fc` and earlier:
 ⚠️ **CRITICAL**: This key encrypts location history and other sensitive data.
 
 **Actions:**
+
 1. Generate NEW Fernet key:
+
    ```bash
    python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
    ```
 
-2. **BEFORE rotating**, decrypt existing data with OLD key:
+1. **BEFORE rotating**, decrypt existing data with OLD key:
+
    ```python
    # Script to migrate encrypted data
    from cryptography.fernet import Fernet
@@ -137,11 +147,12 @@ All credentials below were exposed in git commit `144c8fc` and earlier:
    # (Check which files use Fernet encryption)
    ```
 
-3. Update `.env` with new key
-4. Re-encrypt all data with new key
-5. Verify application works: `python -m src.app.main`
+1. Update `.env` with new key
+1. Re-encrypt all data with new key
+1. Verify application works: `python -m src.app.main`
 
 **Files that may use Fernet:**
+
 - `data/location_history.json.enc` (if exists)
 - Any other encrypted storage files
 
@@ -150,10 +161,11 @@ All credentials below were exposed in git commit `144c8fc` and earlier:
 ### 3. Enable GitHub Secret Scanning
 
 **Steps:**
-1. Go to: https://github.com/IAmSoThirsty/Project-AI/settings/security_analysis
-2. Enable **"Secret scanning"**
-3. Enable **"Push protection"** (prevents future secret commits)
-4. Review any existing alerts
+
+1. Go to: <https://github.com/IAmSoThirsty/Project-AI/settings/security_analysis>
+1. Enable **"Secret scanning"**
+1. Enable **"Push protection"** (prevents future secret commits)
+1. Review any existing alerts
 
 ---
 
@@ -184,11 +196,13 @@ Questions? See docs/security/SECRET_MANAGEMENT.md
 ## ✅ What Has Been Done (Completed in This PR)
 
 ### 1. Credential Rotation
+
 - ✅ `.env` file cleaned and rotated
 - ✅ All documentation redacted
 - ✅ Security warnings added throughout
 
 ### 2. Secret Management Infrastructure
+
 - ✅ Comprehensive secret management guide (`docs/security/SECRET_MANAGEMENT.md`)
 - ✅ Enhanced secret scanner (`tools/enhanced_secret_scan.py`)
 - ✅ Automated security audit script (`tools/run_security_audit.sh`)
@@ -197,12 +211,14 @@ Questions? See docs/security/SECRET_MANAGEMENT.md
 - ✅ Scanning documentation (`tools/SECURITY_SCANNING.md`)
 
 ### 3. Documentation Updates
+
 - ✅ All security docs updated with secure patterns only
 - ✅ README updated with security section
 - ✅ Git history cleanup script enhanced
 - ✅ `.gitignore` updated with comprehensive secret patterns
 
 ### 4. Code Validation
+
 - ✅ All Python code verified to use environment variables
 - ✅ No hardcoded secrets in production code
 - ✅ Test files use appropriate test data
@@ -212,6 +228,7 @@ Questions? See docs/security/SECRET_MANAGEMENT.md
 ## 📊 Verification Results
 
 **Secret Scan Results:**
+
 - Total findings: 22
 - Critical: 1 (documentation example only)
 - High: 9 (test passwords and documentation)
@@ -225,16 +242,20 @@ Questions? See docs/security/SECRET_MANAGEMENT.md
 ## 🔄 Regular Maintenance Going Forward
 
 ### Daily
+
 - ✅ Automated secret scanning via GitHub Actions
 
 ### Before Each Commit
+
 - Run: `python tools/enhanced_secret_scan.py`
 - Use pre-commit hooks
 
 ### Weekly
+
 - Run full security audit: `./tools/run_security_audit.sh`
 
 ### Every 90 Days
+
 - Rotate all credentials
 - Review access logs
 - Update documentation
@@ -256,10 +277,12 @@ Questions? See docs/security/SECRET_MANAGEMENT.md
 ## 🆘 Support & Questions
 
 **Security Issues:**
+
 - Use GitHub's private vulnerability reporting
-- Link: https://github.com/IAmSoThirsty/Project-AI/security/advisories/new
+- Link: <https://github.com/IAmSoThirsty/Project-AI/security/advisories/new>
 
 **General Questions:**
+
 - Review `docs/security/SECRET_MANAGEMENT.md`
 - Check `tools/SECURITY_SCANNING.md`
 - Open GitHub Discussion (not issue) for non-security questions
@@ -269,6 +292,7 @@ Questions? See docs/security/SECRET_MANAGEMENT.md
 ## ✅ Completion Checklist
 
 **Repository Owner:**
+
 - [ ] Run `./tools/purge_git_secrets.ps1`
 - [ ] Force push cleaned history
 - [ ] Rotate OpenAI API key
@@ -282,6 +306,7 @@ Questions? See docs/security/SECRET_MANAGEMENT.md
 - [ ] Document rotation date
 
 **All Contributors:**
+
 - [ ] Delete local clone
 - [ ] Re-clone after history cleanup
 - [ ] Set up `.env` with new credentials

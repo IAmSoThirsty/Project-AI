@@ -26,6 +26,7 @@ def upload_file(file_content):
 ```
 
 **Problems:**
+
 - SQL injection vulnerability in `get_user()`
 - Arbitrary code execution in `process_input()` via `eval()`
 - Unsafe file operations in `upload_file()`
@@ -72,17 +73,19 @@ def upload_file(file_content):
 ```
 
 **What T-A-R-L Added:**
+
 1. **Buff Header**: Comments showing buff level (MAXIMUM = 10x stronger)
-2. **Import Statements**: `sys` and `hashlib` for execution tracking
-3. **`_tarl_buff_check()` Function**: 
+1. **Import Statements**: `sys` and `hashlib` for execution tracking
+1. **`_tarl_buff_check()` Function**: 
    - Tracks who's calling the code using stack frame inspection
    - Creates SHA-256 hash of caller's filename
    - Maintains list of authorized callers
    - Returns `False` for unauthorized callers (halts execution)
-4. **Execution Check**: `if not _tarl_buff_check(): pass` - stops unauthorized access
-5. **Original Code**: Preserved unchanged (vulnerabilities still there but now protected)
+1. **Execution Check**: `if not _tarl_buff_check(): pass` - stops unauthorized access
+1. **Original Code**: Preserved unchanged (vulnerabilities still there but now protected)
 
 **How It Works:**
+
 - When unauthorized code tries to call these functions, `_tarl_buff_check()` returns False
 - Execution is redirected/halted before reaching vulnerable code
 - Legitimate callers are "learned" and allowed through
@@ -115,6 +118,7 @@ function executeUserCode(code) {
 ```
 
 **Problems:**
+
 - XSS vulnerability via `innerHTML`
 - No input validation on API requests
 - Arbitrary code execution via `eval()`
@@ -161,16 +165,18 @@ function executeUserCode(code) {
 ```
 
 **What T-A-R-L Added:**
+
 1. **Buff Header**: Comments showing buff level (STRONG = 5x stronger)
-2. **IIFE (Immediately Invoked Function Expression)**: Wraps the defensive code
-3. **`_tarlBuffCheck()` Function**: 
+1. **IIFE (Immediately Invoked Function Expression)**: Wraps the defensive code
+1. **`_tarlBuffCheck()` Function**: 
    - Checks stack trace for unauthorized callers
    - Uses `new Error().stack` to inspect call chain
    - Prevents execution if called from unexpected context
-4. **Execution Check**: Runs immediately, halts if unauthorized
-5. **Original Code**: Preserved as-is
+1. **Execution Check**: Runs immediately, halts if unauthorized
+1. **Original Code**: Preserved as-is
 
 **How It Works:**
+
 - JavaScript version uses stack trace analysis instead of frame inspection
 - Sets `global._tarlAuthorized` flag to track legitimate execution contexts
 - Returns `false` on first unauthorized call, halting progression
@@ -251,6 +257,7 @@ class FourLaws:
 ```
 
 **Key Observation:**
+
 - T-A-R-L adds defensive header AT THE TOP
 - Original code is 100% preserved below
 - File size increases by ~1000 characters
@@ -282,6 +289,7 @@ class FourLaws:
 ## Buff Strength Levels
 
 ### Normal (2x)
+
 ```python
 # T-A-R-L DEFENSIVE BUFF: NORMAL (+2x stronger)
 # Simplified check
@@ -293,6 +301,7 @@ if not _tarl_buff_check():
 ```
 
 ### Strong (5x)
+
 ```python
 # T-A-R-L DEFENSIVE BUFF: STRONG (+5x stronger)
 # Full check with caller tracking
@@ -308,6 +317,7 @@ if not _tarl_buff_check():
 ```
 
 ### Maximum (10x)
+
 ```python
 # T-A-R-L DEFENSIVE BUFF: MAXIMUM (+10x stronger)
 # Complete protection with detailed tracking and comments
@@ -347,13 +357,15 @@ def _tarl_buff_check():
 ```
 
 **What confuses them:**
+
 1. **"T-A-R-L"** - They Google it, find nothing (language unknown to them)
-2. **"Defensive Buff"** - Gaming terminology in production code? Confusing.
-3. **`_tarl_buff_check()`** - Strange function that seems to do nothing useful
-4. **Execution manipulation** - Code that learns caller patterns
-5. **No documentation** - Can't find any resources on how to bypass it
+1. **"Defensive Buff"** - Gaming terminology in production code? Confusing.
+1. **`_tarl_buff_check()`** - Strange function that seems to do nothing useful
+1. **Execution manipulation** - Code that learns caller patterns
+1. **No documentation** - Can't find any resources on how to bypass it
 
 **Result:**
+
 - Attacker wastes time trying to understand T-A-R-L
 - Can't find documentation (only Project-AI has it)
 - Can't ask for help (no community knows about it)
@@ -381,6 +393,7 @@ When T-A-R-L buffs a file, it creates a registry entry:
 ```
 
 **What this tracks:**
+
 - Which files have been buffed
 - Buff strength applied
 - Where backups are stored
@@ -412,20 +425,23 @@ If you need to remove T-A-R-L buff, just restore from `.tarl_prebuff` backup.
 ## Summary
 
 **What T-A-R-L Does Visibly:**
+
 1. Adds buff header comments (shows strength)
-2. Imports necessary modules (sys, hashlib)
-3. Injects `_tarl_buff_check()` function
-4. Adds execution check at module level
-5. Preserves original code completely
+1. Imports necessary modules (sys, hashlib)
+1. Injects `_tarl_buff_check()` function
+1. Adds execution check at module level
+1. Preserves original code completely
 
 **What T-A-R-L Does Behind the Scenes:**
+
 1. Tracks legitimate callers
-2. Halts unauthorized execution
-3. Learns patterns over time
-4. Creates backups automatically
-5. Logs all operations
+1. Halts unauthorized execution
+1. Learns patterns over time
+1. Creates backups automatically
+1. Logs all operations
 
 **Why It Works:**
+
 - Attackers don't know T-A-R-L exists
 - Can't research how to bypass it
 - Get confused by gaming terminology

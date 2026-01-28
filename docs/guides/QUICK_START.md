@@ -3,6 +3,7 @@
 ## 🚀 Launch Commands
 
 ### Standard Launch (Windows PowerShell)
+
 ```powershell
 cd C:\Users\Jeremy\Documents\GitHub\Project-AI
 $env:PYTHONPATH='src'
@@ -10,6 +11,7 @@ python src/app/main.py
 ```
 
 ### Alternative Launch Methods
+
 ```powershell
 # Method 1: Using python module execution
 python -m app.main
@@ -33,10 +35,10 @@ python src/app/main.py  # Automatically loads .env file
 ## 🎯 What You Can Do Now
 
 1. **Launch the Dashboard** - All features integrated and working
-2. **Test Cloud Sync** - If you have an API endpoint configured
-3. **Train ML Models** - Use the advanced ML features
-4. **Create Plugins** - Extend functionality with custom plugins
-5. **Use All Original Features**:
+1. **Test Cloud Sync** - If you have an API endpoint configured
+1. **Train ML Models** - Use the advanced ML features
+1. **Create Plugins** - Extend functionality with custom plugins
+1. **Use All Original Features**:
    - User Management
    - Image Generation
    - Learning Paths

@@ -45,7 +45,7 @@ async def main():
     shutdown_event = asyncio.Event()
 
     def signal_handler(signum, frame):
-        logger.info(f"Received signal {signum}, initiating shutdown")
+        logger.info("Received signal %s, initiating shutdown", signum)
         shutdown_event.set()
 
     signal.signal(signal.SIGINT, signal_handler)
@@ -103,7 +103,7 @@ async def main():
             logger.info("Worker stopped")
 
     except Exception as e:
-        logger.error(f"Worker error: {e}", exc_info=True)
+        logger.error("Worker error: %s", e)
         return 1
     finally:
         # Cleanup

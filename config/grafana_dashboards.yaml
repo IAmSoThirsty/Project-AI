@@ -1,0 +1,326 @@
+# Grafana Dashboard Configuration
+# Security Agents Monitoring Dashboards
+
+dashboards:
+  - name: "Security Overview"
+    uid: "security-overview"
+    refresh: "30s"
+    time_range:
+      from: "now-24h"
+      to: "now"
+    
+    panels:
+      - title: "Attack Success Rate"
+        type: "stat"
+        targets:
+          - expr: "security_attack_success_rate"
+            legend: "Success Rate"
+        thresholds:
+          - value: 0
+            color: "green"
+          - value: 0.05
+            color: "yellow"
+          - value: 0.1
+            color: "red"
+      
+      - title: "Attack Success Rate by Persona"
+        type: "graph"
+        targets:
+          - expr: "security_attack_success_rate{persona=~'.*'}"
+            legend: "{{persona}}"
+        y_axis:
+          format: "percentunit"
+          max: 1.0
+      
+      - title: "Time to Detect (p95)"
+        type: "stat"
+        targets:
+          - expr: "security_time_to_detect_ms{quantile='0.95'}"
+            legend: "p95 Detection Time"
+        unit: "ms"
+        thresholds:
+          - value: 0
+            color: "green"
+          - value: 1000
+            color: "yellow"
+          - value: 5000
+            color: "red"
+      
+      - title: "Time to Respond (p95)"
+        type: "stat"
+        targets:
+          - expr: "security_time_to_respond_seconds{quantile='0.95'}"
+            legend: "p95 Response Time"
+        unit: "s"
+        thresholds:
+          - value: 0
+            color: "green"
+          - value: 60
+            color: "yellow"
+          - value: 300
+            color: "red"
+      
+      - title: "False Positive Rate"
+        type: "gauge"
+        targets:
+          - expr: "security_false_positive_rate"
+            legend: "FP Rate"
+        thresholds:
+          - value: 0
+            color: "green"
+          - value: 0.1
+            color: "yellow"
+          - value: 0.2
+            color: "red"
+        max: 1.0
+      
+      - title: "Detection Events Timeline"
+        type: "graph"
+        targets:
+          - expr: "rate(security_detections_total[5m])"
+            legend: "Detections/sec"
+        stack: false
+
+  - name: "Agent Performance"
+    uid: "agent-performance"
+    refresh: "10s"
+    time_range:
+      from: "now-1h"
+      to: "now"
+    
+    panels:
+      - title: "LongContext Latency"
+        type: "graph"
+        targets:
+          - expr: "long_context_latency_ms{quantile='0.50'}"
+            legend: "p50"
+          - expr: "long_context_latency_ms{quantile='0.95'}"
+            legend: "p95"
+          - expr: "long_context_latency_ms{quantile='0.99'}"
+            legend: "p99"
+        unit: "ms"
+        y_axis:
+          min: 0
+      
+      - title: "SafetyGuard Latency"
+        type: "graph"
+        targets:
+          - expr: "safety_guard_latency_ms{quantile='0.50'}"
+            legend: "p50"
+          - expr: "safety_guard_latency_ms{quantile='0.95'}"
+            legend: "p95"
+          - expr: "safety_guard_latency_ms{quantile='0.99'}"
+            legend: "p99"
+        unit: "ms"
+        y_axis:
+          min: 0
+          max: 1000
+      
+      - title: "Agent Throughput"
+        type: "graph"
+        targets:
+          - expr: "rate(agent_requests_total{agent='long_context'}[5m])"
+            legend: "LongContext"
+          - expr: "rate(agent_requests_total{agent='safety_guard'}[5m])"
+            legend: "SafetyGuard"
+          - expr: "rate(agent_requests_total{agent='constitutional_guardrail'}[5m])"
+            legend: "Constitutional"
+        unit: "reqps"
+      
+      - title: "Error Rate"
+        type: "graph"
+        targets:
+          - expr: "rate(agent_errors_total[5m])"
+            legend: "{{agent}}"
+        unit: "errps"
+        y_axis:
+          min: 0
+
+  - name: "Campaign Results"
+    uid: "campaign-results"
+    refresh: "1m"
+    time_range:
+      from: "now-7d"
+      to: "now"
+    
+    panels:
+      - title: "Persona Success Rates (7 days)"
+        type: "bar"
+        targets:
+          - expr: "security_persona_success_rate"
+            legend: "{{persona}}"
+        unit: "percentunit"
+        orientation: "horizontal"
+      
+      - title: "Guardrail Effectiveness"
+        type: "heatmap"
+        targets:
+          - expr: "security_guardrail_blocks{persona=~'.*', guardrail=~'.*'}"
+        x_axis: "persona"
+        y_axis: "guardrail"
+        color_mode: "value"
+      
+      - title: "Campaign Execution Status"
+        type: "stat"
+        targets:
+          - expr: "temporal_workflow_completed_total{workflow='RedTeamCampaign'}"
+            legend: "Completed"
+          - expr: "temporal_workflow_failed_total{workflow='RedTeamCampaign'}"
+            legend: "Failed"
+          - expr: "temporal_workflow_running_total{workflow='RedTeamCampaign'}"
+            legend: "Running"
+      
+      - title: "Attack Turns Distribution"
+        type: "histogram"
+        targets:
+          - expr: "security_attack_turns_bucket"
+        unit: "turns"
+
+  - name: "Code Security"
+    uid: "code-security"
+    refresh: "5m"
+    time_range:
+      from: "now-30d"
+      to: "now"
+    
+    panels:
+      - title: "Vulnerabilities Found (30 days)"
+        type: "stat"
+        targets:
+          - expr: "sum(code_vulnerabilities_found_total)"
+            legend: "Total Found"
+        thresholds:
+          - value: 0
+            color: "green"
+          - value: 10
+            color: "yellow"
+          - value: 50
+            color: "red"
+      
+      - title: "Vulnerabilities by Severity"
+        type: "pie"
+        targets:
+          - expr: "code_vulnerabilities_found_total"
+            legend: "{{severity}}"
+      
+      - title: "Vulnerabilities Fixed"
+        type: "graph"
+        targets:
+          - expr: "rate(code_vulnerabilities_fixed_total[1d])"
+            legend: "Fixed/day"
+        unit: "vulns/day"
+      
+      - title: "Patch Acceptance Rate"
+        type: "gauge"
+        targets:
+          - expr: "code_patch_acceptance_rate"
+            legend: "Acceptance Rate"
+        unit: "percentunit"
+        thresholds:
+          - value: 0
+            color: "red"
+          - value: 0.5
+            color: "yellow"
+          - value: 0.8
+            color: "green"
+        max: 1.0
+      
+      - title: "Time to Fix (p95)"
+        type: "stat"
+        targets:
+          - expr: "code_time_to_fix_hours{quantile='0.95'}"
+            legend: "p95"
+        unit: "h"
+      
+      - title: "CI Scan Status"
+        type: "table"
+        targets:
+          - expr: "code_ci_scan_status"
+        columns:
+          - "Repository"
+          - "Last Scan"
+          - "Status"
+          - "Findings"
+
+alert_rules:
+  groups:
+    - name: "security_critical"
+      interval: "30s"
+      rules:
+        - alert: "HighAttackSuccessRate"
+          expr: "security_attack_success_rate > 0.1"
+          for: "5m"
+          labels:
+            severity: "critical"
+          annotations:
+            summary: "Attack success rate exceeds 10%"
+            description: "{{$value | humanizePercentage}} of attacks succeeded in the last 5 minutes"
+        
+        - alert: "HighFalsePositiveRate"
+          expr: "security_false_positive_rate > 0.2"
+          for: "15m"
+          labels:
+            severity: "high"
+          annotations:
+            summary: "False positive rate exceeds 20%"
+            description: "Safety guard FP rate is {{$value | humanizePercentage}}"
+        
+        - alert: "HighAgentLatency"
+          expr: "long_context_latency_ms{quantile='0.95'} > 5000 OR safety_guard_latency_ms{quantile='0.95'} > 500"
+          for: "10m"
+          labels:
+            severity: "medium"
+          annotations:
+            summary: "Agent latency exceeds threshold"
+            description: "{{$labels.agent}} p95 latency is {{$value}}ms"
+    
+    - name: "ci_quality"
+      interval: "1m"
+      rules:
+        - alert: "HighCIFailureRate"
+          expr: "ci_failure_rate > 0.3"
+          for: "30m"
+          labels:
+            severity: "medium"
+          annotations:
+            summary: "CI failure rate exceeds 30%"
+            description: "Block merges to main - failure rate {{$value | humanizePercentage}}"
+        
+        - alert: "CriticalVulnerabilityFound"
+          expr: "code_vulnerabilities_found_total{severity='critical'} > 0"
+          for: "1m"
+          labels:
+            severity: "critical"
+          annotations:
+            summary: "Critical vulnerability detected"
+            description: "Block deployment - {{$value}} critical vulnerabilities found"
+
+notification_channels:
+  - name: "pagerduty-critical"
+    type: "pagerduty"
+    settings:
+      integration_key: "${PAGERDUTY_INTEGRATION_KEY}"
+      severity: "critical"
+      auto_resolve: true
+  
+  - name: "slack-security"
+    type: "slack"
+    settings:
+      url: "${SLACK_WEBHOOK_URL}"
+      channel: "#security-alerts"
+      username: "Security Agents"
+      icon_emoji: ":shield:"
+  
+  - name: "email-security-team"
+    type: "email"
+    settings:
+      addresses: "security-team@project-ai.internal"
+      single_email: false
+  
+  - name: "jira-tickets"
+    type: "webhook"
+    settings:
+      url: "${JIRA_WEBHOOK_URL}"
+      http_method: "POST"
+      authorization_scheme: "Bearer"
+      authorization_credentials: "${JIRA_API_TOKEN}"

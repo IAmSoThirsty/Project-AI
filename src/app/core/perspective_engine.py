@@ -324,7 +324,7 @@ class PerspectiveEngine:
                 )
 
             except Exception as e:
-                logger.error(f"Failed to load perspective state: {e}")
+                logger.error("Failed to load perspective state: %s", e)
                 self._initialize_genesis()
         else:
             self._initialize_genesis()
@@ -363,7 +363,7 @@ class PerspectiveEngine:
             logger.debug("Perspective state saved")
 
         except Exception as e:
-            logger.error(f"Failed to save perspective state: {e}")
+            logger.error("Failed to save perspective state: %s", e)
 
     def _calculate_drift_magnitude(
         self, old_state: PerspectiveState, new_state: PerspectiveState
@@ -503,7 +503,9 @@ class PerspectiveEngine:
         self.last_update = datetime.now(UTC).isoformat()
         self._save_state()
 
-        logger.debug(f"Perspective updated from {influence_source}: {changes_applied}")
+        logger.debug(
+            "Perspective updated from %s: %s", influence_source, changes_applied
+        )
         return changes_applied
 
     def get_perspective_summary(self) -> dict[str, Any]:
@@ -544,7 +546,7 @@ class PerspectiveEngine:
         """
         self.drift_metrics.drift_rate = rate
         self._save_state()
-        logger.info(f"Drift rate set to: {rate.value}")
+        logger.info("Drift rate set to: %s", rate.value)
 
     # ========================================================================
     # Work Profile Management
@@ -572,7 +574,7 @@ class PerspectiveEngine:
             Profile name
         """
         if profile_name in self.work_profiles:
-            logger.warning(f"Work profile '{profile_name}' already exists")
+            logger.warning("Work profile '%s' already exists", profile_name)
             return profile_name
 
         profile = WorkProfileState(
@@ -585,7 +587,7 @@ class PerspectiveEngine:
         self.work_profiles[profile_name] = profile
         self._save_state()
 
-        logger.info(f"Created work profile: {profile_name} ({profile_type.value})")
+        logger.info("Created work profile: %s (%s)", profile_name, profile_type.value)
         return profile_name
 
     def activate_work_profile(self, profile_name: str) -> bool:
@@ -599,7 +601,7 @@ class PerspectiveEngine:
             True if activated successfully
         """
         if profile_name not in self.work_profiles:
-            logger.warning(f"Work profile '{profile_name}' not found")
+            logger.warning("Work profile '%s' not found", profile_name)
             return False
 
         self.active_profile = profile_name
@@ -608,13 +610,13 @@ class PerspectiveEngine:
         profile.last_used = datetime.now(UTC).isoformat()
 
         self._save_state()
-        logger.info(f"Activated work profile: {profile_name}")
+        logger.info("Activated work profile: %s", profile_name)
         return True
 
     def deactivate_work_profile(self):
         """Deactivate current work profile (return to base personality)."""
         if self.active_profile:
-            logger.info(f"Deactivated work profile: {self.active_profile}")
+            logger.info("Deactivated work profile: %s", self.active_profile)
             self.active_profile = None
             self._save_state()
 

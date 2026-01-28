@@ -11,6 +11,7 @@ Version 1.1 — Complete Implementation Guide
 This document extends the AGI Identity Specification with state machines, API endpoints, unit tests, and integration patterns. For the foundational specification, see `AGI_IDENTITY_SPECIFICATION.md`.
 
 **Core Systems:**
+
 - Genesis Event & Birth Signature
 - 5-Phase Bonding Protocol
 - Memory Architecture (Core, Interaction, Learning, Milestone)
@@ -1140,12 +1141,12 @@ if __name__ == "__main__":
 ## 8. Next Steps
 
 1. **Implement REST API**: Create FastAPI endpoints using the specifications in Section 3
-2. **Write Unit Tests**: Implement all test skeletons from Section 4
-3. **Integrate Intelligence Engine**: Add identity system to existing intelligence_engine.py
-4. **Validate State Machines**: Test state transitions match Mermaid diagrams
-5. **Document API**: Generate OpenAPI/Swagger documentation
-6. **Performance Testing**: Benchmark memory consolidation and reflection cycles
-7. **Security Audit**: Review governance decisions and data persistence
+1. **Write Unit Tests**: Implement all test skeletons from Section 4
+1. **Integrate Intelligence Engine**: Add identity system to existing intelligence_engine.py
+1. **Validate State Machines**: Test state transitions match Mermaid diagrams
+1. **Document API**: Generate OpenAPI/Swagger documentation
+1. **Performance Testing**: Benchmark memory consolidation and reflection cycles
+1. **Security Audit**: Review governance decisions and data persistence
 
 ---
 

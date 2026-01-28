@@ -97,6 +97,7 @@ Note: The following targets are not tested since GitHub Actions doesn't support 
 - FreeBSD i386, x86_64
 
 <a name="download-script"></a>
+
 ## Download script
 
 To install `actionlint` executable with one command, [the download script](../scripts/download-actionlint.bash) is available.

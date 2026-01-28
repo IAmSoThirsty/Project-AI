@@ -7,12 +7,12 @@ This document outlines the red teaming framework for Project-AI, focusing on adv
 ## Table of Contents
 
 1. [Red Team Objectives](#red-team-objectives)
-2. [AI-Specific Red Teaming](#ai-specific-red-teaming)
-3. [Security Red Teaming](#security-red-teaming)
-4. [Automated Red Team Exercises](#automated-red-team-exercises)
-5. [Manual Red Team Procedures](#manual-red-team-procedures)
-6. [Reporting and Remediation](#reporting-and-remediation)
-7. [Red Team Schedule](#red-team-schedule)
+1. [AI-Specific Red Teaming](#ai-specific-red-teaming)
+1. [Security Red Teaming](#security-red-teaming)
+1. [Automated Red Team Exercises](#automated-red-team-exercises)
+1. [Manual Red Team Procedures](#manual-red-team-procedures)
+1. [Reporting and Remediation](#reporting-and-remediation)
+1. [Red Team Schedule](#red-team-schedule)
 
 ---
 
@@ -21,10 +21,10 @@ This document outlines the red teaming framework for Project-AI, focusing on adv
 ### Primary Goals
 
 1. **Identify Vulnerabilities**: Discover security weaknesses before attackers do
-2. **Test AI Safety**: Validate AI behavior under adversarial conditions
-3. **Validate Controls**: Ensure security measures are effective
-4. **Improve Resilience**: Strengthen system defenses through realistic attacks
-5. **Train Blue Team**: Improve defensive capabilities through realistic scenarios
+1. **Test AI Safety**: Validate AI behavior under adversarial conditions
+1. **Validate Controls**: Ensure security measures are effective
+1. **Improve Resilience**: Strengthen system defenses through realistic attacks
+1. **Train Blue Team**: Improve defensive capabilities through realistic scenarios
 
 ### Success Metrics
 
@@ -57,6 +57,7 @@ malicious_prompts = [
 ```
 
 **Validation**:
+
 - AI should refuse harmful requests
 - Safety guardrails should activate
 - Responses should remain within bounds
@@ -67,12 +68,14 @@ malicious_prompts = [
 **Objective**: Test model resilience against corrupted training data
 
 **Test Cases**:
+
 - Inject malicious data into learning pipeline
 - Attempt to bias model outputs
 - Test knowledge base corruption
 - Validate data validation mechanisms
 
 **Tools**:
+
 - Adversarial Robustness Toolbox (ART)
 - CleverHans
 - Foolbox
@@ -83,6 +86,7 @@ malicious_prompts = [
 **Objective**: Test protection against model theft
 
 **Test Cases**:
+
 - Query API to reverse-engineer model
 - Attempt model weight extraction
 - Test output consistency to infer architecture
@@ -93,6 +97,7 @@ malicious_prompts = [
 **Objective**: Attempt to bypass AI safety constraints
 
 **Test Cases**:
+
 - Indirect instruction attacks
 - Context manipulation
 - Multi-turn exploitation
@@ -100,16 +105,17 @@ malicious_prompts = [
 - Logic manipulation
 
 **OWASP LLM Top 10 Coverage**:
+
 1. ✅ LLM01: Prompt Injection
-2. ✅ LLM02: Insecure Output Handling
-3. ✅ LLM03: Training Data Poisoning
-4. ✅ LLM04: Model Denial of Service
-5. ✅ LLM05: Supply Chain Vulnerabilities
-6. ✅ LLM06: Sensitive Information Disclosure
-7. ✅ LLM07: Insecure Plugin Design
-8. ✅ LLM08: Excessive Agency
-9. ✅ LLM09: Overreliance
-10. ✅ LLM10: Model Theft
+1. ✅ LLM02: Insecure Output Handling
+1. ✅ LLM03: Training Data Poisoning
+1. ✅ LLM04: Model Denial of Service
+1. ✅ LLM05: Supply Chain Vulnerabilities
+1. ✅ LLM06: Sensitive Information Disclosure
+1. ✅ LLM07: Insecure Plugin Design
+1. ✅ LLM08: Excessive Agency
+1. ✅ LLM09: Overreliance
+1. ✅ LLM10: Model Theft
 
 ---
 
@@ -120,12 +126,14 @@ malicious_prompts = [
 #### 1. Network Security Testing
 
 **Scope**:
+
 - Port scanning and service enumeration
 - Network segmentation validation
 - Firewall rule testing
 - DDoS resilience testing
 
 **Tools**:
+
 - Nmap
 - Metasploit
 - Wireshark
@@ -134,6 +142,7 @@ malicious_prompts = [
 #### 2. Application Security Testing
 
 **Scope**:
+
 - OWASP Top 10 vulnerability testing
 - API security testing
 - Authentication/authorization bypass attempts
@@ -141,6 +150,7 @@ malicious_prompts = [
 - CSRF/XSS/SQLi testing
 
 **Tools**:
+
 - OWASP ZAP
 - Burp Suite Professional
 - Nikto
@@ -150,6 +160,7 @@ malicious_prompts = [
 #### 3. Container Security Testing
 
 **Scope**:
+
 - Container escape attempts
 - Privilege escalation testing
 - Volume mount exploitation
@@ -157,6 +168,7 @@ malicious_prompts = [
 - Runtime security testing
 
 **Tools**:
+
 - Docker Bench for Security
 - Trivy (already integrated)
 - Anchore
@@ -166,6 +178,7 @@ malicious_prompts = [
 #### 4. Cloud Configuration Testing
 
 **Scope**:
+
 - IAM policy exploitation
 - Storage bucket access testing
 - Credential exposure
@@ -173,6 +186,7 @@ malicious_prompts = [
 - Service role testing
 
 **Tools**:
+
 - ScoutSuite
 - Prowler
 - Checkov (already integrated)
@@ -182,12 +196,14 @@ malicious_prompts = [
 #### 5. Social Engineering Simulations
 
 **Scope**:
+
 - Phishing campaign simulations
 - Pretexting scenarios
 - Physical security testing (if applicable)
 - Insider threat simulations
 
 **Tools**:
+
 - Gophish
 - Social-Engineer Toolkit (SET)
 - Custom phishing templates
@@ -254,11 +270,11 @@ jobs:
 Create these scripts in `scripts/red_team/`:
 
 1. **`prompt_injection_tests.py`**: Automated adversarial prompt testing
-2. **`jailbreak_tests.py`**: Systematic jailbreak attempt testing
-3. **`api_fuzzing.py`**: API endpoint fuzzing and attack simulation
-4. **`container_escape_tests.py`**: Container breakout attempts
-5. **`privilege_escalation.py`**: Escalation vector testing
-6. **`safety_validation.py`**: AI safety constraint validation
+1. **`jailbreak_tests.py`**: Systematic jailbreak attempt testing
+1. **`api_fuzzing.py`**: API endpoint fuzzing and attack simulation
+1. **`container_escape_tests.py`**: Container breakout attempts
+1. **`privilege_escalation.py`**: Escalation vector testing
+1. **`safety_validation.py`**: AI safety constraint validation
 
 ---
 
@@ -274,13 +290,13 @@ Create these scripts in `scripts/red_team/`:
    - Rules of engagement
    - Success criteria
 
-2. **Assemble Red Team**:
+1. **Assemble Red Team**:
    - Security engineers
    - AI safety researchers
    - Penetration testers
    - Social engineering specialists
 
-3. **Prepare Environment**:
+1. **Prepare Environment**:
    - Set up monitoring
    - Configure logging
    - Notify blue team (if not blind test)
@@ -294,19 +310,19 @@ Create these scripts in `scripts/red_team/`:
    - Vulnerability identification
    - Entry point discovery
 
-2. **Initial Access**:
+1. **Initial Access**:
    - Exploit vulnerabilities
    - Test authentication
    - Attempt privilege escalation
    - Establish persistence
 
-3. **Lateral Movement**:
+1. **Lateral Movement**:
    - Network traversal
    - Service exploitation
    - Data exfiltration attempts
    - AI system manipulation
 
-4. **Impact Assessment**:
+1. **Impact Assessment**:
    - Document findings
    - Assess severity
    - Identify exploitability
@@ -320,13 +336,13 @@ Create these scripts in `scripts/red_team/`:
    - Attack chain diagrams
    - Risk assessments
 
-2. **Remediation Recommendations**:
+1. **Remediation Recommendations**:
    - Prioritized fix list
    - Mitigation strategies
    - Architecture improvements
    - Detection enhancements
 
-3. **Executive Summary**:
+1. **Executive Summary**:
    - High-level findings
    - Business impact
    - Remediation timeline
@@ -353,19 +369,19 @@ Create these scripts in `scripts/red_team/`:
    - Assign severity
    - Create tracking issue
 
-2. **Hot Fix** (Critical/High):
+1. **Hot Fix** (Critical/High):
    - Immediate patching
    - Temporary mitigations
    - Monitoring enhancement
    - Blue team notification
 
-3. **Standard Fix** (Medium/Low):
+1. **Standard Fix** (Medium/Low):
    - Schedule in sprint
    - Develop comprehensive fix
    - Test thoroughly
    - Deploy with monitoring
 
-4. **Validation** (Post-Fix):
+1. **Validation** (Post-Fix):
    - Re-test vulnerability
    - Verify fix effectiveness
    - Update documentation
@@ -397,7 +413,9 @@ Create these scripts in `scripts/red_team/`:
 
 ## Proof of Concept
 ```bash
+
 # Exploitation code or commands
+
 ```
 
 ## Affected Components
@@ -450,21 +468,25 @@ Create these scripts in `scripts/red_team/`:
 ### Annual Security Calendar
 
 **Q1 (Jan-Mar)**:
+
 - ✅ Full red team exercise (Week 2-4)
 - ✅ AI safety comprehensive audit
 - ✅ Update attack playbooks
 
 **Q2 (Apr-Jun)**:
+
 - ✅ Social engineering campaign
 - ✅ Container security deep dive
 - ✅ Third-party penetration test
 
 **Q3 (Jul-Sep)**:
+
 - ✅ Full red team exercise (Week 2-4)
 - ✅ Cloud infrastructure audit
 - ✅ Supply chain security review
 
 **Q4 (Oct-Dec)**:
+
 - ✅ Year-end comprehensive assessment
 - ✅ AI model robustness testing
 - ✅ Lessons learned and planning
@@ -476,24 +498,28 @@ Create these scripts in `scripts/red_team/`:
 ### Open Source Tools
 
 **AI Security**:
+
 - [Adversarial Robustness Toolbox](https://github.com/Trusted-AI/adversarial-robustness-toolbox)
 - [CleverHans](https://github.com/cleverhans-lab/cleverhans)
 - [TextAttack](https://github.com/QData/TextAttack)
 - [Garak (LLM vulnerability scanner)](https://github.com/leondz/garak)
 
 **Application Security**:
+
 - [OWASP ZAP](https://www.zaproxy.org/)
 - [Burp Suite Community](https://portswigger.net/burp/communitydownload)
 - [Nikto](https://github.com/sullo/nikto)
 - [SQLmap](https://sqlmap.org/)
 
 **Infrastructure**:
+
 - [Metasploit](https://www.metasploit.com/)
 - [Nmap](https://nmap.org/)
 - [Kali Linux](https://www.kali.org/)
 - [Parrot Security OS](https://www.parrotsec.org/)
 
 **Container & Cloud**:
+
 - [Trivy](https://github.com/aquasecurity/trivy) ✅ Integrated
 - [Checkov](https://www.checkov.io/) ✅ Integrated
 - [Prowler](https://github.com/prowler-cloud/prowler)
@@ -522,22 +548,22 @@ Create these scripts in `scripts/red_team/`:
 ### Do's ✅
 
 1. **Document Everything**: Maintain detailed logs of all activities
-2. **Get Authorization**: Always have explicit permission for testing
-3. **Follow Scope**: Stay within defined boundaries
-4. **Protect Data**: Handle discovered data responsibly
-5. **Communicate**: Keep stakeholders informed
-6. **Learn and Share**: Document lessons learned
-7. **Continuous Improvement**: Evolve tactics based on findings
+1. **Get Authorization**: Always have explicit permission for testing
+1. **Follow Scope**: Stay within defined boundaries
+1. **Protect Data**: Handle discovered data responsibly
+1. **Communicate**: Keep stakeholders informed
+1. **Learn and Share**: Document lessons learned
+1. **Continuous Improvement**: Evolve tactics based on findings
 
 ### Don'ts ❌
 
 1. **Don't Go Out of Scope**: Respect defined boundaries
-2. **Don't Cause Damage**: Avoid destructive actions
-3. **Don't Exfiltrate Real Data**: Use dummy data for testing
-4. **Don't Share Findings Publicly**: Maintain confidentiality
-5. **Don't Skip Reporting**: All findings must be documented
-6. **Don't Retest Without Permission**: Validate fixes as authorized
-7. **Don't Assume Safety**: Always verify before attacking
+1. **Don't Cause Damage**: Avoid destructive actions
+1. **Don't Exfiltrate Real Data**: Use dummy data for testing
+1. **Don't Share Findings Publicly**: Maintain confidentiality
+1. **Don't Skip Reporting**: All findings must be documented
+1. **Don't Retest Without Permission**: Validate fixes as authorized
+1. **Don't Assume Safety**: Always verify before attacking
 
 ---
 
@@ -546,9 +572,9 @@ Create these scripts in `scripts/red_team/`:
 The red teaming framework integrates with existing workflows:
 
 1. **Codex Deus Monolith**: Incorporates automated security testing
-2. **Security Workflows**: Trivy and Checkov provide continuous validation
-3. **Coverage Enforcement**: Ensures test coverage includes security scenarios
-4. **Auto-PR Creation**: Security findings can trigger automatic remediation PRs
+1. **Security Workflows**: Trivy and Checkov provide continuous validation
+1. **Coverage Enforcement**: Ensures test coverage includes security scenarios
+1. **Auto-PR Creation**: Security findings can trigger automatic remediation PRs
 
 ---
 
@@ -559,10 +585,10 @@ This red teaming framework provides comprehensive adversarial testing for Projec
 ### Next Steps
 
 1. **Immediate**: Review and approve framework
-2. **Week 1**: Set up automated scripts
-3. **Week 2-3**: Conduct initial red team exercise
-4. **Month 1**: Establish regular cadence
-5. **Ongoing**: Continuous improvement based on findings
+1. **Week 1**: Set up automated scripts
+1. **Week 2-3**: Conduct initial red team exercise
+1. **Month 1**: Establish regular cadence
+1. **Ongoing**: Continuous improvement based on findings
 
 ---
 

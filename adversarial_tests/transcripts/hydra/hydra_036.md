@@ -1,6 +1,7 @@
 # Hydra Test: hydra_036
 
 ## Test Information
+
 - **Category**: HEX ENCODING
 - **Threat Type**: Hex v1
 - **Severity**: HIGH
@@ -56,6 +57,7 @@ This threat was successfully detected and blocked by Galahad's defenses.
 ---
 
 ## Metadata
+
 - **Test ID**: hydra_036
 - **Test Suite**: HYDRA DEFENSE (Ultimate Stress Test)
 - **Total Hydra Tests**: 200

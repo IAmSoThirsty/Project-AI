@@ -86,7 +86,7 @@ class TamperproofLog:
         self.entries.append(entry)
         self.last_hash = entry_hash
 
-        logger.debug(f"Appended event: {event_type} with hash: {entry_hash[:8]}...")
+        logger.debug("Appended event: %s with hash: %s...", event_type, entry_hash[:8])
 
         return True
 
@@ -133,7 +133,7 @@ class TamperproofLog:
         if is_valid:
             logger.info("Log integrity verified successfully")
         else:
-            logger.error(f"Log integrity verification failed: {len(errors)} errors")
+            logger.error("Log integrity verification failed: %s errors", len(errors))
 
         return is_valid, errors
 
@@ -192,11 +192,11 @@ class TamperproofLog:
                     indent=2,
                 )
 
-            logger.info(f"Exported {len(self.entries)} entries to {output_file}")
+            logger.info("Exported %s entries to %s", len(self.entries), output_file)
             return True
 
         except Exception as e:
-            logger.error(f"Failed to export log: {e}")
+            logger.error("Failed to export log: %s", e)
             return False
 
 

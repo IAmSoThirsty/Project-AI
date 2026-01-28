@@ -248,7 +248,7 @@ class ReflectionCycle:
                 )
 
             except Exception as e:
-                logger.error(f"Failed to load reflection history: {e}")
+                logger.error("Failed to load reflection history: %s", e)
 
     def _save_history(self):
         """Save reflection history to disk."""
@@ -273,7 +273,7 @@ class ReflectionCycle:
             logger.debug("Reflection history saved")
 
         except Exception as e:
-            logger.error(f"Failed to save reflection history: {e}")
+            logger.error("Failed to save reflection history: %s", e)
 
     # ========================================================================
     # Daily Reflection
@@ -558,7 +558,7 @@ class ReflectionCycle:
             Reflection report
         """
         start_time = datetime.now(UTC)
-        logger.info(f"Triggered reflection: {trigger_reason}")
+        logger.info("Triggered reflection: %s", trigger_reason)
 
         report = ReflectionReport(
             report_id=f"triggered_{start_time.timestamp()}",

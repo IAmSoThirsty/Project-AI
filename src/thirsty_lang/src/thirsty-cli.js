@@ -57,7 +57,7 @@ function showHelp() {
 function showVersion() {
   const pkg = require('../package.json');
   console.log("Thirsty-lang v" + pkg.version);
-  console.log(`Node.js ${process.version}`);
+  console.log('Node.js ' + process.version);
   console.log('Stay hydrated! 💧');
 }
 
@@ -65,7 +65,7 @@ function initProject(name = 'my-thirsty-project') {
   const projectDir = path.join(process.cwd(), name);
 
   if (fs.existsSync(projectDir)) {
-    console.error(`❌ Directory '${name}' already exists`);
+    console.error("❌ Directory '" + name + "' already exists");
     process.exit(1);
   }
 
@@ -76,14 +76,13 @@ function initProject(name = 'my-thirsty-project') {
   fs.mkdirSync(path.join(projectDir, 'docs'));
 
   // Create main file
-  const mainContent = `// Welcome to ${name}!
-// Start coding your Thirsty-lang application here
-
-drink message = "Hello from ${name}!"
-pour message
-
-// Stay hydrated! 💧
-`;
+  const mainContent = '// Welcome to ' + name + '!\n' +
+'// Start coding your Thirsty-lang application here\n' +
+'\n' +
+'drink message = "Hello from ' + name + '!"\n' +
+'pour message\n' +
+'\n' +
+'// Stay hydrated! 💧\n';
   fs.writeFileSync(path.join(projectDir, 'src', 'main.thirsty'), mainContent);
 
   // Create thirsty.json
@@ -109,31 +108,30 @@ pour message
   );
 
   // Create README
-  const readme = `# ${name}
-
-A Thirsty-lang project.
-
-## Getting Started
-
-\`\`\`bash
-# Run the program
-thirsty run src/main.thirsty
-
-# Start REPL
-thirsty repl
-
-# Run tests
-thirsty test
-\`\`\`
-
-## Learn More
-
-- [Thirsty-lang Documentation](https://github.com/IAmSoThirsty/Thirsty-lang)
-- [Language Specification](https://github.com/IAmSoThirsty/Thirsty-lang/blob/main/docs/SPECIFICATION.md)
-- [Expansions Guide](https://github.com/IAmSoThirsty/Thirsty-lang/blob/main/docs/EXPANSIONS.md)
-
-Stay hydrated! 💧
-`;
+  const readme = '# ' + name + '\n' +
+'\n' +
+'A Thirsty-lang project.\n' +
+'\n' +
+'## Getting Started\n' +
+'\n' +
+'```bash\n' +
+'# Run the program\n' +
+'thirsty run src/main.thirsty\n' +
+'\n' +
+'# Start REPL\n' +
+'thirsty repl\n' +
+'\n' +
+'# Run tests\n' +
+'thirsty test\n' +
+'```\n' +
+'\n' +
+'## Learn More\n' +
+'\n' +
+'- [Thirsty-lang Documentation](https://github.com/IAmSoThirsty/Thirsty-lang)\n' +
+'- [Language Specification](https://github.com/IAmSoThirsty/Thirsty-lang/blob/main/docs/SPECIFICATION.md)\n' +
+'- [Expansions Guide](https://github.com/IAmSoThirsty/Thirsty-lang/blob/main/docs/EXPANSIONS.md)\n' +
+'\n' +
+'Stay hydrated! 💧\n';
   fs.writeFileSync(path.join(projectDir, 'README.md'), readme);
 
   // Create .gitignore
@@ -145,9 +143,9 @@ node_modules/
   fs.writeFileSync(path.join(projectDir, '.gitignore'), gitignore);
 
   console.log('✓ Project initialized successfully!');
-  console.log(`\nNext steps:`);
-  console.log(`  cd ${name}`);
-  console.log(`  thirsty run src/main.thirsty`);
+  console.log('\nNext steps:');
+  console.log('  cd ' + name);
+  console.log('  thirsty run src/main.thirsty');
   console.log('\nStay hydrated! 💧');
 }
 
@@ -236,7 +234,7 @@ async function main() {
       break;
 
     default:
-      console.error(`Unknown command: ${command}`);
+      console.error('Unknown command: ' + command);
       console.log('Run "thirsty help" for usage information');
       process.exit(1);
   }
@@ -249,4 +247,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { main, showHelp, showVersion, initProject };
+module.exports = { main: main, showHelp: showHelp, showVersion: showVersion, initProject: initProject };

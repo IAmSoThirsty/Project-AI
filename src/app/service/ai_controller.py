@@ -102,7 +102,7 @@ class AIController:
             options=options or {},
         )
 
-        logger.info(f"Starting AI request workflow: {workflow_id}")
+        logger.info("Starting AI request workflow: %s", workflow_id)
 
         try:
             # Start the workflow
@@ -121,7 +121,7 @@ class AIController:
             return result
 
         except Exception as e:
-            logger.error(f"Error processing AI request: {e}")
+            logger.error("Error processing AI request: %s", e)
             return WorkflowOutput(
                 success=False,
                 error=f"Failed to process request: {str(e)}",
@@ -162,7 +162,7 @@ class AIController:
             }
 
         except Exception as e:
-            logger.error(f"Error getting workflow status: {e}")
+            logger.error("Error getting workflow status: %s", e)
             return {
                 "workflow_id": workflow_id,
                 "status": "UNKNOWN",
