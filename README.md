@@ -39,6 +39,7 @@
 ![Pre-Commit](https://img.shields.io/badge/Pre--Commit-Enabled-ef5350?logo=pre-commit)
 ![Python Version](https://img.shields.io/badge/Python-3.8%2B-blue?logo=python)
 ![ProjectAI-Config](https://img.shields.io/badge/ProjectAI-Config-blue)
+![Antigravity](https://img.shields.io/badge/Antigravity-IDE_Ready-00D9FF?logo=google)
 ![Batch Merge Checklist](https://img.shields.io/badge/Batch_Merge-Checklist-7e3ff2)
 ![Batch Merge Summary](https://img.shields.io/badge/Batch_Merge-Summary-3a86ff)
 ![Batch Merge Visualization](https://img.shields.io/badge/Batch_Merge-Visualization-00b4d8)
