@@ -6,6 +6,7 @@ Successfully added Perplexity AI as an alternative model provider to Project-AI,
 ## Changes Made
 
 ### 1. Configuration Files
+
 - **`.env.example`**: Added `PERPLEXITY_API_KEY` environment variable
 - **`.projectai.toml.example`**: Added `provider` option to `[ai]` section
 
