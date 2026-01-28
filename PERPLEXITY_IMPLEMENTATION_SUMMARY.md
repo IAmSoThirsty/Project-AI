@@ -145,6 +145,7 @@ result = rag.query_with_llm(
 
 ### Why OpenAI-Compatible API?
 
+
 - Perplexity uses OpenAI-compatible endpoints
 - Reduces code duplication
 - Leverages existing OpenAI client library
