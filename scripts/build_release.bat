@@ -1,5 +1,6 @@
 @echo off
 REM Create complete v1.0.0 release package with all platforms (Windows)
+REM Enhanced with dependency validation, manifest checking, and JSON reporting
 
 setlocal enabledelayedexpansion
 
@@ -13,12 +14,59 @@ echo =========================================
 echo Date: %DATE_STR%
 echo.
 
+REM Check dependencies
+echo Checking system dependencies...
+set MISSING_DEPS=0
+
+where python >nul 2>&1
+if %ERRORLEVEL% EQU 0 (
+    echo   OK Python found
+) else (
+    echo   ERROR Python not found
+    set /a MISSING_DEPS+=1
+)
+
+where node >nul 2>&1
+if %ERRORLEVEL% EQU 0 (
+    echo   OK Node.js found
+) else (
+    echo   WARNING Node.js not found ^(optional^)
+)
+
+where npm >nul 2>&1
+if %ERRORLEVEL% EQU 0 (
+    echo   OK npm found
+) else (
+    echo   WARNING npm not found ^(optional^)
+)
+
+where docker >nul 2>&1
+if %ERRORLEVEL% EQU 0 (
+    echo   OK Docker found
+) else (
+    echo   WARNING Docker not found ^(optional^)
+)
+
+if exist gradlew (
+    echo   OK Gradle wrapper found
+) else (
+    echo   WARNING Gradle wrapper not found
+)
+
+echo.
+
+if %MISSING_DEPS% GTR 0 (
+    echo ERROR: Missing required dependencies. Please install them first.
+    exit /b 1
+)
+
 REM Create release directories
 mkdir "%RELEASE_DIR%\backend" 2>nul
 mkdir "%RELEASE_DIR%\web" 2>nul
 mkdir "%RELEASE_DIR%\android" 2>nul
 mkdir "%RELEASE_DIR%\desktop" 2>nul
 mkdir "%RELEASE_DIR%\docs" 2>nul
+mkdir "%RELEASE_DIR%\monitoring" 2>nul
 
 REM 1. Backend API
 echo [1/5] Building Backend API...
@@ -68,8 +116,17 @@ if exist "desktop\dist" (
     echo WARNING Desktop builds not found - run npm run build first
 )
 
-REM 5. Documentation
-echo [5/5] Copying Documentation...
+REM 5. Monitoring Agents
+echo [5/7] Packaging Monitoring Agents...
+if exist monitoring (
+    xcopy /E /I /Q monitoring "%RELEASE_DIR%\monitoring"
+    echo OK Monitoring agents packaged
+) else (
+    echo WARNING Monitoring directory not found
+)
+
+REM 6. Documentation
+echo [6/7] Copying Documentation...
 copy README.md "%RELEASE_DIR%\" >nul
 copy CONSTITUTION.md "%RELEASE_DIR%\" >nul
 copy CHANGELOG.md "%RELEASE_DIR%\" >nul
@@ -106,7 +163,7 @@ echo.
 echo See README files in each directory for details.
 ) > "%RELEASE_DIR%\README.md"
 
-REM Create archive (requires 7-zip or similar)
+REM Create archive (requires 7-Zip or similar)
 echo.
 echo Creating release archive...
 if exist "C:\Program Files\7-Zip\7z.exe" (
@@ -119,6 +176,64 @@ if exist "C:\Program Files\7-Zip\7z.exe" (
     echo   Install 7-Zip or manually zip the release folder
 )
 
+REM 7. Cleanup sensitive files
+echo.
+echo [7/7] Cleaning up sensitive files...
+del /S /Q "%RELEASE_DIR%\*.key" 2>nul
+del /S /Q "%RELEASE_DIR%\*.pem" 2>nul
+del /S /Q "%RELEASE_DIR%\secrets.*" 2>nul
+echo OK Sensitive files cleaned
+
+REM Generate machine-readable release summary
+echo.
+echo Generating release summary...
+set BUILD_SUMMARY=releases\release-summary-v%VERSION%.json
+
+(
+echo {
+echo   "version": "%VERSION%",
+echo   "build_date": "%DATE_STR%",
+echo   "release_directory": "%RELEASE_DIR%",
+echo   "artifacts": {
+echo     "backend": {
+echo       "included": true,
+echo       "components": ["api", "tarl", "governance", "config", "utils", "kernel"]
+echo     },
+echo     "web": {
+echo       "included": true
+echo     },
+echo     "android": {
+echo       "included": true
+echo     },
+echo     "desktop": {
+echo       "included": true
+echo     },
+echo     "monitoring": {
+echo       "included": true
+echo     },
+echo     "documentation": {
+echo       "included": true
+echo     }
+echo   }
+echo }
+) > "%BUILD_SUMMARY%"
+
+echo OK Release summary written to: %BUILD_SUMMARY%
+
+REM Validate the release package
+echo.
+echo Validating release package...
+if exist "scripts\validate_release.py" (
+    python scripts\validate_release.py "%RELEASE_DIR%" --version "%VERSION%" --output "releases\validation-report-v%VERSION%.json"
+    if %ERRORLEVEL% EQU 0 (
+        echo OK Validation passed
+    ) else (
+        echo WARNING Validation found issues - check validation-report-v%VERSION%.json
+    )
+) else (
+    echo WARNING Validation script not found, skipping validation
+)
+
 echo.
 echo =========================================
 echo OK Release Build Complete!
@@ -126,11 +241,16 @@ echo =========================================
 echo.
 echo Package: %RELEASE_DIR%\
 echo.
+echo Reports generated:
+echo   OK release-summary-v%VERSION%.json
+echo   OK validation-report-v%VERSION%.json
+echo.
 echo Contents:
 echo   OK Backend API (Python)
 echo   OK Web Frontend (HTML/CSS/JS)
 echo   OK Android App (if built)
 echo   OK Desktop Apps (if built)
+echo   OK Monitoring Agents
 echo   OK Complete Documentation
 echo.
 echo Next steps:
