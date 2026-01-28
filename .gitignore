@@ -161,3 +161,8 @@ unity/sysinfo.txt
 # Keep StreamingAssets files
 !unity/StreamingAssets/
 !unity/StreamingAssets/**
+
+# Antigravity IDE artifacts
+.antigravity/artifacts/
+.antigravity/.cache/
+.antigravity/logs/
