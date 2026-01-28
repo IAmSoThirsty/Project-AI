@@ -271,7 +271,7 @@ class ImageGenerator:
             }
 
         except Exception as e:
-            logger.error(f"Hugging Face generation error: {e}")
+            logger.error("Hugging Face generation error: %s", e)
             return {"success": False, "error": str(e)}
 
     def generate_with_openai(
@@ -356,7 +356,7 @@ class ImageGenerator:
             }
 
         except Exception as e:
-            logger.error(f"OpenAI generation error: {e}")
+            logger.error("OpenAI generation error: %s", e)
             return {"success": False, "error": str(e)}
 
     def generate(
@@ -385,7 +385,7 @@ class ImageGenerator:
         # Content filter check
         is_safe, filter_msg = self.check_content_filter(prompt)
         if not is_safe:
-            logger.warning(f"Content filter blocked: {prompt}")
+            logger.warning("Content filter blocked: %s", prompt)
             return {"success": False, "error": filter_msg, "filtered": True}
 
         # Build enhanced prompt
@@ -422,7 +422,7 @@ class ImageGenerator:
                     }
                 )
         except Exception as e:
-            logger.error(f"Error reading history: {e}")
+            logger.error("Error reading history: %s", e)
 
         return history
 

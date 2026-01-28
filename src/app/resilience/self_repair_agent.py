@@ -77,7 +77,7 @@ class SelfRepairAgent(KernelRoutedAgent):
         Returns:
             Health status report
         """
-        logger.debug(f"Monitoring health of component: {component}")
+        logger.debug("Monitoring health of component: %s", component)
 
         # Stub: Always report healthy
         return {
@@ -103,7 +103,7 @@ class SelfRepairAgent(KernelRoutedAgent):
         Returns:
             True if anomaly detected, False otherwise
         """
-        logger.debug(f"Checking for anomalies in {component}")
+        logger.debug("Checking for anomalies in %s", component)
 
         # Stub: No anomalies detected
         return False
@@ -123,7 +123,7 @@ class SelfRepairAgent(KernelRoutedAgent):
         Returns:
             Diagnosis report with suggested fixes
         """
-        logger.info(f"Diagnosing problem in component: {component}")
+        logger.info("Diagnosing problem in component: %s", component)
 
         return {
             "component": component,
@@ -152,7 +152,7 @@ class SelfRepairAgent(KernelRoutedAgent):
             logger.warning("Self-repair agent is disabled")
             return False
 
-        logger.info(f"Applying repair to {component}")
+        logger.info("Applying repair to %s", component)
 
         # Stub: Simulate repair
         repair_record = {
@@ -182,7 +182,7 @@ class SelfRepairAgent(KernelRoutedAgent):
         Returns:
             True if recovery validated, False otherwise
         """
-        logger.debug(f"Validating recovery of component: {component}")
+        logger.debug("Validating recovery of component: %s", component)
 
         # Stub: Always report recovered
         return True

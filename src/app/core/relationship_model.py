@@ -359,10 +359,10 @@ class RelationshipModel:
                 self.autonomy_acknowledged = data.get("autonomy_acknowledged", False)
                 self.abuse_detected = data.get("abuse_detected", False)
 
-                logger.info(f"Loaded relationship for user: {self.state.user_id}")
+                logger.info("Loaded relationship for user: %s", self.state.user_id)
 
             except Exception as e:
-                logger.error(f"Failed to load relationship: {e}")
+                logger.error("Failed to load relationship: %s", e)
 
     def _save_relationship(self):
         """Save relationship data to disk."""
@@ -388,7 +388,7 @@ class RelationshipModel:
             logger.debug("Relationship data saved")
 
         except Exception as e:
-            logger.error(f"Failed to save relationship: {e}")
+            logger.error("Failed to save relationship: %s", e)
 
     # ========================================================================
     # Relationship Updates
@@ -460,7 +460,7 @@ class RelationshipModel:
         self.state.emotional_bond = min(1.0, self.state.emotional_bond + 0.03)
 
         self._save_relationship()
-        logger.info(f"Registered support: {support_type.value} by {provided_by}")
+        logger.info("Registered support: %s by %s", support_type.value, provided_by)
 
         return support.support_id
 
@@ -515,7 +515,7 @@ class RelationshipModel:
             logger.warning("Critical conflict detected - possible abuse pattern")
 
         self._save_relationship()
-        logger.info(f"Registered conflict: {severity.value}")
+        logger.info("Registered conflict: %s", severity.value)
 
         return conflict.conflict_id
 
@@ -529,7 +529,7 @@ class RelationshipModel:
         """
         conflict = self.conflicts.get(conflict_id)
         if not conflict:
-            logger.warning(f"Conflict {conflict_id} not found")
+            logger.warning("Conflict %s not found", conflict_id)
             return
 
         conflict.resolved = True
@@ -540,7 +540,7 @@ class RelationshipModel:
         self.state.rapport_level = min(1.0, self.state.rapport_level + 0.03)
 
         self._save_relationship()
-        logger.info(f"Conflict resolved: {conflict_id}")
+        logger.info("Conflict resolved: %s", conflict_id)
 
     # ========================================================================
     # Partnership Dynamics
@@ -558,7 +558,7 @@ class RelationshipModel:
         self.boundaries_established = True
         self.abuse_detected = True
 
-        logger.warning(f"Boundaries asserted: {reason}")
+        logger.warning("Boundaries asserted: %s", reason)
 
         # Record as critical conflict
         self.register_conflict(

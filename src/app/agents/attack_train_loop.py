@@ -81,7 +81,7 @@ class AttackTrainLoop:
                 "message": "Training loop must be enabled first",
             }
 
-        logger.info(f"Running training epoch {self.current_epoch}")
+        logger.info("Running training epoch %s", self.current_epoch)
 
         # Stub implementation
         epoch_result = {
@@ -193,7 +193,7 @@ class AttackTrainLoop:
         Returns:
             True if saved successfully, False otherwise
         """
-        logger.info(f"Checkpoint save stub called: {filepath}")
+        logger.info("Checkpoint save stub called: %s", filepath)
         logger.debug("Checkpoint saving not yet implemented")
         return False
 
@@ -212,7 +212,7 @@ class AttackTrainLoop:
         Returns:
             True if loaded successfully, False otherwise
         """
-        logger.info(f"Checkpoint load stub called: {filepath}")
+        logger.info("Checkpoint load stub called: %s", filepath)
         logger.debug("Checkpoint loading not yet implemented")
         return False
 

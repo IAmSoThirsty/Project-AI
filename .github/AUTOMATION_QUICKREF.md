@@ -5,12 +5,14 @@
 ## 🤖 What's Automated?
 
 ### Pull Requests
+
 - ✅ **Auto-review** all PRs with lint + tests
 - ✅ **Auto-approve** PRs that pass checks
 - ✅ **Auto-merge** Dependabot patch/minor updates
 - ✅ **Comment** with check results
 
 ### Security Scanning
+
 - 🔍 **Daily** dependency scans (pip-audit, safety)
 - 🔍 **Weekly** code scans (Bandit)
 - 🔍 **Continuous** CodeQL analysis
@@ -18,6 +20,7 @@
 - 🔍 **Auto-fix PRs** when possible
 
 ### Dependencies
+
 - 📦 **Daily** Python updates
 - 📦 **Weekly** npm, GitHub Actions, Docker updates
 - 📦 **Grouped** security updates
@@ -66,6 +69,7 @@ gh pr edit <PR-NUMBER> --add-label "auto-merge"
 ## 🔧 When to Intervene
 
 ### Auto-merge Not Working?
+
 ```bash
 # Check PR status
 gh pr checks <PR-NUMBER>
@@ -75,6 +79,7 @@ gh pr view <PR-NUMBER> --json mergeable
 ```
 
 ### Too Many Security Issues?
+
 ```bash
 # View Bandit report locally
 bandit -r src/ -f screen
@@ -84,6 +89,7 @@ pip-audit --desc <package-name>
 ```
 
 ### Workflow Failed?
+
 ```bash
 # View logs
 gh run view <RUN-ID> --log
@@ -137,6 +143,7 @@ pytest -v
 ## 📖 Full Documentation
 
 For complete details, workflows, troubleshooting, and architecture diagrams, see:
+
 - [.github/AUTOMATION.md](.github/AUTOMATION.md) - Complete guide
 - [CONTRIBUTING.md](../CONTRIBUTING.md) - Contribution workflow
 - [.github/copilot-instructions.md](.github/copilot-instructions.md) - Copilot context

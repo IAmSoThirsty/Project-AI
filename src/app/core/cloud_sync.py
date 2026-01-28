@@ -60,7 +60,7 @@ class CloudSyncManager:
         self.auto_sync_enabled = False
         self.auto_sync_interval = 300  # 5 minutes default
 
-        logger.info(f"CloudSyncManager initialized for device: {self.device_id}")
+        logger.info("CloudSyncManager initialized for device: %s", self.device_id)
 
     def _generate_device_id(self) -> str:
         """Generate a unique device identifier using SHA-256.
@@ -84,7 +84,7 @@ class CloudSyncManager:
                 with open(self.sync_metadata_path) as f:
                     return json.load(f)
             except Exception as e:
-                logger.error(f"Error loading sync metadata: {e}")
+                logger.error("Error loading sync metadata: %s", e)
                 return {}
         return {}
 
@@ -94,7 +94,7 @@ class CloudSyncManager:
             with open(self.sync_metadata_path, "w") as f:
                 json.dump(self.sync_metadata, f, indent=2)
         except Exception as e:
-            logger.error(f"Error saving sync metadata: {e}")
+            logger.error("Error saving sync metadata: %s", e)
 
     def encrypt_data(self, data: dict[str, Any]) -> bytes:
         """Encrypt data using Fernet cipher.
@@ -110,7 +110,7 @@ class CloudSyncManager:
             encrypted_data = self.cipher_suite.encrypt(json_data.encode())
             return encrypted_data
         except Exception as e:
-            logger.error(f"Encryption error: {e}")
+            logger.error("Encryption error: %s", e)
             raise
 
     def decrypt_data(self, encrypted_data: bytes) -> dict[str, Any]:
@@ -126,7 +126,7 @@ class CloudSyncManager:
             decrypted_data = self.cipher_suite.decrypt(encrypted_data)
             return json.loads(decrypted_data.decode())
         except Exception as e:
-            logger.error(f"Decryption error: {e}")
+            logger.error("Decryption error: %s", e)
             raise
 
     def sync_upload(self, username: str, data: dict[str, Any]) -> bool:
@@ -173,7 +173,7 @@ class CloudSyncManager:
                     "device_id": self.device_id,
                 }
                 self._save_sync_metadata()
-                logger.info(f"Successfully uploaded data for {username}")
+                logger.info("Successfully uploaded data for %s", username)
                 return True
             else:
                 logger.error(
@@ -182,10 +182,10 @@ class CloudSyncManager:
                 return False
 
         except requests.RequestException as e:
-            logger.error(f"Network error during upload: {e}")
+            logger.error("Network error during upload: %s", e)
             return False
         except Exception as e:
-            logger.error(f"Error during sync upload: {e}")
+            logger.error("Error during sync upload: %s", e)
             return False
 
     def sync_download(self, username: str) -> dict[str, Any] | None:
@@ -226,11 +226,11 @@ class CloudSyncManager:
                 }
                 self._save_sync_metadata()
 
-                logger.info(f"Successfully downloaded data for {username}")
+                logger.info("Successfully downloaded data for %s", username)
                 return decrypted_data
 
             elif response.status_code == 404:
-                logger.info(f"No cloud data found for {username}")
+                logger.info("No cloud data found for %s", username)
                 return None
             else:
                 logger.error(
@@ -239,10 +239,10 @@ class CloudSyncManager:
                 return None
 
         except requests.RequestException as e:
-            logger.error(f"Network error during download: {e}")
+            logger.error("Network error during download: %s", e)
             return None
         except Exception as e:
-            logger.error(f"Error during sync download: {e}")
+            logger.error("Error during sync download: %s", e)
             return None
 
     def resolve_conflict(
@@ -275,7 +275,7 @@ class CloudSyncManager:
                 return cloud_data
 
         except Exception as e:
-            logger.error(f"Error resolving conflict: {e}")
+            logger.error("Error resolving conflict: %s", e)
             # Default to local data if resolution fails
             return local_data
 
@@ -346,7 +346,7 @@ class CloudSyncManager:
                 return resolved_data
 
         except Exception as e:
-            logger.error(f"Error during bidirectional sync: {e}")
+            logger.error("Error during bidirectional sync: %s", e)
             return local_data
 
     def enable_auto_sync(self, interval: int = 300) -> None:
@@ -357,7 +357,7 @@ class CloudSyncManager:
         """
         self.auto_sync_enabled = True
         self.auto_sync_interval = interval
-        logger.info(f"Auto-sync enabled with {interval}s interval")
+        logger.info("Auto-sync enabled with %ss interval", interval)
 
     def disable_auto_sync(self) -> None:
         """Disable automatic synchronization."""
@@ -410,9 +410,9 @@ class CloudSyncManager:
                     device["current"] = device.get("device_id") == self.device_id
                 return devices
             else:
-                logger.error(f"Failed to list devices: {response.status_code}")
+                logger.error("Failed to list devices: %s", response.status_code)
                 return [{"device_id": self.device_id, "current": True}]
 
         except Exception as e:
-            logger.error(f"Error listing devices: {e}")
+            logger.error("Error listing devices: %s", e)
             return [{"device_id": self.device_id, "current": True}]

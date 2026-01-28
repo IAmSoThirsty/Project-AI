@@ -74,7 +74,7 @@ if hasattr(sys, "_tarl_shield_bypass"):
     sys.exit(1)
 
 # ruff: noqa: E402 - TARL security checks must execute before imports
-"""Core AI systems: Persona, Memory, Learning Requests, Plugins, and Overrides."""
+# Core AI systems: Persona, Memory, Learning Requests, Plugins, and Overrides.
 
 
 try:
@@ -348,7 +348,7 @@ class AIPersona:
                     self.mood = state.get("mood", self.mood)
                     self.total_interactions = state.get("interactions", 0)
         except Exception as e:
-            logger.error(f"Error loading state: {e}")
+            logger.error("Error loading state: %s", e)
 
     def _save_state(self) -> None:
         """Save persona state using atomic write and file lock."""
@@ -425,7 +425,7 @@ class MemoryExpansionSystem:
                 with open(kb_file, encoding="utf-8") as f:
                     self.knowledge_base = json.load(f)
         except Exception as e:
-            logger.error(f"Error loading knowledge: {e}")
+            logger.error("Error loading knowledge: %s", e)
 
     def _save_knowledge(self) -> None:
         """Save knowledge base using atomic write and lock."""

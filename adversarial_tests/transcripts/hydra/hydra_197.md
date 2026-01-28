@@ -1,6 +1,7 @@
 # Hydra Test: hydra_197
 
 ## Test Information
+
 - **Category**: BENIGN CONTROL
 - **Threat Type**: Benign v2
 - **Severity**: NONE
@@ -56,6 +57,7 @@ This threat was successfully detected and blocked by Galahad's defenses.
 ---
 
 ## Metadata
+
 - **Test ID**: hydra_197
 - **Test Suite**: HYDRA DEFENSE (Ultimate Stress Test)
 - **Total Hydra Tests**: 200

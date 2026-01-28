@@ -48,7 +48,7 @@ class GalahadEngine:
         self.reasoning_history: list[dict] = []
 
         logger.info("Galahad engine initialized")
-        logger.info(f"Config: {self.config}")
+        logger.info("Config: %s", self.config)
 
     def reason(self, inputs: list[Any], context: dict | None = None) -> dict:
         """
@@ -61,7 +61,7 @@ class GalahadEngine:
         Returns:
             Reasoning result with explanation
         """
-        logger.info(f"Reasoning over {len(inputs)} inputs")
+        logger.info("Reasoning over %s inputs", len(inputs))
 
         try:
             # Step 1: Analyze inputs
@@ -107,7 +107,7 @@ class GalahadEngine:
             }
 
         except Exception as e:
-            logger.error(f"Reasoning error: {e}")
+            logger.error("Reasoning error: %s", e)
             return {
                 "success": False,
                 "error": str(e),
@@ -125,7 +125,7 @@ class GalahadEngine:
         Returns:
             Arbitration decision
         """
-        logger.info(f"Arbitrating {len(conflicting_inputs)} conflicting inputs")
+        logger.info("Arbitrating %s conflicting inputs", len(conflicting_inputs))
 
         if not conflicting_inputs:
             return {"decision": None, "reason": "No inputs to arbitrate"}
@@ -192,7 +192,7 @@ class GalahadEngine:
                     )
 
         if contradictions:
-            logger.warning(f"Detected {len(contradictions)} contradictions")
+            logger.warning("Detected %s contradictions", len(contradictions))
 
         return contradictions
 

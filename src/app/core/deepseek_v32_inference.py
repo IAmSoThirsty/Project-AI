@@ -99,7 +99,7 @@ class DeepSeekV32:
 
         # Detect device
         self.device = self._detect_device(device)
-        logger.info(f"Using device: {self.device}")
+        logger.info("Using device: %s", self.device)
 
         # Model and tokenizer (lazy loaded)
         self._model = None
@@ -148,7 +148,7 @@ class DeepSeekV32:
         try:
             from transformers import AutoModelForCausalLM, AutoTokenizer
 
-            logger.info(f"Loading model: {self.model_name}")
+            logger.info("Loading model: %s", self.model_name)
 
             # Load tokenizer
             self._tokenizer = AutoTokenizer.from_pretrained(
@@ -186,7 +186,7 @@ class DeepSeekV32:
             )
             return False
         except Exception as e:
-            logger.error(f"Error loading model: {e}")
+            logger.error("Error loading model: %s", e)
             return False
 
     def check_content_filter(self, text: str) -> tuple[bool, str]:
@@ -284,7 +284,7 @@ class DeepSeekV32:
             }
 
         except Exception as e:
-            logger.error(f"Generation error: {e}")
+            logger.error("Generation error: %s", e)
             return {
                 "success": False,
                 "error": str(e),
@@ -364,7 +364,7 @@ class DeepSeekV32:
             return result
 
         except Exception as e:
-            logger.error(f"Chat generation error: {e}")
+            logger.error("Chat generation error: %s", e)
             return {
                 "success": False,
                 "error": str(e),

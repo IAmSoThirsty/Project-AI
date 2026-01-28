@@ -594,7 +594,7 @@ class Triumvirate:
 
         # Log to standard logger
         if decision.allowed:
-            logger.debug(f"Governance APPROVED: {action} - {decision.reason}")
+            logger.debug("Governance APPROVED: %s - %s", action, decision.reason)
         else:
             level = logging.WARNING if decision.overrides else logging.INFO
             logger.log(level, f"Governance BLOCKED: {action} - {decision.reason}")

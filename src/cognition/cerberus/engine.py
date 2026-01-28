@@ -55,8 +55,8 @@ class CerberusEngine:
         self.modified_count = 0
 
         logger.info("Cerberus engine initialized")
-        logger.info(f"Config: {self.config}")
-        logger.info(f"Policy mode: {self.config.mode}")
+        logger.info("Config: %s", self.config)
+        logger.info("Policy mode: %s", self.config.mode)
 
     def validate_input(self, input_data: Any, context: dict | None = None) -> dict:
         """
@@ -110,7 +110,7 @@ class CerberusEngine:
             }
 
         except Exception as e:
-            logger.error(f"Input validation error: {e}")
+            logger.error("Input validation error: %s", e)
             return {"valid": False, "input": None, "reason": f"Validation error: {e}"}
 
     def enforce_output(self, output_data: Any, context: dict | None = None) -> dict:
@@ -165,7 +165,7 @@ class CerberusEngine:
             }
 
         except Exception as e:
-            logger.error(f"Output enforcement error: {e}")
+            logger.error("Output enforcement error: %s", e)
             return {
                 "allowed": False,
                 "output": None,
@@ -211,7 +211,7 @@ class CerberusEngine:
             policy: Policy instance implementing Policy interface
         """
         self.policy_engine.add_policy(policy)
-        logger.info(f"Added custom policy: {policy.__class__.__name__}")
+        logger.info("Added custom policy: %s", policy.__class__.__name__)
 
     def reset_statistics(self):
         """Reset enforcement statistics."""

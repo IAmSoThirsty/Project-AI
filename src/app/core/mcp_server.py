@@ -108,7 +108,7 @@ class ProjectAIMCPServer:
 
             logger.info("Core systems initialized successfully")
         except Exception as e:
-            logger.error(f"Error initializing core systems: {e}")
+            logger.error("Error initializing core systems: %s", e)
             # Attributes remain None if initialization fails
 
     def _register_tools(self):
@@ -424,7 +424,7 @@ class ProjectAIMCPServer:
                 else:
                     return [TextContent(type="text", text=f"Unknown tool: {name}")]
             except Exception as e:
-                logger.error(f"Error calling tool {name}: {e}")
+                logger.error("Error calling tool %s: %s", name, e)
                 return [TextContent(type="text", text=f"Error: {str(e)}")]
 
     def _register_resources(self):
@@ -475,7 +475,7 @@ class ProjectAIMCPServer:
                 else:
                     return json.dumps({"error": f"Unknown resource: {uri}"})
             except Exception as e:
-                logger.error(f"Error reading resource {uri}: {e}")
+                logger.error("Error reading resource %s: %s", uri, e)
                 return json.dumps({"error": str(e)})
 
     def _register_prompts(self):
@@ -539,7 +539,7 @@ class ProjectAIMCPServer:
                 else:
                     return f"Unknown prompt: {name}"
             except Exception as e:
-                logger.error(f"Error getting prompt {name}: {e}")
+                logger.error("Error getting prompt %s: %s", name, e)
                 return f"Error: {str(e)}"
 
     # ==================== TOOL IMPLEMENTATIONS ====================

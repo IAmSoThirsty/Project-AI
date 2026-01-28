@@ -43,7 +43,7 @@ class ImageGenerationWorker(QThread):
             result = self.generator.generate(self.prompt, self.style)
             self.finished.emit(result)
         except Exception as e:
-            logger.error(f"Generation worker error: {e}")
+            logger.error("Generation worker error: %s", e)
             self.finished.emit({"success": False, "error": str(e)})
 
 
@@ -347,7 +347,7 @@ class ImageGenerationRightPanel(QFrame):
             self.copy_btn.setEnabled(True)
 
         except Exception as e:
-            logger.error(f"Error displaying image: {e}")
+            logger.error("Error displaying image: %s", e)
             self.show_error("Failed to display image")
 
     def show_error(self, message: str):
@@ -410,7 +410,7 @@ class ImageGenerationInterface(QWidget):
             self.worker.start()
 
         except Exception as e:
-            logger.error(f"Error starting generation: {e}")
+            logger.error("Error starting generation: %s", e)
             self.left_panel.set_status(f"Error: {e}", is_error=True)
             self.left_panel.set_generating(False)
 

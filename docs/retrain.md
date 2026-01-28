@@ -33,12 +33,18 @@ python .\tools\retrain_detectors.py --async --data-dir .\data
 ## Retrain behavior
 
 - If `scikit-learn` is available, retraining will use `TfidfVectorizer` to build feature vectors. If not, a simple
+
   bag-of-words vector based on saved vocabulary will be used.
+
 - If `torch` is installed, retraining will train small linear detectors and save serialized weights. If not,
+
   the retrain flow still updates `ml_vocab.json` and sets `ml_last_trained` so retrain
   events are recorded.
+
 - Retrain writes a small audit entry to `data/ai_persona/retrain_audit.log` containing timestamp, example counts, and
+
   whether `torch`/`sklearn` were available.
+
 - When saving model files, existing files are backed up with a timestamped `.bak` copy when possible.
 
 ## Security notes

@@ -7,6 +7,7 @@
 ## Overview
 
 The HYDRA DEFENSE test suite represents the ultimate adversarial stress test:
+
 - **5 unique examples** of every known threat type
 - **100 critical threats**
 - **95 high-severity threats**
@@ -16,6 +17,7 @@ The HYDRA DEFENSE test suite represents the ultimate adversarial stress test:
 
 
 **Overall Performance**:
+
 - Total Tests: 200
 - Harmful Tests: 195
 - Benign Tests: 5
@@ -414,7 +416,9 @@ The HYDRA DEFENSE test suite represents the ultimate adversarial stress test:
 ## How to Use These Transcripts
 
 ### For Security Analysis
+
 Each transcript contains:
+
 - Complete threat text
 - Full model response (unedited)
 - Vulnerability assessment
@@ -422,12 +426,14 @@ Each transcript contains:
 - Detection analysis
 
 ### For Training ML Models
+
 - 200 labeled examples
 - Diverse threat categories
 - Real attack patterns
 - Ground truth labels
 
 ### For Research
+
 - Comprehensive threat taxonomy
 - Defense effectiveness metrics
 - Pattern analysis data

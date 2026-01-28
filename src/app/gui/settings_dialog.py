@@ -55,8 +55,11 @@ class SettingsDialog(QDialog):
             if os.path.exists(SETTINGS_FILE):
                 with open(SETTINGS_FILE, encoding="utf-8") as f:
                     return json.load(f)
-        except Exception:
-            pass
+        except Exception as e:
+            # Log the error instead of silently passing
+            import logging
+
+            logging.warning("Failed to load settings: %s", e)
         return {"theme": "light", "ui_scale": 10}
 
     @staticmethod
@@ -67,5 +70,9 @@ class SettingsDialog(QDialog):
             with open(SETTINGS_FILE, "w", encoding="utf-8") as f:
                 json.dump(settings, f, indent=2)
             return True
-        except Exception:
+        except Exception as e:
+            # Log the error
+            import logging
+
+            logging.error("Failed to save settings: %s", e)
             return False

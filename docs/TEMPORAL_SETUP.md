@@ -19,18 +19,18 @@ Temporal is a durable execution platform that guarantees workflow completion eve
 ### Components
 
 1. **Temporal Server**: Core orchestration engine (runs in Docker)
-2. **PostgreSQL**: Persistence layer for workflow state
-3. **Workers**: Python processes that execute workflows and activities
-4. **Client**: Python code that starts workflows (integrated into Project-AI)
+1. **PostgreSQL**: Persistence layer for workflow state
+1. **Workers**: Python processes that execute workflows and activities
+1. **Client**: Python code that starts workflows (integrated into Project-AI)
 
 ### Workflows
 
 Project-AI includes four main workflows:
 
 1. **AILearningWorkflow**: Handles learning requests with Black Vault checks and approval
-2. **ImageGenerationWorkflow**: Orchestrates image generation with content filtering
-3. **DataAnalysisWorkflow**: Manages data analysis pipeline from load to visualization
-4. **MemoryExpansionWorkflow**: Processes conversations and extracts memories
+1. **ImageGenerationWorkflow**: Orchestrates image generation with content filtering
+1. **DataAnalysisWorkflow**: Manages data analysis pipeline from load to visualization
+1. **MemoryExpansionWorkflow**: Processes conversations and extracts memories
 
 ### Activities
 
@@ -52,26 +52,31 @@ Each workflow is composed of atomic activities:
 ### Quick Start (Local Development)
 
 1. **Initialize Temporal configuration**:
+
    ```bash
    python scripts/setup_temporal.py init
    ```
 
-2. **Start Temporal server**:
+1. **Start Temporal server**:
+
    ```bash
    python scripts/setup_temporal.py start
    ```
 
    This starts:
+
    - Temporal server on `localhost:7233` (gRPC)
    - Temporal Web UI on `http://localhost:8233`
    - PostgreSQL database for persistence
 
-3. **Start worker**:
+1. **Start worker**:
+
    ```bash
    python scripts/setup_temporal.py worker
    ```
 
-4. **Verify services**:
+1. **Verify services**:
+
    ```bash
    python scripts/setup_temporal.py status
    ```
@@ -119,9 +124,9 @@ TEMPORAL_ACTIVITY_START_TO_CLOSE_TIMEOUT=300
 For Temporal Cloud deployment:
 
 1. Sign up at https://temporal.io/cloud
-2. Create a namespace (e.g., `project-ai.a2b3c`)
-3. Download client certificates
-4. Update `.env.temporal`:
+1. Create a namespace (e.g., `project-ai.a2b3c`)
+1. Download client certificates
+1. Update `.env.temporal`:
 
 ```bash
 TEMPORAL_CLOUD_NAMESPACE=project-ai.a2b3c
@@ -129,7 +134,7 @@ TEMPORAL_CLOUD_CERT_PATH=/path/to/client-cert.pem
 TEMPORAL_CLOUD_KEY_PATH=/path/to/client-key.pem
 ```
 
-5. Connect using cloud configuration:
+1. Connect using cloud configuration:
 
 ```python
 from app.temporal.client import TemporalClientManager
@@ -240,32 +245,37 @@ async for event in handle.fetch_history():
 ### Worker Not Processing Tasks
 
 1. Check worker is running:
+
    ```bash
    docker-compose ps temporal-worker
    ```
 
-2. Check worker logs:
+1. Check worker logs:
+
    ```bash
    docker-compose logs -f temporal-worker
    ```
 
-3. Verify task queue matches:
+1. Verify task queue matches:
    - Worker: `TEMPORAL_TASK_QUEUE=project-ai-tasks`
    - Client: `task_queue="project-ai-tasks"`
 
 ### Connection Refused
 
 1. Verify Temporal server is running:
+
    ```bash
    docker-compose ps temporal
    ```
 
-2. Check server health:
+1. Check server health:
+
    ```bash
    curl http://localhost:8233
    ```
 
-3. Check server logs:
+1. Check server logs:
+
    ```bash
    docker-compose logs temporal
    ```
@@ -273,18 +283,20 @@ async for event in handle.fetch_history():
 ### Workflow Stuck
 
 1. Check in Web UI for error details
-2. Verify activities have appropriate timeouts
-3. Check worker logs for activity failures
-4. Use workflow history to identify stuck activity
+1. Verify activities have appropriate timeouts
+1. Check worker logs for activity failures
+1. Use workflow history to identify stuck activity
 
 ### Database Issues
 
 1. Check PostgreSQL is running:
+
    ```bash
    docker-compose ps temporal-postgresql
    ```
 
-2. Reset database (⚠️ destroys all workflow data):
+1. Reset database (⚠️ destroys all workflow data):
+
    ```bash
    docker-compose down -v
    docker-compose up -d
@@ -386,10 +398,10 @@ This integration was developed in the **"Expert space waddle"** workspace and ha
 ## Next Steps
 
 1. Review workflow definitions in `src/app/temporal/workflows.py`
-2. Examine activity implementations in `src/app/temporal/activities.py`
-3. Customize configuration in `.env.temporal`
-4. Integrate workflows into your application code
-5. Deploy to production using Temporal Cloud
+1. Examine activity implementations in `src/app/temporal/activities.py`
+1. Customize configuration in `.env.temporal`
+1. Integrate workflows into your application code
+1. Deploy to production using Temporal Cloud
 
 ## Resources
 
@@ -401,6 +413,7 @@ This integration was developed in the **"Expert space waddle"** workspace and ha
 ## Support
 
 For issues specific to Project-AI's Temporal integration:
+
 - Check troubleshooting section above
 - Review logs: `docker-compose logs temporal-worker`
 - Consult Temporal Web UI: http://localhost:8233

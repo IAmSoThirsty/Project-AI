@@ -197,6 +197,7 @@ pytest tests/test_complete_system.py::test_full_system_integration -v
 ### Codex Engine
 
 **Features:**
+
 - GPU/CPU automatic detection and fallback
 - Model loading error handling
 - Environment-based configuration
@@ -220,6 +221,7 @@ engine = CodexEngine(config)
 ### Galahad Engine
 
 **Features:**
+
 - Multi-input reasoning
 - Contradiction detection
 - Arbitration strategies (weighted, majority, unanimous)
@@ -241,6 +243,7 @@ print(f"Explanation: {result['explanation']}")
 ### Cerberus Engine
 
 **Features:**
+
 - Configurable policy modes (production, strict, custom)
 - Pre-persistence validation
 - Output enforcement
@@ -261,6 +264,7 @@ print(f"Allowed: {result['allowed']}")
 ### Semantic Memory
 
 **Features:**
+
 - SentenceTransformer embeddings
 - Efficient vector similarity search
 - Scalable to >10k records
@@ -396,6 +400,7 @@ Same as Project-AI (MIT)
 ## Support
 
 For issues, please create a GitHub issue with:
+
 - Environment details (OS, Python version, GPU)
 - Configuration (env vars)
 - Error messages and logs

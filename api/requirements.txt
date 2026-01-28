@@ -1,0 +1,13 @@
+# API Backend Requirements
+# Project AI Governance Host
+
+# Core Framework
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+pydantic==2.5.3
+
+# CORS & Security
+python-multipart==0.0.6
+
+# Optional: Production deployment
+gunicorn==21.2.0

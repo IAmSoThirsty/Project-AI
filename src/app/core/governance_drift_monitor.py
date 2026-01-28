@@ -174,7 +174,7 @@ class GovernanceDriftMonitor:
                     executions.append(execution)
 
             except Exception as e:
-                logger.warning(f"Failed to load {filepath}: {e}")
+                logger.warning("Failed to load %s: %s", filepath, e)
 
         return executions
 
@@ -371,6 +371,6 @@ class GovernanceDriftMonitor:
                         alerts.append(alert)
 
             except Exception as e:
-                logger.warning(f"Failed to load {filepath}: {e}")
+                logger.warning("Failed to load %s: %s", filepath, e)
 
         return alerts

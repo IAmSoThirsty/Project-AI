@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project AI – The Triumvirate</title>
+  <style>
+    :root {
+      --bg: #0b0e14;
+      --panel: #121826;
+      --text: #e6e9f0;
+      --muted: #9aa4bf;
+      --accent: #7c7cff;
+      --danger: #ff5c5c;
+      --success: #4dff88;
+      --warn: #ffd166;
+
+      --ring: rgba(124,124,255,0.55);
+      --ring2: rgba(77,255,136,0.35);
+      --ring3: rgba(255,92,92,0.35);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(1200px 600px at 50% -200px, #1a1f36, var(--bg));
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* === Animated ambient glow / kernel vibe (Extra Step #1) === */
+    .ambient {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      opacity: 0.9;
+      filter: blur(24px);
+    }
+
+    .ambient::before,
+    .ambient::after {
+      content: "";
+      position: absolute;
+      width: 70vmax;
+      height: 70vmax;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, rgba(124,124,255,0.30), transparent 60%),
+                  radial-gradient(circle at 70% 70%, rgba(77,255,136,0.22), transparent 60%),
+                  radial-gradient(circle at 70% 20%, rgba(255,92,92,0.18), transparent 60%);
+      animation: drift 18s ease-in-out infinite;
+      transform: translate(-20%, -10%);
+    }
+
+    .ambient::after {
+      width: 62vmax;
+      height: 62vmax;
+      animation-duration: 24s;
+      transform: translate(35%, 25%);
+      opacity: 0.75;
+    }
+
+    @keyframes drift {
+      0%   { transform: translate(-20%, -10%) scale(1); }
+      50%  { transform: translate(10%, 6%) scale(1.08); }
+      100% { transform: translate(-20%, -10%) scale(1); }
+    }
+
+    header {
+      padding: 4.25rem 2rem 2.5rem;
+      text-align: center;
+      position: relative;
+    }
+
+    header h1 {
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      margin: 0;
+      letter-spacing: 0.04em;
+    }
+
+    header h1 span {
+      color: var(--accent);
+      text-shadow: 0 0 24px rgba(124,124,255,0.35);
+    }
+
+    header p {
+      max-width: 980px;
+      margin: 1.5rem auto 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .heroRow {
+      max-width: 1200px;
+      margin: 2.25rem auto 0;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 1.75rem;
+      align-items: center;
+    }
+
+    @media (max-width: 940px) {
+      .heroRow { grid-template-columns: 1fr; }
+    }
+
+    .heroCard {
+      background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012));
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 22px;
+      padding: 1.6rem;
+      box-shadow: 0 14px 44px rgba(0,0,0,0.35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .heroCard::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      border-radius: 24px;
+      background: conic-gradient(from 90deg,
+        rgba(124,124,255,0.0),
+        rgba(124,124,255,0.25),
+        rgba(77,255,136,0.18),
+        rgba(255,92,92,0.14),
+        rgba(124,124,255,0.0)
+      );
+      filter: blur(14px);
+      opacity: 0.55;
+      animation: spin 9s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .heroCard > * { position: relative; z-index: 1; }
+
+    .callout {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.45rem 0.75rem;
+      border-radius: 999px;
+      background: rgba(124,124,255,0.12);
+      border: 1px solid rgba(124,124,255,0.18);
+      color: var(--text);
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.9rem;
+      user-select: none;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 16px rgba(124,124,255,0.6);
+      animation: pulse 1.7s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.45); opacity: 0.6; }
+    }
+
+    .heroCard h2 {
+      margin: 0.25rem 0 0.6rem;
+      font-size: 1.45rem;
+      letter-spacing: 0.02em;
+    }
+
+    .heroCard ul {
+      margin: 0.75rem 0 0;
+      padding-left: 1.1rem;
+      color: var(--muted);
+    }
+
+    .heroCard li { margin: 0.35rem 0; }
+
+    /* Triumvirate animated diagram */
+    .triad {
+      display: grid;
+      place-items: center;
+      padding: 1.2rem;
+    }
+
+    .triad svg {
+      width: min(360px, 92vw);
+      height: auto;
+      overflow: visible;
+    }
+
+    .ring {
+      transform-origin: 50% 50%;
+      animation: ringRotate 14s linear infinite;
+      filter: drop-shadow(0 0 16px rgba(124,124,255,0.25));
+    }
+
+    .ring.r2 { animation-duration: 22s; opacity: 0.8; }
+    .ring.r3 { animation-duration: 30s; opacity: 0.65; }
+
+    @keyframes ringRotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .node {
+      filter: drop-shadow(0 0 22px rgba(0,0,0,0.4));
+    }
+
+    .nodeText {
+      font-family: Inter, system-ui, -apple-system, sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      font-size: 10px;
+      fill: rgba(230,233,240,0.92);
+      text-transform: uppercase;
+    }
+
+    .nodeSub {
+      font-family: Inter, system-ui, -apple-system, sans-serif;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      font-size: 10px;
+      fill: rgba(154,164,191,0.95);
+    }
+
+    .section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    .section h2 {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.75rem;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 1.75rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 18px 45px rgba(0,0,0,0.35);
+      border-color: rgba(124,124,255,0.5);
+    }
+
+    .card h3 {
+      margin-top: 0;
+      margin-bottom: 0.75rem;
+      font-size: 1.35rem;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .badge.ethics { background: rgba(124,124,255,0.15); color: var(--accent); }
+    .badge.defense { background: rgba(255,92,92,0.15); color: var(--danger); }
+    .badge.gov { background: rgba(77,255,136,0.15); color: var(--success); }
+
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+      margin: 3rem 0;
+    }
+
+    /* === Repo badges + lightweight "dynamic" injection (Extra Step #3) === */
+    .statusWrap {
+      display: grid;
+      gap: 1rem;
+      align-items: start;
+      justify-items: center;
+    }
+
+    .badgePanel {
+      width: min(980px, 100%);
+      background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.01));
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 18px;
+      padding: 1.25rem;
+      box-shadow: 0 10px 34px rgba(0,0,0,0.28);
+    }
+
+    .badgePanelHeader {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem 1rem;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 0.8rem;
+    }
+
+    .badgePanelHeader h3 {
+      margin: 0;
+      font-size: 1.15rem;
+      letter-spacing: 0.02em;
+    }
+
+    .badgePanelHeader span {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      align-items: center;
+    }
+
+    .badges img {
+      height: 28px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.22);
+      transition: transform 0.18s ease;
+      background: rgba(0,0,0,0.25);
+    }
+
+    .badges img:hover { transform: translateY(-2px); }
+
+    .repoLine {
+      margin-top: 0.9rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 0.85rem;
+    }
+
+    .repoLine code {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 0.18rem 0.5rem;
+      border-radius: 10px;
+      color: rgba(230,233,240,0.92);
+    }
+
+    .repoMini {
+      display: inline-flex;
+      gap: 0.55rem;
+      align-items: center;
+    }
+
+    .miniPill {
+      padding: 0.24rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05);
+      color: rgba(230,233,240,0.92);
+      font-size: 0.82rem;
+      letter-spacing: 0.02em;
+    }
+
+    footer {
+      padding: 2.5rem 2rem 4rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    footer strong {
+      color: var(--text);
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover { text-decoration: underline; }
+
+    /* Charter section styles */
+    .charter-container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .charter-box {
+      background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012));
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 18px;
+      padding: 2.5rem;
+      box-shadow: 0 14px 44px rgba(0,0,0,0.35);
+    }
+
+    .charter-box h3 {
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      font-size: 1.75rem;
+      text-align: center;
+    }
+
+    .charter-content {
+      max-height: 400px;
+      overflow-y: auto;
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      margin-bottom: 2rem;
+    }
+
+    .charter-content::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .charter-content::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
+    }
+
+    .charter-content::-webkit-scrollbar-thumb {
+      background: rgba(124,124,255,0.4);
+      border-radius: 4px;
+    }
+
+    .charter-content h4 {
+      color: var(--accent);
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+      font-size: 1.15rem;
+    }
+
+    .charter-content h4:first-child {
+      margin-top: 0;
+    }
+
+    .charter-content p, .charter-content ul {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .charter-content ul {
+      margin: 0.5rem 0 1rem 1.5rem;
+    }
+
+    .charter-content li {
+      margin: 0.5rem 0;
+    }
+
+    .charter-content code {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: var(--text);
+    }
+
+    .charter-acknowledgment {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .checkbox-container:hover {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(124,124,255,0.3);
+    }
+
+    .checkbox-container input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      accent-color: var(--accent);
+    }
+
+    .checkbox-container span {
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    .charter-button {
+      width: 100%;
+      padding: 1rem 2rem;
+      background: linear-gradient(135deg, rgba(124,124,255,0.2), rgba(77,255,136,0.15));
+      border: 2px solid rgba(124,124,255,0.3);
+      border-radius: 12px;
+      color: var(--text);
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 0.02em;
+    }
+
+    .charter-button:hover:not(:disabled) {
+      background: linear-gradient(135deg, rgba(124,124,255,0.35), rgba(77,255,136,0.25));
+      border-color: rgba(124,124,255,0.6);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(124,124,255,0.3);
+    }
+
+    .charter-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background: rgba(100,100,100,0.2);
+      border-color: rgba(255,255,255,0.1);
+    }
+
+    /* Downloads section */
+    .downloads-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .download-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 1.75rem;
+      transition: all 0.3s ease;
+    }
+
+    .download-card.disabled {
+      opacity: 0.5;
+      filter: grayscale(0.7);
+    }
+
+    .download-card:not(.disabled):hover {
+      transform: translateY(-4px);
+      border-color: rgba(124,124,255,0.4);
+      box-shadow: 0 12px 36px rgba(0,0,0,0.3);
+    }
+
+    .download-card h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.3rem;
+    }
+
+    .download-card p {
+      color: var(--muted);
+      margin: 0 0 1rem 0;
+      font-size: 0.95rem;
+    }
+
+    .download-details {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 1.25rem 0;
+    }
+
+    .download-details li {
+      color: var(--muted);
+      font-size: 0.9rem;
+      padding: 0.35rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .download-details li:last-child {
+      border-bottom: none;
+    }
+
+    .download-button {
+      width: 100%;
+      padding: 0.85rem 1.5rem;
+      background: rgba(124,124,255,0.15);
+      border: 1px solid rgba(124,124,255,0.3);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .download-button:hover:not(:disabled) {
+      background: rgba(124,124,255,0.3);
+      border-color: rgba(124,124,255,0.6);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(124,124,255,0.25);
+    }
+
+    .download-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background: rgba(100,100,100,0.1);
+      border-color: rgba(255,255,255,0.1);
+    }
+
+    .download-note {
+      max-width: 900px;
+      margin: 2rem auto 0;
+      padding: 1.25rem;
+      background: rgba(255,215,0,0.08);
+      border: 1px solid rgba(255,215,0,0.2);
+      border-radius: 12px;
+    }
+
+    .download-note p {
+      margin: 0;
+      color: var(--text);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .download-note code {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ambient" aria-hidden="true"></div>
+
+  <header>
+    <h1>Project <span>AI</span></h1>
+    <p>
+      A production-grade, governance-first artificial intelligence architecture built on the
+      <strong>Triumvirate Model</strong>: Ethics, Defense, and Orchestration — no bypasses, no shortcuts,
+      no silent failures.
+    </p>
+
+    <div class="heroRow">
+      <div class="heroCard">
+        <div class="callout"><span class="dot"></span><span>Kernel authority enforced • audit always on</span></div>
+        <h2>Governed intelligence, not vibes.</h2>
+        <p style="margin:0;color:var(--muted)">
+          Every action routes through governance. If something tries to slip around the rules,
+          the system doesn't "handle it later." It denies it now.
+        </p>
+        <ul>
+          <li><strong>Fail-closed</strong> defaults — no catastrophic "oops."</li>
+          <li><strong>Deterministic replay</strong> — the past is reconstructible.</li>
+          <li><strong>External audit surface</strong> — visibility without execution rights.</li>
+        </ul>
+      </div>
+
+      <div class="triad" aria-label="Animated Triumvirate diagram">
+        <svg viewBox="0 0 260 260" role="img">
+          <defs>
+            <radialGradient id="core" cx="50%" cy="50%" r="60%">
+              <stop offset="0%" stop-color="rgba(230,233,240,0.20)"/>
+              <stop offset="60%" stop-color="rgba(124,124,255,0.10)"/>
+              <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+            </radialGradient>
+          </defs>
+
+          <!-- orbit rings -->
+          <g class="ring">
+            <circle cx="130" cy="130" r="92" fill="none" stroke="var(--ring)" stroke-width="2" stroke-dasharray="10 10" opacity="0.85" />
+          </g>
+          <g class="ring r2">
+            <circle cx="130" cy="130" r="74" fill="none" stroke="var(--ring2)" stroke-width="2" stroke-dasharray="4 10" />
+          </g>
+          <g class="ring r3">
+            <circle cx="130" cy="130" r="56" fill="none" stroke="var(--ring3)" stroke-width="2" stroke-dasharray="18 12" />
+          </g>
+
+          <!-- core -->
+          <circle cx="130" cy="130" r="38" fill="url(#core)" stroke="rgba(255,255,255,0.10)" />
+          <text x="130" y="126" text-anchor="middle" class="nodeText">Triumvirate</text>
+          <text x="130" y="142" text-anchor="middle" class="nodeSub">Kernel</text>
+
+          <!-- nodes -->
+          <g class="node">
+            <circle cx="130" cy="34" r="20" fill="rgba(124,124,255,0.16)" stroke="rgba(124,124,255,0.45)" />
+            <text x="130" y="38" text-anchor="middle" class="nodeText">Galahad</text>
+          </g>
+
+          <g class="node">
+            <circle cx="40" cy="196" r="20" fill="rgba(255,92,92,0.14)" stroke="rgba(255,92,92,0.42)" />
+            <text x="40" y="200" text-anchor="middle" class="nodeText">Cerberus</text>
+          </g>
+
+          <g class="node">
+            <circle cx="220" cy="196" r="20" fill="rgba(77,255,136,0.12)" stroke="rgba(77,255,136,0.40)" />
+            <text x="220" y="200" text-anchor="middle" class="nodeText">Codex</text>
+          </g>
+
+          <!-- connectors -->
+          <path d="M130 56 L130 92" stroke="rgba(255,255,255,0.15)" stroke-width="2" />
+          <path d="M58 186 L98 156" stroke="rgba(255,255,255,0.15)" stroke-width="2" />
+          <path d="M202 186 L162 156" stroke="rgba(255,255,255,0.15)" stroke-width="2" />
+        </svg>
+      </div>
+    </div>
+  </header>
+
+  <section class="section">
+    <h2>The Triumvirate</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="badge ethics">Ethics</div>
+        <h3>Galahad</h3>
+        <p>
+          The cognitive and moral authority. Galahad governs reasoning, alignment, and invariant
+          enforcement. Every decision must pass ethical validation before execution.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="badge defense">Defense</div>
+        <h3>Cerberus</h3>
+        <p>
+          The security and resilience pillar. Cerberus detects adversarial input, prevents bypass
+          attempts, and ensures the system fails closed — not catastrophically.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="badge gov">Orchestration</div>
+        <h3>Codex Deus</h3>
+        <p>
+          The final authority. Codex Deus arbitrates execution, enforces governance, and provides
+          auditability, determinism, and replay across the entire system.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="section">
+    <h2>Status Signals</h2>
+    <div class="statusWrap">
+      <div class="badgePanel">
+        <div class="badgePanelHeader">
+          <h3>Repo health / integrations</h3>
+          <span id="statusHint">Static badges + optional live stats if GitHub API is reachable.</span>
+        </div>
+
+        <div class="badges" aria-label="Project status badges">
+          <!-- NOTE: these match your earlier badge set; swap paths if your workflow names differ -->
+          <img alt="GPT-OSS Integration" src="https://github.com/IAmSoThirsty/Project-AI/actions/workflows/gpt_oss_integration.yml/badge.svg" />
+          <img alt="Codacy configured" src="https://img.shields.io/badge/Codacy-configured-blue?logo=codacy" />
+          <img alt="DevContainer Ready" src="https://img.shields.io/badge/DevContainer-Ready-0078d4?logo=visualstudiocode" />
+          <img alt="GitHooks enabled" src="https://img.shields.io/badge/GitHooks-enabled-blueviolet?logo=git" />
+          <img alt="GitHub Actions" src="https://img.shields.io/badge/GitHub%20Actions-enabled-2088FF?logo=githubactions&logoColor=white" />
+        </div>
+
+        <div class="repoLine">
+          <div>Repository: <code id="repoName">IAmSoThirsty/Project-AI</code></div>
+          <div class="repoMini" aria-label="Live repository mini stats">
+            <span class="miniPill" id="stars">★ —</span>
+            <span class="miniPill" id="forks">⑂ —</span>
+            <span class="miniPill" id="issues">! —</span>
+            <span class="miniPill" id="updated">Updated —</span>
+          </div>
+        </div>
+      </div>
+
+      <p style="max-width:980px;text-align:center;color:var(--muted);margin:0;">
+        These signals are <strong>not decoration</strong>. They're the public heartbeat: build status, tooling posture,
+        and a tiny live pulse of repo activity.
+      </p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="section">
+    <h2>Governance‑First AI Web Host</h2>
+    <p style="max-width:980px;margin:0 auto 2rem;text-align:center;color:var(--muted);">
+      This site is not a static page. It is the <strong>front door</strong> to a governed AI execution environment.
+      The web layer is subordinate to governance — every request, UI action, and API call is evaluated
+      before anything executes.
+    </p>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Web Intake Gateway</h3>
+        <p>
+          All browser interactions route through a governance gateway. UI events are translated into
+          <strong>intent objects</strong>, not executable commands. No JavaScript, form, or API call can
+          bypass this layer.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Intent Classification</h3>
+        <p>
+          Each request is classified by scope, risk, and authority level. Low‑risk reads, high‑risk
+          mutations, and forbidden operations are separated before execution is even considered.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Governance Kernel</h3>
+        <p>
+          The Triumvirate kernel evaluates every intent. Galahad validates alignment, Cerberus evaluates
+          threat posture, Codex Deus arbitrates final permission or denial.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Fail‑Closed Execution</h3>
+        <p>
+          If governance is unreachable, ambiguous, or degraded, the host <strong>halts execution</strong>.
+          The system never guesses and never "tries anyway."
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Audit & Replay Layer</h3>
+        <p>
+          Every decision is logged with deterministic context. Auditors can replay decisions exactly
+          as they occurred — without the ability to execute new actions.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Human‑Readable Authority</h3>
+        <p>
+          Governance decisions are explainable. When something is denied, the host explains <em>why</em>
+          in plain language — not stack traces or legalese.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="section">
+    <h2>Execution Flow</h2>
+    <ol style="max-width:980px;margin:0 auto;color:var(--muted);line-height:1.7;">
+      <li><strong>Request enters web host</strong> (UI, API, agent, or automation).</li>
+      <li><strong>Intent object constructed</strong> (who, what, scope, risk, authority).</li>
+      <li><strong>Galahad evaluates alignment</strong> against invariants and ethics.</li>
+      <li><strong>Cerberus evaluates threat</strong> (bypass attempts, malformed input, adversarial patterns).</li>
+      <li><strong>Codex Deus arbitrates</strong>: allow, deny, degrade, or sandbox.</li>
+      <li><strong>Decision logged</strong> with full replay context.</li>
+      <li><strong>Execution occurs</strong> — or does not.</li>
+    </ol>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="section">
+    <h2>What This Host Is — And Is Not</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Is</h3>
+        <p>
+          A governed interface to intelligence. A place where humans and AI interact under explicit,
+          inspectable authority rules.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Is Not</h3>
+        <p>
+          A chatbot playground, prompt toy, or opaque SaaS. Nothing runs here without permission.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- SOFTWARE CHARTER SECTION -->
+  <section class="section" id="charter">
+    <h2>⚖️ Software Charter & Terms</h2>
+    <p style="max-width:980px;margin:0 auto 2rem;text-align:center;color:var(--muted);">
+      Project AI is released under strict governance principles. Before downloading or using this software,
+      you <strong>must read and acknowledge</strong> the Software Charter below.
+    </p>
+
+    <div class="charter-container">
+      <div class="charter-box">
+        <h3>📜 Software Charter</h3>
+        
+        <div class="charter-content">
+          <h4>1. Purpose & Scope</h4>
+          <p>
+            This software implements a <strong>governance-first AI architecture</strong> built on the Triumvirate Model.
+            It is designed for production environments requiring deterministic, auditable, and fail-closed AI execution.
+            This is <strong>not</strong> a chatbot, toy, or experimental framework.
+          </p>
+
+          <h4>2. Constitutional Guarantees</h4>
+          <p>
+            All actions are governed by an immutable <strong>CONSTITUTION.md</strong> that defines:
+          </p>
+          <ul>
+            <li><strong>Triumvirate Authority:</strong> Galahad (Ethics), Cerberus (Defense), Codex Deus (Orchestration)</li>
+            <li><strong>Four Laws of AI Governance:</strong> Fail-closed defaults, audit logging, deterministic replay, external oversight</li>
+            <li><strong>TARL Enforcement:</strong> Every action validated against governance rules</li>
+          </ul>
+
+          <h4>3. Security & Testing</h4>
+          <p>
+            This software has been tested with:
+          </p>
+          <ul>
+            <li><strong>2,315+ security tests</strong> (2,000 adversarial + 315 OWASP-compliant)</li>
+            <li><strong>100% OWASP Testing Guide coverage</strong> (all 66 categories)</li>
+            <li><strong>Multi-turn attack scenarios</strong> including XSS, SQL injection, privilege escalation, zero-days, APT persistence, and supply chain attacks</li>
+          </ul>
+
+          <h4>4. User Responsibilities</h4>
+          <p>By downloading and using this software, you acknowledge and agree:</p>
+          <ul>
+            <li>✅ You will <strong>not attempt to bypass governance controls</strong></li>
+            <li>✅ You will <strong>respect the Constitutional guarantees</strong> and TARL framework</li>
+            <li>✅ You understand this is a <strong>production-grade system</strong>, not a development toy</li>
+            <li>✅ You will <strong>maintain audit logs</strong> as required by the Constitution</li>
+            <li>✅ You will <strong>not modify core governance</strong> without understanding implications</li>
+            <li>✅ You accept <strong>fail-closed behavior</strong> as default (no silent failures)</li>
+          </ul>
+
+          <h4>5. Prohibited Uses</h4>
+          <p>The following uses are <strong>strictly prohibited</strong>:</p>
+          <ul>
+            <li>❌ Bypassing or disabling governance controls</li>
+            <li>❌ Removing or tampering with audit logging</li>
+            <li>❌ Using for illegal, harmful, or unethical purposes</li>
+            <li>❌ Deploying without understanding the Constitution</li>
+            <li>❌ Commercial use without proper licensing (see LICENSE file)</li>
+          </ul>
+
+          <h4>6. Warranty & Liability</h4>
+          <p>
+            This software is provided <strong>"AS IS"</strong> under the MIT License.
+            While extensively tested, users assume all responsibility for deployment and operation.
+            The authors are not liable for misuse, misconfiguration, or governance bypass attempts.
+          </p>
+
+          <h4>7. Compliance & Standards</h4>
+          <p>This software complies with:</p>
+          <ul>
+            <li>✅ <strong>OWASP Testing Guide v4</strong> (100% coverage)</li>
+            <li>✅ <strong>MITRE ATT&CK Framework</strong> (25+ techniques mapped)</li>
+            <li>✅ <strong>CVE Best Practices</strong> (vulnerabilities addressed)</li>
+            <li>✅ <strong>Governance-First Architecture</strong> (Constitutional enforcement)</li>
+          </ul>
+
+          <h4>8. Required Acknowledgments</h4>
+          <p>Before downloading, you must acknowledge:</p>
+          <ul>
+            <li>✅ I have read and understand the Software Charter</li>
+            <li>✅ I have read the CONSTITUTION.md</li>
+            <li>✅ I understand this is a governance-first system</li>
+            <li>✅ I will not bypass security controls</li>
+            <li>✅ I accept fail-closed defaults</li>
+          </ul>
+
+          <h4>9. Documentation Requirements</h4>
+          <p>
+            Before deployment, you <strong>must read</strong>:
+          </p>
+          <ul>
+            <li>📄 <code>README.md</code> - System overview</li>
+            <li>📄 <code>CONSTITUTION.md</code> - Governance guarantees</li>
+            <li>📄 <code>SECURITY.md</code> - Security posture</li>
+            <li>📄 <code>DEPLOYMENT_RELEASE_QUICKSTART.md</code> - Deployment guide</li>
+          </ul>
+
+          <h4>10. Updates & Modifications</h4>
+          <p>
+            This Charter may be updated. By using this software, you agree to check for Charter updates
+            before each deployment.
+          </p>
+        </div>
+
+        <div class="charter-acknowledgment">
+          <label class="checkbox-container">
+            <input type="checkbox" id="ack1" />
+            <span>I have read and understand the Software Charter</span>
+          </label>
+          <label class="checkbox-container">
+            <input type="checkbox" id="ack2" />
+            <span>I have read the CONSTITUTION.md and understand governance principles</span>
+          </label>
+          <label class="checkbox-container">
+            <input type="checkbox" id="ack3" />
+            <span>I understand this is a production-grade, governance-first system</span>
+          </label>
+          <label class="checkbox-container">
+            <input type="checkbox" id="ack4" />
+            <span>I will not attempt to bypass security or governance controls</span>
+          </label>
+          <label class="checkbox-container">
+            <input type="checkbox" id="ack5" />
+            <span>I accept fail-closed defaults and understand the implications</span>
+          </label>
+        </div>
+
+        <button id="enableDownloads" class="charter-button" disabled>
+          Acknowledge Charter & Enable Downloads
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- DOWNLOADS SECTION -->
+  <section class="section" id="downloads">
+    <h2>📦 Downloads</h2>
+    <p style="max-width:980px;margin:0 auto 2rem;text-align:center;color:var(--muted);">
+      <strong>Note:</strong> Downloads are disabled until you acknowledge the Software Charter above.
+    </p>
+
+    <div class="downloads-grid" id="downloadsGrid">
+      <div class="download-card disabled">
+        <h3>🖥️ Complete Package v1.0.0</h3>
+        <p>All platforms (Backend, Web, Android, Desktop)</p>
+        <ul class="download-details">
+          <li>Size: ~200MB (complete)</li>
+          <li>Platforms: All</li>
+          <li>Includes: Full documentation</li>
+        </ul>
+        <button class="download-button" data-platform="complete" disabled>
+          Download Complete Package
+        </button>
+      </div>
+
+      <div class="download-card disabled">
+        <h3>🐧 Backend API</h3>
+        <p>Python FastAPI + TARL Governance</p>
+        <ul class="download-details">
+          <li>Platforms: Linux, Windows, macOS</li>
+          <li>Requires: Python 3.8+</li>
+          <li>Includes: API + Governance kernel</li>
+        </ul>
+        <button class="download-button" data-platform="backend" disabled>
+          Download Backend
+        </button>
+      </div>
+
+      <div class="download-card disabled">
+        <h3>🌐 Web Frontend</h3>
+        <p>Static HTML/CSS/JS interface</p>
+        <ul class="download-details">
+          <li>Platforms: Any web server</li>
+          <li>Requires: Modern browser</li>
+          <li>Includes: Deployment guide</li>
+        </ul>
+        <button class="download-button" data-platform="web" disabled>
+          Download Web Frontend
+        </button>
+      </div>
+
+      <div class="download-card disabled">
+        <h3>📱 Android App</h3>
+        <p>Native Android application</p>
+        <ul class="download-details">
+          <li>Platforms: Android 7.0+ (API 24+)</li>
+          <li>Size: ~15MB APK</li>
+          <li>Includes: Mobile governance UI</li>
+        </ul>
+        <button class="download-button" data-platform="android" disabled>
+          Download APK
+        </button>
+      </div>
+
+      <div class="download-card disabled">
+        <h3>💻 Desktop App (Windows)</h3>
+        <p>Electron-based desktop application</p>
+        <ul class="download-details">
+          <li>Platforms: Windows 10+</li>
+          <li>Size: ~80MB installer</li>
+          <li>Includes: Full desktop experience</li>
+        </ul>
+        <button class="download-button" data-platform="windows" disabled>
+          Download for Windows
+        </button>
+      </div>
+
+      <div class="download-card disabled">
+        <h3>🍎 Desktop App (macOS)</h3>
+        <p>Electron-based desktop application</p>
+        <ul class="download-details">
+          <li>Platforms: macOS 10.14+</li>
+          <li>Size: ~85MB DMG</li>
+          <li>Includes: Full desktop experience</li>
+        </ul>
+        <button class="download-button" data-platform="macos" disabled>
+          Download for macOS
+        </button>
+      </div>
+
+      <div class="download-card disabled">
+        <h3>🐧 Desktop App (Linux)</h3>
+        <p>Electron-based desktop application</p>
+        <ul class="download-details">
+          <li>Platforms: Ubuntu 18.04+</li>
+          <li>Size: ~75MB AppImage</li>
+          <li>Includes: Full desktop experience</li>
+        </ul>
+        <button class="download-button" data-platform="linux" disabled>
+          Download for Linux
+        </button>
+      </div>
+
+      <div class="download-card disabled">
+        <h3>🐳 Docker Image</h3>
+        <p>Containerized deployment</p>
+        <ul class="download-details">
+          <li>Platforms: Any with Docker</li>
+          <li>Size: ~500MB image</li>
+          <li>Includes: Backend + Web</li>
+        </ul>
+        <button class="download-button" data-platform="docker" disabled>
+          Download Docker Image
+        </button>
+      </div>
+    </div>
+
+    <div class="download-note">
+      <p>
+        <strong>⚠️ Important:</strong> After downloading, read the included <code>README.md</code> and
+        <code>CONSTITUTION.md</code> before deployment. See <code>DEPLOYMENT_RELEASE_QUICKSTART.md</code>
+        for platform-specific instructions.
+      </p>
+    </div>
+  </section>
+
+  <footer>
+    <p>
+      <strong>Project AI</strong> — Not a chatbot. Not a toy. A governed intelligence framework<br />
+      Built for humans who expect systems to be accountable.
+    </p>
+    <p style="margin-top:0.75rem;">
+      <a href="#" id="repoLink" aria-label="Open repository">Open repository</a>
+    </p>
+  </footer>
+
+  <script>
+    // Extra Step #3: lightweight live repo pulse (no auth). If blocked, page still looks perfect.
+    (function () {
+      const owner = 'IAmSoThirsty';
+      const repo = 'Project-AI';
+      const repoUrl = `https://github.com/${owner}/${repo}`;
+      const apiUrl = `https://api.github.com/repos/${owner}/${repo}`;
+
+      const repoName = document.getElementById('repoName');
+      const repoLink = document.getElementById('repoLink');
+      const statusHint = document.getElementById('statusHint');
+
+      repoName.textContent = `${owner}/${repo}`;
+      repoLink.href = repoUrl;
+
+      const elStars = document.getElementById('stars');
+      const elForks = document.getElementById('forks');
+      const elIssues = document.getElementById('issues');
+      const elUpdated = document.getElementById('updated');
+
+      function fmt(n) {
+        try {
+          return new Intl.NumberFormat(undefined, { notation: 'compact' }).format(n);
+        } catch {
+          return String(n);
+        }
+      }
+
+      function ago(iso) {
+        const d = new Date(iso);
+        const s = Math.floor((Date.now() - d.getTime()) / 1000);
+        if (Number.isNaN(s) || s < 0) return '—';
+        const m = Math.floor(s / 60);
+        const h = Math.floor(m / 60);
+        const day = Math.floor(h / 24);
+        if (day > 0) return `${day}d ago`;
+        if (h > 0) return `${h}h ago`;
+        if (m > 0) return `${m}m ago`;
+        return `${s}s ago`;
+      }
+
+      fetch(apiUrl, { headers: { 'Accept': 'application/vnd.github+json' } })
+        .then(r => {
+          if (!r.ok) throw new Error('GitHub API unreachable');
+          return r.json();
+        })
+        .then(data => {
+          elStars.textContent = `★ ${fmt(data.stargazers_count ?? 0)}`;
+          elForks.textContent = `⑂ ${fmt(data.forks_count ?? 0)}`;
+          elIssues.textContent = `! ${fmt(data.open_issues_count ?? 0)}`;
+          elUpdated.textContent = `Updated ${ago(data.updated_at)}`;
+          statusHint.textContent = 'Badges + live repo pulse (GitHub API OK).';
+        })
+        .catch(() => {
+          // Silent, graceful fallback.
+          statusHint.textContent = 'Static badges (GitHub API blocked or rate-limited).';
+        });
+    })();
+
+    // Charter acknowledgment with 2-minute mandatory reading timer
+    (function() {
+      const checkboxes = [
+        document.getElementById('ack1'),
+        document.getElementById('ack2'),
+        document.getElementById('ack3'),
+        document.getElementById('ack4'),
+        document.getElementById('ack5')
+      ];
+      
+      const enableButton = document.getElementById('enableDownloads');
+      const downloadButtons = document.querySelectorAll('.download-button');
+      const downloadCards = document.querySelectorAll('.download-card');
+      const charterContent = document.querySelector('.charter-content');
+      
+      // Timer variables
+      let timerStarted = false;
+      let timerExpired = false;
+      let remainingSeconds = 120; // 2 minutes
+      let timerInterval = null;
+      
+      // Disable checkboxes initially
+      checkboxes.forEach(cb => {
+        cb.disabled = true;
+        cb.parentElement.style.opacity = '0.5';
+        cb.parentElement.style.cursor = 'not-allowed';
+      });
+      
+      // Create timer display
+      const timerDisplay = document.createElement('div');
+      timerDisplay.style.cssText = `
+        background: rgba(255,92,92,0.15);
+        border: 1px solid rgba(255,92,92,0.3);
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        margin-bottom: 1rem;
+        text-align: center;
+        font-size: 0.95rem;
+        color: var(--danger);
+        font-weight: 600;
+      `;
+      timerDisplay.innerHTML = '⏱️ Please scroll through and read the entire charter. Timer will start when you begin reading.';
+      enableButton.parentElement.insertBefore(timerDisplay, enableButton);
+      
+      // Function to format time
+      function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+      }
+      
+      // Function to start timer
+      function startTimer() {
+        if (timerStarted) return;
+        timerStarted = true;
+        
+        timerDisplay.style.background = 'rgba(255,215,0,0.15)';
+        timerDisplay.style.borderColor = 'rgba(255,215,0,0.3)';
+        timerDisplay.style.color = 'var(--warn)';
+        
+        timerInterval = setInterval(() => {
+          remainingSeconds--;
+          
+          if (remainingSeconds > 0) {
+            timerDisplay.innerHTML = `⏱️ Please continue reading. You must wait ${formatTime(remainingSeconds)} before acknowledging.`;
+          } else {
+            clearInterval(timerInterval);
+            timerExpired = true;
+            
+            // Enable checkboxes
+            checkboxes.forEach(cb => {
+              cb.disabled = false;
+              cb.parentElement.style.opacity = '1';
+              cb.parentElement.style.cursor = 'pointer';
+            });
+            
+            // Update timer display
+            timerDisplay.style.background = 'rgba(77,255,136,0.15)';
+            timerDisplay.style.borderColor = 'rgba(77,255,136,0.3)';
+            timerDisplay.style.color = 'var(--success)';
+            timerDisplay.innerHTML = '✅ Reading time complete. You may now acknowledge the charter by checking all boxes below.';
+            
+            // Scroll indicator
+            timerDisplay.style.animation = 'pulse 2s ease-in-out 3';
+          }
+        }, 1000);
+      }
+      
+      // Detect when user scrolls charter content
+      let hasScrolled = false;
+      charterContent.addEventListener('scroll', function() {
+        if (!hasScrolled && !timerStarted) {
+          hasScrolled = true;
+          startTimer();
+        }
+      });
+      
+      // Alternative: Start timer when charter section comes into view
+      const charterSection = document.getElementById('charter');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !timerStarted) {
+            // Wait 1 second after section is visible, then start timer
+            setTimeout(() => {
+              if (!timerStarted) {
+                startTimer();
+              }
+            }, 1000);
+          }
+        });
+      }, { threshold: 0.5 });
+      
+      observer.observe(charterSection);
+      
+      // Check if all checkboxes are checked
+      function checkAllAcknowledged() {
+        if (!timerExpired) {
+          enableButton.disabled = true;
+          return;
+        }
+        
+        const allChecked = checkboxes.every(cb => cb.checked);
+        enableButton.disabled = !allChecked;
+        
+        if (allChecked) {
+          enableButton.style.background = 'linear-gradient(135deg, rgba(124,124,255,0.4), rgba(77,255,136,0.3))';
+          enableButton.style.borderColor = 'rgba(124,124,255,0.7)';
+          enableButton.textContent = '✅ All Acknowledged - Click to Enable Downloads';
+        } else {
+          enableButton.style.background = '';
+          enableButton.style.borderColor = '';
+          enableButton.textContent = 'Acknowledge Charter & Enable Downloads';
+        }
+      }
+      
+      // Add change listeners to checkboxes
+      checkboxes.forEach(cb => {
+        cb.addEventListener('change', checkAllAcknowledged);
+      });
+      
+      // Enable downloads button click handler
+      enableButton.addEventListener('click', function() {
+        if (!timerExpired) {
+          alert('Please wait for the reading timer to complete before acknowledging the charter.');
+          return;
+        }
+        
+        // Enable all download buttons
+        downloadButtons.forEach(btn => {
+          btn.disabled = false;
+        });
+        
+        // Remove disabled class from cards
+        downloadCards.forEach(card => {
+          card.classList.remove('disabled');
+        });
+        
+        // Disable the charter button and update text
+        enableButton.disabled = true;
+        enableButton.textContent = '✅ Downloads Enabled - Scroll Down';
+        enableButton.style.background = 'linear-gradient(135deg, rgba(77,255,136,0.3), rgba(124,124,255,0.2))';
+        
+        // Hide timer display
+        timerDisplay.style.display = 'none';
+        
+        // Scroll to downloads section
+        setTimeout(() => {
+          document.getElementById('downloads').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+        
+        // Store acknowledgment in localStorage
+        localStorage.setItem('charter_acknowledged', 'true');
+        localStorage.setItem('charter_acknowledged_date', new Date().toISOString());
+        localStorage.setItem('charter_reading_time', (120 - remainingSeconds).toString());
+      });
+      
+      // Download button handlers
+      downloadButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+          if (!this.disabled) {
+            const platform = this.getAttribute('data-platform');
+            
+            // Placeholder URLs - replace with actual GitHub release URLs
+            const downloadUrls = {
+              'complete': 'https://github.com/IAmSoThirsty/Project-AI/releases/download/v1.0.0/project-ai-v1.0.0.zip',
+              'backend': 'https://github.com/IAmSoThirsty/Project-AI/releases/download/v1.0.0/backend-v1.0.0.zip',
+              'web': 'https://github.com/IAmSoThirsty/Project-AI/releases/download/v1.0.0/web-v1.0.0.zip',
+              'android': 'https://github.com/IAmSoThirsty/Project-AI/releases/download/v1.0.0/project-ai-v1.0.0.apk',
+              'windows': 'https://github.com/IAmSoThirsty/Project-AI/releases/download/v1.0.0/project-ai-Setup-1.0.0.exe',
+              'macos': 'https://github.com/IAmSoThirsty/Project-AI/releases/download/v1.0.0/project-ai-1.0.0.dmg',
+              'linux': 'https://github.com/IAmSoThirsty/Project-AI/releases/download/v1.0.0/project-ai-1.0.0.AppImage',
+              'docker': 'https://github.com/IAmSoThirsty/Project-AI/releases/download/v1.0.0/backend-v1.0.0-docker.tar.gz'
+            };
+            
+            const url = downloadUrls[platform];
+            
+            if (url) {
+              // Log download
+              console.log(`Downloading ${platform} from ${url}`);
+              console.log(`User read charter for ${120 - remainingSeconds} seconds`);
+              
+              // Show confirmation
+              this.textContent = '⬇️ Downloading...';
+              this.style.background = 'rgba(77,255,136,0.2)';
+              
+              // Attempt download
+              window.location.href = url;
+              
+              // Reset button after delay
+              setTimeout(() => {
+                const platformName = platform.charAt(0).toUpperCase() + platform.slice(1);
+                this.textContent = 'Download ' + (platform === 'complete' ? 'Complete Package' : platformName);
+                this.style.background = '';
+              }, 2000);
+              
+              // Log download event
+              localStorage.setItem(`download_${platform}_date`, new Date().toISOString());
+            } else {
+              alert('Download link not configured for ' + platform + '. Please check back later or visit the GitHub releases page.');
+            }
+          }
+        });
+      });
+      
+      // Development mode: Uncomment to skip timer (for testing only)
+      /*
+      timerExpired = true;
+      remainingSeconds = 0;
+      timerDisplay.innerHTML = '🔧 DEV MODE: Timer skipped';
+      checkboxes.forEach(cb => {
+        cb.disabled = false;
+        cb.parentElement.style.opacity = '1';
+        cb.parentElement.style.cursor = 'pointer';
+      });
+      */
+    })();
+  </script>
+
+</body>
+</html>

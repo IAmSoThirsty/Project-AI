@@ -68,7 +68,7 @@ class GovernanceManager:
             True if loaded successfully, False otherwise
         """
         if not self.state_file.exists():
-            logger.warning(f"Governance state file not found: {self.state_file}")
+            logger.warning("Governance state file not found: %s", self.state_file)
             self._initialize_default_state()
             return False
 
@@ -80,7 +80,7 @@ class GovernanceManager:
             return True
 
         except Exception as e:
-            logger.error(f"Failed to load governance state: {e}")
+            logger.error("Failed to load governance state: %s", e)
             self._initialize_default_state()
             return False
 
@@ -118,7 +118,7 @@ class GovernanceManager:
             return True
 
         except Exception as e:
-            logger.error(f"Failed to save governance state: {e}")
+            logger.error("Failed to save governance state: %s", e)
             return False
 
     def create_proposal(
@@ -168,7 +168,7 @@ class GovernanceManager:
         self.state["active_proposals"].append(proposal)
         self.save_state()
 
-        logger.info(f"Created proposal: {title} (ID: {proposal_id})")
+        logger.info("Created proposal: %s (ID: %s)", title, proposal_id)
         return proposal_id
 
     def vote_on_proposal(
@@ -200,18 +200,18 @@ class GovernanceManager:
                 break
 
         if not proposal:
-            logger.error(f"Proposal not found: {proposal_id}")
+            logger.error("Proposal not found: %s", proposal_id)
             return False
 
         if vote not in ["yes", "no", "abstain"]:
-            logger.error(f"Invalid vote value: {vote}")
+            logger.error("Invalid vote value: %s", vote)
             return False
 
         # Simple voting (stub - no weight, no duplicate check)
         proposal["votes"][vote] += 1
         self.save_state()
 
-        logger.info(f"Recorded vote on proposal {proposal_id}: {vote}")
+        logger.info("Recorded vote on proposal %s: %s", proposal_id, vote)
         return True
 
     def check_quorum(self, proposal_id: str) -> bool:
@@ -270,7 +270,7 @@ class GovernanceManager:
                 break
 
         if not proposal:
-            logger.error(f"Proposal not found: {proposal_id}")
+            logger.error("Proposal not found: %s", proposal_id)
             return False
 
         # Check if passed (simple majority)
@@ -278,7 +278,7 @@ class GovernanceManager:
         no_votes = proposal["votes"]["no"]
 
         if yes_votes <= no_votes:
-            logger.info(f"Proposal {proposal_id} did not pass")
+            logger.info("Proposal %s did not pass", proposal_id)
             proposal["status"] = "rejected"
             return False
 
@@ -293,7 +293,7 @@ class GovernanceManager:
 
         self.save_state()
 
-        logger.info(f"Executed proposal: {proposal_id}")
+        logger.info("Executed proposal: %s", proposal_id)
         return True
 
     def get_policy_rule(self, rule_name: str) -> Any:
@@ -325,7 +325,7 @@ class GovernanceManager:
         self.state["policy_rules"][rule_name] = value
         self.save_state()
 
-        logger.info(f"Set policy rule: {rule_name} = {value}")
+        logger.info("Set policy rule: %s = %s", rule_name, value)
         return True
 
 

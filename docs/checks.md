@@ -43,6 +43,7 @@ Note that actionlint focuses on catching mistakes in workflow files. If you want
 using a general YAML checker like [yamllint][].
 
 <a name="check-unexpected-keys"></a>
+
 ## Unexpected keys
 
 Example input:
@@ -86,6 +87,7 @@ Key names are basically case sensitive (though some specific key names are case 
 case-sensitivity mistakes.
 
 <a name="check-missing-required-duplicate-keys"></a>
+
 ## Missing required keys and key duplicates
 
 Example input:
@@ -127,6 +129,7 @@ And duplicate keys are not allowed. In workflow syntax, comparing some keys is *
 actionlint checks these missing required keys and duplicate keys while parsing, and reports an error.
 
 <a name="check-empty-mapping"></a>
+
 ## Unexpected empty mappings
 
 Example input:
@@ -153,6 +156,7 @@ actionlint checks such mappings and sequences are not empty while parsing, and r
 error.
 
 <a name="check-mapping-values"></a>
+
 ## Unexpected mapping values
 
 Example input:
@@ -199,6 +203,7 @@ actionlint checks such constant strings are used properly while parsing and repo
 specified.
 
 <a name="check-syntax-expression"></a>
+
 ## Syntax check for expression `${{ }}`
 
 Example input:
@@ -246,6 +251,7 @@ actionlint lexes and parses expression in `${{ }}` following [the expression syn
 many syntax errors like invalid characters, missing parens, unexpected end of input, ...
 
 <a name="check-type-check-expression"></a>
+
 ## Type checks for expression syntax in `${{ }}`
 
 actionlint checks types of expressions in `${{ }}` placeholders of templates. The following types are supported by the type
@@ -369,6 +375,7 @@ test.yaml:19:14: type of expression at "env" must be object but found type strin
 In above example, environment variables mapping is expanded at `env:` section. actionlint checks type of the expanded value.
 
 <a name="check-contexts-and-builtin-func"></a>
+
 ## Contexts and built-in functions
 
 Example input:
@@ -443,6 +450,7 @@ string.
 Note that context names and function names are case insensitive. For example, `toJSON` and `toJson` are the same function.
 
 <a name="check-contextual-step-object"></a>
+
 ## Contextual typing for `steps.<step_id>` objects
 
 Example input:
@@ -594,6 +602,7 @@ The 'My action with output' action defines one output `some_value`. The property
 so that actionlint can check incorrect property accesses like a typo in the output name.
 
 <a name="check-contextual-matrix-object"></a>
+
 ## Contextual typing for `matrix` object
 
 Example input:
@@ -680,6 +689,7 @@ steps:
 ```
 
 <a name="check-contextual-needs-object"></a>
+
 ## Contextual typing for `needs` object
 
 Example input:
@@ -749,6 +759,7 @@ Outputs from the jobs can be accessed only from jobs following them via [`needs`
 actionlint defines a type of `needs` variable contextually by looking at each job's `outputs:` section and `needs:` section.
 
 <a name="check-shellcheck-integ"></a>
+
 ## [shellcheck][] integration for `run:`
 
 Example input:
@@ -853,6 +864,7 @@ On GitHub Actions:
 ```
 
 <a name="check-pyflakes-integ"></a>
+
 ## [pyflakes][] integration for `run:`
 
 Example input:
@@ -920,6 +932,7 @@ actionlint replaces `${{ }}` with underscores. For example `print('${{ matrix.os
 `print('________________')`.
 
 <a name="untrusted-inputs"></a>
+
 ## Script injection by potentially untrusted inputs
 
 Example input:
@@ -1029,6 +1042,7 @@ At last, the popular action [actions/github-script][github-script] has the same 
 checks the input.
 
 <a name="check-job-deps"></a>
+
 ## Job dependencies validation
 
 Example input:
@@ -1102,6 +1116,7 @@ test.yaml:8:3: job "bar" needs job "unknown" which does not exist in this workfl
 [Playground](https://rhysd.github.io/actionlint#eJyljD0OgiEQRHtOMR2NXIDO7wi2xgJ0v+BPdgnLxusLWFlbTfJm5glHVNPiHpI1OmAXmQEw0U0jzjm1A7bj6bJoM9Yg42TZuFt4pU7aV6Wdqn6/QJjLCLoWgS93P/AQ/ZqNnyxv/k/8AXoNOHs=)
 
 <a name="check-matrix-values"></a>
+
 ## Matrix values
 
 Example input:
@@ -1150,6 +1165,7 @@ combination of matrix values. actionlint checks
 - duplicate variations of matrix values
 
 <a name="check-webhook-events"></a>
+
 ## Webhook events validation
 
 Example input:
@@ -1215,8 +1231,11 @@ actionlint validates the Webhook configurations:
 - filter names
 - filter usages
   - `paths` and `paths-ignore`, `branches` and `branches-ignore`, `tags` and `tags-ignore` are exclusive. They can not
+
     be used for the same event.
+
   - Some filters are only available for specific events as explained in [the official document][specific-paths-doc]
+
     (see the following table).
 
 | Filter name       | Events where the filter is available          |
@@ -1232,6 +1251,7 @@ The table of available Webhooks and their types are defined in [`all_webhooks.go
 by [a script][generate-webhook-events] and kept to the latest by CI workflow triggered weekly.
 
 <a name="check-workflow-dispatch-events"></a>
+
 ## Workflow dispatch event validation
 
 Example input:
@@ -1380,6 +1400,7 @@ inputs:
 ```
 
 <a name="check-glob-pattern"></a>
+
 ## Glob filter pattern syntax validation
 
 Example input:
@@ -1437,6 +1458,7 @@ Most common mistake I have ever seen here is a misunderstanding that regular exp
 This rule can catch the mistake so that users can notice their mistakes.
 
 <a name="check-cron-syntax"></a>
+
 ## CRON syntax check at `schedule:`
 
 Example input:
@@ -1480,6 +1502,7 @@ actionlint checks the CRON syntax and frequency of running a job. [The official 
 When the job is run more frequently than once every 5 minutes, actionlint reports it as an error.
 
 <a name="check-runner-labels"></a>
+
 ## Runner labels
 
 Example input:
@@ -1571,6 +1594,7 @@ In most cases, this is a misunderstanding that a matrix combination can be speci
 `matrix:` and expand it with `${{ }}` at `runs-on:` to run the workflow on multiple runners.
 
 <a name="check-action-format"></a>
+
 ## Action format in `uses:`
 
 Example input:
@@ -1627,6 +1651,7 @@ a common case where the action is managed in a separate repository and the actio
 (See [#25][issue-25] and [#40][issue-40] for more details).
 
 <a name="check-local-action-inputs"></a>
+
 ## Local action inputs validation at `with:`
 
 My action definition at `.github/actions/my-action/action.yaml`:
@@ -1687,6 +1712,7 @@ When a local action is run in `uses:` of `step:`, actionlint reads `action.yml` 
 validates inputs at `with:` in the workflow are correct. Missing required inputs and unexpected inputs can be detected.
 
 <a name="check-popular-action-inputs"></a>
+
 ## Popular action inputs validation at `with:`
 
 Example input:
@@ -1738,6 +1764,7 @@ and were automatically collected by [a script][generate-popular-actions]. If you
 make a request [as an issue][issue-form].
 
 <a name="check-shell-names"></a>
+
 ## Shell name validation at `shell:`
 
 Example input:
@@ -1806,6 +1833,7 @@ Available shells for runners are defined in [the documentation][shell-doc]. acti
 configuration are properly using the available shells.
 
 <a name="check-job-step-ids"></a>
+
 ## Job ID and step ID uniqueness
 
 Example input:
@@ -1849,6 +1877,7 @@ Job IDs and step IDs in each jobs must be unique. IDs are compared in case insen
 and step IDs, and reports errors when some IDs duplicate.
 
 <a name="check-hardcoded-credentials"></a>
+
 ## Hardcoded credentials
 
 Example input:
@@ -1895,6 +1924,7 @@ and the value should be expanded with `${{ }}` syntax at `password:`. actionlint
 them as an error.
 
 <a name="check-env-var-names"></a>
+
 ## Environment variable names
 
 Example input:
@@ -1932,6 +1962,7 @@ cases they are mistakes and they may cause some issues on using them in shell si
 actionlint checks environment variable names are correct in `env:` configuration.
 
 <a name="permissions"></a>
+
 ## Permissions
 
 Example input:
@@ -1979,6 +2010,7 @@ Each permission scopes have its access levels. The default levels are described 
 actionlint checks permission scopes and access levels in a workflow are correct.
 
 <a name="check-reusable-workflows"></a>
+
 ## Reusable workflows
 
 [Reusable workflows][reusable-workflow-doc] is a feature to call a workflow from another workflow.
@@ -2406,6 +2438,7 @@ as `{version: string}`. In the downstream job, actionlint can report an error at
 Note that this check only works with local reusable workflow (starting with `./`).
 
 <a name="id-naming-convention"></a>
+
 ## ID naming convention
 
 Example input:
@@ -2460,6 +2493,7 @@ IDs must start with a letter or `_` and contain only alphanumeric characters, `-
 convention, and reports invalid IDs as errors.
 
 <a name="ctx-spfunc-availability"></a>
+
 ## Contexts and special functions availability
 
 Example input:
@@ -2532,6 +2566,7 @@ actionlint checks if these contexts and special functions are used correctly. It
 or special function is not available in your workflow.
 
 <a name="#check-deprecated-workflow-commands"></a>
+
 ## Check deprecated workflow commands
 
 Example input:
@@ -2573,6 +2608,7 @@ actionlint detects these commands are used in `run:` and reports them as errors 
 [the official document][workflow-commands-doc] for the comprehensive list of workflow commands to know the usage.
 
 <a name="if-cond-always-true"></a>
+
 ## Conditions always evaluated to true at `if:`
 
 Example input:
