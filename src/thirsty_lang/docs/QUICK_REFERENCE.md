@@ -3,6 +3,7 @@
 ## Basic Syntax
 
 ### Variables
+
 ```thirsty
 drink name = "value"
 drink count = 42
@@ -10,12 +11,14 @@ drink temperature = 25.5
 ```
 
 ### Output
+
 ```thirsty
 pour "Hello, World!"
 pour variable_name
 ```
 
 ### Comments
+
 ```thirsty
 // This is a single-line comment
 ```
@@ -23,17 +26,20 @@ pour variable_name
 ## Keywords
 
 ### Base Thirsty-lang
+
 - `drink` - Declare a variable
 - `pour` - Output a value
 - `sip` - Input (future)
 
 ### Thirsty+ (Plus)
+
 - `thirsty` - If statement
 - `hydrated` - Else statement
 - `parched` - Boolean true
 - `quenched` - Boolean false
 
 ### Thirsty++ (Plus Plus)
+
 - `glass` - Function declaration
 - `refill` - Loop
 - `reservoir` - Array
@@ -41,6 +47,7 @@ pour variable_name
 - `return` - Return from function
 
 ### ThirstOfGods
+
 - `fountain` - Class declaration
 - `cascade` - Async function
 - `await` - Wait for async
@@ -73,12 +80,14 @@ pour variable_name
 ## Examples
 
 ### Hello World
+
 ```thirsty
 drink message = "Hello, World!"
 pour message
 ```
 
 ### Variables and Math
+
 ```thirsty
 drink a = 10
 drink b = 20
@@ -87,6 +96,7 @@ pour sum
 ```
 
 ### Conditional (Thirsty+)
+
 ```thirsty
 drink temp = 30
 thirsty temp > 25
@@ -96,6 +106,7 @@ hydrated
 ```
 
 ### Function (Thirsty++)
+
 ```thirsty
 glass greet(name)
   pour "Hello, " + name
@@ -104,6 +115,7 @@ greet("World")
 ```
 
 ### Class (ThirstOfGods)
+
 ```thirsty
 fountain Person
   drink name = ""

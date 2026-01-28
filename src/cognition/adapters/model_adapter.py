@@ -68,14 +68,18 @@ class HuggingFaceAdapter(ModelAdapter):
         try:
             from transformers import AutoModel, AutoTokenizer
 
-            logger.info(f"Loading HuggingFace model: {model_path}")
-            self.tokenizer = AutoTokenizer.from_pretrained(model_path)
+            logger.info("Loading HuggingFace model: %s", model_path)
+            # Pin to a specific revision for security (use 'main' or specific commit hash)
+            revision = kwargs.pop("revision", "main")
+            self.tokenizer = AutoTokenizer.from_pretrained(
+                model_path, revision=revision
+            )
             self.model = AutoModel.from_pretrained(
-                model_path, device_map=self.device, **kwargs
+                model_path, device_map=self.device, revision=revision, **kwargs
             )
             return self.model
         except Exception as e:
-            logger.error(f"Failed to load HuggingFace model: {e}")
+            logger.error("Failed to load HuggingFace model: %s", e)
             raise
 
     def predict(self, input_data: Any, **kwargs) -> Any:
@@ -90,7 +94,7 @@ class HuggingFaceAdapter(ModelAdapter):
             outputs = self.model(**inputs, **kwargs)
             return outputs
         except Exception as e:
-            logger.error(f"Prediction failed: {e}")
+            logger.error("Prediction failed: %s", e)
             raise
 
     def is_available(self) -> bool:
@@ -131,12 +135,15 @@ class PyTorchAdapter(ModelAdapter):
         try:
             import torch
 
-            logger.info(f"Loading PyTorch model: {model_path}")
-            self.model = torch.load(model_path, map_location=self.device, **kwargs)
+            logger.info("Loading PyTorch model: %s", model_path)
+            # Use weights_only=True to prevent arbitrary code execution
+            self.model = torch.load(
+                model_path, map_location=self.device, weights_only=True, **kwargs
+            )
             self.model.eval()
             return self.model
         except Exception as e:
-            logger.error(f"Failed to load PyTorch model: {e}")
+            logger.error("Failed to load PyTorch model: %s", e)
             raise
 
     def predict(self, input_data: Any, **kwargs) -> Any:
@@ -151,7 +158,7 @@ class PyTorchAdapter(ModelAdapter):
                 outputs = self.model(input_data, **kwargs)
             return outputs
         except Exception as e:
-            logger.error(f"Prediction failed: {e}")
+            logger.error("Prediction failed: %s", e)
             raise
 
     def is_available(self) -> bool:
@@ -179,7 +186,7 @@ class DummyAdapter(ModelAdapter):
 
     def load_model(self, model_path: str, **kwargs) -> Any:
         """Simulate model loading."""
-        logger.info(f"Dummy adapter: loading {model_path}")
+        logger.info("Dummy adapter: loading %s", model_path)
         self.loaded = True
         return "dummy_model"
 
@@ -214,7 +221,7 @@ def get_adapter(adapter_type: str = "auto", **kwargs) -> ModelAdapter:
             try:
                 adapter = get_adapter(atype, **kwargs)
                 if adapter.is_available():
-                    logger.info(f"Auto-selected adapter: {atype}")
+                    logger.info("Auto-selected adapter: %s", atype)
                     return adapter
             except (ValueError, ImportError):
                 continue

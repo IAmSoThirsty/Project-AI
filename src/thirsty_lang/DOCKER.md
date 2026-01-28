@@ -33,6 +33,7 @@ docker run -it --rm thirsty-lang npm run repl
 ## Available Services
 
 ### 1. thirsty (Production)
+
 Main production service for running Thirsty-lang programs.
 
 ```bash
@@ -40,11 +41,13 @@ docker-compose up thirsty
 ```
 
 **Use cases:**
+
 - Running Thirsty-lang programs
 - Production deployment
 - CLI tool usage
 
 ### 2. thirsty-dev (Development)
+
 Development environment with all tools installed.
 
 ```bash
@@ -52,12 +55,14 @@ docker-compose up thirsty-dev
 ```
 
 **Features:**
+
 - All development dependencies
 - Hot-reloading with volume mounts
 - Node.js debugging support (port 9229)
 - Interactive terminal
 
 ### 3. repl (Node.js REPL)
+
 Interactive Node.js REPL for Thirsty-lang.
 
 ```bash
@@ -65,11 +70,13 @@ docker-compose run --rm repl
 ```
 
 **Use cases:**
+
 - Interactive coding
 - Testing code snippets
 - Learning Thirsty-lang
 
 ### 4. python-repl (Python REPL)
+
 Interactive Python REPL for Thirsty-lang.
 
 ```bash
@@ -77,11 +84,13 @@ docker-compose run --rm python-repl
 ```
 
 **Use cases:**
+
 - Using Python implementation
 - Testing Python interpreter
 - Alternative REPL experience
 
 ### 5. training
+
 Interactive training program.
 
 ```bash
@@ -89,11 +98,13 @@ docker-compose run --rm training
 ```
 
 **Use cases:**
+
 - Learning Thirsty-lang
 - Interactive tutorials
 - Skill progression
 
 ### 6. playground
+
 Web-based playground accessible via browser.
 
 ```bash
@@ -103,6 +114,7 @@ docker-compose up playground
 Access at: http://localhost:8888
 
 **Use cases:**
+
 - Browser-based coding
 - Quick experimentation
 - Demos and presentations
@@ -180,6 +192,7 @@ docker-compose exec thirsty-dev bash
 ```
 
 ### 3. Make Changes
+
 Your local files are mounted, so changes are reflected immediately.
 
 ### 4. Test Changes
@@ -221,12 +234,14 @@ volumes:
 ## Environment Variables
 
 ### Production (thirsty)
+
 ```bash
 NODE_ENV=production
 THIRSTY_VERSION=1.0.0
 ```
 
 ### Development (thirsty-dev)
+
 ```bash
 NODE_ENV=development
 THIRSTY_DEBUG=true
@@ -335,9 +350,9 @@ docker run --network thirsty-net thirsty-lang
 ### Multi-Stage Build Benefits
 
 1. **Smaller production images** - Only production dependencies
-2. **Separate dev environment** - Full tooling for development
-3. **Build optimization** - Layer caching
-4. **Security** - Minimal attack surface in production
+1. **Separate dev environment** - Full tooling for development
+1. **Build optimization** - Layer caching
+1. **Security** - Minimal attack surface in production
 
 ## Production Deployment
 
@@ -365,13 +380,13 @@ docker-compose -f docker-compose.yml up -d thirsty
 ## Best Practices
 
 1. **Use .dockerignore** - Exclude unnecessary files
-2. **Layer caching** - Order Dockerfile commands efficiently
-3. **Multi-stage builds** - Separate dev and prod
-4. **Named volumes** - Persist important data
-5. **Health checks** - Monitor container health
-6. **Resource limits** - Set memory and CPU limits
-7. **Logging** - Configure proper logging drivers
-8. **Security** - Run as non-root user (already configured)
+1. **Layer caching** - Order Dockerfile commands efficiently
+1. **Multi-stage builds** - Separate dev and prod
+1. **Named volumes** - Persist important data
+1. **Health checks** - Monitor container health
+1. **Resource limits** - Set memory and CPU limits
+1. **Logging** - Configure proper logging drivers
+1. **Security** - Run as non-root user (already configured)
 
 ## Security Considerations
 
@@ -398,11 +413,12 @@ docker-compose -f docker-compose.yml up -d thirsty
 ## Support
 
 For issues with Docker setup:
+
 1. Check logs: `docker-compose logs`
-2. Verify Docker version: `docker --version`
-3. Check compose version: `docker-compose --version`
-4. Review this guide
-5. Open an issue on GitHub
+1. Verify Docker version: `docker --version`
+1. Check compose version: `docker-compose --version`
+1. Review this guide
+1. Open an issue on GitHub
 
 ## Resources
 

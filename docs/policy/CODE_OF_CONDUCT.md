@@ -87,8 +87,8 @@ Examples of behavior that contribute to creating a positive environment include:
 If you witness or experience unacceptable behavior:
 
 1. **Document**: Note details of the incident (date, time, people involved, description)
-2. **Report**: Open a [GitHub Issue](https://github.com/IAmSoThirsty/Project-AI/issues/new) or use [GitHub Discussions](https://github.com/IAmSoThirsty/Project-AI/discussions) with details
-3. **Include**:
+1. **Report**: Open a [GitHub Issue](https://github.com/IAmSoThirsty/Project-AI/issues/new) or use [GitHub Discussions](https://github.com/IAmSoThirsty/Project-AI/discussions) with details
+1. **Include**:
    - Description of the behavior
    - When and where it occurred
    - Who was involved
@@ -104,10 +104,10 @@ If you witness or experience unacceptable behavior:
 ### Investigation Process
 
 1. **Acknowledgment**: Response within 48 hours
-2. **Investigation**: Thorough review of the report
-3. **Resolution**: Appropriate action determined
-4. **Communication**: Both parties notified of outcome (within reason)
-5. **Appeal**: Process for appealing decisions
+1. **Investigation**: Thorough review of the report
+1. **Resolution**: Appropriate action determined
+1. **Communication**: Both parties notified of outcome (within reason)
+1. **Appeal**: Process for appealing decisions
 
 ### Enforcement
 

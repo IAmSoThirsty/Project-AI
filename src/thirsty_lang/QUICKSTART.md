@@ -114,24 +114,28 @@ cat DEPENDENCIES.txt
 ## Troubleshooting
 
 ### Node.js not found
+
 ```bash
 # Install Node.js from https://nodejs.org
 # Required: v14.0.0 or higher
 ```
 
 ### Python not found
+
 ```bash
 # Install Python from https://python.org
 # Required: 3.8 or higher
 ```
 
 ### Permission denied
+
 ```bash
 chmod +x setup_all.sh setup_venv.sh quickstart.sh
 chmod +x src/*.py
 ```
 
 ### Docker issues
+
 ```bash
 # Check Docker is running
 docker --version
@@ -156,11 +160,13 @@ npm test
 ## What's Available
 
 ### Runtimes
+
 - ✅ Node.js (Primary)
 - ✅ Python (Alternative)
 - ✅ Docker (Containerized)
 
 ### Tools
+
 - ✅ REPL (Interactive shell)
 - ✅ Training (Interactive lessons)
 - ✅ Debugger
@@ -174,6 +180,7 @@ npm test
 - ✅ Web Playground
 
 ### Support
+
 - ✅ VS Code extension
 - ✅ GitHub Actions CI/CD
 - ✅ Complete documentation
@@ -194,10 +201,10 @@ Thirsty-lang/
 ## Need More Help?
 
 1. Read `README.md` - Complete guide
-2. Read `PYTHON_SETUP.md` - Python specific
-3. Read `DOCKER.md` - Docker specific
-4. Check `docs/` directory - Full documentation
-5. Open an issue on GitHub
+1. Read `PYTHON_SETUP.md` - Python specific
+1. Read `DOCKER.md` - Docker specific
+1. Check `docs/` directory - Full documentation
+1. Open an issue on GitHub
 
 ## Version
 

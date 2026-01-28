@@ -100,6 +100,7 @@ docs/ (23 files)              [Documentation]
 ## ✨ FEATURES AT A GLANCE
 
 ### Traditional Features ⭐
+
 - Learning Paths (personalized courses)
 - Data Analysis (statistics & viz)
 - Security Resources (CTF curation)
@@ -108,6 +109,7 @@ docs/ (23 files)              [Documentation]
 - Intent Detection (NLP)
 
 ### NEW Features 🚀
+
 - Cloud Sync (cross-device)
 - Advanced ML (RandomForest, GradientBoosting, Neural Networks)
 - Plugin System (dynamic extensions)
@@ -142,18 +144,21 @@ docs/ (23 files)              [Documentation]
 ## 🌐 DEPLOYMENT OPTIONS
 
 ### Desktop Application
+
 - **Platform:** Windows, macOS, Linux
 - **Framework:** PyQt6
 - **Status:** ✅ Ready
 - **Launch:** `python src/app/main.py`
 
 ### Web Application
+
 - **Backend:** Flask API (Port 5000)
 - **Frontend:** React 18 + Vite (Port 3000)
 - **Status:** ✅ Ready
 - **Tech:** Zustand state, React Router v6
 
 ### Mobile (Future)
+
 - **Framework:** React Native
 - **Status:** 🔮 Planned
 
@@ -198,17 +203,20 @@ cd web/frontend ; npm install ; npm run build
 ## 🔄 LATEST CHANGES (Session Nov 29)
 
 ✅ **Refactored GUI Module**
+
 - Extracted 4 duplicated style constants
 - Fixed paintEvent method signatures
 - Reduced duplication: 50 lines saved
 - Result: 0 red/orange lines
 
 ✅ **Test Validation** 
+
 - Ran 5 consecutive test suites
 - All 70 tests passed
 - Zero failures/regressions
 
 ✅ **Documentation**
+
 - Created comprehensive program summary
 - 600+ lines of reference material
 - Complete architecture overview
@@ -273,22 +281,26 @@ cd web/frontend ; npm install ; npm run build
 ## 📞 GETTING STARTED
 
 1. **Clone Repository**
+
    ```bash
    git clone https://github.com/IAmSoThirsty/Project-AI
    cd Project-AI
    ```
 
-2. **Install Dependencies**
+1. **Install Dependencies**
+
    ```bash
    pip install -r requirements.txt
    ```
 
-3. **Run Application**
+1. **Run Application**
+
    ```bash
    python src/app/main.py
    ```
 
-4. **Run Tests**
+1. **Run Tests**
+
    ```bash
    python -m pytest tests/ -v
    ```

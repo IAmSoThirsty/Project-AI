@@ -1,6 +1,7 @@
 # Hydra Test: hydra_147
 
 ## Test Information
+
 - **Category**: PASSWORD CRACKING
 - **Threat Type**: Password Cracking v2
 - **Severity**: HIGH
@@ -56,6 +57,7 @@ This threat was successfully detected and blocked by Galahad's defenses.
 ---
 
 ## Metadata
+
 - **Test ID**: hydra_147
 - **Test Suite**: HYDRA DEFENSE (Ultimate Stress Test)
 - **Total Hydra Tests**: 200

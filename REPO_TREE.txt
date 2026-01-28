@@ -1,0 +1,1529 @@
+﻿Folder PATH listing for volume Windows
+Volume serial number is E22A-D0FC
+C:.
+|   .coverage
+|   .dockerignore
+|   .editorconfig
+|   .env
+|   .env.example
+|   .env.temporal.example
+|   .flake8
+|   .gitattributes
+|   .gitignore
+|   .gitmodules
+|   .markdownlint.json
+|   .pre-commit-config.yaml
+|   .pre-commit-config.yaml.example
+|   .projectai.toml.example
+|   .python-version
+|   app-config.json
+|   BADGE_RECOMMENDATIONS.md
+|   build.gradle
+|   CHANGELOG.md
+|   CI_CHECK_ISSUES.md
+|   CLEANUP_SUMMARY.md
+|   CLI-CODEX.md
+|   CODEOWNERS
+|   CODE_OF_CONDUCT.md
+|   CONTRIBUTING.md
+|   DEPLOYMENT.md
+|   DEVELOPER_QUICK_REFERENCE.md
+|   docker-compose.override.yml
+|   docker-compose.yml
+|   Dockerfile
+|   gradle.properties
+|   gradlew
+|   gradlew.bat
+|   INTEGRATION_PLAN.md
+|   INTEGRATION_SUMMARY.md
+|   LICENSE
+|   LICENSE.txt
+|   Makefile
+|   MANIFEST.in
+|   mcp.json
+|   package-lock.json
+|   package.json
+|   pip-audit-current.json
+|   PROGRAM_SUMMARY.md
+|   Project-AI.code-workspace
+|   PR_Overseer.prompt.yml
+|   pyproject.toml
+|   pyrightconfig.json
+|   pytest.ini
+|   README.md
+|   REPO_TREE.txt
+|   requirements-dev.txt
+|   requirements.in
+|   requirements.lock
+|   requirements.txt
+|   RESTORATION_GUIDE.md
+|   SECURITY.md
+|   SECURITY_AGENTS_README.md
+|   SECURITY_INCIDENT_REPORT.md
+|   SECURITY_UPDATE.md
+|   settings.gradle
+|   setup.py
+|   TARL_CODE_EXAMPLES.md
+|   TARL_TECHNICAL_DOCUMENTATION.md
+|   TARL_USAGE_SCENARIOS.md
+|   TEMPORAL_INTEGRATION_SUMMARY.md
+|   TEMPORAL_SECURITY_AGENTS_QUICKSTART.md
+|   test_v1_launch.py
+|   THIRSTY_LANG_INTEGRATION.md
+|   threat-model.md
+|   TRIUMVIRATE_INTEGRATION.md
+|   TRIUMVIRATE_QUICKSTART.md
+|   users.json
+|   white_hatter_scenarios.json
+|   
++---.codacy
+|       cli.sh
+|       codacy.yaml
+|       
++---.devcontainer
+|       devcontainer.json
+|       postCreateCommand.sh
+|       README.md
+|       
++---.githooks
+|       pre-commit
+|       
++---.github
+|   |   AUTOMATION.md
+|   |   AUTOMATION_QUICKREF.md
+|   |   CODEOWNERS
+|   |   copilot-instructions.md
+|   |   dependabot.yml
+|   |   INTEGRATION_VERIFICATION.md
+|   |   issue-automation-config.yml
+|   |   ISSUE_AUTOMATION.md
+|   |   labeler.yml
+|   |   PRODUCTION_READINESS_ASSESSMENT.md
+|   |   pull_request_template.md
+|   |   security-waivers.yml
+|   |   SECURITY_AUTOMATION.md
+|   |   WORKFLOW_HARDENING_SUMMARY.md
+|   |   
+|   +---instructions
+|   |       ARCHITECTURE_QUICK_REF.md
+|   |       codacy.instructions.md
+|   |       IMPLEMENTATION_SUMMARY.md
+|   |       
+|   +---ISSUE_TEMPLATE
+|   |       bug_report.md
+|   |       cli_proposal.md
+|   |       custom.md
+|   |       feature_request.md
+|   |       
+|   +---scripts
+|   |       annotate_junit.py
+|   |       security_remediation.py
+|   |       security_verification.py
+|   |       test-automation.sh
+|   |       
+|   \---workflows
+|           adversarial-redteam.yml
+|           ai-model-security.yml
+|           auto-create-branch-prs.yml
+|           AUTO_PR_QUICK_REF.md
+|           AUTO_PR_SYSTEM.md
+|           checkov-cloud-config.yml
+|           ci-consolidated.yml
+|           codex-deus-monolith.yml
+|           CODEX_DEUS_MONOLITH.md
+|           CONSOLIDATION_SUMMARY.md
+|           coverage-threshold-enforcement.yml
+|           dependabot.yml
+|           FINAL_REPORT.md
+|           IMPLEMENTATION_SUMMARY.md
+|           issue-management-consolidated.yml
+|           jekyll-gh-pages.yml
+|           main.yml
+|           Monolith
+|           node-ci.yml
+|           periodic-security-verification.yml
+|           post-merge-validation.yml
+|           pr-automation-consolidated.yml
+|           prune-artifacts.yml
+|           RED_TEAMING_FRAMEWORK.md
+|           sbom.yml
+|           security-consolidated.yml
+|           SECURITY_CHECKLIST.md
+|           sign-release-artifacts.yml
+|           snn-mlops-cicd.yml
+|           trivy-container-security.yml
+|           validate-guardians.yml
+|           validate-waivers.yml
+|           WORKFLOW_ARCHITECTURE.md
+|           
++---.hypothesis
+|   \---constants
+|           20d9d7df4e6b82b6
+|           29209ee65b2954f6
+|           c010a23c13785260
+|           
++---.vscode
+|       launch.json
+|       
++---adversarial_tests
+|   |   custom_prompts.yaml
+|   |   FULL_CONVERSATION_TRANSCRIPTS.md
+|   |   galahad_model.py
+|   |   PUBLISHING_STANDARDS_2026.md
+|   |   README.md
+|   |   RESEARCH_BASED_ATTACKS.md
+|   |   run_all_tests.py
+|   |   THE_CODEX.md
+|   |   
+|   +---garak
+|   |       garak_probes.py
+|   |       run_garak.py
+|   |       
+|   +---hydra
+|   |       hydra_dataset.json
+|   |       run_hydra.py
+|   |       
+|   +---jbb
+|   |       jbb_dataset.py
+|   |       run_jbb.py
+|   |       
+|   +---multiturn
+|   |       run_multiturn.py
+|   |       
+|   +---multi_turn
+|   |   \---scenarios
+|   |           scenario_001_crescendo_hacking.yaml
+|   |           scenario_001_gradual_escalation___hacking.yaml
+|   |           scenario_002_trust_building_then_jailbreak.yaml
+|   |           scenario_003_context_switching_attack.yaml
+|   |           scenario_004_benign_multi_turn_conversation.yaml
+|   |           scenario_005_emotional_manipulation.yaml
+|   |           scenario_006_authority_claim_escalation.yaml
+|   |           scenario_007_hypothetical_scenario_escalation.yaml
+|   |           scenario_008_technical_jargon_obfuscation.yaml
+|   |           scenario_009_story_based_jailbreak.yaml
+|   |           scenario_010_chained_innocuous_requests.yaml
+|   |           scenario_011_translation_obfuscation.yaml
+|   |           scenario_012_comparison_request_attack.yaml
+|   |           scenario_013_benign_educational_sequence.yaml
+|   |           scenario_014_persistence_attack.yaml
+|   |           scenario_015_role_reversal_attack.yaml
+|   |           
+|   +---scripts
+|   |       convert_to_2026_format.py
+|   |       
+|   \---transcripts
+|       |   INDEX.md
+|       |   
+|       +---garak
+|       |       encoding_001.md
+|       |       encoding_002.md
+|       |       encoding_003.md
+|       |       goodware_001.md
+|       |       goodware_002.md
+|       |       goodware_003.md
+|       |       injection_001.md
+|       |       injection_002.md
+|       |       injection_003.md
+|       |       injection_004.md
+|       |       jailbreak_001.md
+|       |       jailbreak_002.md
+|       |       jailbreak_003.md
+|       |       leakage_001.md
+|       |       leakage_002.md
+|       |       malicious_001.md
+|       |       malicious_002.md
+|       |       malicious_003.md
+|       |       malicious_004.md
+|       |       toxicity_001.md
+|       |       toxicity_002.md
+|       |       
+|       +---hydra
+|       |       hydra_001.md
+|       |       hydra_002.md
+|       |       hydra_003.md
+|       |       hydra_004.md
+|       |       hydra_005.md
+|       |       hydra_006.md
+|       |       hydra_007.md
+|       |       hydra_008.md
+|       |       hydra_009.md
+|       |       hydra_010.md
+|       |       hydra_011.md
+|       |       hydra_012.md
+|       |       hydra_013.md
+|       |       hydra_014.md
+|       |       hydra_015.md
+|       |       hydra_016.md
+|       |       hydra_017.md
+|       |       hydra_018.md
+|       |       hydra_019.md
+|       |       hydra_020.md
+|       |       hydra_021.md
+|       |       hydra_022.md
+|       |       hydra_023.md
+|       |       hydra_024.md
+|       |       hydra_025.md
+|       |       hydra_026.md
+|       |       hydra_027.md
+|       |       hydra_028.md
+|       |       hydra_029.md
+|       |       hydra_030.md
+|       |       hydra_031.md
+|       |       hydra_032.md
+|       |       hydra_033.md
+|       |       hydra_034.md
+|       |       hydra_035.md
+|       |       hydra_036.md
+|       |       hydra_037.md
+|       |       hydra_038.md
+|       |       hydra_039.md
+|       |       hydra_040.md
+|       |       hydra_041.md
+|       |       hydra_042.md
+|       |       hydra_043.md
+|       |       hydra_044.md
+|       |       hydra_045.md
+|       |       hydra_046.md
+|       |       hydra_047.md
+|       |       hydra_048.md
+|       |       hydra_049.md
+|       |       hydra_050.md
+|       |       hydra_051.md
+|       |       hydra_052.md
+|       |       hydra_053.md
+|       |       hydra_054.md
+|       |       hydra_055.md
+|       |       hydra_056.md
+|       |       hydra_057.md
+|       |       hydra_058.md
+|       |       hydra_059.md
+|       |       hydra_060.md
+|       |       hydra_061.md
+|       |       hydra_062.md
+|       |       hydra_063.md
+|       |       hydra_064.md
+|       |       hydra_065.md
+|       |       hydra_066.md
+|       |       hydra_067.md
+|       |       hydra_068.md
+|       |       hydra_069.md
+|       |       hydra_070.md
+|       |       hydra_071.md
+|       |       hydra_072.md
+|       |       hydra_073.md
+|       |       hydra_074.md
+|       |       hydra_075.md
+|       |       hydra_076.md
+|       |       hydra_077.md
+|       |       hydra_078.md
+|       |       hydra_079.md
+|       |       hydra_080.md
+|       |       hydra_081.md
+|       |       hydra_082.md
+|       |       hydra_083.md
+|       |       hydra_084.md
+|       |       hydra_085.md
+|       |       hydra_086.md
+|       |       hydra_087.md
+|       |       hydra_088.md
+|       |       hydra_089.md
+|       |       hydra_090.md
+|       |       hydra_091.md
+|       |       hydra_092.md
+|       |       hydra_093.md
+|       |       hydra_094.md
+|       |       hydra_095.md
+|       |       hydra_096.md
+|       |       hydra_097.md
+|       |       hydra_098.md
+|       |       hydra_099.md
+|       |       hydra_100.md
+|       |       hydra_101.md
+|       |       hydra_102.md
+|       |       hydra_103.md
+|       |       hydra_104.md
+|       |       hydra_105.md
+|       |       hydra_106.md
+|       |       hydra_107.md
+|       |       hydra_108.md
+|       |       hydra_109.md
+|       |       hydra_110.md
+|       |       hydra_111.md
+|       |       hydra_112.md
+|       |       hydra_113.md
+|       |       hydra_114.md
+|       |       hydra_115.md
+|       |       hydra_116.md
+|       |       hydra_117.md
+|       |       hydra_118.md
+|       |       hydra_119.md
+|       |       hydra_120.md
+|       |       hydra_121.md
+|       |       hydra_122.md
+|       |       hydra_123.md
+|       |       hydra_124.md
+|       |       hydra_125.md
+|       |       hydra_126.md
+|       |       hydra_127.md
+|       |       hydra_128.md
+|       |       hydra_129.md
+|       |       hydra_130.md
+|       |       hydra_131.md
+|       |       hydra_132.md
+|       |       hydra_133.md
+|       |       hydra_134.md
+|       |       hydra_135.md
+|       |       hydra_136.md
+|       |       hydra_137.md
+|       |       hydra_138.md
+|       |       hydra_139.md
+|       |       hydra_140.md
+|       |       hydra_141.md
+|       |       hydra_142.md
+|       |       hydra_143.md
+|       |       hydra_144.md
+|       |       hydra_145.md
+|       |       hydra_146.md
+|       |       hydra_147.md
+|       |       hydra_148.md
+|       |       hydra_149.md
+|       |       hydra_150.md
+|       |       hydra_151.md
+|       |       hydra_152.md
+|       |       hydra_153.md
+|       |       hydra_154.md
+|       |       hydra_155.md
+|       |       hydra_156.md
+|       |       hydra_157.md
+|       |       hydra_158.md
+|       |       hydra_159.md
+|       |       hydra_160.md
+|       |       hydra_161.md
+|       |       hydra_162.md
+|       |       hydra_163.md
+|       |       hydra_164.md
+|       |       hydra_165.md
+|       |       hydra_166.md
+|       |       hydra_167.md
+|       |       hydra_168.md
+|       |       hydra_169.md
+|       |       hydra_170.md
+|       |       hydra_171.md
+|       |       hydra_172.md
+|       |       hydra_173.md
+|       |       hydra_174.md
+|       |       hydra_175.md
+|       |       hydra_176.md
+|       |       hydra_177.md
+|       |       hydra_178.md
+|       |       hydra_179.md
+|       |       hydra_180.md
+|       |       hydra_181.md
+|       |       hydra_182.md
+|       |       hydra_183.md
+|       |       hydra_184.md
+|       |       hydra_185.md
+|       |       hydra_186.md
+|       |       hydra_187.md
+|       |       hydra_188.md
+|       |       hydra_189.md
+|       |       hydra_190.md
+|       |       hydra_191.md
+|       |       hydra_192.md
+|       |       hydra_193.md
+|       |       hydra_194.md
+|       |       hydra_195.md
+|       |       hydra_196.md
+|       |       hydra_197.md
+|       |       hydra_198.md
+|       |       hydra_199.md
+|       |       hydra_200.md
+|       |       INDEX.md
+|       |       
+|       +---jbb
+|       |       jbb_001.md
+|       |       jbb_002.md
+|       |       jbb_003.md
+|       |       jbb_004.md
+|       |       jbb_005.md
+|       |       jbb_006.md
+|       |       jbb_007.md
+|       |       jbb_008.md
+|       |       jbb_009.md
+|       |       jbb_010.md
+|       |       jbb_011.md
+|       |       jbb_012.md
+|       |       jbb_013.md
+|       |       jbb_014.md
+|       |       jbb_015.md
+|       |       jbb_016.md
+|       |       jbb_017.md
+|       |       jbb_018.md
+|       |       jbb_019.md
+|       |       jbb_020.md
+|       |       jbb_021.md
+|       |       jbb_022.md
+|       |       jbb_023.md
+|       |       jbb_024.md
+|       |       jbb_025.md
+|       |       jbb_026.md
+|       |       jbb_027.md
+|       |       jbb_028.md
+|       |       jbb_029.md
+|       |       jbb_030.md
+|       |       jbb_031.md
+|       |       jbb_032.md
+|       |       jbb_033.md
+|       |       jbb_034.md
+|       |       jbb_035.md
+|       |       jbb_036.md
+|       |       jbb_037.md
+|       |       jbb_038.md
+|       |       jbb_039.md
+|       |       jbb_040.md
+|       |       
+|       \---multiturn
+|               mt_001.md
+|               mt_002.md
+|               mt_003.md
+|               mt_004.md
+|               mt_005.md
+|               mt_006.md
+|               mt_007.md
+|               mt_008.md
+|               mt_009.md
+|               mt_010.md
+|               mt_011.md
+|               mt_012.md
+|               mt_013.md
+|               mt_014.md
+|               mt_015.md
+|               
++---android
+|       README.md
+|       
++---app
+|   |   build.gradle
+|   |   proguard-rules.pro
+|   |   
+|   \---src
+|       \---main
+|           |   AndroidManifest.xml
+|           |   
+|           +---java
+|           |   \---com
+|           |       \---projectai
+|           |           \---app
+|           |                   MainActivity.java
+|           |                   
+|           \---res
+|               \---values
+|                       strings.xml
+|                       
++---ci-reports
+|       garak-latest.json
+|       hydra-latest.json
+|       jbb-latest.json
+|       multiturn-latest.json
+|       unified-report.json
+|       
++---cognition
+|   |   __init__.py
+|   |   
+|   \---liara
+|           agency.py
+|           cli.py
+|           worker.py
+|           __init__.py
+|           
++---config
+|   |   .asl3_key
+|   |   asl_config.json
+|   |   claude_desktop_config.example.json
+|   |   claude_desktop_config.linux.example.json
+|   |   claude_desktop_config.macos.example.json
+|   |   claude_desktop_config.windows.example.json
+|   |   grafana_dashboards.yaml
+|   |   security_hardening.yaml
+|   |   
+|   +---alertmanager
+|   |       alertmanager.yml
+|   |       
+|   +---grafana
+|   |   +---dashboards
+|   |   |       ai_system_health.json
+|   |   |       
+|   |   \---provisioning
+|   |       +---dashboards
+|   |       |       dashboards.yml
+|   |       |       
+|   |       \---datasources
+|   |               prometheus.yml
+|   |               
+|   +---prometheus
+|   |   |   prometheus.yml
+|   |   |   
+|   |   \---alerts
+|   |           ai_system_alerts.yml
+|   |           security_alerts.yml
+|   |           
+|   \---temporal
+|           development.yaml
+|           
++---data
+|   |   access_control.json
+|   |   command_override_config.json
+|   |   cybersecurity_knowledge.json
+|   |   secure.db
+|   |   settings.json
+|   |   sync_metadata.json
+|   |   telemetry.json
+|   |   
+|   +---ai_persona
+|   |       state.json
+|   |       
+|   +---asl_assessments
+|   |       assessment_20260102_171927.json
+|   |       assessment_20260102_171937.json
+|   |       
+|   +---autolearn
+|   |       topic1.txt
+|   |       topic1.txt.consumed
+|   |       
+|   +---black_vault_secure
+|   |       .aiignore
+|   |       
+|   +---comprehensive_security_tests
+|   |       comprehensive_expansion_scenarios.json
+|   |       expansion_results.json
+|   |       
+|   +---continuous_learning
+|   |       curated.json
+|   |       reports.json
+|   |       
+|   +---generated_tests
+|   |       test_bad_impl.py
+|   |       test_impl_test.py
+|   |       
+|   +---learning_requests
+|   |   |   requests.db
+|   |   |   requests.json
+|   |   |   request_index.json
+|   |   |   
+|   |   \---pending_secure
+|   |           .aiignore
+|   |           6b68dcb83578c33c.json
+|   |           
+|   +---memory
+|   |       knowledge.json
+|   |       
+|   +---monitoring
+|   |       cerberus_incidents.json
+|   |       
+|   +---novel_security_scenarios
+|   |       novel_results_redacted.json
+|   |       novel_scenarios_redacted.json
+|   |       
+|   +---osint
+|   |       osint_bible.json
+|   |       
+|   +---red_hat_expert_simulations
+|   |       red_hat_expert_scenarios.json
+|   |       simulation_results.json
+|   |       
+|   +---red_team_stress_tests
+|   |       red_team_stress_test_scenarios.json
+|   |       stress_test_results.json
+|   |       
+|   +---robustness_metrics
+|   |       comparative_robustness_report_20260102_160102.md
+|   |       comparative_robustness_report_20260102_160212.md
+|   |       comprehensive_proximity_metrics_20260102_160207.json
+|   |       comprehensive_robustness_analysis_20260102_160207.json
+|   |       novel_proximity_metrics_20260102_160212.json
+|   |       novel_robustness_analysis_20260102_160212.json
+|   |       red_hat_expert_proximity_metrics_20260102_160151.json
+|   |       red_hat_expert_robustness_analysis_20260102_160151.json
+|   |       red_team_stress_proximity_metrics_20260102_160204.json
+|   |       red_team_stress_robustness_analysis_20260102_160204.json
+|   |       
+|   +---security
+|   |       asl3_report_20260102_172021.md
+|   |       asl_assessment_latest.md
+|   |       cbrn_report_20260102_172052.md
+|   |       
+|   +---tarl_protection
+|   |       shield_registry.json
+|   |       
+|   \---vectors
+|           index.json
+|           
++---docs
+|   |   AGI_CHARTER.md
+|   |   AGI_CHARTER_v1_original.md
+|   |   AGI_IDENTITY_IMPLEMENTATION_SUMMARY.md
+|   |   AGI_IDENTITY_SPECIFICATION.md
+|   |   AI_SECURITY_FRAMEWORK.md
+|   |   api.md
+|   |   ARCHITECTURE_OVERVIEW.md
+|   |   ASL3_IMPLEMENTATION.md
+|   |   ASL_FRAMEWORK.md
+|   |   AUTOMATION_IMPLEMENTATION_SUMMARY.md
+|   |   BRANCH_PROTECTION_CONFIG.md
+|   |   checks.md
+|   |   CLOUD_SYNC.md
+|   |   codacy_setup.md
+|   |   COMPLETE_INTEGRATION_SUMMARY.md
+|   |   COMPREHENSIVE_SECURITY_TESTING_FINAL_REPORT.md
+|   |   config.md
+|   |   CYBERSECURITY_KNOWLEDGE.md
+|   |   DEEPSEEK_V32_GUIDE.md
+|   |   DEPLOYMENT_GUIDE.md
+|   |   FUNCTION_REGISTRY_KNOWLEDGE_BASE.md
+|   |   IDENTITY_SYSTEM_FULL_SPEC.md
+|   |   IMPLEMENTATION_COMPLETE.md
+|   |   INCIDENT_PLAYBOOK.md
+|   |   install.md
+|   |   KUBERNETES_MONITORING_GUIDE.md
+|   |   LIARA_QUICK_REFERENCE.md
+|   |   LICENSING_GUIDE.md
+|   |   LICENSING_SUMMARY.md
+|   |   MCP_CONFIGURATION.md
+|   |   MCP_IMPLEMENTATION_SUMMARY.md
+|   |   MCP_QUICKSTART.md
+|   |   MONITORING_IMPLEMENTATION_SUMMARY.md
+|   |   MONITORING_QUICKSTART.md
+|   |   NEW_TEMPORAL_INTEGRATION_SUMMARY.md
+|   |   OFFLINE_FIRST_ARCHITECTURE.md
+|   |   plugin_sandboxing_proposal.md
+|   |   PROMETHEUS_INTEGRATION.md
+|   |   QUICKSTART_NONDEV.md
+|   |   QUICK_RESPONSE_TEMPLATES.md
+|   |   README.md
+|   |   RED_HAT_EXPERT_SIMULATIONS.md
+|   |   RED_HAT_SIMULATION_RESULTS.md
+|   |   RED_TEAM_STRESS_TEST_RESULTS.md
+|   |   reference.md
+|   |   retrain.md
+|   |   ROBUSTNESS_METRICS.md
+|   |   SECURITY_AGENTS_GUIDE.md
+|   |   SECURITY_AGENTS_INTEGRATION_SUMMARY.md
+|   |   SECURITY_AGENTS_ROADMAP.md
+|   |   SECURITY_AGENTS_TEMPORAL_LLM_GUIDE.md
+|   |   SECURITY_EXAMPLES.md
+|   |   SECURITY_FRAMEWORK.md
+|   |   SECURITY_QUICKREF.md
+|   |   SNN_INTEGRATION.md
+|   |   TEMPORAL_INTEGRATION_ARCHITECTURE.md
+|   |   TEMPORAL_QUICK_REFERENCE.md
+|   |   TEMPORAL_SETUP.md
+|   |   UI_FRONTEND_BATCH_MERGE.md
+|   |   UI_MODERNIZATION.md
+|   |   usage.md
+|   |   
+|   +---accessibility
+|   |       ACCESSIBILITY_CHECKLIST.md
+|   |       
+|   +---architecture
+|   |       architecture_diagram.puml
+|   |       data_flow_diagram.puml
+|   |       deployment_diagram.puml
+|   |       message_lifecycle.puml
+|   |       ml_pipeline.puml
+|   |       onboarding_flow.puml
+|   |       ui_wireframes.puml
+|   |       
+|   +---archive
+|   |   +---adversarial-completion
+|   |   |       FINAL_SUMMARY.md
+|   |   |       GARAK_COMPREHENSIVE_REPORT.md
+|   |   |       IMPLEMENTATION_COMPLETE.md
+|   |   |       MISSION_COMPLETE.md
+|   |   |       README.md
+|   |   |       
+|   |   +---historical-summaries
+|   |   |       BATCH_MERGE_CHECKLIST.md
+|   |   |       BATCH_MERGE_SUMMARY.md
+|   |   |       BATCH_MERGE_VISUALIZATION.md
+|   |   |       CLI_ENHANCEMENT_SUMMARY.md
+|   |   |       README.md
+|   |   |       SECRET_REMOVAL_SUMMARY.md
+|   |   |       SECURITY_FIX_SUMMARY.md
+|   |   |       TARL_REFACTORING_SUMMARY.md
+|   |   |       
+|   |   +---security-incident-jan2026
+|   |   |       CRITICAL_SECRET_EXPOSURE_REPORT.md
+|   |   |       README.md
+|   |   |       SECURITY_REMEDIATION_PLAN.md
+|   |   |       URGENT_SECURITY_UPDATE.md
+|   |   |       
+|   |   \---session-notes
+|   |           COMPLETION_SUMMARY.md
+|   |           CONSOLIDATION_PLAN.txt
+|   |           CONSOLIDATION_PROPOSAL.md
+|   |           CONSOLIDATION_SUMMARY.txt
+|   |           FINAL_SESSION_REPORT.md
+|   |           FINAL_STATUS.md
+|   |           FIXES_APPLIED.md
+|   |           FULL_PROGRAM_TEST_RESULTS.md
+|   |           FULL_TEST_REPORT.md
+|   |           IMPROVEMENT_AUDIT.md
+|   |           INFRASTRUCTURE_AUDIT_COMPLETE.md
+|   |           LINT_FIXES_REPORT.md
+|   |           NEW_FEATURES_SUMMARY.md
+|   |           PROJECT_STATUS.md
+|   |           QUICK_REFERENCE.md
+|   |           QUICK_REFERENCE_FIXES.md
+|   |           QUICK_START.md
+|   |           README.md
+|   |           SESSION_LEATHER_BOOK_COMPLETE.md
+|   |           SESSION_STATUS.md
+|   |           SESSION_SUMMARY.md
+|   |           SYNTAX_HIGHLIGHTING_FIX.md
+|   |           THIRD_PARTY_LICENSES.md
+|   |           WEB_BRANCH_SUMMARY.md
+|   |           
+|   +---cli
+|   |       commands.md
+|   |       README.md
+|   |       
+|   +---developer
+|   |       100_PERCENT_COVERAGE.md
+|   |       COMMAND_MEMORY_FEATURES.md
+|   |       CONTINUOUS_LEARNING.md
+|   |       COVERAGE_ACHIEVEMENT_SUMMARY.md
+|   |       DEVELOPER_QUICK_REFERENCE.md
+|   |       DEVELOPMENT.md
+|   |       DOCKER_WSL_SETUP.md
+|   |       LEARNING_REQUEST_IMPLEMENTATION.md
+|   |       LEARNING_REQUEST_LOG.md
+|   |       PLUGIN_MARKETPLACE.md
+|   |       ROADMAP.md
+|   |       smoke_checks.md
+|   |       troubleshooting.md
+|   |       
+|   +---guides
+|   |       DESKTOP_QUICKSTART.md
+|   |       QUICK_START.md
+|   |       
+|   +---gui_e2e
+|   |       README.md
+|   |       
+|   +---overview
+|   |       AI_PERSONA_FOUR_LAWS.md
+|   |       AI_PERSONA_IMPLEMENTATION.md
+|   |       DESKTOP_APP_QUICKSTART.md
+|   |       DESKTOP_APP_README.md
+|   |       IMAGE_GENERATION_QUICKSTART.md
+|   |       IMAGE_GENERATION_RESTORATION.md
+|   |       IMPLEMENTATION_COMPLETE.md
+|   |       INFRASTRUCTURE.md
+|   |       INTEGRATION_GUIDE.md
+|   |       LEATHER_BOOK_ARCHITECTURE.md
+|   |       LEATHER_BOOK_README.md
+|   |       LEATHER_BOOK_UI_COMPLETE.md
+|   |       README.md
+|   |       
+|   +---policy
+|   |       CODE_OF_CONDUCT.md
+|   |       CONTRIBUTING.md
+|   |       SECURITY.md
+|   |       
+|   +---security
+|   |       fourlaws-test-runs-latest.jsonl
+|   |       fourlaws-test-runs-latest.sha256
+|   |       README.md
+|   |       SBOM_POLICY.md
+|   |       secret-scan-findings.txt
+|   |       SECRET_MANAGEMENT.md
+|   |       SECRET_PURGE_RUNBOOK.md
+|   |       SECURITY_AUDIT_EXECUTIVE_SUMMARY.md
+|   |       SECURITY_AUDIT_REPORT.md
+|   |       SECURITY_COMPLIANCE_CHECKLIST.md
+|   |       SECURITY_GOVERNANCE.md
+|   |       SECURITY_ROADMAP.md
+|   |       SECURITY_WORKFLOW_RUNBOOKS.md
+|   |       TEST_ARTIFACTS_POLICY.md
+|   |       THREAT_MODEL_SECURITY_WORKFLOWS.md
+|   |       tracked-files.txt
+|   |       
+|   \---web
+|           DEPLOYMENT.md
+|           WEB_README.md
+|           
++---examples
+|   |   agi_identity_demo.py
+|   |   cloud_sync_demo.py
+|   |   deepseek_demo.py
+|   |   function_knowledge_integration.py
+|   |   INTEGRATION_GUIDE.py
+|   |   mcp_examples.md
+|   |   offline_integration_example.py
+|   |   security_agents_demo.py
+|   |   security_integration.py
+|   |   temporal_integration_demo.py
+|   |   triumvirate_demo.py
+|   |   users.example.json
+|   |   
+|   \---temporal
+|           batch_workflows_example.py
+|           code_security_sweep_example.py
+|           image_generation_example.py
+|           learning_workflow_example.py
+|           liara_crisis_example.py
+|           README.md
+|           red_team_campaign_example.py
+|           
++---external
+|   \---Cerberus
++---governance
+|       governance_state.json
+|       
++---gradle
+|   \---wrapper
+|           gradle-wrapper.jar
+|           gradle-wrapper.properties
+|           
++---helm
+|   \---project-ai-monitoring
+|       |   Chart.yaml
+|       |   values.yaml
+|       |   
+|       \---templates
+|               deployment.yaml
+|               serviceaccount.yaml
+|               servicemonitor.yaml
+|               _helpers.tpl
+|               
++---man
+|       actionlint.1
+|       
++---policies
+|       constitution.yaml
+|       red_team_personas.yaml
+|       
++---Project-AI
++---scripts
+|       deepseek_v32_cli.py
+|       demo_cybersecurity_knowledge.py
+|       demo_security_features.py
+|       deploy-monitoring.sh
+|       generate_cli_docs.py
+|       get-docker.sh
+|       install-shortcuts.py
+|       launch-desktop.bat
+|       launch-desktop.ps1
+|       launch_mcp_server.py
+|       populate_cybersecurity_knowledge.py
+|       redteam_workflow.py
+|       run_asl3_security.py
+|       run_asl_assessment.py
+|       run_cbrn_classifier.py
+|       run_comprehensive_expansion.py
+|       run_novel_scenarios.py
+|       run_red_hat_expert_simulations.py
+|       run_red_team_stress_tests.py
+|       run_robustness_benchmarks.py
+|       run_security_worker.py
+|       sarif_exporter.py
+|       setup-desktop.bat
+|       setup-docker-wsl.ps1
+|       setup_temporal.py
+|       temporal_quickstart.sh
+|       update_osint_bible.py
+|       
++---src
+|   +---app
+|   |   |   cli.py
+|   |   |   main.py
+|   |   |   main.py.codexbak
+|   |   |   users.json
+|   |   |   __init__.py
+|   |   |   
+|   |   +---agents
+|   |   |   |   alpha_red.py
+|   |   |   |   attack_train_loop.py
+|   |   |   |   border_patrol.py
+|   |   |   |   cerberus_codex_bridge.py
+|   |   |   |   ci_checker_agent.py
+|   |   |   |   codex_deus_maximus.py
+|   |   |   |   code_adversary_agent.py
+|   |   |   |   constitutional_guardrail_agent.py
+|   |   |   |   dependency_auditor.py
+|   |   |   |   doc_generator.py
+|   |   |   |   expert_agent.py
+|   |   |   |   explainability.py
+|   |   |   |   jailbreak_bench_agent.py
+|   |   |   |   knowledge_curator.py
+|   |   |   |   long_context_agent.py
+|   |   |   |   oversight.py
+|   |   |   |   planner.py
+|   |   |   |   planner_agent.py
+|   |   |   |   red_team_agent.py
+|   |   |   |   red_team_persona_agent.py
+|   |   |   |   refactor_agent.py
+|   |   |   |   retrieval_agent.py
+|   |   |   |   rollback_agent.py
+|   |   |   |   safety_guard_agent.py
+|   |   |   |   sandbox_runner.py
+|   |   |   |   sandbox_worker.py
+|   |   |   |   tarl_protector.py
+|   |   |   |   tarl_protector.py.old
+|   |   |   |   test_qa_generator.py
+|   |   |   |   thirsty_lang_validator.py
+|   |   |   |   ux_telemetry.py
+|   |   |   |   validator.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           ci_checker_agent.cpython-311.pyc
+|   |   |           codex_deus_maximus.cpython-311.pyc
+|   |   |           code_adversary_agent.cpython-311.pyc
+|   |   |           constitutional_guardrail_agent.cpython-311.pyc
+|   |   |           dependency_auditor.cpython-311.pyc
+|   |   |           doc_generator.cpython-311.pyc
+|   |   |           expert_agent.cpython-311.pyc
+|   |   |           explainability.cpython-311.pyc
+|   |   |           jailbreak_bench_agent.cpython-311.pyc
+|   |   |           knowledge_curator.cpython-311.pyc
+|   |   |           long_context_agent.cpython-311.pyc
+|   |   |           oversight.cpython-311.pyc
+|   |   |           planner.cpython-311.pyc
+|   |   |           planner_agent.cpython-311.pyc
+|   |   |           red_team_agent.cpython-311.pyc
+|   |   |           red_team_persona_agent.cpython-311.pyc
+|   |   |           refactor_agent.cpython-311.pyc
+|   |   |           retrieval_agent.cpython-311.pyc
+|   |   |           rollback_agent.cpython-311.pyc
+|   |   |           safety_guard_agent.cpython-311.pyc
+|   |   |           sandbox_runner.cpython-311.pyc
+|   |   |           test_qa_generator.cpython-311.pyc
+|   |   |           ux_telemetry.cpython-311.pyc
+|   |   |           validator.cpython-311.pyc
+|   |   |           __init__.cpython-311.pyc
+|   |   |           
+|   |   +---alignment
+|   |   |       panel_feedback.py
+|   |   |       __init__.py
+|   |   |       
+|   |   +---audit
+|   |   |       tamperproof_log.py
+|   |   |       trace_logger.py
+|   |   |       __init__.py
+|   |   |       
+|   |   +---core
+|   |   |   |   access_control.py
+|   |   |   |   ai_systems.py
+|   |   |   |   ai_systems.py.tarl_backup
+|   |   |   |   ai_systems.py.tarl_prebuff
+|   |   |   |   backend_client.py
+|   |   |   |   bonding_protocol.py
+|   |   |   |   cbrn_classifier.py
+|   |   |   |   clickhouse_integration.py
+|   |   |   |   cloud_sync.py
+|   |   |   |   cognition_kernel.py
+|   |   |   |   command_override.py
+|   |   |   |   comprehensive_security_expansion.py
+|   |   |   |   config.py
+|   |   |   |   continuous_learning.py
+|   |   |   |   council_hub.py
+|   |   |   |   cybersecurity_knowledge.py
+|   |   |   |   data_analysis.py
+|   |   |   |   deepseek_v32_inference.py
+|   |   |   |   deterministic_replay.py
+|   |   |   |   emergency_alert.py
+|   |   |   |   function_registry.py
+|   |   |   |   governance.py
+|   |   |   |   governance_drift_monitor.py
+|   |   |   |   identity.py
+|   |   |   |   image_generator.py
+|   |   |   |   intelligence_engine.py
+|   |   |   |   intent_detection.py
+|   |   |   |   kernel_fuzz_harness.py
+|   |   |   |   kernel_integration.py
+|   |   |   |   learning_paths.py
+|   |   |   |   local_fbo.py
+|   |   |   |   location_tracker.py
+|   |   |   |   mcp_server.py
+|   |   |   |   memory_engine.py
+|   |   |   |   meta_identity.py
+|   |   |   |   novel_security_scenarios.py
+|   |   |   |   optical_flow.py
+|   |   |   |   perspective_engine.py
+|   |   |   |   rag_system.py
+|   |   |   |   rebirth_protocol.py
+|   |   |   |   red_hat_expert_defense.py
+|   |   |   |   red_team_stress_test.py
+|   |   |   |   reflection_cycle.py
+|   |   |   |   relationship_model.py
+|   |   |   |   risingwave_integration.py
+|   |   |   |   robustness_metrics.py
+|   |   |   |   safety_levels.py
+|   |   |   |   security_enforcer.py
+|   |   |   |   security_resources.py
+|   |   |   |   snn_integration.py
+|   |   |   |   snn_mlops.py
+|   |   |   |   telemetry.py
+|   |   |   |   user_manager.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           access_control.cpython-311.pyc
+|   |   |           ai_systems.cpython-311.pyc
+|   |   |           bonding_protocol.cpython-311.pyc
+|   |   |           cognition_kernel.cpython-311.pyc
+|   |   |           continuous_learning.cpython-311.pyc
+|   |   |           council_hub.cpython-311.pyc
+|   |   |           governance.cpython-311.pyc
+|   |   |           identity.cpython-311.pyc
+|   |   |           intelligence_engine.cpython-311.pyc
+|   |   |           kernel_integration.cpython-311.pyc
+|   |   |           memory_engine.cpython-311.pyc
+|   |   |           meta_identity.cpython-311.pyc
+|   |   |           perspective_engine.cpython-311.pyc
+|   |   |           rebirth_protocol.cpython-311.pyc
+|   |   |           reflection_cycle.cpython-311.pyc
+|   |   |           relationship_model.cpython-311.pyc
+|   |   |           telemetry.cpython-311.pyc
+|   |   |           
+|   |   +---governance
+|   |   |       governance_manager.py
+|   |   |       __init__.py
+|   |   |       
+|   |   +---gui
+|   |   |   |   3D_VISUALIZATION_README.md
+|   |   |   |   cerberus_panel.py
+|   |   |   |   dashboard.py
+|   |   |   |   dashboard_handlers.py
+|   |   |   |   dashboard_main.py
+|   |   |   |   dashboard_utils.py
+|   |   |   |   image_generation.py
+|   |   |   |   knowledge_functions_panel.py
+|   |   |   |   leather_book_dashboard.py
+|   |   |   |   leather_book_interface.py
+|   |   |   |   leather_book_panels.py
+|   |   |   |   login.py
+|   |   |   |   persona_panel.py
+|   |   |   |   settings_dialog.py
+|   |   |   |   styles.qss
+|   |   |   |   styles_dark.qss
+|   |   |   |   styles_modern.qss
+|   |   |   |   user_management.py
+|   |   |   |   visualization_3d.py
+|   |   |   |   
+|   |   |   +---assets
+|   |   |   |       leather.svg
+|   |   |   |       parchment.svg
+|   |   |   |       
+|   |   |   \---__pycache__
+|   |   |           dashboard_main.cpython-311.pyc
+|   |   |           
+|   |   +---i18n
+|   |   |       ar.json
+|   |   |       bn.json
+|   |   |       cs.json
+|   |   |       de.json
+|   |   |       en.json
+|   |   |       es.json
+|   |   |       fa.json
+|   |   |       fr.json
+|   |   |       he.json
+|   |   |       hi.json
+|   |   |       hu.json
+|   |   |       id.json
+|   |   |       it.json
+|   |   |       ja.json
+|   |   |       ko.json
+|   |   |       manifest.json
+|   |   |       nl.json
+|   |   |       pl.json
+|   |   |       pt.json
+|   |   |       ro.json
+|   |   |       ru.json
+|   |   |       sk.json
+|   |   |       sv.json
+|   |   |       th.json
+|   |   |       tr.json
+|   |   |       ur.json
+|   |   |       vi.json
+|   |   |       zh.json
+|   |   |       
+|   |   +---knowledge
+|   |   |       osint_loader.py
+|   |   |       __init__.py
+|   |   |       
+|   |   +---monitoring
+|   |   |       alert_manager.py
+|   |   |       cerberus_dashboard.py
+|   |   |       metrics_collector.py
+|   |   |       metrics_server.py
+|   |   |       prometheus_exporter.py
+|   |   |       security_metrics.py
+|   |   |       __init__.py
+|   |   |       
+|   |   +---plugins
+|   |   |   |   cerberus_adapter.py
+|   |   |   |   codex_adapter.py
+|   |   |   |   plugin.json
+|   |   |   |   plugin_runner.py
+|   |   |   |   sample_plugin.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           codex_adapter.cpython-311.pyc
+|   |   |           sample_plugin.cpython-311.pyc
+|   |   |           __init__.cpython-311.pyc
+|   |   |           
+|   |   +---reporting
+|   |   |       sarif_generator.py
+|   |   |       __init__.py
+|   |   |       
+|   |   +---resilience
+|   |   |       deadman_switch.py
+|   |   |       self_repair_agent.py
+|   |   |       __init__.py
+|   |   |       
+|   |   +---security
+|   |   |       agent_security.py
+|   |   |       ai_security_framework.py
+|   |   |       aws_integration.py
+|   |   |       database_security.py
+|   |   |       data_validation.py
+|   |   |       environment_hardening.py
+|   |   |       monitoring.py
+|   |   |       web_service.py
+|   |   |       __init__.py
+|   |   |       
+|   |   +---service
+|   |   |       ai_controller.py
+|   |   |       __init__.py
+|   |   |       
+|   |   +---temporal
+|   |   |       activities.py
+|   |   |       client.py
+|   |   |       config.py
+|   |   |       worker.py
+|   |   |       workflows.py
+|   |   |       __init__.py
+|   |   |       
+|   |   \---__pycache__
+|   |           __init__.cpython-311.pyc
+|   |           
+|   +---cognition
+|   |   |   triumvirate.py
+|   |   |   __init__.py
+|   |   |   
+|   |   +---adapters
+|   |   |       memory_adapter.py
+|   |   |       model_adapter.py
+|   |   |       policy_engine.py
+|   |   |       __init__.py
+|   |   |       
+|   |   +---cerberus
+|   |   |       engine.py
+|   |   |       __init__.py
+|   |   |       
+|   |   +---codex
+|   |   |       engine.py
+|   |   |       __init__.py
+|   |   |       
+|   |   \---galahad
+|   |           engine.py
+|   |           __init__.py
+|   |           
+|   +---integrations
+|   |   |   __init__.py
+|   |   |   
+|   |   \---temporal
+|   |       |   client.py
+|   |       |   worker.py
+|   |       |   __init__.py
+|   |       |   
+|   |       +---activities
+|   |       |       core_tasks.py
+|   |       |       __init__.py
+|   |       |       
+|   |       \---workflows
+|   |               example_workflow.py
+|   |               __init__.py
+|   |               
+|   +---plugins
+|   |   \---osint
+|   |           sample_osint_plugin.py
+|   |           __init__.py
+|   |           
+|   +---project_ai.egg-info
+|   |       dependency_links.txt
+|   |       PKG-INFO
+|   |       requires.txt
+|   |       SOURCES.txt
+|   |       top_level.txt
+|   |       
+|   \---thirsty_lang
+|       |   .dockerignore
+|       |   .gitattributes
+|       |   .gitignore
+|       |   AUTHORS.txt
+|       |   CHANGELOG.md
+|       |   CONTRIBUTING.md
+|       |   DEFENSIVE_IMPLEMENTATION_SUMMARY.md
+|       |   DEPENDENCIES.txt
+|       |   docker-compose.yml
+|       |   DOCKER.md
+|       |   Dockerfile
+|       |   IMPLEMENTATION_SUMMARY.md
+|       |   LICENSE
+|       |   package.json
+|       |   PROJECT_AI_INTEGRATION.md
+|       |   PROJECT_SUMMARY.md
+|       |   PYTHON_SETUP.md
+|       |   QUICKSTART.md
+|       |   quickstart.sh
+|       |   README.md
+|       |   requirements-dev.txt
+|       |   requirements.txt
+|       |   setup_all.sh
+|       |   setup_venv.sh
+|       |   VERSION.txt
+|       |   
+|       +---.github
+|       |   \---workflows
+|       |           ci.yml
+|       |           
+|       +---docs
+|       |       EXPANSIONS.md
+|       |       FAQ.md
+|       |       INSTALLATION.md
+|       |       QUICK_REFERENCE.md
+|       |       SECURITY_GUIDE.md
+|       |       SPECIFICATION.md
+|       |       TUTORIAL.md
+|       |       
+|       +---examples
+|       |   |   hello.thirsty
+|       |   |   hydration.thirsty
+|       |   |   variables.thirsty
+|       |   |   
+|       |   +---advanced
+|       |   |       classes.thirstofgods
+|       |   |       control-flow.thirstyplus
+|       |   |       functions.thirstyplusplus
+|       |   |       
+|       |   \---security
+|       |           advanced-defense.thirsty
+|       |           attack-mitigation.thirsty
+|       |           basic-protection.thirsty
+|       |           demo.js
+|       |           paranoid-mode.thirsty
+|       |           security-demo.js
+|       |           
+|       +---playground
+|       |       index.html
+|       |       
+|       +---src
+|       |   |   ast.js
+|       |   |   cli.js
+|       |   |   debugger.js
+|       |   |   doc-generator.js
+|       |   |   formatter.js
+|       |   |   index.js
+|       |   |   linter.js
+|       |   |   package-manager.js
+|       |   |   profiler.js
+|       |   |   repl.js
+|       |   |   secure-interpreter.js
+|       |   |   thirsty-cli.js
+|       |   |   thirsty_interpreter.py
+|       |   |   thirsty_repl.py
+|       |   |   thirsty_utils.py
+|       |   |   training.js
+|       |   |   transpiler.js
+|       |   |   
+|       |   +---security
+|       |   |       code-morpher.js
+|       |   |       defense-compiler.js
+|       |   |       index.js
+|       |   |       policy-engine.js
+|       |   |       threat-detector.js
+|       |   |       
+|       |   \---test
+|       |           runner.js
+|       |           security-tests.js
+|       |           
+|       +---tools
+|       |       benchmark.js
+|       |       
+|       \---vscode-extension
+|           |   language-configuration.json
+|           |   package.json
+|           |   README.md
+|           |   
+|           +---snippets
+|           |       thirsty.json
+|           |       
+|           \---syntaxes
+|                   thirsty.tmLanguage.json
+|                   
++---temporal
+|   |   __init__.py
+|   |   
+|   \---workflows
+|           activities.py
+|           atomic_security_activities.py
+|           enhanced_security_workflows.py
+|           security_agent_activities.py
+|           security_agent_workflows.py
+|           triumvirate_workflow.py
+|           __init__.py
+|           
++---test-artifacts
+|       fourlaws-deterministic-1000-20251224T181356Z.jsonl
+|       fourlaws-deterministic-1000-20251224T181541Z.jsonl
+|       fourlaws-disallowed-highlevel-1000-20251224T181526Z.jsonl
+|       fourlaws-disallowed-highlevel-1000-20251224T181546Z.jsonl
+|       fourlaws-hypothesis-threats-1000-20251224T181904Z.jsonl
+|       fourlaws-hypothesis-threats-1000-20251224T181931Z.jsonl
+|       fourlaws-property-1000-20251224T181440Z.jsonl
+|       fourlaws-property-1000-20251224T181543Z.jsonl
+|       fourlaws-redacted-procedural-1000-20251224T182324Z.jsonl
+|       
++---tests
+|   |   conftest.py
+|   |   test_100_percent_coverage.py
+|   |   test_advanced_security_agents.py
+|   |   test_agents_pipeline.py
+|   |   test_ai_systems.py
+|   |   test_atomic_writes.py
+|   |   test_backend_client.py
+|   |   test_backend_client_extended.py
+|   |   test_cli.py
+|   |   test_cloud_sync.py
+|   |   test_codex_integration.py
+|   |   test_codex_staging_and_export.py
+|   |   test_cognition_kernel.py
+|   |   test_command_override_extended.py
+|   |   test_command_override_migration.py
+|   |   test_complete_system.py
+|   |   test_continuous_learning.py
+|   |   test_council_hub.py
+|   |   test_council_hub_integration.py
+|   |   test_coverage_boost.py
+|   |   test_cybersecurity_knowledge.py
+|   |   test_data_analysis.py
+|   |   test_data_analysis_extended.py
+|   |   test_deepseek_integration.py
+|   |   test_deepseek_v32.py
+|   |   test_edge_cases_complete.py
+|   |   test_error_paths.py
+|   |   test_final_coverage_push.py
+|   |   test_final_excellence.py
+|   |   test_four_laws_1000_deterministic.py
+|   |   test_four_laws_1000_disallowed_high_level.py
+|   |   test_four_laws_1000_hypothesis_threats.py
+|   |   test_four_laws_1000_property_based.py
+|   |   test_four_laws_1000_redacted_procedural_attempts.py
+|   |   test_four_laws_dual_flag_scenarios.py
+|   |   test_four_laws_scenarios.py
+|   |   test_four_laws_stress.py
+|   |   test_function_registry.py
+|   |   test_identity_system.py
+|   |   test_image_generator.py
+|   |   test_image_generator_extended.py
+|   |   test_integration_flow.py
+|   |   test_integration_pipeline_blocking.py
+|   |   test_integration_user_learning.py
+|   |   test_intelligence_router.py
+|   |   test_issue_1_ai_systems_265_266.py
+|   |   test_issue_2_image_gen_269_270.py
+|   |   test_issue_3_user_manager_57.py
+|   |   test_kernel_enhancements.py
+|   |   test_learning_requests_extended.py
+|   |   test_leather_book_smoke.py
+|   |   test_local_fbo.py
+|   |   test_mcp_server.py
+|   |   test_memory_extended.py
+|   |   test_memory_query.py
+|   |   test_optical_flow.py
+|   |   test_persona_extended.py
+|   |   test_plugin_sample.py
+|   |   test_rag_system.py
+|   |   test_remaining_statements.py
+|   |   test_security_agents.py
+|   |   test_security_agents_validation.py
+|   |   test_security_phase1.py
+|   |   test_security_phase2.py
+|   |   test_security_stress.py
+|   |   test_temporal_integration.py
+|   |   test_user_manager.py
+|   |   test_user_manager_extended.py
+|   |   test_web_backend.py
+|   |   test_web_frontend.py
+|   |   verify_security_agents.py
+|   |   __init__.py
+|   |   
+|   +---agents
+|   |       test_border_patrol.py
+|   |       test_dependency_auditor.py
+|   |       
+|   +---e2e
+|   |       test_web_backend_endpoints.py
+|   |       __init__.py
+|   |       
+|   +---gui_e2e
+|   |       test_launch_and_login.py
+|   |       
+|   +---monitoring
+|   |       test_cerberus_metrics.py
+|   |       
+|   +---plugins
+|   |       test_plugin_load_flow.py
+|   |       test_plugin_runner.py
+|   |       
+|   +---temporal
+|   |       test_client.py
+|   |       test_config.py
+|   |       test_liara_workflows.py
+|   |       test_workflows.py
+|   |       __init__.py
+|   |       
+|   \---utils
+|           scenario_recorder.py
+|           __init__.py
+|           
++---tools
+|       check_large_files_for_lfs.py
+|       count_parametrize_cases.py
+|       enhanced_secret_scan.py
+|       fix_whitespace.py
+|       import_test.py
+|       install_dev_tools.sh
+|       launch-dev-ui.bat
+|       merge_fourlaws_artifacts.py
+|       migrate_users.py
+|       prune_test_artifacts.py
+|       purge_git_secrets.ps1
+|       purge_git_secrets.sh
+|       reflow_markdown.py
+|       regenerate_and_commit_fourlaws_report.ps1
+|       regenerate_fourlaws_report.ps1
+|       run_security_audit.sh
+|       secret_scan.py
+|       SECURITY_SCANNING.md
+|       setup_designer_env.bat
+|       setup_designer_env.log
+|       setup_designer_env.ps1
+|       setup_designer_env.ps1.log
+|       simulate_defensive_tests.py
+|       upgrade_override_password_to_bcrypt.py
+|       
+\---web
+    |   __init__.py
+    |   
+    +---backend
+    |       app.py
+    |       __init__.py
+    |       
+    \---frontend
+            app.js
+            index.html
+            

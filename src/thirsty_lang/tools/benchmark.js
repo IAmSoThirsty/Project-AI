@@ -14,46 +14,46 @@ class ThirstyBenchmark {
   }
 
   async runBenchmark(name, code, iterations = 1000) {
-    console.log(`\n🏃 Running benchmark: ${name}`);
-    console.log(`   Iterations: ${iterations}`);
+    console.log('\n🏃 Running benchmark: ' + name);
+    console.log('   Iterations: ' + iterations);
 
     const times = [];
     const interpreter = new ThirstyInterpreter();
 
     // Warmup
-    for (let i = 0; i < 10; i++) {
+    for (var i = 0; i < 10; i++) {
       interpreter.execute(code);
     }
 
     // Actual benchmark
-    for (let i = 0; i < iterations; i++) {
-      const start = process.hrtime.bigint();
+    for (var i = 0; i < iterations; i++) {
+      var start = process.hrtime.bigint();
       interpreter.execute(code);
-      const end = process.hrtime.bigint();
+      var end = process.hrtime.bigint();
       times.push(Number(end - start) / 1000000); // Convert to ms
     }
 
-    const avg = times.reduce((a, b) => a + b, 0) / times.length;
+    const avg = times.reduce(function(a, b) { return a + b; }, 0) / times.length;
     const min = Math.min(...times);
     const max = Math.max(...times);
-    const median = times.sort((a, b) => a - b)[Math.floor(times.length / 2)];
+    const median = times.sort(function(a, b) { return a - b; })[Math.floor(times.length / 2)];
 
     const result = {
-      name,
-      iterations,
+      name: name,
+      iterations: iterations,
       average: avg,
-      min,
-      max,
-      median,
-      totalTime: times.reduce((a, b) => a + b, 0)
+      min: min,
+      max: max,
+      median: median,
+      totalTime: times.reduce(function(a, b) { return a + b; }, 0)
     };
 
     this.results.push(result);
 
-    console.log(`   ✓ Average: ${avg.toFixed(3)} ms`);
-    console.log(`   ✓ Min: ${min.toFixed(3)} ms`);
+    console.log('   ✓ Average: ' + avg.toFixed(3) + ' ms');
+    console.log('   ✓ Min: ' + min.toFixed(3) + ' ms');
     console.log("   ✓ Max: " + max.toFixed(3) + " ms");
-    console.log(`   ✓ Median: ${median.toFixed(3)} ms`);
+    console.log('   ✓ Median: ' + median.toFixed(3) + ' ms');
 
     return result;
   }
@@ -65,35 +65,37 @@ class ThirstyBenchmark {
 
     console.log('Results sorted by average execution time:\n');
 
-    const sorted = [...this.results].sort((a, b) => a.average - b.average);
+    const sorted = [...this.results].sort(function(a, b) { return a.average - b.average; });
 
-    sorted.forEach((result, index) => {
-      console.log(`${index + 1}. ${result.name}`);
-      console.log(`   Average: ${result.average.toFixed(3)} ms`);
-      console.log(`   Median: ${result.median.toFixed(3)} ms`);
-      console.log(`   Range: ${result.min.toFixed(3)} - ${result.max.toFixed(3)} ms`);
+    for (var index = 0; index < sorted.length; index++) {
+      var result = sorted[index];
+      console.log((index + 1) + '. ' + result.name);
+      console.log('   Average: ' + result.average.toFixed(3) + ' ms');
+      console.log('   Median: ' + result.median.toFixed(3) + ' ms');
+      console.log('   Range: ' + result.min.toFixed(3) + ' - ' + result.max.toFixed(3) + ' ms');
       console.log();
-    });
+    }
 
     // Performance comparison
     if (sorted.length > 1) {
       console.log('Performance Comparison:');
       const fastest = sorted[0];
-      sorted.forEach((result, index) => {
+      for (var index = 0; index < sorted.length; index++) {
+        var result = sorted[index];
         if (index === 0) {
-          console.log(`  ${result.name}: Baseline (fastest)`);
+          console.log('  ' + result.name + ': Baseline (fastest)');
         } else {
-          const ratio = (result.average / fastest.average).toFixed(2);
-          const percent = ((result.average - fastest.average) / fastest.average * 100).toFixed(1);
-          console.log(`  ${result.name}: ${ratio}x slower (+${percent}%)`);
+          var ratio = (result.average / fastest.average).toFixed(2);
+          var percent = ((result.average - fastest.average) / fastest.average * 100).toFixed(1);
+          console.log('  ' + result.name + ': ' + ratio + 'x slower (+' + percent + '%)');
         }
-      });
+      }
     }
   }
 
   exportResults(filepath) {
     fs.writeFileSync(filepath, JSON.stringify(this.results, null, 2));
-    console.log(`\n✓ Results exported to ${filepath}`);
+    console.log('\n✓ Results exported to ' + filepath);
   }
 }
 

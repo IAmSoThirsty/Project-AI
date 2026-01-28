@@ -71,8 +71,11 @@ class ThirstyREPL {
       console.log('No variables defined.');
     } else {
       console.log('\n📊 Current Variables:');
-      for (const [name, value] of Object.entries(vars)) {
-        console.log("  " + name + " = " + JSON.stringify(value));
+      for (var name in vars) {
+        if (vars.hasOwnProperty(name)) {
+          var value = vars[name];
+          console.log("  " + name + " = " + JSON.stringify(value));
+        }
       }
       console.log();
     }
@@ -80,9 +83,10 @@ class ThirstyREPL {
 
   showHistory() {
     console.log('\n📜 Command History:');
-    this.history.slice(-20).forEach((cmd, i) => {
-      console.log(`  ${i + 1}. ${cmd}`);
-    });
+    const recentHistory = this.history.slice(-20);
+    for (var i = 0; i < recentHistory.length; i++) {
+      console.log('  ' + (i + 1) + '. ' + recentHistory[i]);
+    }
     console.log();
   }
 
@@ -208,18 +212,18 @@ class ThirstyREPL {
         break;
 
       default:
-        console.log(`Unknown command: ${command}`);
+        console.log('Unknown command: ' + command);
         console.log('Type .help for available commands');
     }
   }
 
   saveSession(filename) {
     try {
-      const code = this.history.filter(h => !h.startsWith('.')).join('\n');
+      const code = this.history.filter(function(h) { return !h.startsWith('.'); }).join('\n');
       fs.writeFileSync(filename, code);
-      console.log(`✓ Session saved to ${filename}`);
+      console.log('✓ Session saved to ' + filename);
     } catch (error) {
-      console.error(`❌ Error saving file: ${error.message}`);
+      console.error('❌ Error saving file: ' + error.message);
     }
   }
 
@@ -227,9 +231,9 @@ class ThirstyREPL {
     try {
       const code = fs.readFileSync(filename, 'utf-8');
       this.interpreter.execute(code);
-      console.log(`✓ Loaded and executed ${filename}`);
+      console.log('✓ Loaded and executed ' + filename);
     } catch (error) {
-      console.error(`❌ Error loading file: ${error.message}`);
+      console.error('❌ Error loading file: ' + error.message);
     }
   }
 }

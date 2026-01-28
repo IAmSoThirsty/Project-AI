@@ -159,6 +159,7 @@ Modify timer interval in `LeatherBookDashboard.__init__`:
         def __init__(self, parent=None):
             super().__init__(parent)
             layout = QVBoxLayout(self)
+
             # Add widgets...
 
 ### Add New Button

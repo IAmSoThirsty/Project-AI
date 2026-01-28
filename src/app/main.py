@@ -54,7 +54,6 @@ def get_cognition_kernel() -> CognitionKernel:
     Returns:
         CognitionKernel: Global kernel instance
     """
-    global _global_cognition_kernel
     if _global_cognition_kernel is None:
         logger.error("CognitionKernel not initialized. Call initialize_kernel() first.")
         raise RuntimeError("CognitionKernel not initialized")
@@ -87,7 +86,7 @@ def initialize_kernel() -> CognitionKernel:
         try:
             memory_engine = MemoryEngine(data_dir="data")
         except Exception as e:
-            logger.warning(f"MemoryEngine initialization failed: {e}, using fallback")
+            logger.warning("MemoryEngine initialization failed: %s, using fallback", e)
             memory_engine = None
 
         # 3. Governance System (Four Laws enforcement)
@@ -115,7 +114,7 @@ def initialize_kernel() -> CognitionKernel:
                 "Triumvirate initialized: Galahad, Cerberus, Codex Deus Maximus"
             )
         except Exception as e:
-            logger.warning(f"Triumvirate initialization failed: {e}, using fallback")
+            logger.warning("Triumvirate initialization failed: %s, using fallback", e)
             triumvirate = None
 
         # 6. Create CognitionKernel with all subsystems
@@ -135,16 +134,16 @@ def initialize_kernel() -> CognitionKernel:
 
         logger.info("✅ CognitionKernel initialized successfully")
         logger.info("   - Identity: ✓")
-        logger.info(f"   - Memory: {'✓' if memory_engine else '✗ (fallback)'}")
-        logger.info(f"   - Governance: {'✓' if governance_system else '✗ (fallback)'}")
-        logger.info(f"   - Reflection: {'✓' if reflection_engine else '✗ (fallback)'}")
-        logger.info(f"   - Triumvirate: {'✓' if triumvirate else '✗ (fallback)'}")
+        logger.info("   - Memory: %s", "✓" if memory_engine else "✗ (fallback)")
+        logger.info("   - Governance: %s", "✓" if governance_system else "✗ (fallback)")
+        logger.info("   - Reflection: %s", "✓" if reflection_engine else "✗ (fallback)")
+        logger.info("   - Triumvirate: %s", "✓" if triumvirate else "✗ (fallback)")
         logger.info("🔒 Kernel syscall boundary active - all execution governed")
 
         return kernel
 
     except Exception as e:
-        logger.error(f"Failed to initialize CognitionKernel: {e}", exc_info=True)
+        logger.error("Failed to initialize CognitionKernel: %s", e)
         raise
 
 
@@ -169,7 +168,7 @@ def initialize_council_hub(kernel: CognitionKernel) -> CouncilHub:
     _global_council_hub = hub
 
     logger.info("✅ CouncilHub initialized with kernel-routed agents")
-    logger.info(f"   - Registered agents: {len(hub.list_agents())}")
+    logger.info("   - Registered agents: %s", len(hub.list_agents()))
 
     return hub
 

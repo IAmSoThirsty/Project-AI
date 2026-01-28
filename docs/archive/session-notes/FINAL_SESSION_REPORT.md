@@ -184,12 +184,12 @@ Distribution:    ✅ Ready (LICENSE included)
    - Contact method for security issues
    - Responsible disclosure process
 
-2. **Add .env.example**
+1. **Add .env.example**
    - Template for environment variables
    - Documentation of required settings
    - Safety: prevents committing secrets
 
-3. **Add CHANGELOG.md**
+1. **Add CHANGELOG.md**
    - Version history
    - Release notes
    - Breaking changes tracking
@@ -201,12 +201,12 @@ Distribution:    ✅ Ready (LICENSE included)
    - pip-audit for dependency vulnerabilities
    - gitleaks for secret detection
 
-2. **Configure Dependabot**
+1. **Configure Dependabot**
    - Automatic dependency updates
    - Security patch alerts
    - Version upgrade PRs
 
-3. **Add Integration Tests**
+1. **Add Integration Tests**
    - End-to-end user flows
    - API endpoint testing
    - Database operations
@@ -214,16 +214,16 @@ Distribution:    ✅ Ready (LICENSE included)
 ### 🟡 MEDIUM PRIORITY (This Month)
 
 1. **Add CODE_OF_CONDUCT.md**
-2. **Create Makefile** (developer convenience)
-3. **Add PyPI Publishing** (if distributing package)
-4. **Create API Documentation**
+1. **Create Makefile** (developer convenience)
+1. **Add PyPI Publishing** (if distributing package)
+1. **Create API Documentation**
 
 ### 🟢 NICE-TO-HAVE (Future)
 
 1. Performance benchmarks
-2. Plugin development guide
-3. Binary distributions (Windows/Mac/Linux)
-4. Docker Hub publishing
+1. Plugin development guide
+1. Binary distributions (Windows/Mac/Linux)
+1. Docker Hub publishing
 
 ---
 

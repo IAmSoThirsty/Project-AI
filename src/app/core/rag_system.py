@@ -111,7 +111,7 @@ class RAGSystem:
         try:
             from sentence_transformers import SentenceTransformer
 
-            logger.info(f"Loading embedding model: {self.embedding_model_name}")
+            logger.info("Loading embedding model: %s", self.embedding_model_name)
             self.model = SentenceTransformer(self.embedding_model_name)
             logger.info("Embedding model loaded successfully")
         except ImportError as e:
@@ -121,7 +121,7 @@ class RAGSystem:
             )
             raise ImportError("sentence-transformers required for RAG system") from e
         except Exception as e:
-            logger.error(f"Error loading embedding model: {e}")
+            logger.error("Error loading embedding model: %s", e)
             raise
 
     def _load_index(self):
@@ -135,9 +135,9 @@ class RAGSystem:
                         TextChunk.from_dict(chunk_data)
                         for chunk_data in data.get("chunks", [])
                     ]
-                logger.info(f"Loaded {len(self.chunks)} chunks from index")
+                logger.info("Loaded %s chunks from index", len(self.chunks))
             except Exception as e:
-                logger.error(f"Error loading index: {e}")
+                logger.error("Error loading index: %s", e)
                 self.chunks = []
 
     def _save_index(self):
@@ -155,9 +155,9 @@ class RAGSystem:
             }
             with open(index_file, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=2)
-            logger.info(f"Saved index with {len(self.chunks)} chunks")
+            logger.info("Saved index with %s chunks", len(self.chunks))
         except Exception as e:
-            logger.error(f"Error saving index: {e}")
+            logger.error("Error saving index: %s", e)
 
     def _chunk_text(self, text: str, source: str) -> list[TextChunk]:
         """
@@ -209,7 +209,7 @@ class RAGSystem:
 
         try:
             texts = [chunk.text for chunk in chunks]
-            logger.info(f"Generating embeddings for {len(texts)} chunks...")
+            logger.info("Generating embeddings for %s chunks...", len(texts))
 
             embeddings = self.model.encode(
                 texts, convert_to_tensor=False, show_progress_bar=True
@@ -221,7 +221,7 @@ class RAGSystem:
 
             logger.info("Embeddings generated successfully")
         except Exception as e:
-            logger.error(f"Error generating embeddings: {e}")
+            logger.error("Error generating embeddings: %s", e)
             raise
 
     def ingest_directory(
@@ -244,7 +244,7 @@ class RAGSystem:
         if not directory.exists():
             raise FileNotFoundError(f"Directory not found: {directory_path}")
 
-        logger.info(f"Ingesting files from: {directory_path}")
+        logger.info("Ingesting files from: %s", directory_path)
         new_chunks = []
 
         for filepath in directory.rglob("*"):
@@ -257,9 +257,11 @@ class RAGSystem:
                     file_chunks = self._chunk_text(text, source)
                     new_chunks.extend(file_chunks)
 
-                    logger.info(f"Processed {filepath.name}: {len(file_chunks)} chunks")
+                    logger.info(
+                        "Processed %s: %s chunks", filepath.name, len(file_chunks)
+                    )
                 except Exception as e:
-                    logger.error(f"Error processing {filepath}: {e}")
+                    logger.error("Error processing %s: %s", filepath, e)
 
         # Generate embeddings for new chunks
         self._embed_chunks(new_chunks)
@@ -268,7 +270,7 @@ class RAGSystem:
         self.chunks.extend(new_chunks)
         self._save_index()
 
-        logger.info(f"Ingestion complete: {len(new_chunks)} new chunks")
+        logger.info("Ingestion complete: %s new chunks", len(new_chunks))
         return len(new_chunks)
 
     def ingest_text(
@@ -285,7 +287,7 @@ class RAGSystem:
         Returns:
             Number of chunks created
         """
-        logger.info(f"Ingesting text from: {source}")
+        logger.info("Ingesting text from: %s", source)
 
         chunks = self._chunk_text(text, source)
 
@@ -301,7 +303,7 @@ class RAGSystem:
         self.chunks.extend(chunks)
         self._save_index()
 
-        logger.info(f"Ingestion complete: {len(chunks)} chunks")
+        logger.info("Ingestion complete: %s chunks", len(chunks))
         return len(chunks)
 
     def retrieve(
@@ -353,7 +355,7 @@ class RAGSystem:
             ]
 
         except Exception as e:
-            logger.error(f"Error during retrieval: {e}")
+            logger.error("Error during retrieval: %s", e)
             return []
 
     def build_context(self, query: str, top_k: int = 3, max_length: int = 2000) -> str:
@@ -467,43 +469,38 @@ Answer:"""
                     "model": model,
                     "provider": provider,
                 }
-            except Exception as e:
-                logger.error(f"API error: {e}")
-                # Determine error type from exception class name and message
-                error_type = type(e).__name__
-                error_msg = str(e).lower()
-
-                # Map error types to user-friendly messages
-                if "ratelimit" in error_type.lower() or (
-                    "rate" in error_msg and "limit" in error_msg
-                ):
-                    return {
-                        "answer": "Rate limit exceeded. Please try again later.",
-                        "context": context,
-                        "chunks_used": 0,
-                        "error": "rate_limit",
-                    }
-                elif "authentication" in error_type.lower() or "auth" in error_msg:
-                    return {
-                        "answer": "Authentication error. Please check your API key.",
-                        "context": context,
-                        "chunks_used": 0,
-                        "error": "authentication",
-                    }
-                elif "timeout" in error_type.lower() or "timeout" in error_msg:
-                    return {
-                        "answer": "Request timed out. Please try again.",
-                        "context": context,
-                        "chunks_used": 0,
-                        "error": "timeout",
-                    }
-                else:
-                    return {
-                        "answer": f"API error occurred: {str(e)}",
-                        "context": context,
-                        "chunks_used": 0,
-                        "error": "api_error",
-                    }
+            except openai.RateLimitError as e:
+                logger.error("OpenAI rate limit exceeded: %s", e)
+                return {
+                    "answer": "Rate limit exceeded. Please try again later.",
+                    "context": context,
+                    "chunks_used": 0,
+                    "error": "rate_limit",
+                }
+            except openai.AuthenticationError as e:
+                logger.error("OpenAI authentication failed: %s", e)
+                return {
+                    "answer": "Authentication error. Please check your API key.",
+                    "context": context,
+                    "chunks_used": 0,
+                    "error": "authentication",
+                }
+            except openai.APITimeoutError as e:
+                logger.error("OpenAI API timeout: %s", e)
+                return {
+                    "answer": "Request timed out. Please try again.",
+                    "context": context,
+                    "chunks_used": 0,
+                    "error": "timeout",
+                }
+            except openai.APIError as e:
+                logger.error("OpenAI API error: %s", e)
+                return {
+                    "answer": f"API error occurred: {str(e)}",
+                    "context": context,
+                    "chunks_used": 0,
+                    "error": "api_error",
+                }
 
         except ImportError as e:
             logger.error(f"Import error: {e}")
@@ -513,7 +510,7 @@ Answer:"""
                 "chunks_used": 0,
             }
         except Exception as e:
-            logger.error(f"Error in LLM query: {e}")
+            logger.error("Error in LLM query: %s", e)
             return {
                 "answer": f"Error: {str(e)}",
                 "context": context if "context" in locals() else "",

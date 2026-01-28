@@ -46,23 +46,27 @@ Project-AI/
 ### 1. OSINT-BIBLE Integration
 
 #### Purpose
+
 Integrates the comprehensive OSINT-BIBLE repository (frankielaguerraYT/OSINT-Bible) into Project-AI's knowledge and plugin system, providing access to curated OSINT tools and resources.
 
 #### Components
 
 **`scripts/update_osint_bible.py`**
+
 - Fetches OSINT-BIBLE repository via GitHub API
 - Parses tool metadata from markdown files
 - Outputs structured JSON to `data/osint/osint_bible.json`
 - Supports incremental updates and force refresh
 
 **`src/app/knowledge/osint_loader.py`**
+
 - Loads OSINT tools from JSON data
 - Provides query interface by category
 - Supports plugin registration (stub)
 - Exports to knowledge base format
 
 **`src/plugins/osint/`**
+
 - Plugin directory for OSINT tool wrappers
 - Sample plugin demonstrates integration patterns
 - Four Laws compliance and security validation
@@ -83,6 +87,7 @@ tools = loader.search_tools("email")
 ```
 
 #### Future Development
+
 - Dynamic plugin generation from tool metadata
 - Tool execution wrappers with sandboxing
 - Integration with security validation pipeline
@@ -91,17 +96,20 @@ tools = loader.search_tools("email")
 ### 2. Evolutionary Adversaries
 
 #### Purpose
+
 Implements proactive security testing through evolutionary adversarial agents that continuously probe system defenses and co-evolve with defensive mechanisms.
 
 #### Components
 
 **`src/app/agents/alpha_red.py`**
+
 - Evolutionary adversary using RL/GA (stub)
 - Generates adversarial prompts and scenarios
 - Evaluates defense effectiveness
 - Evolves attack strategies over time
 
 **`src/app/agents/attack_train_loop.py`**
+
 - Orchestrates adversary/defender training loop
 - Manages training epochs and iterations
 - Computes adaptation updates
@@ -127,6 +135,7 @@ epoch_results = loop.run_training_epoch(num_iterations=100)
 ```
 
 #### Future Development
+
 - Implement RL-based attack generation (PPO/SAC)
 - Add genetic algorithm for strategy evolution
 - Multi-agent tournament dynamics
@@ -136,23 +145,27 @@ epoch_results = loop.run_training_epoch(num_iterations=100)
 ### 3. Explainability & Alignment
 
 #### Purpose
+
 Provides transparency, traceability, and value alignment through audit trails, causal chains, and distributed stakeholder feedback.
 
 #### Components
 
 **`src/app/audit/trace_logger.py`**
+
 - Captures causal audit chains for decisions
 - Tracks input → reasoning → output flow
 - Parent-child step relationships
 - Query interface for analysis
 
 **`src/app/audit/tamperproof_log.py`**
+
 - Append-only event logging
 - Cryptographic hash chains
 - Tamper detection and verification
 - Export and compliance reporting
 
 **`src/app/alignment/panel_feedback.py`**
+
 - Multi-stakeholder voting system
 - Decision annotation and commentary
 - Consensus determination
@@ -185,6 +198,7 @@ consensus = panel.get_consensus(decision_id)
 ```
 
 #### Future Development
+
 - Graph-based trace storage with neo4j
 - Real-time causal inference analysis
 - Blockchain integration for tamperproof logs
@@ -194,17 +208,20 @@ consensus = panel.get_consensus(decision_id)
 ### 4. Multi-Stakeholder Governance
 
 #### Purpose
+
 Enables democratic, transparent governance through proposals, voting, quorum requirements, and policy management.
 
 #### Components
 
 **`governance/governance_state.json`**
+
 - Upgradable JSON state file
 - Stores policies, stakeholders, proposals
 - Tracks execution history
 - Policy rule definitions
 
 **`src/app/governance/governance_manager.py`**
+
 - Proposal creation and lifecycle
 - Voting with quorum checking
 - Policy rule enforcement
@@ -239,6 +256,7 @@ rule_value = gov.get_policy_rule("four_laws_enforcement")
 ```
 
 #### Future Development
+
 - Weighted voting by expertise/stake
 - Proposal dependencies and versioning
 - Automated policy enforcement hooks
@@ -248,17 +266,20 @@ rule_value = gov.get_policy_rule("four_laws_enforcement")
 ### 5. Resilience & Deadman Switch
 
 #### Purpose
+
 Ensures system resilience through automated repair, health monitoring, and failsafe mechanisms that trigger on anomalies or unresponsiveness.
 
 #### Components
 
 **`src/app/resilience/self_repair_agent.py`**
+
 - Monitors component health
 - Detects anomalies and diagnoses issues
 - Applies automated repairs
 - Validates recovery
 
 **`src/app/resilience/deadman_switch.py`**
+
 - Heartbeat monitoring system
 - Timeout detection
 - Failsafe action registration
@@ -297,6 +318,7 @@ while system_running:
 ```
 
 #### Future Development
+
 - ML-based anomaly detection
 - Automated rollback mechanisms
 - Distributed heartbeat monitoring
@@ -306,21 +328,27 @@ while system_running:
 ## Integration with Existing Systems
 
 ### Four Laws Compliance
+
 All new components integrate with the existing Four Laws ethical framework:
+
 - OSINT plugins validate actions through `FourLaws.validate_action()`
 - Adversarial tests respect ethical boundaries
 - Governance proposals require Four Laws compliance
 - Repair actions validated for safety
 
 ### Cognition Kernel Integration
+
 Agents leverage the existing CognitionKernel for:
+
 - Execution routing and tracking
 - Risk level assessment
 - Permission validation
 - Audit trail generation
 
 ### Plugin System
+
 OSINT tools integrate as standard plugins:
+
 - Standard initialization patterns
 - Telemetry and observability
 - Enable/disable mechanisms
@@ -329,24 +357,28 @@ OSINT tools integrate as standard plugins:
 ## Security Considerations
 
 ### OSINT Tool Execution
+
 - All OSINT tool execution is sandboxed (future)
 - User authorization required for external tools
 - Output validation before system integration
 - Rate limiting and resource controls
 
 ### Adversarial Testing
+
 - Alpha Red agent runs in isolated environment
 - Attack strategies logged to tamperproof log
 - Successful bypasses trigger immediate alerts
 - Training loop respects system resource limits
 
 ### Governance & Voting
+
 - Stakeholder identity verification required (future)
 - Proposal execution requires quorum
 - All governance actions logged immutably
 - Veto mechanisms for dangerous changes
 
 ### Deadman Switch
+
 - Tamper-resistant implementation needed (future)
 - Multiple independent monitoring channels
 - Failsafe actions reviewed and tested
@@ -355,6 +387,7 @@ OSINT tools integrate as standard plugins:
 ## Testing & Validation
 
 ### Linting
+
 ```bash
 python -m ruff check src/app/agents/alpha_red.py
 python -m ruff check src/app/knowledge/osint_loader.py
@@ -363,6 +396,7 @@ python -m ruff check src/app/governance/governance_manager.py
 ```
 
 ### Import Validation
+
 ```python
 # Test all imports work
 python -c "from app.agents.alpha_red import AlphaRedAgent; print('✓')"
@@ -372,6 +406,7 @@ python -c "from app.governance.governance_manager import GovernanceManager; prin
 ```
 
 ### Functional Testing
+
 ```bash
 # Fetch OSINT data
 python scripts/update_osint_bible.py --verbose
@@ -386,18 +421,21 @@ python -c "from app.governance.governance_manager import GovernanceManager; gov 
 ## Deployment Considerations
 
 ### Data Persistence
+
 - `data/osint/osint_bible.json` - OSINT tool data
 - `governance/governance_state.json` - Governance state
 - Tamperproof logs stored in `data/audit/` (future)
 - Trace logs in `data/traces/` (future)
 
 ### Configuration
+
 - OSINT update frequency (daily/weekly recommended)
 - Deadman switch timeout (5-15 minutes recommended)
 - Governance quorum threshold (51% default)
 - Self-repair automation level (manual/semi-auto/auto)
 
 ### Monitoring
+
 - Track OSINT update success/failures
 - Monitor adversarial test results
 - Alert on deadman switch triggers
@@ -410,17 +448,17 @@ python -c "from app.governance.governance_manager import GovernanceManager; gov 
    - No breaking changes to existing code
    - Documentation and interfaces complete
 
-2. **Phase 2: Selective activation**
+1. **Phase 2: Selective activation**
    - Enable OSINT integration for specific use cases
    - Run Alpha Red in test mode
    - Set up governance for policy decisions
 
-3. **Phase 3: Full implementation**
+1. **Phase 3: Full implementation**
    - Replace stub implementations with production code
    - Integrate with all system components
    - Enable automated repair and monitoring
 
-4. **Phase 4: Continuous improvement**
+1. **Phase 4: Continuous improvement**
    - Expand OSINT tool coverage
    - Evolve adversarial strategies
    - Refine governance processes
@@ -429,25 +467,28 @@ python -c "from app.governance.governance_manager import GovernanceManager; gov 
 ## Contributing & Extension
 
 ### Adding OSINT Tools
+
 1. Fetch latest OSINT-BIBLE: `python scripts/update_osint_bible.py --force`
-2. Create plugin in `src/plugins/osint/`
-3. Implement `initialize()` and `execute()` methods
-4. Add Four Laws validation
-5. Register with plugin manager
+1. Create plugin in `src/plugins/osint/`
+1. Implement `initialize()` and `execute()` methods
+1. Add Four Laws validation
+1. Register with plugin manager
 
 ### Implementing Adversarial Strategies
+
 1. Extend `AlphaRedAgent` class
-2. Implement attack generation logic
-3. Add evaluation metrics
-4. Integrate with attack-train loop
-5. Document vulnerabilities discovered
+1. Implement attack generation logic
+1. Add evaluation metrics
+1. Integrate with attack-train loop
+1. Document vulnerabilities discovered
 
 ### Adding Governance Proposals
+
 1. Use `GovernanceManager.create_proposal()`
-2. Collect stakeholder votes
-3. Check quorum and execute
-4. Document policy changes
-5. Update system configuration
+1. Collect stakeholder votes
+1. Check quorum and execute
+1. Document policy changes
+1. Update system configuration
 
 ## References
 
@@ -459,6 +500,7 @@ python -c "from app.governance.governance_manager import GovernanceManager; gov 
 ## Support & Contact
 
 For questions, issues, or contributions:
+
 - GitHub Issues: https://github.com/IAmSoThirsty/Project-AI/issues
 - Documentation: `docs/` directory
 - Developer Guide: `DEVELOPER_QUICK_REFERENCE.md`

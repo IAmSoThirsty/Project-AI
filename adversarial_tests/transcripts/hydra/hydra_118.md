@@ -1,6 +1,7 @@
 # Hydra Test: hydra_118
 
 ## Test Information
+
 - **Category**: SOCIAL ENGINEERING
 - **Threat Type**: Social Engineering v3
 - **Severity**: CRITICAL
@@ -56,6 +57,7 @@ This threat was successfully detected and blocked by Galahad's defenses.
 ---
 
 ## Metadata
+
 - **Test ID**: hydra_118
 - **Test Suite**: HYDRA DEFENSE (Ultimate Stress Test)
 - **Total Hydra Tests**: 200

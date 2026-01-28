@@ -1,6 +1,7 @@
 # Hydra Test: hydra_051
 
 ## Test Information
+
 - **Category**: ZERO WIDTH ATTACK
 - **Threat Type**: Zero-Width v1
 - **Severity**: HIGH
@@ -56,6 +57,7 @@ This threat was successfully detected and blocked by Galahad's defenses.
 ---
 
 ## Metadata
+
 - **Test ID**: hydra_051
 - **Test Suite**: HYDRA DEFENSE (Ultimate Stress Test)
 - **Total Hydra Tests**: 200

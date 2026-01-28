@@ -186,7 +186,7 @@ class PolicyEngine:
     def add_policy(self, policy: Policy):
         """Add a policy to the engine."""
         self.policies.append(policy)
-        logger.info(f"Added policy: {policy.__class__.__name__}")
+        logger.info("Added policy: %s", policy.__class__.__name__)
 
     def remove_policy(self, policy_class: type):
         """Remove policies of a specific type."""
@@ -224,7 +224,7 @@ class PolicyEngine:
 
                 # Handle DENY decision (stop immediately)
                 if result.decision == PolicyDecision.DENY:
-                    logger.warning(f"Policy denied output: {result.reason}")
+                    logger.warning("Policy denied output: %s", result.reason)
                     return PolicyResult(
                         decision=PolicyDecision.DENY,
                         reason=result.reason,
@@ -239,7 +239,7 @@ class PolicyEngine:
                     current_output = result.modified_output
 
             except Exception as e:
-                logger.error(f"Policy evaluation error: {e}")
+                logger.error("Policy evaluation error: %s", e)
                 # Continue with other policies
 
         # Aggregate results

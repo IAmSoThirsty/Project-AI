@@ -76,23 +76,27 @@ You should see Project-AI's persona configuration!
 ## Available Tools
 
 ### 🧠 AI Ethics & Persona
+
 - `validate_action` - Check if actions align with AI ethics
 - `get_persona_state` - View AI personality and mood
 - `adjust_persona_trait` - Modify personality traits
 
 ### 💾 Memory & Learning
+
 - `add_memory` - Store information in knowledge base
 - `search_memory` - Search stored knowledge
 - `submit_learning_request` - Request AI to learn new content
 - `approve_learning_request` - Approve learning requests
 
 ### 🛠️ Utilities
+
 - `analyze_data` - Analyze CSV/Excel/JSON files
 - `track_location` - IP geolocation lookup
 - `send_emergency_alert` - Send emergency notifications
 - `generate_image` - Create AI-generated images
 
 ### 🔌 Plugin Management
+
 - `list_plugins` - View available plugins
 - `enable_plugin` / `disable_plugin` - Manage plugins
 
@@ -169,10 +173,11 @@ python -c "import mcp; print('✓ MCP SDK OK')"
 **Problem:** Claude Desktop doesn't detect the server
 
 **Solution:**
+
 1. Check the `cwd` path is absolute and correct
-2. Verify PYTHONPATH is set to "."
-3. Restart Claude Desktop completely
-4. Check Claude's logs (Help → View Logs)
+1. Verify PYTHONPATH is set to "."
+1. Restart Claude Desktop completely
+1. Check Claude's logs (Help → View Logs)
 
 ### Import Errors
 
@@ -195,9 +200,10 @@ export PYTHONPATH=/path/to/Project-AI:$PYTHONPATH
 **Problem:** Tools fail with API errors
 
 **Solution:**
+
 1. Verify API keys in `.env` file
-2. Check keys are valid and have quota
-3. Ensure environment variables are loaded
+1. Check keys are valid and have quota
+1. Ensure environment variables are loaded
 
 ## Next Steps
 
@@ -209,9 +215,9 @@ export PYTHONPATH=/path/to/Project-AI:$PYTHONPATH
 ## Support
 
 - 📖 Documentation: `/docs/MCP_CONFIGURATION.md`
-- 🐛 Issues: https://github.com/IAmSoThirsty/Project-AI/issues
-- 💬 Discussions: https://github.com/IAmSoThirsty/Project-AI/discussions
-- 📧 MCP Protocol: https://modelcontextprotocol.io/
+- 🐛 Issues: <https://github.com/IAmSoThirsty/Project-AI/issues>
+- 💬 Discussions: <https://github.com/IAmSoThirsty/Project-AI/discussions>
+- 📧 MCP Protocol: <https://modelcontextprotocol.io/>
 
 ---
 

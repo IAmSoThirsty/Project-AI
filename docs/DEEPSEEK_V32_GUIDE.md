@@ -235,10 +235,10 @@ class ReasoningAgent:
 ## Performance Tips
 
 1. **GPU Acceleration**: Use CUDA-enabled GPU for 10-100x speedup
-2. **Model Caching**: Keep model loaded for multiple inferences
-3. **Batch Size**: Process multiple prompts in sequence efficiently
-4. **Parameter Tuning**: Lower temperature for deterministic output
-5. **Memory Management**: Unload model when not in use for extended periods
+1. **Model Caching**: Keep model loaded for multiple inferences
+1. **Batch Size**: Process multiple prompts in sequence efficiently
+1. **Parameter Tuning**: Lower temperature for deterministic output
+1. **Memory Management**: Unload model when not in use for extended periods
 
 ## Model Information
 

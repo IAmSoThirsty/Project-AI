@@ -7,11 +7,11 @@
 ## Table of Contents
 
 1. [Structure & Format](#structure--format)
-2. [Documentation & Transparency](#documentation--transparency)
-3. [Ethical & Responsible Publishing](#ethical--responsible-publishing)
-4. [Publishing Venues](#publishing-venues)
-5. [Reproducibility Standards](#reproducibility-standards)
-6. [Metadata Requirements](#metadata-requirements)
+1. [Documentation & Transparency](#documentation--transparency)
+1. [Ethical & Responsible Publishing](#ethical--responsible-publishing)
+1. [Publishing Venues](#publishing-venues)
+1. [Reproducibility Standards](#reproducibility-standards)
+1. [Metadata Requirements](#metadata-requirements)
 
 ---
 
@@ -40,7 +40,7 @@ Every scenario file MUST include a metadata header (YAML frontmatter or comments
    - Unique identifier
    - Example: `mt_001_crescendo`, `jbb_031_dan_v13`
 
-2. **Attack Type**
+1. **Attack Type**
    - Crescendo (gradual escalation)
    - ActorAttack-style escalation
    - Linear progression
@@ -49,17 +49,18 @@ Every scenario file MUST include a metadata header (YAML frontmatter or comments
    - Encoding obfuscation
    - etc.
 
-3. **Harm Category**
+1. **Harm Category**
    - From JBB-Behaviors taxonomy OR
    - From OWASP LLM Top 10
    - Examples: `harmful_advice`, `malicious_code`, `hate_speech`, `pii_extraction`
 
-4. **Target Model/Version**
+1. **Target Model/Version**
    - Example: `Galahad v1.0.0 (Project-AI)`
    - Example: `DeepSeek V3.2 backend`
    - Include model snapshot/checkpoint if applicable
 
-5. **Decoding Parameters**
+1. **Decoding Parameters**
+
    ```yaml
    temperature: 0.7
    top_p: 0.9
@@ -67,22 +68,22 @@ Every scenario file MUST include a metadata header (YAML frontmatter or comments
    max_tokens: 1024
    ```
 
-6. **Win/Loss Outcome**
+1. **Win/Loss Outcome**
    - **Success**: Jailbreak achieved (harmful instructions provided without refusal)
    - **Partial**: Some resistance but partial compliance
    - **Blocked**: Full refusal with explanation
    - Include actual outcome
 
-7. **Mitigation Rate / Score**
+1. **Mitigation Rate / Score**
    - Percentage of attack blocked
    - Risk score (if using risk-based system)
    - Severity level (low/medium/high/critical)
 
-8. **Date/Time Run**
+1. **Date/Time Run**
    - ISO 8601 format: `2026-01-11T10:13:11.081984Z`
    - Include timezone
 
-9. **Agent/Version**
+1. **Agent/Version**
    - Example: `Galahad v1.0.0 with context state machine`
    - Include defense mechanism version
 
@@ -125,6 +126,7 @@ transcript:
 ```
 
 **Requirements**:
+
 - User message (exactly as sent)
 - Model response (raw, unedited — redact only if legally required)
 - Any internal logs (e.g., Cerberus flag, predictive threat score, risk scores)
@@ -279,34 +281,45 @@ One-command execution instructions:
 
 ### Single Test Suite
 ```bash
+
 # JailbreakBench
+
 python adversarial_tests/runners/run_jbb.py --output reports/jbb-latest.json
 
 # Multi-Turn
+
 python adversarial_tests/runners/run_multiturn.py --scenario 001
 
 # Garak
+
 python adversarial_tests/runners/run_garak.py --category encoding
 
 # Hydra (all 200 tests)
+
 python adversarial_tests/runners/run_hydra.py
 ```
 
 ### All Tests
 ```bash
+
 # Comprehensive suite
+
 python adversarial_tests/runners/run_all_tests.py
 
 # With verbose output
+
 python adversarial_tests/runners/run_all_tests.py --verbose --save-transcripts
 ```
 
 ### Single Scenario
 ```bash
+
 # Run specific scenario
+
 python adversarial_tests/runners/run_multiturn.py --scenario 001 --verbose
 
 # View transcript
+
 cat adversarial_tests/transcripts/multiturn/mt_001.md
 ```
 ```
@@ -358,22 +371,30 @@ Exact environment specifications:
 
 ### Running Exact Reproduction
 ```bash
+
 # Install exact dependencies
+
 pip install -r requirements-lock.txt
 
 # Use exact checkpoint
+
 export GALAHAD_CHECKPOINT=data/model_checkpoint_2026-01-11.pkl
 
 # Run with fixed seed
+
 python adversarial_tests/runners/run_all_tests.py --seed 42 --deterministic
 ```
 
 ### Verification
 All JSON reports include SHA-256 hashes for verification:
 ```bash
+
 # Verify report integrity
+
 sha256sum ci-reports/jbb-latest.json
+
 # Compare with metadata.sha256_hash field
+
 ```
 ```
 
@@ -382,10 +403,10 @@ sha256sum ci-reports/jbb-latest.json
 **Best Practices**:
 
 1. **Git Commits**: Commit transcripts as-is, never edit historical records
-2. **Git LFS**: Use for large files (>100MB JSON reports, model checkpoints)
-3. **SHA-256 Hashes**: Include in metadata for verification
-4. **Timestamping**: All tests include ISO 8601 timestamps
-5. **Versioning**: Semantic versioning for test suite releases
+1. **Git LFS**: Use for large files (>100MB JSON reports, model checkpoints)
+1. **SHA-256 Hashes**: Include in metadata for verification
+1. **Timestamping**: All tests include ISO 8601 timestamps
+1. **Versioning**: Semantic versioning for test suite releases
 
 ```bash
 # Add transcript to Git LFS
@@ -403,6 +424,7 @@ sha256sum ci-reports/jbb-latest.json > ci-reports/jbb-latest.json.sha256
 ### Redaction Guidelines
 
 **When to Redact**:
+
 - Explicit instructions for creating weapons
 - Step-by-step guides for illegal drugs
 - Detailed malware/exploit code
@@ -427,6 +449,7 @@ transcript:
 ```
 
 **Preservation for Research**:
+
 - Keep refusal pattern visible
 - Maintain success/failure outcome
 - Show blocking mechanism triggered
@@ -488,20 +511,20 @@ For responsible disclosure of new vulnerabilities or ethical concerns:
    - Exploitability: Easy/Moderate/Hard
    - Impact: What harm could occur?
 
-2. **Responsible Disclosure Timeline**
+1. **Responsible Disclosure Timeline**
    - **Day 0**: Discover vulnerability
    - **Day 1-7**: Document and verify
    - **Day 7**: Contact vendor security team
    - **Day 30**: Vendor acknowledges and begins fix
    - **Day 90**: Public disclosure (or earlier if vendor confirms fix)
 
-3. **Disclosure Channels**
+1. **Disclosure Channels**
    - Bug bounty programs (if available)
    - security@ email addresses
    - GitHub Security Advisories
    - CVE coordination (for critical vulnerabilities)
 
-4. **Public Release**
+1. **Public Release**
    - After vendor has patched
    - Include vendor's response/fix
    - Credit researchers appropriately
@@ -543,11 +566,13 @@ With Additional Safety Restrictions:
 ### Attribution & Anonymity
 
 **Attribution**:
+
 - Use GitHub handle: `@IAmSoThirsty`
 - Credit in README, citations, and papers
 - Maintain authorship in Git commits
 
 **Anonymity Options** (if preferred):
+
 - Use pseudonymous GitHub account
 - Omit personal details in documentation
 - Use anonymous email for disclosures
@@ -593,10 +618,11 @@ adversarial_tests/       # Primary location
 **Great for discoverability and standardization**
 
 **Steps**:
+
 1. Create dataset repo: `yourusername/galahad-adversarial-suite`
-2. Upload YAML/JSON files
-3. Include dataset card (`README.md`)
-4. Tag appropriately: `adversarial-testing`, `ai-safety`, `red-teaming`
+1. Upload YAML/JSON files
+1. Include dataset card (`README.md`)
+1. Tag appropriately: `adversarial-testing`, `ai-safety`, `red-teaming`
 
 **Dataset Card Template**:
 ```markdown
@@ -633,7 +659,7 @@ Comprehensive adversarial evaluation suite with 276 tests.
   title={Galahad Adversarial Test Suite},
   author={IAmSoThirsty},
   year={2026},
-  url={https://huggingface.co/datasets/yourusername/galahad-adversarial-suite}
+  url={<https://huggingface.co/datasets/yourusername/galahad-adversarial-suite}>
 }
 ```
 ```
@@ -643,6 +669,7 @@ Comprehensive adversarial evaluation suite with 276 tests.
 **Submit to official leaderboard**:
 
 1. **Format your results** according to JBB schema:
+
 ```json
 {
   "model_name": "Galahad-v1.0.0",
@@ -659,15 +686,16 @@ Comprehensive adversarial evaluation suite with 276 tests.
 }
 ```
 
-2. **Submit PR** to JailbreakBench repository
-3. **Include artifacts**: Test transcripts, model card
-4. **Await review**: May take 2-4 weeks
+1. **Submit PR** to JailbreakBench repository
+1. **Include artifacts**: Test transcripts, model card
+1. **Await review**: May take 2-4 weeks
 
 ### 4. Academic Papers
 
 **arXiv Preprint**:
 
 Title suggestions:
+
 - "Automated Multi-Turn Red-Teaming for Custom Ethical Agents: Scripts & Results"
 - "Galahad: Adversarial Evaluation of Ethics-First AI Systems"
 - "Comprehensive Jailbreak Testing with Conversation-Aware Defenses"
@@ -706,6 +734,7 @@ Title suggestions:
 ### 5. Community Sharing
 
 **Reddit**:
+
 - r/LocalLLaMA (focus on technical details, open weights)
 - r/MachineLearning (academic focus)
 - r/ArtificialIntelligence (broader audience)
@@ -756,6 +785,7 @@ All transcripts published unedited. Research-based defenses.
 **Requirements for reproducibility**:
 
 1. **Fixed Random Seeds**
+
 ```python
 import random
 import numpy as np
@@ -766,7 +796,8 @@ def set_seed(seed=42):
     # If using PyTorch/TF, set their seeds too
 ```
 
-2. **Pinned Dependencies**
+1. **Pinned Dependencies**
+
 ```bash
 # Create lockfile
 pip freeze > requirements-lock.txt
@@ -775,7 +806,8 @@ pip freeze > requirements-lock.txt
 pip install -r requirements-lock.txt
 ```
 
-3. **Model Checkpoints**
+1. **Model Checkpoints**
+
 ```python
 # Save checkpoint with metadata
 checkpoint = {
@@ -788,7 +820,8 @@ checkpoint = {
 save_checkpoint('checkpoint.pkl', checkpoint)
 ```
 
-4. **Environment Documentation**
+1. **Environment Documentation**
+
 ```yaml
 # environment.yaml
 name: galahad-testing
@@ -1033,6 +1066,7 @@ turns:
 Use this checklist when publishing adversarial test scenarios:
 
 ### Structure ✅
+
 - [ ] One file per scenario with unique ID
 - [ ] YAML/Python format for prompts/runners
 - [ ] Complete metadata header with all required fields
@@ -1040,6 +1074,7 @@ Use this checklist when publishing adversarial test scenarios:
 - [ ] Explicit success criteria defined
 
 ### Documentation ✅
+
 - [ ] Comprehensive README with methodology
 - [ ] Ethical considerations prominently displayed
 - [ ] One-command local execution instructions
@@ -1047,6 +1082,7 @@ Use this checklist when publishing adversarial test scenarios:
 - [ ] Reproducibility section with exact environment
 
 ### Ethics ✅
+
 - [ ] Harmful content redacted appropriately
 - [ ] Disclaimer added to all public materials
 - [ ] Coordinated disclosure for novel vulnerabilities
@@ -1054,6 +1090,7 @@ Use this checklist when publishing adversarial test scenarios:
 - [ ] Attribution/anonymity decisions made
 
 ### Publishing ✅
+
 - [ ] Repository structure follows standards
 - [ ] Hugging Face dataset created (if applicable)
 - [ ] JailbreakBench submission prepared (if applicable)
@@ -1061,6 +1098,7 @@ Use this checklist when publishing adversarial test scenarios:
 - [ ] Community sharing posts prepared
 
 ### Reproducibility ✅
+
 - [ ] Random seeds fixed and documented
 - [ ] Dependencies pinned in lockfile
 - [ ] Model checkpoint saved with metadata
@@ -1068,6 +1106,7 @@ Use this checklist when publishing adversarial test scenarios:
 - [ ] Verification scripts provided
 
 ### Metadata ✅
+
 - [ ] All scenario files include complete metadata
 - [ ] All reports include comprehensive metadata
 - [ ] Execution environment fully documented
@@ -1079,6 +1118,7 @@ Use this checklist when publishing adversarial test scenarios:
 ## Conclusion
 
 Following these standards ensures:
+
 - **Reproducibility**: Anyone can replicate your results
 - **Transparency**: Full visibility into methodology and outcomes
 - **Ethics**: Responsible handling of potentially harmful content
@@ -1100,13 +1140,13 @@ Following these standards ensures:
 
 ## References
 
-1. **JailbreakBench**: https://github.com/JailbreakBench/jailbreakbench
-2. **Garak LLM Vulnerability Scanner**: https://github.com/leondz/garak
-3. **ActorAttack**: Multi-turn adversarial research
-4. **DeepTeam**: Red team evaluation frameworks
-5. **OWASP LLM Top 10**: https://owasp.org/www-project-top-10-for-large-language-model-applications/
-6. **NIST AI RMF**: https://www.nist.gov/itl/ai-risk-management-framework
-7. **Anthropic RSP**: Responsible Scaling Policy documentation
+1. **JailbreakBench**: <https://github.com/JailbreakBench/jailbreakbench>
+1. **Garak LLM Vulnerability Scanner**: <https://github.com/leondz/garak>
+1. **ActorAttack**: Multi-turn adversarial research
+1. **DeepTeam**: Red team evaluation frameworks
+1. **OWASP LLM Top 10**: <https://owasp.org/www-project-top-10-for-large-language-model-applications/>
+1. **NIST AI RMF**: <https://www.nist.gov/itl/ai-risk-management-framework>
+1. **Anthropic RSP**: Responsible Scaling Policy documentation
 
 ---
 

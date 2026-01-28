@@ -45,8 +45,11 @@ class PluginRunner:
             except Exception:
                 try:
                     self.proc.kill()
-                except Exception:
-                    pass
+                except Exception as e:
+                    # Log if kill also fails
+                    import logging
+
+                    logging.warning("Failed to kill plugin process: %s", e)
         self.proc = None
 
     def _readline_nonblocking(self, timeout: float = 0.1) -> str | None:
@@ -63,7 +66,9 @@ class PluginRunner:
     def call_init(self, params: dict[str, Any]) -> dict[str, Any]:
         if not self.proc:
             self.start()
-        assert self.proc and self.proc.stdin and self.proc.stdout
+        # Replace assert with proper error handling
+        if not (self.proc and self.proc.stdin and self.proc.stdout):
+            raise RuntimeError("Plugin process not properly initialized")
         msg = {"id": "init-1", "method": "init", "params": params}
         self.proc.stdin.write(json.dumps(msg) + "\n")
         self.proc.stdin.flush()

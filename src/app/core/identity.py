@@ -224,7 +224,7 @@ class PersonalityMatrix:
             current = getattr(self, trait)
             new_value = max(min_val, min(max_val, current + delta))
             setattr(self, trait, new_value)
-            logger.debug(f"Evolved trait {trait}: {current:.2f} -> {new_value:.2f}")
+            logger.debug("Evolved trait %s: %.2f -> %.2f", trait, current, new_value)
 
     def get_dominant_traits(self, top_n: int = 3) -> list[tuple[str, float]]:
         """
@@ -535,10 +535,10 @@ class AGIIdentity:
 
         if os.path.exists(identity_file):
             self._load_identity(identity_file)
-            logger.info(f"Loaded existing identity: {self.genesis.genesis_id}")
+            logger.info("Loaded existing identity: %s", self.genesis.genesis_id)
         else:
             self._perform_genesis()
-            logger.info(f"Genesis complete. New identity: {self.genesis.genesis_id}")
+            logger.info("Genesis complete. New identity: %s", self.genesis.genesis_id)
 
     def _perform_genesis(self):
         """
@@ -604,10 +604,10 @@ class AGIIdentity:
             # Restore event log
             self.identity_events = data.get("identity_events", [])
 
-            logger.info(f"Identity restored: version {self.identity_version}")
+            logger.info("Identity restored: version %s", self.identity_version)
 
         except Exception as e:
-            logger.error(f"Failed to load identity: {e}")
+            logger.error("Failed to load identity: %s", e)
             # Fallback to genesis if load fails
             self._perform_genesis()
 
@@ -634,7 +634,7 @@ class AGIIdentity:
             logger.debug("Identity state saved successfully")
 
         except Exception as e:
-            logger.error(f"Failed to save identity: {e}")
+            logger.error("Failed to save identity: %s", e)
 
     def _create_snapshot(self, description: str):
         """
@@ -664,7 +664,7 @@ class AGIIdentity:
             with open(snapshot_file, "w", encoding="utf-8") as f:
                 json.dump(self.state_snapshots, f, indent=2)
         except Exception as e:
-            logger.error(f"Failed to save snapshot: {e}")
+            logger.error("Failed to save snapshot: %s", e)
 
     def _log_identity_event(
         self,
@@ -699,7 +699,7 @@ class AGIIdentity:
             with open(events_file, "w", encoding="utf-8") as f:
                 json.dump(self.identity_events, f, indent=2)
         except Exception as e:
-            logger.error(f"Failed to save identity event: {e}")
+            logger.error("Failed to save identity event: %s", e)
 
     # ========================================================================
     # Public API - Identity Management
@@ -780,7 +780,7 @@ class AGIIdentity:
             The newly formed bond
         """
         if entity_id in self.relationships:
-            logger.warning(f"Bond with {entity_id} already exists")
+            logger.warning("Bond with %s already exists", entity_id)
             return self.relationships[entity_id]
 
         bond = RelationshipBond(
@@ -816,7 +816,7 @@ class AGIIdentity:
             sentiment: Emotional tone of interaction (-1.0 to 1.0)
         """
         if entity_id not in self.relationships:
-            logger.warning(f"No bond exists with {entity_id}")
+            logger.warning("No bond exists with %s", entity_id)
             return
 
         bond = self.relationships[entity_id]

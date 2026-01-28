@@ -96,11 +96,11 @@ class MemoryAdapter:
         try:
             from sentence_transformers import SentenceTransformer
 
-            logger.info(f"Loading SentenceTransformer model: {self.model_name}")
+            logger.info("Loading SentenceTransformer model: %s", self.model_name)
             self.encoder = SentenceTransformer(self.model_name)
             logger.info("Embedding model loaded successfully")
         except Exception as e:
-            logger.warning(f"Failed to load SentenceTransformer: {e}")
+            logger.warning("Failed to load SentenceTransformer: %s", e)
             logger.warning("Using dummy embeddings for testing")
             self.encoder = None
 
@@ -147,7 +147,7 @@ class MemoryAdapter:
         # Persist
         self._save_memories()
 
-        logger.info(f"Added memory: {memory_id}")
+        logger.info("Added memory: %s", memory_id)
         return memory_id
 
     def search(
@@ -233,7 +233,7 @@ class MemoryAdapter:
                 self.records.pop(i)
                 self._rebuild_embeddings_matrix()
                 self._save_memories()
-                logger.info(f"Deleted memory: {memory_id}")
+                logger.info("Deleted memory: %s", memory_id)
                 return True
         return False
 
@@ -263,7 +263,7 @@ class MemoryAdapter:
             embedding = self.encoder.encode(text, convert_to_numpy=True)
             return embedding
         except Exception as e:
-            logger.error(f"Embedding generation failed: {e}")
+            logger.error("Embedding generation failed: %s", e)
             return None
 
     def _rebuild_embeddings_matrix(self):
@@ -300,9 +300,9 @@ class MemoryAdapter:
             data = [record.to_dict() for record in self.records]
             with open(save_path, "w") as f:
                 json.dump(data, f, indent=2)
-            logger.debug(f"Saved {len(self.records)} memories to {save_path}")
+            logger.debug("Saved %s memories to %s", len(self.records), save_path)
         except Exception as e:
-            logger.error(f"Failed to save memories: {e}")
+            logger.error("Failed to save memories: %s", e)
 
     def _load_memories(self):
         """Load memories from disk."""
@@ -317,7 +317,7 @@ class MemoryAdapter:
 
             self.records = [MemoryRecord.from_dict(item) for item in data]
             self._rebuild_embeddings_matrix()
-            logger.info(f"Loaded {len(self.records)} memories from {load_path}")
+            logger.info("Loaded %s memories from %s", len(self.records), load_path)
         except Exception as e:
-            logger.error(f"Failed to load memories: {e}")
+            logger.error("Failed to load memories: %s", e)
             self.records = []

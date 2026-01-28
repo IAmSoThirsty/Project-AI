@@ -73,7 +73,7 @@ class CodexEngine:
     def _initialize_model(self):
         """Initialize model with fallback logic."""
         logger.info("Initializing Codex engine")
-        logger.info(f"Config: {self.config}")
+        logger.info("Config: %s", self.config)
 
         # Determine device
         device = self._determine_device()
@@ -86,7 +86,7 @@ class CodexEngine:
 
             # Load model if full engine is enabled
             if self.config.enable_full_engine:
-                logger.info(f"Loading full model: {self.config.model_path}")
+                logger.info("Loading full model: %s", self.config.model_path)
                 self.model_adapter.load_model(self.config.model_path)
                 self.is_loaded = True
                 logger.info("Codex engine initialized successfully")
@@ -95,7 +95,7 @@ class CodexEngine:
                 self.is_loaded = False
 
         except Exception as e:
-            logger.error(f"Failed to initialize Codex engine: {e}")
+            logger.error("Failed to initialize Codex engine: %s", e)
             if self.config.fallback_to_cpu and device != "cpu":
                 logger.info("Attempting CPU fallback")
                 self._fallback_to_cpu()
@@ -136,7 +136,7 @@ class CodexEngine:
                 self.is_loaded = True
                 logger.info("Successfully fell back to CPU")
         except Exception as e:
-            logger.error(f"CPU fallback failed: {e}")
+            logger.error("CPU fallback failed: %s", e)
             self.model_adapter = None
             self.is_loaded = False
 
@@ -181,7 +181,7 @@ class CodexEngine:
             }
 
         except Exception as e:
-            logger.error(f"Codex processing error: {e}")
+            logger.error("Codex processing error: %s", e)
             return {
                 "success": False,
                 "error": str(e),

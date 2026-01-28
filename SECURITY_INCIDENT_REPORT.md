@@ -20,6 +20,7 @@ The Security Orchestrator detected 22 potential secrets in the codebase, includi
 The following real credentials were found in the `.env` file (now removed from tracking):
 
 ### 1. OpenAI API Key
+
 - **Type**: API Key
 - **Pattern**: `sk-proj-[REDACTED]` (148 characters total)
 - **File**: `.env` (line 5)
@@ -27,6 +28,7 @@ The following real credentials were found in the `.env` file (now removed from t
 - **Action Required**: ✅ ROTATE IMMEDIATELY
 
 ### 2. SMTP Credentials
+
 - **Email**: `[REDACTED]@gmail.com`
 - **Password**: `[REDACTED]` (10 characters)
 - **File**: `.env` (lines 8-9)
@@ -34,6 +36,7 @@ The following real credentials were found in the `.env` file (now removed from t
 - **Action Required**: ✅ ROTATE IMMEDIATELY
 
 ### 3. Fernet Encryption Key
+
 - **Key**: `[REDACTED]` (44 characters, base64-encoded)
 - **File**: `.env` (line 13)
 - **Risk**: Decrypt sensitive location history and other encrypted data
@@ -44,6 +47,7 @@ The following real credentials were found in the `.env` file (now removed from t
 ## Remediation Steps Taken
 
 ### 1. Immediate Git Changes (Completed)
+
 - ✅ Removed `.env` file from git tracking via `git rm --cached .env`
 - ✅ Enhanced `.gitignore` to prevent future commits:
   - Added `.env.local`, `.env.*.local` patterns
@@ -54,11 +58,13 @@ The following real credentials were found in the `.env` file (now removed from t
 - ✅ Removed `secret_scan_report.json` from tracking
 
 ### 2. Documentation Updates (Completed)
+
 - ✅ Updated `docs/web/DEPLOYMENT.md` - Changed hardcoded database credentials to environment variables
 - ✅ Updated `docs/SECURITY_FRAMEWORK.md` - Changed SOAP client examples to use `os.getenv()`
 - ✅ Updated `docs/security/README.md` - Changed SOAP client examples to use `os.getenv()`
 
 ### 3. Test File Annotations (Completed)
+
 - ✅ Added clarifying comments to test passwords in 4 test files:
   - `tests/test_ai_systems.py`
   - `tests/test_command_override_migration.py`
@@ -75,10 +81,10 @@ The following real credentials were found in the `.env` file (now removed from t
 # 1. Go to https://platform.openai.com/api-keys
 # 2. Find and REVOKE the exposed key (starts with sk-proj-XXXX...)
 # 3. Create a NEW API key with appropriate permissions
-# 4. Update your local .env file:
+# 4. Update your local .env file
 OPENAI_API_KEY=sk-proj-NEW_KEY_HERE
 
-# 5. Test the application:
+# 5. Test the application
 python -m src.app.main
 ```
 
@@ -91,7 +97,7 @@ For Gmail App Passwords:
 # 1. Go to https://myaccount.google.com/apppasswords
 # 2. REVOKE the exposed app password
 # 3. Generate a NEW app password
-# 4. Update your local .env file:
+# 4. Update your local .env file
 SMTP_USERNAME=YOUR_EMAIL@gmail.com
 SMTP_PASSWORD=NEW_APP_PASSWORD_HERE
 
@@ -107,10 +113,10 @@ SMTP_PASSWORD=NEW_APP_PASSWORD_HERE
 ```bash
 # 1. Identify encrypted files (typically location_history.json.enc)
 # 2. Decrypt with OLD key BEFORE rotation
-# 3. Generate NEW key:
+# 3. Generate NEW key
 python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
 
-# 4. Update .env with NEW key:
+# 4. Update .env with NEW key
 FERNET_KEY=NEW_KEY_HERE
 
 # 5. Re-encrypt all data with NEW key
@@ -139,17 +145,18 @@ git push --force --tags origin
 
 **Option B: Using provided scripts**
 ```bash
-# Windows PowerShell:
+# Windows PowerShell
 ./tools/purge_git_secrets.ps1
 
-# Linux/macOS/WSL:
+# Linux/macOS/WSL
 ./tools/purge_git_secrets.sh
 ```
 
 **IMPORTANT**: After force pushing, all contributors must:
+
 1. Delete their local repository clones
-2. Re-clone the repository fresh
-3. Reconfigure their `.env` files with new credentials
+1. Re-clone the repository fresh
+1. Reconfigure their `.env` files with new credentials
 
 ### STEP 5: Security Audit (Within 1 Week)
 
@@ -164,12 +171,14 @@ git push --force --tags origin
 ## Other Findings (Lower Priority)
 
 ### GitHub Actions Workflow
+
 - **File**: `.github/workflows/google.yml` (line 80)
 - **Finding**: `password: '${{ steps.auth.outputs.auth_token }}'`
 - **Status**: ✅ ACCEPTABLE - Using GitHub Secrets correctly
 - **Action**: None required
 
 ### Documentation Examples
+
 Most documentation examples were updated to use environment variables. A few remain with obvious placeholder values (e.g., `user:pass`) in example code, which is acceptable for documentation purposes.
 
 ---
@@ -177,14 +186,16 @@ Most documentation examples were updated to use environment variables. A few rem
 ## Prevention Measures
 
 ### Already Implemented
+
 1. ✅ `.env` is in `.gitignore`
-2. ✅ `.env.example` provides template without secrets
-3. ✅ Documentation in `docs/security/SECRET_MANAGEMENT.md`
-4. ✅ Enhanced `.gitignore` with comprehensive secret patterns
+1. ✅ `.env.example` provides template without secrets
+1. ✅ Documentation in `docs/security/SECRET_MANAGEMENT.md`
+1. ✅ Enhanced `.gitignore` with comprehensive secret patterns
 
 ### Recommended Additional Measures
 
 1. **Pre-commit Hooks**
+
    ```bash
    # Install pre-commit framework
    pip install pre-commit
@@ -193,16 +204,16 @@ Most documentation examples were updated to use environment variables. A few rem
    # This will automatically scan for secrets before each commit
    ```
 
-2. **CI/CD Secret Scanning**
+1. **CI/CD Secret Scanning**
    - Enable GitHub Secret Scanning (if not already enabled)
    - Add `trufflehog` or `detect-secrets` to CI pipeline
 
-3. **Developer Training**
+1. **Developer Training**
    - Review `docs/security/SECRET_MANAGEMENT.md` with all team members
    - Emphasize never committing `.env` files
    - Practice proper secret rotation procedures
 
-4. **Regular Security Audits**
+1. **Regular Security Audits**
    - Run secret scanner monthly
    - Review access logs quarterly
    - Rotate credentials every 90 days
@@ -232,11 +243,11 @@ Most documentation examples were updated to use environment variables. A few rem
 
 1. **Never commit `.env` files** - Even though `.env` was in `.gitignore`, it was somehow committed to the repository. Always verify with `git status` before committing.
 
-2. **Use pre-commit hooks** - Automated scanning can prevent accidental commits.
+1. **Use pre-commit hooks** - Automated scanning can prevent accidental commits.
 
-3. **Regular audits are essential** - The Security Orchestrator's automated scan caught this issue before it could cause damage.
+1. **Regular audits are essential** - The Security Orchestrator's automated scan caught this issue before it could cause damage.
 
-4. **Documentation matters** - Clear examples using environment variables help developers understand proper practices.
+1. **Documentation matters** - Clear examples using environment variables help developers understand proper practices.
 
 ---
 

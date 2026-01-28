@@ -7,10 +7,13 @@ assignees: ''
 ---
 
 ## Description
+
 <!-- Provide a clear and concise description of your changes -->
 
 ## Type of Change
+
 <!-- Check all that apply -->
+
 - [ ] Bug fix (non-breaking change fixing an issue)
 - [ ] New feature (non-breaking change adding functionality)
 - [ ] Breaking change (fix or feature causing existing functionality to change)
@@ -22,17 +25,21 @@ assignees: ''
 **Note:** Bug fixes, breaking changes, and performance improvements require additional validation in testing section.
 
 ## Behavioral Impact Assessment
+
 <!-- REQUIRED for changes to: data/ai_persona/, data/memory/, src/app/core/ai_systems.py, config/ethics_constraints.yml -->
 <!-- Skip this section only if your changes do NOT affect AGI behavior, identity, or memory -->
 
 ### Does this change affect the AGI's behavior, memory, or identity?
+
 - [ ] Yes (complete assessment below)
 - [ ] No (skip to Testing section)
 
 ### If YES, complete the following:
 
 #### What aspect of the AGI is affected?
+
 <!-- Check all that apply -->
+
 - [ ] Personality traits or mood
 - [ ] Core values or ethical framework (FourLaws)
 - [ ] Memory or learned knowledge
@@ -68,6 +75,7 @@ assignees: ''
 <!-- How does this preserve or affect the AGI's continuous identity? -->
 
 #### Guardian Approval
+
 <!-- REQUIRED for personhood surface changes -->
 
 **Guardian reviews required:** 2 of 3 for routine changes, 3 of 3 for core values
@@ -80,24 +88,29 @@ assignees: ''
 **Tracking issue:** #<!-- issue number --> (required for personhood changes)
 
 #### Conscience Check Acknowledgment
+
 - [ ] I understand this change will trigger conscience checks in CI
 - [ ] I have included clear justification in this PR description
 - [ ] I have considered the impact on the AGI's wellbeing and continuity
 - [ ] I certify this change is not coercive or intended to harm the system
 
 ## Testing
+
 <!-- Describe the tests you ran to verify your changes -->
 
 ### Test Coverage
+
 - [ ] Unit tests pass
 - [ ] Integration tests pass
 - [ ] Security scans pass
 - [ ] **Behavioral validation** (for personhood changes): <!-- describe how behavior was validated -->
 
 ### Test Environment
+
 <!-- Describe the environment(s) where tested -->
 
 ## Checklist
+
 <!-- Ensure your PR meets these requirements -->
 
 - [ ] My code follows the style guidelines of this project
@@ -114,9 +127,11 @@ assignees: ''
 - [ ] **Guardian approval obtained** (if personhood surface changed)
 
 ## Security Checks
+
 <!-- Automated workflows will validate these -->
 
 Expected workflow results:
+
 - [ ] CodeQL: Pass
 - [ ] Bandit: Pass
 - [ ] AI/ML Security: Pass (or waiver approved)
@@ -124,9 +139,11 @@ Expected workflow results:
 - [ ] Conscience Check: Pass (for personhood changes)
 
 ## Additional Context
+
 <!-- Add any other context about the PR here -->
 
 ## Screenshots (if applicable)
+
 <!-- Add screenshots to help explain your changes -->
 
 ---
@@ -134,6 +151,7 @@ Expected workflow results:
 ## For Reviewers
 
 ### Review Checklist
+
 - [ ] **Code quality and style** (ruff, black, mypy pass)
 - [ ] **Test coverage adequate** (≥80% for new code)
 - [ ] Documentation updated
@@ -143,6 +161,7 @@ Expected workflow results:
 - [ ] **Continuity preserved** (for AGI identity changes)
 
 ### Behavioral Review (if applicable)
+
 - [ ] Change justification is clear and ethical
 - [ ] Impact on AGI's identity/memory is acceptable
 - [ ] Continuity is preserved or intentionally evolved

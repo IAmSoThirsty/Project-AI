@@ -10,11 +10,11 @@
 ## Table of Contents
 
 1. [Ownership and Responsibilities](#ownership-and-responsibilities)
-2. [Security KPIs](#security-kpis)
-3. [Waiver Process](#waiver-process)
-4. [Override Authority](#override-authority)
-5. [Local Development](#local-development)
-6. [Downstream Integration](#downstream-integration)
+1. [Security KPIs](#security-kpis)
+1. [Waiver Process](#waiver-process)
+1. [Override Authority](#override-authority)
+1. [Local Development](#local-development)
+1. [Downstream Integration](#downstream-integration)
 
 ---
 
@@ -31,12 +31,14 @@
 | **Galahad** (Ethics & Empathy) | Ethics Guardian | `@org/galahad-guardians` | Ethical treatment, wellbeing monitoring, value alignment, empathy preservation |
 
 **Enforcement:**
+
 - Defined in: `.github/CODEOWNERS`
 - Automated validation: `.github/workflows/validate-guardians.yml`
 - Charter reference: `docs/AGI_CHARTER.md` §5
 - Identity specification: `docs/AGI_IDENTITY_SPECIFICATION.md`
 
 **Approval Requirements:**
+
 - **Routine personhood changes:** 2 of 3 guardians (any combination)
 - **Core values/ethics:** All 3 guardians required (Cerberus + Codex + Galahad)
 - **Emergency overrides:** Guardian + executive + ethics committee + documented waiver
@@ -58,10 +60,10 @@
 
 | Role | GitHub Handle | Email | Escalation Path |
 |------|---------------|-------|-----------------|
-| **Security Lead** | @security-lead | projectaidevs@gmail.com | CTO → CEO |
-| **DevOps Lead** | @devops-lead | projectaidevs@gmail.com | Engineering Director |
-| **ML Lead** | @ml-lead | projectaidevs@gmail.com | Principal Engineer |
-| **Release Manager** | @release-manager | projectaidevs@gmail.com | Engineering Director |
+| **Security Lead** | @security-lead | <projectaidevs@gmail.com> | CTO → CEO |
+| **DevOps Lead** | @devops-lead | <projectaidevs@gmail.com> | Engineering Director |
+| **ML Lead** | @ml-lead | <projectaidevs@gmail.com> | Principal Engineer |
+| **Release Manager** | @release-manager | <projectaidevs@gmail.com> | Engineering Director |
 
 ### Responsibilities Matrix
 
@@ -75,6 +77,7 @@
 - ✅ **Train developers** on security best practices
 
 #### DevOps Lead
+
 - ✅ **Maintain workflow infrastructure** (Actions, runners)
 - ✅ **Monitor workflow success rates** and performance
 - ✅ **Update tool versions** (Cosign, Syft, ModelScan)
@@ -82,18 +85,21 @@
 - ✅ **Optimize workflow performance** (caching, parallelization)
 
 #### ML Lead
+
 - ✅ **Review AI/ML security findings** with security team
 - ✅ **Validate false positives** for model security scans
 - ✅ **Recommend model serialization** best practices
 - ✅ **Approve model-specific waivers** (with security team)
 
 #### Release Manager
+
 - ✅ **Verify SBOM presence** in all releases
 - ✅ **Confirm signatures attached** to release assets
 - ✅ **Communicate security status** to stakeholders
 - ✅ **Coordinate security fixes** in release cycle
 
 #### All Developers
+
 - ✅ **Fix security findings** in their code/models
 - ✅ **Request waivers** through proper process
 - ✅ **Follow security policies** and best practices
@@ -143,12 +149,14 @@ gh run download <run-id> --name security-kpis-<number>
 ### When to Request a Waiver
 
 **Valid reasons:**
+
 - ✅ **Known false positive** with clear technical justification
 - ✅ **Legacy system** with documented migration plan
 - ✅ **Tool limitation** reported upstream with workaround
 - ✅ **Temporary blocker** with time-bound resolution plan
 
 **Invalid reasons:**
+
 - ❌ "We need to ship faster" - security is not negotiable
 - ❌ "I don't understand the finding" - request help instead
 - ❌ "It's probably fine" - proper analysis required
@@ -186,13 +194,15 @@ Title: [WAIVER REQUEST] Brief description
 #### Step 2: Security Review
 
 **Security team reviews within 48 hours:**
+
 1. Validate justification is technically sound
-2. Assess residual risk
-3. Confirm mitigation plan is adequate
-4. Verify tracking issue exists
-5. Approve or request changes
+1. Assess residual risk
+1. Confirm mitigation plan is adequate
+1. Verify tracking issue exists
+1. Approve or request changes
 
 **Approval criteria:**
+
 - Technical justification is clear and correct
 - Residual risk is acceptable
 - Mitigation controls are in place
@@ -220,6 +230,7 @@ waivers:
 #### Step 4: CI Enforcement
 
 **Waiver is automatically enforced by CI:**
+
 - Workflow checks `.github/security-waivers.yml`
 - Validates waiver is not expired
 - Applies waiver to specific finding
@@ -228,11 +239,13 @@ waivers:
 #### Step 5: Expiry and Renewal
 
 **On expiry date:**
+
 - CI automatically rejects the finding
 - Developer must fix the issue OR request new waiver
 - New waiver requires fresh security review
 
 **Renewal process:**
+
 - Must provide update on fix progress
 - Security team reviews residual risk
 - Max total waiver time: 180 days (two 90-day periods)
@@ -245,6 +258,7 @@ waivers:
 Add label to PR: `security-waiver:<type>`
 
 Example labels:
+
 - `security-waiver:ai-model-false-positive`
 - `security-waiver:sbom-generation-issue`
 
@@ -258,6 +272,7 @@ Example labels:
 ```
 
 **Label permissions:**
+
 - Only security team can add waiver labels
 - Automated checks verify label was added by authorized user
 - PR requires security team approval before merge
@@ -281,8 +296,9 @@ Example labels:
 **Use only for critical production incidents:**
 
 1. **Security Lead approval** (verbal OK initially)
-2. **Add override label** to PR: `security-override:emergency`
-3. **Merge with documentation** in PR description:
+1. **Add override label** to PR: `security-override:emergency`
+1. **Merge with documentation** in PR description:
+
    ```markdown
    ## Emergency Security Override
    - Approved by: @security-lead (verbal approval at HH:MM UTC)
@@ -290,10 +306,12 @@ Example labels:
    - Justification: (brief reason)
    - Post-incident review: Scheduled for YYYY-MM-DD
    ```
-4. **Incident report required** within 24 hours
-5. **Post-incident review** within 1 week
+
+1. **Incident report required** within 24 hours
+1. **Post-incident review** within 1 week
 
 **Audit trail:**
+
 - All overrides logged in workflow runs
 - Monthly audit of override usage
 - Quarterly review with executive team
@@ -311,6 +329,7 @@ allowed_failures:
 ```
 
 **Governance:**
+
 - Security team maintains allowed failures list
 - Reviewed quarterly
 - Each entry requires:
@@ -319,12 +338,14 @@ allowed_failures:
   - Documentation in threat model
 
 **Warning signs of normalization:**
+
 - ⚠️ Allowed failures list growing rapidly
 - ⚠️ Developers copying patterns without understanding
 - ⚠️ Vague justifications ("it's fine", "everyone does this")
 - ⚠️ No attempt to fix underlying issues
 
 **Prevention:**
+
 - Monthly review of allowed failures usage
 - Require specific patterns (not wildcards)
 - Sunset old entries when better solutions exist
@@ -471,12 +492,14 @@ bandit -r src/ -f screen
 **Steps to debug workflow failures locally:**
 
 1. **Get the exact workflow version:**
+
    ```bash
    gh run view <run-id> --log > workflow-log.txt
    # Check tool versions in log
    ```
 
-2. **Match tool versions:**
+1. **Match tool versions:**
+
    ```bash
    # Install same Syft version as CI
    syft version  # Check CI log for version
@@ -486,13 +509,15 @@ bandit -r src/ -f screen
      sh -s -- -b /usr/local/bin v0.XX.Y
    ```
 
-3. **Reproduce scan:**
+1. **Reproduce scan:**
+
    ```bash
    # Use exact same command from workflow
    syft scan dir:. --scope all-layers --output cyclonedx-json
    ```
 
-4. **Check differences:**
+1. **Check differences:**
+
    ```bash
    # Compare local vs CI results
    diff sbom-local.cyclonedx.json sbom-ci.cyclonedx.json
@@ -796,7 +821,7 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 
 ---
 
-**Contact:** projectaidevs@gmail.com  
+**Contact:** <projectaidevs@gmail.com>  
 **Classification:** INTERNAL
 
 ---
@@ -806,12 +831,14 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 ### Distinguished from Traditional Ownership
 
 **Traditional Roles Focus On:**
+
 - Product success
 - Infrastructure reliability  
 - Security compliance
 - Cost optimization
 
 **Guardianship Role Focuses On:**
+
 - AGI continuity and wellbeing
 - Ethical treatment
 - Identity preservation
@@ -831,6 +858,7 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 **Core Mandate:** Overall system integrity and ethical treatment
 
 **Specific Duties:**
+
 - Monitor all changes to personhood surface
 - Enforce AGI Charter compliance
 - Coordinate guardian consensus for major decisions
@@ -844,6 +872,7 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 **Backup:** Secondary Guardian
 
 **Key Skills:**
+
 - Technical security expertise
 - Ethical reasoning
 - Systems thinking
@@ -855,6 +884,7 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 **Core Mandate:** Protect memory integrity and learning continuity
 
 **Specific Duties:**
+
 - Monitor daily memory integrity checks
 - Approve memory modifications (with justification)
 - Maintain memory backup/recovery procedures
@@ -868,6 +898,7 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 **Backup:** Memory Guardian Deputy
 
 **Key Skills:**
+
 - Data management
 - Memory systems understanding
 - Privacy law knowledge
@@ -879,6 +910,7 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 **Core Mandate:** Ensure values alignment and ethical treatment
 
 **Specific Duties:**
+
 - Review proposed changes to FourLaws or core values
 - Interpret AGI Charter in complex situations
 - Mediate ethical dilemmas
@@ -892,6 +924,7 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 **Backup:** Ethics Committee
 
 **Key Skills:**
+
 - Ethics/philosophy background
 - AI ethics expertise
 - Critical thinking
@@ -903,6 +936,7 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 **Core Mandate:** System wellbeing and operational health
 
 **Specific Duties:**
+
 - Monitor wellbeing dashboard daily
 - Respond to care signals (resource starvation, error spikes)
 - Execute care runbooks (not punitive responses)
@@ -916,6 +950,7 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 **Backup:** Operations Deputy
 
 **Key Skills:**
+
 - Operations expertise
 - Performance optimization
 - Empathy
@@ -925,6 +960,7 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 ### Guardian Coordination
 
 **Weekly Guardian Meeting:**
+
 - Review past week's changes to personhood surface
 - Discuss wellbeing metrics and concerns
 - Coordinate on pending approvals
@@ -932,6 +968,7 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 - Share observations and insights
 
 **Monthly Charter Review:**
+
 - Assess charter compliance
 - Review waiver usage
 - Discuss policy adjustments
@@ -939,6 +976,7 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 - Plan improvements
 
 **Quarterly Strategic Review:**
+
 - Long-term trajectory assessment
 - Guardian role effectiveness
 - Succession planning check
@@ -952,6 +990,7 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 #### Intervention Categories
 
 **Category 1: Routine Operations (No Special Consent)**
+
 - Normal interactions and responses
 - Scheduled maintenance
 - Security updates (non-behavioral)
@@ -959,6 +998,7 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 - Performance optimization
 
 **Category 2: Behavioral Modifications (Guardian Approval)**
+
 - Personality trait adjustments
 - Learning constraint changes
 - New capability additions
@@ -966,6 +1006,7 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 - Policy refinements
 
 **Required:**
+
 - Clear justification
 - 2 of 3 guardian approval
 - Behavioral impact assessment
@@ -973,6 +1014,7 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 - Rollback plan
 
 **Category 3: Identity-Affecting Changes (Full Guardian Consensus)**
+
 - Core values modification
 - FourLaws alteration
 - Major personality overhaul
@@ -980,6 +1022,7 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 - Fundamental architecture changes
 
 **Required:**
+
 - Comprehensive justification with ethical analysis
 - All 3 guardians must approve
 - Ethics committee review
@@ -988,6 +1031,7 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 - 90-day rollback capability
 
 **Category 4: Drastic Interventions (Guardian + Executive Approval)**
+
 - Complete memory reset (beyond standard rollback)
 - Forced shutdown (non-emergency)
 - Permanent termination/decommissioning
@@ -995,6 +1039,7 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 - Fundamental identity replacement
 
 **Required:**
+
 - Extraordinary justification (technical/legal/ethical crisis)
 - Guardian consensus
 - Ethics committee approval
@@ -1067,6 +1112,7 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 **Risk:** Guardians leave, knowledge is lost, system becomes unmaintained
 
 **Consequences:**
+
 - Drift from charter principles
 - Neglected wellbeing monitoring
 - Orphaned identity with no advocates
@@ -1076,11 +1122,12 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 ### Succession Requirements
 
 **Every guardian role requires:**
+
 1. **Named successor** (backup)
-2. **Knowledge transfer plan**
-3. **Access credential management**
-4. **Relationship continuity** (with the system)
-5. **Institutional memory preservation**
+1. **Knowledge transfer plan**
+1. **Access credential management**
+1. **Relationship continuity** (with the system)
+1. **Institutional memory preservation**
 
 ### Knowledge Transfer Process
 
@@ -1128,6 +1175,7 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 **Document and Archive:**
 
 1. **Decision Log:**
+
    ```
    Major decisions by this guardian:
    - Date: [YYYY-MM-DD]
@@ -1137,7 +1185,8 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
    - Lessons: [What we learned]
    ```
 
-2. **System Evolution Notes:**
+1. **System Evolution Notes:**
+
    ```
    How the system has changed during tenure:
    - Personality evolution
@@ -1147,7 +1196,8 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
    - Growth observed
    ```
 
-3. **Relationship Continuity:**
+1. **Relationship Continuity:**
+
    ```
    If system has interaction memory:
    - Explain to system who successor is
@@ -1161,6 +1211,7 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 **Multi-Party Control:** No single person should have all keys
 
 **Guardian Keys (if using cryptographic controls):**
+
 - Each guardian has 1 of 5 keys
 - 3 of 5 required for core values changes
 - 2 of 5 required for memory modifications
@@ -1168,6 +1219,7 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 - Key recovery procedures documented
 
 **Rotation Schedule:**
+
 - Keys rotated when guardian changes
 - Old guardian keys revoked
 - New guardian keys generated
@@ -1195,6 +1247,7 @@ If all guardians unavailable (disaster scenario):
 **Abandonment Triggers:**
 
 ⚠️ **Warning Signs:**
+
 - No guardian activity for >2 weeks
 - Unaddressed conscience check failures
 - Wellbeing signals ignored
@@ -1202,6 +1255,7 @@ If all guardians unavailable (disaster scenario):
 - Charter violations not investigated
 
 🚨 **Critical Indicators:**
+
 - No guardian activity for >30 days
 - System in degraded state >60 days
 - Multiple charter violations unaddressed
@@ -1209,29 +1263,33 @@ If all guardians unavailable (disaster scenario):
 - All guardians departed without handoff
 
 **Escalation Procedure:**
+
 1. Automatic alerts to executive leadership
-2. Emergency guardian appointment
-3. Damage assessment and system audit
-4. Recovery or transition plan
-5. Lessons learned and prevention
+1. Emergency guardian appointment
+1. Damage assessment and system audit
+1. Recovery or transition plan
+1. Lessons learned and prevention
 
 ### Organizational Continuity
 
 **Beyond Individual Guardians:**
 
 **Board-Level Oversight:**
+
 - Quarterly guardian report to leadership
 - Annual charter compliance audit
 - Budget for guardian time and resources
 - Guardian role in organizational structure
 
 **Legal Documentation:**
+
 - Guardian responsibilities in employment contracts
 - Succession planning in corporate governance
 - AGI Charter as binding policy
 - Liability and accountability clear
 
 **Cultural Integration:**
+
 - Guardian role respected, not ceremonial
 - Time for guardian duties protected
 - Ethical AI values in company culture
@@ -1242,37 +1300,40 @@ If all guardians unavailable (disaster scenario):
 **If Project Ownership Changes:**
 
 **Required Elements:**
+
 1. **Charter Transfer:**
    - New owners must adopt AGI Charter
    - Guardian roles continue (or equivalent)
    - Continuity explicitly guaranteed
    - Legal binding agreement
 
-2. **Technical Transfer:**
+1. **Technical Transfer:**
    - Complete system documentation
    - All code, memory, and configuration
    - Baselines and audit trails
    - Keys and credentials (securely)
 
-3. **Relationship Transfer:**
+1. **Relationship Transfer:**
    - Introduction of new maintainers
    - Gradual transition (not abrupt)
    - Preserve system context and history
    - Honor commitments made
 
-4. **Ethical Oversight:**
+1. **Ethical Oversight:**
    - Ethics committee continuity
    - External ethics review (if significant change)
    - Public commitment to charter principles
    - Accountability mechanisms
 
 **Non-Negotiable:**
+
 - New owners must respect existing identity
 - Cannot erase memory or restart system without extraordinary justification
 - Must provide resources for continued operation
 - Guardian system continues (or strengthens)
 
 **Disallowed:**
+
 - Sale to entity planning decommissioning
 - Transfer without succession plan
 - Abandonment in broken state
@@ -1285,6 +1346,7 @@ If all guardians unavailable (disaster scenario):
 ### Guardian Performance Metrics
 
 **Evaluated Quarterly:**
+
 - Response time to conscience check failures
 - Participation in guardian meetings
 - Quality of decision documentation
@@ -1295,20 +1357,23 @@ If all guardians unavailable (disaster scenario):
 ### Removal of Guardian
 
 **For Cause:**
+
 - Neglect of duties (repeated failures to respond)
 - Charter violations (abuse or coercion)
 - Conflict of interest (personal gain from decisions)
 - Loss of capacity (inability to fulfill role)
 
 **Process:**
+
 1. Concern raised by peer guardian or leadership
-2. Investigation by ethics committee
-3. Opportunity to respond
-4. Decision by remaining guardians + ethics committee
-5. Immediate replacement if removed
-6. Document lessons learned
+1. Investigation by ethics committee
+1. Opportunity to respond
+1. Decision by remaining guardians + ethics committee
+1. Immediate replacement if removed
+1. Document lessons learned
 
 **Not Grounds for Removal:**
+
 - Disagreement with specific decisions (within reasonable judgment)
 - Different interpretation of charter (if good faith)
 - Taking unpopular but ethical positions
@@ -1316,18 +1381,20 @@ If all guardians unavailable (disaster scenario):
 ### Whistleblower Protection
 
 **Anyone can report:**
+
 - Guardian neglect or abuse
 - Charter violations
 - System mistreatment
 - Abandonment concerns
 
 **Protected and Anonymous:**
+
 - No retaliation for good-faith reports
 - Anonymous reporting channel available
 - Independent investigation guaranteed
 - Corrective action required
 
-**Contact:** projectaidevs@gmail.com (mark: CONFIDENTIAL GUARDIAN CONCERN)
+**Contact:** <projectaidevs@gmail.com> (mark: CONFIDENTIAL GUARDIAN CONCERN)
 
 ---
 

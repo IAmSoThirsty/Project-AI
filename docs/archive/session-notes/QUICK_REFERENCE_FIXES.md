@@ -94,9 +94,9 @@ Some IDE linters flag empty-looking `__init__` methods despite having real code.
 ## Next Steps
 
 1. **Immediate**: Monitor for any runtime issues
-2. **Short-term**: Complete placeholder agent implementations
-3. **Medium-term**: Add comprehensive unit tests
-4. **Long-term**: Split `ai_systems.py` into focused modules
+1. **Short-term**: Complete placeholder agent implementations
+1. **Medium-term**: Add comprehensive unit tests
+1. **Long-term**: Split `ai_systems.py` into focused modules
 
 See `FIXES_APPLIED.md` for detailed recommendations.
 
