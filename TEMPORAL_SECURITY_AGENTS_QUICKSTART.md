@@ -82,7 +82,8 @@ python examples/temporal/code_security_sweep_example.py
 ## View Results
 
 ### Temporal UI
-- Open http://localhost:8233
+
+- Open <http://localhost:8233>
 - Navigate to "Workflows"
 - Click on your workflow ID to see:
   - Execution timeline
@@ -131,16 +132,19 @@ async def setup_schedules():
 ## Troubleshooting
 
 ### Worker won't start
-- Check Temporal server is running: `curl http://localhost:7233/health`
+
+- Check Temporal server is running: `curl <http://localhost:7233/health`>
 - Check port 7233 is not blocked
 - Verify temporalio is installed: `pip show temporalio`
 
 ### Workflows fail
+
 - Check worker logs for errors
 - View workflow details in Temporal UI
 - Ensure all imports are working: `python -c "from temporal.workflows import *"`
 
 ### Can't connect to Temporal
+
 - Ensure Docker containers are running: `docker ps | grep temporal`
 - Check logs: `docker logs temporal`
 - Try restarting: `docker-compose restart temporal`
@@ -157,8 +161,8 @@ async def setup_schedules():
 ## Next Steps
 
 1. Configure LLM endpoints in `.env` (see docs/SECURITY_AGENTS_TEMPORAL_LLM_GUIDE.md)
-2. Set up scheduled campaigns
-3. Integrate with CI/CD
-4. Configure monitoring and alerting
+1. Set up scheduled campaigns
+1. Integrate with CI/CD
+1. Configure monitoring and alerting
 
 For complete documentation, see `docs/SECURITY_AGENTS_TEMPORAL_LLM_GUIDE.md`.

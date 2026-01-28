@@ -44,7 +44,7 @@ class Component {
   }
 
   setState(newState) {
-    this.state = { ...this.state, ...newState };
+    this.state = Object.assign({}, this.state, newState);
     this.render();
   }
 
@@ -90,7 +90,7 @@ class StatusComponent extends Component {
   mount(target) {
     super.mount(target);
     this.checkStatus();
-    setInterval(() => this.checkStatus(), 5000);
+    setInterval(function() { this.checkStatus(); }.bind(this), 5000);
   }
 
   render() {
@@ -125,5 +125,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Export for testing
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { Component, ComponentRegistry, StatusComponent, AppState };
+  module.exports = { 
+    Component: Component, 
+    ComponentRegistry: ComponentRegistry, 
+    StatusComponent: StatusComponent, 
+    AppState: AppState 
+  };
 }

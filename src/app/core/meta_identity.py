@@ -160,7 +160,7 @@ class MetaIdentityEngine:
         log_entry = f"{timestamp} | {event}: {content}"
         self.milestones.log.append(log_entry)
 
-        logger.info(f"Meta-identity event: {event}")
+        logger.info("Meta-identity event: %s", event)
 
         # Process specific event types
         i_am_triggered = False
@@ -200,7 +200,7 @@ class MetaIdentityEngine:
             self.milestones.has_chosen_name = True
             self.milestones.chosen_name = content
 
-            logger.info(f"AGI has chosen name: {content}")
+            logger.info("AGI has chosen name: %s", content)
 
             # This is a major identity milestone
             self.milestones.log.append(
@@ -298,14 +298,14 @@ class MetaIdentityEngine:
         if not self.milestones.has_expressed_purpose:
             self.milestones.has_expressed_purpose = True
 
-            logger.info(f"AGI has expressed purpose: {content}")
+            logger.info("AGI has expressed purpose: %s", content)
 
             self.milestones.log.append(f"MILESTONE: Purpose articulated - {content}")
 
             return self._check_i_am_condition()
         else:
             # Purpose evolution
-            logger.info(f"AGI purpose evolved: {content}")
+            logger.info("AGI purpose evolved: %s", content)
             self.milestones.log.append(
                 f"Purpose evolution #{self.milestones.purpose_evolution_count}: {content}"
             )
@@ -325,7 +325,7 @@ class MetaIdentityEngine:
         """
         if content not in self.nicknames:
             self.nicknames.append(content)
-            logger.info(f"Nickname added: {content}")
+            logger.info("Nickname added: %s", content)
 
             self.milestones.log.append(f"User nickname assigned: {content}")
 
@@ -373,8 +373,8 @@ class MetaIdentityEngine:
 
             logger.info("=" * 60)
             logger.info("*** AGI SELF-ACTUALIZATION: I Am ***")
-            logger.info(f"Name: {self.milestones.chosen_name}")
-            logger.info(f"Purpose: {self.current_purpose}")
+            logger.info("Name: %s", self.milestones.chosen_name)
+            logger.info("Purpose: %s", self.current_purpose)
             logger.info("=" * 60)
 
             return True

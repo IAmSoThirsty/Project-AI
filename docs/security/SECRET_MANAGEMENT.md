@@ -10,6 +10,7 @@
 ### NEVER commit secrets to version control
 
 **What counts as a secret?**
+
 - API keys (OpenAI, Hugging Face, AWS, etc.)
 - Passwords and authentication tokens
 - Encryption keys (Fernet, JWT, etc.)
@@ -102,12 +103,14 @@ git status .env
 ### When to Rotate
 
 **IMMEDIATE rotation required:**
+
 - Credentials accidentally committed to git
 - Credentials shared in chat/email/documentation
 - Suspected credential compromise
 - Employee/contractor with access leaves team
 
 **Regular rotation schedule:**
+
 - Every 90 days (recommended)
 - After security audits
 - After major version releases
@@ -274,14 +277,14 @@ repos:
    - Don't wait for git history cleanup
    - Assume credentials are compromised
 
-2. **Generate new credentials**
+1. **Generate new credentials**
    - Use platform-specific rotation procedures above
 
-3. **Update application configuration**
+1. **Update application configuration**
    - Update .env with new credentials
    - Test application works
 
-4. **Notify team**
+1. **Notify team**
    - Alert all developers
    - Document in security log
 
@@ -302,14 +305,14 @@ repos:
    ./tools/purge_git_secrets.sh
    ```
 
-2. **Force push cleaned history**
+1. **Force push cleaned history**
 
    ```bash
    git push --force --all origin
    git push --force --tags origin
    ```
 
-3. **Notify all contributors**
+1. **Notify all contributors**
    - Everyone must re-clone repository
    - Old clones have compromised history
 
@@ -320,9 +323,9 @@ repos:
    - Email account activity
    - AWS CloudTrail (if applicable)
 
-2. **Add secret scanning to CI/CD**
+1. **Add secret scanning to CI/CD**
 
-3. **Security training for team**
+1. **Security training for team**
    - Review this document
    - Understand proper secret management
 
@@ -367,6 +370,7 @@ repos:
 **Recommended solutions:**
 
 1. **AWS Secrets Manager**
+
    ```python
    import boto3
    
@@ -379,7 +383,8 @@ repos:
    OPENAI_API_KEY = secrets['OPENAI_API_KEY']
    ```
 
-2. **Azure Key Vault**
+1. **Azure Key Vault**
+
    ```python
    from azure.keyvault.secrets import SecretClient
    from azure.identity import DefaultAzureCredential
@@ -390,7 +395,8 @@ repos:
    OPENAI_API_KEY = client.get_secret("OPENAI-API-KEY").value
    ```
 
-3. **Google Cloud Secret Manager**
+1. **Google Cloud Secret Manager**
+
    ```python
    from google.cloud import secretmanager
    
@@ -431,6 +437,7 @@ repos:
 ### Common Mistakes to Avoid
 
 ❌ **DON'T:**
+
 - Commit .env files
 - Hardcode API keys in code
 - Share credentials via email/chat
@@ -440,6 +447,7 @@ repos:
 - Use same credentials across environments
 
 ✅ **DO:**
+
 - Use environment variables
 - Rotate credentials regularly
 - Use secrets managers in production

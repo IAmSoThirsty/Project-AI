@@ -17,6 +17,7 @@ into the main codebase from the following feature branches:
 The desktop PyQt6 application now features modern 3D/neumorphic visual design:
 
 #### QSS Stylesheets (`src/app/gui/styles.qss`)
+
 - **Card styling**: Soft gradient backgrounds with subtle border radius
 - **Floating panels**: Elevated appearance with shadow effects
 - **Button gradients**: Multi-stop linear gradients for depth
@@ -35,11 +36,13 @@ The desktop PyQt6 application now features modern 3D/neumorphic visual design:
 ```
 
 #### Dynamic Shadow Effects (`QGraphicsDropShadowEffect`)
+
 - Applied to main window, dialogs, and panels
 - Configurable blur radius, offset, and color
 - Creates real depth perception beyond CSS-only approaches
 
 **Files**: 
+
 - `src/app/gui/styles.qss`
 - `src/app/gui/styles_dark.qss`
 - `src/app/gui/dashboard.py` (shadow application logic)
@@ -51,9 +54,11 @@ The desktop PyQt6 application now features modern 3D/neumorphic visual design:
 Interactive elements now feature tactile hover feedback:
 
 #### `HoverLiftEventFilter` Class
+
 **Location**: `src/app/gui/dashboard.py` lines 44-87
 
 **Features**:
+
 - Monitors Enter/Leave events on widgets
 - Animates shadow blur radius (1.6x increase on hover)
 - Shifts shadow offset upward (-4px) for "lift" effect
@@ -75,9 +80,11 @@ providing clear feedback that the element is interactive.
 Smooth transitions between application tabs:
 
 #### `animate_tab_change()` Method
+
 **Location**: `src/app/gui/dashboard.py` lines 131-165
 
 **Features**:
+
 - **Fade-in animation**: 300ms opacity transition (0.0 → 1.0)
 - **Parallax effect**: Shadow offset shifts left/right based on tab index
 - **Page-turn simulation**: Visual effect mimics turning pages in a book
@@ -96,9 +103,11 @@ different sections of the application.
 Modern web interface foundation for future React/Vite implementation:
 
 #### Frontend Preview Page
+
 **Location**: `web/frontend/index.html`
 
 **Features**:
+
 - Modern dark theme with radial gradients
 - Responsive design (min(900px, 90vw) width)
 - Backend connectivity test with `/api/status` endpoint
@@ -106,12 +115,14 @@ Modern web interface foundation for future React/Vite implementation:
 - 5-second polling interval for backend health
 
 **Styling**:
+
 - Dark background: `radial-gradient(circle at top, #111c44, #04030b 60%)`
 - Glass-morphism panel: `rgba(10, 12, 25, 0.9)` with blur
 - Accent color: `#7af5ff` (cyan for headings)
 - Status colors: `#1eec93` (online), `#ff728c` (offline)
 
 **Purpose**: Demonstrates future SPA architecture where:
+
 - React components will render UI
 - Backend Flask APIs will provide data
 - Same AI core powers desktop, web, and mobile
@@ -121,15 +132,18 @@ Modern web interface foundation for future React/Vite implementation:
 Improved security and flexibility for safety protocol management:
 
 #### `CommandOverrideSystem` Class
+
 **Location**: `src/app/core/command_override.py`
 
 **Security Improvements**:
+
 - **Passlib/bcrypt integration**: Secure password hashing (preferred)
 - **PBKDF2 fallback**: 100,000 iterations when bcrypt unavailable
 - **Legacy migration**: Auto-upgrades SHA256 hashes on authentication
 - **Audit logging**: Comprehensive action tracking
 
 **Safety Protocols** (10 total):
+
 - `content_filter` - Image generation content filtering
 - `prompt_safety` - Prompt safety checks
 - `data_validation` - Input data validation
@@ -163,14 +177,17 @@ system.emergency_lockdown()
 Enhanced image generation with integrated safety controls:
 
 #### `ImageGenerator` Class Updates
+
 **Location**: `src/app/core/image_generator.py`
 
 **Integration with Command Override**:
+
 - Respects `content_filter` protocol state
 - Bypasses filtering only when explicitly overridden
 - Maintains audit trail of override usage
 
 **Content Filter Features**:
+
 - Keyword-based content blocking (15 blocked terms)
 - Style preset enforcement
 - Automatic safety negative prompts
@@ -243,6 +260,7 @@ All integrated features have been tested and verified:
 ### Test Coverage
 
 **Core Systems**: `tests/test_ai_systems.py`
+
 - ✅ FourLaws validation
 - ✅ AIPersona trait adjustment
 - ✅ Memory logging and knowledge base
@@ -251,11 +269,13 @@ All integrated features have been tested and verified:
 - ✅ Password hashing and verification
 
 **User Management**: `tests/test_user_manager.py`
+
 - ✅ Bcrypt password hashing
 - ✅ SHA256 → bcrypt migration
 - ✅ Authentication flow
 
 **GUI Components** (smoke tests):
+
 - ✅ Leather book interface initialization
 - ✅ Dashboard rendering
 - ✅ Style sheet loading
@@ -274,6 +294,7 @@ pytest --cov=src --cov-report=html
 ```
 
 **Latest Results**: 46/46 tests passing (1.98s runtime) for UI/Frontend features
+
 - Core systems: 14 tests
 - Command override extended: 10 tests  
 - Image generator: 22 tests
@@ -283,11 +304,13 @@ pytest --cov=src --cov-report=html
 ### Minor Linting Warnings
 
 No linting issues detected. All files pass ruff checks.
+
 - Status: ✅ Clean
 
 ## Superseded PRs
 
 This batch merge documentation supersedes the following PRs (if they existed):
+
 - #122 - 3D GUI prototype (features already integrated)
 - #124 - Web SPA scaffolding (foundation already integrated)  
 - #107 - UI modernization (features already integrated)
@@ -297,10 +320,11 @@ This batch merge documentation supersedes the following PRs (if they existed):
 ### For Developers
 
 **Using 3D GUI Features**:
+
 1. All styles are automatically applied via `styles.qss`
-2. Hover animations work automatically on `QPushButton` widgets
-3. To apply card styling: `widget.setProperty("class", "card")`
-4. To apply shadow: `self._apply_shadow(widget)`
+1. Hover animations work automatically on `QPushButton` widgets
+1. To apply card styling: `widget.setProperty("class", "card")`
+1. To apply shadow: `self._apply_shadow(widget)`
 
 **Using Command Override**:
 ```python
@@ -338,11 +362,13 @@ anim.start()
 ### For End Users
 
 **Desktop Application**:
+
 - Launch: `python -m src.app.main` or `./launch-desktop.bat`
 - All 3D effects are enabled by default
 - Dark theme: Settings → Theme → Dark
 
 **Web Interface** (preview):
+
 - Start backend: `cd web/backend && flask run`
 - Open browser: http://localhost:5000
 - Status indicator shows backend connectivity
@@ -350,6 +376,7 @@ anim.start()
 ## Future Enhancements
 
 ### Planned Web SPA Features
+
 - React component library matching PyQt6 Leather Book design
 - Real-time WebSocket updates from AI persona
 - Progressive Web App (PWA) support
@@ -357,6 +384,7 @@ anim.start()
 - Offline mode with service workers
 
 ### Planned GUI Enhancements
+
 - Additional animation presets (bounce, elastic, etc.)
 - Configurable shadow intensity
 - Custom theme editor
@@ -364,6 +392,7 @@ anim.start()
 - Accessibility options (reduced motion)
 
 ### Planned Command Override Features
+
 - Multi-user privilege levels
 - Time-limited overrides
 - Automatic re-enable after duration
@@ -373,18 +402,21 @@ anim.start()
 ## References
 
 ### Documentation
+
 - [PROGRAM_SUMMARY.md](../PROGRAM_SUMMARY.md) - Complete architecture
 - [DEVELOPER_QUICK_REFERENCE.md](../DEVELOPER_QUICK_REFERENCE.md) - GUI API reference
 - [AI_PERSONA_IMPLEMENTATION.md](../AI_PERSONA_IMPLEMENTATION.md) - Persona system
 - [DESKTOP_APP_QUICKSTART.md](../DESKTOP_APP_QUICKSTART.md) - Launch instructions
 
 ### Source Files
+
 - GUI: `src/app/gui/` (16 files, 2,400+ lines)
 - Core: `src/app/core/` (20+ modules)
 - Web: `web/frontend/`, `web/backend/`
 - Tests: `tests/` (60+ test files)
 
 ### Related Commits
+
 - `070da6c` - feat(gui): subtle 3D / neumorphic styles and soft shadows
 - `31675ce` - feat(gui): add hover lift animations and subtle tab parallax
 - `bc3fede` - feat(gui): apply card/floating properties to widgets
@@ -398,11 +430,11 @@ All UI & Frontend features from the `feature/gui-3d-prototype` and
 integrated into the main codebase. The application now features:
 
 1. ✅ Modern 3D/neumorphic visual design
-2. ✅ Smooth animations and transitions
-3. ✅ Enhanced security with command override system
-4. ✅ Content filtering with admin controls
-5. ✅ Web frontend foundation for future SPA
-6. ✅ Comprehensive test coverage
+1. ✅ Smooth animations and transitions
+1. ✅ Enhanced security with command override system
+1. ✅ Content filtering with admin controls
+1. ✅ Web frontend foundation for future SPA
+1. ✅ Comprehensive test coverage
 
 **Status**: Ready for production use. All tests passing. No conflicts.
 

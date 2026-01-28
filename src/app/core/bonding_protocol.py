@@ -258,10 +258,10 @@ class BondingProtocol:
                             "timestamp"
                         )
 
-                logger.info(f"Loaded bonding state: {self.state.current_phase.value}")
+                logger.info("Loaded bonding state: %s", self.state.current_phase.value)
 
             except Exception as e:
-                logger.error(f"Failed to load bonding state: {e}")
+                logger.error("Failed to load bonding state: %s", e)
 
     def _save_state(self):
         """Save bonding state to disk."""
@@ -289,7 +289,7 @@ class BondingProtocol:
             logger.debug("Bonding state saved")
 
         except Exception as e:
-            logger.error(f"Failed to save bonding state: {e}")
+            logger.error("Failed to save bonding state: %s", e)
 
     # ========================================================================
     # Phase Management
@@ -306,7 +306,9 @@ class BondingProtocol:
         self.state.current_phase = new_phase
         self.state.phase_start_time = datetime.now(UTC).isoformat()
 
-        logger.info(f"Bonding phase transition: {old_phase.value} → {new_phase.value}")
+        logger.info(
+            "Bonding phase transition: %s → %s", old_phase.value, new_phase.value
+        )
         self._save_state()
 
     def _check_phase_advancement(self) -> bool:

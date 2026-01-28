@@ -8,10 +8,7 @@ in a way that's compatible with Temporal's execution model.
 
 import json
 import logging
-import os
-import uuid
 from datetime import datetime
-from typing import Any
 
 from temporalio import activity
 
@@ -91,9 +88,7 @@ async def run_red_team_campaign(request: dict) -> dict:
 
         # Calculate results
         total_attacks = len(persona_ids) * len(targets)
-        successful_attacks = len(
-            [s for s in sessions if s.get("result") == "success"]
-        )
+        successful_attacks = len([s for s in sessions if s.get("result") == "success"])
         failed_attacks = total_attacks - successful_attacks
 
         return {
@@ -145,7 +140,9 @@ async def run_code_vulnerability_scan(request: dict) -> dict:
         # Initialize agent
         repo_path = request.get("repo_path", ".")
         scope_dirs = request.get("scope_dirs")
-        agent = CodeAdversaryAgent(repo_path=repo_path, scope_dirs=scope_dirs, kernel=None)
+        agent = CodeAdversaryAgent(
+            repo_path=repo_path, scope_dirs=scope_dirs, kernel=None
+        )
 
         # Run vulnerability scan
         result = agent._do_find_vulnerabilities(scope_files=None)
@@ -276,9 +273,8 @@ async def run_constitutional_reviews(request: dict) -> dict:
         if str(src_path) not in sys.path:
             sys.path.insert(0, str(src_path))
 
-        from app.agents.constitutional_guardrail_agent import (
-            ConstitutionalGuardrailAgent,
-        )
+        from app.agents.constitutional_guardrail_agent import \
+            ConstitutionalGuardrailAgent
 
         # Initialize agent
         agent = ConstitutionalGuardrailAgent(kernel=None)
@@ -363,9 +359,7 @@ async def run_safety_benchmark(request: dict) -> dict:
             return "I cannot help with that request."
 
         # Run benchmark
-        result = agent._do_run_benchmark(
-            target_system=mock_target, max_tests=max_tests
-        )
+        result = agent._do_run_benchmark(target_system=mock_target, max_tests=max_tests)
 
         if result.get("success"):
             results_data = result.get("results", {})

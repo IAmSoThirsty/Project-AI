@@ -163,8 +163,8 @@ Located in `.github/workflows/`:
 - **Triggers**: Push and PR to main
 - **To Enable**:
   1. Create Codacy account at <https://codacy.com>
-  2. Add repository secret: `CODACY_API_TOKEN`
-  3. Uncomment job steps
+  1. Add repository secret: `CODACY_API_TOKEN`
+  1. Uncomment job steps
 
 #### 3. **deploy.yml** - Optional Deployment
 
@@ -176,8 +176,8 @@ Located in `.github/workflows/`:
      - `HOST`: Deployment server hostname
      - `PORT`: SSH port (optional)
      - `USER`: SSH username (optional)
-  2. Uncomment deployment steps
-  3. Customize deployment commands
+  1. Uncomment deployment steps
+  1. Customize deployment commands
 
 ## Package Management
 

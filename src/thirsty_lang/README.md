@@ -36,6 +36,7 @@ Thirsty-lang is a unique, expressive programming language designed to be **defen
 ### Prerequisites
 
 **Choose your runtime:**
+
 - **Node.js** (Primary): 14 or higher
 - **Python** (Alternative): 3.8 or higher
 - **Docker** (Optional): For containerized execution
@@ -43,11 +44,13 @@ Thirsty-lang is a unique, expressive programming language designed to be **defen
 ### Installation
 
 #### Node.js Setup (Primary)
+
 ```bash
 npm install
 ```
 
 #### Python Setup (Alternative)
+
 ```bash
 # Automated setup
 ./setup_venv.sh
@@ -59,6 +62,7 @@ pip install -r requirements.txt
 ```
 
 #### Docker Setup (Optional)
+
 ```bash
 # Build and run with Docker Compose
 docker-compose up
@@ -72,6 +76,7 @@ See [DOCKER.md](DOCKER.md) for detailed Docker instructions and [PYTHON_SETUP.md
 ### Quick Start
 
 #### Using Node.js
+
 ```bash
 # Run a program
 npm start examples/hello.thirsty
@@ -81,6 +86,7 @@ node src/thirsty-cli.js run examples/hello.thirsty
 ```
 
 #### Using Python
+
 ```bash
 # Activate virtual environment (if using)
 source .venv/bin/activate
@@ -93,6 +99,7 @@ python3 src/thirsty_repl.py
 ```
 
 #### Using Docker
+
 ```bash
 # Run a program
 docker-compose run --rm thirsty node src/cli.js examples/hello.thirsty
@@ -113,6 +120,7 @@ npm run train
 ```
 
 The training program includes:
+
 - 💧 **Base Thirsty-lang**: Fundamentals for beginners
 - 💧+ **Thirsty Plus**: Control flow and logic
 - 💧++ **Thirsty Plus Plus**: Functions and loops
@@ -157,12 +165,14 @@ node src/test/security-tests.js
 ### Example Programs
 
 #### Basic Program
+
 ```thirsty
 drink water = "Hello, World!"
 pour water
 ```
 
 #### Secure Program with Defensive Features
+
 ```thirsty
 shield mySecureApp {
   detect attacks {
@@ -216,54 +226,63 @@ See [PROJECT_AI_INTEGRATION.md](PROJECT_AI_INTEGRATION.md) for integration detai
 ## Available Tools
 
 ### REPL (Read-Eval-Pour-Loop)
+
 ```bash
 npm run repl
 ```
 Interactive console with history, variables inspection, and session saving.
 
 ### Debugger
+
 ```bash
 npm run debug examples/hello.thirsty
 ```
 Step through code, set breakpoints, watch variables, and inspect state.
 
 ### Code Formatter
+
 ```bash
 npm run format examples/hello.thirsty
 ```
 Automatically format your code with consistent style.
 
 ### Linter
+
 ```bash
 npm run lint examples/hello.thirsty
 ```
 Check for code quality issues and style violations.
 
 ### Performance Profiler
+
 ```bash
 npm run profile examples/hello.thirsty
 ```
 Measure execution time and identify performance bottlenecks.
 
 ### Documentation Generator
+
 ```bash
 npm run doc examples/hello.thirsty
 ```
 Generate beautiful HTML and Markdown documentation.
 
 ### AST Generator
+
 ```bash
 npm run ast examples/hello.thirsty
 ```
 Visualize the Abstract Syntax Tree of your code.
 
 ### Transpiler
+
 ```bash
 node src/transpiler.js examples/hello.thirsty --target python
 ```
 Convert Thirsty-lang to JavaScript, Python, Go, Rust, Java, or C.
 
 ### Package Manager
+
 ```bash
 node src/package-manager.js init my-project
 node src/package-manager.js install
@@ -271,9 +290,11 @@ node src/package-manager.js install
 Manage dependencies and packages for your projects.
 
 ### Web Playground
+
 Open `playground/index.html` in your browser for an interactive web-based editor!
 
 ### Docker Services
+
 ```bash
 # See all available services
 docker-compose ps
@@ -288,12 +309,14 @@ docker-compose up training       # Interactive training
 Thirsty-lang includes two complete implementations:
 
 ### Node.js Implementation (Primary)
+
 - **Fast and feature-complete**
 - All tools and utilities included
 - Production-ready
 - Run: `node src/cli.js <file.thirsty>`
 
 ### Python Implementation (Alternative)
+
 - **Pure Python with standard library**
 - Educational and portable
 - Cross-platform compatible
@@ -302,6 +325,7 @@ Thirsty-lang includes two complete implementations:
 See [PYTHON_SETUP.md](PYTHON_SETUP.md) for detailed Python setup and usage.
 
 ### Docker Support
+
 - **Multi-service architecture**
 - Development and production images
 - Pre-configured services for all tools
@@ -325,6 +349,7 @@ See [docs/EXPANSIONS.md](docs/EXPANSIONS.md) for detailed information.
 Full language specification and documentation can be found in the `docs/` directory and root:
 
 ### Core Documentation
+
 - [README.md](README.md) - Main documentation (this file)
 - [Language Specification](docs/SPECIFICATION.md) - Complete syntax and semantics
 - [Expansions Guide](docs/EXPANSIONS.md) - Multi-tier language editions
@@ -334,10 +359,12 @@ Full language specification and documentation can be found in the `docs/` direct
 - [Installation Guide](docs/INSTALLATION.md) - Setup instructions
 
 ### Setup Guides
+
 - [PYTHON_SETUP.md](PYTHON_SETUP.md) - Python implementation setup
 - [DOCKER.md](DOCKER.md) - Docker and containerization guide
 
 ### Project Information
+
 - [CONTRIBUTING.md](CONTRIBUTING.md) - How to contribute
 - [CHANGELOG.md](CHANGELOG.md) - Version history and changes
 - [AUTHORS.txt](AUTHORS.txt) - Contributors and authors
@@ -350,9 +377,10 @@ Full language specification and documentation can be found in the `docs/` direct
 Syntax highlighting and code snippets are available in `vscode-extension/`.
 
 To install:
+
 1. Copy the `vscode-extension` folder to your VS Code extensions directory
-2. Reload VS Code
-3. Enjoy syntax highlighting for `.thirsty` files!
+1. Reload VS Code
+1. Enjoy syntax highlighting for `.thirsty` files!
 
 See [vscode-extension/README.md](vscode-extension/README.md) for detailed installation instructions.
 

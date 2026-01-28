@@ -257,8 +257,8 @@ echo $PYTHONPATH
 ### Workflow Not Executing
 
 1. Verify worker is running: `docker-compose logs temporal-worker`
-2. Check task queue matches: Worker and client must use same queue
-3. Check Web UI for errors: http://localhost:8233
+1. Check task queue matches: Worker and client must use same queue
+1. Check Web UI for errors: http://localhost:8233
 
 ### Connection Refused
 
@@ -321,22 +321,26 @@ docs/
 ## 💡 Tips & Best Practices
 
 1. **Always use context managers** for clients:
+
    ```python
    async with TemporalClient() as client:
        # Use client
    ```
 
-2. **Use unique workflow IDs** for idempotency:
+1. **Use unique workflow IDs** for idempotency:
+
    ```python
    workflow_id = f"user-{user_id}-{uuid.uuid4().hex[:8]}"
    ```
 
-3. **Set appropriate timeouts** for activities:
+1. **Set appropriate timeouts** for activities:
+
    ```python
    start_to_close_timeout=timedelta(seconds=30)
    ```
 
-4. **Use retry policies** for resilience:
+1. **Use retry policies** for resilience:
+
    ```python
    retry_policy=RetryPolicy(
        initial_interval=timedelta(seconds=1),
@@ -344,19 +348,21 @@ docs/
    )
    ```
 
-5. **Log at each step** for debugging:
+1. **Log at each step** for debugging:
+
    ```python
    workflow.logger.info("Starting step 1...")
    activity.logger.info("Processing data...")
    ```
 
-6. **Test activities independently** before workflows:
+1. **Test activities independently** before workflows:
+
    ```python
    result = await validate_input("test")
    assert result is True
    ```
 
-7. **Monitor the Web UI** during development:
+1. **Monitor the Web UI** during development:
    - http://localhost:8233
    - Inspect event history
    - Check activity retries
@@ -365,27 +371,27 @@ docs/
 ## 🎓 Learning Path
 
 1. **Start with the demo**: Run `examples/temporal_integration_demo.py`
-2. **Read the architecture**: `docs/TEMPORAL_INTEGRATION_ARCHITECTURE.md`
-3. **Run the tests**: `pytest tests/test_temporal_integration.py -v`
-4. **Modify example workflow**: Change `example_workflow.py`
-5. **Create custom workflow**: Follow the guide above
-6. **Integrate with your code**: Use `AIController`
+1. **Read the architecture**: `docs/TEMPORAL_INTEGRATION_ARCHITECTURE.md`
+1. **Run the tests**: `pytest tests/test_temporal_integration.py -v`
+1. **Modify example workflow**: Change `example_workflow.py`
+1. **Create custom workflow**: Follow the guide above
+1. **Integrate with your code**: Use `AIController`
 
 ## 🚨 Common Pitfalls
 
 1. ❌ Forgetting to start worker → Workflows never execute
-2. ❌ Wrong PYTHONPATH → Import errors
-3. ❌ Mismatched task queue → Worker doesn't pick up work
-4. ❌ Not waiting for Temporal to be healthy → Connection errors
-5. ❌ Using blocking code in workflows → Workflows hang
-6. ❌ Not setting timeouts → Activities run forever
-7. ❌ Sharing mutable state → Non-deterministic workflows
+1. ❌ Wrong PYTHONPATH → Import errors
+1. ❌ Mismatched task queue → Worker doesn't pick up work
+1. ❌ Not waiting for Temporal to be healthy → Connection errors
+1. ❌ Using blocking code in workflows → Workflows hang
+1. ❌ Not setting timeouts → Activities run forever
+1. ❌ Sharing mutable state → Non-deterministic workflows
 
 ## 📞 Getting Help
 
 1. Check the Web UI: http://localhost:8233
-2. View logs: `docker-compose logs temporal-worker`
-3. Read the architecture doc: `docs/TEMPORAL_INTEGRATION_ARCHITECTURE.md`
-4. Run the demo: `python examples/temporal_integration_demo.py`
-5. Check tests: `pytest tests/test_temporal_integration.py -v`
-6. Temporal docs: https://docs.temporal.io/docs/python
+1. View logs: `docker-compose logs temporal-worker`
+1. Read the architecture doc: `docs/TEMPORAL_INTEGRATION_ARCHITECTURE.md`
+1. Run the demo: `python examples/temporal_integration_demo.py`
+1. Check tests: `pytest tests/test_temporal_integration.py -v`
+1. Temporal docs: https://docs.temporal.io/docs/python

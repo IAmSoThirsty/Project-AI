@@ -7,14 +7,14 @@ This document describes the Prometheus monitoring integration for Project-AI, pr
 ## Table of Contents
 
 1. [Architecture](#architecture)
-2. [Quick Start](#quick-start)
-3. [Metrics Categories](#metrics-categories)
-4. [Configuration](#configuration)
-5. [Grafana Dashboards](#grafana-dashboards)
-6. [Alerting](#alerting)
-7. [Integration with Existing Systems](#integration-with-existing-systems)
-8. [Troubleshooting](#troubleshooting)
-9. [Advanced Usage](#advanced-usage)
+1. [Quick Start](#quick-start)
+1. [Metrics Categories](#metrics-categories)
+1. [Configuration](#configuration)
+1. [Grafana Dashboards](#grafana-dashboards)
+1. [Alerting](#alerting)
+1. [Integration with Existing Systems](#integration-with-existing-systems)
+1. [Troubleshooting](#troubleshooting)
+1. [Advanced Usage](#advanced-usage)
 
 ---
 
@@ -71,20 +71,21 @@ docker-compose up -d
 ```
 
 This starts:
+
 - Project-AI application with metrics server (port 8000)
 - Prometheus (port 9090)
 - AlertManager (port 9093)
 - Grafana (port 3000)
 - Node Exporter (port 9100) - optional system metrics
 
-2. **Access the services:**
+1. **Access the services:**
 
-- **Grafana**: http://localhost:3000 (admin/admin)
-- **Prometheus**: http://localhost:9090
-- **AlertManager**: http://localhost:9093
-- **Metrics**: http://localhost:8000/metrics
+- **Grafana**: <http://localhost:3000> (admin/admin)
+- **Prometheus**: <http://localhost:9090>
+- **AlertManager**: <http://localhost:9093>
+- **Metrics**: <http://localhost:8000/metrics>
 
-3. **View pre-configured dashboards:**
+1. **View pre-configured dashboards:**
 
 Navigate to Grafana → Dashboards → Project-AI folder
 
@@ -100,7 +101,7 @@ pip install prometheus-client
 python -m src.app.monitoring.metrics_server
 ```
 
-Server will be available at http://localhost:8000/metrics
+Server will be available at <http://localhost:8000/metrics>
 
 ---
 
@@ -126,6 +127,7 @@ rate(project_ai_persona_interactions_total[5m])
 ```
 
 **Use Cases:**
+
 - Monitor AI responsiveness and engagement
 - Detect unusual personality shifts
 - Track user satisfaction through mood indicators
@@ -147,6 +149,7 @@ project_ai_four_laws_overrides_total{result="success"}
 ```
 
 **Use Cases:**
+
 - Audit ethical compliance
 - Detect policy violation attempts
 - Monitor override usage patterns
@@ -170,6 +173,7 @@ project_ai_memory_storage_bytes
 ```
 
 **Use Cases:**
+
 - Capacity planning for knowledge base
 - Performance optimization
 - Error detection and debugging
@@ -191,6 +195,7 @@ rate(project_ai_learning_black_vault_additions_total[15m])
 ```
 
 **Use Cases:**
+
 - Monitor learning request backlog
 - Detect suspicious learning patterns
 - Track Black Vault growth
@@ -214,6 +219,7 @@ rate(project_ai_auth_failures_total[5m])
 ```
 
 **Use Cases:**
+
 - Real-time security monitoring
 - Attack pattern detection
 - Incident response automation
@@ -238,6 +244,7 @@ project_ai_plugin_load_failures_total
 ```
 
 **Use Cases:**
+
 - Plugin performance optimization
 - Failure detection and recovery
 - Capacity planning
@@ -348,19 +355,19 @@ Located in `config/grafana/dashboards/`:
 
 ### Accessing Dashboards
 
-1. Navigate to http://localhost:3000
-2. Login (default: admin/admin)
-3. Go to Dashboards → Browse → Project-AI folder
-4. Select "AI System Health"
+1. Navigate to <http://localhost:3000>
+1. Login (default: admin/admin)
+1. Go to Dashboards → Browse → Project-AI folder
+1. Select "AI System Health"
 
 ### Creating Custom Dashboards
 
 1. In Grafana, click "+" → Dashboard
-2. Add Panel
-3. Select Prometheus datasource
-4. Enter PromQL query (see Metrics Categories section)
-5. Configure visualization
-6. Save dashboard
+1. Add Panel
+1. Select Prometheus datasource
+1. Enter PromQL query (see Metrics Categories section)
+1. Configure visualization
+1. Save dashboard
 
 **Example PromQL queries for custom panels:**
 
@@ -400,10 +407,10 @@ Located in `config/prometheus/alerts/`:
 ### Alert Workflow
 
 1. **Detection**: Prometheus evaluates rules every 30 seconds
-2. **Firing**: Alert fires after "for" duration (e.g., 5 minutes)
-3. **Routing**: AlertManager routes based on labels (severity, component)
-4. **Notification**: Email sent to configured recipients
-5. **Resolution**: Alert resolves when condition clears
+1. **Firing**: Alert fires after "for" duration (e.g., 5 minutes)
+1. **Routing**: AlertManager routes based on labels (severity, component)
+1. **Notification**: Email sent to configured recipients
+1. **Resolution**: Alert resolves when condition clears
 
 ### Testing Alerts
 
@@ -426,11 +433,11 @@ curl -X POST http://localhost:9093/api/v1/alerts \
 
 During maintenance:
 
-1. Navigate to http://localhost:9093
-2. Click "Silences" → "New Silence"
-3. Add matchers (e.g., `alertname="MemorySystemOverloaded"`)
-4. Set duration and comment
-5. Create silence
+1. Navigate to <http://localhost:9093>
+1. Click "Silences" → "New Silence"
+1. Add matchers (e.g., `alertname="MemorySystemOverloaded"`)
+1. Set duration and comment
+1. Create silence
 
 ---
 
@@ -497,16 +504,18 @@ metrics.custom_metric.labels(label1='value1', label2='value2').inc()
 ### Metrics Not Appearing
 
 1. **Check metrics server is running:**
+
    ```bash
    curl http://localhost:8000/health
    ```
 
-2. **Verify Prometheus is scraping:**
-   - Navigate to http://localhost:9090/targets
+1. **Verify Prometheus is scraping:**
+   - Navigate to <http://localhost:9090/targets>
    - Check if `project-ai-app` target is UP
    - If DOWN, check container networking
 
-3. **Check logs:**
+1. **Check logs:**
+
    ```bash
    docker logs project-ai-dev
    docker logs project-ai-prometheus
@@ -515,14 +524,15 @@ metrics.custom_metric.labels(label1='value1', label2='value2').inc()
 ### Alerts Not Firing
 
 1. **Verify alert rules loaded:**
-   - Navigate to http://localhost:9090/alerts
+   - Navigate to <http://localhost:9090/alerts>
    - Check if rules are present
 
-2. **Check AlertManager:**
-   - Navigate to http://localhost:9093
+1. **Check AlertManager:**
+   - Navigate to <http://localhost:9093>
    - Verify configuration and status
 
-3. **Test email configuration:**
+1. **Test email configuration:**
+
    ```bash
    docker exec project-ai-alertmanager \
      amtool config routes test --config.file=/etc/alertmanager/alertmanager.yml
@@ -534,11 +544,11 @@ metrics.custom_metric.labels(label1='value1', label2='value2').inc()
    - Grafana → Configuration → Data Sources
    - Test connection to Prometheus
 
-2. **Check time range:**
+1. **Check time range:**
    - Ensure dashboard time range covers when app was running
    - Try "Last 5 minutes" to see recent data
 
-3. **Verify metrics exist:**
+1. **Verify metrics exist:**
    - In Prometheus (http://localhost:9090)
    - Run query: `project_ai_persona_mood_energy`
 
@@ -547,13 +557,15 @@ metrics.custom_metric.labels(label1='value1', label2='value2').inc()
 If Prometheus memory usage is high:
 
 1. **Reduce retention time:**
+
    ```yaml
    # docker-compose.yml
    command:
      - '--storage.tsdb.retention.time=7d'  # Reduce from 15d
    ```
 
-2. **Reduce scrape frequency:**
+1. **Reduce scrape frequency:**
+
    ```yaml
    # prometheus.yml
    global:
@@ -579,7 +591,7 @@ remote_write:
       max_shards: 50
 ```
 
-2. **Deploy Thanos or Mimir:**
+1. **Deploy Thanos or Mimir:**
 
 ```bash
 # Example Thanos sidecar
@@ -685,33 +697,33 @@ if __name__ == '__main__':
 ## Best Practices
 
 1. **Use Labels Wisely**: Don't create high-cardinality labels (e.g., user IDs)
-2. **Set Appropriate Scrape Intervals**: Balance between freshness and overhead
-3. **Configure Retention**: Match retention to storage and query needs
-4. **Use Recording Rules**: Pre-compute expensive queries
-5. **Monitor Prometheus Itself**: Watch prometheus_tsdb_* metrics
-6. **Test Alerts**: Regularly test alert delivery and response procedures
-7. **Dashboard Organization**: Group related panels, use consistent naming
-8. **Document Custom Metrics**: Add descriptions and usage examples
+1. **Set Appropriate Scrape Intervals**: Balance between freshness and overhead
+1. **Configure Retention**: Match retention to storage and query needs
+1. **Use Recording Rules**: Pre-compute expensive queries
+1. **Monitor Prometheus Itself**: Watch prometheus_tsdb_* metrics
+1. **Test Alerts**: Regularly test alert delivery and response procedures
+1. **Dashboard Organization**: Group related panels, use consistent naming
+1. **Document Custom Metrics**: Add descriptions and usage examples
 
 ---
 
 ## Security Considerations
 
 1. **Network Isolation**: Keep Prometheus/Grafana on internal network
-2. **Authentication**: Enable Grafana authentication in production
-3. **Encryption**: Use TLS for AlertManager email and webhooks
-4. **Access Control**: Restrict who can silence alerts or modify configs
-5. **Sensitive Data**: Avoid exposing PII in metric labels
-6. **API Keys**: Store credentials in secrets, not config files
+1. **Authentication**: Enable Grafana authentication in production
+1. **Encryption**: Use TLS for AlertManager email and webhooks
+1. **Access Control**: Restrict who can silence alerts or modify configs
+1. **Sensitive Data**: Avoid exposing PII in metric labels
+1. **API Keys**: Store credentials in secrets, not config files
 
 ---
 
 ## Support and Resources
 
-- **Prometheus Documentation**: https://prometheus.io/docs/
-- **Grafana Documentation**: https://grafana.com/docs/
-- **PromQL Guide**: https://prometheus.io/docs/prometheus/latest/querying/basics/
-- **Project-AI Issues**: https://github.com/IAmSoThirsty/Project-AI/issues
+- **Prometheus Documentation**: <https://prometheus.io/docs/>
+- **Grafana Documentation**: <https://grafana.com/docs/>
+- **PromQL Guide**: <https://prometheus.io/docs/prometheus/latest/querying/basics/>
+- **Project-AI Issues**: <https://github.com/IAmSoThirsty/Project-AI/issues>
 
 ---
 
@@ -720,6 +732,7 @@ if __name__ == '__main__':
 See `src/app/monitoring/prometheus_exporter.py` for the complete, up-to-date metric definitions.
 
 **Metric Naming Convention:**
+
 - Prefix: `project_ai_`
 - Component: `persona_`, `four_laws_`, `memory_`, etc.
 - Type suffix: `_total` (counter), `_seconds` (histogram), no suffix (gauge)

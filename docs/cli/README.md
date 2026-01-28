@@ -58,9 +58,9 @@ python -m app.cli ai --help
 The CLI supports configuration files in TOML format. Configuration is loaded from the following locations (in priority order):
 
 1. **Environment variables** (highest priority)
-2. **Project config**: `.projectai.toml` (current directory)
-3. **User config**: `~/.projectai.toml` (home directory)
-4. **Default values** (lowest priority)
+1. **Project config**: `.projectai.toml` (current directory)
+1. **User config**: `~/.projectai.toml` (home directory)
+1. **Default values** (lowest priority)
 
 ### Configuration File Format
 
@@ -308,8 +308,8 @@ python -c "import tomllib; print(tomllib.load(open('.projectai.toml', 'rb')))"
 ### Shell Completion Not Working
 
 1. Ensure completion is installed correctly
-2. Restart your shell
-3. Check shell-specific completion directories:
+1. Restart your shell
+1. Check shell-specific completion directories:
    - Bash: `~/.bash_completion.d/`
    - Zsh: `~/.zsh/completion/`
    - Fish: `~/.config/fish/completions/`
@@ -364,10 +364,10 @@ python -m app.cli batch --file commands.txt
 If you need help:
 
 1. Check this documentation
-2. Run `--help` on any command
-3. See [CONTRIBUTING.md](../../CONTRIBUTING.md) for development setup
-4. Open an issue: [GitHub Issues](https://github.com/IAmSoThirsty/Project-AI/issues)
-5. Join discussions: [GitHub Discussions](https://github.com/IAmSoThirsty/Project-AI/discussions)
+1. Run `--help` on any command
+1. See [CONTRIBUTING.md](../../CONTRIBUTING.md) for development setup
+1. Open an issue: [GitHub Issues](https://github.com/IAmSoThirsty/Project-AI/issues)
+1. Join discussions: [GitHub Discussions](https://github.com/IAmSoThirsty/Project-AI/discussions)
 
 ---
 

@@ -11,6 +11,7 @@ This directory contains tools and configurations for scanning the Project-AI cod
 **File**: `tools/enhanced_secret_scan.py`
 
 Comprehensive scanner that detects:
+
 - API keys (OpenAI, AWS, Hugging Face, GitHub, Google, etc.)
 - Passwords and authentication tokens
 - Encryption keys (Fernet, JWT, RSA, SSH, PGP)
@@ -30,6 +31,7 @@ python tools/enhanced_secret_scan.py --root src/
 ```
 
 **Exit Codes:**
+
 - `0` - No secrets found (success)
 - `1` - Medium/High secrets found (warning)
 - `2` - Critical secrets found (failure)
@@ -61,6 +63,7 @@ bandit -r src/ -x tests/
 ```
 
 **Common Issues Detected:**
+
 - B201: Flask app with debug=True
 - B301: Pickle usage (insecure)
 - B303: Insecure MD5/SHA1 usage
@@ -164,18 +167,21 @@ The repository includes automated secret scanning via GitHub Actions.
 **Workflow**: `.github/workflows/security-secret-scan.yml`
 
 **Triggers:**
+
 - Push to main/develop branches
 - Pull requests
 - Daily at 2 AM UTC
 - Manual dispatch
 
 **Scans Performed:**
+
 1. Bandit (Python security)
-2. detect-secrets (baseline checking)
-3. TruffleHog (git history)
-4. Enhanced secret scanner (comprehensive)
+1. detect-secrets (baseline checking)
+1. TruffleHog (git history)
+1. Enhanced secret scanner (comprehensive)
 
 **Artifacts:**
+
 - `bandit-report.json` - Bandit findings
 - `.secrets.baseline` - detect-secrets baseline
 - `enhanced-scan-report.json` - Detailed scan results
@@ -202,6 +208,7 @@ pre-commit run --all-files
 ```
 
 **Configured Hooks:**
+
 - `detect-secrets` - Prevent secret commits
 - `bandit` - Python security checks
 - `git-secrets` - AWS/API key detection
@@ -268,9 +275,9 @@ chmod +x tools/run_security_audit.sh
 ### Immediate Actions
 
 1. **DO NOT COMMIT** - Cancel the commit immediately
-2. **Review findings** - Determine if they are real secrets or false positives
-3. **Remove secrets** - Replace with environment variables
-4. **Rotate credentials** - If secret was previously committed, rotate immediately
+1. **Review findings** - Determine if they are real secrets or false positives
+1. **Remove secrets** - Replace with environment variables
+1. **Rotate credentials** - If secret was previously committed, rotate immediately
 
 ### For Real Secrets
 
@@ -332,32 +339,34 @@ password = "test_password_for_unit_tests"
 ### During Development
 
 1. **Scan before committing**
+
    ```bash
    python tools/enhanced_secret_scan.py
    ```
 
-2. **Use pre-commit hooks**
+1. **Use pre-commit hooks**
+
    ```bash
    pre-commit run --all-files
    ```
 
-3. **Review scan results**
+1. **Review scan results**
    - Don't ignore warnings
    - Fix or document each finding
 
 ### In Code Reviews
 
 1. **Check for secrets** - Even if scanner missed them
-2. **Verify environment variables** - All secrets use `os.getenv()`
-3. **Review .env.example** - Updated with new secrets (placeholders only)
-4. **Check documentation** - No real credentials in docs
+1. **Verify environment variables** - All secrets use `os.getenv()`
+1. **Review .env.example** - Updated with new secrets (placeholders only)
+1. **Check documentation** - No real credentials in docs
 
 ### In CI/CD
 
 1. **Automated scanning** - Every PR and commit
-2. **Fail on critical** - Block merges with critical secrets
-3. **Report findings** - Make visible to team
-4. **Rotate on exposure** - Immediate rotation procedures
+1. **Fail on critical** - Block merges with critical secrets
+1. **Report findings** - Make visible to team
+1. **Rotate on exposure** - Immediate rotation procedures
 
 ---
 
@@ -408,6 +417,7 @@ detect-secrets scan --baseline .secrets.baseline
 File: `tools/enhanced_secret_scan.py`
 
 Customize:
+
 - `PATTERNS` - Add/modify detection patterns
 - `EXCLUDE_PATTERNS` - Exclude files/directories
 - `ALLOWED_FILES` - Allow specific files
@@ -418,11 +428,13 @@ Customize:
 ## 📞 Support
 
 **Questions?**
+
 - Read: `docs/security/SECRET_MANAGEMENT.md`
 - Issues: GitHub Issues with `security` label
 - Urgent: Contact security team immediately
 
 **Resources:**
+
 - [OWASP Top 10](https://owasp.org/Top10/)
 - [GitHub Secret Scanning](https://docs.github.com/en/code-security/secret-scanning)
 - [AWS Secrets Best Practices](https://docs.aws.amazon.com/secretsmanager/latest/userguide/best-practices.html)

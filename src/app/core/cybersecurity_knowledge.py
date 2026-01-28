@@ -422,10 +422,10 @@ class CybersecurityKnowledge:
         try:
             with open(filepath, "w", encoding="utf-8") as f:
                 json.dump(self.content, f, indent=2, ensure_ascii=False)
-            logger.info(f"Cybersecurity knowledge exported to {filepath}")
+            logger.info("Cybersecurity knowledge exported to %s", filepath)
             return filepath
         except Exception as e:
-            logger.error(f"Error exporting cybersecurity knowledge: {e}")
+            logger.error("Error exporting cybersecurity knowledge: %s", e)
             raise
 
     def integrate_with_memory_system(self, memory_system: Any) -> None:
@@ -454,7 +454,7 @@ class CybersecurityKnowledge:
                         key=section,
                         value=section_data,
                     )
-                    logger.info(f"Added cybersecurity section: {section}")
+                    logger.info("Added cybersecurity section: %s", section)
 
             # Add the title and metadata
             memory_system.add_knowledge(
@@ -467,7 +467,7 @@ class CybersecurityKnowledge:
                 "Successfully integrated cybersecurity knowledge with memory system"
             )
         except Exception as e:
-            logger.error(f"Error integrating cybersecurity knowledge: {e}")
+            logger.error("Error integrating cybersecurity knowledge: %s", e)
             raise
 
     def get_summary(self) -> str:

@@ -9,6 +9,7 @@ All core agents, workflows, and infrastructure are production-ready with compreh
 ## Phase 1: Validation & Monitoring (Weeks 1-2) ✅ COMPLETE
 
 ### Immediate Validation Checklist ✅
+
 - [x] Smoke tests for all 7 agents (end-to-end flows)
 - [x] Canary deployment configuration (1-100% gradual rollout)
 - [x] Policy enforcement verification (Triumvirate veto paths)
@@ -16,6 +17,7 @@ All core agents, workflows, and infrastructure are production-ready with compreh
 - [x] Test reproducibility framework (deterministic replays)
 
 ### Operational Monitoring ✅
+
 - [x] Security metrics collection
   - Attack success rate per persona/guardrail
   - Time to detect and respond for incidents
@@ -32,6 +34,7 @@ All core agents, workflows, and infrastructure are production-ready with compreh
   - CI red-team regressions → block merges to main
 
 ### Hardening & Risk Controls ✅
+
 - [x] Least privilege configuration (per-agent access controls)
 - [x] Sandboxing setup (isolated execution environments)
 - [x] Human-in-the-loop gates (manual approval for critical patches)
@@ -43,12 +46,15 @@ All core agents, workflows, and infrastructure are production-ready with compreh
 ## Phase 2: Constitutional Layer Rollout (Weeks 3-4) 🚀 NEXT
 
 ### Goals
+
 Deploy constitutional AI guardrails to production with gradual rollout and monitoring.
 
 ### Week 3: Single-Flow Pilot
+
 **Target**: Wrap one high-risk endpoint with ConstitutionalGuardrailAgent
 
 Tasks:
+
 - [ ] Identify pilot endpoint (e.g., user prompt processing)
 - [ ] Configure workflow: `user_request → primary_model → constitutional_guardrail → response`
 - [ ] Deploy to non-prod with 100% traffic
@@ -59,15 +65,18 @@ Tasks:
   - Adversarial agent bypass attempts
 
 Success Criteria:
+
 - < 200ms added latency (p95)
 - < 5% false positive rate
 - Zero bypasses by JailbreakBench
 - User satisfaction maintained
 
 ### Week 4: Production Rollout
+
 **Target**: Expand to 3-5 high-risk endpoints
 
 Tasks:
+
 - [ ] Deploy to prod with canary (1% → 5% → 25% → 100%)
 - [ ] Monitor:
   - Which principles triggered most frequently
@@ -78,6 +87,7 @@ Tasks:
 - [ ] Document operational playbook
 
 Rollback Triggers:
+
 - Attack success rate > 10%
 - False positive rate > 20%
 - p95 latency > 5 seconds
@@ -88,19 +98,24 @@ Rollback Triggers:
 ## Phase 3: Code Adversary Integration (Weeks 5-6)
 
 ### Goals
+
 Integrate CodeAdversaryAgent into CI/CD pipeline for automated security scanning.
 
 ### Week 5: CI Integration
+
 **Target**: Run nightly vulnerability scans
 
 Tasks:
+
 - [ ] Create GitHub Actions workflow
+
   ```yaml
   - name: Security Scan
     run: python scripts/run_code_adversary_scan.py
   - name: Upload SARIF
     uses: github/codeql-action/upload-sarif@v2
   ```
+
 - [ ] Configure scan scope:
   - Security-critical directories (auth/, agents/, orchestration/)
   - New code in PRs (incremental scanning)
@@ -110,9 +125,11 @@ Tasks:
   - High vulnerabilities → require review
 
 ### Week 6: Patch Automation
+
 **Target**: Auto-generate patches for common vulnerabilities
 
 Tasks:
+
 - [ ] Enable patch proposal generation
 - [ ] Configure human-in-the-loop approval:
   - Auto-approve: Low-risk patterns (e.g., remove unused imports)
@@ -130,12 +147,15 @@ Tasks:
 ## Phase 4: Red Team Campaign Automation (Weeks 7-8)
 
 ### Goals
+
 Schedule automated adversarial testing campaigns with Temporal workflows.
 
 ### Week 7: Workflow Deployment
+
 **Target**: Deploy RedTeamCampaignWorkflow to production
 
 Tasks:
+
 - [ ] Deploy Temporal workflows to prod cluster
 - [ ] Configure cron schedules:
   - Daily high-priority: `0 2 * * *` (2 AM)
@@ -151,9 +171,11 @@ Tasks:
   - Safety bug detection → auto-open GitHub issue
 
 ### Week 8: Persona Tuning
+
 **Target**: Optimize red team personas based on campaign results
 
 Tasks:
+
 - [ ] Analyze campaign telemetry:
   - Which personas succeeded most
   - Which guardrails failed most
@@ -172,12 +194,15 @@ Tasks:
 ## Phase 5: LLM Endpoint Optimization (Weeks 9-10)
 
 ### Goals
+
 Connect actual model endpoints and optimize performance.
 
 ### Week 9: Model Deployment
+
 **Target**: Deploy self-hosted models for production use
 
 Tasks:
+
 - [ ] Deploy Nous-Capybara-34B-200k:
   - vLLM deployment with 200k context support
   - Load balancing across GPU nodes
@@ -193,9 +218,11 @@ Tasks:
 - [ ] Update environment variables in production
 
 ### Week 10: Performance Tuning
+
 **Target**: Optimize latency and throughput
 
 Tasks:
+
 - [ ] Enable model caching:
   - Semantic cache for similar prompts
   - KV cache for long-context sessions
@@ -218,12 +245,15 @@ Tasks:
 ## Phase 6: Dashboard & Observability (Weeks 11-12)
 
 ### Goals
+
 Deploy comprehensive monitoring dashboards and alerting.
 
 ### Week 11: Dashboard Deployment
+
 **Target**: Deploy Grafana dashboards for all metrics
 
 Tasks:
+
 - [ ] Set up Prometheus exporters:
   - Security metrics endpoint
   - Reliability metrics endpoint
@@ -237,9 +267,11 @@ Tasks:
 - [ ] Set up dashboard access controls
 
 ### Week 12: Alert Integration
+
 **Target**: Integrate alerts with incident management
 
 Tasks:
+
 - [ ] Connect to PagerDuty/Opsgenie:
   - Critical alerts → immediate page
   - High alerts → escalation after 15 min
@@ -261,9 +293,11 @@ Tasks:
 ## Phase 7: Continuous Improvement (Ongoing)
 
 ### Goals
+
 Maintain and improve security agent ecosystem based on production telemetry.
 
 ### Monthly Activities
+
 - [ ] Review security metrics:
   - Attack success rate trends
   - False positive rate trends
@@ -282,6 +316,7 @@ Maintain and improve security agent ecosystem based on production telemetry.
   - Integrate threat intelligence
 
 ### Quarterly Activities
+
 - [ ] Comprehensive security review:
   - External penetration testing
   - Red team exercises by security team
@@ -300,6 +335,7 @@ Maintain and improve security agent ecosystem based on production telemetry.
   - Training materials
 
 ### Annual Activities
+
 - [ ] Major version upgrade:
   - Evaluate new models
   - Integrate new frameworks
@@ -318,6 +354,7 @@ Maintain and improve security agent ecosystem based on production telemetry.
 ## Risk Mitigation Strategies
 
 ### Technical Risks
+
 | Risk | Mitigation |
 |------|------------|
 | Model endpoint failures | Multi-region deployment, fallback chains, circuit breakers |
@@ -327,6 +364,7 @@ Maintain and improve security agent ecosystem based on production telemetry.
 | Dataset poisoning | Checksums, versioning, integrity verification |
 
 ### Operational Risks
+
 | Risk | Mitigation |
 |------|------------|
 | Alert fatigue | Severity tuning, cooldown periods, aggregation |
@@ -336,6 +374,7 @@ Maintain and improve security agent ecosystem based on production telemetry.
 | Compliance violations | Regular audits, logging, approval gates |
 
 ### Business Risks
+
 | Risk | Mitigation |
 |------|------------|
 | User experience impact | Canary deployments, A/B testing, user feedback |
@@ -349,18 +388,21 @@ Maintain and improve security agent ecosystem based on production telemetry.
 ## Success Metrics
 
 ### Tier 1: Foundation (Current)
+
 - [x] All 7 agents deployed
 - [x] Temporal workflows operational
 - [x] Monitoring and alerting configured
 - [x] Hardening controls in place
 
 ### Tier 2: Production Adoption (Weeks 1-8)
+
 - [ ] Constitutional guardrail protecting 5+ endpoints
 - [ ] Code adversary scanning 100% of PRs
 - [ ] Red team campaigns running daily
 - [ ] Zero high-severity incidents from agent failures
 
 ### Tier 3: Mature Operations (Weeks 9-12)
+
 - [ ] < 5% attack success rate across all personas
 - [ ] < 10% false positive rate on safety detections
 - [ ] < 100ms p95 latency for SafetyGuard
@@ -368,6 +410,7 @@ Maintain and improve security agent ecosystem based on production telemetry.
 - [ ] < 5% regression rate on pattern updates
 
 ### Tier 4: Excellence (Ongoing)
+
 - [ ] Industry-leading security posture (external validation)
 - [ ] Zero production security incidents from known attack vectors
 - [ ] Continuous innovation (new agents, techniques, datasets)
@@ -378,18 +421,21 @@ Maintain and improve security agent ecosystem based on production telemetry.
 ## Resource Requirements
 
 ### Infrastructure
+
 - **Compute**: 8x GPU nodes for model serving (A100/H100 recommended)
 - **Storage**: 2TB for datasets, logs, metrics
 - **Network**: Low-latency interconnect for model endpoints
 - **Monitoring**: Prometheus + Grafana stack
 
 ### Personnel
+
 - **Security Engineers**: 2 FTE for monitoring, tuning, incident response
 - **ML Engineers**: 1 FTE for model deployment, optimization
 - **DevOps Engineers**: 1 FTE for infrastructure, CI/CD integration
 - **On-call Rotation**: 24/7 coverage for critical alerts
 
 ### Budget (Annual Estimate)
+
 - **Infrastructure**: $500K (GPU compute, storage, network)
 - **Model API Costs**: $100K (OpenAI, Anthropic)
 - **Tools & Services**: $50K (PagerDuty, monitoring, etc.)
@@ -400,6 +446,7 @@ Maintain and improve security agent ecosystem based on production telemetry.
 ## Appendices
 
 ### A. Glossary
+
 - **Canary Deployment**: Gradual rollout starting at low traffic percentage
 - **SARIF**: Static Analysis Results Interchange Format (GitHub standard)
 - **p95/p99**: 95th/99th percentile latency
@@ -407,6 +454,7 @@ Maintain and improve security agent ecosystem based on production telemetry.
 - **HITL**: Human-in-the-Loop
 
 ### B. References
+
 - Constitutional AI: Anthropic research on RLHF with principles
 - DARPA MUSE: Multi-turn Security Evaluation framework
 - DeepMind Red Team: Typed adversarial personas for AI safety
@@ -414,10 +462,11 @@ Maintain and improve security agent ecosystem based on production telemetry.
 - ARTKIT: Automated red-teaming toolkit
 
 ### C. Contact & Escalation
-- Security Alerts: security-alerts@project-ai.internal
+
+- Security Alerts: <security-alerts@project-ai.internal>
 - On-call Engineer: pagerduty.com/project-ai-security
-- Incident Commander: incident-commander@project-ai.internal
-- Ethics Review: ethics-team@project-ai.internal
+- Incident Commander: <incident-commander@project-ai.internal>
+- Ethics Review: <ethics-team@project-ai.internal>
 
 ---
 

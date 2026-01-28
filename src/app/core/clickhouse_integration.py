@@ -68,7 +68,7 @@ class ClickHouseClient:
             compression=compression,
         )
 
-        logger.info(f"ClickHouse client initialized: {host}:{port}/{database}")
+        logger.info("ClickHouse client initialized: %s:%s/%s", host, port, database)
 
     def execute(self, query: str, params: dict = None) -> list[tuple]:
         """Execute SQL query.
@@ -84,7 +84,7 @@ class ClickHouseClient:
             result = self.client.execute(query, params or {})
             return result
         except Exception as e:
-            logger.error(f"Query execution failed: {e}")
+            logger.error("Query execution failed: %s", e)
             raise
 
     def insert(self, table: str, data: list[dict]):
@@ -108,7 +108,7 @@ class ClickHouseClient:
         query = f"INSERT INTO {table} ({columns_str}) VALUES"
 
         self.client.execute(query, values)
-        logger.info(f"Inserted {len(data)} rows into {table}")
+        logger.info("Inserted %s rows into %s", len(data), table)
 
     def query_dataframe(self, query: str):
         """Execute query and return as pandas DataFrame.
@@ -154,7 +154,7 @@ class ClickHouseClient:
         """
 
         self.execute(query)
-        logger.info(f"Created metrics table: {table_name}")
+        logger.info("Created metrics table: %s", table_name)
 
     def create_logs_table(self, table_name: str = "project_ai_logs"):
         """Create table for high-volume log storage.
@@ -178,7 +178,7 @@ class ClickHouseClient:
         """
 
         self.execute(query)
-        logger.info(f"Created logs table: {table_name}")
+        logger.info("Created logs table: %s", table_name)
 
     def create_events_table(self, table_name: str = "project_ai_events"):
         """Create table for AI system events.
@@ -202,7 +202,7 @@ class ClickHouseClient:
         """
 
         self.execute(query)
-        logger.info(f"Created events table: {table_name}")
+        logger.info("Created events table: %s", table_name)
 
     def insert_metric(
         self,

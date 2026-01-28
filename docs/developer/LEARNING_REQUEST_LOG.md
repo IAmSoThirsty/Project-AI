@@ -10,6 +10,7 @@ approval workflow with a "Black Vault" mechanism for permanently denying content
 ## Key Features
 
 ### 🤖 AI Learning Requests
+
 - AI can discover interesting information during autonomous exploration
 - AI submits structured learning requests with justification
 - Priority levels (LOW, MEDIUM, HIGH, CRITICAL)
@@ -17,12 +18,14 @@ approval workflow with a "Black Vault" mechanism for permanently denying content
 - Tags for organization and retrieval
 
 ### 👤 Human Approval Workflow
+
 - All requests stored in secure pending location (AI cannot access)
 - User reviews each request with full context
 - Approve → Auto-integration (hassle-free)
 - Deny → Black Vault (permanent blocking)
 
 ### 🔒 Black Vault System
+
 - Permanently stores denied content
 - Content fingerprinting prevents re-discovery
 - Subliminal filtering makes denied content "invisible"
@@ -30,6 +33,7 @@ approval workflow with a "Black Vault" mechanism for permanently denying content
 - Dual hashing (full + normalized) for robust matching
 
 ### 🧠 Integration with Memory System
+
 - Approved requests automatically integrate into AI memory
 - Seamless connection with Memory Expansion System
 - Knowledge becomes immediately available to AI
@@ -77,12 +81,13 @@ AI-inaccessible directories are marked with `.aiignore` files.
 #### Opening the Learning Request Dialog
 
 1. Click **📋 Learning Requests** in the toolbar
-2. The dialog shows all pending AI requests
-3. Review statistics and pending items
+1. The dialog shows all pending AI requests
+1. Review statistics and pending items
 
 #### Reviewing a Request
 
 Each request contains:
+
 - **Title**: Brief description
 - **Timestamp**: When submitted
 - **Priority**: Critical/High/Medium/Low
@@ -95,22 +100,22 @@ Each request contains:
 #### Approving a Request
 
 1. Select request from list
-2. Review details carefully
-3. Click **✓ Approve & Integrate**
-4. Confirm approval
-5. Content automatically integrates into AI memory
-6. AI can immediately use this knowledge
+1. Review details carefully
+1. Click **✓ Approve & Integrate**
+1. Confirm approval
+1. Content automatically integrates into AI memory
+1. AI can immediately use this knowledge
 
 #### Denying a Request
 
 1. Select request from list
-2. Review details carefully
-3. Click **✗ Deny & Black Vault**
-4. **WARNING**: This permanently blocks the content
-5. Confirm denial
-6. Content moves to Black Vault
-7. AI will never access this content again
-8. If re-discovered, it's automatically filtered
+1. Review details carefully
+1. Click **✗ Deny & Black Vault**
+1. **WARNING**: This permanently blocks the content
+1. Confirm denial
+1. Content moves to Black Vault
+1. AI will never access this content again
+1. If re-discovered, it's automatically filtered
 
 #### Viewing Black Vault (Admin)
 
@@ -200,6 +205,7 @@ def submit_learning_request(
 ```
 
 **Parameters:**
+
 - `title`: Brief description of request
 - `content`: The information to learn
 - `category`: Content type (technical, general, security, user_preference)
@@ -209,6 +215,7 @@ def submit_learning_request(
 - `tags`: Organization labels
 
 **Returns:**
+
 - Request ID string on success
 - `None` if content is blacklisted or submission fails
 
@@ -232,9 +239,11 @@ def get_pending_requests(self, for_ai: bool = True) -> list
 ```
 
 **Parameters:**
+
 - `for_ai`: If True, returns empty list (AI cannot see pending)
 
 **Returns:**
+
 - List of pending request dictionaries
 
 #### Approve Request
@@ -244,13 +253,16 @@ def approve_request(self, request_id: str, user_notes: str = "") -> bool
 ```
 
 **Parameters:**
+
 - `request_id`: ID of request to approve
 - `user_notes`: Optional approval notes
 
 **Returns:**
+
 - `True` on success, `False` on failure
 
 **Side Effects:**
+
 - Moves request to approved directory
 - Auto-integrates into memory system
 - Updates status to INTEGRATED
@@ -262,13 +274,16 @@ def deny_request(self, request_id: str, reason: str = "") -> bool
 ```
 
 **Parameters:**
+
 - `request_id`: ID of request to deny
 - `reason`: Why request was denied
 
 **Returns:**
+
 - `True` on success, `False` on failure
 
 **Side Effects:**
+
 - Moves request to Black Vault
 - Generates content fingerprints
 - Updates blacklist index
@@ -281,10 +296,12 @@ def is_content_relevant(self, content: str, for_ai: bool = True) -> bool
 ```
 
 **Parameters:**
+
 - `content`: Content text to check
 - `for_ai`: If True, applies subliminal filtering
 
 **Returns:**
+
 - `False` if content is blacklisted (appears irrelevant)
 - `True` otherwise
 
@@ -306,6 +323,7 @@ def get_statistics(self) -> dict
 
 **Returns:**
 Dictionary with:
+
 - `total_requests`: Total number of requests
 - `pending_requests`: Awaiting approval
 - `approved_requests`: Approved count
@@ -320,9 +338,10 @@ Dictionary with:
 The system uses dual hashing for robust content matching:
 
 1. **Full Hash**: SHA256 of exact content
-2. **Normalized Hash**: SHA256 of lowercase, whitespace-normalized content
+1. **Normalized Hash**: SHA256 of lowercase, whitespace-normalized content
 
 This prevents re-discovery even if:
+
 - Formatting changes
 - Case changes
 - Minor whitespace differences
@@ -330,18 +349,19 @@ This prevents re-discovery even if:
 ### Subliminal Filtering
 
 When AI checks if content is relevant:
+
 1. Content fingerprint is generated
-2. Checked against Black Vault fingerprints
-3. If match found, returns `False` (appears irrelevant)
-4. AI doesn't know content is specifically blocked
-5. AI naturally ignores it as "not interesting"
+1. Checked against Black Vault fingerprints
+1. If match found, returns `False` (appears irrelevant)
+1. AI doesn't know content is specifically blocked
+1. AI naturally ignores it as "not interesting"
 
 ### Access Control Layers
 
 1. **Directory Markers**: `.aiignore` files mark restricted areas
-2. **API Parameters**: `for_ai` boolean controls visibility
-3. **Index Filtering**: Request index hides denied entries from AI
-4. **Fingerprint Checking**: Prevents resubmission of denied content
+1. **API Parameters**: `for_ai` boolean controls visibility
+1. **Index Filtering**: Request index hides denied entries from AI
+1. **Fingerprint Checking**: Prevents resubmission of denied content
 
 ## Integration with Other Systems
 
@@ -365,6 +385,7 @@ if log.approve_request(request_id):
 ### Command Override System
 
 Learning Request Log respects command overrides:
+
 - Can be disabled via Command Override System
 - Integrates with audit logging
 - Respects safety protocol states
@@ -390,26 +411,26 @@ def initialize(self, context):
 ### For Users
 
 1. **Review Carefully**: Read justification and content before approving
-2. **Use Deny Wisely**: Denial is permanent, consider carefully
-3. **Check Sources**: Verify source credibility before approval
-4. **Monitor Statistics**: Track AI learning patterns
-5. **Audit Black Vault**: Periodically review denied content
+1. **Use Deny Wisely**: Denial is permanent, consider carefully
+1. **Check Sources**: Verify source credibility before approval
+1. **Monitor Statistics**: Track AI learning patterns
+1. **Audit Black Vault**: Periodically review denied content
 
 ### For AI/Plugins
 
 1. **Provide Context**: Always include meaningful justification
-2. **Use Priority Correctly**: Reserve CRITICAL for truly important content
-3. **Tag Appropriately**: Use consistent, descriptive tags
-4. **Check Relevance First**: Use `is_content_relevant()` before submitting
-5. **Respect None Returns**: If submission returns None, don't retry
+1. **Use Priority Correctly**: Reserve CRITICAL for truly important content
+1. **Tag Appropriately**: Use consistent, descriptive tags
+1. **Check Relevance First**: Use `is_content_relevant()` before submitting
+1. **Respect None Returns**: If submission returns None, don't retry
 
 ### For Developers
 
 1. **Use for_ai Parameter**: Always specify whether call is from AI or user
-2. **Handle None Returns**: Check return values before proceeding
-3. **Don't Bypass Security**: Never try to access Black Vault from AI code
-4. **Follow API Patterns**: Use provided methods, don't access files directly
-5. **Test Fingerprinting**: Verify content matching works for your use case
+1. **Handle None Returns**: Check return values before proceeding
+1. **Don't Bypass Security**: Never try to access Black Vault from AI code
+1. **Follow API Patterns**: Use provided methods, don't access files directly
+1. **Test Fingerprinting**: Verify content matching works for your use case
 
 ## Troubleshooting
 
@@ -418,12 +439,14 @@ def initialize(self, context):
 **Problem**: `submit_learning_request()` returns `None`
 
 **Possible Causes:**
+
 1. Content is blacklisted (in Black Vault)
-2. Duplicate request already exists
-3. Invalid parameters
-4. File system errors
+1. Duplicate request already exists
+1. Invalid parameters
+1. File system errors
 
 **Solution:**
+
 - Check if content is blacklisted with `is_content_relevant()`
 - Verify all required parameters are provided
 - Check file system permissions
@@ -434,11 +457,13 @@ def initialize(self, context):
 **Problem**: AI appears to know about pending requests
 
 **Possible Causes:**
+
 1. Code not using `for_ai=True` parameter
-2. Accessing files directly instead of using API
-3. Plugin bypassing access control
+1. Accessing files directly instead of using API
+1. Plugin bypassing access control
 
 **Solution:**
+
 - Always use `for_ai=True` in AI-initiated calls
 - Use API methods, never direct file access
 - Review plugin code for security violations
@@ -449,11 +474,13 @@ def initialize(self, context):
 **Problem**: AI keeps finding blacklisted content
 
 **Possible Causes:**
+
 1. Content is significantly modified
-2. Fingerprinting not catching variations
-3. AI not checking relevance before submission
+1. Fingerprinting not catching variations
+1. AI not checking relevance before submission
 
 **Solution:**
+
 - Deny all variations of the content
 - Update content normalization logic
 - Ensure AI checks `is_content_relevant()` first
@@ -464,11 +491,13 @@ def initialize(self, context):
 **Problem**: Approved request not available in memory
 
 **Possible Causes:**
+
 1. Memory Expansion System not initialized
-2. Integration failed silently
-3. Request status not updated
+1. Integration failed silently
+1. Request status not updated
 
 **Solution:**
+
 - Verify MemoryExpansionSystem is passed to LearningRequestLog
 - Check memory system logs
 - Review request status in integrated directory
@@ -518,13 +547,13 @@ results = memory_system.search_knowledge("Python 3.14 performance")
 Potential improvements to consider:
 
 1. **Bulk Operations**: Approve/deny multiple requests at once
-2. **Request Templates**: Pre-defined structures for common request types
-3. **Auto-Approval Rules**: User-defined rules for automatic approval
-4. **Request Expiration**: Automatically archive old pending requests
-5. **Learning Analytics**: Detailed statistics and visualization
-6. **Content Similarity**: Suggest related approved content
-7. **Request Prioritization**: AI learns user preferences over time
-8. **Collaborative Filtering**: Learn from approval patterns
+1. **Request Templates**: Pre-defined structures for common request types
+1. **Auto-Approval Rules**: User-defined rules for automatic approval
+1. **Request Expiration**: Automatically archive old pending requests
+1. **Learning Analytics**: Detailed statistics and visualization
+1. **Content Similarity**: Suggest related approved content
+1. **Request Prioritization**: AI learns user preferences over time
+1. **Collaborative Filtering**: Learn from approval patterns
 
 ## Conclusion
 
@@ -533,6 +562,7 @@ to control AI learning. It balances AI autonomy with human oversight, ensuring t
 can grow and improve while maintaining complete user control over what gets learned.
 
 Key benefits:
+
 - ✅ AI can propose valuable learning
 - ✅ User maintains complete control
 - ✅ Approved content integrates seamlessly

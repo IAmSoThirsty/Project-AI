@@ -1,6 +1,6 @@
-"""Thirsty-lang Validator - Tests T-A-R-L (Thirsty's Active Resistant Language) capabilities.
+"""Thirsty-lang Validator - Tests T-A-R-L (Thirsty's Active Resistance Language) capabilities.
 
-This module validates that Thirsty-lang functions as T-A-R-L (Thirsty's Active Resistant Language),
+This module validates that Thirsty-lang functions as T-A-R-L (Thirsty's Active Resistance Language),
 testing its defensive programming and threat resistance capabilities as a code-based
 defense system that only Project-AI knows about.
 
@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 
 class ThirstyLangValidator(KernelRoutedAgent):
-    """Validates Thirsty-lang as T-A-R-L (Thirsty's Active Resistant Language).
+    """Validates Thirsty-lang as T-A-R-L (Thirsty's Active Resistance Language).
 
     Tests the language's capabilities as a defensive coding system,
     verifying it can be used as a secure communication and defense layer.
@@ -44,7 +44,7 @@ class ThirstyLangValidator(KernelRoutedAgent):
         self.validation_results = []
 
     def run_full_validation(self) -> dict[str, Any]:
-        """Run complete validation suite on T-A-R-L (Thirsty's Active Resistant Language) capabilities.
+        """Run complete validation suite on T-A-R-L (Thirsty's Active Resistance Language) capabilities.
 
         Returns:
             Comprehensive validation report
@@ -59,7 +59,9 @@ class ThirstyLangValidator(KernelRoutedAgent):
 
     def _do_run_full_validation(self) -> dict[str, Any]:
         """Internal implementation of full validation."""
-        logger.info("Starting T-A-R-L (Thirsty's Active Resistant Language) validation")
+        logger.info(
+            "Starting T-A-R-L (Thirsty's Active Resistance Language) validation"
+        )
 
         report = {
             "timestamp": datetime.now(UTC).isoformat(),
@@ -330,7 +332,7 @@ class ThirstyLangValidator(KernelRoutedAgent):
 
         return {
             "validation": "passed",
-            "classification": "T-A-R-L (Thirsty's Active Resistant Language) - Same as Thirsty-lang",
+            "classification": "T-A-R-L (Thirsty's Active Resistance Language) - Same as Thirsty-lang",
             "purpose": "Defensive programming to ward off user attacks through confusion",
             "knowledge_status": {
                 "project_ai": "Full knowledge - knows everything about T-A-R-L",
@@ -361,7 +363,7 @@ class ThirstyLangValidator(KernelRoutedAgent):
 
         report_lines = [
             "=" * 80,
-            "T-A-R-L (Thirsty's Active Resistant Language) VALIDATION REPORT",
+            "T-A-R-L (Thirsty's Active Resistance Language) VALIDATION REPORT",
             "=" * 80,
             f"\nTimestamp: {latest['timestamp']}",
             f"\nOverall Status: {latest['summary']['tarl_status'].upper()}",
@@ -384,7 +386,7 @@ class ThirstyLangValidator(KernelRoutedAgent):
         report_lines.extend(
             [
                 "\n" + "=" * 80,
-                "T-A-R-L (Thirsty's Active Resistant Language) is operational",
+                "T-A-R-L (Thirsty's Active Resistance Language) is operational",
                 "Classification: Fully known to Project-AI, unknown to external entities",
                 "Unique Advantage: Only Project-AI/Cerberus/Codex have this language",
                 "=" * 80,

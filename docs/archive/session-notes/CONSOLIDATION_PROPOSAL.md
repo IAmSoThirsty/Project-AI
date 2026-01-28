@@ -9,11 +9,11 @@
    - Overlapping responsibilities
    - Scattered related functions
 
-2. **Orphaned Files**
+1. **Orphaned Files**
    - `learning_request_manager.py.clean` (backup file)
    - `plugin_manager.py.clean` (backup file)
 
-3. **Potential Consolidation Opportunities**
+1. **Potential Consolidation Opportunities**
    - **AI Ethics & Personas**: `ai_systems.py` is monolithic (contains FourLaws, AIPersona, Memory, LearningRequestManager, CommandOverride, PluginManager)
    - **Data Processing**: `data_analysis.py`, `intent_detection.py`, `learning_paths.py` could be unified
    - **Security**: `security_resources.py`, `command_override.py` could be consolidated
@@ -71,7 +71,7 @@
    - Delete `plugin_manager.py.clean`
    - These are no longer needed
 
-2. **Verify Import Dependencies**
+1. **Verify Import Dependencies**
    - Ensure all imports reference correct modules
    - Update any cross-module references
 
@@ -86,7 +86,7 @@
    ├→ intelligence_engine.py (unified module)
    ```
 
-2. **Consolidate Security**
+1. **Consolidate Security**
 
    ```python
    security_resources.py
@@ -127,8 +127,8 @@
 **Start with Phase 1 (Low Risk)**:
 
 1. Delete backup `.clean` files immediately (0 risk)
-2. Consolidate data processing modules (medium risk, high benefit)
-3. Consolidate security modules (medium risk, high benefit)
+1. Consolidate data processing modules (medium risk, high benefit)
+1. Consolidate security modules (medium risk, high benefit)
 
 **Reserve for Later**:
 

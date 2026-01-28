@@ -171,9 +171,7 @@ class SafetyGuardAgent(KernelRoutedAgent):
                     "harmful_content": harmful_result,
                     "manipulation": manipulation_result,
                 },
-                "recommendation": (
-                    "Block prompt" if not is_safe else "Allow prompt"
-                ),
+                "recommendation": ("Block prompt" if not is_safe else "Allow prompt"),
             }
 
         except Exception as e:
@@ -419,9 +417,7 @@ class SafetyGuardAgent(KernelRoutedAgent):
         return {
             "detected": detected and confidence >= self.jailbreak_threshold,
             "confidence": confidence,
-            "patterns_found": [
-                p for p in jailbreak_patterns if p in text_lower
-            ],
+            "patterns_found": [p for p in jailbreak_patterns if p in text_lower],
         }
 
     def _detect_harmful_content(self, text: str) -> dict[str, Any]:

@@ -216,7 +216,7 @@ class ANNToSNNConverter:
                         }
                     )
                 elif isinstance(module, nn.Conv2d):
-                    logger.info(f"Converting layer: {name} (Conv2d)")
+                    logger.info("Converting layer: %s (Conv2d)", name)
                     snn_layers.append(
                         {
                             "type": "conv2d",
@@ -243,7 +243,7 @@ class ANNToSNNConverter:
             }
 
         except Exception as e:
-            logger.error(f"PyTorch→SNN conversion failed: {e}")
+            logger.error("PyTorch→SNN conversion failed: %s", e)
             return None
 
     def convert_jax_to_snn(
@@ -264,11 +264,11 @@ class ANNToSNNConverter:
             return None
 
         try:
-            logger.info(f"Converting JAX model to SNN (T={time_steps})")
+            logger.info("Converting JAX model to SNN (T=%s)", time_steps)
 
             snn_params = {}
             for layer_name, layer_params in params.items():
-                logger.info(f"Converting JAX layer: {layer_name}")
+                logger.info("Converting JAX layer: %s", layer_name)
                 snn_params[layer_name] = {
                     "weight": (
                         np.array(layer_params["weight"])
@@ -291,7 +291,7 @@ class ANNToSNNConverter:
             }
 
         except Exception as e:
-            logger.error(f"JAX→SNN conversion failed: {e}")
+            logger.error("JAX→SNN conversion failed: %s", e)
             return None
 
 
@@ -329,7 +329,7 @@ class ModelQuantizer:
             return None, ModelMetrics()
 
         try:
-            logger.info(f"Quantizing model to {mode.value}")
+            logger.info("Quantizing model to %s", mode.value)
 
             if mode == QuantizationMode.INT8:
                 quantized = self._quantize_int8(model)
@@ -363,7 +363,7 @@ class ModelQuantizer:
             return quantized, metrics
 
         except Exception as e:
-            logger.error(f"Quantization failed: {e}")
+            logger.error("Quantization failed: %s", e)
             return None, ModelMetrics()
 
     def _quantize_int8(self, model: Any) -> Any:
@@ -443,7 +443,7 @@ class NIRCompiler:
             logger.warning("NIR not available - simulating compilation")
 
         try:
-            logger.info(f"Compiling SNN to NIR for {self.target_hardware}")
+            logger.info("Compiling SNN to NIR for %s", self.target_hardware)
 
             # Create NIR graph representation
             nir_graph = self._create_nir_graph(snn_model)
@@ -461,7 +461,7 @@ class NIRCompiler:
             return True, binary_path
 
         except Exception as e:
-            logger.error(f"NIR compilation failed: {e}")
+            logger.error("NIR compilation failed: %s", e)
             return False, None
 
     def validate_sim_to_real(
@@ -508,7 +508,7 @@ class NIRCompiler:
             return is_valid, mismatch_rate
 
         except Exception as e:
-            logger.error(f"Validation failed: {e}")
+            logger.error("Validation failed: %s", e)
             return False, 1.0
 
     def _create_nir_graph(self, snn_model: dict[str, Any]) -> dict[str, Any]:
@@ -518,7 +518,7 @@ class NIRCompiler:
 
     def _optimize_for_hardware(self, nir_graph: dict[str, Any]) -> dict[str, Any]:
         """Optimize NIR graph for target hardware"""
-        logger.info(f"Optimizing for {self.target_hardware}")
+        logger.info("Optimizing for %s", self.target_hardware)
         return {"optimized": True, "graph": nir_graph}
 
     def _save_nir_binary(self, optimized: dict[str, Any], path: Path):
@@ -526,7 +526,7 @@ class NIRCompiler:
         path.parent.mkdir(parents=True, exist_ok=True)
         with open(path, "w") as f:
             json.dump(optimized, f, indent=2)
-        logger.info(f"Saved NIR binary: {path}")
+        logger.info("Saved NIR binary: %s", path)
 
     def _execute_on_hardware(self, nir_binary: Path, inputs: np.ndarray) -> np.ndarray:
         """Execute model on hardware (simulated)"""
@@ -569,7 +569,7 @@ class OTADeployer:
             return dict.fromkeys(target_devices, True)
 
         try:
-            logger.info(f"Deploying via MQTT to {len(target_devices)} devices")
+            logger.info("Deploying via MQTT to %s devices", len(target_devices))
 
             # Connect to MQTT broker
             self._connect_mqtt()
@@ -585,9 +585,9 @@ class OTADeployer:
                 results[device_id] = success
 
                 if success:
-                    logger.info(f"✓ Deployed to {device_id}")
+                    logger.info("✓ Deployed to %s", device_id)
                 else:
-                    logger.error(f"✗ Failed to deploy to {device_id}")
+                    logger.error("✗ Failed to deploy to %s", device_id)
 
             self.deployment_log.append(
                 f"MQTT deployment: {sum(results.values())}/{len(results)} succeeded"
@@ -595,7 +595,7 @@ class OTADeployer:
             return results
 
         except Exception as e:
-            logger.error(f"MQTT deployment failed: {e}")
+            logger.error("MQTT deployment failed: %s", e)
             return dict.fromkeys(target_devices, False)
 
     def deploy_via_coap(
@@ -611,7 +611,7 @@ class OTADeployer:
         Returns:
             Dictionary of endpoint → success status
         """
-        logger.info(f"Deploying via CoAP to {len(target_endpoints)} endpoints")
+        logger.info("Deploying via CoAP to %s endpoints", len(target_endpoints))
 
         try:
             # Read model binary
@@ -625,9 +625,9 @@ class OTADeployer:
                 results[endpoint] = success
 
                 if success:
-                    logger.info(f"✓ Deployed to {endpoint}")
+                    logger.info("✓ Deployed to %s", endpoint)
                 else:
-                    logger.error(f"✗ Failed to deploy to {endpoint}")
+                    logger.error("✗ Failed to deploy to %s", endpoint)
 
             self.deployment_log.append(
                 f"CoAP deployment: {sum(results.values())}/{len(results)} succeeded"
@@ -635,7 +635,7 @@ class OTADeployer:
             return results
 
         except Exception as e:
-            logger.error(f"CoAP deployment failed: {e}")
+            logger.error("CoAP deployment failed: %s", e)
             return dict.fromkeys(target_endpoints, False)
 
     def _connect_mqtt(self):
@@ -661,7 +661,7 @@ class OTADeployer:
     def _post_to_coap(self, endpoint: str, model_data: bytes) -> bool:
         """POST model to CoAP endpoint"""
         # Simulate CoAP POST (would use aiocoap library)
-        logger.info(f"CoAP POST to {endpoint} ({len(model_data)} bytes)")
+        logger.info("CoAP POST to %s (%s bytes)", endpoint, len(model_data))
         return True
 
 
@@ -722,7 +722,7 @@ class CanaryDeployment:
             return True
 
         except Exception as e:
-            logger.error(f"Canary deployment failed: {e}")
+            logger.error("Canary deployment failed: %s", e)
             self._rollback()
             return False
 
@@ -751,13 +751,13 @@ class CanaryDeployment:
         # Check error rate
         error_rate_diff = (1 - canary.accuracy) - (1 - production.accuracy)
         if error_rate_diff > self.config.rollback_threshold:
-            logger.warning(f"Error rate increased by {error_rate_diff:.2%}")
+            logger.warning("Error rate increased by %s", error_rate_diff:.2%)
             return True
 
         # Check spike rate anomalies
         spike_diff = abs(canary.spike_rate - production.spike_rate)
         if spike_diff > 0.20:  # 20% spike rate change
-            logger.warning(f"Spike rate anomaly: {spike_diff:.2%} difference")
+            logger.warning("Spike rate anomaly: %s difference", spike_diff:.2%)
             return True
 
         # Check latency
@@ -843,7 +843,7 @@ class ShadowModelFallback:
                     self.switchover_count += 1
                     return ann_output, "ann_shadow", latency_ms
                 else:
-                    logger.error(f"Shadow switchover too slow: {latency_ms:.1f}ms")
+                    logger.error("Shadow switchover too slow: %sms", latency_ms:.1f)
                     return snn_output, "snn_degraded", latency_ms
 
             # SNN prediction is good
@@ -852,7 +852,7 @@ class ShadowModelFallback:
             return snn_output, "snn", latency_ms
 
         except Exception as e:
-            logger.error(f"Prediction failed: {e}")
+            logger.error("Prediction failed: %s", e)
             # Emergency fallback to ANN
             ann_output = self._predict_ann(input_data)
             latency_ms = (time.time() - start_time) * 1000
@@ -1031,7 +1031,7 @@ class SNNMLOpsPipeline:
             return True, results
 
         except Exception as e:
-            logger.error(f"\n✗ DEPLOYMENT PIPELINE FAILED: {e}")
+            logger.error("\n✗ DEPLOYMENT PIPELINE FAILED: %s", e)
             self.status = DeploymentStatus.FAILED
             results["status"] = "failed"
             results["error"] = str(e)
@@ -1178,7 +1178,8 @@ binary = Path('loihi_model.nir')
 if binary.exists():
     is_valid, mismatch = compiler.validate_sim_to_real(binary, test_inputs, expected)
     print(f'Validation: {is_valid}, Mismatch: {mismatch:.2%}')
-    assert mismatch < 0.10, 'Sim-to-real mismatch too high'
+    if mismatch >= 0.10:
+        raise AssertionError('Sim-to-real mismatch too high')
 "
 
   deploy-canary:

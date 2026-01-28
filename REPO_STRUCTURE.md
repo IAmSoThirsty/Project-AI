@@ -3,6 +3,7 @@
 Generated: 2026-01-21 19:42:45
 
 ## Repository Statistics
+
 - **Total Files:** 1530+
 - **Code Files:** 500+
 - **Documentation:** 230KB+ (60+ markdown files)
@@ -14,23 +15,27 @@ Generated: 2026-01-21 19:42:45
 ## Quick Navigation
 
 ### 🚀 Entry Points
+
 - **Main Application:** `src/app/main.py`
 - **CLI:** `src/app/cli.py` OR `python -m app.cli`
 - **Docker:** `docker-compose.yml`
 - **Tests:** `test_v1_launch.py`
 
 ### 📜 Essential Documents
+
 - **AGI Charter:** `docs/AGI_CHARTER.md` ⭐
 - **Deployment Guide:** `PRODUCTION_DEPLOYMENT.md` ⭐
 - **README:** `README.md`
 - **Architecture:** `docs/ARCHITECTURE_OVERVIEW.md`
 
 ### 🔐 Security & Governance
+
 - **Codeowners:** `.github/CODEOWNERS`
 - **Security Policy:** `SECURITY.md`
 - **Workflows:** `.github/workflows/`
 
 ### 💾 Data Directories
+
 - **Persona:** `data/ai_persona/state.json`
 - **Memory:** `data/memory/knowledge.json`
 - **Learning:** `data/learning_requests/`
@@ -43,6 +48,7 @@ Generated: 2026-01-21 19:42:45
 See attached: REPO_TREE.txt (1530 lines, 46KB)
 
 Key highlights:
+
 - 18 data subdirectories (ai_persona, memory, learning_requests, etc.)
 - 15 src/app subdirectories (core, agents, gui, web, etc.)
 - 11 docs subdirectories (security, architecture, developer, etc.)

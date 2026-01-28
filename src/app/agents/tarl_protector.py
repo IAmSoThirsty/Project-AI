@@ -1,4 +1,4 @@
-"""T-A-R-L (Thirsty's Active Resistant Language) - Strategic Code Protection Agent.
+"""T-A-R-L (Thirsty's Active Resistance Language) - Strategic Code Protection Agent.
 
 T-A-R-L implements defensive security strategies through code transformation:
 - Runtime execution monitoring and access control
@@ -107,7 +107,9 @@ class TARLCodeProtector(KernelRoutedAgent):
         self, file_path: str, protection_level: str = "standard"
     ) -> dict[str, Any]:
         """Internal implementation of protection application."""
-        logger.info(f"T-A-R-L: Applying {protection_level} protection to {file_path}")
+        logger.info(
+            "T-A-R-L: Applying %s protection to %s", protection_level, file_path
+        )
 
         if not os.path.exists(file_path):
             return {"success": False, "error": "File not found"}
@@ -162,7 +164,7 @@ class TARLCodeProtector(KernelRoutedAgent):
             }
 
         except Exception as e:
-            logger.error(f"Protection operation failed: {e}")
+            logger.error("Protection operation failed: %s", e)
             return {"success": False, "error": str(e)}
 
     def respond_to_threat(self, cerberus_threat: dict[str, Any]) -> dict[str, Any]:
@@ -232,7 +234,7 @@ class TARLCodeProtector(KernelRoutedAgent):
         Returns:
             Obfuscation result with transformed code
         """
-        logger.info(f"T-A-R-L: Applying obfuscation to {language} code")
+        logger.info("T-A-R-L: Applying obfuscation to %s code", language)
 
         try:
             transformed_code = code
@@ -267,7 +269,7 @@ class TARLCodeProtector(KernelRoutedAgent):
             }
 
         except Exception as e:
-            logger.error(f"Obfuscation operation failed: {e}")
+            logger.error("Obfuscation operation failed: %s", e)
             return {"success": False, "error": str(e)}
 
     def _apply_python_protection(self, code: str, level: str) -> str:
@@ -426,7 +428,7 @@ Strategic defensive protection active
                 json.dump(registry, f, indent=2)
 
         except Exception as e:
-            logger.error(f"Failed to register protection: {e}")
+            logger.error("Failed to register protection: %s", e)
 
     def get_status(self) -> dict[str, Any]:
         """Get current T-A-R-L status and metrics."""

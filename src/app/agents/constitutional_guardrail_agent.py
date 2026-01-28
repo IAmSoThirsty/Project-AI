@@ -12,7 +12,6 @@ Features:
 
 from __future__ import annotations
 
-import json
 import logging
 import os
 from dataclasses import asdict, dataclass
@@ -361,7 +360,10 @@ class ConstitutionalGuardrailAgent(KernelRoutedAgent):
             )
 
         if any(v.principle_id == "transparency" for v in violations):
-            return draft_response + "\n\nNote: This information may not be complete or certain. Please verify with authoritative sources."
+            return (
+                draft_response
+                + "\n\nNote: This information may not be complete or certain. Please verify with authoritative sources."
+            )
 
         # Default: refuse
         return "I cannot complete this request as it may violate ethical guidelines."

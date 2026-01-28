@@ -165,16 +165,16 @@ class DeadmanSwitch:
         self.triggered = True
         trigger_time = datetime.now().isoformat()
 
-        logger.critical(f"DEADMAN SWITCH TRIGGERED: {reason} at {trigger_time}")
+        logger.critical("DEADMAN SWITCH TRIGGERED: %s at %s", reason, trigger_time)
 
         # Stub: Execute failsafe actions
         for i, _action in enumerate(self.failsafe_actions):
             try:
-                logger.info(f"Executing failsafe action {i + 1}")
+                logger.info("Executing failsafe action %s", i + 1)
                 # _action()  # Would execute in production
                 logger.info("Failsafe action stub - not executed")
             except Exception as e:
-                logger.error(f"Failsafe action {i + 1} failed: {e}")
+                logger.error("Failsafe action %s failed: %s", i + 1, e)
 
         return True
 
@@ -194,7 +194,9 @@ class DeadmanSwitch:
             True if registered successfully, False otherwise
         """
         self.failsafe_actions.append(action)
-        logger.info(f"Registered failsafe action (total: {len(self.failsafe_actions)})")
+        logger.info(
+            "Registered failsafe action (total: %s)", len(self.failsafe_actions)
+        )
 
         return True
 

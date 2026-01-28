@@ -88,9 +88,9 @@ print(f"Last upload: {status['last_upload']}")
 ### Security Model
 
 1. **Encryption at Rest**: All data encrypted before leaving the device
-2. **Device Fingerprinting**: SHA-256 hash of device characteristics
-3. **Timestamp Validation**: Ensures data freshness and detects tampering
-4. **Metadata Isolation**: Per-user sync metadata stored locally
+1. **Device Fingerprinting**: SHA-256 hash of device characteristics
+1. **Timestamp Validation**: Ensures data freshness and detects tampering
+1. **Metadata Isolation**: Per-user sync metadata stored locally
 
 ## API Integration
 
@@ -122,6 +122,7 @@ Upload encrypted user data.
 Download encrypted user data.
 
 **Query Parameters:**
+
 - `username` (string): User identifier
 - `device_id` (string): Device identifier
 
@@ -140,6 +141,7 @@ Download encrypted user data.
 List all devices that have synced for a user.
 
 **Query Parameters:**
+
 - `username` (string): User identifier
 
 **Response:**
@@ -159,9 +161,9 @@ List all devices that have synced for a user.
 The module uses timestamp-based conflict resolution:
 
 1. Compare timestamps of local and cloud data
-2. Most recent data wins
-3. Upload winning data to cloud
-4. Update local data if cloud was newer
+1. Most recent data wins
+1. Upload winning data to cloud
+1. Update local data if cloud was newer
 
 ```python
 # Example: Local data (older)
@@ -194,6 +196,7 @@ python -m pytest tests/ -v
 ```
 
 Test coverage includes:
+
 - Device ID generation
 - Encryption/decryption
 - Upload/download operations
@@ -229,6 +232,7 @@ python examples/cloud_sync_demo.py
 **Symptom:** `RequestException` during upload/download
 
 **Solution:** 
+
 - Check network connectivity
 - Verify cloud API endpoint is accessible
 - Check firewall/proxy settings
@@ -242,10 +246,10 @@ python examples/cloud_sync_demo.py
 ## Best Practices
 
 1. **Regular Backups**: Always maintain local backups before syncing
-2. **Network Security**: Use HTTPS for cloud API endpoints
-3. **Key Management**: Store Fernet keys securely, never in source control
-4. **Sync Frequency**: Balance between data freshness and API costs
-5. **Error Handling**: Always check return values and handle failures gracefully
+1. **Network Security**: Use HTTPS for cloud API endpoints
+1. **Key Management**: Store Fernet keys securely, never in source control
+1. **Sync Frequency**: Balance between data freshness and API costs
+1. **Error Handling**: Always check return values and handle failures gracefully
 
 ## Integration with Project-AI
 
@@ -272,7 +276,8 @@ This module is part of Project-AI and follows the same license terms.
 ## Support
 
 For issues or questions:
+
 1. Check the troubleshooting section
-2. Run the example script to verify setup
-3. Check logs in `logs/` directory
-4. Open an issue on GitHub
+1. Run the example script to verify setup
+1. Check logs in `logs/` directory
+1. Open an issue on GitHub

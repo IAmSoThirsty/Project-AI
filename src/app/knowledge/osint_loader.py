@@ -56,7 +56,7 @@ class OSINTLoader:
         osint_file = self.data_dir / filename
 
         if not osint_file.exists():
-            logger.warning(f"OSINT data file not found: {osint_file}")
+            logger.warning("OSINT data file not found: %s", osint_file)
             logger.info("Run scripts/update_osint_bible.py to fetch OSINT data")
             return False
 
@@ -68,14 +68,16 @@ class OSINTLoader:
             self.tools = data.get("categories", {})
 
             tool_count = sum(len(tools) for tools in self.tools.values())
-            logger.info(f"Loaded {tool_count} tools from {len(self.tools)} categories")
+            logger.info(
+                "Loaded %s tools from %s categories", tool_count, len(self.tools)
+            )
             return True
 
         except json.JSONDecodeError as e:
-            logger.error(f"Failed to parse OSINT data: {e}")
+            logger.error("Failed to parse OSINT data: %s", e)
             return False
         except Exception as e:
-            logger.error(f"Error loading OSINT data: {e}")
+            logger.error("Error loading OSINT data: %s", e)
             return False
 
     def get_categories(self) -> list[str]:
@@ -135,7 +137,7 @@ class OSINTLoader:
             True if registered successfully, False otherwise
         """
         tool_name = tool.get("name", "unknown")
-        logger.info(f"Plugin registration stub called for: {tool_name}")
+        logger.info("Plugin registration stub called for: %s", tool_name)
         logger.debug(
             "Future implementation will create plugin wrapper and register with system"
         )
@@ -178,11 +180,11 @@ class OSINTLoader:
             with open(output_file, "w") as f:
                 json.dump(knowledge_data, f, indent=2)
 
-            logger.info(f"Exported knowledge base to {output_file}")
+            logger.info("Exported knowledge base to %s", output_file)
             return True
 
         except Exception as e:
-            logger.error(f"Failed to export knowledge base: {e}")
+            logger.error("Failed to export knowledge base: %s", e)
             return False
 
 

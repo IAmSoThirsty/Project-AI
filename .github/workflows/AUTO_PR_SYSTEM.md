@@ -22,12 +22,12 @@ The automation system consists of three interconnected workflows:
 **Process**:
 
 1. Discovers all branches without open PRs
-2. Checks each branch for merge conflicts with main
-3. Identifies branches with merge conflicts and marks them for manual resolution
-4. Merges main into conflict-free branches to keep them updated
-5. Generates descriptive PR titles and bodies
-6. Creates PRs with appropriate labels (`automated`, `auto-created`, `auto-merge`)
-7. Generates summary reports
+1. Checks each branch for merge conflicts with main
+1. Identifies branches with merge conflicts and marks them for manual resolution
+1. Merges main into conflict-free branches to keep them updated
+1. Generates descriptive PR titles and bodies
+1. Creates PRs with appropriate labels (`automated`, `auto-created`, `auto-merge`)
+1. Generates summary reports
 
 **Conflict Handling**:
 
@@ -48,10 +48,10 @@ The automation system consists of three interconnected workflows:
 **Process**:
 
 1. **Run Checks**: Executes linting (ruff), tests (pytest), and security audits
-2. **Auto-Fix**: Automatically fixes linting issues if checks fail
-3. **Verify Fixes**: Re-runs all checks after auto-fixes
-4. **Auto-Merge**: Enables auto-merge for PRs that pass all checks
-5. **Post-Merge Validation**: Validates main branch health after merge
+1. **Auto-Fix**: Automatically fixes linting issues if checks fail
+1. **Verify Fixes**: Re-runs all checks after auto-fixes
+1. **Auto-Merge**: Enables auto-merge for PRs that pass all checks
+1. **Post-Merge Validation**: Validates main branch health after merge
 
 **Key Features**:
 
@@ -172,10 +172,10 @@ gh pr edit <PR_NUMBER> --remove-label "auto-merge"
 For the automation to work optimally, configure these branch protection rules for `main`:
 
 1. **Require pull request reviews before merging**: Optional (automation provides approval)
-2. **Require status checks to pass**: ✅ Required
+1. **Require status checks to pass**: ✅ Required
    - Select: `lint`, `test`, `Run All Required Checks`
-3. **Require branches to be up to date**: ✅ Required
-4. **Allow auto-merge**: ✅ Required
+1. **Require branches to be up to date**: ✅ Required
+1. **Allow auto-merge**: ✅ Required
 
 ## Summary Reports
 
@@ -250,8 +250,8 @@ gh issue list --label "workflow-failure"
 When the automation detects merge conflicts:
 
 1. PR is created with `conflicts` and `needs-manual-review` labels
-2. A comment is added explaining the situation
-3. Manual intervention is required:
+1. A comment is added explaining the situation
+1. Manual intervention is required:
 
 ```bash
 # Clone and checkout the branch
@@ -278,27 +278,27 @@ git push
 **Check**:
 
 1. Workflow is enabled in repository settings
-2. Workflow has necessary permissions (contents: write, pull-requests: write)
-3. Branch doesn't already have an open PR
-4. Branch is not protected (main, dependabot branches are excluded)
+1. Workflow has necessary permissions (contents: write, pull-requests: write)
+1. Branch doesn't already have an open PR
+1. Branch is not protected (main, dependabot branches are excluded)
 
 ### Auto-Merge Not Working
 
 **Check**:
 
 1. All required checks have passed
-2. Branch protection rules allow auto-merge
-3. PR has `auto-merge` label
-4. No manual "Changes requested" reviews exist
+1. Branch protection rules allow auto-merge
+1. PR has `auto-merge` label
+1. No manual "Changes requested" reviews exist
 
 ### Checks Failing
 
 **Check**:
 
 1. View workflow logs: `gh run view <RUN_ID> --log`
-2. Check if auto-fix ran: Look for "auto-fix" commits
-3. Review test failures in pytest output
-4. Check linting errors in ruff output
+1. Check if auto-fix ran: Look for "auto-fix" commits
+1. Review test failures in pytest output
+1. Check linting errors in ruff output
 
 ## Customization
 
@@ -335,10 +335,10 @@ strategy:
 ## Security Considerations
 
 1. **Token Permissions**: Workflows use `GITHUB_TOKEN` with minimal required permissions
-2. **Branch Protection**: Main branch is protected from direct pushes
-3. **Security Checks**: All PRs undergo security audits (pip-audit, bandit)
-4. **Approval Required**: PRs must pass all checks before merging
-5. **Audit Trail**: All automation actions are logged and traceable
+1. **Branch Protection**: Main branch is protected from direct pushes
+1. **Security Checks**: All PRs undergo security audits (pip-audit, bandit)
+1. **Approval Required**: PRs must pass all checks before merging
+1. **Audit Trail**: All automation actions are logged and traceable
 
 ## Cost Considerations
 
@@ -354,17 +354,17 @@ strategy:
 Potential improvements to consider:
 
 1. **Intelligent Scheduling**: Run more frequently for active branches
-2. **Dependency-Aware Merging**: Merge in dependency order
-3. **Automatic Rebase**: Rebase branches instead of merge
-4. **Slack/Email Notifications**: Alert on conflicts or failures
-5. **Analytics Dashboard**: Track merge velocity and success rates
-6. **Automatic Branch Cleanup**: Delete merged branches after successful merge
+1. **Dependency-Aware Merging**: Merge in dependency order
+1. **Automatic Rebase**: Rebase branches instead of merge
+1. **Slack/Email Notifications**: Alert on conflicts or failures
+1. **Analytics Dashboard**: Track merge velocity and success rates
+1. **Automatic Branch Cleanup**: Delete merged branches after successful merge
 
 ## Support
 
 For issues or questions:
 
 1. Check workflow logs: `gh run view <RUN_ID> --log`
-2. Review summary issues created by automation
-3. Check workflow failure alerts
-4. Create an issue with the `automation` label
+1. Review summary issues created by automation
+1. Check workflow failure alerts
+1. Create an issue with the `automation` label
