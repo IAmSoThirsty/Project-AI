@@ -224,7 +224,7 @@ class PersonalityMatrix:
             current = getattr(self, trait)
             new_value = max(min_val, min(max_val, current + delta))
             setattr(self, trait, new_value)
-            logger.debug("Evolved trait %s: %s -> %s", trait, current:.2f, new_value:.2f)
+            logger.debug("Evolved trait %s: %.2f -> %.2f", trait, current, new_value)
 
     def get_dominant_traits(self, top_n: int = 3) -> list[tuple[str, float]]:
         """

@@ -176,7 +176,7 @@ class TestLoadTesting:
         assert elapsed < 30.0
 
 
-class TestChaos Testing:
+class TestChaosTesting:
     """Chaos testing suite - verify resilience under failure injection"""
 
     def test_random_task_failures(self):
