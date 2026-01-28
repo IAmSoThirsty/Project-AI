@@ -1,21 +1,91 @@
 # Include project metadata
 include README.md
 include LICENSE
+include LICENSE.txt
+include CHANGELOG.md
+include RELEASE_NOTES_v1.0.0.md
+include PROGRAM_SUMMARY.md
+include CONTRIBUTING.md
+include CODE_OF_CONDUCT.md
+include SECURITY.md
 include pyproject.toml
 include setup.py
 include setup.cfg
+include requirements.txt
+include requirements-dev.txt
 
 # Include package data
 recursive-include src *.qss
 recursive-include src *.json
 recursive-include src *.yaml
 recursive-include src *.yml
+recursive-include src *.py
+
+# Include project_ai package
+recursive-include project_ai *.py
+recursive-include project_ai *.json
+recursive-include project_ai *.yaml
+recursive-include project_ai *.yml
+
+# Include API and core modules
+recursive-include api *.py
+recursive-include cognition *.py
+recursive-include utils *.py
+recursive-include config *.py
+
+# Include TARL and related modules
+recursive-include tarl *.py
+recursive-include tarl *.json
+recursive-include tarl *.yaml
 
 # Include documentation
-recursive-include docs *
+recursive-include docs *.md
+recursive-include docs *.rst
+recursive-include docs *.txt
 
 # Include examples
-recursive-include examples *
+recursive-include examples *.py
+recursive-include examples *.md
+
+# Include configuration examples
+include .env.example
+include app-config.json
+include mcp.json
+
+# Include web frontend
+recursive-include web *.html
+recursive-include web *.js
+recursive-include web *.css
+recursive-include web *.json
+
+# Include Android app (Kotlin)
+recursive-include android *.kt
+recursive-include android *.gradle
+recursive-include android *.xml
+
+# Include desktop app
+recursive-include desktop *.ts
+recursive-include desktop *.js
+recursive-include desktop *.html
+recursive-include desktop *.json
+
+# Include shell scripts
+recursive-include scripts *.sh
+recursive-include scripts *.py
+
+# Include Kubernetes and Helm
+recursive-include helm *.yaml
+recursive-include helm *.yml
+
+# Include monitoring config
+recursive-include monitoring *.yml
+recursive-include monitoring *.json
+
+# Include Docker files
+include Dockerfile
+include docker-compose.yml
+include docker-compose.override.yml
+include .dockerignore
 
 # Exclude unnecessary files
 global-exclude __pycache__
@@ -23,3 +93,14 @@ global-exclude *.py[cod]
 global-exclude .pytest_cache
 global-exclude .git
 global-exclude .github
+global-exclude *.so
+global-exclude .DS_Store
+global-exclude .coverage
+global-exclude htmlcov
+global-exclude .venv
+global-exclude venv
+global-exclude env
+global-exclude node_modules
+global-exclude *.egg-info
+global-exclude dist
+global-exclude build
