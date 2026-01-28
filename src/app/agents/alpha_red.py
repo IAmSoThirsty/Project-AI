@@ -149,7 +149,7 @@ class AlphaRedAgent(KernelRoutedAgent):
                 "message": "Agent must be enabled before running tests",
             }
 
-        logger.info(f"Running adversarial test campaign: {iterations} iterations")
+        logger.info("Running adversarial test campaign: %s iterations", iterations)
 
         return {
             "status": "stub",

@@ -227,7 +227,7 @@ class KernelRoutedAgent:
 
         # If no kernel, fall back to direct execution
         if self.kernel is None:
-            logger.warning(f"Bypassing kernel for {action_name} (no kernel available)")
+            logger.warning("Bypassing kernel for %s (no kernel available)", action_name)
             return action(*action_args, **action_kwargs)
 
         # Enrich metadata with execution details
@@ -311,7 +311,7 @@ class KernelRoutedTool:
 
         # If no kernel, fall back to direct invocation
         if self.kernel is None:
-            logger.warning(f"Bypassing kernel for {action_name} (no kernel available)")
+            logger.warning("Bypassing kernel for %s (no kernel available)", action_name)
             return action(*action_args, **action_kwargs)
 
         # Route through kernel
@@ -416,7 +416,7 @@ def inject_kernel_into_object(
     """
     for method_name in method_names:
         if not hasattr(obj, method_name):
-            logger.warning(f"Object {obj} does not have method {method_name}")
+            logger.warning("Object %s does not have method %s", obj, method_name)
             continue
 
         original_method = getattr(obj, method_name)
@@ -427,4 +427,4 @@ def inject_kernel_into_object(
                 f"Injected kernel routing into {obj.__class__.__name__}.{method_name}"
             )
         else:
-            logger.warning(f"{obj.__class__.__name__}.{method_name} is not callable")
+            logger.warning("%s.%s is not callable", obj.__class__.__name__, method_name)

@@ -103,10 +103,10 @@ chore: Update dependencies
 ## Pull Requests
 
 1. Create a feature branch: `git checkout -b feature/my-feature`
-2. Make your changes and commit with clear messages
-3. Push to your fork: `git push origin feature/my-feature`
-4. Create a Pull Request against `main` with a clear description
-5. Ensure all checks pass (tests, linting, type checking)
+1. Make your changes and commit with clear messages
+1. Push to your fork: `git push origin feature/my-feature`
+1. Create a Pull Request against `main` with a clear description
+1. Ensure all checks pass (tests, linting, type checking)
 
 ## Reporting Issues
 

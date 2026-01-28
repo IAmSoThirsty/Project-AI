@@ -17,12 +17,12 @@ Be respectful, inclusive, and keep the community hydrated and happy!
 ### Submitting Pull Requests
 
 1. Fork the repository
-2. Create a new branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Run tests (`npm test`)
-5. Commit your changes (`git commit -m 'Add amazing feature'`)
-6. Push to the branch (`git push origin feature/amazing-feature`)
-7. Open a Pull Request
+1. Create a new branch (`git checkout -b feature/amazing-feature`)
+1. Make your changes
+1. Run tests (`npm test`)
+1. Commit your changes (`git commit -m 'Add amazing feature'`)
+1. Push to the branch (`git push origin feature/amazing-feature`)
+1. Open a Pull Request
 
 ### Coding Standards
 
@@ -50,6 +50,7 @@ npm start examples/hello.thirsty
 ## Language Extensions
 
 We welcome contributions to all language variants:
+
 - **Thirsty-lang**: The base language
 - **Thirsty+**: Enhanced features
 - **Thirsty++**: Advanced features

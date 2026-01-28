@@ -43,6 +43,7 @@ db = SecureDatabaseManager("data/secure.db")
 ## 🛡️ Attack Vectors Blocked
 
 ### XSS (10+ variants)
+
 - `<script>alert(1)</script>`
 - `<img src=x onerror=alert(1)>`
 - `<svg/onload=alert(1)>`
@@ -50,22 +51,26 @@ db = SecureDatabaseManager("data/secure.db")
 - Event handlers: `onload`, `onerror`, `onfocus`, `onstart`
 
 ### SQL Injection
+
 - `' OR '1'='1`
 - `UNION SELECT`
 - `DROP TABLE`
 - SQL comments: `--`, `/**/`
 
 ### XXE (XML External Entity)
+
 - `<!DOCTYPE foo [<!ENTITY xxe SYSTEM "file:///etc/passwd">]>`
 - DTD declarations
 - External entity references
 
 ### Path Traversal
+
 - `../../etc/passwd`
 - `..\\..\\..\\windows\\win.ini`
 - URL encoded: `%2e%2e%2f`
 
 ### Other
+
 - CSV injection: `=cmd`, `+cmd`, `-cmd`, `@cmd`
 - Template injection: `{{7*7}}`, `${jndi:...}`
 - CRLF injection: `%0d%0a`
@@ -73,6 +78,7 @@ db = SecureDatabaseManager("data/secure.db")
 ## 🔧 Component Reference
 
 ### Environment Hardening
+
 ```python
 from app.security import EnvironmentHardening
 
@@ -85,6 +91,7 @@ if not is_valid:
 ```
 
 ### Data Parsing
+
 ```python
 from app.security import SecureDataParser
 
@@ -101,6 +108,7 @@ result = parser.parse_json(json_data, schema={...})
 ```
 
 ### Data Poisoning Defense
+
 ```python
 from app.security import DataPoisoningDefense
 
@@ -117,6 +125,7 @@ defense.add_poison_signature(attack_data)
 ```
 
 ### AWS Integration
+
 ```python
 from app.security import AWSSecurityManager
 
@@ -136,6 +145,7 @@ aws.validate_polp(["s3:GetObject", "s3:PutObject"])
 ```
 
 ### Agent Security
+
 ```python
 from app.security import AgentEncapsulation
 from app.security.agent_security import NumericalProtection
@@ -152,6 +162,7 @@ clean_data = protection.remove_outliers(sensor_data)
 ```
 
 ### Database Security
+
 ```python
 from app.security import SecureDatabaseManager
 
@@ -168,6 +179,7 @@ db.log_action(user_id=123, action="login", ip_address="192.168.1.1")
 ```
 
 ### Security Monitoring
+
 ```python
 from app.security import SecurityMonitor
 
@@ -193,6 +205,7 @@ anomalies = monitor.detect_anomalies(time_window=3600, threshold=10)
 ```
 
 ### Web Security
+
 ```python
 from app.security.web_service import (
     SecureWebHandler,
@@ -252,6 +265,7 @@ pytest tests/test_security*.py -n auto
 ## 🚀 Deployment Checklist
 
 ### Pre-Deployment
+
 - [ ] Run full test suite: `pytest tests/test_security*.py`
 - [ ] Validate environment: `EnvironmentHardening().validate_environment()`
 - [ ] Configure AWS IAM roles (no static credentials)
@@ -260,6 +274,7 @@ pytest tests/test_security*.py -n auto
 - [ ] Set up SNS topic for alerts
 
 ### Post-Deployment
+
 - [ ] Verify CloudWatch metrics
 - [ ] Test SNS alerting
 - [ ] Validate HTTPS/TLS
@@ -267,6 +282,7 @@ pytest tests/test_security*.py -n auto
 - [ ] Review audit logs
 
 ### Ongoing
+
 - [ ] Review logs weekly
 - [ ] Monitor dashboards daily
 - [ ] Update threat signatures monthly
@@ -276,6 +292,7 @@ pytest tests/test_security*.py -n auto
 ## 🔒 Standards Compliance
 
 ### OWASP Top 10 2021
+
 ✅ A01: Broken Access Control  
 ✅ A02: Cryptographic Failures  
 ✅ A03: Injection  
@@ -288,6 +305,7 @@ pytest tests/test_security*.py -n auto
 ✅ A10: SSRF  
 
 ### NIST Cybersecurity Framework
+
 ✅ Identify - Asset Management  
 ✅ Protect - Access Control, Data Security  
 ✅ Detect - Anomaly Detection, Monitoring  
@@ -295,6 +313,7 @@ pytest tests/test_security*.py -n auto
 ✅ Recover - Backups, Versioning  
 
 ### Other Standards
+
 ✅ CERT Secure Coding (Python)  
 ✅ AWS Well-Architected Security Pillar  
 ✅ CIS Benchmarks (IAM, S3, CloudWatch)  
@@ -312,6 +331,7 @@ pytest tests/test_security*.py -n auto
 ## 🐛 Troubleshooting
 
 ### Issue: CloudWatch metrics not appearing
+
 ```bash
 # Check IAM permissions
 aws iam simulate-principal-policy \
@@ -320,6 +340,7 @@ aws iam simulate-principal-policy \
 ```
 
 ### Issue: Tests failing
+
 ```bash
 # Ensure dependencies installed
 pip install -r requirements.txt
@@ -332,6 +353,7 @@ pytest tests/test_security_phase1.py -v --tb=short
 ```
 
 ### Issue: Permission errors
+
 ```bash
 # On Unix/Linux, ensure proper permissions
 chmod 700 data/
@@ -341,19 +363,20 @@ chmod 600 data/*.db
 ## 💡 Best Practices
 
 1. **Never use static AWS credentials** - Use IAM roles
-2. **Always validate input** - Never trust user data
-3. **Log security events** - Enable CloudWatch and SNS
-4. **Monitor anomalies** - Set appropriate thresholds
-5. **Rotate secrets regularly** - Quarterly minimum
-6. **Test security controls** - Run full test suite before deployment
-7. **Review audit logs** - Weekly minimum
-8. **Keep dependencies updated** - Monthly review
-9. **Use parameterized queries** - Prevent SQL injection
-10. **Enable MFA on critical resources** - S3 MFA delete
+1. **Always validate input** - Never trust user data
+1. **Log security events** - Enable CloudWatch and SNS
+1. **Monitor anomalies** - Set appropriate thresholds
+1. **Rotate secrets regularly** - Quarterly minimum
+1. **Test security controls** - Run full test suite before deployment
+1. **Review audit logs** - Weekly minimum
+1. **Keep dependencies updated** - Monthly review
+1. **Use parameterized queries** - Prevent SQL injection
+1. **Enable MFA on critical resources** - S3 MFA delete
 
 ## 📞 Support
 
 For issues or questions:
+
 - Review documentation in `docs/`
 - Check test examples in `tests/`
 - See working integration in `examples/security_integration.py`

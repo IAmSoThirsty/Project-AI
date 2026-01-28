@@ -7,6 +7,7 @@ This security framework implements a comprehensive, multi-phase secure AI deploy
 ## ✨ Key Features
 
 ### 🛡️ Defense Layers
+
 - **Environment Hardening**: Virtualenv validation, sys.path hardening, ASLR/SSP verification
 - **Data Validation**: Secure XML/CSV/JSON parsing with XXE/injection prevention
 - **AWS Integration**: PoLP IAM roles, Secrets Manager, S3 encryption, CloudWatch/SNS
@@ -16,6 +17,7 @@ This security framework implements a comprehensive, multi-phase secure AI deploy
 - **Monitoring**: Real-time threat detection, anomaly detection, incident response
 
 ### 🧪 Test Coverage
+
 - **158 comprehensive tests** (157 passing, 1 skipped)
 - Multi-vector attack scenarios (XSS, SQL injection, XXE, path traversal, etc.)
 - Stress tests up to 10,000 concurrent operations
@@ -23,12 +25,14 @@ This security framework implements a comprehensive, multi-phase secure AI deploy
 - Concurrent access tests with up to 20 threads
 
 ### 📚 Documentation
+
 - **Complete API Reference** - SECURITY_FRAMEWORK.md (22KB)
 - **Deployment Guide** - DEPLOYMENT_GUIDE.md (21KB)  
 - **Quick Reference** - SECURITY_QUICKREF.md (9KB)
 - **Working Example** - examples/security_integration.py (14KB)
 
 ### ✅ Standards Compliance
+
 - ✅ OWASP Top 10 2021 (all 10 categories)
 - ✅ NIST Cybersecurity Framework (6 functions)
 - ✅ CERT Secure Coding Standards
@@ -84,6 +88,7 @@ user_id = db.insert_user("alice", "hashed_password")
 ### Complete Integration Example
 
 See [examples/security_integration.py](../examples/security_integration.py) for a fully working example that demonstrates:
+
 - Environment hardening and validation
 - Security monitoring with CloudWatch/SNS
 - Secure data parsing and poisoning defense
@@ -117,6 +122,7 @@ report = hardening.get_validation_report()
 ```
 
 **Features**:
+
 - Virtualenv detection
 - sys.path security validation
 - ASLR/SSP verification (Linux/Windows/macOS)
@@ -142,6 +148,7 @@ is_poisoned, patterns = defense.check_for_poison(user_input)
 ```
 
 **Protections**:
+
 - XXE (XML External Entity) prevention
 - DTD blocking
 - CSV formula injection detection
@@ -175,6 +182,7 @@ creds = aws.get_temporary_credentials("role-arn", "session-name")
 ```
 
 **Features**:
+
 - IAM role-based authentication (no static credentials)
 - Secrets Manager integration
 - S3 encryption (AES-256)
@@ -214,6 +222,7 @@ test_cases = fuzzer.fuzz_input("boundary_values", base_input)
 ```
 
 **Features**:
+
 - Thread-safe state encapsulation
 - Access control (read/write/execute)
 - Audit logging for all state access
@@ -254,6 +263,7 @@ with db.transaction() as conn:
 ```
 
 **Features**:
+
 - Parameterized queries (SQL injection prevention)
 - Query validation (dangerous pattern detection)
 - Transaction management with rollback
@@ -294,6 +304,7 @@ stats = monitor.get_event_statistics(time_window=3600)
 ```
 
 **Features**:
+
 - AWS CloudWatch integration (metrics)
 - AWS SNS integration (alerting)
 - Structured event logging
@@ -349,6 +360,7 @@ if validator.validate_input(user_input, "application/json"):
 ```
 
 **Features**:
+
 - SOAP over HTTP client
 - SOAP envelope validation
 - WS-Security authentication
@@ -408,6 +420,7 @@ pytest tests/test_security*.py -n auto
 ## 🔒 Attack Vectors Blocked
 
 ### Injection Attacks
+
 - ✅ SQL Injection (`' OR '1'='1`, `UNION SELECT`, `DROP TABLE`)
 - ✅ XXE (XML External Entity)
 - ✅ XSS (10+ variants including script, img, svg, iframe, event handlers)
@@ -416,11 +429,13 @@ pytest tests/test_security*.py -n auto
 - ✅ CRLF Injection (`%0d%0a`)
 
 ### Traversal & Access
+
 - ✅ Path Traversal (`../../`, `..\\`, URL-encoded)
 - ✅ Privilege Escalation (capability-based access control)
 - ✅ Rate Limiting Bypass (token bucket algorithm)
 
 ### Data Attacks
+
 - ✅ Data Poisoning (signature-based detection)
 - ✅ Numerical Overflow (bounds checking, clipping)
 - ✅ Adversarial ML Inputs (outlier removal, validation)
@@ -428,14 +443,17 @@ pytest tests/test_security*.py -n auto
 ## 📚 Documentation
 
 ### Core Documentation
+
 - **[SECURITY_FRAMEWORK.md](SECURITY_FRAMEWORK.md)** - Complete API reference with examples
 - **[DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)** - Step-by-step deployment procedures
 - **[SECURITY_QUICKREF.md](SECURITY_QUICKREF.md)** - Quick reference guide
 
 ### Examples
+
 - **[security_integration.py](../examples/security_integration.py)** - Complete working integration
 
 ### Additional Resources
+
 - **Tests** - See `tests/test_security*.py` for usage examples
 - **Standards** - OWASP, NIST, CERT compliance documentation
 
@@ -502,11 +520,12 @@ MAX_UPLOAD_SIZE=104857600  # 100MB
 ```
 
 **⚠️ CREDENTIAL SECURITY REQUIREMENTS:**
+
 1. **Generate NEW credentials** - never copy from documentation examples
-2. Store `.env` file locally only - verify it's in `.gitignore`
-3. Use secrets managers (AWS Secrets Manager, Azure Key Vault) in production
-4. Rotate credentials every 90 days minimum
-5. If credentials are exposed, rotate immediately and purge git history
+1. Store `.env` file locally only - verify it's in `.gitignore`
+1. Use secrets managers (AWS Secrets Manager, Azure Key Vault) in production
+1. Rotate credentials every 90 days minimum
+1. If credentials are exposed, rotate immediately and purge git history
 
 ## 🐛 Troubleshooting
 
@@ -542,9 +561,9 @@ chmod 600 data/*.db
 ## 🤝 Contributing
 
 1. Run tests: `pytest tests/test_security*.py -v`
-2. Check code style: `ruff check src/app/security/`
-3. Update documentation as needed
-4. Add tests for new features
+1. Check code style: `ruff check src/app/security/`
+1. Update documentation as needed
+1. Add tests for new features
 
 ## 📄 License
 

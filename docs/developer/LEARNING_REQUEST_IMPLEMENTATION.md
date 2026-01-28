@@ -22,7 +22,7 @@ with subliminal filtering to prevent re-discovery.
    - Subliminal filtering mechanism
    - Auto-integration with Memory Expansion System
 
-2. **`src/app/gui/learning_request_ui.py`** (466 lines)
+1. **`src/app/gui/learning_request_ui.py`** (466 lines)
    - LearningRequestDialog for managing pending requests
    - BlackVaultViewDialog for auditing denied content
    - Real-time statistics display
@@ -30,7 +30,7 @@ with subliminal filtering to prevent re-discovery.
    - Approve/deny confirmation dialogs
    - Detailed request information display
 
-3. **`LEARNING_REQUEST_LOG.md`** (590 lines)
+1. **`LEARNING_REQUEST_LOG.md`** (590 lines)
    - Comprehensive documentation
    - Architecture overview
    - Usage guide for users and AI
@@ -49,7 +49,7 @@ with subliminal filtering to prevent re-discovery.
    - Added "📋 Learning Requests" toolbar button
    - Added `open_learning_request_dialog()` method
 
-2. **`README.md`**
+1. **`README.md`**
    - Added Learning Request Log to features list
    - Added documentation reference
 
@@ -114,20 +114,24 @@ data/
 ### Access Control
 
 **for_ai Parameter Pattern**:
+
 - `for_ai=True` (default): AI perspective - pending requests hidden
 - `for_ai=False`: User perspective - all requests visible
 
 **Directory Markers**:
+
 - `.aiignore` files mark AI-restricted directories
 - Security enforced at API level
 
 ### Content Fingerprinting
 
 **Dual Hashing**:
+
 1. Full content hash (exact match)
-2. Normalized hash (case/whitespace insensitive)
+1. Normalized hash (case/whitespace insensitive)
 
 **Prevents**:
+
 - Re-submission of denied content
 - Re-discovery with minor formatting changes
 - Bypass attempts
@@ -135,11 +139,12 @@ data/
 ### Subliminal Filtering
 
 **Mechanism**:
+
 1. AI checks `is_content_relevant(content, for_ai=True)`
-2. System generates content fingerprint
-3. Checks against Black Vault fingerprints
-4. Returns `False` if match (appears irrelevant to AI)
-5. AI naturally ignores it
+1. System generates content fingerprint
+1. Checks against Black Vault fingerprints
+1. Returns `False` if match (appears irrelevant to AI)
+1. AI naturally ignores it
 
 **Result**: AI doesn't know content is specifically blocked
 
@@ -185,20 +190,20 @@ stats = log.get_statistics()
    - `.aiignore` markers
    - AI cannot read pending/vault directories
 
-2. **API Parameter Enforcement**
+1. **API Parameter Enforcement**
    - `for_ai` boolean throughout API
    - Different results for AI vs User
 
-3. **Content Fingerprinting**
+1. **Content Fingerprinting**
    - SHA256 full + normalized
    - Prevents re-discovery
 
-4. **Subliminal Filtering**
+1. **Subliminal Filtering**
    - Blacklisted content returns False
    - Appears irrelevant to AI
    - No explicit blocking notification
 
-5. **Index Filtering**
+1. **Index Filtering**
    - Request index hides denied entries from AI
    - Fast lookups without exposing data
 
@@ -327,48 +332,48 @@ print(f"Black Vault: {stats['black_vault_items']}")
 ### For Users
 
 1. ✅ Review justification carefully before approving
-2. ✅ Use deny wisely (it's permanent)
-3. ✅ Verify source credibility
-4. ✅ Monitor statistics regularly
-5. ✅ Audit Black Vault periodically
+1. ✅ Use deny wisely (it's permanent)
+1. ✅ Verify source credibility
+1. ✅ Monitor statistics regularly
+1. ✅ Audit Black Vault periodically
 
 ### For AI/Plugins
 
 1. ✅ Always provide meaningful justification
-2. ✅ Use priority levels correctly
-3. ✅ Tag appropriately for organization
-4. ✅ Check relevance before submitting
-5. ✅ Respect None returns (don't retry)
+1. ✅ Use priority levels correctly
+1. ✅ Tag appropriately for organization
+1. ✅ Check relevance before submitting
+1. ✅ Respect None returns (don't retry)
 
 ### For Developers
 
 1. ✅ Always use `for_ai` parameter correctly
-2. ✅ Check return values before proceeding
-3. ✅ Never bypass Black Vault security
-4. ✅ Follow API patterns (don't access files directly)
-5. ✅ Test fingerprinting for edge cases
+1. ✅ Check return values before proceeding
+1. ✅ Never bypass Black Vault security
+1. ✅ Follow API patterns (don't access files directly)
+1. ✅ Test fingerprinting for edge cases
 
 ## Known Limitations
 
 ### Current
 
 1. **No Bulk Operations**: Can only approve/deny one at a time
-2. **No Auto-Approval Rules**: All requests require manual review
-3. **No Request Expiration**: Old requests stay pending forever
-4. **No Similarity Detection**: Can't suggest related approved content
+1. **No Auto-Approval Rules**: All requests require manual review
+1. **No Request Expiration**: Old requests stay pending forever
+1. **No Similarity Detection**: Can't suggest related approved content
 
 ### Future Enhancements
 
 Potential improvements:
 
 1. Bulk approve/deny functionality
-2. User-defined auto-approval rules
-3. Request expiration and archival
-4. Learning analytics and visualization
-5. Content similarity suggestions
-6. Priority-based auto-sorting
-7. Collaborative filtering based on approval patterns
-8. Request templates for common types
+1. User-defined auto-approval rules
+1. Request expiration and archival
+1. Learning analytics and visualization
+1. Content similarity suggestions
+1. Priority-based auto-sorting
+1. Collaborative filtering based on approval patterns
+1. Request templates for common types
 
 ## Documentation
 
@@ -411,10 +416,10 @@ re-discovery.
 System is ready for immediate use! Recommended actions:
 
 1. ✅ Start using the system - click "📋 Learning Requests" in toolbar
-2. ✅ Allow AI to submit learning requests during operation
-3. ✅ Review and approve/deny requests as they come in
-4. ✅ Monitor statistics to track learning patterns
-5. ✅ Audit Black Vault periodically
+1. ✅ Allow AI to submit learning requests during operation
+1. ✅ Review and approve/deny requests as they come in
+1. ✅ Monitor statistics to track learning patterns
+1. ✅ Audit Black Vault periodically
 
 For additional features or enhancements, see the "Future Enhancements" section in
 LEARNING_REQUEST_LOG.md.

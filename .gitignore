@@ -125,3 +125,44 @@ captures/
 config/temporal/*.local
 data/temporal/
 actionlint*
+
+# Unity
+unity/Library/
+unity/Temp/
+unity/Obj/
+unity/Build/
+unity/Builds/
+unity/Logs/
+unity/MemoryCaptures/
+unity/UserSettings/
+unity/**/*.csproj
+unity/**/*.unityproj
+unity/**/*.sln
+unity/**/*.suo
+unity/**/*.tmp
+unity/**/*.user
+unity/**/*.userprefs
+unity/**/*.pidb
+unity/**/*.booproj
+unity/**/*.svd
+unity/**/*.pdb
+unity/**/*.mdb
+unity/**/*.opendb
+unity/**/*.VC.db
+
+# Unity3D generated meta files
+unity/**/*.pidb.meta
+unity/**/*.pdb.meta
+unity/**/*.mdb.meta
+
+# Unity3D generated file on crash reports
+unity/sysinfo.txt
+
+# Keep StreamingAssets files
+!unity/StreamingAssets/
+!unity/StreamingAssets/**
+
+# Antigravity IDE artifacts
+.antigravity/artifacts/
+.antigravity/.cache/
+.antigravity/logs/

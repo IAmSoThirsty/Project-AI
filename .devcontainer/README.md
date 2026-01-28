@@ -23,29 +23,32 @@ This directory contains the GitHub Codespaces and VS Code Dev Containers configu
 ### GitHub Codespaces
 
 1. Navigate to the repository on GitHub
-2. Click the "Code" button
-3. Select "Create codespace on main"
-4. Wait for the environment to build (first time takes ~5 minutes)
+1. Click the "Code" button
+1. Select "Create codespace on main"
+1. Wait for the environment to build (first time takes ~5 minutes)
 
 ### VS Code Dev Containers
 
 1. Install the "Dev Containers" extension in VS Code
-2. Open the project folder
-3. Press F1 and select "Dev Containers: Reopen in Container"
-4. Wait for the environment to build
+1. Open the project folder
+1. Press F1 and select "Dev Containers: Reopen in Container"
+1. Wait for the environment to build
 
 ## Post-Setup
 
 After the container is created:
 
 1. Copy `.env.example` to `.env` (done automatically)
-2. Add your API keys to `.env`:
+1. Add your API keys to `.env`:
+
    ```bash
    OPENAI_API_KEY=sk-...
    HUGGINGFACE_API_KEY=hf_...
    FERNET_KEY=<generated_key>
    ```
-3. Generate a Fernet key if needed:
+
+1. Generate a Fernet key if needed:
+
    ```bash
    python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
    ```
@@ -86,8 +89,8 @@ You can customize the devcontainer by modifying `devcontainer.json`:
 If the container fails to build:
 
 1. Check your internet connection
-2. Try rebuilding: F1 → "Dev Containers: Rebuild Container"
-3. Check the build logs for specific errors
+1. Try rebuilding: F1 → "Dev Containers: Rebuild Container"
+1. Check the build logs for specific errors
 
 ### Missing Dependencies
 

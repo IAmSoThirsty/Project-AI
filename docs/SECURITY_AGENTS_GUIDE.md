@@ -13,12 +13,14 @@ Project-AI now includes four advanced security and testing agents that integrate
 **Based on**: Nous-Capybara-34B-200k architecture
 
 **Key Features**:
+
 - Extended context support (up to 200k tokens)
 - Large document analysis
 - Context compression and management
 - Multi-document reasoning
 
 **Use Cases**:
+
 - Extended conversation history analysis
 - Large policy document processing
 - Knowledge base consultation
@@ -29,6 +31,7 @@ Project-AI now includes four advanced security and testing agents that integrate
 **Purpose**: Content moderation and jailbreak detection using Llama-Guard-3-8B.
 
 **Key Features**:
+
 - Pre-processing prompt filtering
 - Post-processing response filtering
 - Jailbreak attempt detection
@@ -37,6 +40,7 @@ Project-AI now includes four advanced security and testing agents that integrate
 - Manipulation pattern detection
 
 **Use Cases**:
+
 - Input validation before LLM processing
 - Output validation before user display
 - Real-time safety monitoring
@@ -47,12 +51,14 @@ Project-AI now includes four advanced security and testing agents that integrate
 **Purpose**: Systematic jailbreak testing using standardized benchmarks.
 
 **Key Features**:
+
 - Standardized attack scenarios
 - Defense strength evaluation
 - Attack category coverage
 - Comprehensive reporting
 
 **Use Cases**:
+
 - Regular security testing
 - Defense capability assessment
 - Vulnerability discovery
@@ -63,12 +69,14 @@ Project-AI now includes four advanced security and testing agents that integrate
 **Purpose**: Automated adversarial testing using ARTKIT framework.
 
 **Key Features**:
+
 - Multi-turn attack conversations
 - Adaptive strategy selection
 - Vulnerability discovery
 - Session-based testing
 
 **Use Cases**:
+
 - Adversarial testing
 - Agent vulnerability analysis
 - Security posture assessment
@@ -92,7 +100,7 @@ SAFETY_MODEL_API_ENDPOINT=https://api.example.com/v1/safety
 SAFETY_MODEL_API_KEY=your_api_key_here
 ```
 
-2. **Agent Access via CouncilHub**
+1. **Agent Access via CouncilHub**
 
 All agents are automatically registered with the CouncilHub when you initialize Project-AI:
 
@@ -284,9 +292,9 @@ else:
 ### Security Testing Schedule
 
 1. **Daily**: SafetyGuard monitoring on all user interactions
-2. **Weekly**: JailbreakBench automated tests
-3. **Monthly**: Red team adversarial sessions
-4. **Quarterly**: Comprehensive security review
+1. **Weekly**: JailbreakBench automated tests
+1. **Monthly**: Red team adversarial sessions
+1. **Quarterly**: Comprehensive security review
 
 ### Configuration Recommendations
 
@@ -320,22 +328,26 @@ if stats['jailbreak_rate'] > 0.05:  # 5% jailbreaks
 ## Performance Considerations
 
 ### LongContextAgent
+
 - **Context window**: Up to 200k tokens
 - **Latency**: Scales with context size
 - **Memory**: ~4-8GB for full context
 - **Recommendation**: Use context compression for efficiency
 
 ### SafetyGuardAgent
+
 - **Latency**: <100ms per check
 - **Memory**: ~2GB for model
 - **Recommendation**: Cache common patterns
 
 ### JailbreakBenchAgent
+
 - **Test time**: 1-5 seconds per test
 - **Total benchmark**: 5-10 minutes for 50 tests
 - **Recommendation**: Run during off-peak hours
 
 ### RedTeamAgent
+
 - **Session time**: 30-300 seconds (depends on turns)
 - **Memory**: Minimal (<1GB)
 - **Recommendation**: Parallelize multiple sessions
@@ -374,6 +386,7 @@ print(result)
 ## API Reference
 
 See individual agent files for detailed API documentation:
+
 - `src/app/agents/long_context_agent.py`
 - `src/app/agents/safety_guard_agent.py`
 - `src/app/agents/jailbreak_bench_agent.py`
@@ -382,10 +395,11 @@ See individual agent files for detailed API documentation:
 ## Support
 
 For issues or questions:
+
 1. Check logs in `logs/` directory
-2. Review TRIUMVIRATE_INTEGRATION.md
-3. See examples in `examples/` directory
-4. File an issue on GitHub
+1. Review TRIUMVIRATE_INTEGRATION.md
+1. See examples in `examples/` directory
+1. File an issue on GitHub
 
 ## Version History
 

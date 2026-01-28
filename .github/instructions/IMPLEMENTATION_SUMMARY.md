@@ -16,7 +16,7 @@
    - Deployment workflows (desktop and web)
    - Environment setup guide
 
-2. **`.github/instructions/ARCHITECTURE_QUICK_REF.md`** (264 lines)
+1. **`.github/instructions/ARCHITECTURE_QUICK_REF.md`** (264 lines)
    - Visual system architecture diagram
    - Data flow patterns with ASCII diagrams
    - User action → AI response flow
@@ -28,7 +28,7 @@
    - Security layers diagram
    - Documentation hierarchy
 
-3. **`.github/instructions/README.md`** (96 lines)
+1. **`.github/instructions/README.md`** (96 lines)
    - Index of all instruction files
    - Quick navigation by task table
    - Usage guide for AI agents and developers
@@ -43,27 +43,32 @@
 ## 🎯 Key Improvements Integrated
 
 ### 1. Plugin System Clarification ✅
+
 - **Found**: PluginManager is in `ai_systems.py` (lines 340-395)
 - **Clarified**: Simple enable/disable system, NOT the complex 8-hook system initially described
 - **Distinguished**: AI Agents (4 specialized modules) vs Plugins (simple extensions)
 
 ### 2. Cloud Sync Note ✅
+
 - **Status**: Feature mentioned in README but implementation files not found
 - **Action**: Removed from main instructions to avoid confusion
 - **Future**: Can be added when implemented
 
 ### 3. Web Version Context Switching ✅
+
 - **Added**: Clear separation of desktop vs web development
 - **Commands**: Specific launch commands for each context
 - **Note**: Web version is in development, desktop is production-ready
 
 ### 4. Testing Patterns Expanded ✅
+
 - **Pattern**: `tempfile.TemporaryDirectory()` context manager
 - **Coverage**: 14 tests across 6 systems documented
 - **Matrix**: Test coverage table showing Init/State/Persist for each system
 - **Fixtures**: Example pytest fixture pattern included
 
 ### 5. Production Deployment Workflows ✅
+
 - **Desktop**: Windows launch scripts (`.bat` and `.ps1`)
 - **Docker**: Multi-stage build details (builder + runtime)
 - **Web**: Docker Compose with PostgreSQL
@@ -94,6 +99,7 @@
 ## 🔍 Content Highlights
 
 ### Architecture Coverage
+
 - ✅ 10 core business logic modules mapped
 - ✅ 6 AI systems explained (FourLaws, Persona, Memory, Learning, Override, Plugin)
 - ✅ 4 AI agents detailed (oversight, planner, validator, explainability)
@@ -101,6 +107,7 @@
 - ✅ Data persistence pattern with file locations
 
 ### Development Workflows
+
 - ✅ Module import pattern (`python -m src.app.main`)
 - ✅ Testing with isolated data directories
 - ✅ PyQt6 threading best practices
@@ -108,6 +115,7 @@
 - ✅ Password security patterns (bcrypt vs SHA-256)
 
 ### Visual Diagrams
+
 - ✅ System overview (UI → Core → Agents → Data)
 - ✅ User action data flow
 - ✅ Learning request workflow (approve/deny paths)
@@ -115,6 +123,7 @@
 - ✅ Documentation hierarchy
 
 ### Integration Guidance
+
 - ✅ OpenAI API setup with environment variables
 - ✅ PyQt6 signal/slot pattern examples
 - ✅ Agent vs Plugin distinction
@@ -123,32 +132,36 @@
 ## 🎓 What AI Agents Now Know
 
 ### Immediate Productivity
+
 1. **How to run the app**: `python -m src.app.main`
-2. **Where to find core logic**: `src/app/core/ai_systems.py` (6 systems in one file)
-3. **Data persistence**: JSON files in `data/` directory with `_save_state()` pattern
-4. **Testing pattern**: Use `tempfile.TemporaryDirectory()` for isolation
+1. **Where to find core logic**: `src/app/core/ai_systems.py` (6 systems in one file)
+1. **Data persistence**: JSON files in `data/` directory with `_save_state()` pattern
+1. **Testing pattern**: Use `tempfile.TemporaryDirectory()` for isolation
 
 ### Architecture Understanding
+
 1. **Six Core Systems**: FourLaws, AIPersona, Memory, Learning, Override, Plugin
-2. **Data Flow**: User → Dashboard → FourLaws → Core Module → Persistence
-3. **Learning Workflow**: AI request → Human approval → Memory or Black Vault
-4. **Security Layers**: 5 levels from ethics to encryption
+1. **Data Flow**: User → Dashboard → FourLaws → Core Module → Persistence
+1. **Learning Workflow**: AI request → Human approval → Memory or Black Vault
+1. **Security Layers**: 5 levels from ethics to encryption
 
 ### Common Pitfalls Avoided
+
 1. ❌ Using `python src/app/main.py` (breaks imports)
-2. ❌ Forgetting `_save_state()` after modifications
-3. ❌ Using `threading.Thread` in PyQt6 GUI
-4. ❌ Not checking Black Vault before learning
-5. ❌ Skipping Codacy analysis after edits
-6. ❌ Mixing up Agents vs Plugins
-7. ❌ Forgetting `os.makedirs(data_dir, exist_ok=True)`
+1. ❌ Forgetting `_save_state()` after modifications
+1. ❌ Using `threading.Thread` in PyQt6 GUI
+1. ❌ Not checking Black Vault before learning
+1. ❌ Skipping Codacy analysis after edits
+1. ❌ Mixing up Agents vs Plugins
+1. ❌ Forgetting `os.makedirs(data_dir, exist_ok=True)`
 
 ### Project-Specific Patterns
+
 1. **Ethics First**: All actions validated through `FourLaws.validate_action()`
-2. **Personality Tracking**: AIPersona updates on every interaction
-3. **Human Oversight**: Learning requests require approval
-4. **Audit Everything**: Command overrides logged with timestamps
-5. **Isolated Testing**: Every system accepts `data_dir` parameter
+1. **Personality Tracking**: AIPersona updates on every interaction
+1. **Human Oversight**: Learning requests require approval
+1. **Audit Everything**: Command overrides logged with timestamps
+1. **Isolated Testing**: Every system accepts `data_dir` parameter
 
 ## 🚀 Quick Start for AI Agents
 
@@ -172,11 +185,13 @@ os.system("pytest -v")
 ## 📚 Documentation Links
 
 ### For Quick Reference
+
 - Architecture diagrams: `.github/instructions/ARCHITECTURE_QUICK_REF.md`
 - Navigation guide: `.github/instructions/README.md`
 - Main instructions: `.github/copilot-instructions.md`
 
 ### For Deep Dives
+
 - Complete architecture: `PROGRAM_SUMMARY.md` (600+ lines)
 - GUI components: `DEVELOPER_QUICK_REFERENCE.md`
 - Persona system: `AI_PERSONA_IMPLEMENTATION.md`
@@ -186,6 +201,7 @@ os.system("pytest -v")
 ## ✨ Benefits Delivered
 
 ### For AI Coding Agents
+
 - ✅ Immediate understanding of project structure
 - ✅ Clear patterns for common tasks
 - ✅ Visual diagrams for system comprehension
@@ -193,6 +209,7 @@ os.system("pytest -v")
 - ✅ Testing patterns for safe changes
 
 ### For Human Developers
+
 - ✅ Onboarding guide for new team members
 - ✅ Quick reference for common workflows
 - ✅ Architecture visualization for planning
@@ -200,6 +217,7 @@ os.system("pytest -v")
 - ✅ Integration examples
 
 ### For Project Maintenance
+
 - ✅ Centralized knowledge base
 - ✅ Consistent coding patterns enforced
 - ✅ Quality gates (Codacy) integrated
@@ -211,13 +229,14 @@ os.system("pytest -v")
 ## 🎉 Implementation Status: COMPLETE
 
 All refinement suggestions have been integrated:
+
 1. ✅ Plugin system clarified (simple enable/disable in ai_systems.py)
-2. ✅ Cloud sync status noted (not yet implemented)
-3. ✅ Web version context switching added
-4. ✅ Testing patterns expanded with matrix
-5. ✅ Production deployment workflows added
-6. ✅ Visual architecture diagrams created
-7. ✅ Navigation index for easy discovery
+1. ✅ Cloud sync status noted (not yet implemented)
+1. ✅ Web version context switching added
+1. ✅ Testing patterns expanded with matrix
+1. ✅ Production deployment workflows added
+1. ✅ Visual architecture diagrams created
+1. ✅ Navigation index for easy discovery
 
 **Last Updated**: November 29, 2025  
 **Status**: Production Ready  

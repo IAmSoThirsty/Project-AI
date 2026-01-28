@@ -7,4 +7,4 @@ for security agent findings.
 
 from .sarif_generator import SARIFGenerator
 
-__all__ = ['SARIFGenerator']
+__all__ = ["SARIFGenerator"]

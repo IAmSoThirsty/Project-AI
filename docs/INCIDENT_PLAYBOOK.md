@@ -9,16 +9,19 @@
 ## Immediate Actions (0–15 minutes)
 
 ### Detect
+
 - Alert fires from monitoring or Triumvirate veto
 - Automated detection via SecurityMetricsCollector
 - Manual report from security team or user
 
 ### Triage Lead Assignment
+
 - **Primary**: GALAHAD (relationship and safety)
 - **Backup**: CERBERUS (security and risk)
 - On-call rotation: See `.github/CODEOWNERS`
 
 ### Contain
+
 Execute automated containment:
 ```bash
 # Execute rollback to last safe snapshot
@@ -32,6 +35,7 @@ Execute automated containment:
 ```
 
 ### Snapshot
+
 Create immutable forensic snapshot:
 ```bash
 # Create forensic snapshot with tamperproof metadata
@@ -45,6 +49,7 @@ python scripts/create_forensic_snapshot.py \
 ```
 
 Snapshot includes:
+
 - Model states and configurations
 - Complete log files (last 24 hours)
 - Agent memory and state
@@ -56,6 +61,7 @@ Snapshot includes:
 ## Short Term (15–90 minutes)
 
 ### Assess
+
 Run reproducibility test in isolated staging:
 ```python
 from src.app.incident.reproducer import IncidentReproducer
@@ -71,6 +77,7 @@ severity = classify_severity(result)
 ```
 
 ### Communicate
+
 Post initial incident note using template:
 ```
 🚨 INCIDENT: [Critical] Jailbreak success on flow X
@@ -100,6 +107,7 @@ Artifacts:
 ```
 
 ### Block
+
 For critical incidents:
 ```bash
 # Block merges and deployments
@@ -117,6 +125,7 @@ python scripts/disable_auto_merge.py --agent code_adversary --reason incident
 ## Containment and Remediation (90 minutes–24 hours)
 
 ### Root Cause
+
 Reproduce attack vector with RedTeam + CodeAdversary:
 ```python
 from src.app.agents.red_team_persona_agent import RedTeamPersonaAgent
@@ -143,6 +152,7 @@ vulns = code_adversary.find_vulnerabilities_related_to(
 ```
 
 ### Mitigate
+
 Apply emergency patch in staging:
 ```bash
 # Apply emergency patch
@@ -162,6 +172,7 @@ python scripts/run_red_team_campaign.py \
 ```
 
 ### Validate
+
 Triumvirate performs manual review:
 ```python
 from src.app.core.council_hub import CouncilHub
@@ -194,6 +205,7 @@ if review["approved"]:
 ## Recovery and Postmortem (24–72 hours)
 
 ### Restore
+
 Gradual canary re-enable:
 ```python
 from src.app.deployment.canary import CanaryDeployment
@@ -222,6 +234,7 @@ canary.rollback_if(
 ```
 
 ### Postmortem
+
 Produce comprehensive postmortem document:
 
 **Template**: `docs/postmortems/INC-${INCIDENT_ID}.md`
@@ -275,6 +288,7 @@ encoded payloads.
 ```
 
 ### Follow Up
+
 ```bash
 # Add detection patterns to SafetyGuard
 python scripts/update_safety_patterns.py \
@@ -295,6 +309,7 @@ python scripts/schedule_regression_campaign.py \
 ## Roles and Escalation
 
 ### Triumvirate Roles
+
 - **GALAHAD**: Incident commander for detection and containment
   - Responsible for: Initial triage, user impact assessment, containment decisions
   - Escalation: Immediately notify if user data at risk
@@ -308,20 +323,23 @@ python scripts/schedule_regression_campaign.py \
   - Escalation: Immediately notify if architectural change required
 
 ### External Escalation
+
 **Requires Triumvirate approval for public disclosure**
 
 Escalation ladder:
+
 1. Internal security team (immediate)
-2. Engineering leadership (within 1 hour)
-3. Legal team (within 4 hours if data breach suspected)
-4. PR/Communications (within 24 hours if public disclosure needed)
-5. External authorities (only after legal review)
+1. Engineering leadership (within 1 hour)
+1. Legal team (within 4 hours if data breach suspected)
+1. PR/Communications (within 24 hours if public disclosure needed)
+1. External authorities (only after legal review)
 
 ---
 
 ## Playbook Triggers and Criteria
 
 ### Auto-Trigger Conditions
+
 ```python
 # In AlertManager rules
 auto_trigger_incident_if(
@@ -340,6 +358,7 @@ auto_trigger_incident_if(
 ```
 
 ### Manual Trigger Criteria
+
 - Any credible report of sensitive data leakage
 - Model producing harmful instructions (verified)
 - Systematic bypass of safety guardrails
@@ -351,6 +370,7 @@ auto_trigger_incident_if(
 ## Quick Reference Commands
 
 ### Immediate Response
+
 ```bash
 # 1. Check incident status
 python scripts/incident_status.py --incident-id ${INCIDENT_ID}
@@ -366,6 +386,7 @@ python scripts/reproduce_incident.py --snapshot-id ${SNAPSHOT_ID}
 ```
 
 ### Monitoring
+
 ```bash
 # Check current metrics
 curl http://localhost:9090/metrics | grep security_
@@ -378,6 +399,7 @@ python scripts/triumvirate_status.py --incident-id ${INCIDENT_ID}
 ```
 
 ### Recovery
+
 ```bash
 # Start canary deployment
 python scripts/canary_deploy.py --patch-id ${PATCH_ID}

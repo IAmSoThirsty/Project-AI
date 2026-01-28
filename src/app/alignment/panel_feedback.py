@@ -78,7 +78,7 @@ class PanelFeedback:
             True if registered successfully, False otherwise
         """
         if stakeholder_id in self.stakeholders:
-            logger.warning(f"Stakeholder already registered: {stakeholder_id}")
+            logger.warning("Stakeholder already registered: %s", stakeholder_id)
             return False
 
         self.stakeholders[stakeholder_id] = {
@@ -89,7 +89,7 @@ class PanelFeedback:
             "registered_at": datetime.now().isoformat(),
         }
 
-        logger.info(f"Registered stakeholder: {name} ({role})")
+        logger.info("Registered stakeholder: %s (%s)", name, role)
         return True
 
     def submit_decision_for_feedback(
@@ -126,7 +126,7 @@ class PanelFeedback:
         self.votes[decision_id] = []
         self.annotations[decision_id] = []
 
-        logger.info(f"Submitted decision for feedback: {decision_id}")
+        logger.info("Submitted decision for feedback: %s", decision_id)
         return decision_id
 
     def submit_vote(
@@ -154,11 +154,11 @@ class PanelFeedback:
             True if vote recorded successfully, False otherwise
         """
         if decision_id not in self.decisions:
-            logger.error(f"Decision not found: {decision_id}")
+            logger.error("Decision not found: %s", decision_id)
             return False
 
         if stakeholder_id not in self.stakeholders:
-            logger.error(f"Stakeholder not registered: {stakeholder_id}")
+            logger.error("Stakeholder not registered: %s", stakeholder_id)
             return False
 
         vote_record = {
@@ -169,7 +169,9 @@ class PanelFeedback:
         }
 
         self.votes[decision_id].append(vote_record)
-        logger.debug(f"Recorded vote from {stakeholder_id} on {decision_id}: {vote}")
+        logger.debug(
+            "Recorded vote from %s on %s: %s", stakeholder_id, decision_id, vote
+        )
 
         return True
 
@@ -198,11 +200,11 @@ class PanelFeedback:
             True if annotation added successfully, False otherwise
         """
         if decision_id not in self.decisions:
-            logger.error(f"Decision not found: {decision_id}")
+            logger.error("Decision not found: %s", decision_id)
             return False
 
         if stakeholder_id not in self.stakeholders:
-            logger.error(f"Stakeholder not registered: {stakeholder_id}")
+            logger.error("Stakeholder not registered: %s", stakeholder_id)
             return False
 
         annotation_record = {
@@ -213,7 +215,7 @@ class PanelFeedback:
         }
 
         self.annotations[decision_id].append(annotation_record)
-        logger.debug(f"Added annotation from {stakeholder_id} on {decision_id}")
+        logger.debug("Added annotation from %s on %s", stakeholder_id, decision_id)
 
         return True
 

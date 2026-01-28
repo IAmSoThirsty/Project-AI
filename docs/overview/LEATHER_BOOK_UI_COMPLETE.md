@@ -105,11 +105,11 @@ Updated application entry point:
 ### Data Flow
 
 1. User logs in via LeatherBookInterface (right page)
-2. `switch_to_main_dashboard()` called
-3. LeatherBookDashboard instantiated and displayed on right page
-4. Left page (Tron face) remains constant throughout session
-5. User can chat with AI through bottom-left input
-6. AI responses displayed in bottom-right panel
+1. `switch_to_main_dashboard()` called
+1. LeatherBookDashboard instantiated and displayed on right page
+1. Left page (Tron face) remains constant throughout session
+1. User can chat with AI through bottom-left input
+1. AI responses displayed in bottom-right panel
 
 ## Dependencies
 
@@ -161,12 +161,12 @@ app.exec()
 ## Next Steps (Optional Enhancements)
 
 1. **AI Integration**: Connect send_message signal to actual AI backend
-2. **Asset Loading**: Load leather.svg and parchment.svg for texture backgrounds
-3. **3D Visualization**: Upgrade face rendering with OpenGL or PyQtGraph
-4. **Database Connection**: Link stats to actual system monitoring
-5. **User Profiles**: Store user-specific layouts and preferences
-6. **Persistence**: Save chat history to database
-7. **Audio**: Add sound effects for Tron theme (beeps, sci-fi sounds)
+1. **Asset Loading**: Load leather.svg and parchment.svg for texture backgrounds
+1. **3D Visualization**: Upgrade face rendering with OpenGL or PyQtGraph
+1. **Database Connection**: Link stats to actual system monitoring
+1. **User Profiles**: Store user-specific layouts and preferences
+1. **Persistence**: Save chat history to database
+1. **Audio**: Add sound effects for Tron theme (beeps, sci-fi sounds)
 
 ## Testing Notes
 

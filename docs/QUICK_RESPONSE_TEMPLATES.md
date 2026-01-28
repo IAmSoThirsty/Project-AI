@@ -384,6 +384,7 @@ Deliverables:
 ## Copy-Paste Command Reference
 
 ### Immediate Response Commands
+
 ```bash
 # Check incident status
 python scripts/incident_status.py --incident-id ${INCIDENT_ID}
@@ -399,6 +400,7 @@ python scripts/reproduce_incident.py --snapshot-id ${SNAPSHOT_ID}
 ```
 
 ### Investigation Commands
+
 ```bash
 # Check current metrics
 curl http://localhost:9090/metrics | grep security_
@@ -414,6 +416,7 @@ python scripts/analyze_attack.py --transcript ${TRANSCRIPT_ID}
 ```
 
 ### Recovery Commands
+
 ```bash
 # Start canary deployment
 python scripts/canary_deploy.py --patch-id ${PATCH_ID}

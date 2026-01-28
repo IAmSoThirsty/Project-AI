@@ -30,10 +30,10 @@ npm test
 ### Method 2: Direct Download
 
 1. Download the repository as a ZIP file from GitHub
-2. Extract to your desired location
-3. Open terminal in the extracted folder
-4. Run `npm install`
-5. Run `npm test` to verify
+1. Extract to your desired location
+1. Open terminal in the extracted folder
+1. Run `npm install`
+1. Run `npm test` to verify
 
 ## Installing the CLI Globally (Optional)
 
@@ -85,12 +85,12 @@ thirsty run src/main.thirsty
 ## Installing the VS Code Extension
 
 1. Open VS Code
-2. Copy `.vscode/extensions/thirsty-lang` to your VS Code extensions folder:
+1. Copy `.vscode/extensions/thirsty-lang` to your VS Code extensions folder:
    - **Windows**: `%USERPROFILE%\.vscode\extensions\`
    - **macOS**: `~/.vscode/extensions/`
    - **Linux**: `~/.vscode/extensions/`
-3. Reload VS Code
-4. Open any `.thirsty` file to see syntax highlighting!
+1. Reload VS Code
+1. Open any `.thirsty` file to see syntax highlighting!
 
 ## Troubleshooting
 
@@ -140,10 +140,10 @@ chmod +x src/*.js
 After installation:
 
 1. 🎓 **Start learning**: Run `npm run train` for interactive lessons
-2. 🔍 **Explore examples**: Check out the `examples/` directory
-3. 📚 **Read docs**: Browse the `docs/` directory
-4. 🎮 **Try the playground**: Open `playground/index.html` in a browser
-5. 💻 **Start coding**: Create your first Thirsty-lang program!
+1. 🔍 **Explore examples**: Check out the `examples/` directory
+1. 📚 **Read docs**: Browse the `docs/` directory
+1. 🎮 **Try the playground**: Open `playground/index.html` in a browser
+1. 💻 **Start coding**: Create your first Thirsty-lang program!
 
 ## Getting Help
 

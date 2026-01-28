@@ -341,7 +341,7 @@ class BindsNetRLAgent:
             weights[conn_name] = conn.w.data.clone()
 
         torch.save(weights, path)
-        logger.info(f"BindsNet weights saved to {path}")
+        logger.info("BindsNet weights saved to %s", path)
 
     def load(self, path: str | None = None):
         """Load network weights.
@@ -353,7 +353,7 @@ class BindsNetRLAgent:
             path = self.data_dir / "bindsnet_weights.pt"
 
         if not Path(path).exists():
-            logger.warning(f"Weight file not found: {path}")
+            logger.warning("Weight file not found: %s", path)
             return
 
         weights = torch.load(path)
@@ -361,7 +361,7 @@ class BindsNetRLAgent:
             if conn_name in weights:
                 conn.w.data = weights[conn_name].clone()
 
-        logger.info(f"BindsNet weights loaded from {path}")
+        logger.info("BindsNet weights loaded from %s", path)
 
 
 class SinabsVisionSNN:
@@ -518,7 +518,7 @@ class SinabsVisionSNN:
             path = self.data_dir / "sinabs_model.pt"
 
         torch.save(self.model.state_dict(), path)
-        logger.info(f"Sinabs model saved to {path}")
+        logger.info("Sinabs model saved to %s", path)
 
     def load(self, path: str | None = None):
         """Load SNN model.
@@ -530,11 +530,11 @@ class SinabsVisionSNN:
             path = self.data_dir / "sinabs_model.pt"
 
         if not Path(path).exists():
-            logger.warning(f"Model file not found: {path}")
+            logger.warning("Model file not found: %s", path)
             return
 
         self.model.load_state_dict(torch.load(path))
-        logger.info(f"Sinabs model loaded from {path}")
+        logger.info("Sinabs model loaded from %s", path)
 
     def export_for_hardware(self, path: str | None = None):
         """
@@ -557,7 +557,7 @@ class SinabsVisionSNN:
             path,
         )
 
-        logger.info(f"Model exported for hardware deployment: {path}")
+        logger.info("Model exported for hardware deployment: %s", path)
         logger.info("Note: Use SynSense SDK for actual hardware deployment")
 
 

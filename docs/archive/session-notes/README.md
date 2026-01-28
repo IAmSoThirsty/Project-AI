@@ -5,6 +5,7 @@ This folder contains historical session summaries, status reports, and developme
 ## Contents
 
 This archive includes:
+
 - **Session Summaries** - Completion reports from development sessions
 - **Status Reports** - Project status at various points in time
 - **Test Reports** - Historical test execution results
@@ -14,6 +15,7 @@ This archive includes:
 ## Current Documentation
 
 For current project documentation, see:
+
 - **Root README.md** - Main project documentation
 - **PROGRAM_SUMMARY.md** - Comprehensive program overview
 - **docs/overview/** - Architecture and implementation guides
@@ -22,9 +24,10 @@ For current project documentation, see:
 ## Why These Were Archived
 
 These files were created during development sessions to track progress and communicate status. Over time, they accumulated in the docs/notes/ folder. The information in these files has been:
+
 1. Incorporated into the main documentation
-2. Superseded by more recent updates
-3. No longer relevant to current development
+1. Superseded by more recent updates
+1. No longer relevant to current development
 
 They are kept here for historical reference and to maintain an audit trail of the project's evolution.
 

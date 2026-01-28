@@ -104,13 +104,13 @@ The `auto-create-branch-prs.yml` workflow integrates with existing security infr
    - Runs all security checks: linting, tests, security audits
    - CodeQL and Bandit scans execute on PR events
 
-2. **Safe Code Practices**
+1. **Safe Code Practices**
    - Environment variables for safe data passing
    - Input validation and sanitization
    - [skip ci] to prevent infinite loops
    - Git configuration for proper commit attribution
 
-3. **Conflict Detection**
+1. **Conflict Detection**
    - Prevents merging conflicting code
    - Labels for manual review when conflicts exist
    - Ensures code review before merge
@@ -206,6 +206,7 @@ The `auto-create-branch-prs.yml` workflow integrates with existing security infr
 ### High Priority
 
 1. **Container Security Enhancement**
+
    ```yaml
    # Add to workflows with Docker builds
    - name: Run Trivy vulnerability scanner
@@ -217,19 +218,20 @@ The `auto-create-branch-prs.yml` workflow integrates with existing security infr
        output: 'trivy-results.sarif'
    ```
 
-2. **Coverage Threshold Definition**
+1. **Coverage Threshold Definition**
    - Define minimum coverage requirements (recommend 80%)
    - Fail builds below threshold
    - Track coverage trends
 
-3. **Red Teaming Integration**
+1. **Red Teaming Integration**
    - Schedule quarterly security assessments
    - Penetration testing for critical workflows
    - Incident response planning
 
 ### Medium Priority
 
-4. **Enhanced Cloud Security**
+1. **Enhanced Cloud Security**
+
    ```yaml
    # Add cloud configuration scanning
    - name: Run Checkov
@@ -239,24 +241,24 @@ The `auto-create-branch-prs.yml` workflow integrates with existing security infr
        framework: terraform,kubernetes
    ```
 
-5. **Supply Chain Security**
+1. **Supply Chain Security**
    - SLSA provenance generation
    - Signed commits enforcement
    - Artifact attestation
 
-6. **License Compliance**
+1. **License Compliance**
    - Automated license scanning
    - Policy enforcement
    - Legal risk protection
 
 ### Low Priority
 
-7. **GenAI-Specific Controls**
+1. **GenAI-Specific Controls**
    - Implement OWASP LLM Top 10 checks
    - Prompt injection testing
    - Model output validation
 
-8. **Advanced Monitoring**
+1. **Advanced Monitoring**
    - Runtime application security monitoring
    - Behavioral analytics
    - Anomaly detection
@@ -315,6 +317,7 @@ Code Push/PR
 ### For New Workflows
 
 1. **Always Include These Steps**:
+
    ```yaml
    - name: Checkout code
      uses: actions/checkout@v4
@@ -326,12 +329,13 @@ Code Push/PR
        pip-audit --format json > audit-report.json
    ```
 
-2. **Use GitHub Security Features**:
+1. **Use GitHub Security Features**:
    - Enable Dependabot alerts
    - Enable secret scanning
    - Enable code scanning (CodeQL)
 
-3. **Follow Least Privilege**:
+1. **Follow Least Privilege**:
+
    ```yaml
    permissions:
      contents: read
@@ -339,7 +343,8 @@ Code Push/PR
      # Only add permissions you need
    ```
 
-4. **Validate Inputs**:
+1. **Validate Inputs**:
+
    ```yaml
    - name: Validate input
      run: |

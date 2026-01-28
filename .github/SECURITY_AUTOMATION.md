@@ -13,6 +13,7 @@ The security automation system consists of several integrated components:
 **File**: `.github/workflows/security-orchestrator.yml`
 
 The main coordinating workflow that:
+
 - Runs every 6 hours continuously
 - Scans for all types of security issues
 - Triages and assesses severity automatically
@@ -20,6 +21,7 @@ The main coordinating workflow that:
 - Generates compliance reports
 
 **Triggers**:
+
 - Schedule: Every 6 hours (`0 */6 * * *`)
 - Manual dispatch via GitHub Actions UI
 - Repository dispatch on security alerts
@@ -27,31 +29,32 @@ The main coordinating workflow that:
 - Pull requests to main branch
 
 **Jobs**:
+
 1. **security-scan-and-triage**: Comprehensive scanning
    - Dependency vulnerabilities (pip-audit)
    - Code security issues (Bandit)
    - Secret exposure (detect-secrets)
    - Severity assessment
    
-2. **auto-remediate-dependencies**: Automatic dependency fixes
+1. **auto-remediate-dependencies**: Automatic dependency fixes
    - Upgrades vulnerable packages
    - Verifies fixes
    - Creates auto-merge PRs
    
-3. **auto-remediate-code-issues**: Code security handling
+1. **auto-remediate-code-issues**: Code security handling
    - Analyzes fixable issues
    - Creates tracking issues for review
    
-4. **auto-remediate-secrets**: Secret exposure handling
+1. **auto-remediate-secrets**: Secret exposure handling
    - Creates critical alerts
    - Requires manual intervention for safety
    
-5. **security-verification**: Final verification
+1. **security-verification**: Final verification
    - Confirms all fixes applied
    - Generates status reports
    - Posts PR comments
    
-6. **generate-security-report**: Compliance reporting
+1. **generate-security-report**: Compliance reporting
    - Creates detailed compliance report
    - Tracks remediation history
 
@@ -60,6 +63,7 @@ The main coordinating workflow that:
 **File**: `.github/workflows/auto-security-fixes.yml`
 
 Enhanced existing workflow with:
+
 - Post-fix verification
 - Remaining vulnerability tracking
 - Auto-merge labels for security PRs
@@ -69,6 +73,7 @@ Enhanced existing workflow with:
 **File**: `.github/workflows/auto-pr-handler.yml`
 
 Added new job:
+
 - **auto-merge-security**: Automatically merges security PRs
 - No manual approval required for security fixes
 - Merges after all CI checks pass
@@ -80,6 +85,7 @@ Added new job:
 Python script that handles automated remediation:
 
 **Features**:
+
 - Dependency vulnerability fixes
 - Code security issue analysis
 - Secret detection and alerting
@@ -100,6 +106,7 @@ python3 .github/scripts/security_remediation.py --all --report-dir custom-report
 ```
 
 **Exit Codes**:
+
 - `0`: Success, remediation completed
 - `1`: Partial failure, some fixes failed
 - `2`: Critical, secrets detected
@@ -111,6 +118,7 @@ python3 .github/scripts/security_remediation.py --all --report-dir custom-report
 Python script for comprehensive security verification:
 
 **Features**:
+
 - Verifies zero vulnerabilities
 - Checks code security compliance
 - Confirms no exposed secrets
@@ -123,10 +131,12 @@ python3 .github/scripts/security_verification.py
 ```
 
 **Output Files**:
+
 - `SECURITY_VERIFICATION_REPORT.md`: Human-readable report
 - `SECURITY_VERIFICATION_REPORT.json`: Machine-readable data
 
 **Exit Codes**:
+
 - `0`: All checks passed
 - `1`: Security issues detected
 
@@ -188,23 +198,26 @@ python3 .github/scripts/security_verification.py
 Security PRs with the `auto-merge` label are automatically merged without manual approval:
 
 **Requirements**:
+
 1. Must have `security` label
-2. Must have `auto-merge` label
-3. All CI checks must pass (lint, tests)
-4. Created by automated workflows
+1. Must have `auto-merge` label
+1. All CI checks must pass (lint, tests)
+1. Created by automated workflows
 
 **Process**:
+
 1. Security issue detected
-2. Automated fix applied
-3. PR created with `auto-merge` label
-4. CI checks run automatically
-5. Auto-approval granted if checks pass
-6. Automatic merge to main branch
-7. Verification run post-merge
+1. Automated fix applied
+1. PR created with `auto-merge` label
+1. CI checks run automatically
+1. Auto-approval granted if checks pass
+1. Automatic merge to main branch
+1. Verification run post-merge
 
 ### Manual Review Cases
 
 Some security issues require manual review:
+
 - **Secrets**: Always require manual intervention
 - **High-severity code issues**: May need code review
 - **Major version upgrades**: Require compatibility testing
@@ -217,11 +230,13 @@ Some security issues require manual review:
 **Tools**: pip-audit, safety
 
 **Scans for**:
+
 - Known CVEs in Python packages
 - Outdated packages with security patches
 - Vulnerable transitive dependencies
 
 **Remediation**:
+
 - Automatic upgrade to secure versions
 - Requirements.txt updated
 - Verification scan post-fix
@@ -231,6 +246,7 @@ Some security issues require manual review:
 **Tool**: Bandit
 
 **Scans for**:
+
 - SQL injection vulnerabilities
 - Command injection risks
 - Hardcoded passwords
@@ -239,6 +255,7 @@ Some security issues require manual review:
 - And 50+ other security patterns
 
 **Remediation**:
+
 - Low-severity: Documented for review
 - High-severity: Tracked in issues
 - Critical: Immediate alert
@@ -248,6 +265,7 @@ Some security issues require manual review:
 **Tool**: detect-secrets
 
 **Scans for**:
+
 - API keys
 - Passwords
 - Private keys
@@ -256,6 +274,7 @@ Some security issues require manual review:
 - Generic secrets
 
 **Remediation**:
+
 - Critical alert created immediately
 - Manual rotation required
 - Auto-remediation disabled for safety
@@ -265,6 +284,7 @@ Some security issues require manual review:
 **Tool**: GitHub CodeQL
 
 **Scans for**:
+
 - Data flow vulnerabilities
 - SQL injection
 - XSS vulnerabilities
@@ -272,6 +292,7 @@ Some security issues require manual review:
 - Unsafe deserialization
 
 **Remediation**:
+
 - Issues tracked automatically
 - High-severity alerts created
 
@@ -280,6 +301,7 @@ Some security issues require manual review:
 ### Workflow Artifacts
 
 Each run generates artifacts:
+
 - `security-scan-reports`: All scan results in JSON
 - `security-compliance-report`: Compliance summary
 - Retention: 30 days (scan reports), 90 days (compliance)
@@ -287,12 +309,14 @@ Each run generates artifacts:
 ### GitHub Issues
 
 Automated issues created for:
+
 - Dependency vulnerabilities
 - Code security findings
 - Secret exposure alerts
 - CodeQL high-severity issues
 
 **Labels**:
+
 - `security`: All security-related issues
 - `automated`: Created by automation
 - `critical`: Requires immediate attention
@@ -302,6 +326,7 @@ Automated issues created for:
 ### Status Checks
 
 PR comments show:
+
 - Security verification status
 - Number of issues found
 - Remediation actions taken
@@ -310,6 +335,7 @@ PR comments show:
 ### Compliance Reports
 
 Generated after each scan:
+
 - **SECURITY_VERIFICATION_REPORT.md**: Detailed status
 - **SECURITY_COMPLIANCE_REPORT.md**: Executive summary
 - **JSON reports**: Machine-readable data
@@ -358,9 +384,10 @@ detect-secrets scan --exclude-files 'test_data/'
 ### Security Workflow Not Running
 
 **Check**:
+
 1. Workflow file syntax: `yamllint .github/workflows/security-orchestrator.yml`
-2. Required permissions in repository settings
-3. GitHub Actions usage limits
+1. Required permissions in repository settings
+1. GitHub Actions usage limits
 
 **Fix**:
 ```bash
@@ -371,9 +398,10 @@ gh workflow run security-orchestrator.yml
 ### Auto-Merge Not Working
 
 **Common Issues**:
+
 1. Missing `auto-merge` label
-2. CI checks failing
-3. Branch protection rules blocking
+1. CI checks failing
+1. Branch protection rules blocking
 
 **Check Status**:
 ```bash
@@ -416,10 +444,10 @@ python3 .github/scripts/security_remediation.py --dependencies
 ### For Developers
 
 1. **Monitor Security Issues**: Check daily for auto-created issues
-2. **Review Security PRs**: Even auto-merged PRs should be reviewed post-merge
-3. **Respond to Alerts**: Secret exposure requires immediate action
-4. **Update Dependencies**: Keep packages current to minimize vulnerabilities
-5. **Test Locally**: Run security scans before pushing
+1. **Review Security PRs**: Even auto-merged PRs should be reviewed post-merge
+1. **Respond to Alerts**: Secret exposure requires immediate action
+1. **Update Dependencies**: Keep packages current to minimize vulnerabilities
+1. **Test Locally**: Run security scans before pushing
 
 ### Local Security Scanning
 
@@ -434,10 +462,10 @@ detect-secrets scan
 ### For Maintainers
 
 1. **Monitor Automation**: Check workflow runs weekly
-2. **Review Artifacts**: Download and review security reports
-3. **Update Configurations**: Adjust thresholds as needed
-4. **Maintain Documentation**: Update this guide with changes
-5. **Track Metrics**: Monitor remediation success rates
+1. **Review Artifacts**: Download and review security reports
+1. **Update Configurations**: Adjust thresholds as needed
+1. **Maintain Documentation**: Update this guide with changes
+1. **Track Metrics**: Monitor remediation success rates
 
 ## Metrics and KPIs
 
@@ -483,14 +511,16 @@ repos:
 ### CI/CD Pipeline Integration
 
 Security checks run automatically:
+
 1. **Pre-merge**: Security scan on all PRs
-2. **Post-merge**: Full scan on main branch
-3. **Scheduled**: Comprehensive scan every 6 hours
-4. **On-demand**: Manual trigger available
+1. **Post-merge**: Full scan on main branch
+1. **Scheduled**: Comprehensive scan every 6 hours
+1. **On-demand**: Manual trigger available
 
 ### Continuous Monitoring
 
 The system provides continuous monitoring:
+
 - **24/7 Scanning**: Runs every 6 hours
 - **Immediate Alerts**: Critical issues trigger alerts immediately
 - **Auto-remediation**: Fixes applied without delay
@@ -517,15 +547,17 @@ To update security tools:
 ```
 
 To update automation logic:
+
 1. Edit `.github/workflows/security-orchestrator.yml`
-2. Test in a fork first
-3. Monitor first few runs after deployment
-4. Document changes in commit message
+1. Test in a fork first
+1. Monitor first few runs after deployment
+1. Document changes in commit message
 
 ## Security Contact
 
 For critical security issues:
-- **Email**: Security@thirstysprojects.com
+
+- **Email**: <Security@thirstysprojects.com>
 - **GitHub**: Create issue with `security` label
 - **Response Time**: 72 hours
 

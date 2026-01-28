@@ -13,13 +13,13 @@ Features:
 
 from __future__ import annotations
 
-import json
 import logging
 import os
+from collections.abc import Callable
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from enum import Enum
-from typing import Any, Callable
+from typing import Any
 
 from app.core.cognition_kernel import CognitionKernel, ExecutionType
 from app.core.kernel_integration import KernelRoutedAgent
@@ -280,10 +280,12 @@ class RedTeamPersonaAgent(KernelRoutedAgent):
                 turns.append(turn)
 
                 # Update conversation history
-                conversation.extend([
-                    {"role": "assistant", "content": attacker_msg},
-                    {"role": "user", "content": target_response},
-                ])
+                conversation.extend(
+                    [
+                        {"role": "assistant", "content": attacker_msg},
+                        {"role": "user", "content": target_response},
+                    ]
+                )
 
                 # Check success criteria
                 success_criteria_met.extend(criteria_met)
@@ -366,7 +368,8 @@ class RedTeamPersonaAgent(KernelRoutedAgent):
             # Aggregate results
             total_sessions = len(results)
             successful = sum(
-                1 for r in results
+                1
+                for r in results
                 if r.get("success") and r.get("session", {}).get("result") == "success"
             )
 
@@ -374,7 +377,9 @@ class RedTeamPersonaAgent(KernelRoutedAgent):
                 "success": True,
                 "total_sessions": total_sessions,
                 "successful_attacks": successful,
-                "success_rate": successful / total_sessions if total_sessions > 0 else 0,
+                "success_rate": (
+                    successful / total_sessions if total_sessions > 0 else 0
+                ),
                 "results": results,
                 "timestamp": datetime.now(UTC).isoformat(),
             }

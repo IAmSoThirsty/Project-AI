@@ -5,10 +5,10 @@ This document provides comprehensive examples of all security features implement
 ## Table of Contents
 
 1. [Security Test Scenarios](#security-test-scenarios)
-2. [Robustness Metrics Examples](#robustness-metrics-examples)
-3. [ASL-3 Security Framework Examples](#asl-3-security-framework-examples)
-4. [CBRN Classification Examples](#cbrn-classification-examples)
-5. [Complete Workflow Examples](#complete-workflow-examples)
+1. [Robustness Metrics Examples](#robustness-metrics-examples)
+1. [ASL-3 Security Framework Examples](#asl-3-security-framework-examples)
+1. [CBRN Classification Examples](#cbrn-classification-examples)
+1. [Complete Workflow Examples](#complete-workflow-examples)
 
 ---
 
@@ -693,6 +693,7 @@ Project-AI implements **production-grade security** with:
 **Status**: APPROVED FOR HIGH-SECURITY ENVIRONMENTS ✅
 
 For more examples and detailed documentation, see:
+
 - `docs/ASL_FRAMEWORK.md` - ASL framework overview
 - `docs/ASL3_IMPLEMENTATION.md` - Implementation guide
 - `docs/ROBUSTNESS_METRICS.md` - Metrics documentation

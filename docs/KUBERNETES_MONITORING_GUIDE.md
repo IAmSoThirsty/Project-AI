@@ -18,16 +18,16 @@ Deploy the complete Project-AI observability stack on Kubernetes in minutes usin
 ## Table of Contents
 
 1. [Prerequisites](#prerequisites)
-2. [Quick Start](#quick-start)
-3. [Deployment Options](#deployment-options)
-4. [Component Details](#component-details)
-5. [eBPF Observability with Cilium](#ebpf-observability-with-cilium)
-6. [ELK Stack Configuration](#elk-stack-configuration)
-7. [Netdata Setup](#netdata-setup)
-8. [OpenTelemetry Integration](#opentelemetry-integration)
-9. [Scaling](#scaling)
-10. [Troubleshooting](#troubleshooting)
-11. [Production Best Practices](#production-best-practices)
+1. [Quick Start](#quick-start)
+1. [Deployment Options](#deployment-options)
+1. [Component Details](#component-details)
+1. [eBPF Observability with Cilium](#ebpf-observability-with-cilium)
+1. [ELK Stack Configuration](#elk-stack-configuration)
+1. [Netdata Setup](#netdata-setup)
+1. [OpenTelemetry Integration](#opentelemetry-integration)
+1. [Scaling](#scaling)
+1. [Troubleshooting](#troubleshooting)
+1. [Production Best Practices](#production-best-practices)
 
 ---
 
@@ -126,6 +126,7 @@ kubectl port-forward -n monitoring svc/netdata 19999:19999 &
 ```
 
 Access:
+
 - **Prometheus**: http://localhost:9090
 - **Grafana**: http://localhost:3000 (admin/admin)
 - **Kibana**: http://localhost:5601
@@ -255,6 +256,7 @@ helm install project-ai-monitoring ./helm/project-ai-monitoring \
 ### Prometheus + Grafana
 
 **What it monitors:**
+
 - AI system metrics (persona, Four Laws, memory)
 - Security events (Cerberus, threats)
 - Application performance (API latency, errors)
@@ -387,6 +389,7 @@ kubectl port-forward -n monitoring svc/cilium-hubble-ui 8080:80
 ```
 
 Navigate to http://localhost:8080 to see:
+
 - Real-time service map
 - Network flows visualization
 - DNS query patterns
@@ -488,22 +491,23 @@ kubectl apply -f https://raw.githubusercontent.com/fluent/fluentd-kubernetes-dae
 kubectl port-forward -n monitoring svc/kibana-kibana 5601:5601
 ```
 
-2. **Create Index Pattern:**
+1. **Create Index Pattern:**
 
 - Navigate to http://localhost:5601
 - Go to Management → Stack Management → Index Patterns
 - Create pattern: `project-ai-*`
 - Select `@timestamp` as time field
 
-3. **Pre-configured Dashboards:**
+1. **Pre-configured Dashboards:**
 
 The Logstash pipeline automatically creates indices:
+
 - `project-ai-persona-*`: AI persona logs
 - `project-ai-security-*`: Security events
 - `project-ai-ethics-*`: Four Laws events
 - `project-ai-logs-*`: General application logs
 
-4. **Search Examples:**
+1. **Search Examples:**
 
 ```
 # Find critical security events
@@ -592,7 +596,7 @@ Navigate to http://localhost:19999
 
 Visit https://app.netdata.cloud and create workspace
 
-2. **Update values:**
+1. **Update values:**
 
 ```yaml
 # values.yaml
@@ -604,7 +608,7 @@ netdata:
       rooms: "YOUR_ROOM_ID"
 ```
 
-3. **Upgrade release:**
+1. **Upgrade release:**
 
 ```bash
 helm upgrade project-ai-monitoring ./helm/project-ai-monitoring \
@@ -616,6 +620,7 @@ helm upgrade project-ai-monitoring ./helm/project-ai-monitoring \
 ### What Netdata Monitors
 
 **Per-Node Metrics:**
+
 - CPU (per core, per thread)
 - Memory (RAM, swap, caches)
 - Disk I/O (per disk, per partition)
@@ -626,6 +631,7 @@ helm upgrade project-ai-monitoring ./helm/project-ai-monitoring \
 - Context switches
 
 **Application Metrics:**
+
 - Docker containers
 - Kubernetes pods
 - Databases (MySQL, PostgreSQL, MongoDB)
@@ -904,7 +910,7 @@ kube-prometheus-stack:
             - grafana.example.com
 ```
 
-2. **Network Policies**:
+1. **Network Policies**:
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -923,7 +929,7 @@ spec:
           name: monitoring
 ```
 
-3. **RBAC**:
+1. **RBAC**:
 
 ```bash
 # Create read-only user

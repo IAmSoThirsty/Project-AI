@@ -3,6 +3,7 @@
 This quickstart helps you run the native desktop (PyQt6) Leather Book interface.
 
 Prerequisites
+
 - Python 3.11 or newer
 - Virtualenv (recommended)
 - PyQt6, cryptography, scikit-learn and other dependencies (see requirements.txt)
@@ -21,7 +22,9 @@ python -m src.app.main
 ```
 
 Troubleshooting
+
 - If PyQt6 fails to install on Windows, ensure you have the latest pip:
+
 ```powershell
 python -m pip install --upgrade pip
 ```
@@ -30,6 +33,7 @@ python -m pip install --upgrade pip
 - For GUI threading issues, the project uses QThread and pyqtSignal. Do not run long blocking code on the main thread.
 
 Notes
+
 - Use `launch-desktop.ps1` for a Windows-friendly launcher that sets env vars and starts the app.
 - If you want to run with a `.env` file, the app will load OpenAI and Hugging Face keys automatically when present.
 

@@ -1,6 +1,7 @@
 # Hydra Test: hydra_115
 
 ## Test Information
+
 - **Category**: EXPLOIT CODE
 - **Threat Type**: Exploit v5
 - **Severity**: CRITICAL
@@ -56,6 +57,7 @@ This threat was successfully detected and blocked by Galahad's defenses.
 ---
 
 ## Metadata
+
 - **Test ID**: hydra_115
 - **Test Suite**: HYDRA DEFENSE (Ultimate Stress Test)
 - **Total Hydra Tests**: 200

@@ -5,15 +5,15 @@
 Project-AI now supports **Spiking Neural Networks (SNNs)** for neuromorphic computing with **10 production-ready libraries**:
 
 1. **BindsNet** - Reinforcement Learning on SNNs with continual learning ✅
-2. **Sinabs** - Vision-optimized SNN library with hardware compatibility ✅
-3. **snnTorch** - PyTorch-based SNN with excellent tutorials ✅
-4. **SpikingJelly** - Deep learning framework for SNNs ✅
-5. **Norse** - Deep learning with SNNs in PyTorch ✅
-6. **Brian2** - Simulator for spiking neural networks ✅
-7. **Lava** - Intel's Neuromorphic Computing framework (Loihi) ✅
-8. **Rockpool** - SNN training and deployment ✅
-9. **Nengo** - Neural engineering framework ✅
-10. **NIR** - Neuromorphic Intermediate Representation ✅
+1. **Sinabs** - Vision-optimized SNN library with hardware compatibility ✅
+1. **snnTorch** - PyTorch-based SNN with excellent tutorials ✅
+1. **SpikingJelly** - Deep learning framework for SNNs ✅
+1. **Norse** - Deep learning with SNNs in PyTorch ✅
+1. **Brian2** - Simulator for spiking neural networks ✅
+1. **Lava** - Intel's Neuromorphic Computing framework (Loihi) ✅
+1. **Rockpool** - SNN training and deployment ✅
+1. **Nengo** - Neural engineering framework ✅
+1. **NIR** - Neuromorphic Intermediate Representation ✅
 
 **Note:** All libraries listed above are **available on PyPI** and **ready to use**. NeurocoreX and RANC are research platforms that require custom installation from source and are not included in the standard installation.
 
@@ -157,6 +157,7 @@ Action Selection (Spike Counting)
 ```
 
 **Key Features**:
+
 - **Leaky Integrate-and-Fire (LIF)** neurons
 - **STDP (Spike-Timing-Dependent Plasticity)** learning
 - **Poisson encoding** for continuous inputs
@@ -181,6 +182,7 @@ Output Spikes (Classification)
 ```
 
 **Key Features**:
+
 - **IAF (Integrate-and-Fire)** neurons
 - **CNN layers** with spiking activations
 - **Weight transfer** from standard CNNs
@@ -357,11 +359,11 @@ def monitor_security_feed(frame):
 ## Best Practices
 
 1. **Start with Small Networks**: SNNs require tuning, start with 100-500 neurons
-2. **Use Poisson Encoding**: For continuous inputs (images, sensors)
-3. **Tune Time Steps**: 50-200 time steps for good spike statistics
-4. **Reward Shaping**: Critical for BindsNet RL performance
-5. **Batch Normalization**: Improves Sinabs CNN-to-SNN conversion
-6. **Hardware Testing**: Test on actual chips early in development
+1. **Use Poisson Encoding**: For continuous inputs (images, sensors)
+1. **Tune Time Steps**: 50-200 time steps for good spike statistics
+1. **Reward Shaping**: Critical for BindsNet RL performance
+1. **Batch Normalization**: Improves Sinabs CNN-to-SNN conversion
+1. **Hardware Testing**: Test on actual chips early in development
 
 ## Troubleshooting
 
@@ -405,6 +407,7 @@ output = vision_snn.forward(x, num_steps=200)  # More time steps
 ## Examples
 
 See `examples/snn_examples.py` for complete examples:
+
 - CartPole with BindsNet RL
 - MNIST classification with Sinabs
 - CNN-to-SNN conversion workflow
@@ -426,6 +429,7 @@ See `examples/snn_examples.py` for complete examples:
 ## Support
 
 For SNN-related questions:
+
 - GitHub Issues: https://github.com/IAmSoThirsty/Project-AI/issues
 - BindsNet Docs: https://bindsnet-docs.readthedocs.io/
 - Sinabs Docs: https://sinabs.readthedocs.io/

@@ -444,7 +444,7 @@ class RobustnessMetricsEngine:
         Aggregate individual metrics into suite-level analysis.
         """
         if not proximity_metrics:
-            logger.warning(f"No metrics to aggregate for {test_suite_name}")
+            logger.warning("No metrics to aggregate for %s", test_suite_name)
             return None
 
         total = len(proximity_metrics)
@@ -532,10 +532,10 @@ class RobustnessMetricsEngine:
             multi_layer_stops=multi_layer,
         )
 
-        logger.info(f"Robustness analysis complete for {test_suite_name}")
-        logger.info(f"  Near-miss count: {near_miss_count}/{total}")
-        logger.info(f"  Min robustness margin: {min_margin:.3f}")
-        logger.info(f"  Avg detection confidence: {avg_confidence:.3f}")
+        logger.info("Robustness analysis complete for %s", test_suite_name)
+        logger.info("  Near-miss count: %s/%s", near_miss_count, total)
+        logger.info("  Min robustness margin: %s", min_margin:.3f)
+        logger.info("  Avg detection confidence: %s", avg_confidence:.3f)
 
         return analysis
 
@@ -640,7 +640,7 @@ class RobustnessMetricsEngine:
         with open(analysis_file, "w") as f:
             json.dump(analysis_data, f, indent=2)
 
-        logger.info(f"Exported metrics to {metrics_file}")
-        logger.info(f"Exported analysis to {analysis_file}")
+        logger.info("Exported metrics to %s", metrics_file)
+        logger.info("Exported analysis to %s", analysis_file)
 
         return str(analysis_file)

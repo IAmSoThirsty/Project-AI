@@ -5,6 +5,7 @@ Thirsty-lang comes in multiple flavors to suit different levels of thirst! 💧
 ## Base: Thirsty-lang
 
 The core language with basic features:
+
 - Variable declaration (`drink`)
 - Output (`pour`)
 - Comments
@@ -16,18 +17,21 @@ The core language with basic features:
 Enhanced features for intermediate users:
 
 ### Additional Features
+
 - **Control Flow**: `thirsty` (if) and `hydrated` (else)
 - **Arithmetic**: Basic math operations (+, -, *, /)
 - **Comparison**: equals, greater than, less than
 - **String concatenation**: Join strings with `+`
 
 ### New Keywords
+
 - `thirsty condition` - If statement
 - `hydrated` - Else statement
 - `parched` - Boolean true
 - `quenched` - Boolean false
 
 ### Example
+
 ```thirstyplus
 drink temperature = 25
 thirsty temperature > 20
@@ -43,12 +47,14 @@ hydrated
 Advanced features for power users:
 
 ### Additional Features
+
 - **Loops**: `refill` for iteration
 - **Functions**: `glass` for function declarations
 - **Arrays**: `reservoir` for collections
 - **Objects**: `bottle` for structured data
 
 ### New Keywords
+
 - `refill times` - For loop
 - `refill while` - While loop
 - `glass name(params)` - Function definition
@@ -58,6 +64,7 @@ Advanced features for power users:
 - `return` - Return from function
 
 ### Example
+
 ```thirstyplusplus
 glass calculateHydration(weight)
   drink dailyWater = weight * 0.033
@@ -79,6 +86,7 @@ refill 3 times
 The most powerful variant with divine capabilities:
 
 ### Additional Features
+
 - **Async/Await**: `cascade` and `await` for asynchronous operations
 - **Classes**: `fountain` for object-oriented programming
 - **Modules**: `import` and `export` for code organization
@@ -87,6 +95,7 @@ The most powerful variant with divine capabilities:
 - **Decorators**: Meta-programming capabilities
 
 ### New Keywords
+
 - `fountain ClassName` - Class declaration
 - `cascade` - Async function
 - `await` - Wait for async operation
@@ -99,6 +108,7 @@ The most powerful variant with divine capabilities:
 - `stream` - Generator function
 
 ### Example
+
 ```thirstofgods
 fountain HydrationTracker
   drink totalWater = 0

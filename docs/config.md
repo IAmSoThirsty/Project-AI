@@ -39,8 +39,11 @@ config-variables:
 
 - `self-hosted-runner`: Configuration for your self-hosted runner environment.
   - `labels`: Label names added to your self-hosted runners as list of pattern. Glob syntax supported by [`path.Match`][pat]
+
     is available.
+
 - `config-variables`: [Configuration variables][vars]. When an array is set, actionlint will check `vars` properties strictly.
+
   An empty array means no variable is allowed. The default value `null` disables the check.
 
 ---

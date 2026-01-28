@@ -81,6 +81,7 @@ class ASL3Security:
         data_dir: str = "data",
         key_file: str = "config/.asl3_key",
         enable_emergency_alerts: bool = True,
+        enable_cerberus_hydra: bool = False,
     ):
         """
         Initialize ASL-3 security enforcer.
@@ -89,6 +90,7 @@ class ASL3Security:
             data_dir: Base data directory
             key_file: Path to encryption key file
             enable_emergency_alerts: Enable emergency alert integration
+            enable_cerberus_hydra: Enable Cerberus Hydra defense mechanism
         """
         self.data_dir = Path(data_dir)
         self.key_file = Path(key_file)
@@ -111,6 +113,22 @@ class ASL3Security:
                 self.emergency_alert = EmergencyAlert()
             except Exception as e:
                 self.logger.warning(f"Emergency alerts unavailable: {e}")
+
+        # Initialize Cerberus Hydra defense if enabled
+        self.cerberus_hydra = None
+        if enable_cerberus_hydra:
+            try:
+                from app.core.cerberus_hydra import CerberusHydraDefense
+
+                self.cerberus_hydra = CerberusHydraDefense(
+                    data_dir=str(self.data_dir),
+                    security_enforcer=self,
+                )
+                # Spawn initial defense agents
+                self.cerberus_hydra.spawn_initial_agents(count=3)
+                self.logger.info("Cerberus Hydra defense enabled with 3 initial agents")
+            except Exception as e:
+                self.logger.warning(f"Cerberus Hydra unavailable: {e}")
 
         # Create security directories
         self._initialize_directories()
@@ -578,6 +596,18 @@ class ASL3Security:
         incident_file = self.data_dir / "security" / "incidents.jsonl"
         with open(incident_file, "a") as f:
             f.write(json.dumps(incident) + "\n")
+
+        # Trigger Cerberus Hydra Defense if available
+        if hasattr(self, "cerberus_hydra") and self.cerberus_hydra:
+            try:
+                self.cerberus_hydra.detect_bypass(
+                    agent_id=None,
+                    bypass_type=reason,
+                    attacker_signature=user,
+                )
+                self.logger.warning("🐍 Cerberus Hydra defense activated")
+            except Exception as e:
+                self.logger.error(f"Failed to activate Cerberus Hydra: {e}")
 
     def encrypt_critical_resources(self) -> dict[str, str]:
         """

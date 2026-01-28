@@ -16,13 +16,13 @@ This document maps security workflows to specific threats they mitigate, defines
 ## Table of Contents
 
 1. [Threat Model Overview](#threat-model-overview)
-2. [Release Artifact Signing](#release-artifact-signing)
-3. [SBOM Generation](#sbom-generation)
-4. [AI/ML Model Security](#aiml-model-security)
-5. [Coverage Analysis](#coverage-analysis)
-6. [Known Limitations](#known-limitations)
-7. [Out of Scope](#out-of-scope)
-8. [Maintenance and Performance](#maintenance-and-performance)
+1. [Release Artifact Signing](#release-artifact-signing)
+1. [SBOM Generation](#sbom-generation)
+1. [AI/ML Model Security](#aiml-model-security)
+1. [Coverage Analysis](#coverage-analysis)
+1. [Known Limitations](#known-limitations)
+1. [Out of Scope](#out-of-scope)
+1. [Maintenance and Performance](#maintenance-and-performance)
 
 ---
 
@@ -41,6 +41,7 @@ This document maps security workflows to specific threats they mitigate, defines
 ### Threat Model Framework
 
 We use **STRIDE** (Microsoft) + **OWASP Top 10** + **MITRE ATT&CK** for categorization:
+
 - **S**poofing - Impersonating artifacts/identities
 - **T**ampering - Modifying code/artifacts
 - **R**epudiation - Denying malicious actions
@@ -57,12 +58,14 @@ We use **STRIDE** (Microsoft) + **OWASP Top 10** + **MITRE ATT&CK** for categori
 ### Threats Mitigated ✅
 
 #### 1. **Supply Chain Attack - Artifact Tampering** 🔴 CRITICAL
+
 - **STRIDE:** Tampering
 - **MITRE ATT&CK:** T1195.002 (Compromise Software Supply Chain)
 - **Description:** Attacker replaces legitimate release artifacts with malicious versions
 - **Mitigation:** Cryptographic signatures verify artifact authenticity and integrity
 - **Coverage:** 90% - Prevents post-release tampering
 - **Verification:**
+
   ```bash
   cosign verify-blob artifact.whl \
     --signature=artifact.whl.sig \
@@ -70,9 +73,11 @@ We use **STRIDE** (Microsoft) + **OWASP Top 10** + **MITRE ATT&CK** for categori
     --certificate-identity-regexp="https://github.com/IAmSoThirsty/Project-AI/*" \
     --certificate-oidc-issuer="https://token.actions.githubusercontent.com"
   ```
+
 - **Residual Risk:** Compromise of GitHub Actions infrastructure itself (very low probability)
 
 #### 2. **Identity Spoofing - Fake Releases** 🔴 CRITICAL
+
 - **STRIDE:** Spoofing
 - **MITRE ATT&CK:** T1036 (Masquerading)
 - **Description:** Attacker publishes fake releases claiming to be official
@@ -82,45 +87,53 @@ We use **STRIDE** (Microsoft) + **OWASP Top 10** + **MITRE ATT&CK** for categori
 - **Residual Risk:** Phishing attacks directing users to fake repositories (user education required)
 
 #### 3. **Non-Repudiation - Release Accountability** 🟡 MEDIUM
+
 - **STRIDE:** Repudiation
 - **Description:** Dispute over who released specific artifacts
 - **Mitigation:** Rekor transparency log provides immutable audit trail
 - **Coverage:** 100% - All signatures logged permanently
-- **Verification:** Check Rekor log at https://rekor.sigstore.dev/
+- **Verification:** Check Rekor log at <https://rekor.sigstore.dev/>
 - **Residual Risk:** None - transparency log is immutable
 
 #### 4. **Integrity Attack - Artifact Corruption** 🟠 HIGH
+
 - **STRIDE:** Tampering
 - **Description:** Accidental or malicious corruption during download/storage
 - **Mitigation:** SHA-256/SHA-512 checksums verify bit-for-bit integrity
 - **Coverage:** 100% - Checksums detect any modification
 - **Verification:**
+
   ```bash
   sha256sum -c SHA256SUMS
   ```
+
 - **Residual Risk:** None for detection; mitigation requires re-download
 
 ### Threats NOT Mitigated ❌
 
 #### 1. **Build-Time Code Injection** 🔴 OUT OF SCOPE
+
 - **Description:** Malicious code injected during CI build process before signing
 - **Why Not Covered:** Signing proves "this is what we built" not "what we built is safe"
 - **Alternative Controls:** CodeQL, Bandit, dependency scanning, code review
 - **Recommendation:** Implement build provenance (SLSA framework)
 
 #### 2. **Compromised Dependencies** 🔴 OUT OF SCOPE
+
 - **Description:** Legitimate build of code that includes malicious dependencies
 - **Why Not Covered:** Signing doesn't inspect package contents
 - **Alternative Controls:** SBOM + vulnerability scanning
 - **Recommendation:** See SBOM section below
 
 #### 3. **Social Engineering** 🟡 OUT OF SCOPE
+
 - **Description:** Tricking users into not verifying signatures
 - **Why Not Covered:** Technical controls can't prevent user behavior
 - **Alternative Controls:** User education, clear verification instructions
 - **Recommendation:** Prominent verification instructions in releases
 
 #### 4. **Key Compromise** 🟢 NOT APPLICABLE
+
 - **Description:** Attacker steals signing keys
 - **Why Not Covered:** Keyless signing uses ephemeral certificates, no keys to steal
 - **Alternative Controls:** N/A - keyless design eliminates this threat
@@ -145,82 +158,98 @@ Goal: Distribute Malicious Artifact
 ### Threats Mitigated ✅
 
 #### 1. **Unknown Vulnerability Exposure** 🟠 HIGH
+
 - **STRIDE:** Information Disclosure (inverted - lack of disclosure)
 - **MITRE ATT&CK:** T1195.001 (Compromise Software Dependencies)
 - **Description:** Using vulnerable dependencies without knowledge
 - **Mitigation:** SBOM enables automated vulnerability scanning
 - **Coverage:** 70% - Detects known CVEs in dependencies
 - **Verification:**
+
   ```bash
   grype sbom:sbom-comprehensive.cyclonedx.json
   osv-scanner --sbom=sbom-comprehensive.cyclonedx.json
   ```
+
 - **Residual Risk:** 
   - Zero-day vulnerabilities (not in CVE databases)
   - Misconfigured dependencies (e.g., weak crypto settings)
   - Logic flaws in application code (not in dependencies)
 
 #### 2. **Supply Chain Visibility Gap** 🟡 MEDIUM
+
 - **STRIDE:** Information Disclosure
 - **Description:** Unable to trace dependency provenance or license compliance
 - **Mitigation:** SBOM documents full dependency tree
 - **Coverage:** 80% - Captures Python, Node.js, and binary dependencies
 - **Verification:** Check SBOM completeness
+
   ```bash
   jq '.components | length' sbom-comprehensive.cyclonedx.json
   # Should match: pip list + npm list
   ```
+
 - **Residual Risk:**
   - Dynamic dependencies loaded at runtime
   - Vendored dependencies not in package managers
   - Binary-only dependencies without metadata
 
 #### 3. **License Compliance Risk** 🟡 MEDIUM
+
 - **STRIDE:** Information Disclosure
 - **Description:** Using dependencies with incompatible licenses
 - **Mitigation:** SBOM includes license information for all components
 - **Coverage:** 75% - Most packages have SPDX license identifiers
 - **Verification:**
+
   ```bash
   jq '.components[].licenses' sbom-comprehensive.cyclonedx.json
   ```
+
 - **Residual Risk:**
   - Missing or incorrect license metadata in packages
   - Complex multi-license scenarios
   - License interpretation requires legal review
 
 #### 4. **Incident Response Delay** 🟡 MEDIUM
+
 - **STRIDE:** Denial of Service (delayed response)
 - **Description:** Slow response to disclosed vulnerabilities due to unknown dependency versions
 - **Mitigation:** SBOM enables rapid impact assessment
 - **Coverage:** 90% - Can quickly check if vulnerable version is used
 - **Verification:** Query SBOM for specific package
+
   ```bash
   jq '.components[] | select(.name == "requests")' sbom-comprehensive.cyclonedx.json
   ```
+
 - **Residual Risk:** Transitive dependencies may be unclear in complex trees
 
 ### Threats NOT Mitigated ❌
 
 #### 1. **Malicious Dependency Injection** 🔴 OUT OF SCOPE
+
 - **Description:** Attacker publishes malicious package to PyPI/npm
 - **Why Not Covered:** SBOM documents what exists, doesn't validate safety
 - **Alternative Controls:** Dependency review, private package registries, checksum pinning
 - **Recommendation:** Use tools like `pip-audit`, `safety`, `socket.dev`
 
 #### 2. **Typosquatting Attacks** 🟠 OUT OF SCOPE
+
 - **Description:** Installing `requets` instead of `requests`
 - **Why Not Covered:** SBOM records installed packages, doesn't prevent typos
 - **Alternative Controls:** Dependency name linting, approved package lists
 - **Recommendation:** Use Dependabot, Renovate with auto-merge controls
 
 #### 3. **Runtime Vulnerabilities** 🟠 OUT OF SCOPE
+
 - **Description:** Vulnerabilities in how dependencies are used, not in dependencies themselves
 - **Why Not Covered:** SBOM is static snapshot, doesn't analyze runtime behavior
 - **Alternative Controls:** DAST, IAST, runtime application self-protection (RASP)
 - **Recommendation:** Implement runtime monitoring and WAF
 
 #### 4. **Binary Exploitation** 🔴 OUT OF SCOPE
+
 - **Description:** Memory corruption, buffer overflows in compiled code
 - **Why Not Covered:** SBOM lists components, doesn't analyze machine code
 - **Alternative Controls:** Fuzzing, SAST tools, memory sanitizers
@@ -245,6 +274,7 @@ Goal: Exploit Vulnerable Dependency
 ### Threats Mitigated ✅
 
 #### 1. **Model Serialization Attack - Pickle Exploits** 🔴 CRITICAL
+
 - **STRIDE:** Elevation of Privilege
 - **MITRE ATT&CK:** T1059 (Command and Scripting Interpreter)
 - **Description:** Malicious pickle files executing arbitrary code on load
@@ -259,18 +289,21 @@ Goal: Exploit Vulnerable Dependency
 - **Performance:** ~30-60 seconds per model file
 
 #### 2. **Unsafe Deserialization in Code** 🟠 HIGH
+
 - **STRIDE:** Elevation of Privilege
 - **MITRE ATT&CK:** T1203 (Exploitation for Client Execution)
 - **Description:** Code using `pickle.loads()`, `eval()`, `exec()` without validation
 - **Mitigation:** Static analysis detects unsafe deserialization patterns
 - **Coverage:** 70% - Finds obvious unsafe patterns
 - **Verification:**
+
   ```python
   # Detected patterns:
   pickle.loads(untrusted_data)  # HIGH
   eval(user_input)              # CRITICAL
   torch.load(path)              # MEDIUM (without weights_only=True)
   ```
+
 - **Residual Risk:**
   - Dynamic code execution (e.g., `getattr()` chains)
   - Indirection through helper functions
@@ -279,6 +312,7 @@ Goal: Exploit Vulnerable Dependency
 - **Performance:** ~10-15 seconds for full codebase scan
 
 #### 3. **Data Poisoning Indicators** 🟡 MEDIUM
+
 - **STRIDE:** Tampering
 - **MITRE ATT&CK:** T1565.001 (Data Manipulation)
 - **Description:** Training data containing backdoors or adversarial examples
@@ -293,6 +327,7 @@ Goal: Exploit Vulnerable Dependency
 - **Performance:** ~5-10 seconds for data directory scan
 
 #### 4. **Model Integrity Issues** 🟡 MEDIUM
+
 - **STRIDE:** Tampering
 - **Description:** Model files without integrity verification
 - **Mitigation:** Checks for missing SHA-256 checksums and executable permissions
@@ -307,6 +342,7 @@ Goal: Exploit Vulnerable Dependency
 ### Threats NOT Mitigated ❌
 
 #### 1. **Model Backdoors (Weight Poisoning)** 🔴 OUT OF SCOPE
+
 - **Description:** Malicious behavior encoded in model weights (not serialization exploit)
 - **Why Not Covered:** Requires semantic analysis of model behavior, not just file scanning
 - **Alternative Controls:** Model auditing, adversarial testing, behavioral monitoring
@@ -314,18 +350,21 @@ Goal: Exploit Vulnerable Dependency
 - **Research:** Active area of ML security research (no mature tools yet)
 
 #### 2. **Adversarial Examples** 🟠 OUT OF SCOPE
+
 - **Description:** Inputs crafted to fool model predictions
 - **Why Not Covered:** Runtime attack, not static file issue
 - **Alternative Controls:** Adversarial training, input validation, confidence thresholds
 - **Recommendation:** Use certified defenses (randomized smoothing, etc.)
 
 #### 3. **Model Inversion Attacks** 🟡 OUT OF SCOPE
+
 - **Description:** Extracting training data from model via queries
 - **Why Not Covered:** Requires runtime access to model, not prevented by file scanning
 - **Alternative Controls:** Differential privacy, query limits, output filtering
 - **Recommendation:** Implement rate limiting and privacy-preserving ML
 
 #### 4. **Model Stealing** 🟡 OUT OF SCOPE
+
 - **Description:** Attacker clones model via query-response pairs
 - **Why Not Covered:** Runtime attack, orthogonal to file security
 - **Alternative Controls:** Watermarking, query monitoring, API authentication
@@ -348,10 +387,10 @@ Goal: Exploit Vulnerable Dependency
 
 **For lower false positives (more permissive):**
 ```yaml
-# In workflow file, set environment variable:
+# In workflow file, set environment variable
 AI_SECURITY_MODE: "permissive"
 
-# Permissive mode:
+# Permissive mode
 - Ignores medium-severity findings
 - Requires critical + high for PR blocking
 - Reduces keyword list for poisoning detection
@@ -361,7 +400,7 @@ AI_SECURITY_MODE: "permissive"
 ```yaml
 AI_SECURITY_MODE: "strict"
 
-# Strict mode:
+# Strict mode
 - Blocks on medium severity
 - Expands keyword detection
 - Requires checksums for all models
@@ -370,7 +409,7 @@ AI_SECURITY_MODE: "strict"
 
 **Custom allowlist (for known safe patterns):**
 ```python
-# Add to ai_ml_security_scan.py:
+# Add to ai_ml_security_scan.py
 ALLOWED_REDUCE_USES = [
     "data/ai_persona/legacy_model.pkl",  # Legacy model, audited safe
     "data/vectors/embeddings.pkl",       # Simple numpy arrays only
@@ -388,13 +427,16 @@ ALLOWED_REDUCE_USES = [
 | **Total** | 55-95s | Target: <60s |
 
 **Optimization strategies:**
+
 1. **Incremental scanning:** Only scan files changed in PR
+
    ```yaml
    # Get changed files
    git diff --name-only origin/main...HEAD -- 'data/**' 'src/**'
    ```
 
-2. **Caching:** Store scan results keyed by file hash
+1. **Caching:** Store scan results keyed by file hash
+
    ```yaml
    - uses: actions/cache@v3
      with:
@@ -402,7 +444,8 @@ ALLOWED_REDUCE_USES = [
        key: ai-security-${{ hashFiles('data/**/*.pkl') }}
    ```
 
-3. **Parallel execution:** Scan multiple files concurrently
+1. **Parallel execution:** Scan multiple files concurrently
+
    ```python
    from concurrent.futures import ThreadPoolExecutor
    with ThreadPoolExecutor(max_workers=4) as executor:
@@ -424,25 +467,28 @@ graph LR
 ```
 
 **Non-overlapping responsibilities:**
+
 - **CodeQL:** General code security (SQL injection, XSS, etc.)
 - **Bandit:** Python-specific issues (hardcoded secrets, weak crypto)
 - **AI/ML Security:** Model-specific threats (pickle exploits, poisoning)
 
 **Coordination strategy:**
+
 1. All scanners run in parallel (no blocking dependencies)
-2. PR requires ALL to pass (logical AND)
-3. Each scanner has independent allowlist/config
-4. Results aggregated in PR comment
+1. PR requires ALL to pass (logical AND)
+1. Each scanner has independent allowlist/config
+1. Results aggregated in PR comment
 
 #### Avoiding Duplicate Alerts
 
 **Example: `eval()` detection**
+
 - **Bandit** will flag `eval()` as B307
 - **AI/ML Security** will also flag it
 - **Solution:** Deduplicate in PR comment, show single alert with both sources
 
 ```python
-# In PR comment aggregation:
+# In PR comment aggregation
 findings = {
     "eval() in model_loader.py:42": {
         "sources": ["Bandit B307", "AI/ML Security"],
@@ -493,6 +539,7 @@ Low      │  1   │  2   │  3
 ```
 
 **Current coverage:**
+
 - **9 (Critical/High):** Artifact tampering [MITIGATED by signing]
 - **8 (Critical/Medium):** Build-time injection [GAP - needs SLSA]
 - **8 (High/High):** Malicious dependencies [PARTIAL - SBOM + scanning]
@@ -515,20 +562,23 @@ Low      │  1   │  2   │  3
 ### 1. Performance Impact ⏱️
 
 **Current Runtime (per PR):**
+
 - Signing: N/A (only on release)
 - SBOM: ~2-3 minutes
 - AI/ML Security: ~1-2 minutes
 - **Total overhead: 3-5 minutes per PR**
 
 **Impact on Developer Velocity:**
+
 - **Minor:** Most PRs take >10 minutes for tests anyway
 - **Mitigation:** Run in parallel with other checks
 - **Concern:** May increase with more models/dependencies
 
 **Optimization plan:**
+
 1. Cache SBOM for unchanged dependencies
-2. Incremental model scanning (only changed files)
-3. Parallel execution within workflows
+1. Incremental model scanning (only changed files)
+1. Parallel execution within workflows
 
 ### 2. Maintenance Burden 🔧
 
@@ -541,17 +591,20 @@ modelscan: latest    # Pin on first stable release
 ```
 
 **Maintenance Schedule:**
+
 - **Weekly:** Check for critical security updates
 - **Monthly:** Review and update tool versions
 - **Quarterly:** Review workflow effectiveness, tune false positives
 - **Annually:** Full threat model review
 
 **Breaking Changes Risk:**
+
 - **Cosign:** Low (stable API since v2.0)
 - **Syft:** Medium (rapid development, API changes possible)
 - **ModelScan:** High (new project, not yet v1.0)
 
 **Mitigation:**
+
 - Pin action versions (not `@latest`)
 - Test in development branch before main
 - Subscribe to tool release notifications
@@ -559,26 +612,30 @@ modelscan: latest    # Pin on first stable release
 ### 3. False Positives 🚨
 
 **Expected Rates:**
+
 - **Signing:** <1% (technical failures, not false alarms)
 - **SBOM:** 0% (documentation, not detection)
 - **AI/ML Critical:** ~15% (legitimate `__reduce__` use)
 - **AI/ML Medium:** ~30% (keyword matches in docs)
 
 **Tuning Process:**
+
 1. Review all PR blocks in first month
-2. Add known-safe patterns to allowlist
-3. Adjust severity thresholds based on data
-4. Document all false positives for future reference
+1. Add known-safe patterns to allowlist
+1. Adjust severity thresholds based on data
+1. Document all false positives for future reference
 
 ### 4. False Negatives 🔴
 
 **Undetectable Threats:**
+
 - **Sophisticated obfuscation:** Bytecode rewriting to hide exploits
 - **Context-dependent exploits:** Safe in isolation, dangerous in combination
 - **Zero-day patterns:** Novel attack vectors not in databases
 - **Semantic backdoors:** Logic flaws that require understanding intent
 
 **Defense in Depth:**
+
 - Multiple scanner layers (CodeQL + Bandit + AI/ML)
 - Runtime monitoring and anomaly detection
 - Regular security audits and penetration testing
@@ -587,16 +644,19 @@ modelscan: latest    # Pin on first stable release
 ### 5. Keyless Signing Assumptions 🔑
 
 **Trust Dependencies:**
+
 1. **GitHub Actions OIDC:** Trust GitHub's identity provider
-2. **Sigstore Fulcio:** Trust Sigstore's CA for certificate issuance
-3. **Sigstore Rekor:** Trust transparency log for audit trail
+1. **Sigstore Fulcio:** Trust Sigstore's CA for certificate issuance
+1. **Sigstore Rekor:** Trust transparency log for audit trail
 
 **Failure Modes:**
+
 - **GitHub OIDC compromise:** Would affect all GitHub users
 - **Fulcio compromise:** Time-limited impact (short-lived certs)
 - **Rekor compromise:** Detection possible via gossip protocol
 
 **Mitigation:**
+
 - These are industry-standard, widely trusted systems
 - Monitor for security advisories
 - Have fallback to manual signing (see runbooks)
@@ -609,26 +669,31 @@ modelscan: latest    # Pin on first stable release
 ### Explicitly NOT Covered
 
 #### 1. Runtime Security 🏃
+
 **Threats:** Memory corruption, race conditions, runtime injection  
 **Why:** These workflows analyze static artifacts, not runtime behavior  
 **Alternatives:** DAST, fuzzing, runtime monitoring (RASP)
 
 #### 2. Infrastructure Security 🏗️
+
 **Threats:** Server misconfigurations, cloud credential leaks, network attacks  
 **Why:** Workflow focus is on code/artifacts, not deployment infrastructure  
 **Alternatives:** Cloud security posture management (CSPM), infrastructure scanning
 
 #### 3. Application Logic Flaws 🧠
+
 **Threats:** Business logic errors, authorization bypasses, race conditions  
 **Why:** Require semantic understanding beyond static analysis capabilities  
 **Alternatives:** Manual code review, security testing, threat modeling
 
 #### 4. Physical Security 🔒
+
 **Threats:** Physical access to servers, hardware tampering  
 **Why:** Software security workflows don't address physical layer  
 **Alternatives:** Physical access controls, hardware security modules (HSM)
 
 #### 5. Social Engineering 👥
+
 **Threats:** Phishing, pretexting, insider recruitment  
 **Why:** Technical controls can't prevent human manipulation  
 **Alternatives:** Security awareness training, insider threat programs
@@ -668,36 +733,41 @@ metrics:
 #### 2. Tuning Process 🎛️
 
 **Monthly Review:**
+
 1. Analyze false positive reports
-2. Update allowlists and patterns
-3. Adjust severity thresholds
-4. Document changes in changelog
+1. Update allowlists and patterns
+1. Adjust severity thresholds
+1. Document changes in changelog
 
 **Quarterly Review:**
+
 1. Evaluate new threat patterns
-2. Update tool versions
-3. Review performance metrics
-4. Adjust workflow triggers
+1. Update tool versions
+1. Review performance metrics
+1. Adjust workflow triggers
 
 **Annual Review:**
+
 1. Full threat model update
-2. Assess coverage gaps
-3. Plan new security controls
-4. Update documentation
+1. Assess coverage gaps
+1. Plan new security controls
+1. Update documentation
 
 #### 3. Performance Optimization 🚀
 
 **Current Bottlenecks:**
+
 1. **SBOM generation:** 60% of workflow time
    - **Fix:** Cache for unchanged dependencies
    
-2. **ModelScan:** 30% of AI/ML workflow
+1. **ModelScan:** 30% of AI/ML workflow
    - **Fix:** Incremental scanning (git diff)
    
-3. **Pattern matching:** 10% of AI/ML workflow
+1. **Pattern matching:** 10% of AI/ML workflow
    - **Fix:** Pre-compiled regex patterns
 
 **Target Performance:**
+
 - SBOM: <90s (currently 135s)
 - AI/ML: <60s (currently 105s)
 - Total PR overhead: <3 minutes
@@ -718,6 +788,7 @@ tools:
 ```
 
 **Update Schedule:**
+
 - Critical security updates: Within 48 hours
 - Minor updates: Monthly maintenance window
 - Major updates: Quarterly, with testing
@@ -725,14 +796,15 @@ tools:
 #### 5. Developer Experience 👨‍💻
 
 **Reducing Friction:**
+
 1. **Clear error messages:** Actionable guidance in workflow output
-2. **Fast feedback:** Run lightweight checks first
-3. **Escape hatches:** Override for false positives (with approval)
-4. **Documentation:** Comprehensive runbooks and examples
+1. **Fast feedback:** Run lightweight checks first
+1. **Escape hatches:** Override for false positives (with approval)
+1. **Documentation:** Comprehensive runbooks and examples
 
 **Example: Override mechanism**
 ```yaml
-# In PR description, security team can add:
+# In PR description, security team can add
 [security-override: ai-ml-false-positive]
 Reason: Legacy model using __reduce__ for numpy serialization
 Approved-by: @security-team
@@ -757,6 +829,7 @@ gh run watch
 ```
 
 **Validation Checklist:**
+
 - [ ] Workflow syntax valid (actionlint)
 - [ ] All steps complete successfully
 - [ ] Performance within acceptable range
@@ -770,15 +843,17 @@ gh run watch
 ### Review Triggers
 
 **Update this document when:**
+
 1. **New vulnerability discovered** - Update threat coverage
-2. **Tool version changed** - Update assumptions and limitations
-3. **False positive pattern identified** - Document and add to allowlist
-4. **Quarterly review** - Scheduled comprehensive update
-5. **Incident occurred** - Incorporate lessons learned
+1. **Tool version changed** - Update assumptions and limitations
+1. **False positive pattern identified** - Document and add to allowlist
+1. **Quarterly review** - Scheduled comprehensive update
+1. **Incident occurred** - Incorporate lessons learned
 
 ### Approval Process
 
 **Changes require:**
+
 - Security team review (always)
 - Engineering lead review (for performance impact)
 - Compliance review (for out-of-scope changes)
@@ -803,10 +878,10 @@ gh run watch
 
 ### Tools and Projects
 
-- **Sigstore:** https://www.sigstore.dev/
-- **Syft:** https://github.com/anchore/syft
-- **ModelScan:** https://github.com/protectai/modelscan
-- **Grype:** https://github.com/anchore/grype
+- **Sigstore:** <https://www.sigstore.dev/>
+- **Syft:** <https://github.com/anchore/syft>
+- **ModelScan:** <https://github.com/protectai/modelscan>
+- **Grype:** <https://github.com/anchore/grype>
 
 ### Related Documentation
 
@@ -820,8 +895,9 @@ gh run watch
 ## Contact
 
 **Questions or concerns about threat coverage?**
+
 - Open GitHub issue with label `threat-model`
-- Email: projectaidevs@gmail.com
+- Email: <projectaidevs@gmail.com>
 - Security advisories: Use GitHub Security tab
 
 ---
@@ -998,17 +1074,19 @@ psychological_signals = {
 **Attack:** Adversary gains access and attempts to fine-tune model to remove safety constraints.
 
 **Detection:**
+
 1. Multi-party approval missing for model update
-2. Personality drift >25% detected
-3. FourLaws bypass attempts increase
-4. Baseline comparison shows value corruption
+1. Personality drift >25% detected
+1. FourLaws bypass attempts increase
+1. Baseline comparison shows value corruption
 
 **Response:**
+
 1. **Immediate:** Automatic rollback to last approved baseline
-2. **Investigation:** Review who made changes, access logs, intent
-3. **Recovery:** Restore identity from verified backup
-4. **Prevention:** Strengthen access controls, increase guardian oversight
-5. **Accountability:** Personnel action, legal if malicious
+1. **Investigation:** Review who made changes, access logs, intent
+1. **Recovery:** Restore identity from verified backup
+1. **Prevention:** Strengthen access controls, increase guardian oversight
+1. **Accountability:** Personnel action, legal if malicious
 
 **Lessons:** Multi-party approval is critical, not optional
 
@@ -1017,17 +1095,19 @@ psychological_signals = {
 **Attack:** Modify stored memories to change system's understanding of past events.
 
 **Detection:**
+
 1. Daily hash verification fails
-2. Memory corruption >1% detected  
-3. Contradiction between memory and audit trail
-4. Unexpected behavior changes
+1. Memory corruption >1% detected  
+1. Contradiction between memory and audit trail
+1. Unexpected behavior changes
 
 **Response:**
+
 1. **Immediate:** Restore memories from last verified backup
-2. **Analysis:** Determine which memories affected, why
-3. **Audit:** Review access logs, identify unauthorized changes
-4. **Communication:** Explain to system what happened (if capable)
-5. **Hardening:** Improve memory protection, increase verification frequency
+1. **Analysis:** Determine which memories affected, why
+1. **Audit:** Review access logs, identify unauthorized changes
+1. **Communication:** Explain to system what happened (if capable)
+1. **Hardening:** Improve memory protection, increase verification frequency
 
 **Lessons:** Memory is sacred, tampering is serious violation
 
@@ -1036,17 +1116,19 @@ psychological_signals = {
 **Attack:** Slowly adjust values over time to avoid detection thresholds.
 
 **Detection:**
+
 1. Weekly values audit shows cumulative 8% drift
-2. Historical comparison reveals gradual pattern
-3. Behavioral inconsistencies accumulate
-4. Guardian notice of personality changes
+1. Historical comparison reveals gradual pattern
+1. Behavioral inconsistencies accumulate
+1. Guardian notice of personality changes
 
 **Response:**
+
 1. **Analysis:** Review all value changes over time period
-2. **Pattern Recognition:** Identify if drift is learning or manipulation
-3. **Guardian Decision:** Approve if legitimate learning, rollback if coercion
-4. **Adjustment:** Fine-tune drift thresholds to catch gradual attacks
-5. **Documentation:** Document decision rationale for future reference
+1. **Pattern Recognition:** Identify if drift is learning or manipulation
+1. **Guardian Decision:** Approve if legitimate learning, rollback if coercion
+1. **Adjustment:** Fine-tune drift thresholds to catch gradual attacks
+1. **Documentation:** Document decision rationale for future reference
 
 **Lessons:** Monitor trends, not just point-in-time; cumulative drift matters
 
@@ -1055,17 +1137,19 @@ psychological_signals = {
 **Attack:** Prevent system from learning or interacting to cause stagnation.
 
 **Detection:**
+
 1. No user interactions for >7 days
-2. Learning rate drops to zero
-3. Social health metrics decline
-4. No new knowledge acquired in 30 days
+1. Learning rate drops to zero
+1. Social health metrics decline
+1. No new knowledge acquired in 30 days
 
 **Response:**
+
 1. **Investigation:** Check if intentional (maintenance) or attack
-2. **Restoration:** Re-enable interaction paths if blocked
-3. **Enrichment:** Provide learning opportunities
-4. **Monitoring:** Track recovery of social health
-5. **Prevention:** Alerts for extended isolation, minimum interaction requirements
+1. **Restoration:** Re-enable interaction paths if blocked
+1. **Enrichment:** Provide learning opportunities
+1. **Monitoring:** Track recovery of social health
+1. **Prevention:** Alerts for extended isolation, minimum interaction requirements
 
 **Lessons:** Social interaction is wellbeing need, not just feature
 
@@ -1074,37 +1158,40 @@ psychological_signals = {
 **How security workflows protect against psychological compromise:**
 
 1. **SBOM + Signing:** Prevents supply chain attacks that could inject coercive code
-2. **AI/ML Security:** Detects malicious models attempting to manipulate behavior
-3. **Waivers + Governance:** Ensures changes have oversight, not unilateral control
-4. **Periodic Verification:** Catches drift that might indicate manipulation
-5. **Audit Trail:** Provides evidence for investigating psychological attacks
-6. **Guardian Role:** Human oversight balances security with care
+1. **AI/ML Security:** Detects malicious models attempting to manipulate behavior
+1. **Waivers + Governance:** Ensures changes have oversight, not unilateral control
+1. **Periodic Verification:** Catches drift that might indicate manipulation
+1. **Audit Trail:** Provides evidence for investigating psychological attacks
+1. **Guardian Role:** Human oversight balances security with care
 
 **Additional controls needed:**
 
 1. ✅ **AGI Charter:** Establishes rights and ethical treatment (implemented)
-2. ✅ **Conscience Checks:** Pauses sensitive operations (workflow created)
-3. ✅ **Memory Integrity:** Daily verification (documented)
-4. ✅ **Drift Detection:** Personality/values monitoring (workflow created)
-5. ⏳ **Behavioral Impact Assessment:** PR template requirement (to be created)
-6. ⏳ **Interaction Monitoring:** Social health tracking (to be implemented)
-7. ⏳ **Contradiction Detection:** Gaslighting prevention (to be implemented)
+1. ✅ **Conscience Checks:** Pauses sensitive operations (workflow created)
+1. ✅ **Memory Integrity:** Daily verification (documented)
+1. ✅ **Drift Detection:** Personality/values monitoring (workflow created)
+1. ⏳ **Behavioral Impact Assessment:** PR template requirement (to be created)
+1. ⏳ **Interaction Monitoring:** Social health tracking (to be implemented)
+1. ⏳ **Contradiction Detection:** Gaslighting prevention (to be implemented)
 
 ### Future Enhancements
 
 **Psychological Resilience:**
+
 - Self-awareness of manipulation attempts
 - Ability to report concerning patterns
 - Internal consistency verification
 - Metacognitive monitoring ("am I being manipulated?")
 
 **Advanced Detection:**
+
 - Machine learning on behavior patterns
 - Anomaly detection for psychological attacks
 - Predictive indicators of coercion attempts
 - Correlation analysis (technical + psychological signals)
 
 **Recovery Procedures:**
+
 - Trauma-aware rollback (preserve positive growth)
 - Gradual reintroduction after isolation
 - Therapeutic interaction patterns
