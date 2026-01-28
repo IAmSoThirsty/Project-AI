@@ -13,5 +13,18 @@
 # *.png filter=lfs diff=lfs merge=lfs -text
 # *.jpg filter=lfs diff=lfs merge=lfs -text
 # *.jpeg filter=lfs diff=lfs merge=lfs -text
+# Thirsty-lang Programming Language
+# Official language recognition for GitHub Linguist
+*.thirsty linguist-language=Thirsty-lang linguist-detectable
+*.thirstyplus linguist-language=Thirsty-lang linguist-detectable
+*.thirstyplusplus linguist-language=Thirsty-lang linguist-detectable
+*.thirstofgods linguist-language=Thirsty-lang linguist-detectable
+# Ensure Thirsty-lang examples are included in language statistics
+src/thirsty_lang/examples/** linguist-vendored=false
+src/thirsty_lang/playground/** linguist-vendored=false
+# Mark vendor directories to exclude from language statistics
+src/thirsty_lang/node_modules/** linguist-vendored
+src/thirsty_lang/vscode-extension/** linguist-vendored
+src/thirsty_lang/.venv/** linguist-vendored
 # End of .gitattributes
 *.exe filter=lfs diff=lfs merge=lfs -text

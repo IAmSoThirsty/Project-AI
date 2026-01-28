@@ -1,8 +1,49 @@
-# Thirsty language files
-*.thirsty linguist-language=Thirsty
-*.thirstyplus linguist-language=Thirsty
-*.thirstyplusplus linguist-language=Thirsty
-*.thirstofgods linguist-language=Thirsty
+# Thirsty-lang Module - GitHub Linguist Configuration
+# Official language recognition for GitHub
+
+# All Thirsty-lang source files (use "Thirsty-lang" for consistency)
+*.thirsty linguist-language=Thirsty-lang linguist-detectable
+*.thirstyplus linguist-language=Thirsty-lang linguist-detectable
+*.thirstyplusplus linguist-language=Thirsty-lang linguist-detectable
+*.thirstofgods linguist-language=Thirsty-lang linguist-detectable
+
+# Example files should be counted in language statistics
+examples/** linguist-vendored=false
+examples/**/*.thirsty linguist-language=Thirsty-lang
+
+# JavaScript implementation files
+src/*.js linguist-vendored=false
+
+# Python implementation files
+src/*.py linguist-vendored=false
+
+# Security and test files (include in stats)
+src/security/** linguist-vendored=false
+src/test/** linguist-vendored=false
 
 # Documentation
 *.md linguist-documentation
+docs/** linguist-documentation
+
+# Playground files (vendored)
+playground/** linguist-vendored
+
+# VS Code extension (vendored, not part of core language)
+vscode-extension/** linguist-vendored
+
+# Dependencies (vendored)
+node_modules/** linguist-vendored
+.venv/** linguist-vendored
+__pycache__/** linguist-vendored
+*.pyc linguist-vendored
+
+# Build artifacts (vendored)
+dist/** linguist-vendored
+build/** linguist-vendored
+
+# Configuration files (not vendored, but not documentation)
+*.json -linguist-documentation
+*.toml -linguist-documentation
+package.json -linguist-documentation
+requirements.txt -linguist-documentation
+
