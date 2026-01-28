@@ -136,6 +136,7 @@ result = rag.query_with_llm(
 ## Key Design Decisions
 
 ### Why Abstraction Layer?
+
 - Allows easy addition of future providers (Anthropic, Cohere, etc.)
 - Centralizes API client management
 - Simplifies testing and mocking
