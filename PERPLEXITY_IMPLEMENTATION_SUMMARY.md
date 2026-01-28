@@ -178,6 +178,7 @@ result = rag.query_with_llm(
 ## Next Steps (Optional Enhancements)
 
 ### For Future Development:
+
 1. **Add More Providers**
    - Anthropic (Claude)
    - Cohere
