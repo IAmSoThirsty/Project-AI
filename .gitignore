@@ -169,3 +169,4 @@ unity/sysinfo.txt
 .antigravity/artifacts/
 .antigravity/.cache/
 .antigravity/logs/
+node_modules/
