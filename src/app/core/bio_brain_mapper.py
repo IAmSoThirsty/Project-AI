@@ -78,13 +78,11 @@ where ω is resonant frequency, γ is modulation depth.
 === END FORMAL SPECIFICATION ===
 """
 
-import hashlib
 import json
 import logging
-import os
 import threading
 import uuid
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from enum import Enum
 from pathlib import Path
@@ -335,7 +333,7 @@ class HyperbolicOps:
         # Handle identical points (distance should be exactly 0)
         if np.allclose(x, y, atol=1e-10):
             return np.zeros(x.shape[:-1], dtype=np.float32)
-        
+
         diff_sq = np.sum((x - y) ** 2, axis=-1)
         x_norm_sq = np.sum(x * x, axis=-1)
         y_norm_sq = np.sum(y * y, axis=-1)
@@ -551,12 +549,12 @@ class ResonantSparseGeometryNetwork:
         Returns:
             Sparse activations with only top-k active, shape (batch, n_neurons)
         """
-        batch_size, n_neurons = x.shape
+        n_samples, n_neurons = x.shape
         k = min(k, n_neurons)  # Ensure k doesn't exceed n_neurons
 
         # Find top-k indices for each sample
         result = np.zeros_like(x)
-        for i in range(batch_size):
+        for i in range(n_samples):
             top_k_indices = np.argpartition(x[i], -k)[-k:]
             result[i, top_k_indices] = x[i, top_k_indices]
 
@@ -581,7 +579,6 @@ class ResonantSparseGeometryNetwork:
                 - Output activations, shape (batch, output_dim)
                 - Diagnostic information dict
         """
-        batch_size = x.shape[0]
         diagnostics = {"layer_activations": [], "layer_embeddings": []}
 
         current_activation = x
@@ -1319,7 +1316,7 @@ class BioBrainMappingSystem:
                 json.dump(state, f, indent=2)
             temp_path.replace(state_path)
 
-        logger.debug(f"Saved state to {state_path}")
+        logger.debug("Saved state to %s", state_path)
 
     def load_state(self, network_id: str) -> None:
         """
@@ -1350,7 +1347,7 @@ class BioBrainMappingSystem:
         # Load bio-modules state
         self.bio_modules.load_state(state["bio_modules_state"])
 
-        logger.info(f"Loaded state from {state_path}")
+        logger.info("Loaded state from %s", state_path)
 
     def register_with_kernel(self, kernel: Any) -> None:
         """
@@ -1359,7 +1356,7 @@ class BioBrainMappingSystem:
         Args:
             kernel: CognitionKernel instance
         """
-        logger.info(f"Registering BioBrainMappingSystem with kernel: {kernel}")
+        logger.info("Registering BioBrainMappingSystem with kernel: %s", kernel)
 
         # Register as a system operation
         # This ensures all operations go through governance
