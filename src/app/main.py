@@ -14,6 +14,7 @@ from dotenv import load_dotenv
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QApplication
 
+from app.core.bio_brain_mapper import BioBrainMappingSystem
 from app.core.cognition_kernel import CognitionKernel
 from app.core.council_hub import CouncilHub
 from app.core.governance import Triumvirate as GovernanceTriumvirate
@@ -117,7 +118,37 @@ def initialize_kernel() -> CognitionKernel:
             logger.warning("Triumvirate initialization failed: %s, using fallback", e)
             triumvirate = None
 
-        # 6. Create CognitionKernel with all subsystems
+        # 6. Bio-Inspired Brain Mapping System
+        try:
+            # Load configuration from YAML
+            import yaml
+            config_path = "config/bio_brain_mapping.yaml"
+            if os.path.exists(config_path):
+                with open(config_path) as f:
+                    bio_config_data = yaml.safe_load(f)
+                # Use active preset if specified
+                active_preset = bio_config_data.get("active_preset", "production")
+                if active_preset in bio_config_data.get("presets", {}):
+                    preset = bio_config_data["presets"][active_preset]
+                    # Merge preset with base config
+                    for key, value in preset.items():
+                        if key in bio_config_data and isinstance(value, dict):
+                            bio_config_data[key].update(value)
+                bio_brain_mapper = BioBrainMappingSystem(
+                    config=bio_config_data,
+                    data_dir="data"
+                )
+                logger.info("✅ BioBrainMappingSystem initialized with preset: %s", active_preset)
+            else:
+                bio_brain_mapper = BioBrainMappingSystem(data_dir="data")
+                logger.info("✅ BioBrainMappingSystem initialized with default config")
+        except Exception as e:
+            logger.warning(
+                f"BioBrainMappingSystem initialization failed: {e}, using fallback"
+            )
+            bio_brain_mapper = None
+
+        # 7. Create CognitionKernel with all subsystems
         kernel = CognitionKernel(
             identity_system=identity_system,
             memory_engine=memory_engine,
@@ -138,7 +169,15 @@ def initialize_kernel() -> CognitionKernel:
         logger.info("   - Governance: %s", "✓" if governance_system else "✗ (fallback)")
         logger.info("   - Reflection: %s", "✓" if reflection_engine else "✗ (fallback)")
         logger.info("   - Triumvirate: %s", "✓" if triumvirate else "✗ (fallback)")
+        logger.info("   - BioBrainMapper: %s", "✓" if bio_brain_mapper else "✗ (fallback)")
         logger.info("🔒 Kernel syscall boundary active - all execution governed")
+
+        # Register bio brain mapper with kernel if available
+        if bio_brain_mapper:
+            try:
+                bio_brain_mapper.register_with_kernel(kernel)
+            except Exception as e:
+                logger.warning(f"Failed to register BioBrainMapper with kernel: {e}")
 
         return kernel
 
