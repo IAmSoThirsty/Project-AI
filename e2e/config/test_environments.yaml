@@ -1,0 +1,104 @@
+# E2E Test Environments Configuration
+#
+# This file defines environment-specific settings for E2E tests.
+# Use the E2E_ENV environment variable to select an environment.
+
+# Development environment (default)
+development:
+  environment_name: "development"
+  debug_mode: true
+  
+  services:
+    flask_api:
+      enabled: true
+      host: "localhost"
+      port: 5000
+    
+  timeouts:
+    default: 30
+    service_startup: 60
+    test_execution: 300
+    
+  external_apis:
+    use_real_apis: false
+    mock_services: true
+
+# CI/CD environment
+ci:
+  environment_name: "ci"
+  debug_mode: false
+  
+  services:
+    flask_api:
+      enabled: true
+      host: "localhost"
+      port: 5000
+    
+  timeouts:
+    default: 60
+    service_startup: 120
+    test_execution: 600
+    
+  external_apis:
+    use_real_apis: false
+    mock_services: true
+    
+  reporting:
+    generate_html_report: true
+    generate_json_report: true
+    save_screenshots: true
+    save_logs: true
+
+# Staging environment
+staging:
+  environment_name: "staging"
+  debug_mode: false
+  
+  services:
+    flask_api:
+      enabled: true
+      host: "staging.project-ai.example.com"
+      port: 443
+    
+  timeouts:
+    default: 30
+    service_startup: 90
+    test_execution: 300
+    
+  external_apis:
+    use_real_apis: true
+    mock_services: false
+
+# Production-like environment (full integration)
+production:
+  environment_name: "production"
+  debug_mode: false
+  
+  services:
+    flask_api:
+      enabled: true
+      host: "localhost"
+      port: 5000
+    temporal_server:
+      enabled: true
+      host: "localhost"
+      port: 7233
+    prometheus:
+      enabled: true
+      host: "localhost"
+      port: 9090
+    
+  timeouts:
+    default: 30
+    service_startup: 120
+    test_execution: 600
+    
+  external_apis:
+    use_real_apis: true
+    mock_services: false
+    
+  reporting:
+    generate_html_report: true
+    generate_json_report: true
+    save_screenshots: true
+    save_logs: true
