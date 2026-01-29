@@ -16,7 +16,7 @@ Environment Variables:
 import logging
 import sys
 
-from tarl.runtime import TarlRuntime
+from tarl import TarlRuntime
 from tarl.policies.default import DEFAULT_POLICIES
 from kernel.execution import ExecutionKernel
 from governance.core import GovernanceCore
