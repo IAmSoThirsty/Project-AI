@@ -201,7 +201,7 @@ class StrategyEngine:
         if existing:
             raise ValueError(f"Strategy with name '{name}' already exists")
 
-        if not callable or not isinstance(callable, Callable):
+        if not callable or not hasattr(callable, "__call__"):
             raise ValueError("Strategy callable must be a valid function")
 
         strategy_id = str(uuid.uuid4())
