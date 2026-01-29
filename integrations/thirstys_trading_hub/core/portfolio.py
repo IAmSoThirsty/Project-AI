@@ -96,6 +96,7 @@ class PortfolioManager:
         """
         self.data_dir = data_dir
         self.currency = currency
+        self.initial_balance = initial_balance
         self._positions: dict[str, Position] = {}
         self._balances: dict[str, Balance] = {
             currency: Balance(
@@ -469,11 +470,10 @@ class PortfolioManager:
             Dictionary with performance metrics
         """
         state = self.get_state()
-        initial_balance = 100000.0
 
         return_pct = (
-            (state.total_equity - initial_balance) / initial_balance * 100
-            if initial_balance > 0
+            (state.total_equity - self.initial_balance) / self.initial_balance * 100
+            if self.initial_balance > 0
             else 0.0
         )
 

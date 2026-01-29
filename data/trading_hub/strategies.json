@@ -1,17 +1,14 @@
 {
   "strategies": [
     {
-      "strategy_id": "fd215afd-32ee-4f12-8b9f-0c8d023fc39d",
-      "name": "Simple MA Crossover",
-      "description": "Test strategy",
+      "strategy_id": "1ac0b3ef-417b-451b-ac57-1941e3d02291",
+      "name": "Valid Strategy",
+      "description": "",
       "parameters": {},
-      "symbols": [
-        "BTC/USD",
-        "ETH/USD"
-      ],
+      "symbols": [],
       "timeframe": "1h",
       "enabled": true,
-      "created_at": 1769696732441,
+      "created_at": 1769696995320,
       "metadata": {}
     }
   ],
@@ -33,5 +30,5 @@
       "metadata": {}
     }
   ],
-  "updated_at": 1769696732441
+  "updated_at": 1769696995320
 }
