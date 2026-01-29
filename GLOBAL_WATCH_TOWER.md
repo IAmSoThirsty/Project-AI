@@ -1,22 +1,37 @@
-# Global Watch Tower System
+# Global Watch Tower System - Security Command Center
 
-The Global Watch Tower System provides centralized security monitoring and file verification for Project-AI through a singleton pattern that's accessible from anywhere in the application.
+The Global Watch Tower System serves as the **Security Command Center** for Project-AI, operating under **Cerberus (Chief of Security)**. This centralized security hub provides system-wide monitoring, file verification, and coordinates all security agents and operations.
 
 ## Overview
 
-The Watch Tower system implements a hierarchical defense architecture:
+The Watch Tower system implements a hierarchical security architecture with **Cerberus as Chief of Security**:
 
 ```
-Cerberus (Command Center)
+Cerberus (Chief of Security)
     ↓
-PortAdmin (Regional Coordinators)
+Security Command Center (Global Watch Tower)
     ↓
-WatchTower (Monitoring Stations)
-    ↓
-GateGuardian (Entry Points)
-    ↓
-VerifierAgent (File Scanners)
+    ┌──────────────┬─────────────────┬──────────────┬──────────────┐
+    │              │                 │              │              │
+Border Patrol    Active Defense    Red Team       Oversight &
+Operations       Agents            Agents         Analysis
+    │              │                 │              │
+    ├ PortAdmin    ├ SafetyGuard     ├ RedTeam     ├ Oversight
+    ├ WatchTower   ├ Constitutional  ├ CodeAdv     ├ Validator
+    ├ GateGuardian ├ TarlProtector   ├ Jailbreak   └ Explainability
+    └ VerifierAgent└ DepAuditor
 ```
+
+### Security Authority Structure
+
+- **Cerberus**: Chief of Security - Supreme security authority
+- **Security Command Center (Global Watch Tower)**: Central coordination hub
+- **Border Patrol Operations**: File verification, quarantine, threat detection
+- **Active Defense Agents**: Real-time protection (Safety Guards, Constitutional Guardrails)
+- **Red Team Agents**: Adversarial testing and vulnerability assessment
+- **Oversight & Analysis**: Security monitoring, validation, and explainability
+
+**All security agents and roles operate under Cerberus's command through the Security Command Center.**
 
 ## Quick Start
 
@@ -42,6 +57,55 @@ tower = GlobalWatchTower.initialize(
 ```
 
 ### Basic Usage
+
+#### Access Cerberus (Chief of Security)
+
+```python
+from app.core.global_watch_tower import get_global_watch_tower
+
+tower = get_global_watch_tower()
+
+# Get Cerberus (Chief of Security)
+cerberus = tower.get_chief_of_security()
+print(f"Chief of Security: {cerberus.title}")
+
+# Get comprehensive security status
+status = tower.get_security_status()
+print(f"Chief: {status['chief_of_security']}")
+print(f"Total incidents: {status['total_incidents']}")
+print(f"Registered agents: {status['registered_agents']}")
+```
+
+#### Register External Security Agents
+
+All security agents should register with Cerberus through the Security Command Center:
+
+```python
+from app.core.global_watch_tower import get_global_watch_tower
+
+tower = get_global_watch_tower()
+
+# Register active defense agents
+tower.register_security_agent("active_defense", "safety_guard_1")
+tower.register_security_agent("active_defense", "constitutional_guardrail_1")
+tower.register_security_agent("active_defense", "tarl_protector_1")
+
+# Register red team agents
+tower.register_security_agent("red_team", "red_team_agent_1")
+tower.register_security_agent("red_team", "code_adversary_1")
+tower.register_security_agent("red_team", "jailbreak_tester_1")
+
+# Register oversight agents
+tower.register_security_agent("oversight", "oversight_agent_1")
+tower.register_security_agent("oversight", "validator_agent_1")
+tower.register_security_agent("oversight", "explainability_agent_1")
+
+# Verify registration
+status = tower.get_security_status()
+print(f"Active Defense agents: {len(status['agent_details']['active_defense'])}")
+print(f"Red Team agents: {len(status['agent_details']['red_team'])}")
+print(f"Oversight agents: {len(status['agent_details']['oversight'])}")
+```
 
 #### Verify a File
 

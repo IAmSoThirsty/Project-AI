@@ -102,26 +102,30 @@ class SecurityStatsPanel(QFrame):
         try:
             tower = GlobalWatchTower.get_instance()
             stats = tower.get_stats()
+            security_status = tower.get_security_status()
 
             output = []
             output.append("=" * 50)
-            output.append("WATCH TOWER STATISTICS")
+            output.append("SECURITY COMMAND CENTER")
             output.append("=" * 50)
             output.append("")
+            output.append(f"CHIEF OF SECURITY: {security_status.get('chief_of_security', 'Cerberus')}")
+            output.append("")
+            output.append("OPERATIONAL STATISTICS:")
             output.append(
-                f"Total Verifications: {stats.get('total_verifications', 0)}"
+                f"  Total Verifications: {stats.get('total_verifications', 0)}"
             )
             output.append(
-                f"Total Incidents: {stats.get('total_incidents', 0)}"
+                f"  Total Incidents: {stats.get('total_incidents', 0)}"
             )
             output.append(
-                f"Active Quarantines: {stats.get('active_quarantines', 0)}"
+                f"  Active Quarantines: {stats.get('active_quarantines', 0)}"
             )
             output.append(
-                f"Lockdown Events: {stats.get('lockdown_count', 0)}"
+                f"  Lockdown Events: {stats.get('lockdown_count', 0)}"
             )
             output.append("")
-            output.append("COMPONENT STATUS:")
+            output.append("BORDER PATROL COMPONENTS:")
             output.append(
                 f"  Port Admins: {stats.get('port_admin_count', 0)}"
             )
@@ -130,6 +134,21 @@ class SecurityStatsPanel(QFrame):
             )
             output.append(
                 f"  Gate Guardians: {stats.get('gate_guardian_count', 0)}"
+            )
+            output.append("")
+            output.append("REGISTERED SECURITY AGENTS:")
+            registered = security_status.get('registered_agents', {})
+            output.append(
+                f"  Border Patrol: {registered.get('border_patrol', 0)}"
+            )
+            output.append(
+                f"  Active Defense: {registered.get('active_defense', 0)}"
+            )
+            output.append(
+                f"  Red Team: {registered.get('red_team', 0)}"
+            )
+            output.append(
+                f"  Oversight: {registered.get('oversight', 0)}"
             )
             output.append("")
             output.append("STATUS: ✓ OPERATIONAL")
@@ -375,10 +394,15 @@ class EmergencyControlsPanel(QFrame):
 
 
 class WatchTowerPanel(QWidget):
-    """Main panel for Global Watch Tower Command Center.
+    """Main panel for Security Command Center under Cerberus (Chief of Security).
+    
+    The Global Watch Tower serves as the Security Command Center, with all
+    security operations coordinated under Cerberus's command.
 
     Displays:
+    - Chief of Security status (Cerberus)
     - Security statistics and verification counts
+    - Registered security agents across all categories
     - Recent incident log
     - Emergency lockdown controls
     - Quarantine management
@@ -469,8 +493,8 @@ class WatchTowerPanel(QWidget):
         layout.addWidget(back_btn)
 
         # Title
-        title = QLabel("🏰 GLOBAL WATCH TOWER COMMAND CENTER")
-        title.setFont(QFont("Courier New", 16, QFont.Weight.Bold))
+        title = QLabel("🏰 SECURITY COMMAND CENTER - CERBERUS CHIEF OF SECURITY")
+        title.setFont(QFont("Courier New", 14, QFont.Weight.Bold))
         title.setStyleSheet(STYLE_CYAN_GLOW)
         title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(title, 1)
