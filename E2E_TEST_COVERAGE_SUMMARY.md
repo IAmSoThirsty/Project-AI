@@ -10,7 +10,7 @@ This document summarizes the comprehensive end-to-end test coverage added to the
 
 | Metric | Value |
 |--------|-------|
-| **Total E2E Tests** | 53 |
+| **Total E2E Tests** | 55 |
 | **Test Files** | 4 |
 | **Test Classes** | 15 |
 | **Component Coverage** | 3 major components |
@@ -22,8 +22,8 @@ This document summarizes the comprehensive end-to-end test coverage added to the
 |------|-------|--------|
 | `test_web_backend_endpoints.py` | 7 | ✅ Passing |
 | `test_web_backend_complete_e2e.py` | 21 | ✅ Passing |
-| `test_governance_api_e2e.py` | 14 | ⏸️ Requires API |
-| `test_system_integration_e2e.py` | 13 | ⏸️ Requires API |
+| `test_governance_api_e2e.py` | 15 | ⏸️ Requires API |
+| `test_system_integration_e2e.py` | 12 | ⏸️ Requires API |
 | **Total** | **55** | **28 passing** |
 
 ### By Component
@@ -31,8 +31,8 @@ This document summarizes the comprehensive end-to-end test coverage added to the
 | Component | Tests | Coverage |
 |-----------|-------|----------|
 | Flask Web Backend | 28 | Complete workflows |
-| FastAPI Governance | 14 | TARL policy enforcement |
-| System Integration | 13 | Cross-component flows |
+| FastAPI Governance | 15 | TARL policy enforcement |
+| System Integration | 12 | Cross-component flows |
 
 ## Test Coverage Details
 
@@ -78,11 +78,11 @@ This document summarizes the comprehensive end-to-end test coverage added to the
 - ✅ Password security and validation
 - ✅ Unauthorized access attempts
 
-### 2. FastAPI Governance API E2E Tests (14 tests)
+### 2. FastAPI Governance API E2E Tests (15 tests)
 
 **File**: `tests/e2e/test_governance_api_e2e.py`
 
-#### Complete Governance Workflows (9 tests)
+#### Complete Governance Workflows (10 tests)
 - ⏸️ Read intent allowed (human reading data)
 - ⏸️ Execute intent denied (high-risk actions)
 - ⏸️ Write intent degrade (medium-risk actions)
@@ -92,6 +92,7 @@ This document summarizes the comprehensive end-to-end test coverage added to the
 - ⏸️ TARL version verification
 - ⏸️ Unauthorized actor denied
 - ⏸️ Audit log immutability
+- ⏸️ API root information
 
 #### Edge Cases (3 tests)
 - ⏸️ Missing intent fields
@@ -104,7 +105,7 @@ This document summarizes the comprehensive end-to-end test coverage added to the
 
 **Note**: These tests require the FastAPI governance API to be running (`python start_api.py`). Tests automatically skip with helpful message if API is unavailable.
 
-### 3. System Integration E2E Tests (13 tests)
+### 3. System Integration E2E Tests (12 tests)
 
 **File**: `tests/e2e/test_system_integration_e2e.py`
 
@@ -431,9 +432,9 @@ jobs:
 
 Successfully implemented comprehensive end-to-end test coverage for Project-AI:
 
-- ✅ **53 E2E tests** covering complete user workflows
+- ✅ **55 E2E tests** covering complete user workflows
 - ✅ **28 tests passing** (Flask backend - no external dependencies)
-- ✅ **27 tests ready** (Governance API - require API server)
+- ✅ **27 tests ready** (Governance API - require API server: 15 governance + 12 integration)
 - ✅ **4 test files** organized by component
 - ✅ **15 test classes** with focused test scenarios
 - ✅ **Comprehensive documentation** for maintenance and extension

@@ -37,7 +37,7 @@ Comprehensive e2e tests for the FastAPI governance backend (`api/main.py`).
   - Response time validation
   - Bulk intent processing
 
-**Total Tests**: 14 comprehensive e2e tests
+**Total Tests**: 15 comprehensive e2e tests
 
 ### `test_web_backend_complete_e2e.py`
 Complete Flask web backend user flow tests (`web/backend/app.py`).
@@ -98,7 +98,7 @@ Cross-component integration tests spanning multiple system parts.
   - Complete audit trail
   - TARL immutability
 
-**Total Tests**: 13 comprehensive integration tests
+**Total Tests**: 12 comprehensive integration tests
 
 ### `test_web_backend_endpoints.py`
 Basic endpoint functionality tests (existing, enhanced).
@@ -173,11 +173,11 @@ pytest tests/e2e/test_web_backend_complete_e2e.py::TestWebBackendAuthenticationE
 
 | Component | Test File | Tests | Coverage |
 |-----------|-----------|-------|----------|
-| Governance API (FastAPI) | `test_governance_api_e2e.py` | 14 | Complete workflows |
-| Web Backend (Flask) | `test_web_backend_complete_e2e.py` | 19 | All user flows |
+| Governance API (FastAPI) | `test_governance_api_e2e.py` | 15 | Complete workflows |
+| Web Backend (Flask) | `test_web_backend_complete_e2e.py` | 21 | All user flows |
 | Web Backend (Basic) | `test_web_backend_endpoints.py` | 7 | Basic endpoints |
-| System Integration | `test_system_integration_e2e.py` | 13 | Cross-component |
-| **Total** | **4 files** | **53** | **Comprehensive** |
+| System Integration | `test_system_integration_e2e.py` | 12 | Cross-component |
+| **Total** | **4 files** | **55** | **Comprehensive** |
 
 ### Workflow Coverage
 
