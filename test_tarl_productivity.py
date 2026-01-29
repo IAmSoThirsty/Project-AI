@@ -28,16 +28,17 @@ def test_cache_functionality():
     decision1 = runtime.evaluate(context)
     assert decision1.verdict == TarlVerdict.ALLOW
     
-    # Second evaluation - should be cache hit
-    decision2 = runtime.evaluate(context)
-    assert decision2.verdict == TarlVerdict.ALLOW
+    # Next 9 evaluations - should all be cache hits
+    for i in range(9):
+        decision = runtime.evaluate(context)
+        assert decision.verdict == TarlVerdict.ALLOW
     
     # Check metrics
     metrics = runtime.get_performance_metrics()
-    assert metrics["total_evaluations"] == 2
+    assert metrics["total_evaluations"] == 10
     assert metrics["cache_enabled"] is True
-    assert metrics["cache_hits"] >= 1  # At least one cache hit
-    assert metrics["cache_hit_rate_percent"] >= 50.0
+    assert metrics["cache_hits"] >= 9  # At least 9 cache hits
+    assert metrics["cache_hit_rate_percent"] >= 90.0  # Target 90% hit rate
     
     print("✓ Cache functionality test passed")
     print(f"  Cache hit rate: {metrics['cache_hit_rate_percent']:.2f}%")
