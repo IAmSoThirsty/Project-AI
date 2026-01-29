@@ -332,6 +332,10 @@ class HyperbolicOps:
         Returns:
             Distance d(x, y), shape (*)
         """
+        # Handle identical points (distance should be exactly 0)
+        if np.allclose(x, y, atol=1e-10):
+            return np.zeros(x.shape[:-1], dtype=np.float32)
+        
         diff_sq = np.sum((x - y) ** 2, axis=-1)
         x_norm_sq = np.sum(x * x, axis=-1)
         y_norm_sq = np.sum(y * y, axis=-1)
@@ -412,11 +416,7 @@ class ResonantSparseGeometryNetwork:
         # Initialize each layer
         for layer_idx in range(self.topology.n_layers):
             n_in = self.topology.layer_sizes[layer_idx]
-            n_out = (
-                self.topology.layer_sizes[layer_idx + 1]
-                if layer_idx < self.topology.n_layers - 1
-                else n_in
-            )
+            n_out = self.topology.layer_sizes[layer_idx + 1]
 
             # Hyperbolic embeddings (random initialization in Poincaré ball)
             embeddings = np.random.randn(n_in, self.topology.hyperbolic_dim).astype(
@@ -435,10 +435,7 @@ class ResonantSparseGeometryNetwork:
             self.weights_slow.append(weights_f.copy())
 
             # Sparse connectivity mask (based on hyperbolic distance)
-            if layer_idx < self.topology.n_layers - 1:
-                mask = self._create_sparse_mask(n_in, n_out, embeddings)
-            else:
-                mask = np.ones((n_in, n_out), dtype=np.float32)
+            mask = self._create_sparse_mask(n_in, n_out, embeddings)
             self.masks.append(mask)
 
     def _create_sparse_mask(
@@ -510,13 +507,20 @@ class ResonantSparseGeometryNetwork:
         """
         batch_size, n_neurons = activations.shape
 
+        # Handle edge case of no neurons
+        if n_neurons == 0:
+            return activations
+
         # Compute pairwise distances in hyperbolic space
         distances = np.zeros((n_neurons, n_neurons), dtype=np.float32)
         for i in range(n_neurons):
             for j in range(i + 1, n_neurons):
                 dist = self.hyperbolic.distance(
                     embeddings[i : i + 1], embeddings[j : j + 1]
-                )[0]
+                )
+                # Extract scalar if needed
+                if isinstance(dist, np.ndarray):
+                    dist = dist.item() if dist.size > 0 else 0.0
                 distances[i, j] = dist
                 distances[j, i] = dist
 
