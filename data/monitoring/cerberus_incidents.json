@@ -5105,14 +5105,1664 @@
         "verdict": "suspicious"
       },
       "ts": 1769697786.977574
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "tower": "wt-0-0",
+        "gate": "gate-0-0-0",
+        "box": {
+          "path": "/tmp/tmp_sjxnnn9.py",
+          "created_ts": 1769697834.3807278,
+          "sealed": true,
+          "verified": false,
+          "metadata": {
+            "success": false,
+            "deps": {
+              "success": true,
+              "imports": [],
+              "pip_audit": null
+            },
+            "sandbox": {
+              "module": "/tmp/tmp_sjxnnn9.py",
+              "stdout": "",
+              "stderr": "",
+              "exception": "Traceback (most recent call last):\n  File \"/home/runner/work/Project-AI/Project-AI/src/app/agents/sandbox_worker.py\", line 55, in run_module\n  File \"<frozen runpy>\", line 280, in run_path\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1128, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1186, in get_data\nOSError: [Errno 24] Too many open files: '/usr/lib/python3.12/pkgutil.py'\n"
+            },
+            "verdict": "suspicious"
+          }
+        }
+      },
+      "ts": 1769697834.3907604
+    },
+    {
+      "type": "suspicious_plugin",
+      "gate": "gate-0-0-0",
+      "module": "/tmp/tmp_sjxnnn9.py",
+      "metadata": {
+        "success": false,
+        "deps": {
+          "success": true,
+          "imports": [],
+          "pip_audit": null
+        },
+        "sandbox": {
+          "module": "/tmp/tmp_sjxnnn9.py",
+          "stdout": "",
+          "stderr": "",
+          "exception": "Traceback (most recent call last):\n  File \"/home/runner/work/Project-AI/Project-AI/src/app/agents/sandbox_worker.py\", line 55, in run_module\n  File \"<frozen runpy>\", line 280, in run_path\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1128, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1186, in get_data\nOSError: [Errno 24] Too many open files: '/usr/lib/python3.12/pkgutil.py'\n"
+        },
+        "verdict": "suspicious"
+      },
+      "ts": 1769697834.3963716
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "tower": "wt-0-0",
+        "gate": "gate-0-0-0",
+        "box": {
+          "path": "/tmp/tmp1htbsgdv.py",
+          "created_ts": 1769697834.4053361,
+          "sealed": true,
+          "verified": false,
+          "metadata": {
+            "success": false,
+            "deps": {
+              "success": true,
+              "imports": [],
+              "pip_audit": null
+            },
+            "sandbox": {
+              "module": "/tmp/tmp1htbsgdv.py",
+              "stdout": "",
+              "stderr": "",
+              "exception": "Traceback (most recent call last):\n  File \"/home/runner/work/Project-AI/Project-AI/src/app/agents/sandbox_worker.py\", line 55, in run_module\n  File \"<frozen runpy>\", line 280, in run_path\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1128, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1186, in get_data\nOSError: [Errno 24] Too many open files: '/usr/lib/python3.12/pkgutil.py'\n"
+            },
+            "verdict": "suspicious"
+          }
+        }
+      },
+      "ts": 1769697834.4143395
+    },
+    {
+      "type": "suspicious_plugin",
+      "gate": "gate-0-0-0",
+      "module": "/tmp/tmp1htbsgdv.py",
+      "metadata": {
+        "success": false,
+        "deps": {
+          "success": true,
+          "imports": [],
+          "pip_audit": null
+        },
+        "sandbox": {
+          "module": "/tmp/tmp1htbsgdv.py",
+          "stdout": "",
+          "stderr": "",
+          "exception": "Traceback (most recent call last):\n  File \"/home/runner/work/Project-AI/Project-AI/src/app/agents/sandbox_worker.py\", line 55, in run_module\n  File \"<frozen runpy>\", line 280, in run_path\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1128, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1186, in get_data\nOSError: [Errno 24] Too many open files: '/usr/lib/python3.12/pkgutil.py'\n"
+        },
+        "verdict": "suspicious"
+      },
+      "ts": 1769697834.420268
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "tower": "wt-0-0",
+        "gate": "gate-0-0-0",
+        "box": {
+          "path": "/tmp/tmp1m078tlx.py",
+          "created_ts": 1769697834.429452,
+          "sealed": true,
+          "verified": false,
+          "metadata": {
+            "success": false,
+            "deps": {
+              "success": true,
+              "imports": [],
+              "pip_audit": null
+            },
+            "sandbox": {
+              "module": "/tmp/tmp1m078tlx.py",
+              "stdout": "",
+              "stderr": "",
+              "exception": "Traceback (most recent call last):\n  File \"/home/runner/work/Project-AI/Project-AI/src/app/agents/sandbox_worker.py\", line 55, in run_module\n  File \"<frozen runpy>\", line 280, in run_path\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1128, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1186, in get_data\nOSError: [Errno 24] Too many open files: '/usr/lib/python3.12/pkgutil.py'\n"
+            },
+            "verdict": "suspicious"
+          }
+        }
+      },
+      "ts": 1769697834.4383824
+    },
+    {
+      "type": "suspicious_plugin",
+      "gate": "gate-0-0-0",
+      "module": "/tmp/tmp1m078tlx.py",
+      "metadata": {
+        "success": false,
+        "deps": {
+          "success": true,
+          "imports": [],
+          "pip_audit": null
+        },
+        "sandbox": {
+          "module": "/tmp/tmp1m078tlx.py",
+          "stdout": "",
+          "stderr": "",
+          "exception": "Traceback (most recent call last):\n  File \"/home/runner/work/Project-AI/Project-AI/src/app/agents/sandbox_worker.py\", line 55, in run_module\n  File \"<frozen runpy>\", line 280, in run_path\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1128, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1186, in get_data\nOSError: [Errno 24] Too many open files: '/usr/lib/python3.12/pkgutil.py'\n"
+        },
+        "verdict": "suspicious"
+      },
+      "ts": 1769697834.4442945
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "tower": "wt-0-0",
+        "gate": "gate-0-0-1",
+        "box": {
+          "path": "/tmp/tmp1m078tlx.py",
+          "created_ts": 1769697834.4484236,
+          "sealed": true,
+          "verified": false,
+          "metadata": {
+            "success": false,
+            "deps": {
+              "success": true,
+              "imports": [],
+              "pip_audit": null
+            },
+            "sandbox": {
+              "module": "/tmp/tmp1m078tlx.py",
+              "stdout": "",
+              "stderr": "",
+              "exception": "Traceback (most recent call last):\n  File \"/home/runner/work/Project-AI/Project-AI/src/app/agents/sandbox_worker.py\", line 55, in run_module\n  File \"<frozen runpy>\", line 280, in run_path\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1128, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1186, in get_data\nOSError: [Errno 24] Too many open files: '/usr/lib/python3.12/pkgutil.py'\n"
+            },
+            "verdict": "suspicious"
+          }
+        }
+      },
+      "ts": 1769697834.4577253
+    },
+    {
+      "type": "suspicious_plugin",
+      "gate": "gate-0-0-1",
+      "module": "/tmp/tmp1m078tlx.py",
+      "metadata": {
+        "success": false,
+        "deps": {
+          "success": true,
+          "imports": [],
+          "pip_audit": null
+        },
+        "sandbox": {
+          "module": "/tmp/tmp1m078tlx.py",
+          "stdout": "",
+          "stderr": "",
+          "exception": "Traceback (most recent call last):\n  File \"/home/runner/work/Project-AI/Project-AI/src/app/agents/sandbox_worker.py\", line 55, in run_module\n  File \"<frozen runpy>\", line 280, in run_path\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1128, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1186, in get_data\nOSError: [Errno 24] Too many open files: '/usr/lib/python3.12/pkgutil.py'\n"
+        },
+        "verdict": "suspicious"
+      },
+      "ts": 1769697834.464087
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "tower": "wt-0-1",
+        "gate": "gate-0-1-0",
+        "box": {
+          "path": "/tmp/tmp1m078tlx.py",
+          "created_ts": 1769697834.468293,
+          "sealed": true,
+          "verified": false,
+          "metadata": {
+            "success": false,
+            "deps": {
+              "success": true,
+              "imports": [],
+              "pip_audit": null
+            },
+            "sandbox": {
+              "module": "/tmp/tmp1m078tlx.py",
+              "stdout": "",
+              "stderr": "",
+              "exception": "Traceback (most recent call last):\n  File \"/home/runner/work/Project-AI/Project-AI/src/app/agents/sandbox_worker.py\", line 55, in run_module\n  File \"<frozen runpy>\", line 280, in run_path\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1128, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1186, in get_data\nOSError: [Errno 24] Too many open files: '/usr/lib/python3.12/pkgutil.py'\n"
+            },
+            "verdict": "suspicious"
+          }
+        }
+      },
+      "ts": 1769697834.4960783
+    },
+    {
+      "type": "suspicious_plugin",
+      "gate": "gate-0-1-0",
+      "module": "/tmp/tmp1m078tlx.py",
+      "metadata": {
+        "success": false,
+        "deps": {
+          "success": true,
+          "imports": [],
+          "pip_audit": null
+        },
+        "sandbox": {
+          "module": "/tmp/tmp1m078tlx.py",
+          "stdout": "",
+          "stderr": "",
+          "exception": "Traceback (most recent call last):\n  File \"/home/runner/work/Project-AI/Project-AI/src/app/agents/sandbox_worker.py\", line 55, in run_module\n  File \"<frozen runpy>\", line 280, in run_path\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1128, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1186, in get_data\nOSError: [Errno 24] Too many open files: '/usr/lib/python3.12/pkgutil.py'\n"
+        },
+        "verdict": "suspicious"
+      },
+      "ts": 1769697834.5020227
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "tower": "wt-0-1",
+        "gate": "gate-0-1-1",
+        "box": {
+          "path": "/tmp/tmp1m078tlx.py",
+          "created_ts": 1769697834.5063047,
+          "sealed": true,
+          "verified": false,
+          "metadata": {
+            "success": false,
+            "deps": {
+              "success": true,
+              "imports": [],
+              "pip_audit": null
+            },
+            "sandbox": {
+              "module": "/tmp/tmp1m078tlx.py",
+              "stdout": "",
+              "stderr": "",
+              "exception": "Traceback (most recent call last):\n  File \"/home/runner/work/Project-AI/Project-AI/src/app/agents/sandbox_worker.py\", line 55, in run_module\n  File \"<frozen runpy>\", line 280, in run_path\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1128, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1186, in get_data\nOSError: [Errno 24] Too many open files: '/usr/lib/python3.12/pkgutil.py'\n"
+            },
+            "verdict": "suspicious"
+          }
+        }
+      },
+      "ts": 1769697834.5156395
+    },
+    {
+      "type": "suspicious_plugin",
+      "gate": "gate-0-1-1",
+      "module": "/tmp/tmp1m078tlx.py",
+      "metadata": {
+        "success": false,
+        "deps": {
+          "success": true,
+          "imports": [],
+          "pip_audit": null
+        },
+        "sandbox": {
+          "module": "/tmp/tmp1m078tlx.py",
+          "stdout": "",
+          "stderr": "",
+          "exception": "Traceback (most recent call last):\n  File \"/home/runner/work/Project-AI/Project-AI/src/app/agents/sandbox_worker.py\", line 55, in run_module\n  File \"<frozen runpy>\", line 280, in run_path\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1128, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1186, in get_data\nOSError: [Errno 24] Too many open files: '/usr/lib/python3.12/pkgutil.py'\n"
+        },
+        "verdict": "suspicious"
+      },
+      "ts": 1769697834.521982
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "tower": "wt-0-0",
+        "gate": "gate-0-0-0",
+        "box": {
+          "path": "/tmp/tmp1m078tlx.py",
+          "created_ts": 1769697834.5262375,
+          "sealed": true,
+          "verified": false,
+          "metadata": {
+            "success": false,
+            "deps": {
+              "success": true,
+              "imports": [],
+              "pip_audit": null
+            },
+            "sandbox": {
+              "module": "/tmp/tmp1m078tlx.py",
+              "stdout": "",
+              "stderr": "",
+              "exception": "Traceback (most recent call last):\n  File \"/home/runner/work/Project-AI/Project-AI/src/app/agents/sandbox_worker.py\", line 55, in run_module\n  File \"<frozen runpy>\", line 280, in run_path\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1128, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1186, in get_data\nOSError: [Errno 24] Too many open files: '/usr/lib/python3.12/pkgutil.py'\n"
+            },
+            "verdict": "suspicious"
+          }
+        }
+      },
+      "ts": 1769697834.5302887
+    },
+    {
+      "type": "suspicious_plugin",
+      "gate": "gate-0-0-0",
+      "module": "/tmp/tmp1m078tlx.py",
+      "metadata": {
+        "success": false,
+        "deps": {
+          "success": true,
+          "imports": [],
+          "pip_audit": null
+        },
+        "sandbox": {
+          "module": "/tmp/tmp1m078tlx.py",
+          "stdout": "",
+          "stderr": "",
+          "exception": "Traceback (most recent call last):\n  File \"/home/runner/work/Project-AI/Project-AI/src/app/agents/sandbox_worker.py\", line 55, in run_module\n  File \"<frozen runpy>\", line 280, in run_path\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1128, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1186, in get_data\nOSError: [Errno 24] Too many open files: '/usr/lib/python3.12/pkgutil.py'\n"
+        },
+        "verdict": "suspicious"
+      },
+      "ts": 1769697834.535683
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "tower": "wt-0-0",
+        "gate": "gate-0-0-0",
+        "box": {
+          "path": "/tmp/tmpn34_fbce.py",
+          "created_ts": 1769697834.544465,
+          "sealed": true,
+          "verified": false,
+          "metadata": {
+            "success": false,
+            "deps": {
+              "success": true,
+              "imports": [],
+              "pip_audit": null
+            },
+            "sandbox": {
+              "module": "/tmp/tmpn34_fbce.py",
+              "stdout": "",
+              "stderr": "",
+              "exception": "Traceback (most recent call last):\n  File \"/home/runner/work/Project-AI/Project-AI/src/app/agents/sandbox_worker.py\", line 55, in run_module\n  File \"<frozen runpy>\", line 280, in run_path\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1128, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1186, in get_data\nOSError: [Errno 24] Too many open files: '/usr/lib/python3.12/pkgutil.py'\n"
+            },
+            "verdict": "suspicious"
+          }
+        }
+      },
+      "ts": 1769697834.5534904
+    },
+    {
+      "type": "suspicious_plugin",
+      "gate": "gate-0-0-0",
+      "module": "/tmp/tmpn34_fbce.py",
+      "metadata": {
+        "success": false,
+        "deps": {
+          "success": true,
+          "imports": [],
+          "pip_audit": null
+        },
+        "sandbox": {
+          "module": "/tmp/tmpn34_fbce.py",
+          "stdout": "",
+          "stderr": "",
+          "exception": "Traceback (most recent call last):\n  File \"/home/runner/work/Project-AI/Project-AI/src/app/agents/sandbox_worker.py\", line 55, in run_module\n  File \"<frozen runpy>\", line 280, in run_path\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1128, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1186, in get_data\nOSError: [Errno 24] Too many open files: '/usr/lib/python3.12/pkgutil.py'\n"
+        },
+        "verdict": "suspicious"
+      },
+      "ts": 1769697834.5597131
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "tower": "wt-0-0",
+        "gate": "gate-0-0-0",
+        "box": {
+          "path": "/tmp/tmpx_x7d75m.py",
+          "created_ts": 1769697834.5687065,
+          "sealed": true,
+          "verified": false,
+          "metadata": {
+            "success": false,
+            "deps": {
+              "success": true,
+              "imports": [],
+              "pip_audit": null
+            },
+            "sandbox": {
+              "module": "/tmp/tmpx_x7d75m.py",
+              "stdout": "",
+              "stderr": "",
+              "exception": "Traceback (most recent call last):\n  File \"/home/runner/work/Project-AI/Project-AI/src/app/agents/sandbox_worker.py\", line 55, in run_module\n  File \"<frozen runpy>\", line 280, in run_path\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1128, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1186, in get_data\nOSError: [Errno 24] Too many open files: '/usr/lib/python3.12/pkgutil.py'\n"
+            },
+            "verdict": "suspicious"
+          }
+        }
+      },
+      "ts": 1769697834.5776718
+    },
+    {
+      "type": "suspicious_plugin",
+      "gate": "gate-0-0-0",
+      "module": "/tmp/tmpx_x7d75m.py",
+      "metadata": {
+        "success": false,
+        "deps": {
+          "success": true,
+          "imports": [],
+          "pip_audit": null
+        },
+        "sandbox": {
+          "module": "/tmp/tmpx_x7d75m.py",
+          "stdout": "",
+          "stderr": "",
+          "exception": "Traceback (most recent call last):\n  File \"/home/runner/work/Project-AI/Project-AI/src/app/agents/sandbox_worker.py\", line 55, in run_module\n  File \"<frozen runpy>\", line 280, in run_path\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1128, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1186, in get_data\nOSError: [Errno 24] Too many open files: '/usr/lib/python3.12/pkgutil.py'\n"
+        },
+        "verdict": "suspicious"
+      },
+      "ts": 1769697834.584057
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "tower": "wt-0-0",
+        "gate": "gate-0-0-0",
+        "box": {
+          "path": "/tmp/tmpchimovin.py",
+          "created_ts": 1769697834.6873548,
+          "sealed": true,
+          "verified": false,
+          "metadata": {
+            "success": false,
+            "deps": {
+              "success": true,
+              "imports": [],
+              "pip_audit": null
+            },
+            "sandbox": {
+              "module": "/tmp/tmpchimovin.py",
+              "stdout": "",
+              "stderr": "",
+              "exception": "Traceback (most recent call last):\n  File \"/home/runner/work/Project-AI/Project-AI/src/app/agents/sandbox_worker.py\", line 55, in run_module\n  File \"<frozen runpy>\", line 280, in run_path\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1128, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1186, in get_data\nOSError: [Errno 24] Too many open files: '/usr/lib/python3.12/pkgutil.py'\n"
+            },
+            "verdict": "suspicious"
+          }
+        }
+      },
+      "ts": 1769697834.6992302
+    },
+    {
+      "type": "suspicious_plugin",
+      "gate": "gate-0-0-0",
+      "module": "/tmp/tmpchimovin.py",
+      "metadata": {
+        "success": false,
+        "deps": {
+          "success": true,
+          "imports": [],
+          "pip_audit": null
+        },
+        "sandbox": {
+          "module": "/tmp/tmpchimovin.py",
+          "stdout": "",
+          "stderr": "",
+          "exception": "Traceback (most recent call last):\n  File \"/home/runner/work/Project-AI/Project-AI/src/app/agents/sandbox_worker.py\", line 55, in run_module\n  File \"<frozen runpy>\", line 280, in run_path\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1128, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1186, in get_data\nOSError: [Errno 24] Too many open files: '/usr/lib/python3.12/pkgutil.py'\n"
+        },
+        "verdict": "suspicious"
+      },
+      "ts": 1769697834.7051492
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "tower": "wt-0-0",
+        "gate": "gate-0-0-0",
+        "box": {
+          "path": "/tmp/tmpx7vaspf_.py",
+          "created_ts": 1769697834.7477899,
+          "sealed": true,
+          "verified": false,
+          "metadata": {
+            "success": false,
+            "deps": {
+              "success": true,
+              "imports": [],
+              "pip_audit": null
+            },
+            "sandbox": {
+              "module": "/tmp/tmpx7vaspf_.py",
+              "stdout": "",
+              "stderr": "",
+              "exception": "Traceback (most recent call last):\n  File \"/home/runner/work/Project-AI/Project-AI/src/app/agents/sandbox_worker.py\", line 55, in run_module\n  File \"<frozen runpy>\", line 280, in run_path\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1128, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1186, in get_data\nOSError: [Errno 24] Too many open files: '/usr/lib/python3.12/pkgutil.py'\n"
+            },
+            "verdict": "suspicious"
+          }
+        }
+      },
+      "ts": 1769697834.7611396
+    },
+    {
+      "type": "suspicious_plugin",
+      "gate": "gate-0-0-0",
+      "module": "/tmp/tmpx7vaspf_.py",
+      "metadata": {
+        "success": false,
+        "deps": {
+          "success": true,
+          "imports": [],
+          "pip_audit": null
+        },
+        "sandbox": {
+          "module": "/tmp/tmpx7vaspf_.py",
+          "stdout": "",
+          "stderr": "",
+          "exception": "Traceback (most recent call last):\n  File \"/home/runner/work/Project-AI/Project-AI/src/app/agents/sandbox_worker.py\", line 55, in run_module\n  File \"<frozen runpy>\", line 280, in run_path\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1128, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1186, in get_data\nOSError: [Errno 24] Too many open files: '/usr/lib/python3.12/pkgutil.py'\n"
+        },
+        "verdict": "suspicious"
+      },
+      "ts": 1769697834.7669992
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-0",
+        "gate": "gate-0-0-0",
+        "ts": 1769697834.7920196
+      },
+      "ts": 1769697834.79314
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-0",
+        "gate": "gate-0-0-1",
+        "ts": 1769697834.7980402
+      },
+      "ts": 1769697834.799079
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-0",
+        "gate": "gate-0-0-2",
+        "ts": 1769697834.8038485
+      },
+      "ts": 1769697834.8048685
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-0",
+        "gate": "gate-0-0-3",
+        "ts": 1769697834.8094974
+      },
+      "ts": 1769697834.8105376
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-0",
+        "gate": "gate-0-0-4",
+        "ts": 1769697834.8151004
+      },
+      "ts": 1769697834.8161476
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-1",
+        "gate": "gate-0-1-0",
+        "ts": 1769697834.8207388
+      },
+      "ts": 1769697834.822385
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-1",
+        "gate": "gate-0-1-1",
+        "ts": 1769697834.8298316
+      },
+      "ts": 1769697834.8310657
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-1",
+        "gate": "gate-0-1-2",
+        "ts": 1769697834.83837
+      },
+      "ts": 1769697834.839425
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-1",
+        "gate": "gate-0-1-3",
+        "ts": 1769697834.8447077
+      },
+      "ts": 1769697834.8457649
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-1",
+        "gate": "gate-0-1-4",
+        "ts": 1769697834.8503258
+      },
+      "ts": 1769697834.8515038
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-2",
+        "gate": "gate-0-2-0",
+        "ts": 1769697834.8561246
+      },
+      "ts": 1769697834.857175
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-2",
+        "gate": "gate-0-2-1",
+        "ts": 1769697834.861879
+      },
+      "ts": 1769697834.8629212
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-2",
+        "gate": "gate-0-2-2",
+        "ts": 1769697834.8675437
+      },
+      "ts": 1769697834.8685856
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-2",
+        "gate": "gate-0-2-3",
+        "ts": 1769697834.8732514
+      },
+      "ts": 1769697834.8743072
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-2",
+        "gate": "gate-0-2-4",
+        "ts": 1769697834.8789208
+      },
+      "ts": 1769697834.87995
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-3",
+        "gate": "gate-0-3-0",
+        "ts": 1769697834.8846643
+      },
+      "ts": 1769697834.885733
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-3",
+        "gate": "gate-0-3-1",
+        "ts": 1769697834.890323
+      },
+      "ts": 1769697834.891374
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-3",
+        "gate": "gate-0-3-2",
+        "ts": 1769697834.8961055
+      },
+      "ts": 1769697834.8971672
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-3",
+        "gate": "gate-0-3-3",
+        "ts": 1769697834.901848
+      },
+      "ts": 1769697834.9029164
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-3",
+        "gate": "gate-0-3-4",
+        "ts": 1769697834.907551
+      },
+      "ts": 1769697834.908596
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-4",
+        "gate": "gate-0-4-0",
+        "ts": 1769697834.913319
+      },
+      "ts": 1769697834.9143693
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-4",
+        "gate": "gate-0-4-1",
+        "ts": 1769697834.9190397
+      },
+      "ts": 1769697834.9201136
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-4",
+        "gate": "gate-0-4-2",
+        "ts": 1769697834.924803
+      },
+      "ts": 1769697834.9258523
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-4",
+        "gate": "gate-0-4-3",
+        "ts": 1769697834.9305365
+      },
+      "ts": 1769697834.9315865
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-4",
+        "gate": "gate-0-4-4",
+        "ts": 1769697834.9363768
+      },
+      "ts": 1769697834.9374473
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-5",
+        "gate": "gate-0-5-0",
+        "ts": 1769697834.9422226
+      },
+      "ts": 1769697834.943282
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-5",
+        "gate": "gate-0-5-1",
+        "ts": 1769697834.9479876
+      },
+      "ts": 1769697834.9490476
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-5",
+        "gate": "gate-0-5-2",
+        "ts": 1769697834.953804
+      },
+      "ts": 1769697834.9549778
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-5",
+        "gate": "gate-0-5-3",
+        "ts": 1769697834.9600532
+      },
+      "ts": 1769697834.9611588
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-5",
+        "gate": "gate-0-5-4",
+        "ts": 1769697834.9658704
+      },
+      "ts": 1769697834.9669378
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-6",
+        "gate": "gate-0-6-0",
+        "ts": 1769697834.971659
+      },
+      "ts": 1769697834.9727383
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-6",
+        "gate": "gate-0-6-1",
+        "ts": 1769697834.977422
+      },
+      "ts": 1769697834.9784997
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-6",
+        "gate": "gate-0-6-2",
+        "ts": 1769697834.9832578
+      },
+      "ts": 1769697834.984347
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-6",
+        "gate": "gate-0-6-3",
+        "ts": 1769697834.989093
+      },
+      "ts": 1769697834.9901602
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-6",
+        "gate": "gate-0-6-4",
+        "ts": 1769697834.9975832
+      },
+      "ts": 1769697834.998667
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-7",
+        "gate": "gate-0-7-0",
+        "ts": 1769697835.0034394
+      },
+      "ts": 1769697835.0045395
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-7",
+        "gate": "gate-0-7-1",
+        "ts": 1769697835.0093012
+      },
+      "ts": 1769697835.0103865
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-7",
+        "gate": "gate-0-7-2",
+        "ts": 1769697835.0151367
+      },
+      "ts": 1769697835.0162396
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-7",
+        "gate": "gate-0-7-3",
+        "ts": 1769697835.0209668
+      },
+      "ts": 1769697835.0220482
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-7",
+        "gate": "gate-0-7-4",
+        "ts": 1769697835.0268025
+      },
+      "ts": 1769697835.0279014
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-8",
+        "gate": "gate-0-8-0",
+        "ts": 1769697835.0327058
+      },
+      "ts": 1769697835.033789
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-8",
+        "gate": "gate-0-8-1",
+        "ts": 1769697835.038698
+      },
+      "ts": 1769697835.039786
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-8",
+        "gate": "gate-0-8-2",
+        "ts": 1769697835.044588
+      },
+      "ts": 1769697835.0456932
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-8",
+        "gate": "gate-0-8-3",
+        "ts": 1769697835.0505693
+      },
+      "ts": 1769697835.0516748
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-8",
+        "gate": "gate-0-8-4",
+        "ts": 1769697835.056461
+      },
+      "ts": 1769697835.0575552
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-9",
+        "gate": "gate-0-9-0",
+        "ts": 1769697835.0623722
+      },
+      "ts": 1769697835.0634868
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-9",
+        "gate": "gate-0-9-1",
+        "ts": 1769697835.0683
+      },
+      "ts": 1769697835.0693932
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-9",
+        "gate": "gate-0-9-2",
+        "ts": 1769697835.0742598
+      },
+      "ts": 1769697835.0753593
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-9",
+        "gate": "gate-0-9-3",
+        "ts": 1769697835.080196
+      },
+      "ts": 1769697835.0812902
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-9",
+        "gate": "gate-0-9-4",
+        "ts": 1769697835.0861633
+      },
+      "ts": 1769697835.0872593
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-0",
+        "gate": "gate-0-0-0",
+        "ts": 1769697835.1257286
+      },
+      "ts": 1769697835.1269855
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-0",
+        "gate": "gate-0-0-1",
+        "ts": 1769697835.1322849
+      },
+      "ts": 1769697835.133795
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-0",
+        "gate": "gate-0-0-2",
+        "ts": 1769697835.1389682
+      },
+      "ts": 1769697835.1400638
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-0",
+        "gate": "gate-0-0-3",
+        "ts": 1769697835.1449602
+      },
+      "ts": 1769697835.1460834
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-0",
+        "gate": "gate-0-0-4",
+        "ts": 1769697835.1509676
+      },
+      "ts": 1769697835.1521006
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-1",
+        "gate": "gate-0-1-0",
+        "ts": 1769697835.1570172
+      },
+      "ts": 1769697835.1581426
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-1",
+        "gate": "gate-0-1-1",
+        "ts": 1769697835.163064
+      },
+      "ts": 1769697835.1641753
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-1",
+        "gate": "gate-0-1-2",
+        "ts": 1769697835.1690693
+      },
+      "ts": 1769697835.1702032
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-1",
+        "gate": "gate-0-1-3",
+        "ts": 1769697835.1751192
+      },
+      "ts": 1769697835.1762383
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-1",
+        "gate": "gate-0-1-4",
+        "ts": 1769697835.1819594
+      },
+      "ts": 1769697835.1830907
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-2",
+        "gate": "gate-0-2-0",
+        "ts": 1769697835.1891577
+      },
+      "ts": 1769697835.1902778
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-2",
+        "gate": "gate-0-2-1",
+        "ts": 1769697835.195333
+      },
+      "ts": 1769697835.196458
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-2",
+        "gate": "gate-0-2-2",
+        "ts": 1769697835.2014275
+      },
+      "ts": 1769697835.2025433
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-2",
+        "gate": "gate-0-2-3",
+        "ts": 1769697835.2075663
+      },
+      "ts": 1769697835.208751
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-2",
+        "gate": "gate-0-2-4",
+        "ts": 1769697835.213758
+      },
+      "ts": 1769697835.2148633
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-3",
+        "gate": "gate-0-3-0",
+        "ts": 1769697835.219855
+      },
+      "ts": 1769697835.2209797
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-3",
+        "gate": "gate-0-3-1",
+        "ts": 1769697835.2259493
+      },
+      "ts": 1769697835.2270768
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-3",
+        "gate": "gate-0-3-2",
+        "ts": 1769697835.2321277
+      },
+      "ts": 1769697835.2332425
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-3",
+        "gate": "gate-0-3-3",
+        "ts": 1769697835.2385097
+      },
+      "ts": 1769697835.239637
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-3",
+        "gate": "gate-0-3-4",
+        "ts": 1769697835.2447157
+      },
+      "ts": 1769697835.2458467
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-4",
+        "gate": "gate-0-4-0",
+        "ts": 1769697835.2509158
+      },
+      "ts": 1769697835.2520401
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-4",
+        "gate": "gate-0-4-1",
+        "ts": 1769697835.257084
+      },
+      "ts": 1769697835.2582161
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-4",
+        "gate": "gate-0-4-2",
+        "ts": 1769697835.263226
+      },
+      "ts": 1769697835.2643502
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-4",
+        "gate": "gate-0-4-3",
+        "ts": 1769697835.2693763
+      },
+      "ts": 1769697835.2705004
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-4",
+        "gate": "gate-0-4-4",
+        "ts": 1769697835.2755046
+      },
+      "ts": 1769697835.2766886
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-5",
+        "gate": "gate-0-5-0",
+        "ts": 1769697835.2817173
+      },
+      "ts": 1769697835.2828853
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-5",
+        "gate": "gate-0-5-1",
+        "ts": 1769697835.2879179
+      },
+      "ts": 1769697835.3069444
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-5",
+        "gate": "gate-0-5-2",
+        "ts": 1769697835.3124769
+      },
+      "ts": 1769697835.3136714
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-5",
+        "gate": "gate-0-5-3",
+        "ts": 1769697835.318806
+      },
+      "ts": 1769697835.319953
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-5",
+        "gate": "gate-0-5-4",
+        "ts": 1769697835.3250794
+      },
+      "ts": 1769697835.326253
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-6",
+        "gate": "gate-0-6-0",
+        "ts": 1769697835.3313751
+      },
+      "ts": 1769697835.3325336
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-6",
+        "gate": "gate-0-6-1",
+        "ts": 1769697835.337891
+      },
+      "ts": 1769697835.3390326
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-6",
+        "gate": "gate-0-6-2",
+        "ts": 1769697835.3441746
+      },
+      "ts": 1769697835.345318
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-6",
+        "gate": "gate-0-6-3",
+        "ts": 1769697835.3504448
+      },
+      "ts": 1769697835.3516343
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-6",
+        "gate": "gate-0-6-4",
+        "ts": 1769697835.3567584
+      },
+      "ts": 1769697835.3579082
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-7",
+        "gate": "gate-0-7-0",
+        "ts": 1769697835.3630147
+      },
+      "ts": 1769697835.3641758
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-7",
+        "gate": "gate-0-7-1",
+        "ts": 1769697835.369258
+      },
+      "ts": 1769697835.3704002
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-7",
+        "gate": "gate-0-7-2",
+        "ts": 1769697835.375497
+      },
+      "ts": 1769697835.3766751
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-7",
+        "gate": "gate-0-7-3",
+        "ts": 1769697835.381825
+      },
+      "ts": 1769697835.382998
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-7",
+        "gate": "gate-0-7-4",
+        "ts": 1769697835.3880954
+      },
+      "ts": 1769697835.3892689
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-8",
+        "gate": "gate-0-8-0",
+        "ts": 1769697835.394387
+      },
+      "ts": 1769697835.3955445
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-8",
+        "gate": "gate-0-8-1",
+        "ts": 1769697835.4006891
+      },
+      "ts": 1769697835.4018507
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-8",
+        "gate": "gate-0-8-2",
+        "ts": 1769697835.40701
+      },
+      "ts": 1769697835.4081697
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-8",
+        "gate": "gate-0-8-3",
+        "ts": 1769697835.4133332
+      },
+      "ts": 1769697835.4144905
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-8",
+        "gate": "gate-0-8-4",
+        "ts": 1769697835.419715
+      },
+      "ts": 1769697835.420886
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-9",
+        "gate": "gate-0-9-0",
+        "ts": 1769697835.426073
+      },
+      "ts": 1769697835.4272301
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-9",
+        "gate": "gate-0-9-1",
+        "ts": 1769697835.432415
+      },
+      "ts": 1769697835.4335887
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-9",
+        "gate": "gate-0-9-2",
+        "ts": 1769697835.438878
+      },
+      "ts": 1769697835.4400628
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-9",
+        "gate": "gate-0-9-3",
+        "ts": 1769697835.4452393
+      },
+      "ts": 1769697835.446405
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-9",
+        "gate": "gate-0-9-4",
+        "ts": 1769697835.4516425
+      },
+      "ts": 1769697835.4528112
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "tower": "wt-0-0",
+        "gate": "gate-0-0-0",
+        "box": {
+          "path": "/tmp/tmp27vqs72y.py",
+          "created_ts": 1769697835.5233498,
+          "sealed": true,
+          "verified": false,
+          "metadata": {
+            "success": false,
+            "deps": {
+              "success": true,
+              "imports": [],
+              "pip_audit": null
+            },
+            "sandbox": {
+              "module": "/tmp/tmp27vqs72y.py",
+              "stdout": "",
+              "stderr": "",
+              "exception": "Traceback (most recent call last):\n  File \"/home/runner/work/Project-AI/Project-AI/src/app/agents/sandbox_worker.py\", line 55, in run_module\n  File \"<frozen runpy>\", line 280, in run_path\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1128, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1186, in get_data\nOSError: [Errno 24] Too many open files: '/usr/lib/python3.12/pkgutil.py'\n"
+            },
+            "verdict": "suspicious"
+          }
+        }
+      },
+      "ts": 1769697835.5416422
+    },
+    {
+      "type": "suspicious_plugin",
+      "gate": "gate-0-0-0",
+      "module": "/tmp/tmp27vqs72y.py",
+      "metadata": {
+        "success": false,
+        "deps": {
+          "success": true,
+          "imports": [],
+          "pip_audit": null
+        },
+        "sandbox": {
+          "module": "/tmp/tmp27vqs72y.py",
+          "stdout": "",
+          "stderr": "",
+          "exception": "Traceback (most recent call last):\n  File \"/home/runner/work/Project-AI/Project-AI/src/app/agents/sandbox_worker.py\", line 55, in run_module\n  File \"<frozen runpy>\", line 280, in run_path\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1128, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1186, in get_data\nOSError: [Errno 24] Too many open files: '/usr/lib/python3.12/pkgutil.py'\n"
+        },
+        "verdict": "suspicious"
+      },
+      "ts": 1769697835.5483694
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "tower": "wt-0-0",
+        "gate": "gate-0-0-0",
+        "box": {
+          "path": "/tmp/tmpoyhk829e.py",
+          "created_ts": 1769697835.5903823,
+          "sealed": true,
+          "verified": false,
+          "metadata": {
+            "success": false,
+            "deps": {
+              "success": true,
+              "imports": [],
+              "pip_audit": null
+            },
+            "sandbox": {
+              "module": "/tmp/tmpoyhk829e.py",
+              "stdout": "",
+              "stderr": "",
+              "exception": "Traceback (most recent call last):\n  File \"/home/runner/work/Project-AI/Project-AI/src/app/agents/sandbox_worker.py\", line 55, in run_module\n  File \"<frozen runpy>\", line 280, in run_path\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1128, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1186, in get_data\nOSError: [Errno 24] Too many open files: '/usr/lib/python3.12/pkgutil.py'\n"
+            },
+            "verdict": "suspicious"
+          }
+        }
+      },
+      "ts": 1769697835.6087732
+    },
+    {
+      "type": "suspicious_plugin",
+      "gate": "gate-0-0-0",
+      "module": "/tmp/tmpoyhk829e.py",
+      "metadata": {
+        "success": false,
+        "deps": {
+          "success": true,
+          "imports": [],
+          "pip_audit": null
+        },
+        "sandbox": {
+          "module": "/tmp/tmpoyhk829e.py",
+          "stdout": "",
+          "stderr": "",
+          "exception": "Traceback (most recent call last):\n  File \"/home/runner/work/Project-AI/Project-AI/src/app/agents/sandbox_worker.py\", line 55, in run_module\n  File \"<frozen runpy>\", line 280, in run_path\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1128, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1186, in get_data\nOSError: [Errno 24] Too many open files: '/usr/lib/python3.12/pkgutil.py'\n"
+        },
+        "verdict": "suspicious"
+      },
+      "ts": 1769697835.6164021
     }
   ],
   "attack_counts": {
-    "unknown": 422,
-    "gate-0-0-0": 15,
-    "gate-0-0-1": 2,
-    "gate-0-1-0": 2,
-    "gate-0-1-1": 2,
+    "unknown": 535,
+    "gate-0-0-0": 25,
+    "gate-0-0-1": 3,
+    "gate-0-1-0": 3,
+    "gate-0-1-1": 3,
     "gate-0-2-0": 1
   }
 }
