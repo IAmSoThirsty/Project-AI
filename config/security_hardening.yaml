@@ -70,6 +70,17 @@ least_privilege:
         - "read"
         - "execute_attacks"
       credential_ttl_hours: 1
+    
+    bio_brain_mapper:
+      allowed_paths:
+        - "data/bio_brain_mapping/**"
+        - "config/bio_brain_mapping.yaml"
+      allowed_operations:
+        - "read"
+        - "write"
+        - "analyze"
+        - "consolidate"
+      credential_ttl_hours: 4
 
 # Sandboxing Configuration
 sandboxing:
