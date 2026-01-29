@@ -336,13 +336,16 @@ class GodTierCommandCenter:
     def generate_intelligence_assessment(self) -> dict[str, Any]:
         """Generate comprehensive intelligence assessment.
         
+        The curator provides statistical simulations. Command decisions are made
+        by the Watch Tower based on these simulations.
+
         Returns:
-            Complete intelligence assessment
+            Complete intelligence assessment including statistical simulations
         """
         logger.info("Generating comprehensive intelligence assessment...")
 
-        # Generate global theory
-        theory = self.intelligence_library.generate_global_theory()
+        # Get statistical simulation from curator (analytical role only)
+        simulation = self.intelligence_library.generate_statistical_simulation()
 
         # Collect domain analyses
         domain_summaries = {}
@@ -354,22 +357,23 @@ class GodTierCommandCenter:
                 "agent_count": len(analysis.agent_reports),
             }
 
-        # Get watch tower alerts
+        # Get watch tower alerts (Watch Tower has command authority)
         wt_incidents = self.watch_tower.get_cerberus_incidents()
 
         assessment = {
             "timestamp": time.time(),
             "assessment_id": f"ASSESSMENT_{int(time.time())}",
-            "global_theory": {
-                "theory": theory.theory,
-                "outcomes": theory.outcomes,
-                "confidence": theory.confidence_score,
-                "cross_domain_patterns": theory.cross_domain_patterns,
+            "statistical_simulation": {
+                "simulation_id": simulation.simulation_id,
+                "statistical_summary": simulation.statistical_summary,
+                "predicted_outcomes": simulation.predicted_outcomes,
+                "confidence": simulation.confidence_score,
+                "cross_domain_patterns": simulation.cross_domain_patterns,
             },
             "domain_summaries": domain_summaries,
             "watch_tower_alerts": len(wt_incidents),
-            "recommendations": theory.recommendations,
-            "overall_assessment": self._assess_global_situation(theory, domain_summaries),
+            "command_assessment": self._assess_global_situation(simulation, domain_summaries),
+            "note": "Statistical simulation provided by curator (librarian/statistician). Command decisions made by Watch Tower."
         }
 
         logger.info(f"Intelligence assessment {assessment['assessment_id']} completed")
@@ -377,16 +381,19 @@ class GodTierCommandCenter:
         return assessment
 
     def _assess_global_situation(
-        self, theory: Any, domain_summaries: dict
+        self, simulation: Any, domain_summaries: dict
     ) -> str:
-        """Assess overall global situation.
+        """Assess overall global situation (Watch Tower command function).
         
+        This is a COMMAND decision made by the Watch Tower, not the curator.
+        The curator only provides statistical simulations as input.
+
         Args:
-            theory: Global theory
+            simulation: Statistical simulation from curator
             domain_summaries: Domain summaries
-            
+
         Returns:
-            Overall assessment string
+            Overall command assessment string
         """
         high_risk_domains = [
             domain for domain, summary in domain_summaries.items()
@@ -394,13 +401,13 @@ class GodTierCommandCenter:
         ]
 
         if len(high_risk_domains) >= 3:
-            return "CRITICAL: Multiple high-risk domains detected. Immediate action required."
+            return "WATCH TOWER COMMAND DECISION: CRITICAL - Multiple high-risk domains detected. Immediate action required."
         elif len(high_risk_domains) >= 1:
-            return f"ELEVATED: High risk in {', '.join(high_risk_domains)}. Enhanced monitoring active."
-        elif theory.confidence_score < 0.6:
-            return "UNCERTAIN: Low confidence in predictions. Additional data collection needed."
+            return f"WATCH TOWER COMMAND DECISION: ELEVATED - High risk in {', '.join(high_risk_domains)}. Enhanced monitoring active."
+        elif simulation.confidence_score < 0.6:
+            return "WATCH TOWER COMMAND DECISION: UNCERTAIN - Low confidence in predictions. Additional data collection needed."
         else:
-            return "STABLE: All domains within normal parameters. Routine monitoring continues."
+            return "WATCH TOWER COMMAND DECISION: STABLE - All domains within normal parameters. Routine monitoring continues."
 
     def export_intelligence_report(
         self, output_dir: str = "data/intelligence/reports"

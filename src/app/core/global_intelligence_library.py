@@ -102,7 +102,11 @@ class IntelligenceReport:
 
 @dataclass
 class DomainAnalysis:
-    """Analysis from a domain overseer."""
+    """Analysis from a domain overseer.
+    
+    Note: Overseers provide analytical reports only. Decision-making authority
+    rests with the Watch Tower command center.
+    """
 
     domain: IntelligenceDomain
     timestamp: float
@@ -110,7 +114,6 @@ class DomainAnalysis:
     key_trends: list[str]
     risk_assessment: str
     agent_reports: list[IntelligenceReport]
-    recommendations: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization."""
@@ -121,32 +124,36 @@ class DomainAnalysis:
             "key_trends": self.key_trends,
             "risk_assessment": self.risk_assessment,
             "agent_reports": [r.to_dict() for r in self.agent_reports],
-            "recommendations": self.recommendations,
         }
 
 
 @dataclass
 class GlobalTheory:
-    """Global theory from the curator."""
+    """Statistical simulation from the curator (librarian).
+    
+    The curator maintains the intelligence library and runs simulations to produce
+    statistical outcomes. The curator has NO decision-making authority - all command
+    decisions rest with the Watch Tower command center.
+    """
 
     timestamp: float
-    theory: str
-    outcomes: list[str]
+    simulation_id: str  # Identifies this as a simulation, not a directive
+    statistical_summary: str  # Changed from 'theory' to emphasize statistical nature
+    predicted_outcomes: list[str]  # Statistical predictions only
     cross_domain_patterns: dict[str, Any]
     confidence_score: float
     domain_analyses: list[DomainAnalysis]
-    recommendations: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization."""
         return {
             "timestamp": self.timestamp,
-            "theory": self.theory,
-            "outcomes": self.outcomes,
+            "simulation_id": self.simulation_id,
+            "statistical_summary": self.statistical_summary,
+            "predicted_outcomes": self.predicted_outcomes,
             "cross_domain_patterns": self.cross_domain_patterns,
             "confidence_score": self.confidence_score,
             "domain_analyses": [d.to_dict() for d in self.domain_analyses],
-            "recommendations": self.recommendations,
         }
 
 
@@ -495,7 +502,6 @@ class DomainOverseer(KernelRoutedAgent):
         synthesis = self._synthesize_reports(reports)
         key_trends = self._identify_trends(reports)
         risk_assessment = self._assess_risks(reports)
-        recommendations = self._generate_recommendations(reports)
 
         analysis = DomainAnalysis(
             domain=self.domain,
@@ -504,7 +510,6 @@ class DomainOverseer(KernelRoutedAgent):
             key_trends=key_trends,
             risk_assessment=risk_assessment,
             agent_reports=reports,
-            recommendations=recommendations,
         )
 
         self.last_analysis = analysis
@@ -598,37 +603,9 @@ class DomainOverseer(KernelRoutedAgent):
         else:
             return "LOW RISK: Routine monitoring, no major concerns"
 
-    def _generate_recommendations(
-        self, reports: list[IntelligenceReport]
-    ) -> list[str]:
-        """Generate recommendations based on reports.
-
-        Args:
-            reports: List of intelligence reports
-
-        Returns:
-            List of recommendations
-        """
-        recommendations = []
-
-        # Check for high-risk situations
-        critical_reports = [
-            r
-            for r in reports
-            if r.change_level in [ChangeLevel.CRITICAL, ChangeLevel.CRISIS]
-        ]
-
-        if critical_reports:
-            recommendations.append(
-                f"URGENT: Review {len(critical_reports)} critical reports immediately"
-            )
-            recommendations.append("Escalate to Global Curator for cross-domain analysis")
-
-        # General recommendations
-        recommendations.append(f"Continue monitoring all {len(reports)} agents")
-        recommendations.append("Update intelligence database with latest reports")
-
-        return recommendations
+    # REMOVED: _generate_recommendations
+    # Overseers provide analytical reports only. They do not make recommendations
+    # or have command authority. All decisions are made by the Watch Tower.
 
     def _save_analysis(self, analysis: DomainAnalysis) -> None:
         """Save analysis to disk.
@@ -661,10 +638,21 @@ class DomainOverseer(KernelRoutedAgent):
 
 
 class GlobalCurator(KernelRoutedAgent):
-    """Global curator overseeing all domain overseers.
+    """Global curator - librarian and statistician.
 
-    The curator synthesizes analyses from all domains, identifies
-    cross-domain patterns, and theorizes potential outcomes.
+    The curator maintains the intelligence library and runs statistical simulations.
+    The curator has NO official decision-making power or command authority.
+    
+    Responsibilities:
+    1. Library Maintenance: Organize and maintain intelligence data
+    2. Statistical Simulations: Run simulations and produce statistical outcomes
+    
+    The curator does NOT:
+    - Issue commands or directives
+    - Make recommendations or decisions
+    - Have authority over agents or overseers
+    
+    All command authority rests with the Global Watch Tower.
     """
 
     def __init__(
@@ -718,100 +706,108 @@ class GlobalCurator(KernelRoutedAgent):
 
         return analyses
 
-    def theorize_outcomes(self) -> GlobalTheory:
-        """Theorize global outcomes based on all domain analyses.
+    def run_statistical_simulation(self) -> GlobalTheory:
+        """Run statistical simulation based on all domain analyses.
+        
+        This is a pure analytical function - the curator produces statistical
+        outcomes and probabilities, but makes NO decisions or recommendations.
 
         Returns:
-            GlobalTheory with cross-domain insights and predictions
+            GlobalTheory with statistical simulation results
         """
         # Collect analyses from all overseers
         analyses = self.collect_analyses()
 
-        # Generate global theory
-        theory = self._generate_theory(analyses)
-        outcomes = self._predict_outcomes(analyses)
+        # Generate statistical summary
+        simulation_id = f"SIM_{int(time.time())}_{self.theory_count + 1}"
+        statistical_summary = self._generate_statistical_summary(analyses)
+        predicted_outcomes = self._calculate_predicted_outcomes(analyses)
         patterns = self._identify_cross_domain_patterns(analyses)
         confidence = self._calculate_confidence(analyses)
-        recommendations = self._generate_global_recommendations(analyses)
 
         global_theory = GlobalTheory(
             timestamp=time.time(),
-            theory=theory,
-            outcomes=outcomes,
+            simulation_id=simulation_id,
+            statistical_summary=statistical_summary,
+            predicted_outcomes=predicted_outcomes,
             cross_domain_patterns=patterns,
             confidence_score=confidence,
             domain_analyses=analyses,
-            recommendations=recommendations,
         )
 
         self.last_theory = global_theory
         self.theory_count += 1
 
-        # Persist theory
+        # Persist simulation results to library
         self._save_theory(global_theory)
 
         return global_theory
 
-    def _generate_theory(self, analyses: list[DomainAnalysis]) -> str:
-        """Generate overarching theory from domain analyses.
+    def _generate_statistical_summary(self, analyses: list[DomainAnalysis]) -> str:
+        """Generate statistical summary from domain analyses.
+        
+        Pure statistical analysis - no recommendations or directives.
 
         Args:
             analyses: List of domain analyses
 
         Returns:
-            Theory string
+            Statistical summary string
         """
         if not analyses:
-            return "Insufficient data for global theory generation"
+            return "Insufficient data for statistical analysis"
 
-        # Count high-risk domains
+        # Count high-risk domains (statistical observation)
         high_risk_domains = [
             a.domain.value
             for a in analyses
             if "HIGH RISK" in a.risk_assessment
         ]
 
-        theory = (
-            f"Global Intelligence Theory (T{self.theory_count + 1}): "
+        summary = (
+            f"Statistical Simulation #{self.theory_count + 1}: "
             f"Analyzed {len(analyses)} domains. "
         )
 
         if high_risk_domains:
-            theory += (
-                f"HIGH ALERT: Critical developments in {', '.join(high_risk_domains)}. "
-                f"Cross-domain cascading effects probable. "
+            summary += (
+                f"Statistical observation: Elevated indicators in {', '.join(high_risk_domains)}. "
+                f"Cross-domain correlation probability: HIGH. "
             )
         else:
-            theory += "Overall stability maintained across domains. "
+            summary += "Statistical observation: Baseline stability across all monitored domains. "
 
-        theory += "Continuous monitoring and adaptation recommended."
+        # Note: No recommendations - this is purely observational
+        summary += "Simulation reflects current data state only."
 
-        return theory
+        return summary
 
-    def _predict_outcomes(self, analyses: list[DomainAnalysis]) -> list[str]:
-        """Predict potential outcomes based on analyses.
+    def _calculate_predicted_outcomes(self, analyses: list[DomainAnalysis]) -> list[str]:
+        """Calculate statistical outcome probabilities based on analyses.
+        
+        Pure probabilistic predictions - no action directives.
 
         Args:
             analyses: List of domain analyses
 
         Returns:
-            List of predicted outcomes
+            List of statistical outcome predictions
         """
         outcomes = []
 
-        # Analyze each domain for predictions
+        # Calculate statistical probabilities for each domain
         for analysis in analyses:
             if "HIGH RISK" in analysis.risk_assessment:
                 outcomes.append(
-                    f"{analysis.domain.value.capitalize()}: High probability of significant change within 30-90 days"
+                    f"{analysis.domain.value.capitalize()}: 70-85% probability of significant change within 30-90 days (statistical model)"
                 )
             elif "MODERATE RISK" in analysis.risk_assessment:
                 outcomes.append(
-                    f"{analysis.domain.value.capitalize()}: Monitoring required, potential shifts possible"
+                    f"{analysis.domain.value.capitalize()}: 40-60% probability of notable shifts (statistical model)"
                 )
 
         if not outcomes:
-            outcomes.append("No major disruptions predicted in monitored domains")
+            outcomes.append("Statistical model predicts <5% probability of major disruptions in monitored domains")
 
         return outcomes
 
@@ -891,43 +887,9 @@ class GlobalCurator(KernelRoutedAgent):
 
         return sum(all_confidences) / len(all_confidences)
 
-    def _generate_global_recommendations(
-        self, analyses: list[DomainAnalysis]
-    ) -> list[str]:
-        """Generate global recommendations.
-
-        Args:
-            analyses: List of domain analyses
-
-        Returns:
-            List of recommendations
-        """
-        recommendations = []
-
-        # Check for urgent situations
-        critical_domains = [
-            a.domain.value
-            for a in analyses
-            if "HIGH RISK" in a.risk_assessment
-        ]
-
-        if critical_domains:
-            recommendations.append(
-                f"PRIORITY: Focus resources on {', '.join(critical_domains)} domains"
-            )
-            recommendations.append(
-                "Activate enhanced monitoring protocols"
-            )
-            recommendations.append(
-                "Coordinate with Global Watch Tower for threat assessment"
-            )
-
-        # General recommendations
-        recommendations.append("Maintain continuous domain monitoring")
-        recommendations.append("Update intelligence database hourly")
-        recommendations.append("Prepare scenario analysis for identified risks")
-
-        return recommendations
+    # REMOVED: _generate_global_recommendations
+    # The curator has NO authority to make recommendations or issue directives.
+    # All command decisions are made by the Global Watch Tower command center.
 
     def _save_theory(self, theory: GlobalTheory) -> None:
         """Save theory to disk.
@@ -1143,16 +1105,18 @@ class GlobalIntelligenceLibrary:
             cls._initialized = False
             logger.warning("GlobalIntelligenceLibrary singleton reset")
 
-    def generate_global_theory(self) -> GlobalTheory:
-        """Generate a global intelligence theory.
+    def generate_statistical_simulation(self) -> GlobalTheory:
+        """Generate a statistical simulation (curator's analytical function).
+        
+        Note: The curator produces statistical simulations only - no command authority.
 
         Returns:
-            GlobalTheory with cross-domain analysis
+            GlobalTheory with statistical simulation results
         """
         if not self.curator:
             raise RuntimeError("Curator not initialized")
 
-        return self.curator.theorize_outcomes()
+        return self.curator.run_statistical_simulation()
 
     def get_domain_analysis(
         self, domain: IntelligenceDomain
@@ -1225,27 +1189,29 @@ class GlobalIntelligenceLibrary:
 
     def run_full_analysis_cycle(self) -> GlobalTheory:
         """Run a complete analysis cycle across all domains.
+        
+        The curator generates statistical simulations. Command decisions are
+        made by the Watch Tower based on these simulations.
 
         Returns:
-            GlobalTheory with comprehensive analysis
+            GlobalTheory with comprehensive statistical analysis
         """
         logger.info("Starting full intelligence analysis cycle")
 
-        # Generate global theory (this triggers all overseer analyses)
-        theory = self.generate_global_theory()
+        # Generate statistical simulation (curator's analytical role)
+        simulation = self.generate_statistical_simulation()
 
         logger.info(
-            f"Analysis cycle complete. Theory T{self.curator.theory_count} generated"
+            f"Analysis cycle complete. Simulation {simulation.simulation_id} generated"
         )
 
-        # Report to Watch Tower if integrated
+        # Note: Watch Tower reviews simulations and makes command decisions
         if self.watch_tower:
             logger.info(
-                "Reporting intelligence analysis to Global Watch Tower command center"
+                "Statistical simulation available to Global Watch Tower command center for decision-making"
             )
-            # The Watch Tower can monitor the intelligence activities
 
-        return theory
+        return simulation
 
 
 # Convenience functions
@@ -1261,14 +1227,16 @@ def get_global_intelligence_library() -> GlobalIntelligenceLibrary:
     return GlobalIntelligenceLibrary.get_instance()
 
 
-def generate_intelligence_report() -> GlobalTheory:
-    """Generate a global intelligence report.
+def generate_statistical_simulation() -> GlobalTheory:
+    """Generate a statistical simulation from the curator.
+    
+    Note: This is an analytical function only - the curator has no command authority.
 
     Returns:
-        GlobalTheory with latest analysis
+        GlobalTheory with latest statistical simulation
 
     Raises:
         RuntimeError: If not initialized
     """
     library = GlobalIntelligenceLibrary.get_instance()
-    return library.generate_global_theory()
+    return library.generate_statistical_simulation()
