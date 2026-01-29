@@ -122,8 +122,24 @@ class LeatherBookInterface(QMainWindow):
         from app.gui.leather_book_dashboard import LeatherBookDashboard
 
         dashboard = LeatherBookDashboard(username)
+        
+        # Connect existing signals
         dashboard.actions_panel.image_gen_requested.connect(
             self.switch_to_image_generation
+        )
+        
+        # Connect new intelligence system signals
+        dashboard.actions_panel.news_intelligence_requested.connect(
+            self.switch_to_news_intelligence
+        )
+        dashboard.actions_panel.intelligence_library_requested.connect(
+            self.switch_to_intelligence_library
+        )
+        dashboard.actions_panel.watch_tower_requested.connect(
+            self.switch_to_watch_tower
+        )
+        dashboard.actions_panel.command_center_requested.connect(
+            self.switch_to_command_center
         )
 
         self._set_stack_page(dashboard, 1)
@@ -145,3 +161,39 @@ class LeatherBookInterface(QMainWindow):
         if self.page_container.count() > 1:
             self.page_container.setCurrentIndex(1)
             self.current_page = 1
+
+    def switch_to_news_intelligence(self):
+        """Switch to news intelligence panel."""
+        from app.gui.news_intelligence_panel import NewsIntelligencePanel
+
+        news_panel = NewsIntelligencePanel()
+        news_panel.back_requested.connect(self.switch_to_dashboard)
+
+        self._set_stack_page(news_panel, 2)
+
+    def switch_to_intelligence_library(self):
+        """Switch to intelligence library panel."""
+        from app.gui.intelligence_library_panel import IntelligenceLibraryPanel
+
+        library_panel = IntelligenceLibraryPanel()
+        library_panel.back_requested.connect(self.switch_to_dashboard)
+
+        self._set_stack_page(library_panel, 2)
+
+    def switch_to_watch_tower(self):
+        """Switch to watch tower panel."""
+        from app.gui.watch_tower_panel import WatchTowerPanel
+
+        tower_panel = WatchTowerPanel()
+        tower_panel.back_requested.connect(self.switch_to_dashboard)
+
+        self._set_stack_page(tower_panel, 2)
+
+    def switch_to_command_center(self):
+        """Switch to god-tier command center panel."""
+        from app.gui.god_tier_panel import GodTierCommandPanel
+
+        command_panel = GodTierCommandPanel()
+        command_panel.back_requested.connect(self.switch_to_dashboard)
+
+        self._set_stack_page(command_panel, 2)

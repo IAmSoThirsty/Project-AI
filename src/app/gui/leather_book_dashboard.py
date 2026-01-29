@@ -58,6 +58,9 @@ PROACTIVE_ACTIONS = (
     "Optimizing memory cache",
     "Updating knowledge base",
     "Processing data streams",
+    "Monitoring global intelligence",
+    "Watch Tower security scan",
+    "News intelligence updates",
 )
 
 
