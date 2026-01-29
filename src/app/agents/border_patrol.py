@@ -24,6 +24,16 @@ class QuarantineBox:
     verified: bool = False
     metadata: dict[str, Any] | None = None
 
+    def to_dict(self) -> dict[str, Any]:
+        """Convert QuarantineBox to a serializable dictionary."""
+        return {
+            "path": self.path,
+            "created_ts": self.created_ts,
+            "sealed": self.sealed,
+            "verified": self.verified,
+            "metadata": self.metadata,
+        }
+
 
 class VerifierAgent(KernelRoutedAgent):
     """VerifierAgent executes audits in a sandbox and reports results.
@@ -89,8 +99,8 @@ class VerifierAgent(KernelRoutedAgent):
         # Route through kernel (COGNITION KERNEL ROUTING)
         return self._execute_through_kernel(
             self._do_verify,
-            file_path,
-            operation_name="verify_file",
+            action_name="verify_file",
+            action_args=(file_path,),
             risk_level="high",
             metadata={"file_path": file_path, "agent_id": self.agent_id},
         )
@@ -223,7 +233,7 @@ class PortAdmin:
         )
         # create incident report and pass to Cerberus
         self.command_center.record_incident(
-            {"tower": tower_id, "gate": gate_id, "box": box}
+            {"tower": tower_id, "gate": gate_id, "box": box.to_dict()}
         )
 
     def handle_emergency(self, tower_id: str, gate_id: str) -> None:
@@ -238,18 +248,42 @@ class PortAdmin:
 
 
 class Cerberus:
+    """Cerberus - Chief of Security.
+    
+    Cerberus is the supreme security authority in Project-AI, overseeing all
+    security operations through the Watch Tower / Security Command Center.
+    
+    As Chief of Security, Cerberus coordinates:
+    - Border Patrol Operations (PortAdmins, WatchTowers, GateGuardians, Verifiers)
+    - Active Defense (Safety Guards, Constitutional Guardrails, Protectors)
+    - Red Team / Adversarial Testing (Red Team Agents, Code Adversaries, Jailbreak Tests)
+    - Oversight & Analysis (Oversight Agents, Validators, Explainability)
+    
+    All security agents and roles operate under Cerberus's command through the
+    Global Watch Tower Security Command Center.
+    """
+    
     def __init__(self):
+        self.title = "Chief of Security"
         self.incidents: list[Any] = []
+        self.security_agents: dict[str, list[str]] = {
+            "border_patrol": [],
+            "active_defense": [],
+            "red_team": [],
+            "oversight": [],
+        }
+        logger.info("Cerberus initialized as Chief of Security")
 
     def record_incident(self, incident: dict[str, Any]) -> None:
-        logger.error("Cerberus recording incident: %s", incident)
+        logger.error("Cerberus (Chief of Security) recording incident: %s", incident)
         # record in persistent monitor
         record_incident({"type": "incident", "detail": incident})
         self.incidents.append(incident)
 
     def execute_lockdown(self, tower_id: str, gate_id: str) -> None:
         logger.critical(
-            "Cerberus executing lockdown for tower %s, gate %s", tower_id, gate_id
+            "Cerberus (Chief of Security) executing lockdown for tower %s, gate %s", 
+            tower_id, gate_id
         )
         # Non-destructive approach: mark box sealed and create audit entry
         self.record_incident(
@@ -260,6 +294,40 @@ class Cerberus:
                 "ts": time.time(),
             }
         )
+    
+    def register_security_agent(self, agent_type: str, agent_id: str) -> None:
+        """Register a security agent under Cerberus's command.
+        
+        Args:
+            agent_type: Category of agent (border_patrol, active_defense, red_team, oversight)
+            agent_id: Unique identifier for the agent
+        """
+        if agent_type in self.security_agents:
+            if agent_id not in self.security_agents[agent_type]:
+                self.security_agents[agent_type].append(agent_id)
+                logger.info(
+                    "Cerberus registered %s agent: %s", agent_type, agent_id
+                )
+        else:
+            logger.warning(
+                "Unknown agent type '%s' for agent '%s'", agent_type, agent_id
+            )
+    
+    def get_security_status(self) -> dict[str, Any]:
+        """Get comprehensive security status report.
+        
+        Returns:
+            dict: Security status including all registered agents and incident count
+        """
+        return {
+            "chief_of_security": "Cerberus",
+            "total_incidents": len(self.incidents),
+            "registered_agents": {
+                agent_type: len(agents) 
+                for agent_type, agents in self.security_agents.items()
+            },
+            "agent_details": self.security_agents,
+        }
 
 
 # Helper: build the hierarchy
