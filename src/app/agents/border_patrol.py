@@ -24,6 +24,16 @@ class QuarantineBox:
     verified: bool = False
     metadata: dict[str, Any] | None = None
 
+    def to_dict(self) -> dict[str, Any]:
+        """Convert QuarantineBox to a serializable dictionary."""
+        return {
+            "path": self.path,
+            "created_ts": self.created_ts,
+            "sealed": self.sealed,
+            "verified": self.verified,
+            "metadata": self.metadata,
+        }
+
 
 class VerifierAgent(KernelRoutedAgent):
     """VerifierAgent executes audits in a sandbox and reports results.
@@ -89,8 +99,8 @@ class VerifierAgent(KernelRoutedAgent):
         # Route through kernel (COGNITION KERNEL ROUTING)
         return self._execute_through_kernel(
             self._do_verify,
-            file_path,
-            operation_name="verify_file",
+            action_name="verify_file",
+            action_args=(file_path,),
             risk_level="high",
             metadata={"file_path": file_path, "agent_id": self.agent_id},
         )
@@ -223,7 +233,7 @@ class PortAdmin:
         )
         # create incident report and pass to Cerberus
         self.command_center.record_incident(
-            {"tower": tower_id, "gate": gate_id, "box": box}
+            {"tower": tower_id, "gate": gate_id, "box": box.to_dict()}
         )
 
     def handle_emergency(self, tower_id: str, gate_id: str) -> None:
