@@ -481,19 +481,19 @@ class TestDataPersistence:
         assert len(analysis_files) > 0
 
     def test_theory_saved_to_disk(self, temp_data_dir):
-        """Test that theories are saved to disk."""
+        """Test that simulations are saved to disk."""
         library = GlobalIntelligenceLibrary.initialize(
             data_dir=temp_data_dir,
             use_watch_tower=False,
         )
 
-        library.generate_global_theory()
+        library.generate_statistical_simulation()
 
-        # Check that theory files were created
+        # Check that simulation files were created
         theory_files = list(Path(temp_data_dir).rglob("theory_*.json"))
         assert len(theory_files) > 0
 
-        # Check that latest theory file exists
+        # Check that latest simulation file exists
         latest_file = Path(temp_data_dir) / "global" / "latest_theory.json"
         assert latest_file.exists()
 
