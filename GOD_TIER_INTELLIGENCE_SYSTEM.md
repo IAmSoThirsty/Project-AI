@@ -6,44 +6,41 @@
 
 A comprehensive, production-ready global intelligence system with the **Global Watch Tower** as the command center, featuring 120+ AI agents, 24/7 monitoring, secure storage, self-healing capabilities, and complete observability.
 
+**Command Authority**: The Global Watch Tower serves as the central command center with full decision-making authority. The curator maintains the intelligence library and produces statistical simulations only - the curator has NO command or decision-making power.
+
 ## 🏗️ System Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                  GOD-TIER COMMAND CENTER                             │
-│                   (Master Control System)                            │
+│            GLOBAL WATCH TOWER COMMAND CENTER                         │
+│            (FULL COMMAND AUTHORITY)                                  │
 └──────────────────────────┬──────────────────────────────────────────┘
                            │
            ┌───────────────┼───────────────┐
            │               │               │
 ┌──────────▼─────────┐ ┌──▼─────────────┐ ┌▼────────────────────┐
-│  Global Watch      │ │  Intelligence  │ │  24/7 Monitoring    │
-│  Tower             │ │  Library       │ │  System             │
-│  (Command Center)  │ │  (120+ Agents) │ │  (Global Coverage)  │
+│  Intelligence      │ │  Global        │ │  24/7 Monitoring    │
+│  Library           │ │  Curator       │ │  System             │
+│  (120+ Agents)     │ │  (Librarian/   │ │  (Global Coverage)  │
+│                    │ │   Statistician)│ │                     │
 └──────────┬─────────┘ └──┬─────────────┘ └┬────────────────────┘
            │               │               │
     ┌──────┴───────┐  ┌───┴───────┐  ┌────┴─────┐
-    │ PortAdmins   │  │  Global   │  │ Secure   │
-    │ WatchTowers  │  │  Curator  │  │ Storage  │
-    │ Guardians    │  │           │  │          │
-    └──────────────┘  │ Domain    │  └──────────┘
-                      │ Overseers │
-                      │           │
-                      │ Agents    │
-                      └───────────┘
-                           │
-         ┌─────────────────┼─────────────────┐
-         │                 │                 │
-   ┌─────▼──────┐  ┌──────▼────────┐  ┌────▼──────┐
-   │ Economic   │  │ Political     │  │ Military  │
-   │ (20 agents)│  │ (20 agents)   │  │(20 agents)│
-   └────────────┘  └───────────────┘  └───────────┘
-         │                 │                 │
-   ┌─────▼──────┐  ┌──────▼────────┐  ┌────▼──────┐
-   │ Religious  │  │ Environmental │  │Technological│
-   │ (20 agents)│  │ (20 agents)   │  │(20 agents)│
-   └────────────┘  └───────────────┘  └───────────┘
+    │ Domain       │  │ Library   │  │ Secure   │
+    │ Overseers    │  │ Maintenance│  │ Storage  │
+    │ (Analysts)   │  │           │  │          │
+    └──────────────┘  │ Statistical│  └──────────┘
+                      │ Simulations│
+                      │ (NO COMMAND│
+                      │  AUTHORITY)│
+                      └────────────┘
 ```
+
+**Authority Structure**:
+- **Global Watch Tower**: Full command and decision-making authority
+- **Global Curator**: Library maintenance and statistical simulations ONLY (no command authority)
+- **Domain Overseers**: Analytical reports only (no command authority)
+- **Intelligence Agents**: Data collection and monitoring (no command authority)
 
 ## 📊 System Components
 
@@ -71,7 +68,26 @@ A comprehensive, production-ready global intelligence system with the **Global W
 
 ### 2. Global Intelligence Library
 
+**Role**: Data collection, analysis, and library maintenance
+
+**Global Curator** (Librarian and Statistician):
+- **Maintains the intelligence library**: Organizes and catalogues intelligence data
+- **Runs statistical simulations**: Produces probability-based outcome predictions
+- **NO COMMAND AUTHORITY**: Cannot issue orders, make recommendations, or direct operations
+
 **6 Intelligence Domains** (120+ agents total):
+
+**Domain Overseers**:
+- Coordinate agents within their domain
+- Synthesize agent reports  
+- Provide analytical assessments
+- **NO COMMAND AUTHORITY**: Report findings only, do not make decisions
+
+**Intelligence Agents**:
+- Specialized monitoring per domain
+- Data collection and labeling
+- Report generation
+- **NO COMMAND AUTHORITY**: Collect and report data only
 
 #### Economic Domain (20 agents)
 Specialties: stock_markets, commodities, currency_exchange, trade_agreements, supply_chains, labor_markets, inflation_tracking, gdp_analysis, debt_markets, real_estate, energy_markets, agricultural_economy, tech_sector, banking_systems, economic_sanctions, emerging_markets, consumer_confidence, business_cycles, fiscal_policy, monetary_policy
