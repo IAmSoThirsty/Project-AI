@@ -16,7 +16,7 @@ Project-AI implements **God Tier monolithic density** architecture with comprehe
 - **120+ AI Agent System** (Global Watch Tower Command Center)
 - **42,000+ Lines of Production Code** across all platforms
 - **Complete Full-Stack Integration** with zero external dependencies for core functionality
-- **Multi-Language Runtime** (7 languages: Python, JavaScript, Kotlin, Rust, Go, Java, C#)
+- **Multi-Language Runtime** (5 production TARL adapters: JavaScript, Rust, Go, Java, C#)
 
 This is not a toy framework or proof-of-concept. This is **production-grade, enterprise-ready, God Tier architecture** with monolithic density.
 
@@ -41,7 +41,7 @@ This is not a toy framework or proof-of-concept. This is **production-grade, ent
 
 | Platform | Version | Build Target | Status | Distribution Format |
 |----------|---------|--------------|--------|-------------------|
-| **Android** | 5.0+ (API 21+) | Kotlin/Java | ✅ Supported | .apk, .aab |
+| **Android** | 8.0+ (API 26+) | Kotlin/Java | ✅ Supported | .apk, .aab |
 
 **Build Tools:**
 - Gradle (android/build.gradle)
@@ -76,7 +76,7 @@ This is not a toy framework or proof-of-concept. This is **production-grade, ent
 | Language | Version | Use Case | Status | Location |
 |----------|---------|----------|--------|----------|
 | **Python** | 3.11+ | Primary application language | ✅ Supported | src/, api/ |
-| **JavaScript/TypeScript** | ES2020+ | Web frontend, TARL adapter | ✅ Supported | web/, tarl/adapters/ |
+| **JavaScript/TypeScript** | ES2020+ | Web frontend, TARL adapter | ✅ Supported | web/, tarl/adapters/javascript/ |
 | **Kotlin** | 1.9+ | Android application | ✅ Supported | android/ |
 | **Rust** | 1.70+ | TARL runtime adapter | ✅ Supported | tarl/adapters/rust/ |
 | **Go** | 1.20+ | TARL runtime adapter | ✅ Supported | tarl/adapters/go/ |
@@ -151,7 +151,7 @@ npm run dist:linux
 
 ```bash
 # Prerequisites
-# - Android SDK (API 21+)
+# - Android SDK (API 26+)
 # - Gradle 8.0+
 # - Java JDK 11+
 
@@ -382,7 +382,7 @@ Desktop (Electron) and Web platforms require:
 
 ✅ **Development Platforms (2+):**
 7. **Python Native** - PyQt6 desktop, 3.11+ cross-platform
-8. **TARL Multi-Language Runtime** - 7 languages (Python, JS, Kotlin, Rust, Go, Java, C#)
+8. **TARL Multi-Language Runtime** - 5 production adapters (JavaScript, Rust, Go, Java, C#)
 
 ### Monolithic Density Metrics
 
@@ -395,7 +395,7 @@ Desktop (Electron) and Web platforms require:
 | **Security Layers** | Defense in Depth | 8 comprehensive layers |
 | **Test Coverage** | Integration + Unit | 70/70 tests (100% pass rate) |
 | **Documentation** | Pages | 60+ comprehensive guides |
-| **Languages** | Multi-language | 7 production languages |
+| **Languages** | Multi-language | 7 total (Python, JS/TS, Kotlin + 5 TARL adapters: JS, Rust, Go, Java, C#) |
 | **Platform Targets** | Deployment | 8+ primary, 12+ total |
 
 ### God Tier Features
@@ -471,7 +471,7 @@ Desktop (Electron) and Web platforms require:
 **This is not a framework. This is not a library. This is a complete, production-ready, enterprise-grade intelligence system.**
 
 1. **Monolithic Density**: 42,000+ lines of production code, tightly integrated, zero unnecessary dependencies
-2. **Comprehensive Coverage**: 8+ platforms, 7 languages, 120+ AI agents, 8 security layers
+2. **Comprehensive Coverage**: 8+ platforms, 7 total languages (Python, JS/TS, Kotlin + 5 TARL adapters), 120+ AI agents, 8 security layers
 3. **Production Grade**: 100% test pass rate, complete CI/CD, signed releases, SBOM included
 4. **Governance First**: Every action validated, every decision logged, every verdict explainable
 5. **Zero Compromises**: No shortcuts, no placeholders, no "TODO" comments in production code

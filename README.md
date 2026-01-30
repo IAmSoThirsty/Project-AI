@@ -181,7 +181,7 @@ Every action routes through governance. If governance is unclear, degraded, or u
 
 **Development & Integration (2+ Platforms):**
 - **Python 3.11+** - Native PyQt6 desktop, 42,000+ lines production code
-- **TARL Multi-Language Runtime** - 7 languages (Python, JavaScript, Kotlin, Rust, Go, Java, C#)
+- **TARL Multi-Language Runtime** - 5 production adapters (JavaScript, Rust, Go, Java, C#)
 
 **🏆 Monolithic Density:**
 - 120+ AI Agents (Global Watch Tower)
@@ -405,7 +405,7 @@ GET http://localhost:8001/audit?limit=50
 | **Total Tests** | 70/70 (100% Pass Rate) |
 | **Documentation** | 60+ Pages |
 | **Platforms Supported** | 8+ Primary (Desktop, Mobile, Web, Container) |
-| **Languages** | 7 Production Languages |
+| **Languages** | 5+ (Python + 5 TARL Adapters) |
 | **Security Layers** | 8 Defense-in-Depth |
 | **AI Agents** | 120+ Specialized Agents |
 | **Governance Pillars** | 3 (Triumvirate) |
@@ -620,13 +620,13 @@ Built on the principle that **intelligence without governance is risk, not progr
 - **100% Test Pass Rate** (70/70 tests passing)
 - **42,669+ Lines** of production code
 - **Complete full-stack** implementation with monolithic density
-- **8+ platforms supported** (Windows, macOS, Linux, Android, Web, Docker, Native Python, TARL Multi-Language)
+- **8+ platforms supported** (Windows, macOS, Linux, Android, Web, Docker, Native Python, TARL 5-Language)
 - **120+ AI Agents** in Global Watch Tower Command System
 - **8-Layer Security** architecture with formal verification
 - **Triumvirate Governance** with fail-closed defaults
 - **Docker deployment** ready with Kubernetes/Helm
 - **Comprehensive documentation** (60+ pages)
-- **Multi-language support** (7 production languages)
+- **Multi-language support** (Python + 5 TARL adapters: JavaScript, Rust, Go, Java, C#)
 - **Enterprise-grade** CI/CD with security scanning
 - **Signed releases** with SBOM
 
