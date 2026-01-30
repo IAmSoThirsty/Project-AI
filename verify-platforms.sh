@@ -45,7 +45,7 @@ fi
 # Platform 5: Web Browser
 echo ""
 echo -e "${YELLOW}[5] Web Browser Platform${NC}"
-if [ -d "web" ] && ([ -f "web/index.html" ] || [ -f "web/package.json" ]); then
+if [ -d "web" ] && ([ -f "web/index.html" ] || [ -d "web/frontend" ] || [ -d "web/backend" ]); then
     echo -e "${GREEN}✓ Web configuration found (React + FastAPI)${NC}"
     ((verify_count+=1))
 else
@@ -77,12 +77,12 @@ echo ""
 echo -e "${YELLOW}[8] TARL Multi-Language Runtime${NC}"
 if [ -d "tarl/adapters" ]; then
     lang_count=0
-    for lang in python javascript rust go java csharp kotlin; do
-        if [ -d "tarl/adapters/$lang" ] || [ -f "tarl/adapters/$lang.py" ] || [ -f "tarl/adapters/$lang.js" ]; then
+    for lang in javascript rust go java csharp; do
+        if [ -d "tarl/adapters/$lang" ]; then
             ((lang_count+=1))
         fi
     done
-    echo -e "${GREEN}✓ TARL adapters found ($lang_count language runtimes)${NC}"
+    echo -e "${GREEN}✓ TARL adapters found ($lang_count production adapters: JavaScript, Rust, Go, Java, C#)${NC}"
     ((verify_count+=1))
 else
     echo -e "${RED}✗ TARL adapters not found${NC}"

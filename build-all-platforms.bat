@@ -141,7 +141,7 @@ echo   4. Android Mobile (API 26+)
 echo   5. Web Browser (All modern browsers)
 echo   6. Docker Container (Multi-arch)
 echo   7. Python Native (3.11+ cross-platform)
-echo   8. TARL Multi-Language (7 language runtimes)
+echo   8. TARL Multi-Language (5 production adapters: JS, Rust, Go, Java, C#)
 echo.
 echo Total Deployment Targets: 12+
 echo Code Base: 42,669+ lines (production)
@@ -151,7 +151,7 @@ echo.
 echo Build artifacts ready in:
 echo   - Desktop: desktop\release\
 echo   - Android: android\app\build\outputs\
-echo   - Web: web\dist\
+echo   - Web: web\frontend\ or web\backend\
 echo   - Python: %BUILD_DIR%\
 echo.
 echo ✓ All platforms verified and ready for deployment
