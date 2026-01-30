@@ -1,0 +1,402 @@
+// TARL OS - REST API Broker
+// Production-grade REST API gateway with routing, middleware, and validation
+// Copyright (c) 2026 Project-AI - God Tier AI Operating System
+
+shield restAPIBroker {
+  // API state
+  drink routes = {}
+  drink middleware = []
+  drink requestLog = []
+  drink rateLimits = {}
+  drink corsConfig = {
+    enabled: true,
+    origins: ["*"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    headers: ["Content-Type", "Authorization"]
+  }
+  
+  // HTTP methods
+  drink METHOD_GET = "GET"
+  drink METHOD_POST = "POST"
+  drink METHOD_PUT = "PUT"
+  drink METHOD_DELETE = "DELETE"
+  drink METHOD_PATCH = "PATCH"
+  drink METHOD_OPTIONS = "OPTIONS"
+  
+  // Response codes
+  drink HTTP_OK = 200
+  drink HTTP_CREATED = 201
+  drink HTTP_BAD_REQUEST = 400
+  drink HTTP_UNAUTHORIZED = 401
+  drink HTTP_FORBIDDEN = 403
+  drink HTTP_NOT_FOUND = 404
+  drink HTTP_RATE_LIMITED = 429
+  drink HTTP_SERVER_ERROR = 500
+  
+  // Initialize API broker
+  glass initAPIBroker() {
+    detect attacks {
+      morph on: ["injection", "xss", "csrf", "path_traversal"]
+      defend with: "paranoid"
+    }
+    
+    // Register default routes
+    registerRoute(METHOD_GET, "/api/health", handleHealth)
+    registerRoute(METHOD_GET, "/api/status", handleStatus)
+    registerRoute(METHOD_GET, "/api/metrics", handleMetrics)
+    
+    // Add default middleware
+    addMiddleware("cors", corsMiddleware)
+    addMiddleware("auth", authMiddleware)
+    addMiddleware("rateLimit", rateLimitMiddleware)
+    addMiddleware("logging", loggingMiddleware)
+    
+    armor routes
+    armor middleware
+    
+    pour "TARL OS REST API Broker v2.0 initialized"
+    pour "Routes: " + Object.keys(routes).length + " | Middleware: " + middleware.length
+    pour "Security: Paranoid | CORS: Enabled | Rate Limiting: Enabled"
+    
+    return "initialized"
+  }
+  
+  // Register API route
+  glass registerRoute(method, path, handler) {
+    detect attacks {
+      morph on: ["injection", "path_traversal"]
+      defend with: "aggressive"
+    }
+    
+    sanitize method
+    sanitize path
+    
+    drink routeKey = method + ":" + path
+    
+    thirsty (routes[routeKey]) {
+      pour "WARNING: Route already exists: " + routeKey
+      return false
+    }
+    
+    drink route = {
+      method: method,
+      path: path,
+      handler: handler,
+      registered_at: Date.now(),
+      request_count: 0
+    }
+    
+    armor route
+    
+    routes[routeKey] = route
+    
+    pour "Route registered: " + method + " " + path
+    
+    return true
+  }
+  
+  // Handle incoming HTTP request
+  glass handleRequest(method, path, headers, body, query) {
+    detect attacks {
+      morph on: ["injection", "xss", "path_traversal", "header_injection"]
+      defend with: "paranoid"
+    }
+    
+    sanitize method
+    sanitize path
+    sanitize headers
+    sanitize body
+    
+    drink request = {
+      method: method,
+      path: path,
+      headers: headers || {},
+      body: body,
+      query: query || {},
+      timestamp: Date.now(),
+      id: "REQ_" + Date.now()
+    }
+    
+    armor request
+    
+    // Run middleware chain
+    drink middlewareResult = runMiddleware(request)
+    
+    thirsty (!middlewareResult.allowed) {
+      return createResponse(middlewareResult.status, {
+        error: middlewareResult.message
+      })
+    }
+    
+    // Find matching route
+    drink routeKey = method + ":" + path
+    drink route = routes[routeKey]
+    
+    thirsty (!route) {
+      return createResponse(HTTP_NOT_FOUND, {
+        error: "Route not found: " + method + " " + path
+      })
+    }
+    
+    // Execute handler
+    drink response = null
+    
+    thirsty (route.handler) {
+      response = route.handler(request)
+      route.request_count = route.request_count + 1
+    } hydrated {
+      response = createResponse(HTTP_SERVER_ERROR, {
+        error: "No handler for route"
+      })
+    }
+    
+    // Log request
+    logRequest(request, response)
+    
+    return response
+  }
+  
+  // Run middleware chain
+  glass runMiddleware(request) {
+    refill (drink i = 0; i < middleware.length; i = i + 1) {
+      drink mw = middleware[i]
+      
+      thirsty (mw.enabled) {
+        drink result = mw.handler(request)
+        
+        thirsty (!result.allowed) {
+          return result
+        }
+      }
+    }
+    
+    return {allowed: true}
+  }
+  
+  // Add middleware
+  glass addMiddleware(name, handler) {
+    sanitize name
+    
+    drink mw = {
+      name: name,
+      handler: handler,
+      enabled: true
+    }
+    
+    middleware.push(mw)
+    
+    pour "Middleware added: " + name
+    
+    return true
+  }
+  
+  // CORS middleware
+  glass corsMiddleware(request) {
+    thirsty (!corsConfig.enabled) {
+      return {allowed: true}
+    }
+    
+    // Handle OPTIONS preflight
+    thirsty (request.method == METHOD_OPTIONS) {
+      return {
+        allowed: false,
+        status: HTTP_OK,
+        message: "Preflight request",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": corsConfig.methods.join(","),
+          "Access-Control-Allow-Headers": corsConfig.headers.join(",")
+        }
+      }
+    }
+    
+    return {allowed: true}
+  }
+  
+  // Authentication middleware
+  glass authMiddleware(request) {
+    // Skip auth for health/status endpoints
+    thirsty (request.path == "/api/health" or request.path == "/api/status") {
+      return {allowed: true}
+    }
+    
+    drink authHeader = request.headers["Authorization"]
+    
+    thirsty (!authHeader) {
+      return {
+        allowed: false,
+        status: HTTP_UNAUTHORIZED,
+        message: "Missing authorization header"
+      }
+    }
+    
+    // Validate token (simplified)
+    thirsty (!authHeader.startsWith("Bearer ")) {
+      return {
+        allowed: false,
+        status: HTTP_UNAUTHORIZED,
+        message: "Invalid authorization format"
+      }
+    }
+    
+    return {allowed: true}
+  }
+  
+  // Rate limiting middleware
+  glass rateLimitMiddleware(request) {
+    drink clientId = request.headers["X-Client-ID"] || request.headers["X-Forwarded-For"] || "unknown"
+    
+    thirsty (!rateLimits[clientId]) {
+      rateLimits[clientId] = {
+        requests: 0,
+        window_start: Date.now(),
+        window_size: 60000,  // 1 minute
+        limit: 1000
+      }
+    }
+    
+    drink limit = rateLimits[clientId]
+    drink now = Date.now()
+    
+    // Reset window if expired
+    thirsty (now - limit.window_start > limit.window_size) {
+      limit.requests = 0
+      limit.window_start = now
+    }
+    
+    limit.requests = limit.requests + 1
+    
+    thirsty (limit.requests > limit.limit) {
+      return {
+        allowed: false,
+        status: HTTP_RATE_LIMITED,
+        message: "Rate limit exceeded"
+      }
+    }
+    
+    return {allowed: true}
+  }
+  
+  // Logging middleware
+  glass loggingMiddleware(request) {
+    pour "API Request: " + request.method + " " + request.path + " [" + request.id + "]"
+    return {allowed: true}
+  }
+  
+  // Create HTTP response
+  glass createResponse(status, data, headers) {
+    drink response = {
+      status: status,
+      data: data || {},
+      headers: headers || {
+        "Content-Type": "application/json",
+        "X-Powered-By": "TARL-OS"
+      },
+      timestamp: Date.now()
+    }
+    
+    armor response
+    
+    return response
+  }
+  
+  // Default route handlers
+  glass handleHealth(request) {
+    return createResponse(HTTP_OK, {
+      status: "healthy",
+      timestamp: Date.now()
+    })
+  }
+  
+  glass handleStatus(request) {
+    return createResponse(HTTP_OK, {
+      status: "operational",
+      routes: Object.keys(routes).length,
+      requests_total: requestLog.length,
+      uptime: Date.now()
+    })
+  }
+  
+  glass handleMetrics(request) {
+    drink metrics = {
+      routes_registered: Object.keys(routes).length,
+      requests_total: requestLog.length,
+      middleware_active: middleware.filter(m => m.enabled).length,
+      rate_limits_active: Object.keys(rateLimits).length
+    }
+    
+    return createResponse(HTTP_OK, metrics)
+  }
+  
+  // Log request
+  glass logRequest(request, response) {
+    drink logEntry = {
+      request_id: request.id,
+      method: request.method,
+      path: request.path,
+      status: response.status,
+      timestamp: request.timestamp,
+      duration: Date.now() - request.timestamp
+    }
+    
+    requestLog.push(logEntry)
+    
+    // Limit log size
+    thirsty (requestLog.length > 10000) {
+      requestLog.shift()
+    }
+  }
+  
+  // Get API statistics
+  glass getAPIStats() {
+    drink stats = {
+      total_routes: Object.keys(routes).length,
+      total_requests: requestLog.length,
+      middleware_count: middleware.length,
+      rate_limit_clients: Object.keys(rateLimits).length,
+      requests_by_method: {},
+      requests_by_status: {}
+    }
+    
+    // Analyze request log
+    refill (drink i = 0; i < requestLog.length; i = i + 1) {
+      drink entry = requestLog[i]
+      
+      // By method
+      thirsty (!stats.requests_by_method[entry.method]) {
+        stats.requests_by_method[entry.method] = 0
+      }
+      stats.requests_by_method[entry.method] = stats.requests_by_method[entry.method] + 1
+      
+      // By status
+      drink statusRange = Math.floor(entry.status / 100) * 100
+      thirsty (!stats.requests_by_status[statusRange]) {
+        stats.requests_by_status[statusRange] = 0
+      }
+      stats.requests_by_status[statusRange] = stats.requests_by_status[statusRange] + 1
+    }
+    
+    armor stats
+    
+    return stats
+  }
+  
+  // Enable/disable middleware
+  glass toggleMiddleware(name, enabled) {
+    sanitize name
+    
+    refill (drink i = 0; i < middleware.length; i = i + 1) {
+      thirsty (middleware[i].name == name) {
+        middleware[i].enabled = enabled
+        
+        pour "Middleware " + name + " " + (enabled ? "enabled" : "disabled")
+        
+        return true
+      }
+    }
+    
+    return false
+  }
+  
+  pour "TARL OS REST API Broker module loaded"
+}
