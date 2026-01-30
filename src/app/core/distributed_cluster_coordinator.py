@@ -112,12 +112,14 @@ class ClusterTask:
 class DistributedLock:
     """Distributed lock implementation using leader-based coordination"""
     
-    def __init__(self, lock_name: str, coordinator: "ClusterCoordinator"):
+    DEFAULT_LOCK_TIMEOUT = 30.0  # Default lock timeout in seconds
+    
+    def __init__(self, lock_name: str, coordinator: "ClusterCoordinator", timeout: float = DEFAULT_LOCK_TIMEOUT):
         self.lock_name = lock_name
         self.coordinator = coordinator
         self.holder: Optional[str] = None
         self.acquired_at: Optional[float] = None
-        self.timeout: float = 30.0  # Lock timeout in seconds
+        self.timeout: float = timeout
         self._lock = threading.RLock()
     
     def acquire(self, node_id: str, timeout: Optional[float] = None) -> bool:

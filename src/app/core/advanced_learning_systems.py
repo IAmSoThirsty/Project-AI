@@ -400,7 +400,9 @@ class ReinforcementLearningAgent:
             
             return total_td_error / (batch_size * num_batches)
     
-    def decay_epsilon(self, decay_rate: float = 0.995, min_epsilon: float = 0.01) -> None:
+    DEFAULT_MIN_EPSILON = 0.01  # Default minimum exploration rate
+    
+    def decay_epsilon(self, decay_rate: float = 0.995, min_epsilon: float = DEFAULT_MIN_EPSILON) -> None:
         """Decay exploration rate"""
         with self._lock:
             self.policy.epsilon = max(min_epsilon, self.policy.epsilon * decay_rate)
@@ -487,16 +489,21 @@ class ContinualLearningSystem:
     Enables models to learn continuously without catastrophic forgetting.
     """
     
-    def __init__(self, system_id: str, data_dir: str = "data/continual_learning"):
+    DEFAULT_IMPROVEMENT_THRESHOLD = 0.05  # 5% improvement threshold for new version
+    
+    def __init__(self, system_id: str, data_dir: str = "data/continual_learning", 
+                 improvement_threshold: float = DEFAULT_IMPROVEMENT_THRESHOLD):
         """
         Initialize continual learning system.
         
         Args:
             system_id: Unique system identifier
             data_dir: Directory for persistence
+            improvement_threshold: Performance improvement threshold for version creation
         """
         self.system_id = system_id
         self.data_dir = data_dir
+        self.improvement_threshold = improvement_threshold
         
         # Model versions and performance tracking
         self.model_versions: Dict[str, List[Dict[str, Any]]] = {}
@@ -566,7 +573,7 @@ class ContinualLearningSystem:
             current_performance = self.performance_history[model_id][-1]
             improvement = performance - current_performance
             
-            if improvement > 0.05:  # 5% improvement threshold
+            if improvement > self.improvement_threshold:  # Configurable improvement threshold
                 version = {
                     "version_id": f"{model_id}_v{len(self.model_versions[model_id])}",
                     "model_type": self.model_versions[model_id][-1]["model_type"],
