@@ -74,13 +74,24 @@ Every action routes through governance. If governance is unclear, degraded, or u
 - **Execution Kernel**: Secure orchestration
 - **Audit System**: Persistent logging & replay
 
-### 🌍 Multi-Platform
-- Python (native)
-- JavaScript/TypeScript
-- Rust
-- Go
-- Java
-- C#
+### 🌍 Multi-Platform Support (8+ Platforms)
+**Desktop Applications:**
+- **Windows** (Electron + PyQt6)
+- **macOS** (Electron + PyQt6)
+- **Linux** (Electron + PyQt6)
+
+**Mobile:**
+- **Android** (Kotlin/Java)
+
+**Web:**
+- **Web Browser** (JavaScript/TypeScript - React/Flask)
+
+**Containerized:**
+- **Docker** (Cross-platform container deployment)
+
+**Development & Integration:**
+- **Python 3.11+** (Native PyQt6 application)
+- **TARL Runtime Adapters:** Rust, Go, Java, C#, JavaScript
 
 ---
 
@@ -292,8 +303,11 @@ GET http://localhost:8001/audit?limit=50
 | **Core Tests** | 17/18 (94%) |
 | **Total Tests** | 32/33 (97%) |
 | **Documentation** | 8 pages |
+| **Platforms Supported** | 8+ (Desktop, Mobile, Web, Container) |
 | **Languages** | 6 |
 | **Security Layers** | 8 |
+
+**Platform Details:** See [PLATFORM_COMPATIBILITY.md](PLATFORM_COMPATIBILITY.md) for complete platform support matrix.
 
 ---
 
@@ -457,6 +471,7 @@ Every decision is logged with a cryptographic hash of the intent. Auditors can r
 | Document | Description |
 |----------|-------------|
 | [README.md](README.md) | Project overview (this file) |
+| [PLATFORM_COMPATIBILITY.md](PLATFORM_COMPATIBILITY.md) | Complete platform support matrix (8+ platforms) |
 | [api/README.md](api/README.md) | API documentation |
 | [FINAL_PROJECT_STATUS.md](FINAL_PROJECT_STATUS.md) | Complete implementation status |
 | [TARL_README.md](TARL_README.md) | TARL quick start |
@@ -501,10 +516,13 @@ Built on the principle that **intelligence without governance is risk, not progr
 
 - 32/33 tests passing (97%)
 - Complete full-stack implementation
+- **8+ platforms supported** (Windows, macOS, Linux, Android, Web, Docker, and more)
 - Docker deployment ready
 - Comprehensive documentation
 - Multi-language support
 - 8-layer security architecture
+
+**Platform Support:** See [PLATFORM_COMPATIBILITY.md](PLATFORM_COMPATIBILITY.md) for detailed compatibility matrix.
 
 ---
 
