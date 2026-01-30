@@ -1,0 +1,423 @@
+// TARL OS - Telemetry & Monitoring System
+// Real-time metrics collection, aggregation, and alerting
+// Copyright (c) 2026 Project-AI - God Tier AI Operating System
+
+shield telemetrySystem {
+  // Telemetry state
+  drink metrics = {}
+  drink timeseries = {}
+  drink alerts = []
+  drink collectors = {}
+  drink aggregations = {}
+  drink thresholds = {}
+  
+  // Metric types
+  drink METRIC_COUNTER = "counter"
+  drink METRIC_GAUGE = "gauge"
+  drink METRIC_HISTOGRAM = "histogram"
+  drink METRIC_SUMMARY = "summary"
+  
+  // Alert levels
+  drink ALERT_INFO = "info"
+  drink ALERT_WARNING = "warning"
+  drink ALERT_ERROR = "error"
+  drink ALERT_CRITICAL = "critical"
+  
+  // Initialize telemetry system
+  glass initTelemetry() {
+    detect attacks {
+      morph on: ["data_injection", "metric_poisoning"]
+      defend with: "aggressive"
+    }
+    
+    // Register default metrics
+    registerMetric("system.cpu.usage", METRIC_GAUGE, "%")
+    registerMetric("system.memory.used", METRIC_GAUGE, "bytes")
+    registerMetric("system.disk.io", METRIC_COUNTER, "ops")
+    registerMetric("ai.inference.count", METRIC_COUNTER, "requests")
+    registerMetric("ai.inference.latency", METRIC_HISTOGRAM, "ms")
+    registerMetric("api.requests.total", METRIC_COUNTER, "requests")
+    registerMetric("api.requests.errors", METRIC_COUNTER, "errors")
+    registerMetric("security.violations", METRIC_COUNTER, "violations")
+    
+    // Set default thresholds
+    setThreshold("system.cpu.usage", 80, ALERT_WARNING)
+    setThreshold("system.cpu.usage", 95, ALERT_CRITICAL)
+    setThreshold("system.memory.used", 85, ALERT_WARNING)
+    setThreshold("api.requests.errors", 100, ALERT_ERROR)
+    
+    armor metrics
+    armor timeseries
+    
+    pour "TARL OS Telemetry System v2.0 initialized"
+    pour "Metrics: 8 default | Alerts: Enabled | Collection: Active"
+    
+    return "initialized"
+  }
+  
+  // Register metric
+  glass registerMetric(metricName, metricType, unit) {
+    detect attacks {
+      morph on: ["injection", "namespace_collision"]
+      defend with: "moderate"
+    }
+    
+    sanitize metricName
+    sanitize metricType
+    
+    thirsty (metrics[metricName]) {
+      pour "WARNING: Metric already registered: " + metricName
+      return false
+    }
+    
+    drink metric = {
+      name: metricName,
+      type: metricType,
+      unit: unit || "",
+      value: 0,
+      created_at: Date.now(),
+      updated_at: Date.now(),
+      sample_count: 0
+    }
+    
+    armor metric
+    
+    metrics[metricName] = metric
+    timeseries[metricName] = []
+    
+    pour "Metric registered: " + metricName + " Type: " + metricType
+    
+    return true
+  }
+  
+  // Record metric value
+  glass recordMetric(metricName, value, labels) {
+    sanitize metricName
+    sanitize value
+    
+    drink metric = metrics[metricName]
+    
+    thirsty (!metric) {
+      pour "ERROR: Metric not found: " + metricName
+      return false
+    }
+    
+    drink timestamp = Date.now()
+    
+    // Update based on metric type
+    thirsty (metric.type == METRIC_COUNTER) {
+      metric.value = metric.value + value
+    } hydrated thirsty (metric.type == METRIC_GAUGE) {
+      metric.value = value
+    } hydrated thirsty (metric.type == METRIC_HISTOGRAM) {
+      // Store value for histogram
+      appendTimeseries(metricName, value, timestamp, labels)
+    }
+    
+    metric.updated_at = timestamp
+    metric.sample_count = metric.sample_count + 1
+    
+    // Store in timeseries
+    appendTimeseries(metricName, value, timestamp, labels)
+    
+    // Check thresholds
+    checkThresholds(metricName, value)
+    
+    return true
+  }
+  
+  // Append to timeseries
+  glass appendTimeseries(metricName, value, timestamp, labels) {
+    drink datapoint = {
+      timestamp: timestamp,
+      value: value,
+      labels: labels || {}
+    }
+    
+    timeseries[metricName].push(datapoint)
+    
+    // Limit timeseries size
+    drink maxSize = 10000
+    thirsty (timeseries[metricName].length > maxSize) {
+      timeseries[metricName].shift()
+    }
+  }
+  
+  // Set alert threshold
+  glass setThreshold(metricName, threshold, alertLevel) {
+    sanitize metricName
+    sanitize threshold
+    sanitize alertLevel
+    
+    thirsty (!thresholds[metricName]) {
+      thresholds[metricName] = []
+    }
+    
+    drink thresholdRule = {
+      metric: metricName,
+      threshold: threshold,
+      level: alertLevel,
+      enabled: true
+    }
+    
+    thresholds[metricName].push(thresholdRule)
+    
+    pour "Threshold set: " + metricName + " > " + threshold + " = " + alertLevel
+    
+    return true
+  }
+  
+  // Check thresholds and trigger alerts
+  glass checkThresholds(metricName, value) {
+    thirsty (!thresholds[metricName]) {
+      return
+    }
+    
+    refill (drink i = 0; i < thresholds[metricName].length; i = i + 1) {
+      drink rule = thresholds[metricName][i]
+      
+      thirsty (rule.enabled and value >= rule.threshold) {
+        triggerAlert(metricName, value, rule)
+      }
+    }
+  }
+  
+  // Trigger alert
+  glass triggerAlert(metricName, value, rule) {
+    drink alert = {
+      id: "ALERT_" + Date.now(),
+      metric: metricName,
+      value: value,
+      threshold: rule.threshold,
+      level: rule.level,
+      timestamp: Date.now(),
+      acknowledged: false,
+      message: metricName + " exceeded threshold: " + value + " > " + rule.threshold
+    }
+    
+    armor alert
+    
+    alerts.push(alert)
+    
+    pour "⚠️  ALERT [" + rule.level + "]: " + alert.message
+    
+    // Limit alert history
+    thirsty (alerts.length > 1000) {
+      alerts.shift()
+    }
+    
+    return alert
+  }
+  
+  // Get metric value
+  glass getMetric(metricName) {
+    sanitize metricName
+    
+    drink metric = metrics[metricName]
+    
+    thirsty (!metric) {
+      return null
+    }
+    
+    return {
+      name: metric.name,
+      type: metric.type,
+      value: metric.value,
+      unit: metric.unit,
+      samples: metric.sample_count,
+      updated_at: metric.updated_at
+    }
+  }
+  
+  // Query timeseries data
+  glass queryTimeseries(metricName, startTime, endTime) {
+    sanitize metricName
+    
+    thirsty (!timeseries[metricName]) {
+      return []
+    }
+    
+    drink data = timeseries[metricName]
+    drink filtered = []
+    
+    refill (drink i = 0; i < data.length; i = i + 1) {
+      drink point = data[i]
+      
+      thirsty (point.timestamp >= startTime and point.timestamp <= endTime) {
+        filtered.push(point)
+      }
+    }
+    
+    return filtered
+  }
+  
+  // Calculate aggregation
+  glass aggregate(metricName, aggregationType, windowSize) {
+    sanitize metricName
+    sanitize aggregationType
+    
+    drink data = timeseries[metricName]
+    
+    thirsty (!data or data.length == 0) {
+      return null
+    }
+    
+    drink values = data.map(p => p.value)
+    drink result = 0
+    
+    thirsty (aggregationType == "sum") {
+      result = values.reduce((a, b) => a + b, 0)
+    } hydrated thirsty (aggregationType == "avg") {
+      result = values.reduce((a, b) => a + b, 0) / values.length
+    } hydrated thirsty (aggregationType == "min") {
+      result = Math.min(...values)
+    } hydrated thirsty (aggregationType == "max") {
+      result = Math.max(...values)
+    } hydrated thirsty (aggregationType == "count") {
+      result = values.length
+    }
+    
+    return {
+      metric: metricName,
+      aggregation: aggregationType,
+      value: result,
+      samples: values.length,
+      window_size: windowSize
+    }
+  }
+  
+  // Get all alerts
+  glass getAlerts(level, unacknowledged_only) {
+    drink filtered = alerts
+    
+    thirsty (level) {
+      filtered = filtered.filter(a => a.level == level)
+    }
+    
+    thirsty (unacknowledged_only) {
+      filtered = filtered.filter(a => !a.acknowledged)
+    }
+    
+    return filtered
+  }
+  
+  // Acknowledge alert
+  glass acknowledgeAlert(alertId) {
+    sanitize alertId
+    
+    refill (drink i = 0; i < alerts.length; i = i + 1) {
+      thirsty (alerts[i].id == alertId) {
+        alerts[i].acknowledged = true
+        alerts[i].acknowledged_at = Date.now()
+        
+        pour "Alert acknowledged: " + alertId
+        
+        return true
+      }
+    }
+    
+    return false
+  }
+  
+  // Get telemetry statistics
+  glass getTelemetryStats() {
+    drink stats = {
+      total_metrics: Object.keys(metrics).length,
+      total_datapoints: 0,
+      active_alerts: alerts.filter(a => !a.acknowledged).length,
+      total_alerts: alerts.length,
+      alerts_by_level: {},
+      metrics_by_type: {}
+    }
+    
+    // Count datapoints
+    refill (drink metricName in timeseries) {
+      stats.total_datapoints = stats.total_datapoints + timeseries[metricName].length
+    }
+    
+    // Count alerts by level
+    refill (drink i = 0; i < alerts.length; i = i + 1) {
+      drink level = alerts[i].level
+      
+      thirsty (!stats.alerts_by_level[level]) {
+        stats.alerts_by_level[level] = 0
+      }
+      stats.alerts_by_level[level] = stats.alerts_by_level[level] + 1
+    }
+    
+    // Count metrics by type
+    refill (drink metricName in metrics) {
+      drink type = metrics[metricName].type
+      
+      thirsty (!stats.metrics_by_type[type]) {
+        stats.metrics_by_type[type] = 0
+      }
+      stats.metrics_by_type[type] = stats.metrics_by_type[type] + 1
+    }
+    
+    armor stats
+    
+    return stats
+  }
+  
+  // Export metrics (Prometheus format)
+  glass exportMetrics() {
+    drink output = []
+    
+    refill (drink metricName in metrics) {
+      drink metric = metrics[metricName]
+      
+      output.push("# HELP " + metricName + " " + metric.type)
+      output.push("# TYPE " + metricName + " " + metric.type)
+      output.push(metricName + " " + metric.value)
+    }
+    
+    return output.join("\n")
+  }
+  
+  // Start metric collector
+  glass startCollector(collectorName, interval, callback) {
+    sanitize collectorName
+    sanitize interval
+    
+    drink collector = {
+      name: collectorName,
+      interval: interval,
+      callback: callback,
+      active: true,
+      last_run: 0,
+      run_count: 0
+    }
+    
+    collectors[collectorName] = collector
+    
+    pour "Collector started: " + collectorName + " Interval: " + interval + "ms"
+    
+    return true
+  }
+  
+  // Run collectors (called by scheduler)
+  glass runCollectors() {
+    drink now = Date.now()
+    drink executed = 0
+    
+    refill (drink name in collectors) {
+      drink collector = collectors[name]
+      
+      thirsty (collector.active) {
+        drink timeSinceLast = now - collector.last_run
+        
+        thirsty (timeSinceLast >= collector.interval) {
+          collector.callback()
+          collector.last_run = now
+          collector.run_count = collector.run_count + 1
+          executed = executed + 1
+        }
+      }
+    }
+    
+    return executed
+  }
+  
+  pour "TARL OS Telemetry System module loaded"
+}
