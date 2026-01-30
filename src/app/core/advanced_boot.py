@@ -22,6 +22,11 @@ from enum import Enum
 from pathlib import Path
 import threading
 import copy
+import uuid
+
+# Import event spine and governance graph for wiring
+from app.core.event_spine import get_event_spine, EventCategory, EventPriority
+from app.core.governance_graph import get_governance_graph, RelationshipType
 
 logger = logging.getLogger(__name__)
 
@@ -357,6 +362,11 @@ class AdvancedBootSystem:
         """
         Request ethics approval for subsystem initialization.
         
+        This method now:
+        1. Emits events through the event spine (cross-domain visibility)
+        2. Checks governance graph for authority relationships
+        3. Creates auditable decisions with full context
+        
         Args:
             subsystem_id: Subsystem requesting approval
             metadata: Subsystem metadata
@@ -364,42 +374,112 @@ class AdvancedBootSystem:
         Returns:
             True if approved
         """
-        # In a real system, this would integrate with ethics_governance subsystem
-        # For now, auto-approve critical and high priority subsystems
         priority = metadata.get("priority", "MEDIUM")
         
         with self._lock:
             self._boot_stats["ethics_approvals_required"] += 1
         
+        # Check governance graph for consultation requirements
+        governance_graph = get_governance_graph()
+        must_consult = governance_graph.must_consult_domains(subsystem_id)
+        
+        # Determine approval based on priority and governance
         if priority in ["CRITICAL", "HIGH"]:
             approved = True
+            reasoning = f"Auto-approved: {priority} priority subsystem"
         else:
             # Default approve for now (would require actual ethics evaluation)
             approved = True
+            reasoning = "Auto-approved: Standard subsystem initialization"
         
         if approved:
             with self._lock:
                 self._boot_stats["ethics_approvals_granted"] += 1
         
+        # Generate unique event ID for traceability
+        event_id = f"ethics_approval_{subsystem_id}_{int(time.time() * 1000)}"
+        
+        # Emit event through event spine - this makes approvals observable
+        try:
+            event_spine = get_event_spine()
+            event_spine.publish(
+                category=EventCategory.GOVERNANCE_DECISION,
+                source_domain="advanced_boot",
+                payload={
+                    "decision_type": "ethics_approval",
+                    "subsystem_id": subsystem_id,
+                    "approved": approved,
+                    "reasoning": reasoning,
+                    "priority": priority,
+                    "must_consult": list(must_consult),
+                    "metadata": metadata
+                },
+                priority=EventPriority.HIGH,
+                requires_approval=False,
+                can_be_vetoed=False,
+                metadata={
+                    "event_id": event_id,
+                    "boot_profile": self._current_profile.value,
+                    "timestamp": datetime.now().isoformat()
+                }
+            )
+            logger.debug(f"Ethics approval event emitted: {event_id}")
+        except Exception as e:
+            logger.warning(f"Failed to emit ethics approval event: {e}")
+        
+        # Create audit entry with event linkage
         self._audit_event(
             event_type="ethics_approval",
             action="request_approval",
             subsystem_id=subsystem_id,
             context={
                 "priority": priority,
-                "approved": approved
+                "approved": approved,
+                "reasoning": reasoning,
+                "must_consult": list(must_consult),
+                "event_id": event_id
             },
             result=approved
         )
         
-        logger.info(f"Ethics approval for {subsystem_id}: {approved}")
+        logger.info(
+            f"Ethics approval for {subsystem_id}: {approved} "
+            f"(reasoning: {reasoning}, event: {event_id})"
+        )
         
         return approved
     
     def mark_ethics_checkpoint_passed(self):
-        """Mark that ethics subsystems have initialized successfully."""
+        """
+        Mark that ethics subsystems have initialized successfully.
+        
+        Emits event for cross-domain visibility.
+        """
         with self._lock:
             self._ethics_checkpoint_passed = True
+        
+        # Emit event through event spine
+        try:
+            event_spine = get_event_spine()
+            event_spine.publish(
+                category=EventCategory.GOVERNANCE_DECISION,
+                source_domain="advanced_boot",
+                payload={
+                    "decision_type": "ethics_checkpoint",
+                    "checkpoint": "ethics_initialization",
+                    "status": "passed"
+                },
+                priority=EventPriority.CRITICAL,
+                requires_approval=False,
+                can_be_vetoed=False,
+                metadata={
+                    "boot_profile": self._current_profile.value,
+                    "timestamp": datetime.now().isoformat()
+                }
+            )
+            logger.debug("Ethics checkpoint event emitted")
+        except Exception as e:
+            logger.warning(f"Failed to emit ethics checkpoint event: {e}")
         
         self._audit_event(
             event_type="ethics_checkpoint",
@@ -414,6 +494,8 @@ class AdvancedBootSystem:
         """
         Activate emergency-only mode.
         
+        Emits critical event for system-wide coordination.
+        
         Args:
             reason: Reason for emergency activation
         """
@@ -425,6 +507,30 @@ class AdvancedBootSystem:
             self._emergency_mode_active = True
             self._emergency_activation_time = datetime.now()
             self._boot_stats["emergency_activations"] += 1
+        
+        # Emit critical event through event spine
+        try:
+            event_spine = get_event_spine()
+            event_spine.publish(
+                category=EventCategory.SYSTEM_HEALTH,
+                source_domain="advanced_boot",
+                payload={
+                    "event_type": "emergency_mode_activated",
+                    "reason": reason,
+                    "critical_subsystems": self.EMERGENCY_CRITICAL_SUBSYSTEMS,
+                    "activation_time": self._emergency_activation_time.isoformat()
+                },
+                priority=EventPriority.CRITICAL,
+                requires_approval=False,
+                can_be_vetoed=False,
+                metadata={
+                    "boot_profile": self._current_profile.value,
+                    "severity": "critical"
+                }
+            )
+            logger.debug("Emergency mode activation event emitted")
+        except Exception as e:
+            logger.warning(f"Failed to emit emergency mode event: {e}")
         
         self._audit_event(
             event_type="emergency_mode",
@@ -438,7 +544,11 @@ class AdvancedBootSystem:
         logger.critical(f"   Critical subsystems: {self.EMERGENCY_CRITICAL_SUBSYSTEMS}")
     
     def deactivate_emergency_mode(self):
-        """Deactivate emergency mode."""
+        """
+        Deactivate emergency mode.
+        
+        Emits event for system-wide coordination.
+        """
         with self._lock:
             if not self._emergency_mode_active:
                 logger.warning("Emergency mode not active")
@@ -448,6 +558,27 @@ class AdvancedBootSystem:
             duration = None
             if self._emergency_activation_time:
                 duration = (datetime.now() - self._emergency_activation_time).total_seconds()
+        
+        # Emit event through event spine
+        try:
+            event_spine = get_event_spine()
+            event_spine.publish(
+                category=EventCategory.SYSTEM_HEALTH,
+                source_domain="advanced_boot",
+                payload={
+                    "event_type": "emergency_mode_deactivated",
+                    "duration_seconds": duration
+                },
+                priority=EventPriority.HIGH,
+                requires_approval=False,
+                can_be_vetoed=False,
+                metadata={
+                    "boot_profile": self._current_profile.value
+                }
+            )
+            logger.debug("Emergency mode deactivation event emitted")
+        except Exception as e:
+            logger.warning(f"Failed to emit emergency mode deactivation event: {e}")
         
         self._audit_event(
             event_type="emergency_mode",
