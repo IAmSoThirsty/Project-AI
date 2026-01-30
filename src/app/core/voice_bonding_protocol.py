@@ -462,10 +462,16 @@ class VoiceBondingProtocol:
             
             # Synthesize with adaptive parameters
             start_time = time.time()
+            
+            # Merge contexts
+            merged_context = context if context else {}
+            merged_context.update(analysis)
+            merged_context.update(params)
+            
             response = model.synthesize(
                 text=text,
                 emotion=params["emotion"],
-                context={**context or {}, **analysis, **params}
+                context=merged_context
             )
             response_time_ms = (time.time() - start_time) * 1000
             
