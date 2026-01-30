@@ -156,6 +156,34 @@ class ApprovalRequest:
         }
 
 
+@dataclass
+class EmergencyOverride:
+    """Emergency override with forced multi-signature and post-mortem."""
+
+    override_id: str = field(default_factory=lambda: str(uuid.uuid4()))
+    request_id: str = ""
+    justification: str = ""
+    initiated_by: str = ""
+    created_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    signatures: List[Dict[str, str]] = field(default_factory=list)  # guardian_id, signature, timestamp
+    min_signatures_required: int = 3  # Minimum 3 signatures for emergency override
+    status: str = "pending"  # pending, active, completed, reviewed
+    post_mortem_required: bool = True
+    post_mortem_completed: bool = False
+    post_mortem_report: str = ""
+    auto_review_scheduled: bool = True
+    auto_review_date: Optional[str] = None
+    consequences: List[str] = field(default_factory=list)
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary."""
+        return asdict(self)
+    
+    def is_valid(self) -> bool:
+        """Check if override has sufficient signatures."""
+        return len(self.signatures) >= self.min_signatures_required
+
+
 class FourLawsValidator:
     """Validates changes against Asimov's Four Laws."""
 
@@ -338,6 +366,7 @@ class GuardianApprovalSystem:
         self.requests: Dict[str, ApprovalRequest] = {}
         self.guardians: Dict[str, Dict[str, Any]] = {}
         self.approval_policies: Dict[str, Dict[str, Any]] = {}
+        self.emergency_overrides: Dict[str, EmergencyOverride] = {}  # Track emergency overrides
 
         # Validators
         self.four_laws_validator = FourLawsValidator()
@@ -662,6 +691,153 @@ class GuardianApprovalSystem:
         except Exception as e:
             logger.error(f"Failed to load requests: {e}")
 
+    def initiate_emergency_override(
+        self,
+        request_id: str,
+        justification: str,
+        initiated_by: str,
+    ) -> str:
+        """Initiate emergency override with multi-signature requirement."""
+        try:
+            with self.lock:
+                if request_id not in self.requests:
+                    logger.error(f"Request {request_id} not found")
+                    return ""
+                
+                request = self.requests[request_id]
+                
+                # Create emergency override
+                override = EmergencyOverride(
+                    request_id=request_id,
+                    justification=justification,
+                    initiated_by=initiated_by,
+                    min_signatures_required=3,  # Require at least 3 guardian signatures
+                )
+                
+                # Schedule automatic review 30 days after activation
+                auto_review_date = datetime.now(timezone.utc) + timedelta(days=30)
+                override.auto_review_date = auto_review_date.isoformat()
+                
+                self.emergency_overrides[override.override_id] = override
+                
+                # Save to disk
+                override_file = self.data_dir / f"emergency_{override.override_id}.json"
+                with open(override_file, "w") as f:
+                    json.dump(override.to_dict(), f, indent=2)
+                
+                logger.warning(
+                    f"Emergency override {override.override_id} initiated for request {request_id} by {initiated_by}"
+                )
+                return override.override_id
+        except Exception as e:
+            logger.error(f"Failed to initiate emergency override: {e}")
+            return ""
+    
+    def sign_emergency_override(
+        self, override_id: str, guardian_id: str, signature_justification: str
+    ) -> bool:
+        """Guardian signs emergency override (multi-signature)."""
+        try:
+            with self.lock:
+                if override_id not in self.emergency_overrides:
+                    logger.error(f"Override {override_id} not found")
+                    return False
+                
+                override = self.emergency_overrides[override_id]
+                
+                # Verify guardian exists and is active
+                if guardian_id not in self.guardians or not self.guardians[guardian_id]["active"]:
+                    logger.error(f"Guardian {guardian_id} not found or inactive")
+                    return False
+                
+                # Check if guardian already signed
+                if any(sig["guardian_id"] == guardian_id for sig in override.signatures):
+                    logger.warning(f"Guardian {guardian_id} already signed override {override_id}")
+                    return False
+                
+                # Add signature
+                signature = {
+                    "guardian_id": guardian_id,
+                    "signature": hashlib.sha256(
+                        f"{override_id}{guardian_id}{signature_justification}".encode()
+                    ).hexdigest(),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                    "justification": signature_justification,
+                }
+                override.signatures.append(signature)
+                
+                # Check if we have enough signatures
+                if override.is_valid() and override.status == "pending":
+                    override.status = "active"
+                    logger.warning(
+                        f"Emergency override {override_id} is now ACTIVE with {len(override.signatures)} signatures"
+                    )
+                    
+                    # Apply override to original request
+                    if override.request_id in self.requests:
+                        request = self.requests[override.request_id]
+                        request.status = ApprovalStatus.APPROVED.value
+                        request.metadata["emergency_override"] = override_id
+                        self._save_request(request)
+                
+                # Save override
+                override_file = self.data_dir / f"emergency_{override_id}.json"
+                with open(override_file, "w") as f:
+                    json.dump(override.to_dict(), f, indent=2)
+                
+                logger.info(
+                    f"Guardian {guardian_id} signed emergency override {override_id} ({len(override.signatures)}/{override.min_signatures_required})"
+                )
+                return True
+        except Exception as e:
+            logger.error(f"Failed to sign emergency override: {e}")
+            return False
+    
+    def complete_post_mortem(
+        self, override_id: str, report: str, completed_by: str
+    ) -> bool:
+        """Complete mandatory post-mortem for emergency override."""
+        try:
+            with self.lock:
+                if override_id not in self.emergency_overrides:
+                    logger.error(f"Override {override_id} not found")
+                    return False
+                
+                override = self.emergency_overrides[override_id]
+                
+                if override.status != "active":
+                    logger.error(f"Override {override_id} is not active")
+                    return False
+                
+                override.post_mortem_completed = True
+                override.post_mortem_report = report
+                override.status = "completed"
+                override.metadata = override.metadata if hasattr(override, 'metadata') else {}
+                override.metadata["post_mortem_completed_by"] = completed_by
+                override.metadata["post_mortem_completed_at"] = datetime.now(timezone.utc).isoformat()
+                
+                # Log consequences for review
+                override.consequences.append(f"Post-mortem completed by {completed_by}")
+                
+                # Save override
+                override_file = self.data_dir / f"emergency_{override_id}.json"
+                with open(override_file, "w") as f:
+                    json.dump(override.to_dict(), f, indent=2)
+                
+                logger.info(f"Post-mortem completed for emergency override {override_id}")
+                return True
+        except Exception as e:
+            logger.error(f"Failed to complete post-mortem: {e}")
+            return False
+    
+    def get_emergency_overrides(self, status: Optional[str] = None) -> List[EmergencyOverride]:
+        """Get emergency overrides, optionally filtered by status."""
+        with self.lock:
+            overrides = list(self.emergency_overrides.values())
+            if status:
+                overrides = [o for o in overrides if o.status == status]
+            return overrides
+
     def get_status(self) -> Dict[str, Any]:
         """Get system status."""
         with self.lock:
@@ -670,6 +846,9 @@ class GuardianApprovalSystem:
                 "pending_requests": len(self.get_pending_requests()),
                 "guardians_active": len([g for g in self.guardians.values() if g["active"]]),
                 "policies_configured": len(self.approval_policies),
+                "emergency_overrides": len(self.emergency_overrides),
+                "active_overrides": len([o for o in self.emergency_overrides.values() if o.status == "active"]),
+                "pending_post_mortems": len([o for o in self.emergency_overrides.values() if o.status == "active" and not o.post_mortem_completed]),
             }
 
 

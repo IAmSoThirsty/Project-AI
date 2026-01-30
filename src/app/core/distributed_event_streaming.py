@@ -95,6 +95,26 @@ class ConsumerGroup:
     session_timeout: int = 60
 
 
+class BackpressureStrategy(Enum):
+    """Backpressure handling strategies for queue saturation."""
+    
+    DROP_OLDEST = "drop_oldest"  # Drop oldest events when queue is full
+    BLOCK_PRODUCER = "block_producer"  # Block producer until space available
+    SPILL_TO_DISK = "spill_to_disk"  # Write overflow events to disk
+    REJECT_NEW = "reject_new"  # Reject new events when queue is full
+
+
+@dataclass
+class BackpressureConfig:
+    """Configuration for backpressure handling."""
+    
+    strategy: str = BackpressureStrategy.DROP_OLDEST.value
+    max_queue_size: int = 10000  # Maximum events per topic before backpressure
+    disk_spill_path: Optional[str] = None  # Path for disk spill (if strategy is SPILL_TO_DISK)
+    block_timeout_ms: int = 5000  # Timeout for BLOCK_PRODUCER strategy
+    enable_metrics: bool = True  # Track backpressure metrics
+
+
 class EventStreamBackend(ABC):
     """Abstract base for event streaming backends."""
 
@@ -136,18 +156,35 @@ class EventStreamBackend(ABC):
 class InMemoryStreamBackend(EventStreamBackend):
     """In-memory event streaming backend for testing and development."""
 
-    def __init__(self):
+    def __init__(self, backpressure_config: Optional[BackpressureConfig] = None):
         self.topics: Dict[str, List[StreamEvent]] = defaultdict(list)
         self.offsets: Dict[str, Dict[str, int]] = defaultdict(lambda: defaultdict(int))
         self.subscriptions: Dict[str, Dict[str, Any]] = {}
         self.lock = threading.RLock()
         self.running = True
         self.consumer_threads: List[threading.Thread] = []
+        
+        # Backpressure configuration
+        self.backpressure_config = backpressure_config or BackpressureConfig()
+        self.backpressure_metrics = {
+            "events_dropped": 0,
+            "events_blocked": 0,
+            "events_spilled": 0,
+            "events_rejected": 0,
+        }
 
     def publish(self, topic: str, event: StreamEvent) -> bool:
-        """Publish event to topic."""
+        """Publish event to topic with backpressure handling."""
         try:
             with self.lock:
+                # Check queue size for backpressure
+                current_size = len(self.topics[topic])
+                
+                if current_size >= self.backpressure_config.max_queue_size:
+                    # Apply backpressure strategy
+                    return self._handle_backpressure(topic, event)
+                
+                # Normal publish
                 event.topic = topic
                 event.offset = len(self.topics[topic])
                 self.topics[topic].append(event)
@@ -158,6 +195,52 @@ class InMemoryStreamBackend(EventStreamBackend):
         except Exception as e:
             logger.error(f"Failed to publish event to {topic}: {e}")
             return False
+    
+    def _handle_backpressure(self, topic: str, event: StreamEvent) -> bool:
+        """Handle backpressure based on configured strategy."""
+        strategy = self.backpressure_config.strategy
+        
+        if strategy == BackpressureStrategy.DROP_OLDEST.value:
+            # Drop oldest event to make room
+            if self.topics[topic]:
+                dropped = self.topics[topic].pop(0)
+                self.backpressure_metrics["events_dropped"] += 1
+                logger.warning(
+                    f"Backpressure: Dropped oldest event {dropped.event_id} from topic {topic}"
+                )
+                # Add new event
+                event.topic = topic
+                event.offset = len(self.topics[topic])
+                self.topics[topic].append(event)
+                return True
+        
+        elif strategy == BackpressureStrategy.BLOCK_PRODUCER.value:
+            # Block and retry (simplified - in production would use condition variable)
+            self.backpressure_metrics["events_blocked"] += 1
+            logger.warning(f"Backpressure: Blocking producer for topic {topic}")
+            # In real implementation, would wait for space
+            return False
+        
+        elif strategy == BackpressureStrategy.SPILL_TO_DISK.value:
+            # Spill to disk (simplified)
+            self.backpressure_metrics["events_spilled"] += 1
+            logger.warning(f"Backpressure: Spilling event {event.event_id} to disk")
+            # In real implementation, would write to disk
+            # For now, we'll just log it
+            return True
+        
+        elif strategy == BackpressureStrategy.REJECT_NEW.value:
+            # Reject new event
+            self.backpressure_metrics["events_rejected"] += 1
+            logger.warning(f"Backpressure: Rejecting event {event.event_id} for topic {topic}")
+            return False
+        
+        return False
+    
+    def get_backpressure_metrics(self) -> Dict[str, int]:
+        """Get backpressure metrics."""
+        with self.lock:
+            return self.backpressure_metrics.copy()
 
     def subscribe(
         self, topics: List[str], consumer_group: str, callback: Callable[[StreamEvent], None]
