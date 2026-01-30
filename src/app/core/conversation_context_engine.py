@@ -435,12 +435,21 @@ class ConversationContextEngine:
             
             session_file = os.path.join(self.data_dir, f"{session_id}.json")
             
+            # Convert turns to serializable format
+            turns_data = []
+            for turn in session.turns:
+                turn_dict = asdict(turn)
+                # Convert Intent enum to string
+                if isinstance(turn_dict.get('detected_intent'), Intent):
+                    turn_dict['detected_intent'] = turn_dict['detected_intent'].value
+                turns_data.append(turn_dict)
+            
             session_data = {
                 "session_id": session.session_id,
                 "user_id": session.user_id,
                 "start_time": session.start_time,
                 "end_time": session.end_time,
-                "turns": [asdict(t) for t in session.turns],
+                "turns": turns_data,
                 "active_topics": list(session.active_topics),
                 "session_mood": session.session_mood,
                 "interaction_count": session.interaction_count,
