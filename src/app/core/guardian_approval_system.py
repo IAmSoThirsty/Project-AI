@@ -21,8 +21,10 @@ Production-ready with full error handling and logging.
 """
 
 import hashlib
+import hmac
 import json
 import logging
+import os
 import threading
 import uuid
 from collections import defaultdict
@@ -33,6 +35,25 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Set
 
 logger = logging.getLogger(__name__)
+
+
+def _atomic_json_write(path: Path, payload: Dict[str, Any]) -> None:
+    """Atomically write JSON to file to prevent corruption.
+    
+    Uses temp file + fsync + atomic rename pattern for durability.
+    """
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    try:
+        with open(tmp, "w", encoding="utf-8") as f:
+            json.dump(payload, f, indent=2)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp, path)
+    except Exception as e:
+        # Clean up temp file on error
+        if tmp.exists():
+            tmp.unlink()
+        raise e
 
 
 class ApprovalStatus(Enum):
@@ -158,22 +179,30 @@ class ApprovalRequest:
 
 @dataclass
 class EmergencyOverride:
-    """Emergency override with forced multi-signature and post-mortem."""
+    """Emergency override with forced multi-signature and post-mortem.
+    
+    Status values: pending, active, completed, reviewed, review_overdue, rejected
+    """
 
     override_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     request_id: str = ""
     justification: str = ""
     initiated_by: str = ""
     created_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
-    signatures: List[Dict[str, str]] = field(default_factory=list)  # guardian_id, signature, timestamp
-    min_signatures_required: int = 3  # Minimum 3 signatures for emergency override
-    status: str = "pending"  # pending, active, completed, reviewed
+    
+    signatures: List[Dict[str, Any]] = field(default_factory=list)
+    min_signatures_required: int = 3
+    
+    status: str = "pending"
     post_mortem_required: bool = True
     post_mortem_completed: bool = False
     post_mortem_report: str = ""
+    
     auto_review_scheduled: bool = True
     auto_review_date: Optional[str] = None
+    
     consequences: List[str] = field(default_factory=list)
+    metadata: Dict[str, Any] = field(default_factory=dict)
     
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary."""
@@ -390,21 +419,25 @@ class GuardianApprovalSystem:
                 "guardian_id": "galahad",
                 "role": GuardianRole.ETHICS_GUARDIAN.value,
                 "active": True,
+                "signing_secret": os.environ.get("GALAHAD_SIGNING_SECRET", "default_galahad_secret_change_me"),
             },
             {
                 "guardian_id": "cerberus",
                 "role": GuardianRole.SECURITY_GUARDIAN.value,
                 "active": True,
+                "signing_secret": os.environ.get("CERBERUS_SIGNING_SECRET", "default_cerberus_secret_change_me"),
             },
             {
                 "guardian_id": "codex_deus",
                 "role": GuardianRole.CHARTER_GUARDIAN.value,
                 "active": True,
+                "signing_secret": os.environ.get("CODEX_DEUS_SIGNING_SECRET", "default_codex_secret_change_me"),
             },
             {
                 "guardian_id": "safety_monitor",
                 "role": GuardianRole.SAFETY_GUARDIAN.value,
                 "active": True,
+                "signing_secret": os.environ.get("SAFETY_MONITOR_SIGNING_SECRET", "default_safety_secret_change_me"),
             },
         ]
 
@@ -691,6 +724,85 @@ class GuardianApprovalSystem:
         except Exception as e:
             logger.error(f"Failed to load requests: {e}")
 
+    def _sign_override(self, override_id: str, guardian_id: str, justification: str) -> str:
+        """Create HMAC signature for emergency override.
+        
+        Uses guardian-specific signing secret for authenticity.
+        """
+        secret = self.guardians[guardian_id].get("signing_secret")
+        if not secret:
+            raise ValueError(f"Guardian {guardian_id} signing secret not configured")
+        
+        msg = f"{override_id}|{guardian_id}|{justification}".encode("utf-8")
+        return hmac.new(secret.encode("utf-8"), msg, hashlib.sha256).hexdigest()
+
+    def _emit_override_activation(self, override: EmergencyOverride) -> None:
+        """Emit cross-system notifications when override becomes ACTIVE.
+        
+        Integrates with distributed event streaming, metrics dashboard, and SOC.
+        Makes emergency overrides visible across the whole system.
+        """
+        try:
+            # Import here to avoid circular dependencies
+            from app.core.distributed_event_streaming import get_event_streaming_system
+            from app.core.live_metrics_dashboard import get_metrics_dashboard
+            from app.core.security_operations_center import get_soc_system
+            
+            # Emit event to streaming system
+            streaming = get_event_streaming_system()
+            if streaming:
+                streaming.publish_event(
+                    "GUARDIAN_EMERGENCY_OVERRIDE_ACTIVATED",
+                    {
+                        "override_id": override.override_id,
+                        "request_id": override.request_id,
+                        "signatures_count": len(override.signatures),
+                        "initiated_by": override.initiated_by,
+                        "justification": override.justification,
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
+                    }
+                )
+                logger.info(f"Emitted override activation event for {override.override_id}")
+            
+            # Record metric in dashboard
+            metrics = get_metrics_dashboard()
+            if metrics:
+                metrics.record_metric(
+                    "guardian.emergency_override_activated",
+                    1,
+                    {"category": "governance", "override_id": override.override_id}
+                )
+                logger.info(f"Recorded override activation metric for {override.override_id}")
+            
+            # Create SOC incident for HIGH/CRITICAL impact overrides
+            soc = get_soc_system()
+            if soc and override.request_id in self.requests:
+                request = self.requests[override.request_id]
+                impact = request.metadata.get("impact", "medium")
+                if impact in ("high", "critical"):
+                    soc.create_incident(
+                        title=f"Emergency Override Activated: {override.override_id}",
+                        description=f"Emergency override activated for {impact.upper()} impact request. "
+                                  f"Justification: {override.justification}",
+                        severity=impact,
+                        incident_type="governance_exception",
+                        metadata={
+                            "override_id": override.override_id,
+                            "request_id": override.request_id,
+                            "impact": impact,
+                            "signatures": [s["guardian_id"] for s in override.signatures],
+                        }
+                    )
+                    logger.warning(
+                        f"Created SOC incident for {impact.upper()} impact override {override.override_id}"
+                    )
+        except ImportError:
+            # Systems not available, which is OK (they're optional integrations)
+            logger.debug("Cross-system integrations not available for override activation")
+        except Exception as e:
+            # Don't fail override activation if notifications fail
+            logger.warning(f"Failed to emit override activation notifications: {e}")
+
     def initiate_emergency_override(
         self,
         request_id: str,
@@ -720,10 +832,9 @@ class GuardianApprovalSystem:
                 
                 self.emergency_overrides[override.override_id] = override
                 
-                # Save to disk
+                # Save to disk atomically
                 override_file = self.data_dir / f"emergency_{override.override_id}.json"
-                with open(override_file, "w") as f:
-                    json.dump(override.to_dict(), f, indent=2)
+                _atomic_json_write(override_file, override.to_dict())
                 
                 logger.warning(
                     f"Emergency override {override.override_id} initiated for request {request_id} by {initiated_by}"
@@ -732,11 +843,12 @@ class GuardianApprovalSystem:
         except Exception as e:
             logger.error(f"Failed to initiate emergency override: {e}")
             return ""
+
     
     def sign_emergency_override(
         self, override_id: str, guardian_id: str, signature_justification: str
     ) -> bool:
-        """Guardian signs emergency override (multi-signature)."""
+        """Guardian signs emergency override (multi-signature) with role quorum."""
         try:
             with self.lock:
                 if override_id not in self.emergency_overrides:
@@ -744,6 +856,11 @@ class GuardianApprovalSystem:
                     return False
                 
                 override = self.emergency_overrides[override_id]
+                
+                # State check: only allow signing in pending or active status
+                if override.status not in ("pending", "active"):
+                    logger.error(f"Override {override_id} not signable in status={override.status}")
+                    return False
                 
                 # Verify guardian exists and is active
                 if guardian_id not in self.guardians or not self.guardians[guardian_id]["active"]:
@@ -755,48 +872,79 @@ class GuardianApprovalSystem:
                     logger.warning(f"Guardian {guardian_id} already signed override {override_id}")
                     return False
                 
-                # Add signature
+                # Get guardian role
+                guardian_role = self.guardians[guardian_id].get("role", "unknown")
+                
+                # Check if role already represented (warning only, still allow)
+                signed_roles = {sig.get("role") for sig in override.signatures if sig.get("role")}
+                if guardian_role in signed_roles:
+                    logger.warning(f"Role {guardian_role} already represented on override {override_id}")
+                
+                # Create HMAC signature
+                signature_value = self._sign_override(override_id, guardian_id, signature_justification)
+                
+                # Add signature with role
                 signature = {
                     "guardian_id": guardian_id,
-                    "signature": hashlib.sha256(
-                        f"{override_id}{guardian_id}{signature_justification}".encode()
-                    ).hexdigest(),
+                    "role": guardian_role,
+                    "signature": signature_value,
                     "timestamp": datetime.now(timezone.utc).isoformat(),
                     "justification": signature_justification,
                 }
                 override.signatures.append(signature)
                 
-                # Check if we have enough signatures
+                # Check if we have enough signatures with proper role quorum
                 if override.is_valid() and override.status == "pending":
-                    override.status = "active"
-                    logger.warning(
-                        f"Emergency override {override_id} is now ACTIVE with {len(override.signatures)} signatures"
-                    )
+                    # Verify role quorum (must have ethics, security, and charter roles)
+                    roles = {sig.get("role") for sig in override.signatures if sig.get("role")}
+                    required_roles = {
+                        GuardianRole.ETHICS_GUARDIAN.value,
+                        GuardianRole.SECURITY_GUARDIAN.value,
+                        GuardianRole.CHARTER_GUARDIAN.value,
+                    }
                     
-                    # Apply override to original request
-                    if override.request_id in self.requests:
-                        request = self.requests[override.request_id]
-                        request.status = ApprovalStatus.APPROVED.value
-                        request.metadata["emergency_override"] = override_id
-                        self._save_request(request)
+                    if not required_roles.issubset(roles):
+                        missing_roles = required_roles - roles
+                        logger.warning(
+                            f"Override {override_id} lacks required role quorum: {missing_roles}. "
+                            f"Need {override.min_signatures_required} signatures with ethics, security, and charter roles."
+                        )
+                    else:
+                        # Role quorum met, activate override
+                        override.status = "active"
+                        logger.warning(
+                            f"Emergency override {override_id} is now ACTIVE with {len(override.signatures)} signatures "
+                            f"and full role quorum (ethics, security, charter)"
+                        )
+                        
+                        # Apply override to original request
+                        if override.request_id in self.requests:
+                            request = self.requests[override.request_id]
+                            request.status = ApprovalStatus.APPROVED.value
+                            request.metadata["emergency_override"] = override_id
+                            self._save_request(request)
+                        
+                        # Emit cross-system notifications
+                        self._emit_override_activation(override)
                 
-                # Save override
+                # Save override atomically
                 override_file = self.data_dir / f"emergency_{override_id}.json"
-                with open(override_file, "w") as f:
-                    json.dump(override.to_dict(), f, indent=2)
+                _atomic_json_write(override_file, override.to_dict())
                 
                 logger.info(
-                    f"Guardian {guardian_id} signed emergency override {override_id} ({len(override.signatures)}/{override.min_signatures_required})"
+                    f"Guardian {guardian_id} ({guardian_role}) signed emergency override {override_id} "
+                    f"({len(override.signatures)}/{override.min_signatures_required})"
                 )
                 return True
         except Exception as e:
             logger.error(f"Failed to sign emergency override: {e}")
             return False
+
     
     def complete_post_mortem(
         self, override_id: str, report: str, completed_by: str
     ) -> bool:
-        """Complete mandatory post-mortem for emergency override."""
+        """Complete mandatory post-mortem for emergency override (idempotent)."""
         try:
             with self.lock:
                 if override_id not in self.emergency_overrides:
@@ -805,30 +953,37 @@ class GuardianApprovalSystem:
                 
                 override = self.emergency_overrides[override_id]
                 
-                if override.status != "active":
-                    logger.error(f"Override {override_id} is not active")
+                # Idempotency check
+                if override.post_mortem_completed:
+                    logger.warning(f"Post-mortem already completed for override {override_id}")
                     return False
                 
+                if override.status != "active":
+                    logger.error(f"Override {override_id} is not active (status={override.status})")
+                    return False
+                
+                # Complete post-mortem
                 override.post_mortem_completed = True
                 override.post_mortem_report = report
                 override.status = "completed"
-                override.metadata = override.metadata if hasattr(override, 'metadata') else {}
+                
+                # Use metadata field (now guaranteed to exist)
                 override.metadata["post_mortem_completed_by"] = completed_by
                 override.metadata["post_mortem_completed_at"] = datetime.now(timezone.utc).isoformat()
                 
                 # Log consequences for review
                 override.consequences.append(f"Post-mortem completed by {completed_by}")
                 
-                # Save override
+                # Save override atomically
                 override_file = self.data_dir / f"emergency_{override_id}.json"
-                with open(override_file, "w") as f:
-                    json.dump(override.to_dict(), f, indent=2)
+                _atomic_json_write(override_file, override.to_dict())
                 
                 logger.info(f"Post-mortem completed for emergency override {override_id}")
                 return True
         except Exception as e:
             logger.error(f"Failed to complete post-mortem: {e}")
             return False
+
     
     def get_emergency_overrides(self, status: Optional[str] = None) -> List[EmergencyOverride]:
         """Get emergency overrides, optionally filtered by status."""
