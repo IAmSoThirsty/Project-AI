@@ -529,7 +529,10 @@ class HealthMonitoringSystem:
         """Register component for health monitoring."""
         with self.lock:
             if component_name not in self.component_monitors:
-                self.component_monitors[component_name] = ComponentHealthMonitor(component_name)
+                self.component_monitors[component_name] = {
+                    "monitor": ComponentHealthMonitor(component_name),
+                    "check_func": health_check_func
+                }
                 logger.info(f"Registered component for monitoring: {component_name}")
 
     def start_monitoring(self) -> bool:
@@ -564,10 +567,18 @@ class HealthMonitoringSystem:
         while self.monitoring_active:
             try:
                 # Check all registered components
-                for component_name, monitor in self.component_monitors.items():
-                    # Component-specific health check would be provided during registration
-                    # For now, we'll skip if no check function available
-                    pass
+                for component_name, component_data in self.component_monitors.items():
+                    monitor = component_data["monitor"]
+                    check_func = component_data["check_func"]
+                    
+                    # Execute health check
+                    health_check = monitor.check_health(check_func)
+                    
+                    # Handle unhealthy components
+                    if health_check.status == HealthStatus.UNHEALTHY.value:
+                        logger.warning(f"Component {component_name} is unhealthy: {health_check.error_message}")
+                        # Attempt fallback activation
+                        self.fallback_manager.activate_fallback(component_name)
 
                 time.sleep(self.check_interval)
             except Exception as e:
@@ -577,7 +588,8 @@ class HealthMonitoringSystem:
         """Get comprehensive system status."""
         with self.lock:
             component_statuses = {}
-            for name, monitor in self.component_monitors.items():
+            for name, component_data in self.component_monitors.items():
+                monitor = component_data["monitor"]
                 component_statuses[name] = monitor.get_current_status().value
 
             operating_mode = self.fallback_manager.get_operating_mode()
