@@ -18,7 +18,7 @@ Features:
 
 import logging
 from abc import ABC, abstractmethod
-from typing import Dict, List, Any, Optional, Protocol, runtime_checkable
+from typing import Dict, List, Any, Optional, Tuple, Protocol, runtime_checkable
 from dataclasses import dataclass, field
 from enum import Enum
 from datetime import datetime
