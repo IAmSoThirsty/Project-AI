@@ -370,6 +370,191 @@ class TestGuardianApprovalSystem(unittest.TestCase):
         self.assertTrue(override.post_mortem_completed)
         self.assertEqual(override.status, "completed")
 
+    def test_emergency_override_hmac_signatures(self):
+        """Test HMAC signatures for emergency overrides."""
+        system = create_guardian_system(self.temp_dir)
+        
+        # Create request
+        request_id = system.create_approval_request(
+            title="Test Request",
+            description="Test HMAC signatures",
+            change_type="feature",
+            impact_level=ImpactLevel.HIGH,
+            requested_by="developer",
+        )
+        
+        # Initiate override
+        override_id = system.initiate_emergency_override(
+            request_id=request_id,
+            justification="Test HMAC",
+            initiated_by="ops",
+        )
+        
+        # Sign with first guardian
+        success = system.sign_emergency_override(
+            override_id, "galahad", "HMAC test"
+        )
+        self.assertTrue(success)
+        
+        # Verify signature is HMAC (64 hex chars for SHA-256)
+        override = system.emergency_overrides[override_id]
+        signature = override.signatures[0]
+        self.assertEqual(len(signature["signature"]), 64)
+        self.assertTrue(all(c in "0123456789abcdef" for c in signature["signature"]))
+        
+        # Verify signature includes role
+        self.assertIn("role", signature)
+        self.assertEqual(signature["role"], "ethics_guardian")
+
+    def test_emergency_override_role_quorum(self):
+        """Test role quorum enforcement for emergency overrides."""
+        system = create_guardian_system(self.temp_dir)
+        
+        # Create request
+        request_id = system.create_approval_request(
+            title="Test Request",
+            description="Test role quorum",
+            change_type="feature",
+            impact_level=ImpactLevel.CRITICAL,
+            requested_by="developer",
+        )
+        
+        # Initiate override
+        override_id = system.initiate_emergency_override(
+            request_id=request_id,
+            justification="Test role quorum",
+            initiated_by="ops",
+        )
+        
+        # Sign with ethics guardian
+        system.sign_emergency_override(override_id, "galahad", "Ethics OK")
+        override = system.emergency_overrides[override_id]
+        self.assertEqual(override.status, "pending")  # Not yet active
+        
+        # Sign with security guardian
+        system.sign_emergency_override(override_id, "cerberus", "Security OK")
+        override = system.emergency_overrides[override_id]
+        self.assertEqual(override.status, "pending")  # Still not active
+        
+        # Sign with charter guardian (completes role quorum)
+        system.sign_emergency_override(override_id, "codex_deus", "Charter OK")
+        override = system.emergency_overrides[override_id]
+        self.assertEqual(override.status, "active")  # Now active!
+        
+        # Verify all three required roles are present
+        roles = {sig["role"] for sig in override.signatures}
+        self.assertIn("ethics_guardian", roles)
+        self.assertIn("security_guardian", roles)
+        self.assertIn("charter_guardian", roles)
+
+    def test_emergency_override_idempotent_post_mortem(self):
+        """Test idempotent post-mortem completion."""
+        system = create_guardian_system(self.temp_dir)
+        
+        # Create and activate override
+        request_id = system.create_approval_request(
+            title="Test Request",
+            description="Test idempotency",
+            change_type="feature",
+            impact_level=ImpactLevel.HIGH,
+            requested_by="developer",
+        )
+        override_id = system.initiate_emergency_override(
+            request_id=request_id,
+            justification="Test idempotency",
+            initiated_by="ops",
+        )
+        
+        # Activate with 3 signatures
+        system.sign_emergency_override(override_id, "galahad", "OK")
+        system.sign_emergency_override(override_id, "cerberus", "OK")
+        system.sign_emergency_override(override_id, "codex_deus", "OK")
+        
+        override = system.emergency_overrides[override_id]
+        self.assertEqual(override.status, "active")
+        
+        # Complete post-mortem
+        success = system.complete_post_mortem(
+            override_id,
+            "Root cause analysis completed",
+            "ops_lead"
+        )
+        self.assertTrue(success)
+        
+        override = system.emergency_overrides[override_id]
+        self.assertEqual(override.status, "completed")
+        self.assertTrue(override.post_mortem_completed)
+        
+        # Try to complete again (should fail with idempotency check)
+        success = system.complete_post_mortem(
+            override_id,
+            "Trying again",
+            "someone_else"
+        )
+        self.assertFalse(success)  # Should return False
+        
+        # Verify metadata was stored correctly
+        self.assertIn("post_mortem_completed_by", override.metadata)
+        self.assertEqual(override.metadata["post_mortem_completed_by"], "ops_lead")
+
+    def test_emergency_override_metadata_field(self):
+        """Test that metadata field exists and works correctly."""
+        system = create_guardian_system(self.temp_dir)
+        
+        # Create request
+        request_id = system.create_approval_request(
+            title="Test Request",
+            description="Test metadata",
+            change_type="feature",
+            impact_level=ImpactLevel.LOW,
+            requested_by="developer",
+        )
+        
+        # Initiate override
+        override_id = system.initiate_emergency_override(
+            request_id=request_id,
+            justification="Test metadata",
+            initiated_by="ops",
+        )
+        
+        # Verify metadata field exists and is a dict
+        override = system.emergency_overrides[override_id]
+        self.assertIsInstance(override.metadata, dict)
+        
+        # Metadata should be empty initially
+        self.assertEqual(len(override.metadata), 0)
+
+    def test_emergency_override_atomic_writes(self):
+        """Test that override files are written atomically."""
+        system = create_guardian_system(self.temp_dir)
+        
+        # Create and save an override
+        request_id = system.create_approval_request(
+            title="Test Request",
+            description="Test atomic writes",
+            change_type="feature",
+            impact_level=ImpactLevel.MEDIUM,
+            requested_by="developer",
+        )
+        override_id = system.initiate_emergency_override(
+            request_id=request_id,
+            justification="Test atomic writes",
+            initiated_by="ops",
+        )
+        
+        # Verify file exists
+        override_file = Path(self.temp_dir) / f"emergency_{override_id}.json"
+        self.assertTrue(override_file.exists())
+        
+        # Verify no .tmp file left behind
+        tmp_file = override_file.with_suffix(override_file.suffix + ".tmp")
+        self.assertFalse(tmp_file.exists())
+        
+        # Verify file is valid JSON
+        with open(override_file) as f:
+            data = json.load(f)
+        self.assertEqual(data["override_id"], override_id)
+
 
 class TestLiveMetricsDashboard(unittest.TestCase):
     """Test metrics dashboard."""
