@@ -27,6 +27,7 @@ import time
 from .system_registry import SystemRegistry, SubsystemPriority, SubsystemState
 from .event_spine import get_event_spine, EventCategory, EventPriority
 from .governance_graph import get_governance_graph
+from .advanced_boot import get_advanced_boot, BootProfile
 
 logger = logging.getLogger(__name__)
 
@@ -68,7 +69,8 @@ class EnhancedBootstrapOrchestrator:
     def __init__(
         self,
         data_dir: str = "data",
-        domain_paths: Optional[List[str]] = None
+        domain_paths: Optional[List[str]] = None,
+        boot_profile: Optional[BootProfile] = None
     ):
         """
         Initialize orchestrator.
@@ -76,6 +78,7 @@ class EnhancedBootstrapOrchestrator:
         Args:
             data_dir: Data directory
             domain_paths: Paths to search for domain modules
+            boot_profile: Optional boot profile to use
         """
         self.data_dir = Path(data_dir)
         self.data_dir.mkdir(parents=True, exist_ok=True)
@@ -86,6 +89,11 @@ class EnhancedBootstrapOrchestrator:
         self.registry = SystemRegistry(data_dir=str(self.data_dir))
         self.event_spine = get_event_spine()
         self.governance = get_governance_graph()
+        self.advanced_boot = get_advanced_boot()
+        
+        # Set boot profile if provided
+        if boot_profile:
+            self.advanced_boot.set_boot_profile(boot_profile)
         
         # Discovered subsystems
         self._subsystem_metadata: Dict[str, SubsystemMetadataInfo] = {}
@@ -258,13 +266,19 @@ class EnhancedBootstrapOrchestrator:
         
         return priority_map.get(info.priority.upper(), 2)
     
-    def initialize_all(self) -> bool:
+    def initialize_all(self, boot_profile: Optional[BootProfile] = None) -> bool:
         """
-        Initialize all subsystems in dependency order.
+        Initialize all subsystems in dependency order with advanced boot features.
+        
+        Args:
+            boot_profile: Optional boot profile to use
         
         Returns:
             True if all critical subsystems initialized
         """
+        # Start boot sequence
+        self.advanced_boot.start_boot(boot_profile)
+        
         logger.info("=" * 80)
         logger.info("INITIALIZING DEFENSE ENGINE")
         logger.info("=" * 80)
@@ -274,30 +288,77 @@ class EnhancedBootstrapOrchestrator:
         
         success_count = 0
         failure_count = 0
+        skipped_count = 0
+        
+        # Check for ethics-first mode
+        ethics_priority_subsystems = {"ethics_governance", "agi_safeguards"}
+        ethics_first = self.advanced_boot.get_current_profile() == BootProfile.ETHICS_FIRST
         
         for subsystem_id in self._init_order:
             info = self._subsystem_metadata.get(subsystem_id)
             if not info:
                 continue
             
+            # Check if should initialize based on boot profile
+            should_init, reason = self.advanced_boot.should_initialize_subsystem(
+                subsystem_id,
+                info.metadata
+            )
+            
+            if not should_init:
+                logger.info(f"Skipping {info.name}: {reason}")
+                skipped_count += 1
+                self.advanced_boot.increment_subsystems_skipped()
+                continue
+            
+            # Check for priority override
+            priority_override = self.advanced_boot.get_priority_override(subsystem_id)
+            if priority_override:
+                info.priority = priority_override
+                logger.info(f"Priority override for {subsystem_id}: {priority_override}")
+            
             logger.info(f"Initializing: {info.name} ({subsystem_id})")
             
             if self._initialize_subsystem(subsystem_id):
                 success_count += 1
+                self.advanced_boot.increment_subsystems_initialized()
+                
+                # Mark ethics checkpoint if ethics subsystem initialized
+                if ethics_first and subsystem_id in ethics_priority_subsystems:
+                    # Check if all ethics subsystems are done
+                    all_ethics_done = all(
+                        self._subsystem_lifecycle.get(es) == SubsystemLifecycleState.RUNNING
+                        for es in ethics_priority_subsystems
+                        if es in self._subsystem_lifecycle
+                    )
+                    
+                    if all_ethics_done:
+                        self.advanced_boot.mark_ethics_checkpoint_passed()
             else:
                 failure_count += 1
                 
                 # Check if critical
                 if info.priority.upper() == "CRITICAL":
                     logger.error(f"Critical subsystem failed: {subsystem_id}")
+                    
+                    # Check if should activate emergency mode
+                    if not self.advanced_boot.is_emergency_mode():
+                        logger.warning("Critical subsystem failure - considering emergency mode")
+                    
+                    self.advanced_boot.finish_boot()
                     return False
         
         logger.info("=" * 80)
-        logger.info(f"INITIALIZATION COMPLETE: {success_count} success, {failure_count} failed")
+        logger.info(f"INITIALIZATION COMPLETE: {success_count} success, {failure_count} failed, {skipped_count} skipped")
         logger.info("=" * 80)
         
-        # Start health monitoring
-        self.start_health_monitoring()
+        # Finish boot sequence
+        self.advanced_boot.finish_boot()
+        
+        # Start health monitoring if enabled
+        if self.advanced_boot._current_profile_config and \
+           self.advanced_boot._current_profile_config.enable_health_monitoring:
+            self.start_health_monitoring()
         
         return True
     
