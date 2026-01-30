@@ -1,0 +1,22 @@
+{
+  "identity_hash": null,
+  "start_time": "2026-01-30T23:05:40.126705+00:00",
+  "recent_scores": [
+    {
+      "timestamp": "2026-01-30T23:05:46.129837+00:00",
+      "overall_score": 1.0,
+      "identity_continuity": 1.0,
+      "memory_continuity": 1.0,
+      "personality_continuity": 1.0,
+      "capability_continuity": 1.0,
+      "ethical_continuity": 1.0,
+      "factors": {
+        "memory_intact": true,
+        "personality_preserved": true,
+        "capabilities_functional": true,
+        "ethics_maintained": true,
+        "identity_verified": true
+      }
+    }
+  ]
+}
