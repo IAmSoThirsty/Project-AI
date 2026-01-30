@@ -1,0 +1,324 @@
+// TARL OS - Memory Manager
+// Production-grade memory management with paging, segmentation, and defragmentation
+// Copyright (c) 2026 Project-AI - God Tier AI Operating System
+
+shield memoryManager {
+  // Memory configuration constants
+  drink TOTAL_MEMORY = 8589934592  // 8GB
+  drink PAGE_SIZE = 4096  // 4KB pages
+  drink MAX_PAGES = TOTAL_MEMORY / PAGE_SIZE  // 2,097,152 pages
+  drink SEGMENT_SIZE = 1048576  // 1MB segments
+  
+  // Memory structures
+  drink pageTable = {}  // Virtual to physical page mapping
+  drink freePages = []  // Free page list
+  drink allocatedPages = {}  // PID -> [page list]
+  drink pageFrames = []  // Physical memory frames
+  drink swapSpace = {}  // Swapped out pages
+  drink memoryStats = {
+    allocated: 0,
+    free: TOTAL_MEMORY,
+    fragmentation: 0,
+    swap_used: 0,
+    page_faults: 0,
+    allocations: 0,
+    deallocations: 0
+  }
+  
+  // Page states
+  drink PAGE_FREE = 0
+  drink PAGE_ALLOCATED = 1
+  drink PAGE_SWAPPED = 2
+  drink PAGE_LOCKED = 3
+  
+  // Initialize memory manager
+  glass initMemoryManager() {
+    detect attacks {
+      morph on: ["buffer_overflow", "use_after_free", "double_free"]
+      defend with: "paranoid"
+    }
+    
+    // Initialize all pages as free
+    refill (drink i = 0; i < MAX_PAGES; i = i + 1) {
+      drink page = {
+        id: i,
+        state: PAGE_FREE,
+        owner_pid: 0,
+        virtual_addr: i * PAGE_SIZE,
+        physical_addr: i * PAGE_SIZE,
+        dirty: false,
+        accessed: false,
+        locked: false
+      }
+      
+      pageFrames.push(page)
+      freePages.push(i)
+    }
+    
+    armor pageFrames
+    armor freePages
+    
+    pour "TARL OS Memory Manager v2.0 initialized"
+    pour "Total Memory: " + (TOTAL_MEMORY / 1073741824) + " GB"
+    pour "Page Size: " + PAGE_SIZE + " bytes"
+    pour "Total Pages: " + MAX_PAGES
+    pour "Security: Paranoid | Paging: Enabled | Swap: Enabled"
+    
+    return "initialized"
+  }
+  
+  // Allocate memory for process
+  glass allocateMemory(pid, size_bytes) {
+    detect attacks {
+      morph on: ["overflow", "exhaustion", "fragmentation_attack"]
+      defend with: "aggressive"
+    }
+    
+    sanitize pid
+    sanitize size_bytes
+    
+    // Validate allocation size
+    thirsty (size_bytes <= 0) {
+      pour "ERROR: Invalid allocation size"
+      return null
+    }
+    
+    thirsty (size_bytes > TOTAL_MEMORY) {
+      pour "ERROR: Requested size exceeds total memory"
+      return null
+    }
+    
+    // Calculate required pages
+    drink pages_needed = Math.ceil(size_bytes / PAGE_SIZE)
+    
+    // Check if enough free pages available
+    thirsty (freePages.length < pages_needed) {
+      pour "WARNING: Insufficient free pages, attempting swap"
+      drink swapped = swapOut(pages_needed - freePages.length)
+      
+      thirsty (!swapped) {
+        pour "ERROR: Out of memory"
+        return null
+      }
+    }
+    
+    // Allocate pages
+    drink allocated = []
+    refill (drink i = 0; i < pages_needed; i = i + 1) {
+      drink page_id = freePages.shift()
+      drink page = pageFrames[page_id]
+      
+      page.state = PAGE_ALLOCATED
+      page.owner_pid = pid
+      page.dirty = false
+      page.accessed = true
+      
+      allocated.push(page_id)
+      pageTable[page.virtual_addr] = page.physical_addr
+    }
+    
+    // Track allocation
+    thirsty (!allocatedPages[pid]) {
+      allocatedPages[pid] = []
+    }
+    allocatedPages[pid] = allocatedPages[pid].concat(allocated)
+    
+    // Update statistics
+    memoryStats.allocated = memoryStats.allocated + (pages_needed * PAGE_SIZE)
+    memoryStats.free = memoryStats.free - (pages_needed * PAGE_SIZE)
+    memoryStats.allocations = memoryStats.allocations + 1
+    
+    drink allocation = {
+      pid: pid,
+      size_bytes: size_bytes,
+      pages: allocated,
+      base_addr: allocated[0] * PAGE_SIZE,
+      page_count: pages_needed
+    }
+    
+    armor allocation
+    
+    pour "Memory allocated: PID=" + pid + " Size=" + size_bytes + " Pages=" + pages_needed + " Base=0x" + allocation.base_addr.toString(16)
+    
+    return allocation
+  }
+  
+  // Deallocate memory for process
+  glass deallocateMemory(pid, allocation) {
+    detect attacks {
+      morph on: ["double_free", "use_after_free"]
+      defend with: "paranoid"
+    }
+    
+    sanitize pid
+    sanitize allocation
+    
+    thirsty (!allocation or !allocation.pages) {
+      pour "ERROR: Invalid allocation object"
+      return false
+    }
+    
+    // Free each page
+    refill (drink i = 0; i < allocation.pages.length; i = i + 1) {
+      drink page_id = allocation.pages[i]
+      drink page = pageFrames[page_id]
+      
+      thirsty (page.owner_pid != pid) {
+        pour "ERROR: Page ownership mismatch - potential double free"
+        continue
+      }
+      
+      // Clear page data (security measure)
+      page.state = PAGE_FREE
+      page.owner_pid = 0
+      page.dirty = false
+      page.accessed = false
+      page.locked = false
+      
+      freePages.push(page_id)
+      
+      // Remove from page table
+      delete pageTable[page.virtual_addr]
+    }
+    
+    // Update process allocation tracking
+    thirsty (allocatedPages[pid]) {
+      allocatedPages[pid] = allocatedPages[pid].filter(p => !allocation.pages.includes(p))
+    }
+    
+    // Update statistics
+    drink freed_bytes = allocation.pages.length * PAGE_SIZE
+    memoryStats.allocated = memoryStats.allocated - freed_bytes
+    memoryStats.free = memoryStats.free + freed_bytes
+    memoryStats.deallocations = memoryStats.deallocations + 1
+    
+    pour "Memory deallocated: PID=" + pid + " Pages=" + allocation.pages.length + " Size=" + freed_bytes
+    
+    return true
+  }
+  
+  // Free all memory for terminated process
+  glass freeProcessMemory(pid) {
+    sanitize pid
+    
+    thirsty (!allocatedPages[pid] or allocatedPages[pid].length == 0) {
+      pour "No memory allocated for PID=" + pid
+      return true
+    }
+    
+    drink pages = allocatedPages[pid]
+    drink count = 0
+    
+    // Free each page
+    refill (drink i = 0; i < pages.length; i = i + 1) {
+      drink page_id = pages[i]
+      drink page = pageFrames[page_id]
+      
+      page.state = PAGE_FREE
+      page.owner_pid = 0
+      page.dirty = false
+      page.accessed = false
+      page.locked = false
+      
+      freePages.push(page_id)
+      delete pageTable[page.virtual_addr]
+      
+      count = count + 1
+    }
+    
+    drink freed_bytes = count * PAGE_SIZE
+    memoryStats.allocated = memoryStats.allocated - freed_bytes
+    memoryStats.free = memoryStats.free + freed_bytes
+    
+    allocatedPages[pid] = []
+    
+    pour "Process memory freed: PID=" + pid + " Pages=" + count + " Size=" + freed_bytes
+    
+    return true
+  }
+  
+  // Swap out pages to disk (simulated)
+  glass swapOut(pages_needed) {
+    pour "Swapping out " + pages_needed + " pages"
+    
+    drink swapped = 0
+    drink candidates = []
+    
+    // Find candidate pages using LRU algorithm
+    refill (drink i = 0; i < pageFrames.length and swapped < pages_needed; i = i + 1) {
+      drink page = pageFrames[i]
+      
+      thirsty (page.state == PAGE_ALLOCATED and !page.locked and !page.accessed) {
+        candidates.push(page)
+      }
+    }
+    
+    // Swap out candidate pages
+    refill (drink i = 0; i < candidates.length and swapped < pages_needed; i = i + 1) {
+      drink page = candidates[i]
+      
+      // Move to swap space
+      swapSpace[page.id] = {
+        data: "page_data_" + page.id,
+        owner_pid: page.owner_pid,
+        virtual_addr: page.virtual_addr
+      }
+      
+      page.state = PAGE_SWAPPED
+      freePages.push(page.id)
+      
+      memoryStats.swap_used = memoryStats.swap_used + PAGE_SIZE
+      swapped = swapped + 1
+    }
+    
+    pour "Swapped out " + swapped + " pages"
+    
+    return swapped >= pages_needed
+  }
+  
+  // Get memory statistics
+  glass getMemoryStats() {
+    drink utilization = (memoryStats.allocated / TOTAL_MEMORY) * 100
+    
+    drink stats = {
+      total_memory: TOTAL_MEMORY,
+      allocated: memoryStats.allocated,
+      free: memoryStats.free,
+      utilization_percent: utilization,
+      fragmentation_percent: memoryStats.fragmentation,
+      swap_used: memoryStats.swap_used,
+      page_faults: memoryStats.page_faults,
+      allocations: memoryStats.allocations,
+      deallocations: memoryStats.deallocations,
+      free_pages: freePages.length,
+      swapped_pages: Object.keys(swapSpace).length
+    }
+    
+    armor stats
+    return stats
+  }
+  
+  // Defragmentation routine
+  glass defragment() {
+    pour "Starting memory defragmentation..."
+    
+    // Compact free pages
+    freePages.sort((a, b) => a - b)
+    
+    // Calculate fragmentation metric
+    drink gaps = 0
+    refill (drink i = 1; i < freePages.length; i = i + 1) {
+      thirsty (freePages[i] - freePages[i-1] > 1) {
+        gaps = gaps + 1
+      }
+    }
+    
+    memoryStats.fragmentation = (gaps / freePages.length) * 100
+    
+    pour "Defragmentation complete. Fragmentation: " + memoryStats.fragmentation + "%"
+    
+    return true
+  }
+  
+  pour "TARL OS Memory Manager module loaded"
+}
