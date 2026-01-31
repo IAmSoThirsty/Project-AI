@@ -225,33 +225,33 @@ def initialize_council_hub(kernel: CognitionKernel) -> CouncilHub:
 
 def initialize_security_systems(kernel: CognitionKernel, council_hub: CouncilHub) -> dict[str, Any]:
     """Initialize comprehensive security countermeasures and defense systems.
-    
+
     Activates:
     1. Global Watch Tower Security Command Center (Cerberus)
     2. Active Defense Agents (SafetyGuard, Constitutional, TARL)
     3. Payload Validation & Attack Detection
     4. ASL-3 Security Enforcement (30 core controls)
-    
+
     This implements ethical defensive capabilities without offensive intent,
     aligned with Asimov's Laws and the FourLaws governance system.
-    
+
     Args:
         kernel: CognitionKernel instance for governance
         council_hub: CouncilHub for agent registration
-        
+
     Returns:
         Dictionary containing initialized security components
     """
     logger.info("=" * 60)
     logger.info("🛡️  INITIALIZING SECURITY COUNTERMEASURES")
     logger.info("=" * 60)
-    
+
     security_components = {}
-    
+
     # Phase 1: Initialize Global Watch Tower Security Command Center
     try:
         from app.core.global_watch_tower import GlobalWatchTower
-        
+
         tower = GlobalWatchTower.initialize(
             num_port_admins=2,
             towers_per_port=10,
@@ -261,11 +261,11 @@ def initialize_security_systems(kernel: CognitionKernel, council_hub: CouncilHub
             timeout=8
         )
         security_components['watch_tower'] = tower
-        
+
         # Get Cerberus (Chief of Security) status
-        cerberus = tower.get_chief_of_security()
+        tower.get_chief_of_security()
         status = tower.get_security_status()
-        
+
         logger.info("✅ Global Watch Tower activated")
         logger.info(f"   - Chief of Security: {status['chief_of_security']}")
         logger.info(f"   - Border Patrol agents: {status['registered_agents']['border_patrol']}")
@@ -275,24 +275,24 @@ def initialize_security_systems(kernel: CognitionKernel, council_hub: CouncilHub
     except Exception as e:
         logger.warning(f"Global Watch Tower initialization failed: {e}")
         security_components['watch_tower'] = None
-    
+
     # Phase 2: Initialize Active Defense Agents
     try:
         from app.agents.safety_guard_agent import SafetyGuardAgent
-        
+
         safety_guard = SafetyGuardAgent(
             model_name="llama-guard-3-8b",
             strict_mode=True,
             kernel=kernel
         )
         security_components['safety_guard'] = safety_guard
-        
+
         # Register with CouncilHub
         try:
             council_hub.register_agent("safety_guard", safety_guard)
         except Exception as e:
             logger.warning(f"Failed to register SafetyGuardAgent with CouncilHub: {e}")
-        
+
         logger.info("✅ SafetyGuardAgent activated")
         logger.info("   - Pre/post-processing content filtering enabled")
         logger.info("   - Jailbreak detection active")
@@ -300,145 +300,147 @@ def initialize_security_systems(kernel: CognitionKernel, council_hub: CouncilHub
     except Exception as e:
         logger.warning(f"SafetyGuardAgent initialization failed: {e}")
         security_components['safety_guard'] = None
-    
+
     try:
-        from app.agents.constitutional_guardrail_agent import ConstitutionalGuardrailAgent
-        
+        from app.agents.constitutional_guardrail_agent import (
+            ConstitutionalGuardrailAgent,
+        )
+
         constitutional_guard = ConstitutionalGuardrailAgent(kernel=kernel)
         security_components['constitutional_guard'] = constitutional_guard
-        
+
         # Register with CouncilHub
         try:
             council_hub.register_agent("constitutional_guard", constitutional_guard)
         except Exception as e:
             logger.warning(f"Failed to register ConstitutionalGuardrailAgent: {e}")
-        
+
         logger.info("✅ ConstitutionalGuardrailAgent activated")
         logger.info("   - Ethical boundary enforcement enabled")
     except Exception as e:
         logger.warning(f"ConstitutionalGuardrailAgent initialization failed: {e}")
         security_components['constitutional_guard'] = None
-    
+
     try:
         from app.agents.tarl_protector import TARLCodeProtector
-        
+
         tarl_protector = TARLCodeProtector(kernel=kernel)
         security_components['tarl_protector'] = tarl_protector
-        
+
         # Register with CouncilHub
         try:
             council_hub.register_agent("tarl_protector", tarl_protector)
         except Exception as e:
             logger.warning(f"Failed to register TARLCodeProtector: {e}")
-        
+
         logger.info("✅ TARL Code Protector activated")
         logger.info("   - Runtime code protection enabled")
     except Exception as e:
         logger.warning(f"TARL Code Protector initialization failed: {e}")
         security_components['tarl_protector'] = None
-    
+
     # Phase 2b: Initialize Red Team Agents (Adversarial Testing)
     try:
-        from app.agents.red_team_agent import RedTeamAgent, AttackStrategy
-        
+        from app.agents.red_team_agent import RedTeamAgent
+
         red_team = RedTeamAgent(kernel=kernel)
         security_components['red_team'] = red_team
-        
+
         # Register with CouncilHub
         try:
             council_hub.register_agent("red_team", red_team)
         except Exception as e:
             logger.warning(f"Failed to register RedTeamAgent: {e}")
-        
+
         logger.info("✅ RedTeamAgent activated")
         logger.info("   - Adversarial testing capabilities enabled")
         logger.info("   - Multi-turn attack simulation ready")
     except Exception as e:
         logger.warning(f"RedTeamAgent initialization failed: {e}")
         security_components['red_team'] = None
-    
+
     try:
         from app.agents.code_adversary_agent import CodeAdversaryAgent
-        
+
         code_adversary = CodeAdversaryAgent(kernel=kernel)
         security_components['code_adversary'] = code_adversary
-        
+
         # Register with CouncilHub
         try:
             council_hub.register_agent("code_adversary", code_adversary)
         except Exception as e:
             logger.warning(f"Failed to register CodeAdversaryAgent: {e}")
-        
+
         logger.info("✅ CodeAdversaryAgent activated")
         logger.info("   - Automated vulnerability scanning enabled")
         logger.info("   - DARPA-grade security testing ready")
     except Exception as e:
         logger.warning(f"CodeAdversaryAgent initialization failed: {e}")
         security_components['code_adversary'] = None
-    
+
     # Phase 2c: Initialize Oversight & Analysis Agents
     try:
         from app.agents.oversight import OversightAgent
-        
+
         oversight = OversightAgent(kernel=kernel)
         security_components['oversight'] = oversight
-        
+
         # Register with CouncilHub
         try:
             council_hub.register_agent("oversight", oversight)
         except Exception as e:
             logger.warning(f"Failed to register OversightAgent: {e}")
-        
+
         logger.info("✅ OversightAgent activated")
         logger.info("   - System health monitoring enabled")
         logger.info("   - Compliance tracking active")
     except Exception as e:
         logger.warning(f"OversightAgent initialization failed: {e}")
         security_components['oversight'] = None
-    
+
     try:
         from app.agents.validator import ValidatorAgent
-        
+
         validator = ValidatorAgent(kernel=kernel)
         security_components['validator'] = validator
-        
+
         # Register with CouncilHub
         try:
             council_hub.register_agent("validator", validator)
         except Exception as e:
             logger.warning(f"Failed to register ValidatorAgent: {e}")
-        
+
         logger.info("✅ ValidatorAgent activated")
         logger.info("   - Input/output validation enabled")
         logger.info("   - Data integrity checking active")
     except Exception as e:
         logger.warning(f"ValidatorAgent initialization failed: {e}")
         security_components['validator'] = None
-    
+
     try:
         from app.agents.explainability import ExplainabilityAgent
-        
+
         explainability = ExplainabilityAgent(kernel=kernel)
         security_components['explainability'] = explainability
-        
+
         # Register with CouncilHub
         try:
             council_hub.register_agent("explainability", explainability)
         except Exception as e:
             logger.warning(f"Failed to register ExplainabilityAgent: {e}")
-        
+
         logger.info("✅ ExplainabilityAgent activated")
         logger.info("   - Decision transparency enabled")
         logger.info("   - Security reasoning traces available")
     except Exception as e:
         logger.warning(f"ExplainabilityAgent initialization failed: {e}")
         security_components['explainability'] = None
-    
+
     # Register all agents with Watch Tower if available
     if security_components.get('watch_tower'):
         try:
             tower = security_components['watch_tower']
-            
+
             # Register Active Defense agents
             if security_components.get('safety_guard'):
                 tower.register_security_agent("active_defense", "safety_guard_main")
@@ -446,13 +448,13 @@ def initialize_security_systems(kernel: CognitionKernel, council_hub: CouncilHub
                 tower.register_security_agent("active_defense", "constitutional_guard_main")
             if security_components.get('tarl_protector'):
                 tower.register_security_agent("active_defense", "tarl_protector_main")
-            
+
             # Register Red Team agents
             if security_components.get('red_team'):
                 tower.register_security_agent("red_team", "red_team_main")
             if security_components.get('code_adversary'):
                 tower.register_security_agent("red_team", "code_adversary_main")
-            
+
             # Register Oversight agents
             if security_components.get('oversight'):
                 tower.register_security_agent("oversight", "oversight_main")
@@ -460,21 +462,21 @@ def initialize_security_systems(kernel: CognitionKernel, council_hub: CouncilHub
                 tower.register_security_agent("oversight", "validator_main")
             if security_components.get('explainability'):
                 tower.register_security_agent("oversight", "explainability_main")
-            
+
             status = tower.get_security_status()
             logger.info(f"   - Active Defense agents: {status['registered_agents']['active_defense']}")
             logger.info(f"   - Red Team agents: {status['registered_agents']['red_team']}")
             logger.info(f"   - Oversight agents: {status['registered_agents']['oversight']}")
         except Exception as e:
             logger.warning(f"Failed to register agents with Watch Tower: {e}")
-    
+
     # Phase 3: Initialize Payload Validation & Attack Detection
     try:
         from app.security.data_validation import SecureDataParser
-        
+
         data_parser = SecureDataParser()
         security_components['data_parser'] = data_parser
-        
+
         logger.info("✅ Secure Data Parser activated")
         logger.info("   - XXE/DTD attack pattern detection enabled")
         logger.info("   - CSV injection defense active")
@@ -483,11 +485,11 @@ def initialize_security_systems(kernel: CognitionKernel, council_hub: CouncilHub
     except Exception as e:
         logger.warning(f"Secure Data Parser initialization failed: {e}")
         security_components['data_parser'] = None
-    
+
     # Phase 4: Initialize ASL-3 Security Enforcement
     try:
         from app.core.security_enforcer import ASL3Security
-        
+
         asl3_security = ASL3Security(
             data_dir="data",
             key_file="config/.asl3_key",
@@ -495,7 +497,7 @@ def initialize_security_systems(kernel: CognitionKernel, council_hub: CouncilHub
             enable_cerberus_hydra=False  # Disabled by default to avoid conflicts
         )
         security_components['asl3_security'] = asl3_security
-        
+
         logger.info("✅ ASL-3 Security Enforcer activated")
         logger.info("   - 30 core security controls enabled")
         logger.info("   - Encryption at rest (Fernet) active")
@@ -505,7 +507,7 @@ def initialize_security_systems(kernel: CognitionKernel, council_hub: CouncilHub
     except Exception as e:
         logger.warning(f"ASL-3 Security Enforcer initialization failed: {e}")
         security_components['asl3_security'] = None
-    
+
     # Summary
     active_count = sum(1 for v in security_components.values() if v is not None)
     logger.info("=" * 60)
@@ -515,7 +517,7 @@ def initialize_security_systems(kernel: CognitionKernel, council_hub: CouncilHub
     logger.info("Aligned with: Asimov's Laws, FourLaws Governance")
     logger.info("Mission: Protect without harm, detect without attack")
     logger.info("=" * 60)
-    
+
     return security_components
 
 
@@ -598,7 +600,7 @@ def main():
         app_window.set_cognition_kernel(kernel)
     if hasattr(app_window, "set_council_hub"):
         app_window.set_council_hub(council_hub)
-    
+
     # Make security systems accessible to the dashboard
     if hasattr(app_window, "set_security_systems"):
         app_window.set_security_systems(security_systems)
