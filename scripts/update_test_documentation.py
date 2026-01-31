@@ -432,6 +432,11 @@ class ArtifactParser:
 class DocumentationUpdater:
     """Update documentation files with test results."""
     
+    # ⚠️ CRITICAL: README.md is OFF LIMITS - NEVER MODIFY IT ⚠️
+    # Modifications only by explicit human action
+    # Violating this invokes the wrath of Thirsty
+    PROTECTED_FILES = ['README.md', 'readme.md', 'ReadMe.md', 'Readme.md']
+    
     def __init__(self, config: Dict[str, Any], stats: OverallStats):
         self.config = config
         self.stats = stats
@@ -442,6 +447,12 @@ class DocumentationUpdater:
         """Update all configured documentation files."""
         for doc_target in self.config.get('documentation_targets', []):
             filepath = doc_target.get('path')
+            
+            # ⚠️ CRITICAL CHECK: NEVER TOUCH README.md ⚠️
+            if any(filepath.lower().endswith(protected.lower()) for protected in self.PROTECTED_FILES):
+                self.logger.warning(f"⚠️  SKIPPING {filepath} - This file is PROTECTED and must only be modified by the repository owner")
+                self.logger.warning(f"⚠️  Attempting to modify this file would invoke the wrath of Thirsty!")
+                continue
             
             if not os.path.exists(filepath):
                 if any(section.get('create_if_missing', False) 

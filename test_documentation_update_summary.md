@@ -1,6 +1,6 @@
 # Test Documentation Update Summary
 
-**Generated:** 2026-01-31T23:21:41.677979
+**Generated:** 2026-01-31T23:24:09.270562
 
 ## Overall Statistics
 
@@ -23,14 +23,13 @@
 
 ## Updated Documentation Files
 
-- ✅ README.md
 - ✅ security_test_category_pass_fail_report.md
 
 
 ## Configuration Used
 
 - **Artifact Sources:** 4
-- **Documentation Targets:** 3
+- **Documentation Targets:** 2
 - **Dry Run:** True
 - **Commit Updates:** True
 

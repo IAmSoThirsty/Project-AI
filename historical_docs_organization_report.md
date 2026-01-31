@@ -1,16 +1,16 @@
 # Historical Documentation Organization Report
 
-**Generated:** 2026-01-31T23:19:33.344201
+**Generated:** 2026-01-31T23:24:09.407383
 **Mode:** DRY RUN
 **Age Checking:** Enabled
 **Age Threshold:** 7 days
 
 ## Summary
 
-- **Files moved to historical:** 1
-- **Files kept active:** 49
+- **Files moved to historical:** 2
+- **Files kept active:** 52
 - **Files checked for age:** 0
-- **References updated:** 1 across 1 files
+- **References updated:** 2 across 1 files
 
 ## Age Assessment
 
@@ -20,11 +20,12 @@ Files older than 7 days that were checked:
 
 ## Moved Files
 
-- `historical_docs_organization_report.md` → `docs/historical/historical_docs_organization_report.md`
+- `IMPLEMENTATION_SUMMARY_CI_TEST_PARSER.md` → `docs/historical/IMPLEMENTATION_SUMMARY_CI_TEST_PARSER.md`
+- `documentation_maintenance_report.md` → `docs/historical/documentation_maintenance_report.md`
 
 ## Reference Updates
 
-- `docs/historical/README.md`: 1 references updated
+- `historical_docs_organization_report.md`: 2 references updated
 
 
 ## Active Documents
@@ -42,6 +43,7 @@ The following documents remain active in the root directory:
 - COMPLETE_TEST_SUITE_SUMMARY.md
 - CONSTITUTION.md
 - CONTRIBUTING.md
+- CRITICAL_README_PROTECTION_POLICY.md
 - DEPLOYMENT.md
 - DEPLOY_TO_THIRSTYSPROJECTS.md
 - DEVELOPER_QUICK_REFERENCE.md
@@ -78,7 +80,9 @@ The following documents remain active in the root directory:
 - TRIUMVIRATE_INTEGRATION.md
 - UNIQUENESS_VERIFICATION.md
 - WORKFLOW_ENGINE.md
+- historical_docs_organization_report.md
 - security_test_category_pass_fail_report.md
+- test_documentation_update_summary.md
 - threat-model.md
 
 

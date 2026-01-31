@@ -2,6 +2,19 @@
 
 This directory contains production-grade scripts for automated documentation maintenance in Project-AI.
 
+## ⚠️⚠️⚠️ CRITICAL WARNING ⚠️⚠️⚠️
+
+**README.md in the repository root is ABSOLUTELY PROTECTED**
+
+- ❌ **NEVER** modified by automation
+- ❌ **NEVER** updated by scripts
+- ❌ **NEVER** touched by CI/CD
+- ✅ **ONLY** modified by repository owner (Thirsty)
+
+**Violating this protection invokes the wrath of Thirsty!**
+
+See `CRITICAL_README_PROTECTION_POLICY.md` for full policy.
+
 ## 📋 Overview
 
 The documentation maintenance system consists of three integrated components:

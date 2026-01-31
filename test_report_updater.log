@@ -81,3 +81,81 @@
 2026-01-31 23:21:41,678 - __main__ - INFO - Passed: 2 (66.7%)
 2026-01-31 23:21:41,678 - __main__ - INFO - Failed: 0
 2026-01-31 23:21:41,678 - __main__ - INFO - Updated files: 2
+2026-01-31 23:24:03,389 - __main__ - INFO - Loaded configuration from .test-report-updater.config.json
+2026-01-31 23:24:03,389 - __main__ - INFO - ================================================================================
+2026-01-31 23:24:03,389 - __main__ - INFO - PARSING TEST ARTIFACTS
+2026-01-31 23:24:03,389 - __main__ - INFO - ================================================================================
+2026-01-31 23:24:03,389 - __main__.ArtifactParser - INFO - Parsing ci_reports: ci-reports/*.json (format: json)
+2026-01-31 23:24:03,389 - __main__.ArtifactParser - INFO -   Reading ci-reports/jbb-latest.json
+2026-01-31 23:24:03,389 - __main__.ArtifactParser - INFO -   Reading ci-reports/hydra-latest.json
+2026-01-31 23:24:03,390 - __main__.ArtifactParser - WARNING - Unknown JSON format in ci-reports/hydra-latest.json
+2026-01-31 23:24:03,390 - __main__.ArtifactParser - INFO -   Reading ci-reports/unified-report.json
+2026-01-31 23:24:03,391 - __main__.ArtifactParser - INFO -   Parsed unified report: 3 tests, 2 passed
+2026-01-31 23:24:03,391 - __main__.ArtifactParser - INFO -   Reading ci-reports/multiturn-latest.json
+2026-01-31 23:24:03,391 - __main__.ArtifactParser - INFO -   Reading ci-reports/garak-latest.json
+2026-01-31 23:24:03,391 - __main__.ArtifactParser - INFO - Parsing test_execution_reports: test_execution_reports/EXECUTION_SUMMARY.md (format: markdown)
+2026-01-31 23:24:03,391 - __main__.ArtifactParser - INFO - Parsing pytest_json: test-results.json (format: pytest-json)
+2026-01-31 23:24:03,392 - __main__.ArtifactParser - INFO - Parsing pytest_xml: test-results.xml (format: junit-xml)
+2026-01-31 23:24:03,392 - __main__.ArtifactParser - INFO - Final statistics: 3 tests, 2 passed, 0 failed (66.7% pass rate)
+2026-01-31 23:24:03,392 - __main__ - INFO - ================================================================================
+2026-01-31 23:24:03,392 - __main__ - INFO - UPDATING DOCUMENTATION
+2026-01-31 23:24:03,392 - __main__ - INFO - ================================================================================
+2026-01-31 23:24:03,392 - __main__.DocumentationUpdater - INFO - Updating COMPLETE_TEST_SUITE_SUMMARY.md
+2026-01-31 23:24:03,392 - __main__.DocumentationUpdater - INFO -   No changes needed for COMPLETE_TEST_SUITE_SUMMARY.md
+2026-01-31 23:24:03,392 - __main__.DocumentationUpdater - INFO - Updating security_test_category_pass_fail_report.md
+2026-01-31 23:24:03,393 - __main__.DocumentationUpdater - INFO -   Updated security_test_category_pass_fail_report.md
+2026-01-31 23:24:03,393 - __main__ - INFO - ================================================================================
+2026-01-31 23:24:03,393 - __main__ - INFO - GENERATING SUMMARY REPORT
+2026-01-31 23:24:03,393 - __main__ - INFO - ================================================================================
+2026-01-31 23:24:03,393 - __main__.SummaryReportGenerator - INFO - Generating summary report: test_documentation_update_summary.md
+2026-01-31 23:24:03,393 - __main__.SummaryReportGenerator - INFO - Summary report saved to test_documentation_update_summary.md
+2026-01-31 23:24:03,393 - __main__ - INFO - ================================================================================
+2026-01-31 23:24:03,393 - __main__ - INFO - COMMITTING UPDATES
+2026-01-31 23:24:03,393 - __main__ - INFO - ================================================================================
+2026-01-31 23:24:03,393 - __main__.GitCommitter - INFO - DRY RUN: Would commit 1 files
+2026-01-31 23:24:03,393 - __main__ - INFO - ================================================================================
+2026-01-31 23:24:03,393 - __main__ - INFO - UPDATE COMPLETE
+2026-01-31 23:24:03,393 - __main__ - INFO - ================================================================================
+2026-01-31 23:24:03,393 - __main__ - INFO - Total tests: 3
+2026-01-31 23:24:03,393 - __main__ - INFO - Passed: 2 (66.7%)
+2026-01-31 23:24:03,393 - __main__ - INFO - Failed: 0
+2026-01-31 23:24:03,394 - __main__ - INFO - Updated files: 1
+2026-01-31 23:24:09,264 - __main__ - INFO - Loaded configuration from .test-report-updater.config.json
+2026-01-31 23:24:09,264 - __main__ - INFO - ================================================================================
+2026-01-31 23:24:09,264 - __main__ - INFO - PARSING TEST ARTIFACTS
+2026-01-31 23:24:09,264 - __main__ - INFO - ================================================================================
+2026-01-31 23:24:09,264 - __main__.ArtifactParser - INFO - Parsing ci_reports: ci-reports/*.json (format: json)
+2026-01-31 23:24:09,264 - __main__.ArtifactParser - INFO -   Reading ci-reports/jbb-latest.json
+2026-01-31 23:24:09,265 - __main__.ArtifactParser - INFO -   Reading ci-reports/hydra-latest.json
+2026-01-31 23:24:09,266 - __main__.ArtifactParser - WARNING - Unknown JSON format in ci-reports/hydra-latest.json
+2026-01-31 23:24:09,266 - __main__.ArtifactParser - INFO -   Reading ci-reports/unified-report.json
+2026-01-31 23:24:09,267 - __main__.ArtifactParser - INFO -   Parsed unified report: 3 tests, 2 passed
+2026-01-31 23:24:09,267 - __main__.ArtifactParser - INFO -   Reading ci-reports/multiturn-latest.json
+2026-01-31 23:24:09,268 - __main__.ArtifactParser - INFO -   Reading ci-reports/garak-latest.json
+2026-01-31 23:24:09,268 - __main__.ArtifactParser - INFO - Parsing test_execution_reports: test_execution_reports/EXECUTION_SUMMARY.md (format: markdown)
+2026-01-31 23:24:09,268 - __main__.ArtifactParser - INFO - Parsing pytest_json: test-results.json (format: pytest-json)
+2026-01-31 23:24:09,268 - __main__.ArtifactParser - INFO - Parsing pytest_xml: test-results.xml (format: junit-xml)
+2026-01-31 23:24:09,268 - __main__.ArtifactParser - INFO - Final statistics: 3 tests, 2 passed, 0 failed (66.7% pass rate)
+2026-01-31 23:24:09,268 - __main__ - INFO - ================================================================================
+2026-01-31 23:24:09,268 - __main__ - INFO - UPDATING DOCUMENTATION
+2026-01-31 23:24:09,268 - __main__ - INFO - ================================================================================
+2026-01-31 23:24:09,269 - __main__.DocumentationUpdater - INFO - Updating COMPLETE_TEST_SUITE_SUMMARY.md
+2026-01-31 23:24:09,269 - __main__.DocumentationUpdater - INFO -   No changes needed for COMPLETE_TEST_SUITE_SUMMARY.md
+2026-01-31 23:24:09,269 - __main__.DocumentationUpdater - INFO - Updating security_test_category_pass_fail_report.md
+2026-01-31 23:24:09,270 - __main__.DocumentationUpdater - INFO -   Updated security_test_category_pass_fail_report.md
+2026-01-31 23:24:09,270 - __main__ - INFO - ================================================================================
+2026-01-31 23:24:09,270 - __main__ - INFO - GENERATING SUMMARY REPORT
+2026-01-31 23:24:09,270 - __main__ - INFO - ================================================================================
+2026-01-31 23:24:09,270 - __main__.SummaryReportGenerator - INFO - Generating summary report: test_documentation_update_summary.md
+2026-01-31 23:24:09,270 - __main__.SummaryReportGenerator - INFO - Summary report saved to test_documentation_update_summary.md
+2026-01-31 23:24:09,270 - __main__ - INFO - ================================================================================
+2026-01-31 23:24:09,270 - __main__ - INFO - COMMITTING UPDATES
+2026-01-31 23:24:09,270 - __main__ - INFO - ================================================================================
+2026-01-31 23:24:09,270 - __main__.GitCommitter - INFO - DRY RUN: Would commit 1 files
+2026-01-31 23:24:09,271 - __main__ - INFO - ================================================================================
+2026-01-31 23:24:09,271 - __main__ - INFO - UPDATE COMPLETE
+2026-01-31 23:24:09,271 - __main__ - INFO - ================================================================================
+2026-01-31 23:24:09,271 - __main__ - INFO - Total tests: 3
+2026-01-31 23:24:09,271 - __main__ - INFO - Passed: 2 (66.7%)
+2026-01-31 23:24:09,271 - __main__ - INFO - Failed: 0
+2026-01-31 23:24:09,271 - __main__ - INFO - Updated files: 1
