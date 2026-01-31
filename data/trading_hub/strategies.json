@@ -1,0 +1,34 @@
+{
+  "strategies": [
+    {
+      "strategy_id": "1ac0b3ef-417b-451b-ac57-1941e3d02291",
+      "name": "Valid Strategy",
+      "description": "",
+      "parameters": {},
+      "symbols": [],
+      "timeframe": "1h",
+      "enabled": true,
+      "created_at": 1769696995320,
+      "metadata": {}
+    }
+  ],
+  "execution_history": [
+    {
+      "strategy_id": "fd215afd-32ee-4f12-8b9f-0c8d023fc39d",
+      "strategy_name": "Simple MA Crossover",
+      "status": "completed",
+      "started_at": 1769696732441,
+      "completed_at": 1769696732441,
+      "orders_placed": 2,
+      "positions_opened": 1,
+      "positions_closed": 0,
+      "total_pnl": 150.0,
+      "metrics": {
+        "signal_strength": 0.85
+      },
+      "errors": [],
+      "metadata": {}
+    }
+  ],
+  "updated_at": 1769696995320
+}
