@@ -10,7 +10,7 @@ This test suite verifies the complete TARL integration including:
 """
 
 import pytest
-from tarl.runtime import TarlRuntime
+from tarl import TarlRuntime
 from tarl.policies.default import DEFAULT_POLICIES
 from tarl.spec import TarlVerdict, TarlDecision
 from kernel.execution import ExecutionKernel
