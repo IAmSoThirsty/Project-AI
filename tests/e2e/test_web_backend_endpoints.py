@@ -84,8 +84,5 @@ class TestAuthenticationBasics:
         token = login_rv.get_json()["token"]
 
         # Use token to access protected endpoint
-        profile_rv = client.get(
-            "/api/auth/profile",
-            headers={"X-Auth-Token": token}
-        )
+        profile_rv = client.get("/api/auth/profile", headers={"X-Auth-Token": token})
         assert profile_rv.status_code == 200

@@ -24,8 +24,12 @@ from app.core.memory_engine import MemoryEngine
 from app.core.perspective_engine import PerspectiveEngine
 from app.core.rebirth_protocol import RebirthManager
 from app.core.reflection_cycle import ReflectionCycle
-from app.core.relationship_model import (InteractionTone, RelationshipModel,
-                                         RelationshipState, SupportType)
+from app.core.relationship_model import (
+    InteractionTone,
+    RelationshipModel,
+    RelationshipState,
+    SupportType,
+)
 
 
 def print_section(title: str):

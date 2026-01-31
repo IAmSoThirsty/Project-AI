@@ -17,8 +17,10 @@ sys.path.insert(0, str(project_root))
 
 from temporalio.client import Client
 
-from temporal.workflows.security_agent_workflows import (RedTeamCampaignRequest,
-                                                         RedTeamCampaignWorkflow)
+from temporal.workflows.security_agent_workflows import (
+    RedTeamCampaignRequest,
+    RedTeamCampaignWorkflow,
+)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

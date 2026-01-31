@@ -11,7 +11,6 @@ Follows Leather Book Interface style with dark theme and cyan/green glows.
 """
 
 import logging
-from typing import Any
 
 from PyQt6.QtCore import Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QFont
@@ -22,7 +21,6 @@ from PyQt6.QtWidgets import (
     QListWidget,
     QListWidgetItem,
     QPushButton,
-    QScrollArea,
     QTabWidget,
     QTextEdit,
     QVBoxLayout,
@@ -31,7 +29,6 @@ from PyQt6.QtWidgets import (
 
 from app.core.global_intelligence_library import (
     GlobalIntelligenceLibrary,
-    IntelligenceDomain,
 )
 
 logger = logging.getLogger(__name__)
@@ -71,8 +68,7 @@ class GlobalStatisticsPanel(QFrame):
         # Statistics display
         self.stats_display = QTextEdit()
         self.stats_display.setReadOnly(True)
-        self.stats_display.setStyleSheet(
-            """
+        self.stats_display.setStyleSheet("""
             QTextEdit {
                 background-color: #0a0a0a;
                 border: 1px solid #00ff00;
@@ -80,14 +76,12 @@ class GlobalStatisticsPanel(QFrame):
                 font-family: 'Courier New';
                 font-size: 10px;
             }
-        """
-        )
+        """)
         layout.addWidget(self.stats_display)
 
         # Refresh button
         refresh_btn = QPushButton("🔄 REFRESH STATISTICS")
-        refresh_btn.setStyleSheet(
-            """
+        refresh_btn.setStyleSheet("""
             QPushButton {
                 background-color: #1a1a1a;
                 border: 2px solid #00ff00;
@@ -99,8 +93,7 @@ class GlobalStatisticsPanel(QFrame):
                 border: 2px solid #00ffff;
                 color: #00ffff;
             }
-        """
-        )
+        """)
         refresh_btn.clicked.connect(self.refresh_statistics)
         layout.addWidget(refresh_btn)
 
@@ -111,7 +104,7 @@ class GlobalStatisticsPanel(QFrame):
         """Refresh global statistics from intelligence library."""
         try:
             library = GlobalIntelligenceLibrary.get_instance()
-            
+
             output = []
             output.append("=" * 70)
             output.append("GLOBAL INTELLIGENCE STATISTICS - REAL-TIME DATA")
@@ -128,7 +121,9 @@ class GlobalStatisticsPanel(QFrame):
 
             # Political trends
             output.append("🏛️ POLITICAL DEVELOPMENTS:")
-            output.append("  ├─ Policy Changes: 20 agents tracking legislative activity")
+            output.append(
+                "  ├─ Policy Changes: 20 agents tracking legislative activity"
+            )
             output.append("  ├─ Diplomatic Relations: International monitoring")
             output.append("  ├─ Election Cycles: Democratic process tracking")
             output.append("  └─ Civil Stability: Social movement analysis")
@@ -199,23 +194,20 @@ class VerifiedNewsPanel(QFrame):
 
         # Info label
         info = QLabel("Verified independent journalism and primary sources")
-        info.setStyleSheet(
-            """
+        info.setStyleSheet("""
             QLabel {
                 color: #00ff00;
                 font-family: 'Courier New';
                 font-size: 9px;
                 padding: 5px;
             }
-        """
-        )
+        """)
         info.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(info)
 
         # News list
         self.news_list = QListWidget()
-        self.news_list.setStyleSheet(
-            """
+        self.news_list.setStyleSheet("""
             QListWidget {
                 background-color: #1a1a1a;
                 border: 1px solid #00ff00;
@@ -231,14 +223,12 @@ class VerifiedNewsPanel(QFrame):
                 background-color: #2a2a2a;
                 color: #00ffff;
             }
-        """
-        )
+        """)
         layout.addWidget(self.news_list)
 
         # Refresh button
         refresh_btn = QPushButton("🔄 REFRESH SOURCES")
-        refresh_btn.setStyleSheet(
-            """
+        refresh_btn.setStyleSheet("""
             QPushButton {
                 background-color: #1a1a1a;
                 border: 2px solid #00ff00;
@@ -250,8 +240,7 @@ class VerifiedNewsPanel(QFrame):
                 border: 2px solid #00ffff;
                 color: #00ffff;
             }
-        """
-        )
+        """)
         refresh_btn.clicked.connect(self.refresh_news)
         layout.addWidget(refresh_btn)
 
@@ -265,15 +254,15 @@ class VerifiedNewsPanel(QFrame):
         # Get intelligence reports from agents
         try:
             library = GlobalIntelligenceLibrary.get_instance()
-            
+
             # Economic verified sources
             item = QListWidgetItem("💰 ECONOMIC | Independent Financial Analysis")
             item.setData(Qt.ItemDataRole.UserRole, "economic")
             self.news_list.addItem(item)
-            
+
             item = QListWidgetItem("  └─ Global trade data from primary sources")
             self.news_list.addItem(item)
-            
+
             item = QListWidgetItem("  └─ Market indicators verified by 20+ agents")
             self.news_list.addItem(item)
 
@@ -281,10 +270,10 @@ class VerifiedNewsPanel(QFrame):
             item = QListWidgetItem("🏛️ POLITICAL | Non-partisan Policy Tracking")
             item.setData(Qt.ItemDataRole.UserRole, "political")
             self.news_list.addItem(item)
-            
+
             item = QListWidgetItem("  └─ Legislative text analysis (primary sources)")
             self.news_list.addItem(item)
-            
+
             item = QListWidgetItem("  └─ Diplomatic cables and official statements")
             self.news_list.addItem(item)
 
@@ -292,10 +281,10 @@ class VerifiedNewsPanel(QFrame):
             item = QListWidgetItem("⚔️ MILITARY | Defense Intelligence Reports")
             item.setData(Qt.ItemDataRole.UserRole, "military")
             self.news_list.addItem(item)
-            
+
             item = QListWidgetItem("  └─ Official military statements and briefings")
             self.news_list.addItem(item)
-            
+
             item = QListWidgetItem("  └─ Strategic positioning data (verified)")
             self.news_list.addItem(item)
 
@@ -303,10 +292,10 @@ class VerifiedNewsPanel(QFrame):
             item = QListWidgetItem("🌍 ENVIRONMENTAL | Scientific Data Sources")
             item.setData(Qt.ItemDataRole.UserRole, "environmental")
             self.news_list.addItem(item)
-            
+
             item = QListWidgetItem("  └─ Climate research from peer-reviewed studies")
             self.news_list.addItem(item)
-            
+
             item = QListWidgetItem("  └─ Disaster monitoring from ground sensors")
             self.news_list.addItem(item)
 
@@ -314,10 +303,10 @@ class VerifiedNewsPanel(QFrame):
             item = QListWidgetItem("🕊️ RELIGIOUS | Primary Religious Sources")
             item.setData(Qt.ItemDataRole.UserRole, "religious")
             self.news_list.addItem(item)
-            
+
             item = QListWidgetItem("  └─ Official religious organization statements")
             self.news_list.addItem(item)
-            
+
             item = QListWidgetItem("  └─ Interfaith dialogue documentation")
             self.news_list.addItem(item)
 
@@ -325,10 +314,10 @@ class VerifiedNewsPanel(QFrame):
             item = QListWidgetItem("🔬 TECHNOLOGICAL | Research Publications")
             item.setData(Qt.ItemDataRole.UserRole, "technological")
             self.news_list.addItem(item)
-            
+
             item = QListWidgetItem("  └─ Patent filings and technical papers")
             self.news_list.addItem(item)
-            
+
             item = QListWidgetItem("  └─ Open-source intelligence on innovation")
             self.news_list.addItem(item)
 
@@ -358,24 +347,21 @@ class MainstreamContextPanel(QFrame):
         info = QLabel(
             "Mainstream sources with contextual analysis for factual accuracy"
         )
-        info.setStyleSheet(
-            """
+        info.setStyleSheet("""
             QLabel {
                 color: #ffaa00;
                 font-family: 'Courier New';
                 font-size: 9px;
                 padding: 5px;
             }
-        """
-        )
+        """)
         info.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(info)
 
         # Context display
         self.context_display = QTextEdit()
         self.context_display.setReadOnly(True)
-        self.context_display.setStyleSheet(
-            """
+        self.context_display.setStyleSheet("""
             QTextEdit {
                 background-color: #1a1a1a;
                 border: 1px solid #ffaa00;
@@ -383,14 +369,12 @@ class MainstreamContextPanel(QFrame):
                 font-family: 'Courier New';
                 font-size: 10px;
             }
-        """
-        )
+        """)
         layout.addWidget(self.context_display)
 
         # Refresh button
         refresh_btn = QPushButton("🔄 REFRESH ANALYSIS")
-        refresh_btn.setStyleSheet(
-            """
+        refresh_btn.setStyleSheet("""
             QPushButton {
                 background-color: #1a1a1a;
                 border: 2px solid #ffaa00;
@@ -402,8 +386,7 @@ class MainstreamContextPanel(QFrame):
                 border: 2px solid #ffcc00;
                 color: #ffcc00;
             }
-        """
-        )
+        """)
         refresh_btn.clicked.connect(self.refresh_context)
         layout.addWidget(refresh_btn)
 
@@ -469,13 +452,11 @@ class NewsIntelligencePanel(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setStyleSheet(
-            """
+        self.setStyleSheet("""
             QWidget {
                 background-color: #1a1a1a;
             }
-        """
-        )
+        """)
 
         main_layout = QVBoxLayout(self)
 
@@ -485,8 +466,7 @@ class NewsIntelligencePanel(QWidget):
 
         # Tab widget
         self.tabs = QTabWidget()
-        self.tabs.setStyleSheet(
-            """
+        self.tabs.setStyleSheet("""
             QTabWidget::pane {
                 border: 2px solid #00ff00;
                 background-color: #1a1a1a;
@@ -507,8 +487,7 @@ class NewsIntelligencePanel(QWidget):
             QTabBar::tab:hover {
                 color: #00ffff;
             }
-        """
-        )
+        """)
 
         # Statistics tab
         self.stats_panel = GlobalStatisticsPanel()
@@ -532,23 +511,20 @@ class NewsIntelligencePanel(QWidget):
     def _create_title_bar(self) -> QFrame:
         """Create title bar with back button."""
         title_frame = QFrame()
-        title_frame.setStyleSheet(
-            """
+        title_frame.setStyleSheet("""
             QFrame {
                 background-color: #0f0f0f;
                 border: 2px solid #00ff00;
                 border-radius: 5px;
             }
-        """
-        )
+        """)
         title_frame.setFixedHeight(60)
 
         layout = QHBoxLayout(title_frame)
 
         # Back button
         back_btn = QPushButton("◀ BACK")
-        back_btn.setStyleSheet(
-            """
+        back_btn.setStyleSheet("""
             QPushButton {
                 background-color: #1a1a1a;
                 border: 2px solid #00ff00;
@@ -560,8 +536,7 @@ class NewsIntelligencePanel(QWidget):
                 border: 2px solid #00ffff;
                 color: #00ffff;
             }
-        """
-        )
+        """)
         back_btn.clicked.connect(self.back_requested.emit)
         layout.addWidget(back_btn)
 
@@ -582,7 +557,7 @@ class NewsIntelligencePanel(QWidget):
     def _auto_refresh(self):
         """Auto-refresh current tab."""
         current_index = self.tabs.currentIndex()
-        
+
         if current_index == 0:  # Statistics
             self.stats_panel.refresh_statistics()
         elif current_index == 1:  # Verified sources

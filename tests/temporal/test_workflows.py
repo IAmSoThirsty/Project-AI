@@ -2,9 +2,13 @@
 Tests for Temporal.io workflow definitions.
 """
 
-from app.temporal.workflows import (DataAnalysisRequest, ImageGenerationRequest,
-                                    LearningRequest, LearningResult,
-                                    MemoryExpansionResult)
+from app.temporal.workflows import (
+    DataAnalysisRequest,
+    ImageGenerationRequest,
+    LearningRequest,
+    LearningResult,
+    MemoryExpansionResult,
+)
 
 
 class TestWorkflowDataClasses:

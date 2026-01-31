@@ -4,8 +4,16 @@ import math
 
 from PyQt6.QtCore import QTimer
 from PyQt6.QtGui import QBrush, QColor, QFont, QPainter, QPen
-from PyQt6.QtWidgets import (QFrame, QHBoxLayout, QLabel, QLineEdit, QPushButton,
-                             QStackedWidget, QVBoxLayout, QWidget)
+from PyQt6.QtWidgets import (
+    QFrame,
+    QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QPushButton,
+    QStackedWidget,
+    QVBoxLayout,
+    QWidget,
+)
 
 from app.core.backend_client import BackendAPIClient
 

@@ -1,5 +1,6 @@
-from tarl.validate import validate
 from cognition.audit import audit
+from tarl.validate import validate
+
 
 def submit_tarl(tarl):
     validate(tarl)

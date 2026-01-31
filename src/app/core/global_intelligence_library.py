@@ -28,7 +28,6 @@ import logging
 import threading
 import time
 from dataclasses import dataclass, field
-from datetime import datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -103,7 +102,7 @@ class IntelligenceReport:
 @dataclass
 class DomainAnalysis:
     """Analysis from a domain overseer.
-    
+
     Note: Overseers provide analytical reports only. Decision-making authority
     rests with the Watch Tower command center.
     """
@@ -130,7 +129,7 @@ class DomainAnalysis:
 @dataclass
 class GlobalTheory:
     """Statistical simulation from the curator (librarian).
-    
+
     The curator maintains the intelligence library and runs simulations to produce
     statistical outcomes. The curator has NO decision-making authority - all command
     decisions rest with the Watch Tower command center.
@@ -303,9 +302,7 @@ class DomainOverseer(KernelRoutedAgent):
             )
 
         self.agents.append(agent)
-        logger.info(
-            f"Added agent {agent.agent_id} to {self.domain.value} overseer"
-        )
+        logger.info(f"Added agent {agent.agent_id} to {self.domain.value} overseer")
 
     def create_agents(self, count: int = 20) -> None:
         """Create intelligence agents for this domain.
@@ -483,9 +480,7 @@ class DomainOverseer(KernelRoutedAgent):
                 report = agent.monitor()
                 reports.append(report)
             except Exception as e:
-                logger.error(
-                    f"Failed to collect report from {agent.agent_id}: {e}"
-                )
+                logger.error(f"Failed to collect report from {agent.agent_id}: {e}")
 
         return reports
 
@@ -592,8 +587,7 @@ class DomainOverseer(KernelRoutedAgent):
         critical_count = sum(
             1
             for r in reports
-            if r.change_level
-            in [ChangeLevel.CRITICAL, ChangeLevel.CRISIS]
+            if r.change_level in [ChangeLevel.CRITICAL, ChangeLevel.CRISIS]
         )
 
         if critical_count > 0:
@@ -642,16 +636,16 @@ class GlobalCurator(KernelRoutedAgent):
 
     The curator maintains the intelligence library and runs statistical simulations.
     The curator has NO official decision-making power or command authority.
-    
+
     Responsibilities:
     1. Library Maintenance: Organize and maintain intelligence data
     2. Statistical Simulations: Run simulations and produce statistical outcomes
-    
+
     The curator does NOT:
     - Issue commands or directives
     - Make recommendations or decisions
     - Have authority over agents or overseers
-    
+
     All command authority rests with the Global Watch Tower.
     """
 
@@ -708,7 +702,7 @@ class GlobalCurator(KernelRoutedAgent):
 
     def run_statistical_simulation(self) -> GlobalTheory:
         """Run statistical simulation based on all domain analyses.
-        
+
         This is a pure analytical function - the curator produces statistical
         outcomes and probabilities, but makes NO decisions or recommendations.
 
@@ -745,7 +739,7 @@ class GlobalCurator(KernelRoutedAgent):
 
     def _generate_statistical_summary(self, analyses: list[DomainAnalysis]) -> str:
         """Generate statistical summary from domain analyses.
-        
+
         Pure statistical analysis - no recommendations or directives.
 
         Args:
@@ -759,9 +753,7 @@ class GlobalCurator(KernelRoutedAgent):
 
         # Count high-risk domains (statistical observation)
         high_risk_domains = [
-            a.domain.value
-            for a in analyses
-            if "HIGH RISK" in a.risk_assessment
+            a.domain.value for a in analyses if "HIGH RISK" in a.risk_assessment
         ]
 
         summary = (
@@ -782,9 +774,11 @@ class GlobalCurator(KernelRoutedAgent):
 
         return summary
 
-    def _calculate_predicted_outcomes(self, analyses: list[DomainAnalysis]) -> list[str]:
+    def _calculate_predicted_outcomes(
+        self, analyses: list[DomainAnalysis]
+    ) -> list[str]:
         """Calculate statistical outcome probabilities based on analyses.
-        
+
         Pure probabilistic predictions - no action directives.
 
         Args:
@@ -807,7 +801,9 @@ class GlobalCurator(KernelRoutedAgent):
                 )
 
         if not outcomes:
-            outcomes.append("Statistical model predicts <5% probability of major disruptions in monitored domains")
+            outcomes.append(
+                "Statistical model predicts <5% probability of major disruptions in monitored domains"
+            )
 
         return outcomes
 
@@ -830,9 +826,7 @@ class GlobalCurator(KernelRoutedAgent):
 
         # Look for correlations between domains
         domains_with_high_risk = [
-            a.domain.value
-            for a in analyses
-            if "HIGH RISK" in a.risk_assessment
+            a.domain.value for a in analyses if "HIGH RISK" in a.risk_assessment
         ]
 
         if len(domains_with_high_risk) >= 2:
@@ -935,7 +929,7 @@ class GlobalIntelligenceLibrary:
 
     The library serves as the central repository and coordination system
     for all intelligence gathering and analysis activities.
-    
+
     Features:
     - 24/7 continuous monitoring
     - Secure encrypted storage
@@ -1031,9 +1025,7 @@ class GlobalIntelligenceLibrary:
                         "Continuous 24/7 monitoring system initialized with secure storage"
                     )
                 except Exception as e:
-                    logger.warning(
-                        f"Could not initialize continuous monitoring: {e}"
-                    )
+                    logger.warning(f"Could not initialize continuous monitoring: {e}")
 
             # Integrate with Global Watch Tower if requested
             if use_watch_tower:
@@ -1047,9 +1039,7 @@ class GlobalIntelligenceLibrary:
                         "Global Intelligence Library integrated with Global Watch Tower command center"
                     )
                 except Exception as e:
-                    logger.warning(
-                        f"Could not integrate with Global Watch Tower: {e}"
-                    )
+                    logger.warning(f"Could not integrate with Global Watch Tower: {e}")
 
             cls._instance = instance
             cls._initialized = True
@@ -1107,7 +1097,7 @@ class GlobalIntelligenceLibrary:
 
     def generate_statistical_simulation(self) -> GlobalTheory:
         """Generate a statistical simulation (curator's analytical function).
-        
+
         Note: The curator produces statistical simulations only - no command authority.
 
         Returns:
@@ -1118,9 +1108,7 @@ class GlobalIntelligenceLibrary:
 
         return self.curator.run_statistical_simulation()
 
-    def get_domain_analysis(
-        self, domain: IntelligenceDomain
-    ) -> DomainAnalysis:
+    def get_domain_analysis(self, domain: IntelligenceDomain) -> DomainAnalysis:
         """Get analysis for a specific domain.
 
         Args:
@@ -1140,7 +1128,7 @@ class GlobalIntelligenceLibrary:
 
     def start_continuous_monitoring(self) -> None:
         """Start 24/7 continuous monitoring for all agents.
-        
+
         Agents will collect, label, organize, and store data securely.
         """
         if not self.continuous_monitoring:
@@ -1181,15 +1169,13 @@ class GlobalIntelligenceLibrary:
             status["watch_tower_stats"] = self.watch_tower.get_stats()
 
         if self.continuous_monitoring:
-            status[
-                "monitoring_system"
-            ] = self.continuous_monitoring.get_system_status()
+            status["monitoring_system"] = self.continuous_monitoring.get_system_status()
 
         return status
 
     def run_full_analysis_cycle(self) -> GlobalTheory:
         """Run a complete analysis cycle across all domains.
-        
+
         The curator generates statistical simulations. Command decisions are
         made by the Watch Tower based on these simulations.
 
@@ -1229,7 +1215,7 @@ def get_global_intelligence_library() -> GlobalIntelligenceLibrary:
 
 def generate_statistical_simulation() -> GlobalTheory:
     """Generate a statistical simulation from the curator.
-    
+
     Note: This is an analytical function only - the curator has no command authority.
 
     Returns:

@@ -26,8 +26,6 @@ from cryptography.fernet import Fernet
 
 from app.core.global_intelligence_library import (
     ChangeLevel,
-    DomainAnalysis,
-    GlobalCurator,
     IntelligenceAgent,
     IntelligenceDomain,
     IntelligenceReport,
@@ -419,9 +417,7 @@ class Continuous24x7Agent(IntelligenceAgent):
         self.total_stored += 1
         self.last_collection_time = time.time()
 
-        logger.debug(
-            f"Agent {self.agent_id} collected and stored report {data_id}"
-        )
+        logger.debug(f"Agent {self.agent_id} collected and stored report {data_id}")
 
     def _classify_report(self, report: IntelligenceReport) -> DataClassification:
         """Classify report for secure storage.
@@ -467,15 +463,13 @@ class GlobalCoverageCoordinator:
 
     def __init__(self):
         """Initialize global coverage coordinator."""
-        self.region_assignments: dict[
-            GlobalRegion, list[Continuous24x7Agent]
-        ] = {region: [] for region in GlobalRegion}
+        self.region_assignments: dict[GlobalRegion, list[Continuous24x7Agent]] = {
+            region: [] for region in GlobalRegion
+        }
 
         self.country_coverage: dict[str, list[str]] = {}  # country -> agent_ids
 
-    def assign_agent(
-        self, agent: Continuous24x7Agent, countries: list[str]
-    ) -> None:
+    def assign_agent(self, agent: Continuous24x7Agent, countries: list[str]) -> None:
         """Assign agent to cover specific countries.
 
         Args:
@@ -516,9 +510,7 @@ class GlobalCoverageCoordinator:
             },
         }
 
-    def get_agents_for_region(
-        self, region: GlobalRegion
-    ) -> list[Continuous24x7Agent]:
+    def get_agents_for_region(self, region: GlobalRegion) -> list[Continuous24x7Agent]:
         """Get all agents covering a region.
 
         Args:
@@ -617,9 +609,7 @@ class ContinuousMonitoringSystem:
 
                 # Register agent
                 self.agents[agent_id] = agent
-                self.coverage_coordinator.assign_agent(
-                    agent, coverage.countries
-                )
+                self.coverage_coordinator.assign_agent(agent, coverage.countries)
                 agents.append(agent)
 
         logger.info(
@@ -752,6 +742,4 @@ class ContinuousMonitoringSystem:
         Returns:
             List of agent statistics
         """
-        return [
-            agent.get_monitoring_stats() for agent in self.agents.values()
-        ]
+        return [agent.get_monitoring_stats() for agent in self.agents.values()]

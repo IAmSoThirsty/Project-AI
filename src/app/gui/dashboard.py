@@ -7,14 +7,30 @@ import os
 
 from PyQt6.QtCore import QEvent, QObject, QPointF, QPropertyAnimation, QTimer
 from PyQt6.QtGui import QAction, QColor, QFont
-from PyQt6.QtWidgets import (QApplication, QComboBox, QGraphicsDropShadowEffect,
-                             QGraphicsOpacityEffect, QLabel, QLineEdit, QListWidget,
-                             QMainWindow, QPushButton, QStyle, QTabWidget, QTextEdit,
-                             QToolBar, QVBoxLayout, QWidget)
+from PyQt6.QtWidgets import (
+    QApplication,
+    QComboBox,
+    QGraphicsDropShadowEffect,
+    QGraphicsOpacityEffect,
+    QLabel,
+    QLineEdit,
+    QListWidget,
+    QMainWindow,
+    QPushButton,
+    QStyle,
+    QTabWidget,
+    QTextEdit,
+    QToolBar,
+    QVBoxLayout,
+    QWidget,
+)
 
 from app.core.emergency_alert import EmergencyAlert
-from app.core.intelligence_engine import (DataAnalyzer, IntentDetector,
-                                          LearningPathManager)
+from app.core.intelligence_engine import (
+    DataAnalyzer,
+    IntentDetector,
+    LearningPathManager,
+)
 from app.core.location_tracker import LocationTracker
 from app.core.security_resources import SecurityResourceManager
 from app.core.user_manager import UserManager

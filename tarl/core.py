@@ -1,15 +1,16 @@
+import hashlib
+import json
 from dataclasses import dataclass
-from typing import Tuple
-import hashlib, json
 
 TARL_VERSION = "2.0"
+
 
 @dataclass(frozen=True)
 class TARL:
     intent: str
     scope: str
     authority: str
-    constraints: Tuple[str, ...]
+    constraints: tuple[str, ...]
     version: str = TARL_VERSION
 
     def canonical(self) -> dict:

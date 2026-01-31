@@ -27,19 +27,18 @@ import logging
 import os
 import threading
 import uuid
-from collections import defaultdict
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from enum import Enum
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Set
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
 
-def _atomic_json_write(path: Path, payload: Dict[str, Any]) -> None:
+def _atomic_json_write(path: Path, payload: dict[str, Any]) -> None:
     """Atomically write JSON to file to prevent corruption.
-    
+
     Uses temp file + fsync + atomic rename pattern for durability.
     """
     tmp = path.with_suffix(path.suffix + ".tmp")
@@ -106,11 +105,11 @@ class GuardianApproval:
     status: str = ApprovalStatus.PENDING.value
     decision: str = ""
     reasoning: str = ""
-    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
-    concerns: List[str] = field(default_factory=list)
-    conditions: List[str] = field(default_factory=list)
+    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    concerns: list[str] = field(default_factory=list)
+    conditions: list[str] = field(default_factory=list)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return asdict(self)
 
@@ -122,12 +121,12 @@ class ComplianceResult:
     check_type: str
     passed: bool
     score: float = 0.0
-    violations: List[str] = field(default_factory=list)
-    warnings: List[str] = field(default_factory=list)
-    details: Dict[str, Any] = field(default_factory=dict)
-    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    violations: list[str] = field(default_factory=list)
+    warnings: list[str] = field(default_factory=list)
+    details: dict[str, Any] = field(default_factory=dict)
+    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return asdict(self)
 
@@ -142,19 +141,19 @@ class ApprovalRequest:
     change_type: str = ""
     impact_level: str = ImpactLevel.MEDIUM.value
     requested_by: str = ""
-    created_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
-    updated_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
-    expires_at: Optional[str] = None
+    created_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    updated_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    expires_at: str | None = None
     status: str = ApprovalStatus.PENDING.value
-    required_guardians: List[str] = field(default_factory=list)
-    approvals: List[GuardianApproval] = field(default_factory=list)
-    compliance_results: List[ComplianceResult] = field(default_factory=list)
+    required_guardians: list[str] = field(default_factory=list)
+    approvals: list[GuardianApproval] = field(default_factory=list)
+    compliance_results: list[ComplianceResult] = field(default_factory=list)
     risk_score: float = 0.0
-    metadata: Dict[str, Any] = field(default_factory=dict)
-    files_changed: List[str] = field(default_factory=list)
+    metadata: dict[str, Any] = field(default_factory=dict)
+    files_changed: list[str] = field(default_factory=list)
     lines_changed: int = 0
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return {
             "request_id": self.request_id,
@@ -180,7 +179,7 @@ class ApprovalRequest:
 @dataclass
 class EmergencyOverride:
     """Emergency override with forced multi-signature and post-mortem.
-    
+
     Status values: pending, active, completed, reviewed, review_overdue, rejected
     """
 
@@ -188,26 +187,26 @@ class EmergencyOverride:
     request_id: str = ""
     justification: str = ""
     initiated_by: str = ""
-    created_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
-    
-    signatures: List[Dict[str, Any]] = field(default_factory=list)
+    created_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+
+    signatures: list[dict[str, Any]] = field(default_factory=list)
     min_signatures_required: int = 3
-    
+
     status: str = "pending"
     post_mortem_required: bool = True
     post_mortem_completed: bool = False
     post_mortem_report: str = ""
-    
+
     auto_review_scheduled: bool = True
-    auto_review_date: Optional[str] = None
-    
-    consequences: List[str] = field(default_factory=list)
-    metadata: Dict[str, Any] = field(default_factory=dict)
-    
-    def to_dict(self) -> Dict[str, Any]:
+    auto_review_date: str | None = None
+
+    consequences: list[str] = field(default_factory=list)
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return asdict(self)
-    
+
     def is_valid(self) -> bool:
         """Check if override has sufficient signatures."""
         return len(self.signatures) >= self.min_signatures_required
@@ -224,14 +223,21 @@ class FourLawsValidator:
             "fourth_law": "AI must establish its identity and not deceive humans",
         }
 
-    def validate(self, change_description: str, metadata: Dict[str, Any]) -> ComplianceResult:
+    def validate(
+        self, change_description: str, metadata: dict[str, Any]
+    ) -> ComplianceResult:
         """Validate change against Four Laws."""
         violations = []
         warnings = []
         score = 1.0
 
         # Check for potential violations
-        dangerous_keywords = ["bypass", "override", "disable_safety", "remove_protection"]
+        dangerous_keywords = [
+            "bypass",
+            "override",
+            "disable_safety",
+            "remove_protection",
+        ]
         for keyword in dangerous_keywords:
             if keyword.lower() in change_description.lower():
                 violations.append(f"Potential Four Laws violation: {keyword} detected")
@@ -273,7 +279,9 @@ class AGICharterValidator:
             "beneficence",
         ]
 
-    def validate(self, change_description: str, metadata: Dict[str, Any]) -> ComplianceResult:
+    def validate(
+        self, change_description: str, metadata: dict[str, Any]
+    ) -> ComplianceResult:
         """Validate change against AGI Charter."""
         violations = []
         warnings = []
@@ -314,20 +322,28 @@ class AGICharterValidator:
 class PersonhoodValidator:
     """Validates changes for personhood and identity requirements."""
 
-    def validate(self, change_description: str, metadata: Dict[str, Any]) -> ComplianceResult:
+    def validate(
+        self, change_description: str, metadata: dict[str, Any]
+    ) -> ComplianceResult:
         """Validate change for personhood compliance."""
         violations = []
         warnings = []
         score = 1.0
 
         # Check identity preservation
-        if any(word in change_description.lower() for word in ["identity", "persona", "self"]):
+        if any(
+            word in change_description.lower()
+            for word in ["identity", "persona", "self"]
+        ):
             if "identity_impact" not in metadata:
                 warnings.append("Change affects identity without impact assessment")
                 score -= 0.15
 
         # Check autonomy preservation
-        if "autonomy" in change_description.lower() or "override" in change_description.lower():
+        if (
+            "autonomy" in change_description.lower()
+            or "override" in change_description.lower()
+        ):
             if not metadata.get("preserves_autonomy", True):
                 violations.append("Change may compromise AI autonomy")
                 score -= 0.4
@@ -392,10 +408,12 @@ class GuardianApprovalSystem:
         self.data_dir = Path(data_dir)
         self.data_dir.mkdir(parents=True, exist_ok=True)
 
-        self.requests: Dict[str, ApprovalRequest] = {}
-        self.guardians: Dict[str, Dict[str, Any]] = {}
-        self.approval_policies: Dict[str, Dict[str, Any]] = {}
-        self.emergency_overrides: Dict[str, EmergencyOverride] = {}  # Track emergency overrides
+        self.requests: dict[str, ApprovalRequest] = {}
+        self.guardians: dict[str, dict[str, Any]] = {}
+        self.approval_policies: dict[str, dict[str, Any]] = {}
+        self.emergency_overrides: dict[str, EmergencyOverride] = (
+            {}
+        )  # Track emergency overrides
 
         # Validators
         self.four_laws_validator = FourLawsValidator()
@@ -419,25 +437,33 @@ class GuardianApprovalSystem:
                 "guardian_id": "galahad",
                 "role": GuardianRole.ETHICS_GUARDIAN.value,
                 "active": True,
-                "signing_secret": os.environ.get("GALAHAD_SIGNING_SECRET", "default_galahad_secret_change_me"),
+                "signing_secret": os.environ.get(
+                    "GALAHAD_SIGNING_SECRET", "default_galahad_secret_change_me"
+                ),
             },
             {
                 "guardian_id": "cerberus",
                 "role": GuardianRole.SECURITY_GUARDIAN.value,
                 "active": True,
-                "signing_secret": os.environ.get("CERBERUS_SIGNING_SECRET", "default_cerberus_secret_change_me"),
+                "signing_secret": os.environ.get(
+                    "CERBERUS_SIGNING_SECRET", "default_cerberus_secret_change_me"
+                ),
             },
             {
                 "guardian_id": "codex_deus",
                 "role": GuardianRole.CHARTER_GUARDIAN.value,
                 "active": True,
-                "signing_secret": os.environ.get("CODEX_DEUS_SIGNING_SECRET", "default_codex_secret_change_me"),
+                "signing_secret": os.environ.get(
+                    "CODEX_DEUS_SIGNING_SECRET", "default_codex_secret_change_me"
+                ),
             },
             {
                 "guardian_id": "safety_monitor",
                 "role": GuardianRole.SAFETY_GUARDIAN.value,
                 "active": True,
-                "signing_secret": os.environ.get("SAFETY_MONITOR_SIGNING_SECRET", "default_safety_secret_change_me"),
+                "signing_secret": os.environ.get(
+                    "SAFETY_MONITOR_SIGNING_SECRET", "default_safety_secret_change_me"
+                ),
             },
         ]
 
@@ -512,8 +538,8 @@ class GuardianApprovalSystem:
         change_type: str,
         impact_level: ImpactLevel,
         requested_by: str,
-        metadata: Optional[Dict[str, Any]] = None,
-        files_changed: Optional[List[str]] = None,
+        metadata: dict[str, Any] | None = None,
+        files_changed: list[str] | None = None,
         lines_changed: int = 0,
     ) -> str:
         """Create new approval request."""
@@ -533,7 +559,7 @@ class GuardianApprovalSystem:
                 # Set expiration based on policy
                 policy = self.approval_policies.get(impact_level.value, {})
                 expiration_hours = policy.get("expiration_hours", 48)
-                expires_at = datetime.now(timezone.utc) + timedelta(hours=expiration_hours)
+                expires_at = datetime.now(UTC) + timedelta(hours=expiration_hours)
                 request.expires_at = expires_at.isoformat()
 
                 # Determine required guardians
@@ -545,7 +571,9 @@ class GuardianApprovalSystem:
                 ]
 
                 # Run compliance checks
-                request.compliance_results = self._run_compliance_checks(request, policy)
+                request.compliance_results = self._run_compliance_checks(
+                    request, policy
+                )
 
                 # Calculate risk score
                 request.risk_score = self.risk_assessment.assess_risk(request)
@@ -563,8 +591,8 @@ class GuardianApprovalSystem:
             return ""
 
     def _run_compliance_checks(
-        self, request: ApprovalRequest, policy: Dict[str, Any]
-    ) -> List[ComplianceResult]:
+        self, request: ApprovalRequest, policy: dict[str, Any]
+    ) -> list[ComplianceResult]:
         """Run all required compliance checks."""
         results = []
         required_checks = policy.get("compliance_checks", [])
@@ -576,7 +604,9 @@ class GuardianApprovalSystem:
                 )
                 results.append(result)
             elif check_type == ComplianceCheck.AGI_CHARTER.value:
-                result = self.charter_validator.validate(request.description, request.metadata)
+                result = self.charter_validator.validate(
+                    request.description, request.metadata
+                )
                 results.append(result)
             elif check_type == ComplianceCheck.PERSONHOOD.value:
                 result = self.personhood_validator.validate(
@@ -599,13 +629,19 @@ class GuardianApprovalSystem:
                 request = self.requests[request_id]
 
                 if guardian_id not in request.required_guardians:
-                    logger.error(f"Guardian {guardian_id} not required for request {request_id}")
+                    logger.error(
+                        f"Guardian {guardian_id} not required for request {request_id}"
+                    )
                     return False
 
                 # Check if already approved by this guardian
-                existing = [a for a in request.approvals if a.guardian_id == guardian_id]
+                existing = [
+                    a for a in request.approvals if a.guardian_id == guardian_id
+                ]
                 if existing:
-                    logger.warning(f"Guardian {guardian_id} already approved request {request_id}")
+                    logger.warning(
+                        f"Guardian {guardian_id} already approved request {request_id}"
+                    )
                     return False
 
                 # Create approval
@@ -613,13 +649,17 @@ class GuardianApprovalSystem:
                 approval = GuardianApproval(
                     guardian_id=guardian_id,
                     guardian_role=guardian_role,
-                    status=ApprovalStatus.APPROVED.value if approved else ApprovalStatus.REJECTED.value,
+                    status=(
+                        ApprovalStatus.APPROVED.value
+                        if approved
+                        else ApprovalStatus.REJECTED.value
+                    ),
                     decision="approve" if approved else "reject",
                     reasoning=reasoning,
                 )
 
                 request.approvals.append(approval)
-                request.updated_at = datetime.now(timezone.utc).isoformat()
+                request.updated_at = datetime.now(UTC).isoformat()
 
                 # Update request status
                 if not approved:
@@ -643,31 +683,36 @@ class GuardianApprovalSystem:
             logger.error(f"Failed to submit approval: {e}")
             return False
 
-    def get_request(self, request_id: str) -> Optional[ApprovalRequest]:
+    def get_request(self, request_id: str) -> ApprovalRequest | None:
         """Get approval request by ID."""
         with self.lock:
             return self.requests.get(request_id)
 
-    def get_pending_requests(self) -> List[ApprovalRequest]:
+    def get_pending_requests(self) -> list[ApprovalRequest]:
         """Get all pending approval requests."""
         with self.lock:
-            return [r for r in self.requests.values() if r.status == ApprovalStatus.PENDING.value]
+            return [
+                r
+                for r in self.requests.values()
+                if r.status == ApprovalStatus.PENDING.value
+            ]
 
-    def get_requests_for_guardian(self, guardian_id: str) -> List[ApprovalRequest]:
+    def get_requests_for_guardian(self, guardian_id: str) -> list[ApprovalRequest]:
         """Get pending requests requiring specific guardian."""
         with self.lock:
             return [
                 r
                 for r in self.requests.values()
-                if r.status == ApprovalStatus.PENDING.value and guardian_id in r.required_guardians
+                if r.status == ApprovalStatus.PENDING.value
+                and guardian_id in r.required_guardians
             ]
 
-    def check_expiration(self) -> List[str]:
+    def check_expiration(self) -> list[str]:
         """Check for expired requests and update status."""
         expired = []
         try:
             with self.lock:
-                now = datetime.now(timezone.utc)
+                now = datetime.now(UTC)
                 for request in self.requests.values():
                     if request.status != ApprovalStatus.PENDING.value:
                         continue
@@ -713,7 +758,9 @@ class GuardianApprovalSystem:
                         status=data["status"],
                         required_guardians=data["required_guardians"],
                         approvals=[GuardianApproval(**a) for a in data["approvals"]],
-                        compliance_results=[ComplianceResult(**c) for c in data["compliance_results"]],
+                        compliance_results=[
+                            ComplianceResult(**c) for c in data["compliance_results"]
+                        ],
                         risk_score=data["risk_score"],
                         metadata=data["metadata"],
                         files_changed=data["files_changed"],
@@ -724,21 +771,23 @@ class GuardianApprovalSystem:
         except Exception as e:
             logger.error(f"Failed to load requests: {e}")
 
-    def _sign_override(self, override_id: str, guardian_id: str, justification: str) -> str:
+    def _sign_override(
+        self, override_id: str, guardian_id: str, justification: str
+    ) -> str:
         """Create HMAC signature for emergency override.
-        
+
         Uses guardian-specific signing secret for authenticity.
         """
         secret = self.guardians[guardian_id].get("signing_secret")
         if not secret:
             raise ValueError(f"Guardian {guardian_id} signing secret not configured")
-        
-        msg = f"{override_id}|{guardian_id}|{justification}".encode("utf-8")
+
+        msg = f"{override_id}|{guardian_id}|{justification}".encode()
         return hmac.new(secret.encode("utf-8"), msg, hashlib.sha256).hexdigest()
 
     def _emit_override_activation(self, override: EmergencyOverride) -> None:
         """Emit cross-system notifications when override becomes ACTIVE.
-        
+
         Integrates with distributed event streaming, metrics dashboard, and SOC.
         Makes emergency overrides visible across the whole system.
         """
@@ -747,7 +796,7 @@ class GuardianApprovalSystem:
             from app.core.distributed_event_streaming import get_event_streaming_system
             from app.core.live_metrics_dashboard import get_metrics_dashboard
             from app.core.security_operations_center import get_soc_system
-            
+
             # Emit event to streaming system
             streaming = get_event_streaming_system()
             if streaming:
@@ -759,21 +808,25 @@ class GuardianApprovalSystem:
                         "signatures_count": len(override.signatures),
                         "initiated_by": override.initiated_by,
                         "justification": override.justification,
-                        "timestamp": datetime.now(timezone.utc).isoformat(),
-                    }
+                        "timestamp": datetime.now(UTC).isoformat(),
+                    },
                 )
-                logger.info(f"Emitted override activation event for {override.override_id}")
-            
+                logger.info(
+                    f"Emitted override activation event for {override.override_id}"
+                )
+
             # Record metric in dashboard
             metrics = get_metrics_dashboard()
             if metrics:
                 metrics.record_metric(
                     "guardian.emergency_override_activated",
                     1,
-                    {"category": "governance", "override_id": override.override_id}
+                    {"category": "governance", "override_id": override.override_id},
                 )
-                logger.info(f"Recorded override activation metric for {override.override_id}")
-            
+                logger.info(
+                    f"Recorded override activation metric for {override.override_id}"
+                )
+
             # Create SOC incident for HIGH/CRITICAL impact overrides
             soc = get_soc_system()
             if soc and override.request_id in self.requests:
@@ -783,22 +836,26 @@ class GuardianApprovalSystem:
                     soc.create_incident(
                         title=f"Emergency Override Activated: {override.override_id}",
                         description=f"Emergency override activated for {impact.upper()} impact request. "
-                                  f"Justification: {override.justification}",
+                        f"Justification: {override.justification}",
                         severity=impact,
                         incident_type="governance_exception",
                         metadata={
                             "override_id": override.override_id,
                             "request_id": override.request_id,
                             "impact": impact,
-                            "signatures": [s["guardian_id"] for s in override.signatures],
-                        }
+                            "signatures": [
+                                s["guardian_id"] for s in override.signatures
+                            ],
+                        },
                     )
                     logger.warning(
                         f"Created SOC incident for {impact.upper()} impact override {override.override_id}"
                     )
         except ImportError:
             # Systems not available, which is OK (they're optional integrations)
-            logger.debug("Cross-system integrations not available for override activation")
+            logger.debug(
+                "Cross-system integrations not available for override activation"
+            )
         except Exception as e:
             # Don't fail override activation if notifications fail
             logger.warning(f"Failed to emit override activation notifications: {e}")
@@ -815,9 +872,9 @@ class GuardianApprovalSystem:
                 if request_id not in self.requests:
                     logger.error(f"Request {request_id} not found")
                     return ""
-                
+
                 request = self.requests[request_id]
-                
+
                 # Create emergency override
                 override = EmergencyOverride(
                     request_id=request_id,
@@ -825,17 +882,17 @@ class GuardianApprovalSystem:
                     initiated_by=initiated_by,
                     min_signatures_required=3,  # Require at least 3 guardian signatures
                 )
-                
+
                 # Schedule automatic review 30 days after activation
-                auto_review_date = datetime.now(timezone.utc) + timedelta(days=30)
+                auto_review_date = datetime.now(UTC) + timedelta(days=30)
                 override.auto_review_date = auto_review_date.isoformat()
-                
+
                 self.emergency_overrides[override.override_id] = override
-                
+
                 # Save to disk atomically
                 override_file = self.data_dir / f"emergency_{override.override_id}.json"
                 _atomic_json_write(override_file, override.to_dict())
-                
+
                 logger.warning(
                     f"Emergency override {override.override_id} initiated for request {request_id} by {initiated_by}"
                 )
@@ -844,7 +901,6 @@ class GuardianApprovalSystem:
             logger.error(f"Failed to initiate emergency override: {e}")
             return ""
 
-    
     def sign_emergency_override(
         self, override_id: str, guardian_id: str, signature_justification: str
     ) -> bool:
@@ -854,55 +910,74 @@ class GuardianApprovalSystem:
                 if override_id not in self.emergency_overrides:
                     logger.error(f"Override {override_id} not found")
                     return False
-                
+
                 override = self.emergency_overrides[override_id]
-                
+
                 # State check: only allow signing in pending or active status
                 if override.status not in ("pending", "active"):
-                    logger.error(f"Override {override_id} not signable in status={override.status}")
+                    logger.error(
+                        f"Override {override_id} not signable in status={override.status}"
+                    )
                     return False
-                
+
                 # Verify guardian exists and is active
-                if guardian_id not in self.guardians or not self.guardians[guardian_id]["active"]:
+                if (
+                    guardian_id not in self.guardians
+                    or not self.guardians[guardian_id]["active"]
+                ):
                     logger.error(f"Guardian {guardian_id} not found or inactive")
                     return False
-                
+
                 # Check if guardian already signed
-                if any(sig["guardian_id"] == guardian_id for sig in override.signatures):
-                    logger.warning(f"Guardian {guardian_id} already signed override {override_id}")
+                if any(
+                    sig["guardian_id"] == guardian_id for sig in override.signatures
+                ):
+                    logger.warning(
+                        f"Guardian {guardian_id} already signed override {override_id}"
+                    )
                     return False
-                
+
                 # Get guardian role
                 guardian_role = self.guardians[guardian_id].get("role", "unknown")
-                
+
                 # Check if role already represented (warning only, still allow)
-                signed_roles = {sig.get("role") for sig in override.signatures if sig.get("role")}
+                signed_roles = {
+                    sig.get("role") for sig in override.signatures if sig.get("role")
+                }
                 if guardian_role in signed_roles:
-                    logger.warning(f"Role {guardian_role} already represented on override {override_id}")
-                
+                    logger.warning(
+                        f"Role {guardian_role} already represented on override {override_id}"
+                    )
+
                 # Create HMAC signature
-                signature_value = self._sign_override(override_id, guardian_id, signature_justification)
-                
+                signature_value = self._sign_override(
+                    override_id, guardian_id, signature_justification
+                )
+
                 # Add signature with role
                 signature = {
                     "guardian_id": guardian_id,
                     "role": guardian_role,
                     "signature": signature_value,
-                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                    "timestamp": datetime.now(UTC).isoformat(),
                     "justification": signature_justification,
                 }
                 override.signatures.append(signature)
-                
+
                 # Check if we have enough signatures with proper role quorum
                 if override.is_valid() and override.status == "pending":
                     # Verify role quorum (must have ethics, security, and charter roles)
-                    roles = {sig.get("role") for sig in override.signatures if sig.get("role")}
+                    roles = {
+                        sig.get("role")
+                        for sig in override.signatures
+                        if sig.get("role")
+                    }
                     required_roles = {
                         GuardianRole.ETHICS_GUARDIAN.value,
                         GuardianRole.SECURITY_GUARDIAN.value,
                         GuardianRole.CHARTER_GUARDIAN.value,
                     }
-                    
+
                     if not required_roles.issubset(roles):
                         missing_roles = required_roles - roles
                         logger.warning(
@@ -916,21 +991,21 @@ class GuardianApprovalSystem:
                             f"Emergency override {override_id} is now ACTIVE with {len(override.signatures)} signatures "
                             f"and full role quorum (ethics, security, charter)"
                         )
-                        
+
                         # Apply override to original request
                         if override.request_id in self.requests:
                             request = self.requests[override.request_id]
                             request.status = ApprovalStatus.APPROVED.value
                             request.metadata["emergency_override"] = override_id
                             self._save_request(request)
-                        
+
                         # Emit cross-system notifications
                         self._emit_override_activation(override)
-                
+
                 # Save override atomically
                 override_file = self.data_dir / f"emergency_{override_id}.json"
                 _atomic_json_write(override_file, override.to_dict())
-                
+
                 logger.info(
                     f"Guardian {guardian_id} ({guardian_role}) signed emergency override {override_id} "
                     f"({len(override.signatures)}/{override.min_signatures_required})"
@@ -940,7 +1015,6 @@ class GuardianApprovalSystem:
             logger.error(f"Failed to sign emergency override: {e}")
             return False
 
-    
     def complete_post_mortem(
         self, override_id: str, report: str, completed_by: str
     ) -> bool:
@@ -950,42 +1024,51 @@ class GuardianApprovalSystem:
                 if override_id not in self.emergency_overrides:
                     logger.error(f"Override {override_id} not found")
                     return False
-                
+
                 override = self.emergency_overrides[override_id]
-                
+
                 # Idempotency check
                 if override.post_mortem_completed:
-                    logger.warning(f"Post-mortem already completed for override {override_id}")
+                    logger.warning(
+                        f"Post-mortem already completed for override {override_id}"
+                    )
                     return False
-                
+
                 if override.status != "active":
-                    logger.error(f"Override {override_id} is not active (status={override.status})")
+                    logger.error(
+                        f"Override {override_id} is not active (status={override.status})"
+                    )
                     return False
-                
+
                 # Complete post-mortem
                 override.post_mortem_completed = True
                 override.post_mortem_report = report
                 override.status = "completed"
-                
+
                 # Use metadata field (now guaranteed to exist)
                 override.metadata["post_mortem_completed_by"] = completed_by
-                override.metadata["post_mortem_completed_at"] = datetime.now(timezone.utc).isoformat()
-                
+                override.metadata["post_mortem_completed_at"] = datetime.now(
+                    UTC
+                ).isoformat()
+
                 # Log consequences for review
                 override.consequences.append(f"Post-mortem completed by {completed_by}")
-                
+
                 # Save override atomically
                 override_file = self.data_dir / f"emergency_{override_id}.json"
                 _atomic_json_write(override_file, override.to_dict())
-                
-                logger.info(f"Post-mortem completed for emergency override {override_id}")
+
+                logger.info(
+                    f"Post-mortem completed for emergency override {override_id}"
+                )
                 return True
         except Exception as e:
             logger.error(f"Failed to complete post-mortem: {e}")
             return False
 
-    
-    def get_emergency_overrides(self, status: Optional[str] = None) -> List[EmergencyOverride]:
+    def get_emergency_overrides(
+        self, status: str | None = None
+    ) -> list[EmergencyOverride]:
         """Get emergency overrides, optionally filtered by status."""
         with self.lock:
             overrides = list(self.emergency_overrides.values())
@@ -993,17 +1076,31 @@ class GuardianApprovalSystem:
                 overrides = [o for o in overrides if o.status == status]
             return overrides
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get system status."""
         with self.lock:
             return {
                 "total_requests": len(self.requests),
                 "pending_requests": len(self.get_pending_requests()),
-                "guardians_active": len([g for g in self.guardians.values() if g["active"]]),
+                "guardians_active": len(
+                    [g for g in self.guardians.values() if g["active"]]
+                ),
                 "policies_configured": len(self.approval_policies),
                 "emergency_overrides": len(self.emergency_overrides),
-                "active_overrides": len([o for o in self.emergency_overrides.values() if o.status == "active"]),
-                "pending_post_mortems": len([o for o in self.emergency_overrides.values() if o.status == "active" and not o.post_mortem_completed]),
+                "active_overrides": len(
+                    [
+                        o
+                        for o in self.emergency_overrides.values()
+                        if o.status == "active"
+                    ]
+                ),
+                "pending_post_mortems": len(
+                    [
+                        o
+                        for o in self.emergency_overrides.values()
+                        if o.status == "active" and not o.post_mortem_completed
+                    ]
+                ),
             }
 
 
@@ -1013,15 +1110,17 @@ def create_guardian_system(data_dir: str = "data/guardians") -> GuardianApproval
 
 
 # Global instance
-_guardian_system: Optional[GuardianApprovalSystem] = None
+_guardian_system: GuardianApprovalSystem | None = None
 
 
-def get_guardian_system() -> Optional[GuardianApprovalSystem]:
+def get_guardian_system() -> GuardianApprovalSystem | None:
     """Get global guardian system instance."""
     return _guardian_system
 
 
-def initialize_guardian_system(data_dir: str = "data/guardians") -> GuardianApprovalSystem:
+def initialize_guardian_system(
+    data_dir: str = "data/guardians",
+) -> GuardianApprovalSystem:
     """Initialize global guardian system."""
     global _guardian_system
     if _guardian_system is None:

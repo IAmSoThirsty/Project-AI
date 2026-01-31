@@ -7,8 +7,13 @@ import tempfile
 
 import pytest
 
-from app.core.ai_systems import (AIPersona, FourLaws, LearningRequestManager,
-                                 MemoryExpansionSystem, PluginManager)
+from app.core.ai_systems import (
+    AIPersona,
+    FourLaws,
+    LearningRequestManager,
+    MemoryExpansionSystem,
+    PluginManager,
+)
 from app.core.image_generator import ImageGenerator, ImageStyle
 from app.core.user_manager import UserManager
 

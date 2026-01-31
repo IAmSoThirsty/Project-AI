@@ -9,8 +9,16 @@ Flow:
 """
 
 from PyQt6.QtGui import QColor
-from PyQt6.QtWidgets import (QDialog, QGraphicsDropShadowEffect, QLabel, QLineEdit,
-                             QListWidget, QMessageBox, QPushButton, QVBoxLayout)
+from PyQt6.QtWidgets import (
+    QDialog,
+    QGraphicsDropShadowEffect,
+    QLabel,
+    QLineEdit,
+    QListWidget,
+    QMessageBox,
+    QPushButton,
+    QVBoxLayout,
+)
 
 from app.core.user_manager import UserManager
 

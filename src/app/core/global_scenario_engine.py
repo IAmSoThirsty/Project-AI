@@ -80,7 +80,9 @@ class DataSource:
                 with open(cache_file) as f:
                     data = json.load(f)
                     # Check if cache is less than 30 days old
-                    if datetime.fromisoformat(data["timestamp"]) > datetime.now(UTC) - timedelta(days=30):
+                    if datetime.fromisoformat(data["timestamp"]) > datetime.now(
+                        UTC
+                    ) - timedelta(days=30):
                         logger.debug(f"Using cached data: {cache_key}")
                         return data["response"]
             except Exception as e:
@@ -92,10 +94,10 @@ class DataSource:
         cache_file = self.cache_dir / f"{cache_key}.json"
         try:
             with open(cache_file, "w") as f:
-                json.dump({
-                    "timestamp": datetime.now(UTC).isoformat(),
-                    "response": response
-                }, f)
+                json.dump(
+                    {"timestamp": datetime.now(UTC).isoformat(), "response": response},
+                    f,
+                )
         except Exception as e:
             logger.warning(f"Cache write error: {e}")
 
@@ -104,7 +106,7 @@ class DataSource:
         url: str,
         params: dict[str, Any] | None = None,
         max_retries: int = 3,
-        use_cache: bool = True
+        use_cache: bool = True,
     ) -> dict | None:
         """Fetch data with retry logic and caching."""
         params = params or {}
@@ -129,9 +131,11 @@ class DataSource:
 
                 return data
             except requests.exceptions.RequestException as e:
-                logger.warning(f"Request failed (attempt {attempt + 1}/{max_retries}): {e}")
+                logger.warning(
+                    f"Request failed (attempt {attempt + 1}/{max_retries}): {e}"
+                )
                 if attempt < max_retries - 1:
-                    time.sleep(2 ** attempt)  # Exponential backoff
+                    time.sleep(2**attempt)  # Exponential backoff
 
         logger.error(f"Failed to fetch data from {url} after {max_retries} attempts")
         return None
@@ -161,7 +165,7 @@ class WorldBankDataSource(DataSource):
         indicator: str,
         start_year: int,
         end_year: int,
-        countries: list[str] | None = None
+        countries: list[str] | None = None,
     ) -> dict[str, dict[int, float]]:
         """
         Fetch World Bank indicator data.
@@ -181,7 +185,7 @@ class WorldBankDataSource(DataSource):
         params = {
             "format": "json",
             "date": f"{start_year}:{end_year}",
-            "per_page": 10000
+            "per_page": 10000,
         }
 
         data = self.fetch_with_retry(url, params)
@@ -193,7 +197,9 @@ class WorldBankDataSource(DataSource):
         result = defaultdict(dict)
         for entry in data[1] if len(data) > 1 else []:
             if entry.get("value") is not None:
-                country_code = entry.get("countryiso3code") or entry.get("country", {}).get("id")
+                country_code = entry.get("countryiso3code") or entry.get(
+                    "country", {}
+                ).get("id")
                 year = int(entry.get("date", 0))
                 value = float(entry.get("value"))
 
@@ -215,10 +221,7 @@ class ACLEDDataSource(DataSource):
     BASE_URL = "https://api.acleddata.com/acled/read"
 
     def fetch_conflict_events(
-        self,
-        start_date: str,
-        end_date: str,
-        countries: list[str] | None = None
+        self, start_date: str, end_date: str, countries: list[str] | None = None
     ) -> list[dict[str, Any]]:
         """
         Fetch conflict and civil unrest events from ACLED.
@@ -236,15 +239,19 @@ class ACLEDDataSource(DataSource):
         api_email = os.getenv("ACLED_API_EMAIL")
 
         if not api_key or not api_email:
-            logger.warning("ACLED API credentials not found. Using fallback synthetic data.")
-            return self._generate_fallback_conflict_data(start_date, end_date, countries)
+            logger.warning(
+                "ACLED API credentials not found. Using fallback synthetic data."
+            )
+            return self._generate_fallback_conflict_data(
+                start_date, end_date, countries
+            )
 
         params = {
             "key": api_key,
             "email": api_email,
             "event_date": f"{start_date}|{end_date}",
             "event_date_where": "BETWEEN",
-            "limit": 10000
+            "limit": 10000,
         }
 
         if countries:
@@ -254,16 +261,15 @@ class ACLEDDataSource(DataSource):
         data = self.fetch_with_retry(self.BASE_URL, params)
         if not data or "data" not in data:
             logger.warning("ACLED request failed. Using fallback data.")
-            return self._generate_fallback_conflict_data(start_date, end_date, countries)
+            return self._generate_fallback_conflict_data(
+                start_date, end_date, countries
+            )
 
         logger.info(f"Loaded {len(data['data'])} ACLED events")
         return data["data"]
 
     def _generate_fallback_conflict_data(
-        self,
-        start_date: str,
-        end_date: str,
-        countries: list[str] | None
+        self, start_date: str, end_date: str, countries: list[str] | None
     ) -> list[dict[str, Any]]:
         """Generate synthetic conflict data when API unavailable."""
         # Parse dates
@@ -282,18 +288,25 @@ class ACLEDDataSource(DataSource):
 
             for _ in range(num_events):
                 event_date = start + timedelta(days=random.randint(0, days))
-                events.append({
-                    "event_date": event_date.strftime("%Y-%m-%d"),
-                    "country": country,
-                    "event_type": random.choice([
-                        "Battles", "Violence against civilians",
-                        "Protests", "Riots", "Strategic developments"
-                    ]),
-                    "fatalities": random.randint(0, 50),
-                    "latitude": random.uniform(-60, 60),
-                    "longitude": random.uniform(-180, 180),
-                    "notes": "Synthetic fallback data"
-                })
+                events.append(
+                    {
+                        "event_date": event_date.strftime("%Y-%m-%d"),
+                        "country": country,
+                        "event_type": random.choice(
+                            [
+                                "Battles",
+                                "Violence against civilians",
+                                "Protests",
+                                "Riots",
+                                "Strategic developments",
+                            ]
+                        ),
+                        "fatalities": random.randint(0, 50),
+                        "latitude": random.uniform(-60, 60),
+                        "longitude": random.uniform(-180, 180),
+                        "notes": "Synthetic fallback data",
+                    }
+                )
 
         logger.info(f"Generated {len(events)} fallback conflict events")
         return events
@@ -366,7 +379,7 @@ class GlobalScenarioEngine(SimulationSystem):
         start_year: int,
         end_year: int,
         domains: list[RiskDomain] | None = None,
-        countries: list[str] | None = None
+        countries: list[str] | None = None,
     ) -> bool:
         """
         Load historical real-world data from ETL sources.
@@ -393,16 +406,13 @@ class GlobalScenarioEngine(SimulationSystem):
                 self.world_bank.INDICATORS["gdp_growth"],
                 start_year,
                 end_year,
-                countries
+                countries,
             )
             self.historical_data[RiskDomain.ECONOMIC] = gdp_data
 
             # Inflation data -> INFLATION domain
             inflation_data = self.world_bank.fetch_indicator(
-                self.world_bank.INDICATORS["inflation"],
-                start_year,
-                end_year,
-                countries
+                self.world_bank.INDICATORS["inflation"], start_year, end_year, countries
             )
             self.historical_data[RiskDomain.INFLATION] = inflation_data
 
@@ -411,16 +421,13 @@ class GlobalScenarioEngine(SimulationSystem):
                 self.world_bank.INDICATORS["unemployment"],
                 start_year,
                 end_year,
-                countries
+                countries,
             )
             self.historical_data[RiskDomain.UNEMPLOYMENT] = unemployment_data
 
             # Trade data -> TRADE domain
             trade_data = self.world_bank.fetch_indicator(
-                self.world_bank.INDICATORS["trade_gdp"],
-                start_year,
-                end_year,
-                countries
+                self.world_bank.INDICATORS["trade_gdp"], start_year, end_year, countries
             )
             self.historical_data[RiskDomain.TRADE] = trade_data
 
@@ -429,16 +436,14 @@ class GlobalScenarioEngine(SimulationSystem):
                 self.world_bank.INDICATORS["co2_emissions"],
                 start_year,
                 end_year,
-                countries
+                countries,
             )
             self.historical_data[RiskDomain.CLIMATE] = co2_data
 
             # Load ACLED conflict data -> CIVIL_UNREST domain
             logger.info("Loading ACLED conflict data")
             conflict_events = self.acled.fetch_conflict_events(
-                f"{start_year}-01-01",
-                f"{end_year}-12-31",
-                countries
+                f"{start_year}-01-01", f"{end_year}-12-31", countries
             )
 
             # Aggregate conflict events by country/year
@@ -461,8 +466,7 @@ class GlobalScenarioEngine(SimulationSystem):
 
             # Log data loading summary
             summary = {
-                domain.value: len(data)
-                for domain, data in self.historical_data.items()
+                domain.value: len(data) for domain, data in self.historical_data.items()
             }
             logger.info(f"Historical data loaded: {summary}")
 
@@ -473,9 +477,7 @@ class GlobalScenarioEngine(SimulationSystem):
             return False
 
     def detect_threshold_events(
-        self,
-        year: int,
-        domains: list[RiskDomain] | None = None
+        self, year: int, domains: list[RiskDomain] | None = None
     ) -> list[ThresholdEvent]:
         """
         Detect threshold exceedance events using statistical methods.
@@ -508,8 +510,7 @@ class GlobalScenarioEngine(SimulationSystem):
 
                 # Calculate Z-score using historical data
                 historical_values = [
-                    v for y, v in year_values.items()
-                    if y < year and not np.isnan(v)
+                    v for y, v in year_values.items() if y < year and not np.isnan(v)
                 ]
 
                 if len(historical_values) < 2:
@@ -541,14 +542,19 @@ class GlobalScenarioEngine(SimulationSystem):
                             "z_score": z_score,
                             "mean": mean,
                             "std": std,
-                            "historical_count": len(historical_values)
-                        }
+                            "historical_count": len(historical_values),
+                        },
                     )
                     events.append(event)
-                    logger.debug(f"Detected event: {country} {domain.value} {year} z={z_score:.2f}")
+                    logger.debug(
+                        f"Detected event: {country} {domain.value} {year} z={z_score:.2f}"
+                    )
 
                 # Check domain-specific absolute thresholds
-                if "absolute" in threshold_config and value >= threshold_config["absolute"]:
+                if (
+                    "absolute" in threshold_config
+                    and value >= threshold_config["absolute"]
+                ):
                     event = ThresholdEvent(
                         event_id=f"{domain.value}_{country}_{year}_abs_{int(time.time())}",
                         timestamp=datetime(year, 1, 1, tzinfo=UTC),
@@ -558,7 +564,7 @@ class GlobalScenarioEngine(SimulationSystem):
                         value=value,
                         threshold=threshold_config["absolute"],
                         severity=min(1.0, value / (threshold_config["absolute"] * 2)),
-                        context={"type": "absolute_threshold"}
+                        context={"type": "absolute_threshold"},
                     )
                     events.append(event)
 
@@ -567,8 +573,7 @@ class GlobalScenarioEngine(SimulationSystem):
         return events
 
     def build_causal_model(
-        self,
-        historical_events: list[ThresholdEvent]
+        self, historical_events: list[ThresholdEvent]
     ) -> list[CausalLink]:
         """
         Build causal relationships between domains using historical events.
@@ -608,9 +613,9 @@ class GlobalScenarioEngine(SimulationSystem):
                 lag_years=lag,
                 evidence=[
                     "Historical correlation analysis",
-                    f"Domain expertise: {source_domain.value} → {target_domain.value}"
+                    f"Domain expertise: {source_domain.value} → {target_domain.value}",
                 ],
-                confidence=0.8
+                confidence=0.8,
             )
             causal_links.append(link)
 
@@ -620,15 +625,17 @@ class GlobalScenarioEngine(SimulationSystem):
                 continue
 
             # Find countries with both source and target events
-            common_countries = (
-                set(domain_events[source_domain].keys()) &
-                set(domain_events[target_domain].keys())
+            common_countries = set(domain_events[source_domain].keys()) & set(
+                domain_events[target_domain].keys()
             )
 
             if len(common_countries) >= 5:  # Need sufficient data
                 # Update confidence based on co-occurrence
                 for link in causal_links:
-                    if link.source == source_domain.value and link.target == target_domain.value:
+                    if (
+                        link.source == source_domain.value
+                        and link.target == target_domain.value
+                    ):
                         link.evidence.append(
                             f"Validated in {len(common_countries)} countries"
                         )
@@ -639,9 +646,7 @@ class GlobalScenarioEngine(SimulationSystem):
         return causal_links
 
     def simulate_scenarios(
-        self,
-        projection_years: int = 10,
-        num_simulations: int = 1000
+        self, projection_years: int = 10, num_simulations: int = 1000
     ) -> list[ScenarioProjection]:
         """
         Run probabilistic Monte Carlo simulations for future scenarios.
@@ -660,39 +665,59 @@ class GlobalScenarioEngine(SimulationSystem):
         scenario_templates = [
             {
                 "title": "Global Economic Collapse",
-                "domains": [RiskDomain.ECONOMIC, RiskDomain.UNEMPLOYMENT, RiskDomain.TRADE],
+                "domains": [
+                    RiskDomain.ECONOMIC,
+                    RiskDomain.UNEMPLOYMENT,
+                    RiskDomain.TRADE,
+                ],
                 "severity": AlertLevel.CATASTROPHIC,
-                "base_probability": 0.05
+                "base_probability": 0.05,
             },
             {
                 "title": "Regional Conflict Escalation",
-                "domains": [RiskDomain.CIVIL_UNREST, RiskDomain.MILITARY, RiskDomain.MIGRATION],
+                "domains": [
+                    RiskDomain.CIVIL_UNREST,
+                    RiskDomain.MILITARY,
+                    RiskDomain.MIGRATION,
+                ],
                 "severity": AlertLevel.CRITICAL,
-                "base_probability": 0.15
+                "base_probability": 0.15,
             },
             {
                 "title": "Climate-Driven Migration Crisis",
                 "domains": [RiskDomain.CLIMATE, RiskDomain.MIGRATION, RiskDomain.FOOD],
                 "severity": AlertLevel.HIGH,
-                "base_probability": 0.25
+                "base_probability": 0.25,
             },
             {
                 "title": "Pandemic Resurgence",
-                "domains": [RiskDomain.PANDEMIC, RiskDomain.ECONOMIC, RiskDomain.SUPPLY_CHAIN],
+                "domains": [
+                    RiskDomain.PANDEMIC,
+                    RiskDomain.ECONOMIC,
+                    RiskDomain.SUPPLY_CHAIN,
+                ],
                 "severity": AlertLevel.HIGH,
-                "base_probability": 0.20
+                "base_probability": 0.20,
             },
             {
                 "title": "Inflation Spiral with Social Unrest",
-                "domains": [RiskDomain.INFLATION, RiskDomain.UNEMPLOYMENT, RiskDomain.CIVIL_UNREST],
+                "domains": [
+                    RiskDomain.INFLATION,
+                    RiskDomain.UNEMPLOYMENT,
+                    RiskDomain.CIVIL_UNREST,
+                ],
                 "severity": AlertLevel.HIGH,
-                "base_probability": 0.30
+                "base_probability": 0.30,
             },
             {
                 "title": "Cybersecurity Catastrophe",
-                "domains": [RiskDomain.CYBERSECURITY, RiskDomain.FINANCIAL, RiskDomain.SUPPLY_CHAIN],
+                "domains": [
+                    RiskDomain.CYBERSECURITY,
+                    RiskDomain.FINANCIAL,
+                    RiskDomain.SUPPLY_CHAIN,
+                ],
                 "severity": AlertLevel.CRITICAL,
-                "base_probability": 0.10
+                "base_probability": 0.10,
             },
         ]
 
@@ -715,9 +740,12 @@ class GlobalScenarioEngine(SimulationSystem):
                 # 1. Base probability from template
                 # 2. Historical trigger frequency
                 # 3. Causal chain activation
-                trigger_boost = len(scenario_triggers) / max(len(self.threshold_events), 1)
+                trigger_boost = len(scenario_triggers) / max(
+                    len(self.threshold_events), 1
+                )
                 causal_boost = sum(
-                    link.strength for link in self.causal_links
+                    link.strength
+                    for link in self.causal_links
                     if link.source in [d.value for d in template["domains"]]
                 ) / max(len(self.causal_links), 1)
 
@@ -726,13 +754,13 @@ class GlobalScenarioEngine(SimulationSystem):
                 for _ in range(num_simulations):
                     # Random factors: base probability + triggers + causality
                     prob = (
-                        template["base_probability"] * 0.5 +
-                        trigger_boost * 0.3 +
-                        causal_boost * 0.2 +
-                        random.uniform(-0.05, 0.05)  # Noise
+                        template["base_probability"] * 0.5
+                        + trigger_boost * 0.3
+                        + causal_boost * 0.2
+                        + random.uniform(-0.05, 0.05)  # Noise
                     )
                     # Decay probability with projection distance
-                    prob *= (1.0 - 0.05 * year_offset)
+                    prob *= 1.0 - 0.05 * year_offset
 
                     if random.random() < max(0, min(1, prob)):
                         successes += 1
@@ -741,9 +769,12 @@ class GlobalScenarioEngine(SimulationSystem):
 
                 # Build causal chain for this scenario
                 causal_chain = [
-                    link for link in self.causal_links
-                    if (link.source in [d.value for d in template["domains"]] or
-                        link.target in [d.value for d in template["domains"]])
+                    link
+                    for link in self.causal_links
+                    if (
+                        link.source in [d.value for d in template["domains"]]
+                        or link.target in [d.value for d in template["domains"]]
+                    )
                 ]
 
                 scenario = ScenarioProjection(
@@ -760,21 +791,21 @@ class GlobalScenarioEngine(SimulationSystem):
                     mitigation_strategies=[
                         f"Strengthen {domain.value} monitoring systems"
                         for domain in template["domains"]
-                    ]
+                    ],
                 )
                 scenarios.append(scenario)
 
         # Sort by likelihood
         scenarios.sort(key=lambda s: s.likelihood, reverse=True)
 
-        logger.info(f"Simulated {len(scenarios)} scenarios over {projection_years} years")
+        logger.info(
+            f"Simulated {len(scenarios)} scenarios over {projection_years} years"
+        )
         self.scenarios = scenarios
         return scenarios
 
     def generate_alerts(
-        self,
-        scenarios: list[ScenarioProjection],
-        threshold: float = 0.7
+        self, scenarios: list[ScenarioProjection], threshold: float = 0.7
     ) -> list[CrisisAlert]:
         """
         Generate crisis alerts for high-probability scenarios.
@@ -798,7 +829,9 @@ class GlobalScenarioEngine(SimulationSystem):
                     AlertLevel.CRITICAL: 80,
                     AlertLevel.CATASTROPHIC: 100,
                 }
-                risk_score = scenario.likelihood * severity_weights.get(scenario.severity, 50)
+                risk_score = scenario.likelihood * severity_weights.get(
+                    scenario.severity, 50
+                )
 
                 # Generate explainability
                 explanation = self.get_explainability(scenario)
@@ -815,7 +848,8 @@ class GlobalScenarioEngine(SimulationSystem):
                         f"Monitor {domain.value} indicators for {country}"
                         for domain in scenario.impact_domains
                         for country in list(scenario.affected_countries)[:5]
-                    ] + scenario.mitigation_strategies
+                    ]
+                    + scenario.mitigation_strategies,
                 )
                 alerts.append(alert)
 
@@ -848,7 +882,7 @@ class GlobalScenarioEngine(SimulationSystem):
             "## Triggering Evidence",
             "",
             "The following threshold exceedances support this scenario:",
-            ""
+            "",
         ]
 
         # Top trigger events
@@ -860,15 +894,19 @@ class GlobalScenarioEngine(SimulationSystem):
             )
 
         if len(scenario.trigger_events) > 5:
-            explanation_parts.append(f"... and {len(scenario.trigger_events) - 5} more events")
+            explanation_parts.append(
+                f"... and {len(scenario.trigger_events) - 5} more events"
+            )
 
-        explanation_parts.extend([
-            "",
-            "## Causal Chain Analysis",
-            "",
-            "The following causal relationships activate this scenario:",
-            ""
-        ])
+        explanation_parts.extend(
+            [
+                "",
+                "## Causal Chain Analysis",
+                "",
+                "The following causal relationships activate this scenario:",
+                "",
+            ]
+        )
 
         # Causal chain
         for i, link in enumerate(scenario.causal_chain[:5], 1):
@@ -880,16 +918,18 @@ class GlobalScenarioEngine(SimulationSystem):
             if link.evidence:
                 explanation_parts.append(f"   Evidence: {link.evidence[0]}")
 
-        explanation_parts.extend([
-            "",
-            "## Affected Regions",
-            "",
-            f"Countries at risk: {', '.join(list(scenario.affected_countries)[:10])}",
-            "",
-            "## Impact Domains",
-            "",
-            f"{', '.join(d.value for d in scenario.impact_domains)}",
-        ])
+        explanation_parts.extend(
+            [
+                "",
+                "## Affected Regions",
+                "",
+                f"Countries at risk: {', '.join(list(scenario.affected_countries)[:10])}",
+                "",
+                "## Impact Domains",
+                "",
+                f"{', '.join(d.value for d in scenario.impact_domains)}",
+            ]
+        )
 
         return "\n".join(explanation_parts)
 
@@ -917,17 +957,25 @@ class GlobalScenarioEngine(SimulationSystem):
                         **asdict(a),
                         "scenario": {
                             **asdict(a.scenario),
-                            "trigger_events": [asdict(e) for e in a.scenario.trigger_events],
-                            "causal_chain": [asdict(link) for link in a.scenario.causal_chain],
+                            "trigger_events": [
+                                asdict(e) for e in a.scenario.trigger_events
+                            ],
+                            "causal_chain": [
+                                asdict(link) for link in a.scenario.causal_chain
+                            ],
                             "affected_countries": list(a.scenario.affected_countries),
-                            "impact_domains": [d.value for d in a.scenario.impact_domains],
+                            "impact_domains": [
+                                d.value for d in a.scenario.impact_domains
+                            ],
                             "severity": a.scenario.severity.value,
                         },
                         "evidence": [asdict(e) for e in a.evidence],
-                        "causal_activation": [asdict(link) for link in a.causal_activation],
+                        "causal_activation": [
+                            asdict(link) for link in a.causal_activation
+                        ],
                     }
                     for a in self.alerts
-                ]
+                ],
             }
 
             with open(state_file, "w") as f:
@@ -959,7 +1007,7 @@ class GlobalScenarioEngine(SimulationSystem):
             "causal_links": len(self.causal_links),
             "scenarios": len(self.scenarios),
             "alerts": len(self.alerts),
-            "issues": []
+            "issues": [],
         }
 
         # Check data coverage
@@ -976,17 +1024,16 @@ class GlobalScenarioEngine(SimulationSystem):
                         f"Sparse temporal data: {domain.value}/{country} has {len(years)} years"
                     )
 
-        validation["quality_score"] = max(
-            0,
-            100 - len(validation["issues"]) * 5
-        )
+        validation["quality_score"] = max(0, 100 - len(validation["issues"]) * 5)
 
         logger.info(f"Data quality score: {validation['quality_score']}/100")
         return validation
 
 
 # Register the engine with the simulation registry
-def register_global_scenario_engine(data_dir: str = "data/global_scenarios") -> GlobalScenarioEngine:
+def register_global_scenario_engine(
+    data_dir: str = "data/global_scenarios",
+) -> GlobalScenarioEngine:
     """
     Factory function to create and register GlobalScenarioEngine.
 

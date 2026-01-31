@@ -31,7 +31,7 @@ Usage:
     # Access from anywhere in the application
     tower = GlobalWatchTower.get_instance()
     result = tower.verify_file("/path/to/file.py")
-    
+
     # Access Cerberus (Chief of Security)
     cerberus = tower.get_chief_of_security()
     status = cerberus.get_security_status()
@@ -62,7 +62,7 @@ logger = logging.getLogger(__name__)
 
 class GlobalWatchTower:
     """Singleton wrapper for the Border Patrol Watch Tower system - Security Command Center.
-    
+
     The Global Watch Tower serves as the Security Command Center, operating under
     Cerberus (Chief of Security). All security operations and agents are coordinated
     through this central hub.
@@ -73,12 +73,12 @@ class GlobalWatchTower:
     - Adversarial testing (Red Team)
     - Security oversight and analysis (Oversight & Analysis)
     - Emergency lockdown coordination (Cerberus Command)
-    
+
     Security Authority:
     - Cerberus is the Chief of Security
     - All security agents report through the Security Command Center
     - All pre-existing security roles continue to operate
-    
+
     Thread-safe singleton implementation.
     """
 
@@ -139,7 +139,9 @@ class GlobalWatchTower:
         """
         with cls._lock:
             if cls._instance is not None:
-                logger.warning("GlobalWatchTower already initialized, returning existing instance")
+                logger.warning(
+                    "GlobalWatchTower already initialized, returning existing instance"
+                )
                 return cls._instance
 
             instance = cls.__new__(cls)
@@ -181,9 +183,13 @@ class GlobalWatchTower:
 
             # Register border patrol agents with Cerberus (Chief of Security)
             for admin in instance.port_admins:
-                instance.cerberus.register_security_agent("border_patrol", admin.admin_id)
+                instance.cerberus.register_security_agent(
+                    "border_patrol", admin.admin_id
+                )
             for tower in instance.watch_towers:
-                instance.cerberus.register_security_agent("border_patrol", tower.tower_id)
+                instance.cerberus.register_security_agent(
+                    "border_patrol", tower.tower_id
+                )
             for gate in instance.gate_guardians:
                 instance.cerberus.register_security_agent("border_patrol", gate.gate_id)
             for verifier_id in instance.verifiers:
@@ -365,9 +371,7 @@ class GlobalWatchTower:
             stats = tower.get_stats()
             print(f"Verified {stats['total_verifications']} files")
         """
-        active_quarantine = sum(
-            len(gate.quarantine) for gate in self.gate_guardians
-        )
+        active_quarantine = sum(len(gate.quarantine) for gate in self.gate_guardians)
 
         return {
             "total_verifications": self.total_verifications,
@@ -420,31 +424,33 @@ class GlobalWatchTower:
             if gate.gate_id == gate_id:
                 return gate
         return None
-    
+
     def get_chief_of_security(self) -> Cerberus:
         """Get Cerberus, the Chief of Security.
-        
+
         Returns:
             Cerberus instance (Chief of Security)
-            
+
         Example:
             tower = GlobalWatchTower.get_instance()
             cerberus = tower.get_chief_of_security()
             status = cerberus.get_security_status()
         """
         return self.cerberus
-    
-    def register_security_agent(self, agent_type: str, agent_id: str, agent_instance: Any = None) -> None:
+
+    def register_security_agent(
+        self, agent_type: str, agent_id: str, agent_instance: Any = None
+    ) -> None:
         """Register an external security agent with Cerberus (Chief of Security).
-        
+
         This allows other security agents in the system to register themselves
         under Cerberus's command through the Security Command Center.
-        
+
         Args:
             agent_type: Type of security agent (active_defense, red_team, oversight)
             agent_id: Unique identifier for the agent
             agent_instance: Optional agent instance for future reference
-            
+
         Example:
             tower = GlobalWatchTower.get_instance()
             tower.register_security_agent("active_defense", "safety_guard_1")
@@ -453,15 +459,16 @@ class GlobalWatchTower:
         self.cerberus.register_security_agent(agent_type, agent_id)
         logger.info(
             "Security Command Center: Registered %s agent '%s' with Cerberus (Chief of Security)",
-            agent_type, agent_id
+            agent_type,
+            agent_id,
         )
-    
+
     def get_security_status(self) -> dict[str, Any]:
         """Get comprehensive security status from Cerberus (Chief of Security).
-        
+
         Returns:
             dict: Complete security status including all registered agents
-            
+
         Example:
             tower = GlobalWatchTower.get_instance()
             status = tower.get_security_status()

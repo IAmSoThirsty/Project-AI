@@ -96,8 +96,11 @@ class TestProviderFactory:
 
     def test_get_provider_case_insensitive(self):
         """Test provider name is case insensitive."""
-        from app.core.model_providers import (OpenAIProvider, PerplexityProvider,
-                                              get_provider)
+        from app.core.model_providers import (
+            OpenAIProvider,
+            PerplexityProvider,
+            get_provider,
+        )
 
         provider = get_provider("OPENAI", api_key="test-key")
         assert isinstance(provider, OpenAIProvider)

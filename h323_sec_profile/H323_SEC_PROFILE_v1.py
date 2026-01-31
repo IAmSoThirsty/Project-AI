@@ -219,8 +219,15 @@ def check_compliance(deployment_config):
 
 def get_registration_status_snmp(device_ip, snmp_user, auth_key, priv_key):
     try:
-        from pysnmp.hlapi import (ContextData, ObjectIdentity, ObjectType, SnmpEngine,
-                                  UdpTransportTarget, UsmUserData, getCmd)
+        from pysnmp.hlapi import (
+            ContextData,
+            ObjectIdentity,
+            ObjectType,
+            SnmpEngine,
+            UdpTransportTarget,
+            UsmUserData,
+            getCmd,
+        )
     except ImportError:
         return "unknown"
 

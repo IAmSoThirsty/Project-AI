@@ -95,8 +95,9 @@ class SecurityAgentsSmokeTests(unittest.TestCase):
 
     def test_constitutional_guardrail_smoke(self):
         """Smoke test: ConstitutionalGuardrailAgent review."""
-        from src.app.agents.constitutional_guardrail_agent import \
-            ConstitutionalGuardrailAgent
+        from src.app.agents.constitutional_guardrail_agent import (
+            ConstitutionalGuardrailAgent,
+        )
 
         agent = ConstitutionalGuardrailAgent(data_dir=str(self.test_data_dir))
 

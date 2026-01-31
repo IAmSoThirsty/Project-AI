@@ -25,11 +25,12 @@ import threading
 import time
 import uuid
 from collections import defaultdict, deque
+from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Set, Tuple
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -69,13 +70,13 @@ class HealthCheck:
 
     component: str
     status: str = HealthStatus.UNKNOWN.value
-    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
     response_time_ms: float = 0.0
     error_message: str = ""
-    metrics: Dict[str, Any] = field(default_factory=dict)
-    details: Dict[str, Any] = field(default_factory=dict)
+    metrics: dict[str, Any] = field(default_factory=dict)
+    details: dict[str, Any] = field(default_factory=dict)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return asdict(self)
 
@@ -85,16 +86,16 @@ class FailureEvent:
     """Failure event record."""
 
     event_id: str = field(default_factory=lambda: str(uuid.uuid4()))
-    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
     component: str = ""
     failure_category: str = FailureCategory.TRANSIENT.value
     description: str = ""
     impact: str = ""
-    recovery_actions: List[str] = field(default_factory=list)
+    recovery_actions: list[str] = field(default_factory=list)
     resolved: bool = False
-    resolution_time: Optional[str] = None
+    resolution_time: str | None = None
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return asdict(self)
 
@@ -103,16 +104,16 @@ class FailureEvent:
 class ContinuityScore:
     """AGI continuity score."""
 
-    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
     overall_score: float = 1.0
     identity_continuity: float = 1.0
     memory_continuity: float = 1.0
     personality_continuity: float = 1.0
     capability_continuity: float = 1.0
     ethical_continuity: float = 1.0
-    factors: Dict[str, Any] = field(default_factory=dict)
+    factors: dict[str, Any] = field(default_factory=dict)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return asdict(self)
 
@@ -130,7 +131,9 @@ class ComponentHealthMonitor:
         self.recovery_threshold = 3
         self.lock = threading.RLock()
 
-    def check_health(self, check_func: Callable[[], Tuple[bool, Dict[str, Any]]]) -> HealthCheck:
+    def check_health(
+        self, check_func: Callable[[], tuple[bool, dict[str, Any]]]
+    ) -> HealthCheck:
         """Perform health check."""
         start_time = time.time()
         try:
@@ -187,7 +190,7 @@ class ComponentHealthMonitor:
         with self.lock:
             return self.last_status
 
-    def get_recent_checks(self, limit: int = 10) -> List[HealthCheck]:
+    def get_recent_checks(self, limit: int = 10) -> list[HealthCheck]:
         """Get recent health checks."""
         with self.lock:
             return list(self.health_checks)[-limit:]
@@ -197,12 +200,14 @@ class FallbackManager:
     """Manages fallback and degraded mode operations."""
 
     def __init__(self):
-        self.fallback_strategies: Dict[str, List[Callable]] = {}
-        self.active_fallbacks: Set[str] = set()
-        self.degradation_levels: Dict[str, int] = {}
+        self.fallback_strategies: dict[str, list[Callable]] = {}
+        self.active_fallbacks: set[str] = set()
+        self.degradation_levels: dict[str, int] = {}
         self.lock = threading.RLock()
 
-    def register_fallback(self, component: str, fallback_func: Callable, priority: int = 0) -> None:
+    def register_fallback(
+        self, component: str, fallback_func: Callable, priority: int = 0
+    ) -> None:
         """Register fallback strategy for component."""
         with self.lock:
             if component not in self.fallback_strategies:
@@ -275,8 +280,8 @@ class AGIContinuityTracker:
         self.data_dir.mkdir(parents=True, exist_ok=True)
 
         self.continuity_scores: deque = deque(maxlen=1000)
-        self.identity_hash: Optional[str] = None
-        self.start_time = datetime.now(timezone.utc)
+        self.identity_hash: str | None = None
+        self.start_time = datetime.now(UTC)
         self.lock = threading.RLock()
 
         self._load_continuity_state()
@@ -336,7 +341,7 @@ class AGIContinuityTracker:
             logger.error(f"Error calculating continuity score: {e}")
             return ContinuityScore(overall_score=0.0)
 
-    def verify_identity(self, current_identity: Dict[str, Any]) -> bool:
+    def verify_identity(self, current_identity: dict[str, Any]) -> bool:
         """Verify AGI identity continuity."""
         try:
             import hashlib
@@ -356,7 +361,7 @@ class AGIContinuityTracker:
             logger.error(f"Error verifying identity: {e}")
             return False
 
-    def get_continuity_trend(self, window: int = 10) -> Dict[str, Any]:
+    def get_continuity_trend(self, window: int = 10) -> dict[str, Any]:
         """Get continuity trend analysis."""
         with self.lock:
             recent_scores = list(self.continuity_scores)[-window:]
@@ -397,7 +402,9 @@ class AGIContinuityTracker:
             state = {
                 "identity_hash": self.identity_hash,
                 "start_time": self.start_time.isoformat(),
-                "recent_scores": [s.to_dict() for s in list(self.continuity_scores)[-100:]],
+                "recent_scores": [
+                    s.to_dict() for s in list(self.continuity_scores)[-100:]
+                ],
             }
             with open(state_file, "w") as f:
                 json.dump(state, f, indent=2)
@@ -427,19 +434,19 @@ class PredictiveFailureDetector:
     """Predicts failures before they occur using trend analysis."""
 
     def __init__(self):
-        self.metric_history: Dict[str, deque] = defaultdict(lambda: deque(maxlen=100))
-        self.predictions: List[Dict[str, Any]] = []
+        self.metric_history: dict[str, deque] = defaultdict(lambda: deque(maxlen=100))
+        self.predictions: list[dict[str, Any]] = []
         self.lock = threading.RLock()
 
     def record_metric(self, component: str, metric_name: str, value: float) -> None:
         """Record metric for prediction."""
         with self.lock:
             key = f"{component}_{metric_name}"
-            self.metric_history[key].append((datetime.now(timezone.utc), value))
+            self.metric_history[key].append((datetime.now(UTC), value))
 
     def predict_failure(
         self, component: str, metric_name: str, threshold: float, lookback: int = 10
-    ) -> Optional[Dict[str, Any]]:
+    ) -> dict[str, Any] | None:
         """Predict if metric will cross threshold."""
         try:
             with self.lock:
@@ -471,14 +478,17 @@ class PredictiveFailureDetector:
 
                 # Predict next few values
                 future_steps = 5
-                predictions_values = [slope * (n + i) + intercept for i in range(future_steps)]
+                predictions_values = [
+                    slope * (n + i) + intercept for i in range(future_steps)
+                ]
 
                 # Check if any prediction crosses threshold
                 will_fail = any(v >= threshold for v in predictions_values)
 
                 if will_fail:
                     steps_to_failure = next(
-                        (i for i, v in enumerate(predictions_values) if v >= threshold), None
+                        (i for i, v in enumerate(predictions_values) if v >= threshold),
+                        None,
                     )
                     prediction = {
                         "component": component,
@@ -488,7 +498,7 @@ class PredictiveFailureDetector:
                         "trend_slope": slope,
                         "predicted_values": predictions_values,
                         "steps_to_failure": steps_to_failure,
-                        "timestamp": datetime.now(timezone.utc).isoformat(),
+                        "timestamp": datetime.now(UTC).isoformat(),
                     }
 
                     self.predictions.append(prediction)
@@ -510,28 +520,30 @@ class HealthMonitoringSystem:
         self.data_dir = Path(data_dir)
         self.data_dir.mkdir(parents=True, exist_ok=True)
 
-        self.component_monitors: Dict[str, ComponentHealthMonitor] = {}
+        self.component_monitors: dict[str, ComponentHealthMonitor] = {}
         self.fallback_manager = FallbackManager()
         self.continuity_tracker = AGIContinuityTracker(data_dir)
         self.failure_detector = PredictiveFailureDetector()
 
-        self.failure_events: List[FailureEvent] = []
+        self.failure_events: list[FailureEvent] = []
         self.monitoring_active = False
-        self.monitor_thread: Optional[threading.Thread] = None
+        self.monitor_thread: threading.Thread | None = None
         self.check_interval = 10  # seconds
         self.lock = threading.RLock()
 
         logger.info("Initialized Health Monitoring System")
 
     def register_component(
-        self, component_name: str, health_check_func: Callable[[], Tuple[bool, Dict[str, Any]]]
+        self,
+        component_name: str,
+        health_check_func: Callable[[], tuple[bool, dict[str, Any]]],
     ) -> None:
         """Register component for health monitoring."""
         with self.lock:
             if component_name not in self.component_monitors:
                 self.component_monitors[component_name] = {
                     "monitor": ComponentHealthMonitor(component_name),
-                    "check_func": health_check_func
+                    "check_func": health_check_func,
                 }
                 logger.info(f"Registered component for monitoring: {component_name}")
 
@@ -542,7 +554,9 @@ class HealthMonitoringSystem:
                 return False
 
             self.monitoring_active = True
-            self.monitor_thread = threading.Thread(target=self._monitoring_loop, daemon=True)
+            self.monitor_thread = threading.Thread(
+                target=self._monitoring_loop, daemon=True
+            )
             self.monitor_thread.start()
             logger.info("Started health monitoring")
             return True
@@ -570,13 +584,15 @@ class HealthMonitoringSystem:
                 for component_name, component_data in self.component_monitors.items():
                     monitor = component_data["monitor"]
                     check_func = component_data["check_func"]
-                    
+
                     # Execute health check
                     health_check = monitor.check_health(check_func)
-                    
+
                     # Handle unhealthy components
                     if health_check.status == HealthStatus.UNHEALTHY.value:
-                        logger.warning(f"Component {component_name} is unhealthy: {health_check.error_message}")
+                        logger.warning(
+                            f"Component {component_name} is unhealthy: {health_check.error_message}"
+                        )
                         # Attempt fallback activation
                         self.fallback_manager.activate_fallback(component_name)
 
@@ -584,7 +600,7 @@ class HealthMonitoringSystem:
             except Exception as e:
                 logger.error(f"Error in monitoring loop: {e}")
 
-    def get_system_status(self) -> Dict[str, Any]:
+    def get_system_status(self) -> dict[str, Any]:
         """Get comprehensive system status."""
         with self.lock:
             component_statuses = {}
@@ -596,7 +612,7 @@ class HealthMonitoringSystem:
             continuity_trend = self.continuity_tracker.get_continuity_trend()
 
             return {
-                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
                 "operating_mode": operating_mode.value,
                 "monitoring_active": self.monitoring_active,
                 "components": component_statuses,
@@ -617,10 +633,10 @@ def create_health_monitoring_system(
 
 
 # Global instance
-_health_system: Optional[HealthMonitoringSystem] = None
+_health_system: HealthMonitoringSystem | None = None
 
 
-def get_health_system() -> Optional[HealthMonitoringSystem]:
+def get_health_system() -> HealthMonitoringSystem | None:
     """Get global health monitoring system instance."""
     return _health_system
 

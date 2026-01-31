@@ -9,8 +9,14 @@ import tempfile
 import pytest
 
 from project_ai.tarl.integrations.orchestration_governance import (
-    AIProvenanceManager, CICDEnforcementManager, ComplianceFramework, ComplianceManager,
-    FullGovernanceStack, GovernanceEngine, RuntimeSafetyManager)
+    AIProvenanceManager,
+    CICDEnforcementManager,
+    ComplianceFramework,
+    ComplianceManager,
+    FullGovernanceStack,
+    GovernanceEngine,
+    RuntimeSafetyManager,
+)
 
 # ============================================================================
 # TEST GOVERNANCE ENGINE
@@ -754,8 +760,9 @@ class TestDemo:
 
     def test_demo_governance_features(self):
         """Test that demo runs without errors"""
-        from project_ai.tarl.integrations.orchestration_governance import \
-            demo_governance_features
+        from project_ai.tarl.integrations.orchestration_governance import (
+            demo_governance_features,
+        )
 
         # Should complete without exceptions
         demo_governance_features()

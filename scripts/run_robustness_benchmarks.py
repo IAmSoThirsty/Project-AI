@@ -22,8 +22,11 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root / "src"))
 
-from app.core.robustness_metrics import (AttackProximityMetrics,  # noqa: E402
-                                         RobustnessAnalysis, RobustnessMetricsEngine)
+from app.core.robustness_metrics import (  # noqa: E402
+    AttackProximityMetrics,
+    RobustnessAnalysis,
+    RobustnessMetricsEngine,
+)
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
