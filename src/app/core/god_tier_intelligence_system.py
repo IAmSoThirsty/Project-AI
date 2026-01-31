@@ -15,10 +15,8 @@ Monolithic density implementation with enterprise-grade features:
 
 from __future__ import annotations
 
-import asyncio
 import functools
 import hashlib
-import json
 import logging
 import multiprocessing as mp
 import queue
@@ -26,24 +24,14 @@ import statistics
 import threading
 import time
 from collections import defaultdict, deque
-from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
+from collections.abc import Callable
+from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta
 from enum import Enum
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 import psutil
-
-from app.core.global_intelligence_library import (
-    ChangeLevel,
-    DomainAnalysis,
-    GlobalTheory,
-    IntelligenceAgent,
-    IntelligenceDomain,
-    IntelligenceReport,
-    MonitoringStatus,
-)
 
 logger = logging.getLogger(__name__)
 
@@ -76,7 +64,7 @@ class HealthCheck:
 
 class CircuitBreaker:
     """Circuit breaker pattern for fault tolerance.
-    
+
     Prevents cascading failures by stopping calls to failing services.
     States: CLOSED -> OPEN -> HALF_OPEN -> CLOSED
     """
@@ -88,7 +76,7 @@ class CircuitBreaker:
         expected_exception: type = Exception,
     ):
         """Initialize circuit breaker.
-        
+
         Args:
             failure_threshold: Number of failures before opening
             timeout: Seconds before attempting recovery
@@ -105,15 +93,15 @@ class CircuitBreaker:
 
     def call(self, func: Callable, *args, **kwargs) -> Any:
         """Execute function through circuit breaker.
-        
+
         Args:
             func: Function to execute
             *args: Positional arguments
             **kwargs: Keyword arguments
-            
+
         Returns:
             Function result
-            
+
         Raises:
             Exception: If circuit is OPEN or function fails
         """
@@ -121,7 +109,7 @@ class CircuitBreaker:
             if self.state == "OPEN":
                 if time.time() - self.last_failure_time >= self.timeout:
                     self.state = "HALF_OPEN"
-                    logger.info(f"Circuit breaker entering HALF_OPEN state")
+                    logger.info("Circuit breaker entering HALF_OPEN state")
                 else:
                     raise Exception("Circuit breaker is OPEN")
 
@@ -129,7 +117,7 @@ class CircuitBreaker:
             result = func(*args, **kwargs)
             self._on_success()
             return result
-        except self.expected_exception as e:
+        except self.expected_exception:
             self._on_failure()
             raise
 
@@ -173,7 +161,7 @@ class SelfHealingSystem:
         recovery_func: Callable | None = None,
     ) -> None:
         """Register component for health monitoring.
-        
+
         Args:
             component_name: Component identifier
             health_check_func: Function to check health
@@ -188,10 +176,10 @@ class SelfHealingSystem:
 
     def check_health(self, component_name: str) -> HealthCheck:
         """Check component health.
-        
+
         Args:
             component_name: Component to check
-            
+
         Returns:
             HealthCheck result
         """
@@ -227,10 +215,10 @@ class SelfHealingSystem:
 
     def attempt_recovery(self, component_name: str) -> bool:
         """Attempt to recover a component.
-        
+
         Args:
             component_name: Component to recover
-            
+
         Returns:
             True if recovery successful
         """
@@ -259,7 +247,7 @@ class LoadBalancer:
 
     def __init__(self, num_workers: int = None):
         """Initialize load balancer.
-        
+
         Args:
             num_workers: Number of worker processes (default: CPU count)
         """
@@ -275,14 +263,12 @@ class LoadBalancer:
 
         logger.info(f"LoadBalancer initialized with {self.num_workers} workers")
 
-    def submit_batch(
-        self, tasks: list[tuple[Callable, tuple, dict]]
-    ) -> dict[str, Any]:
+    def submit_batch(self, tasks: list[tuple[Callable, tuple, dict]]) -> dict[str, Any]:
         """Submit batch of tasks for parallel processing.
-        
+
         Args:
             tasks: List of (function, args, kwargs) tuples
-            
+
         Returns:
             Dictionary of task_id -> result
         """
@@ -320,7 +306,7 @@ class LoadBalancer:
 
     def get_metrics(self) -> dict[str, Any]:
         """Get load balancer metrics.
-        
+
         Returns:
             Metrics dictionary
         """
@@ -352,7 +338,7 @@ class RealTimeAnalytics:
 
     def __init__(self, window_size: int = 100):
         """Initialize analytics engine.
-        
+
         Args:
             window_size: Size of rolling window for metrics
         """
@@ -365,7 +351,7 @@ class RealTimeAnalytics:
 
     def record_metric(self, metric_name: str, value: float) -> None:
         """Record a metric value.
-        
+
         Args:
             metric_name: Name of metric
             value: Metric value
@@ -375,10 +361,10 @@ class RealTimeAnalytics:
 
     def get_statistics(self, metric_name: str) -> dict[str, float]:
         """Get statistics for a metric.
-        
+
         Args:
             metric_name: Name of metric
-            
+
         Returns:
             Statistics dictionary
         """
@@ -397,15 +383,13 @@ class RealTimeAnalytics:
             "max": max(values),
         }
 
-    def detect_anomalies(
-        self, metric_name: str, threshold: float = 3.0
-    ) -> list[dict]:
+    def detect_anomalies(self, metric_name: str, threshold: float = 3.0) -> list[dict]:
         """Detect anomalies using standard deviation method.
-        
+
         Args:
             metric_name: Name of metric
             threshold: Number of standard deviations for anomaly
-            
+
         Returns:
             List of anomaly records
         """
@@ -421,22 +405,24 @@ class RealTimeAnalytics:
             for timestamp, value in self.metrics.get(metric_name, []):
                 z_score = abs((value - mean) / stdev)
                 if z_score > threshold:
-                    anomalies.append({
-                        "metric": metric_name,
-                        "timestamp": timestamp,
-                        "value": value,
-                        "z_score": z_score,
-                        "severity": "high" if z_score > 4 else "medium",
-                    })
+                    anomalies.append(
+                        {
+                            "metric": metric_name,
+                            "timestamp": timestamp,
+                            "value": value,
+                            "z_score": z_score,
+                            "severity": "high" if z_score > 4 else "medium",
+                        }
+                    )
 
         return anomalies
 
     def get_trend(self, metric_name: str) -> str:
         """Get trend direction for a metric.
-        
+
         Args:
             metric_name: Name of metric
-            
+
         Returns:
             Trend string: "increasing", "decreasing", or "stable"
         """
@@ -470,7 +456,7 @@ class IntelligentCache:
 
     def __init__(self, max_size: int = 1000, default_ttl: int = 300):
         """Initialize cache.
-        
+
         Args:
             max_size: Maximum cache entries
             default_ttl: Default time-to-live in seconds
@@ -485,14 +471,16 @@ class IntelligentCache:
         self.hits = 0
         self.misses = 0
 
-        logger.info(f"IntelligentCache initialized (max_size={max_size}, ttl={default_ttl}s)")
+        logger.info(
+            f"IntelligentCache initialized (max_size={max_size}, ttl={default_ttl}s)"
+        )
 
     def get(self, key: str) -> Any | None:
         """Get value from cache.
-        
+
         Args:
             key: Cache key
-            
+
         Returns:
             Cached value or None
         """
@@ -517,7 +505,7 @@ class IntelligentCache:
 
     def set(self, key: str, value: Any, ttl: int | None = None) -> None:
         """Set value in cache.
-        
+
         Args:
             key: Cache key
             value: Value to cache
@@ -550,7 +538,7 @@ class IntelligentCache:
 
     def get_stats(self) -> dict[str, Any]:
         """Get cache statistics.
-        
+
         Returns:
             Statistics dictionary
         """
@@ -567,10 +555,10 @@ class IntelligentCache:
 
 def memoize_with_ttl(ttl: int = 300):
     """Decorator for caching function results with TTL.
-    
+
     Args:
         ttl: Time-to-live in seconds
-        
+
     Returns:
         Decorator function
     """
@@ -613,7 +601,7 @@ class ResourceMonitor:
         check_interval: int = 10,
     ):
         """Initialize resource monitor.
-        
+
         Args:
             cpu_threshold: CPU usage percentage threshold
             memory_threshold: Memory usage percentage threshold
@@ -685,7 +673,7 @@ class ResourceMonitor:
 
     def get_current_resources(self) -> dict[str, Any]:
         """Get current resource usage.
-        
+
         Returns:
             Resource usage dictionary
         """
@@ -697,18 +685,20 @@ class ResourceMonitor:
             "cpu_percent": cpu,
             "cpu_status": "high" if cpu > self.cpu_threshold else "normal",
             "memory_percent": memory.percent,
-            "memory_status": "high" if memory.percent > self.memory_threshold else "normal",
-            "memory_available_gb": memory.available / (1024 ** 3),
+            "memory_status": (
+                "high" if memory.percent > self.memory_threshold else "normal"
+            ),
+            "memory_available_gb": memory.available / (1024**3),
             "disk_percent": disk.percent,
-            "disk_free_gb": disk.free / (1024 ** 3),
+            "disk_free_gb": disk.free / (1024**3),
         }
 
     def get_alerts(self, since: float | None = None) -> list[dict]:
         """Get resource alerts.
-        
+
         Args:
             since: Only get alerts after this timestamp
-            
+
         Returns:
             List of alerts
         """
@@ -725,7 +715,7 @@ class ResourceMonitor:
 
 class GodTierIntelligenceSystem:
     """God-tier intelligence system with monolithic density.
-    
+
     Combines all enterprise features:
     - Self-healing and fault tolerance
     - Distributed processing
@@ -741,7 +731,7 @@ class GodTierIntelligenceSystem:
         num_workers: int = None,
     ):
         """Initialize god-tier system.
-        
+
         Args:
             data_dir: Data directory
             num_workers: Number of worker processes
@@ -763,11 +753,13 @@ class GodTierIntelligenceSystem:
         # Start resource monitoring
         self.resource_monitor.start_monitoring()
 
-        logger.info("GodTierIntelligenceSystem initialized with all enterprise features")
+        logger.info(
+            "GodTierIntelligenceSystem initialized with all enterprise features"
+        )
 
     def get_comprehensive_status(self) -> dict[str, Any]:
         """Get comprehensive system status.
-        
+
         Returns:
             Complete status dictionary
         """

@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+
 @dataclass(frozen=True)
 class HealthSignal:
     alive: bool
@@ -9,9 +10,4 @@ class HealthSignal:
 
     @property
     def healthy(self) -> bool:
-        return all([
-            self.alive,
-            self.responsive,
-            self.bounded,
-            self.compliant
-        ])
+        return all([self.alive, self.responsive, self.bounded, self.compliant])

@@ -5,8 +5,13 @@ import tempfile
 
 import pytest
 
-from app.core.local_fbo import (LocalFBOSystem, OfflineContext, ReflectionEntry,
-                                create_local_fbo, quick_offline_query)
+from app.core.local_fbo import (
+    LocalFBOSystem,
+    OfflineContext,
+    ReflectionEntry,
+    create_local_fbo,
+    quick_offline_query,
+)
 
 
 class TestReflectionEntry:

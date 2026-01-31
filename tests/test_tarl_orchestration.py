@@ -13,13 +13,20 @@ import tempfile
 
 import pytest
 
-from project_ai.tarl.integrations.orchestration import (AgentOrchestrator, Artifact,
-                                                        ArtifactRelationship,
-                                                        Capability, CapabilityEngine,
-                                                        DeterministicVM, EventRecorder,
-                                                        Policy, ProvenanceManager,
-                                                        TarlStackBox, Workflow,
-                                                        WorkflowEventKind)
+from project_ai.tarl.integrations.orchestration import (
+    AgentOrchestrator,
+    Artifact,
+    ArtifactRelationship,
+    Capability,
+    CapabilityEngine,
+    DeterministicVM,
+    EventRecorder,
+    Policy,
+    ProvenanceManager,
+    TarlStackBox,
+    Workflow,
+    WorkflowEventKind,
+)
 
 
 class TestDeterministicVM:

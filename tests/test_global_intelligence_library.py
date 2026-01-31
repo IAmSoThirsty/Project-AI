@@ -6,7 +6,6 @@ from pathlib import Path
 import pytest
 
 from app.core.global_intelligence_library import (
-    ChangeLevel,
     DomainAnalysis,
     DomainOverseer,
     GlobalCurator,
@@ -251,12 +250,12 @@ class TestGlobalCurator:
         assert len(simulation.domain_analyses) == 6  # All 6 domains
         assert curator.theory_count == 1
         assert 0.0 <= simulation.confidence_score <= 1.0
-        
+
         # Verify curator produces simulations, not recommendations
-        assert hasattr(simulation, 'simulation_id')
-        assert hasattr(simulation, 'statistical_summary')
-        assert hasattr(simulation, 'predicted_outcomes')
-        assert not hasattr(simulation, 'recommendations')  # No command authority
+        assert hasattr(simulation, "simulation_id")
+        assert hasattr(simulation, "statistical_summary")
+        assert hasattr(simulation, "predicted_outcomes")
+        assert not hasattr(simulation, "recommendations")  # No command authority
 
     def test_curator_get_status(self, temp_data_dir):
         """Test curator status retrieval."""
@@ -340,10 +339,10 @@ class TestGlobalIntelligenceLibrary:
         assert isinstance(simulation, GlobalTheory)
         assert len(simulation.domain_analyses) == 6
         assert len(simulation.predicted_outcomes) > 0
-        
+
         # Verify no recommendations (curator has no command authority)
         simulation_dict = simulation.to_dict()
-        assert 'recommendations' not in simulation_dict
+        assert "recommendations" not in simulation_dict
 
     def test_library_get_domain_analysis(self, temp_data_dir):
         """Test getting specific domain analysis."""
@@ -382,10 +381,10 @@ class TestGlobalIntelligenceLibrary:
         assert isinstance(simulation, GlobalTheory)
         assert len(simulation.domain_analyses) == 6
         assert library.curator.theory_count == 1
-        
+
         # Verify curator role is analytical only
-        assert 'simulation_id' in simulation.to_dict()
-        assert 'statistical_summary' in simulation.to_dict()
+        assert "simulation_id" in simulation.to_dict()
+        assert "statistical_summary" in simulation.to_dict()
 
     def test_library_reset(self, temp_data_dir):
         """Test resetting library singleton."""
@@ -443,9 +442,9 @@ class TestDataPersistence:
         analysis_dict = analysis.to_dict()
         assert isinstance(analysis_dict, dict)
         assert analysis_dict["domain"] == "economic"
-        
+
         # Verify no recommendations field (overseers have no command authority)
-        assert 'recommendations' not in analysis_dict
+        assert "recommendations" not in analysis_dict
 
     def test_global_theory_serialization(self, temp_data_dir):
         """Test global theory (simulation) can be serialized."""
@@ -462,9 +461,9 @@ class TestDataPersistence:
         assert "simulation_id" in simulation_dict
         assert "statistical_summary" in simulation_dict
         assert "predicted_outcomes" in simulation_dict
-        
+
         # Verify no recommendations (curator has no command authority)
-        assert 'recommendations' not in simulation_dict
+        assert "recommendations" not in simulation_dict
 
     def test_analysis_saved_to_disk(self, temp_data_dir):
         """Test that analyses are saved to disk."""
@@ -548,68 +547,78 @@ class TestCuratorAuthority:
     def test_curator_has_no_recommendations(self, temp_data_dir):
         """Verify curator does not make recommendations."""
         curator = GlobalCurator(data_dir=temp_data_dir)
-        
+
         for domain in IntelligenceDomain:
             overseer = DomainOverseer(domain=domain, data_dir=temp_data_dir)
             overseer.create_agents(count=3)
             curator.add_overseer(overseer)
-        
+
         simulation = curator.run_statistical_simulation()
-        
+
         # Verify simulation has no recommendations
-        assert not hasattr(simulation, 'recommendations')
+        assert not hasattr(simulation, "recommendations")
         simulation_dict = simulation.to_dict()
-        assert 'recommendations' not in simulation_dict
-    
+        assert "recommendations" not in simulation_dict
+
     def test_curator_produces_statistical_simulations(self, temp_data_dir):
         """Verify curator produces statistical simulations, not commands."""
         curator = GlobalCurator(data_dir=temp_data_dir)
-        
-        overseer = DomainOverseer(domain=IntelligenceDomain.ECONOMIC, data_dir=temp_data_dir)
+
+        overseer = DomainOverseer(
+            domain=IntelligenceDomain.ECONOMIC, data_dir=temp_data_dir
+        )
         overseer.create_agents(count=5)
         curator.add_overseer(overseer)
-        
+
         simulation = curator.run_statistical_simulation()
-        
+
         # Verify it's a simulation with statistical data
-        assert hasattr(simulation, 'simulation_id')
-        assert hasattr(simulation, 'statistical_summary')
-        assert hasattr(simulation, 'predicted_outcomes')
-        assert hasattr(simulation, 'confidence_score')
-        
+        assert hasattr(simulation, "simulation_id")
+        assert hasattr(simulation, "statistical_summary")
+        assert hasattr(simulation, "predicted_outcomes")
+        assert hasattr(simulation, "confidence_score")
+
         # Verify the simulation_id format indicates it's a simulation
-        assert simulation.simulation_id.startswith('SIM_')
-        
+        assert simulation.simulation_id.startswith("SIM_")
+
         # Verify statistical summary mentions it's a simulation
-        assert 'simulation' in simulation.statistical_summary.lower() or 'statistical' in simulation.statistical_summary.lower()
-    
+        assert (
+            "simulation" in simulation.statistical_summary.lower()
+            or "statistical" in simulation.statistical_summary.lower()
+        )
+
     def test_overseer_has_no_recommendations(self, temp_data_dir):
         """Verify overseers do not make recommendations."""
-        overseer = DomainOverseer(domain=IntelligenceDomain.MILITARY, data_dir=temp_data_dir)
+        overseer = DomainOverseer(
+            domain=IntelligenceDomain.MILITARY, data_dir=temp_data_dir
+        )
         overseer.create_agents(count=10)
-        
+
         analysis = overseer.analyze_domain()
-        
+
         # Verify analysis has no recommendations
-        assert not hasattr(analysis, 'recommendations')
+        assert not hasattr(analysis, "recommendations")
         analysis_dict = analysis.to_dict()
-        assert 'recommendations' not in analysis_dict
-    
+        assert "recommendations" not in analysis_dict
+
     def test_library_simulation_has_no_command_authority(self, temp_data_dir):
         """Verify library statistical simulations have no command authority."""
         library = GlobalIntelligenceLibrary.initialize(
             data_dir=temp_data_dir,
             use_watch_tower=False,
         )
-        
+
         simulation = library.generate_statistical_simulation()
-        
+
         # Verify no recommendations or commands
         simulation_dict = simulation.to_dict()
-        assert 'recommendations' not in simulation_dict
-        assert 'commands' not in simulation_dict
-        assert 'directives' not in simulation_dict
-        
+        assert "recommendations" not in simulation_dict
+        assert "commands" not in simulation_dict
+        assert "directives" not in simulation_dict
+
         # Verify it's marked as a simulation
-        assert 'simulation_id' in simulation_dict
-        assert 'statistical' in simulation_dict['statistical_summary'].lower() or 'simulation' in simulation_dict['statistical_summary'].lower()
+        assert "simulation_id" in simulation_dict
+        assert (
+            "statistical" in simulation_dict["statistical_summary"].lower()
+            or "simulation" in simulation_dict["statistical_summary"].lower()
+        )

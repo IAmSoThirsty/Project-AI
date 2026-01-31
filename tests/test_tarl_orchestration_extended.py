@@ -9,9 +9,19 @@ import tempfile
 import pytest
 
 from project_ai.tarl.integrations.orchestration_extended import (
-    Activity, ActivityExecutor, ExtendedTarlStackBox, HumanInTheLoopManager,
-    LongRunningWorkflowManager, MetaOrchestrator, MultiTenantManager, ResourceQuota,
-    TaskQueue, TaskQueuePriority, WorkerPool, WorkflowHierarchyManager)
+    Activity,
+    ActivityExecutor,
+    ExtendedTarlStackBox,
+    HumanInTheLoopManager,
+    LongRunningWorkflowManager,
+    MetaOrchestrator,
+    MultiTenantManager,
+    ResourceQuota,
+    TaskQueue,
+    TaskQueuePriority,
+    WorkerPool,
+    WorkflowHierarchyManager,
+)
 
 # ============================================================================
 # TEST TASK QUEUE AND WORKER POOL
@@ -806,8 +816,9 @@ class TestDemo:
     @pytest.mark.asyncio
     async def test_demo_extended_features(self):
         """Test that demo runs without errors"""
-        from project_ai.tarl.integrations.orchestration_extended import \
-            demo_extended_features
+        from project_ai.tarl.integrations.orchestration_extended import (
+            demo_extended_features,
+        )
 
         # Should complete without exceptions
         await demo_extended_features()

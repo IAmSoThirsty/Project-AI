@@ -3,17 +3,20 @@ Kernel-owned Liara orchestration.
 """
 
 from datetime import datetime
-from cognition.liara_guard import authorize_liara, revoke_liara, LiaraViolation
+
 from cognition.audit import audit
+from cognition.liara_guard import LiaraViolation, authorize_liara, revoke_liara
 
 COOLDOWN_SECONDS = 300
 _last_revocation = None
+
 
 def kernel_health_check(pillar_status: dict):
     for pillar, ok in pillar_status.items():
         if not ok:
             return pillar
     return None
+
 
 def maybe_activate_liara(pillar_status: dict):
     global _last_revocation
@@ -34,6 +37,7 @@ def maybe_activate_liara(pillar_status: dict):
     except LiaraViolation as e:
         audit("LIARA_VIOLATION", str(e))
         return None
+
 
 def restore_pillar():
     global _last_revocation

@@ -3,8 +3,18 @@ from __future__ import annotations
 import logging
 import os
 
-from PyQt6.QtWidgets import (QHBoxLayout, QLabel, QListWidget, QMainWindow, QMessageBox,
-                             QPushButton, QTabWidget, QTextEdit, QVBoxLayout, QWidget)
+from PyQt6.QtWidgets import (
+    QHBoxLayout,
+    QLabel,
+    QListWidget,
+    QMainWindow,
+    QMessageBox,
+    QPushButton,
+    QTabWidget,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+)
 
 from app.agents.expert_agent import ExpertAgent
 from app.core.access_control import get_access_control

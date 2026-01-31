@@ -7,8 +7,11 @@ from pathlib import Path
 
 import pytest
 
-from app.security.data_validation import (DataPoisoningDefense, ParsedData,
-                                          SecureDataParser)
+from app.security.data_validation import (
+    DataPoisoningDefense,
+    ParsedData,
+    SecureDataParser,
+)
 from app.security.environment_hardening import EnvironmentHardening
 
 

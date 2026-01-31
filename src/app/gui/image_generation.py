@@ -9,8 +9,17 @@ import logging
 
 from PyQt6.QtCore import Qt, QThread, pyqtSignal
 from PyQt6.QtGui import QFont, QPixmap
-from PyQt6.QtWidgets import (QComboBox, QFrame, QHBoxLayout, QLabel, QPushButton,
-                             QScrollArea, QTextEdit, QVBoxLayout, QWidget)
+from PyQt6.QtWidgets import (
+    QComboBox,
+    QFrame,
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QScrollArea,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+)
 
 from app.core.image_generator import ImageGenerationBackend, ImageGenerator, ImageStyle
 

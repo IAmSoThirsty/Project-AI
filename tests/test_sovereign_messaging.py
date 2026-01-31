@@ -49,8 +49,12 @@ class TestCommunicationCode:
         """Test that different instances get unique codes."""
         with tempfile.TemporaryDirectory() as tmpdir1:
             with tempfile.TemporaryDirectory() as tmpdir2:
-                messaging1 = SovereignMessaging(data_dir=tmpdir1, participant_name="user1")
-                messaging2 = SovereignMessaging(data_dir=tmpdir2, participant_name="user2")
+                messaging1 = SovereignMessaging(
+                    data_dir=tmpdir1, participant_name="user1"
+                )
+                messaging2 = SovereignMessaging(
+                    data_dir=tmpdir2, participant_name="user2"
+                )
 
                 code1 = messaging1.get_communication_code()
                 code2 = messaging2.get_communication_code()
@@ -65,7 +69,7 @@ class TestCommunicationCode:
             valid_codes = [
                 "AB3D-7F2K-9QWE-5RT8",
                 "1234-5678-90AB-CDEF",
-                "AAAA-BBBB-CCCC-DDDD"
+                "AAAA-BBBB-CCCC-DDDD",
             ]
 
             for code in valid_codes:
@@ -117,7 +121,9 @@ class TestEncryption:
             test_data = b"Hello World"
 
             # Encrypt with public key
-            encrypted = messaging._encrypt_with_rsa(test_data, messaging.get_public_key())
+            encrypted = messaging._encrypt_with_rsa(
+                test_data, messaging.get_public_key()
+            )
             assert encrypted != test_data
             assert len(encrypted) > 0
 
@@ -156,21 +162,16 @@ class TestEncryption:
 
                 # Pair them
                 sender.pair_with_contact(
-                    "Bob",
-                    receiver.get_communication_code(),
-                    receiver.get_public_key()
+                    "Bob", receiver.get_communication_code(), receiver.get_public_key()
                 )
                 receiver.pair_with_contact(
-                    "Alice",
-                    sender.get_communication_code(),
-                    sender.get_public_key()
+                    "Alice", sender.get_communication_code(), sender.get_public_key()
                 )
 
                 # Send message
                 message_text = "Secret message from Alice to Bob!"
                 message_id = sender.send_message(
-                    receiver.get_communication_code(),
-                    message_text
+                    receiver.get_communication_code(), message_text
                 )
 
                 assert message_id is not None
@@ -185,7 +186,7 @@ class TestEncryption:
                     sender.get_communication_code(),
                     sent_msg["encrypted_aes_key"],
                     sent_msg["iv"],
-                    sent_msg["ciphertext"]
+                    sent_msg["ciphertext"],
                 )
 
                 assert received_msg is not None
@@ -204,9 +205,7 @@ class TestContactPairing:
 
                 # Pair user1 with user2
                 result = user1.pair_with_contact(
-                    "User2",
-                    user2.get_communication_code(),
-                    user2.get_public_key()
+                    "User2", user2.get_communication_code(), user2.get_public_key()
                 )
 
                 assert result is True
@@ -218,11 +217,7 @@ class TestContactPairing:
         with tempfile.TemporaryDirectory() as tmpdir:
             user = SovereignMessaging(data_dir=tmpdir, participant_name="User")
 
-            result = user.pair_with_contact(
-                "Invalid",
-                "INVALID-CODE",
-                "dummy_key"
-            )
+            result = user.pair_with_contact("Invalid", "INVALID-CODE", "dummy_key")
 
             assert result is False
 
@@ -231,7 +226,9 @@ class TestContactPairing:
         with tempfile.TemporaryDirectory() as tmpdir1:
             with tempfile.TemporaryDirectory() as tmpdir2:
                 user = SovereignMessaging(data_dir=tmpdir1, participant_name="User")
-                ai = SovereignMessaging(data_dir=tmpdir2, participant_name="AI_Assistant")
+                ai = SovereignMessaging(
+                    data_dir=tmpdir2, participant_name="AI_Assistant"
+                )
                 ai.set_participant_type(ParticipantType.AI)
 
                 # Pair user with AI
@@ -239,7 +236,7 @@ class TestContactPairing:
                     "AI_Assistant",
                     ai.get_communication_code(),
                     ai.get_public_key(),
-                    participant_type=ParticipantType.AI
+                    participant_type=ParticipantType.AI,
                 )
 
                 assert result is True
@@ -255,7 +252,9 @@ class TestContactPairing:
             user1.pair_with_contact("User2", "ABCD-1234-EFGH-5678", "dummy_key")
 
             # Reload and verify
-            user1_reloaded = SovereignMessaging(data_dir=tmpdir, participant_name="User1")
+            user1_reloaded = SovereignMessaging(
+                data_dir=tmpdir, participant_name="User1"
+            )
             contacts = user1_reloaded.get_contacts()
             assert "ABCD-1234-EFGH-5678" in contacts
 
@@ -268,19 +267,20 @@ class TestMessaging:
         with tempfile.TemporaryDirectory() as tmpdir1:
             with tempfile.TemporaryDirectory() as tmpdir2:
                 sender = SovereignMessaging(data_dir=tmpdir1, participant_name="Sender")
-                receiver = SovereignMessaging(data_dir=tmpdir2, participant_name="Receiver")
+                receiver = SovereignMessaging(
+                    data_dir=tmpdir2, participant_name="Receiver"
+                )
 
                 # Pair
                 sender.pair_with_contact(
                     "Receiver",
                     receiver.get_communication_code(),
-                    receiver.get_public_key()
+                    receiver.get_public_key(),
                 )
 
                 # Send
                 message_id = sender.send_message(
-                    receiver.get_communication_code(),
-                    "Test message"
+                    receiver.get_communication_code(), "Test message"
                 )
 
                 assert message_id is not None
@@ -300,18 +300,18 @@ class TestMessaging:
         with tempfile.TemporaryDirectory() as tmpdir1:
             with tempfile.TemporaryDirectory() as tmpdir2:
                 sender = SovereignMessaging(data_dir=tmpdir1, participant_name="Sender")
-                receiver = SovereignMessaging(data_dir=tmpdir2, participant_name="Receiver")
+                receiver = SovereignMessaging(
+                    data_dir=tmpdir2, participant_name="Receiver"
+                )
 
                 # Mutual pairing
                 sender.pair_with_contact(
                     "Receiver",
                     receiver.get_communication_code(),
-                    receiver.get_public_key()
+                    receiver.get_public_key(),
                 )
                 receiver.pair_with_contact(
-                    "Sender",
-                    sender.get_communication_code(),
-                    sender.get_public_key()
+                    "Sender", sender.get_communication_code(), sender.get_public_key()
                 )
 
                 # Send
@@ -326,7 +326,7 @@ class TestMessaging:
                     sender.get_communication_code(),
                     sent_msg["encrypted_aes_key"],
                     sent_msg["iv"],
-                    sent_msg["ciphertext"]
+                    sent_msg["ciphertext"],
                 )
 
                 assert received is not None
@@ -339,10 +339,7 @@ class TestMessaging:
             receiver = SovereignMessaging(data_dir=tmpdir, participant_name="Receiver")
 
             received = receiver.receive_message(
-                "UNKNOWN-SENDER-CODE-1234",
-                "aabbcc",
-                "ddeeff",
-                "112233"
+                "UNKNOWN-SENDER-CODE-1234", "aabbcc", "ddeeff", "112233"
             )
 
             assert received is None
@@ -356,25 +353,22 @@ class TestMessageLifecycle:
         with tempfile.TemporaryDirectory() as tmpdir1:
             with tempfile.TemporaryDirectory() as tmpdir2:
                 sender = SovereignMessaging(data_dir=tmpdir1, participant_name="Sender")
-                receiver = SovereignMessaging(data_dir=tmpdir2, participant_name="Receiver")
+                receiver = SovereignMessaging(
+                    data_dir=tmpdir2, participant_name="Receiver"
+                )
 
                 # Pair
                 sender.pair_with_contact(
                     "Receiver",
                     receiver.get_communication_code(),
-                    receiver.get_public_key()
+                    receiver.get_public_key(),
                 )
                 receiver.pair_with_contact(
-                    "Sender",
-                    sender.get_communication_code(),
-                    sender.get_public_key()
+                    "Sender", sender.get_communication_code(), sender.get_public_key()
                 )
 
                 # Send - status is SENT
-                sender.send_message(
-                    receiver.get_communication_code(),
-                    "Test"
-                )
+                sender.send_message(receiver.get_communication_code(), "Test")
                 sent_msg = sender.get_messages()[0]
                 assert sent_msg["status"] == MessageStatus.SENT.value
 
@@ -384,7 +378,7 @@ class TestMessageLifecycle:
                     sender.get_communication_code(),
                     sent_msg_data["encrypted_aes_key"],
                     sent_msg_data["iv"],
-                    sent_msg_data["ciphertext"]
+                    sent_msg_data["ciphertext"],
                 )
                 assert received["status"] == MessageStatus.DELIVERED.value
 
@@ -404,19 +398,21 @@ class TestMessageLifecycle:
             messaging = SovereignMessaging(data_dir=tmpdir, participant_name="Test")
 
             # Create a dummy received message
-            messaging.messages.append({
-                "message_id": "test123",
-                "sender_code": "SENDER-CODE",
-                "sender_name": "Sender",
-                "recipient_code": messaging.get_communication_code(),
-                "recipient_name": "Test",
-                "content": "Test message",
-                "status": MessageStatus.DELIVERED.value,
-                "sent_at": None,
-                "delivered_at": datetime.now().isoformat(),
-                "seen_at": None,
-                "delete_at": None
-            })
+            messaging.messages.append(
+                {
+                    "message_id": "test123",
+                    "sender_code": "SENDER-CODE",
+                    "sender_name": "Sender",
+                    "recipient_code": messaging.get_communication_code(),
+                    "recipient_name": "Test",
+                    "content": "Test message",
+                    "status": MessageStatus.DELIVERED.value,
+                    "sent_at": None,
+                    "delivered_at": datetime.now().isoformat(),
+                    "seen_at": None,
+                    "delete_at": None,
+                }
+            )
 
             # Mark as seen
             messaging.mark_message_seen("test123")
@@ -439,19 +435,21 @@ class TestMessageLifecycle:
 
             # Create message with past delete time
             past_time = datetime.now() - timedelta(hours=2)
-            messaging.messages.append({
-                "message_id": "expired123",
-                "sender_code": "SENDER-CODE",
-                "sender_name": "Sender",
-                "recipient_code": messaging.get_communication_code(),
-                "recipient_name": "Test",
-                "content": "Secret content",
-                "status": MessageStatus.SEEN.value,
-                "sent_at": None,
-                "delivered_at": past_time.isoformat(),
-                "seen_at": past_time.isoformat(),
-                "delete_at": (past_time + timedelta(hours=1)).isoformat()
-            })
+            messaging.messages.append(
+                {
+                    "message_id": "expired123",
+                    "sender_code": "SENDER-CODE",
+                    "sender_name": "Sender",
+                    "recipient_code": messaging.get_communication_code(),
+                    "recipient_name": "Test",
+                    "content": "Secret content",
+                    "status": MessageStatus.SEEN.value,
+                    "sent_at": None,
+                    "delivered_at": past_time.isoformat(),
+                    "seen_at": past_time.isoformat(),
+                    "delete_at": (past_time + timedelta(hours=1)).isoformat(),
+                }
+            )
 
             # Process self-destruct
             deleted_count = messaging.process_self_destruct()
@@ -469,19 +467,21 @@ class TestMessageLifecycle:
 
             # Create message with future delete time
             future_time = datetime.now() + timedelta(hours=1)
-            messaging.messages.append({
-                "message_id": "active123",
-                "sender_code": "SENDER-CODE",
-                "sender_name": "Sender",
-                "recipient_code": messaging.get_communication_code(),
-                "recipient_name": "Test",
-                "content": "Active content",
-                "status": MessageStatus.SEEN.value,
-                "sent_at": None,
-                "delivered_at": datetime.now().isoformat(),
-                "seen_at": datetime.now().isoformat(),
-                "delete_at": future_time.isoformat()
-            })
+            messaging.messages.append(
+                {
+                    "message_id": "active123",
+                    "sender_code": "SENDER-CODE",
+                    "sender_name": "Sender",
+                    "recipient_code": messaging.get_communication_code(),
+                    "recipient_name": "Test",
+                    "content": "Active content",
+                    "status": MessageStatus.SEEN.value,
+                    "sent_at": None,
+                    "delivered_at": datetime.now().isoformat(),
+                    "seen_at": datetime.now().isoformat(),
+                    "delete_at": future_time.isoformat(),
+                }
+            )
 
             # Process self-destruct
             deleted_count = messaging.process_self_destruct()
@@ -517,23 +517,23 @@ class TestDataPersistence:
         with tempfile.TemporaryDirectory() as tmpdir1:
             with tempfile.TemporaryDirectory() as tmpdir2:
                 sender = SovereignMessaging(data_dir=tmpdir1, participant_name="Sender")
-                receiver = SovereignMessaging(data_dir=tmpdir2, participant_name="Receiver")
+                receiver = SovereignMessaging(
+                    data_dir=tmpdir2, participant_name="Receiver"
+                )
 
                 # Pair and send
                 sender.pair_with_contact(
                     "Receiver",
                     receiver.get_communication_code(),
-                    receiver.get_public_key()
+                    receiver.get_public_key(),
                 )
                 message_id = sender.send_message(
-                    receiver.get_communication_code(),
-                    "Persistent message"
+                    receiver.get_communication_code(), "Persistent message"
                 )
 
                 # Reload sender and verify
                 sender_reloaded = SovereignMessaging(
-                    data_dir=tmpdir1,
-                    participant_name="Sender"
+                    data_dir=tmpdir1, participant_name="Sender"
                 )
                 messages = sender_reloaded.get_messages()
                 assert len(messages) == 1
@@ -589,10 +589,12 @@ class TestParticipantTypes:
 
             # Reload and verify persistence
             messaging_reloaded = SovereignMessaging(
-                data_dir=tmpdir,
-                participant_name="AI"
+                data_dir=tmpdir, participant_name="AI"
             )
-            assert messaging_reloaded.identity["participant_type"] == ParticipantType.AI.value
+            assert (
+                messaging_reloaded.identity["participant_type"]
+                == ParticipantType.AI.value
+            )
 
     def test_user_ai_conversation(self):
         """Test conversation between user and AI."""
@@ -607,13 +609,13 @@ class TestParticipantTypes:
                     "AI_Agent",
                     ai.get_communication_code(),
                     ai.get_public_key(),
-                    participant_type=ParticipantType.AI
+                    participant_type=ParticipantType.AI,
                 )
                 ai.pair_with_contact(
                     "Human",
                     user.get_communication_code(),
                     user.get_public_key(),
-                    participant_type=ParticipantType.USER
+                    participant_type=ParticipantType.USER,
                 )
 
                 # User sends to AI
@@ -625,7 +627,7 @@ class TestParticipantTypes:
                     user.get_communication_code(),
                     user_msg["encrypted_aes_key"],
                     user_msg["iv"],
-                    user_msg["ciphertext"]
+                    user_msg["ciphertext"],
                 )
                 assert ai_received["content"] == "Hello AI!"
 
@@ -638,7 +640,7 @@ class TestParticipantTypes:
                     ai.get_communication_code(),
                     ai_msg["encrypted_aes_key"],
                     ai_msg["iv"],
-                    ai_msg["ciphertext"]
+                    ai_msg["ciphertext"],
                 )
                 assert user_received["content"] == "Hello Human!"
 

@@ -140,7 +140,9 @@ class NetworkTopology:
     layer_sizes: list[int]
     sparsity: float  # Fraction of active connections
     hyperbolic_dim: int  # Dimensionality of Poincaré ball
-    curvature: float = 1.0  # Hyperbolic curvature (default: -1, represented as positive)
+    curvature: float = (
+        1.0  # Hyperbolic curvature (default: -1, represented as positive)
+    )
 
 
 @dataclass
@@ -536,9 +538,7 @@ class ResonantSparseGeometryNetwork:
 
         return inhibited
 
-    def _kwta_activation(
-        self, x: NDArray[np.float32], k: int
-    ) -> NDArray[np.float32]:
+    def _kwta_activation(self, x: NDArray[np.float32], k: int) -> NDArray[np.float32]:
         """
         k-winner-take-all activation.
 
@@ -615,7 +615,9 @@ class ResonantSparseGeometryNetwork:
             activation = self._apply_local_inhibition(activation, embeddings)
 
             # Apply k-WTA sparsity
-            activation = self._kwta_activation(activation, self.inhibition_params.kwta_k)
+            activation = self._kwta_activation(
+                activation, self.inhibition_params.kwta_k
+            )
 
             # Store diagnostics
             diagnostics["layer_activations"].append(activation.copy())
@@ -684,9 +686,15 @@ class ResonantSparseGeometryNetwork:
         Args:
             state: Dictionary containing network state
         """
-        self.embeddings = [np.array(emb, dtype=np.float32) for emb in state["embeddings"]]
-        self.weights_fast = [np.array(w, dtype=np.float32) for w in state["weights_fast"]]
-        self.weights_slow = [np.array(w, dtype=np.float32) for w in state["weights_slow"]]
+        self.embeddings = [
+            np.array(emb, dtype=np.float32) for emb in state["embeddings"]
+        ]
+        self.weights_fast = [
+            np.array(w, dtype=np.float32) for w in state["weights_fast"]
+        ]
+        self.weights_slow = [
+            np.array(w, dtype=np.float32) for w in state["weights_slow"]
+        ]
         self.masks = [np.array(m, dtype=np.float32) for m in state["masks"]]
 
 
@@ -735,10 +743,12 @@ class CorticalModule:
 
         # Initialize weights (feedforward and lateral)
         scale = np.sqrt(2.0 / input_dim)
-        self.weights_ff = np.random.randn(input_dim, output_dim).astype(np.float32) * scale
-        self.weights_lateral = np.random.randn(output_dim, output_dim).astype(
-            np.float32
-        ) * 0.01
+        self.weights_ff = (
+            np.random.randn(input_dim, output_dim).astype(np.float32) * scale
+        )
+        self.weights_lateral = (
+            np.random.randn(output_dim, output_dim).astype(np.float32) * 0.01
+        )
 
         # Oscillatory phase
         self.phase = 0.0
@@ -1089,7 +1099,9 @@ class BioBrainMappingSystem:
         resonance_params = ResonanceParameters(
             frequency=self.config["resonance"]["frequency"],
             modulation_depth=self.config["resonance"]["modulation_depth"],
-            phase_coherence_threshold=self.config["resonance"]["phase_coherence_threshold"],
+            phase_coherence_threshold=self.config["resonance"][
+                "phase_coherence_threshold"
+            ],
         )
 
         self.rsgn = ResonantSparseGeometryNetwork(
@@ -1247,14 +1259,22 @@ class BioBrainMappingSystem:
         # Normalize RSGN weights
         for layer_idx in range(len(self.rsgn.weights_fast)):
             # Normalize fast weights
-            norms = np.linalg.norm(self.rsgn.weights_fast[layer_idx], axis=0, keepdims=True)
+            norms = np.linalg.norm(
+                self.rsgn.weights_fast[layer_idx], axis=0, keepdims=True
+            )
             norms = np.maximum(norms, 1e-10)
-            self.rsgn.weights_fast[layer_idx] = self.rsgn.weights_fast[layer_idx] / norms
+            self.rsgn.weights_fast[layer_idx] = (
+                self.rsgn.weights_fast[layer_idx] / norms
+            )
 
             # Normalize slow weights
-            norms = np.linalg.norm(self.rsgn.weights_slow[layer_idx], axis=0, keepdims=True)
+            norms = np.linalg.norm(
+                self.rsgn.weights_slow[layer_idx], axis=0, keepdims=True
+            )
             norms = np.maximum(norms, 1e-10)
-            self.rsgn.weights_slow[layer_idx] = self.rsgn.weights_slow[layer_idx] / norms
+            self.rsgn.weights_slow[layer_idx] = (
+                self.rsgn.weights_slow[layer_idx] / norms
+            )
 
         # Update consolidation tracking
         self.consolidation_count += 1
@@ -1266,9 +1286,7 @@ class BioBrainMappingSystem:
         # Persist state
         self.save_state()
 
-        logger.info(
-            f"Memory consolidation complete (count={self.consolidation_count})"
-        )
+        logger.info(f"Memory consolidation complete (count={self.consolidation_count})")
 
     def get_diagnostics(self) -> dict[str, Any]:
         """
@@ -1339,7 +1357,9 @@ class BioBrainMappingSystem:
         self.consolidation_count = state.get("consolidation_count", 0)
 
         last_cons = state.get("last_consolidation")
-        self.last_consolidation = datetime.fromisoformat(last_cons) if last_cons else None
+        self.last_consolidation = (
+            datetime.fromisoformat(last_cons) if last_cons else None
+        )
 
         # Load RSGN state
         self.rsgn.load_state(state["rsgn_state"])

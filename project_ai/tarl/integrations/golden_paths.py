@@ -9,8 +9,13 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any
 
-from project_ai.tarl.integrations import (Capability, ExtendedTarlStackBox,
-                                          FullGovernanceStack, Policy, ResourceQuota)
+from project_ai.tarl.integrations import (
+    Capability,
+    ExtendedTarlStackBox,
+    FullGovernanceStack,
+    Policy,
+    ResourceQuota,
+)
 
 
 @dataclass

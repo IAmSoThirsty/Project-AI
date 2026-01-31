@@ -347,7 +347,7 @@ class TestCerberusChiefOfSecurity:
         """Test that Cerberus has Chief of Security title."""
         tower = get_global_watch_tower()
         cerberus = tower.get_chief_of_security()
-        
+
         assert cerberus is not None
         assert hasattr(cerberus, "title")
         assert cerberus.title == "Chief of Security"
@@ -356,24 +356,24 @@ class TestCerberusChiefOfSecurity:
         """Test that border patrol agents are registered with Cerberus."""
         tower = get_global_watch_tower()
         status = tower.get_security_status()
-        
+
         assert "chief_of_security" in status
         assert status["chief_of_security"] == "Cerberus"
         assert "registered_agents" in status
         assert "border_patrol" in status["registered_agents"]
-        
+
         # Should have registered port admins, towers, gates, and verifiers
         assert status["registered_agents"]["border_patrol"] > 0
 
     def test_register_active_defense_agents(self):
         """Test registering active defense agents with Cerberus."""
         tower = get_global_watch_tower()
-        
+
         # Register some active defense agents
         tower.register_security_agent("active_defense", "safety_guard_1")
         tower.register_security_agent("active_defense", "constitutional_guardrail_1")
         tower.register_security_agent("active_defense", "tarl_protector_1")
-        
+
         status = tower.get_security_status()
         assert status["registered_agents"]["active_defense"] == 3
         assert "safety_guard_1" in status["agent_details"]["active_defense"]
@@ -383,12 +383,12 @@ class TestCerberusChiefOfSecurity:
     def test_register_red_team_agents(self):
         """Test registering red team agents with Cerberus."""
         tower = get_global_watch_tower()
-        
+
         # Register some red team agents
         tower.register_security_agent("red_team", "red_team_agent_1")
         tower.register_security_agent("red_team", "code_adversary_1")
         tower.register_security_agent("red_team", "jailbreak_tester_1")
-        
+
         status = tower.get_security_status()
         assert status["registered_agents"]["red_team"] == 3
         assert "red_team_agent_1" in status["agent_details"]["red_team"]
@@ -396,12 +396,12 @@ class TestCerberusChiefOfSecurity:
     def test_register_oversight_agents(self):
         """Test registering oversight agents with Cerberus."""
         tower = get_global_watch_tower()
-        
+
         # Register some oversight agents
         tower.register_security_agent("oversight", "oversight_agent_1")
         tower.register_security_agent("oversight", "validator_agent_1")
         tower.register_security_agent("oversight", "explainability_agent_1")
-        
+
         status = tower.get_security_status()
         assert status["registered_agents"]["oversight"] == 3
         assert "oversight_agent_1" in status["agent_details"]["oversight"]
@@ -409,20 +409,20 @@ class TestCerberusChiefOfSecurity:
     def test_security_status_includes_all_categories(self):
         """Test that security status includes all agent categories."""
         tower = get_global_watch_tower()
-        
+
         # Register agents in all categories
         tower.register_security_agent("active_defense", "test_defense")
         tower.register_security_agent("red_team", "test_red")
         tower.register_security_agent("oversight", "test_oversight")
-        
+
         status = tower.get_security_status()
-        
+
         assert "registered_agents" in status
         assert "border_patrol" in status["registered_agents"]
         assert "active_defense" in status["registered_agents"]
         assert "red_team" in status["registered_agents"]
         assert "oversight" in status["registered_agents"]
-        
+
         # All categories should have at least one agent
         assert status["registered_agents"]["border_patrol"] > 0
         assert status["registered_agents"]["active_defense"] == 1
@@ -432,11 +432,11 @@ class TestCerberusChiefOfSecurity:
     def test_duplicate_agent_registration_ignored(self):
         """Test that duplicate agent registration is ignored."""
         tower = get_global_watch_tower()
-        
+
         # Register same agent twice
         tower.register_security_agent("active_defense", "duplicate_agent")
         tower.register_security_agent("active_defense", "duplicate_agent")
-        
+
         status = tower.get_security_status()
         # Should only be counted once
         assert status["agent_details"]["active_defense"].count("duplicate_agent") == 1
@@ -445,14 +445,14 @@ class TestCerberusChiefOfSecurity:
         """Test that Cerberus tracks incidents properly."""
         tower = get_global_watch_tower()
         cerberus = tower.get_chief_of_security()
-        
+
         initial_count = len(cerberus.incidents)
-        
+
         # Record an incident
         cerberus.record_incident({"type": "test", "details": "test incident"})
-        
+
         assert len(cerberus.incidents) == initial_count + 1
-        
+
         # Verify in security status
         status = tower.get_security_status()
         assert status["total_incidents"] == initial_count + 1

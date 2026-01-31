@@ -28,50 +28,43 @@ import logging
 import sys
 import threading
 import time
-from dataclasses import asdict, dataclass, field
-from datetime import datetime, timezone
+from collections.abc import Callable
+from dataclasses import asdict, dataclass
+from datetime import UTC, datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any
+
+from app.core.advanced_behavioral_validation import (
+    create_validation_system,
+)
 
 # Import all God Tier systems
 from app.core.distributed_event_streaming import (
     EventType,
     StreamBackend,
     create_streaming_system,
-    get_streaming_system,
+)
+from app.core.guardian_approval_system import (
+    ImpactLevel,
+    create_guardian_system,
+)
+from app.core.health_monitoring_continuity import (
+    create_health_monitoring_system,
+)
+from app.core.live_metrics_dashboard import (
+    create_dashboard,
 )
 from app.core.security_operations_center import (
     SecurityEvent,
     ThreatLevel,
     create_soc,
-    get_soc,
-)
-from app.core.guardian_approval_system import (
-    ImpactLevel,
-    create_guardian_system,
-    get_guardian_system,
-)
-from app.core.live_metrics_dashboard import (
-    MetricCategory,
-    create_dashboard,
-    get_dashboard,
-)
-from app.core.advanced_behavioral_validation import (
-    create_validation_system,
-    get_validation_system,
-)
-from app.core.health_monitoring_continuity import (
-    HealthStatus,
-    OperatingMode,
-    create_health_monitoring_system,
-    get_health_system,
 )
 
 # Import existing God Tier systems for integration
 try:
-    from app.core.distributed_cluster_coordinator import create_cluster_coordinator
     from app.core.advanced_learning_systems import ReinforcementLearningAgent
+    from app.core.distributed_cluster_coordinator import create_cluster_coordinator
     from app.core.hardware_auto_discovery import HardwareAutoDiscoverySystem
 except ImportError as e:
     logging.warning(f"Optional God Tier systems not available: {e}")
@@ -126,12 +119,12 @@ class GodTierConfig:
     # Hardware Discovery (optional)
     hardware_discovery_enabled: bool = False
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return asdict(self)
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "GodTierConfig":
+    def from_dict(cls, data: dict[str, Any]) -> "GodTierConfig":
         """Create from dictionary."""
         return cls(**data)
 
@@ -150,10 +143,10 @@ class GodTierConfig:
 class GodTierIntegratedSystem:
     """Main integrated God Tier system orchestrator."""
 
-    def __init__(self, config: Optional[GodTierConfig] = None):
+    def __init__(self, config: GodTierConfig | None = None):
         self.config = config or GodTierConfig()
         self.status = SystemStatus.INITIALIZING
-        self.start_time: Optional[datetime] = None
+        self.start_time: datetime | None = None
 
         # System components (initialized on start)
         self.streaming_system = None
@@ -168,7 +161,7 @@ class GodTierIntegratedSystem:
         self.hardware_system = None
 
         # Integration state
-        self.event_handlers: Dict[str, List[Callable]] = {}
+        self.event_handlers: dict[str, list[Callable]] = {}
         self.lock = threading.RLock()
 
         # Setup data directory
@@ -200,7 +193,7 @@ class GodTierIntegratedSystem:
             logger.info("=" * 80)
 
             self.status = SystemStatus.INITIALIZING
-            self.start_time = datetime.now(timezone.utc)
+            self.start_time = datetime.now(UTC)
 
             # 1. Initialize Event Streaming
             if self.config.streaming_enabled:
@@ -264,7 +257,9 @@ class GodTierIntegratedSystem:
             if self.config.hardware_discovery_enabled:
                 try:
                     logger.info("Initializing Hardware Auto-Discovery...")
-                    self.hardware_system = HardwareAutoDiscoverySystem("god_tier_hardware")
+                    self.hardware_system = HardwareAutoDiscoverySystem(
+                        "god_tier_hardware"
+                    )
                     self.hardware_system.start()
                     logger.info("✅ Hardware Auto-Discovery initialized")
                 except Exception as e:
@@ -296,7 +291,7 @@ class GodTierIntegratedSystem:
                     self.dashboard.health_monitor.record_component_health(
                         "soc",
                         True,
-                        (datetime.now(timezone.utc) - self.start_time).total_seconds(),
+                        (datetime.now(UTC) - self.start_time).total_seconds(),
                     )
 
                 self.soc.register_event_handler(soc_event_handler)
@@ -308,7 +303,9 @@ class GodTierIntegratedSystem:
                     if event.event_type == EventType.SECURITY_EVENT.value:
                         sec_event = SecurityEvent(
                             event_type=event.data.get("type", "unknown"),
-                            threat_level=event.data.get("threat_level", ThreatLevel.INFO.value),
+                            threat_level=event.data.get(
+                                "threat_level", ThreatLevel.INFO.value
+                            ),
                             description=event.data.get("description", ""),
                         )
                         self.soc.ingest_event(sec_event)
@@ -378,12 +375,12 @@ class GodTierIntegratedSystem:
             logger.error(f"Error during shutdown: {e}")
             return False
 
-    def get_system_status(self) -> Dict[str, Any]:
+    def get_system_status(self) -> dict[str, Any]:
         """Get comprehensive system status."""
         try:
             with self.lock:
                 uptime = (
-                    (datetime.now(timezone.utc) - self.start_time).total_seconds()
+                    (datetime.now(UTC) - self.start_time).total_seconds()
                     if self.start_time
                     else 0
                 )
@@ -438,14 +435,17 @@ class GodTierIntegratedSystem:
             logger.error(f"Error getting system status: {e}")
             return {"error": str(e)}
 
-    def process_event(self, event_type: str, data: Dict[str, Any]) -> bool:
+    def process_event(self, event_type: str, data: dict[str, Any]) -> bool:
         """Process event through appropriate systems."""
         try:
             # Route to event streaming
             if self.streaming_system:
                 event_type_enum = EventType[event_type.upper()]
                 self.streaming_system.publish(
-                    topic=event_type.lower(), event_type=event_type_enum, data=data, source=self.config.system_id
+                    topic=event_type.lower(),
+                    event_type=event_type_enum,
+                    data=data,
+                    source=self.config.system_id,
                 )
 
             # Record metrics
@@ -480,11 +480,13 @@ class GodTierIntegratedSystem:
 
 
 # Global instance
-_god_tier_system: Optional[GodTierIntegratedSystem] = None
+_god_tier_system: GodTierIntegratedSystem | None = None
 _system_lock = threading.Lock()
 
 
-def initialize_god_tier_system(config: Optional[GodTierConfig] = None) -> GodTierIntegratedSystem:
+def initialize_god_tier_system(
+    config: GodTierConfig | None = None,
+) -> GodTierIntegratedSystem:
     """Initialize global God Tier system."""
     global _god_tier_system
     with _system_lock:
@@ -494,7 +496,7 @@ def initialize_god_tier_system(config: Optional[GodTierConfig] = None) -> GodTie
         return _god_tier_system
 
 
-def get_god_tier_system() -> Optional[GodTierIntegratedSystem]:
+def get_god_tier_system() -> GodTierIntegratedSystem | None:
     """Get global God Tier system instance."""
     return _god_tier_system
 
@@ -511,7 +513,7 @@ def shutdown_god_tier_system() -> bool:
 
 
 # Convenience functions for common operations
-def publish_event(event_type: str, data: Dict[str, Any]) -> bool:
+def publish_event(event_type: str, data: dict[str, Any]) -> bool:
     """Publish event to God Tier system."""
     system = get_god_tier_system()
     if system:
@@ -519,7 +521,7 @@ def publish_event(event_type: str, data: Dict[str, Any]) -> bool:
     return False
 
 
-def get_system_status() -> Dict[str, Any]:
+def get_system_status() -> dict[str, Any]:
     """Get God Tier system status."""
     system = get_god_tier_system()
     if system:
