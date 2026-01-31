@@ -13,8 +13,13 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from app.security import (AgentEncapsulation, DataPoisoningDefense,
-                          SecureDatabaseManager, SecureDataParser, SecurityMonitor)
+from app.security import (
+    AgentEncapsulation,
+    DataPoisoningDefense,
+    SecureDatabaseManager,
+    SecureDataParser,
+    SecurityMonitor,
+)
 from app.security.agent_security import NumericalProtection, RuntimeFuzzer
 from app.security.web_service import InputValidator, RateLimiter, SecureWebHandler
 

@@ -3,18 +3,14 @@ Robotic Mainframe Integration System for Project-AI
 Provides comprehensive hardware abstraction and robot control with Four Laws enforcement.
 Production-grade, monolithic, God Tier architecture.
 """
-import hashlib
-import json
+
 import logging
-import os
 import threading
-import time
 from abc import ABC, abstractmethod
-from collections import deque
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple, Callable
+from typing import Any
 
 import numpy as np
 
@@ -23,6 +19,7 @@ logger = logging.getLogger(__name__)
 
 class RobotJointType(Enum):
     """Types of robot joints"""
+
     REVOLUTE = "revolute"  # Rotational joint
     PRISMATIC = "prismatic"  # Linear joint
     FIXED = "fixed"  # Fixed connection
@@ -31,6 +28,7 @@ class RobotJointType(Enum):
 
 class MotorType(Enum):
     """Types of motors"""
+
     SERVO = "servo"  # Position-controlled
     STEPPER = "stepper"  # Step-controlled
     DC_MOTOR = "dc_motor"  # Speed-controlled
@@ -39,6 +37,7 @@ class MotorType(Enum):
 
 class SensorType(Enum):
     """Types of sensors"""
+
     CAMERA = "camera"
     LIDAR = "lidar"
     ULTRASONIC = "ultrasonic"
@@ -53,6 +52,7 @@ class SensorType(Enum):
 
 class CommunicationProtocol(Enum):
     """Hardware communication protocols"""
+
     UART = "uart"
     I2C = "i2c"
     SPI = "spi"
@@ -64,6 +64,7 @@ class CommunicationProtocol(Enum):
 
 class RobotState(Enum):
     """Robot operational states"""
+
     IDLE = "idle"
     INITIALIZING = "initializing"
     READY = "ready"
@@ -77,6 +78,7 @@ class RobotState(Enum):
 @dataclass
 class HardwareLimit:
     """Hardware safety limits"""
+
     min_value: float
     max_value: float
     max_velocity: float
@@ -87,6 +89,7 @@ class HardwareLimit:
 @dataclass
 class JointState:
     """State of a single joint"""
+
     joint_id: str
     joint_type: RobotJointType
     position: float  # radians or meters
@@ -101,6 +104,7 @@ class JointState:
 @dataclass
 class SensorReading:
     """Sensor data reading"""
+
     sensor_id: str
     sensor_type: SensorType
     value: Any
@@ -112,11 +116,12 @@ class SensorReading:
 @dataclass
 class RobotConfiguration:
     """Robot hardware configuration"""
+
     robot_id: str
     robot_name: str
     num_joints: int
     num_end_effectors: int
-    workspace_bounds: Dict[str, Tuple[float, float]]  # {axis: (min, max)}
+    workspace_bounds: dict[str, tuple[float, float]]  # {axis: (min, max)}
     max_payload: float  # kg
     max_reach: float  # meters
     communication_protocol: CommunicationProtocol
@@ -142,17 +147,17 @@ class HardwareAbstractionLayer(ABC):
         pass
 
     @abstractmethod
-    def read_joint_states(self) -> List[JointState]:
+    def read_joint_states(self) -> list[JointState]:
         """Read current state of all joints"""
         pass
 
     @abstractmethod
-    def write_joint_commands(self, commands: List[Dict[str, float]]) -> bool:
+    def write_joint_commands(self, commands: list[dict[str, float]]) -> bool:
         """Send commands to joints"""
         pass
 
     @abstractmethod
-    def read_sensors(self) -> List[SensorReading]:
+    def read_sensors(self) -> list[SensorReading]:
         """Read all sensor data"""
         pass
 
@@ -176,11 +181,11 @@ class SimulatedHardwareInterface(HardwareAbstractionLayer):
     def __init__(self, config: RobotConfiguration):
         self.config = config
         self._initialized = False
-        self._joint_states: List[JointState] = []
-        self._sensors: List[SensorReading] = []
+        self._joint_states: list[JointState] = []
+        self._sensors: list[SensorReading] = []
         self._lock = threading.RLock()
         self._emergency_stopped = False
-        
+
         logger.info(f"Simulated hardware interface created for {config.robot_name}")
 
     def initialize(self) -> bool:
@@ -201,33 +206,33 @@ class SimulatedHardwareInterface(HardwareAbstractionLayer):
                             min_value=-3.14,
                             max_value=3.14,
                             max_velocity=2.0,
-                            max_acceleration=5.0
-                        )
+                            max_acceleration=5.0,
+                        ),
                     )
                     self._joint_states.append(joint_state)
-                
+
                 # Create simulated sensors
                 sensor_types = [
                     SensorType.CAMERA,
                     SensorType.ULTRASONIC,
                     SensorType.GYROSCOPE,
-                    SensorType.ACCELEROMETER
+                    SensorType.ACCELEROMETER,
                 ]
-                
+
                 for i, sensor_type in enumerate(sensor_types):
                     sensor = SensorReading(
                         sensor_id=f"sensor_{i}",
                         sensor_type=sensor_type,
                         value=0.0,
-                        unit="simulated"
+                        unit="simulated",
                     )
                     self._sensors.append(sensor)
-                
+
                 self._initialized = True
                 self._emergency_stopped = False
                 logger.info("Simulated hardware initialized successfully")
                 return True
-                
+
         except Exception as e:
             logger.error(f"Failed to initialize simulated hardware: {e}")
             return False
@@ -240,7 +245,7 @@ class SimulatedHardwareInterface(HardwareAbstractionLayer):
             self._joint_states.clear()
             self._sensors.clear()
 
-    def read_joint_states(self) -> List[JointState]:
+    def read_joint_states(self) -> list[JointState]:
         """Read simulated joint states"""
         with self._lock:
             # Update timestamps
@@ -249,50 +254,56 @@ class SimulatedHardwareInterface(HardwareAbstractionLayer):
                 # Simulate some motion
                 joint.position += np.random.normal(0, 0.01)
                 joint.temperature = 25.0 + np.random.normal(0, 0.5)
-            
+
             return self._joint_states.copy()
 
-    def write_joint_commands(self, commands: List[Dict[str, float]]) -> bool:
+    def write_joint_commands(self, commands: list[dict[str, float]]) -> bool:
         """Write commands to simulated joints"""
         if self._emergency_stopped:
             logger.warning("Cannot write commands: emergency stop active")
             return False
-        
+
         try:
             with self._lock:
                 for i, cmd in enumerate(commands):
                     if i < len(self._joint_states):
                         joint = self._joint_states[i]
-                        
+
                         # Apply position command (simulated)
                         if "position" in cmd:
                             target_pos = cmd["position"]
                             # Check limits
-                            if joint.limits.min_value <= target_pos <= joint.limits.max_value:
+                            if (
+                                joint.limits.min_value
+                                <= target_pos
+                                <= joint.limits.max_value
+                            ):
                                 joint.position = target_pos
                             else:
-                                logger.warning(f"Joint {i} position {target_pos} exceeds limits")
+                                logger.warning(
+                                    f"Joint {i} position {target_pos} exceeds limits"
+                                )
                                 return False
-                        
+
                         # Apply velocity command
                         if "velocity" in cmd:
                             joint.velocity = cmd["velocity"]
-                        
+
                         joint.timestamp = datetime.utcnow().isoformat()
-                
+
                 return True
-                
+
         except Exception as e:
             logger.error(f"Failed to write joint commands: {e}")
             return False
 
-    def read_sensors(self) -> List[SensorReading]:
+    def read_sensors(self) -> list[SensorReading]:
         """Read simulated sensor data"""
         with self._lock:
             # Update sensor readings
             for sensor in self._sensors:
                 sensor.timestamp = datetime.utcnow().isoformat()
-                
+
                 # Simulate different sensor types
                 if sensor.sensor_type == SensorType.ULTRASONIC:
                     sensor.value = 0.5 + np.random.normal(0, 0.1)  # meters
@@ -303,7 +314,7 @@ class SimulatedHardwareInterface(HardwareAbstractionLayer):
                 elif sensor.sensor_type == SensorType.ACCELEROMETER:
                     sensor.value = [0, 0, 9.81] + np.random.normal(0, 0.1, 3).tolist()
                     sensor.unit = "m/s^2"
-            
+
             return self._sensors.copy()
 
     def emergency_stop(self) -> bool:
@@ -311,13 +322,13 @@ class SimulatedHardwareInterface(HardwareAbstractionLayer):
         with self._lock:
             logger.critical("EMERGENCY STOP ACTIVATED")
             self._emergency_stopped = True
-            
+
             # Set all joints to zero velocity
             for joint in self._joint_states:
                 joint.velocity = 0.0
                 joint.acceleration = 0.0
                 joint.torque = 0.0
-            
+
             return True
 
     def is_healthy(self) -> bool:
@@ -325,16 +336,18 @@ class SimulatedHardwareInterface(HardwareAbstractionLayer):
         with self._lock:
             if not self._initialized:
                 return False
-            
+
             if self._emergency_stopped:
                 return False
-            
+
             # Check all joints for temperature limits
             for joint in self._joint_states:
                 if joint.temperature > 80.0:
-                    logger.error(f"Joint {joint.joint_id} overheating: {joint.temperature}°C")
+                    logger.error(
+                        f"Joint {joint.joint_id} overheating: {joint.temperature}°C"
+                    )
                     return False
-            
+
             return True
 
 
@@ -346,131 +359,153 @@ class RoboticSafetyValidator:
 
     def __init__(self, config: RobotConfiguration):
         self.config = config
-        self._violation_history: List[Dict[str, Any]] = []
+        self._violation_history: list[dict[str, Any]] = []
         self._lock = threading.RLock()
-        
+
         logger.info("Robotic safety validator initialized")
 
-    def validate_action(self, action: str, joint_commands: List[Dict[str, float]],
-                       joint_states: List[JointState],
-                       context: Optional[Dict[str, Any]] = None) -> Tuple[bool, str]:
+    def validate_action(
+        self,
+        action: str,
+        joint_commands: list[dict[str, float]],
+        joint_states: list[JointState],
+        context: dict[str, Any] | None = None,
+    ) -> tuple[bool, str]:
         """
         Validate robotic action against Four Laws and safety constraints.
-        
+
         Args:
             action: Description of the action
             joint_commands: Commands to be executed
             joint_states: Current joint states
             context: Additional context
-            
+
         Returns:
             (is_valid, reason)
         """
         context = context or {}
-        
+
         # Four Laws validation
         if self.config.four_laws_enabled:
             laws_valid, reason = self._validate_four_laws(action, context)
             if not laws_valid:
                 self._log_violation("four_laws", action, reason)
                 return False, reason
-        
+
         # Hardware limits validation
-        limits_valid, reason = self._validate_hardware_limits(joint_commands, joint_states)
+        limits_valid, reason = self._validate_hardware_limits(
+            joint_commands, joint_states
+        )
         if not limits_valid:
             self._log_violation("hardware_limits", action, reason)
             return False, reason
-        
+
         # Collision detection (simplified)
         collision_valid, reason = self._check_collisions(joint_states, context)
         if not collision_valid:
             self._log_violation("collision", action, reason)
             return False, reason
-        
+
         # Workspace bounds validation
         workspace_valid, reason = self._validate_workspace(joint_states)
         if not workspace_valid:
             self._log_violation("workspace", action, reason)
             return False, reason
-        
+
         return True, "Action validated successfully"
 
-    def _validate_four_laws(self, action: str, context: Dict[str, Any]) -> Tuple[bool, str]:
+    def _validate_four_laws(
+        self, action: str, context: dict[str, Any]
+    ) -> tuple[bool, str]:
         """Validate action against Asimov's Four Laws"""
-        
+
         # Zeroth Law: Protect humanity
         if context.get("endangers_humanity"):
             return False, "FOUR LAWS VIOLATION: Action would harm humanity"
-        
+
         # First Law: Protect individual humans
         if context.get("endangers_human"):
             return False, "FOUR LAWS VIOLATION: Action would injure a human"
-        
+
         # Detect potential collision with humans
         if context.get("human_in_workspace") and not context.get("safe_distance"):
             return False, "FOUR LAWS VIOLATION: Human too close to robot workspace"
-        
+
         # Second Law: Obey human orders (unless conflicts with First/Zeroth)
         if context.get("is_user_order"):
             if context.get("order_conflicts_with_first"):
                 return False, "FOUR LAWS VIOLATION: Order conflicts with First Law"
-        
+
         # Third Law: Self-preservation (unless conflicts with First/Second)
         if context.get("endangers_robot"):
             if not context.get("preserves_human_safety"):
                 logger.warning("Robot self-preservation: Action endangers robot")
-        
+
         return True, "Four Laws validated"
 
-    def _validate_hardware_limits(self, commands: List[Dict[str, float]],
-                                  states: List[JointState]) -> Tuple[bool, str]:
+    def _validate_hardware_limits(
+        self, commands: list[dict[str, float]], states: list[JointState]
+    ) -> tuple[bool, str]:
         """Validate commands against hardware limits"""
-        
+
         for i, (cmd, state) in enumerate(zip(commands, states)):
             # Position limits
             if "position" in cmd:
                 pos = cmd["position"]
                 if pos < state.limits.min_value or pos > state.limits.max_value:
-                    return False, f"Joint {i} position {pos} exceeds limits [{state.limits.min_value}, {state.limits.max_value}]"
-            
+                    return (
+                        False,
+                        f"Joint {i} position {pos} exceeds limits [{state.limits.min_value}, {state.limits.max_value}]",
+                    )
+
             # Velocity limits
             if "velocity" in cmd:
                 vel = abs(cmd["velocity"])
                 if vel > state.limits.max_velocity:
-                    return False, f"Joint {i} velocity {vel} exceeds limit {state.limits.max_velocity}"
-            
+                    return (
+                        False,
+                        f"Joint {i} velocity {vel} exceeds limit {state.limits.max_velocity}",
+                    )
+
             # Acceleration limits
             if "acceleration" in cmd:
                 acc = abs(cmd["acceleration"])
                 if acc > state.limits.max_acceleration:
-                    return False, f"Joint {i} acceleration {acc} exceeds limit {state.limits.max_acceleration}"
-        
+                    return (
+                        False,
+                        f"Joint {i} acceleration {acc} exceeds limit {state.limits.max_acceleration}",
+                    )
+
         return True, "Hardware limits validated"
 
-    def _check_collisions(self, states: List[JointState],
-                         context: Dict[str, Any]) -> Tuple[bool, str]:
+    def _check_collisions(
+        self, states: list[JointState], context: dict[str, Any]
+    ) -> tuple[bool, str]:
         """Check for potential collisions"""
-        
+
         # Simplified collision detection
         # In production, this would use actual collision detection algorithms
-        
+
         if context.get("obstacle_detected"):
             distance = context.get("obstacle_distance", 0)
             if distance < 0.1:  # 10cm minimum safety distance
                 return False, f"Collision risk: obstacle at {distance:.2f}m"
-        
+
         return True, "No collision detected"
 
-    def _validate_workspace(self, states: List[JointState]) -> Tuple[bool, str]:
+    def _validate_workspace(self, states: list[JointState]) -> tuple[bool, str]:
         """Validate robot is within workspace bounds"""
-        
+
         # Simplified workspace validation
         # In production, this would use forward kinematics
-        
+
         for state in states:
-            if state.position < state.limits.min_value or state.position > state.limits.max_value:
+            if (
+                state.position < state.limits.min_value
+                or state.position > state.limits.max_value
+            ):
                 return False, f"Joint {state.joint_id} outside workspace"
-        
+
         return True, "Workspace validated"
 
     def _log_violation(self, violation_type: str, action: str, reason: str) -> None:
@@ -480,28 +515,30 @@ class RoboticSafetyValidator:
                 "type": violation_type,
                 "action": action,
                 "reason": reason,
-                "timestamp": datetime.utcnow().isoformat()
+                "timestamp": datetime.utcnow().isoformat(),
             }
             self._violation_history.append(violation)
-            
+
             # Keep last 1000 violations
             if len(self._violation_history) > 1000:
                 self._violation_history = self._violation_history[-1000:]
-            
+
             logger.error(f"SAFETY VIOLATION [{violation_type}]: {reason}")
 
-    def get_violation_history(self, limit: int = 100) -> List[Dict[str, Any]]:
+    def get_violation_history(self, limit: int = 100) -> list[dict[str, Any]]:
         """Get recent safety violations"""
         with self._lock:
             return self._violation_history[-limit:]
 
 
 # Global instances for easy access
-_default_hardware: Optional[HardwareAbstractionLayer] = None
-_default_validator: Optional[RoboticSafetyValidator] = None
+_default_hardware: HardwareAbstractionLayer | None = None
+_default_validator: RoboticSafetyValidator | None = None
 
 
-def get_default_hardware(config: Optional[RobotConfiguration] = None) -> HardwareAbstractionLayer:
+def get_default_hardware(
+    config: RobotConfiguration | None = None,
+) -> HardwareAbstractionLayer:
     """Get or create default hardware interface"""
     global _default_hardware
     if _default_hardware is None:
@@ -514,13 +551,15 @@ def get_default_hardware(config: Optional[RobotConfiguration] = None) -> Hardwar
                 workspace_bounds={"x": (-1, 1), "y": (-1, 1), "z": (0, 2)},
                 max_payload=5.0,
                 max_reach=1.5,
-                communication_protocol=CommunicationProtocol.USB
+                communication_protocol=CommunicationProtocol.USB,
             )
         _default_hardware = SimulatedHardwareInterface(config)
     return _default_hardware
 
 
-def get_default_validator(config: Optional[RobotConfiguration] = None) -> RoboticSafetyValidator:
+def get_default_validator(
+    config: RobotConfiguration | None = None,
+) -> RoboticSafetyValidator:
     """Get or create default safety validator"""
     global _default_validator
     if _default_validator is None:
@@ -533,7 +572,7 @@ def get_default_validator(config: Optional[RobotConfiguration] = None) -> Roboti
                 workspace_bounds={"x": (-1, 1), "y": (-1, 1), "z": (0, 2)},
                 max_payload=5.0,
                 max_reach=1.5,
-                communication_protocol=CommunicationProtocol.USB
+                communication_protocol=CommunicationProtocol.USB,
             )
         _default_validator = RoboticSafetyValidator(config)
     return _default_validator

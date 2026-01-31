@@ -126,7 +126,9 @@ def initialize_kernel() -> CognitionKernel:
         # 6. Bio-Inspired Brain Mapping System
         try:
             if yaml is None:
-                logger.warning("PyYAML not available, using default bio brain mapper config")
+                logger.warning(
+                    "PyYAML not available, using default bio brain mapper config"
+                )
                 bio_brain_mapper = BioBrainMappingSystem(data_dir="data")
             else:
                 # Load configuration from YAML
@@ -140,18 +142,26 @@ def initialize_kernel() -> CognitionKernel:
                         preset = bio_config_data["presets"][active_preset]
                         # Merge preset with base config (only merge dictionaries)
                         for key, value in preset.items():
-                            if key in bio_config_data and isinstance(value, dict) and isinstance(bio_config_data[key], dict):
+                            if (
+                                key in bio_config_data
+                                and isinstance(value, dict)
+                                and isinstance(bio_config_data[key], dict)
+                            ):
                                 bio_config_data[key].update(value)
                             elif key in bio_config_data:
                                 bio_config_data[key] = value
                     bio_brain_mapper = BioBrainMappingSystem(
-                        config=bio_config_data,
-                        data_dir="data"
+                        config=bio_config_data, data_dir="data"
                     )
-                    logger.info("✅ BioBrainMappingSystem initialized with preset: %s", active_preset)
+                    logger.info(
+                        "✅ BioBrainMappingSystem initialized with preset: %s",
+                        active_preset,
+                    )
                 else:
                     bio_brain_mapper = BioBrainMappingSystem(data_dir="data")
-                    logger.info("✅ BioBrainMappingSystem initialized with default config")
+                    logger.info(
+                        "✅ BioBrainMappingSystem initialized with default config"
+                    )
         except Exception as e:
             logger.warning(
                 "BioBrainMappingSystem initialization failed: %s, using fallback", e
@@ -179,7 +189,9 @@ def initialize_kernel() -> CognitionKernel:
         logger.info("   - Governance: %s", "✓" if governance_system else "✗ (fallback)")
         logger.info("   - Reflection: %s", "✓" if reflection_engine else "✗ (fallback)")
         logger.info("   - Triumvirate: %s", "✓" if triumvirate else "✗ (fallback)")
-        logger.info("   - BioBrainMapper: %s", "✓" if bio_brain_mapper else "✗ (fallback)")
+        logger.info(
+            "   - BioBrainMapper: %s", "✓" if bio_brain_mapper else "✗ (fallback)"
+        )
         logger.info("🔒 Kernel syscall boundary active - all execution governed")
 
         # Register bio brain mapper with kernel if available

@@ -7,9 +7,15 @@ into a production application.
 import logging
 import os
 
-from app.security import (AgentEncapsulation, AWSSecurityManager, DataPoisoningDefense,
-                          EnvironmentHardening, SecureDatabaseManager, SecureDataParser,
-                          SecurityMonitor)
+from app.security import (
+    AgentEncapsulation,
+    AWSSecurityManager,
+    DataPoisoningDefense,
+    EnvironmentHardening,
+    SecureDatabaseManager,
+    SecureDataParser,
+    SecurityMonitor,
+)
 from app.security.agent_security import NumericalProtection, PluginIsolation
 from app.security.web_service import InputValidator, RateLimiter, SecureWebHandler
 

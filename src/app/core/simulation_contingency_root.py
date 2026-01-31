@@ -147,7 +147,7 @@ class SimulationSystem(ABC):
         start_year: int,
         end_year: int,
         domains: list[RiskDomain] | None = None,
-        countries: list[str] | None = None
+        countries: list[str] | None = None,
     ) -> bool:
         """
         Load historical data for specified time range and domains.
@@ -165,9 +165,7 @@ class SimulationSystem(ABC):
 
     @abstractmethod
     def detect_threshold_events(
-        self,
-        year: int,
-        domains: list[RiskDomain] | None = None
+        self, year: int, domains: list[RiskDomain] | None = None
     ) -> list[ThresholdEvent]:
         """
         Detect threshold exceedance events for a given year.
@@ -183,8 +181,7 @@ class SimulationSystem(ABC):
 
     @abstractmethod
     def build_causal_model(
-        self,
-        historical_events: list[ThresholdEvent]
+        self, historical_events: list[ThresholdEvent]
     ) -> list[CausalLink]:
         """
         Build causal relationships from historical event data.
@@ -199,9 +196,7 @@ class SimulationSystem(ABC):
 
     @abstractmethod
     def simulate_scenarios(
-        self,
-        projection_years: int = 10,
-        num_simulations: int = 1000
+        self, projection_years: int = 10, num_simulations: int = 1000
     ) -> list[ScenarioProjection]:
         """
         Run probabilistic scenario simulations for future years.
@@ -217,9 +212,7 @@ class SimulationSystem(ABC):
 
     @abstractmethod
     def generate_alerts(
-        self,
-        scenarios: list[ScenarioProjection],
-        threshold: float = 0.7
+        self, scenarios: list[ScenarioProjection], threshold: float = 0.7
     ) -> list[CrisisAlert]:
         """
         Generate crisis alerts for high-probability scenarios.
@@ -234,10 +227,7 @@ class SimulationSystem(ABC):
         pass
 
     @abstractmethod
-    def get_explainability(
-        self,
-        scenario: ScenarioProjection
-    ) -> str:
+    def get_explainability(self, scenario: ScenarioProjection) -> str:
         """
         Generate human-readable explanation for a scenario.
 

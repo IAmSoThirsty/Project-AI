@@ -21,19 +21,25 @@ from temporalio.worker import Worker
 
 # Import shared activities
 from temporal.workflows.activities import record_telemetry
+
 # Import workflows and activities
-from temporal.workflows.security_agent_activities import (block_deployment,
-                                                          generate_sarif_report,
-                                                          generate_security_patches,
-                                                          run_code_vulnerability_scan,
-                                                          run_constitutional_reviews,
-                                                          run_red_team_campaign,
-                                                          run_safety_benchmark,
-                                                          trigger_incident_workflow,
-                                                          trigger_security_alert)
+from temporal.workflows.security_agent_activities import (
+    block_deployment,
+    generate_sarif_report,
+    generate_security_patches,
+    run_code_vulnerability_scan,
+    run_constitutional_reviews,
+    run_red_team_campaign,
+    run_safety_benchmark,
+    trigger_incident_workflow,
+    trigger_security_alert,
+)
 from temporal.workflows.security_agent_workflows import (
-    CodeSecuritySweepWorkflow, ConstitutionalMonitoringWorkflow,
-    RedTeamCampaignWorkflow, SafetyTestingWorkflow)
+    CodeSecuritySweepWorkflow,
+    ConstitutionalMonitoringWorkflow,
+    RedTeamCampaignWorkflow,
+    SafetyTestingWorkflow,
+)
 
 # Configure logging
 logging.basicConfig(

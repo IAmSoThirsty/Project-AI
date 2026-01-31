@@ -5,10 +5,8 @@ Validates that a release package contains all required artifacts and dependencie
 """
 
 import json
-import os
 import sys
 from pathlib import Path
-from typing import Dict, List, Tuple
 
 # ANSI color codes
 GREEN = "\033[92m"
@@ -24,16 +22,16 @@ class ReleaseValidator:
     def __init__(self, release_dir: str, version: str = "1.0.0"):
         self.release_dir = Path(release_dir)
         self.version = version
-        self.errors: List[str] = []
-        self.warnings: List[str] = []
-        self.info: List[str] = []
+        self.errors: list[str] = []
+        self.warnings: list[str] = []
+        self.info: list[str] = []
 
-    def validate_all(self) -> Tuple[bool, Dict]:
+    def validate_all(self) -> tuple[bool, dict]:
         """Run all validations and return results."""
         # Only print if not in JSON mode (checked later in main)
-        if not hasattr(self, '_json_mode'):
+        if not hasattr(self, "_json_mode"):
             self._json_mode = False
-        
+
         if not self._json_mode:
             print(f"\n{BLUE}{'=' * 70}{RESET}")
             print(f"{BLUE}Project-AI v{self.version} Release Validation{RESET}")
@@ -52,7 +50,7 @@ class ReleaseValidator:
 
         # Generate report
         report = self._generate_report()
-        
+
         if not self._json_mode:
             self._print_summary()
 
@@ -296,13 +294,15 @@ class ReleaseValidator:
                             if line.strip() and not line.startswith("#")
                         ]
                     if not self._json_mode:
-                        print(f"  {GREEN}✓{RESET} Backend requirements.txt ({len(deps)} dependencies)")
+                        print(
+                            f"  {GREEN}✓{RESET} Backend requirements.txt ({len(deps)} dependencies)"
+                        )
                 except Exception as e:
                     self.warnings.append(f"Could not parse requirements.txt: {e}")
             else:
                 self.errors.append("Backend requirements.txt missing")
 
-    def _generate_report(self) -> Dict:
+    def _generate_report(self) -> dict:
         """Generate validation report."""
         return {
             "version": self.version,
@@ -361,9 +361,7 @@ def main():
     """Main entry point."""
     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="Validate Project-AI release package"
-    )
+    parser = argparse.ArgumentParser(description="Validate Project-AI release package")
     parser.add_argument(
         "release_dir",
         nargs="?",

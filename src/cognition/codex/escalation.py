@@ -1,6 +1,6 @@
-from enum import Enum
 from dataclasses import dataclass
-from typing import Dict, Any
+from enum import Enum
+from typing import Any
 
 
 class EscalationLevel(Enum):
@@ -13,7 +13,7 @@ class EscalationLevel(Enum):
 class EscalationEvent:
     level: EscalationLevel
     reason: str
-    context: Dict[str, Any]
+    context: dict[str, Any]
 
 
 class CodexDeus:

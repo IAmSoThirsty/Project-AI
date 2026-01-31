@@ -273,8 +273,9 @@ async def run_constitutional_reviews(request: dict) -> dict:
         if str(src_path) not in sys.path:
             sys.path.insert(0, str(src_path))
 
-        from app.agents.constitutional_guardrail_agent import \
-            ConstitutionalGuardrailAgent
+        from app.agents.constitutional_guardrail_agent import (
+            ConstitutionalGuardrailAgent,
+        )
 
         # Initialize agent
         agent = ConstitutionalGuardrailAgent(kernel=None)

@@ -16,8 +16,12 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from tarl import TARLSystem, get_system
 from tarl.compiler import CompilerFrontend
 from tarl.config import ConfigRegistry
-from tarl.diagnostics import (DiagnosticCategory, DiagnosticsEngine, Severity,
-                              SourceLocation)
+from tarl.diagnostics import (
+    DiagnosticCategory,
+    DiagnosticsEngine,
+    Severity,
+    SourceLocation,
+)
 from tarl.ffi import FFIBridge
 from tarl.runtime import RuntimeVM
 from tarl.stdlib import StandardLibrary

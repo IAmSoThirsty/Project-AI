@@ -11,9 +11,11 @@ import logging
 from typing import Any
 
 from integrations.temporal.client import TemporalClient
-from integrations.temporal.workflows.example_workflow import (ExampleWorkflow,
-                                                              WorkflowInput,
-                                                              WorkflowOutput)
+from integrations.temporal.workflows.example_workflow import (
+    ExampleWorkflow,
+    WorkflowInput,
+    WorkflowOutput,
+)
 
 logger = logging.getLogger(__name__)
 

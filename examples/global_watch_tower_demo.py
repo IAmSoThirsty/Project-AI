@@ -37,7 +37,7 @@ def example_basic_initialization():
         timeout=8,
     )
 
-    print(f"✅ Watch tower initialized")
+    print("✅ Watch tower initialized")
     print(f"   - Port Admins: {len(tower.port_admins)}")
     print(f"   - Watch Towers: {len(tower.watch_towers)}")
     print(f"   - Gate Guardians: {len(tower.gate_guardians)}")
@@ -77,25 +77,25 @@ def example_quarantine_workflow():
 
     # Place in quarantine without processing
     box = tower.quarantine_file(test_file)
-    print(f"   - Quarantine box created")
+    print("   - Quarantine box created")
     print(f"   - Sealed: {box.sealed}")
     print(f"   - Verified: {box.verified}")
 
     # Check stats
     stats = tower.get_stats()
-    print(f"\n📊 Current quarantine status:")
+    print("\n📊 Current quarantine status:")
     print(f"   - Total quarantined: {stats['total_quarantined']}")
     print(f"   - Active in quarantine: {stats['active_quarantine']}")
 
     # Later: process the quarantined file
-    print(f"\n🔍 Processing quarantined file...")
+    print("\n🔍 Processing quarantined file...")
     result = tower.process_quarantined(str(test_file))
     print(f"   - Success: {result['success']}")
     print(f"   - Verdict: {result['verdict']}")
 
     # Check stats after processing
     stats = tower.get_stats()
-    print(f"\n📊 After processing:")
+    print("\n📊 After processing:")
     print(f"   - Total verifications: {stats['total_verifications']}")
     print(f"   - Active in quarantine: {stats['active_quarantine']}")
 
@@ -165,7 +165,9 @@ def example_emergency_lockdown():
         1 for gate in tower.gate_guardians if gate.force_field_active
     )
 
-    print(f"   - Gates with active force fields: {active_force_fields}/{len(tower.gate_guardians)}")
+    print(
+        f"   - Gates with active force fields: {active_force_fields}/{len(tower.gate_guardians)}"
+    )
 
     stats = tower.get_stats()
     print(f"   - Total lockdowns: {stats['total_lockdowns']}")

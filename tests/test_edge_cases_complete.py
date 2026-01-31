@@ -7,10 +7,18 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from app.core.ai_systems import (AIPersona, CommandOverride, FourLaws,
-                                 LearningRequestManager, MemoryExpansionSystem,
-                                 OverrideType, Plugin, PluginManager, RequestPriority,
-                                 RequestStatus)
+from app.core.ai_systems import (
+    AIPersona,
+    CommandOverride,
+    FourLaws,
+    LearningRequestManager,
+    MemoryExpansionSystem,
+    OverrideType,
+    Plugin,
+    PluginManager,
+    RequestPriority,
+    RequestStatus,
+)
 from app.core.image_generator import ImageGenerationBackend, ImageGenerator, ImageStyle
 from app.core.user_manager import UserManager
 

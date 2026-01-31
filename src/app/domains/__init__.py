@@ -16,14 +16,14 @@ This package contains all 10 major functional domain subsystems:
 """
 
 __all__ = [
-    'situational_awareness',
-    'command_control',
-    'supply_logistics',
-    'biomedical_defense',
-    'tactical_edge_ai',
-    'survivor_support',
-    'ethics_governance',
-    'agi_safeguards',
-    'continuous_improvement',
-    'deep_expansion'
+    "situational_awareness",
+    "command_control",
+    "supply_logistics",
+    "biomedical_defense",
+    "tactical_edge_ai",
+    "survivor_support",
+    "ethics_governance",
+    "agi_safeguards",
+    "continuous_improvement",
+    "deep_expansion",
 ]

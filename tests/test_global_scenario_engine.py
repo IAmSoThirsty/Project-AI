@@ -92,7 +92,7 @@ class TestWorldBankDataSource:
         assert key1 == key2
         assert len(key1) == 64  # SHA256 hex length
 
-    @patch('requests.Session.get')
+    @patch("requests.Session.get")
     def test_fetch_with_cache(self, mock_get, data_source):
         """Test fetching with caching."""
         # Mock response
@@ -103,21 +103,19 @@ class TestWorldBankDataSource:
 
         # First call - should hit API
         result1 = data_source.fetch_with_retry(
-            "https://api.test.com",
-            {"param": "value"}
+            "https://api.test.com", {"param": "value"}
         )
         assert result1 == {"data": "test"}
         assert mock_get.call_count == 1
 
         # Second call - should use cache
         result2 = data_source.fetch_with_retry(
-            "https://api.test.com",
-            {"param": "value"}
+            "https://api.test.com", {"param": "value"}
         )
         assert result2 == {"data": "test"}
         assert mock_get.call_count == 1  # Not called again
 
-    @patch('requests.Session.get')
+    @patch("requests.Session.get")
     def test_fetch_indicator_success(self, mock_get, data_source):
         """Test successful indicator fetch."""
         # Mock World Bank API response
@@ -125,17 +123,9 @@ class TestWorldBankDataSource:
         mock_response.json.return_value = [
             {"page": 1, "pages": 1},
             [
-                {
-                    "countryiso3code": "USA",
-                    "date": "2020",
-                    "value": 2.5
-                },
-                {
-                    "countryiso3code": "USA",
-                    "date": "2021",
-                    "value": 3.0
-                }
-            ]
+                {"countryiso3code": "USA", "date": "2020", "value": 2.5},
+                {"countryiso3code": "USA", "date": "2021", "value": 3.0},
+            ],
         ]
         mock_response.raise_for_status.return_value = None
         mock_get.return_value = mock_response
@@ -159,9 +149,7 @@ class TestACLEDDataSource:
     def test_fallback_data_generation(self, data_source):
         """Test synthetic fallback data generation."""
         events = data_source._generate_fallback_conflict_data(
-            "2020-01-01",
-            "2020-12-31",
-            ["Syria", "Yemen"]
+            "2020-01-01", "2020-12-31", ["Syria", "Yemen"]
         )
 
         assert len(events) > 0
@@ -169,13 +157,11 @@ class TestACLEDDataSource:
         assert all("event_date" in e for e in events)
         assert all("fatalities" in e for e in events)
 
-    @patch.dict('os.environ', {}, clear=True)
+    @patch.dict("os.environ", {}, clear=True)
     def test_fetch_without_credentials(self, data_source):
         """Test graceful fallback when credentials missing."""
         events = data_source.fetch_conflict_events(
-            "2020-01-01",
-            "2020-12-31",
-            ["Syria"]
+            "2020-01-01", "2020-12-31", ["Syria"]
         )
 
         # Should return fallback data
@@ -204,26 +190,21 @@ class TestGlobalScenarioEngine:
         assert RiskDomain.INFLATION in engine.thresholds
         assert "z_score" in engine.thresholds[RiskDomain.ECONOMIC]
 
-    @patch.object(WorldBankDataSource, 'fetch_indicator')
-    @patch.object(ACLEDDataSource, 'fetch_conflict_events')
-    def test_load_historical_data(
-        self,
-        mock_acled,
-        mock_wb,
-        engine
-    ):
+    @patch.object(WorldBankDataSource, "fetch_indicator")
+    @patch.object(ACLEDDataSource, "fetch_conflict_events")
+    def test_load_historical_data(self, mock_acled, mock_wb, engine):
         """Test historical data loading."""
         # Setup mocks
         mock_wb.return_value = {
             "USA": {2020: 2.5, 2021: 3.0},
-            "CHN": {2020: 6.0, 2021: 7.0}
+            "CHN": {2020: 6.0, 2021: 7.0},
         }
         mock_acled.return_value = [
             {
                 "event_date": "2020-01-15",
                 "country": "Syria",
                 "event_type": "Battles",
-                "fatalities": 10
+                "fatalities": 10,
             }
         ]
 
@@ -247,7 +228,7 @@ class TestGlobalScenarioEngine:
                 2018: 2.9,
                 2019: 2.2,
                 2020: -3.5,  # Severe drop (threshold event)
-                2021: 5.7
+                2021: 5.7,
             }
         }
 
@@ -276,7 +257,7 @@ class TestGlobalScenarioEngine:
                 metric_name="gdp_growth",
                 value=-3.5,
                 threshold=0.0,
-                severity=0.8
+                severity=0.8,
             ),
             ThresholdEvent(
                 event_id="e2",
@@ -286,8 +267,8 @@ class TestGlobalScenarioEngine:
                 metric_name="unemployment",
                 value=14.7,
                 threshold=10.0,
-                severity=0.7
-            )
+                severity=0.7,
+            ),
         ]
 
         links = engine.build_causal_model(events)
@@ -295,7 +276,8 @@ class TestGlobalScenarioEngine:
         assert len(links) > 0
         # Should include ECONOMIC -> UNEMPLOYMENT link
         econ_to_unemp = [
-            link for link in links
+            link
+            for link in links
             if link.source == RiskDomain.ECONOMIC.value
             and link.target == RiskDomain.UNEMPLOYMENT.value
         ]
@@ -319,7 +301,7 @@ class TestGlobalScenarioEngine:
                 metric_name="gdp_growth",
                 value=-5.0,
                 threshold=0.0,
-                severity=0.9
+                severity=0.9,
             )
         ]
 
@@ -329,7 +311,7 @@ class TestGlobalScenarioEngine:
                 target=RiskDomain.UNEMPLOYMENT.value,
                 strength=0.8,
                 lag_years=0.5,
-                confidence=0.8
+                confidence=0.8,
             )
         ]
 
@@ -370,7 +352,7 @@ class TestGlobalScenarioEngine:
                     metric_name="gdp_growth",
                     value=-5.0,
                     threshold=0.0,
-                    severity=0.9
+                    severity=0.9,
                 )
             ],
             causal_chain=[
@@ -379,12 +361,12 @@ class TestGlobalScenarioEngine:
                     target=RiskDomain.UNEMPLOYMENT.value,
                     strength=0.8,
                     lag_years=0.5,
-                    confidence=0.8
+                    confidence=0.8,
                 )
             ],
             affected_countries={"USA", "CHN"},
             impact_domains={RiskDomain.ECONOMIC, RiskDomain.UNEMPLOYMENT},
-            severity=AlertLevel.CRITICAL
+            severity=AlertLevel.CRITICAL,
         )
 
         alerts = engine.generate_alerts([scenario], threshold=0.7)
@@ -421,7 +403,7 @@ class TestGlobalScenarioEngine:
                     metric_name="gdp_growth",
                     value=-5.0,
                     threshold=0.0,
-                    severity=0.9
+                    severity=0.9,
                 )
             ],
             causal_chain=[
@@ -431,12 +413,12 @@ class TestGlobalScenarioEngine:
                     strength=0.8,
                     lag_years=0.5,
                     evidence=["Historical correlation"],
-                    confidence=0.8
+                    confidence=0.8,
                 )
             ],
             affected_countries={"USA"},
             impact_domains={RiskDomain.ECONOMIC},
-            severity=AlertLevel.HIGH
+            severity=AlertLevel.HIGH,
         )
 
         explanation = engine.get_explainability(scenario)
@@ -463,7 +445,7 @@ class TestGlobalScenarioEngine:
                 metric_name="gdp",
                 value=-3.5,
                 threshold=0.0,
-                severity=0.8
+                severity=0.8,
             )
         ]
 
@@ -488,7 +470,7 @@ class TestGlobalScenarioEngine:
         # Load some data
         engine.historical_data[RiskDomain.ECONOMIC] = {
             "USA": {2020: 2.5, 2021: 3.0},
-            "CHN": {2020: 6.0}
+            "CHN": {2020: 6.0},
         }
 
         validation = engine.validate_data_quality()
@@ -510,14 +492,30 @@ class TestEngineIntegration:
         with tempfile.TemporaryDirectory() as tmpdir:
             yield GlobalScenarioEngine(data_dir=tmpdir)
 
-    @patch.object(WorldBankDataSource, 'fetch_indicator')
-    @patch.object(ACLEDDataSource, 'fetch_conflict_events')
+    @patch.object(WorldBankDataSource, "fetch_indicator")
+    @patch.object(ACLEDDataSource, "fetch_conflict_events")
     def test_full_workflow(self, mock_acled, mock_wb, engine):
         """Test complete workflow from data loading to alert generation."""
         # Mock data sources - need more historical data for Z-score detection
         mock_wb.return_value = {
-            "USA": {2016: 2.5, 2017: 2.3, 2018: 2.9, 2019: 2.2, 2020: 2.5, 2021: -3.5, 2022: 5.0},
-            "CHN": {2016: 6.5, 2017: 6.8, 2018: 6.6, 2019: 6.1, 2020: 6.0, 2021: 8.0, 2022: 6.5}
+            "USA": {
+                2016: 2.5,
+                2017: 2.3,
+                2018: 2.9,
+                2019: 2.2,
+                2020: 2.5,
+                2021: -3.5,
+                2022: 5.0,
+            },
+            "CHN": {
+                2016: 6.5,
+                2017: 6.8,
+                2018: 6.6,
+                2019: 6.1,
+                2020: 6.0,
+                2021: 8.0,
+                2022: 6.5,
+            },
         }
         mock_acled.return_value = []
 

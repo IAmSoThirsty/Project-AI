@@ -6,8 +6,11 @@ from unittest.mock import Mock
 
 import pytest
 
-from app.core.cognition_kernel import (CognitionKernel, ExecutionResult,
-                                       require_kernel_context)
+from app.core.cognition_kernel import (
+    CognitionKernel,
+    ExecutionResult,
+    require_kernel_context,
+)
 
 
 class TestCognitionKernel:

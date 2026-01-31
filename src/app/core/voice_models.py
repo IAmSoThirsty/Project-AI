@@ -3,6 +3,7 @@ Voice Model System for Project-AI
 Implements VoiceModel interface, concrete models, and registry with bonding protocol.
 Production-grade, fully integrated, no TODOs.
 """
+
 import hashlib
 import json
 import logging
@@ -13,13 +14,14 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional, Callable
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
 
 class VoiceEmotionType(Enum):
     """Voice emotional characteristics"""
+
     NEUTRAL = "neutral"
     HAPPY = "happy"
     SAD = "sad"
@@ -32,6 +34,7 @@ class VoiceEmotionType(Enum):
 
 class VoiceModelType(Enum):
     """Types of voice models available"""
+
     TTS_BASIC = "tts_basic"
     TTS_EMOTIONAL = "tts_emotional"
     CONVERSATIONAL = "conversational"
@@ -42,6 +45,7 @@ class VoiceModelType(Enum):
 @dataclass
 class VoiceModelMetadata:
     """Metadata for voice models"""
+
     model_id: str
     model_type: VoiceModelType
     name: str
@@ -52,20 +56,21 @@ class VoiceModelMetadata:
     speaking_rate: float = 1.0
     pitch: float = 1.0
     volume: float = 1.0
-    capabilities: List[str] = field(default_factory=list)
+    capabilities: list[str] = field(default_factory=list)
     created_at: str = field(default_factory=lambda: datetime.utcnow().isoformat())
 
 
 @dataclass
 class VoiceResponse:
     """Response from voice model"""
+
     text: str
-    audio_data: Optional[bytes] = None
+    audio_data: bytes | None = None
     emotion: VoiceEmotionType = VoiceEmotionType.NEUTRAL
     duration_ms: float = 0.0
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
     success: bool = True
-    error: Optional[str] = None
+    error: str | None = None
 
 
 class VoiceModel(ABC):
@@ -81,8 +86,12 @@ class VoiceModel(ABC):
         logger.info(f"Voice model created: {metadata.model_id}")
 
     @abstractmethod
-    def synthesize(self, text: str, emotion: VoiceEmotionType = VoiceEmotionType.NEUTRAL,
-                   context: Optional[Dict[str, Any]] = None) -> VoiceResponse:
+    def synthesize(
+        self,
+        text: str,
+        emotion: VoiceEmotionType = VoiceEmotionType.NEUTRAL,
+        context: dict[str, Any] | None = None,
+    ) -> VoiceResponse:
         """Synthesize speech from text with emotion"""
         pass
 
@@ -120,25 +129,27 @@ class BasicTTSVoiceModel(VoiceModel):
             logger.error(f"Failed to initialize BasicTTS: {e}")
             return False
 
-    def synthesize(self, text: str, emotion: VoiceEmotionType = VoiceEmotionType.NEUTRAL,
-                   context: Optional[Dict[str, Any]] = None) -> VoiceResponse:
+    def synthesize(
+        self,
+        text: str,
+        emotion: VoiceEmotionType = VoiceEmotionType.NEUTRAL,
+        context: dict[str, Any] | None = None,
+    ) -> VoiceResponse:
         """Synthesize speech from text"""
         if not self._initialized:
             return VoiceResponse(
-                text=text,
-                success=False,
-                error="Model not initialized"
+                text=text, success=False, error="Model not initialized"
             )
 
         try:
             start_time = time.time()
             with self._lock:
                 self._synthesis_count += 1
-                
+
                 # Simulate audio generation
                 audio_data = self._generate_audio(text, emotion)
                 duration_ms = (time.time() - start_time) * 1000
-                
+
                 return VoiceResponse(
                     text=text,
                     audio_data=audio_data,
@@ -146,9 +157,9 @@ class BasicTTSVoiceModel(VoiceModel):
                     duration_ms=duration_ms,
                     metadata={
                         "synthesis_count": self._synthesis_count,
-                        "model_type": self.metadata.model_type.value
+                        "model_type": self.metadata.model_type.value,
                     },
-                    success=True
+                    success=True,
                 )
         except Exception as e:
             logger.error(f"Synthesis error: {e}")
@@ -172,7 +183,7 @@ class EmotionalTTSVoiceModel(VoiceModel):
 
     def __init__(self, metadata: VoiceModelMetadata):
         super().__init__(metadata)
-        self._emotion_cache: Dict[str, VoiceResponse] = {}
+        self._emotion_cache: dict[str, VoiceResponse] = {}
         self._max_cache_size = 100
 
     def initialize(self) -> bool:
@@ -186,14 +197,20 @@ class EmotionalTTSVoiceModel(VoiceModel):
             logger.error(f"Failed to initialize EmotionalTTS: {e}")
             return False
 
-    def synthesize(self, text: str, emotion: VoiceEmotionType = VoiceEmotionType.NEUTRAL,
-                   context: Optional[Dict[str, Any]] = None) -> VoiceResponse:
+    def synthesize(
+        self,
+        text: str,
+        emotion: VoiceEmotionType = VoiceEmotionType.NEUTRAL,
+        context: dict[str, Any] | None = None,
+    ) -> VoiceResponse:
         """Synthesize speech with emotional expression"""
         if not self._initialized:
-            return VoiceResponse(text=text, success=False, error="Model not initialized")
+            return VoiceResponse(
+                text=text, success=False, error="Model not initialized"
+            )
 
         cache_key = f"{text}:{emotion.value}"
-        
+
         # Check cache
         if cache_key in self._emotion_cache:
             logger.debug(f"Cache hit for: {cache_key[:50]}")
@@ -201,11 +218,11 @@ class EmotionalTTSVoiceModel(VoiceModel):
 
         try:
             start_time = time.time()
-            
+
             # Apply emotional modulation
             modulated_audio = self._apply_emotion(text, emotion)
             duration_ms = (time.time() - start_time) * 1000
-            
+
             response = VoiceResponse(
                 text=text,
                 audio_data=modulated_audio,
@@ -213,17 +230,17 @@ class EmotionalTTSVoiceModel(VoiceModel):
                 duration_ms=duration_ms,
                 metadata={
                     "emotion_applied": emotion.value,
-                    "cache_size": len(self._emotion_cache)
+                    "cache_size": len(self._emotion_cache),
                 },
-                success=True
+                success=True,
             )
-            
+
             # Cache management
             if len(self._emotion_cache) < self._max_cache_size:
                 self._emotion_cache[cache_key] = response
-            
+
             return response
-            
+
         except Exception as e:
             logger.error(f"Emotional synthesis error: {e}")
             return VoiceResponse(text=text, success=False, error=str(e))
@@ -239,7 +256,7 @@ class EmotionalTTSVoiceModel(VoiceModel):
             VoiceEmotionType.CALM: 0.7,
             VoiceEmotionType.EMPATHETIC: 0.9,
         }.get(emotion, 1.0)
-        
+
         data = f"{text}:{emotion.value}:{emotion_factor}".encode()
         return hashlib.sha256(data).digest()
 
@@ -256,42 +273,54 @@ class ConversationalVoiceModel(VoiceModel):
 
     def __init__(self, metadata: VoiceModelMetadata):
         super().__init__(metadata)
-        self._conversation_history: List[Dict[str, Any]] = []
+        self._conversation_history: list[dict[str, Any]] = []
         self._max_history = 50
 
     def initialize(self) -> bool:
         """Initialize conversational model"""
         try:
             with self._lock:
-                logger.info(f"Initializing ConversationalVoice: {self.metadata.model_id}")
+                logger.info(
+                    f"Initializing ConversationalVoice: {self.metadata.model_id}"
+                )
                 self._initialized = True
                 return True
         except Exception as e:
             logger.error(f"Failed to initialize ConversationalVoice: {e}")
             return False
 
-    def synthesize(self, text: str, emotion: VoiceEmotionType = VoiceEmotionType.NEUTRAL,
-                   context: Optional[Dict[str, Any]] = None) -> VoiceResponse:
+    def synthesize(
+        self,
+        text: str,
+        emotion: VoiceEmotionType = VoiceEmotionType.NEUTRAL,
+        context: dict[str, Any] | None = None,
+    ) -> VoiceResponse:
         """Synthesize with conversational context"""
         if not self._initialized:
-            return VoiceResponse(text=text, success=False, error="Model not initialized")
+            return VoiceResponse(
+                text=text, success=False, error="Model not initialized"
+            )
 
         try:
             start_time = time.time()
-            
+
             # Analyze conversational context
             context_analysis = self._analyze_context(text, context or {})
-            
+
             # Adjust based on conversation flow
-            adjusted_emotion = self._adjust_emotion_from_context(emotion, context_analysis)
-            
+            adjusted_emotion = self._adjust_emotion_from_context(
+                emotion, context_analysis
+            )
+
             # Generate audio
-            audio_data = self._generate_conversational_audio(text, adjusted_emotion, context_analysis)
+            audio_data = self._generate_conversational_audio(
+                text, adjusted_emotion, context_analysis
+            )
             duration_ms = (time.time() - start_time) * 1000
-            
+
             # Update history
             self._update_history(text, adjusted_emotion, context_analysis)
-            
+
             return VoiceResponse(
                 text=text,
                 audio_data=audio_data,
@@ -299,59 +328,66 @@ class ConversationalVoiceModel(VoiceModel):
                 duration_ms=duration_ms,
                 metadata={
                     "context_analysis": context_analysis,
-                    "history_length": len(self._conversation_history)
+                    "history_length": len(self._conversation_history),
                 },
-                success=True
+                success=True,
             )
-            
+
         except Exception as e:
             logger.error(f"Conversational synthesis error: {e}")
             return VoiceResponse(text=text, success=False, error=str(e))
 
-    def _analyze_context(self, text: str, context: Dict[str, Any]) -> Dict[str, Any]:
+    def _analyze_context(self, text: str, context: dict[str, Any]) -> dict[str, Any]:
         """Analyze conversational context"""
         analysis = {
             "turn_count": len(self._conversation_history),
             "avg_response_length": self._calculate_avg_length(),
             "detected_mood": context.get("user_mood", "neutral"),
             "topic_continuity": self._check_topic_continuity(text),
-            "formality_level": context.get("formality", "casual")
+            "formality_level": context.get("formality", "casual"),
         }
         return analysis
 
-    def _adjust_emotion_from_context(self, base_emotion: VoiceEmotionType,
-                                    context: Dict[str, Any]) -> VoiceEmotionType:
+    def _adjust_emotion_from_context(
+        self, base_emotion: VoiceEmotionType, context: dict[str, Any]
+    ) -> VoiceEmotionType:
         """Adjust emotion based on conversational context"""
         # Context-aware emotion adjustment
         mood = context.get("detected_mood", "neutral")
-        
+
         if mood == "sad" and base_emotion == VoiceEmotionType.NEUTRAL:
             return VoiceEmotionType.EMPATHETIC
         elif mood == "angry" and base_emotion == VoiceEmotionType.NEUTRAL:
             return VoiceEmotionType.CALM
-        
+
         return base_emotion
 
-    def _generate_conversational_audio(self, text: str, emotion: VoiceEmotionType,
-                                      context: Dict[str, Any]) -> bytes:
+    def _generate_conversational_audio(
+        self, text: str, emotion: VoiceEmotionType, context: dict[str, Any]
+    ) -> bytes:
         """Generate audio with conversational nuances"""
         data = f"{text}:{emotion.value}:{context.get('turn_count', 0)}".encode()
         return hashlib.sha256(data).digest()
 
-    def _update_history(self, text: str, emotion: VoiceEmotionType,
-                       context: Dict[str, Any]) -> None:
+    def _update_history(
+        self, text: str, emotion: VoiceEmotionType, context: dict[str, Any]
+    ) -> None:
         """Update conversation history"""
         with self._lock:
-            self._conversation_history.append({
-                "text": text,
-                "emotion": emotion.value,
-                "context": context,
-                "timestamp": datetime.utcnow().isoformat()
-            })
-            
+            self._conversation_history.append(
+                {
+                    "text": text,
+                    "emotion": emotion.value,
+                    "context": context,
+                    "timestamp": datetime.utcnow().isoformat(),
+                }
+            )
+
             # Trim history
             if len(self._conversation_history) > self._max_history:
-                self._conversation_history = self._conversation_history[-self._max_history:]
+                self._conversation_history = self._conversation_history[
+                    -self._max_history :
+                ]
 
     def _calculate_avg_length(self) -> float:
         """Calculate average response length"""
@@ -385,7 +421,7 @@ class VoiceModelRegistry:
 
     def __init__(self, data_dir: str = "data/voice_models"):
         self.data_dir = data_dir
-        self._models: Dict[str, VoiceModel] = {}
+        self._models: dict[str, VoiceModel] = {}
         self._lock = threading.RLock()
         self._registry_file = os.path.join(data_dir, "registry.json")
         os.makedirs(data_dir, exist_ok=True)
@@ -399,12 +435,12 @@ class VoiceModelRegistry:
                 if model_id in self._models:
                     logger.warning(f"Model already registered: {model_id}")
                     return False
-                
+
                 self._models[model_id] = model
                 self._save_registry()
                 logger.info(f"Registered model: {model_id}")
                 return True
-                
+
         except Exception as e:
             logger.error(f"Failed to register model: {e}")
             return False
@@ -415,35 +451,36 @@ class VoiceModelRegistry:
             with self._lock:
                 if model_id not in self._models:
                     return False
-                
+
                 model = self._models[model_id]
                 model.shutdown()
                 del self._models[model_id]
                 self._save_registry()
                 logger.info(f"Unregistered model: {model_id}")
                 return True
-                
+
         except Exception as e:
             logger.error(f"Failed to unregister model: {e}")
             return False
 
-    def get_model(self, model_id: str) -> Optional[VoiceModel]:
+    def get_model(self, model_id: str) -> VoiceModel | None:
         """Retrieve a voice model by ID"""
         with self._lock:
             return self._models.get(model_id)
 
-    def list_models(self) -> List[VoiceModelMetadata]:
+    def list_models(self) -> list[VoiceModelMetadata]:
         """List all registered models"""
         with self._lock:
             return [model.metadata for model in self._models.values()]
 
-    def get_models_by_type(self, model_type: VoiceModelType) -> List[VoiceModel]:
+    def get_models_by_type(self, model_type: VoiceModelType) -> list[VoiceModel]:
         """Get all models of a specific type"""
         with self._lock:
-            return [m for m in self._models.values() 
-                   if m.metadata.model_type == model_type]
+            return [
+                m for m in self._models.values() if m.metadata.model_type == model_type
+            ]
 
-    def initialize_all(self) -> Dict[str, bool]:
+    def initialize_all(self) -> dict[str, bool]:
         """Initialize all registered models"""
         results = {}
         with self._lock:
@@ -469,22 +506,22 @@ class VoiceModelRegistry:
                         "model_id": m.metadata.model_id,
                         "model_type": m.metadata.model_type.value,
                         "name": m.metadata.name,
-                        "created_at": m.metadata.created_at
+                        "created_at": m.metadata.created_at,
                     }
                     for m in self._models.values()
                 ],
-                "updated_at": datetime.utcnow().isoformat()
+                "updated_at": datetime.utcnow().isoformat(),
             }
-            
-            with open(self._registry_file, 'w') as f:
+
+            with open(self._registry_file, "w") as f:
                 json.dump(registry_data, f, indent=2)
-                
+
         except Exception as e:
             logger.error(f"Failed to save registry: {e}")
 
 
 # Initialize default registry
-_default_registry: Optional[VoiceModelRegistry] = None
+_default_registry: VoiceModelRegistry | None = None
 
 
 def get_default_registry() -> VoiceModelRegistry:

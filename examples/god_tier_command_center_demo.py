@@ -13,13 +13,10 @@ Demonstrates the complete monolithic density implementation with:
 This is the ULTIMATE intelligence operations system.
 """
 
-import time
-
 from app.core.god_tier_command_center import (
     GodTierCommandCenter,
     initialize_god_tier_command_center,
 )
-from app.core.global_intelligence_library import IntelligenceDomain
 
 
 def print_header(title: str) -> None:
@@ -78,7 +75,7 @@ def demo_comprehensive_status(command_center: GodTierCommandCenter):
     print()
 
     print("📈 Current Metrics:")
-    metrics = status['current_metrics']
+    metrics = status["current_metrics"]
     print(f"   • Total Agents: {metrics['total_agents']}")
     print(f"   • Active Agents: {metrics['active_agents']}")
     print(f"   • Data Collections: {metrics['total_collections']}")
@@ -91,7 +88,13 @@ def main():
     print()
     print("╔" + "=" * 98 + "╗")
     print("║" + " " * 25 + "GOD-TIER INTELLIGENCE COMMAND CENTER" + " " * 37 + "║")
-    print("║" + " " * 20 + "Monolithic Density • Maximum Reliability • Complete Control" + " " * 20 + "║")
+    print(
+        "║"
+        + " " * 20
+        + "Monolithic Density • Maximum Reliability • Complete Control"
+        + " " * 20
+        + "║"
+    )
     print("╚" + "=" * 98 + "╝")
 
     try:
@@ -104,6 +107,7 @@ def main():
     except Exception as e:
         print(f"\n❌ Error: {e}")
         import traceback
+
         traceback.print_exc()
     finally:
         GodTierCommandCenter.reset()

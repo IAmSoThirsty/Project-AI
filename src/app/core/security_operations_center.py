@@ -20,18 +20,18 @@ Features:
 Production-ready with full error handling and logging.
 """
 
-import hashlib
 import json
 import logging
 import threading
 import time
 import uuid
-from collections import defaultdict, deque
+from collections import deque
+from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Set
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -77,17 +77,17 @@ class SecurityEvent:
     """Individual security event."""
 
     event_id: str = field(default_factory=lambda: str(uuid.uuid4()))
-    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
     event_type: str = ""
     threat_level: str = ThreatLevel.INFO.value
     source: str = ""
     destination: str = ""
     description: str = ""
-    indicators: Dict[str, Any] = field(default_factory=dict)
-    metadata: Dict[str, Any] = field(default_factory=dict)
-    raw_data: Dict[str, Any] = field(default_factory=dict)
+    indicators: dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
+    raw_data: dict[str, Any] = field(default_factory=dict)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return asdict(self)
 
@@ -101,16 +101,16 @@ class SecurityIncident:
     description: str = ""
     threat_level: str = ThreatLevel.MEDIUM.value
     status: str = IncidentStatus.DETECTED.value
-    created_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
-    updated_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
-    resolved_at: Optional[str] = None
-    events: List[SecurityEvent] = field(default_factory=list)
-    remediation_actions: List[str] = field(default_factory=list)
-    affected_systems: List[str] = field(default_factory=list)
-    indicators_of_compromise: List[str] = field(default_factory=list)
-    notes: List[str] = field(default_factory=list)
+    created_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    updated_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    resolved_at: str | None = None
+    events: list[SecurityEvent] = field(default_factory=list)
+    remediation_actions: list[str] = field(default_factory=list)
+    affected_systems: list[str] = field(default_factory=list)
+    indicators_of_compromise: list[str] = field(default_factory=list)
+    notes: list[str] = field(default_factory=list)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return {
             "incident_id": self.incident_id,
@@ -133,14 +133,18 @@ class ThreatDetectionEngine:
     """Real-time threat detection and analysis."""
 
     def __init__(self):
-        self.detection_rules: Dict[str, Dict[str, Any]] = {}
-        self.threat_patterns: Dict[str, Any] = {}
-        self.baseline_metrics: Dict[str, Any] = {}
+        self.detection_rules: dict[str, dict[str, Any]] = {}
+        self.threat_patterns: dict[str, Any] = {}
+        self.baseline_metrics: dict[str, Any] = {}
         self.anomaly_threshold = 2.0  # Standard deviations
         self.lock = threading.RLock()
 
     def add_detection_rule(
-        self, rule_id: str, rule_type: str, conditions: Dict[str, Any], threat_level: ThreatLevel
+        self,
+        rule_id: str,
+        rule_type: str,
+        conditions: dict[str, Any],
+        threat_level: ThreatLevel,
     ) -> bool:
         """Add threat detection rule."""
         try:
@@ -158,7 +162,7 @@ class ThreatDetectionEngine:
             logger.error(f"Failed to add detection rule {rule_id}: {e}")
             return False
 
-    def detect_threats(self, event: SecurityEvent) -> List[str]:
+    def detect_threats(self, event: SecurityEvent) -> list[str]:
         """Detect threats in security event."""
         detected_threats = []
         try:
@@ -178,7 +182,7 @@ class ThreatDetectionEngine:
 
         return detected_threats
 
-    def _match_rule(self, event: SecurityEvent, rule: Dict[str, Any]) -> bool:
+    def _match_rule(self, event: SecurityEvent, rule: dict[str, Any]) -> bool:
         """Check if event matches detection rule."""
         try:
             conditions = rule["conditions"]
@@ -247,13 +251,13 @@ class AutomatedRemediationEngine:
 
     def __init__(self, dry_run: bool = False):
         self.dry_run = dry_run
-        self.remediation_policies: Dict[str, List[RemediationAction]] = {}
-        self.action_history: List[Dict[str, Any]] = []
-        self.allowed_actions: Set[RemediationAction] = set(RemediationAction)
+        self.remediation_policies: dict[str, list[RemediationAction]] = {}
+        self.action_history: list[dict[str, Any]] = []
+        self.allowed_actions: set[RemediationAction] = set(RemediationAction)
         self.lock = threading.RLock()
 
     def add_remediation_policy(
-        self, threat_level: ThreatLevel, actions: List[RemediationAction]
+        self, threat_level: ThreatLevel, actions: list[RemediationAction]
     ) -> bool:
         """Add automated remediation policy for threat level."""
         try:
@@ -269,7 +273,7 @@ class AutomatedRemediationEngine:
 
     def execute_remediation(
         self, incident: SecurityIncident, manual_override: bool = False
-    ) -> List[str]:
+    ) -> list[str]:
         """Execute automated remediation actions for incident."""
         executed_actions = []
         try:
@@ -277,7 +281,9 @@ class AutomatedRemediationEngine:
                 actions = self.remediation_policies.get(incident.threat_level, [])
 
                 if not actions:
-                    logger.info(f"No remediation actions for threat level {incident.threat_level}")
+                    logger.info(
+                        f"No remediation actions for threat level {incident.threat_level}"
+                    )
                     return executed_actions
 
                 for action in actions:
@@ -301,12 +307,17 @@ class AutomatedRemediationEngine:
         return executed_actions
 
     def _execute_action(
-        self, incident: SecurityIncident, action: RemediationAction, manual_override: bool
+        self,
+        incident: SecurityIncident,
+        action: RemediationAction,
+        manual_override: bool,
     ) -> bool:
         """Execute individual remediation action."""
         try:
             if self.dry_run and not manual_override:
-                logger.info(f"DRY RUN: Would execute {action.value} for {incident.incident_id}")
+                logger.info(
+                    f"DRY RUN: Would execute {action.value} for {incident.incident_id}"
+                )
                 return True
 
             # Implement actual remediation logic here
@@ -355,7 +366,9 @@ class AutomatedRemediationEngine:
 
     def _alert_admin(self, incident: SecurityIncident) -> bool:
         """Send alert to administrators."""
-        logger.warning(f"SECURITY ALERT: {incident.title} (level: {incident.threat_level})")
+        logger.warning(
+            f"SECURITY ALERT: {incident.title} (level: {incident.threat_level})"
+        )
         # Implementation would send notifications via email/SMS/Slack
         return True
 
@@ -364,7 +377,9 @@ class AutomatedRemediationEngine:
         logger.info(f"Logging incident {incident.incident_id}")
         return True
 
-    def _log_action(self, incident_id: str, action: RemediationAction, success: bool) -> None:
+    def _log_action(
+        self, incident_id: str, action: RemediationAction, success: bool
+    ) -> None:
         """Log remediation action."""
         with self.lock:
             self.action_history.append(
@@ -372,7 +387,7 @@ class AutomatedRemediationEngine:
                     "incident_id": incident_id,
                     "action": action.value,
                     "success": success,
-                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                    "timestamp": datetime.now(UTC).isoformat(),
                 }
             )
 
@@ -383,7 +398,7 @@ class IncidentManager:
     def __init__(self, data_dir: str = "data/soc"):
         self.data_dir = Path(data_dir)
         self.data_dir.mkdir(parents=True, exist_ok=True)
-        self.incidents: Dict[str, SecurityIncident] = {}
+        self.incidents: dict[str, SecurityIncident] = {}
         self.event_queue: deque = deque(maxlen=1000)
         self.lock = threading.RLock()
         self._load_incidents()
@@ -393,7 +408,7 @@ class IncidentManager:
         title: str,
         description: str,
         threat_level: ThreatLevel,
-        events: List[SecurityEvent],
+        events: list[SecurityEvent],
     ) -> str:
         """Create new security incident."""
         try:
@@ -427,9 +442,12 @@ class IncidentManager:
 
                 incident = self.incidents[incident_id]
                 incident.status = status.value
-                incident.updated_at = datetime.now(timezone.utc).isoformat()
+                incident.updated_at = datetime.now(UTC).isoformat()
 
-                if status == IncidentStatus.CLOSED or status == IncidentStatus.REMEDIATED:
+                if (
+                    status == IncidentStatus.CLOSED
+                    or status == IncidentStatus.REMEDIATED
+                ):
                     incident.resolved_at = incident.updated_at
 
                 if note:
@@ -451,19 +469,19 @@ class IncidentManager:
 
                 incident = self.incidents[incident_id]
                 incident.remediation_actions.append(action)
-                incident.updated_at = datetime.now(timezone.utc).isoformat()
+                incident.updated_at = datetime.now(UTC).isoformat()
                 self._save_incident(incident)
                 return True
         except Exception as e:
             logger.error(f"Failed to add remediation action: {e}")
             return False
 
-    def get_incident(self, incident_id: str) -> Optional[SecurityIncident]:
+    def get_incident(self, incident_id: str) -> SecurityIncident | None:
         """Get incident by ID."""
         with self.lock:
             return self.incidents.get(incident_id)
 
-    def get_active_incidents(self) -> List[SecurityIncident]:
+    def get_active_incidents(self) -> list[SecurityIncident]:
         """Get all active incidents."""
         with self.lock:
             return [
@@ -477,10 +495,16 @@ class IncidentManager:
                 ]
             ]
 
-    def get_incidents_by_threat_level(self, threat_level: ThreatLevel) -> List[SecurityIncident]:
+    def get_incidents_by_threat_level(
+        self, threat_level: ThreatLevel
+    ) -> list[SecurityIncident]:
         """Get incidents by threat level."""
         with self.lock:
-            return [i for i in self.incidents.values() if i.threat_level == threat_level.value]
+            return [
+                i
+                for i in self.incidents.values()
+                if i.threat_level == threat_level.value
+            ]
 
     def _save_incident(self, incident: SecurityIncident) -> None:
         """Save incident to disk."""
@@ -528,8 +552,8 @@ class SecurityOperationsCenter:
         self.remediation_engine = AutomatedRemediationEngine(dry_run)
         self.incident_manager = IncidentManager(data_dir)
         self.monitoring_active = False
-        self.monitor_thread: Optional[threading.Thread] = None
-        self.event_handlers: List[Callable[[SecurityEvent], None]] = []
+        self.monitor_thread: threading.Thread | None = None
+        self.event_handlers: list[Callable[[SecurityEvent], None]] = []
         self.lock = threading.RLock()
 
         self._setup_default_rules()
@@ -572,7 +596,8 @@ class SecurityOperationsCenter:
 
         # Low level - log and alert
         self.remediation_engine.add_remediation_policy(
-            ThreatLevel.LOW, [RemediationAction.LOG_EVENT, RemediationAction.ALERT_ADMIN]
+            ThreatLevel.LOW,
+            [RemediationAction.LOG_EVENT, RemediationAction.ALERT_ADMIN],
         )
 
         # Medium level - alert and investigate
@@ -609,7 +634,7 @@ class SecurityOperationsCenter:
             ],
         )
 
-    def ingest_event(self, event: SecurityEvent) -> Optional[str]:
+    def ingest_event(self, event: SecurityEvent) -> str | None:
         """Ingest security event and process for threats."""
         try:
             # Detect threats
@@ -633,7 +658,9 @@ class SecurityOperationsCenter:
                     if incident:
                         actions = self.remediation_engine.execute_remediation(incident)
                         for action in actions:
-                            self.incident_manager.add_remediation_action(incident_id, action)
+                            self.incident_manager.add_remediation_action(
+                                incident_id, action
+                            )
 
                         # Update incident status
                         self.incident_manager.update_incident_status(
@@ -669,7 +696,9 @@ class SecurityOperationsCenter:
                 return False
 
             self.monitoring_active = True
-            self.monitor_thread = threading.Thread(target=self._monitoring_loop, daemon=True)
+            self.monitor_thread = threading.Thread(
+                target=self._monitoring_loop, daemon=True
+            )
             self.monitor_thread.start()
             logger.info("SOC monitoring started")
             return True
@@ -698,7 +727,7 @@ class SecurityOperationsCenter:
             except Exception as e:
                 logger.error(f"Error in monitoring loop: {e}")
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get SOC status."""
         active_incidents = self.incident_manager.get_active_incidents()
         critical_incidents = self.incident_manager.get_incidents_by_threat_level(
@@ -716,16 +745,18 @@ class SecurityOperationsCenter:
         }
 
 
-def create_soc(data_dir: str = "data/soc", dry_run: bool = False) -> SecurityOperationsCenter:
+def create_soc(
+    data_dir: str = "data/soc", dry_run: bool = False
+) -> SecurityOperationsCenter:
     """Factory function to create SOC instance."""
     return SecurityOperationsCenter(data_dir, dry_run)
 
 
 # Global instance
-_soc_instance: Optional[SecurityOperationsCenter] = None
+_soc_instance: SecurityOperationsCenter | None = None
 
 
-def get_soc() -> Optional[SecurityOperationsCenter]:
+def get_soc() -> SecurityOperationsCenter | None:
     """Get global SOC instance."""
     return _soc_instance
 

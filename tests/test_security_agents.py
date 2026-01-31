@@ -8,6 +8,7 @@ Tests:
 """
 
 import os
+
 # Set up module path for imports
 import sys
 import tempfile

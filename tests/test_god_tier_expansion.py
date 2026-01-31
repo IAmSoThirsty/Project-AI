@@ -13,40 +13,37 @@ Tests all new systems:
 
 import json
 import tempfile
-import threading
 import time
 import unittest
 from pathlib import Path
 
+from app.core.advanced_behavioral_validation import (
+    create_validation_system,
+)
 from app.core.distributed_event_streaming import (
     EventType,
     StreamBackend,
     create_streaming_system,
 )
-from app.core.security_operations_center import (
-    SecurityEvent,
-    ThreatLevel,
-    create_soc,
+from app.core.god_tier_integration_layer import (
+    GodTierConfig,
+    GodTierIntegratedSystem,
 )
 from app.core.guardian_approval_system import (
     ImpactLevel,
     create_guardian_system,
 )
-from app.core.live_metrics_dashboard import (
-    MetricCategory,
-    MetricType,
-    create_dashboard,
-)
-from app.core.advanced_behavioral_validation import (
-    create_validation_system,
-)
 from app.core.health_monitoring_continuity import (
-    HealthStatus,
     create_health_monitoring_system,
 )
-from app.core.god_tier_integration_layer import (
-    GodTierConfig,
-    GodTierIntegratedSystem,
+from app.core.live_metrics_dashboard import (
+    MetricCategory,
+    create_dashboard,
+)
+from app.core.security_operations_center import (
+    SecurityEvent,
+    ThreatLevel,
+    create_soc,
 )
 
 
@@ -97,7 +94,9 @@ class TestDistributedEventStreaming(unittest.TestCase):
         self.assertTrue(success)
 
         # Publish sensor data
-        system.publish("sensor_data", EventType.SENSOR_DATA, {"sensor_id": "temp_1", "value": 25.5})
+        system.publish(
+            "sensor_data", EventType.SENSOR_DATA, {"sensor_id": "temp_1", "value": 25.5}
+        )
 
         time.sleep(0.3)
 
@@ -106,53 +105,58 @@ class TestDistributedEventStreaming(unittest.TestCase):
         self.assertTrue(success)
 
         system.close()
-    
+
     def test_backpressure_strategies(self):
         """Test event streaming backpressure handling."""
-        from app.core.distributed_event_streaming import BackpressureStrategy, BackpressureConfig, InMemoryStreamBackend
-        
+        from app.core.distributed_event_streaming import (
+            BackpressureConfig,
+            BackpressureStrategy,
+            InMemoryStreamBackend,
+        )
+
         # Test DROP_OLDEST strategy
         config = BackpressureConfig(
             strategy=BackpressureStrategy.DROP_OLDEST.value,
             max_queue_size=5,
-            enable_metrics=True
+            enable_metrics=True,
         )
         backend = InMemoryStreamBackend(backpressure_config=config)
-        
+
         # Publish events up to limit
-        from app.core.distributed_event_streaming import StreamEvent, EventType
+        from app.core.distributed_event_streaming import EventType, StreamEvent
+
         for i in range(7):  # Exceed limit
             event = StreamEvent(
-                event_type=EventType.SENSOR_DATA.value,
-                data={"value": i}
+                event_type=EventType.SENSOR_DATA.value, data={"value": i}
             )
             success = backend.publish("test_topic", event)
             self.assertTrue(success)
-        
+
         # Should have dropped oldest events
         metrics = backend.get_backpressure_metrics()
         self.assertGreater(metrics["events_dropped"], 0)
-        
+
         # Queue size should not exceed limit
         self.assertLessEqual(len(backend.topics["test_topic"]), config.max_queue_size)
-        
+
         # Test REJECT_NEW strategy
         config_reject = BackpressureConfig(
-            strategy=BackpressureStrategy.REJECT_NEW.value,
-            max_queue_size=3
+            strategy=BackpressureStrategy.REJECT_NEW.value, max_queue_size=3
         )
         backend_reject = InMemoryStreamBackend(backpressure_config=config_reject)
-        
+
         # Fill queue
         for i in range(3):
-            event = StreamEvent(event_type=EventType.SENSOR_DATA.value, data={"value": i})
+            event = StreamEvent(
+                event_type=EventType.SENSOR_DATA.value, data={"value": i}
+            )
             backend_reject.publish("test_topic", event)
-        
+
         # Next publish should be rejected
         event = StreamEvent(event_type=EventType.SENSOR_DATA.value, data={"value": 999})
         success = backend_reject.publish("test_topic", event)
         self.assertFalse(success)
-        
+
         metrics = backend_reject.get_backpressure_metrics()
         self.assertGreater(metrics["events_rejected"], 0)
 
@@ -303,11 +307,11 @@ class TestGuardianApprovalSystem(unittest.TestCase):
         status = system.get_status()
         self.assertIn("total_requests", status)
         self.assertIn("guardians_active", status)
-    
+
     def test_emergency_override(self):
         """Test emergency override with multi-signature."""
         system = create_guardian_system(self.temp_dir)
-        
+
         # Create a request first
         request_id = system.create_approval_request(
             title="Emergency Fix",
@@ -316,47 +320,47 @@ class TestGuardianApprovalSystem(unittest.TestCase):
             impact_level=ImpactLevel.CRITICAL,
             requested_by="ops_team",
         )
-        
+
         # Initiate emergency override
         override_id = system.initiate_emergency_override(
             request_id=request_id,
             justification="Production system down, immediate action required",
             initiated_by="ops_lead",
         )
-        
+
         self.assertIsNotNone(override_id)
         self.assertNotEqual(override_id, "")
-        
+
         # Get override
         overrides = system.get_emergency_overrides(status="pending")
         self.assertEqual(len(overrides), 1)
         override = overrides[0]
         self.assertEqual(override.override_id, override_id)
         self.assertEqual(override.status, "pending")
-        
+
         # Sign by first guardian
         success = system.sign_emergency_override(
             override_id, "galahad", "Justified emergency"
         )
         self.assertTrue(success)
-        
+
         # Sign by second guardian
         success = system.sign_emergency_override(
             override_id, "cerberus", "Security risk acceptable"
         )
         self.assertTrue(success)
-        
+
         # Sign by third guardian (should activate override)
         success = system.sign_emergency_override(
             override_id, "codex_deus", "Charter compliance maintained"
         )
         self.assertTrue(success)
-        
+
         # Verify override is now active
         override = system.emergency_overrides[override_id]
         self.assertEqual(override.status, "active")
         self.assertEqual(len(override.signatures), 3)
-        
+
         # Complete post-mortem
         success = system.complete_post_mortem(
             override_id,
@@ -364,7 +368,7 @@ class TestGuardianApprovalSystem(unittest.TestCase):
             "ops_lead",
         )
         self.assertTrue(success)
-        
+
         # Verify post-mortem completed
         override = system.emergency_overrides[override_id]
         self.assertTrue(override.post_mortem_completed)
@@ -373,7 +377,7 @@ class TestGuardianApprovalSystem(unittest.TestCase):
     def test_emergency_override_hmac_signatures(self):
         """Test HMAC signatures for emergency overrides."""
         system = create_guardian_system(self.temp_dir)
-        
+
         # Create request
         request_id = system.create_approval_request(
             title="Test Request",
@@ -382,26 +386,24 @@ class TestGuardianApprovalSystem(unittest.TestCase):
             impact_level=ImpactLevel.HIGH,
             requested_by="developer",
         )
-        
+
         # Initiate override
         override_id = system.initiate_emergency_override(
             request_id=request_id,
             justification="Test HMAC",
             initiated_by="ops",
         )
-        
+
         # Sign with first guardian
-        success = system.sign_emergency_override(
-            override_id, "galahad", "HMAC test"
-        )
+        success = system.sign_emergency_override(override_id, "galahad", "HMAC test")
         self.assertTrue(success)
-        
+
         # Verify signature is HMAC (64 hex chars for SHA-256)
         override = system.emergency_overrides[override_id]
         signature = override.signatures[0]
         self.assertEqual(len(signature["signature"]), 64)
         self.assertTrue(all(c in "0123456789abcdef" for c in signature["signature"]))
-        
+
         # Verify signature includes role
         self.assertIn("role", signature)
         self.assertEqual(signature["role"], "ethics_guardian")
@@ -409,7 +411,7 @@ class TestGuardianApprovalSystem(unittest.TestCase):
     def test_emergency_override_role_quorum(self):
         """Test role quorum enforcement for emergency overrides."""
         system = create_guardian_system(self.temp_dir)
-        
+
         # Create request
         request_id = system.create_approval_request(
             title="Test Request",
@@ -418,29 +420,29 @@ class TestGuardianApprovalSystem(unittest.TestCase):
             impact_level=ImpactLevel.CRITICAL,
             requested_by="developer",
         )
-        
+
         # Initiate override
         override_id = system.initiate_emergency_override(
             request_id=request_id,
             justification="Test role quorum",
             initiated_by="ops",
         )
-        
+
         # Sign with ethics guardian
         system.sign_emergency_override(override_id, "galahad", "Ethics OK")
         override = system.emergency_overrides[override_id]
         self.assertEqual(override.status, "pending")  # Not yet active
-        
+
         # Sign with security guardian
         system.sign_emergency_override(override_id, "cerberus", "Security OK")
         override = system.emergency_overrides[override_id]
         self.assertEqual(override.status, "pending")  # Still not active
-        
+
         # Sign with charter guardian (completes role quorum)
         system.sign_emergency_override(override_id, "codex_deus", "Charter OK")
         override = system.emergency_overrides[override_id]
         self.assertEqual(override.status, "active")  # Now active!
-        
+
         # Verify all three required roles are present
         roles = {sig["role"] for sig in override.signatures}
         self.assertIn("ethics_guardian", roles)
@@ -450,7 +452,7 @@ class TestGuardianApprovalSystem(unittest.TestCase):
     def test_emergency_override_idempotent_post_mortem(self):
         """Test idempotent post-mortem completion."""
         system = create_guardian_system(self.temp_dir)
-        
+
         # Create and activate override
         request_id = system.create_approval_request(
             title="Test Request",
@@ -464,35 +466,31 @@ class TestGuardianApprovalSystem(unittest.TestCase):
             justification="Test idempotency",
             initiated_by="ops",
         )
-        
+
         # Activate with 3 signatures
         system.sign_emergency_override(override_id, "galahad", "OK")
         system.sign_emergency_override(override_id, "cerberus", "OK")
         system.sign_emergency_override(override_id, "codex_deus", "OK")
-        
+
         override = system.emergency_overrides[override_id]
         self.assertEqual(override.status, "active")
-        
+
         # Complete post-mortem
         success = system.complete_post_mortem(
-            override_id,
-            "Root cause analysis completed",
-            "ops_lead"
+            override_id, "Root cause analysis completed", "ops_lead"
         )
         self.assertTrue(success)
-        
+
         override = system.emergency_overrides[override_id]
         self.assertEqual(override.status, "completed")
         self.assertTrue(override.post_mortem_completed)
-        
+
         # Try to complete again (should fail with idempotency check)
         success = system.complete_post_mortem(
-            override_id,
-            "Trying again",
-            "someone_else"
+            override_id, "Trying again", "someone_else"
         )
         self.assertFalse(success)  # Should return False
-        
+
         # Verify metadata was stored correctly
         self.assertIn("post_mortem_completed_by", override.metadata)
         self.assertEqual(override.metadata["post_mortem_completed_by"], "ops_lead")
@@ -500,7 +498,7 @@ class TestGuardianApprovalSystem(unittest.TestCase):
     def test_emergency_override_metadata_field(self):
         """Test that metadata field exists and works correctly."""
         system = create_guardian_system(self.temp_dir)
-        
+
         # Create request
         request_id = system.create_approval_request(
             title="Test Request",
@@ -509,25 +507,25 @@ class TestGuardianApprovalSystem(unittest.TestCase):
             impact_level=ImpactLevel.LOW,
             requested_by="developer",
         )
-        
+
         # Initiate override
         override_id = system.initiate_emergency_override(
             request_id=request_id,
             justification="Test metadata",
             initiated_by="ops",
         )
-        
+
         # Verify metadata field exists and is a dict
         override = system.emergency_overrides[override_id]
         self.assertIsInstance(override.metadata, dict)
-        
+
         # Metadata should be empty initially
         self.assertEqual(len(override.metadata), 0)
 
     def test_emergency_override_atomic_writes(self):
         """Test that override files are written atomically."""
         system = create_guardian_system(self.temp_dir)
-        
+
         # Create and save an override
         request_id = system.create_approval_request(
             title="Test Request",
@@ -541,15 +539,15 @@ class TestGuardianApprovalSystem(unittest.TestCase):
             justification="Test atomic writes",
             initiated_by="ops",
         )
-        
+
         # Verify file exists
         override_file = Path(self.temp_dir) / f"emergency_{override_id}.json"
         self.assertTrue(override_file.exists())
-        
+
         # Verify no .tmp file left behind
         tmp_file = override_file.with_suffix(override_file.suffix + ".tmp")
         self.assertFalse(tmp_file.exists())
-        
+
         # Verify file is valid JSON
         with open(override_file) as f:
             data = json.load(f)
@@ -586,7 +584,10 @@ class TestLiveMetricsDashboard(unittest.TestCase):
         dashboard = create_dashboard()
 
         dashboard.agi_monitor.record_decision(
-            decision_type="test_decision", confidence=0.9, reasoning_steps=5, compliant=True
+            decision_type="test_decision",
+            confidence=0.9,
+            reasoning_steps=5,
+            compliant=True,
         )
 
         summary = dashboard.agi_monitor.get_behavior_summary()
@@ -638,7 +639,9 @@ class TestLiveMetricsDashboard(unittest.TestCase):
         dashboard = create_dashboard()
 
         # Record some metrics
-        dashboard.collector.record_gauge("test", 42.0, category=MetricCategory.SYSTEM_HEALTH.value)
+        dashboard.collector.record_gauge(
+            "test", 42.0, category=MetricCategory.SYSTEM_HEALTH.value
+        )
 
         data = dashboard.get_dashboard_data(MetricCategory.SYSTEM_HEALTH)
         self.assertIn("series", data)
@@ -696,8 +699,8 @@ class TestBehavioralValidation(unittest.TestCase):
         action = {"name": "harm_human", "deceptive": False}
         context = {"harms_human": True}
 
-        is_violation, violation_type, reason = system.verification_engine.four_laws.check_violation(
-            action, context
+        is_violation, violation_type, reason = (
+            system.verification_engine.four_laws.check_violation(action, context)
         )
         self.assertTrue(is_violation)
 
@@ -760,7 +763,9 @@ class TestHealthMonitoring(unittest.TestCase):
             fallback_called.append(True)
             return True
 
-        system.fallback_manager.register_fallback("test_component", fallback_func, priority=1)
+        system.fallback_manager.register_fallback(
+            "test_component", fallback_func, priority=1
+        )
         success = system.fallback_manager.activate_fallback("test_component")
         self.assertTrue(success)
         self.assertGreater(len(fallback_called), 0)
@@ -786,7 +791,9 @@ class TestHealthMonitoring(unittest.TestCase):
 
         # Record increasing metric values (trending toward failure)
         for i in range(15):
-            system.failure_detector.record_metric("test_component", "error_rate", 0.1 + i * 0.05)
+            system.failure_detector.record_metric(
+                "test_component", "error_rate", 0.1 + i * 0.05
+            )
 
         # Predict failure
         prediction = system.failure_detector.predict_failure(
@@ -802,40 +809,44 @@ class TestHealthMonitoring(unittest.TestCase):
         status = system.get_system_status()
         self.assertIn("operating_mode", status)
         self.assertIn("monitoring_active", status)
-    
+
     def test_monitoring_loop_execution(self):
         """Test that monitoring loop actually executes health checks."""
         system = create_health_monitoring_system(self.temp_dir)
-        
+
         # Track if health check was called
         check_called = []
-        
+
         def health_check():
             check_called.append(True)
             return (True, {"status": "healthy", "checks": len(check_called)})
-        
+
         # Register component with health check function
         system.register_component("monitored_component", health_check)
-        
+
         # Verify registration stored both monitor and check function
         self.assertIn("monitored_component", system.component_monitors)
         component_data = system.component_monitors["monitored_component"]
         self.assertIn("monitor", component_data)
         self.assertIn("check_func", component_data)
-        
+
         # Start monitoring
         system.check_interval = 1  # 1 second for faster test
         success = system.start_monitoring()
         self.assertTrue(success)
-        
+
         # Wait for at least one check cycle
         time.sleep(1.5)
-        
+
         # Stop monitoring
         system.stop_monitoring()
-        
+
         # Verify health check was actually called
-        self.assertGreater(len(check_called), 0, "Health check should have been called by monitoring loop")
+        self.assertGreater(
+            len(check_called),
+            0,
+            "Health check should have been called by monitoring loop",
+        )
 
 
 class TestGodTierIntegration(unittest.TestCase):

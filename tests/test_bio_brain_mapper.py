@@ -12,13 +12,11 @@ Covers:
 """
 
 import tempfile
-from pathlib import Path
 
 import numpy as np
 import pytest
 
 from app.core.bio_brain_mapper import (
-    ActivationFunction,
     BioBrainMappingSystem,
     BioModularRepresentation,
     CorticalModule,
@@ -209,14 +207,18 @@ class TestResonantSparseGeometryNetwork:
         # Before any learning, fast and slow should be the same (initialized as copies)
         output_fast_initial, _ = rsgn.forward(x, learning_mode=LearningMode.FAST)
         output_slow_initial, _ = rsgn.forward(x, learning_mode=LearningMode.SLOW)
-        
+
         # Initially they should be identical
         assert np.allclose(output_fast_initial, output_slow_initial, atol=1e-6)
 
         # Apply multiple Hebbian updates to create noticeable difference
         for _ in range(10):
-            pre = np.random.randn(batch_size, rsgn.topology.layer_sizes[0]).astype(np.float32)
-            post = np.random.randn(batch_size, rsgn.topology.layer_sizes[1]).astype(np.float32)
+            pre = np.random.randn(batch_size, rsgn.topology.layer_sizes[0]).astype(
+                np.float32
+            )
+            post = np.random.randn(batch_size, rsgn.topology.layer_sizes[1]).astype(
+                np.float32
+            )
             rsgn.update_weights_hebbian(0, pre, post)
 
         # Now they should be different
@@ -610,6 +612,7 @@ class TestBioBrainMappingSystem:
 
     def test_register_with_kernel(self, system):
         """Test kernel registration."""
+
         # Mock kernel
         class MockKernel:
             def __init__(self):
