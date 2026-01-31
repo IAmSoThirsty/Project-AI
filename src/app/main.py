@@ -9,6 +9,7 @@ and all subsystems are wired together. No execution happens without kernel autho
 import logging
 import os
 import sys
+from typing import Any
 
 from dotenv import load_dotenv
 from PyQt6.QtGui import QFont
@@ -222,6 +223,187 @@ def initialize_council_hub(kernel: CognitionKernel) -> CouncilHub:
     return hub
 
 
+def initialize_security_systems(kernel: CognitionKernel, council_hub: CouncilHub) -> dict[str, Any]:
+    """Initialize comprehensive security countermeasures and defense systems.
+    
+    Activates:
+    1. Global Watch Tower Security Command Center (Cerberus)
+    2. Active Defense Agents (SafetyGuard, Constitutional, TARL)
+    3. Payload Validation & Attack Detection
+    4. ASL-3 Security Enforcement (30 core controls)
+    
+    This implements ethical defensive capabilities without offensive intent,
+    aligned with Asimov's Laws and the FourLaws governance system.
+    
+    Args:
+        kernel: CognitionKernel instance for governance
+        council_hub: CouncilHub for agent registration
+        
+    Returns:
+        Dictionary containing initialized security components
+    """
+    logger.info("=" * 60)
+    logger.info("🛡️  INITIALIZING SECURITY COUNTERMEASURES")
+    logger.info("=" * 60)
+    
+    security_components = {}
+    
+    # Phase 1: Initialize Global Watch Tower Security Command Center
+    try:
+        from app.core.global_watch_tower import GlobalWatchTower
+        
+        tower = GlobalWatchTower.initialize(
+            num_port_admins=2,
+            towers_per_port=10,
+            gates_per_tower=5,
+            data_dir="data",
+            max_workers=2,
+            timeout=8
+        )
+        security_components['watch_tower'] = tower
+        
+        # Get Cerberus (Chief of Security) status
+        cerberus = tower.get_chief_of_security()
+        status = tower.get_security_status()
+        
+        logger.info("✅ Global Watch Tower activated")
+        logger.info(f"   - Chief of Security: {status['chief_of_security']}")
+        logger.info(f"   - Border Patrol agents: {status['registered_agents']['border_patrol']}")
+        logger.info(f"   - Port Admins: {len(tower.port_admins)}")
+        logger.info(f"   - Watch Towers: {len(tower.watch_towers)}")
+        logger.info(f"   - Gate Guardians: {len(tower.gate_guardians)}")
+    except Exception as e:
+        logger.warning(f"Global Watch Tower initialization failed: {e}")
+        security_components['watch_tower'] = None
+    
+    # Phase 2: Initialize Active Defense Agents
+    try:
+        from app.agents.safety_guard_agent import SafetyGuardAgent
+        
+        safety_guard = SafetyGuardAgent(
+            model_name="llama-guard-3-8b",
+            strict_mode=True,
+            kernel=kernel
+        )
+        security_components['safety_guard'] = safety_guard
+        
+        # Register with CouncilHub
+        try:
+            council_hub.register_agent("safety_guard", safety_guard)
+        except Exception as e:
+            logger.warning(f"Failed to register SafetyGuardAgent with CouncilHub: {e}")
+        
+        logger.info("✅ SafetyGuardAgent activated")
+        logger.info("   - Pre/post-processing content filtering enabled")
+        logger.info("   - Jailbreak detection active")
+        logger.info("   - Strict mode: ON")
+    except Exception as e:
+        logger.warning(f"SafetyGuardAgent initialization failed: {e}")
+        security_components['safety_guard'] = None
+    
+    try:
+        from app.agents.constitutional_guardrail_agent import ConstitutionalGuardrailAgent
+        
+        constitutional_guard = ConstitutionalGuardrailAgent(kernel=kernel)
+        security_components['constitutional_guard'] = constitutional_guard
+        
+        # Register with CouncilHub
+        try:
+            council_hub.register_agent("constitutional_guard", constitutional_guard)
+        except Exception as e:
+            logger.warning(f"Failed to register ConstitutionalGuardrailAgent: {e}")
+        
+        logger.info("✅ ConstitutionalGuardrailAgent activated")
+        logger.info("   - Ethical boundary enforcement enabled")
+    except Exception as e:
+        logger.warning(f"ConstitutionalGuardrailAgent initialization failed: {e}")
+        security_components['constitutional_guard'] = None
+    
+    try:
+        from app.agents.tarl_protector import TarlProtector
+        
+        tarl_protector = TarlProtector(kernel=kernel)
+        security_components['tarl_protector'] = tarl_protector
+        
+        # Register with CouncilHub
+        try:
+            council_hub.register_agent("tarl_protector", tarl_protector)
+        except Exception as e:
+            logger.warning(f"Failed to register TarlProtector: {e}")
+        
+        logger.info("✅ TARL Protector activated")
+        logger.info("   - Runtime code protection enabled")
+    except Exception as e:
+        logger.warning(f"TARL Protector initialization failed: {e}")
+        security_components['tarl_protector'] = None
+    
+    # Register defense agents with Watch Tower if available
+    if security_components.get('watch_tower'):
+        try:
+            tower = security_components['watch_tower']
+            if security_components.get('safety_guard'):
+                tower.register_security_agent("active_defense", "safety_guard_main")
+            if security_components.get('constitutional_guard'):
+                tower.register_security_agent("active_defense", "constitutional_guard_main")
+            if security_components.get('tarl_protector'):
+                tower.register_security_agent("active_defense", "tarl_protector_main")
+            
+            status = tower.get_security_status()
+            logger.info(f"   - Active Defense agents registered: {status['registered_agents']['active_defense']}")
+        except Exception as e:
+            logger.warning(f"Failed to register agents with Watch Tower: {e}")
+    
+    # Phase 3: Initialize Payload Validation & Attack Detection
+    try:
+        from app.security.data_validation import SecureDataParser
+        
+        data_parser = SecureDataParser()
+        security_components['data_parser'] = data_parser
+        
+        logger.info("✅ Secure Data Parser activated")
+        logger.info("   - XXE/DTD attack pattern detection enabled")
+        logger.info("   - CSV injection defense active")
+        logger.info("   - Data poisoning countermeasures ready")
+        logger.info("   - Max file size: 100MB")
+    except Exception as e:
+        logger.warning(f"Secure Data Parser initialization failed: {e}")
+        security_components['data_parser'] = None
+    
+    # Phase 4: Initialize ASL-3 Security Enforcement
+    try:
+        from app.core.security_enforcer import ASL3Security
+        
+        asl3_security = ASL3Security(
+            data_dir="data",
+            key_file="config/.asl3_key",
+            enable_emergency_alerts=True,
+            enable_cerberus_hydra=False  # Disabled by default to avoid conflicts
+        )
+        security_components['asl3_security'] = asl3_security
+        
+        logger.info("✅ ASL-3 Security Enforcer activated")
+        logger.info("   - 30 core security controls enabled")
+        logger.info("   - Encryption at rest (Fernet) active")
+        logger.info("   - Access control & rate limiting enabled")
+        logger.info("   - Tamper-proof audit logging active")
+        logger.info("   - Emergency alert integration ready")
+    except Exception as e:
+        logger.warning(f"ASL-3 Security Enforcer initialization failed: {e}")
+        security_components['asl3_security'] = None
+    
+    # Summary
+    active_count = sum(1 for v in security_components.values() if v is not None)
+    logger.info("=" * 60)
+    logger.info(f"🔒 Security Systems Initialized: {active_count}/{len(security_components)}")
+    logger.info("=" * 60)
+    logger.info("Security Posture: DEFENSIVE - NO OFFENSIVE CAPABILITIES")
+    logger.info("Aligned with: Asimov's Laws, FourLaws Governance")
+    logger.info("Mission: Protect without harm, detect without attack")
+    logger.info("=" * 60)
+    
+    return security_components
+
+
 def setup_environment():
     """Setup environment variables and configurations"""
     # Load environment variables from .env file
@@ -232,7 +414,12 @@ def setup_environment():
     os.makedirs("data/identities", exist_ok=True)
     os.makedirs("data/memory", exist_ok=True)
     os.makedirs("data/reflections", exist_ok=True)
+    os.makedirs("data/security", exist_ok=True)
+    os.makedirs("data/security/audit_logs", exist_ok=True)
+    os.makedirs("data/security/encrypted", exist_ok=True)
+    os.makedirs("data/security/backups", exist_ok=True)
     os.makedirs("logs", exist_ok=True)
+    os.makedirs("config", exist_ok=True)
 
     # Set up logging
     logging.basicConfig(
@@ -243,6 +430,7 @@ def setup_environment():
 
     logger.info("Environment setup complete")
     logger.info("AGI Identity System directories created")
+    logger.info("Security directories initialized")
 
 
 def main():
@@ -263,6 +451,9 @@ def main():
 
     # Initialize CouncilHub with kernel injection
     council_hub = initialize_council_hub(kernel)
+
+    # Initialize comprehensive security countermeasures
+    security_systems = initialize_security_systems(kernel, council_hub)
 
     # Start autonomous learning (optional)
     # council_hub.start_autonomous_learning()
@@ -292,6 +483,10 @@ def main():
         app_window.set_cognition_kernel(kernel)
     if hasattr(app_window, "set_council_hub"):
         app_window.set_council_hub(council_hub)
+    
+    # Make security systems accessible to the dashboard
+    if hasattr(app_window, "set_security_systems"):
+        app_window.set_security_systems(security_systems)
 
     app_window.show()
 
