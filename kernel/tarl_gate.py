@@ -1,4 +1,4 @@
-from tarl.runtime import TarlRuntime
+from tarl import TarlRuntime
 from tarl.spec import TarlVerdict
 from kernel.tarl_codex_bridge import TarlCodexBridge
 from src.cognition.codex.escalation import CodexDeus

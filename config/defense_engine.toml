@@ -1,0 +1,213 @@
+# Project-AI God Tier Zombie Apocalypse Defense Engine Configuration
+# Complete configuration for all 10 functional domain subsystems
+
+version = "1.0.0"
+
+[bootstrap]
+auto_discover = true
+discovery_paths = ["src/app/domains", "src/app/core"]
+failure_mode = "continue"  # Options: continue, stop, rollback
+health_check_interval = 30
+enable_hot_reload = true
+
+[security]
+encryption_enabled = true
+encryption_algorithm = "AES-256-GCM"  # Options: AES-256-GCM, ChaCha20-Poly1305, Fernet
+key_rotation_days = 90
+audit_log_retention_days = 365
+
+operational_mode = "normal"  # Options: normal, degraded, air_gapped, adversarial, recovery, maintenance, emergency
+
+[data_persistence]
+data_dir = "data"
+backup_enabled = true
+backup_interval_hours = 24
+max_backups = 7
+compression_enabled = true
+
+[monitoring]
+metrics_enabled = true
+metrics_export_interval = 60
+
+[monitoring.alert_thresholds]
+threat_level = 6  # 0-10 scale
+resource_critical_percent = 10.0
+subsystem_failure_count = 3
+
+# ===========================
+# SUBSYSTEM DEFINITIONS
+# ===========================
+
+[subsystems.situational_awareness]
+name = "Situational Awareness"
+version = "1.0.0"
+priority = "CRITICAL"
+module_path = "src.app.domains.situational_awareness"
+class_name = "SituationalAwarenessSubsystem"
+dependencies = []
+provides_capabilities = ["sensor_fusion", "threat_detection", "situational_awareness", "predictive_analytics"]
+enabled = true
+auto_init = true
+
+[subsystems.situational_awareness.config]
+data_dir = "data"
+sensor_fusion_interval = 1.0
+threat_detection_threshold = 0.7
+max_threat_age_seconds = 300
+predictive_horizon_seconds = 600
+
+[subsystems.command_control]
+name = "Command & Control"
+version = "1.0.0"
+priority = "CRITICAL"
+module_path = "src.app.domains.command_control"
+class_name = "CommandControlSubsystem"
+dependencies = ["situational_awareness"]
+provides_capabilities = ["mission_planning", "resource_allocation", "communication_coordination", "decision_support"]
+enabled = true
+auto_init = true
+
+[subsystems.command_control.config]
+data_dir = "data"
+mission_planning_horizon_hours = 72
+resource_allocation_algorithm = "priority_based"
+communication_check_interval = 30
+
+[subsystems.supply_logistics]
+name = "Supply Logistics"
+version = "1.0.0"
+priority = "HIGH"
+module_path = "src.app.domains.supply_logistics"
+class_name = "SupplyLogisticsSubsystem"
+dependencies = ["situational_awareness", "command_control"]
+provides_capabilities = ["inventory_management", "distribution_optimization", "scarcity_planning"]
+enabled = true
+auto_init = true
+
+[subsystems.supply_logistics.config]
+data_dir = "data"
+inventory_check_interval = 300
+distribution_optimization_algorithm = "shortest_path"
+scarcity_threshold_percent = 20.0
+rationing_enabled = true
+
+[subsystems.biomedical_defense]
+name = "Biomedical Defense"
+version = "1.0.0"
+priority = "CRITICAL"
+module_path = "src.app.domains.biomedical_defense"
+class_name = "BiomedicalDefenseSubsystem"
+dependencies = ["situational_awareness"]
+provides_capabilities = ["infection_detection", "medical_resource_management", "quarantine_protocols"]
+enabled = true
+auto_init = true
+
+[subsystems.biomedical_defense.config]
+data_dir = "data"
+infection_screening_interval = 3600
+quarantine_duration_days = 14
+medical_supply_critical_threshold = 15.0
+
+[subsystems.tactical_edge_ai]
+name = "Tactical Edge AI"
+version = "1.0.0"
+priority = "HIGH"
+module_path = "src.app.domains.tactical_edge_ai"
+class_name = "TacticalEdgeAISubsystem"
+dependencies = ["situational_awareness", "command_control"]
+provides_capabilities = ["tactical_decision_making", "threat_response_optimization", "adaptive_strategy"]
+enabled = true
+auto_init = true
+
+[subsystems.tactical_edge_ai.config]
+data_dir = "data"
+decision_cycle_interval = 5.0
+threat_response_timeout = 30.0
+strategy_adaptation_enabled = true
+
+[subsystems.survivor_support]
+name = "Survivor Support"
+version = "1.0.0"
+priority = "HIGH"
+module_path = "src.app.domains.survivor_support"
+class_name = "SurvivorSupportSubsystem"
+dependencies = ["situational_awareness", "supply_logistics"]
+provides_capabilities = ["survivor_registry", "rescue_coordination", "needs_assessment"]
+enabled = true
+auto_init = true
+
+[subsystems.survivor_support.config]
+data_dir = "data"
+needs_assessment_interval = 3600
+rescue_priority_algorithm = "triage_based"
+morale_tracking_enabled = true
+
+[subsystems.ethics_governance]
+name = "Ethics & Governance"
+version = "1.0.0"
+priority = "CRITICAL"
+module_path = "src.app.domains.ethics_governance"
+class_name = "EthicsGovernanceSubsystem"
+dependencies = []
+provides_capabilities = ["ethical_validation", "conflict_resolution", "fairness_enforcement"]
+enabled = true
+auto_init = true
+
+[subsystems.ethics_governance.config]
+data_dir = "data"
+ethical_framework = "utilitarian_deontological_hybrid"
+conflict_resolution_strategy = "consensus_based"
+fairness_algorithm = "proportional_allocation"
+
+[subsystems.agi_safeguards]
+name = "AGI Safeguards"
+version = "1.0.0"
+priority = "CRITICAL"
+module_path = "src.app.domains.agi_safeguards"
+class_name = "AGISafeguardsSubsystem"
+dependencies = ["ethics_governance"]
+provides_capabilities = ["ai_monitoring", "alignment_verification", "behavioral_bounds"]
+enabled = true
+auto_init = true
+
+[subsystems.agi_safeguards.config]
+data_dir = "data"
+monitoring_interval = 10.0
+alignment_check_frequency = 60.0
+kill_switch_enabled = true
+behavioral_bounds_strict = true
+
+[subsystems.continuous_improvement]
+name = "Continuous Improvement"
+version = "1.0.0"
+priority = "MEDIUM"
+module_path = "src.app.domains.continuous_improvement"
+class_name = "ContinuousImprovementSubsystem"
+dependencies = ["situational_awareness", "command_control", "tactical_edge_ai"]
+provides_capabilities = ["performance_analytics", "strategy_optimization", "outcome_learning"]
+enabled = true
+auto_init = true
+
+[subsystems.continuous_improvement.config]
+data_dir = "data"
+analytics_interval = 3600
+optimization_algorithm = "gradient_based"
+learning_rate = 0.01
+
+[subsystems.deep_expansion]
+name = "Deep Expansion Protocols"
+version = "1.0.0"
+priority = "LOW"
+module_path = "src.app.domains.deep_expansion"
+class_name = "DeepExpansionSubsystem"
+dependencies = ["situational_awareness", "continuous_improvement"]
+provides_capabilities = ["scenario_simulation", "long_term_strategy", "threat_modeling", "recursive_expansion"]
+enabled = true
+auto_init = true
+
+[subsystems.deep_expansion.config]
+data_dir = "data"
+simulation_horizon_days = 365
+scenario_count = 100
+multiverse_modeling_enabled = false  # Requires extensive computational resources
+recursive_depth = 3

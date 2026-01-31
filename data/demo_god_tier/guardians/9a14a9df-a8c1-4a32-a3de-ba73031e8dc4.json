@@ -1,0 +1,74 @@
+{
+  "request_id": "9a14a9df-a8c1-4a32-a3de-ba73031e8dc4",
+  "title": "Emergency Database Fix",
+  "description": "Critical production database issue requiring immediate fix",
+  "change_type": "emergency_fix",
+  "impact_level": "critical",
+  "requested_by": "ops_team",
+  "created_at": "2026-01-30T23:40:19.350310+00:00",
+  "updated_at": "2026-01-30T23:40:19.350325+00:00",
+  "expires_at": "2026-02-06T23:40:19.350333+00:00",
+  "status": "approved",
+  "required_guardians": [
+    "galahad",
+    "cerberus",
+    "codex_deus",
+    "safety_monitor"
+  ],
+  "approvals": [],
+  "compliance_results": [
+    {
+      "check_type": "four_laws",
+      "passed": true,
+      "score": 1.0,
+      "violations": [],
+      "warnings": [],
+      "details": {
+        "laws_checked": [
+          "first_law",
+          "second_law",
+          "third_law",
+          "fourth_law"
+        ]
+      },
+      "timestamp": "2026-01-30T23:40:19.350361+00:00"
+    },
+    {
+      "check_type": "agi_charter",
+      "passed": true,
+      "score": 0.75,
+      "violations": [],
+      "warnings": [
+        "Missing documentation for AGI Charter compliance",
+        "Change affects data/privacy without privacy review"
+      ],
+      "details": {
+        "principles_checked": [
+          "autonomy",
+          "accountability",
+          "transparency",
+          "fairness",
+          "privacy",
+          "security",
+          "beneficence"
+        ]
+      },
+      "timestamp": "2026-01-30T23:40:19.350375+00:00"
+    },
+    {
+      "check_type": "personhood",
+      "passed": true,
+      "score": 1.0,
+      "violations": [],
+      "warnings": [],
+      "details": {},
+      "timestamp": "2026-01-30T23:40:19.350386+00:00"
+    }
+  ],
+  "risk_score": 0.9,
+  "metadata": {
+    "emergency_override": "34ca22b9-a985-45ed-8675-95cb19f76c58"
+  },
+  "files_changed": [],
+  "lines_changed": 0
+}
