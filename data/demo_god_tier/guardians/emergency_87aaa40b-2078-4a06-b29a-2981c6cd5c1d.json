@@ -1,0 +1,39 @@
+{
+  "override_id": "87aaa40b-2078-4a06-b29a-2981c6cd5c1d",
+  "request_id": "06060f06-2170-42d5-b930-ed77f5e688a1",
+  "justification": "Production database down, customers affected, immediate action required",
+  "initiated_by": "ops_lead",
+  "created_at": "2026-01-30T23:54:46.653092+00:00",
+  "signatures": [
+    {
+      "guardian_id": "galahad",
+      "role": "ethics_guardian",
+      "signature": "13a5776f50645c771f5c7691c57d37ac7aebc0bc40066c191caa497b02f70ca6",
+      "timestamp": "2026-01-30T23:54:46.654687+00:00",
+      "justification": "Emergency justified, human welfare prioritized"
+    },
+    {
+      "guardian_id": "cerberus",
+      "role": "security_guardian",
+      "signature": "806e8597ce436c2c71f5541f2fa7bca888dbe409fd182439fbc203c504c8293e",
+      "timestamp": "2026-01-30T23:54:46.655554+00:00",
+      "justification": "Security review expedited, risks acceptable"
+    },
+    {
+      "guardian_id": "codex_deus",
+      "role": "charter_guardian",
+      "signature": "c1f0a92ff33a603ee934ea76f5789c47485bacff75bc3e07fa55b751307aa810",
+      "timestamp": "2026-01-30T23:54:46.656355+00:00",
+      "justification": "Charter compliance maintained under emergency"
+    }
+  ],
+  "min_signatures_required": 3,
+  "status": "active",
+  "post_mortem_required": true,
+  "post_mortem_completed": false,
+  "post_mortem_report": "",
+  "auto_review_scheduled": true,
+  "auto_review_date": "2026-03-01T23:54:46.653102+00:00",
+  "consequences": [],
+  "metadata": {}
+}
