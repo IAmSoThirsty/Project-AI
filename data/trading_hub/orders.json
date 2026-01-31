@@ -1,0 +1,21 @@
+{
+  "orders": [
+    {
+      "order_id": "3bcd3c17-95c3-4aba-8145-a82c1387eaa2",
+      "symbol": "BTC/USD",
+      "side": "buy",
+      "order_type": "market",
+      "quantity": 0.1,
+      "price": null,
+      "stop_price": null,
+      "status": "cancelled",
+      "filled_quantity": 0.1,
+      "average_fill_price": 0.0,
+      "created_at": 1769696721628,
+      "updated_at": 1769696721629,
+      "filled_at": 1769696721628,
+      "metadata": {}
+    }
+  ],
+  "updated_at": 1769696721629
+}
