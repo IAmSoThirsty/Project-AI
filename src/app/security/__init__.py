@@ -10,12 +10,30 @@ This module provides comprehensive security controls including:
 - Monitoring and alerting
 """
 
-from .agent_security import AgentEncapsulation
-from .aws_integration import AWSSecurityManager
+# Import core security components (always available)
 from .data_validation import DataPoisoningDefense, SecureDataParser
-from .database_security import SecureDatabaseManager
 from .environment_hardening import EnvironmentHardening
-from .monitoring import SecurityMonitor
+
+# Optional imports (graceful degradation if dependencies missing)
+try:
+    from .agent_security import AgentEncapsulation
+except ImportError:
+    AgentEncapsulation = None
+
+try:
+    from .aws_integration import AWSSecurityManager
+except ImportError:
+    AWSSecurityManager = None
+
+try:
+    from .database_security import SecureDatabaseManager
+except ImportError:
+    SecureDatabaseManager = None
+
+try:
+    from .monitoring import SecurityMonitor
+except ImportError:
+    SecurityMonitor = None
 
 __all__ = [
     "EnvironmentHardening",
