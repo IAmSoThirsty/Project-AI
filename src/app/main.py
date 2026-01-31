@@ -494,7 +494,11 @@ def initialize_security_systems(kernel: CognitionKernel, council_hub: CouncilHub
             data_dir="data",
             key_file="config/.asl3_key",
             enable_emergency_alerts=True,
-            enable_cerberus_hydra=False  # Disabled by default to avoid conflicts
+            # Cerberus Hydra disabled by default to avoid conflicts with:
+            # - GlobalWatchTower's Cerberus (would create duplicate Cerberus instances)
+            # - Border Patrol hierarchy (Hydra spawns additional defense agents)
+            # Enable only if you need Hydra's multi-head defense capabilities
+            enable_cerberus_hydra=False
         )
         security_components['asl3_security'] = asl3_security
 
