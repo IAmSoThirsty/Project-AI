@@ -1,8 +1,14 @@
 import json
 import os
 
-from PyQt6.QtWidgets import (QComboBox, QDialog, QDialogButtonBox, QLabel, QSpinBox,
-                             QVBoxLayout)
+from PyQt6.QtWidgets import (
+    QComboBox,
+    QDialog,
+    QDialogButtonBox,
+    QLabel,
+    QSpinBox,
+    QVBoxLayout,
+)
 
 DATA_DIR = os.getenv("DATA_DIR", "data")
 SETTINGS_FILE = os.path.join(DATA_DIR, "settings.json")

@@ -84,9 +84,14 @@ class ProjectAIMCPServer:
         self.image_gen = None
 
         try:
-            from app.core.ai_systems import (AIPersona, CommandOverrideSystem, FourLaws,
-                                             LearningRequestManager,
-                                             MemoryExpansionSystem, PluginManager)
+            from app.core.ai_systems import (
+                AIPersona,
+                CommandOverrideSystem,
+                FourLaws,
+                LearningRequestManager,
+                MemoryExpansionSystem,
+                PluginManager,
+            )
             from app.core.data_analysis import DataAnalyzer
             from app.core.emergency_alert import EmergencyAlertSystem
             from app.core.image_generator import ImageGenerator

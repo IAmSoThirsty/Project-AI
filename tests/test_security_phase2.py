@@ -8,12 +8,19 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from app.security.agent_security import (AgentEncapsulation, NumericalProtection,
-                                         RuntimeFuzzer)
+from app.security.agent_security import (
+    AgentEncapsulation,
+    NumericalProtection,
+    RuntimeFuzzer,
+)
 from app.security.database_security import SecureDatabaseManager
 from app.security.monitoring import SecurityMonitor, StructuredLogger
-from app.security.web_service import (InputValidator, RateLimiter, SecureWebHandler,
-                                      SOAPClient)
+from app.security.web_service import (
+    InputValidator,
+    RateLimiter,
+    SecureWebHandler,
+    SOAPClient,
+)
 
 # Skip AWS tests if boto3 not available
 try:

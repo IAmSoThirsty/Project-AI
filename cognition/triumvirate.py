@@ -1,8 +1,8 @@
-from cognition.health import HealthSignal
-from cognition.kernel_liara import maybe_activate_liara, restore_pillar
 from cognition.audit import audit
+from cognition.kernel_liara import maybe_activate_liara, restore_pillar
 
 ACTIVE_SUBSTITUTION = None
+
 
 def evaluate_triumvirate(health: dict):
     global ACTIVE_SUBSTITUTION

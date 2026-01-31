@@ -72,8 +72,12 @@ class TestDeterministicReplayTool:
     def test_save_and_load_execution(self, replay_tool):
         """Test saving and loading an execution."""
         # Create mock execution context
-        from app.core.cognition_kernel import (Action, Decision, ExecutionContext,
-                                               ExecutionStatus)
+        from app.core.cognition_kernel import (
+            Action,
+            Decision,
+            ExecutionContext,
+            ExecutionStatus,
+        )
 
         action = Action(
             action_id="test_action_1",
@@ -115,8 +119,12 @@ class TestDeterministicReplayTool:
     def test_replay_execution(self, replay_tool):
         """Test replaying an execution."""
         # Save a test execution first
-        from app.core.cognition_kernel import (Action, Decision, ExecutionContext,
-                                               ExecutionStatus)
+        from app.core.cognition_kernel import (
+            Action,
+            Decision,
+            ExecutionContext,
+            ExecutionStatus,
+        )
 
         action = Action(
             action_id="test_action_2",

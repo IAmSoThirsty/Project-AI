@@ -1,6 +1,6 @@
-from enum import Enum
 from dataclasses import dataclass
-from typing import Dict, Any, Optional
+from enum import Enum
+from typing import Any
 
 
 class TarlVerdict(Enum):
@@ -13,7 +13,7 @@ class TarlVerdict(Enum):
 class TarlDecision:
     verdict: TarlVerdict
     reason: str
-    metadata: Optional[Dict[str, Any]] = None
+    metadata: dict[str, Any] | None = None
 
     def is_terminal(self) -> bool:
         return self.verdict in (TarlVerdict.DENY, TarlVerdict.ESCALATE)

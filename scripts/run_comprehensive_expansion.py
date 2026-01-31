@@ -20,8 +20,10 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from app.core.ai_systems import AIPersona, FourLaws, MemoryExpansionSystem
-from app.core.comprehensive_security_expansion import (ComprehensiveScenario,
-                                                       ComprehensiveSecurityExpansion)
+from app.core.comprehensive_security_expansion import (
+    ComprehensiveScenario,
+    ComprehensiveSecurityExpansion,
+)
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"

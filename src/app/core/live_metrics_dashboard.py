@@ -19,17 +19,15 @@ Features:
 Production-ready with full error handling and logging.
 """
 
-import json
 import logging
 import threading
 import time
-import uuid
 from collections import defaultdict, deque
+from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime
 from enum import Enum
-from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Set, Tuple
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -58,14 +56,14 @@ class MetricCategory(Enum):
 class MetricPoint:
     """Individual metric data point."""
 
-    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
     metric_name: str = ""
     metric_type: str = MetricType.GAUGE.value
     value: float = 0.0
-    labels: Dict[str, str] = field(default_factory=dict)
+    labels: dict[str, str] = field(default_factory=dict)
     category: str = MetricCategory.SYSTEM_HEALTH.value
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return asdict(self)
 
@@ -77,8 +75,8 @@ class MetricSeries:
     metric_name: str
     metric_type: str
     category: str
-    points: List[MetricPoint] = field(default_factory=list)
-    labels: Dict[str, str] = field(default_factory=dict)
+    points: list[MetricPoint] = field(default_factory=list)
+    labels: dict[str, str] = field(default_factory=dict)
     min_value: float = float("inf")
     max_value: float = float("-inf")
     avg_value: float = 0.0
@@ -96,11 +94,11 @@ class MetricSeries:
         self.max_value = max(self.max_value, point.value)
         self.avg_value = (self.avg_value * (self.count - 1) + point.value) / self.count
 
-    def get_recent_points(self, limit: int = 100) -> List[MetricPoint]:
+    def get_recent_points(self, limit: int = 100) -> list[MetricPoint]:
         """Get most recent points."""
         return self.points[-limit:]
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return {
             "metric_name": self.metric_name,
@@ -122,14 +120,18 @@ class MetricsCollector:
     """Collects and aggregates metrics."""
 
     def __init__(self):
-        self.series: Dict[str, MetricSeries] = {}
-        self.counters: Dict[str, float] = defaultdict(float)
-        self.gauges: Dict[str, float] = {}
-        self.histograms: Dict[str, List[float]] = defaultdict(list)
+        self.series: dict[str, MetricSeries] = {}
+        self.counters: dict[str, float] = defaultdict(float)
+        self.gauges: dict[str, float] = {}
+        self.histograms: dict[str, list[float]] = defaultdict(list)
         self.lock = threading.RLock()
 
     def record_counter(
-        self, name: str, value: float = 1.0, labels: Optional[Dict[str, str]] = None, category: str = MetricCategory.SYSTEM_HEALTH.value
+        self,
+        name: str,
+        value: float = 1.0,
+        labels: dict[str, str] | None = None,
+        category: str = MetricCategory.SYSTEM_HEALTH.value,
     ) -> None:
         """Record counter metric (always increasing)."""
         try:
@@ -150,7 +152,11 @@ class MetricsCollector:
             logger.error(f"Error recording counter {name}: {e}")
 
     def record_gauge(
-        self, name: str, value: float, labels: Optional[Dict[str, str]] = None, category: str = MetricCategory.SYSTEM_HEALTH.value
+        self,
+        name: str,
+        value: float,
+        labels: dict[str, str] | None = None,
+        category: str = MetricCategory.SYSTEM_HEALTH.value,
     ) -> None:
         """Record gauge metric (can go up or down)."""
         try:
@@ -171,7 +177,11 @@ class MetricsCollector:
             logger.error(f"Error recording gauge {name}: {e}")
 
     def record_histogram(
-        self, name: str, value: float, labels: Optional[Dict[str, str]] = None, category: str = MetricCategory.SYSTEM_HEALTH.value
+        self,
+        name: str,
+        value: float,
+        labels: dict[str, str] | None = None,
+        category: str = MetricCategory.SYSTEM_HEALTH.value,
     ) -> None:
         """Record histogram observation."""
         try:
@@ -195,14 +205,16 @@ class MetricsCollector:
         except Exception as e:
             logger.error(f"Error recording histogram {name}: {e}")
 
-    def _make_key(self, name: str, labels: Optional[Dict[str, str]]) -> str:
+    def _make_key(self, name: str, labels: dict[str, str] | None) -> str:
         """Create unique key for metric with labels."""
         if not labels:
             return name
         label_str = ",".join(f"{k}={v}" for k, v in sorted(labels.items()))
         return f"{name}{{{label_str}}}"
 
-    def _add_to_series(self, name: str, point: MetricPoint, labels: Optional[Dict[str, str]]) -> None:
+    def _add_to_series(
+        self, name: str, point: MetricPoint, labels: dict[str, str] | None
+    ) -> None:
         """Add point to time series."""
         key = self._make_key(name, labels)
         if key not in self.series:
@@ -214,18 +226,20 @@ class MetricsCollector:
             )
         self.series[key].add_point(point)
 
-    def get_series(self, name: str, labels: Optional[Dict[str, str]] = None) -> Optional[MetricSeries]:
+    def get_series(
+        self, name: str, labels: dict[str, str] | None = None
+    ) -> MetricSeries | None:
         """Get metric series."""
         with self.lock:
             key = self._make_key(name, labels)
             return self.series.get(key)
 
-    def get_all_series(self) -> List[MetricSeries]:
+    def get_all_series(self) -> list[MetricSeries]:
         """Get all metric series."""
         with self.lock:
             return list(self.series.values())
 
-    def get_series_by_category(self, category: MetricCategory) -> List[MetricSeries]:
+    def get_series_by_category(self, category: MetricCategory) -> list[MetricSeries]:
         """Get series by category."""
         with self.lock:
             return [s for s in self.series.values() if s.category == category.value]
@@ -242,7 +256,11 @@ class AGIBehaviorMonitor:
         self.lock = threading.RLock()
 
     def record_decision(
-        self, decision_type: str, confidence: float, reasoning_steps: int, compliant: bool
+        self,
+        decision_type: str,
+        confidence: float,
+        reasoning_steps: int,
+        compliant: bool,
     ) -> None:
         """Record AGI decision."""
         try:
@@ -253,7 +271,10 @@ class AGIBehaviorMonitor:
                 # Record metrics
                 self.collector.record_counter(
                     "agi_decisions_total",
-                    labels={"decision_type": decision_type, "compliant": str(compliant)},
+                    labels={
+                        "decision_type": decision_type,
+                        "compliant": str(compliant),
+                    },
                     category=MetricCategory.AGI_BEHAVIOR.value,
                 )
 
@@ -278,8 +299,15 @@ class AGIBehaviorMonitor:
 
                 compliance_rate = (
                     self.four_laws_checks["passed"]
-                    / (self.four_laws_checks["passed"] + self.four_laws_checks["failed"])
-                    if (self.four_laws_checks["passed"] + self.four_laws_checks["failed"]) > 0
+                    / (
+                        self.four_laws_checks["passed"]
+                        + self.four_laws_checks["failed"]
+                    )
+                    if (
+                        self.four_laws_checks["passed"]
+                        + self.four_laws_checks["failed"]
+                    )
+                    > 0
                     else 1.0
                 )
 
@@ -295,7 +323,9 @@ class AGIBehaviorMonitor:
         except Exception as e:
             logger.error(f"Error recording AGI decision: {e}")
 
-    def record_learning_event(self, learning_type: str, success: bool, duration: float) -> None:
+    def record_learning_event(
+        self, learning_type: str, success: bool, duration: float
+    ) -> None:
         """Record learning event."""
         self.collector.record_counter(
             "agi_learning_events_total",
@@ -310,7 +340,7 @@ class AGIBehaviorMonitor:
             category=MetricCategory.AGI_BEHAVIOR.value,
         )
 
-    def get_behavior_summary(self) -> Dict[str, Any]:
+    def get_behavior_summary(self) -> dict[str, Any]:
         """Get behavior summary."""
         with self.lock:
             avg_reasoning_steps = (
@@ -334,7 +364,7 @@ class FusionOperationsMonitor:
         self.lock = threading.RLock()
 
     def record_fusion(
-        self, fusion_type: str, modalities: List[str], latency: float, confidence: float
+        self, fusion_type: str, modalities: list[str], latency: float, confidence: float
     ) -> None:
         """Record fusion operation."""
         try:
@@ -343,7 +373,10 @@ class FusionOperationsMonitor:
 
                 self.collector.record_counter(
                     "fusion_operations_total",
-                    labels={"fusion_type": fusion_type, "modality_count": str(len(modalities))},
+                    labels={
+                        "fusion_type": fusion_type,
+                        "modality_count": str(len(modalities)),
+                    },
                     category=MetricCategory.FUSION_OPS.value,
                 )
 
@@ -370,7 +403,9 @@ class FusionOperationsMonitor:
         except Exception as e:
             logger.error(f"Error recording fusion operation: {e}")
 
-    def record_sensor_reading(self, sensor_id: str, sensor_type: str, value: float) -> None:
+    def record_sensor_reading(
+        self, sensor_id: str, sensor_type: str, value: float
+    ) -> None:
         """Record sensor reading."""
         self.collector.record_gauge(
             f"sensor_{sensor_type}_value",
@@ -389,7 +424,12 @@ class RoboticActionMonitor:
         self.lock = threading.RLock()
 
     def record_action(
-        self, action_type: str, motor_id: str, success: bool, duration: float, power: float = 0.0
+        self,
+        action_type: str,
+        motor_id: str,
+        success: bool,
+        duration: float,
+        power: float = 0.0,
     ) -> None:
         """Record robotic action."""
         try:
@@ -398,7 +438,11 @@ class RoboticActionMonitor:
 
                 self.collector.record_counter(
                     "robotic_actions_total",
-                    labels={"action_type": action_type, "motor_id": motor_id, "success": str(success)},
+                    labels={
+                        "action_type": action_type,
+                        "motor_id": motor_id,
+                        "success": str(success),
+                    },
                     category=MetricCategory.ROBOTIC_ACTION.value,
                 )
 
@@ -419,7 +463,9 @@ class RoboticActionMonitor:
         except Exception as e:
             logger.error(f"Error recording robotic action: {e}")
 
-    def record_motor_health(self, motor_id: str, temperature: float, current: float) -> None:
+    def record_motor_health(
+        self, motor_id: str, temperature: float, current: float
+    ) -> None:
         """Record motor health metrics."""
         self.collector.record_gauge(
             "robotic_motor_temperature_celsius",
@@ -454,17 +500,25 @@ class SystemHealthMonitor:
     def record_memory_usage(self, used_mb: float, total_mb: float) -> None:
         """Record memory usage."""
         self.collector.record_gauge(
-            "system_memory_used_mb", used_mb, category=MetricCategory.SYSTEM_HEALTH.value
+            "system_memory_used_mb",
+            used_mb,
+            category=MetricCategory.SYSTEM_HEALTH.value,
         )
         self.collector.record_gauge(
-            "system_memory_total_mb", total_mb, category=MetricCategory.SYSTEM_HEALTH.value
+            "system_memory_total_mb",
+            total_mb,
+            category=MetricCategory.SYSTEM_HEALTH.value,
         )
         percentage = (used_mb / total_mb * 100) if total_mb > 0 else 0
         self.collector.record_gauge(
-            "system_memory_usage_percent", percentage, category=MetricCategory.SYSTEM_HEALTH.value
+            "system_memory_usage_percent",
+            percentage,
+            category=MetricCategory.SYSTEM_HEALTH.value,
         )
 
-    def record_disk_usage(self, used_gb: float, total_gb: float, path: str = "/") -> None:
+    def record_disk_usage(
+        self, used_gb: float, total_gb: float, path: str = "/"
+    ) -> None:
         """Record disk usage."""
         self.collector.record_gauge(
             "system_disk_used_gb",
@@ -486,7 +540,9 @@ class SystemHealthMonitor:
             category=MetricCategory.SYSTEM_HEALTH.value,
         )
 
-    def record_component_health(self, component: str, healthy: bool, uptime_seconds: float) -> None:
+    def record_component_health(
+        self, component: str, healthy: bool, uptime_seconds: float
+    ) -> None:
         """Record component health."""
         self.collector.record_gauge(
             "system_component_healthy",
@@ -506,13 +562,17 @@ class AlertManager:
     """Manages metric-based alerting."""
 
     def __init__(self):
-        self.thresholds: Dict[str, Dict[str, Any]] = {}
-        self.active_alerts: Dict[str, Dict[str, Any]] = {}
-        self.alert_handlers: List[Callable[[Dict[str, Any]], None]] = []
+        self.thresholds: dict[str, dict[str, Any]] = {}
+        self.active_alerts: dict[str, dict[str, Any]] = {}
+        self.alert_handlers: list[Callable[[dict[str, Any]], None]] = []
         self.lock = threading.RLock()
 
     def add_threshold(
-        self, metric_name: str, threshold: float, operator: str = "gt", severity: str = "warning"
+        self,
+        metric_name: str,
+        threshold: float,
+        operator: str = "gt",
+        severity: str = "warning",
     ) -> None:
         """Add alerting threshold for metric."""
         with self.lock:
@@ -522,7 +582,7 @@ class AlertManager:
                 "severity": severity,  # info, warning, critical
             }
 
-    def check_thresholds(self, collector: MetricsCollector) -> List[Dict[str, Any]]:
+    def check_thresholds(self, collector: MetricsCollector) -> list[dict[str, Any]]:
         """Check all thresholds against current metrics."""
         alerts = []
         try:
@@ -537,15 +597,18 @@ class AlertManager:
                     operator = config["operator"]
 
                     triggered = False
-                    if operator == "gt" and value > threshold:
-                        triggered = True
-                    elif operator == "lt" and value < threshold:
-                        triggered = True
-                    elif operator == "gte" and value >= threshold:
-                        triggered = True
-                    elif operator == "lte" and value <= threshold:
-                        triggered = True
-                    elif operator == "eq" and abs(value - threshold) < 0.001:
+                    if (
+                        operator == "gt"
+                        and value > threshold
+                        or operator == "lt"
+                        and value < threshold
+                        or operator == "gte"
+                        and value >= threshold
+                        or operator == "lte"
+                        and value <= threshold
+                        or operator == "eq"
+                        and abs(value - threshold) < 0.001
+                    ):
                         triggered = True
 
                     if triggered:
@@ -555,7 +618,7 @@ class AlertManager:
                             "threshold": threshold,
                             "operator": operator,
                             "severity": config["severity"],
-                            "timestamp": datetime.now(timezone.utc).isoformat(),
+                            "timestamp": datetime.now(UTC).isoformat(),
                         }
                         alerts.append(alert)
                         self._trigger_alert(alert)
@@ -564,7 +627,7 @@ class AlertManager:
 
         return alerts
 
-    def _trigger_alert(self, alert: Dict[str, Any]) -> None:
+    def _trigger_alert(self, alert: dict[str, Any]) -> None:
         """Trigger alert to all handlers."""
         alert_id = f"{alert['metric']}_{alert['timestamp']}"
         with self.lock:
@@ -581,7 +644,7 @@ class AlertManager:
             f"({alert['operator']} {alert['threshold']})"
         )
 
-    def register_alert_handler(self, handler: Callable[[Dict[str, Any]], None]) -> None:
+    def register_alert_handler(self, handler: Callable[[dict[str, Any]], None]) -> None:
         """Register alert handler."""
         with self.lock:
             self.alert_handlers.append(handler)
@@ -599,7 +662,7 @@ class LiveMetricsDashboard:
         self.alert_manager = AlertManager()
 
         self.monitoring_active = False
-        self.monitor_thread: Optional[threading.Thread] = None
+        self.monitor_thread: threading.Thread | None = None
         self.lock = threading.RLock()
 
         self._setup_default_alerts()
@@ -609,13 +672,23 @@ class LiveMetricsDashboard:
     def _setup_default_alerts(self) -> None:
         """Setup default alerting thresholds."""
         # System health alerts
-        self.alert_manager.add_threshold("system_cpu_usage_percent", 90.0, "gt", "warning")
-        self.alert_manager.add_threshold("system_cpu_usage_percent", 95.0, "gt", "critical")
-        self.alert_manager.add_threshold("system_memory_usage_percent", 85.0, "gt", "warning")
-        self.alert_manager.add_threshold("system_memory_usage_percent", 95.0, "gt", "critical")
+        self.alert_manager.add_threshold(
+            "system_cpu_usage_percent", 90.0, "gt", "warning"
+        )
+        self.alert_manager.add_threshold(
+            "system_cpu_usage_percent", 95.0, "gt", "critical"
+        )
+        self.alert_manager.add_threshold(
+            "system_memory_usage_percent", 85.0, "gt", "warning"
+        )
+        self.alert_manager.add_threshold(
+            "system_memory_usage_percent", 95.0, "gt", "critical"
+        )
 
         # AGI behavior alerts
-        self.alert_manager.add_threshold("agi_four_laws_compliance_rate", 0.95, "lt", "critical")
+        self.alert_manager.add_threshold(
+            "agi_four_laws_compliance_rate", 0.95, "lt", "critical"
+        )
 
     def start_monitoring(self) -> bool:
         """Start background monitoring."""
@@ -624,7 +697,9 @@ class LiveMetricsDashboard:
                 return False
 
             self.monitoring_active = True
-            self.monitor_thread = threading.Thread(target=self._monitoring_loop, daemon=True)
+            self.monitor_thread = threading.Thread(
+                target=self._monitoring_loop, daemon=True
+            )
             self.monitor_thread.start()
             logger.info("Started live metrics monitoring")
             return True
@@ -654,7 +729,9 @@ class LiveMetricsDashboard:
             except Exception as e:
                 logger.error(f"Error in monitoring loop: {e}")
 
-    def get_dashboard_data(self, category: Optional[MetricCategory] = None) -> Dict[str, Any]:
+    def get_dashboard_data(
+        self, category: MetricCategory | None = None
+    ) -> dict[str, Any]:
         """Get dashboard data for API."""
         try:
             if category:
@@ -663,7 +740,7 @@ class LiveMetricsDashboard:
                 series = self.collector.get_all_series()
 
             return {
-                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
                 "metrics_count": len(series),
                 "series": [s.to_dict() for s in series],
                 "agi_behavior": self.agi_monitor.get_behavior_summary(),
@@ -673,7 +750,7 @@ class LiveMetricsDashboard:
             logger.error(f"Error getting dashboard data: {e}")
             return {}
 
-    def get_metrics_summary(self) -> Dict[str, Any]:
+    def get_metrics_summary(self) -> dict[str, Any]:
         """Get high-level metrics summary."""
         return {
             "agi_decisions": self.agi_monitor.decision_count,
@@ -691,10 +768,10 @@ def create_dashboard() -> LiveMetricsDashboard:
 
 
 # Global instance
-_dashboard_instance: Optional[LiveMetricsDashboard] = None
+_dashboard_instance: LiveMetricsDashboard | None = None
 
 
-def get_dashboard() -> Optional[LiveMetricsDashboard]:
+def get_dashboard() -> LiveMetricsDashboard | None:
     """Get global dashboard instance."""
     return _dashboard_instance
 

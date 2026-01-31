@@ -4,9 +4,14 @@ import multiprocessing
 import os
 import time
 
-from app.core.ai_systems import (AIPersona, LearningRequestManager,
-                                 MemoryExpansionSystem, _acquire_lock,
-                                 _atomic_write_json, _release_lock)
+from app.core.ai_systems import (
+    AIPersona,
+    LearningRequestManager,
+    MemoryExpansionSystem,
+    _acquire_lock,
+    _atomic_write_json,
+    _release_lock,
+)
 
 
 def _writer_proc(path: str, idx: int, loops: int = 10, pause: float = 0.01):

@@ -27,27 +27,25 @@ def example_user_ai_secure_conversation():
 
     # Initialize AI agent messaging
     ai_agent = SovereignMessaging(
-        data_dir="data/sovereign_messages_ai",
-        participant_name="ProjectAI_Assistant"
+        data_dir="data/sovereign_messages_ai", participant_name="ProjectAI_Assistant"
     )
     ai_agent.set_participant_type(ParticipantType.AI)
 
     # Initialize user messaging
     user = SovereignMessaging(
-        data_dir="data/sovereign_messages_user",
-        participant_name="Alice"
+        data_dir="data/sovereign_messages_user", participant_name="Alice"
     )
 
     # Display pairing information
     print("\n🤖 AI Agent Information:")
-    print(f"   Name: ProjectAI_Assistant")
+    print("   Name: ProjectAI_Assistant")
     print(f"   Code: {ai_agent.get_communication_code()}")
-    print(f"   Type: AI")
+    print("   Type: AI")
 
     print("\n👤 User Information:")
-    print(f"   Name: Alice")
+    print("   Name: Alice")
     print(f"   Code: {user.get_communication_code()}")
-    print(f"   Type: USER")
+    print("   Type: USER")
 
     # Mutual pairing
     print("\n🔗 Pairing user and AI...")
@@ -55,24 +53,21 @@ def example_user_ai_secure_conversation():
         "ProjectAI_Assistant",
         ai_agent.get_communication_code(),
         ai_agent.get_public_key(),
-        participant_type=ParticipantType.AI
+        participant_type=ParticipantType.AI,
     )
 
     ai_agent.pair_with_contact(
         "Alice",
         user.get_communication_code(),
         user.get_public_key(),
-        participant_type=ParticipantType.USER
+        participant_type=ParticipantType.USER,
     )
     print("✅ Pairing complete!")
 
     # User sends encrypted question to AI
     print("\n📤 User sends encrypted message to AI...")
     question = "What is the meaning of life?"
-    user_msg_id = user.send_message(
-        ai_agent.get_communication_code(),
-        question
-    )
+    user_msg_id = user.send_message(ai_agent.get_communication_code(), question)
     print(f"   Question: '{question}'")
     print(f"   Message ID: {user_msg_id}")
     print(f"   Status: {MessageStatus.SENT.value}")
@@ -84,7 +79,7 @@ def example_user_ai_secure_conversation():
         user.get_communication_code(),
         user_sent_msg["encrypted_aes_key"],
         user_sent_msg["iv"],
-        user_sent_msg["ciphertext"]
+        user_sent_msg["ciphertext"],
     )
     print(f"   Decrypted: '{ai_received['content']}'")
     print(f"   Status: {ai_received['status']}")
@@ -92,10 +87,7 @@ def example_user_ai_secure_conversation():
     # AI processes and sends encrypted response
     print("\n📤 AI sends encrypted response...")
     ai_response = "42 - The answer to life, the universe, and everything!"
-    ai_msg_id = ai_agent.send_message(
-        user.get_communication_code(),
-        ai_response
-    )
+    ai_msg_id = ai_agent.send_message(user.get_communication_code(), ai_response)
     print(f"   Response: '{ai_response}'")
     print(f"   Message ID: {ai_msg_id}")
 
@@ -106,7 +98,7 @@ def example_user_ai_secure_conversation():
         ai_agent.get_communication_code(),
         ai_sent_msg["encrypted_aes_key"],
         ai_sent_msg["iv"],
-        ai_sent_msg["ciphertext"]
+        ai_sent_msg["ciphertext"],
     )
     print(f"   Decrypted: '{user_received['content']}'")
     print(f"   Status: {user_received['status']}")
@@ -210,8 +202,7 @@ def example_multi_user_scenario():
 
     # Initialize AI agent
     ai = SovereignMessaging(
-        data_dir="data/sovereign_messages_multi_ai",
-        participant_name="ProjectAI_Hub"
+        data_dir="data/sovereign_messages_multi_ai", participant_name="ProjectAI_Hub"
     )
     ai.set_participant_type(ParticipantType.AI)
 
@@ -220,7 +211,7 @@ def example_multi_user_scenario():
     for name in ["Alice", "Bob", "Charlie"]:
         user = SovereignMessaging(
             data_dir=f"data/sovereign_messages_multi_{name.lower()}",
-            participant_name=name
+            participant_name=name,
         )
         users.append((name, user))
 
@@ -234,7 +225,7 @@ def example_multi_user_scenario():
             "ProjectAI_Hub",
             ai.get_communication_code(),
             ai.get_public_key(),
-            participant_type=ParticipantType.AI
+            participant_type=ParticipantType.AI,
         )
 
         # AI pairs with user
@@ -242,7 +233,7 @@ def example_multi_user_scenario():
             name,
             user.get_communication_code(),
             user.get_public_key(),
-            participant_type=ParticipantType.USER
+            participant_type=ParticipantType.USER,
         )
 
         print(f"   ✅ {name} ({user.get_communication_code()}) paired with AI")
@@ -262,7 +253,7 @@ def example_multi_user_scenario():
             user.get_communication_code(),
             user_msg["encrypted_aes_key"],
             user_msg["iv"],
-            user_msg["ciphertext"]
+            user_msg["ciphertext"],
         )
         print(f"   From {name}: '{ai_received['content']}'")
 

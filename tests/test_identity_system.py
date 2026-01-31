@@ -20,14 +20,19 @@ import pytest
 
 from app.core.bonding_protocol import BondingPhase, BondingProtocol
 from app.core.governance import GovernanceContext, Triumvirate
+
 # Import all identity system components
 from app.core.identity import GenesisEvent, PersonalityMatrix
 from app.core.memory_engine import MemoryEngine, SignificanceLevel
 from app.core.meta_identity import IdentityMilestones, MetaIdentityEngine
 from app.core.perspective_engine import PerspectiveEngine
 from app.core.rebirth_protocol import RebirthManager
-from app.core.relationship_model import (ConflictSeverity, RelationshipModel,
-                                         RelationshipState, SupportType)
+from app.core.relationship_model import (
+    ConflictSeverity,
+    RelationshipModel,
+    RelationshipState,
+    SupportType,
+)
 
 # Note: The formal spec references BirthSignature, but the implementation
 # uses GenesisEvent which contains birth_timestamp and genesis_signature.

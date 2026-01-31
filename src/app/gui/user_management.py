@@ -8,9 +8,21 @@ reset passwords, and set a profile picture path).
 import os
 
 from PyQt6.QtGui import QPixmap
-from PyQt6.QtWidgets import (QCheckBox, QComboBox, QDialog, QDialogButtonBox,
-                             QFileDialog, QHBoxLayout, QLabel, QLineEdit, QListWidget,
-                             QMessageBox, QPushButton, QVBoxLayout, QWidget)
+from PyQt6.QtWidgets import (
+    QCheckBox,
+    QComboBox,
+    QDialog,
+    QDialogButtonBox,
+    QFileDialog,
+    QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QListWidget,
+    QMessageBox,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
+)
 
 from app.core.user_manager import UserManager
 

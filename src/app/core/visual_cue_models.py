@@ -3,18 +3,18 @@ Visual Cue Recognition System for Project-AI
 Implements visual models, camera management, and visual bonding protocol.
 Production-grade, fully integrated, no TODOs.
 """
+
 import hashlib
-import json
 import logging
 import os
 import threading
 import time
 from abc import ABC, abstractmethod
 from collections import deque
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 import numpy as np
 
@@ -23,6 +23,7 @@ logger = logging.getLogger(__name__)
 
 class EmotionType(Enum):
     """Visual emotion types detected"""
+
     NEUTRAL = "neutral"
     HAPPY = "happy"
     SAD = "sad"
@@ -35,6 +36,7 @@ class EmotionType(Enum):
 
 class FocusLevel(Enum):
     """User focus/attention levels"""
+
     UNFOCUSED = "unfocused"
     LOW_FOCUS = "low_focus"
     MEDIUM_FOCUS = "medium_focus"
@@ -44,6 +46,7 @@ class FocusLevel(Enum):
 
 class FacialExpression(Enum):
     """Detailed facial expressions"""
+
     NEUTRAL = "neutral"
     SMILE = "smile"
     FROWN = "frown"
@@ -57,31 +60,33 @@ class FacialExpression(Enum):
 @dataclass
 class VisualCueData:
     """Data from visual cue detection"""
+
     timestamp: str = field(default_factory=lambda: datetime.utcnow().isoformat())
     emotion: EmotionType = EmotionType.NEUTRAL
     emotion_confidence: float = 0.0
     facial_expression: FacialExpression = FacialExpression.NEUTRAL
     focus_level: FocusLevel = FocusLevel.MEDIUM_FOCUS
-    gaze_direction: Tuple[float, float] = (0.0, 0.0)
-    head_pose: Tuple[float, float, float] = (0.0, 0.0, 0.0)  # pitch, yaw, roll
+    gaze_direction: tuple[float, float] = (0.0, 0.0)
+    head_pose: tuple[float, float, float] = (0.0, 0.0, 0.0)  # pitch, yaw, roll
     blink_rate: float = 15.0  # blinks per minute
     is_present: bool = True
     distance_cm: float = 60.0
     lighting_quality: float = 0.8
     frame_quality: float = 0.9
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
 class CameraDeviceInfo:
     """Camera device information"""
+
     device_id: str
     device_name: str
-    resolution: Tuple[int, int]
+    resolution: tuple[int, int]
     fps: int
     is_active: bool = False
-    capabilities: List[str] = field(default_factory=list)
-    last_frame_time: Optional[str] = None
+    capabilities: list[str] = field(default_factory=list)
+    last_frame_time: str | None = None
 
 
 class VisualCueModel(ABC):
@@ -95,8 +100,9 @@ class VisualCueModel(ABC):
         logger.info(f"Visual model created: {model_id}")
 
     @abstractmethod
-    def detect(self, frame_data: np.ndarray,
-              context: Optional[Dict[str, Any]] = None) -> VisualCueData:
+    def detect(
+        self, frame_data: np.ndarray, context: dict[str, Any] | None = None
+    ) -> VisualCueData:
         """Detect visual cues from frame"""
         pass
 
@@ -135,8 +141,9 @@ class FacialEmotionModel(VisualCueModel):
             logger.error(f"Failed to initialize {self.model_name}: {e}")
             return False
 
-    def detect(self, frame_data: np.ndarray,
-              context: Optional[Dict[str, Any]] = None) -> VisualCueData:
+    def detect(
+        self, frame_data: np.ndarray, context: dict[str, Any] | None = None
+    ) -> VisualCueData:
         """Detect facial emotions"""
         if not self._initialized:
             return VisualCueData(is_present=False)
@@ -144,13 +151,13 @@ class FacialEmotionModel(VisualCueModel):
         try:
             with self._lock:
                 self._detection_count += 1
-                
+
                 # Simulate emotion detection
                 emotion, confidence = self._detect_emotion(frame_data)
                 expression = self._detect_expression(frame_data)
-                
+
                 self._emotion_history.append(emotion)
-                
+
                 cue_data = VisualCueData(
                     emotion=emotion,
                     emotion_confidence=confidence,
@@ -159,22 +166,24 @@ class FacialEmotionModel(VisualCueModel):
                     metadata={
                         "detection_count": self._detection_count,
                         "model": self.model_id,
-                        "recent_emotions": [e.value for e in list(self._emotion_history)[-5:]]
-                    }
+                        "recent_emotions": [
+                            e.value for e in list(self._emotion_history)[-5:]
+                        ],
+                    },
                 )
-                
+
                 return cue_data
-                
+
         except Exception as e:
             logger.error(f"Detection error: {e}")
             return VisualCueData(is_present=False)
 
-    def _detect_emotion(self, frame_data: np.ndarray) -> Tuple[EmotionType, float]:
+    def _detect_emotion(self, frame_data: np.ndarray) -> tuple[EmotionType, float]:
         """Detect emotion from frame"""
         # Simulated detection based on frame characteristics
         frame_hash = hashlib.sha256(frame_data.tobytes()).hexdigest()
         hash_val = int(frame_hash[:8], 16) % 100
-        
+
         if hash_val < 30:
             return EmotionType.HAPPY, 0.85
         elif hash_val < 50:
@@ -192,7 +201,7 @@ class FacialEmotionModel(VisualCueModel):
         """Detect facial expression"""
         # Simulated expression detection
         mean_val = np.mean(frame_data)
-        
+
         if mean_val > 200:
             return FacialExpression.SMILE
         elif mean_val > 150:
@@ -230,8 +239,9 @@ class FocusAttentionModel(VisualCueModel):
             logger.error(f"Failed to initialize {self.model_name}: {e}")
             return False
 
-    def detect(self, frame_data: np.ndarray,
-              context: Optional[Dict[str, Any]] = None) -> VisualCueData:
+    def detect(
+        self, frame_data: np.ndarray, context: dict[str, Any] | None = None
+    ) -> VisualCueData:
         """Detect focus and attention levels"""
         if not self._initialized:
             return VisualCueData(is_present=False)
@@ -241,16 +251,16 @@ class FocusAttentionModel(VisualCueModel):
                 # Detect focus level
                 focus_level = self._detect_focus(frame_data)
                 self._focus_history.append(focus_level)
-                
+
                 # Detect gaze direction
                 gaze = self._detect_gaze(frame_data)
-                
+
                 # Detect head pose
                 head_pose = self._detect_head_pose(frame_data)
-                
+
                 # Calculate blink rate
                 blink_rate = self._calculate_blink_rate()
-                
+
                 cue_data = VisualCueData(
                     focus_level=focus_level,
                     gaze_direction=gaze,
@@ -260,12 +270,12 @@ class FocusAttentionModel(VisualCueModel):
                     metadata={
                         "model": self.model_id,
                         "avg_focus": self._calculate_avg_focus(),
-                        "focus_trend": self._get_focus_trend()
-                    }
+                        "focus_trend": self._get_focus_trend(),
+                    },
                 )
-                
+
                 return cue_data
-                
+
         except Exception as e:
             logger.error(f"Focus detection error: {e}")
             return VisualCueData(is_present=False)
@@ -274,7 +284,7 @@ class FocusAttentionModel(VisualCueModel):
         """Detect focus level"""
         # Simulate focus detection based on frame characteristics
         std_dev = np.std(frame_data)
-        
+
         if std_dev > 80:
             return FocusLevel.INTENSE_FOCUS
         elif std_dev > 60:
@@ -286,26 +296,26 @@ class FocusAttentionModel(VisualCueModel):
         else:
             return FocusLevel.UNFOCUSED
 
-    def _detect_gaze(self, frame_data: np.ndarray) -> Tuple[float, float]:
+    def _detect_gaze(self, frame_data: np.ndarray) -> tuple[float, float]:
         """Detect gaze direction (x, y) normalized to [-1, 1]"""
         # Simulate gaze detection
         mean_row = np.mean(np.arange(frame_data.shape[0]))
         mean_col = np.mean(np.arange(frame_data.shape[1]))
-        
+
         x = (mean_col / frame_data.shape[1]) * 2 - 1
         y = (mean_row / frame_data.shape[0]) * 2 - 1
-        
+
         return (x, y)
 
-    def _detect_head_pose(self, frame_data: np.ndarray) -> Tuple[float, float, float]:
+    def _detect_head_pose(self, frame_data: np.ndarray) -> tuple[float, float, float]:
         """Detect head pose (pitch, yaw, roll) in degrees"""
         # Simulate head pose detection
         mean_val = np.mean(frame_data)
-        
+
         pitch = (mean_val / 255.0) * 30 - 15  # -15 to +15 degrees
         yaw = (np.std(frame_data) / 100.0) * 40 - 20  # -20 to +20 degrees
         roll = 0.0  # Simplified
-        
+
         return (pitch, yaw, roll)
 
     def _calculate_blink_rate(self) -> float:
@@ -315,7 +325,7 @@ class FocusAttentionModel(VisualCueModel):
         if current_time - self._last_blink_time > 3.0:
             self._blink_counter += 1
             self._last_blink_time = current_time
-        
+
         # Normal blink rate is 15-20 per minute
         return 15.0 + (self._blink_counter % 6)
 
@@ -323,38 +333,40 @@ class FocusAttentionModel(VisualCueModel):
         """Calculate average focus level"""
         if not self._focus_history:
             return 0.5
-        
+
         focus_values = {
             FocusLevel.UNFOCUSED: 0.0,
             FocusLevel.LOW_FOCUS: 0.25,
             FocusLevel.MEDIUM_FOCUS: 0.5,
             FocusLevel.HIGH_FOCUS: 0.75,
-            FocusLevel.INTENSE_FOCUS: 1.0
+            FocusLevel.INTENSE_FOCUS: 1.0,
         }
-        
-        avg = sum(focus_values[f] for f in self._focus_history) / len(self._focus_history)
+
+        avg = sum(focus_values[f] for f in self._focus_history) / len(
+            self._focus_history
+        )
         return avg
 
     def _get_focus_trend(self) -> str:
         """Get focus trend: increasing, decreasing, stable"""
         if len(self._focus_history) < 10:
             return "stable"
-        
+
         recent = list(self._focus_history)[-10:]
         first_half = recent[:5]
         second_half = recent[5:]
-        
+
         focus_values = {
             FocusLevel.UNFOCUSED: 0,
             FocusLevel.LOW_FOCUS: 1,
             FocusLevel.MEDIUM_FOCUS: 2,
             FocusLevel.HIGH_FOCUS: 3,
-            FocusLevel.INTENSE_FOCUS: 4
+            FocusLevel.INTENSE_FOCUS: 4,
         }
-        
+
         first_avg = sum(focus_values[f] for f in first_half) / 5
         second_avg = sum(focus_values[f] for f in second_half) / 5
-        
+
         if second_avg > first_avg + 0.5:
             return "increasing"
         elif second_avg < first_avg - 0.5:
@@ -376,10 +388,10 @@ class VisualCueModelRegistry:
     def __init__(self, data_dir: str = "data/visual_models"):
         self.data_dir = data_dir
         os.makedirs(data_dir, exist_ok=True)
-        
-        self._models: Dict[str, VisualCueModel] = {}
+
+        self._models: dict[str, VisualCueModel] = {}
         self._lock = threading.RLock()
-        
+
         logger.info(f"VisualCueModelRegistry initialized at {data_dir}")
 
     def register(self, model: VisualCueModel) -> bool:
@@ -389,11 +401,11 @@ class VisualCueModelRegistry:
                 if model.model_id in self._models:
                     logger.warning(f"Model already registered: {model.model_id}")
                     return False
-                
+
                 self._models[model.model_id] = model
                 logger.info(f"Registered visual model: {model.model_id}")
                 return True
-                
+
         except Exception as e:
             logger.error(f"Failed to register model: {e}")
             return False
@@ -404,28 +416,28 @@ class VisualCueModelRegistry:
             with self._lock:
                 if model_id not in self._models:
                     return False
-                
+
                 model = self._models[model_id]
                 model.shutdown()
                 del self._models[model_id]
                 logger.info(f"Unregistered model: {model_id}")
                 return True
-                
+
         except Exception as e:
             logger.error(f"Failed to unregister model: {e}")
             return False
 
-    def get_model(self, model_id: str) -> Optional[VisualCueModel]:
+    def get_model(self, model_id: str) -> VisualCueModel | None:
         """Get a visual model by ID"""
         with self._lock:
             return self._models.get(model_id)
 
-    def list_models(self) -> List[str]:
+    def list_models(self) -> list[str]:
         """List all registered model IDs"""
         with self._lock:
             return list(self._models.keys())
 
-    def initialize_all(self) -> Dict[str, bool]:
+    def initialize_all(self) -> dict[str, bool]:
         """Initialize all registered models"""
         results = {}
         with self._lock:
@@ -452,17 +464,17 @@ class CameraManager:
     def __init__(self, data_dir: str = "data/camera"):
         self.data_dir = data_dir
         os.makedirs(data_dir, exist_ok=True)
-        
-        self._devices: Dict[str, CameraDeviceInfo] = {}
-        self._active_device: Optional[str] = None
-        self._capture_thread: Optional[threading.Thread] = None
+
+        self._devices: dict[str, CameraDeviceInfo] = {}
+        self._active_device: str | None = None
+        self._capture_thread: threading.Thread | None = None
         self._should_capture = False
-        self._frame_callback: Optional[callable] = None
+        self._frame_callback: callable | None = None
         self._lock = threading.RLock()
-        
+
         logger.info("CameraManager initialized")
 
-    def discover_devices(self) -> List[CameraDeviceInfo]:
+    def discover_devices(self) -> list[CameraDeviceInfo]:
         """Discover available camera devices"""
         try:
             with self._lock:
@@ -474,23 +486,23 @@ class CameraManager:
                         device_name="Built-in Camera",
                         resolution=(1920, 1080),
                         fps=30,
-                        capabilities=["rgb", "hd", "autofocus"]
+                        capabilities=["rgb", "hd", "autofocus"],
                     ),
                     CameraDeviceInfo(
                         device_id="cam_1",
                         device_name="External Webcam",
                         resolution=(1280, 720),
                         fps=30,
-                        capabilities=["rgb", "microphone"]
-                    )
+                        capabilities=["rgb", "microphone"],
+                    ),
                 ]
-                
+
                 for device in devices:
                     self._devices[device.device_id] = device
-                
+
                 logger.info(f"Discovered {len(devices)} camera devices")
                 return devices
-                
+
         except Exception as e:
             logger.error(f"Device discovery error: {e}")
             return []
@@ -502,18 +514,18 @@ class CameraManager:
                 if device_id not in self._devices:
                     logger.error(f"Device not found: {device_id}")
                     return False
-                
+
                 # Deactivate current device
                 if self._active_device:
                     self._devices[self._active_device].is_active = False
-                
+
                 # Activate new device
                 self._devices[device_id].is_active = True
                 self._active_device = device_id
-                
+
                 logger.info(f"Activated camera device: {device_id}")
                 return True
-                
+
         except Exception as e:
             logger.error(f"Failed to activate device: {e}")
             return False
@@ -525,23 +537,22 @@ class CameraManager:
                 if not self._active_device:
                     logger.error("No active camera device")
                     return False
-                
+
                 if self._should_capture:
                     logger.warning("Capture already running")
                     return False
-                
+
                 self._frame_callback = callback
                 self._should_capture = True
-                
+
                 self._capture_thread = threading.Thread(
-                    target=self._capture_loop,
-                    daemon=True
+                    target=self._capture_loop, daemon=True
                 )
                 self._capture_thread.start()
-                
+
                 logger.info("Started camera capture")
                 return True
-                
+
         except Exception as e:
             logger.error(f"Failed to start capture: {e}")
             return False
@@ -551,56 +562,57 @@ class CameraManager:
         try:
             with self._lock:
                 self._should_capture = False
-                
+
                 if self._capture_thread:
                     self._capture_thread.join(timeout=2.0)
                     self._capture_thread = None
-                
+
                 logger.info("Stopped camera capture")
-                
+
         except Exception as e:
             logger.error(f"Error stopping capture: {e}")
 
     def _capture_loop(self) -> None:
         """Main capture loop (runs in thread)"""
         logger.info("Capture loop started")
-        
+
         while self._should_capture:
             try:
                 # Simulate frame capture
                 frame = self._capture_frame()
-                
+
                 if frame is not None and self._frame_callback:
                     self._frame_callback(frame)
-                
+
                 # Update device info
                 if self._active_device:
-                    self._devices[self._active_device].last_frame_time = \
+                    self._devices[self._active_device].last_frame_time = (
                         datetime.utcnow().isoformat()
-                
+                    )
+
                 time.sleep(1.0 / 30.0)  # 30 FPS
-                
+
             except Exception as e:
                 logger.error(f"Capture loop error: {e}")
                 time.sleep(0.1)
-        
+
         logger.info("Capture loop stopped")
 
-    def _capture_frame(self) -> Optional[np.ndarray]:
+    def _capture_frame(self) -> np.ndarray | None:
         """Capture a single frame"""
         # Simulate frame capture
         # In production, use cv2.VideoCapture.read()
         if not self._active_device or self._active_device not in self._devices:
             return None
-        
+
         device = self._devices[self._active_device]
         height, width = device.resolution[1], device.resolution[0]
-        
+
         # Generate synthetic frame
         frame = np.random.randint(0, 256, (height, width, 3), dtype=np.uint8)
         return frame
 
-    def get_active_device_info(self) -> Optional[CameraDeviceInfo]:
+    def get_active_device_info(self) -> CameraDeviceInfo | None:
         """Get info for active device"""
         with self._lock:
             if self._active_device:
@@ -618,8 +630,8 @@ class CameraManager:
 
 
 # Global instances
-_default_visual_registry: Optional[VisualCueModelRegistry] = None
-_default_camera_manager: Optional[CameraManager] = None
+_default_visual_registry: VisualCueModelRegistry | None = None
+_default_camera_manager: CameraManager | None = None
 
 
 def get_default_visual_registry() -> VisualCueModelRegistry:
