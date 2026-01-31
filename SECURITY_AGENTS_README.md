@@ -148,7 +148,7 @@ python examples/security_agents_demo.py
 ## Documentation
 
 - **User Guide**: `docs/SECURITY_AGENTS_GUIDE.md`
-- **Integration Summary**: `docs/SECURITY_AGENTS_INTEGRATION_SUMMARY.md`
+- **Integration Summary**: `docs/SECURITY_AGENTS_docs/historical/INTEGRATION_SUMMARY.md`
 - **Demo**: `examples/security_agents_demo.py`
 
 ## Features Summary
@@ -242,4 +242,4 @@ All agents:
 See full documentation:
 
 - `docs/SECURITY_AGENTS_GUIDE.md`
-- `docs/SECURITY_AGENTS_INTEGRATION_SUMMARY.md`
+- `docs/SECURITY_AGENTS_docs/historical/INTEGRATION_SUMMARY.md`

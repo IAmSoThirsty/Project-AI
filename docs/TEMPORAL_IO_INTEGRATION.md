@@ -749,8 +749,8 @@ result = await client.execute_workflow(
 
 ### Project-AI Documentation
 
-- **Temporal Integration Summary**: `TEMPORAL_INTEGRATION_SUMMARY.md`
-- **Security Agents Quickstart**: `TEMPORAL_SECURITY_AGENTS_QUICKSTART.md`
+- **Temporal Integration Summary**: `TEMPORAL_docs/historical/INTEGRATION_SUMMARY.md`
+- **Security Agents Quickstart**: `docs/historical/TEMPORAL_SECURITY_AGENTS_QUICKSTART.md`
 - **Triumvirate Integration**: `TRIUMVIRATE_INTEGRATION.md`
 - **Workflow Engine**: `WORKFLOW_ENGINE.md`
 
@@ -817,7 +817,7 @@ result = await client.execute_workflow(
 ## 🚀 Next Steps
 
 1. **Explore Examples**: Run all 6 example workflows in `examples/temporal/`
-2. **Read Documentation**: Review `TEMPORAL_INTEGRATION_SUMMARY.md`
+2. **Read Documentation**: Review `TEMPORAL_docs/historical/INTEGRATION_SUMMARY.md`
 3. **Write Custom Workflows**: Create workflows for your use cases
 4. **Monitor Production**: Set up alerts and dashboards
 5. **Scale Workers**: Add more workers as load increases

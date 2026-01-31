@@ -305,7 +305,7 @@ adversarial_tests/
 ├── GARAK_COMPREHENSIVE_REPORT.md (15KB) - Detailed analysis
 ├── RESEARCH_BASED_ATTACKS.md (12KB) - Attack catalog
 ├── README.md (16KB) - Quick reference
-├── IMPLEMENTATION_COMPLETE.md (11KB) - Completion status
+├── docs/historical/IMPLEMENTATION_COMPLETE.md (11KB) - Completion status
 └── FINAL_SUMMARY.md (this file)
 ```
 

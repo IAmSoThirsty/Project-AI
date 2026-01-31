@@ -294,7 +294,7 @@ data/
 - **Full Feature Guide**: `COMMAND_MEMORY_FEATURES.md`
 - **API Reference**: Module docstrings
 - **Usage Examples**: Feature guide sections
-- **Integration Summary**: `INTEGRATION_SUMMARY.md`
+- **Integration Summary**: `docs/historical/INTEGRATION_SUMMARY.md`
 - **Quick Start**: `QUICK_START.md`
 
 ---

@@ -1,7 +1,7 @@
 # Security Incident - January 9, 2026 (ARCHIVED)
 
 **Status**: RESOLVED  
-**Current Documentation**: See `SECURITY_INCIDENT_REPORT.md` in the repository root for comprehensive information.
+**Current Documentation**: See `docs/historical/SECURITY_INCIDENT_REPORT.md` in the repository root for comprehensive information.
 
 ## Contents of This Archive
 
@@ -9,9 +9,9 @@ This folder contains historical documentation created during the January 9, 2026
 
 - `CRITICAL_SECRET_EXPOSURE_REPORT.md` - Root cause analysis
 - `SECURITY_REMEDIATION_PLAN.md` - Action plan created during incident response
-- `URGENT_SECURITY_UPDATE.md` - Initial incident notification
+- `URGENT_docs/historical/SECURITY_UPDATE.md` - Initial incident notification
 
-These files have been archived because their content has been consolidated into `SECURITY_INCIDENT_REPORT.md` (root), which provides a complete timeline, remediation steps, and current status.
+These files have been archived because their content has been consolidated into `docs/historical/SECURITY_INCIDENT_REPORT.md` (root), which provides a complete timeline, remediation steps, and current status.
 
 ## Why These Were Archived
 
@@ -19,4 +19,4 @@ During the incident response, multiple documents were created by different team 
 
 ## Reference Only
 
-These files are kept for historical reference and audit trail purposes. Do not update these files - all security documentation updates should go to the main `SECURITY_INCIDENT_REPORT.md` file.
+These files are kept for historical reference and audit trail purposes. Do not update these files - all security documentation updates should go to the main `docs/historical/SECURITY_INCIDENT_REPORT.md` file.

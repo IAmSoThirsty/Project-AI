@@ -225,7 +225,7 @@ trends = client.query_metrics_aggregated(
 - `docs/PROMETHEUS_INTEGRATION.md` (730 lines)
 - `docs/KUBERNETES_MONITORING_GUIDE.md` (1,010 lines)
 - `docs/MONITORING_QUICKSTART.md` (387 lines)
-- `docs/MONITORING_IMPLEMENTATION_SUMMARY.md` (400+ lines)
+- `docs/MONITORING_docs/historical/IMPLEMENTATION_SUMMARY.md` (400+ lines)
 
 **SNN Documentation:**
 

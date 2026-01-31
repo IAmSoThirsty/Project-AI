@@ -227,7 +227,7 @@ PYTHONPATH=. python -c "from bootstrap import main; main()"
 
 ## Support and Documentation
 
-- Full Documentation: `TARL_IMPLEMENTATION.md`
+- Full Documentation: `docs/historical/TARL_IMPLEMENTATION.md`
 - Technical Docs: `TARL_TECHNICAL_DOCUMENTATION.md`
 - Usage Scenarios: `TARL_USAGE_SCENARIOS.md`
 - Code Examples: `TARL_CODE_EXAMPLES.md`

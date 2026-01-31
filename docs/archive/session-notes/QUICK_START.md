@@ -205,7 +205,7 @@ Project-AI/
 
 - **Tests**: Run `python -m pytest tests/ -v`
 - **Lint**: Run `flake8 src tests setup.py`
-- **Documentation**: See README.md, INTEGRATION_SUMMARY.md
+- **Documentation**: See README.md, docs/historical/INTEGRATION_SUMMARY.md
 - **Branch**: feature/android-apk-integration
 
 ---

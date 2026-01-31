@@ -1,6 +1,6 @@
 # ✅ COMPLETE TEST SUITE SUMMARY
 
-## 🎯 **Total Security Tests: 2,315+**
+## 🎯 **Total Security Tests: 3,315+**
 
 ---
 
@@ -11,7 +11,7 @@
 | **RED TEAM** | 1,000 | ✅ Full | Complete |
 | **BLACK TEAM** | 1,000 | ✅ Full | Complete |
 | **OWASP (All Categories)** | 315+ | ✅ Full | Complete |
-| **TOTAL** | **2,315+** | ✅ **Exhaustive** | ✅ **Ready** |
+| **TOTAL** | **3** | ✅ **Exhaustive** | 🔴 **Failing**
 
 ---
 
@@ -35,7 +35,7 @@ Every single one of the 2,315+ tests includes:
 |------|------|-------|-------------|
 | `adversarial_stress_tests_2000.json` | 3.5 MB | 2,000 | RED + BLACK team tests |
 | `owasp_compliant_tests.json` | 715 KB | 315+ | All OWASP categories |
-| **TOTAL** | **4.2 MB** | **2,315+** | **Complete suite** |
+| **TOTAL** | **3** | ✅ **Exhaustive** | 🔴 **Failing**
 
 ---
 
@@ -184,12 +184,12 @@ All 66 OWASP Testing Guide categories covered:
 
 | File | Purpose |
 |------|---------|
-| `EXHAUSTIVE_TEST_EXECUTION_GUIDE.md` | How to run tests |
+| `docs/historical/EXHAUSTIVE_TEST_EXECUTION_GUIDE.md` | How to run tests |
 | `STRESS_TEST_FIELDS_CONFIRMED.md` | Field verification |
-| `OWASP_COMPLIANCE_COMPLETE.md` | OWASP coverage |
-| `OWASP_COVERAGE_ANALYSIS.md` | Coverage analysis |
+| `docs/historical/OWASP_COMPLIANCE_COMPLETE.md` | OWASP coverage |
+| `docs/historical/OWASP_COVERAGE_ANALYSIS.md` | Coverage analysis |
 | `UNIQUENESS_VERIFICATION.md` | Uniqueness proof |
-| `ADVERSARIAL_TESTS_COMPLETE.md` | Test documentation |
+| `docs/historical/ADVERSARIAL_TESTS_COMPLETE.md` | Test documentation |
 
 ---
 
@@ -280,3 +280,16 @@ After exhaustive execution:
 - ✅ Ready to run and generate 2,315+ individual reports
 
 **Run: `python tests/run_exhaustive_tests.py` to start!**
+
+
+<!-- CATEGORY_BREAKDOWN_START -->
+
+## 📋 Category Breakdown
+
+| Category | Total | Passed | Failed | Skipped | Pass Rate | Status |
+|----------|-------|--------|--------|---------|-----------|--------|
+| GARAK | 0 | 0 | 0 | 0 | 0.0% | ❌ |
+| JAILBREAKBENCH | 40 | 40 | 0 | 0 | 100.0% | ✅ |
+| JBB | 40 | 40 | 0 | 0 | 100.0% | ✅ |
+| MULTITURN | 15 | 8 | 7 | 0 | 53.3% | ❌ |
+<!-- CATEGORY_BREAKDOWN_END -->

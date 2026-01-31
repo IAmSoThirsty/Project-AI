@@ -1,6 +1,6 @@
 # Deployment & Release Checklist
 
-This document captures the deployment and release process for Project-AI. For detailed automated build instructions, see [RELEASE_BUILD_GUIDE.md](RELEASE_BUILD_GUIDE.md).
+This document captures the deployment and release process for Project-AI. For detailed automated build instructions, see [RELEASE_BUILD_GUIDE.md](docs/historical/RELEASE_BUILD_GUIDE.md).
 
 ## Automated Release Process (Recommended)
 
@@ -41,7 +41,7 @@ For local builds or testing:
 scripts\build_release.bat
 ```
 
-See [RELEASE_BUILD_GUIDE.md](RELEASE_BUILD_GUIDE.md) for complete instructions.
+See [RELEASE_BUILD_GUIDE.md](docs/historical/RELEASE_BUILD_GUIDE.md) for complete instructions.
 
 ## Manual Deployment (Legacy)
 
@@ -154,6 +154,6 @@ project-ai-v1.0.0/
 ## Support
 
 For detailed build instructions, troubleshooting, and CI/CD integration:
-- See [RELEASE_BUILD_GUIDE.md](RELEASE_BUILD_GUIDE.md)
+- See [RELEASE_BUILD_GUIDE.md](docs/historical/RELEASE_BUILD_GUIDE.md)
 - See [PRODUCTION_DEPLOYMENT.md](PRODUCTION_DEPLOYMENT.md) for deployment
 - GitHub Issues: https://github.com/IAmSoThirsty/Project-AI/issues

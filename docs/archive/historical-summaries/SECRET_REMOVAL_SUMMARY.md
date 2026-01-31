@@ -46,13 +46,13 @@
 
 ### 3. Security Documentation Created
 
-✅ **`SECURITY_INCIDENT_REPORT.md`**
+✅ **`docs/historical/SECURITY_INCIDENT_REPORT.md`**
 
 - Complete incident report with timeline
 - Detailed remediation instructions
 - All secrets fully redacted
 
-✅ **`URGENT_SECURITY_UPDATE.md`**
+✅ **`URGENT_docs/historical/SECURITY_UPDATE.md`**
 
 - Quick reference for all team members
 - Safe `.env` setup instructions
@@ -102,7 +102,7 @@ Your credentials were exposed in git history and **MUST** be rotated immediately
 # Generate new key
 python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
 
-# Follow instructions in SECURITY_INCIDENT_REPORT.md
+# Follow instructions in docs/historical/SECURITY_INCIDENT_REPORT.md
 # for data decryption/re-encryption process
 ```
 
@@ -184,8 +184,8 @@ git push --force --tags origin
 
 ### For Immediate Action
 
-- **`URGENT_SECURITY_UPDATE.md`** - Quick start guide for all users
-- **`SECURITY_INCIDENT_REPORT.md`** - Complete incident details and remediation
+- **`URGENT_docs/historical/SECURITY_UPDATE.md`** - Quick start guide for all users
+- **`docs/historical/SECURITY_INCIDENT_REPORT.md`** - Complete incident details and remediation
 
 ### For Best Practices
 
@@ -210,7 +210,7 @@ git push --force --tags origin
 ### For All Team Members
 
 1. ✅ Pull the latest changes
-1. ✅ Read `URGENT_SECURITY_UPDATE.md`
+1. ✅ Read `URGENT_docs/historical/SECURITY_UPDATE.md`
 1. ✅ Verify their `.env` files are properly configured
 1. ✅ Review `docs/security/SECRET_MANAGEMENT.md`
 
@@ -225,8 +225,8 @@ git push --force --tags origin
 
 ## 📞 Questions?
 
-- **Security concerns**: Review `SECURITY_INCIDENT_REPORT.md`
-- **Setup help**: Review `URGENT_SECURITY_UPDATE.md`
+- **Security concerns**: Review `docs/historical/SECURITY_INCIDENT_REPORT.md`
+- **Setup help**: Review `URGENT_docs/historical/SECURITY_UPDATE.md`
 - **Best practices**: Review `docs/security/SECRET_MANAGEMENT.md`
 
 ---

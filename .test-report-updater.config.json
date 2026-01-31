@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Configuration for automated test report documentation updater",
+  "version": "1.0.0",
+  
+  "artifact_sources": {
+    "ci_reports": {
+      "enabled": true,
+      "path": "ci-reports/*.json",
+      "format": "json",
+      "priority": 1
+    },
+    "test_execution_reports": {
+      "enabled": true,
+      "path": "test_execution_reports/EXECUTION_SUMMARY.md",
+      "format": "markdown",
+      "priority": 2
+    },
+    "pytest_json": {
+      "enabled": true,
+      "path": "test-results.json",
+      "format": "pytest-json",
+      "priority": 3
+    },
+    "pytest_xml": {
+      "enabled": true,
+      "path": "test-results.xml",
+      "format": "junit-xml",
+      "priority": 4
+    }
+  },
+  
+  "documentation_targets": [
+    {
+      "path": "README.md",
+      "sections": {
+        "test_badges": {
+          "markers": ["<!-- TEST_BADGES_START -->", "<!-- TEST_BADGES_END -->"],
+          "auto_create": true,
+          "insert_after_line": 1
+        },
+        "test_summary": {
+          "markers": ["<!-- TEST_SUMMARY_START -->", "<!-- TEST_SUMMARY_END -->"],
+          "auto_create": true
+        }
+      }
+    },
+    {
+      "path": "COMPLETE_TEST_SUITE_SUMMARY.md",
+      "sections": {
+        "overall_stats": {
+          "markers": ["<!-- OVERALL_STATS_START -->", "<!-- OVERALL_STATS_END -->"],
+          "patterns": [
+            {"match": "Total Security Tests: \\d+", "template": "Total Security Tests: {total_tests}"},
+            {"match": "\\*\\*TOTAL\\*\\* \\| \\*\\*\\d+.*", "template": "**TOTAL** | **{total_tests}** | ✅ **Exhaustive** | {overall_status}"}
+          ]
+        },
+        "category_breakdown": {
+          "markers": ["<!-- CATEGORY_BREAKDOWN_START -->", "<!-- CATEGORY_BREAKDOWN_END -->"],
+          "auto_create": true
+        }
+      }
+    },
+    {
+      "path": "security_test_category_pass_fail_report.md",
+      "sections": {
+        "pass_fail_table": {
+          "markers": ["<!-- PASS_FAIL_TABLE_START -->", "<!-- PASS_FAIL_TABLE_END -->"],
+          "auto_create": true,
+          "create_if_missing": true
+        }
+      }
+    }
+  ],
+  
+  "badge_templates": {
+    "tests_total": "![Tests](https://img.shields.io/badge/tests-{total}-{color})",
+    "tests_passing": "![Passing](https://img.shields.io/badge/passing-{passed}-green)",
+    "tests_failing": "![Failing](https://img.shields.io/badge/failing-{failed}-{color})",
+    "coverage": "![Coverage](https://img.shields.io/badge/coverage-{percentage}%25-{color})",
+    "status": "![Status](https://img.shields.io/badge/status-{status}-{color})"
+  },
+  
+  "badge_colors": {
+    "pass": "green",
+    "fail": "red",
+    "warning": "yellow",
+    "partial": "orange",
+    "unknown": "lightgrey"
+  },
+  
+  "output": {
+    "commit_updates": true,
+    "commit_message_template": "chore: auto-update test documentation [{timestamp}]",
+    "create_summary_report": true,
+    "summary_report_path": "test_documentation_update_summary.md",
+    "dry_run": false
+  },
+  
+  "thresholds": {
+    "min_pass_rate": 0.80,
+    "warning_pass_rate": 0.90,
+    "min_coverage": 0.70
+  },
+  
+  "categories": [
+    "RED_TEAM",
+    "BLACK_TEAM",
+    "OWASP",
+    "authorization",
+    "injection",
+    "cryptographic",
+    "business_logic",
+    "rate_limiting",
+    "session",
+    "zero_day",
+    "apt_persistence",
+    "data_exfiltration",
+    "lateral_movement",
+    "supply_chain"
+  ],
+  
+  "logging": {
+    "enabled": true,
+    "level": "INFO",
+    "file": "test_report_updater.log",
+    "max_size_mb": 10,
+    "backup_count": 5
+  }
+}

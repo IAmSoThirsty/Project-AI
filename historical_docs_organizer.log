@@ -1,0 +1,565 @@
+2026-01-31 23:18:39,823 - __main__ - INFO - ================================================================================
+2026-01-31 23:18:39,824 - __main__ - INFO - IDENTIFYING OBSOLETE DOCUMENTS
+2026-01-31 23:18:39,824 - __main__ - INFO - ================================================================================
+2026-01-31 23:18:39,824 - __main__.HistoricalDocsOrganizer - INFO - Identifying obsolete documents...
+2026-01-31 23:18:39,825 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: IMPLEMENTATION_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:39,825 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: THIRSTY_LANG_INTEGRATION.md (matched: content keywords (count: 3))
+2026-01-31 23:18:39,825 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: CRITICAL_FIXES_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:39,825 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: TEMPORAL_SECURITY_AGENTS_QUICKSTART.md (matched: .*_QUICKSTART\.md$)
+2026-01-31 23:18:39,825 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: DEPLOYMENT_AND_RELEASE_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:39,825 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: GLOBAL_SCENARIO_ENGINE_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:39,826 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: GOD_TIER_DISTRIBUTED_ARCHITECTURE.md (matched: content keywords (count: 2))
+2026-01-31 23:18:39,826 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: TARL_PATCH_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:39,826 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: ALL_PATCHES_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:39,826 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: ROBOTIC_MAINFRAME_IMPLEMENTATION.md (matched: .*_IMPLEMENTATION\.md$)
+2026-01-31 23:18:39,826 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: PRODUCTION_HARDENING_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:39,826 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: ADVERSARIAL_TESTS_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:39,826 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: PROJECT_AI_V1_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:39,826 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: SECURE-H323-DEPLOYMENT.md (matched: content keywords (count: 2))
+2026-01-31 23:18:39,826 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: RESTORATION_GUIDE.md (matched: .*_GUIDE\.md$)
+2026-01-31 23:18:39,827 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: TARL_ORCHESTRATION_IMPLEMENTATION_REPORT.md (matched: content keywords (count: 3))
+2026-01-31 23:18:39,827 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: TRIUMVIRATE_QUICKSTART.md (matched: .*_QUICKSTART\.md$)
+2026-01-31 23:18:39,827 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: SECURITY_INCIDENT_REPORT.md (matched: content keywords (count: 2))
+2026-01-31 23:18:39,827 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: EXHAUSTIVE_TEST_EXECUTION_GUIDE.md (matched: .*_GUIDE\.md$)
+2026-01-31 23:18:39,827 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: SECURITY_UPDATE.md (matched: content keywords (count: 2))
+2026-01-31 23:18:39,827 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: BADGE_RECOMMENDATIONS.md (matched: .*_RECOMMENDATIONS\.md$)
+2026-01-31 23:18:39,828 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: REPO_RESOURCES_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:39,828 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: IMPLEMENTATION_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:39,828 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: GOD_TIER_EXPANSION_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:39,828 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: RELEASE_SUMMARY_v1.0.0.md (matched: content keywords (count: 3))
+2026-01-31 23:18:39,828 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: DEPLOY_CHECKLIST.md (matched: .*_CHECKLIST\.md$)
+2026-01-31 23:18:39,828 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: WHITEPAPER_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:39,828 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: CI_CHECK_ISSUES.md (matched: .*_ISSUES\.md$)
+2026-01-31 23:18:39,828 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: DEPLOYMENT_SOLUTIONS.md (matched: .*_SOLUTIONS\.md$)
+2026-01-31 23:18:39,828 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: PRODUCTION_HARDENING_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:39,828 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: PRODUCTION_INFRASTRUCTURE_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:39,828 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: TESTING_FRAMEWORK_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:39,829 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: GOD_TIER_PLATFORM_IMPLEMENTATION.md (matched: .*_IMPLEMENTATION\.md$)
+2026-01-31 23:18:39,829 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: test_documentation_update_summary.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:39,829 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: E2E_TEST_COVERAGE_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:39,829 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: TARL_HARDENING_UX_IMPLEMENTATION.md (matched: .*_IMPLEMENTATION\.md$)
+2026-01-31 23:18:39,829 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: GUI_IMPLEMENTATION_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:39,829 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: IMPLEMENTATION_COMPLETE_WATCHTOWER.md (matched: content keywords (count: 3))
+2026-01-31 23:18:39,829 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: DEFENSE_ENGINE_IMPLEMENTATION_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:39,829 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: OWASP_COMPLIANCE_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:39,829 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: TARL_IMPLEMENTATION.md (matched: .*_IMPLEMENTATION\.md$)
+2026-01-31 23:18:39,829 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: PROJECT_STRUCTURE.md (matched: content keywords (count: 3))
+2026-01-31 23:18:39,830 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: OWASP_COVERAGE_ANALYSIS.md (matched: .*_ANALYSIS\.md$)
+2026-01-31 23:18:39,830 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: ENHANCED_SYSTEMS_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:39,830 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: SOVEREIGN_MESSAGING_IMPLEMENTATION.md (matched: .*_IMPLEMENTATION\.md$)
+2026-01-31 23:18:39,830 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: GOD_TIER_EXPANSION_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:39,830 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: DOMAIN_SUBSYSTEMS_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:39,830 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: WIRED_ETHICS_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:39,830 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: MASTER_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:39,830 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: TECHNICAL_WHITE_PAPER_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:39,831 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: DEPLOYMENT_READY_THIRSTYSPROJECTS.md (matched: content keywords (count: 2))
+2026-01-31 23:18:39,831 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: DEPLOYMENT_RELEASE_QUICKSTART.md (matched: .*_QUICKSTART\.md$)
+2026-01-31 23:18:39,831 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: SECURITY_ACTIVATION_STATUS.md (matched: .*_STATUS\.md$)
+2026-01-31 23:18:39,831 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: DESKTOP_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:39,831 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: GITHUB_UPDATE_GUIDE.md (matched: .*_GUIDE\.md$)
+2026-01-31 23:18:39,831 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: TARL_EXTENDED_IMPLEMENTATION_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:39,831 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: CLEANUP_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:39,831 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: ANDROID_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:39,831 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: GOD_TIER_IMPLEMENTATION_EXECUTIVE_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:39,831 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: CI_CD_FIX_ANALYSIS.md (matched: .*_ANALYSIS\.md$)
+2026-01-31 23:18:39,831 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: CERBERUS_IMPLEMENTATION_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:39,831 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: PERPLEXITY_IMPLEMENTATION_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:39,832 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: ACTIONABLE_RECOMMENDATIONS_IMPLEMENTATION.md (matched: .*_IMPLEMENTATION\.md$)
+2026-01-31 23:18:39,832 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: GITHUB_PUSH_SUCCESS.md (matched: .*_SUCCESS\.md$)
+2026-01-31 23:18:39,832 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: FINAL_PROJECT_STATUS.md (matched: .*_STATUS\.md$)
+2026-01-31 23:18:39,832 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: WEB_CHARTER_DOWNLOADS_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:39,832 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: TARL_60_PERCENT_IMPROVEMENT_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:39,832 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: PACE_IMPLEMENTATION_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:39,832 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: COMPLETE_REPOSITORY_AUDIT.md (matched: .*_AUDIT\.md$)
+2026-01-31 23:18:39,832 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: GLOBAL_SCENARIO_ENGINE_FINDINGS.md (matched: content keywords (count: 4))
+2026-01-31 23:18:39,832 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: RELEASE_BUILD_GUIDE.md (matched: .*_GUIDE\.md$)
+2026-01-31 23:18:39,832 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: IMPLEMENTATION_STATUS.md (matched: .*_STATUS\.md$)
+2026-01-31 23:18:39,832 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: INTEGRATION_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:39,832 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: TEMPORAL_INTEGRATION_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:39,832 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: AUTOMATED_RELEASE_BUILD_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:39,833 - __main__.HistoricalDocsOrganizer - INFO - Found 75 obsolete documents, keeping 49
+2026-01-31 23:18:39,833 - __main__ - INFO - ================================================================================
+2026-01-31 23:18:39,833 - __main__ - INFO - MOVING TO HISTORICAL DIRECTORY
+2026-01-31 23:18:39,833 - __main__ - INFO - ================================================================================
+2026-01-31 23:18:39,833 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move IMPLEMENTATION_COMPLETE.md -> docs/historical/IMPLEMENTATION_COMPLETE.md
+2026-01-31 23:18:39,833 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move THIRSTY_LANG_INTEGRATION.md -> docs/historical/THIRSTY_LANG_INTEGRATION.md
+2026-01-31 23:18:39,833 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move CRITICAL_FIXES_SUMMARY.md -> docs/historical/CRITICAL_FIXES_SUMMARY.md
+2026-01-31 23:18:39,833 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move TEMPORAL_SECURITY_AGENTS_QUICKSTART.md -> docs/historical/TEMPORAL_SECURITY_AGENTS_QUICKSTART.md
+2026-01-31 23:18:39,833 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move DEPLOYMENT_AND_RELEASE_COMPLETE.md -> docs/historical/DEPLOYMENT_AND_RELEASE_COMPLETE.md
+2026-01-31 23:18:39,833 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move GLOBAL_SCENARIO_ENGINE_SUMMARY.md -> docs/historical/GLOBAL_SCENARIO_ENGINE_SUMMARY.md
+2026-01-31 23:18:39,833 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move GOD_TIER_DISTRIBUTED_ARCHITECTURE.md -> docs/historical/GOD_TIER_DISTRIBUTED_ARCHITECTURE.md
+2026-01-31 23:18:39,833 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move TARL_PATCH_COMPLETE.md -> docs/historical/TARL_PATCH_COMPLETE.md
+2026-01-31 23:18:39,834 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move ALL_PATCHES_COMPLETE.md -> docs/historical/ALL_PATCHES_COMPLETE.md
+2026-01-31 23:18:39,834 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move ROBOTIC_MAINFRAME_IMPLEMENTATION.md -> docs/historical/ROBOTIC_MAINFRAME_IMPLEMENTATION.md
+2026-01-31 23:18:39,834 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move PRODUCTION_HARDENING_SUMMARY.md -> docs/historical/PRODUCTION_HARDENING_SUMMARY.md
+2026-01-31 23:18:39,834 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move ADVERSARIAL_TESTS_COMPLETE.md -> docs/historical/ADVERSARIAL_TESTS_COMPLETE.md
+2026-01-31 23:18:39,834 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move PROJECT_AI_V1_COMPLETE.md -> docs/historical/PROJECT_AI_V1_COMPLETE.md
+2026-01-31 23:18:39,834 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move SECURE-H323-DEPLOYMENT.md -> docs/historical/SECURE-H323-DEPLOYMENT.md
+2026-01-31 23:18:39,834 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move RESTORATION_GUIDE.md -> docs/historical/RESTORATION_GUIDE.md
+2026-01-31 23:18:39,834 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move TARL_ORCHESTRATION_IMPLEMENTATION_REPORT.md -> docs/historical/TARL_ORCHESTRATION_IMPLEMENTATION_REPORT.md
+2026-01-31 23:18:39,834 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move TRIUMVIRATE_QUICKSTART.md -> docs/historical/TRIUMVIRATE_QUICKSTART.md
+2026-01-31 23:18:39,834 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move SECURITY_INCIDENT_REPORT.md -> docs/historical/SECURITY_INCIDENT_REPORT.md
+2026-01-31 23:18:39,834 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move EXHAUSTIVE_TEST_EXECUTION_GUIDE.md -> docs/historical/EXHAUSTIVE_TEST_EXECUTION_GUIDE.md
+2026-01-31 23:18:39,834 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move SECURITY_UPDATE.md -> docs/historical/SECURITY_UPDATE.md
+2026-01-31 23:18:39,834 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move BADGE_RECOMMENDATIONS.md -> docs/historical/BADGE_RECOMMENDATIONS.md
+2026-01-31 23:18:39,834 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move REPO_RESOURCES_COMPLETE.md -> docs/historical/REPO_RESOURCES_COMPLETE.md
+2026-01-31 23:18:39,834 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move IMPLEMENTATION_SUMMARY.md -> docs/historical/IMPLEMENTATION_SUMMARY.md
+2026-01-31 23:18:39,834 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move GOD_TIER_EXPANSION_SUMMARY.md -> docs/historical/GOD_TIER_EXPANSION_SUMMARY.md
+2026-01-31 23:18:39,834 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move RELEASE_SUMMARY_v1.0.0.md -> docs/historical/RELEASE_SUMMARY_v1.0.0.md
+2026-01-31 23:18:39,834 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move DEPLOY_CHECKLIST.md -> docs/historical/DEPLOY_CHECKLIST.md
+2026-01-31 23:18:39,834 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move WHITEPAPER_SUMMARY.md -> docs/historical/WHITEPAPER_SUMMARY.md
+2026-01-31 23:18:39,835 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move CI_CHECK_ISSUES.md -> docs/historical/CI_CHECK_ISSUES.md
+2026-01-31 23:18:39,835 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move DEPLOYMENT_SOLUTIONS.md -> docs/historical/DEPLOYMENT_SOLUTIONS.md
+2026-01-31 23:18:39,835 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move PRODUCTION_HARDENING_COMPLETE.md -> docs/historical/PRODUCTION_HARDENING_COMPLETE.md
+2026-01-31 23:18:39,835 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move PRODUCTION_INFRASTRUCTURE_COMPLETE.md -> docs/historical/PRODUCTION_INFRASTRUCTURE_COMPLETE.md
+2026-01-31 23:18:39,835 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move TESTING_FRAMEWORK_COMPLETE.md -> docs/historical/TESTING_FRAMEWORK_COMPLETE.md
+2026-01-31 23:18:39,835 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move GOD_TIER_PLATFORM_IMPLEMENTATION.md -> docs/historical/GOD_TIER_PLATFORM_IMPLEMENTATION.md
+2026-01-31 23:18:39,835 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move test_documentation_update_summary.md -> docs/historical/test_documentation_update_summary.md
+2026-01-31 23:18:39,835 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move E2E_TEST_COVERAGE_SUMMARY.md -> docs/historical/E2E_TEST_COVERAGE_SUMMARY.md
+2026-01-31 23:18:39,835 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move TARL_HARDENING_UX_IMPLEMENTATION.md -> docs/historical/TARL_HARDENING_UX_IMPLEMENTATION.md
+2026-01-31 23:18:39,835 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move GUI_IMPLEMENTATION_COMPLETE.md -> docs/historical/GUI_IMPLEMENTATION_COMPLETE.md
+2026-01-31 23:18:39,835 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move IMPLEMENTATION_COMPLETE_WATCHTOWER.md -> docs/historical/IMPLEMENTATION_COMPLETE_WATCHTOWER.md
+2026-01-31 23:18:39,835 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move DEFENSE_ENGINE_IMPLEMENTATION_COMPLETE.md -> docs/historical/DEFENSE_ENGINE_IMPLEMENTATION_COMPLETE.md
+2026-01-31 23:18:39,835 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move OWASP_COMPLIANCE_COMPLETE.md -> docs/historical/OWASP_COMPLIANCE_COMPLETE.md
+2026-01-31 23:18:39,835 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move TARL_IMPLEMENTATION.md -> docs/historical/TARL_IMPLEMENTATION.md
+2026-01-31 23:18:39,835 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move PROJECT_STRUCTURE.md -> docs/historical/PROJECT_STRUCTURE.md
+2026-01-31 23:18:39,835 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move OWASP_COVERAGE_ANALYSIS.md -> docs/historical/OWASP_COVERAGE_ANALYSIS.md
+2026-01-31 23:18:39,835 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move ENHANCED_SYSTEMS_COMPLETE.md -> docs/historical/ENHANCED_SYSTEMS_COMPLETE.md
+2026-01-31 23:18:39,835 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move SOVEREIGN_MESSAGING_IMPLEMENTATION.md -> docs/historical/SOVEREIGN_MESSAGING_IMPLEMENTATION.md
+2026-01-31 23:18:39,835 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move GOD_TIER_EXPANSION_COMPLETE.md -> docs/historical/GOD_TIER_EXPANSION_COMPLETE.md
+2026-01-31 23:18:39,835 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move DOMAIN_SUBSYSTEMS_COMPLETE.md -> docs/historical/DOMAIN_SUBSYSTEMS_COMPLETE.md
+2026-01-31 23:18:39,835 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move WIRED_ETHICS_COMPLETE.md -> docs/historical/WIRED_ETHICS_COMPLETE.md
+2026-01-31 23:18:39,836 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move MASTER_COMPLETE.md -> docs/historical/MASTER_COMPLETE.md
+2026-01-31 23:18:39,836 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move TECHNICAL_WHITE_PAPER_SUMMARY.md -> docs/historical/TECHNICAL_WHITE_PAPER_SUMMARY.md
+2026-01-31 23:18:39,836 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move DEPLOYMENT_READY_THIRSTYSPROJECTS.md -> docs/historical/DEPLOYMENT_READY_THIRSTYSPROJECTS.md
+2026-01-31 23:18:39,836 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move DEPLOYMENT_RELEASE_QUICKSTART.md -> docs/historical/DEPLOYMENT_RELEASE_QUICKSTART.md
+2026-01-31 23:18:39,836 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move SECURITY_ACTIVATION_STATUS.md -> docs/historical/SECURITY_ACTIVATION_STATUS.md
+2026-01-31 23:18:39,836 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move DESKTOP_COMPLETE.md -> docs/historical/DESKTOP_COMPLETE.md
+2026-01-31 23:18:39,836 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move GITHUB_UPDATE_GUIDE.md -> docs/historical/GITHUB_UPDATE_GUIDE.md
+2026-01-31 23:18:39,836 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move TARL_EXTENDED_IMPLEMENTATION_SUMMARY.md -> docs/historical/TARL_EXTENDED_IMPLEMENTATION_SUMMARY.md
+2026-01-31 23:18:39,836 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move CLEANUP_SUMMARY.md -> docs/historical/CLEANUP_SUMMARY.md
+2026-01-31 23:18:39,836 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move ANDROID_COMPLETE.md -> docs/historical/ANDROID_COMPLETE.md
+2026-01-31 23:18:39,836 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move GOD_TIER_IMPLEMENTATION_EXECUTIVE_SUMMARY.md -> docs/historical/GOD_TIER_IMPLEMENTATION_EXECUTIVE_SUMMARY.md
+2026-01-31 23:18:39,836 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move CI_CD_FIX_ANALYSIS.md -> docs/historical/CI_CD_FIX_ANALYSIS.md
+2026-01-31 23:18:39,836 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move CERBERUS_IMPLEMENTATION_SUMMARY.md -> docs/historical/CERBERUS_IMPLEMENTATION_SUMMARY.md
+2026-01-31 23:18:39,836 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move PERPLEXITY_IMPLEMENTATION_SUMMARY.md -> docs/historical/PERPLEXITY_IMPLEMENTATION_SUMMARY.md
+2026-01-31 23:18:39,836 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move ACTIONABLE_RECOMMENDATIONS_IMPLEMENTATION.md -> docs/historical/ACTIONABLE_RECOMMENDATIONS_IMPLEMENTATION.md
+2026-01-31 23:18:39,836 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move GITHUB_PUSH_SUCCESS.md -> docs/historical/GITHUB_PUSH_SUCCESS.md
+2026-01-31 23:18:39,836 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move FINAL_PROJECT_STATUS.md -> docs/historical/FINAL_PROJECT_STATUS.md
+2026-01-31 23:18:39,836 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move WEB_CHARTER_DOWNLOADS_COMPLETE.md -> docs/historical/WEB_CHARTER_DOWNLOADS_COMPLETE.md
+2026-01-31 23:18:39,837 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move TARL_60_PERCENT_IMPROVEMENT_SUMMARY.md -> docs/historical/TARL_60_PERCENT_IMPROVEMENT_SUMMARY.md
+2026-01-31 23:18:39,837 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move PACE_IMPLEMENTATION_SUMMARY.md -> docs/historical/PACE_IMPLEMENTATION_SUMMARY.md
+2026-01-31 23:18:39,837 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move COMPLETE_REPOSITORY_AUDIT.md -> docs/historical/COMPLETE_REPOSITORY_AUDIT.md
+2026-01-31 23:18:39,837 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move GLOBAL_SCENARIO_ENGINE_FINDINGS.md -> docs/historical/GLOBAL_SCENARIO_ENGINE_FINDINGS.md
+2026-01-31 23:18:39,837 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move RELEASE_BUILD_GUIDE.md -> docs/historical/RELEASE_BUILD_GUIDE.md
+2026-01-31 23:18:39,837 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move IMPLEMENTATION_STATUS.md -> docs/historical/IMPLEMENTATION_STATUS.md
+2026-01-31 23:18:39,837 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move INTEGRATION_SUMMARY.md -> docs/historical/INTEGRATION_SUMMARY.md
+2026-01-31 23:18:39,837 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move TEMPORAL_INTEGRATION_SUMMARY.md -> docs/historical/TEMPORAL_INTEGRATION_SUMMARY.md
+2026-01-31 23:18:39,837 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move AUTOMATED_RELEASE_BUILD_SUMMARY.md -> docs/historical/AUTOMATED_RELEASE_BUILD_SUMMARY.md
+2026-01-31 23:18:39,837 - __main__ - INFO - ================================================================================
+2026-01-31 23:18:39,837 - __main__ - INFO - FINDING REFERENCES
+2026-01-31 23:18:39,837 - __main__ - INFO - ================================================================================
+2026-01-31 23:18:39,837 - __main__.HistoricalDocsOrganizer - INFO - Finding references to moved files...
+2026-01-31 23:18:39,879 - __main__.HistoricalDocsOrganizer - INFO -   Found 2 references in SECURITY_AGENTS_README.md
+2026-01-31 23:18:39,907 - __main__.HistoricalDocsOrganizer - INFO -   Found 8 references in THIRSTY_LANG_TARL_WHITEPAPER.md
+2026-01-31 23:18:39,909 - __main__.HistoricalDocsOrganizer - INFO -   Found 3 references in DEPLOYMENT.md
+2026-01-31 23:18:39,918 - __main__.HistoricalDocsOrganizer - INFO -   Found 3 references in README.md
+2026-01-31 23:18:39,947 - __main__.HistoricalDocsOrganizer - INFO -   Found 2 references in TARL_README.md
+2026-01-31 23:18:39,957 - __main__.HistoricalDocsOrganizer - INFO -   Found 3 references in PLATFORM_COMPATIBILITY.md
+2026-01-31 23:18:39,977 - __main__.HistoricalDocsOrganizer - INFO -   Found 4 references in COMPLETE_TEST_SUITE_SUMMARY.md
+2026-01-31 23:18:40,063 - __main__.HistoricalDocsOrganizer - INFO -   Found 1 references in TARL_QUICK_REFERENCE.md
+2026-01-31 23:18:40,069 - __main__.HistoricalDocsOrganizer - INFO -   Found 2 references in docs/IMPLEMENTATION_COMPLETE.md
+2026-01-31 23:18:40,096 - __main__.HistoricalDocsOrganizer - INFO -   Found 5 references in docs/TEMPORAL_IO_INTEGRATION.md
+2026-01-31 23:18:40,216 - __main__.HistoricalDocsOrganizer - INFO -   Found 2 references in docs/README.md
+2026-01-31 23:18:40,260 - __main__.HistoricalDocsOrganizer - INFO -   Found 2 references in docs/AGI_IDENTITY_IMPLEMENTATION_SUMMARY.md
+2026-01-31 23:18:40,296 - __main__.HistoricalDocsOrganizer - INFO -   Found 1 references in docs/ARCHITECTURE_OVERVIEW.md
+2026-01-31 23:18:40,380 - __main__.HistoricalDocsOrganizer - INFO -   Found 1 references in docs/COMPLETE_INTEGRATION_SUMMARY.md
+2026-01-31 23:18:40,560 - __main__.HistoricalDocsOrganizer - INFO -   Found 1 references in docs/overview/INTEGRATION_GUIDE.md
+2026-01-31 23:18:40,602 - __main__.HistoricalDocsOrganizer - INFO -   Found 2 references in docs/archive/historical-summaries/SECURITY_FIX_SUMMARY.md
+2026-01-31 23:18:40,607 - __main__.HistoricalDocsOrganizer - INFO -   Found 8 references in docs/archive/historical-summaries/SECRET_REMOVAL_SUMMARY.md
+2026-01-31 23:18:40,617 - __main__.HistoricalDocsOrganizer - INFO -   Found 4 references in docs/archive/security-incident-jan2026/README.md
+2026-01-31 23:18:40,619 - __main__.HistoricalDocsOrganizer - INFO -   Found 3 references in docs/archive/security-incident-jan2026/URGENT_SECURITY_UPDATE.md
+2026-01-31 23:18:40,638 - __main__.HistoricalDocsOrganizer - INFO -   Found 1 references in docs/archive/session-notes/QUICK_START.md
+2026-01-31 23:18:40,643 - __main__.HistoricalDocsOrganizer - INFO -   Found 2 references in docs/archive/session-notes/PROJECT_STATUS.md
+2026-01-31 23:18:40,653 - __main__.HistoricalDocsOrganizer - INFO -   Found 1 references in docs/archive/session-notes/NEW_FEATURES_SUMMARY.md
+2026-01-31 23:18:40,660 - __main__.HistoricalDocsOrganizer - INFO -   Found 3 references in docs/archive/session-notes/COMPLETION_SUMMARY.md
+2026-01-31 23:18:40,675 - __main__.HistoricalDocsOrganizer - INFO -   Found 3 references in docs/archive/session-notes/FINAL_STATUS.md
+2026-01-31 23:18:40,692 - __main__.HistoricalDocsOrganizer - INFO -   Found 1 references in docs/archive/adversarial-completion/README.md
+2026-01-31 23:18:40,703 - __main__.HistoricalDocsOrganizer - INFO -   Found 1 references in docs/archive/adversarial-completion/FINAL_SUMMARY.md
+2026-01-31 23:18:40,718 - __main__.HistoricalDocsOrganizer - INFO -   Found 1 references in .github/INTEGRATION_VERIFICATION.md
+2026-01-31 23:18:40,788 - __main__ - INFO - ================================================================================
+2026-01-31 23:18:40,788 - __main__ - INFO - UPDATING REFERENCES
+2026-01-31 23:18:40,788 - __main__ - INFO - ================================================================================
+2026-01-31 23:18:40,788 - __main__.HistoricalDocsOrganizer - INFO - Updating references...
+2026-01-31 23:18:40,788 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would update 2 references in SECURITY_AGENTS_README.md
+2026-01-31 23:18:40,788 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would update 8 references in THIRSTY_LANG_TARL_WHITEPAPER.md
+2026-01-31 23:18:40,788 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would update 3 references in DEPLOYMENT.md
+2026-01-31 23:18:40,788 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would update 3 references in README.md
+2026-01-31 23:18:40,788 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would update 2 references in TARL_README.md
+2026-01-31 23:18:40,788 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would update 3 references in PLATFORM_COMPATIBILITY.md
+2026-01-31 23:18:40,788 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would update 4 references in COMPLETE_TEST_SUITE_SUMMARY.md
+2026-01-31 23:18:40,788 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would update 1 references in TARL_QUICK_REFERENCE.md
+2026-01-31 23:18:40,788 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would update 2 references in docs/IMPLEMENTATION_COMPLETE.md
+2026-01-31 23:18:40,788 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would update 5 references in docs/TEMPORAL_IO_INTEGRATION.md
+2026-01-31 23:18:40,788 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would update 2 references in docs/README.md
+2026-01-31 23:18:40,788 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would update 2 references in docs/AGI_IDENTITY_IMPLEMENTATION_SUMMARY.md
+2026-01-31 23:18:40,788 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would update 1 references in docs/ARCHITECTURE_OVERVIEW.md
+2026-01-31 23:18:40,788 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would update 1 references in docs/COMPLETE_INTEGRATION_SUMMARY.md
+2026-01-31 23:18:40,788 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would update 1 references in docs/overview/INTEGRATION_GUIDE.md
+2026-01-31 23:18:40,788 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would update 2 references in docs/archive/historical-summaries/SECURITY_FIX_SUMMARY.md
+2026-01-31 23:18:40,788 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would update 8 references in docs/archive/historical-summaries/SECRET_REMOVAL_SUMMARY.md
+2026-01-31 23:18:40,788 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would update 4 references in docs/archive/security-incident-jan2026/README.md
+2026-01-31 23:18:40,788 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would update 3 references in docs/archive/security-incident-jan2026/URGENT_SECURITY_UPDATE.md
+2026-01-31 23:18:40,788 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would update 1 references in docs/archive/session-notes/QUICK_START.md
+2026-01-31 23:18:40,788 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would update 2 references in docs/archive/session-notes/PROJECT_STATUS.md
+2026-01-31 23:18:40,788 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would update 1 references in docs/archive/session-notes/NEW_FEATURES_SUMMARY.md
+2026-01-31 23:18:40,788 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would update 3 references in docs/archive/session-notes/COMPLETION_SUMMARY.md
+2026-01-31 23:18:40,788 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would update 3 references in docs/archive/session-notes/FINAL_STATUS.md
+2026-01-31 23:18:40,789 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would update 1 references in docs/archive/adversarial-completion/README.md
+2026-01-31 23:18:40,789 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would update 1 references in docs/archive/adversarial-completion/FINAL_SUMMARY.md
+2026-01-31 23:18:40,789 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would update 1 references in .github/INTEGRATION_VERIFICATION.md
+2026-01-31 23:18:40,789 - __main__ - INFO - ================================================================================
+2026-01-31 23:18:40,789 - __main__ - INFO - CREATING HISTORICAL INDEX
+2026-01-31 23:18:40,789 - __main__ - INFO - ================================================================================
+2026-01-31 23:18:40,789 - __main__.HistoricalDocsOrganizer - INFO - DRY RUN: Would create historical index
+2026-01-31 23:18:40,789 - __main__ - INFO - ================================================================================
+2026-01-31 23:18:40,789 - __main__ - INFO - GENERATING REPORT
+2026-01-31 23:18:40,789 - __main__ - INFO - ================================================================================
+2026-01-31 23:18:40,789 - __main__ - INFO - Report saved to historical_docs_organization_report.md
+2026-01-31 23:18:40,789 - __main__ - INFO - ================================================================================
+2026-01-31 23:18:40,789 - __main__ - INFO - ORGANIZATION COMPLETE
+2026-01-31 23:18:40,789 - __main__ - INFO - ================================================================================
+2026-01-31 23:18:40,789 - __main__ - INFO - Files moved: 75
+2026-01-31 23:18:40,789 - __main__ - INFO - References updated: 70
+2026-01-31 23:18:45,500 - __main__ - INFO - ================================================================================
+2026-01-31 23:18:45,500 - __main__ - INFO - IDENTIFYING OBSOLETE DOCUMENTS
+2026-01-31 23:18:45,500 - __main__ - INFO - ================================================================================
+2026-01-31 23:18:45,500 - __main__.HistoricalDocsOrganizer - INFO - Identifying obsolete documents...
+2026-01-31 23:18:45,501 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: IMPLEMENTATION_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:45,501 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: THIRSTY_LANG_INTEGRATION.md (matched: content keywords (count: 3))
+2026-01-31 23:18:45,501 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: CRITICAL_FIXES_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:45,502 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: historical_docs_organization_report.md (matched: content keywords (count: 4))
+2026-01-31 23:18:45,502 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: TEMPORAL_SECURITY_AGENTS_QUICKSTART.md (matched: .*_QUICKSTART\.md$)
+2026-01-31 23:18:45,502 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: DEPLOYMENT_AND_RELEASE_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:45,502 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: GLOBAL_SCENARIO_ENGINE_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:45,502 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: GOD_TIER_DISTRIBUTED_ARCHITECTURE.md (matched: content keywords (count: 2))
+2026-01-31 23:18:45,502 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: TARL_PATCH_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:45,502 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: ALL_PATCHES_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:45,502 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: ROBOTIC_MAINFRAME_IMPLEMENTATION.md (matched: .*_IMPLEMENTATION\.md$)
+2026-01-31 23:18:45,502 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: PRODUCTION_HARDENING_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:45,502 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: ADVERSARIAL_TESTS_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:45,502 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: PROJECT_AI_V1_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:45,502 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: SECURE-H323-DEPLOYMENT.md (matched: content keywords (count: 2))
+2026-01-31 23:18:45,503 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: RESTORATION_GUIDE.md (matched: .*_GUIDE\.md$)
+2026-01-31 23:18:45,503 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: TARL_ORCHESTRATION_IMPLEMENTATION_REPORT.md (matched: content keywords (count: 3))
+2026-01-31 23:18:45,503 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: TRIUMVIRATE_QUICKSTART.md (matched: .*_QUICKSTART\.md$)
+2026-01-31 23:18:45,503 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: SECURITY_INCIDENT_REPORT.md (matched: content keywords (count: 2))
+2026-01-31 23:18:45,503 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: EXHAUSTIVE_TEST_EXECUTION_GUIDE.md (matched: .*_GUIDE\.md$)
+2026-01-31 23:18:45,503 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: SECURITY_UPDATE.md (matched: content keywords (count: 2))
+2026-01-31 23:18:45,503 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: BADGE_RECOMMENDATIONS.md (matched: .*_RECOMMENDATIONS\.md$)
+2026-01-31 23:18:45,503 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: REPO_RESOURCES_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:45,504 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: IMPLEMENTATION_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:45,504 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: GOD_TIER_EXPANSION_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:45,504 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: RELEASE_SUMMARY_v1.0.0.md (matched: content keywords (count: 3))
+2026-01-31 23:18:45,504 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: DEPLOY_CHECKLIST.md (matched: .*_CHECKLIST\.md$)
+2026-01-31 23:18:45,504 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: WHITEPAPER_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:45,504 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: CI_CHECK_ISSUES.md (matched: .*_ISSUES\.md$)
+2026-01-31 23:18:45,504 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: DEPLOYMENT_SOLUTIONS.md (matched: .*_SOLUTIONS\.md$)
+2026-01-31 23:18:45,504 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: PRODUCTION_HARDENING_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:45,504 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: PRODUCTION_INFRASTRUCTURE_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:45,504 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: TESTING_FRAMEWORK_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:45,504 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: GOD_TIER_PLATFORM_IMPLEMENTATION.md (matched: .*_IMPLEMENTATION\.md$)
+2026-01-31 23:18:45,505 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: test_documentation_update_summary.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:45,505 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: E2E_TEST_COVERAGE_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:45,505 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: TARL_HARDENING_UX_IMPLEMENTATION.md (matched: .*_IMPLEMENTATION\.md$)
+2026-01-31 23:18:45,505 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: GUI_IMPLEMENTATION_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:45,505 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: IMPLEMENTATION_COMPLETE_WATCHTOWER.md (matched: content keywords (count: 3))
+2026-01-31 23:18:45,505 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: DEFENSE_ENGINE_IMPLEMENTATION_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:45,505 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: OWASP_COMPLIANCE_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:45,505 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: TARL_IMPLEMENTATION.md (matched: .*_IMPLEMENTATION\.md$)
+2026-01-31 23:18:45,505 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: PROJECT_STRUCTURE.md (matched: content keywords (count: 3))
+2026-01-31 23:18:45,506 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: OWASP_COVERAGE_ANALYSIS.md (matched: .*_ANALYSIS\.md$)
+2026-01-31 23:18:45,506 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: ENHANCED_SYSTEMS_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:45,506 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: SOVEREIGN_MESSAGING_IMPLEMENTATION.md (matched: .*_IMPLEMENTATION\.md$)
+2026-01-31 23:18:45,506 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: GOD_TIER_EXPANSION_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:45,506 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: DOMAIN_SUBSYSTEMS_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:45,506 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: WIRED_ETHICS_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:45,506 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: MASTER_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:45,507 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: TECHNICAL_WHITE_PAPER_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:45,507 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: DEPLOYMENT_READY_THIRSTYSPROJECTS.md (matched: content keywords (count: 2))
+2026-01-31 23:18:45,507 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: DEPLOYMENT_RELEASE_QUICKSTART.md (matched: .*_QUICKSTART\.md$)
+2026-01-31 23:18:45,507 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: SECURITY_ACTIVATION_STATUS.md (matched: .*_STATUS\.md$)
+2026-01-31 23:18:45,507 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: DESKTOP_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:45,507 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: GITHUB_UPDATE_GUIDE.md (matched: .*_GUIDE\.md$)
+2026-01-31 23:18:45,507 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: TARL_EXTENDED_IMPLEMENTATION_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:45,507 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: CLEANUP_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:45,507 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: ANDROID_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:45,507 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: GOD_TIER_IMPLEMENTATION_EXECUTIVE_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:45,508 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: CI_CD_FIX_ANALYSIS.md (matched: .*_ANALYSIS\.md$)
+2026-01-31 23:18:45,508 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: CERBERUS_IMPLEMENTATION_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:45,508 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: PERPLEXITY_IMPLEMENTATION_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:45,508 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: ACTIONABLE_RECOMMENDATIONS_IMPLEMENTATION.md (matched: .*_IMPLEMENTATION\.md$)
+2026-01-31 23:18:45,508 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: GITHUB_PUSH_SUCCESS.md (matched: .*_SUCCESS\.md$)
+2026-01-31 23:18:45,508 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: FINAL_PROJECT_STATUS.md (matched: .*_STATUS\.md$)
+2026-01-31 23:18:45,508 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: WEB_CHARTER_DOWNLOADS_COMPLETE.md (matched: .*_COMPLETE\.md$)
+2026-01-31 23:18:45,508 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: TARL_60_PERCENT_IMPROVEMENT_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:45,508 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: PACE_IMPLEMENTATION_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:45,508 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: COMPLETE_REPOSITORY_AUDIT.md (matched: .*_AUDIT\.md$)
+2026-01-31 23:18:45,508 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: GLOBAL_SCENARIO_ENGINE_FINDINGS.md (matched: content keywords (count: 4))
+2026-01-31 23:18:45,509 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: RELEASE_BUILD_GUIDE.md (matched: .*_GUIDE\.md$)
+2026-01-31 23:18:45,509 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: IMPLEMENTATION_STATUS.md (matched: .*_STATUS\.md$)
+2026-01-31 23:18:45,509 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: INTEGRATION_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:45,509 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: TEMPORAL_INTEGRATION_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:45,509 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: AUTOMATED_RELEASE_BUILD_SUMMARY.md (matched: .*_SUMMARY\.md$)
+2026-01-31 23:18:45,509 - __main__.HistoricalDocsOrganizer - INFO - Found 76 obsolete documents, keeping 49
+2026-01-31 23:18:45,509 - __main__ - INFO - ================================================================================
+2026-01-31 23:18:45,509 - __main__ - INFO - MOVING TO HISTORICAL DIRECTORY
+2026-01-31 23:18:45,509 - __main__ - INFO - ================================================================================
+2026-01-31 23:18:45,509 - __main__.HistoricalDocsOrganizer - INFO - Created historical directory: docs/historical
+2026-01-31 23:18:45,509 - __main__.HistoricalDocsOrganizer - INFO -   Moved: IMPLEMENTATION_COMPLETE.md -> docs/historical/IMPLEMENTATION_COMPLETE.md
+2026-01-31 23:18:45,509 - __main__.HistoricalDocsOrganizer - INFO -   Moved: THIRSTY_LANG_INTEGRATION.md -> docs/historical/THIRSTY_LANG_INTEGRATION.md
+2026-01-31 23:18:45,510 - __main__.HistoricalDocsOrganizer - INFO -   Moved: CRITICAL_FIXES_SUMMARY.md -> docs/historical/CRITICAL_FIXES_SUMMARY.md
+2026-01-31 23:18:45,510 - __main__.HistoricalDocsOrganizer - INFO -   Moved: historical_docs_organization_report.md -> docs/historical/historical_docs_organization_report.md
+2026-01-31 23:18:45,510 - __main__.HistoricalDocsOrganizer - INFO -   Moved: TEMPORAL_SECURITY_AGENTS_QUICKSTART.md -> docs/historical/TEMPORAL_SECURITY_AGENTS_QUICKSTART.md
+2026-01-31 23:18:45,510 - __main__.HistoricalDocsOrganizer - INFO -   Moved: DEPLOYMENT_AND_RELEASE_COMPLETE.md -> docs/historical/DEPLOYMENT_AND_RELEASE_COMPLETE.md
+2026-01-31 23:18:45,510 - __main__.HistoricalDocsOrganizer - INFO -   Moved: GLOBAL_SCENARIO_ENGINE_SUMMARY.md -> docs/historical/GLOBAL_SCENARIO_ENGINE_SUMMARY.md
+2026-01-31 23:18:45,510 - __main__.HistoricalDocsOrganizer - INFO -   Moved: GOD_TIER_DISTRIBUTED_ARCHITECTURE.md -> docs/historical/GOD_TIER_DISTRIBUTED_ARCHITECTURE.md
+2026-01-31 23:18:45,510 - __main__.HistoricalDocsOrganizer - INFO -   Moved: TARL_PATCH_COMPLETE.md -> docs/historical/TARL_PATCH_COMPLETE.md
+2026-01-31 23:18:45,510 - __main__.HistoricalDocsOrganizer - INFO -   Moved: ALL_PATCHES_COMPLETE.md -> docs/historical/ALL_PATCHES_COMPLETE.md
+2026-01-31 23:18:45,510 - __main__.HistoricalDocsOrganizer - INFO -   Moved: ROBOTIC_MAINFRAME_IMPLEMENTATION.md -> docs/historical/ROBOTIC_MAINFRAME_IMPLEMENTATION.md
+2026-01-31 23:18:45,510 - __main__.HistoricalDocsOrganizer - INFO -   Moved: PRODUCTION_HARDENING_SUMMARY.md -> docs/historical/PRODUCTION_HARDENING_SUMMARY.md
+2026-01-31 23:18:45,511 - __main__.HistoricalDocsOrganizer - INFO -   Moved: ADVERSARIAL_TESTS_COMPLETE.md -> docs/historical/ADVERSARIAL_TESTS_COMPLETE.md
+2026-01-31 23:18:45,511 - __main__.HistoricalDocsOrganizer - INFO -   Moved: PROJECT_AI_V1_COMPLETE.md -> docs/historical/PROJECT_AI_V1_COMPLETE.md
+2026-01-31 23:18:45,511 - __main__.HistoricalDocsOrganizer - INFO -   Moved: SECURE-H323-DEPLOYMENT.md -> docs/historical/SECURE-H323-DEPLOYMENT.md
+2026-01-31 23:18:45,511 - __main__.HistoricalDocsOrganizer - INFO -   Moved: RESTORATION_GUIDE.md -> docs/historical/RESTORATION_GUIDE.md
+2026-01-31 23:18:45,511 - __main__.HistoricalDocsOrganizer - INFO -   Moved: TARL_ORCHESTRATION_IMPLEMENTATION_REPORT.md -> docs/historical/TARL_ORCHESTRATION_IMPLEMENTATION_REPORT.md
+2026-01-31 23:18:45,511 - __main__.HistoricalDocsOrganizer - INFO -   Moved: TRIUMVIRATE_QUICKSTART.md -> docs/historical/TRIUMVIRATE_QUICKSTART.md
+2026-01-31 23:18:45,511 - __main__.HistoricalDocsOrganizer - INFO -   Moved: SECURITY_INCIDENT_REPORT.md -> docs/historical/SECURITY_INCIDENT_REPORT.md
+2026-01-31 23:18:45,511 - __main__.HistoricalDocsOrganizer - INFO -   Moved: EXHAUSTIVE_TEST_EXECUTION_GUIDE.md -> docs/historical/EXHAUSTIVE_TEST_EXECUTION_GUIDE.md
+2026-01-31 23:18:45,511 - __main__.HistoricalDocsOrganizer - INFO -   Moved: SECURITY_UPDATE.md -> docs/historical/SECURITY_UPDATE.md
+2026-01-31 23:18:45,511 - __main__.HistoricalDocsOrganizer - INFO -   Moved: BADGE_RECOMMENDATIONS.md -> docs/historical/BADGE_RECOMMENDATIONS.md
+2026-01-31 23:18:45,511 - __main__.HistoricalDocsOrganizer - INFO -   Moved: REPO_RESOURCES_COMPLETE.md -> docs/historical/REPO_RESOURCES_COMPLETE.md
+2026-01-31 23:18:45,512 - __main__.HistoricalDocsOrganizer - INFO -   Moved: IMPLEMENTATION_SUMMARY.md -> docs/historical/IMPLEMENTATION_SUMMARY.md
+2026-01-31 23:18:45,512 - __main__.HistoricalDocsOrganizer - INFO -   Moved: GOD_TIER_EXPANSION_SUMMARY.md -> docs/historical/GOD_TIER_EXPANSION_SUMMARY.md
+2026-01-31 23:18:45,512 - __main__.HistoricalDocsOrganizer - INFO -   Moved: RELEASE_SUMMARY_v1.0.0.md -> docs/historical/RELEASE_SUMMARY_v1.0.0.md
+2026-01-31 23:18:45,512 - __main__.HistoricalDocsOrganizer - INFO -   Moved: DEPLOY_CHECKLIST.md -> docs/historical/DEPLOY_CHECKLIST.md
+2026-01-31 23:18:45,512 - __main__.HistoricalDocsOrganizer - INFO -   Moved: WHITEPAPER_SUMMARY.md -> docs/historical/WHITEPAPER_SUMMARY.md
+2026-01-31 23:18:45,512 - __main__.HistoricalDocsOrganizer - INFO -   Moved: CI_CHECK_ISSUES.md -> docs/historical/CI_CHECK_ISSUES.md
+2026-01-31 23:18:45,512 - __main__.HistoricalDocsOrganizer - INFO -   Moved: DEPLOYMENT_SOLUTIONS.md -> docs/historical/DEPLOYMENT_SOLUTIONS.md
+2026-01-31 23:18:45,512 - __main__.HistoricalDocsOrganizer - INFO -   Moved: PRODUCTION_HARDENING_COMPLETE.md -> docs/historical/PRODUCTION_HARDENING_COMPLETE.md
+2026-01-31 23:18:45,512 - __main__.HistoricalDocsOrganizer - INFO -   Moved: PRODUCTION_INFRASTRUCTURE_COMPLETE.md -> docs/historical/PRODUCTION_INFRASTRUCTURE_COMPLETE.md
+2026-01-31 23:18:45,512 - __main__.HistoricalDocsOrganizer - INFO -   Moved: TESTING_FRAMEWORK_COMPLETE.md -> docs/historical/TESTING_FRAMEWORK_COMPLETE.md
+2026-01-31 23:18:45,512 - __main__.HistoricalDocsOrganizer - INFO -   Moved: GOD_TIER_PLATFORM_IMPLEMENTATION.md -> docs/historical/GOD_TIER_PLATFORM_IMPLEMENTATION.md
+2026-01-31 23:18:45,513 - __main__.HistoricalDocsOrganizer - INFO -   Moved: test_documentation_update_summary.md -> docs/historical/test_documentation_update_summary.md
+2026-01-31 23:18:45,513 - __main__.HistoricalDocsOrganizer - INFO -   Moved: E2E_TEST_COVERAGE_SUMMARY.md -> docs/historical/E2E_TEST_COVERAGE_SUMMARY.md
+2026-01-31 23:18:45,513 - __main__.HistoricalDocsOrganizer - INFO -   Moved: TARL_HARDENING_UX_IMPLEMENTATION.md -> docs/historical/TARL_HARDENING_UX_IMPLEMENTATION.md
+2026-01-31 23:18:45,513 - __main__.HistoricalDocsOrganizer - INFO -   Moved: GUI_IMPLEMENTATION_COMPLETE.md -> docs/historical/GUI_IMPLEMENTATION_COMPLETE.md
+2026-01-31 23:18:45,513 - __main__.HistoricalDocsOrganizer - INFO -   Moved: IMPLEMENTATION_COMPLETE_WATCHTOWER.md -> docs/historical/IMPLEMENTATION_COMPLETE_WATCHTOWER.md
+2026-01-31 23:18:45,513 - __main__.HistoricalDocsOrganizer - INFO -   Moved: DEFENSE_ENGINE_IMPLEMENTATION_COMPLETE.md -> docs/historical/DEFENSE_ENGINE_IMPLEMENTATION_COMPLETE.md
+2026-01-31 23:18:45,513 - __main__.HistoricalDocsOrganizer - INFO -   Moved: OWASP_COMPLIANCE_COMPLETE.md -> docs/historical/OWASP_COMPLIANCE_COMPLETE.md
+2026-01-31 23:18:45,513 - __main__.HistoricalDocsOrganizer - INFO -   Moved: TARL_IMPLEMENTATION.md -> docs/historical/TARL_IMPLEMENTATION.md
+2026-01-31 23:18:45,513 - __main__.HistoricalDocsOrganizer - INFO -   Moved: PROJECT_STRUCTURE.md -> docs/historical/PROJECT_STRUCTURE.md
+2026-01-31 23:18:45,513 - __main__.HistoricalDocsOrganizer - INFO -   Moved: OWASP_COVERAGE_ANALYSIS.md -> docs/historical/OWASP_COVERAGE_ANALYSIS.md
+2026-01-31 23:18:45,513 - __main__.HistoricalDocsOrganizer - INFO -   Moved: ENHANCED_SYSTEMS_COMPLETE.md -> docs/historical/ENHANCED_SYSTEMS_COMPLETE.md
+2026-01-31 23:18:45,514 - __main__.HistoricalDocsOrganizer - INFO -   Moved: SOVEREIGN_MESSAGING_IMPLEMENTATION.md -> docs/historical/SOVEREIGN_MESSAGING_IMPLEMENTATION.md
+2026-01-31 23:18:45,514 - __main__.HistoricalDocsOrganizer - INFO -   Moved: GOD_TIER_EXPANSION_COMPLETE.md -> docs/historical/GOD_TIER_EXPANSION_COMPLETE.md
+2026-01-31 23:18:45,514 - __main__.HistoricalDocsOrganizer - INFO -   Moved: DOMAIN_SUBSYSTEMS_COMPLETE.md -> docs/historical/DOMAIN_SUBSYSTEMS_COMPLETE.md
+2026-01-31 23:18:45,514 - __main__.HistoricalDocsOrganizer - INFO -   Moved: WIRED_ETHICS_COMPLETE.md -> docs/historical/WIRED_ETHICS_COMPLETE.md
+2026-01-31 23:18:45,514 - __main__.HistoricalDocsOrganizer - INFO -   Moved: MASTER_COMPLETE.md -> docs/historical/MASTER_COMPLETE.md
+2026-01-31 23:18:45,514 - __main__.HistoricalDocsOrganizer - INFO -   Moved: TECHNICAL_WHITE_PAPER_SUMMARY.md -> docs/historical/TECHNICAL_WHITE_PAPER_SUMMARY.md
+2026-01-31 23:18:45,514 - __main__.HistoricalDocsOrganizer - INFO -   Moved: DEPLOYMENT_READY_THIRSTYSPROJECTS.md -> docs/historical/DEPLOYMENT_READY_THIRSTYSPROJECTS.md
+2026-01-31 23:18:45,514 - __main__.HistoricalDocsOrganizer - INFO -   Moved: DEPLOYMENT_RELEASE_QUICKSTART.md -> docs/historical/DEPLOYMENT_RELEASE_QUICKSTART.md
+2026-01-31 23:18:45,514 - __main__.HistoricalDocsOrganizer - INFO -   Moved: SECURITY_ACTIVATION_STATUS.md -> docs/historical/SECURITY_ACTIVATION_STATUS.md
+2026-01-31 23:18:45,514 - __main__.HistoricalDocsOrganizer - INFO -   Moved: DESKTOP_COMPLETE.md -> docs/historical/DESKTOP_COMPLETE.md
+2026-01-31 23:18:45,515 - __main__.HistoricalDocsOrganizer - INFO -   Moved: GITHUB_UPDATE_GUIDE.md -> docs/historical/GITHUB_UPDATE_GUIDE.md
+2026-01-31 23:18:45,515 - __main__.HistoricalDocsOrganizer - INFO -   Moved: TARL_EXTENDED_IMPLEMENTATION_SUMMARY.md -> docs/historical/TARL_EXTENDED_IMPLEMENTATION_SUMMARY.md
+2026-01-31 23:18:45,515 - __main__.HistoricalDocsOrganizer - INFO -   Moved: CLEANUP_SUMMARY.md -> docs/historical/CLEANUP_SUMMARY.md
+2026-01-31 23:18:45,515 - __main__.HistoricalDocsOrganizer - INFO -   Moved: ANDROID_COMPLETE.md -> docs/historical/ANDROID_COMPLETE.md
+2026-01-31 23:18:45,515 - __main__.HistoricalDocsOrganizer - INFO -   Moved: GOD_TIER_IMPLEMENTATION_EXECUTIVE_SUMMARY.md -> docs/historical/GOD_TIER_IMPLEMENTATION_EXECUTIVE_SUMMARY.md
+2026-01-31 23:18:45,515 - __main__.HistoricalDocsOrganizer - INFO -   Moved: CI_CD_FIX_ANALYSIS.md -> docs/historical/CI_CD_FIX_ANALYSIS.md
+2026-01-31 23:18:45,515 - __main__.HistoricalDocsOrganizer - INFO -   Moved: CERBERUS_IMPLEMENTATION_SUMMARY.md -> docs/historical/CERBERUS_IMPLEMENTATION_SUMMARY.md
+2026-01-31 23:18:45,515 - __main__.HistoricalDocsOrganizer - INFO -   Moved: PERPLEXITY_IMPLEMENTATION_SUMMARY.md -> docs/historical/PERPLEXITY_IMPLEMENTATION_SUMMARY.md
+2026-01-31 23:18:45,515 - __main__.HistoricalDocsOrganizer - INFO -   Moved: ACTIONABLE_RECOMMENDATIONS_IMPLEMENTATION.md -> docs/historical/ACTIONABLE_RECOMMENDATIONS_IMPLEMENTATION.md
+2026-01-31 23:18:45,515 - __main__.HistoricalDocsOrganizer - INFO -   Moved: GITHUB_PUSH_SUCCESS.md -> docs/historical/GITHUB_PUSH_SUCCESS.md
+2026-01-31 23:18:45,516 - __main__.HistoricalDocsOrganizer - INFO -   Moved: FINAL_PROJECT_STATUS.md -> docs/historical/FINAL_PROJECT_STATUS.md
+2026-01-31 23:18:45,516 - __main__.HistoricalDocsOrganizer - INFO -   Moved: WEB_CHARTER_DOWNLOADS_COMPLETE.md -> docs/historical/WEB_CHARTER_DOWNLOADS_COMPLETE.md
+2026-01-31 23:18:45,516 - __main__.HistoricalDocsOrganizer - INFO -   Moved: TARL_60_PERCENT_IMPROVEMENT_SUMMARY.md -> docs/historical/TARL_60_PERCENT_IMPROVEMENT_SUMMARY.md
+2026-01-31 23:18:45,516 - __main__.HistoricalDocsOrganizer - INFO -   Moved: PACE_IMPLEMENTATION_SUMMARY.md -> docs/historical/PACE_IMPLEMENTATION_SUMMARY.md
+2026-01-31 23:18:45,516 - __main__.HistoricalDocsOrganizer - INFO -   Moved: COMPLETE_REPOSITORY_AUDIT.md -> docs/historical/COMPLETE_REPOSITORY_AUDIT.md
+2026-01-31 23:18:45,516 - __main__.HistoricalDocsOrganizer - INFO -   Moved: GLOBAL_SCENARIO_ENGINE_FINDINGS.md -> docs/historical/GLOBAL_SCENARIO_ENGINE_FINDINGS.md
+2026-01-31 23:18:45,516 - __main__.HistoricalDocsOrganizer - INFO -   Moved: RELEASE_BUILD_GUIDE.md -> docs/historical/RELEASE_BUILD_GUIDE.md
+2026-01-31 23:18:45,516 - __main__.HistoricalDocsOrganizer - INFO -   Moved: IMPLEMENTATION_STATUS.md -> docs/historical/IMPLEMENTATION_STATUS.md
+2026-01-31 23:18:45,516 - __main__.HistoricalDocsOrganizer - INFO -   Moved: INTEGRATION_SUMMARY.md -> docs/historical/INTEGRATION_SUMMARY.md
+2026-01-31 23:18:45,516 - __main__.HistoricalDocsOrganizer - INFO -   Moved: TEMPORAL_INTEGRATION_SUMMARY.md -> docs/historical/TEMPORAL_INTEGRATION_SUMMARY.md
+2026-01-31 23:18:45,516 - __main__.HistoricalDocsOrganizer - INFO -   Moved: AUTOMATED_RELEASE_BUILD_SUMMARY.md -> docs/historical/AUTOMATED_RELEASE_BUILD_SUMMARY.md
+2026-01-31 23:18:45,517 - __main__ - INFO - ================================================================================
+2026-01-31 23:18:45,517 - __main__ - INFO - FINDING REFERENCES
+2026-01-31 23:18:45,517 - __main__ - INFO - ================================================================================
+2026-01-31 23:18:45,517 - __main__.HistoricalDocsOrganizer - INFO - Finding references to moved files...
+2026-01-31 23:18:45,559 - __main__.HistoricalDocsOrganizer - INFO -   Found 2 references in SECURITY_AGENTS_README.md
+2026-01-31 23:18:45,585 - __main__.HistoricalDocsOrganizer - INFO -   Found 8 references in THIRSTY_LANG_TARL_WHITEPAPER.md
+2026-01-31 23:18:45,587 - __main__.HistoricalDocsOrganizer - INFO -   Found 3 references in DEPLOYMENT.md
+2026-01-31 23:18:45,598 - __main__.HistoricalDocsOrganizer - INFO -   Found 3 references in README.md
+2026-01-31 23:18:45,628 - __main__.HistoricalDocsOrganizer - INFO -   Found 2 references in TARL_README.md
+2026-01-31 23:18:45,638 - __main__.HistoricalDocsOrganizer - INFO -   Found 3 references in PLATFORM_COMPATIBILITY.md
+2026-01-31 23:18:45,658 - __main__.HistoricalDocsOrganizer - INFO -   Found 4 references in COMPLETE_TEST_SUITE_SUMMARY.md
+2026-01-31 23:18:45,745 - __main__.HistoricalDocsOrganizer - INFO -   Found 1 references in TARL_QUICK_REFERENCE.md
+2026-01-31 23:18:45,751 - __main__.HistoricalDocsOrganizer - INFO -   Found 2 references in docs/IMPLEMENTATION_COMPLETE.md
+2026-01-31 23:18:45,775 - __main__.HistoricalDocsOrganizer - INFO -   Found 5 references in docs/TEMPORAL_IO_INTEGRATION.md
+2026-01-31 23:18:45,901 - __main__.HistoricalDocsOrganizer - INFO -   Found 2 references in docs/README.md
+2026-01-31 23:18:45,946 - __main__.HistoricalDocsOrganizer - INFO -   Found 2 references in docs/AGI_IDENTITY_IMPLEMENTATION_SUMMARY.md
+2026-01-31 23:18:45,979 - __main__.HistoricalDocsOrganizer - INFO -   Found 1 references in docs/ARCHITECTURE_OVERVIEW.md
+2026-01-31 23:18:46,069 - __main__.HistoricalDocsOrganizer - INFO -   Found 1 references in docs/COMPLETE_INTEGRATION_SUMMARY.md
+2026-01-31 23:18:46,251 - __main__.HistoricalDocsOrganizer - INFO -   Found 1 references in docs/overview/INTEGRATION_GUIDE.md
+2026-01-31 23:18:46,285 - __main__.HistoricalDocsOrganizer - INFO -   Found 2 references in docs/historical/IMPLEMENTATION_COMPLETE.md
+2026-01-31 23:18:46,287 - __main__.HistoricalDocsOrganizer - INFO -   Found 1 references in docs/historical/THIRSTY_LANG_INTEGRATION.md
+2026-01-31 23:18:46,292 - __main__.HistoricalDocsOrganizer - INFO -   Found 2 references in docs/historical/CRITICAL_FIXES_SUMMARY.md
+2026-01-31 23:18:46,296 - __main__.HistoricalDocsOrganizer - INFO -   Found 88 references in docs/historical/historical_docs_organization_report.md
+2026-01-31 23:18:46,300 - __main__.HistoricalDocsOrganizer - INFO -   Found 2 references in docs/historical/DEPLOYMENT_AND_RELEASE_COMPLETE.md
+2026-01-31 23:18:46,315 - __main__.HistoricalDocsOrganizer - INFO -   Found 2 references in docs/historical/TARL_PATCH_COMPLETE.md
+2026-01-31 23:18:46,321 - __main__.HistoricalDocsOrganizer - INFO -   Found 2 references in docs/historical/ALL_PATCHES_COMPLETE.md
+2026-01-31 23:18:46,333 - __main__.HistoricalDocsOrganizer - INFO -   Found 4 references in docs/historical/PRODUCTION_HARDENING_SUMMARY.md
+2026-01-31 23:18:46,340 - __main__.HistoricalDocsOrganizer - INFO -   Found 27 references in docs/historical/PROJECT_AI_V1_COMPLETE.md
+2026-01-31 23:18:46,342 - __main__.HistoricalDocsOrganizer - INFO -   Found 2 references in docs/historical/RESTORATION_GUIDE.md
+2026-01-31 23:18:46,362 - __main__.HistoricalDocsOrganizer - INFO -   Found 7 references in docs/historical/REPO_RESOURCES_COMPLETE.md
+2026-01-31 23:18:46,367 - __main__.HistoricalDocsOrganizer - INFO -   Found 3 references in docs/historical/GOD_TIER_EXPANSION_SUMMARY.md
+2026-01-31 23:18:46,374 - __main__.HistoricalDocsOrganizer - INFO -   Found 1 references in docs/historical/DEPLOY_CHECKLIST.md
+2026-01-31 23:18:46,375 - __main__.HistoricalDocsOrganizer - INFO -   Found 1 references in docs/historical/WHITEPAPER_SUMMARY.md
+2026-01-31 23:18:46,380 - __main__.HistoricalDocsOrganizer - INFO -   Found 4 references in docs/historical/DEPLOYMENT_SOLUTIONS.md
+2026-01-31 23:18:46,393 - __main__.HistoricalDocsOrganizer - INFO -   Found 8 references in docs/historical/TESTING_FRAMEWORK_COMPLETE.md
+2026-01-31 23:18:46,402 - __main__.HistoricalDocsOrganizer - INFO -   Found 1 references in docs/historical/E2E_TEST_COVERAGE_SUMMARY.md
+2026-01-31 23:18:46,416 - __main__.HistoricalDocsOrganizer - INFO -   Found 2 references in docs/historical/DEFENSE_ENGINE_IMPLEMENTATION_COMPLETE.md
+2026-01-31 23:18:46,424 - __main__.HistoricalDocsOrganizer - INFO -   Found 6 references in docs/historical/PROJECT_STRUCTURE.md
+2026-01-31 23:18:46,428 - __main__.HistoricalDocsOrganizer - INFO -   Found 1 references in docs/historical/ENHANCED_SYSTEMS_COMPLETE.md
+2026-01-31 23:18:46,454 - __main__.HistoricalDocsOrganizer - INFO -   Found 8 references in docs/historical/MASTER_COMPLETE.md
+2026-01-31 23:18:46,460 - __main__.HistoricalDocsOrganizer - INFO -   Found 1 references in docs/historical/DEPLOYMENT_READY_THIRSTYSPROJECTS.md
+2026-01-31 23:18:46,474 - __main__.HistoricalDocsOrganizer - INFO -   Found 27 references in docs/historical/GITHUB_UPDATE_GUIDE.md
+2026-01-31 23:18:46,482 - __main__.HistoricalDocsOrganizer - INFO -   Found 6 references in docs/historical/CLEANUP_SUMMARY.md
+2026-01-31 23:18:46,490 - __main__.HistoricalDocsOrganizer - INFO -   Found 2 references in docs/historical/GOD_TIER_IMPLEMENTATION_EXECUTIVE_SUMMARY.md
+2026-01-31 23:18:46,509 - __main__.HistoricalDocsOrganizer - INFO -   Found 3 references in docs/historical/ACTIONABLE_RECOMMENDATIONS_IMPLEMENTATION.md
+2026-01-31 23:18:46,512 - __main__.HistoricalDocsOrganizer - INFO -   Found 14 references in docs/historical/GITHUB_PUSH_SUCCESS.md
+2026-01-31 23:18:46,518 - __main__.HistoricalDocsOrganizer - INFO -   Found 7 references in docs/historical/FINAL_PROJECT_STATUS.md
+2026-01-31 23:18:46,534 - __main__.HistoricalDocsOrganizer - INFO -   Found 25 references in docs/historical/COMPLETE_REPOSITORY_AUDIT.md
+2026-01-31 23:18:46,542 - __main__.HistoricalDocsOrganizer - INFO -   Found 1 references in docs/historical/GLOBAL_SCENARIO_ENGINE_FINDINGS.md
+2026-01-31 23:18:46,551 - __main__.HistoricalDocsOrganizer - INFO -   Found 3 references in docs/historical/IMPLEMENTATION_STATUS.md
+2026-01-31 23:18:46,554 - __main__.HistoricalDocsOrganizer - INFO -   Found 3 references in docs/historical/INTEGRATION_SUMMARY.md
+2026-01-31 23:18:46,561 - __main__.HistoricalDocsOrganizer - INFO -   Found 2 references in docs/historical/AUTOMATED_RELEASE_BUILD_SUMMARY.md
+2026-01-31 23:18:46,571 - __main__.HistoricalDocsOrganizer - INFO -   Found 2 references in docs/archive/historical-summaries/SECURITY_FIX_SUMMARY.md
+2026-01-31 23:18:46,575 - __main__.HistoricalDocsOrganizer - INFO -   Found 8 references in docs/archive/historical-summaries/SECRET_REMOVAL_SUMMARY.md
+2026-01-31 23:18:46,586 - __main__.HistoricalDocsOrganizer - INFO -   Found 4 references in docs/archive/security-incident-jan2026/README.md
+2026-01-31 23:18:46,588 - __main__.HistoricalDocsOrganizer - INFO -   Found 3 references in docs/archive/security-incident-jan2026/URGENT_SECURITY_UPDATE.md
+2026-01-31 23:18:46,609 - __main__.HistoricalDocsOrganizer - INFO -   Found 1 references in docs/archive/session-notes/QUICK_START.md
+2026-01-31 23:18:46,614 - __main__.HistoricalDocsOrganizer - INFO -   Found 2 references in docs/archive/session-notes/PROJECT_STATUS.md
+2026-01-31 23:18:46,624 - __main__.HistoricalDocsOrganizer - INFO -   Found 1 references in docs/archive/session-notes/NEW_FEATURES_SUMMARY.md
+2026-01-31 23:18:46,631 - __main__.HistoricalDocsOrganizer - INFO -   Found 3 references in docs/archive/session-notes/COMPLETION_SUMMARY.md
+2026-01-31 23:18:46,646 - __main__.HistoricalDocsOrganizer - INFO -   Found 3 references in docs/archive/session-notes/FINAL_STATUS.md
+2026-01-31 23:18:46,661 - __main__.HistoricalDocsOrganizer - INFO -   Found 1 references in docs/archive/adversarial-completion/README.md
+2026-01-31 23:18:46,671 - __main__.HistoricalDocsOrganizer - INFO -   Found 1 references in docs/archive/adversarial-completion/FINAL_SUMMARY.md
+2026-01-31 23:18:46,687 - __main__.HistoricalDocsOrganizer - INFO -   Found 1 references in .github/INTEGRATION_VERIFICATION.md
+2026-01-31 23:18:46,759 - __main__ - INFO - ================================================================================
+2026-01-31 23:18:46,759 - __main__ - INFO - UPDATING REFERENCES
+2026-01-31 23:18:46,759 - __main__ - INFO - ================================================================================
+2026-01-31 23:18:46,759 - __main__.HistoricalDocsOrganizer - INFO - Updating references...
+2026-01-31 23:18:46,780 - __main__.HistoricalDocsOrganizer - INFO -   Updated 1 references in SECURITY_AGENTS_README.md
+2026-01-31 23:18:46,841 - __main__.HistoricalDocsOrganizer - INFO -   Updated 7 references in THIRSTY_LANG_TARL_WHITEPAPER.md
+2026-01-31 23:18:46,850 - __main__.HistoricalDocsOrganizer - INFO -   Updated 1 references in DEPLOYMENT.md
+2026-01-31 23:18:46,854 - __main__.HistoricalDocsOrganizer - INFO -   Updated 2 references in README.md
+2026-01-31 23:18:46,871 - __main__.HistoricalDocsOrganizer - INFO -   Updated 2 references in TARL_README.md
+2026-01-31 23:18:46,893 - __main__.HistoricalDocsOrganizer - INFO -   Updated 3 references in PLATFORM_COMPATIBILITY.md
+2026-01-31 23:18:46,905 - __main__.HistoricalDocsOrganizer - INFO -   Updated 4 references in COMPLETE_TEST_SUITE_SUMMARY.md
+2026-01-31 23:18:46,913 - __main__.HistoricalDocsOrganizer - INFO -   Updated 1 references in TARL_QUICK_REFERENCE.md
+2026-01-31 23:18:46,935 - __main__.HistoricalDocsOrganizer - INFO -   Updated 2 references in docs/IMPLEMENTATION_COMPLETE.md
+2026-01-31 23:18:46,966 - __main__.HistoricalDocsOrganizer - INFO -   Updated 2 references in docs/TEMPORAL_IO_INTEGRATION.md
+2026-01-31 23:18:47,015 - __main__.HistoricalDocsOrganizer - INFO -   Updated 1 references in docs/AGI_IDENTITY_IMPLEMENTATION_SUMMARY.md
+2026-01-31 23:18:47,061 - __main__.HistoricalDocsOrganizer - INFO -   Updated 1 references in docs/COMPLETE_INTEGRATION_SUMMARY.md
+2026-01-31 23:18:47,075 - __main__.HistoricalDocsOrganizer - INFO -   Updated 1 references in docs/overview/INTEGRATION_GUIDE.md
+2026-01-31 23:18:47,094 - __main__.HistoricalDocsOrganizer - INFO -   Updated 1 references in docs/historical/IMPLEMENTATION_COMPLETE.md
+2026-01-31 23:18:47,118 - __main__.HistoricalDocsOrganizer - INFO -   Updated 2 references in docs/historical/CRITICAL_FIXES_SUMMARY.md
+2026-01-31 23:18:47,130 - __main__.HistoricalDocsOrganizer - INFO -   Updated 1 references in docs/historical/DEPLOYMENT_AND_RELEASE_COMPLETE.md
+2026-01-31 23:18:47,145 - __main__.HistoricalDocsOrganizer - INFO -   Updated 1 references in docs/historical/TARL_PATCH_COMPLETE.md
+2026-01-31 23:18:47,162 - __main__.HistoricalDocsOrganizer - INFO -   Updated 2 references in docs/historical/ALL_PATCHES_COMPLETE.md
+2026-01-31 23:18:47,176 - __main__.HistoricalDocsOrganizer - INFO -   Updated 2 references in docs/historical/PRODUCTION_HARDENING_SUMMARY.md
+2026-01-31 23:18:47,194 - __main__.HistoricalDocsOrganizer - INFO -   Updated 15 references in docs/historical/PROJECT_AI_V1_COMPLETE.md
+2026-01-31 23:18:47,199 - __main__.HistoricalDocsOrganizer - INFO -   Updated 2 references in docs/historical/RESTORATION_GUIDE.md
+2026-01-31 23:18:47,208 - __main__.HistoricalDocsOrganizer - INFO -   Updated 5 references in docs/historical/REPO_RESOURCES_COMPLETE.md
+2026-01-31 23:18:47,220 - __main__.HistoricalDocsOrganizer - INFO -   Updated 2 references in docs/historical/GOD_TIER_EXPANSION_SUMMARY.md
+2026-01-31 23:18:47,227 - __main__.HistoricalDocsOrganizer - INFO -   Updated 1 references in docs/historical/DEPLOY_CHECKLIST.md
+2026-01-31 23:18:47,234 - __main__.HistoricalDocsOrganizer - INFO -   Updated 1 references in docs/historical/WHITEPAPER_SUMMARY.md
+2026-01-31 23:18:47,244 - __main__.HistoricalDocsOrganizer - INFO -   Updated 2 references in docs/historical/DEPLOYMENT_SOLUTIONS.md
+2026-01-31 23:18:47,259 - __main__.HistoricalDocsOrganizer - INFO -   Updated 4 references in docs/historical/TESTING_FRAMEWORK_COMPLETE.md
+2026-01-31 23:18:47,284 - __main__.HistoricalDocsOrganizer - INFO -   Updated 1 references in docs/historical/E2E_TEST_COVERAGE_SUMMARY.md
+2026-01-31 23:18:47,304 - __main__.HistoricalDocsOrganizer - INFO -   Updated 1 references in docs/historical/DEFENSE_ENGINE_IMPLEMENTATION_COMPLETE.md
+2026-01-31 23:18:47,313 - __main__.HistoricalDocsOrganizer - INFO -   Updated 6 references in docs/historical/PROJECT_STRUCTURE.md
+2026-01-31 23:18:47,325 - __main__.HistoricalDocsOrganizer - INFO -   Updated 1 references in docs/historical/ENHANCED_SYSTEMS_COMPLETE.md
+2026-01-31 23:18:47,345 - __main__.HistoricalDocsOrganizer - INFO -   Updated 5 references in docs/historical/MASTER_COMPLETE.md
+2026-01-31 23:18:47,359 - __main__.HistoricalDocsOrganizer - INFO -   Updated 1 references in docs/historical/DEPLOYMENT_READY_THIRSTYSPROJECTS.md
+2026-01-31 23:18:47,376 - __main__.HistoricalDocsOrganizer - INFO -   Updated 11 references in docs/historical/GITHUB_UPDATE_GUIDE.md
+2026-01-31 23:18:47,388 - __main__.HistoricalDocsOrganizer - INFO -   Updated 4 references in docs/historical/CLEANUP_SUMMARY.md
+2026-01-31 23:18:47,410 - __main__.HistoricalDocsOrganizer - INFO -   Updated 2 references in docs/historical/GOD_TIER_IMPLEMENTATION_EXECUTIVE_SUMMARY.md
+2026-01-31 23:18:47,438 - __main__.HistoricalDocsOrganizer - INFO -   Updated 3 references in docs/historical/ACTIONABLE_RECOMMENDATIONS_IMPLEMENTATION.md
+2026-01-31 23:18:47,448 - __main__.HistoricalDocsOrganizer - INFO -   Updated 12 references in docs/historical/GITHUB_PUSH_SUCCESS.md
+2026-01-31 23:18:47,475 - __main__.HistoricalDocsOrganizer - INFO -   Updated 5 references in docs/historical/FINAL_PROJECT_STATUS.md
+2026-01-31 23:18:47,498 - __main__.HistoricalDocsOrganizer - INFO -   Updated 21 references in docs/historical/COMPLETE_REPOSITORY_AUDIT.md
+2026-01-31 23:18:47,532 - __main__.HistoricalDocsOrganizer - INFO -   Updated 1 references in docs/historical/GLOBAL_SCENARIO_ENGINE_FINDINGS.md
+2026-01-31 23:18:47,551 - __main__.HistoricalDocsOrganizer - INFO -   Updated 3 references in docs/historical/IMPLEMENTATION_STATUS.md
+2026-01-31 23:18:47,562 - __main__.HistoricalDocsOrganizer - INFO -   Updated 1 references in docs/historical/INTEGRATION_SUMMARY.md
+2026-01-31 23:18:47,577 - __main__.HistoricalDocsOrganizer - INFO -   Updated 1 references in docs/historical/AUTOMATED_RELEASE_BUILD_SUMMARY.md
+2026-01-31 23:18:47,583 - __main__.HistoricalDocsOrganizer - INFO -   Updated 1 references in docs/archive/historical-summaries/SECURITY_FIX_SUMMARY.md
+2026-01-31 23:18:47,597 - __main__.HistoricalDocsOrganizer - INFO -   Updated 2 references in docs/archive/historical-summaries/SECRET_REMOVAL_SUMMARY.md
+2026-01-31 23:18:47,600 - __main__.HistoricalDocsOrganizer - INFO -   Updated 2 references in docs/archive/security-incident-jan2026/README.md
+2026-01-31 23:18:47,606 - __main__.HistoricalDocsOrganizer - INFO -   Updated 1 references in docs/archive/security-incident-jan2026/URGENT_SECURITY_UPDATE.md
+2026-01-31 23:18:47,615 - __main__.HistoricalDocsOrganizer - INFO -   Updated 1 references in docs/archive/session-notes/QUICK_START.md
+2026-01-31 23:18:47,636 - __main__.HistoricalDocsOrganizer - INFO -   Updated 1 references in docs/archive/session-notes/PROJECT_STATUS.md
+2026-01-31 23:18:47,649 - __main__.HistoricalDocsOrganizer - INFO -   Updated 1 references in docs/archive/session-notes/NEW_FEATURES_SUMMARY.md
+2026-01-31 23:18:47,662 - __main__.HistoricalDocsOrganizer - INFO -   Updated 1 references in docs/archive/session-notes/COMPLETION_SUMMARY.md
+2026-01-31 23:18:47,674 - __main__.HistoricalDocsOrganizer - INFO -   Updated 1 references in docs/archive/session-notes/FINAL_STATUS.md
+2026-01-31 23:18:47,677 - __main__.HistoricalDocsOrganizer - INFO -   Updated 1 references in docs/archive/adversarial-completion/README.md
+2026-01-31 23:18:47,697 - __main__.HistoricalDocsOrganizer - INFO -   Updated 1 references in docs/archive/adversarial-completion/FINAL_SUMMARY.md
+2026-01-31 23:18:47,702 - __main__.HistoricalDocsOrganizer - INFO -   Updated 1 references in .github/INTEGRATION_VERIFICATION.md
+2026-01-31 23:18:47,703 - __main__ - INFO - ================================================================================
+2026-01-31 23:18:47,703 - __main__ - INFO - CREATING HISTORICAL INDEX
+2026-01-31 23:18:47,703 - __main__ - INFO - ================================================================================
+2026-01-31 23:18:47,703 - __main__.HistoricalDocsOrganizer - INFO - Creating historical index: docs/historical/README.md
+2026-01-31 23:18:47,703 - __main__.HistoricalDocsOrganizer - INFO - Historical index created
+2026-01-31 23:18:47,703 - __main__ - INFO - ================================================================================
+2026-01-31 23:18:47,703 - __main__ - INFO - GENERATING REPORT
+2026-01-31 23:18:47,703 - __main__ - INFO - ================================================================================
+2026-01-31 23:18:47,704 - __main__ - INFO - Report saved to historical_docs_organization_report.md
+2026-01-31 23:18:47,704 - __main__ - INFO - ================================================================================
+2026-01-31 23:18:47,704 - __main__ - INFO - ORGANIZATION COMPLETE
+2026-01-31 23:18:47,704 - __main__ - INFO - ================================================================================
+2026-01-31 23:18:47,704 - __main__ - INFO - Files moved: 76
+2026-01-31 23:18:47,704 - __main__ - INFO - References updated: 162
+2026-01-31 23:19:33,292 - __main__ - INFO - ================================================================================
+2026-01-31 23:19:33,292 - __main__ - INFO - IDENTIFYING OBSOLETE DOCUMENTS
+2026-01-31 23:19:33,292 - __main__ - INFO - ================================================================================
+2026-01-31 23:19:33,292 - __main__.HistoricalDocsOrganizer - INFO - Identifying obsolete documents...
+2026-01-31 23:19:33,293 - __main__.HistoricalDocsOrganizer - INFO -   Obsolete: historical_docs_organization_report.md (matched: content keywords (count: 4))
+2026-01-31 23:19:33,296 - __main__.HistoricalDocsOrganizer - INFO - Found 1 obsolete documents, keeping 49
+2026-01-31 23:19:33,296 - __main__ - INFO - ================================================================================
+2026-01-31 23:19:33,296 - __main__ - INFO - MOVING TO HISTORICAL DIRECTORY
+2026-01-31 23:19:33,296 - __main__ - INFO - ================================================================================
+2026-01-31 23:19:33,296 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would move historical_docs_organization_report.md -> docs/historical/historical_docs_organization_report.md
+2026-01-31 23:19:33,296 - __main__ - INFO - ================================================================================
+2026-01-31 23:19:33,296 - __main__ - INFO - FINDING REFERENCES
+2026-01-31 23:19:33,296 - __main__ - INFO - ================================================================================
+2026-01-31 23:19:33,296 - __main__.HistoricalDocsOrganizer - INFO - Finding references to moved files...
+2026-01-31 23:19:33,329 - __main__.HistoricalDocsOrganizer - INFO -   Found 1 references in docs/historical/README.md
+2026-01-31 23:19:33,343 - __main__ - INFO - ================================================================================
+2026-01-31 23:19:33,343 - __main__ - INFO - UPDATING REFERENCES
+2026-01-31 23:19:33,343 - __main__ - INFO - ================================================================================
+2026-01-31 23:19:33,343 - __main__.HistoricalDocsOrganizer - INFO - Updating references...
+2026-01-31 23:19:33,343 - __main__.HistoricalDocsOrganizer - INFO -   DRY RUN: Would update 1 references in docs/historical/README.md
+2026-01-31 23:19:33,343 - __main__ - INFO - ================================================================================
+2026-01-31 23:19:33,343 - __main__ - INFO - CREATING HISTORICAL INDEX
+2026-01-31 23:19:33,343 - __main__ - INFO - ================================================================================
+2026-01-31 23:19:33,344 - __main__.HistoricalDocsOrganizer - INFO - DRY RUN: Would create historical index
+2026-01-31 23:19:33,344 - __main__ - INFO - ================================================================================
+2026-01-31 23:19:33,344 - __main__ - INFO - GENERATING REPORT
+2026-01-31 23:19:33,344 - __main__ - INFO - ================================================================================
+2026-01-31 23:19:33,344 - __main__ - INFO - Report saved to historical_docs_organization_report.md
+2026-01-31 23:19:33,344 - __main__ - INFO - ================================================================================
+2026-01-31 23:19:33,344 - __main__ - INFO - ORGANIZATION COMPLETE
+2026-01-31 23:19:33,344 - __main__ - INFO - ================================================================================
+2026-01-31 23:19:33,344 - __main__ - INFO - Files moved: 1
+2026-01-31 23:19:33,344 - __main__ - INFO - References updated: 1

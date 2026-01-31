@@ -333,6 +333,6 @@ def validate_all_inputs(self) -> bool:
 
 For more details, see:
 
-- `IMPLEMENTATION_COMPLETE.md` - Feature overview
+- `docs/historical/IMPLEMENTATION_COMPLETE.md` - Feature overview
 - `AI_PERSONA_FOUR_LAWS.md` - AI Persona documentation
 - `tests/test_ai_systems.py` - Example usage patterns

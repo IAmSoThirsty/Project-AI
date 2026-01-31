@@ -275,8 +275,8 @@ FUZZ: PASS
 
 | Document | Description |
 |----------|-------------|
-| `TARL_PATCH_COMPLETE.md` | Complete implementation summary |
-| `TARL_IMPLEMENTATION.md` | Detailed implementation guide |
+| `docs/historical/TARL_PATCH_COMPLETE.md` | Complete implementation summary |
+| `docs/historical/TARL_IMPLEMENTATION.md` | Detailed implementation guide |
 | `TARL_QUICK_REFERENCE.md` | Developer quick reference |
 | `TARL_ARCHITECTURE.md` | System architecture diagrams |
 

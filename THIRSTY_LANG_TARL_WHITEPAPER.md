@@ -1265,10 +1265,10 @@ python bootstrap.py
 
 1. **T.A.R.L. Technical Whitepaper**: `tarl/docs/WHITEPAPER.md`
 2. **T.A.R.L. Architecture**: `TARL_ARCHITECTURE.md`
-3. **T.A.R.L. Implementation**: `TARL_IMPLEMENTATION.md`
+3. **T.A.R.L. Implementation**: `docs/historical/TARL_IMPLEMENTATION.md`
 4. **T.A.R.L. Quick Reference**: `TARL_QUICK_REFERENCE.md`
 5. **T.A.R.L. Technical Documentation**: `TARL_TECHNICAL_DOCUMENTATION.md`
-6. **Thirsty-Lang Integration**: `THIRSTY_LANG_INTEGRATION.md`
+6. **Thirsty-Lang Integration**: `docs/historical/THIRSTY_LANG_INTEGRATION.md`
 7. **Thirsty-Lang README**: `src/thirsty_lang/README.md`
 
 ### 11.2 Language Specification
@@ -1283,7 +1283,7 @@ python bootstrap.py
 ### 11.3 Integration Guides
 
 14. **Project-AI Integration**: `src/thirsty_lang/PROJECT_AI_INTEGRATION.md`
-15. **Cerberus Integration**: `CERBERUS_IMPLEMENTATION_SUMMARY.md`
+15. **Cerberus Integration**: `CERBERUS_docs/historical/IMPLEMENTATION_SUMMARY.md`
 16. **Codex Integration**: Documentation in `src/cognition/codex/`
 17. **Governance Integration**: `governance/README.md`
 
@@ -1296,10 +1296,10 @@ python bootstrap.py
 
 ### 11.5 Testing & Quality
 
-22. **Testing Framework**: `TESTING_FRAMEWORK_COMPLETE.md`
-23. **E2E Test Coverage**: `E2E_TEST_COVERAGE_SUMMARY.md`
-24. **OWASP Compliance**: `OWASP_COMPLIANCE_COMPLETE.md`
-25. **Security Incident Report**: `SECURITY_INCIDENT_REPORT.md`
+22. **Testing Framework**: `docs/historical/TESTING_FRAMEWORK_COMPLETE.md`
+23. **E2E Test Coverage**: `docs/historical/E2E_TEST_COVERAGE_SUMMARY.md`
+24. **OWASP Compliance**: `docs/historical/OWASP_COMPLIANCE_COMPLETE.md`
+25. **Security Incident Report**: `docs/historical/SECURITY_INCIDENT_REPORT.md`
 
 ### 11.6 Project-AI System
 

@@ -353,9 +353,9 @@ Desktop (Electron) and Web platforms require:
 
 ## 📚 Platform-Specific Documentation
 
-- **Desktop:** [DESKTOP_COMPLETE.md](DESKTOP_COMPLETE.md)
-- **Android:** [ANDROID_COMPLETE.md](ANDROID_COMPLETE.md), [android/README.md](android/README.md)
-- **Web:** [WEB_CHARTER_DOWNLOADS_COMPLETE.md](WEB_CHARTER_DOWNLOADS_COMPLETE.md), [web/README.md](web/README.md)
+- **Desktop:** [DESKTOP_COMPLETE.md](docs/historical/DESKTOP_COMPLETE.md)
+- **Android:** [ANDROID_COMPLETE.md](docs/historical/ANDROID_COMPLETE.md), [android/README.md](android/README.md)
+- **Web:** [WEB_CHARTER_DOWNLOADS_COMPLETE.md](docs/historical/WEB_CHARTER_DOWNLOADS_COMPLETE.md), [web/README.md](web/README.md)
 - **API:** [api/README.md](api/README.md)
 - **Docker:** [docker-compose.yml](docker-compose.yml), [Dockerfile](Dockerfile)
 - **Build & Deploy:** [BUILD_AND_DEPLOYMENT.md](BUILD_AND_DEPLOYMENT.md)

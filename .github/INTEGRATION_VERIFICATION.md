@@ -56,7 +56,7 @@ January 4, 2026 (2026-01-04T18:40:00Z)
 - [x] CHANGELOG.md
 - [x] PROJECT_AI_INTEGRATION.md (integration guide)
 - [x] All 7 docs/ files present
-- [x] THIRSTY_LANG_INTEGRATION.md created in root
+- [x] docs/historical/THIRSTY_LANG_INTEGRATION.md created in root
 
 ### No Modifications
 

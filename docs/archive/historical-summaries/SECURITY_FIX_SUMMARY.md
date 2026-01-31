@@ -47,7 +47,7 @@ The issue report was **misleading** - it showed "0 vulnerability(ies)" for all p
 
 ### 3. Added Documentation
 
-- Created `SECURITY_UPDATE.md` with full vulnerability details
+- Created `docs/historical/SECURITY_UPDATE.md` with full vulnerability details
 - Installation instructions for developers
 - CI/CD recommendations
 
@@ -112,7 +112,7 @@ pip install -r requirements.txt
 
 - `requirements.txt` - Fixed pip-audit version (3.0.1 → 2.10.0)
 - `pyproject.toml` - Updated minimum versions for cryptography and requests
-- `SECURITY_UPDATE.md` - New file with detailed vulnerability information
+- `docs/historical/SECURITY_UPDATE.md` - New file with detailed vulnerability information
 - `SECURITY_FIX_SUMMARY.md` - This file
 
 ## Commit History

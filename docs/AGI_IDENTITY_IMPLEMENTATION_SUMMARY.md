@@ -611,7 +611,7 @@ health = relationship.get_relationship_health()
    - Integration examples
    - Test patterns
 
-1. **`docs/AGI_IDENTITY_IMPLEMENTATION_SUMMARY.md`** (This document)
+1. **`docs/AGI_IDENTITY_docs/historical/IMPLEMENTATION_SUMMARY.md`** (This document)
    - Complete implementation overview
    - Usage examples
    - Integration guide
@@ -703,7 +703,7 @@ tests/
 docs/
 ├── AGI_IDENTITY_SPECIFICATION.md          [NEW]
 ├── IDENTITY_SYSTEM_FULL_SPEC.md           [NEW]
-└── AGI_IDENTITY_IMPLEMENTATION_SUMMARY.md [NEW]
+└── AGI_IDENTITY_docs/historical/IMPLEMENTATION_SUMMARY.md [NEW]
 
 examples/
 └── agi_identity_demo.py          [NEW]

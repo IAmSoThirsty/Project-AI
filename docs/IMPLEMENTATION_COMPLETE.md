@@ -438,8 +438,8 @@ opentelemetry-instrument \
 1. `docs/MONITORING_QUICKSTART.md` (387 lines) - Quick reference
 1. `docs/SNN_INTEGRATION.md` (450 lines) - Neuromorphic computing
 1. `docs/AI_SECURITY_FRAMEWORK.md` (1,080 lines) - Security guide
-1. `docs/MONITORING_IMPLEMENTATION_SUMMARY.md` (400 lines) - Implementation details
-1. `docs/COMPLETE_INTEGRATION_SUMMARY.md` (400 lines) - Verification report
+1. `docs/MONITORING_docs/historical/IMPLEMENTATION_SUMMARY.md` (400 lines) - Implementation details
+1. `docs/COMPLETE_docs/historical/INTEGRATION_SUMMARY.md` (400 lines) - Verification report
 
 **Quick Start Examples:**
 

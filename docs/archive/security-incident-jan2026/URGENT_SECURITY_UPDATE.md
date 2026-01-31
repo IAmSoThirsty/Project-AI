@@ -28,7 +28,7 @@ A security scan detected that the `.env` file containing real API keys and passw
    - Update your local `.env` file
 
 1. **Review Full Incident Report**
-   - Read `SECURITY_INCIDENT_REPORT.md` for complete details
+   - Read `docs/historical/SECURITY_INCIDENT_REPORT.md` for complete details
    - Follow all remediation steps
 
 ### For All Contributors
@@ -121,7 +121,7 @@ git add .
 
 ## 📚 Additional Resources
 
-- **Full Incident Report**: `SECURITY_INCIDENT_REPORT.md`
+- **Full Incident Report**: `docs/historical/SECURITY_INCIDENT_REPORT.md`
 - **Secret Management Guide**: `docs/security/SECRET_MANAGEMENT.md`
 - **Setup Guide**: `docs/guides/QUICK_START.md`
 
@@ -142,7 +142,7 @@ python -m src.app.main
 
 ## ❓ Questions?
 
-- Security concerns: Review `SECURITY_INCIDENT_REPORT.md`
+- Security concerns: Review `docs/historical/SECURITY_INCIDENT_REPORT.md`
 - Setup help: Review `docs/guides/QUICK_START.md`
 - Secret management: Review `docs/security/SECRET_MANAGEMENT.md`
 
