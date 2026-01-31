@@ -5,6 +5,36 @@ All notable changes to Project-AI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] - 2026-01-31
+
+### 🔄 Integration
+- **Major Merge from Main Branch** (commit: 5b7a8ff967d288b3e5184b8db5f6464b3a600f23)
+  - Integrated 300+ files from main branch on 2026-01-31 03:08:54 -0700
+  - Added Antigravity AI-powered IDE integration (`.antigravity/`)
+  - Added Codacy static analysis tools and configuration (`.codacy/`)
+  - Integrated comprehensive GitHub workflow automation
+  - Added devcontainer support for containerized development
+  - Enhanced security workflows (SBOM, signing, AI/ML scanning)
+  - Added issue automation and PR management workflows
+  - Integrated Guardian validation and waiver systems
+
+### 🔧 Maintenance
+- **Automated Linting Fix** (commit: e4b8cd534c54eb355d9c04a4499f9943f93a10bb)
+  - Applied automated code style fixes on 2026-01-31 10:12:25 +0000
+  - Fixed linting issues via github-actions[bot]
+  - Maintained code quality standards across merged codebase
+
+### 📦 New Components from Merge
+- **Antigravity Integration**: AI-powered development assistant with project-specific agent
+- **Codacy Integration**: Automated code quality and security scanning
+- **Workflow Automation**: 20+ new GitHub workflows for CI/CD, security, and issue management
+- **DevContainer**: Complete containerized development environment
+- **Security Enhancements**: SBOM generation, artifact signing, AI/ML model security scanning
+- **Guardian System**: Multi-party approval for personhood-critical changes
+- **Waiver System**: Temporary security exception management
+
+---
+
 ## [1.0.0] - 2026-01-28
 
 ### 🎯 Initial Production Release
