@@ -563,3 +563,9 @@
 2026-01-31 23:19:33,344 - __main__ - INFO - ================================================================================
 2026-01-31 23:19:33,344 - __main__ - INFO - Files moved: 1
 2026-01-31 23:19:33,344 - __main__ - INFO - References updated: 1
+2026-01-31 23:21:41,727 - __main__ - INFO - ================================================================================
+2026-01-31 23:21:41,727 - __main__ - INFO - IDENTIFYING OBSOLETE DOCUMENTS
+2026-01-31 23:21:41,727 - __main__ - INFO - ================================================================================
+2026-01-31 23:21:41,727 - __main__.HistoricalDocsOrganizer - INFO - Identifying obsolete documents...
+2026-01-31 23:21:41,730 - __main__.HistoricalDocsOrganizer - INFO - Found 0 obsolete documents, keeping 51
+2026-01-31 23:21:41,731 - __main__ - INFO - No obsolete documents found
