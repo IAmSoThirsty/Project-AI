@@ -320,27 +320,126 @@ def initialize_security_systems(kernel: CognitionKernel, council_hub: CouncilHub
         security_components['constitutional_guard'] = None
     
     try:
-        from app.agents.tarl_protector import TarlProtector
+        from app.agents.tarl_protector import TARLCodeProtector
         
-        tarl_protector = TarlProtector(kernel=kernel)
+        tarl_protector = TARLCodeProtector(kernel=kernel)
         security_components['tarl_protector'] = tarl_protector
         
         # Register with CouncilHub
         try:
             council_hub.register_agent("tarl_protector", tarl_protector)
         except Exception as e:
-            logger.warning(f"Failed to register TarlProtector: {e}")
+            logger.warning(f"Failed to register TARLCodeProtector: {e}")
         
-        logger.info("✅ TARL Protector activated")
+        logger.info("✅ TARL Code Protector activated")
         logger.info("   - Runtime code protection enabled")
     except Exception as e:
-        logger.warning(f"TARL Protector initialization failed: {e}")
+        logger.warning(f"TARL Code Protector initialization failed: {e}")
         security_components['tarl_protector'] = None
     
-    # Register defense agents with Watch Tower if available
+    # Phase 2b: Initialize Red Team Agents (Adversarial Testing)
+    try:
+        from app.agents.red_team_agent import RedTeamAgent, AttackStrategy
+        
+        red_team = RedTeamAgent(kernel=kernel)
+        security_components['red_team'] = red_team
+        
+        # Register with CouncilHub
+        try:
+            council_hub.register_agent("red_team", red_team)
+        except Exception as e:
+            logger.warning(f"Failed to register RedTeamAgent: {e}")
+        
+        logger.info("✅ RedTeamAgent activated")
+        logger.info("   - Adversarial testing capabilities enabled")
+        logger.info("   - Multi-turn attack simulation ready")
+    except Exception as e:
+        logger.warning(f"RedTeamAgent initialization failed: {e}")
+        security_components['red_team'] = None
+    
+    try:
+        from app.agents.code_adversary_agent import CodeAdversaryAgent
+        
+        code_adversary = CodeAdversaryAgent(kernel=kernel)
+        security_components['code_adversary'] = code_adversary
+        
+        # Register with CouncilHub
+        try:
+            council_hub.register_agent("code_adversary", code_adversary)
+        except Exception as e:
+            logger.warning(f"Failed to register CodeAdversaryAgent: {e}")
+        
+        logger.info("✅ CodeAdversaryAgent activated")
+        logger.info("   - Automated vulnerability scanning enabled")
+        logger.info("   - DARPA-grade security testing ready")
+    except Exception as e:
+        logger.warning(f"CodeAdversaryAgent initialization failed: {e}")
+        security_components['code_adversary'] = None
+    
+    # Phase 2c: Initialize Oversight & Analysis Agents
+    try:
+        from app.agents.oversight import OversightAgent
+        
+        oversight = OversightAgent(kernel=kernel)
+        security_components['oversight'] = oversight
+        
+        # Register with CouncilHub
+        try:
+            council_hub.register_agent("oversight", oversight)
+        except Exception as e:
+            logger.warning(f"Failed to register OversightAgent: {e}")
+        
+        logger.info("✅ OversightAgent activated")
+        logger.info("   - System health monitoring enabled")
+        logger.info("   - Compliance tracking active")
+    except Exception as e:
+        logger.warning(f"OversightAgent initialization failed: {e}")
+        security_components['oversight'] = None
+    
+    try:
+        from app.agents.validator import ValidatorAgent
+        
+        validator = ValidatorAgent(kernel=kernel)
+        security_components['validator'] = validator
+        
+        # Register with CouncilHub
+        try:
+            council_hub.register_agent("validator", validator)
+        except Exception as e:
+            logger.warning(f"Failed to register ValidatorAgent: {e}")
+        
+        logger.info("✅ ValidatorAgent activated")
+        logger.info("   - Input/output validation enabled")
+        logger.info("   - Data integrity checking active")
+    except Exception as e:
+        logger.warning(f"ValidatorAgent initialization failed: {e}")
+        security_components['validator'] = None
+    
+    try:
+        from app.agents.explainability import ExplainabilityAgent
+        
+        explainability = ExplainabilityAgent(kernel=kernel)
+        security_components['explainability'] = explainability
+        
+        # Register with CouncilHub
+        try:
+            council_hub.register_agent("explainability", explainability)
+        except Exception as e:
+            logger.warning(f"Failed to register ExplainabilityAgent: {e}")
+        
+        logger.info("✅ ExplainabilityAgent activated")
+        logger.info("   - Decision transparency enabled")
+        logger.info("   - Security reasoning traces available")
+    except Exception as e:
+        logger.warning(f"ExplainabilityAgent initialization failed: {e}")
+        security_components['explainability'] = None
+    
+    # Register all agents with Watch Tower if available
     if security_components.get('watch_tower'):
         try:
             tower = security_components['watch_tower']
+            
+            # Register Active Defense agents
             if security_components.get('safety_guard'):
                 tower.register_security_agent("active_defense", "safety_guard_main")
             if security_components.get('constitutional_guard'):
@@ -348,8 +447,24 @@ def initialize_security_systems(kernel: CognitionKernel, council_hub: CouncilHub
             if security_components.get('tarl_protector'):
                 tower.register_security_agent("active_defense", "tarl_protector_main")
             
+            # Register Red Team agents
+            if security_components.get('red_team'):
+                tower.register_security_agent("red_team", "red_team_main")
+            if security_components.get('code_adversary'):
+                tower.register_security_agent("red_team", "code_adversary_main")
+            
+            # Register Oversight agents
+            if security_components.get('oversight'):
+                tower.register_security_agent("oversight", "oversight_main")
+            if security_components.get('validator'):
+                tower.register_security_agent("oversight", "validator_main")
+            if security_components.get('explainability'):
+                tower.register_security_agent("oversight", "explainability_main")
+            
             status = tower.get_security_status()
-            logger.info(f"   - Active Defense agents registered: {status['registered_agents']['active_defense']}")
+            logger.info(f"   - Active Defense agents: {status['registered_agents']['active_defense']}")
+            logger.info(f"   - Red Team agents: {status['registered_agents']['red_team']}")
+            logger.info(f"   - Oversight agents: {status['registered_agents']['oversight']}")
         except Exception as e:
             logger.warning(f"Failed to register agents with Watch Tower: {e}")
     
