@@ -23,6 +23,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Include Legion/OpenClaw router
+try:
+    from integrations.openclaw.api_endpoints import router as openclaw_router
+    app.include_router(openclaw_router)
+    print("[OK] Legion agent endpoints registered")
+except ImportError as e:
+    print(f"[WARN] Legion endpoints not available: {e}")
+
 # ==========================================================
 # Core Data Models
 # ==========================================================
