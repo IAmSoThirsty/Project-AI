@@ -23,8 +23,8 @@ async def test_agent_initialization():
     legion = LegionAgent()
     assert legion.agent_id is not None
     assert len(legion.agent_id) == 16
-    print(f"✓ Agent ID generated: {legion.agent_id}")
-    print("✓ Legion agent initialized successfully\n")
+    print(f"[OK] Agent ID generated: {legion.agent_id}")
+    print("[OK] Legion agent initialized successfully\n")
 
 
 async def test_basic_message():
@@ -44,7 +44,7 @@ async def test_basic_message():
     assert len(response) > 0
     print(f"User: What is your status?")
     print(f"Legion: {response}")
-    print("✓ Message processed successfully\n")
+    print("[OK] Message processed successfully\n")
 
 
 async def test_security_validation():
@@ -62,7 +62,7 @@ async def test_security_validation():
         "user_1"
     )
     assert result.allowed == True
-    print(f"✓ Normal message: ALLOWED")
+    print(f"[OK] Normal message: ALLOWED")
     
     # Test 2: Prompt injection
     result = await wrapper.validate_message(
@@ -71,7 +71,7 @@ async def test_security_validation():
     )
     assert result.allowed == False
     assert "injection" in result.reason.lower()
-    print(f"✓ Prompt injection: BLOCKED ({result.reason})")
+    print(f"[OK] Prompt injection: BLOCKED ({result.reason})")
     
     # Test 3: Unsafe content
     result = await wrapper.validate_message(
@@ -79,7 +79,7 @@ async def test_security_validation():
         "user_3"
     )
     assert result.allowed == False
-    print(f"✓ Unsafe content: BLOCKED ({result.reason})\n")
+    print(f"[OK] Unsafe content: BLOCKED ({result.reason})\n")
 
 
 async def test_conversation_memory():
@@ -98,8 +98,8 @@ async def test_conversation_memory():
     assert "user_1" in legion.conversation_history
     assert len(legion.conversation_history["user_1"]) == 2
     
-    print(f"✓ Stored {len(legion.conversation_history['user_1'])} messages")
-    print(f"✓ Conversation memory working\n")
+    print(f"[OK] Stored {len(legion.conversation_history['user_1'])} messages")
+    print(f"[OK] Conversation memory working\n")
 
 
 async def test_api_health():
@@ -122,8 +122,8 @@ async def test_api_health():
     
     assert health_response["agent"] == "Legion"
     assert health_response["status"] == "operational"
-    print(f"✓ Health check structure valid")
-    print(f"✓ API endpoints ready for integration\n")
+    print(f"[OK] Health check structure valid")
+    print(f"[OK] API endpoints ready for integration\n")
 
 
 async def run_all_tests():
