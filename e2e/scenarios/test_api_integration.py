@@ -9,8 +9,6 @@ from __future__ import annotations
 import pytest
 import requests
 
-from e2e.fixtures.test_users import ADMIN_USER, REGULAR_USER
-
 
 @pytest.mark.e2e
 @pytest.mark.api

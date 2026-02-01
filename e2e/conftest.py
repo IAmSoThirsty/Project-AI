@@ -171,36 +171,16 @@ def mock_geolocation_service():
 
 def pytest_configure(config):
     """Configure pytest with custom markers."""
-    config.addinivalue_line(
-        "markers", "e2e: Mark test as end-to-end test"
-    )
-    config.addinivalue_line(
-        "markers", "gui: Mark test as GUI test"
-    )
-    config.addinivalue_line(
-        "markers", "api: Mark test as API test"
-    )
-    config.addinivalue_line(
-        "markers", "council_hub: Mark test as Council Hub test"
-    )
-    config.addinivalue_line(
-        "markers", "triumvirate: Mark test as Triumvirate test"
-    )
-    config.addinivalue_line(
-        "markers", "watch_tower: Mark test as Watch Tower test"
-    )
-    config.addinivalue_line(
-        "markers", "tarl: Mark test as TARL enforcement test"
-    )
-    config.addinivalue_line(
-        "markers", "security: Mark test as security test"
-    )
-    config.addinivalue_line(
-        "markers", "slow: Mark test as slow-running"
-    )
-    config.addinivalue_line(
-        "markers", "integration: Mark test as integration test"
-    )
+    config.addinivalue_line("markers", "e2e: Mark test as end-to-end test")
+    config.addinivalue_line("markers", "gui: Mark test as GUI test")
+    config.addinivalue_line("markers", "api: Mark test as API test")
+    config.addinivalue_line("markers", "council_hub: Mark test as Council Hub test")
+    config.addinivalue_line("markers", "triumvirate: Mark test as Triumvirate test")
+    config.addinivalue_line("markers", "watch_tower: Mark test as Watch Tower test")
+    config.addinivalue_line("markers", "tarl: Mark test as TARL enforcement test")
+    config.addinivalue_line("markers", "security: Mark test as security test")
+    config.addinivalue_line("markers", "slow: Mark test as slow-running")
+    config.addinivalue_line("markers", "integration: Mark test as integration test")
 
 
 def pytest_collection_modifyitems(config, items):

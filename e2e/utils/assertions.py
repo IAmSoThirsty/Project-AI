@@ -67,9 +67,7 @@ def assert_audit_log_entry(
     matching_logs = [log for log in logs if log.get("event_type") == event_type]
 
     if not matching_logs:
-        raise AssertionError(
-            f"No audit log entry found with event_type='{event_type}'"
-        )
+        raise AssertionError(f"No audit log entry found with event_type='{event_type}'")
 
     if user is not None:
         matching_logs = [log for log in matching_logs if log.get("user") == user]
@@ -79,9 +77,7 @@ def assert_audit_log_entry(
             )
 
     if action is not None:
-        matching_logs = [
-            log for log in matching_logs if log.get("action") == action
-        ]
+        matching_logs = [log for log in matching_logs if log.get("action") == action]
         if not matching_logs:
             raise AssertionError(
                 f"No audit log entry found with event_type='{event_type}' and action='{action}'"
@@ -112,14 +108,10 @@ def assert_event_propagation(
             f"Source event missing correlation key '{correlation_key}'"
         )
 
-    propagated = any(
-        event.get(correlation_key) == source_id for event in target_events
-    )
+    propagated = any(event.get(correlation_key) == source_id for event in target_events)
 
     if not propagated:
-        raise AssertionError(
-            f"Event {source_id} did not propagate to target systems"
-        )
+        raise AssertionError(f"Event {source_id} did not propagate to target systems")
 
     logger.info(f"Event propagation validated for {source_id}")
 
@@ -223,9 +215,7 @@ def assert_watch_tower_trigger(
     ]
 
     if not matching_triggers:
-        raise AssertionError(
-            f"No Watch Tower trigger found with type='{trigger_type}'"
-        )
+        raise AssertionError(f"No Watch Tower trigger found with type='{trigger_type}'")
 
     if severity:
         matching_triggers = [

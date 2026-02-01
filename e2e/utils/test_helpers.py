@@ -9,8 +9,9 @@ from __future__ import annotations
 import json
 import logging
 import time
+from collections.abc import Callable
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -63,7 +64,7 @@ def load_json_file(file_path: Path) -> dict[str, Any] | list[Any]:
     if not file_path.exists():
         raise FileNotFoundError(f"File not found: {file_path}")
 
-    with open(file_path, "r") as f:
+    with open(file_path) as f:
         return json.load(f)
 
 
@@ -177,9 +178,7 @@ def retry_on_failure(
             return func()
         except exceptions as e:
             last_exception = e
-            logger.warning(
-                f"Attempt {attempt + 1}/{max_retries} failed: {e}"
-            )
+            logger.warning(f"Attempt {attempt + 1}/{max_retries} failed: {e}")
             if attempt < max_retries - 1:
                 time.sleep(retry_delay)
 
@@ -226,9 +225,7 @@ def compare_json_objects(
 
         elif isinstance(o1, list):
             if len(o1) != len(o2):
-                differences.append(
-                    f"{path}: Length mismatch ({len(o1)} vs {len(o2)})"
-                )
+                differences.append(f"{path}: Length mismatch ({len(o1)} vs {len(o2)})")
             else:
                 for i, (item1, item2) in enumerate(zip(o1, o2)):
                     compare_recursive(item1, item2, f"{path}[{i}]")

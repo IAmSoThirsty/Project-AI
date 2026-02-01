@@ -13,7 +13,6 @@ from __future__ import annotations
 import logging
 import subprocess
 import time
-from typing import Any
 
 import requests
 
@@ -195,9 +194,7 @@ class ServiceManager:
 
             time.sleep(1)
 
-        logger.error(
-            f"{service.name} did not become healthy within {max_wait}s"
-        )
+        logger.error(f"{service.name} did not become healthy within {max_wait}s")
         return False
 
     def _start_flask_api(self, service: ServiceConfig) -> subprocess.Popen | None:
@@ -212,7 +209,16 @@ class ServiceManager:
         try:
             # Start Flask app from web/backend
             process = subprocess.Popen(
-                ["python", "-m", "flask", "run", "--host", service.host, "--port", str(service.port)],
+                [
+                    "python",
+                    "-m",
+                    "flask",
+                    "run",
+                    "--host",
+                    service.host,
+                    "--port",
+                    str(service.port),
+                ],
                 env={**subprocess.os.environ, "FLASK_APP": "web.backend.app"},
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
@@ -223,9 +229,7 @@ class ServiceManager:
             logger.error(f"Failed to start Flask API: {e}")
             return None
 
-    def _start_fastapi_backend(
-        self, service: ServiceConfig
-    ) -> subprocess.Popen | None:
+    def _start_fastapi_backend(self, service: ServiceConfig) -> subprocess.Popen | None:
         """Start the FastAPI backend service.
 
         Args:
@@ -254,9 +258,7 @@ class ServiceManager:
             logger.error(f"Failed to start FastAPI backend: {e}")
             return None
 
-    def _start_temporal_server(
-        self, service: ServiceConfig
-    ) -> subprocess.Popen | None:
+    def _start_temporal_server(self, service: ServiceConfig) -> subprocess.Popen | None:
         """Start the Temporal server.
 
         Args:

@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import logging
 import time
-from typing import Callable
+from collections.abc import Callable
 
 import requests
 
@@ -122,18 +122,16 @@ class HealthChecker:
         for attempt in range(max_retries):
             is_healthy, message = self.check_service_health(service)
             if is_healthy:
-                logger.info(
-                    f"{service.name} is healthy after {attempt + 1} attempt(s)"
-                )
+                logger.info(f"{service.name} is healthy after {attempt + 1} attempt(s)")
                 return True
 
-            logger.warning(
-                f"Attempt {attempt + 1}/{max_retries} failed: {message}"
-            )
+            logger.warning(f"Attempt {attempt + 1}/{max_retries} failed: {message}")
             if attempt < max_retries - 1:
                 time.sleep(retry_delay)
 
-        logger.error(f"{service.name} did not become healthy after {max_retries} attempts")
+        logger.error(
+            f"{service.name} did not become healthy after {max_retries} attempts"
+        )
         return False
 
 
