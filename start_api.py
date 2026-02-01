@@ -13,9 +13,10 @@ import sys
 
 def start_dev():
     """Start in development mode with auto-reload"""
-    print("🚀 Starting Project AI Governance Backend (Development)")
-    print("📍 API: http://localhost:8001")
-    print("📚 Docs: http://localhost:8001/docs")
+    print("[*] Starting Project AI Governance Backend (Development)")
+    print("[*] API: http://localhost:8001")
+    print("[*] Docs: http://localhost:8001/docs")
+    print("[*] Save Points: Enabled (15-min auto-save)")
     print("")
 
     subprocess.run(
@@ -35,8 +36,8 @@ def start_dev():
 
 def start_prod():
     """Start in production mode"""
-    print("🚀 Starting Project AI Governance Backend (Production)")
-    print("📍 API: http://localhost:8001")
+    print("[*] Starting Project AI Governance Backend (Production)")
+    print("[*] API: http://localhost:8001")
     print("")
 
     subprocess.run(

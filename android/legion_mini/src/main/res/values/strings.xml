@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Legion Mini</string>
+    <string name="app_description">Personal AI Assistant - Project-AI Interface</string>
+    <string name="connecting">Connecting to Legion...</string>
+    <string name="error_connection">Unable to connect to Legion API</string>
+    <string name="send">Send</string>
+    <string name="message_placeholder">Message Legion...</string>
+</resources>
