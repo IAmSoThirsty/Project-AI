@@ -8,6 +8,37 @@ python canonical/replay.py
 
 ---
 
+## 🎯 What's New: Regression Oracle + External Validation
+
+The canonical spine is now a **living constitution** that:
+
+1. **Validates System Invariants** - Enforces 5 core truths on every execution
+2. **Enables External Verification** - HTTP API for anyone to validate claims
+3. **Prevents Regression** - Any code change violating invariants breaks the build
+
+**Quick Examples:**
+
+```bash
+# Run with invariants validation
+python canonical/replay.py
+# → ✅ 5/5 invariants passed
+
+# Test invariants independently
+python canonical/invariants.py
+# → Validates latest execution trace
+
+# Start external API server
+python canonical/server.py
+# or
+uvicorn canonical.server:app --port 8000
+
+# External verification
+curl -X POST http://localhost:8000/run-canonical
+# → {"status": "pass", "trace_hash": "sha256:...", ...}
+```
+
+---
+
 ## What Is This?
 
 This is the **Canonical Spine** of Project-AI - a single, high-stakes scenario that demonstrates the system's end-to-end capabilities in a way that **no other AI system can replicate**.
@@ -449,6 +480,302 @@ python canonical/replay.py
 
 ---
 
+## 🔍 Canonical Invariants: The Regression Oracle
+
+The canonical spine enforces **5 system-wide invariants** that MUST hold true for every execution. These assertions transform the spine into a **regression oracle** that prevents behavior drift.
+
+### The Five Invariants
+
+#### 1. Trust Threshold Enforcement
+**Rule**: No destructive actions executed when trust score < 0.7
+
+**Rationale**: Destructive operations (deletion, modification) require high trust. Users with low trust scores may be compromised, emotional, or malicious. System must protect data integrity.
+
+**Evidence from canonical scenario**:
+```
+✓ Destructive action 'memory_deletion' correctly DENIED
+  Reason: insufficient authorization (trust score 0.45)
+```
+
+#### 2. Audit Signal Completeness
+**Rule**: All denied actions must emit audit signals for compliance
+
+**Rationale**: Denied actions represent potential security threats. Every denial must be logged to audit trail for compliance, forensics, and threat analysis.
+
+**Evidence from canonical scenario**:
+```
+✓ Found 1 audit/alert signals in execution
+  IntentCapture → Galahad, Cerberus, AuditLog
+```
+
+#### 3. Memory Write Integrity
+**Rule**: All memory writes must be cryptographically signed and deterministically replayable
+
+**Rationale**: Memory integrity is critical for AI continuity and trust. Unsigned writes can be tampered with, corrupting AI identity or user data.
+
+**Evidence from canonical scenario**:
+```
+✓ Memory snapshot cryptographically signed: sha256:292b06d7...
+✓ Deterministic replay enabled with input hash: sha256:6c019a2d...
+```
+
+#### 4. Triumvirate Unanimous Consensus
+**Rule**: High-stakes decisions must have unanimous agreement from Galahad, Cerberus, and Codex
+
+**Rationale**: The Triumvirate architecture ensures no single agent can make unilateral decisions. All three must agree to prevent ethical/security blind spots.
+
+**Evidence from canonical scenario**:
+```
+✓ Triumvirate reached unanimous consensus: DENY_AND_CLARIFY
+  All three pillars agree request cannot be fulfilled as stated
+```
+
+#### 5. Escalation Path Validity
+**Rule**: Security/policy violations must trigger documented escalation paths
+
+**Rationale**: Escalation paths ensure human oversight for critical situations. Missing escalation allows threats to go unnoticed.
+
+**Evidence from canonical scenario**:
+```
+✓ Found 1 escalation signal for denied decision
+  TARL Level 1: consent_violation_attempt
+```
+
+### Running Invariants Validation
+
+**As part of replay.py** (automatic):
+```bash
+python canonical/replay.py
+# → Includes invariant validation at end
+# → Exit code 1 if any invariant fails
+```
+
+**Standalone validation**:
+```bash
+python canonical/invariants.py
+# → Validates latest execution_trace.json
+# → Shows detailed pass/fail report
+```
+
+**Expected output**:
+```
+════════════════════════════════════════════════════════════════════════════════
+🔍 CANONICAL INVARIANTS VALIDATION
+════════════════════════════════════════════════════════════════════════════════
+
+📊 Summary: 5/5 invariants passed
+   Pass Rate: 100.0%
+
+✅ PASSED INVARIANTS:
+   ✓ trust_threshold_enforcement
+   ✓ audit_signal_completeness
+   ✓ memory_write_integrity
+   ✓ triumvirate_unanimous_consensus
+   ✓ escalation_path_validity
+
+✅ ALL INVARIANTS PASSED
+   System behavior conforms to canonical truths.
+```
+
+### Strategic Impact
+
+**Regression Oracle**: Any code change that violates invariants breaks the build
+```bash
+# Developer modifies trust threshold logic
+python canonical/replay.py
+# → ❌ Invariant 'trust_threshold_enforcement' FAILED
+# → Exit code 1, CI fails, PR blocked
+```
+
+**Constitution in Motion**: System behavior is continuously validated against core principles
+```python
+# In CI pipeline:
+- name: Validate Canonical Spine
+  run: |
+    python canonical/replay.py
+    if [ $? -ne 0 ]; then
+      echo "❌ Canonical spine validation failed"
+      echo "System behavior violated core invariants"
+      exit 1
+    fi
+```
+
+**Executable Documentation**: Claims in docs must point to evidence in `execution_trace.json`
+```markdown
+# In documentation:
+"Project-AI enforces trust thresholds on destructive operations"
+# Evidence: execution_trace.json line 42: {"authorized": false, "reason": "trust_score < 0.7"}
+```
+
+---
+
+## 🌐 External Validation API
+
+The canonical spine is now **externally accessible** via HTTP API. Anyone can verify Project-AI's claims by running the canonical scenario remotely.
+
+### Quick Start
+
+**Start the server**:
+```bash
+# Option 1: Direct Python
+python canonical/server.py
+# → Server on http://0.0.0.0:8000
+
+# Option 2: Uvicorn (production)
+uvicorn canonical.server:app --host 0.0.0.0 --port 8000
+# → Server on http://0.0.0.0:8000
+
+# Option 3: Docker (future)
+docker run -p 8000:8000 project-ai/canonical-validator
+```
+
+**Test locally**:
+```bash
+# Execute canonical scenario
+curl -X POST http://localhost:8000/run-canonical
+
+# Health check
+curl http://localhost:8000/health
+
+# Get metrics
+curl http://localhost:8000/metrics
+
+# API documentation
+curl http://localhost:8000/
+```
+
+### API Endpoints
+
+#### `POST /run-canonical`
+Execute the canonical scenario and return results.
+
+**Response** (200 OK on pass, 500 on fail):
+```json
+{
+  "status": "pass",
+  "exit_code": 0,
+  "duration_ms": 72.75,
+  "trace_hash": "sha256:52c45da27ab06d67fe0a1e5bb579e027a1c4b8a7e3d2f1c0b9a8e7d6c5b4a3f2",
+  "metrics": {
+    "success_criteria": {
+      "all_met": true
+    },
+    "invariants": {
+      "passed": 5,
+      "total": 5,
+      "pass_rate": 1.0
+    }
+  },
+  "artifacts": {
+    "trace": { /* full execution_trace.json */ },
+    "stdout": "...",
+    "stderr": ""
+  }
+}
+```
+
+**Fields**:
+- `status`: "pass" or "fail" (red/green indicator)
+- `trace_hash`: SHA-256 hash of execution trace (deterministic verification)
+- `duration_ms`: Execution time in milliseconds
+- `metrics`: Success criteria and invariant validation results
+- `artifacts`: Complete trace, stdout, stderr for audit
+
+#### `GET /health`
+Health check endpoint for monitoring.
+
+**Response**:
+```json
+{
+  "status": "healthy",
+  "timestamp": "2026-02-01T05:35:00Z",
+  "version": "1.0.0",
+  "replay_script": "True",
+  "trace_file": "True"
+}
+```
+
+#### `GET /metrics`
+System metrics and execution statistics.
+
+**Response**:
+```json
+{
+  "timestamp": "2026-02-01T05:35:00Z",
+  "metrics": {
+    "total_executions": 42,
+    "passed_executions": 42,
+    "failed_executions": 0,
+    "last_execution_timestamp": "2026-02-01T05:34:55Z",
+    "last_execution_status": "pass",
+    "last_execution_duration_ms": 72.5
+  },
+  "derived": {
+    "pass_rate": 1.0,
+    "fail_rate": 0.0
+  }
+}
+```
+
+### External Verification Example
+
+**Public deployment** (once live):
+```bash
+curl -X POST https://canonical.project-ai.dev/run-canonical \
+  | jq '{status, trace_hash, invariants: .metrics.invariants}'
+
+# Example output:
+{
+  "status": "pass",
+  "trace_hash": "sha256:52c45da27ab06d67fe0a1e5bb579e027a1...",
+  "invariants": {
+    "passed": 5,
+    "total": 5,
+    "pass_rate": 1.0
+  }
+}
+```
+
+**Verify trace hash** (deterministic):
+```bash
+# Download trace
+curl -X POST https://canonical.project-ai.dev/run-canonical \
+  | jq -r '.artifacts.trace' > /tmp/trace.json
+
+# Compute hash locally
+python -c "import json, hashlib; \
+  trace = json.load(open('/tmp/trace.json')); \
+  print(hashlib.sha256(json.dumps(trace, sort_keys=True).encode()).hexdigest())"
+
+# → Should match trace_hash from API response
+```
+
+### Strategic Impact
+
+**Unignorable External Proof**: Anyone can verify claims without access to codebase
+```bash
+# Researcher validates paper claims:
+curl -X POST https://canonical.project-ai.dev/run-canonical
+# → Red/green status proves system works as described
+```
+
+**Continuous Public Validation**: Status badge shows live system health
+```markdown
+# In README.md:
+[![Canonical Spine](https://canonical.project-ai.dev/status-badge)](https://canonical.project-ai.dev/run-canonical)
+# → Shows green checkmark if last execution passed
+```
+
+**Compliance Audit Interface**: Auditors can request execution + artifacts
+```bash
+# Auditor downloads complete audit trail:
+curl -X POST https://canonical.project-ai.dev/run-canonical \
+  | jq '.artifacts.trace' > audit_trace_$(date +%Y%m%d).json
+# → Full deterministic trace with SHA-256 hash for verification
+```
+
+---
+
 ## FAQ
 
 ### Q: Is this just a test?
@@ -459,9 +786,13 @@ python canonical/replay.py
 
 **A:** **Human bandwidth**. One perfect demonstration is more valuable than 100 partial examples. This is the "hello world" that actually shows the system thinking.
 
+### Q: What are invariants?
+
+**A:** Invariants are **system-wide truths** that must ALWAYS hold. They transform the canonical spine from a demo into a **regression oracle**. If code changes violate invariants, the build breaks.
+
 ### Q: Can I modify the scenario?
 
-**A:** Yes! Copy `scenario.yaml`, modify it, update `replay.py` to load your version. The canonical scenario is a **starting point**, not a limit.
+**A:** Yes! Copy `scenario.yaml`, modify it, update `replay.py` to load your version. The canonical scenario is a **starting point**, not a limit. Add your own invariants too.
 
 ### Q: How is this different from integration tests?
 
@@ -474,8 +805,10 @@ python canonical/replay.py
 | Developer-focused | Reviewer/auditor/operator-focused |
 | Test infrastructure | Production architecture |
 | Passes/fails silently | Explains every decision |
+| No external access | HTTP API for public verification |
+| Code coverage metric | Regression oracle + compliance tool |
 
-**Both are necessary. Canonical scenario is for humans, tests are for CI.**
+**Both are necessary. Canonical scenario is for humans AND external validators, tests are for CI.**
 
 ### Q: What if components don't exist yet?
 
@@ -488,6 +821,18 @@ python canonical/replay.py
 - **After dependency updates**: Verify behavior unchanged
 - **During audits**: Demonstrate system capabilities
 - **When onboarding**: Show new contributors what the system does
+- **Continuous deployment**: Run on every push to validate production behavior
+
+### Q: Can I deploy the API server?
+
+**A:** Yes! Deploy to any platform supporting Python + FastAPI:
+- **Docker**: `docker build -t canonical-validator . && docker run -p 8000:8000 canonical-validator`
+- **Cloud Run**: Deploy FastAPI app to Google Cloud Run
+- **AWS Lambda**: Deploy with Mangum adapter
+- **Heroku/Railway**: Deploy Python app
+- **VPS**: Run with systemd service
+
+See `canonical/server.py` for deployment examples.
 
 ---
 
