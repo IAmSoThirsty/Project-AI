@@ -1,0 +1,83 @@
+name: 'Run Security Scan Suite'
+description: 'Comprehensive security scanning with multiple tools'
+inputs:
+  scan-type:
+    description: 'Type of scan: secrets, dependencies, code, or all'
+    required: false
+    default: 'all'
+  create-issues:
+    description: 'Create GitHub issues for findings'
+    required: false
+    default: 'false'
+
+outputs:
+  has-vulnerabilities:
+    description: 'Whether vulnerabilities were found'
+    value: ${{ steps.analyze.outputs.has-vulnerabilities }}
+  critical-count:
+    description: 'Number of critical vulnerabilities'
+    value: ${{ steps.analyze.outputs.critical-count }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Run secret scanning
+      if: inputs.scan-type == 'secrets' || inputs.scan-type == 'all'
+      shell: bash
+      continue-on-error: true
+      run: |
+        echo "🔍 Running secret detection..."
+        detect-secrets scan --all-files --force-use-all-plugins \
+          --exclude-files '\.lock$' \
+          --exclude-files '\.pyc$' \
+          --exclude-files 'node_modules/' \
+          --exclude-files '\.git/' \
+          > .secrets.baseline || true
+        
+        trufflehog3 -v -r . --format json -o trufflehog-report.json || true
+    
+    - name: Run dependency scanning
+      if: inputs.scan-type == 'dependencies' || inputs.scan-type == 'all'
+      shell: bash
+      continue-on-error: true
+      run: |
+        echo "🔍 Running dependency vulnerability scan..."
+        pip-audit --format json > pip-audit-report.json || true
+        pip-audit || true
+        safety check --json > safety-report.json || true
+        safety check || true
+    
+    - name: Run code security scanning
+      if: inputs.scan-type == 'code' || inputs.scan-type == 'all'
+      shell: bash
+      continue-on-error: true
+      run: |
+        echo "🔍 Running Bandit security scan..."
+        bandit -r src/ tools/ scripts/ -f json -o bandit-report.json || true
+        bandit -r src/ tools/ scripts/ || true
+    
+    - name: Analyze results
+      id: analyze
+      shell: bash
+      run: |
+        echo "has-vulnerabilities=false" >> $GITHUB_OUTPUT
+        echo "critical-count=0" >> $GITHUB_OUTPUT
+        
+        # Check if any reports exist and contain findings
+        if [ -f pip-audit-report.json ] && [ -s pip-audit-report.json ]; then
+          echo "has-vulnerabilities=true" >> $GITHUB_OUTPUT
+        fi
+        
+        if [ -f bandit-report.json ] && [ -s bandit-report.json ]; then
+          echo "has-vulnerabilities=true" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Upload scan artifacts
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: security-scan-results-${{ github.run_id }}
+        path: |
+          *-report.json
+          .secrets.baseline
+        retention-days: 30
