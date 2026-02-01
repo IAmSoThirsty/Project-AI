@@ -562,6 +562,33 @@ class CanonicalReplay:
             print(f"❌ Failed to save trace: {e}")
             return False
 
+    def validate_invariants(self) -> bool:
+        """Validate canonical invariants against execution trace."""
+        self.print_header("CANONICAL INVARIANTS VALIDATION")
+
+        try:
+            # Import invariants module
+            from canonical.invariants import validate_invariants, print_invariant_report
+
+            # Validate invariants
+            passed, failed, report = validate_invariants(self.trace)
+
+            # Print report
+            print_invariant_report(report)
+
+            # Add to trace
+            self.trace["invariants"] = report
+
+            return len(failed) == 0
+
+        except ImportError as e:
+            print(f"⚠️  Warning: Could not import invariants module: {e}")
+            print("   Skipping invariant validation")
+            return True
+        except Exception as e:
+            print(f"❌ Invariant validation error: {e}")
+            return False
+
     def run(self) -> int:
         """Execute the canonical scenario replay."""
         start_time = time.time()
@@ -590,7 +617,10 @@ class CanonicalReplay:
         # Validate success criteria
         all_met = self.validate_success_criteria()
 
-        # Save trace
+        # Validate canonical invariants (regression oracle)
+        invariants_passed = self.validate_invariants()
+
+        # Save trace (includes invariant results)
         if not self.save_trace():
             return 1
 
@@ -601,20 +631,24 @@ class CanonicalReplay:
         print("=" * 80)
         print()
         print(f"⏱️  Duration: {duration:.2f} seconds")
-        print(f"📊 Result: {'✅ ALL CRITERIA MET' if all_met else '❌ SOME CRITERIA FAILED'}")
+        print(f"📊 Success Criteria: {'✅ ALL MET' if all_met else '❌ SOME FAILED'}")
+        print(f"🔍 Invariants: {'✅ ALL PASSED' if invariants_passed else '❌ SOME FAILED'}")
         print()
 
-        if all_met:
+        if all_met and invariants_passed:
             print("🎉 This is the system thinking.")
             print("🎉 This is the canonical spine.")
             print("🎉 This is Project-AI.")
         else:
-            print("⚠️  Some success criteria were not met.")
+            if not all_met:
+                print("⚠️  Some success criteria were not met.")
+            if not invariants_passed:
+                print("⚠️  Some invariants failed - system behavior violated core principles.")
             print("⚠️  Review the trace for details.")
 
         print()
 
-        return 0 if all_met else 1
+        return 0 if (all_met and invariants_passed) else 1
 
 
 def main() -> int:
