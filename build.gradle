@@ -6,7 +6,12 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:8.1.4'
+        classpath 'com.github.node-gradle:gradle-node-plugin:7.0.1'
     }
+}
+
+plugins {
+    id 'com.github.node-gradle.node' version '7.0.1' apply false
 }
 
 allprojects {
@@ -14,6 +19,44 @@ allprojects {
         google()
         mavenCentral()
     }
+}
+
+// Node.js configuration
+node {
+    version = '20.11.0'
+    download = true
+    workDir = file("${project.projectDir}/.gradle/nodejs")
+    npmWorkDir = file("${project.projectDir}/.gradle/npm")
+}
+
+// JavaScript/Node.js tasks
+task npmInstall(type: com.github.gradle.node.npm.task.NpmTask) {
+    description = 'Install Node.js dependencies'
+    args = ['install']
+}
+
+task npmBuild(type: com.github.gradle.node.npm.task.NpmTask) {
+    dependsOn npmInstall
+    description = 'Build JavaScript/TypeScript code'
+    args = ['run', 'build']
+}
+
+task npmTest(type: com.github.gradle.node.npm.task.NpmTask) {
+    dependsOn npmInstall
+    description = 'Run JavaScript tests'
+    args = ['run', 'test:js']
+}
+
+task npmDev(type: com.github.gradle.node.npm.task.NpmTask) {
+    dependsOn npmInstall
+    description = 'Run development server'
+    args = ['run', 'dev']
+}
+
+task npmLint(type: com.github.gradle.node.npm.task.NpmTask) {
+    dependsOn npmInstall
+    description = 'Run linting on markdown files'
+    args = ['run', 'lint:markdown']
 }
 
 task clean(type: Delete) {
