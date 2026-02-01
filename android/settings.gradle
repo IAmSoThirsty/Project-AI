@@ -1,2 +1,3 @@
-rootProject.name = "Project-AI-Android"
+rootProject.name = 'Project-AI'
 include ':app'
+include ':legion_mini'

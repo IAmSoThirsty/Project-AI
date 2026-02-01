@@ -31,6 +31,27 @@ try:
 except ImportError as e:
     print(f"[WARN] Legion endpoints not available: {e}")
 
+# Include Save Points router
+try:
+    from api.save_points_routes import router as save_points_router, start_auto_save, stop_auto_save
+    app.include_router(save_points_router)
+    
+    @app.on_event("startup")
+    async def startup_auto_save():
+        """Start auto-save service on app startup"""
+        await start_auto_save()
+        print("[OK] Auto-save service started (15-min intervals)")
+    
+    @app.on_event("shutdown")
+    async def shutdown_auto_save():
+        """Stop auto-save service on app shutdown"""
+        await stop_auto_save()
+        print("[OK] Auto-save service stopped")
+    
+    print("[OK] Save Points API endpoints registered")
+except ImportError as e:
+    print(f"[WARN] Save Points endpoints not available: {e}")
+
 # ==========================================================
 # Core Data Models
 # ==========================================================
@@ -248,6 +269,13 @@ def root():
             "view_tarl": "GET /tarl",
             "health_check": "GET /health",
             "api_docs": "GET /docs",
+            "save_points": {
+                "create": "POST /api/savepoints/create",
+                "list": "GET /api/savepoints/list",
+                "restore": "POST /api/savepoints/restore/{id}",
+                "delete": "DELETE /api/savepoints/delete/{id}",
+                "auto_status": "GET /api/savepoints/auto/status"
+            }
         },
     }
 
