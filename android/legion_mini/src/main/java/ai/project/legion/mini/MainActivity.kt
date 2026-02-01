@@ -232,7 +232,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                     
-                    document.getElementById('messageInput').addEventListener('keypress',' (e) => {
+                    document.getElementById('messageInput').addEventListener('keypress', (e) => {
                         if (e.key === 'Enter') sendMessage();
                     });
                 </script>

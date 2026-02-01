@@ -1,0 +1,5 @@
+[AutoRun]
+open=autorun_launcher.bat
+icon=legion_mini_icon.ico
+label=Legion Mini - Personal AI Assistant
+action=Launch Legion Mini Installation Wizard
