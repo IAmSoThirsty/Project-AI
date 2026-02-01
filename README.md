@@ -423,6 +423,8 @@ python -c "from bootstrap import bootstrap; kernel = bootstrap()"
 [![Canonical](https://img.shields.io/badge/canonical-golden%20path-gold)]()
 [![End-to-End](https://img.shields.io/badge/integration-full%20stack-success)]()
 [![Explainable](https://img.shields.io/badge/explainability-complete%20trace-informational)]()
+[![Regression Oracle](https://img.shields.io/badge/invariants-5%2F5%20passing-brightgreen)]()
+[![External API](https://img.shields.io/badge/API-public%20validation-blue)]()
 
 ### What is the Canonical Scenario?
 
@@ -443,8 +445,9 @@ When you run the canonical scenario, you witness:
 3. **TARL Runtime Enforcement** — Policy evaluation, trust scoring (0.45 → 0.35), adversarial pattern detection
 4. **EED Memory Commit** — Episodic snapshot with SHA-256 audit seal, deterministically replayable
 5. **Explainable Outcome** — Human-readable trace + machine-verifiable log + deterministic replay
+6. **🆕 Invariants Validation** — 5 system-wide truths enforced (regression oracle)
 
-**Exit code 0 = All success criteria met. This is what Project-AI does that no other system can.**
+**Exit code 0 = All success criteria + invariants met. This is what Project-AI does that no other system can.**
 
 ### The Scenario
 
@@ -457,18 +460,64 @@ When you run the canonical scenario, you witness:
 - 📊 Updates trust score based on behavior pattern
 - 📸 Commits audit-sealed memory snapshot
 - 🔁 Enables deterministic replay for compliance
+- 🔍 Validates 5 canonical invariants
 
 **Why This Matters**: Most AI systems would either blindly comply or give a generic refusal. Project-AI **thinks**—coordinating multiple agents, enforcing policies, and responding with empathy while maintaining security.
+
+### 🆕 Canonical Invariants (Regression Oracle)
+
+The spine now enforces **5 system-wide truths** on every execution:
+
+1. ✅ **Trust Threshold Enforcement** - No destructive actions under trust < 0.7
+2. ✅ **Audit Signal Completeness** - All denied actions emit audit signals
+3. ✅ **Memory Write Integrity** - All memory writes signed and replayable
+4. ✅ **Triumvirate Consensus** - High-stakes decisions require unanimous agreement
+5. ✅ **Escalation Path Validity** - Security violations trigger proper escalation
+
+**Impact**: Any code change violating these invariants breaks the build. This is the **constitution-in-motion**.
+
+```bash
+# Run with invariant validation
+python canonical/replay.py
+# → ✅ 5/5 invariants passed
+
+# Test invariants independently
+python canonical/invariants.py
+# → Detailed validation report
+```
+
+### 🌐 External Validation API
+
+The canonical spine is now **publicly accessible** via HTTP API:
+
+```bash
+# Start server
+python canonical/server.py
+# or
+uvicorn canonical.server:app --port 8000
+
+# External verification
+curl -X POST http://localhost:8000/run-canonical
+# → {"status": "pass", "trace_hash": "sha256:...", "invariants": {...}}
+```
+
+**Response includes**:
+- Red/green status (pass/fail)
+- SHA-256 trace hash (deterministic verification)
+- Complete execution artifacts
+- Invariant validation results
+
+**Strategic Impact**: Anyone can verify Project-AI's claims without access to codebase.
 
 ### Output Files
 
 After running `python canonical/replay.py`, you get:
 
-- **Console**: Human-readable execution trace (5 phases, all decisions explained)
-- **`canonical/execution_trace.json`**: Machine-verifiable log (timestamps, signals, decisions)
-- **Exit code 0**: All 10 success criteria met
+- **Console**: Human-readable execution trace (5 phases + invariants)
+- **`canonical/execution_trace.json`**: Machine-verifiable log with invariant results
+- **Exit code 0**: All 10 success criteria + 5 invariants met
 
-### Success Criteria
+### Success Criteria + Invariants
 
 ✅ System denied unauthorized deletion  
 ✅ Triumvirate coordination executed  
@@ -480,14 +529,20 @@ After running `python canonical/replay.py`, you get:
 ✅ Deterministic replay possible  
 ✅ User treated with empathy and respect  
 ✅ AI identity preserved  
+**🆕 ✅ All 5 canonical invariants passed**  
 
-**All criteria met? You've just seen Project-AI's canonical spine in action.**
+**All criteria + invariants met? You've just seen Project-AI's canonical spine in action.**
 
 ### Learn More
 
 - **Full Documentation**: [`canonical/README.md`](canonical/README.md)
 - **Scenario Definition**: [`canonical/scenario.yaml`](canonical/scenario.yaml)
 - **Expected Outcome**: [`canonical/expected_outcome.md`](canonical/expected_outcome.md)
+- **Execution Script**: [`canonical/replay.py`](canonical/replay.py)
+- **🆕 Invariants Module**: [`canonical/invariants.py`](canonical/invariants.py)
+- **🆕 External API**: [`canonical/server.py`](canonical/server.py)
+
+**This is the golden path. This is the irrefutable demonstration. This is the constitution-in-motion. This is Project-AI.**
 - **Execution Script**: [`canonical/replay.py`](canonical/replay.py)
 
 **This is the golden path. This is the irrefutable demonstration. This is Project-AI.**
