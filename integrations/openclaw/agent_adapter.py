@@ -68,6 +68,7 @@ class LegionAgent:
         self._init_security_wrapper()
         self._init_context_manager()
         self._init_capability_registry()
+        self._init_moltbook_client()  # NEW: Social network integration
         
         print(f"[OK] Legion Agent initialized: {self.agent_id}")
         print("   For we are many, and we are one")
@@ -130,6 +131,19 @@ class LegionAgent:
             self.learning_engine = None
             self.collective = None
             print("   [!] Capability registry not available (import failed)")
+    
+    def _init_moltbook_client(self):
+        """Initialize Moltbook social network client"""
+        try:
+            from .moltbook_client import MoltbookClient
+            
+            # Pass Triumvirate client for governance
+            self.moltbook = MoltbookClient(triumvirate_client=self.triumvirate_client)
+            print("   [OK] Moltbook social network ready")
+            print("   [!] All Moltbook posts require Triumvirate approval")
+        except ImportError as e:
+            self.moltbook = None
+            print(f"   [!] Moltbook not available: {e}")
     
     async def process_message(
         self,
