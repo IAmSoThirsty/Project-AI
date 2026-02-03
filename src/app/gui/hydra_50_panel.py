@@ -189,9 +189,9 @@ class ScenarioListWidget(QFrame):
     def refresh_scenarios(self):
         """Refresh scenario list"""
         try:
-            from app.core.hydra_50_engine import HYDRA50Engine
+            from app.core.hydra_50_engine import Hydra50Engine
             
-            engine = HYDRA50Engine()
+            engine = Hydra50Engine()
             self.scenarios = engine.list_scenarios()
             self.populate_list()
             
@@ -312,7 +312,7 @@ class StatusDashboardWidget(QFrame):
     
     def _create_metric_label(self, name: str, value: str) -> QLabel:
         """Create metric label"""
-        label = QLabel(f"{name}:\\n{value}")
+        label = QLabel(f"{name}:\n{value}")
         label.setStyleSheet(f"""
             QLabel {{
                 color: {TRON_GREEN};
@@ -345,10 +345,10 @@ class StatusDashboardWidget(QFrame):
     def refresh_status(self):
         """Refresh status metrics"""
         try:
-            from app.core.hydra_50_engine import HYDRA50Engine
+            from app.core.hydra_50_engine import Hydra50Engine
             from app.core.hydra_50_telemetry import HYDRA50TelemetrySystem
             
-            engine = HYDRA50Engine()
+            engine = Hydra50Engine()
             status = engine.get_system_status()
             
             self.active_label.setText(f"Active Scenarios:\\n{status.get('active_scenarios', 0)}")
@@ -621,8 +621,8 @@ class ControlPanelWidget(QFrame):
         if not self.current_scenario_id:
             return
         try:
-            from app.core.hydra_50_engine import HYDRA50Engine
-            engine = HYDRA50Engine()
+            from app.core.hydra_50_engine import Hydra50Engine
+            engine = Hydra50Engine()
             engine.activate_scenario(self.current_scenario_id)
             logger.info(f"Activated scenario: {self.current_scenario_id}")
         except Exception as e:
@@ -633,8 +633,8 @@ class ControlPanelWidget(QFrame):
         if not self.current_scenario_id:
             return
         try:
-            from app.core.hydra_50_engine import HYDRA50Engine
-            engine = HYDRA50Engine()
+            from app.core.hydra_50_engine import Hydra50Engine
+            engine = Hydra50Engine()
             engine.deactivate_scenario(self.current_scenario_id)
             logger.info(f"Deactivated scenario: {self.current_scenario_id}")
         except Exception as e:
