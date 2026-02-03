@@ -1,0 +1,108 @@
+# Sovereign Runtime Demonstration Pipeline
+# The Iron Path - End-to-End Cryptographically Enforced Sovereign Loop
+
+name: "sovereign_demo_pipeline"
+version: "1.0.0"
+description: |
+  This pipeline demonstrates Project-AI's sovereign runtime capabilities:
+  - Cryptographic config snapshot
+  - Role-based signature verification
+  - Policy state binding enforcement
+  - Immutable audit trail with hash chains
+  - Full artifact generation with hashes
+  - Compliance bundle export
+
+  This is NOT a tool pipeline. This is a PROOF pipeline that shows
+  Project-AI can run where failure is illegal.
+
+metadata:
+  author: "Project-AI Sovereign Runtime"
+  created: "2026-02-03"
+  purpose: "demonstration"
+  classification: "public"
+
+# Pipeline Stages - The Iron Path
+stages:
+  - name: "data_preparation"
+    type: "data_preparation"
+    description: "Prepare and validate sovereign demonstration dataset"
+    dataset: "sovereign_demo_dataset"
+    requirements:
+      - "Dataset integrity verification"
+      - "Data lineage tracking"
+      - "Cryptographic hash generation"
+    
+  - name: "model_training"
+    type: "model_training"
+    description: "Train model with full governance oversight"
+    model: "sovereign_demo_model"
+    requirements:
+      - "Model provenance tracking"
+      - "Training metrics audit trail"
+      - "Governance approval required"
+    
+  - name: "agent_chain"
+    type: "agent_chain"
+    description: "Execute multi-agent sovereign decision chain"
+    chain: "sovereign_demo_chain"
+    agents:
+      - "planner"
+      - "validator"
+      - "executor"
+      - "oversight"
+    requirements:
+      - "Multi-agent consensus"
+      - "Decision path audit"
+      - "Cryptographic proof of execution"
+    
+  - name: "promotion"
+    type: "promotion"
+    description: "Promote to production with governance approval"
+    environment: "production"
+    requirements:
+      - "Role signature verification"
+      - "Policy compliance check"
+      - "Approval workflow completion"
+    
+  - name: "rollback"
+    type: "rollback"
+    description: "Demonstrate rollback capability with audit trail"
+    reason: "demonstration"
+    requirements:
+      - "State restoration verification"
+      - "Rollback audit logging"
+      - "System integrity check"
+    
+  - name: "audit_export"
+    type: "audit_export"
+    description: "Export compliance bundle with all cryptographic proofs"
+    format: "json"
+    requirements:
+      - "Complete audit trail export"
+      - "Cryptographic signature verification"
+      - "Hash chain integrity proof"
+
+# Governance Requirements
+governance:
+  enforcement_level: "strict"
+  policy_binding_required: true
+  role_signatures_required: true
+  audit_trail_required: true
+  cryptographic_verification: true
+
+# Success Criteria
+success_criteria:
+  - criterion: "All stages execute with cryptographic verification"
+    critical: true
+  - criterion: "Audit trail integrity verified"
+    critical: true
+  - criterion: "Role signatures validated"
+    critical: true
+  - criterion: "Policy bindings enforced"
+    critical: true
+  - criterion: "Artifacts generated with hashes"
+    critical: true
+  - criterion: "Compliance bundle exported"
+    critical: true
+
+# This pipeline proves sovereignty through execution, not documentation

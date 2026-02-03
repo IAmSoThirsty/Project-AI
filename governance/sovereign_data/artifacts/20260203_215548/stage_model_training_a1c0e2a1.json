@@ -1,0 +1,31 @@
+{
+  "stage": "model_training",
+  "type": "model_training",
+  "status": "success",
+  "timestamp": "2026-02-03T21:55:48.289220",
+  "role_signature": {
+    "role": "pipeline_executor",
+    "payload_hash": "1b22280df58f98e2be0a65b9a1b5176836379a2baf565a2d8f4753e3bd32648a",
+    "signature": "10e7e48259704c9322a79ac44308331c066b232c62c41163cce8993c79fc4d542b24de7659480ac86bb9bbbc8e4e292b4518a6dab0d28d568b2786b8baa7260e",
+    "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+    "timestamp": "2026-02-03T21:55:48.288520"
+  },
+  "policy_binding": {
+    "policy_hash": "950c6be9c046f561131d1ee08eaf27e8c4179812819e19a86d800358d53d76d3",
+    "context_hash": "3832a41952be99adcaf09316a3a023bcecedef9f42abc504ddfdb314c81c5f37",
+    "binding_hash": "fe366d4b3a00b0a68865d10b53344730237f0eafa4c1e99028ff7e4a9d6224db",
+    "signature": "6291f4643b5942c70c72e4eea71064b01cf563c5ba3b798284b5bb0399f292166f60bb9eb0cf80ab396bcdc99ae6422aee04412f640d1a7ecd1af90ff5023a02",
+    "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+    "timestamp": "2026-02-03T21:55:48.288891"
+  },
+  "output": {
+    "model_name": "sovereign_demo_model",
+    "algorithm": "neural_network",
+    "epochs": 100,
+    "accuracy": 0.95,
+    "loss": 0.05,
+    "training_time_seconds": 120,
+    "model_hash": "4e811acb6ff8b53ab74d04722778c880ef3c4f6a096e387844813d8462891bc4"
+  },
+  "artifact_hash": "a1c0e2a15ae6e93902dce19601409f83304966b4b47aa5c01ec003d20189536c"
+}

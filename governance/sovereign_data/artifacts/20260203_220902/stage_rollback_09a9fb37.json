@@ -1,0 +1,30 @@
+{
+  "stage": "rollback",
+  "type": "rollback",
+  "status": "success",
+  "timestamp": "2026-02-03T22:09:02.517581",
+  "role_signature": {
+    "role": "pipeline_executor",
+    "payload_hash": "ebdaf70b5e51caa7e2802542575882e135b58588ff96bc0ae25358be612714d1",
+    "signature": "55c784a1972e529daef3e5c52398471159b03ffdb05843a7f3cc6b519c6d7f4a4308e98cd387a01903a18b2e80a736ff8b7a3efe859788e73329f41e03905b05",
+    "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+    "timestamp": "2026-02-03T22:09:02.516763"
+  },
+  "policy_binding": {
+    "policy_hash": "950c6be9c046f561131d1ee08eaf27e8c4179812819e19a86d800358d53d76d3",
+    "context_hash": "bd3091a8556f0fff996d5d11133a8e5fb4fe394d0518ca6d575478d73414bf2f",
+    "binding_hash": "641c1c4e56e2a48f331af163348ef4f58ca87e11ee0be875c35cd0105021425f",
+    "signature": "1a7fb2eaf576360ee1d4393337585f44b70386f047d69ebd402c5183c36361fd78b6f83a2ae9d6d5015c91074b91b3d5c6d077e55978729a4f20869df5d91f02",
+    "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+    "timestamp": "2026-02-03T22:09:02.517201"
+  },
+  "output": {
+    "rollback_reason": "demonstration",
+    "rolled_back_at": "2026-02-03T22:09:02.517585",
+    "previous_state_restored": true,
+    "rollback_successful": true,
+    "environment": "production",
+    "rollback_hash": "451d5c30d7bc0f41e1de4d29fcc57d7a9cac512ebd5989fe7d1ecdaf9e55d6b4"
+  },
+  "artifact_hash": "09a9fb37981e919b6d02608b2565e8acacfd44f2a959f0b6e739010654959989"
+}
