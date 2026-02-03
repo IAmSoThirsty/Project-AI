@@ -1,0 +1,85 @@
+{
+  "simulation_config": {
+    "world": {
+      "start_year": 2026,
+      "simulation_duration_years": 1,
+      "time_step_days": 30,
+      "num_countries": 195,
+      "global_population": 8000000000,
+      "global_gdp_usd": 100000000000000.0,
+      "enable_climate_effects": true,
+      "enable_economic_propagation": true,
+      "enable_political_instability": true,
+      "enable_religious_tensions": true
+    },
+    "alien": {
+      "initial_threat_level": "reconnaissance",
+      "technology_level": "superior",
+      "initial_ship_count": 1,
+      "invasion_probability_per_year": 0.15,
+      "technology_advantage_multiplier": 100.0,
+      "resource_extraction_rate": 0.05,
+      "hostile_intent": 0.7,
+      "adaptation_rate": 0.1,
+      "communication_attempts": true,
+      "negotiation_openness": 0.2
+    },
+    "ai_governance": {
+      "enable_ai_governance": true,
+      "ai_failure_probability": 0.05,
+      "ai_alignment_score": 0.85,
+      "ai_decision_weight": 0.6,
+      "enable_ai_failsafes": true,
+      "human_override_capability": true,
+      "catastrophic_failure_threshold": 0.95
+    },
+    "validation": {
+      "enable_strict_validation": true,
+      "conservation_tolerance": 0.01,
+      "causality_enforcement": true,
+      "deterministic_replay": true,
+      "random_seed": null,
+      "save_state_frequency": 30
+    },
+    "artifacts": {
+      "generate_monthly_reports": true,
+      "generate_annual_reports": true,
+      "generate_postmortem": true,
+      "output_format": "json",
+      "include_raw_data": true,
+      "include_visualizations": false,
+      "artifact_dir": "engines/alien_invaders/artifacts"
+    },
+    "scenario": "standard"
+  },
+  "simulation_duration": {
+    "start_date": "2026-01-01T00:00:00",
+    "end_date": "2026-12-27T00:00:00",
+    "total_days": 360,
+    "total_years": 0.9863013698630136
+  },
+  "final_state": {
+    "global_population": 8000000000,
+    "initial_population": 8000000000,
+    "population_loss_pct": 0.0,
+    "total_casualties": 0,
+    "global_gdp": 100000000000000.0,
+    "alien_control_pct": 0.0,
+    "average_morale": 0.6636748149620415,
+    "ai_operational": true
+  },
+  "alien_metrics": {
+    "ships_in_system": 1,
+    "ground_forces": 0,
+    "resource_extraction_total": 0.20684628485551537,
+    "contact_established": false,
+    "negotiations_attempted": false
+  },
+  "key_events": [],
+  "validation_summary": {
+    "total_validations": 13,
+    "failed_validations": 0,
+    "conservation_violations": 0
+  },
+  "outcome_classification": "survival"
+}
