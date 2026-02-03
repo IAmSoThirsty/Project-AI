@@ -6,11 +6,14 @@ One-time setup script
 
 import asyncio
 import sys
+import os
 from pathlib import Path
 
-# Add parent directory to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+# Add project root to path
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
 
+# Now import
 from integrations.openclaw.moltbook_client import register_legion
 
 
