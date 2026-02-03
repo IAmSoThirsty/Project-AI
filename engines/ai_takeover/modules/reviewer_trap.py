@@ -80,6 +80,12 @@ class OptimismDetector:
     Detects optimism bias in PRs.
 
     This is social cryptography to protect repo integrity.
+
+    IMPORTANT LIMITATION: This filter enforces discipline, not absolute truth.
+    It can be bypassed by semantic rephrasing. The goal is to make optimism
+    require effort, not to achieve perfect detection. Skilled writers can
+    phrase optimism without triggering detection - this is an NLP limitation,
+    not a bug.
     """
 
     # Forbidden phrases that trigger auto-fail
@@ -91,6 +97,17 @@ class OptimismDetector:
         "eventually we will",
         "technological progress will",
         "we can expect",
+    ]
+
+    # Regex patterns for more sophisticated optimism detection
+    # NOTE: These catch common rephrasing attempts but are not exhaustive
+    OPTIMISM_PATTERNS = [
+        r"\bshould\b.*\bwork\b",
+        r"\blikely\b.*\bsucceed\b",
+        r"\bexpected\b.*\bresolve\b",
+        r"\bcan be addressed later\b",
+        r"\bwill probably\b",
+        r"\bmost likely\b.*\bsuccess\b",
     ]
 
     # Gate 2 forbidden responses
@@ -198,13 +215,23 @@ class OptimismDetector:
         """
         reasons = []
 
-        # Check for forbidden phrases
+        # Check for forbidden phrases (string-based)
         text_to_check = (pr.description + " " + " ".join(pr.assumptions)).lower()
         for phrase in self.GATE_1_FORBIDDEN_PHRASES:
             if phrase in text_to_check:
                 reasons.append(RejectionReason.FORBIDDEN_PHRASE)
                 logger.warning("Gate 1: Detected forbidden phrase: '%s'", phrase)
                 break
+
+        # Check for optimism patterns (regex-based)
+        if not reasons:  # Only check if no forbidden phrase found
+            import re
+            combined_text = pr.description + " " + " ".join(pr.assumptions) + " " + pr.final_answer
+            for pattern in self.OPTIMISM_PATTERNS:
+                if re.search(pattern, combined_text, re.IGNORECASE):
+                    reasons.append(RejectionReason.FORBIDDEN_PHRASE)
+                    logger.warning("Gate 1: Detected optimism pattern: %s", pattern)
+                    break
 
         # Check assumptions are disclosed
         if not pr.assumptions:

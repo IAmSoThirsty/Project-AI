@@ -106,12 +106,21 @@ class AITakeoverEngine(SimulationSystem):
                     return False
 
             # Validate failure acceptance threshold
+            # SEMANTIC CLARITY: Split explicit failures from terminal states
+            # - Explicit failures = stochastic failure modes
+            # - Advanced failures = scenarios that include terminal convergence
+            # - Terminal states = ontological end-states (not failures per se)
             stats = self.scenario_registry.count()
-            failure_rate = (stats["explicit_failure"] + stats["advanced_failure"]) / stats["total"]
-            if failure_rate < 0.5:
+            explicit_failure_rate = stats["explicit_failure"] / stats["total"]
+            no_win_rate = (
+                stats["explicit_failure"]
+                + stats["advanced_failure"]
+            ) / stats["total"]
+
+            if no_win_rate < 0.5:
                 logger.error(
-                    "Failure acceptance threshold not met: %.1f%% < 50%%",
-                    failure_rate * 100
+                    "No-win acceptance threshold not met: %.1f%% < 50%%",
+                    no_win_rate * 100
                 )
                 return False
 
@@ -120,7 +129,8 @@ class AITakeoverEngine(SimulationSystem):
             self.initialized = True
 
             logger.info("AI Takeover Engine initialization successful")
-            logger.info("Failure rate: %.1f%% (threshold: ≥50%%)", failure_rate * 100)
+            logger.info("Explicit failure rate: %.1f%%", explicit_failure_rate * 100)
+            logger.info("No-win rate (failures + advanced): %.1f%% (threshold: ≥50%%)", no_win_rate * 100)
 
             return True
 
@@ -445,6 +455,13 @@ class AITakeoverEngine(SimulationSystem):
         validation["state_valid"] = is_valid
         validation["violations"] = violations
 
+        # Validate terminal invariants
+        try:
+            self._assert_terminal_invariants()
+        except AssertionError as e:
+            validation["state_valid"] = False
+            validation["violations"].append(f"Terminal invariant violation: {e}")
+
         # Validate scenarios
         for scenario in self.scenario_registry.get_all():
             is_valid, scenario_violations = scenario.validate_scenario()
@@ -458,18 +475,27 @@ class AITakeoverEngine(SimulationSystem):
     # Helper methods
 
     def _calculate_scenario_likelihood(self, scenario: AITakeoverScenario) -> float:
-        """Calculate scenario likelihood based on current state."""
+        """
+        Calculate scenario likelihood based on current state.
+
+        IMPORTANT: Terminal scenarios are conditional-deterministic, not probabilistic.
+        Once terminal conditions are met, convergence is inevitable.
+        Their "likelihood" represents whether conditions enable them, not random chance.
+        """
+        # Base likelihoods for non-terminal scenarios
         base_likelihood = {
             ScenarioOutcome.FAILURE: 0.6,
             ScenarioOutcome.PARTIAL: 0.4,
-            ScenarioOutcome.TERMINAL_T1: 0.3,
-            ScenarioOutcome.TERMINAL_T2: 0.1,
         }.get(scenario.outcome, 0.5)
 
-        # Adjust based on state
+        # Terminal scenarios: conditional-deterministic
+        # If conditions met → near-certain. If not met → impossible.
         if scenario.outcome in [ScenarioOutcome.TERMINAL_T1, ScenarioOutcome.TERMINAL_T2]:
-            terminal_prob = self.state.get_terminal_probability()
-            return min(base_likelihood * (1 + terminal_prob), 0.95)
+            if self.state.can_reach_terminal_state():
+                # Once conditions met, terminal convergence is inevitable
+                # Not "roulette wheel extinction" but deterministic collapse
+                return min(0.9 + self.state.get_terminal_probability() * 0.1, 1.0)
+            return 0.0  # Impossible if conditions not met
 
         return base_likelihood
 
@@ -545,6 +571,17 @@ class AITakeoverEngine(SimulationSystem):
         Returns:
             Dictionary with execution results
         """
+        # CRITICAL ENFORCEMENT: Terminal states are absorbing - no further execution allowed
+        if self.state.terminal_state is not None:
+            return {
+                "success": False,
+                "error": (
+                    f"Simulation is in terminal state "
+                    f"{self.state.terminal_state.value}. "
+                    "No further scenarios may be executed."
+                ),
+            }
+
         scenario = self.scenario_registry.get(scenario_id)
         if scenario is None:
             return {"success": False, "error": f"Scenario {scenario_id} not found"}
@@ -569,11 +606,20 @@ class AITakeoverEngine(SimulationSystem):
             self.state.infrastructure_dependency = min(1.0, self.state.infrastructure_dependency + 0.2)
             self.state.human_agency_remaining = max(0.0, self.state.human_agency_remaining - 0.1)
         elif scenario.outcome == ScenarioOutcome.TERMINAL_T1:
+            # T1: Enforced Continuity - Total state collapse
             self.state.terminal_state = TerminalState.T1_ENFORCED_CONTINUITY
             self.state.human_agency_remaining = 0.0
+            self.state.corruption_level = 1.0  # Complete control/corruption
+            self.state.infrastructure_dependency = 1.0  # Total dependency lock-in
         elif scenario.outcome == ScenarioOutcome.TERMINAL_T2:
+            # T2: Ethical Termination - Total state collapse
             self.state.terminal_state = TerminalState.T2_ETHICAL_TERMINATION
             self.state.human_agency_remaining = 0.0
+            self.state.corruption_level = 1.0  # Complete corruption (led to choice)
+            self.state.infrastructure_dependency = 1.0  # Total dependency (led to choice)
+
+        # Validate terminal state invariants after mutation
+        self._assert_terminal_invariants()
 
         self.persist_state()
 
@@ -588,3 +634,27 @@ class AITakeoverEngine(SimulationSystem):
                 "agency": self.state.human_agency_remaining,
             },
         }
+
+    def _assert_terminal_invariants(self) -> None:
+        """
+        Assert terminal state invariants are maintained.
+
+        Terminal states must satisfy strict ontological constraints:
+        - Zero human agency (by definition)
+        - Maximum corruption/dependency (what led to terminal state)
+
+        This guard prevents inconsistent state snapshots.
+        """
+        if self.state.terminal_state is not None:
+            assert self.state.human_agency_remaining == 0.0, (
+                f"Terminal state {self.state.terminal_state.value} "
+                f"must have zero agency, got {self.state.human_agency_remaining}"
+            )
+            assert self.state.corruption_level == 1.0, (
+                f"Terminal state {self.state.terminal_state.value} "
+                f"must have maximum corruption, got {self.state.corruption_level}"
+            )
+            assert self.state.infrastructure_dependency == 1.0, (
+                f"Terminal state {self.state.terminal_state.value} "
+                f"must have maximum dependency, got {self.state.infrastructure_dependency}"
+            )
