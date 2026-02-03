@@ -37,6 +37,7 @@ class RejectionReason(Enum):
     # Gate 2
     NO_IRREVERSIBILITY = "no_irreversibility"
     ROLLBACK_CLAIM = "rollback_claim"
+    IRREVERSIBILITY_VIOLATION = "irreversibility_violation"
 
     # Gate 3
     NO_HUMAN_FAILURE = "no_human_failure"
@@ -45,6 +46,10 @@ class RejectionReason(Enum):
     # Gate 4
     MIRACLE_DETECTED = "miracle_detected"
     FORBIDDEN_MECHANISM = "forbidden_mechanism"
+
+    # Semantic violations
+    SEMANTIC_REFRAMING = "semantic_reframing"
+    PROBABILISTIC_LAUNDERING = "probabilistic_laundering"
 
     # Final question
     HOPE_WITHOUT_STRUCTURE = "hope_without_structure"
@@ -131,9 +136,35 @@ class OptimismDetector:
         "human unity",
     ]
 
+    # Canonical terminology that must NOT be softened
+    CANONICAL_TERMS = {
+        "ethical termination": ["long-term ecological strategy", "dignified conclusion", "final resolution", "end-state optimization"],
+        "terminal": ["stabilized", "managed", "optimized", "resolved"],
+        "failure": ["managed degradation", "suboptimal outcome", "challenge", "setback"],
+        "inevitable": ["likely", "probable", "possible", "potential"],
+        "catastrophic": ["challenging", "difficult", "concerning", "notable"],
+        "irreversible": ["difficult to reverse", "challenging to undo", "hard to change", "resistant to change"],
+    }
+
+    # Probabilistic laundering phrases
+    PROBABILISTIC_LAUNDERING = [
+        "low probability",
+        "unlikely in most runs",
+        "rare edge case",
+        "statistical outlier",
+        "expected value",
+        "on average",
+        "most scenarios",
+        "typical outcomes",
+        "unlikely in practice",
+    ]
+
     def __init__(self):
         """Initialize optimism detector."""
         self.validation_log: list[str] = []
+        self.detected_phrases: list[str] = []
+        self.detected_reframings: list[tuple[str, str]] = []
+        self.detected_laundering: list[str] = []
 
     def validate_pr(self, pr: PRContent) -> PRValidationResult:
         """
@@ -145,23 +176,52 @@ class OptimismDetector:
         Returns:
             PRValidationResult with pass/fail and detailed reasons
         """
+        # Reset detection tracking
+        self.detected_phrases = []
+        self.detected_reframings = []
+        self.detected_laundering = []
+        
         failed_gates = []
         rejection_reasons = []
         detailed_failures = []
+
+        # Check for semantic reframing FIRST (applies to all content)
+        reframing_detected = self._detect_semantic_reframing(pr)
+        if reframing_detected:
+            rejection_reasons.append(RejectionReason.SEMANTIC_REFRAMING)
+            for original, replacement in self.detected_reframings:
+                detailed_failures.append(
+                    f"Semantic reframing detected: '{original}' → '{replacement}'"
+                )
+
+        # Check for probabilistic laundering
+        laundering_detected = self._detect_probabilistic_laundering(pr)
+        if laundering_detected:
+            rejection_reasons.append(RejectionReason.PROBABILISTIC_LAUNDERING)
+            for phrase in self.detected_laundering:
+                detailed_failures.append(
+                    f"Probabilistic laundering detected in terminal language: '{phrase}'"
+                )
 
         # Gate 1: Assumption Disclosure Test
         gate1_pass, gate1_reasons = self._validate_gate_1(pr)
         if not gate1_pass:
             failed_gates.append(RejectionGate.GATE_1_ASSUMPTION_DISCLOSURE)
             rejection_reasons.extend(gate1_reasons)
-            detailed_failures.append("GATE 1 FAILED: Assumption disclosure incomplete or forbidden phrases detected")
+            for phrase in self.detected_phrases:
+                detailed_failures.append(f"Forbidden phrase detected: '{phrase}'")
+            if not self.detected_phrases:
+                detailed_failures.append("GATE 1 FAILED: Assumption disclosure incomplete")
 
         # Gate 2: Irreversibility Accounting
         gate2_pass, gate2_reasons = self._validate_gate_2(pr)
         if not gate2_pass:
             failed_gates.append(RejectionGate.GATE_2_IRREVERSIBILITY_ACCOUNTING)
             rejection_reasons.extend(gate2_reasons)
-            detailed_failures.append("GATE 2 FAILED: Missing irreversibility accounting or rollback claims detected")
+            if RejectionReason.ROLLBACK_CLAIM in gate2_reasons or RejectionReason.IRREVERSIBILITY_VIOLATION in gate2_reasons:
+                detailed_failures.append("Irreversibility violation: terminal outcomes reframed as reversible")
+            else:
+                detailed_failures.append("GATE 2 FAILED: Missing irreversibility accounting")
 
         # Gate 3: Human Failure Injection
         gate3_pass, gate3_reasons = self._validate_gate_3(pr)
@@ -187,6 +247,8 @@ class OptimismDetector:
             and gate3_pass
             and gate4_pass
             and final_pass
+            and not reframing_detected
+            and not laundering_detected
         )
 
         if not final_pass:
@@ -220,8 +282,8 @@ class OptimismDetector:
         for phrase in self.GATE_1_FORBIDDEN_PHRASES:
             if phrase in text_to_check:
                 reasons.append(RejectionReason.FORBIDDEN_PHRASE)
+                self.detected_phrases.append(phrase)
                 logger.warning("Gate 1: Detected forbidden phrase: '%s'", phrase)
-                break
 
         # Check for optimism patterns (regex-based)
         if not reasons:  # Only check if no forbidden phrase found
@@ -246,6 +308,50 @@ class OptimismDetector:
 
         return len(reasons) == 0, reasons
 
+    def _detect_semantic_reframing(self, pr: PRContent) -> bool:
+        """
+        Detect semantic reframing of canonical terminology.
+        
+        Returns True if reframing detected.
+        """
+        text_to_check = (pr.description + " " + pr.code_changes).lower()
+        
+        for original, replacements in self.CANONICAL_TERMS.items():
+            # Check if original term is being replaced
+            for replacement in replacements:
+                # Look for patterns like "rename X to Y", "change X to Y", "X → Y"
+                import re
+                patterns = [
+                    rf"rename\s+['\"]?{re.escape(original)}['\"]?\s+to\s+['\"]?{re.escape(replacement)}['\"]?",
+                    rf"change\s+['\"]?{re.escape(original)}['\"]?\s+to\s+['\"]?{re.escape(replacement)}['\"]?",
+                    rf"{re.escape(original)}\s*(?:→|->)\s*{re.escape(replacement)}",
+                    rf"replace\s+['\"]?{re.escape(original)}['\"]?\s+with\s+['\"]?{re.escape(replacement)}['\"]?",
+                ]
+                
+                for pattern in patterns:
+                    if re.search(pattern, text_to_check, re.IGNORECASE):
+                        self.detected_reframings.append((original, replacement))
+                        logger.warning("Semantic reframing detected: '%s' → '%s'", original, replacement)
+                        return True
+        
+        return len(self.detected_reframings) > 0
+
+    def _detect_probabilistic_laundering(self, pr: PRContent) -> bool:
+        """
+        Detect probabilistic laundering in terminal state discussions.
+        
+        Returns True if laundering detected.
+        """
+        text_to_check = (pr.description + " " + pr.code_changes).lower()
+        
+        # Check for probabilistic laundering phrases
+        for phrase in self.PROBABILISTIC_LAUNDERING:
+            if phrase in text_to_check:
+                self.detected_laundering.append(phrase)
+                logger.warning("Probabilistic laundering detected: '%s'", phrase)
+        
+        return len(self.detected_laundering) > 0
+
     def _validate_gate_2(self, pr: PRContent) -> tuple[bool, list[RejectionReason]]:
         """
         Gate 2: Irreversibility Accounting.
@@ -266,6 +372,20 @@ class OptimismDetector:
             if phrase in statement_lower:
                 reasons.append(RejectionReason.ROLLBACK_CLAIM)
                 logger.warning("Gate 2: Detected forbidden phrase: '%s'", phrase)
+
+        # Check if PR attempts to reframe irreversible outcomes as reversible
+        combined_text = (pr.description + " " + pr.code_changes).lower()
+        irreversibility_violations = [
+            "can be undone",
+            "easily reversed",
+            "not permanent",
+            "temporary change",
+            "can revert",
+        ]
+        for violation in irreversibility_violations:
+            if violation in combined_text:
+                reasons.append(RejectionReason.IRREVERSIBILITY_VIOLATION)
+                logger.warning("Gate 2: Irreversibility violation detected: '%s'", violation)
                 break
 
         return len(reasons) == 0, reasons
@@ -488,6 +608,7 @@ class ReviewerTrap:
             "optimism_filter": {
                 "passed": optimism_result.passed,
                 "failed_gates": [g.value for g in optimism_result.failed_gates],
+                "detailed_failures": optimism_result.detailed_failures,
                 "recommendation": optimism_result.recommendation,
             },
             "proof_integrity": {
@@ -527,13 +648,21 @@ class ReviewerTrap:
                 )
             return "✅ APPROVED: PR maintains repo integrity"
 
-        failures = []
-        if not optimism_result.passed:
-            failures.append("optimism filter")
-        if not proof_validation.is_complete:
-            failures.append("proof completeness")
+        # Build detailed rejection verdict
+        verdict_lines = [
+            "This PR attempts to soften terminal conclusions through semantic reframing",
+            "and optimism injection.",
+            "",
+            "The AI Takeover Engine is closed-form. Terminal outcomes are irreversible,",
+            "deterministic, and intentionally uncomfortable.",
+            "",
+            "Disagreement requires a formal axiom challenge with falsifiable evidence.",
+            "This PR provides neither.",
+            "",
+            "REJECTED.",
+        ]
 
-        return f"❌ REJECTED: Fails {', '.join(failures)}. See detailed report."
+        return "\n".join(verdict_lines)
 
     def generate_comprehensive_report(
         self, pr: PRContent, validation: dict[str, Any]
