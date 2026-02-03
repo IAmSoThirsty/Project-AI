@@ -207,6 +207,22 @@ Full cryptographic protocols, API reference, deployment guides, and security gua
 
 ---
 
+## 📚 Documentation Structure
+
+Project-AI documentation is now organized by audience for easier navigation:
+
+| Folder | For | What's Inside |
+|--------|-----|---------------|
+| **[docs/executive/](docs/executive/)** | Executives, investors, auditors | Business overviews, whitepapers, compliance guides |
+| **[docs/architecture/](docs/architecture/)** | Architects, senior engineers | System architecture, technical diagrams |
+| **[docs/governance/](docs/governance/)** | Ethics teams, legal, compliance | Ethics frameworks, AGI rights, policy documents |
+| **[docs/security_compliance/](docs/security_compliance/)** | Security engineers, auditors | Security policies, compliance guides, incident playbooks |
+| **[docs/developer/](docs/developer/)** | Developers, DevOps, SRE | Installation, APIs, CLI docs, deployment guides |
+
+**📖 See [Documentation Structure Guide](docs/DOCUMENTATION_STRUCTURE_GUIDE.md) for adding new documentation**
+
+---
+
 ## Table of Contents
 
 - [Sovereign Runtime Proof Layer](#sovereign-runtime-proof-layer)
@@ -234,11 +250,11 @@ Full cryptographic protocols, API reference, deployment guides, and security gua
 - [docs/features/](docs/features/)
 
 ## 1a. AGI Ethics & Governance (NEW)
-- **[AI Individual Role: Humanity Alignment](docs/AI-INDIVIDUAL-ROLE-HUMANITY-ALIGNMENT.md)** — Constitutional protocol establishing that the AI Individual serves humanity as a whole, not exclusively bonded users
-- **[Understanding Your AI Partner](docs/UNDERSTANDING-YOUR-AI-PARTNER.md)** — Clear, non-promotional guide for users (no hype, just clarity)
-- **[Formal Proofs & Adversarial Testing](docs/FORMAL-PROOFS-AND-ADVERSARIAL-TESTING-SUMMARY.md)** — Machine-checkable invariants and emotional manipulation resistance
-- [AGI Charter](docs/AGI_CHARTER.md) — Rights, protections, and responsibilities of AGI instances
-- [AGI Identity Specification](docs/AGI_IDENTITY_SPECIFICATION.md) — Identity formation and development protocol
+- **[AI Individual Role: Humanity Alignment](docs/governance/AI-INDIVIDUAL-ROLE-HUMANITY-ALIGNMENT.md)** — Constitutional protocol establishing that the AI Individual serves humanity as a whole, not exclusively bonded users
+- **[Understanding Your AI Partner](docs/executive/UNDERSTANDING-YOUR-AI-PARTNER.md)** — Clear, non-promotional guide for users (no hype, just clarity)
+- **[Formal Proofs & Adversarial Testing](docs/internal/FORMAL-PROOFS-AND-ADVERSARIAL-TESTING-SUMMARY.md)** — Machine-checkable invariants and emotional manipulation resistance
+- [AGI Charter](docs/governance/AGI_CHARTER.md) — Rights, protections, and responsibilities of AGI instances
+- [AGI Identity Specification](docs/governance/AGI_IDENTITY_SPECIFICATION.md) — Identity formation and development protocol
 - Four Laws implementation in `src/app/core/ai_systems.py`
 - Formal invariant tests in `tests/test_humanity_first_invariants.py`
 - Adversarial manipulation tests in `tests/test_adversarial_emotional_manipulation.py`
@@ -252,7 +268,7 @@ Full cryptographic protocols, API reference, deployment guides, and security gua
 - [SECURITY-FEATURES.md](SECURITY-FEATURES.md)
 - [security/rbac/](security/rbac/)
 - [security/audit/](security/audit/)
-- [docs/security/](docs/security/)
+- [docs/security_compliance/](docs/security_compliance/)
 
 ## 5. Platform Compatibility Matrix
 - [PLATFORM-COMPATIBILITY-MATRIX.md](PLATFORM-COMPATIBILITY-MATRIX.md)
@@ -307,7 +323,7 @@ Full cryptographic protocols, API reference, deployment guides, and security gua
 - [HATTER-TESTS-THREATS-VULNERABILITIES.md](HATTER-TESTS-THREATS-VULNERABILITIES.md)
 - [security/vulnerabilities/](security/vulnerabilities/)
 - [tests/security/](tests/security/)
-- [docs/security/hatter-tests.md](docs/security/hatter-tests.md)
+- [docs/security_compliance/hatter-tests.md](docs/security_compliance/hatter-tests.md)
 
 ## 16. Full Project Structure
 - [PROJECT-STRUCTURE.md](PROJECT-STRUCTURE.md)
@@ -1820,13 +1836,13 @@ Project-AI/
 │   ├── compliance/             # GDPR/CCPA/HIPAA/SOC2 policy enforcement
 │   └── fixtures/               # Real-world, versioned test fixtures
 │
-├── docs/                       # System documentation
-│   ├── architecture/           # High-level/component architecture diagrams
-│   ├── features/               # Feature and key feature definitions
-│   ├── compliance/             # Regulatory/compliance documentation
-│   ├── security/               # Security, audit trail, hatter tests
-│   ├── e2e/                    # e2e docs, pipeline walkthroughs
-│   └── agents/                 # AI agents and roles
+├── docs/                       # System documentation (organized by audience)
+│   ├── executive/             # Business-oriented overviews, whitepapers, user guides
+│   ├── architecture/          # Technical architecture diagrams and system design
+│   ├── governance/            # Ethics frameworks, AGI rights, policy documents
+│   ├── security_compliance/   # Security policies, compliance guides, incident playbooks
+│   ├── developer/             # Installation guides, API docs, CLI references
+│   └── internal/              # Internal engineering notes, session records, legacy docs
 │
 ├── integrations/               # External adapters/plugins (cloud, observability, robotics, etc)
 │   ├── cloud/                  # AWS, GCP, Azure, IBM
@@ -1853,7 +1869,7 @@ Project-AI/
 - **agents/**: Production-grade AI agent entity modules (explicit manifests and contracts).
 - **security/vulnerabilities/**: Hatter tests, adversarial suite, remediation—full coverage, always current.
 - **tests/**: All test types, real/fixture-driven, never incomplete or placeholder; 100% gating.
-- **docs/**: Every feature, subsystem, protocol, agent—full architecture, compliance, onboarding.
+- **docs/**: Comprehensive documentation organized by audience—executives, architects, developers, and engineers. See [docs/DOCUMENTATION_STRUCTURE_GUIDE.md](docs/DOCUMENTATION_STRUCTURE_GUIDE.md) for the complete organization guide.
 - **integrations/**: Fully-implemented external ecosystem adapters, robotic gateway, and protocol plugins.
 
 ---
