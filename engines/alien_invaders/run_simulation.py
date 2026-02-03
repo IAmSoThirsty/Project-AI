@@ -12,7 +12,7 @@ from pathlib import Path
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from engines.alien_invaders import AlienInvadersEngine, SimulationConfig, load_scenario_preset
+from engines.alien_invaders import AlienInvadersEngine, load_scenario_preset
 
 # Configure logging
 logging.basicConfig(
@@ -33,12 +33,12 @@ def run_simulation(
 ) -> bool:
     """
     Run a complete AICPD simulation.
-    
+
     Args:
         scenario: Scenario preset name
         duration_years: Simulation duration in years
         output_dir: Output directory for artifacts
-        
+
     Returns:
         bool: True if simulation completed successfully
     """
@@ -49,33 +49,33 @@ def run_simulation(
     logger.info("Duration: %d years", duration_years)
     logger.info("Output: %s", output_dir)
     logger.info("=" * 80)
-    
+
     try:
         # Load configuration
         config = load_scenario_preset(scenario)
         config.world.simulation_duration_years = duration_years
         config.artifacts.artifact_dir = output_dir
-        
+
         # Create engine
         engine = AlienInvadersEngine(config)
-        
+
         # Initialize
         if not engine.init():
             logger.error("Failed to initialize simulation")
             return False
-        
+
         # Calculate total ticks
         total_days = duration_years * 365
         total_ticks = total_days // config.world.time_step_days
-        
+
         logger.info("Starting simulation: %d ticks over %d years", total_ticks, duration_years)
-        
+
         # Run simulation
         for tick_num in range(total_ticks):
             if not engine.tick():
                 logger.error("Simulation failed at tick %d", tick_num)
                 return False
-            
+
             # Progress logging
             if (tick_num + 1) % 12 == 0:  # Every year (12 months)
                 year = (tick_num + 1) // 12
@@ -87,14 +87,14 @@ def run_simulation(
                     state["casualties"],
                     state["average_morale"],
                 )
-                
+
                 alien_state = engine.observe("aliens")
                 logger.info(
                     "  Aliens: Ships=%d, Control=%.1f%%",
                     alien_state["alien_ships"],
                     alien_state["control_percentage"],
                 )
-            
+
             # Inject random events occasionally
             if tick_num % 24 == 0 and tick_num > 0:  # Every 2 years
                 engine.inject_event(
@@ -104,13 +104,13 @@ def run_simulation(
                         "description": "Random crisis event for realism",
                     },
                 )
-        
+
         # Export artifacts
         logger.info("Simulation complete. Exporting artifacts...")
         if not engine.export_artifacts(output_dir):
             logger.error("Failed to export artifacts")
             return False
-        
+
         # Final summary
         final_state = engine.observe()
         logger.info("=" * 80)
@@ -125,9 +125,9 @@ def run_simulation(
         logger.info("=" * 80)
         logger.info("Artifacts saved to: %s", output_dir)
         logger.info("=" * 80)
-        
+
         return True
-        
+
     except Exception as e:
         logger.error("Simulation failed with exception: %s", e, exc_info=True)
         return False
@@ -138,7 +138,7 @@ def main():
     parser = argparse.ArgumentParser(
         description="Alien Invaders Contingency Plan Defense Engine - Simulation Runner"
     )
-    
+
     parser.add_argument(
         "--scenario",
         type=str,
@@ -146,21 +146,21 @@ def main():
         choices=["standard", "aggressive", "peaceful", "extinction"],
         help="Scenario preset to run",
     )
-    
+
     parser.add_argument(
         "--duration",
         type=int,
         default=5,
         help="Simulation duration in years (default: 5)",
     )
-    
+
     parser.add_argument(
         "--output",
         type=str,
         default="engines/alien_invaders/artifacts",
         help="Output directory for artifacts",
     )
-    
+
     parser.add_argument(
         "--log-level",
         type=str,
@@ -168,19 +168,19 @@ def main():
         choices=["DEBUG", "INFO", "WARNING", "ERROR"],
         help="Logging level",
     )
-    
+
     args = parser.parse_args()
-    
+
     # Set log level
     logging.getLogger().setLevel(getattr(logging, args.log_level))
-    
+
     # Run simulation
     success = run_simulation(
         scenario=args.scenario,
         duration_years=args.duration,
         output_dir=args.output,
     )
-    
+
     return 0 if success else 1
 
 

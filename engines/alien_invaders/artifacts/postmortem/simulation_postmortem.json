@@ -54,9 +54,9 @@
   },
   "simulation_duration": {
     "start_date": "2026-01-01T00:00:00",
-    "end_date": "2030-12-06T00:00:00",
-    "total_days": 1800,
-    "total_years": 4.931506849315069
+    "end_date": "2026-12-27T00:00:00",
+    "total_days": 360,
+    "total_years": 0.9863013698630136
   },
   "final_state": {
     "global_population": 8000000000,
@@ -65,19 +65,19 @@
     "total_casualties": 0,
     "global_gdp": 100000000000000.0,
     "alien_control_pct": 0.0,
-    "average_morale": 0.6516025944877311,
+    "average_morale": 0.6638426557044704,
     "ai_operational": true
   },
   "alien_metrics": {
-    "ships_in_system": 6,
-    "ground_forces": 274,
-    "resource_extraction_total": 0.3491037068162631,
+    "ships_in_system": 3,
+    "ground_forces": 148,
+    "resource_extraction_total": 0.20684628485551537,
     "contact_established": false,
     "negotiations_attempted": false
   },
   "key_events": [],
   "validation_summary": {
-    "total_validations": 61,
+    "total_validations": 13,
     "failed_validations": 0,
     "conservation_violations": 0
   },
