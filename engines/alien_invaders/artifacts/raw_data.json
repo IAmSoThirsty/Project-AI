@@ -1,0 +1,83 @@
+{
+  "events": [],
+  "validation_history": [
+    {
+      "timestamp": "2026-01-01T00:00:00",
+      "is_valid": true,
+      "violations": [],
+      "population_delta": 0
+    },
+    {
+      "timestamp": "2026-01-31T00:00:00",
+      "is_valid": true,
+      "violations": [],
+      "population_delta": 0
+    },
+    {
+      "timestamp": "2026-03-02T00:00:00",
+      "is_valid": true,
+      "violations": [],
+      "population_delta": 0
+    },
+    {
+      "timestamp": "2026-04-01T00:00:00",
+      "is_valid": true,
+      "violations": [],
+      "population_delta": 0
+    },
+    {
+      "timestamp": "2026-05-01T00:00:00",
+      "is_valid": true,
+      "violations": [],
+      "population_delta": 0
+    },
+    {
+      "timestamp": "2026-05-31T00:00:00",
+      "is_valid": true,
+      "violations": [],
+      "population_delta": 0
+    },
+    {
+      "timestamp": "2026-06-30T00:00:00",
+      "is_valid": true,
+      "violations": [],
+      "population_delta": 0
+    },
+    {
+      "timestamp": "2026-07-30T00:00:00",
+      "is_valid": true,
+      "violations": [],
+      "population_delta": 0
+    },
+    {
+      "timestamp": "2026-08-29T00:00:00",
+      "is_valid": true,
+      "violations": [],
+      "population_delta": 0
+    },
+    {
+      "timestamp": "2026-09-28T00:00:00",
+      "is_valid": true,
+      "violations": [],
+      "population_delta": 0
+    },
+    {
+      "timestamp": "2026-10-28T00:00:00",
+      "is_valid": true,
+      "violations": [],
+      "population_delta": 0
+    },
+    {
+      "timestamp": "2026-11-27T00:00:00",
+      "is_valid": true,
+      "violations": [],
+      "population_delta": 0
+    },
+    {
+      "timestamp": "2026-12-27T00:00:00",
+      "is_valid": true,
+      "violations": [],
+      "population_delta": 0
+    }
+  ]
+}
