@@ -1,0 +1,35 @@
+{
+  "stage": "agent_chain",
+  "type": "agent_chain",
+  "status": "success",
+  "timestamp": "2026-02-03T22:09:02.515311",
+  "role_signature": {
+    "role": "pipeline_executor",
+    "payload_hash": "19278c2711d9d8255cc2f7e72cd3ccc35602025fb1aa366becb62703b60550fc",
+    "signature": "ef64e3ddcc9bf57dd7705707caff7770ce5e4f9ffc7430f732d533b5bff8059dde0deb2ee0eaedf1a1faa39930e5a1035767f21ba9d9d4525d3b333b43c9ed09",
+    "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+    "timestamp": "2026-02-03T22:09:02.514515"
+  },
+  "policy_binding": {
+    "policy_hash": "950c6be9c046f561131d1ee08eaf27e8c4179812819e19a86d800358d53d76d3",
+    "context_hash": "23ba5f48f47a93f452538333c7ccf362babe9bac20e3dc491eb81908008c397a",
+    "binding_hash": "a1213757598300dbe7d23b68fea5036c1381c15128491b01dc2fdd16141ea083",
+    "signature": "52053dcc4424f679197d127991a3dec23ce6c18ccfdd34c792ca47f7350fe85de293745c519f978bdca9f30b1af04febbb22968ba549a73832a3668ae573bb09",
+    "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+    "timestamp": "2026-02-03T22:09:02.514926"
+  },
+  "output": {
+    "chain_name": "sovereign_demo_chain",
+    "agents": [
+      "planner",
+      "validator",
+      "executor",
+      "oversight"
+    ],
+    "decisions_made": 5,
+    "consensus_reached": true,
+    "execution_path": "approved",
+    "chain_hash": "16a25ca427f7cc315ab8e3d37e2162aac8836e053579b91f9cac15e9aa7ea993"
+  },
+  "artifact_hash": "f4304711b1c7f2bd66d84a18b71ce3082d8dfe443950309d80fd7e6bac992107"
+}
