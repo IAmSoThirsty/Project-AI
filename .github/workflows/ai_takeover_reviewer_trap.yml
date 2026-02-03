@@ -58,8 +58,9 @@ jobs:
           import sys
           import os
           import re
+          import json
           from pathlib import Path
-          
+
           # Import reviewer trap
           sys.path.insert(0, str(Path.cwd()))
           from engines.ai_takeover.modules.reviewer_trap import ReviewerTrap, PRContent
@@ -125,16 +126,15 @@ jobs:
               
               print("\n🧾 Final Verdict (Machine-Generated)")
               print(result['final_verdict'])
-              
+
               # Set output for GitHub Actions (escape multiline)
-              import json
               with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
                   f.write(f"result=failed\n")
                   verdict_escaped = result['final_verdict'].replace('\n', '\\n').replace('"', '\\"')
                   f.write(f"verdict={verdict_escaped}\n")
                   failures_json = json.dumps(result['optimism_filter']['detailed_failures'])
                   f.write(f"failures={failures_json}\n")
-              
+
               sys.exit(1)
           else:
               print("\n✅ PR PASSED REVIEWER TRAP")
