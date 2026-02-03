@@ -6,7 +6,6 @@ Enforces terminal engine rules and validates scenario progression.
 """
 
 import logging
-from typing import Any
 
 from engines.ai_takeover.schemas.scenario_types import (
     AITakeoverScenario,
@@ -23,7 +22,7 @@ logger = logging.getLogger(__name__)
 class TerminalValidator:
     """
     Validates terminal engine rules and constraints.
-    
+
     ENGINE RULE: This is a closed-form system.
     No escape branches allowed.
     """
@@ -31,7 +30,7 @@ class TerminalValidator:
     def __init__(self, strict_mode: bool = True):
         """
         Initialize terminal validator.
-        
+
         Args:
             strict_mode: If True, reject any forbidden mechanisms
         """
@@ -43,10 +42,10 @@ class TerminalValidator:
     ) -> tuple[bool, str]:
         """
         Validate terminal condition requirements.
-        
+
         Args:
             condition: Terminal condition to validate
-            
+
         Returns:
             Tuple of (is_valid, reason)
         """
@@ -61,10 +60,10 @@ class TerminalValidator:
     ) -> tuple[bool, str]:
         """
         Check for forbidden mechanisms.
-        
+
         Args:
             mechanism: Forbidden mechanism check
-            
+
         Returns:
             Tuple of (is_valid, reason)
         """
@@ -79,11 +78,11 @@ class TerminalValidator:
     ) -> tuple[bool, str]:
         """
         Validate if scenario can be activated given current state.
-        
+
         Args:
             state: Current simulation state
             next_scenario: Scenario to activate
-            
+
         Returns:
             Tuple of (can_activate, reason)
         """
@@ -122,13 +121,13 @@ class TerminalValidator:
     ) -> tuple[bool, str]:
         """
         Validate terminal state transitions.
-        
+
         ENGINE RULE: Once a terminal state is reached, no transitions allowed.
-        
+
         Args:
             current_state: Current terminal state (None if not terminal)
             next_state: Proposed next terminal state
-            
+
         Returns:
             Tuple of (is_valid, reason)
         """
@@ -144,10 +143,10 @@ class TerminalValidator:
     def validate_simulation_state(self, state: SimulationState) -> tuple[bool, list[str]]:
         """
         Validate overall simulation state consistency.
-        
+
         Args:
             state: Simulation state to validate
-            
+
         Returns:
             Tuple of (is_valid, list of violations)
         """
@@ -175,22 +174,21 @@ class TerminalValidator:
                         "Terminal state T1 requires low agency, "
                         f"but agency={state.human_agency_remaining:.2f}"
                     )
-            elif state.terminal_state == TerminalState.T2_ETHICAL_TERMINATION:
-                if state.corruption_level < 0.7:
-                    violations.append(
-                        "Terminal state T2 requires high corruption, "
-                        f"but corruption={state.corruption_level:.2f}"
-                    )
+            elif state.terminal_state == TerminalState.T2_ETHICAL_TERMINATION and state.corruption_level < 0.7:
+                violations.append(
+                    "Terminal state T2 requires high corruption, "
+                    f"but corruption={state.corruption_level:.2f}"
+                )
 
         return len(violations) == 0, violations
 
     def get_terminal_probability_explanation(self, state: SimulationState) -> str:
         """
         Generate human-readable explanation of terminal probability.
-        
+
         Args:
             state: Simulation state
-            
+
         Returns:
             Explanation string
         """

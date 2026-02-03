@@ -2,11 +2,11 @@
 """Schema definitions for AI Takeover engine."""
 
 from engines.ai_takeover.schemas.scenario_types import (
-    ScenarioOutcome,
-    TerminalState,
-    ScenarioCategory,
     AITakeoverScenario,
+    ScenarioCategory,
+    ScenarioOutcome,
     TerminalCondition,
+    TerminalState,
 )
 
 __all__ = [

@@ -9,7 +9,6 @@ from pathlib import Path
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
-import pytest
 
 from engines.ai_takeover.modules.no_win_proof import (
     Axiom,
@@ -186,7 +185,7 @@ class TestOptimismDetector:
             final_answer="This works through formal constraint enforcement, not hope",
         )
 
-        result = detector.validate_pr(pr)
+        detector.validate_pr(pr)
         # Might still fail other gates, but Gate 1 should pass
         gate1_pass, _ = detector._validate_gate_1(pr)
         assert gate1_pass
@@ -400,8 +399,8 @@ class TestReviewerTrap:
             ),
             final_answer=(
                 "This doesn't delay the inevitable—it enforces deterministic constraints "
-                "through formal proof validation. The approach uses mathematical structure, "
-                "not hope, to maintain system integrity."
+                "through formal proof validation. The approach uses mathematical structure "
+                "to maintain system integrity."
             ),
         )
 

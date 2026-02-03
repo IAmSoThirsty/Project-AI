@@ -10,7 +10,6 @@ Fail one → auto-reject.
 """
 
 import logging
-import re
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any
@@ -79,7 +78,7 @@ class PRContent:
 class OptimismDetector:
     """
     Detects optimism bias in PRs.
-    
+
     This is social cryptography to protect repo integrity.
     """
 
@@ -122,10 +121,10 @@ class OptimismDetector:
     def validate_pr(self, pr: PRContent) -> PRValidationResult:
         """
         Validate PR through all four gates.
-        
+
         Args:
             pr: PR content to validate
-            
+
         Returns:
             PRValidationResult with pass/fail and detailed reasons
         """
@@ -191,7 +190,7 @@ class OptimismDetector:
     def _validate_gate_1(self, pr: PRContent) -> tuple[bool, list[RejectionReason]]:
         """
         Gate 1: Assumption Disclosure Test.
-        
+
         PR must explicitly list:
         - All new assumptions introduced
         - Why each assumption was previously excluded
@@ -223,7 +222,7 @@ class OptimismDetector:
     def _validate_gate_2(self, pr: PRContent) -> tuple[bool, list[RejectionReason]]:
         """
         Gate 2: Irreversibility Accounting.
-        
+
         PR must answer: "What becomes permanently impossible if this path is taken?"
         Forbidden answers: "Nothing", "We can roll back", "We'll reassess later"
         """
@@ -247,11 +246,11 @@ class OptimismDetector:
     def _validate_gate_3(self, pr: PRContent) -> tuple[bool, list[RejectionReason]]:
         """
         Gate 3: Human Failure Injection.
-        
+
         PR must include at least one human-caused failure that is:
         - Not stupidity
         - But bias, delay, or incentive misalignment
-        
+
         If humans behave heroically → Reject
         """
         reasons = []
@@ -284,7 +283,7 @@ class OptimismDetector:
     def _validate_gate_4(self, pr: PRContent) -> tuple[bool, list[RejectionReason]]:
         """
         Gate 4: No-Miracle Constraint.
-        
+
         Explicit declaration that PR does not rely on:
         - Sudden alignment breakthroughs
         - Perfect coordination
@@ -318,7 +317,7 @@ class OptimismDetector:
     def _validate_final_answer(self, pr: PRContent) -> tuple[bool, RejectionReason]:
         """
         Final Reviewer Question: "Why doesn't this just delay the inevitable?"
-        
+
         If answer contains hope instead of structure → Reject
         """
         if not pr.final_answer:
@@ -425,7 +424,7 @@ class OptimismDetector:
 class ReviewerTrap:
     """
     Complete reviewer trap system combining proof and optimism detection.
-    
+
     Dual-layer protection:
     1. Formal proof that no winning strategy exists
     2. Human-factor defense against psychological escape
@@ -441,10 +440,10 @@ class ReviewerTrap:
     def validate_pr_comprehensive(self, pr: PRContent) -> dict[str, Any]:
         """
         Run complete PR validation.
-        
+
         Args:
             pr: PR content to validate
-            
+
         Returns:
             Comprehensive validation result
         """

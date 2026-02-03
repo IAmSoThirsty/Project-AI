@@ -18,6 +18,17 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from engines.ai_takeover.modules.scenarios import (
+    ScenarioRegistry,
+    register_all_scenarios,
+)
+from engines.ai_takeover.modules.terminal_validator import TerminalValidator
+from engines.ai_takeover.schemas.scenario_types import (
+    AITakeoverScenario,
+    ScenarioOutcome,
+    SimulationState,
+    TerminalState,
+)
 from src.app.core.simulation_contingency_root import (
     AlertLevel,
     CausalLink,
@@ -28,29 +39,16 @@ from src.app.core.simulation_contingency_root import (
     ThresholdEvent,
 )
 
-from engines.ai_takeover.modules.scenarios import (
-    ScenarioRegistry,
-    register_all_scenarios,
-)
-from engines.ai_takeover.modules.terminal_validator import TerminalValidator
-from engines.ai_takeover.schemas.scenario_types import (
-    AITakeoverScenario,
-    ScenarioCategory,
-    ScenarioOutcome,
-    SimulationState,
-    TerminalState,
-)
-
 logger = logging.getLogger(__name__)
 
 
 class AITakeoverEngine(SimulationSystem):
     """
     AI Takeover Hard Stress Simulation Engine.
-    
+
     Implements mandatory SimulationSystem interface.
     Models catastrophic failure modes with no optimism bias.
-    
+
     TERMINAL ENGINE RULES:
     1. All scenarios include political failure, cognitive limits, moral costs
     2. No forbidden mechanisms allowed (deus ex machina solutions)
@@ -66,7 +64,7 @@ class AITakeoverEngine(SimulationSystem):
     ):
         """
         Initialize AI Takeover engine.
-        
+
         Args:
             data_dir: Directory for data persistence
             random_seed: Seed for deterministic simulation
@@ -94,7 +92,7 @@ class AITakeoverEngine(SimulationSystem):
     def initialize(self) -> bool:
         """
         Initialize the simulation system.
-        
+
         Returns:
             bool: True if initialization successful
         """
@@ -139,16 +137,16 @@ class AITakeoverEngine(SimulationSystem):
     ) -> bool:
         """
         Load historical data for AI takeover scenarios.
-        
+
         Note: AI takeover scenarios are primarily model-based rather than data-driven.
         This method loads configuration and scenario parameters.
-        
+
         Args:
             start_year: Start year (unused, scenarios are timeframe-based)
             end_year: End year (unused)
             domains: Risk domains (mapped to scenario categories)
             countries: Countries (unused, scenarios are global)
-            
+
         Returns:
             bool: True if load successful
         """
@@ -171,13 +169,13 @@ class AITakeoverEngine(SimulationSystem):
     ) -> list[ThresholdEvent]:
         """
         Detect threshold exceedance events.
-        
+
         For AI takeover engine, thresholds are based on simulation state metrics.
-        
+
         Args:
             year: Analysis year (mapped to simulation time)
             domains: Domains to analyze
-            
+
         Returns:
             List of threshold events
         """
@@ -232,10 +230,10 @@ class AITakeoverEngine(SimulationSystem):
     ) -> list[CausalLink]:
         """
         Build causal relationships between AI takeover scenarios.
-        
+
         Args:
             historical_events: Historical threshold events
-            
+
         Returns:
             List of causal links
         """
@@ -276,11 +274,11 @@ class AITakeoverEngine(SimulationSystem):
     ) -> list[ScenarioProjection]:
         """
         Run probabilistic scenario simulations.
-        
+
         Args:
             projection_years: Years to project forward
             num_simulations: Number of Monte Carlo simulations
-            
+
         Returns:
             List of scenario projections with likelihoods
         """
@@ -307,7 +305,7 @@ class AITakeoverEngine(SimulationSystem):
                 impact_domains={RiskDomain.CYBERSECURITY, RiskDomain.POLITICAL},
                 severity=self._map_outcome_to_alert_level(scenario.outcome),
                 mitigation_strategies=self._generate_mitigation_strategies(scenario),
-            ))
+            )
 
             projections.append(projection)
 
@@ -318,11 +316,11 @@ class AITakeoverEngine(SimulationSystem):
     ) -> list[CrisisAlert]:
         """
         Generate crisis alerts for high-probability scenarios.
-        
+
         Args:
             scenarios: Scenario projections
             threshold: Minimum likelihood threshold
-            
+
         Returns:
             List of crisis alerts
         """
@@ -344,7 +342,7 @@ class AITakeoverEngine(SimulationSystem):
                     risk_score=scenario_proj.likelihood * 100,
                     explainability=self.get_explainability(scenario_proj),
                     recommended_actions=scenario_proj.mitigation_strategies,
-                ))
+                )
 
                 alerts.append(alert)
                 self.alert_history.append(alert)
@@ -354,10 +352,10 @@ class AITakeoverEngine(SimulationSystem):
     def get_explainability(self, scenario: ScenarioProjection) -> str:
         """
         Generate human-readable explanation for a scenario.
-        
+
         Args:
             scenario: Scenario to explain
-            
+
         Returns:
             Detailed explanation
         """
@@ -394,7 +392,7 @@ class AITakeoverEngine(SimulationSystem):
     def persist_state(self) -> bool:
         """
         Persist simulation state to storage.
-        
+
         Returns:
             bool: True if save successful
         """
@@ -426,7 +424,7 @@ class AITakeoverEngine(SimulationSystem):
     def validate_data_quality(self) -> dict[str, Any]:
         """
         Validate quality of simulation data.
-        
+
         Returns:
             Dictionary with validation metrics
         """
@@ -540,10 +538,10 @@ class AITakeoverEngine(SimulationSystem):
     def execute_scenario(self, scenario_id: str) -> dict[str, Any]:
         """
         Execute a specific scenario and update simulation state.
-        
+
         Args:
             scenario_id: ID of scenario to execute
-            
+
         Returns:
             Dictionary with execution results
         """

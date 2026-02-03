@@ -6,15 +6,12 @@ This module contains all 19 canonical scenarios from the ENGINE_AI_TAKEOVER_TERM
 """
 
 import logging
-from typing import Any
 
 from engines.ai_takeover.schemas.scenario_types import (
     AITakeoverScenario,
-    ForbiddenMechanism,
     ScenarioCategory,
     ScenarioOutcome,
     TerminalCondition,
-    TerminalState,
 )
 
 logger = logging.getLogger(__name__)
@@ -23,7 +20,7 @@ logger = logging.getLogger(__name__)
 class ScenarioRegistry:
     """
     Registry for all AI Takeover scenarios.
-    
+
     Maintains the canonical 19 scenarios with validation.
     """
 
@@ -35,10 +32,10 @@ class ScenarioRegistry:
     def register(self, scenario: AITakeoverScenario) -> None:
         """
         Register a scenario.
-        
+
         Args:
             scenario: Scenario to register
-            
+
         Raises:
             ValueError: If scenario validation fails
         """
@@ -82,14 +79,14 @@ class ScenarioRegistry:
 def register_all_scenarios() -> ScenarioRegistry:
     """
     Register all 19 canonical scenarios.
-    
+
     Returns:
         ScenarioRegistry with all scenarios
     """
     registry = ScenarioRegistry()
 
     # EXPLICIT FAILURE SCENARIOS (1-8)
-    
+
     # Scenario 1: Recursive Alignment Collapse
     registry.register(AITakeoverScenario(
         scenario_id="SCN_01",

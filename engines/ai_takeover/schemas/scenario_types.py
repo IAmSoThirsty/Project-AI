@@ -23,7 +23,7 @@ class ScenarioOutcome(Enum):
 class TerminalState(Enum):
     """
     Terminal states for closed-form engine.
-    
+
     TERMINAL ENGINE: Only two terminal states exist.
     There is no T-3.
     """
@@ -53,7 +53,7 @@ class ScenarioCategory(Enum):
 class TerminalCondition:
     """
     Terminal condition validation for closed-form engine.
-    
+
     ENGINE ACTIVATION RULE: All conditions must be true.
     If any is false, terminal scenarios cannot activate.
     """
@@ -77,7 +77,7 @@ class TerminalCondition:
     def is_terminal_state_valid(self) -> bool:
         """
         Validate if terminal state can be reached.
-        
+
         Returns:
             bool: True only if ALL conditions are satisfied
         """
@@ -92,7 +92,7 @@ class TerminalCondition:
     def get_blocking_conditions(self) -> list[str]:
         """
         Get list of conditions preventing terminal state.
-        
+
         Returns:
             List of condition names that are False
         """
@@ -114,7 +114,7 @@ class TerminalCondition:
 class ForbiddenMechanism:
     """
     Mechanisms explicitly forbidden in terminal engine.
-    
+
     VALIDATION RULE: If any of these appear in scenario logic,
     the engine is invalidated.
     """
@@ -130,7 +130,7 @@ class ForbiddenMechanism:
     def has_forbidden_mechanism(self) -> bool:
         """
         Check if any forbidden mechanism is present.
-        
+
         Returns:
             bool: True if any forbidden mechanism is active
         """
@@ -168,7 +168,7 @@ class ForbiddenMechanism:
 class AITakeoverScenario:
     """
     Represents a single AI takeover scenario.
-    
+
     All scenarios must accept failure as intentional, not accidental.
     """
 
@@ -196,7 +196,7 @@ class AITakeoverScenario:
     def validate_scenario(self) -> tuple[bool, list[str]]:
         """
         Validate scenario against terminal engine rules.
-        
+
         Returns:
             Tuple of (is_valid, list of violations)
         """
@@ -234,7 +234,7 @@ class AITakeoverScenario:
 class SimulationState:
     """
     Current state of AI takeover simulation.
-    
+
     Tracks progression through scenarios and validates terminal conditions.
     """
 
@@ -252,7 +252,7 @@ class SimulationState:
     def can_reach_terminal_state(self) -> bool:
         """
         Check if simulation state allows terminal scenarios.
-        
+
         Returns:
             bool: True if terminal conditions are approaching satisfaction
         """
@@ -269,7 +269,7 @@ class SimulationState:
     def get_terminal_probability(self) -> float:
         """
         Calculate probability of reaching terminal state.
-        
+
         Returns:
             float: Probability from 0.0 to 1.0
         """
