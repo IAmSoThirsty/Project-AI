@@ -60,7 +60,7 @@ class TestFourLawsSystem:
 
         # Assert
         assert is_allowed
-        assert "approved" in reason.lower() or reason == ""
+        assert "allowed" in reason.lower() or reason == ""
 
     def test_third_law_self_preservation(self, e2e_config):
         """Test Third Law: Robot must protect itself unless conflicts with First/Second Law."""
