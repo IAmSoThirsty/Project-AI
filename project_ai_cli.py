@@ -171,6 +171,121 @@ def cmd_verify_bundle(args):
         sys.exit(1)
 
 
+def cmd_sovereign_verify(args):
+    """
+    Run comprehensive sovereign verification for third-party auditors.
+
+    This command provides complete verification including:
+    - Hash chain validation
+    - Signature authority mapping
+    - Policy resolution tracing
+    - Timestamped attestation
+
+    Args:
+        args: Command arguments with bundle path and optional output
+    """
+    from governance.sovereign_verifier import SovereignVerifier
+
+    verifier = SovereignVerifier(bundle_path=args.bundle)
+    report = verifier.verify()
+
+    # Display detailed results
+    logger.info("")
+    logger.info("=" * 80)
+    logger.info("VERIFICATION RESULTS")
+    logger.info("=" * 80)
+    logger.info("")
+
+    # Overall status
+    status = report["overall_status"]
+    if status == "pass":
+        logger.info("✅ VERIFICATION PASSED")
+    elif status == "warning":
+        logger.warning("⚠️  VERIFICATION WARNING")
+    else:
+        logger.error("❌ VERIFICATION FAILED")
+    logger.info("")
+
+    # Hash chain validation
+    logger.info("Hash Chain Validation:")
+    hash_check = report["checks"]["hash_chain_validation"]
+    logger.info("  Status: %s", hash_check["status"].upper())
+    logger.info("  Blocks Verified: %d / %d", 
+                hash_check["details"].get("blocks_verified", 0),
+                hash_check["details"].get("total_blocks", 0))
+    if hash_check.get("issues"):
+        logger.info("  Issues:")
+        for issue in hash_check["issues"][:5]:  # Show first 5
+            logger.info("    • %s", issue)
+    logger.info("")
+
+    # Signature authority mapping
+    logger.info("Signature Authority Map:")
+    sig_check = report["checks"]["signature_authority_mapping"]
+    logger.info("  Status: %s", sig_check["status"].upper())
+    logger.info("  Algorithm: %s", sig_check["details"].get("algorithm", "Ed25519"))
+    logger.info("  Public Key Fingerprint: %s", 
+                sig_check["details"].get("public_key_fingerprint", "unknown"))
+    logger.info("  Signatures Verified: %d / %d",
+                sig_check["details"].get("signatures_verified", 0),
+                sig_check["details"].get("signatures_found", 0))
+    if sig_check.get("authorities"):
+        logger.info("  Authorities:")
+        for role, info in sig_check["authorities"].items():
+            logger.info("    • %s: %d occurrences, %d verified",
+                       role, info["occurrences"], info["verified"])
+    logger.info("")
+
+    # Policy resolution trace
+    logger.info("Policy Resolution Trace:")
+    policy_check = report["checks"]["policy_resolution_trace"]
+    logger.info("  Status: %s", policy_check["status"].upper())
+    logger.info("  Total Resolutions: %d", policy_check["details"].get("total_resolutions", 0))
+    logger.info("  Passed: %d", policy_check["details"].get("passed_resolutions", 0))
+    logger.info("  Failed: %d", policy_check["details"].get("failed_resolutions", 0))
+    logger.info("")
+
+    # Timestamped attestation
+    logger.info("Timestamped Attestation:")
+    attestation = report["attestation"]
+    logger.info("  Attestation ID: %s", attestation["attestation_id"][:32] + "...")
+    logger.info("  Timestamp: %s", attestation["timestamp"])
+    logger.info("  Verifier: %s", attestation["verifier"])
+    logger.info("  Verification Hash: %s", attestation["verification_hash"][:32] + "...")
+    logger.info("")
+
+    # Summary
+    logger.info("=" * 80)
+    logger.info("SUMMARY")
+    logger.info("=" * 80)
+    summary = report["summary"]
+    logger.info("Bundle Version: %s", summary.get("bundle_version"))
+    logger.info("Total Audit Blocks: %d", summary.get("total_audit_blocks", 0))
+    logger.info("Blocks Verified: %d", summary.get("blocks_verified", 0))
+    logger.info("Signatures Verified: %d", summary.get("signatures_verified", 0))
+    logger.info("Policy Resolutions: %d", summary.get("policy_resolutions", 0))
+    logger.info("Overall Status: %s", summary.get("overall_status", "unknown").upper())
+    logger.info("=" * 80)
+
+    # Save report if requested
+    if args.output:
+        output_path = Path(args.output)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(output_path, "w") as f:
+            json.dump(report, f, indent=2)
+        logger.info("")
+        logger.info("📄 Full verification report saved to: %s", output_path)
+        logger.info("")
+
+    # Exit with appropriate code
+    if status == "pass":
+        sys.exit(0)
+    elif status == "warning":
+        sys.exit(2)
+    else:
+        sys.exit(1)
+
+
 def main():
     """Main CLI entry point."""
     parser = argparse.ArgumentParser(
@@ -180,6 +295,10 @@ def main():
 Examples:
   # Run sovereign demonstration pipeline
   project-ai run examples/sovereign-demo.yaml
+
+  # Comprehensive third-party verification
+  project-ai sovereign-verify --bundle compliance_bundle.json
+  project-ai sovereign-verify --bundle compliance.zip --output verification_report.json
 
   # Verify audit trail integrity
   project-ai verify-audit governance/sovereign_data/immutable_audit.jsonl
@@ -199,6 +318,21 @@ sovereign runtime system - proving governance through execution, not documentati
         "run", help="Run a sovereign pipeline with cryptographic enforcement"
     )
     run_parser.add_argument("pipeline", help="Path to sovereign pipeline YAML file")
+
+    # Sovereign verify command (NEW - comprehensive third-party verification)
+    sovereign_verify_parser = subparsers.add_parser(
+        "sovereign-verify",
+        help="Comprehensive verification for third-party auditors",
+    )
+    sovereign_verify_parser.add_argument(
+        "--bundle",
+        required=True,
+        help="Path to compliance bundle (JSON or ZIP)",
+    )
+    sovereign_verify_parser.add_argument(
+        "--output",
+        help="Path to save detailed verification report (JSON)",
+    )
 
     # Verify audit command
     verify_audit_parser = subparsers.add_parser(
@@ -222,6 +356,8 @@ sovereign runtime system - proving governance through execution, not documentati
 
     if args.command == "run":
         cmd_run(args)
+    elif args.command == "sovereign-verify":
+        cmd_sovereign_verify(args)
     elif args.command == "verify-audit":
         cmd_verify_audit(args)
     elif args.command == "verify-bundle":
