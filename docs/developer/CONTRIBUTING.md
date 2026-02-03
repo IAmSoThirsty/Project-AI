@@ -3,11 +3,18 @@
 Thank you for your interest. To contribute:
 
 - **Read the [Copilot Workspace Profile](.github/copilot_workspace_profile.md)** - All contributions must meet production-grade standards
+- **For documentation**: See [Documentation Contributing Guide](../.github/CONTRIBUTING_DOCS.md)
 - Fork the repository.
 - Create a branch with a descriptive name.
 - Run tests locally: `pytest -q`.
 - Run linters: `ruff check .` and `mypy src`.
 - Open a pull request describing your changes.
+
+## 📚 Contributing Documentation
+
+**Before adding or moving documentation**, read:
+- [Documentation Contributing Guide](../.github/CONTRIBUTING_DOCS.md) - Where to place documentation
+- [Documentation Structure Guide](DOCUMENTATION_STRUCTURE_GUIDE.md) - Complete organization guide
 
 ## 🚨 Governance & Standards
 
