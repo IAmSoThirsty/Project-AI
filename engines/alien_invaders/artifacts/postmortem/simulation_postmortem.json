@@ -65,12 +65,12 @@
     "total_casualties": 0,
     "global_gdp": 100000000000000.0,
     "alien_control_pct": 0.0,
-    "average_morale": 0.6759895880605155,
+    "average_morale": 0.669979488626393,
     "ai_operational": true
   },
   "alien_metrics": {
-    "ships_in_system": 3,
-    "ground_forces": 231,
+    "ships_in_system": 1,
+    "ground_forces": 0,
     "resource_extraction_total": 0.20684628485551537,
     "contact_established": false,
     "negotiations_attempted": false
