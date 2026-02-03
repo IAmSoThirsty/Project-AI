@@ -73,6 +73,15 @@ class SQLiteStorage(StorageEngine):
     Recommended for production use.
     """
 
+    # Whitelist of allowed table names to prevent SQL injection
+    ALLOWED_TABLES = {
+        "governance_state",
+        "governance_decisions",
+        "execution_history",
+        "reflection_history",
+        "memory_records",
+    }
+
     def __init__(self, db_path: str = "data/cognition.db"):
         """
         Initialize SQLite storage engine.
@@ -100,6 +109,22 @@ class SQLiteStorage(StorageEngine):
                 yield conn
             finally:
                 conn.close()
+
+    def _validate_table_name(self, table: str) -> None:
+        """
+        Validate table name against whitelist.
+
+        Args:
+            table: Table name to validate
+
+        Raises:
+            ValueError: If table name is not in whitelist
+        """
+        if table not in self.ALLOWED_TABLES:
+            raise ValueError(
+                f"Invalid table name: {table}. "
+                f"Allowed tables: {', '.join(self.ALLOWED_TABLES)}"
+            )
 
     def initialize(self) -> None:
         """Initialize database schema."""
@@ -279,7 +304,9 @@ class SQLiteStorage(StorageEngine):
                         ),
                     )
                 else:
-                    # Generic table handling
+                    # Validate table name before generic handling
+                    self._validate_table_name(table)
+                    # Generic table handling (for reflection_history and memory_records)
                     cursor.execute(
                         f"INSERT OR REPLACE INTO {table} (key, data) VALUES (?, ?)",
                         (key, data_json),
@@ -316,13 +343,16 @@ class SQLiteStorage(StorageEngine):
                     "execution_history",
                     "reflection_history",
                 ]:
-                    # Get column name for primary key
+                    # Get column name for primary key (validated tables only)
                     pk_col = "decision_id" if table == "governance_decisions" else "trace_id"
                     if table == "reflection_history":
                         pk_col = "id"
 
+                    # Safe: table is validated against whitelist in elif condition
                     cursor.execute(f"SELECT * FROM {table} WHERE {pk_col} = ?", (key,))
                 else:
+                    # Validate table name before generic handling
+                    self._validate_table_name(table)
                     cursor.execute(f"SELECT data FROM {table} WHERE key = ?", (key,))
 
                 row = cursor.fetchone()
@@ -353,6 +383,9 @@ class SQLiteStorage(StorageEngine):
             List of matching records
         """
         try:
+            # Validate table name first
+            self._validate_table_name(table)
+
             with self._get_connection() as conn:
                 cursor = conn.cursor()
 
@@ -360,9 +393,11 @@ class SQLiteStorage(StorageEngine):
                     # Build WHERE clause
                     conditions = [f"{k} = ?" for k in filters.keys()]
                     where_clause = " AND ".join(conditions)
+                    # Safe: table is validated, and column names come from keys
                     query = f"SELECT * FROM {table} WHERE {where_clause}"
                     cursor.execute(query, tuple(filters.values()))
                 else:
+                    # Safe: table is validated
                     cursor.execute(f"SELECT * FROM {table}")
 
                 rows = cursor.fetchall()
@@ -398,6 +433,8 @@ class SQLiteStorage(StorageEngine):
                         "DELETE FROM execution_history WHERE trace_id = ?", (key,)
                     )
                 else:
+                    # Validate table name before generic handling
+                    self._validate_table_name(table)
                     cursor.execute(f"DELETE FROM {table} WHERE key = ?", (key,))
 
                 conn.commit()
