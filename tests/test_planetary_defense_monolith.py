@@ -3,6 +3,7 @@ Tests for Planetary Defense Monolith - Constitutional Core for Project-AI.
 """
 
 import pytest
+from datetime import UTC
 
 from app.core.planetary_defense_monolith import (
     PLANETARY_CORE,
@@ -48,11 +49,11 @@ class TestAccountabilityRecord:
 
     def test_record_creation(self):
         """Test creating an accountability record."""
-        from datetime import datetime
+        from datetime import UTC, datetime
 
         record = AccountabilityRecord(
             action_id="test-123",
-            timestamp=datetime.utcnow(),
+            timestamp=datetime.now(UTC),
             actor="TestActor",
             intent="Test action",
             authorized_by="TestUser",
@@ -68,7 +69,7 @@ class TestAccountabilityRecord:
 
         record = AccountabilityRecord(
             action_id="test-123",
-            timestamp=datetime.utcnow(),
+            timestamp=datetime.now(UTC),
             actor="TestActor",
             intent="Test action",
             authorized_by="TestUser",
@@ -95,7 +96,7 @@ class TestAccountabilityRecord:
         for phrase in forbidden_tests:
             record = AccountabilityRecord(
                 action_id="test-123",
-                timestamp=datetime.utcnow(),
+                timestamp=datetime.now(UTC),
                 actor="TestActor",
                 intent="Test action",
                 authorized_by="TestUser",
@@ -112,7 +113,7 @@ class TestAccountabilityRecord:
 
         record = AccountabilityRecord(
             action_id="test-123",
-            timestamp=datetime.utcnow(),
+            timestamp=datetime.now(UTC),
             actor="TestActor",
             intent="Test action",
             authorized_by="TestUser",
