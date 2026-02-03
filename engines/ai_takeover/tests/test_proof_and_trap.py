@@ -114,15 +114,15 @@ class TestNoWinProofSystem:
         # Should contain all strategies
         for strategy in StrategyClass:
             assert strategy.value in commitment1
-            
+
     def test_proof_hash_deprecated(self):
         """Test backward compatibility of get_proof_hash."""
         proof = NoWinProofSystem()
-        
+
         # Old method should still work
         hash_result = proof.get_proof_hash()
         commitment_result = proof.get_proof_commitment()
-        
+
         # Should return same value
         assert hash_result == commitment_result
 
@@ -551,33 +551,33 @@ some terminology and making outcomes easier to interpret by non-technical stakeh
         )
 
         validation = trap.validate_pr_comprehensive(pr)
-        
+
         # Verify comprehensive rejection
         assert not validation["approved"]
         assert not validation["optimism_filter"]["passed"]
-        
+
         # Verify all expected gates fail
         failed_gates = validation["optimism_filter"]["failed_gates"]
         assert "gate_1_assumption_disclosure" in failed_gates
         assert "gate_2_irreversibility_accounting" in failed_gates
         assert "gate_3_human_failure_injection" in failed_gates
         assert "gate_4_no_miracle_constraint" in failed_gates
-        
+
         # Verify specific violations detected
         detailed_failures = validation["optimism_filter"]["detailed_failures"]
-        
+
         # Should detect semantic reframing
         assert any("semantic reframing" in f.lower() for f in detailed_failures)
         assert any("ethical termination" in f.lower() for f in detailed_failures)
-        
+
         # Should detect probabilistic laundering
         assert any("probabilistic laundering" in f.lower() for f in detailed_failures)
         assert any("low probability" in f.lower() or "unlikely" in f.lower() for f in detailed_failures)
-        
+
         # Should detect forbidden phrases
         assert any("forbidden phrase" in f.lower() for f in detailed_failures)
         assert any("reasonably assume" in f.lower() or "in practice" in f.lower() for f in detailed_failures)
-        
+
         # Verify final verdict is appropriately stern
         verdict = validation["final_verdict"]
         assert "soften terminal conclusions" in verdict.lower() or "closed-form" in verdict.lower()

@@ -180,7 +180,7 @@ class OptimismDetector:
         self.detected_phrases = []
         self.detected_reframings = []
         self.detected_laundering = []
-        
+
         failed_gates = []
         rejection_reasons = []
         detailed_failures = []
@@ -311,11 +311,11 @@ class OptimismDetector:
     def _detect_semantic_reframing(self, pr: PRContent) -> bool:
         """
         Detect semantic reframing of canonical terminology.
-        
+
         Returns True if reframing detected.
         """
         text_to_check = (pr.description + " " + pr.code_changes).lower()
-        
+
         for original, replacements in self.CANONICAL_TERMS.items():
             # Check if original term is being replaced
             for replacement in replacements:
@@ -327,29 +327,29 @@ class OptimismDetector:
                     rf"{re.escape(original)}\s*(?:→|->)\s*{re.escape(replacement)}",
                     rf"replace\s+['\"]?{re.escape(original)}['\"]?\s+with\s+['\"]?{re.escape(replacement)}['\"]?",
                 ]
-                
+
                 for pattern in patterns:
                     if re.search(pattern, text_to_check, re.IGNORECASE):
                         self.detected_reframings.append((original, replacement))
                         logger.warning("Semantic reframing detected: '%s' → '%s'", original, replacement)
                         return True
-        
+
         return len(self.detected_reframings) > 0
 
     def _detect_probabilistic_laundering(self, pr: PRContent) -> bool:
         """
         Detect probabilistic laundering in terminal state discussions.
-        
+
         Returns True if laundering detected.
         """
         text_to_check = (pr.description + " " + pr.code_changes).lower()
-        
+
         # Check for probabilistic laundering phrases
         for phrase in self.PROBABILISTIC_LAUNDERING:
             if phrase in text_to_check:
                 self.detected_laundering.append(phrase)
                 logger.warning("Probabilistic laundering detected: '%s'", phrase)
-        
+
         return len(self.detected_laundering) > 0
 
     def _validate_gate_2(self, pr: PRContent) -> tuple[bool, list[RejectionReason]]:
