@@ -79,12 +79,6 @@
 ![Agent-Manifested](https://img.shields.io/badge/agents-manifested-orange)
 ![Tested-100%](https://img.shields.io/badge/test-100%25-important)
 ![Audit-Trail](https://img.shields.io/badge/audit-trail-success)
-![Cryptographic-Enforcement](https://img.shields.io/badge/governance-cryptographic--enforcement-red)
-![Non-Bypassable](https://img.shields.io/badge/kernel-non--bypassable-critical)
-![Signed-Policy](https://img.shields.io/badge/policy-signed--context-important)
-![Hash-Chain](https://img.shields.io/badge/audit-hash--chain-blue)
-![Sovereign-Runtime](https://img.shields.io/badge/runtime-sovereign--proof-purple)
-![Ed25519](https://img.shields.io/badge/crypto-Ed25519-success)
 
 ---
 
@@ -132,84 +126,10 @@ Deploying or reviewing Project‑AI requires full awareness of its categorical e
 
 ---
 
-# Sovereign Runtime Proof Layer
-
-## Cryptographically Enforced Governance
-
-Project‑AI implements the **Sovereign Runtime Proof Layer**—a cryptographically enforced governance system that transforms the platform from a "certification-ready specification" into a **provably non-bypassable control system**. This is not documentation. This is cryptographic enforcement where **failure is illegal by design**.
-
-### The Iron Path: Provable Sovereignty
-
-Every production workflow in sovereign mode generates:
-
-- **Config Snapshot Hash** (SHA-256): Immutable fingerprint of pipeline configuration
-- **Role Authorization Signature** (Ed25519): Cryptographically signed role assignments
-- **Policy Resolution Record**: Binding of policy state to execution context
-- **Kernel Execution Attestation**: Proof that governance was verified before execution
-- **Artifact Lineage Chain**: Hash-chained artifacts with tamper-evident provenance
-- **Immutable Audit Export Bundle**: Complete compliance package for regulatory review
-
-### Non-Bypassable Execution Path
-
-**Critical Enforcement:**  
-No kernel, agent, or pipeline can execute unless a **signed policy context** resolves true at runtime. This enforcement exists at **scheduler, kernel, and registry layers simultaneously**.
-
-```python
-# Execution BLOCKED without valid policy binding
-result = kernel.execute(action, context)
-# RuntimeError: "SOVEREIGN ENFORCEMENT: Execution blocked - no policy binding provided"
-
-# Execution AUTHORIZED with cryptographic proof
-policy_binding = sovereign.create_policy_state_binding(policy_state, context)
-result = kernel.execute(action, context, policy_binding=policy_binding)
-# Returns: {status: "success", sovereign_proof: {verified: true, binding_hash: "..."}}
-```
-
-### Deterministic Governance Chain
-
-Every state transition is **cryptographically chained** to its originating:
-- Config snapshot (immutable pipeline definition)
-- Role context (who is authorized)
-- Policy resolution (what is allowed)
-- Execution attestation (proof of enforcement)
-
-**Audit Trail**: Hash-chained blocks (blockchain-style) make tampering immediately detectable. Every block links to previous via SHA-256 hash. Modifying any historical entry breaks the chain.
-
-### The Iron Path Demonstration
-
-Run the complete sovereign proof pipeline:
-
-```bash
-# Execute end-to-end sovereign demonstration
-python project_ai_cli.py run examples/sovereign-demo.yaml
-
-# Output includes:
-# - 6 cryptographically signed stages
-# - Role signatures verified at each stage
-# - Policy bindings enforced before execution
-# - Artifacts with SHA-256 hashes
-# - Immutable audit trail
-# - Compliance bundle (ZIP/JSON) ready for review
-```
-
-**What This Proves:**
-1. Pipeline config is cryptographically signed (can't be tampered)
-2. Role signatures are verified (can't escalate privileges)
-3. Policy bindings are enforced (execution literally cannot run without valid governance)
-4. Audit trail is immutable (tampering is detectable)
-5. Compliance bundle is exportable (provable to auditors)
-
-### Technical Specification
-
-Full cryptographic protocols, API reference, deployment guides, and security guarantees documented in:
-
-**→ [SOVEREIGN_RUNTIME.md](SOVEREIGN_RUNTIME.md)**
-
 ---
 
 ## Table of Contents
 
-- [Sovereign Runtime Proof Layer](#sovereign-runtime-proof-layer)
 - [Design Philosophy](#design-philosophy)
 - [System Architecture](#system-architecture)
   - [Monolithic Integration](#monolithic-integration)
@@ -233,80 +153,73 @@ Full cryptographic protocols, API reference, deployment guides, and security gua
 - [docs/architecture/](docs/architecture/)
 - [docs/features/](docs/features/)
 
-## 2. Sovereign Runtime Proof Layer (NEW)
-- [SOVEREIGN_RUNTIME.md](SOVEREIGN_RUNTIME.md) ⭐ **Cryptographic Governance**
-- [governance/sovereign_runtime.py](governance/sovereign_runtime.py)
-- [governance/iron_path.py](governance/iron_path.py)
-- [examples/sovereign-demo.yaml](examples/sovereign-demo.yaml)
-- [project_ai_cli.py](project_ai_cli.py)
-
-## 3. Usage Scaling Matrix, Cost Guidance
+## 2. Usage Scaling Matrix, Cost Guidance
 - [USAGE-SCALING-MATRIX.md](USAGE-SCALING-MATRIX.md)
 - [docs/architecture/deployment.md](docs/architecture/deployment.md)
 - [docs/features/cost-analysis.md](docs/features/cost-analysis.md)
 
-## 4. Security Feature List
+## 3. Security Feature List
 - [SECURITY-FEATURES.md](SECURITY-FEATURES.md)
 - [security/rbac/](security/rbac/)
 - [security/audit/](security/audit/)
 - [docs/security/](docs/security/)
 
-## 5. Platform Compatibility Matrix
+## 4. Platform Compatibility Matrix
 - [PLATFORM-COMPATIBILITY-MATRIX.md](PLATFORM-COMPATIBILITY-MATRIX.md)
 - [docs/architecture/platforms.md](docs/architecture/platforms.md)
 
-## 6. Kernels
+## 5. Kernels
 - [KERNELS.md](KERNELS.md)
 - [core/kernel/](core/kernel/)
 - [docs/architecture/kernels.md](docs/architecture/kernels.md)
 
-## 7. Thirsty-Lang & T.A.R.L.
+## 6. Thirsty-Lang & T.A.R.L.
 - [THIRSTY-LANG-and-TARL.md](THIRSTY-LANG-and-TARL.md)
 - [pipeline/thirsty_lang/](pipeline/thirsty_lang/)
 - [core/engine/](core/engine/)
 - [docs/features/dsl-tarl.md](docs/features/dsl-tarl.md)
 
-## 8. Features + Key Features
+## 7. Features + Key Features
 - [FEATURES.md](FEATURES.md)
 - [docs/features/](docs/features/)
 
-## 9. EED (End-to-End Determinism)
+## 8. EED (End-to-End Determinism)
 - [EED.md](EED.md)
 - [docs/architecture/e2e-determinism.md](docs/architecture/e2e-determinism.md)
 
-## 10. ECFD (Explicit Config Flow Determinism)
+## 9. ECFD (Explicit Config Flow Determinism)
 - [ECFD.md](ECFD.md)
 - [core/config/](core/config/)
 - [docs/architecture/config-determinism.md](docs/architecture/config-determinism.md)
 
-## 11. AI Agents (Fully Detailed Workforce)
+## 10. AI Agents (Fully Detailed Workforce)
 - [AI-AGENTS.md](AI-AGENTS.md)
 - [agents/](agents/)
 - [docs/agents/](docs/agents/)
 
-## 12. AI Roles
+## 11. AI Roles
 - [AI-ROLES.md](AI-ROLES.md)
 - [security/rbac/roles.md](security/rbac/roles.md)
 - [docs/agents/roles.md](docs/agents/roles.md)
 
-## 13. Robotic Integration
+## 12. Robotic Integration
 - [ROBOTIC-INTEGRATION.md](ROBOTIC-INTEGRATION.md)
 - [integrations/robotics/](integrations/robotics/)
 - [docs/architecture/robotic-integration.md](docs/architecture/robotic-integration.md)
 
-## 14. e2e Documentation, Test Suite, Test Results, Training Monolith
+## 13. e2e Documentation, Test Suite, Test Results, Training Monolith
 - [E2E-DOCS-AND-TESTS.md](E2E-DOCS-AND-TESTS.md)
 - [tests/e2e/](tests/e2e/)
 - [model/training/](model/training/)
 - [docs/e2e/](docs/e2e/)
 
-## 15. Hatter Tests / Threats / Vulnerabilities + Results
+## 14. Hatter Tests / Threats / Vulnerabilities + Results
 - [HATTER-TESTS-THREATS-VULNERABILITIES.md](HATTER-TESTS-THREATS-VULNERABILITIES.md)
 - [security/vulnerabilities/](security/vulnerabilities/)
 - [tests/security/](tests/security/)
 - [docs/security/hatter-tests.md](docs/security/hatter-tests.md)
 
-## 16. Full Project Structure
+## 15. Full Project Structure
 - [PROJECT-STRUCTURE.md](PROJECT-STRUCTURE.md)
 - [docs/architecture/project-structure.md](docs/architecture/project-structure.md)
 
@@ -339,7 +252,6 @@ This definitive production-grade précis delivers a categorical definition, oper
 
 - **Centralized Model Registry**: Immutable artifacts, deterministic lineage, full audit history, shadow/canary deployment, rollback, and freeze.
 - **Kernel Execution**: Secure, sandboxed, multi-runtime compute for all ML, AI, and analytics workloads—fully logged and monitored.
-- **Sovereign Mode**: Optional cryptographic enforcement—kernels can execute ONLY with valid signed policy context. Non-bypassable governance at the execution layer.
 
 ### For Ops Engineers & Security Admins
 
@@ -350,7 +262,6 @@ This definitive production-grade précis delivers a categorical definition, oper
 
 - **Immutable Audit Trail**: Every action, data flow, model change, agent interaction, and promotion logged, signed, and shippable to regulatory endpoints.
 - **Active Compliance**: Automated checks for GDPR, HIPAA, SOC2, CCPA, license and export regimes—never deferred or partial.
-- **Cryptographic Proof**: Sovereign Runtime provides cryptographically verifiable compliance bundles with hash-chained audit trails, signed policy contexts, and tamper-evident artifacts—provable sovereignty through execution, not documentation.
 
 ### For End Users
 
@@ -427,7 +338,6 @@ All subsystems and flows are unified within a single deployable, source-of-truth
 - **Data Management**: Ingestion connectors, schema registry, data lake integration, versioned datasets, lineage tracking
 - **Pipeline Layer**: Task specification, pipeline definitions, scheduling, results capture, rollback, and replay
 - **Model Lifecycle**: Training orchestrator, model registry, artifact storage, deployed endpoints, shadowing, rollback
-- **Sovereign Runtime** (Optional): Cryptographic governance layer with Ed25519 signing, config snapshot hashing, role signature verification, policy state binding, and immutable audit trails
 - **Observability**: Telemetry ingestion, metrics store, event streaming, distributed tracing
 - **Access Control & AuthN/Z**: RBAC, secrets vault, policy engine, audit logging
 - **API Surface**: Fully-typed REST/gRPC endpoints powering UI, CLI, automation, and integrations
