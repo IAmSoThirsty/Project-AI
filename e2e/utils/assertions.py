@@ -238,3 +238,31 @@ def assert_watch_tower_trigger(
             )
 
     logger.info(f"Watch Tower trigger validated: {trigger_type}")
+
+
+def assert_within_timeout(
+    condition: callable,
+    timeout: float = 30.0,
+    interval: float = 0.5,
+    message: str = "Condition not met within timeout",
+) -> None:
+    """Assert that a condition becomes true within a timeout period.
+
+    Args:
+        condition: Callable that returns True when condition is met
+        timeout: Maximum time to wait in seconds
+        interval: Time between checks in seconds
+        message: Error message if condition not met
+
+    Raises:
+        AssertionError: If condition not met within timeout
+    """
+    import time
+
+    start_time = time.time()
+    while time.time() - start_time < timeout:
+        if condition():
+            return
+        time.sleep(interval)
+
+    raise AssertionError(f"{message} (timeout: {timeout}s)")

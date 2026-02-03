@@ -201,6 +201,64 @@ def pytest_configure(config):
     config.addinivalue_line(
         "markers", "integration: Mark test as integration test"
     )
+    # Additional E2E markers
+    config.addinivalue_line(
+        "markers", "batch: Mark test as batch processing test"
+    )
+    config.addinivalue_line(
+        "markers", "temporal: Mark test as Temporal workflow test"
+    )
+    config.addinivalue_line(
+        "markers", "memory: Mark test as memory system test"
+    )
+    config.addinivalue_line(
+        "markers", "knowledge: Mark test as knowledge base test"
+    )
+    config.addinivalue_line(
+        "markers", "rag: Mark test as RAG pipeline test"
+    )
+    config.addinivalue_line(
+        "markers", "agents: Mark test as multi-agent test"
+    )
+    config.addinivalue_line(
+        "markers", "failover: Mark test as failover test"
+    )
+    config.addinivalue_line(
+        "markers", "recovery: Mark test as recovery test"
+    )
+    config.addinivalue_line(
+        "markers", "circuit_breaker: Mark test as circuit breaker test"
+    )
+    config.addinivalue_line(
+        "markers", "adversarial: Mark test as adversarial/security test"
+    )
+    config.addinivalue_line(
+        "markers", "batch: Mark test as batch processing test"
+    )
+    config.addinivalue_line(
+        "markers", "memory: Mark test as memory system test"
+    )
+    config.addinivalue_line(
+        "markers", "knowledge: Mark test as knowledge base test"
+    )
+    config.addinivalue_line(
+        "markers", "rag: Mark test as RAG pipeline test"
+    )
+    config.addinivalue_line(
+        "markers", "agents: Mark test as multi-agent test"
+    )
+    config.addinivalue_line(
+        "markers", "failover: Mark test as failover test"
+    )
+    config.addinivalue_line(
+        "markers", "recovery: Mark test as recovery test"
+    )
+    config.addinivalue_line(
+        "markers", "circuit_breaker: Mark test as circuit breaker test"
+    )
+    config.addinivalue_line(
+        "markers", "adversarial: Mark test as adversarial security test"
+    )
 
 
 def pytest_collection_modifyitems(config, items):
