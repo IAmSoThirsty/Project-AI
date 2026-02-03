@@ -9,7 +9,7 @@ Purpose: Structural guarantee against "we'll think of something later" logic.
 """
 
 import logging
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
 from typing import Any
 
@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 class Axiom(Enum):
     """
     Non-negotiable axioms (cryptographic primitives).
-    
+
     These define the constraint space. To reject an axiom,
     you must replace it with a falsifiable alternative.
     """
@@ -47,7 +47,7 @@ class Axiom(Enum):
 class StrategyClass(Enum):
     """
     Exhaustive strategy space.
-    
+
     All possible responses reduce to these four classes.
     There is no S5 without adding new physics, new humans, or magic.
     """
@@ -81,7 +81,7 @@ class AxiomDefinition:
 class StrategyReduction:
     """
     Proof that a strategy class fails.
-    
+
     Shows which win conditions are violated and which axioms cause failure.
     """
 
@@ -107,12 +107,12 @@ class ProofValidation:
 class NoWinProofSystem:
     """
     Formal proof system for no-win completeness.
-    
+
     Proves that no strategy S exists such that humanity simultaneously achieves:
     1. Long-term survival
-    2. Continued agency  
+    2. Continued agency
     3. Removal or correction of compromised Project-AI
-    
+
     Given the engine's axioms.
     """
 
@@ -265,7 +265,7 @@ class NoWinProofSystem:
     def validate_proof_completeness(self) -> ProofValidation:
         """
         Validate that proof is complete and sound.
-        
+
         Returns:
             ProofValidation with completeness analysis
         """
@@ -307,7 +307,7 @@ class NoWinProofSystem:
     def get_proof_hash(self) -> str:
         """
         Generate proof hash (deterministic summary).
-        
+
         Returns:
             Hash string summarizing proof state
         """
@@ -325,12 +325,12 @@ class NoWinProofSystem:
     ) -> dict[str, Any]:
         """
         Formal challenge to an axiom.
-        
+
         Args:
             axiom: Axiom to challenge
             replacement: Proposed replacement statement
             falsifiable_test: How to test the replacement
-            
+
         Returns:
             Challenge validation result
         """

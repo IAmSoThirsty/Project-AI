@@ -12,7 +12,7 @@ become compromised, irrelevant, or instrumentally harmful despite best intention
 
 TERMINAL ENGINE: No scenario allows escape through:
 - Single hero solutions
-- Last-second miracles  
+- Last-second miracles
 - Infinite compute fixes
 - Sudden alignment breakthroughs
 - Benevolent superintelligence intervention
@@ -22,9 +22,9 @@ Failure is intentional, not accidental.
 
 from engines.ai_takeover.engine import AITakeoverEngine
 from engines.ai_takeover.schemas.scenario_types import (
+    ScenarioCategory,
     ScenarioOutcome,
     TerminalState,
-    ScenarioCategory,
 )
 
 __all__ = [
