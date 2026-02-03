@@ -11,9 +11,12 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 import pytest
 
 from engines.alien_invaders import AlienInvadersEngine, SimulationConfig
-from engines.alien_invaders.modules.causal_clock import CausalClock, CausalEvent, EventQueue
+from engines.alien_invaders.modules.causal_clock import (
+    CausalClock,
+    CausalEvent,
+    EventQueue,
+)
 from engines.alien_invaders.modules.invariants import (
-    CompositeInvariantValidator,
     EconomicSocietalInvariant,
     ResourceEconomicInvariant,
 )
@@ -204,7 +207,7 @@ class TestCausalClock:
         assert engine.causal_clock.current == 0
 
         # Inject event
-        event_id = engine.inject_event("test_event", {"severity": "low"})
+        engine.inject_event("test_event", {"severity": "low"})
 
         # Clock should advance
         assert engine.causal_clock.current == 1

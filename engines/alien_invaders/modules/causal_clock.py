@@ -279,7 +279,7 @@ class CausalValidator:
             )
             return False
 
-        for i, ((t1, e1), (t2, e2)) in enumerate(zip(chain1, chain2)):
+        for i, ((t1, e1), (t2, e2)) in enumerate(zip(chain1, chain2, strict=False)):
             if t1 != t2 or e1 != e2:
                 logger.error(
                     "Causal chain divergence at position %d: (%d, %s) vs (%d, %s)",
