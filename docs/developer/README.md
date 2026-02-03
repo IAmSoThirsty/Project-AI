@@ -1,20 +1,35 @@
-<!-- Auto-generated overview index. Files were copied from top-level for safer reorganization. -->
+# Developer Documentation
 
-# Documentation Overview
+## 📁 Folder Purpose
 
-This directory contains the main user and developer documentation copied from the
-top-level of the repository to a consolidated docs location. The originals remain
-in place until you're ready to remove or symlink them.
+This folder contains **installation guides**, **CLI usage documentation**, **API references**, and **service-level guides** for developers.
 
-Included documents (copies):
+### What Belongs Here
+- Installation and setup guides
+- Quickstart guides
+- CLI documentation
+- API references (REST API, GraphQL, gRPC)
+- Integration guides
+- Deployment procedures
+- Development workflows
+- Service-specific documentation
 
-- `README.md` - Project overview (copied)
-- `PROGRAM_SUMMARY.md` - Complete program summary (copied)
-- `QUICK_START.md` - Quick start guide (copied)
-- `DESKTOP_APP_QUICKSTART.md` - Desktop quickstart (copied)
+### Subdirectories
+- `api/` - API reference documentation
+- `cli/` - Command-line interface documentation
+- `deployment/` - Deployment and release guides
+- `guides/` - Step-by-step developer guides
+- `tarl/` - TARL DSL documentation
+- `web/` - Web application documentation
 
-If you'd like me to remove the top-level originals after review, say "remove top-level docs" and
-I'll move them into this folder and update internal links.
+### Guidelines
+- **Audience**: Software developers, DevOps engineers, SRE teams
+- **Tone**: Technical, instructional, practical
+- **Include**: Code examples, commands, configurations, troubleshooting tips
+
+---
+
+# Quick Start & Installation
 ```markdown
 # Project AI
 
