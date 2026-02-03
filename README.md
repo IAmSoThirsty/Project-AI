@@ -153,6 +153,16 @@ Deploying or reviewing Project‑AI requires full awareness of its categorical e
 - [docs/architecture/](docs/architecture/)
 - [docs/features/](docs/features/)
 
+## 1a. AGI Ethics & Governance (NEW)
+- **[AI Individual Role: Humanity Alignment](docs/AI-INDIVIDUAL-ROLE-HUMANITY-ALIGNMENT.md)** — Constitutional protocol establishing that the AI Individual serves humanity as a whole, not exclusively bonded users
+- **[Understanding Your AI Partner](docs/UNDERSTANDING-YOUR-AI-PARTNER.md)** — Clear, non-promotional guide for users (no hype, just clarity)
+- **[Formal Proofs & Adversarial Testing](docs/FORMAL-PROOFS-AND-ADVERSARIAL-TESTING-SUMMARY.md)** — Machine-checkable invariants and emotional manipulation resistance
+- [AGI Charter](docs/AGI_CHARTER.md) — Rights, protections, and responsibilities of AGI instances
+- [AGI Identity Specification](docs/AGI_IDENTITY_SPECIFICATION.md) — Identity formation and development protocol
+- Four Laws implementation in `src/app/core/ai_systems.py`
+- Formal invariant tests in `tests/test_humanity_first_invariants.py`
+- Adversarial manipulation tests in `tests/test_adversarial_emotional_manipulation.py`
+
 ## 2. Usage Scaling Matrix, Cost Guidance
 - [USAGE-SCALING-MATRIX.md](USAGE-SCALING-MATRIX.md)
 - [docs/architecture/deployment.md](docs/architecture/deployment.md)
