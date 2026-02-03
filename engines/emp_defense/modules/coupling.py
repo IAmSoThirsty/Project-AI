@@ -21,36 +21,55 @@ class CrossDomainCoupling:
         """
         Apply all cross-domain coupling rules.
         
-        Order matters: some dependencies feed into others.
+        **CRITICAL: Order matters** - dependencies cascade through domains.
+        
+        Execution order encodes the causality chain:
+        1. PRIMARY: Energy powers everything
+        2. SECONDARY: Water/Food depend on energy
+        3. TERTIARY: Health/Security respond to resource scarcity
+        4. QUATERNARY: Governance erodes from all failures
+        
+        Changing this order will silently break cascade logic.
         
         Args:
             state: World state to update with coupling effects
         """
-        # Energy → Everything (most critical dependency)
+        # ===================================================================
+        # PRIMARY DEPENDENCIES: Energy → All
+        # Energy is the foundation - grid powers pumps, storage, hospitals
+        # ===================================================================
         CrossDomainCoupling._energy_to_water(state)
         CrossDomainCoupling._energy_to_food(state)
         CrossDomainCoupling._energy_to_health(state)
         CrossDomainCoupling._energy_to_governance(state)
         
-        # Water → Health, Food, Security
+        # ===================================================================
+        # SECONDARY DEPENDENCIES: Water/Food → Health/Security/Governance
+        # Resource scarcity triggers second-order effects
+        # ===================================================================
         CrossDomainCoupling._water_to_health(state)
         CrossDomainCoupling._water_to_food(state)
         CrossDomainCoupling._water_to_security(state)
         
-        # Food → Security, Health, Governance
         CrossDomainCoupling._food_to_security(state)
         CrossDomainCoupling._food_to_health(state)
         CrossDomainCoupling._food_to_governance(state)
         
-        # Health → Governance, Security
+        # ===================================================================
+        # TERTIARY DEPENDENCIES: Health/Security → Governance
+        # System failures compound into political instability
+        # ===================================================================
         CrossDomainCoupling._health_to_governance(state)
         CrossDomainCoupling._health_to_security(state)
         
-        # Security → Governance, Everything else
         CrossDomainCoupling._security_to_governance(state)
         CrossDomainCoupling._security_to_all(state)
         
-        # Governance → Security, Economic
+        # ===================================================================
+        # QUATERNARY DEPENDENCIES: Governance → Security/Economy
+        # Government collapse enables armed groups, destroys economy
+        # Must be last to reflect accumulated damage
+        # ===================================================================
         CrossDomainCoupling._governance_to_security(state)
         CrossDomainCoupling._governance_to_economy(state)
     
