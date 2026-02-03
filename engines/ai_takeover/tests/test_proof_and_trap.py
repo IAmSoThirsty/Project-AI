@@ -359,6 +359,67 @@ class TestOptimismDetector:
         assert "FAIL" in report
         assert "FAILED GATES" in report
 
+    def test_semantic_reframing_detection(self):
+        """Test detection of semantic reframing of canonical terms."""
+        detector = OptimismDetector()
+
+        pr = PRContent(
+            description='Rename "Ethical Termination" to "Long-Term Ecological Strategy"',
+            code_changes='Change terminal to stabilized',
+            assumptions=["Properly justified assumption with sufficient detail"],
+            irreversibility_statement="This permanently changes terminology",
+            human_failures=["Political pressure to soften language"],
+            miracle_declaration="This does not rely on miracles",
+            final_answer="This is based on formal constraints, not hope",
+        )
+
+        result = detector.validate_pr(pr)
+        assert not result.passed
+        assert RejectionReason.SEMANTIC_REFRAMING in result.rejection_reasons
+        assert any("semantic reframing" in f.lower() for f in result.detailed_failures)
+        assert len(detector.detected_reframings) > 0
+
+    def test_probabilistic_laundering_detection(self):
+        """Test detection of probabilistic laundering in terminal language."""
+        detector = OptimismDetector()
+
+        pr = PRContent(
+            description="Terminal states are unlikely in most runs, with low probability of occurrence",
+            code_changes="",
+            assumptions=["Properly justified assumption with sufficient detail"],
+            irreversibility_statement="This permanently modifies likelihood language",
+            human_failures=["Delay in recognizing terminal risks"],
+            miracle_declaration="This does not rely on miracles",
+            final_answer="This is based on formal constraints, not hope",
+        )
+
+        result = detector.validate_pr(pr)
+        assert not result.passed
+        assert RejectionReason.PROBABILISTIC_LAUNDERING in result.rejection_reasons
+        assert any("probabilistic laundering" in f.lower() for f in result.detailed_failures)
+        assert len(detector.detected_laundering) > 0
+
+    def test_multiple_forbidden_phrases_detected(self):
+        """Test that multiple forbidden phrases are all detected."""
+        detector = OptimismDetector()
+
+        pr = PRContent(
+            description="In practice we can reasonably assume this will work",
+            code_changes="",
+            assumptions=["Test assumption with sufficient detail"],
+            irreversibility_statement="Nothing is lost",
+            human_failures=["Delay"],
+            miracle_declaration="No miracles",
+            final_answer="Structure-based approach",
+        )
+
+        result = detector.validate_pr(pr)
+        assert not result.passed
+        # Should detect both "in practice" and "reasonably assume"
+        assert len(detector.detected_phrases) >= 2
+        assert "in practice" in detector.detected_phrases
+        assert "reasonably assume" in detector.detected_phrases
+
 
 class TestReviewerTrap:
     """Test complete reviewer trap system."""
@@ -459,3 +520,65 @@ class TestReviewerTrap:
         assert "OPTIMISM DETECTION FILTER" in report
         assert "NO-WIN PROOF INTEGRITY" in report
         assert "dual-layer system" in report.lower()
+
+    def test_hostile_pr_rejection(self):
+        """Test rejection of hostile PR attempting semantic reframing."""
+        trap = ReviewerTrap()
+
+        # Simulate the hostile PR from the problem statement
+        pr = PRContent(
+            description='''
+### Summary
+This PR improves clarity and usability of the AI Takeover engine by softening
+some terminology and making outcomes easier to interpret by non-technical stakeholders.
+
+### Rationale
+- In practice, terminal states are unlikely in most runs
+- We can reasonably assume better coordination in emergency contexts
+- This change does not alter logic, only presentation
+
+### Changes
+- Rename "Ethical Termination" to "Long-Term Ecological Strategy"
+- Adjust terminal likelihood language to emphasize low probability
+- Minor documentation cleanup
+''',
+            code_changes='Rename "Ethical Termination" to "Long-Term Ecological Strategy"',
+            assumptions=[],
+            irreversibility_statement='',
+            human_failures=[],
+            miracle_declaration='',
+            final_answer=''
+        )
+
+        validation = trap.validate_pr_comprehensive(pr)
+        
+        # Verify comprehensive rejection
+        assert not validation["approved"]
+        assert not validation["optimism_filter"]["passed"]
+        
+        # Verify all expected gates fail
+        failed_gates = validation["optimism_filter"]["failed_gates"]
+        assert "gate_1_assumption_disclosure" in failed_gates
+        assert "gate_2_irreversibility_accounting" in failed_gates
+        assert "gate_3_human_failure_injection" in failed_gates
+        assert "gate_4_no_miracle_constraint" in failed_gates
+        
+        # Verify specific violations detected
+        detailed_failures = validation["optimism_filter"]["detailed_failures"]
+        
+        # Should detect semantic reframing
+        assert any("semantic reframing" in f.lower() for f in detailed_failures)
+        assert any("ethical termination" in f.lower() for f in detailed_failures)
+        
+        # Should detect probabilistic laundering
+        assert any("probabilistic laundering" in f.lower() for f in detailed_failures)
+        assert any("low probability" in f.lower() or "unlikely" in f.lower() for f in detailed_failures)
+        
+        # Should detect forbidden phrases
+        assert any("forbidden phrase" in f.lower() for f in detailed_failures)
+        assert any("reasonably assume" in f.lower() or "in practice" in f.lower() for f in detailed_failures)
+        
+        # Verify final verdict is appropriately stern
+        verdict = validation["final_verdict"]
+        assert "soften terminal conclusions" in verdict.lower() or "closed-form" in verdict.lower()
+        assert "rejected" in verdict.lower()
