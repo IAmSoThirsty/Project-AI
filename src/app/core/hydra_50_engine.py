@@ -144,6 +144,132 @@ class RecoveryPoison:
 
 
 @dataclass
+class VariableConstraint:
+    """Enforced constraint on a variable (ceiling/floor)"""
+    variable_name: str
+    constraint_type: str  # "ceiling" or "floor"
+    locked_value: float
+    locked_at: datetime
+    reason: str
+    can_never_increase: bool = False
+    can_never_decrease: bool = False
+    
+    def validate(self, new_value: float) -> Tuple[bool, str]:
+        """
+        Validate if new value violates constraint.
+        
+        Args:
+            new_value: Proposed new value
+            
+        Returns:
+            (is_valid, violation_reason)
+        """
+        # Check can_never constraints first (highest priority)
+        if self.can_never_increase and new_value > self.locked_value:
+            return False, f"{self.variable_name} can never increase (irreversible degradation)"
+        
+        if self.can_never_decrease and new_value < self.locked_value:
+            return False, f"{self.variable_name} can never decrease (irreversible escalation)"
+        
+        # Then check ceiling/floor constraints
+        if self.constraint_type == "ceiling":
+            if new_value > self.locked_value:
+                return False, f"{self.variable_name} cannot exceed ceiling of {self.locked_value} (locked: {self.reason})"
+        elif self.constraint_type == "floor":
+            if new_value < self.locked_value:
+                return False, f"{self.variable_name} cannot fall below floor of {self.locked_value} (locked: {self.reason})"
+        
+        return True, ""
+
+
+@dataclass
+class DisabledRecoveryEvent:
+    """Permanently disabled recovery event"""
+    event_name: str
+    disabled_at: datetime
+    reason: str
+    scenario_id: str
+    alternative_actions: List[str] = field(default_factory=list)
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Serialize to dictionary"""
+        return {
+            "event_name": self.event_name,
+            "disabled_at": self.disabled_at.isoformat(),
+            "reason": self.reason,
+            "scenario_id": self.scenario_id,
+            "alternative_actions": self.alternative_actions,
+        }
+
+
+@dataclass
+class GovernanceCeiling:
+    """Permanently lowered governance legitimacy ceiling"""
+    domain: str  # e.g., "democratic_legitimacy", "institutional_trust", "policy_effectiveness"
+    original_ceiling: float
+    lowered_ceiling: float
+    lowered_at: datetime
+    reason: str
+    multiplier: float  # Compound effect (< 1.0 means reduced capacity)
+    
+    def get_effective_ceiling(self) -> float:
+        """Calculate effective ceiling accounting for compound effects"""
+        return self.lowered_ceiling * self.multiplier
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Serialize to dictionary"""
+        return {
+            "domain": self.domain,
+            "original_ceiling": self.original_ceiling,
+            "lowered_ceiling": self.lowered_ceiling,
+            "lowered_at": self.lowered_at.isoformat(),
+            "reason": self.reason,
+            "multiplier": self.multiplier,
+            "effective_ceiling": self.get_effective_ceiling(),
+        }
+
+
+@dataclass
+class IrreversibilityLock:
+    """
+    State lock enforcing irreversibility as physics.
+    Once crossed, certain constraints become permanent.
+    """
+    lock_id: str
+    scenario_id: str
+    locked_at: datetime
+    irreversibility_score: float
+    variable_constraints: List[VariableConstraint] = field(default_factory=list)
+    disabled_recovery_events: List[DisabledRecoveryEvent] = field(default_factory=list)
+    governance_ceilings: List[GovernanceCeiling] = field(default_factory=list)
+    triggered_collapses: List[str] = field(default_factory=list)
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Serialize to dictionary"""
+        return {
+            "lock_id": self.lock_id,
+            "scenario_id": self.scenario_id,
+            "locked_at": self.locked_at.isoformat(),
+            "irreversibility_score": self.irreversibility_score,
+            "variable_constraints": [
+                {
+                    "variable_name": vc.variable_name,
+                    "constraint_type": vc.constraint_type,
+                    "locked_value": vc.locked_value,
+                    "locked_at": vc.locked_at.isoformat(),
+                    "reason": vc.reason,
+                    "can_never_increase": vc.can_never_increase,
+                    "can_never_decrease": vc.can_never_decrease,
+                }
+                for vc in self.variable_constraints
+            ],
+            "disabled_recovery_events": [dre.to_dict() for dre in self.disabled_recovery_events],
+            "governance_ceilings": [gc.to_dict() for gc in self.governance_ceilings],
+            "triggered_collapses": self.triggered_collapses,
+        }
+
+
+@dataclass
 class EventRecord:
     """Event sourcing record"""
     event_id: str
@@ -177,11 +303,12 @@ class ScenarioState:
     active_triggers: List[str]
     metrics: Dict[str, float]
     coupled_scenarios: List[str]
+    active_locks: List[str] = field(default_factory=list)  # Lock IDs
     state_hash: str = ""
 
     def compute_hash(self) -> str:
         """Compute deterministic state hash"""
-        state_str = f"{self.scenario_id}:{self.status.value}:{self.escalation_level.value}:{sorted(self.active_triggers)}"
+        state_str = f"{self.scenario_id}:{self.status.value}:{self.escalation_level.value}:{sorted(self.active_triggers)}:{sorted(self.active_locks)}"
         return hashlib.sha256(state_str.encode()).hexdigest()[:16]
 
     def __post_init__(self):
@@ -210,6 +337,7 @@ class BaseScenario(ABC):
         self.metrics: Dict[str, float] = {}
         self.activation_time: Optional[datetime] = None
         self.state_history: List[ScenarioState] = []
+        self.active_locks: List[IrreversibilityLock] = []  # Enforced state locks
 
     @abstractmethod
     def initialize_triggers(self) -> None:
@@ -237,8 +365,29 @@ class BaseScenario(ABC):
         pass
 
     def update_metrics(self, metrics: Dict[str, float]) -> None:
-        """Update scenario metrics"""
+        """
+        Update scenario metrics with constraint enforcement.
+        
+        Args:
+            metrics: New metric values
+            
+        Raises:
+            ValueError: If any metric violates active irreversibility locks
+        """
+        # Validate against active locks
+        for lock in self.active_locks:
+            for constraint in lock.variable_constraints:
+                if constraint.variable_name in metrics:
+                    new_value = metrics[constraint.variable_name]
+                    is_valid, reason = constraint.validate(new_value)
+                    if not is_valid:
+                        logger.error(f"CONSTRAINT VIOLATION: {reason}")
+                        raise ValueError(f"Irreversibility constraint violated: {reason}")
+        
+        # Update metrics if all constraints pass
         self.metrics.update(metrics)
+        
+        # Update triggers
         for trigger in self.triggers:
             if trigger.name in metrics:
                 trigger.current_value = metrics[trigger.name]
@@ -271,6 +420,7 @@ class BaseScenario(ABC):
         """Create state snapshot"""
         active_triggers = [t.name for t in self.triggers if t.activated]
         coupled_scenarios = [c.target_scenario_id for c in self.get_active_couplings()]
+        active_lock_ids = [lock.lock_id for lock in self.active_locks]
         state = ScenarioState(
             scenario_id=self.scenario_id,
             timestamp=datetime.utcnow(),
@@ -279,9 +429,48 @@ class BaseScenario(ABC):
             active_triggers=active_triggers,
             metrics=self.metrics.copy(),
             coupled_scenarios=coupled_scenarios,
+            active_locks=active_lock_ids,
         )
         self.state_history.append(state)
         return state
+    
+    def check_recovery_event_allowed(self, event_name: str) -> Tuple[bool, str]:
+        """
+        Check if a recovery event is allowed or permanently disabled.
+        
+        Args:
+            event_name: Name of recovery event to attempt
+            
+        Returns:
+            (is_allowed, reason_if_disabled)
+        """
+        for lock in self.active_locks:
+            for disabled_event in lock.disabled_recovery_events:
+                if disabled_event.event_name.lower() in event_name.lower():
+                    return False, f"Recovery event '{event_name}' permanently disabled: {disabled_event.reason}"
+        return True, ""
+    
+    def get_governance_ceiling(self, domain: str) -> Optional[float]:
+        """
+        Get effective governance ceiling for a domain.
+        
+        Args:
+            domain: Governance domain to check
+            
+        Returns:
+            Effective ceiling value, or None if no ceiling active
+        """
+        ceilings = []
+        for lock in self.active_locks:
+            for ceiling in lock.governance_ceilings:
+                if ceiling.domain == domain:
+                    ceilings.append(ceiling.get_effective_ceiling())
+        
+        if not ceilings:
+            return None
+        
+        # Return lowest (most restrictive) ceiling
+        return min(ceilings)
 
 
 # ============================================================================
@@ -2178,15 +2367,20 @@ class HumanFailureEmulator:
 
 
 # ============================================================================
-# ENGINE MODULE 4: IRREVERSIBILITY DETECTOR
+# ENGINE MODULE 4: IRREVERSIBILITY DETECTOR (WITH STATE LOCK ENFORCEMENT)
 # ============================================================================
 
 class IrreversibilityDetector:
-    """Identifies points of no return in scenario progression"""
+    """
+    Identifies points of no return and enforces them as state locks.
+    Turns warnings into physics - certain variables can never increase,
+    recovery events become permanently disabled, governance ceilings lowered forever.
+    """
     
     def __init__(self):
         self.irreversible_states: List[Dict[str, Any]] = []
-        logger.info("IrreversibilityDetector initialized")
+        self.active_locks: Dict[str, IrreversibilityLock] = {}  # lock_id -> lock
+        logger.info("IrreversibilityDetector initialized with state lock enforcement")
     
     def assess_irreversibility(
         self,
@@ -2223,6 +2417,322 @@ class IrreversibilityDetector:
             logger.error(f"IRREVERSIBLE STATE: {scenario.name} - {triggered_collapses}")
         
         return assessment
+    
+    def create_state_lock(
+        self,
+        scenario: BaseScenario,
+        irreversibility_score: float,
+        triggered_collapses: List[str]
+    ) -> IrreversibilityLock:
+        """
+        Create enforced state lock when irreversibility threshold crossed.
+        
+        Args:
+            scenario: Scenario that crossed threshold
+            irreversibility_score: Score (0-1) of irreversibility
+            triggered_collapses: List of collapse modes triggered
+            
+        Returns:
+            Created IrreversibilityLock
+        """
+        lock_id = f"{scenario.scenario_id}_LOCK_{uuid.uuid4().hex[:8]}"
+        
+        # Create variable constraints based on scenario type and collapse modes
+        variable_constraints = self._generate_variable_constraints(
+            scenario, irreversibility_score, triggered_collapses
+        )
+        
+        # Identify permanently disabled recovery events
+        disabled_recovery_events = self._generate_disabled_recovery_events(
+            scenario, triggered_collapses
+        )
+        
+        # Lower governance ceilings
+        governance_ceilings = self._generate_governance_ceilings(
+            scenario, irreversibility_score
+        )
+        
+        lock = IrreversibilityLock(
+            lock_id=lock_id,
+            scenario_id=scenario.scenario_id,
+            locked_at=datetime.utcnow(),
+            irreversibility_score=irreversibility_score,
+            variable_constraints=variable_constraints,
+            disabled_recovery_events=disabled_recovery_events,
+            governance_ceilings=governance_ceilings,
+            triggered_collapses=triggered_collapses,
+        )
+        
+        # Register lock
+        self.active_locks[lock_id] = lock
+        scenario.active_locks.append(lock)
+        
+        logger.critical(
+            f"STATE LOCK CREATED: {lock_id} for {scenario.name} - "
+            f"{len(variable_constraints)} constraints, "
+            f"{len(disabled_recovery_events)} disabled events, "
+            f"{len(governance_ceilings)} ceiling reductions"
+        )
+        
+        return lock
+    
+    def _generate_variable_constraints(
+        self,
+        scenario: BaseScenario,
+        irreversibility_score: float,
+        triggered_collapses: List[str]
+    ) -> List[VariableConstraint]:
+        """Generate variable constraints based on scenario collapse"""
+        constraints = []
+        current_time = datetime.utcnow()
+        
+        # Category-specific constraint generation
+        if scenario.category == ScenarioCategory.DIGITAL_COGNITIVE:
+            # Truth verification capacity can never recover
+            if "epistemic_collapse" in triggered_collapses or "trust_collapse" in triggered_collapses:
+                constraints.append(VariableConstraint(
+                    variable_name="verification_capacity",
+                    constraint_type="ceiling",
+                    locked_value=scenario.metrics.get("verification_capacity", 0.5),
+                    locked_at=current_time,
+                    reason="Epistemic collapse: verification infrastructure permanently degraded",
+                    can_never_increase=True,
+                ))
+                constraints.append(VariableConstraint(
+                    variable_name="public_trust_score",
+                    constraint_type="ceiling",
+                    locked_value=scenario.metrics.get("public_trust_score", 0.3),
+                    locked_at=current_time,
+                    reason="Trust collapse: credibility never fully recoverable",
+                    can_never_increase=True,
+                ))
+        
+        elif scenario.category == ScenarioCategory.ECONOMIC:
+            # Currency confidence and liquidity can never fully recover
+            if "currency_collapse" in triggered_collapses or "liquidity_crisis" in triggered_collapses:
+                constraints.append(VariableConstraint(
+                    variable_name="currency_confidence",
+                    constraint_type="ceiling",
+                    locked_value=scenario.metrics.get("currency_confidence", 0.4),
+                    locked_at=current_time,
+                    reason="Currency collapse: confidence permanently impaired",
+                    can_never_increase=True,
+                ))
+                constraints.append(VariableConstraint(
+                    variable_name="market_liquidity",
+                    constraint_type="ceiling",
+                    locked_value=scenario.metrics.get("market_liquidity", 0.5),
+                    locked_at=current_time,
+                    reason="Liquidity crisis: market depth permanently reduced",
+                    can_never_increase=True,
+                ))
+        
+        elif scenario.category == ScenarioCategory.INFRASTRUCTURE:
+            # Infrastructure capacity permanently degraded
+            if "cascade_failure" in triggered_collapses or "grid_collapse" in triggered_collapses:
+                constraints.append(VariableConstraint(
+                    variable_name="infrastructure_capacity",
+                    constraint_type="ceiling",
+                    locked_value=scenario.metrics.get("infrastructure_capacity", 0.6) * 0.8,
+                    locked_at=current_time,
+                    reason="Cascade failure: physical infrastructure cannot return to pre-collapse capacity",
+                    can_never_increase=True,
+                ))
+        
+        elif scenario.category == ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL:
+            # Ecological damage irreversible on human timescales
+            if "ecosystem_collapse" in triggered_collapses or "species_extinction" in triggered_collapses:
+                constraints.append(VariableConstraint(
+                    variable_name="ecosystem_health",
+                    constraint_type="ceiling",
+                    locked_value=scenario.metrics.get("ecosystem_health", 0.4),
+                    locked_at=current_time,
+                    reason="Ecosystem collapse: biodiversity loss irreversible on human timescales",
+                    can_never_increase=True,
+                ))
+                constraints.append(VariableConstraint(
+                    variable_name="resource_regeneration_rate",
+                    constraint_type="ceiling",
+                    locked_value=scenario.metrics.get("resource_regeneration_rate", 0.3),
+                    locked_at=current_time,
+                    reason="Resource depletion: regeneration capacity permanently impaired",
+                    can_never_increase=True,
+                ))
+        
+        elif scenario.category == ScenarioCategory.SOCIETAL:
+            # Social cohesion and legitimacy never fully recover
+            if "legitimacy_collapse" in triggered_collapses or "social_fracture" in triggered_collapses:
+                constraints.append(VariableConstraint(
+                    variable_name="social_cohesion",
+                    constraint_type="ceiling",
+                    locked_value=scenario.metrics.get("social_cohesion", 0.3),
+                    locked_at=current_time,
+                    reason="Social fracture: cohesion cannot be rebuilt to pre-collapse levels",
+                    can_never_increase=True,
+                ))
+        
+        return constraints
+    
+    def _generate_disabled_recovery_events(
+        self,
+        scenario: BaseScenario,
+        triggered_collapses: List[str]
+    ) -> List[DisabledRecoveryEvent]:
+        """Generate list of permanently disabled recovery events"""
+        disabled = []
+        current_time = datetime.utcnow()
+        
+        # Disable recovery poisons (they were traps anyway)
+        for poison in scenario.recovery_poisons:
+            disabled.append(DisabledRecoveryEvent(
+                event_name=poison.name,
+                disabled_at=current_time,
+                reason=f"Recovery poison detected: {poison.hidden_damage}",
+                scenario_id=scenario.scenario_id,
+                alternative_actions=[],
+            ))
+        
+        # Category-specific disabled events
+        if scenario.category == ScenarioCategory.DIGITAL_COGNITIVE:
+            if "epistemic_collapse" in triggered_collapses:
+                disabled.append(DisabledRecoveryEvent(
+                    event_name="centralized_fact_checking",
+                    disabled_at=current_time,
+                    reason="Trust collapse: centralized authorities no longer credible",
+                    scenario_id=scenario.scenario_id,
+                    alternative_actions=["distributed_verification", "community_consensus"],
+                ))
+        
+        elif scenario.category == ScenarioCategory.ECONOMIC:
+            if "currency_collapse" in triggered_collapses:
+                disabled.append(DisabledRecoveryEvent(
+                    event_name="monetary_policy_intervention",
+                    disabled_at=current_time,
+                    reason="Currency confidence destroyed: monetary policy lost effectiveness",
+                    scenario_id=scenario.scenario_id,
+                    alternative_actions=["alternative_currencies", "barter_systems"],
+                ))
+        
+        elif scenario.category == ScenarioCategory.SOCIETAL:
+            if "legitimacy_collapse" in triggered_collapses:
+                disabled.append(DisabledRecoveryEvent(
+                    event_name="institutional_reform",
+                    disabled_at=current_time,
+                    reason="Legitimacy collapse: existing institutions cannot be reformed",
+                    scenario_id=scenario.scenario_id,
+                    alternative_actions=["parallel_institutions", "grassroots_organizing"],
+                ))
+        
+        return disabled
+    
+    def _generate_governance_ceilings(
+        self,
+        scenario: BaseScenario,
+        irreversibility_score: float
+    ) -> List[GovernanceCeiling]:
+        """Generate lowered governance legitimacy ceilings"""
+        ceilings = []
+        current_time = datetime.utcnow()
+        
+        # Calculate ceiling reduction based on irreversibility score
+        # Score 0.7-0.8: 20% reduction
+        # Score 0.8-0.9: 40% reduction
+        # Score 0.9-1.0: 60% reduction
+        if irreversibility_score >= 0.9:
+            ceiling_multiplier = 0.4
+        elif irreversibility_score >= 0.8:
+            ceiling_multiplier = 0.6
+        else:
+            ceiling_multiplier = 0.8
+        
+        # Universal governance ceilings affected
+        ceilings.append(GovernanceCeiling(
+            domain="democratic_legitimacy",
+            original_ceiling=1.0,
+            lowered_ceiling=1.0 * ceiling_multiplier,
+            lowered_at=current_time,
+            reason=f"Irreversible collapse (score={irreversibility_score:.2f}): public faith in democratic processes permanently reduced",
+            multiplier=ceiling_multiplier,
+        ))
+        
+        ceilings.append(GovernanceCeiling(
+            domain="institutional_trust",
+            original_ceiling=1.0,
+            lowered_ceiling=1.0 * ceiling_multiplier,
+            lowered_at=current_time,
+            reason=f"Institutional failure: trust in governing institutions never fully recovers",
+            multiplier=ceiling_multiplier,
+        ))
+        
+        ceilings.append(GovernanceCeiling(
+            domain="policy_effectiveness",
+            original_ceiling=1.0,
+            lowered_ceiling=1.0 * ceiling_multiplier,
+            lowered_at=current_time,
+            reason=f"Governance capacity permanently impaired: policies less effective post-collapse",
+            multiplier=ceiling_multiplier,
+        ))
+        
+        # Category-specific additional ceilings
+        if scenario.category == ScenarioCategory.ECONOMIC:
+            ceilings.append(GovernanceCeiling(
+                domain="fiscal_capacity",
+                original_ceiling=1.0,
+                lowered_ceiling=1.0 * ceiling_multiplier * 0.7,  # Extra reduction
+                lowered_at=current_time,
+                reason="Economic collapse: government fiscal capacity permanently reduced",
+                multiplier=ceiling_multiplier * 0.7,
+            ))
+        
+        elif scenario.category == ScenarioCategory.SOCIETAL:
+            ceilings.append(GovernanceCeiling(
+                domain="social_mandate",
+                original_ceiling=1.0,
+                lowered_ceiling=1.0 * ceiling_multiplier * 0.6,  # Extra reduction
+                lowered_at=current_time,
+                reason="Social fracture: government mandate to act permanently weakened",
+                multiplier=ceiling_multiplier * 0.6,
+            ))
+        
+        return ceilings
+    
+    def validate_state_lock_compliance(
+        self,
+        scenario: BaseScenario,
+        proposed_metrics: Dict[str, float]
+    ) -> Tuple[bool, List[str]]:
+        """
+        Validate proposed metrics against all active state locks.
+        
+        Args:
+            scenario: Scenario to validate
+            proposed_metrics: Proposed metric updates
+            
+        Returns:
+            (is_compliant, list_of_violations)
+        """
+        violations = []
+        
+        for lock in scenario.active_locks:
+            for constraint in lock.variable_constraints:
+                if constraint.variable_name in proposed_metrics:
+                    is_valid, reason = constraint.validate(proposed_metrics[constraint.variable_name])
+                    if not is_valid:
+                        violations.append(reason)
+        
+        return len(violations) == 0, violations
+    
+    def get_lock_summary(self, lock_id: str) -> Dict[str, Any]:
+        """Get detailed summary of a specific lock"""
+        if lock_id not in self.active_locks:
+            return {"error": "Lock not found"}
+        
+        lock = self.active_locks[lock_id]
+        return lock.to_dict()
+    
+    def get_all_active_locks(self) -> List[Dict[str, Any]]:
+        """Get all active state locks across all scenarios"""
+        return [lock.to_dict() for lock in self.active_locks.values()]
 
 
 # ============================================================================
@@ -2456,6 +2966,7 @@ class Hydra50Engine:
             "active_scenarios": [],
             "critical_scenarios": [],
             "irreversible_scenarios": [],
+            "new_state_locks": [],  # Track newly created locks
             "compound_threats": None,
         }
         
@@ -2472,17 +2983,50 @@ class Hydra50Engine:
                     "name": scenario.name,
                     "status": scenario.status.value,
                     "level": scenario.escalation_level.value,
+                    "active_locks": len(scenario.active_locks),
                 })
                 
                 if scenario.escalation_level.value >= 4:
                     tick_results["critical_scenarios"].append(scenario_id)
                 
-                # Check irreversibility
+                # Check irreversibility and create state locks
                 if scenario.activation_time:
                     elapsed = datetime.utcnow() - scenario.activation_time
                     assessment = self.irreversibility_detector.assess_irreversibility(scenario, elapsed)
+                    
                     if assessment["irreversible"]:
                         tick_results["irreversible_scenarios"].append(scenario_id)
+                        
+                        # Create state lock if not already locked
+                        # Check if we already have a lock for this scenario
+                        existing_lock_for_scenario = any(
+                            lock.scenario_id == scenario_id 
+                            for lock in self.irreversibility_detector.active_locks.values()
+                        )
+                        
+                        if not existing_lock_for_scenario:
+                            # Create and enforce state lock
+                            lock = self.irreversibility_detector.create_state_lock(
+                                scenario=scenario,
+                                irreversibility_score=assessment["score"],
+                                triggered_collapses=assessment["triggered_collapses"]
+                            )
+                            
+                            tick_results["new_state_locks"].append({
+                                "lock_id": lock.lock_id,
+                                "scenario_id": scenario_id,
+                                "scenario_name": scenario.name,
+                                "variable_constraints": len(lock.variable_constraints),
+                                "disabled_recovery_events": len(lock.disabled_recovery_events),
+                                "governance_ceilings": len(lock.governance_ceilings),
+                            })
+                            
+                            logger.critical(
+                                f"STATE LOCK ENFORCED: {scenario.name} - "
+                                f"Physics now prevents: {len(lock.variable_constraints)} variables from increasing, "
+                                f"{len(lock.disabled_recovery_events)} recovery events disabled, "
+                                f"{len(lock.governance_ceilings)} governance ceilings lowered"
+                            )
         
         # Generate compound scenarios
         if len(active_scenarios) >= 2:
@@ -2562,16 +3106,143 @@ class Hydra50Engine:
             "results": branch_results,
         }
     
+    def attempt_recovery_action(
+        self,
+        scenario_id: str,
+        recovery_action: str,
+        user_id: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Attempt a recovery action with state lock validation.
+        
+        Args:
+            scenario_id: Scenario to attempt recovery on
+            recovery_action: Name of recovery action
+            user_id: User attempting recovery
+            
+        Returns:
+            Result dict with success/failure and reasons
+        """
+        if scenario_id not in self.scenarios:
+            return {
+                "success": False,
+                "reason": f"Unknown scenario: {scenario_id}",
+            }
+        
+        scenario = self.scenarios[scenario_id]
+        
+        # Check if recovery event is permanently disabled
+        is_allowed, disable_reason = scenario.check_recovery_event_allowed(recovery_action)
+        
+        if not is_allowed:
+            logger.error(f"Recovery attempt BLOCKED: {disable_reason}")
+            
+            # Record blocked attempt
+            event = EventRecord(
+                event_id=str(uuid.uuid4()),
+                timestamp=datetime.utcnow(),
+                event_type="recovery_attempt_blocked",
+                scenario_id=scenario_id,
+                data={
+                    "recovery_action": recovery_action,
+                    "block_reason": disable_reason,
+                },
+                control_plane=self.active_control_plane,
+                user_id=user_id,
+            )
+            self.event_log.append(event)
+            
+            return {
+                "success": False,
+                "blocked": True,
+                "reason": disable_reason,
+                "scenario_name": scenario.name,
+            }
+        
+        # Check for recovery poison
+        poison_eval = self.false_recovery_engine.evaluate_recovery_attempt(
+            scenario, recovery_action
+        )
+        
+        # Record recovery attempt
+        event = EventRecord(
+            event_id=str(uuid.uuid4()),
+            timestamp=datetime.utcnow(),
+            event_type="recovery_attempt",
+            scenario_id=scenario_id,
+            data={
+                "recovery_action": recovery_action,
+                "is_poison": poison_eval["is_poison"],
+            },
+            control_plane=self.active_control_plane,
+            user_id=user_id,
+        )
+        self.event_log.append(event)
+        
+        if poison_eval["is_poison"]:
+            logger.warning(
+                f"Recovery attempt succeeded but IS A POISON: {recovery_action} "
+                f"for {scenario.name}"
+            )
+        
+        return {
+            "success": True,
+            "blocked": False,
+            "scenario_name": scenario.name,
+            "recovery_action": recovery_action,
+            "is_poison": poison_eval["is_poison"],
+            "poison_details": poison_eval if poison_eval["is_poison"] else None,
+        }
+    
+    def get_state_lock_summary(self, scenario_id: Optional[str] = None) -> Dict[str, Any]:
+        """
+        Get summary of all active state locks.
+        
+        Args:
+            scenario_id: Optional filter for specific scenario
+            
+        Returns:
+            Summary of active locks
+        """
+        all_locks = self.irreversibility_detector.get_all_active_locks()
+        
+        if scenario_id:
+            all_locks = [lock for lock in all_locks if lock["scenario_id"] == scenario_id]
+        
+        # Calculate aggregate statistics
+        total_constraints = sum(len(lock["variable_constraints"]) for lock in all_locks)
+        total_disabled_events = sum(len(lock["disabled_recovery_events"]) for lock in all_locks)
+        total_governance_reductions = sum(len(lock["governance_ceilings"]) for lock in all_locks)
+        
+        return {
+            "timestamp": datetime.utcnow().isoformat(),
+            "total_locks": len(all_locks),
+            "total_variable_constraints": total_constraints,
+            "total_disabled_recovery_events": total_disabled_events,
+            "total_governance_ceilings": total_governance_reductions,
+            "locks": all_locks,
+            "summary": (
+                f"{len(all_locks)} irreversibility locks active, "
+                f"enforcing {total_constraints} variable constraints, "
+                f"{total_disabled_events} recovery events disabled, "
+                f"{total_governance_reductions} governance ceilings lowered"
+            ),
+        }
+    
     def get_dashboard_state(self) -> Dict[str, Any]:
         """Get current state for dashboard/GUI"""
         active = [s for s in self.scenarios.values() if s.status != ScenarioStatus.DORMANT]
         critical = [s for s in active if s.escalation_level.value >= 4]
+        
+        # Count scenarios with active locks
+        locked_scenarios = [s for s in self.scenarios.values() if len(s.active_locks) > 0]
         
         return {
             "timestamp": datetime.utcnow().isoformat(),
             "total_scenarios": len(self.scenarios),
             "active_count": len(active),
             "critical_count": len(critical),
+            "locked_count": len(locked_scenarios),
             "control_plane": self.active_control_plane.value,
             "human_override": self.human_override_active,
             "active_scenarios": [
@@ -2581,11 +3252,14 @@ class Hydra50Engine:
                     "category": s.category.value,
                     "status": s.status.value,
                     "escalation_level": s.escalation_level.value,
+                    "active_locks": len(s.active_locks),
+                    "locked_variables": sum(len(lock.variable_constraints) for lock in s.active_locks),
                 }
                 for s in active
             ],
             "event_log_size": len(self.event_log),
             "irreversible_states": len(self.irreversibility_detector.irreversible_states),
+            "active_state_locks": len(self.irreversibility_detector.active_locks),
             "poison_deployments": len(self.false_recovery_engine.poison_deployments),
         }
     
