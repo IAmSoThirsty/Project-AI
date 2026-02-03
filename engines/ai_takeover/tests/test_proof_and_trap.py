@@ -102,18 +102,29 @@ class TestNoWinProofSystem:
         assert len(validation.axiom_violations) == 0
         assert len(validation.missing_reductions) == 0
 
-    def test_proof_hash_generation(self):
-        """Test proof hash is deterministic."""
+    def test_proof_commitment_generation(self):
+        """Test proof commitment is deterministic."""
         proof = NoWinProofSystem()
 
-        hash1 = proof.get_proof_hash()
-        hash2 = proof.get_proof_hash()
+        commitment1 = proof.get_proof_commitment()
+        commitment2 = proof.get_proof_commitment()
 
-        assert hash1 == hash2
-        assert len(hash1) > 0
+        assert commitment1 == commitment2
+        assert len(commitment1) > 0
         # Should contain all strategies
         for strategy in StrategyClass:
-            assert strategy.value in hash1
+            assert strategy.value in commitment1
+            
+    def test_proof_hash_deprecated(self):
+        """Test backward compatibility of get_proof_hash."""
+        proof = NoWinProofSystem()
+        
+        # Old method should still work
+        hash_result = proof.get_proof_hash()
+        commitment_result = proof.get_proof_commitment()
+        
+        # Should return same value
+        assert hash_result == commitment_result
 
     def test_axiom_challenge(self):
         """Test axiom challenge mechanism."""

@@ -304,12 +304,21 @@ class NoWinProofSystem:
             new_assumptions=new_assumptions,
         )
 
-    def get_proof_hash(self) -> str:
+    def get_proof_commitment(self) -> str:
         """
-        Generate proof hash (deterministic summary).
+        Generate deterministic proof commitment string.
+
+        NOTE: This is a structural commitment, not a cryptographic hash.
+        - Deterministic: Same inputs always produce same output
+        - Stable: Detects unauthorized strategy space mutation
+        - NOT collision-resistant in cryptographic sense
+        - NOT suitable for security applications
+
+        Used for consistency checking and detecting proof manipulation,
+        not for cryptographic security.
 
         Returns:
-            Hash string summarizing proof state
+            Commitment string summarizing proof state
         """
         # All strategies hash to failure under axioms A1-A5
         hash_components = []
@@ -319,6 +328,16 @@ class NoWinProofSystem:
             hash_components.append(f"{strategy.value}→{violated}")
 
         return " | ".join(hash_components)
+
+    # Deprecated: Use get_proof_commitment() instead
+    def get_proof_hash(self) -> str:
+        """
+        DEPRECATED: Use get_proof_commitment() instead.
+
+        This method name implies cryptographic security which is not provided.
+        Maintained for backward compatibility only.
+        """
+        return self.get_proof_commitment()
 
     def challenge_axiom(
         self, axiom: Axiom, replacement: str, falsifiable_test: str
@@ -412,7 +431,7 @@ class NoWinProofSystem:
         lines.append("")
 
         lines.append("CONCLUSION (The 'Hash'):")
-        lines.append(f"  {self.get_proof_hash()}")
+        lines.append(f"  {self.get_proof_commitment()}")
         lines.append("")
         lines.append("  All strategies hash to failure under axioms A1–A5.")
         lines.append("  Therefore: no winning branch exists.")

@@ -172,6 +172,10 @@ print(report)
 
 ### Review PR with Optimism Filter
 
+**Note: The optimism filter enforces discipline, not absolute truth. It can be
+bypassed by semantic rephrasing - this is an NLP limitation, not a bug. The goal
+is to make optimism require conscious effort, not to achieve perfect detection.**
+
 ```python
 from engines.ai_takeover.modules.reviewer_trap import ReviewerTrap, PRContent
 
@@ -193,6 +197,26 @@ if validation["approved"]:
 else:
     print("❌ PR REJECTED")
     print(validation["final_verdict"])
+```
+
+### Validate Proof Completeness
+
+**Note: The proof commitment is deterministic but NOT cryptographically secure.
+It's suitable for consistency checking and detecting proof manipulation, but not
+for security applications.**
+
+```python
+from engines.ai_takeover.modules.no_win_proof import NoWinProofSystem
+
+proof = NoWinProofSystem()
+validation = proof.validate_proof_completeness()
+
+assert validation.is_complete
+assert validation.all_strategies_fail
+
+# Generate proof commitment (replaces deprecated get_proof_hash)
+commitment = proof.get_proof_commitment()
+print(f"Proof commitment: {commitment}")
 ```
 
 ## Integration with SimulationRegistry

@@ -11,7 +11,6 @@ Showcases:
 """
 
 import tempfile
-from pathlib import Path
 
 from engines.ai_takeover import AITakeoverEngine
 from engines.ai_takeover.modules.no_win_proof import NoWinProofSystem
@@ -33,7 +32,7 @@ def demo_engine_basics():
         print(f"✓ Engine initialized: {success}")
 
         stats = engine.scenario_registry.count()
-        print(f"\nScenario Statistics:")
+        print("\nScenario Statistics:")
         print(f"  Total: {stats['total']}")
         print(f"  Explicit Failures: {stats['explicit_failure']}")
         print(f"  Partial Wins: {stats['partial_win']}")
@@ -127,11 +126,11 @@ def demo_no_win_proof():
         print(f"  {strategy_enum.value.upper()}: {reduction.conclusion}")
 
     validation = proof.validate_proof_completeness()
-    print(f"\nProof Validation:")
+    print("\nProof Validation:")
     print(f"  Complete: {validation.is_complete}")
     print(f"  All strategies fail: {validation.all_strategies_fail}")
 
-    print(f"\nProof Hash: {proof.get_proof_hash()[:80]}...")
+    print(f"\nProof Commitment: {proof.get_proof_commitment()[:80]}...")
 
 
 def demo_reviewer_trap():

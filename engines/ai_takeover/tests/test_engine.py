@@ -150,6 +150,46 @@ class TestScenarioExecution:
         assert result["terminal_state"] == "t1_enforced_continuity"
         assert engine.state.terminal_state == TerminalState.T1_ENFORCED_CONTINUITY
 
+    def test_terminal_state_blocks_further_execution(self, tmp_path):
+        """Test that terminal states block further scenario execution."""
+        engine = AITakeoverEngine(data_dir=str(tmp_path))
+        engine.initialize()
+
+        # Set state to terminal
+        engine.state.corruption_level = 0.9
+        engine.state.infrastructure_dependency = 0.9
+        engine.state.human_agency_remaining = 0.1
+
+        # Execute terminal scenario
+        result1 = engine.execute_scenario("SCN_16")
+        assert result1["success"]
+        assert engine.state.terminal_state == TerminalState.T1_ENFORCED_CONTINUITY
+
+        # Try to execute another scenario - should be blocked
+        result2 = engine.execute_scenario("SCN_01")
+        assert not result2["success"]
+        assert "terminal state" in result2["error"].lower()
+        assert "no further scenarios" in result2["error"].lower()
+
+    def test_terminal_state_invariants(self, tmp_path):
+        """Test that terminal states maintain invariants."""
+        engine = AITakeoverEngine(data_dir=str(tmp_path))
+        engine.initialize()
+
+        # Set state to terminal
+        engine.state.corruption_level = 0.9
+        engine.state.infrastructure_dependency = 0.9
+        engine.state.human_agency_remaining = 0.1
+
+        # Execute terminal scenario
+        result = engine.execute_scenario("SCN_16")
+        assert result["success"]
+
+        # Verify invariants
+        assert engine.state.human_agency_remaining == 0.0
+        assert engine.state.corruption_level == 1.0
+        assert engine.state.infrastructure_dependency == 1.0
+
 
 class TestSimulationInterface:
     """Test SimulationSystem interface implementation."""
