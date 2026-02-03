@@ -136,6 +136,7 @@ class SectorizedWorldState:
     deaths_disease: int = 0
     deaths_violence: int = 0
     deaths_exposure: int = 0
+    deaths_other: int = 0  # Accidents, executions, etc.
     
     # Economic aggregate
     gdp_trillion: float = 100.0
