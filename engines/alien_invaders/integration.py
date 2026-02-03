@@ -398,6 +398,8 @@ def register_aicpd_system(config: SimulationConfig | None = None) -> bool:
     """
     Register AICPD engine with the global simulation registry.
 
+    INTEGRATION POINT C: Sets monolith authority on registry for access control.
+
     Args:
         config: Optional simulation configuration
 
@@ -415,8 +417,15 @@ def register_aicpd_system(config: SimulationConfig | None = None) -> bool:
             logger.error("Failed to initialize AICPD adapter")
             return False
 
-        # Register
-        SimulationRegistry.register("alien_invaders", adapter)
+        # INTEGRATION POINT C: Set monolith authority on registry
+        # This enables projection mode enforcement
+        if hasattr(adapter.engine, 'monolith'):
+            SimulationRegistry.set_monolith_authority(adapter.engine.monolith)
+            SimulationRegistry.enable_projection_mode(True)
+            logger.info("Registry projection mode enabled with monolith authority")
+
+        # Register with monolith bypass (we're inside the monolith during initialization)
+        SimulationRegistry.register("alien_invaders", adapter, from_monolith=True)
 
         logger.info("AICPD system registered successfully")
         return True
