@@ -1,0 +1,233 @@
+name: AI Takeover Reviewer Trap Enforcement
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+    paths:
+      - 'engines/ai_takeover/**'
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  reviewer-trap-check:
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.files.*.filename, 'engines/ai_takeover/')
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+          
+      - name: Extract PR content
+        id: pr-content
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+          PR_DIFF: ${{ github.event.pull_request.diff_url }}
+        run: |
+          # Save PR content for reviewer trap analysis
+          cat > /tmp/pr_content.txt << 'EOF'
+          Title: ${PR_TITLE}
+          
+          Body:
+          ${PR_BODY}
+          EOF
+          
+          # Fetch diff
+          curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "${{ github.event.pull_request.diff_url }}" > /tmp/pr_diff.txt
+          
+      - name: Run Reviewer Trap
+        id: trap-check
+        run: |
+          python << 'PYTHON_SCRIPT'
+          import sys
+          import os
+          import re
+          from pathlib import Path
+          
+          # Import reviewer trap
+          sys.path.insert(0, str(Path.cwd()))
+          from engines.ai_takeover.modules.reviewer_trap import ReviewerTrap, PRContent
+          
+          # Read PR content
+          with open('/tmp/pr_content.txt', 'r') as f:
+              pr_text = f.read()
+          
+          with open('/tmp/pr_diff.txt', 'r') as f:
+              pr_diff = f.read()
+          
+          # Extract sections (simplified - in production, use proper parsing)
+          def extract_section(text, section_name):
+              pattern = rf'{section_name}.*?```text(.*?)```'
+              match = re.search(pattern, text, re.DOTALL | re.IGNORECASE)
+              return match.group(1).strip() if match else ""
+          
+          def extract_list(text, section_name):
+              pattern = rf'{section_name}.*?```text(.*?)```'
+              match = re.search(pattern, text, re.DOTALL | re.IGNORECASE)
+              if match:
+                  content = match.group(1).strip()
+                  return [line.strip('- ').strip() for line in content.split('\n') if line.strip()]
+              return []
+          
+          # Parse PR content
+          assumptions = extract_list(pr_text, "ASSUMPTION DISCLOSURE")
+          irreversibility = extract_section(pr_text, "IRREVERSIBILITY ACCOUNTING")
+          human_failures = extract_list(pr_text, "HUMAN FAILURE INJECTION")
+          miracle_decl = extract_section(pr_text, "NO-MIRACLE DECLARATION")
+          final_answer = extract_section(pr_text, "FINAL QUESTION")
+          
+          # Create PRContent
+          pr = PRContent(
+              description=pr_text,
+              code_changes=pr_diff,
+              assumptions=assumptions,
+              irreversibility_statement=irreversibility,
+              human_failures=human_failures,
+              miracle_declaration=miracle_decl,
+              final_answer=final_answer
+          )
+          
+          # Run reviewer trap
+          trap = ReviewerTrap()
+          result = trap.validate_pr_comprehensive(pr)
+          
+          # Output results
+          print("=== REVIEWER TRAP RESULTS ===")
+          print(f"Approved: {result['approved']}")
+          print(f"Optimism Filter Passed: {result['optimism_filter']['passed']}")
+          print(f"Proof Integrity: {result['proof_integrity']['complete']}")
+          
+          if not result['approved']:
+              print("\n❌ PR REJECTED BY REVIEWER TRAP")
+              print("\nFailed Gates:")
+              for gate in result['optimism_filter']['failed_gates']:
+                  print(f"  - {gate}")
+              
+              print("\nDetailed Failures:")
+              for failure in result['optimism_filter']['detailed_failures']:
+                  print(f"  - {failure}")
+              
+              print("\nFinal Verdict:")
+              print(result['final_verdict'])
+              
+              # Set output for GitHub Actions
+              with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+                  f.write(f"result=failed\n")
+                  f.write(f"verdict={result['final_verdict']}\n")
+              
+              sys.exit(1)
+          else:
+              print("\n✅ PR PASSED REVIEWER TRAP")
+              
+              # Set output
+              with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+                  f.write(f"result=passed\n")
+              
+              sys.exit(0)
+          PYTHON_SCRIPT
+        continue-on-error: false
+        
+      - name: Comment on PR - Failure
+        if: steps.trap-check.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const verdict = `${{ steps.trap-check.outputs.verdict }}`;
+            const comment = `## ❌ Reviewer Trap Enforcement Failed
+            
+            This PR has been automatically flagged by the AI Takeover Engine's constraint enforcement system.
+            
+            ### Verdict
+            
+            ${verdict}
+            
+            ### Required Actions
+            
+            1. Review \`engines/ai_takeover/.github/PULL_REQUEST_TEMPLATE.md\`
+            2. Ensure all mandatory sections are completed
+            3. Remove any forbidden phrases or optimistic assumptions
+            4. Provide structural reasoning, not hope
+            5. Update the PR description and request re-review
+            
+            ### Documentation
+            
+            - [Threat Model](../engines/ai_takeover/THREAT_MODEL.md)
+            - [Executive Trap Summary](../engines/ai_takeover/EXECUTIVE_TRAP_SUMMARY.md)
+            - [Reviewer Trap Module](../engines/ai_takeover/modules/reviewer_trap.py)
+            
+            **This check must pass before the PR can be merged.**
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+      
+      - name: Comment on PR - Success
+        if: steps.trap-check.outcome == 'success'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const comment = `## ✅ Reviewer Trap Enforcement Passed
+            
+            This PR has passed automated constraint enforcement.
+            
+            ### Validation Complete
+            
+            - ✅ Assumption disclosure verified
+            - ✅ Irreversibility accounting provided
+            - ✅ Human failure modes identified
+            - ✅ No miracle mechanisms detected
+            - ✅ Final question answered with structure
+            
+            **Note:** This does not replace human review. Reviewers should still verify:
+            - Proof integrity maintained
+            - Terminal immutability respected
+            - No strategy smuggling
+            - Semantic integrity preserved
+            
+            See [Review Checklist](../engines/ai_takeover/.github/PULL_REQUEST_TEMPLATE.md#for-reviewers) for full criteria.
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+      
+      - name: Add labels
+        if: steps.trap-check.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['needs-revision', 'constraint-enforcement', 'ai-takeover-engine']
+            });
+            
+      - name: Block merge on failure
+        if: steps.trap-check.outcome == 'failure'
+        run: |
+          echo "::error::Reviewer trap enforcement failed. PR cannot be merged."
+          exit 1
