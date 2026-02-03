@@ -20,6 +20,10 @@ from engines.alien_invaders.modules.causal_clock import (
 from engines.alien_invaders.modules.invariants import (
     CompositeInvariantValidator,
 )
+from engines.alien_invaders.modules.planetary_defense_monolith import (
+    PlanetaryDefenseMonolith,
+    ActionRequest,
+)
 from engines.alien_invaders.modules.world_state import (
     Country,
     GlobalState,
@@ -69,6 +73,14 @@ class AlienInvadersEngine:
 
         # Composite invariant validator
         self.invariant_validator = CompositeInvariantValidator()
+
+        # INTEGRATION POINT B: Planetary Defense Monolith as sole time authority
+        # The monolith controls all time advancement and law evaluation
+        self.monolith = PlanetaryDefenseMonolith(
+            causal_clock=self.causal_clock,
+            invariant_validator=self.invariant_validator,
+            enable_strict_enforcement=self.config.validation.enable_strict_validation,
+        )
 
         # Random seed for deterministic replay
         if self.config.validation.random_seed is not None:
@@ -138,6 +150,9 @@ class AlienInvadersEngine:
         """
         Advance simulation by one time step (default: 30 days).
 
+        INTEGRATION POINT B: All time advancement deferred to monolith's causal clock.
+        The engine no longer advances time independently.
+
         Processes all subsystem updates, cross-domain propagation,
         and cause-and-effect chains.
 
@@ -152,18 +167,50 @@ class AlienInvadersEngine:
             # Save previous state for composite invariant validation
             self.prev_state = self._deep_copy_state(self.state)
 
-            # Advance time
+            # INTEGRATION POINT B: Defer time advancement to monolith
+            # The monolith's causal clock is the SOLE time authority
+            self.monolith.advance_time()
             self.current_tick += 1
+
+            # Update physical time based on logical time
             self.state.day_number += self.config.world.time_step_days
             self.state.current_date += timedelta(days=self.config.world.time_step_days)
 
-            logger.debug("Tick: Day %d, Date: %s",
-                        self.state.day_number, self.state.current_date)
+            logger.debug("Tick: Day %d, Date: %s, Logical Time: %d",
+                        self.state.day_number, self.state.current_date,
+                        self.monolith.get_current_time())
 
             # Process queued events at tick boundary
             queued_events = self.event_queue.get_events_for_tick(self.current_tick)
             for causal_event in queued_events:
                 self._execute_causal_event(causal_event)
+
+            # INTEGRATION POINT A: Validate action legality through monolith
+            # Before processing updates, check if the tick itself is legal
+            tick_action = ActionRequest(
+                action_id=f"tick_{self.current_tick}",
+                action_type="simulation_tick",
+                parameters={
+                    "tick": self.current_tick,
+                    "day_number": self.state.day_number,
+                },
+                requestor="AlienInvadersEngine",
+            )
+
+            verdict = self.monolith.evaluate_action(
+                tick_action, self.state, self.prev_state
+            )
+
+            if not verdict.allowed:
+                logger.error("Tick %d REJECTED by monolith: %s",
+                           self.current_tick, verdict.reason)
+                if self.config.validation.enable_strict_validation:
+                    return False
+                # Log violations but continue if not strict
+                for violation in verdict.violations:
+                    logger.warning("  - %s: %s",
+                                 violation.invariant_name,
+                                 violation.description)
 
             # Process all subsystem updates
             self._update_alien_activity()
@@ -191,22 +238,6 @@ class AlienInvadersEngine:
                            self.state.day_number, validation.violations)
                 return False
 
-            # Validate composite invariants (cross-domain coherence)
-            if self.config.validation.enable_strict_validation:
-                invariants_valid, invariant_violations = self.invariant_validator.validate_all(
-                    self.state,
-                    self.prev_state,
-                    enforce=True
-                )
-
-                if not invariants_valid:
-                    logger.error("Composite invariant validation failed at day %d: %d violations",
-                               self.state.day_number, len(invariant_violations))
-                    # Log violations but don't fail immediately (for now)
-                    # In production, this could be configurable
-                    for violation in invariant_violations:
-                        logger.warning("  - %s: %s", violation.invariant_name, violation.description)
-
             # Save periodic snapshots
             if self.state.day_number % self.config.validation.save_state_frequency == 0:
                 self.state_snapshots[self.state.day_number] = self._deep_copy_state(self.state)
@@ -222,6 +253,9 @@ class AlienInvadersEngine:
         """
         Inject an external event into the simulation.
 
+        INTEGRATION POINT B: Uses monolith's causal clock for time assignment.
+        No independent time advancement.
+
         Events are queued for execution at the NEXT tick boundary to ensure
         deterministic ordering regardless of injection timing.
 
@@ -235,8 +269,9 @@ class AlienInvadersEngine:
         if not self.initialized or self.state is None:
             raise RuntimeError("Cannot inject event: simulation not initialized")
 
-        # Assign logical time from causal clock
-        logical_time = self.causal_clock.next()
+        # INTEGRATION POINT B: Assign logical time from monolith's causal clock
+        # The monolith is the sole authority for time
+        logical_time = self.monolith.advance_time()
 
         # Events execute at NEXT tick boundary (never immediately)
         execution_tick = self.current_tick + 1
