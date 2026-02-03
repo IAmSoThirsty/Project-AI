@@ -8,6 +8,7 @@ This is where it becomes REAL.
 """
 
 import logging
+import random
 from dataclasses import dataclass
 from engines.emp_defense.modules.sectorized_state import SectorizedWorldState
 
@@ -33,10 +34,16 @@ class FailureStatesEngine:
     Simulation branches diverge.
     """
     
-    def __init__(self):
-        """Initialize failure states engine."""
+    def __init__(self, seed: int | None = None):
+        """
+        Initialize failure states engine.
+        
+        Args:
+            seed: Random seed for deterministic failure outcomes (None = non-deterministic)
+        """
         self.thresholds: list[FailureThreshold] = []
         self.triggered_failures: set[str] = set()
+        self.rng = random.Random(seed)
         self._register_failure_thresholds()
     
     def check_failure_states(self, state: SectorizedWorldState) -> list[str]:
@@ -207,8 +214,7 @@ class FailureStatesEngine:
     def _apply_government_splinter(self, state: SectorizedWorldState) -> None:
         """Government splinters: Multiple competing authorities."""
         # Spawn 3-7 splinter entities
-        import random
-        num_splinters = random.randint(3, 7)
+        num_splinters = self.rng.randint(3, 7)
         
         for i in range(num_splinters):
             entity_name = f"Splinter_{chr(65+i)}"  # A, B, C, etc.

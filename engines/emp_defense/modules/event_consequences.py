@@ -6,6 +6,7 @@ No free wins. Every action has tradeoffs.
 """
 
 import logging
+import random
 from dataclasses import dataclass
 from typing import Any, Callable
 from engines.emp_defense.modules.sectorized_state import SectorizedWorldState
@@ -61,9 +62,15 @@ class ConsequentialEventSystem:
     No free wins - every event costs something, helps something, risks something else.
     """
     
-    def __init__(self):
-        """Initialize event system with event catalog."""
+    def __init__(self, seed: int | None = None):
+        """
+        Initialize event system with event catalog.
+        
+        Args:
+            seed: Random seed for deterministic event outcomes (None = non-deterministic)
+        """
         self.events: dict[str, EventDefinition] = {}
+        self.rng = random.Random(seed)
         self._register_default_events()
     
     def register_event(self, event: EventDefinition) -> None:
@@ -102,8 +109,7 @@ class ConsequentialEventSystem:
         self._apply_costs(state, event.cost)
         
         # Check if event fails (risks)
-        import random
-        if random.random() < event.risk.failure_chance:
+        if self.rng.random() < event.risk.failure_chance:
             # Event fails - costs paid, no benefits
             self._apply_failure_consequences(state, event.risk)
             return False, f"{event.name} FAILED - costs paid, no benefit", {
@@ -178,11 +184,10 @@ class ConsequentialEventSystem:
     
     def _apply_risks(self, state: SectorizedWorldState, risk: EventRisk) -> dict[str, Any]:
         """Apply event risks and check for cascading failures."""
-        import random
         consequences = {}
         
         # Violence spike risk
-        if random.random() < risk.violence_spike_chance:
+        if self.rng.random() < risk.violence_spike_chance:
             spike = 0.10
             state.security.violence_index += spike
             state.security.violence_index = min(1.0, state.security.violence_index)
@@ -190,7 +195,7 @@ class ConsequentialEventSystem:
             logger.warning(f"⚠️ Violence spike triggered: +{spike:.0%}")
         
         # Cascade failure risk
-        if random.random() < risk.cascade_failure_chance:
+        if self.rng.random() < risk.cascade_failure_chance:
             # Event backfires - make something worse
             state.governance.legitimacy_score -= 0.05
             state.security.civil_unrest_level += 0.10
