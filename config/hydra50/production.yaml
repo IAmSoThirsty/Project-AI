@@ -1,0 +1,132 @@
+# HYDRA-50 Production Configuration
+# God-Tier settings for production deployment
+
+system:
+  name: "HYDRA-50 Contingency Engine"
+  version: "1.0.0"
+  environment: "production"
+  log_level: "INFO"
+
+engine:
+  data_dir: "/var/lib/hydra50/data"
+  max_concurrent_scenarios: 50
+  escalation_check_interval_seconds: 10
+  event_sourcing_enabled: true
+  replay_enabled: true
+  
+telemetry:
+  enabled: true
+  metrics_retention_seconds: 86400  # 24 hours
+  prometheus_port: 9090
+  export_interval_seconds: 15
+  distributed_tracing: true
+  health_check_interval_seconds: 30
+
+visualization:
+  output_dir: "/var/lib/hydra50/visualizations"
+  default_width: 80
+  default_height: 40
+  export_formats: ["json", "ascii"]
+  realtime_updates: true
+
+analytics:
+  enabled: true
+  ml_models_dir: "/var/lib/hydra50/models"
+  monte_carlo_iterations: 10000
+  confidence_level: 0.95
+  anomaly_detection_threshold: 0.1
+
+integration:
+  cerberus:
+    enabled: true
+    max_spawn_agents: 100
+    lockdown_stages: 25
+  
+  tarl:
+    enabled: true
+    task_timeout_seconds: 3600
+  
+  temporal:
+    enabled: true
+    namespace: "hydra50"
+    task_queue: "hydra50-tasks"
+  
+  command_center:
+    enabled: true
+    auto_reconnect: true
+  
+  soc:
+    enabled: true
+    incident_reporting: true
+  
+  planetary_defense:
+    enabled: true
+    four_laws_validation: true
+
+performance:
+  caching:
+    lru_max_size: 10000
+    ttl_default_seconds: 300
+  
+  parallel_processing:
+    enabled: true
+    max_workers: null  # Auto-detect CPU count
+    use_processes: false
+  
+  memory:
+    max_usage_percent: 80
+    gc_threshold_percent: 70
+
+security:
+  authentication_required: true
+  session_timeout_minutes: 60
+  rate_limiting:
+    enabled: true
+    max_requests: 100
+    window_seconds: 60
+  
+  encryption:
+    enabled: true
+    algorithm: "fernet"
+  
+  api_keys:
+    enabled: true
+    default_expiry_days: 90
+
+monitoring:
+  health_checks:
+    enabled: true
+    interval_seconds: 30
+  
+  alerting:
+    enabled: true
+    severity_threshold: "WARNING"
+    notification_channels: ["email", "webhook"]
+
+database:
+  type: "sqlite"  # or "postgresql" for production
+  path: "/var/lib/hydra50/hydra50.db"
+  connection_pool_size: 10
+  timeout_seconds: 30
+
+logging:
+  level: "INFO"
+  format: "json"
+  output: "/var/log/hydra50/hydra50.log"
+  rotation: "daily"
+  retention_days: 30
+  structured_logging: true
+
+# Scenario-specific configurations
+scenarios:
+  default_escalation_levels: 6
+  auto_escalation_enabled: true
+  intervention_approval_required: true
+  
+  triggers:
+    evaluation_interval_seconds: 60
+    threshold_sensitivity: 0.8
+  
+  recovery:
+    poisoning_detection_enabled: true
+    recovery_validation_required: true
