@@ -390,7 +390,6 @@ class PlanetaryDefenseCore:
 
         logger.info(f"Action {action_id} completed: {outcome}")
         return action_id
-        return action_id
 
     # -------------------------------
     # AUDIT & DISCLOSURE
