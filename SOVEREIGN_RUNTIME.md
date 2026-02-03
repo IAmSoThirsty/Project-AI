@@ -239,6 +239,92 @@ Artifacts Generated:
 ================================================================================
 ```
 
+### Third-Party Verification (NEW)
+
+**Comprehensive verification for third-party auditors - makes trust portable:**
+
+```bash
+# Verify compliance bundle with detailed report
+python project_ai_cli.py sovereign-verify --bundle compliance_bundle.json
+
+# Save detailed verification report
+python project_ai_cli.py sovereign-verify --bundle compliance.zip --output verification_report.json
+```
+
+**Output:**
+```
+================================================================================
+SOVEREIGN VERIFICATION SYSTEM
+================================================================================
+Bundle: compliance_bundle.json
+Timestamp: 2026-02-03T22:07:25.405389
+================================================================================
+
+1. Verifying hash chain integrity...
+   Status: PASS
+
+2. Mapping signature authorities...
+   Status: PASS
+
+3. Tracing policy resolutions...
+   Status: PASS
+
+4. Generating timestamped attestation...
+   Attestation ID: 6de3fa2bf37a889f
+
+================================================================================
+VERIFICATION COMPLETE
+================================================================================
+Overall Status: PASS
+================================================================================
+
+Hash Chain Validation:
+  Status: PASS
+  Blocks Verified: 20 / 20
+
+Signature Authority Map:
+  Status: PASS
+  Algorithm: Ed25519
+  Public Key Fingerprint: f9e001262157f123
+  Signatures Verified: 7 / 7
+  Authorities:
+    • pipeline_executor: 6 occurrences, 6 verified
+
+Policy Resolution Trace:
+  Status: PASS
+  Total Resolutions: 6
+  Passed: 6
+  Failed: 0
+
+Timestamped Attestation:
+  Attestation ID: 6de3fa2bf37a889f918cd66baac982b2...
+  Timestamp: 2026-02-03T22:07:25.441332
+  Verifier: Project-AI Sovereign Verifier v1.0.0
+  Verification Hash: cc0f011e1113bb82ddd456cc5e1281b1...
+
+================================================================================
+SUMMARY
+================================================================================
+Bundle Version: 1.0.0
+Total Audit Blocks: 20
+Blocks Verified: 20
+Signatures Verified: 7
+Policy Resolutions: 6
+Overall Status: PASS
+================================================================================
+
+📄 Full verification report saved to: verification_report.json
+```
+
+**Key Features:**
+- **Hash Chain Validation**: Cryptographic verification of all audit blocks
+- **Signature Authority Map**: Ed25519 signature verification with authority tracking
+- **Policy Resolution Trace**: Complete trace of all policy decisions
+- **Timestamped Attestation**: Independent verification certificate with cryptographic proof
+- **Portable Trust**: Third-party auditors can verify WITHOUT trusting the provider
+
+**This is the answer to: "Make this something a third-party auditor can run without trusting you."**
+
 ### Verifying Audit Trail
 
 ```bash
