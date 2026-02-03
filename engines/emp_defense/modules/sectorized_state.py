@@ -6,6 +6,13 @@ asymmetric cross-domain coupling.
 """
 
 from dataclasses import dataclass, field
+from engines.emp_defense.modules.constants import (
+    EnergyThresholds,
+    WaterThresholds,
+    FoodThresholds,
+    HealthThresholds,
+    GovernanceThresholds,
+)
 
 
 @dataclass
@@ -16,11 +23,11 @@ class EnergyDomain:
     Tracks grid generation, transformer inventory, and fuel access.
     """
     grid_generation_pct: float = 1.0  # Percentage of generation capacity
-    transformer_inventory: int = 55000  # Available HV transformers
+    transformer_inventory: int = EnergyThresholds.TOTAL_HV_TRANSFORMERS
     transformers_damaged: int = 0  # Damaged transformers
-    transformer_replacement_rate_yearly: int = 10  # Manufacturing capacity
-    fuel_access_days: float = 90.0  # Days of fuel reserves
-    nuclear_plants_operational: int = 440  # Operational nuclear plants
+    transformer_replacement_rate_yearly: int = EnergyThresholds.TRANSFORMER_REPLACEMENT_RATE_YEARLY
+    fuel_access_days: float = EnergyThresholds.BASELINE_FUEL_RESERVE_DAYS
+    nuclear_plants_operational: int = EnergyThresholds.GLOBAL_NUCLEAR_PLANTS
     nuclear_plants_scram: int = 0  # Emergency shutdown count
     grid_restoration_progress: float = 0.0  # 0-1 scale
 
@@ -48,7 +55,7 @@ class FoodDomain:
     
     Tracks urban food supply, rural production, and logistics.
     """
-    urban_food_days: float = 3.0  # Days of food in cities
+    urban_food_days: float = FoodThresholds.INITIAL_URBAN_FOOD_DAYS
     rural_output_pct: float = 1.0  # Agricultural production capacity
     logistics_integrity: float = 1.0  # Supply chain functionality
     cold_storage_operational_pct: float = 1.0  # Depends on grid
@@ -66,9 +73,9 @@ class HealthDomain:
     Tracks hospital capacity, medical supplies, and disease pressure.
     """
     hospital_capacity_pct: float = 1.0  # Functional hospital capacity
-    critical_med_supply_days: float = 30.0  # Insulin, vaccines, antibiotics
+    critical_med_supply_days: float = HealthThresholds.BASELINE_MED_SUPPLY_DAYS
     disease_pressure_index: float = 0.0  # 0=baseline, 1=pandemic
-    generator_fuel_days: float = 30.0  # Hospital backup power
+    generator_fuel_days: float = HealthThresholds.BASELINE_GENERATOR_FUEL_DAYS
     electronic_records_accessible_pct: float = 1.0  # Depends on grid
     cold_chain_loss_pct: float = 0.0  # Vaccine/medication spoilage
     surgical_capacity_pct: float = 1.0  # Operating room availability
@@ -100,7 +107,7 @@ class GovernanceDomain:
     
     Tracks government effectiveness, fragmentation, and emergency powers.
     """
-    legitimacy_score: float = 0.70  # 0=collapsed, 1=strong
+    legitimacy_score: float = GovernanceThresholds.LEGITIMACY_BASELINE
     regional_fragmentation: float = 0.0  # 0=unified, 1=balkanized
     emergency_power_level: float = 0.0  # 0=normal, 1=martial law
     courts_operational_pct: float = 1.0  # Legal system functionality
