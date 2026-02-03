@@ -4,6 +4,8 @@
 
 The **Alien Invaders Contingency Plan Defense (AICPD) Engine** is a complete, production-grade simulation system designed to model alien invasion scenarios and their cascading effects across all domains of human civilization. It implements deterministic, causally-consistent world modeling with full state validation and artifact generation.
 
+**NEW**: Now integrated with **Planetary Defense Monolith** for constitutional law evaluation, sole time authority, and mandatory projection mode. See [MONOLITH_INTEGRATION.md](MONOLITH_INTEGRATION.md) for details.
+
 ## Architecture
 
 ### Core Components
@@ -12,6 +14,7 @@ The **Alien Invaders Contingency Plan Defense (AICPD) Engine** is a complete, pr
 2. **World State** (`modules/world_state.py`) - Complete state representation
 3. **Configuration Schema** (`schemas/config_schema.py`) - Type-safe configuration
 4. **Simulation Runner** (`run_simulation.py`) - Execution harness
+5. **Planetary Defense Monolith** (`modules/planetary_defense_monolith.py`) - Constitutional kernel (NEW)
 
 ### Mandatory Interface
 
@@ -22,6 +25,16 @@ All contingency engines must implement these five methods:
 - `inject_event(type, parameters)` - Inject external events
 - `observe(query)` - Query current state
 - `export_artifacts(output_dir)` - Generate reports and data
+
+### Monolithic Integration (NEW)
+
+The engine now integrates with the Planetary Defense Monolith for:
+
+- **Integration Point A**: Invariants as constitutional laws (not post-hoc checks)
+- **Integration Point B**: Causal clock as sole time authority (eliminates race conditions)
+- **Integration Point C**: Mandatory read-only projection for SimulationRegistry
+
+See [MONOLITH_INTEGRATION.md](MONOLITH_INTEGRATION.md) for complete documentation.
 
 ### World Model Subsystems
 
