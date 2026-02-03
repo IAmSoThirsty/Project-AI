@@ -1,0 +1,11 @@
+{
+  "simulation_day": 7,
+  "global_population": 7999937070,
+  "total_deaths": 62930,
+  "grid_operational_pct": 0.10099999999999998,
+  "gdp_trillion": 10.099999999999998,
+  "major_events": [
+    "T+0: Pre-EMP baseline established",
+    "Day 0: EMP event - 90.0% grid failure"
+  ]
+}
