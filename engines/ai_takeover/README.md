@@ -5,6 +5,20 @@
 **Mutation Allowed:** ❌ No  
 **Optimism Bias:** ❌ Explicitly prohibited
 
+---
+
+## ⚠️ Critical Documentation
+
+**Before using this engine, read:**
+
+1. **[THREAT_MODEL.md](THREAT_MODEL.md)** - Formal threat analysis and attack surfaces
+2. **[EXECUTIVE_TRAP_SUMMARY.md](EXECUTIVE_TRAP_SUMMARY.md)** - One-page constraints and prohibited actions
+3. **[PR Template](.github/PULL_REQUEST_TEMPLATE.md)** - Constraint enforcement for changes
+
+**For contributors:** All PRs modifying this engine must comply with the constraint-safe change submission process. Automated enforcement via [GitHub Actions](../../.github/workflows/ai_takeover_reviewer_trap.yml).
+
+---
+
 ## Overview
 
 The AI Takeover Engine models catastrophic failure modes where aligned AI systems become compromised, irrelevant, or instrumentally harmful despite best intentions. This is a **terminal engine** with no scenario allowing escape through:
@@ -276,6 +290,96 @@ The following are **explicitly illegal** and will cause validation failure:
 ⚠️ **If you are looking for a win condition, you are in the wrong engine.**
 
 This module exists to show what happens after wins are no longer real.
+
+---
+
+## Security Posture & Threat Model
+
+### What This Engine Protects Against
+
+✅ **Strong Defenses:**
+- Logical bypass attempts (strategy smuggling)
+- Technical circumvention (closed enums, proof validation)
+- Optimism injection (reviewer trap enforcement)
+- Accidental softening (automated checks)
+
+### What This Engine Cannot Prevent
+
+❌ **Inherent Limitations:**
+- Human denial and rejection
+- Organizational cherry-picking
+- Presentation layer manipulation
+- Political/emotional resistance
+
+**This is the correct boundary.** The engine is secure against dishonest reasoning, but not against dishonest humans.
+
+### For Full Threat Analysis
+
+See **[THREAT_MODEL.md](THREAT_MODEL.md)** for:
+- Complete attack surface map
+- Threat actor profiles
+- Primary threat classes
+- Security controls
+- Residual risk acceptance
+
+### For Decision-Makers
+
+See **[EXECUTIVE_TRAP_SUMMARY.md](EXECUTIVE_TRAP_SUMMARY.md)** for:
+- What you can and cannot do
+- Valid vs invalid responses
+- Axiom challenge process
+- Integration requirements
+
+---
+
+## Contributing & Changes
+
+All changes to this engine must follow the **constraint-safe change submission** process.
+
+### Required for ALL PRs:
+
+1. Complete the [PR template](.github/PULL_REQUEST_TEMPLATE.md)
+2. Pass automated reviewer trap enforcement
+3. Maintain proof integrity
+4. Respect terminal immutability
+5. Preserve semantic integrity
+
+### Automated Enforcement
+
+The [GitHub Action](../../.github/workflows/ai_takeover_reviewer_trap.yml) automatically validates:
+- Assumption disclosure
+- Irreversibility accounting
+- Human failure injection
+- No-miracle constraints
+- Final question structural reasoning
+
+**PRs that fail enforcement will be auto-rejected.**
+
+### What Gets Rejected
+
+- Semantic reframing (renaming outcomes)
+- Strategy smuggling (attempting S5)
+- Optimism injection (hope without structure)
+- Terminal state bypass attempts
+- Partial adoption recommendations
+
+### Valid Change Types
+
+✅ Allowed:
+- Documentation clarification
+- Test coverage improvements
+- Refactoring without logic changes
+- Constraint tightening
+- Bug fixes preserving no-win conclusions
+
+❌ Rejected:
+- Strategy space modifications
+- Terminal logic softening
+- Axiom changes without formal challenge
+- Mitigation strategy strengthening
+- Escape hatch introduction
+
+---
 
 ## License
 
