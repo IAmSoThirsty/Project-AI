@@ -4,6 +4,7 @@ Alien Invaders Contingency Plan Defense Engine
 Main simulation engine implementing the mandatory interface.
 """
 
+import copy
 import json
 import logging
 import random
@@ -11,6 +12,14 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from engines.alien_invaders.modules.causal_clock import (
+    CausalClock,
+    CausalEvent,
+    EventQueue,
+)
+from engines.alien_invaders.modules.invariants import (
+    CompositeInvariantValidator,
+)
 from engines.alien_invaders.modules.world_state import (
     Country,
     GlobalState,
@@ -48,9 +57,18 @@ class AlienInvadersEngine:
         """
         self.config = config or SimulationConfig()
         self.state: GlobalState | None = None
+        self.prev_state: GlobalState | None = None  # For composite invariant validation
         self.events: list[SimulationEvent] = []
         self.validation_history: list[ValidationState] = []
         self.initialized = False
+
+        # Causal clock for deterministic event ordering
+        self.causal_clock = CausalClock()
+        self.event_queue = EventQueue()
+        self.current_tick = 0
+
+        # Composite invariant validator
+        self.invariant_validator = CompositeInvariantValidator()
 
         # Random seed for deterministic replay
         if self.config.validation.random_seed is not None:
@@ -131,12 +149,21 @@ class AlienInvadersEngine:
             return False
 
         try:
+            # Save previous state for composite invariant validation
+            self.prev_state = self._deep_copy_state(self.state)
+
             # Advance time
+            self.current_tick += 1
             self.state.day_number += self.config.world.time_step_days
             self.state.current_date += timedelta(days=self.config.world.time_step_days)
 
             logger.debug("Tick: Day %d, Date: %s",
                         self.state.day_number, self.state.current_date)
+
+            # Process queued events at tick boundary
+            queued_events = self.event_queue.get_events_for_tick(self.current_tick)
+            for causal_event in queued_events:
+                self._execute_causal_event(causal_event)
 
             # Process all subsystem updates
             self._update_alien_activity()
@@ -155,7 +182,7 @@ class AlienInvadersEngine:
             if self.config.ai_governance.enable_ai_governance:
                 self._process_ai_governance()
 
-            # Validate state consistency
+            # Validate state consistency (basic conservation laws)
             validation = self._validate_state()
             self.validation_history.append(validation)
 
@@ -163,6 +190,22 @@ class AlienInvadersEngine:
                 logger.error("State validation failed at day %d: %s",
                            self.state.day_number, validation.violations)
                 return False
+
+            # Validate composite invariants (cross-domain coherence)
+            if self.config.validation.enable_strict_validation:
+                invariants_valid, invariant_violations = self.invariant_validator.validate_all(
+                    self.state,
+                    self.prev_state,
+                    enforce=True
+                )
+
+                if not invariants_valid:
+                    logger.error("Composite invariant validation failed at day %d: %d violations",
+                               self.state.day_number, len(invariant_violations))
+                    # Log violations but don't fail immediately (for now)
+                    # In production, this could be configurable
+                    for violation in invariant_violations:
+                        logger.warning("  - %s: %s", violation.invariant_name, violation.description)
 
             # Save periodic snapshots
             if self.state.day_number % self.config.validation.save_state_frequency == 0:
@@ -179,6 +222,9 @@ class AlienInvadersEngine:
         """
         Inject an external event into the simulation.
 
+        Events are queued for execution at the NEXT tick boundary to ensure
+        deterministic ordering regardless of injection timing.
+
         Args:
             event_type: Type of event (e.g., "alien_attack", "diplomatic_initiative")
             parameters: Event-specific parameters
@@ -189,39 +235,81 @@ class AlienInvadersEngine:
         if not self.initialized or self.state is None:
             raise RuntimeError("Cannot inject event: simulation not initialized")
 
-        event_id = f"evt_{self.state.day_number}_{len(self.events)}"
+        # Assign logical time from causal clock
+        logical_time = self.causal_clock.next()
 
-        event = SimulationEvent(
+        # Events execute at NEXT tick boundary (never immediately)
+        execution_tick = self.current_tick + 1
+
+        event_id = f"evt_{logical_time}_{event_type}"
+
+        # Create causal event
+        causal_event = CausalEvent(
             event_id=event_id,
-            timestamp=self.state.current_date,
-            day_number=self.state.day_number,
             event_type=event_type,
-            severity=parameters.get("severity", "medium"),
-            affected_countries=parameters.get("affected_countries", []),
-            description=parameters.get("description", f"Injected event: {event_type}"),
             parameters=parameters,
+            logical_time=logical_time,
+            physical_time=datetime.now(),
+            tick_number=execution_tick,
+            severity=parameters.get("severity", "medium"),
+            description=parameters.get("description", f"Injected event: {event_type}"),
+            affected_countries=parameters.get("affected_countries", []),
         )
 
-        self.events.append(event)
-        self.state.events_history.append({
-            "event_id": event_id,
-            "type": event_type,
-            "day": self.state.day_number,
-            "parameters": parameters,
-        })
+        # Queue for execution at tick boundary
+        self.event_queue.enqueue(causal_event)
 
-        # Process event effects
-        self._process_event(event)
+        # Record in causal history
+        self.causal_clock.record_event(event_id)
 
-        logger.info("Event injected: %s (ID: %s)", event_type, event_id)
+        logger.info("Event queued: %s (ID: %s, logical_time=%d, exec_tick=%d)",
+                   event_type, event_id, logical_time, execution_tick)
+
         return event_id
 
-    def observe(self, query: str | None = None) -> dict[str, Any]:
+    def _execute_causal_event(self, causal_event: CausalEvent):
+        """
+        Execute a causal event at tick boundary.
+
+        Args:
+            causal_event: Event to execute
+        """
+        # Convert to legacy SimulationEvent for compatibility
+        sim_event = SimulationEvent(
+            event_id=causal_event.event_id,
+            timestamp=self.state.current_date if self.state else datetime.now(),
+            day_number=self.state.day_number if self.state else 0,
+            event_type=causal_event.event_type,
+            severity=causal_event.severity,
+            affected_countries=causal_event.affected_countries,
+            description=causal_event.description,
+            parameters=causal_event.parameters,
+        )
+
+        self.events.append(sim_event)
+
+        if self.state:
+            self.state.events_history.append({
+                "event_id": causal_event.event_id,
+                "type": causal_event.event_type,
+                "day": self.state.day_number,
+                "logical_time": causal_event.logical_time,
+                "parameters": causal_event.parameters,
+            })
+
+        # Process event effects
+        self._process_event(sim_event)
+
+        logger.debug("Executed event: %s (logical_time=%d)",
+                    causal_event.event_id, causal_event.logical_time)
+
+    def observe(self, query: str | None = None, readonly: bool = True) -> dict[str, Any]:
         """
         Query the current simulation state.
 
         Args:
             query: Optional query filter (e.g., "countries", "aliens", "global")
+            readonly: If True, return deep copy to prevent external mutations (default: True)
 
         Returns:
             dict: Requested state information
@@ -229,63 +317,74 @@ class AlienInvadersEngine:
         if not self.initialized or self.state is None:
             return {"error": "Simulation not initialized"}
 
-        if query == "countries":
-            return {
-                "countries": {
-                    code: {
-                        "name": country.name,
-                        "population": country.population,
-                        "gdp": country.gdp_usd,
-                        "morale": country.public_morale,
-                        "alien_influence": country.alien_influence,
-                        "casualties": country.casualties,
+        # Helper to get state data
+        def get_state_data():
+            if query == "countries":
+                return {
+                    "countries": {
+                        code: {
+                            "name": country.name,
+                            "population": country.population,
+                            "gdp": country.gdp_usd,
+                            "morale": country.public_morale,
+                            "alien_influence": country.alien_influence,
+                            "casualties": country.casualties,
+                        }
+                        for code, country in self.state.countries.items()
                     }
-                    for code, country in self.state.countries.items()
                 }
-            }
-        elif query == "aliens":
-            return {
-                "alien_ships": self.state.alien_ships_in_system,
-                "ground_forces": self.state.alien_ground_forces,
-                "control_percentage": self.state.get_alien_control_percentage(),
-                "resource_extraction": self.state.alien_resource_extraction,
-                "contact_established": self.state.alien_contact_established,
-                "negotiations_active": self.state.negotiations_active,
-            }
-        elif query == "global":
-            return {
-                "date": self.state.current_date.isoformat(),
-                "day_number": self.state.day_number,
-                "population": self.state.get_total_population(),
-                "gdp": self.state.get_total_gdp(),
-                "casualties": self.state.global_casualties,
-                "refugees": self.state.global_refugees,
-                "average_morale": self.state.get_average_morale(),
-                "ai_operational": self.state.ai_systems_operational,
-            }
-        else:
-            # Return complete state
-            return {
-                "date": self.state.current_date.isoformat(),
-                "day_number": self.state.day_number,
-                "global": {
+            elif query == "aliens":
+                return {
+                    "alien_ships": self.state.alien_ships_in_system,
+                    "ships": self.state.alien_ships_in_system,  # Backward compatibility
+                    "ground_forces": self.state.alien_ground_forces,
+                    "control_percentage": self.state.get_alien_control_percentage(),
+                    "resource_extraction": self.state.alien_resource_extraction,
+                    "contact_established": self.state.alien_contact_established,
+                    "negotiations_active": self.state.negotiations_active,
+                }
+            elif query == "global":
+                return {
+                    "date": self.state.current_date.isoformat(),
+                    "day_number": self.state.day_number,
                     "population": self.state.get_total_population(),
                     "gdp": self.state.get_total_gdp(),
                     "casualties": self.state.global_casualties,
                     "refugees": self.state.global_refugees,
                     "average_morale": self.state.get_average_morale(),
-                },
-                "aliens": {
-                    "ships": self.state.alien_ships_in_system,
-                    "control_percentage": self.state.get_alien_control_percentage(),
-                },
-                "ai": {
-                    "operational": self.state.ai_systems_operational,
-                    "alignment": self.state.ai_alignment_score,
-                },
-                "num_countries": len(self.state.countries),
-                "num_events": len(self.events),
-            }
+                    "ai_operational": self.state.ai_systems_operational,
+                }
+            else:
+                # Return complete state
+                return {
+                    "date": self.state.current_date.isoformat(),
+                    "day_number": self.state.day_number,
+                    "global": {
+                        "population": self.state.get_total_population(),
+                        "gdp": self.state.get_total_gdp(),
+                        "casualties": self.state.global_casualties,
+                        "refugees": self.state.global_refugees,
+                        "average_morale": self.state.get_average_morale(),
+                    },
+                    "aliens": {
+                        "ships": self.state.alien_ships_in_system,
+                        "control_percentage": self.state.get_alien_control_percentage(),
+                    },
+                    "ai": {
+                        "operational": self.state.ai_systems_operational,
+                        "alignment": self.state.ai_alignment_score,
+                    },
+                    "num_countries": len(self.state.countries),
+                    "num_events": len(self.events),
+                }
+
+        state_data = get_state_data()
+
+        # Return deep copy for read-only access (protects against external mutations)
+        if readonly:
+            return copy.deepcopy(state_data)
+
+        return state_data
 
     def export_artifacts(self, output_dir: str | None = None) -> bool:
         """

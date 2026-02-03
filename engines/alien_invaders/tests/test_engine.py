@@ -91,6 +91,9 @@ class TestEventInjection:
         )
 
         assert event_id.startswith("evt_")
+
+        # Events are queued for next tick, need to tick to execute
+        engine.tick()
         assert len(engine.events) == 1
 
     def test_inject_diplomatic_event(self):
@@ -107,6 +110,9 @@ class TestEventInjection:
         )
 
         assert event_id is not None
+
+        # Events are queued for next tick, need to tick to execute
+        engine.tick()
         assert engine.state.negotiations_active
 
 
