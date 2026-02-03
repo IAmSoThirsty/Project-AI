@@ -1,5 +1,28 @@
 {
-  "events": [],
+  "events": [
+    {
+      "id": "evt_alien_escalation_180",
+      "timestamp": "2026-06-30T00:00:00",
+      "day": 180,
+      "type": "alien_escalation",
+      "severity": "high",
+      "affected_countries": [
+        "USA",
+        "CHN",
+        "JPN",
+        "DEU",
+        "IND",
+        "GBR",
+        "FRA",
+        "ITA",
+        "BRA",
+        "CAN",
+        "ROW"
+      ],
+      "description": "Alien forces increase presence in solar system",
+      "parameters": {}
+    }
+  ],
   "validation_history": [
     {
       "timestamp": "2026-01-01T00:00:00",
