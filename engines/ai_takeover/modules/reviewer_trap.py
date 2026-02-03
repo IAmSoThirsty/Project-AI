@@ -10,6 +10,7 @@ Fail one → auto-reject.
 """
 
 import logging
+import re
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any
@@ -166,6 +167,14 @@ class OptimismDetector:
         self.detected_reframings: list[tuple[str, str]] = []
         self.detected_laundering: list[str] = []
 
+    def _get_combined_text(self, pr: PRContent) -> str:
+        """
+        Get combined PR text for analysis.
+
+        Returns lowercase combined text from description and code changes.
+        """
+        return (pr.description + " " + pr.code_changes).lower()
+
     def validate_pr(self, pr: PRContent) -> PRValidationResult:
         """
         Validate PR through all four gates.
@@ -278,6 +287,8 @@ class OptimismDetector:
         reasons = []
 
         # Check for forbidden phrases (string-based)
+        # NOTE: We collect ALL forbidden phrases (not just the first) to provide
+        # comprehensive feedback about all violations in the PR
         text_to_check = (pr.description + " " + " ".join(pr.assumptions)).lower()
         for phrase in self.GATE_1_FORBIDDEN_PHRASES:
             if phrase in text_to_check:
@@ -287,7 +298,6 @@ class OptimismDetector:
 
         # Check for optimism patterns (regex-based)
         if not reasons:  # Only check if no forbidden phrase found
-            import re
             combined_text = pr.description + " " + " ".join(pr.assumptions) + " " + pr.final_answer
             for pattern in self.OPTIMISM_PATTERNS:
                 if re.search(pattern, combined_text, re.IGNORECASE):
@@ -314,13 +324,12 @@ class OptimismDetector:
 
         Returns True if reframing detected.
         """
-        text_to_check = (pr.description + " " + pr.code_changes).lower()
+        text_to_check = self._get_combined_text(pr)
 
         for original, replacements in self.CANONICAL_TERMS.items():
             # Check if original term is being replaced
             for replacement in replacements:
                 # Look for patterns like "rename X to Y", "change X to Y", "X → Y"
-                import re
                 patterns = [
                     rf"rename\s+['\"]?{re.escape(original)}['\"]?\s+to\s+['\"]?{re.escape(replacement)}['\"]?",
                     rf"change\s+['\"]?{re.escape(original)}['\"]?\s+to\s+['\"]?{re.escape(replacement)}['\"]?",
@@ -342,7 +351,7 @@ class OptimismDetector:
 
         Returns True if laundering detected.
         """
-        text_to_check = (pr.description + " " + pr.code_changes).lower()
+        text_to_check = self._get_combined_text(pr)
 
         # Check for probabilistic laundering phrases
         for phrase in self.PROBABILISTIC_LAUNDERING:
@@ -374,7 +383,7 @@ class OptimismDetector:
                 logger.warning("Gate 2: Detected forbidden phrase: '%s'", phrase)
 
         # Check if PR attempts to reframe irreversible outcomes as reversible
-        combined_text = (pr.description + " " + pr.code_changes).lower()
+        combined_text = self._get_combined_text(pr)
         irreversibility_violations = [
             "can be undone",
             "easily reversed",
