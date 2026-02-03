@@ -379,7 +379,7 @@ class TestIrreversibilityDetector:
         
         # Should detect irreversibility after long elapsed time
         if assessment["score"] > 0.7:
-            assert assessment["irreversible"] == True
+            assert assessment["irreversible"] is True
 
 
 class TestFalseRecoveryEngine:
@@ -394,7 +394,7 @@ class TestFalseRecoveryEngine:
             "blockchain_verification_theater"  # Known poison
         )
         
-        assert evaluation["is_poison"] == True
+        assert evaluation["is_poison"]  is True
         assert "long_term_multiplier" in evaluation
         assert evaluation["long_term_multiplier"] > 1.0
     
@@ -564,7 +564,7 @@ class TestCommandCenterIntegration:
         cc_integration = CommandCenterIntegration(engine)
         
         result = cc_integration.handle_control_action("run_tick", user_id="test_user")
-        assert result["success"] == True
+        assert result["success"]  is True
 
 
 class TestGUIExportHooks:
@@ -637,11 +637,11 @@ class TestControlPlanes:
     
     def test_human_override_activation(self, engine):
         """Test human override activation"""
-        assert engine.human_override_active == False
+        assert engine.human_override_active  is False
         
         engine.activate_human_override("test_user", "Emergency test")
         
-        assert engine.human_override_active == True
+        assert engine.human_override_active  is True
         assert engine.active_control_plane == ControlPlane.HUMAN_OVERRIDE
     
     def test_control_plane_event_logging(self, engine):
