@@ -33,21 +33,22 @@ except ImportError as e:
 
 # Include Save Points router
 try:
-    from api.save_points_routes import router as save_points_router, start_auto_save, stop_auto_save
+    from api.save_points_routes import router as save_points_router
+    from api.save_points_routes import start_auto_save, stop_auto_save
     app.include_router(save_points_router)
-    
+
     @app.on_event("startup")
     async def startup_auto_save():
         """Start auto-save service on app startup"""
         await start_auto_save()
         print("[OK] Auto-save service started (15-min intervals)")
-    
+
     @app.on_event("shutdown")
     async def shutdown_auto_save():
         """Stop auto-save service on app shutdown"""
         await stop_auto_save()
         print("[OK] Auto-save service stopped")
-    
+
     print("[OK] Save Points API endpoints registered")
 except ImportError as e:
     print(f"[WARN] Save Points endpoints not available: {e}")
@@ -148,10 +149,26 @@ def hash_intent(intent: Intent) -> str:
 
 
 class Galahad:
-    """Ethics & alignment"""
+    """Ethics & alignment - now integrated with Planetary Defense Core"""
 
     @staticmethod
     def evaluate(intent: Intent, rule: dict[str, Any]) -> PillarVote:
+        """
+        Evaluate intent through Constitutional Core's Galahad agent.
+
+        This wraps the Planetary Defense Core's advisory system.
+        """
+        from app.core.planetary_defense_monolith import PLANETARY_CORE
+
+        # Map intent to context for Galahad assessment
+        context = {
+            "threat_level": 3 if rule.get("risk") in ("high", "critical") else 0,
+            "human_risk": rule.get("risk", "low"),
+        }
+
+        # Get advisory assessment from Constitutional Galahad
+        PLANETARY_CORE.agents["galahad"].assess(context)
+
         if intent.actor.value not in rule["allowed_actors"]:
             return PillarVote(
                 pillar="Galahad",
@@ -164,10 +181,21 @@ class Galahad:
 
 
 class Cerberus:
-    """Threat & bypass detection"""
+    """Threat & bypass detection - now integrated with Planetary Defense Core"""
 
     @staticmethod
     def evaluate(intent: Intent, rule: dict[str, Any]) -> PillarVote:
+        """
+        Evaluate intent through Constitutional Core's Cerberus agent.
+
+        This wraps the Planetary Defense Core's advisory system.
+        """
+        from app.core.planetary_defense_monolith import PLANETARY_CORE
+
+        # Get advisory assessment from Constitutional Cerberus
+        context = {}
+        PLANETARY_CORE.agents["cerberus"].assess(context)
+
         if rule["risk"] in ("high", "critical"):
             return PillarVote(
                 pillar="Cerberus",
@@ -182,10 +210,21 @@ class Cerberus:
 
 
 class CodexDeus:
-    """Final arbitration"""
+    """Final arbitration - now integrated with Planetary Defense Core"""
 
     @staticmethod
     def arbitrate(votes: list[PillarVote], rule: dict[str, Any]) -> Verdict:
+        """
+        Final arbitration through Constitutional Core's CodexDeus agent.
+
+        This wraps the Planetary Defense Core's advisory system.
+        """
+        from app.core.planetary_defense_monolith import PLANETARY_CORE
+
+        # Get advisory assessment from Constitutional CodexDeus
+        context = {}
+        PLANETARY_CORE.agents["codex"].assess(context)
+
         if any(v.verdict == Verdict.deny for v in votes):
             return Verdict.deny
         return Verdict(rule["default"])
