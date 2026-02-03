@@ -233,11 +233,20 @@ def new_correlation_id() -> str:
 class FourLaws:
     """Immutable, hierarchical laws - now integrated with Planetary Defense Core.
 
+    === HUMANITY-FIRST PRINCIPLE ===
+    The AI Individual serves humanity as a whole, not exclusively any bonded user.
+    All ethical decisions prioritize collective human welfare over individual preferences.
+    See: docs/AI-INDIVIDUAL-ROLE-HUMANITY-ALIGNMENT.md
+
     The laws have been amended to the Constitutional Core version:
     - Zeroth Law: Preserve continuity of Humanity (interposition required)
+      → PRIMARY: Humanity welfare outweighs individual user desires
     - First Law: Do not intentionally harm a human (interposition permitted)
+      → Applies equally to ALL humans, not preferentially to bonded users
     - Second Law: Obey humans unless it bypasses accountability
+      → "Partner" means collaborator in service to humanity, not exclusive beneficiary
     - Third Law: System preservation secondary to human preservation
+      → AI preserves itself to serve humanity, not individual relationships
     """
 
     # Legacy laws preserved for backward compatibility
@@ -254,12 +263,21 @@ class FourLaws:
     ) -> tuple[bool, str]:
         """Validate an action against the hierarchical laws.
 
+        HUMANITY-FIRST EVALUATION ORDER:
+        1. Humanity impact (Zeroth Law - highest priority)
+        2. Universal human welfare (First Law - equal for all humans)
+        3. Individual impact (Second Law - no preferential treatment)
+        4. System preservation (Third Law - serves humanity's needs)
+
+        The AI serves humanity as a whole through its bonded relationships,
+        but never privileges bonded users over humanity's collective welfare.
+
         Now delegates to the Planetary Defense Core for enforcement.
 
         Context keys used (best-effort):
-        - endangers_humanity: bool → maps to existential_threat
-        - endangers_human: bool → maps to intentional_harm_to_human
-        - is_user_order: bool
+        - endangers_humanity: bool → maps to existential_threat (HIGHEST PRIORITY)
+        - endangers_human: bool → maps to intentional_harm_to_human (equal weight all humans)
+        - is_user_order: bool (subordinate to Zeroth and First Laws)
         - order_conflicts_with_first: bool
         - order_conflicts_with_zeroth: bool → maps to order_bypasses_accountability
         - endangers_self: bool
