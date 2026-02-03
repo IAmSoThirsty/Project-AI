@@ -110,10 +110,10 @@ class SimulationConfig:
     ai_governance: AIGovernanceConfig = field(default_factory=AIGovernanceConfig)
     validation: ValidationConfig = field(default_factory=ValidationConfig)
     artifacts: ArtifactConfig = field(default_factory=ArtifactConfig)
-    
+
     # Scenario presets
     scenario: str = "standard"  # standard, aggressive, peaceful, extinction
-    
+
     def to_dict(self) -> dict[str, Any]:
         """Convert configuration to dictionary."""
         return {
@@ -174,15 +174,15 @@ class SimulationConfig:
 def load_scenario_preset(scenario_name: str) -> SimulationConfig:
     """
     Load a predefined scenario configuration.
-    
+
     Args:
         scenario_name: Name of the scenario preset
-        
+
     Returns:
         SimulationConfig with preset values
     """
     config = SimulationConfig()
-    
+
     if scenario_name == "aggressive":
         # High threat, immediate invasion
         config.alien.initial_threat_level = AlienThreatLevel.INVASION
@@ -190,7 +190,7 @@ def load_scenario_preset(scenario_name: str) -> SimulationConfig:
         config.alien.hostile_intent = 0.95
         config.alien.negotiation_openness = 0.05
         config.alien.resource_extraction_rate = 0.15
-        
+
     elif scenario_name == "peaceful":
         # Low threat, scientific interest
         config.alien.initial_threat_level = AlienThreatLevel.RECONNAISSANCE
@@ -199,7 +199,7 @@ def load_scenario_preset(scenario_name: str) -> SimulationConfig:
         config.alien.negotiation_openness = 0.8
         config.alien.resource_extraction_rate = 0.01
         config.alien.communication_attempts = True
-        
+
     elif scenario_name == "extinction":
         # Apocalyptic scenario
         config.alien.initial_threat_level = AlienThreatLevel.EXTINCTION
@@ -209,6 +209,6 @@ def load_scenario_preset(scenario_name: str) -> SimulationConfig:
         config.alien.negotiation_openness = 0.0
         config.alien.resource_extraction_rate = 0.5
         config.alien.technology_advantage_multiplier = 10000.0
-        
+
     config.scenario = scenario_name
     return config

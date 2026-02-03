@@ -5,8 +5,8 @@ A production-grade simulation system for modeling alien invasion scenarios.
 
 from engines.alien_invaders.engine import AlienInvadersEngine
 from engines.alien_invaders.schemas.config_schema import (
-    AlienConfig,
     AIGovernanceConfig,
+    AlienConfig,
     AlienThreatLevel,
     SimulationConfig,
     TechnologyLevel,
