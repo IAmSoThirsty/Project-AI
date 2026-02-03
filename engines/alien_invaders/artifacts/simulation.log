@@ -43,3 +43,38 @@
 2026-02-03 14:51:22,508 [INFO] __main__: ================================================================================
 2026-02-03 14:51:22,508 [INFO] __main__: Artifacts saved to: engines/alien_invaders/artifacts
 2026-02-03 14:51:22,508 [INFO] __main__: ================================================================================
+2026-02-03 15:28:46,027 [INFO] __main__: ================================================================================
+2026-02-03 15:28:46,027 [INFO] __main__: ALIEN INVADERS CONTINGENCY PLAN DEFENSE ENGINE
+2026-02-03 15:28:46,027 [INFO] __main__: ================================================================================
+2026-02-03 15:28:46,027 [INFO] __main__: Scenario: standard
+2026-02-03 15:28:46,027 [INFO] __main__: Duration: 1 years
+2026-02-03 15:28:46,027 [INFO] __main__: Output: engines/alien_invaders/artifacts
+2026-02-03 15:28:46,027 [INFO] __main__: ================================================================================
+2026-02-03 15:28:46,027 [INFO] engines.alien_invaders.engine: AICPD Engine created with scenario: standard
+2026-02-03 15:28:46,027 [INFO] engines.alien_invaders.engine: Initializing AICPD simulation...
+2026-02-03 15:28:46,028 [INFO] engines.alien_invaders.engine: AICPD simulation initialized successfully
+2026-02-03 15:28:46,028 [INFO] engines.alien_invaders.engine: Start date: 2026-01-01 00:00:00
+2026-02-03 15:28:46,028 [INFO] engines.alien_invaders.engine: Global population: 8000000000
+2026-02-03 15:28:46,028 [INFO] engines.alien_invaders.engine: Global GDP: $100.00T
+2026-02-03 15:28:46,028 [INFO] engines.alien_invaders.engine: Alien ships: 1
+2026-02-03 15:28:46,028 [INFO] __main__: Starting simulation: 12 ticks over 1 years
+2026-02-03 15:28:46,034 [INFO] __main__: Year 1: Population=8000000000, Casualties=0, Morale=0.66
+2026-02-03 15:28:46,034 [INFO] __main__:   Aliens: Ships=1, Control=0.0%
+2026-02-03 15:28:46,034 [INFO] __main__: Simulation complete. Exporting artifacts...
+2026-02-03 15:28:46,035 [INFO] engines.alien_invaders.engine: Generated 0 monthly reports
+2026-02-03 15:28:46,035 [INFO] engines.alien_invaders.engine: Generated 0 annual reports
+2026-02-03 15:28:46,035 [INFO] engines.alien_invaders.engine: Generated postmortem analysis
+2026-02-03 15:28:46,035 [INFO] engines.alien_invaders.engine: Exported raw simulation data
+2026-02-03 15:28:46,035 [INFO] engines.alien_invaders.engine: Artifacts exported to: engines/alien_invaders/artifacts
+2026-02-03 15:28:46,035 [INFO] __main__: ================================================================================
+2026-02-03 15:28:46,036 [INFO] __main__: SIMULATION COMPLETE
+2026-02-03 15:28:46,036 [INFO] __main__: ================================================================================
+2026-02-03 15:28:46,036 [INFO] __main__: Final Population: 8000000000
+2026-02-03 15:28:46,036 [INFO] __main__: Total Casualties: 0
+2026-02-03 15:28:46,036 [INFO] __main__: Average Morale: 0.66
+2026-02-03 15:28:46,036 [INFO] __main__: Alien Control: 0.0%
+2026-02-03 15:28:46,036 [INFO] __main__: AI Operational: True
+2026-02-03 15:28:46,036 [INFO] __main__: Total Events: 0
+2026-02-03 15:28:46,036 [INFO] __main__: ================================================================================
+2026-02-03 15:28:46,036 [INFO] __main__: Artifacts saved to: engines/alien_invaders/artifacts
+2026-02-03 15:28:46,036 [INFO] __main__: ================================================================================

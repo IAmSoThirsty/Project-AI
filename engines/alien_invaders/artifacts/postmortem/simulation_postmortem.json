@@ -2,7 +2,7 @@
   "simulation_config": {
     "world": {
       "start_year": 2026,
-      "simulation_duration_years": 5,
+      "simulation_duration_years": 1,
       "time_step_days": 30,
       "num_countries": 195,
       "global_population": 8000000000,
@@ -65,7 +65,7 @@
     "total_casualties": 0,
     "global_gdp": 100000000000000.0,
     "alien_control_pct": 0.0,
-    "average_morale": 0.669979488626393,
+    "average_morale": 0.6636748149620415,
     "ai_operational": true
   },
   "alien_metrics": {
