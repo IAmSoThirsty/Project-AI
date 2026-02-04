@@ -1,8 +1,11 @@
 """
 Proof System for SOVEREIGN WAR ROOM
 
-Generates and verifies cryptographic proofs of AI decision-making processes.
-Implements zero-knowledge proofs and verifiable computation for transparency.
+Generates and verifies cryptographic decision attestations for AI decision-making processes.
+Implements cryptographically-secured attestations and verifiable computation for transparency.
+
+Note: This system provides cryptographic decision attestations using commitment schemes
+and hash-based verification, not formal zero-knowledge proof systems (zk-SNARKs/zk-STARKs).
 """
 
 from enum import Enum
@@ -43,10 +46,13 @@ class Proof(BaseModel):
 
 class ProofSystem:
     """
-    Proof generation and verification system.
+    Cryptographic Decision Attestation System.
     
-    Generates cryptographic proofs that AI decisions were made correctly
-    without revealing internal decision-making processes.
+    Generates cryptographic attestations that AI decisions were made correctly
+    while maintaining confidentiality of internal decision-making processes.
+    
+    Uses commitment schemes and hash-based verification for tamper-evident
+    decision validation without full zero-knowledge proof constructions.
     """
     
     def __init__(self, crypto_engine=None):
@@ -68,7 +74,7 @@ class ProofSystem:
         governance_report: Optional[Dict[str, Any]] = None
     ) -> Proof:
         """
-        Generate proof of correct decision-making.
+        Generate cryptographic attestation of decision-making process.
         
         Args:
             scenario_id: Scenario identifier
@@ -77,7 +83,7 @@ class ProofSystem:
             governance_report: Optional governance compliance report
             
         Returns:
-            Cryptographic proof of decision
+            Cryptographic decision attestation
         """
         # Create statement (public)
         statement = {
@@ -222,10 +228,10 @@ class ProofSystem:
         reveal_witness: bool = False
     ) -> Dict[str, Any]:
         """
-        Verify cryptographic proof.
+        Verify cryptographic attestation.
         
         Args:
-            proof: Proof to verify
+            proof: Attestation to verify
             reveal_witness: If True, includes witness data in response
             
         Returns:

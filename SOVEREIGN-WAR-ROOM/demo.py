@@ -115,7 +115,7 @@ print("🔟 Verifying Result Integrity...")
 first_result = round_results[0]
 is_valid = swr.verify_result_integrity(first_result)
 print(f"   Result integrity: {'✓ VALID' if is_valid else '✗ INVALID'}")
-print(f"   Cryptographic proof verified: {is_valid}")
+print(f"   Cryptographic attestation verified: {is_valid}")
 print()
 
 print("=" * 80)
