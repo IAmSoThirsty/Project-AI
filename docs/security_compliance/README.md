@@ -1,3 +1,25 @@
+# Security & Compliance Documentation
+
+## 📁 Folder Purpose
+
+This folder centralizes **cryptographic verification instructions**, **RBAC examples**, **incident response playbooks**, **security frameworks**, and **compliance documentation**.
+
+### What Belongs Here
+- Security frameworks and policies
+- Compliance documentation (GDPR, HIPAA, SOC2, ISO 27001, etc.)
+- Cryptographic verification procedures
+- RBAC and access control documentation
+- Incident response playbooks
+- Threat models and security testing reports
+- Vulnerability management
+
+### Guidelines
+- **Audience**: Security engineers, compliance officers, auditors, penetration testers
+- **Tone**: Technical, security-focused, compliance-oriented
+- **Include**: Runbooks, checklists, verification procedures, audit trails
+
+---
+
 # Project-AI Security Framework
 
 ## 🎯 Overview

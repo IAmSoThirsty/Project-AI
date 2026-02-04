@@ -2,6 +2,23 @@
 
 Welcome to **Project-AI** — an extensible, secure AGI operations stack for building, running, and monitoring advanced intelligent agents with robust safety and identity management.
 
+## 📁 Documentation Structure
+
+Project-AI documentation is organized into **six main categories** to help you find what you need quickly:
+
+| Folder | Audience | Content |
+|--------|----------|---------|
+| **[executive/](executive/)** | Executives, investors, auditors | Business overviews, whitepapers, compliance guides, user guides |
+| **[architecture/](architecture/)** | Architects, senior engineers | System architecture, technical diagrams, design documents |
+| **[governance/](governance/)** | Ethics teams, legal, compliance | Ethics frameworks, AGI rights, policy documents, licensing |
+| **[security_compliance/](security_compliance/)** | Security engineers, auditors | Security policies, incident playbooks, compliance guides, RBAC |
+| **[developer/](developer/)** | Developers, DevOps, SRE | Installation, APIs, CLI docs, deployment guides, quickstarts |
+| **[internal/](internal/)** | Engineering team | Implementation notes, session records, legacy docs, WIP |
+
+📖 **[Documentation Structure Guide](DOCUMENTATION_STRUCTURE_GUIDE.md)** - Complete guide for adding new documentation
+
+---
+
 ## What is Project-AI?
 
 _Project-AI is an open, extensible platform for operating, securing, and researching AGI systems. It integrates state-of-the-art scheduling (Temporal), monitoring, modular cognitive processing (MCP tools), Spiking Neural Network co-processors, and end-to-end security/identity for both production and experimental deployments._
