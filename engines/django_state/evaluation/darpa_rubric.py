@@ -467,15 +467,13 @@ class DARPAEvaluator:
         max_score = 100.0
         issues = []
         
-        # Basic performance check - can run 100 ticks without error
+        # Performance check - measure tick rate using existing engine
+        # Note: This measures 100 additional ticks on the existing engine
         try:
-            test_engine = DjangoStateEngine(engine.config)
-            test_engine.init()
-            
             import time
             start = time.time()
             for _ in range(100):
-                test_engine.tick()
+                engine.tick()
             elapsed = time.time() - start
             
             # Score based on speed (100 ticks should complete in < 10 seconds)
@@ -490,6 +488,7 @@ class DARPAEvaluator:
                 issues.append(f"Slow performance: 100 ticks took {elapsed:.2f}s")
             
             self._record_test("performance_100_ticks", True)
+            logger.info(f"Performance test: 100 ticks in {elapsed:.2f}s")
             
         except Exception as e:
             score -= 50
