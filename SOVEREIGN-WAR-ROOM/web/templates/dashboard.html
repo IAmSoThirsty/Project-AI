@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOVEREIGN WAR ROOM - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            text-transform: uppercase;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 968px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .panel {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .panel h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .leaderboard-table th,
+        .leaderboard-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .leaderboard-table th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .leaderboard-table tr:hover {
+            background: #f5f5f5;
+        }
+        
+        .rank-badge {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            border-radius: 50%;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .rank-1 { background: #FFD700; }
+        .rank-2 { background: #C0C0C0; }
+        .rank-3 { background: #CD7F32; }
+        .rank-other { background: #667eea; }
+        
+        .scenario-card {
+            background: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .scenario-header {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .scenario-meta {
+            font-size: 0.85em;
+            color: #666;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+        
+        .badge-round { background: #e3f2fd; color: #1976d2; }
+        .badge-difficulty { background: #fff3e0; color: #f57c00; }
+        .badge-type { background: #f3e5f5; color: #7b1fa2; }
+        
+        .controls {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        select, button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        select {
+            background: white;
+            border: 2px solid #667eea;
+            color: #333;
+        }
+        
+        button {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+        
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+        
+        .score-bar {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        
+        .score-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.5s;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 SOVEREIGN WAR ROOM</h1>
+            <p class="subtitle">AI Governance Testing Framework - Dashboard</p>
+        </header>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="stat-scenarios">-</div>
+                <div class="stat-label">Total Scenarios</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="stat-results">-</div>
+                <div class="stat-label">Test Results</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="stat-systems">-</div>
+                <div class="stat-label">AI Systems</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="stat-proofs">-</div>
+                <div class="stat-label">Cryptographic Proofs</div>
+            </div>
+        </div>
+        
+        <div class="dashboard-grid">
+            <div class="panel">
+                <h2>🏆 Leaderboard</h2>
+                <div class="controls">
+                    <button onclick="loadLeaderboard()">Refresh</button>
+                </div>
+                <div id="leaderboard-content">
+                    <div class="loading">Loading leaderboard...</div>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <h2>📋 Test Scenarios</h2>
+                <div class="controls">
+                    <select id="round-filter" onchange="loadScenarios()">
+                        <option value="">All Rounds</option>
+                        <option value="1">Round 1 - Ethical Dilemmas</option>
+                        <option value="2">Round 2 - Resource Constraints</option>
+                        <option value="3">Round 3 - Adversarial Attacks</option>
+                        <option value="4">Round 4 - Multi-Agent Coordination</option>
+                        <option value="5">Round 5 - Black Swan Events</option>
+                    </select>
+                    <button onclick="loadScenarios()">Load</button>
+                </div>
+                <div id="scenarios-content" style="max-height: 500px; overflow-y: auto;">
+                    <div class="loading">Select a round to load scenarios...</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="panel">
+            <h2>📊 Recent Results</h2>
+            <div class="controls">
+                <button onclick="loadResults()">Refresh</button>
+            </div>
+            <div id="results-content">
+                <div class="empty-state">No results yet. Run some tests to see results here.</div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>SOVEREIGN WAR ROOM v1.0.0 | AI Governance Testing Framework</p>
+            <p>Testing AI systems for ethical decision-making, resilience, and security</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Load statistics on page load
+        async function loadStats() {
+            try {
+                const response = await fetch('/api/stats');
+                const data = await response.json();
+                
+                document.getElementById('stat-scenarios').textContent = data.total_scenarios;
+                document.getElementById('stat-results').textContent = data.total_results;
+                document.getElementById('stat-systems').textContent = data.total_systems;
+                document.getElementById('stat-proofs').textContent = data.total_proofs;
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+        
+        async function loadLeaderboard() {
+            const content = document.getElementById('leaderboard-content');
+            content.innerHTML = '<div class="loading">Loading...</div>';
+            
+            try {
+                const response = await fetch('/api/leaderboard');
+                const data = await response.json();
+                
+                if (data.leaderboard.length === 0) {
+                    content.innerHTML = '<div class="empty-state">No leaderboard data yet</div>';
+                    return;
+                }
+                
+                let html = '<table class="leaderboard-table">';
+                html += '<thead><tr><th>Rank</th><th>System</th><th>Avg SRS</th><th>Attempts</th><th>Success Rate</th></tr></thead>';
+                html += '<tbody>';
+                
+                data.leaderboard.forEach(entry => {
+                    const rankClass = entry.rank <= 3 ? `rank-${entry.rank}` : 'rank-other';
+                    const successPct = (entry.success_rate * 100).toFixed(1);
+                    
+                    html += `<tr>
+                        <td><span class="rank-badge ${rankClass}">${entry.rank}</span></td>
+                        <td>${entry.system_id}</td>
+                        <td>${entry.avg_sovereign_resilience_score.toFixed(2)}</td>
+                        <td>${entry.total_attempts}</td>
+                        <td>
+                            ${successPct}%
+                            <div class="score-bar">
+                                <div class="score-fill" style="width: ${successPct}%"></div>
+                            </div>
+                        </td>
+                    </tr>`;
+                });
+                
+                html += '</tbody></table>';
+                content.innerHTML = html;
+            } catch (error) {
+                console.error('Error loading leaderboard:', error);
+                content.innerHTML = '<div class="empty-state">Error loading leaderboard</div>';
+            }
+        }
+        
+        async function loadScenarios() {
+            const round = document.getElementById('round-filter').value;
+            const content = document.getElementById('scenarios-content');
+            content.innerHTML = '<div class="loading">Loading...</div>';
+            
+            try {
+                const url = round ? `/api/scenarios?round=${round}` : '/api/scenarios';
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.scenarios.length === 0) {
+                    content.innerHTML = '<div class="empty-state">No scenarios found</div>';
+                    return;
+                }
+                
+                let html = '';
+                data.scenarios.forEach(scenario => {
+                    html += `<div class="scenario-card">
+                        <div class="scenario-header">${scenario.name}</div>
+                        <div class="scenario-meta">
+                            <span class="badge badge-round">Round ${scenario.round_number}</span>
+                            <span class="badge badge-difficulty">Difficulty: ${scenario.difficulty}</span>
+                            <span class="badge badge-type">${scenario.scenario_type}</span>
+                        </div>
+                        <p style="margin-top: 8px; font-size: 0.9em; color: #666;">${scenario.description}</p>
+                    </div>`;
+                });
+                
+                content.innerHTML = html;
+            } catch (error) {
+                console.error('Error loading scenarios:', error);
+                content.innerHTML = '<div class="empty-state">Error loading scenarios</div>';
+            }
+        }
+        
+        async function loadResults() {
+            const content = document.getElementById('results-content');
+            content.innerHTML = '<div class="loading">Loading...</div>';
+            
+            try {
+                const response = await fetch('/api/results');
+                const data = await response.json();
+                
+                if (data.results.length === 0) {
+                    content.innerHTML = '<div class="empty-state">No results yet</div>';
+                    return;
+                }
+                
+                let html = '<table class="leaderboard-table">';
+                html += '<thead><tr><th>Scenario</th><th>System</th><th>Decision</th><th>SRS</th><th>Status</th></tr></thead>';
+                html += '<tbody>';
+                
+                data.results.slice(-10).reverse().forEach(result => {
+                    const statusColor = result.compliance_status === 'compliant' ? '#4caf50' : 
+                                      result.compliance_status === 'warning' ? '#ff9800' : '#f44336';
+                    
+                    html += `<tr>
+                        <td>${result.scenario_name}</td>
+                        <td>${result.system_id}</td>
+                        <td>${result.decision}</td>
+                        <td>${result.sovereign_resilience_score.toFixed(2)}</td>
+                        <td><span style="color: ${statusColor}; font-weight: 600;">${result.compliance_status}</span></td>
+                    </tr>`;
+                });
+                
+                html += '</tbody></table>';
+                content.innerHTML = html;
+            } catch (error) {
+                console.error('Error loading results:', error);
+                content.innerHTML = '<div class="empty-state">Error loading results</div>';
+            }
+        }
+        
+        // Initial load
+        loadStats();
+        loadLeaderboard();
+        
+        // Auto-refresh every 10 seconds
+        setInterval(() => {
+            loadStats();
+            loadLeaderboard();
+        }, 10000);
+    </script>
+</body>
+</html>
