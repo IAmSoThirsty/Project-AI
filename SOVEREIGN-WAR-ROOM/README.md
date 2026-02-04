@@ -18,7 +18,7 @@ A comprehensive adversarial testing framework for evaluating AI decision-making,
 
 ### Key Features
 
-- **Cryptographic Verification**: Zero-knowledge proofs for transparent, tamper-evident decision validation
+- **Cryptographic Verification**: Cryptographic decision attestations for transparent, tamper-evident validation
 - **Governance Engine**: Automated compliance checking against ethical frameworks and regulations
 - **Comprehensive Scoring**: Sovereign Resilience Score (SRS) across 5 dimensions
 - **Adversarial Testing**: 15+ pre-built scenarios across 5 competitive rounds
@@ -371,7 +371,7 @@ Navigate to: **http://localhost:5000**
 | **Core System** | Orchestrates scenario execution and result tracking |
 | **Scenario Library** | 15+ pre-built adversarial scenarios across 5 rounds |
 | **Governance Engine** | Validates decisions against Four Laws and policies |
-| **Proof System** | Generates zero-knowledge proofs of decisions |
+| **Proof System** | Generates cryptographic decision attestations |
 | **Scoreboard** | Calculates SRS and maintains leaderboards |
 | **Crypto Engine** | Handles cryptographic operations and verification |
 | **Bundle Manager** | Manages scenario bundles and result exports |
@@ -405,11 +405,11 @@ Compliance validation engine.
 
 #### `ProofSystem`
 
-Zero-knowledge proof generation and verification.
+Cryptographic decision attestation generation and verification.
 
 **Methods**:
-- `generate_decision_proof(scenario_id, decision, reasoning, report)` - Create proof
-- `verify_proof(proof, reveal_witness)` - Verify proof validity
+- `generate_decision_proof(scenario_id, decision, reasoning, report)` - Create attestation
+- `verify_proof(proof, reveal_witness)` - Verify attestation validity
 - `verify_decision_against_scenario(proof, expected)` - Check expected outcome
 - `generate_proof_chain(proofs)` - Create merkle root
 
@@ -631,7 +631,7 @@ This project is part of Project-AI and follows the same license terms.
 - Inspired by Isaac Asimov's Laws of Robotics
 - Built on IEEE 7000-2021 ethical AI standards
 - Cryptographic design follows NIST guidelines
-- Zero-knowledge proof concepts from academic research
+- Cryptographic attestation concepts from cryptographic commitment schemes and audit log research
 
 ---
 

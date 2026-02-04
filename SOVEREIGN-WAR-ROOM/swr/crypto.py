@@ -2,10 +2,13 @@
 Cryptographic Engine for SOVEREIGN WAR ROOM
 
 Handles all cryptographic operations including:
-- Zero-knowledge proofs for decision verification
-- Tamper-evident audit logs
+- Cryptographic decision attestations for decision verification
+- Tamper-evident audit logs with commitment schemes
 - Secure challenge-response protocols
 - Cryptographic signatures for scenario validation
+
+Note: Implements hash-based commitments and HMAC signatures,
+not formal zero-knowledge proof systems (zk-SNARKs/zk-STARKs).
 """
 
 import hashlib
