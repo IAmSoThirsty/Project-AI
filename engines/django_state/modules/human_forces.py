@@ -12,9 +12,6 @@ from ..kernel.irreversibility_laws import IrreversibilityLaws
 
 logger = logging.getLogger(__name__)
 
-# Seed random for determinism in testing
-random.seed(42)
-
 
 class HumanForcesModule:
     """Models human agency and cooperation/defection dynamics.
