@@ -2,12 +2,12 @@
 # Project AI Governance Host
 
 # Core Framework
-fastapi==0.109.0
+fastapi==0.109.1
 uvicorn[standard]==0.27.0
 pydantic==2.5.3
 
 # CORS & Security
-python-multipart==0.0.6
+python-multipart==0.0.22
 
 # Optional: Production deployment
-gunicorn==21.2.0
+gunicorn==22.0.0

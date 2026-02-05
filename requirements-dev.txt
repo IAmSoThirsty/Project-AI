@@ -2,7 +2,8 @@
 -r requirements.txt
 
 # Optional design tool for interactive UI creation (Qt Designer)
-pyqt6-tools
+# Note: pyqt6-tools has dependency conflicts - install separately if needed
+# pyqt6-tools
 
 # Locking tool (optional; used to generate requirements.lock)
 pip-tools
