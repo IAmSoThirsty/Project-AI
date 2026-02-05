@@ -767,6 +767,53 @@ Project-AI excels at:
 
 ---
 
+## 📚 Documentation & Resources
+
+Project-AI provides comprehensive documentation for all stakeholders:
+
+### 🎯 Quick Start Guides
+
+- **[Operator Quickstart](docs/developer/OPERATOR_QUICKSTART.md)** - Guardian mindset, operational safety, incident response playbooks
+- **[Desktop App Quickstart](docs/developer/DESKTOP_APP_QUICKSTART.md)** - Get the PyQt6 desktop app running in minutes
+- **[Contributing Guide](docs/developer/CONTRIBUTING.md)** - Code/docs contribution philosophy and standards
+
+### 🏗️ Infrastructure & Deployment
+
+- **[Infrastructure Production Guide](docs/developer/INFRASTRUCTURE_PRODUCTION_GUIDE.md)** - Production deployment checklist, Prometheus monitoring, Kubernetes guide
+- **[Example Deployments](docs/developer/EXAMPLE_DEPLOYMENTS.md)** - Three production-ready patterns:
+  - Minimal deployment (simple, single-server)
+  - Secured advanced deployment (defense-in-depth, HA, monitoring)
+  - Research sandbox (isolated environment for testing risky capabilities)
+- **[Kubernetes Monitoring Guide](docs/developer/KUBERNETES_MONITORING_GUIDE.md)** - Complete K8s setup with monitoring
+
+### 🔒 Security & Safety
+
+- **[AI Safety Overview](docs/developer/AI_SAFETY_OVERVIEW.md)** - Corrigibility, interpretability, robustness metrics, red-teaming protocols
+- **[Security Framework](docs/security_compliance/AI_SECURITY_FRAMEWORK.md)** - Defense-in-depth architecture
+- **[Incident Playbook](docs/security_compliance/INCIDENT_PLAYBOOK.md)** - Emergency response procedures
+
+### 🧠 Governance & Ethics
+
+- **[AGI Charter](docs/governance/AGI_CHARTER.md)** - Rights, dignity, Four Laws framework (binding contract with AGI instances)
+- **[Project Vision & Roadmap](docs/developer/ROADMAP.md)** - AGI for collective flourishing, organizational theory, philosophical framework
+- **[Identity, Security & Infrastructure](docs/developer/IDENTITY_SECURITY_INFRASTRUCTURE.md)** - Self-sovereign identity, security principles, infrastructure philosophy
+
+### 🏛️ Architecture & Design
+
+- **[Architecture Overview](docs/architecture/ARCHITECTURE_OVERVIEW.md)** - System design and component interactions
+- **[Documentation Structure Guide](docs/DOCUMENTATION_STRUCTURE_GUIDE.md)** - Where to place new documentation
+
+### 📖 Complete Documentation Index
+
+Visit **[docs/README.md](docs/README.md)** for the complete documentation index organized by:
+- Executive summaries and whitepapers
+- Architecture and design documents
+- Security and compliance guides
+- Developer guides and APIs
+- Governance and policy documents
+
+---
+
 ## 🏆 The Verdict
 
 **Is Project-AI the "Most Comprehensive" AI System?**  
