@@ -1,31 +1,31 @@
 # Installation Requirements
 
 # Core dependencies
-fastapi==0.109.0
+fastapi==0.109.1
 uvicorn[standard]==0.27.0
 pydantic==2.5.3
 python-dotenv==1.0.0
 
 # Web server (production)
-gunicorn==21.2.0
+gunicorn==22.0.0
 
 # Database
 sqlalchemy==2.0.25
 alembic==1.13.1
-sqlite3  # Built-in
+# Note: sqlite3 is part of Python's standard library
 
 # Security
-python-multipart==0.0.6
+python-multipart==0.0.22
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
-cryptography==42.0.0
+cryptography==42.0.4
 
 # HTTP client
 httpx==0.26.0
 requests==2.31.0
 
 # Save points system dependencies
-(no additional dependencies - uses stdlib)
+# Note: uses Python standard library only
 
 # Testing
 pytest==7.4.4
@@ -38,7 +38,7 @@ flake8==7.0.0
 mypy==1.8.0
 
 # Legion integration
-# (uses existing dependencies)
+# Note: uses existing dependencies listed above
 
 # Optional: Model serving
 # torch==2.1.2
