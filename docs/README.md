@@ -35,27 +35,28 @@ _Project-AI is an open, extensible platform for operating, securing, and researc
 
 | If you're an...     | Start Here                                                                  |
 |---------------------|-----------------------------------------------------------------------------|
-| **Operator**        | [Quickstart for Operators](../QUICKSTART_NONDEV.md) _(Coming soon)_         |
-| **Infrastructure Engineer** | [Production Deployment Checklist](../DEPLOYMENT_GUIDE.md) _(Coming soon)_<br>[Prometheus Monitoring](../PROMETHEUS_INTEGRATION.md) _(Coming soon)_<br>[Kubernetes Guide](../KUBERNETES_MONITORING_GUIDE.md) _(Coming soon)_|
-| **AI Safety/Research** | [AI Safety Overview](../AI_SECURITY_FRAMEWORK.md) _(Coming soon)_<br>[Robustness Metrics](../ROBUSTNESS_METRICS.md) _(Coming soon)_<br>[Read the AGI Charter](../AGI_CHARTER.md) _(Coming soon)_|
-| **Contributor**     | [Code Contribution Guide](../CONTRIBUTING.md) _(Coming soon)_<br>[Docs Contribution Guide](CONTRIBUTING_DOCS.md) _(Coming soon)_ |
+| **Operator**        | [Operator Quickstart](developer/OPERATOR_QUICKSTART.md) - Guardian mindset, operational safety, incident response         |
+| **Infrastructure Engineer** | [Infrastructure Production Guide](developer/INFRASTRUCTURE_PRODUCTION_GUIDE.md) - Deployment checklist, Prometheus monitoring, Kubernetes guide<br>[Example Deployments](developer/EXAMPLE_DEPLOYMENTS.md) - Minimal, secured, and research sandbox configurations|
+| **AI Safety/Research** | [AI Safety Overview](developer/AI_SAFETY_OVERVIEW.md) - Corrigibility, interpretability, robustness metrics<br>[AGI Charter](governance/AGI_CHARTER.md) - Rights, dignity, and Four Laws framework|
+| **Contributor**     | [Code & Docs Contribution Guide](developer/CONTRIBUTING.md) - Standards, governance, philosophical framework<br>[Documentation Structure Guide](DOCUMENTATION_STRUCTURE_GUIDE.md) - Where to place new docs |
 
 ---
 
 ## Overview & Roadmap
 
-- [Project Vision & Roadmap](overview/ROADMAP.md) _(Coming soon)_
+- [Project Vision & Roadmap](developer/ROADMAP.md) - AGI for collective flourishing, organizational theory, philosophical framework
+- [Identity, Security & Infrastructure](developer/IDENTITY_SECURITY_INFRASTRUCTURE.md) - Self-sovereign identity, security principles, infrastructure philosophy
 
 ---
 
-## Example Deployments (Happy Paths)
+## Example Deployments (Production-Ready Patterns)
 
-**(All coming soon — see `examples/` directory)**
+*See [Example Deployments Guide](developer/EXAMPLE_DEPLOYMENTS.md) for complete configurations*
 
-- Minimal deployment example
-- Advanced secured deployment
-- Research sandbox
-- [First Workflow: Temporal → Monitoring](../TEMPORAL_SETUP.md) + [Integration Steps](../NEW_TEMPORAL_INTEGRATION_SUMMARY.md) _(Coming soon)_
+- **Minimal Deployment:** Simple, single-server setup for development and PoC
+- **Secured Advanced Deployment:** Production-grade with defense-in-depth, HA, monitoring
+- **Research Sandbox:** Isolated environment for testing risky capabilities
+- [Temporal Workflow Setup](developer/TEMPORAL_SETUP.md) + [Integration Guide](developer/INTEGRATION_GUIDE.md)
 
 ---
 
@@ -63,15 +64,29 @@ _Project-AI is an open, extensible platform for operating, securing, and researc
 
 **Identity Docs:**  
 
-- AGI Identity Spec _(Coming soon)_
+- [AGI Identity Specification](governance/AGI_IDENTITY_SPECIFICATION.md)
+- [Identity System Full Spec](governance/IDENTITY_SYSTEM_FULL_SPEC.md)
+- [Identity, Security & Infrastructure Framework](developer/IDENTITY_SECURITY_INFRASTRUCTURE.md)
 
 **Security Docs:**  
 
-- Security Frameworks, Red Team Results, Robustness Metrics _(Coming soon)_
+- [AI Security Framework](security_compliance/AI_SECURITY_FRAMEWORK.md)
+- [Security Policy](security_compliance/SECURITY.md)
+- [Incident Playbook](security_compliance/INCIDENT_PLAYBOOK.md)
+- [AI Safety Overview](developer/AI_SAFETY_OVERVIEW.md) - Robustness metrics, red-teaming, corrigibility
 
 **Infrastructure Docs:**  
 
-- Deployment, Monitoring, Cloud/Offline Sync _(Coming soon)_
+- [Infrastructure Production Guide](developer/INFRASTRUCTURE_PRODUCTION_GUIDE.md) - Deployment, Prometheus, Kubernetes
+- [Example Deployments](developer/EXAMPLE_DEPLOYMENTS.md) - Minimal, secured, research sandbox
+- [Deployment Guide](developer/DEPLOYMENT_GUIDE.md)
+- [Kubernetes Monitoring Guide](developer/KUBERNETES_MONITORING_GUIDE.md)
+
+**Governance & Ethics:**
+
+- [AGI Charter](governance/AGI_CHARTER.md) - Rights, dignity, Four Laws
+- [Project Vision & Roadmap](developer/ROADMAP.md) - Mission, organizational theory
+- [Contributing Guide](developer/CONTRIBUTING.md) - Code/docs contribution philosophy
 
 ---
 
