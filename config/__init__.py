@@ -1,31 +1,10 @@
 """
-Project AI Configuration Module.
-
-Central configuration and constants for the system.
+Settings and Support - Q/A, Contact, and Feedback system
 """
 
-from .constants import (
-    ActionType,
-    ActorType,
-    Endpoints,
-    HttpStatus,
-    Messages,
-    Pillar,
-    RiskLevel,
-    VerdictType,
-)
-from .settings import Config
+from .settings_manager import SettingsManager
+from .qa_system import QASystem
+from .contact_system import ContactSystem
+from .feedback_manager import FeedbackManager
 
-__all__ = [
-    "Config",
-    "ActorType",
-    "ActionType",
-    "VerdictType",
-    "Pillar",
-    "RiskLevel",
-    "HttpStatus",
-    "Endpoints",
-    "Messages",
-]
-
-__version__ = "1.0.0"
+__all__ = ['SettingsManager', 'QASystem', 'ContactSystem', 'FeedbackManager']
