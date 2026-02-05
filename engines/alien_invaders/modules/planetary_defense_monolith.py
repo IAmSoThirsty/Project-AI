@@ -16,9 +16,9 @@ The monolith acts as the single source of truth for:
 import logging
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any, Callable
+from typing import Any
 
-from engines.alien_invaders.modules.causal_clock import CausalClock, CausalEvent
+from engines.alien_invaders.modules.causal_clock import CausalClock
 from engines.alien_invaders.modules.invariants import (
     CompositeInvariantValidator,
     InvariantViolation,

@@ -3,7 +3,6 @@ Save Points API Endpoints
 """
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from typing import Optional, Dict, List
 from project_ai.save_points import SavePointsManager, get_auto_save_service
 
 router = APIRouter(prefix="/api/savepoints", tags=["savepoints"])
@@ -12,7 +11,7 @@ save_manager = SavePointsManager()
 
 class CreateSaveRequest(BaseModel):
     name: str
-    metadata: Optional[Dict] = None
+    metadata: dict | None = None
 
 
 class RestoreRequest(BaseModel):

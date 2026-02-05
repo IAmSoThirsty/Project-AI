@@ -11,9 +11,8 @@ import logging
 import shutil
 import tempfile
 from pathlib import Path
-from typing import Any
 
-from e2e.config.e2e_config import E2E_ROOT, PROJECT_ROOT
+from e2e.config.e2e_config import PROJECT_ROOT
 
 logger = logging.getLogger(__name__)
 

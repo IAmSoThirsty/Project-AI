@@ -10,7 +10,6 @@ This module extends TARL with:
 This transforms TARL from static protection to adaptive, intelligent security.
 """
 
-import hashlib
 import logging
 from datetime import UTC, datetime
 from typing import Any

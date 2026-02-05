@@ -44,7 +44,7 @@ class TestEngineInitialization:
 
         engine = EMPDefenseEngine(config)
         engine.init()
-        
+
         # After EMP, grid should be 5% operational (100% - 95% failure)
         assert engine.state.grid_operational_pct == pytest.approx(0.05, abs=0.01)
 
@@ -56,7 +56,7 @@ class TestSimulationTicks:
         """Test single simulation tick."""
         engine = EMPDefenseEngine()
         engine.init()
-        
+
         result = engine.tick()
         assert result is True
         assert engine.state.simulation_day == 7  # 7-day time step
@@ -65,10 +65,10 @@ class TestSimulationTicks:
         """Test multiple ticks."""
         engine = EMPDefenseEngine()
         engine.init()
-        
+
         for i in range(10):
             engine.tick()
-        
+
         assert engine.state.simulation_day == 70  # 10 weeks
 
     def test_tick_without_init_fails(self):
@@ -85,7 +85,7 @@ class TestEventInjection:
         """Test injecting an event."""
         engine = EMPDefenseEngine()
         engine.init()
-        
+
         event_id = engine.inject_event("recovery_effort", {"region": "NA"})
         assert event_id.startswith("evt_")
         assert len(engine.events) == 2  # 1 initial EMP + 1 injected
@@ -94,10 +94,10 @@ class TestEventInjection:
         """Test injecting multiple events."""
         engine = EMPDefenseEngine()
         engine.init()
-        
+
         event_id_1 = engine.inject_event("recovery_effort", {"region": "NA"})
         event_id_2 = engine.inject_event("resource_discovered", {"type": "fuel"})
-        
+
         assert event_id_1 != event_id_2
         assert len(engine.events) == 3  # 1 EMP + 2 injected
 
@@ -109,7 +109,7 @@ class TestStateObservation:
         """Test that observe returns a dictionary."""
         engine = EMPDefenseEngine()
         engine.init()
-        
+
         state = engine.observe()
         assert isinstance(state, dict)
         assert "simulation_day" in state
@@ -119,11 +119,11 @@ class TestStateObservation:
         """Test that observe reflects state changes."""
         engine = EMPDefenseEngine()
         engine.init()
-        
+
         initial_day = engine.observe()["simulation_day"]
         engine.tick()
         updated_day = engine.observe()["simulation_day"]
-        
+
         assert updated_day > initial_day
 
 
@@ -135,10 +135,10 @@ class TestArtifactExport:
         engine = EMPDefenseEngine()
         engine.init()
         engine.tick()
-        
+
         result = engine.export_artifacts(str(tmp_path))
         assert result is True
-        
+
         # Check files exist
         assert (tmp_path / "final_state.json").exists()
         assert (tmp_path / "events.json").exists()
@@ -177,25 +177,25 @@ class TestEndToEnd:
         # Create engine with standard scenario
         config = load_scenario_preset(EMPScenario.STANDARD)
         engine = EMPDefenseEngine(config)
-        
+
         # Initialize
         assert engine.init()
-        
+
         # Run for 52 weeks (1 year)
         for _ in range(52):
             assert engine.tick()
-        
+
         # Inject recovery event
         event_id = engine.inject_event("recovery_milestone", {"type": "grid_partial"})
         assert event_id
-        
+
         # Observe state
         final_state = engine.observe()
         assert final_state["simulation_day"] == 52 * 7  # 364 days
-        
+
         # Export artifacts
         assert engine.export_artifacts(str(tmp_path))
-        
+
         # Verify artifacts
         assert (tmp_path / "final_state.json").exists()
         assert (tmp_path / "summary.json").exists()

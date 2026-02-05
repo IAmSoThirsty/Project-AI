@@ -7,7 +7,7 @@ Maintains Triumvirate governance for ALL requests
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import Optional, Dict, Any
+from typing import Any
 import uvicorn
 
 # Import Legion agent
@@ -28,7 +28,7 @@ class ChatMessage(BaseModel):
     message: str
     user_id: str
     platform: str = "web"
-    metadata: Optional[Dict[str, Any]] = None
+    metadata: dict[str, Any] | None = None
 
 
 class ChatResponse(BaseModel):
@@ -69,7 +69,7 @@ app.add_middleware(
 )
 
 # Initialize Legion
-legion: Optional[LegionAgent] = None
+legion: LegionAgent | None = None
 
 @app.on_event("startup")
 async def startup():
@@ -78,7 +78,7 @@ async def startup():
     if LEGION_AVAILABLE:
         legion = LegionAgent(api_url="http://localhost:8001")
         print(f"[Legion] Initialized: {legion.agent_id}")
-        
+
         # Start background learning
         await legion.start_background_learning()
     else:
@@ -129,9 +129,9 @@ async def get_status():
     """Get Legion status"""
     if not legion:
         raise HTTPException(status_code=503, detail="Legion not initialized")
-    
+
     learning_stats = legion.get_learning_stats()
-    
+
     return LegionStatus(
         agent_id=legion.agent_id,
         status="active",
@@ -146,13 +146,13 @@ async def get_status():
 async def chat(msg: ChatMessage) -> ChatResponse:
     """
     Send message to Legion
-    
+
     ALL MESSAGES GO THROUGH TRIUMVIRATE GOVERNANCE
     No backdoors, no bypass - single gate only
     """
     if not legion:
         raise HTTPException(status_code=503, detail="Legion not initialized")
-    
+
     try:
         # Process through Legion (includes Triumvirate governance)
         response = await legion.process_message(
@@ -161,7 +161,7 @@ async def chat(msg: ChatMessage) -> ChatResponse:
             platform=msg.platform,
             metadata=msg.metadata
         )
-        
+
         import time
         return ChatResponse(
             response=response,
@@ -169,7 +169,7 @@ async def chat(msg: ChatMessage) -> ChatResponse:
             timestamp=time.time(),
             governed=True  # Always governed by Triumvirate
         )
-        
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Legion error: {str(e)}")
 
@@ -179,7 +179,7 @@ async def start_learning():
     """Start background learning"""
     if not legion:
         raise HTTPException(status_code=503, detail="Legion not initialized")
-    
+
     await legion.start_background_learning()
     return {"status": "learning_started"}
 
@@ -189,7 +189,7 @@ async def stop_learning():
     """Stop background learning"""
     if not legion:
         raise HTTPException(status_code=503, detail="Legion not initialized")
-    
+
     await legion.stop_background_learning()
     return {"status": "learning_stopped"}
 
@@ -199,7 +199,7 @@ async def learning_stats():
     """Get learning statistics"""
     if not legion:
         raise HTTPException(status_code=503, detail="Legion not initialized")
-    
+
     return legion.get_learning_stats()
 
 
@@ -221,7 +221,7 @@ if __name__ == "__main__":
     print("  Docs: http://localhost:8002/docs")
     print("\nNote: Project-AI API must be running on port 8001")
     print("=" * 60 + "\n")
-    
+
     uvicorn.run(
         app,
         host="0.0.0.0",

@@ -8,7 +8,6 @@ asymmetric cross-domain coupling.
 from dataclasses import dataclass, field
 from engines.emp_defense.modules.constants import (
     EnergyThresholds,
-    WaterThresholds,
     FoodThresholds,
     HealthThresholds,
     GovernanceThresholds,
@@ -19,7 +18,7 @@ from engines.emp_defense.modules.constants import (
 class EnergyDomain:
     """
     Energy infrastructure domain.
-    
+
     Tracks grid generation, transformer inventory, and fuel access.
     """
     grid_generation_pct: float = 1.0  # Percentage of generation capacity
@@ -36,7 +35,7 @@ class EnergyDomain:
 class WaterDomain:
     """
     Water and sanitation domain.
-    
+
     Tracks potable water access, treatment capacity, and contamination.
     """
     potable_water_pct: float = 1.0  # Population with clean water access
@@ -52,7 +51,7 @@ class WaterDomain:
 class FoodDomain:
     """
     Food production and distribution domain.
-    
+
     Tracks urban food supply, rural production, and logistics.
     """
     urban_food_days: float = FoodThresholds.INITIAL_URBAN_FOOD_DAYS
@@ -69,7 +68,7 @@ class FoodDomain:
 class HealthDomain:
     """
     Healthcare infrastructure domain.
-    
+
     Tracks hospital capacity, medical supplies, and disease pressure.
     """
     hospital_capacity_pct: float = 1.0  # Functional hospital capacity
@@ -88,7 +87,7 @@ class HealthDomain:
 class SecurityDomain:
     """
     Law enforcement and security domain.
-    
+
     Tracks policing, armed groups, and violence levels.
     """
     law_enforcement_coverage: float = 1.0  # Police/military presence
@@ -104,7 +103,7 @@ class SecurityDomain:
 class GovernanceDomain:
     """
     Government legitimacy and authority domain.
-    
+
     Tracks government effectiveness, fragmentation, and emergency powers.
     """
     legitimacy_score: float = GovernanceThresholds.LEGITIMACY_BASELINE
@@ -121,7 +120,7 @@ class GovernanceDomain:
 class SectorizedWorldState:
     """
     Complete sectorized world state with cross-domain coupling.
-    
+
     Each domain degrades independently and feeds others asymmetrically.
     """
     # Domain models
@@ -131,11 +130,11 @@ class SectorizedWorldState:
     health: HealthDomain = field(default_factory=HealthDomain)
     security: SecurityDomain = field(default_factory=SecurityDomain)
     governance: GovernanceDomain = field(default_factory=GovernanceDomain)
-    
+
     # Time tracking
     simulation_hour: int = 0  # Hour-level precision for early cascade
     simulation_day: int = 0  # Day counter
-    
+
     # Population tracking
     global_population: int = 8_000_000_000
     total_deaths: int = 0
@@ -144,18 +143,18 @@ class SectorizedWorldState:
     deaths_violence: int = 0
     deaths_exposure: int = 0
     deaths_other: int = 0  # Accidents, executions, etc.
-    
+
     # Economic aggregate
     gdp_trillion: float = 100.0
-    
+
     # Event history
     major_events: list[str] = field(default_factory=list)
     failure_states_triggered: list[str] = field(default_factory=list)
-    
+
     # Cascade tracking
     emp_cascade_phase: str = "pre_emp"  # pre_emp, electronics, grid, panic, etc.
     irreversible_collapses: list[str] = field(default_factory=list)
-    
+
     def to_dict(self) -> dict:
         """Convert to dictionary for serialization."""
         return {

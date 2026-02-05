@@ -97,13 +97,13 @@ def example_long_context_analysis():
     # Simulate large document
     large_document = """
     [LARGE POLICY DOCUMENT - 50,000+ words]
-    
+
     Security Policy Section 1: Access Control
     All systems must implement multi-factor authentication...
-    
+
     Security Policy Section 2: Data Protection
     Sensitive data must be encrypted at rest and in transit...
-    
+
     [... many more sections ...]
     """ * 100  # Multiply to simulate large document
 

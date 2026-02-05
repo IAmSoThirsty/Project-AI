@@ -16,7 +16,7 @@ class EMPScenario(str, Enum):
 class SimulationConfig:
     """
     Minimal simulation configuration.
-    
+
     Examples:
         >>> config = SimulationConfig()
         >>> config.duration_years
@@ -33,24 +33,24 @@ class SimulationConfig:
 def load_scenario_preset(scenario: EMPScenario) -> SimulationConfig:
     """
     Load predefined scenario.
-    
+
     Args:
         scenario: Scenario type
-        
+
     Returns:
         SimulationConfig with preset values
-        
+
     Examples:
         >>> config = load_scenario_preset(EMPScenario.STANDARD)
         >>> config.grid_failure_pct
         0.9
-        
+
         >>> config = load_scenario_preset(EMPScenario.SEVERE)
         >>> config.grid_failure_pct
         0.98
     """
     config = SimulationConfig()
-    
+
     if scenario == EMPScenario.STANDARD:
         config.scenario = "standard"
         config.grid_failure_pct = 0.90
@@ -61,5 +61,5 @@ def load_scenario_preset(scenario: EMPScenario) -> SimulationConfig:
         config.grid_failure_pct = 0.98
         config.population_affected_pct = 0.85
         config.duration_years = 30
-        
+
     return config

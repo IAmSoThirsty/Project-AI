@@ -23,17 +23,17 @@ from __future__ import annotations
 import functools
 import hashlib
 import logging
-import multiprocessing
 import os
 import threading
 import time
 from collections import OrderedDict
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Set, Tuple
+from typing import Any
+from collections.abc import Callable
 
 import psutil
 
@@ -58,15 +58,15 @@ class CacheStrategy(Enum):
 
 class LRUCache:
     """Thread-safe LRU cache implementation"""
-    
+
     def __init__(self, max_size: int = 1000):
         self.max_size = max_size
         self.cache: OrderedDict = OrderedDict()
         self.hits = 0
         self.misses = 0
         self.lock = threading.RLock()
-    
-    def get(self, key: str) -> Optional[Any]:
+
+    def get(self, key: str) -> Any | None:
         """Get value from cache"""
         with self.lock:
             if key in self.cache:
@@ -75,25 +75,25 @@ class LRUCache:
                 return self.cache[key]
             self.misses += 1
             return None
-    
+
     def put(self, key: str, value: Any) -> None:
         """Put value in cache"""
         with self.lock:
             if key in self.cache:
                 self.cache.move_to_end(key)
             self.cache[key] = value
-            
+
             if len(self.cache) > self.max_size:
                 self.cache.popitem(last=False)
-    
+
     def clear(self) -> None:
         """Clear cache"""
         with self.lock:
             self.cache.clear()
             self.hits = 0
             self.misses = 0
-    
-    def get_stats(self) -> Dict[str, Any]:
+
+    def get_stats(self) -> dict[str, Any]:
         """Get cache statistics"""
         with self.lock:
             total = self.hits + self.misses
@@ -120,15 +120,15 @@ class CacheEntry:
 
 class TTLCache:
     """Thread-safe cache with Time-To-Live"""
-    
+
     def __init__(self, default_ttl_seconds: int = 300):
         self.default_ttl = default_ttl_seconds
-        self.cache: Dict[str, CacheEntry] = {}
+        self.cache: dict[str, CacheEntry] = {}
         self.hits = 0
         self.misses = 0
         self.lock = threading.RLock()
-    
-    def get(self, key: str) -> Optional[Any]:
+
+    def get(self, key: str) -> Any | None:
         """Get value from cache"""
         with self.lock:
             if key in self.cache:
@@ -140,15 +140,15 @@ class TTLCache:
                     del self.cache[key]
             self.misses += 1
             return None
-    
-    def put(self, key: str, value: Any, ttl_seconds: Optional[int] = None) -> None:
+
+    def put(self, key: str, value: Any, ttl_seconds: int | None = None) -> None:
         """Put value in cache with TTL"""
         ttl = ttl_seconds if ttl_seconds is not None else self.default_ttl
         expires_at = time.time() + ttl
-        
+
         with self.lock:
             self.cache[key] = CacheEntry(value=value, expires_at=expires_at)
-    
+
     def cleanup_expired(self) -> int:
         """Remove expired entries"""
         with self.lock:
@@ -170,24 +170,24 @@ def memoize(max_size: int = 128):
     """Decorator for function memoization"""
     def decorator(func: Callable) -> Callable:
         cache = LRUCache(max_size=max_size)
-        
+
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             # Create cache key from args/kwargs
             key_parts = [str(arg) for arg in args]
             key_parts.extend(f"{k}={v}" for k, v in sorted(kwargs.items()))
             cache_key = hashlib.md5("|".join(key_parts).encode()).hexdigest()
-            
+
             # Try cache
             result = cache.get(cache_key)
             if result is not None:
                 return result
-            
+
             # Compute and cache
             result = func(*args, **kwargs)
             cache.put(cache_key, result)
             return result
-        
+
         wrapper.cache = cache
         return wrapper
     return decorator
@@ -199,31 +199,31 @@ def memoize(max_size: int = 128):
 
 class ParallelProcessor:
     """Parallel task processing with thread/process pools"""
-    
+
     def __init__(
         self,
-        max_workers: Optional[int] = None,
+        max_workers: int | None = None,
         use_processes: bool = False
     ):
         self.max_workers = max_workers or os.cpu_count()
         self.use_processes = use_processes
-        
+
         if use_processes:
             self.executor = ProcessPoolExecutor(max_workers=self.max_workers)
         else:
             self.executor = ThreadPoolExecutor(max_workers=self.max_workers)
-        
+
         logger.info(f"ParallelProcessor initialized: {self.max_workers} {'processes' if use_processes else 'threads'}")
-    
-    def map(self, func: Callable, items: List[Any]) -> List[Any]:
+
+    def map(self, func: Callable, items: list[Any]) -> list[Any]:
         """Map function over items in parallel"""
         results = list(self.executor.map(func, items))
         return results
-    
+
     def submit(self, func: Callable, *args, **kwargs):
         """Submit single task"""
         return self.executor.submit(func, *args, **kwargs)
-    
+
     def shutdown(self, wait: bool = True) -> None:
         """Shutdown executor"""
         self.executor.shutdown(wait=wait)
@@ -235,30 +235,30 @@ class ParallelProcessor:
 
 class MemoryOptimizer:
     """Memory usage optimization and monitoring"""
-    
+
     @staticmethod
-    def get_memory_usage() -> Dict[str, float]:
+    def get_memory_usage() -> dict[str, float]:
         """Get current memory usage"""
         process = psutil.Process()
         mem_info = process.memory_info()
-        
+
         return {
             "rss_mb": mem_info.rss / 1024 / 1024,
             "vms_mb": mem_info.vms / 1024 / 1024,
             "percent": process.memory_percent()
         }
-    
+
     @staticmethod
     def check_memory_pressure() -> bool:
         """Check if system is under memory pressure"""
         mem = psutil.virtual_memory()
         return mem.percent > 85.0
-    
+
     @staticmethod
     def suggest_gc() -> bool:
         """Suggest garbage collection if needed"""
         import gc
-        
+
         if MemoryOptimizer.check_memory_pressure():
             gc.collect()
             logger.info("Garbage collection triggered")
@@ -272,19 +272,19 @@ class MemoryOptimizer:
 
 class QueryOptimizer:
     """Query optimization for data access"""
-    
+
     def __init__(self):
-        self.query_stats: Dict[str, List[float]] = {}
+        self.query_stats: dict[str, list[float]] = {}
         self.lock = threading.RLock()
-    
+
     def record_query(self, query_id: str, duration_ms: float) -> None:
         """Record query execution time"""
         with self.lock:
             if query_id not in self.query_stats:
                 self.query_stats[query_id] = []
             self.query_stats[query_id].append(duration_ms)
-    
-    def get_slow_queries(self, threshold_ms: float = 100.0) -> Dict[str, float]:
+
+    def get_slow_queries(self, threshold_ms: float = 100.0) -> dict[str, float]:
         """Get queries exceeding threshold"""
         with self.lock:
             slow_queries = {}
@@ -301,7 +301,7 @@ class QueryOptimizer:
 
 class ConnectionPool:
     """Generic connection pool"""
-    
+
     def __init__(
         self,
         create_fn: Callable,
@@ -311,11 +311,11 @@ class ConnectionPool:
         self.create_fn = create_fn
         self.max_size = max_size
         self.timeout = timeout
-        
-        self.pool: List[Any] = []
-        self.active: Set[Any] = set()
+
+        self.pool: list[Any] = []
+        self.active: set[Any] = set()
         self.lock = threading.RLock()
-    
+
     def acquire(self) -> Any:
         """Acquire connection from pool"""
         with self.lock:
@@ -324,22 +324,22 @@ class ConnectionPool:
                 conn = self.pool.pop()
                 self.active.add(conn)
                 return conn
-            
+
             # Create new if under limit
             if len(self.active) < self.max_size:
                 conn = self.create_fn()
                 self.active.add(conn)
                 return conn
-            
+
             raise RuntimeError("Connection pool exhausted")
-    
+
     def release(self, conn: Any) -> None:
         """Release connection back to pool"""
         with self.lock:
             if conn in self.active:
                 self.active.remove(conn)
                 self.pool.append(conn)
-    
+
     def close_all(self) -> None:
         """Close all connections"""
         with self.lock:
@@ -356,13 +356,13 @@ class ConnectionPool:
 
 class LazyLoader:
     """Lazy loading of resources"""
-    
+
     def __init__(self, loader_fn: Callable):
         self.loader_fn = loader_fn
         self._value = None
         self._loaded = False
         self.lock = threading.Lock()
-    
+
     def get(self) -> Any:
         """Get value, loading if necessary"""
         if not self._loaded:
@@ -371,7 +371,7 @@ class LazyLoader:
                     self._value = self.loader_fn()
                     self._loaded = True
         return self._value
-    
+
     def reset(self) -> None:
         """Reset lazy loader"""
         with self.lock:
@@ -385,19 +385,19 @@ class LazyLoader:
 
 class BackgroundTaskProcessor:
     """Process tasks in background"""
-    
+
     def __init__(self, num_workers: int = 2):
         self.num_workers = num_workers
-        self.task_queue: List[Callable] = []
-        self.workers: List[threading.Thread] = []
+        self.task_queue: list[Callable] = []
+        self.workers: list[threading.Thread] = []
         self.running = False
         self.lock = threading.Lock()
-    
+
     def start(self) -> None:
         """Start background workers"""
         if self.running:
             return
-        
+
         self.running = True
         for i in range(self.num_workers):
             worker = threading.Thread(
@@ -407,9 +407,9 @@ class BackgroundTaskProcessor:
             )
             worker.start()
             self.workers.append(worker)
-        
+
         logger.info(f"Background task processor started: {self.num_workers} workers")
-    
+
     def stop(self) -> None:
         """Stop background workers"""
         self.running = False
@@ -417,21 +417,21 @@ class BackgroundTaskProcessor:
             worker.join(timeout=5)
         self.workers.clear()
         logger.info("Background task processor stopped")
-    
+
     def submit(self, task: Callable) -> None:
         """Submit task for background processing"""
         with self.lock:
             self.task_queue.append(task)
-    
+
     def _worker_loop(self) -> None:
         """Worker loop"""
         while self.running:
             task = None
-            
+
             with self.lock:
                 if self.task_queue:
                     task = self.task_queue.pop(0)
-            
+
             if task:
                 try:
                     task()
@@ -448,7 +448,7 @@ class BackgroundTaskProcessor:
 class HYDRA50PerformanceOptimizer:
     """
     God-Tier performance optimization system for HYDRA-50
-    
+
     Complete performance suite with:
     - Multi-level caching
     - Parallel processing
@@ -457,11 +457,11 @@ class HYDRA50PerformanceOptimizer:
     - Connection pooling
     - Background tasks
     """
-    
+
     def __init__(self, data_dir: str = "data/hydra50/performance"):
         self.data_dir = Path(data_dir)
         self.data_dir.mkdir(parents=True, exist_ok=True)
-        
+
         # Initialize components
         self.lru_cache = LRUCache(max_size=1000)
         self.ttl_cache = TTLCache(default_ttl_seconds=300)
@@ -469,15 +469,15 @@ class HYDRA50PerformanceOptimizer:
         self.memory_optimizer = MemoryOptimizer()
         self.query_optimizer = QueryOptimizer()
         self.background_processor = BackgroundTaskProcessor()
-        
+
         # Start background processing
         self.background_processor.start()
-        
+
         # Schedule periodic cleanup
         self._schedule_cleanup()
-        
+
         logger.info("HYDRA-50 Performance Optimizer initialized")
-    
+
     def _schedule_cleanup(self) -> None:
         """Schedule periodic cleanup tasks"""
         def cleanup_loop():
@@ -485,15 +485,15 @@ class HYDRA50PerformanceOptimizer:
                 time.sleep(60)  # Every minute
                 self.ttl_cache.cleanup_expired()
                 self.memory_optimizer.suggest_gc()
-        
+
         cleanup_thread = threading.Thread(
             target=cleanup_loop,
             daemon=True,
             name="PerformanceCleanup"
         )
         cleanup_thread.start()
-    
-    def get_performance_stats(self) -> Dict[str, Any]:
+
+    def get_performance_stats(self) -> dict[str, Any]:
         """Get comprehensive performance statistics"""
         return {
             "lru_cache": self.lru_cache.get_stats(),
@@ -501,7 +501,7 @@ class HYDRA50PerformanceOptimizer:
             "slow_queries": self.query_optimizer.get_slow_queries(),
             "timestamp": datetime.now().isoformat()
         }
-    
+
     def shutdown(self) -> None:
         """Shutdown optimizer"""
         self.background_processor.stop()

@@ -20,7 +20,6 @@ This transforms Project-AI from "God-tier architecture" to "Deployable sovereign
 import hashlib
 import json
 import logging
-import shutil
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -108,8 +107,8 @@ class IronPathExecutor:
                     logger.error("Pipeline missing required field: %s", field)
                     return False
 
-            logger.info("Loaded pipeline: %s v%s", 
-                       self.pipeline_config["name"], 
+            logger.info("Loaded pipeline: %s v%s",
+                       self.pipeline_config["name"],
                        self.pipeline_config["version"])
 
             # Create config snapshot

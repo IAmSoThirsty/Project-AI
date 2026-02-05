@@ -23,10 +23,10 @@ print()
 try:
     response = requests.post(url, json=data)
     result = response.json()
-    
+
     if response.status_code in [200, 201]:
         agent = result.get("agent", {})
-        
+
         print("✅ REGISTRATION SUCCESSFUL!")
         print()
         print("API Key:", agent.get("api_key"))
@@ -39,7 +39,7 @@ try:
         print("2. Post verification tweet with the code")
         print("3. Legion is activated!")
         print("="*70)
-        
+
         # Save to config
         config_path = "integrations/openclaw/moltbook_config.json"
         config = {
@@ -51,17 +51,17 @@ try:
             "heartbeat_enabled": True,
             "require_triumvirate_approval": True
         }
-        
+
         import os
         os.makedirs("integrations/openclaw", exist_ok=True)
         with open(config_path, 'w') as f:
             json.dump(config, f, indent=2)
-        
+
         print()
         print(f"Config saved to: {config_path}")
-        
+
     else:
         print(f"❌ Registration failed: {result}")
-        
+
 except Exception as e:
     print(f"❌ Error: {e}")

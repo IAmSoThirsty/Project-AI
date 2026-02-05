@@ -132,7 +132,7 @@ Integration Steps:
 1. **Initialize Sovereign Messaging in main.py:**
 
    from src.features.sovereign_messaging import SovereignMessaging, ParticipantType
-   
+
    # In your Project-AI initialization
    self.messaging = SovereignMessaging(
        data_dir="data/sovereign_messages",
@@ -168,11 +168,11 @@ Integration Steps:
            encrypted_data["iv"],
            encrypted_data["ciphertext"]
        )
-       
+
        if message:
            # Process the decrypted message
            response = self.process_user_query(message["content"])
-           
+
            # Send encrypted response
            self.messaging.send_message(sender_code, response)
 
@@ -188,7 +188,7 @@ Integration Steps:
 
    contacts = self.messaging.get_contacts()
    messages = self.messaging.get_messages(include_deleted=False)
-   
+
    print(f"Paired contacts: {len(contacts)}")
    print(f"Active messages: {len(messages)}")
 """)

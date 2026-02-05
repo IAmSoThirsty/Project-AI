@@ -12,7 +12,6 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 from engines.emp_defense import (
     EMPDefenseEngine,
     EMPScenario,
-    SimulationConfig,
     load_scenario_preset,
 )
 
@@ -22,10 +21,10 @@ def test_basic_functionality():
     print("=" * 60)
     print("EMP Defense Engine - Manual Test Suite")
     print("=" * 60)
-    
+
     tests_passed = 0
     tests_failed = 0
-    
+
     # Test 1: Engine creation
     print("\n[TEST 1] Engine creation...")
     try:
@@ -37,7 +36,7 @@ def test_basic_functionality():
     except Exception as e:
         print(f"❌ FAIL: {e}")
         tests_failed += 1
-    
+
     # Test 2: Engine initialization
     print("\n[TEST 2] Engine initialization...")
     try:
@@ -51,7 +50,7 @@ def test_basic_functionality():
     except Exception as e:
         print(f"❌ FAIL: {e}")
         tests_failed += 1
-    
+
     # Test 3: Simulation tick
     print("\n[TEST 3] Simulation tick...")
     try:
@@ -65,7 +64,7 @@ def test_basic_functionality():
     except Exception as e:
         print(f"❌ FAIL: {e}")
         tests_failed += 1
-    
+
     # Test 4: Event injection
     print("\n[TEST 4] Event injection...")
     try:
@@ -79,7 +78,7 @@ def test_basic_functionality():
     except Exception as e:
         print(f"❌ FAIL: {e}")
         tests_failed += 1
-    
+
     # Test 5: State observation
     print("\n[TEST 5] State observation...")
     try:
@@ -94,7 +93,7 @@ def test_basic_functionality():
     except Exception as e:
         print(f"❌ FAIL: {e}")
         tests_failed += 1
-    
+
     # Test 6: Artifact export
     print("\n[TEST 6] Artifact export...")
     try:
@@ -108,7 +107,7 @@ def test_basic_functionality():
     except Exception as e:
         print(f"❌ FAIL: {e}")
         tests_failed += 1
-    
+
     # Test 7: Scenario presets
     print("\n[TEST 7] Scenario presets...")
     try:
@@ -120,17 +119,17 @@ def test_basic_functionality():
     except Exception as e:
         print(f"❌ FAIL: {e}")
         tests_failed += 1
-    
+
     # Test 8: Full simulation
     print("\n[TEST 8] Full simulation run (52 weeks)...")
     try:
         config = load_scenario_preset(EMPScenario.STANDARD)
         engine = EMPDefenseEngine(config)
         engine.init()
-        
+
         for week in range(52):
             engine.tick()
-        
+
         final_state = engine.observe()
         assert final_state["simulation_day"] == 52 * 7
         print("✅ PASS")
@@ -138,12 +137,12 @@ def test_basic_functionality():
     except Exception as e:
         print(f"❌ FAIL: {e}")
         tests_failed += 1
-    
+
     # Summary
     print("\n" + "=" * 60)
     print(f"Test Results: {tests_passed} passed, {tests_failed} failed")
     print("=" * 60)
-    
+
     return tests_failed == 0
 
 

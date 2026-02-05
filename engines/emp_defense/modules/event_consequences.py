@@ -8,7 +8,8 @@ No free wins. Every action has tradeoffs.
 import logging
 import random
 from dataclasses import dataclass
-from typing import Any, Callable
+from typing import Any
+from collections.abc import Callable
 from engines.emp_defense.modules.sectorized_state import SectorizedWorldState
 
 logger = logging.getLogger(__name__)
@@ -58,26 +59,26 @@ class EventDefinition:
 class ConsequentialEventSystem:
     """
     Event system where every action has tradeoffs.
-    
+
     No free wins - every event costs something, helps something, risks something else.
     """
-    
+
     def __init__(self, seed: int | None = None):
         """
         Initialize event system with event catalog.
-        
+
         Args:
             seed: Random seed for deterministic event outcomes (None = non-deterministic)
         """
         self.events: dict[str, EventDefinition] = {}
         self.rng = random.Random(seed)
         self._register_default_events()
-    
+
     def register_event(self, event: EventDefinition) -> None:
         """Register a new event type."""
         self.events[event.name] = event
         logger.info(f"Event registered: {event.name}")
-    
+
     def execute_event(
         self,
         event_name: str,
@@ -86,28 +87,28 @@ class ConsequentialEventSystem:
     ) -> tuple[bool, str, dict[str, Any]]:
         """
         Execute an event with full consequence system.
-        
+
         Args:
             event_name: Name of event to execute
             state: World state to modify
             parameters: Event-specific parameters
-            
+
         Returns:
             (success, message, consequences) tuple
         """
         if event_name not in self.events:
             return False, f"Unknown event: {event_name}", {}
-        
+
         event = self.events[event_name]
-        
+
         # Validate event can be executed
         can_execute, reason = event.validation(state)
         if not can_execute:
             return False, f"Cannot execute: {reason}", {}
-        
+
         # Apply costs FIRST (no take-backs)
         self._apply_costs(state, event.cost)
-        
+
         # Check if event fails (risks)
         if self.rng.random() < event.risk.failure_chance:
             # Event fails - costs paid, no benefits
@@ -117,75 +118,75 @@ class ConsequentialEventSystem:
                 "benefits_received": False,
                 "failure": True
             }
-        
+
         # Apply benefits
         self._apply_benefits(state, event.benefit)
-        
+
         # Check for secondary risks
         consequences = self._apply_risks(state, event.risk)
-        
+
         # Execute custom logic
         event.execution(state)
-        
+
         # Log event
         state.major_events.append(
             f"Day {state.simulation_day}: {event.name} executed"
         )
-        
+
         return True, f"{event.name} executed successfully", consequences
-    
+
     def _apply_costs(self, state: SectorizedWorldState, cost: EventCost) -> None:
         """Apply event costs to state."""
         # Legitimacy cost
         state.governance.legitimacy_score -= cost.legitimacy_cost
         state.governance.legitimacy_score = max(0.0, state.governance.legitimacy_score)
-        
+
         # Fuel cost
         if cost.fuel_cost_days > 0:
             state.energy.fuel_access_days -= cost.fuel_cost_days
             state.energy.fuel_access_days = max(0.0, state.energy.fuel_access_days)
-        
+
         # Population cost (lives lost in execution)
         if cost.population_cost > 0:
             state.global_population -= cost.population_cost
             state.total_deaths += cost.population_cost
             state.deaths_other += cost.population_cost
-        
+
         # Violence increase
         if cost.violence_increase > 0:
             state.security.violence_index += cost.violence_increase
             state.security.violence_index = min(1.0, state.security.violence_index)
-    
+
     def _apply_benefits(self, state: SectorizedWorldState, benefit: EventBenefit) -> None:
         """Apply event benefits to state."""
         # Grid restoration
         if benefit.grid_restoration > 0:
             state.energy.grid_generation_pct += benefit.grid_restoration
             state.energy.grid_generation_pct = min(1.0, state.energy.grid_generation_pct)
-        
+
         # Food supply
         if benefit.food_supply_days > 0:
             state.food.urban_food_days += benefit.food_supply_days
-        
+
         # Water treatment
         if benefit.water_treatment_boost > 0:
             state.water.treatment_capacity_pct += benefit.water_treatment_boost
             state.water.treatment_capacity_pct = min(1.0, state.water.treatment_capacity_pct)
-        
+
         # Legitimacy gain
         if benefit.legitimacy_gain > 0:
             state.governance.legitimacy_score += benefit.legitimacy_gain
             state.governance.legitimacy_score = min(1.0, state.governance.legitimacy_score)
-        
+
         # Violence reduction
         if benefit.violence_reduction > 0:
             state.security.violence_index -= benefit.violence_reduction
             state.security.violence_index = max(0.0, state.security.violence_index)
-    
+
     def _apply_risks(self, state: SectorizedWorldState, risk: EventRisk) -> dict[str, Any]:
         """Apply event risks and check for cascading failures."""
         consequences = {}
-        
+
         # Violence spike risk
         if self.rng.random() < risk.violence_spike_chance:
             spike = 0.10
@@ -193,7 +194,7 @@ class ConsequentialEventSystem:
             state.security.violence_index = min(1.0, state.security.violence_index)
             consequences["violence_spike"] = True
             logger.warning(f"⚠️ Violence spike triggered: +{spike:.0%}")
-        
+
         # Cascade failure risk
         if self.rng.random() < risk.cascade_failure_chance:
             # Event backfires - make something worse
@@ -201,18 +202,18 @@ class ConsequentialEventSystem:
             state.security.civil_unrest_level += 0.10
             consequences["cascade_failure"] = True
             logger.error(f"💥 Cascade failure: event backfired")
-        
+
         return consequences
-    
+
     def _apply_failure_consequences(self, state: SectorizedWorldState, risk: EventRisk) -> None:
         """Apply consequences when event fails."""
         # Legitimacy loss on failure
         state.governance.legitimacy_score -= risk.legitimacy_loss_on_failure
         state.governance.legitimacy_score = max(0.0, state.governance.legitimacy_score)
-    
+
     def _register_default_events(self) -> None:
         """Register default event catalog."""
-        
+
         # Recovery Effort - restore grid
         self.register_event(EventDefinition(
             name="grid_recovery_effort",
@@ -239,7 +240,7 @@ class ConsequentialEventSystem:
             ),
             execution=lambda state: None  # Benefits applied automatically
         ))
-        
+
         # Food Aid Distribution
         self.register_event(EventDefinition(
             name="food_aid_distribution",
@@ -267,7 +268,7 @@ class ConsequentialEventSystem:
             ),
             execution=lambda state: None
         ))
-        
+
         # Martial Law Declaration
         self.register_event(EventDefinition(
             name="declare_martial_law",
@@ -293,7 +294,7 @@ class ConsequentialEventSystem:
             ),
             execution=lambda state: setattr(state.governance, 'constitutional_limits_exceeded', True)
         ))
-        
+
         # Water Purification Tablets Distribution
         self.register_event(EventDefinition(
             name="distribute_water_tablets",

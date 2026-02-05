@@ -15,7 +15,7 @@ from app.core.services import (
     MemoryLoggingService,
 )
 from app.core.services.execution_service import ExecutionStatus
-from app.core.services.governance_service import Decision, MutationIntent
+from app.core.services.governance_service import Decision
 
 
 class TestGovernanceService:

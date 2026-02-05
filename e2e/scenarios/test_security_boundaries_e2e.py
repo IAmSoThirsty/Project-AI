@@ -11,7 +11,6 @@ import pytest
 from e2e.utils.assertions import (
     assert_business_invariant,
     assert_four_laws_compliance,
-    assert_permission_denied,
 )
 
 

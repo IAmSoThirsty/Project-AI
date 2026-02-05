@@ -12,12 +12,10 @@ Comprehensive tests for multi-agent systems including:
 
 from __future__ import annotations
 
-import json
 import queue
 import threading
 import time
 from dataclasses import dataclass, field
-from datetime import datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -28,7 +26,6 @@ from e2e.utils.test_helpers import (
     get_timestamp_iso,
     load_json_file,
     save_json_file,
-    wait_for_condition,
 )
 
 
@@ -171,7 +168,7 @@ class TestAgentCommunication:
         # Act
         msg = agent_a.send_message("agent_b", {"task": "process_data"}, "request")
         broker.deliver_message(msg)
-        
+
         received_msg = agent_b.receive_message(timeout=1.0)
 
         # Assert
@@ -185,7 +182,7 @@ class TestAgentCommunication:
         # Arrange
         broker = MessageBroker()
         agents = [Agent(f"agent_{i}", "worker") for i in range(5)]
-        
+
         for agent in agents:
             broker.register_agent(agent)
 
@@ -209,21 +206,21 @@ class TestAgentCommunication:
         # Arrange
         broker = MessageBroker()
         agents = [Agent(f"agent_{i}") for i in range(3)]
-        
+
         for agent in agents:
             broker.register_agent(agent)
 
         # Act - Send messages in a chain
         msg1 = agents[0].send_message("agent_1", {"data": "step1"})
         msg2 = agents[1].send_message("agent_2", {"data": "step2"})
-        
+
         broker.deliver_message(msg1)
         broker.deliver_message(msg2)
 
         # Assert
         msg_received_1 = agents[1].receive_message(timeout=1.0)
         msg_received_2 = agents[2].receive_message(timeout=1.0)
-        
+
         assert msg_received_1.content["data"] == "step1"
         assert msg_received_2.content["data"] == "step2"
 
@@ -233,7 +230,7 @@ class TestAgentCommunication:
         broker = MessageBroker()
         sender = Agent("sender")
         receiver = Agent("receiver")
-        
+
         broker.register_agent(sender)
         broker.register_agent(receiver)
 
@@ -255,7 +252,7 @@ class TestAgentCommunication:
         # Arrange
         broker = MessageBroker()
         agents = [Agent(f"agent_{i}") for i in range(3)]
-        
+
         for agent in agents:
             broker.register_agent(agent)
 
@@ -285,7 +282,7 @@ class TestAgentCoordination:
         broker = MessageBroker()
         coordinator = Agent("coordinator", "coordinator")
         workers = [Agent(f"worker_{i}", "worker") for i in range(5)]
-        
+
         broker.register_agent(coordinator)
         for worker in workers:
             broker.register_agent(worker)
@@ -306,14 +303,14 @@ class TestAgentCoordination:
                 if msg is None:
                     break
                 received_tasks.append(msg.content)
-            
+
             assert len(received_tasks) == 2  # 10 tasks / 5 workers
 
     def test_leader_election(self):
         """Test leader election among agents."""
         # Arrange
         agents = [Agent(f"agent_{i}") for i in range(5)]
-        
+
         # Simulate voting
         votes = {}
         for agent in agents:
@@ -336,7 +333,7 @@ class TestAgentCoordination:
         """Test reaching consensus among agents."""
         # Arrange
         agents = [Agent(f"agent_{i}") for i in range(5)]
-        
+
         # Each agent proposes a value
         proposals = {
             "agent_0": 10,
@@ -363,7 +360,7 @@ class TestAgentCoordination:
         """Test work stealing between agents."""
         # Arrange
         agents = [Agent(f"agent_{i}") for i in range(3)]
-        
+
         # Give uneven workload
         work_queues = {
             "agent_0": [1, 2, 3, 4, 5],
@@ -398,11 +395,11 @@ class TestAgentCoordination:
         def agent_work(agent_id: int):
             # Simulate work
             time.sleep(0.1 * agent_id)
-            
+
             # Reach barrier
             with lock:
                 barrier_count[0] += 1
-            
+
             # Wait for all agents
             while barrier_count[0] < num_agents:
                 time.sleep(0.01)
@@ -410,7 +407,7 @@ class TestAgentCoordination:
         # Act
         threads = []
         start_time = time.time()
-        
+
         for i in range(num_agents):
             thread = threading.Thread(target=agent_work, args=(i,))
             thread.start()
@@ -441,25 +438,25 @@ class TestAgentCollaboration:
             Agent("process_agent", "processor"),
             Agent("output_agent", "output"),
         ]
-        
+
         for agent in agents:
             broker.register_agent(agent)
 
         # Act - Process through pipeline
         data = {"value": 10}
-        
+
         # Stage 1: Input
         msg1 = agents[0].send_message("process_agent", data)
         broker.deliver_message(msg1)
-        
+
         msg = agents[1].receive_message(timeout=1.0)
         processed_data = msg.content.copy()
         processed_data["value"] *= 2  # Process
-        
+
         # Stage 2: Process
         msg2 = agents[1].send_message("output_agent", processed_data)
         broker.deliver_message(msg2)
-        
+
         msg = agents[2].receive_message(timeout=1.0)
         final_data = msg.content
 
@@ -471,18 +468,18 @@ class TestAgentCollaboration:
         # Arrange
         mappers = [Agent(f"mapper_{i}") for i in range(3)]
         reducer = Agent("reducer")
-        
+
         data = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
         # Act - Map phase
         map_results = []
         chunk_size = len(data) // len(mappers)
-        
+
         for i, mapper in enumerate(mappers):
             start_idx = i * chunk_size
             end_idx = start_idx + chunk_size if i < len(mappers) - 1 else len(data)
             chunk = data[start_idx:end_idx]
-            
+
             # Map: square each number
             mapped = [x ** 2 for x in chunk]
             map_results.extend(mapped)
@@ -498,7 +495,7 @@ class TestAgentCollaboration:
         """Test collaborative decision making among agents."""
         # Arrange
         agents = [Agent(f"expert_{i}") for i in range(4)]
-        
+
         # Each agent provides a recommendation
         recommendations = {
             "expert_0": {"action": "buy", "confidence": 0.8},
@@ -512,7 +509,7 @@ class TestAgentCollaboration:
         for rec in recommendations.values():
             action = rec["action"]
             confidence = rec["confidence"]
-            
+
             if action not in action_scores:
                 action_scores[action] = []
             action_scores[action].append(confidence)
@@ -532,7 +529,7 @@ class TestAgentCollaboration:
         # Arrange
         author = Agent("author")
         reviewers = [Agent(f"reviewer_{i}") for i in range(3)]
-        
+
         work = {
             "id": "work_001",
             "content": "Agent implementation",
@@ -563,7 +560,7 @@ class TestAgentCollaboration:
         """Test resource sharing between agents."""
         # Arrange
         agents = [Agent(f"agent_{i}") for i in range(3)]
-        
+
         shared_resources = {
             "cpu": 100,
             "memory": 1000,
@@ -583,7 +580,7 @@ class TestAgentCollaboration:
                 req[res] <= shared_resources[res]
                 for res in ["cpu", "memory", "storage"]
             )
-            
+
             if can_allocate:
                 for res in ["cpu", "memory", "storage"]:
                     shared_resources[res] -= req[res]
@@ -615,10 +612,10 @@ class TestAgentConflictResolution:
 
         # Act - Resolve by priority
         requests.sort(key=lambda x: x["priority"], reverse=True)
-        
+
         allocations = []
         remaining = available_resource
-        
+
         for req in requests:
             if req["amount"] <= remaining:
                 allocations.append(req)
@@ -660,7 +657,7 @@ class TestAgentConflictResolution:
         def has_cycle(graph, start):
             visited = set()
             current = start
-            
+
             while current not in visited:
                 visited.add(current)
                 if current not in graph:
@@ -668,7 +665,7 @@ class TestAgentConflictResolution:
                 current = graph[current]
                 if current == start:
                     return True
-            
+
             return False
 
         deadlock = has_cycle(waiting_for, "agent_a")
@@ -681,7 +678,7 @@ class TestAgentConflictResolution:
         # Arrange
         coordinator = Agent("coordinator", "coordinator")
         agents = [Agent(f"agent_{i}") for i in range(2)]
-        
+
         conflicts = [
             {
                 "agent_0": {"action": "write", "target": "resource_x"},
@@ -703,11 +700,11 @@ class TestAgentConflictResolution:
         # Arrange
         buyer = Agent("buyer")
         seller = Agent("seller")
-        
+
         # Initial positions
         buyer_offer = 80
         seller_ask = 120
-        
+
         max_rounds = 10
         agreement_threshold = 5
 
@@ -717,7 +714,7 @@ class TestAgentConflictResolution:
             buyer_offer += 4
             # Seller decreases ask
             seller_ask -= 4
-            
+
             if abs(buyer_offer - seller_ask) <= agreement_threshold:
                 agreed_price = (buyer_offer + seller_ask) / 2
                 break
@@ -740,10 +737,10 @@ class TestAgentStateSynchronization:
         # Arrange
         state_dir = Path(test_temp_dir) / "state"
         state_dir.mkdir(parents=True, exist_ok=True)
-        
+
         primary = Agent("primary")
         replicas = [Agent(f"replica_{i}") for i in range(3)]
-        
+
         # Primary state
         primary_state = {
             "counter": 42,
@@ -769,7 +766,7 @@ class TestAgentStateSynchronization:
         """Test eventual consistency among distributed agents."""
         # Arrange
         agents = [Agent(f"agent_{i}") for i in range(5)]
-        
+
         # Initial divergent states
         for i, agent in enumerate(agents):
             agent.update_state("value", i * 10)
@@ -797,9 +794,9 @@ class TestAgentStateSynchronization:
         # Arrange
         state_dir = Path(test_temp_dir) / "snapshots"
         state_dir.mkdir(parents=True, exist_ok=True)
-        
+
         agents = [Agent(f"agent_{i}") for i in range(3)]
-        
+
         for i, agent in enumerate(agents):
             agent.update_state("counter", i * 100)
 
@@ -809,7 +806,7 @@ class TestAgentStateSynchronization:
             "timestamp": snapshot_time,
             "agents": {},
         }
-        
+
         for agent in agents:
             snapshot["agents"][agent.agent_id] = agent.get_state()
 
@@ -825,7 +822,7 @@ class TestAgentStateSynchronization:
         # Arrange
         checkpoint_dir = Path(test_temp_dir) / "checkpoints"
         checkpoint_dir.mkdir(parents=True, exist_ok=True)
-        
+
         agent = Agent("agent_1")
         agent.update_state("processed_items", 1000)
         agent.update_state("last_checkpoint", get_timestamp_iso())
@@ -850,7 +847,7 @@ class TestAgentStateSynchronization:
         """Test distributed transaction across multiple agents."""
         # Arrange
         agents = [Agent(f"agent_{i}") for i in range(3)]
-        
+
         for agent in agents:
             agent.update_state("balance", 100)
 
@@ -870,7 +867,7 @@ class TestAgentStateSynchronization:
             agent_id = op["agent"]
             agent_idx = int(agent_id.split("_")[1])
             new_balance = agents[agent_idx].state["balance"] + op["amount"]
-            
+
             if new_balance < 0:
                 success = False
                 break

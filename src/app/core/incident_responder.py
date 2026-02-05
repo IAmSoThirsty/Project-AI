@@ -17,16 +17,15 @@ Defensive only - no offensive capabilities.
 
 import json
 import logging
-import os
 import shutil
-import subprocess
 import threading
 import time
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime, UTC
 from enum import Enum
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any
+from collections.abc import Callable
 
 logger = logging.getLogger(__name__)
 
@@ -62,13 +61,13 @@ class IncidentResponse:
     """Record of an incident response action."""
 
     response_id: str = field(default_factory=lambda: str(__import__('uuid').uuid4()))
-    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
     incident_id: str = ""
     action: str = ""
     target: str = ""
     success: bool = False
     details: str = ""
-    error: Optional[str] = None
+    error: str | None = None
     duration_seconds: float = 0.0
 
 
@@ -77,16 +76,16 @@ class SecurityIncident:
     """Security incident requiring response."""
 
     incident_id: str = field(default_factory=lambda: str(__import__('uuid').uuid4()))
-    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
     severity: str = IncidentSeverity.MEDIUM.value
     incident_type: str = ""
     source_ip: str = ""
     target_component: str = ""
     description: str = ""
-    indicators: Dict[str, Any] = field(default_factory=dict)
-    automated_responses: List[str] = field(default_factory=list)
+    indicators: dict[str, Any] = field(default_factory=dict)
+    automated_responses: list[str] = field(default_factory=list)
     status: str = "detected"
-    resolution: Optional[str] = None
+    resolution: str | None = None
 
 
 class IncidentResponder:
@@ -120,12 +119,12 @@ class IncidentResponder:
         self.enable_auto_response = enable_auto_response
 
         # State
-        self.incidents: List[SecurityIncident] = []
-        self.responses: List[IncidentResponse] = []
+        self.incidents: list[SecurityIncident] = []
+        self.responses: list[IncidentResponse] = []
         self.isolated_components: set = set()
 
         # Response handlers
-        self.response_handlers: Dict[str, Callable] = {
+        self.response_handlers: dict[str, Callable] = {
             ResponseAction.ISOLATE_COMPONENT.value: self._isolate_component,
             ResponseAction.BACKUP_DATA.value: self._backup_data,
             ResponseAction.RESTORE_FROM_BACKUP.value: self._restore_from_backup,
@@ -156,7 +155,7 @@ class IncidentResponder:
         source_ip: str = "",
         target_component: str = "",
         description: str = "",
-        indicators: Optional[Dict[str, Any]] = None,
+        indicators: dict[str, Any] | None = None,
         auto_respond: bool = True,
     ) -> SecurityIncident:
         """
@@ -250,7 +249,7 @@ class IncidentResponder:
                 with self.lock:
                     self.responses.append(response)
 
-    def _determine_response_actions(self, incident: SecurityIncident) -> List[str]:
+    def _determine_response_actions(self, incident: SecurityIncident) -> list[str]:
         """Determine appropriate response actions for incident."""
         actions = []
 
@@ -318,7 +317,7 @@ class IncidentResponder:
     def _backup_data(self, incident: SecurityIncident) -> tuple[bool, str]:
         """Create backup of critical data."""
         try:
-            timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+            timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
             backup_name = f"backup_{incident.incident_id}_{timestamp}"
             backup_path = self.backup_dir / backup_name
 
@@ -419,7 +418,7 @@ Please review and take appropriate action.
         try:
             src = Path(file_path)
             if src.exists():
-                timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+                timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
                 dst = quarantine_dir / f"{timestamp}_{src.name}"
                 shutil.move(str(src), str(dst))
                 logger.info(f"File quarantined: {src} -> {dst}")
@@ -439,7 +438,7 @@ Please review and take appropriate action.
 
         forensics_data = {
             "incident": asdict(incident),
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "system_state": {
                 "isolated_components": list(self.isolated_components),
                 "total_incidents": len(self.incidents),
@@ -458,7 +457,7 @@ Please review and take appropriate action.
             logger.error(f"Forensics logging failed: {e}")
             return False, f"Forensics logging failed: {e}"
 
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self) -> dict[str, Any]:
         """Get incident response statistics."""
         with self.lock:
             total_incidents = len(self.incidents)
@@ -497,11 +496,11 @@ Please review and take appropriate action.
                 "auto_response_enabled": self.enable_auto_response,
             }
 
-    def get_recent_incidents(self, hours: int = 24) -> List[Dict[str, Any]]:
+    def get_recent_incidents(self, hours: int = 24) -> list[dict[str, Any]]:
         """Get recent incidents."""
         from datetime import timedelta
 
-        cutoff = datetime.now(timezone.utc) - timedelta(hours=hours)
+        cutoff = datetime.now(UTC) - timedelta(hours=hours)
         recent = []
 
         for incident in self.incidents:
@@ -515,7 +514,7 @@ Please review and take appropriate action.
         """Load state from disk."""
         try:
             if self.incidents_file.exists():
-                with open(self.incidents_file, "r") as f:
+                with open(self.incidents_file) as f:
                     incident_data = json.load(f)
                     # Load last 1000 incidents
                     self.incidents = [
@@ -524,7 +523,7 @@ Please review and take appropriate action.
                 logger.info(f"Loaded {len(self.incidents)} incidents")
 
             if self.responses_file.exists():
-                with open(self.responses_file, "r") as f:
+                with open(self.responses_file) as f:
                     response_data = json.load(f)
                     # Load last 5000 responses
                     self.responses = [
