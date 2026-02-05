@@ -1,5 +1,6 @@
 import random
-from tarl.runtime import TarlRuntime
+
+from tarl import TarlRuntime
 from tarl.policies.default import DEFAULT_POLICIES
 
 

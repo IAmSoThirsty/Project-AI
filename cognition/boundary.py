@@ -5,6 +5,7 @@ All inbound requests must present a valid TARL hash.
 
 from cognition.audit import audit
 
+
 def enforce_boundary(tarl_hash: str | None):
     if not tarl_hash:
         audit("BOUNDARY_BLOCK", "missing_tarl")

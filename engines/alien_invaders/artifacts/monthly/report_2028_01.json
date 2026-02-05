@@ -1,0 +1,13 @@
+{
+  "month": "2028_01",
+  "num_events": 1,
+  "events": [
+    {
+      "id": "evt_750_0",
+      "type": "random_crisis",
+      "severity": "medium",
+      "description": "Random crisis event for realism",
+      "day": 750
+    }
+  ]
+}

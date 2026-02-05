@@ -15,8 +15,16 @@ import random
 
 from PyQt6.QtCore import QDateTime, Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QBrush, QColor, QFont, QPainter, QPen
-from PyQt6.QtWidgets import (QFrame, QHBoxLayout, QLabel, QPushButton, QScrollArea,
-                             QTextEdit, QVBoxLayout, QWidget)
+from PyQt6.QtWidgets import (
+    QFrame,
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QScrollArea,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+)
 
 # ============================================================================
 # STYLE CONSTANTS
@@ -58,6 +66,9 @@ PROACTIVE_ACTIONS = (
     "Optimizing memory cache",
     "Updating knowledge base",
     "Processing data streams",
+    "Monitoring global intelligence",
+    "Watch Tower security scan",
+    "News intelligence updates",
 )
 
 
@@ -254,6 +265,10 @@ class ProactiveActionsPanel(QFrame):
     """Top right panel showing AI proactive actions."""
 
     image_gen_requested = pyqtSignal()  # Signal to request image generation interface
+    intelligence_library_requested = pyqtSignal()  # Signal for intelligence library
+    watch_tower_requested = pyqtSignal()  # Signal for watch tower
+    command_center_requested = pyqtSignal()  # Signal for command center
+    news_intelligence_requested = pyqtSignal()  # Signal for news intelligence
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -271,6 +286,29 @@ class ProactiveActionsPanel(QFrame):
         image_gen_btn = self._create_action_button("🎨 GENERATE IMAGES")
         image_gen_btn.clicked.connect(self.image_gen_requested.emit)
         layout.addWidget(image_gen_btn)
+
+        # Separator
+        separator = QLabel("─" * 15)
+        separator.setStyleSheet("color: #004400;")
+        separator.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(separator)
+
+        # Intelligence system buttons
+        news_btn = self._create_action_button("📡 NEWS INTEL")
+        news_btn.clicked.connect(self.news_intelligence_requested.emit)
+        layout.addWidget(news_btn)
+
+        library_btn = self._create_action_button("🗂️ LIBRARY")
+        library_btn.clicked.connect(self.intelligence_library_requested.emit)
+        layout.addWidget(library_btn)
+
+        tower_btn = self._create_action_button("🏰 WATCH TOWER")
+        tower_btn.clicked.connect(self.watch_tower_requested.emit)
+        layout.addWidget(tower_btn)
+
+        command_btn = self._create_action_button("👑 COMMAND")
+        command_btn.clicked.connect(self.command_center_requested.emit)
+        layout.addWidget(command_btn)
 
     def _create_title(self) -> QLabel:
         title = QLabel("PROACTIVE ACTIONS")

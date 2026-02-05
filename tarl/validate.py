@@ -2,6 +2,7 @@ from tarl.core import TARL
 
 ALLOWED_AUTHORITIES = {"Galahad", "Cerberus", "CodexDeus"}
 
+
 def validate(t: TARL) -> None:
     if not t.intent or not t.scope:
         raise ValueError("Invalid TARL: intent and scope required")

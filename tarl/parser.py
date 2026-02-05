@@ -1,5 +1,6 @@
 from tarl.core import TARL
 
+
 def parse(text: str) -> TARL:
     lines = [l.strip() for l in text.splitlines() if l.strip()]
     data = {"constraints": []}

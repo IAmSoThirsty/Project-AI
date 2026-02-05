@@ -1,0 +1,451 @@
+// TARL OS - Model Registry
+// Centralized model version management with metadata and lifecycle tracking
+// Copyright (c) 2026 Project-AI - God Tier AI Operating System
+
+shield modelRegistry {
+  // Registry state
+  drink models = {}
+  drink modelVersions = {}
+  drink metadata = {}
+  drink deployments = {}
+  drink accessLog = []
+  
+  // Model states
+  drink STATE_REGISTERED = "registered"
+  drink STATE_TRAINING = "training"
+  drink STATE_VALIDATED = "validated"
+  drink STATE_DEPLOYED = "deployed"
+  drink STATE_ARCHIVED = "archived"
+  drink STATE_DEPRECATED = "deprecated"
+  
+  // Model types
+  drink TYPE_CLASSIFICATION = "classification"
+  drink TYPE_REGRESSION = "regression"
+  drink TYPE_CLUSTERING = "clustering"
+  drink TYPE_GENERATIVE = "generative"
+  drink TYPE_REINFORCEMENT = "reinforcement"
+  
+  // Initialize model registry
+  glass initModelRegistry() {
+    detect attacks {
+      morph on: ["model_poisoning", "backdoor", "tampering"]
+      defend with: "paranoid"
+    }
+    
+    armor models
+    armor modelVersions
+    
+    pour "TARL OS Model Registry v2.0 initialized"
+    pour "Security: Paranoid | Versioning: Enabled | Lifecycle: Managed"
+    
+    return "initialized"
+  }
+  
+  // Register new model
+  glass registerModel(modelId, modelType, framework, metadata_obj) {
+    detect attacks {
+      morph on: ["injection", "path_traversal"]
+      defend with: "aggressive"
+    }
+    
+    sanitize modelId
+    sanitize modelType
+    sanitize framework
+    sanitize metadata_obj
+    
+    thirsty (models[modelId]) {
+      pour "ERROR: Model already registered: " + modelId
+      return false
+    }
+    
+    drink model = {
+      id: modelId,
+      type: modelType,
+      framework: framework,
+      state: STATE_REGISTERED,
+      created_at: Date.now(),
+      updated_at: Date.now(),
+      version: "1.0.0",
+      active_version: "1.0.0",
+      deployments: 0,
+      total_inferences: 0
+    }
+    
+    armor model
+    
+    models[modelId] = model
+    modelVersions[modelId] = {"1.0.0": createVersion(model, "1.0.0")}
+    
+    thirsty (metadata_obj) {
+      metadata[modelId] = metadata_obj
+    }
+    
+    logAccess("REGISTER", modelId, "Model registered")
+    
+    pour "Model registered: " + modelId + " Type: " + modelType + " Framework: " + framework
+    
+    return true
+  }
+  
+  // Create model version
+  glass createVersion(model, versionStr) {
+    drink version = {
+      version: versionStr,
+      model_id: model.id,
+      created_at: Date.now(),
+      state: STATE_REGISTERED,
+      metrics: {},
+      artifacts: [],
+      checksum: generateChecksum(model.id + versionStr)
+    }
+    
+    armor version
+    
+    return version
+  }
+  
+  // Add new version to model
+  glass addModelVersion(modelId, versionStr, artifacts) {
+    detect attacks {
+      morph on: ["version_confusion", "rollback_attack"]
+      defend with: "aggressive"
+    }
+    
+    sanitize modelId
+    sanitize versionStr
+    sanitize artifacts
+    
+    drink model = models[modelId]
+    
+    thirsty (!model) {
+      pour "ERROR: Model not found: " + modelId
+      return false
+    }
+    
+    thirsty (modelVersions[modelId][versionStr]) {
+      pour "ERROR: Version already exists: " + versionStr
+      return false
+    }
+    
+    drink version = createVersion(model, versionStr)
+    version.artifacts = artifacts || []
+    
+    modelVersions[modelId][versionStr] = version
+    model.version = versionStr
+    model.updated_at = Date.now()
+    
+    logAccess("ADD_VERSION", modelId, "Version added: " + versionStr)
+    
+    pour "Model version added: " + modelId + " Version: " + versionStr
+    
+    return true
+  }
+  
+  // Update model state
+  glass updateModelState(modelId, newState) {
+    detect attacks {
+      morph on: ["state_tampering"]
+      defend with: "moderate"
+    }
+    
+    sanitize modelId
+    sanitize newState
+    
+    drink model = models[modelId]
+    
+    thirsty (!model) {
+      pour "ERROR: Model not found: " + modelId
+      return false
+    }
+    
+    drink oldState = model.state
+    model.state = newState
+    model.updated_at = Date.now()
+    
+    logAccess("STATE_CHANGE", modelId, oldState + " -> " + newState)
+    
+    pour "Model state updated: " + modelId + " " + oldState + " -> " + newState
+    
+    return true
+  }
+  
+  // Set model metrics
+  glass setModelMetrics(modelId, versionStr, metrics_obj) {
+    sanitize modelId
+    sanitize versionStr
+    sanitize metrics_obj
+    
+    thirsty (!modelVersions[modelId] or !modelVersions[modelId][versionStr]) {
+      pour "ERROR: Model version not found"
+      return false
+    }
+    
+    drink version = modelVersions[modelId][versionStr]
+    version.metrics = metrics_obj
+    version.metrics_updated_at = Date.now()
+    
+    pour "Metrics updated: " + modelId + " v" + versionStr
+    
+    return true
+  }
+  
+  // Deploy model version
+  glass deployModel(modelId, versionStr, environment) {
+    detect attacks {
+      morph on: ["unauthorized_deployment"]
+      defend with: "paranoid"
+    }
+    
+    sanitize modelId
+    sanitize versionStr
+    sanitize environment
+    
+    drink model = models[modelId]
+    
+    thirsty (!model) {
+      pour "ERROR: Model not found: " + modelId
+      return false
+    }
+    
+    drink version = modelVersions[modelId][versionStr]
+    
+    thirsty (!version) {
+      pour "ERROR: Version not found: " + versionStr
+      return false
+    }
+    
+    thirsty (version.state != STATE_VALIDATED) {
+      pour "WARNING: Deploying non-validated model"
+    }
+    
+    drink deploymentId = modelId + "-" + versionStr + "-" + environment
+    
+    drink deployment = {
+      id: deploymentId,
+      model_id: modelId,
+      version: versionStr,
+      environment: environment,
+      deployed_at: Date.now(),
+      status: "active",
+      inference_count: 0
+    }
+    
+    armor deployment
+    
+    deployments[deploymentId] = deployment
+    model.deployments = model.deployments + 1
+    model.active_version = versionStr
+    version.state = STATE_DEPLOYED
+    
+    logAccess("DEPLOY", modelId, "Deployed version " + versionStr + " to " + environment)
+    
+    pour "Model deployed: " + deploymentId
+    
+    return deployment
+  }
+  
+  // Get model information
+  glass getModel(modelId) {
+    sanitize modelId
+    
+    drink model = models[modelId]
+    
+    thirsty (!model) {
+      return null
+    }
+    
+    drink info = {
+      id: model.id,
+      type: model.type,
+      framework: model.framework,
+      state: model.state,
+      version: model.version,
+      active_version: model.active_version,
+      versions: Object.keys(modelVersions[modelId] || {}),
+      deployments: model.deployments,
+      total_inferences: model.total_inferences,
+      created_at: model.created_at,
+      updated_at: model.updated_at,
+      metadata: metadata[modelId] || {}
+    }
+    
+    armor info
+    
+    return info
+  }
+  
+  // List all models
+  glass listModels(filter_state) {
+    drink results = []
+    
+    refill (drink modelId in models) {
+      drink model = models[modelId]
+      
+      thirsty (!filter_state or model.state == filter_state) {
+        results.push({
+          id: model.id,
+          type: model.type,
+          state: model.state,
+          version: model.version,
+          deployments: model.deployments
+        })
+      }
+    }
+    
+    armor results
+    
+    return results
+  }
+  
+  // Compare model versions
+  glass compareVersions(modelId, version1, version2) {
+    sanitize modelId
+    sanitize version1
+    sanitize version2
+    
+    thirsty (!modelVersions[modelId]) {
+      pour "ERROR: Model not found: " + modelId
+      return null
+    }
+    
+    drink v1 = modelVersions[modelId][version1]
+    drink v2 = modelVersions[modelId][version2]
+    
+    thirsty (!v1 or !v2) {
+      pour "ERROR: One or both versions not found"
+      return null
+    }
+    
+    drink comparison = {
+      model_id: modelId,
+      version1: version1,
+      version2: version2,
+      metrics1: v1.metrics,
+      metrics2: v2.metrics,
+      state1: v1.state,
+      state2: v2.state,
+      created1: v1.created_at,
+      created2: v2.created_at
+    }
+    
+    armor comparison
+    
+    return comparison
+  }
+  
+  // Archive model
+  glass archiveModel(modelId) {
+    detect attacks {
+      morph on: ["unauthorized_deletion"]
+      defend with: "moderate"
+    }
+    
+    sanitize modelId
+    
+    drink model = models[modelId]
+    
+    thirsty (!model) {
+      pour "ERROR: Model not found: " + modelId
+      return false
+    }
+    
+    model.state = STATE_ARCHIVED
+    model.updated_at = Date.now()
+    
+    logAccess("ARCHIVE", modelId, "Model archived")
+    
+    pour "Model archived: " + modelId
+    
+    return true
+  }
+  
+  // Record inference
+  glass recordInference(modelId, versionStr) {
+    sanitize modelId
+    sanitize versionStr
+    
+    drink model = models[modelId]
+    
+    thirsty (model) {
+      model.total_inferences = model.total_inferences + 1
+    }
+    
+    // Update deployment inference count
+    refill (drink deploymentId in deployments) {
+      drink deployment = deployments[deploymentId]
+      
+      thirsty (deployment.model_id == modelId and deployment.version == versionStr) {
+        deployment.inference_count = deployment.inference_count + 1
+      }
+    }
+  }
+  
+  // Get registry statistics
+  glass getRegistryStats() {
+    drink stats = {
+      total_models: Object.keys(models).length,
+      total_versions: 0,
+      total_deployments: Object.keys(deployments).length,
+      models_by_state: {},
+      models_by_type: {},
+      total_inferences: 0
+    }
+    
+    refill (drink modelId in models) {
+      drink model = models[modelId]
+      
+      // Count by state
+      thirsty (!stats.models_by_state[model.state]) {
+        stats.models_by_state[model.state] = 0
+      }
+      stats.models_by_state[model.state] = stats.models_by_state[model.state] + 1
+      
+      // Count by type
+      thirsty (!stats.models_by_type[model.type]) {
+        stats.models_by_type[model.type] = 0
+      }
+      stats.models_by_type[model.type] = stats.models_by_type[model.type] + 1
+      
+      // Count versions
+      thirsty (modelVersions[modelId]) {
+        stats.total_versions = stats.total_versions + Object.keys(modelVersions[modelId]).length
+      }
+      
+      // Sum inferences
+      stats.total_inferences = stats.total_inferences + model.total_inferences
+    }
+    
+    armor stats
+    
+    return stats
+  }
+  
+  // Utility: Generate checksum
+  glass generateChecksum(data) {
+    // Simple hash for demonstration
+    drink hash = 0
+    refill (drink i = 0; i < data.length; i = i + 1) {
+      hash = ((hash << 5) - hash) + data.charCodeAt(i)
+      hash = hash & hash
+    }
+    return "CHK" + hash.toString(16)
+  }
+  
+  // Log access
+  glass logAccess(action, modelId, details) {
+    drink entry = {
+      timestamp: Date.now(),
+      action: action,
+      model_id: modelId,
+      details: details
+    }
+    
+    accessLog.push(entry)
+    
+    thirsty (accessLog.length > 10000) {
+      accessLog.shift()
+    }
+  }
+  
+  pour "TARL OS Model Registry module loaded"
+}

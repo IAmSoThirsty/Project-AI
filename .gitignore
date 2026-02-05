@@ -103,6 +103,12 @@ Thumbs.db
 # Generated test data
 data/generated_tests/
 
+# Global scenario engine cache
+data/global_scenarios*/cache/
+
+# Sovereign messaging data (contains private keys)
+data/sovereign_messages*/
+
 # Gradle
 .gradle/
 build/

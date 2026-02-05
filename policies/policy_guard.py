@@ -11,6 +11,7 @@ ALLOWED_POLICY_ACTIONS = {
     "analyze",
 }
 
+
 def enforce_policy(action: str):
     if action not in ALLOWED_POLICY_ACTIONS:
         audit("POLICY_BLOCK", action)

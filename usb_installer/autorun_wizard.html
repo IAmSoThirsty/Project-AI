@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legion Mini - Installation Wizard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%);
+            color: #e0e0e0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .wizard-container {
+            width: 90%;
+            max-width: 800px;
+            background: rgba(26, 26, 46, 0.95);
+            border-radius: 20px;
+            border: 2px solid #00ff88;
+            box-shadow: 0 20px 60px rgba(0, 255, 136, 0.3);
+            padding: 3rem;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #00ff88, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 1.1rem;
+        }
+
+        .speech-bubble {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            position: relative;
+            animation: fadeIn 1s ease-out 0.5s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .speech-bubble::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 10px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .speech-text {
+            font-size: 1.3rem;
+            text-align: center;
+            color: #00ff88;
+            font-style: italic;
+        }
+
+        .system-info {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: #888;
+        }
+
+        .info-value {
+            color: #00ff88;
+            font-weight: 600;
+        }
+
+        .progress-container {
+            margin: 2rem 0;
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff88, #00d4ff);
+            width: 0%;
+            transition: width 0.3s ease;
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 1rem;
+            color: #888;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00ff88, #00d4ff);
+            color: #0a0a0a;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 255, 136, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e0e0e0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .platform-icons {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .platform-icon {
+            font-size: 3rem;
+            opacity: 0.5;
+            transition: all 0.3s ease;
+        }
+
+        .platform-icon.active {
+            opacity: 1;
+            color: #00ff88;
+        }
+
+        .status-message {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .status-success {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            color: #00ff88;
+        }
+
+        .status-error {
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid rgba(255, 68, 68, 0.3);
+            color: #ff6b6b;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wizard-container">
+        <div class="header">
+            <div class="logo">LEGION MINI</div>
+            <div class="subtitle">Personal AI Installation Wizard</div>
+        </div>
+
+        <div id="speechBubble" class="speech-bubble">
+            <div class="speech-text">"Well, let's see what we're working with..."</div>
+        </div>
+
+        <div class="system-info" id="systemInfo">
+            <div class="info-row">
+                <span class="info-label">Platform:</span>
+                <span class="info-value" id="platform">Detecting...</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Available Storage:</span>
+                <span class="info-value" id="storage">Checking...</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Installation Type:</span>
+                <span class="info-value" id="installType">Auto-Selected</span>
+            </div>
+        </div>
+
+        <div class="platform-icons">
+            <span class="platform-icon" id="iconWindows" title="Windows">🖥️</span>
+            <span class="platform-icon" id="iconMac" title="macOS">🍎</span>
+            <span class="platform-icon" id="iconLinux" title="Linux">🐧</span>
+            <span class="platform-icon" id="iconAndroid" title="Android">📱</span>
+        </div>
+
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">Preparing installation...</div>
+        </div>
+
+        <div class="status-message" id="statusMessage"></div>
+
+        <div class="button-group" id="buttonGroup">
+            <button class="btn btn-secondary" onclick="cancelInstall()">Cancel</button>
+            <button class="btn btn-primary" onclick="startInstall()">Begin Installation</button>
+        </div>
+    </div>
+
+    <script>
+        // Detect platform
+        function detectPlatform() {
+            const ua = navigator.userAgent;
+            const platform = navigator.platform;
+
+            if (/Android/i.test(ua)) {
+                return { type: 'Android', icon: 'iconAndroid', installer: 'legion_mini.apk' };
+            } else if (/iPhone|iPad|iPod/i.test(ua)) {
+                return { type: 'iOS', icon: 'iconMac', installer: 'not_supported' };
+            } else if (/Mac/i.test(platform)) {
+                return { type: 'macOS', icon: 'iconMac', installer: 'LegionMini.dmg' };
+            } else if (/Linux/i.test(platform)) {
+                return { type: 'Linux', icon: 'iconLinux', installer: 'legion-mini.AppImage' };
+            } else if (/Win/i.test(platform)) {
+                return { type: 'Windows', icon: 'iconWindows', installer: 'START_LEGION.bat' };
+            }
+            return { type: 'Unknown', icon: null, installer: null };
+        }
+
+        // Initialize
+        const platformInfo = detectPlatform();
+        document.getElementById('platform').textContent = platformInfo.type;
+        if (platformInfo.icon) {
+            document.getElementById(platformInfo.icon).classList.add('active');
+        }
+
+        // Estimate storage
+        if (navigator.storage && navigator.storage.estimate) {
+            navigator.storage.estimate().then(estimate => {
+                const available = ((estimate.quota - estimate.usage) / 1024 / 1024 / 1024).toFixed(2);
+                document.getElementById('storage').textContent = available + ' GB';
+            });
+        } else {
+            document.getElementById('storage').textContent = 'Available';
+        }
+
+        // Set installation type based on platform
+        const installTypes = {
+            'Windows': 'Portable USB Ready',
+            'macOS': 'Desktop Application',
+            'Linux': 'AppImage Executable',
+            'Android': 'APK Sideload'
+        };
+        document.getElementById('installType').textContent = installTypes[platformInfo.type] || 'Standard';
+
+        // Start installation
+        function startInstall() {
+            document.getElementById('buttonGroup').style.display = 'none';
+            document.getElementById('progressContainer').style.display = 'block';
+            document.getElementById('speechBubble').querySelector('.speech-text').textContent =
+                '"Perfect! Let me get everything set up for you..."';
+
+            // Simulate installation progress
+            let progress = 0;
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+
+            const steps = [
+                'Analyzing system...',
+                'Preparing Legion backend...',
+                'Configuring AI models...',
+                'Setting up save points system...',
+                'Initializing Triumvirate governance...',
+                'Installing ' + platformInfo.installer + '...',
+                'Finalizing installation...'
+            ];
+
+            let stepIndex = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress > 100) progress = 100;
+
+                progressFill.style.width = progress + '%';
+                progressText.textContent = steps[stepIndex];
+
+                if (progress >= (stepIndex + 1) * (100 / steps.length)) {
+                    stepIndex++;
+                }
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    completeInstallation();
+                }
+            }, 500);
+        }
+
+        function completeInstallation() {
+            document.getElementById('speechBubble').querySelector('.speech-text').textContent =
+                '"All done! Legion Mini is ready to assist you."';
+
+            const statusMsg = document.getElementById('statusMessage');
+            statusMsg.className = 'status-message status-success';
+            statusMsg.textContent = 'Installation complete! You can now launch Legion Mini.';
+            statusMsg.style.display = 'block';
+
+            // Show appropriate next steps based on platform
+            setTimeout(() => {
+                if (platformInfo.type === 'Windows') {
+                    window.location.href = 'START_LEGION.bat';
+                } else if (platformInfo.type === 'Android') {
+                    window.location.href = 'install_android.html';
+                } else {
+                    alert('Installation complete! Please run the installer from your USB drive.');
+                }
+            }, 2000);
+        }
+
+        function cancelInstall() {
+            if (confirm('Are you sure you want to cancel the installation?')) {
+                window.close();
+            }
+        }
+    </script>
+</body>
+
+</html>

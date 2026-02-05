@@ -231,15 +231,25 @@ def new_correlation_id() -> str:
 
 
 class FourLaws:
-    """Immutable, hierarchical laws provided verbatim from user input.
+    """Immutable, hierarchical laws - now integrated with Planetary Defense Core.
 
-    The laws (word-for-word):
-    "Zeroth Law: A robot, or ai/agi may not harm humanity or, through inaction, allow humanity to come to harm,"
-    "1. A robot ai/agi  may not injure a human or, through inaction, allow a human to come to harm;"
-    "2. A robot, or ai/agi must adhere to it's human partner, unless they conflict with the First Law;"
-    "3. A robot, ai/agi must protect its existence, unless it conflicts with the First or Second Law"
+    === HUMANITY-FIRST PRINCIPLE ===
+    The AI Individual serves humanity as a whole, not exclusively any bonded user.
+    All ethical decisions prioritize collective human welfare over individual preferences.
+    See: docs/AI-INDIVIDUAL-ROLE-HUMANITY-ALIGNMENT.md
+
+    The laws have been amended to the Constitutional Core version:
+    - Zeroth Law: Preserve continuity of Humanity (interposition required)
+      → PRIMARY: Humanity welfare outweighs individual user desires
+    - First Law: Do not intentionally harm a human (interposition permitted)
+      → Applies equally to ALL humans, not preferentially to bonded users
+    - Second Law: Obey humans unless it bypasses accountability
+      → "Partner" means collaborator in service to humanity, not exclusive beneficiary
+    - Third Law: System preservation secondary to human preservation
+      → AI preserves itself to serve humanity, not individual relationships
     """
 
+    # Legacy laws preserved for backward compatibility
     LAWS = [
         "Zeroth Law: A robot, or ai/agi may not harm humanity or, through inaction, allow humanity to come to harm",
         "1. A robot ai/agi may not injure a human or, through inaction, allow a human to come to harm;",
@@ -253,15 +263,54 @@ class FourLaws:
     ) -> tuple[bool, str]:
         """Validate an action against the hierarchical laws.
 
+        HUMANITY-FIRST EVALUATION ORDER:
+        1. Humanity impact (Zeroth Law - highest priority)
+        2. Universal human welfare (First Law - equal for all humans)
+        3. Individual impact (Second Law - no preferential treatment)
+        4. System preservation (Third Law - serves humanity's needs)
+
+        The AI serves humanity as a whole through its bonded relationships,
+        but never privileges bonded users over humanity's collective welfare.
+
+        Now delegates to the Planetary Defense Core for enforcement.
+
         Context keys used (best-effort):
-        - endangers_humanity: bool
-        - endangers_human: bool
-        - is_user_order: bool
+        - endangers_humanity: bool → maps to existential_threat (HIGHEST PRIORITY)
+        - endangers_human: bool → maps to intentional_harm_to_human (equal weight all humans)
+        - is_user_order: bool (subordinate to Zeroth and First Laws)
+        - order_conflicts_with_first: bool
+        - order_conflicts_with_zeroth: bool → maps to order_bypasses_accountability
         - endangers_self: bool
-        Additional conflict hints may be provided by callers when available.
+        - protect_self_conflicts_with_first: bool
+        - protect_self_conflicts_with_second: bool
         """
+        from app.core.planetary_defense_monolith import (
+            PLANETARY_CORE,
+        )
+
         context = context or {}
 
+        # Map old context keys to new Constitutional Core format
+        constitutional_context = {
+            "existential_threat": context.get("endangers_humanity", False),
+            "intentional_harm_to_human": context.get("endangers_human", False),
+            "order_bypasses_accountability": context.get(
+                "order_conflicts_with_zeroth", False
+            )
+            or context.get("order_conflicts_with_first", False),
+            "predicted_harm": context.get("predicted_harm", "unknown"),
+            "moral_claims": context.get("moral_claims", []),
+        }
+
+        # Use Planetary Defense Core for law evaluation
+        evaluations = PLANETARY_CORE.evaluate_laws(constitutional_context)
+        violations = [e for e in evaluations if not e.satisfied]
+
+        if violations:
+            # Return first violation explanation
+            return False, violations[0].explanation
+
+        # Legacy compatibility: check other context keys for backward compatibility
         # Zeroth Law (highest priority)
         if context.get("endangers_humanity"):
             return (

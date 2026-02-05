@@ -17,8 +17,10 @@ sys.path.insert(0, str(project_root))
 
 from temporalio.client import Client
 
-from temporal.workflows.security_agent_workflows import (CodeSecuritySweepRequest,
-                                                         CodeSecuritySweepWorkflow)
+from temporal.workflows.security_agent_workflows import (
+    CodeSecuritySweepRequest,
+    CodeSecuritySweepWorkflow,
+)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
