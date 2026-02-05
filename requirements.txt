@@ -12,7 +12,7 @@ gunicorn==21.2.0
 # Database
 sqlalchemy==2.0.25
 alembic==1.13.1
-sqlite3  # Built-in
+# Note: sqlite3 is part of Python's standard library
 
 # Security
 python-multipart==0.0.6
@@ -25,7 +25,7 @@ httpx==0.26.0
 requests==2.31.0
 
 # Save points system dependencies
-(no additional dependencies - uses stdlib)
+# Note: uses Python standard library only
 
 # Testing
 pytest==7.4.4
@@ -38,7 +38,7 @@ flake8==7.0.0
 mypy==1.8.0
 
 # Legion integration
-# (uses existing dependencies)
+# Note: uses existing dependencies listed above
 
 # Optional: Model serving
 # torch==2.1.2
