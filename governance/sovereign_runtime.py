@@ -24,7 +24,7 @@ from typing import Any
 from uuid import uuid4
 
 # Use cryptography for Ed25519 signatures
-from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import ed25519
 
 logger = logging.getLogger(__name__)

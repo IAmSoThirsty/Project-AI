@@ -31,10 +31,10 @@ import traceback
 import uuid
 from collections import defaultdict, deque
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timedelta
 from enum import Enum
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Set, Tuple
+from typing import Any
+from collections.abc import Callable
 
 logger = logging.getLogger(__name__)
 
@@ -87,10 +87,10 @@ class Metric:
     metric_type: MetricType
     value: float
     timestamp: float
-    tags: Dict[str, str] = field(default_factory=dict)
+    tags: dict[str, str] = field(default_factory=dict)
     unit: str = ""
     description: str = ""
-    
+
     def to_prometheus_format(self) -> str:
         """Convert to Prometheus exposition format"""
         labels = ','.join([f'{k}="{v}"' for k, v in self.tags.items()])
@@ -107,17 +107,17 @@ class Alert:
     message: str
     timestamp: float
     source: str
-    tags: Dict[str, str] = field(default_factory=dict)
-    context: Dict[str, Any] = field(default_factory=dict)
+    tags: dict[str, str] = field(default_factory=dict)
+    context: dict[str, Any] = field(default_factory=dict)
     acknowledged: bool = False
     resolved: bool = False
-    resolution_time: Optional[float] = None
-    
+    resolution_time: float | None = None
+
     def acknowledge(self) -> None:
         """Mark alert as acknowledged"""
         self.acknowledged = True
         logger.info(f"Alert acknowledged: {self.alert_id}")
-    
+
     def resolve(self) -> None:
         """Mark alert as resolved"""
         self.resolved = True
@@ -130,22 +130,22 @@ class TraceSpan:
     """Distributed trace span"""
     span_id: str
     trace_id: str
-    parent_span_id: Optional[str]
+    parent_span_id: str | None
     operation_name: str
     start_time: float
-    end_time: Optional[float] = None
-    duration_ms: Optional[float] = None
-    tags: Dict[str, str] = field(default_factory=dict)
-    logs: List[Dict[str, Any]] = field(default_factory=list)
+    end_time: float | None = None
+    duration_ms: float | None = None
+    tags: dict[str, str] = field(default_factory=dict)
+    logs: list[dict[str, Any]] = field(default_factory=list)
     level: TraceLevel = TraceLevel.INFO
-    error: Optional[str] = None
-    
+    error: str | None = None
+
     def finish(self) -> None:
         """Complete the span"""
         self.end_time = time.time()
         self.duration_ms = (self.end_time - self.start_time) * 1000
-    
-    def log_event(self, event: str, data: Optional[Dict[str, Any]] = None) -> None:
+
+    def log_event(self, event: str, data: dict[str, Any] | None = None) -> None:
         """Add log event to span"""
         log_entry = {
             "timestamp": time.time(),
@@ -153,7 +153,7 @@ class TraceSpan:
             "data": data or {}
         }
         self.logs.append(log_entry)
-    
+
     def set_error(self, error: Exception) -> None:
         """Mark span with error"""
         self.level = TraceLevel.ERROR
@@ -169,8 +169,8 @@ class HealthCheck:
     timestamp: float
     response_time_ms: float
     message: str = ""
-    details: Dict[str, Any] = field(default_factory=dict)
-    dependencies: List[str] = field(default_factory=list)
+    details: dict[str, Any] = field(default_factory=dict)
+    dependencies: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -185,8 +185,8 @@ class PerformanceProfile:
     memory_mb: float
     io_operations: int
     context_switches: int
-    call_stack: List[str] = field(default_factory=list)
-    bottlenecks: List[str] = field(default_factory=list)
+    call_stack: list[str] = field(default_factory=list)
+    bottlenecks: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -198,15 +198,15 @@ class AuditLogEntry:
     action: str
     resource: str
     result: str
-    context: Dict[str, Any] = field(default_factory=dict)
+    context: dict[str, Any] = field(default_factory=dict)
     previous_hash: str = ""
     entry_hash: str = ""
-    
+
     def compute_hash(self) -> str:
         """Compute tamper-proof hash"""
         data = f"{self.entry_id}|{self.timestamp}|{self.actor}|{self.action}|{self.resource}|{self.result}|{self.previous_hash}"
         return hashlib.sha256(data.encode()).hexdigest()
-    
+
     def seal(self, previous_hash: str = "") -> None:
         """Seal the entry with hash"""
         self.previous_hash = previous_hash
@@ -219,16 +219,16 @@ class AuditLogEntry:
 
 class MetricsCollector:
     """High-performance metrics collection and aggregation"""
-    
+
     def __init__(self, retention_seconds: int = 3600):
         self.retention_seconds = retention_seconds
-        self.metrics: Dict[str, deque] = defaultdict(lambda: deque(maxlen=10000))
-        self.counters: Dict[str, float] = {}
-        self.gauges: Dict[str, float] = {}
-        self.histograms: Dict[str, List[float]] = defaultdict(list)
+        self.metrics: dict[str, deque] = defaultdict(lambda: deque(maxlen=10000))
+        self.counters: dict[str, float] = {}
+        self.gauges: dict[str, float] = {}
+        self.histograms: dict[str, list[float]] = defaultdict(list)
         self.lock = threading.RLock()
-        
-    def record_counter(self, name: str, value: float = 1.0, tags: Optional[Dict[str, str]] = None) -> None:
+
+    def record_counter(self, name: str, value: float = 1.0, tags: dict[str, str] | None = None) -> None:
         """Record counter metric (monotonically increasing)"""
         with self.lock:
             key = self._make_key(name, tags or {})
@@ -241,8 +241,8 @@ class MetricsCollector:
                 tags=tags or {}
             )
             self.metrics[key].append(metric)
-    
-    def record_gauge(self, name: str, value: float, tags: Optional[Dict[str, str]] = None) -> None:
+
+    def record_gauge(self, name: str, value: float, tags: dict[str, str] | None = None) -> None:
         """Record gauge metric (point-in-time value)"""
         with self.lock:
             key = self._make_key(name, tags or {})
@@ -255,8 +255,8 @@ class MetricsCollector:
                 tags=tags or {}
             )
             self.metrics[key].append(metric)
-    
-    def record_histogram(self, name: str, value: float, tags: Optional[Dict[str, str]] = None) -> None:
+
+    def record_histogram(self, name: str, value: float, tags: dict[str, str] | None = None) -> None:
         """Record histogram metric (distribution)"""
         with self.lock:
             key = self._make_key(name, tags or {})
@@ -269,27 +269,27 @@ class MetricsCollector:
                 tags=tags or {}
             )
             self.metrics[key].append(metric)
-    
-    def get_counter(self, name: str, tags: Optional[Dict[str, str]] = None) -> float:
+
+    def get_counter(self, name: str, tags: dict[str, str] | None = None) -> float:
         """Get current counter value"""
         with self.lock:
             key = self._make_key(name, tags or {})
             return self.counters.get(key, 0.0)
-    
-    def get_gauge(self, name: str, tags: Optional[Dict[str, str]] = None) -> Optional[float]:
+
+    def get_gauge(self, name: str, tags: dict[str, str] | None = None) -> float | None:
         """Get current gauge value"""
         with self.lock:
             key = self._make_key(name, tags or {})
             return self.gauges.get(key)
-    
-    def get_histogram_stats(self, name: str, tags: Optional[Dict[str, str]] = None) -> Dict[str, float]:
+
+    def get_histogram_stats(self, name: str, tags: dict[str, str] | None = None) -> dict[str, float]:
         """Get histogram statistics"""
         with self.lock:
             key = self._make_key(name, tags or {})
             values = self.histograms.get(key, [])
             if not values:
                 return {}
-            
+
             sorted_values = sorted(values)
             n = len(sorted_values)
             return {
@@ -302,8 +302,8 @@ class MetricsCollector:
                 "p95": sorted_values[int(n * 0.95)],
                 "p99": sorted_values[int(n * 0.99)],
             }
-    
-    def get_metrics_snapshot(self) -> List[Metric]:
+
+    def get_metrics_snapshot(self) -> list[Metric]:
         """Get snapshot of all current metrics"""
         with self.lock:
             snapshot = []
@@ -311,22 +311,22 @@ class MetricsCollector:
                 if metric_queue:
                     snapshot.append(metric_queue[-1])
             return snapshot
-    
+
     def prune_old_metrics(self) -> int:
         """Remove metrics older than retention period"""
         with self.lock:
             cutoff_time = time.time() - self.retention_seconds
             pruned_count = 0
-            
+
             for key in list(self.metrics.keys()):
                 metric_queue = self.metrics[key]
                 while metric_queue and metric_queue[0].timestamp < cutoff_time:
                     metric_queue.popleft()
                     pruned_count += 1
-            
+
             return pruned_count
-    
-    def _make_key(self, name: str, tags: Dict[str, str]) -> str:
+
+    def _make_key(self, name: str, tags: dict[str, str]) -> str:
         """Generate unique key for metric"""
         tag_str = ",".join(f"{k}={v}" for k, v in sorted(tags.items()))
         return f"{name}{{{tag_str}}}" if tag_str else name
@@ -338,26 +338,26 @@ class MetricsCollector:
 
 class AlertManager:
     """Alert generation, routing, and tracking"""
-    
+
     def __init__(self, data_dir: str = "data/hydra50/telemetry"):
         self.data_dir = Path(data_dir)
         self.data_dir.mkdir(parents=True, exist_ok=True)
-        
-        self.alerts: Dict[str, Alert] = {}
-        self.alert_rules: List[AlertRule] = []
+
+        self.alerts: dict[str, Alert] = {}
+        self.alert_rules: list[AlertRule] = []
         self.alert_history: deque = deque(maxlen=10000)
         self.lock = threading.RLock()
-        
+
         self._load_alert_rules()
-    
+
     def create_alert(
         self,
         severity: AlertSeverity,
         title: str,
         message: str,
         source: str,
-        tags: Optional[Dict[str, str]] = None,
-        context: Optional[Dict[str, Any]] = None
+        tags: dict[str, str] | None = None,
+        context: dict[str, Any] | None = None
     ) -> Alert:
         """Create new alert"""
         with self.lock:
@@ -373,14 +373,14 @@ class AlertManager:
             )
             self.alerts[alert.alert_id] = alert
             self.alert_history.append(alert)
-            
+
             logger.log(
                 self._severity_to_log_level(severity),
                 f"Alert created: {title} - {message}"
             )
-            
+
             return alert
-    
+
     def acknowledge_alert(self, alert_id: str) -> bool:
         """Acknowledge an alert"""
         with self.lock:
@@ -388,7 +388,7 @@ class AlertManager:
                 self.alerts[alert_id].acknowledge()
                 return True
             return False
-    
+
     def resolve_alert(self, alert_id: str) -> bool:
         """Resolve an alert"""
         with self.lock:
@@ -396,8 +396,8 @@ class AlertManager:
                 self.alerts[alert_id].resolve()
                 return True
             return False
-    
-    def get_active_alerts(self, min_severity: Optional[AlertSeverity] = None) -> List[Alert]:
+
+    def get_active_alerts(self, min_severity: AlertSeverity | None = None) -> list[Alert]:
         """Get all active (unresolved) alerts"""
         with self.lock:
             alerts = [a for a in self.alerts.values() if not a.resolved]
@@ -412,8 +412,8 @@ class AlertManager:
                 min_level = severity_order[min_severity]
                 alerts = [a for a in alerts if severity_order[a.severity] >= min_level]
             return sorted(alerts, key=lambda x: x.timestamp, reverse=True)
-    
-    def evaluate_rules(self, metrics: List[Metric]) -> List[Alert]:
+
+    def evaluate_rules(self, metrics: list[Metric]) -> list[Alert]:
         """Evaluate alert rules against metrics"""
         triggered_alerts = []
         with self.lock:
@@ -429,7 +429,7 @@ class AlertManager:
                     )
                     triggered_alerts.append(alert)
         return triggered_alerts
-    
+
     def _load_alert_rules(self) -> None:
         """Load alert rules from configuration"""
         # Default alert rules
@@ -457,7 +457,7 @@ class AlertManager:
                 source="telemetry"
             ),
         ]
-    
+
     def _severity_to_log_level(self, severity: AlertSeverity) -> int:
         """Convert alert severity to logging level"""
         mapping = {
@@ -477,12 +477,12 @@ class AlertRule:
     severity: AlertSeverity
     title: str
     message_template: str
-    condition: Callable[[List[Metric]], bool]
+    condition: Callable[[list[Metric]], bool]
     source: str
-    tags: Dict[str, str] = field(default_factory=dict)
-    context: Dict[str, Any] = field(default_factory=dict)
-    
-    def evaluate(self, metrics: List[Metric]) -> bool:
+    tags: dict[str, str] = field(default_factory=dict)
+    context: dict[str, Any] = field(default_factory=dict)
+
+    def evaluate(self, metrics: list[Metric]) -> bool:
         """Evaluate rule condition"""
         try:
             return self.condition(metrics)
@@ -497,43 +497,43 @@ class AlertRule:
 
 class DistributedTracer:
     """Distributed tracing with context propagation"""
-    
+
     def __init__(self, service_name: str = "hydra-50"):
         self.service_name = service_name
-        self.active_traces: Dict[str, List[TraceSpan]] = {}
+        self.active_traces: dict[str, list[TraceSpan]] = {}
         self.completed_traces: deque = deque(maxlen=10000)
         self.lock = threading.RLock()
-    
-    def start_trace(self, operation_name: str, tags: Optional[Dict[str, str]] = None) -> TraceSpan:
+
+    def start_trace(self, operation_name: str, tags: dict[str, str] | None = None) -> TraceSpan:
         """Start new trace"""
         trace_id = str(uuid.uuid4())
         span = self._create_span(trace_id, None, operation_name, tags)
-        
+
         with self.lock:
             self.active_traces[trace_id] = [span]
-        
+
         return span
-    
+
     def start_span(
         self,
         trace_id: str,
         parent_span_id: str,
         operation_name: str,
-        tags: Optional[Dict[str, str]] = None
+        tags: dict[str, str] | None = None
     ) -> TraceSpan:
         """Start child span in existing trace"""
         span = self._create_span(trace_id, parent_span_id, operation_name, tags)
-        
+
         with self.lock:
             if trace_id in self.active_traces:
                 self.active_traces[trace_id].append(span)
-        
+
         return span
-    
+
     def finish_span(self, span: TraceSpan) -> None:
         """Finish span and update trace"""
         span.finish()
-        
+
         with self.lock:
             if span.trace_id in self.active_traces:
                 # Check if all spans in trace are complete
@@ -541,18 +541,18 @@ class DistributedTracer:
                 if all(s.end_time is not None for s in spans):
                     self.completed_traces.append(spans)
                     del self.active_traces[span.trace_id]
-    
-    def get_trace(self, trace_id: str) -> Optional[List[TraceSpan]]:
+
+    def get_trace(self, trace_id: str) -> list[TraceSpan] | None:
         """Get trace by ID"""
         with self.lock:
             return self.active_traces.get(trace_id)
-    
+
     def _create_span(
         self,
         trace_id: str,
-        parent_span_id: Optional[str],
+        parent_span_id: str | None,
         operation_name: str,
-        tags: Optional[Dict[str, str]]
+        tags: dict[str, str] | None
     ) -> TraceSpan:
         """Create new span"""
         return TraceSpan(
@@ -571,36 +571,36 @@ class DistributedTracer:
 
 class HealthMonitor:
     """System health monitoring with self-healing triggers"""
-    
+
     def __init__(self):
-        self.health_checks: Dict[str, HealthCheck] = {}
+        self.health_checks: dict[str, HealthCheck] = {}
         self.health_history: deque = deque(maxlen=1000)
         self.lock = threading.RLock()
-    
+
     def register_check(
         self,
         check_name: str,
-        check_fn: Callable[[], Tuple[bool, str, Dict[str, Any]]],
-        dependencies: Optional[List[str]] = None
+        check_fn: Callable[[], tuple[bool, str, dict[str, Any]]],
+        dependencies: list[str] | None = None
     ) -> None:
         """Register health check function"""
         self.health_checks[check_name] = {
             "fn": check_fn,
             "dependencies": dependencies or []
         }
-    
-    def run_health_checks(self) -> Dict[str, HealthCheck]:
+
+    def run_health_checks(self) -> dict[str, HealthCheck]:
         """Run all health checks"""
         results = {}
-        
+
         for check_name, check_config in self.health_checks.items():
             start_time = time.time()
             try:
                 success, message, details = check_config["fn"]()
                 response_time_ms = (time.time() - start_time) * 1000
-                
+
                 status = HealthStatus.HEALTHY if success else HealthStatus.UNHEALTHY
-                
+
                 health_check = HealthCheck(
                     check_name=check_name,
                     status=status,
@@ -610,10 +610,10 @@ class HealthMonitor:
                     details=details,
                     dependencies=check_config["dependencies"]
                 )
-                
+
                 results[check_name] = health_check
                 self.health_history.append(health_check)
-                
+
             except Exception as e:
                 logger.error(f"Health check {check_name} failed: {e}")
                 results[check_name] = HealthCheck(
@@ -624,18 +624,18 @@ class HealthMonitor:
                     message=f"Check failed: {str(e)}",
                     details={"error": traceback.format_exc()}
                 )
-        
+
         return results
-    
+
     def get_overall_health(self) -> HealthStatus:
         """Get overall system health status"""
         results = self.run_health_checks()
-        
+
         if not results:
             return HealthStatus.HEALTHY
-        
+
         statuses = [check.status for check in results.values()]
-        
+
         if HealthStatus.CRITICAL in statuses:
             return HealthStatus.CRITICAL
         elif HealthStatus.UNHEALTHY in statuses:
@@ -652,21 +652,21 @@ class HealthMonitor:
 
 class PerformanceProfiler:
     """Performance profiling and bottleneck detection"""
-    
+
     def __init__(self):
         self.profiles: deque = deque(maxlen=1000)
         self.lock = threading.RLock()
-    
+
     def profile_operation(self, operation: str) -> PerformanceProfileContext:
         """Create profiling context for operation"""
         return PerformanceProfileContext(self, operation)
-    
+
     def record_profile(self, profile: PerformanceProfile) -> None:
         """Record performance profile"""
         with self.lock:
             self.profiles.append(profile)
-    
-    def get_bottlenecks(self, min_duration_ms: float = 100) -> List[PerformanceProfile]:
+
+    def get_bottlenecks(self, min_duration_ms: float = 100) -> list[PerformanceProfile]:
         """Get operations exceeding duration threshold"""
         with self.lock:
             return [p for p in self.profiles if p.duration_ms >= min_duration_ms]
@@ -674,7 +674,7 @@ class PerformanceProfiler:
 
 class PerformanceProfileContext:
     """Context manager for performance profiling"""
-    
+
     def __init__(self, profiler: PerformanceProfiler, operation: str):
         self.profiler = profiler
         self.operation = operation
@@ -683,17 +683,17 @@ class PerformanceProfileContext:
         self.start_cpu = 0.0
         self.start_memory = 0.0
         self.process = psutil.Process()
-    
+
     def __enter__(self) -> PerformanceProfileContext:
         self.start_time = time.time()
         self.start_cpu = self.process.cpu_percent()
         self.start_memory = self.process.memory_info().rss / 1024 / 1024
         return self
-    
+
     def __exit__(self, exc_type, exc_val, exc_tb):
         end_time = time.time()
         duration_ms = (end_time - self.start_time) * 1000
-        
+
         profile = PerformanceProfile(
             profile_id=self.profile_id,
             operation=self.operation,
@@ -705,7 +705,7 @@ class PerformanceProfileContext:
             io_operations=self.process.io_counters().read_count + self.process.io_counters().write_count,
             context_switches=self.process.num_ctx_switches().voluntary
         )
-        
+
         self.profiler.record_profile(profile)
 
 
@@ -715,24 +715,24 @@ class PerformanceProfileContext:
 
 class AuditLogger:
     """Tamper-proof audit logging with blockchain-style chaining"""
-    
+
     def __init__(self, data_dir: str = "data/hydra50/audit"):
         self.data_dir = Path(data_dir)
         self.data_dir.mkdir(parents=True, exist_ok=True)
-        
-        self.audit_log: List[AuditLogEntry] = []
+
+        self.audit_log: list[AuditLogEntry] = []
         self.lock = threading.RLock()
         self.last_hash = ""
-        
+
         self._load_audit_log()
-    
+
     def log_action(
         self,
         actor: str,
         action: str,
         resource: str,
         result: str,
-        context: Optional[Dict[str, Any]] = None
+        context: dict[str, Any] | None = None
     ) -> AuditLogEntry:
         """Log auditable action"""
         with self.lock:
@@ -745,43 +745,43 @@ class AuditLogger:
                 result=result,
                 context=context or {}
             )
-            
+
             entry.seal(self.last_hash)
             self.last_hash = entry.entry_hash
-            
+
             self.audit_log.append(entry)
             self._persist_entry(entry)
-            
+
             return entry
-    
-    def verify_integrity(self) -> Tuple[bool, List[str]]:
+
+    def verify_integrity(self) -> tuple[bool, list[str]]:
         """Verify audit log integrity"""
         errors = []
         previous_hash = ""
-        
+
         for i, entry in enumerate(self.audit_log):
             if entry.previous_hash != previous_hash:
                 errors.append(f"Entry {i} has invalid previous_hash")
-            
+
             computed_hash = entry.compute_hash()
             if computed_hash != entry.entry_hash:
                 errors.append(f"Entry {i} has invalid entry_hash")
-            
+
             previous_hash = entry.entry_hash
-        
+
         return len(errors) == 0, errors
-    
+
     def get_audit_trail(
         self,
-        actor: Optional[str] = None,
-        resource: Optional[str] = None,
-        start_time: Optional[float] = None,
-        end_time: Optional[float] = None
-    ) -> List[AuditLogEntry]:
+        actor: str | None = None,
+        resource: str | None = None,
+        start_time: float | None = None,
+        end_time: float | None = None
+    ) -> list[AuditLogEntry]:
         """Query audit trail with filters"""
         with self.lock:
             results = self.audit_log.copy()
-            
+
             if actor:
                 results = [e for e in results if e.actor == actor]
             if resource:
@@ -790,15 +790,15 @@ class AuditLogger:
                 results = [e for e in results if e.timestamp >= start_time]
             if end_time:
                 results = [e for e in results if e.timestamp <= end_time]
-            
+
             return results
-    
+
     def _load_audit_log(self) -> None:
         """Load audit log from disk"""
         log_file = self.data_dir / "audit_log.jsonl"
         if log_file.exists():
             try:
-                with open(log_file, 'r') as f:
+                with open(log_file) as f:
                     for line in f:
                         entry_data = json.loads(line)
                         entry = AuditLogEntry(**entry_data)
@@ -807,7 +807,7 @@ class AuditLogger:
                 logger.info(f"Loaded {len(self.audit_log)} audit log entries")
             except Exception as e:
                 logger.error(f"Failed to load audit log: {e}")
-    
+
     def _persist_entry(self, entry: AuditLogEntry) -> None:
         """Persist single entry to disk"""
         log_file = self.data_dir / "audit_log.jsonl"
@@ -824,21 +824,21 @@ class AuditLogger:
 
 class PrometheusExporter:
     """Prometheus metrics exporter"""
-    
+
     def __init__(self, metrics_collector: MetricsCollector, port: int = 9090):
         self.metrics_collector = metrics_collector
         self.port = port
-    
+
     def export_metrics(self) -> str:
         """Export metrics in Prometheus format"""
         lines = []
         snapshot = self.metrics_collector.get_metrics_snapshot()
-        
+
         for metric in snapshot:
             lines.append(metric.to_prometheus_format())
-        
+
         return '\n'.join(lines)
-    
+
     def start_http_server(self) -> None:
         """Start HTTP server for Prometheus scraping"""
         # Implementation would use http.server
@@ -852,7 +852,7 @@ class PrometheusExporter:
 class HYDRA50TelemetrySystem:
     """
     God-Tier telemetry system for HYDRA-50
-    
+
     Complete observability with:
     - Real-time metrics collection
     - Alert management
@@ -861,10 +861,10 @@ class HYDRA50TelemetrySystem:
     - Performance profiling
     - Audit logging
     """
-    
+
     def __init__(self, data_dir: str = "data/hydra50/telemetry"):
         self.data_dir = data_dir
-        
+
         self.metrics_collector = MetricsCollector()
         self.alert_manager = AlertManager(data_dir)
         self.tracer = DistributedTracer()
@@ -872,20 +872,20 @@ class HYDRA50TelemetrySystem:
         self.profiler = PerformanceProfiler()
         self.audit_logger = AuditLogger(os.path.join(data_dir, "audit"))
         self.prometheus_exporter = PrometheusExporter(self.metrics_collector)
-        
-        self._monitoring_thread: Optional[threading.Thread] = None
+
+        self._monitoring_thread: threading.Thread | None = None
         self._stop_monitoring = threading.Event()
-        
+
         self._register_default_health_checks()
-        
+
         logger.info("HYDRA-50 Telemetry System initialized")
-    
+
     def start_monitoring(self, interval_seconds: int = 10) -> None:
         """Start background monitoring"""
         if self._monitoring_thread and self._monitoring_thread.is_alive():
             logger.warning("Monitoring already running")
             return
-        
+
         self._stop_monitoring.clear()
         self._monitoring_thread = threading.Thread(
             target=self._monitoring_loop,
@@ -894,14 +894,14 @@ class HYDRA50TelemetrySystem:
         )
         self._monitoring_thread.start()
         logger.info(f"Monitoring started with {interval_seconds}s interval")
-    
+
     def stop_monitoring(self) -> None:
         """Stop background monitoring"""
         self._stop_monitoring.set()
         if self._monitoring_thread:
             self._monitoring_thread.join(timeout=5)
         logger.info("Monitoring stopped")
-    
+
     def _monitoring_loop(self, interval_seconds: int) -> None:
         """Background monitoring loop"""
         while not self._stop_monitoring.is_set():
@@ -912,45 +912,45 @@ class HYDRA50TelemetrySystem:
                 self.metrics_collector.prune_old_metrics()
             except Exception as e:
                 logger.error(f"Error in monitoring loop: {e}")
-            
+
             self._stop_monitoring.wait(interval_seconds)
-    
+
     def _collect_system_metrics(self) -> None:
         """Collect system-level metrics"""
         # CPU metrics
         cpu_percent = psutil.cpu_percent(interval=1)
         self.metrics_collector.record_gauge("system_cpu_percent", cpu_percent)
-        
+
         # Memory metrics
         memory = psutil.virtual_memory()
         self.metrics_collector.record_gauge("system_memory_percent", memory.percent)
         self.metrics_collector.record_gauge("system_memory_used_mb", memory.used / 1024 / 1024)
-        
+
         # Disk metrics
         disk = psutil.disk_usage('/')
         self.metrics_collector.record_gauge("system_disk_percent", disk.percent)
-        
+
         # Network metrics
         net_io = psutil.net_io_counters()
         self.metrics_collector.record_counter("system_network_bytes_sent", net_io.bytes_sent)
         self.metrics_collector.record_counter("system_network_bytes_recv", net_io.bytes_recv)
-    
+
     def _register_default_health_checks(self) -> None:
         """Register default health checks"""
-        def check_disk_space() -> Tuple[bool, str, Dict[str, Any]]:
+        def check_disk_space() -> tuple[bool, str, dict[str, Any]]:
             disk = psutil.disk_usage('/')
             success = disk.percent < 90
             message = f"Disk usage: {disk.percent}%"
             details = {"percent": disk.percent, "free_gb": disk.free / 1024 / 1024 / 1024}
             return success, message, details
-        
-        def check_memory() -> Tuple[bool, str, Dict[str, Any]]:
+
+        def check_memory() -> tuple[bool, str, dict[str, Any]]:
             memory = psutil.virtual_memory()
             success = memory.percent < 90
             message = f"Memory usage: {memory.percent}%"
             details = {"percent": memory.percent, "available_gb": memory.available / 1024 / 1024 / 1024}
             return success, message, details
-        
+
         self.health_monitor.register_check("disk_space", check_disk_space)
         self.health_monitor.register_check("memory", check_memory)
 

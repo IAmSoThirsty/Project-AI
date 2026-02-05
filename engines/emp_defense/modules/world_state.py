@@ -10,7 +10,7 @@ from typing import Any
 class WorldState:
     """
     Minimal world state tracking 5 key metrics.
-    
+
     Examples:
         >>> state = WorldState()
         >>> state.global_population
@@ -24,22 +24,22 @@ class WorldState:
     total_deaths: int = 0
     grid_operational_pct: float = 1.0  # 1.0 = 100% operational
     gdp_trillion: float = 100.0
-    
+
     # Simple event tracking
     major_events: list[str] = None
-    
+
     def __post_init__(self):
         """Initialize mutable defaults."""
         if self.major_events is None:
             self.major_events = []
-    
+
     def to_dict(self) -> dict[str, Any]:
         """
         Convert to dictionary.
-        
+
         Returns:
             Dictionary representation
-            
+
         Examples:
             >>> state = WorldState()
             >>> d = state.to_dict()

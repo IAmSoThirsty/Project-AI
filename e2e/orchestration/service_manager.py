@@ -13,7 +13,6 @@ from __future__ import annotations
 import logging
 import subprocess
 import time
-from typing import Any
 
 import requests
 

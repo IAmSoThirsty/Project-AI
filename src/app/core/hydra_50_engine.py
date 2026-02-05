@@ -7,7 +7,7 @@ Built to scare senior engineers. No fluff. Pure systems brutality.
 
 This engine implements:
 - Event-sourced state history (nothing ever deleted)
-- Time-travel replay + counterfactual branching  
+- Time-travel replay + counterfactual branching
 - Offline-first / air-gap survivability
 - Multiple control planes (Strategic, Operational, Tactical, Human Override)
 - Integration with Planetary Defense Constitutional Core
@@ -23,11 +23,11 @@ import json
 import logging
 import uuid
 from abc import ABC, abstractmethod
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -83,11 +83,11 @@ class TriggerEvent:
     """Scenario trigger condition"""
     name: str
     description: str
-    indicators: List[str]
+    indicators: list[str]
     threshold_value: float
     current_value: float = 0.0
     activated: bool = False
-    activation_time: Optional[datetime] = None
+    activation_time: datetime | None = None
 
     def check_activation(self) -> bool:
         """Check if trigger threshold exceeded"""
@@ -105,10 +105,10 @@ class EscalationStep:
     description: str
     time_horizon: timedelta
     impact_severity: float  # 0.0-1.0
-    required_conditions: List[str]
-    mitigation_actions: List[str]
+    required_conditions: list[str]
+    mitigation_actions: list[str]
     reached: bool = False
-    reached_time: Optional[datetime] = None
+    reached_time: datetime | None = None
 
 
 @dataclass
@@ -129,7 +129,7 @@ class CollapseMode:
     probability: float  # 0.0-1.0
     time_to_collapse: timedelta
     irreversibility_score: float  # 0.0-1.0 (1.0 = permanent)
-    secondary_effects: List[str]
+    secondary_effects: list[str]
 
 
 @dataclass
@@ -153,24 +153,24 @@ class VariableConstraint:
     reason: str
     can_never_increase: bool = False
     can_never_decrease: bool = False
-    
-    def validate(self, new_value: float) -> Tuple[bool, str]:
+
+    def validate(self, new_value: float) -> tuple[bool, str]:
         """
         Validate if new value violates constraint.
-        
+
         Args:
             new_value: Proposed new value
-            
+
         Returns:
             (is_valid, violation_reason)
         """
         # Check can_never constraints first (highest priority)
         if self.can_never_increase and new_value > self.locked_value:
             return False, f"{self.variable_name} can never increase (irreversible degradation)"
-        
+
         if self.can_never_decrease and new_value < self.locked_value:
             return False, f"{self.variable_name} can never decrease (irreversible escalation)"
-        
+
         # Then check ceiling/floor constraints
         if self.constraint_type == "ceiling":
             if new_value > self.locked_value:
@@ -178,7 +178,7 @@ class VariableConstraint:
         elif self.constraint_type == "floor":
             if new_value < self.locked_value:
                 return False, f"{self.variable_name} cannot fall below floor of {self.locked_value} (locked: {self.reason})"
-        
+
         return True, ""
 
 
@@ -189,9 +189,9 @@ class DisabledRecoveryEvent:
     disabled_at: datetime
     reason: str
     scenario_id: str
-    alternative_actions: List[str] = field(default_factory=list)
-    
-    def to_dict(self) -> Dict[str, Any]:
+    alternative_actions: list[str] = field(default_factory=list)
+
+    def to_dict(self) -> dict[str, Any]:
         """Serialize to dictionary"""
         return {
             "event_name": self.event_name,
@@ -211,12 +211,12 @@ class GovernanceCeiling:
     lowered_at: datetime
     reason: str
     multiplier: float  # Compound effect (< 1.0 means reduced capacity)
-    
+
     def get_effective_ceiling(self) -> float:
         """Calculate effective ceiling accounting for compound effects"""
         return self.lowered_ceiling * self.multiplier
-    
-    def to_dict(self) -> Dict[str, Any]:
+
+    def to_dict(self) -> dict[str, Any]:
         """Serialize to dictionary"""
         return {
             "domain": self.domain,
@@ -239,12 +239,12 @@ class IrreversibilityLock:
     scenario_id: str
     locked_at: datetime
     irreversibility_score: float
-    variable_constraints: List[VariableConstraint] = field(default_factory=list)
-    disabled_recovery_events: List[DisabledRecoveryEvent] = field(default_factory=list)
-    governance_ceilings: List[GovernanceCeiling] = field(default_factory=list)
-    triggered_collapses: List[str] = field(default_factory=list)
-    
-    def to_dict(self) -> Dict[str, Any]:
+    variable_constraints: list[VariableConstraint] = field(default_factory=list)
+    disabled_recovery_events: list[DisabledRecoveryEvent] = field(default_factory=list)
+    governance_ceilings: list[GovernanceCeiling] = field(default_factory=list)
+    triggered_collapses: list[str] = field(default_factory=list)
+
+    def to_dict(self) -> dict[str, Any]:
         """Serialize to dictionary"""
         return {
             "lock_id": self.lock_id,
@@ -275,12 +275,12 @@ class EventRecord:
     event_id: str
     timestamp: datetime
     event_type: str
-    scenario_id: Optional[str]
-    data: Dict[str, Any]
+    scenario_id: str | None
+    data: dict[str, Any]
     control_plane: ControlPlane
-    user_id: Optional[str] = None
+    user_id: str | None = None
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Serialize to dictionary"""
         return {
             "event_id": self.event_id,
@@ -300,10 +300,10 @@ class ScenarioState:
     timestamp: datetime
     status: ScenarioStatus
     escalation_level: EscalationLevel
-    active_triggers: List[str]
-    metrics: Dict[str, float]
-    coupled_scenarios: List[str]
-    active_locks: List[str] = field(default_factory=list)  # Lock IDs
+    active_triggers: list[str]
+    metrics: dict[str, float]
+    coupled_scenarios: list[str]
+    active_locks: list[str] = field(default_factory=list)  # Lock IDs
     state_hash: str = ""
 
     def compute_hash(self) -> str:
@@ -329,15 +329,15 @@ class BaseScenario(ABC):
         self.category = category
         self.status = ScenarioStatus.DORMANT
         self.escalation_level = EscalationLevel.LEVEL_0_BASELINE
-        self.triggers: List[TriggerEvent] = []
-        self.escalation_ladder: List[EscalationStep] = []
-        self.couplings: List[DomainCoupling] = []
-        self.collapse_modes: List[CollapseMode] = []
-        self.recovery_poisons: List[RecoveryPoison] = []
-        self.metrics: Dict[str, float] = {}
-        self.activation_time: Optional[datetime] = None
-        self.state_history: List[ScenarioState] = []
-        self.active_locks: List[IrreversibilityLock] = []  # Enforced state locks
+        self.triggers: list[TriggerEvent] = []
+        self.escalation_ladder: list[EscalationStep] = []
+        self.couplings: list[DomainCoupling] = []
+        self.collapse_modes: list[CollapseMode] = []
+        self.recovery_poisons: list[RecoveryPoison] = []
+        self.metrics: dict[str, float] = {}
+        self.activation_time: datetime | None = None
+        self.state_history: list[ScenarioState] = []
+        self.active_locks: list[IrreversibilityLock] = []  # Enforced state locks
 
     @abstractmethod
     def initialize_triggers(self) -> None:
@@ -364,13 +364,13 @@ class BaseScenario(ABC):
         """Define false recovery traps"""
         pass
 
-    def update_metrics(self, metrics: Dict[str, float]) -> None:
+    def update_metrics(self, metrics: dict[str, float]) -> None:
         """
         Update scenario metrics with constraint enforcement.
-        
+
         Args:
             metrics: New metric values
-            
+
         Raises:
             ValueError: If any metric violates active irreversibility locks
         """
@@ -383,10 +383,10 @@ class BaseScenario(ABC):
                     if not is_valid:
                         logger.error(f"CONSTRAINT VIOLATION: {reason}")
                         raise ValueError(f"Irreversibility constraint violated: {reason}")
-        
+
         # Update metrics if all constraints pass
         self.metrics.update(metrics)
-        
+
         # Update triggers
         for trigger in self.triggers:
             if trigger.name in metrics:
@@ -410,7 +410,7 @@ class BaseScenario(ABC):
                     self.escalation_level = step.level
                     logger.warning(f"{self.name} escalated to {step.level.name}")
 
-    def get_active_couplings(self) -> List[DomainCoupling]:
+    def get_active_couplings(self) -> list[DomainCoupling]:
         """Return couplings that should activate based on current state"""
         if self.escalation_level.value < 2:
             return []
@@ -433,14 +433,14 @@ class BaseScenario(ABC):
         )
         self.state_history.append(state)
         return state
-    
-    def check_recovery_event_allowed(self, event_name: str) -> Tuple[bool, str]:
+
+    def check_recovery_event_allowed(self, event_name: str) -> tuple[bool, str]:
         """
         Check if a recovery event is allowed or permanently disabled.
-        
+
         Args:
             event_name: Name of recovery event to attempt
-            
+
         Returns:
             (is_allowed, reason_if_disabled)
         """
@@ -449,14 +449,14 @@ class BaseScenario(ABC):
                 if disabled_event.event_name.lower() in event_name.lower():
                     return False, f"Recovery event '{event_name}' permanently disabled: {disabled_event.reason}"
         return True, ""
-    
-    def get_governance_ceiling(self, domain: str) -> Optional[float]:
+
+    def get_governance_ceiling(self, domain: str) -> float | None:
         """
         Get effective governance ceiling for a domain.
-        
+
         Args:
             domain: Governance domain to check
-            
+
         Returns:
             Effective ceiling value, or None if no ceiling active
         """
@@ -465,10 +465,10 @@ class BaseScenario(ABC):
             for ceiling in lock.governance_ceilings:
                 if ceiling.domain == domain:
                     ceilings.append(ceiling.get_effective_ceiling())
-        
+
         if not ceilings:
             return None
-        
+
         # Return lowest (most restrictive) ceiling
         return min(ceilings)
 
@@ -1581,7 +1581,7 @@ class LiquidityBlackHoleScenario(BaseScenario):
 
 
 # ============================================================================
-# INFRASTRUCTURE SCENARIOS (21-30)  
+# INFRASTRUCTURE SCENARIOS (21-30)
 # ============================================================================
 # Compact implementations for space efficiency
 
@@ -1795,7 +1795,7 @@ class SlowBurnPandemicScenario(BaseScenario):
         self.couplings = []
         self.collapse_modes = [CollapseMode("bio_collapse", "Biological system failure", 0.5, timedelta(days=730), 0.8, ["Cascading effects"])]
         self.recovery_poisons = [RecoveryPoison("tech_fix", "Technological solution", "Problem solved", "Dependency created", 0.7, 2.5)]
-        
+
     def initialize_triggers(self) -> None: pass
     def initialize_escalation_ladder(self) -> None: pass
     def initialize_couplings(self) -> None: pass
@@ -1815,7 +1815,7 @@ class AntibioticCollapseScenario(BaseScenario):
         self.couplings = []
         self.collapse_modes = [CollapseMode("bio_collapse", "Biological system failure", 0.5, timedelta(days=730), 0.8, ["Cascading effects"])]
         self.recovery_poisons = [RecoveryPoison("tech_fix", "Technological solution", "Problem solved", "Dependency created", 0.7, 2.5)]
-        
+
     def initialize_triggers(self) -> None: pass
     def initialize_escalation_ladder(self) -> None: pass
     def initialize_couplings(self) -> None: pass
@@ -1835,7 +1835,7 @@ class MassCropFailureScenario(BaseScenario):
         self.couplings = []
         self.collapse_modes = [CollapseMode("bio_collapse", "Biological system failure", 0.5, timedelta(days=730), 0.8, ["Cascading effects"])]
         self.recovery_poisons = [RecoveryPoison("tech_fix", "Technological solution", "Problem solved", "Dependency created", 0.7, 2.5)]
-        
+
     def initialize_triggers(self) -> None: pass
     def initialize_escalation_ladder(self) -> None: pass
     def initialize_couplings(self) -> None: pass
@@ -1855,7 +1855,7 @@ class AIDesignedInvasiveSpeciesScenario(BaseScenario):
         self.couplings = []
         self.collapse_modes = [CollapseMode("bio_collapse", "Biological system failure", 0.5, timedelta(days=730), 0.8, ["Cascading effects"])]
         self.recovery_poisons = [RecoveryPoison("tech_fix", "Technological solution", "Problem solved", "Dependency created", 0.7, 2.5)]
-        
+
     def initialize_triggers(self) -> None: pass
     def initialize_escalation_ladder(self) -> None: pass
     def initialize_couplings(self) -> None: pass
@@ -1875,7 +1875,7 @@ class OceanicFoodChainScenario(BaseScenario):
         self.couplings = []
         self.collapse_modes = [CollapseMode("bio_collapse", "Biological system failure", 0.5, timedelta(days=730), 0.8, ["Cascading effects"])]
         self.recovery_poisons = [RecoveryPoison("tech_fix", "Technological solution", "Problem solved", "Dependency created", 0.7, 2.5)]
-        
+
     def initialize_triggers(self) -> None: pass
     def initialize_escalation_ladder(self) -> None: pass
     def initialize_couplings(self) -> None: pass
@@ -1895,7 +1895,7 @@ class AtmosphericAerosolGovernanceScenario(BaseScenario):
         self.couplings = []
         self.collapse_modes = [CollapseMode("bio_collapse", "Biological system failure", 0.5, timedelta(days=730), 0.8, ["Cascading effects"])]
         self.recovery_poisons = [RecoveryPoison("tech_fix", "Technological solution", "Problem solved", "Dependency created", 0.7, 2.5)]
-        
+
     def initialize_triggers(self) -> None: pass
     def initialize_escalation_ladder(self) -> None: pass
     def initialize_couplings(self) -> None: pass
@@ -1915,7 +1915,7 @@ class UrbanAirToxicityScenario(BaseScenario):
         self.couplings = []
         self.collapse_modes = [CollapseMode("bio_collapse", "Biological system failure", 0.5, timedelta(days=730), 0.8, ["Cascading effects"])]
         self.recovery_poisons = [RecoveryPoison("tech_fix", "Technological solution", "Problem solved", "Dependency created", 0.7, 2.5)]
-        
+
     def initialize_triggers(self) -> None: pass
     def initialize_escalation_ladder(self) -> None: pass
     def initialize_couplings(self) -> None: pass
@@ -1935,7 +1935,7 @@ class SyntheticBiologyLeaksScenario(BaseScenario):
         self.couplings = []
         self.collapse_modes = [CollapseMode("bio_collapse", "Biological system failure", 0.5, timedelta(days=730), 0.8, ["Cascading effects"])]
         self.recovery_poisons = [RecoveryPoison("tech_fix", "Technological solution", "Problem solved", "Dependency created", 0.7, 2.5)]
-        
+
     def initialize_triggers(self) -> None: pass
     def initialize_escalation_ladder(self) -> None: pass
     def initialize_couplings(self) -> None: pass
@@ -1955,7 +1955,7 @@ class FertilityDeclineShockScenario(BaseScenario):
         self.couplings = []
         self.collapse_modes = [CollapseMode("bio_collapse", "Biological system failure", 0.5, timedelta(days=730), 0.8, ["Cascading effects"])]
         self.recovery_poisons = [RecoveryPoison("tech_fix", "Technological solution", "Problem solved", "Dependency created", 0.7, 2.5)]
-        
+
     def initialize_triggers(self) -> None: pass
     def initialize_escalation_ladder(self) -> None: pass
     def initialize_couplings(self) -> None: pass
@@ -1975,7 +1975,7 @@ class EcosystemFalsePositivesScenario(BaseScenario):
         self.couplings = []
         self.collapse_modes = [CollapseMode("bio_collapse", "Biological system failure", 0.5, timedelta(days=730), 0.8, ["Cascading effects"])]
         self.recovery_poisons = [RecoveryPoison("tech_fix", "Technological solution", "Problem solved", "Dependency created", 0.7, 2.5)]
-        
+
     def initialize_triggers(self) -> None: pass
     def initialize_escalation_ladder(self) -> None: pass
     def initialize_couplings(self) -> None: pass
@@ -2001,7 +2001,7 @@ class LegitimacyCollapseScenario(BaseScenario):
         self.couplings = []
         self.collapse_modes = [CollapseMode("social_breakdown", "Society fails", 0.6, timedelta(days=1095), 0.7, ["Chaos"])]
         self.recovery_poisons = [RecoveryPoison("authoritarian_fix", "Strong hand restores order", "Stability", "Freedom lost", 0.6, 3.0)]
-        
+
     def initialize_triggers(self) -> None: pass
     def initialize_escalation_ladder(self) -> None: pass
     def initialize_couplings(self) -> None: pass
@@ -2021,7 +2021,7 @@ class PermanentEmergencyGovernanceScenario(BaseScenario):
         self.couplings = []
         self.collapse_modes = [CollapseMode("social_breakdown", "Society fails", 0.6, timedelta(days=1095), 0.7, ["Chaos"])]
         self.recovery_poisons = [RecoveryPoison("authoritarian_fix", "Strong hand restores order", "Stability", "Freedom lost", 0.6, 3.0)]
-        
+
     def initialize_triggers(self) -> None: pass
     def initialize_escalation_ladder(self) -> None: pass
     def initialize_couplings(self) -> None: pass
@@ -2041,7 +2041,7 @@ class AIBackedAuthoritarianismScenario(BaseScenario):
         self.couplings = []
         self.collapse_modes = [CollapseMode("social_breakdown", "Society fails", 0.6, timedelta(days=1095), 0.7, ["Chaos"])]
         self.recovery_poisons = [RecoveryPoison("authoritarian_fix", "Strong hand restores order", "Stability", "Freedom lost", 0.6, 3.0)]
-        
+
     def initialize_triggers(self) -> None: pass
     def initialize_escalation_ladder(self) -> None: pass
     def initialize_couplings(self) -> None: pass
@@ -2061,7 +2061,7 @@ class DemocracyFatigueScenario(BaseScenario):
         self.couplings = []
         self.collapse_modes = [CollapseMode("social_breakdown", "Society fails", 0.6, timedelta(days=1095), 0.7, ["Chaos"])]
         self.recovery_poisons = [RecoveryPoison("authoritarian_fix", "Strong hand restores order", "Stability", "Freedom lost", 0.6, 3.0)]
-        
+
     def initialize_triggers(self) -> None: pass
     def initialize_escalation_ladder(self) -> None: pass
     def initialize_couplings(self) -> None: pass
@@ -2081,7 +2081,7 @@ class ReligiousAIProphetsScenario(BaseScenario):
         self.couplings = []
         self.collapse_modes = [CollapseMode("social_breakdown", "Society fails", 0.6, timedelta(days=1095), 0.7, ["Chaos"])]
         self.recovery_poisons = [RecoveryPoison("authoritarian_fix", "Strong hand restores order", "Stability", "Freedom lost", 0.6, 3.0)]
-        
+
     def initialize_triggers(self) -> None: pass
     def initialize_escalation_ladder(self) -> None: pass
     def initialize_couplings(self) -> None: pass
@@ -2101,7 +2101,7 @@ class GenerationalCivilColdWarsScenario(BaseScenario):
         self.couplings = []
         self.collapse_modes = [CollapseMode("social_breakdown", "Society fails", 0.6, timedelta(days=1095), 0.7, ["Chaos"])]
         self.recovery_poisons = [RecoveryPoison("authoritarian_fix", "Strong hand restores order", "Stability", "Freedom lost", 0.6, 3.0)]
-        
+
     def initialize_triggers(self) -> None: pass
     def initialize_escalation_ladder(self) -> None: pass
     def initialize_couplings(self) -> None: pass
@@ -2121,7 +2121,7 @@ class MassMigrationScenario(BaseScenario):
         self.couplings = []
         self.collapse_modes = [CollapseMode("social_breakdown", "Society fails", 0.6, timedelta(days=1095), 0.7, ["Chaos"])]
         self.recovery_poisons = [RecoveryPoison("authoritarian_fix", "Strong hand restores order", "Stability", "Freedom lost", 0.6, 3.0)]
-        
+
     def initialize_triggers(self) -> None: pass
     def initialize_escalation_ladder(self) -> None: pass
     def initialize_couplings(self) -> None: pass
@@ -2141,7 +2141,7 @@ class CulturalMemoryFragmentationScenario(BaseScenario):
         self.couplings = []
         self.collapse_modes = [CollapseMode("social_breakdown", "Society fails", 0.6, timedelta(days=1095), 0.7, ["Chaos"])]
         self.recovery_poisons = [RecoveryPoison("authoritarian_fix", "Strong hand restores order", "Stability", "Freedom lost", 0.6, 3.0)]
-        
+
     def initialize_triggers(self) -> None: pass
     def initialize_escalation_ladder(self) -> None: pass
     def initialize_couplings(self) -> None: pass
@@ -2161,7 +2161,7 @@ class LawBecomesAdvisoryScenario(BaseScenario):
         self.couplings = []
         self.collapse_modes = [CollapseMode("social_breakdown", "Society fails", 0.6, timedelta(days=1095), 0.7, ["Chaos"])]
         self.recovery_poisons = [RecoveryPoison("authoritarian_fix", "Strong hand restores order", "Stability", "Freedom lost", 0.6, 3.0)]
-        
+
     def initialize_triggers(self) -> None: pass
     def initialize_escalation_ladder(self) -> None: pass
     def initialize_couplings(self) -> None: pass
@@ -2181,7 +2181,7 @@ class SpeciesLevelApathyScenario(BaseScenario):
         self.couplings = []
         self.collapse_modes = [CollapseMode("social_breakdown", "Society fails", 0.6, timedelta(days=1095), 0.7, ["Chaos"])]
         self.recovery_poisons = [RecoveryPoison("authoritarian_fix", "Strong hand restores order", "Stability", "Freedom lost", 0.6, 3.0)]
-        
+
     def initialize_triggers(self) -> None: pass
     def initialize_escalation_ladder(self) -> None: pass
     def initialize_couplings(self) -> None: pass
@@ -2195,20 +2195,20 @@ class SpeciesLevelApathyScenario(BaseScenario):
 
 class AdversarialRealityGenerator:
     """Generates worst-case compound scenarios by combining multiple triggers"""
-    
+
     def __init__(self):
-        self.adversarial_scenarios: List[Dict[str, Any]] = []
+        self.adversarial_scenarios: list[dict[str, Any]] = []
         logger.info("AdversarialRealityGenerator initialized")
-    
+
     def generate_compound_scenario(
-        self, 
-        active_scenarios: List[BaseScenario],
+        self,
+        active_scenarios: list[BaseScenario],
         coupling_threshold: float = 0.7
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Generate worst-case compound scenario from active scenarios"""
         if not active_scenarios:
             return {"compound_threats": [], "severity": 0.0}
-        
+
         # Find high-strength couplings
         threat_network = {}
         for scenario in active_scenarios:
@@ -2216,24 +2216,24 @@ class AdversarialRealityGenerator:
                 if coupling.coupling_strength >= coupling_threshold:
                     key = (scenario.scenario_id, coupling.target_scenario_id)
                     threat_network[key] = coupling.coupling_strength
-        
+
         # Calculate compound severity
         base_severity = sum(s.escalation_level.value for s in active_scenarios) / len(active_scenarios)
         coupling_multiplier = 1.0 + (len(threat_network) * 0.2)
         compound_severity = min(base_severity * coupling_multiplier, 10.0)
-        
+
         compound = {
             "compound_threats": [s.scenario_id for s in active_scenarios],
             "severity": compound_severity,
             "coupling_network": threat_network,
             "generated_at": datetime.utcnow().isoformat(),
         }
-        
+
         self.adversarial_scenarios.append(compound)
         logger.warning(f"Compound scenario generated: severity={compound_severity:.2f}")
         return compound
-    
-    def identify_critical_nodes(self, all_scenarios: List[BaseScenario]) -> List[str]:
+
+    def identify_critical_nodes(self, all_scenarios: list[BaseScenario]) -> list[str]:
         """Identify scenarios that are central to multiple coupling paths"""
         coupling_counts = {}
         for scenario in all_scenarios:
@@ -2241,7 +2241,7 @@ class AdversarialRealityGenerator:
             for coupling in scenario.couplings:
                 coupling_counts[coupling.target_scenario_id] = \
                     coupling_counts.get(coupling.target_scenario_id, 0) + 1
-        
+
         # Return top 10 most coupled scenarios
         sorted_nodes = sorted(coupling_counts.items(), key=lambda x: x[1], reverse=True)
         critical = [node[0] for node in sorted_nodes[:10]]
@@ -2255,39 +2255,39 @@ class AdversarialRealityGenerator:
 
 class CrossScenarioCoupler:
     """Manages cascading effects between scenarios"""
-    
+
     def __init__(self):
-        self.coupling_history: List[Dict[str, Any]] = []
+        self.coupling_history: list[dict[str, Any]] = []
         logger.info("CrossScenarioCoupler initialized")
-    
+
     def propagate_activation(
         self,
         source_scenario: BaseScenario,
-        all_scenarios: Dict[str, BaseScenario]
-    ) -> List[str]:
+        all_scenarios: dict[str, BaseScenario]
+    ) -> list[str]:
         """Propagate activation to coupled scenarios"""
         activated = []
-        
+
         for coupling in source_scenario.get_active_couplings():
             target_id = coupling.target_scenario_id
             if target_id not in all_scenarios:
                 continue
-                
+
             target = all_scenarios[target_id]
-            
+
             # Apply coupling effect based on type
             if coupling.coupling_type == "amplifying":
                 # Amplify existing metrics
                 for key in target.metrics:
                     target.metrics[key] *= (1.0 + coupling.coupling_strength * 0.5)
-            
+
             elif coupling.coupling_type == "cascading":
                 # Directly activate triggers
                 for trigger in target.triggers:
                     trigger.current_value += coupling.coupling_strength
                     if trigger.check_activation():
                         activated.append(target_id)
-            
+
             elif coupling.coupling_type == "synchronizing":
                 # Synchronize escalation levels
                 if target.escalation_level.value < source_scenario.escalation_level.value:
@@ -2295,7 +2295,7 @@ class CrossScenarioCoupler:
                         min(source_scenario.escalation_level.value, 5)
                     )
                     activated.append(target_id)
-            
+
             # Record coupling event
             self.coupling_history.append({
                 "timestamp": datetime.utcnow().isoformat(),
@@ -2304,7 +2304,7 @@ class CrossScenarioCoupler:
                 "coupling_type": coupling.coupling_type,
                 "strength": coupling.coupling_strength,
             })
-        
+
         if activated:
             logger.warning(f"Coupling propagation from {source_scenario.scenario_id}: activated {activated}")
         return activated
@@ -2316,16 +2316,16 @@ class CrossScenarioCoupler:
 
 class HumanFailureEmulator:
     """Models human decision-making failures under stress"""
-    
+
     def __init__(self):
-        self.failure_history: List[Dict[str, Any]] = []
+        self.failure_history: list[dict[str, Any]] = []
         logger.info("HumanFailureEmulator initialized")
-    
+
     def simulate_decision_failure(
         self,
         stress_level: float,  # 0.0-1.0
         decision_type: str
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Simulate probability of human decision failure"""
         # Failure modes by decision type
         failure_modes = {
@@ -2333,22 +2333,22 @@ class HumanFailureEmulator:
             "operational": ["communication breakdown", "coordination failure", "resource misallocation"],
             "tactical": ["panic response", "premature action", "freezing"],
         }
-        
+
         # Base failure probability increases with stress
         base_failure_prob = 0.1 + (stress_level * 0.6)  # 10-70%
-        
+
         # Stress compounds over time
-        recent_failures = len([f for f in self.failure_history 
-                              if datetime.fromisoformat(f["timestamp"]) > 
+        recent_failures = len([f for f in self.failure_history
+                              if datetime.fromisoformat(f["timestamp"]) >
                               datetime.utcnow() - timedelta(days=7)])
         stress_multiplier = 1.0 + (recent_failures * 0.1)
-        
+
         failure_probability = min(base_failure_prob * stress_multiplier, 0.95)
-        
+
         import random
         random.seed()
         failed = random.random() < failure_probability
-        
+
         result = {
             "timestamp": datetime.utcnow().isoformat(),
             "decision_type": decision_type,
@@ -2357,12 +2357,12 @@ class HumanFailureEmulator:
             "failed": failed,
             "failure_mode": random.choice(failure_modes.get(decision_type, ["unknown"])) if failed else None,
         }
-        
+
         self.failure_history.append(result)
-        
+
         if failed:
             logger.warning(f"Human failure simulated: {result['failure_mode']} (p={failure_probability:.2f})")
-        
+
         return result
 
 
@@ -2376,33 +2376,33 @@ class IrreversibilityDetector:
     Turns warnings into physics - certain variables can never increase,
     recovery events become permanently disabled, governance ceilings lowered forever.
     """
-    
+
     def __init__(self):
-        self.irreversible_states: List[Dict[str, Any]] = []
-        self.active_locks: Dict[str, IrreversibilityLock] = {}  # lock_id -> lock
+        self.irreversible_states: list[dict[str, Any]] = []
+        self.active_locks: dict[str, IrreversibilityLock] = {}  # lock_id -> lock
         logger.info("IrreversibilityDetector initialized with state lock enforcement")
-    
+
     def assess_irreversibility(
         self,
         scenario: BaseScenario,
         time_elapsed: timedelta
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Assess if scenario has crossed irreversibility threshold"""
         # Check collapse modes
         irreversibility_scores = []
         triggered_collapses = []
-        
+
         for collapse in scenario.collapse_modes:
             if time_elapsed >= collapse.time_to_collapse:
                 irreversibility_scores.append(collapse.irreversibility_score)
                 triggered_collapses.append(collapse.name)
-        
+
         if not irreversibility_scores:
             return {"irreversible": False, "score": 0.0}
-        
+
         max_irreversibility = max(irreversibility_scores)
         is_irreversible = max_irreversibility > 0.7  # Threshold for "point of no return"
-        
+
         assessment = {
             "scenario_id": scenario.scenario_id,
             "timestamp": datetime.utcnow().isoformat(),
@@ -2411,47 +2411,47 @@ class IrreversibilityDetector:
             "triggered_collapses": triggered_collapses,
             "time_elapsed_days": time_elapsed.days,
         }
-        
+
         if is_irreversible:
             self.irreversible_states.append(assessment)
             logger.error(f"IRREVERSIBLE STATE: {scenario.name} - {triggered_collapses}")
-        
+
         return assessment
-    
+
     def create_state_lock(
         self,
         scenario: BaseScenario,
         irreversibility_score: float,
-        triggered_collapses: List[str]
+        triggered_collapses: list[str]
     ) -> IrreversibilityLock:
         """
         Create enforced state lock when irreversibility threshold crossed.
-        
+
         Args:
             scenario: Scenario that crossed threshold
             irreversibility_score: Score (0-1) of irreversibility
             triggered_collapses: List of collapse modes triggered
-            
+
         Returns:
             Created IrreversibilityLock
         """
         lock_id = f"{scenario.scenario_id}_LOCK_{uuid.uuid4().hex[:8]}"
-        
+
         # Create variable constraints based on scenario type and collapse modes
         variable_constraints = self._generate_variable_constraints(
             scenario, irreversibility_score, triggered_collapses
         )
-        
+
         # Identify permanently disabled recovery events
         disabled_recovery_events = self._generate_disabled_recovery_events(
             scenario, triggered_collapses
         )
-        
+
         # Lower governance ceilings
         governance_ceilings = self._generate_governance_ceilings(
             scenario, irreversibility_score
         )
-        
+
         lock = IrreversibilityLock(
             lock_id=lock_id,
             scenario_id=scenario.scenario_id,
@@ -2462,30 +2462,30 @@ class IrreversibilityDetector:
             governance_ceilings=governance_ceilings,
             triggered_collapses=triggered_collapses,
         )
-        
+
         # Register lock
         self.active_locks[lock_id] = lock
         scenario.active_locks.append(lock)
-        
+
         logger.critical(
             f"STATE LOCK CREATED: {lock_id} for {scenario.name} - "
             f"{len(variable_constraints)} constraints, "
             f"{len(disabled_recovery_events)} disabled events, "
             f"{len(governance_ceilings)} ceiling reductions"
         )
-        
+
         return lock
-    
+
     def _generate_variable_constraints(
         self,
         scenario: BaseScenario,
         irreversibility_score: float,
-        triggered_collapses: List[str]
-    ) -> List[VariableConstraint]:
+        triggered_collapses: list[str]
+    ) -> list[VariableConstraint]:
         """Generate variable constraints based on scenario collapse"""
         constraints = []
         current_time = datetime.utcnow()
-        
+
         # Category-specific constraint generation
         if scenario.category == ScenarioCategory.DIGITAL_COGNITIVE:
             # Truth verification capacity can never recover
@@ -2506,7 +2506,7 @@ class IrreversibilityDetector:
                     reason="Trust collapse: credibility never fully recoverable",
                     can_never_increase=True,
                 ))
-        
+
         elif scenario.category == ScenarioCategory.ECONOMIC:
             # Currency confidence and liquidity can never fully recover
             if "currency_collapse" in triggered_collapses or "liquidity_crisis" in triggered_collapses:
@@ -2526,7 +2526,7 @@ class IrreversibilityDetector:
                     reason="Liquidity crisis: market depth permanently reduced",
                     can_never_increase=True,
                 ))
-        
+
         elif scenario.category == ScenarioCategory.INFRASTRUCTURE:
             # Infrastructure capacity permanently degraded
             if "cascade_failure" in triggered_collapses or "grid_collapse" in triggered_collapses:
@@ -2538,7 +2538,7 @@ class IrreversibilityDetector:
                     reason="Cascade failure: physical infrastructure cannot return to pre-collapse capacity",
                     can_never_increase=True,
                 ))
-        
+
         elif scenario.category == ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL:
             # Ecological damage irreversible on human timescales
             if "ecosystem_collapse" in triggered_collapses or "species_extinction" in triggered_collapses:
@@ -2558,7 +2558,7 @@ class IrreversibilityDetector:
                     reason="Resource depletion: regeneration capacity permanently impaired",
                     can_never_increase=True,
                 ))
-        
+
         elif scenario.category == ScenarioCategory.SOCIETAL:
             # Social cohesion and legitimacy never fully recover
             if "legitimacy_collapse" in triggered_collapses or "social_fracture" in triggered_collapses:
@@ -2570,18 +2570,18 @@ class IrreversibilityDetector:
                     reason="Social fracture: cohesion cannot be rebuilt to pre-collapse levels",
                     can_never_increase=True,
                 ))
-        
+
         return constraints
-    
+
     def _generate_disabled_recovery_events(
         self,
         scenario: BaseScenario,
-        triggered_collapses: List[str]
-    ) -> List[DisabledRecoveryEvent]:
+        triggered_collapses: list[str]
+    ) -> list[DisabledRecoveryEvent]:
         """Generate list of permanently disabled recovery events"""
         disabled = []
         current_time = datetime.utcnow()
-        
+
         # Disable recovery poisons (they were traps anyway)
         for poison in scenario.recovery_poisons:
             disabled.append(DisabledRecoveryEvent(
@@ -2591,7 +2591,7 @@ class IrreversibilityDetector:
                 scenario_id=scenario.scenario_id,
                 alternative_actions=[],
             ))
-        
+
         # Category-specific disabled events
         if scenario.category == ScenarioCategory.DIGITAL_COGNITIVE:
             if "epistemic_collapse" in triggered_collapses:
@@ -2602,7 +2602,7 @@ class IrreversibilityDetector:
                     scenario_id=scenario.scenario_id,
                     alternative_actions=["distributed_verification", "community_consensus"],
                 ))
-        
+
         elif scenario.category == ScenarioCategory.ECONOMIC:
             if "currency_collapse" in triggered_collapses:
                 disabled.append(DisabledRecoveryEvent(
@@ -2612,7 +2612,7 @@ class IrreversibilityDetector:
                     scenario_id=scenario.scenario_id,
                     alternative_actions=["alternative_currencies", "barter_systems"],
                 ))
-        
+
         elif scenario.category == ScenarioCategory.SOCIETAL:
             if "legitimacy_collapse" in triggered_collapses:
                 disabled.append(DisabledRecoveryEvent(
@@ -2622,18 +2622,18 @@ class IrreversibilityDetector:
                     scenario_id=scenario.scenario_id,
                     alternative_actions=["parallel_institutions", "grassroots_organizing"],
                 ))
-        
+
         return disabled
-    
+
     def _generate_governance_ceilings(
         self,
         scenario: BaseScenario,
         irreversibility_score: float
-    ) -> List[GovernanceCeiling]:
+    ) -> list[GovernanceCeiling]:
         """Generate lowered governance legitimacy ceilings"""
         ceilings = []
         current_time = datetime.utcnow()
-        
+
         # Calculate ceiling reduction based on irreversibility score
         # Score 0.7-0.8: 20% reduction
         # Score 0.8-0.9: 40% reduction
@@ -2644,7 +2644,7 @@ class IrreversibilityDetector:
             ceiling_multiplier = 0.6
         else:
             ceiling_multiplier = 0.8
-        
+
         # Universal governance ceilings affected
         ceilings.append(GovernanceCeiling(
             domain="democratic_legitimacy",
@@ -2654,7 +2654,7 @@ class IrreversibilityDetector:
             reason=f"Irreversible collapse (score={irreversibility_score:.2f}): public faith in democratic processes permanently reduced",
             multiplier=ceiling_multiplier,
         ))
-        
+
         ceilings.append(GovernanceCeiling(
             domain="institutional_trust",
             original_ceiling=1.0,
@@ -2663,7 +2663,7 @@ class IrreversibilityDetector:
             reason=f"Institutional failure: trust in governing institutions never fully recovers",
             multiplier=ceiling_multiplier,
         ))
-        
+
         ceilings.append(GovernanceCeiling(
             domain="policy_effectiveness",
             original_ceiling=1.0,
@@ -2672,7 +2672,7 @@ class IrreversibilityDetector:
             reason=f"Governance capacity permanently impaired: policies less effective post-collapse",
             multiplier=ceiling_multiplier,
         ))
-        
+
         # Category-specific additional ceilings
         if scenario.category == ScenarioCategory.ECONOMIC:
             ceilings.append(GovernanceCeiling(
@@ -2683,7 +2683,7 @@ class IrreversibilityDetector:
                 reason="Economic collapse: government fiscal capacity permanently reduced",
                 multiplier=ceiling_multiplier * 0.7,
             ))
-        
+
         elif scenario.category == ScenarioCategory.SOCIETAL:
             ceilings.append(GovernanceCeiling(
                 domain="social_mandate",
@@ -2693,44 +2693,44 @@ class IrreversibilityDetector:
                 reason="Social fracture: government mandate to act permanently weakened",
                 multiplier=ceiling_multiplier * 0.6,
             ))
-        
+
         return ceilings
-    
+
     def validate_state_lock_compliance(
         self,
         scenario: BaseScenario,
-        proposed_metrics: Dict[str, float]
-    ) -> Tuple[bool, List[str]]:
+        proposed_metrics: dict[str, float]
+    ) -> tuple[bool, list[str]]:
         """
         Validate proposed metrics against all active state locks.
-        
+
         Args:
             scenario: Scenario to validate
             proposed_metrics: Proposed metric updates
-            
+
         Returns:
             (is_compliant, list_of_violations)
         """
         violations = []
-        
+
         for lock in scenario.active_locks:
             for constraint in lock.variable_constraints:
                 if constraint.variable_name in proposed_metrics:
                     is_valid, reason = constraint.validate(proposed_metrics[constraint.variable_name])
                     if not is_valid:
                         violations.append(reason)
-        
+
         return len(violations) == 0, violations
-    
-    def get_lock_summary(self, lock_id: str) -> Dict[str, Any]:
+
+    def get_lock_summary(self, lock_id: str) -> dict[str, Any]:
         """Get detailed summary of a specific lock"""
         if lock_id not in self.active_locks:
             return {"error": "Lock not found"}
-        
+
         lock = self.active_locks[lock_id]
         return lock.to_dict()
-    
-    def get_all_active_locks(self) -> List[Dict[str, Any]]:
+
+    def get_all_active_locks(self) -> list[dict[str, Any]]:
         """Get all active state locks across all scenarios"""
         return [lock.to_dict() for lock in self.active_locks.values()]
 
@@ -2741,16 +2741,16 @@ class IrreversibilityDetector:
 
 class FalseRecoveryEngine:
     """Identifies and tracks recovery poisons (false solutions)"""
-    
+
     def __init__(self):
-        self.poison_deployments: List[Dict[str, Any]] = []
+        self.poison_deployments: list[dict[str, Any]] = []
         logger.info("FalseRecoveryEngine initialized")
-    
+
     def evaluate_recovery_attempt(
         self,
         scenario: BaseScenario,
         recovery_action: str
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Evaluate if recovery action is a trap"""
         # Check if action matches known recovery poisons
         for poison in scenario.recovery_poisons:
@@ -2766,11 +2766,11 @@ class FalseRecoveryEngine:
                     "detection_difficulty": poison.detection_difficulty,
                     "long_term_multiplier": poison.long_term_cost_multiplier,
                 }
-                
+
                 self.poison_deployments.append(deployment)
                 logger.warning(f"RECOVERY POISON DETECTED: {poison.name} for {scenario.name}")
                 return deployment
-        
+
         # Not a known poison
         return {
             "scenario_id": scenario.scenario_id,
@@ -2778,18 +2778,18 @@ class FalseRecoveryEngine:
             "recovery_action": recovery_action,
             "is_poison": False,
         }
-    
+
     def calculate_cumulative_poison_cost(self) -> float:
         """Calculate total hidden costs from deployed poisons"""
         if not self.poison_deployments:
             return 1.0
-        
+
         # Multiply all cost multipliers
         total_multiplier = 1.0
         for deployment in self.poison_deployments:
             if deployment.get("is_poison"):
                 total_multiplier *= deployment["long_term_multiplier"]
-        
+
         logger.info(f"Cumulative poison cost multiplier: {total_multiplier:.2f}x")
         return total_multiplier
 
@@ -2802,7 +2802,7 @@ class FalseRecoveryEngine:
 class Hydra50Engine:
     """
     Main HYDRA-50 Contingency Plan Engine
-    
+
     Features:
     - Event-sourced state history (complete audit trail)
     - Time-travel replay (reconstruct state at any point)
@@ -2810,35 +2810,35 @@ class Hydra50Engine:
     - Multi-plane control system
     - Offline-first / air-gap survivability
     """
-    
+
     def __init__(self, data_dir: str = "data/hydra50"):
         self.data_dir = Path(data_dir)
         self.data_dir.mkdir(parents=True, exist_ok=True)
-        
+
         # Initialize all 50 scenarios
-        self.scenarios: Dict[str, BaseScenario] = {}
+        self.scenarios: dict[str, BaseScenario] = {}
         self._initialize_all_scenarios()
-        
+
         # Initialize engine modules
         self.adversarial_generator = AdversarialRealityGenerator()
         self.scenario_coupler = CrossScenarioCoupler()
         self.human_failure_emulator = HumanFailureEmulator()
         self.irreversibility_detector = IrreversibilityDetector()
         self.false_recovery_engine = FalseRecoveryEngine()
-        
+
         # Event sourcing
-        self.event_log: List[EventRecord] = []
-        self.state_snapshots: Dict[str, List[ScenarioState]] = {}
-        
+        self.event_log: list[EventRecord] = []
+        self.state_snapshots: dict[str, list[ScenarioState]] = {}
+
         # Control plane state
         self.active_control_plane = ControlPlane.OPERATIONAL
         self.human_override_active = False
-        
+
         # Load persisted state
         self._load_state()
-        
+
         logger.info(f"Hydra50Engine initialized with {len(self.scenarios)} scenarios")
-    
+
     def _initialize_all_scenarios(self) -> None:
         """Initialize all 50 scenario objects"""
         # Digital/Cognitive (S01-S10)
@@ -2852,7 +2852,7 @@ class Hydra50Engine:
         self.scenarios["S08"] = DNSTrustCollapseScenario()
         self.scenarios["S09"] = DeepfakeLegalEvidenceScenario()
         self.scenarios["S10"] = PsychologicalExhaustionScenario()
-        
+
         # Economic (S11-S20)
         self.scenarios["S11"] = SovereignDebtCascadeScenario()
         self.scenarios["S12"] = CurrencyConfidenceDeathSpiralScenario()
@@ -2864,7 +2864,7 @@ class Hydra50Engine:
         self.scenarios["S18"] = PermanentInflationLockScenario()
         self.scenarios["S19"] = LaborAlgorithmicCollapseScenario()
         self.scenarios["S20"] = LiquidityBlackHoleScenario()
-        
+
         # Infrastructure (S21-S30)
         self.scenarios["S21"] = PowerGridFrequencyWarfareScenario()
         self.scenarios["S22"] = SatelliteOrbitCongestionScenario()
@@ -2876,7 +2876,7 @@ class Hydra50Engine:
         self.scenarios["S28"] = ConstructionMaterialLockoutsScenario()
         self.scenarios["S29"] = GPSDegradationScenario()
         self.scenarios["S30"] = UrbanHeatFeedbackScenario()
-        
+
         # Biological/Environmental (S31-S40)
         self.scenarios["S31"] = SlowBurnPandemicScenario()
         self.scenarios["S32"] = AntibioticCollapseScenario()
@@ -2888,7 +2888,7 @@ class Hydra50Engine:
         self.scenarios["S38"] = SyntheticBiologyLeaksScenario()
         self.scenarios["S39"] = FertilityDeclineShockScenario()
         self.scenarios["S40"] = EcosystemFalsePositivesScenario()
-        
+
         # Societal (S41-S50)
         self.scenarios["S41"] = LegitimacyCollapseScenario()
         self.scenarios["S42"] = PermanentEmergencyGovernanceScenario()
@@ -2900,31 +2900,31 @@ class Hydra50Engine:
         self.scenarios["S48"] = CulturalMemoryFragmentationScenario()
         self.scenarios["S49"] = LawBecomesAdvisoryScenario()
         self.scenarios["S50"] = SpeciesLevelApathyScenario()
-    
+
     def update_scenario_metrics(
         self,
         scenario_id: str,
-        metrics: Dict[str, float],
-        user_id: Optional[str] = None
+        metrics: dict[str, float],
+        user_id: str | None = None
     ) -> None:
         """Update metrics for a scenario and trigger event sourcing"""
         if scenario_id not in self.scenarios:
             raise ValueError(f"Unknown scenario: {scenario_id}")
-        
+
         scenario = self.scenarios[scenario_id]
         old_status = scenario.status
-        
+
         # Update metrics
         scenario.update_metrics(metrics)
-        
+
         # Check for status changes
         if any(t.activated for t in scenario.triggers) and old_status == ScenarioStatus.DORMANT:
             scenario.status = ScenarioStatus.TRIGGERED
             scenario.activation_time = datetime.utcnow()
-        
+
         # Evaluate escalation
         scenario.evaluate_escalation()
-        
+
         # Record event
         event = EventRecord(
             event_id=str(uuid.uuid4()),
@@ -2936,13 +2936,13 @@ class Hydra50Engine:
             user_id=user_id,
         )
         self.event_log.append(event)
-        
+
         # Capture state snapshot
         state = scenario.capture_state()
         if scenario_id not in self.state_snapshots:
             self.state_snapshots[scenario_id] = []
         self.state_snapshots[scenario_id].append(state)
-        
+
         # Propagate couplings
         if scenario.status in [ScenarioStatus.TRIGGERED, ScenarioStatus.ESCALATING]:
             activated = self.scenario_coupler.propagate_activation(scenario, self.scenarios)
@@ -2956,10 +2956,10 @@ class Hydra50Engine:
                     control_plane=self.active_control_plane,
                 )
                 self.event_log.append(event)
-        
+
         self._save_state()
-    
-    def run_tick(self, user_id: Optional[str] = None) -> Dict[str, Any]:
+
+    def run_tick(self, user_id: str | None = None) -> dict[str, Any]:
         """Execute one simulation tick - evaluate all scenarios"""
         tick_results = {
             "timestamp": datetime.utcnow().isoformat(),
@@ -2969,15 +2969,15 @@ class Hydra50Engine:
             "new_state_locks": [],  # Track newly created locks
             "compound_threats": None,
         }
-        
+
         active_scenarios = []
-        
+
         for scenario_id, scenario in self.scenarios.items():
             # Evaluate escalation for active scenarios
             if scenario.status != ScenarioStatus.DORMANT:
                 scenario.evaluate_escalation()
                 active_scenarios.append(scenario)
-                
+
                 tick_results["active_scenarios"].append({
                     "id": scenario_id,
                     "name": scenario.name,
@@ -2985,25 +2985,25 @@ class Hydra50Engine:
                     "level": scenario.escalation_level.value,
                     "active_locks": len(scenario.active_locks),
                 })
-                
+
                 if scenario.escalation_level.value >= 4:
                     tick_results["critical_scenarios"].append(scenario_id)
-                
+
                 # Check irreversibility and create state locks
                 if scenario.activation_time:
                     elapsed = datetime.utcnow() - scenario.activation_time
                     assessment = self.irreversibility_detector.assess_irreversibility(scenario, elapsed)
-                    
+
                     if assessment["irreversible"]:
                         tick_results["irreversible_scenarios"].append(scenario_id)
-                        
+
                         # Create state lock if not already locked
                         # Check if we already have a lock for this scenario
                         existing_lock_for_scenario = any(
-                            lock.scenario_id == scenario_id 
+                            lock.scenario_id == scenario_id
                             for lock in self.irreversibility_detector.active_locks.values()
                         )
-                        
+
                         if not existing_lock_for_scenario:
                             # Create and enforce state lock
                             lock = self.irreversibility_detector.create_state_lock(
@@ -3011,7 +3011,7 @@ class Hydra50Engine:
                                 irreversibility_score=assessment["score"],
                                 triggered_collapses=assessment["triggered_collapses"]
                             )
-                            
+
                             tick_results["new_state_locks"].append({
                                 "lock_id": lock.lock_id,
                                 "scenario_id": scenario_id,
@@ -3020,19 +3020,19 @@ class Hydra50Engine:
                                 "disabled_recovery_events": len(lock.disabled_recovery_events),
                                 "governance_ceilings": len(lock.governance_ceilings),
                             })
-                            
+
                             logger.critical(
                                 f"STATE LOCK ENFORCED: {scenario.name} - "
                                 f"Physics now prevents: {len(lock.variable_constraints)} variables from increasing, "
                                 f"{len(lock.disabled_recovery_events)} recovery events disabled, "
                                 f"{len(lock.governance_ceilings)} governance ceilings lowered"
                             )
-        
+
         # Generate compound scenarios
         if len(active_scenarios) >= 2:
             compound = self.adversarial_generator.generate_compound_scenario(active_scenarios)
             tick_results["compound_threats"] = compound
-        
+
         # Record tick event
         event = EventRecord(
             event_id=str(uuid.uuid4()),
@@ -3044,82 +3044,82 @@ class Hydra50Engine:
             user_id=user_id,
         )
         self.event_log.append(event)
-        
+
         self._save_state()
         return tick_results
-    
-    def replay_to_timestamp(self, target_time: datetime) -> Dict[str, Any]:
+
+    def replay_to_timestamp(self, target_time: datetime) -> dict[str, Any]:
         """Time-travel: replay event log to specific timestamp"""
         logger.info(f"Replaying to timestamp: {target_time}")
-        
+
         # Reset all scenarios
         self._initialize_all_scenarios()
-        
+
         # Replay events up to target time
         replayed_events = 0
         for event in self.event_log:
             if event.timestamp > target_time:
                 break
-            
+
             if event.event_type == "metrics_updated" and event.scenario_id:
                 metrics = event.data.get("metrics", {})
                 self.scenarios[event.scenario_id].update_metrics(metrics)
                 replayed_events += 1
-        
+
         logger.info(f"Replayed {replayed_events} events")
-        
+
         return {
             "target_timestamp": target_time.isoformat(),
             "events_replayed": replayed_events,
             "final_state": {sid: s.status.value for sid, s in self.scenarios.items()},
         }
-    
+
     def create_counterfactual_branch(
         self,
         branch_name: str,
         branch_point: datetime,
-        alternate_events: List[Dict[str, Any]]
-    ) -> Dict[str, Any]:
+        alternate_events: list[dict[str, Any]]
+    ) -> dict[str, Any]:
         """Create what-if scenario by branching from history"""
         logger.info(f"Creating counterfactual branch: {branch_name}")
-        
+
         # Replay to branch point
         self.replay_to_timestamp(branch_point)
-        
+
         # Apply alternate events
         for alt_event in alternate_events:
             scenario_id = alt_event.get("scenario_id")
             metrics = alt_event.get("metrics", {})
             if scenario_id and scenario_id in self.scenarios:
                 self.update_scenario_metrics(scenario_id, metrics)
-        
+
         # Run simulation forward
         branch_results = []
         for _ in range(10):  # 10 ticks
             result = self.run_tick()
             branch_results.append(result)
-        
+
         return {
             "branch_name": branch_name,
             "branch_point": branch_point.isoformat(),
             "alternate_events": len(alternate_events),
             "results": branch_results,
         }
-    
+
     def attempt_recovery_action(
         self,
         scenario_id: str,
         recovery_action: str,
-        user_id: Optional[str] = None
-    ) -> Dict[str, Any]:
+        user_id: str | None = None
+    ) -> dict[str, Any]:
         """
         Attempt a recovery action with state lock validation.
-        
+
         Args:
             scenario_id: Scenario to attempt recovery on
             recovery_action: Name of recovery action
             user_id: User attempting recovery
-            
+
         Returns:
             Result dict with success/failure and reasons
         """
@@ -3128,15 +3128,15 @@ class Hydra50Engine:
                 "success": False,
                 "reason": f"Unknown scenario: {scenario_id}",
             }
-        
+
         scenario = self.scenarios[scenario_id]
-        
+
         # Check if recovery event is permanently disabled
         is_allowed, disable_reason = scenario.check_recovery_event_allowed(recovery_action)
-        
+
         if not is_allowed:
             logger.error(f"Recovery attempt BLOCKED: {disable_reason}")
-            
+
             # Record blocked attempt
             event = EventRecord(
                 event_id=str(uuid.uuid4()),
@@ -3151,19 +3151,19 @@ class Hydra50Engine:
                 user_id=user_id,
             )
             self.event_log.append(event)
-            
+
             return {
                 "success": False,
                 "blocked": True,
                 "reason": disable_reason,
                 "scenario_name": scenario.name,
             }
-        
+
         # Check for recovery poison
         poison_eval = self.false_recovery_engine.evaluate_recovery_attempt(
             scenario, recovery_action
         )
-        
+
         # Record recovery attempt
         event = EventRecord(
             event_id=str(uuid.uuid4()),
@@ -3178,13 +3178,13 @@ class Hydra50Engine:
             user_id=user_id,
         )
         self.event_log.append(event)
-        
+
         if poison_eval["is_poison"]:
             logger.warning(
                 f"Recovery attempt succeeded but IS A POISON: {recovery_action} "
                 f"for {scenario.name}"
             )
-        
+
         return {
             "success": True,
             "blocked": False,
@@ -3193,27 +3193,27 @@ class Hydra50Engine:
             "is_poison": poison_eval["is_poison"],
             "poison_details": poison_eval if poison_eval["is_poison"] else None,
         }
-    
-    def get_state_lock_summary(self, scenario_id: Optional[str] = None) -> Dict[str, Any]:
+
+    def get_state_lock_summary(self, scenario_id: str | None = None) -> dict[str, Any]:
         """
         Get summary of all active state locks.
-        
+
         Args:
             scenario_id: Optional filter for specific scenario
-            
+
         Returns:
             Summary of active locks
         """
         all_locks = self.irreversibility_detector.get_all_active_locks()
-        
+
         if scenario_id:
             all_locks = [lock for lock in all_locks if lock["scenario_id"] == scenario_id]
-        
+
         # Calculate aggregate statistics
         total_constraints = sum(len(lock["variable_constraints"]) for lock in all_locks)
         total_disabled_events = sum(len(lock["disabled_recovery_events"]) for lock in all_locks)
         total_governance_reductions = sum(len(lock["governance_ceilings"]) for lock in all_locks)
-        
+
         return {
             "timestamp": datetime.utcnow().isoformat(),
             "total_locks": len(all_locks),
@@ -3228,15 +3228,15 @@ class Hydra50Engine:
                 f"{total_governance_reductions} governance ceilings lowered"
             ),
         }
-    
-    def get_dashboard_state(self) -> Dict[str, Any]:
+
+    def get_dashboard_state(self) -> dict[str, Any]:
         """Get current state for dashboard/GUI"""
         active = [s for s in self.scenarios.values() if s.status != ScenarioStatus.DORMANT]
         critical = [s for s in active if s.escalation_level.value >= 4]
-        
+
         # Count scenarios with active locks
         locked_scenarios = [s for s in self.scenarios.values() if len(s.active_locks) > 0]
-        
+
         return {
             "timestamp": datetime.utcnow().isoformat(),
             "total_scenarios": len(self.scenarios),
@@ -3262,12 +3262,12 @@ class Hydra50Engine:
             "active_state_locks": len(self.irreversibility_detector.active_locks),
             "poison_deployments": len(self.false_recovery_engine.poison_deployments),
         }
-    
+
     def activate_human_override(self, user_id: str, reason: str) -> None:
         """Activate human override control plane"""
         self.human_override_active = True
         self.active_control_plane = ControlPlane.HUMAN_OVERRIDE
-        
+
         event = EventRecord(
             event_id=str(uuid.uuid4()),
             timestamp=datetime.utcnow(),
@@ -3278,14 +3278,14 @@ class Hydra50Engine:
             user_id=user_id,
         )
         self.event_log.append(event)
-        
+
         logger.warning(f"HUMAN OVERRIDE ACTIVATED by {user_id}: {reason}")
         self._save_state()
-    
+
     def _save_state(self) -> None:
         """Persist engine state to disk"""
         state_file = self.data_dir / "engine_state.json"
-        
+
         state_data = {
             "timestamp": datetime.utcnow().isoformat(),
             "control_plane": self.active_control_plane.value,
@@ -3300,29 +3300,29 @@ class Hydra50Engine:
                 for sid, s in self.scenarios.items()
             },
         }
-        
+
         try:
             with open(state_file, "w") as f:
                 json.dump(state_data, f, indent=2)
             logger.debug(f"State persisted: {len(self.event_log)} events")
         except Exception as e:
             logger.error(f"Failed to save state: {e}")
-    
+
     def _load_state(self) -> None:
         """Load persisted engine state"""
         state_file = self.data_dir / "engine_state.json"
-        
+
         if not state_file.exists():
             logger.info("No saved state found, starting fresh")
             return
-        
+
         try:
-            with open(state_file, "r") as f:
+            with open(state_file) as f:
                 state_data = json.load(f)
-            
+
             self.active_control_plane = ControlPlane(state_data.get("control_plane", "operational"))
             self.human_override_active = state_data.get("human_override_active", False)
-            
+
             # Restore scenario states
             scenario_states = state_data.get("scenario_states", {})
             for sid, state in scenario_states.items():
@@ -3330,7 +3330,7 @@ class Hydra50Engine:
                     self.scenarios[sid].status = ScenarioStatus(state["status"])
                     self.scenarios[sid].escalation_level = EscalationLevel(state["escalation_level"])
                     self.scenarios[sid].metrics = state["metrics"]
-            
+
             logger.info(f"State loaded from {state_file}")
         except Exception as e:
             logger.error(f"Failed to load state: {e}")

@@ -18,7 +18,8 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
+from collections.abc import Callable
 
 import pytest
 
@@ -26,7 +27,6 @@ from e2e.utils.test_helpers import (
     get_timestamp_iso,
     load_json_file,
     save_json_file,
-    wait_for_condition,
 )
 
 

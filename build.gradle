@@ -21,6 +21,9 @@ allprojects {
     }
 }
 
+// Apply and configure node plugin properly
+apply plugin: 'com.github.node-gradle.node'
+
 // Node.js configuration
 node {
     version = '20.11.0'

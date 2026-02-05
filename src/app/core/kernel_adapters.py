@@ -16,53 +16,53 @@ logger = logging.getLogger(__name__)
 class ReflectionCycleAdapter(KernelInterface):
     """
     Adapter for ReflectionCycle to match KernelInterface.
-    
+
     ReflectionCycle has three different methods for different reflection types:
     - perform_daily_reflection()
     - perform_weekly_reflection()
     - perform_triggered_reflection()
-    
+
     This adapter exposes a unified process() interface that routes to the
     appropriate method based on input parameters.
     """
-    
+
     def __init__(self, reflection_cycle):
         """
         Initialize adapter with ReflectionCycle instance.
-        
+
         Args:
             reflection_cycle: ReflectionCycle instance to wrap
         """
         self.reflection_cycle = reflection_cycle
         logger.info("ReflectionCycleAdapter initialized")
-    
+
     def process(self, input_data: Any, **kwargs) -> Any:
         """
         Process reflection request.
-        
+
         Args:
             input_data: Reflection type ("daily", "weekly", "triggered") or None
             **kwargs: Additional arguments for reflection:
                 - memory_engine: MemoryEngine instance (required)
                 - perspective_engine: PerspectiveEngine instance (optional)
                 - trigger_reason: Reason for triggered reflection (for triggered type)
-                
+
         Returns:
             ReflectionReport object
-            
+
         Raises:
             ValueError: If reflection type is invalid or required args missing
         """
         # Determine reflection type
         reflection_type = input_data if isinstance(input_data, str) else "daily"
-        
+
         # Extract required arguments
         memory_engine = kwargs.get("memory_engine")
         perspective_engine = kwargs.get("perspective_engine")
-        
+
         if not memory_engine:
             raise ValueError("memory_engine is required for reflection")
-        
+
         # Route to appropriate method
         if reflection_type == "daily":
             return self.reflection_cycle.perform_daily_reflection(
@@ -83,7 +83,7 @@ class ReflectionCycleAdapter(KernelInterface):
             )
         else:
             raise ValueError(f"Unknown reflection type: {reflection_type}")
-    
+
     def get_statistics(self) -> dict[str, Any]:
         """Get reflection cycle statistics."""
         return self.reflection_cycle.get_statistics()
@@ -92,7 +92,7 @@ class ReflectionCycleAdapter(KernelInterface):
 class MemoryEngineAdapter(KernelInterface):
     """
     Adapter for MemoryEngine to match KernelInterface.
-    
+
     MemoryEngine has multiple specific methods for different memory operations:
     - store_episodic_memory()
     - retrieve_episodic_memory()
@@ -100,25 +100,25 @@ class MemoryEngineAdapter(KernelInterface):
     - store_semantic_concept()
     - store_procedural_skill()
     - etc.
-    
+
     This adapter exposes a unified process() interface that routes to the
     appropriate method based on input parameters.
     """
-    
+
     def __init__(self, memory_engine):
         """
         Initialize adapter with MemoryEngine instance.
-        
+
         Args:
             memory_engine: MemoryEngine instance to wrap
         """
         self.memory_engine = memory_engine
         logger.info("MemoryEngineAdapter initialized")
-    
+
     def process(self, input_data: Any, **kwargs) -> Any:
         """
         Process memory operation.
-        
+
         Args:
             input_data: Operation type or data structure:
                 - "search": Search episodic memories
@@ -127,10 +127,10 @@ class MemoryEngineAdapter(KernelInterface):
                 - dict with 'operation' key: Specific operation
                 - None: Return memory statistics
             **kwargs: Operation-specific arguments
-                
+
         Returns:
             Operation result (type depends on operation)
-            
+
         Raises:
             ValueError: If operation is invalid
         """
@@ -142,14 +142,14 @@ class MemoryEngineAdapter(KernelInterface):
                 "semantic_count": len(self.memory_engine.semantic_concepts),
                 "procedural_count": len(self.memory_engine.procedural_skills),
             }
-        
+
         if isinstance(input_data, str):
             operation = input_data
         elif isinstance(input_data, dict):
             operation = input_data.get("operation", "search")
         else:
             operation = "search"
-        
+
         # Route to appropriate method
         if operation == "search":
             query = kwargs.get("query", "")
@@ -171,7 +171,7 @@ class MemoryEngineAdapter(KernelInterface):
             return {"status": "consolidation scheduled"}
         else:
             raise ValueError(f"Unknown memory operation: {operation}")
-    
+
     def get_statistics(self) -> dict[str, Any]:
         """Get memory engine statistics."""
         return {
@@ -184,32 +184,32 @@ class MemoryEngineAdapter(KernelInterface):
 class PerspectiveEngineAdapter(KernelInterface):
     """
     Adapter for PerspectiveEngine to match KernelInterface.
-    
+
     PerspectiveEngine has various methods for managing perspective:
     - update_from_interaction()
     - get_perspective_summary()
     - create_work_profile()
     - activate_work_profile()
     - etc.
-    
+
     This adapter exposes a unified process() interface that routes to the
     appropriate method based on input parameters.
     """
-    
+
     def __init__(self, perspective_engine):
         """
         Initialize adapter with PerspectiveEngine instance.
-        
+
         Args:
             perspective_engine: PerspectiveEngine instance to wrap
         """
         self.perspective_engine = perspective_engine
         logger.info("PerspectiveEngineAdapter initialized")
-    
+
     def process(self, input_data: Any, **kwargs) -> Any:
         """
         Process perspective operation.
-        
+
         Args:
             input_data: Operation type or data:
                 - "update": Update from interaction
@@ -218,31 +218,31 @@ class PerspectiveEngineAdapter(KernelInterface):
                 - "profile_deactivate": Deactivate work profile
                 - None: Return perspective summary
             **kwargs: Operation-specific arguments
-                
+
         Returns:
             Operation result (type depends on operation)
-            
+
         Raises:
             ValueError: If operation is invalid
         """
         # Handle different input formats
         if input_data is None:
             return self.perspective_engine.get_perspective_summary()
-        
+
         if isinstance(input_data, str):
             operation = input_data
         elif isinstance(input_data, dict):
             operation = input_data.get("operation", "summary")
         else:
             operation = "summary"
-        
+
         # Route to appropriate method
         if operation == "update":
             interaction_type = kwargs.get("interaction_type", "general")
             sentiment = kwargs.get("sentiment", 0.0)
             outcome = kwargs.get("outcome", "neutral")
             traits_observed = kwargs.get("traits_observed", {})
-            
+
             return self.perspective_engine.update_from_interaction(
                 interaction_type=interaction_type,
                 sentiment=sentiment,
@@ -261,7 +261,7 @@ class PerspectiveEngineAdapter(KernelInterface):
             return {"status": "profile deactivated"}
         else:
             raise ValueError(f"Unknown perspective operation: {operation}")
-    
+
     def get_statistics(self) -> dict[str, Any]:
         """Get perspective engine statistics."""
         return self.perspective_engine.get_perspective_summary()

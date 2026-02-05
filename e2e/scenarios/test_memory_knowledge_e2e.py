@@ -14,7 +14,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import tempfile
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -22,11 +21,9 @@ from pathlib import Path
 import pytest
 
 from e2e.utils.test_helpers import (
-    compare_json_objects,
     get_timestamp_iso,
     load_json_file,
     save_json_file,
-    wait_for_condition,
 )
 
 
@@ -40,7 +37,7 @@ class TestMemoryPersistence:
         # Arrange
         memory_dir = Path(test_temp_dir) / "memory"
         memory_dir.mkdir(parents=True, exist_ok=True)
-        
+
         test_memory = {
             "conversation_id": "conv_001",
             "timestamp": get_timestamp_iso(),
@@ -52,7 +49,7 @@ class TestMemoryPersistence:
         # Act
         memory_file = memory_dir / "conversation_001.json"
         save_json_file(test_memory, memory_file)
-        
+
         loaded_memory = load_json_file(memory_file)
 
         # Assert
@@ -66,7 +63,7 @@ class TestMemoryPersistence:
         # Arrange
         memory_dir = Path(test_temp_dir) / "memory"
         memory_dir.mkdir(parents=True, exist_ok=True)
-        
+
         num_sessions = 10
         sessions = []
 
@@ -100,7 +97,7 @@ class TestMemoryPersistence:
         # Arrange
         memory_dir = Path(test_temp_dir) / "memory"
         memory_dir.mkdir(parents=True, exist_ok=True)
-        
+
         large_content = "x" * 100000  # 100KB of data
         memory = {
             "id": "large_memory_001",
@@ -124,10 +121,10 @@ class TestMemoryPersistence:
         # Arrange
         memory_dir = Path(test_temp_dir) / "memory"
         memory_dir.mkdir(parents=True, exist_ok=True)
-        
+
         content = "Important information that must not be corrupted"
         checksum = hashlib.sha256(content.encode()).hexdigest()
-        
+
         memory = {
             "id": "integrity_test_001",
             "content": content,
@@ -139,7 +136,7 @@ class TestMemoryPersistence:
         memory_file = memory_dir / "integrity_test.json"
         save_json_file(memory, memory_file)
         loaded = load_json_file(memory_file)
-        
+
         # Verify integrity
         loaded_checksum = hashlib.sha256(loaded["content"].encode()).hexdigest()
 
@@ -152,7 +149,7 @@ class TestMemoryPersistence:
         # Arrange
         memory_dir = Path(test_temp_dir) / "memory"
         memory_dir.mkdir(parents=True, exist_ok=True)
-        
+
         from concurrent.futures import ThreadPoolExecutor, as_completed
 
         def write_memory(index):
@@ -180,10 +177,10 @@ class TestMemoryPersistence:
         # Arrange
         memory_dir = Path(test_temp_dir) / "memory"
         memory_dir.mkdir(parents=True, exist_ok=True)
-        
+
         base_time = datetime.now()
         memories = []
-        
+
         for i in range(20):
             timestamp = base_time + timedelta(hours=i)
             memory = {
@@ -197,7 +194,7 @@ class TestMemoryPersistence:
         # Act - Search for memories in middle range (hours 5-10)
         target_start = (base_time + timedelta(hours=5)).isoformat()
         target_end = (base_time + timedelta(hours=10)).isoformat()
-        
+
         found_memories = []
         for memory_file in memory_dir.glob("timed_*.json"):
             memory = load_json_file(memory_file)
@@ -218,7 +215,7 @@ class TestKnowledgeBaseCRUD:
         # Arrange
         kb_dir = Path(test_temp_dir) / "knowledge_base"
         kb_dir.mkdir(parents=True, exist_ok=True)
-        
+
         entry = {
             "id": "kb_001",
             "title": "Python Best Practices",
@@ -245,7 +242,7 @@ class TestKnowledgeBaseCRUD:
         # Arrange
         kb_dir = Path(test_temp_dir) / "knowledge_base"
         kb_dir.mkdir(parents=True, exist_ok=True)
-        
+
         entries = [
             {
                 "id": f"kb_{i:03d}",
@@ -255,7 +252,7 @@ class TestKnowledgeBaseCRUD:
             }
             for i in range(5)
         ]
-        
+
         for entry in entries:
             save_json_file(entry, kb_dir / f"{entry['id']}.json")
 
@@ -274,7 +271,7 @@ class TestKnowledgeBaseCRUD:
         # Arrange
         kb_dir = Path(test_temp_dir) / "knowledge_base"
         kb_dir.mkdir(parents=True, exist_ok=True)
-        
+
         original_entry = {
             "id": "kb_update",
             "title": "Original Title",
@@ -282,7 +279,7 @@ class TestKnowledgeBaseCRUD:
             "version": 1,
             "updated_at": get_timestamp_iso(),
         }
-        
+
         entry_file = kb_dir / "kb_update.json"
         save_json_file(original_entry, entry_file)
 
@@ -307,13 +304,13 @@ class TestKnowledgeBaseCRUD:
         # Arrange
         kb_dir = Path(test_temp_dir) / "knowledge_base"
         kb_dir.mkdir(parents=True, exist_ok=True)
-        
+
         entry = {
             "id": "kb_delete",
             "title": "To Be Deleted",
             "content": "This will be deleted",
         }
-        
+
         entry_file = kb_dir / "kb_delete.json"
         save_json_file(entry, entry_file)
         assert entry_file.exists()
@@ -329,7 +326,7 @@ class TestKnowledgeBaseCRUD:
         # Arrange
         kb_dir = Path(test_temp_dir) / "knowledge_base"
         kb_dir.mkdir(parents=True, exist_ok=True)
-        
+
         batch_size = 50
         entries = [
             {
@@ -357,7 +354,7 @@ class TestKnowledgeBaseCRUD:
         # Arrange
         kb_dir = Path(test_temp_dir) / "knowledge_base"
         kb_dir.mkdir(parents=True, exist_ok=True)
-        
+
         valid_entry = {
             "id": "kb_valid",
             "title": "Valid Entry",
@@ -387,10 +384,10 @@ class TestKnowledgeSearchAndFilter:
         # Arrange
         kb_dir = Path(test_temp_dir) / "knowledge_base"
         kb_dir.mkdir(parents=True, exist_ok=True)
-        
+
         categories = ["programming", "science", "history", "art"]
         entries = []
-        
+
         for i, category in enumerate(categories * 3):
             entry = {
                 "id": f"cat_{i}",
@@ -416,7 +413,7 @@ class TestKnowledgeSearchAndFilter:
         # Arrange
         kb_dir = Path(test_temp_dir) / "knowledge_base"
         kb_dir.mkdir(parents=True, exist_ok=True)
-        
+
         entries = [
             {
                 "id": "tag_1",
@@ -434,7 +431,7 @@ class TestKnowledgeSearchAndFilter:
                 "tags": ["javascript", "tutorial", "beginner"],
             },
         ]
-        
+
         for entry in entries:
             save_json_file(entry, kb_dir / f"{entry['id']}.json")
 
@@ -453,7 +450,7 @@ class TestKnowledgeSearchAndFilter:
         # Arrange
         kb_dir = Path(test_temp_dir) / "knowledge_base"
         kb_dir.mkdir(parents=True, exist_ok=True)
-        
+
         entries = [
             {
                 "id": "search_1",
@@ -468,7 +465,7 @@ class TestKnowledgeSearchAndFilter:
                 "content": "To be or not to be, that is the question",
             },
         ]
-        
+
         for entry in entries:
             save_json_file(entry, kb_dir / f"{entry['id']}.json")
 
@@ -489,10 +486,10 @@ class TestKnowledgeSearchAndFilter:
         # Arrange
         kb_dir = Path(test_temp_dir) / "knowledge_base"
         kb_dir.mkdir(parents=True, exist_ok=True)
-        
+
         base_date = datetime.now()
         entries = []
-        
+
         for i in range(10):
             created_at = (base_date - timedelta(days=i)).isoformat()
             entry = {
@@ -506,7 +503,7 @@ class TestKnowledgeSearchAndFilter:
         # Act - Filter entries from last 5 days
         cutoff_date = (base_date - timedelta(days=5)).isoformat()
         recent_entries = []
-        
+
         for kb_file in kb_dir.glob("date_*.json"):
             entry = load_json_file(kb_file)
             if entry["created_at"] >= cutoff_date:
@@ -520,7 +517,7 @@ class TestKnowledgeSearchAndFilter:
         # Arrange
         kb_dir = Path(test_temp_dir) / "knowledge_base"
         kb_dir.mkdir(parents=True, exist_ok=True)
-        
+
         entries = [
             {
                 "id": "combo_1",
@@ -547,7 +544,7 @@ class TestKnowledgeSearchAndFilter:
                 "priority": "high",
             },
         ]
-        
+
         for entry in entries:
             save_json_file(entry, kb_dir / f"{entry['id']}.json")
 
@@ -580,9 +577,9 @@ class TestMemoryCleanupArchival:
         archive_dir = Path(test_temp_dir) / "archive"
         memory_dir.mkdir(parents=True, exist_ok=True)
         archive_dir.mkdir(parents=True, exist_ok=True)
-        
+
         base_date = datetime.now()
-        
+
         # Create memories of different ages
         for i in range(20):
             created_at = (base_date - timedelta(days=i * 10)).isoformat()
@@ -596,7 +593,7 @@ class TestMemoryCleanupArchival:
         # Act - Archive memories older than 100 days
         cutoff_date = (base_date - timedelta(days=100)).isoformat()
         archived_count = 0
-        
+
         for memory_file in list(memory_dir.glob("mem_*.json")):
             memory = load_json_file(memory_file)
             if memory["created_at"] < cutoff_date:
@@ -609,7 +606,7 @@ class TestMemoryCleanupArchival:
         # Assert
         active_memories = list(memory_dir.glob("mem_*.json"))
         archived_memories = list(archive_dir.glob("mem_*.json"))
-        
+
         assert archived_count > 0
         assert len(active_memories) + len(archived_memories) == 20
 
@@ -618,13 +615,13 @@ class TestMemoryCleanupArchival:
         # Arrange
         memory_dir = Path(test_temp_dir) / "memory"
         memory_dir.mkdir(parents=True, exist_ok=True)
-        
+
         # Create memories with some duplicates
         base_memory = {
             "content": "This is duplicate content",
             "context": {"topic": "test"},
         }
-        
+
         for i in range(10):
             memory = base_memory.copy()
             memory["id"] = f"dup_{i}"
@@ -636,13 +633,13 @@ class TestMemoryCleanupArchival:
         # Act - Remove duplicates based on content hash
         seen_hashes = set()
         removed_count = 0
-        
+
         for memory_file in list(memory_dir.glob("dup_*.json")):
             memory = load_json_file(memory_file)
             content_hash = hashlib.sha256(
                 memory["content"].encode()
             ).hexdigest()
-            
+
             if content_hash in seen_hashes:
                 memory_file.unlink()
                 removed_count += 1
@@ -658,19 +655,19 @@ class TestMemoryCleanupArchival:
         """Test compression of archived memories."""
         # Arrange
         import gzip
-        
+
         archive_dir = Path(test_temp_dir) / "archive"
         archive_dir.mkdir(parents=True, exist_ok=True)
-        
+
         memory = {
             "id": "compress_test",
             "content": "x" * 10000,  # Large content
             "metadata": {"size": "large"},
         }
-        
+
         memory_file = archive_dir / "compress_test.json"
         save_json_file(memory, memory_file)
-        
+
         original_size = memory_file.stat().st_size
 
         # Act - Compress the memory
@@ -678,9 +675,9 @@ class TestMemoryCleanupArchival:
         with open(memory_file, "rb") as f_in:
             with gzip.open(compressed_file, "wb") as f_out:
                 f_out.writelines(f_in)
-        
+
         compressed_size = compressed_file.stat().st_size
-        
+
         # Verify decompression
         with gzip.open(compressed_file, "rb") as f:
             decompressed_data = json.loads(f.read().decode())
@@ -695,10 +692,10 @@ class TestMemoryCleanupArchival:
         # Arrange
         memory_dir = Path(test_temp_dir) / "memory"
         memory_dir.mkdir(parents=True, exist_ok=True)
-        
+
         retention_days = 30
         base_date = datetime.now()
-        
+
         # Create memories with various priorities
         for i in range(50):
             created_at = (base_date - timedelta(days=i)).isoformat()
@@ -713,7 +710,7 @@ class TestMemoryCleanupArchival:
         # Act - Apply retention policy (keep high priority always, others 30 days)
         cutoff_date = (base_date - timedelta(days=retention_days)).isoformat()
         deleted_count = 0
-        
+
         for memory_file in list(memory_dir.glob("retention_*.json")):
             memory = load_json_file(memory_file)
             should_delete = (
@@ -735,9 +732,9 @@ class TestMemoryCleanupArchival:
         # Arrange
         memory_dir = Path(test_temp_dir) / "memory"
         memory_dir.mkdir(parents=True, exist_ok=True)
-        
+
         categories = ["tech", "personal", "work", "learning"]
-        
+
         for i in range(100):
             memory = {
                 "id": f"stat_{i}",
@@ -754,17 +751,17 @@ class TestMemoryCleanupArchival:
             "by_category": {},
             "avg_size": 0,
         }
-        
+
         for memory_file in memory_dir.glob("stat_*.json"):
             memory = load_json_file(memory_file)
             stats["total_count"] += 1
             stats["total_size"] += memory["size"]
-            
+
             category = memory["category"]
             if category not in stats["by_category"]:
                 stats["by_category"][category] = 0
             stats["by_category"][category] += 1
-        
+
         stats["avg_size"] = stats["total_size"] / stats["total_count"]
 
         # Assert

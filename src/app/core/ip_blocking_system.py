@@ -15,16 +15,15 @@ Features:
 Defensive only - no offensive capabilities.
 """
 
-import ipaddress
 import json
 import logging
 import threading
 import time
 from collections import defaultdict, deque
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, UTC
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -34,16 +33,16 @@ class IPRecord:
     """Record of IP address activity."""
 
     ip_address: str
-    first_seen: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
-    last_seen: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    first_seen: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    last_seen: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
     request_count: int = 0
     violation_count: int = 0
     blocked: bool = False
     block_reason: str = ""
-    block_timestamp: Optional[str] = None
-    geolocation: Dict[str, Any] = field(default_factory=dict)
+    block_timestamp: str | None = None
+    geolocation: dict[str, Any] = field(default_factory=dict)
     user_agent: str = ""
-    endpoints_accessed: List[str] = field(default_factory=list)
+    endpoints_accessed: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -98,11 +97,11 @@ class IPBlockingSystem:
         self.block_duration = timedelta(hours=block_duration_hours)
 
         # State
-        self.ip_records: Dict[str, IPRecord] = {}
-        self.blacklist: Set[str] = set()
-        self.whitelist: Set[str] = set()
-        self.rate_windows: Dict[str, deque] = defaultdict(lambda: deque(maxlen=1000))
-        self.violations: List[RateLimitViolation] = []
+        self.ip_records: dict[str, IPRecord] = {}
+        self.blacklist: set[str] = set()
+        self.whitelist: set[str] = set()
+        self.rate_windows: dict[str, deque] = defaultdict(lambda: deque(maxlen=1000))
+        self.violations: list[RateLimitViolation] = []
 
         # Thread safety
         self.lock = threading.Lock()
@@ -126,7 +125,7 @@ class IPBlockingSystem:
         ip_address: str,
         endpoint: str = "/",
         user_agent: str = "",
-        geolocation: Optional[Dict[str, Any]] = None,
+        geolocation: dict[str, Any] | None = None,
     ) -> tuple[bool, str]:
         """
         Check if IP address is allowed to access endpoint.
@@ -158,7 +157,7 @@ class IPBlockingSystem:
                     # Check if block has expired
                     if record.block_timestamp:
                         block_time = datetime.fromisoformat(record.block_timestamp)
-                        if datetime.now(timezone.utc) - block_time > self.block_duration:
+                        if datetime.now(UTC) - block_time > self.block_duration:
                             # Unblock
                             record.blocked = False
                             record.block_timestamp = None
@@ -219,14 +218,14 @@ class IPBlockingSystem:
         ip_address: str,
         endpoint: str,
         user_agent: str,
-        geolocation: Optional[Dict[str, Any]],
+        geolocation: dict[str, Any] | None,
     ) -> None:
         """Record a successful request."""
         if ip_address not in self.ip_records:
             self.ip_records[ip_address] = IPRecord(ip_address=ip_address)
 
         record = self.ip_records[ip_address]
-        record.last_seen = datetime.now(timezone.utc).isoformat()
+        record.last_seen = datetime.now(UTC).isoformat()
         record.request_count += 1
         record.user_agent = user_agent or record.user_agent
 
@@ -247,7 +246,7 @@ class IPBlockingSystem:
         # Record violation
         violation = RateLimitViolation(
             ip_address=ip_address,
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             requests_in_window=len(self.rate_windows[f"{ip_address}:{endpoint}"]),
             limit=self.max_requests_per_hour,
             endpoint=endpoint,
@@ -281,7 +280,7 @@ class IPBlockingSystem:
             record = self.ip_records[ip_address]
             record.blocked = True
             record.block_reason = reason
-            record.block_timestamp = datetime.now(timezone.utc).isoformat()
+            record.block_timestamp = datetime.now(UTC).isoformat()
 
             if permanent:
                 self.blacklist.add(ip_address)
@@ -321,7 +320,7 @@ class IPBlockingSystem:
                 logger.info(f"IP removed from whitelist: {ip_address}")
                 self._save_state()
 
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self) -> dict[str, Any]:
         """Get system statistics."""
         with self.lock:
             blocked_ips = sum(1 for r in self.ip_records.values() if r.blocked)
@@ -339,7 +338,7 @@ class IPBlockingSystem:
                 "block_duration_hours": self.block_duration.total_seconds() / 3600,
             }
 
-    def get_blocked_ips(self) -> List[Dict[str, Any]]:
+    def get_blocked_ips(self) -> list[dict[str, Any]]:
         """Get list of currently blocked IPs."""
         with self.lock:
             return [
@@ -357,7 +356,7 @@ class IPBlockingSystem:
         """Load state from disk."""
         try:
             if self.records_file.exists():
-                with open(self.records_file, "r") as f:
+                with open(self.records_file) as f:
                     data = json.load(f)
                     self.ip_records = {
                         ip: IPRecord(**record) for ip, record in data.items()
@@ -365,17 +364,17 @@ class IPBlockingSystem:
                 logger.info(f"Loaded {len(self.ip_records)} IP records")
 
             if self.blacklist_file.exists():
-                with open(self.blacklist_file, "r") as f:
+                with open(self.blacklist_file) as f:
                     self.blacklist = set(json.load(f))
                 logger.info(f"Loaded {len(self.blacklist)} blacklisted IPs")
 
             if self.whitelist_file.exists():
-                with open(self.whitelist_file, "r") as f:
+                with open(self.whitelist_file) as f:
                     self.whitelist = set(json.load(f))
                 logger.info(f"Loaded {len(self.whitelist)} whitelisted IPs")
 
             if self.violations_file.exists():
-                with open(self.violations_file, "r") as f:
+                with open(self.violations_file) as f:
                     violation_data = json.load(f)
                     self.violations = [RateLimitViolation(**v) for v in violation_data]
                 logger.info(f"Loaded {len(self.violations)} violations")

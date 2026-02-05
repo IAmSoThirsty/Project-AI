@@ -14,7 +14,7 @@ Invariants serve as:
 
 Usage:
     from canonical.invariants import validate_invariants
-    
+
     passed, failed, report = validate_invariants(trace)
     if failed:
         raise AssertionError(f"Invariants failed: {failed}")
@@ -531,7 +531,7 @@ def main():
         print("   Run 'python canonical/replay.py' first to generate trace")
         return 1
 
-    with open(trace_path, "r") as f:
+    with open(trace_path) as f:
         trace = json.load(f)
 
     passed, failed, report = validate_invariants(trace)

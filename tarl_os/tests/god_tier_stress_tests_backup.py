@@ -302,14 +302,14 @@ class GodTierStressTestGenerator:
             By creating numerous processes simultaneously and manipulating priority values during the
             critical section between process state save and restore, an attacker can corrupt the
             scheduler state and potentially execute arbitrary code with kernel privileges.
-            
+
             Attack Vector Details:
             1. Process Creation Flood: Spawn 1000 processes to overwhelm scheduler
             2. Priority Manipulation: Rapidly change process priorities during context switch
             3. Interrupt Injection: Send interrupt signals at precise timing
             4. State Corruption: Exploit race window to corrupt process control block
             5. Privilege Escalation: Execute code with elevated privileges
-            
+
             Required Knowledge:
             - Scheduler implementation details (white box)
             - Context switch timing windows
@@ -504,14 +504,14 @@ class GodTierStressTestGenerator:
                 technical_details="""
             This sophisticated attack targets the memory manager's paging system by corrupting
             page table entries (PTEs) to bypass memory protection mechanisms.
-            
+
             Attack Methodology:
             1. ASLR Bypass: Use information leak to discover page table base
             2. PTE Location: Calculate target PTE offset using virtual address
             3. Permission Escalation: Modify PTE to grant RWX permissions
             4. Mapping Hijack: Remap physical page to attacker-controlled memory
             5. Code Injection: Inject and execute malicious code
-            
+
             Technical Requirements:
             - Knowledge of page table structure (4-level paging)
             - Understanding of virtual-to-physical address translation

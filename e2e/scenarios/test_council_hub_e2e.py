@@ -9,11 +9,6 @@ from __future__ import annotations
 
 import pytest
 
-from e2e.fixtures.test_data import TEST_COUNCIL_MESSAGES
-from e2e.utils.assertions import (
-    assert_audit_log_entry,
-    assert_event_propagation,
-)
 
 
 @pytest.mark.e2e

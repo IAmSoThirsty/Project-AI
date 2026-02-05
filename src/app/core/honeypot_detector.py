@@ -18,14 +18,13 @@ Defensive only - no offensive capabilities.
 import json
 import logging
 import re
-import time
 import uuid
 from collections import defaultdict
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime, UTC
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -53,18 +52,18 @@ class AttackAttempt:
     """Record of an attack attempt on honeypot."""
 
     attempt_id: str = field(default_factory=lambda: str(uuid.uuid4()))
-    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
     ip_address: str = ""
     endpoint: str = ""
     attack_type: str = AttackType.UNKNOWN.value
     method: str = ""  # HTTP method
     payload: str = ""
     user_agent: str = ""
-    headers: Dict[str, str] = field(default_factory=dict)
-    parameters: Dict[str, Any] = field(default_factory=dict)
+    headers: dict[str, str] = field(default_factory=dict)
+    parameters: dict[str, Any] = field(default_factory=dict)
     severity: str = "medium"
     fingerprint: str = ""  # Attack signature
-    tool_detected: Optional[str] = None  # e.g., "sqlmap", "nikto"
+    tool_detected: str | None = None  # e.g., "sqlmap", "nikto"
     action_taken: str = "logged"
 
 
@@ -73,11 +72,11 @@ class AttackerProfile:
     """Profile of an attacker based on behavior."""
 
     ip_address: str
-    first_seen: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
-    last_seen: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    first_seen: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    last_seen: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
     attempt_count: int = 0
-    attack_types_used: List[str] = field(default_factory=list)
-    tools_detected: List[str] = field(default_factory=list)
+    attack_types_used: list[str] = field(default_factory=list)
+    tools_detected: list[str] = field(default_factory=list)
     sophistication_score: float = 0.0  # 0-10 scale
     targeting_pattern: str = "random"  # "random", "targeted", "automated"
     blocked: bool = False
@@ -102,8 +101,8 @@ class HoneypotDetector:
         self.data_dir.mkdir(parents=True, exist_ok=True)
 
         # State
-        self.attack_attempts: List[AttackAttempt] = []
-        self.attacker_profiles: Dict[str, AttackerProfile] = {}
+        self.attack_attempts: list[AttackAttempt] = []
+        self.attacker_profiles: dict[str, AttackerProfile] = {}
 
         # Attack pattern signatures
         self.sql_patterns = [
@@ -165,9 +164,9 @@ class HoneypotDetector:
         method: str,
         payload: str,
         user_agent: str = "",
-        headers: Optional[Dict[str, str]] = None,
-        parameters: Optional[Dict[str, Any]] = None,
-    ) -> Optional[AttackAttempt]:
+        headers: dict[str, str] | None = None,
+        parameters: dict[str, Any] | None = None,
+    ) -> AttackAttempt | None:
         """
         Analyze a request for attack patterns.
 
@@ -188,7 +187,7 @@ class HoneypotDetector:
 
         # Detect attack type
         attack_types = []
-        
+
         # Check for SQL injection
         for pattern in self.sql_patterns:
             if re.search(pattern, payload, re.IGNORECASE):
@@ -220,13 +219,13 @@ class HoneypotDetector:
         # If attack detected, record it
         if attack_types:
             attack_type = attack_types[0]  # Primary attack type
-            
+
             # Detect tool
             tool_detected = self._detect_tool(user_agent, headers, payload)
-            
+
             # Calculate severity
             severity = self._calculate_severity(attack_type, tool_detected)
-            
+
             # Create fingerprint
             fingerprint = self._create_fingerprint(attack_type, payload, tool_detected)
 
@@ -297,8 +296,8 @@ class HoneypotDetector:
         return False
 
     def _detect_tool(
-        self, user_agent: str, headers: Dict[str, str], payload: str
-    ) -> Optional[str]:
+        self, user_agent: str, headers: dict[str, str], payload: str
+    ) -> str | None:
         """Detect scanning/attack tool being used."""
         search_text = f"{user_agent} {str(headers)} {payload}".lower()
 
@@ -309,7 +308,7 @@ class HoneypotDetector:
 
         return None
 
-    def _calculate_severity(self, attack_type: str, tool_detected: Optional[str]) -> str:
+    def _calculate_severity(self, attack_type: str, tool_detected: str | None) -> str:
         """Calculate severity of attack."""
         # Base severity by attack type
         high_severity = [
@@ -338,7 +337,7 @@ class HoneypotDetector:
         return severity
 
     def _create_fingerprint(
-        self, attack_type: str, payload: str, tool_detected: Optional[str]
+        self, attack_type: str, payload: str, tool_detected: str | None
     ) -> str:
         """Create attack fingerprint for tracking."""
         import hashlib
@@ -348,14 +347,14 @@ class HoneypotDetector:
         return hashlib.sha256(fp_data.encode()).hexdigest()[:16]
 
     def _update_attacker_profile(
-        self, ip_address: str, attack_type: str, tool_detected: Optional[str]
+        self, ip_address: str, attack_type: str, tool_detected: str | None
     ) -> None:
         """Update attacker profile based on new attack."""
         if ip_address not in self.attacker_profiles:
             self.attacker_profiles[ip_address] = AttackerProfile(ip_address=ip_address)
 
         profile = self.attacker_profiles[ip_address]
-        profile.last_seen = datetime.now(timezone.utc).isoformat()
+        profile.last_seen = datetime.now(UTC).isoformat()
         profile.attempt_count += 1
 
         if attack_type not in profile.attack_types_used:
@@ -401,10 +400,10 @@ class HoneypotDetector:
         else:
             return "random"
 
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self) -> dict[str, Any]:
         """Get honeypot statistics."""
         total_attempts = len(self.attack_attempts)
-        
+
         # Count by attack type
         attack_type_counts = defaultdict(int)
         for attempt in self.attack_attempts:
@@ -431,7 +430,7 @@ class HoneypotDetector:
         """Count attacks in last N hours."""
         from datetime import timedelta
 
-        cutoff = datetime.now(timezone.utc) - timedelta(hours=hours)
+        cutoff = datetime.now(UTC) - timedelta(hours=hours)
         count = 0
 
         for attempt in self.attack_attempts:
@@ -441,11 +440,11 @@ class HoneypotDetector:
 
         return count
 
-    def get_attacker_profiles(self) -> List[Dict[str, Any]]:
+    def get_attacker_profiles(self) -> list[dict[str, Any]]:
         """Get all attacker profiles."""
         return [asdict(profile) for profile in self.attacker_profiles.values()]
 
-    def get_high_threat_attackers(self) -> List[Dict[str, Any]]:
+    def get_high_threat_attackers(self) -> list[dict[str, Any]]:
         """Get attackers with high sophistication or attempt count."""
         high_threat = [
             asdict(profile)
@@ -458,7 +457,7 @@ class HoneypotDetector:
         """Load state from disk."""
         try:
             if self.attempts_file.exists():
-                with open(self.attempts_file, "r") as f:
+                with open(self.attempts_file) as f:
                     attempt_data = json.load(f)
                     # Load last 10000 attempts
                     self.attack_attempts = [
@@ -467,7 +466,7 @@ class HoneypotDetector:
                 logger.info(f"Loaded {len(self.attack_attempts)} attack attempts")
 
             if self.profiles_file.exists():
-                with open(self.profiles_file, "r") as f:
+                with open(self.profiles_file) as f:
                     profile_data = json.load(f)
                     self.attacker_profiles = {
                         ip: AttackerProfile(**data) for ip, data in profile_data.items()

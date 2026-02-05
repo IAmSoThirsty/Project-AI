@@ -6,7 +6,6 @@ One-time setup script
 
 import asyncio
 import sys
-import os
 from pathlib import Path
 
 # Add project root to path
@@ -35,10 +34,10 @@ async def main():
     print()
     print("=" * 70)
     print()
-    
+
     try:
         result = await register_legion()
-        
+
         print()
         print("✅ REGISTRATION COMPLETE!")
         print()
@@ -49,13 +48,13 @@ async def main():
         print()
         print("Config saved to: integrations/openclaw/moltbook_config.json")
         print()
-        
+
     except Exception as e:
         print()
         print(f"❌ Registration failed: {e}")
         print()
         return 1
-    
+
     return 0
 
 

@@ -16,7 +16,6 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import pytest
 
-from e2e.utils.assertions import assert_within_timeout
 
 
 @pytest.mark.e2e

@@ -45,14 +45,14 @@ Behavior specification for degraded or failed states.
 === END SPECIFICATION ===
 """
 
-import json
 import logging
 import uuid
 from abc import ABC, abstractmethod
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from enum import Enum
-from typing import Any, Callable
+from typing import Any
+from collections.abc import Callable
 
 logger = logging.getLogger(__name__)
 

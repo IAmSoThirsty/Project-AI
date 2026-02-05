@@ -11,7 +11,7 @@ This ensures memory operations are secure, auditable, and governable.
 """
 
 import logging
-from datetime import UTC, datetime, timedelta
+from datetime import timedelta
 from typing import Any
 
 from src.app.core.operational_substructure import (

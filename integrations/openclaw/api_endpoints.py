@@ -3,7 +3,6 @@ OpenClaw API Extensions
 New endpoints for Legion agent integration
 """
 
-from typing import Optional
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 import sys
@@ -18,7 +17,7 @@ from integrations.openclaw import LegionAgent, get_config
 router = APIRouter(prefix="/openclaw", tags=["Legion Agent"])
 
 # Initialize Legion agent (singleton)
-_legion_agent: Optional[LegionAgent] = None
+_legion_agent: LegionAgent | None = None
 
 
 def get_legion_agent() -> LegionAgent:
@@ -44,7 +43,7 @@ class LegionResponse(BaseModel):
     response: str
     agent_id: str
     status: str
-    governance: Optional[dict] = None
+    governance: dict | None = None
 
 
 class CapabilityRequest(BaseModel):
@@ -60,7 +59,7 @@ class CapabilityRequest(BaseModel):
 async def process_message(message: OpenClawMessage):
     """
     Main OpenClaw message handler
-    
+
     Processes messages through Legion's full pipeline:
     1. Security validation (Cerberus)
     2. Intent parsing
@@ -69,7 +68,7 @@ async def process_message(message: OpenClawMessage):
     5. Capability execution
     """
     legion = get_legion_agent()
-    
+
     try:
         response_text = await legion.process_message(
             message=message.content,
@@ -77,13 +76,13 @@ async def process_message(message: OpenClawMessage):
             platform=message.platform,
             metadata=message.metadata
         )
-        
+
         return LegionResponse(
             response=response_text,
             agent_id=legion.agent_id,
             status="success"
         )
-    
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -92,7 +91,7 @@ async def process_message(message: OpenClawMessage):
 async def list_capabilities():
     """
     List all available Project-AI capabilities
-    
+
     Returns capability registry with:
     - Capability IDs
     - Subsystem mappings
@@ -129,7 +128,7 @@ async def list_capabilities():
 async def execute_capability(request: CapabilityRequest):
     """
     Execute a specific Project-AI capability
-    
+
     All executions go through:
     - Triumvirate governance
     - TARL enforcement
@@ -147,14 +146,14 @@ async def execute_capability(request: CapabilityRequest):
 async def health_check():
     """
     Legion agent health check
-    
+
     Returns:
     - Agent status
     - Subsystem status
     - Security status
     """
     legion = get_legion_agent()
-    
+
     return {
         "agent": "Legion",
         "version": "1.0.0-phase1",
@@ -174,7 +173,7 @@ async def health_check():
 async def get_status():
     """Get detailed status including security metrics"""
     legion = get_legion_agent()
-    
+
     return {
         "agent_id": legion.agent_id,
         "conversations": len(legion.conversation_history),

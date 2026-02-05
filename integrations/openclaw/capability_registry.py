@@ -5,8 +5,8 @@ Maps natural language intents to Project-AI subsystems and assistant features
 """
 
 import asyncio
-from typing import Dict, Any, List, Optional, Callable
-from datetime import datetime
+from typing import Any
+from collections.abc import Callable
 from enum import Enum
 from pydantic import BaseModel
 
@@ -26,8 +26,8 @@ class Capability(BaseModel):
     name: str
     category: CapabilityCategory
     description: str
-    keywords: List[str]  # For intent matching
-    handler: Optional[Callable] = None
+    keywords: list[str]  # For intent matching
+    handler: Callable | None = None
     enabled: bool = True
     requires_online: bool = False
     risk_level: str = "low"  # low, medium, high
@@ -36,35 +36,35 @@ class Capability(BaseModel):
 class CapabilityRegistry:
     """
     Maps natural language to Project-AI subsystems and assistant features
-    
+
     Integrates:
     - Project-AI subsystems (Triumvirate, Global Scenario Engine, etc.)
     - OpenClaw assistant features (tasks, scheduling, files, search)
     """
-    
+
     def __init__(self, api_url: str = "http://localhost:8001"):
         """
         Initialize capability registry
-        
+
         Args:
             api_url: Base URL for Project-AI API
         """
         self.api_url = api_url
-        self.capabilities: Dict[str, Capability] = {}
+        self.capabilities: dict[str, Capability] = {}
         self._register_all_capabilities()
-        
+
     def _register_all_capabilities(self):
         """Register all available capabilities"""
         # Project-AI Core Subsystems
         self._register_ai_subsystems()
-        
+
         # OpenClaw Assistant Features
         self._register_assistant_features()
         self._register_system_features()
         self._register_research_features()
         self._register_communication_features()
         self._register_development_features()
-        
+
     def _register_ai_subsystems(self):
         """Register Project-AI core subsystems"""
         self.capabilities.update({
@@ -125,7 +125,7 @@ class CapabilityRegistry:
                 risk_level="high"
             ),
         })
-        
+
     def _register_assistant_features(self):
         """Register OpenClaw assistant features"""
         self.capabilities.update({
@@ -162,7 +162,7 @@ class CapabilityRegistry:
                 risk_level="low"
             ),
         })
-        
+
     def _register_system_features(self):
         """Register system operation features"""
         self.capabilities.update({
@@ -191,7 +191,7 @@ class CapabilityRegistry:
                 risk_level="high"
             ),
         })
-        
+
     def _register_research_features(self):
         """Register research and search features"""
         self.capabilities.update({
@@ -220,7 +220,7 @@ class CapabilityRegistry:
                 risk_level="low"
             ),
         })
-        
+
     def _register_communication_features(self):
         """Register communication features"""
         self.capabilities.update({
@@ -241,7 +241,7 @@ class CapabilityRegistry:
                 risk_level="medium"
             ),
         })
-        
+
     def _register_development_features(self):
         """Register development and code features"""
         self.capabilities.update({
@@ -270,68 +270,68 @@ class CapabilityRegistry:
                 risk_level="low"
             ),
         })
-    
+
     async def match_capability(
         self,
         message: str,
-        context: Dict[str, Any] = None
-    ) -> Optional[str]:
+        context: dict[str, Any] = None
+    ) -> str | None:
         """
         Match user message to a capability
-        
+
         Args:
             message: User message
             context: Additional context
-            
+
         Returns:
             Capability name if matched, None otherwise
         """
         message_lower = message.lower()
-        
+
         # Score each capability by keyword matches
         scores = {}
         for cap_name, capability in self.capabilities.items():
             if not capability.enabled:
                 continue
-                
+
             score = sum(
                 1 for keyword in capability.keywords
                 if keyword in message_lower
             )
-            
+
             if score > 0:
                 scores[cap_name] = score
-        
+
         # Return highest scoring capability
         if scores:
             return max(scores, key=scores.get)
         return None
-    
+
     async def execute_capability(
         self,
         capability_name: str,
-        parameters: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        parameters: dict[str, Any]
+    ) -> dict[str, Any]:
         """
         Execute a capability
-        
+
         Args:
             capability_name: Name of capability to execute
             parameters: Execution parameters
-            
+
         Returns:
             Execution result
-            
+
         Raises:
             CapabilityError: If capability fails
         """
         capability = self.capabilities.get(capability_name)
         if not capability:
             raise CapabilityError(f"Unknown capability: {capability_name}")
-            
+
         if not capability.enabled:
             raise CapabilityError(f"Capability disabled: {capability_name}")
-        
+
         # Route to appropriate handler
         if capability.category == CapabilityCategory.AI_SUBSYSTEMS:
             return await self._execute_ai_subsystem(capability_name, parameters)
@@ -347,12 +347,12 @@ class CapabilityRegistry:
             return await self._execute_development_feature(capability_name, parameters)
         else:
             raise CapabilityError(f"Unknown category: {capability.category}")
-    
+
     async def _execute_ai_subsystem(
         self,
         capability_name: str,
-        parameters: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        parameters: dict[str, Any]
+    ) -> dict[str, Any]:
         """Execute Project-AI subsystem capability"""
         # Placeholder - will connect to actual subsystems
         return {
@@ -361,12 +361,12 @@ class CapabilityRegistry:
             "result": f"Executed {capability_name} with parameters: {parameters}",
             "note": "Placeholder - integrate with actual Project-AI subsystems"
         }
-    
+
     async def _execute_assistant_feature(
         self,
         capability_name: str,
-        parameters: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        parameters: dict[str, Any]
+    ) -> dict[str, Any]:
         """Execute assistant feature"""
         if capability_name == "task_management":
             return await self._handle_task_management(parameters)
@@ -378,12 +378,12 @@ class CapabilityRegistry:
             return await self._handle_timer_alarms(parameters)
         else:
             return {"success": False, "error": "Handler not implemented"}
-    
+
     async def _execute_system_feature(
         self,
         capability_name: str,
-        parameters: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        parameters: dict[str, Any]
+    ) -> dict[str, Any]:
         """Execute system feature"""
         return {
             "success": True,
@@ -391,87 +391,87 @@ class CapabilityRegistry:
             "result": f"System feature {capability_name} placeholder",
             "note": "Requires Triumvirate approval for execution"
         }
-    
+
     async def _execute_research_feature(
         self,
         capability_name: str,
-        parameters: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        parameters: dict[str, Any]
+    ) -> dict[str, Any]:
         """Execute research feature"""
         return {
             "success": True,
             "capability": capability_name,
             "result": f"Research feature {capability_name} placeholder"
         }
-    
+
     async def _execute_communication_feature(
         self,
         capability_name: str,
-        parameters: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        parameters: dict[str, Any]
+    ) -> dict[str, Any]:
         """Execute communication feature"""
         return {
             "success": True,
             "capability": capability_name,
             "result": f"Communication feature {capability_name} placeholder"
         }
-    
+
     async def _execute_development_feature(
         self,
         capability_name: str,
-        parameters: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        parameters: dict[str, Any]
+    ) -> dict[str, Any]:
         """Execute development feature"""
         return {
             "success": True,
             "capability": capability_name,
             "result": f"Development feature {capability_name} placeholder"
         }
-    
+
     # Assistant feature handlers
-    async def _handle_task_management(self, params: Dict[str, Any]) -> Dict[str, Any]:
+    async def _handle_task_management(self, params: dict[str, Any]) -> dict[str, Any]:
         """Handle task management operations"""
         action = params.get("action", "list")  # create, list, update, complete
-        
+
         return {
             "success": True,
             "action": action,
             "result": f"Task {action} - placeholder implementation"
         }
-    
-    async def _handle_scheduling(self, params: Dict[str, Any]) -> Dict[str, Any]:
+
+    async def _handle_scheduling(self, params: dict[str, Any]) -> dict[str, Any]:
         """Handle scheduling operations"""
         return {
             "success": True,
             "result": "Scheduling feature - placeholder implementation"
         }
-    
-    async def _handle_note_taking(self, params: Dict[str, Any]) -> Dict[str, Any]:
+
+    async def _handle_note_taking(self, params: dict[str, Any]) -> dict[str, Any]:
         """Handle note-taking operations"""
         return {
             "success": True,
             "result": "Note-taking feature - placeholder implementation"
         }
-    
-    async def _handle_timer_alarms(self, params: Dict[str, Any]) -> Dict[str, Any]:
+
+    async def _handle_timer_alarms(self, params: dict[str, Any]) -> dict[str, Any]:
         """Handle timers and alarms"""
         return {
             "success": True,
             "result": "Timer/alarm feature - placeholder implementation"
         }
-    
+
     def list_capabilities(
         self,
-        category: Optional[CapabilityCategory] = None,
+        category: CapabilityCategory | None = None,
         enabled_only: bool = True
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """
         List available capabilities
-        
+
         Args:
             category: Filter by category
             enabled_only: Only show enabled capabilities
-            
+
         Returns:
             List of capability descriptions
         """
@@ -481,7 +481,7 @@ class CapabilityRegistry:
                 continue
             if enabled_only and not cap.enabled:
                 continue
-                
+
             caps.append({
                 "name": name,
                 "display_name": cap.name,
@@ -490,7 +490,7 @@ class CapabilityRegistry:
                 "requires_online": cap.requires_online,
                 "risk_level": cap.risk_level
             })
-        
+
         return caps
 
 
@@ -509,12 +509,12 @@ async def test_capability_registry():
     print("\n" + "=" * 60)
     print("Capability Registry - Test Mode")
     print("=" * 60 + "\n")
-    
+
     registry = CapabilityRegistry()
-    
+
     # List all capabilities
     print("Available Capabilities:\n")
-    
+
     for category in CapabilityCategory:
         caps = registry.list_capabilities(category=category)
         if caps:
@@ -525,10 +525,10 @@ async def test_capability_registry():
                 print(f"    • {cap['display_name']}{online}{risk}")
                 print(f"      {cap['description']}")
             print()
-    
+
     # Test intent matching
     print("\nIntent Matching Tests:\n")
-    
+
     test_messages = [
         "Can you forecast the global economy for next year?",
         "Set a reminder for 3pm tomorrow",
@@ -536,7 +536,7 @@ async def test_capability_registry():
         "Execute this Python code",
         "What's on my calendar today?",
     ]
-    
+
     for msg in test_messages:
         matched = await registry.match_capability(msg)
         print(f"  '{msg}'")

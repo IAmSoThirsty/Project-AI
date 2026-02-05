@@ -131,12 +131,12 @@ class GoldenPathRecipes:
 def query_agent(vm, context):
     # Check capability before querying
     allowed, reason = stack.capabilities.check_capability(
-        "Agent.Query", 
+        "Agent.Query",
         {"pii_protected": True, "audit_required": True}
     )
     if not allowed:
         raise PermissionError(reason)
-    
+
     # Perform query
     return {"data": "query_result"}
 
@@ -148,10 +148,10 @@ def execute_agent(vm, context):
         required_approvers=["supervisor"],
         context=context
     )
-    
+
     # Wait for approval (in real system, would be async)
     # stack.hitl.approve(request_id, "supervisor")
-    
+
     # Check if approved
     if stack.hitl.is_approved(request_id):
         return {"executed": True}
@@ -203,7 +203,7 @@ def data_processing(vm, context):
         {"endpoint": "/data"},
         {"records": [1, 2, 3]}
     )
-    
+
     # Process data
     result = {"processed": len([1, 2, 3])}
     return result
@@ -277,10 +277,10 @@ for tenant_id, tier in [("customer_1", "pro"), ("customer_2", "free")]:
 # Tenant executes workflow
 def tenant_workflow(vm, context):
     tenant_id = context["tenant_id"]
-    
+
     # Consume quota
     stack.multi_tenant.consume_quota(tenant_id, "workflows", amount=1)
-    
+
     try:
         # Execute business logic
         result = {"success": True}
@@ -382,12 +382,12 @@ if status["status"] == "approved":
     compliance_result = governance.compliance.verify_compliance(
         "patient_data_processor"
     )
-    
+
     # Enforce no-run without attestations
     allowed, reason = governance.compliance.enforce_no_run_without_attestations(
         "patient_data_processor"
     )
-    
+
     if allowed:
         # Execute workflow
         result = stack.vm.execute_workflow("patient_data_processor", {})
@@ -475,17 +475,17 @@ report = governance.compliance.generate_compliance_report(
 def deploy_model_workflow(vm, context):
     model_id = context["model_id"]
     environment = context["environment"]
-    
+
     # Check guardrails
     allowed, violations = governance.safety.check_guardrails(
         "deploy_model",
         "deploy",
         {"accuracy": 0.89, "environment": environment}
     )
-    
+
     if not allowed:
         raise PermissionError(f"Safety check failed: {violations}")
-    
+
     # Request human approval for production
     if environment == "production":
         request_id = stack.hitl.request_approval(
@@ -494,10 +494,10 @@ def deploy_model_workflow(vm, context):
             required_approvers=["ml_lead", "security_lead"],
             context={"model_id": model_id}
         )
-        
+
         # Wait for approval
         # ... approval process ...
-    
+
     # Record human decision
     decision_id = governance.ai_provenance.record_human_decision(
         context["workflow_id"],
@@ -505,13 +505,13 @@ def deploy_model_workflow(vm, context):
         "deployment_approval",
         f"Approved deployment of {model_id} to {environment}"
     )
-    
+
     # Generate AI-specific SBOM
     ai_sbom = governance.ai_provenance.generate_ai_sbom(model_id)
-    
+
     # Get full lineage
     lineage = governance.ai_provenance.get_lineage(model_id)
-    
+
     return {
         "deployed": True,
         "model_id": model_id,

@@ -210,7 +210,7 @@ def cmd_sovereign_verify(args):
     logger.info("Hash Chain Validation:")
     hash_check = report["checks"]["hash_chain_validation"]
     logger.info("  Status: %s", hash_check["status"].upper())
-    logger.info("  Blocks Verified: %d / %d", 
+    logger.info("  Blocks Verified: %d / %d",
                 hash_check["details"].get("blocks_verified", 0),
                 hash_check["details"].get("total_blocks", 0))
     if hash_check.get("issues"):
@@ -224,7 +224,7 @@ def cmd_sovereign_verify(args):
     sig_check = report["checks"]["signature_authority_mapping"]
     logger.info("  Status: %s", sig_check["status"].upper())
     logger.info("  Algorithm: %s", sig_check["details"].get("algorithm", "Ed25519"))
-    logger.info("  Public Key Fingerprint: %s", 
+    logger.info("  Public Key Fingerprint: %s",
                 sig_check["details"].get("public_key_fingerprint", "unknown"))
     logger.info("  Signatures Verified: %d / %d",
                 sig_check["details"].get("signatures_verified", 0),

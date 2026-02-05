@@ -13,20 +13,15 @@ Comprehensive tests for RAG operations including:
 from __future__ import annotations
 
 import hashlib
-import json
-import tempfile
 import time
 from pathlib import Path
-from typing import Any
 
 import pytest
 
 from e2e.utils.test_helpers import (
-    create_test_file,
     get_timestamp_iso,
     load_json_file,
     save_json_file,
-    wait_for_condition,
 )
 
 
@@ -191,7 +186,7 @@ class TestDocumentIngestion:
         Author: AI Researcher
         Date: 2024-01-01
         Tags: ML, AI, Tutorial
-        
+
         Machine learning is a subset of artificial intelligence.
         """
 
