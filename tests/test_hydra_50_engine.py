@@ -6,36 +6,37 @@ Tests all 50 scenarios, 5 engine modules, event sourcing, time-travel,
 and integration points. Target: 80%+ coverage.
 """
 
-import pytest
 import tempfile
 from datetime import datetime, timedelta
 from pathlib import Path
 
+import pytest
+
 from app.core.hydra_50_engine import (
-    Hydra50Engine,
+    SCENARIO_REGISTRY,
     AIRealityFloodScenario,
     AutonomousTradingWarScenario,
-    SovereignDebtCascadeScenario,
-    PowerGridFrequencyWarfareScenario,
-    SlowBurnPandemicScenario,
-    LegitimacyCollapseScenario,
-    ScenarioStatus,
-    EscalationLevel,
     ControlPlane,
-    SCENARIO_REGISTRY,
+    EscalationLevel,
+    Hydra50Engine,
+    LegitimacyCollapseScenario,
+    PowerGridFrequencyWarfareScenario,
+    ScenarioStatus,
+    SlowBurnPandemicScenario,
+    SovereignDebtCascadeScenario,
 )
 from app.core.hydra_50_integration import (
+    CommandCenterIntegration,
+    GlobalScenarioEngineIntegration,
+    GUIExportHooks,
     Hydra50IntegrationManager,
     PlanetaryDefenseIntegration,
-    GlobalScenarioEngineIntegration,
-    CommandCenterIntegration,
-    GUIExportHooks,
 )
-
 
 # ============================================================================
 # FIXTURES
 # ============================================================================
+
 
 @pytest.fixture
 def temp_data_dir():
@@ -60,6 +61,7 @@ def integration_manager(temp_data_dir):
 # SCENARIO TESTS (S01-S50)
 # ============================================================================
 
+
 class TestDigitalCognitiveScenarios:
     """Test Digital/Cognitive scenarios (S01-S10)"""
 
@@ -72,10 +74,12 @@ class TestDigitalCognitiveScenarios:
         assert not any(t.activated for t in scenario.triggers)
 
         # Activate triggers
-        scenario.update_metrics({
-            "synthetic_content_ratio": 0.6,  # Above 0.5 threshold
-            "verification_capacity_deficit": 0.95,  # Above 0.9 threshold
-        })
+        scenario.update_metrics(
+            {
+                "synthetic_content_ratio": 0.6,  # Above 0.5 threshold
+                "verification_capacity_deficit": 0.95,  # Above 0.9 threshold
+            }
+        )
 
         # Check activation
         assert scenario.triggers[0].activated
@@ -108,16 +112,20 @@ class TestDigitalCognitiveScenarios:
 
         # Should have high-strength couplings
         assert len(couplings) > 0
-        assert any(c.target_scenario_id == "S09" for c in couplings)  # Deepfake coupling
+        assert any(
+            c.target_scenario_id == "S09" for c in couplings
+        )  # Deepfake coupling
 
     def test_s02_autonomous_trading_war(self):
         """Test S02 algorithmic trading scenario"""
         scenario = AutonomousTradingWarScenario()
 
-        scenario.update_metrics({
-            "algorithmic_trading_dominance": 0.85,
-            "flash_crash_frequency": 2.0,
-        })
+        scenario.update_metrics(
+            {
+                "algorithmic_trading_dominance": 0.85,
+                "flash_crash_frequency": 2.0,
+            }
+        )
 
         assert scenario.triggers[0].activated
         assert scenario.triggers[1].activated
@@ -125,14 +133,14 @@ class TestDigitalCognitiveScenarios:
     def test_scenarios_s03_to_s10_initialization(self):
         """Test that S03-S10 initialize correctly"""
         from app.core.hydra_50_engine import (
-            InternetFragmentationScenario,
-            SyntheticIdentityScenario,
-            CognitiveLoadScenario,
             AlgorithmicCulturalDriftScenario,
-            ModelWeightPoisoningScenario,
-            DNSTrustCollapseScenario,
+            CognitiveLoadScenario,
             DeepfakeLegalEvidenceScenario,
+            DNSTrustCollapseScenario,
+            InternetFragmentationScenario,
+            ModelWeightPoisoningScenario,
             PsychologicalExhaustionScenario,
+            SyntheticIdentityScenario,
         )
 
         scenarios = [
@@ -159,10 +167,12 @@ class TestEconomicScenarios:
         """Test S11 debt crisis scenario"""
         scenario = SovereignDebtCascadeScenario()
 
-        scenario.update_metrics({
-            "default_count": 4.0,  # Above 3.0 threshold
-            "debt_to_gdp_threshold": 3.2,
-        })
+        scenario.update_metrics(
+            {
+                "default_count": 4.0,  # Above 3.0 threshold
+                "debt_to_gdp_threshold": 3.2,
+            }
+        )
 
         assert scenario.triggers[0].activated
         assert scenario.triggers[1].activated
@@ -264,6 +274,7 @@ class TestSocietalScenarios:
 # ENGINE MODULE TESTS
 # ============================================================================
 
+
 class TestAdversarialRealityGenerator:
     """Test Adversarial Reality Generator module"""
 
@@ -275,7 +286,9 @@ class TestAdversarialRealityGenerator:
         engine.update_scenario_metrics("S10", {"mental_health_crisis": 0.5})
 
         # Get active scenarios
-        active = [s for s in engine.scenarios.values() if s.status != ScenarioStatus.DORMANT]
+        active = [
+            s for s in engine.scenarios.values() if s.status != ScenarioStatus.DORMANT
+        ]
 
         # Generate compound
         compound = engine.adversarial_generator.generate_compound_scenario(active)
@@ -329,8 +342,7 @@ class TestHumanFailureEmulator:
     def test_decision_failure_simulation(self, engine):
         """Test human decision failure modeling"""
         result = engine.human_failure_emulator.simulate_decision_failure(
-            stress_level=0.8,  # High stress
-            decision_type="tactical"
+            stress_level=0.8, decision_type="tactical"  # High stress
         )
 
         assert "failed" in result
@@ -342,7 +354,9 @@ class TestHumanFailureEmulator:
         # Simulate multiple failures
         results = []
         for _ in range(5):
-            result = engine.human_failure_emulator.simulate_decision_failure(0.5, "strategic")
+            result = engine.human_failure_emulator.simulate_decision_failure(
+                0.5, "strategic"
+            )
             results.append(result)
 
         # Failure probability should increase over time
@@ -359,8 +373,7 @@ class TestIrreversibilityDetector:
 
         # Assess irreversibility
         assessment = engine.irreversibility_detector.assess_irreversibility(
-            scenario,
-            time_elapsed=timedelta(days=800)
+            scenario, time_elapsed=timedelta(days=800)
         )
 
         assert "irreversible" in assessment
@@ -372,8 +385,7 @@ class TestIrreversibilityDetector:
         scenario.activation_time = datetime.utcnow() - timedelta(days=1000)
 
         assessment = engine.irreversibility_detector.assess_irreversibility(
-            scenario,
-            time_elapsed=timedelta(days=1000)
+            scenario, time_elapsed=timedelta(days=1000)
         )
 
         # Should detect irreversibility after long elapsed time
@@ -389,11 +401,10 @@ class TestFalseRecoveryEngine:
         scenario = engine.scenarios["S01"]
 
         evaluation = engine.false_recovery_engine.evaluate_recovery_attempt(
-            scenario,
-            "blockchain_verification_theater"  # Known poison
+            scenario, "blockchain_verification_theater"  # Known poison
         )
 
-        assert evaluation["is_poison"]  is True
+        assert evaluation["is_poison"] is True
         assert "long_term_multiplier" in evaluation
         assert evaluation["long_term_multiplier"] > 1.0
 
@@ -402,8 +413,12 @@ class TestFalseRecoveryEngine:
         scenario = engine.scenarios["S01"]
 
         # Deploy multiple poisons
-        engine.false_recovery_engine.evaluate_recovery_attempt(scenario, "blockchain_verification_theater")
-        engine.false_recovery_engine.evaluate_recovery_attempt(scenario, "ai_fact_checker_paradox")
+        engine.false_recovery_engine.evaluate_recovery_attempt(
+            scenario, "blockchain_verification_theater"
+        )
+        engine.false_recovery_engine.evaluate_recovery_attempt(
+            scenario, "ai_fact_checker_paradox"
+        )
 
         # Calculate total cost
         total_cost = engine.false_recovery_engine.calculate_cumulative_poison_cost()
@@ -413,6 +428,7 @@ class TestFalseRecoveryEngine:
 # ============================================================================
 # EVENT SOURCING & TIME-TRAVEL TESTS
 # ============================================================================
+
 
 class TestEventSourcing:
     """Test event sourcing capabilities"""
@@ -480,9 +496,7 @@ class TestTimeTravel:
         ]
 
         branch_result = engine.create_counterfactual_branch(
-            "low_ai_content",
-            branch_point,
-            alternate_events
+            "low_ai_content", branch_point, alternate_events
         )
 
         assert branch_result["branch_name"] == "low_ai_content"
@@ -493,6 +507,7 @@ class TestTimeTravel:
 # INTEGRATION TESTS
 # ============================================================================
 
+
 class TestPlanetaryDefenseIntegration:
     """Test Planetary Defense integration"""
 
@@ -501,8 +516,7 @@ class TestPlanetaryDefenseIntegration:
         pd_integration = PlanetaryDefenseIntegration(engine)
 
         is_allowed, reason = pd_integration.validate_mitigation_action(
-            "S01",
-            "Deploy watermarking standards"
+            "S01", "Deploy watermarking standards"
         )
 
         # Should either validate or fallback to allow
@@ -563,7 +577,7 @@ class TestCommandCenterIntegration:
         cc_integration = CommandCenterIntegration(engine)
 
         result = cc_integration.handle_control_action("run_tick", user_id="test_user")
-        assert result["success"]  is True
+        assert result["success"] is True
 
 
 class TestGUIExportHooks:
@@ -631,16 +645,17 @@ class TestIntegrationManager:
 # CONTROL PLANE TESTS
 # ============================================================================
 
+
 class TestControlPlanes:
     """Test control plane system"""
 
     def test_human_override_activation(self, engine):
         """Test human override activation"""
-        assert engine.human_override_active  is False
+        assert engine.human_override_active is False
 
         engine.activate_human_override("test_user", "Emergency test")
 
-        assert engine.human_override_active  is True
+        assert engine.human_override_active is True
         assert engine.active_control_plane == ControlPlane.HUMAN_OVERRIDE
 
     def test_control_plane_event_logging(self, engine):
@@ -657,6 +672,7 @@ class TestControlPlanes:
 # ============================================================================
 # FULL SYSTEM TESTS
 # ============================================================================
+
 
 class TestFullSystem:
     """Test complete system workflows"""
@@ -724,6 +740,7 @@ class TestFullSystem:
 # PERFORMANCE TESTS
 # ============================================================================
 
+
 class TestPerformance:
     """Test performance characteristics"""
 
@@ -756,6 +773,7 @@ class TestPerformance:
 # REGISTRY TESTS
 # ============================================================================
 
+
 class TestScenarioRegistry:
     """Test scenario registry"""
 
@@ -776,6 +794,7 @@ class TestScenarioRegistry:
 # ============================================================================
 # ERROR HANDLING TESTS
 # ============================================================================
+
 
 class TestErrorHandling:
     """Test error handling and edge cases"""

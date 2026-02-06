@@ -3,9 +3,10 @@ Action Ledger - Auditable log of all actions
 """
 
 import logging
-from typing import Dict, Any, List
-from cryptography.fernet import Fernet
 import time
+from typing import Any
+
+from cryptography.fernet import Fernet
 
 
 class ActionLedger:
@@ -15,17 +16,17 @@ class ActionLedger:
         self.logger = logging.getLogger(__name__)
         self._cipher = cipher
         self._max_entries = max_entries
-        self._entries: List[Dict[str, Any]] = []
+        self._entries: list[dict[str, Any]] = []
         self._entry_counter = 0
 
-    def add_entry(self, action: str, details: Dict[str, Any]):
+    def add_entry(self, action: str, details: dict[str, Any]):
         """Add an action to the ledger (encrypted)"""
         entry = {
-            'id': self._entry_counter,
-            'action': action,
-            'details': details,
-            'timestamp': time.time(),
-            'redacted': False
+            "id": self._entry_counter,
+            "action": action,
+            "details": details,
+            "timestamp": time.time(),
+            "redacted": False,
         }
 
         self._entries.append(entry)
@@ -36,18 +37,18 @@ class ActionLedger:
 
         self.logger.debug(f"Ledger entry added: {action}")
 
-    def get_entries(self, include_redacted: bool = False) -> List[Dict[str, Any]]:
+    def get_entries(self, include_redacted: bool = False) -> list[dict[str, Any]]:
         """Get all ledger entries"""
         if include_redacted:
             return self._entries.copy()
-        return [e for e in self._entries if not e.get('redacted', False)]
+        return [e for e in self._entries if not e.get("redacted", False)]
 
     def redact_entry(self, entry_id: int):
         """Redact a specific entry"""
         for entry in self._entries:
-            if entry['id'] == entry_id:
-                entry['redacted'] = True
-                entry['details'] = {'redacted': True}
+            if entry["id"] == entry_id:
+                entry["redacted"] = True
+                entry["details"] = {"redacted": True}
                 self.logger.info(f"Entry redacted: {entry_id}")
                 return
 

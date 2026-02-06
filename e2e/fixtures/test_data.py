@@ -8,7 +8,6 @@ from __future__ import annotations
 
 from datetime import datetime, timedelta
 
-
 # AI Persona test data
 TEST_PERSONA_STATES = {
     "curious": {

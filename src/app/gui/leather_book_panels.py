@@ -28,12 +28,14 @@ class TronFacePage(QFrame):  # pylint: disable=too-few-public-methods
         self._start_animation()
 
     def _configure_frame(self):
-        self.setStyleSheet("""
+        self.setStyleSheet(
+            """
             QFrame {
                 background-color: #0a0a0a;
                 border-right: 3px solid #00ff00;
             }
-        """)
+        """
+        )
         self.setMinimumWidth(400)
 
     def _setup_layout(self):
@@ -49,13 +51,15 @@ class TronFacePage(QFrame):  # pylint: disable=too-few-public-methods
         title = QLabel("NEURAL INTERFACE")
         title_font = QFont("Courier New", 16, QFont.Weight.Bold)
         title.setFont(title_font)
-        title.setStyleSheet("""
+        title.setStyleSheet(
+            """
             QLabel {
                 color: #00ff00;
                 text-shadow: 0px 0px 10px #00ff00;
                 padding: 10px;
             }
-        """)
+        """
+        )
         return title
 
     def _create_status_layout(self) -> QVBoxLayout:
@@ -191,13 +195,15 @@ class StatusIndicator(QFrame):
         layout.setContentsMargins(5, 5, 5, 5)
         led = QLabel("●")
         led_color = "#00ff00" if status else "#ff0000"
-        led.setStyleSheet(f"""
+        led.setStyleSheet(
+            f"""
             QLabel {{
                 color: {led_color};
                 font-size: 14px;
                 text-shadow: 0px 0px 5px {led_color};
             }}
-        """)
+        """
+        )
         led.setMaximumWidth(20)
         layout.addWidget(led)
         name_label = QLabel(name)
@@ -228,12 +234,14 @@ class IntroInfoPage(QFrame):
         self.update_tab_styling()
 
     def _configure_frame(self):
-        self.setStyleSheet("""
+        self.setStyleSheet(
+            """
             QFrame {
                 background-color: #2a2a1a;
                 border-left: 3px solid #8b7355;
             }
-        """)
+        """
+        )
 
     def _setup_layout(self):
         layout = QVBoxLayout(self)
@@ -254,13 +262,15 @@ class IntroInfoPage(QFrame):
         title = QLabel("PROJECT-AI")
         title_font = QFont("Georgia", 24, QFont.Weight.Bold)
         title.setFont(title_font)
-        title.setStyleSheet("""
+        title.setStyleSheet(
+            """
             QLabel {
                 color: #8b7355;
                 text-shadow: 0px 2px 4px #000000;
                 padding: 10px;
             }
-        """)
+        """
+        )
         return title
 
     def _create_divider(self) -> QFrame:
@@ -273,7 +283,8 @@ class IntroInfoPage(QFrame):
         tab_layout = QHBoxLayout()
         for index, tab_name in enumerate(self.tabs):
             btn = QPushButton(tab_name)
-            btn.setStyleSheet("""
+            btn.setStyleSheet(
+                """
                 QPushButton {
                     background-color: transparent;
                     border: none;
@@ -285,7 +296,8 @@ class IntroInfoPage(QFrame):
                 QPushButton:hover {
                     color: #a0826d;
                 }
-            """)
+            """
+            )
             btn.clicked.connect(lambda _, idx=index: self.switch_tab(idx))
             self.tab_buttons.append(btn)
             tab_layout.addWidget(btn)
@@ -343,7 +355,8 @@ class IntroInfoPage(QFrame):
         layout.addWidget(self.password_input)
         layout.addSpacing(20)
         self.login_button = QPushButton("ENTER SYSTEM")
-        self.login_button.setStyleSheet("""
+        self.login_button.setStyleSheet(
+            """
             QPushButton {
                 background-color: #8b7355;
                 border: 2px solid #8b7355;
@@ -357,7 +370,8 @@ class IntroInfoPage(QFrame):
                 background-color: #a0826d;
                 border: 2px solid #a0826d;
             }
-        """)
+        """
+        )
         self.login_button.clicked.connect(self._handle_login)
         layout.addWidget(self.login_button)
 
@@ -379,7 +393,8 @@ class IntroInfoPage(QFrame):
 
     @staticmethod
     def _style_login_input(input_field: QLineEdit):
-        input_field.setStyleSheet("""
+        input_field.setStyleSheet(
+            """
             QLineEdit {
                 background-color: #1a1a0f;
                 border: 2px solid #8b7355;
@@ -390,7 +405,8 @@ class IntroInfoPage(QFrame):
             QLineEdit:focus {
                 border: 2px solid #a0826d;
             }
-        """)
+        """
+        )
 
     def _create_glossary_page(self) -> QWidget:
         """Create the glossary tab listing key definitions."""
@@ -484,7 +500,8 @@ class IntroInfoPage(QFrame):
         """Highlight the currently active tab button."""
         for index, btn in enumerate(self.tab_buttons):
             if index == self.current_tab:
-                btn.setStyleSheet("""
+                btn.setStyleSheet(
+                    """
                     QPushButton {
                         background-color: transparent;
                         border: none;
@@ -494,9 +511,11 @@ class IntroInfoPage(QFrame):
                         font-weight: bold;
                         border-bottom: 2px solid #8b7355;
                     }
-                """)
+                """
+                )
             else:
-                btn.setStyleSheet("""
+                btn.setStyleSheet(
+                    """
                     QPushButton {
                         background-color: transparent;
                         border: none;
@@ -508,7 +527,8 @@ class IntroInfoPage(QFrame):
                     QPushButton:hover {
                         color: #a0826d;
                     }
-                """)
+                """
+                )
 
     def refresh_backend_status(self):
         """Fetch backend heartbeat and update label."""

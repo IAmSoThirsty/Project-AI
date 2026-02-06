@@ -1,8 +1,9 @@
 """Privacy Vault - Encrypted secure storage"""
 
 import logging
-from typing import Dict, Any, Optional
 import os
+from typing import Any
+
 from cryptography.fernet import Fernet
 
 
@@ -12,17 +13,17 @@ class PrivacyVault:
     All data is encrypted at rest with forensic resistance.
     """
 
-    def __init__(self, config: Dict[str, Any]):
+    def __init__(self, config: dict[str, Any]):
         self.enabled = config.get('privacy_vault_enabled', True)
         self.encrypted = config.get('encrypted', True)
         self.forensic_resistance = config.get('forensic_resistance', True)
         self.logger = logging.getLogger(__name__)
 
-        self._vault: Dict[str, bytes] = {}
-        self._cipher: Optional[Fernet] = None
+        self._vault: dict[str, bytes] = {}
+        self._cipher: Fernet | None = None
         self._active = False
 
-    def start(self, encryption_key: Optional[bytes] = None):
+    def start(self, encryption_key: bytes | None = None):
         """Start privacy vault"""
         self.logger.info("Starting Privacy Vault")
 
@@ -65,7 +66,7 @@ class PrivacyVault:
 
         self.logger.debug(f"Stored encrypted data: {key}")
 
-    def retrieve(self, key: str) -> Optional[str]:
+    def retrieve(self, key: str) -> str | None:
         """
         Retrieve and decrypt data from vault.
 

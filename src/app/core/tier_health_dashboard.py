@@ -52,7 +52,6 @@ import time
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from enum import Enum
-from typing import Any
 
 from app.core.platform_tiers import PlatformTier, TierHealthStatus, get_tier_registry
 
@@ -130,7 +129,7 @@ class ComponentHealthReport:
             return HealthLevel.OFFLINE
         if self.is_paused:
             return HealthLevel.DEGRADED
-        
+
         # Check metrics
         critical_count = sum(
             1 for m in self.metrics if m.get_health_level() == HealthLevel.CRITICAL
@@ -138,12 +137,12 @@ class ComponentHealthReport:
         warning_count = sum(
             1 for m in self.metrics if m.get_health_level() == HealthLevel.DEGRADED
         )
-        
+
         if critical_count > 0:
             return HealthLevel.CRITICAL
         if warning_count > 0:
             return HealthLevel.DEGRADED
-        
+
         return HealthLevel.HEALTHY
 
 
@@ -198,7 +197,7 @@ class HealthAlert:
 class TierHealthMonitor:
     """
     Monitors health of all three tiers in real-time.
-    
+
     Responsibilities:
     - Collect metrics from all components
     - Detect anomalies and violations
@@ -213,12 +212,12 @@ class TierHealthMonitor:
         self._component_start_times: dict[str, float] = {}
         self._alerts: list[HealthAlert] = []
         self._alert_counter = 0
-        
+
         # Metric storage
         self._tier1_metrics: dict[str, HealthMetric] = {}
         self._tier2_metrics: dict[str, HealthMetric] = {}
         self._tier3_metrics: dict[str, HealthMetric] = {}
-        
+
         logger.info("TierHealthMonitor initialized")
 
     def collect_component_health(
@@ -226,30 +225,30 @@ class TierHealthMonitor:
     ) -> ComponentHealthReport | None:
         """
         Collect health report for a single component.
-        
+
         Args:
             component_id: Component to check
-            
+
         Returns:
             ComponentHealthReport or None if component not found
         """
         registry = get_tier_registry()
         component = registry.get_component(component_id)
-        
+
         if not component:
             logger.warning("Component %s not found in registry", component_id)
             return None
-        
+
         # Track component start time
         if component_id not in self._component_start_times:
             self._component_start_times[component_id] = time.time()
-        
+
         uptime = time.time() - self._component_start_times[component_id]
         is_paused = registry.is_component_paused(component_id)
-        
+
         # Collect basic metrics
         metrics = []
-        
+
         # Availability metric
         availability_metric = HealthMetric(
             metric_name="availability",
@@ -260,7 +259,7 @@ class TierHealthMonitor:
             threshold_critical=90.0,
         )
         metrics.append(availability_metric)
-        
+
         # Uptime metric
         uptime_metric = HealthMetric(
             metric_name="uptime",
@@ -269,7 +268,7 @@ class TierHealthMonitor:
             unit="seconds",
         )
         metrics.append(uptime_metric)
-        
+
         return ComponentHealthReport(
             component_id=component_id,
             component_name=component.component_name,
@@ -284,25 +283,25 @@ class TierHealthMonitor:
     def collect_tier_health(self, tier: PlatformTier) -> TierHealthReport:
         """
         Collect health report for an entire tier.
-        
+
         Args:
             tier: Tier to check
-            
+
         Returns:
             TierHealthReport with comprehensive tier health
         """
         registry = get_tier_registry()
         tier_status = registry.get_tier_health(tier)
-        
+
         # Collect health for all components in tier
         components = registry.get_tier_components(tier)
         component_reports = []
-        
+
         for component in components:
             report = self.collect_component_health(component.component_id)
             if report:
                 component_reports.append(report)
-        
+
         # Calculate overall tier health
         if tier_status.active_components == 0:
             overall_health = HealthLevel.OFFLINE
@@ -321,13 +320,13 @@ class TierHealthMonitor:
                 overall_health = HealthLevel.CRITICAL
             else:
                 overall_health = HealthLevel.HEALTHY
-        
+
         # Get violations
         violations = registry.get_all_violations()
         tier_violations = [
             v for v in violations if v.source_tier == tier or v.target_tier == tier
         ]
-        
+
         # Select tier-specific metrics
         if tier == PlatformTier.TIER_1_GOVERNANCE:
             tier_metrics = self._tier1_metrics.copy()
@@ -335,7 +334,7 @@ class TierHealthMonitor:
             tier_metrics = self._tier2_metrics.copy()
         else:
             tier_metrics = self._tier3_metrics.copy()
-        
+
         return TierHealthReport(
             tier=tier,
             tier_status=tier_status,
@@ -349,7 +348,7 @@ class TierHealthMonitor:
     def collect_platform_health(self) -> PlatformHealthReport:
         """
         Collect comprehensive platform health across all tiers.
-        
+
         Returns:
             PlatformHealthReport with complete platform status
         """
@@ -361,10 +360,10 @@ class TierHealthMonitor:
             PlatformTier.TIER_3_APPLICATION,
         ]:
             tier_reports[tier.value] = self.collect_tier_health(tier)
-        
+
         # Calculate overall platform health
         tier_health_levels = [r.overall_health for r in tier_reports.values()]
-        
+
         if HealthLevel.OFFLINE in tier_health_levels:
             overall_health = HealthLevel.OFFLINE
         elif HealthLevel.CRITICAL in tier_health_levels:
@@ -373,16 +372,24 @@ class TierHealthMonitor:
             overall_health = HealthLevel.DEGRADED
         else:
             overall_health = HealthLevel.HEALTHY
-        
+
         # Aggregate statistics
-        total_components = sum(r.tier_status.component_count for r in tier_reports.values())
-        active_components = sum(r.tier_status.active_components for r in tier_reports.values())
-        paused_components = sum(r.tier_status.paused_components for r in tier_reports.values())
-        failed_components = sum(r.tier_status.failed_components for r in tier_reports.values())
+        total_components = sum(
+            r.tier_status.component_count for r in tier_reports.values()
+        )
+        active_components = sum(
+            r.tier_status.active_components for r in tier_reports.values()
+        )
+        paused_components = sum(
+            r.tier_status.paused_components for r in tier_reports.values()
+        )
+        failed_components = sum(
+            r.tier_status.failed_components for r in tier_reports.values()
+        )
         total_violations = sum(r.active_violations for r in tier_reports.values())
-        
+
         uptime = time.time() - self._start_time
-        
+
         return PlatformHealthReport(
             overall_health=overall_health,
             tier_reports=tier_reports,
@@ -394,12 +401,10 @@ class TierHealthMonitor:
             uptime_seconds=uptime,
         )
 
-    def record_metric(
-        self, tier: PlatformTier, metric: HealthMetric
-    ) -> None:
+    def record_metric(self, tier: PlatformTier, metric: HealthMetric) -> None:
         """
         Record a health metric for a tier.
-        
+
         Args:
             tier: Tier the metric belongs to
             metric: Metric to record
@@ -410,7 +415,7 @@ class TierHealthMonitor:
             self._tier2_metrics[metric.metric_name] = metric
         else:
             self._tier3_metrics[metric.metric_name] = metric
-        
+
         # Check if metric exceeds thresholds
         health_level = metric.get_health_level()
         if health_level in (HealthLevel.CRITICAL, HealthLevel.DEGRADED):
@@ -434,7 +439,7 @@ class TierHealthMonitor:
         )
         self._alerts.append(alert)
         self._alert_counter += 1
-        
+
         logger.warning(
             "Health alert raised: %s [%s] - %s",
             alert.alert_id,
@@ -442,15 +447,13 @@ class TierHealthMonitor:
             alert.message,
         )
 
-    def get_alerts(
-        self, acknowledged: bool | None = None
-    ) -> list[HealthAlert]:
+    def get_alerts(self, acknowledged: bool | None = None) -> list[HealthAlert]:
         """
         Get health alerts.
-        
+
         Args:
             acknowledged: Filter by acknowledged status (None = all)
-            
+
         Returns:
             List of health alerts
         """
@@ -461,10 +464,10 @@ class TierHealthMonitor:
     def acknowledge_alert(self, alert_id: str) -> bool:
         """
         Acknowledge an alert.
-        
+
         Args:
             alert_id: Alert to acknowledge
-            
+
         Returns:
             bool: True if alert found and acknowledged
         """
@@ -478,10 +481,10 @@ class TierHealthMonitor:
     def format_health_report(self, report: PlatformHealthReport) -> str:
         """
         Format platform health report as human-readable string.
-        
+
         Args:
             report: Platform health report
-            
+
         Returns:
             Formatted string
         """
@@ -497,7 +500,7 @@ class TierHealthMonitor:
         lines.append(f"  Failed: {report.failed_components}")
         lines.append(f"Active Violations: {report.total_violations}")
         lines.append("")
-        
+
         # Tier-by-tier breakdown
         for tier_num, tier_report in sorted(report.tier_reports.items()):
             lines.append(f"TIER {tier_num} - {tier_report.tier.name}")
@@ -507,7 +510,7 @@ class TierHealthMonitor:
             lines.append(f"  Active: {tier_report.tier_status.active_components}")
             lines.append(f"  Paused: {tier_report.tier_status.paused_components}")
             lines.append(f"  Violations: {tier_report.active_violations}")
-            
+
             # Component details
             for comp_report in tier_report.component_reports:
                 status_icon = "✓" if comp_report.is_operational else "✗"
@@ -517,7 +520,7 @@ class TierHealthMonitor:
                     f"[{comp_report.get_overall_health().value}] {pause_icon}"
                 )
             lines.append("")
-        
+
         lines.append("=" * 70)
         return "\n".join(lines)
 
@@ -533,7 +536,7 @@ _global_monitor: TierHealthMonitor | None = None
 def get_health_monitor() -> TierHealthMonitor:
     """
     Get the global tier health monitor.
-    
+
     Returns:
         TierHealthMonitor: Global monitor singleton
     """

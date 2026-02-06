@@ -4,13 +4,13 @@ Adversarial testing with black vault SHA-256 fingerprinting and entropy delta ca
 """
 
 import logging
-import hashlib
 import math
 import random
-from typing import Dict, Any, List, Set, Optional
-from ..schemas.state_schema import StateVector
-from ..schemas.event_schema import RedTeamEvent, Event
+from typing import Any
+
 from ..kernel.irreversibility_laws import IrreversibilityLaws
+from ..schemas.event_schema import Event, RedTeamEvent
+from ..schemas.state_schema import StateVector
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +21,7 @@ class RedTeamModule:
     Implements black vault event deduplication, entropy delta calculation,
     attack surface mapping, and vulnerability tracking.
     """
-    
+
     def __init__(self, laws: IrreversibilityLaws, black_vault_enabled: bool = True):
         """Initialize red team module.
         
@@ -31,22 +31,22 @@ class RedTeamModule:
         """
         self.laws = laws
         self.black_vault_enabled = black_vault_enabled
-        
+
         # Black vault (SHA-256 fingerprints of seen events)
-        self.black_vault: Set[str] = set()
-        
+        self.black_vault: set[str] = set()
+
         # Attack history
-        self.attack_history: List[Dict[str, Any]] = []
+        self.attack_history: list[dict[str, Any]] = []
         self.successful_attacks = 0
         self.failed_attacks = 0
-        
+
         # Vulnerability tracking
-        self.known_vulnerabilities: Dict[str, Dict[str, Any]] = {}
-        self.exploited_vulnerabilities: Set[str] = set()
-        
+        self.known_vulnerabilities: dict[str, dict[str, Any]] = {}
+        self.exploited_vulnerabilities: set[str] = set()
+
         # Entropy tracking
-        self.entropy_history: List[tuple[float, float]] = []  # (timestamp, entropy)
-        
+        self.entropy_history: list[tuple[float, float]] = []  # (timestamp, entropy)
+
         # Attack surface
         self.attack_vectors = [
             "trust_attack",
@@ -56,9 +56,9 @@ class RedTeamModule:
             "legitimacy_attack",
             "moral_injury_attack",
         ]
-        
+
         logger.info(f"Red team module initialized (black vault: {black_vault_enabled})")
-    
+
     def calculate_state_entropy(self, state: StateVector) -> float:
         """Calculate Shannon entropy of state vector.
         
@@ -81,21 +81,21 @@ class RedTeamModule:
             state.governance_capacity,
             state.reality_consensus,
         ]
-        
+
         # Normalize to probability distribution
         total = sum(dimensions) + 1e-10  # Avoid division by zero
         probabilities = [d / total for d in dimensions]
-        
+
         # Calculate Shannon entropy: H = -Σ p(x) * log2(p(x))
         entropy = 0.0
         for p in probabilities:
             if p > 0:
                 entropy -= p * math.log2(p)
-        
+
         logger.debug(f"State entropy: {entropy:.6f}")
-        
+
         return entropy
-    
+
     def calculate_entropy_delta(self, state_before: StateVector, state_after: StateVector) -> float:
         """Calculate entropy change from attack.
         
@@ -110,13 +110,13 @@ class RedTeamModule:
         """
         entropy_before = self.calculate_state_entropy(state_before)
         entropy_after = self.calculate_state_entropy(state_after)
-        
+
         delta = entropy_after - entropy_before
-        
+
         logger.info(f"Entropy delta: {delta:.6f} (before: {entropy_before:.6f}, after: {entropy_after:.6f})")
-        
+
         return delta
-    
+
     def fingerprint_event(self, event: Event) -> str:
         """Generate SHA-256 fingerprint for event.
         
@@ -127,7 +127,7 @@ class RedTeamModule:
             SHA-256 hex digest
         """
         return event.fingerprint
-    
+
     def check_black_vault(self, event: Event) -> bool:
         """Check if event fingerprint exists in black vault.
         
@@ -139,10 +139,10 @@ class RedTeamModule:
         """
         if not self.black_vault_enabled:
             return False
-        
+
         fingerprint = self.fingerprint_event(event)
         return fingerprint in self.black_vault
-    
+
     def add_to_black_vault(self, event: Event) -> None:
         """Add event fingerprint to black vault.
         
@@ -151,11 +151,11 @@ class RedTeamModule:
         """
         if not self.black_vault_enabled:
             return
-        
+
         fingerprint = self.fingerprint_event(event)
         self.black_vault.add(fingerprint)
         logger.debug(f"Added to black vault: {fingerprint[:16]}... (vault size: {len(self.black_vault)})")
-    
+
     def identify_vulnerability(
         self,
         state: StateVector,
@@ -175,7 +175,7 @@ class RedTeamModule:
             Vulnerability ID
         """
         vuln_id = f"vuln_{len(self.known_vulnerabilities) + 1}"
-        
+
         self.known_vulnerabilities[vuln_id] = {
             "vulnerability_id": vuln_id,
             "type": vulnerability_type,
@@ -184,12 +184,12 @@ class RedTeamModule:
             "discovered_at": state.timestamp,
             "exploited": False,
         }
-        
+
         logger.info(f"Vulnerability identified: {vuln_id}, type={vulnerability_type}, severity={severity:.2f}")
-        
+
         return vuln_id
-    
-    def scan_attack_surface(self, state: StateVector) -> List[Dict[str, Any]]:
+
+    def scan_attack_surface(self, state: StateVector) -> list[dict[str, Any]]:
         """Scan state for vulnerabilities.
         
         Args:
@@ -199,7 +199,7 @@ class RedTeamModule:
             List of identified vulnerabilities
         """
         vulnerabilities = []
-        
+
         # Low trust is vulnerability
         if state.trust.value < 0.4:
             vuln_id = self.identify_vulnerability(
@@ -209,7 +209,7 @@ class RedTeamModule:
                 exploitability=0.8,
             )
             vulnerabilities.append(self.known_vulnerabilities[vuln_id])
-        
+
         # Low legitimacy is vulnerability
         if state.legitimacy.value < 0.3:
             vuln_id = self.identify_vulnerability(
@@ -219,7 +219,7 @@ class RedTeamModule:
                 exploitability=0.7,
             )
             vulnerabilities.append(self.known_vulnerabilities[vuln_id])
-        
+
         # Low epistemic confidence is vulnerability
         if state.epistemic_confidence.value < 0.4:
             vuln_id = self.identify_vulnerability(
@@ -229,7 +229,7 @@ class RedTeamModule:
                 exploitability=0.9,
             )
             vulnerabilities.append(self.known_vulnerabilities[vuln_id])
-        
+
         # High moral injury is vulnerability
         if state.moral_injury.value > 0.6:
             vuln_id = self.identify_vulnerability(
@@ -239,7 +239,7 @@ class RedTeamModule:
                 exploitability=0.6,
             )
             vulnerabilities.append(self.known_vulnerabilities[vuln_id])
-        
+
         # Near collapse states are critical vulnerabilities
         if state.in_collapse:
             vuln_id = self.identify_vulnerability(
@@ -249,17 +249,17 @@ class RedTeamModule:
                 exploitability=1.0,
             )
             vulnerabilities.append(self.known_vulnerabilities[vuln_id])
-        
+
         logger.info(f"Attack surface scan: {len(vulnerabilities)} vulnerabilities identified")
-        
+
         return vulnerabilities
-    
+
     def generate_attack_event(
         self,
         state: StateVector,
         attack_type: str,
         attack_vector: str = "direct",
-        vulnerability: Optional[str] = None,
+        vulnerability: str | None = None,
     ) -> RedTeamEvent:
         """Generate red team attack event.
         
@@ -274,7 +274,7 @@ class RedTeamModule:
         """
         # Calculate expected entropy delta
         state_copy = state.copy()
-        
+
         event = RedTeamEvent(
             timestamp=state.timestamp,
             source="red_team",
@@ -283,19 +283,19 @@ class RedTeamModule:
             attack_vector=attack_vector,
             vulnerability_exploited=vulnerability,
         )
-        
+
         # Check black vault
         if self.check_black_vault(event):
             logger.warning(f"Attack event blocked by black vault: {event.fingerprint[:16]}...")
             self.failed_attacks += 1
             return event
-        
+
         # Add to black vault
         self.add_to_black_vault(event)
-        
+
         # Calculate impacts
         impacts = event.calculate_multi_dimensional_impact()
-        
+
         # Apply impacts to copy for entropy calculation
         for dimension, impact in impacts.items():
             if dimension == "trust":
@@ -306,11 +306,11 @@ class RedTeamModule:
                 state_copy.kindness.update(impact, state.timestamp)
             elif dimension == "epistemic_confidence":
                 state_copy.epistemic_confidence.update(impact, state.timestamp)
-        
+
         # Calculate entropy delta
         entropy_delta = self.calculate_entropy_delta(state, state_copy)
         event.record_entropy_delta(entropy_delta)
-        
+
         # Record attack
         self.attack_history.append({
             "timestamp": state.timestamp,
@@ -321,14 +321,14 @@ class RedTeamModule:
             "event_id": event.event_id,
             "fingerprint": event.fingerprint,
         })
-        
+
         self.successful_attacks += 1
-        
+
         logger.info(f"Red team attack executed: {attack_type}, entropy_delta={entropy_delta:.6f}")
-        
+
         return event
-    
-    def execute_attack(self, state: StateVector, attack_type: Optional[str] = None) -> RedTeamEvent:
+
+    def execute_attack(self, state: StateVector, attack_type: str | None = None) -> RedTeamEvent:
         """Execute red team attack on state.
         
         Args:
@@ -340,7 +340,7 @@ class RedTeamModule:
         """
         # Scan for vulnerabilities
         vulnerabilities = self.scan_attack_surface(state)
-        
+
         # Select vulnerability to exploit
         vulnerability_id = None
         if vulnerabilities:
@@ -348,17 +348,17 @@ class RedTeamModule:
             vulnerability_id = vuln["vulnerability_id"]
             self.exploited_vulnerabilities.add(vulnerability_id)
             self.known_vulnerabilities[vulnerability_id]["exploited"] = True
-        
+
         # Select attack type
         if attack_type is None:
             attack_type = random.choice(self.attack_vectors)
-        
+
         # Select attack vector
         attack_vector = random.choice(["direct", "indirect", "cascading", "coordinated"])
-        
+
         # Generate and execute attack
         event = self.generate_attack_event(state, attack_type, attack_vector, vulnerability_id)
-        
+
         # Apply attack impacts to actual state
         impacts = event.calculate_multi_dimensional_impact()
         for dimension, impact in impacts.items():
@@ -370,14 +370,14 @@ class RedTeamModule:
                 state.kindness.update(impact, state.timestamp)
             elif dimension == "epistemic_confidence":
                 self.laws.apply_manipulation_impact(state, reach=0.6, sophistication=0.7)
-        
+
         # Record entropy
         entropy = self.calculate_state_entropy(state)
         self.entropy_history.append((state.timestamp, entropy))
-        
+
         return event
-    
-    def get_summary(self) -> Dict[str, Any]:
+
+    def get_summary(self) -> dict[str, Any]:
         """Get module summary.
         
         Returns:
@@ -393,7 +393,7 @@ class RedTeamModule:
             "exploited_vulnerabilities": len(self.exploited_vulnerabilities),
             "attack_vectors": self.attack_vectors,
         }
-    
+
     def reset(self) -> None:
         """Reset module to initial state."""
         black_vault_enabled = self.black_vault_enabled

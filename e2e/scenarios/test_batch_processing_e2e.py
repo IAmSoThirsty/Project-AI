@@ -17,7 +17,6 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import pytest
 
 
-
 @pytest.mark.e2e
 @pytest.mark.batch
 class TestBatchProcessing:

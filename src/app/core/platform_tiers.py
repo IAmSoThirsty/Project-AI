@@ -108,7 +108,7 @@ logger = logging.getLogger(__name__)
 class PlatformTier(Enum):
     """
     Platform tier classification.
-    
+
     Authority flows downward: TIER_1 > TIER_2 > TIER_3
     Capability flows upward: TIER_3 → TIER_2 → TIER_1
     """
@@ -133,12 +133,12 @@ class ComponentRole(Enum):
     GOVERNANCE_CORE = "governance_core"
     POLICY_ENFORCER = "policy_enforcer"
     INVARIANT_GUARDIAN = "invariant_guardian"
-    
+
     # Tier 2 roles
     RESOURCE_ORCHESTRATOR = "resource_orchestrator"
     INFRASTRUCTURE_CONTROLLER = "infrastructure_controller"
     ISOLATION_MANAGER = "isolation_manager"
-    
+
     # Tier 3 roles
     RUNTIME_SERVICE = "runtime_service"
     API_SURFACE = "api_surface"
@@ -154,7 +154,7 @@ class ComponentRole(Enum):
 class TierComponent:
     """
     Represents a component registered in the platform tier system.
-    
+
     Immutable after registration to ensure tier integrity.
     """
 
@@ -175,7 +175,9 @@ class TierBoundaryViolation:
     """Records a violation of tier boundary rules."""
 
     violation_id: str
-    violation_type: str  # "upward_authority", "tier_1_dependency", "unauthorized_enforcement"
+    violation_type: (
+        str  # "upward_authority", "tier_1_dependency", "unauthorized_enforcement"
+    )
     source_component: str
     target_component: str
     source_tier: PlatformTier
@@ -205,14 +207,14 @@ class TierHealthStatus:
 class TierRegistry:
     """
     Central registry for platform tier components.
-    
+
     Enforces tier boundaries and authority flow constraints:
     - Authority only flows downward (Tier 1 → Tier 2 → Tier 3)
     - Capability flows upward (Tier 3 → Tier 2 → Tier 1)
     - Tier 1 never depends on Tier 2/3
     - Infrastructure decisions validated by governance
     - Tier 3 is swappable
-    
+
     Thread-safe singleton pattern.
     """
 
@@ -228,14 +230,14 @@ class TierRegistry:
         """Initialize the tier registry (singleton pattern)."""
         if self._initialized:
             return
-            
+
         self._components: dict[str, TierComponent] = {}
         self._tier_1_components: list[str] = []
         self._tier_2_components: list[str] = []
         self._tier_3_components: list[str] = []
         self._violations: list[TierBoundaryViolation] = []
         self._paused_components: set[str] = set()
-        
+
         self._initialized = True
         logger.info("TierRegistry initialized")
 
@@ -253,7 +255,7 @@ class TierRegistry:
     ) -> TierComponent:
         """
         Register a component in the tier system.
-        
+
         Args:
             component_id: Unique identifier
             component_name: Human-readable name
@@ -264,23 +266,23 @@ class TierRegistry:
             dependencies: List of component IDs this depends on
             can_be_paused: Whether Tier-1 can pause this component
             can_be_replaced: Whether component is replaceable
-            
+
         Returns:
             TierComponent: Registered component
-            
+
         Raises:
             ValueError: If tier boundaries are violated
         """
         if component_id in self._components:
             logger.warning("Component %s already registered, updating", component_id)
-            
+
         # Validate tier/authority alignment
         self._validate_tier_authority_alignment(tier, authority_level)
-        
+
         # Validate dependencies (Tier 1 cannot depend on Tier 2/3)
         if dependencies:
             self._validate_dependencies(tier, dependencies)
-        
+
         component = TierComponent(
             component_id=component_id,
             component_name=component_name,
@@ -292,9 +294,9 @@ class TierRegistry:
             can_be_paused=can_be_paused,
             can_be_replaced=can_be_replaced,
         )
-        
+
         self._components[component_id] = component
-        
+
         # Add to tier-specific tracking
         if tier == PlatformTier.TIER_1_GOVERNANCE:
             self._tier_1_components.append(component_id)
@@ -302,7 +304,7 @@ class TierRegistry:
             self._tier_2_components.append(component_id)
         else:
             self._tier_3_components.append(component_id)
-            
+
         logger.info(
             "Registered component: %s [%s] - Tier %s, Authority: %s",
             component_name,
@@ -310,7 +312,7 @@ class TierRegistry:
             tier.value,
             authority_level.value,
         )
-        
+
         return component
 
     def _validate_tier_authority_alignment(
@@ -338,16 +340,16 @@ class TierRegistry:
     ) -> None:
         """
         Validate dependencies don't violate tier boundaries.
-        
+
         CRITICAL: Tier 1 must never depend on Tier 2 or 3.
         """
         for dep_id in dependencies:
             if dep_id not in self._components:
                 logger.warning("Dependency %s not yet registered", dep_id)
                 continue
-                
+
             dep_component = self._components[dep_id]
-            
+
             # Tier 1 cannot depend on Tier 2/3
             if tier == PlatformTier.TIER_1_GOVERNANCE:
                 if dep_component.tier != PlatformTier.TIER_1_GOVERNANCE:
@@ -373,26 +375,26 @@ class TierRegistry:
     ) -> tuple[bool, str]:
         """
         Validate that authority flow is downward only.
-        
+
         Authority flows: Tier 1 → Tier 2 → Tier 3
-        
+
         Args:
             source_component_id: Component initiating action
             target_component_id: Component receiving action
             action: Description of action
-            
+
         Returns:
             Tuple of (is_valid, reason)
         """
         if source_component_id not in self._components:
             return False, f"Source component {source_component_id} not registered"
-            
+
         if target_component_id not in self._components:
             return False, f"Target component {target_component_id} not registered"
-            
+
         source = self._components[source_component_id]
         target = self._components[target_component_id]
-        
+
         # Authority can only flow downward
         if source.tier.value > target.tier.value:
             # Upward authority flow - violation
@@ -406,31 +408,34 @@ class TierRegistry:
                 description=f"Authority cannot flow upward: {source.tier.name} → {target.tier.name}",
             )
             self._violations.append(violation)
-            return False, f"Authority flow violation: {source.tier.name} cannot command {target.tier.name}"
-            
+            return (
+                False,
+                f"Authority flow violation: {source.tier.name} cannot command {target.tier.name}",
+            )
+
         # Authority flows downward - valid
         return True, "Authority flow valid"
 
     def pause_component(self, component_id: str) -> bool:
         """
         Pause a component (Tier-1 authority only).
-        
+
         Args:
             component_id: Component to pause
-            
+
         Returns:
             bool: True if paused successfully
         """
         if component_id not in self._components:
             logger.error("Cannot pause unknown component: %s", component_id)
             return False
-            
+
         component = self._components[component_id]
-        
+
         if not component.can_be_paused:
             logger.error("Component %s cannot be paused", component_id)
             return False
-            
+
         self._paused_components.add(component_id)
         logger.info("Paused component: %s [%s]", component.component_name, component_id)
         return True
@@ -438,10 +443,10 @@ class TierRegistry:
     def resume_component(self, component_id: str) -> bool:
         """
         Resume a paused component.
-        
+
         Args:
             component_id: Component to resume
-            
+
         Returns:
             bool: True if resumed successfully
         """
@@ -458,10 +463,10 @@ class TierRegistry:
     def get_tier_health(self, tier: PlatformTier) -> TierHealthStatus:
         """
         Get health status for a tier.
-        
+
         Args:
             tier: Tier to check
-            
+
         Returns:
             TierHealthStatus: Health status
         """
@@ -471,10 +476,10 @@ class TierRegistry:
             component_ids = self._tier_2_components
         else:
             component_ids = self._tier_3_components
-            
+
         active = sum(1 for cid in component_ids if cid not in self._paused_components)
         paused = len(self._paused_components.intersection(component_ids))
-        
+
         return TierHealthStatus(
             tier=tier,
             is_operational=len(component_ids) > 0 and active > 0,
@@ -509,7 +514,7 @@ class TierRegistry:
 def get_tier_registry() -> TierRegistry:
     """
     Get the global tier registry instance.
-    
+
     Returns:
         TierRegistry: Global registry singleton
     """

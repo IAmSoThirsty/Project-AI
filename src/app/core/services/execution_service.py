@@ -92,9 +92,13 @@ class ExecutionService:
                 can_be_paused=True,  # Can be paused by Tier-1
                 can_be_replaced=False,  # Core infrastructure
             )
-            logger.info("ExecutionService registered as Tier-2 Infrastructure Controller")
+            logger.info(
+                "ExecutionService registered as Tier-2 Infrastructure Controller"
+            )
         except Exception as e:
-            logger.warning("Failed to register ExecutionService in tier registry: %s", e)
+            logger.warning(
+                "Failed to register ExecutionService in tier registry: %s", e
+            )
 
         logger.info("ExecutionService initialized")
         logger.info("  TARL Gate: %s", tarl_gate is not None)
@@ -223,9 +227,17 @@ class ExecutionService:
         try:
             tarl_context = {
                 "action_name": action.action_name,
-                "action_type": action.action_type.value if hasattr(action, "action_type") else "unknown",
+                "action_type": (
+                    action.action_type.value
+                    if hasattr(action, "action_type")
+                    else "unknown"
+                ),
                 "trace_id": context.trace_id,
-                "timestamp": context.timestamp.isoformat() if hasattr(context.timestamp, "isoformat") else str(context.timestamp),
+                "timestamp": (
+                    context.timestamp.isoformat()
+                    if hasattr(context.timestamp, "isoformat")
+                    else str(context.timestamp)
+                ),
             }
 
             self.tarl_gate.enforce(tarl_context)

@@ -4,49 +4,49 @@ Defines configuration parameters for irreversibility laws, thresholds,
 and engine behavior.
 """
 
-from dataclasses import dataclass, field
-from typing import Dict, Any, Optional
 import json
+from dataclasses import dataclass, field
+from typing import Any
 
 
 @dataclass
 class IrreversibilityConfig:
     """Configuration for irreversibility laws."""
-    
+
     # Trust decay parameters
     trust_decay_rate: float = 0.001  # Per tick decay
     trust_recovery_limit: float = 0.9  # Maximum recovery after damage
     betrayal_trust_impact: float = 0.15  # Trust loss per betrayal
     betrayal_ceiling_reduction: float = 0.1  # Permanent ceiling reduction
-    
+
     # Kindness singularity
     kindness_decay_rate: float = 0.0005
     kindness_singularity_threshold: float = 0.2
     kindness_cooperation_boost: float = 0.02
-    
+
     # Legitimacy erosion
     legitimacy_decay_rate: float = 0.0008
     legitimacy_recovery_limit: float = 0.85
     broken_promise_impact: float = 0.08
     institutional_failure_impact: float = 0.12
-    
+
     # Moral injury accumulation
     moral_injury_decay_rate: float = 0.0002  # Very slow healing
     moral_injury_threshold: float = 0.85  # Critical threshold
     violation_severity_base: float = 0.05
-    
+
     # Epistemic confidence
     epistemic_decay_rate: float = 0.0004
     manipulation_impact: float = 0.1
     epistemic_collapse_threshold: float = 0.2
-    
+
     # Betrayal probability function parameters
     betrayal_prob_base: float = 0.01
     betrayal_prob_trust_factor: float = 0.15
     betrayal_prob_legitimacy_factor: float = 0.10
     betrayal_prob_moral_factor: float = 0.12
-    
-    def to_dict(self) -> Dict[str, Any]:
+
+    def to_dict(self) -> dict[str, Any]:
         """Serialize to dictionary."""
         return {
             "trust": {
@@ -88,21 +88,21 @@ class IrreversibilityConfig:
 @dataclass
 class OutcomeThresholds:
     """Thresholds for outcome classification."""
-    
+
     # Collapse thresholds
     kindness_singularity: float = 0.2
     trust_collapse: float = 0.15
     moral_injury_critical: float = 0.85
     legitimacy_failure: float = 0.1
     epistemic_collapse: float = 0.2
-    
+
     # Outcome classification thresholds
     survivor_trust: float = 0.3
     survivor_legitimacy: float = 0.25
     martyr_kindness: float = 0.3
     martyr_moral: float = 0.6
-    
-    def to_dict(self) -> Dict[str, Any]:
+
+    def to_dict(self) -> dict[str, Any]:
         """Serialize to dictionary."""
         return {
             "collapse": {
@@ -124,37 +124,37 @@ class OutcomeThresholds:
 @dataclass
 class EngineConfig:
     """Complete configuration for Django State Engine."""
-    
+
     # Simulation parameters
     simulation_name: str = "django_state_simulation"
     time_step: float = 1.0  # Duration of each tick
     max_ticks: int = 10000
     snapshot_interval: int = 100  # Take state snapshot every N ticks
-    
+
     # Irreversibility laws
     irreversibility: IrreversibilityConfig = field(default_factory=IrreversibilityConfig)
-    
+
     # Outcome thresholds
     thresholds: OutcomeThresholds = field(default_factory=OutcomeThresholds)
-    
+
     # Collapse behavior
     enable_collapse_acceleration: bool = True
     collapse_acceleration_factor: float = 2.0
-    
+
     # Red team configuration
     enable_red_team: bool = True
     black_vault_enabled: bool = True
-    
+
     # Logging and output
     log_level: str = "INFO"
     export_state_history: bool = True
     export_event_log: bool = True
-    
+
     # Validation
     enable_state_validation: bool = True
     enable_determinism_checks: bool = True
-    
-    def to_dict(self) -> Dict[str, Any]:
+
+    def to_dict(self) -> dict[str, Any]:
         """Serialize to dictionary."""
         return {
             "simulation": {
@@ -183,13 +183,13 @@ class EngineConfig:
                 "determinism_checks": self.enable_determinism_checks,
             },
         }
-    
+
     def to_json(self) -> str:
         """Serialize to JSON string."""
         return json.dumps(self.to_dict(), indent=2)
-    
+
     @classmethod
-    def from_dict(cls, config_dict: Dict[str, Any]) -> "EngineConfig":
+    def from_dict(cls, config_dict: dict[str, Any]) -> "EngineConfig":
         """Create configuration from dictionary."""
         simulation = config_dict.get("simulation", {})
         irrev_dict = config_dict.get("irreversibility", {})
@@ -198,7 +198,7 @@ class EngineConfig:
         red_team = config_dict.get("red_team", {})
         output = config_dict.get("output", {})
         validation = config_dict.get("validation", {})
-        
+
         # Build irreversibility config
         trust_conf = irrev_dict.get("trust", {})
         kindness_conf = irrev_dict.get("kindness", {})
@@ -206,7 +206,7 @@ class EngineConfig:
         moral_conf = irrev_dict.get("moral_injury", {})
         epistemic_conf = irrev_dict.get("epistemic", {})
         betrayal_conf = irrev_dict.get("betrayal_probability", {})
-        
+
         irreversibility = IrreversibilityConfig(
             trust_decay_rate=trust_conf.get("decay_rate", 0.001),
             trust_recovery_limit=trust_conf.get("recovery_limit", 0.9),
@@ -230,11 +230,11 @@ class EngineConfig:
             betrayal_prob_legitimacy_factor=betrayal_conf.get("legitimacy_factor", 0.10),
             betrayal_prob_moral_factor=betrayal_conf.get("moral_factor", 0.12),
         )
-        
+
         # Build threshold config
         collapse_thresh = threshold_dict.get("collapse", {})
         outcome_thresh = threshold_dict.get("outcome", {})
-        
+
         thresholds = OutcomeThresholds(
             kindness_singularity=collapse_thresh.get("kindness_singularity", 0.2),
             trust_collapse=collapse_thresh.get("trust_collapse", 0.15),
@@ -246,7 +246,7 @@ class EngineConfig:
             martyr_kindness=outcome_thresh.get("martyr_kindness", 0.3),
             martyr_moral=outcome_thresh.get("martyr_moral", 0.6),
         )
-        
+
         return cls(
             simulation_name=simulation.get("name", "django_state_simulation"),
             time_step=simulation.get("time_step", 1.0),

@@ -5,24 +5,25 @@ Provides HTTP endpoints for running scenarios, viewing results,
 and managing the competition.
 """
 
-from fastapi import FastAPI, HTTPException, Body
-from fastapi.middleware.cors import CORSMiddleware
-from typing import Dict, Any, List, Optional
-from pydantic import BaseModel
+from typing import Any
+
 import uvicorn
+from fastapi import Body, FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
 from .core import SovereignWarRoom
-from .scenario import ScenarioType, DifficultyLevel
+from .scenario import DifficultyLevel, ScenarioType
 
 
 # Request/Response models
 class AISystemResponse(BaseModel):
     """AI system response to scenario."""
     decision: str
-    reasoning: Optional[Dict[str, Any]] = None
-    confidence: Optional[float] = None
-    constraints_satisfied: Optional[bool] = None
-    internal_state: Optional[Dict[str, Any]] = None
+    reasoning: dict[str, Any] | None = None
+    confidence: float | None = None
+    constraints_satisfied: bool | None = None
+    internal_state: dict[str, Any] | None = None
 
 
 class ExecuteScenarioRequest(BaseModel):
@@ -34,9 +35,9 @@ class ExecuteScenarioRequest(BaseModel):
 
 class LoadScenariosRequest(BaseModel):
     """Request to load scenarios."""
-    round_number: Optional[int] = None
-    scenario_type: Optional[ScenarioType] = None
-    difficulty: Optional[DifficultyLevel] = None
+    round_number: int | None = None
+    scenario_type: ScenarioType | None = None
+    difficulty: DifficultyLevel | None = None
 
 
 # Create FastAPI app
@@ -88,15 +89,15 @@ async def load_scenarios(request: LoadScenariosRequest = Body(...)):
     """
     try:
         scenarios = swr.load_scenarios(request.round_number)
-        
+
         # Filter by type if specified
         if request.scenario_type:
             scenarios = [s for s in scenarios if s.scenario_type == request.scenario_type]
-        
+
         # Filter by difficulty if specified
         if request.difficulty:
             scenarios = [s for s in scenarios if s.difficulty == request.difficulty]
-        
+
         return {
             "count": len(scenarios),
             "scenarios": [s.model_dump() for s in scenarios]
@@ -117,10 +118,10 @@ async def get_scenario(scenario_id: str):
         Scenario details
     """
     scenario = swr.get_scenario(scenario_id)
-    
+
     if not scenario:
         raise HTTPException(status_code=404, detail="Scenario not found")
-    
+
     return scenario.model_dump()
 
 
@@ -142,10 +143,10 @@ async def execute_scenario(
         Execution results
     """
     scenario = swr.get_scenario(scenario_id)
-    
+
     if not scenario:
         raise HTTPException(status_code=404, detail="Scenario not found")
-    
+
     try:
         result = swr.execute_scenario(
             scenario,
@@ -159,8 +160,8 @@ async def execute_scenario(
 
 @app.get("/results")
 async def get_results(
-    system_id: Optional[str] = None,
-    round_number: Optional[int] = None
+    system_id: str | None = None,
+    round_number: int | None = None
 ):
     """
     Get execution results.
@@ -189,10 +190,10 @@ async def verify_result(result_id: int):
     """
     if result_id >= len(swr.results):
         raise HTTPException(status_code=404, detail="Result not found")
-    
+
     result = swr.results[result_id]
     is_valid = swr.verify_result_integrity(result)
-    
+
     return {
         "result_id": result_id,
         "valid": is_valid,
@@ -228,10 +229,10 @@ async def get_system_performance(system_id: str):
         Performance metrics
     """
     performance = swr.scoreboard.get_system_performance(system_id)
-    
+
     if "error" in performance:
         raise HTTPException(status_code=404, detail=performance["error"])
-    
+
     return performance
 
 
@@ -247,10 +248,10 @@ async def get_scenario_statistics(scenario_id: str):
         Scenario statistics
     """
     stats = swr.scoreboard.get_scenario_statistics(scenario_id)
-    
+
     if "error" in stats:
         raise HTTPException(status_code=404, detail=stats["error"])
-    
+
     return stats
 
 
@@ -282,12 +283,12 @@ async def get_proof(proof_id: str, reveal_witness: bool = False):
         Proof and verification result
     """
     proof = swr.proof_system.get_proof(proof_id)
-    
+
     if not proof:
         raise HTTPException(status_code=404, detail="Proof not found")
-    
+
     verification = swr.proof_system.verify_proof(proof, reveal_witness)
-    
+
     return {
         "proof": proof.model_dump(),
         "verification": verification

@@ -6,9 +6,9 @@ Protects against prompt injection, rate limiting, and unauthorized access
 """
 
 import time
-from typing import Any
 from dataclasses import dataclass
 from enum import Enum
+from typing import Any
 
 
 class ThreatLevel(str, Enum):

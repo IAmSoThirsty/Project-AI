@@ -4,11 +4,13 @@ The user's confidential, cautious strategist following the Code of Omertà
 """
 
 import logging
-from typing import Dict, Any, Optional, List
-from cryptography.fernet import Fernet
 import time
-from .capability_manager import CapabilityManager
+from typing import Any
+
+from cryptography.fernet import Fernet
+
 from .action_ledger import ActionLedger
+from .capability_manager import CapabilityManager
 from .privacy_checker import PrivacyChecker
 
 
@@ -27,7 +29,7 @@ class ThirstyConsigliere:
     "I need less information" than over-collect.
     """
 
-    def __init__(self, config: Dict[str, Any], god_tier_encryption):
+    def __init__(self, config: dict[str, Any], god_tier_encryption):
         self.config = config
         self.logger = logging.getLogger(__name__)
 
@@ -47,11 +49,11 @@ class ThirstyConsigliere:
         self.privacy_checker = PrivacyChecker()
 
         # Ephemeral context window (memory only, never persisted)
-        self._context_window: List[Dict[str, Any]] = []
+        self._context_window: list[dict[str, Any]] = []
         self._max_context_size = config.get("max_context_size", 10)
 
         # Active capabilities (user must explicitly enable)
-        self._active_capabilities: Dict[str, bool] = {}
+        self._active_capabilities: dict[str, bool] = {}
 
         self._active = False
 
@@ -131,8 +133,8 @@ class ThirstyConsigliere:
         return granted
 
     def assist(
-        self, query: str, context: Optional[Dict[str, Any]] = None
-    ) -> Dict[str, Any]:
+        self, query: str, context: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
         """
         Process user query with privacy-first approach.
         All data encrypted with God tier encryption.
@@ -180,9 +182,9 @@ class ThirstyConsigliere:
             action="assist",
             details={
                 "query_length": len(query),
-                "context_used": list(minimized_context.keys())
-                if minimized_context
-                else [],
+                "context_used": (
+                    list(minimized_context.keys()) if minimized_context else []
+                ),
                 "capabilities_used": [
                     k for k, v in self._active_capabilities.items() if v
                 ],
@@ -193,7 +195,7 @@ class ThirstyConsigliere:
 
         return response
 
-    def _minimize_data(self, context: Dict[str, Any]) -> Dict[str, Any]:
+    def _minimize_data(self, context: dict[str, Any]) -> dict[str, Any]:
         """
         Apply data minimization - keep only what's strictly needed.
         Strip URLs, IPs, identifiers where possible.
@@ -208,10 +210,11 @@ class ThirstyConsigliere:
             elif key == "ip":
                 minimized["has_ip"] = True  # Just flag, not value
             # Keep minimal data types
-            elif key in ["page_title", "language"]:
-                minimized[key] = value
-            # Skip identifiers
-            elif key not in ["user_id", "session_id", "tracking_id"]:
+            elif key in ["page_title", "language"] or key not in [
+                "user_id",
+                "session_id",
+                "tracking_id",
+            ]:
                 minimized[key] = value
 
         return minimized
@@ -226,7 +229,7 @@ class ThirstyConsigliere:
         except Exception:
             return "unknown"
 
-    def _add_to_context(self, entry: Dict[str, Any]):
+    def _add_to_context(self, entry: dict[str, Any]):
         """Add to ephemeral context window (memory only)"""
         self._context_window.append(entry)
 
@@ -234,7 +237,7 @@ class ThirstyConsigliere:
         if len(self._context_window) > self._max_context_size:
             self._context_window.pop(0)
 
-    def _process_locally(self, query: str, context: Dict[str, Any]) -> Dict[str, Any]:
+    def _process_locally(self, query: str, context: dict[str, Any]) -> dict[str, Any]:
         """
         Process query locally (on-device).
         No external API calls, no data sent off-device.
@@ -255,7 +258,7 @@ class ThirstyConsigliere:
             },
         }
 
-    def _generate_cautious_response(self, query: str, context: Dict[str, Any]) -> str:
+    def _generate_cautious_response(self, query: str, context: dict[str, Any]) -> str:
         """Generate cautious, privacy-preserving response"""
         query_lower = query.lower()
 
@@ -288,7 +291,7 @@ class ThirstyConsigliere:
             "and never send your data anywhere. How can I help you while maintaining maximum privacy?"
         )
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get Consigliere status"""
         return {
             "active": self._active,

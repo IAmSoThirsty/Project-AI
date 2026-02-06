@@ -3,10 +3,11 @@ OpenClaw API Extensions
 New endpoints for Legion agent integration
 """
 
+import os
+import sys
+
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-import sys
-import os
 
 # Add integrations to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))

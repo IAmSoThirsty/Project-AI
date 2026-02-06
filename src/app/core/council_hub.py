@@ -171,12 +171,12 @@ class CouncilHub:
 
     def register_agent(self, agent_id: str, agent_obj: Any) -> None:
         """Register a smaller agent under the Council.
-        
+
         All agents are registered as Tier-3 sandboxed components.
         """
         with self._lock:
             self._agents[agent_id] = {"obj": agent_obj, "active": True}
-            
+
             # Register agent in Tier Registry as Tier-3 Runtime Service
             try:
                 tier_registry = get_tier_registry()
@@ -192,8 +192,10 @@ class CouncilHub:
                     can_be_replaced=True,  # All agents are replaceable
                 )
             except Exception as e:
-                logger.warning("Failed to register agent %s in tier registry: %s", agent_id, e)
-                
+                logger.warning(
+                    "Failed to register agent %s in tier registry: %s", agent_id, e
+                )
+
             logger.info("Registered agent %s", agent_id)
 
     def unregister_agent(self, agent_id: str) -> None:

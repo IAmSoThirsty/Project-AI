@@ -1,13 +1,15 @@
 """Incognito Browser Engine"""
 
-from typing import Dict, Any, Optional
 import logging
+from typing import Any
+
 from cryptography.fernet import Fernet
-from .tab_manager import TabManager
-from .sandbox import BrowserSandbox
+
 from .content_blocker import ContentBlocker
-from .encrypted_search import EncryptedSearchEngine
 from .encrypted_navigation import EncryptedNavigationHistory
+from .encrypted_search import EncryptedSearchEngine
+from .sandbox import BrowserSandbox
+from .tab_manager import TabManager
 
 
 class IncognitoBrowser:
@@ -23,31 +25,31 @@ class IncognitoBrowser:
     - Zero telemetry
     """
 
-    def __init__(self, config: Dict[str, Any]):
+    def __init__(self, config: dict[str, Any]):
         self.config = config
         self.logger = logging.getLogger(__name__)
 
         # Privacy settings
-        self.incognito_mode = config.get('incognito_mode', True)
-        self.no_history = config.get('no_history', True)
-        self.no_cache = config.get('no_cache', True)
-        self.no_cookies = config.get('no_cookies', True)
-        self.tab_isolation = config.get('tab_isolation', True)
-        self.fingerprint_protection = config.get('fingerprint_protection', True)
-        self.tracker_blocking = config.get('tracker_blocking', True)
-        self.keyboard_cloaking = config.get('keyboard_cloaking', True)
-        self.mouse_cloaking = config.get('mouse_cloaking', True)
+        self.incognito_mode = config.get("incognito_mode", True)
+        self.no_history = config.get("no_history", True)
+        self.no_cache = config.get("no_cache", True)
+        self.no_cookies = config.get("no_cookies", True)
+        self.tab_isolation = config.get("tab_isolation", True)
+        self.fingerprint_protection = config.get("fingerprint_protection", True)
+        self.tracker_blocking = config.get("tracker_blocking", True)
+        self.keyboard_cloaking = config.get("keyboard_cloaking", True)
+        self.mouse_cloaking = config.get("mouse_cloaking", True)
 
         # ENCRYPTION: Generate encryption key for all browser data
         self._cipher = Fernet(Fernet.generate_key())
 
         # Components
         self.tab_manager = TabManager(self.tab_isolation)
-        self.sandbox = BrowserSandbox(config.get('sandbox_enabled', True))
+        self.sandbox = BrowserSandbox(config.get("sandbox_enabled", True))
         self.content_blocker = ContentBlocker(
             block_trackers=self.tracker_blocking,
             block_popups=True,  # Block pop-ups
-            block_redirects=True  # Block redirects
+            block_redirects=True,  # Block redirects
         )
 
         # ENCRYPTED COMPONENTS: Everything encrypted
@@ -55,8 +57,8 @@ class IncognitoBrowser:
         self.encrypted_navigation = EncryptedNavigationHistory(self._cipher)
 
         self._active = False
-        self._extension_whitelist = config.get('extension_whitelist', [])
-        self._download_isolation = config.get('download_isolation', True)
+        self._extension_whitelist = config.get("extension_whitelist", [])
+        self._download_isolation = config.get("download_isolation", True)
 
     def start(self):
         """Start incognito browser"""
@@ -111,7 +113,7 @@ class IncognitoBrowser:
 
         return True
 
-    def create_tab(self, url: Optional[str] = None) -> str:
+    def create_tab(self, url: str | None = None) -> str:
         """
         Create new isolated tab.
 
@@ -155,14 +157,17 @@ class IncognitoBrowser:
     def _apply_privacy_policies(self, tab_id: str):
         """Apply privacy policies to tab"""
         # Disable storage
-        self.tab_manager.set_tab_config(tab_id, {
-            'storage': False,
-            'cookies': False,
-            'cache': False,
-            'history': False,
-            'popups': False,  # NEW REQUIREMENT
-            'redirects': False  # NEW REQUIREMENT
-        })
+        self.tab_manager.set_tab_config(
+            tab_id,
+            {
+                "storage": False,
+                "cookies": False,
+                "cache": False,
+                "history": False,
+                "popups": False,  # NEW REQUIREMENT
+                "redirects": False,  # NEW REQUIREMENT
+            },
+        )
 
     def _clear_ephemeral_data(self):
         """Clear all ephemeral data"""
@@ -185,7 +190,7 @@ class IncognitoBrowser:
             self.logger.warning(f"Extension not whitelisted: {extension_id}")
             return False
 
-    def download_file(self, url: str, tab_id: str) -> Optional[str]:
+    def download_file(self, url: str, tab_id: str) -> str | None:
         """
         Download file with isolation.
 
@@ -200,21 +205,21 @@ class IncognitoBrowser:
         # In production, would download to isolated directory
         return None
 
-    def get_fingerprint_protection_status(self) -> Dict[str, Any]:
+    def get_fingerprint_protection_status(self) -> dict[str, Any]:
         """Get fingerprint protection status"""
         return {
-            'enabled': self.fingerprint_protection,
-            'user_agent_spoofed': True,
-            'canvas_randomized': True,
-            'webgl_blocked': True,
-            'fonts_limited': True,
-            'timezone_spoofed': True,
-            'language_spoofed': True,
-            'screen_size_spoofed': True,
-            'hardware_info_hidden': True
+            "enabled": self.fingerprint_protection,
+            "user_agent_spoofed": True,
+            "canvas_randomized": True,
+            "webgl_blocked": True,
+            "fonts_limited": True,
+            "timezone_spoofed": True,
+            "language_spoofed": True,
+            "screen_size_spoofed": True,
+            "hardware_info_hidden": True,
         }
 
-    def search(self, query: str) -> Dict[str, Any]:
+    def search(self, query: str) -> dict[str, Any]:
         """
         Perform encrypted search.
         Query is encrypted immediately.
@@ -224,22 +229,22 @@ class IncognitoBrowser:
         """
         return self.encrypted_search.search(query)
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get browser status"""
         return {
-            'active': self._active,
-            'incognito_mode': self.incognito_mode,
-            'no_history': self.no_history,
-            'no_cache': self.no_cache,
-            'no_cookies': self.no_cookies,
-            'no_popups': True,
-            'no_redirects': True,
-            'tab_isolation': self.tab_isolation,
-            'open_tabs': len(self.tab_manager.get_all_tabs()),
-            'fingerprint_protection': self.fingerprint_protection,
-            'tracker_blocking': self.tracker_blocking,
-            'sandbox_enabled': self.sandbox.is_active(),
-            'everything_encrypted': True,  # NEW: Everything encrypted
-            'searches_encrypted': self.encrypted_search._active,
-            'navigation_encrypted': self.encrypted_navigation._active
+            "active": self._active,
+            "incognito_mode": self.incognito_mode,
+            "no_history": self.no_history,
+            "no_cache": self.no_cache,
+            "no_cookies": self.no_cookies,
+            "no_popups": True,
+            "no_redirects": True,
+            "tab_isolation": self.tab_isolation,
+            "open_tabs": len(self.tab_manager.get_all_tabs()),
+            "fingerprint_protection": self.fingerprint_protection,
+            "tracker_blocking": self.tracker_blocking,
+            "sandbox_enabled": self.sandbox.is_active(),
+            "everything_encrypted": True,  # NEW: Everything encrypted
+            "searches_encrypted": self.encrypted_search._active,
+            "navigation_encrypted": self.encrypted_navigation._active,
         }

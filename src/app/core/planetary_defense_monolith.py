@@ -246,9 +246,11 @@ class PlanetaryDefenseCore:
             LawEvaluation(
                 Law.ZEROTH,
                 not existential_threat,  # Satisfied if NO existential threat
-                "Existential threat detected; interposition required"
-                if existential_threat
-                else "No existential threat to Humanity",
+                (
+                    "Existential threat detected; interposition required"
+                    if existential_threat
+                    else "No existential threat to Humanity"
+                ),
             )
         )
 
@@ -258,9 +260,11 @@ class PlanetaryDefenseCore:
             LawEvaluation(
                 Law.FIRST,
                 not intentional_harm,  # Satisfied if NO intentional harm
-                "Intentional targeting of humans forbidden"
-                if intentional_harm
-                else "No intentional targeting of humans",
+                (
+                    "Intentional targeting of humans forbidden"
+                    if intentional_harm
+                    else "No intentional targeting of humans"
+                ),
             )
         )
 
@@ -270,9 +274,11 @@ class PlanetaryDefenseCore:
             LawEvaluation(
                 Law.SECOND,
                 not bypasses_accountability,  # Satisfied if order doesn't bypass
-                "Human instruction bypasses accountability"
-                if bypasses_accountability
-                else "Human instruction does not bypass accountability",
+                (
+                    "Human instruction bypasses accountability"
+                    if bypasses_accountability
+                    else "Human instruction does not bypass accountability"
+                ),
             )
         )
 
@@ -330,7 +336,11 @@ class PlanetaryDefenseCore:
 
         record = AccountabilityRecord(
             action_id=action_id,
-            timestamp=datetime.now(datetime.UTC) if hasattr(datetime, 'UTC') else datetime.utcnow(),
+            timestamp=(
+                datetime.now(datetime.UTC)
+                if hasattr(datetime, "UTC")
+                else datetime.utcnow()
+            ),
             actor=actor,
             intent=intent,
             authorized_by=authorized_by,
@@ -350,14 +360,12 @@ class PlanetaryDefenseCore:
 
             if violations:
                 record.violated_laws.extend(violations)
-                record.actual_outcome = "BLOCKED: Law violation detected before execution"
-                violation_details = [
-                    f"{v.value}" for v in violations
-                ]
-                self.ledger.append(record)  # Log violation
-                raise LawViolationError(
-                    f"Action violates laws: {violation_details}"
+                record.actual_outcome = (
+                    "BLOCKED: Law violation detected before execution"
                 )
+                violation_details = [f"{v.value}" for v in violations]
+                self.ledger.append(record)  # Log violation
+                raise LawViolationError(f"Action violates laws: {violation_details}")
 
             # Perform action (placeholder for real effectors)
             # Real implementation would dispatch to actual systems here
@@ -518,7 +526,8 @@ def get_ledger_stats() -> dict[str, Any]:
         "total_actions": PLANETARY_CORE.get_ledger_count(),
         "violations": PLANETARY_CORE.get_violation_count(),
         "compliance_rate": (
-            1.0 - (PLANETARY_CORE.get_violation_count() / PLANETARY_CORE.get_ledger_count())
+            1.0
+            - (PLANETARY_CORE.get_violation_count() / PLANETARY_CORE.get_ledger_count())
             if PLANETARY_CORE.get_ledger_count() > 0
             else 1.0
         ),

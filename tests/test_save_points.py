@@ -1,9 +1,12 @@
 """
 Test suite for save points system
 """
-import pytest
+
 import shutil
 from pathlib import Path
+
+import pytest
+
 from project_ai.save_points import SavePointsManager
 
 

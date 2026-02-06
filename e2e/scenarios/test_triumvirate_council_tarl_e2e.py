@@ -450,7 +450,7 @@ class TestCompleteSystemIntegration:
 
     def test_end_to_end_request_flow(self, e2e_config):
         """Test complete request flow through all systems."""
-        from src.app.core.ai_systems import FourLaws, AIPersona, MemoryExpansionSystem
+        from src.app.core.ai_systems import AIPersona, FourLaws, MemoryExpansionSystem
         from src.cognition.triumvirate import Triumvirate
 
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -497,7 +497,7 @@ class TestCompleteSystemIntegration:
 
     def test_security_monitoring_integration(self, e2e_config):
         """Test security monitoring across all systems."""
-        from src.app.core.ai_systems import FourLaws, CommandOverride
+        from src.app.core.ai_systems import CommandOverride, FourLaws
         from src.app.core.user_manager import UserManager
 
         try:

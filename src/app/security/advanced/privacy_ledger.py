@@ -3,29 +3,30 @@ Production-Grade Encrypted Privacy Accountability Ledger
 Immutable, tamper-proof audit logging with zero-knowledge encryption
 """
 
-import logging
-import json
 import hashlib
+import json
+import logging
+import os
 import secrets
 import threading
 import time
-import os
-from dataclasses import dataclass, field, asdict
-from typing import Dict, Any, List, Optional, Tuple
-from datetime import datetime
-from pathlib import Path
-from enum import Enum
 from collections import defaultdict
+from dataclasses import asdict, dataclass, field
+from datetime import datetime
+from enum import Enum
+from pathlib import Path
+from typing import Any
 
 from cryptography.fernet import Fernet
-from cryptography.hazmat.primitives.ciphers.aead import AESGCM
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 
 class EventType(Enum):
     """Privacy and security event types"""
+
     DATA_ACCESS = "data_access"
     DATA_MODIFICATION = "data_modification"
     DATA_DELETION = "data_deletion"
@@ -45,6 +46,7 @@ class EventType(Enum):
 
 class SeverityLevel(Enum):
     """Event severity levels"""
+
     DEBUG = 0
     INFO = 1
     WARNING = 2
@@ -70,6 +72,7 @@ class LedgerEntry:
         previous_hash: Hash of previous entry (for chain integrity)
         merkle_proof: Merkle tree proof for verification
     """
+
     entry_id: str = field(default_factory=lambda: secrets.token_hex(16))
     timestamp: float = field(default_factory=time.time)
     event_type: EventType = EventType.SYSTEM_ACCESS
@@ -77,10 +80,10 @@ class LedgerEntry:
     user_id: str = ""
     action: str = ""
     resource: str = ""
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
     hash: str = ""
     previous_hash: str = ""
-    merkle_proof: List[str] = field(default_factory=list)
+    merkle_proof: list[str] = field(default_factory=list)
     encrypted: bool = False
 
     def __post_init__(self):
@@ -112,22 +115,28 @@ class LedgerEntry:
         """
         return self.hash == self.compute_hash()
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert entry to dictionary"""
         data = asdict(self)
-        data['event_type'] = self.event_type.value
-        data['severity'] = self.severity.value
+        data["event_type"] = self.event_type.value
+        data["severity"] = self.severity.value
         return data
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'LedgerEntry':
+    def from_dict(cls, data: dict[str, Any]) -> "LedgerEntry":
         """Create entry from dictionary"""
         # Convert string enums back to enum types
-        if isinstance(data.get('event_type'), str):
-            data['event_type'] = EventType(data['event_type'])
-        if isinstance(data.get('severity'), str) or isinstance(data.get('severity'), int):
-            severity_val = data['severity']
-            data['severity'] = SeverityLevel(severity_val) if isinstance(severity_val, int) else SeverityLevel[severity_val]
+        if isinstance(data.get("event_type"), str):
+            data["event_type"] = EventType(data["event_type"])
+        if isinstance(data.get("severity"), str) or isinstance(
+            data.get("severity"), int
+        ):
+            severity_val = data["severity"]
+            data["severity"] = (
+                SeverityLevel(severity_val)
+                if isinstance(severity_val, int)
+                else SeverityLevel[severity_val]
+            )
 
         return cls(**data)
 
@@ -140,9 +149,9 @@ class MerkleTree:
 
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        self.leaves: List[str] = []
-        self.tree: List[List[str]] = []
-        self.root: Optional[str] = None
+        self.leaves: list[str] = []
+        self.tree: list[list[str]] = []
+        self.root: str | None = None
 
     def add_leaf(self, leaf_hash: str):
         """Add a leaf node to the tree"""
@@ -183,7 +192,7 @@ class MerkleTree:
         # Root is the single node at top
         self.root = current_layer[0] if current_layer else None
 
-    def get_proof(self, leaf_index: int) -> List[str]:
+    def get_proof(self, leaf_index: int) -> list[str]:
         """
         Generate Merkle proof for a leaf.
 
@@ -217,7 +226,13 @@ class MerkleTree:
 
         return proof
 
-    def verify_proof(self, leaf_hash: str, proof: List[str], root: Optional[str] = None, leaf_index: Optional[int] = None) -> bool:
+    def verify_proof(
+        self,
+        leaf_hash: str,
+        proof: list[str],
+        root: str | None = None,
+        leaf_index: int | None = None,
+    ) -> bool:
         """
         Verify Merkle proof for a leaf.
 
@@ -261,7 +276,7 @@ class MerkleTree:
 
         return current_hash == root
 
-    def get_root(self) -> Optional[str]:
+    def get_root(self) -> str | None:
         """Get current Merkle root"""
         return self.root
 
@@ -286,9 +301,9 @@ class PrivacyLedger:
     def __init__(
         self,
         storage_path: str,
-        encryption_key: Optional[bytes] = None,
+        encryption_key: bytes | None = None,
         max_entries: int = 100000,
-        retention_days: int = 90
+        retention_days: int = 90,
     ):
         """
         Initialize privacy ledger.
@@ -309,10 +324,10 @@ class PrivacyLedger:
         self._write_lock = threading.Lock()
 
         # Ledger state
-        self.entries: List[LedgerEntry] = []
-        self.entry_index: Dict[str, LedgerEntry] = {}
-        self.user_index: Dict[str, List[str]] = defaultdict(list)
-        self.type_index: Dict[EventType, List[str]] = defaultdict(list)
+        self.entries: list[LedgerEntry] = []
+        self.entry_index: dict[str, LedgerEntry] = {}
+        self.user_index: dict[str, list[str]] = defaultdict(list)
+        self.type_index: dict[EventType, list[str]] = defaultdict(list)
 
         # Merkle tree for verification
         self.merkle_tree = MerkleTree()
@@ -326,18 +341,20 @@ class PrivacyLedger:
 
         # Statistics
         self.stats = {
-            'total_entries': 0,
-            'encrypted_entries': 0,
-            'tamper_attempts': 0,
-            'verification_failures': 0
+            "total_entries": 0,
+            "encrypted_entries": 0,
+            "tamper_attempts": 0,
+            "verification_failures": 0,
         }
 
         # Load existing ledger
         self._load_ledger()
 
-        self.logger.info(f"Privacy Ledger initialized: {len(self.entries)} entries loaded")
+        self.logger.info(
+            f"Privacy Ledger initialized: {len(self.entries)} entries loaded"
+        )
 
-    def _setup_encryption(self, encryption_key: Optional[bytes]):
+    def _setup_encryption(self, encryption_key: bytes | None):
         """Setup zero-knowledge encryption"""
         if encryption_key:
             self.encryption_key = encryption_key
@@ -353,6 +370,7 @@ class PrivacyLedger:
         # Setup AES-GCM with unique per-ledger salt
         # Generate salt from storage path for deterministic but unique salt per ledger
         import hashlib
+
         path_hash = hashlib.sha256(str(self.storage_path).encode()).digest()
         salt = path_hash[:32]  # Use first 32 bytes as salt
 
@@ -361,7 +379,7 @@ class PrivacyLedger:
             length=32,
             salt=salt,
             iterations=100000,
-            backend=default_backend()
+            backend=default_backend(),
         )
         aes_key = kdf.derive(self.encryption_key)
         self.aes_cipher = AESGCM(aes_key)
@@ -373,7 +391,7 @@ class PrivacyLedger:
         action: str,
         resource: str = "",
         severity: SeverityLevel = SeverityLevel.INFO,
-        metadata: Optional[Dict[str, Any]] = None
+        metadata: dict[str, Any] | None = None,
     ) -> LedgerEntry:
         """
         Append new entry to ledger (atomic operation).
@@ -401,12 +419,12 @@ class PrivacyLedger:
                 resource=resource,
                 metadata=metadata or {},
                 previous_hash=self.last_entry_hash,
-                encrypted=True
+                encrypted=True,
             )
 
             # Store index in metadata before computing hash
             entry_index = len(self.entries)
-            entry.metadata['_merkle_index'] = entry_index
+            entry.metadata["_merkle_index"] = entry_index
 
             # Compute final hash (after metadata is set)
             entry.hash = entry.compute_hash()
@@ -425,8 +443,8 @@ class PrivacyLedger:
             self.last_entry_hash = entry.hash
 
             # Update stats
-            self.stats['total_entries'] += 1
-            self.stats['encrypted_entries'] += 1
+            self.stats["total_entries"] += 1
+            self.stats["encrypted_entries"] += 1
 
             self.logger.debug(
                 f"Appended entry: {entry.entry_id} | "
@@ -446,15 +464,15 @@ class PrivacyLedger:
         """
         with self._write_lock:
             # Write to WAL first
-            wal_path = self.storage_path.with_suffix('.wal')
+            wal_path = self.storage_path.with_suffix(".wal")
 
             try:
                 # Serialize entry
                 entry_data = self._serialize_entry(entry)
 
                 # Write to WAL
-                with open(wal_path, 'ab') as wal:
-                    wal.write(entry_data + b'\n')
+                with open(wal_path, "ab") as wal:
+                    wal.write(entry_data + b"\n")
                     wal.flush()
                     os.fsync(wal.fileno())
 
@@ -486,6 +504,7 @@ class PrivacyLedger:
 
         # Base64 encode for safe storage
         import base64
+
         return base64.b64encode(nonce + aes_encrypted)
 
     def _deserialize_entry(self, data: bytes) -> LedgerEntry:
@@ -493,6 +512,7 @@ class PrivacyLedger:
         try:
             # Base64 decode
             import base64
+
             decoded = base64.b64decode(data)
 
             # Extract nonce
@@ -544,7 +564,7 @@ class PrivacyLedger:
         # Type index
         self.type_index[entry.event_type].append(entry.entry_id)
 
-    def get_entry(self, entry_id: str) -> Optional[LedgerEntry]:
+    def get_entry(self, entry_id: str) -> LedgerEntry | None:
         """
         Retrieve entry by ID.
 
@@ -559,13 +579,13 @@ class PrivacyLedger:
 
     def search(
         self,
-        user_id: Optional[str] = None,
-        event_type: Optional[EventType] = None,
-        severity: Optional[SeverityLevel] = None,
-        start_time: Optional[float] = None,
-        end_time: Optional[float] = None,
-        limit: int = 100
-    ) -> List[LedgerEntry]:
+        user_id: str | None = None,
+        event_type: EventType | None = None,
+        severity: SeverityLevel | None = None,
+        start_time: float | None = None,
+        end_time: float | None = None,
+        limit: int = 100,
+    ) -> list[LedgerEntry]:
         """
         Search ledger entries with filters.
 
@@ -586,10 +606,18 @@ class PrivacyLedger:
             # Start with user index if specified
             if user_id:
                 candidate_ids = self.user_index.get(user_id, [])
-                candidates = [self.entry_index[eid] for eid in candidate_ids if eid in self.entry_index]
+                candidates = [
+                    self.entry_index[eid]
+                    for eid in candidate_ids
+                    if eid in self.entry_index
+                ]
             elif event_type:
                 candidate_ids = self.type_index.get(event_type, [])
-                candidates = [self.entry_index[eid] for eid in candidate_ids if eid in self.entry_index]
+                candidates = [
+                    self.entry_index[eid]
+                    for eid in candidate_ids
+                    if eid in self.entry_index
+                ]
             else:
                 candidates = self.entries
 
@@ -622,7 +650,7 @@ class PrivacyLedger:
 
             return results
 
-    def verify_chain_integrity(self) -> Tuple[bool, List[str]]:
+    def verify_chain_integrity(self) -> tuple[bool, list[str]]:
         """
         Verify integrity of entire ledger chain.
 
@@ -638,12 +666,12 @@ class PrivacyLedger:
                 # Check entry integrity
                 if not entry.verify_integrity():
                     errors.append(f"Entry {i} ({entry.entry_id}): Hash mismatch")
-                    self.stats['verification_failures'] += 1
+                    self.stats["verification_failures"] += 1
 
                 # Check chain linkage
                 if entry.previous_hash != previous_hash:
                     errors.append(f"Entry {i} ({entry.entry_id}): Chain broken")
-                    self.stats['tamper_attempts'] += 1
+                    self.stats["tamper_attempts"] += 1
 
                 previous_hash = entry.hash
 
@@ -655,12 +683,16 @@ class PrivacyLedger:
                 sample_size = min(5, len(self.entries))
                 for i in range(sample_size):
                     entry = self.entries[i]
-                    merkle_index = entry.metadata.get('_merkle_index', i)
+                    merkle_index = entry.metadata.get("_merkle_index", i)
 
                     # Generate fresh proof for verification
                     fresh_proof = self.merkle_tree.get_proof(merkle_index)
-                    if not self.merkle_tree.verify_proof(entry.hash, fresh_proof, expected_root, merkle_index):
-                        errors.append(f"Entry {i} ({entry.entry_id}): Merkle proof invalid")
+                    if not self.merkle_tree.verify_proof(
+                        entry.hash, fresh_proof, expected_root, merkle_index
+                    ):
+                        errors.append(
+                            f"Entry {i} ({entry.entry_id}): Merkle proof invalid"
+                        )
 
             is_valid = len(errors) == 0
             self.chain_verified = is_valid
@@ -694,9 +726,11 @@ class PrivacyLedger:
 
             if entries_to_delete:
                 self._secure_delete_entries(entries_to_delete)
-                self.logger.info(f"Retention policy enforced: {len(entries_to_delete)} entries deleted")
+                self.logger.info(
+                    f"Retention policy enforced: {len(entries_to_delete)} entries deleted"
+                )
 
-    def _secure_delete_entries(self, entries: List[LedgerEntry]):
+    def _secure_delete_entries(self, entries: list[LedgerEntry]):
         """
         Securely delete entries (forensic resistance).
 
@@ -750,12 +784,12 @@ class PrivacyLedger:
             self.storage_path.parent.mkdir(parents=True, exist_ok=True)
 
             # Write to temporary file first (atomic write)
-            temp_path = self.storage_path.with_suffix('.tmp')
+            temp_path = self.storage_path.with_suffix(".tmp")
 
-            with open(temp_path, 'wb') as f:
+            with open(temp_path, "wb") as f:
                 for entry in self.entries:
                     entry_data = self._serialize_entry(entry)
-                    f.write(entry_data + b'\n')
+                    f.write(entry_data + b"\n")
                 f.flush()
                 os.fsync(f.fileno())
 
@@ -763,7 +797,7 @@ class PrivacyLedger:
             temp_path.replace(self.storage_path)
 
             # Clear WAL
-            wal_path = self.storage_path.with_suffix('.wal')
+            wal_path = self.storage_path.with_suffix(".wal")
             if wal_path.exists():
                 wal_path.unlink()
 
@@ -777,7 +811,7 @@ class PrivacyLedger:
             return
 
         try:
-            with open(self.storage_path, 'rb') as f:
+            with open(self.storage_path, "rb") as f:
                 for line in f:
                     line = line.strip()
                     if not line:
@@ -793,8 +827,8 @@ class PrivacyLedger:
                         entry_idx = len(self.entries) - 1
                         self.merkle_tree.add_leaf(entry.hash)
                         # Update metadata with index if not present
-                        if '_merkle_index' not in entry.metadata:
-                            entry.metadata['_merkle_index'] = entry_idx
+                        if "_merkle_index" not in entry.metadata:
+                            entry.metadata["_merkle_index"] = entry_idx
 
                         self.last_entry_hash = entry.hash
 
@@ -803,8 +837,8 @@ class PrivacyLedger:
                         continue
 
             # Update stats
-            self.stats['total_entries'] = len(self.entries)
-            self.stats['encrypted_entries'] = len(self.entries)
+            self.stats["total_entries"] = len(self.entries)
+            self.stats["encrypted_entries"] = len(self.entries)
 
             self.logger.info(f"Loaded {len(self.entries)} entries from ledger")
 
@@ -816,26 +850,38 @@ class PrivacyLedger:
         except Exception as e:
             self.logger.error(f"Failed to load ledger: {e}")
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get ledger statistics"""
         with self._lock:
             return {
                 **self.stats,
-                'current_entries': len(self.entries),
-                'chain_verified': self.chain_verified,
-                'merkle_root': self.merkle_tree.get_root(),
-                'storage_size_bytes': self.storage_path.stat().st_size if self.storage_path.exists() else 0,
-                'oldest_entry': datetime.fromtimestamp(self.entries[0].timestamp).isoformat() if self.entries else None,
-                'newest_entry': datetime.fromtimestamp(self.entries[-1].timestamp).isoformat() if self.entries else None
+                "current_entries": len(self.entries),
+                "chain_verified": self.chain_verified,
+                "merkle_root": self.merkle_tree.get_root(),
+                "storage_size_bytes": (
+                    self.storage_path.stat().st_size
+                    if self.storage_path.exists()
+                    else 0
+                ),
+                "oldest_entry": (
+                    datetime.fromtimestamp(self.entries[0].timestamp).isoformat()
+                    if self.entries
+                    else None
+                ),
+                "newest_entry": (
+                    datetime.fromtimestamp(self.entries[-1].timestamp).isoformat()
+                    if self.entries
+                    else None
+                ),
             }
 
     def export_audit_log(
         self,
         output_path: str,
-        user_id: Optional[str] = None,
-        start_time: Optional[float] = None,
-        end_time: Optional[float] = None,
-        decrypt_sensitive: bool = False
+        user_id: str | None = None,
+        start_time: float | None = None,
+        end_time: float | None = None,
+        decrypt_sensitive: bool = False,
     ) -> int:
         """
         Export audit log for compliance/investigation.
@@ -856,7 +902,7 @@ class PrivacyLedger:
                 user_id=user_id,
                 start_time=start_time,
                 end_time=end_time,
-                limit=1000000  # No limit for export
+                limit=1000000,  # No limit for export
             )
 
             # Export to JSON
@@ -866,18 +912,26 @@ class PrivacyLedger:
 
                 # Optionally decrypt sensitive fields
                 if decrypt_sensitive:
-                    entry_dict['user_id'] = self._decrypt_field(entry.user_id)
+                    entry_dict["user_id"] = self._decrypt_field(entry.user_id)
 
                 export_data.append(entry_dict)
 
             # Write to file
-            with open(output_path, 'w') as f:
-                json.dump({
-                    'export_time': datetime.now(datetime.timezone.utc).isoformat() if hasattr(datetime, 'timezone') else datetime.utcnow().isoformat(),
-                    'entry_count': len(export_data),
-                    'merkle_root': self.merkle_tree.get_root(),
-                    'entries': export_data
-                }, f, indent=2)
+            with open(output_path, "w") as f:
+                json.dump(
+                    {
+                        "export_time": (
+                            datetime.now(datetime.timezone.utc).isoformat()
+                            if hasattr(datetime, "timezone")
+                            else datetime.utcnow().isoformat()
+                        ),
+                        "entry_count": len(export_data),
+                        "merkle_root": self.merkle_tree.get_root(),
+                        "entries": export_data,
+                    },
+                    f,
+                    indent=2,
+                )
 
             self.logger.info(f"Exported {len(entries)} entries to {output_path}")
 
@@ -887,7 +941,7 @@ class PrivacyLedger:
                 user_id=user_id or "system",
                 action=f"Exported audit log to {output_path}",
                 severity=SeverityLevel.INFO,
-                metadata={'entry_count': len(entries)}
+                metadata={"entry_count": len(entries)},
             )
 
             return len(entries)
@@ -903,6 +957,8 @@ class PrivacyLedger:
             # Final integrity check
             is_valid, errors = self.verify_chain_integrity()
             if not is_valid:
-                self.logger.warning(f"Ledger closed with integrity issues: {len(errors)} errors")
+                self.logger.warning(
+                    f"Ledger closed with integrity issues: {len(errors)} errors"
+                )
 
             self.logger.info(f"Privacy ledger closed: {len(self.entries)} entries")

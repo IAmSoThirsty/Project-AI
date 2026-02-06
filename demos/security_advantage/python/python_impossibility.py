@@ -11,11 +11,9 @@ Result: IMPOSSIBLE in Python - all protection mechanisms can be bypassed.
 """
 
 import ctypes
-import sys
 import gc
-import types
+import sys
 from typing import Final
-
 
 print("=" * 80)
 print("PYTHON SECRET PROTECTION: IMPOSSIBLE TO ACHIEVE ABSOLUTE SECURITY")
@@ -32,10 +30,10 @@ print("-" * 80)
 
 class SecretWithMangling:
     """Attempt to hide secret with name mangling."""
-    
+
     def __init__(self, api_key: str):
         self.__api_key = api_key  # Name mangled to _SecretWithMangling__api_key
-    
+
     def get_key(self) -> str:
         # Only "authorized" way to access
         return self.__api_key
@@ -57,10 +55,10 @@ print("-" * 80)
 class SecretWithSlots:
     """Attempt to restrict attributes with __slots__."""
     __slots__ = ('_key',)
-    
+
     def __init__(self, api_key: str):
         object.__setattr__(self, '_key', api_key)
-    
+
     def __setattr__(self, name, value):
         raise AttributeError("Cannot modify attributes!")
 
@@ -80,10 +78,10 @@ print("-" * 80)
 
 class SecretWithProperty:
     """Attempt to control access via @property."""
-    
+
     def __init__(self, api_key: str):
         self._api_key = api_key
-    
+
     @property
     def api_key(self) -> str:
         # Check caller (simplified)
@@ -111,12 +109,12 @@ print("-" * 80)
 
 class SecretInMemory:
     """Attempt to store secret in protected memory."""
-    
+
     def __init__(self, api_key: str):
         self._buffer = ctypes.create_string_buffer(api_key.encode())
         # Attempt to make memory read-only (doesn't really work)
         self._address = ctypes.addressof(self._buffer)
-    
+
     def get_key(self) -> str:
         return self._buffer.value.decode()
 
@@ -161,10 +159,10 @@ print("-" * 80)
 def create_secret_holder():
     """Secret stored in closure, not accessible directly."""
     api_key = "sk-PRODUCTION-SECRET-12345"
-    
+
     def get_key():
         return api_key
-    
+
     return get_key
 
 
@@ -204,14 +202,14 @@ print("-" * 80)
 
 class ProtectedDescriptor:
     """Descriptor that attempts to control access."""
-    
+
     def __init__(self, value):
         self._value = value
-    
+
     def __get__(self, obj, objtype=None):
         # Check if caller is authorized (always returns true for demo)
         return self._value
-    
+
     def __set__(self, obj, value):
         raise AttributeError("Cannot modify!")
 

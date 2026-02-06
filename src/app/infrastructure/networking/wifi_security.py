@@ -1,9 +1,8 @@
 """WiFi Security Manager - God Tier Security with WPA3, OWE, SAE, and PMF"""
 
 import logging
-from typing import Dict, List, Optional
-from enum import Enum
 from dataclasses import dataclass
+from enum import Enum
 
 
 class WiFiSecurityProtocol(Enum):
@@ -24,7 +23,7 @@ class WiFiSecurityConfig:
     """WiFi security configuration"""
 
     protocol: WiFiSecurityProtocol
-    passphrase: Optional[str] = None
+    passphrase: str | None = None
     enable_pmf: bool = True  # Protected Management Frames (802.11w)
     enable_sae: bool = True  # Simultaneous Authentication of Equals (WPA3)
     transition_mode: bool = False  # WPA2/WPA3 transition mode
@@ -40,10 +39,10 @@ class WiFiSecurityManager:
 
     def __init__(self):
         self.logger = logging.getLogger(self.__class__.__name__)
-        self.current_security: Optional[WiFiSecurityConfig] = None
+        self.current_security: WiFiSecurityConfig | None = None
 
         # Security monitoring
-        self.detected_threats: List[str] = []
+        self.detected_threats: list[str] = []
         self.deauth_attack_count = 0
         self.evil_twin_detected = False
 
@@ -204,7 +203,7 @@ class WiFiSecurityManager:
             self.logger.error(f"Fast roaming enable failed: {e}")
             return False
 
-    def get_security_status(self) -> Dict:
+    def get_security_status(self) -> dict:
         """Get current security status"""
         if not self.current_security:
             return {"configured": False, "security_level": "NONE"}
@@ -232,7 +231,7 @@ class WiFiSecurityManager:
             "deauth_attack_protected": self.current_security.enable_pmf,
         }
 
-    def audit_security(self) -> Dict:
+    def audit_security(self) -> dict:
         """
         Perform security audit
 

@@ -27,13 +27,13 @@ import os
 import threading
 import time
 from collections import OrderedDict
+from collections.abc import Callable
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any
-from collections.abc import Callable
 
 import psutil
 
@@ -44,8 +44,10 @@ logger = logging.getLogger(__name__)
 # ENUMERATIONS
 # ============================================================================
 
+
 class CacheStrategy(Enum):
     """Cache eviction strategies"""
+
     LRU = "lru"  # Least Recently Used
     LFU = "lfu"  # Least Frequently Used
     FIFO = "fifo"  # First In First Out
@@ -55,6 +57,7 @@ class CacheStrategy(Enum):
 # ============================================================================
 # LRU CACHE
 # ============================================================================
+
 
 class LRUCache:
     """Thread-safe LRU cache implementation"""
@@ -103,7 +106,7 @@ class LRUCache:
                 "max_size": self.max_size,
                 "hits": self.hits,
                 "misses": self.misses,
-                "hit_rate": hit_rate
+                "hit_rate": hit_rate,
             }
 
 
@@ -111,9 +114,11 @@ class LRUCache:
 # TTL CACHE
 # ============================================================================
 
+
 @dataclass
 class CacheEntry:
     """Cache entry with TTL"""
+
     value: Any
     expires_at: float
 
@@ -154,8 +159,7 @@ class TTLCache:
         with self.lock:
             current_time = time.time()
             expired_keys = [
-                k for k, v in self.cache.items()
-                if current_time >= v.expires_at
+                k for k, v in self.cache.items() if current_time >= v.expires_at
             ]
             for key in expired_keys:
                 del self.cache[key]
@@ -166,8 +170,10 @@ class TTLCache:
 # FUNCTION MEMOIZATION
 # ============================================================================
 
+
 def memoize(max_size: int = 128):
     """Decorator for function memoization"""
+
     def decorator(func: Callable) -> Callable:
         cache = LRUCache(max_size=max_size)
 
@@ -190,6 +196,7 @@ def memoize(max_size: int = 128):
 
         wrapper.cache = cache
         return wrapper
+
     return decorator
 
 
@@ -197,14 +204,11 @@ def memoize(max_size: int = 128):
 # PARALLEL PROCESSOR
 # ============================================================================
 
+
 class ParallelProcessor:
     """Parallel task processing with thread/process pools"""
 
-    def __init__(
-        self,
-        max_workers: int | None = None,
-        use_processes: bool = False
-    ):
+    def __init__(self, max_workers: int | None = None, use_processes: bool = False):
         self.max_workers = max_workers or os.cpu_count()
         self.use_processes = use_processes
 
@@ -213,7 +217,9 @@ class ParallelProcessor:
         else:
             self.executor = ThreadPoolExecutor(max_workers=self.max_workers)
 
-        logger.info(f"ParallelProcessor initialized: {self.max_workers} {'processes' if use_processes else 'threads'}")
+        logger.info(
+            f"ParallelProcessor initialized: {self.max_workers} {'processes' if use_processes else 'threads'}"
+        )
 
     def map(self, func: Callable, items: list[Any]) -> list[Any]:
         """Map function over items in parallel"""
@@ -233,6 +239,7 @@ class ParallelProcessor:
 # MEMORY OPTIMIZER
 # ============================================================================
 
+
 class MemoryOptimizer:
     """Memory usage optimization and monitoring"""
 
@@ -245,7 +252,7 @@ class MemoryOptimizer:
         return {
             "rss_mb": mem_info.rss / 1024 / 1024,
             "vms_mb": mem_info.vms / 1024 / 1024,
-            "percent": process.memory_percent()
+            "percent": process.memory_percent(),
         }
 
     @staticmethod
@@ -269,6 +276,7 @@ class MemoryOptimizer:
 # ============================================================================
 # QUERY OPTIMIZER
 # ============================================================================
+
 
 class QueryOptimizer:
     """Query optimization for data access"""
@@ -299,15 +307,11 @@ class QueryOptimizer:
 # CONNECTION POOL
 # ============================================================================
 
+
 class ConnectionPool:
     """Generic connection pool"""
 
-    def __init__(
-        self,
-        create_fn: Callable,
-        max_size: int = 10,
-        timeout: float = 5.0
-    ):
+    def __init__(self, create_fn: Callable, max_size: int = 10, timeout: float = 5.0):
         self.create_fn = create_fn
         self.max_size = max_size
         self.timeout = timeout
@@ -344,7 +348,7 @@ class ConnectionPool:
         """Close all connections"""
         with self.lock:
             for conn in self.pool:
-                if hasattr(conn, 'close'):
+                if hasattr(conn, "close"):
                     conn.close()
             self.pool.clear()
             self.active.clear()
@@ -353,6 +357,7 @@ class ConnectionPool:
 # ============================================================================
 # LAZY LOADER
 # ============================================================================
+
 
 class LazyLoader:
     """Lazy loading of resources"""
@@ -383,6 +388,7 @@ class LazyLoader:
 # BACKGROUND TASK PROCESSOR
 # ============================================================================
 
+
 class BackgroundTaskProcessor:
     """Process tasks in background"""
 
@@ -401,9 +407,7 @@ class BackgroundTaskProcessor:
         self.running = True
         for i in range(self.num_workers):
             worker = threading.Thread(
-                target=self._worker_loop,
-                name=f"BackgroundWorker-{i}",
-                daemon=True
+                target=self._worker_loop, name=f"BackgroundWorker-{i}", daemon=True
             )
             worker.start()
             self.workers.append(worker)
@@ -445,6 +449,7 @@ class BackgroundTaskProcessor:
 # MAIN PERFORMANCE OPTIMIZER
 # ============================================================================
 
+
 class HYDRA50PerformanceOptimizer:
     """
     God-Tier performance optimization system for HYDRA-50
@@ -480,6 +485,7 @@ class HYDRA50PerformanceOptimizer:
 
     def _schedule_cleanup(self) -> None:
         """Schedule periodic cleanup tasks"""
+
         def cleanup_loop():
             while True:
                 time.sleep(60)  # Every minute
@@ -487,9 +493,7 @@ class HYDRA50PerformanceOptimizer:
                 self.memory_optimizer.suggest_gc()
 
         cleanup_thread = threading.Thread(
-            target=cleanup_loop,
-            daemon=True,
-            name="PerformanceCleanup"
+            target=cleanup_loop, daemon=True, name="PerformanceCleanup"
         )
         cleanup_thread.start()
 
@@ -499,7 +503,7 @@ class HYDRA50PerformanceOptimizer:
             "lru_cache": self.lru_cache.get_stats(),
             "memory": self.memory_optimizer.get_memory_usage(),
             "slow_queries": self.query_optimizer.get_slow_queries(),
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.now().isoformat(),
         }
 
     def shutdown(self) -> None:

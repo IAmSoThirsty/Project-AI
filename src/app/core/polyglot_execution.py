@@ -268,7 +268,8 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
-        cursor.execute("""
+        cursor.execute(
+            """
             CREATE TABLE IF NOT EXISTS executions (
                 request_id TEXT PRIMARY KEY,
                 prompt TEXT,
@@ -282,9 +283,11 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
                 timestamp REAL,
                 metadata TEXT
             )
-        """)
+        """
+        )
 
-        cursor.execute("""
+        cursor.execute(
+            """
             CREATE TABLE IF NOT EXISTS model_metrics (
                 model_id TEXT PRIMARY KEY,
                 total_requests INTEGER,
@@ -296,15 +299,18 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
                 cache_hit_rate REAL,
                 last_used REAL
             )
-        """)
+        """
+        )
 
-        cursor.execute("""
+        cursor.execute(
+            """
             CREATE TABLE IF NOT EXISTS cache (
                 cache_key TEXT PRIMARY KEY,
                 response_data TEXT,
                 timestamp REAL
             )
-        """)
+        """
+        )
 
         conn.commit()
         conn.close()

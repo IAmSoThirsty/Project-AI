@@ -2,7 +2,6 @@
 
 import logging
 import statistics
-from typing import Dict, List, Optional
 from dataclasses import dataclass
 
 
@@ -117,17 +116,17 @@ class SpectrumAnalyzer:
         140,
     }
 
-    def __init__(self, config: Optional[Dict] = None):
+    def __init__(self, config: dict | None = None):
         self.config = config or {}
         self.logger = logging.getLogger(self.__class__.__name__)
 
-        self.channel_data_2_4ghz: Dict[int, ChannelInfo] = {}
-        self.channel_data_5ghz: Dict[int, ChannelInfo] = {}
-        self.channel_data_6ghz: Dict[int, ChannelInfo] = {}
+        self.channel_data_2_4ghz: dict[int, ChannelInfo] = {}
+        self.channel_data_5ghz: dict[int, ChannelInfo] = {}
+        self.channel_data_6ghz: dict[int, ChannelInfo] = {}
 
         self.enable_dfs = self.config.get("enable_dfs", False)
 
-    def analyze_spectrum(self, band: str = "all") -> Dict[str, List[ChannelInfo]]:
+    def analyze_spectrum(self, band: str = "all") -> dict[str, list[ChannelInfo]]:
         """Analyze WiFi spectrum for specified band(s)"""
         results = {}
 
@@ -145,7 +144,7 @@ class SpectrumAnalyzer:
 
         return results
 
-    def _analyze_2_4ghz(self) -> Dict[int, ChannelInfo]:
+    def _analyze_2_4ghz(self) -> dict[int, ChannelInfo]:
         """Analyze 2.4 GHz spectrum (channels overlap)"""
         channel_data = {}
 
@@ -169,7 +168,7 @@ class SpectrumAnalyzer:
         """Calculate interference (non-overlapping channels: 1, 6, 11)"""
         return 20.0 if channel in [1, 6, 11] else 60.0
 
-    def _analyze_5ghz(self) -> Dict[int, ChannelInfo]:
+    def _analyze_5ghz(self) -> dict[int, ChannelInfo]:
         """Analyze 5 GHz spectrum (non-overlapping)"""
         channel_data = {}
 
@@ -192,7 +191,7 @@ class SpectrumAnalyzer:
 
         return channel_data
 
-    def _analyze_6ghz(self) -> Dict[int, ChannelInfo]:
+    def _analyze_6ghz(self) -> dict[int, ChannelInfo]:
         """Analyze 6 GHz spectrum (WiFi 6E/7 - clean spectrum)"""
         channel_data = {}
 
@@ -212,7 +211,7 @@ class SpectrumAnalyzer:
 
     def get_optimal_channel(
         self, band: str, bandwidth_mhz: int = 20
-    ) -> Optional[ChannelInfo]:
+    ) -> ChannelInfo | None:
         """Get optimal channel for specified band"""
         channels = self._get_channel_data(band)
 
@@ -231,7 +230,7 @@ class SpectrumAnalyzer:
 
         return best_channel
 
-    def _get_channel_data(self, band: str) -> Dict[int, ChannelInfo]:
+    def _get_channel_data(self, band: str) -> dict[int, ChannelInfo]:
         """Get channel data for band"""
         if band == "2.4ghz":
             return self.channel_data_2_4ghz
@@ -241,7 +240,7 @@ class SpectrumAnalyzer:
             return self.channel_data_6ghz
         return {}
 
-    def get_spectrum_report(self) -> Dict:
+    def get_spectrum_report(self) -> dict:
         """Generate comprehensive spectrum report"""
 
         def _band_stats(channels):

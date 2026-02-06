@@ -1,8 +1,8 @@
 """Anti-Phishing Engine"""
 
 import logging
-from typing import Dict, Any, Set
 import re
+from typing import Any
 
 
 class AntiPhishingEngine:
@@ -11,12 +11,12 @@ class AntiPhishingEngine:
     Protects against social engineering and credential theft.
     """
 
-    def __init__(self, config: Dict[str, Any]):
-        self.enabled = config.get('anti_phishing', True)
+    def __init__(self, config: dict[str, Any]):
+        self.enabled = config.get("anti_phishing", True)
         self.logger = logging.getLogger(__name__)
         self._active = False
 
-        self._phishing_domains: Set[str] = set()
+        self._phishing_domains: set[str] = set()
         self._suspicious_patterns = []
         self._blocked_count = 0
 
@@ -36,24 +36,24 @@ class AntiPhishingEngine:
         """Load known phishing domains and patterns"""
         # Example phishing domains (would be loaded from database)
         self._phishing_domains = {
-            'secure-login-verify.com',
-            'account-verify-secure.com',
-            'paypal-secure-login.com'
+            "secure-login-verify.com",
+            "account-verify-secure.com",
+            "paypal-secure-login.com",
         }
 
         # Suspicious URL patterns
         self._suspicious_patterns = [
-            r'login.*verify',
-            r'secure.*account.*update',
-            r'suspended.*account',
-            r'confirm.*identity',
-            r'urgent.*action.*required',
-            r'paypal.*secure',
-            r'amazon.*verify',
-            r'apple.*icloud.*login'
+            r"login.*verify",
+            r"secure.*account.*update",
+            r"suspended.*account",
+            r"confirm.*identity",
+            r"urgent.*action.*required",
+            r"paypal.*secure",
+            r"amazon.*verify",
+            r"apple.*icloud.*login",
         ]
 
-    def is_phishing(self, url: str, content: str = '') -> bool:
+    def is_phishing(self, url: str, content: str = "") -> bool:
         """
         Check if URL or content is phishing.
 
@@ -94,7 +94,7 @@ class AntiPhishingEngine:
     def _is_homograph_attack(self, url: str) -> bool:
         """Detect homograph/lookalike domain attacks"""
         # Check for unicode characters that look like ASCII
-        suspicious_chars = ['а', 'е', 'о', 'р', 'с', 'у', 'х']  # Cyrillic
+        suspicious_chars = ["а", "е", "о", "р", "с", "у", "х"]  # Cyrillic
 
         for char in suspicious_chars:
             if char in url:
@@ -105,13 +105,13 @@ class AntiPhishingEngine:
     def _contains_phishing_content(self, content: str) -> bool:
         """Check if content contains phishing indicators"""
         phishing_keywords = [
-            'verify your account',
-            'confirm your identity',
-            'suspended account',
-            'unusual activity',
-            'click here immediately',
-            'urgent action required',
-            'update payment information'
+            "verify your account",
+            "confirm your identity",
+            "suspended account",
+            "unusual activity",
+            "click here immediately",
+            "urgent action required",
+            "update payment information",
         ]
 
         content_lower = content.lower()
@@ -126,10 +126,10 @@ class AntiPhishingEngine:
         self._phishing_domains.add(url)
         self.logger.info(f"Phishing URL reported and blocked: {url}")
 
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self) -> dict[str, Any]:
         """Get anti-phishing statistics"""
         return {
-            'active': self._active,
-            'blocked_count': self._blocked_count,
-            'known_phishing_domains': len(self._phishing_domains)
+            "active": self._active,
+            "blocked_count": self._blocked_count,
+            "known_phishing_domains": len(self._phishing_domains),
         }

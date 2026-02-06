@@ -344,7 +344,8 @@ class ProjectAIAnalytics:
         """Create materialized views for fast queries."""
 
         # Hourly metrics aggregation
-        self.client.execute("""
+        self.client.execute(
+            """
         CREATE MATERIALIZED VIEW IF NOT EXISTS metrics_hourly
         ENGINE = SummingMergeTree()
         PARTITION BY toYYYYMM(hour)
@@ -359,7 +360,8 @@ class ProjectAIAnalytics:
             count() as sample_count
         FROM project_ai_metrics
         GROUP BY hour, component, metric_name;
-        """)
+        """
+        )
 
         logger.info("Materialized views created")
 

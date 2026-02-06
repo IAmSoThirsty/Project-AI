@@ -946,9 +946,7 @@ class CodexSignalsTelemetry(SignalsTelemetry):
         )
         self.emit_signal(signal)
 
-    def emit_inference_metrics(
-        self, model_name: str, metrics: dict[str, Any]
-    ) -> None:
+    def emit_inference_metrics(self, model_name: str, metrics: dict[str, Any]) -> None:
         """
         Emit ML inference metrics.
 
@@ -986,7 +984,9 @@ class CodexSignalsTelemetry(SignalsTelemetry):
         }
 
         signal = Signal(
-            signal_type=SignalType.ALERT if health_status != "healthy" else SignalType.STATUS,
+            signal_type=(
+                SignalType.ALERT if health_status != "healthy" else SignalType.STATUS
+            ),
             severity=severity_map.get(health_status, SeverityLevel.WARNING),
             payload={
                 "message": f"Model health: {model_name} - {health_status}",

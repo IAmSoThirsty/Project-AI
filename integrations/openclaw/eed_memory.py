@@ -4,10 +4,11 @@ EED Memory Adapter - Legion Phase 2
 Handles persistent memory storage via Project-AI EED system
 """
 
-import aiohttp
 import asyncio
-from typing import Any
 from datetime import datetime
+from typing import Any
+
+import aiohttp
 from pydantic import BaseModel
 
 

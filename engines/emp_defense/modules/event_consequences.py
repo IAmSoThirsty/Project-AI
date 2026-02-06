@@ -7,9 +7,10 @@ No free wins. Every action has tradeoffs.
 
 import logging
 import random
+from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
-from collections.abc import Callable
+
 from engines.emp_defense.modules.sectorized_state import SectorizedWorldState
 
 logger = logging.getLogger(__name__)
@@ -201,7 +202,7 @@ class ConsequentialEventSystem:
             state.governance.legitimacy_score -= 0.05
             state.security.civil_unrest_level += 0.10
             consequences["cascade_failure"] = True
-            logger.error(f"💥 Cascade failure: event backfired")
+            logger.error("💥 Cascade failure: event backfired")
 
         return consequences
 

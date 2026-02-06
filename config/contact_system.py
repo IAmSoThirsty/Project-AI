@@ -3,8 +3,8 @@ Contact System - Message threads for support
 """
 
 import logging
-from typing import Dict, Any, List
 import time
+from typing import Any
 
 
 class ContactSystem:
@@ -14,14 +14,14 @@ class ContactSystem:
         self.logger = logging.getLogger(__name__)
         self.god_tier_encryption = god_tier_encryption
 
-        self.threads: Dict[str, List[Dict[str, Any]]] = {
+        self.threads: dict[str, list[dict[str, Any]]] = {
             'improvements': [],
             'features': [],
             'code_of_conduct': [],
             'security': []
         }
 
-    def send_message(self, thread: str, message: str) -> Dict[str, Any]:
+    def send_message(self, thread: str, message: str) -> dict[str, Any]:
         """Send a message (encrypted)"""
         if thread not in self.threads:
             return {'error': f'Unknown thread: {thread}'}
@@ -38,6 +38,6 @@ class ContactSystem:
         self.threads[thread].append(msg)
         return {'status': 'sent', 'id': msg['id'], 'thread': thread}
 
-    def get_thread(self, thread: str) -> List[Dict[str, Any]]:
+    def get_thread(self, thread: str) -> list[dict[str, Any]]:
         """Get messages in a thread"""
         return self.threads.get(thread, []).copy()

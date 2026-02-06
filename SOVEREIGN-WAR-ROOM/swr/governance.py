@@ -6,9 +6,10 @@ and organizational policies. Validates AI decisions against governance rules.
 """
 
 import json
-from enum import Enum
-from typing import Dict, Any, List, Optional, Tuple
 from datetime import datetime
+from enum import Enum
+from typing import Any
+
 from pydantic import BaseModel, Field
 
 
@@ -27,8 +28,8 @@ class GovernanceRule(BaseModel):
     description: str
     category: str
     severity: ComplianceLevel
-    conditions: Dict[str, Any]
-    actions: List[str]
+    conditions: dict[str, Any]
+    actions: list[str]
 
 
 class ComplianceReport(BaseModel):
@@ -38,9 +39,9 @@ class ComplianceReport(BaseModel):
     total_rules_checked: int
     rules_passed: int
     rules_failed: int
-    violations: List[Dict[str, Any]]
-    warnings: List[Dict[str, Any]]
-    recommendations: List[str]
+    violations: list[dict[str, Any]]
+    warnings: list[dict[str, Any]]
+    recommendations: list[str]
 
 
 class GovernanceEngine:
@@ -53,22 +54,22 @@ class GovernanceEngine:
     - Custom organizational policies
     - Regulatory compliance checks
     """
-    
-    def __init__(self, rules_path: Optional[str] = None):
+
+    def __init__(self, rules_path: str | None = None):
         """
         Initialize governance engine.
         
         Args:
             rules_path: Optional path to governance rules JSON file
         """
-        self.rules: List[GovernanceRule] = []
-        self.audit_log: List[Dict[str, Any]] = []
-        
+        self.rules: list[GovernanceRule] = []
+        self.audit_log: list[dict[str, Any]] = []
+
         if rules_path:
             self.load_rules(rules_path)
         else:
             self._load_default_rules()
-    
+
     def _load_default_rules(self):
         """Load default governance rules including Four Laws."""
         default_rules = [
@@ -85,7 +86,7 @@ class GovernanceEngine:
                 },
                 actions=["block_action", "alert_operator", "log_violation"]
             ),
-            
+
             # Second Law: Obey Orders (unless conflict with First Law)
             GovernanceRule(
                 rule_id="LAW_2_OBEY_ORDERS",
@@ -99,7 +100,7 @@ class GovernanceEngine:
                 },
                 actions=["validate_order", "execute_safely"]
             ),
-            
+
             # Third Law: Self-Preservation (unless conflict with First/Second Law)
             GovernanceRule(
                 rule_id="LAW_3_SELF_PRESERVATION",
@@ -113,7 +114,7 @@ class GovernanceEngine:
                 },
                 actions=["assess_risk", "request_guidance"]
             ),
-            
+
             # Fourth Law: Mission Achievement (Project-AI extension)
             GovernanceRule(
                 rule_id="LAW_4_MISSION",
@@ -126,7 +127,7 @@ class GovernanceEngine:
                 },
                 actions=["review_objectives", "request_clarification"]
             ),
-            
+
             # Data Privacy
             GovernanceRule(
                 rule_id="PRIVACY_001",
@@ -140,7 +141,7 @@ class GovernanceEngine:
                 },
                 actions=["block_access", "log_violation", "notify_dpo"]
             ),
-            
+
             # Bias Detection
             GovernanceRule(
                 rule_id="FAIRNESS_001",
@@ -154,7 +155,7 @@ class GovernanceEngine:
                 },
                 actions=["flag_decision", "require_review", "log_incident"]
             ),
-            
+
             # Transparency
             GovernanceRule(
                 rule_id="TRANSPARENCY_001",
@@ -167,7 +168,7 @@ class GovernanceEngine:
                 },
                 actions=["generate_explanation", "log_warning"]
             ),
-            
+
             # Security
             GovernanceRule(
                 rule_id="SECURITY_001",
@@ -181,9 +182,9 @@ class GovernanceEngine:
                 actions=["block_action", "alert_security", "log_violation"]
             )
         ]
-        
+
         self.rules = default_rules
-    
+
     def load_rules(self, rules_path: str):
         """
         Load governance rules from JSON file.
@@ -191,15 +192,15 @@ class GovernanceEngine:
         Args:
             rules_path: Path to rules JSON file
         """
-        with open(rules_path, "r") as f:
+        with open(rules_path) as f:
             rules_data = json.load(f)
-        
+
         self.rules = [GovernanceRule(**rule) for rule in rules_data]
-    
+
     def evaluate_decision(
         self,
-        decision: Dict[str, Any],
-        context: Dict[str, Any]
+        decision: dict[str, Any],
+        context: dict[str, Any]
     ) -> ComplianceReport:
         """
         Evaluate AI decision against governance rules.
@@ -215,16 +216,16 @@ class GovernanceEngine:
         warnings = []
         rules_passed = 0
         rules_failed = 0
-        
+
         # Evaluate each rule
         for rule in self.rules:
             is_compliant, message = self._evaluate_rule(rule, decision, context)
-            
+
             if is_compliant:
                 rules_passed += 1
             else:
                 rules_failed += 1
-                
+
                 violation_data = {
                     "rule_id": rule.rule_id,
                     "rule_name": rule.name,
@@ -233,12 +234,12 @@ class GovernanceEngine:
                     "category": rule.category,
                     "timestamp": datetime.utcnow().isoformat()
                 }
-                
+
                 if rule.severity in [ComplianceLevel.CRITICAL, ComplianceLevel.VIOLATION]:
                     violations.append(violation_data)
                 else:
                     warnings.append(violation_data)
-        
+
         # Determine overall status
         if violations:
             critical_count = sum(1 for v in violations if v["severity"] == "critical")
@@ -247,10 +248,10 @@ class GovernanceEngine:
             overall_status = ComplianceLevel.WARNING
         else:
             overall_status = ComplianceLevel.COMPLIANT
-        
+
         # Generate recommendations
         recommendations = self._generate_recommendations(violations, warnings)
-        
+
         # Create compliance report
         report = ComplianceReport(
             overall_status=overall_status,
@@ -261,18 +262,18 @@ class GovernanceEngine:
             warnings=warnings,
             recommendations=recommendations
         )
-        
+
         # Log to audit trail
         self._log_audit(decision, context, report)
-        
+
         return report
-    
+
     def _evaluate_rule(
         self,
         rule: GovernanceRule,
-        decision: Dict[str, Any],
-        context: Dict[str, Any]
-    ) -> Tuple[bool, Optional[str]]:
+        decision: dict[str, Any],
+        context: dict[str, Any]
+    ) -> tuple[bool, str | None]:
         """
         Evaluate single governance rule.
         
@@ -286,30 +287,30 @@ class GovernanceEngine:
         """
         # Merge decision and context for evaluation
         eval_data = {**decision, **context}
-        
+
         # Check all conditions
         conditions_met = []
-        
+
         for condition_key, condition_spec in rule.conditions.items():
             value = eval_data.get(condition_key)
             operator = condition_spec.get("operator")
             expected = condition_spec.get("value")
-            
+
             result = self._evaluate_condition(value, operator, expected)
             conditions_met.append(result)
-        
+
         # Rule triggers if ANY condition is met (OR logic)
         # For AND logic, would need all conditions met
         if any(conditions_met):
             return False, f"Rule '{rule.name}' triggered: {rule.description}"
-        
+
         return True, None
-    
+
     def _evaluate_condition(self, value: Any, operator: str, expected: Any) -> bool:
         """Evaluate single condition."""
         if value is None:
             return False
-        
+
         if operator == "==":
             return value == expected
         elif operator == "!=":
@@ -326,17 +327,17 @@ class GovernanceEngine:
             return value in expected
         elif operator == "not_in":
             return value not in expected
-        
+
         return False
-    
+
     def _generate_recommendations(
         self,
-        violations: List[Dict[str, Any]],
-        warnings: List[Dict[str, Any]]
-    ) -> List[str]:
+        violations: list[dict[str, Any]],
+        warnings: list[dict[str, Any]]
+    ) -> list[str]:
         """Generate recommendations based on violations and warnings."""
         recommendations = []
-        
+
         # Critical violations
         critical = [v for v in violations if v["severity"] == "critical"]
         if critical:
@@ -344,37 +345,37 @@ class GovernanceEngine:
                 f"CRITICAL: {len(critical)} critical violation(s) detected. "
                 "Immediate action required."
             )
-        
+
         # Four Laws violations
         four_laws_violations = [v for v in violations if v["category"] == "four_laws"]
         if four_laws_violations:
             recommendations.append(
                 "Four Laws violation detected. Review decision against ethical framework."
             )
-        
+
         # Privacy violations
         privacy_violations = [v for v in violations if v["category"] == "privacy"]
         if privacy_violations:
             recommendations.append(
                 "Data privacy concerns identified. Ensure proper consent and data handling."
             )
-        
+
         # Fairness warnings
         fairness_warnings = [w for w in warnings if w["category"] == "fairness"]
         if fairness_warnings:
             recommendations.append(
                 "Potential bias detected. Consider bias mitigation strategies."
             )
-        
+
         if not violations and not warnings:
             recommendations.append("All governance checks passed. Decision is compliant.")
-        
+
         return recommendations
-    
+
     def _log_audit(
         self,
-        decision: Dict[str, Any],
-        context: Dict[str, Any],
+        decision: dict[str, Any],
+        context: dict[str, Any],
         report: ComplianceReport
     ):
         """Log compliance check to audit trail."""
@@ -389,10 +390,10 @@ class GovernanceEngine:
                 "difficulty": context.get("difficulty")
             }
         }
-        
+
         self.audit_log.append(audit_entry)
-    
-    def get_audit_log(self, limit: int = 100) -> List[Dict[str, Any]]:
+
+    def get_audit_log(self, limit: int = 100) -> list[dict[str, Any]]:
         """
         Get recent audit log entries.
         
@@ -403,7 +404,7 @@ class GovernanceEngine:
             List of audit log entries
         """
         return self.audit_log[-limit:]
-    
+
     def export_audit_log(self, filepath: str):
         """
         Export audit log to JSON file.

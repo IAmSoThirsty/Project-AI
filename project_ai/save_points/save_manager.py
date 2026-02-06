@@ -5,11 +5,11 @@ Manages manual user save points and automatic 15-minute rotation saves
 """
 
 import json
+import logging
 import shutil
 import time
 from datetime import datetime
 from pathlib import Path
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -52,11 +52,11 @@ class SavePointsManager:
             "type": "user",
             "timestamp": timestamp,
             "created_at": time.time(),
-            "metadata": metadata or {}
+            "metadata": metadata or {},
         }
 
         # Save manifest
-        with open(save_path / "manifest.json", 'w') as f:
+        with open(save_path / "manifest.json", "w") as f:
             json.dump(manifest, f, indent=2)
 
         # Copy important files
@@ -88,11 +88,11 @@ class SavePointsManager:
             "type": "auto",
             "timestamp": timestamp,
             "created_at": time.time(),
-            "slot": "latest"
+            "slot": "latest",
         }
 
         # Save manifest
-        with open(save_path / "manifest.json", 'w') as f:
+        with open(save_path / "manifest.json", "w") as f:
             json.dump(manifest, f, indent=2)
 
         # Backup files
@@ -124,7 +124,7 @@ class SavePointsManager:
             "data/users.json",
             "data/conversations.db",
             ".env",
-            "config/app-config.json"
+            "config/app-config.json",
         ]
 
         for file_path in files_to_backup:

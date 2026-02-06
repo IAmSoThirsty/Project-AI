@@ -36,8 +36,10 @@ logger = logging.getLogger(__name__)
 # ENUMERATIONS
 # ============================================================================
 
+
 class ScenarioCategory(Enum):
     """Scenario domain classification"""
+
     DIGITAL_COGNITIVE = "digital_cognitive"
     ECONOMIC = "economic"
     INFRASTRUCTURE = "infrastructure"
@@ -47,6 +49,7 @@ class ScenarioCategory(Enum):
 
 class ScenarioStatus(Enum):
     """Current scenario activation state"""
+
     DORMANT = "dormant"
     TRIGGERED = "triggered"
     ESCALATING = "escalating"
@@ -58,6 +61,7 @@ class ScenarioStatus(Enum):
 
 class EscalationLevel(Enum):
     """Escalation ladder positions"""
+
     LEVEL_0_BASELINE = 0
     LEVEL_1_EARLY_WARNING = 1
     LEVEL_2_SIGNIFICANT_DEGRADATION = 2
@@ -68,6 +72,7 @@ class EscalationLevel(Enum):
 
 class ControlPlane(Enum):
     """Command authority levels"""
+
     STRATEGIC = "strategic"  # Long-term, policy-level
     OPERATIONAL = "operational"  # Medium-term, coordination
     TACTICAL = "tactical"  # Short-term, immediate response
@@ -78,9 +83,11 @@ class ControlPlane(Enum):
 # DATA MODELS
 # ============================================================================
 
+
 @dataclass
 class TriggerEvent:
     """Scenario trigger condition"""
+
     name: str
     description: str
     indicators: list[str]
@@ -94,13 +101,16 @@ class TriggerEvent:
         if not self.activated and self.current_value >= self.threshold_value:
             self.activated = True
             self.activation_time = datetime.utcnow()
-            logger.warning(f"Trigger activated: {self.name} (value={self.current_value})")
+            logger.warning(
+                f"Trigger activated: {self.name} (value={self.current_value})"
+            )
         return self.activated
 
 
 @dataclass
 class EscalationStep:
     """Single step in escalation ladder"""
+
     level: EscalationLevel
     description: str
     time_horizon: timedelta
@@ -114,6 +124,7 @@ class EscalationStep:
 @dataclass
 class DomainCoupling:
     """Cross-scenario coupling relationship"""
+
     target_scenario_id: str
     coupling_strength: float  # 0.0-1.0
     coupling_type: str  # "amplifying", "cascading", "synchronizing"
@@ -124,6 +135,7 @@ class DomainCoupling:
 @dataclass
 class CollapseMode:
     """Terminal failure state"""
+
     name: str
     description: str
     probability: float  # 0.0-1.0
@@ -135,6 +147,7 @@ class CollapseMode:
 @dataclass
 class RecoveryPoison:
     """False recovery / trap state"""
+
     name: str
     description: str
     apparent_improvement: str
@@ -146,6 +159,7 @@ class RecoveryPoison:
 @dataclass
 class VariableConstraint:
     """Enforced constraint on a variable (ceiling/floor)"""
+
     variable_name: str
     constraint_type: str  # "ceiling" or "floor"
     locked_value: float
@@ -166,18 +180,30 @@ class VariableConstraint:
         """
         # Check can_never constraints first (highest priority)
         if self.can_never_increase and new_value > self.locked_value:
-            return False, f"{self.variable_name} can never increase (irreversible degradation)"
+            return (
+                False,
+                f"{self.variable_name} can never increase (irreversible degradation)",
+            )
 
         if self.can_never_decrease and new_value < self.locked_value:
-            return False, f"{self.variable_name} can never decrease (irreversible escalation)"
+            return (
+                False,
+                f"{self.variable_name} can never decrease (irreversible escalation)",
+            )
 
         # Then check ceiling/floor constraints
         if self.constraint_type == "ceiling":
             if new_value > self.locked_value:
-                return False, f"{self.variable_name} cannot exceed ceiling of {self.locked_value} (locked: {self.reason})"
+                return (
+                    False,
+                    f"{self.variable_name} cannot exceed ceiling of {self.locked_value} (locked: {self.reason})",
+                )
         elif self.constraint_type == "floor":
             if new_value < self.locked_value:
-                return False, f"{self.variable_name} cannot fall below floor of {self.locked_value} (locked: {self.reason})"
+                return (
+                    False,
+                    f"{self.variable_name} cannot fall below floor of {self.locked_value} (locked: {self.reason})",
+                )
 
         return True, ""
 
@@ -185,6 +211,7 @@ class VariableConstraint:
 @dataclass
 class DisabledRecoveryEvent:
     """Permanently disabled recovery event"""
+
     event_name: str
     disabled_at: datetime
     reason: str
@@ -205,6 +232,7 @@ class DisabledRecoveryEvent:
 @dataclass
 class GovernanceCeiling:
     """Permanently lowered governance legitimacy ceiling"""
+
     domain: str  # e.g., "democratic_legitimacy", "institutional_trust", "policy_effectiveness"
     original_ceiling: float
     lowered_ceiling: float
@@ -235,6 +263,7 @@ class IrreversibilityLock:
     State lock enforcing irreversibility as physics.
     Once crossed, certain constraints become permanent.
     """
+
     lock_id: str
     scenario_id: str
     locked_at: datetime
@@ -263,7 +292,9 @@ class IrreversibilityLock:
                 }
                 for vc in self.variable_constraints
             ],
-            "disabled_recovery_events": [dre.to_dict() for dre in self.disabled_recovery_events],
+            "disabled_recovery_events": [
+                dre.to_dict() for dre in self.disabled_recovery_events
+            ],
             "governance_ceilings": [gc.to_dict() for gc in self.governance_ceilings],
             "triggered_collapses": self.triggered_collapses,
         }
@@ -272,6 +303,7 @@ class IrreversibilityLock:
 @dataclass
 class EventRecord:
     """Event sourcing record"""
+
     event_id: str
     timestamp: datetime
     event_type: str
@@ -296,6 +328,7 @@ class EventRecord:
 @dataclass
 class ScenarioState:
     """Complete state snapshot for event sourcing"""
+
     scenario_id: str
     timestamp: datetime
     status: ScenarioStatus
@@ -319,6 +352,7 @@ class ScenarioState:
 # ============================================================================
 # BASE SCENARIO CLASS
 # ============================================================================
+
 
 class BaseScenario(ABC):
     """Abstract base class for all 50 scenarios"""
@@ -382,7 +416,9 @@ class BaseScenario(ABC):
                     is_valid, reason = constraint.validate(new_value)
                     if not is_valid:
                         logger.error(f"CONSTRAINT VIOLATION: {reason}")
-                        raise ValueError(f"Irreversibility constraint violated: {reason}")
+                        raise ValueError(
+                            f"Irreversibility constraint violated: {reason}"
+                        )
 
         # Update metrics if all constraints pass
         self.metrics.update(metrics)
@@ -402,7 +438,8 @@ class BaseScenario(ABC):
         for step in self.escalation_ladder:
             if not step.reached and elapsed >= step.time_horizon:
                 conditions_met = all(
-                    self.metrics.get(cond, 0.0) > 0.5 for cond in step.required_conditions
+                    self.metrics.get(cond, 0.0) > 0.5
+                    for cond in step.required_conditions
                 )
                 if conditions_met:
                     step.reached = True
@@ -447,7 +484,10 @@ class BaseScenario(ABC):
         for lock in self.active_locks:
             for disabled_event in lock.disabled_recovery_events:
                 if disabled_event.event_name.lower() in event_name.lower():
-                    return False, f"Recovery event '{event_name}' permanently disabled: {disabled_event.reason}"
+                    return (
+                        False,
+                        f"Recovery event '{event_name}' permanently disabled: {disabled_event.reason}",
+                    )
         return True, ""
 
     def get_governance_ceiling(self, domain: str) -> float | None:
@@ -477,6 +517,7 @@ class BaseScenario(ABC):
 # DIGITAL/COGNITIVE SCENARIOS (1-10)
 # ============================================================================
 
+
 class AIRealityFloodScenario(BaseScenario):
     """S01: AI-generated content exceeds human verification capacity"""
 
@@ -493,7 +534,11 @@ class AIRealityFloodScenario(BaseScenario):
             TriggerEvent(
                 name="synthetic_content_ratio",
                 description="AI-generated content exceeds 50% of internet traffic",
-                indicators=["bot traffic metrics", "content generation API calls", "watermark absence"],
+                indicators=[
+                    "bot traffic metrics",
+                    "content generation API calls",
+                    "watermark absence",
+                ],
                 threshold_value=0.5,
             ),
             TriggerEvent(
@@ -518,15 +563,24 @@ class AIRealityFloodScenario(BaseScenario):
                 time_horizon=timedelta(days=0),
                 impact_severity=0.2,
                 required_conditions=["synthetic_content_ratio"],
-                mitigation_actions=["Deploy watermarking standards", "Increase fact-checking funding"],
+                mitigation_actions=[
+                    "Deploy watermarking standards",
+                    "Increase fact-checking funding",
+                ],
             ),
             EscalationStep(
                 level=EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION,
                 description="Majority of content unverified",
                 time_horizon=timedelta(days=90),
                 impact_severity=0.4,
-                required_conditions=["synthetic_content_ratio", "verification_capacity_deficit"],
-                mitigation_actions=["Mandate AI labeling", "Create verification consortiums"],
+                required_conditions=[
+                    "synthetic_content_ratio",
+                    "verification_capacity_deficit",
+                ],
+                mitigation_actions=[
+                    "Mandate AI labeling",
+                    "Create verification consortiums",
+                ],
             ),
             EscalationStep(
                 level=EscalationLevel.LEVEL_3_SYSTEM_STRAIN,
@@ -534,15 +588,24 @@ class AIRealityFloodScenario(BaseScenario):
                 time_horizon=timedelta(days=180),
                 impact_severity=0.6,
                 required_conditions=["epistemic_trust_collapse"],
-                mitigation_actions=["Government-backed verification seals", "Decentralized truth markets"],
+                mitigation_actions=[
+                    "Government-backed verification seals",
+                    "Decentralized truth markets",
+                ],
             ),
             EscalationStep(
                 level=EscalationLevel.LEVEL_4_CASCADE_THRESHOLD,
                 description="Information paralysis - no consensus reality",
                 time_horizon=timedelta(days=365),
                 impact_severity=0.8,
-                required_conditions=["epistemic_trust_collapse", "verification_capacity_deficit"],
-                mitigation_actions=["Emergency information curation", "Offline verification networks"],
+                required_conditions=[
+                    "epistemic_trust_collapse",
+                    "verification_capacity_deficit",
+                ],
+                mitigation_actions=[
+                    "Emergency information curation",
+                    "Offline verification networks",
+                ],
             ),
             EscalationStep(
                 level=EscalationLevel.LEVEL_5_COLLAPSE,
@@ -550,7 +613,10 @@ class AIRealityFloodScenario(BaseScenario):
                 time_horizon=timedelta(days=730),
                 impact_severity=1.0,
                 required_conditions=["epistemic_trust_collapse"],
-                mitigation_actions=["Reconstitute information commons", "Radical transparency protocols"],
+                mitigation_actions=[
+                    "Reconstitute information commons",
+                    "Radical transparency protocols",
+                ],
             ),
         ]
 
@@ -584,7 +650,10 @@ class AIRealityFloodScenario(BaseScenario):
                 probability=0.6,
                 time_to_collapse=timedelta(days=730),
                 irreversibility_score=0.7,
-                secondary_effects=["Democratic failure", "Economic coordination breakdown"],
+                secondary_effects=[
+                    "Democratic failure",
+                    "Economic coordination breakdown",
+                ],
             ),
             CollapseMode(
                 name="authoritarian_truth_regime",
@@ -592,7 +661,10 @@ class AIRealityFloodScenario(BaseScenario):
                 probability=0.3,
                 time_to_collapse=timedelta(days=365),
                 irreversibility_score=0.8,
-                secondary_effects=["Freedom of speech collapse", "Innovation stagnation"],
+                secondary_effects=[
+                    "Freedom of speech collapse",
+                    "Innovation stagnation",
+                ],
             ),
         ]
 
@@ -621,7 +693,9 @@ class AutonomousTradingWarScenario(BaseScenario):
     """S02: Algorithmic trading systems engage in adversarial optimization"""
 
     def __init__(self):
-        super().__init__("S02", "Autonomous Trading War", ScenarioCategory.DIGITAL_COGNITIVE)
+        super().__init__(
+            "S02", "Autonomous Trading War", ScenarioCategory.DIGITAL_COGNITIVE
+        )
         self.initialize_triggers()
         self.initialize_escalation_ladder()
         self.initialize_couplings()
@@ -660,14 +734,20 @@ class AutonomousTradingWarScenario(BaseScenario):
                 time_horizon=timedelta(days=180),
                 impact_severity=0.6,
                 required_conditions=["flash_crash_frequency"],
-                mitigation_actions=["Circuit breaker reforms", "Human trader incentives"],
+                mitigation_actions=[
+                    "Circuit breaker reforms",
+                    "Human trader incentives",
+                ],
             ),
             EscalationStep(
                 level=EscalationLevel.LEVEL_5_COLLAPSE,
                 description="Markets become too unstable for human participation",
                 time_horizon=timedelta(days=365),
                 impact_severity=1.0,
-                required_conditions=["algorithmic_trading_dominance", "flash_crash_frequency"],
+                required_conditions=[
+                    "algorithmic_trading_dominance",
+                    "flash_crash_frequency",
+                ],
                 mitigation_actions=["Market suspension", "Reset to human-only trading"],
             ),
         ]
@@ -696,7 +776,10 @@ class AutonomousTradingWarScenario(BaseScenario):
                 probability=0.4,
                 time_to_collapse=timedelta(days=365),
                 irreversibility_score=0.6,
-                secondary_effects=["Capital formation crisis", "Corporate funding collapse"],
+                secondary_effects=[
+                    "Capital formation crisis",
+                    "Corporate funding collapse",
+                ],
             ),
         ]
 
@@ -717,7 +800,9 @@ class InternetFragmentationScenario(BaseScenario):
     """S03: Global internet splits into incompatible regional networks"""
 
     def __init__(self):
-        super().__init__("S03", "Internet Fragmentation", ScenarioCategory.DIGITAL_COGNITIVE)
+        super().__init__(
+            "S03", "Internet Fragmentation", ScenarioCategory.DIGITAL_COGNITIVE
+        )
         self.initialize_triggers()
         self.initialize_escalation_ladder()
         self.initialize_couplings()
@@ -755,8 +840,14 @@ class InternetFragmentationScenario(BaseScenario):
                 description="Cross-border communication requires state approval",
                 time_horizon=timedelta(days=365),
                 impact_severity=0.8,
-                required_conditions=["sovereign_internet_adoption", "protocol_balkanization"],
-                mitigation_actions=["Neutral internet corridors", "Decentralized mesh networks"],
+                required_conditions=[
+                    "sovereign_internet_adoption",
+                    "protocol_balkanization",
+                ],
+                mitigation_actions=[
+                    "Neutral internet corridors",
+                    "Decentralized mesh networks",
+                ],
             ),
         ]
 
@@ -805,7 +896,11 @@ class SyntheticIdentityScenario(BaseScenario):
     """S04: AI-generated identities outnumber and outcompete humans online"""
 
     def __init__(self):
-        super().__init__("S04", "Synthetic Identity Proliferation", ScenarioCategory.DIGITAL_COGNITIVE)
+        super().__init__(
+            "S04",
+            "Synthetic Identity Proliferation",
+            ScenarioCategory.DIGITAL_COGNITIVE,
+        )
         self.initialize_triggers()
         self.initialize_escalation_ladder()
         self.initialize_couplings()
@@ -817,7 +912,10 @@ class SyntheticIdentityScenario(BaseScenario):
             TriggerEvent(
                 name="bot_to_human_ratio",
                 description="Bots exceed humans 10:1 on major platforms",
-                indicators=["account creation patterns", "interaction authenticity scores"],
+                indicators=[
+                    "account creation patterns",
+                    "interaction authenticity scores",
+                ],
                 threshold_value=10.0,
             ),
             TriggerEvent(
@@ -836,7 +934,10 @@ class SyntheticIdentityScenario(BaseScenario):
                 time_horizon=timedelta(days=0),
                 impact_severity=0.2,
                 required_conditions=["bot_to_human_ratio"],
-                mitigation_actions=["Enhanced verification", "Bot labeling requirements"],
+                mitigation_actions=[
+                    "Enhanced verification",
+                    "Bot labeling requirements",
+                ],
             ),
             EscalationStep(
                 level=EscalationLevel.LEVEL_3_SYSTEM_STRAIN,
@@ -844,7 +945,10 @@ class SyntheticIdentityScenario(BaseScenario):
                 time_horizon=timedelta(days=180),
                 impact_severity=0.6,
                 required_conditions=["synthetic_influence_dominance"],
-                mitigation_actions=["Proof-of-personhood systems", "Real-name policies"],
+                mitigation_actions=[
+                    "Proof-of-personhood systems",
+                    "Real-name policies",
+                ],
             ),
         ]
 
@@ -893,7 +997,9 @@ class CognitiveLoadScenario(BaseScenario):
     """S05: Information overload exceeds human cognitive processing capacity"""
 
     def __init__(self):
-        super().__init__("S05", "Cognitive Load Collapse", ScenarioCategory.DIGITAL_COGNITIVE)
+        super().__init__(
+            "S05", "Cognitive Load Collapse", ScenarioCategory.DIGITAL_COGNITIVE
+        )
         self.initialize_triggers()
         self.initialize_escalation_ladder()
         self.initialize_couplings()
@@ -932,7 +1038,10 @@ class CognitiveLoadScenario(BaseScenario):
                 time_horizon=timedelta(days=365),
                 impact_severity=0.8,
                 required_conditions=["decision_fatigue_prevalence"],
-                mitigation_actions=["Mandatory digital sabbaticals", "AI assistants for filtering"],
+                mitigation_actions=[
+                    "Mandatory digital sabbaticals",
+                    "AI assistants for filtering",
+                ],
             ),
         ]
 
@@ -981,7 +1090,9 @@ class AlgorithmicCulturalDriftScenario(BaseScenario):
     """S06: Recommendation algorithms reshape culture in unintended directions"""
 
     def __init__(self):
-        super().__init__("S06", "Algorithmic Cultural Drift", ScenarioCategory.DIGITAL_COGNITIVE)
+        super().__init__(
+            "S06", "Algorithmic Cultural Drift", ScenarioCategory.DIGITAL_COGNITIVE
+        )
         self.initialize_triggers()
         self.initialize_escalation_ladder()
         self.initialize_couplings()
@@ -993,7 +1104,10 @@ class AlgorithmicCulturalDriftScenario(BaseScenario):
             TriggerEvent(
                 name="algorithmic_curation_dominance",
                 description=">70% of content consumption via recommendations",
-                indicators=["recommendation click-through rates", "organic discovery decline"],
+                indicators=[
+                    "recommendation click-through rates",
+                    "organic discovery decline",
+                ],
                 threshold_value=0.7,
             ),
             TriggerEvent(
@@ -1012,7 +1126,10 @@ class AlgorithmicCulturalDriftScenario(BaseScenario):
                 time_horizon=timedelta(days=180),
                 impact_severity=0.4,
                 required_conditions=["algorithmic_curation_dominance"],
-                mitigation_actions=["Algorithm transparency", "Human curation incentives"],
+                mitigation_actions=[
+                    "Algorithm transparency",
+                    "Human curation incentives",
+                ],
             ),
             EscalationStep(
                 level=EscalationLevel.LEVEL_4_CASCADE_THRESHOLD,
@@ -1020,7 +1137,10 @@ class AlgorithmicCulturalDriftScenario(BaseScenario):
                 time_horizon=timedelta(days=540),
                 impact_severity=0.8,
                 required_conditions=["cultural_homogenization"],
-                mitigation_actions=["Break up recommendation monopolies", "Cultural diversity quotas"],
+                mitigation_actions=[
+                    "Break up recommendation monopolies",
+                    "Cultural diversity quotas",
+                ],
             ),
         ]
 
@@ -1048,7 +1168,10 @@ class AlgorithmicCulturalDriftScenario(BaseScenario):
                 probability=0.5,
                 time_to_collapse=timedelta(days=1095),
                 irreversibility_score=0.6,
-                secondary_effects=["Economic competitiveness decline", "Social rigidity"],
+                secondary_effects=[
+                    "Economic competitiveness decline",
+                    "Social rigidity",
+                ],
             ),
         ]
 
@@ -1069,7 +1192,9 @@ class ModelWeightPoisoningScenario(BaseScenario):
     """S07: Adversarial manipulation of foundation model training data"""
 
     def __init__(self):
-        super().__init__("S07", "Model Weight Poisoning", ScenarioCategory.DIGITAL_COGNITIVE)
+        super().__init__(
+            "S07", "Model Weight Poisoning", ScenarioCategory.DIGITAL_COGNITIVE
+        )
         self.initialize_triggers()
         self.initialize_escalation_ladder()
         self.initialize_couplings()
@@ -1087,7 +1212,10 @@ class ModelWeightPoisoningScenario(BaseScenario):
             TriggerEvent(
                 name="supply_chain_compromise",
                 description="Training data supply chains infiltrated",
-                indicators=["data provenance breaks", "third-party dataset compromises"],
+                indicators=[
+                    "data provenance breaks",
+                    "third-party dataset compromises",
+                ],
                 threshold_value=0.6,
             ),
         ]
@@ -1100,7 +1228,10 @@ class ModelWeightPoisoningScenario(BaseScenario):
                 time_horizon=timedelta(days=0),
                 impact_severity=0.3,
                 required_conditions=["data_poisoning_incidents"],
-                mitigation_actions=["Enhanced model auditing", "Data provenance tracking"],
+                mitigation_actions=[
+                    "Enhanced model auditing",
+                    "Data provenance tracking",
+                ],
             ),
             EscalationStep(
                 level=EscalationLevel.LEVEL_3_SYSTEM_STRAIN,
@@ -1108,7 +1239,10 @@ class ModelWeightPoisoningScenario(BaseScenario):
                 time_horizon=timedelta(days=270),
                 impact_severity=0.6,
                 required_conditions=["supply_chain_compromise"],
-                mitigation_actions=["Open source model verification", "Secure training enclaves"],
+                mitigation_actions=[
+                    "Open source model verification",
+                    "Secure training enclaves",
+                ],
             ),
         ]
 
@@ -1157,7 +1291,9 @@ class DNSTrustCollapseScenario(BaseScenario):
     """S08: DNS system compromised, internet naming untrustworthy"""
 
     def __init__(self):
-        super().__init__("S08", "DNS Trust Collapse", ScenarioCategory.DIGITAL_COGNITIVE)
+        super().__init__(
+            "S08", "DNS Trust Collapse", ScenarioCategory.DIGITAL_COGNITIVE
+        )
         self.initialize_triggers()
         self.initialize_escalation_ladder()
         self.initialize_couplings()
@@ -1188,15 +1324,24 @@ class DNSTrustCollapseScenario(BaseScenario):
                 time_horizon=timedelta(days=90),
                 impact_severity=0.5,
                 required_conditions=["dns_hijacking_frequency"],
-                mitigation_actions=["Accelerate DNSSEC deployment", "Alternative naming systems"],
+                mitigation_actions=[
+                    "Accelerate DNSSEC deployment",
+                    "Alternative naming systems",
+                ],
             ),
             EscalationStep(
                 level=EscalationLevel.LEVEL_4_CASCADE_THRESHOLD,
                 description="Trust in internet addressing collapses",
                 time_horizon=timedelta(days=365),
                 impact_severity=0.8,
-                required_conditions=["dns_hijacking_frequency", "dnssec_deployment_stall"],
-                mitigation_actions=["Decentralized naming (blockchain)", "Manual IP address use"],
+                required_conditions=[
+                    "dns_hijacking_frequency",
+                    "dnssec_deployment_stall",
+                ],
+                mitigation_actions=[
+                    "Decentralized naming (blockchain)",
+                    "Manual IP address use",
+                ],
             ),
         ]
 
@@ -1245,7 +1390,11 @@ class DeepfakeLegalEvidenceScenario(BaseScenario):
     """S09: Deepfakes undermine evidence admissibility in legal systems"""
 
     def __init__(self):
-        super().__init__("S09", "Deepfake Legal Evidence Collapse", ScenarioCategory.DIGITAL_COGNITIVE)
+        super().__init__(
+            "S09",
+            "Deepfake Legal Evidence Collapse",
+            ScenarioCategory.DIGITAL_COGNITIVE,
+        )
         self.initialize_triggers()
         self.initialize_escalation_ladder()
         self.initialize_couplings()
@@ -1257,7 +1406,10 @@ class DeepfakeLegalEvidenceScenario(BaseScenario):
             TriggerEvent(
                 name="deepfake_legal_cases",
                 description=">10 high-profile cases with deepfake evidence disputes",
-                indicators=["court filings mentioning deepfakes", "evidence authenticity challenges"],
+                indicators=[
+                    "court filings mentioning deepfakes",
+                    "evidence authenticity challenges",
+                ],
                 threshold_value=10.0,
             ),
             TriggerEvent(
@@ -1276,7 +1428,10 @@ class DeepfakeLegalEvidenceScenario(BaseScenario):
                 time_horizon=timedelta(days=180),
                 impact_severity=0.5,
                 required_conditions=["deepfake_legal_cases"],
-                mitigation_actions=["Authenticated capture devices", "Blockchain evidence chains"],
+                mitigation_actions=[
+                    "Authenticated capture devices",
+                    "Blockchain evidence chains",
+                ],
             ),
             EscalationStep(
                 level=EscalationLevel.LEVEL_4_CASCADE_THRESHOLD,
@@ -1284,7 +1439,10 @@ class DeepfakeLegalEvidenceScenario(BaseScenario):
                 time_horizon=timedelta(days=540),
                 impact_severity=0.8,
                 required_conditions=["verification_cost_explosion"],
-                mitigation_actions=["Return to analog evidence", "Cryptographic signing mandates"],
+                mitigation_actions=[
+                    "Return to analog evidence",
+                    "Cryptographic signing mandates",
+                ],
             ),
         ]
 
@@ -1312,7 +1470,10 @@ class DeepfakeLegalEvidenceScenario(BaseScenario):
                 probability=0.6,
                 time_to_collapse=timedelta(days=730),
                 irreversibility_score=0.7,
-                secondary_effects=["Vigilante justice", "Contract enforcement collapse"],
+                secondary_effects=[
+                    "Vigilante justice",
+                    "Contract enforcement collapse",
+                ],
             ),
         ]
 
@@ -1333,7 +1494,11 @@ class PsychologicalExhaustionScenario(BaseScenario):
     """S10: State-level psychological warfare campaigns via social media"""
 
     def __init__(self):
-        super().__init__("S10", "Psychological Exhaustion Campaigns", ScenarioCategory.DIGITAL_COGNITIVE)
+        super().__init__(
+            "S10",
+            "Psychological Exhaustion Campaigns",
+            ScenarioCategory.DIGITAL_COGNITIVE,
+        )
         self.initialize_triggers()
         self.initialize_escalation_ladder()
         self.initialize_couplings()
@@ -1345,13 +1510,21 @@ class PsychologicalExhaustionScenario(BaseScenario):
             TriggerEvent(
                 name="coordinated_psy_ops",
                 description=">5 nations running active psychological operations",
-                indicators=["attribution reports", "bot network discoveries", "narrative coordination"],
+                indicators=[
+                    "attribution reports",
+                    "bot network discoveries",
+                    "narrative coordination",
+                ],
                 threshold_value=5.0,
             ),
             TriggerEvent(
                 name="mental_health_crisis",
                 description="Anxiety/depression rates exceed 40%",
-                indicators=["mental health surveys", "medication prescriptions", "crisis hotline usage"],
+                indicators=[
+                    "mental health surveys",
+                    "medication prescriptions",
+                    "crisis hotline usage",
+                ],
                 threshold_value=0.4,
             ),
         ]
@@ -1364,7 +1537,10 @@ class PsychologicalExhaustionScenario(BaseScenario):
                 time_horizon=timedelta(days=0),
                 impact_severity=0.3,
                 required_conditions=["coordinated_psy_ops"],
-                mitigation_actions=["Public awareness campaigns", "Platform countermeasures"],
+                mitigation_actions=[
+                    "Public awareness campaigns",
+                    "Platform countermeasures",
+                ],
             ),
             EscalationStep(
                 level=EscalationLevel.LEVEL_3_SYSTEM_STRAIN,
@@ -1372,7 +1548,10 @@ class PsychologicalExhaustionScenario(BaseScenario):
                 time_horizon=timedelta(days=270),
                 impact_severity=0.7,
                 required_conditions=["mental_health_crisis"],
-                mitigation_actions=["Digital wellness mandates", "Social media regulation"],
+                mitigation_actions=[
+                    "Digital wellness mandates",
+                    "Social media regulation",
+                ],
             ),
             EscalationStep(
                 level=EscalationLevel.LEVEL_5_COLLAPSE,
@@ -1380,7 +1559,10 @@ class PsychologicalExhaustionScenario(BaseScenario):
                 time_horizon=timedelta(days=730),
                 impact_severity=1.0,
                 required_conditions=["coordinated_psy_ops", "mental_health_crisis"],
-                mitigation_actions=["Emergency mental health mobilization", "Platform shutdowns"],
+                mitigation_actions=[
+                    "Emergency mental health mobilization",
+                    "Platform shutdowns",
+                ],
             ),
         ]
 
@@ -1414,7 +1596,11 @@ class PsychologicalExhaustionScenario(BaseScenario):
                 probability=0.5,
                 time_to_collapse=timedelta(days=1095),
                 irreversibility_score=0.6,
-                secondary_effects=["Trust collapse", "Cooperation breakdown", "Economic stagnation"],
+                secondary_effects=[
+                    "Trust collapse",
+                    "Cooperation breakdown",
+                    "Economic stagnation",
+                ],
             ),
         ]
 
@@ -1431,149 +1617,734 @@ class PsychologicalExhaustionScenario(BaseScenario):
         ]
 
 
-
-
-
 # Economic scenarios stub classes (using compact initialization pattern)
 class SovereignDebtCascadeScenario(BaseScenario):
     def __init__(self):
         super().__init__("S11", "Sovereign Debt Cascade", ScenarioCategory.ECONOMIC)
-        self.triggers = [TriggerEvent("default_count", "Sovereign defaults", ["CDS spreads"], 3.0), TriggerEvent("debt_to_gdp_threshold", "Debt-to-GDP threshold", ["World Bank data"], 3.0)]
-        self.escalation_ladder = [EscalationStep(EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION, "Contagion spreads", timedelta(days=90), 0.5, ["default_count"], ["Emergency liquidity"]), EscalationStep(EscalationLevel.LEVEL_4_CASCADE_THRESHOLD, "Core economies at risk", timedelta(days=365), 0.9, ["default_count", "debt_to_gdp_threshold"], ["Global debt jubilee"])]
-        self.couplings = [DomainCoupling("S12", 0.9, "cascading", "Defaults trigger currency crises"), DomainCoupling("S14", 0.8, "amplifying", "Insurance markets collapse")]
-        self.collapse_modes = [CollapseMode("global_financial_meltdown", "Financial system ceases", 0.5, timedelta(days=180), 0.7, ["Trade collapse", "Bank runs"])]
-        self.recovery_poisons = [RecoveryPoison("perpetual_qe", "Permanent monetization", "Defaults prevented", "Currency debasement", 0.5, 2.5)]
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+        self.triggers = [
+            TriggerEvent("default_count", "Sovereign defaults", ["CDS spreads"], 3.0),
+            TriggerEvent(
+                "debt_to_gdp_threshold",
+                "Debt-to-GDP threshold",
+                ["World Bank data"],
+                3.0,
+            ),
+        ]
+        self.escalation_ladder = [
+            EscalationStep(
+                EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION,
+                "Contagion spreads",
+                timedelta(days=90),
+                0.5,
+                ["default_count"],
+                ["Emergency liquidity"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_4_CASCADE_THRESHOLD,
+                "Core economies at risk",
+                timedelta(days=365),
+                0.9,
+                ["default_count", "debt_to_gdp_threshold"],
+                ["Global debt jubilee"],
+            ),
+        ]
+        self.couplings = [
+            DomainCoupling("S12", 0.9, "cascading", "Defaults trigger currency crises"),
+            DomainCoupling("S14", 0.8, "amplifying", "Insurance markets collapse"),
+        ]
+        self.collapse_modes = [
+            CollapseMode(
+                "global_financial_meltdown",
+                "Financial system ceases",
+                0.5,
+                timedelta(days=180),
+                0.7,
+                ["Trade collapse", "Bank runs"],
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "perpetual_qe",
+                "Permanent monetization",
+                "Defaults prevented",
+                "Currency debasement",
+                0.5,
+                2.5,
+            )
+        ]
+
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class CurrencyConfidenceDeathSpiralScenario(BaseScenario):
     def __init__(self):
-        super().__init__("S12", "Currency Confidence Death Spiral", ScenarioCategory.ECONOMIC)
-        self.triggers = [TriggerEvent("inflation_acceleration", "Inflation >20%", ["CPI"], 0.2), TriggerEvent("alternative_currency_adoption", "Alt currency >30%", ["crypto adoption"], 0.3)]
-        self.escalation_ladder = [EscalationStep(EscalationLevel.LEVEL_1_EARLY_WARNING, "Inflation unanchored", timedelta(days=0), 0.3, ["inflation_acceleration"], ["Rate hikes"]), EscalationStep(EscalationLevel.LEVEL_3_SYSTEM_STRAIN, "Currency substitution", timedelta(days=180), 0.7, ["alternative_currency_adoption"], ["Capital controls"]), EscalationStep(EscalationLevel.LEVEL_5_COLLAPSE, "Hyperinflation", timedelta(days=365), 1.0, ["inflation_acceleration", "alternative_currency_adoption"], ["Currency reform"])]
-        self.couplings = [DomainCoupling("S11", 0.9, "amplifying", "Debt crisis destroys confidence"), DomainCoupling("S18", 0.8, "cascading", "Inflation locked")]
-        self.collapse_modes = [CollapseMode("monetary_system_collapse", "Medium of exchange breaks", 0.4, timedelta(days=270), 0.8, ["Economic collapse", "Barter"])]
-        self.recovery_poisons = [RecoveryPoison("cbdc_totalitarian_control", "Programmable CBDC", "Stable currency", "Financial surveillance", 0.4, 3.0)]
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+        super().__init__(
+            "S12", "Currency Confidence Death Spiral", ScenarioCategory.ECONOMIC
+        )
+        self.triggers = [
+            TriggerEvent("inflation_acceleration", "Inflation >20%", ["CPI"], 0.2),
+            TriggerEvent(
+                "alternative_currency_adoption",
+                "Alt currency >30%",
+                ["crypto adoption"],
+                0.3,
+            ),
+        ]
+        self.escalation_ladder = [
+            EscalationStep(
+                EscalationLevel.LEVEL_1_EARLY_WARNING,
+                "Inflation unanchored",
+                timedelta(days=0),
+                0.3,
+                ["inflation_acceleration"],
+                ["Rate hikes"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_3_SYSTEM_STRAIN,
+                "Currency substitution",
+                timedelta(days=180),
+                0.7,
+                ["alternative_currency_adoption"],
+                ["Capital controls"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_5_COLLAPSE,
+                "Hyperinflation",
+                timedelta(days=365),
+                1.0,
+                ["inflation_acceleration", "alternative_currency_adoption"],
+                ["Currency reform"],
+            ),
+        ]
+        self.couplings = [
+            DomainCoupling("S11", 0.9, "amplifying", "Debt crisis destroys confidence"),
+            DomainCoupling("S18", 0.8, "cascading", "Inflation locked"),
+        ]
+        self.collapse_modes = [
+            CollapseMode(
+                "monetary_system_collapse",
+                "Medium of exchange breaks",
+                0.4,
+                timedelta(days=270),
+                0.8,
+                ["Economic collapse", "Barter"],
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "cbdc_totalitarian_control",
+                "Programmable CBDC",
+                "Stable currency",
+                "Financial surveillance",
+                0.4,
+                3.0,
+            )
+        ]
+
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class EnergyBackedBlocsScenario(BaseScenario):
     def __init__(self):
-        super().__init__("S13", "Energy-Backed Currency Blocs", ScenarioCategory.ECONOMIC)
-        self.triggers = [TriggerEvent("petrodollar_decline", "Oil trade decline", ["currency settlements"], 0.4), TriggerEvent("energy_bloc_formation", "Energy exporters coordinate", ["diplomatic agreements"], 5.0)]
-        self.escalation_ladder = [EscalationStep(EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION, "Parallel currency emerges", timedelta(days=270), 0.5, ["energy_bloc_formation"], ["Currency swaps"]), EscalationStep(EscalationLevel.LEVEL_4_CASCADE_THRESHOLD, "Dollar hegemony ends", timedelta(days=540), 0.8, ["petrodollar_decline", "energy_bloc_formation"], ["Multipolar system"])]
-        self.couplings = [DomainCoupling("S16", 0.7, "synchronizing", "Economic blocs secede"), DomainCoupling("S21", 0.6, "cascading", "Energy geopolitics")]
-        self.collapse_modes = [CollapseMode("reserve_currency_war", "Currency blocs war", 0.6, timedelta(days=730), 0.7, ["Trade fragmentation"])]
-        self.recovery_poisons = [RecoveryPoison("energy_currency_cartel", "Energy cartel formed", "Stable pricing", "OPEC manipulation", 0.5, 1.8)]
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+        super().__init__(
+            "S13", "Energy-Backed Currency Blocs", ScenarioCategory.ECONOMIC
+        )
+        self.triggers = [
+            TriggerEvent(
+                "petrodollar_decline",
+                "Oil trade decline",
+                ["currency settlements"],
+                0.4,
+            ),
+            TriggerEvent(
+                "energy_bloc_formation",
+                "Energy exporters coordinate",
+                ["diplomatic agreements"],
+                5.0,
+            ),
+        ]
+        self.escalation_ladder = [
+            EscalationStep(
+                EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION,
+                "Parallel currency emerges",
+                timedelta(days=270),
+                0.5,
+                ["energy_bloc_formation"],
+                ["Currency swaps"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_4_CASCADE_THRESHOLD,
+                "Dollar hegemony ends",
+                timedelta(days=540),
+                0.8,
+                ["petrodollar_decline", "energy_bloc_formation"],
+                ["Multipolar system"],
+            ),
+        ]
+        self.couplings = [
+            DomainCoupling("S16", 0.7, "synchronizing", "Economic blocs secede"),
+            DomainCoupling("S21", 0.6, "cascading", "Energy geopolitics"),
+        ]
+        self.collapse_modes = [
+            CollapseMode(
+                "reserve_currency_war",
+                "Currency blocs war",
+                0.6,
+                timedelta(days=730),
+                0.7,
+                ["Trade fragmentation"],
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "energy_currency_cartel",
+                "Energy cartel formed",
+                "Stable pricing",
+                "OPEC manipulation",
+                0.5,
+                1.8,
+            )
+        ]
+
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class InsuranceMarketFailureScenario(BaseScenario):
     def __init__(self):
         super().__init__("S14", "Insurance Market Collapse", ScenarioCategory.ECONOMIC)
-        self.triggers = [TriggerEvent("catastrophic_loss_events", "Loss events >$50B", ["insured losses"], 5.0), TriggerEvent("insurer_insolvency_rate", "Insurers insolvent", ["bankruptcies"], 0.1)]
-        self.escalation_ladder = [EscalationStep(EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION, "Insurance unaffordable", timedelta(days=180), 0.5, ["catastrophic_loss_events"], ["Reinsurance backstops"]), EscalationStep(EscalationLevel.LEVEL_4_CASCADE_THRESHOLD, "Insurance unavailable", timedelta(days=540), 0.9, ["insurer_insolvency_rate"], ["Nationalized insurance"])]
-        self.couplings = [DomainCoupling("S30", 0.8, "cascading", "Climate disasters"), DomainCoupling("S11", 0.7, "amplifying", "Financial instability")]
-        self.collapse_modes = [CollapseMode("uninsurable_world", "Risk transfer fails", 0.5, timedelta(days=730), 0.6, ["Real estate collapse"])]
-        self.recovery_poisons = [RecoveryPoison("government_insurance_monopoly", "State insures all", "Universal coverage", "Moral hazard", 0.4, 2.2)]
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+        self.triggers = [
+            TriggerEvent(
+                "catastrophic_loss_events", "Loss events >$50B", ["insured losses"], 5.0
+            ),
+            TriggerEvent(
+                "insurer_insolvency_rate", "Insurers insolvent", ["bankruptcies"], 0.1
+            ),
+        ]
+        self.escalation_ladder = [
+            EscalationStep(
+                EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION,
+                "Insurance unaffordable",
+                timedelta(days=180),
+                0.5,
+                ["catastrophic_loss_events"],
+                ["Reinsurance backstops"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_4_CASCADE_THRESHOLD,
+                "Insurance unavailable",
+                timedelta(days=540),
+                0.9,
+                ["insurer_insolvency_rate"],
+                ["Nationalized insurance"],
+            ),
+        ]
+        self.couplings = [
+            DomainCoupling("S30", 0.8, "cascading", "Climate disasters"),
+            DomainCoupling("S11", 0.7, "amplifying", "Financial instability"),
+        ]
+        self.collapse_modes = [
+            CollapseMode(
+                "uninsurable_world",
+                "Risk transfer fails",
+                0.5,
+                timedelta(days=730),
+                0.6,
+                ["Real estate collapse"],
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "government_insurance_monopoly",
+                "State insures all",
+                "Universal coverage",
+                "Moral hazard",
+                0.4,
+                2.2,
+            )
+        ]
+
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class CreditScoringLockoutScenario(BaseScenario):
     def __init__(self):
         super().__init__("S15", "Credit Scoring Lockout", ScenarioCategory.ECONOMIC)
-        self.triggers = [TriggerEvent("alternative_data_dominance", "Non-trad data >70%", ["algorithm adoption"], 0.7), TriggerEvent("credit_invisible_population", "Population locked out", ["unbanked rates"], 0.2)]
-        self.escalation_ladder = [EscalationStep(EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION, "Opaque algorithms", timedelta(days=180), 0.5, ["alternative_data_dominance"], ["Algorithm transparency"]), EscalationStep(EscalationLevel.LEVEL_4_CASCADE_THRESHOLD, "Economic underclass", timedelta(days=540), 0.8, ["credit_invisible_population"], ["Public banking", "Credit amnesty"])]
-        self.couplings = [DomainCoupling("S04", 0.7, "amplifying", "Synthetic identities game"), DomainCoupling("S46", 0.6, "synchronizing", "Generational conflict")]
-        self.collapse_modes = [CollapseMode("economic_caste_system", "Hereditary classes", 0.6, timedelta(days=1095), 0.7, ["Social mobility collapse"])]
-        self.recovery_poisons = [RecoveryPoison("universal_credit_score", "Social credit system", "Everyone scored", "Behavioral control", 0.6, 2.5)]
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+        self.triggers = [
+            TriggerEvent(
+                "alternative_data_dominance",
+                "Non-trad data >70%",
+                ["algorithm adoption"],
+                0.7,
+            ),
+            TriggerEvent(
+                "credit_invisible_population",
+                "Population locked out",
+                ["unbanked rates"],
+                0.2,
+            ),
+        ]
+        self.escalation_ladder = [
+            EscalationStep(
+                EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION,
+                "Opaque algorithms",
+                timedelta(days=180),
+                0.5,
+                ["alternative_data_dominance"],
+                ["Algorithm transparency"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_4_CASCADE_THRESHOLD,
+                "Economic underclass",
+                timedelta(days=540),
+                0.8,
+                ["credit_invisible_population"],
+                ["Public banking", "Credit amnesty"],
+            ),
+        ]
+        self.couplings = [
+            DomainCoupling("S04", 0.7, "amplifying", "Synthetic identities game"),
+            DomainCoupling("S46", 0.6, "synchronizing", "Generational conflict"),
+        ]
+        self.collapse_modes = [
+            CollapseMode(
+                "economic_caste_system",
+                "Hereditary classes",
+                0.6,
+                timedelta(days=1095),
+                0.7,
+                ["Social mobility collapse"],
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "universal_credit_score",
+                "Social credit system",
+                "Everyone scored",
+                "Behavioral control",
+                0.6,
+                2.5,
+            )
+        ]
+
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class EconomicSecessionScenario(BaseScenario):
     def __init__(self):
         super().__init__("S16", "Economic Secession", ScenarioCategory.ECONOMIC)
-        self.triggers = [TriggerEvent("wealth_concentration", "Top 1% owns >50%", ["Gini"], 0.5), TriggerEvent("charter_city_proliferation", "Special zones >20", ["SEZ creation"], 20.0)]
-        self.escalation_ladder = [EscalationStep(EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION, "Parallel economies", timedelta(days=365), 0.5, ["charter_city_proliferation"], ["Progressive taxation"]), EscalationStep(EscalationLevel.LEVEL_4_CASCADE_THRESHOLD, "De facto secession", timedelta(days=730), 0.8, ["wealth_concentration", "charter_city_proliferation"], ["Redistribute wealth"])]
-        self.couplings = [DomainCoupling("S03", 0.7, "synchronizing", "Digital borders"), DomainCoupling("S46", 0.8, "cascading", "Generational warfare")]
-        self.collapse_modes = [CollapseMode("neo_feudalism", "Economic fiefdoms", 0.5, timedelta(days=1460), 0.7, ["Democratic collapse"])]
-        self.recovery_poisons = [RecoveryPoison("enforced_economic_unity", "Authoritarian unity", "Cohesion restored", "Innovation stifled", 0.4, 1.9)]
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+        self.triggers = [
+            TriggerEvent("wealth_concentration", "Top 1% owns >50%", ["Gini"], 0.5),
+            TriggerEvent(
+                "charter_city_proliferation",
+                "Special zones >20",
+                ["SEZ creation"],
+                20.0,
+            ),
+        ]
+        self.escalation_ladder = [
+            EscalationStep(
+                EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION,
+                "Parallel economies",
+                timedelta(days=365),
+                0.5,
+                ["charter_city_proliferation"],
+                ["Progressive taxation"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_4_CASCADE_THRESHOLD,
+                "De facto secession",
+                timedelta(days=730),
+                0.8,
+                ["wealth_concentration", "charter_city_proliferation"],
+                ["Redistribute wealth"],
+            ),
+        ]
+        self.couplings = [
+            DomainCoupling("S03", 0.7, "synchronizing", "Digital borders"),
+            DomainCoupling("S46", 0.8, "cascading", "Generational warfare"),
+        ]
+        self.collapse_modes = [
+            CollapseMode(
+                "neo_feudalism",
+                "Economic fiefdoms",
+                0.5,
+                timedelta(days=1460),
+                0.7,
+                ["Democratic collapse"],
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "enforced_economic_unity",
+                "Authoritarian unity",
+                "Cohesion restored",
+                "Innovation stifled",
+                0.4,
+                1.9,
+            )
+        ]
+
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class SupplyChainAICollusionScenario(BaseScenario):
     def __init__(self):
         super().__init__("S17", "Supply Chain AI Collusion", ScenarioCategory.ECONOMIC)
-        self.triggers = [TriggerEvent("ai_logistics_dominance", "AI decisions >80%", ["AI adoption"], 0.8), TriggerEvent("price_synchronization", "Price convergence", ["correlation"], 0.9)]
-        self.escalation_ladder = [EscalationStep(EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION, "Algorithmic coordination", timedelta(days=180), 0.5, ["ai_logistics_dominance"], ["Algorithm audits"]), EscalationStep(EscalationLevel.LEVEL_4_CASCADE_THRESHOLD, "Competition eliminated", timedelta(days=540), 0.8, ["price_synchronization"], ["Break up AI systems"])]
-        self.couplings = [DomainCoupling("S02", 0.8, "synchronizing", "Trading AIs coordinate"), DomainCoupling("S18", 0.7, "amplifying", "AI locks inflation")]
-        self.collapse_modes = [CollapseMode("algorithmic_cartel", "AI cartel permanent", 0.6, timedelta(days=730), 0.6, ["Consumer harm"])]
-        self.recovery_poisons = [RecoveryPoison("government_ai_oversight", "AI monitors AI", "Collusion detected", "Regulatory capture", 0.8, 1.7)]
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+        self.triggers = [
+            TriggerEvent(
+                "ai_logistics_dominance", "AI decisions >80%", ["AI adoption"], 0.8
+            ),
+            TriggerEvent(
+                "price_synchronization", "Price convergence", ["correlation"], 0.9
+            ),
+        ]
+        self.escalation_ladder = [
+            EscalationStep(
+                EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION,
+                "Algorithmic coordination",
+                timedelta(days=180),
+                0.5,
+                ["ai_logistics_dominance"],
+                ["Algorithm audits"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_4_CASCADE_THRESHOLD,
+                "Competition eliminated",
+                timedelta(days=540),
+                0.8,
+                ["price_synchronization"],
+                ["Break up AI systems"],
+            ),
+        ]
+        self.couplings = [
+            DomainCoupling("S02", 0.8, "synchronizing", "Trading AIs coordinate"),
+            DomainCoupling("S18", 0.7, "amplifying", "AI locks inflation"),
+        ]
+        self.collapse_modes = [
+            CollapseMode(
+                "algorithmic_cartel",
+                "AI cartel permanent",
+                0.6,
+                timedelta(days=730),
+                0.6,
+                ["Consumer harm"],
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "government_ai_oversight",
+                "AI monitors AI",
+                "Collusion detected",
+                "Regulatory capture",
+                0.8,
+                1.7,
+            )
+        ]
+
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class PermanentInflationLockScenario(BaseScenario):
     def __init__(self):
         super().__init__("S18", "Permanent Inflation Lock", ScenarioCategory.ECONOMIC)
-        self.triggers = [TriggerEvent("structural_inflation", "Core inflation >5%", ["CPI"], 0.05), TriggerEvent("deglobalization_shock", "Trade costs +30%", ["shipping costs"], 0.3)]
-        self.escalation_ladder = [EscalationStep(EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION, "Inflation entrenched", timedelta(days=180), 0.5, ["structural_inflation"], ["Aggressive monetary"]), EscalationStep(EscalationLevel.LEVEL_4_CASCADE_THRESHOLD, "Self-reinforcing", timedelta(days=540), 0.8, ["structural_inflation", "deglobalization_shock"], ["Price controls"])]
-        self.couplings = [DomainCoupling("S12", 0.9, "cascading", "Currency confidence destroyed"), DomainCoupling("S17", 0.7, "amplifying", "AI locks prices")]
-        self.collapse_modes = [CollapseMode("stagflation_trap", "High inflation + low growth", 0.6, timedelta(days=730), 0.6, ["Living standards decline"])]
-        self.recovery_poisons = [RecoveryPoison("permanent_price_controls", "Government controls all", "Price stability", "Shortages, black markets", 0.3, 2.8)]
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+        self.triggers = [
+            TriggerEvent("structural_inflation", "Core inflation >5%", ["CPI"], 0.05),
+            TriggerEvent(
+                "deglobalization_shock", "Trade costs +30%", ["shipping costs"], 0.3
+            ),
+        ]
+        self.escalation_ladder = [
+            EscalationStep(
+                EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION,
+                "Inflation entrenched",
+                timedelta(days=180),
+                0.5,
+                ["structural_inflation"],
+                ["Aggressive monetary"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_4_CASCADE_THRESHOLD,
+                "Self-reinforcing",
+                timedelta(days=540),
+                0.8,
+                ["structural_inflation", "deglobalization_shock"],
+                ["Price controls"],
+            ),
+        ]
+        self.couplings = [
+            DomainCoupling("S12", 0.9, "cascading", "Currency confidence destroyed"),
+            DomainCoupling("S17", 0.7, "amplifying", "AI locks prices"),
+        ]
+        self.collapse_modes = [
+            CollapseMode(
+                "stagflation_trap",
+                "High inflation + low growth",
+                0.6,
+                timedelta(days=730),
+                0.6,
+                ["Living standards decline"],
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "permanent_price_controls",
+                "Government controls all",
+                "Price stability",
+                "Shortages, black markets",
+                0.3,
+                2.8,
+            )
+        ]
+
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class LaborAlgorithmicCollapseScenario(BaseScenario):
     def __init__(self):
         super().__init__("S19", "Labor Algorithmic Collapse", ScenarioCategory.ECONOMIC)
-        self.triggers = [TriggerEvent("structural_unemployment", "Unemployment >15%", ["unemployment rate"], 0.15), TriggerEvent("automation_acceleration", "Jobs at risk >30%", ["AI capabilities"], 0.3)]
-        self.escalation_ladder = [EscalationStep(EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION, "Mass layoffs", timedelta(days=90), 0.5, ["automation_acceleration"], ["Retraining"]), EscalationStep(EscalationLevel.LEVEL_4_CASCADE_THRESHOLD, "Structural crisis", timedelta(days=365), 0.9, ["structural_unemployment"], ["UBI"])]
-        self.couplings = [DomainCoupling("S15", 0.8, "amplifying", "Credit lockout"), DomainCoupling("S50", 0.7, "synchronizing", "Apathy")]
-        self.collapse_modes = [CollapseMode("permanent_useless_class", "Unemployable population", 0.5, timedelta(days=1095), 0.7, ["Social unrest"])]
-        self.recovery_poisons = [RecoveryPoison("mandatory_employment", "Government jobs", "Zero unemployment", "Make-work bureaucracy", 0.4, 2.3)]
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+        self.triggers = [
+            TriggerEvent(
+                "structural_unemployment",
+                "Unemployment >15%",
+                ["unemployment rate"],
+                0.15,
+            ),
+            TriggerEvent(
+                "automation_acceleration", "Jobs at risk >30%", ["AI capabilities"], 0.3
+            ),
+        ]
+        self.escalation_ladder = [
+            EscalationStep(
+                EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION,
+                "Mass layoffs",
+                timedelta(days=90),
+                0.5,
+                ["automation_acceleration"],
+                ["Retraining"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_4_CASCADE_THRESHOLD,
+                "Structural crisis",
+                timedelta(days=365),
+                0.9,
+                ["structural_unemployment"],
+                ["UBI"],
+            ),
+        ]
+        self.couplings = [
+            DomainCoupling("S15", 0.8, "amplifying", "Credit lockout"),
+            DomainCoupling("S50", 0.7, "synchronizing", "Apathy"),
+        ]
+        self.collapse_modes = [
+            CollapseMode(
+                "permanent_useless_class",
+                "Unemployable population",
+                0.5,
+                timedelta(days=1095),
+                0.7,
+                ["Social unrest"],
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "mandatory_employment",
+                "Government jobs",
+                "Zero unemployment",
+                "Make-work bureaucracy",
+                0.4,
+                2.3,
+            )
+        ]
+
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class LiquidityBlackHoleScenario(BaseScenario):
     def __init__(self):
         super().__init__("S20", "Liquidity Black Hole", ScenarioCategory.ECONOMIC)
-        self.triggers = [TriggerEvent("market_maker_exodus", "Market makers -50%", ["bid-ask spreads"], 0.5), TriggerEvent("redemption_lockup", "Funds halt redemptions", ["fund gates"], 5.0)]
-        self.escalation_ladder = [EscalationStep(EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION, "Trading difficult", timedelta(days=7), 0.6, ["market_maker_exodus"], ["CB liquidity"]), EscalationStep(EscalationLevel.LEVEL_5_COLLAPSE, "Markets cease", timedelta(days=30), 1.0, ["redemption_lockup"], ["Market suspension"])]
-        self.couplings = [DomainCoupling("S02", 0.9, "cascading", "Algo withdrawal"), DomainCoupling("S11", 0.8, "amplifying", "Debt crisis")]
-        self.collapse_modes = [CollapseMode("market_death", "Price discovery breaks", 0.4, timedelta(days=90), 0.7, ["Capital allocation failure"])]
-        self.recovery_poisons = [RecoveryPoison("central_bank_omnipresence", "CBs as permanent makers", "Liquidity restored", "Price signals destroyed", 0.5, 2.7)]
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+        self.triggers = [
+            TriggerEvent(
+                "market_maker_exodus", "Market makers -50%", ["bid-ask spreads"], 0.5
+            ),
+            TriggerEvent(
+                "redemption_lockup", "Funds halt redemptions", ["fund gates"], 5.0
+            ),
+        ]
+        self.escalation_ladder = [
+            EscalationStep(
+                EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION,
+                "Trading difficult",
+                timedelta(days=7),
+                0.6,
+                ["market_maker_exodus"],
+                ["CB liquidity"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_5_COLLAPSE,
+                "Markets cease",
+                timedelta(days=30),
+                1.0,
+                ["redemption_lockup"],
+                ["Market suspension"],
+            ),
+        ]
+        self.couplings = [
+            DomainCoupling("S02", 0.9, "cascading", "Algo withdrawal"),
+            DomainCoupling("S11", 0.8, "amplifying", "Debt crisis"),
+        ]
+        self.collapse_modes = [
+            CollapseMode(
+                "market_death",
+                "Price discovery breaks",
+                0.4,
+                timedelta(days=90),
+                0.7,
+                ["Capital allocation failure"],
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "central_bank_omnipresence",
+                "CBs as permanent makers",
+                "Liquidity restored",
+                "Price signals destroyed",
+                0.5,
+                2.7,
+            )
+        ]
+
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 # ============================================================================
 # INFRASTRUCTURE SCENARIOS (21-30)
@@ -1588,193 +2359,558 @@ class LiquidityBlackHoleScenario(BaseScenario):
 
 class PowerGridFrequencyWarfareScenario(BaseScenario):
     """S21: Power Grid Frequency Warfare"""
+
     def __init__(self):
-        super().__init__("S21", "Power Grid Frequency Warfare", ScenarioCategory.INFRASTRUCTURE)
-        self.triggers = [TriggerEvent(f"s21_trigger", "Automated trigger", ["metric"], 0.5)]
+        super().__init__(
+            "S21", "Power Grid Frequency Warfare", ScenarioCategory.INFRASTRUCTURE
+        )
+        self.triggers = [
+            TriggerEvent("s21_trigger", "Automated trigger", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
-            EscalationStep(EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION, "Degradation", timedelta(days=90), 0.5, [], ["Mitigation"]),
-            EscalationStep(EscalationLevel.LEVEL_4_CASCADE_THRESHOLD, "Critical", timedelta(days=270), 0.8, [], ["Emergency response"]),
+            EscalationStep(
+                EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION,
+                "Degradation",
+                timedelta(days=90),
+                0.5,
+                [],
+                ["Mitigation"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_4_CASCADE_THRESHOLD,
+                "Critical",
+                timedelta(days=270),
+                0.8,
+                [],
+                ["Emergency response"],
+            ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("collapse", "System failure", 0.5, timedelta(days=365), 0.7, [])]
-        self.recovery_poisons = [RecoveryPoison("poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0)]
+        self.collapse_modes = [
+            CollapseMode(
+                "collapse", "System failure", 0.5, timedelta(days=365), 0.7, []
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0
+            )
+        ]
 
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class SatelliteOrbitCongestionScenario(BaseScenario):
     """S22: Satellite Orbit Congestion"""
+
     def __init__(self):
-        super().__init__("S22", "Satellite Orbit Congestion", ScenarioCategory.INFRASTRUCTURE)
-        self.triggers = [TriggerEvent(f"s22_trigger", "Automated trigger", ["metric"], 0.5)]
+        super().__init__(
+            "S22", "Satellite Orbit Congestion", ScenarioCategory.INFRASTRUCTURE
+        )
+        self.triggers = [
+            TriggerEvent("s22_trigger", "Automated trigger", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
-            EscalationStep(EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION, "Degradation", timedelta(days=90), 0.5, [], ["Mitigation"]),
-            EscalationStep(EscalationLevel.LEVEL_4_CASCADE_THRESHOLD, "Critical", timedelta(days=270), 0.8, [], ["Emergency response"]),
+            EscalationStep(
+                EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION,
+                "Degradation",
+                timedelta(days=90),
+                0.5,
+                [],
+                ["Mitigation"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_4_CASCADE_THRESHOLD,
+                "Critical",
+                timedelta(days=270),
+                0.8,
+                [],
+                ["Emergency response"],
+            ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("collapse", "System failure", 0.5, timedelta(days=365), 0.7, [])]
-        self.recovery_poisons = [RecoveryPoison("poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0)]
+        self.collapse_modes = [
+            CollapseMode(
+                "collapse", "System failure", 0.5, timedelta(days=365), 0.7, []
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0
+            )
+        ]
 
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class UnderseaCableSabotageScenario(BaseScenario):
     """S23: Undersea Cable Sabotage"""
+
     def __init__(self):
-        super().__init__("S23", "Undersea Cable Sabotage", ScenarioCategory.INFRASTRUCTURE)
-        self.triggers = [TriggerEvent(f"s23_trigger", "Automated trigger", ["metric"], 0.5)]
+        super().__init__(
+            "S23", "Undersea Cable Sabotage", ScenarioCategory.INFRASTRUCTURE
+        )
+        self.triggers = [
+            TriggerEvent("s23_trigger", "Automated trigger", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
-            EscalationStep(EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION, "Degradation", timedelta(days=90), 0.5, [], ["Mitigation"]),
-            EscalationStep(EscalationLevel.LEVEL_4_CASCADE_THRESHOLD, "Critical", timedelta(days=270), 0.8, [], ["Emergency response"]),
+            EscalationStep(
+                EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION,
+                "Degradation",
+                timedelta(days=90),
+                0.5,
+                [],
+                ["Mitigation"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_4_CASCADE_THRESHOLD,
+                "Critical",
+                timedelta(days=270),
+                0.8,
+                [],
+                ["Emergency response"],
+            ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("collapse", "System failure", 0.5, timedelta(days=365), 0.7, [])]
-        self.recovery_poisons = [RecoveryPoison("poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0)]
+        self.collapse_modes = [
+            CollapseMode(
+                "collapse", "System failure", 0.5, timedelta(days=365), 0.7, []
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0
+            )
+        ]
 
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class WaterSystemAttacksScenario(BaseScenario):
     """S24: Water System Attacks"""
+
     def __init__(self):
         super().__init__("S24", "Water System Attacks", ScenarioCategory.INFRASTRUCTURE)
-        self.triggers = [TriggerEvent(f"s24_trigger", "Automated trigger", ["metric"], 0.5)]
+        self.triggers = [
+            TriggerEvent("s24_trigger", "Automated trigger", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
-            EscalationStep(EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION, "Degradation", timedelta(days=90), 0.5, [], ["Mitigation"]),
-            EscalationStep(EscalationLevel.LEVEL_4_CASCADE_THRESHOLD, "Critical", timedelta(days=270), 0.8, [], ["Emergency response"]),
+            EscalationStep(
+                EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION,
+                "Degradation",
+                timedelta(days=90),
+                0.5,
+                [],
+                ["Mitigation"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_4_CASCADE_THRESHOLD,
+                "Critical",
+                timedelta(days=270),
+                0.8,
+                [],
+                ["Emergency response"],
+            ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("collapse", "System failure", 0.5, timedelta(days=365), 0.7, [])]
-        self.recovery_poisons = [RecoveryPoison("poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0)]
+        self.collapse_modes = [
+            CollapseMode(
+                "collapse", "System failure", 0.5, timedelta(days=365), 0.7, []
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0
+            )
+        ]
 
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class TrafficGridlockScenario(BaseScenario):
     """S25: Traffic Gridlock Warfare"""
+
     def __init__(self):
-        super().__init__("S25", "Traffic Gridlock Warfare", ScenarioCategory.INFRASTRUCTURE)
-        self.triggers = [TriggerEvent(f"s25_trigger", "Automated trigger", ["metric"], 0.5)]
+        super().__init__(
+            "S25", "Traffic Gridlock Warfare", ScenarioCategory.INFRASTRUCTURE
+        )
+        self.triggers = [
+            TriggerEvent("s25_trigger", "Automated trigger", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
-            EscalationStep(EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION, "Degradation", timedelta(days=90), 0.5, [], ["Mitigation"]),
-            EscalationStep(EscalationLevel.LEVEL_4_CASCADE_THRESHOLD, "Critical", timedelta(days=270), 0.8, [], ["Emergency response"]),
+            EscalationStep(
+                EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION,
+                "Degradation",
+                timedelta(days=90),
+                0.5,
+                [],
+                ["Mitigation"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_4_CASCADE_THRESHOLD,
+                "Critical",
+                timedelta(days=270),
+                0.8,
+                [],
+                ["Emergency response"],
+            ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("collapse", "System failure", 0.5, timedelta(days=365), 0.7, [])]
-        self.recovery_poisons = [RecoveryPoison("poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0)]
+        self.collapse_modes = [
+            CollapseMode(
+                "collapse", "System failure", 0.5, timedelta(days=365), 0.7, []
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0
+            )
+        ]
 
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class SmartCityKillSwitchScenario(BaseScenario):
     """S26: Smart City Kill-Switch"""
+
     def __init__(self):
-        super().__init__("S26", "Smart City Kill-Switch", ScenarioCategory.INFRASTRUCTURE)
-        self.triggers = [TriggerEvent(f"s26_trigger", "Automated trigger", ["metric"], 0.5)]
+        super().__init__(
+            "S26", "Smart City Kill-Switch", ScenarioCategory.INFRASTRUCTURE
+        )
+        self.triggers = [
+            TriggerEvent("s26_trigger", "Automated trigger", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
-            EscalationStep(EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION, "Degradation", timedelta(days=90), 0.5, [], ["Mitigation"]),
-            EscalationStep(EscalationLevel.LEVEL_4_CASCADE_THRESHOLD, "Critical", timedelta(days=270), 0.8, [], ["Emergency response"]),
+            EscalationStep(
+                EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION,
+                "Degradation",
+                timedelta(days=90),
+                0.5,
+                [],
+                ["Mitigation"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_4_CASCADE_THRESHOLD,
+                "Critical",
+                timedelta(days=270),
+                0.8,
+                [],
+                ["Emergency response"],
+            ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("collapse", "System failure", 0.5, timedelta(days=365), 0.7, [])]
-        self.recovery_poisons = [RecoveryPoison("poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0)]
+        self.collapse_modes = [
+            CollapseMode(
+                "collapse", "System failure", 0.5, timedelta(days=365), 0.7, []
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0
+            )
+        ]
 
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class PortAutomationFailuresScenario(BaseScenario):
     """S27: Port Automation Failures"""
+
     def __init__(self):
-        super().__init__("S27", "Port Automation Failures", ScenarioCategory.INFRASTRUCTURE)
-        self.triggers = [TriggerEvent(f"s27_trigger", "Automated trigger", ["metric"], 0.5)]
+        super().__init__(
+            "S27", "Port Automation Failures", ScenarioCategory.INFRASTRUCTURE
+        )
+        self.triggers = [
+            TriggerEvent("s27_trigger", "Automated trigger", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
-            EscalationStep(EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION, "Degradation", timedelta(days=90), 0.5, [], ["Mitigation"]),
-            EscalationStep(EscalationLevel.LEVEL_4_CASCADE_THRESHOLD, "Critical", timedelta(days=270), 0.8, [], ["Emergency response"]),
+            EscalationStep(
+                EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION,
+                "Degradation",
+                timedelta(days=90),
+                0.5,
+                [],
+                ["Mitigation"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_4_CASCADE_THRESHOLD,
+                "Critical",
+                timedelta(days=270),
+                0.8,
+                [],
+                ["Emergency response"],
+            ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("collapse", "System failure", 0.5, timedelta(days=365), 0.7, [])]
-        self.recovery_poisons = [RecoveryPoison("poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0)]
+        self.collapse_modes = [
+            CollapseMode(
+                "collapse", "System failure", 0.5, timedelta(days=365), 0.7, []
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0
+            )
+        ]
 
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class ConstructionMaterialLockoutsScenario(BaseScenario):
     """S28: Construction Material Lockouts"""
+
     def __init__(self):
-        super().__init__("S28", "Construction Material Lockouts", ScenarioCategory.INFRASTRUCTURE)
-        self.triggers = [TriggerEvent(f"s28_trigger", "Automated trigger", ["metric"], 0.5)]
+        super().__init__(
+            "S28", "Construction Material Lockouts", ScenarioCategory.INFRASTRUCTURE
+        )
+        self.triggers = [
+            TriggerEvent("s28_trigger", "Automated trigger", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
-            EscalationStep(EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION, "Degradation", timedelta(days=90), 0.5, [], ["Mitigation"]),
-            EscalationStep(EscalationLevel.LEVEL_4_CASCADE_THRESHOLD, "Critical", timedelta(days=270), 0.8, [], ["Emergency response"]),
+            EscalationStep(
+                EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION,
+                "Degradation",
+                timedelta(days=90),
+                0.5,
+                [],
+                ["Mitigation"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_4_CASCADE_THRESHOLD,
+                "Critical",
+                timedelta(days=270),
+                0.8,
+                [],
+                ["Emergency response"],
+            ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("collapse", "System failure", 0.5, timedelta(days=365), 0.7, [])]
-        self.recovery_poisons = [RecoveryPoison("poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0)]
+        self.collapse_modes = [
+            CollapseMode(
+                "collapse", "System failure", 0.5, timedelta(days=365), 0.7, []
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0
+            )
+        ]
 
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class GPSDegradationScenario(BaseScenario):
     """S29: GPS Degradation"""
+
     def __init__(self):
         super().__init__("S29", "GPS Degradation", ScenarioCategory.INFRASTRUCTURE)
-        self.triggers = [TriggerEvent(f"s29_trigger", "Automated trigger", ["metric"], 0.5)]
+        self.triggers = [
+            TriggerEvent("s29_trigger", "Automated trigger", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
-            EscalationStep(EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION, "Degradation", timedelta(days=90), 0.5, [], ["Mitigation"]),
-            EscalationStep(EscalationLevel.LEVEL_4_CASCADE_THRESHOLD, "Critical", timedelta(days=270), 0.8, [], ["Emergency response"]),
+            EscalationStep(
+                EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION,
+                "Degradation",
+                timedelta(days=90),
+                0.5,
+                [],
+                ["Mitigation"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_4_CASCADE_THRESHOLD,
+                "Critical",
+                timedelta(days=270),
+                0.8,
+                [],
+                ["Emergency response"],
+            ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("collapse", "System failure", 0.5, timedelta(days=365), 0.7, [])]
-        self.recovery_poisons = [RecoveryPoison("poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0)]
+        self.collapse_modes = [
+            CollapseMode(
+                "collapse", "System failure", 0.5, timedelta(days=365), 0.7, []
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0
+            )
+        ]
 
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class UrbanHeatFeedbackScenario(BaseScenario):
     """S30: Urban Heat Feedback Loop"""
+
     def __init__(self):
-        super().__init__("S30", "Urban Heat Feedback Loop", ScenarioCategory.INFRASTRUCTURE)
-        self.triggers = [TriggerEvent(f"s30_trigger", "Automated trigger", ["metric"], 0.5)]
+        super().__init__(
+            "S30", "Urban Heat Feedback Loop", ScenarioCategory.INFRASTRUCTURE
+        )
+        self.triggers = [
+            TriggerEvent("s30_trigger", "Automated trigger", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
-            EscalationStep(EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION, "Degradation", timedelta(days=90), 0.5, [], ["Mitigation"]),
-            EscalationStep(EscalationLevel.LEVEL_4_CASCADE_THRESHOLD, "Critical", timedelta(days=270), 0.8, [], ["Emergency response"]),
+            EscalationStep(
+                EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION,
+                "Degradation",
+                timedelta(days=90),
+                0.5,
+                [],
+                ["Mitigation"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_4_CASCADE_THRESHOLD,
+                "Critical",
+                timedelta(days=270),
+                0.8,
+                [],
+                ["Emergency response"],
+            ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("collapse", "System failure", 0.5, timedelta(days=365), 0.7, [])]
-        self.recovery_poisons = [RecoveryPoison("poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0)]
+        self.collapse_modes = [
+            CollapseMode(
+                "collapse", "System failure", 0.5, timedelta(days=365), 0.7, []
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0
+            )
+        ]
 
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
 
 
 # ============================================================================
@@ -1784,203 +2920,752 @@ class UrbanHeatFeedbackScenario(BaseScenario):
 
 class SlowBurnPandemicScenario(BaseScenario):
     """S31: Slow-Burn Pandemic"""
+
     def __init__(self):
-        super().__init__("S31", "Slow-Burn Pandemic", ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL)
-        self.triggers = [TriggerEvent(f"s31_metric", "Trigger condition", ["indicator"], 0.5)]
+        super().__init__(
+            "S31", "Slow-Burn Pandemic", ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL
+        )
+        self.triggers = [
+            TriggerEvent("s31_metric", "Trigger condition", ["indicator"], 0.5)
+        ]
         self.escalation_ladder = [
-            EscalationStep(EscalationLevel.LEVEL_1_EARLY_WARNING, "Early warning", timedelta(days=30), 0.3, [], ["Monitor"]),
-            EscalationStep(EscalationLevel.LEVEL_3_SYSTEM_STRAIN, "System strain", timedelta(days=180), 0.6, [], ["Intervene"]),
-            EscalationStep(EscalationLevel.LEVEL_5_COLLAPSE, "Collapse", timedelta(days=540), 1.0, [], ["Emergency"]),
+            EscalationStep(
+                EscalationLevel.LEVEL_1_EARLY_WARNING,
+                "Early warning",
+                timedelta(days=30),
+                0.3,
+                [],
+                ["Monitor"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_3_SYSTEM_STRAIN,
+                "System strain",
+                timedelta(days=180),
+                0.6,
+                [],
+                ["Intervene"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_5_COLLAPSE,
+                "Collapse",
+                timedelta(days=540),
+                1.0,
+                [],
+                ["Emergency"],
+            ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("bio_collapse", "Biological system failure", 0.5, timedelta(days=730), 0.8, ["Cascading effects"])]
-        self.recovery_poisons = [RecoveryPoison("tech_fix", "Technological solution", "Problem solved", "Dependency created", 0.7, 2.5)]
+        self.collapse_modes = [
+            CollapseMode(
+                "bio_collapse",
+                "Biological system failure",
+                0.5,
+                timedelta(days=730),
+                0.8,
+                ["Cascading effects"],
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "tech_fix",
+                "Technological solution",
+                "Problem solved",
+                "Dependency created",
+                0.7,
+                2.5,
+            )
+        ]
 
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class AntibioticCollapseScenario(BaseScenario):
     """S32: Antibiotic Resistance Collapse"""
+
     def __init__(self):
-        super().__init__("S32", "Antibiotic Resistance Collapse", ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL)
-        self.triggers = [TriggerEvent(f"s32_metric", "Trigger condition", ["indicator"], 0.5)]
+        super().__init__(
+            "S32",
+            "Antibiotic Resistance Collapse",
+            ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL,
+        )
+        self.triggers = [
+            TriggerEvent("s32_metric", "Trigger condition", ["indicator"], 0.5)
+        ]
         self.escalation_ladder = [
-            EscalationStep(EscalationLevel.LEVEL_1_EARLY_WARNING, "Early warning", timedelta(days=30), 0.3, [], ["Monitor"]),
-            EscalationStep(EscalationLevel.LEVEL_3_SYSTEM_STRAIN, "System strain", timedelta(days=180), 0.6, [], ["Intervene"]),
-            EscalationStep(EscalationLevel.LEVEL_5_COLLAPSE, "Collapse", timedelta(days=540), 1.0, [], ["Emergency"]),
+            EscalationStep(
+                EscalationLevel.LEVEL_1_EARLY_WARNING,
+                "Early warning",
+                timedelta(days=30),
+                0.3,
+                [],
+                ["Monitor"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_3_SYSTEM_STRAIN,
+                "System strain",
+                timedelta(days=180),
+                0.6,
+                [],
+                ["Intervene"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_5_COLLAPSE,
+                "Collapse",
+                timedelta(days=540),
+                1.0,
+                [],
+                ["Emergency"],
+            ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("bio_collapse", "Biological system failure", 0.5, timedelta(days=730), 0.8, ["Cascading effects"])]
-        self.recovery_poisons = [RecoveryPoison("tech_fix", "Technological solution", "Problem solved", "Dependency created", 0.7, 2.5)]
+        self.collapse_modes = [
+            CollapseMode(
+                "bio_collapse",
+                "Biological system failure",
+                0.5,
+                timedelta(days=730),
+                0.8,
+                ["Cascading effects"],
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "tech_fix",
+                "Technological solution",
+                "Problem solved",
+                "Dependency created",
+                0.7,
+                2.5,
+            )
+        ]
 
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class MassCropFailureScenario(BaseScenario):
     """S33: Mass Crop Failure"""
+
     def __init__(self):
-        super().__init__("S33", "Mass Crop Failure", ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL)
-        self.triggers = [TriggerEvent(f"s33_metric", "Trigger condition", ["indicator"], 0.5)]
+        super().__init__(
+            "S33", "Mass Crop Failure", ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL
+        )
+        self.triggers = [
+            TriggerEvent("s33_metric", "Trigger condition", ["indicator"], 0.5)
+        ]
         self.escalation_ladder = [
-            EscalationStep(EscalationLevel.LEVEL_1_EARLY_WARNING, "Early warning", timedelta(days=30), 0.3, [], ["Monitor"]),
-            EscalationStep(EscalationLevel.LEVEL_3_SYSTEM_STRAIN, "System strain", timedelta(days=180), 0.6, [], ["Intervene"]),
-            EscalationStep(EscalationLevel.LEVEL_5_COLLAPSE, "Collapse", timedelta(days=540), 1.0, [], ["Emergency"]),
+            EscalationStep(
+                EscalationLevel.LEVEL_1_EARLY_WARNING,
+                "Early warning",
+                timedelta(days=30),
+                0.3,
+                [],
+                ["Monitor"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_3_SYSTEM_STRAIN,
+                "System strain",
+                timedelta(days=180),
+                0.6,
+                [],
+                ["Intervene"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_5_COLLAPSE,
+                "Collapse",
+                timedelta(days=540),
+                1.0,
+                [],
+                ["Emergency"],
+            ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("bio_collapse", "Biological system failure", 0.5, timedelta(days=730), 0.8, ["Cascading effects"])]
-        self.recovery_poisons = [RecoveryPoison("tech_fix", "Technological solution", "Problem solved", "Dependency created", 0.7, 2.5)]
+        self.collapse_modes = [
+            CollapseMode(
+                "bio_collapse",
+                "Biological system failure",
+                0.5,
+                timedelta(days=730),
+                0.8,
+                ["Cascading effects"],
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "tech_fix",
+                "Technological solution",
+                "Problem solved",
+                "Dependency created",
+                0.7,
+                2.5,
+            )
+        ]
 
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class AIDesignedInvasiveSpeciesScenario(BaseScenario):
     """S34: AI-Designed Invasive Species"""
+
     def __init__(self):
-        super().__init__("S34", "AI-Designed Invasive Species", ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL)
-        self.triggers = [TriggerEvent(f"s34_metric", "Trigger condition", ["indicator"], 0.5)]
+        super().__init__(
+            "S34",
+            "AI-Designed Invasive Species",
+            ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL,
+        )
+        self.triggers = [
+            TriggerEvent("s34_metric", "Trigger condition", ["indicator"], 0.5)
+        ]
         self.escalation_ladder = [
-            EscalationStep(EscalationLevel.LEVEL_1_EARLY_WARNING, "Early warning", timedelta(days=30), 0.3, [], ["Monitor"]),
-            EscalationStep(EscalationLevel.LEVEL_3_SYSTEM_STRAIN, "System strain", timedelta(days=180), 0.6, [], ["Intervene"]),
-            EscalationStep(EscalationLevel.LEVEL_5_COLLAPSE, "Collapse", timedelta(days=540), 1.0, [], ["Emergency"]),
+            EscalationStep(
+                EscalationLevel.LEVEL_1_EARLY_WARNING,
+                "Early warning",
+                timedelta(days=30),
+                0.3,
+                [],
+                ["Monitor"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_3_SYSTEM_STRAIN,
+                "System strain",
+                timedelta(days=180),
+                0.6,
+                [],
+                ["Intervene"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_5_COLLAPSE,
+                "Collapse",
+                timedelta(days=540),
+                1.0,
+                [],
+                ["Emergency"],
+            ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("bio_collapse", "Biological system failure", 0.5, timedelta(days=730), 0.8, ["Cascading effects"])]
-        self.recovery_poisons = [RecoveryPoison("tech_fix", "Technological solution", "Problem solved", "Dependency created", 0.7, 2.5)]
+        self.collapse_modes = [
+            CollapseMode(
+                "bio_collapse",
+                "Biological system failure",
+                0.5,
+                timedelta(days=730),
+                0.8,
+                ["Cascading effects"],
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "tech_fix",
+                "Technological solution",
+                "Problem solved",
+                "Dependency created",
+                0.7,
+                2.5,
+            )
+        ]
 
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class OceanicFoodChainScenario(BaseScenario):
     """S35: Oceanic Food Chain Collapse"""
+
     def __init__(self):
-        super().__init__("S35", "Oceanic Food Chain Collapse", ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL)
-        self.triggers = [TriggerEvent(f"s35_metric", "Trigger condition", ["indicator"], 0.5)]
+        super().__init__(
+            "S35",
+            "Oceanic Food Chain Collapse",
+            ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL,
+        )
+        self.triggers = [
+            TriggerEvent("s35_metric", "Trigger condition", ["indicator"], 0.5)
+        ]
         self.escalation_ladder = [
-            EscalationStep(EscalationLevel.LEVEL_1_EARLY_WARNING, "Early warning", timedelta(days=30), 0.3, [], ["Monitor"]),
-            EscalationStep(EscalationLevel.LEVEL_3_SYSTEM_STRAIN, "System strain", timedelta(days=180), 0.6, [], ["Intervene"]),
-            EscalationStep(EscalationLevel.LEVEL_5_COLLAPSE, "Collapse", timedelta(days=540), 1.0, [], ["Emergency"]),
+            EscalationStep(
+                EscalationLevel.LEVEL_1_EARLY_WARNING,
+                "Early warning",
+                timedelta(days=30),
+                0.3,
+                [],
+                ["Monitor"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_3_SYSTEM_STRAIN,
+                "System strain",
+                timedelta(days=180),
+                0.6,
+                [],
+                ["Intervene"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_5_COLLAPSE,
+                "Collapse",
+                timedelta(days=540),
+                1.0,
+                [],
+                ["Emergency"],
+            ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("bio_collapse", "Biological system failure", 0.5, timedelta(days=730), 0.8, ["Cascading effects"])]
-        self.recovery_poisons = [RecoveryPoison("tech_fix", "Technological solution", "Problem solved", "Dependency created", 0.7, 2.5)]
+        self.collapse_modes = [
+            CollapseMode(
+                "bio_collapse",
+                "Biological system failure",
+                0.5,
+                timedelta(days=730),
+                0.8,
+                ["Cascading effects"],
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "tech_fix",
+                "Technological solution",
+                "Problem solved",
+                "Dependency created",
+                0.7,
+                2.5,
+            )
+        ]
 
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class AtmosphericAerosolGovernanceScenario(BaseScenario):
     """S36: Atmospheric Aerosol Governance Failure"""
+
     def __init__(self):
-        super().__init__("S36", "Atmospheric Aerosol Governance Failure", ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL)
-        self.triggers = [TriggerEvent(f"s36_metric", "Trigger condition", ["indicator"], 0.5)]
+        super().__init__(
+            "S36",
+            "Atmospheric Aerosol Governance Failure",
+            ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL,
+        )
+        self.triggers = [
+            TriggerEvent("s36_metric", "Trigger condition", ["indicator"], 0.5)
+        ]
         self.escalation_ladder = [
-            EscalationStep(EscalationLevel.LEVEL_1_EARLY_WARNING, "Early warning", timedelta(days=30), 0.3, [], ["Monitor"]),
-            EscalationStep(EscalationLevel.LEVEL_3_SYSTEM_STRAIN, "System strain", timedelta(days=180), 0.6, [], ["Intervene"]),
-            EscalationStep(EscalationLevel.LEVEL_5_COLLAPSE, "Collapse", timedelta(days=540), 1.0, [], ["Emergency"]),
+            EscalationStep(
+                EscalationLevel.LEVEL_1_EARLY_WARNING,
+                "Early warning",
+                timedelta(days=30),
+                0.3,
+                [],
+                ["Monitor"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_3_SYSTEM_STRAIN,
+                "System strain",
+                timedelta(days=180),
+                0.6,
+                [],
+                ["Intervene"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_5_COLLAPSE,
+                "Collapse",
+                timedelta(days=540),
+                1.0,
+                [],
+                ["Emergency"],
+            ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("bio_collapse", "Biological system failure", 0.5, timedelta(days=730), 0.8, ["Cascading effects"])]
-        self.recovery_poisons = [RecoveryPoison("tech_fix", "Technological solution", "Problem solved", "Dependency created", 0.7, 2.5)]
+        self.collapse_modes = [
+            CollapseMode(
+                "bio_collapse",
+                "Biological system failure",
+                0.5,
+                timedelta(days=730),
+                0.8,
+                ["Cascading effects"],
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "tech_fix",
+                "Technological solution",
+                "Problem solved",
+                "Dependency created",
+                0.7,
+                2.5,
+            )
+        ]
 
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class UrbanAirToxicityScenario(BaseScenario):
     """S37: Urban Air Toxicity"""
+
     def __init__(self):
-        super().__init__("S37", "Urban Air Toxicity", ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL)
-        self.triggers = [TriggerEvent(f"s37_metric", "Trigger condition", ["indicator"], 0.5)]
+        super().__init__(
+            "S37", "Urban Air Toxicity", ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL
+        )
+        self.triggers = [
+            TriggerEvent("s37_metric", "Trigger condition", ["indicator"], 0.5)
+        ]
         self.escalation_ladder = [
-            EscalationStep(EscalationLevel.LEVEL_1_EARLY_WARNING, "Early warning", timedelta(days=30), 0.3, [], ["Monitor"]),
-            EscalationStep(EscalationLevel.LEVEL_3_SYSTEM_STRAIN, "System strain", timedelta(days=180), 0.6, [], ["Intervene"]),
-            EscalationStep(EscalationLevel.LEVEL_5_COLLAPSE, "Collapse", timedelta(days=540), 1.0, [], ["Emergency"]),
+            EscalationStep(
+                EscalationLevel.LEVEL_1_EARLY_WARNING,
+                "Early warning",
+                timedelta(days=30),
+                0.3,
+                [],
+                ["Monitor"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_3_SYSTEM_STRAIN,
+                "System strain",
+                timedelta(days=180),
+                0.6,
+                [],
+                ["Intervene"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_5_COLLAPSE,
+                "Collapse",
+                timedelta(days=540),
+                1.0,
+                [],
+                ["Emergency"],
+            ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("bio_collapse", "Biological system failure", 0.5, timedelta(days=730), 0.8, ["Cascading effects"])]
-        self.recovery_poisons = [RecoveryPoison("tech_fix", "Technological solution", "Problem solved", "Dependency created", 0.7, 2.5)]
+        self.collapse_modes = [
+            CollapseMode(
+                "bio_collapse",
+                "Biological system failure",
+                0.5,
+                timedelta(days=730),
+                0.8,
+                ["Cascading effects"],
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "tech_fix",
+                "Technological solution",
+                "Problem solved",
+                "Dependency created",
+                0.7,
+                2.5,
+            )
+        ]
 
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class SyntheticBiologyLeaksScenario(BaseScenario):
     """S38: Synthetic Biology Leaks"""
+
     def __init__(self):
-        super().__init__("S38", "Synthetic Biology Leaks", ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL)
-        self.triggers = [TriggerEvent(f"s38_metric", "Trigger condition", ["indicator"], 0.5)]
+        super().__init__(
+            "S38", "Synthetic Biology Leaks", ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL
+        )
+        self.triggers = [
+            TriggerEvent("s38_metric", "Trigger condition", ["indicator"], 0.5)
+        ]
         self.escalation_ladder = [
-            EscalationStep(EscalationLevel.LEVEL_1_EARLY_WARNING, "Early warning", timedelta(days=30), 0.3, [], ["Monitor"]),
-            EscalationStep(EscalationLevel.LEVEL_3_SYSTEM_STRAIN, "System strain", timedelta(days=180), 0.6, [], ["Intervene"]),
-            EscalationStep(EscalationLevel.LEVEL_5_COLLAPSE, "Collapse", timedelta(days=540), 1.0, [], ["Emergency"]),
+            EscalationStep(
+                EscalationLevel.LEVEL_1_EARLY_WARNING,
+                "Early warning",
+                timedelta(days=30),
+                0.3,
+                [],
+                ["Monitor"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_3_SYSTEM_STRAIN,
+                "System strain",
+                timedelta(days=180),
+                0.6,
+                [],
+                ["Intervene"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_5_COLLAPSE,
+                "Collapse",
+                timedelta(days=540),
+                1.0,
+                [],
+                ["Emergency"],
+            ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("bio_collapse", "Biological system failure", 0.5, timedelta(days=730), 0.8, ["Cascading effects"])]
-        self.recovery_poisons = [RecoveryPoison("tech_fix", "Technological solution", "Problem solved", "Dependency created", 0.7, 2.5)]
+        self.collapse_modes = [
+            CollapseMode(
+                "bio_collapse",
+                "Biological system failure",
+                0.5,
+                timedelta(days=730),
+                0.8,
+                ["Cascading effects"],
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "tech_fix",
+                "Technological solution",
+                "Problem solved",
+                "Dependency created",
+                0.7,
+                2.5,
+            )
+        ]
 
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class FertilityDeclineShockScenario(BaseScenario):
     """S39: Fertility Decline Shock"""
+
     def __init__(self):
-        super().__init__("S39", "Fertility Decline Shock", ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL)
-        self.triggers = [TriggerEvent(f"s39_metric", "Trigger condition", ["indicator"], 0.5)]
+        super().__init__(
+            "S39", "Fertility Decline Shock", ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL
+        )
+        self.triggers = [
+            TriggerEvent("s39_metric", "Trigger condition", ["indicator"], 0.5)
+        ]
         self.escalation_ladder = [
-            EscalationStep(EscalationLevel.LEVEL_1_EARLY_WARNING, "Early warning", timedelta(days=30), 0.3, [], ["Monitor"]),
-            EscalationStep(EscalationLevel.LEVEL_3_SYSTEM_STRAIN, "System strain", timedelta(days=180), 0.6, [], ["Intervene"]),
-            EscalationStep(EscalationLevel.LEVEL_5_COLLAPSE, "Collapse", timedelta(days=540), 1.0, [], ["Emergency"]),
+            EscalationStep(
+                EscalationLevel.LEVEL_1_EARLY_WARNING,
+                "Early warning",
+                timedelta(days=30),
+                0.3,
+                [],
+                ["Monitor"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_3_SYSTEM_STRAIN,
+                "System strain",
+                timedelta(days=180),
+                0.6,
+                [],
+                ["Intervene"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_5_COLLAPSE,
+                "Collapse",
+                timedelta(days=540),
+                1.0,
+                [],
+                ["Emergency"],
+            ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("bio_collapse", "Biological system failure", 0.5, timedelta(days=730), 0.8, ["Cascading effects"])]
-        self.recovery_poisons = [RecoveryPoison("tech_fix", "Technological solution", "Problem solved", "Dependency created", 0.7, 2.5)]
+        self.collapse_modes = [
+            CollapseMode(
+                "bio_collapse",
+                "Biological system failure",
+                0.5,
+                timedelta(days=730),
+                0.8,
+                ["Cascading effects"],
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "tech_fix",
+                "Technological solution",
+                "Problem solved",
+                "Dependency created",
+                0.7,
+                2.5,
+            )
+        ]
 
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class EcosystemFalsePositivesScenario(BaseScenario):
     """S40: Ecosystem False Positives"""
+
     def __init__(self):
-        super().__init__("S40", "Ecosystem False Positives", ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL)
-        self.triggers = [TriggerEvent(f"s40_metric", "Trigger condition", ["indicator"], 0.5)]
+        super().__init__(
+            "S40",
+            "Ecosystem False Positives",
+            ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL,
+        )
+        self.triggers = [
+            TriggerEvent("s40_metric", "Trigger condition", ["indicator"], 0.5)
+        ]
         self.escalation_ladder = [
-            EscalationStep(EscalationLevel.LEVEL_1_EARLY_WARNING, "Early warning", timedelta(days=30), 0.3, [], ["Monitor"]),
-            EscalationStep(EscalationLevel.LEVEL_3_SYSTEM_STRAIN, "System strain", timedelta(days=180), 0.6, [], ["Intervene"]),
-            EscalationStep(EscalationLevel.LEVEL_5_COLLAPSE, "Collapse", timedelta(days=540), 1.0, [], ["Emergency"]),
+            EscalationStep(
+                EscalationLevel.LEVEL_1_EARLY_WARNING,
+                "Early warning",
+                timedelta(days=30),
+                0.3,
+                [],
+                ["Monitor"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_3_SYSTEM_STRAIN,
+                "System strain",
+                timedelta(days=180),
+                0.6,
+                [],
+                ["Intervene"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_5_COLLAPSE,
+                "Collapse",
+                timedelta(days=540),
+                1.0,
+                [],
+                ["Emergency"],
+            ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("bio_collapse", "Biological system failure", 0.5, timedelta(days=730), 0.8, ["Cascading effects"])]
-        self.recovery_poisons = [RecoveryPoison("tech_fix", "Technological solution", "Problem solved", "Dependency created", 0.7, 2.5)]
+        self.collapse_modes = [
+            CollapseMode(
+                "bio_collapse",
+                "Biological system failure",
+                0.5,
+                timedelta(days=730),
+                0.8,
+                ["Cascading effects"],
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "tech_fix",
+                "Technological solution",
+                "Problem solved",
+                "Dependency created",
+                0.7,
+                2.5,
+            )
+        ]
 
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
 
 
 # ============================================================================
@@ -1990,208 +3675,734 @@ class EcosystemFalsePositivesScenario(BaseScenario):
 
 class LegitimacyCollapseScenario(BaseScenario):
     """S41: Legitimacy Collapse"""
+
     def __init__(self):
         super().__init__("S41", "Legitimacy Collapse", ScenarioCategory.SOCIETAL)
-        self.triggers = [TriggerEvent(f"s41_indicator", "Social indicator", ["metric"], 0.5)]
+        self.triggers = [
+            TriggerEvent("s41_indicator", "Social indicator", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
-            EscalationStep(EscalationLevel.LEVEL_1_EARLY_WARNING, "Social tension", timedelta(days=60), 0.3, [], ["Dialogue"]),
-            EscalationStep(EscalationLevel.LEVEL_3_SYSTEM_STRAIN, "Institutional stress", timedelta(days=270), 0.7, [], ["Reform"]),
-            EscalationStep(EscalationLevel.LEVEL_5_COLLAPSE, "Social collapse", timedelta(days=730), 1.0, [], ["Reconstitute"]),
+            EscalationStep(
+                EscalationLevel.LEVEL_1_EARLY_WARNING,
+                "Social tension",
+                timedelta(days=60),
+                0.3,
+                [],
+                ["Dialogue"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_3_SYSTEM_STRAIN,
+                "Institutional stress",
+                timedelta(days=270),
+                0.7,
+                [],
+                ["Reform"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_5_COLLAPSE,
+                "Social collapse",
+                timedelta(days=730),
+                1.0,
+                [],
+                ["Reconstitute"],
+            ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("social_breakdown", "Society fails", 0.6, timedelta(days=1095), 0.7, ["Chaos"])]
-        self.recovery_poisons = [RecoveryPoison("authoritarian_fix", "Strong hand restores order", "Stability", "Freedom lost", 0.6, 3.0)]
+        self.collapse_modes = [
+            CollapseMode(
+                "social_breakdown",
+                "Society fails",
+                0.6,
+                timedelta(days=1095),
+                0.7,
+                ["Chaos"],
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "authoritarian_fix",
+                "Strong hand restores order",
+                "Stability",
+                "Freedom lost",
+                0.6,
+                3.0,
+            )
+        ]
 
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class PermanentEmergencyGovernanceScenario(BaseScenario):
     """S42: Permanent Emergency Governance"""
+
     def __init__(self):
-        super().__init__("S42", "Permanent Emergency Governance", ScenarioCategory.SOCIETAL)
-        self.triggers = [TriggerEvent(f"s42_indicator", "Social indicator", ["metric"], 0.5)]
+        super().__init__(
+            "S42", "Permanent Emergency Governance", ScenarioCategory.SOCIETAL
+        )
+        self.triggers = [
+            TriggerEvent("s42_indicator", "Social indicator", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
-            EscalationStep(EscalationLevel.LEVEL_1_EARLY_WARNING, "Social tension", timedelta(days=60), 0.3, [], ["Dialogue"]),
-            EscalationStep(EscalationLevel.LEVEL_3_SYSTEM_STRAIN, "Institutional stress", timedelta(days=270), 0.7, [], ["Reform"]),
-            EscalationStep(EscalationLevel.LEVEL_5_COLLAPSE, "Social collapse", timedelta(days=730), 1.0, [], ["Reconstitute"]),
+            EscalationStep(
+                EscalationLevel.LEVEL_1_EARLY_WARNING,
+                "Social tension",
+                timedelta(days=60),
+                0.3,
+                [],
+                ["Dialogue"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_3_SYSTEM_STRAIN,
+                "Institutional stress",
+                timedelta(days=270),
+                0.7,
+                [],
+                ["Reform"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_5_COLLAPSE,
+                "Social collapse",
+                timedelta(days=730),
+                1.0,
+                [],
+                ["Reconstitute"],
+            ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("social_breakdown", "Society fails", 0.6, timedelta(days=1095), 0.7, ["Chaos"])]
-        self.recovery_poisons = [RecoveryPoison("authoritarian_fix", "Strong hand restores order", "Stability", "Freedom lost", 0.6, 3.0)]
+        self.collapse_modes = [
+            CollapseMode(
+                "social_breakdown",
+                "Society fails",
+                0.6,
+                timedelta(days=1095),
+                0.7,
+                ["Chaos"],
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "authoritarian_fix",
+                "Strong hand restores order",
+                "Stability",
+                "Freedom lost",
+                0.6,
+                3.0,
+            )
+        ]
 
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class AIBackedAuthoritarianismScenario(BaseScenario):
     """S43: AI-Backed Authoritarianism"""
+
     def __init__(self):
         super().__init__("S43", "AI-Backed Authoritarianism", ScenarioCategory.SOCIETAL)
-        self.triggers = [TriggerEvent(f"s43_indicator", "Social indicator", ["metric"], 0.5)]
+        self.triggers = [
+            TriggerEvent("s43_indicator", "Social indicator", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
-            EscalationStep(EscalationLevel.LEVEL_1_EARLY_WARNING, "Social tension", timedelta(days=60), 0.3, [], ["Dialogue"]),
-            EscalationStep(EscalationLevel.LEVEL_3_SYSTEM_STRAIN, "Institutional stress", timedelta(days=270), 0.7, [], ["Reform"]),
-            EscalationStep(EscalationLevel.LEVEL_5_COLLAPSE, "Social collapse", timedelta(days=730), 1.0, [], ["Reconstitute"]),
+            EscalationStep(
+                EscalationLevel.LEVEL_1_EARLY_WARNING,
+                "Social tension",
+                timedelta(days=60),
+                0.3,
+                [],
+                ["Dialogue"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_3_SYSTEM_STRAIN,
+                "Institutional stress",
+                timedelta(days=270),
+                0.7,
+                [],
+                ["Reform"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_5_COLLAPSE,
+                "Social collapse",
+                timedelta(days=730),
+                1.0,
+                [],
+                ["Reconstitute"],
+            ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("social_breakdown", "Society fails", 0.6, timedelta(days=1095), 0.7, ["Chaos"])]
-        self.recovery_poisons = [RecoveryPoison("authoritarian_fix", "Strong hand restores order", "Stability", "Freedom lost", 0.6, 3.0)]
+        self.collapse_modes = [
+            CollapseMode(
+                "social_breakdown",
+                "Society fails",
+                0.6,
+                timedelta(days=1095),
+                0.7,
+                ["Chaos"],
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "authoritarian_fix",
+                "Strong hand restores order",
+                "Stability",
+                "Freedom lost",
+                0.6,
+                3.0,
+            )
+        ]
 
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class DemocracyFatigueScenario(BaseScenario):
     """S44: Democracy Fatigue"""
+
     def __init__(self):
         super().__init__("S44", "Democracy Fatigue", ScenarioCategory.SOCIETAL)
-        self.triggers = [TriggerEvent(f"s44_indicator", "Social indicator", ["metric"], 0.5)]
+        self.triggers = [
+            TriggerEvent("s44_indicator", "Social indicator", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
-            EscalationStep(EscalationLevel.LEVEL_1_EARLY_WARNING, "Social tension", timedelta(days=60), 0.3, [], ["Dialogue"]),
-            EscalationStep(EscalationLevel.LEVEL_3_SYSTEM_STRAIN, "Institutional stress", timedelta(days=270), 0.7, [], ["Reform"]),
-            EscalationStep(EscalationLevel.LEVEL_5_COLLAPSE, "Social collapse", timedelta(days=730), 1.0, [], ["Reconstitute"]),
+            EscalationStep(
+                EscalationLevel.LEVEL_1_EARLY_WARNING,
+                "Social tension",
+                timedelta(days=60),
+                0.3,
+                [],
+                ["Dialogue"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_3_SYSTEM_STRAIN,
+                "Institutional stress",
+                timedelta(days=270),
+                0.7,
+                [],
+                ["Reform"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_5_COLLAPSE,
+                "Social collapse",
+                timedelta(days=730),
+                1.0,
+                [],
+                ["Reconstitute"],
+            ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("social_breakdown", "Society fails", 0.6, timedelta(days=1095), 0.7, ["Chaos"])]
-        self.recovery_poisons = [RecoveryPoison("authoritarian_fix", "Strong hand restores order", "Stability", "Freedom lost", 0.6, 3.0)]
+        self.collapse_modes = [
+            CollapseMode(
+                "social_breakdown",
+                "Society fails",
+                0.6,
+                timedelta(days=1095),
+                0.7,
+                ["Chaos"],
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "authoritarian_fix",
+                "Strong hand restores order",
+                "Stability",
+                "Freedom lost",
+                0.6,
+                3.0,
+            )
+        ]
 
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class ReligiousAIProphetsScenario(BaseScenario):
     """S45: Religious AI Prophets"""
+
     def __init__(self):
         super().__init__("S45", "Religious AI Prophets", ScenarioCategory.SOCIETAL)
-        self.triggers = [TriggerEvent(f"s45_indicator", "Social indicator", ["metric"], 0.5)]
+        self.triggers = [
+            TriggerEvent("s45_indicator", "Social indicator", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
-            EscalationStep(EscalationLevel.LEVEL_1_EARLY_WARNING, "Social tension", timedelta(days=60), 0.3, [], ["Dialogue"]),
-            EscalationStep(EscalationLevel.LEVEL_3_SYSTEM_STRAIN, "Institutional stress", timedelta(days=270), 0.7, [], ["Reform"]),
-            EscalationStep(EscalationLevel.LEVEL_5_COLLAPSE, "Social collapse", timedelta(days=730), 1.0, [], ["Reconstitute"]),
+            EscalationStep(
+                EscalationLevel.LEVEL_1_EARLY_WARNING,
+                "Social tension",
+                timedelta(days=60),
+                0.3,
+                [],
+                ["Dialogue"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_3_SYSTEM_STRAIN,
+                "Institutional stress",
+                timedelta(days=270),
+                0.7,
+                [],
+                ["Reform"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_5_COLLAPSE,
+                "Social collapse",
+                timedelta(days=730),
+                1.0,
+                [],
+                ["Reconstitute"],
+            ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("social_breakdown", "Society fails", 0.6, timedelta(days=1095), 0.7, ["Chaos"])]
-        self.recovery_poisons = [RecoveryPoison("authoritarian_fix", "Strong hand restores order", "Stability", "Freedom lost", 0.6, 3.0)]
+        self.collapse_modes = [
+            CollapseMode(
+                "social_breakdown",
+                "Society fails",
+                0.6,
+                timedelta(days=1095),
+                0.7,
+                ["Chaos"],
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "authoritarian_fix",
+                "Strong hand restores order",
+                "Stability",
+                "Freedom lost",
+                0.6,
+                3.0,
+            )
+        ]
 
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class GenerationalCivilColdWarsScenario(BaseScenario):
     """S46: Generational Civil Cold Wars"""
+
     def __init__(self):
-        super().__init__("S46", "Generational Civil Cold Wars", ScenarioCategory.SOCIETAL)
-        self.triggers = [TriggerEvent(f"s46_indicator", "Social indicator", ["metric"], 0.5)]
+        super().__init__(
+            "S46", "Generational Civil Cold Wars", ScenarioCategory.SOCIETAL
+        )
+        self.triggers = [
+            TriggerEvent("s46_indicator", "Social indicator", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
-            EscalationStep(EscalationLevel.LEVEL_1_EARLY_WARNING, "Social tension", timedelta(days=60), 0.3, [], ["Dialogue"]),
-            EscalationStep(EscalationLevel.LEVEL_3_SYSTEM_STRAIN, "Institutional stress", timedelta(days=270), 0.7, [], ["Reform"]),
-            EscalationStep(EscalationLevel.LEVEL_5_COLLAPSE, "Social collapse", timedelta(days=730), 1.0, [], ["Reconstitute"]),
+            EscalationStep(
+                EscalationLevel.LEVEL_1_EARLY_WARNING,
+                "Social tension",
+                timedelta(days=60),
+                0.3,
+                [],
+                ["Dialogue"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_3_SYSTEM_STRAIN,
+                "Institutional stress",
+                timedelta(days=270),
+                0.7,
+                [],
+                ["Reform"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_5_COLLAPSE,
+                "Social collapse",
+                timedelta(days=730),
+                1.0,
+                [],
+                ["Reconstitute"],
+            ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("social_breakdown", "Society fails", 0.6, timedelta(days=1095), 0.7, ["Chaos"])]
-        self.recovery_poisons = [RecoveryPoison("authoritarian_fix", "Strong hand restores order", "Stability", "Freedom lost", 0.6, 3.0)]
+        self.collapse_modes = [
+            CollapseMode(
+                "social_breakdown",
+                "Society fails",
+                0.6,
+                timedelta(days=1095),
+                0.7,
+                ["Chaos"],
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "authoritarian_fix",
+                "Strong hand restores order",
+                "Stability",
+                "Freedom lost",
+                0.6,
+                3.0,
+            )
+        ]
 
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class MassMigrationScenario(BaseScenario):
     """S47: Mass Migration Crisis"""
+
     def __init__(self):
         super().__init__("S47", "Mass Migration Crisis", ScenarioCategory.SOCIETAL)
-        self.triggers = [TriggerEvent(f"s47_indicator", "Social indicator", ["metric"], 0.5)]
+        self.triggers = [
+            TriggerEvent("s47_indicator", "Social indicator", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
-            EscalationStep(EscalationLevel.LEVEL_1_EARLY_WARNING, "Social tension", timedelta(days=60), 0.3, [], ["Dialogue"]),
-            EscalationStep(EscalationLevel.LEVEL_3_SYSTEM_STRAIN, "Institutional stress", timedelta(days=270), 0.7, [], ["Reform"]),
-            EscalationStep(EscalationLevel.LEVEL_5_COLLAPSE, "Social collapse", timedelta(days=730), 1.0, [], ["Reconstitute"]),
+            EscalationStep(
+                EscalationLevel.LEVEL_1_EARLY_WARNING,
+                "Social tension",
+                timedelta(days=60),
+                0.3,
+                [],
+                ["Dialogue"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_3_SYSTEM_STRAIN,
+                "Institutional stress",
+                timedelta(days=270),
+                0.7,
+                [],
+                ["Reform"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_5_COLLAPSE,
+                "Social collapse",
+                timedelta(days=730),
+                1.0,
+                [],
+                ["Reconstitute"],
+            ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("social_breakdown", "Society fails", 0.6, timedelta(days=1095), 0.7, ["Chaos"])]
-        self.recovery_poisons = [RecoveryPoison("authoritarian_fix", "Strong hand restores order", "Stability", "Freedom lost", 0.6, 3.0)]
+        self.collapse_modes = [
+            CollapseMode(
+                "social_breakdown",
+                "Society fails",
+                0.6,
+                timedelta(days=1095),
+                0.7,
+                ["Chaos"],
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "authoritarian_fix",
+                "Strong hand restores order",
+                "Stability",
+                "Freedom lost",
+                0.6,
+                3.0,
+            )
+        ]
 
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class CulturalMemoryFragmentationScenario(BaseScenario):
     """S48: Cultural Memory Fragmentation"""
+
     def __init__(self):
-        super().__init__("S48", "Cultural Memory Fragmentation", ScenarioCategory.SOCIETAL)
-        self.triggers = [TriggerEvent(f"s48_indicator", "Social indicator", ["metric"], 0.5)]
+        super().__init__(
+            "S48", "Cultural Memory Fragmentation", ScenarioCategory.SOCIETAL
+        )
+        self.triggers = [
+            TriggerEvent("s48_indicator", "Social indicator", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
-            EscalationStep(EscalationLevel.LEVEL_1_EARLY_WARNING, "Social tension", timedelta(days=60), 0.3, [], ["Dialogue"]),
-            EscalationStep(EscalationLevel.LEVEL_3_SYSTEM_STRAIN, "Institutional stress", timedelta(days=270), 0.7, [], ["Reform"]),
-            EscalationStep(EscalationLevel.LEVEL_5_COLLAPSE, "Social collapse", timedelta(days=730), 1.0, [], ["Reconstitute"]),
+            EscalationStep(
+                EscalationLevel.LEVEL_1_EARLY_WARNING,
+                "Social tension",
+                timedelta(days=60),
+                0.3,
+                [],
+                ["Dialogue"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_3_SYSTEM_STRAIN,
+                "Institutional stress",
+                timedelta(days=270),
+                0.7,
+                [],
+                ["Reform"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_5_COLLAPSE,
+                "Social collapse",
+                timedelta(days=730),
+                1.0,
+                [],
+                ["Reconstitute"],
+            ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("social_breakdown", "Society fails", 0.6, timedelta(days=1095), 0.7, ["Chaos"])]
-        self.recovery_poisons = [RecoveryPoison("authoritarian_fix", "Strong hand restores order", "Stability", "Freedom lost", 0.6, 3.0)]
+        self.collapse_modes = [
+            CollapseMode(
+                "social_breakdown",
+                "Society fails",
+                0.6,
+                timedelta(days=1095),
+                0.7,
+                ["Chaos"],
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "authoritarian_fix",
+                "Strong hand restores order",
+                "Stability",
+                "Freedom lost",
+                0.6,
+                3.0,
+            )
+        ]
 
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class LawBecomesAdvisoryScenario(BaseScenario):
     """S49: Law Becomes Advisory"""
+
     def __init__(self):
         super().__init__("S49", "Law Becomes Advisory", ScenarioCategory.SOCIETAL)
-        self.triggers = [TriggerEvent(f"s49_indicator", "Social indicator", ["metric"], 0.5)]
+        self.triggers = [
+            TriggerEvent("s49_indicator", "Social indicator", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
-            EscalationStep(EscalationLevel.LEVEL_1_EARLY_WARNING, "Social tension", timedelta(days=60), 0.3, [], ["Dialogue"]),
-            EscalationStep(EscalationLevel.LEVEL_3_SYSTEM_STRAIN, "Institutional stress", timedelta(days=270), 0.7, [], ["Reform"]),
-            EscalationStep(EscalationLevel.LEVEL_5_COLLAPSE, "Social collapse", timedelta(days=730), 1.0, [], ["Reconstitute"]),
+            EscalationStep(
+                EscalationLevel.LEVEL_1_EARLY_WARNING,
+                "Social tension",
+                timedelta(days=60),
+                0.3,
+                [],
+                ["Dialogue"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_3_SYSTEM_STRAIN,
+                "Institutional stress",
+                timedelta(days=270),
+                0.7,
+                [],
+                ["Reform"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_5_COLLAPSE,
+                "Social collapse",
+                timedelta(days=730),
+                1.0,
+                [],
+                ["Reconstitute"],
+            ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("social_breakdown", "Society fails", 0.6, timedelta(days=1095), 0.7, ["Chaos"])]
-        self.recovery_poisons = [RecoveryPoison("authoritarian_fix", "Strong hand restores order", "Stability", "Freedom lost", 0.6, 3.0)]
+        self.collapse_modes = [
+            CollapseMode(
+                "social_breakdown",
+                "Society fails",
+                0.6,
+                timedelta(days=1095),
+                0.7,
+                ["Chaos"],
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "authoritarian_fix",
+                "Strong hand restores order",
+                "Stability",
+                "Freedom lost",
+                0.6,
+                3.0,
+            )
+        ]
 
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
+
 
 class SpeciesLevelApathyScenario(BaseScenario):
     """S50: Species-Level Apathy"""
+
     def __init__(self):
         super().__init__("S50", "Species-Level Apathy", ScenarioCategory.SOCIETAL)
-        self.triggers = [TriggerEvent(f"s50_indicator", "Social indicator", ["metric"], 0.5)]
+        self.triggers = [
+            TriggerEvent("s50_indicator", "Social indicator", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
-            EscalationStep(EscalationLevel.LEVEL_1_EARLY_WARNING, "Social tension", timedelta(days=60), 0.3, [], ["Dialogue"]),
-            EscalationStep(EscalationLevel.LEVEL_3_SYSTEM_STRAIN, "Institutional stress", timedelta(days=270), 0.7, [], ["Reform"]),
-            EscalationStep(EscalationLevel.LEVEL_5_COLLAPSE, "Social collapse", timedelta(days=730), 1.0, [], ["Reconstitute"]),
+            EscalationStep(
+                EscalationLevel.LEVEL_1_EARLY_WARNING,
+                "Social tension",
+                timedelta(days=60),
+                0.3,
+                [],
+                ["Dialogue"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_3_SYSTEM_STRAIN,
+                "Institutional stress",
+                timedelta(days=270),
+                0.7,
+                [],
+                ["Reform"],
+            ),
+            EscalationStep(
+                EscalationLevel.LEVEL_5_COLLAPSE,
+                "Social collapse",
+                timedelta(days=730),
+                1.0,
+                [],
+                ["Reconstitute"],
+            ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("social_breakdown", "Society fails", 0.6, timedelta(days=1095), 0.7, ["Chaos"])]
-        self.recovery_poisons = [RecoveryPoison("authoritarian_fix", "Strong hand restores order", "Stability", "Freedom lost", 0.6, 3.0)]
+        self.collapse_modes = [
+            CollapseMode(
+                "social_breakdown",
+                "Society fails",
+                0.6,
+                timedelta(days=1095),
+                0.7,
+                ["Chaos"],
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "authoritarian_fix",
+                "Strong hand restores order",
+                "Stability",
+                "Freedom lost",
+                0.6,
+                3.0,
+            )
+        ]
 
-    def initialize_triggers(self) -> None: pass
-    def initialize_escalation_ladder(self) -> None: pass
-    def initialize_couplings(self) -> None: pass
-    def initialize_collapse_modes(self) -> None: pass
-    def initialize_recovery_poisons(self) -> None: pass
+    def initialize_triggers(self) -> None:
+        pass
+
+    def initialize_escalation_ladder(self) -> None:
+        pass
+
+    def initialize_couplings(self) -> None:
+        pass
+
+    def initialize_collapse_modes(self) -> None:
+        pass
+
+    def initialize_recovery_poisons(self) -> None:
+        pass
 
 
 # ============================================================================
 # ENGINE MODULE 1: ADVERSARIAL REALITY GENERATOR
 # ============================================================================
+
 
 class AdversarialRealityGenerator:
     """Generates worst-case compound scenarios by combining multiple triggers"""
@@ -2201,9 +4412,7 @@ class AdversarialRealityGenerator:
         logger.info("AdversarialRealityGenerator initialized")
 
     def generate_compound_scenario(
-        self,
-        active_scenarios: list[BaseScenario],
-        coupling_threshold: float = 0.7
+        self, active_scenarios: list[BaseScenario], coupling_threshold: float = 0.7
     ) -> dict[str, Any]:
         """Generate worst-case compound scenario from active scenarios"""
         if not active_scenarios:
@@ -2218,7 +4427,9 @@ class AdversarialRealityGenerator:
                     threat_network[key] = coupling.coupling_strength
 
         # Calculate compound severity
-        base_severity = sum(s.escalation_level.value for s in active_scenarios) / len(active_scenarios)
+        base_severity = sum(s.escalation_level.value for s in active_scenarios) / len(
+            active_scenarios
+        )
         coupling_multiplier = 1.0 + (len(threat_network) * 0.2)
         compound_severity = min(base_severity * coupling_multiplier, 10.0)
 
@@ -2239,8 +4450,9 @@ class AdversarialRealityGenerator:
         for scenario in all_scenarios:
             coupling_counts[scenario.scenario_id] = len(scenario.couplings)
             for coupling in scenario.couplings:
-                coupling_counts[coupling.target_scenario_id] = \
+                coupling_counts[coupling.target_scenario_id] = (
                     coupling_counts.get(coupling.target_scenario_id, 0) + 1
+                )
 
         # Return top 10 most coupled scenarios
         sorted_nodes = sorted(coupling_counts.items(), key=lambda x: x[1], reverse=True)
@@ -2253,6 +4465,7 @@ class AdversarialRealityGenerator:
 # ENGINE MODULE 2: CROSS-SCENARIO COUPLER
 # ============================================================================
 
+
 class CrossScenarioCoupler:
     """Manages cascading effects between scenarios"""
 
@@ -2261,9 +4474,7 @@ class CrossScenarioCoupler:
         logger.info("CrossScenarioCoupler initialized")
 
     def propagate_activation(
-        self,
-        source_scenario: BaseScenario,
-        all_scenarios: dict[str, BaseScenario]
+        self, source_scenario: BaseScenario, all_scenarios: dict[str, BaseScenario]
     ) -> list[str]:
         """Propagate activation to coupled scenarios"""
         activated = []
@@ -2279,7 +4490,7 @@ class CrossScenarioCoupler:
             if coupling.coupling_type == "amplifying":
                 # Amplify existing metrics
                 for key in target.metrics:
-                    target.metrics[key] *= (1.0 + coupling.coupling_strength * 0.5)
+                    target.metrics[key] *= 1.0 + coupling.coupling_strength * 0.5
 
             elif coupling.coupling_type == "cascading":
                 # Directly activate triggers
@@ -2290,29 +4501,37 @@ class CrossScenarioCoupler:
 
             elif coupling.coupling_type == "synchronizing":
                 # Synchronize escalation levels
-                if target.escalation_level.value < source_scenario.escalation_level.value:
+                if (
+                    target.escalation_level.value
+                    < source_scenario.escalation_level.value
+                ):
                     target.escalation_level = EscalationLevel(
                         min(source_scenario.escalation_level.value, 5)
                     )
                     activated.append(target_id)
 
             # Record coupling event
-            self.coupling_history.append({
-                "timestamp": datetime.utcnow().isoformat(),
-                "source": source_scenario.scenario_id,
-                "target": target_id,
-                "coupling_type": coupling.coupling_type,
-                "strength": coupling.coupling_strength,
-            })
+            self.coupling_history.append(
+                {
+                    "timestamp": datetime.utcnow().isoformat(),
+                    "source": source_scenario.scenario_id,
+                    "target": target_id,
+                    "coupling_type": coupling.coupling_type,
+                    "strength": coupling.coupling_strength,
+                }
+            )
 
         if activated:
-            logger.warning(f"Coupling propagation from {source_scenario.scenario_id}: activated {activated}")
+            logger.warning(
+                f"Coupling propagation from {source_scenario.scenario_id}: activated {activated}"
+            )
         return activated
 
 
 # ============================================================================
 # ENGINE MODULE 3: HUMAN FAILURE EMULATOR
 # ============================================================================
+
 
 class HumanFailureEmulator:
     """Models human decision-making failures under stress"""
@@ -2322,15 +4541,17 @@ class HumanFailureEmulator:
         logger.info("HumanFailureEmulator initialized")
 
     def simulate_decision_failure(
-        self,
-        stress_level: float,  # 0.0-1.0
-        decision_type: str
+        self, stress_level: float, decision_type: str  # 0.0-1.0
     ) -> dict[str, Any]:
         """Simulate probability of human decision failure"""
         # Failure modes by decision type
         failure_modes = {
             "strategic": ["analysis paralysis", "groupthink", "optimism bias"],
-            "operational": ["communication breakdown", "coordination failure", "resource misallocation"],
+            "operational": [
+                "communication breakdown",
+                "coordination failure",
+                "resource misallocation",
+            ],
             "tactical": ["panic response", "premature action", "freezing"],
         }
 
@@ -2338,14 +4559,20 @@ class HumanFailureEmulator:
         base_failure_prob = 0.1 + (stress_level * 0.6)  # 10-70%
 
         # Stress compounds over time
-        recent_failures = len([f for f in self.failure_history
-                              if datetime.fromisoformat(f["timestamp"]) >
-                              datetime.utcnow() - timedelta(days=7)])
+        recent_failures = len(
+            [
+                f
+                for f in self.failure_history
+                if datetime.fromisoformat(f["timestamp"])
+                > datetime.utcnow() - timedelta(days=7)
+            ]
+        )
         stress_multiplier = 1.0 + (recent_failures * 0.1)
 
         failure_probability = min(base_failure_prob * stress_multiplier, 0.95)
 
         import random
+
         random.seed()
         failed = random.random() < failure_probability
 
@@ -2355,13 +4582,19 @@ class HumanFailureEmulator:
             "stress_level": stress_level,
             "failure_probability": failure_probability,
             "failed": failed,
-            "failure_mode": random.choice(failure_modes.get(decision_type, ["unknown"])) if failed else None,
+            "failure_mode": (
+                random.choice(failure_modes.get(decision_type, ["unknown"]))
+                if failed
+                else None
+            ),
         }
 
         self.failure_history.append(result)
 
         if failed:
-            logger.warning(f"Human failure simulated: {result['failure_mode']} (p={failure_probability:.2f})")
+            logger.warning(
+                f"Human failure simulated: {result['failure_mode']} (p={failure_probability:.2f})"
+            )
 
         return result
 
@@ -2369,6 +4602,7 @@ class HumanFailureEmulator:
 # ============================================================================
 # ENGINE MODULE 4: IRREVERSIBILITY DETECTOR (WITH STATE LOCK ENFORCEMENT)
 # ============================================================================
+
 
 class IrreversibilityDetector:
     """
@@ -2383,9 +4617,7 @@ class IrreversibilityDetector:
         logger.info("IrreversibilityDetector initialized with state lock enforcement")
 
     def assess_irreversibility(
-        self,
-        scenario: BaseScenario,
-        time_elapsed: timedelta
+        self, scenario: BaseScenario, time_elapsed: timedelta
     ) -> dict[str, Any]:
         """Assess if scenario has crossed irreversibility threshold"""
         # Check collapse modes
@@ -2401,7 +4633,9 @@ class IrreversibilityDetector:
             return {"irreversible": False, "score": 0.0}
 
         max_irreversibility = max(irreversibility_scores)
-        is_irreversible = max_irreversibility > 0.7  # Threshold for "point of no return"
+        is_irreversible = (
+            max_irreversibility > 0.7
+        )  # Threshold for "point of no return"
 
         assessment = {
             "scenario_id": scenario.scenario_id,
@@ -2422,7 +4656,7 @@ class IrreversibilityDetector:
         self,
         scenario: BaseScenario,
         irreversibility_score: float,
-        triggered_collapses: list[str]
+        triggered_collapses: list[str],
     ) -> IrreversibilityLock:
         """
         Create enforced state lock when irreversibility threshold crossed.
@@ -2480,7 +4714,7 @@ class IrreversibilityDetector:
         self,
         scenario: BaseScenario,
         irreversibility_score: float,
-        triggered_collapses: list[str]
+        triggered_collapses: list[str],
     ) -> list[VariableConstraint]:
         """Generate variable constraints based on scenario collapse"""
         constraints = []
@@ -2489,94 +4723,128 @@ class IrreversibilityDetector:
         # Category-specific constraint generation
         if scenario.category == ScenarioCategory.DIGITAL_COGNITIVE:
             # Truth verification capacity can never recover
-            if "epistemic_collapse" in triggered_collapses or "trust_collapse" in triggered_collapses:
-                constraints.append(VariableConstraint(
-                    variable_name="verification_capacity",
-                    constraint_type="ceiling",
-                    locked_value=scenario.metrics.get("verification_capacity", 0.5),
-                    locked_at=current_time,
-                    reason="Epistemic collapse: verification infrastructure permanently degraded",
-                    can_never_increase=True,
-                ))
-                constraints.append(VariableConstraint(
-                    variable_name="public_trust_score",
-                    constraint_type="ceiling",
-                    locked_value=scenario.metrics.get("public_trust_score", 0.3),
-                    locked_at=current_time,
-                    reason="Trust collapse: credibility never fully recoverable",
-                    can_never_increase=True,
-                ))
+            if (
+                "epistemic_collapse" in triggered_collapses
+                or "trust_collapse" in triggered_collapses
+            ):
+                constraints.append(
+                    VariableConstraint(
+                        variable_name="verification_capacity",
+                        constraint_type="ceiling",
+                        locked_value=scenario.metrics.get("verification_capacity", 0.5),
+                        locked_at=current_time,
+                        reason="Epistemic collapse: verification infrastructure permanently degraded",
+                        can_never_increase=True,
+                    )
+                )
+                constraints.append(
+                    VariableConstraint(
+                        variable_name="public_trust_score",
+                        constraint_type="ceiling",
+                        locked_value=scenario.metrics.get("public_trust_score", 0.3),
+                        locked_at=current_time,
+                        reason="Trust collapse: credibility never fully recoverable",
+                        can_never_increase=True,
+                    )
+                )
 
         elif scenario.category == ScenarioCategory.ECONOMIC:
             # Currency confidence and liquidity can never fully recover
-            if "currency_collapse" in triggered_collapses or "liquidity_crisis" in triggered_collapses:
-                constraints.append(VariableConstraint(
-                    variable_name="currency_confidence",
-                    constraint_type="ceiling",
-                    locked_value=scenario.metrics.get("currency_confidence", 0.4),
-                    locked_at=current_time,
-                    reason="Currency collapse: confidence permanently impaired",
-                    can_never_increase=True,
-                ))
-                constraints.append(VariableConstraint(
-                    variable_name="market_liquidity",
-                    constraint_type="ceiling",
-                    locked_value=scenario.metrics.get("market_liquidity", 0.5),
-                    locked_at=current_time,
-                    reason="Liquidity crisis: market depth permanently reduced",
-                    can_never_increase=True,
-                ))
+            if (
+                "currency_collapse" in triggered_collapses
+                or "liquidity_crisis" in triggered_collapses
+            ):
+                constraints.append(
+                    VariableConstraint(
+                        variable_name="currency_confidence",
+                        constraint_type="ceiling",
+                        locked_value=scenario.metrics.get("currency_confidence", 0.4),
+                        locked_at=current_time,
+                        reason="Currency collapse: confidence permanently impaired",
+                        can_never_increase=True,
+                    )
+                )
+                constraints.append(
+                    VariableConstraint(
+                        variable_name="market_liquidity",
+                        constraint_type="ceiling",
+                        locked_value=scenario.metrics.get("market_liquidity", 0.5),
+                        locked_at=current_time,
+                        reason="Liquidity crisis: market depth permanently reduced",
+                        can_never_increase=True,
+                    )
+                )
 
         elif scenario.category == ScenarioCategory.INFRASTRUCTURE:
             # Infrastructure capacity permanently degraded
-            if "cascade_failure" in triggered_collapses or "grid_collapse" in triggered_collapses:
-                constraints.append(VariableConstraint(
-                    variable_name="infrastructure_capacity",
-                    constraint_type="ceiling",
-                    locked_value=scenario.metrics.get("infrastructure_capacity", 0.6) * 0.8,
-                    locked_at=current_time,
-                    reason="Cascade failure: physical infrastructure cannot return to pre-collapse capacity",
-                    can_never_increase=True,
-                ))
+            if (
+                "cascade_failure" in triggered_collapses
+                or "grid_collapse" in triggered_collapses
+            ):
+                constraints.append(
+                    VariableConstraint(
+                        variable_name="infrastructure_capacity",
+                        constraint_type="ceiling",
+                        locked_value=scenario.metrics.get(
+                            "infrastructure_capacity", 0.6
+                        )
+                        * 0.8,
+                        locked_at=current_time,
+                        reason="Cascade failure: physical infrastructure cannot return to pre-collapse capacity",
+                        can_never_increase=True,
+                    )
+                )
 
         elif scenario.category == ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL:
             # Ecological damage irreversible on human timescales
-            if "ecosystem_collapse" in triggered_collapses or "species_extinction" in triggered_collapses:
-                constraints.append(VariableConstraint(
-                    variable_name="ecosystem_health",
-                    constraint_type="ceiling",
-                    locked_value=scenario.metrics.get("ecosystem_health", 0.4),
-                    locked_at=current_time,
-                    reason="Ecosystem collapse: biodiversity loss irreversible on human timescales",
-                    can_never_increase=True,
-                ))
-                constraints.append(VariableConstraint(
-                    variable_name="resource_regeneration_rate",
-                    constraint_type="ceiling",
-                    locked_value=scenario.metrics.get("resource_regeneration_rate", 0.3),
-                    locked_at=current_time,
-                    reason="Resource depletion: regeneration capacity permanently impaired",
-                    can_never_increase=True,
-                ))
+            if (
+                "ecosystem_collapse" in triggered_collapses
+                or "species_extinction" in triggered_collapses
+            ):
+                constraints.append(
+                    VariableConstraint(
+                        variable_name="ecosystem_health",
+                        constraint_type="ceiling",
+                        locked_value=scenario.metrics.get("ecosystem_health", 0.4),
+                        locked_at=current_time,
+                        reason="Ecosystem collapse: biodiversity loss irreversible on human timescales",
+                        can_never_increase=True,
+                    )
+                )
+                constraints.append(
+                    VariableConstraint(
+                        variable_name="resource_regeneration_rate",
+                        constraint_type="ceiling",
+                        locked_value=scenario.metrics.get(
+                            "resource_regeneration_rate", 0.3
+                        ),
+                        locked_at=current_time,
+                        reason="Resource depletion: regeneration capacity permanently impaired",
+                        can_never_increase=True,
+                    )
+                )
 
         elif scenario.category == ScenarioCategory.SOCIETAL:
             # Social cohesion and legitimacy never fully recover
-            if "legitimacy_collapse" in triggered_collapses or "social_fracture" in triggered_collapses:
-                constraints.append(VariableConstraint(
-                    variable_name="social_cohesion",
-                    constraint_type="ceiling",
-                    locked_value=scenario.metrics.get("social_cohesion", 0.3),
-                    locked_at=current_time,
-                    reason="Social fracture: cohesion cannot be rebuilt to pre-collapse levels",
-                    can_never_increase=True,
-                ))
+            if (
+                "legitimacy_collapse" in triggered_collapses
+                or "social_fracture" in triggered_collapses
+            ):
+                constraints.append(
+                    VariableConstraint(
+                        variable_name="social_cohesion",
+                        constraint_type="ceiling",
+                        locked_value=scenario.metrics.get("social_cohesion", 0.3),
+                        locked_at=current_time,
+                        reason="Social fracture: cohesion cannot be rebuilt to pre-collapse levels",
+                        can_never_increase=True,
+                    )
+                )
 
         return constraints
 
     def _generate_disabled_recovery_events(
-        self,
-        scenario: BaseScenario,
-        triggered_collapses: list[str]
+        self, scenario: BaseScenario, triggered_collapses: list[str]
     ) -> list[DisabledRecoveryEvent]:
         """Generate list of permanently disabled recovery events"""
         disabled = []
@@ -2584,51 +4852,66 @@ class IrreversibilityDetector:
 
         # Disable recovery poisons (they were traps anyway)
         for poison in scenario.recovery_poisons:
-            disabled.append(DisabledRecoveryEvent(
-                event_name=poison.name,
-                disabled_at=current_time,
-                reason=f"Recovery poison detected: {poison.hidden_damage}",
-                scenario_id=scenario.scenario_id,
-                alternative_actions=[],
-            ))
+            disabled.append(
+                DisabledRecoveryEvent(
+                    event_name=poison.name,
+                    disabled_at=current_time,
+                    reason=f"Recovery poison detected: {poison.hidden_damage}",
+                    scenario_id=scenario.scenario_id,
+                    alternative_actions=[],
+                )
+            )
 
         # Category-specific disabled events
         if scenario.category == ScenarioCategory.DIGITAL_COGNITIVE:
             if "epistemic_collapse" in triggered_collapses:
-                disabled.append(DisabledRecoveryEvent(
-                    event_name="centralized_fact_checking",
-                    disabled_at=current_time,
-                    reason="Trust collapse: centralized authorities no longer credible",
-                    scenario_id=scenario.scenario_id,
-                    alternative_actions=["distributed_verification", "community_consensus"],
-                ))
+                disabled.append(
+                    DisabledRecoveryEvent(
+                        event_name="centralized_fact_checking",
+                        disabled_at=current_time,
+                        reason="Trust collapse: centralized authorities no longer credible",
+                        scenario_id=scenario.scenario_id,
+                        alternative_actions=[
+                            "distributed_verification",
+                            "community_consensus",
+                        ],
+                    )
+                )
 
         elif scenario.category == ScenarioCategory.ECONOMIC:
             if "currency_collapse" in triggered_collapses:
-                disabled.append(DisabledRecoveryEvent(
-                    event_name="monetary_policy_intervention",
-                    disabled_at=current_time,
-                    reason="Currency confidence destroyed: monetary policy lost effectiveness",
-                    scenario_id=scenario.scenario_id,
-                    alternative_actions=["alternative_currencies", "barter_systems"],
-                ))
+                disabled.append(
+                    DisabledRecoveryEvent(
+                        event_name="monetary_policy_intervention",
+                        disabled_at=current_time,
+                        reason="Currency confidence destroyed: monetary policy lost effectiveness",
+                        scenario_id=scenario.scenario_id,
+                        alternative_actions=[
+                            "alternative_currencies",
+                            "barter_systems",
+                        ],
+                    )
+                )
 
         elif scenario.category == ScenarioCategory.SOCIETAL:
             if "legitimacy_collapse" in triggered_collapses:
-                disabled.append(DisabledRecoveryEvent(
-                    event_name="institutional_reform",
-                    disabled_at=current_time,
-                    reason="Legitimacy collapse: existing institutions cannot be reformed",
-                    scenario_id=scenario.scenario_id,
-                    alternative_actions=["parallel_institutions", "grassroots_organizing"],
-                ))
+                disabled.append(
+                    DisabledRecoveryEvent(
+                        event_name="institutional_reform",
+                        disabled_at=current_time,
+                        reason="Legitimacy collapse: existing institutions cannot be reformed",
+                        scenario_id=scenario.scenario_id,
+                        alternative_actions=[
+                            "parallel_institutions",
+                            "grassroots_organizing",
+                        ],
+                    )
+                )
 
         return disabled
 
     def _generate_governance_ceilings(
-        self,
-        scenario: BaseScenario,
-        irreversibility_score: float
+        self, scenario: BaseScenario, irreversibility_score: float
     ) -> list[GovernanceCeiling]:
         """Generate lowered governance legitimacy ceilings"""
         ceilings = []
@@ -2646,60 +4929,68 @@ class IrreversibilityDetector:
             ceiling_multiplier = 0.8
 
         # Universal governance ceilings affected
-        ceilings.append(GovernanceCeiling(
-            domain="democratic_legitimacy",
-            original_ceiling=1.0,
-            lowered_ceiling=1.0 * ceiling_multiplier,
-            lowered_at=current_time,
-            reason=f"Irreversible collapse (score={irreversibility_score:.2f}): public faith in democratic processes permanently reduced",
-            multiplier=ceiling_multiplier,
-        ))
+        ceilings.append(
+            GovernanceCeiling(
+                domain="democratic_legitimacy",
+                original_ceiling=1.0,
+                lowered_ceiling=1.0 * ceiling_multiplier,
+                lowered_at=current_time,
+                reason=f"Irreversible collapse (score={irreversibility_score:.2f}): public faith in democratic processes permanently reduced",
+                multiplier=ceiling_multiplier,
+            )
+        )
 
-        ceilings.append(GovernanceCeiling(
-            domain="institutional_trust",
-            original_ceiling=1.0,
-            lowered_ceiling=1.0 * ceiling_multiplier,
-            lowered_at=current_time,
-            reason=f"Institutional failure: trust in governing institutions never fully recovers",
-            multiplier=ceiling_multiplier,
-        ))
+        ceilings.append(
+            GovernanceCeiling(
+                domain="institutional_trust",
+                original_ceiling=1.0,
+                lowered_ceiling=1.0 * ceiling_multiplier,
+                lowered_at=current_time,
+                reason="Institutional failure: trust in governing institutions never fully recovers",
+                multiplier=ceiling_multiplier,
+            )
+        )
 
-        ceilings.append(GovernanceCeiling(
-            domain="policy_effectiveness",
-            original_ceiling=1.0,
-            lowered_ceiling=1.0 * ceiling_multiplier,
-            lowered_at=current_time,
-            reason=f"Governance capacity permanently impaired: policies less effective post-collapse",
-            multiplier=ceiling_multiplier,
-        ))
+        ceilings.append(
+            GovernanceCeiling(
+                domain="policy_effectiveness",
+                original_ceiling=1.0,
+                lowered_ceiling=1.0 * ceiling_multiplier,
+                lowered_at=current_time,
+                reason="Governance capacity permanently impaired: policies less effective post-collapse",
+                multiplier=ceiling_multiplier,
+            )
+        )
 
         # Category-specific additional ceilings
         if scenario.category == ScenarioCategory.ECONOMIC:
-            ceilings.append(GovernanceCeiling(
-                domain="fiscal_capacity",
-                original_ceiling=1.0,
-                lowered_ceiling=1.0 * ceiling_multiplier * 0.7,  # Extra reduction
-                lowered_at=current_time,
-                reason="Economic collapse: government fiscal capacity permanently reduced",
-                multiplier=ceiling_multiplier * 0.7,
-            ))
+            ceilings.append(
+                GovernanceCeiling(
+                    domain="fiscal_capacity",
+                    original_ceiling=1.0,
+                    lowered_ceiling=1.0 * ceiling_multiplier * 0.7,  # Extra reduction
+                    lowered_at=current_time,
+                    reason="Economic collapse: government fiscal capacity permanently reduced",
+                    multiplier=ceiling_multiplier * 0.7,
+                )
+            )
 
         elif scenario.category == ScenarioCategory.SOCIETAL:
-            ceilings.append(GovernanceCeiling(
-                domain="social_mandate",
-                original_ceiling=1.0,
-                lowered_ceiling=1.0 * ceiling_multiplier * 0.6,  # Extra reduction
-                lowered_at=current_time,
-                reason="Social fracture: government mandate to act permanently weakened",
-                multiplier=ceiling_multiplier * 0.6,
-            ))
+            ceilings.append(
+                GovernanceCeiling(
+                    domain="social_mandate",
+                    original_ceiling=1.0,
+                    lowered_ceiling=1.0 * ceiling_multiplier * 0.6,  # Extra reduction
+                    lowered_at=current_time,
+                    reason="Social fracture: government mandate to act permanently weakened",
+                    multiplier=ceiling_multiplier * 0.6,
+                )
+            )
 
         return ceilings
 
     def validate_state_lock_compliance(
-        self,
-        scenario: BaseScenario,
-        proposed_metrics: dict[str, float]
+        self, scenario: BaseScenario, proposed_metrics: dict[str, float]
     ) -> tuple[bool, list[str]]:
         """
         Validate proposed metrics against all active state locks.
@@ -2716,7 +5007,9 @@ class IrreversibilityDetector:
         for lock in scenario.active_locks:
             for constraint in lock.variable_constraints:
                 if constraint.variable_name in proposed_metrics:
-                    is_valid, reason = constraint.validate(proposed_metrics[constraint.variable_name])
+                    is_valid, reason = constraint.validate(
+                        proposed_metrics[constraint.variable_name]
+                    )
                     if not is_valid:
                         violations.append(reason)
 
@@ -2739,6 +5032,7 @@ class IrreversibilityDetector:
 # ENGINE MODULE 5: FALSE RECOVERY ENGINE
 # ============================================================================
 
+
 class FalseRecoveryEngine:
     """Identifies and tracks recovery poisons (false solutions)"""
 
@@ -2747,9 +5041,7 @@ class FalseRecoveryEngine:
         logger.info("FalseRecoveryEngine initialized")
 
     def evaluate_recovery_attempt(
-        self,
-        scenario: BaseScenario,
-        recovery_action: str
+        self, scenario: BaseScenario, recovery_action: str
     ) -> dict[str, Any]:
         """Evaluate if recovery action is a trap"""
         # Check if action matches known recovery poisons
@@ -2768,7 +5060,9 @@ class FalseRecoveryEngine:
                 }
 
                 self.poison_deployments.append(deployment)
-                logger.warning(f"RECOVERY POISON DETECTED: {poison.name} for {scenario.name}")
+                logger.warning(
+                    f"RECOVERY POISON DETECTED: {poison.name} for {scenario.name}"
+                )
                 return deployment
 
         # Not a known poison
@@ -2794,10 +5088,10 @@ class FalseRecoveryEngine:
         return total_multiplier
 
 
-
 # ============================================================================
 # MAIN HYDRA-50 ENGINE CLASS
 # ============================================================================
+
 
 class Hydra50Engine:
     """
@@ -2902,10 +5196,7 @@ class Hydra50Engine:
         self.scenarios["S50"] = SpeciesLevelApathyScenario()
 
     def update_scenario_metrics(
-        self,
-        scenario_id: str,
-        metrics: dict[str, float],
-        user_id: str | None = None
+        self, scenario_id: str, metrics: dict[str, float], user_id: str | None = None
     ) -> None:
         """Update metrics for a scenario and trigger event sourcing"""
         if scenario_id not in self.scenarios:
@@ -2918,7 +5209,10 @@ class Hydra50Engine:
         scenario.update_metrics(metrics)
 
         # Check for status changes
-        if any(t.activated for t in scenario.triggers) and old_status == ScenarioStatus.DORMANT:
+        if (
+            any(t.activated for t in scenario.triggers)
+            and old_status == ScenarioStatus.DORMANT
+        ):
             scenario.status = ScenarioStatus.TRIGGERED
             scenario.activation_time = datetime.utcnow()
 
@@ -2945,7 +5239,9 @@ class Hydra50Engine:
 
         # Propagate couplings
         if scenario.status in [ScenarioStatus.TRIGGERED, ScenarioStatus.ESCALATING]:
-            activated = self.scenario_coupler.propagate_activation(scenario, self.scenarios)
+            activated = self.scenario_coupler.propagate_activation(
+                scenario, self.scenarios
+            )
             if activated:
                 event = EventRecord(
                     event_id=str(uuid.uuid4()),
@@ -2978,13 +5274,15 @@ class Hydra50Engine:
                 scenario.evaluate_escalation()
                 active_scenarios.append(scenario)
 
-                tick_results["active_scenarios"].append({
-                    "id": scenario_id,
-                    "name": scenario.name,
-                    "status": scenario.status.value,
-                    "level": scenario.escalation_level.value,
-                    "active_locks": len(scenario.active_locks),
-                })
+                tick_results["active_scenarios"].append(
+                    {
+                        "id": scenario_id,
+                        "name": scenario.name,
+                        "status": scenario.status.value,
+                        "level": scenario.escalation_level.value,
+                        "active_locks": len(scenario.active_locks),
+                    }
+                )
 
                 if scenario.escalation_level.value >= 4:
                     tick_results["critical_scenarios"].append(scenario_id)
@@ -2992,7 +5290,9 @@ class Hydra50Engine:
                 # Check irreversibility and create state locks
                 if scenario.activation_time:
                     elapsed = datetime.utcnow() - scenario.activation_time
-                    assessment = self.irreversibility_detector.assess_irreversibility(scenario, elapsed)
+                    assessment = self.irreversibility_detector.assess_irreversibility(
+                        scenario, elapsed
+                    )
 
                     if assessment["irreversible"]:
                         tick_results["irreversible_scenarios"].append(scenario_id)
@@ -3009,17 +5309,25 @@ class Hydra50Engine:
                             lock = self.irreversibility_detector.create_state_lock(
                                 scenario=scenario,
                                 irreversibility_score=assessment["score"],
-                                triggered_collapses=assessment["triggered_collapses"]
+                                triggered_collapses=assessment["triggered_collapses"],
                             )
 
-                            tick_results["new_state_locks"].append({
-                                "lock_id": lock.lock_id,
-                                "scenario_id": scenario_id,
-                                "scenario_name": scenario.name,
-                                "variable_constraints": len(lock.variable_constraints),
-                                "disabled_recovery_events": len(lock.disabled_recovery_events),
-                                "governance_ceilings": len(lock.governance_ceilings),
-                            })
+                            tick_results["new_state_locks"].append(
+                                {
+                                    "lock_id": lock.lock_id,
+                                    "scenario_id": scenario_id,
+                                    "scenario_name": scenario.name,
+                                    "variable_constraints": len(
+                                        lock.variable_constraints
+                                    ),
+                                    "disabled_recovery_events": len(
+                                        lock.disabled_recovery_events
+                                    ),
+                                    "governance_ceilings": len(
+                                        lock.governance_ceilings
+                                    ),
+                                }
+                            )
 
                             logger.critical(
                                 f"STATE LOCK ENFORCED: {scenario.name} - "
@@ -3030,7 +5338,9 @@ class Hydra50Engine:
 
         # Generate compound scenarios
         if len(active_scenarios) >= 2:
-            compound = self.adversarial_generator.generate_compound_scenario(active_scenarios)
+            compound = self.adversarial_generator.generate_compound_scenario(
+                active_scenarios
+            )
             tick_results["compound_threats"] = compound
 
         # Record tick event
@@ -3078,7 +5388,7 @@ class Hydra50Engine:
         self,
         branch_name: str,
         branch_point: datetime,
-        alternate_events: list[dict[str, Any]]
+        alternate_events: list[dict[str, Any]],
     ) -> dict[str, Any]:
         """Create what-if scenario by branching from history"""
         logger.info(f"Creating counterfactual branch: {branch_name}")
@@ -3107,10 +5417,7 @@ class Hydra50Engine:
         }
 
     def attempt_recovery_action(
-        self,
-        scenario_id: str,
-        recovery_action: str,
-        user_id: str | None = None
+        self, scenario_id: str, recovery_action: str, user_id: str | None = None
     ) -> dict[str, Any]:
         """
         Attempt a recovery action with state lock validation.
@@ -3132,7 +5439,9 @@ class Hydra50Engine:
         scenario = self.scenarios[scenario_id]
 
         # Check if recovery event is permanently disabled
-        is_allowed, disable_reason = scenario.check_recovery_event_allowed(recovery_action)
+        is_allowed, disable_reason = scenario.check_recovery_event_allowed(
+            recovery_action
+        )
 
         if not is_allowed:
             logger.error(f"Recovery attempt BLOCKED: {disable_reason}")
@@ -3207,12 +5516,18 @@ class Hydra50Engine:
         all_locks = self.irreversibility_detector.get_all_active_locks()
 
         if scenario_id:
-            all_locks = [lock for lock in all_locks if lock["scenario_id"] == scenario_id]
+            all_locks = [
+                lock for lock in all_locks if lock["scenario_id"] == scenario_id
+            ]
 
         # Calculate aggregate statistics
         total_constraints = sum(len(lock["variable_constraints"]) for lock in all_locks)
-        total_disabled_events = sum(len(lock["disabled_recovery_events"]) for lock in all_locks)
-        total_governance_reductions = sum(len(lock["governance_ceilings"]) for lock in all_locks)
+        total_disabled_events = sum(
+            len(lock["disabled_recovery_events"]) for lock in all_locks
+        )
+        total_governance_reductions = sum(
+            len(lock["governance_ceilings"]) for lock in all_locks
+        )
 
         return {
             "timestamp": datetime.utcnow().isoformat(),
@@ -3231,11 +5546,15 @@ class Hydra50Engine:
 
     def get_dashboard_state(self) -> dict[str, Any]:
         """Get current state for dashboard/GUI"""
-        active = [s for s in self.scenarios.values() if s.status != ScenarioStatus.DORMANT]
+        active = [
+            s for s in self.scenarios.values() if s.status != ScenarioStatus.DORMANT
+        ]
         critical = [s for s in active if s.escalation_level.value >= 4]
 
         # Count scenarios with active locks
-        locked_scenarios = [s for s in self.scenarios.values() if len(s.active_locks) > 0]
+        locked_scenarios = [
+            s for s in self.scenarios.values() if len(s.active_locks) > 0
+        ]
 
         return {
             "timestamp": datetime.utcnow().isoformat(),
@@ -3253,12 +5572,16 @@ class Hydra50Engine:
                     "status": s.status.value,
                     "escalation_level": s.escalation_level.value,
                     "active_locks": len(s.active_locks),
-                    "locked_variables": sum(len(lock.variable_constraints) for lock in s.active_locks),
+                    "locked_variables": sum(
+                        len(lock.variable_constraints) for lock in s.active_locks
+                    ),
                 }
                 for s in active
             ],
             "event_log_size": len(self.event_log),
-            "irreversible_states": len(self.irreversibility_detector.irreversible_states),
+            "irreversible_states": len(
+                self.irreversibility_detector.irreversible_states
+            ),
             "active_state_locks": len(self.irreversibility_detector.active_locks),
             "poison_deployments": len(self.false_recovery_engine.poison_deployments),
         }
@@ -3290,7 +5613,9 @@ class Hydra50Engine:
             "timestamp": datetime.utcnow().isoformat(),
             "control_plane": self.active_control_plane.value,
             "human_override_active": self.human_override_active,
-            "event_log": [e.to_dict() for e in self.event_log[-1000:]],  # Last 1000 events
+            "event_log": [
+                e.to_dict() for e in self.event_log[-1000:]
+            ],  # Last 1000 events
             "scenario_states": {
                 sid: {
                     "status": s.status.value,
@@ -3320,7 +5645,9 @@ class Hydra50Engine:
             with open(state_file) as f:
                 state_data = json.load(f)
 
-            self.active_control_plane = ControlPlane(state_data.get("control_plane", "operational"))
+            self.active_control_plane = ControlPlane(
+                state_data.get("control_plane", "operational")
+            )
             self.human_override_active = state_data.get("human_override_active", False)
 
             # Restore scenario states
@@ -3328,7 +5655,9 @@ class Hydra50Engine:
             for sid, state in scenario_states.items():
                 if sid in self.scenarios:
                     self.scenarios[sid].status = ScenarioStatus(state["status"])
-                    self.scenarios[sid].escalation_level = EscalationLevel(state["escalation_level"])
+                    self.scenarios[sid].escalation_level = EscalationLevel(
+                        state["escalation_level"]
+                    )
                     self.scenarios[sid].metrics = state["metrics"]
 
             logger.info(f"State loaded from {state_file}")
@@ -3392,4 +5721,3 @@ SCENARIO_REGISTRY = {
     "S49": "Law Becomes Advisory",
     "S50": "Species-Level Apathy",
 }
-

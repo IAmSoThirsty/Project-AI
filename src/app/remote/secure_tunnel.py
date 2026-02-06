@@ -3,7 +3,7 @@ Secure Tunnel - Encrypted tunnel for all remote access
 """
 
 import logging
-from typing import Dict, Any
+from typing import Any
 
 
 class SecureTunnel:
@@ -19,16 +19,16 @@ class SecureTunnel:
 
         self._tunnel_active = False
 
-    def establish(self) -> Dict[str, Any]:
+    def establish(self) -> dict[str, Any]:
         """Establish secure tunnel"""
         self.logger.info("Establishing secure tunnel with God tier encryption")
 
         self._tunnel_active = True
 
         return {
-            'status': 'established',
-            'god_tier_encrypted': True,
-            'encryption_layers': 7
+            "status": "established",
+            "god_tier_encrypted": True,
+            "encryption_layers": 7,
         }
 
     def close(self):
@@ -36,9 +36,6 @@ class SecureTunnel:
         self.logger.info("Closing secure tunnel")
         self._tunnel_active = False
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get tunnel status"""
-        return {
-            'active': self._tunnel_active,
-            'god_tier_encrypted': True
-        }
+        return {"active": self._tunnel_active, "god_tier_encrypted": True}

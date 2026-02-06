@@ -30,7 +30,9 @@ class AutoSaveService:
 
         self.running = True
         self.task = asyncio.create_task(self._auto_save_loop())
-        logger.info(f"Auto-save service started (interval: {self.interval_minutes} minutes)")
+        logger.info(
+            f"Auto-save service started (interval: {self.interval_minutes} minutes)"
+        )
 
     async def stop(self):
         """Stop the auto-save service"""
@@ -70,7 +72,7 @@ class AutoSaveService:
             "running": self.running,
             "interval_minutes": self.interval_minutes,
             "next_save_in_seconds": self.interval_seconds if self.running else None,
-            "save_points": self.save_manager.list_save_points()
+            "save_points": self.save_manager.list_save_points(),
         }
 
 
