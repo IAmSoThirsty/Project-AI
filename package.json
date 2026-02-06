@@ -11,7 +11,11 @@
     "format": "ruff check . --fix",
     "dev": "docker-compose up",
     "build": "docker build -t project-ai:latest .",
-    "lint:markdown": "markdownlint README.md PROGRAM_SUMMARY.md docs docs/developer --config .markdownlint.json"
+    "lint:markdown": "markdownlint README.md PROGRAM_SUMMARY.md docs docs/developer --config .markdownlint.json",
+    "tarl:build": "python -m tarl.build.cli build",
+    "tarl:clean": "python -m tarl.build.cli clean",
+    "tarl:list": "python -m tarl.build.cli list",
+    "tarl:cache": "python -m tarl.build.cli cache stats"
   },
   "keywords": [
     "ai",
@@ -33,4 +37,3 @@
     "markdownlint-cli": "^0.47.0"
   }
 }
-

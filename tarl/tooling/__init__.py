@@ -84,6 +84,21 @@ class BuildSystem:
         self.config = config
         self.compiler = compiler
         self.modules = modules
+        self._tarl_build = None
+
+    def initialize(self) -> None:
+        """Initialize TarlBuild engine"""
+        try:
+            from tarl.build import TarlBuild
+
+            self._tarl_build = TarlBuild(
+                cache_enabled=True,
+                parallel=True,
+                max_workers=4,
+            )
+            logger.info("TarlBuild engine initialized")
+        except ImportError:
+            logger.warning("TarlBuild not available, using placeholder")
 
     def build(self, project_path: str) -> bool:
         """
@@ -95,6 +110,22 @@ class BuildSystem:
         Returns:
             True if build succeeded
         """
+        if self._tarl_build:
+            logger.info(f"Building project at {project_path} with TarlBuild")
+            # Use new build engine
+            from tarl.build.dsl_parser import BuildDSLParser
+            from pathlib import Path
+
+            build_file = Path(project_path) / "build.tarl"
+            if build_file.exists():
+                parser = BuildDSLParser()
+                tasks = parser.parse_file(str(build_file))
+                for task in tasks.values():
+                    self._tarl_build.registry.register(task)
+                return self._tarl_build.execute()
+            else:
+                logger.warning(f"No build.tarl found at {project_path}")
+
         logger.info(f"Building project at {project_path}")
         return True
 
