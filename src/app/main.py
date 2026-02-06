@@ -4,6 +4,11 @@ Main entry point for the AI Desktop Application with AGI Identity System.
 
 CRITICAL: This is the trust root - where CognitionKernel is instantiated
 and all subsystems are wired together. No execution happens without kernel authority.
+
+THREE-TIER PLATFORM:
+- Tier 1 (Governance): CognitionKernel, GovernanceService - Sovereign authority
+- Tier 2 (Infrastructure): MemoryEngine, GlobalWatchTower, ExecutionService - Constrained
+- Tier 3 (Application): CouncilHub, Agents, GUI - Sandboxed, replaceable
 """
 
 import logging
@@ -22,7 +27,9 @@ from app.core.governance import Triumvirate as GovernanceTriumvirate
 from app.core.intelligence_engine import IdentityIntegratedIntelligenceEngine
 from app.core.kernel_integration import set_global_kernel
 from app.core.memory_engine import MemoryEngine
+from app.core.platform_tiers import get_tier_registry
 from app.core.reflection_cycle import ReflectionCycle
+from app.core.tier_health_dashboard import get_health_monitor
 from app.gui.dashboard_main import DashboardMainWindow
 from src.cognition.triumvirate import Triumvirate
 
@@ -700,6 +707,100 @@ def setup_environment():
     logger.info("Security directories initialized")
 
 
+def initialize_tier_registry():
+    """
+    Initialize the three-tier platform registry.
+    
+    This is called early in startup to establish the tier system
+    before components are initialized. Components will self-register
+    during their initialization.
+    
+    Returns:
+        TierRegistry: The initialized tier registry singleton
+    """
+    logger.info("=" * 60)
+    logger.info("🏗️  INITIALIZING THREE-TIER PLATFORM")
+    logger.info("=" * 60)
+    
+    # Get the registry singleton (creates it if needed)
+    tier_registry = get_tier_registry()
+    
+    logger.info("✅ Tier Registry initialized")
+    logger.info("   - Tier 1 (Governance): Sovereign authority")
+    logger.info("   - Tier 2 (Infrastructure): Constrained control")
+    logger.info("   - Tier 3 (Application): Sandboxed runtime")
+    logger.info("   - Authority flows downward only")
+    logger.info("   - Capability flows upward only")
+    logger.info("=" * 60)
+    
+    return tier_registry
+
+
+def report_tier_health():
+    """
+    Report health status of all three tiers.
+    
+    This is called after all components are initialized to verify
+    the tier system is properly configured and operational.
+    """
+    logger.info("=" * 60)
+    logger.info("🔍 TIER PLATFORM HEALTH CHECK")
+    logger.info("=" * 60)
+    
+    try:
+        registry = get_tier_registry()
+        health_monitor = get_health_monitor()
+        
+        # Collect platform health
+        platform_health = health_monitor.collect_platform_health()
+        
+        # Log tier-by-tier status
+        from app.core.platform_tiers import PlatformTier
+        
+        for tier_num, tier in enumerate([
+            PlatformTier.TIER_1_GOVERNANCE,
+            PlatformTier.TIER_2_INFRASTRUCTURE,
+            PlatformTier.TIER_3_APPLICATION
+        ], 1):
+            tier_health = health_monitor.collect_tier_health(tier)
+            logger.info(f"Tier {tier_num} ({tier.name}):")
+            logger.info(f"   Status: {tier_health.overall_health.value.upper()}")
+            logger.info(f"   Components: {tier_health.tier_status.component_count}")
+            logger.info(f"   Active: {tier_health.tier_status.active_components}")
+            logger.info(f"   Paused: {tier_health.tier_status.paused_components}")
+            
+            # List components
+            for comp in tier_health.component_reports[:5]:  # First 5
+                status_icon = "✓" if comp.is_operational else "✗"
+                logger.info(f"     {status_icon} {comp.component_name}")
+            
+            if len(tier_health.component_reports) > 5:
+                logger.info(f"     ... and {len(tier_health.component_reports) - 5} more")
+        
+        # Overall status
+        logger.info("")
+        logger.info(f"Platform Status: {platform_health.overall_health.value.upper()}")
+        logger.info(f"Total Components: {platform_health.total_components}")
+        logger.info(f"Active: {platform_health.active_components}")
+        logger.info(f"Violations: {platform_health.total_violations}")
+        
+        # Check for violations
+        violations = registry.get_all_violations()
+        if violations:
+            logger.warning(f"⚠️  {len(violations)} tier boundary violations detected:")
+            for violation in violations[:3]:  # First 3
+                logger.warning(f"   - {violation.violation_type}: {violation.description}")
+        else:
+            logger.info("✓ No tier boundary violations")
+        
+        logger.info("=" * 60)
+        
+    except Exception as e:
+        logger.error(f"Failed to report tier health: {e}")
+        import traceback
+        traceback.print_exc()
+
+
 def main():
     """Main application entry point.
 
@@ -713,13 +814,19 @@ def main():
     logger.info("🚀 Starting Project-AI with CognitionKernel governance")
     logger.info("=" * 60)
 
+    # Initialize Three-Tier Platform Registry
+    tier_registry = initialize_tier_registry()
+
     # Initialize CognitionKernel (trust root)
+    # Note: Kernel will self-register as Tier-1 during initialization
     kernel = initialize_kernel()
 
     # Initialize CouncilHub with kernel injection
+    # Note: CouncilHub will self-register as Tier-3 during initialization
     council_hub = initialize_council_hub(kernel)
 
     # Initialize comprehensive security countermeasures
+    # Note: GlobalWatchTower will self-register as Tier-2 during initialization
     security_systems = initialize_security_systems(kernel, council_hub)
 
     # Initialize enhanced defensive capabilities
@@ -727,6 +834,9 @@ def main():
 
     # Combine security systems for dashboard access
     all_security_systems = {**security_systems, **enhanced_defenses}
+
+    # Report tier platform health
+    report_tier_health()
 
     # Start autonomous learning (optional)
     # council_hub.start_autonomous_learning()
@@ -747,6 +857,7 @@ def main():
         app.setFont(fallback_font)
 
     # Show the consolidated dashboard
+    # Note: Dashboard will self-register as Tier-3 during initialization
     app_window = DashboardMainWindow()
 
     # Make subsystems accessible to the dashboard
