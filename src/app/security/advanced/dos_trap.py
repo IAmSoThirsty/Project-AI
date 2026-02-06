@@ -4,19 +4,20 @@ Comprehensive system compromise detection and response with rootkit detection,
 kernel anomaly analysis, hardware integration, and emergency sanitization.
 """
 
-import logging
-import hashlib
-import secrets
-import os
-import time
-import threading
 import ctypes
+import hashlib
+import logging
+import os
 import platform
+import secrets
 import subprocess
-from typing import Dict, Any, Optional, List, Tuple, Callable, Set
-from enum import Enum
-from dataclasses import dataclass, field
+import threading
+import time
 from collections import deque
+from collections.abc import Callable
+from dataclasses import dataclass, field
+from enum import Enum
+from typing import Any
 
 # Cryptography imports removed - not used in current implementation
 # These were placeholders for future hardware-based encryption features
@@ -79,12 +80,12 @@ class CompromiseEvent:
     threat_level: ThreatLevel
     compromise_type: CompromiseType
     description: str
-    indicators: List[str] = field(default_factory=list)
-    affected_components: List[str] = field(default_factory=list)
-    recommended_actions: List[ResponseAction] = field(default_factory=list)
-    evidence: Dict[str, Any] = field(default_factory=dict)
+    indicators: list[str] = field(default_factory=list)
+    affected_components: list[str] = field(default_factory=list)
+    recommended_actions: list[ResponseAction] = field(default_factory=list)
+    evidence: dict[str, Any] = field(default_factory=dict)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary"""
         return {
             "timestamp": self.timestamp,
@@ -103,13 +104,13 @@ class SystemSnapshot:
     """System state snapshot for anomaly detection"""
 
     timestamp: float
-    kernel_modules: Set[str]
-    syscall_table_hash: Optional[bytes]
-    memory_regions: List[Tuple[int, int]]
-    process_list: Set[int]
-    network_connections: List[Tuple[str, int]]
-    loaded_libraries: Set[str]
-    pcr_values: Dict[int, bytes]
+    kernel_modules: set[str]
+    syscall_table_hash: bytes | None
+    memory_regions: list[tuple[int, int]]
+    process_list: set[int]
+    network_connections: list[tuple[str, int]]
+    loaded_libraries: set[str]
+    pcr_values: dict[int, bytes]
 
     def __hash__(self):
         return hash((self.timestamp, frozenset(self.kernel_modules)))
@@ -125,16 +126,16 @@ class KernelInterface:
         self.logger = logging.getLogger(__name__)
         self._is_linux = platform.system() == "Linux"
         self._is_windows = platform.system() == "Windows"
-        self._baseline_modules: Set[str] = set()
-        self._baseline_syscalls: Optional[bytes] = None
+        self._baseline_modules: set[str] = set()
+        self._baseline_syscalls: bytes | None = None
 
-    def get_loaded_kernel_modules(self) -> Set[str]:
+    def get_loaded_kernel_modules(self) -> set[str]:
         """Get list of loaded kernel modules"""
         modules = set()
 
         if self._is_linux:
             try:
-                with open("/proc/modules", "r") as f:
+                with open("/proc/modules") as f:
                     for line in f:
                         module_name = line.split()[0]
                         modules.add(module_name)
@@ -160,7 +161,7 @@ class KernelInterface:
 
         return modules
 
-    def detect_suspicious_modules(self, current_modules: Set[str]) -> List[str]:
+    def detect_suspicious_modules(self, current_modules: set[str]) -> list[str]:
         """Detect suspicious kernel modules"""
         suspicious = []
 
@@ -193,7 +194,7 @@ class KernelInterface:
 
         return suspicious
 
-    def get_syscall_table_hash(self) -> Optional[bytes]:
+    def get_syscall_table_hash(self) -> bytes | None:
         """
         Get hash of system call table.
         Detects syscall hooking.
@@ -204,7 +205,7 @@ class KernelInterface:
                 syscall_data = []
 
                 try:
-                    with open("/proc/kallsyms", "r") as f:
+                    with open("/proc/kallsyms") as f:
                         for line in f:
                             if "sys_call_table" in line:
                                 syscall_data.append(line.encode())
@@ -240,13 +241,13 @@ class KernelInterface:
 
         return False
 
-    def scan_memory_regions(self) -> List[Tuple[int, int]]:
+    def scan_memory_regions(self) -> list[tuple[int, int]]:
         """Scan memory regions for anomalies"""
         regions = []
 
         try:
             if self._is_linux:
-                with open(f"/proc/{os.getpid()}/maps", "r") as f:
+                with open(f"/proc/{os.getpid()}/maps") as f:
                     for line in f:
                         parts = line.split()
                         if len(parts) >= 1:
@@ -259,7 +260,7 @@ class KernelInterface:
 
         return regions
 
-    def detect_hidden_processes(self) -> List[int]:
+    def detect_hidden_processes(self) -> list[int]:
         """Detect hidden processes (PID manipulation)"""
         hidden_pids = []
 
@@ -297,7 +298,7 @@ class KernelInterface:
         try:
             if self._is_linux:
                 # Check for kernel memory corruption indicators
-                with open("/proc/sys/kernel/tainted", "r") as f:
+                with open("/proc/sys/kernel/tainted") as f:
                     tainted = int(f.read().strip())
                     if tainted != 0:
                         self.logger.warning(f"Kernel is tainted: {tainted}")
@@ -319,7 +320,7 @@ class CompromiseDetector:
     def __init__(self):
         self.logger = logging.getLogger(__name__)
         self.kernel_interface = KernelInterface()
-        self._baseline_snapshot: Optional[SystemSnapshot] = None
+        self._baseline_snapshot: SystemSnapshot | None = None
         self._detection_history: deque = deque(maxlen=1000)
         self._lock = threading.Lock()
 
@@ -360,15 +361,17 @@ class CompromiseDetector:
             kernel_modules=self.kernel_interface.get_loaded_kernel_modules(),
             syscall_table_hash=self.kernel_interface.get_syscall_table_hash(),
             memory_regions=self.kernel_interface.scan_memory_regions(),
-            process_list=set(int(pid) for pid in os.listdir("/proc") if pid.isdigit())
-            if os.path.exists("/proc")
-            else set(),
+            process_list=(
+                set(int(pid) for pid in os.listdir("/proc") if pid.isdigit())
+                if os.path.exists("/proc")
+                else set()
+            ),
             network_connections=[],
             loaded_libraries=set(),
             pcr_values={},
         )
 
-    def detect_rootkit(self) -> Optional[CompromiseEvent]:
+    def detect_rootkit(self) -> CompromiseEvent | None:
         """Detect rootkit presence"""
         if not self.config["enable_rootkit_detection"]:
             return None
@@ -441,7 +444,7 @@ class CompromiseDetector:
 
         return any(suspicious_indicators)
 
-    def detect_kernel_hooks(self) -> Optional[CompromiseEvent]:
+    def detect_kernel_hooks(self) -> CompromiseEvent | None:
         """Detect kernel-level hooking"""
         if not self.config["enable_kernel_hook_detection"]:
             return None
@@ -474,7 +477,7 @@ class CompromiseDetector:
 
         return None
 
-    def detect_memory_anomalies(self) -> Optional[CompromiseEvent]:
+    def detect_memory_anomalies(self) -> CompromiseEvent | None:
         """Detect memory-level anomalies"""
         if not self.config["enable_memory_scan"]:
             return None
@@ -506,7 +509,7 @@ class CompromiseDetector:
 
         return None
 
-    def detect_process_injection(self) -> Optional[CompromiseEvent]:
+    def detect_process_injection(self) -> CompromiseEvent | None:
         """Detect process injection attempts"""
         if not self.config["enable_process_injection_detection"]:
             return None
@@ -539,7 +542,7 @@ class CompromiseDetector:
 
         return None
 
-    def comprehensive_scan(self) -> List[CompromiseEvent]:
+    def comprehensive_scan(self) -> list[CompromiseEvent]:
         """Perform comprehensive system compromise scan"""
         self.logger.info("Starting comprehensive compromise scan")
 
@@ -578,7 +581,7 @@ class SecretWiper:
 
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        self._wiped_items: Set[str] = set()
+        self._wiped_items: set[str] = set()
         self._lock = threading.Lock()
 
     def wipe_memory_region(self, address: int, size: int) -> bool:
@@ -602,7 +605,7 @@ class SecretWiper:
             self.logger.error(f"Failed to wipe memory region: {e}")
             return False
 
-    def wipe_master_keys(self, key_storage: Dict[str, Any]) -> bool:
+    def wipe_master_keys(self, key_storage: dict[str, Any]) -> bool:
         """Wipe master cryptographic keys"""
         with self._lock:
             try:
@@ -634,7 +637,7 @@ class SecretWiper:
                 self.logger.error(f"Failed to wipe master keys: {e}")
                 return False
 
-    def wipe_session_keys(self, session_storage: Dict[str, Any]) -> bool:
+    def wipe_session_keys(self, session_storage: dict[str, Any]) -> bool:
         """Wipe session keys and tokens"""
         with self._lock:
             try:
@@ -650,7 +653,7 @@ class SecretWiper:
                 self.logger.error(f"Failed to wipe session keys: {e}")
                 return False
 
-    def wipe_credentials(self, credential_store: Dict[str, Any]) -> bool:
+    def wipe_credentials(self, credential_store: dict[str, Any]) -> bool:
         """Wipe stored credentials"""
         with self._lock:
             try:
@@ -730,7 +733,7 @@ class HardwareKeyDestroyer:
 
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        self._destroyed_keys: Set[str] = set()
+        self._destroyed_keys: set[str] = set()
 
     def destroy_tpm_keys(self, tpm_interface) -> bool:
         """Destroy keys stored in TPM"""
@@ -772,7 +775,7 @@ class HardwareKeyDestroyer:
             self.logger.error(f"Failed to destroy HSM keys: {e}")
             return False
 
-    def destroy_all_hardware_keys(self, hardware_interfaces: List[Any]) -> bool:
+    def destroy_all_hardware_keys(self, hardware_interfaces: list[Any]) -> bool:
         """Destroy keys in all hardware security modules"""
         self.logger.critical("Destroying all hardware-stored keys")
 
@@ -801,7 +804,7 @@ class InterfaceDisabler:
 
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        self._disabled_interfaces: List[str] = []
+        self._disabled_interfaces: list[str] = []
         self._is_linux = platform.system() == "Linux"
         self._is_windows = platform.system() == "Windows"
 
@@ -928,7 +931,7 @@ class MemorySanitizer:
 
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        self._sanitized_regions: List[Tuple[int, int]] = []
+        self._sanitized_regions: list[tuple[int, int]] = []
 
     def sanitize_ram(
         self, mode: SanitizationMode = SanitizationMode.THREE_PASS
@@ -1148,11 +1151,11 @@ class DOSTrapMode:
         self._active = False
         self._triggered = False
         self._threat_level = ThreatLevel.NONE
-        self._detected_threats: List[CompromiseEvent] = []
+        self._detected_threats: list[CompromiseEvent] = []
         self._lock = threading.Lock()
 
         # Monitoring thread
-        self._monitor_thread: Optional[threading.Thread] = None
+        self._monitor_thread: threading.Thread | None = None
         self._stop_monitoring = threading.Event()
 
         # Configuration
@@ -1165,7 +1168,7 @@ class DOSTrapMode:
         }
 
         # Response callbacks
-        self._response_callbacks: List[Callable] = []
+        self._response_callbacks: list[Callable] = []
 
     def initialize(self) -> bool:
         """Initialize DOS trap mode"""
@@ -1251,7 +1254,7 @@ class DOSTrapMode:
 
         self.logger.info("DOS Trap monitoring stopped")
 
-    def _check_attestation(self) -> Optional[CompromiseEvent]:
+    def _check_attestation(self) -> CompromiseEvent | None:
         """Check hardware attestation status"""
         try:
             if not hasattr(self.hardware_root_of_trust, "attest_system"):
@@ -1284,7 +1287,7 @@ class DOSTrapMode:
 
         return None
 
-    def _handle_detected_threats(self, events: List[CompromiseEvent]):
+    def _handle_detected_threats(self, events: list[CompromiseEvent]):
         """Handle detected compromise events"""
         with self._lock:
             self._detected_threats.extend(events)
@@ -1320,7 +1323,7 @@ class DOSTrapMode:
                 except Exception as e:
                     self.logger.error(f"Response callback failed: {e}")
 
-    def _execute_emergency_response(self, events: List[CompromiseEvent]):
+    def _execute_emergency_response(self, events: list[CompromiseEvent]):
         """Execute emergency response to detected threats"""
         if self._triggered:
             return
@@ -1458,7 +1461,7 @@ class DOSTrapMode:
 
         self._handle_detected_threats([event])
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get current DOS trap mode status"""
         with self._lock:
             return {
@@ -1470,7 +1473,7 @@ class DOSTrapMode:
                 "config": self.config.copy(),
             }
 
-    def get_threat_report(self) -> Dict[str, Any]:
+    def get_threat_report(self) -> dict[str, Any]:
         """Generate comprehensive threat report"""
         with self._lock:
             threats_by_type = {}

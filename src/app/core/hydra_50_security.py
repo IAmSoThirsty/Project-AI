@@ -43,8 +43,10 @@ logger = logging.getLogger(__name__)
 # ENUMERATIONS
 # ============================================================================
 
+
 class Role(Enum):
     """User roles"""
+
     VIEWER = "viewer"
     OPERATOR = "operator"
     ADMIN = "admin"
@@ -53,6 +55,7 @@ class Role(Enum):
 
 class Permission(Enum):
     """Permissions"""
+
     READ = "read"
     WRITE = "write"
     EXECUTE = "execute"
@@ -64,9 +67,11 @@ class Permission(Enum):
 # DATA MODELS
 # ============================================================================
 
+
 @dataclass
 class User:
     """User account"""
+
     user_id: str
     username: str
     password_hash: str
@@ -81,6 +86,7 @@ class User:
 @dataclass
 class Session:
     """User session"""
+
     session_id: str
     user_id: str
     created_at: float
@@ -93,6 +99,7 @@ class Session:
 @dataclass
 class APIKey:
     """API key"""
+
     key_id: str
     key_hash: str
     name: str
@@ -106,6 +113,7 @@ class APIKey:
 # ============================================================================
 # INPUT VALIDATOR
 # ============================================================================
+
 
 class InputValidator:
     """Input validation and sanitization"""
@@ -135,7 +143,10 @@ class InputValidator:
             return False, "Username cannot be empty"
 
         if not cls.USERNAME_PATTERN.match(username):
-            return False, "Username must be 3-32 characters, alphanumeric, underscore, or hyphen"
+            return (
+                False,
+                "Username must be 3-32 characters, alphanumeric, underscore, or hyphen",
+            )
 
         return True, "Valid"
 
@@ -213,13 +224,25 @@ class InputValidator:
 # ACCESS CONTROL
 # ============================================================================
 
+
 class AccessControl:
     """Role-based access control"""
 
     # Role hierarchy
     ROLE_HIERARCHY = {
-        Role.SUPER_ADMIN: {Permission.READ, Permission.WRITE, Permission.EXECUTE, Permission.DELETE, Permission.ADMIN},
-        Role.ADMIN: {Permission.READ, Permission.WRITE, Permission.EXECUTE, Permission.DELETE},
+        Role.SUPER_ADMIN: {
+            Permission.READ,
+            Permission.WRITE,
+            Permission.EXECUTE,
+            Permission.DELETE,
+            Permission.ADMIN,
+        },
+        Role.ADMIN: {
+            Permission.READ,
+            Permission.WRITE,
+            Permission.EXECUTE,
+            Permission.DELETE,
+        },
         Role.OPERATOR: {Permission.READ, Permission.WRITE, Permission.EXECUTE},
         Role.VIEWER: {Permission.READ},
     }
@@ -232,10 +255,7 @@ class AccessControl:
         self._load_users()
 
     def create_user(
-        self,
-        username: str,
-        password: str,
-        role: Role
+        self, username: str, password: str, role: Role
     ) -> tuple[bool, str, User | None]:
         """Create new user"""
         # Validate username
@@ -262,7 +282,7 @@ class AccessControl:
             password_hash=password_hash,
             role=role,
             permissions=self.ROLE_HIERARCHY[role],
-            created_at=time.time()
+            created_at=time.time(),
         )
 
         self.users[username] = user
@@ -313,12 +333,15 @@ class AccessControl:
         if users_file.exists():
             try:
                 import json
+
                 with open(users_file) as f:
                     data = json.load(f)
                     for user_data in data.values():
-                        user_data['role'] = Role(user_data['role'])
-                        user_data['permissions'] = {Permission(p) for p in user_data['permissions']}
-                        self.users[user_data['username']] = User(**user_data)
+                        user_data["role"] = Role(user_data["role"])
+                        user_data["permissions"] = {
+                            Permission(p) for p in user_data["permissions"]
+                        }
+                        self.users[user_data["username"]] = User(**user_data)
                 logger.info(f"Loaded {len(self.users)} users")
             except Exception as e:
                 logger.error(f"Failed to load users: {e}")
@@ -328,14 +351,15 @@ class AccessControl:
         users_file = self.data_dir / "users.json"
         try:
             import json
+
             data = {}
             for username, user in self.users.items():
                 user_dict = asdict(user)
-                user_dict['role'] = user.role.value
-                user_dict['permissions'] = [p.value for p in user.permissions]
+                user_dict["role"] = user.role.value
+                user_dict["permissions"] = [p.value for p in user.permissions]
                 data[username] = user_dict
 
-            with open(users_file, 'w') as f:
+            with open(users_file, "w") as f:
                 json.dump(data, f, indent=2)
         except Exception as e:
             logger.error(f"Failed to save users: {e}")
@@ -344,6 +368,7 @@ class AccessControl:
 # ============================================================================
 # RATE LIMITER
 # ============================================================================
+
 
 class RateLimiter:
     """Rate limiting and throttling"""
@@ -360,7 +385,8 @@ class RateLimiter:
 
         # Remove old requests
         self.requests[identifier] = [
-            req_time for req_time in self.requests[identifier]
+            req_time
+            for req_time in self.requests[identifier]
             if req_time > window_start
         ]
 
@@ -378,6 +404,7 @@ class RateLimiter:
 # ============================================================================
 # ENCRYPTION MANAGER
 # ============================================================================
+
 
 class EncryptionManager:
     """Encryption at rest using Fernet"""
@@ -408,6 +435,7 @@ class EncryptionManager:
 # SESSION MANAGER
 # ============================================================================
 
+
 class SessionManager:
     """Session management"""
 
@@ -415,12 +443,7 @@ class SessionManager:
         self.session_timeout = session_timeout_minutes * 60
         self.sessions: dict[str, Session] = {}
 
-    def create_session(
-        self,
-        user_id: str,
-        ip_address: str,
-        user_agent: str
-    ) -> Session:
+    def create_session(self, user_id: str, ip_address: str, user_agent: str) -> Session:
         """Create new session"""
         session = Session(
             session_id=secrets.token_urlsafe(32),
@@ -429,7 +452,7 @@ class SessionManager:
             expires_at=time.time() + self.session_timeout,
             ip_address=ip_address,
             user_agent=user_agent,
-            csrf_token=secrets.token_urlsafe(32)
+            csrf_token=secrets.token_urlsafe(32),
         )
 
         self.sessions[session.session_id] = session
@@ -462,6 +485,7 @@ class SessionManager:
 # API KEY MANAGER
 # ============================================================================
 
+
 class APIKeyManager:
     """API key management"""
 
@@ -469,10 +493,7 @@ class APIKeyManager:
         self.keys: dict[str, APIKey] = {}
 
     def create_key(
-        self,
-        name: str,
-        permissions: set[Permission],
-        expires_days: int | None = None
+        self, name: str, permissions: set[Permission], expires_days: int | None = None
     ) -> tuple[str, APIKey]:
         """Create new API key"""
         # Generate key
@@ -491,7 +512,7 @@ class APIKeyManager:
             name=name,
             permissions=permissions,
             created_at=time.time(),
-            expires_at=expires_at
+            expires_at=expires_at,
         )
 
         self.keys[key_hash] = api_key
@@ -523,6 +544,7 @@ class APIKeyManager:
 # ============================================================================
 # MAIN SECURITY SYSTEM
 # ============================================================================
+
 
 class HYDRA50SecuritySystem:
     """

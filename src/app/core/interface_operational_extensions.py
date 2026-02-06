@@ -571,7 +571,11 @@ class CognitiveLoadGuardrailsSignalsTelemetry(SignalsTelemetry):
                 "message": "Information complexity reduced",
                 "original_complexity": original_complexity,
                 "reduced_complexity": reduced_complexity,
-                "reduction_ratio": reduced_complexity / original_complexity if original_complexity > 0 else 0,
+                "reduction_ratio": (
+                    reduced_complexity / original_complexity
+                    if original_complexity > 0
+                    else 0
+                ),
             },
             destination=["AuditLog"],
         )
@@ -744,9 +748,7 @@ class CommandAuthenticationSignalsTelemetry(SignalsTelemetry):
         )
         self.emit_signal(signal)
 
-    def emit_rollback_executed(
-        self, target_state: str, reason: str
-    ) -> None:
+    def emit_rollback_executed(self, target_state: str, reason: str) -> None:
         """Emit rollback execution signal."""
         signal = Signal(
             signal_type=SignalType.AUDIT,

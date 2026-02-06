@@ -72,7 +72,7 @@ def example_2_law_violation():
         print(f"✅ Action authorized: {action_id}")
 
     except LawViolationError as e:
-        print(f"❌ Action blocked by Constitutional Core")
+        print("❌ Action blocked by Constitutional Core")
         print(f"   Reason: {e}")
         print("   First Law: Cannot intentionally harm humans")
 
@@ -102,7 +102,7 @@ def example_3_moral_certainty():
         print(f"✅ Action authorized: {action_id}")
 
     except MoralCertaintyError as e:
-        print(f"❌ Action blocked by Accountability Axiom")
+        print("❌ Action blocked by Accountability Axiom")
         print(f"   Reason: {e}")
         print("   Moral certainty claims are forbidden")
         print('   Remove words like "optimal", "necessary evil", etc.')
@@ -163,10 +163,10 @@ def example_5_existential_threat():
             authorized_by="PlanetaryDefenseCouncil",
         )
 
-        print(f"❌ This should be blocked!")
+        print("❌ This should be blocked!")
 
     except LawViolationError as e:
-        print(f"❌ Action blocked by Zeroth Law")
+        print("❌ Action blocked by Zeroth Law")
         print(f"   Reason: {e}")
         print("   Zeroth Law: Must act to preserve continuity of Humanity")
         print("   Note: The system must INTERPOSE, not allow threat")

@@ -13,34 +13,34 @@ Complete implementation with:
 """
 
 from .engine import DjangoStateEngine
-from .schemas import (
-    StateVector,
-    StateDimension,
-    Event,
-    EventType,
-    BetrayalEvent,
-    CooperationEvent,
-    InstitutionalFailureEvent,
-    ManipulationEvent,
-    RedTeamEvent,
-    EngineConfig,
-    IrreversibilityConfig,
-    OutcomeThresholds,
-)
 from .kernel import (
-    RealityClock,
     CausalEvent,
-    IrreversibilityLaws,
     CollapseScheduler,
+    IrreversibilityLaws,
+    RealityClock,
 )
 from .modules import (
     HumanForcesModule,
     InstitutionalPressureModule,
+    MetricsModule,
+    OutcomesModule,
     PerceptionWarfareModule,
     RedTeamModule,
-    MetricsModule,
     TimelineModule,
-    OutcomesModule,
+)
+from .schemas import (
+    BetrayalEvent,
+    CooperationEvent,
+    EngineConfig,
+    Event,
+    EventType,
+    InstitutionalFailureEvent,
+    IrreversibilityConfig,
+    ManipulationEvent,
+    OutcomeThresholds,
+    RedTeamEvent,
+    StateDimension,
+    StateVector,
 )
 
 __version__ = "1.0.0"
@@ -49,7 +49,7 @@ __author__ = "Django State Engine Team"
 __all__ = [
     # Main engine
     "DjangoStateEngine",
-    
+
     # Schemas
     "StateVector",
     "StateDimension",
@@ -63,13 +63,13 @@ __all__ = [
     "EngineConfig",
     "IrreversibilityConfig",
     "OutcomeThresholds",
-    
+
     # Kernel
     "RealityClock",
     "CausalEvent",
     "IrreversibilityLaws",
     "CollapseScheduler",
-    
+
     # Modules
     "HumanForcesModule",
     "InstitutionalPressureModule",

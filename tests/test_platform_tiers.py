@@ -16,26 +16,22 @@ from app.core.platform_tiers import (
     ComponentRole,
     PlatformTier,
     TierRegistry,
-    get_tier_registry,
 )
 from app.core.tier_governance_policies import (
     BlockReason,
     BlockType,
     CrossTierPolicyEngine,
-    get_policy_engine,
 )
 from app.core.tier_health_dashboard import (
     HealthLevel,
     HealthMetric,
     MetricType,
     TierHealthMonitor,
-    get_health_monitor,
 )
 from app.core.tier_interfaces import (
     RequestType,
     TierInterfaceRouter,
     TierRequest,
-    get_tier_router,
 )
 
 
@@ -160,19 +156,27 @@ class TestTierRegistry:
         )
 
         # Valid: Tier 1 → Tier 2 (downward)
-        is_valid, reason = self.registry.validate_authority_flow("tier1", "tier2", "command")
+        is_valid, reason = self.registry.validate_authority_flow(
+            "tier1", "tier2", "command"
+        )
         assert is_valid
 
         # Valid: Tier 2 → Tier 3 (downward)
-        is_valid, reason = self.registry.validate_authority_flow("tier2", "tier3", "command")
+        is_valid, reason = self.registry.validate_authority_flow(
+            "tier2", "tier3", "command"
+        )
         assert is_valid
 
         # Invalid: Tier 3 → Tier 2 (upward)
-        is_valid, reason = self.registry.validate_authority_flow("tier3", "tier2", "command")
+        is_valid, reason = self.registry.validate_authority_flow(
+            "tier3", "tier2", "command"
+        )
         assert not is_valid
 
         # Invalid: Tier 2 → Tier 1 (upward)
-        is_valid, reason = self.registry.validate_authority_flow("tier2", "tier1", "command")
+        is_valid, reason = self.registry.validate_authority_flow(
+            "tier2", "tier1", "command"
+        )
         assert not is_valid
 
     def test_pause_resume_component(self):

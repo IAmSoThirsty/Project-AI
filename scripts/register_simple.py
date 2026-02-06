@@ -3,8 +3,9 @@
 Simple Legion registration using requests library
 """
 
-import requests
 import json
+
+import requests
 
 print("="*70)
 print("        LEGION MOLTBOOK REGISTRATION")

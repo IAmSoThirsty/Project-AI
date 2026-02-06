@@ -5,9 +5,10 @@ Maps natural language intents to Project-AI subsystems and assistant features
 """
 
 import asyncio
-from typing import Any
 from collections.abc import Callable
 from enum import Enum
+from typing import Any
+
 from pydantic import BaseModel
 
 

@@ -87,7 +87,7 @@ class EnforcementAction(Enum):
 class TierRequest:
     """
     Represents a request between tiers.
-    
+
     Validates authority flow (downward) and capability flow (upward).
     """
 
@@ -186,10 +186,10 @@ class BlockResponse:
 class ITier1Governance(ABC):
     """
     Interface for Tier 1 (Governance) operations.
-    
+
     This is the sovereign authority interface - all governance operations
     flow through this interface.
-    
+
     AUTHORITY: Can command any tier
     CAPABILITY: Provides policy enforcement, audit, rollback
     """
@@ -200,13 +200,13 @@ class ITier1Governance(ABC):
     ) -> GovernanceDecisionResponse:
         """
         Evaluate an action against governance policies.
-        
+
         This is the primary authority mechanism - all significant actions
         must pass through governance evaluation.
-        
+
         Args:
             request: Governance decision request
-            
+
         Returns:
             GovernanceDecisionResponse with approval/denial
         """
@@ -218,12 +218,12 @@ class ITier1Governance(ABC):
     ) -> bool:
         """
         Enforce a policy on a lower tier.
-        
+
         Args:
             policy_id: Policy to enforce
             target_tier: Target tier (2 or 3)
             target_component: Component to enforce on
-            
+
         Returns:
             bool: True if enforcement succeeded
         """
@@ -235,13 +235,13 @@ class ITier1Governance(ABC):
     ) -> str:
         """
         Record an audit entry for an operation.
-        
+
         Args:
             operation: Operation name
             tier: Tier that performed operation
             component: Component that performed operation
             details: Operation details
-            
+
         Returns:
             str: Audit record ID
         """
@@ -251,11 +251,11 @@ class ITier1Governance(ABC):
     def rollback_tier(self, tier: int, reason: str) -> bool:
         """
         Rollback a tier to previous state.
-        
+
         Args:
             tier: Tier to rollback (2 or 3)
             reason: Reason for rollback
-            
+
         Returns:
             bool: True if rollback succeeded
         """
@@ -265,10 +265,10 @@ class ITier1Governance(ABC):
 class ITier2Infrastructure(ABC):
     """
     Interface for Tier 2 (Infrastructure) operations.
-    
+
     This is the constrained control interface - infrastructure operations
     are subordinate to governance and can be paused/rolled back.
-    
+
     AUTHORITY: Can block/control Tier 3 (with governance approval)
     CAPABILITY: Provides resource orchestration, isolation, scaling
     """
@@ -279,42 +279,38 @@ class ITier2Infrastructure(ABC):
     ) -> ResourceAllocationResponse:
         """
         Allocate resources for a component.
-        
+
         Args:
             request: Resource allocation request
-            
+
         Returns:
             ResourceAllocationResponse with allocation details
         """
         pass
 
     @abstractmethod
-    def isolate_workload(
-        self, workload_id: str, isolation_level: str
-    ) -> str:
+    def isolate_workload(self, workload_id: str, isolation_level: str) -> str:
         """
         Create isolation domain for workload.
-        
+
         Args:
             workload_id: Workload to isolate
             isolation_level: "low", "medium", "high"
-            
+
         Returns:
             str: Isolation domain ID
         """
         pass
 
     @abstractmethod
-    def scale_capacity(
-        self, component_id: str, target_capacity: int
-    ) -> bool:
+    def scale_capacity(self, component_id: str, target_capacity: int) -> bool:
         """
         Scale capacity for a component.
-        
+
         Args:
             component_id: Component to scale
             target_capacity: Target capacity level
-            
+
         Returns:
             bool: True if scaling succeeded
         """
@@ -324,12 +320,12 @@ class ITier2Infrastructure(ABC):
     def block_application(self, request: BlockRequest) -> BlockResponse:
         """
         Block a Tier 3 application component.
-        
+
         This requires governance approval for permanent blocks.
-        
+
         Args:
             request: Block request
-            
+
         Returns:
             BlockResponse with block details
         """
@@ -339,10 +335,10 @@ class ITier2Infrastructure(ABC):
 class ITier3Application(ABC):
     """
     Interface for Tier 3 (Application) operations.
-    
+
     This is the sandboxed interface - applications have no enforcement
     authority and must request capabilities from higher tiers.
-    
+
     AUTHORITY: None (sandboxed)
     CAPABILITY: Can request resources, submit tasks, query status
     """
@@ -351,11 +347,11 @@ class ITier3Application(ABC):
     def request_capability(self, capability: str, justification: str) -> bool:
         """
         Request a capability from higher tier.
-        
+
         Args:
             capability: Capability to request
             justification: Reason for request
-            
+
         Returns:
             bool: True if granted
         """
@@ -365,10 +361,10 @@ class ITier3Application(ABC):
     def submit_task(self, task: dict[str, Any]) -> str:
         """
         Submit a task for execution (routed through kernel).
-        
+
         Args:
             task: Task definition
-            
+
         Returns:
             str: Task ID
         """
@@ -378,7 +374,7 @@ class ITier3Application(ABC):
     def query_status(self) -> dict[str, Any]:
         """
         Query component status.
-        
+
         Returns:
             dict: Status information
         """
@@ -388,11 +384,11 @@ class ITier3Application(ABC):
     def register_service(self, service_id: str, service_spec: dict[str, Any]) -> bool:
         """
         Register a service with the platform.
-        
+
         Args:
             service_id: Service identifier
             service_spec: Service specification
-            
+
         Returns:
             bool: True if registration succeeded
         """
@@ -407,7 +403,7 @@ class ITier3Application(ABC):
 class TierInterfaceRouter:
     """
     Routes requests between tiers, enforcing authority and capability flow.
-    
+
     CRITICAL RULES:
     - Authority flows downward: Tier 1 → Tier 2 → Tier 3
     - Capability flows upward: Tier 3 → Tier 2 → Tier 1
@@ -419,12 +415,12 @@ class TierInterfaceRouter:
         self._tier1_interface: ITier1Governance | None = None
         self._tier2_interface: ITier2Infrastructure | None = None
         self._tier3_interfaces: dict[str, ITier3Application] = {}
-        
+
         # Request tracking
         self._request_log: list[TierRequest] = []
         self._response_log: list[TierResponse] = []
         self._blocked_requests: list[TierRequest] = []
-        
+
         logger.info("TierInterfaceRouter initialized")
 
     def register_tier1_interface(self, interface: ITier1Governance) -> None:
@@ -447,12 +443,12 @@ class TierInterfaceRouter:
     def route_request(self, request: TierRequest) -> TierResponse:
         """
         Route a request between tiers.
-        
+
         Validates authority flow and capability flow.
-        
+
         Args:
             request: Tier request
-            
+
         Returns:
             TierResponse with result
         """
@@ -462,7 +458,7 @@ class TierInterfaceRouter:
             request.source_tier,
             request.target_tier,
         )
-        
+
         # Validate request
         is_valid, reason = self._validate_request(request)
         if not is_valid:
@@ -475,10 +471,10 @@ class TierInterfaceRouter:
             self._blocked_requests.append(request)
             self._response_log.append(response)
             return response
-        
+
         # Log request
         self._request_log.append(request)
-        
+
         # Route based on request type and target tier
         try:
             result = self._execute_request(request)
@@ -495,50 +491,50 @@ class TierInterfaceRouter:
                 result=None,
                 error_message=str(e),
             )
-        
+
         self._response_log.append(response)
         return response
 
     def _validate_request(self, request: TierRequest) -> tuple[bool, str]:
         """
         Validate request follows authority/capability flow rules.
-        
+
         Rules:
         - Authority commands: Must flow downward (lower tier number → higher)
         - Capability requests: Must flow upward (higher tier number → lower)
         - Same-tier communication: Always allowed
-        
+
         Returns:
             Tuple of (is_valid, reason)
         """
         # Same-tier communication is always valid
         if request.source_tier == request.target_tier:
             return True, "Same-tier communication"
-        
+
         # Authority commands must flow downward
         if request.request_type == RequestType.AUTHORITY_COMMAND:
             if request.source_tier > request.target_tier:
                 return False, "Authority cannot flow upward"
             return True, "Authority flows downward"
-        
+
         # Capability requests must flow upward
         if request.request_type == RequestType.CAPABILITY_REQUEST:
             if request.source_tier < request.target_tier:
                 return False, "Capability requests cannot flow downward"
             return True, "Capability flows upward"
-        
+
         # Resource allocation: Tier 3 → Tier 2 or Tier 2 → Tier 1
         if request.request_type == RequestType.RESOURCE_ALLOCATION:
             if request.source_tier < request.target_tier:
                 return False, "Resource requests cannot flow downward"
             return True, "Resource request flows upward"
-        
+
         # Enforcement: Tier 1 → Tier 2/3 or Tier 2 → Tier 3
         if request.request_type == RequestType.ENFORCEMENT_ACTION:
             if request.source_tier > request.target_tier:
                 return False, "Enforcement cannot flow upward"
             return True, "Enforcement flows downward"
-        
+
         return True, "Request type validated"
 
     def _execute_request(self, request: TierRequest) -> Any:
@@ -580,7 +576,7 @@ _global_router: TierInterfaceRouter | None = None
 def get_tier_router() -> TierInterfaceRouter:
     """
     Get the global tier interface router.
-    
+
     Returns:
         TierInterfaceRouter: Global router singleton
     """

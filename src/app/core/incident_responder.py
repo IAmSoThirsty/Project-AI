@@ -20,12 +20,12 @@ import logging
 import shutil
 import threading
 import time
+from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any
-from collections.abc import Callable
 
 logger = logging.getLogger(__name__)
 
@@ -60,7 +60,7 @@ class IncidentSeverity(Enum):
 class IncidentResponse:
     """Record of an incident response action."""
 
-    response_id: str = field(default_factory=lambda: str(__import__('uuid').uuid4()))
+    response_id: str = field(default_factory=lambda: str(__import__("uuid").uuid4()))
     timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
     incident_id: str = ""
     action: str = ""
@@ -75,7 +75,7 @@ class IncidentResponse:
 class SecurityIncident:
     """Security incident requiring response."""
 
-    incident_id: str = field(default_factory=lambda: str(__import__('uuid').uuid4()))
+    incident_id: str = field(default_factory=lambda: str(__import__("uuid").uuid4()))
     timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
     severity: str = IncidentSeverity.MEDIUM.value
     incident_type: str = ""
@@ -145,7 +145,9 @@ class IncidentResponder:
         self._load_state()
 
         logger.info("Incident Responder initialized")
-        logger.info(f"  Auto-response: {'enabled' if enable_auto_response else 'disabled'}")
+        logger.info(
+            f"  Auto-response: {'enabled' if enable_auto_response else 'disabled'}"
+        )
         logger.info(f"  Available actions: {len(self.response_handlers)}")
 
     def handle_incident(
@@ -203,7 +205,9 @@ class IncidentResponder:
         """Execute automated response based on incident."""
         actions = self._determine_response_actions(incident)
 
-        logger.info(f"Executing {len(actions)} automated responses for {incident.incident_id}")
+        logger.info(
+            f"Executing {len(actions)} automated responses for {incident.incident_id}"
+        )
 
         for action in actions:
             try:
@@ -483,7 +487,9 @@ Please review and take appropriate action.
 
             # Success rate
             successful = sum(1 for r in self.responses if r.success)
-            success_rate = (successful / total_responses * 100) if total_responses > 0 else 0
+            success_rate = (
+                (successful / total_responses * 100) if total_responses > 0 else 0
+            )
 
             return {
                 "total_incidents": total_incidents,

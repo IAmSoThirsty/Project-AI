@@ -36,8 +36,10 @@ logger = logging.getLogger(__name__)
 # ENUMERATIONS
 # ============================================================================
 
+
 class VisualizationType(Enum):
     """Types of visualizations"""
+
     ESCALATION_LADDER = "escalation_ladder"
     COUPLING_GRAPH = "coupling_graph"
     TEMPORAL_FLOW = "temporal_flow"
@@ -48,6 +50,7 @@ class VisualizationType(Enum):
 
 class ColorScheme(Enum):
     """Color schemes for visualization"""
+
     TERMINAL = "terminal"  # ASCII terminal colors
     TRON = "tron"  # Tron-inspired cyan/green
     DANGER = "danger"  # Red-orange-yellow warning
@@ -57,6 +60,7 @@ class ColorScheme(Enum):
 # ============================================================================
 # ASCII ART COMPONENTS
 # ============================================================================
+
 
 class ASCIIArtRenderer:
     """ASCII art rendering engine"""
@@ -114,33 +118,33 @@ class ASCIIArtRenderer:
             left_width = remaining // 2
             right_width = remaining - left_width
             top_line = (
-                cls.BOX_CHARS["top_left"] +
-                cls.BOX_CHARS["horizontal"] * left_width +
-                title_text +
-                cls.BOX_CHARS["horizontal"] * right_width +
-                cls.BOX_CHARS["top_right"]
+                cls.BOX_CHARS["top_left"]
+                + cls.BOX_CHARS["horizontal"] * left_width
+                + title_text
+                + cls.BOX_CHARS["horizontal"] * right_width
+                + cls.BOX_CHARS["top_right"]
             )
         else:
             top_line = (
-                cls.BOX_CHARS["top_left"] +
-                cls.BOX_CHARS["horizontal"] * (width - 2) +
-                cls.BOX_CHARS["top_right"]
+                cls.BOX_CHARS["top_left"]
+                + cls.BOX_CHARS["horizontal"] * (width - 2)
+                + cls.BOX_CHARS["top_right"]
             )
         lines.append(top_line)
 
         # Middle lines
         for _ in range(height - 2):
             lines.append(
-                cls.BOX_CHARS["vertical"] +
-                " " * (width - 2) +
                 cls.BOX_CHARS["vertical"]
+                + " " * (width - 2)
+                + cls.BOX_CHARS["vertical"]
             )
 
         # Bottom line
         bottom_line = (
-            cls.BOX_CHARS["bottom_left"] +
-            cls.BOX_CHARS["horizontal"] * (width - 2) +
-            cls.BOX_CHARS["bottom_right"]
+            cls.BOX_CHARS["bottom_left"]
+            + cls.BOX_CHARS["horizontal"] * (width - 2)
+            + cls.BOX_CHARS["bottom_right"]
         )
         lines.append(bottom_line)
 
@@ -179,9 +183,11 @@ class ASCIIArtRenderer:
 # ESCALATION LADDER VISUALIZATION
 # ============================================================================
 
+
 @dataclass
 class EscalationLadderViz:
     """Escalation ladder visualization data"""
+
     scenario_name: str
     current_level: int
     max_level: int
@@ -194,10 +200,11 @@ class EscalationLadderViz:
         lines = []
 
         # Title
-        lines.append(ASCIIArtRenderer.colorize(
-            f"═══ ESCALATION LADDER: {self.scenario_name} ═══",
-            "cyan"
-        ))
+        lines.append(
+            ASCIIArtRenderer.colorize(
+                f"═══ ESCALATION LADDER: {self.scenario_name} ═══", "cyan"
+            )
+        )
         lines.append("")
 
         # Draw each level
@@ -254,9 +261,11 @@ class EscalationLadderViz:
 # COUPLING GRAPH VISUALIZATION
 # ============================================================================
 
+
 @dataclass
 class GraphNode:
     """Node in coupling graph"""
+
     node_id: str
     label: str
     x: float = 0.0
@@ -268,6 +277,7 @@ class GraphNode:
 @dataclass
 class GraphEdge:
     """Edge in coupling graph"""
+
     source: str
     target: str
     weight: float
@@ -281,7 +291,7 @@ class CouplingGraphViz:
         self,
         nodes: list[GraphNode],
         edges: list[GraphEdge],
-        title: str = "Domain Coupling"
+        title: str = "Domain Coupling",
     ):
         self.nodes = {n.node_id: n for n in nodes}
         self.edges = edges
@@ -292,10 +302,7 @@ class CouplingGraphViz:
         lines = []
 
         # Title
-        lines.append(ASCIIArtRenderer.colorize(
-            f"═══ {self.title.upper()} ═══",
-            "cyan"
-        ))
+        lines.append(ASCIIArtRenderer.colorize(f"═══ {self.title.upper()} ═══", "cyan"))
         lines.append("")
 
         # Calculate positions using force-directed layout
@@ -342,7 +349,7 @@ class CouplingGraphViz:
         canvas: list[list[str]],
         source: GraphNode,
         target: GraphNode,
-        edge: GraphEdge
+        edge: GraphEdge,
     ) -> None:
         """Draw line between nodes using Bresenham's algorithm"""
         x0, y0 = int(source.x), int(source.y)
@@ -389,7 +396,7 @@ class CouplingGraphViz:
                     "x": n.x,
                     "y": n.y,
                     "value": n.value,
-                    "color": n.color
+                    "color": n.color,
                 }
                 for n in self.nodes.values()
             ],
@@ -398,10 +405,10 @@ class CouplingGraphViz:
                     "source": e.source,
                     "target": e.target,
                     "weight": e.weight,
-                    "bidirectional": e.bidirectional
+                    "bidirectional": e.bidirectional,
                 }
                 for e in self.edges
-            ]
+            ],
         }
 
 
@@ -409,9 +416,11 @@ class CouplingGraphViz:
 # TEMPORAL FLOW VISUALIZATION
 # ============================================================================
 
+
 @dataclass
 class StateTransition:
     """State transition event"""
+
     timestamp: float
     from_state: str
     to_state: str
@@ -423,10 +432,7 @@ class TemporalFlowViz:
     """Temporal flow diagram showing state transitions"""
 
     def __init__(
-        self,
-        scenario_name: str,
-        transitions: list[StateTransition],
-        current_state: str
+        self, scenario_name: str, transitions: list[StateTransition], current_state: str
     ):
         self.scenario_name = scenario_name
         self.transitions = sorted(transitions, key=lambda t: t.timestamp)
@@ -437,10 +443,11 @@ class TemporalFlowViz:
         lines = []
 
         # Title
-        lines.append(ASCIIArtRenderer.colorize(
-            f"═══ TEMPORAL FLOW: {self.scenario_name} ═══",
-            "cyan"
-        ))
+        lines.append(
+            ASCIIArtRenderer.colorize(
+                f"═══ TEMPORAL FLOW: {self.scenario_name} ═══", "cyan"
+            )
+        )
         lines.append("")
 
         if not self.transitions:
@@ -458,7 +465,9 @@ class TemporalFlowViz:
 
             # State transition
             arrow = ASCIIArtRenderer.ARROWS["right"]
-            state_line = f"{time_str} │ {transition.from_state} {arrow} {transition.to_state}"
+            state_line = (
+                f"{time_str} │ {transition.from_state} {arrow} {transition.to_state}"
+            )
 
             # Color based on target state
             if "COLLAPSE" in transition.to_state:
@@ -474,10 +483,9 @@ class TemporalFlowViz:
             lines.append("")
 
         # Current state
-        lines.append(ASCIIArtRenderer.colorize(
-            f"Current State: {self.current_state}",
-            "bold"
-        ))
+        lines.append(
+            ASCIIArtRenderer.colorize(f"Current State: {self.current_state}", "bold")
+        )
 
         return "\n".join(lines)
 
@@ -492,10 +500,10 @@ class TemporalFlowViz:
                     "from_state": t.from_state,
                     "to_state": t.to_state,
                     "trigger": t.trigger,
-                    "duration_seconds": t.duration_seconds
+                    "duration_seconds": t.duration_seconds,
                 }
                 for t in self.transitions
-            ]
+            ],
         }
 
 
@@ -503,9 +511,11 @@ class TemporalFlowViz:
 # COLLAPSE PREDICTION VISUALIZATION
 # ============================================================================
 
+
 @dataclass
 class CollapsePrediction:
     """Collapse mode prediction data"""
+
     collapse_mode: str
     probability: float
     time_to_collapse_hours: float | None
@@ -516,23 +526,22 @@ class CollapsePrediction:
 class CollapsePredictionViz:
     """Collapse mode prediction chart"""
 
-    def __init__(
-        self,
-        scenario_name: str,
-        predictions: list[CollapsePrediction]
-    ):
+    def __init__(self, scenario_name: str, predictions: list[CollapsePrediction]):
         self.scenario_name = scenario_name
-        self.predictions = sorted(predictions, key=lambda p: p.probability, reverse=True)
+        self.predictions = sorted(
+            predictions, key=lambda p: p.probability, reverse=True
+        )
 
     def render_ascii(self, width: int = 70) -> str:
         """Render collapse predictions as ASCII chart"""
         lines = []
 
         # Title
-        lines.append(ASCIIArtRenderer.colorize(
-            f"═══ COLLAPSE PREDICTIONS: {self.scenario_name} ═══",
-            "red"
-        ))
+        lines.append(
+            ASCIIArtRenderer.colorize(
+                f"═══ COLLAPSE PREDICTIONS: {self.scenario_name} ═══", "red"
+            )
+        )
         lines.append("")
 
         if not self.predictions:
@@ -580,16 +589,17 @@ class CollapsePredictionViz:
                     "probability": p.probability,
                     "time_to_collapse_hours": p.time_to_collapse_hours,
                     "contributing_factors": p.contributing_factors,
-                    "severity": p.severity
+                    "severity": p.severity,
                 }
                 for p in self.predictions
-            ]
+            ],
         }
 
 
 # ============================================================================
 # STATUS DASHBOARD VISUALIZATION
 # ============================================================================
+
 
 class StatusDashboardViz:
     """Comprehensive status dashboard"""
@@ -601,7 +611,7 @@ class StatusDashboardViz:
         total_scenarios: int,
         system_health: str,
         alerts_count: int,
-        uptime_hours: float
+        uptime_hours: float,
     ):
         self.active_scenarios = active_scenarios
         self.critical_scenarios = critical_scenarios
@@ -623,7 +633,7 @@ class StatusDashboardViz:
             f"  System Health: {self._colorize_health(self.system_health)}",
             f"  Uptime: {self.uptime_hours:.1f} hours",
             "",
-            f"  Scenarios:",
+            "  Scenarios:",
             f"    Total: {self.total_scenarios}",
             f"    Active: {self.active_scenarios}",
             f"    Critical: {ASCIIArtRenderer.colorize(str(self.critical_scenarios), 'red')}",
@@ -638,7 +648,13 @@ class StatusDashboardViz:
         for i, content in enumerate(content_lines, 1):
             if i < len(lines) - 1:
                 padding = width - len(content) - 2
-                result += "\n" + ASCIIArtRenderer.BOX_CHARS["vertical"] + content + " " * padding + ASCIIArtRenderer.BOX_CHARS["vertical"]
+                result += (
+                    "\n"
+                    + ASCIIArtRenderer.BOX_CHARS["vertical"]
+                    + content
+                    + " " * padding
+                    + ASCIIArtRenderer.BOX_CHARS["vertical"]
+                )
         result += "\n" + lines[-1]
 
         return result
@@ -649,7 +665,7 @@ class StatusDashboardViz:
             "HEALTHY": "green",
             "DEGRADED": "yellow",
             "UNHEALTHY": "red",
-            "CRITICAL": "red"
+            "CRITICAL": "red",
         }
         color = color_map.get(health, "white")
         return ASCIIArtRenderer.colorize(health, color)
@@ -662,13 +678,14 @@ class StatusDashboardViz:
             "total_scenarios": self.total_scenarios,
             "system_health": self.system_health,
             "alerts_count": self.alerts_count,
-            "uptime_hours": self.uptime_hours
+            "uptime_hours": self.uptime_hours,
         }
 
 
 # ============================================================================
 # HEAT MAP VISUALIZATION
 # ============================================================================
+
 
 class HeatMapViz:
     """Heat map for scenario intensity across categories"""
@@ -677,7 +694,7 @@ class HeatMapViz:
         self,
         categories: list[str],
         scenarios: list[str],
-        intensity_matrix: list[list[float]]
+        intensity_matrix: list[list[float]],
     ):
         self.categories = categories
         self.scenarios = scenarios
@@ -688,20 +705,23 @@ class HeatMapViz:
         lines = []
 
         # Title
-        lines.append(ASCIIArtRenderer.colorize(
-            "═══ SCENARIO INTENSITY HEAT MAP ═══",
-            "cyan"
-        ))
+        lines.append(
+            ASCIIArtRenderer.colorize("═══ SCENARIO INTENSITY HEAT MAP ═══", "cyan")
+        )
         lines.append("")
 
         # Header with categories
-        header = "Scenario".ljust(30) + " ".join([c[:6].center(6) for c in self.categories])
+        header = "Scenario".ljust(30) + " ".join(
+            [c[:6].center(6) for c in self.categories]
+        )
         lines.append(header)
         lines.append("─" * len(header))
 
         # Draw each scenario row
         for i, scenario in enumerate(self.scenarios):
-            row_data = self.intensity_matrix[i] if i < len(self.intensity_matrix) else []
+            row_data = (
+                self.intensity_matrix[i] if i < len(self.intensity_matrix) else []
+            )
 
             cells = []
             for j, intensity in enumerate(row_data):
@@ -725,13 +745,14 @@ class HeatMapViz:
         return {
             "categories": self.categories,
             "scenarios": self.scenarios,
-            "intensity_matrix": self.intensity_matrix
+            "intensity_matrix": self.intensity_matrix,
         }
 
 
 # ============================================================================
 # MAIN VISUALIZATION ENGINE
 # ============================================================================
+
 
 class HYDRA50VisualizationEngine:
     """
@@ -757,7 +778,7 @@ class HYDRA50VisualizationEngine:
         current_level: int,
         max_level: int,
         level_descriptions: dict[int, str],
-        level_values: dict[int, float]
+        level_values: dict[int, float],
     ) -> tuple[str, dict[str, Any]]:
         """Render escalation ladder visualization"""
         viz = EscalationLadderViz(
@@ -766,7 +787,7 @@ class HYDRA50VisualizationEngine:
             max_level=max_level,
             level_descriptions=level_descriptions,
             level_values=level_values,
-            timestamp=datetime.now().timestamp()
+            timestamp=datetime.now().timestamp(),
         )
 
         ascii_output = viz.render_ascii()
@@ -778,7 +799,7 @@ class HYDRA50VisualizationEngine:
         self,
         nodes: list[GraphNode],
         edges: list[GraphEdge],
-        title: str = "Domain Coupling"
+        title: str = "Domain Coupling",
     ) -> tuple[str, dict[str, Any]]:
         """Render coupling graph visualization"""
         viz = CouplingGraphViz(nodes, edges, title)
@@ -789,10 +810,7 @@ class HYDRA50VisualizationEngine:
         return ascii_output, data_output
 
     def render_temporal_flow(
-        self,
-        scenario_name: str,
-        transitions: list[StateTransition],
-        current_state: str
+        self, scenario_name: str, transitions: list[StateTransition], current_state: str
     ) -> tuple[str, dict[str, Any]]:
         """Render temporal flow visualization"""
         viz = TemporalFlowViz(scenario_name, transitions, current_state)
@@ -803,9 +821,7 @@ class HYDRA50VisualizationEngine:
         return ascii_output, data_output
 
     def render_collapse_predictions(
-        self,
-        scenario_name: str,
-        predictions: list[CollapsePrediction]
+        self, scenario_name: str, predictions: list[CollapsePrediction]
     ) -> tuple[str, dict[str, Any]]:
         """Render collapse prediction visualization"""
         viz = CollapsePredictionViz(scenario_name, predictions)
@@ -822,7 +838,7 @@ class HYDRA50VisualizationEngine:
         total_scenarios: int,
         system_health: str,
         alerts_count: int,
-        uptime_hours: float
+        uptime_hours: float,
     ) -> tuple[str, dict[str, Any]]:
         """Render status dashboard visualization"""
         viz = StatusDashboardViz(
@@ -831,7 +847,7 @@ class HYDRA50VisualizationEngine:
             total_scenarios,
             system_health,
             alerts_count,
-            uptime_hours
+            uptime_hours,
         )
 
         ascii_output = viz.render_ascii()
@@ -843,7 +859,7 @@ class HYDRA50VisualizationEngine:
         self,
         categories: list[str],
         scenarios: list[str],
-        intensity_matrix: list[list[float]]
+        intensity_matrix: list[list[float]],
     ) -> tuple[str, dict[str, Any]]:
         """Render heat map visualization"""
         viz = HeatMapViz(categories, scenarios, intensity_matrix)
@@ -854,24 +870,31 @@ class HYDRA50VisualizationEngine:
         return ascii_output, data_output
 
     def export_visualization(
-        self,
-        viz_type: VisualizationType,
-        data: dict[str, Any],
-        filename: str
+        self, viz_type: VisualizationType, data: dict[str, Any], filename: str
     ) -> str:
         """Export visualization data to file"""
         output_path = self.output_dir / filename
 
-        with open(output_path, 'w') as f:
-            json.dump({
-                "type": viz_type.value,
-                "timestamp": datetime.now().isoformat(),
-                "data": data
-            }, f, indent=2)
+        with open(output_path, "w") as f:
+            json.dump(
+                {
+                    "type": viz_type.value,
+                    "timestamp": datetime.now().isoformat(),
+                    "data": data,
+                },
+                f,
+                indent=2,
+            )
 
         logger.info(f"Exported visualization to {output_path}")
         return str(output_path)
 
 
 # Export main class
-__all__ = ["HYDRA50VisualizationEngine", "GraphNode", "GraphEdge", "CollapsePrediction", "StateTransition"]
+__all__ = [
+    "HYDRA50VisualizationEngine",
+    "GraphNode",
+    "GraphEdge",
+    "CollapsePrediction",
+    "StateTransition",
+]

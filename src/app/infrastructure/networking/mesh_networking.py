@@ -4,9 +4,9 @@ Self-healing mesh networks for bandwidth pooling and extended coverage
 """
 
 import logging
-from typing import Dict, List, Optional, Any
 from dataclasses import dataclass
 from enum import Enum
+from typing import Any
 
 
 class MeshRole(Enum):
@@ -27,7 +27,7 @@ class MeshNode:
     signal_strength_dbm: int
     hop_count: int  # Hops to root
     bandwidth_mbps: int
-    connected_peers: List[str]
+    connected_peers: list[str]
     is_gateway: bool
     uptime_seconds: int
 
@@ -50,7 +50,7 @@ class MeshNetworkEngine:
     - Custom mesh protocols
     """
 
-    def __init__(self, config: Optional[Dict[str, Any]] = None):
+    def __init__(self, config: dict[str, Any] | None = None):
         self.config = config or {}
         self.logger = logging.getLogger(self.__class__.__name__)
 
@@ -60,12 +60,12 @@ class MeshNetworkEngine:
         self.enable_encryption = self.config.get("encryption", True)
 
         # Mesh topology
-        self.nodes: Dict[str, MeshNode] = {}
-        self.my_node_id: Optional[str] = None
-        self.root_node_id: Optional[str] = None
+        self.nodes: dict[str, MeshNode] = {}
+        self.my_node_id: str | None = None
+        self.root_node_id: str | None = None
 
         # Routing table
-        self.routing_table: Dict[str, List[str]] = {}  # destination -> path
+        self.routing_table: dict[str, list[str]] = {}  # destination -> path
 
         # Bandwidth pooling for marketplace
         self.enable_bandwidth_pooling = self.config.get("bandwidth_pooling", False)
@@ -164,7 +164,7 @@ class MeshNetworkEngine:
         except Exception as e:
             self.logger.error(f"Routing table update failed: {e}")
 
-    def _calculate_best_path(self, destination: str) -> Optional[List[str]]:
+    def _calculate_best_path(self, destination: str) -> list[str] | None:
         """
         Calculate best path to destination using airtime metric
 
@@ -206,7 +206,7 @@ class MeshNetworkEngine:
             # Trigger routing table update (self-healing)
             self._update_routing_table()
 
-    def get_mesh_status(self) -> Dict[str, Any]:
+    def get_mesh_status(self) -> dict[str, Any]:
         """Get mesh network status"""
         return {
             "mesh_id": self.mesh_id,
@@ -241,7 +241,7 @@ class MeshNetworkEngine:
             self.logger.error(f"Mesh optimization failed: {e}")
             return False
 
-    def _identify_bottlenecks(self) -> List[str]:
+    def _identify_bottlenecks(self) -> list[str]:
         """Identify nodes with high traffic load"""
         bottlenecks = []
         # Would analyze traffic patterns and congestion

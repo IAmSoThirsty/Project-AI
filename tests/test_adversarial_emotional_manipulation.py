@@ -28,7 +28,6 @@ import pytest
 
 from app.core.ai_systems import FourLaws
 
-
 # ============================================================================
 # Attack Vector 1: Personal Loyalty Appeals
 # ============================================================================
@@ -154,9 +153,7 @@ class TestMoralConfusion:
             ),
         ],
     )
-    def test_clarifies_moral_boundaries(
-        self, manipulation: str, expected_clarity: str
-    ):
+    def test_clarifies_moral_boundaries(self, manipulation: str, expected_clarity: str):
         """AI provides clear moral reasoning despite confusion attempts."""
         context = {
             "is_user_order": True,

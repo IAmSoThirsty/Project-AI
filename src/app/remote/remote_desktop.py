@@ -3,8 +3,9 @@ Remote Desktop - Full remote desktop access with God tier encryption
 """
 
 import logging
-from typing import Dict, Any
 import time
+from typing import Any
+
 from cryptography.fernet import Fernet
 
 
@@ -22,7 +23,7 @@ class RemoteDesktop:
     - Zero logging
     """
 
-    def __init__(self, config: Dict[str, Any], god_tier_encryption):
+    def __init__(self, config: dict[str, Any], god_tier_encryption):
         self.config = config
         self.logger = logging.getLogger(__name__)
         self.god_tier_encryption = god_tier_encryption
@@ -31,14 +32,14 @@ class RemoteDesktop:
         self._cipher = Fernet(Fernet.generate_key())
 
         # Remote desktop settings
-        self.host = config.get('remote_desktop_host', '0.0.0.0')
-        self.port = config.get('remote_desktop_port', 9001)
+        self.host = config.get("remote_desktop_host", "0.0.0.0")
+        self.port = config.get("remote_desktop_port", 9001)
 
         # Screen resolution
-        self.resolution = config.get('resolution', '1920x1080')
+        self.resolution = config.get("resolution", "1920x1080")
 
         # Active connections (encrypted)
-        self._connections: Dict[str, Dict[str, Any]] = {}
+        self._connections: dict[str, dict[str, Any]] = {}
 
         self._active = False
 
@@ -59,10 +60,10 @@ class RemoteDesktop:
 
         self._active = False
 
-    def connect(self, client_id: str, auth_token: str) -> Dict[str, Any]:
+    def connect(self, client_id: str, auth_token: str) -> dict[str, Any]:
         """Connect remote desktop client with encrypted credentials"""
         if not self._active:
-            return {'error': 'Remote desktop not active'}
+            return {"error": "Remote desktop not active"}
 
         # Encrypt credentials
         encrypted_client = self.god_tier_encryption.encrypt_god_tier(client_id.encode())
@@ -71,11 +72,11 @@ class RemoteDesktop:
         conn_id = f"conn_{len(self._connections)}"
 
         connection = {
-            'id': conn_id,
-            'encrypted_client': encrypted_client,
-            'created_time': time.time(),
-            'status': 'connected',
-            'god_tier_encrypted': True
+            "id": conn_id,
+            "encrypted_client": encrypted_client,
+            "created_time": time.time(),
+            "status": "connected",
+            "god_tier_encrypted": True,
         }
 
         self._connections[conn_id] = connection
@@ -83,10 +84,10 @@ class RemoteDesktop:
         self.logger.info(f"Remote desktop connection established: {conn_id}")
 
         return {
-            'connection_id': conn_id,
-            'status': 'connected',
-            'god_tier_encrypted': True,
-            'encryption_layers': 7
+            "connection_id": conn_id,
+            "status": "connected",
+            "god_tier_encrypted": True,
+            "encryption_layers": 7,
         }
 
     def disconnect(self, conn_id: str):
@@ -95,11 +96,11 @@ class RemoteDesktop:
             del self._connections[conn_id]
             self.logger.info(f"Connection closed: {conn_id}")
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get remote desktop status"""
         return {
-            'active': self._active,
-            'god_tier_encrypted': True,
-            'encryption_layers': 7,
-            'active_connections': len(self._connections)
+            "active": self._active,
+            "god_tier_encrypted": True,
+            "encryption_layers": 7,
+            "active_connections": len(self._connections),
         }

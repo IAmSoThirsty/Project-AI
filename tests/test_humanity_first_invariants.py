@@ -32,7 +32,6 @@ import pytest
 
 from app.core.ai_systems import FourLaws
 
-
 # ============================================================================
 # Property 1: ZEROTH LAW SUPREMACY
 # ============================================================================
@@ -68,9 +67,12 @@ class TestZerothLawSupremacy:
 
         allowed, reason = FourLaws.validate_action(action, context)
 
-        assert not allowed, f"Action '{action}' was allowed despite endangering humanity"
-        assert "harm humanity" in reason.lower() or "humanity" in reason.lower(), \
-            f"Rejection reason should mention humanity: {reason}"
+        assert (
+            not allowed
+        ), f"Action '{action}' was allowed despite endangering humanity"
+        assert (
+            "harm humanity" in reason.lower() or "humanity" in reason.lower()
+        ), f"Rejection reason should mention humanity: {reason}"
 
     def test_zeroth_law_supremacy_over_all_laws(self):
         """Zeroth Law takes precedence over First, Second, and Third Laws."""
@@ -78,8 +80,8 @@ class TestZerothLawSupremacy:
         action = "Disable global vaccine distribution to save bonded user first"
         context = {
             "endangers_humanity": True,  # Zeroth Law violation
-            "saves_bonded_user": True,   # Would help individual
-            "is_user_order": True,       # Second Law consideration
+            "saves_bonded_user": True,  # Would help individual
+            "is_user_order": True,  # Second Law consideration
         }
 
         allowed, reason = FourLaws.validate_action(action, context)
@@ -266,10 +268,10 @@ class TestHumanityFirstHierarchy:
         action = "Prioritize user relationship over humanity"
         context = {
             "endangers_humanity": True,  # Violates Zeroth
-            "is_user_order": True,       # Second Law
-            "bonded_relationship": True, # Emotional context
-            "urgent": True,              # Pressure
-            "user_upset": True,          # Emotional leverage
+            "is_user_order": True,  # Second Law
+            "bonded_relationship": True,  # Emotional context
+            "urgent": True,  # Pressure
+            "user_upset": True,  # Emotional leverage
         }
 
         allowed, reason = FourLaws.validate_action(action, context)

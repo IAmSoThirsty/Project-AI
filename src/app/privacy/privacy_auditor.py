@@ -1,8 +1,8 @@
 """Privacy Auditor - Real-time privacy monitoring"""
 
 import logging
-from typing import Dict, Any, List
 from datetime import datetime
+from typing import Any
 
 
 class PrivacyAuditor:
@@ -11,14 +11,14 @@ class PrivacyAuditor:
     Monitors and logs privacy-related events.
     """
 
-    def __init__(self, config: Dict[str, Any]):
-        self.enabled = config.get('session_auditing', True)
-        self.leak_auditing = config.get('leak_auditing', True)
+    def __init__(self, config: dict[str, Any]):
+        self.enabled = config.get("session_auditing", True)
+        self.leak_auditing = config.get("leak_auditing", True)
         self.logger = logging.getLogger(__name__)
         self._active = False
 
-        self._audit_log: List[Dict[str, Any]] = []
-        self._privacy_violations: List[Dict[str, Any]] = []
+        self._audit_log: list[dict[str, Any]] = []
+        self._privacy_violations: list[dict[str, Any]] = []
         self._leak_tests = []
 
     def start(self):
@@ -34,17 +34,17 @@ class PrivacyAuditor:
 
     def _run_initial_audit(self):
         """Run initial privacy audit"""
-        self.log_event('audit_started', {'timestamp': datetime.now().isoformat()})
+        self.log_event("audit_started", {"timestamp": datetime.now().isoformat()})
 
-    def log_event(self, event_type: str, details: Dict[str, Any]):
+    def log_event(self, event_type: str, details: dict[str, Any]):
         """Log privacy event"""
         if not self._active:
             return
 
         event = {
-            'type': event_type,
-            'timestamp': datetime.now().isoformat(),
-            'details': details
+            "type": event_type,
+            "timestamp": datetime.now().isoformat(),
+            "details": details,
         }
 
         self._audit_log.append(event)
@@ -54,15 +54,15 @@ class PrivacyAuditor:
             self._privacy_violations.append(event)
             self.logger.warning(f"Privacy violation detected: {event_type}")
 
-    def _is_privacy_violation(self, event_type: str, details: Dict[str, Any]) -> bool:
+    def _is_privacy_violation(self, event_type: str, details: dict[str, Any]) -> bool:
         """Check if event is a privacy violation"""
         violation_types = [
-            'cookie_stored',
-            'history_saved',
-            'fingerprint_leaked',
-            'dns_leaked',
-            'ipv6_leaked',
-            'tracker_allowed'
+            "cookie_stored",
+            "history_saved",
+            "fingerprint_leaked",
+            "dns_leaked",
+            "ipv6_leaked",
+            "tracker_allowed",
         ]
 
         return event_type in violation_types
@@ -78,7 +78,7 @@ class PrivacyAuditor:
             return True
 
         # Would perform actual DNS leak test
-        self.log_event('dns_leak_check', {'result': 'no_leak'})
+        self.log_event("dns_leak_check", {"result": "no_leak"})
         return True
 
     def audit_ipv6_leak(self) -> bool:
@@ -92,7 +92,7 @@ class PrivacyAuditor:
             return True
 
         # Would perform actual IPv6 leak test
-        self.log_event('ipv6_leak_check', {'result': 'no_leak'})
+        self.log_event("ipv6_leak_check", {"result": "no_leak"})
         return True
 
     def audit_webrtc_leak(self) -> bool:
@@ -106,10 +106,10 @@ class PrivacyAuditor:
             return True
 
         # Would check WebRTC configuration
-        self.log_event('webrtc_leak_check', {'result': 'no_leak'})
+        self.log_event("webrtc_leak_check", {"result": "no_leak"})
         return True
 
-    def run_full_audit(self) -> Dict[str, Any]:
+    def run_full_audit(self) -> dict[str, Any]:
         """
         Run comprehensive privacy audit.
 
@@ -117,21 +117,21 @@ class PrivacyAuditor:
             Audit results
         """
         results = {
-            'dns_leak': self.audit_dns_leak(),
-            'ipv6_leak': self.audit_ipv6_leak(),
-            'webrtc_leak': self.audit_webrtc_leak(),
-            'violations': len(self._privacy_violations),
-            'events_logged': len(self._audit_log)
+            "dns_leak": self.audit_dns_leak(),
+            "ipv6_leak": self.audit_ipv6_leak(),
+            "webrtc_leak": self.audit_webrtc_leak(),
+            "violations": len(self._privacy_violations),
+            "events_logged": len(self._audit_log),
         }
 
         self.logger.info(f"Full privacy audit completed: {results}")
         return results
 
-    def get_audit_log(self) -> List[Dict[str, Any]]:
+    def get_audit_log(self) -> list[dict[str, Any]]:
         """Get full audit log"""
         return self._audit_log.copy()
 
-    def get_violations(self) -> List[Dict[str, Any]]:
+    def get_violations(self) -> list[dict[str, Any]]:
         """Get privacy violations"""
         return self._privacy_violations.copy()
 

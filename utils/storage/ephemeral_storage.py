@@ -1,8 +1,8 @@
 """Ephemeral Storage - Temporary, auto-wiping storage"""
 
 import logging
-from typing import Dict, Any, Optional
 import time
+from typing import Any
 
 
 class EphemeralStorage:
@@ -11,13 +11,13 @@ class EphemeralStorage:
     Data is kept in memory only and never written to disk.
     """
 
-    def __init__(self, config: Dict[str, Any]):
+    def __init__(self, config: dict[str, Any]):
         self.enabled = config.get('ephemeral_mode', True)
         self.memory_only = config.get('memory_only', True)
         self.auto_wipe_interval = config.get('auto_wipe_interval', 300)  # 5 minutes
         self.logger = logging.getLogger(__name__)
 
-        self._storage: Dict[str, Dict[str, Any]] = {}
+        self._storage: dict[str, dict[str, Any]] = {}
         self._active = False
 
     def start(self):
@@ -31,7 +31,7 @@ class EphemeralStorage:
         self._wipe_all()
         self._active = False
 
-    def store(self, key: str, value: Any, ttl: Optional[int] = None):
+    def store(self, key: str, value: Any, ttl: int | None = None):
         """
         Store data temporarily.
 
@@ -51,7 +51,7 @@ class EphemeralStorage:
 
         self.logger.debug(f"Stored ephemeral data: {key}")
 
-    def retrieve(self, key: str) -> Optional[Any]:
+    def retrieve(self, key: str) -> Any | None:
         """
         Retrieve ephemeral data.
 
@@ -97,7 +97,7 @@ class EphemeralStorage:
         if expired_keys:
             self.logger.debug(f"Cleaned up {len(expired_keys)} expired items")
 
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self) -> dict[str, Any]:
         """Get storage statistics"""
         return {
             'active': self._active,

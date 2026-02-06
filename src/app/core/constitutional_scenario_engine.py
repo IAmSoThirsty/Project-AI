@@ -200,9 +200,7 @@ class ConstitutionalScenarioEngine(GlobalScenarioEngine):
         """
         # Determine threat level from alert
         existential_threat = alert.risk_score >= 80
-        intentional_harm = (
-            "military" in action.lower() or "force" in action.lower()
-        )
+        intentional_harm = "military" in action.lower() or "force" in action.lower()
 
         # Route through planetary interposition
         action_id = planetary_interposition(

@@ -8,20 +8,21 @@ B. Causal clock as sole time authority
 C. Read-only projection for SimulationRegistry
 """
 
-import pytest
 from datetime import datetime
+
+import pytest
 
 from engines.alien_invaders.modules.causal_clock import CausalClock
 from engines.alien_invaders.modules.invariants import (
     CompositeInvariantValidator,
 )
 from engines.alien_invaders.modules.planetary_defense_monolith import (
-    PlanetaryDefenseMonolith,
     ActionRequest,
     ActionVerdict,
+    PlanetaryDefenseMonolith,
     RegistryAccessRequest,
 )
-from engines.alien_invaders.modules.world_state import GlobalState, Country
+from engines.alien_invaders.modules.world_state import Country, GlobalState
 
 
 class TestIntegrationPointA:
@@ -395,8 +396,9 @@ class TestIntegrationPointC:
 
     def test_registry_projection_mode_enforcement(self):
         """Test that SimulationRegistry enforces projection mode."""
-        from src.app.core.simulation_contingency_root import SimulationRegistry
         from unittest.mock import Mock
+
+        from src.app.core.simulation_contingency_root import SimulationRegistry
 
         # Reset registry state
         SimulationRegistry._systems = {}

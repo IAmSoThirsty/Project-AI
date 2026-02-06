@@ -9,9 +9,8 @@ import logging
 from pathlib import Path
 from typing import Any
 
-from engines.emp_defense.schemas.config_schema import SimulationConfig
 from engines.emp_defense.modules.world_state import WorldState
-
+from engines.emp_defense.schemas.config_schema import SimulationConfig
 
 logger = logging.getLogger(__name__)
 

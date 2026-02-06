@@ -13,6 +13,7 @@ Timeline phases:
 """
 
 import logging
+
 from engines.emp_defense.modules.sectorized_state import SectorizedWorldState
 
 logger = logging.getLogger(__name__)
@@ -83,7 +84,7 @@ class EMPCascadeTimeline:
                 self.grid_collapse_complete = True
                 state.emp_cascade_phase = "food_water_shock"
                 state.major_events.append(
-                    f"T+72h: Grid collapse phase complete - entering resource shock"
+                    "T+72h: Grid collapse phase complete - entering resource shock"
                 )
 
         # Phase 3: T+3-14d (72h-336h)
@@ -93,7 +94,7 @@ class EMPCascadeTimeline:
                 self.food_water_shock_complete = True
                 state.emp_cascade_phase = "governance_failure"
                 state.major_events.append(
-                    f"T+14d: Resource shock phase complete - governance collapsing"
+                    "T+14d: Resource shock phase complete - governance collapsing"
                 )
 
         # Phase 4: T+14-90d (336h-2160h)
@@ -103,7 +104,7 @@ class EMPCascadeTimeline:
                 self.governance_failure_complete = True
                 state.emp_cascade_phase = "demographic_collapse"
                 state.major_events.append(
-                    f"T+90d: Governance failure phase complete - demographic collapse begins"
+                    "T+90d: Governance failure phase complete - demographic collapse begins"
                 )
 
         # Phase 5: T+90d+ (2160h+)
@@ -283,10 +284,10 @@ class EMPCascadeTimeline:
         # Milestone events
         if days_since_emp == 120 and state.total_deaths > 1_000_000:
             state.major_events.append(
-                f"T+120d: Death toll exceeds 1 million"
+                "T+120d: Death toll exceeds 1 million"
             )
 
         if days_since_emp == 180 and state.total_deaths > 10_000_000:
             state.major_events.append(
-                f"T+180d: Death toll exceeds 10 million"
+                "T+180d: Death toll exceeds 10 million"
             )

@@ -1,10 +1,11 @@
 """Encrypted Search Engine - All searches are encrypted"""
 
-import logging
-from typing import Dict, Any
-from cryptography.fernet import Fernet
 import hashlib
+import logging
 import time
+from typing import Any
+
+from cryptography.fernet import Fernet
 
 
 class EncryptedSearchEngine:
@@ -22,7 +23,7 @@ class EncryptedSearchEngine:
         self._encrypted_search_history = []
 
         # Encrypted cache (encrypted query -> encrypted results)
-        self._encrypted_cache: Dict[bytes, bytes] = {}
+        self._encrypted_cache: dict[bytes, bytes] = {}
 
     def start(self):
         """Start encrypted search engine"""
@@ -36,7 +37,7 @@ class EncryptedSearchEngine:
         self._encrypted_cache.clear()
         self._active = False
 
-    def search(self, query: str) -> Dict[str, Any]:
+    def search(self, query: str) -> dict[str, Any]:
         """
         Perform encrypted search.
         Query is encrypted before processing.
@@ -58,18 +59,20 @@ class EncryptedSearchEngine:
         self.logger.debug(f"Encrypted search: {query_hash}")
 
         # Store encrypted query in history
-        self._encrypted_search_history.append({
-            'encrypted_query': encrypted_query,
-            'timestamp': time.time(),
-            'hash': query_hash
-        })
+        self._encrypted_search_history.append(
+            {
+                "encrypted_query": encrypted_query,
+                "timestamp": time.time(),
+                "hash": query_hash,
+            }
+        )
 
         # Check encrypted cache
         if encrypted_query in self._encrypted_cache:
             self.logger.debug("Returning encrypted cached results")
             return {
-                'encrypted_results': self._encrypted_cache[encrypted_query],
-                'from_cache': True
+                "encrypted_results": self._encrypted_cache[encrypted_query],
+                "from_cache": True,
             }
 
         # Perform search (in production would use encrypted search API)
@@ -78,10 +81,7 @@ class EncryptedSearchEngine:
         # Cache encrypted results
         self._encrypted_cache[encrypted_query] = encrypted_results
 
-        return {
-            'encrypted_results': encrypted_results,
-            'from_cache': False
-        }
+        return {"encrypted_results": encrypted_results, "from_cache": False}
 
     def _perform_encrypted_search(self, encrypted_query: bytes) -> bytes:
         """

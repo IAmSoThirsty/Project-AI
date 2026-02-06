@@ -197,8 +197,8 @@ def demo_cross_tier_blocking() -> None:
         print(f"   ✓ Block imposed: {block.block_id}")
         print(f"   - Type: {block.block_type.value}")
         print(f"   - Reason: {block.reason.value}")
-        print(f"   - Duration: 300 seconds")
-        print(f"   - Governance Approval Required: No (autonomous)")
+        print("   - Duration: 300 seconds")
+        print("   - Governance Approval Required: No (autonomous)")
     else:
         print(f"   ✗ Block failed: {reason}")
 
@@ -240,10 +240,10 @@ def demo_cross_tier_blocking() -> None:
     )
 
     if not success:
-        print(f"   ✓ Block correctly REJECTED")
+        print("   ✓ Block correctly REJECTED")
         print(f"   - Reason: {reason}")
     else:
-        print(f"   ✗ Block should have been rejected!")
+        print("   ✗ Block should have been rejected!")
 
 
 def demo_health_monitoring() -> None:
@@ -281,7 +281,7 @@ def demo_health_monitoring() -> None:
     monitor.record_metric(PlatformTier.TIER_2_INFRASTRUCTURE, metric)
     print(f"   Value: {metric.value} {metric.unit}")
     print(f"   Health: {metric.get_health_level().value.upper()}")
-    print(f"   ⚠ Alert generated: Exceeds warning threshold")
+    print("   ⚠ Alert generated: Exceeds warning threshold")
 
     # Tier 3: Critical
     print("\n3. Tier 3 (Application) - Error Rate (CRITICAL)")
@@ -296,7 +296,7 @@ def demo_health_monitoring() -> None:
     monitor.record_metric(PlatformTier.TIER_3_APPLICATION, metric)
     print(f"   Value: {metric.value} {metric.unit}")
     print(f"   Health: {metric.get_health_level().value.upper()}")
-    print(f"   🚨 Alert generated: CRITICAL threshold exceeded")
+    print("   🚨 Alert generated: CRITICAL threshold exceeded")
 
     # Show platform health
     print("\n" + "-" * 70)

@@ -64,7 +64,8 @@ class DomainAgentsPanel(QFrame):
 
         # Agent list
         self.agent_list = QListWidget()
-        self.agent_list.setStyleSheet("""
+        self.agent_list.setStyleSheet(
+            """
             QListWidget {
                 background-color: #1a1a1a;
                 border: 1px solid #00ff00;
@@ -76,7 +77,8 @@ class DomainAgentsPanel(QFrame):
                 background-color: #2a2a2a;
                 color: #00ffff;
             }
-        """)
+        """
+        )
         layout.addWidget(self.agent_list)
 
         # Status info
@@ -86,7 +88,8 @@ class DomainAgentsPanel(QFrame):
 
         # Refresh button
         refresh_btn = QPushButton("🔄 REFRESH AGENTS")
-        refresh_btn.setStyleSheet("""
+        refresh_btn.setStyleSheet(
+            """
             QPushButton {
                 background-color: #1a1a1a;
                 border: 2px solid #00ff00;
@@ -98,7 +101,8 @@ class DomainAgentsPanel(QFrame):
                 border: 2px solid #00ffff;
                 color: #00ffff;
             }
-        """)
+        """
+        )
         refresh_btn.clicked.connect(self.refresh_agents)
         layout.addWidget(refresh_btn)
 
@@ -150,7 +154,8 @@ class SimulationViewerPanel(QFrame):
         # Simulation display
         self.simulation_display = QTextEdit()
         self.simulation_display.setReadOnly(True)
-        self.simulation_display.setStyleSheet("""
+        self.simulation_display.setStyleSheet(
+            """
             QTextEdit {
                 background-color: #0a0a0a;
                 border: 1px solid #00ff00;
@@ -158,14 +163,16 @@ class SimulationViewerPanel(QFrame):
                 font-family: 'Courier New';
                 font-size: 10px;
             }
-        """)
+        """
+        )
         layout.addWidget(self.simulation_display)
 
         # Control buttons
         btn_layout = QHBoxLayout()
 
         self.run_btn = QPushButton("▶ RUN SIMULATION")
-        self.run_btn.setStyleSheet("""
+        self.run_btn.setStyleSheet(
+            """
             QPushButton {
                 background-color: #1a1a1a;
                 border: 2px solid #00ff00;
@@ -177,7 +184,8 @@ class SimulationViewerPanel(QFrame):
                 border: 2px solid #00ffff;
                 color: #00ffff;
             }
-        """)
+        """
+        )
         self.run_btn.clicked.connect(self.run_simulation)
         btn_layout.addWidget(self.run_btn)
 
@@ -269,11 +277,13 @@ class IntelligenceLibraryPanel(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setStyleSheet("""
+        self.setStyleSheet(
+            """
             QWidget {
                 background-color: #1a1a1a;
             }
-        """)
+        """
+        )
 
         main_layout = QVBoxLayout(self)
 
@@ -283,7 +293,8 @@ class IntelligenceLibraryPanel(QWidget):
 
         # Tab widget for different views
         self.tabs = QTabWidget()
-        self.tabs.setStyleSheet("""
+        self.tabs.setStyleSheet(
+            """
             QTabWidget::pane {
                 border: 2px solid #00ff00;
                 background-color: #1a1a1a;
@@ -304,7 +315,8 @@ class IntelligenceLibraryPanel(QWidget):
             QTabBar::tab:hover {
                 color: #00ffff;
             }
-        """)
+        """
+        )
 
         # Overview tab
         overview_tab = self._create_overview_tab()
@@ -333,20 +345,23 @@ class IntelligenceLibraryPanel(QWidget):
     def _create_title_bar(self) -> QFrame:
         """Create title bar with back button."""
         title_frame = QFrame()
-        title_frame.setStyleSheet("""
+        title_frame.setStyleSheet(
+            """
             QFrame {
                 background-color: #0f0f0f;
                 border: 2px solid #00ff00;
                 border-radius: 5px;
             }
-        """)
+        """
+        )
         title_frame.setFixedHeight(60)
 
         layout = QHBoxLayout(title_frame)
 
         # Back button
         back_btn = QPushButton("◀ BACK")
-        back_btn.setStyleSheet("""
+        back_btn.setStyleSheet(
+            """
             QPushButton {
                 background-color: #1a1a1a;
                 border: 2px solid #00ff00;
@@ -358,7 +373,8 @@ class IntelligenceLibraryPanel(QWidget):
                 border: 2px solid #00ffff;
                 color: #00ffff;
             }
-        """)
+        """
+        )
         back_btn.clicked.connect(self.back_requested.emit)
         layout.addWidget(back_btn)
 
@@ -387,14 +403,16 @@ class IntelligenceLibraryPanel(QWidget):
         stats_layout = QVBoxLayout(stats_frame)
 
         self.stats_label = QLabel("Loading statistics...")
-        self.stats_label.setStyleSheet("""
+        self.stats_label.setStyleSheet(
+            """
             QLabel {
                 color: #00ff00;
                 font-family: 'Courier New';
                 font-size: 12px;
                 padding: 10px;
             }
-        """)
+        """
+        )
         self.stats_label.setWordWrap(True)
         stats_layout.addWidget(self.stats_label)
 
@@ -404,7 +422,8 @@ class IntelligenceLibraryPanel(QWidget):
         btn_layout = QHBoxLayout()
 
         refresh_btn = QPushButton("🔄 REFRESH STATS")
-        refresh_btn.setStyleSheet("""
+        refresh_btn.setStyleSheet(
+            """
             QPushButton {
                 background-color: #1a1a1a;
                 border: 2px solid #00ff00;
@@ -416,7 +435,8 @@ class IntelligenceLibraryPanel(QWidget):
                 border: 2px solid #00ffff;
                 color: #00ffff;
             }
-        """)
+        """
+        )
         refresh_btn.clicked.connect(self._refresh_overview)
         btn_layout.addWidget(refresh_btn)
 

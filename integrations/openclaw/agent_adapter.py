@@ -6,16 +6,21 @@ Bridges OpenClaw message routing with Project-AI's governance engine
 
 import asyncio
 import hashlib
-from typing import Any
 from enum import Enum
+from typing import Any
+
 from pydantic import BaseModel
 
 # Import Phase 2A components
 try:
-    from .triumvirate_client import TriumvirateClient, Intent as TriumvirateIntent
-    from .eed_memory import EEDMemoryAdapter
+    from .autonomous_learning import (
+        AutonomousLearningEngine,
+        CollectiveIntelligenceEngine,
+    )
     from .capability_registry import CapabilityRegistry
-    from .autonomous_learning import AutonomousLearningEngine, CollectiveIntelligenceEngine
+    from .eed_memory import EEDMemoryAdapter
+    from .triumvirate_client import Intent as TriumvirateIntent
+    from .triumvirate_client import TriumvirateClient
 except ImportError:
     # Fallback for testing
     TriumvirateClient = None
@@ -430,7 +435,7 @@ async def test_legion():
         platform="cli"
     )
 
-    print(f"User: What is your threat status?")
+    print("User: What is your threat status?")
     print(f"Legion: {response}\n")
 
 

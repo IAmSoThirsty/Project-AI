@@ -78,8 +78,9 @@ def example_realtime_monitoring():
 
 def example_monte_carlo():
     """Demonstrate Monte Carlo simulation"""
-    from app.core.hydra_50_analytics import MonteCarloSimulator
     import random
+
+    from app.core.hydra_50_analytics import MonteCarloSimulator
 
     logger.info("=== Example 3: Monte Carlo Simulation ===")
 
@@ -198,7 +199,7 @@ def example_custom_scenario():
 
 def example_alert_management():
     """Demonstrate alert management"""
-    from app.core.hydra_50_telemetry import HYDRA50TelemetrySystem, AlertSeverity
+    from app.core.hydra_50_telemetry import AlertSeverity, HYDRA50TelemetrySystem
 
     logger.info("=== Example 7: Alert Management ===")
 
@@ -242,9 +243,9 @@ def example_alert_management():
 def example_visualization():
     """Demonstrate visualization generation"""
     from app.core.hydra_50_visualization import (
-        HYDRA50VisualizationEngine,
+        GraphEdge,
         GraphNode,
-        GraphEdge
+        HYDRA50VisualizationEngine,
     )
 
     logger.info("=== Example 8: Visualization Generation ===")
@@ -332,7 +333,7 @@ def example_performance_optimization():
 
 def example_security_hardening():
     """Demonstrate security features"""
-    from app.core.hydra_50_security import HYDRA50SecuritySystem, Role, Permission
+    from app.core.hydra_50_security import HYDRA50SecuritySystem, Permission, Role
 
     logger.info("=== Example 10: Security Hardening ===")
 

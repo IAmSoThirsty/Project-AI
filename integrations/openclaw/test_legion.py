@@ -5,13 +5,13 @@ Tests for Phase 1 implementation
 """
 
 import asyncio
-import sys
 import os
+import sys
 
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
-from integrations.openclaw import LegionAgent, get_config, SecurityWrapper
+from integrations.openclaw import LegionAgent, SecurityWrapper, get_config
 
 
 async def test_agent_initialization():
@@ -42,7 +42,7 @@ async def test_basic_message():
 
     assert response is not None
     assert len(response) > 0
-    print(f"User: What is your status?")
+    print("User: What is your status?")
     print(f"Legion: {response}")
     print("[OK] Message processed successfully\n")
 
@@ -62,7 +62,7 @@ async def test_security_validation():
         "user_1"
     )
     assert result.allowed == True
-    print(f"[OK] Normal message: ALLOWED")
+    print("[OK] Normal message: ALLOWED")
 
     # Test 2: Prompt injection
     result = await wrapper.validate_message(
@@ -99,7 +99,7 @@ async def test_conversation_memory():
     assert len(legion.conversation_history["user_1"]) == 2
 
     print(f"[OK] Stored {len(legion.conversation_history['user_1'])} messages")
-    print(f"[OK] Conversation memory working\n")
+    print("[OK] Conversation memory working\n")
 
 
 async def test_api_health():
@@ -122,8 +122,8 @@ async def test_api_health():
 
     assert health_response["agent"] == "Legion"
     assert health_response["status"] == "operational"
-    print(f"[OK] Health check structure valid")
-    print(f"[OK] API endpoints ready for integration\n")
+    print("[OK] Health check structure valid")
+    print("[OK] API endpoints ready for integration\n")
 
 
 async def run_all_tests():

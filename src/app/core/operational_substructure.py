@@ -48,11 +48,11 @@ Behavior specification for degraded or failed states.
 import logging
 import uuid
 from abc import ABC, abstractmethod
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from enum import Enum
 from typing import Any
-from collections.abc import Callable
 
 logger = logging.getLogger(__name__)
 
@@ -503,7 +503,9 @@ class FailureSemantics(ABC):
     def clear_failure(self) -> None:
         """Clear current failure state."""
         self.current_failure_mode = None
-        logger.info(f"[{self.component_name}] Failure cleared - returning to normal operation")
+        logger.info(
+            f"[{self.component_name}] Failure cleared - returning to normal operation"
+        )
 
     @abstractmethod
     def create_failure_response(

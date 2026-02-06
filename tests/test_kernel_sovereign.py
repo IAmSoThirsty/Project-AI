@@ -111,9 +111,7 @@ class TestExecutionKernelSovereign:
         assert result["action"] == action
         assert kernel_without_sovereign.tarl_gate.enforce_called
 
-    def test_kernel_with_sovereign_requires_policy_binding(
-        self, kernel_with_sovereign
-    ):
+    def test_kernel_with_sovereign_requires_policy_binding(self, kernel_with_sovereign):
         """
         CRITICAL TEST: Kernel with sovereign runtime REQUIRES policy binding.
 
@@ -181,7 +179,9 @@ class TestExecutionKernelSovereign:
         assert result["action"] == action
         assert "sovereign_proof" in result
         assert result["sovereign_proof"]["verified"]
-        assert result["sovereign_proof"]["binding_hash"] == policy_binding["binding_hash"]
+        assert (
+            result["sovereign_proof"]["binding_hash"] == policy_binding["binding_hash"]
+        )
 
     def test_sovereign_enforcement_logs_to_audit_trail(
         self, kernel_with_sovereign, sovereign
@@ -254,9 +254,7 @@ class TestExecutionKernelSovereign:
         assert "verification failed" in str(exc2.value)
 
         # Attempt 3: Valid binding - ALLOWED
-        correct_binding = sovereign.create_policy_state_binding(
-            policy_state, context
-        )
+        correct_binding = sovereign.create_policy_state_binding(policy_state, context)
         result = kernel_with_sovereign.execute(
             action, context, policy_binding=correct_binding
         )
@@ -270,7 +268,9 @@ class TestExecutionKernelSovereign:
         #
         # = GOVERNANCE IS NON-BYPASSABLE BY DESIGN
 
-    def test_tarl_gate_still_enforced_in_sovereign_mode(self, kernel_with_sovereign, sovereign):
+    def test_tarl_gate_still_enforced_in_sovereign_mode(
+        self, kernel_with_sovereign, sovereign
+    ):
         """Test that TARL gate is still enforced even in sovereign mode."""
         action = "test_action"
         context = {"stage": "test"}

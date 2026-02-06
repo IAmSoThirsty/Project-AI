@@ -16,10 +16,10 @@ from datetime import datetime
 from typing import Any
 
 from app.core.hydra_50_engine import (
-    Hydra50Engine,
     SCENARIO_REGISTRY,
-    ScenarioStatus,
     ControlPlane,
+    Hydra50Engine,
+    ScenarioStatus,
 )
 
 logger = logging.getLogger(__name__)
@@ -28,6 +28,7 @@ logger = logging.getLogger(__name__)
 # ============================================================================
 # PLANETARY DEFENSE INTEGRATION
 # ============================================================================
+
 
 class PlanetaryDefenseIntegration:
     """Integrate Hydra50 with Planetary Defense Constitutional Core"""
@@ -42,15 +43,14 @@ class PlanetaryDefenseIntegration:
         if self.planetary_defense is None:
             try:
                 from app.core.planetary_defense_monolith import PlanetaryDefenseMonolith
+
                 self.planetary_defense = PlanetaryDefenseMonolith()
             except ImportError:
                 logger.warning("Planetary Defense Monolith not available")
         return self.planetary_defense
 
     def validate_mitigation_action(
-        self,
-        scenario_id: str,
-        mitigation_action: str
+        self, scenario_id: str, mitigation_action: str
     ) -> tuple[bool, str]:
         """
         Validate mitigation action through Constitutional Core
@@ -78,18 +78,23 @@ class PlanetaryDefenseIntegration:
             "scenario_category": scenario.category.value,
             "escalation_level": scenario.escalation_level.value,
             "is_emergency": scenario.escalation_level.value >= 4,
-            "mitigation_type": "automated" if self.hydra.active_control_plane != ControlPlane.HUMAN_OVERRIDE else "human",
+            "mitigation_type": (
+                "automated"
+                if self.hydra.active_control_plane != ControlPlane.HUMAN_OVERRIDE
+                else "human"
+            ),
         }
 
         # Validate through Constitutional Core
         try:
             is_allowed, reason = pd.validate_action(
-                action=mitigation_action,
-                context=context
+                action=mitigation_action, context=context
             )
 
             if not is_allowed:
-                logger.warning(f"Mitigation blocked by Constitutional Core: {mitigation_action} - {reason}")
+                logger.warning(
+                    f"Mitigation blocked by Constitutional Core: {mitigation_action} - {reason}"
+                )
 
             return is_allowed, reason
 
@@ -118,7 +123,9 @@ class PlanetaryDefenseIntegration:
 
         try:
             pd.receive_threat_assessment(threat_data)
-            logger.info(f"Threat assessment sent to Planetary Defense: {state['active_count']} active scenarios")
+            logger.info(
+                f"Threat assessment sent to Planetary Defense: {state['active_count']} active scenarios"
+            )
         except Exception as e:
             logger.error(f"Failed to send threat assessment: {e}")
 
@@ -148,13 +155,17 @@ class PlanetaryDefenseIntegration:
 
                 if current_step:
                     for mitigation in current_step.mitigation_actions:
-                        is_allowed, reason = self.validate_mitigation_action(scenario_id, mitigation)
-                        validated_mitigations.append({
-                            "scenario_id": scenario_id,
-                            "mitigation": mitigation,
-                            "allowed": is_allowed,
-                            "reason": reason,
-                        })
+                        is_allowed, reason = self.validate_mitigation_action(
+                            scenario_id, mitigation
+                        )
+                        validated_mitigations.append(
+                            {
+                                "scenario_id": scenario_id,
+                                "mitigation": mitigation,
+                                "allowed": is_allowed,
+                                "reason": reason,
+                            }
+                        )
 
         # Add validation results to tick result
         tick_result["validated_mitigations"] = validated_mitigations
@@ -168,6 +179,7 @@ class PlanetaryDefenseIntegration:
 # ============================================================================
 # GLOBAL SCENARIO ENGINE INTEGRATION
 # ============================================================================
+
 
 class GlobalScenarioEngineIntegration:
     """Integrate Hydra50 as a module within Global Scenario Engine"""
@@ -183,7 +195,13 @@ class GlobalScenarioEngineIntegration:
             "module_name": "HYDRA-50 Contingency Plan Engine",
             "version": "1.0",
             "scenario_count": 50,
-            "categories": ["digital_cognitive", "economic", "infrastructure", "biological_environmental", "societal"],
+            "categories": [
+                "digital_cognitive",
+                "economic",
+                "infrastructure",
+                "biological_environmental",
+                "societal",
+            ],
             "capabilities": [
                 "event_sourcing",
                 "time_travel_replay",
@@ -196,7 +214,9 @@ class GlobalScenarioEngineIntegration:
             ],
         }
 
-    def query(self, query_type: str, params: dict[str, Any] | None = None) -> dict[str, Any]:
+    def query(
+        self, query_type: str, params: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
         """
         Handle queries from Global Scenario Engine
 
@@ -227,7 +247,11 @@ class GlobalScenarioEngineIntegration:
                 "metrics": scenario.metrics,
                 "active_triggers": [t.name for t in scenario.triggers if t.activated],
                 "couplings": [
-                    {"target": c.target_scenario_id, "strength": c.coupling_strength, "type": c.coupling_type}
+                    {
+                        "target": c.target_scenario_id,
+                        "strength": c.coupling_strength,
+                        "type": c.coupling_type,
+                    }
                     for c in scenario.couplings
                 ],
             }
@@ -276,9 +300,11 @@ class GlobalScenarioEngineIntegration:
                     self.hydra.update_scenario_metrics(
                         scenario_id=scenario_id,
                         metrics=metrics,
-                        user_id=external_data.get("source")
+                        user_id=external_data.get("source"),
                     )
-                    logger.info(f"Updated {scenario_id} from external source: {external_data.get('source')}")
+                    logger.info(
+                        f"Updated {scenario_id} from external source: {external_data.get('source')}"
+                    )
                 except Exception as e:
                     logger.error(f"Failed to update {scenario_id}: {e}")
 
@@ -286,6 +312,7 @@ class GlobalScenarioEngineIntegration:
 # ============================================================================
 # GOD-TIER COMMAND CENTER INTEGRATION
 # ============================================================================
+
 
 class CommandCenterIntegration:
     """Export Hydra50 widgets and controls to God-Tier Command Center"""
@@ -338,7 +365,8 @@ class CommandCenterIntegration:
     def get_threat_network_widget_data(self) -> dict[str, Any]:
         """Return data for threat network visualization"""
         active_scenarios = [
-            s for s in self.hydra.scenarios.values()
+            s
+            for s in self.hydra.scenarios.values()
             if s.status != ScenarioStatus.DORMANT
         ]
 
@@ -347,20 +375,24 @@ class CommandCenterIntegration:
         edges = []
 
         for scenario in active_scenarios:
-            nodes.append({
-                "id": scenario.scenario_id,
-                "name": scenario.name,
-                "category": scenario.category.value,
-                "escalation_level": scenario.escalation_level.value,
-            })
+            nodes.append(
+                {
+                    "id": scenario.scenario_id,
+                    "name": scenario.name,
+                    "category": scenario.category.value,
+                    "escalation_level": scenario.escalation_level.value,
+                }
+            )
 
             for coupling in scenario.get_active_couplings():
-                edges.append({
-                    "source": scenario.scenario_id,
-                    "target": coupling.target_scenario_id,
-                    "strength": coupling.coupling_strength,
-                    "type": coupling.coupling_type,
-                })
+                edges.append(
+                    {
+                        "source": scenario.scenario_id,
+                        "target": coupling.target_scenario_id,
+                        "strength": coupling.coupling_strength,
+                        "type": coupling.coupling_type,
+                    }
+                )
 
         return {
             "widget_type": "hydra50_threat_network",
@@ -401,7 +433,12 @@ class CommandCenterIntegration:
                     "id": "control_plane",
                     "label": "Control Plane",
                     "type": "dropdown",
-                    "options": ["strategic", "operational", "tactical", "human_override"],
+                    "options": [
+                        "strategic",
+                        "operational",
+                        "tactical",
+                        "human_override",
+                    ],
                     "current": self.hydra.active_control_plane.value,
                 },
             ],
@@ -411,7 +448,7 @@ class CommandCenterIntegration:
         self,
         action: str,
         params: dict[str, Any] | None = None,
-        user_id: str | None = None
+        user_id: str | None = None,
     ) -> dict[str, Any]:
         """Handle control actions from Command Center"""
         params = params or {}
@@ -423,21 +460,29 @@ class CommandCenterIntegration:
 
             elif action == "activate_human_override":
                 reason = params.get("reason", "Manual override from Command Center")
-                self.hydra.activate_human_override(user_id=user_id or "command_center", reason=reason)
+                self.hydra.activate_human_override(
+                    user_id=user_id or "command_center", reason=reason
+                )
                 return {"success": True, "message": "Human override activated"}
 
             elif action == "generate_compound_scenario":
                 active_scenarios = [
-                    s for s in self.hydra.scenarios.values()
+                    s
+                    for s in self.hydra.scenarios.values()
                     if s.status != ScenarioStatus.DORMANT
                 ]
-                compound = self.hydra.adversarial_generator.generate_compound_scenario(active_scenarios)
+                compound = self.hydra.adversarial_generator.generate_compound_scenario(
+                    active_scenarios
+                )
                 return {"success": True, "compound_scenario": compound}
 
             elif action == "set_control_plane":
                 plane_value = params.get("control_plane")
                 self.hydra.active_control_plane = ControlPlane(plane_value)
-                return {"success": True, "message": f"Control plane set to {plane_value}"}
+                return {
+                    "success": True,
+                    "message": f"Control plane set to {plane_value}",
+                }
 
             else:
                 return {"success": False, "error": f"Unknown action: {action}"}
@@ -451,6 +496,7 @@ class CommandCenterIntegration:
 # GUI EXPORT HOOKS
 # ============================================================================
 
+
 class GUIExportHooks:
     """Export functions for PyQt6 GUI integration"""
 
@@ -460,10 +506,7 @@ class GUIExportHooks:
 
     def get_scenario_dropdown_list(self) -> list[dict[str, str]]:
         """Return list of all scenarios for GUI dropdown"""
-        return [
-            {"id": sid, "name": name}
-            for sid, name in SCENARIO_REGISTRY.items()
-        ]
+        return [{"id": sid, "name": name} for sid, name in SCENARIO_REGISTRY.items()]
 
     def get_scenario_detail_for_gui(self, scenario_id: str) -> dict[str, Any]:
         """Return full scenario state for GUI display"""
@@ -488,7 +531,9 @@ class GUIExportHooks:
                     "activated": t.activated,
                     "current_value": t.current_value,
                     "threshold": t.threshold_value,
-                    "activation_time": t.activation_time.isoformat() if t.activation_time else None,
+                    "activation_time": (
+                        t.activation_time.isoformat() if t.activation_time else None
+                    ),
                 }
                 for t in scenario.triggers
             ],
@@ -507,7 +552,9 @@ class GUIExportHooks:
             "couplings": [
                 {
                     "target_id": c.target_scenario_id,
-                    "target_name": SCENARIO_REGISTRY.get(c.target_scenario_id, "Unknown"),
+                    "target_name": SCENARIO_REGISTRY.get(
+                        c.target_scenario_id, "Unknown"
+                    ),
                     "strength": c.coupling_strength,
                     "type": c.coupling_type,
                     "description": c.description,
@@ -578,14 +625,14 @@ class GUIExportHooks:
         scenario_id: str,
         metric_name: str,
         metric_value: float,
-        user_id: str = "gui_user"
+        user_id: str = "gui_user",
     ) -> dict[str, Any]:
         """Update a single scenario metric from GUI"""
         try:
             self.hydra.update_scenario_metrics(
                 scenario_id=scenario_id,
                 metrics={metric_name: metric_value},
-                user_id=user_id
+                user_id=user_id,
             )
             return {
                 "success": True,
@@ -604,6 +651,7 @@ class GUIExportHooks:
 # ============================================================================
 # UNIFIED INTEGRATION MANAGER
 # ============================================================================
+
 
 class Hydra50IntegrationManager:
     """Unified manager for all Hydra50 integrations"""
@@ -658,7 +706,10 @@ class Hydra50IntegrationManager:
 # CONVENIENCE FUNCTIONS
 # ============================================================================
 
-def create_integrated_hydra_instance(data_dir: str = "data/hydra50") -> Hydra50IntegrationManager:
+
+def create_integrated_hydra_instance(
+    data_dir: str = "data/hydra50",
+) -> Hydra50IntegrationManager:
     """
     Factory function to create fully integrated Hydra50 instance
 

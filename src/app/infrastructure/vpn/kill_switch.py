@@ -1,8 +1,8 @@
 """Kill Switch implementation"""
 
-from typing import Callable, List
 import logging
 import threading
+from collections.abc import Callable
 
 
 class KillSwitch:
@@ -15,7 +15,7 @@ class KillSwitch:
         self.enabled = enabled
         self.logger = logging.getLogger(__name__)
         self._active = False
-        self._callbacks: List[Callable] = []
+        self._callbacks: list[Callable] = []
         self._lock = threading.Lock()
         self._monitoring = False
 

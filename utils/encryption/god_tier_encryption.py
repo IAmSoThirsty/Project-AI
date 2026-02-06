@@ -3,15 +3,16 @@ GOD TIER ENCRYPTION MODULE
 Military-grade, quantum-resistant, multi-layered encryption
 """
 
+import hashlib
+import logging
+import os
+import secrets
+
 from cryptography.fernet import Fernet
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.asymmetric import ec, rsa
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
-from cryptography.hazmat.primitives.asymmetric import rsa, ec
-from cryptography.hazmat.backends import default_backend
-import os
-import hashlib
-import secrets
-import logging
 
 
 class GodTierEncryption:
