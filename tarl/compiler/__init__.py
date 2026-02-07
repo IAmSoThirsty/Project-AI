@@ -68,15 +68,65 @@ class Lexer:
         Returns:
             List of tokens
         """
-        # Placeholder: Basic tokenization
         tokens = []
-
-        # Simple whitespace-based tokenization for now
         lines = source.split("\n")
+
         for line_num, line in enumerate(lines, 1):
-            words = line.split()
-            for col_num, word in enumerate(words, 1):
-                tokens.append(Token("WORD", word, line_num, col_num))
+            col_num = 1
+            i = 0
+            while i < len(line):
+                # Skip whitespace
+                if line[i].isspace():
+                    i += 1
+                    col_num += 1
+                    continue
+
+                # String literals (single or double quotes)
+                if line[i] in ("'", '"'):
+                    quote_char = line[i]
+                    start_col = col_num
+                    i += 1
+                    string_value = ""
+
+                    # Read until closing quote
+                    while i < len(line) and line[i] != quote_char:
+                        string_value += line[i]
+                        i += 1
+
+                    # Skip closing quote
+                    if i < len(line):
+                        i += 1
+
+                    tokens.append(Token("STRING", string_value, line_num, start_col))
+                    col_num = i + 1
+
+                # Identifiers and keywords
+                elif line[i].isalpha() or line[i] == "_":
+                    start_col = col_num
+                    word = ""
+                    while i < len(line) and (line[i].isalnum() or line[i] == "_"):
+                        word += line[i]
+                        i += 1
+
+                    tokens.append(Token("WORD", word, line_num, start_col))
+                    col_num = i + 1
+
+                # Numbers
+                elif line[i].isdigit():
+                    start_col = col_num
+                    number = ""
+                    while i < len(line) and (line[i].isdigit() or line[i] == "."):
+                        number += line[i]
+                        i += 1
+
+                    tokens.append(Token("NUMBER", number, line_num, start_col))
+                    col_num = i + 1
+
+                # Operators and punctuation
+                else:
+                    tokens.append(Token("OPERATOR", line[i], line_num, col_num))
+                    i += 1
+                    col_num += 1
 
         logger.debug(f"Tokenized {len(tokens)} tokens")
         return tokens
@@ -154,24 +204,88 @@ class CodeGenerator:
 
         Returns:
             Bytecode bytes
+
+        Instruction Set:
+            0x00: NOP - No operation
+            0x01: LOAD_CONST <index> - Load constant from constant pool
+            0x02: STORE_VAR <name_len> <name> - Store top of stack to variable
+            0x03: LOAD_VAR <name_len> <name> - Load variable to stack
+            0x04: CALL <func_len> <func_name> <arg_count> - Call built-in function
+            0x05: RETURN - Return from execution
+            0x06: ADD - Add top two stack items
+            0x07: SUB - Subtract top two stack items
+            0x08: MUL - Multiply top two stack items
+            0x09: DIV - Divide top two stack items
+            0x0A: PRINT - Print top of stack
         """
         # Bytecode header (version marker)
         bytecode = bytearray(b"TARL_BYTECODE_V1\x00")
 
-        # TODO: Full code generation pending
-        # For now, emit a simple NOP instruction to make bytecode valid
-        # Opcode format: [opcode, operand_count, ...operands]
-        bytecode.extend(
-            [
-                0x00,  # NOP opcode
-                0x00,  # No operands
-            ]
-        )
+        # Constant pool section
+        constants = []
 
-        logger.debug(f"Generated {len(bytecode)} bytes of bytecode (placeholder)")
-        logger.warning(
-            "Full code generation not yet implemented. "
-            "Bytecode contains only header and NOP instruction."
+        # Extract tokens from AST
+        tokens = ast.attributes.get("tokens", [])
+
+        # Simple code generation: For each token, emit bytecode
+        for token in tokens:
+            # Handle STRING tokens (from tokenizer)
+            if token.type == "STRING":
+                # String constant
+                const_index = len(constants)
+                constants.append(token.value)
+
+                # LOAD_CONST instruction
+                bytecode.append(0x01)
+                bytecode.append(const_index)
+
+            # Handle WORD tokens
+            elif token.type == "WORD":
+                word = token.value
+
+                # Check for print command (pour)
+                if word.lower() in ("pour", "print"):
+                    # PRINT instruction
+                    bytecode.append(0x0A)
+
+            # Handle NUMBER tokens
+            elif token.type == "NUMBER":
+                # Number constant
+                const_index = len(constants)
+                # Try to parse as int or float
+                try:
+                    num_value = int(token.value)
+                except ValueError:
+                    try:
+                        num_value = float(token.value)
+                    except ValueError:
+                        num_value = token.value
+
+                constants.append(num_value)
+
+                # LOAD_CONST instruction
+                bytecode.append(0x01)
+                bytecode.append(const_index)
+
+        # If no instructions were generated, emit NOP
+        # (17 is header size)
+        if len(bytecode) == 17:
+            bytecode.append(0x00)  # NOP
+
+        # Always end with RETURN
+        bytecode.append(0x05)
+
+        # Encode constant pool at the end
+        # Format: [count, len1, data1, len2, data2, ...]
+        bytecode.append(len(constants))
+        for const in constants:
+            if isinstance(const, str):
+                encoded = const.encode("utf-8")
+                bytecode.append(len(encoded))
+                bytecode.extend(encoded)
+
+        logger.debug(
+            f"Generated {len(bytecode)} bytes of bytecode with {len(constants)} constants"
         )
 
         return bytes(bytecode)
