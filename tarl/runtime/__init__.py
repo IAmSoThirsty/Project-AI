@@ -21,7 +21,7 @@ Architecture Contract:
 """
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -188,8 +188,15 @@ class BytecodeVM:
                             func = stdlib.get_builtin(func_name)
                             result = func(*args)
                             context.stack.append(result)
-                        except KeyError:
-                            raise RuntimeError(f"Unknown function: {func_name}")
+                        except KeyError as err:
+                            # Get available functions for helpful error message
+                            available = stdlib.list_builtins() if hasattr(stdlib, 'list_builtins') else []
+                            available_str = ", ".join(available[:5])  # Show first 5
+                            if len(available) > 5:
+                                available_str += ", ..."
+                            raise RuntimeError(
+                                f"Unknown function: {func_name}. Available: {available_str}"
+                            ) from err
                 else:
                     break
 
