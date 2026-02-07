@@ -53,6 +53,32 @@ try:
 except ImportError as e:
     print(f"[WARN] Save Points endpoints not available: {e}")
 
+# Include Contrarian Firewall router (God-tier monolithic integration)
+try:
+    from api.firewall_routes import router as firewall_router
+    app.include_router(firewall_router)
+    print("[OK] Contrarian Firewall endpoints registered")
+    
+    # Initialize orchestrator on startup
+    from src.app.security.contrarian_firewall_orchestrator import get_orchestrator
+    
+    @app.on_event("startup")
+    async def startup_firewall_orchestrator():
+        """Start the Contrarian Firewall Orchestrator"""
+        orchestrator = get_orchestrator()
+        await orchestrator.start()
+        print("[OK] Contrarian Firewall Orchestrator started")
+    
+    @app.on_event("shutdown")
+    async def shutdown_firewall_orchestrator():
+        """Stop the Contrarian Firewall Orchestrator"""
+        from src.app.security.contrarian_firewall_orchestrator import get_orchestrator
+        orchestrator = get_orchestrator()
+        await orchestrator.stop()
+        print("[OK] Contrarian Firewall Orchestrator stopped")
+except ImportError as e:
+    print(f"[WARN] Contrarian Firewall endpoints not available: {e}")
+
 # ==========================================================
 # Core Data Models
 # ==========================================================
@@ -299,22 +325,40 @@ def health():
 def root():
     return {
         "service": "Project AI Governance Host",
-        "version": "0.1.0",
-        "architecture": "Triumvirate",
+        "version": "0.2.0",
+        "architecture": "Triumvirate + Contrarian Firewall",
+        "capabilities": [
+            "TARL Governance (Galahad, Cerberus, CodexDeus)",
+            "Contrarian Firewall (Chaos Engine, Swarm Defense)",
+            "Thirsty-lang Security Integration",
+            "Intent Tracking & Cognitive Warfare",
+            "Real-time Auto-tuning",
+            "Federated Threat Intelligence"
+        ],
         "endpoints": {
-            "submit_intent": "POST /intent",
-            "governed_execute": "POST /execute",
-            "audit_replay": "GET /audit",
-            "view_tarl": "GET /tarl",
-            "health_check": "GET /health",
-            "api_docs": "GET /docs",
+            "governance": {
+                "submit_intent": "POST /intent",
+                "governed_execute": "POST /execute",
+                "audit_replay": "GET /audit",
+                "view_tarl": "GET /tarl",
+            },
+            "firewall": {
+                "chaos_control": "POST /api/firewall/chaos/{start|stop|tune}",
+                "violation_detect": "POST /api/firewall/violation/detect",
+                "intent_tracking": "POST /api/firewall/intent/track",
+                "decoy_management": "POST /api/firewall/decoy/{deploy|list}",
+                "threat_scoring": "GET /api/firewall/threat/score",
+                "status": "GET /api/firewall/status",
+            },
             "save_points": {
                 "create": "POST /api/savepoints/create",
                 "list": "GET /api/savepoints/list",
                 "restore": "POST /api/savepoints/restore/{id}",
                 "delete": "DELETE /api/savepoints/delete/{id}",
                 "auto_status": "GET /api/savepoints/auto/status"
-            }
+            },
+            "health_check": "GET /health",
+            "api_docs": "GET /docs",
         },
     }
 
