@@ -10,7 +10,6 @@ import pytest
 import requests
 
 
-
 @pytest.mark.e2e
 @pytest.mark.api
 def test_api_health_endpoint(e2e_config):

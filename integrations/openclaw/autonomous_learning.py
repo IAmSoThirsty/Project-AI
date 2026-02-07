@@ -6,8 +6,9 @@ Continuous learning when users are inactive
 
 import asyncio
 import random
-from typing import Any
 from datetime import datetime
+from typing import Any
+
 from pydantic import BaseModel
 
 
@@ -335,8 +336,8 @@ async def test_autonomous_learning():
     print("=" * 60 + "\n")
 
     # Import required components
-    from eed_memory import EEDMemoryAdapter
     from capability_registry import CapabilityRegistry
+    from eed_memory import EEDMemoryAdapter
 
     eed = EEDMemoryAdapter()
     registry = CapabilityRegistry()
@@ -351,10 +352,10 @@ async def test_autonomous_learning():
     print(f"  Session ID: {session.session_id}")
     print(f"  Duration: {(session.ended_at - session.started_at).total_seconds():.1f}s")
     print(f"  Activities: {', '.join(session.activities)}")
-    print(f"\nInsights Discovered:")
+    print("\nInsights Discovered:")
     for insight in session.insights:
         print(f"  • {insight}")
-    print(f"\nImprovements Identified:")
+    print("\nImprovements Identified:")
     for improvement in session.improvements:
         print(f"  • {improvement}")
 

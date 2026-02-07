@@ -21,7 +21,7 @@ import re
 import uuid
 from collections import defaultdict
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -154,7 +154,7 @@ class HoneypotDetector:
         self._load_state()
 
         logger.info("Honeypot Detection System initialized")
-        logger.info(f"  Attack patterns: SQL, XSS, Path Traversal, Command Injection")
+        logger.info("  Attack patterns: SQL, XSS, Path Traversal, Command Injection")
         logger.info(f"  Tool detection: {len(self.tool_signatures)} signatures")
 
     def analyze_request(
@@ -202,7 +202,9 @@ class HoneypotDetector:
 
         # Check for path traversal
         for pattern in self.path_traversal_patterns:
-            if re.search(pattern, payload, re.IGNORECASE) or re.search(pattern, endpoint, re.IGNORECASE):
+            if re.search(pattern, payload, re.IGNORECASE) or re.search(
+                pattern, endpoint, re.IGNORECASE
+            ):
                 attack_types.append(AttackType.PATH_TRAVERSAL.value)
                 break
 
@@ -282,8 +284,15 @@ class HoneypotDetector:
         # Check endpoint
         endpoint_lower = endpoint.lower()
         suspicious_endpoints = [
-            "admin", "backup", "config", "database", "phpinfo",
-            "shell", "upload", "xmlrpc", "wp-admin"
+            "admin",
+            "backup",
+            "config",
+            "database",
+            "phpinfo",
+            "shell",
+            "upload",
+            "xmlrpc",
+            "wp-admin",
         ]
         for suspicious in suspicious_endpoints:
             if suspicious in endpoint_lower:
@@ -451,7 +460,9 @@ class HoneypotDetector:
             for profile in self.attacker_profiles.values()
             if profile.sophistication_score >= 7.0 or profile.attempt_count >= 50
         ]
-        return sorted(high_threat, key=lambda x: x["sophistication_score"], reverse=True)
+        return sorted(
+            high_threat, key=lambda x: x["sophistication_score"], reverse=True
+        )
 
     def _load_state(self) -> None:
         """Load state from disk."""

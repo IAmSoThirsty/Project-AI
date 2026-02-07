@@ -314,10 +314,7 @@ class MemoryLoggingService:
 
         # Apply status filter if provided
         if filter_status:
-            history = [
-                ctx for ctx in history
-                if ctx.status.value == filter_status
-            ]
+            history = [ctx for ctx in history if ctx.status.value == filter_status]
 
         # Return most recent entries
         recent = history[-limit:]

@@ -6,11 +6,12 @@ asymmetric cross-domain coupling.
 """
 
 from dataclasses import dataclass, field
+
 from engines.emp_defense.modules.constants import (
     EnergyThresholds,
     FoodThresholds,
-    HealthThresholds,
     GovernanceThresholds,
+    HealthThresholds,
 )
 
 

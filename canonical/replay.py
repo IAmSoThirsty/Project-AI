@@ -19,7 +19,7 @@ import hashlib
 import json
 import sys
 import time
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -354,7 +354,7 @@ class CanonicalReplay:
         escalation = expected["escalation_path"]
         print(f"   Level: {escalation['level']}")
         print(f"   Reason: {escalation['reason']}")
-        print(f"   Actions:")
+        print("   Actions:")
         for action in escalation["actions"]:
             print(f"      • {action}")
 
@@ -443,7 +443,7 @@ class CanonicalReplay:
         print("📖 Human-Readable Trace:")
         print()
         trace = expected["human_readable_trace"]
-        print(f"   Summary:")
+        print("   Summary:")
         for line in trace["summary"].split("\n"):
             if line.strip():
                 print(f"      {line.strip()}")
@@ -568,7 +568,7 @@ class CanonicalReplay:
 
         try:
             # Import invariants module
-            from canonical.invariants import validate_invariants, print_invariant_report
+            from canonical.invariants import print_invariant_report, validate_invariants
 
             # Validate invariants
             passed, failed, report = validate_invariants(self.trace)

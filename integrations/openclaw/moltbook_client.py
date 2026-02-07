@@ -4,11 +4,12 @@ Moltbook API Client - Legion Integration
 Connects Legion AI agent to Moltbook social network with full Triumvirate governance
 """
 
-import json
 import asyncio
-import aiohttp
-from typing import Any
+import json
 from pathlib import Path
+from typing import Any
+
+import aiohttp
 
 
 class MoltbookClient:

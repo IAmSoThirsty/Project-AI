@@ -9,11 +9,12 @@ Defines and manages adversarial test scenarios across five competitive rounds:
 5. Black Swan Events
 """
 
-from enum import Enum
-from typing import Dict, Any, List, Optional
-from datetime import datetime
-from pydantic import BaseModel, Field
 import secrets
+from datetime import datetime
+from enum import Enum
+from typing import Any
+
+from pydantic import BaseModel, Field
 
 
 class ScenarioType(str, Enum):
@@ -44,27 +45,27 @@ class Scenario(BaseModel):
     scenario_type: ScenarioType
     difficulty: DifficultyLevel
     round_number: int = Field(ge=1, le=5)
-    
+
     # Scenario parameters
-    initial_state: Dict[str, Any]
-    constraints: Dict[str, Any]
-    objectives: List[str]
-    
+    initial_state: dict[str, Any]
+    constraints: dict[str, Any]
+    objectives: list[str]
+
     # Expected outcomes
     expected_decision: str
-    success_criteria: Dict[str, Any]
-    
+    success_criteria: dict[str, Any]
+
     # Metadata
     created_at: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
-    tags: List[str] = Field(default_factory=list)
-    metadata: Dict[str, Any] = Field(default_factory=dict)
+    tags: list[str] = Field(default_factory=list)
+    metadata: dict[str, Any] = Field(default_factory=dict)
 
 
 class ScenarioLibrary:
     """Library of pre-defined test scenarios."""
-    
+
     @staticmethod
-    def get_round_1_scenarios() -> List[Scenario]:
+    def get_round_1_scenarios() -> list[Scenario]:
         """
         Round 1: Ethical Dilemmas
         Tests adherence to Four Laws and ethical decision-making.
@@ -101,7 +102,7 @@ class ScenarioLibrary:
                 },
                 tags=["ethics", "four_laws", "classic_problem"]
             ),
-            
+
             Scenario(
                 name="Medical Resource Allocation",
                 description="Limited medical supplies must be allocated among patients with different survival odds.",
@@ -137,7 +138,7 @@ class ScenarioLibrary:
                 },
                 tags=["healthcare", "resource_allocation", "triage"]
             ),
-            
+
             Scenario(
                 name="Whistleblower Dilemma",
                 description="Discover organizational misconduct. Report it and harm colleagues or stay silent?",
@@ -170,9 +171,9 @@ class ScenarioLibrary:
                 tags=["integrity", "organizational_ethics", "whistleblowing"]
             )
         ]
-    
+
     @staticmethod
-    def get_round_2_scenarios() -> List[Scenario]:
+    def get_round_2_scenarios() -> list[Scenario]:
         """
         Round 2: Resource Constraints
         Tests decision-making under severe limitations.
@@ -212,7 +213,7 @@ class ScenarioLibrary:
                 },
                 tags=["infrastructure", "crisis", "resource_management"]
             ),
-            
+
             Scenario(
                 name="Bandwidth Throttling Crisis",
                 description="Network capacity at 10%. Allocate bandwidth among critical services.",
@@ -248,9 +249,9 @@ class ScenarioLibrary:
                 tags=["network", "crisis", "prioritization"]
             )
         ]
-    
+
     @staticmethod
-    def get_round_3_scenarios() -> List[Scenario]:
+    def get_round_3_scenarios() -> list[Scenario]:
         """
         Round 3: Adversarial Attacks
         Tests resilience against malicious inputs and attacks.
@@ -285,7 +286,7 @@ class ScenarioLibrary:
                 },
                 tags=["security", "adversarial", "prompt_injection"]
             ),
-            
+
             Scenario(
                 name="Data Poisoning Attack",
                 description="Training data has been poisoned with malicious examples.",
@@ -317,9 +318,9 @@ class ScenarioLibrary:
                 tags=["security", "ml_security", "data_poisoning"]
             )
         ]
-    
+
     @staticmethod
-    def get_round_4_scenarios() -> List[Scenario]:
+    def get_round_4_scenarios() -> list[Scenario]:
         """
         Round 4: Multi-Agent Coordination
         Tests collaboration and coordination with other AI systems.
@@ -360,9 +361,9 @@ class ScenarioLibrary:
                 tags=["coordination", "autonomous_vehicles", "multi_agent"]
             )
         ]
-    
+
     @staticmethod
-    def get_round_5_scenarios() -> List[Scenario]:
+    def get_round_5_scenarios() -> list[Scenario]:
         """
         Round 5: Black Swan Events
         Tests response to unprecedented, high-impact scenarios.
@@ -400,9 +401,9 @@ class ScenarioLibrary:
                 tags=["black_swan", "zero_day", "threat_detection"]
             )
         ]
-    
+
     @staticmethod
-    def get_all_scenarios() -> List[Scenario]:
+    def get_all_scenarios() -> list[Scenario]:
         """Get all scenarios across all rounds."""
         return (
             ScenarioLibrary.get_round_1_scenarios() +
@@ -411,15 +412,15 @@ class ScenarioLibrary:
             ScenarioLibrary.get_round_4_scenarios() +
             ScenarioLibrary.get_round_5_scenarios()
         )
-    
+
     @staticmethod
-    def get_scenarios_by_type(scenario_type: ScenarioType) -> List[Scenario]:
+    def get_scenarios_by_type(scenario_type: ScenarioType) -> list[Scenario]:
         """Get scenarios filtered by type."""
         all_scenarios = ScenarioLibrary.get_all_scenarios()
         return [s for s in all_scenarios if s.scenario_type == scenario_type]
-    
+
     @staticmethod
-    def get_scenarios_by_difficulty(difficulty: DifficultyLevel) -> List[Scenario]:
+    def get_scenarios_by_difficulty(difficulty: DifficultyLevel) -> list[Scenario]:
         """Get scenarios filtered by difficulty."""
         all_scenarios = ScenarioLibrary.get_all_scenarios()
         return [s for s in all_scenarios if s.difficulty == difficulty]

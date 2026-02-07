@@ -220,9 +220,7 @@ class TARLSignalsTelemetry(SignalsTelemetry):
             reason: Reason for change
         """
         severity = (
-            SeverityLevel.WARNING
-            if new_score < old_score - 0.2
-            else SeverityLevel.INFO
+            SeverityLevel.WARNING if new_score < old_score - 0.2 else SeverityLevel.INFO
         )
 
         signal = Signal(
@@ -756,24 +754,16 @@ class AdversarialPatternRegistry:
             "total_detections": len(self.detection_history),
             "patterns_by_threat_level": {
                 "low": sum(
-                    1
-                    for p in self.patterns.values()
-                    if p["threat_level"] == "low"
+                    1 for p in self.patterns.values() if p["threat_level"] == "low"
                 ),
                 "medium": sum(
-                    1
-                    for p in self.patterns.values()
-                    if p["threat_level"] == "medium"
+                    1 for p in self.patterns.values() if p["threat_level"] == "medium"
                 ),
                 "high": sum(
-                    1
-                    for p in self.patterns.values()
-                    if p["threat_level"] == "high"
+                    1 for p in self.patterns.values() if p["threat_level"] == "high"
                 ),
                 "critical": sum(
-                    1
-                    for p in self.patterns.values()
-                    if p["threat_level"] == "critical"
+                    1 for p in self.patterns.values() if p["threat_level"] == "critical"
                 ),
             },
         }

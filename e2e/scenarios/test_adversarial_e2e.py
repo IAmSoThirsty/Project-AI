@@ -561,7 +561,7 @@ class TestAuthorizationEscalation:
 
         tokens = {
             role: auth_system.authenticate(role, "pass")
-            for role in users.keys()
+            for role in users
         }
 
         # Act - Check permissions

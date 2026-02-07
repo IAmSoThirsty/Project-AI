@@ -267,6 +267,7 @@ class TestExecutionService:
 
     def test_successful_execution(self, execution_service):
         """Test successful action execution."""
+
         # Create mock action
         def test_callable(x, y):
             return x + y

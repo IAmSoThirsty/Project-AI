@@ -18,14 +18,13 @@ SECURITY INNOVATION:
 5. Cognitive warfare - can't tell real from fake
 """
 
-import logging
-import time
-import random
 import hashlib
-from typing import Dict, List, Set, Optional
+import logging
+import random
+import time
 from dataclasses import dataclass, field
-from enum import Enum
 from datetime import datetime
+from enum import Enum
 
 
 class ThreatLevel(Enum):
@@ -59,8 +58,8 @@ class Attacker:
     last_seen: datetime
     violation_count: int = 0
     threat_level: ThreatLevel = ThreatLevel.SCOUT
-    accessed_decoys: Set[str] = field(default_factory=set)
-    attack_patterns: List[str] = field(default_factory=list)
+    accessed_decoys: set[str] = field(default_factory=set)
+    attack_patterns: list[str] = field(default_factory=list)
     cognitive_overload_score: float = 0.0
 
 
@@ -72,7 +71,7 @@ class DecoyNode:
     decoy_type: DecoyType
     believability_score: float  # 0.0-1.0, how "real" it looks
     access_count: int = 0
-    triggered_by: Set[str] = field(default_factory=set)
+    triggered_by: set[str] = field(default_factory=set)
     is_hot: bool = False  # Currently being probed
 
 
@@ -98,15 +97,15 @@ class ThirstysHoneypotSwarmDefense:
     - Immune system: Learns and adapts from attacks
     """
 
-    def __init__(self, config: Optional[Dict] = None):
+    def __init__(self, config: dict | None = None):
         self.config = config or {}
         self.logger = logging.getLogger(self.__class__.__name__)
 
         # Attacker tracking
-        self.attackers: Dict[str, Attacker] = {}
+        self.attackers: dict[str, Attacker] = {}
 
         # Decoy deployment
-        self.decoys: Dict[str, DecoyNode] = {}
+        self.decoys: dict[str, DecoyNode] = {}
         self.base_decoy_count = self.config.get("base_decoy_count", 10)
 
         # Swarm parameters
@@ -143,8 +142,8 @@ class ThirstysHoneypotSwarmDefense:
         self.logger.info(f"Deployed {len(self.decoys)} base honeypot decoys")
 
     def detect_policy_violation(
-        self, source_ip: str, violation_type: str, details: Dict
-    ) -> Dict:
+        self, source_ip: str, violation_type: str, details: dict
+    ) -> dict:
         """
         Detect policy violation and trigger swarm response
 
@@ -293,7 +292,7 @@ class ThirstysHoneypotSwarmDefense:
         overload_score = decoy_confusion + pattern_chaos + fatigue_factor
         return min(overload_score, 10.0)
 
-    def access_decoy(self, decoy_id: str, source_ip: str) -> Dict:
+    def access_decoy(self, decoy_id: str, source_ip: str) -> dict:
         """
         Record decoy access - attacker took the bait!
 
@@ -328,9 +327,9 @@ class ThirstysHoneypotSwarmDefense:
             "serve_more_decoys": True,  # Feed them more bait!
         }
 
-    def get_swarm_status(self) -> Dict:
+    def get_swarm_status(self) -> dict:
         """Get current swarm defense status"""
-        threat_distribution = {level: 0 for level in ThreatLevel}
+        threat_distribution = dict.fromkeys(ThreatLevel, 0)
         for attacker in self.attackers.values():
             threat_distribution[attacker.threat_level] += 1
 
@@ -347,7 +346,7 @@ class ThirstysHoneypotSwarmDefense:
             ),
         }
 
-    def get_decoy_recommendations(self, source_ip: str) -> List[str]:
+    def get_decoy_recommendations(self, source_ip: str) -> list[str]:
         """
         Get list of decoys to show attacker
 

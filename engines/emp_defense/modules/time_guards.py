@@ -5,8 +5,8 @@ Enforces valid time transitions and phase boundaries.
 Prevents accidental breakage of early-phase realism.
 """
 
-from engines.emp_defense.modules.sectorized_state import SectorizedWorldState
 from engines.emp_defense.modules.constants import TimeConstants
+from engines.emp_defense.modules.sectorized_state import SectorizedWorldState
 
 
 def is_early_phase(state: SectorizedWorldState) -> bool:

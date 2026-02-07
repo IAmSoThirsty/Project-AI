@@ -1,7 +1,7 @@
 """Browser Sandbox for secure execution"""
 
 import logging
-from typing import Dict, Any
+from typing import Any
 
 
 class BrowserSandbox:
@@ -15,15 +15,15 @@ class BrowserSandbox:
         self.logger = logging.getLogger(__name__)
         self._active = False
         self._sandbox_policies = {
-            'allow_system_access': False,
-            'allow_network_access': True,  # Through VPN only
-            'allow_file_access': False,
-            'allow_camera': False,
-            'allow_microphone': False,
-            'allow_geolocation': False,
-            'allow_notifications': False,
-            'allow_popups': False,  # NEW REQUIREMENT
-            'allow_plugins': False
+            "allow_system_access": False,
+            "allow_network_access": True,  # Through VPN only
+            "allow_file_access": False,
+            "allow_camera": False,
+            "allow_microphone": False,
+            "allow_geolocation": False,
+            "allow_notifications": False,
+            "allow_popups": False,  # NEW REQUIREMENT
+            "allow_plugins": False,
         }
 
     def start(self):
@@ -45,7 +45,7 @@ class BrowserSandbox:
         self.logger.debug("Applying sandbox policies")
         # In production, would set actual OS-level sandbox policies
 
-    def execute_script(self, script: str, context: Dict[str, Any]) -> Any:
+    def execute_script(self, script: str, context: dict[str, Any]) -> Any:
         """
         Execute script in sandboxed context.
 
@@ -72,14 +72,14 @@ class BrowserSandbox:
         """Check if script is safe to execute"""
         # Block dangerous operations
         dangerous_patterns = [
-            'eval(',
-            'Function(',
-            'window.open(',  # NEW REQUIREMENT: Block pop-ups
-            'location.href =',  # NEW REQUIREMENT: Block redirects
-            'location.replace(',  # NEW REQUIREMENT: Block redirects
-            '__proto__',
-            'constructor',
-            'exec'
+            "eval(",
+            "Function(",
+            "window.open(",  # NEW REQUIREMENT: Block pop-ups
+            "location.href =",  # NEW REQUIREMENT: Block redirects
+            "location.replace(",  # NEW REQUIREMENT: Block redirects
+            "__proto__",
+            "constructor",
+            "exec",
         ]
 
         for pattern in dangerous_patterns:
@@ -93,6 +93,6 @@ class BrowserSandbox:
         """Check if sandbox is active"""
         return self._active
 
-    def get_policies(self) -> Dict[str, bool]:
+    def get_policies(self) -> dict[str, bool]:
         """Get sandbox policies"""
         return self._sandbox_policies.copy()

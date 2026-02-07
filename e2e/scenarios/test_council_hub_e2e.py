@@ -10,7 +10,6 @@ from __future__ import annotations
 import pytest
 
 
-
 @pytest.mark.e2e
 @pytest.mark.council_hub
 @pytest.mark.integration

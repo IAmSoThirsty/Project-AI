@@ -1,10 +1,11 @@
 """Encrypted Navigation History - All visited sites encrypted"""
 
-import logging
-from typing import List, Dict, Any
-from cryptography.fernet import Fernet
-import time
 import hashlib
+import logging
+import time
+from typing import Any
+
+from cryptography.fernet import Fernet
 
 
 class EncryptedNavigationHistory:
@@ -19,10 +20,10 @@ class EncryptedNavigationHistory:
         self._active = False
 
         # All URLs encrypted
-        self._encrypted_history: List[Dict[str, Any]] = []
+        self._encrypted_history: list[dict[str, Any]] = []
 
         # Encrypted bookmarks
-        self._encrypted_bookmarks: Dict[str, bytes] = {}
+        self._encrypted_bookmarks: dict[str, bytes] = {}
 
     def start(self):
         """Start encrypted navigation history"""
@@ -57,16 +58,16 @@ class EncryptedNavigationHistory:
 
         # Store encrypted entry
         entry = {
-            'encrypted_url': encrypted_url,
-            'encrypted_tab_id': encrypted_tab_id,
-            'timestamp': time.time(),
-            'hash': url_hash
+            "encrypted_url": encrypted_url,
+            "encrypted_tab_id": encrypted_tab_id,
+            "timestamp": time.time(),
+            "hash": url_hash,
         }
 
         self._encrypted_history.append(entry)
         self.logger.debug(f"Recorded encrypted navigation: {url_hash}")
 
-    def get_encrypted_history(self) -> List[Dict[str, Any]]:
+    def get_encrypted_history(self) -> list[dict[str, Any]]:
         """
         Get encrypted history.
         Returns encrypted data only, never plaintext.
@@ -98,7 +99,7 @@ class EncryptedNavigationHistory:
 
         self.logger.debug(f"Added encrypted bookmark: {name_hash[:16]}")
 
-    def get_encrypted_bookmarks(self) -> Dict[str, bytes]:
+    def get_encrypted_bookmarks(self) -> dict[str, bytes]:
         """Get all encrypted bookmarks"""
         return self._encrypted_bookmarks.copy()
 
@@ -107,7 +108,7 @@ class EncryptedNavigationHistory:
         self.logger.info("Clearing encrypted navigation history")
         self._encrypted_history.clear()
 
-    def search_encrypted_history(self, encrypted_query: bytes) -> List[Dict[str, Any]]:
+    def search_encrypted_history(self, encrypted_query: bytes) -> list[dict[str, Any]]:
         """
         Search through encrypted history.
         Search is performed on encrypted data.

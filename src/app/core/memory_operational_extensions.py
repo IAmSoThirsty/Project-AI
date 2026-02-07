@@ -360,7 +360,9 @@ class MemorySignalsTelemetry(SignalsTelemetry):
         """
         signal = Signal(
             signal_type=SignalType.AUDIT,
-            severity=SeverityLevel.WARNING if not access_granted else SeverityLevel.INFO,
+            severity=(
+                SeverityLevel.WARNING if not access_granted else SeverityLevel.INFO
+            ),
             payload={
                 "message": f"Cross-pillar memory access: {requester} -> {memory_type}",
                 "requester": requester,

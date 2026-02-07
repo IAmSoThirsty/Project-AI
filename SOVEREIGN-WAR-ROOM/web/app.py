@@ -4,9 +4,10 @@ SOVEREIGN WAR ROOM - Web Dashboard
 Flask web interface for viewing scenarios, results, and leaderboards.
 """
 
-from flask import Flask, render_template, jsonify, request
 import sys
 from pathlib import Path
+
+from flask import Flask, jsonify, render_template, request
 
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -72,9 +73,9 @@ def api_stats():
 if __name__ == "__main__":
     # Load all scenarios on startup
     swr.load_scenarios()
-    
+
     print("🎯 SOVEREIGN WAR ROOM Dashboard")
     print("📊 Navigate to: http://localhost:5000")
     print("⚡ Press Ctrl+C to stop\n")
-    
+
     app.run(host="0.0.0.0", port=5000, debug=True)

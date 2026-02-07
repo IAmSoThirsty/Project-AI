@@ -1,30 +1,29 @@
 """Tests for all modules."""
 
-import pytest
-from ..schemas.state_schema import StateVector
-from ..schemas.config_schema import IrreversibilityConfig, OutcomeThresholds
 from ..kernel.irreversibility_laws import IrreversibilityLaws
 from ..modules import (
     HumanForcesModule,
     InstitutionalPressureModule,
+    MetricsModule,
+    OutcomesModule,
     PerceptionWarfareModule,
     RedTeamModule,
-    MetricsModule,
     TimelineModule,
-    OutcomesModule,
 )
+from ..schemas.config_schema import IrreversibilityConfig, OutcomeThresholds
+from ..schemas.state_schema import StateVector
 
 
 class TestHumanForcesModule:
     """Test HumanForcesModule."""
-    
+
     def test_module_initialization(self):
         """Test module initialization."""
         laws = IrreversibilityLaws(IrreversibilityConfig())
         module = HumanForcesModule(laws)
         assert module.population_size == 1000
         assert module.cooperators + module.defectors == module.population_size
-    
+
     def test_cooperation_decision(self):
         """Test cooperation decision simulation."""
         laws = IrreversibilityLaws(IrreversibilityConfig())
@@ -32,7 +31,7 @@ class TestHumanForcesModule:
         state = StateVector.create_initial_state()
         cooperators, defectors = module.simulate_cooperation_decision(state)
         assert cooperators + defectors == module.population_size
-    
+
     def test_betrayal_risk_evaluation(self):
         """Test betrayal risk calculation."""
         laws = IrreversibilityLaws(IrreversibilityConfig())
@@ -46,14 +45,14 @@ class TestHumanForcesModule:
 
 class TestInstitutionalPressureModule:
     """Test InstitutionalPressureModule."""
-    
+
     def test_module_initialization(self):
         """Test module initialization."""
         laws = IrreversibilityLaws(IrreversibilityConfig())
         module = InstitutionalPressureModule(laws)
         assert module.base_capacity == 1.0
         assert module.efficiency > 0
-    
+
     def test_capacity_calculation(self):
         """Test governance capacity calculation."""
         laws = IrreversibilityLaws(IrreversibilityConfig())
@@ -61,7 +60,7 @@ class TestInstitutionalPressureModule:
         state = StateVector.create_initial_state()
         capacity = module.calculate_governance_capacity(state)
         assert 0.0 <= capacity <= 1.0
-    
+
     def test_promise_keeping(self):
         """Test promise keeping evaluation."""
         laws = IrreversibilityLaws(IrreversibilityConfig())
@@ -74,14 +73,14 @@ class TestInstitutionalPressureModule:
 
 class TestPerceptionWarfareModule:
     """Test PerceptionWarfareModule."""
-    
+
     def test_module_initialization(self):
         """Test module initialization."""
         laws = IrreversibilityLaws(IrreversibilityConfig())
         module = PerceptionWarfareModule(laws)
         assert module.reality_fragments == 1
         assert module.consensus_level == 1.0
-    
+
     def test_campaign_launch(self):
         """Test launching manipulation campaign."""
         laws = IrreversibilityLaws(IrreversibilityConfig())
@@ -94,7 +93,7 @@ class TestPerceptionWarfareModule:
         )
         assert campaign_id.startswith("campaign_")
         assert len(module.active_campaigns) == 1
-    
+
     def test_reality_fragmentation(self):
         """Test reality fragmentation calculation."""
         laws = IrreversibilityLaws(IrreversibilityConfig())
@@ -107,14 +106,14 @@ class TestPerceptionWarfareModule:
 
 class TestRedTeamModule:
     """Test RedTeamModule."""
-    
+
     def test_module_initialization(self):
         """Test module initialization."""
         laws = IrreversibilityLaws(IrreversibilityConfig())
         module = RedTeamModule(laws, black_vault_enabled=True)
         assert module.black_vault_enabled
         assert len(module.black_vault) == 0
-    
+
     def test_entropy_calculation(self):
         """Test state entropy calculation."""
         laws = IrreversibilityLaws(IrreversibilityConfig())
@@ -122,7 +121,7 @@ class TestRedTeamModule:
         state = StateVector.create_initial_state()
         entropy = module.calculate_state_entropy(state)
         assert entropy > 0
-    
+
     def test_black_vault_fingerprinting(self):
         """Test SHA-256 fingerprinting."""
         laws = IrreversibilityLaws(IrreversibilityConfig())
@@ -137,7 +136,7 @@ class TestRedTeamModule:
         )
         fingerprint = module.fingerprint_event(event)
         assert len(fingerprint) == 64  # SHA-256 hex digest length
-    
+
     def test_vulnerability_scan(self):
         """Test attack surface scanning."""
         laws = IrreversibilityLaws(IrreversibilityConfig())
@@ -150,12 +149,12 @@ class TestRedTeamModule:
 
 class TestMetricsModule:
     """Test MetricsModule."""
-    
+
     def test_module_initialization(self):
         """Test module initialization."""
         module = MetricsModule()
         assert len(module.metrics_history) == 0
-    
+
     def test_metrics_calculation(self):
         """Test calculating metrics."""
         module = MetricsModule()
@@ -170,13 +169,13 @@ class TestMetricsModule:
 
 class TestTimelineModule:
     """Test TimelineModule."""
-    
+
     def test_module_initialization(self):
         """Test module initialization."""
         module = TimelineModule()
         assert len(module.timeline) == 0
         assert module.chain_hash == ""
-    
+
     def test_event_recording(self):
         """Test recording events."""
         module = TimelineModule()
@@ -191,7 +190,7 @@ class TestTimelineModule:
         index = module.record_event(event, state, state, {})
         assert index == 0
         assert len(module.timeline) == 1
-    
+
     def test_chain_integrity(self):
         """Test chain integrity verification."""
         module = TimelineModule()
@@ -205,20 +204,20 @@ class TestTimelineModule:
                 description=f"Event {i}",
             )
             module.record_event(event, state, state, {})
-        
+
         is_valid, error = module.verify_chain_integrity()
         assert is_valid
 
 
 class TestOutcomesModule:
     """Test OutcomesModule."""
-    
+
     def test_module_initialization(self):
         """Test module initialization."""
         thresholds = OutcomeThresholds()
         module = OutcomesModule(thresholds)
         assert not module.outcome_determined
-    
+
     def test_survivor_classification(self):
         """Test survivor outcome classification."""
         thresholds = OutcomeThresholds()
@@ -229,7 +228,7 @@ class TestOutcomesModule:
         state.moral_injury.value = 0.5
         outcome = module.classify_outcome(state)
         assert outcome == "survivor"
-    
+
     def test_extinction_classification(self):
         """Test extinction outcome classification."""
         thresholds = OutcomeThresholds()
@@ -241,7 +240,7 @@ class TestOutcomesModule:
         state.moral_injury.value = 0.9
         outcome = module.classify_outcome(state)
         assert outcome == "extinction"
-    
+
     def test_outcome_probabilities(self):
         """Test outcome probability calculation."""
         thresholds = OutcomeThresholds()

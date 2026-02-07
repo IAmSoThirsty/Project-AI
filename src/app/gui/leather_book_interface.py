@@ -17,7 +17,17 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
+from app.core.platform_tiers import (
+    AuthorityLevel,
+    ComponentRole,
+    PlatformTier,
+    get_tier_registry,
+)
 from app.gui.leather_book_panels import IntroInfoPage, TronFacePage
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class LeatherBookInterface(QMainWindow):
@@ -52,6 +62,25 @@ class LeatherBookInterface(QMainWindow):
         self.main_layout.addWidget(self.page_container, 3)
 
         self._apply_leather_texture()
+
+        # Register with Tier Registry as Tier-3 User Interface
+        try:
+            tier_registry = get_tier_registry()
+            tier_registry.register_component(
+                component_id="leather_book_interface",
+                component_name="LeatherBookInterface",
+                tier=PlatformTier.TIER_3_APPLICATION,
+                authority_level=AuthorityLevel.SANDBOXED,
+                role=ComponentRole.USER_INTERFACE,
+                component_ref=self,
+                dependencies=["cognition_kernel", "council_hub"],
+                can_be_paused=True,  # Can be paused by Tier-1
+                can_be_replaced=True,  # GUI is replaceable
+            )
+            logger.info("LeatherBookInterface registered as Tier-3 User Interface")
+        except Exception as e:
+            logger.warning("Failed to register LeatherBookInterface in tier registry: %s", e)
+
         self.show()
 
     def _get_stylesheet(self) -> str:

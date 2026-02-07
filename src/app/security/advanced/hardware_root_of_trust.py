@@ -4,21 +4,23 @@ Provides TPM, Secure Enclave, and HSM support for cryptographic key storage
 and attested secure boot, protecting against OS/root compromise.
 """
 
-import logging
 import hashlib
 import hmac
+import logging
 import secrets
-from typing import Dict, Any, Optional, List
+import threading
 from abc import ABC, abstractmethod
 from enum import Enum
+from typing import Any
+
+from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-from cryptography.hazmat.backends import default_backend
-import threading
 
 
 class HardwareType(Enum):
     """Supported hardware security module types"""
+
     TPM = "tpm"
     SECURE_ENCLAVE = "secure_enclave"
     HSM = "hsm"
@@ -27,6 +29,7 @@ class HardwareType(Enum):
 
 class AttestationStatus(Enum):
     """Attestation status indicators"""
+
     VALID = "valid"
     INVALID = "invalid"
     UNKNOWN = "unknown"
@@ -47,7 +50,7 @@ class HardwareInterface(ABC):
         pass
 
     @abstractmethod
-    def retrieve_key(self, key_id: str) -> Optional[bytes]:
+    def retrieve_key(self, key_id: str) -> bytes | None:
         """Retrieve cryptographic key from hardware"""
         pass
 
@@ -67,12 +70,12 @@ class HardwareInterface(ABC):
         pass
 
     @abstractmethod
-    def seal_data(self, data: bytes, pcr_values: List[int]) -> bytes:
+    def seal_data(self, data: bytes, pcr_values: list[int]) -> bytes:
         """Seal data to specific PCR values"""
         pass
 
     @abstractmethod
-    def unseal_data(self, sealed_data: bytes) -> Optional[bytes]:
+    def unseal_data(self, sealed_data: bytes) -> bytes | None:
         """Unseal data (only if PCR values match)"""
         pass
 
@@ -86,8 +89,8 @@ class TPMInterface(HardwareInterface):
     def __init__(self):
         self.logger = logging.getLogger(__name__)
         self._initialized = False
-        self._keys: Dict[str, bytes] = {}
-        self._pcr_banks: Dict[int, bytes] = {}
+        self._keys: dict[str, bytes] = {}
+        self._pcr_banks: dict[int, bytes] = {}
         self._hardware_id = self._generate_hardware_id()
         # Generate unique salt from hardware ID instead of hard-coding
         self._salt = hashlib.sha256(f"TPM_SRK_{self._hardware_id}".encode()).digest()
@@ -124,7 +127,7 @@ class TPMInterface(HardwareInterface):
             b"BOOTLOADER_MEASUREMENT",
             b"KERNEL_MEASUREMENT",
             b"INITRD_MEASUREMENT",
-            b"USERSPACE_MEASUREMENT"
+            b"USERSPACE_MEASUREMENT",
         ]
 
         for i, measurement in enumerate(boot_measurements):
@@ -143,7 +146,7 @@ class TPMInterface(HardwareInterface):
                 self.logger.error(f"Failed to store key {key_id}: {e}")
                 return False
 
-    def retrieve_key(self, key_id: str) -> Optional[bytes]:
+    def retrieve_key(self, key_id: str) -> bytes | None:
         """Retrieve key from TPM"""
         with self._lock:
             try:
@@ -201,7 +204,7 @@ class TPMInterface(HardwareInterface):
         # In production: Read TPM endorsement key
         return hashlib.sha256(secrets.token_bytes(32)).hexdigest()
 
-    def seal_data(self, data: bytes, pcr_values: List[int]) -> bytes:
+    def seal_data(self, data: bytes, pcr_values: list[int]) -> bytes:
         """
         Seal data to specific PCR values using TPM.
         Data can only be unsealed when PCRs match.
@@ -221,7 +224,7 @@ class TPMInterface(HardwareInterface):
             self.logger.error(f"Failed to seal data: {e}")
             raise
 
-    def unseal_data(self, sealed_data: bytes) -> Optional[bytes]:
+    def unseal_data(self, sealed_data: bytes) -> bytes | None:
         """
         Unseal data sealed to PCR values.
         Only succeeds if current PCR values match sealed policy.
@@ -250,7 +253,7 @@ class TPMInterface(HardwareInterface):
             length=32,
             salt=self._salt,
             iterations=100000,
-            backend=default_backend()
+            backend=default_backend(),
         )
         key = kdf.derive(self._hardware_id.encode())
         return hmac.new(key, data, hashlib.sha256).digest() + data
@@ -266,7 +269,7 @@ class TPMInterface(HardwareInterface):
             length=32,
             salt=self._salt,
             iterations=100000,
-            backend=default_backend()
+            backend=default_backend(),
         )
         key = kdf.derive(self._hardware_id.encode())
 
@@ -275,7 +278,7 @@ class TPMInterface(HardwareInterface):
             return data
         raise ValueError("MAC verification failed")
 
-    def _create_policy_digest(self, pcr_values: List[int]) -> bytes:
+    def _create_policy_digest(self, pcr_values: list[int]) -> bytes:
         """Create policy digest from PCR values"""
         digest = hashlib.sha256()
         for pcr in pcr_values:
@@ -287,7 +290,7 @@ class TPMInterface(HardwareInterface):
         """Encrypt data with policy digest"""
         return policy_digest + data
 
-    def _decrypt_with_policy(self, sealed_data: bytes) -> Optional[bytes]:
+    def _decrypt_with_policy(self, sealed_data: bytes) -> bytes | None:
         """Decrypt data if policy matches current state"""
         sealed_data[:32]
         data = sealed_data[32:]
@@ -306,10 +309,12 @@ class SecureEnclaveInterface(HardwareInterface):
     def __init__(self):
         self.logger = logging.getLogger(__name__)
         self._initialized = False
-        self._keychain: Dict[str, bytes] = {}
+        self._keychain: dict[str, bytes] = {}
         self._enclave_id = self._generate_enclave_id()
         # Generate unique salt from enclave ID instead of hard-coding
-        self._salt = hashlib.sha256(f"SECURE_ENCLAVE_{self._enclave_id}".encode()).digest()
+        self._salt = hashlib.sha256(
+            f"SECURE_ENCLAVE_{self._enclave_id}".encode()
+        ).digest()
         self._lock = threading.Lock()
 
     def initialize(self) -> bool:
@@ -342,7 +347,7 @@ class SecureEnclaveInterface(HardwareInterface):
                 self.logger.error(f"Failed to store key: {e}")
                 return False
 
-    def retrieve_key(self, key_id: str) -> Optional[bytes]:
+    def retrieve_key(self, key_id: str) -> bytes | None:
         """Retrieve key from Secure Enclave"""
         with self._lock:
             encrypted_key = self._keychain.get(key_id)
@@ -372,11 +377,11 @@ class SecureEnclaveInterface(HardwareInterface):
         """Generate unique enclave identifier"""
         return hashlib.sha256(secrets.token_bytes(32)).hexdigest()
 
-    def seal_data(self, data: bytes, pcr_values: List[int]) -> bytes:
+    def seal_data(self, data: bytes, pcr_values: list[int]) -> bytes:
         """Seal data using Secure Enclave"""
         return self._encrypt_for_enclave(data)
 
-    def unseal_data(self, sealed_data: bytes) -> Optional[bytes]:
+    def unseal_data(self, sealed_data: bytes) -> bytes | None:
         """Unseal data using Secure Enclave"""
         return self._decrypt_from_enclave(sealed_data)
 
@@ -387,7 +392,7 @@ class SecureEnclaveInterface(HardwareInterface):
             length=32,
             salt=self._salt,
             iterations=100000,
-            backend=default_backend()
+            backend=default_backend(),
         )
         key = kdf.derive(self._enclave_id.encode())
         return hmac.new(key, data, hashlib.sha256).digest() + data
@@ -402,7 +407,7 @@ class SecureEnclaveInterface(HardwareInterface):
             length=32,
             salt=self._salt,
             iterations=100000,
-            backend=default_backend()
+            backend=default_backend(),
         )
         key = kdf.derive(self._enclave_id.encode())
 
@@ -418,11 +423,11 @@ class HSMInterface(HardwareInterface):
     Enterprise-grade hardware for key management and cryptographic operations.
     """
 
-    def __init__(self, hsm_config: Optional[Dict[str, Any]] = None):
+    def __init__(self, hsm_config: dict[str, Any] | None = None):
         self.logger = logging.getLogger(__name__)
         self.config = hsm_config or {}
         self._initialized = False
-        self._keys: Dict[str, bytes] = {}
+        self._keys: dict[str, bytes] = {}
         self._hsm_id = self._generate_hsm_id()
         # Generate unique salt from HSM ID instead of hard-coding
         self._salt = hashlib.sha256(f"HSM_MASTER_KEY_{self._hsm_id}".encode()).digest()
@@ -459,7 +464,7 @@ class HSMInterface(HardwareInterface):
                 self.logger.error(f"Failed to store key: {e}")
                 return False
 
-    def retrieve_key(self, key_id: str) -> Optional[bytes]:
+    def retrieve_key(self, key_id: str) -> bytes | None:
         """Retrieve key from HSM"""
         with self._lock:
             encrypted_key = self._keys.get(key_id)
@@ -490,11 +495,11 @@ class HSMInterface(HardwareInterface):
         """Generate HSM identifier"""
         return f"HSM-{hashlib.sha256(secrets.token_bytes(32)).hexdigest()[:16]}"
 
-    def seal_data(self, data: bytes, pcr_values: List[int]) -> bytes:
+    def seal_data(self, data: bytes, pcr_values: list[int]) -> bytes:
         """Seal data using HSM"""
         return self._hsm_encrypt(data)
 
-    def unseal_data(self, sealed_data: bytes) -> Optional[bytes]:
+    def unseal_data(self, sealed_data: bytes) -> bytes | None:
         """Unseal data using HSM"""
         return self._hsm_decrypt(sealed_data)
 
@@ -505,7 +510,7 @@ class HSMInterface(HardwareInterface):
             length=32,
             salt=self._salt,
             iterations=100000,
-            backend=default_backend()
+            backend=default_backend(),
         )
         key = kdf.derive(self._hsm_id.encode())
         return hmac.new(key, data, hashlib.sha256).digest() + data
@@ -520,7 +525,7 @@ class HSMInterface(HardwareInterface):
             length=32,
             salt=self._salt,
             iterations=100000,
-            backend=default_backend()
+            backend=default_backend(),
         )
         key = kdf.derive(self._hsm_id.encode())
 
@@ -536,11 +541,11 @@ class HardwareRootOfTrust:
     Automatically selects best available hardware security module.
     """
 
-    def __init__(self, preferred_type: Optional[HardwareType] = None):
+    def __init__(self, preferred_type: HardwareType | None = None):
         self.logger = logging.getLogger(__name__)
         self.preferred_type = preferred_type
-        self._interface: Optional[HardwareInterface] = None
-        self._active_type: Optional[HardwareType] = None
+        self._interface: HardwareInterface | None = None
+        self._active_type: HardwareType | None = None
         self._kill_switch_callback = None
 
     def initialize(self) -> bool:
@@ -553,8 +558,12 @@ class HardwareRootOfTrust:
                 return True
 
         # Try in order of security: HSM > TPM > Secure Enclave > Software
-        for hw_type in [HardwareType.HSM, HardwareType.TPM,
-                        HardwareType.SECURE_ENCLAVE, HardwareType.SOFTWARE_FALLBACK]:
+        for hw_type in [
+            HardwareType.HSM,
+            HardwareType.TPM,
+            HardwareType.SECURE_ENCLAVE,
+            HardwareType.SOFTWARE_FALLBACK,
+        ]:
             if self._try_initialize_type(hw_type):
                 return True
 
@@ -590,7 +599,7 @@ class HardwareRootOfTrust:
             return False
         return self._interface.store_key("master_encryption_key", key_data)
 
-    def retrieve_master_key(self) -> Optional[bytes]:
+    def retrieve_master_key(self) -> bytes | None:
         """Retrieve system master encryption key"""
         if not self._interface:
             return None
@@ -640,20 +649,16 @@ class HardwareRootOfTrust:
         """Register callback to trigger kill switch on compromise"""
         self._kill_switch_callback = callback
 
-    def get_hardware_info(self) -> Dict[str, Any]:
+    def get_hardware_info(self) -> dict[str, Any]:
         """Get information about active hardware security module"""
         if not self._interface:
-            return {
-                'active': False,
-                'type': None,
-                'hardware_id': None
-            }
+            return {"active": False, "type": None, "hardware_id": None}
 
         return {
-            'active': True,
-            'type': self._active_type.value if self._active_type else None,
-            'hardware_id': self._interface.get_hardware_id(),
-            'attestation_status': self._interface.attest_boot().value
+            "active": True,
+            "type": self._active_type.value if self._active_type else None,
+            "hardware_id": self._interface.get_hardware_id(),
+            "attestation_status": self._interface.attest_boot().value,
         }
 
     def wipe_all_keys(self) -> bool:

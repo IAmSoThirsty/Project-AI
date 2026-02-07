@@ -299,10 +299,15 @@ class SimulationRegistry:
             enabled: If True, enforce read-only access
         """
         cls._projection_mode = enabled
-        logger.info("SimulationRegistry: Projection mode %s", "ENABLED" if enabled else "DISABLED")
+        logger.info(
+            "SimulationRegistry: Projection mode %s",
+            "ENABLED" if enabled else "DISABLED",
+        )
 
     @classmethod
-    def register(cls, name: str, system: SimulationSystem, from_monolith: bool = False) -> None:
+    def register(
+        cls, name: str, system: SimulationSystem, from_monolith: bool = False
+    ) -> None:
         """
         Register a simulation system.
 
@@ -331,9 +336,7 @@ class SimulationRegistry:
                 )
 
                 if not allowed:
-                    logger.error(
-                        "Registration of %s DENIED: %s", name, reason
-                    )
+                    logger.error("Registration of %s DENIED: %s", name, reason)
                     raise PermissionError(f"Registry registration denied: {reason}")
 
         if name in cls._systems:
@@ -342,7 +345,9 @@ class SimulationRegistry:
         logger.info(f"Registered simulation system: {name}")
 
     @classmethod
-    def get(cls, name: str, mutable: bool = False, from_monolith: bool = False) -> SimulationSystem | None:
+    def get(
+        cls, name: str, mutable: bool = False, from_monolith: bool = False
+    ) -> SimulationSystem | None:
         """
         Retrieve a registered simulation system.
 
@@ -382,9 +387,7 @@ class SimulationRegistry:
                 )
 
                 if not allowed:
-                    logger.warning(
-                        "Mutable access to %s DENIED: %s", name, reason
-                    )
+                    logger.warning("Mutable access to %s DENIED: %s", name, reason)
                     # Return None to prevent mutable access
                     return None
 
@@ -433,9 +436,7 @@ class SimulationRegistry:
                 )
 
                 if not allowed:
-                    logger.error(
-                        "Unregistration of %s DENIED: %s", name, reason
-                    )
+                    logger.error("Unregistration of %s DENIED: %s", name, reason)
                     return False
 
         if name in cls._systems:

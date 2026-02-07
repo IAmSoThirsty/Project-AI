@@ -14,6 +14,7 @@
 ![Production-Grade](https://img.shields.io/badge/status-production--grade-brightgreen)
 ![Monolithic](https://img.shields.io/badge/arch-monolithic-blue)
 ![Zero-Placeholder](https://img.shields.io/badge/code-zero--placeholder-critical)
+![Three-Tier Platform](https://img.shields.io/badge/platform-three--tier%20✅%20enforced-success)
 ![Agent-Driven](https://img.shields.io/badge/feature-agent--workforce-orange)
 ![Sovereign](https://img.shields.io/badge/governance-sovereign-red)
 ![100% Determinism](https://img.shields.io/badge/EED--ECFD-100%25-yellow)
@@ -756,6 +757,38 @@ Project‑AI is a monolithic, agent-driven, security/native, config-governed AI 
 ---
 
 ## System Architecture
+
+### Three-Tier Platform (✅ Fully Integrated & Enforced - Feb 2026)
+
+Project-AI implements a formal three-tier platform architecture with strict authority flow enforcement:
+
+**Tier 1 - Governance / Enforcement Platform (SOVEREIGN)**
+- CognitionKernel (Trust Root)
+- GovernanceService (Policy Enforcement)
+- Zero dependencies on lower tiers
+- Cannot be paused or overridden
+
+**Tier 2 - Infrastructure Control Platform (CONSTRAINED)**
+- ExecutionService (Execution Infrastructure)
+- GlobalWatchTower (Security Command Center)
+- MemoryEngine (Multi-Layered Memory System)
+- Subordinate to Tier-1 governance
+- Can be paused/rolled back by Tier-1
+
+**Tier 3 - Application / Runtime Platform (SANDBOXED)**
+- CouncilHub (Agent Orchestration)
+- 18+ Specialized Agents
+- GUI Dashboards (Replaceable)
+- No enforcement authority
+- Fully swappable without risk
+
+**Authority Flow Enforcement:**
+- ✅ Authority flows downward only (T1 → T2 → T3)
+- ✅ Capability flows upward only (T3 → T2 → T1)
+- ✅ Infrastructure decisions validated by governance
+- ✅ Real-time health monitoring and violation detection
+
+For complete details, see [Three-Tier Integration Guide](docs/TIER2_TIER3_INTEGRATION.md).
 
 ### Monolithic Integration
 

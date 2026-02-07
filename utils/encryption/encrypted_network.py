@@ -1,7 +1,8 @@
 """Encrypted Network Traffic Handler"""
 
 import logging
-from typing import Dict, Any
+from typing import Any
+
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives.asymmetric import rsa
 
@@ -34,7 +35,7 @@ class EncryptedNetworkHandler:
         self.logger.info("Stopping Encrypted Network Handler")
         self._active = False
 
-    def encrypt_request(self, request: Dict[str, Any]) -> bytes:
+    def encrypt_request(self, request: dict[str, Any]) -> bytes:
         """
         Encrypt outgoing network request.
         Request is encrypted with multiple layers.
@@ -60,7 +61,7 @@ class EncryptedNetworkHandler:
         self.logger.debug(f"Encrypted outgoing request: {len(encrypted_layer1)} bytes")
         return encrypted_layer1
 
-    def decrypt_response(self, encrypted_response: bytes) -> Dict[str, Any]:
+    def decrypt_response(self, encrypted_response: bytes) -> dict[str, Any]:
         """
         Decrypt incoming network response.
 
@@ -92,7 +93,7 @@ class EncryptedNetworkHandler:
         """
         return self._cipher.encrypt(hostname.encode())
 
-    def encrypt_packet(self, packet: Dict[str, Any]) -> bytes:
+    def encrypt_packet(self, packet: dict[str, Any]) -> bytes:
         """
         Encrypt individual network packet.
         Every packet is encrypted.
@@ -100,7 +101,7 @@ class EncryptedNetworkHandler:
         packet_bytes = str(packet).encode()
         return self._cipher.encrypt(packet_bytes)
 
-    def decrypt_packet(self, encrypted_packet: bytes) -> Dict[str, Any]:
+    def decrypt_packet(self, encrypted_packet: bytes) -> dict[str, Any]:
         """Decrypt network packet"""
         try:
             self._cipher.decrypt(encrypted_packet)

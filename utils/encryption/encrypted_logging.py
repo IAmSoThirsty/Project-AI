@@ -1,10 +1,10 @@
 """Encrypted Logging System - All logs encrypted"""
 
 import logging
-from typing import Optional
-from cryptography.fernet import Fernet
-import time
 import os
+import time
+
+from cryptography.fernet import Fernet
 
 
 class EncryptedLogger:
@@ -13,7 +13,7 @@ class EncryptedLogger:
     All logs are encrypted before writing to disk or memory.
     """
 
-    def __init__(self, cipher: Fernet, log_file: Optional[str] = None):
+    def __init__(self, cipher: Fernet, log_file: str | None = None):
         self._cipher = cipher
         self._log_file = log_file
         self._encrypted_logs = []

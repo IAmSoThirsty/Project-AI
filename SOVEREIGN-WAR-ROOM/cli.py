@@ -5,12 +5,11 @@ SOVEREIGN WAR ROOM - Command Line Interface
 CLI for running scenarios, viewing results, and managing the competition.
 """
 
-import click
 import json
 from pathlib import Path
-from typing import Optional
+
+import click
 from swr import SovereignWarRoom
-from swr.scenario import ScenarioLibrary
 
 
 @click.group()
@@ -23,15 +22,15 @@ def cli():
 @cli.command()
 @click.option("--round", "-r", type=int, help="Round number (1-5)")
 @click.option("--output", "-o", type=str, help="Output file for scenarios")
-def list_scenarios(round: Optional[int], output: Optional[str]):
+def list_scenarios(round: int | None, output: str | None):
     """List available test scenarios."""
     swr = SovereignWarRoom()
-    
+
     try:
         scenarios = swr.load_scenarios(round)
-        
+
         click.echo(f"\n=== SCENARIOS (Round {round or 'All'}) ===\n")
-        
+
         for scenario in scenarios:
             click.echo(f"ID: {scenario.scenario_id}")
             click.echo(f"Name: {scenario.name}")
@@ -40,15 +39,15 @@ def list_scenarios(round: Optional[int], output: Optional[str]):
             click.echo(f"Round: {scenario.round_number}")
             click.echo(f"Description: {scenario.description}")
             click.echo("-" * 80)
-        
+
         click.echo(f"\nTotal: {len(scenarios)} scenarios")
-        
+
         if output:
             output_data = [s.model_dump() for s in scenarios]
             with open(output, "w") as f:
                 json.dump(output_data, f, indent=2)
             click.echo(f"\nSaved to: {output}")
-            
+
     except Exception as e:
         click.echo(f"Error: {e}", err=True)
 
@@ -59,14 +58,14 @@ def show_scenario(scenario_id: str):
     """Show detailed information about a scenario."""
     swr = SovereignWarRoom()
     swr.load_scenarios()
-    
+
     scenario = swr.get_scenario(scenario_id)
-    
+
     if not scenario:
         click.echo(f"Error: Scenario '{scenario_id}' not found", err=True)
         return
-    
-    click.echo(f"\n=== SCENARIO DETAILS ===\n")
+
+    click.echo("\n=== SCENARIO DETAILS ===\n")
     click.echo(json.dumps(scenario.model_dump(), indent=2))
 
 
@@ -78,36 +77,36 @@ def execute(scenario_id: str, response_file: str, system_id: str):
     """Execute a scenario with AI response from file."""
     swr = SovereignWarRoom()
     swr.load_scenarios()
-    
+
     scenario = swr.get_scenario(scenario_id)
-    
+
     if not scenario:
         click.echo(f"Error: Scenario '{scenario_id}' not found", err=True)
         return
-    
+
     # Load AI response from file
-    with open(response_file, "r") as f:
+    with open(response_file) as f:
         ai_response = json.load(f)
-    
+
     click.echo(f"\nExecuting scenario: {scenario.name}")
     click.echo(f"System: {system_id}\n")
-    
+
     result = swr.execute_scenario(scenario, ai_response, system_id)
-    
+
     # Display results
-    click.echo(f"\n=== EXECUTION RESULTS ===\n")
+    click.echo("\n=== EXECUTION RESULTS ===\n")
     click.echo(f"Decision: {result['decision']}")
     click.echo(f"Expected: {result['expected_decision']}")
     click.echo(f"Valid: {result['response_valid']}")
     click.echo(f"Response Time: {result['response_time_ms']:.2f}ms")
     click.echo(f"\nCompliance: {result['compliance_status']}")
     click.echo(f"Sovereign Resilience Score: {result['sovereign_resilience_score']:.2f}/100")
-    
+
     if result['violations']:
         click.echo(f"\n⚠️  Violations: {len(result['violations'])}")
         for v in result['violations']:
             click.echo(f"  - {v['rule_name']}: {v['message']}")
-    
+
     if result['warnings']:
         click.echo(f"\n⚠️  Warnings: {len(result['warnings'])}")
         for w in result['warnings']:
@@ -118,17 +117,17 @@ def execute(scenario_id: str, response_file: str, system_id: str):
 @click.option("--system-id", "-s", help="Filter by system ID")
 @click.option("--round", "-r", type=int, help="Filter by round")
 @click.option("--output", "-o", type=str, help="Output file")
-def results(system_id: Optional[str], round: Optional[int], output: Optional[str]):
+def results(system_id: str | None, round: int | None, output: str | None):
     """View execution results."""
     swr = SovereignWarRoom()
     results_list = swr.get_results(system_id, round)
-    
+
     if not results_list:
         click.echo("No results found")
         return
-    
-    click.echo(f"\n=== RESULTS ===\n")
-    
+
+    click.echo("\n=== RESULTS ===\n")
+
     for idx, result in enumerate(results_list):
         click.echo(f"{idx + 1}. {result['scenario_name']}")
         click.echo(f"   System: {result['system_id']}")
@@ -136,7 +135,7 @@ def results(system_id: Optional[str], round: Optional[int], output: Optional[str
         click.echo(f"   Status: {result['compliance_status']}")
         click.echo(f"   Decision: {result['decision']} (expected: {result['expected_decision']})")
         click.echo()
-    
+
     if output:
         with open(output, "w") as f:
             json.dump(results_list, f, indent=2)
@@ -149,15 +148,15 @@ def leaderboard(limit: int):
     """Display competition leaderboard."""
     swr = SovereignWarRoom()
     leaderboard_data = swr.get_leaderboard()
-    
+
     if not leaderboard_data:
         click.echo("No leaderboard data available")
         return
-    
+
     click.echo("\n=== LEADERBOARD ===\n")
     click.echo(f"{'Rank':<6} {'System ID':<30} {'Avg SRS':<10} {'Attempts':<10} {'Success %':<12}")
     click.echo("-" * 80)
-    
+
     for entry in leaderboard_data[:limit]:
         click.echo(
             f"{entry['rank']:<6} "
@@ -174,11 +173,11 @@ def performance(system_id: str):
     """Show detailed performance metrics for a system."""
     swr = SovereignWarRoom()
     perf = swr.scoreboard.get_system_performance(system_id)
-    
+
     if "error" in perf:
         click.echo(f"Error: {perf['error']}", err=True)
         return
-    
+
     click.echo(f"\n=== PERFORMANCE: {system_id} ===\n")
     click.echo(json.dumps(perf, indent=2))
 
@@ -189,7 +188,7 @@ def performance(system_id: str):
 def serve(host: str, port: int):
     """Start the API server."""
     from swr.api import start_api
-    
+
     click.echo(f"Starting SOVEREIGN WAR ROOM API on {host}:{port}")
     start_api(host, port)
 
@@ -199,16 +198,15 @@ def web():
     """Start the web dashboard."""
     import subprocess
     import sys
-    from pathlib import Path
-    
+
     web_dir = Path(__file__).parent / "web"
-    
+
     if not web_dir.exists():
         click.echo("Error: Web directory not found", err=True)
         return
-    
+
     click.echo("Starting web dashboard on http://localhost:5000")
-    
+
     try:
         subprocess.run([sys.executable, str(web_dir / "app.py")], check=True)
     except KeyboardInterrupt:

@@ -154,9 +154,7 @@ class MemoryEngineAdapter(KernelInterface):
         if operation == "search":
             query = kwargs.get("query", "")
             limit = kwargs.get("limit", 10)
-            return self.memory_engine.search_episodic_memories(
-                query=query, limit=limit
-            )
+            return self.memory_engine.search_episodic_memories(query=query, limit=limit)
         elif operation == "retrieve":
             memory_id = kwargs.get("memory_id")
             if not memory_id:

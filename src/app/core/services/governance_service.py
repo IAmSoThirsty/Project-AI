@@ -13,6 +13,11 @@ SEPARATION OF POWERS:
 - CODEX DEUS MAXIMUS: Logic & Consistency - rational coherence, contradiction detection
 
 The service maintains the principle: "Governance observes, never executes"
+
+THREE-TIER PLATFORM:
+- Tier 1 (Governance): This is a Tier-1 Policy Enforcer
+- Provides sovereign authority for governance decisions
+- Cannot be overridden by lower tiers
 """
 
 import logging
@@ -21,6 +26,13 @@ from datetime import UTC, datetime
 from enum import Enum
 from typing import Any
 
+from app.core.platform_tiers import (
+    AuthorityLevel,
+    ComponentRole,
+    PlatformTier,
+    get_tier_registry,
+)
+
 logger = logging.getLogger(__name__)
 
 
@@ -28,7 +40,9 @@ class MutationIntent(Enum):
     """Intent classification for mutations to identity/memory."""
 
     CORE = "core"  # genesis, law_hierarchy, core_values - requires full consensus
-    STANDARD = "standard"  # personality_weights, preferences - requires standard consensus
+    STANDARD = (
+        "standard"  # personality_weights, preferences - requires standard consensus
+    )
     ROUTINE = "routine"  # regular operations - allowed
 
 
@@ -96,6 +110,26 @@ class GovernanceService:
         self.decision_log: list[Decision] = []
         self.approval_count = 0
         self.block_count = 0
+
+        # Register in Tier Registry as Tier-1 Policy Enforcer
+        try:
+            tier_registry = get_tier_registry()
+            tier_registry.register_component(
+                component_id="governance_service",
+                component_name="GovernanceService",
+                tier=PlatformTier.TIER_1_GOVERNANCE,
+                authority_level=AuthorityLevel.SOVEREIGN,
+                role=ComponentRole.POLICY_ENFORCER,
+                component_ref=self,
+                dependencies=[],  # Tier 1 has NO dependencies on Tier 2/3
+                can_be_paused=False,  # Governance cannot be paused
+                can_be_replaced=False,  # Governance is irreplaceable
+            )
+            logger.info("GovernanceService registered as Tier-1 Policy Enforcer")
+        except Exception as e:
+            logger.warning(
+                "Failed to register GovernanceService in tier registry: %s", e
+            )
 
         logger.info("GovernanceService initialized")
         logger.info("  Triumvirate: %s", triumvirate is not None)

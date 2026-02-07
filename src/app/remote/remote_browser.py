@@ -3,8 +3,9 @@ Remote Browser - Connect to browser remotely with God tier encryption
 """
 
 import logging
-from typing import Dict, Any
 import time
+from typing import Any
+
 from cryptography.fernet import Fernet
 
 
@@ -20,7 +21,7 @@ class RemoteBrowser:
     - No logging of remote sessions
     """
 
-    def __init__(self, config: Dict[str, Any], god_tier_encryption):
+    def __init__(self, config: dict[str, Any], god_tier_encryption):
         self.config = config
         self.logger = logging.getLogger(__name__)
         self.god_tier_encryption = god_tier_encryption
@@ -33,7 +34,7 @@ class RemoteBrowser:
         self.port = config.get("remote_port", 9000)
 
         # Active sessions (encrypted)
-        self._sessions: Dict[str, Dict[str, Any]] = {}
+        self._sessions: dict[str, dict[str, Any]] = {}
 
         self._active = False
         self._server_socket = None
@@ -57,7 +58,7 @@ class RemoteBrowser:
 
         self._active = False
 
-    def create_session(self, client_id: str) -> Dict[str, Any]:
+    def create_session(self, client_id: str) -> dict[str, Any]:
         """
         Create new remote browser session.
 
@@ -100,7 +101,7 @@ class RemoteBrowser:
             "encryption_layers": 7,
         }
 
-    def send_command(self, session_id: str, command: str) -> Dict[str, Any]:
+    def send_command(self, session_id: str, command: str) -> dict[str, Any]:
         """
         Send command to remote browser (encrypted).
 
@@ -132,11 +133,11 @@ class RemoteBrowser:
             del self._sessions[session_id]
             self.logger.info(f"Remote browser session disconnected: {session_id}")
 
-    def get_sessions(self) -> Dict[str, Dict[str, Any]]:
+    def get_sessions(self) -> dict[str, dict[str, Any]]:
         """Get all active sessions"""
         return self._sessions.copy()
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get remote browser status"""
         return {
             "active": self._active,

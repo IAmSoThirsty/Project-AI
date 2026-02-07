@@ -266,7 +266,8 @@ class SecureCommunicationsKernel(
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
-        cursor.execute("""
+        cursor.execute(
+            """
             CREATE TABLE IF NOT EXISTS messages (
                 message_id TEXT PRIMARY KEY,
                 sender_id TEXT,
@@ -280,9 +281,11 @@ class SecureCommunicationsKernel(
                 retry_count INTEGER DEFAULT 0,
                 metadata TEXT
             )
-        """)
+        """
+        )
 
-        cursor.execute("""
+        cursor.execute(
+            """
             CREATE TABLE IF NOT EXISTS routing_table (
                 destination_id TEXT PRIMARY KEY,
                 next_hop_id TEXT,
@@ -292,15 +295,18 @@ class SecureCommunicationsKernel(
                 last_updated REAL,
                 transport_type TEXT
             )
-        """)
+        """
+        )
 
-        cursor.execute("""
+        cursor.execute(
+            """
             CREATE TABLE IF NOT EXISTS peer_keys (
                 node_id TEXT PRIMARY KEY,
                 public_key BLOB,
                 last_seen REAL
             )
-        """)
+        """
+        )
 
         conn.commit()
         conn.close()

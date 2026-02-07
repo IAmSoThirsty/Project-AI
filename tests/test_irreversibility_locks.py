@@ -8,24 +8,25 @@ Tests the formalization of irreversibility as enforced physics:
 - Lowered governance ceilings
 """
 
-import pytest
 import tempfile
 from datetime import datetime, timedelta
 
-from app.core.hydra_50_engine import (
-    Hydra50Engine,
-    ScenarioStatus,
-    EscalationLevel,
-    VariableConstraint,
-    DisabledRecoveryEvent,
-    GovernanceCeiling,
-    IrreversibilityLock,
-)
+import pytest
 
+from app.core.hydra_50_engine import (
+    DisabledRecoveryEvent,
+    EscalationLevel,
+    GovernanceCeiling,
+    Hydra50Engine,
+    IrreversibilityLock,
+    ScenarioStatus,
+    VariableConstraint,
+)
 
 # ============================================================================
 # FIXTURES
 # ============================================================================
+
 
 @pytest.fixture
 def temp_data_dir():
@@ -61,6 +62,7 @@ def active_scenario(engine):
 # ============================================================================
 # VARIABLE CONSTRAINT TESTS
 # ============================================================================
+
 
 class TestVariableConstraints:
     """Test variable constraint enforcement"""
@@ -171,6 +173,7 @@ class TestVariableConstraints:
 # DISABLED RECOVERY EVENT TESTS
 # ============================================================================
 
+
 class TestDisabledRecoveryEvents:
     """Test permanently disabled recovery events"""
 
@@ -207,6 +210,7 @@ class TestDisabledRecoveryEvents:
 # ============================================================================
 # GOVERNANCE CEILING TESTS
 # ============================================================================
+
 
 class TestGovernanceCeilings:
     """Test lowered governance legitimacy ceilings"""
@@ -261,6 +265,7 @@ class TestGovernanceCeilings:
 # IRREVERSIBILITY LOCK TESTS
 # ============================================================================
 
+
 class TestIrreversibilityLock:
     """Test complete irreversibility lock"""
 
@@ -276,7 +281,7 @@ class TestIrreversibilityLock:
         lock = engine.irreversibility_detector.create_state_lock(
             scenario=active_scenario,
             irreversibility_score=assessment["score"],
-            triggered_collapses=assessment.get("triggered_collapses", [])
+            triggered_collapses=assessment.get("triggered_collapses", []),
         )
 
         assert lock is not None
@@ -296,7 +301,7 @@ class TestIrreversibilityLock:
         lock = engine.irreversibility_detector.create_state_lock(
             scenario=active_scenario,
             irreversibility_score=assessment["score"],
-            triggered_collapses=assessment.get("triggered_collapses", [])
+            triggered_collapses=assessment.get("triggered_collapses", []),
         )
 
         assert lock in active_scenario.active_locks
@@ -311,7 +316,7 @@ class TestIrreversibilityLock:
         lock = engine.irreversibility_detector.create_state_lock(
             scenario=active_scenario,
             irreversibility_score=assessment["score"],
-            triggered_collapses=assessment.get("triggered_collapses", [])
+            triggered_collapses=assessment.get("triggered_collapses", []),
         )
 
         data = lock.to_dict()
@@ -325,6 +330,7 @@ class TestIrreversibilityLock:
 # ============================================================================
 # METRIC UPDATE ENFORCEMENT TESTS
 # ============================================================================
+
 
 class TestMetricUpdateEnforcement:
     """Test that metric updates are blocked by constraints"""
@@ -394,6 +400,7 @@ class TestMetricUpdateEnforcement:
 # RECOVERY EVENT ENFORCEMENT TESTS
 # ============================================================================
 
+
 class TestRecoveryEventEnforcement:
     """Test that recovery events are blocked when disabled"""
 
@@ -455,7 +462,7 @@ class TestRecoveryEventEnforcement:
         result = engine.attempt_recovery_action(
             scenario_id=active_scenario.scenario_id,
             recovery_action="monetary_policy_intervention",
-            user_id="test_user"
+            user_id="test_user",
         )
 
         assert result["success"] is False
@@ -465,6 +472,7 @@ class TestRecoveryEventEnforcement:
 # ============================================================================
 # GOVERNANCE CEILING ENFORCEMENT TESTS
 # ============================================================================
+
 
 class TestGovernanceCeilingEnforcement:
     """Test governance ceiling retrieval and enforcement"""
@@ -545,6 +553,7 @@ class TestGovernanceCeilingEnforcement:
 # ENGINE INTEGRATION TESTS
 # ============================================================================
 
+
 class TestEngineIntegration:
     """Test end-to-end engine integration with locks"""
 
@@ -561,7 +570,9 @@ class TestEngineIntegration:
         # Check if lock was created
         if "S01" in result["irreversible_scenarios"]:
             assert len(result["new_state_locks"]) > 0
-            assert any(lock["scenario_id"] == "S01" for lock in result["new_state_locks"])
+            assert any(
+                lock["scenario_id"] == "S01" for lock in result["new_state_locks"]
+            )
 
     def test_dashboard_shows_lock_count(self, engine, active_scenario):
         """Test dashboard includes lock information"""
@@ -628,6 +639,7 @@ class TestEngineIntegration:
 # CATEGORY-SPECIFIC CONSTRAINT TESTS
 # ============================================================================
 
+
 class TestCategorySpecificConstraints:
     """Test that different scenario categories generate appropriate constraints"""
 
@@ -643,7 +655,7 @@ class TestCategorySpecificConstraints:
         lock = engine.irreversibility_detector.create_state_lock(
             scenario=scenario,
             irreversibility_score=0.9,
-            triggered_collapses=["epistemic_collapse", "trust_collapse"]
+            triggered_collapses=["epistemic_collapse", "trust_collapse"],
         )
 
         # Should have verification and trust constraints
@@ -662,7 +674,7 @@ class TestCategorySpecificConstraints:
         lock = engine.irreversibility_detector.create_state_lock(
             scenario=scenario,
             irreversibility_score=0.9,
-            triggered_collapses=["currency_collapse", "liquidity_crisis"]
+            triggered_collapses=["currency_collapse", "liquidity_crisis"],
         )
 
         # Should have economic constraints
@@ -684,7 +696,7 @@ class TestCategorySpecificConstraints:
         lock = engine.irreversibility_detector.create_state_lock(
             scenario=scenario,
             irreversibility_score=0.9,
-            triggered_collapses=["cascade_failure", "grid_collapse"]
+            triggered_collapses=["cascade_failure", "grid_collapse"],
         )
 
         # Should have infrastructure constraint
@@ -703,12 +715,14 @@ class TestCategorySpecificConstraints:
         lock = engine.irreversibility_detector.create_state_lock(
             scenario=scenario,
             irreversibility_score=0.9,
-            triggered_collapses=["ecosystem_collapse", "species_extinction"]
+            triggered_collapses=["ecosystem_collapse", "species_extinction"],
         )
 
         # Should have ecological constraints
         var_names = [c.variable_name for c in lock.variable_constraints]
-        assert "ecosystem_health" in var_names or "resource_regeneration_rate" in var_names
+        assert (
+            "ecosystem_health" in var_names or "resource_regeneration_rate" in var_names
+        )
 
     def test_societal_constraints(self, engine):
         """Test societal scenarios get appropriate constraints and ceilings"""
@@ -721,7 +735,7 @@ class TestCategorySpecificConstraints:
         lock = engine.irreversibility_detector.create_state_lock(
             scenario=scenario,
             irreversibility_score=0.9,
-            triggered_collapses=["legitimacy_collapse", "social_fracture"]
+            triggered_collapses=["legitimacy_collapse", "social_fracture"],
         )
 
         # Should have social cohesion constraint

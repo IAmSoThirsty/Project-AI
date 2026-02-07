@@ -26,6 +26,12 @@ from app.agents.ux_telemetry import UxTelemetryAgent
 from app.core.ai_systems import AIPersona, MemoryExpansionSystem
 from app.core.cognition_kernel import CognitionKernel
 from app.core.continuous_learning import ContinuousLearningEngine
+from app.core.platform_tiers import (
+    AuthorityLevel,
+    ComponentRole,
+    PlatformTier,
+    get_tier_registry,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +47,12 @@ class CouncilHub:
 
     CRITICAL: All agent operations are routed through CognitionKernel.
     No agent may execute directly - kernel.route() is the only execution path.
+
+    THREE-TIER PLATFORM:
+    - Tier 3 (Application): This is a Tier-3 Runtime Service
+    - Sandboxed and subordinate to governance
+    - Agents have no enforcement authority
+    - Can be replaced without threatening Tier 1/2
 
     This hub is intentionally conservative: enforcement actions are local and
     non-destructive (deactivate agent and store audit record).
@@ -75,6 +87,24 @@ class CouncilHub:
                 "CouncilHub initialized without CognitionKernel. "
                 "Agent operations will not be governed (NOT RECOMMENDED)."
             )
+
+        # Register CouncilHub in Tier Registry as Tier-3 Runtime Service
+        try:
+            tier_registry = get_tier_registry()
+            tier_registry.register_component(
+                component_id="council_hub",
+                component_name="CouncilHub",
+                tier=PlatformTier.TIER_3_APPLICATION,
+                authority_level=AuthorityLevel.SANDBOXED,
+                role=ComponentRole.RUNTIME_SERVICE,
+                component_ref=self,
+                dependencies=["cognition_kernel"],  # Depends on kernel for routing
+                can_be_paused=True,  # Can be paused by Tier-1
+                can_be_replaced=True,  # Replaceable without threatening core
+            )
+            logger.info("CouncilHub registered as Tier-3 Runtime Service")
+        except Exception as e:
+            logger.warning("Failed to register CouncilHub in tier registry: %s", e)
 
         # register this instance as the default singleton for convenience
         global _default_hub
@@ -140,9 +170,32 @@ class CouncilHub:
             )
 
     def register_agent(self, agent_id: str, agent_obj: Any) -> None:
-        """Register a smaller agent under the Council."""
+        """Register a smaller agent under the Council.
+
+        All agents are registered as Tier-3 sandboxed components.
+        """
         with self._lock:
             self._agents[agent_id] = {"obj": agent_obj, "active": True}
+
+            # Register agent in Tier Registry as Tier-3 Runtime Service
+            try:
+                tier_registry = get_tier_registry()
+                tier_registry.register_component(
+                    component_id=f"agent_{agent_id}",
+                    component_name=f"Agent: {agent_id}",
+                    tier=PlatformTier.TIER_3_APPLICATION,
+                    authority_level=AuthorityLevel.SANDBOXED,
+                    role=ComponentRole.RUNTIME_SERVICE,
+                    component_ref=agent_obj,
+                    dependencies=["cognition_kernel", "council_hub"],
+                    can_be_paused=True,
+                    can_be_replaced=True,  # All agents are replaceable
+                )
+            except Exception as e:
+                logger.warning(
+                    "Failed to register agent %s in tier registry: %s", agent_id, e
+                )
+
             logger.info("Registered agent %s", agent_id)
 
     def unregister_agent(self, agent_id: str) -> None:

@@ -3,7 +3,7 @@ Context Manager - Manages AI context with encryption
 """
 
 import logging
-from typing import List, Dict, Any
+from typing import Any
 
 
 class ContextManager:
@@ -13,15 +13,15 @@ class ContextManager:
         self.logger = logging.getLogger(__name__)
         self.god_tier_encryption = god_tier_encryption
         self.max_size = max_size
-        self._context: List[Dict[str, Any]] = []
+        self._context: list[dict[str, Any]] = []
 
-    def add(self, entry: Dict[str, Any]):
+    def add(self, entry: dict[str, Any]):
         """Add entry to context (encrypted)"""
         self._context.append(entry)
         if len(self._context) > self.max_size:
             self._context.pop(0)
 
-    def get(self) -> List[Dict[str, Any]]:
+    def get(self) -> list[dict[str, Any]]:
         """Get context"""
         return self._context.copy()
 

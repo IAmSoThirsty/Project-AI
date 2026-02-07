@@ -204,9 +204,7 @@ class TestSovereignRuntime:
             "environment": "production",
         }
 
-        binding = sovereign.create_policy_state_binding(
-            policy_state, execution_context
-        )
+        binding = sovereign.create_policy_state_binding(policy_state, execution_context)
 
         assert "policy_hash" in binding
         assert "context_hash" in binding
@@ -228,9 +226,7 @@ class TestSovereignRuntime:
         }
 
         # Create binding
-        binding = sovereign.create_policy_state_binding(
-            policy_state, execution_context
-        )
+        binding = sovereign.create_policy_state_binding(policy_state, execution_context)
 
         # Verify binding
         is_valid = sovereign.verify_policy_state_binding(
@@ -250,9 +246,7 @@ class TestSovereignRuntime:
         }
 
         # Create binding
-        binding = sovereign.create_policy_state_binding(
-            policy_state, execution_context
-        )
+        binding = sovereign.create_policy_state_binding(policy_state, execution_context)
 
         # Change policy state
         policy_state["stage_allowed"] = False
@@ -275,9 +269,7 @@ class TestSovereignRuntime:
         }
 
         # Create binding
-        binding = sovereign.create_policy_state_binding(
-            policy_state, execution_context
-        )
+        binding = sovereign.create_policy_state_binding(policy_state, execution_context)
 
         # Change context
         execution_context["environment"] = "staging"

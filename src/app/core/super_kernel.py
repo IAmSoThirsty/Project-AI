@@ -273,7 +273,9 @@ class SuperKernel:
             if not governance_decision.get("approved", True):
                 # Blocked by governance
                 self.blocked_count += 1
-                record.error = governance_decision.get("reason", "Blocked by governance")
+                record.error = governance_decision.get(
+                    "reason", "Blocked by governance"
+                )
 
                 logger.warning(
                     "[%s] Blocked by governance: %s",
@@ -400,7 +402,9 @@ class SuperKernel:
 
                 return {
                     "approved": triumvirate_result.get("success", True),
-                    "reason": triumvirate_result.get("output", "Triumvirate evaluation"),
+                    "reason": triumvirate_result.get(
+                        "output", "Triumvirate evaluation"
+                    ),
                 }
             except Exception as e:
                 logger.error("Triumvirate evaluation failed: %s", e)

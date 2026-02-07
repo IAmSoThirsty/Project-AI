@@ -382,7 +382,11 @@ class OversightSignalsTelemetry(SignalsTelemetry):
         severity = (
             SeverityLevel.ERROR
             if health_status == "unhealthy"
-            else SeverityLevel.WARNING if health_status == "degraded" else SeverityLevel.INFO
+            else (
+                SeverityLevel.WARNING
+                if health_status == "degraded"
+                else SeverityLevel.INFO
+            )
         )
 
         signal = Signal(
@@ -818,9 +822,7 @@ class ToolAccessMap:
             "audit_system": ToolAccessLevel.READ_ONLY,
         }
 
-    def check_tool_access(
-        self, agent: str, tool: str
-    ) -> tuple[bool, ToolAccessLevel]:
+    def check_tool_access(self, agent: str, tool: str) -> tuple[bool, ToolAccessLevel]:
         """
         Check if agent has access to tool.
 

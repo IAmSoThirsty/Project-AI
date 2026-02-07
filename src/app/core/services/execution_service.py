@@ -9,12 +9,24 @@ This service handles all execution-related responsibilities:
 
 The service maintains the principle: "Execution never governs"
 All actions must be pre-approved by GovernanceService before execution.
+
+THREE-TIER PLATFORM:
+- Tier 2 (Infrastructure): This is a Tier-2 Infrastructure Controller
+- Subordinate to Tier-1 governance
+- Can be paused or constrained by governance
 """
 
 import logging
 import time
 from enum import Enum
 from typing import Any
+
+from app.core.platform_tiers import (
+    AuthorityLevel,
+    ComponentRole,
+    PlatformTier,
+    get_tier_registry,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -65,6 +77,28 @@ class ExecutionService:
         self.success_count = 0
         self.failure_count = 0
         self.total_execution_time_ms = 0.0
+
+        # Register in Tier Registry as Tier-2 Infrastructure Controller
+        try:
+            tier_registry = get_tier_registry()
+            tier_registry.register_component(
+                component_id="execution_service",
+                component_name="ExecutionService",
+                tier=PlatformTier.TIER_2_INFRASTRUCTURE,
+                authority_level=AuthorityLevel.CONSTRAINED,
+                role=ComponentRole.INFRASTRUCTURE_CONTROLLER,
+                component_ref=self,
+                dependencies=["cognition_kernel"],  # Depends on kernel for authority
+                can_be_paused=True,  # Can be paused by Tier-1
+                can_be_replaced=False,  # Core infrastructure
+            )
+            logger.info(
+                "ExecutionService registered as Tier-2 Infrastructure Controller"
+            )
+        except Exception as e:
+            logger.warning(
+                "Failed to register ExecutionService in tier registry: %s", e
+            )
 
         logger.info("ExecutionService initialized")
         logger.info("  TARL Gate: %s", tarl_gate is not None)
@@ -193,9 +227,17 @@ class ExecutionService:
         try:
             tarl_context = {
                 "action_name": action.action_name,
-                "action_type": action.action_type.value if hasattr(action, "action_type") else "unknown",
+                "action_type": (
+                    action.action_type.value
+                    if hasattr(action, "action_type")
+                    else "unknown"
+                ),
                 "trace_id": context.trace_id,
-                "timestamp": context.timestamp.isoformat() if hasattr(context.timestamp, "isoformat") else str(context.timestamp),
+                "timestamp": (
+                    context.timestamp.isoformat()
+                    if hasattr(context.timestamp, "isoformat")
+                    else str(context.timestamp)
+                ),
             }
 
             self.tarl_gate.enforce(tarl_context)

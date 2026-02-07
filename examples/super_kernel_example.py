@@ -18,8 +18,8 @@ logger = logging.getLogger(__name__)
 
 def example_1_minimal_setup():
     """Example 1: Minimal SuperKernel setup for testing."""
+    from app.core.kernel_types import KernelInterface, KernelType
     from app.core.super_kernel_bootstrap import create_minimal_super_kernel
-    from app.core.kernel_types import KernelType, KernelInterface
 
     logger.info("=== Example 1: Minimal Setup ===")
 
@@ -48,12 +48,13 @@ def example_1_minimal_setup():
 def example_2_with_adapters():
     """Example 2: Using adapters for non-standard kernels."""
     from unittest.mock import Mock
-    from app.core.super_kernel import SuperKernel
+
     from app.core.kernel_adapters import (
-        ReflectionCycleAdapter,
         MemoryEngineAdapter,
+        ReflectionCycleAdapter,
     )
     from app.core.kernel_types import KernelType
+    from app.core.super_kernel import SuperKernel
 
     logger.info("\n=== Example 2: With Adapters ===")
 
@@ -114,8 +115,8 @@ def example_2_with_adapters():
 
 def example_3_execution_history():
     """Example 3: Execution history and five-channel logging."""
+    from app.core.kernel_types import KernelInterface, KernelType
     from app.core.super_kernel_bootstrap import create_minimal_super_kernel
-    from app.core.kernel_types import KernelType, KernelInterface
 
     logger.info("\n=== Example 3: Execution History ===")
 
@@ -156,9 +157,10 @@ def example_3_execution_history():
 
 def example_4_error_handling():
     """Example 4: Error handling and blocked executions."""
-    from app.core.super_kernel import SuperKernel
-    from app.core.kernel_types import KernelType, KernelInterface
     from unittest.mock import Mock
+
+    from app.core.kernel_types import KernelInterface, KernelType
+    from app.core.super_kernel import SuperKernel
 
     logger.info("\n=== Example 4: Error Handling ===")
 
