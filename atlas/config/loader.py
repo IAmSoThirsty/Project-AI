@@ -46,8 +46,8 @@ class ConfigLoader:
             config_dir: Path to configuration directory (defaults to atlas/config)
         """
         if config_dir is None:
-            # Default to atlas/config relative to this file
-            config_dir = Path(__file__).parent.parent / "config"
+            # Default to atlas/config (this file is already in config directory)
+            config_dir = Path(__file__).parent
         
         self.config_dir = Path(config_dir)
         if not self.config_dir.exists():
