@@ -1,5 +1,5 @@
 """
-T.A.R.L. Diagnostics Subsystem
+T.A.R.L. (Thirstys Active Resistance Language) Diagnostics Subsystem
 
 Production-grade error reporting, warning system, and code quality diagnostics.
 Provides comprehensive feedback for compilation and runtime errors with rich
