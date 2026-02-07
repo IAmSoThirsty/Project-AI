@@ -1,0 +1,227 @@
+# Memory Optimization Configuration
+# GOD TIER Architecture for aggressive memory resource optimization
+
+# Global Settings
+enabled: false  # Disabled by default - opt-in for safety
+optimization_level: "aggressive"  # conservative, moderate, aggressive
+
+# Feature Flags
+enable_compression: true
+enable_tiered_storage: true
+enable_deduplication: true
+enable_pruning: true
+enable_federation: false  # External storage disabled by default
+enable_streaming_recall: true
+enable_adaptive_policy: true
+
+# ============================================================================
+# Compression Configuration
+# ============================================================================
+compression:
+  enabled: true
+  default_strategy: "adaptive"  # adaptive, lz4, blosc, zlib, quantize_int8, binarize
+  compression_level: 6  # 1-9, higher = more compression but slower
+  quantization_bits: 8  # 4, 8, 16 for vector quantization
+  sparse_threshold: 0.1  # Sparsity threshold for CSR conversion
+  graph_prune_threshold: 0.3  # Confidence threshold for graph edge pruning
+  
+  # Compression targets per memory type (0.0-1.0, higher = more compression)
+  episodic_compression_target: 0.70  # 70% reduction target
+  semantic_compression_target: 0.80  # 80% reduction target
+  session_compression_target: 0.60  # 60% reduction target
+  vector_compression_target: 0.85  # 85% reduction target
+
+# ============================================================================
+# Tiered Storage Configuration
+# ============================================================================
+tiered_storage:
+  enabled: true
+  
+  # Tier capacities (in megabytes)
+  hot_capacity_mb: 100   # Hot tier: RAM/NVMe for active data
+  warm_capacity_mb: 1024 # Warm tier: NVMe/SSD for recent data
+  cold_capacity_unlimited: true  # Cold tier: Unlimited disk/cloud
+  
+  # Tier latency targets (milliseconds)
+  hot_latency_target_ms: 1.0     # <1ms for hot tier
+  warm_latency_target_ms: 100.0  # <100ms for warm tier
+  cold_latency_target_ms: 5000.0 # <5s for cold tier
+  
+  # Migration thresholds (hours)
+  hot_to_warm_idle_hours: 1.0   # Demote to warm after 1 hour idle
+  warm_to_cold_idle_hours: 24.0 # Demote to cold after 24 hours idle
+  cold_to_warm_access_count: 2  # Promote to warm after 2 accesses
+  warm_to_hot_access_count: 5   # Promote to hot after 5 accesses
+  
+  # Eviction policy
+  eviction_policy: "lru"  # lru, lfu, fifo
+  eviction_threshold: 0.9  # Evict when tier is 90% full
+  
+  # Background tasks (seconds)
+  migration_interval_seconds: 300  # Check for migrations every 5 minutes
+  pruning_interval_seconds: 3600   # Prune cold data every hour
+  
+  # Storage paths
+  hot_storage_path: "data/memory_tiers/hot"
+  warm_storage_path: "data/memory_tiers/warm"
+  cold_storage_path: "data/memory_tiers/cold"
+
+# ============================================================================
+# Deduplication Configuration
+# ============================================================================
+deduplication:
+  enabled: true
+  storage_path: "data/memory_dedup"
+  enable_bloom_filter: true
+  bloom_filter_size: 1000000  # Larger = fewer false positives
+  
+  # Persistence
+  save_interval_seconds: 300  # Save dedup index every 5 minutes
+  
+  # Compaction
+  compaction_enabled: true
+  compaction_interval_hours: 24  # Compact storage once per day
+
+# ============================================================================
+# Pruning Configuration
+# ============================================================================
+pruning:
+  enabled: true
+  
+  # Model-aware pruning
+  inactive_threshold_days: 30  # Prune memories not accessed in 30 days
+  query_history_retention_days: 90  # Keep query history for 90 days
+  
+  # Cluster pruning
+  min_cluster_access_count: 5  # Keep clusters accessed at least 5 times
+  cluster_idle_threshold_days: 7  # Prune clusters idle for 7 days
+  
+  # Entity pruning
+  min_entity_confidence: 0.3  # Keep entities with confidence >= 0.3
+  entity_idle_threshold_days: 14  # Prune entities idle for 14 days
+  
+  # Schedule
+  pruning_interval_hours: 6  # Run pruning every 6 hours
+
+# ============================================================================
+# Federation Configuration (External/Cloud Storage)
+# ============================================================================
+federation:
+  enabled: false  # Disabled by default for security
+  
+  # Backend type: local, s3, azure, gcp
+  backend_type: "local"
+  
+  # Encryption
+  encryption_enabled: true
+  encryption_key_path: "config/federation_key.enc"
+  
+  # Data sovereignty
+  data_sovereignty_region: "us-east-1"
+  sovereignty_tags: {}
+  
+  # S3 Configuration (if backend_type == "s3")
+  s3_bucket: ""
+  s3_region: "us-east-1"
+  s3_access_key_id: ""
+  s3_secret_access_key: ""
+  
+  # Cold data hydration
+  hydration_cache_size_mb: 100
+  hydration_timeout_seconds: 30
+
+# ============================================================================
+# Streaming Recall Configuration
+# ============================================================================
+streaming_recall:
+  enabled: true
+  
+  # Recall strategy: adaptive, eager, lazy, streaming
+  default_strategy: "adaptive"
+  
+  # Prefetching
+  prefetch_enabled: true
+  prefetch_lookahead: 3  # Prefetch next 3 items
+  
+  # Attention-based loading
+  attention_threshold: 0.5  # Load items with attention > 0.5
+  attention_window_size: 10
+  
+  # Hot partition search
+  hot_partition_enabled: true
+  hot_partition_hit_rate_threshold: 0.8  # Activate full DB if hit rate < 80%
+  dynamic_db_activation: true
+
+# ============================================================================
+# Adaptive Policy Configuration
+# ============================================================================
+adaptive_policy:
+  enabled: true
+  
+  # Telemetry
+  telemetry_interval_seconds: 10  # Collect metrics every 10 seconds
+  
+  # Policy tuning
+  policy_tuning_interval_seconds: 300  # Tune policies every 5 minutes
+  major_rebalancing_interval_hours: 1  # Major rebalancing every hour
+  
+  # Optimization targets
+  memory_reduction_target: 0.75  # Target 75% memory reduction
+  performance_impact_limit: 0.05  # Allow <5% performance impact
+  
+  # Learning rate
+  policy_learning_rate: 0.1  # How fast policies adapt (0.0-1.0)
+  
+  # Metrics thresholds
+  high_memory_threshold: 0.85  # Alert at 85% capacity
+  low_memory_threshold: 0.50   # OK below 50% capacity
+  high_latency_threshold_ms: 100.0
+  low_latency_threshold_ms: 10.0
+
+# ============================================================================
+# Audit Configuration
+# ============================================================================
+audit:
+  enabled: true
+  
+  # Critical path audit (always logged, no loss)
+  critical_audit_enabled: true
+  critical_audit_path: "data/audit/critical.log"
+  
+  # Aggregate audit (lossy, summarized for efficiency)
+  aggregate_audit_enabled: true
+  aggregate_audit_path: "data/audit/aggregate.log"
+  aggregate_interval_seconds: 60  # Aggregate every minute
+  
+  # Metrics audit
+  metrics_audit_enabled: true
+  metrics_audit_path: "data/audit/metrics.log"
+  metrics_interval_seconds: 300  # Log metrics every 5 minutes
+  
+  # Retention
+  audit_retention_days: 30  # Keep audits for 30 days
+  compress_old_audits: true  # Compress audits older than 7 days
+
+# ============================================================================
+# Optimization Level Presets
+# ============================================================================
+# 
+# Conservative: Minimal optimization, prioritize safety
+#   - compression_level: 3
+#   - hot_capacity_mb: 500
+#   - migration_interval: 600s
+#   - inactive_threshold: 90 days
+#
+# Moderate: Balanced optimization (DEFAULT)
+#   - compression_level: 6
+#   - hot_capacity_mb: 200
+#   - migration_interval: 300s
+#   - inactive_threshold: 30 days
+#
+# Aggressive: Maximum optimization (RECOMMENDED)
+#   - compression_level: 9
+#   - hot_capacity_mb: 100
+#   - migration_interval: 60s
+#   - inactive_threshold: 7 days
+#
+# ============================================================================

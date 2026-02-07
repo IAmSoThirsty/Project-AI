@@ -545,8 +545,10 @@ class CompressionEngine:
         total_orig = self.compression_stats["total_original_bytes"]
         total_comp = self.compression_stats["total_compressed_bytes"]
         
+        # Compression ratio: 0 = no compression, 1.0 = 100% reduction
+        # Ensure it's always non-negative (compressed can be larger than original in some cases)
         overall_ratio = (
-            1.0 - (total_comp / total_orig) if total_orig > 0 else 0.0
+            max(0.0, 1.0 - (total_comp / total_orig)) if total_orig > 0 else 0.0
         )
         
         return {
