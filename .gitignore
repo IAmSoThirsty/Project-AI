@@ -1,3 +1,8 @@
+# Health report snapshots and archives (keep canonical report only)
+data/health_snapshots/
+docs/assets/health_report_*.png
+governance/audit_log.yaml
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
