@@ -31,6 +31,16 @@ See [SUBORDINATION.md](./SUBORDINATION.md) for full relationship documentation.
 
 PROJECT ATLAS Ω is a comprehensive, deterministic, and auditable system for analyzing organizational influence, generating probabilistic timelines, and producing verified projections. The system enforces seven immutable axioms through a constitutional kernel that cannot be overridden.
 
+### Purpose and Access
+
+ATLAS Ω serves as a **Triumvirate-accessible tool** for:
+- **Deterministic projection** - Modeling potential outcomes of Triumvirate actions
+- **Simulation execution** - Running user-requested scenarios for analysis
+- **Decision support** - Providing evidence-based probability assessments
+- **Scenario analysis** - Exploring consequences of various decisions
+
+**Access Model**: ATLAS Ω is a tool that can be accessed by the Triumvirate and used to run simulations for users. It projects outcomes but does not make decisions. The Triumvirate retains full authority and uses ATLAS as an analytical instrument.
+
 ### Foundational Axioms (Non-Override)
 
 1. **Determinism > Interpretation** - Canonical hashing, reproducible operations
