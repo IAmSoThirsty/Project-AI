@@ -4,6 +4,17 @@ ATLAS Ω Command Line Interface
 
 Constitutional Probabilistic Civilization Engine
 
+⚠️ SUBORDINATION NOTICE ⚠️
+ATLAS Ω is a SECONDARY, OPTIONAL tool subordinate to Project-AI.
+- Primary System: Project-AI (Jeremy Karrick, Architect and Founder)
+- Triumvirate governance remains in full authority
+- This tool projects (doesn't decide), assists (doesn't replace)
+- Removable without affecting Project-AI core functionality
+
+See atlas/SUBORDINATION.md for complete documentation.
+
+---
+
 Commands:
 - atlas sovereign-verify --bundle <file>  : Verify constitutional compliance
 - atlas build-hc : Build history chain (Reality Stack construction)
@@ -201,6 +212,9 @@ class AtlasCLI:
         """Display system status and statistics."""
         print("═" * 70)
         print("PROJECT ATLAS Ω - System Status")
+        print("⚠️  SECONDARY TOOL - Subordinate to Project-AI")
+        print("Primary System: Project-AI (Jeremy Karrick)")
+        print("Triumvirate governance: ACTIVE and UNCHANGED")
         print("═" * 70)
         print(f"Timestamp: {datetime.utcnow().isoformat()}")
         print()
@@ -228,6 +242,12 @@ class AtlasCLI:
         schema_valid = self.validator.verify_integrity()
         print(f"  Status: {'✓ VALID' if schema_valid else '✗ COMPROMISED'}")
         
+        # Subordination status
+        print("\n⚠️  Subordination Status:")
+        print("  ATLAS Ω is a SECONDARY, OPTIONAL tool")
+        print("  Primary authority: Project-AI + Triumvirate")
+        print("  Removal: Delete /atlas directory (no impact on Project-AI)")
+        
         print("═" * 70)
 
 
@@ -239,11 +259,25 @@ def main():
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
     
+    # Display subordination notice
+    print()
+    print("╔═══════════════════════════════════════════════════════════════════╗")
+    print("║  ⚠️  ATLAS Ω - SECONDARY TOOL (Subordinate to Project-AI)  ⚠️   ║")
+    print("║  Primary System: Project-AI (Jeremy Karrick)                     ║")
+    print("║  Triumvirate governance: ACTIVE and UNCHANGED                    ║")
+    print("║  This tool projects (doesn't decide), assists (doesn't replace)  ║")
+    print("╚═══════════════════════════════════════════════════════════════════╝")
+    print()
+    
     # Create argument parser
     parser = argparse.ArgumentParser(
-        description="ATLAS Ω - Constitutional Probabilistic Civilization Engine",
+        description="ATLAS Ω - Constitutional Probabilistic Civilization Engine (SECONDARY TOOL)",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
+⚠️  SUBORDINATION NOTICE ⚠️
+ATLAS Ω is a secondary, optional tool subordinate to Project-AI.
+See atlas/SUBORDINATION.md for complete documentation.
+
 Examples:
   atlas sovereign-verify --bundle output.json
   atlas status
