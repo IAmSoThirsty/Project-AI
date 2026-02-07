@@ -1,5 +1,5 @@
 """
-T.A.R.L. Foreign Function Interface (FFI) Bridge Subsystem
+T.A.R.L. (Thirstys Active Resistance Language) Foreign Function Interface (FFI) Bridge Subsystem
 
 Production-grade FFI bridge for interoperability with C, Python, and other
 languages. Enables safe calling of foreign functions with automatic marshaling.

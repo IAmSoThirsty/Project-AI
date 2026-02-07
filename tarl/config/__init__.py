@@ -1,5 +1,5 @@
 """
-T.A.R.L. Configuration Management Subsystem
+T.A.R.L. (Thirstys Active Resistance Language) Configuration Management Subsystem
 
 Production-grade configuration loader with validation, environment handling,
 and hierarchical configuration merging. Provides the foundational configuration

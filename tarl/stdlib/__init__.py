@@ -1,5 +1,5 @@
 """
-T.A.R.L. Standard Library Subsystem
+T.A.R.L. (Thirstys Active Resistance Language) Standard Library Subsystem
 
 Production-grade standard library with core built-in types, data structures,
 I/O operations, and networking capabilities. Provides the foundational

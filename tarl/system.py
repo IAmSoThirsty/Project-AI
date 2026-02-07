@@ -1,5 +1,5 @@
 """
-T.A.R.L. Main System Controller
+T.A.R.L. (Thirstys Active Resistance Language) Main System Controller
 
 Production-grade system controller that orchestrates all T.A.R.L. subsystems:
 - Configuration

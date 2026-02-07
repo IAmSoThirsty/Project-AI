@@ -1,5 +1,5 @@
 """
-T.A.R.L. Module System Subsystem
+T.A.R.L. (Thirstys Active Resistance Language) Module System Subsystem
 
 Production-grade module and package management system with import resolution,
 caching, and dependency management.

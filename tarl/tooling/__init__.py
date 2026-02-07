@@ -1,5 +1,5 @@
 """
-T.A.R.L. Development Tooling Subsystem
+T.A.R.L. (Thirstys Active Resistance Language) Development Tooling Subsystem
 
 Production-grade development tools including Language Server Protocol (LSP)
 implementation, build system, REPL, and debugger.
