@@ -25,7 +25,7 @@ Architecture Contract:
 """
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -259,7 +259,11 @@ class CodeGenerator:
                     try:
                         num_value = float(token.value)
                     except ValueError:
-                        num_value = token.value
+                        # If parsing fails, log warning and skip
+                        logger.warning(
+                            f"NUMBER token '{token.value}' cannot be parsed as numeric type, skipping"
+                        )
+                        continue
 
                 constants.append(num_value)
 

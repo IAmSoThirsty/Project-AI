@@ -22,7 +22,7 @@ Example:
 """
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any
 
 from tarl.compiler import CompilerFrontend
 from tarl.config import ConfigRegistry
@@ -65,8 +65,8 @@ class TARLSystem:
 
     def __init__(
         self,
-        config_path: Optional[str] = None,
-        config_overrides: Optional[Dict[str, Any]] = None,
+        config_path: str | None = None,
+        config_overrides: dict[str, Any] | None = None,
         **kwargs,
     ):
         """
@@ -91,14 +91,14 @@ class TARLSystem:
                 overrides[section][option] = value
 
         # Initialize subsystems (created but not initialized)
-        self.config: Optional[ConfigRegistry] = None
-        self.diagnostics: Optional[DiagnosticsEngine] = None
-        self.stdlib: Optional[StandardLibrary] = None
-        self.ffi: Optional[FFIBridge] = None
-        self.compiler: Optional[CompilerFrontend] = None
-        self.runtime: Optional[RuntimeVM] = None
-        self.modules: Optional[ModuleSystem] = None
-        self.tooling: Optional[DevelopmentTooling] = None
+        self.config: ConfigRegistry | None = None
+        self.diagnostics: DiagnosticsEngine | None = None
+        self.stdlib: StandardLibrary | None = None
+        self.ffi: FFIBridge | None = None
+        self.compiler: CompilerFrontend | None = None
+        self.runtime: RuntimeVM | None = None
+        self.modules: ModuleSystem | None = None
+        self.tooling: DevelopmentTooling | None = None
 
         # System state
         self._initialized = False
@@ -196,7 +196,7 @@ class TARLSystem:
             self._cleanup_subsystems()
             raise RuntimeError(f"T.A.R.L. system initialization failed: {e}") from e
 
-    def execute_source(self, source: str, context: Optional[Dict[str, Any]] = None) -> Any:
+    def execute_source(self, source: str, context: dict[str, Any] | None = None) -> Any:
         """
         Compile and execute T.A.R.L. source code
 
@@ -249,7 +249,7 @@ class TARLSystem:
 
         return self.compiler.compile(source)
 
-    def execute_bytecode(self, bytecode: bytes, context: Optional[Dict[str, Any]] = None) -> Any:
+    def execute_bytecode(self, bytecode: bytes, context: dict[str, Any] | None = None) -> Any:
         """
         Execute pre-compiled T.A.R.L. bytecode
 
@@ -268,7 +268,7 @@ class TARLSystem:
 
         return self.runtime.execute(bytecode, context=context)
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """
         Get system status
 
@@ -297,6 +297,15 @@ class TARLSystem:
             )
 
         return status
+
+    def is_initialized(self) -> bool:
+        """
+        Check if system is initialized
+
+        Returns:
+            True if system is initialized and ready for use
+        """
+        return self._initialized
 
     def shutdown(self) -> None:
         """
@@ -354,7 +363,7 @@ class TARLSystem:
 
 
 # Global system instance for singleton pattern
-_global_system: Optional[TARLSystem] = None
+_global_system: TARLSystem | None = None
 
 
 def get_system() -> TARLSystem:
@@ -366,7 +375,7 @@ def get_system() -> TARLSystem:
 
     Example:
         >>> system = get_system()
-        >>> if not system._initialized:
+        >>> if not system.is_initialized():
         ...     system.initialize()
     """
     global _global_system

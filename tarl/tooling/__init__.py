@@ -113,8 +113,9 @@ class BuildSystem:
         if self._tarl_build:
             logger.info(f"Building project at {project_path} with TarlBuild")
             # Use new build engine
-            from tarl.build.dsl_parser import BuildDSLParser
             from pathlib import Path
+
+            from tarl.build.dsl_parser import BuildDSLParser
 
             build_file = Path(project_path) / "build.tarl"
             if build_file.exists():
