@@ -94,18 +94,23 @@ ATLAS Ω is:
 - Generate probabilistic projections
 - Produce analytical reports
 - Suggest insights based on evidence
+- **Project deterministic outcomes when accessed by Triumvirate**
+- **Run user-requested simulations for analysis**
+- **Provide scenario analysis to inform Triumvirate decisions**
+- **Model potential consequences of various courses of action**
 
 ### ATLAS Ω Cannot:
 - Modify Project-AI core code
 - Override Project-AI governance
-- Make autonomous decisions
+- Make autonomous decisions (only projects outcomes)
 - Claim sovereignty over any system component
 - Execute actions without Project-AI approval
 - **Interfere with Triumvirate authority**
-- **Override Triumvirate decisions**
+- **Override Triumvirate decisions** (only inform them with projections)
 - **Modify baseline personality assignments**
 - **Replace or supersede Liara or any Triumvirate member**
 - **Claim authority over genesis events**
+- **Act independently without Triumvirate or user direction**
 
 ---
 
@@ -147,6 +152,25 @@ No core functionality depends on ATLAS Ω.
 - ATLAS Ω does NOT interfere with, override, or replace Triumvirate governance
 
 **Liara and all Triumvirate members retain full authority over their domains.**
+
+### ATLAS Ω as Triumvirate Tool
+
+ATLAS Ω is a **Triumvirate-accessible tool** that can be used for:
+- **Deterministic projection** - Modeling potential outcomes of Triumvirate actions
+- **Running simulations** - Executing user-requested scenarios for analysis
+- **Decision support** - Providing evidence-based probability assessments to inform Triumvirate decisions
+
+**Access Model**:
+- ✅ Triumvirate **CAN** access ATLAS Ω to project outcomes of their actions
+- ✅ Triumvirate **CAN** request simulations and deterministic analysis
+- ✅ Users **CAN** request simulations through the Triumvirate
+- ✅ ATLAS Ω **SERVES** as an analytical instrument (not a decision-maker)
+
+**Critical Distinction**:
+- ATLAS Ω **projects** (doesn't decide)
+- ATLAS Ω **assists** (doesn't replace)
+- ATLAS Ω **extends** (doesn't subsume)
+- Triumvirate makes decisions; ATLAS provides projections to inform those decisions
 
 ### ATLAS Ω Subordination
 Everything in ATLAS Ω—including all analytical systems—is:
