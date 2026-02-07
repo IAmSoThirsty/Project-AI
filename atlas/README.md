@@ -2,10 +2,28 @@
 
 ## Constitutional Probabilistic Civilization Engine
 
+---
+
+## ⚠️ CRITICAL: SUBORDINATION NOTICE ⚠️
+
+**ATLAS Ω is NOT a replacement for Project-AI.**
+
+This is an **optional, secondary tool** built on top of Project-AI. It is:
+- **Bounded** by Project-AI architecture
+- **Removable** if it violates primary system
+- **Subordinate** to all Project-AI design decisions
+
+**Project-AI is the source of truth. ATLAS Ω is an instrument.**
+
+See [SUBORDINATION.md](./SUBORDINATION.md) for full relationship documentation.
+
+---
+
 **Status**: Production-Grade Implementation  
 **Version**: 1.0.0  
 **Architecture**: God-Tier Monolithic  
-**Axioms**: Non-Override Constitutional Enforcement
+**Axioms**: Non-Override Constitutional Enforcement  
+**Relationship**: SECONDARY TOOL (subordinate to Project-AI)
 
 ---
 
@@ -452,15 +470,35 @@ Complete bounds enforcement for 50+ parameters:
 
 ---
 
+## Relationship to Project-AI
+
+**ATLAS Ω is a secondary, optional tool.**
+
+- **Primary System**: Project-AI (designed by Jeremy Karrick)
+- **Secondary Tool**: ATLAS Ω (subordinate analytical instrument)
+
+ATLAS Ω:
+- **Projects** (doesn't decide)
+- **Assists** (doesn't replace)
+- **Extends** (doesn't subsume)
+
+**Removal**: Delete `/atlas` directory. Project-AI continues functioning normally.
+
+See [SUBORDINATION.md](./SUBORDINATION.md) for complete relationship documentation.
+
+---
+
 ## Contributing
 
-This is a sovereign, constitutional system. All changes must:
+This is a sovereign, constitutional system **subordinate to Project-AI**. All changes must:
 
-1. **Preserve constitutional axioms** (non-negotiable)
-2. **Pass all 7 verification steps**
-3. **Maintain determinism and replayability**
-4. **Include comprehensive tests**
-5. **Update audit trail**
+1. **Respect Project-AI primary authority** (non-negotiable)
+2. **Preserve constitutional axioms** (non-negotiable)
+3. **Pass all 7 verification steps**
+4. **Maintain determinism and replayability**
+5. **Include comprehensive tests**
+6. **Update audit trail**
+7. **Not attempt to supersede Project-AI architecture**
 
 ---
 
@@ -472,15 +510,18 @@ MIT License - See LICENSE file
 
 ## Authors
 
-- Project-AI Team
-- Constitutional Kernel: Production-grade enforcement
-- Bayesian Engine: Evidence-based inference
-- Sludge Sandbox: Fictional narrative isolation
+- **Primary System**: Project-AI (Jeremy Karrick, Architect and Founder)
+- **Secondary Tool**: ATLAS Ω Team
+  - Constitutional Kernel: Production-grade enforcement
+  - Bayesian Engine: Evidence-based inference
+  - Sludge Sandbox: Fictional narrative isolation
 
 ---
 
 ## Acknowledgments
 
 This system implements a God-Tier, monolithic architecture with zero placeholders, complete production-grade implementation, and non-bypassable constitutional enforcement.
+
+**ATLAS Ω is an instrument of Project-AI, not a replacement.**
 
 **No technical debt. No shortcuts. No compromises.**

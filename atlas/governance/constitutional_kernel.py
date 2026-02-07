@@ -1,10 +1,22 @@
 """
 Layer 0: Constitutional Kernel for PROJECT ATLAS Ω
 
+⚠️ SUBORDINATION NOTICE ⚠️
+
+ATLAS Ω is a SECONDARY, OPTIONAL tool subordinate to Project-AI.
+- Primary System: Project-AI (Jeremy Karrick, Architect and Founder)
+- Triumvirate governance remains in full authority (including Liara)
+- This kernel enforces constraints WITHIN ATLAS Ω, not over Project-AI
+- ATLAS Ω cannot override, replace, or supersede Project-AI governance
+
+See atlas/SUBORDINATION.md for complete relationship documentation.
+
+---
+
 Immutable runtime constraints that cannot be overridden. Enforces fundamental
 rules before every simulation tick to ensure system integrity.
 
-FOUNDATIONAL AXIOMS (Non-Override):
+FOUNDATIONAL AXIOMS (Non-Override within ATLAS Ω scope):
 - Determinism > Interpretation
 - Probability > Narrative
 - Evidence > Agency
@@ -14,6 +26,9 @@ FOUNDATIONAL AXIOMS (Non-Override):
 - Abort > Drift
 
 Production-grade with cryptographic enforcement and immediate abort on violation.
+
+SCOPE: These axioms apply ONLY to ATLAS Ω operations. They do NOT apply to
+or supersede Project-AI, Triumvirate authority, or baseline personality assignment.
 """
 
 import hashlib
