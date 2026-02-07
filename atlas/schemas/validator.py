@@ -41,8 +41,8 @@ class SchemaValidator:
             schema_dir: Path to schema directory (defaults to atlas/schemas)
         """
         if schema_dir is None:
-            # Default to atlas/schemas relative to this file
-            schema_dir = Path(__file__).parent.parent / "schemas"
+            # Default to atlas/schemas (this file is already in schemas directory)
+            schema_dir = Path(__file__).parent
         
         self.schema_dir = Path(schema_dir)
         if not self.schema_dir.exists():

@@ -415,9 +415,14 @@ class DriverCalculator:
             # Replace parentheses in formula for parsing
             formula = formula.strip()
             
-            # Simple replacements for common patterns
-            formula = formula.replace("sum(", "self._sum_func(")
-            formula = formula.replace("stddev(", "self._stddev_func(")
+            # Add safe functions to context
+            eval_context = dict(context)
+            eval_context["sum"] = sum
+            eval_context["min"] = min
+            eval_context["max"] = max
+            eval_context["abs"] = abs
+            eval_context["sqrt"] = math.sqrt
+            eval_context["stddev"] = self._calculate_stddev
             
             # Parse the formula into AST
             try:
@@ -426,7 +431,7 @@ class DriverCalculator:
                 raise FormulaError(f"Invalid formula syntax: {e}")
             
             # Evaluate safely
-            result = self._eval_node(tree.body, context)
+            result = self._eval_node(tree.body, eval_context)
             
             # Ensure numeric result
             if not isinstance(result, (int, float)):
