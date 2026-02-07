@@ -1,0 +1,256 @@
+# PROJECT ATLAS Penalties Configuration
+# Score adjustments for violations, risks, and negative behaviors
+# Version: 1.0.0
+# Status: LOCKED
+
+version: "1.0.0"
+schema_version: "1.0.0"
+
+# Veracity Penalties
+veracity_penalties:
+  false_claim:
+    name: "False Claim Penalty"
+    severity: "high"
+    score_multiplier: 0.7
+    duration_days: 180
+    description: "Applied when organization makes demonstrably false claim"
+    stackable: true
+    max_applications: 5
+    
+  disputed_claim:
+    name: "Disputed Claim Penalty"
+    severity: "medium"
+    score_multiplier: 0.85
+    duration_days: 90
+    description: "Applied when claim is disputed by credible sources"
+    stackable: true
+    max_applications: 3
+    
+  unverified_claim:
+    name: "Unverified Claim Penalty"
+    severity: "low"
+    score_multiplier: 0.95
+    duration_days: 30
+    description: "Applied when claim lacks verification"
+    stackable: false
+    
+  misinformation_campaign:
+    name: "Misinformation Campaign Penalty"
+    severity: "critical"
+    score_multiplier: 0.5
+    duration_days: 365
+    description: "Applied for systematic disinformation efforts"
+    stackable: true
+    max_applications: 10
+
+# Behavioral Penalties
+behavioral_penalties:
+  aggressive_action:
+    name: "Aggressive Action Penalty"
+    severity: "high"
+    score_multiplier: 0.75
+    duration_days: 120
+    description: "Applied for hostile or aggressive actions"
+    triggers:
+      - military_action
+      - economic_sanctions
+      - cyber_attacks
+      
+  treaty_violation:
+    name: "Treaty Violation Penalty"
+    severity: "critical"
+    score_multiplier: 0.6
+    duration_days: 365
+    description: "Applied when international agreements are violated"
+    
+  human_rights_violation:
+    name: "Human Rights Violation Penalty"
+    severity: "critical"
+    score_multiplier: 0.55
+    duration_days: 730
+    description: "Applied for documented human rights abuses"
+    
+  corruption:
+    name: "Corruption Penalty"
+    severity: "high"
+    score_multiplier: 0.70
+    duration_days: 180
+    description: "Applied when corruption is documented"
+    
+  environmental_damage:
+    name: "Environmental Damage Penalty"
+    severity: "medium"
+    score_multiplier: 0.80
+    duration_days: 365
+    description: "Applied for significant environmental harm"
+
+# Operational Penalties
+operational_penalties:
+  data_breach:
+    name: "Data Breach Penalty"
+    severity: "high"
+    score_multiplier: 0.75
+    duration_days: 180
+    description: "Applied when security breach occurs"
+    scale_by: "breach_severity"
+    
+  service_failure:
+    name: "Service Failure Penalty"
+    severity: "medium"
+    score_multiplier: 0.85
+    duration_days: 60
+    description: "Applied when critical services fail"
+    
+  financial_instability:
+    name: "Financial Instability Penalty"
+    severity: "high"
+    score_multiplier: 0.70
+    duration_days: 180
+    description: "Applied during financial crises"
+    
+  leadership_scandal:
+    name: "Leadership Scandal Penalty"
+    severity: "medium"
+    score_multiplier: 0.80
+    duration_days: 120
+    description: "Applied when leadership faces credible scandal"
+
+# Relationship Penalties
+relationship_penalties:
+  alliance_betrayal:
+    name: "Alliance Betrayal Penalty"
+    severity: "critical"
+    score_multiplier: 0.50
+    duration_days: 730
+    description: "Applied when betraying an ally"
+    affects_relationships: true
+    relationship_multiplier: 0.3
+    
+  trust_violation:
+    name: "Trust Violation Penalty"
+    severity: "high"
+    score_multiplier: 0.70
+    duration_days: 365
+    description: "Applied when breaking agreements"
+    affects_relationships: true
+    relationship_multiplier: 0.5
+    
+  diplomatic_incident:
+    name: "Diplomatic Incident Penalty"
+    severity: "medium"
+    score_multiplier: 0.85
+    duration_days: 90
+    description: "Applied for diplomatic failures"
+
+# Stack-Specific Penalties
+stack_penalties:
+  RS_invalidation:
+    name: "Reality Stack Invalidation"
+    severity: "critical"
+    score_multiplier: 0.0
+    duration_days: 0
+    description: "Entity removed from RS due to data quality issues"
+    permanent: true
+    
+  TS_inconsistency:
+    name: "Timeline Inconsistency Penalty"
+    severity: "high"
+    score_multiplier: 0.60
+    duration_days: 90
+    description: "Applied when timeline projections become inconsistent"
+    
+  SS_contamination:
+    name: "Simulation Stack Contamination"
+    severity: "critical"
+    score_multiplier: 0.0
+    duration_days: 0
+    description: "Attempted to promote SS data to authoritative stack"
+    permanent: true
+    breach_of_protocol: true
+
+# Compound Penalties
+compound_penalties:
+  repeat_offender:
+    name: "Repeat Offender Multiplier"
+    calculation: "base_penalty * (1.0 + 0.2 * repeat_count)"
+    max_multiplier: 2.0
+    lookback_days: 365
+    
+  severity_escalation:
+    name: "Severity Escalation"
+    calculation: "base_penalty * severity_factor ^ escalation_count"
+    max_escalation: 3
+    severity_factor: 1.5
+    
+  cross_category:
+    name: "Cross-Category Penalty"
+    calculation: "product of all active penalties, capped at min_score"
+    min_score: 0.1
+    description: "Multiple penalty types compound multiplicatively"
+
+# Penalty Recovery
+recovery:
+  time_based:
+    name: "Time-Based Recovery"
+    enabled: true
+    recovery_rate: 0.01  # 1% per day
+    min_duration: 30  # Minimum days before recovery starts
+    
+  action_based:
+    name: "Action-Based Recovery"
+    enabled: true
+    actions:
+      public_retraction:
+        recovery_amount: 0.1
+      corrective_measures:
+        recovery_amount: 0.15
+      compensation:
+        recovery_amount: 0.2
+      third_party_validation:
+        recovery_amount: 0.25
+        
+  appeal_process:
+    name: "Penalty Appeal Process"
+    enabled: true
+    requires: "council_review"
+    success_recovery: 0.5
+    appeal_window_days: 30
+
+# Penalty Application Rules
+application_rules:
+  stacking:
+    same_type: "multiplicative"  # Same penalty type stacks multiplicatively
+    different_type: "multiplicative"  # Different penalty types stack multiplicatively
+    max_total_multiplier: 0.1  # Cannot reduce score below 10% of original
+    
+  expiration:
+    check_frequency: "daily"
+    auto_remove: true
+    notification: true
+    
+  audit:
+    log_all_applications: true
+    log_all_removals: true
+    require_justification: true
+    
+  governance:
+    critical_requires_council: true
+    high_requires_review: true
+    auto_apply_below: "medium"
+
+# Validation Rules
+validation:
+  score_bounds:
+    - "All score multipliers must be in range [0.0, 1.0]"
+    - "Duration must be positive or 0 for permanent"
+    - "Max applications must be positive if stackable"
+    
+  consistency:
+    - "Critical severity must have lowest multipliers"
+    - "Permanent penalties must have 0 duration"
+    - "All penalties must have unique names"
+    
+  audit_trail:
+    - "All penalty applications must be logged"
+    - "All penalty removals must be logged"
+    - "Justifications must be provided"

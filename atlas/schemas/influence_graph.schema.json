@@ -1,0 +1,200 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://project-ai.org/schemas/atlas/influence_graph.v1.json",
+  "title": "InfluenceGraph",
+  "description": "Canonical schema for influence graphs in PROJECT ATLAS. Immutable and locked for sovereign use.",
+  "type": "object",
+  "required": ["id", "world_state_id", "nodes", "edges", "metrics", "metadata"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^IG-[A-Z0-9]{16}$",
+      "description": "Unique influence graph identifier with prefix"
+    },
+    "world_state_id": {
+      "type": "string",
+      "pattern": "^WS-[A-Z0-9]{16}$",
+      "description": "Associated world state"
+    },
+    "nodes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["id", "type", "influence_score", "centrality"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["organization", "claim", "event"]
+          },
+          "influence_score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "centrality": {
+            "type": "object",
+            "required": ["degree", "betweenness", "eigenvector"],
+            "properties": {
+              "degree": {
+                "type": "number",
+                "minimum": 0
+              },
+              "betweenness": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "eigenvector": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "pagerank": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            }
+          },
+          "community_id": {
+            "type": "string"
+          },
+          "position": {
+            "type": "object",
+            "properties": {
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source", "target", "type", "weight"],
+        "properties": {
+          "source": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "influences",
+              "opposes",
+              "supports",
+              "controls",
+              "partners_with",
+              "competes_with",
+              "validates",
+              "disputes"
+            ]
+          },
+          "weight": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "bidirectional": {
+            "type": "boolean"
+          },
+          "metadata": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "communities": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["members", "cohesion"],
+        "properties": {
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "cohesion": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "required": ["density", "avg_clustering", "diameter"],
+      "properties": {
+        "density": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "avg_clustering": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "diameter": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "assortativity": {
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1
+        },
+        "modularity": {
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["created_at", "version", "hash", "algorithm"],
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "SHA-256 hash for provenance"
+        },
+        "algorithm": {
+          "type": "string",
+          "description": "Graph construction algorithm used"
+        },
+        "computation_time_ms": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,182 @@
+# PROJECT ATLAS Stack Registry Configuration
+# Canonical, locked definitions for stack classification and rules
+# Version: 1.0.0
+# Status: IMMUTABLE
+
+version: "1.0.0"
+schema_version: "1.0.0"
+
+# Stack Definitions
+stacks:
+  RS:
+    name: "Reality Stack"
+    description: "Ground truth data from verified real-world sources"
+    color: "#00FF00"
+    priority: 1
+    rules:
+      - immutable: true
+      - no_simulation: true
+      - require_provenance: true
+      - require_verification: true
+      - minimum_sources: 2
+    constraints:
+      - "Cannot be derived from TS or SS stacks"
+      - "Must have cryptographic audit trail"
+      - "Requires human validation for critical claims"
+    data_sources:
+      - government_records
+      - verified_news_agencies
+      - official_statements
+      - court_documents
+      - academic_publications
+      
+  TS-0:
+    name: "Timeline Stack - Base Projection"
+    description: "Near-term projection (0-30 days) from RS"
+    color: "#0088FF"
+    priority: 2
+    parent: "RS"
+    rules:
+      - derived_from: ["RS"]
+      - horizon_max_days: 30
+      - deterministic: true
+      - replayable: true
+    constraints:
+      - "Must use seed from seeds.yaml"
+      - "Cannot introduce events without driver triggers"
+      - "Inherits all RS data constraints"
+      
+  TS-1:
+    name: "Timeline Stack - Short-term Projection"
+    description: "Short-term projection (30-180 days) from TS-0"
+    color: "#4400FF"
+    priority: 3
+    parent: "TS-0"
+    rules:
+      - derived_from: ["RS", "TS-0"]
+      - horizon_max_days: 180
+      - deterministic: true
+      - replayable: true
+      - branching_allowed: true
+    constraints:
+      - "Can branch into multiple scenarios"
+      - "Must maintain consistency with parent timeline"
+      
+  TS-2:
+    name: "Timeline Stack - Medium-term Projection"
+    description: "Medium-term projection (180-365 days) from TS-1"
+    color: "#8800FF"
+    priority: 4
+    parent: "TS-1"
+    rules:
+      - derived_from: ["RS", "TS-0", "TS-1"]
+      - horizon_max_days: 365
+      - deterministic: true
+      - replayable: true
+      - branching_allowed: true
+      - uncertainty_scaling: 1.5
+    constraints:
+      - "Increased uncertainty bounds"
+      - "Must account for feedback loops"
+      
+  TS-3:
+    name: "Timeline Stack - Long-term Projection"
+    description: "Long-term projection (1-10 years) from TS-2"
+    color: "#CC00FF"
+    priority: 5
+    parent: "TS-2"
+    rules:
+      - derived_from: ["RS", "TS-0", "TS-1", "TS-2"]
+      - horizon_max_days: 3650
+      - deterministic: true
+      - replayable: true
+      - branching_allowed: true
+      - uncertainty_scaling: 3.0
+    constraints:
+      - "High uncertainty, scenario-based"
+      - "Must include sensitivity analysis"
+      
+  SS:
+    name: "Simulation Stack"
+    description: "Experimental simulations and what-if scenarios"
+    color: "#FF00FF"
+    priority: 6
+    rules:
+      - experimental: true
+      - no_promotion: true
+      - isolated: true
+    constraints:
+      - "CANNOT be promoted to any TS or RS stack"
+      - "CANNOT influence production projections"
+      - "Used only for hypothesis testing"
+      - "Must be marked as non-authoritative"
+
+# Stack Transitions
+transitions:
+  - from: "RS"
+    to: "TS-0"
+    allowed: true
+    automatic: true
+    validation: "council_approval"
+    
+  - from: "TS-0"
+    to: "TS-1"
+    allowed: true
+    automatic: true
+    validation: "stability_check"
+    
+  - from: "TS-1"
+    to: "TS-2"
+    allowed: true
+    automatic: true
+    validation: "consistency_check"
+    
+  - from: "TS-2"
+    to: "TS-3"
+    allowed: true
+    automatic: true
+    validation: "range_analysis"
+    
+  - from: "SS"
+    to: any
+    allowed: false
+    reason: "Simulation stack cannot contaminate authoritative stacks"
+
+# Hard Stops - Non-bypassable Stack Rules
+hard_stops:
+  - id: "HS-001"
+    rule: "No SS data shall ever transition to any non-SS stack"
+    enforcement: "cryptographic"
+    bypass: false
+    
+  - id: "HS-002"
+    rule: "RS data must have minimum 2 independent source confirmations"
+    enforcement: "validation"
+    bypass: false
+    
+  - id: "HS-003"
+    rule: "All TS stacks must be deterministically replayable"
+    enforcement: "audit_trail"
+    bypass: false
+    
+  - id: "HS-004"
+    rule: "Parent stack must be complete before child can execute"
+    enforcement: "dependency_check"
+    bypass: false
+
+# Audit Requirements
+audit:
+  stack_separation:
+    enabled: true
+    cryptographic: true
+    log_all_transitions: true
+    
+  provenance:
+    hash_algorithm: "SHA-256"
+    chain_verification: true
+    timestamp_source: "NTP"
+    
+  immutability:
+    RS_locked: true
+    TS_versioned: true
+    SS_ephemeral: true
