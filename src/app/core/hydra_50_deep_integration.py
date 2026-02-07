@@ -39,8 +39,10 @@ logger = logging.getLogger(__name__)
 # INTEGRATION ENUMERATIONS
 # ============================================================================
 
+
 class IntegrationStatus(Enum):
     """Status of system integration"""
+
     DISCONNECTED = "disconnected"
     CONNECTING = "connecting"
     CONNECTED = "connected"
@@ -50,6 +52,7 @@ class IntegrationStatus(Enum):
 
 class EventPriority(Enum):
     """Event priority levels"""
+
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
@@ -61,9 +64,11 @@ class EventPriority(Enum):
 # DATA MODELS
 # ============================================================================
 
+
 @dataclass
 class SystemIntegration:
     """System integration configuration"""
+
     system_name: str
     integration_type: str
     endpoint: str
@@ -77,6 +82,7 @@ class SystemIntegration:
 @dataclass
 class SystemEvent:
     """System-wide event"""
+
     event_id: str
     event_type: str
     source_system: str
@@ -89,6 +95,7 @@ class SystemEvent:
 # ============================================================================
 # CERBERUS AGENT INTEGRATION
 # ============================================================================
+
 
 class CerberusAgentIntegration:
     """
@@ -129,10 +136,7 @@ class CerberusAgentIntegration:
             self.integration_status = IntegrationStatus.DISCONNECTED
 
     def trigger_defense(
-        self,
-        incident_id: str,
-        threat_type: str,
-        severity: int
+        self, incident_id: str, threat_type: str, severity: int
     ) -> dict[str, Any]:
         """Trigger Cerberus defense spawning"""
         if self.integration_status != IntegrationStatus.CONNECTED:
@@ -142,8 +146,7 @@ class CerberusAgentIntegration:
         try:
             # Trigger hydra spawning
             spawn_result = self.cerberus_hydra.spawn_agents_on_bypass(
-                incident_id=incident_id,
-                bypassed_agent_id="hydra_50_monitor"
+                incident_id=incident_id, bypassed_agent_id="hydra_50_monitor"
             )
 
             # Escalate lockdown if severity is high
@@ -153,13 +156,19 @@ class CerberusAgentIntegration:
 
             self.spawned_count += spawn_result.get("agents_spawned", 0)
 
-            logger.info(f"Cerberus defense triggered: {spawn_result.get('agents_spawned', 0)} agents spawned")
+            logger.info(
+                f"Cerberus defense triggered: {spawn_result.get('agents_spawned', 0)} agents spawned"
+            )
 
             return {
                 "success": True,
                 "agents_spawned": spawn_result.get("agents_spawned", 0),
                 "total_spawned": self.spawned_count,
-                "lockdown_stage": self.lockdown_controller.current_stage if hasattr(self.lockdown_controller, 'current_stage') else 0
+                "lockdown_stage": (
+                    self.lockdown_controller.current_stage
+                    if hasattr(self.lockdown_controller, "current_stage")
+                    else 0
+                ),
             }
 
         except Exception as e:
@@ -181,6 +190,7 @@ class CerberusAgentIntegration:
 # ============================================================================
 # TARL ORCHESTRATION INTEGRATION
 # ============================================================================
+
 
 class TARLOrchestrationIntegration:
     """
@@ -215,7 +225,7 @@ class TARLOrchestrationIntegration:
         scenario_id: str,
         intervention_type: str,
         execute_at: datetime,
-        parameters: dict[str, Any]
+        parameters: dict[str, Any],
     ) -> str:
         """Schedule intervention via TARL"""
         task_id = str(uuid.uuid4())
@@ -227,7 +237,7 @@ class TARLOrchestrationIntegration:
             "execute_at": execute_at.isoformat(),
             "parameters": parameters,
             "status": "scheduled",
-            "created_at": datetime.now().isoformat()
+            "created_at": datetime.now().isoformat(),
         }
 
         self.scheduled_tasks[task_id] = task
@@ -244,6 +254,7 @@ class TARLOrchestrationIntegration:
 # ============================================================================
 # TEMPORAL WORKFLOW INTEGRATION
 # ============================================================================
+
 
 class TemporalWorkflowIntegration:
     """
@@ -273,10 +284,7 @@ class TemporalWorkflowIntegration:
             self.integration_status = IntegrationStatus.DISCONNECTED
 
     def start_workflow(
-        self,
-        workflow_type: str,
-        workflow_id: str,
-        parameters: dict[str, Any]
+        self, workflow_type: str, workflow_id: str, parameters: dict[str, Any]
     ) -> dict[str, Any]:
         """Start Temporal workflow"""
         workflow = {
@@ -284,7 +292,7 @@ class TemporalWorkflowIntegration:
             "workflow_type": workflow_type,
             "parameters": parameters,
             "status": "running",
-            "started_at": datetime.now().isoformat()
+            "started_at": datetime.now().isoformat(),
         }
 
         self.workflows[workflow_id] = workflow
@@ -301,6 +309,7 @@ class TemporalWorkflowIntegration:
 # ============================================================================
 # GOD-TIER COMMAND CENTER INTEGRATION
 # ============================================================================
+
 
 class GodTierCommandCenterIntegration:
     """
@@ -338,11 +347,7 @@ class GodTierCommandCenterIntegration:
             logger.warning(f"Command Center integration not available: {e}")
             self.integration_status = IntegrationStatus.DISCONNECTED
 
-    def query_intelligence(
-        self,
-        domain: str,
-        query: str
-    ) -> dict[str, Any]:
+    def query_intelligence(self, domain: str, query: str) -> dict[str, Any]:
         """Query Global Intelligence Library"""
         if not self.command_center:
             return {"success": False, "reason": "not_connected"}
@@ -353,7 +358,7 @@ class GodTierCommandCenterIntegration:
                 "domain": domain,
                 "query": query,
                 "timestamp": datetime.now().isoformat(),
-                "results": []
+                "results": [],
             }
 
             logger.info(f"Intelligence query: {domain} - {query}")
@@ -365,9 +370,7 @@ class GodTierCommandCenterIntegration:
             return {"success": False, "error": str(e)}
 
     def submit_threat_report(
-        self,
-        scenario_id: str,
-        threat_data: dict[str, Any]
+        self, scenario_id: str, threat_data: dict[str, Any]
     ) -> bool:
         """Submit threat report to Watch Tower"""
         if not self.command_center:
@@ -384,6 +387,7 @@ class GodTierCommandCenterIntegration:
 # ============================================================================
 # SECURITY OPERATIONS CENTER INTEGRATION
 # ============================================================================
+
 
 class SecurityOperationsCenterIntegration:
     """
@@ -421,7 +425,7 @@ class SecurityOperationsCenterIntegration:
         incident_type: str,
         severity: str,
         description: str,
-        context: dict[str, Any]
+        context: dict[str, Any],
     ) -> str:
         """Report security incident to SOC"""
         incident_id = str(uuid.uuid4())
@@ -433,7 +437,7 @@ class SecurityOperationsCenterIntegration:
             "description": description,
             "context": context,
             "status": "open",
-            "created_at": datetime.now().isoformat()
+            "created_at": datetime.now().isoformat(),
         }
 
         self.incidents[incident_id] = incident
@@ -450,6 +454,7 @@ class SecurityOperationsCenterIntegration:
 # ============================================================================
 # COUNCIL HUB INTEGRATION
 # ============================================================================
+
 
 class CouncilHubIntegration:
     """
@@ -483,10 +488,7 @@ class CouncilHubIntegration:
             self.integration_status = IntegrationStatus.DISCONNECTED
 
     def request_advisory(
-        self,
-        scenario_id: str,
-        decision_type: str,
-        context: dict[str, Any]
+        self, scenario_id: str, decision_type: str, context: dict[str, Any]
     ) -> str:
         """Request advisory from Council Hub"""
         request_id = str(uuid.uuid4())
@@ -497,7 +499,7 @@ class CouncilHubIntegration:
             "decision_type": decision_type,
             "context": context,
             "status": "pending",
-            "created_at": datetime.now().isoformat()
+            "created_at": datetime.now().isoformat(),
         }
 
         self.advisory_requests[request_id] = request
@@ -514,6 +516,7 @@ class CouncilHubIntegration:
 # ============================================================================
 # PLANETARY DEFENSE INTEGRATION
 # ============================================================================
+
 
 class PlanetaryDefenseIntegration:
     """
@@ -535,9 +538,7 @@ class PlanetaryDefenseIntegration:
     def _try_connect_planetary_defense(self) -> None:
         """Attempt to connect to Planetary Defense"""
         try:
-            from app.core.planetary_defense_monolith import (
-                PlanetaryDefenseMonolith
-            )
+            from app.core.planetary_defense_monolith import PlanetaryDefenseMonolith
 
             self.planetary_defense = PlanetaryDefenseMonolith()
             self.integration_status = IntegrationStatus.CONNECTED
@@ -548,11 +549,7 @@ class PlanetaryDefenseIntegration:
             self.planetary_defense = None
             self.integration_status = IntegrationStatus.DISCONNECTED
 
-    def validate_action(
-        self,
-        action: str,
-        context: dict[str, Any]
-    ) -> tuple[bool, str]:
+    def validate_action(self, action: str, context: dict[str, Any]) -> tuple[bool, str]:
         """Validate action against Four Laws"""
         if not self.planetary_defense:
             return True, "Validation unavailable"
@@ -574,6 +571,7 @@ class PlanetaryDefenseIntegration:
 # ============================================================================
 # EVENT SPINE INTEGRATION
 # ============================================================================
+
 
 class EventSpineIntegration:
     """
@@ -604,10 +602,7 @@ class EventSpineIntegration:
             self.integration_status = IntegrationStatus.DISCONNECTED
 
     def publish_event(
-        self,
-        event_type: str,
-        priority: EventPriority,
-        data: dict[str, Any]
+        self, event_type: str, priority: EventPriority, data: dict[str, Any]
     ) -> str:
         """Publish event to Event Spine"""
         event = SystemEvent(
@@ -616,7 +611,7 @@ class EventSpineIntegration:
             source_system="hydra_50",
             priority=priority,
             timestamp=time.time(),
-            data=data
+            data=data,
         )
 
         self.event_queue.append(event)
@@ -634,6 +629,7 @@ class EventSpineIntegration:
 # ============================================================================
 # MAIN DEEP INTEGRATION CONTROLLER
 # ============================================================================
+
 
 class HYDRA50DeepIntegration:
     """
@@ -697,7 +693,7 @@ class HYDRA50DeepIntegration:
         scenario_id: str,
         scenario_type: str,
         severity: int,
-        context: dict[str, Any]
+        context: dict[str, Any],
     ) -> dict[str, Any]:
         """
         Handle scenario trigger with full system integration
@@ -707,7 +703,7 @@ class HYDRA50DeepIntegration:
         results = {
             "scenario_id": scenario_id,
             "timestamp": datetime.now().isoformat(),
-            "actions": []
+            "actions": [],
         }
 
         # 1. Validate with Planetary Defense
@@ -722,72 +718,81 @@ class HYDRA50DeepIntegration:
             results["reason"] = validation_msg
             return results
 
-        results["actions"].append({
-            "action": "planetary_defense_validation",
-            "status": "passed",
-            "message": validation_msg
-        })
+        results["actions"].append(
+            {
+                "action": "planetary_defense_validation",
+                "status": "passed",
+                "message": validation_msg,
+            }
+        )
 
         # 2. Trigger Cerberus defense if high severity
         if severity >= 4:
             cerberus_result = self.cerberus.trigger_defense(
-                incident_id=scenario_id,
-                threat_type=scenario_type,
-                severity=severity
+                incident_id=scenario_id, threat_type=scenario_type, severity=severity
             )
-            results["actions"].append({
-                "action": "cerberus_defense",
-                "status": "triggered",
-                "result": cerberus_result
-            })
+            results["actions"].append(
+                {
+                    "action": "cerberus_defense",
+                    "status": "triggered",
+                    "result": cerberus_result,
+                }
+            )
 
         # 3. Report to Security Operations Center
         incident_id = self.soc.report_incident(
             incident_type=scenario_type,
             severity="HIGH" if severity >= 3 else "MEDIUM",
             description=f"HYDRA-50 scenario triggered: {scenario_id}",
-            context=context
+            context=context,
         )
-        results["actions"].append({
-            "action": "soc_incident_report",
-            "status": "submitted",
-            "incident_id": incident_id
-        })
+        results["actions"].append(
+            {
+                "action": "soc_incident_report",
+                "status": "submitted",
+                "incident_id": incident_id,
+            }
+        )
 
         # 4. Submit to Command Center intelligence
         self.command_center.submit_threat_report(scenario_id, context)
-        results["actions"].append({
-            "action": "command_center_threat_report",
-            "status": "submitted"
-        })
+        results["actions"].append(
+            {"action": "command_center_threat_report", "status": "submitted"}
+        )
 
         # 5. Request Council advisory if critical
         if severity >= 5:
             advisory_id = self.council.request_advisory(
                 scenario_id=scenario_id,
                 decision_type="critical_scenario_response",
-                context=context
+                context=context,
             )
-            results["actions"].append({
-                "action": "council_advisory_request",
-                "status": "pending",
-                "advisory_id": advisory_id
-            })
+            results["actions"].append(
+                {
+                    "action": "council_advisory_request",
+                    "status": "pending",
+                    "advisory_id": advisory_id,
+                }
+            )
 
         # 6. Publish event to Event Spine
         priority = EventPriority.CRITICAL if severity >= 4 else EventPriority.HIGH
         event_id = self.event_spine.publish_event(
             event_type="hydra_50_scenario_triggered",
             priority=priority,
-            data={"scenario_id": scenario_id, "severity": severity, **context}
+            data={"scenario_id": scenario_id, "severity": severity, **context},
         )
-        results["actions"].append({
-            "action": "event_spine_publish",
-            "status": "published",
-            "event_id": event_id
-        })
+        results["actions"].append(
+            {
+                "action": "event_spine_publish",
+                "status": "published",
+                "event_id": event_id,
+            }
+        )
 
-        logger.info(f"Scenario trigger handled: {scenario_id} - {len(results['actions'])} actions taken")
+        logger.info(
+            f"Scenario trigger handled: {scenario_id} - {len(results['actions'])} actions taken"
+        )
 
         return results
 
@@ -802,11 +807,15 @@ class HYDRA50DeepIntegration:
 
         if self.cerberus.integration_status != IntegrationStatus.CONNECTED:
             self.cerberus._try_import_cerberus()
-            results["cerberus"] = self.cerberus.integration_status == IntegrationStatus.CONNECTED
+            results["cerberus"] = (
+                self.cerberus.integration_status == IntegrationStatus.CONNECTED
+            )
 
         if self.command_center.integration_status != IntegrationStatus.CONNECTED:
             self.command_center._try_connect_command_center()
-            results["command_center"] = self.command_center.integration_status == IntegrationStatus.CONNECTED
+            results["command_center"] = (
+                self.command_center.integration_status == IntegrationStatus.CONNECTED
+            )
 
         # Add other reconnection attempts as needed
 

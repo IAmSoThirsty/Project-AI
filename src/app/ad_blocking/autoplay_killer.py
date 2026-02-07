@@ -29,4 +29,4 @@ class AutoplayKiller:
 
     def get_stats(self):
         """Get kill statistics"""
-        return {'autoplay_killed': self.killed_count}
+        return {"autoplay_killed": self.killed_count}

@@ -4,7 +4,6 @@ from pathlib import Path
 from zipfile import BadZipFile, ZipFile
 
 import pytest
-
 from extract_with_permissions import extract_with_permissions
 
 

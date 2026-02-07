@@ -24,13 +24,11 @@ from pathlib import Path
 
 import typer
 from rich.console import Console
-from rich.table import Table
 from rich.progress import track
+from rich.table import Table
 
 app = typer.Typer(
-    name="hydra50",
-    help="HYDRA-50 Contingency Plan Engine CLI",
-    add_completion=True
+    name="hydra50", help="HYDRA-50 Contingency Plan Engine CLI", add_completion=True
 )
 
 console = Console()
@@ -40,11 +38,12 @@ console = Console()
 # SCENARIO COMMANDS
 # ============================================================================
 
+
 @app.command()
 def list_scenarios(
     category: str | None = typer.Option(None, help="Filter by category"),
     status: str | None = typer.Option(None, help="Filter by status"),
-    json_output: bool = typer.Option(False, "--json", help="Output as JSON")
+    json_output: bool = typer.Option(False, "--json", help="Output as JSON"),
 ) -> None:
     """List all HYDRA-50 scenarios"""
     try:
@@ -75,7 +74,7 @@ def list_scenarios(
                     scenario.get("name", ""),
                     scenario.get("category", ""),
                     scenario.get("status", ""),
-                    str(scenario.get("current_escalation_level", 0))
+                    str(scenario.get("current_escalation_level", 0)),
                 )
 
             console.print(table)
@@ -98,7 +97,9 @@ def activate(
         engine = HYDRA50Engine()
 
         if not force:
-            confirm = typer.confirm(f"Are you sure you want to activate scenario {scenario_id}?")
+            confirm = typer.confirm(
+                f"Are you sure you want to activate scenario {scenario_id}?"
+            )
             if not confirm:
                 console.print("[yellow]Activation cancelled[/yellow]")
                 raise typer.Exit()
@@ -141,7 +142,7 @@ def deactivate(
 @app.command()
 def status(
     scenario_id: str = typer.Argument(..., help="Scenario ID"),
-    json_output: bool = typer.Option(False, "--json", help="Output as JSON")
+    json_output: bool = typer.Option(False, "--json", help="Output as JSON"),
 ) -> None:
     """Get scenario status"""
     try:
@@ -157,8 +158,12 @@ def status(
             console.print(f"[bold]Name:[/bold] {scenario_status.get('name')}")
             console.print(f"[bold]Category:[/bold] {scenario_status.get('category')}")
             console.print(f"[bold]Status:[/bold] {scenario_status.get('status')}")
-            console.print(f"[bold]Escalation Level:[/bold] {scenario_status.get('escalation_level')}")
-            console.print(f"[bold]Last Updated:[/bold] {scenario_status.get('last_updated')}")
+            console.print(
+                f"[bold]Escalation Level:[/bold] {scenario_status.get('escalation_level')}"
+            )
+            console.print(
+                f"[bold]Last Updated:[/bold] {scenario_status.get('last_updated')}"
+            )
 
     except Exception as e:
         console.print(f"[red]Error:[/red] {str(e)}")
@@ -169,11 +174,12 @@ def status(
 # SIMULATION COMMANDS
 # ============================================================================
 
+
 @app.command()
 def simulate(
     scenario_id: str = typer.Argument(..., help="Scenario ID to simulate"),
     duration_hours: float = typer.Option(24.0, help="Simulation duration in hours"),
-    output_file: str | None = typer.Option(None, help="Output file for results")
+    output_file: str | None = typer.Option(None, help="Output file for results"),
 ) -> None:
     """Run scenario simulation"""
     try:
@@ -190,7 +196,7 @@ def simulate(
             # Simulation logic would go here
             pass
 
-        console.print(f"[green]✓[/green] Simulation complete")
+        console.print("[green]✓[/green] Simulation complete")
 
         if output_file:
             Path(output_file).write_text(json.dumps(results, indent=2))
@@ -205,10 +211,13 @@ def simulate(
 # QUERY COMMANDS
 # ============================================================================
 
+
 @app.command()
 def query(
-    query_type: str = typer.Argument(..., help="Query type (active, critical, history)"),
-    json_output: bool = typer.Option(False, "--json", help="Output as JSON")
+    query_type: str = typer.Argument(
+        ..., help="Query type (active, critical, history)"
+    ),
+    json_output: bool = typer.Option(False, "--json", help="Output as JSON"),
 ) -> None:
     """Query scenario data"""
     try:
@@ -242,10 +251,11 @@ def query(
 # EXPORT/IMPORT COMMANDS
 # ============================================================================
 
+
 @app.command()
 def export(
     output_file: str = typer.Argument(..., help="Output file path"),
-    format_type: str = typer.Option("json", help="Export format (json, csv)")
+    format_type: str = typer.Option("json", help="Export format (json, csv)"),
 ) -> None:
     """Export scenario data"""
     try:
@@ -265,7 +275,7 @@ def export(
 @app.command()
 def import_data(
     input_file: str = typer.Argument(..., help="Input file path"),
-    format_type: str = typer.Option("json", help="Import format (json, csv)")
+    format_type: str = typer.Option("json", help="Import format (json, csv)"),
 ) -> None:
     """Import scenario data"""
     try:
@@ -287,15 +297,17 @@ def import_data(
 # MONITORING COMMANDS
 # ============================================================================
 
+
 @app.command()
 def monitor(
     interval: int = typer.Option(5, help="Update interval in seconds"),
-    duration: int = typer.Option(60, help="Monitoring duration in seconds")
+    duration: int = typer.Option(60, help="Monitoring duration in seconds"),
 ) -> None:
     """Monitor HYDRA-50 system in real-time"""
     try:
-        from app.core.hydra_50_engine import HYDRA50Engine
         import time
+
+        from app.core.hydra_50_engine import HYDRA50Engine
 
         engine = HYDRA50Engine()
 
@@ -308,12 +320,20 @@ def monitor(
             status = engine.get_system_status()
 
             console.clear()
-            console.print(f"[bold cyan]HYDRA-50 System Monitor[/bold cyan]")
-            console.print(f"[dim]{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}[/dim]\n")
+            console.print("[bold cyan]HYDRA-50 System Monitor[/bold cyan]")
+            console.print(
+                f"[dim]{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}[/dim]\n"
+            )
 
-            console.print(f"[bold]Active Scenarios:[/bold] {status.get('active_count', 0)}")
-            console.print(f"[bold]Critical Scenarios:[/bold] {status.get('critical_count', 0)}")
-            console.print(f"[bold]System Health:[/bold] {status.get('health', 'UNKNOWN')}")
+            console.print(
+                f"[bold]Active Scenarios:[/bold] {status.get('active_count', 0)}"
+            )
+            console.print(
+                f"[bold]Critical Scenarios:[/bold] {status.get('critical_count', 0)}"
+            )
+            console.print(
+                f"[bold]System Health:[/bold] {status.get('health', 'UNKNOWN')}"
+            )
 
             time.sleep(interval)
 
@@ -330,6 +350,7 @@ def monitor(
 # VERSION COMMAND
 # ============================================================================
 
+
 @app.command()
 def version() -> None:
     """Show HYDRA-50 version"""
@@ -341,6 +362,7 @@ def version() -> None:
 # ============================================================================
 # MAIN ENTRY POINT
 # ============================================================================
+
 
 def main() -> None:
     """Main CLI entry point"""

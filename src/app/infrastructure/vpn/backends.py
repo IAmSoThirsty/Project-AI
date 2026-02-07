@@ -4,18 +4,18 @@ Concrete wrappers for WireGuard, OpenVPN, and IKEv2 protocols
 with platform-specific OS integration.
 """
 
-import subprocess
-import platform
-import time
 import logging
-from typing import Dict, Any, Optional, List
+import platform
+import subprocess
+import time
 from abc import ABC, abstractmethod
+from typing import Any
 
 
 class VPNBackend(ABC):
     """Abstract base class for VPN backend implementations"""
 
-    def __init__(self, config: Dict[str, Any]):
+    def __init__(self, config: dict[str, Any]):
         self.config = config
         self.logger = logging.getLogger(self.__class__.__name__)
         self.connected = False
@@ -32,7 +32,7 @@ class VPNBackend(ABC):
         pass
 
     @abstractmethod
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get connection status"""
         pass
 
@@ -48,34 +48,29 @@ class WireGuardBackend(VPNBackend):
     Integrates with WireGuard kernel module or userspace implementation
     """
 
-    def __init__(self, config: Dict[str, Any]):
+    def __init__(self, config: dict[str, Any]):
         super().__init__(config)
-        self.interface_name = config.get('interface', 'wg0')
-        self.config_path = config.get('config_path', '/etc/wireguard/wg0.conf')
+        self.interface_name = config.get("interface", "wg0")
+        self.config_path = config.get("config_path", "/etc/wireguard/wg0.conf")
 
     def check_availability(self) -> bool:
         """Check if WireGuard is available on system"""
         try:
-            if self.platform == 'Linux':
+            if self.platform == "Linux":
                 # Check for wg command
-                result = subprocess.run(['which', 'wg'],
-                                      capture_output=True,
-                                      timeout=5)
+                result = subprocess.run(["which", "wg"], capture_output=True, timeout=5)
                 return result.returncode == 0
 
-            elif self.platform == 'Windows':
+            elif self.platform == "Windows":
                 # Check for wireguard.exe
-                result = subprocess.run(['where', 'wireguard'],
-                                      capture_output=True,
-                                      timeout=5,
-                                      shell=True)
+                result = subprocess.run(
+                    ["where", "wireguard"], capture_output=True, timeout=5, shell=True
+                )
                 return result.returncode == 0
 
-            elif self.platform == 'Darwin':
+            elif self.platform == "Darwin":
                 # Check for wg command on macOS
-                result = subprocess.run(['which', 'wg'],
-                                      capture_output=True,
-                                      timeout=5)
+                result = subprocess.run(["which", "wg"], capture_output=True, timeout=5)
                 return result.returncode == 0
 
         except Exception as e:
@@ -91,11 +86,11 @@ class WireGuardBackend(VPNBackend):
                 self.logger.warning("WireGuard not available on system")
                 return False
 
-            if self.platform == 'Linux':
+            if self.platform == "Linux":
                 return self._connect_linux()
-            elif self.platform == 'Windows':
+            elif self.platform == "Windows":
                 return self._connect_windows()
-            elif self.platform == 'Darwin':
+            elif self.platform == "Darwin":
                 return self._connect_macos()
             else:
                 self.logger.error(f"Unsupported platform: {self.platform}")
@@ -110,11 +105,8 @@ class WireGuardBackend(VPNBackend):
         try:
             # Use wg-quick to bring up interface
             # Note: Requires root/sudo privileges
-            cmd = ['sudo', 'wg-quick', 'up', self.interface_name]
-            result = subprocess.run(cmd,
-                                  capture_output=True,
-                                  text=True,
-                                  timeout=30)
+            cmd = ["sudo", "wg-quick", "up", self.interface_name]
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
 
             if result.returncode == 0:
                 self.connected = True
@@ -136,11 +128,8 @@ class WireGuardBackend(VPNBackend):
         try:
             # Use WireGuard Windows service
             # Assumes WireGuard for Windows is installed
-            cmd = ['wireguard', '/installtunnelservice', self.config_path]
-            result = subprocess.run(cmd,
-                                  capture_output=True,
-                                  timeout=30,
-                                  shell=True)
+            cmd = ["wireguard", "/installtunnelservice", self.config_path]
+            result = subprocess.run(cmd, capture_output=True, timeout=30, shell=True)
 
             if result.returncode == 0:
                 self.connected = True
@@ -158,11 +147,8 @@ class WireGuardBackend(VPNBackend):
         """Connect WireGuard on macOS"""
         try:
             # Use wg-quick on macOS (via Homebrew or official app)
-            cmd = ['sudo', 'wg-quick', 'up', self.interface_name]
-            result = subprocess.run(cmd,
-                                  capture_output=True,
-                                  text=True,
-                                  timeout=30)
+            cmd = ["sudo", "wg-quick", "up", self.interface_name]
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
 
             if result.returncode == 0:
                 self.connected = True
@@ -182,23 +168,20 @@ class WireGuardBackend(VPNBackend):
             if not self.connected:
                 return True
 
-            if self.platform == 'Linux' or self.platform == 'Darwin':
-                cmd = ['sudo', 'wg-quick', 'down', self.interface_name]
-                result = subprocess.run(cmd,
-                                      capture_output=True,
-                                      timeout=30)
+            if self.platform == "Linux" or self.platform == "Darwin":
+                cmd = ["sudo", "wg-quick", "down", self.interface_name]
+                result = subprocess.run(cmd, capture_output=True, timeout=30)
 
                 if result.returncode == 0:
                     self.connected = False
                     self.logger.info("WireGuard disconnected")
                     return True
 
-            elif self.platform == 'Windows':
-                cmd = ['wireguard', '/uninstalltunnelservice', self.interface_name]
-                result = subprocess.run(cmd,
-                                      capture_output=True,
-                                      timeout=30,
-                                      shell=True)
+            elif self.platform == "Windows":
+                cmd = ["wireguard", "/uninstalltunnelservice", self.interface_name]
+                result = subprocess.run(
+                    cmd, capture_output=True, timeout=30, shell=True
+                )
 
                 if result.returncode == 0:
                     self.connected = False
@@ -211,25 +194,27 @@ class WireGuardBackend(VPNBackend):
             self.logger.error(f"WireGuard disconnect failed: {e}")
             return False
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get WireGuard connection status"""
         status = {
-            'backend': 'wireguard',
-            'connected': self.connected,
-            'interface': self.interface_name,
-            'platform': self.platform
+            "backend": "wireguard",
+            "connected": self.connected,
+            "interface": self.interface_name,
+            "platform": self.platform,
         }
 
         if self.connected:
             try:
                 # Get interface statistics
-                result = subprocess.run(['wg', 'show', self.interface_name],
-                                      capture_output=True,
-                                      text=True,
-                                      timeout=5)
+                result = subprocess.run(
+                    ["wg", "show", self.interface_name],
+                    capture_output=True,
+                    text=True,
+                    timeout=5,
+                )
 
                 if result.returncode == 0:
-                    status['details'] = result.stdout
+                    status["details"] = result.stdout
 
             except Exception as e:
                 self.logger.debug(f"Could not get WireGuard stats: {e}")
@@ -243,25 +228,20 @@ class OpenVPNBackend(VPNBackend):
     Integrates with OpenVPN client
     """
 
-    def __init__(self, config: Dict[str, Any]):
+    def __init__(self, config: dict[str, Any]):
         super().__init__(config)
-        self.config_file = config.get('config_file', '/etc/openvpn/client.conf')
+        self.config_file = config.get("config_file", "/etc/openvpn/client.conf")
         self.process = None
 
     def check_availability(self) -> bool:
         """Check if OpenVPN is available"""
         try:
-            if self.platform == 'Windows':
-                cmd = ['where', 'openvpn']
-                result = subprocess.run(cmd,
-                                      capture_output=True,
-                                      timeout=5,
-                                      shell=True)
+            if self.platform == "Windows":
+                cmd = ["where", "openvpn"]
+                result = subprocess.run(cmd, capture_output=True, timeout=5, shell=True)
             else:
-                cmd = ['which', 'openvpn']
-                result = subprocess.run(cmd,
-                                      capture_output=True,
-                                      timeout=5)
+                cmd = ["which", "openvpn"]
+                result = subprocess.run(cmd, capture_output=True, timeout=5)
 
             return result.returncode == 0
 
@@ -276,15 +256,15 @@ class OpenVPNBackend(VPNBackend):
                 self.logger.warning("OpenVPN not available on system")
                 return False
 
-            if self.platform == 'Windows':
-                cmd = ['openvpn', '--config', self.config_file]
+            if self.platform == "Windows":
+                cmd = ["openvpn", "--config", self.config_file]
             else:
-                cmd = ['sudo', 'openvpn', '--config', self.config_file]
+                cmd = ["sudo", "openvpn", "--config", self.config_file]
 
             # Start OpenVPN process in background
-            self.process = subprocess.Popen(cmd,
-                                          stdout=subprocess.PIPE,
-                                          stderr=subprocess.PIPE)
+            self.process = subprocess.Popen(
+                cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            )
 
             # Wait briefly to check if connection succeeds
             time.sleep(5)
@@ -318,14 +298,14 @@ class OpenVPNBackend(VPNBackend):
             self.logger.error(f"OpenVPN disconnect failed: {e}")
             return False
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get OpenVPN status"""
         return {
-            'backend': 'openvpn',
-            'connected': self.connected,
-            'config_file': self.config_file,
-            'platform': self.platform,
-            'process_running': self.process is not None and self.process.poll() is None
+            "backend": "openvpn",
+            "connected": self.connected,
+            "config_file": self.config_file,
+            "platform": self.platform,
+            "process_running": self.process is not None and self.process.poll() is None,
         }
 
 
@@ -335,22 +315,22 @@ class IKEv2Backend(VPNBackend):
     Uses native OS VPN capabilities
     """
 
-    def __init__(self, config: Dict[str, Any]):
+    def __init__(self, config: dict[str, Any]):
         super().__init__(config)
-        self.connection_name = config.get('connection_name', 'ThirstysVPN')
+        self.connection_name = config.get("connection_name", "ThirstysVPN")
 
     def check_availability(self) -> bool:
         """IKEv2 is built into most modern OSes"""
-        return self.platform in ['Linux', 'Windows', 'Darwin']
+        return self.platform in ["Linux", "Windows", "Darwin"]
 
     def connect(self) -> bool:
         """Establish IKEv2 connection"""
         try:
-            if self.platform == 'Linux':
+            if self.platform == "Linux":
                 return self._connect_linux_strongswan()
-            elif self.platform == 'Windows':
+            elif self.platform == "Windows":
                 return self._connect_windows_native()
-            elif self.platform == 'Darwin':
+            elif self.platform == "Darwin":
                 return self._connect_macos_native()
 
             return False
@@ -363,10 +343,8 @@ class IKEv2Backend(VPNBackend):
         """Connect using strongSwan on Linux"""
         try:
             # Use strongSwan's swanctl or ipsec command
-            cmd = ['sudo', 'ipsec', 'up', self.connection_name]
-            result = subprocess.run(cmd,
-                                  capture_output=True,
-                                  timeout=30)
+            cmd = ["sudo", "ipsec", "up", self.connection_name]
+            result = subprocess.run(cmd, capture_output=True, timeout=30)
 
             if result.returncode == 0:
                 self.connected = True
@@ -383,11 +361,8 @@ class IKEv2Backend(VPNBackend):
         """Connect using Windows native VPN"""
         try:
             # Use rasdial command
-            cmd = ['rasdial', self.connection_name]
-            result = subprocess.run(cmd,
-                                  capture_output=True,
-                                  timeout=30,
-                                  shell=True)
+            cmd = ["rasdial", self.connection_name]
+            result = subprocess.run(cmd, capture_output=True, timeout=30, shell=True)
 
             if result.returncode == 0:
                 self.connected = True
@@ -404,10 +379,8 @@ class IKEv2Backend(VPNBackend):
         """Connect using macOS native VPN"""
         try:
             # Use scutil for IKEv2/IPSec VPN connections
-            cmd = ['scutil', '--nc', 'start', self.connection_name]
-            result = subprocess.run(cmd,
-                                  capture_output=True,
-                                  timeout=30)
+            cmd = ["scutil", "--nc", "start", self.connection_name]
+            result = subprocess.run(cmd, capture_output=True, timeout=30)
 
             if result.returncode == 0:
                 self.connected = True
@@ -426,20 +399,22 @@ class IKEv2Backend(VPNBackend):
             if not self.connected:
                 return True
 
-            if self.platform == 'Linux':
-                cmd = ['sudo', 'ipsec', 'down', self.connection_name]
-            elif self.platform == 'Windows':
-                cmd = ['rasdial', self.connection_name, '/disconnect']
-            elif self.platform == 'Darwin':
+            if self.platform == "Linux":
+                cmd = ["sudo", "ipsec", "down", self.connection_name]
+            elif self.platform == "Windows":
+                cmd = ["rasdial", self.connection_name, "/disconnect"]
+            elif self.platform == "Darwin":
                 # Use scutil for IKEv2/IPSec on macOS
-                cmd = ['scutil', '--nc', 'stop', self.connection_name]
+                cmd = ["scutil", "--nc", "stop", self.connection_name]
             else:
                 return False
 
-            result = subprocess.run(cmd,
-                                  capture_output=True,
-                                  timeout=30,
-                                  shell=True if self.platform == 'Windows' else False)
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                timeout=30,
+                shell=True if self.platform == "Windows" else False,
+            )
 
             if result.returncode == 0:
                 self.connected = False
@@ -452,13 +427,13 @@ class IKEv2Backend(VPNBackend):
             self.logger.error(f"IKEv2 disconnect failed: {e}")
             return False
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get IKEv2 status"""
         return {
-            'backend': 'ikev2',
-            'connected': self.connected,
-            'connection_name': self.connection_name,
-            'platform': self.platform
+            "backend": "ikev2",
+            "connected": self.connected,
+            "connection_name": self.connection_name,
+            "platform": self.platform,
         }
 
 
@@ -466,7 +441,7 @@ class VPNBackendFactory:
     """Factory for creating VPN backend instances"""
 
     @staticmethod
-    def create_backend(protocol: str, config: Dict[str, Any]) -> Optional[VPNBackend]:
+    def create_backend(protocol: str, config: dict[str, Any]) -> VPNBackend | None:
         """
         Create VPN backend based on protocol
 
@@ -478,9 +453,9 @@ class VPNBackendFactory:
             VPNBackend instance or None if protocol unsupported
         """
         backends = {
-            'wireguard': WireGuardBackend,
-            'openvpn': OpenVPNBackend,
-            'ikev2': IKEv2Backend
+            "wireguard": WireGuardBackend,
+            "openvpn": OpenVPNBackend,
+            "ikev2": IKEv2Backend,
         }
 
         backend_class = backends.get(protocol.lower())
@@ -490,7 +465,7 @@ class VPNBackendFactory:
         return None
 
     @staticmethod
-    def get_available_backends() -> List[str]:
+    def get_available_backends() -> list[str]:
         """
         Get list of available VPN backends on this system
 
@@ -500,7 +475,7 @@ class VPNBackendFactory:
         available = []
         test_config = {}
 
-        for protocol in ['wireguard', 'openvpn', 'ikev2']:
+        for protocol in ["wireguard", "openvpn", "ikev2"]:
             backend = VPNBackendFactory.create_backend(protocol, test_config)
             if backend and backend.check_availability():
                 available.append(protocol)

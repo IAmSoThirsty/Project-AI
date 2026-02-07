@@ -24,17 +24,18 @@ import hashlib
 import json
 import logging
 import os
-import psutil
 import threading
 import time
 import traceback
 import uuid
 from collections import defaultdict, deque
+from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
 from enum import Enum
 from pathlib import Path
 from typing import Any
-from collections.abc import Callable
+
+import psutil
 
 logger = logging.getLogger(__name__)
 
@@ -43,8 +44,10 @@ logger = logging.getLogger(__name__)
 # ENUMERATIONS
 # ============================================================================
 
+
 class MetricType(Enum):
     """Types of metrics collected"""
+
     COUNTER = "counter"  # Monotonically increasing
     GAUGE = "gauge"  # Point-in-time value
     HISTOGRAM = "histogram"  # Distribution of values
@@ -53,6 +56,7 @@ class MetricType(Enum):
 
 class AlertSeverity(Enum):
     """Alert severity levels"""
+
     INFO = "info"
     WARNING = "warning"
     ERROR = "error"
@@ -62,6 +66,7 @@ class AlertSeverity(Enum):
 
 class TraceLevel(Enum):
     """Trace detail levels"""
+
     DEBUG = "debug"
     INFO = "info"
     WARN = "warn"
@@ -70,6 +75,7 @@ class TraceLevel(Enum):
 
 class HealthStatus(Enum):
     """System health status"""
+
     HEALTHY = "healthy"
     DEGRADED = "degraded"
     UNHEALTHY = "unhealthy"
@@ -80,9 +86,11 @@ class HealthStatus(Enum):
 # DATA MODELS
 # ============================================================================
 
+
 @dataclass
 class Metric:
     """Individual metric datapoint"""
+
     name: str
     metric_type: MetricType
     value: float
@@ -93,7 +101,7 @@ class Metric:
 
     def to_prometheus_format(self) -> str:
         """Convert to Prometheus exposition format"""
-        labels = ','.join([f'{k}="{v}"' for k, v in self.tags.items()])
+        labels = ",".join([f'{k}="{v}"' for k, v in self.tags.items()])
         label_str = f"{{{labels}}}" if labels else ""
         return f"{self.name}{label_str} {self.value} {int(self.timestamp * 1000)}"
 
@@ -101,6 +109,7 @@ class Metric:
 @dataclass
 class Alert:
     """System alert"""
+
     alert_id: str
     severity: AlertSeverity
     title: str
@@ -128,6 +137,7 @@ class Alert:
 @dataclass
 class TraceSpan:
     """Distributed trace span"""
+
     span_id: str
     trace_id: str
     parent_span_id: str | None
@@ -147,11 +157,7 @@ class TraceSpan:
 
     def log_event(self, event: str, data: dict[str, Any] | None = None) -> None:
         """Add log event to span"""
-        log_entry = {
-            "timestamp": time.time(),
-            "event": event,
-            "data": data or {}
-        }
+        log_entry = {"timestamp": time.time(), "event": event, "data": data or {}}
         self.logs.append(log_entry)
 
     def set_error(self, error: Exception) -> None:
@@ -164,6 +170,7 @@ class TraceSpan:
 @dataclass
 class HealthCheck:
     """Health check result"""
+
     check_name: str
     status: HealthStatus
     timestamp: float
@@ -176,6 +183,7 @@ class HealthCheck:
 @dataclass
 class PerformanceProfile:
     """Performance profiling result"""
+
     profile_id: str
     operation: str
     start_time: float
@@ -192,6 +200,7 @@ class PerformanceProfile:
 @dataclass
 class AuditLogEntry:
     """Tamper-proof audit log entry"""
+
     entry_id: str
     timestamp: float
     actor: str
@@ -217,6 +226,7 @@ class AuditLogEntry:
 # METRICS COLLECTOR
 # ============================================================================
 
+
 class MetricsCollector:
     """High-performance metrics collection and aggregation"""
 
@@ -228,7 +238,9 @@ class MetricsCollector:
         self.histograms: dict[str, list[float]] = defaultdict(list)
         self.lock = threading.RLock()
 
-    def record_counter(self, name: str, value: float = 1.0, tags: dict[str, str] | None = None) -> None:
+    def record_counter(
+        self, name: str, value: float = 1.0, tags: dict[str, str] | None = None
+    ) -> None:
         """Record counter metric (monotonically increasing)"""
         with self.lock:
             key = self._make_key(name, tags or {})
@@ -238,11 +250,13 @@ class MetricsCollector:
                 metric_type=MetricType.COUNTER,
                 value=self.counters[key],
                 timestamp=time.time(),
-                tags=tags or {}
+                tags=tags or {},
             )
             self.metrics[key].append(metric)
 
-    def record_gauge(self, name: str, value: float, tags: dict[str, str] | None = None) -> None:
+    def record_gauge(
+        self, name: str, value: float, tags: dict[str, str] | None = None
+    ) -> None:
         """Record gauge metric (point-in-time value)"""
         with self.lock:
             key = self._make_key(name, tags or {})
@@ -252,11 +266,13 @@ class MetricsCollector:
                 metric_type=MetricType.GAUGE,
                 value=value,
                 timestamp=time.time(),
-                tags=tags or {}
+                tags=tags or {},
             )
             self.metrics[key].append(metric)
 
-    def record_histogram(self, name: str, value: float, tags: dict[str, str] | None = None) -> None:
+    def record_histogram(
+        self, name: str, value: float, tags: dict[str, str] | None = None
+    ) -> None:
         """Record histogram metric (distribution)"""
         with self.lock:
             key = self._make_key(name, tags or {})
@@ -266,7 +282,7 @@ class MetricsCollector:
                 metric_type=MetricType.HISTOGRAM,
                 value=value,
                 timestamp=time.time(),
-                tags=tags or {}
+                tags=tags or {},
             )
             self.metrics[key].append(metric)
 
@@ -282,7 +298,9 @@ class MetricsCollector:
             key = self._make_key(name, tags or {})
             return self.gauges.get(key)
 
-    def get_histogram_stats(self, name: str, tags: dict[str, str] | None = None) -> dict[str, float]:
+    def get_histogram_stats(
+        self, name: str, tags: dict[str, str] | None = None
+    ) -> dict[str, float]:
         """Get histogram statistics"""
         with self.lock:
             key = self._make_key(name, tags or {})
@@ -336,6 +354,7 @@ class MetricsCollector:
 # ALERT MANAGER
 # ============================================================================
 
+
 class AlertManager:
     """Alert generation, routing, and tracking"""
 
@@ -357,7 +376,7 @@ class AlertManager:
         message: str,
         source: str,
         tags: dict[str, str] | None = None,
-        context: dict[str, Any] | None = None
+        context: dict[str, Any] | None = None,
     ) -> Alert:
         """Create new alert"""
         with self.lock:
@@ -369,14 +388,14 @@ class AlertManager:
                 timestamp=time.time(),
                 source=source,
                 tags=tags or {},
-                context=context or {}
+                context=context or {},
             )
             self.alerts[alert.alert_id] = alert
             self.alert_history.append(alert)
 
             logger.log(
                 self._severity_to_log_level(severity),
-                f"Alert created: {title} - {message}"
+                f"Alert created: {title} - {message}",
             )
 
             return alert
@@ -397,7 +416,9 @@ class AlertManager:
                 return True
             return False
 
-    def get_active_alerts(self, min_severity: AlertSeverity | None = None) -> list[Alert]:
+    def get_active_alerts(
+        self, min_severity: AlertSeverity | None = None
+    ) -> list[Alert]:
         """Get all active (unresolved) alerts"""
         with self.lock:
             alerts = [a for a in self.alerts.values() if not a.resolved]
@@ -407,7 +428,7 @@ class AlertManager:
                     AlertSeverity.WARNING: 1,
                     AlertSeverity.ERROR: 2,
                     AlertSeverity.CRITICAL: 3,
-                    AlertSeverity.EMERGENCY: 4
+                    AlertSeverity.EMERGENCY: 4,
                 }
                 min_level = severity_order[min_severity]
                 alerts = [a for a in alerts if severity_order[a.severity] >= min_level]
@@ -425,7 +446,7 @@ class AlertManager:
                         message=rule.message_template.format(**rule.context),
                         source=rule.source,
                         tags=rule.tags,
-                        context=rule.context
+                        context=rule.context,
                     )
                     triggered_alerts.append(alert)
         return triggered_alerts
@@ -443,7 +464,7 @@ class AlertManager:
                     metric.name == "system_cpu_percent" and metric.value > 80
                     for metric in m
                 ),
-                source="telemetry"
+                source="telemetry",
             ),
             AlertRule(
                 name="high_memory_usage",
@@ -454,7 +475,7 @@ class AlertManager:
                     metric.name == "system_memory_percent" and metric.value > 85
                     for metric in m
                 ),
-                source="telemetry"
+                source="telemetry",
             ),
         ]
 
@@ -473,6 +494,7 @@ class AlertManager:
 @dataclass
 class AlertRule:
     """Alert rule definition"""
+
     name: str
     severity: AlertSeverity
     title: str
@@ -495,6 +517,7 @@ class AlertRule:
 # DISTRIBUTED TRACER
 # ============================================================================
 
+
 class DistributedTracer:
     """Distributed tracing with context propagation"""
 
@@ -504,7 +527,9 @@ class DistributedTracer:
         self.completed_traces: deque = deque(maxlen=10000)
         self.lock = threading.RLock()
 
-    def start_trace(self, operation_name: str, tags: dict[str, str] | None = None) -> TraceSpan:
+    def start_trace(
+        self, operation_name: str, tags: dict[str, str] | None = None
+    ) -> TraceSpan:
         """Start new trace"""
         trace_id = str(uuid.uuid4())
         span = self._create_span(trace_id, None, operation_name, tags)
@@ -519,7 +544,7 @@ class DistributedTracer:
         trace_id: str,
         parent_span_id: str,
         operation_name: str,
-        tags: dict[str, str] | None = None
+        tags: dict[str, str] | None = None,
     ) -> TraceSpan:
         """Start child span in existing trace"""
         span = self._create_span(trace_id, parent_span_id, operation_name, tags)
@@ -552,7 +577,7 @@ class DistributedTracer:
         trace_id: str,
         parent_span_id: str | None,
         operation_name: str,
-        tags: dict[str, str] | None
+        tags: dict[str, str] | None,
     ) -> TraceSpan:
         """Create new span"""
         return TraceSpan(
@@ -561,13 +586,14 @@ class DistributedTracer:
             parent_span_id=parent_span_id,
             operation_name=operation_name,
             start_time=time.time(),
-            tags=tags or {}
+            tags=tags or {},
         )
 
 
 # ============================================================================
 # HEALTH MONITOR
 # ============================================================================
+
 
 class HealthMonitor:
     """System health monitoring with self-healing triggers"""
@@ -581,12 +607,12 @@ class HealthMonitor:
         self,
         check_name: str,
         check_fn: Callable[[], tuple[bool, str, dict[str, Any]]],
-        dependencies: list[str] | None = None
+        dependencies: list[str] | None = None,
     ) -> None:
         """Register health check function"""
         self.health_checks[check_name] = {
             "fn": check_fn,
-            "dependencies": dependencies or []
+            "dependencies": dependencies or [],
         }
 
     def run_health_checks(self) -> dict[str, HealthCheck]:
@@ -608,7 +634,7 @@ class HealthMonitor:
                     response_time_ms=response_time_ms,
                     message=message,
                     details=details,
-                    dependencies=check_config["dependencies"]
+                    dependencies=check_config["dependencies"],
                 )
 
                 results[check_name] = health_check
@@ -622,7 +648,7 @@ class HealthMonitor:
                     timestamp=time.time(),
                     response_time_ms=(time.time() - start_time) * 1000,
                     message=f"Check failed: {str(e)}",
-                    details={"error": traceback.format_exc()}
+                    details={"error": traceback.format_exc()},
                 )
 
         return results
@@ -649,6 +675,7 @@ class HealthMonitor:
 # ============================================================================
 # PERFORMANCE PROFILER
 # ============================================================================
+
 
 class PerformanceProfiler:
     """Performance profiling and bottleneck detection"""
@@ -702,8 +729,9 @@ class PerformanceProfileContext:
             duration_ms=duration_ms,
             cpu_percent=self.process.cpu_percent(),
             memory_mb=self.process.memory_info().rss / 1024 / 1024,
-            io_operations=self.process.io_counters().read_count + self.process.io_counters().write_count,
-            context_switches=self.process.num_ctx_switches().voluntary
+            io_operations=self.process.io_counters().read_count
+            + self.process.io_counters().write_count,
+            context_switches=self.process.num_ctx_switches().voluntary,
         )
 
         self.profiler.record_profile(profile)
@@ -712,6 +740,7 @@ class PerformanceProfileContext:
 # ============================================================================
 # AUDIT LOGGER
 # ============================================================================
+
 
 class AuditLogger:
     """Tamper-proof audit logging with blockchain-style chaining"""
@@ -732,7 +761,7 @@ class AuditLogger:
         action: str,
         resource: str,
         result: str,
-        context: dict[str, Any] | None = None
+        context: dict[str, Any] | None = None,
     ) -> AuditLogEntry:
         """Log auditable action"""
         with self.lock:
@@ -743,7 +772,7 @@ class AuditLogger:
                 action=action,
                 resource=resource,
                 result=result,
-                context=context or {}
+                context=context or {},
             )
 
             entry.seal(self.last_hash)
@@ -776,7 +805,7 @@ class AuditLogger:
         actor: str | None = None,
         resource: str | None = None,
         start_time: float | None = None,
-        end_time: float | None = None
+        end_time: float | None = None,
     ) -> list[AuditLogEntry]:
         """Query audit trail with filters"""
         with self.lock:
@@ -812,8 +841,8 @@ class AuditLogger:
         """Persist single entry to disk"""
         log_file = self.data_dir / "audit_log.jsonl"
         try:
-            with open(log_file, 'a') as f:
-                f.write(json.dumps(asdict(entry)) + '\n')
+            with open(log_file, "a") as f:
+                f.write(json.dumps(asdict(entry)) + "\n")
         except Exception as e:
             logger.error(f"Failed to persist audit entry: {e}")
 
@@ -821,6 +850,7 @@ class AuditLogger:
 # ============================================================================
 # PROMETHEUS EXPORTER
 # ============================================================================
+
 
 class PrometheusExporter:
     """Prometheus metrics exporter"""
@@ -837,7 +867,7 @@ class PrometheusExporter:
         for metric in snapshot:
             lines.append(metric.to_prometheus_format())
 
-        return '\n'.join(lines)
+        return "\n".join(lines)
 
     def start_http_server(self) -> None:
         """Start HTTP server for Prometheus scraping"""
@@ -848,6 +878,7 @@ class PrometheusExporter:
 # ============================================================================
 # MAIN TELEMETRY SYSTEM
 # ============================================================================
+
 
 class HYDRA50TelemetrySystem:
     """
@@ -888,9 +919,7 @@ class HYDRA50TelemetrySystem:
 
         self._stop_monitoring.clear()
         self._monitoring_thread = threading.Thread(
-            target=self._monitoring_loop,
-            args=(interval_seconds,),
-            daemon=True
+            target=self._monitoring_loop, args=(interval_seconds,), daemon=True
         )
         self._monitoring_thread.start()
         logger.info(f"Monitoring started with {interval_seconds}s interval")
@@ -924,31 +953,44 @@ class HYDRA50TelemetrySystem:
         # Memory metrics
         memory = psutil.virtual_memory()
         self.metrics_collector.record_gauge("system_memory_percent", memory.percent)
-        self.metrics_collector.record_gauge("system_memory_used_mb", memory.used / 1024 / 1024)
+        self.metrics_collector.record_gauge(
+            "system_memory_used_mb", memory.used / 1024 / 1024
+        )
 
         # Disk metrics
-        disk = psutil.disk_usage('/')
+        disk = psutil.disk_usage("/")
         self.metrics_collector.record_gauge("system_disk_percent", disk.percent)
 
         # Network metrics
         net_io = psutil.net_io_counters()
-        self.metrics_collector.record_counter("system_network_bytes_sent", net_io.bytes_sent)
-        self.metrics_collector.record_counter("system_network_bytes_recv", net_io.bytes_recv)
+        self.metrics_collector.record_counter(
+            "system_network_bytes_sent", net_io.bytes_sent
+        )
+        self.metrics_collector.record_counter(
+            "system_network_bytes_recv", net_io.bytes_recv
+        )
 
     def _register_default_health_checks(self) -> None:
         """Register default health checks"""
+
         def check_disk_space() -> tuple[bool, str, dict[str, Any]]:
-            disk = psutil.disk_usage('/')
+            disk = psutil.disk_usage("/")
             success = disk.percent < 90
             message = f"Disk usage: {disk.percent}%"
-            details = {"percent": disk.percent, "free_gb": disk.free / 1024 / 1024 / 1024}
+            details = {
+                "percent": disk.percent,
+                "free_gb": disk.free / 1024 / 1024 / 1024,
+            }
             return success, message, details
 
         def check_memory() -> tuple[bool, str, dict[str, Any]]:
             memory = psutil.virtual_memory()
             success = memory.percent < 90
             message = f"Memory usage: {memory.percent}%"
-            details = {"percent": memory.percent, "available_gb": memory.available / 1024 / 1024 / 1024}
+            details = {
+                "percent": memory.percent,
+                "available_gb": memory.available / 1024 / 1024 / 1024,
+            }
             return success, message, details
 
         self.health_monitor.register_check("disk_space", check_disk_space)

@@ -3,17 +3,17 @@
 Data models for state vectors, events, and configuration.
 """
 
-from .state_schema import StateVector, StateDimension
+from .config_schema import EngineConfig, IrreversibilityConfig, OutcomeThresholds
 from .event_schema import (
-    Event,
-    EventType,
     BetrayalEvent,
     CooperationEvent,
+    Event,
+    EventType,
     InstitutionalFailureEvent,
     ManipulationEvent,
     RedTeamEvent,
 )
-from .config_schema import EngineConfig, IrreversibilityConfig, OutcomeThresholds
+from .state_schema import StateDimension, StateVector
 
 __all__ = [
     "StateVector",

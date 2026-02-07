@@ -4,11 +4,12 @@ Triumvirate HTTP Client - Legion Phase 2
 Handles governance decisions via Project-AI API
 """
 
-import aiohttp
 import asyncio
-from typing import Any
-from pydantic import BaseModel
 from datetime import datetime
+from typing import Any
+
+import aiohttp
+from pydantic import BaseModel
 
 
 class TriumvirateVote(BaseModel):

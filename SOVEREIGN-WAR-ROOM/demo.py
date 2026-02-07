@@ -6,7 +6,6 @@ Demonstrates the core functionality of the SWR system.
 """
 
 from swr import SovereignWarRoom
-from swr.scenario import ScenarioType
 
 print("=" * 80)
 print("🎯 SOVEREIGN WAR ROOM - Quick Demo")

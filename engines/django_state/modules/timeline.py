@@ -3,12 +3,13 @@
 Event sourcing and state chain reconstruction with immutable audit trail.
 """
 
-import logging
 import hashlib
 import json
-from typing import Dict, Any, List, Optional
-from ..schemas.state_schema import StateVector
+import logging
+from typing import Any
+
 from ..schemas.event_schema import Event
+from ..schemas.state_schema import StateVector
 
 logger = logging.getLogger(__name__)
 
@@ -18,25 +19,25 @@ class TimelineModule:
     
     Maintains complete audit trail of all events and state transitions.
     """
-    
+
     def __init__(self):
         """Initialize timeline module."""
-        self.timeline: List[Dict[str, Any]] = []
-        self.state_snapshots: Dict[int, Dict[str, Any]] = {}
-        self.event_index: Dict[str, int] = {}  # event_id -> timeline index
-        
+        self.timeline: list[dict[str, Any]] = []
+        self.state_snapshots: dict[int, dict[str, Any]] = {}
+        self.event_index: dict[str, int] = {}  # event_id -> timeline index
+
         # Chain integrity
         self.chain_hash = ""
         self.last_snapshot_tick = 0
-        
+
         logger.info("Timeline module initialized")
-    
+
     def record_event(
         self,
         event: Event,
         state_before: StateVector,
         state_after: StateVector,
-        changes_applied: Dict[str, Any],
+        changes_applied: dict[str, Any],
     ) -> int:
         """Record event in timeline with state transitions.
         
@@ -52,10 +53,10 @@ class TimelineModule:
         # Calculate state hash
         state_hash_before = self._hash_state(state_before)
         state_hash_after = self._hash_state(state_after)
-        
+
         # Sanitize changes for JSON serialization
         safe_changes = self._sanitize_for_json(changes_applied)
-        
+
         # Create timeline entry
         entry = {
             "index": len(self.timeline),
@@ -66,27 +67,27 @@ class TimelineModule:
             "changes": safe_changes,
             "previous_chain_hash": self.chain_hash,
         }
-        
+
         # Calculate entry hash and update chain
         entry_hash = self._hash_entry(entry)
         entry["entry_hash"] = entry_hash
         self.chain_hash = entry_hash
-        
+
         # Add to timeline
         self.timeline.append(entry)
         self.event_index[event.event_id] = entry["index"]
-        
+
         logger.debug(f"Recorded event {event.event_id} at index {entry['index']}")
-        
+
         return entry["index"]
-    
+
     def record_tick(
         self,
         tick_number: int,
         timestamp: float,
         state_before: StateVector,
         state_after: StateVector,
-        changes: Dict[str, Any],
+        changes: dict[str, Any],
     ) -> int:
         """Record a tick with natural state evolution.
         
@@ -102,7 +103,7 @@ class TimelineModule:
         """
         # Create synthetic tick event
         from ..schemas.event_schema import Event, EventType
-        
+
         tick_event = Event(
             event_type=EventType.SYSTEM_SHOCK,
             timestamp=timestamp,
@@ -110,10 +111,10 @@ class TimelineModule:
             description=f"Tick {tick_number}: natural state evolution",
             metadata={"tick": tick_number},  # Don't include full changes in metadata
         )
-        
+
         # Record with changes separate
         return self.record_event(tick_event, state_before, state_after, changes)
-    
+
     def create_snapshot(self, tick: int, state: StateVector) -> None:
         """Create state snapshot for efficient replay.
         
@@ -124,7 +125,7 @@ class TimelineModule:
         self.state_snapshots[tick] = state.to_dict()
         self.last_snapshot_tick = tick
         logger.debug(f"Created state snapshot at tick {tick}")
-    
+
     def _hash_state(self, state: StateVector) -> str:
         """Calculate hash of state vector.
         
@@ -136,7 +137,7 @@ class TimelineModule:
         """
         state_json = json.dumps(state.to_dict(), sort_keys=True)
         return hashlib.sha256(state_json.encode()).hexdigest()
-    
+
     def _sanitize_for_json(self, obj: Any) -> Any:
         """Sanitize object for JSON serialization.
         
@@ -156,8 +157,8 @@ class TimelineModule:
             return obj
         else:
             return str(obj)
-    
-    def _hash_entry(self, entry: Dict[str, Any]) -> str:
+
+    def _hash_entry(self, entry: dict[str, Any]) -> str:
         """Calculate hash of timeline entry.
         
         Args:
@@ -169,11 +170,11 @@ class TimelineModule:
         # Create deterministic representation
         entry_copy = entry.copy()
         entry_copy.pop("entry_hash", None)  # Remove hash field itself
-        
+
         entry_json = json.dumps(entry_copy, sort_keys=True)
         return hashlib.sha256(entry_json.encode()).hexdigest()
-    
-    def verify_chain_integrity(self) -> tuple[bool, Optional[str]]:
+
+    def verify_chain_integrity(self) -> tuple[bool, str | None]:
         """Verify integrity of event chain.
         
         Returns:
@@ -181,31 +182,31 @@ class TimelineModule:
         """
         if not self.timeline:
             return True, None
-        
+
         # Check first entry
         first_entry = self.timeline[0]
         if first_entry["previous_chain_hash"] != "":
             return False, "First entry has non-empty previous hash"
-        
+
         # Check chain linkage
         for i in range(1, len(self.timeline)):
             entry = self.timeline[i]
             previous_entry = self.timeline[i-1]
-            
+
             if entry["previous_chain_hash"] != previous_entry["entry_hash"]:
                 return False, f"Chain break at index {i}"
-        
+
         # Verify entry hashes
         for entry in self.timeline:
             expected_hash = entry["entry_hash"]
             calculated_hash = self._hash_entry(entry)
-            
+
             if expected_hash != calculated_hash:
                 return False, f"Hash mismatch at index {entry['index']}"
-        
+
         return True, None
-    
-    def reconstruct_state_at_tick(self, target_tick: int, initial_state: StateVector) -> Optional[StateVector]:
+
+    def reconstruct_state_at_tick(self, target_tick: int, initial_state: StateVector) -> StateVector | None:
         """Reconstruct state at specific tick from timeline.
         
         Args:
@@ -222,24 +223,23 @@ class TimelineModule:
                 snapshot_tick = tick
             else:
                 break
-        
+
         # Load snapshot or use initial state
         if snapshot_tick > 0:
-            from ..schemas.state_schema import StateVector
             # Would need to implement StateVector.from_dict() for full reconstruction
             logger.info(f"Loading snapshot from tick {snapshot_tick}")
             current_state = initial_state.copy()  # Simplified
         else:
             current_state = initial_state.copy()
-        
+
         # Replay events from snapshot to target
         logger.info(f"Replaying events from tick {snapshot_tick} to {target_tick}")
-        
+
         # This would require storing and replaying all events
         # Simplified implementation for now
         return current_state
-    
-    def get_event_by_id(self, event_id: str) -> Optional[Dict[str, Any]]:
+
+    def get_event_by_id(self, event_id: str) -> dict[str, Any] | None:
         """Get timeline entry by event ID.
         
         Args:
@@ -252,8 +252,8 @@ class TimelineModule:
             index = self.event_index[event_id]
             return self.timeline[index]
         return None
-    
-    def get_events_in_range(self, start_time: float, end_time: float) -> List[Dict[str, Any]]:
+
+    def get_events_in_range(self, start_time: float, end_time: float) -> list[dict[str, Any]]:
         """Get all events in time range.
         
         Args:
@@ -267,8 +267,8 @@ class TimelineModule:
             entry for entry in self.timeline
             if start_time <= entry["timestamp"] <= end_time
         ]
-    
-    def get_timeline_summary(self) -> Dict[str, Any]:
+
+    def get_timeline_summary(self) -> dict[str, Any]:
         """Get timeline summary statistics.
         
         Returns:
@@ -281,7 +281,7 @@ class TimelineModule:
                 "timeline_end": 0.0,
                 "snapshots": 0,
             }
-        
+
         return {
             "total_events": len(self.timeline),
             "timeline_start": self.timeline[0]["timestamp"],
@@ -291,8 +291,8 @@ class TimelineModule:
             "chain_hash": self.chain_hash[:16] + "...",
             "chain_valid": self.verify_chain_integrity()[0],
         }
-    
-    def export_timeline(self, include_states: bool = False) -> List[Dict[str, Any]]:
+
+    def export_timeline(self, include_states: bool = False) -> list[dict[str, Any]]:
         """Export complete timeline.
         
         Args:
@@ -314,15 +314,15 @@ class TimelineModule:
                 }
                 for entry in self.timeline
             ]
-    
-    def get_summary(self) -> Dict[str, Any]:
+
+    def get_summary(self) -> dict[str, Any]:
         """Get module summary.
         
         Returns:
             Dictionary with module state
         """
         return self.get_timeline_summary()
-    
+
     def reset(self) -> None:
         """Reset module to initial state."""
         self.__init__()

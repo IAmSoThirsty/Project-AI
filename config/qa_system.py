@@ -3,8 +3,8 @@ Q/A System - Questions and Answers with God tier encryption
 """
 
 import logging
-from typing import Dict, Any, List
 import time
+from typing import Any
 
 
 class QASystem:
@@ -23,15 +23,15 @@ class QASystem:
              'answer': 'HOLY WAR mode - eliminates ALL ads, trackers, pop-ups, redirects, autoplay videos. Zero mercy. Complete annihilation of intrusive advertising.'}
         ]
 
-        self.user_questions: List[Dict[str, Any]] = []
+        self.user_questions: list[dict[str, Any]] = []
 
-    def search(self, query: str) -> List[Dict[str, Any]]:
+    def search(self, query: str) -> list[dict[str, Any]]:
         """Search Q/A database"""
         query_lower = query.lower()
         return [qa for qa in self.qa_database
                 if query_lower in qa['question'].lower() or query_lower in qa['answer'].lower()]
 
-    def submit_question(self, question: str, category: str = 'general') -> Dict[str, Any]:
+    def submit_question(self, question: str, category: str = 'general') -> dict[str, Any]:
         """Submit a question (encrypted)"""
         encrypted_q = self.god_tier_encryption.encrypt_god_tier(question.encode())
         submission = {

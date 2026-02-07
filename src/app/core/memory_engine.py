@@ -92,6 +92,13 @@ from datetime import UTC, datetime, timedelta
 from enum import Enum
 from typing import Any
 
+from app.core.platform_tiers import (
+    AuthorityLevel,
+    ComponentRole,
+    PlatformTier,
+    get_tier_registry,
+)
+
 logger = logging.getLogger(__name__)
 
 
@@ -423,6 +430,24 @@ class MemoryEngine:
 
         # Load existing memories
         self._load_memories()
+
+        # Register with Tier Registry as Tier-2 Resource Orchestrator
+        try:
+            tier_registry = get_tier_registry()
+            tier_registry.register_component(
+                component_id="memory_engine",
+                component_name="MemoryEngine",
+                tier=PlatformTier.TIER_2_INFRASTRUCTURE,
+                authority_level=AuthorityLevel.CONSTRAINED,
+                role=ComponentRole.RESOURCE_ORCHESTRATOR,
+                component_ref=self,
+                dependencies=["cognition_kernel"],  # Depends on kernel for authority
+                can_be_paused=True,  # Can be paused by Tier-1
+                can_be_replaced=False,  # Core memory infrastructure
+            )
+            logger.info("MemoryEngine registered as Tier-2 Resource Orchestrator")
+        except Exception as e:
+            logger.warning("Failed to register MemoryEngine in tier registry: %s", e)
 
     def _load_memories(self):
         """Load all memory types from disk."""

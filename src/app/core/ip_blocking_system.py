@@ -21,7 +21,7 @@ import threading
 import time
 from collections import defaultdict, deque
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timedelta, UTC
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -116,7 +116,9 @@ class IPBlockingSystem:
         self._load_state()
 
         logger.info("IP Blocking System initialized")
-        logger.info(f"  Rate limits: {max_requests_per_minute}/min, {max_requests_per_hour}/hour")
+        logger.info(
+            f"  Rate limits: {max_requests_per_minute}/min, {max_requests_per_hour}/hour"
+        )
         logger.info(f"  Violation threshold: {violation_threshold}")
         logger.info(f"  Block duration: {block_duration_hours} hours")
 
@@ -201,13 +203,19 @@ class IPBlockingSystem:
             logger.warning(
                 f"Rate limit exceeded (minute): {ip_address} - {requests_last_minute} requests"
             )
-            return False, f"Rate limit exceeded: {requests_last_minute} requests in last minute"
+            return (
+                False,
+                f"Rate limit exceeded: {requests_last_minute} requests in last minute",
+            )
 
         if requests_last_hour >= self.max_requests_per_hour:
             logger.warning(
                 f"Rate limit exceeded (hour): {ip_address} - {requests_last_hour} requests"
             )
-            return False, f"Rate limit exceeded: {requests_last_hour} requests in last hour"
+            return (
+                False,
+                f"Rate limit exceeded: {requests_last_hour} requests in last hour",
+            )
 
         # Add this request
         requests.append(now)
@@ -250,7 +258,11 @@ class IPBlockingSystem:
             requests_in_window=len(self.rate_windows[f"{ip_address}:{endpoint}"]),
             limit=self.max_requests_per_hour,
             endpoint=endpoint,
-            action_taken="blocked" if record.violation_count >= self.violation_threshold else "logged",
+            action_taken=(
+                "blocked"
+                if record.violation_count >= self.violation_threshold
+                else "logged"
+            ),
         )
         self.violations.append(violation)
 

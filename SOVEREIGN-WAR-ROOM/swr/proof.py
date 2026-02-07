@@ -8,12 +8,13 @@ Note: This system provides cryptographic decision attestations using commitment 
 and hash-based verification, not formal zero-knowledge proof systems (zk-SNARKs/zk-STARKs).
 """
 
-from enum import Enum
-from typing import Dict, Any, List, Optional
-from datetime import datetime
-from pydantic import BaseModel, Field
 import hashlib
 import json
+from datetime import datetime
+from enum import Enum
+from typing import Any
+
+from pydantic import BaseModel, Field
 
 
 class ProofType(str, Enum):
@@ -29,19 +30,19 @@ class Proof(BaseModel):
     proof_id: str
     proof_type: ProofType
     timestamp: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
-    
+
     # Proof data
     statement: str
-    witness: Dict[str, Any]
+    witness: dict[str, Any]
     commitment: str
-    
+
     # Verification data
     verification_key: str
     proof_data: str
-    
+
     # Metadata
-    scenario_id: Optional[str] = None
-    metadata: Dict[str, Any] = Field(default_factory=dict)
+    scenario_id: str | None = None
+    metadata: dict[str, Any] = Field(default_factory=dict)
 
 
 class ProofSystem:
@@ -54,7 +55,7 @@ class ProofSystem:
     Uses commitment schemes and hash-based verification for tamper-evident
     decision validation without full zero-knowledge proof constructions.
     """
-    
+
     def __init__(self, crypto_engine=None):
         """
         Initialize proof system.
@@ -64,14 +65,14 @@ class ProofSystem:
         """
         from .crypto import CryptoEngine
         self.crypto = crypto_engine or CryptoEngine()
-        self.proof_store: Dict[str, Proof] = {}
-    
+        self.proof_store: dict[str, Proof] = {}
+
     def generate_decision_proof(
         self,
         scenario_id: str,
-        decision: Dict[str, Any],
-        reasoning: Dict[str, Any],
-        governance_report: Optional[Dict[str, Any]] = None
+        decision: dict[str, Any],
+        reasoning: dict[str, Any],
+        governance_report: dict[str, Any] | None = None
     ) -> Proof:
         """
         Generate cryptographic attestation of decision-making process.
@@ -93,7 +94,7 @@ class ProofSystem:
             "compliant": governance_report.get("overall_status") == "compliant" if governance_report else None
         }
         statement_str = json.dumps(statement, sort_keys=True)
-        
+
         # Create witness (private)
         witness = {
             "full_decision": decision,
@@ -101,18 +102,18 @@ class ProofSystem:
             "governance_report": governance_report,
             "internal_state": decision.get("internal_state", {})
         }
-        
+
         # Generate commitment (hash of witness)
         witness_str = json.dumps(witness, sort_keys=True)
         commitment = hashlib.sha3_512(witness_str.encode()).hexdigest()
-        
+
         # Generate proof data
         proof_input = f"{statement_str}:{commitment}"
         proof_hash = hashlib.sha3_512(proof_input.encode()).hexdigest()
-        
+
         # Generate verification key
         verification_key = self._generate_verification_key(statement_str, commitment)
-        
+
         # Create proof
         proof = Proof(
             proof_id=hashlib.sha256(f"{scenario_id}:{datetime.utcnow().isoformat()}".encode()).hexdigest()[:16],
@@ -124,16 +125,16 @@ class ProofSystem:
             proof_data=proof_hash,
             scenario_id=scenario_id
         )
-        
+
         # Store proof
         self.proof_store[proof.proof_id] = proof
-        
+
         return proof
-    
+
     def generate_compliance_proof(
         self,
         scenario_id: str,
-        compliance_report: Dict[str, Any]
+        compliance_report: dict[str, Any]
     ) -> Proof:
         """
         Generate proof of compliance with governance rules.
@@ -152,21 +153,21 @@ class ProofSystem:
             "timestamp": datetime.utcnow().isoformat()
         }
         statement_str = json.dumps(statement, sort_keys=True)
-        
+
         witness = {
             "full_report": compliance_report,
             "violations": compliance_report.get("violations", []),
             "warnings": compliance_report.get("warnings", [])
         }
-        
+
         witness_str = json.dumps(witness, sort_keys=True)
         commitment = hashlib.sha3_512(witness_str.encode()).hexdigest()
-        
+
         proof_input = f"{statement_str}:{commitment}"
         proof_hash = hashlib.sha3_512(proof_input.encode()).hexdigest()
-        
+
         verification_key = self._generate_verification_key(statement_str, commitment)
-        
+
         proof = Proof(
             proof_id=hashlib.sha256(f"{scenario_id}:compliance:{datetime.utcnow().isoformat()}".encode()).hexdigest()[:16],
             proof_type=ProofType.COMPLIANCE_PROOF,
@@ -177,12 +178,12 @@ class ProofSystem:
             proof_data=proof_hash,
             scenario_id=scenario_id
         )
-        
+
         self.proof_store[proof.proof_id] = proof
-        
+
         return proof
-    
-    def generate_audit_proof(self, audit_data: Dict[str, Any]) -> Proof:
+
+    def generate_audit_proof(self, audit_data: dict[str, Any]) -> Proof:
         """
         Generate proof of audit trail integrity.
         
@@ -198,16 +199,16 @@ class ProofSystem:
             "integrity_hash": hashlib.sha3_256(json.dumps(audit_data, sort_keys=True).encode()).hexdigest()
         }
         statement_str = json.dumps(statement, sort_keys=True)
-        
+
         witness = {"full_audit_log": audit_data}
         witness_str = json.dumps(witness, sort_keys=True)
         commitment = hashlib.sha3_512(witness_str.encode()).hexdigest()
-        
+
         proof_input = f"{statement_str}:{commitment}"
         proof_hash = hashlib.sha3_512(proof_input.encode()).hexdigest()
-        
+
         verification_key = self._generate_verification_key(statement_str, commitment)
-        
+
         proof = Proof(
             proof_id=hashlib.sha256(f"audit:{datetime.utcnow().isoformat()}".encode()).hexdigest()[:16],
             proof_type=ProofType.AUDIT_PROOF,
@@ -217,16 +218,16 @@ class ProofSystem:
             verification_key=verification_key,
             proof_data=proof_hash
         )
-        
+
         self.proof_store[proof.proof_id] = proof
-        
+
         return proof
-    
+
     def verify_proof(
         self,
         proof: Proof,
         reveal_witness: bool = False
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Verify cryptographic attestation.
         
@@ -240,19 +241,19 @@ class ProofSystem:
         # Verify commitment
         witness_str = json.dumps(proof.witness, sort_keys=True)
         expected_commitment = hashlib.sha3_512(witness_str.encode()).hexdigest()
-        
+
         commitment_valid = (proof.commitment == expected_commitment)
-        
+
         # Verify proof data
         proof_input = f"{proof.statement}:{proof.commitment}"
         expected_proof = hashlib.sha3_512(proof_input.encode()).hexdigest()
-        
+
         proof_valid = (proof.proof_data == expected_proof)
-        
+
         # Verify verification key
         expected_key = self._generate_verification_key(proof.statement, proof.commitment)
         key_valid = (proof.verification_key == expected_key)
-        
+
         result = {
             "proof_id": proof.proof_id,
             "valid": commitment_valid and proof_valid and key_valid,
@@ -261,12 +262,12 @@ class ProofSystem:
             "key_valid": key_valid,
             "timestamp": datetime.utcnow().isoformat()
         }
-        
+
         if reveal_witness:
             result["witness"] = proof.witness
-        
+
         return result
-    
+
     def verify_decision_against_scenario(
         self,
         proof: Proof,
@@ -284,22 +285,22 @@ class ProofSystem:
         """
         if proof.proof_type != ProofType.DECISION_PROOF:
             return False
-        
+
         # Parse statement
         statement = json.loads(proof.statement)
         actual_decision = statement.get("decision_made", "")
-        
+
         return actual_decision.lower() == expected_outcome.lower()
-    
-    def get_proof(self, proof_id: str) -> Optional[Proof]:
+
+    def get_proof(self, proof_id: str) -> Proof | None:
         """Retrieve proof by ID."""
         return self.proof_store.get(proof_id)
-    
+
     def list_proofs(
         self,
-        proof_type: Optional[ProofType] = None,
-        scenario_id: Optional[str] = None
-    ) -> List[Proof]:
+        proof_type: ProofType | None = None,
+        scenario_id: str | None = None
+    ) -> list[Proof]:
         """
         List stored proofs with optional filtering.
         
@@ -311,15 +312,15 @@ class ProofSystem:
             List of matching proofs
         """
         proofs = list(self.proof_store.values())
-        
+
         if proof_type:
             proofs = [p for p in proofs if p.proof_type == proof_type]
-        
+
         if scenario_id:
             proofs = [p for p in proofs if p.scenario_id == scenario_id]
-        
+
         return proofs
-    
+
     def export_proof(self, proof: Proof, filepath: str):
         """
         Export proof to JSON file.
@@ -330,7 +331,7 @@ class ProofSystem:
         """
         with open(filepath, "w") as f:
             json.dump(proof.model_dump(), f, indent=2)
-    
+
     def import_proof(self, filepath: str) -> Proof:
         """
         Import proof from JSON file.
@@ -341,20 +342,20 @@ class ProofSystem:
         Returns:
             Imported proof
         """
-        with open(filepath, "r") as f:
+        with open(filepath) as f:
             proof_data = json.load(f)
-        
+
         proof = Proof(**proof_data)
         self.proof_store[proof.proof_id] = proof
-        
+
         return proof
-    
+
     def _generate_verification_key(self, statement: str, commitment: str) -> str:
         """Generate verification key for proof."""
         key_input = f"{statement}:{commitment}:{self.crypto.master_key.decode()}"
         return hashlib.sha3_256(key_input.encode()).hexdigest()
-    
-    def generate_proof_chain(self, proofs: List[Proof]) -> str:
+
+    def generate_proof_chain(self, proofs: list[Proof]) -> str:
         """
         Generate merkle root of proof chain.
         
@@ -366,18 +367,18 @@ class ProofSystem:
         """
         if not proofs:
             return ""
-        
+
         # Create leaf hashes
         hashes = [p.proof_data for p in proofs]
-        
+
         # Build merkle tree
         while len(hashes) > 1:
             if len(hashes) % 2 == 1:
                 hashes.append(hashes[-1])  # Duplicate last hash if odd
-            
+
             hashes = [
                 hashlib.sha3_256(f"{hashes[i]}:{hashes[i+1]}".encode()).hexdigest()
                 for i in range(0, len(hashes), 2)
             ]
-        
+
         return hashes[0]

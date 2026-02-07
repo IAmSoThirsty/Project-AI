@@ -18,6 +18,11 @@ NON-NEGOTIABLE INVARIANTS:
 - ExecutionContext is the single source of truth for all execution state
 - Governance never executes, Execution never governs
 - Blocked actions are still logged for auditability
+
+THREE-TIER PLATFORM INTEGRATION:
+- Tier 1 (Governance): Kernel is the sovereign authority
+- Authority flows downward only (Tier 1 → Tier 2 → Tier 3)
+- Capability flows upward (Tier 3 → Tier 2 → Tier 1)
 """
 
 import logging
@@ -29,6 +34,13 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from enum import Enum
 from typing import Any
+
+from app.core.platform_tiers import (
+    AuthorityLevel,
+    ComponentRole,
+    PlatformTier,
+    get_tier_registry,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -335,6 +347,24 @@ class CognitionKernel:
         self.pre_execution_hooks: list[Callable] = []
         self.post_execution_hooks: list[Callable] = []
         self.error_hooks: list[Callable] = []
+
+        # Register kernel in Tier Registry as Tier-1 Governance Core
+        try:
+            tier_registry = get_tier_registry()
+            tier_registry.register_component(
+                component_id="cognition_kernel",
+                component_name="CognitionKernel",
+                tier=PlatformTier.TIER_1_GOVERNANCE,
+                authority_level=AuthorityLevel.SOVEREIGN,
+                role=ComponentRole.GOVERNANCE_CORE,
+                component_ref=self,
+                dependencies=[],  # Tier 1 has NO dependencies on Tier 2/3
+                can_be_paused=False,  # Kernel cannot be paused
+                can_be_replaced=False,  # Kernel is irreplaceable
+            )
+            logger.info("CognitionKernel registered as Tier-1 Governance Core")
+        except Exception as e:
+            logger.warning("Failed to register kernel in tier registry: %s", e)
 
         logger.info("CognitionKernel initialized with integrated subsystems")
         logger.info("Identity: %s", identity_system is not None)

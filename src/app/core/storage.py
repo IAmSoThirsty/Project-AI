@@ -344,7 +344,9 @@ class SQLiteStorage(StorageEngine):
                     "reflection_history",
                 ]:
                     # Get column name for primary key (validated tables only)
-                    pk_col = "decision_id" if table == "governance_decisions" else "trace_id"
+                    pk_col = (
+                        "decision_id" if table == "governance_decisions" else "trace_id"
+                    )
                     if table == "reflection_history":
                         pk_col = "id"
 
@@ -590,9 +592,7 @@ class JSONStorage(StorageEngine):
         logger.info("JSONStorage closed")
 
 
-def get_storage_engine(
-    storage_type: str = "sqlite", **kwargs
-) -> StorageEngine:
+def get_storage_engine(storage_type: str = "sqlite", **kwargs) -> StorageEngine:
     """
     Factory function to get a storage engine.
 

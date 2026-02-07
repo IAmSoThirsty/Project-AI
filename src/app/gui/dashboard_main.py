@@ -20,6 +20,12 @@ from app.agents.expert_agent import ExpertAgent
 from app.core.access_control import get_access_control
 from app.core.ai_systems import LearningRequestManager
 from app.core.council_hub import get_council_hub
+from app.core.platform_tiers import (
+    AuthorityLevel,
+    ComponentRole,
+    PlatformTier,
+    get_tier_registry,
+)
 from app.plugins.codex_adapter import CodexAdapter
 
 logger = logging.getLogger(__name__)
@@ -47,6 +53,24 @@ class DashboardMainWindow(QMainWindow):
         self._init_codex_tab()
         self._init_logs_tab()
         self._init_waiting_tab()
+
+        # Register with Tier Registry as Tier-3 User Interface
+        try:
+            tier_registry = get_tier_registry()
+            tier_registry.register_component(
+                component_id="dashboard_main",
+                component_name="DashboardMainWindow",
+                tier=PlatformTier.TIER_3_APPLICATION,
+                authority_level=AuthorityLevel.SANDBOXED,
+                role=ComponentRole.USER_INTERFACE,
+                component_ref=self,
+                dependencies=["cognition_kernel", "council_hub"],
+                can_be_paused=True,  # Can be paused by Tier-1
+                can_be_replaced=True,  # GUI is replaceable
+            )
+            logger.info("DashboardMainWindow registered as Tier-3 User Interface")
+        except Exception as e:
+            logger.warning("Failed to register DashboardMainWindow in tier registry: %s", e)
 
     def _init_requests_tab(self) -> None:
         widget = QWidget()

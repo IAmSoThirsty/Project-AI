@@ -2,8 +2,9 @@
 Tests for Planetary Defense Monolith - Constitutional Core for Project-AI.
 """
 
-import pytest
 from datetime import UTC
+
+import pytest
 
 from app.core.planetary_defense_monolith import (
     PLANETARY_CORE,

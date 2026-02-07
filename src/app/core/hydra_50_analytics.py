@@ -24,17 +24,17 @@ from __future__ import annotations
 
 import json
 import logging
+from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any
-from collections.abc import Callable
 
 import numpy as np
 from scipy import stats
-from sklearn.cluster import KMeans, DBSCAN
-from sklearn.ensemble import RandomForestClassifier, IsolationForest
+from sklearn.cluster import DBSCAN, KMeans
+from sklearn.ensemble import IsolationForest, RandomForestClassifier
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import (
     mean_absolute_error,
@@ -51,8 +51,10 @@ logger = logging.getLogger(__name__)
 # ENUMERATIONS
 # ============================================================================
 
+
 class AnalysisType(Enum):
     """Types of analytics"""
+
     STATISTICAL = "statistical"
     PREDICTIVE = "predictive"
     RISK_QUANTIFICATION = "risk_quantification"
@@ -66,6 +68,7 @@ class AnalysisType(Enum):
 
 class RiskLevel(Enum):
     """Risk level classifications"""
+
     MINIMAL = "minimal"
     LOW = "low"
     MODERATE = "moderate"
@@ -78,9 +81,11 @@ class RiskLevel(Enum):
 # DATA MODELS
 # ============================================================================
 
+
 @dataclass
 class ScenarioProgression:
     """Scenario progression data point"""
+
     scenario_id: str
     timestamp: float
     escalation_level: int
@@ -93,6 +98,7 @@ class ScenarioProgression:
 @dataclass
 class StatisticalSummary:
     """Statistical summary of data"""
+
     mean: float
     median: float
     std_dev: float
@@ -109,6 +115,7 @@ class StatisticalSummary:
 @dataclass
 class CorrelationResult:
     """Correlation analysis result"""
+
     variable1: str
     variable2: str
     correlation: float
@@ -120,6 +127,7 @@ class CorrelationResult:
 @dataclass
 class PredictionResult:
     """Prediction model result"""
+
     predicted_value: float
     confidence_interval_lower: float
     confidence_interval_upper: float
@@ -132,6 +140,7 @@ class PredictionResult:
 @dataclass
 class RiskMetrics:
     """Risk quantification metrics"""
+
     value_at_risk: float  # VaR
     conditional_var: float  # CVaR
     expected_loss: float
@@ -144,6 +153,7 @@ class RiskMetrics:
 @dataclass
 class SensitivityResult:
     """Sensitivity analysis result"""
+
     parameter: str
     base_value: float
     variation_range: tuple[float, float]
@@ -155,6 +165,7 @@ class SensitivityResult:
 @dataclass
 class MonteCarloResult:
     """Monte Carlo simulation result"""
+
     simulation_id: str
     n_iterations: int
     mean_outcome: float
@@ -169,6 +180,7 @@ class MonteCarloResult:
 @dataclass
 class AnomalyDetectionResult:
     """Anomaly detection result"""
+
     timestamp: float
     data_point: dict[str, float]
     anomaly_score: float
@@ -180,6 +192,7 @@ class AnomalyDetectionResult:
 @dataclass
 class ClusterAnalysisResult:
     """Cluster analysis result"""
+
     n_clusters: int
     cluster_labels: list[int]
     cluster_centers: list[list[float]]
@@ -192,6 +205,7 @@ class ClusterAnalysisResult:
 # STATISTICAL ANALYZER
 # ============================================================================
 
+
 class StatisticalAnalyzer:
     """Statistical analysis of scenario data"""
 
@@ -200,9 +214,17 @@ class StatisticalAnalyzer:
         """Compute comprehensive statistical summary"""
         if not data:
             return StatisticalSummary(
-                mean=0.0, median=0.0, std_dev=0.0, variance=0.0,
-                min_value=0.0, max_value=0.0, q25=0.0, q75=0.0,
-                skewness=0.0, kurtosis=0.0, count=0
+                mean=0.0,
+                median=0.0,
+                std_dev=0.0,
+                variance=0.0,
+                min_value=0.0,
+                max_value=0.0,
+                q25=0.0,
+                q75=0.0,
+                skewness=0.0,
+                kurtosis=0.0,
+                count=0,
             )
 
         arr = np.array(data)
@@ -218,14 +240,12 @@ class StatisticalAnalyzer:
             q75=float(np.percentile(arr, 75)),
             skewness=float(stats.skew(arr)),
             kurtosis=float(stats.kurtosis(arr)),
-            count=len(data)
+            count=len(data),
         )
 
     @staticmethod
     def hypothesis_test(
-        sample1: list[float],
-        sample2: list[float],
-        test_type: str = "t-test"
+        sample1: list[float], sample2: list[float], test_type: str = "t-test"
     ) -> tuple[float, float, bool]:
         """Perform hypothesis test between two samples"""
         arr1 = np.array(sample1)
@@ -246,8 +266,7 @@ class StatisticalAnalyzer:
 
     @staticmethod
     def distribution_fit(
-        data: list[float],
-        distributions: list[str] | None = None
+        data: list[float], distributions: list[str] | None = None
     ) -> dict[str, dict[str, float]]:
         """Fit data to various distributions and compare"""
         if distributions is None:
@@ -268,7 +287,7 @@ class StatisticalAnalyzer:
                     "params": params,
                     "ks_statistic": float(ks_stat),
                     "p_value": float(p_value),
-                    "fits_well": p_value > 0.05
+                    "fits_well": p_value > 0.05,
                 }
             except Exception as e:
                 logger.warning(f"Failed to fit {dist_name}: {e}")
@@ -280,14 +299,13 @@ class StatisticalAnalyzer:
 # CORRELATION ANALYZER
 # ============================================================================
 
+
 class CorrelationAnalyzer:
     """Correlation analysis across variables"""
 
     @staticmethod
     def compute_correlation(
-        data1: list[float],
-        data2: list[float],
-        method: str = "pearson"
+        data1: list[float], data2: list[float], method: str = "pearson"
     ) -> tuple[float, float]:
         """Compute correlation coefficient and p-value"""
         arr1 = np.array(data1)
@@ -306,8 +324,7 @@ class CorrelationAnalyzer:
 
     @staticmethod
     def correlation_matrix(
-        data: dict[str, list[float]],
-        method: str = "pearson"
+        data: dict[str, list[float]], method: str = "pearson"
     ) -> dict[str, dict[str, float]]:
         """Compute correlation matrix for multiple variables"""
         variables = list(data.keys())
@@ -331,29 +348,29 @@ class CorrelationAnalyzer:
 
     @staticmethod
     def find_significant_correlations(
-        data: dict[str, list[float]],
-        threshold: float = 0.7,
-        method: str = "pearson"
+        data: dict[str, list[float]], threshold: float = 0.7, method: str = "pearson"
     ) -> list[CorrelationResult]:
         """Find significant correlations above threshold"""
         variables = list(data.keys())
         results = []
 
         for i, var1 in enumerate(variables):
-            for j, var2 in enumerate(variables[i+1:], i+1):
+            for j, var2 in enumerate(variables[i + 1 :], i + 1):
                 corr, p_value = CorrelationAnalyzer.compute_correlation(
                     data[var1], data[var2], method
                 )
 
                 if abs(corr) >= threshold:
-                    results.append(CorrelationResult(
-                        variable1=var1,
-                        variable2=var2,
-                        correlation=corr,
-                        p_value=p_value,
-                        correlation_type=method,
-                        significant=p_value < 0.05
-                    ))
+                    results.append(
+                        CorrelationResult(
+                            variable1=var1,
+                            variable2=var2,
+                            correlation=corr,
+                            p_value=p_value,
+                            correlation_type=method,
+                            significant=p_value < 0.05,
+                        )
+                    )
 
         return sorted(results, key=lambda x: abs(x.correlation), reverse=True)
 
@@ -361,6 +378,7 @@ class CorrelationAnalyzer:
 # ============================================================================
 # PREDICTIVE MODELER
 # ============================================================================
+
 
 class PredictiveModeler:
     """Predictive modeling using machine learning"""
@@ -370,11 +388,7 @@ class PredictiveModeler:
         self.scalers: dict[str, StandardScaler] = {}
 
     def train_regression_model(
-        self,
-        model_name: str,
-        X: np.ndarray,
-        y: np.ndarray,
-        feature_names: list[str]
+        self, model_name: str, X: np.ndarray, y: np.ndarray, feature_names: list[str]
     ) -> dict[str, float]:
         """Train regression model"""
         X_train, X_test, y_train, y_test = train_test_split(
@@ -406,7 +420,7 @@ class PredictiveModeler:
             "mse": float(mse),
             "mae": float(mae),
             "r2_score": float(r2),
-            "n_features": X.shape[1]
+            "n_features": X.shape[1],
         }
 
     def train_classification_model(
@@ -415,7 +429,7 @@ class PredictiveModeler:
         X: np.ndarray,
         y: np.ndarray,
         feature_names: list[str],
-        model_type: str = "random_forest"
+        model_type: str = "random_forest",
     ) -> dict[str, Any]:
         """Train classification model"""
         X_train, X_test, y_train, y_test = train_test_split(
@@ -451,14 +465,11 @@ class PredictiveModeler:
         return {
             "accuracy": accuracy,
             "n_features": X.shape[1],
-            "model_type": model_type
+            "model_type": model_type,
         }
 
     def predict(
-        self,
-        model_name: str,
-        X: np.ndarray,
-        confidence_level: float = 0.95
+        self, model_name: str, X: np.ndarray, confidence_level: float = 0.95
     ) -> PredictionResult:
         """Make prediction with confidence interval"""
         if model_name not in self.models:
@@ -483,7 +494,7 @@ class PredictiveModeler:
             confidence_level=confidence_level,
             prediction_timestamp=datetime.now().timestamp(),
             model_accuracy=0.85,  # Would be stored from training
-            features_used=[]
+            features_used=[],
         )
 
 
@@ -491,24 +502,19 @@ class PredictiveModeler:
 # RISK QUANTIFIER
 # ============================================================================
 
+
 class RiskQuantifier:
     """Risk quantification and VaR calculations"""
 
     @staticmethod
-    def calculate_var(
-        returns: list[float],
-        confidence_level: float = 0.95
-    ) -> float:
+    def calculate_var(returns: list[float], confidence_level: float = 0.95) -> float:
         """Calculate Value at Risk (VaR)"""
         arr = np.array(returns)
         var = np.percentile(arr, (1 - confidence_level) * 100)
         return float(var)
 
     @staticmethod
-    def calculate_cvar(
-        returns: list[float],
-        confidence_level: float = 0.95
-    ) -> float:
+    def calculate_cvar(returns: list[float], confidence_level: float = 0.95) -> float:
         """Calculate Conditional Value at Risk (CVaR)"""
         arr = np.array(returns)
         var = RiskQuantifier.calculate_var(returns, confidence_level)
@@ -517,8 +523,7 @@ class RiskQuantifier:
 
     @staticmethod
     def quantify_risk(
-        loss_distribution: list[float],
-        confidence_level: float = 0.95
+        loss_distribution: list[float], confidence_level: float = 0.95
     ) -> RiskMetrics:
         """Comprehensive risk quantification"""
         arr = np.array(loss_distribution)
@@ -548,13 +553,14 @@ class RiskQuantifier:
             max_loss=max_loss,
             probability_of_loss=prob_loss,
             risk_level=risk_level,
-            confidence_level=confidence_level
+            confidence_level=confidence_level,
         )
 
 
 # ============================================================================
 # SENSITIVITY ANALYZER
 # ============================================================================
+
 
 class SensitivityAnalyzer:
     """Sensitivity analysis for parameter variations"""
@@ -565,7 +571,7 @@ class SensitivityAnalyzer:
         base_value: float,
         model_fn: Callable[[float], float],
         variation_percent: float = 20.0,
-        n_steps: int = 20
+        n_steps: int = 20,
     ) -> SensitivityResult:
         """Analyze sensitivity to parameter variation"""
         min_value = base_value * (1 - variation_percent / 100)
@@ -588,7 +594,9 @@ class SensitivityAnalyzer:
         # Find critical threshold (where output changes significantly)
         critical_threshold = None
         for i in range(len(values) - 1):
-            if abs(outputs[values[i+1]] - outputs[values[i]]) > 0.1 * abs(base_output):
+            if abs(outputs[values[i + 1]] - outputs[values[i]]) > 0.1 * abs(
+                base_output
+            ):
                 critical_threshold = float(values[i])
                 break
 
@@ -598,13 +606,14 @@ class SensitivityAnalyzer:
             variation_range=(float(min_value), float(max_value)),
             output_change=outputs,
             elasticity=float(elasticity),
-            critical_threshold=critical_threshold
+            critical_threshold=critical_threshold,
         )
 
 
 # ============================================================================
 # MONTE CARLO SIMULATOR
 # ============================================================================
+
 
 class MonteCarloSimulator:
     """Monte Carlo simulations for probabilistic forecasting"""
@@ -613,7 +622,7 @@ class MonteCarloSimulator:
     def simulate(
         simulation_fn: Callable[[], float],
         n_iterations: int = 10000,
-        convergence_threshold: float = 0.01
+        convergence_threshold: float = 0.01,
     ) -> MonteCarloResult:
         """Run Monte Carlo simulation"""
         results = []
@@ -641,13 +650,14 @@ class MonteCarloSimulator:
             percentile_5=float(np.percentile(arr, 5)),
             percentile_95=float(np.percentile(arr, 95)),
             probability_distribution=arr.tolist(),
-            convergence_achieved=len(results) < n_iterations
+            convergence_achieved=len(results) < n_iterations,
         )
 
 
 # ============================================================================
 # ANOMALY DETECTOR
 # ============================================================================
+
 
 class AnomalyDetector:
     """Anomaly detection in scenario data"""
@@ -665,9 +675,7 @@ class AnomalyDetector:
         logger.info("Anomaly detector fitted")
 
     def detect(
-        self,
-        data_point: dict[str, float],
-        feature_names: list[str]
+        self, data_point: dict[str, float], feature_names: list[str]
     ) -> AnomalyDetectionResult:
         """Detect if data point is anomalous"""
         if not self.fitted:
@@ -698,7 +706,7 @@ class AnomalyDetector:
             anomaly_score=float(score),
             is_anomaly=is_anomaly,
             anomaly_type=anomaly_type,
-            explanation=explanation
+            explanation=explanation,
         )
 
 
@@ -706,14 +714,12 @@ class AnomalyDetector:
 # CLUSTER ANALYZER
 # ============================================================================
 
+
 class ClusterAnalyzer:
     """Cluster analysis for scenario grouping"""
 
     @staticmethod
-    def perform_kmeans(
-        X: np.ndarray,
-        n_clusters: int = 5
-    ) -> ClusterAnalysisResult:
+    def perform_kmeans(X: np.ndarray, n_clusters: int = 5) -> ClusterAnalysisResult:
         """Perform K-means clustering"""
         scaler = StandardScaler()
         X_scaled = scaler.fit_transform(X)
@@ -723,6 +729,7 @@ class ClusterAnalyzer:
 
         # Calculate metrics
         from sklearn.metrics import silhouette_score
+
         silhouette = silhouette_score(X_scaled, labels)
 
         # Cluster sizes
@@ -735,14 +742,12 @@ class ClusterAnalyzer:
             cluster_centers=kmeans.cluster_centers_.tolist(),
             cluster_sizes=cluster_sizes,
             silhouette_score=float(silhouette),
-            inertia=float(kmeans.inertia_)
+            inertia=float(kmeans.inertia_),
         )
 
     @staticmethod
     def perform_dbscan(
-        X: np.ndarray,
-        eps: float = 0.5,
-        min_samples: int = 5
+        X: np.ndarray, eps: float = 0.5, min_samples: int = 5
     ) -> ClusterAnalysisResult:
         """Perform DBSCAN clustering"""
         scaler = StandardScaler()
@@ -763,13 +768,14 @@ class ClusterAnalyzer:
             cluster_centers=[],  # DBSCAN doesn't have centers
             cluster_sizes=cluster_sizes,
             silhouette_score=0.0,
-            inertia=0.0
+            inertia=0.0,
         )
 
 
 # ============================================================================
 # MAIN ANALYTICS ENGINE
 # ============================================================================
+
 
 class HYDRA50AnalyticsEngine:
     """
@@ -801,8 +807,7 @@ class HYDRA50AnalyticsEngine:
         logger.info("HYDRA-50 Analytics Engine initialized")
 
     def analyze_scenario_progression(
-        self,
-        progressions: list[ScenarioProgression]
+        self, progressions: list[ScenarioProgression]
     ) -> dict[str, Any]:
         """Comprehensive analysis of scenario progressions"""
         if not progressions:
@@ -817,30 +822,33 @@ class HYDRA50AnalyticsEngine:
         # Time series analysis
         timestamps = [p.timestamp for p in progressions]
         time_diffs = np.diff(timestamps)
-        avg_progression_rate = float(np.mean(time_diffs)) if len(time_diffs) > 0 else 0.0
+        avg_progression_rate = (
+            float(np.mean(time_diffs)) if len(time_diffs) > 0 else 0.0
+        )
 
         return {
             "statistical_summary": asdict(stats_summary),
             "avg_progression_rate_seconds": avg_progression_rate,
             "total_progressions": len(progressions),
-            "unique_scenarios": len(set(p.scenario_id for p in progressions))
+            "unique_scenarios": len(set(p.scenario_id for p in progressions)),
         }
 
     def export_analysis(
-        self,
-        analysis_type: AnalysisType,
-        results: dict[str, Any],
-        filename: str
+        self, analysis_type: AnalysisType, results: dict[str, Any], filename: str
     ) -> str:
         """Export analysis results to file"""
         output_path = self.data_dir / filename
 
-        with open(output_path, 'w') as f:
-            json.dump({
-                "type": analysis_type.value,
-                "timestamp": datetime.now().isoformat(),
-                "results": results
-            }, f, indent=2)
+        with open(output_path, "w") as f:
+            json.dump(
+                {
+                    "type": analysis_type.value,
+                    "timestamp": datetime.now().isoformat(),
+                    "results": results,
+                },
+                f,
+                indent=2,
+            )
 
         logger.info(f"Exported analysis to {output_path}")
         return str(output_path)

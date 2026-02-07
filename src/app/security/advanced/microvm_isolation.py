@@ -4,22 +4,23 @@ Provides hardware-level process isolation using Firecracker/QEMU-based MicroVMs
 for browser tabs, extensions, and sessions with hard process separation.
 """
 
+import json
 import logging
 import os
+import secrets
 import socket
 import subprocess
+import tempfile
 import threading
 import time
-import json
-import secrets
-from typing import Dict, Any, Optional, List
-from enum import Enum
 from dataclasses import dataclass, field
-import tempfile
+from enum import Enum
+from typing import Any
 
 
 class VMBackend(Enum):
     """Supported MicroVM backend types"""
+
     FIRECRACKER = "firecracker"
     QEMU = "qemu"
     CLOUD_HYPERVISOR = "cloud-hypervisor"
@@ -27,6 +28,7 @@ class VMBackend(Enum):
 
 class VMState(Enum):
     """MicroVM lifecycle states"""
+
     CREATED = "created"
     STARTING = "starting"
     RUNNING = "running"
@@ -39,6 +41,7 @@ class VMState(Enum):
 
 class IsolationType(Enum):
     """Type of workload being isolated"""
+
     BROWSER_TAB = "browser_tab"
     EXTENSION = "extension"
     SESSION = "session"
@@ -48,6 +51,7 @@ class IsolationType(Enum):
 @dataclass
 class VMResourceLimits:
     """Resource limits for a MicroVM"""
+
     vcpu_count: int = 1
     memory_mb: int = 512
     disk_size_mb: int = 1024
@@ -59,17 +63,19 @@ class VMResourceLimits:
 @dataclass
 class VMNetworkConfig:
     """Network configuration for a MicroVM"""
-    tap_device: Optional[str] = None
-    ip_address: Optional[str] = None
-    mac_address: Optional[str] = None
-    gateway: Optional[str] = None
-    dns_servers: List[str] = field(default_factory=list)
+
+    tap_device: str | None = None
+    ip_address: str | None = None
+    mac_address: str | None = None
+    gateway: str | None = None
+    dns_servers: list[str] = field(default_factory=list)
     isolated_network: bool = True
 
 
 @dataclass
 class VMHealthMetrics:
     """Health monitoring metrics for a MicroVM"""
+
     cpu_usage_percent: float = 0.0
     memory_usage_mb: int = 0
     disk_io_bytes: int = 0
@@ -86,11 +92,11 @@ class CommunicationChannel:
     Uses Unix domain sockets or virtio-vsock for IPC.
     """
 
-    def __init__(self, vm_id: str, socket_path: Optional[str] = None):
+    def __init__(self, vm_id: str, socket_path: str | None = None):
         self.logger = logging.getLogger(__name__)
         self.vm_id = vm_id
         self.socket_path = socket_path or f"/tmp/thirstys_vm_{vm_id}.sock"
-        self._socket: Optional[socket.socket] = None
+        self._socket: socket.socket | None = None
         self._connected = False
         self._lock = threading.Lock()
 
@@ -103,29 +109,31 @@ class CommunicationChannel:
                     self._socket.settimeout(timeout)
                     self._socket.connect(self.socket_path)
                     self._connected = True
-                    self.logger.info(f"Connected to VM {self.vm_id} via {self.socket_path}")
+                    self.logger.info(
+                        f"Connected to VM {self.vm_id} via {self.socket_path}"
+                    )
                     return True
             except Exception as e:
                 self.logger.error(f"Failed to connect to VM {self.vm_id}: {e}")
 
             return False
 
-    def send_message(self, message: Dict[str, Any]) -> bool:
+    def send_message(self, message: dict[str, Any]) -> bool:
         """Send message to MicroVM"""
         with self._lock:
             if not self._connected or not self._socket:
                 return False
 
             try:
-                data = json.dumps(message).encode('utf-8')
-                length = len(data).to_bytes(4, byteorder='big')
+                data = json.dumps(message).encode("utf-8")
+                length = len(data).to_bytes(4, byteorder="big")
                 self._socket.sendall(length + data)
                 return True
             except Exception as e:
                 self.logger.error(f"Failed to send message to VM {self.vm_id}: {e}")
                 return False
 
-    def receive_message(self, timeout: float = 1.0) -> Optional[Dict[str, Any]]:
+    def receive_message(self, timeout: float = 1.0) -> dict[str, Any] | None:
         """Receive message from MicroVM"""
         with self._lock:
             if not self._connected or not self._socket:
@@ -139,7 +147,7 @@ class CommunicationChannel:
                 if not length_bytes:
                     return None
 
-                message_length = int.from_bytes(length_bytes, byteorder='big')
+                message_length = int.from_bytes(length_bytes, byteorder="big")
 
                 # Read message data
                 data = b""
@@ -149,12 +157,14 @@ class CommunicationChannel:
                         break
                     data += chunk
 
-                return json.loads(data.decode('utf-8'))
+                return json.loads(data.decode("utf-8"))
 
-            except socket.timeout:
+            except TimeoutError:
                 return None
             except Exception as e:
-                self.logger.error(f"Failed to receive message from VM {self.vm_id}: {e}")
+                self.logger.error(
+                    f"Failed to receive message from VM {self.vm_id}: {e}"
+                )
                 return None
 
     def close(self):
@@ -187,9 +197,9 @@ class MicroVMInstance:
         backend: VMBackend,
         isolation_type: IsolationType,
         resource_limits: VMResourceLimits,
-        network_config: Optional[VMNetworkConfig] = None,
-        kernel_path: Optional[str] = None,
-        rootfs_path: Optional[str] = None
+        network_config: VMNetworkConfig | None = None,
+        kernel_path: str | None = None,
+        rootfs_path: str | None = None,
     ):
         self.logger = logging.getLogger(__name__)
 
@@ -206,23 +216,23 @@ class MicroVMInstance:
 
         # Runtime state
         self._state = VMState.CREATED
-        self._process: Optional[subprocess.Popen] = None
-        self._pid: Optional[int] = None
-        self._start_time: Optional[float] = None
+        self._process: subprocess.Popen | None = None
+        self._pid: int | None = None
+        self._start_time: float | None = None
 
         # Communication
         self._channel = CommunicationChannel(vm_id)
 
         # Monitoring
         self._health_metrics = VMHealthMetrics()
-        self._monitor_thread: Optional[threading.Thread] = None
+        self._monitor_thread: threading.Thread | None = None
         self._monitoring_active = False
 
         # Thread safety
         self._lock = threading.Lock()
 
         # Firecracker/QEMU specific
-        self._config_file: Optional[str] = None
+        self._config_file: str | None = None
         self._socket_path = f"/tmp/thirstys_vm_{vm_id}.socket"
 
     def _get_default_kernel_path(self) -> str:
@@ -243,10 +253,14 @@ class MicroVMInstance:
                 return True
 
             if self._state not in [VMState.CREATED, VMState.STOPPED]:
-                self.logger.error(f"Cannot start VM {self.vm_id} in state {self._state.value}")
+                self.logger.error(
+                    f"Cannot start VM {self.vm_id} in state {self._state.value}"
+                )
                 return False
 
-            self.logger.info(f"Starting MicroVM {self.vm_id} with backend {self.backend.value}")
+            self.logger.info(
+                f"Starting MicroVM {self.vm_id} with backend {self.backend.value}"
+            )
             self._state = VMState.STARTING
 
             try:
@@ -277,7 +291,9 @@ class MicroVMInstance:
                 # Start health monitoring
                 self._start_monitoring()
 
-                self.logger.info(f"MicroVM {self.vm_id} started successfully (PID: {self._pid})")
+                self.logger.info(
+                    f"MicroVM {self.vm_id} started successfully (PID: {self._pid})"
+                )
                 return True
 
             except Exception as e:
@@ -298,11 +314,10 @@ class MicroVMInstance:
 
             # Write config to temporary file
             fd, self._config_file = tempfile.mkstemp(
-                prefix=f"thirstys_vm_{self.vm_id}_",
-                suffix=".json"
+                prefix=f"thirstys_vm_{self.vm_id}_", suffix=".json"
             )
 
-            with os.fdopen(fd, 'w') as f:
+            with os.fdopen(fd, "w") as f:
                 json.dump(config, f, indent=2)
 
             self.logger.debug(f"Created config file: {self._config_file}")
@@ -312,36 +327,42 @@ class MicroVMInstance:
             self.logger.error(f"Failed to create VM config: {e}")
             return False
 
-    def _create_firecracker_config(self) -> Dict[str, Any]:
+    def _create_firecracker_config(self) -> dict[str, Any]:
         """Create Firecracker configuration"""
         return {
             "boot-source": {
                 "kernel_image_path": self.kernel_path,
-                "boot_args": "console=ttyS0 reboot=k panic=1 pci=off"
+                "boot_args": "console=ttyS0 reboot=k panic=1 pci=off",
             },
             "drives": [
                 {
                     "drive_id": "rootfs",
                     "path_on_host": self.rootfs_path,
                     "is_root_device": True,
-                    "is_read_only": False
+                    "is_read_only": False,
                 }
             ],
             "machine-config": {
                 "vcpu_count": self.resource_limits.vcpu_count,
                 "mem_size_mib": self.resource_limits.memory_mb,
-                "ht_enabled": False
+                "ht_enabled": False,
             },
-            "network-interfaces": [
-                {
-                    "iface_id": "eth0",
-                    "guest_mac": self.network_config.mac_address or self._generate_mac_address(),
-                    "host_dev_name": self.network_config.tap_device or f"tap_{self.vm_id[:8]}"
-                }
-            ] if not self.network_config.isolated_network else []
+            "network-interfaces": (
+                [
+                    {
+                        "iface_id": "eth0",
+                        "guest_mac": self.network_config.mac_address
+                        or self._generate_mac_address(),
+                        "host_dev_name": self.network_config.tap_device
+                        or f"tap_{self.vm_id[:8]}",
+                    }
+                ]
+                if not self.network_config.isolated_network
+                else []
+            ),
         }
 
-    def _create_qemu_config(self) -> Dict[str, Any]:
+    def _create_qemu_config(self) -> dict[str, Any]:
         """Create QEMU configuration"""
         return {
             "machine": "microvm",
@@ -353,14 +374,14 @@ class MicroVMInstance:
             "serial": "stdio",
             "nodefaults": True,
             "no-user-config": True,
-            "nographic": True
+            "nographic": True,
         }
 
     def _generate_mac_address(self) -> str:
         """Generate random MAC address"""
         mac = [0x52, 0x54, 0x00]  # QEMU OUI
         mac.extend([secrets.randbelow(256) for _ in range(3)])
-        return ':'.join(f'{b:02x}' for b in mac)
+        return ":".join(f"{b:02x}" for b in mac)
 
     def _setup_networking(self) -> bool:
         """Setup networking for MicroVM"""
@@ -404,7 +425,7 @@ class MicroVMInstance:
                 cmd,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
-                stdin=subprocess.PIPE
+                stdin=subprocess.PIPE,
             )
 
             self._pid = self._process.pid
@@ -416,15 +437,17 @@ class MicroVMInstance:
             self.logger.error(f"Failed to launch VM process: {e}")
             return False
 
-    def _build_firecracker_command(self) -> List[str]:
+    def _build_firecracker_command(self) -> list[str]:
         """Build Firecracker command line"""
         return [
             "firecracker",
-            "--api-sock", self._socket_path,
-            "--config-file", self._config_file,
+            "--api-sock",
+            self._socket_path,
+            "--config-file",
+            self._config_file,
         ]
 
-    def _build_qemu_command(self) -> List[str]:
+    def _build_qemu_command(self) -> list[str]:
         """Build QEMU command line"""
         cmd = ["qemu-system-x86_64"]
 
@@ -500,7 +523,9 @@ class MicroVMInstance:
                             self._process.wait(timeout=10.0)
                         except subprocess.TimeoutExpired:
                             # Force kill if not responding
-                            self.logger.warning(f"VM {self.vm_id} not responding, forcing shutdown")
+                            self.logger.warning(
+                                f"VM {self.vm_id} not responding, forcing shutdown"
+                            )
                             self._process.kill()
                             self._process.wait()
 
@@ -567,8 +592,7 @@ class MicroVMInstance:
 
         self._monitoring_active = True
         self._monitor_thread = threading.Thread(
-            target=self._monitoring_loop,
-            daemon=True
+            target=self._monitoring_loop, daemon=True
         )
         self._monitor_thread.start()
 
@@ -627,20 +651,18 @@ class MicroVMInstance:
         """Get health metrics"""
         return self._health_metrics
 
-    def send_command(self, command: str, params: Optional[Dict[str, Any]] = None) -> Optional[Dict[str, Any]]:
+    def send_command(
+        self, command: str, params: dict[str, Any] | None = None
+    ) -> dict[str, Any] | None:
         """Send command to MicroVM"""
-        message = {
-            "type": "command",
-            "command": command,
-            "params": params or {}
-        }
+        message = {"type": "command", "command": command, "params": params or {}}
 
         if self._channel.send_message(message):
             return self._channel.receive_message(timeout=5.0)
 
         return None
 
-    def get_info(self) -> Dict[str, Any]:
+    def get_info(self) -> dict[str, Any]:
         """Get VM information"""
         return {
             "vm_id": self.vm_id,
@@ -651,19 +673,19 @@ class MicroVMInstance:
             "resource_limits": {
                 "vcpu_count": self.resource_limits.vcpu_count,
                 "memory_mb": self.resource_limits.memory_mb,
-                "disk_size_mb": self.resource_limits.disk_size_mb
+                "disk_size_mb": self.resource_limits.disk_size_mb,
             },
             "network_config": {
                 "isolated": self.network_config.isolated_network,
                 "tap_device": self.network_config.tap_device,
-                "ip_address": self.network_config.ip_address
+                "ip_address": self.network_config.ip_address,
             },
             "health_metrics": {
                 "status": self._health_metrics.health_status,
                 "uptime_seconds": self._health_metrics.uptime_seconds,
                 "cpu_usage": self._health_metrics.cpu_usage_percent,
-                "memory_usage_mb": self._health_metrics.memory_usage_mb
-            }
+                "memory_usage_mb": self._health_metrics.memory_usage_mb,
+            },
         }
 
 
@@ -674,12 +696,12 @@ class MicroVMIsolationManager:
     Provides resource management and monitoring across all VMs.
     """
 
-    def __init__(self, config: Optional[Dict[str, Any]] = None):
+    def __init__(self, config: dict[str, Any] | None = None):
         self.logger = logging.getLogger(__name__)
         self.config = config or {}
 
         # VM instances
-        self._vms: Dict[str, MicroVMInstance] = {}
+        self._vms: dict[str, MicroVMInstance] = {}
 
         # Resource tracking
         self._total_vcpus_allocated = 0
@@ -694,14 +716,14 @@ class MicroVMIsolationManager:
         self._default_resources = VMResourceLimits(
             vcpu_count=self.config.get("default_vcpu_count", 1),
             memory_mb=self.config.get("default_memory_mb", 512),
-            disk_size_mb=self.config.get("default_disk_size_mb", 1024)
+            disk_size_mb=self.config.get("default_disk_size_mb", 1024),
         )
 
         # Thread safety
         self._lock = threading.Lock()
 
         # Background tasks
-        self._cleanup_thread: Optional[threading.Thread] = None
+        self._cleanup_thread: threading.Thread | None = None
         self._cleanup_active = False
 
     def start(self):
@@ -710,10 +732,7 @@ class MicroVMIsolationManager:
 
         # Start cleanup thread
         self._cleanup_active = True
-        self._cleanup_thread = threading.Thread(
-            target=self._cleanup_loop,
-            daemon=True
-        )
+        self._cleanup_thread = threading.Thread(target=self._cleanup_loop, daemon=True)
         self._cleanup_thread.start()
 
         self.logger.info(
@@ -740,11 +759,11 @@ class MicroVMIsolationManager:
     def create_vm(
         self,
         isolation_type: IsolationType,
-        resource_limits: Optional[VMResourceLimits] = None,
-        backend: Optional[VMBackend] = None,
-        network_config: Optional[VMNetworkConfig] = None,
-        vm_id: Optional[str] = None
-    ) -> Optional[str]:
+        resource_limits: VMResourceLimits | None = None,
+        backend: VMBackend | None = None,
+        network_config: VMNetworkConfig | None = None,
+        vm_id: str | None = None,
+    ) -> str | None:
         """
         Create a new MicroVM instance.
 
@@ -783,7 +802,7 @@ class MicroVMIsolationManager:
                     backend=backend,
                     isolation_type=isolation_type,
                     resource_limits=resource_limits,
-                    network_config=network_config
+                    network_config=network_config,
                 )
 
                 self._vms[vm_id] = vm
@@ -885,15 +904,13 @@ class MicroVMIsolationManager:
         for vm_id in vm_ids:
             self.destroy_vm(vm_id)
 
-    def get_vm(self, vm_id: str) -> Optional[MicroVMInstance]:
+    def get_vm(self, vm_id: str) -> MicroVMInstance | None:
         """Get MicroVM instance by ID"""
         return self._vms.get(vm_id)
 
     def list_vms(
-        self,
-        isolation_type: Optional[IsolationType] = None,
-        state: Optional[VMState] = None
-    ) -> List[str]:
+        self, isolation_type: IsolationType | None = None, state: VMState | None = None
+    ) -> list[str]:
         """
         List VM IDs matching criteria.
 
@@ -917,7 +934,7 @@ class MicroVMIsolationManager:
 
         return vms
 
-    def get_vm_info(self, vm_id: str) -> Optional[Dict[str, Any]]:
+    def get_vm_info(self, vm_id: str) -> dict[str, Any] | None:
         """Get VM information"""
         vm = self._vms.get(vm_id)
         if not vm:
@@ -925,19 +942,13 @@ class MicroVMIsolationManager:
 
         return vm.get_info()
 
-    def get_all_vms_info(self) -> Dict[str, Dict[str, Any]]:
+    def get_all_vms_info(self) -> dict[str, dict[str, Any]]:
         """Get information for all VMs"""
-        return {
-            vm_id: vm.get_info()
-            for vm_id, vm in self._vms.items()
-        }
+        return {vm_id: vm.get_info() for vm_id, vm in self._vms.items()}
 
     def send_command_to_vm(
-        self,
-        vm_id: str,
-        command: str,
-        params: Optional[Dict[str, Any]] = None
-    ) -> Optional[Dict[str, Any]]:
+        self, vm_id: str, command: str, params: dict[str, Any] | None = None
+    ) -> dict[str, Any] | None:
         """Send command to specific VM"""
         vm = self._vms.get(vm_id)
         if not vm:
@@ -945,7 +956,7 @@ class MicroVMIsolationManager:
 
         return vm.send_command(command, params)
 
-    def get_resource_usage(self) -> Dict[str, Any]:
+    def get_resource_usage(self) -> dict[str, Any]:
         """Get aggregate resource usage"""
         return {
             "total_vms": len(self._vms),
@@ -954,10 +965,10 @@ class MicroVMIsolationManager:
             "memory_allocated_mb": self._total_memory_allocated,
             "memory_available_mb": self._max_memory_mb - self._total_memory_allocated,
             "vms_by_type": self._count_vms_by_type(),
-            "vms_by_state": self._count_vms_by_state()
+            "vms_by_state": self._count_vms_by_state(),
         }
 
-    def _count_vms_by_type(self) -> Dict[str, int]:
+    def _count_vms_by_type(self) -> dict[str, int]:
         """Count VMs by isolation type"""
         counts = {}
         for vm in self._vms.values():
@@ -965,7 +976,7 @@ class MicroVMIsolationManager:
             counts[iso_type] = counts.get(iso_type, 0) + 1
         return counts
 
-    def _count_vms_by_state(self) -> Dict[str, int]:
+    def _count_vms_by_state(self) -> dict[str, int]:
         """Count VMs by state"""
         counts = {}
         for vm in self._vms.values():
@@ -986,7 +997,8 @@ class MicroVMIsolationManager:
         """Remove VMs in error state"""
         with self._lock:
             dead_vms = [
-                vm_id for vm_id, vm in self._vms.items()
+                vm_id
+                for vm_id, vm in self._vms.items()
                 if vm.get_state() == VMState.ERROR
             ]
 
@@ -994,7 +1006,7 @@ class MicroVMIsolationManager:
             self.logger.warning(f"Cleaning up dead VM {vm_id}")
             self.destroy_vm(vm_id)
 
-    def get_health_status(self) -> Dict[str, Any]:
+    def get_health_status(self) -> dict[str, Any]:
         """Get overall health status"""
         healthy_count = 0
         unhealthy_count = 0
@@ -1010,5 +1022,5 @@ class MicroVMIsolationManager:
             "total_vms": len(self._vms),
             "healthy_vms": healthy_count,
             "unhealthy_vms": unhealthy_count,
-            "resource_usage": self.get_resource_usage()
+            "resource_usage": self.get_resource_usage(),
         }

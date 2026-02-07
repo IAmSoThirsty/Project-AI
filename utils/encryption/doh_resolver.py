@@ -1,7 +1,6 @@
 """DNS-over-HTTPS Resolver"""
 
 import logging
-from typing import Optional
 
 
 class DoHResolver:
@@ -33,7 +32,7 @@ class DoHResolver:
         self.logger.info("Stopping DNS-over-HTTPS resolver")
         self._active = False
 
-    def resolve(self, hostname: str) -> Optional[str]:
+    def resolve(self, hostname: str) -> str | None:
         """
         Resolve hostname using DNS-over-HTTPS.
 

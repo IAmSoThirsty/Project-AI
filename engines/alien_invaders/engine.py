@@ -21,8 +21,8 @@ from engines.alien_invaders.modules.invariants import (
     CompositeInvariantValidator,
 )
 from engines.alien_invaders.modules.planetary_defense_monolith import (
-    PlanetaryDefenseMonolith,
     ActionRequest,
+    PlanetaryDefenseMonolith,
 )
 from engines.alien_invaders.modules.world_state import (
     Country,

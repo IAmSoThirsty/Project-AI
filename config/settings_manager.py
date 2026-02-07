@@ -3,9 +3,10 @@ Settings Manager - Comprehensive settings with God tier encryption
 Covers ALL features: standard + additional features
 """
 
-import logging
-from typing import Dict, Any
 import json
+import logging
+from typing import Any
+
 from cryptography.fernet import Fernet
 
 
@@ -281,11 +282,11 @@ class SettingsManager:
         if category in ['security', 'privacy', 'ad_blocker']:
             self.logger.warning(f"SECURITY SETTING CHANGED: {category}.{key} from {old_value} to {value}")
 
-    def get_category(self, category: str) -> Dict[str, Any]:
+    def get_category(self, category: str) -> dict[str, Any]:
         """Get all settings in a category"""
         return self.settings.get(category, {}).copy()
 
-    def get_all_settings(self) -> Dict[str, Dict[str, Any]]:
+    def get_all_settings(self) -> dict[str, dict[str, Any]]:
         """Get all settings"""
         return self.settings.copy()
 
@@ -328,7 +329,7 @@ class SettingsManager:
         except Exception as e:
             self.logger.error(f"Failed to import settings: {e}")
 
-    def validate_settings(self) -> Dict[str, Any]:
+    def validate_settings(self) -> dict[str, Any]:
         """Validate all settings for security and consistency"""
         issues = []
 
@@ -352,7 +353,7 @@ class SettingsManager:
             'warnings': len(issues)
         }
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get settings manager status"""
         validation = self.validate_settings()
 

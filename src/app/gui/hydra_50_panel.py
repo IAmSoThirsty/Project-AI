@@ -23,13 +23,26 @@ from __future__ import annotations
 import logging
 from datetime import datetime
 
-from PyQt6.QtCore import Qt, QTimer, pyqtSignal, QThread
-from PyQt6.QtGui import QFont, QColor
+from PyQt6.QtCore import Qt, QThread, QTimer, pyqtSignal
+from PyQt6.QtGui import QColor, QFont
 from PyQt6.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QGridLayout,
-    QPushButton, QLabel, QFrame, QListWidget, QListWidgetItem, QTabWidget,
-    QTextEdit, QProgressBar, QSlider, QComboBox,
-    QTableWidget, QTableWidgetItem, QSplitter
+    QComboBox,
+    QFrame,
+    QGridLayout,
+    QHBoxLayout,
+    QLabel,
+    QListWidget,
+    QListWidgetItem,
+    QProgressBar,
+    QPushButton,
+    QSlider,
+    QSplitter,
+    QTableWidget,
+    QTableWidgetItem,
+    QTabWidget,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
 )
 
 logger = logging.getLogger(__name__)
@@ -96,6 +109,7 @@ CRITICAL_STYLE = """
 # UPDATE WORKER THREAD
 # ============================================================================
 
+
 class UpdateWorker(QThread):
     """Worker thread for async data updates"""
 
@@ -126,6 +140,7 @@ class UpdateWorker(QThread):
 # ============================================================================
 # SCENARIO LIST WIDGET
 # ============================================================================
+
 
 class ScenarioListWidget(QFrame):
     """Widget displaying all scenarios"""
@@ -160,7 +175,8 @@ class ScenarioListWidget(QFrame):
 
         # List widget
         self.list_widget = QListWidget()
-        self.list_widget.setStyleSheet(f"""
+        self.list_widget.setStyleSheet(
+            f"""
             QListWidget {{
                 background-color: {TRON_DARK};
                 border: 1px solid {TRON_BORDER};
@@ -172,7 +188,8 @@ class ScenarioListWidget(QFrame):
                 background-color: #004400;
                 border: 1px solid {TRON_CYAN};
             }}
-        """)
+        """
+        )
         self.list_widget.itemClicked.connect(self.on_item_clicked)
         layout.addWidget(self.list_widget)
 
@@ -229,7 +246,9 @@ class ScenarioListWidget(QFrame):
         for i in range(self.list_widget.count()):
             item = self.list_widget.item(i)
             scenario_id = item.data(Qt.ItemDataRole.UserRole)
-            scenario = next((s for s in self.scenarios if s.get("scenario_id") == scenario_id), None)
+            scenario = next(
+                (s for s in self.scenarios if s.get("scenario_id") == scenario_id), None
+            )
 
             if scenario:
                 item.setHidden(scenario.get("status") != filter_status)
@@ -243,6 +262,7 @@ class ScenarioListWidget(QFrame):
 # ============================================================================
 # STATUS DASHBOARD WIDGET
 # ============================================================================
+
 
 class StatusDashboardWidget(QFrame):
     """Real-time status dashboard"""
@@ -311,7 +331,8 @@ class StatusDashboardWidget(QFrame):
     def _create_metric_label(self, name: str, value: str) -> QLabel:
         """Create metric label"""
         label = QLabel(f"{name}:\n{value}")
-        label.setStyleSheet(f"""
+        label.setStyleSheet(
+            f"""
             QLabel {{
                 color: {TRON_GREEN};
                 font-family: 'Courier New';
@@ -321,7 +342,8 @@ class StatusDashboardWidget(QFrame):
                 background-color: {TRON_DARK};
                 border-radius: 3px;
             }}
-        """)
+        """
+        )
         label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         return label
 
@@ -348,18 +370,28 @@ class StatusDashboardWidget(QFrame):
             engine = Hydra50Engine()
             status = engine.get_system_status()
 
-            self.active_label.setText(f"Active Scenarios:\\n{status.get('active_scenarios', 0)}")
-            self.critical_label.setText(f"Critical Scenarios:\\n{status.get('critical_scenarios', 0)}")
-            self.total_label.setText(f"Total Scenarios:\\n{status.get('total_scenarios', 0)}")
-            self.health_label.setText(f"System Health:\\n{status.get('system_health', 'UNKNOWN')}")
-            self.alerts_label.setText(f"Active Alerts:\\n{status.get('alerts_count', 0)}")
+            self.active_label.setText(
+                f"Active Scenarios:\\n{status.get('active_scenarios', 0)}"
+            )
+            self.critical_label.setText(
+                f"Critical Scenarios:\\n{status.get('critical_scenarios', 0)}"
+            )
+            self.total_label.setText(
+                f"Total Scenarios:\\n{status.get('total_scenarios', 0)}"
+            )
+            self.health_label.setText(
+                f"System Health:\\n{status.get('system_health', 'UNKNOWN')}"
+            )
+            self.alerts_label.setText(
+                f"Active Alerts:\\n{status.get('alerts_count', 0)}"
+            )
 
-            uptime_hours = status.get('uptime_hours', 0)
+            uptime_hours = status.get("uptime_hours", 0)
             self.uptime_label.setText(f"Uptime:\\n{uptime_hours:.1f}h")
 
             # Update resource bars
-            self.cpu_progress.setValue(int(status.get('cpu_percent', 0)))
-            self.memory_progress.setValue(int(status.get('memory_percent', 0)))
+            self.cpu_progress.setValue(int(status.get("cpu_percent", 0)))
+            self.memory_progress.setValue(int(status.get("memory_percent", 0)))
 
         except Exception as e:
             logger.error(f"Failed to refresh status: {e}")
@@ -368,6 +400,7 @@ class StatusDashboardWidget(QFrame):
 # ============================================================================
 # VISUALIZATION WIDGET
 # ============================================================================
+
 
 class VisualizationWidget(QFrame):
     """Scenario visualizations"""
@@ -391,13 +424,15 @@ class VisualizationWidget(QFrame):
         type_label.setStyleSheet(LABEL_STYLE)
         self.viz_combo = QComboBox()
         self.viz_combo.setStyleSheet(BUTTON_STYLE)
-        self.viz_combo.addItems([
-            "Escalation Ladder",
-            "Coupling Graph",
-            "Temporal Flow",
-            "Collapse Predictions",
-            "Heat Map"
-        ])
+        self.viz_combo.addItems(
+            [
+                "Escalation Ladder",
+                "Coupling Graph",
+                "Temporal Flow",
+                "Collapse Predictions",
+                "Heat Map",
+            ]
+        )
         self.viz_combo.currentTextChanged.connect(self.change_visualization)
 
         type_layout.addWidget(type_label)
@@ -407,7 +442,8 @@ class VisualizationWidget(QFrame):
         # Visualization display (ASCII art)
         self.viz_display = QTextEdit()
         self.viz_display.setReadOnly(True)
-        self.viz_display.setStyleSheet(f"""
+        self.viz_display.setStyleSheet(
+            f"""
             QTextEdit {{
                 background-color: {TRON_DARK};
                 border: 1px solid {TRON_BORDER};
@@ -415,7 +451,8 @@ class VisualizationWidget(QFrame):
                 font-family: 'Courier New';
                 font-size: 9px;
             }}
-        """)
+        """
+        )
         layout.addWidget(self.viz_display)
 
         self.current_scenario_id = None
@@ -452,9 +489,9 @@ class VisualizationWidget(QFrame):
                         2: "Degradation",
                         3: "System Strain",
                         4: "Cascade Threshold",
-                        5: "Collapse"
+                        5: "Collapse",
                     },
-                    level_values={0: 0, 1: 20, 2: 40, 3: 60, 4: 80, 5: 100}
+                    level_values={0: 0, 1: 20, 2: 40, 3: 60, 4: 80, 5: 100},
                 )
                 self.viz_display.setPlainText(ascii_output)
 
@@ -466,6 +503,7 @@ class VisualizationWidget(QFrame):
 # ============================================================================
 # ALERT MANAGEMENT WIDGET
 # ============================================================================
+
 
 class AlertManagementWidget(QFrame):
     """Alert management interface"""
@@ -486,8 +524,11 @@ class AlertManagementWidget(QFrame):
         # Alert table
         self.alert_table = QTableWidget()
         self.alert_table.setColumnCount(4)
-        self.alert_table.setHorizontalHeaderLabels(["Severity", "Title", "Time", "Status"])
-        self.alert_table.setStyleSheet(f"""
+        self.alert_table.setHorizontalHeaderLabels(
+            ["Severity", "Title", "Time", "Status"]
+        )
+        self.alert_table.setStyleSheet(
+            f"""
             QTableWidget {{
                 background-color: {TRON_DARK};
                 border: 1px solid {TRON_BORDER};
@@ -501,7 +542,8 @@ class AlertManagementWidget(QFrame):
                 border: 1px solid {TRON_BORDER};
                 padding: 4px;
             }}
-        """)
+        """
+        )
         layout.addWidget(self.alert_table)
 
         # Button row
@@ -537,9 +579,13 @@ class AlertManagementWidget(QFrame):
             for i, alert in enumerate(alerts):
                 self.alert_table.setItem(i, 0, QTableWidgetItem(alert.severity.value))
                 self.alert_table.setItem(i, 1, QTableWidgetItem(alert.title))
-                self.alert_table.setItem(i, 2, QTableWidgetItem(
-                    datetime.fromtimestamp(alert.timestamp).strftime("%H:%M:%S")
-                ))
+                self.alert_table.setItem(
+                    i,
+                    2,
+                    QTableWidgetItem(
+                        datetime.fromtimestamp(alert.timestamp).strftime("%H:%M:%S")
+                    ),
+                )
                 status = "Acknowledged" if alert.acknowledged else "Active"
                 self.alert_table.setItem(i, 3, QTableWidgetItem(status))
 
@@ -560,6 +606,7 @@ class AlertManagementWidget(QFrame):
 # ============================================================================
 # CONTROL PANEL WIDGET
 # ============================================================================
+
 
 class ControlPanelWidget(QFrame):
     """Scenario control panel"""
@@ -619,6 +666,7 @@ class ControlPanelWidget(QFrame):
             return
         try:
             from app.core.hydra_50_engine import Hydra50Engine
+
             engine = Hydra50Engine()
             engine.activate_scenario(self.current_scenario_id)
             logger.info(f"Activated scenario: {self.current_scenario_id}")
@@ -631,6 +679,7 @@ class ControlPanelWidget(QFrame):
             return
         try:
             from app.core.hydra_50_engine import Hydra50Engine
+
             engine = Hydra50Engine()
             engine.deactivate_scenario(self.current_scenario_id)
             logger.info(f"Deactivated scenario: {self.current_scenario_id}")
@@ -651,6 +700,7 @@ class ControlPanelWidget(QFrame):
 # ============================================================================
 # HISTORICAL REPLAY WIDGET
 # ============================================================================
+
 
 class HistoricalReplayWidget(QFrame):
     """Historical replay controls"""
@@ -677,7 +727,8 @@ class HistoricalReplayWidget(QFrame):
         self.timeline_slider.setMinimum(0)
         self.timeline_slider.setMaximum(100)
         self.timeline_slider.setValue(100)
-        self.timeline_slider.setStyleSheet(f"""
+        self.timeline_slider.setStyleSheet(
+            f"""
             QSlider::groove:horizontal {{
                 border: 1px solid {TRON_BORDER};
                 height: 8px;
@@ -690,7 +741,8 @@ class HistoricalReplayWidget(QFrame):
                 margin: -5px 0;
                 border-radius: 3px;
             }}
-        """)
+        """
+        )
         self.timeline_slider.valueChanged.connect(self.on_timeline_changed)
         layout.addWidget(self.timeline_slider)
 
@@ -758,6 +810,7 @@ class HistoricalReplayWidget(QFrame):
 # MAIN HYDRA-50 PANEL
 # ============================================================================
 
+
 class HYDRA50Panel(QWidget):
     """
     Main HYDRA-50 Panel for Leather Book Interface
@@ -785,7 +838,8 @@ class HYDRA50Panel(QWidget):
 
         # Create tab widget
         tabs = QTabWidget()
-        tabs.setStyleSheet(f"""
+        tabs.setStyleSheet(
+            f"""
             QTabWidget::pane {{
                 border: 2px solid {TRON_BORDER};
                 background-color: {TRON_DARK};
@@ -803,7 +857,8 @@ class HYDRA50Panel(QWidget):
                 color: {TRON_CYAN};
                 border: 2px solid {TRON_CYAN};
             }}
-        """)
+        """
+        )
 
         # Create main content area with splitters
         overview_widget = QWidget()

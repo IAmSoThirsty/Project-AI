@@ -379,7 +379,11 @@ class TestMemoryEngineInterface:
         memory_id = memory.add_memory(
             "Test content",
             "test_category",
-            {"trace_id": "trace_456", "channels": {"test": "data"}, "status": "completed"},
+            {
+                "trace_id": "trace_456",
+                "channels": {"test": "data"},
+                "status": "completed",
+            },
         )
 
         # Verify record_execution was called

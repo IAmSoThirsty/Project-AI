@@ -3,12 +3,12 @@ WiFi Controller - Full-Spectrum WiFi Network Direct Control
 Supports 2.4GHz, 5GHz, 6GHz (WiFi 6E/7), and 60GHz (WiGig)
 """
 
-import subprocess
-import platform
 import logging
-from typing import Dict, List, Optional, Any
+import platform
+import subprocess
 from dataclasses import dataclass
 from enum import Enum
+from typing import Any
 
 
 class WiFiBand(Enum):
@@ -37,8 +37,8 @@ class WiFiAdapter:
 
     interface_name: str
     mac_address: str
-    supported_bands: List[WiFiBand]
-    supported_standards: List[WiFiStandard]
+    supported_bands: list[WiFiBand]
+    supported_standards: list[WiFiStandard]
     max_speed_mbps: int
     supports_monitor_mode: bool
     supports_injection: bool
@@ -60,7 +60,7 @@ class WiFiNetwork:
     channel: int
     frequency_mhz: int
     signal_strength_dbm: int
-    security: List[str]  # WPA2, WPA3, OWE, etc.
+    security: list[str]  # WPA2, WPA3, OWE, etc.
     max_rate_mbps: int
     bandwidth_mhz: int  # 20, 40, 80, 160
     supports_wifi6: bool
@@ -81,15 +81,15 @@ class WiFiController:
     - Bandwidth marketplace integration
     """
 
-    def __init__(self, config: Optional[Dict[str, Any]] = None):
+    def __init__(self, config: dict[str, Any] | None = None):
         self.config = config or {}
         self.logger = logging.getLogger(self.__class__.__name__)
         self.platform = platform.system()
 
         # Detected adapters and networks
-        self.adapters: List[WiFiAdapter] = []
-        self.available_networks: List[WiFiNetwork] = []
-        self.connected_network: Optional[WiFiNetwork] = None
+        self.adapters: list[WiFiAdapter] = []
+        self.available_networks: list[WiFiNetwork] = []
+        self.connected_network: WiFiNetwork | None = None
 
         # Performance settings
         self.enable_band_steering = self.config.get("band_steering", True)
@@ -154,7 +154,7 @@ class WiFiController:
 
     def _get_adapter_capabilities_linux(
         self, interface: str, mac: str
-    ) -> Optional[WiFiAdapter]:
+    ) -> WiFiAdapter | None:
         """Get detailed capabilities of Linux WiFi adapter"""
         try:
             # Use 'iw phy' to get physical capabilities
@@ -252,7 +252,7 @@ class WiFiController:
 
     def _get_adapter_capabilities_windows(
         self, interface: str, mac: str
-    ) -> Optional[WiFiAdapter]:
+    ) -> WiFiAdapter | None:
         """Get WiFi adapter capabilities on Windows"""
         try:
             # Get detailed capabilities using netsh
@@ -329,7 +329,7 @@ class WiFiController:
         except Exception as e:
             self.logger.error(f"macOS adapter discovery error: {e}")
 
-    def _get_adapter_capabilities_macos(self, interface: str) -> Optional[WiFiAdapter]:
+    def _get_adapter_capabilities_macos(self, interface: str) -> WiFiAdapter | None:
         """Get WiFi adapter capabilities on macOS"""
         try:
             # Use system_profiler for detailed info
@@ -389,7 +389,7 @@ class WiFiController:
             self.logger.error(f"Error getting macOS adapter capabilities: {e}")
             return None
 
-    def _estimate_max_speed(self, standards: List[WiFiStandard]) -> int:
+    def _estimate_max_speed(self, standards: list[WiFiStandard]) -> int:
         """Estimate maximum speed based on supported standards"""
         speed_map = {
             WiFiStandard.WIFI_4: 600,  # 802.11n
@@ -405,7 +405,7 @@ class WiFiController:
     def _get_driver_linux(self, interface: str) -> str:
         """Get driver name for Linux WiFi interface"""
         try:
-            with open(f"/sys/class/net/{interface}/device/uevent", "r") as f:
+            with open(f"/sys/class/net/{interface}/device/uevent") as f:
                 for line in f:
                     if "DRIVER=" in line:
                         return line.split("=")[1].strip()
@@ -434,7 +434,7 @@ class WiFiController:
         # Would require WMI or registry access
         return "Windows WiFi Driver"
 
-    def scan_networks(self, band: Optional[WiFiBand] = None) -> List[WiFiNetwork]:
+    def scan_networks(self, band: WiFiBand | None = None) -> list[WiFiNetwork]:
         """
         Scan for available WiFi networks
 
@@ -458,7 +458,7 @@ class WiFiController:
             self.logger.error(f"Network scan failed: {e}")
             return []
 
-    def _scan_networks_linux(self, band: Optional[WiFiBand]) -> List[WiFiNetwork]:
+    def _scan_networks_linux(self, band: WiFiBand | None) -> list[WiFiNetwork]:
         """Scan networks on Linux"""
         networks = []
 
@@ -484,14 +484,14 @@ class WiFiController:
         return networks
 
     def _parse_scan_results_linux(
-        self, output: str, band_filter: Optional[WiFiBand]
-    ) -> List[WiFiNetwork]:
+        self, output: str, band_filter: WiFiBand | None
+    ) -> list[WiFiNetwork]:
         """Parse Linux iw scan output"""
         networks = []
         # Simplified parser - production would be more comprehensive
         return networks
 
-    def _scan_networks_windows(self, band: Optional[WiFiBand]) -> List[WiFiNetwork]:
+    def _scan_networks_windows(self, band: WiFiBand | None) -> list[WiFiNetwork]:
         """Scan networks on Windows"""
         networks = []
 
@@ -514,14 +514,14 @@ class WiFiController:
         return networks
 
     def _parse_scan_results_windows(
-        self, output: str, band_filter: Optional[WiFiBand]
-    ) -> List[WiFiNetwork]:
+        self, output: str, band_filter: WiFiBand | None
+    ) -> list[WiFiNetwork]:
         """Parse Windows netsh scan output"""
         networks = []
         # Simplified parser
         return networks
 
-    def _scan_networks_macos(self, band: Optional[WiFiBand]) -> List[WiFiNetwork]:
+    def _scan_networks_macos(self, band: WiFiBand | None) -> list[WiFiNetwork]:
         """Scan networks on macOS"""
         networks = []
 
@@ -547,15 +547,15 @@ class WiFiController:
         return networks
 
     def _parse_scan_results_macos(
-        self, output: str, band_filter: Optional[WiFiBand]
-    ) -> List[WiFiNetwork]:
+        self, output: str, band_filter: WiFiBand | None
+    ) -> list[WiFiNetwork]:
         """Parse macOS airport scan output"""
         networks = []
         # Simplified parser
         return networks
 
     def connect(
-        self, ssid: str, password: Optional[str] = None, security: Optional[str] = None
+        self, ssid: str, password: str | None = None, security: str | None = None
     ) -> bool:
         """
         Connect to WiFi network with God Tier security
@@ -585,7 +585,7 @@ class WiFiController:
             return False
 
     def _connect_linux(
-        self, ssid: str, password: Optional[str], security: Optional[str]
+        self, ssid: str, password: str | None, security: str | None
     ) -> bool:
         """Connect to WiFi on Linux using NetworkManager or wpa_supplicant"""
         # Implementation would use nmcli or wpa_supplicant
@@ -593,14 +593,14 @@ class WiFiController:
         return False
 
     def _connect_windows(
-        self, ssid: str, password: Optional[str], security: Optional[str]
+        self, ssid: str, password: str | None, security: str | None
     ) -> bool:
         """Connect to WiFi on Windows"""
         # Implementation would use netsh or Windows API
         return False
 
     def _connect_macos(
-        self, ssid: str, password: Optional[str], security: Optional[str]
+        self, ssid: str, password: str | None, security: str | None
     ) -> bool:
         """Connect to WiFi on macOS"""
         # Implementation would use networksetup
@@ -621,13 +621,13 @@ class WiFiController:
             self.logger.error(f"WiFi disconnect failed: {e}")
             return False
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get WiFi connection status"""
         return {
             "connected": self.connected_network is not None,
-            "network": self.connected_network.__dict__
-            if self.connected_network
-            else None,
+            "network": (
+                self.connected_network.__dict__ if self.connected_network else None
+            ),
             "adapters": [adapter.__dict__ for adapter in self.adapters],
             "available_networks_count": len(self.available_networks),
             "marketplace_mode": self.marketplace_mode,
@@ -642,7 +642,7 @@ class WiFiController:
         self.logger.info("WiFi marketplace mode enabled")
         return True
 
-    def optimize_channel(self, band: WiFiBand) -> Optional[int]:
+    def optimize_channel(self, band: WiFiBand) -> int | None:
         """
         Analyze spectrum and select optimal channel
 

@@ -8,10 +8,9 @@ The Solution: T.A.R.L.'s `armor` keyword provides compile-time immutability
 enforcement that cannot be bypassed through any runtime mechanism.
 """
 
+
 from tarl import TARLSystem
 from tarl.runtime import TARLSecurityViolation
-import sys
-
 
 print("=" * 80)
 print("T.A.R.L. SECRET PROTECTION: ABSOLUTE SECURITY ACHIEVED")
@@ -116,13 +115,13 @@ try:
     print("✓ Code executed with memory encryption enabled")
     print("  Secret is encrypted in RAM using AES-256")
     print("  Memory dumps will not reveal the plaintext secret")
-    
+
     # Attempt to access T.A.R.L. VM memory (fails)
     print("\nAttempting memory dump attack:")
     print("  ✓ PROTECTED: T.A.R.L. VM memory is encrypted")
     print("  ✓ PROTECTED: No Python introspection available")
     print("  ✓ PROTECTED: Sandboxed from host runtime")
-    
+
 except Exception as e:
     print(f"Error: {e}")
 
