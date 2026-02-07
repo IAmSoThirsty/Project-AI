@@ -39,7 +39,12 @@ from .memory_pool_allocator import (
     HardwareProfile,
 )
 from .deduplication_engine import DeduplicationEngine, ContentAddress
-from .optimization_config import OptimizationConfig, load_optimization_config
+from .optimization_config import (
+    OptimizationConfig,
+    load_optimization_config,
+    save_optimization_config,
+    get_optimization_level_preset,
+)
 from .optimization_middleware import OptimizationMiddleware
 from .telemetry_collector import (
     TelemetryCollector,
@@ -69,6 +74,8 @@ __all__ = [
     # Configuration
     "OptimizationConfig",
     "load_optimization_config",
+    "save_optimization_config",
+    "get_optimization_level_preset",
     # Integration
     "OptimizationMiddleware",
     # Telemetry
