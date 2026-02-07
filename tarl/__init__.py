@@ -22,4 +22,16 @@ _runtime_module = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(_runtime_module)
 TarlRuntime = _runtime_module.TarlRuntime
 
-__all__ = ["TarlDecision", "TarlVerdict", "TarlPolicy", "TarlRuntime"]
+# Import TARL VM system (compiler, runtime VM, etc.)
+from tarl.system import TARLSystem, get_system
+
+__all__ = [
+    # Policy/Governance runtime
+    "TarlDecision",
+    "TarlVerdict",
+    "TarlPolicy",
+    "TarlRuntime",
+    # VM System
+    "TARLSystem",
+    "get_system",
+]
