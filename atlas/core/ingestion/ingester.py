@@ -1,10 +1,10 @@
 """
-Data Ingestion Module for PROJECT ATLAS
+Data Ingestion Module for PROJECT ATLAS Ω
 
 Loads raw data from various sources, validates against schemas, and prepares
-for normalization and processing.
+for normalization and processing. Implements full tier classification system.
 
-Production-grade with comprehensive error handling, validation, and audit logging.
+Layer 1 Component - Production-Grade Implementation
 """
 
 import json
@@ -17,6 +17,9 @@ import csv
 
 from atlas.schemas.validator import get_schema_validator, ValidationError
 from atlas.audit.trail import get_audit_trail, AuditCategory, AuditLevel
+from atlas.core.ingestion.tier_classifier import (
+    get_tier_classifier, TierMetadata, DataTier
+)
 
 logger = logging.getLogger(__name__)
 
@@ -48,9 +51,10 @@ class DataIngester:
         self.raw_dir = self.data_dir / "raw"
         self.raw_dir.mkdir(parents=True, exist_ok=True)
         
-        # Get validator and audit trail
+        # Get validator, audit trail, and tier classifier
         self.validator = get_schema_validator()
         self.audit = get_audit_trail()
+        self.tier_classifier = get_tier_classifier()
         
         logger.info(f"Initialized DataIngester with data dir: {self.data_dir}")
         
@@ -403,6 +407,113 @@ class DataIngester:
             logger.error(f"Failed to save data to {output_path}: {e}")
             raise IngestionError(f"Failed to save data: {e}") from e
     
+    def ingest_with_tier_classification(
+        self,
+        filepath: Path,
+        schema_type: str,
+        source_name: str,
+        source_type: str,
+        geographic_scope: str = "global",
+        **tier_kwargs
+    ) -> Tuple[List[Dict[str, Any]], List[TierMetadata]]:
+        """
+        Ingest data with full tier classification and validation.
+        
+        This is the production method that enforces:
+        - Four-tier classification (TierA/B/C/D)
+        - Confidence weighting
+        - "No hash → no inclusion" rule
+        - Complete provenance tracking
+        
+        Args:
+            filepath: Path to data file
+            schema_type: Schema to validate against
+            source_name: Name of data source
+            source_type: Type of source (e.g., "peer_reviewed_journal")
+            geographic_scope: Geographic scope (e.g., "global", "US", "EU")
+            **tier_kwargs: Additional tier metadata (peer_reviewed, citation_count, etc.)
+            
+        Returns:
+            (validated_data, tier_metadata_list)
+            
+        Raises:
+            IngestionError: If ingestion fails or data excluded by tier rules
+        """
+        logger.info(
+            f"Ingesting with tier classification: {filepath} "
+            f"(source: {source_name}, type: {source_type})"
+        )
+        
+        # Read file content
+        if not filepath.exists():
+            raise IngestionError(f"File not found: {filepath}")
+        
+        with open(filepath, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        # Create tier metadata
+        tier_metadata = self.tier_classifier.create_tier_metadata(
+            content=content,
+            source_name=source_name,
+            source_type=source_type,
+            timestamp=datetime.utcnow(),
+            geographic_scope=geographic_scope,
+            **tier_kwargs
+        )
+        
+        # Enforce inclusion rule ("No hash → no inclusion")
+        if not self.tier_classifier.enforce_inclusion_rule(tier_metadata):
+            error_msg = (
+                f"Data from {source_name} excluded by tier classification rules. "
+                f"Errors: {tier_metadata.validation_errors}"
+            )
+            logger.error(error_msg)
+            raise IngestionError(error_msg)
+        
+        # Ingest the data
+        try:
+            if filepath.suffix == '.json':
+                data = self.ingest_json_file(filepath, schema_type)
+            elif filepath.suffix == '.csv':
+                data = self.ingest_csv_file(filepath, schema_type)
+            else:
+                raise IngestionError(f"Unsupported file type: {filepath.suffix}")
+        except Exception as e:
+            logger.error(f"Ingestion failed for {filepath}: {e}")
+            raise
+        
+        # Attach tier metadata to each object
+        tier_metadata_list = []
+        for obj in data:
+            if "tier_metadata" not in obj:
+                obj["tier_metadata"] = tier_metadata.to_dict()
+            tier_metadata_list.append(tier_metadata)
+        
+        # Log successful tier-classified ingestion
+        self.audit.log_event(
+            category=AuditCategory.DATA,
+            level=AuditLevel.INFORMATIONAL,
+            operation="tier_classified_ingestion",
+            actor="DATA_INGESTER",
+            details={
+                "file": str(filepath),
+                "source_name": source_name,
+                "source_type": source_type,
+                "tier": tier_metadata.tier.value,
+                "confidence_weight": tier_metadata.confidence_weight,
+                "objects_ingested": len(data),
+                "validation_passed": tier_metadata.validation_passed
+            }
+        )
+        
+        logger.info(
+            f"Successfully ingested {len(data)} objects from {filepath} "
+            f"(Tier: {tier_metadata.tier.value}, "
+            f"Confidence: {tier_metadata.confidence_weight})"
+        )
+        
+        return data, tier_metadata_list
+    
     def get_statistics(self) -> Dict[str, Any]:
         """Get ingestion statistics from audit trail."""
         events = self.audit.get_events(
@@ -410,14 +521,28 @@ class DataIngester:
             operation="json_file_ingested"
         )
         
+        tier_events = self.audit.get_events(
+            category=AuditCategory.DATA,
+            operation="tier_classified_ingestion"
+        )
+        
         total_objects = sum(e.details.get("validated", 0) for e in events)
         total_errors = sum(e.details.get("errors", 0) for e in events)
+        
+        # Tier statistics
+        tier_stats = {}
+        for event in tier_events:
+            tier = event.details.get("tier", "unknown")
+            tier_stats[tier] = tier_stats.get(tier, 0) + event.details.get("objects_ingested", 0)
         
         return {
             "total_ingestions": len(events),
             "total_objects": total_objects,
             "total_errors": total_errors,
-            "success_rate": total_objects / (total_objects + total_errors) if total_objects + total_errors > 0 else 0
+            "success_rate": total_objects / (total_objects + total_errors) if total_objects + total_errors > 0 else 0,
+            "tier_classified_ingestions": len(tier_events),
+            "objects_by_tier": tier_stats,
+            "tier_classifier_stats": self.tier_classifier.get_tier_statistics()
         }
 
 
