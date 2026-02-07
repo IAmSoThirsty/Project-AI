@@ -14,19 +14,18 @@ This module provides production-grade system health diagnostics and reporting:
 Usage:
     # Programmatic usage
     from app.health.report import HealthReporter
-    
+
     reporter = HealthReporter()
     success, snapshot_path, report_path = reporter.generate_full_report()
-    
+
     # CLI usage
     python -m src.app.health.report
 """
 
 import logging
-import os
 import platform
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -50,11 +49,11 @@ DEFAULT_REPORT_DIR = Path(__file__).parent.parent.parent.parent / "docs" / "asse
 
 class HealthReporter:
     """System health reporter with diagnostics, YAML snapshots, and PNG rendering.
-    
+
     This class collects comprehensive system health information and outputs it in
     both machine-readable (YAML) and human-readable (PNG) formats, with full
     audit trail integration.
-    
+
     Example:
         >>> reporter = HealthReporter()
         >>> success, snapshot_path, report_path = reporter.generate_full_report()
@@ -69,7 +68,7 @@ class HealthReporter:
         audit_log: AuditLog | None = None
     ):
         """Initialize the health reporter.
-        
+
         Args:
             snapshot_dir: Directory for YAML snapshots (default: data/health_snapshots)
             report_dir: Directory for PNG reports (default: docs/assets)
@@ -77,24 +76,24 @@ class HealthReporter:
         """
         # Load configuration
         self.config = get_config()
-        
+
         # Set directories from config or defaults
         health_config = self.config.get_section("health")
         self.snapshot_dir = snapshot_dir or Path(health_config.get("snapshot_dir", DEFAULT_SNAPSHOT_DIR))
         self.report_dir = report_dir or Path(health_config.get("report_dir", DEFAULT_REPORT_DIR))
-        
+
         # Create directories
         self.snapshot_dir.mkdir(parents=True, exist_ok=True)
         self.report_dir.mkdir(parents=True, exist_ok=True)
-        
+
         # Initialize audit log
         self.audit_log = audit_log or AuditLog()
-        
+
         logger.info(f"HealthReporter initialized: snapshots={self.snapshot_dir}, reports={self.report_dir}")
 
     def collect_system_metrics(self) -> dict[str, Any]:
         """Collect system-level metrics.
-        
+
         Returns:
             Dictionary containing CPU, memory, disk, and platform information
         """
@@ -102,7 +101,7 @@ class HealthReporter:
             cpu_percent = psutil.cpu_percent(interval=1)
             memory = psutil.virtual_memory()
             disk = psutil.disk_usage('/')
-            
+
             return {
                 "cpu": {
                     "usage_percent": cpu_percent,
@@ -137,17 +136,17 @@ class HealthReporter:
 
     def collect_dependencies(self) -> dict[str, str]:
         """Collect installed Python packages and versions.
-        
+
         Returns:
             Dictionary mapping package names to versions
         """
         try:
             import pkg_resources
-            
+
             dependencies = {}
             for package in pkg_resources.working_set:
                 dependencies[package.project_name] = package.version
-            
+
             return dependencies
         except Exception as e:
             logger.error(f"Failed to collect dependencies: {e}")
@@ -155,7 +154,7 @@ class HealthReporter:
 
     def collect_config_summary(self) -> dict[str, Any]:
         """Collect summary of current configuration.
-        
+
         Returns:
             Dictionary with configuration overview
         """
@@ -172,49 +171,49 @@ class HealthReporter:
 
     def generate_yaml_snapshot(self) -> tuple[bool, Path | None]:
         """Generate a YAML snapshot of system health.
-        
+
         Returns:
             Tuple of (success, snapshot_path)
         """
         try:
             # Collect all data based on config
             health_config = self.config.get_section("health")
-            
+
             snapshot = {
-                "generated_at": datetime.now(timezone.utc).isoformat(),
+                "generated_at": datetime.now(UTC).isoformat(),
                 "version": "1.0.0",
             }
-            
+
             if health_config.get("collect_system_metrics", True):
                 snapshot["system_metrics"] = self.collect_system_metrics()
-            
+
             if health_config.get("collect_dependencies", True):
                 snapshot["dependencies"] = self.collect_dependencies()
-            
+
             if health_config.get("collect_config_summary", True):
                 snapshot["config_summary"] = self.collect_config_summary()
-            
+
             # Generate snapshot filename with timestamp
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             snapshot_path = self.snapshot_dir / f"health_snapshot_{timestamp}.yaml"
-            
+
             # Write YAML snapshot
             with open(snapshot_path, "w", encoding="utf-8") as f:
                 yaml.dump(snapshot, f, default_flow_style=False, sort_keys=False)
-            
+
             logger.info(f"YAML snapshot generated: {snapshot_path}")
             return True, snapshot_path
-            
+
         except Exception as e:
             logger.error(f"Failed to generate YAML snapshot: {e}")
             return False, None
 
     def generate_png_report(self, snapshot_data: dict[str, Any]) -> tuple[bool, Path | None]:
         """Generate a PNG health report visualization.
-        
+
         Args:
             snapshot_data: Health snapshot data dictionary
-            
+
         Returns:
             Tuple of (success, report_path)
         """
@@ -222,14 +221,14 @@ class HealthReporter:
             # Create figure with subplots
             fig, axes = plt.subplots(2, 2, figsize=(12, 10))
             fig.suptitle('Project-AI System Health Report', fontsize=16, fontweight='bold')
-            
+
             # Extract system metrics
             system_metrics = snapshot_data.get("system_metrics", {})
             cpu_data = system_metrics.get("cpu", {})
             memory_data = system_metrics.get("memory", {})
             disk_data = system_metrics.get("disk", {})
             platform_data = system_metrics.get("platform", {})
-            
+
             # CPU Usage (top-left)
             ax1 = axes[0, 0]
             cpu_usage = cpu_data.get("usage_percent", 0)
@@ -239,7 +238,7 @@ class HealthReporter:
             ax1.set_xlabel('Usage (%)')
             ax1.set_title(f'CPU Usage ({cpu_count} cores)')
             ax1.grid(axis='x', alpha=0.3)
-            
+
             # Memory Usage (top-right)
             ax2 = axes[0, 1]
             memory_usage = memory_data.get("usage_percent", 0)
@@ -249,7 +248,7 @@ class HealthReporter:
             ax2.set_xlabel('Usage (%)')
             ax2.set_title(f'Memory Usage ({memory_total:.1f} GB total)')
             ax2.grid(axis='x', alpha=0.3)
-            
+
             # Disk Usage (bottom-left)
             ax3 = axes[1, 0]
             disk_usage = disk_data.get("usage_percent", 0)
@@ -259,18 +258,18 @@ class HealthReporter:
             ax3.set_xlabel('Usage (%)')
             ax3.set_title(f'Disk Usage ({disk_total:.1f} GB total)')
             ax3.grid(axis='x', alpha=0.3)
-            
+
             # System Information (bottom-right)
             ax4 = axes[1, 1]
             ax4.axis('off')
-            
+
             # Format system info text
             info_text = f"""
 System Information:
 ─────────────────────────
 OS: {platform_data.get('system', 'Unknown')} {platform_data.get('release', '')}
 Machine: {platform_data.get('machine', 'Unknown')}
-Python: {platform_data.get('python_implementation', 'Unknown')} 
+Python: {platform_data.get('python_implementation', 'Unknown')}
         {sys.version.split()[0]}
 
 Generated: {snapshot_data.get('generated_at', 'Unknown')[:19]}
@@ -281,31 +280,31 @@ Status: {"✓ Healthy" if all([
     disk_usage < 90
 ]) else "⚠ Attention Needed"}
             """
-            
+
             ax4.text(0.1, 0.5, info_text, fontsize=10, family='monospace',
                     verticalalignment='center', transform=ax4.transAxes)
-            
+
             plt.tight_layout()
-            
+
             # Save to canonical path and timestamped path
             canonical_path = self.report_dir / "health_report.png"
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             timestamped_path = self.report_dir / f"health_report_{timestamp}.png"
-            
+
             fig.savefig(canonical_path, dpi=100, bbox_inches='tight')
             fig.savefig(timestamped_path, dpi=100, bbox_inches='tight')
             plt.close(fig)
-            
+
             logger.info(f"PNG report generated: {canonical_path}")
             return True, canonical_path
-            
+
         except Exception as e:
             logger.error(f"Failed to generate PNG report: {e}")
             return False, None
 
     def generate_full_report(self) -> tuple[bool, Path | None, Path | None]:
         """Generate complete health report with YAML snapshot and PNG visualization.
-        
+
         Returns:
             Tuple of (success, snapshot_path, report_path)
         """
@@ -314,40 +313,40 @@ Status: {"✓ Healthy" if all([
             snapshot_success, snapshot_path = self.generate_yaml_snapshot()
             if not snapshot_success:
                 return False, None, None
-            
+
             # Load snapshot data for PNG generation
-            with open(snapshot_path, "r", encoding="utf-8") as f:
+            with open(snapshot_path, encoding="utf-8") as f:
                 snapshot_data = yaml.safe_load(f)
-            
+
             # Generate PNG report
             report_success, report_path = self.generate_png_report(snapshot_data)
             if not report_success:
                 return False, snapshot_path, None
-            
+
             # Log to audit
             self.audit_log.log_event(
                 event_type="health_report_generated",
                 data={
                     "snapshot_path": str(snapshot_path),
                     "report_path": str(report_path),
-                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                    "timestamp": datetime.now(UTC).isoformat(),
                 },
                 description="System health report generated successfully"
             )
-            
+
             logger.info(f"Full health report generated: snapshot={snapshot_path}, report={report_path}")
             return True, snapshot_path, report_path
-            
+
         except Exception as e:
             logger.error(f"Failed to generate full report: {e}")
-            
+
             # Log failure to audit
             self.audit_log.log_event(
                 event_type="health_report_failed",
                 data={"error": str(e)},
                 description="System health report generation failed"
             )
-            
+
             return False, None, None
 
 
@@ -358,23 +357,23 @@ def main():
         level=logging.INFO,
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     )
-    
+
     print("=" * 60)
     print("Project-AI System Health Reporter")
     print("=" * 60)
     print()
-    
+
     # Create reporter and generate report
     reporter = HealthReporter()
     success, snapshot_path, report_path = reporter.generate_full_report()
-    
+
     if success:
         print("✓ Health report generated successfully!")
         print()
         print(f"  Snapshot: {snapshot_path}")
         print(f"  Report:   {report_path}")
         print()
-        
+
         # Verify audit log chain
         is_valid, message = reporter.audit_log.verify_chain()
         if is_valid:
@@ -385,7 +384,7 @@ def main():
         print("✗ Health report generation failed!")
         print("  Check logs for details.")
         sys.exit(1)
-    
+
     print()
     print("=" * 60)
 
