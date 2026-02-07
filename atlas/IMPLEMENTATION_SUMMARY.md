@@ -2,7 +2,31 @@
 
 **Date**: 2026-02-07  
 **Status**: CRITICAL LAYERS OPERATIONAL  
-**Architecture**: God-Tier Monolithic with Constitutional Enforcement
+**Architecture**: God-Tier Monolithic with Constitutional Enforcement  
+**Relationship**: SECONDARY TOOL - Subordinate to Project-AI
+
+---
+
+## ⚠️ SUBORDINATION NOTICE ⚠️
+
+**ATLAS Ω is NOT a replacement for Project-AI.**
+
+This is a **secondary, optional tool** built on top of Project-AI. It is:
+- **Bounded** by Project-AI architecture
+- **Subordinate** to Project-AI and Triumvirate governance
+- **Removable** without affecting Project-AI core functionality
+
+**Primary Authority:**
+- Project-AI (Jeremy Karrick, Architect and Founder)
+- Triumvirate governance (including Liara) - UNCHANGED
+- Baseline personality assignment for genesis-spawned AIs - UNCHANGED
+
+**ATLAS Ω Role:**
+- Projects (doesn't decide)
+- Assists (doesn't replace)
+- Extends (doesn't subsume)
+
+See [SUBORDINATION.md](./SUBORDINATION.md) for complete documentation.
 
 ---
 
@@ -393,13 +417,31 @@ PROJECT ATLAS Ω has achieved **God-Tier monolithic implementation** of its foun
 
 **System Status**: OPERATIONAL for constitutional enforcement, Bayesian inference, and narrative isolation.
 
+**Subordination Status**: ATLAS Ω is explicitly positioned as a **secondary, optional tool** subordinate to Project-AI and Triumvirate governance.
+
 **Remaining Work**: 5 layers (agent simulation, Monte Carlo dynamics, divergence analysis, contingency triggers, sensitivity analysis, failure surveillance) require implementation to achieve full 13-layer specification.
 
 **Quality**: Zero placeholders, zero stubs, production-grade implementation throughout.
 
+**Relationship**: ATLAS Ω is an instrument of Project-AI, not a replacement. It projects (doesn't decide), assists (doesn't replace), and extends (doesn't subsume).
+
+---
+
+## Subordination Declaration
+
+**Primary Authority**: Project-AI + Triumvirate  
+**Secondary Tool**: ATLAS Ω  
+**Triumvirate Status**: ACTIVE and UNCHANGED  
+**Removal Impact**: None (Project-AI continues functioning)
+
+See [SUBORDINATION.md](./SUBORDINATION.md) for complete relationship documentation.
+
 ---
 
 **Implementation Team**: Project-AI  
+**Primary System**: Project-AI (Jeremy Karrick, Architect and Founder)  
+**Triumvirate**: ACTIVE (including Liara) - all duties and powers unchanged  
+**ATLAS Ω**: Secondary analytical instrument  
 **Architecture**: God-Tier Monolithic  
 **Status**: CRITICAL LAYERS OPERATIONAL  
 **Date**: 2026-02-07
