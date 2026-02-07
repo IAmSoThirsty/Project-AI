@@ -47,6 +47,13 @@ class Config:
             "timeout": 30,
             "retry_attempts": 3,
         },
+        "health": {
+            "collect_system_metrics": True,
+            "collect_dependencies": True,
+            "collect_config_summary": True,
+            "snapshot_dir": "data/health_snapshots",
+            "report_dir": "docs/assets",
+        },
     }
 
     def __init__(self, config_path: Path | None = None):
