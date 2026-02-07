@@ -19,7 +19,7 @@ Production-grade with cryptographic enforcement and immediate abort on violation
 import hashlib
 import logging
 import struct
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any, Dict, List, Optional, Set, Tuple
 from pathlib import Path
@@ -343,8 +343,14 @@ class ConstitutionalKernel:
         created_at = metadata.get("created_at")
         if created_at:
             try:
+                # Parse timestamp with timezone awareness
                 created_time = datetime.fromisoformat(created_at.replace('Z', '+00:00'))
-                now = datetime.utcnow()
+                # Use timezone-aware current time
+                now = datetime.now(timezone.utc)
+                
+                # Ensure both are timezone-aware for comparison
+                if created_time.tzinfo is None:
+                    created_time = created_time.replace(tzinfo=timezone.utc)
                 
                 # State cannot be created in the future
                 if created_time > now:
@@ -352,8 +358,9 @@ class ConstitutionalKernel:
                         ViolationType.TEMPORAL_SKEW,
                         f"State created_at {created_at} is in the future!"
                     )
-            except Exception:
-                pass  # Don't fail on timestamp parse errors
+            except Exception as e:
+                # Log but don't fail on timestamp parse errors
+                logger.debug(f"Could not parse timestamp {created_at}: {e}")
         
         # Check 4: Step size must be consistent
         if "previous_step_size_hours" in parameters:
