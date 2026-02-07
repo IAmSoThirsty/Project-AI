@@ -12,23 +12,24 @@ This is the main entry point for the complete system.
 
 import logging
 import time
-from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
+from typing import Any
+
+from kernel.deception import DeceptionOrchestrator, DeceptionStrategy
 
 # Import all core systems
-from kernel.holographic import HolographicLayerManager, Command, ThreatLevel, Layer
-from kernel.threat_detection import ThreatDetectionEngine, ThreatAssessment, AttackType
-from kernel.deception import DeceptionOrchestrator, DeceptionStrategy
+from kernel.holographic import Command, HolographicLayerManager, Layer, ThreatLevel
+from kernel.threat_detection import ThreatAssessment, ThreatDetectionEngine
 from kernel.visualize import DemoVisualizer, VisualizationMode
 
 # New advanced components
 try:
-    from kernel.learning_engine import DefenseEvolutionEngine
     from kernel.advanced_visualizations import (
-        SplitScreenVisualizer,
         AnimatedAttackFlow,
         AttackFlowStep,
+        SplitScreenVisualizer,
     )
+    from kernel.learning_engine import DefenseEvolutionEngine
 
     ADVANCED_FEATURES = True
 except ImportError:
@@ -82,7 +83,7 @@ class ThirstySuperKernel:
 
     VERSION = "0.1.0-thirst-of-gods"
 
-    def __init__(self, config: Optional[SystemConfig] = None):
+    def __init__(self, config: SystemConfig | None = None):
         self.config = config or SystemConfig()
 
         logger.info("=" * 70)
@@ -156,7 +157,7 @@ class ThirstySuperKernel:
         logger.info("   All systems operational")
         logger.info("")
 
-    def execute_command(self, user_id: int, command_str: str) -> Dict[str, Any]:
+    def execute_command(self, user_id: int, command_str: str) -> dict[str, Any]:
         """
         Main command execution entry point
 
@@ -245,7 +246,7 @@ class ThirstySuperKernel:
 
     def _handle_safe_command(
         self, user_id: int, cmd: Command, observed: Any, layer: Layer
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Handle safe command execution"""
         # If in mirror layer, apply to real system
         if layer.is_mirror():
@@ -260,7 +261,7 @@ class ThirstySuperKernel:
 
     def _handle_suspicious_command(
         self, user_id: int, cmd: Command, observed: Any, threat: ThreatAssessment
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Handle suspicious command - allow but monitor closely"""
         logger.warning(f"⚠️  Suspicious activity from user {user_id}")
         logger.warning(f"   Type: {threat.threat_type}")
@@ -290,7 +291,7 @@ class ThirstySuperKernel:
 
     def _handle_malicious_command(
         self, user_id: int, cmd: Command, observed: Any, threat: ThreatAssessment
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Handle malicious command - transition to deception"""
         self.threats_detected += 1
 
@@ -364,7 +365,7 @@ class ThirstySuperKernel:
         # Return fake success so attacker doesn't know
         return {
             "status": "SUCCESS",  # Fake!
-            "result": f"Command executed successfully",  # Lie!
+            "result": "Command executed successfully",  # Lie!
             "layer": deception_layer.id,
             "threat_level": threat.level.name,
             "DECEPTION_ACTIVE": True,
@@ -374,7 +375,7 @@ class ThirstySuperKernel:
         }
 
     def _execute_bubblegum_transition(
-        self, user_id: int, bubblegum_result: Dict[str, Any]
+        self, user_id: int, bubblegum_result: dict[str, Any]
     ):
         """Execute the Bubblegum protocol transition"""
         logger.critical("")
@@ -398,7 +399,7 @@ class ThirstySuperKernel:
         logger.critical("=" * 70)
         logger.critical("")
 
-    def get_system_status(self) -> Dict[str, Any]:
+    def get_system_status(self) -> dict[str, Any]:
         """Get complete system status"""
         uptime = time.time() - self.start_time
 

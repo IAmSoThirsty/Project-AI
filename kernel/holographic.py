@@ -8,12 +8,11 @@ Manages multiple reality layers for security:
 Commands execute in observed sandbox before real system.
 """
 
-from dataclasses import dataclass, field
-from enum import Enum
-from typing import Dict, List, Optional, Any, Callable
 import logging
 import time
-import hashlib
+from dataclasses import dataclass, field
+from enum import Enum
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +39,7 @@ class Command:
     """User command to execute"""
 
     cmdtype: str
-    args: List[str] = field(default_factory=list)
+    args: list[str] = field(default_factory=list)
     user_id: int = 0
     timestamp: float = field(default_factory=time.time)
 
@@ -54,11 +53,11 @@ class ObservedExecution:
 
     command: Command
     result: Any
-    system_calls: List[str] = field(default_factory=list)
-    file_accesses: List[str] = field(default_factory=list)
-    network_activity: List[str] = field(default_factory=list)
+    system_calls: list[str] = field(default_factory=list)
+    file_accesses: list[str] = field(default_factory=list)
+    network_activity: list[str] = field(default_factory=list)
     execution_time_ms: float = 0
-    threat_indicators: List[str] = field(default_factory=list)
+    threat_indicators: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -68,7 +67,7 @@ class ThreatAssessment:
     level: ThreatLevel
     confidence: float
     threat_type: str
-    indicators: List[str] = field(default_factory=list)
+    indicators: list[str] = field(default_factory=list)
     recommended_action: str = "ALLOW"
 
 
@@ -102,7 +101,7 @@ class RealSystemLayer(Layer):
 
     def __init__(self):
         super().__init__(0, LayerType.REAL, "REALITY_LAYER")
-        self.command_history: List[Command] = []
+        self.command_history: list[Command] = []
 
     def execute_observed(self, cmd: Command, user_id: int) -> ObservedExecution:
         """Real layer executes directly (only for verified safe commands)"""
@@ -132,7 +131,7 @@ class MirrorLayer(Layer):
         super().__init__(layer_id, LayerType.MIRROR, f"MIRROR_LAYER_{layer_id}")
         self.parent_id = parent_id
         self.observation_steps = observation_steps
-        self.pending_verification: List[Command] = []
+        self.pending_verification: list[Command] = []
 
     def execute_observed(self, cmd: Command, user_id: int) -> ObservedExecution:
         """Execute in sandbox, observe N steps ahead"""
@@ -161,7 +160,7 @@ class MirrorLayer(Layer):
         # Sandbox execution (isolated from real system)
         return f"SANDBOX_EXEC: {cmd}"
 
-    def _simulate_future_steps(self, cmd: Command, steps: int) -> List[str]:
+    def _simulate_future_steps(self, cmd: Command, steps: int) -> list[str]:
         """Simulate what attacker might do next"""
         threats = []
 
@@ -175,16 +174,16 @@ class MirrorLayer(Layer):
 
         return threats
 
-    def _extract_syscalls(self, cmd: Command) -> List[str]:
+    def _extract_syscalls(self, cmd: Command) -> list[str]:
         """Extract system calls made"""
         # Would use strace/ptrace in real implementation
         return ["execve", "open", "read"]
 
-    def _extract_file_ops(self, cmd: Command) -> List[str]:
+    def _extract_file_ops(self, cmd: Command) -> list[str]:
         """Extract file operations"""
         return []
 
-    def _extract_network_ops(self, cmd: Command) -> List[str]:
+    def _extract_network_ops(self, cmd: Command) -> list[str]:
         """Extract network operations"""
         return []
 
@@ -196,7 +195,7 @@ class DeceptionLayer(Layer):
         super().__init__(layer_id, LayerType.DECEPTION, f"HONEYPOT_{attacker_id}")
         self.threat_type = threat_type
         self.attacker_id = attacker_id
-        self.attack_log: List[Command] = []
+        self.attack_log: list[Command] = []
         self.victory_confidence = 0.0
         self.bubblegum_triggered = False
 
@@ -277,8 +276,8 @@ class HolographicLayerManager:
     MAX_LAYERS = 10
 
     def __init__(self):
-        self.layers: List[Layer] = []
-        self.user_layer_map: Dict[int, int] = {}  # user_id -> layer_id
+        self.layers: list[Layer] = []
+        self.user_layer_map: dict[int, int] = {}  # user_id -> layer_id
         self.observation_window = 2
 
         logger.info("Initializing Holographic Defense System...")

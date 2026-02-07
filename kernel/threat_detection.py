@@ -5,13 +5,11 @@ Enhanced threat detection using CodexDeus AI integration.
 Real-time behavior analysis, pattern recognition, and learning.
 """
 
+import logging
+import time
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import List, Dict, Any, Optional
-import time
-import hashlib
-import json
-import logging
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -43,11 +41,11 @@ class BehaviorPattern:
     """Observed behavior pattern"""
 
     pattern_id: str
-    commands: List[str] = field(default_factory=list)
+    commands: list[str] = field(default_factory=list)
     time_window_seconds: float = 60.0
     threat_score: float = 0.0
-    attack_types: List[AttackType] = field(default_factory=list)
-    indicators: List[str] = field(default_factory=list)
+    attack_types: list[AttackType] = field(default_factory=list)
+    indicators: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -57,11 +55,11 @@ class ThreatAssessment:
     level: ThreatLevel
     confidence: float
     threat_type: str
-    indicators: List[str] = field(default_factory=list)
+    indicators: list[str] = field(default_factory=list)
     recommended_action: str = "ALLOW"
-    attack_patterns: List[AttackType] = field(default_factory=list)
+    attack_patterns: list[AttackType] = field(default_factory=list)
     behavior_score: float = 0.0
-    ml_prediction: Optional[Dict[str, float]] = None
+    ml_prediction: dict[str, float] | None = None
 
 
 class AttackPatternLibrary:
@@ -70,7 +68,7 @@ class AttackPatternLibrary:
     def __init__(self):
         self.patterns = self._initialize_patterns()
 
-    def _initialize_patterns(self) -> Dict[str, BehaviorPattern]:
+    def _initialize_patterns(self) -> dict[str, BehaviorPattern]:
         """Initialize known attack patterns"""
         patterns = {}
 
@@ -153,7 +151,7 @@ class AttackPatternLibrary:
 
         return patterns
 
-    def match_pattern(self, command: str) -> List[BehaviorPattern]:
+    def match_pattern(self, command: str) -> list[BehaviorPattern]:
         """Match command against known patterns"""
         matched = []
         cmd_lower = command.lower()
@@ -172,7 +170,7 @@ class BehaviorAnalyzer:
 
     def __init__(self, window_size: int = 10):
         self.window_size = window_size
-        self.user_sessions: Dict[int, List[Dict[str, Any]]] = {}
+        self.user_sessions: dict[int, list[dict[str, Any]]] = {}
 
     def record_command(self, user_id: int, command: str, timestamp: float = None):
         """Record a command in user's session"""
@@ -201,7 +199,7 @@ class BehaviorAnalyzer:
 
         return (len(session) / time_span) * 60  # Commands per minute
 
-    def detect_sequence_patterns(self, user_id: int) -> List[str]:
+    def detect_sequence_patterns(self, user_id: int) -> list[str]:
         """Detect attack sequences (e.g., recon -> escalation -> exfil)"""
         if user_id not in self.user_sessions:
             return []
@@ -268,7 +266,7 @@ class ThreatDetectionEngine:
         self.pattern_library = AttackPatternLibrary()
         self.behavior_analyzer = BehaviorAnalyzer()
         self.use_ml = use_ml
-        self.detection_history: List[ThreatAssessment] = []
+        self.detection_history: list[ThreatAssessment] = []
 
         logger.info("Threat Detection Engine initialized")
         if use_ml:
@@ -276,7 +274,7 @@ class ThreatDetectionEngine:
             logger.info("  - CodexDeus integration: READY")
 
     def analyze_threat(
-        self, user_id: int, command: str, observed_behavior: Dict[str, Any]
+        self, user_id: int, command: str, observed_behavior: dict[str, Any]
     ) -> ThreatAssessment:
         """
         Comprehensive threat analysis
@@ -367,8 +365,8 @@ class ThreatDetectionEngine:
         return assessment
 
     def _ml_predict(
-        self, command: str, observed_behavior: Dict[str, Any]
-    ) -> Dict[str, float]:
+        self, command: str, observed_behavior: dict[str, Any]
+    ) -> dict[str, float]:
         """
         ML-based threat prediction using CodexDeus
 
@@ -419,8 +417,8 @@ class ThreatDetectionEngine:
         }
 
     def _extract_features(
-        self, command: str, observed_behavior: Dict[str, Any]
-    ) -> List[str]:
+        self, command: str, observed_behavior: dict[str, Any]
+    ) -> list[str]:
         """Extract features for ML model"""
         features = []
 
@@ -446,7 +444,7 @@ class ThreatDetectionEngine:
 
         return features
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get detection engine statistics"""
         if not self.detection_history:
             return {

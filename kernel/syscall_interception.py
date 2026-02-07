@@ -8,10 +8,10 @@ Real implementation would require kernel modules or eBPF.
 
 import logging
 import time
-import ctypes
-from typing import Dict, List, Any, Callable, Optional
+from collections.abc import Callable
 from dataclasses import dataclass
 from enum import Enum
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -39,9 +39,9 @@ class SyscallEvent:
     pid: int
     uid: int
     syscall_type: SyscallType
-    args: List[Any]
+    args: list[Any]
     return_value: int
-    metadata: Dict[str, Any]
+    metadata: dict[str, Any]
 
 
 class SyscallInterceptor:
@@ -57,8 +57,8 @@ class SyscallInterceptor:
     """
 
     def __init__(self):
-        self.hooks: Dict[SyscallType, List[Callable]] = {}
-        self.events: List[SyscallEvent] = []
+        self.hooks: dict[SyscallType, list[Callable]] = {}
+        self.events: list[SyscallEvent] = []
         self.enabled = False
 
         logger.info("=" * 70)
@@ -111,8 +111,8 @@ class SyscallInterceptor:
         return True
 
     def get_events(
-        self, syscall_type: Optional[SyscallType] = None, since: Optional[float] = None
-    ) -> List[SyscallEvent]:
+        self, syscall_type: SyscallType | None = None, since: float | None = None
+    ) -> list[SyscallEvent]:
         """Get captured events"""
         events = self.events
 
@@ -151,7 +151,7 @@ class CommandInterceptionBridge:
         self.interceptor = interceptor
         logger.info("Command-to-Syscall bridge initialized")
 
-    def analyze_command(self, command: str, user_id: int) -> List[SyscallEvent]:
+    def analyze_command(self, command: str, user_id: int) -> list[SyscallEvent]:
         """
         Analyze command and generate expected syscall events
 
@@ -204,7 +204,7 @@ class KernelHookSimulator:
     def __init__(self):
         self.interceptor = SyscallInterceptor()
         self.bridge = CommandInterceptionBridge(self.interceptor)
-        self.security_rules: List[Dict[str, Any]] = []
+        self.security_rules: list[dict[str, Any]] = []
 
         # Install default security hooks
         self._install_default_hooks()
@@ -247,7 +247,7 @@ class KernelHookSimulator:
 
         self.interceptor.register_hook(SyscallType.CONNECT, detect_exfiltration)
 
-    def process_command(self, command: str, user_id: int) -> Dict[str, Any]:
+    def process_command(self, command: str, user_id: int) -> dict[str, Any]:
         """
         Process command through syscall interception
 
@@ -268,7 +268,7 @@ class KernelHookSimulator:
 
         return result
 
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self) -> dict[str, Any]:
         """Get interception statistics"""
         all_events = self.interceptor.get_events()
 

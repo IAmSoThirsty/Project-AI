@@ -222,13 +222,19 @@ class GlobalWatchTower:
                     authority_level=AuthorityLevel.CONSTRAINED,
                     role=ComponentRole.INFRASTRUCTURE_CONTROLLER,
                     component_ref=instance,
-                    dependencies=["cognition_kernel"],  # Depends on kernel for authority
+                    dependencies=[
+                        "cognition_kernel"
+                    ],  # Depends on kernel for authority
                     can_be_paused=True,  # Can be paused by Tier-1
                     can_be_replaced=False,  # Core security infrastructure
                 )
-                logger.info("GlobalWatchTower registered as Tier-2 Infrastructure Controller")
+                logger.info(
+                    "GlobalWatchTower registered as Tier-2 Infrastructure Controller"
+                )
             except Exception as e:
-                logger.warning("Failed to register GlobalWatchTower in tier registry: %s", e)
+                logger.warning(
+                    "Failed to register GlobalWatchTower in tier registry: %s", e
+                )
 
             return instance
 

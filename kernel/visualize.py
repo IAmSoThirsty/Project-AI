@@ -8,10 +8,9 @@ Real-time visual displays for demonstrations:
 - Performance metrics dashboard
 """
 
-import time
-from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
 from enum import Enum
+from typing import Any
 
 
 class VisualizationMode(Enum):
@@ -110,7 +109,7 @@ class ThreatHeatmap:
     def __init__(self, width: int = 60, height: int = 10):
         self.width = width
         self.height = height
-        self.activity_grid: List[List[float]] = []
+        self.activity_grid: list[list[float]] = []
         self._initialize_grid()
 
     def _initialize_grid(self):
@@ -158,7 +157,7 @@ class PerformanceMetrics:
     """Performance metrics dashboard"""
 
     def __init__(self):
-        self.metrics: Dict[str, Any] = {
+        self.metrics: dict[str, Any] = {
             "total_commands": 0,
             "threats_detected": 0,
             "deceptions_active": 0,
@@ -234,7 +233,7 @@ class AttackFlowDiagram:
     """Visualize attack progression"""
 
     @staticmethod
-    def render(attack_chain: List[str]) -> str:
+    def render(attack_chain: list[str]) -> str:
         """Render attack flow diagram"""
         if not attack_chain:
             return "No attack activity"
@@ -268,7 +267,7 @@ class DemoVisualizer:
         print(ASCIIArt.layer_diagram())
         input("\nPress Enter to begin demonstration...")
 
-    def show_threat_detected(self, threat_info: Dict[str, Any]):
+    def show_threat_detected(self, threat_info: dict[str, Any]):
         """Display threat detection alert"""
         print("")
         print("╔" + "═" * 60 + "╗")

@@ -4,15 +4,15 @@ Start Thirsty Super Kernel as a Live Service
 Runs the kernel continuously, monitoring for commands and threats.
 """
 
+import logging
 import sys
 import time
-import logging
 from pathlib import Path
 
 # Add kernel to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from kernel.thirsty_super_kernel import ThirstySuperKernel, SystemConfig
+from kernel.thirsty_super_kernel import SystemConfig, ThirstySuperKernel
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -50,10 +50,10 @@ def run_kernel_service():
     )
 
     if hasattr(kernel, "learning_engine") and kernel.learning_engine:
-        logger.info(f"  - Learning Engine: ACTIVE")
+        logger.info("  - Learning Engine: ACTIVE")
 
     if hasattr(kernel, "split_screen") and kernel.split_screen:
-        logger.info(f"  - Advanced Visualizations: ACTIVE")
+        logger.info("  - Advanced Visualizations: ACTIVE")
 
     logger.info("")
     logger.info("=" * 70)

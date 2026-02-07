@@ -10,8 +10,8 @@ Connects Thirsty Super Kernel with existing Project-AI infrastructure:
 
 import logging
 import sys
-from typing import Dict, List, Any, Optional
 from pathlib import Path
+from typing import Any
 
 # Add Project-AI to path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
@@ -38,8 +38,8 @@ class CerberusSecurityBridge:
     def _initialize(self):
         """Initialize Cerberus integration"""
         try:
-            from src.app.core.cerberus_runtime_manager import CerberusRuntimeManager
             from src.app.core.cerberus_hydra import HydraController
+            from src.app.core.cerberus_runtime_manager import CerberusRuntimeManager
 
             self.cerberus_runtime = CerberusRuntimeManager()
             self.hydra_controller = HydraController()
@@ -68,7 +68,7 @@ class CerberusSecurityBridge:
         except Exception as e:
             logger.error(f"Failed to register with Cerberus: {e}")
 
-    def report_threat(self, threat_assessment: Dict[str, Any]):
+    def report_threat(self, threat_assessment: dict[str, Any]):
         """Report threat to Cerberus for coordinated response"""
         if not self.hydra_controller:
             return
@@ -133,8 +133,8 @@ class CodexDeusAIBridge:
             logger.warning("Using heuristic-based detection")
 
     def predict_threat(
-        self, command: str, user_history: List[str], context: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, command: str, user_history: list[str], context: dict[str, Any]
+    ) -> dict[str, Any]:
         """Use CodexDeus AI to predict threat level"""
         if not self.model_loaded:
             return self._fallback_prediction(command)
@@ -164,7 +164,7 @@ class CodexDeusAIBridge:
             logger.error(f"CodexDeus prediction failed: {e}")
             return self._fallback_prediction(command)
 
-    def _fallback_prediction(self, command: str) -> Dict[str, Any]:
+    def _fallback_prediction(self, command: str) -> dict[str, Any]:
         """Fallback when AI not available"""
         # Simple heuristic
         dangerous_keywords = [
@@ -190,7 +190,7 @@ class CodexDeusAIBridge:
             "model": "fallback_heuristic",
         }
 
-    def learn_from_attack(self, attack_data: Dict[str, Any]):
+    def learn_from_attack(self, attack_data: dict[str, Any]):
         """Update AI model with attack data"""
         if not self.model_loaded:
             return
@@ -228,13 +228,13 @@ class TriumvirateGovernanceBridge:
             logger.warning(f"Triumvirate not available: {e}")
 
     def check_action_permitted(
-        self, action: str, user_id: int, context: Dict[str, Any]
+        self, action: str, user_id: int, context: dict[str, Any]
     ) -> bool:
         """Check if action is permitted by governance policies"""
         # For now, allow all - real implementation would check policies
         return True
 
-    def audit_log_action(self, action: str, user_id: int, result: Dict[str, Any]):
+    def audit_log_action(self, action: str, user_id: int, result: dict[str, Any]):
         """Log action to governance audit trail"""
         logger.info(f"[AUDIT] User {user_id}: {action} -> {result.get('status')}")
 
@@ -268,7 +268,7 @@ class ProjectAIIntegration:
         """Callback when holographic layer is created"""
         self.cerberus.register_holographic_layer(layer_id, layer_type, user_id)
 
-    def on_threat_detected(self, threat_assessment: Dict[str, Any]):
+    def on_threat_detected(self, threat_assessment: dict[str, Any]):
         """Callback when threat is detected"""
         # Report to Cerberus
         self.cerberus.report_threat(threat_assessment)
@@ -283,8 +283,8 @@ class ProjectAIIntegration:
         return action_permitted
 
     def get_ai_threat_prediction(
-        self, command: str, user_history: List[str], context: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, command: str, user_history: list[str], context: dict[str, Any]
+    ) -> dict[str, Any]:
         """Get AI-powered threat prediction"""
         return self.codex_deus.predict_threat(command, user_history, context)
 
@@ -298,11 +298,11 @@ class ProjectAIIntegration:
         # Execute via Cerberus
         return self.cerberus.request_lockdown(user_id, reason)
 
-    def learn_from_attack(self, attack_data: Dict[str, Any]):
+    def learn_from_attack(self, attack_data: dict[str, Any]):
         """Update AI models with attack data"""
         self.codex_deus.learn_from_attack(attack_data)
 
-    def get_integration_status(self) -> Dict[str, Any]:
+    def get_integration_status(self) -> dict[str, Any]:
         """Get status of all integrations"""
         return {
             "cerberus": {

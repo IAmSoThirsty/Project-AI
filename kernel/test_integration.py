@@ -4,14 +4,12 @@ End-to-End Integration Test Suite
 Comprehensive testing of complete system with all features enabled.
 """
 
-import unittest
-import time
 import logging
-from typing import List
+import time
+import unittest
 
-from kernel.thirsty_super_kernel import ThirstySuperKernel, SystemConfig
-from kernel.learning_engine import DefenseEvolutionEngine
 from kernel.performance_benchmark import PerformanceBenchmark
+from kernel.thirsty_super_kernel import SystemConfig, ThirstySuperKernel
 
 logging.basicConfig(level=logging.WARNING)  # Reduce noise during tests
 
@@ -208,7 +206,7 @@ class TestEndToEndIntegration(unittest.TestCase):
         total_time = time.time() - total_time
         avg_time_ms = (total_time / total_commands) * 1000
 
-        print(f"\nStress Test Results:")
+        print("\nStress Test Results:")
         print(f"  Total commands: {total_commands}")
         print(f"  Total time: {total_time:.2f}s")
         print(f"  Avg per command: {avg_time_ms:.2f}ms")
@@ -275,9 +273,9 @@ class TestFeatureCompleteness(unittest.TestCase):
         """Test advanced visualization components"""
         try:
             from kernel.advanced_visualizations import (
-                SplitScreenVisualizer,
                 AnimatedAttackFlow,
                 LiveMetricsDashboard,
+                SplitScreenVisualizer,
             )
 
             viz = SplitScreenVisualizer()
