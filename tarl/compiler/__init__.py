@@ -1,5 +1,5 @@
 """
-T.A.R.L. Compiler Frontend Subsystem
+T.A.R.L. (Thirstys Active Resistance Language) Compiler Frontend Subsystem
 
 Production-grade compiler frontend with lexer, parser, AST, semantic analysis,
 and code generation. Converts T.A.R.L. source code to executable bytecode.

@@ -1,5 +1,5 @@
 """
-T.A.R.L. Runtime VM Subsystem
+T.A.R.L. (Thirstys Active Resistance Language) Runtime VM Subsystem
 
 Production-grade virtual machine for executing T.A.R.L. bytecode. Includes
 bytecode interpreter, JIT compilation infrastructure, memory management,
