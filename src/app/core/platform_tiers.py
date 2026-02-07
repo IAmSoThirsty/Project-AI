@@ -237,6 +237,7 @@ class TierRegistry:
         self._tier_3_components: list[str] = []
         self._violations: list[TierBoundaryViolation] = []
         self._paused_components: set[str] = set()
+        self._failed_components: set[str] = set()
 
         self._initialized = True
         logger.info("TierRegistry initialized")
@@ -460,6 +461,35 @@ class TierRegistry:
         """Check if a component is paused."""
         return component_id in self._paused_components
 
+    def mark_component_failed(self, component_id: str, reason: str = "") -> None:
+        """
+        Mark a component as failed.
+
+        Args:
+            component_id: Component identifier
+            reason: Failure reason (for logging)
+        """
+        if component_id not in self._components:
+            raise ValueError(f"Component {component_id} not registered")
+
+        self._failed_components.add(component_id)
+        logger.error(f"Component {component_id} marked as failed: {reason}")
+
+    def mark_component_recovered(self, component_id: str) -> None:
+        """
+        Mark a previously failed component as recovered.
+
+        Args:
+            component_id: Component identifier
+        """
+        if component_id in self._failed_components:
+            self._failed_components.remove(component_id)
+            logger.info(f"Component {component_id} marked as recovered")
+
+    def is_component_failed(self, component_id: str) -> bool:
+        """Check if a component has failed."""
+        return component_id in self._failed_components
+
     def get_tier_health(self, tier: PlatformTier) -> TierHealthStatus:
         """
         Get health status for a tier.
@@ -477,8 +507,13 @@ class TierRegistry:
         else:
             component_ids = self._tier_3_components
 
-        active = sum(1 for cid in component_ids if cid not in self._paused_components)
+        active = sum(
+            1
+            for cid in component_ids
+            if cid not in self._paused_components and cid not in self._failed_components
+        )
         paused = len(self._paused_components.intersection(component_ids))
+        failed = len(self._failed_components.intersection(component_ids))
 
         return TierHealthStatus(
             tier=tier,
@@ -486,7 +521,7 @@ class TierRegistry:
             component_count=len(component_ids),
             active_components=active,
             paused_components=paused,
-            failed_components=0,  # TODO: Track failures
+            failed_components=failed,
         )
 
     def get_all_violations(self) -> list[TierBoundaryViolation]:
