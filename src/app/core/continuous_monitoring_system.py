@@ -330,7 +330,9 @@ class Continuous24x7Agent(IntelligenceAgent):
         self.auto_labels: set[str] = set()
         self._initialize_labels()
 
-        logger.info("Continuous24x7Agent %s initialized for %s", agent_id, coverage.region.value)
+        logger.info(
+            "Continuous24x7Agent %s initialized for %s", agent_id, coverage.region.value
+        )
 
     def _initialize_labels(self) -> None:
         """Initialize automatic labels for this agent."""
@@ -483,7 +485,12 @@ class GlobalCoverageCoordinator:
                 self.country_coverage[country] = []
             self.country_coverage[country].append(agent.agent_id)
 
-        logger.info("Assigned agent %s to %s countries in %s", agent.agent_id, len(countries), agent.coverage.region.value)
+        logger.info(
+            "Assigned agent %s to %s countries in %s",
+            agent.agent_id,
+            len(countries),
+            agent.coverage.region.value,
+        )
 
     def get_coverage_report(self) -> dict[str, Any]:
         """Get comprehensive coverage report.
@@ -608,7 +615,12 @@ class ContinuousMonitoringSystem:
                 self.coverage_coordinator.assign_agent(agent, coverage.countries)
                 agents.append(agent)
 
-        logger.info("Created %s agents for %s/%s with global coverage", len(agents), domain.value, specialty)
+        logger.info(
+            "Created %s agents for %s/%s with global coverage",
+            len(agents),
+            domain.value,
+            specialty,
+        )
 
         return agents
 
@@ -691,7 +703,9 @@ class ContinuousMonitoringSystem:
         for agent in self.agents.values():
             agent.start_monitoring()
 
-        logger.info("Started 24/7 monitoring for %s agents across all regions", len(self.agents))
+        logger.info(
+            "Started 24/7 monitoring for %s agents across all regions", len(self.agents)
+        )
 
     def stop_all_monitoring(self) -> None:
         """Stop all monitoring."""

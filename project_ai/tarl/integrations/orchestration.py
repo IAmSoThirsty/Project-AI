@@ -959,7 +959,12 @@ class ProvenanceManager:
     def add_relationship(self, relationship: ArtifactRelationship) -> None:
         """Add a relationship between artifacts"""
         self._relationships.append(relationship)
-        logger.debug("Added relationship: %s %s %s", relationship.from_artifact, relationship.relationship_type, relationship.to_artifact)
+        logger.debug(
+            "Added relationship: %s %s %s",
+            relationship.from_artifact,
+            relationship.relationship_type,
+            relationship.to_artifact,
+        )
 
     def attest(
         self, attestation_type: str, artifact_id: str, details: dict[str, Any]

@@ -172,7 +172,9 @@ def main():
             for s in scenarios
             if any(s.category.startswith(cat.replace("-", "_")) for cat in cat_filter)
         ]
-        logger.info("\nFiltered to categories %s: %s scenarios", cat_filter, len(scenarios))
+        logger.info(
+            "\nFiltered to categories %s: %s scenarios", cat_filter, len(scenarios)
+        )
 
     # Export scenarios
     if args.export:

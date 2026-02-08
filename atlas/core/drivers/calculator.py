@@ -23,18 +23,20 @@ logger = logging.getLogger(__name__)
 
 class DriverError(Exception):
     """Raised when driver calculation fails."""
+
     pass
 
 
 class FormulaError(Exception):
     """Raised when formula evaluation fails."""
+
     pass
 
 
 class DriverCalculator:
     """
     Production-grade driver calculator for PROJECT ATLAS.
-    
+
     Loads formulas from drivers.yaml, executes calculations for influence scores,
     implements all influence drivers with deterministic evaluation.
     """
@@ -64,13 +66,15 @@ class DriverCalculator:
         "pow": pow,
     }
 
-    def __init__(self,
-                 config_loader: ConfigLoader | None = None,
-                 schema_validator: SchemaValidator | None = None,
-                 audit_trail: AuditTrail | None = None):
+    def __init__(
+        self,
+        config_loader: ConfigLoader | None = None,
+        schema_validator: SchemaValidator | None = None,
+        audit_trail: AuditTrail | None = None,
+    ):
         """
         Initialize driver calculator.
-        
+
         Args:
             config_loader: Configuration loader (uses global if None)
             schema_validator: Schema validator (uses global if None)
@@ -95,7 +99,7 @@ class DriverCalculator:
         self._stats = {
             "calculations_performed": 0,
             "formulas_evaluated": 0,
-            "errors_encountered": 0
+            "errors_encountered": 0,
         }
 
         logger.info("DriverCalculator initialized successfully")
@@ -107,20 +111,20 @@ class DriverCalculator:
             actor="DRIVERS_MODULE",
             details={
                 "drivers_loaded": len(self.influence_drivers),
-                "config_hash": self.config.get_hash("drivers")
-            }
+                "config_hash": self.config.get_hash("drivers"),
+            },
         )
 
     def calculate_influence_score(self, entity_data: dict[str, Any]) -> dict[str, Any]:
         """
         Calculate composite influence score for an entity.
-        
+
         Args:
             entity_data: Entity data with driver inputs
-            
+
         Returns:
             Dictionary with driver scores and composite influence
-            
+
         Raises:
             DriverError: If calculation fails
         """
@@ -135,7 +139,7 @@ class DriverCalculator:
                 level=AuditLevel.STANDARD,
                 operation="calculate_influence_start",
                 actor="DRIVERS_MODULE",
-                details={"entity_id": entity_id}
+                details={"entity_id": entity_id},
             )
 
             driver_scores = {}
@@ -146,16 +150,14 @@ class DriverCalculator:
             for driver_name, driver_config in self.influence_drivers.items():
                 try:
                     score = self._calculate_driver(
-                        driver_name,
-                        driver_config,
-                        entity_data
+                        driver_name, driver_config, entity_data
                     )
 
                     weight = driver_config.get("weight", 0.0)
                     driver_scores[driver_name] = {
                         "value": score,
                         "weight": weight,
-                        "weighted_value": score * weight
+                        "weighted_value": score * weight,
                     }
 
                     total_weight += weight
@@ -167,7 +169,7 @@ class DriverCalculator:
                         "value": 0.0,
                         "weight": driver_config.get("weight", 0.0),
                         "weighted_value": 0.0,
-                        "error": str(e)
+                        "error": str(e),
                     }
 
             # Validate weights sum to 1.0
@@ -175,7 +177,9 @@ class DriverCalculator:
                 logger.warning("Driver weights sum to %s, expected 1.0", total_weight)
 
             # Calculate composite influence
-            composite_influence = weighted_sum / total_weight if total_weight > 0 else 0.0
+            composite_influence = (
+                weighted_sum / total_weight if total_weight > 0 else 0.0
+            )
 
             # Apply constraints
             composite_influence = max(0.0, min(1.0, composite_influence))
@@ -188,8 +192,8 @@ class DriverCalculator:
                     "calculated_at": datetime.utcnow().isoformat(),
                     "calculator_version": "1.0.0",
                     "total_weight": total_weight,
-                    "config_hash": self.config.get_hash("drivers")
-                }
+                    "config_hash": self.config.get_hash("drivers"),
+                },
             }
 
             # Log success
@@ -200,8 +204,8 @@ class DriverCalculator:
                 actor="DRIVERS_MODULE",
                 details={
                     "entity_id": entity_id,
-                    "composite_influence": composite_influence
-                }
+                    "composite_influence": composite_influence,
+                },
             )
 
             return result
@@ -215,21 +219,24 @@ class DriverCalculator:
                 level=AuditLevel.HIGH_PRIORITY,
                 operation="calculate_influence_failed",
                 actor="DRIVERS_MODULE",
-                details={"error": str(e), "entity_id": entity_data.get("id", "unknown")}
+                details={
+                    "error": str(e),
+                    "entity_id": entity_data.get("id", "unknown"),
+                },
             )
 
             raise DriverError(f"Failed to calculate influence score: {e}") from e
 
-    def calculate_projection_drivers(self,
-                                     current_state: dict[str, Any],
-                                     history: list[dict[str, Any]]) -> dict[str, Any]:
+    def calculate_projection_drivers(
+        self, current_state: dict[str, Any], history: list[dict[str, Any]]
+    ) -> dict[str, Any]:
         """
         Calculate projection drivers for timeline evolution.
-        
+
         Args:
             current_state: Current entity state
             history: Historical state data
-            
+
         Returns:
             Dictionary with projection driver values
         """
@@ -239,10 +246,7 @@ class DriverCalculator:
             for driver_name, driver_config in self.projection_drivers.items():
                 try:
                     value = self._calculate_projection_driver(
-                        driver_name,
-                        driver_config,
-                        current_state,
-                        history
+                        driver_name, driver_config, current_state, history
                     )
 
                     # Apply constraints
@@ -254,30 +258,31 @@ class DriverCalculator:
                     projection_values[driver_name] = value
 
                 except Exception as e:
-                    logger.error("Failed to calculate projection driver %s: %s", driver_name, e)
+                    logger.error(
+                        "Failed to calculate projection driver %s: %s", driver_name, e
+                    )
                     projection_values[driver_name] = 0.0
 
             return {
                 "projection_drivers": projection_values,
-                "calculated_at": datetime.utcnow().isoformat()
+                "calculated_at": datetime.utcnow().isoformat(),
             }
 
         except Exception as e:
             logger.error("Failed to calculate projection drivers: %s", e)
             raise DriverError(f"Failed to calculate projection drivers: {e}") from e
 
-    def calculate_relationship_strength(self,
-                                        entity1: dict[str, Any],
-                                        entity2: dict[str, Any],
-                                        relationship_type: str) -> float:
+    def calculate_relationship_strength(
+        self, entity1: dict[str, Any], entity2: dict[str, Any], relationship_type: str
+    ) -> float:
         """
         Calculate relationship strength between two entities.
-        
+
         Args:
             entity1: First entity data
             entity2: Second entity data
             relationship_type: Type of relationship (cooperation, competition, conflict)
-            
+
         Returns:
             Relationship strength value
         """
@@ -295,11 +300,13 @@ class DriverCalculator:
                 "shared_interests": self._calculate_shared_interests(entity1, entity2),
                 "mutual_benefit": self._calculate_mutual_benefit(entity1, entity2),
                 "trust": entity1.get("trust_scores", {}).get(entity2.get("id"), 0.5),
-                "conflicting_interests": self._calculate_conflicting_interests(entity1, entity2),
+                "conflicting_interests": self._calculate_conflicting_interests(
+                    entity1, entity2
+                ),
                 "resource_overlap": self._calculate_resource_overlap(entity1, entity2),
                 "competition": 0.5,  # Placeholder
                 "tension": entity1.get("tensions", {}).get(entity2.get("id"), 0.0),
-                "cooperation": 0.5  # Placeholder
+                "cooperation": 0.5,  # Placeholder
             }
 
             # Evaluate formula
@@ -315,18 +322,20 @@ class DriverCalculator:
             logger.error("Failed to calculate relationship strength: %s", e)
             return 0.5
 
-    def _calculate_driver(self,
-                          driver_name: str,
-                          driver_config: dict[str, Any],
-                          entity_data: dict[str, Any]) -> float:
+    def _calculate_driver(
+        self,
+        driver_name: str,
+        driver_config: dict[str, Any],
+        entity_data: dict[str, Any],
+    ) -> float:
         """
         Calculate a single influence driver.
-        
+
         Args:
             driver_name: Name of driver
             driver_config: Driver configuration
             entity_data: Entity data
-            
+
         Returns:
             Driver score between 0.0 and 1.0
         """
@@ -368,11 +377,13 @@ class DriverCalculator:
 
         return score
 
-    def _calculate_projection_driver(self,
-                                     driver_name: str,
-                                     driver_config: dict[str, Any],
-                                     current_state: dict[str, Any],
-                                     history: list[dict[str, Any]]) -> float:
+    def _calculate_projection_driver(
+        self,
+        driver_name: str,
+        driver_config: dict[str, Any],
+        current_state: dict[str, Any],
+        history: list[dict[str, Any]],
+    ) -> float:
         """Calculate a projection driver value."""
         formula = driver_config.get("formula", "0.0")
 
@@ -388,8 +399,12 @@ class DriverCalculator:
         # Add history-based calculations
         if history:
             influences = [h.get("influence", 0.5) for h in history]
-            context["stddev"] = self._calculate_stddev(influences) if len(influences) > 1 else 0.0
-            context["volatility_multiplier"] = driver_config.get("volatility_multiplier", 1.5)
+            context["stddev"] = (
+                self._calculate_stddev(influences) if len(influences) > 1 else 0.0
+            )
+            context["volatility_multiplier"] = driver_config.get(
+                "volatility_multiplier", 1.5
+            )
 
         # Evaluate formula
         value = self._evaluate_formula(formula, context)
@@ -399,14 +414,14 @@ class DriverCalculator:
     def _evaluate_formula(self, formula: str, context: dict[str, Any]) -> float:
         """
         Safely evaluate a mathematical formula.
-        
+
         Args:
             formula: Formula string
             context: Variable values
-            
+
         Returns:
             Evaluated result
-            
+
         Raises:
             FormulaError: If evaluation fails
         """
@@ -425,7 +440,7 @@ class DriverCalculator:
 
             # Parse the formula into AST
             try:
-                tree = ast.parse(formula, mode='eval')
+                tree = ast.parse(formula, mode="eval")
             except SyntaxError as e:
                 raise FormulaError(f"Invalid formula syntax: {e}")
 
@@ -445,11 +460,11 @@ class DriverCalculator:
     def _eval_node(self, node: ast.AST, context: dict[str, Any]) -> Any:
         """
         Recursively evaluate an AST node.
-        
+
         Args:
             node: AST node
             context: Variable values
-            
+
         Returns:
             Evaluation result
         """
@@ -517,7 +532,9 @@ class DriverCalculator:
         variance = sum((x - mean) ** 2 for x in values) / len(values)
         return math.sqrt(variance)
 
-    def _calculate_shared_interests(self, entity1: dict[str, Any], entity2: dict[str, Any]) -> float:
+    def _calculate_shared_interests(
+        self, entity1: dict[str, Any], entity2: dict[str, Any]
+    ) -> float:
         """Calculate shared interests between entities."""
         topics1 = set(entity1.get("topics", []))
         topics2 = set(entity2.get("topics", []))
@@ -530,7 +547,9 @@ class DriverCalculator:
 
         return intersection / union if union > 0 else 0.0
 
-    def _calculate_mutual_benefit(self, entity1: dict[str, Any], entity2: dict[str, Any]) -> float:
+    def _calculate_mutual_benefit(
+        self, entity1: dict[str, Any], entity2: dict[str, Any]
+    ) -> float:
         """Calculate mutual benefit score."""
         # Simplified calculation based on influence alignment
         influence1 = entity1.get("influence", 0.5)
@@ -539,12 +558,16 @@ class DriverCalculator:
         # Both high influence = high mutual benefit
         return (influence1 + influence2) / 2.0
 
-    def _calculate_conflicting_interests(self, entity1: dict[str, Any], entity2: dict[str, Any]) -> float:
+    def _calculate_conflicting_interests(
+        self, entity1: dict[str, Any], entity2: dict[str, Any]
+    ) -> float:
         """Calculate conflicting interests between entities."""
         # Inverse of shared interests
         return 1.0 - self._calculate_shared_interests(entity1, entity2)
 
-    def _calculate_resource_overlap(self, entity1: dict[str, Any], entity2: dict[str, Any]) -> float:
+    def _calculate_resource_overlap(
+        self, entity1: dict[str, Any], entity2: dict[str, Any]
+    ) -> float:
         """Calculate resource overlap between entities."""
         # Simplified: based on jurisdiction overlap
         juris1 = entity1.get("jurisdiction", "")
@@ -556,12 +579,13 @@ class DriverCalculator:
         """Validate driver configuration integrity."""
         # Validate influence drivers weights sum to 1.0
         total_weight = sum(
-            driver.get("weight", 0.0)
-            for driver in self.influence_drivers.values()
+            driver.get("weight", 0.0) for driver in self.influence_drivers.values()
         )
 
         if not (0.99 <= total_weight <= 1.01):
-            logger.warning("Influence driver weights sum to %s, expected 1.0", total_weight)
+            logger.warning(
+                "Influence driver weights sum to %s, expected 1.0", total_weight
+            )
 
         # Validate all drivers have required fields
         for driver_name, driver_config in self.influence_drivers.items():
@@ -579,7 +603,7 @@ class DriverCalculator:
         self._stats = {
             "calculations_performed": 0,
             "formulas_evaluated": 0,
-            "errors_encountered": 0
+            "errors_encountered": 0,
         }
 
 
@@ -587,7 +611,7 @@ if __name__ == "__main__":
     # Test driver calculator
     logging.basicConfig(
         level=logging.DEBUG,
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
 
     try:
@@ -617,8 +641,8 @@ if __name__ == "__main__":
                 "censorship_power": 0.4,
                 "internal_stability": 0.8,
                 "public_trust": 0.7,
-                "unity_index": 0.75
-            }
+                "unity_index": 0.75,
+            },
         }
 
         # Calculate influence score
@@ -627,8 +651,10 @@ if __name__ == "__main__":
         print("Influence Calculation Result:")
         print(f"Composite Influence: {result['composite_influence']:.4f}")
         print("\nDriver Scores:")
-        for driver_name, scores in result['driver_scores'].items():
-            print(f"  {driver_name}: {scores['value']:.4f} (weighted: {scores['weighted_value']:.4f})")
+        for driver_name, scores in result["driver_scores"].items():
+            print(
+                f"  {driver_name}: {scores['value']:.4f} (weighted: {scores['weighted_value']:.4f})"
+            )
 
         # Test projection drivers
         current_state = {"influence": 0.7}
@@ -636,12 +662,13 @@ if __name__ == "__main__":
 
         projection = calculator.calculate_projection_drivers(current_state, history)
         print("\nProjection Drivers:")
-        for driver_name, value in projection['projection_drivers'].items():
+        for driver_name, value in projection["projection_drivers"].items():
             print(f"  {driver_name}: {value:.4f}")
 
         # Print statistics
         print("\nStatistics:")
         import json
+
         print(json.dumps(calculator.get_statistics(), indent=2))
 
     except Exception as e:

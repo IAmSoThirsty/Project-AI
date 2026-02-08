@@ -330,7 +330,7 @@ class DefenseEvolutionEngine:
 
     def learn_from_attack(self, attack_data: dict[str, Any]):
         """Learn from a completed attack"""
-        logger.info("Learning from attack: %s", attack_data.get('attack_id', 'unknown'))
+        logger.info("Learning from attack: %s", attack_data.get("attack_id", "unknown"))
 
         # Add to history
         self.attack_history.append(attack_data)
@@ -346,7 +346,7 @@ class DefenseEvolutionEngine:
                 playbook_id = f"playbook_{pattern.pattern_id}"
 
                 if playbook_id not in self.playbook_generator.playbooks:
-                    playbook = self.playbook_generator.generate_playbook(pattern)
+                    self.playbook_generator.generate_playbook(pattern)
                     logger.info("  Generated new playbook: %s", playbook_id)
 
     def evolve_defenses(self):

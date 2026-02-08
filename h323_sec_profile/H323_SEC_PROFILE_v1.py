@@ -164,8 +164,8 @@ def secure_h323_call_setup(
 
 
 def exchange_keys_securely(ep_a, ep_b, key_a, key_b):
-    if not (key_a and key_b  # placeholder):
-        raise AssertionError("Assertion failed: key_a and key_b  # placeholder")
+    if not (key_a and key_b):  # placeholder
+        raise AssertionError("Keys must be provided")
 
 
 def setup_srtp_media(ep_a, ep_b):
@@ -342,7 +342,9 @@ def run_simulated_secure_call():
 
     try:
         if not (validate_certificate_chain(ep.certificate, trust_store, crl_ocsp)):
-            raise AssertionError("Assertion failed: validate_certificate_chain(ep.certificate, trust_store, crl_ocsp)")
+            raise AssertionError(
+                "Assertion failed: validate_certificate_chain(ep.certificate, trust_store, crl_ocsp)"
+            )
         call = secure_h323_call_setup(ep, gw, "+18005551234", trust_store, crl_ocsp)
         if not (call.media_negotiated is True):
             raise AssertionError("Assertion failed: call.media_negotiated is True")

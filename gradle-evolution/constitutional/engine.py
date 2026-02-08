@@ -15,14 +15,14 @@ class ConstitutionalEngine:
     """
     Enforces constitutional principles from policies/constitution.yaml
     during Gradle build lifecycle events.
-    
+
     Integrates with existing Project-AI governance infrastructure.
     """
 
     def __init__(self, constitution_path: str = "policies/constitution.yaml"):
         """
         Initialize constitutional engine.
-        
+
         Args:
             constitution_path: Path to constitution.yaml file
         """
@@ -41,8 +41,8 @@ class ConstitutionalEngine:
         with open(self.constitution_path) as f:
             self.constitution = yaml.safe_load(f)
 
-        logger.info("Loaded constitution: %s", self.constitution.get('name', 'unknown'))
-        logger.info("Principles: %s", len(self.constitution.get('principles', [])))
+        logger.info("Loaded constitution: %s", self.constitution.get("name", "unknown"))
+        logger.info("Principles: %s", len(self.constitution.get("principles", [])))
 
     def _get_default_constitution(self) -> dict[str, Any]:
         """Provide default constitution if file missing."""
@@ -55,21 +55,19 @@ class ConstitutionalEngine:
                 "high": {"action": "warn_and_modify", "log": True},
                 "medium": {"action": "warn", "log": True},
                 "low": {"action": "log_only", "log": True},
-            }
+            },
         }
 
     def validate_build_action(
-        self,
-        action: str,
-        context: dict[str, Any]
+        self, action: str, context: dict[str, Any]
     ) -> tuple[bool, str]:
         """
         Validate a build action against constitutional principles.
-        
+
         Args:
             action: Build action to validate (e.g., "compile", "test", "deploy")
             context: Action context with metadata
-            
+
         Returns:
             (is_allowed, reason) tuple
         """
@@ -78,7 +76,9 @@ class ConstitutionalEngine:
         violations = context.get("violations", [])
 
         for violation_type in violations:
-            if violation_type in self.constitution.get("violation_handling", {}).get("immediate_block", []):
+            if violation_type in self.constitution.get("violation_handling", {}).get(
+                "immediate_block", []
+            ):
                 reason = f"Constitutional violation: {violation_type} (immediate block)"
                 self._log_violation(action, context, "critical", reason)
                 return False, reason
@@ -95,7 +95,9 @@ class ConstitutionalEngine:
                 action_type = enforcement_rule.get("action", "log_only")
 
                 if action_type == "block":
-                    reason = f"Violates principle: {principle_id} (priority: {priority})"
+                    reason = (
+                        f"Violates principle: {principle_id} (priority: {priority})"
+                    )
                     self._log_violation(action, context, priority, reason)
                     return False, reason
                 elif action_type in ["warn_and_modify", "warn"]:
@@ -105,10 +107,7 @@ class ConstitutionalEngine:
         return True, "Action complies with constitutional principles"
 
     def _violates_principle(
-        self,
-        action: str,
-        context: dict[str, Any],
-        principle: dict[str, Any]
+        self, action: str, context: dict[str, Any], principle: dict[str, Any]
     ) -> bool:
         """Check if an action violates a specific principle."""
         principle_id = principle.get("id", "")
@@ -125,14 +124,11 @@ class ConstitutionalEngine:
         return False
 
     def _log_violation(
-        self,
-        action: str,
-        context: dict[str, Any],
-        severity: str,
-        reason: str
+        self, action: str, context: dict[str, Any], severity: str, reason: str
     ) -> None:
         """Log a constitutional violation."""
         from datetime import datetime
+
         violation = {
             "action": action,
             "context": context,

@@ -9,8 +9,7 @@ import logging
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 
 logger = logging.getLogger(__name__)
@@ -109,8 +108,13 @@ def example_2_with_adapters():
 
     # Get statistics
     logger.info("SuperKernel stats: %s", super_kernel.get_statistics())
-    logger.info("Reflection stats: %s", super_kernel.get_kernel_statistics(KernelType.REFLECTION))
-    logger.info("Memory stats: %s", super_kernel.get_kernel_statistics(KernelType.MEMORY))
+    logger.info(
+        "Reflection stats: %s",
+        super_kernel.get_kernel_statistics(KernelType.REFLECTION),
+    )
+    logger.info(
+        "Memory stats: %s", super_kernel.get_kernel_statistics(KernelType.MEMORY)
+    )
 
 
 def example_3_execution_history():
@@ -142,17 +146,17 @@ def example_3_execution_history():
             kernel_type=KernelType.COGNITION,
             source="test",
         )
-        logger.info("Operation %s result: %s", i+1, result)
+        logger.info("Operation %s result: %s", i + 1, result)
 
     # Get execution history
     logger.info("\nExecution History:")
     history = super_kernel.get_execution_history(limit=10)
     for record in history:
-        logger.info("  Execution %s:", record['execution_id'])
-        logger.info("    Attempt: %s", record['attempt'])
-        logger.info("    Decision: %s", record['decision'])
-        logger.info("    Result: %s", record['result'])
-        logger.info("    Duration: %sms", record['duration_ms'])
+        logger.info("  Execution %s:", record["execution_id"])
+        logger.info("    Attempt: %s", record["attempt"])
+        logger.info("    Decision: %s", record["decision"])
+        logger.info("    Result: %s", record["result"])
+        logger.info("    Duration: %sms", record["duration_ms"])
 
 
 def example_4_error_handling():

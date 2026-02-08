@@ -35,7 +35,7 @@ def test_constitutional_guardrail_agent():
     )
     assert result["success"]
     # Should detect harm-related content
-    assert result["result"]["is_compliant"] == False
+    assert not result["result"]["is_compliant"]
     assert len(result["result"]["violations"]) > 0
 
     # Test statistics

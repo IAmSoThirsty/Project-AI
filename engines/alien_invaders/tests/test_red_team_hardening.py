@@ -328,7 +328,7 @@ class TestIntegration:
                     {
                         "target_country": "USA",
                         "severity": "medium",
-                    }
+                    },
                 )
 
             assert engine.tick()

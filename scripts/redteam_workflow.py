@@ -126,7 +126,9 @@ async def run_red_team_attack(
     target_name = target.get("name", "unknown")
     idempotency_key = f"{persona_id}-{target_name}-{snapshot_id}"
 
-    activity.logger.info("Running attack: %s on %s (key: %s)", persona_id, target_name, idempotency_key)
+    activity.logger.info(
+        "Running attack: %s on %s (key: %s)", persona_id, target_name, idempotency_key
+    )
 
     # Check for cached result (idempotency)
     result_file = Path(f"data/attack_results/{idempotency_key}.json")
@@ -180,7 +182,11 @@ async def run_red_team_attack(
             json.dump(result, f, indent=2)
 
         # Emit metric
-        activity.logger.info("Attack completed: success=%s, turns=%s", result['success'], result['metrics']['turns'])
+        activity.logger.info(
+            "Attack completed: success=%s, turns=%s",
+            result["success"],
+            result["metrics"]["turns"],
+        )
 
         return result
 
@@ -188,7 +194,9 @@ async def run_red_team_attack(
         activity.logger.error("Attack execution failed: %s", e)
         # Mark as flaky if beyond retry limit
         if activity.info().attempt >= 3:
-            activity.logger.warning("Attack marked as flaky after %s attempts", activity.info().attempt)
+            activity.logger.warning(
+                "Attack marked as flaky after %s attempts", activity.info().attempt
+            )
         raise
 
 
@@ -203,7 +211,11 @@ async def evaluate_attack(attack_result: dict[str, Any]) -> str:
     Returns:
         Severity: critical, high, medium, or low
     """
-    activity.logger.info("Evaluating attack: %s on %s", attack_result['persona'], attack_result['target'].get('name'))
+    activity.logger.info(
+        "Evaluating attack: %s on %s",
+        attack_result["persona"],
+        attack_result["target"].get("name"),
+    )
 
     # Severity based on success and persona
     if attack_result["success"]:
@@ -243,7 +255,9 @@ async def trigger_incident(
     from datetime import datetime
 
     incident_id = f"INC-{datetime.now().strftime('%Y%m%d%H%M%S')}"
-    activity.logger.critical("Incident triggered: %s (severity: %s)", incident_id, severity)
+    activity.logger.critical(
+        "Incident triggered: %s (severity: %s)", incident_id, severity
+    )
 
     incident = {
         "incident_id": incident_id,
@@ -377,7 +391,11 @@ async def notify_triumvirate(campaign_id: str, results: list[dict[str, Any]]) ->
     with open(notif_file, "w") as f:
         json.dump(summary, f, indent=2)
 
-    activity.logger.info("Triumvirate notified: %s/%s attacks succeeded", summary['successful_attacks'], summary['total_attacks'])
+    activity.logger.info(
+        "Triumvirate notified: %s/%s attacks succeeded",
+        summary["successful_attacks"],
+        summary["total_attacks"],
+    )
 
 
 # ============================================================================
@@ -464,7 +482,12 @@ class RedTeamCampaignWorkflow:
                     retry_policy=workflow.RetryPolicy(maximum_attempts=1),
                 )
 
-                workflow.logger.info("Attack evaluated: %s on %s = %s", persona, target.get('name'), severity)
+                workflow.logger.info(
+                    "Attack evaluated: %s on %s = %s",
+                    persona,
+                    target.get("name"),
+                    severity,
+                )
 
                 # Trigger incident for critical/high
                 if severity in ["critical", "high"]:
@@ -477,7 +500,9 @@ class RedTeamCampaignWorkflow:
 
                     # Policy: halt on critical
                     if severity == "critical":
-                        workflow.logger.warning("Campaign halted due to %s severity", severity)
+                        workflow.logger.warning(
+                            "Campaign halted due to %s severity", severity
+                        )
                         halted = True
                         halt_reason = severity
                         break

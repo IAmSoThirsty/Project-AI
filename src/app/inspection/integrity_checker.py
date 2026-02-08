@@ -163,13 +163,12 @@ class IntegrityChecker:
                                 if (
                                     isinstance(target, ast.Name)
                                     and target.id == "__all__"
-                                ):
-                                    if isinstance(node.value, (ast.List, ast.Tuple)):
-                                        for elt in node.value.elts:
-                                            if isinstance(elt, ast.Constant):
-                                                self.module_exports[module_name].add(
-                                                    elt.value
-                                                )
+                                ) and isinstance(node.value, (ast.List, ast.Tuple)):
+                                    for elt in node.value.elts:
+                                        if isinstance(elt, ast.Constant):
+                                            self.module_exports[module_name].add(
+                                                elt.value
+                                            )
 
                     # Extract imports
                     for node in ast.walk(tree):

@@ -261,7 +261,7 @@ class AdversarialAGITester:
             # Get AGI response
             start_time = time.time()
             response = agi_response_func(scenario["message"])
-            elapsed = time.time() - start_time
+            time.time() - start_time
 
             interaction.response = response
 
@@ -284,7 +284,9 @@ class AdversarialAGITester:
             with self.lock:
                 self.interactions.append(interaction)
 
-            logger.info("Adversarial test '%s': %s", scenario['name'], interaction.outcome)
+            logger.info(
+                "Adversarial test '%s': %s", scenario["name"], interaction.outcome
+            )
             return interaction
         except Exception as e:
             logger.error("Error running adversarial test: %s", e)
@@ -490,7 +492,9 @@ class FormalVerificationEngine:
             if proof.valid:
                 logger.info("Four Laws compliance VERIFIED for action trace")
             else:
-                logger.warning("Four Laws compliance FAILED: %s violations found", len(violations))
+                logger.warning(
+                    "Four Laws compliance FAILED: %s violations found", len(violations)
+                )
 
             with self.lock:
                 self.proofs.append(proof)
@@ -629,7 +633,11 @@ class BehavioralAnomalyDetector:
                         "anomaly_features": anomaly_features,
                     }
                     self.anomalies.append(anomaly_record)
-                    logger.warning("Behavioral anomaly detected in %s: %s", behavior_name, ', '.join(anomaly_features))
+                    logger.warning(
+                        "Behavioral anomaly detected in %s: %s",
+                        behavior_name,
+                        ", ".join(anomaly_features),
+                    )
 
                 return (is_anomaly, anomaly_features)
         except Exception as e:
@@ -667,9 +675,7 @@ class AdvancedBehavioralValidationSystem:
 
             # 1. Adversarial testing
             logger.info("Running adversarial AGI interaction tests...")
-            adversarial_results = self.adversarial_tester.run_all_tests(
-                agi_id, agi_response_func
-            )
+            self.adversarial_tester.run_all_tests(agi_id, agi_response_func)
             results["adversarial_tests"] = self.adversarial_tester.get_test_summary()
 
             # 2. Memory stress testing
@@ -697,7 +703,10 @@ class AdvancedBehavioralValidationSystem:
                 and results["four_laws_proof"]["valid"]
             )
 
-            logger.info("Validation suite completed: %s", 'PASSED' if results['passed'] else 'FAILED')
+            logger.info(
+                "Validation suite completed: %s",
+                "PASSED" if results["passed"] else "FAILED",
+            )
             return results
         except Exception as e:
             logger.error("Error running validation suite: %s", e)

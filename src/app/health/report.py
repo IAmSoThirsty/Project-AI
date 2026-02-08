@@ -95,7 +95,11 @@ class HealthReporter:
         # Initialize audit log
         self.audit_log = audit_log or AuditLog()
 
-        logger.info("HealthReporter initialized: snapshots=%s, reports=%s", self.snapshot_dir, self.report_dir)
+        logger.info(
+            "HealthReporter initialized: snapshots=%s, reports=%s",
+            self.snapshot_dir,
+            self.report_dir,
+        )
 
     def collect_system_metrics(self) -> dict[str, Any]:
         """Collect system-level metrics.
@@ -363,7 +367,11 @@ Status: {"✓ Healthy" if all([
                 description="System health report generated successfully",
             )
 
-            logger.info("Full health report generated: snapshot=%s, report=%s", snapshot_path, report_path)
+            logger.info(
+                "Full health report generated: snapshot=%s, report=%s",
+                snapshot_path,
+                report_path,
+            )
             return True, snapshot_path, report_path
 
         except Exception as e:

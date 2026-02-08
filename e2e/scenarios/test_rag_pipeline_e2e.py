@@ -61,7 +61,7 @@ class SimpleVectorStore:
 
     def _cosine_similarity(self, vec1: list[float], vec2: list[float]) -> float:
         """Calculate cosine similarity between two vectors."""
-        dot_product = sum(a * b for a, b in zip(vec1, vec2))
+        dot_product = sum(a * b for a, b in zip(vec1, vec2, strict=False))
         magnitude1 = sum(a * a for a in vec1) ** 0.5
         magnitude2 = sum(b * b for b in vec2) ** 0.5
 
@@ -166,9 +166,7 @@ class TestDocumentIngestion:
                 "position": i // chunk_size,
             }
             chunks.append(chunk)
-            save_json_file(
-                chunk, doc_dir / f"{chunk['chunk_id']}.json"
-            )
+            save_json_file(chunk, doc_dir / f"{chunk['chunk_id']}.json")
 
         # Assert
         assert len(chunks) == 10  # 1000 words / 100 per chunk
@@ -225,7 +223,9 @@ class TestDocumentIngestion:
         documents = [
             {
                 "id": f"dup_{i}",
-                "content": "This is duplicate content" if i < 5 else f"Unique content {i}",
+                "content": (
+                    "This is duplicate content" if i < 5 else f"Unique content {i}"
+                ),
             }
             for i in range(10)
         ]
@@ -353,7 +353,7 @@ class TestVectorSimilaritySearch:
         ]
 
         # Store with metadata
-        for doc_id, content, embedding, metadata in documents:
+        for doc_id, content, embedding, _metadata in documents:
             vector_store.add_document(doc_id, content, embedding)
             # In real implementation, metadata would be stored with document
 
@@ -362,9 +362,7 @@ class TestVectorSimilaritySearch:
         all_results = vector_store.search(query_embedding, top_k=3)
 
         # Simulate metadata filtering (in real system)
-        filtered_results = [
-            r for r in all_results if "tutorial" in r["content"]
-        ]
+        filtered_results = [r for r in all_results if "tutorial" in r["content"]]
 
         # Assert
         assert len(filtered_results) >= 1
@@ -466,16 +464,16 @@ class TestContextRetrieval:
             overlap = query_words & context_words
             return len(overlap) / len(query_words) if query_words else 0.0
 
-        scored_contexts = [
-            (ctx, score_relevance(query, ctx)) for ctx in contexts
-        ]
+        scored_contexts = [(ctx, score_relevance(query, ctx)) for ctx in contexts]
         scored_contexts.sort(key=lambda x: x[1], reverse=True)
 
         # Assert
         # Most relevant contexts should be about ML
         assert scored_contexts[0][1] > 0.0
-        assert "machine learning" in scored_contexts[0][0].lower() or \
-               "algorithm" in scored_contexts[0][0].lower()
+        assert (
+            "machine learning" in scored_contexts[0][0].lower()
+            or "algorithm" in scored_contexts[0][0].lower()
+        )
 
     def test_multi_source_context_aggregation(self, test_temp_dir):
         """Test aggregating context from multiple sources."""
@@ -507,10 +505,12 @@ class TestContextRetrieval:
             if source_dir.is_dir():
                 for item_file in source_dir.glob("item_*.json"):
                     item = load_json_file(item_file)
-                    aggregated_context.append({
-                        "source": source_dir.name,
-                        "content": item["content"],
-                    })
+                    aggregated_context.append(
+                        {
+                            "source": source_dir.name,
+                            "content": item["content"],
+                        }
+                    )
 
         # Assert
         assert len(aggregated_context) == 3
@@ -545,9 +545,7 @@ class TestRAGQueryExecution:
 
         vector_store = SimpleVectorStore()
         for item in knowledge:
-            vector_store.add_document(
-                item["id"], item["content"], item["embedding"]
-            )
+            vector_store.add_document(item["id"], item["content"], item["embedding"])
             save_json_file(item, doc_dir / f"{item['id']}.json")
 
         # Act - Execute RAG query
@@ -577,9 +575,7 @@ class TestRAGQueryExecution:
         """Test RAG query when no relevant context is found."""
         # Arrange
         vector_store = SimpleVectorStore()
-        vector_store.add_document(
-            "doc_1", "Information about cooking", [0.1, 0.9, 0.8]
-        )
+        vector_store.add_document("doc_1", "Information about cooking", [0.1, 0.9, 0.8])
 
         # Act - Query about unrelated topic
         query_embedding = [0.9, 0.1, 0.1]  # Very different
@@ -651,10 +647,7 @@ class TestRAGQueryExecution:
         save_json_file(response, cache_file)
 
         # Simulate cache lookup
-        if cache_file.exists():
-            cached_response = load_json_file(cache_file)
-        else:
-            cached_response = None
+        cached_response = load_json_file(cache_file) if cache_file.exists() else None
 
         # Assert
         assert cached_response is not None
@@ -684,7 +677,6 @@ class TestMultiDocumentReasoning:
             save_json_file(doc, doc_dir / f"{doc['id']}.json")
 
         # Act - Aggregate information
-        query = "Tell me about Python's history and uses"
         relevant_info = []
 
         for doc_file in doc_dir.glob("doc_*.json"):
@@ -706,7 +698,11 @@ class TestMultiDocumentReasoning:
 
         documents = [
             {"id": "doc_1", "fact": "Python is easy to learn", "sentiment": "positive"},
-            {"id": "doc_2", "fact": "Python is difficult to master", "sentiment": "negative"},
+            {
+                "id": "doc_2",
+                "fact": "Python is difficult to master",
+                "sentiment": "negative",
+            },
         ]
 
         for doc in documents:

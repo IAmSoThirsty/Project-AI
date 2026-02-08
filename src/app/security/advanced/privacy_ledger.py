@@ -350,7 +350,9 @@ class PrivacyLedger:
         # Load existing ledger
         self._load_ledger()
 
-        self.logger.info("Privacy Ledger initialized: %s entries loaded", len(self.entries))
+        self.logger.info(
+            "Privacy Ledger initialized: %s entries loaded", len(self.entries)
+        )
 
     def _setup_encryption(self, encryption_key: bytes | None):
         """Setup zero-knowledge encryption"""
@@ -698,7 +700,9 @@ class PrivacyLedger:
             if is_valid:
                 self.logger.info("Chain integrity verified successfully")
             else:
-                self.logger.error("Chain integrity check failed: %s errors", len(errors))
+                self.logger.error(
+                    "Chain integrity check failed: %s errors", len(errors)
+                )
                 for error in errors[:10]:  # Log first 10 errors
                     self.logger.error("  - %s", error)
 
@@ -724,7 +728,10 @@ class PrivacyLedger:
 
             if entries_to_delete:
                 self._secure_delete_entries(entries_to_delete)
-                self.logger.info("Retention policy enforced: %s entries deleted", len(entries_to_delete))
+                self.logger.info(
+                    "Retention policy enforced: %s entries deleted",
+                    len(entries_to_delete),
+                )
 
     def _secure_delete_entries(self, entries: list[LedgerEntry]):
         """
@@ -841,7 +848,9 @@ class PrivacyLedger:
             # Verify integrity on load
             is_valid, errors = self.verify_chain_integrity()
             if not is_valid:
-                self.logger.error("Ledger integrity compromised: %s errors", len(errors))
+                self.logger.error(
+                    "Ledger integrity compromised: %s errors", len(errors)
+                )
 
         except Exception as e:
             self.logger.error("Failed to load ledger: %s", e)
@@ -953,6 +962,8 @@ class PrivacyLedger:
             # Final integrity check
             is_valid, errors = self.verify_chain_integrity()
             if not is_valid:
-                self.logger.warning("Ledger closed with integrity issues: %s errors", len(errors))
+                self.logger.warning(
+                    "Ledger closed with integrity issues: %s errors", len(errors)
+                )
 
             self.logger.info("Privacy ledger closed: %s entries", len(self.entries))

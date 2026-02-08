@@ -80,7 +80,10 @@ class CerberusSecurityBridge:
                 source_user=threat_assessment.get("user_id"),
                 indicators=threat_assessment.get("indicators", []),
             )
-            logger.info("Threat reported to Cerberus Hydra: %s", threat_assessment['threat_type'])
+            logger.info(
+                "Threat reported to Cerberus Hydra: %s",
+                threat_assessment["threat_type"],
+            )
         except Exception as e:
             logger.error("Failed to report to Cerberus: %s", e)
 
@@ -93,7 +96,9 @@ class CerberusSecurityBridge:
             from src.app.core.cerberus_lockdown_controller import lock_user_session
 
             lock_user_session(user_id=user_id, reason=reason, duration="INDEFINITE")
-            logger.warning("🔒 Cerberus lockdown initiated for user %s: %s", user_id, reason)
+            logger.warning(
+                "🔒 Cerberus lockdown initiated for user %s: %s", user_id, reason
+            )
             return True
         except Exception as e:
             logger.error("Lockdown request failed: %s", e)
@@ -232,7 +237,7 @@ class TriumvirateGovernanceBridge:
 
     def audit_log_action(self, action: str, user_id: int, result: dict[str, Any]):
         """Log action to governance audit trail"""
-        logger.info("[AUDIT] User %s: %s -> %s", user_id, action, result.get('status'))
+        logger.info("[AUDIT] User %s: %s -> %s", user_id, action, result.get("status"))
 
 
 class ProjectAIIntegration:
@@ -303,9 +308,9 @@ class ProjectAIIntegration:
         return {
             "cerberus": {
                 "available": self.cerberus.cerberus_runtime is not None,
-                "runtime": "ACTIVE"
-                if self.cerberus.cerberus_runtime
-                else "UNAVAILABLE",
+                "runtime": (
+                    "ACTIVE" if self.cerberus.cerberus_runtime else "UNAVAILABLE"
+                ),
                 "hydra": "ACTIVE" if self.cerberus.hydra_controller else "UNAVAILABLE",
             },
             "codex_deus": {

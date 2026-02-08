@@ -120,12 +120,14 @@ class MemoryManager:
 
         # Rule 1: Keep last N builds
         if self.policy.keep_last_n_builds:
-            for build in all_builds[:self.policy.keep_last_n_builds]:
+            for build in all_builds[: self.policy.keep_last_n_builds]:
                 builds_to_keep.add(build["id"])
 
         # Rule 2: Keep builds within age threshold
         if self.policy.keep_days:
-            cutoff_time = (datetime.utcnow() - timedelta(days=self.policy.keep_days)).isoformat()
+            cutoff_time = (
+                datetime.utcnow() - timedelta(days=self.policy.keep_days)
+            ).isoformat()
             for build in all_builds:
                 if build["timestamp"] >= cutoff_time:
                     builds_to_keep.add(build["id"])
@@ -442,7 +444,9 @@ class MemoryManager:
             table_sizes = {}
             for table, _count in stats.items():
                 try:
-                    cursor = conn.execute("SELECT SUM(pgsize) FROM dbstat WHERE name = ?", (table,))
+                    cursor = conn.execute(
+                        "SELECT SUM(pgsize) FROM dbstat WHERE name = ?", (table,)
+                    )
                     row = cursor.fetchone()
                     table_sizes[table] = row[0] if row and row[0] else 0
                 except Exception:
@@ -483,7 +487,9 @@ class MemoryManager:
             health["warnings"].append(f"Large number of builds: {stats['builds']}")
 
         if stats.get("dependencies", 0) > 100000:
-            health["warnings"].append(f"Large number of dependencies: {stats['dependencies']}")
+            health["warnings"].append(
+                f"Large number of dependencies: {stats['dependencies']}"
+            )
 
         # Check for unresolved violations
         unresolved_violations = len(self.db.get_violations(waived=False))
@@ -516,7 +522,7 @@ class MemoryManager:
         elif health["warnings"]:
             health["status"] = "warning"
 
-        logger.info("Health check completed: %s", health['status'])
+        logger.info("Health check completed: %s", health["status"])
         return health
 
     def create_backup(self, backup_path: Path | None = None) -> Path:
@@ -546,7 +552,10 @@ class MemoryManager:
 
                 # Compress backup
                 compressed_path = backup_path.with_suffix(".db.gz")
-                with open(backup_path, "rb") as f_in, gzip.open(compressed_path, "wb") as f_out:
+                with (
+                    open(backup_path, "rb") as f_in,
+                    gzip.open(compressed_path, "wb") as f_out,
+                ):
                     shutil.copyfileobj(f_in, f_out)
 
                 # Remove uncompressed backup
@@ -570,11 +579,13 @@ class MemoryManager:
         archives = []
         for archive_file in sorted(self.archive_dir.glob("*.json.gz")):
             stat = archive_file.stat()
-            archives.append({
-                "filename": archive_file.name,
-                "path": str(archive_file),
-                "size_bytes": stat.st_size,
-                "size_mb": round(stat.st_size / 1024 / 1024, 2),
-                "created": datetime.fromtimestamp(stat.st_ctime).isoformat(),
-            })
+            archives.append(
+                {
+                    "filename": archive_file.name,
+                    "path": str(archive_file),
+                    "size_bytes": stat.st_size,
+                    "size_mb": round(stat.st_size / 1024 / 1024, 2),
+                    "created": datetime.fromtimestamp(stat.st_ctime).isoformat(),
+                }
+            )
         return archives

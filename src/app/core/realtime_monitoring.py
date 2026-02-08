@@ -82,7 +82,14 @@ class IncrementalUpdateManager:
                     }
                 )
 
-                logger.info("Updated %s/%s/%s: %s -> %s", country, domain, year, old_value, value)
+                logger.info(
+                    "Updated %s/%s/%s: %s -> %s",
+                    country,
+                    domain,
+                    year,
+                    old_value,
+                    value,
+                )
                 return True
 
         except Exception as e:
@@ -296,7 +303,9 @@ class WebhookNotifier:
                     }
                 )
 
-                logger.info("Webhook notification sent to %s: %s", url, response.status_code)
+                logger.info(
+                    "Webhook notification sent to %s: %s", url, response.status_code
+                )
 
             except Exception as e:
                 self.notification_log.append(

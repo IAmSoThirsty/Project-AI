@@ -97,7 +97,7 @@ class EncryptedNavigationHistory:
         name_hash = hashlib.sha256(encrypted_name).hexdigest()
         self._encrypted_bookmarks[name_hash] = encrypted_url
 
-        self.logger.debug("Added encrypted bookmark: %s", name_hash[)
+        self.logger.debug("Added encrypted bookmark: %s", name_hash[:16])
 
     def get_encrypted_bookmarks(self) -> dict[str, bytes]:
         """Get all encrypted bookmarks"""

@@ -96,11 +96,7 @@ class AntiPhishingEngine:
         # Check for unicode characters that look like ASCII
         suspicious_chars = ["а", "е", "о", "р", "с", "у", "х"]  # Cyrillic
 
-        for char in suspicious_chars:
-            if char in url:
-                return True
-
-        return False
+        return any(char in url for char in suspicious_chars)
 
     def _contains_phishing_content(self, content: str) -> bool:
         """Check if content contains phishing indicators"""
@@ -115,11 +111,7 @@ class AntiPhishingEngine:
         ]
 
         content_lower = content.lower()
-        for keyword in phishing_keywords:
-            if keyword in content_lower:
-                return True
-
-        return False
+        return any(keyword in content_lower for keyword in phishing_keywords)
 
     def report_phishing(self, url: str):
         """Report new phishing URL"""

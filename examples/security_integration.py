@@ -137,7 +137,7 @@ class SecureAIApplication:
 
                 # Audit permissions
                 audit = self.aws.audit_iam_permissions()
-                logger.info("IAM Role: %s", audit.get('role_name'))
+                logger.info("IAM Role: %s", audit.get("role_name"))
 
                 # Validate PoLP
                 required_perms = self.config.get(

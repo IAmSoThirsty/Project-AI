@@ -107,14 +107,18 @@ def initialize_kernel() -> CognitionKernel:
         try:
             governance_system = GovernanceTriumvirate()
         except Exception as e:
-            logger.warning("GovernanceTriumvirate initialization failed: %s, using fallback", e)
+            logger.warning(
+                "GovernanceTriumvirate initialization failed: %s, using fallback", e
+            )
             governance_system = None
 
         # 4. Reflection Engine (post-hoc reasoning)
         try:
             reflection_engine = ReflectionCycle(data_dir="data")
         except Exception as e:
-            logger.warning("ReflectionCycle initialization failed: %s, using fallback", e)
+            logger.warning(
+                "ReflectionCycle initialization failed: %s, using fallback", e
+            )
             reflection_engine = None
 
         # 5. Triumvirate (Galahad, Cerberus, Codex)
@@ -284,8 +288,11 @@ def initialize_security_systems(
         status = tower.get_security_status()
 
         logger.info("✅ Global Watch Tower activated")
-        logger.info("   - Chief of Security: %s", status['chief_of_security'])
-        logger.info("   - Border Patrol agents: %s", status['registered_agents']['border_patrol'])
+        logger.info("   - Chief of Security: %s", status["chief_of_security"])
+        logger.info(
+            "   - Border Patrol agents: %s",
+            status["registered_agents"]["border_patrol"],
+        )
         logger.info("   - Port Admins: %s", len(tower.port_admins))
         logger.info("   - Watch Towers: %s", len(tower.watch_towers))
         logger.info("   - Gate Guardians: %s", len(tower.gate_guardians))
@@ -481,9 +488,16 @@ def initialize_security_systems(
                 tower.register_security_agent("oversight", "explainability_main")
 
             status = tower.get_security_status()
-            logger.info("   - Active Defense agents: %s", status['registered_agents']['active_defense'])
-            logger.info("   - Red Team agents: %s", status['registered_agents']['red_team'])
-            logger.info("   - Oversight agents: %s", status['registered_agents']['oversight'])
+            logger.info(
+                "   - Active Defense agents: %s",
+                status["registered_agents"]["active_defense"],
+            )
+            logger.info(
+                "   - Red Team agents: %s", status["registered_agents"]["red_team"]
+            )
+            logger.info(
+                "   - Oversight agents: %s", status["registered_agents"]["oversight"]
+            )
         except Exception as e:
             logger.warning("Failed to register agents with Watch Tower: %s", e)
 
@@ -532,7 +546,9 @@ def initialize_security_systems(
     # Summary
     active_count = sum(1 for v in security_components.values() if v is not None)
     logger.info("=" * 60)
-    logger.info("🔒 Security Systems Initialized: %s/%s", active_count, len(security_components))
+    logger.info(
+        "🔒 Security Systems Initialized: %s/%s", active_count, len(security_components)
+    )
     logger.info("=" * 60)
     logger.info("Security Posture: DEFENSIVE - NO OFFENSIVE CAPABILITIES")
     logger.info("Aligned with: Asimov's Laws, FourLaws Governance")
@@ -652,7 +668,11 @@ def initialize_enhanced_defenses(
     # Summary
     active_count = sum(1 for v in enhanced_components.values() if v is not None)
     logger.info("=" * 60)
-    logger.info("🛡️  Enhanced Defenses Initialized: %s/%s", active_count, len(enhanced_components))
+    logger.info(
+        "🛡️  Enhanced Defenses Initialized: %s/%s",
+        active_count,
+        len(enhanced_components),
+    )
     logger.info("=" * 60)
     logger.info("Enhanced Capabilities: Detection, Response, Hardening")
     logger.info("Defensive Posture: Stronger deterrent through resilience")
@@ -762,7 +782,9 @@ def report_tier_health():
                 logger.info("     %s %s", status_icon, comp.component_name)
 
             if len(tier_health.component_reports) > 5:
-                logger.info("     ... and %s more", len(tier_health.component_reports) - 5)
+                logger.info(
+                    "     ... and %s more", len(tier_health.component_reports) - 5
+                )
 
         # Overall status
         logger.info("")
@@ -776,7 +798,9 @@ def report_tier_health():
         if violations:
             logger.warning("⚠️  %s tier boundary violations detected:", len(violations))
             for violation in violations[:3]:  # First 3
-                logger.warning("   - %s: %s", violation.violation_type, violation.description)
+                logger.warning(
+                    "   - %s: %s", violation.violation_type, violation.description
+                )
         else:
             logger.info("✓ No tier boundary violations")
 
@@ -803,7 +827,7 @@ def main():
     logger.info("=" * 60)
 
     # Initialize Three-Tier Platform Registry
-    tier_registry = initialize_tier_registry()
+    initialize_tier_registry()
 
     # Initialize CognitionKernel (trust root)
     # Note: Kernel will self-register as Tier-1 during initialization

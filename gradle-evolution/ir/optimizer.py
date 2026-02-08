@@ -31,6 +31,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class OptimizationStats:
     """Statistics for optimization passes"""
+
     dead_code_removed: int = 0
     constants_folded: int = 0
     cse_eliminations: int = 0
@@ -45,7 +46,9 @@ class OptimizationStats:
         """Calculate reduction percentage (cached)"""
         if self._reduction_percent is None:
             if self.nodes_before > 0:
-                self._reduction_percent = 100 * (1 - self.nodes_after / self.nodes_before)
+                self._reduction_percent = 100 * (
+                    1 - self.nodes_after / self.nodes_before
+                )
             else:
                 self._reduction_percent = 0.0
         return self._reduction_percent
@@ -60,7 +63,7 @@ class OptimizationStats:
             "peephole_optimizations": self.peephole_optimizations,
             "nodes_before": self.nodes_before,
             "nodes_after": self.nodes_after,
-            "reduction_percent": self.reduction_percent
+            "reduction_percent": self.reduction_percent,
         }
 
 
@@ -70,7 +73,7 @@ class IROptimizer:
     def __init__(self, optimization_level: int = 2):
         """
         Initialize optimizer
-        
+
         Args:
             optimization_level: 0=none, 1=basic, 2=aggressive, 3=maximum
         """
@@ -81,14 +84,18 @@ class IROptimizer:
     def optimize(self, graph: IRGraph) -> IRGraph:
         """
         Run optimization passes on IR graph
-        
+
         Args:
             graph: IR graph to optimize
-        
+
         Returns:
             Optimized IR graph
         """
-        logger.info("Starting optimization (level %s) on graph with %s nodes", self.optimization_level, len(graph.nodes))
+        logger.info(
+            "Starting optimization (level %s) on graph with %s nodes",
+            self.optimization_level,
+            len(graph.nodes),
+        )
 
         self.stats = OptimizationStats()
         self.stats.nodes_before = len(graph.nodes)
@@ -117,9 +124,15 @@ class IROptimizer:
 
         self.stats.nodes_after = len(graph.nodes)
 
-        logger.info("Optimization complete: %s -> %s nodes", self.stats.nodes_before, self.stats.nodes_after)
-        logger.info(f"Optimizations: DCE={self.stats.dead_code_removed}, "
-                   f"CF={self.stats.constants_folded}, CSE={self.stats.cse_eliminations}")
+        logger.info(
+            "Optimization complete: %s -> %s nodes",
+            self.stats.nodes_before,
+            self.stats.nodes_after,
+        )
+        logger.info(
+            f"Optimizations: DCE={self.stats.dead_code_removed}, "
+            f"CF={self.stats.constants_folded}, CSE={self.stats.cse_eliminations}"
+        )
 
         return graph
 
@@ -187,7 +200,9 @@ class IROptimizer:
             self.stats.dead_code_removed += 1
             logger.debug("Eliminated dead code: %s", node_id)
 
-    def _mark_reachable(self, graph: IRGraph, node_id: str, reachable: set[str]) -> None:
+    def _mark_reachable(
+        self, graph: IRGraph, node_id: str, reachable: set[str]
+    ) -> None:
         """Mark all reachable nodes from given node"""
         if node_id in reachable or node_id not in graph.nodes:
             return
@@ -216,11 +231,21 @@ class IROptimizer:
             changed = False
 
             for node_id, node in list(graph.nodes.items()):
-                if node.opcode not in {IROpcode.ADD, IROpcode.SUB, IROpcode.MUL, IROpcode.DIV, IROpcode.MOD}:
+                if node.opcode not in {
+                    IROpcode.ADD,
+                    IROpcode.SUB,
+                    IROpcode.MUL,
+                    IROpcode.DIV,
+                    IROpcode.MOD,
+                }:
                     continue
 
                 # Check if all inputs are constants
-                input_nodes = [graph.nodes[inp_id] for inp_id in node.inputs if inp_id in graph.nodes]
+                input_nodes = [
+                    graph.nodes[inp_id]
+                    for inp_id in node.inputs
+                    if inp_id in graph.nodes
+                ]
                 if not all(n.opcode == IROpcode.CONST for n in input_nodes):
                     continue
 
@@ -230,7 +255,9 @@ class IROptimizer:
                     if len(values) != 2:
                         continue
 
-                    result = self._compute_constant_op(node.opcode, values[0], values[1])
+                    result = self._compute_constant_op(
+                        node.opcode, values[0], values[1]
+                    )
 
                     if result is not None:
                         # Replace with constant node
@@ -296,18 +323,21 @@ class IROptimizer:
         import hashlib
         import json
 
-        content = json.dumps({
-            "opcode": node.opcode.value,
-            "inputs": sorted(node.inputs),
-            "operands": node.operands,
-            "attributes": sorted(node.attributes.items())
-        }, sort_keys=True)
+        content = json.dumps(
+            {
+                "opcode": node.opcode.value,
+                "inputs": sorted(node.inputs),
+                "operands": node.operands,
+                "attributes": sorted(node.attributes.items()),
+            },
+            sort_keys=True,
+        )
 
         return hashlib.sha256(content.encode()).hexdigest()
 
     def _replace_node_uses(self, graph: IRGraph, old_id: str, new_id: str) -> None:
         """Replace all uses of old node with new node"""
-        for node_id, node in graph.nodes.items():
+        for _node_id, node in graph.nodes.items():
             if old_id in node.inputs:
                 node.inputs = [new_id if inp == old_id else inp for inp in node.inputs]
 
@@ -318,7 +348,11 @@ class IROptimizer:
         for node_id, node in list(graph.nodes.items()):
             # x + 0 = x, x * 1 = x, x - 0 = x
             if node.opcode in {IROpcode.ADD, IROpcode.SUB, IROpcode.MUL}:
-                input_nodes = [graph.nodes[inp_id] for inp_id in node.inputs if inp_id in graph.nodes]
+                input_nodes = [
+                    graph.nodes[inp_id]
+                    for inp_id in node.inputs
+                    if inp_id in graph.nodes
+                ]
 
                 for i, inp_node in enumerate(input_nodes):
                     if inp_node.opcode != IROpcode.CONST or not inp_node.operands:
@@ -331,13 +365,17 @@ class IROptimizer:
                         # x +/- 0 = x
                         other_idx = 1 - i
                         if other_idx < len(node.inputs):
-                            self._replace_node_uses(graph, node_id, node.inputs[other_idx])
+                            self._replace_node_uses(
+                                graph, node_id, node.inputs[other_idx]
+                            )
                             self.stats.peephole_optimizations += 1
                     elif node.opcode == IROpcode.MUL and value == 1:
                         # x * 1 = x
                         other_idx = 1 - i
                         if other_idx < len(node.inputs):
-                            self._replace_node_uses(graph, node_id, node.inputs[other_idx])
+                            self._replace_node_uses(
+                                graph, node_id, node.inputs[other_idx]
+                            )
                             self.stats.peephole_optimizations += 1
                     elif node.opcode == IROpcode.MUL and value == 0:
                         # x * 0 = 0
@@ -350,7 +388,7 @@ class IROptimizer:
         """Apply peephole optimizations"""
         logger.debug("Running peephole optimization")
 
-        for node_id, node in list(graph.nodes.items()):
+        for _node_id, node in list(graph.nodes.items()):
             # Pattern: x - x = 0
             if node.opcode == IROpcode.SUB and len(node.inputs) == 2:
                 if node.inputs[0] == node.inputs[1]:
@@ -373,10 +411,14 @@ class IROptimizer:
         logger.debug("Running loop invariant code motion")
 
         # Find loop nodes
-        loop_nodes = [node_id for node_id, node in graph.nodes.items() if node.opcode == IROpcode.LOOP]
+        loop_nodes = [
+            node_id
+            for node_id, node in graph.nodes.items()
+            if node.opcode == IROpcode.LOOP
+        ]
 
         for loop_id in loop_nodes:
-            loop_node = graph.nodes[loop_id]
+            graph.nodes[loop_id]
 
             # Find nodes inside loop
             loop_body = self._get_loop_body(graph, loop_id)
@@ -393,7 +435,7 @@ class IROptimizer:
 
             # Hoist invariant nodes
             for inv_id in invariant_nodes:
-                inv_node = graph.nodes[inv_id]
+                graph.nodes[inv_id]
 
                 # Move node before loop
                 # (In a real implementation, this would restructure the graph)
@@ -427,10 +469,14 @@ class IROptimizer:
         """Replace expensive operations with cheaper equivalents"""
         logger.debug("Running strength reduction")
 
-        for node_id, node in list(graph.nodes.items()):
+        for _node_id, node in list(graph.nodes.items()):
             # x * 2 -> x + x (addition is cheaper than multiplication)
             if node.opcode == IROpcode.MUL:
-                input_nodes = [graph.nodes[inp_id] for inp_id in node.inputs if inp_id in graph.nodes]
+                input_nodes = [
+                    graph.nodes[inp_id]
+                    for inp_id in node.inputs
+                    if inp_id in graph.nodes
+                ]
 
                 for i, inp_node in enumerate(input_nodes):
                     if inp_node.opcode == IROpcode.CONST and inp_node.operands:
@@ -449,10 +495,10 @@ class IROptimizer:
         """Combine multiple instructions into single instruction"""
         logger.debug("Running instruction combining")
 
-        for node_id, node in list(graph.nodes.items()):
+        for _node_id, node in list(graph.nodes.items()):
             # Pattern: (x + a) + b -> x + (a + b)
             if node.opcode == IROpcode.ADD and len(node.inputs) == 2:
-                left_id, right_id = node.inputs[0], node.inputs[1]
+                left_id, _right_id = node.inputs[0], node.inputs[1]
 
                 if left_id in graph.nodes:
                     left_node = graph.nodes[left_id]
@@ -466,7 +512,9 @@ class IROptimizer:
         """Remove NOP nodes and reconnect edges"""
         logger.debug("Removing NOP nodes")
 
-        nop_nodes = [nid for nid, node in graph.nodes.items() if node.opcode == IROpcode.NOP]
+        nop_nodes = [
+            nid for nid, node in graph.nodes.items() if node.opcode == IROpcode.NOP
+        ]
 
         for nop_id in nop_nodes:
             nop_node = graph.nodes[nop_id]
@@ -477,7 +525,9 @@ class IROptimizer:
                     continue
 
                 input_node = graph.nodes[input_id]
-                input_node.outputs = [out for out in input_node.outputs if out != nop_id]
+                input_node.outputs = [
+                    out for out in input_node.outputs if out != nop_id
+                ]
 
                 for output_id in nop_node.outputs:
                     if output_id in graph.nodes:
@@ -485,7 +535,9 @@ class IROptimizer:
                             input_node.outputs.append(output_id)
 
                         output_node = graph.nodes[output_id]
-                        output_node.inputs = [inp for inp in output_node.inputs if inp != nop_id]
+                        output_node.inputs = [
+                            inp for inp in output_node.inputs if inp != nop_id
+                        ]
                         if input_id not in output_node.inputs:
                             output_node.inputs.append(input_id)
 

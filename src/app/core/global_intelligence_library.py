@@ -196,7 +196,12 @@ class IntelligenceAgent(KernelRoutedAgent):
         self.last_report: IntelligenceReport | None = None
         self.report_count = 0
 
-        logger.info("IntelligenceAgent %s initialized for %s/%s", agent_id, domain.value, specialty)
+        logger.info(
+            "IntelligenceAgent %s initialized for %s/%s",
+            agent_id,
+            domain.value,
+            specialty,
+        )
 
     def monitor(self) -> IntelligenceReport:
         """Monitor for changes and generate a report.
@@ -990,7 +995,10 @@ class GlobalIntelligenceLibrary:
 
             # Ensure minimum 20 agents per domain
             if agents_per_domain < 20:
-                logger.warning("Requested %s agents per domain, using minimum of 20", agents_per_domain)
+                logger.warning(
+                    "Requested %s agents per domain, using minimum of 20",
+                    agents_per_domain,
+                )
                 agents_per_domain = 20
 
             # Initialize curator
@@ -1183,7 +1191,9 @@ class GlobalIntelligenceLibrary:
         # Generate statistical simulation (curator's analytical role)
         simulation = self.generate_statistical_simulation()
 
-        logger.info("Analysis cycle complete. Simulation %s generated", simulation.simulation_id)
+        logger.info(
+            "Analysis cycle complete. Simulation %s generated", simulation.simulation_id
+        )
 
         # Note: Watch Tower reviews simulations and makes command decisions
         if self.watch_tower:

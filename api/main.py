@@ -5,7 +5,7 @@
 import hashlib
 import json
 import time
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 from fastapi import FastAPI, HTTPException, Request
@@ -26,6 +26,7 @@ app.add_middleware(
 # Include Legion/OpenClaw router
 try:
     from integrations.openclaw.api_endpoints import router as openclaw_router
+
     app.include_router(openclaw_router)
     print("[OK] Legion agent endpoints registered")
 except ImportError as e:
@@ -35,6 +36,7 @@ except ImportError as e:
 try:
     from api.save_points_routes import router as save_points_router
     from api.save_points_routes import start_auto_save, stop_auto_save
+
     app.include_router(save_points_router)
 
     @app.on_event("startup")
@@ -56,6 +58,7 @@ except ImportError as e:
 # Include Contrarian Firewall router (God-tier monolithic integration)
 try:
     from api.firewall_routes import router as firewall_router
+
     app.include_router(firewall_router)
     print("[OK] Contrarian Firewall endpoints registered")
 
@@ -73,9 +76,11 @@ try:
     async def shutdown_firewall_orchestrator():
         """Stop the Contrarian Firewall Orchestrator"""
         from src.app.security.contrarian_firewall_orchestrator import get_orchestrator
+
         orchestrator = get_orchestrator()
         await orchestrator.stop()
         print("[OK] Contrarian Firewall Orchestrator stopped")
+
 except ImportError as e:
     print(f"[WARN] Contrarian Firewall endpoints not available: {e}")
 
@@ -84,20 +89,20 @@ except ImportError as e:
 # ==========================================================
 
 
-class ActorType(str, Enum):
+class ActorType(StrEnum):
     human = "human"
     agent = "agent"
     system = "system"
 
 
-class ActionType(str, Enum):
+class ActionType(StrEnum):
     read = "read"
     write = "write"
     execute = "execute"
     mutate = "mutate"
 
 
-class Verdict(str, Enum):
+class Verdict(StrEnum):
     allow = "allow"
     deny = "deny"
     degrade = "degrade"
@@ -333,7 +338,7 @@ def root():
             "Thirsty-lang Security Integration",
             "Intent Tracking & Cognitive Warfare",
             "Real-time Auto-tuning",
-            "Federated Threat Intelligence"
+            "Federated Threat Intelligence",
         ],
         "endpoints": {
             "governance": {
@@ -355,7 +360,7 @@ def root():
                 "list": "GET /api/savepoints/list",
                 "restore": "POST /api/savepoints/restore/{id}",
                 "delete": "DELETE /api/savepoints/delete/{id}",
-                "auto_status": "GET /api/savepoints/auto/status"
+                "auto_status": "GET /api/savepoints/auto/status",
             },
             "health_check": "GET /health",
             "api_docs": "GET /docs",

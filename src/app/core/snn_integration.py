@@ -252,7 +252,12 @@ class BindsNetRLAgent:
         # Poisson encoder for input spikes
         self.encoder = PoissonEncoder(time=100, dt=dt)
 
-        logger.info("BindsNet RL agent initialized: %s→%s→%s", input_size, hidden_size, output_size)
+        logger.info(
+            "BindsNet RL agent initialized: %s→%s→%s",
+            input_size,
+            hidden_size,
+            output_size,
+        )
 
     def process_observation(
         self, observation: np.ndarray, time: int = 100
@@ -402,7 +407,9 @@ class SinabsVisionSNN:
         # Build SNN model
         self.model = self._build_model()
 
-        logger.info("Sinabs vision SNN initialized: %s → %s classes", input_shape, num_classes)
+        logger.info(
+            "Sinabs vision SNN initialized: %s → %s classes", input_shape, num_classes
+        )
 
     def _build_model(self) -> nn.Module:
         """Build Sinabs SNN model for vision tasks."""

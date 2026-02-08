@@ -263,7 +263,6 @@ print("Agent {agent_id} active")
         cerberus.detect_bypass(bypass_type="test")
 
         initial_agent_count = len(cerberus.agents)
-        initial_lockdown_stage = cerberus.lockdown_controller.current_stage
 
         # Save state
         cerberus._save_state()

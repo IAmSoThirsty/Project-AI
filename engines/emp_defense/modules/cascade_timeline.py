@@ -135,9 +135,14 @@ class EMPCascadeTimeline:
             f"T+10s: {state.energy.transformers_damaged:,} transformers damaged"
         )
 
-        logger.error("⚡ Electronics damage: %s transformers lost", state.energy.transformers_damaged)
+        logger.error(
+            "⚡ Electronics damage: %s transformers lost",
+            state.energy.transformers_damaged,
+        )
 
-    def _apply_grid_collapse_phase(self, state: SectorizedWorldState, hours: int) -> None:
+    def _apply_grid_collapse_phase(
+        self, state: SectorizedWorldState, hours: int
+    ) -> None:
         """
         Phase 2: T+0-72h - Grid collapse and initial panic.
 
@@ -146,7 +151,7 @@ class EMPCascadeTimeline:
         # Progressive grid degradation (compounding failures)
         if hours < 24:  # First 24 hours - rapid decline
             degradation = 0.001 * (24 - hours) / 24  # Faster early
-            state.energy.grid_generation_pct *= (1.0 - degradation)
+            state.energy.grid_generation_pct *= 1.0 - degradation
 
         # Nuclear plants SCRAM (emergency shutdown)
         if hours == 2 and state.energy.nuclear_plants_scram == 0:
@@ -171,7 +176,9 @@ class EMPCascadeTimeline:
         if hours == 48:  # 48 hours in
             state.security.violence_index = 0.15  # Escalating
             state.security.civil_unrest_level = 0.20
-            state.major_events.append("T+48h: Violence escalating - law enforcement overwhelmed")
+            state.major_events.append(
+                "T+48h: Violence escalating - law enforcement overwhelmed"
+            )
 
     def _apply_food_water_shock(self, state: SectorizedWorldState, hours: int) -> None:
         """
@@ -212,7 +219,9 @@ class EMPCascadeTimeline:
         # Governance legitimacy erodes
         state.governance.legitimacy_score -= 0.01
 
-    def _apply_governance_failure(self, state: SectorizedWorldState, hours: int) -> None:
+    def _apply_governance_failure(
+        self, state: SectorizedWorldState, hours: int
+    ) -> None:
         """
         Phase 4: T+14-90d - Government authority collapses.
 
@@ -226,11 +235,15 @@ class EMPCascadeTimeline:
 
         # Regional fragmentation accelerates
         state.governance.regional_fragmentation += 0.01
-        state.governance.regional_fragmentation = min(1.0, state.governance.regional_fragmentation)
+        state.governance.regional_fragmentation = min(
+            1.0, state.governance.regional_fragmentation
+        )
 
         # Government control shrinks
         state.governance.government_control_pct -= 0.01
-        state.governance.government_control_pct = max(0.0, state.governance.government_control_pct)
+        state.governance.government_control_pct = max(
+            0.0, state.governance.government_control_pct
+        )
 
         # Emergency powers invoked
         if days_since_emp == 30 and not state.governance.constitutional_limits_exceeded:
@@ -246,7 +259,9 @@ class EMPCascadeTimeline:
         if days_since_emp > 60:
             state.governance.courts_operational_pct *= 0.95
 
-    def _apply_demographic_collapse(self, state: SectorizedWorldState, hours: int) -> None:
+    def _apply_demographic_collapse(
+        self, state: SectorizedWorldState, hours: int
+    ) -> None:
         """
         Phase 5: T+90d+ - Demographic collapse and die-off.
 
@@ -260,14 +275,18 @@ class EMPCascadeTimeline:
         # Starvation deaths
         if state.food.famine_affected_population > 0:
             starvation_rate = 0.001  # 0.1% per day
-            starvation_deaths = int(state.food.famine_affected_population * starvation_rate)
+            starvation_deaths = int(
+                state.food.famine_affected_population * starvation_rate
+            )
             base_death_rate += starvation_deaths
             state.deaths_starvation += starvation_deaths
 
         # Disease deaths
         if state.water.waterborne_disease_cases > 0:
             disease_mortality = 0.05  # 5% mortality
-            disease_deaths = int(state.water.waterborne_disease_cases * disease_mortality)
+            disease_deaths = int(
+                state.water.waterborne_disease_cases * disease_mortality
+            )
             base_death_rate += disease_deaths
             state.deaths_disease += disease_deaths
 
@@ -283,11 +302,7 @@ class EMPCascadeTimeline:
 
         # Milestone events
         if days_since_emp == 120 and state.total_deaths > 1_000_000:
-            state.major_events.append(
-                "T+120d: Death toll exceeds 1 million"
-            )
+            state.major_events.append("T+120d: Death toll exceeds 1 million")
 
         if days_since_emp == 180 and state.total_deaths > 10_000_000:
-            state.major_events.append(
-                "T+180d: Death toll exceeds 10 million"
-            )
+            state.major_events.append("T+180d: Death toll exceeds 10 million")

@@ -78,7 +78,9 @@ class SecurityWorker:
             logger.info("✅ Connected to Temporal server")
 
             # Create worker
-            logger.info("🛡️ Creating security agent worker on queue: %s", self.task_queue)
+            logger.info(
+                "🛡️ Creating security agent worker on queue: %s", self.task_queue
+            )
             self.worker = Worker(
                 self.client,
                 task_queue=self.task_queue,

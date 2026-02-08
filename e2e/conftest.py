@@ -171,88 +171,38 @@ def mock_geolocation_service():
 
 def pytest_configure(config):
     """Configure pytest with custom markers."""
-    config.addinivalue_line(
-        "markers", "e2e: Mark test as end-to-end test"
-    )
-    config.addinivalue_line(
-        "markers", "gui: Mark test as GUI test"
-    )
-    config.addinivalue_line(
-        "markers", "api: Mark test as API test"
-    )
-    config.addinivalue_line(
-        "markers", "council_hub: Mark test as Council Hub test"
-    )
-    config.addinivalue_line(
-        "markers", "triumvirate: Mark test as Triumvirate test"
-    )
-    config.addinivalue_line(
-        "markers", "watch_tower: Mark test as Watch Tower test"
-    )
-    config.addinivalue_line(
-        "markers", "tarl: Mark test as TARL enforcement test"
-    )
-    config.addinivalue_line(
-        "markers", "security: Mark test as security test"
-    )
-    config.addinivalue_line(
-        "markers", "slow: Mark test as slow-running"
-    )
-    config.addinivalue_line(
-        "markers", "integration: Mark test as integration test"
-    )
+    config.addinivalue_line("markers", "e2e: Mark test as end-to-end test")
+    config.addinivalue_line("markers", "gui: Mark test as GUI test")
+    config.addinivalue_line("markers", "api: Mark test as API test")
+    config.addinivalue_line("markers", "council_hub: Mark test as Council Hub test")
+    config.addinivalue_line("markers", "triumvirate: Mark test as Triumvirate test")
+    config.addinivalue_line("markers", "watch_tower: Mark test as Watch Tower test")
+    config.addinivalue_line("markers", "tarl: Mark test as TARL enforcement test")
+    config.addinivalue_line("markers", "security: Mark test as security test")
+    config.addinivalue_line("markers", "slow: Mark test as slow-running")
+    config.addinivalue_line("markers", "integration: Mark test as integration test")
     # Additional E2E markers
-    config.addinivalue_line(
-        "markers", "batch: Mark test as batch processing test"
-    )
-    config.addinivalue_line(
-        "markers", "temporal: Mark test as Temporal workflow test"
-    )
-    config.addinivalue_line(
-        "markers", "memory: Mark test as memory system test"
-    )
-    config.addinivalue_line(
-        "markers", "knowledge: Mark test as knowledge base test"
-    )
-    config.addinivalue_line(
-        "markers", "rag: Mark test as RAG pipeline test"
-    )
-    config.addinivalue_line(
-        "markers", "agents: Mark test as multi-agent test"
-    )
-    config.addinivalue_line(
-        "markers", "failover: Mark test as failover test"
-    )
-    config.addinivalue_line(
-        "markers", "recovery: Mark test as recovery test"
-    )
+    config.addinivalue_line("markers", "batch: Mark test as batch processing test")
+    config.addinivalue_line("markers", "temporal: Mark test as Temporal workflow test")
+    config.addinivalue_line("markers", "memory: Mark test as memory system test")
+    config.addinivalue_line("markers", "knowledge: Mark test as knowledge base test")
+    config.addinivalue_line("markers", "rag: Mark test as RAG pipeline test")
+    config.addinivalue_line("markers", "agents: Mark test as multi-agent test")
+    config.addinivalue_line("markers", "failover: Mark test as failover test")
+    config.addinivalue_line("markers", "recovery: Mark test as recovery test")
     config.addinivalue_line(
         "markers", "circuit_breaker: Mark test as circuit breaker test"
     )
     config.addinivalue_line(
         "markers", "adversarial: Mark test as adversarial/security test"
     )
-    config.addinivalue_line(
-        "markers", "batch: Mark test as batch processing test"
-    )
-    config.addinivalue_line(
-        "markers", "memory: Mark test as memory system test"
-    )
-    config.addinivalue_line(
-        "markers", "knowledge: Mark test as knowledge base test"
-    )
-    config.addinivalue_line(
-        "markers", "rag: Mark test as RAG pipeline test"
-    )
-    config.addinivalue_line(
-        "markers", "agents: Mark test as multi-agent test"
-    )
-    config.addinivalue_line(
-        "markers", "failover: Mark test as failover test"
-    )
-    config.addinivalue_line(
-        "markers", "recovery: Mark test as recovery test"
-    )
+    config.addinivalue_line("markers", "batch: Mark test as batch processing test")
+    config.addinivalue_line("markers", "memory: Mark test as memory system test")
+    config.addinivalue_line("markers", "knowledge: Mark test as knowledge base test")
+    config.addinivalue_line("markers", "rag: Mark test as RAG pipeline test")
+    config.addinivalue_line("markers", "agents: Mark test as multi-agent test")
+    config.addinivalue_line("markers", "failover: Mark test as failover test")
+    config.addinivalue_line("markers", "recovery: Mark test as recovery test")
     config.addinivalue_line(
         "markers", "circuit_breaker: Mark test as circuit breaker test"
     )

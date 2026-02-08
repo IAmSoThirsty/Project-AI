@@ -10,8 +10,7 @@ import logging
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 
 logger = logging.getLogger(__name__)
@@ -92,7 +91,12 @@ steps:
     # Show cost estimation
     original_cost = optimizer.estimate_cost(graph)
     optimized_cost = optimizer.estimate_cost(optimized_graph)
-    logger.info("Cost reduction: %s -> %s (%s%%)", original_cost, optimized_cost, 100*(1-optimized_cost/original_cost))
+    logger.info(
+        "Cost reduction: %s -> %s (%s%%)",
+        original_cost,
+        optimized_cost,
+        100 * (1 - optimized_cost / original_cost),
+    )
 
     return optimized_graph
 
@@ -129,24 +133,33 @@ steps:
     verifier = IRVerifier(strict_mode=True)
     verification = verifier.verify(graph)
 
-    logger.info("Verification result: %s", 'PASSED' if verification['all_verified'] else 'FAILED')
-    logger.info("Properties verified: %s/%s", len([r for r in verification['results'] if r['verified']]), len(verification['results']))
+    logger.info(
+        "Verification result: %s",
+        "PASSED" if verification["all_verified"] else "FAILED",
+    )
+    logger.info(
+        "Properties verified: %s/%s",
+        len([r for r in verification["results"] if r["verified"]]),
+        len(verification["results"]),
+    )
 
     # Show results
-    for result in verification['results']:
-        status = "✓" if result['verified'] else "✗"
-        logger.info("  %s %s: confidence=%s", status, result['property'], result['confidence'])
-        if result['warnings']:
-            for warning in result['warnings']:
+    for result in verification["results"]:
+        status = "✓" if result["verified"] else "✗"
+        logger.info(
+            "  %s %s: confidence=%s", status, result["property"], result["confidence"]
+        )
+        if result["warnings"]:
+            for warning in result["warnings"]:
                 logger.info("    - %s", warning)
 
     # Generate proof certificate
     certificate = verifier.generate_proof_certificate(graph)
-    logger.info("Proof certificate hash: %s", certificate['certificate_hash'])
+    logger.info("Proof certificate hash: %s", certificate["certificate_hash"])
 
     # Verify certificate
     is_valid = verifier.verify_certificate(certificate, graph)
-    logger.info("Certificate validation: %s", 'VALID' if is_valid else 'INVALID')
+    logger.info("Certificate validation: %s", "VALID" if is_valid else "INVALID")
 
     return verification, certificate
 
@@ -184,25 +197,29 @@ steps:
 
     # Execute
     executor = IRExecutor(
-        max_execution_time_ms=60000,
-        enable_tracing=True,
-        enable_checkpointing=True
+        max_execution_time_ms=60000, enable_tracing=True, enable_checkpointing=True
     )
 
     results = executor.execute(graph)
 
-    logger.info("Execution status: %s", results['status'])
-    logger.info("Nodes executed: %s", results['nodes_executed'])
-    logger.info("Execution time: %sms", results['execution_time_ms'])
-    logger.info("Resource usage: %s", json.dumps(results['resource_usage'], indent=2))
+    logger.info("Execution status: %s", results["status"])
+    logger.info("Nodes executed: %s", results["nodes_executed"])
+    logger.info("Execution time: %sms", results["execution_time_ms"])
+    logger.info("Resource usage: %s", json.dumps(results["resource_usage"], indent=2))
 
     # Show trace
-    if results.get('trace'):
-        logger.info("Execution trace (%s entries):", len(results['trace']))
-        for i, trace_entry in enumerate(results['trace'][:5]):  # Show first 5
-            logger.info("  [%s] %s (node %s): %sms", i, trace_entry['opcode'], trace_entry['node_id'], trace_entry['duration_ms'])
-        if len(results['trace']) > 5:
-            logger.info("  ... and %s more", len(results['trace']) - 5)
+    if results.get("trace"):
+        logger.info("Execution trace (%s entries):", len(results["trace"]))
+        for i, trace_entry in enumerate(results["trace"][:5]):  # Show first 5
+            logger.info(
+                "  [%s] %s (node %s): %sms",
+                i,
+                trace_entry["opcode"],
+                trace_entry["node_id"],
+                trace_entry["duration_ms"],
+            )
+        if len(results["trace"]) > 5:
+            logger.info("  ... and %s more", len(results["trace"]) - 5)
 
     return results
 
@@ -248,49 +265,68 @@ steps:
     optimizer = IROptimizer(optimization_level=2)
     optimized_graph = optimizer.optimize(graph)
     stats = optimizer.get_statistics()
-    logger.info("  ✓ Optimized to %s nodes (%s%% reduction)", len(optimized_graph.nodes), stats['reduction_percent'])
+    logger.info(
+        "  ✓ Optimized to %s nodes (%s%% reduction)",
+        len(optimized_graph.nodes),
+        stats["reduction_percent"],
+    )
 
     # Step 3: Verify
     logger.info("Step 3: Verifying correctness...")
     verifier = IRVerifier(strict_mode=True)
     verification = verifier.verify(optimized_graph)
-    logger.info("  ✓ Verification: %s/%s properties verified", len([r for r in verification['results'] if r['verified']]), len(verification['results']))
+    logger.info(
+        "  ✓ Verification: %s/%s properties verified",
+        len([r for r in verification["results"] if r["verified"]]),
+        len(verification["results"]),
+    )
 
-    if not verification['all_verified']:
+    if not verification["all_verified"]:
         logger.warning("  ⚠ Some properties could not be verified:")
-        for result in verification['results']:
-            if not result['verified']:
-                logger.warning("    - %s: %s", result['property'], result['warnings'])
+        for result in verification["results"]:
+            if not result["verified"]:
+                logger.warning("    - %s: %s", result["property"], result["warnings"])
 
     # Step 4: Generate proof certificate
     logger.info("Step 4: Generating proof certificate...")
     certificate = verifier.generate_proof_certificate(optimized_graph)
-    logger.info("  ✓ Certificate generated: %s...", certificate['certificate_hash'][:16])
+    logger.info(
+        "  ✓ Certificate generated: %s...", certificate["certificate_hash"][:16]
+    )
 
     # Step 5: Execute
     logger.info("Step 5: Executing IR...")
     executor = IRExecutor(enable_tracing=True)
     results = executor.execute(optimized_graph)
-    logger.info("  ✓ Execution %s: %s nodes in %sms", results['status'], results['nodes_executed'], results['execution_time_ms'])
+    logger.info(
+        "  ✓ Execution %s: %s nodes in %sms",
+        results["status"],
+        results["nodes_executed"],
+        results["execution_time_ms"],
+    )
 
     # Summary
     logger.info("\n=== Pipeline Summary ===")
-    logger.info("Intent: %s", graph.metadata['intent'])
-    logger.info("Original nodes: %s", stats['nodes_before'])
-    logger.info("Optimized nodes: %s", stats['nodes_after'])
-    logger.info("Verification: %s", '✓ PASSED' if verification['all_verified'] else '⚠ PARTIAL')
-    logger.info("Execution: %s", results['status'].upper())
-    logger.info("Total time: %sms", results['execution_time_ms'])
+    logger.info("Intent: %s", graph.metadata["intent"])
+    logger.info("Original nodes: %s", stats["nodes_before"])
+    logger.info("Optimized nodes: %s", stats["nodes_after"])
+    logger.info(
+        "Verification: %s", "✓ PASSED" if verification["all_verified"] else "⚠ PARTIAL"
+    )
+    logger.info("Execution: %s", results["status"].upper())
+    logger.info("Total time: %sms", results["execution_time_ms"])
     logger.info("Resource usage:")
-    logger.info("  CPU: %sms", results['resource_usage']['cpu_time_ms'])
-    logger.info("  Memory: %sMB", results['resource_usage']['memory_bytes'] / (1024*1024))
-    logger.info("  I/O ops: %s", results['resource_usage']['io_operations'])
+    logger.info("  CPU: %sms", results["resource_usage"]["cpu_time_ms"])
+    logger.info(
+        "  Memory: %sMB", results["resource_usage"]["memory_bytes"] / (1024 * 1024)
+    )
+    logger.info("  I/O ops: %s", results["resource_usage"]["io_operations"])
 
     return {
         "graph": optimized_graph,
         "verification": verification,
         "certificate": certificate,
-        "execution": results
+        "execution": results,
     }
 
 

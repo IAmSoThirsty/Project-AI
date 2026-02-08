@@ -7,7 +7,9 @@ logger = logging.getLogger(__name__)
 
 
 class ExecutionKernel:
-    def __init__(self, governance, tarl_runtime, codex: CodexDeus, sovereign_runtime=None):
+    def __init__(
+        self, governance, tarl_runtime, codex: CodexDeus, sovereign_runtime=None
+    ):
         self.governance = governance
         self.codex = codex
         self.tarl_gate = TarlGate(tarl_runtime, codex)

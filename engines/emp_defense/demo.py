@@ -49,32 +49,38 @@ def run_demo():
         if week % 13 == 0:
             state = engine.observe()
             quarter = week // 13 + 1
-            print(f"    • Q{quarter} (Week {week:2d}): "
-                  f"Grid {state['grid_operational_pct']:.1%}, "
-                  f"Pop {state['global_population']:,}, "
-                  f"Deaths {state['total_deaths']:,}")
+            print(
+                f"    • Q{quarter} (Week {week:2d}): "
+                f"Grid {state['grid_operational_pct']:.1%}, "
+                f"Pop {state['global_population']:,}, "
+                f"Deaths {state['total_deaths']:,}"
+            )
 
         # Inject recovery events quarterly
         if week % 13 == 0 and week > 0:
-            event_id = engine.inject_event("recovery_milestone", {
-                "quarter": week // 13,
-                "progress": f"{(week / 52) * 100:.0f}%"
-            })
+            engine.inject_event(
+                "recovery_milestone",
+                {"quarter": week // 13, "progress": f"{(week / 52) * 100:.0f}%"},
+            )
 
     # Final state
     print("\n[4] Final State (After 1 Year)...")
     final_state = engine.observe()
     print(f"    • Simulation Day: {final_state['simulation_day']}")
     print(f"    • Final Population: {final_state['global_population']:,}")
-    print(f"    • Population Loss: {initial_state['global_population'] - final_state['global_population']:,}")
+    print(
+        f"    • Population Loss: {initial_state['global_population'] - final_state['global_population']:,}"
+    )
     print(f"    • Grid Recovery: {final_state['grid_operational_pct']:.1%}")
     print(f"    • GDP Recovery: ${final_state['gdp_trillion']:.1f}T")
     print(f"    • Total Deaths: {final_state['total_deaths']:,}")
 
     # Calculate metrics
-    survival_rate = (final_state['global_population'] / initial_state['global_population']) * 100
-    grid_recovery = final_state['grid_operational_pct'] * 100
-    gdp_recovery = (final_state['gdp_trillion'] / initial_state['gdp_trillion']) * 100
+    survival_rate = (
+        final_state["global_population"] / initial_state["global_population"]
+    ) * 100
+    grid_recovery = final_state["grid_operational_pct"] * 100
+    gdp_recovery = (final_state["gdp_trillion"] / initial_state["gdp_trillion"]) * 100
 
     print("\n[5] Recovery Metrics...")
     print(f"    • Survival Rate: {survival_rate:.2f}%")
@@ -88,9 +94,9 @@ def run_demo():
 
     # Show event history
     print("\n[7] Major Events...")
-    for i, event in enumerate(final_state['major_events'][:5], 1):
+    for i, event in enumerate(final_state["major_events"][:5], 1):
         print(f"    {i}. {event}")
-    if len(final_state['major_events']) > 5:
+    if len(final_state["major_events"]) > 5:
         print(f"    ... and {len(final_state['major_events']) - 5} more events")
 
     print("\n" + "=" * 70)

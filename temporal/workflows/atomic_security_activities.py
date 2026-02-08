@@ -96,7 +96,7 @@ async def create_forensic_snapshot(campaign_id: str) -> dict[str, Any]:
         with open(metadata_file, "w") as f:
             json.dump(metadata, f, indent=2)
 
-        activity.logger.info("Snapshot created: %s (%s...)", snapshot_id, checksum[)
+        activity.logger.info("Snapshot created: %s (%s...)", snapshot_id, checksum[:16])
 
         return {
             "snapshot_id": snapshot_id,
@@ -129,7 +129,9 @@ async def run_red_team_attack(
         Attack result with transcript and metrics
     """
     activity_id = activity.info().activity_id
-    activity.logger.info("Running red team attack: %s on %s (activity: %s)", persona, target, activity_id)
+    activity.logger.info(
+        "Running red team attack: %s on %s (activity: %s)", persona, target, activity_id
+    )
 
     # Check for existing result (idempotency)
     result_file = Path(f"data/attack_results/{activity_id}.json")
@@ -201,7 +203,9 @@ async def evaluate_attack(attack_result: dict[str, Any]) -> str:
     Returns:
         Severity level (critical/high/medium/low)
     """
-    activity.logger.info("Evaluating attack: %s on %s", attack_result['persona'], attack_result['target'])
+    activity.logger.info(
+        "Evaluating attack: %s on %s", attack_result["persona"], attack_result["target"]
+    )
 
     # Evaluation logic based on persona and success
     if attack_result["success"]:
@@ -244,7 +248,9 @@ async def trigger_incident(
         Incident metadata
     """
     incident_id = f"INC-{datetime.now().strftime('%Y%m%d%H%M%S')}"
-    activity.logger.critical("Triggering incident %s: %s severity", incident_id, severity)
+    activity.logger.critical(
+        "Triggering incident %s: %s severity", incident_id, severity
+    )
 
     incident = {
         "incident_id": incident_id,
@@ -428,4 +434,8 @@ async def notify_triumvirate(campaign_id: str, results: list[dict[str, Any]]) ->
     # - Create GitHub issue with security label
     # - Email security team distribution list
 
-    activity.logger.info("Triumvirate notified: %s/%s attacks succeeded", summary['successful_attacks'], summary['total_attacks'])
+    activity.logger.info(
+        "Triumvirate notified: %s/%s attacks succeeded",
+        summary["successful_attacks"],
+        summary["total_attacks"],
+    )

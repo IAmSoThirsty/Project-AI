@@ -153,7 +153,12 @@ class DistributedLock:
         """Release distributed lock"""
         with self._lock:
             if self.holder != node_id:
-                logger.warning("Node %s tried to release lock %s held by %s", node_id, self.lock_name, self.holder)
+                logger.warning(
+                    "Node %s tried to release lock %s held by %s",
+                    node_id,
+                    self.lock_name,
+                    self.holder,
+                )
                 return False
 
             self.holder = None
@@ -196,7 +201,9 @@ class FederatedRegistry:
             key = f"{node_id}:{service_name}"
             if key in self._registry:
                 del self._registry[key]
-                logger.info("Service %s unregistered from node %s", service_name, node_id)
+                logger.info(
+                    "Service %s unregistered from node %s", service_name, node_id
+                )
                 return True
             return False
 
@@ -204,7 +211,7 @@ class FederatedRegistry:
         """Find all nodes providing a specific service"""
         with self._lock:
             results = []
-            for key, info in self._registry.items():
+            for _key, info in self._registry.items():
                 if info["service_name"] == service_name:
                     results.append(info)
             return results
@@ -213,7 +220,7 @@ class FederatedRegistry:
         """Get all services provided by a node"""
         with self._lock:
             services = []
-            for key, info in self._registry.items():
+            for _key, info in self._registry.items():
                 if info["node_id"] == node_id:
                     services.append(info["service_name"])
             return services
@@ -436,7 +443,11 @@ class ClusterCoordinator:
                 time_since_heartbeat = current_time - node_info.last_heartbeat
                 if time_since_heartbeat > self.node_timeout:
                     if node_info.state != NodeState.OFFLINE:
-                        logger.warning("Node %s timed out (no heartbeat for %ss)", node_id, time_since_heartbeat)
+                        logger.warning(
+                            "Node %s timed out (no heartbeat for %ss)",
+                            node_id,
+                            time_since_heartbeat,
+                        )
                         node_info.state = NodeState.OFFLINE
                         offline_nodes.append(node_id)
 
@@ -476,7 +487,11 @@ class ClusterCoordinator:
     def _trigger_election(self) -> None:
         """Trigger leader election (simplified Raft-like algorithm)"""
         with self._lock:
-            logger.info("Node %s triggering election (term %s)", self.node_id, self._election_term + 1)
+            logger.info(
+                "Node %s triggering election (term %s)",
+                self.node_id,
+                self._election_term + 1,
+            )
 
             self._election_term += 1
             self.role = NodeRole.CANDIDATE
@@ -506,7 +521,9 @@ class ClusterCoordinator:
     def _become_leader(self) -> None:
         """Become cluster leader"""
         with self._lock:
-            logger.info("Node %s became LEADER for term %s", self.node_id, self._election_term)
+            logger.info(
+                "Node %s became LEADER for term %s", self.node_id, self._election_term
+            )
             self.role = NodeRole.LEADER
             self._leader_id = self.node_id
             self._last_leader_contact = time.time()
@@ -591,7 +608,9 @@ class ClusterCoordinator:
 
             task.assigned_node = assigned_node.node_id
             task.status = "assigned"
-            logger.info("Task %s assigned to node %s", task.task_id, assigned_node.node_id)
+            logger.info(
+                "Task %s assigned to node %s", task.task_id, assigned_node.node_id
+            )
 
     def get_task_status(self, task_id: str) -> dict[str, Any] | None:
         """Get status of a task"""
@@ -638,7 +657,9 @@ class ClusterCoordinator:
             try:
                 handler(data)
             except Exception as e:
-                logger.error("Error in event handler for %s: %s", event_type, e, exc_info=True)
+                logger.error(
+                    "Error in event handler for %s: %s", event_type, e, exc_info=True
+                )
 
 
 def create_cluster_coordinator(

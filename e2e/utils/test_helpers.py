@@ -225,11 +225,9 @@ def compare_json_objects(
 
         elif isinstance(o1, list):
             if len(o1) != len(o2):
-                differences.append(
-                    f"{path}: Length mismatch ({len(o1)} vs {len(o2)})"
-                )
+                differences.append(f"{path}: Length mismatch ({len(o1)} vs {len(o2)})")
             else:
-                for i, (item1, item2) in enumerate(zip(o1, o2)):
+                for i, (item1, item2) in enumerate(zip(o1, o2, strict=False)):
                     compare_recursive(item1, item2, f"{path}[{i}]")
 
         else:

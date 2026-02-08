@@ -159,9 +159,7 @@ class TARLSystem:
             logger.info("✓ FFI bridge initialized")
 
             # 5. Compiler Frontend
-            self.compiler = CompilerFrontend(
-                self.config, self.diagnostics, self.stdlib
-            )
+            self.compiler = CompilerFrontend(self.config, self.diagnostics, self.stdlib)
             self.compiler.initialize()
             self._subsystems_loaded.append("compiler")
             logger.info("✓ Compiler initialized")
@@ -252,7 +250,9 @@ class TARLSystem:
 
         return self.compiler.compile(source)
 
-    def execute_bytecode(self, bytecode: bytes, context: dict[str, Any] | None = None) -> Any:
+    def execute_bytecode(
+        self, bytecode: bytes, context: dict[str, Any] | None = None
+    ) -> Any:
         """
         Execute pre-compiled T.A.R.L. bytecode
 
@@ -287,7 +287,9 @@ class TARLSystem:
         if self._initialized:
             status.update(
                 {
-                    "config": self.config.get_section("compiler") if self.config else {},
+                    "config": (
+                        self.config.get_section("compiler") if self.config else {}
+                    ),
                     "diagnostics": (
                         self.diagnostics.get_status() if self.diagnostics else {}
                     ),

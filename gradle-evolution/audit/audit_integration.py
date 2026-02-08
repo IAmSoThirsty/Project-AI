@@ -23,9 +23,7 @@ class BuildAuditIntegration:
     """
 
     def __init__(
-        self,
-        audit_log_path: Path | None = None,
-        enable_verbose: bool = False
+        self, audit_log_path: Path | None = None, enable_verbose: bool = False
     ):
         """
         Initialize build audit integration.
@@ -40,10 +38,7 @@ class BuildAuditIntegration:
         logger.info("Build audit integration initialized")
 
     def audit_build_start(
-        self,
-        build_id: str,
-        tasks: list[str],
-        context: dict[str, Any]
+        self, build_id: str, tasks: list[str], context: dict[str, Any]
     ) -> None:
         """
         Audit build start event.
@@ -76,7 +71,7 @@ class BuildAuditIntegration:
         build_id: str,
         success: bool,
         duration_seconds: float,
-        result: dict[str, Any]
+        result: dict[str, Any],
     ) -> None:
         """
         Audit build completion event.
@@ -111,7 +106,7 @@ class BuildAuditIntegration:
         action: str,
         allowed: bool,
         reason: str | None = None,
-        metadata: dict[str, Any] | None = None
+        metadata: dict[str, Any] | None = None,
     ) -> None:
         """
         Audit policy decision event.
@@ -152,7 +147,7 @@ class BuildAuditIntegration:
         path: str,
         operation: str,
         allowed: bool,
-        reason: str | None = None
+        reason: str | None = None,
     ) -> None:
         """
         Audit security event.
@@ -194,7 +189,7 @@ class BuildAuditIntegration:
         tasks: list[str],
         input_count: int,
         output_count: int,
-        merkle_root: str
+        merkle_root: str,
     ) -> None:
         """
         Audit build capsule creation.
@@ -226,10 +221,7 @@ class BuildAuditIntegration:
             logger.error("Error auditing capsule creation: %s", e, exc_info=True)
 
     def audit_replay_event(
-        self,
-        capsule_id: str,
-        success: bool,
-        differences: dict[str, Any] | None = None
+        self, capsule_id: str, success: bool, differences: dict[str, Any] | None = None
     ) -> None:
         """
         Audit build replay event.
@@ -264,7 +256,7 @@ class BuildAuditIntegration:
         decision_type: str,
         inputs: dict[str, Any],
         outputs: dict[str, Any],
-        reasoning: dict[str, Any] | None = None
+        reasoning: dict[str, Any] | None = None,
     ) -> None:
         """
         Audit cognitive decision event.
@@ -318,9 +310,7 @@ class BuildAuditIntegration:
         return count
 
     def generate_audit_report(
-        self,
-        start_time: datetime | None = None,
-        end_time: datetime | None = None
+        self, start_time: datetime | None = None, end_time: datetime | None = None
     ) -> dict[str, Any]:
         """
         Generate audit report for time period.
@@ -334,9 +324,7 @@ class BuildAuditIntegration:
         """
         try:
             filtered_entries = self._filter_by_time(
-                self.audit_buffer,
-                start_time,
-                end_time
+                self.audit_buffer, start_time, end_time
             )
 
             # Aggregate statistics
@@ -378,11 +366,13 @@ class BuildAuditIntegration:
 
     def _buffer_audit(self, event: str, detail: Any) -> None:
         """Add audit entry to buffer."""
-        self.audit_buffer.append({
-            "event": event,
-            "detail": detail,
-            "timestamp": datetime.utcnow().isoformat(),
-        })
+        self.audit_buffer.append(
+            {
+                "event": event,
+                "detail": detail,
+                "timestamp": datetime.utcnow().isoformat(),
+            }
+        )
 
         # Keep last 10000 entries
         if len(self.audit_buffer) > 10000:
@@ -392,10 +382,7 @@ class BuildAuditIntegration:
         """Sanitize context for audit logging."""
         # Remove sensitive keys
         sensitive_keys = {"password", "token", "secret", "key"}
-        return {
-            k: v for k, v in context.items()
-            if k.lower() not in sensitive_keys
-        }
+        return {k: v for k, v in context.items() if k.lower() not in sensitive_keys}
 
     def _summarize_result(self, result: dict[str, Any]) -> dict[str, Any]:
         """Summarize build result for audit."""
@@ -416,7 +403,9 @@ class BuildAuditIntegration:
                 summary[key] = "present"
         return summary
 
-    def _summarize_dict(self, data: dict[str, Any], max_keys: int = 5) -> dict[str, Any]:
+    def _summarize_dict(
+        self, data: dict[str, Any], max_keys: int = 5
+    ) -> dict[str, Any]:
         """Summarize dictionary for audit."""
         keys = list(data.keys())[:max_keys]
         return {
@@ -428,7 +417,7 @@ class BuildAuditIntegration:
         self,
         entries: list[dict[str, Any]],
         start_time: datetime | None,
-        end_time: datetime | None
+        end_time: datetime | None,
     ) -> list[dict[str, Any]]:
         """Filter entries by time range."""
         if not start_time and not end_time:

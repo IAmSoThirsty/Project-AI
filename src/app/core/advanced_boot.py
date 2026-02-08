@@ -538,7 +538,9 @@ class AdvancedBootSystem:
 
         logger.critical("🚨 EMERGENCY MODE ACTIVATED: %s", reason)
         logger.critical("   Only critical subsystems will be available")
-        logger.critical("   Critical subsystems: %s", self.EMERGENCY_CRITICAL_SUBSYSTEMS)
+        logger.critical(
+            "   Critical subsystems: %s", self.EMERGENCY_CRITICAL_SUBSYSTEMS
+        )
 
     def deactivate_emergency_mode(self):
         """
@@ -901,11 +903,17 @@ class AdvancedBootSystem:
 
         logger.info("=" * 80)
         logger.info("BOOT SEQUENCE COMPLETE")
-        logger.info("Profile: %s", self._boot_stats['profile'])
-        logger.info("Subsystems initialized: %s", self._boot_stats['subsystems_initialized'])
-        logger.info("Subsystems skipped: %s", self._boot_stats['subsystems_skipped'])
+        logger.info("Profile: %s", self._boot_stats["profile"])
+        logger.info(
+            "Subsystems initialized: %s", self._boot_stats["subsystems_initialized"]
+        )
+        logger.info("Subsystems skipped: %s", self._boot_stats["subsystems_skipped"])
         if self._boot_stats.get("ethics_approvals_required", 0) > 0:
-            logger.info("Ethics approvals: %s/%s", self._boot_stats['ethics_approvals_granted'], self._boot_stats['ethics_approvals_required'])
+            logger.info(
+                "Ethics approvals: %s/%s",
+                self._boot_stats["ethics_approvals_granted"],
+                self._boot_stats["ethics_approvals_required"],
+            )
         logger.info("=" * 80)
 
     def increment_subsystems_initialized(self):

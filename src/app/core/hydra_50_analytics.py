@@ -328,7 +328,7 @@ class CorrelationAnalyzer:
     ) -> dict[str, dict[str, float]]:
         """Compute correlation matrix for multiple variables"""
         variables = list(data.keys())
-        n = len(variables)
+        len(variables)
 
         matrix = {}
         for i, var1 in enumerate(variables):
@@ -355,7 +355,7 @@ class CorrelationAnalyzer:
         results = []
 
         for i, var1 in enumerate(variables):
-            for j, var2 in enumerate(variables[i + 1 :], i + 1):
+            for _j, var2 in enumerate(variables[i + 1 :], i + 1):
                 corr, p_value = CorrelationAnalyzer.compute_correlation(
                     data[var1], data[var2], method
                 )
@@ -453,7 +453,7 @@ class PredictiveModeler:
         model.fit(X_train_scaled, y_train)
 
         # Evaluate
-        y_pred = model.predict(X_test_scaled)
+        model.predict(X_test_scaled)
         accuracy = float(model.score(X_test_scaled, y_test))
 
         # Store model
@@ -830,7 +830,7 @@ class HYDRA50AnalyticsEngine:
             "statistical_summary": asdict(stats_summary),
             "avg_progression_rate_seconds": avg_progression_rate,
             "total_progressions": len(progressions),
-            "unique_scenarios": len(set(p.scenario_id for p in progressions)),
+            "unique_scenarios": len({p.scenario_id for p in progressions}),
         }
 
     def export_analysis(

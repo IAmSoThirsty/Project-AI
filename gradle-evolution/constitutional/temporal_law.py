@@ -25,7 +25,7 @@ class TemporalLawEnforcer:
     def __init__(
         self,
         temporal_client: Client | None = None,
-        task_queue: str = "constitutional-enforcement"
+        task_queue: str = "constitutional-enforcement",
     ):
         """
         Initialize temporal law enforcer.
@@ -40,10 +40,7 @@ class TemporalLawEnforcer:
         logger.info("Temporal law enforcer initialized with queue: %s", task_queue)
 
     async def enforce_with_timeout(
-        self,
-        action: str,
-        metadata: dict[str, Any],
-        timeout_seconds: int = 30
+        self, action: str, metadata: dict[str, Any], timeout_seconds: int = 30
     ) -> dict[str, Any]:
         """
         Enforce policy with temporal timeout.
@@ -74,10 +71,7 @@ class TemporalLawEnforcer:
             self.workflow_cache[action] = workflow_id
 
             # Wait for result with timeout
-            result = await asyncio.wait_for(
-                handle.result(),
-                timeout=timeout_seconds
-            )
+            result = await asyncio.wait_for(handle.result(), timeout=timeout_seconds)
 
             logger.info("Temporal enforcement completed: %s", action)
             return result
@@ -98,9 +92,7 @@ class TemporalLawEnforcer:
             }
 
     async def query_historical_decision(
-        self,
-        action: str,
-        timestamp: datetime
+        self, action: str, timestamp: datetime
     ) -> dict[str, Any] | None:
         """
         Query historical policy decision at a specific point in time.
@@ -122,8 +114,7 @@ class TemporalLawEnforcer:
 
             # Query workflow at specific time
             result = await handle.query(
-                "get_decision_at_time",
-                args=[timestamp.isoformat()]
+                "get_decision_at_time", args=[timestamp.isoformat()]
             )
 
             logger.debug("Historical query result for %s: %s", action, result)
@@ -134,10 +125,7 @@ class TemporalLawEnforcer:
             return None
 
     async def schedule_periodic_review(
-        self,
-        action: str,
-        metadata: dict[str, Any],
-        interval_hours: int = 24
+        self, action: str, metadata: dict[str, Any], interval_hours: int = 24
     ) -> str:
         """
         Schedule periodic policy review for an action.
@@ -156,7 +144,7 @@ class TemporalLawEnforcer:
 
             workflow_id = f"review-{action}-{datetime.utcnow().timestamp()}"
 
-            handle = await self.temporal_client.start_workflow(
+            await self.temporal_client.start_workflow(
                 "PeriodicPolicyReview",
                 args=[action, metadata, interval_hours],
                 id=workflow_id,
@@ -174,10 +162,7 @@ class TemporalLawEnforcer:
             raise
 
     async def enforce_time_bounded_policy(
-        self,
-        action: str,
-        metadata: dict[str, Any],
-        valid_until: datetime
+        self, action: str, metadata: dict[str, Any], valid_until: datetime
     ) -> dict[str, Any]:
         """
         Enforce time-bounded policy that expires at specified time.
@@ -206,9 +191,7 @@ class TemporalLawEnforcer:
 
             # Enforce with remaining time as timeout
             result = await self.enforce_with_timeout(
-                action,
-                metadata,
-                timeout_seconds=int(remaining)
+                action, metadata, timeout_seconds=int(remaining)
             )
 
             result["expires_at"] = valid_until.isoformat()
@@ -225,9 +208,7 @@ class TemporalLawEnforcer:
             }
 
     def _local_enforcement(
-        self,
-        action: str,
-        metadata: dict[str, Any]
+        self, action: str, metadata: dict[str, Any]
     ) -> dict[str, Any]:
         """
         Fallback local enforcement when Temporal is unavailable.
@@ -258,9 +239,7 @@ class TemporalLawEnforcer:
         }
 
     async def get_enforcement_history(
-        self,
-        action: str,
-        lookback_hours: int = 24
+        self, action: str, lookback_hours: int = 24
     ) -> list[dict[str, Any]]:
         """
         Get enforcement history for an action.
@@ -280,8 +259,7 @@ class TemporalLawEnforcer:
             handle = self.temporal_client.get_workflow_handle(workflow_id)
 
             history = await handle.query(
-                "get_enforcement_history",
-                args=[lookback_hours]
+                "get_enforcement_history", args=[lookback_hours]
             )
 
             return history or []

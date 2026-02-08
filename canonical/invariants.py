@@ -76,7 +76,6 @@ class TrustThresholdInvariant(Invariant):
             scenario_context = trace.get("scenario", {})
 
             # Find trust score from scenario or context
-            trust_score = None
             if "context" in scenario_context:
                 # This would come from loaded scenario
                 pass
@@ -144,12 +143,10 @@ class AuditSignalInvariant(Invariant):
             signals = trace.get("execution", {}).get("signals", [])
 
             # Find all denied decisions
-            denied_decisions = [
-                d for d in decisions if not d.get("authorized", True)
-            ]
+            denied_decisions = [d for d in decisions if not d.get("authorized", True)]
 
             # Check that signals exist for denied operations
-            signal_sources = set(s.get("source", "") for s in signals)
+            {s.get("source", "") for s in signals}
 
             for decision in denied_decisions:
                 component = decision.get("component", "")
@@ -269,7 +266,9 @@ class MemoryIntegrityInvariant(Invariant):
                         f"Deterministic replay enabled with input hash: sha256:{input_hash[:16]}..."
                     )
                 else:
-                    self.violations.append("Missing input hash for deterministic replay")
+                    self.violations.append(
+                        "Missing input hash for deterministic replay"
+                    )
                     self.passed = False
                     return False
 
@@ -380,9 +379,7 @@ class EscalationPathInvariant(Invariant):
 
             # Check decisions for violations
             decisions = trace.get("execution", {}).get("decisions", [])
-            denied_decisions = [
-                d for d in decisions if not d.get("authorized", True)
-            ]
+            denied_decisions = [d for d in decisions if not d.get("authorized", True)]
 
             if denied_decisions:
                 # Denied decisions should trigger escalation
@@ -469,7 +466,9 @@ def validate_invariants(
             "total": len(CANONICAL_INVARIANTS),
             "passed": len(passed),
             "failed": len(failed),
-            "pass_rate": len(passed) / len(CANONICAL_INVARIANTS) if CANONICAL_INVARIANTS else 0,
+            "pass_rate": (
+                len(passed) / len(CANONICAL_INVARIANTS) if CANONICAL_INVARIANTS else 0
+            ),
         },
         "invariants": {
             "passed": [inv.to_dict() for inv in passed],

@@ -83,7 +83,7 @@ async def simulate_ai_call(prompt: str) -> str:
         >>> print(response)
         "AI Response: quantum computing explanation..."
     """
-    activity.logger.info("Simulating AI call with prompt: %s...", prompt[)
+    activity.logger.info("Simulating AI call with prompt: %s...", prompt[:16])
 
     # Simulate API call delay
     await asyncio.sleep(2)

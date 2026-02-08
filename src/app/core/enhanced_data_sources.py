@@ -111,7 +111,9 @@ class IMFDataSource(DataSource):
             # For demo purposes, return empty dict
             # In production, this would be handled with proper error recovery
 
-        logger.info("Loaded IMF data for %s countries, indicator %s", len(result), indicator)
+        logger.info(
+            "Loaded IMF data for %s countries, indicator %s", len(result), indicator
+        )
         return result
 
     def fetch_fiscal_data(
@@ -224,7 +226,9 @@ class WHODataSource(DataSource):
         except Exception as e:
             logger.warning("Error parsing WHO data: %s", e)
 
-        logger.info("Loaded WHO data for %s countries, indicator %s", len(result), indicator)
+        logger.info(
+            "Loaded WHO data for %s countries, indicator %s", len(result), indicator
+        )
         return result
 
     def fetch_covid19_data(

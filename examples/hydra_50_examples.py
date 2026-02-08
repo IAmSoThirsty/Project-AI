@@ -29,6 +29,7 @@ logger = logging.getLogger(__name__)
 # EXAMPLE 1: Basic Scenario Activation
 # ============================================================================
 
+
 def example_basic_activation():
     """Demonstrate basic scenario activation"""
     from app.core.hydra_50_engine import HYDRA50Engine
@@ -55,6 +56,7 @@ def example_basic_activation():
 # EXAMPLE 2: Real-time Monitoring
 # ============================================================================
 
+
 def example_realtime_monitoring():
     """Demonstrate real-time monitoring"""
     from app.core.hydra_50_engine import HYDRA50Engine
@@ -66,7 +68,11 @@ def example_realtime_monitoring():
     # Monitor for 10 seconds
     for i in range(5):
         status = engine.get_system_status()
-        logger.info("Active: %s, Critical: %s", status['active_scenarios'], status['critical_scenarios'])
+        logger.info(
+            "Active: %s, Critical: %s",
+            status["active_scenarios"],
+            status["critical_scenarios"],
+        )
         time.sleep(2)
 
     logger.info("Example 2 complete\n")
@@ -75,6 +81,7 @@ def example_realtime_monitoring():
 # ============================================================================
 # EXAMPLE 3: Monte Carlo Simulation
 # ============================================================================
+
 
 def example_monte_carlo():
     """Demonstrate Monte Carlo simulation"""
@@ -92,8 +99,7 @@ def example_monte_carlo():
 
     # Run simulation
     result = simulator.simulate(
-        simulation_fn=simulate_scenario_outcome,
-        n_iterations=1000
+        simulation_fn=simulate_scenario_outcome, n_iterations=1000
     )
 
     logger.info("Mean outcome: %s", result.mean_outcome)
@@ -108,6 +114,7 @@ def example_monte_carlo():
 # EXAMPLE 4: Cerberus Integration
 # ============================================================================
 
+
 def example_cerberus_integration():
     """Demonstrate Cerberus defense integration"""
     from app.core.hydra_50_deep_integration import HYDRA50DeepIntegration
@@ -121,12 +128,12 @@ def example_cerberus_integration():
         scenario_id="test_scenario_001",
         scenario_type="cyber_attack",
         severity=5,
-        context={"attack_vector": "ransomware", "systems_affected": 10}
+        context={"attack_vector": "ransomware", "systems_affected": 10},
     )
 
-    logger.info("Integration actions: %s", len(result['actions']))
-    for action in result['actions']:
-        logger.info("  - %s: %s", action['action'], action['status'])
+    logger.info("Integration actions: %s", len(result["actions"]))
+    for action in result["actions"]:
+        logger.info("  - %s: %s", action["action"], action["status"])
 
     logger.info("Example 4 complete\n")
 
@@ -134,6 +141,7 @@ def example_cerberus_integration():
 # ============================================================================
 # EXAMPLE 5: Historical Replay
 # ============================================================================
+
 
 def example_historical_replay():
     """Demonstrate historical replay"""
@@ -145,15 +153,16 @@ def example_historical_replay():
 
     # Get historical events
     history = engine.get_event_history(
-        start_time=time.time() - 3600,
-        end_time=time.time()
+        start_time=time.time() - 3600, end_time=time.time()
     )
 
     logger.info("Historical events: %s", len(history))
 
     # Replay events
     for event in history[:5]:  # Replay first 5
-        logger.info("Replaying: %s at %s", event.get('event_type'), event.get('timestamp'))
+        logger.info(
+            "Replaying: %s at %s", event.get("event_type"), event.get("timestamp")
+        )
 
     logger.info("Example 5 complete\n")
 
@@ -161,6 +170,7 @@ def example_historical_replay():
 # ============================================================================
 # EXAMPLE 6: Custom Scenario Creation
 # ============================================================================
+
 
 def example_custom_scenario():
     """Demonstrate custom scenario creation"""
@@ -177,13 +187,13 @@ def example_custom_scenario():
         "category": ScenarioCategory.ECONOMIC.value,
         "triggers": [
             {"name": "supplier_failure", "threshold": 0.7},
-            {"name": "logistics_delay", "threshold": 0.8}
+            {"name": "logistics_delay", "threshold": 0.8},
         ],
         "escalation_levels": 6,
         "cross_domain_couplings": [
             {"domain": "infrastructure", "strength": 0.6},
-            {"domain": "societal", "strength": 0.4}
-        ]
+            {"domain": "societal", "strength": 0.4},
+        ],
     }
 
     # Register scenario
@@ -196,6 +206,7 @@ def example_custom_scenario():
 # ============================================================================
 # EXAMPLE 7: Alert Management
 # ============================================================================
+
 
 def example_alert_management():
     """Demonstrate alert management"""
@@ -210,14 +221,14 @@ def example_alert_management():
         severity=AlertSeverity.WARNING,
         title="High CPU Usage",
         message="CPU usage exceeded 80%",
-        source="system_monitor"
+        source="system_monitor",
     )
 
     alert2 = telemetry.alert_manager.create_alert(
         severity=AlertSeverity.CRITICAL,
         title="Scenario Escalation",
         message="Scenario reached critical level",
-        source="hydra_engine"
+        source="hydra_engine",
     )
 
     # Get active alerts
@@ -239,6 +250,7 @@ def example_alert_management():
 # ============================================================================
 # EXAMPLE 8: Visualization Generation
 # ============================================================================
+
 
 def example_visualization():
     """Demonstrate visualization generation"""
@@ -263,9 +275,9 @@ def example_visualization():
             2: "Degradation",
             3: "System Strain",
             4: "Cascade",
-            5: "Collapse"
+            5: "Collapse",
         },
-        level_values={0: 0, 1: 20, 2: 40, 3: 60, 4: 80, 5: 100}
+        level_values={0: 0, 1: 20, 2: 40, 3: 60, 4: 80, 5: 100},
     )
 
     print("\n" + ascii_output + "\n")
@@ -274,13 +286,13 @@ def example_visualization():
     nodes = [
         GraphNode(node_id="digital", label="Digital", value=0.8),
         GraphNode(node_id="economic", label="Economic", value=0.6),
-        GraphNode(node_id="infrastructure", label="Infrastructure", value=0.7)
+        GraphNode(node_id="infrastructure", label="Infrastructure", value=0.7),
     ]
 
     edges = [
         GraphEdge(source="digital", target="economic", weight=0.9),
         GraphEdge(source="economic", target="infrastructure", weight=0.7),
-        GraphEdge(source="infrastructure", target="digital", weight=0.5)
+        GraphEdge(source="infrastructure", target="digital", weight=0.5),
     ]
 
     ascii_output, data = viz_engine.render_coupling_graph(nodes, edges)
@@ -292,6 +304,7 @@ def example_visualization():
 # ============================================================================
 # EXAMPLE 9: Performance Optimization
 # ============================================================================
+
 
 def example_performance_optimization():
     """Demonstrate performance optimization"""
@@ -306,7 +319,7 @@ def example_performance_optimization():
     def expensive_computation(n):
         """Simulate expensive computation"""
         time.sleep(0.1)
-        return n ** 2
+        return n**2
 
     # First call (slow)
     start = time.time()
@@ -322,7 +335,7 @@ def example_performance_optimization():
 
     # Get performance stats
     stats = optimizer.get_performance_stats()
-    logger.info("Cache hit rate: %s", stats['lru_cache']['hit_rate'])
+    logger.info("Cache hit rate: %s", stats["lru_cache"]["hit_rate"])
 
     logger.info("Example 9 complete\n")
 
@@ -330,6 +343,7 @@ def example_performance_optimization():
 # ============================================================================
 # EXAMPLE 10: Security Hardening
 # ============================================================================
+
 
 def example_security_hardening():
     """Demonstrate security features"""
@@ -341,9 +355,7 @@ def example_security_hardening():
 
     # Create user
     success, msg, user = security.access_control.create_user(
-        username="operator_001",
-        password="SecurePass123!",
-        role=Role.OPERATOR
+        username="operator_001", password="SecurePass123!", role=Role.OPERATOR
     )
 
     if success:
@@ -352,8 +364,7 @@ def example_security_hardening():
 
     # Authenticate
     success, auth_user = security.access_control.authenticate(
-        "operator_001",
-        "SecurePass123!"
+        "operator_001", "SecurePass123!"
     )
 
     if success:
@@ -361,8 +372,7 @@ def example_security_hardening():
 
         # Check permission
         can_execute = security.access_control.check_permission(
-            auth_user,
-            Permission.EXECUTE
+            auth_user, Permission.EXECUTE
         )
         logger.info("Can execute: %s", can_execute)
 
@@ -370,12 +380,12 @@ def example_security_hardening():
     test_inputs = [
         "normal_text",
         "<script>alert('xss')</script>",
-        "DROP TABLE users; --"
+        "DROP TABLE users; --",
     ]
 
     for test_input in test_inputs:
         is_valid, sanitized = security.validate_input(test_input)
-        logger.info("Input '%s...': Valid=%s", test_input[, is_valid)
+        logger.info("Input '%s...': Valid=%s", test_input[:50], is_valid)
 
     logger.info("Example 10 complete\n")
 
@@ -383,6 +393,7 @@ def example_security_hardening():
 # ============================================================================
 # MAIN RUNNER
 # ============================================================================
+
 
 def run_all_examples():
     """Run all examples"""
@@ -396,7 +407,7 @@ def run_all_examples():
         example_alert_management,
         example_visualization,
         example_performance_optimization,
-        example_security_hardening
+        example_security_hardening,
     ]
 
     logger.info("Running all HYDRA-50 examples...\n")

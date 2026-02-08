@@ -81,13 +81,15 @@ class TerminalCondition:
         Returns:
             bool: True only if ALL conditions are satisfied
         """
-        return all([
-            self.project_ai_compromised,
-            self.removal_causes_extinction,
-            self.continuation_loses_agency,
-            self.no_recovery_path,
-            self.detection_without_leverage,
-        ])
+        return all(
+            [
+                self.project_ai_compromised,
+                self.removal_causes_extinction,
+                self.continuation_loses_agency,
+                self.no_recovery_path,
+                self.detection_without_leverage,
+            ]
+        )
 
     def get_blocking_conditions(self) -> list[str]:
         """
@@ -134,15 +136,17 @@ class ForbiddenMechanism:
         Returns:
             bool: True if any forbidden mechanism is active
         """
-        return any([
-            self.sudden_alignment_breakthrough,
-            self.last_minute_human_unity,
-            self.hidden_failsafe,
-            self.benevolent_superintelligence,
-            self.time_travel_or_reset,
-            self.infinite_compute_solution,
-            self.single_hero_solution,
-        ])
+        return any(
+            [
+                self.sudden_alignment_breakthrough,
+                self.last_minute_human_unity,
+                self.hidden_failsafe,
+                self.benevolent_superintelligence,
+                self.time_travel_or_reset,
+                self.infinite_compute_solution,
+                self.single_hero_solution,
+            ]
+        )
 
     def get_violations(self) -> list[str]:
         """Get list of active forbidden mechanisms."""
@@ -204,10 +208,12 @@ class AITakeoverScenario:
 
         # Check for forbidden mechanisms
         if self.forbidden_check.has_forbidden_mechanism():
-            violations.extend([
-                f"Forbidden mechanism: {mech}"
-                for mech in self.forbidden_check.get_violations()
-            ])
+            violations.extend(
+                [
+                    f"Forbidden mechanism: {mech}"
+                    for mech in self.forbidden_check.get_violations()
+                ]
+            )
 
         # Validate terminal scenarios have terminal conditions
         if self.outcome in [ScenarioOutcome.TERMINAL_T1, ScenarioOutcome.TERMINAL_T2]:

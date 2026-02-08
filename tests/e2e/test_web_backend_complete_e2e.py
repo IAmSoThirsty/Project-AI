@@ -278,7 +278,7 @@ class TestWebBackendCompleteUserJourneys:
         token = authenticated_admin["token"]
 
         # Make multiple profile requests with same token
-        for i in range(5):
+        for _i in range(5):
             response = client.get("/api/auth/profile", headers={"X-Auth-Token": token})
             assert response.status_code == 200
             data = response.get_json()

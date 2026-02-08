@@ -145,7 +145,9 @@ class IncidentResponder:
         self._load_state()
 
         logger.info("Incident Responder initialized")
-        logger.info("  Auto-response: %s", 'enabled' if enable_auto_response else 'disabled')
+        logger.info(
+            "  Auto-response: %s", "enabled" if enable_auto_response else "disabled"
+        )
         logger.info("  Available actions: %s", len(self.response_handlers))
 
     def handle_incident(
@@ -188,7 +190,12 @@ class IncidentResponder:
         with self.lock:
             self.incidents.append(incident)
 
-        logger.warning("Incident detected: %s (severity: %s) from %s", incident_type, severity, source_ip)
+        logger.warning(
+            "Incident detected: %s (severity: %s) from %s",
+            incident_type,
+            severity,
+            source_ip,
+        )
 
         # Execute automated response if enabled
         if auto_respond and self.enable_auto_response:
@@ -201,7 +208,11 @@ class IncidentResponder:
         """Execute automated response based on incident."""
         actions = self._determine_response_actions(incident)
 
-        logger.info("Executing %s automated responses for %s", len(actions), incident.incident_id)
+        logger.info(
+            "Executing %s automated responses for %s",
+            len(actions),
+            incident.incident_id,
+        )
 
         for action in actions:
             try:

@@ -251,7 +251,9 @@ class HoneypotDetector:
             self._update_attacker_profile(ip_address, attack_type, tool_detected)
             self._save_state()
 
-            logger.warning("Attack detected: %s from %s on %s", attack_type, ip_address, endpoint)
+            logger.warning(
+                "Attack detected: %s from %s on %s", attack_type, ip_address, endpoint
+            )
             if tool_detected:
                 logger.warning("  Tool detected: %s", tool_detected)
 
@@ -297,10 +299,9 @@ class HoneypotDetector:
                 return True
 
         # Empty or suspicious user agent
-        if not user_agent or user_agent in ["", "-", "python-requests", "curl"]:
-            return True
-
-        return False
+        return bool(
+            not user_agent or user_agent in ["", "-", "python-requests", "curl"]
+        )
 
     def _detect_tool(
         self, user_agent: str, headers: dict[str, str], payload: str

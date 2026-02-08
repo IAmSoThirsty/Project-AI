@@ -86,7 +86,9 @@ class MigrationManager:
         self.db_path = Path(db_path)
         self.migrations: list[Migration] = []
         self._register_migrations()
-        logger.info("MigrationManager initialized with %s migrations", len(self.migrations))
+        logger.info(
+            "MigrationManager initialized with %s migrations", len(self.migrations)
+        )
 
     def _register_migrations(self) -> None:
         """Register all migrations."""
@@ -168,7 +170,11 @@ class MigrationManager:
             return True
 
         if current_version > target:
-            logger.error("Cannot migrate backwards (current: %s, target: %s)", current_version, target)
+            logger.error(
+                "Cannot migrate backwards (current: %s, target: %s)",
+                current_version,
+                target,
+            )
             return False
 
         pending = [m for m in self.migrations if current_version < m.version <= target]
@@ -178,7 +184,9 @@ class MigrationManager:
             logger.info("No pending migrations")
             return True
 
-        logger.info("Applying %s migrations (%s -> %s)", len(pending), current_version, target)
+        logger.info(
+            "Applying %s migrations (%s -> %s)", len(pending), current_version, target
+        )
 
         with self._get_connection() as conn:
             for migration in pending:
@@ -186,7 +194,9 @@ class MigrationManager:
                     migration.apply(conn)
                     self._update_version(conn, migration.version)
                 except Exception as e:
-                    logger.error("Migration failed at version %s: %s", migration.version, e)
+                    logger.error(
+                        "Migration failed at version %s: %s", migration.version, e
+                    )
                     raise
 
         logger.info("Successfully migrated to version %s", target)
@@ -209,17 +219,28 @@ class MigrationManager:
         target = target_version if target_version is not None else current_version - 1
 
         if current_version <= target:
-            logger.error("Cannot rollback forwards (current: %s, target: %s)", current_version, target)
+            logger.error(
+                "Cannot rollback forwards (current: %s, target: %s)",
+                current_version,
+                target,
+            )
             return False
 
-        to_rollback = [m for m in self.migrations if target < m.version <= current_version]
+        to_rollback = [
+            m for m in self.migrations if target < m.version <= current_version
+        ]
         to_rollback.sort(key=lambda m: m.version, reverse=True)
 
         if not to_rollback:
             logger.info("No migrations to rollback")
             return True
 
-        logger.info("Rolling back %s migrations (%s -> %s)", len(to_rollback), current_version, target)
+        logger.info(
+            "Rolling back %s migrations (%s -> %s)",
+            len(to_rollback),
+            current_version,
+            target,
+        )
 
         with self._get_connection() as conn:
             for migration in to_rollback:
@@ -227,7 +248,9 @@ class MigrationManager:
                     migration.rollback(conn)
                     self._update_version(conn, migration.version - 1)
                 except Exception as e:
-                    logger.error("Rollback failed at version %s: %s", migration.version, e)
+                    logger.error(
+                        "Rollback failed at version %s: %s", migration.version, e
+                    )
                     raise
 
         logger.info("Successfully rolled back to version %s", target)
@@ -433,7 +456,7 @@ class MigrationManager:
             # Sanitize table name to prevent SQL injection
             # Note: Table names cannot be parameterized in SQL, so we validate them
             safe_table = sanitize_identifier(table)
-            
+
             # Get all rows
             cursor = conn.execute(f"SELECT * FROM {safe_table}")
             rows = cursor.fetchall()
@@ -441,7 +464,7 @@ class MigrationManager:
 
             migrated = 0
             for i in range(0, len(rows), batch_size):
-                batch = rows[i:i + batch_size]
+                batch = rows[i : i + batch_size]
 
                 for row in batch:
                     row_dict = dict(zip(columns, row, strict=False))
@@ -463,7 +486,9 @@ class MigrationManager:
                         migrated += 1
 
                 conn.commit()
-                logger.debug("Migrated batch %s (%s rows)", i // batch_size + 1, migrated)
+                logger.debug(
+                    "Migrated batch %s (%s rows)", i // batch_size + 1, migrated
+                )
 
         logger.info("Data migration complete: %s rows migrated in %s", migrated, table)
         return migrated
@@ -489,7 +514,7 @@ class MigrationManager:
             # Sanitize table names to prevent SQL injection
             safe_source = sanitize_identifier(source_table)
             safe_dest = sanitize_identifier(dest_table)
-            
+
             if column_mapping:
                 # Sanitize column names
                 safe_src_cols = sanitize_identifier_list(list(column_mapping.keys()))
@@ -528,7 +553,7 @@ class MigrationManager:
         """
         # Sanitize table name to prevent SQL injection
         safe_table = sanitize_identifier(table)
-        
+
         timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
         backup_table = f"{table}_backup_{timestamp}"
         safe_backup = sanitize_identifier(backup_table)
@@ -556,7 +581,7 @@ class MigrationManager:
         # Sanitize table names to prevent SQL injection
         safe_backup = sanitize_identifier(backup_table)
         safe_target = sanitize_identifier(target_table)
-        
+
         with self._get_connection() as conn:
             # Clear target table
             conn.execute(f"DELETE FROM {safe_target}")
@@ -568,7 +593,9 @@ class MigrationManager:
             restored = cursor.fetchone()[0]
             conn.commit()
 
-        logger.info("Restored %s rows from %s to %s", restored, backup_table, target_table)
+        logger.info(
+            "Restored %s rows from %s to %s", restored, backup_table, target_table
+        )
         return restored
 
     def validate_schema(self) -> tuple[bool, list[str]]:
@@ -605,9 +632,7 @@ class MigrationManager:
                 "dependencies",
             ]
 
-            cursor = conn.execute(
-                "SELECT name FROM sqlite_master WHERE type='table'"
-            )
+            cursor = conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
             existing_tables = {row[0] for row in cursor.fetchall()}
 
             missing = set(required_tables) - existing_tables
@@ -618,6 +643,6 @@ class MigrationManager:
         if is_valid:
             logger.info("Schema validation passed")
         else:
-            logger.warning("Schema validation failed: %s", '; '.join(issues))
+            logger.warning("Schema validation failed: %s", "; ".join(issues))
 
         return is_valid, issues

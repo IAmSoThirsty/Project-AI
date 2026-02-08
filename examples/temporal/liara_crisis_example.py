@@ -98,7 +98,7 @@ async def main():
         # Check initial status
         logger.info("\n[4] Checking workflow status...")
         status = await agency.get_crisis_status(workflow_id)
-        logger.info("    Status: %s", status.get('status'))
+        logger.info("    Status: %s", status.get("status"))
 
         # Wait for completion (this is durable and survives crashes)
         logger.info("\n[5] Waiting for crisis response to complete...")
@@ -109,15 +109,15 @@ async def main():
         # Display results
         logger.info("\n[6] Crisis Response Results:")
         logger.info("=" * 80)
-        logger.info("    Success: %s", result['success'])
-        logger.info("    Crisis ID: %s", result['crisis_id'])
-        logger.info("    Completed Phases: %s", result['completed_phases'])
+        logger.info("    Success: %s", result["success"])
+        logger.info("    Crisis ID: %s", result["crisis_id"])
+        logger.info("    Completed Phases: %s", result["completed_phases"])
 
         if result.get("failed_phases"):
-            logger.info("    Failed Phases: %s", result['failed_phases'])
+            logger.info("    Failed Phases: %s", result["failed_phases"])
 
         if result.get("error"):
-            logger.error("    Error: %s", result['error'])
+            logger.error("    Error: %s", result["error"])
 
         logger.info("\n[7] Checking persistent state...")
         crisis_file = Path("data/crises") / f"{result['crisis_id']}.json"

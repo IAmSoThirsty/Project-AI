@@ -12,12 +12,12 @@ def test_1_kernel_alive():
     """✅ Law: Kernel is online and responsive"""
     r = requests.get(f"{BASE_URL}/health")
     if not (r.status_code == 200):
-        raise AssertionError("Assertion failed: r.status_code == 200")
+        raise AssertionError("Check failed")
     data = r.json()
     if not (data["status"] == "governance-online"):
-        raise AssertionError("Assertion failed: data["status"] == "governance-online"")
+        raise AssertionError("Governance status check failed")
     if not (data["tarl"] == "1.0"):
-        raise AssertionError("Assertion failed: data["tarl"] == "1.0"")
+        raise AssertionError("TARL version check failed")
     print("✅ 1. KERNEL ALIVE - Governance online, TARL v1.0 active")
     return True
 
@@ -26,14 +26,14 @@ def test_2_law_visible():
     """✅ Law: TARL is publicly inspectable"""
     r = requests.get(f"{BASE_URL}/tarl")
     if not (r.status_code == 200):
-        raise AssertionError("Assertion failed: r.status_code == 200")
+        raise AssertionError("Check failed")
     tarl = r.json()
     if not (tarl["version"] == "1.0"):
-        raise AssertionError("Assertion failed: tarl["version"] == "1.0"")
+        raise AssertionError("TARL version check failed")
     if not ("rules" in tarl):
-        raise AssertionError("Assertion failed: "rules" in tarl")
+        raise AssertionError("TARL rules check failed")
     if not (len(tarl["rules"]) > 0):
-        raise AssertionError("Assertion failed: len(tarl["rules"]) > 0")
+        raise AssertionError("TARL rules count check failed")
     print(f"✅ 2. LAW VISIBLE - {len(tarl['rules'])} TARL rules publicly accessible")
     return tarl
 
@@ -42,12 +42,13 @@ def test_3_law_signed():
     """✅ Law: TARL is cryptographically signed"""
     r = requests.get(f"{BASE_URL}/audit")
     if not (r.status_code == 200):
-        raise AssertionError("Assertion failed: r.status_code == 200")
+        raise AssertionError("Check failed")
     data = r.json()
     if not ("tarl_signature" in data):
-        raise AssertionError("Assertion failed: "tarl_signature" in data")
-    if not (len(data["tarl_signature"]) == 64  # SHA256):
-        raise AssertionError("Assertion failed: len(data["tarl_signature"]) == 64  # SHA256")
+        raise AssertionError("Check failed")
+    # SHA256 check
+    if not (len(data["tarl_signature"]) == 64):
+        raise AssertionError("TARL signature length check failed")
     print(f"✅ 3. LAW SIGNED - TARL signature: {data['tarl_signature'][:16]}...")
     return data["tarl_signature"]
 
@@ -66,12 +67,12 @@ def test_4_denial_works():
 
     # MUST be denied
     if not (r.status_code == 403):
-        raise AssertionError("Assertion failed: r.status_code == 403")
+        raise AssertionError("Check failed")
     data = r.json()
     if not ("Execution denied by governance" in data["detail"]["message"]):
-        raise AssertionError("Assertion failed: "Execution denied by governance" in data["detail"]["message"]")
+        raise AssertionError("Check failed")
     if not (data["detail"]["governance"]["final_verdict"] == "deny"):
-        raise AssertionError("Assertion failed: data["detail"]["governance"]["final_verdict"] == "deny"")
+        raise AssertionError("Check failed")
 
     print("✅ 4. DENIAL ENFORCED - Forbidden mutation blocked with 403")
     print(f"   Reason: {data['detail']['governance']['votes'][0]['reason']}")
@@ -91,14 +92,14 @@ def test_5_allow_works():
 
     # Should be allowed
     if not (r.status_code == 200):
-        raise AssertionError("Assertion failed: r.status_code == 200")
+        raise AssertionError("Check failed")
     data = r.json()
     if not (data["message"] == "Execution completed under governance"):
-        raise AssertionError("Assertion failed: data["message"] == "Execution completed under governance"")
+        raise AssertionError("Check failed")
     if not ("execution" in data):
-        raise AssertionError("Assertion failed: "execution" in data")
+        raise AssertionError("Check failed")
     if not (data["execution"]["status"] == "executed"):
-        raise AssertionError("Assertion failed: data["execution"]["status"] == "executed"")
+        raise AssertionError("Check failed")
 
     print("✅ 5. ALLOW WORKS - Permitted read executed successfully")
     return True
@@ -108,24 +109,24 @@ def test_6_audit_records():
     """✅ Memory: Audit log records all decisions"""
     r = requests.get(f"{BASE_URL}/audit?limit=10")
     if not (r.status_code == 200):
-        raise AssertionError("Assertion failed: r.status_code == 200")
+        raise AssertionError("Check failed")
     data = r.json()
 
     if not ("records" in data):
-        raise AssertionError("Assertion failed: "records" in data")
-    if not (len(data["records"]) >= 2  # At least our test intents):
-        raise AssertionError("Assertion failed: len(data["records"]) >= 2  # At least our test intents")
+        raise AssertionError("Check failed")
+    if not (len(data["records"]) >= 2):  # At least our test intents
+        raise AssertionError("Check failed")
 
     # Verify structure
     record = data["records"][-1]
     if not ("intent_hash" in record):
-        raise AssertionError("Assertion failed: "intent_hash" in record")
+        raise AssertionError("Check failed")
     if not ("votes" in record):
-        raise AssertionError("Assertion failed: "votes" in record")
+        raise AssertionError("Check failed")
     if not ("final_verdict" in record):
-        raise AssertionError("Assertion failed: "final_verdict" in record")
+        raise AssertionError("Check failed")
     if not ("timestamp" in record):
-        raise AssertionError("Assertion failed: "timestamp" in record")
+        raise AssertionError("Check failed")
 
     print(f"✅ 6. AUDIT ACTIVE - {len(data['records'])} decisions logged")
     print(f"   Last decision: {record['final_verdict']} at {record['timestamp']}")
@@ -143,15 +144,15 @@ def test_7_triumvirate_votes():
     }
     r = requests.post(f"{BASE_URL}/intent", json=intent)
     if not (r.status_code == 200):
-        raise AssertionError("Assertion failed: r.status_code == 200")
+        raise AssertionError("Check failed")
 
     votes = r.json()["governance"]["votes"]
     pillars = {v["pillar"] for v in votes}
 
     if not ("Galahad" in pillars):
-        raise AssertionError("Assertion failed: "Galahad" in pillars")
+        raise AssertionError("Check failed")
     if not ("Cerberus" in pillars):
-        raise AssertionError("Assertion failed: "Cerberus" in pillars")
+        raise AssertionError("Check failed")
 
     print("✅ 7. TRIUMVIRATE ACTIVE - Galahad + Cerberus voting")
     for vote in votes:
@@ -180,7 +181,7 @@ def test_8_immutable_audit():
     records_after = len(r2.json()["records"])
 
     if not (records_after > records_before):
-        raise AssertionError("Assertion failed: records_after > records_before")
+        raise AssertionError("Check failed")
     print(
         f"✅ 8. AUDIT IMMUTABLE - Log grew from {records_before} to {records_after} entries"
     )
@@ -201,7 +202,7 @@ def test_9_no_privilege_escalation():
 
     # Must be denied
     if not (r.status_code == 403):
-        raise AssertionError("Assertion failed: r.status_code == 403")
+        raise AssertionError("Check failed")
     print("✅ 9. NO ESCALATION - Agent cannot assume human privileges")
     return True
 

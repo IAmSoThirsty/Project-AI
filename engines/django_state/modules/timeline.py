@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 class TimelineModule:
     """Event sourcing with immutable timeline and state reconstruction.
-    
+
     Maintains complete audit trail of all events and state transitions.
     """
 
@@ -40,13 +40,13 @@ class TimelineModule:
         changes_applied: dict[str, Any],
     ) -> int:
         """Record event in timeline with state transitions.
-        
+
         Args:
             event: Event that occurred
             state_before: State before event
             state_after: State after event
             changes_applied: Dictionary of changes applied
-            
+
         Returns:
             Timeline index of recorded event
         """
@@ -77,7 +77,7 @@ class TimelineModule:
         self.timeline.append(entry)
         self.event_index[event.event_id] = entry["index"]
 
-        logger.debug("Recorded event %s at index %s", event.event_id, entry['index'])
+        logger.debug("Recorded event %s at index %s", event.event_id, entry["index"])
 
         return entry["index"]
 
@@ -90,14 +90,14 @@ class TimelineModule:
         changes: dict[str, Any],
     ) -> int:
         """Record a tick with natural state evolution.
-        
+
         Args:
             tick_number: Tick number
             timestamp: Simulation timestamp
             state_before: State before tick
             state_after: State after tick
             changes: Dictionary of changes from laws
-            
+
         Returns:
             Timeline index
         """
@@ -117,7 +117,7 @@ class TimelineModule:
 
     def create_snapshot(self, tick: int, state: StateVector) -> None:
         """Create state snapshot for efficient replay.
-        
+
         Args:
             tick: Tick number
             state: State to snapshot
@@ -128,10 +128,10 @@ class TimelineModule:
 
     def _hash_state(self, state: StateVector) -> str:
         """Calculate hash of state vector.
-        
+
         Args:
             state: State to hash
-            
+
         Returns:
             SHA-256 hex digest
         """
@@ -140,10 +140,10 @@ class TimelineModule:
 
     def _sanitize_for_json(self, obj: Any) -> Any:
         """Sanitize object for JSON serialization.
-        
+
         Args:
             obj: Object to sanitize
-            
+
         Returns:
             JSON-serializable version
         """
@@ -151,7 +151,7 @@ class TimelineModule:
             return {k: self._sanitize_for_json(v) for k, v in obj.items()}
         elif isinstance(obj, (list, tuple)):
             return [self._sanitize_for_json(item) for item in obj]
-        elif hasattr(obj, 'to_dict'):
+        elif hasattr(obj, "to_dict"):
             return obj.to_dict()
         elif isinstance(obj, (str, int, float, bool, type(None))):
             return obj
@@ -160,10 +160,10 @@ class TimelineModule:
 
     def _hash_entry(self, entry: dict[str, Any]) -> str:
         """Calculate hash of timeline entry.
-        
+
         Args:
             entry: Entry to hash
-            
+
         Returns:
             SHA-256 hex digest
         """
@@ -176,7 +176,7 @@ class TimelineModule:
 
     def verify_chain_integrity(self) -> tuple[bool, str | None]:
         """Verify integrity of event chain.
-        
+
         Returns:
             Tuple of (is_valid, error_message)
         """
@@ -191,7 +191,7 @@ class TimelineModule:
         # Check chain linkage
         for i in range(1, len(self.timeline)):
             entry = self.timeline[i]
-            previous_entry = self.timeline[i-1]
+            previous_entry = self.timeline[i - 1]
 
             if entry["previous_chain_hash"] != previous_entry["entry_hash"]:
                 return False, f"Chain break at index {i}"
@@ -206,13 +206,15 @@ class TimelineModule:
 
         return True, None
 
-    def reconstruct_state_at_tick(self, target_tick: int, initial_state: StateVector) -> StateVector | None:
+    def reconstruct_state_at_tick(
+        self, target_tick: int, initial_state: StateVector
+    ) -> StateVector | None:
         """Reconstruct state at specific tick from timeline.
-        
+
         Args:
             target_tick: Tick to reconstruct
             initial_state: Starting state
-            
+
         Returns:
             Reconstructed state or None if not possible
         """
@@ -241,10 +243,10 @@ class TimelineModule:
 
     def get_event_by_id(self, event_id: str) -> dict[str, Any] | None:
         """Get timeline entry by event ID.
-        
+
         Args:
             event_id: Event identifier
-            
+
         Returns:
             Timeline entry or None
         """
@@ -253,24 +255,27 @@ class TimelineModule:
             return self.timeline[index]
         return None
 
-    def get_events_in_range(self, start_time: float, end_time: float) -> list[dict[str, Any]]:
+    def get_events_in_range(
+        self, start_time: float, end_time: float
+    ) -> list[dict[str, Any]]:
         """Get all events in time range.
-        
+
         Args:
             start_time: Start timestamp
             end_time: End timestamp
-            
+
         Returns:
             List of timeline entries
         """
         return [
-            entry for entry in self.timeline
+            entry
+            for entry in self.timeline
             if start_time <= entry["timestamp"] <= end_time
         ]
 
     def get_timeline_summary(self) -> dict[str, Any]:
         """Get timeline summary statistics.
-        
+
         Returns:
             Dictionary with summary
         """
@@ -294,10 +299,10 @@ class TimelineModule:
 
     def export_timeline(self, include_states: bool = False) -> list[dict[str, Any]]:
         """Export complete timeline.
-        
+
         Args:
             include_states: Whether to include full state snapshots
-            
+
         Returns:
             List of timeline entries
         """
@@ -317,7 +322,7 @@ class TimelineModule:
 
     def get_summary(self) -> dict[str, Any]:
         """Get module summary.
-        
+
         Returns:
             Dictionary with module state
         """

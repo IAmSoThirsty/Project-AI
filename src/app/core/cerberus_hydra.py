@@ -337,7 +337,12 @@ class CerberusHydraDefense:
         anomaly_type = event.get("anomaly_type", "unknown")
         severity = event.get("severity", "medium")
 
-        logger.warning("⚠️ ANOMALY DETECTED: %s (severity: %s, event: %s)", anomaly_type, severity, event_id)
+        logger.warning(
+            "⚠️ ANOMALY DETECTED: %s (severity: %s, event: %s)",
+            anomaly_type,
+            severity,
+            event_id,
+        )
 
         # Map severity to risk score
         severity_map = {
@@ -775,7 +780,9 @@ class CerberusHydraDefense:
                 agent.pid = agent_process.info.pid
                 agent.status = "running"
 
-                logger.info("Agent process spawned: %s (PID: %s)", agent.agent_id, agent.pid)
+                logger.info(
+                    "Agent process spawned: %s (PID: %s)", agent.agent_id, agent.pid
+                )
 
                 return True
 

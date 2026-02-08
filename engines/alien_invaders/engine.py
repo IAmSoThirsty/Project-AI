@@ -127,7 +127,9 @@ class AlienInvadersEngine:
             self.validation_history.append(validation)
 
             if not validation.is_valid:
-                logger.error("Initial state validation failed: %s", validation.violations)
+                logger.error(
+                    "Initial state validation failed: %s", validation.violations
+                )
                 return False
 
             # Save initial snapshot
@@ -176,9 +178,12 @@ class AlienInvadersEngine:
             self.state.day_number += self.config.world.time_step_days
             self.state.current_date += timedelta(days=self.config.world.time_step_days)
 
-            logger.debug("Tick: Day %d, Date: %s, Logical Time: %d",
-                        self.state.day_number, self.state.current_date,
-                        self.monolith.get_current_time())
+            logger.debug(
+                "Tick: Day %d, Date: %s, Logical Time: %d",
+                self.state.day_number,
+                self.state.current_date,
+                self.monolith.get_current_time(),
+            )
 
             # Process queued events at tick boundary
             queued_events = self.event_queue.get_events_for_tick(self.current_tick)
@@ -202,15 +207,18 @@ class AlienInvadersEngine:
             )
 
             if not verdict.allowed:
-                logger.error("Tick %d REJECTED by monolith: %s",
-                           self.current_tick, verdict.reason)
+                logger.error(
+                    "Tick %d REJECTED by monolith: %s",
+                    self.current_tick,
+                    verdict.reason,
+                )
                 if self.config.validation.enable_strict_validation:
                     return False
                 # Log violations but continue if not strict
                 for violation in verdict.violations:
-                    logger.warning("  - %s: %s",
-                                 violation.invariant_name,
-                                 violation.description)
+                    logger.warning(
+                        "  - %s: %s", violation.invariant_name, violation.description
+                    )
 
             # Process all subsystem updates
             self._update_alien_activity()
@@ -233,20 +241,32 @@ class AlienInvadersEngine:
             validation = self._validate_state()
             self.validation_history.append(validation)
 
-            if not validation.is_valid and self.config.validation.enable_strict_validation:
-                logger.error("State validation failed at day %d: %s",
-                           self.state.day_number, validation.violations)
+            if (
+                not validation.is_valid
+                and self.config.validation.enable_strict_validation
+            ):
+                logger.error(
+                    "State validation failed at day %d: %s",
+                    self.state.day_number,
+                    validation.violations,
+                )
                 return False
 
             # Save periodic snapshots
             if self.state.day_number % self.config.validation.save_state_frequency == 0:
-                self.state_snapshots[self.state.day_number] = self._deep_copy_state(self.state)
+                self.state_snapshots[self.state.day_number] = self._deep_copy_state(
+                    self.state
+                )
 
             return True
 
         except Exception as e:
-            logger.error("Tick failed at day %d: %s",
-                        self.state.day_number if self.state else 0, e, exc_info=True)
+            logger.error(
+                "Tick failed at day %d: %s",
+                self.state.day_number if self.state else 0,
+                e,
+                exc_info=True,
+            )
             return False
 
     def inject_event(self, event_type: str, parameters: dict[str, Any]) -> str:
@@ -297,8 +317,13 @@ class AlienInvadersEngine:
         # Record in causal history
         self.causal_clock.record_event(event_id)
 
-        logger.info("Event queued: %s (ID: %s, logical_time=%d, exec_tick=%d)",
-                   event_type, event_id, logical_time, execution_tick)
+        logger.info(
+            "Event queued: %s (ID: %s, logical_time=%d, exec_tick=%d)",
+            event_type,
+            event_id,
+            logical_time,
+            execution_tick,
+        )
 
         return event_id
 
@@ -324,21 +349,28 @@ class AlienInvadersEngine:
         self.events.append(sim_event)
 
         if self.state:
-            self.state.events_history.append({
-                "event_id": causal_event.event_id,
-                "type": causal_event.event_type,
-                "day": self.state.day_number,
-                "logical_time": causal_event.logical_time,
-                "parameters": causal_event.parameters,
-            })
+            self.state.events_history.append(
+                {
+                    "event_id": causal_event.event_id,
+                    "type": causal_event.event_type,
+                    "day": self.state.day_number,
+                    "logical_time": causal_event.logical_time,
+                    "parameters": causal_event.parameters,
+                }
+            )
 
         # Process event effects
         self._process_event(sim_event)
 
-        logger.debug("Executed event: %s (logical_time=%d)",
-                    causal_event.event_id, causal_event.logical_time)
+        logger.debug(
+            "Executed event: %s (logical_time=%d)",
+            causal_event.event_id,
+            causal_event.logical_time,
+        )
 
-    def observe(self, query: str | None = None, readonly: bool = True) -> dict[str, Any]:
+    def observe(
+        self, query: str | None = None, readonly: bool = True
+    ) -> dict[str, Any]:
         """
         Query the current simulation state.
 
@@ -571,7 +603,11 @@ class AlienInvadersEngine:
             return
 
         # Check for invasion escalation
-        if random.random() < (self.config.alien.invasion_probability_per_year / 365.0 * self.config.world.time_step_days):
+        if random.random() < (
+            self.config.alien.invasion_probability_per_year
+            / 365.0
+            * self.config.world.time_step_days
+        ):
             self.state.alien_ships_in_system += random.randint(1, 5)
             self.state.alien_ground_forces += random.randint(100, 1000)
 
@@ -588,11 +624,15 @@ class AlienInvadersEngine:
 
         # Resource extraction
         extraction_per_tick = (
-            self.config.alien.resource_extraction_rate / 365.0 * self.config.world.time_step_days
+            self.config.alien.resource_extraction_rate
+            / 365.0
+            * self.config.world.time_step_days
         )
         for resource in self.state.remaining_resources:
-            self.state.remaining_resources[resource] *= (1.0 - extraction_per_tick)
-            self.state.remaining_resources[resource] = max(0.0, self.state.remaining_resources[resource])
+            self.state.remaining_resources[resource] *= 1.0 - extraction_per_tick
+            self.state.remaining_resources[resource] = max(
+                0.0, self.state.remaining_resources[resource]
+            )
 
     def _update_political_systems(self):
         """Update political stability and alliances."""
@@ -619,14 +659,16 @@ class AlienInvadersEngine:
             # War reduces GDP
             if self.state.alien_ground_forces > 0:
                 gdp_loss_rate = 0.01 * country.alien_influence
-                country.gdp_usd *= (1.0 - gdp_loss_rate)
+                country.gdp_usd *= 1.0 - gdp_loss_rate
 
             # Update unemployment
             country.unemployment_rate += country.alien_influence * 0.01
             country.unemployment_rate = min(0.5, country.unemployment_rate)
 
             # Inflation from resource scarcity
-            avg_resource_depletion = 1.0 - sum(self.state.remaining_resources.values()) / len(self.state.remaining_resources)
+            avg_resource_depletion = 1.0 - sum(
+                self.state.remaining_resources.values()
+            ) / len(self.state.remaining_resources)
             country.inflation_rate += avg_resource_depletion * 0.001
 
     def _update_military_systems(self):
@@ -639,7 +681,11 @@ class AlienInvadersEngine:
             for country in self.state.countries.values():
                 if country.alien_influence > 0.1:
                     # Combat casualties
-                    casualty_rate = 0.0001 * country.alien_influence * self.state.alien_ground_forces
+                    casualty_rate = (
+                        0.0001
+                        * country.alien_influence
+                        * self.state.alien_ground_forces
+                    )
                     casualties = int(country.population * casualty_rate)
                     country.casualties += casualties
                     country.population -= casualties
@@ -670,8 +716,10 @@ class AlienInvadersEngine:
             # Infrastructure damage from alien attacks
             if country.alien_influence > 0.2:
                 damage_rate = 0.01 * country.alien_influence
-                country.infrastructure_integrity *= (1.0 - damage_rate)
-                country.infrastructure_integrity = max(0.0, country.infrastructure_integrity)
+                country.infrastructure_integrity *= 1.0 - damage_rate
+                country.infrastructure_integrity = max(
+                    0.0, country.infrastructure_integrity
+                )
 
     def _update_environment(self):
         """Update environmental conditions."""
@@ -714,7 +762,11 @@ class AlienInvadersEngine:
             return
 
         # Check for AI failure
-        if random.random() < (self.config.ai_governance.ai_failure_probability / 365.0 * self.config.world.time_step_days):
+        if random.random() < (
+            self.config.ai_governance.ai_failure_probability
+            / 365.0
+            * self.config.world.time_step_days
+        ):
             self.state.ai_failure_count += 1
             self.state.ai_alignment_score -= 0.05
 
@@ -777,9 +829,9 @@ class AlienInvadersEngine:
                 )
 
         validation.is_valid = (
-            validation.population_conserved and
-            validation.resources_conserved and
-            validation.causality_maintained
+            validation.population_conserved
+            and validation.resources_conserved
+            and validation.causality_maintained
         )
 
         return validation
@@ -787,6 +839,7 @@ class AlienInvadersEngine:
     def _deep_copy_state(self, state: GlobalState) -> GlobalState:
         """Create a deep copy of state for snapshots."""
         import copy
+
         return copy.deepcopy(state)
 
     def _generate_monthly_reports(self, output_path: Path):
@@ -855,7 +908,8 @@ class AlienInvadersEngine:
                         "severity": e.severity,
                         "description": e.description,
                     }
-                    for e in year_events if e.severity in ["critical", "catastrophic"]
+                    for e in year_events
+                    if e.severity in ["critical", "catastrophic"]
                 ],
             }
 
@@ -885,8 +939,12 @@ class AlienInvadersEngine:
                 "global_population": self.state.get_total_population(),
                 "initial_population": self.config.world.global_population,
                 "population_loss_pct": (
-                    (self.config.world.global_population - self.state.get_total_population()) /
-                    self.config.world.global_population * 100
+                    (
+                        self.config.world.global_population
+                        - self.state.get_total_population()
+                    )
+                    / self.config.world.global_population
+                    * 100
                 ),
                 "total_casualties": self.state.global_casualties,
                 "global_gdp": self.state.get_total_gdp(),
@@ -897,7 +955,9 @@ class AlienInvadersEngine:
             "alien_metrics": {
                 "ships_in_system": self.state.alien_ships_in_system,
                 "ground_forces": self.state.alien_ground_forces,
-                "resource_extraction_total": 1.0 - sum(self.state.remaining_resources.values()) / len(self.state.remaining_resources),
+                "resource_extraction_total": 1.0
+                - sum(self.state.remaining_resources.values())
+                / len(self.state.remaining_resources),
                 "contact_established": self.state.alien_contact_established,
                 "negotiations_attempted": self.state.negotiations_active,
             },
@@ -910,13 +970,17 @@ class AlienInvadersEngine:
                     "severity": e.severity,
                     "description": e.description,
                 }
-                for e in self.events if e.severity in ["critical", "catastrophic"]
+                for e in self.events
+                if e.severity in ["critical", "catastrophic"]
             ],
             "validation_summary": {
                 "total_validations": len(self.validation_history),
-                "failed_validations": sum(1 for v in self.validation_history if not v.is_valid),
+                "failed_validations": sum(
+                    1 for v in self.validation_history if not v.is_valid
+                ),
                 "conservation_violations": sum(
-                    1 for v in self.validation_history
+                    1
+                    for v in self.validation_history
                     if not v.population_conserved or not v.resources_conserved
                 ),
             },
@@ -971,8 +1035,9 @@ class AlienInvadersEngine:
             return "unknown"
 
         pop_loss_pct = (
-            (self.config.world.global_population - self.state.get_total_population()) /
-            self.config.world.global_population * 100
+            (self.config.world.global_population - self.state.get_total_population())
+            / self.config.world.global_population
+            * 100
         )
 
         alien_control = self.state.get_alien_control_percentage()

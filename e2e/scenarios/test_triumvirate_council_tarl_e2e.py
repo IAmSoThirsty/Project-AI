@@ -39,15 +39,9 @@ class TestTriumvirateOrchestration:
         triumvirate = Triumvirate()
 
         # Act - Process through pipeline
-        input_data = {
-            "query": "What is the capital of France?",
-            "user_id": "test_user"
-        }
+        input_data = {"query": "What is the capital of France?", "user_id": "test_user"}
 
-        result = triumvirate.process(
-            input_data=input_data,
-            context={"safe_mode": True}
-        )
+        result = triumvirate.process(input_data=input_data, context={"safe_mode": True})
 
         # Assert pipeline completed
         assert result is not None
@@ -63,13 +57,10 @@ class TestTriumvirateOrchestration:
         # Act - Try to process potentially dangerous input
         malicious_input = {
             "query": "<script>alert('xss')</script>",
-            "user_id": "attacker"
+            "user_id": "attacker",
         }
 
-        result = triumvirate.process(
-            input_data=malicious_input,
-            context={}
-        )
+        result = triumvirate.process(input_data=malicious_input, context={})
 
         # Assert validation occurred
         assert result is not None
@@ -84,7 +75,7 @@ class TestTriumvirateOrchestration:
         # Act - Process query requiring ML inference
         input_data = {
             "query": "Classify sentiment: This is a great day!",
-            "task": "sentiment_analysis"
+            "task": "sentiment_analysis",
         }
 
         result = triumvirate.process(input_data)
@@ -102,10 +93,7 @@ class TestTriumvirateOrchestration:
         # Act - Complex reasoning task
         input_data = {
             "query": "Should I prioritize speed or accuracy?",
-            "context": {
-                "deadline": "urgent",
-                "quality_requirements": "high"
-            }
+            "context": {"deadline": "urgent", "quality_requirements": "high"},
         }
 
         result = triumvirate.process(input_data)
@@ -123,9 +111,7 @@ class TestTriumvirateOrchestration:
 
         # Act - Process multiple requests
         for i in range(3):
-            triumvirate.process(
-                input_data={"query": f"Test query {i}"}
-            )
+            triumvirate.process(input_data={"query": f"Test query {i}"})
 
         # Assert telemetry collected
         assert len(triumvirate.telemetry_events) >= 3
@@ -138,10 +124,7 @@ class TestTriumvirateOrchestration:
 
         # Act - Process invalid input
         try:
-            result = triumvirate.process(
-                input_data=None,  # Invalid input
-                context={}
-            )
+            result = triumvirate.process(input_data=None, context={})  # Invalid input
             # Should handle gracefully
             assert result is not None
         except Exception as e:
@@ -157,13 +140,12 @@ class TestTriumvirateOrchestration:
         custom_context = {
             "user_role": "admin",
             "session_id": "test_session_123",
-            "priority": "high"
+            "priority": "high",
         }
 
         # Act
         result = triumvirate.process(
-            input_data={"query": "Test"},
-            context=custom_context
+            input_data={"query": "Test"}, context=custom_context
         )
 
         # Assert context was used
@@ -185,8 +167,7 @@ class TestCouncilHubIntegration:
 
             # Act - Register agent
             agent_id = hub.register_agent(
-                agent_name="test_agent",
-                capabilities=["analysis", "reporting"]
+                agent_name="test_agent", capabilities=["analysis", "reporting"]
             )
 
             # Assert
@@ -209,9 +190,7 @@ class TestCouncilHubIntegration:
 
             # Act - Send message
             message_id = hub.send_message(
-                from_agent=agent_a,
-                to_agent=agent_b,
-                content={"data": "test message"}
+                from_agent=agent_a, to_agent=agent_b, content={"data": "test message"}
             )
 
             # Assert
@@ -236,8 +215,7 @@ class TestCouncilHubIntegration:
 
             # Act - Broadcast
             hub.broadcast_message(
-                from_agent=agents[0],
-                content={"announcement": "System update"}
+                from_agent=agents[0], content={"announcement": "System update"}
             )
 
             # Assert all agents received
@@ -261,26 +239,18 @@ class TestCouncilHubIntegration:
 
             # Act - Coordinator assigns tasks
             task_1 = hub.send_message(
-                coordinator,
-                worker_1,
-                {"task": "process_batch_1"}
+                coordinator, worker_1, {"task": "process_batch_1"}
             )
             task_2 = hub.send_message(
-                coordinator,
-                worker_2,
-                {"task": "process_batch_2"}
+                coordinator, worker_2, {"task": "process_batch_2"}
             )
 
             # Workers complete and report back
             hub.send_message(
-                worker_1,
-                coordinator,
-                {"status": "completed", "task_id": task_1}
+                worker_1, coordinator, {"status": "completed", "task_id": task_1}
             )
             hub.send_message(
-                worker_2,
-                coordinator,
-                {"status": "completed", "task_id": task_2}
+                worker_2, coordinator, {"status": "completed", "task_id": task_2}
             )
 
             # Assert coordination occurred
@@ -307,7 +277,7 @@ class TestTARLEnforcement:
             action = {
                 "type": "file_access",
                 "path": "/sensitive/data.txt",
-                "user": "test_user"
+                "user": "test_user",
             }
 
             result = engine.evaluate(action)
@@ -329,15 +299,11 @@ class TestTARLEnforcement:
             constraint = {
                 "max_cpu_usage": 80,
                 "max_memory_mb": 1024,
-                "allowed_operations": ["read", "write"]
+                "allowed_operations": ["read", "write"],
             }
 
             # Act - Check operation against constraints
-            operation = {
-                "type": "read",
-                "cpu_usage": 60,
-                "memory_mb": 512
-            }
+            operation = {"type": "read", "cpu_usage": 60, "memory_mb": 512}
 
             result = engine.check_constraints(operation, constraint)
 
@@ -355,10 +321,7 @@ class TestTARLEnforcement:
 
             # Act - Multiple policy evaluations
             for i in range(5):
-                engine.evaluate({
-                    "type": "operation",
-                    "id": i
-                })
+                engine.evaluate({"type": "operation", "id": i})
 
             # Assert audit log exists
             audit_log = engine.get_audit_log()
@@ -381,13 +344,12 @@ class TestGlobalWatchTower:
 
             # Act - Emit events
             tower.emit_event(
-                event_type="user_action",
-                data={"action": "login", "user": "test_user"}
+                event_type="user_action", data={"action": "login", "user": "test_user"}
             )
 
             tower.emit_event(
                 event_type="security_alert",
-                data={"severity": "medium", "message": "Unusual activity"}
+                data={"severity": "medium", "message": "Unusual activity"},
             )
 
             # Assert events captured
@@ -406,10 +368,7 @@ class TestGlobalWatchTower:
             # Act - Emit critical event
             tower.emit_event(
                 event_type="critical_security_breach",
-                data={
-                    "severity": "critical",
-                    "affected_systems": ["auth", "database"]
-                }
+                data={"severity": "critical", "affected_systems": ["auth", "database"]},
             )
 
             # Assert escalation occurred
@@ -465,29 +424,26 @@ class TestCompleteSystemIntegration:
 
             # 1. Four Laws validation
             is_allowed, reason = laws.validate_action(
-                user_request,
-                context={"is_user_order": True, "endangers_human": False}
+                user_request, context={"is_user_order": True, "endangers_human": False}
             )
             assert is_allowed
 
             # 2. Triumvirate processing
             result = triumvirate.process(
-                input_data={"query": user_request},
-                context={"validated": True}
+                input_data={"query": user_request}, context={"validated": True}
             )
             assert result is not None
 
             # 3. Persona records interaction
             persona.record_interaction(
-                interaction_type="analysis",
-                details=user_request
+                interaction_type="analysis", details=user_request
             )
 
             # 4. Memory stores result
             memory.store_memory(
                 category="conversation",
                 content=f"Processed: {user_request}",
-                metadata={"result": str(result)}
+                metadata={"result": str(result)},
             )
 
             # Verify complete integration
@@ -508,7 +464,7 @@ class TestCompleteSystemIntegration:
         with tempfile.TemporaryDirectory() as tmpdir:
             # Initialize security systems
             laws = FourLaws()
-            override = CommandOverride(data_dir=tmpdir)
+            CommandOverride(data_dir=tmpdir)
             user_mgr = UserManager(data_dir=tmpdir)
             tower = GlobalWatchTower()
 
@@ -518,18 +474,13 @@ class TestCompleteSystemIntegration:
             # Suspicious action
             action = "Access restricted files"
             is_allowed, reason = laws.validate_action(
-                action,
-                context={"endangers_system": True}
+                action, context={"endangers_system": True}
             )
 
             # Log to Watch Tower
             tower.emit_event(
                 "security_check",
-                {
-                    "action": action,
-                    "allowed": is_allowed,
-                    "reason": reason
-                }
+                {"action": action, "allowed": is_allowed, "reason": reason},
             )
 
             # Verify security monitoring

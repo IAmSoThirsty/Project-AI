@@ -170,7 +170,10 @@ class ContrariaNFirewallOrchestrator:
         self.running = False
         self.background_tasks: list[asyncio.Task] = []
 
-        self.logger.info("ContrariaNFirewallOrchestrator initialized in %s mode", self.config.mode.value)
+        self.logger.info(
+            "ContrariaNFirewallOrchestrator initialized in %s mode",
+            self.config.mode.value,
+        )
 
     def _initialize_subsystems(self):
         """Initialize all integrated subsystems"""
@@ -472,7 +475,7 @@ class ContrariaNFirewallOrchestrator:
         """Collect feedback for auto-tuning"""
         # Extract key metrics
         cognitive_overload = swarm_result.get("cognitive_overload", 0.0)
-        threat_level = swarm_result.get("threat_level", "scout")
+        swarm_result.get("threat_level", "scout")
 
         # Adjust tuning parameters based on feedback
         if cognitive_overload < self.tuning_parameters["cognitive_target"]:
@@ -496,7 +499,7 @@ class ContrariaNFirewallOrchestrator:
             try:
                 # Collect from all sources
                 swarm_status = self.swarm_defense.get_swarm_status()
-                security_status = self.security_bridge.get_integrated_status()
+                self.security_bridge.get_integrated_status()
 
                 # Calculate aggregates
                 cognitive_overload_avg = swarm_status.get("max_cognitive_overload", 0.0)

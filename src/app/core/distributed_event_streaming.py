@@ -193,7 +193,12 @@ class InMemoryStreamBackend(EventStreamBackend):
                 event.topic = topic
                 event.offset = len(self.topics[topic])
                 self.topics[topic].append(event)
-                logger.debug("Published event %s to topic %s at offset %s", event.event_id, topic, event.offset)
+                logger.debug(
+                    "Published event %s to topic %s at offset %s",
+                    event.event_id,
+                    topic,
+                    event.offset,
+                )
                 return True
         except Exception as e:
             logger.error("Failed to publish event to %s: %s", topic, e)
@@ -208,7 +213,11 @@ class InMemoryStreamBackend(EventStreamBackend):
             if self.topics[topic]:
                 dropped = self.topics[topic].pop(0)
                 self.backpressure_metrics["events_dropped"] += 1
-                logger.warning("Backpressure: Dropped oldest event %s from topic %s", dropped.event_id, topic)
+                logger.warning(
+                    "Backpressure: Dropped oldest event %s from topic %s",
+                    dropped.event_id,
+                    topic,
+                )
                 # Add new event
                 event.topic = topic
                 event.offset = len(self.topics[topic])
@@ -233,7 +242,9 @@ class InMemoryStreamBackend(EventStreamBackend):
         elif strategy == BackpressureStrategy.REJECT_NEW.value:
             # Reject new event
             self.backpressure_metrics["events_rejected"] += 1
-            logger.warning("Backpressure: Rejecting event %s for topic %s", event.event_id, topic)
+            logger.warning(
+                "Backpressure: Rejecting event %s for topic %s", event.event_id, topic
+            )
             return False
 
         return False
@@ -269,7 +280,12 @@ class InMemoryStreamBackend(EventStreamBackend):
             thread.start()
             self.consumer_threads.append(thread)
 
-            logger.info("Subscribed to topics %s with group %s (subscription %s)", topics, consumer_group, subscription_id)
+            logger.info(
+                "Subscribed to topics %s with group %s (subscription %s)",
+                topics,
+                consumer_group,
+                subscription_id,
+            )
             return subscription_id
         except Exception as e:
             logger.error("Failed to subscribe to topics %s: %s", topics, e)
@@ -297,7 +313,9 @@ class InMemoryStreamBackend(EventStreamBackend):
                                 callback(event)
                                 self.offsets[topic][consumer_group] = event.offset + 1
                             except Exception as e:
-                                logger.error("Error processing event %s: %s", event.event_id, e)
+                                logger.error(
+                                    "Error processing event %s: %s", event.event_id, e
+                                )
             except Exception as e:
                 logger.error("Error in consumer loop for %s: %s", subscription_id, e)
 
@@ -336,7 +354,9 @@ class InMemoryStreamBackend(EventStreamBackend):
                 self.offsets[topic][consumer_group] = offset
                 return True
         except Exception as e:
-            logger.error("Failed to commit offset for %s/%s: %s", topic, consumer_group, e)
+            logger.error(
+                "Failed to commit offset for %s/%s: %s", topic, consumer_group, e
+            )
             return False
 
     def close(self) -> None:
@@ -391,7 +411,11 @@ class EventSourceStore:
                     "version": version,
                     "timestamp": datetime.now(UTC).isoformat(),
                 }
-                logger.info("Created snapshot for aggregate %s at version %s", aggregate_id, version)
+                logger.info(
+                    "Created snapshot for aggregate %s at version %s",
+                    aggregate_id,
+                    version,
+                )
                 return True
         except Exception as e:
             logger.error("Failed to create snapshot for %s: %s", aggregate_id, e)
@@ -523,7 +547,9 @@ class DistributedEventStreamingSystem:
             "errors": 0,
         }
         self.lock = threading.RLock()
-        logger.info("Initialized event streaming system with %s backend", backend_type.value)
+        logger.info(
+            "Initialized event streaming system with %s backend", backend_type.value
+        )
 
     def _create_backend(self) -> EventStreamBackend:
         """Create appropriate backend based on type."""

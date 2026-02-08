@@ -190,7 +190,7 @@ def main():
         ("Vendoring Configuration", test_vendoring_config),
     ]
 
-    for test_name, test_func in tests:
+    for _test_name, test_func in tests:
         try:
             passed, failed = test_func()
             total_passed += passed

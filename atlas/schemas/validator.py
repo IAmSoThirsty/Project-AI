@@ -22,13 +22,14 @@ logger = logging.getLogger(__name__)
 
 class ValidationError(Exception):
     """Raised when data validation fails."""
+
     pass
 
 
 class SchemaValidator:
     """
     Production-grade schema validator for PROJECT ATLAS.
-    
+
     Loads and caches JSON schemas, validates data objects, and provides
     detailed error reporting.
     """
@@ -36,7 +37,7 @@ class SchemaValidator:
     def __init__(self, schema_dir: Path | None = None):
         """
         Initialize schema validator.
-        
+
         Args:
             schema_dir: Path to schema directory (defaults to atlas/schemas)
         """
@@ -67,7 +68,7 @@ class SchemaValidator:
             "opinion": "opinion.schema.json",
             "world_state": "world_state.schema.json",
             "influence_graph": "influence_graph.schema.json",
-            "projection_pack": "projection_pack.schema.json"
+            "projection_pack": "projection_pack.schema.json",
         }
 
         for schema_name, filename in schema_files.items():
@@ -81,7 +82,7 @@ class SchemaValidator:
     def _load_schema(self, name: str, filepath: Path) -> None:
         """
         Load a single JSON schema.
-        
+
         Args:
             name: Schema name (e.g., 'organization')
             filepath: Path to schema file
@@ -92,11 +93,11 @@ class SchemaValidator:
             raise ValidationError(f"Schema file not found: {filepath}")
 
         try:
-            with open(filepath, encoding='utf-8') as f:
+            with open(filepath, encoding="utf-8") as f:
                 content = f.read()
 
             # Compute hash for integrity
-            schema_hash = hashlib.sha256(content.encode('utf-8')).hexdigest()
+            schema_hash = hashlib.sha256(content.encode("utf-8")).hexdigest()
             self._schema_hashes[name] = schema_hash
 
             # Parse JSON
@@ -111,7 +112,7 @@ class SchemaValidator:
             self._schemas[name] = schema
             self._validators[name] = validator
 
-            logger.debug("Loaded schema %s (hash: %s...)", name, schema_hash[)
+            logger.debug("Loaded schema %s (hash: %s...)", name, schema_hash[:16])
 
         except json.JSONDecodeError as e:
             logger.error("JSON parse error in %s: %s", filepath, e)
@@ -123,19 +124,20 @@ class SchemaValidator:
             logger.error("Error loading schema %s: %s", filepath, e)
             raise ValidationError(f"Error loading schema {filepath}: {e}") from e
 
-    def validate(self, schema_name: str, data: dict[str, Any],
-                 strict: bool = True) -> tuple[bool, list[str] | None]:
+    def validate(
+        self, schema_name: str, data: dict[str, Any], strict: bool = True
+    ) -> tuple[bool, list[str] | None]:
         """
         Validate data against a schema.
-        
+
         Args:
             schema_name: Name of schema to validate against
             data: Data object to validate
             strict: If True, raise exception on validation failure
-            
+
         Returns:
             Tuple of (is_valid, error_messages)
-            
+
         Raises:
             ValidationError: If schema not found or validation fails (strict mode)
         """
@@ -178,17 +180,23 @@ class SchemaValidator:
         is_valid, errors = self.validate("opinion", opinion, strict)
         return is_valid
 
-    def validate_world_state(self, world_state: dict[str, Any], strict: bool = True) -> bool:
+    def validate_world_state(
+        self, world_state: dict[str, Any], strict: bool = True
+    ) -> bool:
         """Validate a WorldState object."""
         is_valid, errors = self.validate("world_state", world_state, strict)
         return is_valid
 
-    def validate_influence_graph(self, graph: dict[str, Any], strict: bool = True) -> bool:
+    def validate_influence_graph(
+        self, graph: dict[str, Any], strict: bool = True
+    ) -> bool:
         """Validate an InfluenceGraph object."""
         is_valid, errors = self.validate("influence_graph", graph, strict)
         return is_valid
 
-    def validate_projection_pack(self, pack: dict[str, Any], strict: bool = True) -> bool:
+    def validate_projection_pack(
+        self, pack: dict[str, Any], strict: bool = True
+    ) -> bool:
         """Validate a ProjectionPack object."""
         is_valid, errors = self.validate("projection_pack", pack, strict)
         return is_valid
@@ -196,13 +204,13 @@ class SchemaValidator:
     def get_schema(self, schema_name: str) -> dict[str, Any]:
         """
         Get a schema by name.
-        
+
         Args:
             schema_name: Name of schema
-            
+
         Returns:
             Schema dictionary
-            
+
         Raises:
             ValidationError: If schema not found
         """
@@ -215,10 +223,10 @@ class SchemaValidator:
     def get_schema_hash(self, schema_name: str) -> str:
         """
         Get the SHA-256 hash of a schema.
-        
+
         Args:
             schema_name: Name of schema
-            
+
         Returns:
             Hex-encoded SHA-256 hash
         """
@@ -238,7 +246,7 @@ class SchemaValidator:
     def verify_integrity(self) -> bool:
         """
         Verify that schemas have not been modified.
-        
+
         Returns:
             True if all schemas are unchanged, False otherwise
         """
@@ -247,10 +255,10 @@ class SchemaValidator:
             filepath = self.schema_dir / filename
 
             try:
-                with open(filepath, encoding='utf-8') as f:
+                with open(filepath, encoding="utf-8") as f:
                     content = f.read()
 
-                current_hash = hashlib.sha256(content.encode('utf-8')).hexdigest()
+                current_hash = hashlib.sha256(content.encode("utf-8")).hexdigest()
 
                 if current_hash != original_hash:
                     logger.error(
@@ -268,25 +276,25 @@ class SchemaValidator:
     def compute_data_hash(self, data: dict[str, Any]) -> str:
         """
         Compute SHA-256 hash of data object for provenance.
-        
+
         Args:
             data: Data object
-            
+
         Returns:
             Hex-encoded SHA-256 hash
         """
         # Serialize deterministically (sorted keys)
-        json_str = json.dumps(data, sort_keys=True, separators=(',', ':'))
-        return hashlib.sha256(json_str.encode('utf-8')).hexdigest()
+        json_str = json.dumps(data, sort_keys=True, separators=(",", ":"))
+        return hashlib.sha256(json_str.encode("utf-8")).hexdigest()
 
     def add_metadata(self, data: dict[str, Any], schema_name: str) -> dict[str, Any]:
         """
         Add metadata fields to data object.
-        
+
         Args:
             data: Data object
             schema_name: Schema being validated against
-            
+
         Returns:
             Data object with metadata added
         """
@@ -321,7 +329,7 @@ class SchemaValidator:
             "schema_dir": str(self.schema_dir),
             "schemas_loaded": self.get_all_schema_names(),
             "schema_hashes": self._schema_hashes,
-            "integrity_verified": self.verify_integrity()
+            "integrity_verified": self.verify_integrity(),
         }
 
 
@@ -332,10 +340,10 @@ _global_schema_validator: SchemaValidator | None = None
 def get_schema_validator(schema_dir: Path | None = None) -> SchemaValidator:
     """
     Get the global schema validator instance.
-    
+
     Args:
         schema_dir: Schema directory (only used on first call)
-        
+
     Returns:
         SchemaValidator instance
     """
@@ -357,7 +365,7 @@ if __name__ == "__main__":
     # Test schema loading and validation
     logging.basicConfig(
         level=logging.DEBUG,
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
 
     try:

@@ -23,11 +23,7 @@ class BuildStateIntegration:
     Provides episodic build memory and state persistence.
     """
 
-    def __init__(
-        self,
-        state_manager: StateManager,
-        state_dir: Path | None = None
-    ):
+    def __init__(self, state_manager: StateManager, state_dir: Path | None = None):
         """
         Initialize build state integration.
 
@@ -52,7 +48,7 @@ class BuildStateIntegration:
         build_id: str,
         tasks: list[str],
         result: dict[str, Any],
-        metadata: dict[str, Any] | None = None
+        metadata: dict[str, Any] | None = None,
     ) -> None:
         """
         Record a build execution as an episode.
@@ -83,10 +79,7 @@ class BuildStateIntegration:
         except Exception as e:
             logger.error("Error recording build episode: %s", e, exc_info=True)
 
-    def save_build_cache(
-        self,
-        cache_data: dict[str, Any]
-    ) -> None:
+    def save_build_cache(self, cache_data: dict[str, Any]) -> None:
         """
         Save build cache state.
 
@@ -116,9 +109,7 @@ class BuildStateIntegration:
             return {}
 
     def get_build_history(
-        self,
-        limit: int = 10,
-        task_filter: str | None = None
+        self, limit: int = 10, task_filter: str | None = None
     ) -> list[dict[str, Any]]:
         """
         Get recent build episodes.
@@ -135,15 +126,13 @@ class BuildStateIntegration:
 
             # Filter to build episodes
             build_episodes = [
-                ep for ep in episodes
-                if ep.get("type") == "build_execution"
+                ep for ep in episodes if ep.get("type") == "build_execution"
             ]
 
             # Apply task filter if specified
             if task_filter:
                 build_episodes = [
-                    ep for ep in build_episodes
-                    if task_filter in ep.get("tasks", [])
+                    ep for ep in build_episodes if task_filter in ep.get("tasks", [])
                 ]
 
             return build_episodes[:limit]
@@ -152,10 +141,7 @@ class BuildStateIntegration:
             logger.error("Error getting build history: %s", e, exc_info=True)
             return []
 
-    def save_build_configuration(
-        self,
-        config: dict[str, Any]
-    ) -> None:
+    def save_build_configuration(self, config: dict[str, Any]) -> None:
         """
         Save build configuration state.
 
@@ -192,13 +178,16 @@ class BuildStateIntegration:
             Build statistics summary
         """
         try:
-            stats = self.state_manager.load_state(self.BUILD_STATS_KEY, default={
-                "total_builds": 0,
-                "successful_builds": 0,
-                "failed_builds": 0,
-                "total_duration_seconds": 0,
-                "average_duration_seconds": 0,
-            })
+            stats = self.state_manager.load_state(
+                self.BUILD_STATS_KEY,
+                default={
+                    "total_builds": 0,
+                    "successful_builds": 0,
+                    "failed_builds": 0,
+                    "total_duration_seconds": 0,
+                    "average_duration_seconds": 0,
+                },
+            )
 
             return stats
 
@@ -218,13 +207,16 @@ class BuildStateIntegration:
             self.state_manager.save_state(self.BUILD_CACHE_KEY, {})
 
             # Reset statistics
-            self.state_manager.save_state(self.BUILD_STATS_KEY, {
-                "total_builds": 0,
-                "successful_builds": 0,
-                "failed_builds": 0,
-                "total_duration_seconds": 0,
-                "average_duration_seconds": 0,
-            })
+            self.state_manager.save_state(
+                self.BUILD_STATS_KEY,
+                {
+                    "total_builds": 0,
+                    "successful_builds": 0,
+                    "failed_builds": 0,
+                    "total_duration_seconds": 0,
+                    "average_duration_seconds": 0,
+                },
+            )
 
             # Clear configuration if requested
             if not keep_config:
@@ -283,7 +275,9 @@ class BuildStateIntegration:
 
             # Import statistics
             if "statistics" in snapshot:
-                self.state_manager.save_state(self.BUILD_STATS_KEY, snapshot["statistics"])
+                self.state_manager.save_state(
+                    self.BUILD_STATS_KEY, snapshot["statistics"]
+                )
 
             logger.info("State snapshot imported from: %s", input_path)
             return True
@@ -329,7 +323,11 @@ class BuildStateIntegration:
     def _load_persistent_state(self) -> None:
         """Load persistent state from disk on initialization."""
         try:
-            for key in [self.BUILD_CACHE_KEY, self.BUILD_CONFIG_KEY, self.BUILD_STATS_KEY]:
+            for key in [
+                self.BUILD_CACHE_KEY,
+                self.BUILD_CONFIG_KEY,
+                self.BUILD_STATS_KEY,
+            ]:
                 filepath = self.state_dir / f"{key}.json"
                 if filepath.exists():
                     with open(filepath) as f:

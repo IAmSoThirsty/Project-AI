@@ -101,7 +101,9 @@ class TriggerEvent:
         if not self.activated and self.current_value >= self.threshold_value:
             self.activated = True
             self.activation_time = datetime.utcnow()
-            logger.warning("Trigger activated: %s (value=%s)", self.name, self.current_value)
+            logger.warning(
+                "Trigger activated: %s (value=%s)", self.name, self.current_value
+            )
         return self.activated
 
 
@@ -4520,7 +4522,11 @@ class CrossScenarioCoupler:
             )
 
         if activated:
-            logger.warning("Coupling propagation from %s: activated %s", source_scenario.scenario_id, activated)
+            logger.warning(
+                "Coupling propagation from %s: activated %s",
+                source_scenario.scenario_id,
+                activated,
+            )
         return activated
 
 
@@ -4588,7 +4594,11 @@ class HumanFailureEmulator:
         self.failure_history.append(result)
 
         if failed:
-            logger.warning("Human failure simulated: %s (p=%s)", result['failure_mode'], failure_probability)
+            logger.warning(
+                "Human failure simulated: %s (p=%s)",
+                result["failure_mode"],
+                failure_probability,
+            )
 
         return result
 
@@ -4642,7 +4652,9 @@ class IrreversibilityDetector:
 
         if is_irreversible:
             self.irreversible_states.append(assessment)
-            logger.error("IRREVERSIBLE STATE: %s - %s", scenario.name, triggered_collapses)
+            logger.error(
+                "IRREVERSIBLE STATE: %s - %s", scenario.name, triggered_collapses
+            )
 
         return assessment
 
@@ -5054,7 +5066,9 @@ class FalseRecoveryEngine:
                 }
 
                 self.poison_deployments.append(deployment)
-                logger.warning("RECOVERY POISON DETECTED: %s for %s", poison.name, scenario.name)
+                logger.warning(
+                    "RECOVERY POISON DETECTED: %s for %s", poison.name, scenario.name
+                )
                 return deployment
 
         # Not a known poison

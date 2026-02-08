@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 
 class BuildActionViolation(Exception):
     """Raised when a build action violates constitutional policy."""
+
     pass
 
 
@@ -28,9 +29,7 @@ class ConstitutionalEnforcer:
     """
 
     def __init__(
-        self,
-        identity_manager: IdentityManager,
-        config_path: Path | None = None
+        self, identity_manager: IdentityManager, config_path: Path | None = None
     ):
         """
         Initialize constitutional enforcer.
@@ -63,9 +62,7 @@ class ConstitutionalEnforcer:
         logger.info("Constitutional enforcer initialized")
 
     def validate_build_action(
-        self,
-        action: str,
-        metadata: dict[str, Any]
+        self, action: str, metadata: dict[str, Any]
     ) -> tuple[bool, str | None]:
         """
         Validate a build action against constitutional policies.
@@ -96,12 +93,18 @@ class ConstitutionalEnforcer:
             mode = self.policy_engine.policy_mode
             build_rules = self.build_policies[mode]
 
-            if metadata.get("requires_network") and not build_rules["allow_network_access"]:
+            if (
+                metadata.get("requires_network")
+                and not build_rules["allow_network_access"]
+            ):
                 reason = f"Network access denied in {mode} mode"
                 self._record_violation(action, metadata, reason)
                 return False, reason
 
-            if metadata.get("requires_file_write") and not build_rules["allow_file_write"]:
+            if (
+                metadata.get("requires_file_write")
+                and not build_rules["allow_file_write"]
+            ):
                 reason = f"File write access denied in {mode} mode"
                 self._record_violation(action, metadata, reason)
                 return False, reason
@@ -115,7 +118,9 @@ class ConstitutionalEnforcer:
             return True, None
 
         except Exception as e:
-            logger.error("Error validating build action '%s': %s", action, e, exc_info=True)
+            logger.error(
+                "Error validating build action '%s': %s", action, e, exc_info=True
+            )
             return False, f"Validation error: {str(e)}"
 
     def enforce_task_limit(self, task_count: int) -> tuple[bool, str | None]:
@@ -136,7 +141,9 @@ class ConstitutionalEnforcer:
                 return True, None
 
             if task_count > max_tasks:
-                reason = f"Task count {task_count} exceeds limit {max_tasks} in {mode} mode"
+                reason = (
+                    f"Task count {task_count} exceeds limit {max_tasks} in {mode} mode"
+                )
                 logger.warning(reason)
                 return False, reason
 
@@ -147,8 +154,7 @@ class ConstitutionalEnforcer:
             return False, f"Task limit enforcement error: {str(e)}"
 
     def validate_batch_actions(
-        self,
-        actions: list[tuple[str, dict[str, Any]]]
+        self, actions: list[tuple[str, dict[str, Any]]]
     ) -> dict[str, tuple[bool, str | None]]:
         """
         Validate multiple build actions in batch.
@@ -188,10 +194,7 @@ class ConstitutionalEnforcer:
             return {"error": str(e)}
 
     def _record_violation(
-        self,
-        action: str,
-        metadata: dict[str, Any],
-        reason: str
+        self, action: str, metadata: dict[str, Any], reason: str
     ) -> None:
         """
         Record a policy violation for audit purposes.

@@ -280,7 +280,9 @@ class SimulatedHardwareInterface(HardwareAbstractionLayer):
                             ):
                                 joint.position = target_pos
                             else:
-                                logger.warning("Joint %s position %s exceeds limits", i, target_pos)
+                                logger.warning(
+                                    "Joint %s position %s exceeds limits", i, target_pos
+                                )
                                 return False
 
                         # Apply velocity command
@@ -341,7 +343,9 @@ class SimulatedHardwareInterface(HardwareAbstractionLayer):
             # Check all joints for temperature limits
             for joint in self._joint_states:
                 if joint.temperature > 80.0:
-                    logger.error("Joint %s overheating: %s°C", joint.joint_id, joint.temperature)
+                    logger.error(
+                        "Joint %s overheating: %s°C", joint.joint_id, joint.temperature
+                    )
                     return False
 
             return True
@@ -444,7 +448,7 @@ class RoboticSafetyValidator:
     ) -> tuple[bool, str]:
         """Validate commands against hardware limits"""
 
-        for i, (cmd, state) in enumerate(zip(commands, states)):
+        for i, (cmd, state) in enumerate(zip(commands, states, strict=False)):
             # Position limits
             if "position" in cmd:
                 pos = cmd["position"]

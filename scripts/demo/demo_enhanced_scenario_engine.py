@@ -216,7 +216,7 @@ def main():
     )
 
     print("✓ Real-time monitoring components initialized:")
-    for component_name in monitoring.keys():
+    for component_name in monitoring:
         print(f"  • {component_name}")
     print()
 

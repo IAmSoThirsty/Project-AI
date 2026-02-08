@@ -301,7 +301,9 @@ class HardwareRegistry:
             )
             self._events.append(event)
 
-            logger.info("Registered device '%s' (%s)", device.device_name, device.device_id)
+            logger.info(
+                "Registered device '%s' (%s)", device.device_name, device.device_id
+            )
             return True
 
     def unregister_device(self, device_id: str) -> bool:
@@ -372,7 +374,12 @@ class HardwareRegistry:
             device.status = status
             device.last_seen = time.time()
 
-            logger.info("Device '%s' status: %s -> %s", device.device_name, old_status.value, status.value)
+            logger.info(
+                "Device '%s' status: %s -> %s",
+                device.device_name,
+                old_status.value,
+                status.value,
+            )
             return True
 
     def get_all_devices(self) -> list[HardwareDevice]:
@@ -606,12 +613,16 @@ class HardwareAutoDiscoverySystem:
         has_all = all(req in device_capabilities for req in required_capabilities)
 
         if has_all:
-            logger.info("Device '%s' meets all capability requirements", device.device_name)
+            logger.info(
+                "Device '%s' meets all capability requirements", device.device_name
+            )
         else:
             missing = [
                 req for req in required_capabilities if req not in device_capabilities
             ]
-            logger.warning("Device '%s' missing capabilities: %s", device.device_name, missing)
+            logger.warning(
+                "Device '%s' missing capabilities: %s", device.device_name, missing
+            )
 
         return has_all
 
@@ -626,7 +637,9 @@ class HardwareAutoDiscoverySystem:
             try:
                 handler(data)
             except Exception as e:
-                logger.error("Error in event handler for %s: %s", event_type, e, exc_info=True)
+                logger.error(
+                    "Error in event handler for %s: %s", event_type, e, exc_info=True
+                )
 
     def get_system_status(self) -> dict[str, Any]:
         """Get system status"""

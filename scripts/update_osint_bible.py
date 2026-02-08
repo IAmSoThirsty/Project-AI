@@ -246,7 +246,9 @@ def main():
 
     output_file = args.output / DEFAULT_OUTPUT_FILE
     if output_file.exists() and not args.force:
-        logger.info("Output file %s already exists. Use --force to update.", output_file)
+        logger.info(
+            "Output file %s already exists. Use --force to update.", output_file
+        )
         return
 
     logger.info("Starting OSINT-BIBLE update...")

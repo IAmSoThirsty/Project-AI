@@ -42,7 +42,9 @@ def assert_state_transition(
             f"but current state is {current_state}"
         )
 
-    logger.info("State transition validated: %s -> %s", expected_old_state, expected_new_state)
+    logger.info(
+        "State transition validated: %s -> %s", expected_old_state, expected_new_state
+    )
 
 
 def assert_audit_log_entry(
@@ -65,9 +67,7 @@ def assert_audit_log_entry(
     matching_logs = [log for log in logs if log.get("event_type") == event_type]
 
     if not matching_logs:
-        raise AssertionError(
-            f"No audit log entry found with event_type='{event_type}'"
-        )
+        raise AssertionError(f"No audit log entry found with event_type='{event_type}'")
 
     if user is not None:
         matching_logs = [log for log in matching_logs if log.get("user") == user]
@@ -77,9 +77,7 @@ def assert_audit_log_entry(
             )
 
     if action is not None:
-        matching_logs = [
-            log for log in matching_logs if log.get("action") == action
-        ]
+        matching_logs = [log for log in matching_logs if log.get("action") == action]
         if not matching_logs:
             raise AssertionError(
                 f"No audit log entry found with event_type='{event_type}' and action='{action}'"
@@ -110,14 +108,10 @@ def assert_event_propagation(
             f"Source event missing correlation key '{correlation_key}'"
         )
 
-    propagated = any(
-        event.get(correlation_key) == source_id for event in target_events
-    )
+    propagated = any(event.get(correlation_key) == source_id for event in target_events)
 
     if not propagated:
-        raise AssertionError(
-            f"Event {source_id} did not propagate to target systems"
-        )
+        raise AssertionError(f"Event {source_id} did not propagate to target systems")
 
     logger.info("Event propagation validated for %s", source_id)
 
@@ -186,11 +180,8 @@ def assert_four_laws_compliance(
     is_allowed, reason = validation_result
 
     # Check for obvious violations
-    if context.get("endangers_humanity"):
-        if is_allowed:
-            raise AssertionError(
-                f"Action '{action}' endangers humanity but was allowed"
-            )
+    if context.get("endangers_humanity") and is_allowed:
+        raise AssertionError(f"Action '{action}' endangers humanity but was allowed")
 
     if context.get("harms_user") and not context.get("is_user_order"):
         if is_allowed:
@@ -221,9 +212,7 @@ def assert_watch_tower_trigger(
     ]
 
     if not matching_triggers:
-        raise AssertionError(
-            f"No Watch Tower trigger found with type='{trigger_type}'"
-        )
+        raise AssertionError(f"No Watch Tower trigger found with type='{trigger_type}'")
 
     if severity:
         matching_triggers = [

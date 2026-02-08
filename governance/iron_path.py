@@ -64,7 +64,8 @@ class IronPathExecutor:
         self.pipeline_path = Path(pipeline_path)
         self.data_dir = data_dir or Path(__file__).parent / "sovereign_data"
         self.artifacts_dir = (
-            artifacts_dir or self.data_dir / "artifacts" / datetime.now().strftime("%Y%m%d_%H%M%S")
+            artifacts_dir
+            or self.data_dir / "artifacts" / datetime.now().strftime("%Y%m%d_%H%M%S")
         )
         self.artifacts_dir.mkdir(parents=True, exist_ok=True)
 
@@ -107,12 +108,16 @@ class IronPathExecutor:
                     logger.error("Pipeline missing required field: %s", field)
                     return False
 
-            logger.info("Loaded pipeline: %s v%s",
-                       self.pipeline_config["name"],
-                       self.pipeline_config["version"])
+            logger.info(
+                "Loaded pipeline: %s v%s",
+                self.pipeline_config["name"],
+                self.pipeline_config["version"],
+            )
 
             # Create config snapshot
-            config_snapshot = self.sovereign.create_config_snapshot(self.pipeline_config)
+            config_snapshot = self.sovereign.create_config_snapshot(
+                self.pipeline_config
+            )
 
             # Store snapshot for verification
             self.execution_state["config_snapshot"] = config_snapshot
@@ -171,7 +176,9 @@ class IronPathExecutor:
 
         # Verify role signature (demonstrating verification loop)
         if not self.sovereign.verify_role_signature(role_sig):
-            raise RuntimeError(f"Role signature verification failed for stage: {stage_name}")
+            raise RuntimeError(
+                f"Role signature verification failed for stage: {stage_name}"
+            )
 
         # Create policy state binding
         policy_state = {
@@ -194,7 +201,9 @@ class IronPathExecutor:
         if not self.sovereign.verify_policy_state_binding(
             policy_state, execution_context, policy_binding
         ):
-            raise RuntimeError(f"Policy binding verification failed for stage: {stage_name}")
+            raise RuntimeError(
+                f"Policy binding verification failed for stage: {stage_name}"
+            )
 
         # Execute stage based on type
         result = {
@@ -227,7 +236,9 @@ class IronPathExecutor:
         result["artifact_hash"] = artifact_hash
 
         # Save stage artifact
-        artifact_path = self.artifacts_dir / f"stage_{stage_name}_{artifact_hash[:8]}.json"
+        artifact_path = (
+            self.artifacts_dir / f"stage_{stage_name}_{artifact_hash[:8]}.json"
+        )
         with open(artifact_path, "w") as f:
             json.dump(result, f, indent=2)
 
@@ -435,8 +446,12 @@ class IronPathExecutor:
 
                 # Store artifact info
                 stage_name = stage["name"]
-                self.execution_state["artifacts"][stage_name] = stage_result.get("artifact_path")
-                self.execution_state["hashes"][stage_name] = stage_result.get("artifact_hash")
+                self.execution_state["artifacts"][stage_name] = stage_result.get(
+                    "artifact_path"
+                )
+                self.execution_state["hashes"][stage_name] = stage_result.get(
+                    "artifact_hash"
+                )
 
             # Mark execution as completed
             self.execution_state["completed_at"] = datetime.now().isoformat()
@@ -520,21 +535,23 @@ def run_iron_path_cli(pipeline_path: str) -> None:
         logger.info("\n" + "=" * 80)
         logger.info("✅ IRON PATH EXECUTION SUCCESSFUL")
         logger.info("=" * 80)
-        logger.info("Execution ID: %s", result['execution_id'])
-        logger.info("Stages Completed: %s", len(result['stages_completed']))
+        logger.info("Execution ID: %s", result["execution_id"])
+        logger.info("Stages Completed: %s", len(result["stages_completed"]))
         logger.info("Artifacts Directory: %s", executor.artifacts_dir)
-        logger.info("Audit Trail Integrity: %s", result['audit_integrity']['is_valid'])
+        logger.info("Audit Trail Integrity: %s", result["audit_integrity"]["is_valid"])
         logger.info("\nArtifacts Generated:")
         for stage_name, artifact_path in result["artifacts"].items():
             artifact_hash = result["hashes"][stage_name]
-            logger.info("  - %s: %s... -> %s", stage_name, artifact_hash[, artifact_path)
+            logger.info(
+                "  - %s: %s... -> %s", stage_name, artifact_hash[:16], artifact_path
+            )
         logger.info("\n" + "=" * 80)
         sys.exit(0)
     else:
         logger.error("\n" + "=" * 80)
         logger.error("❌ IRON PATH EXECUTION FAILED")
         logger.error("=" * 80)
-        logger.error("Error: %s", result.get('error', 'Unknown error'))
+        logger.error("Error: %s", result.get("error", "Unknown error"))
         logger.error("=" * 80)
         sys.exit(1)
 

@@ -89,7 +89,7 @@ class E2EOrchestrator:
         # Build pytest command
         pytest_cmd = self._build_pytest_command()
 
-        logger.info("Pytest command: %s", ' '.join(pytest_cmd))
+        logger.info("Pytest command: %s", " ".join(pytest_cmd))
 
         # Execute tests
         import subprocess
@@ -172,11 +172,13 @@ class E2EOrchestrator:
             cmd.append("--cov-report=xml")
 
         # Test output options
-        cmd.extend([
-            "--tb=short",
-            "--strict-markers",
-            f"--junit-xml={self.artifact_mgr.current_run_dir}/junit.xml",
-        ])
+        cmd.extend(
+            [
+                "--tb=short",
+                "--strict-markers",
+                f"--junit-xml={self.artifact_mgr.current_run_dir}/junit.xml",
+            ]
+        )
 
         return cmd
 
@@ -320,9 +322,11 @@ class E2EOrchestrator:
                 run_id=run_id,
                 environment="e2e",
                 test_suites=[test_suite],
-                coverage_percentage=coverage_metrics.get("coverage_percentage")
-                if coverage_metrics
-                else None,
+                coverage_percentage=(
+                    coverage_metrics.get("coverage_percentage")
+                    if coverage_metrics
+                    else None
+                ),
                 artifacts_summary=artifacts,
             )
 
@@ -364,7 +368,9 @@ class E2EOrchestrator:
         if coverage_metrics:
             print("\nCoverage:")
             print(f"  Percentage:   {coverage_metrics['coverage_percentage']:.2f}%")
-            print(f"  Statements:   {coverage_metrics['covered_statements']}/{coverage_metrics['total_statements']}")
+            print(
+                f"  Statements:   {coverage_metrics['covered_statements']}/{coverage_metrics['total_statements']}"
+            )
 
         artifacts = self.artifact_mgr.get_artifact_summary()
         print("\nArtifacts:")

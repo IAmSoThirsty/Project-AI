@@ -14,9 +14,9 @@ class PrivacyVault:
     """
 
     def __init__(self, config: dict[str, Any]):
-        self.enabled = config.get('privacy_vault_enabled', True)
-        self.encrypted = config.get('encrypted', True)
-        self.forensic_resistance = config.get('forensic_resistance', True)
+        self.enabled = config.get("privacy_vault_enabled", True)
+        self.encrypted = config.get("encrypted", True)
+        self.forensic_resistance = config.get("forensic_resistance", True)
         self.logger = logging.getLogger(__name__)
 
         self._vault: dict[str, bytes] = {}

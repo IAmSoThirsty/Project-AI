@@ -113,7 +113,9 @@ class BuildGraphDB:
                 timestamp=build["timestamp"],
                 status=build["status"],
                 capsule_id=build["capsule_id"],
-                metadata=json.loads(build["metadata"]) if build.get("metadata") else None,
+                metadata=(
+                    json.loads(build["metadata"]) if build.get("metadata") else None
+                ),
             )
 
         # Load artifacts and create edges
@@ -147,10 +149,15 @@ class BuildGraphDB:
                     vulnerability_count=dep["vulnerability_count"],
                 )
                 # Create DEPENDS_ON edge
-                self._add_edge(build_id, dep_id, "DEPENDS_ON", {
-                    "name": dep["name"],
-                    "version": dep["version"],
-                })
+                self._add_edge(
+                    build_id,
+                    dep_id,
+                    "DEPENDS_ON",
+                    {
+                        "name": dep["name"],
+                        "version": dep["version"],
+                    },
+                )
 
         # Find build relationships
         self._compute_build_ancestry()
@@ -190,14 +197,17 @@ class BuildGraphDB:
             previous = sorted_builds[i - 1]
 
             # Direct evolution: same version line or capsule
-            if (current.capsule_id and current.capsule_id == previous.capsule_id) or \
-               self._is_version_evolution(previous.version, current.version):
+            if (
+                current.capsule_id and current.capsule_id == previous.capsule_id
+            ) or self._is_version_evolution(previous.version, current.version):
                 self._add_edge(
                     current.id,
                     previous.id,
                     "EVOLVED_FROM",
                     {
-                        "time_delta": self._time_delta(previous.timestamp, current.timestamp),
+                        "time_delta": self._time_delta(
+                            previous.timestamp, current.timestamp
+                        ),
                         "version_from": previous.version,
                         "version_to": current.version,
                     },
@@ -370,20 +380,26 @@ class BuildGraphDB:
             if artifact.hash == artifact_hash:
                 build = self._build_nodes.get(artifact.build_id)
                 if build:
-                    provenance.append({
-                        "build_id": build.id,
-                        "build_version": build.version,
-                        "build_timestamp": build.timestamp,
-                        "build_status": build.status,
-                        "artifact_path": artifact.path,
-                        "artifact_type": artifact.type,
-                        "artifact_signed": artifact.signed,
-                    })
+                    provenance.append(
+                        {
+                            "build_id": build.id,
+                            "build_version": build.version,
+                            "build_timestamp": build.timestamp,
+                            "build_status": build.status,
+                            "artifact_path": artifact.path,
+                            "artifact_type": artifact.type,
+                            "artifact_signed": artifact.signed,
+                        }
+                    )
 
         # Sort by timestamp
         provenance.sort(key=lambda p: p["build_timestamp"])
 
-        logger.debug("Found %s provenance records for hash %s...", len(provenance), artifact_hash[)
+        logger.debug(
+            "Found %s provenance records for hash %s...",
+            len(provenance),
+            artifact_hash[:16],
+        )
         return provenance
 
     def identify_failure_correlations(
@@ -429,14 +445,16 @@ class BuildGraphDB:
                             builds[j].id,
                         )
                         if correlation >= min_correlation:
-                            correlations.append({
-                                "build1_id": builds[i].id,
-                                "build1_version": builds[i].version,
-                                "build2_id": builds[j].id,
-                                "build2_version": builds[j].version,
-                                "correlation": correlation,
-                                "time_window": window,
-                            })
+                            correlations.append(
+                                {
+                                    "build1_id": builds[i].id,
+                                    "build1_version": builds[i].version,
+                                    "build2_id": builds[j].id,
+                                    "build2_version": builds[j].version,
+                                    "correlation": correlation,
+                                    "time_window": window,
+                                }
+                            )
 
         logger.info("Found %s failure correlations", len(correlations))
         return correlations
@@ -445,12 +463,10 @@ class BuildGraphDB:
         """Compute correlation score between two builds."""
         # Get shared artifacts
         artifacts1 = {
-            a.hash for a in self._artifact_nodes.values()
-            if a.build_id == build1_id
+            a.hash for a in self._artifact_nodes.values() if a.build_id == build1_id
         }
         artifacts2 = {
-            a.hash for a in self._artifact_nodes.values()
-            if a.build_id == build2_id
+            a.hash for a in self._artifact_nodes.values() if a.build_id == build2_id
         }
 
         shared_artifacts = len(artifacts1 & artifacts2)
@@ -458,11 +474,13 @@ class BuildGraphDB:
 
         # Get shared dependencies
         deps1 = {
-            (d.name, d.version) for d in self._dependency_nodes.values()
+            (d.name, d.version)
+            for d in self._dependency_nodes.values()
             if d.build_id == build1_id
         }
         deps2 = {
-            (d.name, d.version) for d in self._dependency_nodes.values()
+            (d.name, d.version)
+            for d in self._dependency_nodes.values()
             if d.build_id == build2_id
         }
 
@@ -473,7 +491,7 @@ class BuildGraphDB:
         if total_artifacts > 0 and total_deps > 0:
             artifact_correlation = shared_artifacts / total_artifacts
             dep_correlation = shared_deps / total_deps
-            return (artifact_correlation * 0.4 + dep_correlation * 0.6)
+            return artifact_correlation * 0.4 + dep_correlation * 0.6
         elif total_deps > 0:
             return shared_deps / total_deps
         elif total_artifacts > 0:
@@ -499,7 +517,9 @@ class BuildGraphDB:
         """Find all builds that depend on a specific dependency."""
         builds = []
         for dep in self._dependency_nodes.values():
-            if dep.name == dep_name and (dep_version is None or dep.version == dep_version):
+            if dep.name == dep_name and (
+                dep_version is None or dep.version == dep_version
+            ):
                 build = self._build_nodes.get(dep.build_id)
                 if build and build not in builds:
                     builds.append(build)
@@ -518,14 +538,20 @@ class BuildGraphDB:
                 ancestors = self.find_build_ancestry(dep.build_id, depth=5)
                 descendants = self.find_build_descendants(dep.build_id, depth=5)
 
-                vulnerable_paths.append({
-                    "build_id": build.id,
-                    "build_version": build.version,
-                    "dependency": f"{dep.name}:{dep.version}",
-                    "vulnerability_count": dep.vulnerability_count,
-                    "ancestors": [{"id": a.id, "version": a.version} for a in ancestors],
-                    "descendants": [{"id": d.id, "version": d.version} for d in descendants],
-                })
+                vulnerable_paths.append(
+                    {
+                        "build_id": build.id,
+                        "build_version": build.version,
+                        "dependency": f"{dep.name}:{dep.version}",
+                        "vulnerability_count": dep.vulnerability_count,
+                        "ancestors": [
+                            {"id": a.id, "version": a.version} for a in ancestors
+                        ],
+                        "descendants": [
+                            {"id": d.id, "version": d.version} for d in descendants
+                        ],
+                    }
+                )
 
         return vulnerable_paths
 
@@ -542,12 +568,12 @@ class BuildGraphDB:
             DOT format string
         """
         lines = ["digraph BuildGraph {"]
-        lines.append('  rankdir=LR;')
-        lines.append('  node [shape=box];')
-        lines.append('')
+        lines.append("  rankdir=LR;")
+        lines.append("  node [shape=box];")
+        lines.append("")
 
         # Build nodes
-        lines.append('  // Build nodes')
+        lines.append("  // Build nodes")
         for build in self._build_nodes.values():
             color = {
                 "success": "green",
@@ -558,33 +584,31 @@ class BuildGraphDB:
 
             lines.append(
                 f'  build_{build.id} [label="Build {build.id}\\n{build.version}\\n{build.status}", '
-                f'color={color}, style=filled, fillcolor={color}22];'
+                f"color={color}, style=filled, fillcolor={color}22];"
             )
 
         # Artifact nodes
-        lines.append('')
-        lines.append('  // Artifact nodes')
-        lines.append('  node [shape=ellipse, color=purple];')
+        lines.append("")
+        lines.append("  // Artifact nodes")
+        lines.append("  node [shape=ellipse, color=purple];")
         for artifact in self._artifact_nodes.values():
             label = f"{Path(artifact.path).name}\\n{artifact.hash[:8]}"
             lines.append(f'  artifact_{artifact.id} [label="{label}"];')
 
         # Dependency nodes
-        lines.append('')
-        lines.append('  // Dependency nodes')
-        lines.append('  node [shape=diamond, color=blue];')
+        lines.append("")
+        lines.append("  // Dependency nodes")
+        lines.append("  node [shape=diamond, color=blue];")
         for dep in self._dependency_nodes.values():
             color = "red" if dep.vulnerability_count > 0 else "blue"
             label = f"{dep.name}\\n{dep.version}"
             if dep.vulnerability_count > 0:
                 label += f"\\n⚠ {dep.vulnerability_count} vulns"
-            lines.append(
-                f'  dep_{dep.id} [label="{label}", color={color}];'
-            )
+            lines.append(f'  dep_{dep.id} [label="{label}", color={color}];')
 
         # Edges
-        lines.append('')
-        lines.append('  // Edges')
+        lines.append("")
+        lines.append("  // Edges")
         edge_styles = {
             "PRODUCES": '[color=purple, label="produces"]',
             "DEPENDS_ON": '[color=blue, label="depends"]',
@@ -605,12 +629,12 @@ class BuildGraphDB:
                 target_prefix = "dep"
 
             lines.append(
-                f'  {source_prefix}_{edge.source} -> {target_prefix}_{edge.target} {style};'
+                f"  {source_prefix}_{edge.source} -> {target_prefix}_{edge.target} {style};"
             )
 
-        lines.append('}')
+        lines.append("}")
 
-        dot_content = '\n'.join(lines)
+        dot_content = "\n".join(lines)
 
         if output_path:
             output_path = Path(output_path)
@@ -692,7 +716,9 @@ class BuildGraphDB:
                 "builds": len(self._build_nodes),
                 "artifacts": len(self._artifact_nodes),
                 "dependencies": len(self._dependency_nodes),
-                "total": len(self._build_nodes) + len(self._artifact_nodes) + len(self._dependency_nodes),
+                "total": len(self._build_nodes)
+                + len(self._artifact_nodes)
+                + len(self._dependency_nodes),
             },
             "edges": {
                 "total": len(self._edges),
@@ -705,7 +731,8 @@ class BuildGraphDB:
             "vulnerabilities": {
                 "total_dependencies": len(self._dependency_nodes),
                 "vulnerable_dependencies": sum(
-                    1 for d in self._dependency_nodes.values()
+                    1
+                    for d in self._dependency_nodes.values()
                     if d.vulnerability_count > 0
                 ),
                 "total_vulnerabilities": sum(

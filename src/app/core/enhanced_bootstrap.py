@@ -323,7 +323,9 @@ class EnhancedBootstrapOrchestrator:
             priority_override = self.advanced_boot.get_priority_override(subsystem_id)
             if priority_override:
                 info.priority = priority_override
-                logger.info("Priority override for %s: %s", subsystem_id, priority_override)
+                logger.info(
+                    "Priority override for %s: %s", subsystem_id, priority_override
+                )
 
             logger.info("Initializing: %s (%s)", info.name, subsystem_id)
 
@@ -360,7 +362,12 @@ class EnhancedBootstrapOrchestrator:
                     return False
 
         logger.info("=" * 80)
-        logger.info("INITIALIZATION COMPLETE: %s success, %s failed, %s skipped", success_count, failure_count, skipped_count)
+        logger.info(
+            "INITIALIZATION COMPLETE: %s success, %s failed, %s skipped",
+            success_count,
+            failure_count,
+            skipped_count,
+        )
         logger.info("=" * 80)
 
         # Finish boot sequence
@@ -392,7 +399,9 @@ class EnhancedBootstrapOrchestrator:
                 dep_state = self._subsystem_lifecycle.get(dep_id)
 
                 if dep_state != SubsystemLifecycleState.RUNNING:
-                    logger.error("Dependency not running: %s (state: %s)", dep_id, dep_state)
+                    logger.error(
+                        "Dependency not running: %s (state: %s)", dep_id, dep_state
+                    )
                     with self._lock:
                         self._subsystem_lifecycle[subsystem_id] = (
                             SubsystemLifecycleState.FAILED

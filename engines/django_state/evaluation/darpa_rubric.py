@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 class DARPAEvaluator:
     """DARPA-grade evaluation rubric implementation.
-    
+
     Evaluates engine on multiple dimensions:
     - Correctness: Laws implemented correctly
     - Completeness: All features present
@@ -34,10 +34,10 @@ class DARPAEvaluator:
 
     def evaluate_engine(self, engine: DjangoStateEngine) -> dict[str, Any]:
         """Run complete evaluation on engine.
-        
+
         Args:
             engine: Engine instance to evaluate
-            
+
         Returns:
             Evaluation results
         """
@@ -62,16 +62,20 @@ class DARPAEvaluator:
             "tests_failed": self.tests_failed,
         }
 
-        logger.info("DARPA evaluation complete: %s/100 (%s)", overall_score, self._calculate_grade(overall_score))
+        logger.info(
+            "DARPA evaluation complete: %s/100 (%s)",
+            overall_score,
+            self._calculate_grade(overall_score),
+        )
 
         return self.evaluation_results
 
     def _evaluate_correctness(self, engine: DjangoStateEngine) -> dict[str, Any]:
         """Evaluate correctness of law implementations.
-        
+
         Args:
             engine: Engine to evaluate
-            
+
         Returns:
             Correctness evaluation
         """
@@ -105,7 +109,9 @@ class DARPAEvaluator:
                 self._record_test("betrayal_impact", False)
 
             # Check ceiling was imposed
-            if test_state.trust.ceiling is not None and (initial_ceiling is None or test_state.trust.ceiling < initial_ceiling):
+            if test_state.trust.ceiling is not None and (
+                initial_ceiling is None or test_state.trust.ceiling < initial_ceiling
+            ):
                 score += 10
                 self._record_test("betrayal_ceiling", True)
             else:
@@ -140,7 +146,9 @@ class DARPAEvaluator:
         if engine.laws:
             test_state = engine.state.copy()
             initial_legitimacy = test_state.legitimacy.value
-            engine.laws.apply_legitimacy_erosion(test_state, broken_promises=1, failures=1, visibility=0.5)
+            engine.laws.apply_legitimacy_erosion(
+                test_state, broken_promises=1, failures=1, visibility=0.5
+            )
             if test_state.legitimacy.value < initial_legitimacy:
                 score += 10
                 self._record_test("legitimacy_erosion", True)
@@ -165,7 +173,9 @@ class DARPAEvaluator:
         if engine.laws:
             test_state = engine.state.copy()
             initial_epistemic = test_state.epistemic_confidence.value
-            engine.laws.apply_manipulation_impact(test_state, reach=0.5, sophistication=0.5)
+            engine.laws.apply_manipulation_impact(
+                test_state, reach=0.5, sophistication=0.5
+            )
             if test_state.epistemic_confidence.value < initial_epistemic:
                 score += 10
                 self._record_test("epistemic_damage", True)
@@ -188,7 +198,9 @@ class DARPAEvaluator:
         # Check collapse detection
         test_state = engine.state.copy()
         test_state.kindness.value = 0.1
-        collapsed, reason = test_state.check_collapse_conditions(engine.config.thresholds.to_dict()["collapse"])
+        collapsed, reason = test_state.check_collapse_conditions(
+            engine.config.thresholds.to_dict()["collapse"]
+        )
         if collapsed:
             score += 10
             self._record_test("collapse_detection", True)
@@ -205,10 +217,10 @@ class DARPAEvaluator:
 
     def _evaluate_completeness(self, engine: DjangoStateEngine) -> dict[str, Any]:
         """Evaluate feature completeness.
-        
+
         Args:
             engine: Engine to evaluate
-            
+
         Returns:
             Completeness evaluation
         """
@@ -217,35 +229,35 @@ class DARPAEvaluator:
         missing = []
 
         # Check mandatory interface
-        if hasattr(engine, 'init') and callable(engine.init):
+        if hasattr(engine, "init") and callable(engine.init):
             score += 10
             self._record_test("interface_init", True)
         else:
             missing.append("init() method")
             self._record_test("interface_init", False)
 
-        if hasattr(engine, 'tick') and callable(engine.tick):
+        if hasattr(engine, "tick") and callable(engine.tick):
             score += 10
             self._record_test("interface_tick", True)
         else:
             missing.append("tick() method")
             self._record_test("interface_tick", False)
 
-        if hasattr(engine, 'inject_event') and callable(engine.inject_event):
+        if hasattr(engine, "inject_event") and callable(engine.inject_event):
             score += 10
             self._record_test("interface_inject_event", True)
         else:
             missing.append("inject_event() method")
             self._record_test("interface_inject_event", False)
 
-        if hasattr(engine, 'observe') and callable(engine.observe):
+        if hasattr(engine, "observe") and callable(engine.observe):
             score += 10
             self._record_test("interface_observe", True)
         else:
             missing.append("observe() method")
             self._record_test("interface_observe", False)
 
-        if hasattr(engine, 'export_artifacts') and callable(engine.export_artifacts):
+        if hasattr(engine, "export_artifacts") and callable(engine.export_artifacts):
             score += 10
             self._record_test("interface_export_artifacts", True)
         else:
@@ -333,10 +345,10 @@ class DARPAEvaluator:
 
     def _evaluate_irreversibility(self, engine: DjangoStateEngine) -> dict[str, Any]:
         """Evaluate irreversibility constraint enforcement.
-        
+
         Args:
             engine: Engine to evaluate
-            
+
         Returns:
             Irreversibility evaluation
         """
@@ -360,7 +372,9 @@ class DARPAEvaluator:
         test_state = engine.state.copy()
         test_state.moral_injury.value = 0.5
         test_state.moral_injury.impose_floor(0.4)
-        test_state.moral_injury.update(-0.3, test_state.timestamp)  # Try to go below floor
+        test_state.moral_injury.update(
+            -0.3, test_state.timestamp
+        )  # Try to go below floor
         if test_state.moral_injury.value >= 0.4:
             score += 25
             self._record_test("moral_injury_floor_enforcement", True)
@@ -401,10 +415,10 @@ class DARPAEvaluator:
 
     def _evaluate_determinism(self, engine: DjangoStateEngine) -> dict[str, Any]:
         """Evaluate deterministic behavior.
-        
+
         Args:
             engine: Engine to evaluate
-            
+
         Returns:
             Determinism evaluation
         """
@@ -457,10 +471,10 @@ class DARPAEvaluator:
 
     def _evaluate_performance(self, engine: DjangoStateEngine) -> dict[str, Any]:
         """Evaluate performance characteristics.
-        
+
         Args:
             engine: Engine to evaluate
-            
+
         Returns:
             Performance evaluation
         """
@@ -472,6 +486,7 @@ class DARPAEvaluator:
         # Note: This measures 100 additional ticks on the existing engine
         try:
             import time
+
             start = time.time()
             for _ in range(100):
                 engine.tick()
@@ -505,10 +520,10 @@ class DARPAEvaluator:
 
     def _calculate_grade(self, score: float) -> str:
         """Calculate letter grade from score.
-        
+
         Args:
             score: Numerical score (0-100)
-            
+
         Returns:
             Letter grade
         """
@@ -525,15 +540,17 @@ class DARPAEvaluator:
 
     def _record_test(self, test_name: str, passed: bool) -> None:
         """Record test result.
-        
+
         Args:
             test_name: Name of test
             passed: Whether test passed
         """
-        self.test_details.append({
-            "test": test_name,
-            "passed": passed,
-        })
+        self.test_details.append(
+            {
+                "test": test_name,
+                "passed": passed,
+            }
+        )
 
         if passed:
             self.tests_passed += 1
@@ -542,7 +559,7 @@ class DARPAEvaluator:
 
     def generate_report(self) -> str:
         """Generate human-readable evaluation report.
-        
+
         Returns:
             Formatted report string
         """

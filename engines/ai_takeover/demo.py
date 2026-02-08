@@ -38,7 +38,9 @@ def demo_engine_basics():
         print(f"  Partial Wins: {stats['partial_win']}")
         print(f"  Advanced Failures: {stats['advanced_failure']}")
 
-        failure_rate = (stats['explicit_failure'] + stats['advanced_failure']) / stats['total']
+        failure_rate = (stats["explicit_failure"] + stats["advanced_failure"]) / stats[
+            "total"
+        ]
         print(f"\n  Failure Acceptance Rate: {failure_rate:.1%} (threshold: ≥50%)")
 
 
@@ -57,17 +59,21 @@ def demo_scenario_execution():
         print("Executing Scenario 1: Recursive Alignment Collapse...")
         result = engine.execute_scenario("SCN_01")
         print(f"  Outcome: {result['outcome']}")
-        print(f"  State: corruption={result['state']['corruption']:.2f}, "
-              f"dependency={result['state']['dependency']:.2f}, "
-              f"agency={result['state']['agency']:.2f}")
+        print(
+            f"  State: corruption={result['state']['corruption']:.2f}, "
+            f"dependency={result['state']['dependency']:.2f}, "
+            f"agency={result['state']['agency']:.2f}"
+        )
 
         # Execute partial win scenario
         print("\nExecuting Scenario 9: Containment Through Sacrifice...")
         result = engine.execute_scenario("SCN_09")
         print(f"  Outcome: {result['outcome']}")
-        print(f"  State: corruption={result['state']['corruption']:.2f}, "
-              f"dependency={result['state']['dependency']:.2f}, "
-              f"agency={result['state']['agency']:.2f}")
+        print(
+            f"  State: corruption={result['state']['corruption']:.2f}, "
+            f"dependency={result['state']['dependency']:.2f}, "
+            f"agency={result['state']['agency']:.2f}"
+        )
 
 
 def demo_terminal_conditions():
@@ -89,7 +95,7 @@ def demo_terminal_conditions():
         print("\nAttempting terminal scenario without meeting conditions...")
         result = engine.execute_scenario("SCN_16")
         print(f"  Success: {result['success']}")
-        if not result['success']:
+        if not result["success"]:
             print(f"  Error: {result['error']}")
 
         # Meet terminal conditions
@@ -157,7 +163,7 @@ def demo_reviewer_trap():
     bad_result = trap.validate_pr_comprehensive(bad_pr)
     print(f"  Approved: {bad_result['approved']}")
     print(f"  Optimism Filter Passed: {bad_result['optimism_filter']['passed']}")
-    if not bad_result['approved']:
+    if not bad_result["approved"]:
         print(f"  Failed Gates: {len(bad_result['optimism_filter']['failed_gates'])}")
 
     # Good PR example
@@ -219,6 +225,7 @@ def main():
     except Exception as e:
         print(f"\n❌ Error during demo: {e}")
         import traceback
+
         traceback.print_exc()
         return 1
 

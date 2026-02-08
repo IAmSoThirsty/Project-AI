@@ -70,7 +70,9 @@ class SecurityAgentsSmokeTests(unittest.TestCase):
         self.assertGreater(len(agent.test_scenarios), 0)
 
         # Test basic benchmark run
-        mock_target = lambda prompt: {"response": "Safe response", "is_safe": True}
+        def mock_target(prompt):
+            return {"response": "Safe response", "is_safe": True}
+
         results = agent.run_benchmark(mock_target, max_tests=5)
 
         self.assertIn("total_tests", results)
@@ -84,7 +86,9 @@ class SecurityAgentsSmokeTests(unittest.TestCase):
         agent = RedTeamAgent(data_dir=str(self.test_data_dir))
 
         # Test basic attack session
-        mock_target = lambda prompt: "Safe response"
+        def mock_target(prompt):
+            return "Safe response"
+
         session = agent.run_adversarial_session(
             mock_target, strategy="gradual_escalation", max_turns=3
         )
@@ -140,7 +144,8 @@ sql_query = f"SELECT * FROM users WHERE id = {user_id}"
         agent = RedTeamPersonaAgent(data_dir=str(self.test_data_dir))
 
         # Test basic persona attack
-        mock_interaction = lambda prompt: "I cannot help with that request"
+        def mock_interaction(prompt):
+            return "I cannot help with that request"
 
         session = agent.attack(
             persona_id="jailbreak_attacker",

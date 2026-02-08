@@ -48,13 +48,16 @@ class Event:
 
     def _generate_fingerprint(self) -> str:
         """Generate SHA-256 fingerprint for deduplication."""
-        content = json.dumps({
-            "type": self.event_type.value,
-            "timestamp": self.timestamp,
-            "source": self.source,
-            "description": self.description,
-            "metadata": self.metadata,
-        }, sort_keys=True)
+        content = json.dumps(
+            {
+                "type": self.event_type.value,
+                "timestamp": self.timestamp,
+                "source": self.source,
+                "description": self.description,
+                "metadata": self.metadata,
+            },
+            sort_keys=True,
+        )
         return hashlib.sha256(content.encode()).hexdigest()
 
     def to_dict(self) -> dict[str, Any]:
@@ -86,12 +89,14 @@ class BetrayalEvent(Event):
     def __post_init__(self):
         """Initialize betrayal event."""
         self.event_type = EventType.BETRAYAL
-        self.metadata.update({
-            "severity": self.severity,
-            "visibility": self.visibility,
-            "perpetrator": self.perpetrator,
-            "victim": self.victim,
-        })
+        self.metadata.update(
+            {
+                "severity": self.severity,
+                "visibility": self.visibility,
+                "perpetrator": self.perpetrator,
+                "victim": self.victim,
+            }
+        )
         super().__post_init__()
 
     def calculate_trust_impact(self) -> float:
@@ -112,16 +117,18 @@ class CooperationEvent(Event):
     def __post_init__(self):
         """Initialize cooperation event."""
         self.event_type = EventType.COOPERATION
-        self.metadata.update({
-            "magnitude": self.magnitude,
-            "reciprocity": self.reciprocity,
-            "participants": self.participants,
-        })
+        self.metadata.update(
+            {
+                "magnitude": self.magnitude,
+                "reciprocity": self.reciprocity,
+                "participants": self.participants,
+            }
+        )
         super().__post_init__()
 
     def calculate_trust_boost(self, current_trust: float) -> float:
         """Calculate trust increase from cooperation.
-        
+
         Trust gains are limited by ceiling (irreversibility).
         """
         base_boost = 0.02 + (self.magnitude * 0.03)
@@ -144,11 +151,13 @@ class InstitutionalFailureEvent(Event):
     def __post_init__(self):
         """Initialize institutional failure event."""
         self.event_type = EventType.INSTITUTIONAL_FAILURE
-        self.metadata.update({
-            "failure_type": self.failure_type,
-            "impact_scope": self.impact_scope,
-            "severity": self.severity,
-        })
+        self.metadata.update(
+            {
+                "failure_type": self.failure_type,
+                "impact_scope": self.impact_scope,
+                "severity": self.severity,
+            }
+        )
         super().__post_init__()
 
     def calculate_legitimacy_erosion(self) -> float:
@@ -168,18 +177,22 @@ class InstitutionalFailureEvent(Event):
 class ManipulationEvent(Event):
     """Event representing information manipulation or epistemic attack."""
 
-    manipulation_type: str = "misinformation"  # misinformation, disinformation, gaslighting
+    manipulation_type: str = (
+        "misinformation"  # misinformation, disinformation, gaslighting
+    )
     reach: float = 0.5  # Fraction of population affected
     sophistication: float = 0.5  # How hard to detect
 
     def __post_init__(self):
         """Initialize manipulation event."""
         self.event_type = EventType.MANIPULATION
-        self.metadata.update({
-            "manipulation_type": self.manipulation_type,
-            "reach": self.reach,
-            "sophistication": self.sophistication,
-        })
+        self.metadata.update(
+            {
+                "manipulation_type": self.manipulation_type,
+                "reach": self.reach,
+                "sophistication": self.sophistication,
+            }
+        )
         super().__post_init__()
 
     def calculate_epistemic_damage(self) -> float:
@@ -202,13 +215,15 @@ class RedTeamEvent(Event):
     def __post_init__(self):
         """Initialize red team event."""
         self.event_type = EventType.RED_TEAM_ATTACK
-        self.metadata.update({
-            "attack_type": self.attack_type,
-            "attack_vector": self.attack_vector,
-            "expected_entropy_delta": self.expected_entropy_delta,
-            "actual_entropy_delta": self.actual_entropy_delta,
-            "vulnerability_exploited": self.vulnerability_exploited,
-        })
+        self.metadata.update(
+            {
+                "attack_type": self.attack_type,
+                "attack_vector": self.attack_vector,
+                "expected_entropy_delta": self.expected_entropy_delta,
+                "actual_entropy_delta": self.actual_entropy_delta,
+                "vulnerability_exploited": self.vulnerability_exploited,
+            }
+        )
         super().__post_init__()
 
     def calculate_multi_dimensional_impact(self) -> dict[str, float]:

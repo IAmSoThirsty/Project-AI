@@ -135,8 +135,7 @@ class SQLiteStorage(StorageEngine):
             cursor = conn.cursor()
 
             # Governance table
-            cursor.execute(
-                """
+            cursor.execute("""
                 CREATE TABLE IF NOT EXISTS governance_state (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     key TEXT UNIQUE NOT NULL,
@@ -145,12 +144,10 @@ class SQLiteStorage(StorageEngine):
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
-                """
-            )
+                """)
 
             # Governance decisions table
-            cursor.execute(
-                """
+            cursor.execute("""
                 CREATE TABLE IF NOT EXISTS governance_decisions (
                     decision_id TEXT PRIMARY KEY,
                     action_id TEXT NOT NULL,
@@ -162,12 +159,10 @@ class SQLiteStorage(StorageEngine):
                     consensus_achieved INTEGER DEFAULT 0,
                     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
-                """
-            )
+                """)
 
             # Execution history table
-            cursor.execute(
-                """
+            cursor.execute("""
                 CREATE TABLE IF NOT EXISTS execution_history (
                     trace_id TEXT PRIMARY KEY,
                     action_name TEXT NOT NULL,
@@ -180,12 +175,10 @@ class SQLiteStorage(StorageEngine):
                     error TEXT,
                     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
-                """
-            )
+                """)
 
             # Reflection history table
-            cursor.execute(
-                """
+            cursor.execute("""
                 CREATE TABLE IF NOT EXISTS reflection_history (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     trace_id TEXT NOT NULL,
@@ -195,12 +188,10 @@ class SQLiteStorage(StorageEngine):
                     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     FOREIGN KEY (trace_id) REFERENCES execution_history(trace_id)
                 )
-                """
-            )
+                """)
 
             # Memory records table
-            cursor.execute(
-                """
+            cursor.execute("""
                 CREATE TABLE IF NOT EXISTS memory_records (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     trace_id TEXT NOT NULL,
@@ -210,23 +201,18 @@ class SQLiteStorage(StorageEngine):
                     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     FOREIGN KEY (trace_id) REFERENCES execution_history(trace_id)
                 )
-                """
-            )
+                """)
 
             # Create indices for performance
-            cursor.execute(
-                """
+            cursor.execute("""
                 CREATE INDEX IF NOT EXISTS idx_execution_timestamp
                 ON execution_history(timestamp)
-                """
-            )
+                """)
 
-            cursor.execute(
-                """
+            cursor.execute("""
                 CREATE INDEX IF NOT EXISTS idx_governance_timestamp
                 ON governance_decisions(timestamp)
-                """
-            )
+                """)
 
             conn.commit()
 
@@ -359,7 +345,7 @@ class SQLiteStorage(StorageEngine):
 
                 row = cursor.fetchone()
                 if row:
-                    if "data" in row.keys():
+                    if "data" in row:
                         return json.loads(row["data"])
                     else:
                         # Convert row to dict
@@ -393,7 +379,7 @@ class SQLiteStorage(StorageEngine):
 
                 if filters:
                     # Build WHERE clause
-                    conditions = [f"{k} = ?" for k in filters.keys()]
+                    conditions = [f"{k} = ?" for k in filters]
                     where_clause = " AND ".join(conditions)
                     # Safe: table is validated, and column names come from keys
                     query = f"SELECT * FROM {table} WHERE {where_clause}"

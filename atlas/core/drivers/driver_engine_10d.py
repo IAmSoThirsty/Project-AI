@@ -31,17 +31,22 @@ logger = logging.getLogger(__name__)
 class DriverType(Enum):
     """
     10-dimensional driver types.
-    
+
     Each driver is normalized to [0, 1] using historical anchors from 1900-2026.
     """
+
     # Primary Economic Drivers (3)
-    CAPITAL_CONCENTRATION = "capital_concentration"  # Wealth/capital concentration index
+    CAPITAL_CONCENTRATION = (
+        "capital_concentration"  # Wealth/capital concentration index
+    )
     MARKET_VOLATILITY = "market_volatility"  # Financial market instability
     RESOURCE_SCARCITY = "resource_scarcity"  # Access to critical resources
 
     # Institutional Drivers (3)
     MEDIA_GATEKEEPING = "media_gatekeeping"  # Media consolidation and control
-    INSTITUTIONAL_CAPTURE_RISK = "institutional_capture_risk"  # Regulatory capture index
+    INSTITUTIONAL_CAPTURE_RISK = (
+        "institutional_capture_risk"  # Regulatory capture index
+    )
     GOVERNANCE_FRAGILITY = "governance_fragility"  # State capacity/legitimacy
 
     # Social Drivers (2)
@@ -50,12 +55,14 @@ class DriverType(Enum):
 
     # Information Drivers (2)
     INFORMATION_ASYMMETRY = "information_asymmetry"  # Access to truth vs. noise
-    TECHNOLOGICAL_DISRUPTION = "technological_disruption"  # Rate of technological change
+    TECHNOLOGICAL_DISRUPTION = (
+        "technological_disruption"  # Rate of technological change
+    )
 
     def get_historical_range(self) -> tuple[float, float]:
         """
         Get historical min/max for normalization (1900-2026).
-        
+
         Returns:
             (min_value, max_value) from historical record
         """
@@ -63,13 +70,22 @@ class DriverType(Enum):
         ranges = {
             DriverType.CAPITAL_CONCENTRATION: (0.45, 0.92),  # Top 1% wealth share
             DriverType.MARKET_VOLATILITY: (0.05, 0.85),  # VIX-equivalent normalized
-            DriverType.RESOURCE_SCARCITY: (0.10, 0.75),  # Critical resource access index
+            DriverType.RESOURCE_SCARCITY: (
+                0.10,
+                0.75,
+            ),  # Critical resource access index
             DriverType.MEDIA_GATEKEEPING: (0.20, 0.88),  # Media ownership concentration
-            DriverType.INSTITUTIONAL_CAPTURE_RISK: (0.15, 0.80),  # Regulatory capture index
+            DriverType.INSTITUTIONAL_CAPTURE_RISK: (
+                0.15,
+                0.80,
+            ),  # Regulatory capture index
             DriverType.GOVERNANCE_FRAGILITY: (0.10, 0.90),  # State capacity inverse
             DriverType.INEQUALITY_INDEX: (0.25, 0.70),  # Gini coefficient normalized
             DriverType.SOCIAL_COHESION: (0.15, 0.85),  # Social capital index (inverted)
-            DriverType.INFORMATION_ASYMMETRY: (0.20, 0.82),  # Information access inequality
+            DriverType.INFORMATION_ASYMMETRY: (
+                0.20,
+                0.82,
+            ),  # Information access inequality
             DriverType.TECHNOLOGICAL_DISRUPTION: (0.05, 0.95),  # Innovation rate index
         }
         return ranges[self]
@@ -86,7 +102,7 @@ class DriverType(Enum):
             DriverType.INEQUALITY_INDEX: "Economic inequality (income and wealth distribution)",
             DriverType.SOCIAL_COHESION: "Social cohesion and community trust levels",
             DriverType.INFORMATION_ASYMMETRY: "Asymmetry in access to accurate information",
-            DriverType.TECHNOLOGICAL_DISRUPTION: "Rate of technological change and disruption"
+            DriverType.TECHNOLOGICAL_DISRUPTION: "Rate of technological change and disruption",
         }
         return descriptions[self]
 
@@ -95,9 +111,10 @@ class DriverType(Enum):
 class DriverVector:
     """
     10-dimensional driver vector at a specific point in time.
-    
+
     All values normalized to [0, 1] using historical anchors.
     """
+
     timestamp: datetime
 
     # 10 driver values (all [0, 1])
@@ -118,18 +135,20 @@ class DriverVector:
 
     def as_array(self) -> np.ndarray:
         """Return as numpy array."""
-        return np.array([
-            self.capital_concentration,
-            self.market_volatility,
-            self.resource_scarcity,
-            self.media_gatekeeping,
-            self.institutional_capture_risk,
-            self.governance_fragility,
-            self.inequality_index,
-            self.social_cohesion,
-            self.information_asymmetry,
-            self.technological_disruption
-        ])
+        return np.array(
+            [
+                self.capital_concentration,
+                self.market_volatility,
+                self.resource_scarcity,
+                self.media_gatekeeping,
+                self.institutional_capture_risk,
+                self.governance_fragility,
+                self.inequality_index,
+                self.social_cohesion,
+                self.information_asymmetry,
+                self.technological_disruption,
+            ]
+        )
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
@@ -145,16 +164,16 @@ class DriverVector:
                 "inequality_index": self.inequality_index,
                 "social_cohesion": self.social_cohesion,
                 "information_asymmetry": self.information_asymmetry,
-                "technological_disruption": self.technological_disruption
+                "technological_disruption": self.technological_disruption,
             },
             "source": self.source,
-            "confidence": self.confidence
+            "confidence": self.confidence,
         }
 
     def validate_bounds(self) -> tuple[bool, list[str]]:
         """
         Validate all driver values are in [0, 1].
-        
+
         Returns:
             (valid, list of errors)
         """
@@ -169,7 +188,7 @@ class DriverVector:
             "inequality_index": self.inequality_index,
             "social_cohesion": self.social_cohesion,
             "information_asymmetry": self.information_asymmetry,
-            "technological_disruption": self.technological_disruption
+            "technological_disruption": self.technological_disruption,
         }
 
         for name, value in values.items():
@@ -184,7 +203,7 @@ class DriverVector:
 class DriverNormalizationEngine:
     """
     Production-grade 10-dimensional driver normalization engine.
-    
+
     Implements:
     - Historical anchoring (1900-2026)
     - [0, 1] normalization with immutable bounds
@@ -196,7 +215,7 @@ class DriverNormalizationEngine:
     def __init__(self, config_dir: Path | None = None):
         """
         Initialize driver normalization engine.
-        
+
         Args:
             config_dir: Path to config directory (defaults to atlas/config)
         """
@@ -224,8 +243,8 @@ class DriverNormalizationEngine:
             actor="DRIVER_ENGINE",
             details={
                 "config_dir": str(self.config_dir),
-                "baseline_checksum": self.baseline_checksum
-            }
+                "baseline_checksum": self.baseline_checksum,
+            },
         )
 
     def _load_or_create_baseline(self) -> None:
@@ -245,7 +264,7 @@ class DriverNormalizationEngine:
 
             # Save with checksum
             content = json.dumps(self.baseline, indent=2, sort_keys=True)
-            with open(self.baseline_file, 'w') as f:
+            with open(self.baseline_file, "w") as f:
                 f.write(content)
 
             self.baseline_checksum = hashlib.sha256(content.encode()).hexdigest()
@@ -260,8 +279,8 @@ class DriverNormalizationEngine:
                 actor="DRIVER_ENGINE",
                 details={
                     "baseline_file": str(self.baseline_file),
-                    "checksum": self.baseline_checksum
-                }
+                    "checksum": self.baseline_checksum,
+                },
             )
 
     def _create_baseline(self) -> dict[str, Any]:
@@ -271,7 +290,7 @@ class DriverNormalizationEngine:
             "created": datetime.utcnow().isoformat(),
             "historical_period": "1900-2026",
             "description": "Immutable baseline for driver normalization",
-            "drivers": {}
+            "drivers": {},
         }
 
         # Add each driver's historical range
@@ -282,23 +301,19 @@ class DriverNormalizationEngine:
                 "description": driver_type.get_description(),
                 "historical_min": min_val,
                 "historical_max": max_val,
-                "normalization_formula": "(value - min) / (max - min)"
+                "normalization_formula": "(value - min) / (max - min)",
             }
 
         return baseline
 
-    def normalize_value(
-        self,
-        driver_type: DriverType,
-        raw_value: float
-    ) -> float:
+    def normalize_value(self, driver_type: DriverType, raw_value: float) -> float:
         """
         Normalize raw driver value to [0, 1] using historical anchors.
-        
+
         Args:
             driver_type: Type of driver
             raw_value: Raw value to normalize
-            
+
         Returns:
             Normalized value in [0, 1]
         """
@@ -316,17 +331,15 @@ class DriverNormalizationEngine:
         return normalized
 
     def denormalize_value(
-        self,
-        driver_type: DriverType,
-        normalized_value: float
+        self, driver_type: DriverType, normalized_value: float
     ) -> float:
         """
         Denormalize from [0, 1] back to raw value.
-        
+
         Args:
             driver_type: Type of driver
             normalized_value: Normalized value in [0, 1]
-            
+
         Returns:
             Raw value in historical range
         """
@@ -337,19 +350,19 @@ class DriverNormalizationEngine:
         self,
         timestamp: datetime,
         raw_values: dict[str, float],
-        source: str = "computed"
+        source: str = "computed",
     ) -> DriverVector:
         """
         Create 10-dimensional driver vector from raw values.
-        
+
         Args:
             timestamp: Timestamp for this vector
             raw_values: Dictionary of raw driver values
             source: Source of values
-            
+
         Returns:
             Normalized driver vector
-            
+
         Raises:
             ValueError: If required drivers missing or values invalid
         """
@@ -376,7 +389,7 @@ class DriverNormalizationEngine:
             social_cohesion=normalized["social_cohesion"],
             information_asymmetry=normalized["information_asymmetry"],
             technological_disruption=normalized["technological_disruption"],
-            source=source
+            source=source,
         )
 
         # Validate bounds
@@ -393,70 +406,78 @@ class DriverNormalizationEngine:
             details={
                 "timestamp": timestamp.isoformat(),
                 "source": source,
-                "drivers": vector.to_dict()["drivers"]
-            }
+                "drivers": vector.to_dict()["drivers"],
+            },
         )
 
         return vector
 
     def compute_derived_metrics(
-        self,
-        vector: DriverVector,
-        graph_metrics: dict[str, float] | None = None
+        self, vector: DriverVector, graph_metrics: dict[str, float] | None = None
     ) -> dict[str, float]:
         """
         Compute derived metrics from driver vector and graph.
-        
+
         Args:
             vector: Base driver vector
             graph_metrics: Optional graph metrics (centrality, clustering, etc.)
-            
+
         Returns:
             Dictionary of derived metrics
         """
-        arr = vector.as_array()
+        vector.as_array()
 
         derived = {
             # Composite indices
-            "systemic_risk_index": np.mean([
-                vector.capital_concentration,
-                vector.institutional_capture_risk,
-                vector.governance_fragility
-            ]),
-
-            "information_control_index": np.mean([
-                vector.media_gatekeeping,
-                vector.information_asymmetry
-            ]),
-
-            "social_stability_index": 1.0 - np.mean([
-                vector.inequality_index,
-                1.0 - vector.social_cohesion,
-                vector.governance_fragility
-            ]),
-
+            "systemic_risk_index": np.mean(
+                [
+                    vector.capital_concentration,
+                    vector.institutional_capture_risk,
+                    vector.governance_fragility,
+                ]
+            ),
+            "information_control_index": np.mean(
+                [vector.media_gatekeeping, vector.information_asymmetry]
+            ),
+            "social_stability_index": 1.0
+            - np.mean(
+                [
+                    vector.inequality_index,
+                    1.0 - vector.social_cohesion,
+                    vector.governance_fragility,
+                ]
+            ),
             # Interaction terms
-            "elite_capture_potential": vector.capital_concentration * vector.institutional_capture_risk,
-            "narrative_control_capacity": vector.media_gatekeeping * vector.information_asymmetry,
-            "disruption_vulnerability": vector.technological_disruption * vector.governance_fragility,
-
+            "elite_capture_potential": vector.capital_concentration
+            * vector.institutional_capture_risk,
+            "narrative_control_capacity": vector.media_gatekeeping
+            * vector.information_asymmetry,
+            "disruption_vulnerability": vector.technological_disruption
+            * vector.governance_fragility,
             # Volatility measures
-            "economic_instability": np.sqrt(vector.market_volatility * vector.resource_scarcity),
-            "institutional_stress": vector.institutional_capture_risk * vector.governance_fragility
+            "economic_instability": np.sqrt(
+                vector.market_volatility * vector.resource_scarcity
+            ),
+            "institutional_stress": vector.institutional_capture_risk
+            * vector.governance_fragility,
         }
 
         # Add graph-derived metrics if available
         if graph_metrics:
-            derived["graph_concentration"] = graph_metrics.get("power_concentration", 0.0)
+            derived["graph_concentration"] = graph_metrics.get(
+                "power_concentration", 0.0
+            )
             derived["network_fragmentation"] = graph_metrics.get("modularity", 0.0)
-            derived["influence_centralization"] = graph_metrics.get("centralization", 0.0)
+            derived["influence_centralization"] = graph_metrics.get(
+                "centralization", 0.0
+            )
 
         return derived
 
     def verify_baseline_integrity(self) -> bool:
         """
         Verify baseline file hasn't been tampered with.
-        
+
         Returns:
             True if integrity check passes, False otherwise
         """
@@ -482,8 +503,8 @@ class DriverNormalizationEngine:
                 actor="DRIVER_ENGINE",
                 details={
                     "expected_checksum": self.baseline_checksum,
-                    "actual_checksum": current_checksum
-                }
+                    "actual_checksum": current_checksum,
+                },
             )
             return False
 
@@ -497,7 +518,7 @@ class DriverNormalizationEngine:
             "baseline_version": self.baseline.get("version"),
             "historical_period": self.baseline.get("historical_period"),
             "driver_count": len(DriverType),
-            "integrity_ok": self.verify_baseline_integrity()
+            "integrity_ok": self.verify_baseline_integrity(),
         }
 
 

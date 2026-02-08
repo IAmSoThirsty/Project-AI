@@ -219,7 +219,9 @@ class TriumvirateRobotValidator:
 
         # Check for large position changes that might need trajectory planning
         max_delta = 0.0
-        for i, (target, state) in enumerate(zip(command.joint_targets, joint_states)):
+        for i, (target, state) in enumerate(
+            zip(command.joint_targets, joint_states, strict=False)
+        ):
             delta = abs(target - state.position)
             max_delta = max(max_delta, delta)
 
@@ -253,7 +255,9 @@ class TriumvirateRobotValidator:
         }
 
         # Assess command feasibility
-        for i, (target, state) in enumerate(zip(command.joint_targets, joint_states)):
+        for i, (target, state) in enumerate(
+            zip(command.joint_targets, joint_states, strict=False)
+        ):
             # Check if target is reachable given current velocity
             delta = target - state.position
             time_required = abs(delta) / max(abs(state.limits.max_velocity), 0.1)

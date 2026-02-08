@@ -63,7 +63,9 @@ class WiFiSecurityManager:
 
             # Check for deprecated protocols
             if config.protocol in [WiFiSecurityProtocol.WEP, WiFiSecurityProtocol.WPA]:
-                self.logger.error("%s is deprecated and insecure - REFUSED", config.protocol.value)
+                self.logger.error(
+                    "%s is deprecated and insecure - REFUSED", config.protocol.value
+                )
                 return False
 
             # Warn about non-God-Tier configurations
@@ -71,7 +73,9 @@ class WiFiSecurityManager:
                 WiFiSecurityProtocol.WPA3_PERSONAL,
                 WiFiSecurityProtocol.WPA3_ENTERPRISE,
             ]:
-                self.logger.warning("%s is not God Tier - consider WPA3", config.protocol.value)
+                self.logger.warning(
+                    "%s is not God Tier - consider WPA3", config.protocol.value
+                )
 
             # Enforce PMF (Protected Management Frames)
             if not config.enable_pmf:
@@ -270,13 +274,16 @@ class WiFiSecurityManager:
             recommendations.append("ENABLE PMF immediately")
 
         # Check SAE for WPA3
-        if self.current_security.protocol in [
-            WiFiSecurityProtocol.WPA3_PERSONAL,
-            WiFiSecurityProtocol.WPA3_ENTERPRISE,
-        ]:
-            if not self.current_security.enable_sae:
-                warnings.append("SAE disabled for WPA3 - not recommended")
-                recommendations.append("Enable SAE for full WPA3 benefits")
+        if (
+            self.current_security.protocol
+            in [
+                WiFiSecurityProtocol.WPA3_PERSONAL,
+                WiFiSecurityProtocol.WPA3_ENTERPRISE,
+            ]
+            and not self.current_security.enable_sae
+        ):
+            warnings.append("SAE disabled for WPA3 - not recommended")
+            recommendations.append("Enable SAE for full WPA3 benefits")
 
         return {
             "security_level": self.get_security_status()["security_level"],

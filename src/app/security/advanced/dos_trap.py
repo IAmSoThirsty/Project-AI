@@ -362,7 +362,7 @@ class CompromiseDetector:
             syscall_table_hash=self.kernel_interface.get_syscall_table_hash(),
             memory_regions=self.kernel_interface.scan_memory_regions(),
             process_list=(
-                set(int(pid) for pid in os.listdir("/proc") if pid.isdigit())
+                {int(pid) for pid in os.listdir("/proc") if pid.isdigit()}
                 if os.path.exists("/proc")
                 else set()
             ),
@@ -532,7 +532,9 @@ class CompromiseDetector:
                     evidence={"hidden_pids": hidden_pids},
                 )
 
-                self.logger.critical("PROCESS INJECTION DETECTED: %s hidden processes", len(hidden_pids))
+                self.logger.critical(
+                    "PROCESS INJECTION DETECTED: %s hidden processes", len(hidden_pids)
+                )
                 return event
 
         except Exception as e:
@@ -616,11 +618,11 @@ class SecretWiper:
                         key_data = key_storage[key_id]
                         if isinstance(key_data, bytes):
                             # Overwrite in place
-                            for i in range(len(key_data)):
+                            for _i in range(len(key_data)):
                                 key_data = b"\x00" * len(key_data)
-                            for i in range(len(key_data)):
+                            for _i in range(len(key_data)):
                                 key_data = secrets.token_bytes(len(key_data))
-                            for i in range(len(key_data)):
+                            for _i in range(len(key_data)):
                                 key_data = b"\xff" * len(key_data)
 
                         # Remove from storage
@@ -853,7 +855,9 @@ class InterfaceDisabler:
                 except Exception as e:
                     self.logger.error("Failed to disable Windows adapters: %s", e)
 
-            self.logger.info("Disabled %s network interfaces", len(self._disabled_interfaces))
+            self.logger.info(
+                "Disabled %s network interfaces", len(self._disabled_interfaces)
+            )
             return True
 
         except Exception as e:
@@ -880,7 +884,9 @@ class InterfaceDisabler:
                                     if ":" in device:
                                         with open(unbind_path, "w") as f:
                                             f.write(device)
-                                        self.logger.info("Unbound USB device: %s", device)
+                                        self.logger.info(
+                                            "Unbound USB device: %s", device
+                                        )
                             except Exception as e:
                                 self.logger.error("Failed to unbind %s: %s", driver, e)
 
@@ -954,7 +960,9 @@ class MemorySanitizer:
             chunk_size = 1024 * 1024 * 100  # 100MB chunks
 
             for pass_num in range(num_passes):
-                self.logger.info("RAM sanitization pass %s/%s", pass_num + 1, num_passes)
+                self.logger.info(
+                    "RAM sanitization pass %s/%s", pass_num + 1, num_passes
+                )
 
                 try:
                     # Allocate memory
@@ -1033,7 +1041,7 @@ class DiskSanitizer:
                 patterns = [b"\x00", b"\xff", None]
 
             # Perform overwrites
-            for i, pattern in enumerate(patterns):
+            for _i, pattern in enumerate(patterns):
                 with open(file_path, "rb+") as f:
                     if pattern is None:
                         # Random data
@@ -1292,7 +1300,11 @@ class DOSTrapMode:
             if max_threat.value > self._threat_level.value:
                 self._threat_level = max_threat
 
-            self.logger.critical("THREATS DETECTED: %s events, max level: %s", len(events), max_threat.name)
+            self.logger.critical(
+                "THREATS DETECTED: %s events, max level: %s",
+                len(events),
+                max_threat.name,
+            )
 
             # Log all events
             for event in events:

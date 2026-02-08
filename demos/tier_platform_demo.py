@@ -102,7 +102,7 @@ def demo_authority_flow() -> None:
     """Demonstrate authority flow validation."""
     print_header("PHASE 2: Authority Flow Validation")
 
-    registry = get_tier_registry()
+    get_tier_registry()
     router = get_tier_router()
 
     print("Testing Authority Commands (Must Flow Downward)...")

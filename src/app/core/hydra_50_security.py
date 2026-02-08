@@ -189,7 +189,7 @@ class InputValidator:
         """Detect SQL injection attempts"""
         for pattern in cls.SQL_INJECTION_PATTERNS:
             if re.search(pattern, text, re.IGNORECASE):
-                logger.warning("SQL injection detected: %s", text[)
+                logger.warning("SQL injection detected: %s", text[:16])
                 return True
         return False
 
@@ -198,7 +198,7 @@ class InputValidator:
         """Detect XSS attempts"""
         for pattern in cls.XSS_PATTERNS:
             if re.search(pattern, text, re.IGNORECASE):
-                logger.warning("XSS detected: %s", text[)
+                logger.warning("XSS detected: %s", text[:16])
                 return True
         return False
 

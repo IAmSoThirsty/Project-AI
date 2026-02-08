@@ -94,7 +94,9 @@ class VPNManager:
         """Establish VPN connection"""
         if self.multi_hop:
             self._current_route = self.router.establish_route()
-            self.logger.info("Multi-hop route established: %s hops", len(self._current_route))
+            self.logger.info(
+                "Multi-hop route established: %s hops", len(self._current_route)
+            )
         else:
             self._current_route = [self._connect_single_node()]
 
@@ -147,7 +149,7 @@ class VPNManager:
     def enable_split_tunneling(self, enabled: bool):
         """Enable/disable split tunneling"""
         self.split_tunneling = enabled
-        self.logger.info("Split tunneling: %s", 'enabled' if enabled else 'disabled')
+        self.logger.info("Split tunneling: %s", "enabled" if enabled else "disabled")
 
     def encrypt_traffic(self, data: bytes) -> bytes:
         """

@@ -66,7 +66,9 @@ def test_order_management():
         assert order is not None
         assert order.symbol == "BTC/USD"
         assert order.quantity == 0.5
-        print(f"  ✓ Order retrieved: {order.side.value} {order.quantity} {order.symbol}")
+        print(
+            f"  ✓ Order retrieved: {order.side.value} {order.quantity} {order.symbol}"
+        )
 
         cancel_result = manager.cancel_order(result.order_id)
         assert cancel_result.success
@@ -87,12 +89,16 @@ def test_portfolio_management():
         state = portfolio.get_state()
         assert state.cash_balance == 100000.0
         assert state.positions_count == 0
-        print(f"  ✓ Initial state: ${state.cash_balance} cash, {state.positions_count} positions")
+        print(
+            f"  ✓ Initial state: ${state.cash_balance} cash, {state.positions_count} positions"
+        )
 
         position = portfolio.update_position("BTC/USD", 1.0, 45000.0)
         assert position.symbol == "BTC/USD"
         assert position.quantity == 1.0
-        print(f"  ✓ Position opened: {position.quantity} {position.symbol} @ ${position.average_entry_price}")
+        print(
+            f"  ✓ Position opened: {position.quantity} {position.symbol} @ ${position.average_entry_price}"
+        )
 
         portfolio.update_prices({"BTC/USD": 47000.0})
         updated_position = portfolio.get_position("BTC/USD")
@@ -106,7 +112,9 @@ def test_portfolio_management():
         print(f"  ✓ Position closed: realized PnL ${state.realized_pnl}")
 
         metrics = portfolio.calculate_metrics()
-        print(f"  ✓ Metrics: {metrics['total_trades']} trades, {metrics['win_rate_pct']}% win rate")
+        print(
+            f"  ✓ Metrics: {metrics['total_trades']} trades, {metrics['win_rate_pct']}% win rate"
+        )
 
 
 def test_strategy_engine():
@@ -149,7 +157,9 @@ def test_strategy_engine():
         assert result.status.value == "completed"
         assert result.orders_placed == 2
         assert result.total_pnl == 250.0
-        print(f"  ✓ Strategy executed: {result.orders_placed} orders, PnL ${result.total_pnl}")
+        print(
+            f"  ✓ Strategy executed: {result.orders_placed} orders, PnL ${result.total_pnl}"
+        )
 
         metrics = engine.calculate_strategy_metrics(strategy_id)
         assert metrics["total_executions"] == 1

@@ -3,6 +3,7 @@
 Manages trading strategy registration, execution, and result tracking.
 """
 
+import builtins
 import json
 import logging
 import os
@@ -120,7 +121,9 @@ class StrategyEngine:
                         for r in data.get("execution_history", [])
                     ]
 
-                logger.info("Loaded %s strategy execution results", len(self._execution_history))
+                logger.info(
+                    "Loaded %s strategy execution results", len(self._execution_history)
+                )
             except Exception as e:
                 logger.error("Failed to load strategies: %s", e)
 
@@ -199,7 +202,7 @@ class StrategyEngine:
         if existing:
             raise ValueError(f"Strategy with name '{name}' already exists")
 
-        if not callable or not hasattr(callable, "__call__"):
+        if not callable or not builtins.callable(callable):
             raise ValueError("Strategy callable must be a valid function")
 
         strategy_id = str(uuid.uuid4())
@@ -353,7 +356,11 @@ class StrategyEngine:
 
         result = self._results[strategy_id]
         if result.status != StrategyStatus.RUNNING:
-            logger.warning("Strategy %s is not running (status: %s)", strategy_id, result.status.value)
+            logger.warning(
+                "Strategy %s is not running (status: %s)",
+                strategy_id,
+                result.status.value,
+            )
             return False
 
         result.status = StrategyStatus.STOPPED

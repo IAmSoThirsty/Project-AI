@@ -319,7 +319,9 @@ class PerspectiveEngine:
                     profile = WorkProfileState.from_dict(profile_data)
                     self.work_profiles[profile.profile_name] = profile
 
-                logger.info("Loaded perspective state: %s interactions", self.interaction_count)
+                logger.info(
+                    "Loaded perspective state: %s interactions", self.interaction_count
+                )
 
             except Exception as e:
                 logger.error("Failed to load perspective state: %s", e)
@@ -379,9 +381,7 @@ class PerspectiveEngine:
         old_dict = old_state.to_dict()
         new_dict = new_state.to_dict()
 
-        total_change = sum(
-            abs(new_dict[key] - old_dict[key]) for key in old_dict.keys()
-        )
+        total_change = sum(abs(new_dict[key] - old_dict[key]) for key in old_dict)
 
         return total_change
 

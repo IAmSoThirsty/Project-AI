@@ -56,7 +56,7 @@ class TestConfigurationSubsystem:
         config.load()
 
         config.set("compiler.debug_mode", True)
-        assert config.get("compiler.debug_mode") == True
+        assert config.get("compiler.debug_mode")
 
     def test_config_section(self):
         """Test getting entire configuration section"""
@@ -371,7 +371,7 @@ class TestConfigurationOverrides:
         config = ConfigRegistry(overrides=overrides)
         config.load()
 
-        assert config.get("compiler.debug_mode") == True
+        assert config.get("compiler.debug_mode")
         assert config.get("compiler.optimization_level") == 0
 
     def test_system_with_config_overrides(self):

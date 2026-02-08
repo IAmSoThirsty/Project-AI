@@ -209,7 +209,16 @@ class ServiceManager:
         try:
             # Start Flask app from web/backend
             process = subprocess.Popen(
-                ["python", "-m", "flask", "run", "--host", service.host, "--port", str(service.port)],
+                [
+                    "python",
+                    "-m",
+                    "flask",
+                    "run",
+                    "--host",
+                    service.host,
+                    "--port",
+                    str(service.port),
+                ],
                 env={**subprocess.os.environ, "FLASK_APP": "web.backend.app"},
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
@@ -220,9 +229,7 @@ class ServiceManager:
             logger.error("Failed to start Flask API: %s", e)
             return None
 
-    def _start_fastapi_backend(
-        self, service: ServiceConfig
-    ) -> subprocess.Popen | None:
+    def _start_fastapi_backend(self, service: ServiceConfig) -> subprocess.Popen | None:
         """Start the FastAPI backend service.
 
         Args:
@@ -251,9 +258,7 @@ class ServiceManager:
             logger.error("Failed to start FastAPI backend: %s", e)
             return None
 
-    def _start_temporal_server(
-        self, service: ServiceConfig
-    ) -> subprocess.Popen | None:
+    def _start_temporal_server(self, service: ServiceConfig) -> subprocess.Popen | None:
         """Start the Temporal server.
 
         Args:

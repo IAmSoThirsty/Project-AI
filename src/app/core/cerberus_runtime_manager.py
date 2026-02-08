@@ -135,18 +135,30 @@ class RuntimeManager:
                     runtime.health_status = "healthy"
                     self.health_cache[lang_key] = "healthy"
                     healthy_count += 1
-                    logger.debug("✓ %s (%s): healthy - %s", runtime.name, lang_key, result.stdout.strip()[)
+                    logger.debug(
+                        "✓ %s (%s): healthy - %s",
+                        runtime.name,
+                        lang_key,
+                        result.stdout.strip()[:100],
+                    )
                 else:
                     runtime.health_status = "degraded"
                     self.health_cache[lang_key] = "degraded"
                     degraded_count += 1
-                    logger.warning("⚠ %s (%s): degraded - exit code %s", runtime.name, lang_key, result.returncode)
+                    logger.warning(
+                        "⚠ %s (%s): degraded - exit code %s",
+                        runtime.name,
+                        lang_key,
+                        result.returncode,
+                    )
 
             except subprocess.TimeoutExpired:
                 runtime.health_status = "unavailable"
                 self.health_cache[lang_key] = "unavailable"
                 unavailable_count += 1
-                logger.warning("✗ %s (%s): unavailable - timeout", runtime.name, lang_key)
+                logger.warning(
+                    "✗ %s (%s): unavailable - timeout", runtime.name, lang_key
+                )
 
             except Exception as e:
                 runtime.health_status = "unavailable"

@@ -283,8 +283,7 @@ class TestDefenseEngineIntegration(unittest.TestCase):
 
         # Create minimal config
         self.config_file = Path(self.test_dir) / "test_config.toml"
-        self.config_file.write_text(
-            """
+        self.config_file.write_text("""
 version = "1.0.0"
 
 [bootstrap]
@@ -294,8 +293,7 @@ health_check_interval = 30
 enable_hot_reload = false
 
 [subsystems]
-        """
-        )
+        """)
 
     def tearDown(self):
         """Clean up test environment."""
@@ -319,7 +317,7 @@ enable_hot_reload = false
         # Note: This will fail without domain modules in path
         # but tests the initialization logic
         try:
-            success = engine.initialize()
+            engine.initialize()
             # May succeed or fail depending on environment
         except Exception:
             # Expected if domain modules not in path

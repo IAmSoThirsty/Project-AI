@@ -114,12 +114,24 @@ def main():
     print("6. Recording build artifacts...")
     artifacts = [
         ("build/libs/app-2.0.0.jar", "sha256:abc123def456", 2048576, "jar", True),
-        ("build/libs/app-2.0.0-sources.jar", "sha256:def789ghi012", 512000, "jar", False),
-        ("build/distributions/app-2.0.0.tar.gz", "sha256:jkl345mno678", 3145728, "tar.gz", True),
+        (
+            "build/libs/app-2.0.0-sources.jar",
+            "sha256:def789ghi012",
+            512000,
+            "jar",
+            False,
+        ),
+        (
+            "build/distributions/app-2.0.0.tar.gz",
+            "sha256:jkl345mno678",
+            3145728,
+            "tar.gz",
+            True,
+        ),
     ]
 
     for path, hash_val, size, artifact_type, signed in artifacts:
-        artifact_id = db.create_artifact(
+        db.create_artifact(
             build_id=build_id,
             path=path,
             hash=hash_val,
@@ -142,13 +154,17 @@ def main():
     ]
 
     for name, version, vuln_count, license in dependencies:
-        dep_id = db.create_dependency(
+        db.create_dependency(
             build_id=build_id,
             name=name,
             version=version,
             source="maven-central",
             license=license,
-            vulnerabilities=[{"cve": "CVE-2024-1234", "severity": "high"}] if vuln_count > 0 else None,
+            vulnerabilities=(
+                [{"cve": "CVE-2024-1234", "severity": "high"}]
+                if vuln_count > 0
+                else None
+            ),
         )
         vuln_indicator = f"⚠ {vuln_count} vuln" if vuln_count > 0 else "✓ clean"
         print(f"   📚 {name}:{version} ({vuln_indicator})")

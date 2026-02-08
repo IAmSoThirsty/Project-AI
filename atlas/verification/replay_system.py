@@ -2,7 +2,7 @@
 Verification & Replay System for PROJECT ATLAS Ω
 
 Implements complete verification and deterministic replay:
-- Bundle format specification  
+- Bundle format specification
 - Full replay engine from bundles
 - Portable verification
 - Deterministic reproducibility validation
@@ -28,6 +28,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class VerificationBundle:
     """Complete bundle for deterministic replay and verification."""
+
     bundle_id: str
     created: datetime
     atlas_version: str
@@ -75,10 +76,10 @@ class VerificationBundle:
             "graph_snapshot_count": len(self.graph_snapshots),
             "audit_event_count": len(self.audit_events),
             "projection_count": len(self.projections),
-            "claim_count": len(self.claims)
+            "claim_count": len(self.claims),
         }
 
-        content = json.dumps(canonical, sort_keys=True, separators=(',', ':'))
+        content = json.dumps(canonical, sort_keys=True, separators=(",", ":"))
         return hashlib.sha256(content.encode()).hexdigest()
 
     def to_dict(self) -> dict[str, Any]:
@@ -99,11 +100,11 @@ class VerificationBundle:
             "projections": self.projections,
             "claims": self.claims,
             "bundle_hash": self.bundle_hash,
-            "signature": self.signature
+            "signature": self.signature,
         }
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> 'VerificationBundle':
+    def from_dict(cls, data: dict[str, Any]) -> "VerificationBundle":
         """Create from dictionary."""
         bundle = cls(
             bundle_id=data["bundle_id"],
@@ -121,7 +122,7 @@ class VerificationBundle:
             projections=data.get("projections", []),
             claims=data.get("claims", []),
             bundle_hash=data.get("bundle_hash"),
-            signature=data.get("signature")
+            signature=data.get("signature"),
         )
         return bundle
 
@@ -147,7 +148,7 @@ class VerificationSystem:
         config_hashes: dict[str, str],
         data_hashes: dict[str, str],
         seeds: dict[str, str],
-        **kwargs
+        **kwargs,
     ) -> VerificationBundle:
         """Create verification bundle."""
         bundle = VerificationBundle(
@@ -156,7 +157,7 @@ class VerificationSystem:
             atlas_version="1.0.0",
             config_hashes=config_hashes,
             data_hashes=data_hashes,
-            seeds=seeds
+            seeds=seeds,
         )
 
         bundle.bundle_hash = bundle.compute_bundle_hash()
@@ -175,10 +176,10 @@ class VerificationSystem:
         bundle_data = bundle.to_dict()
 
         if compress:
-            with gzip.open(filepath, 'wt', encoding='utf-8') as f:
+            with gzip.open(filepath, "wt", encoding="utf-8") as f:
                 json.dump(bundle_data, f, indent=2, sort_keys=True)
         else:
-            with open(filepath, 'w', encoding='utf-8') as f:
+            with open(filepath, "w", encoding="utf-8") as f:
                 json.dump(bundle_data, f, indent=2, sort_keys=True)
 
         logger.info("Saved bundle to %s", filepath)
@@ -189,11 +190,11 @@ class VerificationSystem:
         if not filepath.exists():
             raise FileNotFoundError(f"Bundle not found: {filepath}")
 
-        if filepath.suffix == '.gz':
-            with gzip.open(filepath, 'rt', encoding='utf-8') as f:
+        if filepath.suffix == ".gz":
+            with gzip.open(filepath, "rt", encoding="utf-8") as f:
                 data = json.load(f)
         else:
-            with open(filepath, encoding='utf-8') as f:
+            with open(filepath, encoding="utf-8") as f:
                 data = json.load(f)
 
         bundle = VerificationBundle.from_dict(data)

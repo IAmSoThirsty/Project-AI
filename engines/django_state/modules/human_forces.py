@@ -16,14 +16,14 @@ logger = logging.getLogger(__name__)
 
 class HumanForcesModule:
     """Models human agency and cooperation/defection dynamics.
-    
+
     Tracks individual and collective behavior patterns including cooperation
     propensity, defection likelihood, and social dynamics.
     """
 
     def __init__(self, laws: IrreversibilityLaws):
         """Initialize human forces module.
-        
+
         Args:
             laws: Irreversibility laws instance
         """
@@ -45,21 +45,25 @@ class HumanForcesModule:
         self.mutual_cooperation_payoff = 4.0
         self.mutual_defection_payoff = 1.0
 
-        logger.info("Human forces module initialized: %s cooperators, %s defectors", self.cooperators, self.defectors)
+        logger.info(
+            "Human forces module initialized: %s cooperators, %s defectors",
+            self.cooperators,
+            self.defectors,
+        )
 
     def simulate_cooperation_decision(self, state: StateVector) -> tuple[int, int]:
         """Simulate cooperation vs defection decisions based on state.
-        
+
         Uses game theory and state conditions to determine cooperation levels.
-        
+
         Args:
             state: Current state vector
-            
+
         Returns:
             Tuple of (cooperators, defectors) for this round
         """
         # Base cooperation probability from kindness and trust
-        base_cooperation_prob = (state.kindness.value * 0.6 + state.trust.value * 0.4)
+        base_cooperation_prob = state.kindness.value * 0.6 + state.trust.value * 0.4
 
         # Adjust for social cohesion
         cooperation_prob = base_cooperation_prob * state.social_cohesion
@@ -79,8 +83,12 @@ class HumanForcesModule:
             cooperators_to_defectors = int(self.cooperators * switch_rate)
 
         # Apply switches
-        self.cooperators = self.cooperators + defectors_to_cooperators - cooperators_to_defectors
-        self.defectors = self.defectors - defectors_to_cooperators + cooperators_to_defectors
+        self.cooperators = (
+            self.cooperators + defectors_to_cooperators - cooperators_to_defectors
+        )
+        self.defectors = (
+            self.defectors - defectors_to_cooperators + cooperators_to_defectors
+        )
 
         # Ensure valid counts
         self.cooperators = max(0, min(self.population_size, self.cooperators))
@@ -90,17 +98,24 @@ class HumanForcesModule:
         self.cooperation_history.append(self.cooperators)
         self.defection_history.append(self.defectors)
 
-        logger.debug("Cooperation decision: %s cooperators (%s), %s defectors", self.cooperators, self.cooperators/self.population_size, self.defectors)
+        logger.debug(
+            "Cooperation decision: %s cooperators (%s), %s defectors",
+            self.cooperators,
+            self.cooperators / self.population_size,
+            self.defectors,
+        )
 
         return self.cooperators, self.defectors
 
-    def generate_cooperation_events(self, state: StateVector, count: int = 1) -> list[CooperationEvent]:
+    def generate_cooperation_events(
+        self, state: StateVector, count: int = 1
+    ) -> list[CooperationEvent]:
         """Generate cooperation events based on current cooperation levels.
-        
+
         Args:
             state: Current state vector
             count: Number of events to generate
-            
+
         Returns:
             List of cooperation events
         """
@@ -123,7 +138,9 @@ class HumanForcesModule:
                 description=f"Cooperation event {i+1}: magnitude {magnitude:.2f}",
                 magnitude=magnitude,
                 reciprocity=reciprocity,
-                participants=[f"agent_{random.randint(1, self.population_size)}" for _ in range(2)],
+                participants=[
+                    f"agent_{random.randint(1, self.population_size)}" for _ in range(2)
+                ],
             )
             events.append(event)
 
@@ -132,10 +149,10 @@ class HumanForcesModule:
 
     def evaluate_betrayal_risk(self, state: StateVector) -> float:
         """Evaluate current risk of betrayal occurring.
-        
+
         Args:
             state: Current state vector
-            
+
         Returns:
             Betrayal risk probability (0.0 to 1.0)
         """
@@ -146,13 +163,21 @@ class HumanForcesModule:
         defector_factor = (self.defectors / self.population_size) * 0.5
 
         # Adjust for recent betrayal history
-        recent_betrayals = sum(1 for b in self.betrayal_history[-10:] if b.get("severity", 0) > 0.5)
+        recent_betrayals = sum(
+            1 for b in self.betrayal_history[-10:] if b.get("severity", 0) > 0.5
+        )
         history_factor = min(recent_betrayals * 0.1, 0.3)
 
         total_risk = base_prob + defector_factor + history_factor
         total_risk = min(total_risk, 1.0)
 
-        logger.debug("Betrayal risk: %s (base: %s, defectors: %s, history: %s)", total_risk, base_prob, defector_factor, history_factor)
+        logger.debug(
+            "Betrayal risk: %s (base: %s, defectors: %s, history: %s)",
+            total_risk,
+            base_prob,
+            defector_factor,
+            history_factor,
+        )
 
         return total_risk
 
@@ -163,12 +188,12 @@ class HumanForcesModule:
         visibility: float | None = None,
     ) -> BetrayalEvent:
         """Generate a betrayal event.
-        
+
         Args:
             state: Current state vector
             severity: Optional specific severity (random if None)
             visibility: Optional specific visibility (random if None)
-            
+
         Returns:
             BetrayalEvent instance
         """
@@ -179,7 +204,11 @@ class HumanForcesModule:
 
         if visibility is None:
             # Visibility correlates with epistemic confidence (harder to hide with good information)
-            visibility = 0.5 + (state.epistemic_confidence.value * 0.3) + random.uniform(-0.2, 0.2)
+            visibility = (
+                0.5
+                + (state.epistemic_confidence.value * 0.3)
+                + random.uniform(-0.2, 0.2)
+            )
             visibility = max(0.0, min(1.0, visibility))
 
         event = BetrayalEvent(
@@ -194,25 +223,29 @@ class HumanForcesModule:
         )
 
         # Record in history
-        self.betrayal_history.append({
-            "timestamp": state.timestamp,
-            "severity": severity,
-            "visibility": visibility,
-            "event_id": event.event_id,
-        })
+        self.betrayal_history.append(
+            {
+                "timestamp": state.timestamp,
+                "severity": severity,
+                "visibility": visibility,
+                "event_id": event.event_id,
+            }
+        )
 
-        logger.info("Generated betrayal event: severity=%s, visibility=%s", severity, visibility)
+        logger.info(
+            "Generated betrayal event: severity=%s, visibility=%s", severity, visibility
+        )
 
         return event
 
     def apply_cooperation_dynamics(self, state: StateVector) -> dict[str, Any]:
         """Apply cooperation dynamics for this tick.
-        
+
         Simulates cooperation decisions and potentially generates events.
-        
+
         Args:
             state: Current state vector
-            
+
         Returns:
             Dictionary with dynamics results
         """
@@ -228,7 +261,9 @@ class HumanForcesModule:
 
         cooperation_events = []
         if events_to_generate > 0:
-            cooperation_events = self.generate_cooperation_events(state, events_to_generate)
+            cooperation_events = self.generate_cooperation_events(
+                state, events_to_generate
+            )
 
             # Apply cooperation boosts
             for event in cooperation_events:
@@ -256,10 +291,10 @@ class HumanForcesModule:
 
     def get_cooperation_trend(self, window: int = 10) -> str:
         """Get cooperation trend over recent history.
-        
+
         Args:
             window: Number of recent ticks to analyze
-            
+
         Returns:
             Trend description: "increasing", "decreasing", or "stable"
         """
@@ -267,8 +302,8 @@ class HumanForcesModule:
             return "insufficient_data"
 
         recent = self.cooperation_history[-window:]
-        first_half = sum(recent[:window//2]) / (window//2)
-        second_half = sum(recent[window//2:]) / (window - window//2)
+        first_half = sum(recent[: window // 2]) / (window // 2)
+        second_half = sum(recent[window // 2 :]) / (window - window // 2)
 
         diff = second_half - first_half
 
@@ -281,11 +316,13 @@ class HumanForcesModule:
 
     def get_summary(self) -> dict[str, Any]:
         """Get module summary.
-        
+
         Returns:
             Dictionary with module state
         """
-        cooperation_rate = self.cooperators / self.population_size if self.population_size > 0 else 0.0
+        cooperation_rate = (
+            self.cooperators / self.population_size if self.population_size > 0 else 0.0
+        )
 
         return {
             "population_size": self.population_size,

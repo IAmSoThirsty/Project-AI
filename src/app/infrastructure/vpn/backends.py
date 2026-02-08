@@ -110,7 +110,9 @@ class WireGuardBackend(VPNBackend):
 
             if result.returncode == 0:
                 self.connected = True
-                self.logger.info("WireGuard connected on Linux: %s", self.interface_name)
+                self.logger.info(
+                    "WireGuard connected on Linux: %s", self.interface_name
+                )
                 return True
             else:
                 self.logger.error("wg-quick failed: %s", result.stderr)
@@ -152,7 +154,9 @@ class WireGuardBackend(VPNBackend):
 
             if result.returncode == 0:
                 self.connected = True
-                self.logger.info("WireGuard connected on macOS: %s", self.interface_name)
+                self.logger.info(
+                    "WireGuard connected on macOS: %s", self.interface_name
+                )
                 return True
             else:
                 self.logger.error("macOS wg-quick failed: %s", result.stderr)
@@ -413,7 +417,7 @@ class IKEv2Backend(VPNBackend):
                 cmd,
                 capture_output=True,
                 timeout=30,
-                shell=True if self.platform == "Windows" else False,
+                shell=self.platform == "Windows",
             )
 
             if result.returncode == 0:

@@ -186,18 +186,6 @@ class SecurityEnforcementGateway:
             f"{request.operation_id}{request.timestamp}".encode()
         ).hexdigest()[:16]
 
-        audit_record = {
-            "audit_id": audit_id,
-            "operation_id": request.operation_id,
-            "operation_type": request.operation_type.value,
-            "action": request.action,
-            "user_id": request.user_id,
-            "timestamp": request.timestamp,
-            "allowed": result.allowed,
-            "layers_checked": result.layers_checked,
-            "context": request.context,
-        }
-
         # TODO: Wire into immutable audit log system
         logger.info("AUDIT TRAIL: %s - %s", audit_id, request.action)
 

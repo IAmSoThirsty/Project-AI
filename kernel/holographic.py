@@ -318,7 +318,9 @@ class HolographicLayerManager:
 
         elif threat.level == ThreatLevel.SUSPICIOUS:
             # Monitor closely but allow
-            logger.warning("⚠️  Suspicious activity from user %s: %s", user_id, threat.threat_type)
+            logger.warning(
+                "⚠️  Suspicious activity from user %s: %s", user_id, threat.threat_type
+            )
             return {
                 "status": "SUCCESS",
                 "result": observed.result,
@@ -329,7 +331,9 @@ class HolographicLayerManager:
 
         elif threat.level in (ThreatLevel.MALICIOUS, ThreatLevel.CRITICAL):
             # TRAP THEM!
-            logger.error("🚨 THREAT DETECTED: %s from user %s", threat.threat_type, user_id)
+            logger.error(
+                "🚨 THREAT DETECTED: %s from user %s", threat.threat_type, user_id
+            )
             deception_layer = self.transition_to_deception(user_id, threat)
 
             # Return fake success so they don't know

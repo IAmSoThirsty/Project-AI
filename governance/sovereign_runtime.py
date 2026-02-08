@@ -89,7 +89,8 @@ class SovereignRuntime:
                 encryption_algorithm=serialization.NoEncryption(),
             )
             public_bytes = self.public_key.public_bytes(
-                encoding=serialization.Encoding.Raw, format=serialization.PublicFormat.Raw
+                encoding=serialization.Encoding.Raw,
+                format=serialization.PublicFormat.Raw,
             )
 
             with open(self.keypair_path, "w") as f:
@@ -216,7 +217,8 @@ class SovereignRuntime:
             "config_hash": config_hash,
             "signature": signature.hex(),
             "public_key": self.public_key.public_bytes(
-                encoding=serialization.Encoding.Raw, format=serialization.PublicFormat.Raw
+                encoding=serialization.Encoding.Raw,
+                format=serialization.PublicFormat.Raw,
             ).hex(),
             "timestamp": datetime.now().isoformat(),
             "algorithm": "Ed25519",
@@ -270,7 +272,9 @@ class SovereignRuntime:
             logger.error("Config snapshot verification failed: %s", e)
             return False
 
-    def create_role_signature(self, role: str, context: dict[str, Any]) -> dict[str, str]:
+    def create_role_signature(
+        self, role: str, context: dict[str, Any]
+    ) -> dict[str, str]:
         """
         Create cryptographic role signature.
 
@@ -299,7 +303,8 @@ class SovereignRuntime:
             "payload_hash": payload_hash,
             "signature": signature.hex(),
             "public_key": self.public_key.public_bytes(
-                encoding=serialization.Encoding.Raw, format=serialization.PublicFormat.Raw
+                encoding=serialization.Encoding.Raw,
+                format=serialization.PublicFormat.Raw,
             ).hex(),
             "timestamp": payload["timestamp"],
         }
@@ -307,7 +312,11 @@ class SovereignRuntime:
         # Log to audit trail
         self.audit_log(
             "ROLE_SIGNATURE",
-            {"role": role, "payload_hash": payload_hash, "signature": role_sig["signature"][:16] + "..."},
+            {
+                "role": role,
+                "payload_hash": payload_hash,
+                "signature": role_sig["signature"][:16] + "...",
+            },
         )
 
         return role_sig
@@ -379,7 +388,8 @@ class SovereignRuntime:
             "binding_hash": binding_hash,
             "signature": signature.hex(),
             "public_key": self.public_key.public_bytes(
-                encoding=serialization.Encoding.Raw, format=serialization.PublicFormat.Raw
+                encoding=serialization.Encoding.Raw,
+                format=serialization.PublicFormat.Raw,
             ).hex(),
             "timestamp": binding_payload["timestamp"],
         }

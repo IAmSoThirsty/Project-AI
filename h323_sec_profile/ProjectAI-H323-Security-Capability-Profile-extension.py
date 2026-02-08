@@ -1,23 +1,29 @@
-# Project-AI H.323 Security Capability Profile
+"""
+Project-AI H.323 Security Capability Profile
 
-# v1
+v1
 
-## Introduction
-This profile describes the security capabilities for the H.323 protocol, essential for secure communications.
+Introduction
+This profile describes the security capabilities for the H.323 protocol,
+essential for secure communications.
 
-## Security Features
+Security Features
 - Authentication
 - Encryption
 - Integrity
 
-# v2
+v2
 
-## Additions
+Additions
 - Improved encryption algorithms.
 - Support for new authentication methods.
 
-# v3
+v3
 
-## Enhancements
+Enhancements
 - Updated security features based on user feedback.
 - Compatibility with newer H.323 standards.
+"""
+
+# This is a documentation file - no executable code
+pass

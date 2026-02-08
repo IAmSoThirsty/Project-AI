@@ -109,7 +109,9 @@ class CommunicationChannel:
                     self._socket.settimeout(timeout)
                     self._socket.connect(self.socket_path)
                     self._connected = True
-                    self.logger.info("Connected to VM %s via %s", self.vm_id, self.socket_path)
+                    self.logger.info(
+                        "Connected to VM %s via %s", self.vm_id, self.socket_path
+                    )
                     return True
             except Exception as e:
                 self.logger.error("Failed to connect to VM %s: %s", self.vm_id, e)
@@ -160,7 +162,9 @@ class CommunicationChannel:
             except TimeoutError:
                 return None
             except Exception as e:
-                self.logger.error("Failed to receive message from VM %s: %s", self.vm_id, e)
+                self.logger.error(
+                    "Failed to receive message from VM %s: %s", self.vm_id, e
+                )
                 return None
 
     def close(self):
@@ -249,10 +253,14 @@ class MicroVMInstance:
                 return True
 
             if self._state not in [VMState.CREATED, VMState.STOPPED]:
-                self.logger.error("Cannot start VM %s in state %s", self.vm_id, self._state.value)
+                self.logger.error(
+                    "Cannot start VM %s in state %s", self.vm_id, self._state.value
+                )
                 return False
 
-            self.logger.info("Starting MicroVM %s with backend %s", self.vm_id, self.backend.value)
+            self.logger.info(
+                "Starting MicroVM %s with backend %s", self.vm_id, self.backend.value
+            )
             self._state = VMState.STARTING
 
             try:
@@ -283,7 +291,9 @@ class MicroVMInstance:
                 # Start health monitoring
                 self._start_monitoring()
 
-                self.logger.info("MicroVM %s started successfully (PID: %s)", self.vm_id, self._pid)
+                self.logger.info(
+                    "MicroVM %s started successfully (PID: %s)", self.vm_id, self._pid
+                )
                 return True
 
             except Exception as e:
@@ -408,7 +418,7 @@ class MicroVMInstance:
             else:
                 return False
 
-            self.logger.debug("Launching VM with command: %s", ' '.join(cmd))
+            self.logger.debug("Launching VM with command: %s", " ".join(cmd))
 
             # Launch process
             self._process = subprocess.Popen(
@@ -513,7 +523,9 @@ class MicroVMInstance:
                             self._process.wait(timeout=10.0)
                         except subprocess.TimeoutExpired:
                             # Force kill if not responding
-                            self.logger.warning("VM %s not responding, forcing shutdown", self.vm_id)
+                            self.logger.warning(
+                                "VM %s not responding, forcing shutdown", self.vm_id
+                            )
                             self._process.kill()
                             self._process.wait()
 
@@ -823,10 +835,7 @@ class MicroVMIsolationManager:
         if self._total_vcpus_allocated + limits.vcpu_count > self._max_vcpus:
             return False
 
-        if self._total_memory_allocated + limits.memory_mb > self._max_memory_mb:
-            return False
-
-        return True
+        return not self._total_memory_allocated + limits.memory_mb > self._max_memory_mb
 
     def start_vm(self, vm_id: str) -> bool:
         """Start a MicroVM instance"""

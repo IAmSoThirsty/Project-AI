@@ -44,7 +44,9 @@ class AdBlockDatabase:
             "contextweb.com",
         }
 
-        self.logger.info("Loaded %s major ad networks for annihilation", len(major_networks))
+        self.logger.info(
+            "Loaded %s major ad networks for annihilation", len(major_networks)
+        )
         return major_networks
 
     def _load_malvertising_list(self) -> set[str]:

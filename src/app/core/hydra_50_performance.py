@@ -217,7 +217,11 @@ class ParallelProcessor:
         else:
             self.executor = ThreadPoolExecutor(max_workers=self.max_workers)
 
-        logger.info("ParallelProcessor initialized: %s %s", self.max_workers, 'processes' if use_processes else 'threads')
+        logger.info(
+            "ParallelProcessor initialized: %s %s",
+            self.max_workers,
+            "processes" if use_processes else "threads",
+        )
 
     def map(self, func: Callable, items: list[Any]) -> list[Any]:
         """Map function over items in parallel"""

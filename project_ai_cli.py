@@ -68,7 +68,9 @@ def cmd_run(args):
         logger.info("   - Policy bindings enforced: ✓")
         logger.info("   - Audit trail immutable: ✓")
         logger.info("")
-        logger.info("📦 Compliance Bundle: %s/compliance_bundle.json", executor.artifacts_dir)
+        logger.info(
+            "📦 Compliance Bundle: %s/compliance_bundle.json", executor.artifacts_dir
+        )
         logger.info("=" * 80)
         sys.exit(0)
     else:
@@ -210,9 +212,11 @@ def cmd_sovereign_verify(args):
     logger.info("Hash Chain Validation:")
     hash_check = report["checks"]["hash_chain_validation"]
     logger.info("  Status: %s", hash_check["status"].upper())
-    logger.info("  Blocks Verified: %d / %d",
-                hash_check["details"].get("blocks_verified", 0),
-                hash_check["details"].get("total_blocks", 0))
+    logger.info(
+        "  Blocks Verified: %d / %d",
+        hash_check["details"].get("blocks_verified", 0),
+        hash_check["details"].get("total_blocks", 0),
+    )
     if hash_check.get("issues"):
         logger.info("  Issues:")
         for issue in hash_check["issues"][:5]:  # Show first 5
@@ -224,23 +228,33 @@ def cmd_sovereign_verify(args):
     sig_check = report["checks"]["signature_authority_mapping"]
     logger.info("  Status: %s", sig_check["status"].upper())
     logger.info("  Algorithm: %s", sig_check["details"].get("algorithm", "Ed25519"))
-    logger.info("  Public Key Fingerprint: %s",
-                sig_check["details"].get("public_key_fingerprint", "unknown"))
-    logger.info("  Signatures Verified: %d / %d",
-                sig_check["details"].get("signatures_verified", 0),
-                sig_check["details"].get("signatures_found", 0))
+    logger.info(
+        "  Public Key Fingerprint: %s",
+        sig_check["details"].get("public_key_fingerprint", "unknown"),
+    )
+    logger.info(
+        "  Signatures Verified: %d / %d",
+        sig_check["details"].get("signatures_verified", 0),
+        sig_check["details"].get("signatures_found", 0),
+    )
     if sig_check.get("authorities"):
         logger.info("  Authorities:")
         for role, info in sig_check["authorities"].items():
-            logger.info("    • %s: %d occurrences, %d verified",
-                       role, info["occurrences"], info["verified"])
+            logger.info(
+                "    • %s: %d occurrences, %d verified",
+                role,
+                info["occurrences"],
+                info["verified"],
+            )
     logger.info("")
 
     # Policy resolution trace
     logger.info("Policy Resolution Trace:")
     policy_check = report["checks"]["policy_resolution_trace"]
     logger.info("  Status: %s", policy_check["status"].upper())
-    logger.info("  Total Resolutions: %d", policy_check["details"].get("total_resolutions", 0))
+    logger.info(
+        "  Total Resolutions: %d", policy_check["details"].get("total_resolutions", 0)
+    )
     logger.info("  Passed: %d", policy_check["details"].get("passed_resolutions", 0))
     logger.info("  Failed: %d", policy_check["details"].get("failed_resolutions", 0))
     logger.info("")
@@ -251,7 +265,9 @@ def cmd_sovereign_verify(args):
     logger.info("  Attestation ID: %s", attestation["attestation_id"][:32] + "...")
     logger.info("  Timestamp: %s", attestation["timestamp"])
     logger.info("  Verifier: %s", attestation["verifier"])
-    logger.info("  Verification Hash: %s", attestation["verification_hash"][:32] + "...")
+    logger.info(
+        "  Verification Hash: %s", attestation["verification_hash"][:32] + "..."
+    )
     logger.info("")
 
     # Summary
@@ -346,7 +362,9 @@ sovereign runtime system - proving governance through execution, not documentati
     verify_bundle_parser = subparsers.add_parser(
         "verify-bundle", help="Verify compliance bundle"
     )
-    verify_bundle_parser.add_argument("bundle", help="Path to compliance bundle JSON file")
+    verify_bundle_parser.add_argument(
+        "bundle", help="Path to compliance bundle JSON file"
+    )
 
     args = parser.parse_args()
 

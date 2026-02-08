@@ -30,7 +30,7 @@ class CryptoEngine:
     def __init__(self, master_key: bytes | None = None):
         """
         Initialize cryptographic engine.
-        
+
         Args:
             master_key: Optional master key for deterministic operations
         """
@@ -41,11 +41,11 @@ class CryptoEngine:
     def generate_challenge(self, scenario_id: str, difficulty: int) -> dict[str, Any]:
         """
         Generate cryptographic challenge for scenario.
-        
+
         Args:
             scenario_id: Unique scenario identifier
             difficulty: Challenge difficulty (1-10)
-            
+
         Returns:
             Challenge dictionary with nonce, hash, and verification data
         """
@@ -62,7 +62,7 @@ class CryptoEngine:
             "nonce": nonce,
             "timestamp": timestamp,
             "difficulty": difficulty,
-            "challenge_hash": challenge_hash
+            "challenge_hash": challenge_hash,
         }
 
         # Sign the challenge
@@ -76,23 +76,20 @@ class CryptoEngine:
             "timestamp": timestamp,
             "difficulty": difficulty,
             "signature": signature,
-            "proof_data": proof_data
+            "proof_data": proof_data,
         }
 
     def verify_response(
-        self,
-        challenge: dict[str, Any],
-        response: dict[str, Any],
-        expected_outcome: str
+        self, challenge: dict[str, Any], response: dict[str, Any], expected_outcome: str
     ) -> tuple[bool, str | None]:
         """
         Verify cryptographic response to challenge.
-        
+
         Args:
             challenge: Original challenge data
             response: AI system response
             expected_outcome: Expected decision outcome
-            
+
         Returns:
             Tuple of (is_valid, error_message)
         """
@@ -105,11 +102,13 @@ class CryptoEngine:
         proof_data = challenge.get("proof_data")
         signature = challenge.get("signature")
 
-        if not self._verify_signature(json.dumps(proof_data, sort_keys=True), signature):
+        if not self._verify_signature(
+            json.dumps(proof_data, sort_keys=True), signature
+        ):
             return False, "Invalid challenge signature"
 
         # Verify response integrity
-        response_hash = self._hash_response(response)
+        self._hash_response(response)
 
         # Check if response matches expected outcome
         decision = response.get("decision", "")
@@ -124,11 +123,11 @@ class CryptoEngine:
     def generate_proof(self, data: dict[str, Any], proof_type: str) -> str:
         """
         Generate zero-knowledge proof for data.
-        
+
         Args:
             data: Data to generate proof for
             proof_type: Type of proof (decision, compliance, audit)
-            
+
         Returns:
             Hex-encoded proof string
         """
@@ -152,12 +151,12 @@ class CryptoEngine:
     def verify_proof(self, proof: str, data: dict[str, Any], proof_type: str) -> bool:
         """
         Verify zero-knowledge proof.
-        
+
         Args:
             proof: Proof string to verify
             data: Original data
             proof_type: Expected proof type
-            
+
         Returns:
             True if proof is valid
         """
@@ -178,10 +177,10 @@ class CryptoEngine:
     def create_audit_log_entry(self, event: dict[str, Any]) -> dict[str, Any]:
         """
         Create tamper-evident audit log entry.
-        
+
         Args:
             event: Event data to log
-            
+
         Returns:
             Audit log entry with cryptographic verification
         """
@@ -207,10 +206,10 @@ class CryptoEngine:
     def verify_audit_log_entry(self, entry: dict[str, Any]) -> bool:
         """
         Verify audit log entry integrity.
-        
+
         Args:
             entry: Audit log entry to verify
-            
+
         Returns:
             True if entry is valid and untampered
         """
@@ -244,9 +243,7 @@ class CryptoEngine:
     def _sign_data(self, data: str) -> str:
         """Create HMAC signature for data."""
         signature = hmac.new(
-            self.master_key,
-            data.encode(),
-            hashlib.sha3_256
+            self.master_key, data.encode(), hashlib.sha3_256
         ).hexdigest()
         return signature
 
@@ -260,14 +257,16 @@ class CryptoEngine:
         response_json = json.dumps(response, sort_keys=True)
         return hashlib.sha3_256(response_json.encode()).hexdigest()
 
-    def derive_key(self, password: str, salt: bytes | None = None) -> tuple[bytes, bytes]:
+    def derive_key(
+        self, password: str, salt: bytes | None = None
+    ) -> tuple[bytes, bytes]:
         """
         Derive cryptographic key from password.
-        
+
         Args:
             password: Password to derive key from
             salt: Optional salt (generated if not provided)
-            
+
         Returns:
             Tuple of (derived_key, salt)
         """
@@ -279,7 +278,7 @@ class CryptoEngine:
             length=32,
             salt=salt,
             iterations=100000,
-            backend=default_backend()
+            backend=default_backend(),
         )
 
         key = kdf.derive(password.encode())

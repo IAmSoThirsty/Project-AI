@@ -256,7 +256,10 @@ class TestContractCompliance:
         contract_sig = signature(SimulationSystem.initialize)
 
         # Both should return bool
-        assert adapter_sig.return_annotation is bool or adapter_sig.return_annotation == contract_sig.return_annotation
+        assert (
+            adapter_sig.return_annotation is bool
+            or adapter_sig.return_annotation == contract_sig.return_annotation
+        )
 
 
 class TestEndToEndIntegration:

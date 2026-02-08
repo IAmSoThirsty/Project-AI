@@ -3,11 +3,12 @@ Minimal configuration schema for EMP Defense Engine.
 """
 
 from dataclasses import dataclass
-from enum import Enum
+from enum import StrEnum
 
 
-class EMPScenario(str, Enum):
+class EMPScenario(StrEnum):
     """EMP scenario types."""
+
     STANDARD = "standard"
     SEVERE = "severe"
 
@@ -24,6 +25,7 @@ class SimulationConfig:
         >>> config.scenario
         'standard'
     """
+
     scenario: str = "standard"
     duration_years: int = 10
     grid_failure_pct: float = 0.90  # 90% grid failure

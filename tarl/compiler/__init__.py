@@ -260,7 +260,10 @@ class CodeGenerator:
                         num_value = float(token.value)
                     except ValueError:
                         # If parsing fails, log warning and skip
-                        logger.warning("NUMBER token '%s' cannot be parsed as numeric type, skipping", token.value)
+                        logger.warning(
+                            "NUMBER token '%s' cannot be parsed as numeric type, skipping",
+                            token.value,
+                        )
                         continue
 
                 constants.append(num_value)
@@ -286,7 +289,11 @@ class CodeGenerator:
                 bytecode.append(len(encoded))
                 bytecode.extend(encoded)
 
-        logger.debug("Generated %s bytes of bytecode with %s constants", len(bytecode), len(constants))
+        logger.debug(
+            "Generated %s bytes of bytecode with %s constants",
+            len(bytecode),
+            len(constants),
+        )
 
         return bytes(bytecode)
 

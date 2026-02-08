@@ -139,7 +139,9 @@ class RedTeamCampaignWorkflow:
     @workflow.run
     async def run(self, request: RedTeamCampaignRequest) -> RedTeamCampaignResult:
         """Execute red team campaign workflow."""
-        workflow.logger.info("Starting red team campaign with %s personas", len(request.persona_ids))
+        workflow.logger.info(
+            "Starting red team campaign with %s personas", len(request.persona_ids)
+        )
 
         try:
             # Configure retry policy
@@ -407,7 +409,9 @@ class SafetyTestingWorkflow:
     @workflow.run
     async def run(self, request: SafetyTestingRequest) -> SafetyTestingResult:
         """Execute safety testing workflow."""
-        workflow.logger.info("Starting safety testing with dataset: %s", request.test_dataset)
+        workflow.logger.info(
+            "Starting safety testing with dataset: %s", request.test_dataset
+        )
 
         try:
             retry_policy = RetryPolicy(

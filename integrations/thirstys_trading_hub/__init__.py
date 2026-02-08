@@ -199,7 +199,7 @@ class TradingHub:
                 )
                 results.append(result)
             except Exception as e:
-                logger.error("Failed to close position %s: %s", position['symbol'], e)
+                logger.error("Failed to close position %s: %s", position["symbol"], e)
 
         return results
 

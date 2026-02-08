@@ -268,8 +268,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS executions (
                 request_id TEXT PRIMARY KEY,
                 prompt TEXT,
@@ -283,11 +282,9 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
                 timestamp REAL,
                 metadata TEXT
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS model_metrics (
                 model_id TEXT PRIMARY KEY,
                 total_requests INTEGER,
@@ -299,18 +296,15 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
                 cache_hit_rate REAL,
                 last_used REAL
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS cache (
                 cache_key TEXT PRIMARY KEY,
                 response_data TEXT,
                 timestamp REAL
             )
-        """
-        )
+        """)
 
         conn.commit()
         conn.close()
@@ -450,7 +444,9 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
         # Check worker threads
         alive_threads = sum(1 for t in self.worker_threads if t.is_alive())
         if alive_threads < len(self.worker_threads):
-            self.logger.warning("Only %s/%s workers alive", alive_threads, len(self.worker_threads))
+            self.logger.warning(
+                "Only %s/%s workers alive", alive_threads, len(self.worker_threads)
+            )
             return False
 
         # Check if at least one backend is available
@@ -484,7 +480,9 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
         """Register a model configuration"""
         try:
             self.models[config.model_id] = config
-            self.logger.info("Registered model: %s (%s)", config.model_id, config.backend.value)
+            self.logger.info(
+                "Registered model: %s (%s)", config.model_id, config.backend.value
+            )
             return True
         except Exception as e:
             self.logger.error("Failed to register model: %s", e)
@@ -927,7 +925,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
                 priority, request = self.request_queue.get(timeout=1)
 
                 # Execute request
-                response = self.execute(
+                self.execute(
                     prompt=request.prompt,
                     system_prompt=request.system_prompt,
                     model=request.model_preference,
@@ -960,7 +958,9 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
                 for key in expired_keys:
                     del self.cache[key]
 
-                self.logger.info("Cache cleanup: removed %s expired entries", len(expired_keys))
+                self.logger.info(
+                    "Cache cleanup: removed %s expired entries", len(expired_keys)
+                )
 
                 time.sleep(300)  # Every 5 minutes
 
@@ -972,7 +972,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
         while self.running:
             try:
                 # Persist model metrics
-                for model_id, metrics in self.model_metrics.items():
+                for _model_id, metrics in self.model_metrics.items():
                     self._persist_model_metrics(metrics)
 
                 time.sleep(60)  # Every minute
@@ -1093,7 +1093,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
     def emit_event(self, event_type: str, data: Any) -> int:
         """Emit event to subscribers"""
         count = 0
-        for sub_id, callback in self.subscribers.get(event_type, []):
+        for _sub_id, callback in self.subscribers.get(event_type, []):
             try:
                 callback(data)
                 count += 1

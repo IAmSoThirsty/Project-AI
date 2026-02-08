@@ -24,7 +24,7 @@ class SecurityContext:
         agent: str,
         allowed_paths: list[str],
         allowed_operations: list[str],
-        credential_ttl_hours: int
+        credential_ttl_hours: int,
     ):
         """
         Initialize security context.
@@ -113,7 +113,7 @@ class SecurityEngine:
                 agent=agent,
                 allowed_paths=agent_config.get("allowed_paths", []),
                 allowed_operations=agent_config.get("allowed_operations", []),
-                credential_ttl_hours=agent_config.get("credential_ttl_hours", 1)
+                credential_ttl_hours=agent_config.get("credential_ttl_hours", 1),
             )
 
         except Exception as e:
@@ -121,10 +121,7 @@ class SecurityEngine:
             return None
 
     def validate_path_access(
-        self,
-        agent: str,
-        path: str,
-        operation: str
+        self, agent: str, path: str, operation: str
     ) -> tuple[bool, str | None]:
         """
         Validate path access for agent.
@@ -152,8 +149,7 @@ class SecurityEngine:
 
             # Check path allowed (glob matching)
             path_allowed = any(
-                fnmatch(path, pattern)
-                for pattern in context.allowed_paths
+                fnmatch(path, pattern) for pattern in context.allowed_paths
             )
 
             if not path_allowed:
@@ -171,9 +167,7 @@ class SecurityEngine:
             return False, f"Validation error: {str(e)}"
 
     def validate_batch_operations(
-        self,
-        agent: str,
-        operations: list[tuple[str, str]]
+        self, agent: str, operations: list[tuple[str, str]]
     ) -> dict[str, tuple[bool, str | None]]:
         """
         Validate multiple operations in batch.
@@ -266,7 +260,7 @@ class SecurityEngine:
             allowed_accesses = sum(1 for log in self.access_log if log.get("allowed"))
             denied_accesses = len(self.denied_operations)
 
-            agents = set(log.get("agent") for log in self.access_log)
+            agents = {log.get("agent") for log in self.access_log}
 
             return {
                 "total_accesses": total_accesses,
@@ -275,9 +269,7 @@ class SecurityEngine:
                 "unique_agents": len(agents),
                 "agents": list(agents),
                 "configured_agents": list(
-                    self.config.get("least_privilege", {})
-                    .get("agents", {})
-                    .keys()
+                    self.config.get("least_privilege", {}).get("agents", {}).keys()
                 ),
             }
 
@@ -291,51 +283,47 @@ class SecurityEngine:
         self.denied_operations.clear()
         logger.info("Security logs cleared")
 
-    def _log_access(
-        self,
-        agent: str,
-        path: str,
-        operation: str,
-        allowed: bool
-    ) -> None:
+    def _log_access(self, agent: str, path: str, operation: str, allowed: bool) -> None:
         """Log access attempt."""
         from datetime import datetime
 
-        self.access_log.append({
-            "timestamp": datetime.utcnow().isoformat(),
-            "agent": agent,
-            "path": path,
-            "operation": operation,
-            "allowed": allowed,
-        })
+        self.access_log.append(
+            {
+                "timestamp": datetime.utcnow().isoformat(),
+                "agent": agent,
+                "path": path,
+                "operation": operation,
+                "allowed": allowed,
+            }
+        )
 
         # Keep last 10000 entries
         if len(self.access_log) > 10000:
             self.access_log = self.access_log[-10000:]
 
     def _log_denied_operation(
-        self,
-        agent: str,
-        path: str,
-        operation: str,
-        reason: str
+        self, agent: str, path: str, operation: str, reason: str
     ) -> None:
         """Log denied operation."""
         from datetime import datetime
 
-        self.denied_operations.append({
-            "timestamp": datetime.utcnow().isoformat(),
-            "agent": agent,
-            "path": path,
-            "operation": operation,
-            "reason": reason,
-        })
+        self.denied_operations.append(
+            {
+                "timestamp": datetime.utcnow().isoformat(),
+                "agent": agent,
+                "path": path,
+                "operation": operation,
+                "reason": reason,
+            }
+        )
 
         # Keep last 1000 denied operations
         if len(self.denied_operations) > 1000:
             self.denied_operations = self.denied_operations[-1000:]
 
-        logger.warning("Denied operation: %s %s %s - %s", agent, operation, path, reason)
+        logger.warning(
+            "Denied operation: %s %s %s - %s", agent, operation, path, reason
+        )
 
 
 __all__ = ["SecurityEngine", "SecurityContext"]

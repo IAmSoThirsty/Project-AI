@@ -247,7 +247,10 @@ class AgentProcess:
 
                 except subprocess.TimeoutExpired:
                     # Force kill if timeout
-                    logger.warning("Agent %s did not terminate gracefully, forcing...", self.agent_id)
+                    logger.warning(
+                        "Agent %s did not terminate gracefully, forcing...",
+                        self.agent_id,
+                    )
                     self.process.kill()
                     self.process.wait(timeout=2)
                     self._emit_log("agent_terminated", {"method": "forced"})
@@ -262,7 +265,11 @@ class AgentProcess:
             self.info.stop_time = datetime.now().isoformat()
             self.info.exit_code = self.process.returncode
 
-            logger.info("Terminated agent %s (exit code: %s)", self.agent_id, self.info.exit_code)
+            logger.info(
+                "Terminated agent %s (exit code: %s)",
+                self.agent_id,
+                self.info.exit_code,
+            )
 
             return True
 

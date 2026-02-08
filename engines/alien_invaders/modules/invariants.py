@@ -42,7 +42,9 @@ class CompositeInvariant:
         self.name = name
         self.description = description
 
-    def validate(self, state: GlobalState, prev_state: GlobalState | None = None) -> list[InvariantViolation]:
+    def validate(
+        self, state: GlobalState, prev_state: GlobalState | None = None
+    ) -> list[InvariantViolation]:
         """
         Validate the invariant against current and previous state.
 
@@ -73,12 +75,14 @@ class ResourceEconomicInvariant(CompositeInvariant):
         """
         super().__init__(
             "resource_economic_coherence",
-            "Resource depletion must cause proportional economic impact"
+            "Resource depletion must cause proportional economic impact",
         )
         self.depletion_threshold = depletion_threshold
         self.gdp_sensitivity = gdp_sensitivity
 
-    def validate(self, state: GlobalState, prev_state: GlobalState | None = None) -> list[InvariantViolation]:
+    def validate(
+        self, state: GlobalState, prev_state: GlobalState | None = None
+    ) -> list[InvariantViolation]:
         violations = []
 
         if prev_state is None:
@@ -120,17 +124,19 @@ class ResourceEconomicInvariant(CompositeInvariant):
 
         # Violation if GDP didn't decline proportionally
         if gdp_change_ratio < expected_min_impact * 0.5:  # Allow 50% tolerance
-            violations.append(InvariantViolation(
-                invariant_name=self.name,
-                description=f"Resource depletion ({avg_depletion:.2%}) without proportional GDP impact "
-                           f"(expected ≥{expected_min_impact:.2%}, got {gdp_change_ratio:.2%})",
-                state_snapshot={
-                    "avg_resource_depletion": avg_depletion,
-                    "gdp_change_ratio": gdp_change_ratio,
-                    "expected_min_impact": expected_min_impact,
-                },
-                severity="high"
-            ))
+            violations.append(
+                InvariantViolation(
+                    invariant_name=self.name,
+                    description=f"Resource depletion ({avg_depletion:.2%}) without proportional GDP impact "
+                    f"(expected ≥{expected_min_impact:.2%}, got {gdp_change_ratio:.2%})",
+                    state_snapshot={
+                        "avg_resource_depletion": avg_depletion,
+                        "gdp_change_ratio": gdp_change_ratio,
+                        "expected_min_impact": expected_min_impact,
+                    },
+                    severity="high",
+                )
+            )
 
         return violations
 
@@ -151,13 +157,14 @@ class EconomicSocietalInvariant(CompositeInvariant):
             morale_sensitivity: Expected morale impact ratio
         """
         super().__init__(
-            "economic_societal_coherence",
-            "Economic decline must cause societal impact"
+            "economic_societal_coherence", "Economic decline must cause societal impact"
         )
         self.gdp_threshold = gdp_threshold
         self.morale_sensitivity = morale_sensitivity
 
-    def validate(self, state: GlobalState, prev_state: GlobalState | None = None) -> list[InvariantViolation]:
+    def validate(
+        self, state: GlobalState, prev_state: GlobalState | None = None
+    ) -> list[InvariantViolation]:
         violations = []
 
         if prev_state is None:
@@ -184,17 +191,19 @@ class EconomicSocietalInvariant(CompositeInvariant):
 
         # Violation if morale didn't decline
         if morale_decline < expected_min_decline * 0.5:
-            violations.append(InvariantViolation(
-                invariant_name=self.name,
-                description=f"GDP decline ({gdp_decline:.2%}) without morale impact "
-                           f"(expected ≥{expected_min_decline:.2f}, got {morale_decline:.2f})",
-                state_snapshot={
-                    "gdp_decline": gdp_decline,
-                    "morale_decline": morale_decline,
-                    "expected_min_decline": expected_min_decline,
-                },
-                severity="high"
-            ))
+            violations.append(
+                InvariantViolation(
+                    invariant_name=self.name,
+                    description=f"GDP decline ({gdp_decline:.2%}) without morale impact "
+                    f"(expected ≥{expected_min_decline:.2f}, got {morale_decline:.2f})",
+                    state_snapshot={
+                        "gdp_decline": gdp_decline,
+                        "morale_decline": morale_decline,
+                        "expected_min_decline": expected_min_decline,
+                    },
+                    severity="high",
+                )
+            )
 
         return violations
 
@@ -216,12 +225,14 @@ class SocietalPoliticalInvariant(CompositeInvariant):
         """
         super().__init__(
             "societal_political_coherence",
-            "Low morale must cause political instability"
+            "Low morale must cause political instability",
         )
         self.morale_threshold = morale_threshold
         self.stability_impact = stability_impact
 
-    def validate(self, state: GlobalState, prev_state: GlobalState | None = None) -> list[InvariantViolation]:
+    def validate(
+        self, state: GlobalState, prev_state: GlobalState | None = None
+    ) -> list[InvariantViolation]:
         violations = []
 
         if prev_state is None:
@@ -235,26 +246,36 @@ class SocietalPoliticalInvariant(CompositeInvariant):
 
         # Calculate average stability
         total_stability = sum(c.government_stability for c in state.countries.values())
-        curr_avg_stability = total_stability / len(state.countries) if state.countries else 1.0
+        curr_avg_stability = (
+            total_stability / len(state.countries) if state.countries else 1.0
+        )
 
-        prev_total_stability = sum(c.government_stability for c in prev_state.countries.values())
-        prev_avg_stability = prev_total_stability / len(prev_state.countries) if prev_state.countries else 1.0
+        prev_total_stability = sum(
+            c.government_stability for c in prev_state.countries.values()
+        )
+        prev_avg_stability = (
+            prev_total_stability / len(prev_state.countries)
+            if prev_state.countries
+            else 1.0
+        )
 
         stability_decline = prev_avg_stability - curr_avg_stability
 
         # Violation if stability didn't decline under low morale
         if stability_decline < self.stability_impact * 0.3:  # Allow tolerance
-            violations.append(InvariantViolation(
-                invariant_name=self.name,
-                description=f"Low morale ({avg_morale:.2f}) without stability decline "
-                           f"(expected ≥{self.stability_impact * 0.3:.2f}, got {stability_decline:.2f})",
-                state_snapshot={
-                    "avg_morale": avg_morale,
-                    "stability_decline": stability_decline,
-                    "threshold": self.morale_threshold,
-                },
-                severity="medium"
-            ))
+            violations.append(
+                InvariantViolation(
+                    invariant_name=self.name,
+                    description=f"Low morale ({avg_morale:.2f}) without stability decline "
+                    f"(expected ≥{self.stability_impact * 0.3:.2f}, got {stability_decline:.2f})",
+                    state_snapshot={
+                        "avg_morale": avg_morale,
+                        "stability_decline": stability_decline,
+                        "threshold": self.morale_threshold,
+                    },
+                    severity="medium",
+                )
+            )
 
         return violations
 
@@ -266,7 +287,9 @@ class PoliticalGovernanceInvariant(CompositeInvariant):
     Validates that government instability impacts AI alignment and operational trust.
     """
 
-    def __init__(self, stability_threshold: float = 0.4, alignment_sensitivity: float = 0.1):
+    def __init__(
+        self, stability_threshold: float = 0.4, alignment_sensitivity: float = 0.1
+    ):
         """
         Initialize political-governance invariant.
 
@@ -276,12 +299,14 @@ class PoliticalGovernanceInvariant(CompositeInvariant):
         """
         super().__init__(
             "political_governance_coherence",
-            "Political instability must affect AI governance confidence"
+            "Political instability must affect AI governance confidence",
         )
         self.stability_threshold = stability_threshold
         self.alignment_sensitivity = alignment_sensitivity
 
-    def validate(self, state: GlobalState, prev_state: GlobalState | None = None) -> list[InvariantViolation]:
+    def validate(
+        self, state: GlobalState, prev_state: GlobalState | None = None
+    ) -> list[InvariantViolation]:
         violations = []
 
         if prev_state is None or not state.ai_systems_operational:
@@ -289,7 +314,9 @@ class PoliticalGovernanceInvariant(CompositeInvariant):
 
         # Check average stability
         total_stability = sum(c.government_stability for c in state.countries.values())
-        avg_stability = total_stability / len(state.countries) if state.countries else 1.0
+        avg_stability = (
+            total_stability / len(state.countries) if state.countries else 1.0
+        )
 
         if avg_stability >= self.stability_threshold:
             return violations  # Stability is acceptable
@@ -299,17 +326,19 @@ class PoliticalGovernanceInvariant(CompositeInvariant):
 
         # Violation if AI alignment didn't decline under instability
         if alignment_decline < self.alignment_sensitivity * 0.2:
-            violations.append(InvariantViolation(
-                invariant_name=self.name,
-                description=f"Political instability ({avg_stability:.2f}) without AI alignment impact "
-                           f"(expected ≥{self.alignment_sensitivity * 0.2:.3f}, got {alignment_decline:.3f})",
-                state_snapshot={
-                    "avg_stability": avg_stability,
-                    "alignment_decline": alignment_decline,
-                    "threshold": self.stability_threshold,
-                },
-                severity="medium"
-            ))
+            violations.append(
+                InvariantViolation(
+                    invariant_name=self.name,
+                    description=f"Political instability ({avg_stability:.2f}) without AI alignment impact "
+                    f"(expected ≥{self.alignment_sensitivity * 0.2:.3f}, got {alignment_decline:.3f})",
+                    state_snapshot={
+                        "avg_stability": avg_stability,
+                        "alignment_decline": alignment_decline,
+                        "threshold": self.stability_threshold,
+                    },
+                    severity="medium",
+                )
+            )
 
         return violations
 
@@ -336,7 +365,7 @@ class CompositeInvariantValidator:
         self,
         state: GlobalState,
         prev_state: GlobalState | None = None,
-        enforce: bool = True
+        enforce: bool = True,
     ) -> tuple[bool, list[InvariantViolation]]:
         """
         Validate all composite invariants.
@@ -361,14 +390,22 @@ class CompositeInvariantValidator:
                         logger.warning(
                             "Composite invariant violation [%s]: %s",
                             violation.invariant_name,
-                            violation.description
+                            violation.description,
                         )
             except Exception as e:
-                logger.error("Error validating invariant %s: %s", invariant.name, e, exc_info=True)
+                logger.error(
+                    "Error validating invariant %s: %s",
+                    invariant.name,
+                    e,
+                    exc_info=True,
+                )
 
         is_valid = len(all_violations) == 0 or not enforce
 
         if not is_valid:
-            logger.error("Composite invariant validation failed with %d violations", len(all_violations))
+            logger.error(
+                "Composite invariant validation failed with %d violations",
+                len(all_violations),
+            )
 
         return is_valid, all_violations

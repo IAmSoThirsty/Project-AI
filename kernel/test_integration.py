@@ -119,7 +119,7 @@ class TestEndToEndIntegration(unittest.TestCase):
 
         detected_threats = 0
 
-        for attack_type, command in attack_commands:
+        for _attack_type, command in attack_commands:
             result = self.kernel.execute_command(1000 + detected_threats, command)
 
             if result.get("threat_level") in ["SUSPICIOUS", "MALICIOUS", "CRITICAL"]:
@@ -195,10 +195,7 @@ class TestEndToEndIntegration(unittest.TestCase):
         for user_id in range(10000, 10000 + num_users):
             for i in range(commands_per_user):
                 # Mix of safe and malicious
-                if i % 3 == 0:
-                    cmd = "sudo cat /etc/shadow"
-                else:
-                    cmd = f"echo test{i}"
+                cmd = "sudo cat /etc/shadow" if i % 3 == 0 else f"echo test{i}"
 
                 self.kernel.execute_command(user_id, cmd)
                 total_commands += 1

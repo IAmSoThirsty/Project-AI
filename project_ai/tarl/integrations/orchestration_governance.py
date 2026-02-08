@@ -86,7 +86,9 @@ class GovernanceEngine:
         )
 
         self._policy_versions[policy_id].append(policy_version)
-        logger.info("Policy %s version %s registered for %s", policy_id, version, environment)
+        logger.info(
+            "Policy %s version %s registered for %s", policy_id, version, environment
+        )
 
     def get_active_policy(
         self, policy_id: str, environment: str
@@ -125,7 +127,9 @@ class GovernanceEngine:
         if severity == "critical":
             self.escalate_violation(violation_id)
 
-        logger.warning("Policy violation recorded: %s for workflow %s", policy_id, workflow_id)
+        logger.warning(
+            "Policy violation recorded: %s for workflow %s", policy_id, workflow_id
+        )
         return violation_id
 
     def escalate_violation(self, violation_id: str) -> None:
@@ -267,7 +271,9 @@ class ComplianceManager:
         )
 
         self._mappings[component_id] = mapping
-        logger.info("Component %s mapped to %s requirements", component_id, len(requirement_ids))
+        logger.info(
+            "Component %s mapped to %s requirements", component_id, len(requirement_ids)
+        )
 
     def verify_compliance(self, component_id: str) -> dict[str, Any]:
         """Verify compliance for a component"""
@@ -878,7 +884,12 @@ class CICDEnforcementManager:
         # Run gates
         self._run_gates(request_id)
 
-        logger.info("Promotion requested: %s from %s to %s", component_id, from_environment, to_environment)
+        logger.info(
+            "Promotion requested: %s from %s to %s",
+            component_id,
+            from_environment,
+            to_environment,
+        )
         return request_id
 
     def _run_gates(self, request_id: str) -> None:
@@ -898,7 +909,11 @@ class CICDEnforcementManager:
 
                 if not passed and gate.required:
                     request.status = "rejected"
-                    logger.warning("Promotion gate %s failed for %s", gate.name, request.component_id)
+                    logger.warning(
+                        "Promotion gate %s failed for %s",
+                        gate.name,
+                        request.component_id,
+                    )
 
             except Exception as ex:
                 logger.error("Gate %s check failed: %s", gate.name, ex)

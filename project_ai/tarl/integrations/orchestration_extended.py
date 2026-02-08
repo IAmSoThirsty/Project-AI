@@ -182,12 +182,19 @@ class TaskQueue:
             # Re-enqueue for retry
             self._queues[task.priority].append(task)
             self._metrics["tasks_retried"] += 1
-            logger.warning("Task %s failed (attempt %s/%s), re-enqueued", task_id, task.attempts, task.max_attempts)
+            logger.warning(
+                "Task %s failed (attempt %s/%s), re-enqueued",
+                task_id,
+                task.attempts,
+                task.max_attempts,
+            )
         else:
             # Move to dead letter queue
             self._dlq.append(task)
             self._metrics["tasks_failed"] += 1
-            logger.error("Task %s failed permanently after %s attempts", task_id, task.attempts)
+            logger.error(
+                "Task %s failed permanently after %s attempts", task_id, task.attempts
+            )
 
     def register_worker(
         self, worker_id: str, capabilities: list[str], metadata: dict[str, Any]
@@ -452,7 +459,11 @@ class ActivityExecutor:
         """
         # Check idempotency
         if idempotency_token and idempotency_token in self._completed:
-            logger.info("Activity %s already executed (token: %s)", activity.activity_id, idempotency_token)
+            logger.info(
+                "Activity %s already executed (token: %s)",
+                activity.activity_id,
+                idempotency_token,
+            )
             return self._completed[idempotency_token]
 
         # Execute with retries
@@ -477,12 +488,19 @@ class ActivityExecutor:
                 if idempotency_token and activity.idempotent:
                     self._completed[idempotency_token] = activity_result
 
-                logger.info("Activity %s completed on attempt %s", activity.activity_id, attempt)
+                logger.info(
+                    "Activity %s completed on attempt %s", activity.activity_id, attempt
+                )
                 return activity_result
 
             except Exception as ex:
                 last_error = str(ex)
-                logger.warning("Activity %s failed on attempt %s: %s", activity.activity_id, attempt, ex)
+                logger.warning(
+                    "Activity %s failed on attempt %s: %s",
+                    activity.activity_id,
+                    attempt,
+                    ex,
+                )
 
                 if attempt < max_retries:
                     # Exponential backoff (in production, this would use actual delays)
@@ -497,7 +515,9 @@ class ActivityExecutor:
             idempotency_token=idempotency_token,
         )
 
-        logger.error("Activity %s failed after %s attempts", activity.activity_id, attempt)
+        logger.error(
+            "Activity %s failed after %s attempts", activity.activity_id, attempt
+        )
         return activity_result
 
 
@@ -939,7 +959,12 @@ class WorkflowHierarchyManager:
         """Propagate failure from child to parent"""
         parent_id = self._parent_map.get(child_id)
         if parent_id:
-            logger.warning("Failure propagated from child %s to parent %s: %s", child_id, parent_id, error)
+            logger.warning(
+                "Failure propagated from child %s to parent %s: %s",
+                child_id,
+                parent_id,
+                error,
+            )
             # In production, this would trigger parent error handling
 
 

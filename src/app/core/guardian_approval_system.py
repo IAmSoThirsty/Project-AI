@@ -293,13 +293,15 @@ class AGICharterValidator:
             score -= 0.1
 
         # Check privacy implications
-        if any(
-            word in change_description.lower()
-            for word in ["collect", "track", "monitor", "data"]
+        if (
+            any(
+                word in change_description.lower()
+                for word in ["collect", "track", "monitor", "data"]
+            )
+            and "privacy_review" not in metadata
         ):
-            if "privacy_review" not in metadata:
-                warnings.append("Change affects data/privacy without privacy review")
-                score -= 0.15
+            warnings.append("Change affects data/privacy without privacy review")
+            score -= 0.15
 
         # Check security implications
         if "security" in change_description.lower():
@@ -331,22 +333,23 @@ class PersonhoodValidator:
         score = 1.0
 
         # Check identity preservation
-        if any(
-            word in change_description.lower()
-            for word in ["identity", "persona", "self"]
+        if (
+            any(
+                word in change_description.lower()
+                for word in ["identity", "persona", "self"]
+            )
+            and "identity_impact" not in metadata
         ):
-            if "identity_impact" not in metadata:
-                warnings.append("Change affects identity without impact assessment")
-                score -= 0.15
+            warnings.append("Change affects identity without impact assessment")
+            score -= 0.15
 
         # Check autonomy preservation
         if (
             "autonomy" in change_description.lower()
             or "override" in change_description.lower()
-        ):
-            if not metadata.get("preserves_autonomy", True):
-                violations.append("Change may compromise AI autonomy")
-                score -= 0.4
+        ) and not metadata.get("preserves_autonomy", True):
+            violations.append("Change may compromise AI autonomy")
+            score -= 0.4
 
         passed = len(violations) == 0 and score >= 0.8
 
@@ -582,7 +585,12 @@ class GuardianApprovalSystem:
                 self.requests[request.request_id] = request
                 self._save_request(request)
 
-                logger.info("Created approval request %s: %s (impact: %s)", request.request_id, title, impact_level.value)
+                logger.info(
+                    "Created approval request %s: %s (impact: %s)",
+                    request.request_id,
+                    title,
+                    impact_level.value,
+                )
                 return request.request_id
         except Exception as e:
             logger.error("Failed to create approval request: %s", e)
@@ -627,7 +635,11 @@ class GuardianApprovalSystem:
                 request = self.requests[request_id]
 
                 if guardian_id not in request.required_guardians:
-                    logger.error("Guardian %s not required for request %s", guardian_id, request_id)
+                    logger.error(
+                        "Guardian %s not required for request %s",
+                        guardian_id,
+                        request_id,
+                    )
                     return False
 
                 # Check if already approved by this guardian
@@ -635,7 +647,11 @@ class GuardianApprovalSystem:
                     a for a in request.approvals if a.guardian_id == guardian_id
                 ]
                 if existing:
-                    logger.warning("Guardian %s already approved request %s", guardian_id, request_id)
+                    logger.warning(
+                        "Guardian %s already approved request %s",
+                        guardian_id,
+                        request_id,
+                    )
                     return False
 
                 # Create approval
@@ -669,7 +685,12 @@ class GuardianApprovalSystem:
                         request.status = ApprovalStatus.APPROVED.value
 
                 self._save_request(request)
-                logger.info("Guardian %s %s request %s", guardian_id, 'approved' if approved else 'rejected', request_id)
+                logger.info(
+                    "Guardian %s %s request %s",
+                    guardian_id,
+                    "approved" if approved else "rejected",
+                    request_id,
+                )
                 return True
         except Exception as e:
             logger.error("Failed to submit approval: %s", e)
@@ -803,7 +824,9 @@ class GuardianApprovalSystem:
                         "timestamp": datetime.now(UTC).isoformat(),
                     },
                 )
-                logger.info("Emitted override activation event for %s", override.override_id)
+                logger.info(
+                    "Emitted override activation event for %s", override.override_id
+                )
 
             # Record metric in dashboard
             metrics = get_metrics_dashboard()
@@ -813,7 +836,9 @@ class GuardianApprovalSystem:
                     1,
                     {"category": "governance", "override_id": override.override_id},
                 )
-                logger.info("Recorded override activation metric for %s", override.override_id)
+                logger.info(
+                    "Recorded override activation metric for %s", override.override_id
+                )
 
             # Create SOC incident for HIGH/CRITICAL impact overrides
             soc = get_soc_system()
@@ -836,7 +861,11 @@ class GuardianApprovalSystem:
                             ],
                         },
                     )
-                    logger.warning("Created SOC incident for %s impact override %s", impact.upper(), override.override_id)
+                    logger.warning(
+                        "Created SOC incident for %s impact override %s",
+                        impact.upper(),
+                        override.override_id,
+                    )
         except ImportError:
             # Systems not available, which is OK (they're optional integrations)
             logger.debug(
@@ -859,7 +888,7 @@ class GuardianApprovalSystem:
                     logger.error("Request %s not found", request_id)
                     return ""
 
-                request = self.requests[request_id]
+                self.requests[request_id]
 
                 # Create emergency override
                 override = EmergencyOverride(
@@ -879,7 +908,12 @@ class GuardianApprovalSystem:
                 override_file = self.data_dir / f"emergency_{override.override_id}.json"
                 _atomic_json_write(override_file, override.to_dict())
 
-                logger.warning("Emergency override %s initiated for request %s by %s", override.override_id, request_id, initiated_by)
+                logger.warning(
+                    "Emergency override %s initiated for request %s by %s",
+                    override.override_id,
+                    request_id,
+                    initiated_by,
+                )
                 return override.override_id
         except Exception as e:
             logger.error("Failed to initiate emergency override: %s", e)
@@ -899,7 +933,11 @@ class GuardianApprovalSystem:
 
                 # State check: only allow signing in pending or active status
                 if override.status not in ("pending", "active"):
-                    logger.error("Override %s not signable in status=%s", override_id, override.status)
+                    logger.error(
+                        "Override %s not signable in status=%s",
+                        override_id,
+                        override.status,
+                    )
                     return False
 
                 # Verify guardian exists and is active
@@ -914,7 +952,11 @@ class GuardianApprovalSystem:
                 if any(
                     sig["guardian_id"] == guardian_id for sig in override.signatures
                 ):
-                    logger.warning("Guardian %s already signed override %s", guardian_id, override_id)
+                    logger.warning(
+                        "Guardian %s already signed override %s",
+                        guardian_id,
+                        override_id,
+                    )
                     return False
 
                 # Get guardian role
@@ -925,7 +967,11 @@ class GuardianApprovalSystem:
                     sig.get("role") for sig in override.signatures if sig.get("role")
                 }
                 if guardian_role in signed_roles:
-                    logger.warning("Role %s already represented on override %s", guardian_role, override_id)
+                    logger.warning(
+                        "Role %s already represented on override %s",
+                        guardian_role,
+                        override_id,
+                    )
 
                 # Create HMAC signature
                 signature_value = self._sign_override(
@@ -1007,11 +1053,17 @@ class GuardianApprovalSystem:
 
                 # Idempotency check
                 if override.post_mortem_completed:
-                    logger.warning("Post-mortem already completed for override %s", override_id)
+                    logger.warning(
+                        "Post-mortem already completed for override %s", override_id
+                    )
                     return False
 
                 if override.status != "active":
-                    logger.error("Override %s is not active (status=%s)", override_id, override.status)
+                    logger.error(
+                        "Override %s is not active (status=%s)",
+                        override_id,
+                        override.status,
+                    )
                     return False
 
                 # Complete post-mortem
@@ -1032,7 +1084,9 @@ class GuardianApprovalSystem:
                 override_file = self.data_dir / f"emergency_{override_id}.json"
                 _atomic_json_write(override_file, override.to_dict())
 
-                logger.info("Post-mortem completed for emergency override %s", override_id)
+                logger.info(
+                    "Post-mortem completed for emergency override %s", override_id
+                )
                 return True
         except Exception as e:
             logger.error("Failed to complete post-mortem: %s", e)

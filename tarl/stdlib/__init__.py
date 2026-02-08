@@ -92,7 +92,7 @@ class StandardLibrary:
         # Utility
         "range": lambda *args: list(range(*args)),
         "enumerate": lambda it: list(enumerate(it)),
-        "zip": lambda *its: list(zip(*its)),
+        "zip": lambda *its: list(zip(*its, strict=False)),
         "sorted": lambda it: sorted(it),
         "reversed": lambda it: list(reversed(it)),
         "sum": lambda it: sum(it),

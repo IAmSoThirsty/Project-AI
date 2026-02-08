@@ -213,7 +213,7 @@ class EmotionalTTSVoiceModel(VoiceModel):
 
         # Check cache
         if cache_key in self._emotion_cache:
-            logger.debug("Cache hit for: %s", cache_key[)
+            logger.debug("Cache hit for: %s", cache_key[:16])
             return self._emotion_cache[cache_key]
 
         try:
@@ -280,7 +280,9 @@ class ConversationalVoiceModel(VoiceModel):
         """Initialize conversational model"""
         try:
             with self._lock:
-                logger.info("Initializing ConversationalVoice: %s", self.metadata.model_id)
+                logger.info(
+                    "Initializing ConversationalVoice: %s", self.metadata.model_id
+                )
                 self._initialized = True
                 return True
         except Exception as e:

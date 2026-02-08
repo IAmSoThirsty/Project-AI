@@ -32,7 +32,9 @@ class TestIntegrationPointA:
         """Test that actions are approved when no invariants are violated."""
         clock = CausalClock()
         validator = CompositeInvariantValidator()
-        monolith = PlanetaryDefenseMonolith(clock, validator, enable_strict_enforcement=True)
+        monolith = PlanetaryDefenseMonolith(
+            clock, validator, enable_strict_enforcement=True
+        )
 
         # Create states with no violations
         prev_state = GlobalState(
@@ -88,7 +90,9 @@ class TestIntegrationPointA:
         """Test that actions are rejected when invariants are violated."""
         clock = CausalClock()
         validator = CompositeInvariantValidator()
-        monolith = PlanetaryDefenseMonolith(clock, validator, enable_strict_enforcement=True)
+        monolith = PlanetaryDefenseMonolith(
+            clock, validator, enable_strict_enforcement=True
+        )
 
         # Create states with resource depletion but no GDP impact (violation)
         prev_state = GlobalState(
@@ -115,7 +119,10 @@ class TestIntegrationPointA:
             global_population=8_000_000_000,
             global_gdp_usd=100_000_000_000_000,  # No GDP decline despite resource loss
         )
-        current_state.remaining_resources = {"oil": 80.0, "minerals": 80.0}  # 20% depletion
+        current_state.remaining_resources = {
+            "oil": 80.0,
+            "minerals": 80.0,
+        }  # 20% depletion
         current_state.countries["USA"] = Country(
             name="USA",
             code="USA",
@@ -147,7 +154,9 @@ class TestIntegrationPointA:
         """Test that accountability records are generated for all actions."""
         clock = CausalClock()
         validator = CompositeInvariantValidator()
-        monolith = PlanetaryDefenseMonolith(clock, validator, enable_strict_enforcement=True)
+        monolith = PlanetaryDefenseMonolith(
+            clock, validator, enable_strict_enforcement=True
+        )
 
         prev_state = GlobalState(
             current_date=datetime(2030, 1, 1),
@@ -280,7 +289,7 @@ class TestIntegrationPointB:
         monolith = PlanetaryDefenseMonolith(clock, validator)
 
         times = []
-        for i in range(10):
+        for _i in range(10):
             times.append(monolith.advance_time())
 
         # All times should be sequential

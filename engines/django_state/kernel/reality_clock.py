@@ -36,13 +36,13 @@ class CausalEvent:
 
 class RealityClock:
     """Causal time tracking with irreversibility enforcement.
-    
+
     Maintains causal ordering of events and tracks irreversible state transitions.
     """
 
     def __init__(self, start_time: float = 0.0, time_step: float = 1.0):
         """Initialize reality clock.
-        
+
         Args:
             start_time: Initial simulation time
             time_step: Duration of each tick
@@ -68,7 +68,7 @@ class RealityClock:
 
     def tick(self) -> float:
         """Advance time by one step.
-        
+
         Returns:
             New current time
         """
@@ -86,13 +86,13 @@ class RealityClock:
         irreversible: bool = True,
     ) -> CausalEvent:
         """Record event in causal chain.
-        
+
         Args:
             event_id: Unique event identifier
             parent_events: List of parent event IDs (causal dependencies)
             state_hash: Hash of state after event
             irreversible: Whether event is irreversible
-            
+
         Returns:
             CausalEvent instance
         """
@@ -112,24 +112,31 @@ class RealityClock:
         if irreversible:
             self.irreversible_events.append(event_id)
 
-        logger.debug("Recorded event: %s at t=%s, order=%s", event_id, self.current_time, self.causal_order-1)
+        logger.debug(
+            "Recorded event: %s at t=%s, order=%s",
+            event_id,
+            self.current_time,
+            self.causal_order - 1,
+        )
         return causal_event
 
     def checkpoint_state(self, state_hash: str) -> None:
         """Record state checkpoint for this tick.
-        
+
         Args:
             state_hash: Hash of current state
         """
         self.state_checkpoints[self.tick_count] = state_hash
-        logger.debug("State checkpoint at tick %s: %s", self.tick_count, state_hash[)
+        logger.debug(
+            "State checkpoint at tick %s: %s", self.tick_count, state_hash[:16]
+        )
 
     def get_causal_ancestors(self, event_id: str) -> list[CausalEvent]:
         """Get all causal ancestors of an event.
-        
+
         Args:
             event_id: Event to trace back from
-            
+
         Returns:
             List of ancestor events in causal order
         """
@@ -157,13 +164,16 @@ class RealityClock:
 
     def verify_causal_consistency(self) -> tuple[bool, str]:
         """Verify causal chain consistency.
-        
+
         Returns:
             Tuple of (is_consistent, error_message)
         """
         # Check causal order monotonicity
         for i in range(len(self.causal_chain) - 1):
-            if self.causal_chain[i].causal_order >= self.causal_chain[i+1].causal_order:
+            if (
+                self.causal_chain[i].causal_order
+                >= self.causal_chain[i + 1].causal_order
+            ):
                 return False, f"Causal order violation at index {i}"
 
         # Check parent references
@@ -173,18 +183,21 @@ class RealityClock:
                     return False, f"Missing parent event: {parent_id}"
                 parent = self.event_index[parent_id]
                 if parent.causal_order >= event.causal_order:
-                    return False, f"Parent-child order violation: {parent_id} -> {event.event_id}"
+                    return (
+                        False,
+                        f"Parent-child order violation: {parent_id} -> {event.event_id}",
+                    )
 
         return True, ""
 
     def can_rewind_to(self, target_tick: int) -> tuple[bool, str]:
         """Check if time can be rewound to target tick.
-        
+
         Rewinding is only possible if no irreversible events occurred after target.
-        
+
         Args:
             target_tick: Target tick to rewind to
-            
+
         Returns:
             Tuple of (can_rewind, reason)
         """
@@ -204,7 +217,7 @@ class RealityClock:
 
     def get_timeline_summary(self) -> dict[str, Any]:
         """Get summary of timeline state.
-        
+
         Returns:
             Dictionary with timeline statistics
         """
@@ -215,12 +228,14 @@ class RealityClock:
             "total_events": len(self.causal_chain),
             "irreversible_events": len(self.irreversible_events),
             "checkpoints": len(self.state_checkpoints),
-            "simulation_duration": (datetime.utcnow() - self.simulation_start).total_seconds(),
+            "simulation_duration": (
+                datetime.utcnow() - self.simulation_start
+            ).total_seconds(),
         }
 
     def export_causal_chain(self) -> list[dict[str, Any]]:
         """Export complete causal chain.
-        
+
         Returns:
             List of causal events as dictionaries
         """

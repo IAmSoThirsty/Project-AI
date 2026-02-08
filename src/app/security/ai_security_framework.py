@@ -922,7 +922,15 @@ class NISTAIRMFCompliance:
         self.measurements.append(measurement)
 
         status = "✓" if is_acceptable else "✗"
-        logger.info("NIST AI RMF - %s Metric '%s': %s%s (threshold: %s%s)", status, metric_name, value, unit, threshold, unit)
+        logger.info(
+            "NIST AI RMF - %s Metric '%s': %s%s (threshold: %s%s)",
+            status,
+            metric_name,
+            value,
+            unit,
+            threshold,
+            unit,
+        )
 
         return is_acceptable
 
@@ -1173,7 +1181,9 @@ class AISecurityFramework:
             )
 
             self.incidents.append(incident)
-            logger.warning("⚠ Input validation failed: Prompt injection detected (%s)", risk.value)
+            logger.warning(
+                "⚠ Input validation failed: Prompt injection detected (%s)", risk.value
+            )
             return False, f"Prompt injection detected: {patterns[0]}", incident
 
         # Layer 2: NeMo Guardrails

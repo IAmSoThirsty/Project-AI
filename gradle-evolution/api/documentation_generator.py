@@ -29,7 +29,7 @@ class DocumentationGenerator:
         capsule_engine: CapsuleEngine,
         state_integration: BuildStateIntegration,
         audit_integration: BuildAuditIntegration,
-        output_dir: Path | None = None
+        output_dir: Path | None = None,
     ):
         """
         Initialize documentation generator.
@@ -118,7 +118,7 @@ class DocumentationGenerator:
             for capsule in sorted(
                 self.capsule_engine.capsules.values(),
                 key=lambda c: c.timestamp,
-                reverse=True
+                reverse=True,
             ):
                 doc += f"### Capsule: `{capsule.capsule_id}`\n\n"
                 doc += f"- **Timestamp**: {capsule.timestamp}\n"
@@ -145,9 +145,7 @@ class DocumentationGenerator:
             raise
 
     def generate_audit_summary_doc(
-        self,
-        start_time: datetime | None = None,
-        end_time: datetime | None = None
+        self, start_time: datetime | None = None, end_time: datetime | None = None
     ) -> Path:
         """
         Generate audit summary documentation.
@@ -161,8 +159,7 @@ class DocumentationGenerator:
         """
         try:
             report = self.audit_integration.generate_audit_report(
-                start_time=start_time,
-                end_time=end_time
+                start_time=start_time, end_time=end_time
             )
 
             doc = self._build_markdown_header("Audit Summary")
@@ -314,7 +311,9 @@ class DocumentationGenerator:
             return docs
 
         except Exception as e:
-            logger.error("Error generating complete documentation: %s", e, exc_info=True)
+            logger.error(
+                "Error generating complete documentation: %s", e, exc_info=True
+            )
             raise
 
     def _generate_index(self, docs: list[Path]) -> Path:
@@ -353,15 +352,17 @@ class DocumentationGenerator:
             snapshot = {
                 "timestamp": datetime.utcnow().isoformat(),
                 "capsules": [
-                    cap.to_dict()
-                    for cap in self.capsule_engine.capsules.values()
+                    cap.to_dict() for cap in self.capsule_engine.capsules.values()
                 ],
                 "build_statistics": self.state_integration.get_build_statistics(),
                 "build_history": self.state_integration.get_build_history(limit=100),
                 "audit_report": self.audit_integration.generate_audit_report(),
             }
 
-            output_path = self.output_dir / f"snapshot-{datetime.utcnow().strftime('%Y%m%d-%H%M%S')}.json"
+            output_path = (
+                self.output_dir
+                / f"snapshot-{datetime.utcnow().strftime('%Y%m%d-%H%M%S')}.json"
+            )
             with open(output_path, "w") as f:
                 json.dump(snapshot, f, indent=2)
 

@@ -44,7 +44,7 @@ def compliance_bundle():
             data_dir=Path(tmpdir) / "data",
             artifacts_dir=Path(tmpdir) / "artifacts",
         )
-        result = executor.execute()
+        executor.execute()
 
         # Get compliance bundle path
         bundle_path = executor.artifacts_dir / "compliance_bundle.json"

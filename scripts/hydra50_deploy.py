@@ -19,7 +19,9 @@ import subprocess
 import sys
 from pathlib import Path
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 
@@ -30,7 +32,9 @@ class HYDRA50Deployer:
         self.environment = environment
         self.project_root = Path(__file__).parent.parent
         self.config_dir = self.project_root / "config" / "hydra50"
-        self.data_dir = Path("/var/lib/hydra50" if environment == "production" else "data/hydra50")
+        self.data_dir = Path(
+            "/var/lib/hydra50" if environment == "production" else "data/hydra50"
+        )
 
     def deploy(self) -> bool:
         """Execute full deployment"""
@@ -152,7 +156,7 @@ class HYDRA50Deployer:
             subprocess.run(
                 [sys.executable, "-m", "pip", "install", "-r", str(requirements_file)],
                 check=True,
-                capture_output=True
+                capture_output=True,
             )
             logger.info("Dependencies installed successfully")
             return True
@@ -196,22 +200,17 @@ def main():
         "--environment",
         choices=["development", "production"],
         default="development",
-        help="Deployment environment"
+        help="Deployment environment",
     )
     parser.add_argument(
-        "--rollback",
-        action="store_true",
-        help="Rollback previous deployment"
+        "--rollback", action="store_true", help="Rollback previous deployment"
     )
 
     args = parser.parse_args()
 
     deployer = HYDRA50Deployer(args.environment)
 
-    if args.rollback:
-        success = deployer.rollback()
-    else:
-        success = deployer.deploy()
+    success = deployer.rollback() if args.rollback else deployer.deploy()
 
     sys.exit(0 if success else 1)
 

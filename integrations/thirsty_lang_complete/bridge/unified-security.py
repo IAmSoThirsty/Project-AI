@@ -264,7 +264,7 @@ class TARLBridge:
         if not self.policy_engine:
             raise RuntimeError("Policy engine not initialized")
 
-        self.logger.info("Loading policy: %s", policy.get('name', 'unnamed'))
+        self.logger.info("Loading policy: %s", policy.get("name", "unnamed"))
         await self.policy_engine.load_policy_dict(policy)
         self.cache.clear()
 

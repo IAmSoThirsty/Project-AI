@@ -140,14 +140,11 @@ class BiomedicalDefenseSubsystem(
         if not self._initialized:
             return False
 
-        if (
+        return not (
             not self._processing_active
             or not self._processing_thread
             or not self._processing_thread.is_alive()
-        ):
-            return False
-
-        return True
+        )
 
     def get_status(self) -> dict[str, Any]:
         status = super().get_status()
@@ -243,7 +240,9 @@ class BiomedicalDefenseSubsystem(
                 try:
                     callback(data)
                 except Exception as e:
-                    self.logger.error("Error in event callback %s: %s", subscription_id, e)
+                    self.logger.error(
+                        "Error in event callback %s: %s", subscription_id, e
+                    )
 
             return len(subscribers)
 

@@ -206,7 +206,9 @@ class ExperienceReplayBuffer:
                     experiences = pickle.load(f)
 
                 self._buffer = deque(experiences, maxlen=self.max_size)
-                logger.info("Loaded %s experiences from %s", len(self._buffer), filepath)
+                logger.info(
+                    "Loaded %s experiences from %s", len(self._buffer), filepath
+                )
                 return True
         except Exception as e:
             logger.error("Failed to load replay buffer: %s", e, exc_info=True)
@@ -615,7 +617,12 @@ class ContinualLearningSystem:
                 }
 
                 self.model_versions[model_id].append(version)
-                logger.info("Model '%s' updated: %s -> %s", model_id, current_performance, performance)
+                logger.info(
+                    "Model '%s' updated: %s -> %s",
+                    model_id,
+                    current_performance,
+                    performance,
+                )
 
             self.performance_history[model_id].append(performance)
             return True
@@ -638,7 +645,11 @@ class ContinualLearningSystem:
             # Merge new knowledge with existing
             self.consolidated_knowledge[model_id].update(knowledge)
 
-            logger.info("Knowledge consolidated for model '%s' (%s items)", model_id, len(knowledge))
+            logger.info(
+                "Knowledge consolidated for model '%s' (%s items)",
+                model_id,
+                len(knowledge),
+            )
             return True
 
     def get_consolidated_knowledge(self, model_id: str) -> dict[str, Any] | None:
@@ -684,7 +695,9 @@ class ContinualLearningSystem:
                 return True
 
         except Exception as e:
-            logger.error("Failed to save continual learning state: %s", e, exc_info=True)
+            logger.error(
+                "Failed to save continual learning state: %s", e, exc_info=True
+            )
             return False
 
     def load(self, filename: str = "continual_learning.json") -> bool:
@@ -709,7 +722,9 @@ class ContinualLearningSystem:
                 return True
 
         except Exception as e:
-            logger.error("Failed to load continual learning state: %s", e, exc_info=True)
+            logger.error(
+                "Failed to load continual learning state: %s", e, exc_info=True
+            )
             return False
 
 

@@ -215,10 +215,7 @@ class JSONReporter:
             Dictionary representation
         """
         if hasattr(obj, "__dataclass_fields__"):
-            return {
-                key: self._to_dict(value)
-                for key, value in asdict(obj).items()
-            }
+            return {key: self._to_dict(value) for key, value in asdict(obj).items()}
         elif isinstance(obj, list):
             return [self._to_dict(item) for item in obj]
         else:
@@ -255,8 +252,7 @@ class JSONReporter:
 
             for suite_data in data.get("test_suites", []):
                 test_results = [
-                    TestResult(**test_data)
-                    for test_data in suite_data.get("tests", [])
+                    TestResult(**test_data) for test_data in suite_data.get("tests", [])
                 ]
                 suite = TestSuite(
                     suite_name=suite_data["suite_name"],
