@@ -1,0 +1,144 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://project-ai.org/schemas/atlas/claim.v1.json",
+  "title": "Claim",
+  "description": "Canonical schema for factual claims in PROJECT ATLAS. Immutable and locked for sovereign use.",
+  "type": "object",
+  "required": ["id", "statement", "claimant_id", "timestamp", "category", "metadata"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^CLM-[A-Z0-9]{16}$",
+      "description": "Unique claim identifier with prefix"
+    },
+    "statement": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096,
+      "description": "The factual claim statement"
+    },
+    "claimant_id": {
+      "type": "string",
+      "pattern": "^ORG-[A-Z0-9]{16}$",
+      "description": "Organization making the claim"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the claim was made (ISO 8601)"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "economic",
+        "political",
+        "military",
+        "social",
+        "technological",
+        "environmental",
+        "health",
+        "legal",
+        "other"
+      ]
+    },
+    "veracity": {
+      "type": "object",
+      "required": ["status", "confidence"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["verified", "disputed", "false", "unverified", "mixed"]
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "verified_by": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^ORG-[A-Z0-9]{16}$"
+          }
+        },
+        "disputed_by": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^ORG-[A-Z0-9]{16}$"
+          }
+        }
+      }
+    },
+    "impact": {
+      "type": "object",
+      "properties": {
+        "severity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "reach": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "duration": {
+          "type": "string",
+          "enum": ["immediate", "short_term", "long_term", "permanent"]
+        }
+      }
+    },
+    "supporting_evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "source"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["document", "data", "testimony", "media", "other"]
+          },
+          "source": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "hash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["created_at", "updated_at", "version", "hash"],
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "SHA-256 hash for provenance"
+        },
+        "source": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

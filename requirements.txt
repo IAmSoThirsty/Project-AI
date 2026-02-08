@@ -44,3 +44,8 @@ mypy==1.8.0
 # torch==2.1.2
 # transformers==4.37.0
 # accelerate==0.26.0
+
+# ATLAS Ω Constitutional Engine Dependencies
+cbor2>=5.4.0  # Canonical binary encoding for hash integrity
+jsonschema>=4.17.0  # Schema validation
+pyyaml>=6.0  # Configuration loading
