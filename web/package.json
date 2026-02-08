@@ -20,7 +20,7 @@
     "security:fix": "npm audit fix"
   },
   "dependencies": {
-    "next": "^14.2.18",
+    "next": "^15.0.8",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "zustand": "^5.0.2",
@@ -36,7 +36,7 @@
     "@typescript-eslint/eslint-plugin": "^8.19.1",
     "@typescript-eslint/parser": "^8.19.1",
     "eslint": "^8.57.1",
-    "eslint-config-next": "^14.2.18",
+    "eslint-config-next": "^15.0.8",
     "typescript": "^5.7.2",
     "prettier": "^3.4.2",
     "@testing-library/react": "^16.1.0",
