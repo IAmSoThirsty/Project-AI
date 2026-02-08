@@ -58,8 +58,8 @@ class Entity(ABC):
     
     def __init__(self, entity_id: UUID):
         self.id = entity_id
-        self.created_at = datetime.utcnow()
-        self.updated_at = datetime.utcnow()
+        self.created_at = datetime.now(timezone.utc)
+        self.updated_at = datetime.now(timezone.utc)
         self._domain_events: List[DomainEvent] = []
         logger.info(f"Created entity {self.__class__.__name__} with ID {entity_id}")
     
