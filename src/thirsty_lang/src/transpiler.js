@@ -6,6 +6,8 @@
  */
 
 const fs = require('fs');
+const path = require('path');
+const { validatePath, isValidFile } = require('./path-validator');
 
 class ThirstyTranspiler {
   constructor(targetLanguage = 'javascript') {
@@ -136,39 +138,48 @@ function main() {
 
   const filename = args[0];
 
-  if (!fs.existsSync(filename)) {
-    console.error("Error: File '" + filename + "' not found");
-    process.exit(1);
-  }
-
-  let targetLanguage = 'javascript';
-  let outputFile = null;
-  let wrapMain = false;
-
-  // Parse arguments
-  for (var i = 1; i < args.length; i++) {
-    if (args[i] === '--target' && args[i + 1]) {
-      targetLanguage = args[i + 1];
-      i++;
-    } else if (args[i] === '--output' && args[i + 1]) {
-      outputFile = args[i + 1];
-      i++;
-    } else if (args[i] === '--wrap') {
-      wrapMain = true;
+  try {
+    // Validate filename to prevent path traversal
+    const validatedFilename = validatePath(filename);
+    if (!isValidFile(validatedFilename)) {
+      console.error("Error: File '" + filename + "' not found or is not a valid file");
+      process.exit(1);
     }
-  }
 
-  const code = fs.readFileSync(filename, 'utf-8');
-  const transpiler = new ThirstyTranspiler(targetLanguage);
-  const transpiledCode = transpiler.transpile(code);
-  const finalCode = wrapMain ? transpiler.generateWrapper() : transpiledCode;
+    let targetLanguage = 'javascript';
+    let outputFile = null;
+    let wrapMain = false;
 
-  if (outputFile) {
-    fs.writeFileSync(outputFile, finalCode);
-    console.log('✓ Transpiled to ' + targetLanguage + ' and saved to ' + outputFile);
-  } else {
-    console.log('// Transpiled to ' + targetLanguage + '\n');
-    console.log(finalCode);
+    // Parse arguments
+    for (var i = 1; i < args.length; i++) {
+      if (args[i] === '--target' && args[i + 1]) {
+        targetLanguage = args[i + 1];
+        i++;
+      } else if (args[i] === '--output' && args[i + 1]) {
+        outputFile = args[i + 1];
+        i++;
+      } else if (args[i] === '--wrap') {
+        wrapMain = true;
+      }
+    }
+
+    const code = fs.readFileSync(validatedFilename, 'utf-8');
+    const transpiler = new ThirstyTranspiler(targetLanguage);
+    const transpiledCode = transpiler.transpile(code);
+    const finalCode = wrapMain ? transpiler.generateWrapper() : transpiledCode;
+
+    if (outputFile) {
+      // Validate output file path
+      const validatedOutputFile = validatePath(outputFile);
+      fs.writeFileSync(validatedOutputFile, finalCode);
+      console.log('✓ Transpiled to ' + targetLanguage + ' and saved to ' + outputFile);
+    } else {
+      console.log('// Transpiled to ' + targetLanguage + '\n');
+      console.log(finalCode);
+    }
+  } catch (error) {
+    console.error('Error: ' + error.message);
+    process.exit(1);
   }
 }
 
