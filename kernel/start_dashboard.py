@@ -4,11 +4,10 @@ Start Web Dashboard Server (Simplified - No WebSocket Required)
 Opens the dashboard in browser with demo mode.
 """
 
-import sys
-import webbrowser
 import http.server
 import socketserver
-import threading
+import sys
+import webbrowser
 from pathlib import Path
 
 # Add kernel to path

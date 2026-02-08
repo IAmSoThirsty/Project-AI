@@ -12,12 +12,11 @@ Demonstrates all major features:
 - Project-AI integration
 """
 
-import time
 import logging
-from typing import List
+import time
 
-from kernel.thirsty_super_kernel import ThirstySuperKernel
 from kernel.advanced_visualizations import AttackFlowStep
+from kernel.thirsty_super_kernel import ThirstySuperKernel
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

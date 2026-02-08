@@ -8,10 +8,10 @@ Validates build actions against constitutional policies and identity-aware const
 
 import logging
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
-from project_ai.engine.policy.policy_engine import PolicyEngine
 from project_ai.engine.identity.identity_manager import IdentityManager
+from project_ai.engine.policy.policy_engine import PolicyEngine
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +30,7 @@ class ConstitutionalEnforcer:
     def __init__(
         self,
         identity_manager: IdentityManager,
-        config_path: Optional[Path] = None
+        config_path: Path | None = None
     ):
         """
         Initialize constitutional enforcer.
@@ -42,8 +42,8 @@ class ConstitutionalEnforcer:
         self.policy_engine = PolicyEngine(identity_manager)
         self.identity_manager = identity_manager
         self.config_path = config_path
-        self.violation_history: List[Dict[str, Any]] = []
-        
+        self.violation_history: list[dict[str, Any]] = []
+
         # Build-specific policy extensions
         self.build_policies = {
             "bootstrap": {
@@ -59,14 +59,14 @@ class ConstitutionalEnforcer:
                 "max_build_tasks": -1,  # unlimited
             },
         }
-        
+
         logger.info("Constitutional enforcer initialized")
 
     def validate_build_action(
         self,
         action: str,
-        metadata: Dict[str, Any]
-    ) -> Tuple[bool, Optional[str]]:
+        metadata: dict[str, Any]
+    ) -> tuple[bool, str | None]:
         """
         Validate a build action against constitutional policies.
 
@@ -81,7 +81,7 @@ class ConstitutionalEnforcer:
             # Refresh policy from identity phase
             self.policy_engine.refresh_from_identity()
             policy_context = self.policy_engine.get_policy_context()
-            
+
             # Check capability-level policy
             if not self.policy_engine.is_capability_allowed(metadata):
                 reason = (
@@ -91,34 +91,34 @@ class ConstitutionalEnforcer:
                 )
                 self._record_violation(action, metadata, reason)
                 return False, reason
-            
+
             # Check build-specific policies
             mode = self.policy_engine.policy_mode
             build_rules = self.build_policies[mode]
-            
+
             if metadata.get("requires_network") and not build_rules["allow_network_access"]:
                 reason = f"Network access denied in {mode} mode"
                 self._record_violation(action, metadata, reason)
                 return False, reason
-            
+
             if metadata.get("requires_file_write") and not build_rules["allow_file_write"]:
                 reason = f"File write access denied in {mode} mode"
                 self._record_violation(action, metadata, reason)
                 return False, reason
-            
+
             if metadata.get("is_plugin") and not build_rules["allow_plugin_execution"]:
                 reason = f"Plugin execution denied in {mode} mode"
                 self._record_violation(action, metadata, reason)
                 return False, reason
-            
+
             logger.debug(f"Build action '{action}' validated successfully")
             return True, None
-            
+
         except Exception as e:
             logger.error(f"Error validating build action '{action}': {e}", exc_info=True)
             return False, f"Validation error: {str(e)}"
 
-    def enforce_task_limit(self, task_count: int) -> Tuple[bool, Optional[str]]:
+    def enforce_task_limit(self, task_count: int) -> tuple[bool, str | None]:
         """
         Enforce maximum task count based on current policy mode.
 
@@ -131,25 +131,25 @@ class ConstitutionalEnforcer:
         try:
             mode = self.policy_engine.policy_mode
             max_tasks = self.build_policies[mode]["max_build_tasks"]
-            
+
             if max_tasks == -1:
                 return True, None
-            
+
             if task_count > max_tasks:
                 reason = f"Task count {task_count} exceeds limit {max_tasks} in {mode} mode"
                 logger.warning(reason)
                 return False, reason
-            
+
             return True, None
-            
+
         except Exception as e:
             logger.error(f"Error enforcing task limit: {e}", exc_info=True)
             return False, f"Task limit enforcement error: {str(e)}"
 
     def validate_batch_actions(
         self,
-        actions: List[Tuple[str, Dict[str, Any]]]
-    ) -> Dict[str, Tuple[bool, Optional[str]]]:
+        actions: list[tuple[str, dict[str, Any]]]
+    ) -> dict[str, tuple[bool, str | None]]:
         """
         Validate multiple build actions in batch.
 
@@ -164,7 +164,7 @@ class ConstitutionalEnforcer:
             results[action] = self.validate_build_action(action, metadata)
         return results
 
-    def get_policy_summary(self) -> Dict[str, Any]:
+    def get_policy_summary(self) -> dict[str, Any]:
         """
         Get current policy configuration summary.
 
@@ -175,7 +175,7 @@ class ConstitutionalEnforcer:
             self.policy_engine.refresh_from_identity()
             policy_context = self.policy_engine.get_policy_context()
             mode = self.policy_engine.policy_mode
-            
+
             return {
                 "identity_phase": policy_context["phase"],
                 "policy_mode": mode,
@@ -190,7 +190,7 @@ class ConstitutionalEnforcer:
     def _record_violation(
         self,
         action: str,
-        metadata: Dict[str, Any],
+        metadata: dict[str, Any],
         reason: str
     ) -> None:
         """
@@ -202,7 +202,7 @@ class ConstitutionalEnforcer:
             reason: Reason for denial
         """
         from datetime import datetime
-        
+
         violation = {
             "timestamp": datetime.utcnow().isoformat(),
             "action": action,
@@ -213,7 +213,7 @@ class ConstitutionalEnforcer:
         self.violation_history.append(violation)
         logger.warning(f"Policy violation recorded: {reason}")
 
-    def get_violations(self, limit: int = 10) -> List[Dict[str, Any]]:
+    def get_violations(self, limit: int = 10) -> list[dict[str, Any]]:
         """
         Get recent policy violations.
 

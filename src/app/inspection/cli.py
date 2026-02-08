@@ -42,7 +42,7 @@ from rich.table import Table
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from app.inspection.audit_pipeline import AuditConfig, AuditPipeline, run_audit
+from app.inspection.audit_pipeline import AuditConfig, AuditPipeline
 
 app = typer.Typer(
     name="inspection",
@@ -145,8 +145,10 @@ def audit(
     )
 
     # Display header
-    console.print("\n[bold cyan]Project-AI Repository Inspection & Audit System[/bold cyan]")
-    console.print(f"[dim]Version 1.0.0[/dim]\n")
+    console.print(
+        "\n[bold cyan]Project-AI Repository Inspection & Audit System[/bold cyan]"
+    )
+    console.print("[dim]Version 1.0.0[/dim]\n")
 
     console.print(f"[bold]Repository:[/bold] {repo}")
     console.print(f"[bold]Output:[/bold] {output}\n")
@@ -167,12 +169,12 @@ def audit(
 
             if results.success:
                 _display_results(results)
-                console.print("\n[bold green]✓ Audit completed successfully![/bold green]")
+                console.print(
+                    "\n[bold green]✓ Audit completed successfully![/bold green]"
+                )
                 sys.exit(0)
             else:
-                console.print(
-                    f"\n[bold red]✗ Audit failed:[/bold red] {results.error}"
-                )
+                console.print(f"\n[bold red]✗ Audit failed:[/bold red] {results.error}")
                 sys.exit(1)
 
         except KeyboardInterrupt:
@@ -213,26 +215,37 @@ def config(
     """
     if create:
         # Create default config
-        default_config_path = Path(__file__).parent.parent.parent.parent / "config" / "inspection_config.yaml"
-        
+        default_config_path = (
+            Path(__file__).parent.parent.parent.parent
+            / "config"
+            / "inspection_config.yaml"
+        )
+
         if default_config_path.exists():
             import shutil
+
             shutil.copy(default_config_path, output)
             console.print(f"[green]✓ Created configuration file:[/green] {output}")
         else:
-            console.print(f"[red]✗ Default configuration file not found:[/red] {default_config_path}")
+            console.print(
+                f"[red]✗ Default configuration file not found:[/red] {default_config_path}"
+            )
             sys.exit(1)
-    
+
     elif show:
         # Show current config
-        config_path = Path(__file__).parent.parent.parent.parent / "config" / "inspection_config.yaml"
-        
+        config_path = (
+            Path(__file__).parent.parent.parent.parent
+            / "config"
+            / "inspection_config.yaml"
+        )
+
         if config_path.exists():
             with open(config_path) as f:
                 console.print(f.read())
         else:
             console.print("[yellow]No configuration file found[/yellow]")
-    
+
     else:
         console.print("[yellow]Please specify --show or --create[/yellow]")
 
@@ -293,9 +306,7 @@ def _display_results(results):
         table.add_row(
             "Dependencies", str(len(results.integrity.get("dependencies", [])))
         )
-        table.add_row(
-            "Integrity Issues", str(len(results.integrity.get("issues", [])))
-        )
+        table.add_row("Integrity Issues", str(len(results.integrity.get("issues", []))))
         table.add_row(
             "Circular Dependencies",
             str(len(results.integrity.get("circular_dependencies", []))),

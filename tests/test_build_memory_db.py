@@ -37,7 +37,7 @@ class TestBuildMemoryDB:
     def test_create_violation(self, db):
         """Test constitutional violation tracking."""
         build_id = db.create_build(version="1.0.0", status="failure")
-        
+
         violation_id = db.create_violation(
             build_id=build_id,
             phase="compilation",
@@ -54,7 +54,7 @@ class TestBuildMemoryDB:
     def test_create_security_event(self, db):
         """Test security event tracking."""
         build_id = db.create_build(version="1.0.0", status="success")
-        
+
         event_id = db.create_security_event(
             build_id=build_id,
             event_type="vulnerability_detected",
@@ -72,7 +72,7 @@ class TestBuildMemoryDB:
     def test_create_artifact(self, db):
         """Test artifact tracking."""
         build_id = db.create_build(version="1.0.0", status="success")
-        
+
         artifact_id = db.create_artifact(
             build_id=build_id,
             path="build/libs/app.jar",
@@ -90,7 +90,7 @@ class TestBuildMemoryDB:
     def test_create_dependency(self, db):
         """Test dependency tracking."""
         build_id = db.create_build(version="1.0.0", status="success")
-        
+
         dep_id = db.create_dependency(
             build_id=build_id,
             name="com.example:library",
@@ -115,17 +115,17 @@ class TestBuildGraphDB:
 
         with tempfile.TemporaryDirectory() as tmpdir:
             db = BuildMemoryDB(Path(tmpdir) / "test.db")
-            
+
             # Create test data
             build1 = db.create_build(version="1.0.0", status="success")
             build2 = db.create_build(version="1.1.0", status="success")
-            
+
             db.create_artifact(build1, "app.jar", "hash1", 100, "jar")
             db.create_dependency(build1, "dep1", "1.0", license="MIT")
-            
+
             graph = BuildGraphDB(db)
             graph.build_graph()
-            
+
             yield graph
 
     def test_build_graph(self, graph_db):
@@ -184,7 +184,7 @@ class TestBuildQueryEngine:
 
         with tempfile.TemporaryDirectory() as tmpdir:
             db = BuildMemoryDB(Path(tmpdir) / "test.db")
-            
+
             # Create test data
             for i in range(5):
                 build_id = db.create_build(
@@ -192,7 +192,7 @@ class TestBuildQueryEngine:
                     status="success" if i % 2 == 0 else "failure",
                 )
                 db.update_build(build_id, duration=float(100 + i * 10))
-            
+
             yield BuildQueryEngine(db)
 
     def test_build_trends(self, query_engine):
@@ -213,11 +213,11 @@ class TestMemoryManager:
 
         with tempfile.TemporaryDirectory() as tmpdir:
             db = BuildMemoryDB(Path(tmpdir) / "test.db")
-            
+
             # Create test builds
             for i in range(10):
                 db.create_build(version=f"1.{i}.0", status="success")
-            
+
             yield MemoryManager(db, archive_dir=Path(tmpdir) / "archives")
 
     def test_cleanup_dry_run(self, manager):

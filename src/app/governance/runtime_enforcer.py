@@ -11,7 +11,7 @@ Zero tolerance. Zero placeholders. Zero bypass.
 import logging
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Optional
+from typing import Any
 
 from src.app.governance.acceptance_ledger import (
     AcceptanceType,
@@ -40,7 +40,7 @@ class EnforcementContext:
     is_commercial: bool = False
     is_government: bool = False
     requires_hardware_signing: bool = False
-    tier_required: Optional[TierLevel] = None
+    tier_required: TierLevel | None = None
     metadata: dict[str, Any] = None
 
     def __post_init__(self):
@@ -204,7 +204,9 @@ class RuntimeEnforcer:
 
             # Check for termination entry
             terminations = [
-                a for a in acceptances if a.acceptance_type == AcceptanceType.TERMINATION
+                a
+                for a in acceptances
+                if a.acceptance_type == AcceptanceType.TERMINATION
             ]
 
             if terminations:
@@ -405,7 +407,7 @@ class RuntimeEnforcer:
 
 
 # Singleton instance
-_enforcer_instance: Optional[RuntimeEnforcer] = None
+_enforcer_instance: RuntimeEnforcer | None = None
 
 
 def get_runtime_enforcer(data_dir: str = "data/legal") -> RuntimeEnforcer:
@@ -421,7 +423,7 @@ def enforce_action(
     action: str,
     is_commercial: bool = False,
     is_government: bool = False,
-    tier_required: Optional[TierLevel] = None,
+    tier_required: TierLevel | None = None,
     **kwargs,
 ) -> EnforcementResult:
     """

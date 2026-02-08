@@ -10,11 +10,10 @@ import json
 import logging
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
 
+from ..audit.audit_integration import BuildAuditIntegration
 from ..capsules.capsule_engine import CapsuleEngine
 from ..cognition.state_integration import BuildStateIntegration
-from ..audit.audit_integration import BuildAuditIntegration
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +29,7 @@ class DocumentationGenerator:
         capsule_engine: CapsuleEngine,
         state_integration: BuildStateIntegration,
         audit_integration: BuildAuditIntegration,
-        output_dir: Optional[Path] = None
+        output_dir: Path | None = None
     ):
         """
         Initialize documentation generator.
@@ -61,42 +60,42 @@ class DocumentationGenerator:
         try:
             history = self.state_integration.get_build_history(limit=limit)
             stats = self.state_integration.get_build_statistics()
-            
+
             doc = self._build_markdown_header("Build History")
-            
+
             # Statistics section
             doc += "\n## Summary Statistics\n\n"
             doc += f"- **Total Builds**: {stats.get('total_builds', 0)}\n"
             doc += f"- **Successful Builds**: {stats.get('successful_builds', 0)}\n"
             doc += f"- **Failed Builds**: {stats.get('failed_builds', 0)}\n"
             doc += f"- **Average Duration**: {stats.get('average_duration_seconds', 0):.2f}s\n"
-            
+
             # Build history table
             doc += "\n## Recent Builds\n\n"
             doc += "| Build ID | Timestamp | Tasks | Duration | Status |\n"
             doc += "|----------|-----------|-------|----------|--------|\n"
-            
+
             for episode in history:
                 build_id = episode.get("build_id", "N/A")
                 timestamp = episode.get("timestamp", "N/A")
                 tasks = ", ".join(episode.get("tasks", [])[:3])
                 if len(episode.get("tasks", [])) > 3:
                     tasks += "..."
-                
+
                 result = episode.get("result", {})
                 duration = result.get("duration_seconds", 0)
                 success = result.get("success", False)
                 status = "✅ Success" if success else "❌ Failed"
-                
+
                 doc += f"| {build_id[:8]} | {timestamp[:19]} | {tasks} | {duration:.2f}s | {status} |\n"
-            
+
             # Write to file
             output_path = self.output_dir / "build-history.md"
             output_path.write_text(doc)
-            
+
             logger.info(f"Generated build history doc: {output_path}")
             return output_path
-            
+
         except Exception as e:
             logger.error(f"Error generating build history doc: {e}", exc_info=True)
             raise
@@ -110,12 +109,12 @@ class DocumentationGenerator:
         """
         try:
             doc = self._build_markdown_header("Build Capsule Registry")
-            
+
             doc += "\n## Overview\n\n"
             doc += f"Total capsules: **{len(self.capsule_engine.capsules)}**\n\n"
-            
+
             doc += "## Capsules\n\n"
-            
+
             for capsule in sorted(
                 self.capsule_engine.capsules.values(),
                 key=lambda c: c.timestamp,
@@ -127,28 +126,28 @@ class DocumentationGenerator:
                 doc += f"- **Tasks**: {len(capsule.tasks)}\n"
                 doc += f"- **Inputs**: {len(capsule.inputs)}\n"
                 doc += f"- **Outputs**: {len(capsule.outputs)}\n"
-                
+
                 # Tasks list
                 doc += "\n**Tasks Executed**:\n"
                 for task in capsule.tasks:
                     doc += f"- `{task}`\n"
-                
+
                 doc += "\n---\n\n"
-            
+
             output_path = self.output_dir / "capsule-registry.md"
             output_path.write_text(doc)
-            
+
             logger.info(f"Generated capsule registry doc: {output_path}")
             return output_path
-            
+
         except Exception as e:
             logger.error(f"Error generating capsule registry doc: {e}", exc_info=True)
             raise
 
     def generate_audit_summary_doc(
         self,
-        start_time: Optional[datetime] = None,
-        end_time: Optional[datetime] = None
+        start_time: datetime | None = None,
+        end_time: datetime | None = None
     ) -> Path:
         """
         Generate audit summary documentation.
@@ -165,9 +164,9 @@ class DocumentationGenerator:
                 start_time=start_time,
                 end_time=end_time
             )
-            
+
             doc = self._build_markdown_header("Audit Summary")
-            
+
             # Period info
             doc += "\n## Report Period\n\n"
             if start_time:
@@ -175,31 +174,31 @@ class DocumentationGenerator:
             if end_time:
                 doc += f"- **End**: {end_time.isoformat()}\n"
             doc += f"- **Total Events**: {report.get('total_events', 0)}\n"
-            
+
             # Event counts
             doc += "\n## Event Distribution\n\n"
             event_counts = report.get("event_counts", {})
             for event_type, count in sorted(event_counts.items()):
                 doc += f"- **{event_type}**: {count}\n"
-            
+
             # Policy decisions
             doc += "\n## Policy Decisions\n\n"
             policy_decisions = report.get("policy_decisions", {})
             doc += f"- **Allowed**: {policy_decisions.get('allowed', 0)}\n"
             doc += f"- **Denied**: {policy_decisions.get('denied', 0)}\n"
-            
+
             # Security events
             doc += "\n## Security Events\n\n"
             security_events = report.get("security_events", {})
             doc += f"- **Allowed**: {security_events.get('allowed', 0)}\n"
             doc += f"- **Denied**: {security_events.get('denied', 0)}\n"
-            
+
             output_path = self.output_dir / "audit-summary.md"
             output_path.write_text(doc)
-            
+
             logger.info(f"Generated audit summary doc: {output_path}")
             return output_path
-            
+
         except Exception as e:
             logger.error(f"Error generating audit summary doc: {e}", exc_info=True)
             raise
@@ -213,10 +212,10 @@ class DocumentationGenerator:
         """
         try:
             doc = self._build_markdown_header("Verifiability API Reference")
-            
+
             doc += "\n## Base URL\n\n"
             doc += "```\nhttp://localhost:8080/api/v1\n```\n\n"
-            
+
             # Endpoints
             endpoints = [
                 {
@@ -270,28 +269,28 @@ class DocumentationGenerator:
                     "description": "Get API statistics",
                 },
             ]
-            
+
             doc += "## Endpoints\n\n"
-            
+
             for endpoint in endpoints:
                 doc += f"### `{endpoint['method']} {endpoint['path']}`\n\n"
                 doc += f"{endpoint['description']}\n\n"
-                
+
                 doc += "**Example Request**:\n"
                 doc += f"```bash\ncurl -X {endpoint['method']} http://localhost:8080/api/v1{endpoint['path']}\n```\n\n"
                 doc += "---\n\n"
-            
+
             output_path = self.output_dir / "api-reference.md"
             output_path.write_text(doc)
-            
+
             logger.info(f"Generated API reference doc: {output_path}")
             return output_path
-            
+
         except Exception as e:
             logger.error(f"Error generating API reference doc: {e}", exc_info=True)
             raise
 
-    def generate_complete_documentation(self) -> List[Path]:
+    def generate_complete_documentation(self) -> list[Path]:
         """
         Generate complete documentation suite.
 
@@ -300,38 +299,38 @@ class DocumentationGenerator:
         """
         try:
             logger.info("Generating complete documentation suite")
-            
+
             docs = []
             docs.append(self.generate_build_history_doc())
             docs.append(self.generate_capsule_registry_doc())
             docs.append(self.generate_audit_summary_doc())
             docs.append(self.generate_api_reference_doc())
-            
+
             # Generate index
             index_path = self._generate_index(docs)
             docs.insert(0, index_path)
-            
+
             logger.info(f"Generated {len(docs)} documentation files")
             return docs
-            
+
         except Exception as e:
             logger.error(f"Error generating complete documentation: {e}", exc_info=True)
             raise
 
-    def _generate_index(self, docs: List[Path]) -> Path:
+    def _generate_index(self, docs: list[Path]) -> Path:
         """Generate documentation index."""
         doc = self._build_markdown_header("Gradle Evolution Documentation")
-        
+
         doc += "\n## Documentation Index\n\n"
         doc += f"Generated: {datetime.utcnow().isoformat()}\n\n"
-        
+
         doc += "### Available Documents\n\n"
         for doc_path in docs:
             doc += f"- [{doc_path.stem.replace('-', ' ').title()}]({doc_path.name})\n"
-        
+
         index_path = self.output_dir / "README.md"
         index_path.write_text(doc)
-        
+
         return index_path
 
     def _build_markdown_header(self, title: str) -> str:
@@ -361,14 +360,14 @@ class DocumentationGenerator:
                 "build_history": self.state_integration.get_build_history(limit=100),
                 "audit_report": self.audit_integration.generate_audit_report(),
             }
-            
+
             output_path = self.output_dir / f"snapshot-{datetime.utcnow().strftime('%Y%m%d-%H%M%S')}.json"
             with open(output_path, "w") as f:
                 json.dump(snapshot, f, indent=2)
-            
+
             logger.info(f"Exported JSON snapshot: {output_path}")
             return output_path
-            
+
         except Exception as e:
             logger.error(f"Error exporting JSON snapshot: {e}", exc_info=True)
             raise

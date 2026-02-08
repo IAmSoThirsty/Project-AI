@@ -19,8 +19,7 @@ Date: 2026-02-08
 """
 
 import logging
-import os
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -137,7 +136,11 @@ class AuditPipeline(KernelRoutedAgent if KERNEL_AVAILABLE else object):
 
         This is the main entry point for running a complete audit.
         """
-        if KERNEL_AVAILABLE and self.kernel is not None and hasattr(self, "_execute_through_kernel"):
+        if (
+            KERNEL_AVAILABLE
+            and self.kernel is not None
+            and hasattr(self, "_execute_through_kernel")
+        ):
             # Route through kernel for governance
             return self._execute_through_kernel(
                 action=self._do_run,
@@ -184,9 +187,7 @@ class AuditPipeline(KernelRoutedAgent if KERNEL_AVAILABLE else object):
             if self.config.enable_integrity:
                 logger.info("\n[Phase 2/5] Integrity Checking")
                 logger.info("-" * 70)
-                results["integrity"] = self._run_integrity_check(
-                    results["inspection"]
-                )
+                results["integrity"] = self._run_integrity_check(results["inspection"])
             else:
                 logger.info("\n[Phase 2/5] Integrity Checking - SKIPPED")
 
@@ -283,7 +284,9 @@ class AuditPipeline(KernelRoutedAgent if KERNEL_AVAILABLE else object):
 
         return results
 
-    def _run_integrity_check(self, inspection_results: dict[str, Any]) -> dict[str, Any]:
+    def _run_integrity_check(
+        self, inspection_results: dict[str, Any]
+    ) -> dict[str, Any]:
         """Run integrity checking phase."""
         self.integrity_checker = IntegrityChecker(
             repo_root=self.repo_root,
@@ -295,11 +298,15 @@ class AuditPipeline(KernelRoutedAgent if KERNEL_AVAILABLE else object):
         logger.info("✓ Integrity check complete")
         logger.info("  Dependencies analyzed: %d", len(results["dependencies"]))
         logger.info("  Issues found: %d", len(results["issues"]))
-        logger.info("  Circular dependencies: %d", len(results["circular_dependencies"]))
+        logger.info(
+            "  Circular dependencies: %d", len(results["circular_dependencies"])
+        )
 
         return results
 
-    def _run_quality_analysis(self, inspection_results: dict[str, Any]) -> dict[str, Any]:
+    def _run_quality_analysis(
+        self, inspection_results: dict[str, Any]
+    ) -> dict[str, Any]:
         """Run quality analysis phase."""
         self.quality_analyzer = QualityAnalyzer(
             repo_root=self.repo_root,
@@ -336,7 +343,9 @@ class AuditPipeline(KernelRoutedAgent if KERNEL_AVAILABLE else object):
         logger.info("✓ Lint check complete")
         logger.info("  Files checked: %d", summary.get("total_files_checked", 0))
         logger.info("  Issues found: %d", summary.get("total_issues", 0))
-        logger.info("  Errors: %d", summary.get("issues_by_severity", {}).get("error", 0))
+        logger.info(
+            "  Errors: %d", summary.get("issues_by_severity", {}).get("error", 0)
+        )
 
         return results
 
@@ -406,7 +415,11 @@ class AuditPipeline(KernelRoutedAgent if KERNEL_AVAILABLE else object):
             "documentation": avg_doc * 25,
             "maintainability": (avg_maint / 100) * 25,
             "integrity": max(0, 25 - min(integrity_issues * 2 + circular_deps * 5, 25)),
-            "lint": max(0, 25 - min(lint_errors * 0.5 + (total_lint_issues - lint_errors) * 0.1, 25)),
+            "lint": max(
+                0,
+                25
+                - min(lint_errors * 0.5 + (total_lint_issues - lint_errors) * 0.1, 25),
+            ),
         }
 
         overall_health = sum(health_factors.values())
@@ -432,7 +445,9 @@ class AuditPipeline(KernelRoutedAgent if KERNEL_AVAILABLE else object):
         if integrity_issues > 20:
             recommendations.append(f"Address {integrity_issues} integrity issues")
         if avg_doc < 0.5:
-            recommendations.append(f"Increase documentation from {avg_doc*100:.1f}% to 70%+")
+            recommendations.append(
+                f"Increase documentation from {avg_doc*100:.1f}% to 70%+"
+            )
 
         return {
             "health_score": round(overall_health, 2),
@@ -458,21 +473,25 @@ class AuditPipeline(KernelRoutedAgent if KERNEL_AVAILABLE else object):
             "timestamp": datetime.now().isoformat(),
             "execution_time_seconds": execution_time,
             "repository": str(self.repo_root),
-            "files_analyzed": results["inspection"]["statistics"]["total_files"]
-            if results.get("inspection")
-            else 0,
-            "components": len(results["inspection"]["components"])
-            if results.get("inspection")
-            else 0,
-            "integrity_issues": len(results["integrity"]["issues"])
-            if results.get("integrity")
-            else 0,
-            "lint_issues": results["lint"]["summary"]["total_issues"]
-            if results.get("lint")
-            else 0,
-            "reports_generated": list(results.get("reports").keys())
-            if results.get("reports")
-            else [],
+            "files_analyzed": (
+                results["inspection"]["statistics"]["total_files"]
+                if results.get("inspection")
+                else 0
+            ),
+            "components": (
+                len(results["inspection"]["components"])
+                if results.get("inspection")
+                else 0
+            ),
+            "integrity_issues": (
+                len(results["integrity"]["issues"]) if results.get("integrity") else 0
+            ),
+            "lint_issues": (
+                results["lint"]["summary"]["total_issues"] if results.get("lint") else 0
+            ),
+            "reports_generated": (
+                list(results.get("reports").keys()) if results.get("reports") else []
+            ),
             "catalog_path": results.get("catalog_path"),
         }
 

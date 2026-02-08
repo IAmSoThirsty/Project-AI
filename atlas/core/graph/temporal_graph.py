@@ -16,13 +16,14 @@ Layer 3 Component - Production-Grade Implementation
 import hashlib
 import json
 import logging
+from collections import defaultdict
+from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any
+
 import numpy as np
-from dataclasses import dataclass, field
-from collections import defaultdict
 
 try:
     from scipy.sparse import csr_matrix, lil_matrix
@@ -31,7 +32,7 @@ except ImportError:
     SCIPY_AVAILABLE = False
     logger.warning("scipy not available - sparse matrix optimization disabled")
 
-from atlas.audit.trail import get_audit_trail, AuditCategory, AuditLevel
+from atlas.audit.trail import AuditCategory, AuditLevel, get_audit_trail
 
 logger = logging.getLogger(__name__)
 
@@ -46,7 +47,7 @@ class NodeType(Enum):
     MEDIA_GATEKEEPER = "media_gatekeeper"  # Media outlets, platforms
     RELIGIOUS_AUTHORITY = "religious_authority"  # Religious institutions
     PUBLIC_CLUSTER = "public_cluster"  # Public groups, demographics
-    
+
     def get_description(self) -> str:
         """Get human-readable description."""
         descriptions = {
@@ -69,7 +70,7 @@ class EdgeType(Enum):
     REGULATORY_INFLUENCE = "regulatory_influence"  # Regulatory relationships
     MEDIA_AMPLIFICATION = "media_amplification"  # Media coverage/promotion
     FUNDING_RELATIONSHIP = "funding_relationship"  # Funding and donations
-    
+
     def get_description(self) -> str:
         """Get human-readable description."""
         descriptions = {
@@ -90,22 +91,22 @@ class GraphNode:
     node_id: str
     node_type: NodeType
     name: str
-    
+
     # Optional metadata
-    description: Optional[str] = None
-    jurisdiction: Optional[str] = None
-    sector: Optional[str] = None
-    size_metric: Optional[float] = None  # Revenue, membership, etc.
-    
+    description: str | None = None
+    jurisdiction: str | None = None
+    sector: str | None = None
+    size_metric: float | None = None  # Revenue, membership, etc.
+
     # Temporal tracking
-    first_seen: Optional[datetime] = None
-    last_updated: Optional[datetime] = None
-    
+    first_seen: datetime | None = None
+    last_updated: datetime | None = None
+
     # Provenance
-    source_tier: Optional[str] = None
-    source_hash: Optional[str] = None
-    
-    def to_dict(self) -> Dict[str, Any]:
+    source_tier: str | None = None
+    source_hash: str | None = None
+
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return {
             "node_id": self.node_id,
@@ -131,24 +132,24 @@ class GraphEdge:
     source_id: str
     target_id: str
     edge_type: EdgeType
-    
+
     # Required edge properties
     weight: float  # Strength of relationship [0, 1]
     confidence_score: float  # Confidence in edge existence [0, 1]
     decay_rate: float  # Temporal decay rate (per year)
     source_tier: str  # Data tier (TierA/B/C/D)
-    
+
     # Optional metadata
-    description: Optional[str] = None
-    amount: Optional[float] = None  # For capital flow, funding
-    start_date: Optional[datetime] = None
-    end_date: Optional[datetime] = None
-    
+    description: str | None = None
+    amount: float | None = None  # For capital flow, funding
+    start_date: datetime | None = None
+    end_date: datetime | None = None
+
     # Provenance
-    source_hash: Optional[str] = None
-    evidence_ids: List[str] = field(default_factory=list)
-    
-    def to_dict(self) -> Dict[str, Any]:
+    source_hash: str | None = None
+    evidence_ids: list[str] = field(default_factory=list)
+
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return {
             "edge_id": self.edge_id,
@@ -166,7 +167,7 @@ class GraphEdge:
             "source_hash": self.source_hash,
             "evidence_ids": self.evidence_ids
         }
-    
+
     def compute_current_weight(self, current_time: datetime) -> float:
         """
         Compute current weight with temporal decay.
@@ -179,13 +180,13 @@ class GraphEdge:
         """
         if not self.start_date:
             return self.weight
-        
+
         years_elapsed = (current_time - self.start_date).days / 365.25
         decayed_weight = self.weight * np.exp(-self.decay_rate * years_elapsed)
-        
+
         return max(0.0, min(1.0, decayed_weight))
-    
-    def validate(self) -> Tuple[bool, List[str]]:
+
+    def validate(self) -> tuple[bool, list[str]]:
         """
         Validate edge properties.
         
@@ -193,22 +194,22 @@ class GraphEdge:
             (valid, list of errors)
         """
         errors = []
-        
+
         if not (0.0 <= self.weight <= 1.0):
             errors.append(f"weight = {self.weight} (must be in [0, 1])")
-        
+
         if not (0.0 <= self.confidence_score <= 1.0):
             errors.append(f"confidence_score = {self.confidence_score} (must be in [0, 1])")
-        
+
         if self.decay_rate < 0:
             errors.append(f"decay_rate = {self.decay_rate} (must be >= 0)")
-        
+
         if self.source_tier not in ["TierA", "TierB", "TierC", "TierD"]:
             errors.append(f"source_tier = {self.source_tier} (must be TierA/B/C/D)")
-        
+
         if not self.source_hash:
             errors.append("source_hash required (no hash → no inclusion)")
-        
+
         return len(errors) == 0, errors
 
 
@@ -218,17 +219,17 @@ class GraphSnapshot:
     Time-indexed snapshot of the influence graph.
     """
     timestamp: datetime
-    nodes: Dict[str, GraphNode]
-    edges: Dict[str, GraphEdge]
-    
+    nodes: dict[str, GraphNode]
+    edges: dict[str, GraphEdge]
+
     # Merkle chain for validation
-    previous_hash: Optional[str] = None
-    snapshot_hash: Optional[str] = None
-    
+    previous_hash: str | None = None
+    snapshot_hash: str | None = None
+
     # Metadata
-    node_count_by_type: Dict[str, int] = field(default_factory=dict)
-    edge_count_by_type: Dict[str, int] = field(default_factory=dict)
-    
+    node_count_by_type: dict[str, int] = field(default_factory=dict)
+    edge_count_by_type: dict[str, int] = field(default_factory=dict)
+
     def compute_hash(self) -> str:
         """Compute Merkle hash of this snapshot."""
         # Create canonical representation
@@ -238,10 +239,10 @@ class GraphSnapshot:
             "edges": sorted([e.to_dict() for e in self.edges.values()], key=lambda x: x["edge_id"]),
             "previous_hash": self.previous_hash
         }
-        
+
         content = json.dumps(canonical, sort_keys=True, separators=(',', ':'))
         return hashlib.sha256(content.encode()).hexdigest()
-    
+
     def to_adjacency_matrix(self, sparse: bool = True) -> Any:
         """
         Convert to adjacency matrix.
@@ -255,18 +256,18 @@ class GraphSnapshot:
         node_ids = sorted(self.nodes.keys())
         n = len(node_ids)
         node_idx = {nid: i for i, nid in enumerate(node_ids)}
-        
+
         if sparse and SCIPY_AVAILABLE:
             matrix = lil_matrix((n, n), dtype=float)
         else:
             matrix = np.zeros((n, n), dtype=float)
-        
+
         for edge in self.edges.values():
             if edge.source_id in node_idx and edge.target_id in node_idx:
                 i = node_idx[edge.source_id]
                 j = node_idx[edge.target_id]
                 matrix[i, j] = edge.weight
-        
+
         if sparse and SCIPY_AVAILABLE:
             return matrix.tocsr()
         return matrix
@@ -284,8 +285,8 @@ class GraphBuilder:
     - Sparse-matrix optimization
     - Constitutional "no hash → no inclusion" enforcement
     """
-    
-    def __init__(self, data_dir: Optional[Path] = None):
+
+    def __init__(self, data_dir: Path | None = None):
         """
         Initialize graph builder.
         
@@ -294,23 +295,23 @@ class GraphBuilder:
         """
         if data_dir is None:
             data_dir = Path(__file__).parent.parent.parent / "data"
-        
+
         self.data_dir = Path(data_dir)
         self.graph_dir = self.data_dir / "graphs"
         self.graph_dir.mkdir(parents=True, exist_ok=True)
-        
+
         self.audit = get_audit_trail()
-        
+
         # Graph state
-        self.nodes: Dict[str, GraphNode] = {}
-        self.edges: Dict[str, GraphEdge] = {}
-        self.snapshots: List[GraphSnapshot] = []
-        
+        self.nodes: dict[str, GraphNode] = {}
+        self.edges: dict[str, GraphEdge] = {}
+        self.snapshots: list[GraphSnapshot] = []
+
         # Merkle chain tracking
-        self.baseline_hash: Optional[str] = None
-        
+        self.baseline_hash: str | None = None
+
         logger.info("Initialized GraphBuilder")
-        
+
         self.audit.log_event(
             category=AuditCategory.SYSTEM,
             level=AuditLevel.INFORMATIONAL,
@@ -318,7 +319,7 @@ class GraphBuilder:
             actor="GRAPH_BUILDER",
             details={"data_dir": str(self.data_dir)}
         )
-    
+
     def add_node(self, node: GraphNode) -> None:
         """
         Add node to graph.
@@ -335,7 +336,7 @@ class GraphBuilder:
                 f"Node {node.node_id} missing source_hash - "
                 "no hash → no inclusion (constitutional rule)"
             )
-        
+
         # Add or update node
         if node.node_id in self.nodes:
             logger.info(f"Updating existing node: {node.node_id}")
@@ -344,9 +345,9 @@ class GraphBuilder:
             logger.info(f"Adding new node: {node.node_id} ({node.node_type.value})")
             node.first_seen = datetime.utcnow()
             node.last_updated = datetime.utcnow()
-        
+
         self.nodes[node.node_id] = node
-        
+
         self.audit.log_event(
             category=AuditCategory.DATA,
             level=AuditLevel.INFORMATIONAL,
@@ -358,7 +359,7 @@ class GraphBuilder:
                 "name": node.name
             }
         )
-    
+
     def add_edge(self, edge: GraphEdge) -> None:
         """
         Add edge to graph.
@@ -373,21 +374,21 @@ class GraphBuilder:
         valid, errors = edge.validate()
         if not valid:
             raise ValueError(f"Edge {edge.edge_id} validation failed: {errors}")
-        
+
         # Check source and target nodes exist
         if edge.source_id not in self.nodes:
             raise ValueError(f"Source node {edge.source_id} not found")
         if edge.target_id not in self.nodes:
             raise ValueError(f"Target node {edge.target_id} not found")
-        
+
         # Add edge
         self.edges[edge.edge_id] = edge
-        
+
         logger.info(
             f"Added edge: {edge.edge_id} ({edge.source_id} → {edge.target_id}, "
             f"type: {edge.edge_type.value})"
         )
-        
+
         self.audit.log_event(
             category=AuditCategory.DATA,
             level=AuditLevel.INFORMATIONAL,
@@ -402,8 +403,8 @@ class GraphBuilder:
                 "source_tier": edge.source_tier
             }
         )
-    
-    def create_snapshot(self, timestamp: Optional[datetime] = None) -> GraphSnapshot:
+
+    def create_snapshot(self, timestamp: datetime | None = None) -> GraphSnapshot:
         """
         Create time-indexed snapshot of current graph state.
         
@@ -415,23 +416,23 @@ class GraphBuilder:
         """
         if timestamp is None:
             timestamp = datetime.utcnow()
-        
+
         # Count nodes and edges by type
         node_counts = defaultdict(int)
         for node in self.nodes.values():
             node_counts[node.node_type.value] += 1
-        
+
         edge_counts = defaultdict(int)
         for edge in self.edges.values():
             edge_counts[edge.edge_type.value] += 1
-        
+
         # Get previous hash from last snapshot
         previous_hash = None
         if self.snapshots:
             previous_hash = self.snapshots[-1].snapshot_hash
         elif self.baseline_hash:
             previous_hash = self.baseline_hash
-        
+
         # Create snapshot
         snapshot = GraphSnapshot(
             timestamp=timestamp,
@@ -441,18 +442,18 @@ class GraphBuilder:
             node_count_by_type=dict(node_counts),
             edge_count_by_type=dict(edge_counts)
         )
-        
+
         # Compute and store Merkle hash
         snapshot.snapshot_hash = snapshot.compute_hash()
-        
+
         # Add to snapshot history
         self.snapshots.append(snapshot)
-        
+
         logger.info(
             f"Created graph snapshot at {timestamp.isoformat()} "
             f"(hash: {snapshot.snapshot_hash[:16]}...)"
         )
-        
+
         self.audit.log_event(
             category=AuditCategory.DATA,
             level=AuditLevel.INFORMATIONAL,
@@ -466,10 +467,10 @@ class GraphBuilder:
                 "edge_count": len(self.edges)
             }
         )
-        
+
         return snapshot
-    
-    def verify_merkle_chain(self) -> Tuple[bool, List[str]]:
+
+    def verify_merkle_chain(self) -> tuple[bool, list[str]]:
         """
         Verify Merkle chain integrity of all snapshots.
         
@@ -477,10 +478,10 @@ class GraphBuilder:
             (valid, list of errors)
         """
         errors = []
-        
+
         if not self.snapshots:
             return True, []
-        
+
         # Verify each snapshot's hash
         for i, snapshot in enumerate(self.snapshots):
             computed_hash = snapshot.compute_hash()
@@ -490,7 +491,7 @@ class GraphBuilder:
                     f"stored={snapshot.snapshot_hash[:16]}..., "
                     f"computed={computed_hash[:16]}..."
                 )
-        
+
         # Verify chain linkage
         expected_previous = self.baseline_hash
         for i, snapshot in enumerate(self.snapshots):
@@ -501,9 +502,9 @@ class GraphBuilder:
                     f"expected={expected_previous[:16] if expected_previous else None}..."
                 )
             expected_previous = snapshot.snapshot_hash
-        
+
         valid = len(errors) == 0
-        
+
         if not valid:
             logger.error(f"Merkle chain validation failed: {errors}")
             self.audit.log_event(
@@ -513,10 +514,10 @@ class GraphBuilder:
                 actor="GRAPH_BUILDER",
                 details={"errors": errors}
             )
-        
+
         return valid, errors
-    
-    def save_snapshot(self, snapshot: GraphSnapshot, filename: Optional[str] = None) -> Path:
+
+    def save_snapshot(self, snapshot: GraphSnapshot, filename: str | None = None) -> Path:
         """
         Save snapshot to file.
         
@@ -529,9 +530,9 @@ class GraphBuilder:
         """
         if filename is None:
             filename = f"graph_snapshot_{snapshot.timestamp.strftime('%Y%m%d_%H%M%S')}.json"
-        
+
         filepath = self.graph_dir / filename
-        
+
         snapshot_data = {
             "timestamp": snapshot.timestamp.isoformat(),
             "snapshot_hash": snapshot.snapshot_hash,
@@ -541,15 +542,15 @@ class GraphBuilder:
             "nodes": [n.to_dict() for n in snapshot.nodes.values()],
             "edges": [e.to_dict() for e in snapshot.edges.values()]
         }
-        
+
         with open(filepath, 'w') as f:
             json.dump(snapshot_data, f, indent=2, sort_keys=True)
-        
+
         logger.info(f"Saved snapshot to {filepath}")
-        
+
         return filepath
-    
-    def get_statistics(self) -> Dict[str, Any]:
+
+    def get_statistics(self) -> dict[str, Any]:
         """Get graph statistics."""
         return {
             "node_count": len(self.nodes),
@@ -569,7 +570,7 @@ class GraphBuilder:
 
 
 # Singleton instance
-_graph_builder: Optional[GraphBuilder] = None
+_graph_builder: GraphBuilder | None = None
 
 
 def get_graph_builder() -> GraphBuilder:

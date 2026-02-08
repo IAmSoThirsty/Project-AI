@@ -4,14 +4,14 @@ Final validation for Phase 4: Academic Rigor & Standards Mapping
 """
 
 import os
-import json
+
 
 def main():
     print("=" * 80)
     print("  FINAL PHASE 4 VALIDATION")
     print("=" * 80)
     print()
-    
+
     # Check all required files exist
     required_files = [
         "docs/THIRSTYS_ASYMMETRIC_SECURITY_README.md",
@@ -23,7 +23,7 @@ def main():
         "tarl_os/security/thirstys_enforcement_gateway.thirsty",
         "tarl_os/security/thirstys_constitution.thirsty",
     ]
-    
+
     print("File Existence Checks:")
     all_exist = True
     for filepath in required_files:
@@ -32,15 +32,15 @@ def main():
         print(f"  {status} {filepath}")
         if not exists:
             all_exist = False
-    
+
     print()
-    
+
     # Check README enhancements
     readme_path = "docs/THIRSTYS_ASYMMETRIC_SECURITY_README.md"
     if os.path.exists(readme_path):
-        with open(readme_path, 'r') as f:
+        with open(readme_path) as f:
             content = f.read()
-        
+
         required_sections = [
             ("Standards & Industry Alignment", "Standards & Industry Alignment"),
             ("Invariant-Driven Development", "Invariant-Driven Development"),
@@ -58,25 +58,25 @@ def main():
             ("Overhead Analysis", "0.0001 ms" or "ops_per_sec"),
             ("O(1) Complexity", "O(1)"),
         ]
-        
+
         print("README Content Validation:")
         for name, search_term in required_sections:
             found = search_term in content or search_term.lower() in content.lower()
             status = "✓" if found else "✗"
             print(f"  {status} {name}")
-        
+
         print()
         print(f"README Size: {len(content)} chars ({len(content)//1024}KB)")
         print(f"README Lines: {content.count(chr(10))}")
-    
+
     print()
-    
+
     # Summary
     print("=" * 80)
     print("  PHASE 4 REQUIREMENTS CHECKLIST")
     print("=" * 80)
     print()
-    
+
     requirements = [
         ("1. Standards Mapping", "✅ Complete - 4 paradigms mapped"),
         ("   - Invariant-Driven Dev", "✅ Mapped to constitutional rules"),
@@ -110,13 +110,13 @@ def main():
         ("   - Comparison", "✅ 60x better than WAF"),
         ("   - Production bench", "✅ 100K ops tested"),
     ]
-    
+
     for name, status in requirements:
         if name:
             print(f"{name:35} {status}")
         else:
             print()
-    
+
     print()
     print("=" * 80)
     print("  FINAL STATUS")

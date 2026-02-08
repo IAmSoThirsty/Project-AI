@@ -36,7 +36,9 @@ class AuditRequest(BaseModel):
     enable_lint: bool = Field(True, description="Enable lint checking")
     enable_quality: bool = Field(True, description="Enable quality analysis")
     enable_integrity: bool = Field(True, description="Enable integrity checking")
-    generate_reports: bool = Field(True, description="Generate machine-readable reports")
+    generate_reports: bool = Field(
+        True, description="Generate machine-readable reports"
+    )
     generate_catalog: bool = Field(True, description="Generate markdown catalog")
 
 

@@ -16,8 +16,8 @@ Date: 2026-02-08
 import json
 import logging
 import re
-import subprocess
 import shutil
+import subprocess
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
@@ -181,9 +181,7 @@ class LintChecker:
                                 file=str(file_path),
                                 line=item.get("location", {}).get("row", 0),
                                 column=item.get("location", {}).get("column", 0),
-                                severity="error"
-                                if item.get("fix")
-                                else "warning",
+                                severity="error" if item.get("fix") else "warning",
                                 rule=item.get("code", ""),
                                 message=item.get("message", ""),
                                 source="ruff",
@@ -262,9 +260,7 @@ class LintChecker:
             # Parse mypy output
             for line in result.stdout.splitlines():
                 if ":" in line and ("error:" in line or "note:" in line):
-                    match = re.match(
-                        r"(.+):(\d+):(\d+):\s+(error|note):\s+(.+)", line
-                    )
+                    match = re.match(r"(.+):(\d+):(\d+):\s+(error|note):\s+(.+)", line)
                     if match:
                         issues.append(
                             LintIssue(
@@ -380,9 +376,11 @@ class LintChecker:
                         issues.append(
                             LintIssue(
                                 file=str(file_path),
-                                line=getattr(e, "problem_mark", None).line
-                                if hasattr(e, "problem_mark")
-                                else 0,
+                                line=(
+                                    getattr(e, "problem_mark", None).line
+                                    if hasattr(e, "problem_mark")
+                                    else 0
+                                ),
                                 column=0,
                                 severity="error",
                                 rule="yaml-syntax",
