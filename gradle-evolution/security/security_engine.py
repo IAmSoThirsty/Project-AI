@@ -9,7 +9,7 @@ Provides runtime security controls and agent-based security validation.
 import logging
 from fnmatch import fnmatch
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set
+from typing import Any
 
 import yaml
 
@@ -22,8 +22,8 @@ class SecurityContext:
     def __init__(
         self,
         agent: str,
-        allowed_paths: List[str],
-        allowed_operations: List[str],
+        allowed_paths: list[str],
+        allowed_operations: list[str],
         credential_ttl_hours: int
     ):
         """
@@ -47,7 +47,7 @@ class SecurityEngine:
     Implements least privilege, path restrictions, and operation controls.
     """
 
-    def __init__(self, config_path: Optional[Path] = None):
+    def __init__(self, config_path: Path | None = None):
         """
         Initialize security engine.
 
@@ -56,28 +56,28 @@ class SecurityEngine:
         """
         self.config_path = config_path or Path("config/security_hardening.yaml")
         self.config = self._load_config()
-        self.access_log: List[Dict[str, Any]] = []
-        self.denied_operations: List[Dict[str, Any]] = []
+        self.access_log: list[dict[str, Any]] = []
+        self.denied_operations: list[dict[str, Any]] = []
         logger.info(f"Security engine initialized from: {self.config_path}")
 
-    def _load_config(self) -> Dict[str, Any]:
+    def _load_config(self) -> dict[str, Any]:
         """Load security configuration from YAML."""
         try:
             if not self.config_path.exists():
                 logger.warning(f"Config not found: {self.config_path}, using defaults")
                 return self._default_config()
-            
-            with open(self.config_path, "r") as f:
+
+            with open(self.config_path) as f:
                 config = yaml.safe_load(f)
-            
+
             logger.info("Security configuration loaded")
             return config
-            
+
         except Exception as e:
             logger.error(f"Error loading config: {e}, using defaults", exc_info=True)
             return self._default_config()
 
-    def _default_config(self) -> Dict[str, Any]:
+    def _default_config(self) -> dict[str, Any]:
         """Return default security configuration."""
         return {
             "least_privilege": {
@@ -91,7 +91,7 @@ class SecurityEngine:
             }
         }
 
-    def get_security_context(self, agent: str) -> Optional[SecurityContext]:
+    def get_security_context(self, agent: str) -> SecurityContext | None:
         """
         Get security context for an agent.
 
@@ -104,18 +104,18 @@ class SecurityEngine:
         try:
             agents = self.config.get("least_privilege", {}).get("agents", {})
             agent_config = agents.get(agent)
-            
+
             if not agent_config:
                 logger.warning(f"No security context for agent: {agent}")
                 return None
-            
+
             return SecurityContext(
                 agent=agent,
                 allowed_paths=agent_config.get("allowed_paths", []),
                 allowed_operations=agent_config.get("allowed_operations", []),
                 credential_ttl_hours=agent_config.get("credential_ttl_hours", 1)
             )
-            
+
         except Exception as e:
             logger.error(f"Error getting security context: {e}", exc_info=True)
             return None
@@ -125,7 +125,7 @@ class SecurityEngine:
         agent: str,
         path: str,
         operation: str
-    ) -> tuple[bool, Optional[str]]:
+    ) -> tuple[bool, str | None]:
         """
         Validate path access for agent.
 
@@ -143,29 +143,29 @@ class SecurityEngine:
                 reason = f"No security context for agent: {agent}"
                 self._log_denied_operation(agent, path, operation, reason)
                 return False, reason
-            
+
             # Check operation allowed
             if operation not in context.allowed_operations:
                 reason = f"Operation '{operation}' not allowed for agent '{agent}'"
                 self._log_denied_operation(agent, path, operation, reason)
                 return False, reason
-            
+
             # Check path allowed (glob matching)
             path_allowed = any(
                 fnmatch(path, pattern)
                 for pattern in context.allowed_paths
             )
-            
+
             if not path_allowed:
                 reason = f"Path '{path}' not in allowed paths for agent '{agent}'"
                 self._log_denied_operation(agent, path, operation, reason)
                 return False, reason
-            
+
             # Log successful access
             self._log_access(agent, path, operation, allowed=True)
-            
+
             return True, None
-            
+
         except Exception as e:
             logger.error(f"Error validating path access: {e}", exc_info=True)
             return False, f"Validation error: {str(e)}"
@@ -173,8 +173,8 @@ class SecurityEngine:
     def validate_batch_operations(
         self,
         agent: str,
-        operations: List[tuple[str, str]]
-    ) -> Dict[str, tuple[bool, Optional[str]]]:
+        operations: list[tuple[str, str]]
+    ) -> dict[str, tuple[bool, str | None]]:
         """
         Validate multiple operations in batch.
 
@@ -191,7 +191,7 @@ class SecurityEngine:
             results[key] = self.validate_path_access(agent, path, operation)
         return results
 
-    def get_allowed_paths(self, agent: str) -> List[str]:
+    def get_allowed_paths(self, agent: str) -> list[str]:
         """
         Get allowed paths for agent.
 
@@ -204,7 +204,7 @@ class SecurityEngine:
         context = self.get_security_context(agent)
         return context.allowed_paths if context else []
 
-    def get_allowed_operations(self, agent: str) -> List[str]:
+    def get_allowed_operations(self, agent: str) -> list[str]:
         """
         Get allowed operations for agent.
 
@@ -230,7 +230,7 @@ class SecurityEngine:
         context = self.get_security_context(agent)
         return context.credential_ttl_hours if context else 1
 
-    def get_access_log(self, limit: int = 100) -> List[Dict[str, Any]]:
+    def get_access_log(self, limit: int = 100) -> list[dict[str, Any]]:
         """
         Get recent access log entries.
 
@@ -242,7 +242,7 @@ class SecurityEngine:
         """
         return self.access_log[-limit:]
 
-    def get_denied_operations(self, limit: int = 100) -> List[Dict[str, Any]]:
+    def get_denied_operations(self, limit: int = 100) -> list[dict[str, Any]]:
         """
         Get recent denied operations.
 
@@ -254,7 +254,7 @@ class SecurityEngine:
         """
         return self.denied_operations[-limit:]
 
-    def get_security_summary(self) -> Dict[str, Any]:
+    def get_security_summary(self) -> dict[str, Any]:
         """
         Get security summary statistics.
 
@@ -265,9 +265,9 @@ class SecurityEngine:
             total_accesses = len(self.access_log)
             allowed_accesses = sum(1 for log in self.access_log if log.get("allowed"))
             denied_accesses = len(self.denied_operations)
-            
+
             agents = set(log.get("agent") for log in self.access_log)
-            
+
             return {
                 "total_accesses": total_accesses,
                 "allowed_accesses": allowed_accesses,
@@ -280,7 +280,7 @@ class SecurityEngine:
                     .keys()
                 ),
             }
-            
+
         except Exception as e:
             logger.error(f"Error getting security summary: {e}", exc_info=True)
             return {"error": str(e)}
@@ -300,7 +300,7 @@ class SecurityEngine:
     ) -> None:
         """Log access attempt."""
         from datetime import datetime
-        
+
         self.access_log.append({
             "timestamp": datetime.utcnow().isoformat(),
             "agent": agent,
@@ -308,7 +308,7 @@ class SecurityEngine:
             "operation": operation,
             "allowed": allowed,
         })
-        
+
         # Keep last 10000 entries
         if len(self.access_log) > 10000:
             self.access_log = self.access_log[-10000:]
@@ -322,7 +322,7 @@ class SecurityEngine:
     ) -> None:
         """Log denied operation."""
         from datetime import datetime
-        
+
         self.denied_operations.append({
             "timestamp": datetime.utcnow().isoformat(),
             "agent": agent,
@@ -330,11 +330,11 @@ class SecurityEngine:
             "operation": operation,
             "reason": reason,
         })
-        
+
         # Keep last 1000 denied operations
         if len(self.denied_operations) > 1000:
             self.denied_operations = self.denied_operations[-1000:]
-        
+
         logger.warning(f"Denied operation: {agent} {operation} {path} - {reason}")
 
 

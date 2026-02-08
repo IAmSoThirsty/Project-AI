@@ -11,10 +11,9 @@ Learns from attacks to improve defenses:
 import json
 import logging
 import time
-from typing import Dict, List, Any, Set
 from dataclasses import dataclass, field
-from collections import defaultdict
 from pathlib import Path
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -25,14 +24,14 @@ class AttackPattern:
 
     pattern_id: str
     attack_type: str
-    command_sequence: List[str]
-    indicators: List[str]
+    command_sequence: list[str]
+    indicators: list[str]
     success_rate: float
     frequency: int
     first_seen: float
     last_seen: float
     threat_level: str
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -41,9 +40,9 @@ class DefensePlaybook:
 
     playbook_id: str
     pattern_id: str
-    detection_rules: List[str]
+    detection_rules: list[str]
     response_strategy: str
-    deception_template: Dict[str, Any]
+    deception_template: dict[str, Any]
     success_rate: float
     times_used: int
     created_at: float
@@ -61,13 +60,13 @@ class AttackPatternExtractor:
     def __init__(self, min_frequency: int = 3, min_confidence: float = 0.6):
         self.min_frequency = min_frequency
         self.min_confidence = min_confidence
-        self.patterns: Dict[str, AttackPattern] = {}
+        self.patterns: dict[str, AttackPattern] = {}
 
         logger.info("Attack Pattern Extractor initialized")
         logger.info(f"  Min frequency: {min_frequency}")
         logger.info(f"  Min confidence: {min_confidence}")
 
-    def extract_from_attack(self, attack_data: Dict[str, Any]) -> List[AttackPattern]:
+    def extract_from_attack(self, attack_data: dict[str, Any]) -> list[AttackPattern]:
         """Extract patterns from single attack"""
         commands = attack_data.get("commands", [])
         threat_type = attack_data.get("threat_type", "unknown")
@@ -111,7 +110,7 @@ class AttackPatternExtractor:
 
         return patterns
 
-    def _create_signature(self, commands: List[str]) -> str:
+    def _create_signature(self, commands: list[str]) -> str:
         """Create unique signature for command sequence"""
         # Normalize commands (remove arguments, keep structure)
         normalized = []
@@ -131,7 +130,7 @@ class AttackPatternExtractor:
 
         return "::".join(normalized)
 
-    def _extract_indicators(self, commands: List[str]) -> List[str]:
+    def _extract_indicators(self, commands: list[str]) -> list[str]:
         """Extract threat indicators from command sequence"""
         indicators = []
 
@@ -155,11 +154,11 @@ class AttackPatternExtractor:
 
         return list(set(indicators))
 
-    def get_significant_patterns(self) -> List[AttackPattern]:
+    def get_significant_patterns(self) -> list[AttackPattern]:
         """Get patterns that meet significance threshold"""
         return [p for p in self.patterns.values() if p.frequency >= self.min_frequency]
 
-    def export_patterns(self) -> List[Dict[str, Any]]:
+    def export_patterns(self) -> list[dict[str, Any]]:
         """Export patterns for storage"""
         return [
             {
@@ -184,7 +183,7 @@ class PlaybookGenerator:
     """
 
     def __init__(self):
-        self.playbooks: Dict[str, DefensePlaybook] = {}
+        self.playbooks: dict[str, DefensePlaybook] = {}
         logger.info("Playbook Generator initialized")
 
     def generate_playbook(self, pattern: AttackPattern) -> DefensePlaybook:
@@ -220,7 +219,7 @@ class PlaybookGenerator:
 
         return playbook
 
-    def _generate_detection_rules(self, pattern: AttackPattern) -> List[str]:
+    def _generate_detection_rules(self, pattern: AttackPattern) -> list[str]:
         """Generate detection rules from pattern"""
         rules = []
 
@@ -254,7 +253,7 @@ class PlaybookGenerator:
         else:
             return "MONITORED_DECEPTION"
 
-    def _generate_deception_template(self, pattern: AttackPattern) -> Dict[str, Any]:
+    def _generate_deception_template(self, pattern: AttackPattern) -> dict[str, Any]:
         """Generate deception environment template"""
         template = {
             "strategy": "adaptive",
@@ -286,7 +285,7 @@ class PlaybookGenerator:
 
         return template
 
-    def export_playbooks(self) -> List[Dict[str, Any]]:
+    def export_playbooks(self) -> list[dict[str, Any]]:
         """Export playbooks for storage"""
         return [
             {
@@ -316,7 +315,7 @@ class DefenseEvolutionEngine:
         self.pattern_extractor = AttackPatternExtractor()
         self.playbook_generator = PlaybookGenerator()
 
-        self.attack_history: List[Dict[str, Any]] = []
+        self.attack_history: list[dict[str, Any]] = []
         self.evolution_cycles = 0
 
         # Load existing knowledge
@@ -329,7 +328,7 @@ class DefenseEvolutionEngine:
         logger.info(f"  Active playbooks: {len(self.playbook_generator.playbooks)}")
         logger.info("=" * 70)
 
-    def learn_from_attack(self, attack_data: Dict[str, Any]):
+    def learn_from_attack(self, attack_data: dict[str, Any]):
         """Learn from a completed attack"""
         logger.info(f"Learning from attack: {attack_data.get('attack_id', 'unknown')}")
 
@@ -383,7 +382,7 @@ class DefenseEvolutionEngine:
         logger.info("")
 
     def get_playbook_for_attack(
-        self, command_sequence: List[str]
+        self, command_sequence: list[str]
     ) -> DefensePlaybook | None:
         """Get best playbook for command sequence"""
         # Try to match against known patterns
@@ -443,7 +442,7 @@ class DefenseEvolutionEngine:
 
             logger.info(f"Loaded {len(playbooks_data)} playbooks")
 
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self) -> dict[str, Any]:
         """Get learning engine statistics"""
         return {
             "evolution_cycles": self.evolution_cycles,

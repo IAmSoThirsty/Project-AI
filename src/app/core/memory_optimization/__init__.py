@@ -25,37 +25,37 @@ Architecture:
 Target: 75%+ memory reduction with <5% performance impact
 """
 
+from .adaptive_policy_engine import AdaptivePolicyEngine, PolicyAction, PolicyRule
 from .compression_engine import CompressionEngine, CompressionStrategy
-from .tiered_storage import (
-    StorageTier,
-    TieredStorageManager,
-    TierPolicy,
-    AccessPattern,
-)
+from .deduplication_engine import ContentAddress, DeduplicationEngine
+from .federation_backend import DataSovereignty, FederationBackend, StorageBackend
 from .memory_pool_allocator import (
+    HardwareProfile,
     MemoryPool,
     MemoryPoolAllocator,
     PoolConfiguration,
-    HardwareProfile,
 )
-from .deduplication_engine import DeduplicationEngine, ContentAddress
 from .optimization_config import (
     OptimizationConfig,
+    get_optimization_level_preset,
     load_optimization_config,
     save_optimization_config,
-    get_optimization_level_preset,
 )
 from .optimization_middleware import OptimizationMiddleware
+from .pruning_scheduler import PruningPolicy, PruningScheduler
+from .streaming_recall import RecallStrategy, StreamingRecallEngine
 from .telemetry_collector import (
-    TelemetryCollector,
-    MemoryMetrics,
     CompressionMetrics,
+    MemoryMetrics,
+    TelemetryCollector,
     TierMetrics,
 )
-from .adaptive_policy_engine import AdaptivePolicyEngine, PolicyRule, PolicyAction
-from .streaming_recall import StreamingRecallEngine, RecallStrategy
-from .pruning_scheduler import PruningScheduler, PruningPolicy
-from .federation_backend import FederationBackend, StorageBackend, DataSovereignty
+from .tiered_storage import (
+    AccessPattern,
+    StorageTier,
+    TieredStorageManager,
+    TierPolicy,
+)
 
 __all__ = [
     # Core engines

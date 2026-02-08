@@ -14,16 +14,13 @@ Production-grade with complete isolation enforcement.
 """
 
 import hashlib
-import json
 import logging
 import random
-from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
-from atlas.audit.trail import get_audit_trail, AuditCategory, AuditLevel
-from atlas.governance.constitutional_kernel import get_constitutional_kernel
+from atlas.audit.trail import get_audit_trail
 
 logger = logging.getLogger(__name__)
 
@@ -43,7 +40,7 @@ class SludgeSandbox:
     Generates FICTIONAL narratives from RS snapshots.
     COMPLETELY ISOLATED from Reality and Timeline stacks.
     """
-    
+
     FICTION_BANNER = """
 ╔═══════════════════════════════════════════════════════════════════╗
 ║                  ⚠️  FICTIONAL NARRATIVE SIMULATION ⚠️           ║
@@ -51,20 +48,20 @@ class SludgeSandbox:
 ║  It is NOT based on probabilistic analysis                       ║
 ╚═══════════════════════════════════════════════════════════════════╝
     """
-    
-    def __init__(self, sandbox_dir: Optional[Path] = None):
+
+    def __init__(self, sandbox_dir: Path | None = None):
         if sandbox_dir is None:
             sandbox_dir = Path(__file__).parent.parent / "data" / "sludge"
-        
+
         self.sandbox_dir = Path(sandbox_dir)
         self.sandbox_dir.mkdir(parents=True, exist_ok=True)
-        
+
         self.audit = get_audit_trail()
         self._generation_count = 0
-        
+
         logger.warning("⚠️  SludgeSandbox initialized - FICTIONAL NARRATIVES ONLY ⚠️")
-    
-    def generate_narrative(self, rs_snapshot: Dict[str, Any]) -> Dict[str, Any]:
+
+    def generate_narrative(self, rs_snapshot: dict[str, Any]) -> dict[str, Any]:
         narrative = {
             "id": f"SLUDGE-{hashlib.sha256(str(random.random()).encode()).hexdigest()[:16].upper()}",
             "type": "fictional_narrative",
@@ -76,7 +73,7 @@ class SludgeSandbox:
         return narrative
 
 
-_global_sludge_sandbox: Optional[SludgeSandbox] = None
+_global_sludge_sandbox: SludgeSandbox | None = None
 
 
 def get_sludge_sandbox() -> SludgeSandbox:

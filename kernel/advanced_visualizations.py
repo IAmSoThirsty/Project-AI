@@ -9,17 +9,15 @@ Enhanced visualizations for presentations:
 """
 
 import time
-import os
-from typing import Dict, List, Any
 from dataclasses import dataclass
 
 try:
     # Try to use rich for better terminal output
     from rich.console import Console
-    from rich.live import Live
-    from rich.table import Table
-    from rich.panel import Panel
     from rich.layout import Layout
+    from rich.live import Live
+    from rich.panel import Panel
+    from rich.table import Table
 
     RICH_AVAILABLE = True
 except ImportError:
@@ -141,14 +139,14 @@ Actual Response:
         elif step.layer == 1:
             return "Observing in mirror layer, analyzing..."
         else:
-            return f"TRAPPED in deception layer! Attacker has no idea."
+            return "TRAPPED in deception layer! Attacker has no idea."
 
 
 class AnimatedAttackFlow:
     """Animated attack sequence visualization"""
 
     def __init__(self):
-        self.steps: List[AttackFlowStep] = []
+        self.steps: list[AttackFlowStep] = []
         self.use_rich = RICH_AVAILABLE
         if self.use_rich:
             self.console = Console()

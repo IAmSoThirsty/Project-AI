@@ -358,7 +358,9 @@ class RepositoryInspector:
                 )
 
                 # Module name from path
-                file_info.module_name = self._path_to_module_name(file_info.relative_path)
+                file_info.module_name = self._path_to_module_name(
+                    file_info.relative_path
+                )
 
             except SyntaxError as e:
                 logger.debug("Syntax error in %s: %s", file_info.path, e)

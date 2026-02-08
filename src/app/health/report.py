@@ -35,7 +35,7 @@ import psutil
 import yaml
 
 # Use non-interactive backend for server environments
-matplotlib.use('Agg')
+matplotlib.use("Agg")
 
 from app.core.config import get_config
 from app.governance.audit_log import AuditLog
@@ -43,7 +43,9 @@ from app.governance.audit_log import AuditLog
 logger = logging.getLogger(__name__)
 
 # Default paths
-DEFAULT_SNAPSHOT_DIR = Path(__file__).parent.parent.parent.parent / "data" / "health_snapshots"
+DEFAULT_SNAPSHOT_DIR = (
+    Path(__file__).parent.parent.parent.parent / "data" / "health_snapshots"
+)
 DEFAULT_REPORT_DIR = Path(__file__).parent.parent.parent.parent / "docs" / "assets"
 
 
@@ -65,7 +67,7 @@ class HealthReporter:
         self,
         snapshot_dir: Path | None = None,
         report_dir: Path | None = None,
-        audit_log: AuditLog | None = None
+        audit_log: AuditLog | None = None,
     ):
         """Initialize the health reporter.
 
@@ -79,8 +81,12 @@ class HealthReporter:
 
         # Set directories from config or defaults
         health_config = self.config.get_section("health")
-        self.snapshot_dir = snapshot_dir or Path(health_config.get("snapshot_dir", DEFAULT_SNAPSHOT_DIR))
-        self.report_dir = report_dir or Path(health_config.get("report_dir", DEFAULT_REPORT_DIR))
+        self.snapshot_dir = snapshot_dir or Path(
+            health_config.get("snapshot_dir", DEFAULT_SNAPSHOT_DIR)
+        )
+        self.report_dir = report_dir or Path(
+            health_config.get("report_dir", DEFAULT_REPORT_DIR)
+        )
 
         # Create directories
         self.snapshot_dir.mkdir(parents=True, exist_ok=True)
@@ -89,7 +95,9 @@ class HealthReporter:
         # Initialize audit log
         self.audit_log = audit_log or AuditLog()
 
-        logger.info(f"HealthReporter initialized: snapshots={self.snapshot_dir}, reports={self.report_dir}")
+        logger.info(
+            f"HealthReporter initialized: snapshots={self.snapshot_dir}, reports={self.report_dir}"
+        )
 
     def collect_system_metrics(self) -> dict[str, Any]:
         """Collect system-level metrics.
@@ -100,7 +108,7 @@ class HealthReporter:
         try:
             cpu_percent = psutil.cpu_percent(interval=1)
             memory = psutil.virtual_memory()
-            disk = psutil.disk_usage('/')
+            disk = psutil.disk_usage("/")
 
             return {
                 "cpu": {
@@ -115,9 +123,9 @@ class HealthReporter:
                     "usage_percent": memory.percent,
                 },
                 "disk": {
-                    "total_gb": disk.total / (1024 ** 3),
-                    "used_gb": disk.used / (1024 ** 3),
-                    "free_gb": disk.free / (1024 ** 3),
+                    "total_gb": disk.total / (1024**3),
+                    "used_gb": disk.used / (1024**3),
+                    "free_gb": disk.free / (1024**3),
                     "usage_percent": disk.percent,
                 },
                 "platform": {
@@ -208,7 +216,9 @@ class HealthReporter:
             logger.error(f"Failed to generate YAML snapshot: {e}")
             return False, None
 
-    def generate_png_report(self, snapshot_data: dict[str, Any]) -> tuple[bool, Path | None]:
+    def generate_png_report(
+        self, snapshot_data: dict[str, Any]
+    ) -> tuple[bool, Path | None]:
         """Generate a PNG health report visualization.
 
         Args:
@@ -220,7 +230,9 @@ class HealthReporter:
         try:
             # Create figure with subplots
             fig, axes = plt.subplots(2, 2, figsize=(12, 10))
-            fig.suptitle('Project-AI System Health Report', fontsize=16, fontweight='bold')
+            fig.suptitle(
+                "Project-AI System Health Report", fontsize=16, fontweight="bold"
+            )
 
             # Extract system metrics
             system_metrics = snapshot_data.get("system_metrics", {})
@@ -233,35 +245,47 @@ class HealthReporter:
             ax1 = axes[0, 0]
             cpu_usage = cpu_data.get("usage_percent", 0)
             cpu_count = cpu_data.get("count", 0)
-            ax1.barh(['CPU Usage'], [cpu_usage], color='#2ecc71' if cpu_usage < 70 else '#e74c3c')
+            ax1.barh(
+                ["CPU Usage"],
+                [cpu_usage],
+                color="#2ecc71" if cpu_usage < 70 else "#e74c3c",
+            )
             ax1.set_xlim(0, 100)
-            ax1.set_xlabel('Usage (%)')
-            ax1.set_title(f'CPU Usage ({cpu_count} cores)')
-            ax1.grid(axis='x', alpha=0.3)
+            ax1.set_xlabel("Usage (%)")
+            ax1.set_title(f"CPU Usage ({cpu_count} cores)")
+            ax1.grid(axis="x", alpha=0.3)
 
             # Memory Usage (top-right)
             ax2 = axes[0, 1]
             memory_usage = memory_data.get("usage_percent", 0)
             memory_total = memory_data.get("total_mb", 0) / 1024  # Convert to GB
-            ax2.barh(['Memory Usage'], [memory_usage], color='#3498db' if memory_usage < 80 else '#e74c3c')
+            ax2.barh(
+                ["Memory Usage"],
+                [memory_usage],
+                color="#3498db" if memory_usage < 80 else "#e74c3c",
+            )
             ax2.set_xlim(0, 100)
-            ax2.set_xlabel('Usage (%)')
-            ax2.set_title(f'Memory Usage ({memory_total:.1f} GB total)')
-            ax2.grid(axis='x', alpha=0.3)
+            ax2.set_xlabel("Usage (%)")
+            ax2.set_title(f"Memory Usage ({memory_total:.1f} GB total)")
+            ax2.grid(axis="x", alpha=0.3)
 
             # Disk Usage (bottom-left)
             ax3 = axes[1, 0]
             disk_usage = disk_data.get("usage_percent", 0)
             disk_total = disk_data.get("total_gb", 0)
-            ax3.barh(['Disk Usage'], [disk_usage], color='#9b59b6' if disk_usage < 85 else '#e74c3c')
+            ax3.barh(
+                ["Disk Usage"],
+                [disk_usage],
+                color="#9b59b6" if disk_usage < 85 else "#e74c3c",
+            )
             ax3.set_xlim(0, 100)
-            ax3.set_xlabel('Usage (%)')
-            ax3.set_title(f'Disk Usage ({disk_total:.1f} GB total)')
-            ax3.grid(axis='x', alpha=0.3)
+            ax3.set_xlabel("Usage (%)")
+            ax3.set_title(f"Disk Usage ({disk_total:.1f} GB total)")
+            ax3.grid(axis="x", alpha=0.3)
 
             # System Information (bottom-right)
             ax4 = axes[1, 1]
-            ax4.axis('off')
+            ax4.axis("off")
 
             # Format system info text
             info_text = f"""
@@ -281,8 +305,15 @@ Status: {"✓ Healthy" if all([
 ]) else "⚠ Attention Needed"}
             """
 
-            ax4.text(0.1, 0.5, info_text, fontsize=10, family='monospace',
-                    verticalalignment='center', transform=ax4.transAxes)
+            ax4.text(
+                0.1,
+                0.5,
+                info_text,
+                fontsize=10,
+                family="monospace",
+                verticalalignment="center",
+                transform=ax4.transAxes,
+            )
 
             plt.tight_layout()
 
@@ -291,8 +322,8 @@ Status: {"✓ Healthy" if all([
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             timestamped_path = self.report_dir / f"health_report_{timestamp}.png"
 
-            fig.savefig(canonical_path, dpi=100, bbox_inches='tight')
-            fig.savefig(timestamped_path, dpi=100, bbox_inches='tight')
+            fig.savefig(canonical_path, dpi=100, bbox_inches="tight")
+            fig.savefig(timestamped_path, dpi=100, bbox_inches="tight")
             plt.close(fig)
 
             logger.info(f"PNG report generated: {canonical_path}")
@@ -331,10 +362,12 @@ Status: {"✓ Healthy" if all([
                     "report_path": str(report_path),
                     "timestamp": datetime.now(UTC).isoformat(),
                 },
-                description="System health report generated successfully"
+                description="System health report generated successfully",
             )
 
-            logger.info(f"Full health report generated: snapshot={snapshot_path}, report={report_path}")
+            logger.info(
+                f"Full health report generated: snapshot={snapshot_path}, report={report_path}"
+            )
             return True, snapshot_path, report_path
 
         except Exception as e:
@@ -344,7 +377,7 @@ Status: {"✓ Healthy" if all([
             self.audit_log.log_event(
                 event_type="health_report_failed",
                 data={"error": str(e)},
-                description="System health report generation failed"
+                description="System health report generation failed",
             )
 
             return False, None, None
@@ -355,7 +388,7 @@ def main():
     # Configure logging
     logging.basicConfig(
         level=logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
 
     print("=" * 60)

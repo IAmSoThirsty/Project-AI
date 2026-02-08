@@ -5,8 +5,8 @@ Security & Policy Scheduling
 Enforces security constraints and dynamically schedules policies.
 """
 
-from .security_engine import SecurityEngine
 from .policy_scheduler import PolicyScheduler
+from .security_engine import SecurityEngine
 
 __all__ = [
     "SecurityEngine",

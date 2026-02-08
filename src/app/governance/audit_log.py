@@ -22,7 +22,9 @@ import yaml
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_AUDIT_LOG = Path(__file__).parent.parent.parent.parent / "governance" / "audit_log.yaml"
+DEFAULT_AUDIT_LOG = (
+    Path(__file__).parent.parent.parent.parent / "governance" / "audit_log.yaml"
+)
 
 
 class AuditLog:
@@ -98,7 +100,7 @@ class AuditLog:
         event_type: str,
         data: dict[str, Any] | None = None,
         actor: str = "system",
-        description: str = ""
+        description: str = "",
     ) -> bool:
         """Log an audit event with cryptographic chaining.
 
@@ -134,7 +136,9 @@ class AuditLog:
             # Update last hash for next event
             self.last_hash = event_hash
 
-            logger.info(f"Audit event logged: {event_type} (hash: {event_hash[:16]}...)")
+            logger.info(
+                f"Audit event logged: {event_type} (hash: {event_hash[:16]}...)"
+            )
             return True
 
         except Exception as e:
@@ -169,7 +173,10 @@ class AuditLog:
 
                 # Check if previous hash matches
                 if event.get("previous_hash") != expected_prev_hash:
-                    return False, f"Chain broken at event {i}: expected previous_hash={expected_prev_hash}, got {event.get('previous_hash')}"
+                    return (
+                        False,
+                        f"Chain broken at event {i}: expected previous_hash={expected_prev_hash}, got {event.get('previous_hash')}",
+                    )
 
                 # Verify the event's own hash
                 stored_hash = event.get("hash")
@@ -181,7 +188,10 @@ class AuditLog:
                 computed_hash = self._compute_hash(event_copy)
 
                 if computed_hash != stored_hash:
-                    return False, f"Event {i} hash mismatch: expected {stored_hash[:16]}..., computed {computed_hash[:16]}..."
+                    return (
+                        False,
+                        f"Event {i} hash mismatch: expected {stored_hash[:16]}..., computed {computed_hash[:16]}...",
+                    )
 
                 expected_prev_hash = stored_hash
 
@@ -191,9 +201,7 @@ class AuditLog:
             return False, f"Verification failed with error: {e}"
 
     def get_events(
-        self,
-        event_type: str | None = None,
-        limit: int | None = None
+        self, event_type: str | None = None, limit: int | None = None
     ) -> list[dict[str, Any]]:
         """Retrieve audit events from the log.
 

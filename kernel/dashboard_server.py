@@ -5,11 +5,11 @@ Provides real-time metrics to the web dashboard via WebSocket.
 """
 
 import asyncio
-import websockets
 import json
 import logging
-import time
-from typing import Set, Dict, Any
+from typing import Any
+
+import websockets
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -25,7 +25,7 @@ class DashboardWebSocketServer:
     def __init__(self, host="localhost", port=8765):
         self.host = host
         self.port = port
-        self.clients: Set[websockets.WebSocketServerProtocol] = set()
+        self.clients: set[websockets.WebSocketServerProtocol] = set()
         self.kernel = None  # Will be set by kernel
 
         logger.info(f"Dashboard WebSocket Server initialized on {host}:{port}")
@@ -103,7 +103,7 @@ class DashboardWebSocketServer:
         except Exception as e:
             logger.error(f"Error sending metrics: {e}")
 
-    def _get_learning_stats(self) -> Dict[str, Any]:
+    def _get_learning_stats(self) -> dict[str, Any]:
         """Get learning engine statistics"""
         if hasattr(self.kernel, "learning_engine") and self.kernel.learning_engine:
             stats = self.kernel.learning_engine.get_statistics()
@@ -121,7 +121,7 @@ class DashboardWebSocketServer:
                 "detectionAccuracy": 0.0,
             }
 
-    async def send_threat_alert(self, threat_info: Dict[str, Any]):
+    async def send_threat_alert(self, threat_info: dict[str, Any]):
         """Send threat alert to all clients"""
         payload = {"type": "threat", "payload": threat_info}
 
@@ -198,8 +198,8 @@ def start_dashboard_server(kernel=None, host="localhost", port=8765):
     thread = threading.Thread(target=server.run, daemon=True)
     thread.start()
 
-    logger.info(f"Dashboard server started on background thread")
-    logger.info(f"Open http://localhost:8000/index.html in browser")
+    logger.info("Dashboard server started on background thread")
+    logger.info("Open http://localhost:8000/index.html in browser")
 
     return server
 
@@ -216,7 +216,7 @@ if __name__ == "__main__":
     print("\n" + "=" * 70)
     print("DASHBOARD WEBSOCKET SERVER - DEMO MODE")
     print("=" * 70)
-    print(f"\nStarting server on ws://localhost:8765")
+    print("\nStarting server on ws://localhost:8765")
     print("Open dashboard at: file:///path/to/web_dashboard/index.html")
     print("\n")
 
