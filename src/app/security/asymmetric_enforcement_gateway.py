@@ -1,5 +1,6 @@
 """
-ASYMMETRIC SECURITY ENFORCEMENT GATEWAY
+THIRSTY'S SECURITY ENFORCEMENT GATEWAY
+Part of Thirsty's Active Resistance Language (T.A.R.L.) Framework
 
 This is the truth-defining enforcement layer for Project-AI.
 ALL state-mutating operations MUST pass through this gateway.
@@ -7,6 +8,11 @@ ALL state-mutating operations MUST pass through this gateway.
 Hard Guarantee: If validate_action returns allowed=False, the operation CANNOT execute.
 
 This is not advisory. This is constitutional.
+
+Integrates with:
+- Thirsty's God Tier Asymmetric Security
+- Thirsty's Security Constitution
+- Thirsty's Asymmetric Security Engine
 """
 
 import logging
