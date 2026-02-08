@@ -1,14 +1,14 @@
 # Project Ai Code of Conduct
 
-Like the technical community as a whole, Project AI and its future community will bea made up of a mixture of professionals and volunteers from all over the world, working on every aspect of the mission - including mentorship, teaching, and connecting people.
+Like the technical community as a whole, Project AI and its future community will be made up of a mixture of professionals and volunteers from all over the world, working on every aspect of the mission - including mentorship, teaching, and connecting people.
 
-Diversity is one a huge strength, but it can also lead to communication issues and unhappiness. To that end, I have a few ground rules that I ask people to adhere to. This code applies equally to founders, mentors and those seeking help and guidance.
+Diversity is a huge strength, but it can also lead to communication issues and unhappiness. To that end, I have a few ground rules that I ask people to adhere to. This code applies equally to founders, mentors and those seeking help and guidance.
 
 This isn’t an exhaustive list of things that you can’t do. Rather, take it in the spirit in which it’s intended - a guide to make it easier to enrich all of us and the technical communities in which we participate.
 
 This code of conduct applies to all spaces managed by the Project Ai project or Thirstys Projects. This includes IRC, the mailing lists, the issue tracker, DSF events, and any other forums created by myself or the future project team which the community uses for communication. In addition, violations of this code outside these spaces may affect a person's ability to participate within them.
 
-If you believe someone is violating the code of conduct, I ask that you report it by emailing [projectaidevs@gmail.com](mailto:projectaidevs@gmail.com). For more details please see our 
+If you believe someone is violating the code of conduct, I ask that you report it by emailing [projectaidevs@gmail.com](mailto:projectaidevs@gmail.com). For more details, please see our [Community Guidelines](docs/governance/COMMUNITY_GUIDELINES.md).
 
 - **Be friendly and patient.**
 - **Be welcoming.** We strive to be a community that welcomes and supports people of all backgrounds and identities. This includes, but is not limited to members of any race, ethnicity, culture, national origin, colour, immigration status, social and economic class, educational level, sex, sexual orientation, gender identity and expression, age, size, family status, political belief, religion, and mental and physical ability.
