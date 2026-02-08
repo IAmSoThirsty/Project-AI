@@ -1,0 +1,179 @@
+{
+  "metadata": {
+    "report_version": "1.0.0",
+    "generated_at": "2026-02-08T07:13:47.669801",
+    "repository": "/home/runner/work/Project-AI/Project-AI/test_audit_sample",
+    "tool": "Project-AI Inspection System"
+  },
+  "inspection": {
+    "files": {
+      "sample.py": {
+        "path": "/home/runner/work/Project-AI/Project-AI/test_audit_sample/sample.py",
+        "relative_path": "sample.py",
+        "name": "sample.py",
+        "extension": ".py",
+        "file_type": "python_module",
+        "status": "implemented",
+        "size_bytes": 211,
+        "lines_of_code": 9,
+        "is_test": true,
+        "is_executable": false,
+        "module_name": "sample",
+        "classes": [
+          "SampleClass"
+        ],
+        "functions": [
+          "function",
+          "method"
+        ],
+        "imports": [],
+        "docstring": "Sample module for testing.",
+        "complexity_score": 3,
+        "last_modified": "",
+        "metadata": {}
+      }
+    },
+    "components": {},
+    "statistics": {
+      "total_files": 1,
+      "total_lines": 9,
+      "by_type": {
+        "python_module": 1
+      },
+      "by_status": {
+        "implemented": 1
+      },
+      "by_component": {}
+    }
+  },
+  "integrity": {
+    "dependencies": [],
+    "circular_dependencies": [],
+    "issues": [
+      {
+        "issue_type": "potential_dead_code",
+        "severity": "low",
+        "file": "sample",
+        "line": 0,
+        "description": "Module 'sample' is never imported",
+        "suggestion": "Consider removing if truly unused, or add to __all__ if it's a public API",
+        "metadata": {
+          "module": "sample"
+        }
+      }
+    ],
+    "dependency_graph": {},
+    "cross_reference_catalog": {
+      "modules": {
+        "sample": {
+          "path": "sample.py",
+          "classes": [
+            "SampleClass"
+          ],
+          "functions": [
+            "function",
+            "method"
+          ],
+          "imports": [],
+          "imported_by": [],
+          "imports_from": []
+        }
+      },
+      "classes": {
+        "sample.SampleClass": {
+          "module": "sample",
+          "file": "sample.py",
+          "name": "SampleClass"
+        }
+      },
+      "functions": {
+        "sample.function": {
+          "module": "sample",
+          "file": "sample.py",
+          "name": "function"
+        },
+        "sample.method": {
+          "module": "sample",
+          "file": "sample.py",
+          "name": "method"
+        }
+      },
+      "interfaces": {}
+    },
+    "statistics": {
+      "total_dependencies": 0,
+      "total_issues": 1,
+      "issues_by_severity": {
+        "critical": 0,
+        "high": 0,
+        "medium": 0,
+        "low": 1
+      },
+      "issues_by_type": {
+        "potential_dead_code": 1
+      },
+      "most_dependent_modules": [],
+      "most_imported_modules": []
+    }
+  },
+  "quality": {
+    "file_metrics": {
+      "sample.py": {
+        "file": "/home/runner/work/Project-AI/Project-AI/test_audit_sample/sample.py",
+        "documentation_coverage": 1.0,
+        "code_coverage": 0.0,
+        "complexity_score": 3,
+        "maintainability_index": 100.0,
+        "cohesion_score": 0.9,
+        "has_docstring": true,
+        "has_tests": true,
+        "has_type_hints": false,
+        "lines_of_code": 9,
+        "comment_ratio": 0.0,
+        "metadata": {}
+      }
+    },
+    "component_quality": {},
+    "aggregate_metrics": {
+      "total_files_analyzed": 1,
+      "average_documentation_coverage": 1.0,
+      "average_code_coverage": 0.0,
+      "average_maintainability_index": 100.0,
+      "average_cohesion_score": 0.9,
+      "files_with_docstrings": 1,
+      "files_with_tests": 1,
+      "files_with_type_hints": 0,
+      "total_lines_of_code": 9,
+      "average_complexity": 3.0,
+      "component_count": 0,
+      "component_quality_distribution": {
+        "excellent": 0,
+        "good": 0,
+        "fair": 0,
+        "poor": 0
+      }
+    }
+  },
+  "lint": {
+    "reports": [],
+    "summary": {}
+  },
+  "overall_assessment": {
+    "health_score": 98.0,
+    "grade": "A",
+    "health_factors": {
+      "documentation": 25.0,
+      "maintainability": 25.0,
+      "integrity": 23,
+      "lint": 25.0
+    },
+    "critical_issues": {
+      "integrity_issues": 1,
+      "circular_dependencies": 0,
+      "lint_errors": 0
+    },
+    "recommendations": [
+      "Excellent! No critical issues found."
+    ]
+  }
+}
