@@ -428,10 +428,7 @@ For those who prefer ongoing support, automatic updates, and don't want to think
 
 ## CONTACT
 
-**Sales:** sales@project-ai.dev  
-**Support:** support@project-ai.dev  
-**Compliance:** compliance@project-ai.dev
-
+Karrick1995@Gmail.com
 ---
 
 **END OF PRICING FRAMEWORK**
