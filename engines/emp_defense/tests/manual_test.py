@@ -127,7 +127,7 @@ def test_basic_functionality():
         engine = EMPDefenseEngine(config)
         engine.init()
 
-        for week in range(52):
+        for _week in range(52):
             engine.tick()
 
         final_state = engine.observe()

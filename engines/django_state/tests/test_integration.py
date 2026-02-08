@@ -220,7 +220,7 @@ class TestScenarios:
         engine.init()
 
         # Inject many betrayals
-        for i in range(10):
+        for _i in range(10):
             betrayal = BetrayalEvent(
                 timestamp=engine.state.timestamp,
                 source="scenario",

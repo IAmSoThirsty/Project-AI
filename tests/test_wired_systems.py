@@ -99,7 +99,7 @@ class TestWiredEthicsApprovals(unittest.TestCase):
 
         # Request approval
         metadata = {"priority": "MEDIUM", "description": "Test subsystem"}
-        approved = self.boot._request_ethics_approval("test_subsystem", metadata)
+        self.boot._request_ethics_approval("test_subsystem", metadata)
 
         # Give event time to be processed
         time.sleep(0.2)

@@ -168,7 +168,7 @@ class HardwareDiscoveryProtocol:
             protocol_name: Name of the protocol
         """
         self.protocol_name = protocol_name
-        logger.info(f"Hardware Discovery Protocol '{protocol_name}' created")
+        logger.info("Hardware Discovery Protocol '%s' created", protocol_name)
 
     def discover_devices(self) -> list[HardwareDevice]:
         """
@@ -220,7 +220,7 @@ class HardwareDiscoveryProtocol:
             )
             devices.append(device)
 
-        logger.info(f"Discovered {len(devices)} devices")
+        logger.info("Discovered %s devices", len(devices))
         return devices
 
     PROBE_TIMEOUT = 0.01  # Device probe timeout in seconds (simulated)
@@ -240,10 +240,10 @@ class HardwareDiscoveryProtocol:
             # In production, this would attempt to communicate with the device
             time.sleep(self.PROBE_TIMEOUT)  # Simulate probe time
             device.status = HardwareStatus.READY
-            logger.info(f"Probed device '{device.device_name}' successfully")
+            logger.info("Probed device '%s' successfully", device.device_name)
             return True
         except Exception as e:
-            logger.error(f"Failed to probe device '{device.device_name}': {e}")
+            logger.error("Failed to probe device '%s': %s", device.device_name, e)
             device.status = HardwareStatus.ERROR
             return False
 
@@ -286,7 +286,7 @@ class HardwareRegistry:
         """
         with self._lock:
             if device.device_id in self._devices:
-                logger.warning(f"Device '{device.device_id}' already registered")
+                logger.warning("Device '%s' already registered", device.device_id)
                 return False
 
             self._devices[device.device_id] = device
@@ -302,7 +302,7 @@ class HardwareRegistry:
             self._events.append(event)
 
             logger.info(
-                f"Registered device '{device.device_name}' ({device.device_id})"
+                "Registered device '%s' (%s)", device.device_name, device.device_id
             )
             return True
 
@@ -338,7 +338,7 @@ class HardwareRegistry:
             # Remove device
             del self._devices[device_id]
 
-            logger.info(f"Unregistered device '{device.device_name}' ({device_id})")
+            logger.info("Unregistered device '%s' (%s)", device.device_name, device_id)
             return True
 
     def get_device(self, device_id: str) -> HardwareDevice | None:
@@ -375,7 +375,10 @@ class HardwareRegistry:
             device.last_seen = time.time()
 
             logger.info(
-                f"Device '{device.device_name}' status: {old_status.value} -> {status.value}"
+                "Device '%s' status: %s -> %s",
+                device.device_name,
+                old_status.value,
+                status.value,
             )
             return True
 
@@ -410,11 +413,11 @@ class HardwareRegistry:
                 with open(filepath, "w") as f:
                     json.dump(data, f, indent=2)
 
-                logger.info(f"Saved {len(self._devices)} devices to {filepath}")
+                logger.info("Saved %s devices to %s", len(self._devices), filepath)
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to save hardware registry: {e}", exc_info=True)
+            logger.error("Failed to save hardware registry: %s", e, exc_info=True)
             return False
 
     def load(self, filename: str = "hardware_registry.json") -> bool:
@@ -424,7 +427,7 @@ class HardwareRegistry:
                 filepath = os.path.join(self.data_dir, filename)
 
                 if not os.path.exists(filepath):
-                    logger.warning(f"Hardware registry file not found: {filepath}")
+                    logger.warning("Hardware registry file not found: %s", filepath)
                     return False
 
                 with open(filepath) as f:
@@ -447,11 +450,11 @@ class HardwareRegistry:
                     event = DiscoveryEvent(**event_data)
                     self._events.append(event)
 
-                logger.info(f"Loaded {len(self._devices)} devices from {filepath}")
+                logger.info("Loaded %s devices from %s", len(self._devices), filepath)
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to load hardware registry: {e}", exc_info=True)
+            logger.error("Failed to load hardware registry: %s", e, exc_info=True)
             return False
 
 
@@ -496,7 +499,7 @@ class HardwareAutoDiscoverySystem:
             "device_error": [],
         }
 
-        logger.info(f"Hardware Auto-Discovery System '{system_id}' created")
+        logger.info("Hardware Auto-Discovery System '%s' created", system_id)
 
     def start(self) -> bool:
         """Start auto-discovery system"""
@@ -523,7 +526,7 @@ class HardwareAutoDiscoverySystem:
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to start auto-discovery: {e}", exc_info=True)
+            logger.error("Failed to start auto-discovery: %s", e, exc_info=True)
             return False
 
     def stop(self) -> bool:
@@ -544,7 +547,7 @@ class HardwareAutoDiscoverySystem:
                 return True
 
         except Exception as e:
-            logger.error(f"Error stopping auto-discovery: {e}", exc_info=True)
+            logger.error("Error stopping auto-discovery: %s", e, exc_info=True)
             return False
 
     def _scan_loop(self) -> None:
@@ -554,7 +557,7 @@ class HardwareAutoDiscoverySystem:
                 self._perform_scan()
                 time.sleep(self.scan_interval)
             except Exception as e:
-                logger.error(f"Error in scan loop: {e}", exc_info=True)
+                logger.error("Error in scan loop: %s", e, exc_info=True)
 
     def _perform_scan(self) -> None:
         """Perform a single device scan"""
@@ -611,14 +614,14 @@ class HardwareAutoDiscoverySystem:
 
         if has_all:
             logger.info(
-                f"Device '{device.device_name}' meets all capability requirements"
+                "Device '%s' meets all capability requirements", device.device_name
             )
         else:
             missing = [
                 req for req in required_capabilities if req not in device_capabilities
             ]
             logger.warning(
-                f"Device '{device.device_name}' missing capabilities: {missing}"
+                "Device '%s' missing capabilities: %s", device.device_name, missing
             )
 
         return has_all
@@ -635,7 +638,7 @@ class HardwareAutoDiscoverySystem:
                 handler(data)
             except Exception as e:
                 logger.error(
-                    f"Error in event handler for {event_type}: {e}", exc_info=True
+                    "Error in event handler for %s: %s", event_type, e, exc_info=True
                 )
 
     def get_system_status(self) -> dict[str, Any]:

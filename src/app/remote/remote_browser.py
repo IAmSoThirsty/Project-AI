@@ -43,7 +43,7 @@ class RemoteBrowser:
         """Start remote browser server"""
         self.logger.info("Starting Remote Browser with God tier encryption")
         self.logger.info("All remote connections encrypted with 7 layers")
-        self.logger.info(f"Listening on {self.host}:{self.port}")
+        self.logger.info("Listening on %s:%s", self.host, self.port)
 
         # Initialize server (simulated)
         self._active = True
@@ -91,7 +91,7 @@ class RemoteBrowser:
 
         self._sessions[session_id] = session
 
-        self.logger.info(f"Remote browser session created: {session_id}")
+        self.logger.info("Remote browser session created: %s", session_id)
 
         return {
             "session_id": session_id,
@@ -118,7 +118,7 @@ class RemoteBrowser:
         # Encrypt command
         self.god_tier_encryption.encrypt_god_tier(command.encode())
 
-        self.logger.info(f"Sending encrypted command to session {session_id}")
+        self.logger.info("Sending encrypted command to session %s", session_id)
 
         # Process command (simulated)
         return {
@@ -131,7 +131,7 @@ class RemoteBrowser:
         """Disconnect remote browser session"""
         if session_id in self._sessions:
             del self._sessions[session_id]
-            self.logger.info(f"Remote browser session disconnected: {session_id}")
+            self.logger.info("Remote browser session disconnected: %s", session_id)
 
     def get_sessions(self) -> dict[str, dict[str, Any]]:
         """Get all active sessions"""

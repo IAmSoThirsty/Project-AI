@@ -51,7 +51,7 @@ class HTMLReporter:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         report_file = self.output_dir / f"e2e_report_{timestamp}.html"
         report_file.write_text(html_content)
-        logger.info(f"Generated HTML report: {report_file}")
+        logger.info("Generated HTML report: %s", report_file)
         return report_file
 
     def _generate_html(
@@ -314,9 +314,9 @@ class HTMLReporter:
         if coverage_metrics:
             coverage_pct = coverage_metrics.get("coverage_percentage", 0)
             coverage_class = (
-                "excellent" if coverage_pct >= 80
-                else "good" if coverage_pct >= 60
-                else "poor"
+                "excellent"
+                if coverage_pct >= 80
+                else "good" if coverage_pct >= 60 else "poor"
             )
 
             html += f"""

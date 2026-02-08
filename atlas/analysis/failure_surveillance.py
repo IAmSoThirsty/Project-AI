@@ -27,6 +27,7 @@ logger = logging.getLogger(__name__)
 
 class AnomalyType(Enum):
     """Types of anomalies detected."""
+
     DRIFT_DETECTION = "drift_detection"
     DRIVER_VOLATILITY = "driver_volatility"
     EDGE_INFLATION = "edge_inflation"
@@ -39,6 +40,7 @@ class AnomalyType(Enum):
 
 class SeverityLevel(Enum):
     """Severity levels for anomalies."""
+
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
@@ -48,6 +50,7 @@ class SeverityLevel(Enum):
 @dataclass
 class Anomaly:
     """Detected anomaly."""
+
     anomaly_id: str
     anomaly_type: AnomalyType
     severity: SeverityLevel
@@ -66,6 +69,7 @@ class Anomaly:
 @dataclass
 class SystemHealth:
     """Overall system health status."""
+
     timestamp: datetime
     is_healthy: bool
 
@@ -83,20 +87,26 @@ class SystemHealth:
 
     def overall_score(self) -> float:
         """Compute overall health score."""
-        return (self.drift_score + self.volatility_score +
-                self.integrity_score + self.performance_score) / 4.0
+        return (
+            self.drift_score
+            + self.volatility_score
+            + self.integrity_score
+            + self.performance_score
+        ) / 4.0
 
     def needs_attention(self) -> bool:
         """Check if system needs attention."""
-        return (self.anomalies_critical > 0 or
-                self.anomalies_high > 3 or
-                self.overall_score() < 0.7)
+        return (
+            self.anomalies_critical > 0
+            or self.anomalies_high > 3
+            or self.overall_score() < 0.7
+        )
 
 
 class FailureSurveillanceSystem:
     """
     Layer 13: Failure-Mode Surveillance & Kill-Switch
-    
+
     Monitors system for failures and provides emergency shutdown.
     """
 
@@ -128,21 +138,22 @@ class FailureSurveillanceSystem:
             operation="failure_surveillance_initialized",
             details={"timestamp": datetime.now().isoformat()},
             level="INFORMATIONAL",
-            priority="HIGH_PRIORITY"
+            priority="HIGH_PRIORITY",
         )
 
         logger.info("Failure surveillance system initialized")
 
-    def detect_drift(self, current_value: float, baseline_value: float,
-                    metric_name: str) -> Anomaly | None:
+    def detect_drift(
+        self, current_value: float, baseline_value: float, metric_name: str
+    ) -> Anomaly | None:
         """
         Detect drift from baseline.
-        
+
         Args:
             current_value: Current metric value
             baseline_value: Baseline value
             metric_name: Metric name
-        
+
         Returns:
             Anomaly if drift detected, None otherwise
         """
@@ -159,7 +170,7 @@ class FailureSurveillanceSystem:
                 description=f"Drift detected in {metric_name}: {drift:.2%}",
                 metric_name=metric_name,
                 value=current_value,
-                threshold=baseline_value
+                threshold=baseline_value,
             )
 
             self._record_anomaly(anomaly)
@@ -167,15 +178,16 @@ class FailureSurveillanceSystem:
 
         return None
 
-    def detect_driver_volatility(self, driver_values: list[float],
-                                metric_name: str) -> Anomaly | None:
+    def detect_driver_volatility(
+        self, driver_values: list[float], metric_name: str
+    ) -> Anomaly | None:
         """
         Detect excessive driver volatility.
-        
+
         Args:
             driver_values: Recent driver values
             metric_name: Driver name
-        
+
         Returns:
             Anomaly if volatility exceeds threshold
         """
@@ -195,7 +207,7 @@ class FailureSurveillanceSystem:
                 description=f"High volatility in {metric_name}: σ={volatility:.3f}",
                 metric_name=metric_name,
                 value=volatility,
-                threshold=self.volatility_threshold
+                threshold=self.volatility_threshold,
             )
 
             self._record_anomaly(anomaly)
@@ -203,15 +215,16 @@ class FailureSurveillanceSystem:
 
         return None
 
-    def detect_edge_inflation(self, current_edge_count: int,
-                             baseline_edge_count: int) -> Anomaly | None:
+    def detect_edge_inflation(
+        self, current_edge_count: int, baseline_edge_count: int
+    ) -> Anomaly | None:
         """
         Detect graph edge inflation.
-        
+
         Args:
             current_edge_count: Current edge count
             baseline_edge_count: Baseline edge count
-        
+
         Returns:
             Anomaly if inflation detected
         """
@@ -228,7 +241,7 @@ class FailureSurveillanceSystem:
                 timestamp=datetime.now(),
                 description=f"Edge inflation: {inflation_factor:.1f}x baseline",
                 value=float(current_edge_count),
-                threshold=float(baseline_edge_count)
+                threshold=float(baseline_edge_count),
             )
 
             self._record_anomaly(anomaly)
@@ -236,20 +249,24 @@ class FailureSurveillanceSystem:
 
         return None
 
-    def detect_claim_posterior_explosion(self, posteriors: list[float]) -> Anomaly | None:
+    def detect_claim_posterior_explosion(
+        self, posteriors: list[float]
+    ) -> Anomaly | None:
         """
         Detect claim posterior explosion (too many high posteriors).
-        
+
         Args:
             posteriors: List of claim posterior values
-        
+
         Returns:
             Anomaly if explosion detected
         """
         if not posteriors:
             return None
 
-        high_posteriors = sum(1 for p in posteriors if p > self.posterior_explosion_threshold)
+        high_posteriors = sum(
+            1 for p in posteriors if p > self.posterior_explosion_threshold
+        )
         explosion_rate = high_posteriors / len(posteriors)
 
         if explosion_rate > 0.5:  # More than 50% near 1.0
@@ -259,7 +276,7 @@ class FailureSurveillanceSystem:
                 severity=SeverityLevel.HIGH,
                 timestamp=datetime.now(),
                 description=f"Claim posterior explosion: {explosion_rate:.1%} near 1.0",
-                value=explosion_rate
+                value=explosion_rate,
             )
 
             self._record_anomaly(anomaly)
@@ -267,15 +284,16 @@ class FailureSurveillanceSystem:
 
         return None
 
-    def detect_narrative_bleed(self, sludge_elements: list[str],
-                              rs_content: str) -> Anomaly | None:
+    def detect_narrative_bleed(
+        self, sludge_elements: list[str], rs_content: str
+    ) -> Anomaly | None:
         """
         Detect narrative bleed from Sludge to RS.
-        
+
         Args:
             sludge_elements: Elements that should only appear in sludge
             rs_content: Content from RS stack
-        
+
         Returns:
             Anomaly if bleed detected
         """
@@ -287,7 +305,7 @@ class FailureSurveillanceSystem:
                     severity=SeverityLevel.CRITICAL,
                     timestamp=datetime.now(),
                     description=f"Narrative bleed detected: '{element}' found in RS",
-                    action_taken="ABORT_REQUIRED"
+                    action_taken="ABORT_REQUIRED",
                 )
 
                 self._record_anomaly(anomaly)
@@ -295,15 +313,16 @@ class FailureSurveillanceSystem:
 
         return None
 
-    def detect_sensitivity_blowup(self, elasticity: float,
-                                 parameter_name: str) -> Anomaly | None:
+    def detect_sensitivity_blowup(
+        self, elasticity: float, parameter_name: str
+    ) -> Anomaly | None:
         """
         Detect sensitivity blowup (extreme parameter sensitivity).
-        
+
         Args:
             elasticity: Parameter elasticity
             parameter_name: Parameter name
-        
+
         Returns:
             Anomaly if blowup detected
         """
@@ -315,7 +334,7 @@ class FailureSurveillanceSystem:
                 timestamp=datetime.now(),
                 description=f"Sensitivity blowup in {parameter_name}: elasticity={elasticity:.1f}",
                 metric_name=parameter_name,
-                value=elasticity
+                value=elasticity,
             )
 
             self._record_anomaly(anomaly)
@@ -334,26 +353,42 @@ class FailureSurveillanceSystem:
                 "anomaly_id": anomaly.anomaly_id,
                 "type": anomaly.anomaly_type.value,
                 "severity": anomaly.severity.value,
-                "description": anomaly.description
+                "description": anomaly.description,
             },
-            level="CRITICAL" if anomaly.severity == SeverityLevel.CRITICAL else "INFORMATIONAL",
-            priority="HIGH_PRIORITY"
+            level=(
+                "CRITICAL"
+                if anomaly.severity == SeverityLevel.CRITICAL
+                else "INFORMATIONAL"
+            ),
+            priority="HIGH_PRIORITY",
         )
 
-        logger.warning(f"Anomaly detected: {anomaly.description} (severity: {anomaly.severity.value})")
+        logger.warning(
+            "Anomaly detected: %s (severity: %s)",
+            anomaly.description,
+            anomaly.severity.value,
+        )
 
     def compute_health(self) -> SystemHealth:
         """
         Compute current system health.
-        
+
         Returns:
             System health status
         """
         # Count anomalies by severity
-        anomalies_low = sum(1 for a in self.anomalies if a.severity == SeverityLevel.LOW)
-        anomalies_medium = sum(1 for a in self.anomalies if a.severity == SeverityLevel.MEDIUM)
-        anomalies_high = sum(1 for a in self.anomalies if a.severity == SeverityLevel.HIGH)
-        anomalies_critical = sum(1 for a in self.anomalies if a.severity == SeverityLevel.CRITICAL)
+        anomalies_low = sum(
+            1 for a in self.anomalies if a.severity == SeverityLevel.LOW
+        )
+        anomalies_medium = sum(
+            1 for a in self.anomalies if a.severity == SeverityLevel.MEDIUM
+        )
+        anomalies_high = sum(
+            1 for a in self.anomalies if a.severity == SeverityLevel.HIGH
+        )
+        anomalies_critical = sum(
+            1 for a in self.anomalies if a.severity == SeverityLevel.CRITICAL
+        )
 
         # Compute health scores
         # Penalize based on anomaly counts
@@ -372,7 +407,7 @@ class FailureSurveillanceSystem:
             anomalies_low=anomalies_low,
             anomalies_medium=anomalies_medium,
             anomalies_high=anomalies_high,
-            anomalies_critical=anomalies_critical
+            anomalies_critical=anomalies_critical,
         )
 
         self.health_history.append(health)
@@ -382,7 +417,7 @@ class FailureSurveillanceSystem:
     def check_abort_conditions(self) -> tuple[bool, list[str]]:
         """
         Check if abort conditions are met.
-        
+
         Returns:
             (should_abort, reasons)
         """
@@ -391,15 +426,21 @@ class FailureSurveillanceSystem:
 
         # Critical anomalies
         if health.anomalies_critical >= self.max_critical_anomalies:
-            reasons.append(f"Critical anomalies: {health.anomalies_critical} >= {self.max_critical_anomalies}")
+            reasons.append(
+                f"Critical anomalies: {health.anomalies_critical} >= {self.max_critical_anomalies}"
+            )
 
         # High anomalies
         if health.anomalies_high >= self.max_high_anomalies:
-            reasons.append(f"High anomalies: {health.anomalies_high} >= {self.max_high_anomalies}")
+            reasons.append(
+                f"High anomalies: {health.anomalies_high} >= {self.max_high_anomalies}"
+            )
 
         # Health score
         if health.overall_score() < self.min_health_score:
-            reasons.append(f"Health score: {health.overall_score():.2f} < {self.min_health_score}")
+            reasons.append(
+                f"Health score: {health.overall_score():.2f} < {self.min_health_score}"
+            )
 
         should_abort = len(reasons) > 0
 
@@ -407,12 +448,9 @@ class FailureSurveillanceSystem:
             self.audit_trail.log(
                 category="SAFETY",
                 operation="abort_conditions_met",
-                details={
-                    "reasons": reasons,
-                    "health_score": health.overall_score()
-                },
+                details={"reasons": reasons, "health_score": health.overall_score()},
                 level="CRITICAL",
-                priority="HIGH_PRIORITY"
+                priority="HIGH_PRIORITY",
             )
 
         return should_abort, reasons
@@ -420,7 +458,7 @@ class FailureSurveillanceSystem:
     def activate_kill_switch(self, reason: str) -> None:
         """
         Activate emergency kill switch.
-        
+
         Args:
             reason: Reason for activation
         """
@@ -434,15 +472,12 @@ class FailureSurveillanceSystem:
         self.audit_trail.log(
             category="SAFETY",
             operation="kill_switch_activated",
-            details={
-                "reason": reason,
-                "timestamp": datetime.now().isoformat()
-            },
+            details={"reason": reason, "timestamp": datetime.now().isoformat()},
             level="CRITICAL",
-            priority="HIGH_PRIORITY"
+            priority="HIGH_PRIORITY",
         )
 
-        logger.critical(f"🛑 KILL SWITCH ACTIVATED: {reason}")
+        logger.critical("🛑 KILL SWITCH ACTIVATED: %s", reason)
 
     def reset(self) -> None:
         """Reset surveillance system (clears history, reactivates)."""
@@ -458,7 +493,7 @@ class FailureSurveillanceSystem:
             category="SAFETY",
             operation="surveillance_reset",
             details={"timestamp": datetime.now().isoformat()},
-            level="INFORMATIONAL"
+            level="INFORMATIONAL",
         )
 
         logger.info("Surveillance system reset")
@@ -475,13 +510,13 @@ class FailureSurveillanceSystem:
                 "low": health.anomalies_low,
                 "medium": health.anomalies_medium,
                 "high": health.anomalies_high,
-                "critical": health.anomalies_critical
+                "critical": health.anomalies_critical,
             },
             "health": {
                 "overall_score": health.overall_score(),
                 "is_healthy": health.is_healthy,
-                "needs_attention": health.needs_attention()
-            }
+                "needs_attention": health.needs_attention(),
+            },
         }
 
 

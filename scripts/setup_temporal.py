@@ -75,7 +75,7 @@ def start_temporal_local():
         logger.info("gRPC endpoint: localhost:7233")
         return True
     except subprocess.CalledProcessError as e:
-        logger.error(f"Failed to start Temporal server: {e}")
+        logger.error("Failed to start Temporal server: %s", e)
         return False
 
 
@@ -92,7 +92,7 @@ def start_worker():
         logger.info("Temporal worker started successfully!")
         return True
     except subprocess.CalledProcessError as e:
-        logger.error(f"Failed to start worker: {e}")
+        logger.error("Failed to start worker: %s", e)
         return False
 
 
@@ -114,7 +114,7 @@ def stop_temporal():
         logger.info("Temporal services stopped successfully!")
         return True
     except subprocess.CalledProcessError as e:
-        logger.error(f"Failed to stop Temporal services: {e}")
+        logger.error("Failed to stop Temporal services: %s", e)
         return False
 
 
@@ -133,7 +133,7 @@ def show_status():
         print(result.stdout)
         return True
     except subprocess.CalledProcessError as e:
-        logger.error(f"Failed to get status: {e}")
+        logger.error("Failed to get status: %s", e)
         return False
 
 
@@ -181,7 +181,7 @@ Setup Instructions:
 """.strip()
 
     workspace_file.write_text(workspace_content)
-    logger.info(f"Created workspace reference: {workspace_file}")
+    logger.info("Created workspace reference: %s", workspace_file)
 
 
 def main():

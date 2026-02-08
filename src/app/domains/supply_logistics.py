@@ -244,7 +244,7 @@ class SupplyLogisticsSubsystem(
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to initialize Supply Logistics subsystem: {e}")
+            self.logger.error("Failed to initialize Supply Logistics subsystem: %s", e)
             return False
 
     def shutdown(self) -> bool:
@@ -265,7 +265,7 @@ class SupplyLogisticsSubsystem(
             return True
 
         except Exception as e:
-            self.logger.error(f"Error during shutdown: {e}")
+            self.logger.error("Error during shutdown: %s", e)
             return False
 
     def health_check(self) -> bool:
@@ -290,7 +290,7 @@ class SupplyLogisticsSubsystem(
         )
 
         if critical_count > 3:
-            self.logger.warning(f"Multiple critical shortages: {critical_count}")
+            self.logger.warning("Multiple critical shortages: %s", critical_count)
             return False
 
         return True
@@ -337,7 +337,7 @@ class SupplyLogisticsSubsystem(
             available_items = self._find_available_resources(rt, amount)
 
             if not available_items:
-                self.logger.warning(f"Insufficient {resource_type} available")
+                self.logger.warning("Insufficient %s available", resource_type)
                 return None
 
             # Create allocation
@@ -362,7 +362,7 @@ class SupplyLogisticsSubsystem(
             return allocation_id
 
         except Exception as e:
-            self.logger.error(f"Failed to allocate resource: {e}")
+            self.logger.error("Failed to allocate resource: %s", e)
             return None
 
     def release_resource(self, resource_id: str) -> bool:
@@ -442,7 +442,7 @@ class SupplyLogisticsSubsystem(
             )
 
         except Exception as e:
-            self.logger.error(f"Command execution failed: {e}")
+            self.logger.error("Command execution failed: %s", e)
             return SubsystemResponse(
                 command_id=command.command_id,
                 success=False,
@@ -516,7 +516,9 @@ class SupplyLogisticsSubsystem(
                 try:
                     callback(data)
                 except Exception as e:
-                    self.logger.error(f"Error in event callback {subscription_id}: {e}")
+                    self.logger.error(
+                        "Error in event callback %s: %s", subscription_id, e
+                    )
 
             return len(subscribers)
 
@@ -532,7 +534,7 @@ class SupplyLogisticsSubsystem(
                 self._refresh_availability_cache()
                 time.sleep(5.0)
             except Exception as e:
-                self.logger.error(f"Error in processing loop: {e}")
+                self.logger.error("Error in processing loop: %s", e)
                 time.sleep(5.0)
 
     def _process_supply_requests(self):
@@ -667,7 +669,7 @@ class SupplyLogisticsSubsystem(
             return item
 
         except Exception as e:
-            self.logger.error(f"Failed to add resource: {e}")
+            self.logger.error("Failed to add resource: %s", e)
             return None
 
     def _create_supply_request(self, params: dict[str, Any]) -> SupplyRequest | None:
@@ -709,7 +711,7 @@ class SupplyLogisticsSubsystem(
             return request
 
         except Exception as e:
-            self.logger.error(f"Failed to create supply request: {e}")
+            self.logger.error("Failed to create supply request: %s", e)
             return None
 
     def _create_distribution_route(
@@ -739,7 +741,7 @@ class SupplyLogisticsSubsystem(
             return route
 
         except Exception as e:
-            self.logger.error(f"Failed to create distribution route: {e}")
+            self.logger.error("Failed to create distribution route: %s", e)
             return None
 
     def _enable_rationing(self, params: dict[str, Any]) -> bool:
@@ -886,10 +888,7 @@ class SupplyLogisticsSubsystem(
         critical_reserve = rules.get("critical_reserve", 0)
 
         # Don't deplete below critical reserve
-        if available - request.quantity_requested < critical_reserve:
-            return False
-
-        return True
+        return not available - request.quantity_requested < critical_reserve
 
     def _find_consolidation_opportunities(self) -> list[dict[str, Any]]:
         """Find opportunities to consolidate shipments."""
@@ -941,10 +940,10 @@ class SupplyLogisticsSubsystem(
             with open(state_file, "w") as f:
                 json.dump(state, f, indent=2, default=str)
 
-            self.logger.info(f"State saved to {state_file}")
+            self.logger.info("State saved to %s", state_file)
 
         except Exception as e:
-            self.logger.error(f"Failed to save state: {e}")
+            self.logger.error("Failed to save state: %s", e)
 
     def _load_state(self):
         """Load persistent state."""
@@ -972,7 +971,7 @@ class SupplyLogisticsSubsystem(
                     )
                     self._inventory[item.item_id] = item
 
-                self.logger.info(f"State loaded from {state_file}")
+                self.logger.info("State loaded from %s", state_file)
 
         except Exception as e:
-            self.logger.error(f"Failed to load state: {e}")
+            self.logger.error("Failed to load state: %s", e)

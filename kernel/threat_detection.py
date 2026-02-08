@@ -359,7 +359,10 @@ class ThreatDetectionEngine:
 
         if level != ThreatLevel.SAFE:
             logger.warning(
-                f"Threat detected: {level.name} (confidence: {combined_score:.2f}) - {command}"
+                "Threat detected: %s (confidence: %s) - %s",
+                level.name,
+                combined_score,
+                command,
             )
 
         return assessment

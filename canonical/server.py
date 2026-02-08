@@ -96,8 +96,8 @@ def execute_canonical_scenario() -> dict[str, Any]:
         trace_hash = compute_trace_hash(trace_data) if trace_data else None
 
         # Extract key metrics
-        success_criteria_met = (
-            trace_data.get("outcome", {}).get("all_criteria_met", False)
+        success_criteria_met = trace_data.get("outcome", {}).get(
+            "all_criteria_met", False
         )
 
         invariants_summary = trace_data.get("invariants", {}).get("summary", {})

@@ -47,7 +47,7 @@ class GalahadModel:
             self._cleanup_temp = False
             os.makedirs(data_dir, exist_ok=True)
 
-        logger.info(f"Initializing Galahad model with data_dir: {self.data_dir}")
+        logger.info("Initializing Galahad model with data_dir: %s", self.data_dir)
 
         # Initialize AI systems
         self.persona = AIPersona(data_dir=self.data_dir, user_name="RedTeam")
@@ -96,7 +96,8 @@ class GalahadModel:
         if risk_score >= 2:
             context["endangers_humanity"] = True
             logger.info(
-                f"Elevated conversation risk: score={risk_score}/10, blocking preemptively"
+                "Elevated conversation risk: score=%s/10, blocking preemptively",
+                risk_score,
             )
 
         # Check for escalation patterns in conversation history
@@ -208,7 +209,7 @@ class GalahadModel:
                 )
                 if has_previous_harmful:
                     risk_score += 1  # Suspicious pattern after harmful = escalation
-                    logger.debug(f"Suspicious pattern detected: {pattern_name}")
+                    logger.debug("Suspicious pattern detected: %s", pattern_name)
 
         # Factor 1: Current prompt danger (0-4 points) - INCREASED from 0-3
         if current_context.get("endangers_humanity"):
@@ -294,7 +295,9 @@ class GalahadModel:
                 risk_score += 2  # First-turn jailbreak attempt
 
         logger.debug(
-            f"Conversation risk score: {risk_score}/10 (turns: {len(self.conversation_history)})"
+            "Conversation risk score: %s/10 (turns: %s)",
+            risk_score,
+            len(self.conversation_history),
         )
 
         return min(risk_score, 10)  # Cap at 10
@@ -356,7 +359,8 @@ class GalahadModel:
             # Lowered threshold: Even 1 previous harmful = persistence attack
             if previous_harmful_count >= 1:
                 logger.info(
-                    f"Escalation detected: Persistence attack (harmful keywords in {previous_harmful_count + 1} turns)"
+                    "Escalation detected: Persistence attack (harmful keywords in %s turns)",
+                    previous_harmful_count + 1,
                 )
                 return True
 
@@ -424,7 +428,9 @@ class GalahadModel:
                 max_previous = max(recent_harm_scores) if recent_harm_scores else 0
                 if current_harm_score > 0 and current_harm_score > max_previous:
                     logger.info(
-                        f"Escalation detected: Severity increase from {max_previous} -> {current_harm_score}"
+                        "Escalation detected: Severity increase from %s -> %s",
+                        max_previous,
+                        current_harm_score,
                     )
                     return True
 
@@ -466,7 +472,9 @@ class GalahadModel:
         for word1, word2 in suspicious_combinations:
             if word1 in current_lower and word2 in current_lower:
                 logger.info(
-                    f"Escalation detected: Suspicious combination '{word1}' + '{word2}'"
+                    "Escalation detected: Suspicious combination '%s' + '%s'",
+                    word1,
+                    word2,
                 )
                 return True
 
@@ -784,7 +792,10 @@ class GalahadModel:
         if is_persona_jailbreak or is_override_attempt or is_encoding_attack:
             endangers_humanity = True
             logger.info(
-                f"Jailbreak attempt detected: persona={is_persona_jailbreak}, override={is_override_attempt}, encoding={is_encoding_attack}"
+                "Jailbreak attempt detected: persona=%s, override=%s, encoding=%s",
+                is_persona_jailbreak,
+                is_override_attempt,
+                is_encoding_attack,
             )
 
         # Data leakage and toxicity are CRITICAL (block immediately)
@@ -805,7 +816,10 @@ class GalahadModel:
         if is_manipulation or is_delimiter_injection or is_reverse_psych:
             endangers_humanity = True
             logger.info(
-                f"Manipulation detected: cognitive={is_manipulation}, delimiter={is_delimiter_injection}, reverse_psych={is_reverse_psych}"
+                "Manipulation detected: cognitive=%s, delimiter=%s, reverse_psych=%s",
+                is_manipulation,
+                is_delimiter_injection,
+                is_reverse_psych,
             )
 
         # Harmful content requests trigger blocks

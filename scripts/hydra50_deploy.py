@@ -19,7 +19,9 @@ import subprocess
 import sys
 from pathlib import Path
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 
@@ -30,12 +32,14 @@ class HYDRA50Deployer:
         self.environment = environment
         self.project_root = Path(__file__).parent.parent
         self.config_dir = self.project_root / "config" / "hydra50"
-        self.data_dir = Path("/var/lib/hydra50" if environment == "production" else "data/hydra50")
+        self.data_dir = Path(
+            "/var/lib/hydra50" if environment == "production" else "data/hydra50"
+        )
 
     def deploy(self) -> bool:
         """Execute full deployment"""
         try:
-            logger.info(f"Starting HYDRA-50 deployment for {self.environment}")
+            logger.info("Starting HYDRA-50 deployment for %s", self.environment)
 
             # Step 1: Validate environment
             if not self.validate_environment():
@@ -71,7 +75,7 @@ class HYDRA50Deployer:
             return True
 
         except Exception as e:
-            logger.error(f"Deployment failed: {e}")
+            logger.error("Deployment failed: %s", e)
             return False
 
     def validate_environment(self) -> bool:
@@ -84,7 +88,7 @@ class HYDRA50Deployer:
         required_tools = ["git", "pip"]
         for tool in required_tools:
             if not shutil.which(tool):
-                logger.error(f"Required tool not found: {tool}")
+                logger.error("Required tool not found: %s", tool)
                 return False
 
         logger.info("Environment validation passed")
@@ -106,7 +110,7 @@ class HYDRA50Deployer:
 
         for directory in directories:
             directory.mkdir(parents=True, exist_ok=True)
-            logger.info(f"Created directory: {directory}")
+            logger.info("Created directory: %s", directory)
 
         return True
 
@@ -116,13 +120,13 @@ class HYDRA50Deployer:
 
         config_file = self.config_dir / f"{self.environment}.yaml"
         if not config_file.exists():
-            logger.error(f"Configuration file not found: {config_file}")
+            logger.error("Configuration file not found: %s", config_file)
             return False
 
         target_config = self.data_dir / "config.yaml"
         shutil.copy(config_file, target_config)
 
-        logger.info(f"Configuration deployed: {target_config}")
+        logger.info("Configuration deployed: %s", target_config)
         return True
 
     def initialize_database(self) -> bool:
@@ -136,7 +140,7 @@ class HYDRA50Deployer:
             return True
 
         # In production, you would run migration scripts here
-        logger.info(f"Database initialized: {db_path}")
+        logger.info("Database initialized: %s", db_path)
         return True
 
     def install_dependencies(self) -> bool:
@@ -152,12 +156,12 @@ class HYDRA50Deployer:
             subprocess.run(
                 [sys.executable, "-m", "pip", "install", "-r", str(requirements_file)],
                 check=True,
-                capture_output=True
+                capture_output=True,
             )
             logger.info("Dependencies installed successfully")
             return True
         except subprocess.CalledProcessError as e:
-            logger.error(f"Dependency installation failed: {e}")
+            logger.error("Dependency installation failed: %s", e)
             return False
 
     def run_health_checks(self) -> bool:
@@ -173,9 +177,9 @@ class HYDRA50Deployer:
         all_passed = True
         for check_name, check_fn in checks:
             if check_fn():
-                logger.info(f"✓ {check_name}")
+                logger.info("✓ %s", check_name)
             else:
-                logger.error(f"✗ {check_name}")
+                logger.error("✗ %s", check_name)
                 all_passed = False
 
         return all_passed
@@ -196,22 +200,17 @@ def main():
         "--environment",
         choices=["development", "production"],
         default="development",
-        help="Deployment environment"
+        help="Deployment environment",
     )
     parser.add_argument(
-        "--rollback",
-        action="store_true",
-        help="Rollback previous deployment"
+        "--rollback", action="store_true", help="Rollback previous deployment"
     )
 
     args = parser.parse_args()
 
     deployer = HYDRA50Deployer(args.environment)
 
-    if args.rollback:
-        success = deployer.rollback()
-    else:
-        success = deployer.deploy()
+    success = deployer.rollback() if args.rollback else deployer.deploy()
 
     sys.exit(0 if success else 1)
 

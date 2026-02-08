@@ -37,225 +37,195 @@ class SettingsManager:
         # Comprehensive settings for ALL features
         self.settings = {
             # General Settings
-            'general': {
-                'language': 'en',
-                'theme': 'dark',
-                'auto_start': False,
-                'minimize_to_tray': True,
-                'check_updates': False,  # Privacy-first: no auto-updates
-                'notifications': True
+            "general": {
+                "language": "en",
+                "theme": "dark",
+                "auto_start": False,
+                "minimize_to_tray": True,
+                "check_updates": False,  # Privacy-first: no auto-updates
+                "notifications": True,
             },
-
             # Privacy Settings (God Tier)
-            'privacy': {
-                'god_tier_encryption': True,
-                'encryption_layers': 7,
-                'quantum_resistant': True,
-                'data_minimization': True,
-                'on_device_only': True,
-                'no_telemetry': True,
-                'no_logging': True,
-                'forensic_resistance': True,
-                'perfect_forward_secrecy': True,
-                'ephemeral_storage': True
+            "privacy": {
+                "god_tier_encryption": True,
+                "encryption_layers": 7,
+                "quantum_resistant": True,
+                "data_minimization": True,
+                "on_device_only": True,
+                "no_telemetry": True,
+                "no_logging": True,
+                "forensic_resistance": True,
+                "perfect_forward_secrecy": True,
+                "ephemeral_storage": True,
             },
-
             # Security Settings
-            'security': {
-                'kill_switch': True,
-                'kill_switch_mode': 'aggressive',  # aggressive/normal
-                'vpn_multi_hop': True,
-                'vpn_required': True,
-                'dns_leak_protection': True,
-                'ipv6_leak_protection': True,
-                'webrtc_leak_protection': True,
-                'firewall_count': 8,
-                'firewall_mode': 'maximum',
-                'auto_security_audit': True,
-                'malware_scanning': True,
-                'phishing_protection': True
+            "security": {
+                "kill_switch": True,
+                "kill_switch_mode": "aggressive",  # aggressive/normal
+                "vpn_multi_hop": True,
+                "vpn_required": True,
+                "dns_leak_protection": True,
+                "ipv6_leak_protection": True,
+                "webrtc_leak_protection": True,
+                "firewall_count": 8,
+                "firewall_mode": "maximum",
+                "auto_security_audit": True,
+                "malware_scanning": True,
+                "phishing_protection": True,
             },
-
             # Browser Settings
-            'browser': {
-                'incognito_mode': True,
-                'no_history': True,
-                'no_cache': True,
-                'no_cookies': True,
-                'no_popups': True,
-                'no_redirects': True,
-                'tab_isolation': True,
-                'sandbox_enabled': True,
-                'anti_fingerprint': True,
-                'keyboard_cloaking': True,
-                'mouse_cloaking': True,
-                'user_agent_rotation': True,
-                'referrer_policy': 'no-referrer',
-                'download_isolation': True,
-                'encrypted_downloads': True
+            "browser": {
+                "incognito_mode": True,
+                "no_history": True,
+                "no_cache": True,
+                "no_cookies": True,
+                "no_popups": True,
+                "no_redirects": True,
+                "tab_isolation": True,
+                "sandbox_enabled": True,
+                "anti_fingerprint": True,
+                "keyboard_cloaking": True,
+                "mouse_cloaking": True,
+                "user_agent_rotation": True,
+                "referrer_policy": "no-referrer",
+                "download_isolation": True,
+                "encrypted_downloads": True,
             },
-
             # Ad Blocker Settings (HOLY WAR)
-            'ad_blocker': {
-                'enabled': True,
-                'holy_war_mode': True,
-                'aggressiveness': 'MAXIMUM',  # MAXIMUM/HIGH/MEDIUM/LOW
-                'block_ads': True,
-                'block_trackers': True,
-                'block_popups': True,
-                'block_redirects': True,
-                'block_autoplay': True,
-                'block_video_ads': True,
-                'block_audio_ads': True,
-                'block_banners': True,
-                'block_malvertising': True,
-                'block_cryptominers': True,
-                'block_social_widgets': True,
-                'custom_filters': True,
-                'update_filters': False  # Manual updates only for privacy
+            "ad_blocker": {
+                "enabled": True,
+                "holy_war_mode": True,
+                "aggressiveness": "MAXIMUM",  # MAXIMUM/HIGH/MEDIUM/LOW
+                "block_ads": True,
+                "block_trackers": True,
+                "block_popups": True,
+                "block_redirects": True,
+                "block_autoplay": True,
+                "block_video_ads": True,
+                "block_audio_ads": True,
+                "block_banners": True,
+                "block_malvertising": True,
+                "block_cryptominers": True,
+                "block_social_widgets": True,
+                "custom_filters": True,
+                "update_filters": False,  # Manual updates only for privacy
             },
-
             # Thirsty Consigliere Settings
-            'consigliere': {
-                'enabled': True,
-                'on_device_only': True,
-                'code_of_omerta': True,
-                'capability_mode': 'manual',  # manual/auto
-                'default_locked': True,
-                'data_minimization': True,
-                'no_training': True,
-                'max_context_size': 10,
-                'ephemeral_context': True,
-                'action_ledger_size': 100,
-                'auto_wipe_on_close': True
+            "consigliere": {
+                "enabled": True,
+                "on_device_only": True,
+                "code_of_omerta": True,
+                "capability_mode": "manual",  # manual/auto
+                "default_locked": True,
+                "data_minimization": True,
+                "no_training": True,
+                "max_context_size": 10,
+                "ephemeral_context": True,
+                "action_ledger_size": 100,
+                "auto_wipe_on_close": True,
             },
-
             # Media Downloader Settings
-            'media_downloader': {
-                'enabled': True,
-                'default_mode': 'best_quality',  # audio_only/video_only/audio_video/best_quality
-                'audio_format': 'mp3',
-                'video_format': 'mp4',
-                'default_quality': 'best',
-                'download_directory': './downloads',
-                'library_enabled': True,
-                'encrypt_metadata': True,
-                'encrypt_files': True,
-                'auto_organize': True,
-                'thumbnail_encryption': True
+            "media_downloader": {
+                "enabled": True,
+                "default_mode": "best_quality",  # audio_only/video_only/audio_video/best_quality
+                "audio_format": "mp3",
+                "video_format": "mp4",
+                "default_quality": "best",
+                "download_directory": "./downloads",
+                "library_enabled": True,
+                "encrypt_metadata": True,
+                "encrypt_files": True,
+                "auto_organize": True,
+                "thumbnail_encryption": True,
             },
-
             # AI Assistant Settings
-            'ai_assistant': {
-                'enabled': True,
-                'god_tier_encrypted': True,
-                'local_inference': True,
-                'no_external_calls': True,
-                'no_data_collection': True,
-                'max_context': 20,
-                'capabilities': {
-                    'text_generation': True,
-                    'code_assistance': True,
-                    'problem_solving': True,
-                    'privacy_analysis': True,
-                    'security_audit': True
+            "ai_assistant": {
+                "enabled": True,
+                "god_tier_encrypted": True,
+                "local_inference": True,
+                "no_external_calls": True,
+                "no_data_collection": True,
+                "max_context": 20,
+                "capabilities": {
+                    "text_generation": True,
+                    "code_assistance": True,
+                    "problem_solving": True,
+                    "privacy_analysis": True,
+                    "security_audit": True,
                 },
-                'conversation_encryption': True,
-                'auto_clear_history': True
+                "conversation_encryption": True,
+                "auto_clear_history": True,
             },
-
             # Remote Access Settings
-            'remote_access': {
-                'browser_enabled': False,  # Disabled by default for security
-                'desktop_enabled': False,  # Disabled by default for security
-                'require_authentication': True,
-                'require_vpn': True,
-                'encryption_required': True,
-                'session_timeout': 3600,  # 1 hour
-                'max_sessions': 1,
-                'remote_host': '0.0.0.0',
-                'remote_port': 9000,
-                'desktop_port': 9001,
-                'secure_tunnel': True
+            "remote_access": {
+                "browser_enabled": False,  # Disabled by default for security
+                "desktop_enabled": False,  # Disabled by default for security
+                "require_authentication": True,
+                "require_vpn": True,
+                "encryption_required": True,
+                "session_timeout": 3600,  # 1 hour
+                "max_sessions": 1,
+                "remote_host": "0.0.0.0",
+                "remote_port": 9000,
+                "desktop_port": 9001,
+                "secure_tunnel": True,
             },
-
             # Network/VPN Settings
-            'network': {
-                'vpn_enabled': True,
-                'vpn_protocol': 'multi-protocol',
-                'vpn_hops': 3,  # Multi-hop routing
-                'max_hops': 5,
-                'location_spoofing': True,
-                'dns_over_https': True,
-                'dns_provider': 'cloudflare',  # cloudflare/quad9/custom
-                'split_tunneling': False,  # All traffic through VPN
-                'stealth_mode': True,
-                'never_logs': True,
-                'connection_timeout': 30,
-                'auto_reconnect': True
+            "network": {
+                "vpn_enabled": True,
+                "vpn_protocol": "multi-protocol",
+                "vpn_hops": 3,  # Multi-hop routing
+                "max_hops": 5,
+                "location_spoofing": True,
+                "dns_over_https": True,
+                "dns_provider": "cloudflare",  # cloudflare/quad9/custom
+                "split_tunneling": False,  # All traffic through VPN
+                "stealth_mode": True,
+                "never_logs": True,
+                "connection_timeout": 30,
+                "auto_reconnect": True,
             },
-
             # Firewall Settings (8 Types)
-            'firewalls': {
-                'packet_filtering': {
-                    'enabled': True,
-                    'mode': 'strict',
-                    'default_policy': 'deny'
+            "firewalls": {
+                "packet_filtering": {
+                    "enabled": True,
+                    "mode": "strict",
+                    "default_policy": "deny",
                 },
-                'circuit_level': {
-                    'enabled': True,
-                    'tcp_monitoring': True
+                "circuit_level": {"enabled": True, "tcp_monitoring": True},
+                "stateful_inspection": {"enabled": True, "connection_tracking": True},
+                "proxy": {"enabled": True, "application_layer": True},
+                "next_generation": {
+                    "enabled": True,
+                    "ai_powered": True,
+                    "threat_detection": True,
                 },
-                'stateful_inspection': {
-                    'enabled': True,
-                    'connection_tracking': True
-                },
-                'proxy': {
-                    'enabled': True,
-                    'application_layer': True
-                },
-                'next_generation': {
-                    'enabled': True,
-                    'ai_powered': True,
-                    'threat_detection': True
-                },
-                'software': {
-                    'enabled': True,
-                    'user_space_protection': True
-                },
-                'hardware': {
-                    'enabled': True,
-                    'hardware_filtering': True
-                },
-                'cloud': {
-                    'enabled': True,
-                    'distributed_protection': True
-                }
+                "software": {"enabled": True, "user_space_protection": True},
+                "hardware": {"enabled": True, "hardware_filtering": True},
+                "cloud": {"enabled": True, "distributed_protection": True},
             },
-
             # Support Settings
-            'support': {
-                'qa_enabled': True,
-                'contact_enabled': True,
-                'feedback_enabled': True,
-                'bug_reports_enabled': True,
-                'feature_requests_enabled': True,
-                'security_reports_enabled': True,
-                'code_of_conduct_suggestions': True,
-                'encrypt_communications': True
+            "support": {
+                "qa_enabled": True,
+                "contact_enabled": True,
+                "feedback_enabled": True,
+                "bug_reports_enabled": True,
+                "feature_requests_enabled": True,
+                "security_reports_enabled": True,
+                "code_of_conduct_suggestions": True,
+                "encrypt_communications": True,
             },
-
             # Advanced Settings
-            'advanced': {
-                'debug_mode': False,
-                'verbose_logging': False,
-                'performance_monitoring': False,
-                'memory_optimization': True,
-                'cpu_priority': 'normal',
-                'network_buffer_size': 65536,
-                'max_concurrent_connections': 100,
-                'encryption_hardware_acceleration': True
-            }
+            "advanced": {
+                "debug_mode": False,
+                "verbose_logging": False,
+                "performance_monitoring": False,
+                "memory_optimization": True,
+                "cpu_priority": "normal",
+                "network_buffer_size": 65536,
+                "max_concurrent_connections": 100,
+                "encryption_hardware_acceleration": True,
+            },
         }
 
         self._modified = False
@@ -276,11 +246,17 @@ class SettingsManager:
         self.settings[category][key] = value
         self._modified = True
 
-        self.logger.info(f"Setting updated: {category}.{key} = {value}")
+        self.logger.info("Setting updated: %s.%s = %s", category, key, value)
 
         # Log security-critical changes
-        if category in ['security', 'privacy', 'ad_blocker']:
-            self.logger.warning(f"SECURITY SETTING CHANGED: {category}.{key} from {old_value} to {value}")
+        if category in ["security", "privacy", "ad_blocker"]:
+            self.logger.warning(
+                "SECURITY SETTING CHANGED: %s.%s from %s to %s",
+                category,
+                key,
+                old_value,
+                value,
+            )
 
     def get_category(self, category: str) -> dict[str, Any]:
         """Get all settings in a category"""
@@ -295,7 +271,7 @@ class SettingsManager:
         if category in self._defaults:
             self.settings[category] = self._defaults[category].copy()
             self._modified = True
-            self.logger.info(f"Category reset to defaults: {category}")
+            self.logger.info("Category reset to defaults: %s", category)
 
     def reset_all(self):
         """Reset all settings to defaults"""
@@ -306,7 +282,9 @@ class SettingsManager:
     def export_settings(self) -> bytes:
         """Export all settings (encrypted with God tier)"""
         settings_json = json.dumps(self.settings, indent=2)
-        encrypted_settings = self.god_tier_encryption.encrypt_god_tier(settings_json.encode())
+        encrypted_settings = self.god_tier_encryption.encrypt_god_tier(
+            settings_json.encode()
+        )
 
         self.logger.info("Settings exported (God tier encrypted)")
 
@@ -327,41 +305,40 @@ class SettingsManager:
             self.logger.info("Settings imported successfully")
 
         except Exception as e:
-            self.logger.error(f"Failed to import settings: {e}")
+            self.logger.error("Failed to import settings: %s", e)
 
     def validate_settings(self) -> dict[str, Any]:
         """Validate all settings for security and consistency"""
         issues = []
 
         # Check critical security settings
-        if not self.settings['privacy']['god_tier_encryption']:
+        if not self.settings["privacy"]["god_tier_encryption"]:
             issues.append("God tier encryption is disabled!")
 
-        if not self.settings['security']['kill_switch']:
+        if not self.settings["security"]["kill_switch"]:
             issues.append("Kill switch is disabled!")
 
-        if not self.settings['ad_blocker']['holy_war_mode']:
+        if not self.settings["ad_blocker"]["holy_war_mode"]:
             issues.append("Ad blocker HOLY WAR mode is disabled!")
 
-        if self.settings['remote_access']['browser_enabled'] or self.settings['remote_access']['desktop_enabled']:
-            if not self.settings['remote_access']['require_authentication']:
+        if (
+            self.settings["remote_access"]["browser_enabled"]
+            or self.settings["remote_access"]["desktop_enabled"]
+        ):
+            if not self.settings["remote_access"]["require_authentication"]:
                 issues.append("Remote access enabled without authentication!")
 
-        return {
-            'valid': len(issues) == 0,
-            'issues': issues,
-            'warnings': len(issues)
-        }
+        return {"valid": len(issues) == 0, "issues": issues, "warnings": len(issues)}
 
     def get_status(self) -> dict[str, Any]:
         """Get settings manager status"""
         validation = self.validate_settings()
 
         return {
-            'god_tier_encrypted': True,
-            'encryption_layers': 7,
-            'categories': list(self.settings.keys()),
-            'total_settings': sum(len(cat) for cat in self.settings.values()),
-            'modified': self._modified,
-            'validation': validation
+            "god_tier_encrypted": True,
+            "encryption_layers": 7,
+            "categories": list(self.settings.keys()),
+            "total_settings": sum(len(cat) for cat in self.settings.values()),
+            "modified": self._modified,
+            "validation": validation,
         }

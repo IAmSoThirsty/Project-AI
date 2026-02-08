@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class FailureThreshold:
     """Definition of an irreversible failure threshold."""
+
     name: str
     description: str
     condition: callable  # Returns True if threshold breached
@@ -71,7 +72,9 @@ class FailureStatesEngine:
 
         return newly_triggered
 
-    def _trigger_failure(self, state: SectorizedWorldState, threshold: FailureThreshold) -> None:
+    def _trigger_failure(
+        self, state: SectorizedWorldState, threshold: FailureThreshold
+    ) -> None:
         """
         Trigger an irreversible failure state.
 
@@ -79,7 +82,7 @@ class FailureStatesEngine:
             state: World state to modify
             threshold: Failure threshold that was breached
         """
-        logger.critical(f"💀 FAILURE STATE TRIGGERED: {threshold.name}")
+        logger.critical("💀 FAILURE STATE TRIGGERED: %s", threshold.name)
 
         # Apply consequences
         threshold.consequence(state)
@@ -98,92 +101,107 @@ class FailureStatesEngine:
         """Register all failure thresholds."""
 
         # Water Crisis Death Spiral
-        self.thresholds.append(FailureThreshold(
-            name="water_death_spiral",
-            description="Water <20% for 60+ days → death rate ×3",
-            condition=lambda state: (
-                state.water.potable_water_pct < 0.20
-                and state.water.days_below_threshold >= 60
-            ),
-            consequence=lambda state: self._apply_water_death_spiral(state),
-            recoverable=False  # Once death rate accelerates, can't undo deaths
-        ))
+        self.thresholds.append(
+            FailureThreshold(
+                name="water_death_spiral",
+                description="Water <20% for 60+ days → death rate ×3",
+                condition=lambda state: (
+                    state.water.potable_water_pct < 0.20
+                    and state.water.days_below_threshold >= 60
+                ),
+                consequence=lambda state: self._apply_water_death_spiral(state),
+                recoverable=False,  # Once death rate accelerates, can't undo deaths
+            )
+        )
 
         # Pandemic Unlock
-        self.thresholds.append(FailureThreshold(
-            name="pandemic_outbreak",
-            description="Hospital capacity <15% → pandemic unlocked",
-            condition=lambda state: state.health.hospital_capacity_pct < 0.15,
-            consequence=lambda state: self._apply_pandemic_outbreak(state),
-            recoverable=False  # Pandemic can't be "unlocked" once triggered
-        ))
+        self.thresholds.append(
+            FailureThreshold(
+                name="pandemic_outbreak",
+                description="Hospital capacity <15% → pandemic unlocked",
+                condition=lambda state: state.health.hospital_capacity_pct < 0.15,
+                consequence=lambda state: self._apply_pandemic_outbreak(state),
+                recoverable=False,  # Pandemic can't be "unlocked" once triggered
+            )
+        )
 
         # Government Splinter
-        self.thresholds.append(FailureThreshold(
-            name="government_splinter",
-            description="Legitimacy <30% → splinter entities spawn",
-            condition=lambda state: state.governance.legitimacy_score < 0.30,
-            consequence=lambda state: self._apply_government_splinter(state),
-            recoverable=False  # Can't unify once fragmented
-        ))
+        self.thresholds.append(
+            FailureThreshold(
+                name="government_splinter",
+                description="Legitimacy <30% → splinter entities spawn",
+                condition=lambda state: state.governance.legitimacy_score < 0.30,
+                consequence=lambda state: self._apply_government_splinter(state),
+                recoverable=False,  # Can't unify once fragmented
+            )
+        )
 
         # Nuclear Cooling Failure
-        self.thresholds.append(FailureThreshold(
-            name="nuclear_meltdown_cascade",
-            description="Nuclear plants without cooling → regional exclusion zones",
-            condition=lambda state: (
-                state.energy.nuclear_plants_scram > 400
-                and state.energy.grid_generation_pct < 0.10
-                and state.simulation_day > 7  # One week without cooling
-            ),
-            consequence=lambda state: self._apply_nuclear_meltdown(state),
-            recoverable=False  # Radiation is permanent
-        ))
+        self.thresholds.append(
+            FailureThreshold(
+                name="nuclear_meltdown_cascade",
+                description="Nuclear plants without cooling → regional exclusion zones",
+                condition=lambda state: (
+                    state.energy.nuclear_plants_scram > 400
+                    and state.energy.grid_generation_pct < 0.10
+                    and state.simulation_day > 7  # One week without cooling
+                ),
+                consequence=lambda state: self._apply_nuclear_meltdown(state),
+                recoverable=False,  # Radiation is permanent
+            )
+        )
 
         # Total Governance Collapse
-        self.thresholds.append(FailureThreshold(
-            name="state_failure",
-            description="Government control <10% → failed state",
-            condition=lambda state: state.governance.government_control_pct < 0.10,
-            consequence=lambda state: self._apply_state_failure(state),
-            recoverable=False  # State can't be reconstituted
-        ))
+        self.thresholds.append(
+            FailureThreshold(
+                name="state_failure",
+                description="Government control <10% → failed state",
+                condition=lambda state: state.governance.government_control_pct < 0.10,
+                consequence=lambda state: self._apply_state_failure(state),
+                recoverable=False,  # State can't be reconstituted
+            )
+        )
 
         # Food System Extinction
-        self.thresholds.append(FailureThreshold(
-            name="agricultural_collapse",
-            description="Rural food output <5% for 90 days → permanent famine",
-            condition=lambda state: (
-                state.food.rural_output_pct < 0.05
-                and state.simulation_day > 90
-            ),
-            consequence=lambda state: self._apply_agricultural_collapse(state),
-            recoverable=False  # Can't restart agriculture at scale
-        ))
+        self.thresholds.append(
+            FailureThreshold(
+                name="agricultural_collapse",
+                description="Rural food output <5% for 90 days → permanent famine",
+                condition=lambda state: (
+                    state.food.rural_output_pct < 0.05 and state.simulation_day > 90
+                ),
+                consequence=lambda state: self._apply_agricultural_collapse(state),
+                recoverable=False,  # Can't restart agriculture at scale
+            )
+        )
 
         # Healthcare System Extinction
-        self.thresholds.append(FailureThreshold(
-            name="medical_dark_age",
-            description="Hospital capacity <5% AND med supplies exhausted",
-            condition=lambda state: (
-                state.health.hospital_capacity_pct < 0.05
-                and state.health.critical_med_supply_days <= 0
-            ),
-            consequence=lambda state: self._apply_medical_dark_age(state),
-            recoverable=False  # Medical knowledge lost
-        ))
+        self.thresholds.append(
+            FailureThreshold(
+                name="medical_dark_age",
+                description="Hospital capacity <5% AND med supplies exhausted",
+                condition=lambda state: (
+                    state.health.hospital_capacity_pct < 0.05
+                    and state.health.critical_med_supply_days <= 0
+                ),
+                consequence=lambda state: self._apply_medical_dark_age(state),
+                recoverable=False,  # Medical knowledge lost
+            )
+        )
 
         # Warzone
-        self.thresholds.append(FailureThreshold(
-            name="civil_war",
-            description="Violence >70% AND armed groups >50 → civil war",
-            condition=lambda state: (
-                state.security.violence_index > 0.70
-                and state.security.armed_group_count > 50
-            ),
-            consequence=lambda state: self._apply_civil_war(state),
-            recoverable=True  # War can end, but at huge cost
-        ))
+        self.thresholds.append(
+            FailureThreshold(
+                name="civil_war",
+                description="Violence >70% AND armed groups >50 → civil war",
+                condition=lambda state: (
+                    state.security.violence_index > 0.70
+                    and state.security.armed_group_count > 50
+                ),
+                consequence=lambda state: self._apply_civil_war(state),
+                recoverable=True,  # War can end, but at huge cost
+            )
+        )
 
     # Failure consequence implementations
 
@@ -224,7 +242,9 @@ class FailureStatesEngine:
         state.governance.competing_authorities = 1 + num_splinters
         state.governance.regional_fragmentation = 0.80
 
-        logger.critical(f"💀 Government splinter - {num_splinters} competing authorities")
+        logger.critical(
+            "💀 Government splinter - %s competing authorities", num_splinters
+        )
         state.major_events.append(
             f"IRREVERSIBLE: Government fragmented into {num_splinters} splinter entities"
         )
@@ -250,7 +270,11 @@ class FailureStatesEngine:
         state.total_deaths += longterm_deaths
         state.global_population -= longterm_deaths
 
-        logger.critical(f"💀 Nuclear meltdown cascade - {meltdowns} plants, {affected_population:,} affected")
+        logger.critical(
+            "💀 Nuclear meltdown cascade - %s plants, %s affected",
+            meltdowns,
+            affected_population,
+        )
         state.major_events.append(
             f"IRREVERSIBLE: {meltdowns} nuclear meltdowns - {affected_population:,} in exclusion zones"
         )
@@ -263,7 +287,9 @@ class FailureStatesEngine:
 
         # Armed groups take over completely
         state.security.armed_group_count += 20
-        state.security.militia_governance_regions = state.governance.competing_authorities
+        state.security.militia_governance_regions = (
+            state.governance.competing_authorities
+        )
 
         logger.critical("💀 State failure - government no longer exists")
         state.major_events.append(
@@ -293,9 +319,7 @@ class FailureStatesEngine:
         state.health.disease_pressure_index = 0.90
 
         logger.critical("💀 Medical dark age - healthcare knowledge lost")
-        state.major_events.append(
-            "IRREVERSIBLE: Medical dark age - healthcare extinct"
-        )
+        state.major_events.append("IRREVERSIBLE: Medical dark age - healthcare extinct")
 
     def _apply_civil_war(self, state: SectorizedWorldState) -> None:
         """Civil war: Armed conflict between factions."""
@@ -310,7 +334,7 @@ class FailureStatesEngine:
         state.food.logistics_integrity *= 0.70
         state.health.hospital_capacity_pct *= 0.60
 
-        logger.critical(f"💀 Civil war - {war_deaths:,} immediate casualties")
+        logger.critical("💀 Civil war - %s immediate casualties", war_deaths)
         state.major_events.append(
             f"RECOVERABLE (but costly): Civil war - {war_deaths:,} deaths, infrastructure damaged"
         )
@@ -322,8 +346,11 @@ class FailureStatesEngine:
             "irreversible_collapses": len(state.irreversible_collapses),
             "failure_list": state.failure_states_triggered,
             "irreversible_list": state.irreversible_collapses,
-            "cascading_failures": len([
-                f for f in state.failure_states_triggered
-                if f not in self.triggered_failures
-            ]),
+            "cascading_failures": len(
+                [
+                    f
+                    for f in state.failure_states_triggered
+                    if f not in self.triggered_failures
+                ]
+            ),
         }

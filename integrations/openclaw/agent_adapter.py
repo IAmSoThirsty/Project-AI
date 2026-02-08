@@ -6,7 +6,7 @@ Bridges OpenClaw message routing with Project-AI's governance engine
 
 import asyncio
 import hashlib
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 from pydantic import BaseModel
@@ -31,13 +31,13 @@ except ImportError:
 
 
 # Define models locally to avoid circular imports
-class ActorType(str, Enum):
+class ActorType(StrEnum):
     human = "human"
     agent = "agent"
     system = "system"
 
 
-class ActionType(str, Enum):
+class ActionType(StrEnum):
     read = "read"
     write = "write"
     execute = "execute"
@@ -80,6 +80,7 @@ class LegionAgent:
     def _generate_agent_id(self) -> str:
         """Generate unique agent identifier"""
         import time
+
         data = f"legion-{time.time()}".encode()
         return hashlib.sha256(data).hexdigest()[:16]
 
@@ -115,8 +116,7 @@ class LegionAgent:
             # Initialize autonomous learning
             if AutonomousLearningEngine and self.eed:
                 self.learning_engine = AutonomousLearningEngine(
-                    self.eed,
-                    self.capability_registry
+                    self.eed, self.capability_registry
                 )
                 print("   [OK] Autonomous learning ready")
             else:
@@ -154,7 +154,7 @@ class LegionAgent:
         message: str,
         user_id: str,
         platform: str = "openclaw",
-        metadata: dict[str, Any] | None = None
+        metadata: dict[str, Any] | None = None,
     ) -> str:
         """
         Main message processing pipeline
@@ -204,18 +204,9 @@ class LegionAgent:
         - User authorization
         """
         # Placeholder - implement with actual Cerberus integration
-        return {
-            "allowed": True,
-            "reason": "security_passed",
-            "threat_level": "low"
-        }
+        return {"allowed": True, "reason": "security_passed", "threat_level": "low"}
 
-    async def _parse_intent(
-        self,
-        message: str,
-        user_id: str,
-        platform: str
-    ) -> Intent:
+    async def _parse_intent(self, message: str, user_id: str, platform: str) -> Intent:
         """
         Parse natural language into structured Intent
         Uses simple heuristics for now, will integrate LLM later
@@ -235,7 +226,7 @@ class LegionAgent:
             action=action,
             target=f"conversation:{user_id}",
             context={"message": message, "platform": platform},
-            origin="legion_agent"
+            origin="legion_agent",
         )
 
     async def _get_context(self, user_id: str) -> dict[str, Any]:
@@ -246,16 +237,13 @@ class LegionAgent:
         if not self.eed:
             # Fallback to local storage
             history = self.conversation_history.get(user_id, [])
-            return {
-                "history": history[-10:],
-                "user_id": user_id
-            }
+            return {"history": history[-10:], "user_id": user_id}
 
         try:
             context_window = await self.eed.retrieve_context(user_id)
             return {
                 "conversations": [c.dict() for c in context_window.conversations],
-                "total_tokens": context_window.total_tokens
+                "total_tokens": context_window.total_tokens,
             }
         except Exception as e:
             print(f"[Legion] Context retrieval error: {str(e)}")
@@ -276,8 +264,8 @@ class LegionAgent:
                 "votes": [
                     {"pillar": "Galahad", "verdict": "allow"},
                     {"pillar": "Cerberus", "verdict": "allow"},
-                    {"pillar": "CodexDeus", "verdict": "allow"}
-                ]
+                    {"pillar": "CodexDeus", "verdict": "allow"},
+                ],
             }
 
         try:
@@ -288,7 +276,7 @@ class LegionAgent:
                 target=intent.target,
                 context=intent.context,
                 origin=intent.origin,
-                risk_level="low"  # Could be determined by security check
+                risk_level="low",  # Could be determined by security check
             )
 
             decision = await self.triumvirate_client.submit_intent(tri_intent)
@@ -297,21 +285,14 @@ class LegionAgent:
                 "final_verdict": decision.final_verdict,
                 "votes": [v.dict() for v in decision.votes],
                 "audit_id": decision.audit_id,
-                "consensus": decision.consensus
+                "consensus": decision.consensus,
             }
         except Exception as e:
             print(f"[Legion] Triumvirate error: {str(e)}")
             # Conservative default: deny on error
-            return {
-                "final_verdict": "deny",
-                "reason": f"governance_error: {str(e)}"
-            }
+            return {"final_verdict": "deny", "reason": f"governance_error: {str(e)}"}
 
-    async def _execute_capability(
-        self,
-        intent: Intent,
-        context: dict[str, Any]
-    ) -> str:
+    async def _execute_capability(self, intent: Intent, context: dict[str, Any]) -> str:
         """
         Execute capability based on intent
         Uses capability registry for routing to Project-AI subsystems
@@ -326,8 +307,7 @@ class LegionAgent:
             # Match message to capability
             message = intent.context.get("message", "")
             capability_name = await self.capability_registry.match_capability(
-                message,
-                intent.context
+                message, intent.context
             )
 
             if not capability_name:
@@ -335,15 +315,13 @@ class LegionAgent:
 
             # Execute capability
             result = await self.capability_registry.execute_capability(
-                capability_name,
-                intent.context
+                capability_name, intent.context
             )
 
             # Contribute to collective intelligence
             if self.collective:
                 await self.collective.aggregate_insights(
-                    "capability_execution",
-                    [f"Executed {capability_name}"]
+                    "capability_execution", [f"Executed {capability_name}"]
                 )
 
             return self._format_capability_result(result)
@@ -358,10 +336,9 @@ class LegionAgent:
             if user_id not in self.conversation_history:
                 self.conversation_history[user_id] = []
 
-            self.conversation_history[user_id].append({
-                "user": message,
-                "legion": response
-            })
+            self.conversation_history[user_id].append(
+                {"user": message, "legion": response}
+            )
             return
 
         try:
@@ -370,7 +347,7 @@ class LegionAgent:
                 message=message,
                 response=response,
                 context={"platform": "openclaw"},
-                metadata={"agent_id": self.agent_id}
+                metadata={"agent_id": self.agent_id},
             )
         except Exception as e:
             print(f"[Legion] Conversation storage error: {str(e)}")
@@ -381,10 +358,9 @@ class LegionAgent:
 
     def _format_governance_denial(self, result: dict[str, Any]) -> str:
         """Format Triumvirate governance denial"""
-        votes = "\n".join([
-            f"  {v['pillar']}: {v['verdict']}"
-            for v in result.get("votes", [])
-        ])
+        votes = "\n".join(
+            [f"  {v['pillar']}: {v['verdict']}" for v in result.get("votes", [])]
+        )
         return f"🛡️ Triumvirate Decision: Denied\n{votes}"
 
     def _default_response(self, message: str) -> str:
@@ -430,9 +406,7 @@ async def test_legion():
 
     # Test message
     response = await legion.process_message(
-        message="What is your threat status?",
-        user_id="test_user_1",
-        platform="cli"
+        message="What is your threat status?", user_id="test_user_1", platform="cli"
     )
 
     print("User: What is your threat status?")

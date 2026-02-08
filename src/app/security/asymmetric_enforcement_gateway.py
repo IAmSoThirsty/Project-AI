@@ -174,7 +174,7 @@ class SecurityEnforcementGateway:
         }
 
         # TODO: Wire into Hydra-50 incident response system
-        logger.critical(f"SECURITY INCIDENT: {incident}")
+        logger.critical("SECURITY INCIDENT: %s", incident)
 
     def _create_audit_trail(
         self, request: OperationRequest, result: OperationResult
@@ -186,20 +186,8 @@ class SecurityEnforcementGateway:
             f"{request.operation_id}{request.timestamp}".encode()
         ).hexdigest()[:16]
 
-        audit_record = {
-            "audit_id": audit_id,
-            "operation_id": request.operation_id,
-            "operation_type": request.operation_type.value,
-            "action": request.action,
-            "user_id": request.user_id,
-            "timestamp": request.timestamp,
-            "allowed": result.allowed,
-            "layers_checked": result.layers_checked,
-            "context": request.context,
-        }
-
         # TODO: Wire into immutable audit log system
-        logger.info(f"AUDIT TRAIL: {audit_id} - {request.action}")
+        logger.info("AUDIT TRAIL: %s - %s", audit_id, request.action)
 
         return audit_id
 
@@ -258,7 +246,7 @@ class SecureCommandDispatcher:
     def register_command(self, command_name: str, handler: Callable) -> None:
         """Register a command handler."""
         self.command_handlers[command_name] = handler
-        logger.info(f"Registered secure command: {command_name}")
+        logger.info("Registered secure command: %s", command_name)
 
     def execute_command(
         self,

@@ -253,7 +253,7 @@ def main():
     print("✓ Support provided: Technical assistance")
 
     # Register multiple interactions
-    for i in range(8):
+    for _i in range(8):
         bonding.record_interaction(
             trust_delta=0.02, rapport_delta=0.03, emotional_tone=0.5
         )

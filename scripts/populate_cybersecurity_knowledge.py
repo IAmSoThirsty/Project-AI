@@ -43,7 +43,7 @@ def main():
 
         # Export to JSON for reference
         export_path = cyber_knowledge.export_to_json()
-        logger.info(f"Exported cybersecurity knowledge to: {export_path}")
+        logger.info("Exported cybersecurity knowledge to: %s", export_path)
 
         # Integrate with memory system
         logger.info("Integrating cybersecurity knowledge with memory system...")
@@ -71,7 +71,7 @@ def main():
         return 0
 
     except Exception as e:
-        logger.error(f"Error populating cybersecurity knowledge: {e}", exc_info=True)
+        logger.error("Error populating cybersecurity knowledge: %s", e, exc_info=True)
         return 1
 
 

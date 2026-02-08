@@ -159,9 +159,7 @@ class TARLSystem:
             logger.info("✓ FFI bridge initialized")
 
             # 5. Compiler Frontend
-            self.compiler = CompilerFrontend(
-                self.config, self.diagnostics, self.stdlib
-            )
+            self.compiler = CompilerFrontend(self.config, self.diagnostics, self.stdlib)
             self.compiler.initialize()
             self._subsystems_loaded.append("compiler")
             logger.info("✓ Compiler initialized")
@@ -191,10 +189,10 @@ class TARLSystem:
             logger.info("✓ Development tooling initialized")
 
             self._initialized = True
-            logger.info(f"T.A.R.L. System v{self.VERSION} initialized successfully")
+            logger.info("T.A.R.L. System v%s initialized successfully", self.VERSION)
 
         except Exception as e:
-            logger.error(f"System initialization failed: {e}")
+            logger.error("System initialization failed: %s", e)
             # Cleanup partially initialized subsystems
             self._cleanup_subsystems()
             raise RuntimeError(f"T.A.R.L. system initialization failed: {e}") from e
@@ -228,7 +226,7 @@ class TARLSystem:
             return result
 
         except Exception as e:
-            logger.error(f"Execution failed: {e}")
+            logger.error("Execution failed: %s", e)
             # Log diagnostics if available
             if self.diagnostics and self.diagnostics.has_errors():
                 logger.error("Diagnostics:\n" + self.diagnostics.format_all())
@@ -252,7 +250,9 @@ class TARLSystem:
 
         return self.compiler.compile(source)
 
-    def execute_bytecode(self, bytecode: bytes, context: dict[str, Any] | None = None) -> Any:
+    def execute_bytecode(
+        self, bytecode: bytes, context: dict[str, Any] | None = None
+    ) -> Any:
         """
         Execute pre-compiled T.A.R.L. bytecode
 
@@ -287,7 +287,9 @@ class TARLSystem:
         if self._initialized:
             status.update(
                 {
-                    "config": self.config.get_section("compiler") if self.config else {},
+                    "config": (
+                        self.config.get_section("compiler") if self.config else {}
+                    ),
                     "diagnostics": (
                         self.diagnostics.get_status() if self.diagnostics else {}
                     ),

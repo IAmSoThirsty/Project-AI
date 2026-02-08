@@ -58,12 +58,12 @@ async def run_triumvirate_pipeline(request: dict) -> dict:
         )
 
         activity.logger.info(
-            f"Triumvirate pipeline complete: {result.get('correlation_id')}"
+            "Triumvirate pipeline complete: %s", result.get("correlation_id")
         )
         return result
 
     except Exception as e:
-        activity.logger.error(f"Triumvirate pipeline activity failed: {e}")
+        activity.logger.error("Triumvirate pipeline activity failed: %s", e)
         return {
             "success": False,
             "error": str(e),
@@ -93,7 +93,7 @@ async def validate_input_activity(input_data: Any, context: dict | None = None) 
         return result
 
     except Exception as e:
-        activity.logger.error(f"Validation activity failed: {e}")
+        activity.logger.error("Validation activity failed: %s", e)
         return {"valid": False, "reason": str(e)}
 
 
@@ -119,7 +119,7 @@ async def run_codex_inference(input_data: Any, context: dict | None = None) -> d
         return result
 
     except Exception as e:
-        activity.logger.error(f"Codex activity failed: {e}")
+        activity.logger.error("Codex activity failed: %s", e)
         return {"success": False, "error": str(e)}
 
 
@@ -135,7 +135,7 @@ async def run_galahad_reasoning(inputs: list, context: dict | None = None) -> di
     Returns:
         Reasoning result
     """
-    activity.logger.info(f"Galahad reasoning activity with {len(inputs)} inputs")
+    activity.logger.info("Galahad reasoning activity with %s inputs", len(inputs))
 
     try:
         from src.cognition.galahad.engine import GalahadEngine
@@ -145,7 +145,7 @@ async def run_galahad_reasoning(inputs: list, context: dict | None = None) -> di
         return result
 
     except Exception as e:
-        activity.logger.error(f"Galahad activity failed: {e}")
+        activity.logger.error("Galahad activity failed: %s", e)
         return {"success": False, "error": str(e)}
 
 
@@ -171,7 +171,7 @@ async def enforce_output_policy(output_data: Any, context: dict | None = None) -
         return result
 
     except Exception as e:
-        activity.logger.error(f"Enforcement activity failed: {e}")
+        activity.logger.error("Enforcement activity failed: %s", e)
         return {"allowed": False, "reason": str(e)}
 
 
@@ -187,7 +187,7 @@ async def record_telemetry(event_type: str, payload: dict) -> bool:
     Returns:
         True if recorded successfully
     """
-    activity.logger.info(f"Recording telemetry: {event_type}")
+    activity.logger.info("Recording telemetry: %s", event_type)
 
     try:
         # In production, this would send to monitoring system
@@ -200,11 +200,11 @@ async def record_telemetry(event_type: str, payload: dict) -> bool:
             "activity_id": activity.info().activity_id,
         }
 
-        activity.logger.debug(f"Telemetry: {json.dumps(telemetry_data)}")
+        activity.logger.debug("Telemetry: %s", json.dumps(telemetry_data))
         return True
 
     except Exception as e:
-        activity.logger.error(f"Telemetry recording failed: {e}")
+        activity.logger.error("Telemetry recording failed: %s", e)
         return False
 
 

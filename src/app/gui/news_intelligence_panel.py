@@ -68,8 +68,7 @@ class GlobalStatisticsPanel(QFrame):
         # Statistics display
         self.stats_display = QTextEdit()
         self.stats_display.setReadOnly(True)
-        self.stats_display.setStyleSheet(
-            """
+        self.stats_display.setStyleSheet("""
             QTextEdit {
                 background-color: #0a0a0a;
                 border: 1px solid #00ff00;
@@ -77,14 +76,12 @@ class GlobalStatisticsPanel(QFrame):
                 font-family: 'Courier New';
                 font-size: 10px;
             }
-        """
-        )
+        """)
         layout.addWidget(self.stats_display)
 
         # Refresh button
         refresh_btn = QPushButton("🔄 REFRESH STATISTICS")
-        refresh_btn.setStyleSheet(
-            """
+        refresh_btn.setStyleSheet("""
             QPushButton {
                 background-color: #1a1a1a;
                 border: 2px solid #00ff00;
@@ -96,8 +93,7 @@ class GlobalStatisticsPanel(QFrame):
                 border: 2px solid #00ffff;
                 color: #00ffff;
             }
-        """
-        )
+        """)
         refresh_btn.clicked.connect(self.refresh_statistics)
         layout.addWidget(refresh_btn)
 
@@ -107,7 +103,7 @@ class GlobalStatisticsPanel(QFrame):
     def refresh_statistics(self):
         """Refresh global statistics from intelligence library."""
         try:
-            library = GlobalIntelligenceLibrary.get_instance()
+            GlobalIntelligenceLibrary.get_instance()
 
             output = []
             output.append("=" * 70)
@@ -172,7 +168,7 @@ class GlobalStatisticsPanel(QFrame):
             self.stats_display.setText("\n".join(output))
 
         except Exception as e:
-            logger.error(f"Error refreshing statistics: {e}")
+            logger.error("Error refreshing statistics: %s", e)
             self.stats_display.setText(
                 "Initializing global intelligence monitoring...\n\n"
                 "Please ensure Intelligence Library is initialized.\n\n"
@@ -198,23 +194,20 @@ class VerifiedNewsPanel(QFrame):
 
         # Info label
         info = QLabel("Verified independent journalism and primary sources")
-        info.setStyleSheet(
-            """
+        info.setStyleSheet("""
             QLabel {
                 color: #00ff00;
                 font-family: 'Courier New';
                 font-size: 9px;
                 padding: 5px;
             }
-        """
-        )
+        """)
         info.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(info)
 
         # News list
         self.news_list = QListWidget()
-        self.news_list.setStyleSheet(
-            """
+        self.news_list.setStyleSheet("""
             QListWidget {
                 background-color: #1a1a1a;
                 border: 1px solid #00ff00;
@@ -230,14 +223,12 @@ class VerifiedNewsPanel(QFrame):
                 background-color: #2a2a2a;
                 color: #00ffff;
             }
-        """
-        )
+        """)
         layout.addWidget(self.news_list)
 
         # Refresh button
         refresh_btn = QPushButton("🔄 REFRESH SOURCES")
-        refresh_btn.setStyleSheet(
-            """
+        refresh_btn.setStyleSheet("""
             QPushButton {
                 background-color: #1a1a1a;
                 border: 2px solid #00ff00;
@@ -249,8 +240,7 @@ class VerifiedNewsPanel(QFrame):
                 border: 2px solid #00ffff;
                 color: #00ffff;
             }
-        """
-        )
+        """)
         refresh_btn.clicked.connect(self.refresh_news)
         layout.addWidget(refresh_btn)
 
@@ -263,7 +253,7 @@ class VerifiedNewsPanel(QFrame):
 
         # Get intelligence reports from agents
         try:
-            library = GlobalIntelligenceLibrary.get_instance()
+            GlobalIntelligenceLibrary.get_instance()
 
             # Economic verified sources
             item = QListWidgetItem("💰 ECONOMIC | Independent Financial Analysis")
@@ -332,7 +322,7 @@ class VerifiedNewsPanel(QFrame):
             self.news_list.addItem(item)
 
         except Exception as e:
-            logger.error(f"Error refreshing news: {e}")
+            logger.error("Error refreshing news: %s", e)
             item = QListWidgetItem(f"⚠️ Error loading sources: {str(e)}")
             self.news_list.addItem(item)
 
@@ -357,24 +347,21 @@ class MainstreamContextPanel(QFrame):
         info = QLabel(
             "Mainstream sources with contextual analysis for factual accuracy"
         )
-        info.setStyleSheet(
-            """
+        info.setStyleSheet("""
             QLabel {
                 color: #ffaa00;
                 font-family: 'Courier New';
                 font-size: 9px;
                 padding: 5px;
             }
-        """
-        )
+        """)
         info.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(info)
 
         # Context display
         self.context_display = QTextEdit()
         self.context_display.setReadOnly(True)
-        self.context_display.setStyleSheet(
-            """
+        self.context_display.setStyleSheet("""
             QTextEdit {
                 background-color: #1a1a1a;
                 border: 1px solid #ffaa00;
@@ -382,14 +369,12 @@ class MainstreamContextPanel(QFrame):
                 font-family: 'Courier New';
                 font-size: 10px;
             }
-        """
-        )
+        """)
         layout.addWidget(self.context_display)
 
         # Refresh button
         refresh_btn = QPushButton("🔄 REFRESH ANALYSIS")
-        refresh_btn.setStyleSheet(
-            """
+        refresh_btn.setStyleSheet("""
             QPushButton {
                 background-color: #1a1a1a;
                 border: 2px solid #ffaa00;
@@ -401,8 +386,7 @@ class MainstreamContextPanel(QFrame):
                 border: 2px solid #ffcc00;
                 color: #ffcc00;
             }
-        """
-        )
+        """)
         refresh_btn.clicked.connect(self.refresh_context)
         layout.addWidget(refresh_btn)
 
@@ -468,13 +452,11 @@ class NewsIntelligencePanel(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setStyleSheet(
-            """
+        self.setStyleSheet("""
             QWidget {
                 background-color: #1a1a1a;
             }
-        """
-        )
+        """)
 
         main_layout = QVBoxLayout(self)
 
@@ -484,8 +466,7 @@ class NewsIntelligencePanel(QWidget):
 
         # Tab widget
         self.tabs = QTabWidget()
-        self.tabs.setStyleSheet(
-            """
+        self.tabs.setStyleSheet("""
             QTabWidget::pane {
                 border: 2px solid #00ff00;
                 background-color: #1a1a1a;
@@ -506,8 +487,7 @@ class NewsIntelligencePanel(QWidget):
             QTabBar::tab:hover {
                 color: #00ffff;
             }
-        """
-        )
+        """)
 
         # Statistics tab
         self.stats_panel = GlobalStatisticsPanel()
@@ -531,23 +511,20 @@ class NewsIntelligencePanel(QWidget):
     def _create_title_bar(self) -> QFrame:
         """Create title bar with back button."""
         title_frame = QFrame()
-        title_frame.setStyleSheet(
-            """
+        title_frame.setStyleSheet("""
             QFrame {
                 background-color: #0f0f0f;
                 border: 2px solid #00ff00;
                 border-radius: 5px;
             }
-        """
-        )
+        """)
         title_frame.setFixedHeight(60)
 
         layout = QHBoxLayout(title_frame)
 
         # Back button
         back_btn = QPushButton("◀ BACK")
-        back_btn.setStyleSheet(
-            """
+        back_btn.setStyleSheet("""
             QPushButton {
                 background-color: #1a1a1a;
                 border: 2px solid #00ff00;
@@ -559,8 +536,7 @@ class NewsIntelligencePanel(QWidget):
                 border: 2px solid #00ffff;
                 color: #00ffff;
             }
-        """
-        )
+        """)
         back_btn.clicked.connect(self.back_requested.emit)
         layout.addWidget(back_btn)
 

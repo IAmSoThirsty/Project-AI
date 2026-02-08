@@ -274,7 +274,7 @@ class DiagnosticsEngine:
         )
 
         self.diagnostics.append(diagnostic)
-        logger.info(f"[{code}] {message}")
+        logger.info("[%s] %s", code, message)
 
     def get_diagnostics(
         self,

@@ -45,7 +45,7 @@ class AdBlockDatabase:
         }
 
         self.logger.info(
-            f"Loaded {len(major_networks)} major ad networks for annihilation"
+            "Loaded %s major ad networks for annihilation", len(major_networks)
         )
         return major_networks
 

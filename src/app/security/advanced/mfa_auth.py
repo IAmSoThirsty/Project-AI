@@ -246,11 +246,11 @@ class TOTPProvider(AuthenticationProvider):
                     ),
                 }
 
-                self.logger.info(f"TOTP enrolled for user {user_id}")
+                self.logger.info("TOTP enrolled for user %s", user_id)
                 return True, enrollment_data
 
             except Exception as e:
-                self.logger.error(f"TOTP enrollment failed for {user_id}: {e}")
+                self.logger.error("TOTP enrollment failed for %s: %s", user_id, e)
                 return False, None
 
     def authenticate(self, credential: str, context: AuthContext) -> bool:
@@ -268,7 +268,7 @@ class TOTPProvider(AuthenticationProvider):
             try:
                 config = self._secrets.get(context.user_id)
                 if not config:
-                    self.logger.warning(f"No TOTP config for user {context.user_id}")
+                    self.logger.warning("No TOTP config for user %s", context.user_id)
                     return False
 
                 # Check token hasn't been used (replay protection)
@@ -277,7 +277,7 @@ class TOTPProvider(AuthenticationProvider):
                 ).digest()
 
                 if token_hash in self._used_tokens:
-                    self.logger.warning(f"TOTP replay attempt for {context.user_id}")
+                    self.logger.warning("TOTP replay attempt for %s", context.user_id)
                     return False
 
                 # Verify token with time window (±1 period for clock drift)
@@ -291,15 +291,15 @@ class TOTPProvider(AuthenticationProvider):
                     if secrets.compare_digest(credential, expected_token):
                         self._used_tokens.append(token_hash)
                         self.logger.info(
-                            f"TOTP authentication successful for {context.user_id}"
+                            "TOTP authentication successful for %s", context.user_id
                         )
                         return True
 
-                self.logger.warning(f"Invalid TOTP token for {context.user_id}")
+                self.logger.warning("Invalid TOTP token for %s", context.user_id)
                 return False
 
             except Exception as e:
-                self.logger.error(f"TOTP authentication error: {e}")
+                self.logger.error("TOTP authentication error: %s", e)
                 return False
 
     def revoke(self, user_id: str, credential_id: str = None) -> bool:
@@ -307,7 +307,7 @@ class TOTPProvider(AuthenticationProvider):
         with self._lock:
             if user_id in self._secrets:
                 del self._secrets[user_id]
-                self.logger.info(f"TOTP revoked for user {user_id}")
+                self.logger.info("TOTP revoked for user %s", user_id)
                 return True
             return False
 
@@ -394,11 +394,11 @@ class FIDO2Provider(AuthenticationProvider):
                     self._credentials[user_id] = []
 
                 self._credentials[user_id].append(credential)
-                self.logger.info(f"FIDO2 credential enrolled for {user_id}")
+                self.logger.info("FIDO2 credential enrolled for %s", user_id)
                 return True
 
             except Exception as e:
-                self.logger.error(f"FIDO2 enrollment failed: {e}")
+                self.logger.error("FIDO2 enrollment failed: %s", e)
                 return False
 
     def authenticate(self, credential: dict[str, Any], context: AuthContext) -> bool:
@@ -431,7 +431,7 @@ class FIDO2Provider(AuthenticationProvider):
                         break
 
                 if not matching_cred:
-                    self.logger.warning(f"Unknown credential for {context.user_id}")
+                    self.logger.warning("Unknown credential for %s", context.user_id)
                     return False
 
                 # Verify signature
@@ -454,19 +454,19 @@ class FIDO2Provider(AuthenticationProvider):
                         matching_cred.sign_count = new_sign_count
                         matching_cred.last_used = time.time()
                         self.logger.info(
-                            f"FIDO2 authentication successful for {context.user_id}"
+                            "FIDO2 authentication successful for %s", context.user_id
                         )
                         return True
                     else:
                         self.logger.warning(
-                            f"Potential cloned authenticator for {context.user_id}"
+                            "Potential cloned authenticator for %s", context.user_id
                         )
                         return False
 
                 return False
 
             except Exception as e:
-                self.logger.error(f"FIDO2 authentication error: {e}")
+                self.logger.error("FIDO2 authentication error: %s", e)
                 return False
 
     def revoke(self, user_id: str, credential_id: str) -> bool:
@@ -482,7 +482,7 @@ class FIDO2Provider(AuthenticationProvider):
                 ]
 
                 if len(self._credentials[user_id]) < initial_count:
-                    self.logger.info(f"FIDO2 credential revoked for {user_id}")
+                    self.logger.info("FIDO2 credential revoked for %s", user_id)
                     return True
 
             return False
@@ -564,11 +564,11 @@ class PasskeyProvider(AuthenticationProvider):
                     self._passkeys[user_id] = []
 
                 self._passkeys[user_id].append(passkey)
-                self.logger.info(f"Passkey enrolled for {user_id}")
+                self.logger.info("Passkey enrolled for %s", user_id)
                 return True
 
             except Exception as e:
-                self.logger.error(f"Passkey enrollment failed: {e}")
+                self.logger.error("Passkey enrollment failed: %s", e)
                 return False
 
     def authenticate(self, credential: dict[str, Any], context: AuthContext) -> bool:
@@ -602,7 +602,7 @@ class PasskeyProvider(AuthenticationProvider):
 
                     matching_passkey.last_used = time.time()
                     self.logger.info(
-                        f"Passkey authentication successful for {context.user_id}"
+                        "Passkey authentication successful for %s", context.user_id
                     )
                     return True
 
@@ -610,7 +610,7 @@ class PasskeyProvider(AuthenticationProvider):
                     return False
 
             except Exception as e:
-                self.logger.error(f"Passkey authentication error: {e}")
+                self.logger.error("Passkey authentication error: %s", e)
                 return False
 
     def revoke(self, user_id: str, credential_id: str) -> bool:
@@ -625,7 +625,7 @@ class PasskeyProvider(AuthenticationProvider):
                 ]
 
                 if len(self._passkeys[user_id]) < initial_count:
-                    self.logger.info(f"Passkey revoked for {user_id}")
+                    self.logger.info("Passkey revoked for %s", user_id)
                     return True
 
             return False
@@ -663,18 +663,18 @@ class CertificateProvider(AuthenticationProvider):
 
                 # Validate certificate
                 if not self._validate_certificate(cert):
-                    self.logger.warning(f"Invalid certificate for {user_id}")
+                    self.logger.warning("Invalid certificate for %s", user_id)
                     return False
 
                 if user_id not in self._certificates:
                     self._certificates[user_id] = []
 
                 self._certificates[user_id].append(cert)
-                self.logger.info(f"Certificate enrolled for {user_id}")
+                self.logger.info("Certificate enrolled for %s", user_id)
                 return True
 
             except Exception as e:
-                self.logger.error(f"Certificate enrollment failed: {e}")
+                self.logger.error("Certificate enrollment failed: %s", e)
                 return False
 
     def authenticate(self, credential: dict[str, Any], context: AuthContext) -> bool:
@@ -689,7 +689,7 @@ class CertificateProvider(AuthenticationProvider):
                 # Check if certificate is revoked
                 if cert.serial_number in self._revoked_serials:
                     self.logger.warning(
-                        f"Revoked certificate used for {context.user_id}"
+                        "Revoked certificate used for %s", context.user_id
                     )
                     return False
 
@@ -714,7 +714,7 @@ class CertificateProvider(AuthenticationProvider):
                         )
 
                     self.logger.info(
-                        f"Certificate authentication successful for {context.user_id}"
+                        "Certificate authentication successful for %s", context.user_id
                     )
                     return True
 
@@ -722,7 +722,7 @@ class CertificateProvider(AuthenticationProvider):
                     return False
 
             except Exception as e:
-                self.logger.error(f"Certificate authentication error: {e}")
+                self.logger.error("Certificate authentication error: %s", e)
                 return False
 
     def revoke(self, user_id: str, credential_id: str) -> bool:
@@ -731,7 +731,7 @@ class CertificateProvider(AuthenticationProvider):
             try:
                 serial_number = int(credential_id)
                 self._revoked_serials.add(serial_number)
-                self.logger.info(f"Certificate {serial_number} revoked")
+                self.logger.info("Certificate %s revoked", serial_number)
                 return True
             except Exception:
                 return False
@@ -795,11 +795,11 @@ class BiometricProvider(AuthenticationProvider):
                     self._templates[user_id] = []
 
                 self._templates[user_id].append(template)
-                self.logger.info(f"Biometric template enrolled for {user_id}")
+                self.logger.info("Biometric template enrolled for %s", user_id)
                 return True
 
             except Exception as e:
-                self.logger.error(f"Biometric enrollment failed: {e}")
+                self.logger.error("Biometric enrollment failed: %s", e)
                 return False
 
     def authenticate(self, credential: dict[str, Any], context: AuthContext) -> bool:
@@ -828,14 +828,15 @@ class BiometricProvider(AuthenticationProvider):
                     if similarity >= 0.95:  # 95% match threshold
                         template.last_verified = time.time()
                         self.logger.info(
-                            f"Biometric authentication successful for {context.user_id}"
+                            "Biometric authentication successful for %s",
+                            context.user_id,
                         )
                         return True
 
                 return False
 
             except Exception as e:
-                self.logger.error(f"Biometric authentication error: {e}")
+                self.logger.error("Biometric authentication error: %s", e)
                 return False
 
     def revoke(self, user_id: str, credential_id: str) -> bool:
@@ -850,7 +851,7 @@ class BiometricProvider(AuthenticationProvider):
                 ]
 
                 if len(self._templates[user_id]) < initial_count:
-                    self.logger.info(f"Biometric template revoked for {user_id}")
+                    self.logger.info("Biometric template revoked for %s", user_id)
                     return True
 
             return False
@@ -1011,7 +1012,7 @@ class MFAAuthenticator:
                 return False, "Authentication failed"
 
         except Exception as e:
-            self.logger.error(f"Authentication error: {e}")
+            self.logger.error("Authentication error: %s", e)
             self._log_audit(
                 "authentication_error",
                 context,
@@ -1055,7 +1056,7 @@ class MFAAuthenticator:
             return success, enrollment_data
 
         except Exception as e:
-            self.logger.error(f"Enrollment error: {e}")
+            self.logger.error("Enrollment error: %s", e)
             return False, None
 
     def revoke_method(
@@ -1093,7 +1094,7 @@ class MFAAuthenticator:
             return success
 
         except Exception as e:
-            self.logger.error(f"Revocation error: {e}")
+            self.logger.error("Revocation error: %s", e)
             return False
 
     def require_escalation(
@@ -1254,7 +1255,7 @@ class MFAAuthenticator:
             try:
                 return self._risk_engine_callback(context)
             except Exception as e:
-                self.logger.error(f"Risk engine callback error: {e}")
+                self.logger.error("Risk engine callback error: %s", e)
 
         # Default risk assessment
         risk_score = 0
@@ -1346,7 +1347,7 @@ class MFAAuthenticator:
         self._audit_log.append(audit_entry)
 
         # Also log to standard logger
-        self.logger.info(f"AUDIT: {event} - {metadata or {}}")
+        self.logger.info("AUDIT: %s - %s", event, metadata or {})
 
 
 # Utility functions for integration

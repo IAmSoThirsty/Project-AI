@@ -26,7 +26,7 @@ class AccountabilityRecord:
         actor: str,
         justification: str,
         signature: str,
-        metadata: dict[str, Any]
+        metadata: dict[str, Any],
     ):
         """
         Initialize accountability record.
@@ -70,13 +70,12 @@ class AccountabilityRecord:
             True if signature valid
         """
         # Recompute signature
-        content = f"{self.action_type}:{self.actor}:{self.justification}:{self.timestamp}"
+        content = (
+            f"{self.action_type}:{self.actor}:{self.justification}:{self.timestamp}"
+        )
         computed_sig = hashlib.sha256(content.encode()).hexdigest()
 
-        return (
-            self.signature == computed_sig and
-            self.actor == expected_actor
-        )
+        return self.signature == computed_sig and self.actor == expected_actor
 
 
 class AccountabilitySystem:
@@ -97,7 +96,7 @@ class AccountabilitySystem:
         self.records: dict[str, AccountabilityRecord] = {}
         self.pending_approvals: dict[str, dict[str, Any]] = {}
         self._load_records()
-        logger.info(f"Accountability system initialized: {self.records_dir}")
+        logger.info("Accountability system initialized: %s", self.records_dir)
 
     def request_policy_override(
         self,
@@ -105,7 +104,7 @@ class AccountabilitySystem:
         policy_id: str,
         reason: str,
         affected_actions: list[str],
-        duration_hours: int = 24
+        duration_hours: int = 24,
     ) -> str:
         """
         Request a policy override with justification.
@@ -139,7 +138,7 @@ class AccountabilitySystem:
                     "affected_actions": affected_actions,
                     "duration_hours": duration_hours,
                     "status": "pending_approval",
-                }
+                },
             )
 
             self.records[request_id] = record
@@ -151,19 +150,15 @@ class AccountabilitySystem:
 
             self._persist_record(record)
 
-            logger.info(f"Policy override requested: {request_id} by {actor}")
+            logger.info("Policy override requested: %s by %s", request_id, actor)
             return request_id
 
         except Exception as e:
-            logger.error(f"Error requesting policy override: {e}", exc_info=True)
+            logger.error("Error requesting policy override: %s", e, exc_info=True)
             raise
 
     def request_waiver(
-        self,
-        actor: str,
-        requirement: str,
-        reason: str,
-        scope: dict[str, Any]
+        self, actor: str, requirement: str, reason: str, scope: dict[str, Any]
     ) -> str:
         """
         Request a requirement waiver.
@@ -193,7 +188,7 @@ class AccountabilitySystem:
                     "requirement": requirement,
                     "scope": scope,
                     "status": "pending_approval",
-                }
+                },
             )
 
             self.records[request_id] = record
@@ -205,18 +200,15 @@ class AccountabilitySystem:
 
             self._persist_record(record)
 
-            logger.info(f"Waiver requested: {request_id} by {actor}")
+            logger.info("Waiver requested: %s by %s", request_id, actor)
             return request_id
 
         except Exception as e:
-            logger.error(f"Error requesting waiver: {e}", exc_info=True)
+            logger.error("Error requesting waiver: %s", e, exc_info=True)
             raise
 
     def approve_request(
-        self,
-        request_id: str,
-        approver: str,
-        comments: str | None = None
+        self, request_id: str, approver: str, comments: str | None = None
     ) -> bool:
         """
         Approve a pending request.
@@ -231,7 +223,7 @@ class AccountabilitySystem:
         """
         try:
             if request_id not in self.pending_approvals:
-                logger.warning(f"Request not found: {request_id}")
+                logger.warning("Request not found: %s", request_id)
                 return False
 
             approval_data = self.pending_approvals[request_id]
@@ -253,7 +245,7 @@ class AccountabilitySystem:
                 del self.pending_approvals[request_id]
                 self._persist_record(record)
 
-                logger.info(f"Request approved: {request_id}")
+                logger.info("Request approved: %s", request_id)
                 return True
 
             logger.info(
@@ -263,15 +255,10 @@ class AccountabilitySystem:
             return False
 
         except Exception as e:
-            logger.error(f"Error approving request: {e}", exc_info=True)
+            logger.error("Error approving request: %s", e, exc_info=True)
             return False
 
-    def deny_request(
-        self,
-        request_id: str,
-        denier: str,
-        reason: str
-    ) -> None:
+    def deny_request(self, request_id: str, denier: str, reason: str) -> None:
         """
         Deny a pending request.
 
@@ -282,7 +269,7 @@ class AccountabilitySystem:
         """
         try:
             if request_id not in self.pending_approvals:
-                logger.warning(f"Request not found: {request_id}")
+                logger.warning("Request not found: %s", request_id)
                 return
 
             approval_data = self.pending_approvals[request_id]
@@ -296,17 +283,17 @@ class AccountabilitySystem:
             del self.pending_approvals[request_id]
             self._persist_record(record)
 
-            logger.info(f"Request denied: {request_id} by {denier}")
+            logger.info("Request denied: %s by %s", request_id, denier)
 
         except Exception as e:
-            logger.error(f"Error denying request: {e}", exc_info=True)
+            logger.error("Error denying request: %s", e, exc_info=True)
 
     def sign_action(
         self,
         actor: str,
         action_type: str,
         action_data: dict[str, Any],
-        justification: str
+        justification: str,
     ) -> str:
         """
         Create signed record of action.
@@ -323,7 +310,9 @@ class AccountabilitySystem:
         try:
             record_id = self._generate_request_id(actor, action_type)
 
-            content = f"{action_type}:{actor}:{justification}:{datetime.utcnow().isoformat()}"
+            content = (
+                f"{action_type}:{actor}:{justification}:{datetime.utcnow().isoformat()}"
+            )
             signature = hashlib.sha256(content.encode()).hexdigest()
 
             record = AccountabilityRecord(
@@ -335,17 +324,17 @@ class AccountabilitySystem:
                 metadata={
                     "action_data": action_data,
                     "status": "signed",
-                }
+                },
             )
 
             self.records[record_id] = record
             self._persist_record(record)
 
-            logger.info(f"Action signed: {record_id} by {actor}")
+            logger.info("Action signed: %s by %s", record_id, actor)
             return record_id
 
         except Exception as e:
-            logger.error(f"Error signing action: {e}", exc_info=True)
+            logger.error("Error signing action: %s", e, exc_info=True)
             raise
 
     def get_record(self, record_id: str) -> AccountabilityRecord | None:
@@ -370,10 +359,7 @@ class AccountabilitySystem:
         Returns:
             List of records
         """
-        return [
-            record for record in self.records.values()
-            if record.actor == actor
-        ]
+        return [record for record in self.records.values() if record.actor == actor]
 
     def get_pending_approvals(self) -> list[dict[str, Any]]:
         """
@@ -426,7 +412,7 @@ class AccountabilitySystem:
             }
 
         except Exception as e:
-            logger.error(f"Error generating report: {e}", exc_info=True)
+            logger.error("Error generating report: %s", e, exc_info=True)
             return {"error": str(e)}
 
     def _generate_request_id(self, actor: str, identifier: str) -> str:
@@ -441,7 +427,7 @@ class AccountabilitySystem:
             with open(filepath, "w") as f:
                 json.dump(record.to_dict(), f, indent=2)
         except Exception as e:
-            logger.error(f"Error persisting record: {e}", exc_info=True)
+            logger.error("Error persisting record: %s", e, exc_info=True)
 
     def _load_records(self) -> None:
         """Load records from disk."""
@@ -456,7 +442,7 @@ class AccountabilitySystem:
                     actor=data["actor"],
                     justification=data["justification"],
                     signature=data["signature"],
-                    metadata=data["metadata"]
+                    metadata=data["metadata"],
                 )
 
                 self.records[record.record_id] = record
@@ -465,13 +451,15 @@ class AccountabilitySystem:
                 if data["metadata"].get("status") == "pending_approval":
                     self.pending_approvals[record.record_id] = {
                         "record": record,
-                        "requires_approvals": data["metadata"].get("requires_approvals", 1),
+                        "requires_approvals": data["metadata"].get(
+                            "requires_approvals", 1
+                        ),
                         "approvals": data["metadata"].get("approvals", []),
                     }
 
-            logger.info(f"Loaded {len(self.records)} accountability records")
+            logger.info("Loaded %s accountability records", len(self.records))
         except Exception as e:
-            logger.error(f"Error loading records: {e}", exc_info=True)
+            logger.error("Error loading records: %s", e, exc_info=True)
 
 
 __all__ = ["AccountabilitySystem", "AccountabilityRecord"]

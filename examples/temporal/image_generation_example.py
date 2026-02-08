@@ -38,8 +38,8 @@ async def main():
         # Generate unique workflow ID
         workflow_id = f"image-gen-{datetime.now().timestamp()}"
 
-        logger.info(f"Starting workflow: {workflow_id}")
-        logger.info(f"Prompt: {request.prompt}")
+        logger.info("Starting workflow: %s", workflow_id)
+        logger.info("Prompt: %s", request.prompt)
 
         # Start workflow
         handle = await manager.client.start_workflow(
@@ -57,10 +57,10 @@ async def main():
 
         if result.success:
             logger.info("✓ Image generation successful!")
-            logger.info(f"  Image saved to: {result.image_path}")
-            logger.info(f"  Metadata: {result.metadata}")
+            logger.info("  Image saved to: %s", result.image_path)
+            logger.info("  Metadata: %s", result.metadata)
         else:
-            logger.error(f"✗ Image generation failed: {result.error}")
+            logger.error("✗ Image generation failed: %s", result.error)
 
     finally:
         await manager.disconnect()

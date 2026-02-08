@@ -111,7 +111,7 @@ class BuildSystem:
             True if build succeeded
         """
         if self._tarl_build:
-            logger.info(f"Building project at {project_path} with TarlBuild")
+            logger.info("Building project at %s with TarlBuild", project_path)
             # Use new build engine
             from pathlib import Path
 
@@ -125,9 +125,9 @@ class BuildSystem:
                     self._tarl_build.registry.register(task)
                 return self._tarl_build.execute()
             else:
-                logger.warning(f"No build.tarl found at {project_path}")
+                logger.warning("No build.tarl found at %s", project_path)
 
-        logger.info(f"Building project at {project_path}")
+        logger.info("Building project at %s", project_path)
         return True
 
 

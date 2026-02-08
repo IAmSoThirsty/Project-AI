@@ -177,7 +177,9 @@ class CloudSyncManager:
                 return True
             else:
                 logger.error(
-                    f"Upload failed with status {response.status_code}: {response.text}"
+                    "Upload failed with status %s: %s",
+                    response.status_code,
+                    response.text,
                 )
                 return False
 
@@ -234,7 +236,9 @@ class CloudSyncManager:
                 return None
             else:
                 logger.error(
-                    f"Download failed with status {response.status_code}: {response.text}"
+                    "Download failed with status %s: %s",
+                    response.status_code,
+                    response.text,
                 )
                 return None
 
@@ -332,7 +336,7 @@ class CloudSyncManager:
                         return resolved_data
                 except (ValueError, TypeError) as e:
                     logger.warning(
-                        f"Error comparing timestamps: {e}, defaulting to local data"
+                        "Error comparing timestamps: %s, defaulting to local data", e
                     )
                     return local_data
             else:

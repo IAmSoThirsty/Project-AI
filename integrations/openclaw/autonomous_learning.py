@@ -14,6 +14,7 @@ from pydantic import BaseModel
 
 class LearningSession(BaseModel):
     """Single autonomous learning session"""
+
     session_id: str
     started_at: datetime
     ended_at: datetime
@@ -76,25 +77,33 @@ class AutonomousLearningEngine:
         started_at = datetime.now()
 
         # 1. Analyze past conversations
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] Analyzing conversation patterns...")
+        print(
+            f"[{datetime.now().strftime('%H:%M:%S')}] Analyzing conversation patterns..."
+        )
         pattern_insights = await self.analyze_conversation_patterns()
         insights.extend(pattern_insights)
         activities.append("conversation_pattern_analysis")
 
         # 2. Explore capabilities
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] Exploring capability interactions...")
+        print(
+            f"[{datetime.now().strftime('%H:%M:%S')}] Exploring capability interactions..."
+        )
         capability_insights = await self.explore_capabilities()
         insights.extend(capability_insights)
         activities.append("capability_exploration")
 
         # 3. Knowledge graph exploration
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] Exploring knowledge connections...")
+        print(
+            f"[{datetime.now().strftime('%H:%M:%S')}] Exploring knowledge connections..."
+        )
         knowledge_insights = await self.explore_knowledge_graph()
         insights.extend(knowledge_insights)
         activities.append("knowledge_graph_exploration")
 
         # 4. Self-improvement
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] Identifying improvement opportunities...")
+        print(
+            f"[{datetime.now().strftime('%H:%M:%S')}] Identifying improvement opportunities..."
+        )
         improvement_ideas = await self.continuous_improvement()
         improvements.extend(improvement_ideas)
         activities.append("self_improvement_analysis")
@@ -108,7 +117,7 @@ class AutonomousLearningEngine:
             ended_at=ended_at,
             activities=activities,
             insights=insights,
-            improvements=improvements
+            improvements=improvements,
         )
 
         # Log summary
@@ -136,7 +145,7 @@ class AutonomousLearningEngine:
             "Users frequently ask about system capabilities",
             "Detailed explanations are preferred over brief responses",
             "Context retention improves conversation quality",
-            "Multi-step tasks benefit from progress tracking"
+            "Multi-step tasks benefit from progress tracking",
         ]
 
         # Simulate analysis
@@ -164,9 +173,7 @@ class AutonomousLearningEngine:
             # Pick random capability to explore
             cap = random.choice(all_caps)
 
-            insights.append(
-                f"Explored {cap['display_name']}: {cap['description']}"
-            )
+            insights.append(f"Explored {cap['display_name']}: {cap['description']}")
 
         await asyncio.sleep(0.5)
         return insights
@@ -188,7 +195,7 @@ class AutonomousLearningEngine:
             "Security and scenario forecasting are often used together",
             "Task management integrates well with scheduling",
             "Code execution requires governance approval",
-            "Memory retrieval improves with context awareness"
+            "Memory retrieval improves with context awareness",
         ]
 
         await asyncio.sleep(0.5)
@@ -214,7 +221,7 @@ class AutonomousLearningEngine:
             "Preload frequently used capabilities",
             "Cache common query results",
             "Improve intent matching algorithm",
-            "Add more assistant feature handlers"
+            "Add more assistant feature handlers",
         ]
 
         await asyncio.sleep(0.5)
@@ -254,7 +261,7 @@ class AutonomousLearningEngine:
             "current_session": self.current_session.session_id,
             "total_insights": len(self.current_session.insights),
             "total_improvements": len(self.current_session.improvements),
-            "activities": self.current_session.activities
+            "activities": self.current_session.activities,
         }
 
 
@@ -275,11 +282,7 @@ class CollectiveIntelligenceEngine:
         self.eed = eed_adapter
         self.insights_buffer: list[dict[str, Any]] = []
 
-    async def aggregate_insights(
-        self,
-        source: str,
-        insights: list[str]
-    ):
+    async def aggregate_insights(self, source: str, insights: list[str]):
         """
         Aggregate learnings from various sources
 
@@ -291,12 +294,14 @@ class CollectiveIntelligenceEngine:
         - Background simulations
         """
         for insight in insights:
-            self.insights_buffer.append({
-                "source": source,
-                "insight": insight,
-                "timestamp": datetime.now().isoformat(),
-                "confidence": 1.0
-            })
+            self.insights_buffer.append(
+                {
+                    "source": source,
+                    "insight": insight,
+                    "timestamp": datetime.now().isoformat(),
+                    "confidence": 1.0,
+                }
+            )
 
         # Flush buffer if it grows too large
         if len(self.insights_buffer) > 100:
@@ -308,14 +313,12 @@ class CollectiveIntelligenceEngine:
             return
 
         # Would store in EED or knowledge base
-        print(f"[Collective] Flushed {len(self.insights_buffer)} insights to collective")
+        print(
+            f"[Collective] Flushed {len(self.insights_buffer)} insights to collective"
+        )
         self.insights_buffer.clear()
 
-    async def update_knowledge_base(
-        self,
-        knowledge_type: str,
-        data: dict[str, Any]
-    ):
+    async def update_knowledge_base(self, knowledge_type: str, data: dict[str, Any]):
         """
         Continuously update Project-AI's knowledge
 

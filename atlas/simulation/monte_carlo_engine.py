@@ -27,6 +27,7 @@ logger = logging.getLogger(__name__)
 
 class Domain(Enum):
     """Domains in the coupled system."""
+
     MARKETS = "markets"
     GOVERNANCE = "governance"
     REGULATION = "regulation"
@@ -38,9 +39,10 @@ class Domain(Enum):
 class WorldState:
     """
     Complete world state at time t.
-    
+
     W_t contains all domain states that evolve over time.
     """
+
     timestamp: datetime
     timestep: int
 
@@ -68,11 +70,12 @@ class WorldState:
             "graph_topology": sorted(self.graph_topology.items()),
             "capital_distribution": sorted(self.capital_distribution.items()),
             "systemic_risk": round(self.systemic_risk, 8),
-            "stability_index": round(self.stability_index, 8)
+            "stability_index": round(self.stability_index, 8),
         }
 
         import json
-        content = json.dumps(canonical, sort_keys=True, separators=(',', ':'))
+
+        content = json.dumps(canonical, sort_keys=True, separators=(",", ":"))
         return hashlib.sha256(content.encode()).hexdigest()
 
     def validate(self) -> tuple[bool, list[str]]:
@@ -85,7 +88,7 @@ class WorldState:
             ("governance", self.governance),
             ("regulation", self.regulation),
             ("graph_topology", self.graph_topology),
-            ("capital_distribution", self.capital_distribution)
+            ("capital_distribution", self.capital_distribution),
         ]:
             for key, value in domain_dict.items():
                 if not (0 <= value <= 1):
@@ -106,9 +109,10 @@ class WorldState:
 class NoiseVector:
     """
     Seeded noise vector ε_t for stochastic dynamics.
-    
+
     All noise is seeded for reproducibility.
     """
+
     seed: str
     timestep: int
 
@@ -120,15 +124,15 @@ class NoiseVector:
     capital_noise: np.ndarray = field(default_factory=lambda: np.array([]))
 
     @staticmethod
-    def generate(seed: str, timestep: int, dimensions: dict[str, int]) -> 'NoiseVector':
+    def generate(seed: str, timestep: int, dimensions: dict[str, int]) -> "NoiseVector":
         """
         Generate seeded noise vector for timestep.
-        
+
         Args:
             seed: Hex seed string (e.g., "0xA17F01")
             timestep: Current timestep
             dimensions: {domain: dimension} dict
-        
+
         Returns:
             NoiseVector with Gaussian noise in each domain
         """
@@ -152,9 +156,10 @@ class NoiseVector:
 class CouplingCoefficients:
     """
     Coupling coefficients for cross-domain interactions.
-    
+
     Defines how domains affect each other.
     """
+
     # Markets → other domains
     markets_to_governance: float = 0.3
     markets_to_regulation: float = 0.2
@@ -190,11 +195,10 @@ class CouplingCoefficients:
         errors = []
 
         for attr_name in dir(self):
-            if not attr_name.startswith('_') and attr_name != 'validate':
+            if not attr_name.startswith("_") and attr_name != "validate":
                 value = getattr(self, attr_name)
-                if isinstance(value, float):
-                    if not (0 <= value <= 1):
-                        errors.append(f"{attr_name} out of bounds: {value}")
+                if isinstance(value, float) and not (0 <= value <= 1):
+                    errors.append(f"{attr_name} out of bounds: {value}")
 
         return len(errors) == 0, errors
 
@@ -202,16 +206,17 @@ class CouplingCoefficients:
 class MonteCarloEngine:
     """
     Layer 6: Coupled Monte Carlo Dynamics Core
-    
+
     Implements system evolution: W_{t+1} = F(W_t, ε_t)
     with cross-domain coupling and closed feedback loops.
     """
 
-    def __init__(self, seed: str, coupling: CouplingCoefficients | None = None,
-                 audit_trail=None):
+    def __init__(
+        self, seed: str, coupling: CouplingCoefficients | None = None, audit_trail=None
+    ):
         """
         Initialize Monte Carlo engine.
-        
+
         Args:
             seed: Hex seed string for reproducibility (e.g., "0xA17F01")
             coupling: Coupling coefficients (uses defaults if None)
@@ -236,20 +241,17 @@ class MonteCarloEngine:
             "governance": 5,
             "regulation": 5,
             "graph": 5,
-            "capital": 5
+            "capital": 5,
         }
 
         self.audit_trail.log(
             category="SIMULATION",
             operation="monte_carlo_engine_initialized",
-            details={
-                "seed": seed,
-                "timestamp": datetime.now().isoformat()
-            },
-            level="INFORMATIONAL"
+            details={"seed": seed, "timestamp": datetime.now().isoformat()},
+            level="INFORMATIONAL",
         )
 
-        logger.info(f"Monte Carlo engine initialized with seed: {seed}")
+        logger.info("Monte Carlo engine initialized with seed: %s", seed)
 
     def set_initial_state(self, state: WorldState) -> None:
         """Set initial world state W_0."""
@@ -266,32 +268,30 @@ class MonteCarloEngine:
         self.audit_trail.log(
             category="SIMULATION",
             operation="initial_state_set",
-            details={
-                "timestep": state.timestep,
-                "state_hash": state.state_hash
-            },
-            level="INFORMATIONAL"
+            details={"timestep": state.timestep, "state_hash": state.state_hash},
+            level="INFORMATIONAL",
         )
 
     def _apply_coupling(self, state: WorldState, noise: NoiseVector) -> WorldState:
         """
         Apply cross-domain coupling to compute next state.
-        
+
         Implements closed feedback loop:
         Markets ↔ Governance ↔ Regulation ↔ Graph ↔ Capital
         """
         # Create next state
-        next_state = WorldState(
-            timestamp=datetime.now(),
-            timestep=state.timestep + 1
-        )
+        next_state = WorldState(timestamp=datetime.now(), timestep=state.timestep + 1)
 
         # Compute effects on markets
         market_effect = (
-            self.coupling.governance_to_markets * np.mean(list(state.governance.values()) or [0]) +
-            self.coupling.regulation_to_markets * np.mean(list(state.regulation.values()) or [0]) +
-            self.coupling.graph_to_markets * np.mean(list(state.graph_topology.values()) or [0]) +
-            self.coupling.capital_to_markets * np.mean(list(state.capital_distribution.values()) or [0])
+            self.coupling.governance_to_markets
+            * np.mean(list(state.governance.values()) or [0])
+            + self.coupling.regulation_to_markets
+            * np.mean(list(state.regulation.values()) or [0])
+            + self.coupling.graph_to_markets
+            * np.mean(list(state.graph_topology.values()) or [0])
+            + self.coupling.capital_to_markets
+            * np.mean(list(state.capital_distribution.values()) or [0])
         )
 
         # Update markets
@@ -303,40 +303,56 @@ class MonteCarloEngine:
 
         # Compute effects on governance
         governance_effect = (
-            self.coupling.markets_to_governance * np.mean(list(state.markets.values()) or [0]) +
-            self.coupling.regulation_to_governance * np.mean(list(state.regulation.values()) or [0]) +
-            self.coupling.graph_to_governance * np.mean(list(state.graph_topology.values()) or [0]) +
-            self.coupling.capital_to_governance * np.mean(list(state.capital_distribution.values()) or [0])
+            self.coupling.markets_to_governance
+            * np.mean(list(state.markets.values()) or [0])
+            + self.coupling.regulation_to_governance
+            * np.mean(list(state.regulation.values()) or [0])
+            + self.coupling.graph_to_governance
+            * np.mean(list(state.graph_topology.values()) or [0])
+            + self.coupling.capital_to_governance
+            * np.mean(list(state.capital_distribution.values()) or [0])
         )
 
         # Update governance
         next_state.governance = {}
         for i, (key, value) in enumerate(state.governance.items()):
-            noise_val = noise.governance_noise[i] if i < len(noise.governance_noise) else 0
+            noise_val = (
+                noise.governance_noise[i] if i < len(noise.governance_noise) else 0
+            )
             new_val = value + 0.1 * governance_effect + noise_val
             next_state.governance[key] = float(np.clip(new_val, 0, 1))
 
         # Compute effects on regulation
         regulation_effect = (
-            self.coupling.markets_to_regulation * np.mean(list(state.markets.values()) or [0]) +
-            self.coupling.governance_to_regulation * np.mean(list(state.governance.values()) or [0]) +
-            self.coupling.graph_to_regulation * np.mean(list(state.graph_topology.values()) or [0]) +
-            self.coupling.capital_to_regulation * np.mean(list(state.capital_distribution.values()) or [0])
+            self.coupling.markets_to_regulation
+            * np.mean(list(state.markets.values()) or [0])
+            + self.coupling.governance_to_regulation
+            * np.mean(list(state.governance.values()) or [0])
+            + self.coupling.graph_to_regulation
+            * np.mean(list(state.graph_topology.values()) or [0])
+            + self.coupling.capital_to_regulation
+            * np.mean(list(state.capital_distribution.values()) or [0])
         )
 
         # Update regulation
         next_state.regulation = {}
         for i, (key, value) in enumerate(state.regulation.items()):
-            noise_val = noise.regulation_noise[i] if i < len(noise.regulation_noise) else 0
+            noise_val = (
+                noise.regulation_noise[i] if i < len(noise.regulation_noise) else 0
+            )
             new_val = value + 0.1 * regulation_effect + noise_val
             next_state.regulation[key] = float(np.clip(new_val, 0, 1))
 
         # Compute effects on graph topology
         graph_effect = (
-            self.coupling.markets_to_graph * np.mean(list(state.markets.values()) or [0]) +
-            self.coupling.governance_to_graph * np.mean(list(state.governance.values()) or [0]) +
-            self.coupling.regulation_to_graph * np.mean(list(state.regulation.values()) or [0]) +
-            self.coupling.capital_to_graph * np.mean(list(state.capital_distribution.values()) or [0])
+            self.coupling.markets_to_graph
+            * np.mean(list(state.markets.values()) or [0])
+            + self.coupling.governance_to_graph
+            * np.mean(list(state.governance.values()) or [0])
+            + self.coupling.regulation_to_graph
+            * np.mean(list(state.regulation.values()) or [0])
+            + self.coupling.capital_to_graph
+            * np.mean(list(state.capital_distribution.values()) or [0])
         )
 
         # Update graph topology
@@ -348,10 +364,14 @@ class MonteCarloEngine:
 
         # Compute effects on capital distribution
         capital_effect = (
-            self.coupling.markets_to_capital * np.mean(list(state.markets.values()) or [0]) +
-            self.coupling.governance_to_capital * np.mean(list(state.governance.values()) or [0]) +
-            self.coupling.regulation_to_capital * np.mean(list(state.regulation.values()) or [0]) +
-            self.coupling.graph_to_capital * np.mean(list(state.graph_topology.values()) or [0])
+            self.coupling.markets_to_capital
+            * np.mean(list(state.markets.values()) or [0])
+            + self.coupling.governance_to_capital
+            * np.mean(list(state.governance.values()) or [0])
+            + self.coupling.regulation_to_capital
+            * np.mean(list(state.regulation.values()) or [0])
+            + self.coupling.graph_to_capital
+            * np.mean(list(state.graph_topology.values()) or [0])
         )
 
         # Update capital distribution
@@ -363,11 +383,11 @@ class MonteCarloEngine:
 
         # Compute derived metrics
         all_values = (
-            list(next_state.markets.values()) +
-            list(next_state.governance.values()) +
-            list(next_state.regulation.values()) +
-            list(next_state.graph_topology.values()) +
-            list(next_state.capital_distribution.values())
+            list(next_state.markets.values())
+            + list(next_state.governance.values())
+            + list(next_state.regulation.values())
+            + list(next_state.graph_topology.values())
+            + list(next_state.capital_distribution.values())
         )
 
         if all_values:
@@ -375,16 +395,18 @@ class MonteCarloEngine:
             next_state.systemic_risk = float(np.clip(np.var(all_values), 0, 1))
 
             # Stability as inverse of volatility
-            next_state.stability_index = float(np.clip(1.0 - next_state.systemic_risk, 0, 1))
+            next_state.stability_index = float(
+                np.clip(1.0 - next_state.systemic_risk, 0, 1)
+            )
 
         return next_state
 
     def step(self) -> WorldState:
         """
         Advance simulation by one timestep.
-        
+
         Computes: W_{t+1} = F(W_t, ε_t)
-        
+
         Returns: Next world state
         """
         if not self.states:
@@ -396,7 +418,7 @@ class MonteCarloEngine:
         noise = NoiseVector.generate(
             seed=self.seed,
             timestep=current_state.timestep + 1,
-            dimensions=self.dimensions
+            dimensions=self.dimensions,
         )
         self.noise_vectors.append(noise)
 
@@ -406,7 +428,7 @@ class MonteCarloEngine:
         # Validate next state
         valid, errors = next_state.validate()
         if not valid:
-            logger.error(f"Invalid next state: {errors}")
+            logger.error("Invalid next state: %s", errors)
             raise ValueError(f"State evolution produced invalid state: {errors}")
 
         # Compute and store hash
@@ -422,9 +444,9 @@ class MonteCarloEngine:
                 "timestep": next_state.timestep,
                 "state_hash": next_state.state_hash,
                 "systemic_risk": next_state.systemic_risk,
-                "stability_index": next_state.stability_index
+                "stability_index": next_state.stability_index,
             },
-            level="INFORMATIONAL"
+            level="INFORMATIONAL",
         )
 
         return next_state
@@ -432,16 +454,16 @@ class MonteCarloEngine:
     def run(self, n_steps: int) -> list[WorldState]:
         """
         Run simulation for n timesteps.
-        
+
         Returns: List of all world states (including initial)
         """
         for i in range(n_steps):
             self.step()
 
             if (i + 1) % 100 == 0:
-                logger.info(f"Completed {i + 1}/{n_steps} steps")
+                logger.info("Completed %s/%s steps", i + 1, n_steps)
 
-        logger.info(f"Monte Carlo simulation complete: {n_steps} steps")
+        logger.info("Monte Carlo simulation complete: %s steps", n_steps)
         return self.states
 
     def get_current_state(self) -> WorldState | None:
@@ -455,7 +477,7 @@ class MonteCarloEngine:
     def verify_determinism(self, other_seed: str) -> bool:
         """
         Verify determinism by comparing with another run using same seed.
-        
+
         Returns: True if hashes match, False otherwise
         """
         if other_seed != self.seed:
@@ -470,9 +492,12 @@ class MonteCarloEngine:
 _engines: dict[str, MonteCarloEngine] = {}
 
 
-def get_monte_carlo_engine(seed: str, coupling: CouplingCoefficients | None = None,
-                           audit_trail=None) -> MonteCarloEngine:
+def get_monte_carlo_engine(
+    seed: str, coupling: CouplingCoefficients | None = None, audit_trail=None
+) -> MonteCarloEngine:
     """Get Monte Carlo engine for given seed."""
     if seed not in _engines:
-        _engines[seed] = MonteCarloEngine(seed=seed, coupling=coupling, audit_trail=audit_trail)
+        _engines[seed] = MonteCarloEngine(
+            seed=seed, coupling=coupling, audit_trail=audit_trail
+        )
     return _engines[seed]

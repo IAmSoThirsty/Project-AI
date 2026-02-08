@@ -305,7 +305,7 @@ class TestAuditReplay(unittest.TestCase):
     def test_replay_with_time_filter(self):
         """Test replaying audit log with time filter."""
         # Create events at different times
-        start_time = datetime.now()
+        datetime.now()
 
         self.boot_system._audit_event(event_type="test", action="action_1", context={})
 

@@ -18,6 +18,7 @@ class WorldState:
         >>> state.grid_operational_pct
         1.0
     """
+
     # Core metrics
     simulation_day: int = 0
     global_population: int = 8_000_000_000

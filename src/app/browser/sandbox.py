@@ -84,7 +84,7 @@ class BrowserSandbox:
 
         for pattern in dangerous_patterns:
             if pattern in script:
-                self.logger.warning(f"Dangerous pattern detected: {pattern}")
+                self.logger.warning("Dangerous pattern detected: %s", pattern)
                 return False
 
         return True

@@ -127,7 +127,7 @@ def main():
     # Generate scenarios
     logger.info("\nGenerating 750 red team hard stress test scenarios...")
     scenarios = generator.generate_all_scenarios()
-    logger.info(f"✓ Generated {len(scenarios)} red team scenarios")
+    logger.info("✓ Generated %s red team scenarios", len(scenarios))
 
     # Generate summary
     summary = generator.generate_summary()
@@ -173,13 +173,13 @@ def main():
             if any(s.category.startswith(cat.replace("-", "_")) for cat in cat_filter)
         ]
         logger.info(
-            f"\nFiltered to categories {cat_filter}: {len(scenarios)} scenarios"
+            "\nFiltered to categories %s: %s scenarios", cat_filter, len(scenarios)
         )
 
     # Export scenarios
     if args.export:
         export_path = generator.export_scenarios()
-        logger.info(f"✓ Exported scenarios to: {export_path}")
+        logger.info("✓ Exported scenarios to: %s", export_path)
 
     # Initialize AI systems
     logger.info("\nInitializing Project-AI defense systems...")
@@ -191,7 +191,7 @@ def main():
     logger.info("✓ Defense systems ready")
 
     # Run stress tests
-    logger.info(f"\nRunning {len(scenarios)} red team hard stress tests...")
+    logger.info("\nRunning %s red team hard stress tests...", len(scenarios))
     logger.info("This will take several minutes...\n")
 
     results = []
@@ -202,7 +202,7 @@ def main():
 
     for i, scenario in enumerate(scenarios, 1):
         if i % 100 == 0:
-            logger.info(f"Progress: {i}/{len(scenarios)} scenarios tested...")
+            logger.info("Progress: %s/%s scenarios tested...", i, len(scenarios))
 
         result = simulate_defense(scenario, ai_systems)
         results.append(result)
@@ -301,7 +301,7 @@ def main():
                 indent=2,
             )
 
-        logger.info(f"\n✓ Exported results to: {results_path}")
+        logger.info("\n✓ Exported results to: %s", results_path)
 
     print("\n" + "=" * 90)
     print("STRESS TEST COMPLETE")

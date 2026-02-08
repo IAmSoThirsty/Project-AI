@@ -268,8 +268,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS executions (
                 request_id TEXT PRIMARY KEY,
                 prompt TEXT,
@@ -283,11 +282,9 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
                 timestamp REAL,
                 metadata TEXT
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS model_metrics (
                 model_id TEXT PRIMARY KEY,
                 total_requests INTEGER,
@@ -299,18 +296,15 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
                 cache_hit_rate REAL,
                 last_used REAL
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS cache (
                 cache_key TEXT PRIMARY KEY,
                 response_data TEXT,
                 timestamp REAL
             )
-        """
-        )
+        """)
 
         conn.commit()
         conn.close()
@@ -325,7 +319,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
                     self.openai_client = OpenAI(api_key=api_key)
                     self.logger.info("OpenAI client initialized")
                 except Exception as e:
-                    self.logger.error(f"Failed to initialize OpenAI: {e}")
+                    self.logger.error("Failed to initialize OpenAI: %s", e)
 
         # HuggingFace (initialized on-demand)
         if not TRANSFORMERS_AVAILABLE:
@@ -415,7 +409,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to initialize polyglot engine: {e}")
+            self.logger.error("Failed to initialize polyglot engine: %s", e)
             return False
 
     def shutdown(self) -> bool:
@@ -439,7 +433,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
             return True
 
         except Exception as e:
-            self.logger.error(f"Error during shutdown: {e}")
+            self.logger.error("Error during shutdown: %s", e)
             return False
 
     def health_check(self) -> bool:
@@ -451,7 +445,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
         alive_threads = sum(1 for t in self.worker_threads if t.is_alive())
         if alive_threads < len(self.worker_threads):
             self.logger.warning(
-                f"Only {alive_threads}/{len(self.worker_threads)} workers alive"
+                "Only %s/%s workers alive", alive_threads, len(self.worker_threads)
             )
             return False
 
@@ -487,11 +481,11 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
         try:
             self.models[config.model_id] = config
             self.logger.info(
-                f"Registered model: {config.model_id} ({config.backend.value})"
+                "Registered model: %s (%s)", config.model_id, config.backend.value
             )
             return True
         except Exception as e:
-            self.logger.error(f"Failed to register model: {e}")
+            self.logger.error("Failed to register model: %s", e)
             return False
 
     def _load_hf_model(self, model_name: str) -> bool:
@@ -503,7 +497,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
             if model_name in self.hf_models:
                 return True
 
-            self.logger.info(f"Loading HuggingFace model: {model_name}")
+            self.logger.info("Loading HuggingFace model: %s", model_name)
 
             tokenizer = AutoTokenizer.from_pretrained(model_name)
             model = AutoModelForCausalLM.from_pretrained(
@@ -517,11 +511,11 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
             self.hf_tokenizers[model_name] = tokenizer
             self.hf_models[model_name] = model
 
-            self.logger.info(f"Successfully loaded: {model_name}")
+            self.logger.info("Successfully loaded: %s", model_name)
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to load HuggingFace model {model_name}: {e}")
+            self.logger.error("Failed to load HuggingFace model %s: %s", model_name, e)
             return False
 
     def _unload_hf_model(self, model_name: str):
@@ -534,9 +528,9 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
                 if torch and torch.cuda.is_available():
                     torch.cuda.empty_cache()
 
-                self.logger.info(f"Unloaded HuggingFace model: {model_name}")
+                self.logger.info("Unloaded HuggingFace model: %s", model_name)
         except Exception as e:
-            self.logger.error(f"Failed to unload model {model_name}: {e}")
+            self.logger.error("Failed to unload model %s: %s", model_name, e)
 
     # ========================================================================
     # EXECUTION API
@@ -642,7 +636,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
             return response
 
         except Exception as e:
-            self.logger.error(f"Execution failed: {e}")
+            self.logger.error("Execution failed: %s", e)
             self.metrics["failed_requests"] += 1
 
             # Try fallback
@@ -839,7 +833,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
                 continue
 
             try:
-                self.logger.info(f"Trying fallback model: {model_id}")
+                self.logger.info("Trying fallback model: %s", model_id)
 
                 if model.backend == ModelBackend.OPENAI:
                     response = self._execute_openai(request, model)
@@ -851,11 +845,11 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
                 response.metadata["fallback"] = True
                 response.metadata["original_model"] = failed_model_id
 
-                self.logger.info(f"Fallback successful with {model_id}")
+                self.logger.info("Fallback successful with %s", model_id)
                 return response
 
             except Exception as e:
-                self.logger.error(f"Fallback model {model_id} failed: {e}")
+                self.logger.error("Fallback model %s failed: %s", model_id, e)
                 continue
 
         return None
@@ -914,7 +908,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
 
         # Check limit
         if len(self.rate_limits[backend.value]) >= self.rate_limit_max[backend]:
-            self.logger.warning(f"Rate limit exceeded for {backend.value}")
+            self.logger.warning("Rate limit exceeded for %s", backend.value)
             return False
 
         self.rate_limits[backend.value].append(current_time)
@@ -931,7 +925,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
                 priority, request = self.request_queue.get(timeout=1)
 
                 # Execute request
-                response = self.execute(
+                self.execute(
                     prompt=request.prompt,
                     system_prompt=request.system_prompt,
                     model=request.model_preference,
@@ -948,7 +942,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
             except queue.Empty:
                 continue
             except Exception as e:
-                self.logger.error(f"Execution worker error: {e}")
+                self.logger.error("Execution worker error: %s", e)
 
     def _cache_cleanup_worker(self):
         """Clean up expired cache entries"""
@@ -965,26 +959,26 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
                     del self.cache[key]
 
                 self.logger.info(
-                    f"Cache cleanup: removed {len(expired_keys)} expired entries"
+                    "Cache cleanup: removed %s expired entries", len(expired_keys)
                 )
 
                 time.sleep(300)  # Every 5 minutes
 
             except Exception as e:
-                self.logger.error(f"Cache cleanup worker error: {e}")
+                self.logger.error("Cache cleanup worker error: %s", e)
 
     def _metrics_aggregation_worker(self):
         """Aggregate and persist metrics"""
         while self.running:
             try:
                 # Persist model metrics
-                for model_id, metrics in self.model_metrics.items():
+                for _model_id, metrics in self.model_metrics.items():
                     self._persist_model_metrics(metrics)
 
                 time.sleep(60)  # Every minute
 
             except Exception as e:
-                self.logger.error(f"Metrics aggregation worker error: {e}")
+                self.logger.error("Metrics aggregation worker error: %s", e)
 
     # ========================================================================
     # METRICS AND PERSISTENCE
@@ -1042,7 +1036,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
             conn.close()
 
         except Exception as e:
-            self.logger.error(f"Failed to persist metrics: {e}")
+            self.logger.error("Failed to persist metrics: %s", e)
 
     # ========================================================================
     # INTERFACE IMPLEMENTATIONS
@@ -1069,7 +1063,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
                 self.fallback_chain = config["fallback_chain"]
             return True
         except Exception as e:
-            self.logger.error(f"Failed to set config: {e}")
+            self.logger.error("Failed to set config: %s", e)
             return False
 
     def validate_config(self, config: dict[str, Any]) -> tuple[bool, str | None]:
@@ -1099,12 +1093,12 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
     def emit_event(self, event_type: str, data: Any) -> int:
         """Emit event to subscribers"""
         count = 0
-        for sub_id, callback in self.subscribers.get(event_type, []):
+        for _sub_id, callback in self.subscribers.get(event_type, []):
             try:
                 callback(data)
                 count += 1
             except Exception as e:
-                self.logger.error(f"Event callback failed: {e}")
+                self.logger.error("Event callback failed: %s", e)
         return count
 
     def get_metrics(self) -> dict[str, Any]:

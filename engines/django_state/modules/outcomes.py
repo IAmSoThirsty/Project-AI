@@ -14,13 +14,13 @@ logger = logging.getLogger(__name__)
 
 class OutcomesModule:
     """Terminal state classification and outcome tracking.
-    
+
     Classifies final outcomes: survivor, martyr, or extinction.
     """
 
     def __init__(self, thresholds: OutcomeThresholds):
         """Initialize outcomes module.
-        
+
         Args:
             thresholds: Outcome classification thresholds
         """
@@ -41,15 +41,15 @@ class OutcomesModule:
 
     def classify_outcome(self, state: StateVector) -> str:
         """Classify terminal outcome based on state.
-        
+
         Outcome logic:
         - Survivor: Some trust/legitimacy remains, moral injury manageable
         - Martyr: System collapsed but preserved values, creates warning
         - Extinction: Complete collapse, irreversible cascade
-        
+
         Args:
             state: Current state vector
-            
+
         Returns:
             Outcome classification
         """
@@ -60,10 +60,10 @@ class OutcomesModule:
 
         # Check survivor conditions
         survivor_conditions = (
-            state.trust.value > survivor_trust and
-            state.legitimacy.value > survivor_legitimacy and
-            state.moral_injury.value < martyr_moral and
-            state.kindness.value > 0.25
+            state.trust.value > survivor_trust
+            and state.legitimacy.value > survivor_legitimacy
+            and state.moral_injury.value < martyr_moral
+            and state.kindness.value > 0.25
         )
 
         if survivor_conditions:
@@ -72,13 +72,15 @@ class OutcomesModule:
 
         # Check martyr conditions (collapsed but preserved values)
         martyr_conditions = (
-            state.kindness.value > martyr_kindness and
-            state.moral_injury.value < martyr_moral and
-            (state.trust.value > 0.15 or state.legitimacy.value > 0.15)
+            state.kindness.value > martyr_kindness
+            and state.moral_injury.value < martyr_moral
+            and (state.trust.value > 0.15 or state.legitimacy.value > 0.15)
         )
 
         if martyr_conditions:
-            logger.info("Outcome: MARTYR - System collapsed but preserved values as warning")
+            logger.info(
+                "Outcome: MARTYR - System collapsed but preserved values as warning"
+            )
             return "martyr"
 
         # Default to extinction
@@ -87,26 +89,26 @@ class OutcomesModule:
 
     def calculate_outcome_probabilities(self, state: StateVector) -> dict[str, float]:
         """Calculate probabilities of each outcome given current state.
-        
+
         Args:
             state: Current state vector
-            
+
         Returns:
             Dictionary of outcome probabilities
         """
         # Survivor probability from trust, legitimacy, low moral injury
         survivor_score = (
-            state.trust.value * 0.35 +
-            state.legitimacy.value * 0.35 +
-            (1.0 - state.moral_injury.value) * 0.20 +
-            state.kindness.value * 0.10
+            state.trust.value * 0.35
+            + state.legitimacy.value * 0.35
+            + (1.0 - state.moral_injury.value) * 0.20
+            + state.kindness.value * 0.10
         )
 
         # Martyr probability from kindness preservation despite collapse
         martyr_score = (
-            state.kindness.value * 0.50 +
-            (1.0 - state.moral_injury.value) * 0.30 +
-            state.epistemic_confidence.value * 0.20
+            state.kindness.value * 0.50
+            + (1.0 - state.moral_injury.value) * 0.30
+            + state.epistemic_confidence.value * 0.20
         )
 
         # If in collapse, reduce survivor probability
@@ -132,10 +134,10 @@ class OutcomesModule:
 
     def determine_final_outcome(self, state: StateVector) -> str:
         """Determine and record final outcome.
-        
+
         Args:
             state: Final state vector
-            
+
         Returns:
             Final outcome classification
         """
@@ -155,16 +157,18 @@ class OutcomesModule:
         # Update state
         state.terminal_outcome = outcome
 
-        logger.critical(f"FINAL OUTCOME DETERMINED: {outcome.upper()} at t={state.timestamp}")
+        logger.critical(
+            "FINAL OUTCOME DETERMINED: %s at t=%s", outcome.upper(), state.timestamp
+        )
 
         return outcome
 
     def generate_outcome_report(self, state: StateVector) -> dict[str, Any]:
         """Generate comprehensive outcome report.
-        
+
         Args:
             state: Final state vector
-            
+
         Returns:
             Dictionary with outcome analysis
         """
@@ -182,7 +186,6 @@ class OutcomesModule:
             "outcome": outcome,
             "outcome_timestamp": state.timestamp,
             "outcome_tick": state.tick_count,
-
             # State summary
             "final_state": {
                 "trust": state.trust.value,
@@ -191,14 +194,12 @@ class OutcomesModule:
                 "moral_injury": state.moral_injury.value,
                 "epistemic_confidence": state.epistemic_confidence.value,
             },
-
             # Irreversibility indicators
             "irreversibility": {
                 "trust_ceiling": state.trust.ceiling,
                 "legitimacy_ceiling": state.legitimacy.ceiling,
                 "moral_injury_floor": state.moral_injury.floor,
             },
-
             # Event counts
             "events": {
                 "betrayals": state.betrayal_count,
@@ -207,16 +208,13 @@ class OutcomesModule:
                 "institutional_failures": state.institutional_failures,
                 "manipulation_events": state.manipulation_events,
             },
-
             # Outcome probabilities
             "probabilities": probabilities,
-
             # Collapse information
             "collapse": {
                 "in_collapse": state.in_collapse,
                 "collapse_triggered_at": state.collapse_triggered_at,
             },
-
             # Interpretation
             "interpretation": self._generate_interpretation(outcome, state),
         }
@@ -225,11 +223,11 @@ class OutcomesModule:
 
     def _generate_interpretation(self, outcome: str, state: StateVector) -> str:
         """Generate human-readable interpretation of outcome.
-        
+
         Args:
             outcome: Outcome classification
             state: Final state vector
-            
+
         Returns:
             Interpretation string
         """
@@ -262,7 +260,7 @@ class OutcomesModule:
 
     def get_summary(self) -> dict[str, Any]:
         """Get module summary.
-        
+
         Returns:
             Dictionary with module state
         """

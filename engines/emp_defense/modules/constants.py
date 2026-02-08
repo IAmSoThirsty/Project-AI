@@ -12,6 +12,7 @@ defined here for clarity and maintainability.
 # TIME CONSTANTS
 # ============================================================================
 
+
 class TimeConstants:
     """Time-related constants and phase boundaries."""
 
@@ -31,6 +32,7 @@ class TimeConstants:
 # ============================================================================
 # ENERGY DOMAIN THRESHOLDS
 # ============================================================================
+
 
 class EnergyThresholds:
     """Energy infrastructure thresholds and constants."""
@@ -57,6 +59,7 @@ class EnergyThresholds:
 # WATER DOMAIN THRESHOLDS
 # ============================================================================
 
+
 class WaterThresholds:
     """Water and sanitation thresholds."""
 
@@ -79,6 +82,7 @@ class WaterThresholds:
 # FOOD DOMAIN THRESHOLDS
 # ============================================================================
 
+
 class FoodThresholds:
     """Food system thresholds and constants."""
 
@@ -97,6 +101,7 @@ class FoodThresholds:
 # ============================================================================
 # HEALTH DOMAIN THRESHOLDS
 # ============================================================================
+
 
 class HealthThresholds:
     """Healthcare system thresholds."""
@@ -122,6 +127,7 @@ class HealthThresholds:
 # SECURITY DOMAIN THRESHOLDS
 # ============================================================================
 
+
 class SecurityThresholds:
     """Security and violence thresholds."""
 
@@ -142,6 +148,7 @@ class SecurityThresholds:
 # ============================================================================
 # GOVERNANCE DOMAIN THRESHOLDS
 # ============================================================================
+
 
 class GovernanceThresholds:
     """Government legitimacy and control thresholds."""
@@ -168,6 +175,7 @@ class GovernanceThresholds:
 # COUPLING STRENGTHS
 # ============================================================================
 
+
 class CouplingStrengths:
     """Cross-domain coupling coefficients."""
 
@@ -189,6 +197,7 @@ class CouplingStrengths:
 # ============================================================================
 # EVENT COSTS AND BENEFITS
 # ============================================================================
+
 
 class EventParameters:
     """Event system cost/benefit/risk parameters."""
@@ -229,6 +238,7 @@ class EventParameters:
 # DEATH RATE PARAMETERS
 # ============================================================================
 
+
 class DeathRateParameters:
     """Death rate calculations and multipliers."""
 
@@ -252,6 +262,7 @@ class DeathRateParameters:
 # ============================================================================
 # CASCADE TIMELINE PARAMETERS
 # ============================================================================
+
 
 class CascadeParameters:
     """EMP cascade timeline specific parameters."""

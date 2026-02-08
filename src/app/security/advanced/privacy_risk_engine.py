@@ -163,7 +163,7 @@ class PrivacyRiskEngine:
                 time.sleep(1.0)
 
             except Exception as e:
-                self.logger.error(f"Error in monitoring loop: {e}")
+                self.logger.error("Error in monitoring loop: %s", e)
 
     def report_event(self, event_type: str, source: str, metadata: dict[str, Any]):
         """
@@ -366,7 +366,7 @@ class PrivacyRiskEngine:
                 self._current_risk_level = new_level
 
                 self.logger.warning(
-                    f"Risk level escalated: {old_level.name} -> {new_level.name}"
+                    "Risk level escalated: %s -> %s", old_level.name, new_level.name
                 )
 
                 # Trigger escalation callbacks
@@ -375,11 +375,13 @@ class PrivacyRiskEngine:
             elif new_level.value < self._current_risk_level.value:
                 # Risk decreased
                 self._current_risk_level = new_level
-                self.logger.info(f"Risk level decreased to: {new_level.name}")
+                self.logger.info("Risk level decreased to: %s", new_level.name)
 
     def _escalate_hardening(self, threat: ThreatEvent):
         """Escalate system hardening in response to threat"""
-        self.logger.warning(f"Auto-escalating hardening for {threat.threat_type.value}")
+        self.logger.warning(
+            "Auto-escalating hardening for %s", threat.threat_type.value
+        )
 
         # Trigger hardening based on threat type
         if threat.threat_type == ThreatType.NETWORK_ATTACK:
@@ -425,7 +427,7 @@ class PrivacyRiskEngine:
                     try:
                         callback(risk_level, self.get_threat_summary())
                     except Exception as e:
-                        self.logger.error(f"Escalation callback error: {e}")
+                        self.logger.error("Escalation callback error: %s", e)
 
     def get_current_risk_level(self) -> RiskLevel:
         """Get current system risk level"""
@@ -480,7 +482,7 @@ class PrivacyRiskEngine:
             self._metrics["suspicious_patterns"] = 0
 
             self.logger.info(
-                f"Risk level manually reset from {old_level.name} to MINIMAL"
+                "Risk level manually reset from %s to MINIMAL", old_level.name
             )
 
     def learn_from_event(
@@ -501,5 +503,5 @@ class PrivacyRiskEngine:
                     )
 
             self.logger.debug(
-                f"Model updated from event: {event_type} (threat: {is_threat})"
+                "Model updated from event: %s (threat: %s)", event_type, is_threat
             )

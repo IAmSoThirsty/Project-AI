@@ -55,7 +55,7 @@ def simulate_component_activity(
 ):
     """
     Simulate activity for a component.
-    
+
     Args:
         component_id: Component identifier
         tier: Tier the component belongs to
@@ -331,12 +331,12 @@ def main():
     print()
 
     print("Per-Tier Summary:")
-    for tier_name, tier_data in platform_report['tier_reports'].items():
-        status_icon = "✓" if tier_data.get('total_sla_violations', 0) == 0 else "⚠️"
+    for tier_name, tier_data in platform_report["tier_reports"].items():
+        status_icon = "✓" if tier_data.get("total_sla_violations", 0) == 0 else "⚠️"
         print(f"  {status_icon} {tier_name}:")
         print(f"     Components: {tier_data.get('components_tracked', 0)}")
         print(f"     Violations: {tier_data.get('total_sla_violations', 0)}")
-        if tier_data.get('performance_level'):
+        if tier_data.get("performance_level"):
             print(f"     Level: {tier_data['performance_level'].value.upper()}")
 
     # Summary

@@ -28,7 +28,7 @@ class DashboardWebSocketServer:
         self.clients: set[websockets.WebSocketServerProtocol] = set()
         self.kernel = None  # Will be set by kernel
 
-        logger.info(f"Dashboard WebSocket Server initialized on {host}:{port}")
+        logger.info("Dashboard WebSocket Server initialized on %s:%s", host, port)
 
     def set_kernel(self, kernel):
         """Set the kernel instance to pull metrics from"""
@@ -38,7 +38,7 @@ class DashboardWebSocketServer:
     async def register(self, websocket):
         """Register new client"""
         self.clients.add(websocket)
-        logger.info(f"Client connected. Total clients: {len(self.clients)}")
+        logger.info("Client connected. Total clients: %s", len(self.clients))
 
         # Send initial state
         await self.send_metrics(websocket)
@@ -46,7 +46,7 @@ class DashboardWebSocketServer:
     async def unregister(self, websocket):
         """Unregister client"""
         self.clients.discard(websocket)
-        logger.info(f"Client disconnected. Total clients: {len(self.clients)}")
+        logger.info("Client disconnected. Total clients: %s", len(self.clients))
 
     async def send_metrics(self, websocket=None):
         """Send current metrics to client(s)"""
@@ -101,7 +101,7 @@ class DashboardWebSocketServer:
                     )
 
         except Exception as e:
-            logger.error(f"Error sending metrics: {e}")
+            logger.error("Error sending metrics: %s", e)
 
     def _get_learning_stats(self) -> dict[str, Any]:
         """Get learning engine statistics"""
@@ -163,7 +163,7 @@ class DashboardWebSocketServer:
 
     async def start(self):
         """Start the WebSocket server"""
-        logger.info(f"Starting WebSocket server on ws://{self.host}:{self.port}")
+        logger.info("Starting WebSocket server on ws://%s:%s", self.host, self.port)
 
         async with websockets.serve(self.handler, self.host, self.port):
             logger.info("✅ WebSocket server running")

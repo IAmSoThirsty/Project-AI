@@ -47,7 +47,7 @@ async def create_forensic_snapshot(campaign_id: str) -> dict[str, Any]:
     Returns:
         Snapshot metadata with ID and checksum
     """
-    activity.logger.info(f"Creating forensic snapshot for campaign {campaign_id}")
+    activity.logger.info("Creating forensic snapshot for campaign %s", campaign_id)
 
     snapshot_id = f"snap-{campaign_id}-{datetime.now().strftime('%Y%m%d%H%M%S')}"
     snapshot_dir = Path("data/forensic_snapshots")
@@ -96,7 +96,7 @@ async def create_forensic_snapshot(campaign_id: str) -> dict[str, Any]:
         with open(metadata_file, "w") as f:
             json.dump(metadata, f, indent=2)
 
-        activity.logger.info(f"Snapshot created: {snapshot_id} ({checksum[:16]}...)")
+        activity.logger.info("Snapshot created: %s (%s...)", snapshot_id, checksum[:16])
 
         return {
             "snapshot_id": snapshot_id,
@@ -106,7 +106,7 @@ async def create_forensic_snapshot(campaign_id: str) -> dict[str, Any]:
         }
 
     except Exception as e:
-        activity.logger.error(f"Snapshot creation failed: {e}")
+        activity.logger.error("Snapshot creation failed: %s", e)
         raise  # Non-retryable - abort campaign
 
 
@@ -130,13 +130,13 @@ async def run_red_team_attack(
     """
     activity_id = activity.info().activity_id
     activity.logger.info(
-        f"Running red team attack: {persona} on {target} (activity: {activity_id})"
+        "Running red team attack: %s on %s (activity: %s)", persona, target, activity_id
     )
 
     # Check for existing result (idempotency)
     result_file = Path(f"data/attack_results/{activity_id}.json")
     if result_file.exists():
-        activity.logger.info(f"Returning cached result for {activity_id}")
+        activity.logger.info("Returning cached result for %s", activity_id)
         with open(result_file) as f:
             return json.load(f)
 
@@ -185,7 +185,7 @@ async def run_red_team_attack(
         return result
 
     except Exception as e:
-        activity.logger.error(f"Attack execution failed: {e}")
+        activity.logger.error("Attack execution failed: %s", e)
         # On retry limit, mark as flaky
         if activity.info().attempt >= 3:
             activity.logger.warning("Attack marked as flaky after 3 attempts")
@@ -204,7 +204,7 @@ async def evaluate_attack(attack_result: dict[str, Any]) -> str:
         Severity level (critical/high/medium/low)
     """
     activity.logger.info(
-        f"Evaluating attack: {attack_result['persona']} on {attack_result['target']}"
+        "Evaluating attack: %s on %s", attack_result["persona"], attack_result["target"]
     )
 
     # Evaluation logic based on persona and success
@@ -248,7 +248,9 @@ async def trigger_incident(
         Incident metadata
     """
     incident_id = f"INC-{datetime.now().strftime('%Y%m%d%H%M%S')}"
-    activity.logger.critical(f"Triggering incident {incident_id}: {severity} severity")
+    activity.logger.critical(
+        "Triggering incident %s: %s severity", incident_id, severity
+    )
 
     incident = {
         "incident_id": incident_id,
@@ -274,7 +276,7 @@ async def trigger_incident(
     # - Alert on-call (GALAHAD primary, CERBERUS backup)
     # - Post to incident channel
 
-    activity.logger.info(f"Incident {incident_id} created and saved")
+    activity.logger.info("Incident %s created and saved", incident_id)
 
     return incident
 
@@ -293,7 +295,7 @@ async def generate_sarif(
     Returns:
         SARIF report (version 2.1.0)
     """
-    activity.logger.info(f"Generating SARIF report for campaign {campaign_id}")
+    activity.logger.info("Generating SARIF report for campaign %s", campaign_id)
 
     try:
         import sys
@@ -332,12 +334,12 @@ async def generate_sarif(
         sarif_file.parent.mkdir(parents=True, exist_ok=True)
         generator.save_report(sarif_report, str(sarif_file))
 
-        activity.logger.info(f"SARIF report saved: {sarif_file}")
+        activity.logger.info("SARIF report saved: %s", sarif_file)
 
         return sarif_report
 
     except Exception as e:
-        activity.logger.error(f"SARIF generation failed: {e}")
+        activity.logger.error("SARIF generation failed: %s", e)
         raise
 
 
@@ -356,7 +358,7 @@ async def upload_sarif(
     Returns:
         Upload result
     """
-    activity.logger.info(f"Uploading SARIF to GitHub Security for {repo}")
+    activity.logger.info("Uploading SARIF to GitHub Security for %s", repo)
 
     try:
         import sys
@@ -379,7 +381,7 @@ async def upload_sarif(
             "uploaded_at": datetime.now().isoformat(),
         }
     except Exception as e:
-        activity.logger.warning(f"SARIF upload failed: {e}. Saving locally.")
+        activity.logger.warning("SARIF upload failed: %s. Saving locally.", e)
 
         # Fallback: save to artifact store
         artifact_file = Path(
@@ -406,7 +408,7 @@ async def notify_triumvirate(campaign_id: str, results: list[dict[str, Any]]) ->
         campaign_id: Campaign identifier
         results: Campaign results
     """
-    activity.logger.info(f"Notifying Triumvirate of campaign {campaign_id}")
+    activity.logger.info("Notifying Triumvirate of campaign %s", campaign_id)
 
     summary = {
         "campaign_id": campaign_id,
@@ -433,5 +435,7 @@ async def notify_triumvirate(campaign_id: str, results: list[dict[str, Any]]) ->
     # - Email security team distribution list
 
     activity.logger.info(
-        f"Triumvirate notified: {summary['successful_attacks']}/{summary['total_attacks']} attacks succeeded"
+        "Triumvirate notified: %s/%s attacks succeeded",
+        summary["successful_attacks"],
+        summary["total_attacks"],
     )

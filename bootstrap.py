@@ -41,7 +41,7 @@ def bootstrap():
     # Initialize TARL runtime with default policies
     logger.info("Initializing TARL runtime...")
     tarl_runtime = TarlRuntime(DEFAULT_POLICIES)
-    logger.info(f"Loaded {len(DEFAULT_POLICIES)} TARL policies")
+    logger.info("Loaded %s TARL policies", len(DEFAULT_POLICIES))
 
     # Initialize CodexDeus escalation system
     logger.info("Initializing CodexDeus escalation system...")
@@ -73,13 +73,13 @@ def main():
         }
 
         result = kernel.execute("test_action", test_context)
-        logger.info(f"Bootstrap test result: {result}")
+        logger.info("Bootstrap test result: %s", result)
         logger.info("✓ Bootstrap verification successful!")
 
         return 0
 
     except Exception as e:
-        logger.error(f"Bootstrap failed: {e}", exc_info=True)
+        logger.error("Bootstrap failed: %s", e, exc_info=True)
         return 1
 
 

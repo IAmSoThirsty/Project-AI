@@ -67,7 +67,7 @@ class HealthChecker:
         for service in enabled_services:
             is_healthy, message = self.check_service_health(service)
             results[service.name] = (is_healthy, message)
-            logger.info(f"{service.name}: {message}")
+            logger.info("%s: %s", service.name, message)
 
         return results
 
@@ -100,7 +100,7 @@ class HealthChecker:
 
             time.sleep(check_interval)
 
-        logger.error(f"Services did not become healthy within {timeout}s")
+        logger.error("Services did not become healthy within %ss", timeout)
         return False
 
     def retry_until_healthy(
@@ -123,17 +123,19 @@ class HealthChecker:
             is_healthy, message = self.check_service_health(service)
             if is_healthy:
                 logger.info(
-                    f"{service.name} is healthy after {attempt + 1} attempt(s)"
+                    "%s is healthy after %s attempt(s)", service.name, attempt + 1
                 )
                 return True
 
             logger.warning(
-                f"Attempt {attempt + 1}/{max_retries} failed: {message}"
+                "Attempt %s/%s failed: %s", attempt + 1, max_retries, message
             )
             if attempt < max_retries - 1:
                 time.sleep(retry_delay)
 
-        logger.error(f"{service.name} did not become healthy after {max_retries} attempts")
+        logger.error(
+            "%s did not become healthy after %s attempts", service.name, max_retries
+        )
         return False
 
 

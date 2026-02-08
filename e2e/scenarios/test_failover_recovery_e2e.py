@@ -32,6 +32,7 @@ from e2e.utils.test_helpers import (
 
 class ServiceState(Enum):
     """Service state enumeration."""
+
     HEALTHY = "healthy"
     DEGRADED = "degraded"
     FAILED = "failed"
@@ -40,6 +41,7 @@ class ServiceState(Enum):
 
 class CircuitState(Enum):
     """Circuit breaker state."""
+
     CLOSED = "closed"
     OPEN = "open"
     HALF_OPEN = "half_open"
@@ -48,6 +50,7 @@ class CircuitState(Enum):
 @dataclass
 class HealthCheck:
     """Health check result."""
+
     service_id: str
     is_healthy: bool
     response_time: float
@@ -215,6 +218,7 @@ class TestFailureDetection:
 
     def test_timeout_based_detection(self):
         """Test detecting failures through timeout."""
+
         # Arrange
         def slow_operation():
             time.sleep(0.5)
@@ -227,7 +231,7 @@ class TestFailureDetection:
         timed_out = False
 
         try:
-            result = slow_operation()
+            slow_operation()
             duration = time.time() - start_time
             if duration > timeout:
                 timed_out = True
@@ -264,7 +268,6 @@ class TestFailureDetection:
         heartbeat_dir.mkdir(parents=True, exist_ok=True)
 
         service_id = "service_1"
-        heartbeat_interval = 1.0  # seconds
         timeout = 2.0
 
         # Act - Send heartbeats
@@ -276,10 +279,7 @@ class TestFailureDetection:
                 "sequence": i,
             }
             heartbeats.append(heartbeat)
-            save_json_file(
-                heartbeat,
-                heartbeat_dir / f"heartbeat_{i}.json"
-            )
+            save_json_file(heartbeat, heartbeat_dir / f"heartbeat_{i}.json")
             time.sleep(0.5)
 
         # Check for missing heartbeat
@@ -294,10 +294,7 @@ class TestFailureDetection:
     def test_cascade_failure_detection(self):
         """Test detecting cascade failures."""
         # Arrange
-        services = [
-            Service(f"service_{i}", failure_rate=0.0)
-            for i in range(5)
-        ]
+        services = [Service(f"service_{i}", failure_rate=0.0) for i in range(5)]
 
         # Simulate cascade
         services[0].state = ServiceState.FAILED
@@ -342,10 +339,7 @@ class TestAutomaticFailover:
     def test_load_balancer_failover(self):
         """Test load balancer automatically routes around failures."""
         # Arrange
-        services = [
-            Service(f"service_{i}", failure_rate=0.0)
-            for i in range(3)
-        ]
+        services = [Service(f"service_{i}", failure_rate=0.0) for i in range(3)]
         lb = LoadBalancer(services)
 
         # Fail one service
@@ -386,7 +380,7 @@ class TestAutomaticFailover:
                 break
             except Exception:
                 if attempt < max_retries - 1:
-                    delay = base_delay * (2 ** attempt)
+                    delay = base_delay * (2**attempt)
                     time.sleep(delay)
 
         # Assert
@@ -489,10 +483,7 @@ class TestStateRecovery:
         ]
 
         for txn in transactions:
-            save_json_file(
-                txn,
-                log_dir / f"txn_{txn['id']}.json"
-            )
+            save_json_file(txn, log_dir / f"txn_{txn['id']}.json")
 
         # Act - Replay transactions
         state = {"balance": 0}
@@ -560,10 +551,7 @@ class TestStateRecovery:
         ]
 
         for replica in replicas:
-            save_json_file(
-                replica,
-                replica_dir / f"{replica['replica_id']}.json"
-            )
+            save_json_file(replica, replica_dir / f"{replica['replica_id']}.json")
 
         # Act - Recover from replica with highest version
         all_replicas = []
@@ -733,11 +721,7 @@ class TestCircuitBreaker:
     def test_circuit_breaker_closes_after_success(self):
         """Test circuit breaker closes after successful calls in half-open."""
         # Arrange
-        cb = CircuitBreaker(
-            failure_threshold=2,
-            timeout=0.3,
-            half_open_max_calls=3
-        )
+        cb = CircuitBreaker(failure_threshold=2, timeout=0.3, half_open_max_calls=3)
 
         # Trigger failures
         for _ in range(3):
@@ -832,7 +816,7 @@ class TestDisasterRecovery:
         request = {"data": "test"}
         result = None
 
-        for region_name, service in regions.items():
+        for _region_name, service in regions.items():
             if service.state == ServiceState.HEALTHY:
                 result = service.process_request(request)
                 break
@@ -849,8 +833,7 @@ class TestDisasterRecovery:
 
         # Create data with checksums
         data_items = [
-            {"id": i, "value": f"data_{i}", "checksum": f"check_{i}"}
-            for i in range(10)
+            {"id": i, "value": f"data_{i}", "checksum": f"check_{i}"} for i in range(10)
         ]
 
         for item in data_items:

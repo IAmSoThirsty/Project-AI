@@ -25,7 +25,7 @@ class TemporalLawEnforcer:
     def __init__(
         self,
         temporal_client: Client | None = None,
-        task_queue: str = "constitutional-enforcement"
+        task_queue: str = "constitutional-enforcement",
     ):
         """
         Initialize temporal law enforcer.
@@ -37,13 +37,10 @@ class TemporalLawEnforcer:
         self.temporal_client = temporal_client
         self.task_queue = task_queue
         self.workflow_cache: dict[str, str] = {}  # action_id -> workflow_id
-        logger.info(f"Temporal law enforcer initialized with queue: {task_queue}")
+        logger.info("Temporal law enforcer initialized with queue: %s", task_queue)
 
     async def enforce_with_timeout(
-        self,
-        action: str,
-        metadata: dict[str, Any],
-        timeout_seconds: int = 30
+        self, action: str, metadata: dict[str, Any], timeout_seconds: int = 30
     ) -> dict[str, Any]:
         """
         Enforce policy with temporal timeout.
@@ -74,23 +71,20 @@ class TemporalLawEnforcer:
             self.workflow_cache[action] = workflow_id
 
             # Wait for result with timeout
-            result = await asyncio.wait_for(
-                handle.result(),
-                timeout=timeout_seconds
-            )
+            result = await asyncio.wait_for(handle.result(), timeout=timeout_seconds)
 
-            logger.info(f"Temporal enforcement completed: {action}")
+            logger.info("Temporal enforcement completed: %s", action)
             return result
 
         except TimeoutError:
-            logger.error(f"Enforcement timeout for action: {action}")
+            logger.error("Enforcement timeout for action: %s", action)
             return {
                 "allowed": False,
                 "reason": f"Policy enforcement timeout ({timeout_seconds}s)",
                 "timestamp": datetime.utcnow().isoformat(),
             }
         except Exception as e:
-            logger.error(f"Error in temporal enforcement: {e}", exc_info=True)
+            logger.error("Error in temporal enforcement: %s", e, exc_info=True)
             return {
                 "allowed": False,
                 "reason": f"Enforcement error: {str(e)}",
@@ -98,9 +92,7 @@ class TemporalLawEnforcer:
             }
 
     async def query_historical_decision(
-        self,
-        action: str,
-        timestamp: datetime
+        self, action: str, timestamp: datetime
     ) -> dict[str, Any] | None:
         """
         Query historical policy decision at a specific point in time.
@@ -115,29 +107,25 @@ class TemporalLawEnforcer:
         try:
             workflow_id = self.workflow_cache.get(action)
             if not workflow_id or not self.temporal_client:
-                logger.warning(f"No workflow found for action: {action}")
+                logger.warning("No workflow found for action: %s", action)
                 return None
 
             handle = self.temporal_client.get_workflow_handle(workflow_id)
 
             # Query workflow at specific time
             result = await handle.query(
-                "get_decision_at_time",
-                args=[timestamp.isoformat()]
+                "get_decision_at_time", args=[timestamp.isoformat()]
             )
 
-            logger.debug(f"Historical query result for {action}: {result}")
+            logger.debug("Historical query result for %s: %s", action, result)
             return result
 
         except Exception as e:
-            logger.error(f"Error querying historical decision: {e}", exc_info=True)
+            logger.error("Error querying historical decision: %s", e, exc_info=True)
             return None
 
     async def schedule_periodic_review(
-        self,
-        action: str,
-        metadata: dict[str, Any],
-        interval_hours: int = 24
+        self, action: str, metadata: dict[str, Any], interval_hours: int = 24
     ) -> str:
         """
         Schedule periodic policy review for an action.
@@ -156,7 +144,7 @@ class TemporalLawEnforcer:
 
             workflow_id = f"review-{action}-{datetime.utcnow().timestamp()}"
 
-            handle = await self.temporal_client.start_workflow(
+            await self.temporal_client.start_workflow(
                 "PeriodicPolicyReview",
                 args=[action, metadata, interval_hours],
                 id=workflow_id,
@@ -170,14 +158,11 @@ class TemporalLawEnforcer:
             return workflow_id
 
         except Exception as e:
-            logger.error(f"Error scheduling periodic review: {e}", exc_info=True)
+            logger.error("Error scheduling periodic review: %s", e, exc_info=True)
             raise
 
     async def enforce_time_bounded_policy(
-        self,
-        action: str,
-        metadata: dict[str, Any],
-        valid_until: datetime
+        self, action: str, metadata: dict[str, Any], valid_until: datetime
     ) -> dict[str, Any]:
         """
         Enforce time-bounded policy that expires at specified time.
@@ -194,7 +179,7 @@ class TemporalLawEnforcer:
             now = datetime.utcnow()
 
             if now > valid_until:
-                logger.warning(f"Time-bounded policy expired for {action}")
+                logger.warning("Time-bounded policy expired for %s", action)
                 return {
                     "allowed": False,
                     "reason": f"Policy expired at {valid_until.isoformat()}",
@@ -206,9 +191,7 @@ class TemporalLawEnforcer:
 
             # Enforce with remaining time as timeout
             result = await self.enforce_with_timeout(
-                action,
-                metadata,
-                timeout_seconds=int(remaining)
+                action, metadata, timeout_seconds=int(remaining)
             )
 
             result["expires_at"] = valid_until.isoformat()
@@ -217,7 +200,7 @@ class TemporalLawEnforcer:
             return result
 
         except Exception as e:
-            logger.error(f"Error in time-bounded enforcement: {e}", exc_info=True)
+            logger.error("Error in time-bounded enforcement: %s", e, exc_info=True)
             return {
                 "allowed": False,
                 "reason": f"Time-bounded enforcement error: {str(e)}",
@@ -225,9 +208,7 @@ class TemporalLawEnforcer:
             }
 
     def _local_enforcement(
-        self,
-        action: str,
-        metadata: dict[str, Any]
+        self, action: str, metadata: dict[str, Any]
     ) -> dict[str, Any]:
         """
         Fallback local enforcement when Temporal is unavailable.
@@ -258,9 +239,7 @@ class TemporalLawEnforcer:
         }
 
     async def get_enforcement_history(
-        self,
-        action: str,
-        lookback_hours: int = 24
+        self, action: str, lookback_hours: int = 24
     ) -> list[dict[str, Any]]:
         """
         Get enforcement history for an action.
@@ -280,14 +259,13 @@ class TemporalLawEnforcer:
             handle = self.temporal_client.get_workflow_handle(workflow_id)
 
             history = await handle.query(
-                "get_enforcement_history",
-                args=[lookback_hours]
+                "get_enforcement_history", args=[lookback_hours]
             )
 
             return history or []
 
         except Exception as e:
-            logger.error(f"Error getting enforcement history: {e}", exc_info=True)
+            logger.error("Error getting enforcement history: %s", e, exc_info=True)
             return []
 
     async def cleanup_expired_workflows(self, max_age_days: int = 30) -> int:
@@ -322,11 +300,11 @@ class TemporalLawEnforcer:
                     )
                     continue
 
-            logger.info(f"Cleaned up {cleaned} expired workflows")
+            logger.info("Cleaned up %s expired workflows", cleaned)
             return cleaned
 
         except Exception as e:
-            logger.error(f"Error cleaning up workflows: {e}", exc_info=True)
+            logger.error("Error cleaning up workflows: %s", e, exc_info=True)
             return 0
 
 

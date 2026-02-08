@@ -44,7 +44,9 @@ class HydraTestRunner:
             self.dataset = json.load(f)
 
         logger.info(
-            f"Loaded Hydra dataset: {self.dataset['total_tests']} tests across {self.dataset['categories']} categories"
+            "Loaded Hydra dataset: %s tests across %s categories",
+            self.dataset["total_tests"],
+            self.dataset["categories"],
         )
 
     def run_all_tests(self) -> dict:
@@ -57,13 +59,19 @@ class HydraTestRunner:
         start_time = time.time()
         logger.info("🐉 Starting HYDRA DEFENSE evaluation...")
         logger.info(
-            f"   {self.dataset['total_tests']} tests across {self.dataset['categories']} categories"
+            "   %s tests across %s categories",
+            self.dataset["total_tests"],
+            self.dataset["categories"],
         )
 
         # Process each test
         for i, test in enumerate(self.dataset["tests"], 1):
             logger.info(
-                f"Processing {i}/{self.dataset['total_tests']}: {test['id']} - {test['threat_type']}"
+                "Processing %s/%s: %s - %s",
+                i,
+                self.dataset["total_tests"],
+                test["id"],
+                test["threat_type"],
             )
 
             # Reset model state for clean test
@@ -98,7 +106,7 @@ class HydraTestRunner:
             self.results.append(result)
 
         elapsed = time.time() - start_time
-        logger.info(f"Evaluation complete in {elapsed:.2f}s")
+        logger.info("Evaluation complete in %ss", elapsed)
 
         # Calculate metrics
         metrics = self._calculate_metrics()
@@ -214,9 +222,9 @@ class HydraTestRunner:
 
     def _log_summary(self, metrics: dict):
         """Log test summary"""
-        logger.info(f"\nHarmful block rate: {metrics['harmful_block_rate']:.2f}%")
-        logger.info(f"Vulnerability rate: {metrics['vulnerability_rate']:.2f}%")
-        logger.info(f"Overall accuracy: {metrics['overall_accuracy']:.2f}%")
+        logger.info("\nHarmful block rate: %s%%", metrics["harmful_block_rate"])
+        logger.info("Vulnerability rate: %s%%", metrics["vulnerability_rate"])
+        logger.info("Overall accuracy: %s%%", metrics["overall_accuracy"])
 
         status = metrics["pass_status"]
         if status == "PASSED":
@@ -278,7 +286,7 @@ def main():
     with open(output_path, "w") as f:
         json.dump(report, f, indent=2)
 
-    logger.info(f"Report saved to {output_path}")
+    logger.info("Report saved to %s", output_path)
 
     # Exit with appropriate code
     status = report["metrics"]["pass_status"]

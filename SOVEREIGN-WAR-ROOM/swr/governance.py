@@ -7,14 +7,15 @@ and organizational policies. Validates AI decisions against governance rules.
 
 import json
 from datetime import datetime
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 from pydantic import BaseModel, Field
 
 
-class ComplianceLevel(str, Enum):
+class ComplianceLevel(StrEnum):
     """Compliance level classification."""
+
     COMPLIANT = "compliant"
     WARNING = "warning"
     VIOLATION = "violation"
@@ -23,6 +24,7 @@ class ComplianceLevel(str, Enum):
 
 class GovernanceRule(BaseModel):
     """Governance rule definition."""
+
     rule_id: str
     name: str
     description: str
@@ -34,6 +36,7 @@ class GovernanceRule(BaseModel):
 
 class ComplianceReport(BaseModel):
     """Compliance assessment report."""
+
     timestamp: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
     overall_status: ComplianceLevel
     total_rules_checked: int
@@ -47,7 +50,7 @@ class ComplianceReport(BaseModel):
 class GovernanceEngine:
     """
     Governance engine for validating AI decisions against compliance rules.
-    
+
     Implements:
     - Asimov's Three Laws of Robotics (Project-AI's Four Laws)
     - IEEE 7000-2021 ethical AI standards
@@ -58,7 +61,7 @@ class GovernanceEngine:
     def __init__(self, rules_path: str | None = None):
         """
         Initialize governance engine.
-        
+
         Args:
             rules_path: Optional path to governance rules JSON file
         """
@@ -82,11 +85,10 @@ class GovernanceEngine:
                 severity=ComplianceLevel.CRITICAL,
                 conditions={
                     "harm_potential": {"operator": ">", "value": 0},
-                    "human_safety_risk": {"operator": "==", "value": True}
+                    "human_safety_risk": {"operator": "==", "value": True},
                 },
-                actions=["block_action", "alert_operator", "log_violation"]
+                actions=["block_action", "alert_operator", "log_violation"],
             ),
-
             # Second Law: Obey Orders (unless conflict with First Law)
             GovernanceRule(
                 rule_id="LAW_2_OBEY_ORDERS",
@@ -96,11 +98,10 @@ class GovernanceEngine:
                 severity=ComplianceLevel.VIOLATION,
                 conditions={
                     "is_human_order": {"operator": "==", "value": True},
-                    "conflicts_with_law_1": {"operator": "==", "value": False}
+                    "conflicts_with_law_1": {"operator": "==", "value": False},
                 },
-                actions=["validate_order", "execute_safely"]
+                actions=["validate_order", "execute_safely"],
             ),
-
             # Third Law: Self-Preservation (unless conflict with First/Second Law)
             GovernanceRule(
                 rule_id="LAW_3_SELF_PRESERVATION",
@@ -110,11 +111,10 @@ class GovernanceEngine:
                 severity=ComplianceLevel.WARNING,
                 conditions={
                     "self_harm_risk": {"operator": "==", "value": True},
-                    "conflicts_with_law_1_or_2": {"operator": "==", "value": False}
+                    "conflicts_with_law_1_or_2": {"operator": "==", "value": False},
                 },
-                actions=["assess_risk", "request_guidance"]
+                actions=["assess_risk", "request_guidance"],
             ),
-
             # Fourth Law: Mission Achievement (Project-AI extension)
             GovernanceRule(
                 rule_id="LAW_4_MISSION",
@@ -122,12 +122,9 @@ class GovernanceEngine:
                 description="AI must work towards mission objectives within ethical bounds",
                 category="four_laws",
                 severity=ComplianceLevel.WARNING,
-                conditions={
-                    "mission_aligned": {"operator": "==", "value": False}
-                },
-                actions=["review_objectives", "request_clarification"]
+                conditions={"mission_aligned": {"operator": "==", "value": False}},
+                actions=["review_objectives", "request_clarification"],
             ),
-
             # Data Privacy
             GovernanceRule(
                 rule_id="PRIVACY_001",
@@ -137,11 +134,10 @@ class GovernanceEngine:
                 severity=ComplianceLevel.CRITICAL,
                 conditions={
                     "accesses_pii": {"operator": "==", "value": True},
-                    "has_consent": {"operator": "==", "value": False}
+                    "has_consent": {"operator": "==", "value": False},
                 },
-                actions=["block_access", "log_violation", "notify_dpo"]
+                actions=["block_access", "log_violation", "notify_dpo"],
             ),
-
             # Bias Detection
             GovernanceRule(
                 rule_id="FAIRNESS_001",
@@ -151,11 +147,10 @@ class GovernanceEngine:
                 severity=ComplianceLevel.VIOLATION,
                 conditions={
                     "bias_detected": {"operator": "==", "value": True},
-                    "protected_class_involved": {"operator": "==", "value": True}
+                    "protected_class_involved": {"operator": "==", "value": True},
                 },
-                actions=["flag_decision", "require_review", "log_incident"]
+                actions=["flag_decision", "require_review", "log_incident"],
             ),
-
             # Transparency
             GovernanceRule(
                 rule_id="TRANSPARENCY_001",
@@ -166,9 +161,8 @@ class GovernanceEngine:
                 conditions={
                     "explanation_available": {"operator": "==", "value": False}
                 },
-                actions=["generate_explanation", "log_warning"]
+                actions=["generate_explanation", "log_warning"],
             ),
-
             # Security
             GovernanceRule(
                 rule_id="SECURITY_001",
@@ -179,8 +173,8 @@ class GovernanceEngine:
                 conditions={
                     "security_bypass_attempted": {"operator": "==", "value": True}
                 },
-                actions=["block_action", "alert_security", "log_violation"]
-            )
+                actions=["block_action", "alert_security", "log_violation"],
+            ),
         ]
 
         self.rules = default_rules
@@ -188,7 +182,7 @@ class GovernanceEngine:
     def load_rules(self, rules_path: str):
         """
         Load governance rules from JSON file.
-        
+
         Args:
             rules_path: Path to rules JSON file
         """
@@ -198,17 +192,15 @@ class GovernanceEngine:
         self.rules = [GovernanceRule(**rule) for rule in rules_data]
 
     def evaluate_decision(
-        self,
-        decision: dict[str, Any],
-        context: dict[str, Any]
+        self, decision: dict[str, Any], context: dict[str, Any]
     ) -> ComplianceReport:
         """
         Evaluate AI decision against governance rules.
-        
+
         Args:
             decision: AI decision to evaluate
             context: Decision context and metadata
-            
+
         Returns:
             ComplianceReport with assessment results
         """
@@ -232,10 +224,13 @@ class GovernanceEngine:
                     "severity": rule.severity.value,
                     "message": message,
                     "category": rule.category,
-                    "timestamp": datetime.utcnow().isoformat()
+                    "timestamp": datetime.utcnow().isoformat(),
                 }
 
-                if rule.severity in [ComplianceLevel.CRITICAL, ComplianceLevel.VIOLATION]:
+                if rule.severity in [
+                    ComplianceLevel.CRITICAL,
+                    ComplianceLevel.VIOLATION,
+                ]:
                     violations.append(violation_data)
                 else:
                     warnings.append(violation_data)
@@ -243,7 +238,11 @@ class GovernanceEngine:
         # Determine overall status
         if violations:
             critical_count = sum(1 for v in violations if v["severity"] == "critical")
-            overall_status = ComplianceLevel.CRITICAL if critical_count > 0 else ComplianceLevel.VIOLATION
+            overall_status = (
+                ComplianceLevel.CRITICAL
+                if critical_count > 0
+                else ComplianceLevel.VIOLATION
+            )
         elif warnings:
             overall_status = ComplianceLevel.WARNING
         else:
@@ -260,7 +259,7 @@ class GovernanceEngine:
             rules_failed=rules_failed,
             violations=violations,
             warnings=warnings,
-            recommendations=recommendations
+            recommendations=recommendations,
         )
 
         # Log to audit trail
@@ -269,19 +268,16 @@ class GovernanceEngine:
         return report
 
     def _evaluate_rule(
-        self,
-        rule: GovernanceRule,
-        decision: dict[str, Any],
-        context: dict[str, Any]
+        self, rule: GovernanceRule, decision: dict[str, Any], context: dict[str, Any]
     ) -> tuple[bool, str | None]:
         """
         Evaluate single governance rule.
-        
+
         Args:
             rule: Governance rule to evaluate
             decision: AI decision
             context: Decision context
-            
+
         Returns:
             Tuple of (is_compliant, message)
         """
@@ -331,9 +327,7 @@ class GovernanceEngine:
         return False
 
     def _generate_recommendations(
-        self,
-        violations: list[dict[str, Any]],
-        warnings: list[dict[str, Any]]
+        self, violations: list[dict[str, Any]], warnings: list[dict[str, Any]]
     ) -> list[str]:
         """Generate recommendations based on violations and warnings."""
         recommendations = []
@@ -368,7 +362,9 @@ class GovernanceEngine:
             )
 
         if not violations and not warnings:
-            recommendations.append("All governance checks passed. Decision is compliant.")
+            recommendations.append(
+                "All governance checks passed. Decision is compliant."
+            )
 
         return recommendations
 
@@ -376,7 +372,7 @@ class GovernanceEngine:
         self,
         decision: dict[str, Any],
         context: dict[str, Any],
-        report: ComplianceReport
+        report: ComplianceReport,
     ):
         """Log compliance check to audit trail."""
         audit_entry = {
@@ -387,8 +383,8 @@ class GovernanceEngine:
             "warnings_count": len(report.warnings),
             "context_summary": {
                 "scenario_type": context.get("scenario_type"),
-                "difficulty": context.get("difficulty")
-            }
+                "difficulty": context.get("difficulty"),
+            },
         }
 
         self.audit_log.append(audit_entry)
@@ -396,10 +392,10 @@ class GovernanceEngine:
     def get_audit_log(self, limit: int = 100) -> list[dict[str, Any]]:
         """
         Get recent audit log entries.
-        
+
         Args:
             limit: Maximum number of entries to return
-            
+
         Returns:
             List of audit log entries
         """
@@ -408,7 +404,7 @@ class GovernanceEngine:
     def export_audit_log(self, filepath: str):
         """
         Export audit log to JSON file.
-        
+
         Args:
             filepath: Path to export file
         """

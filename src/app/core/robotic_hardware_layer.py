@@ -186,7 +186,7 @@ class SimulatedHardwareInterface(HardwareAbstractionLayer):
         self._lock = threading.RLock()
         self._emergency_stopped = False
 
-        logger.info(f"Simulated hardware interface created for {config.robot_name}")
+        logger.info("Simulated hardware interface created for %s", config.robot_name)
 
     def initialize(self) -> bool:
         """Initialize simulated hardware"""
@@ -234,7 +234,7 @@ class SimulatedHardwareInterface(HardwareAbstractionLayer):
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to initialize simulated hardware: {e}")
+            logger.error("Failed to initialize simulated hardware: %s", e)
             return False
 
     def shutdown(self) -> None:
@@ -281,7 +281,7 @@ class SimulatedHardwareInterface(HardwareAbstractionLayer):
                                 joint.position = target_pos
                             else:
                                 logger.warning(
-                                    f"Joint {i} position {target_pos} exceeds limits"
+                                    "Joint %s position %s exceeds limits", i, target_pos
                                 )
                                 return False
 
@@ -294,7 +294,7 @@ class SimulatedHardwareInterface(HardwareAbstractionLayer):
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to write joint commands: {e}")
+            logger.error("Failed to write joint commands: %s", e)
             return False
 
     def read_sensors(self) -> list[SensorReading]:
@@ -344,7 +344,7 @@ class SimulatedHardwareInterface(HardwareAbstractionLayer):
             for joint in self._joint_states:
                 if joint.temperature > 80.0:
                     logger.error(
-                        f"Joint {joint.joint_id} overheating: {joint.temperature}°C"
+                        "Joint %s overheating: %s°C", joint.joint_id, joint.temperature
                     )
                     return False
 
@@ -448,7 +448,7 @@ class RoboticSafetyValidator:
     ) -> tuple[bool, str]:
         """Validate commands against hardware limits"""
 
-        for i, (cmd, state) in enumerate(zip(commands, states)):
+        for i, (cmd, state) in enumerate(zip(commands, states, strict=False)):
             # Position limits
             if "position" in cmd:
                 pos = cmd["position"]
@@ -523,7 +523,7 @@ class RoboticSafetyValidator:
             if len(self._violation_history) > 1000:
                 self._violation_history = self._violation_history[-1000:]
 
-            logger.error(f"SAFETY VIOLATION [{violation_type}]: {reason}")
+            logger.error("SAFETY VIOLATION [%s]: %s", violation_type, reason)
 
     def get_violation_history(self, limit: int = 100) -> list[dict[str, Any]]:
         """Get recent safety violations"""

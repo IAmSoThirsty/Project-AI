@@ -1,6 +1,7 @@
 """
 Save Points API Endpoints
 """
+
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
@@ -58,7 +59,9 @@ async def delete_save_point(save_id: str):
     try:
         success = save_manager.delete_save_point(save_id)
         if not success:
-            raise HTTPException(status_code=404, detail="Save point not found or cannot be deleted")
+            raise HTTPException(
+                status_code=404, detail="Save point not found or cannot be deleted"
+            )
         return {"success": True, "message": f"Deleted save point: {save_id}"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

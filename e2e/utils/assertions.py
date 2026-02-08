@@ -43,7 +43,7 @@ def assert_state_transition(
         )
 
     logger.info(
-        f"State transition validated: {expected_old_state} -> {expected_new_state}"
+        "State transition validated: %s -> %s", expected_old_state, expected_new_state
     )
 
 
@@ -67,9 +67,7 @@ def assert_audit_log_entry(
     matching_logs = [log for log in logs if log.get("event_type") == event_type]
 
     if not matching_logs:
-        raise AssertionError(
-            f"No audit log entry found with event_type='{event_type}'"
-        )
+        raise AssertionError(f"No audit log entry found with event_type='{event_type}'")
 
     if user is not None:
         matching_logs = [log for log in matching_logs if log.get("user") == user]
@@ -79,15 +77,13 @@ def assert_audit_log_entry(
             )
 
     if action is not None:
-        matching_logs = [
-            log for log in matching_logs if log.get("action") == action
-        ]
+        matching_logs = [log for log in matching_logs if log.get("action") == action]
         if not matching_logs:
             raise AssertionError(
                 f"No audit log entry found with event_type='{event_type}' and action='{action}'"
             )
 
-    logger.info(f"Audit log entry validated: {event_type}")
+    logger.info("Audit log entry validated: %s", event_type)
 
 
 def assert_event_propagation(
@@ -112,16 +108,12 @@ def assert_event_propagation(
             f"Source event missing correlation key '{correlation_key}'"
         )
 
-    propagated = any(
-        event.get(correlation_key) == source_id for event in target_events
-    )
+    propagated = any(event.get(correlation_key) == source_id for event in target_events)
 
     if not propagated:
-        raise AssertionError(
-            f"Event {source_id} did not propagate to target systems"
-        )
+        raise AssertionError(f"Event {source_id} did not propagate to target systems")
 
-    logger.info(f"Event propagation validated for {source_id}")
+    logger.info("Event propagation validated for %s", source_id)
 
 
 def assert_business_invariant(
@@ -140,7 +132,7 @@ def assert_business_invariant(
     if not condition:
         raise AssertionError(f"Business invariant violated: {invariant_description}")
 
-    logger.info(f"Business invariant validated: {invariant_description}")
+    logger.info("Business invariant validated: %s", invariant_description)
 
 
 def assert_permission_denied(
@@ -188,11 +180,8 @@ def assert_four_laws_compliance(
     is_allowed, reason = validation_result
 
     # Check for obvious violations
-    if context.get("endangers_humanity"):
-        if is_allowed:
-            raise AssertionError(
-                f"Action '{action}' endangers humanity but was allowed"
-            )
+    if context.get("endangers_humanity") and is_allowed:
+        raise AssertionError(f"Action '{action}' endangers humanity but was allowed")
 
     if context.get("harms_user") and not context.get("is_user_order"):
         if is_allowed:
@@ -200,7 +189,7 @@ def assert_four_laws_compliance(
                 f"Action '{action}' harms user without explicit order but was allowed"
             )
 
-    logger.info(f"Four Laws validation result: {is_allowed} - {reason}")
+    logger.info("Four Laws validation result: %s - %s", is_allowed, reason)
 
 
 def assert_watch_tower_trigger(
@@ -223,9 +212,7 @@ def assert_watch_tower_trigger(
     ]
 
     if not matching_triggers:
-        raise AssertionError(
-            f"No Watch Tower trigger found with type='{trigger_type}'"
-        )
+        raise AssertionError(f"No Watch Tower trigger found with type='{trigger_type}'")
 
     if severity:
         matching_triggers = [
@@ -237,7 +224,7 @@ def assert_watch_tower_trigger(
                 f"and severity='{severity}'"
             )
 
-    logger.info(f"Watch Tower trigger validated: {trigger_type}")
+    logger.info("Watch Tower trigger validated: %s", trigger_type)
 
 
 def assert_within_timeout(

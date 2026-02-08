@@ -504,7 +504,7 @@ class TestIntegration:
         )
 
         # Run multiple episodes
-        for episode in range(10):
+        for _episode in range(10):
             state = {"position": 0}
             total_reward = 0
 

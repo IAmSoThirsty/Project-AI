@@ -101,7 +101,7 @@ class SampleOSINTPlugin(Plugin):
         # Check if user authorization is required
         if context.get("requires_explicit_order") and not context.get("is_user_order"):
             logger.warning(
-                f"OSINT tool requires explicit user authorization: {self.tool_name}"
+                "OSINT tool requires explicit user authorization: %s", self.tool_name
             )
             emit_event(
                 "plugin.osint.blocked",

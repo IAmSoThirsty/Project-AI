@@ -83,12 +83,17 @@ class IncrementalUpdateManager:
                 )
 
                 logger.info(
-                    f"Updated {country}/{domain}/{year}: {old_value} -> {value}"
+                    "Updated %s/%s/%s: %s -> %s",
+                    country,
+                    domain,
+                    year,
+                    old_value,
+                    value,
                 )
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to update country data: {e}")
+            logger.error("Failed to update country data: %s", e)
             return False
 
     def get_update_history(self, limit: int = 100) -> list[dict[str, Any]]:
@@ -135,7 +140,7 @@ class RealTimeAlertSystem:
                      Signature: callback(alert: CrisisAlert) -> None
         """
         self.subscribers.append(callback)
-        logger.info(f"Added alert subscriber: {callback.__name__}")
+        logger.info("Added alert subscriber: %s", callback.__name__)
 
     def unsubscribe(self, callback: Callable) -> None:
         """
@@ -146,7 +151,7 @@ class RealTimeAlertSystem:
         """
         if callback in self.subscribers:
             self.subscribers.remove(callback)
-            logger.info(f"Removed alert subscriber: {callback.__name__}")
+            logger.info("Removed alert subscriber: %s", callback.__name__)
 
     def emit_alert(self, alert) -> None:
         """
@@ -163,7 +168,7 @@ class RealTimeAlertSystem:
             try:
                 subscriber(alert)
             except Exception as e:
-                logger.error(f"Error in alert subscriber {subscriber.__name__}: {e}")
+                logger.error("Error in alert subscriber %s: %s", subscriber.__name__, e)
 
     def check_for_alerts(self) -> None:
         """Check for new alerts based on current data."""
@@ -183,7 +188,7 @@ class RealTimeAlertSystem:
                 self.emit_alert(alert)
 
         except Exception as e:
-            logger.error(f"Error checking for alerts: {e}")
+            logger.error("Error checking for alerts: %s", e)
 
     def start_monitoring(self, interval: int = 3600) -> None:
         """
@@ -205,7 +210,7 @@ class RealTimeAlertSystem:
 
         self.monitor_thread = threading.Thread(target=monitor_loop, daemon=True)
         self.monitor_thread.start()
-        logger.info(f"Started real-time monitoring (interval: {interval}s)")
+        logger.info("Started real-time monitoring (interval: %ss)", interval)
 
     def stop_monitoring(self) -> None:
         """Stop continuous monitoring."""
@@ -244,7 +249,7 @@ class WebhookNotifier:
         """
         if url not in self.webhook_urls:
             self.webhook_urls.append(url)
-            logger.info(f"Added webhook: {url}")
+            logger.info("Added webhook: %s", url)
 
     def remove_webhook(self, url: str) -> None:
         """
@@ -255,7 +260,7 @@ class WebhookNotifier:
         """
         if url in self.webhook_urls:
             self.webhook_urls.remove(url)
-            logger.info(f"Removed webhook: {url}")
+            logger.info("Removed webhook: %s", url)
 
     def notify(self, alert) -> None:
         """
@@ -299,7 +304,7 @@ class WebhookNotifier:
                 )
 
                 logger.info(
-                    f"Webhook notification sent to {url}: {response.status_code}"
+                    "Webhook notification sent to %s: %s", url, response.status_code
                 )
 
             except Exception as e:
@@ -312,7 +317,7 @@ class WebhookNotifier:
                         "error": str(e),
                     }
                 )
-                logger.error(f"Failed to send webhook to {url}: {e}")
+                logger.error("Failed to send webhook to %s: %s", url, e)
 
 
 class MonitoringDashboard:
@@ -437,11 +442,11 @@ class MonitoringDashboard:
             with open(filepath, "w") as f:
                 json.dump(state, f, indent=2, default=str)
 
-            logger.info(f"Dashboard state exported to {filepath}")
+            logger.info("Dashboard state exported to %s", filepath)
             return True
 
         except Exception as e:
-            logger.error(f"Failed to export dashboard state: {e}")
+            logger.error("Failed to export dashboard state: %s", e)
             return False
 
 

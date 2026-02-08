@@ -858,7 +858,7 @@ class ToolAccessMap:
 
         self.access_map[agent][tool] = access_level
 
-        logger.info(f"Granted {access_level.value} access to {tool} for {agent}")
+        logger.info("Granted %s access to %s for %s", access_level.value, tool, agent)
 
     def revoke_tool_access(self, agent: str, tool: str) -> None:
         """
@@ -870,7 +870,7 @@ class ToolAccessMap:
         """
         if agent in self.access_map and tool in self.access_map[agent]:
             del self.access_map[agent][tool]
-            logger.info(f"Revoked access to {tool} for {agent}")
+            logger.info("Revoked access to %s for %s", tool, agent)
 
 
 # ============================================================================

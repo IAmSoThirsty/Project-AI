@@ -59,23 +59,20 @@ class SecurityStatsPanel(QFrame):
 
         # Stats display
         self.stats_label = QLabel("Loading statistics...")
-        self.stats_label.setStyleSheet(
-            """
+        self.stats_label.setStyleSheet("""
             QLabel {
                 color: #00ff00;
                 font-family: 'Courier New';
                 font-size: 11px;
                 padding: 10px;
             }
-        """
-        )
+        """)
         self.stats_label.setWordWrap(True)
         layout.addWidget(self.stats_label)
 
         # Refresh button
         refresh_btn = QPushButton("🔄 REFRESH")
-        refresh_btn.setStyleSheet(
-            """
+        refresh_btn.setStyleSheet("""
             QPushButton {
                 background-color: #1a1a1a;
                 border: 2px solid #00ff00;
@@ -87,8 +84,7 @@ class SecurityStatsPanel(QFrame):
                 border: 2px solid #00ffff;
                 color: #00ffff;
             }
-        """
-        )
+        """)
         refresh_btn.clicked.connect(self.refresh_stats)
         layout.addWidget(refresh_btn)
 
@@ -137,7 +133,7 @@ class SecurityStatsPanel(QFrame):
             self.stats_label.setText("\n".join(output))
 
         except Exception as e:
-            logger.error(f"Error refreshing stats: {e}")
+            logger.error("Error refreshing stats: %s", e)
             self.stats_label.setText(f"ERROR: {str(e)}")
 
 
@@ -159,8 +155,7 @@ class IncidentLogPanel(QFrame):
 
         # Incident list
         self.incident_list = QListWidget()
-        self.incident_list.setStyleSheet(
-            """
+        self.incident_list.setStyleSheet("""
             QListWidget {
                 background-color: #1a1a1a;
                 border: 1px solid #00ff00;
@@ -172,16 +167,14 @@ class IncidentLogPanel(QFrame):
                 background-color: #2a2a2a;
                 color: #00ffff;
             }
-        """
-        )
+        """)
         layout.addWidget(self.incident_list)
 
         # Control buttons
         btn_layout = QHBoxLayout()
 
         refresh_btn = QPushButton("🔄 REFRESH")
-        refresh_btn.setStyleSheet(
-            """
+        refresh_btn.setStyleSheet("""
             QPushButton {
                 background-color: #1a1a1a;
                 border: 2px solid #00ff00;
@@ -193,8 +186,7 @@ class IncidentLogPanel(QFrame):
                 border: 2px solid #00ffff;
                 color: #00ffff;
             }
-        """
-        )
+        """)
         refresh_btn.clicked.connect(self.refresh_incidents)
         btn_layout.addWidget(refresh_btn)
 
@@ -234,7 +226,7 @@ class IncidentLogPanel(QFrame):
             self.incident_list.scrollToBottom()
 
         except Exception as e:
-            logger.error(f"Error refreshing incidents: {e}")
+            logger.error("Error refreshing incidents: %s", e)
             item = QListWidgetItem(f"ERROR: {str(e)}")
             self.incident_list.addItem(item)
 
@@ -274,16 +266,14 @@ class EmergencyControlsPanel(QFrame):
             "⚠️ WARNING: These controls affect system-wide security.\n"
             "Use only in genuine emergency situations."
         )
-        warning.setStyleSheet(
-            """
+        warning.setStyleSheet("""
             QLabel {
                 color: #ffaa00;
                 font-family: 'Courier New';
                 font-size: 10px;
                 padding: 10px;
             }
-        """
-        )
+        """)
         warning.setWordWrap(True)
         warning.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(warning)
@@ -293,8 +283,7 @@ class EmergencyControlsPanel(QFrame):
         btn_layout.setSpacing(10)
 
         self.lockdown_btn = QPushButton("🔒 INITIATE LOCKDOWN")
-        self.lockdown_btn.setStyleSheet(
-            """
+        self.lockdown_btn.setStyleSheet("""
             QPushButton {
                 background-color: #1a1a1a;
                 border: 3px solid #ff0000;
@@ -308,14 +297,12 @@ class EmergencyControlsPanel(QFrame):
                 border: 3px solid #ff4444;
                 color: #ff4444;
             }
-        """
-        )
+        """)
         self.lockdown_btn.clicked.connect(self.initiate_lockdown)
         btn_layout.addWidget(self.lockdown_btn)
 
         self.release_btn = QPushButton("🔓 RELEASE LOCKDOWN")
-        self.release_btn.setStyleSheet(
-            """
+        self.release_btn.setStyleSheet("""
             QPushButton {
                 background-color: #1a1a1a;
                 border: 2px solid #00ff00;
@@ -327,8 +314,7 @@ class EmergencyControlsPanel(QFrame):
                 border: 2px solid #00ffff;
                 color: #00ffff;
             }
-        """
-        )
+        """)
         self.release_btn.clicked.connect(self.release_lockdown)
         self.release_btn.setEnabled(False)
         btn_layout.addWidget(self.release_btn)
@@ -340,7 +326,7 @@ class EmergencyControlsPanel(QFrame):
         """Initiate emergency lockdown."""
         try:
             tower = GlobalWatchTower.get_instance()
-            result = tower.emergency_lockdown(reason="Manual GUI trigger")
+            tower.emergency_lockdown(reason="Manual GUI trigger")
 
             self.status_label.setText("Status: 🔒 LOCKDOWN ACTIVE")
             self.status_label.setStyleSheet(STYLE_RED_ALERT)
@@ -351,13 +337,13 @@ class EmergencyControlsPanel(QFrame):
             logger.warning("Emergency lockdown initiated from GUI")
 
         except Exception as e:
-            logger.error(f"Error initiating lockdown: {e}")
+            logger.error("Error initiating lockdown: %s", e)
             self.status_label.setText(f"ERROR: {str(e)}")
 
     def release_lockdown(self):
         """Release emergency lockdown."""
         try:
-            tower = GlobalWatchTower.get_instance()
+            GlobalWatchTower.get_instance()
             # Note: GlobalWatchTower might not have a release method
             # This is a placeholder for the interface
 
@@ -369,7 +355,7 @@ class EmergencyControlsPanel(QFrame):
             logger.info("Lockdown released from GUI")
 
         except Exception as e:
-            logger.error(f"Error releasing lockdown: {e}")
+            logger.error("Error releasing lockdown: %s", e)
             self.status_label.setText(f"ERROR: {str(e)}")
 
 
@@ -392,13 +378,11 @@ class WatchTowerPanel(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setStyleSheet(
-            """
+        self.setStyleSheet("""
             QWidget {
                 background-color: #1a1a1a;
             }
-        """
-        )
+        """)
 
         main_layout = QVBoxLayout(self)
 
@@ -439,23 +423,20 @@ class WatchTowerPanel(QWidget):
     def _create_title_bar(self) -> QFrame:
         """Create title bar with back button."""
         title_frame = QFrame()
-        title_frame.setStyleSheet(
-            """
+        title_frame.setStyleSheet("""
             QFrame {
                 background-color: #0f0f0f;
                 border: 2px solid #00ff00;
                 border-radius: 5px;
             }
-        """
-        )
+        """)
         title_frame.setFixedHeight(60)
 
         layout = QHBoxLayout(title_frame)
 
         # Back button
         back_btn = QPushButton("◀ BACK")
-        back_btn.setStyleSheet(
-            """
+        back_btn.setStyleSheet("""
             QPushButton {
                 background-color: #1a1a1a;
                 border: 2px solid #00ff00;
@@ -467,8 +448,7 @@ class WatchTowerPanel(QWidget):
                 border: 2px solid #00ffff;
                 color: #00ffff;
             }
-        """
-        )
+        """)
         back_btn.clicked.connect(self.back_requested.emit)
         layout.addWidget(back_btn)
 
@@ -489,7 +469,7 @@ class WatchTowerPanel(QWidget):
     def _initialize_watch_tower(self):
         """Initialize the watch tower if needed."""
         try:
-            tower = GlobalWatchTower.get_instance()
+            GlobalWatchTower.get_instance()
             logger.info("Watch tower already initialized")
         except RuntimeError:
             # Tower not initialized yet
@@ -497,7 +477,7 @@ class WatchTowerPanel(QWidget):
                 GlobalWatchTower.initialize(data_dir="data/watch_tower")
                 logger.info("Watch tower initialized successfully")
             except Exception as e:
-                logger.error(f"Failed to initialize watch tower: {e}")
+                logger.error("Failed to initialize watch tower: %s", e)
 
     def _auto_refresh(self):
         """Auto-refresh panels."""

@@ -72,10 +72,10 @@ class CoverageReporter:
 
             if result.returncode != 0:
                 logger.warning(
-                    f"Coverage run had non-zero exit code: {result.returncode}"
+                    "Coverage run had non-zero exit code: %s", result.returncode
                 )
-                logger.debug(f"STDOUT: {result.stdout}")
-                logger.debug(f"STDERR: {result.stderr}")
+                logger.debug("STDOUT: %s", result.stdout)
+                logger.debug("STDERR: %s", result.stderr)
 
             # Parse coverage.json
             coverage_file = self.output_dir / "coverage.json"
@@ -86,7 +86,7 @@ class CoverageReporter:
                 return CoverageMetrics(0, 0, 0, 0.0)
 
         except Exception as e:
-            logger.error(f"Failed to run coverage: {e}")
+            logger.error("Failed to run coverage: %s", e)
             return CoverageMetrics(0, 0, 0, 0.0)
 
     def _parse_coverage_json(self, coverage_file: Path) -> CoverageMetrics:
@@ -122,7 +122,7 @@ class CoverageReporter:
             )
 
         except Exception as e:
-            logger.error(f"Failed to parse coverage JSON: {e}")
+            logger.error("Failed to parse coverage JSON: %s", e)
             return CoverageMetrics(0, 0, 0, 0.0)
 
     def generate_summary_report(self, metrics: CoverageMetrics) -> str:
@@ -180,16 +180,22 @@ class CoverageReporter:
 
         if not meets_threshold:
             logger.warning(
-                f"Coverage {metrics.coverage_percentage:.2f}% below threshold {threshold}%"
+                "Coverage %s%% below threshold %s%%",
+                metrics.coverage_percentage,
+                threshold,
             )
         else:
             logger.info(
-                f"Coverage {metrics.coverage_percentage:.2f}% meets threshold {threshold}%"
+                "Coverage %s%% meets threshold %s%%",
+                metrics.coverage_percentage,
+                threshold,
             )
 
         return meets_threshold
 
-    def save_report(self, metrics: CoverageMetrics, filename: str = "coverage_report.txt") -> Path:
+    def save_report(
+        self, metrics: CoverageMetrics, filename: str = "coverage_report.txt"
+    ) -> Path:
         """Save coverage report to file.
 
         Args:
@@ -202,5 +208,5 @@ class CoverageReporter:
         report = self.generate_summary_report(metrics)
         report_file = self.output_dir / filename
         report_file.write_text(report)
-        logger.info(f"Saved coverage report: {report_file}")
+        logger.info("Saved coverage report: %s", report_file)
         return report_file

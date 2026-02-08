@@ -22,10 +22,13 @@ class EnergyDomain:
 
     Tracks grid generation, transformer inventory, and fuel access.
     """
+
     grid_generation_pct: float = 1.0  # Percentage of generation capacity
     transformer_inventory: int = EnergyThresholds.TOTAL_HV_TRANSFORMERS
     transformers_damaged: int = 0  # Damaged transformers
-    transformer_replacement_rate_yearly: int = EnergyThresholds.TRANSFORMER_REPLACEMENT_RATE_YEARLY
+    transformer_replacement_rate_yearly: int = (
+        EnergyThresholds.TRANSFORMER_REPLACEMENT_RATE_YEARLY
+    )
     fuel_access_days: float = EnergyThresholds.BASELINE_FUEL_RESERVE_DAYS
     nuclear_plants_operational: int = EnergyThresholds.GLOBAL_NUCLEAR_PLANTS
     nuclear_plants_scram: int = 0  # Emergency shutdown count
@@ -39,6 +42,7 @@ class WaterDomain:
 
     Tracks potable water access, treatment capacity, and contamination.
     """
+
     potable_water_pct: float = 1.0  # Population with clean water access
     treatment_capacity_pct: float = 1.0  # Treatment plant capacity
     contamination_index: float = 0.0  # 0=clean, 1=catastrophic
@@ -55,6 +59,7 @@ class FoodDomain:
 
     Tracks urban food supply, rural production, and logistics.
     """
+
     urban_food_days: float = FoodThresholds.INITIAL_URBAN_FOOD_DAYS
     rural_output_pct: float = 1.0  # Agricultural production capacity
     logistics_integrity: float = 1.0  # Supply chain functionality
@@ -72,6 +77,7 @@ class HealthDomain:
 
     Tracks hospital capacity, medical supplies, and disease pressure.
     """
+
     hospital_capacity_pct: float = 1.0  # Functional hospital capacity
     critical_med_supply_days: float = HealthThresholds.BASELINE_MED_SUPPLY_DAYS
     disease_pressure_index: float = 0.0  # 0=baseline, 1=pandemic
@@ -91,6 +97,7 @@ class SecurityDomain:
 
     Tracks policing, armed groups, and violence levels.
     """
+
     law_enforcement_coverage: float = 1.0  # Police/military presence
     armed_group_count: int = 0  # Militias, gangs, warlords
     violence_index: float = 0.0  # 0=peaceful, 1=warzone
@@ -107,6 +114,7 @@ class GovernanceDomain:
 
     Tracks government effectiveness, fragmentation, and emergency powers.
     """
+
     legitimacy_score: float = GovernanceThresholds.LEGITIMACY_BASELINE
     regional_fragmentation: float = 0.0  # 0=unified, 1=balkanized
     emergency_power_level: float = 0.0  # 0=normal, 1=martial law
@@ -124,6 +132,7 @@ class SectorizedWorldState:
 
     Each domain degrades independently and feeds others asymmetrically.
     """
+
     # Domain models
     energy: EnergyDomain = field(default_factory=EnergyDomain)
     water: WaterDomain = field(default_factory=WaterDomain)

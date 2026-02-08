@@ -153,7 +153,9 @@ class SystemRegistry:
         self._load_state()
 
         logger.info(
-            f"System Registry initialized (data_dir={data_dir}, config_dir={config_dir})"
+            "System Registry initialized (data_dir=%s, config_dir=%s)",
+            data_dir,
+            config_dir,
         )
 
     def register_subsystem(
@@ -188,7 +190,7 @@ class SystemRegistry:
         with self._lock:
             if subsystem_id in self._subsystems:
                 logger.warning(
-                    f"Subsystem {subsystem_id} already registered, updating..."
+                    "Subsystem %s already registered, updating...", subsystem_id
                 )
 
             subsystem_meta = SubsystemMetadata(
@@ -234,7 +236,11 @@ class SystemRegistry:
             self._save_state()
 
             logger.info(
-                f"Registered subsystem: {name} ({subsystem_id}) v{version} [Priority: {priority.value}]"
+                "Registered subsystem: %s (%s) v%s [Priority: %s]",
+                name,
+                subsystem_id,
+                version,
+                priority.value,
             )
             return True
 
@@ -250,7 +256,7 @@ class SystemRegistry:
         """
         with self._lock:
             if subsystem_id not in self._subsystems:
-                logger.error(f"Cannot initialize unknown subsystem: {subsystem_id}")
+                logger.error("Cannot initialize unknown subsystem: %s", subsystem_id)
                 return False
 
             subsystem = self._subsystems[subsystem_id]
@@ -259,7 +265,7 @@ class SystemRegistry:
             for dep_id in subsystem.dependencies:
                 if dep_id not in self._subsystems:
                     logger.error(
-                        f"Missing dependency {dep_id} for subsystem {subsystem_id}"
+                        "Missing dependency %s for subsystem %s", dep_id, subsystem_id
                     )
                     return False
 
@@ -269,7 +275,9 @@ class SystemRegistry:
                     SubsystemState.DEGRADED,
                 ]:
                     logger.error(
-                        f"Dependency {dep_id} not active for subsystem {subsystem_id}"
+                        "Dependency %s not active for subsystem %s",
+                        dep_id,
+                        subsystem_id,
                     )
                     return False
 
@@ -295,7 +303,7 @@ class SystemRegistry:
 
                 self._save_state()
 
-                logger.info(f"Initialized subsystem: {subsystem_id}")
+                logger.info("Initialized subsystem: %s", subsystem_id)
                 return True
 
             except Exception as e:
@@ -312,7 +320,7 @@ class SystemRegistry:
                     }
                 )
 
-                logger.error(f"Failed to initialize subsystem {subsystem_id}: {e}")
+                logger.error("Failed to initialize subsystem %s: %s", subsystem_id, e)
                 return False
 
     def get_subsystem(self, subsystem_id: str) -> Any | None:
@@ -429,7 +437,9 @@ class SystemRegistry:
                     if subsystem.failure_count >= self._max_failure_threshold:
                         subsystem.state = SubsystemState.FAILED
                         logger.error(
-                            f"Subsystem {subsystem_id} marked as FAILED after {subsystem.failure_count} failures"
+                            "Subsystem %s marked as FAILED after %s failures",
+                            subsystem_id,
+                            subsystem.failure_count,
                         )
                 else:
                     subsystem.failure_count = max(0, subsystem.failure_count - 1)
@@ -450,7 +460,7 @@ class SystemRegistry:
                 subsystem.health_status = False
                 subsystem.failure_count += 1
 
-                logger.error(f"Health check failed for {subsystem_id}: {e}")
+                logger.error("Health check failed for %s: %s", subsystem_id, e)
 
                 return HealthCheckResult(
                     subsystem_id=subsystem_id,
@@ -483,7 +493,7 @@ class SystemRegistry:
         self._health_check_thread.start()
 
         logger.info(
-            f"Health monitoring started (interval={self._health_check_interval}s)"
+            "Health monitoring started (interval=%ss)", self._health_check_interval
         )
 
     def stop_health_monitoring(self):
@@ -508,7 +518,7 @@ class SystemRegistry:
 
                     if not result.healthy:
                         logger.warning(
-                            f"Health check failed for {subsystem_id}: {result.error}"
+                            "Health check failed for %s: %s", subsystem_id, result.error
                         )
                         self._attempt_recovery(subsystem_id)
 
@@ -516,7 +526,7 @@ class SystemRegistry:
                 time.sleep(self._health_check_interval)
 
             except Exception as e:
-                logger.error(f"Error in health monitoring loop: {e}")
+                logger.error("Error in health monitoring loop: %s", e)
                 time.sleep(self._health_check_interval)
 
     def _attempt_recovery(self, subsystem_id: str):
@@ -535,7 +545,7 @@ class SystemRegistry:
             if subsystem.state == SubsystemState.RECOVERING:
                 return  # Already attempting recovery
 
-            logger.info(f"Attempting recovery for subsystem: {subsystem_id}")
+            logger.info("Attempting recovery for subsystem: %s", subsystem_id)
             subsystem.state = SubsystemState.RECOVERING
 
             try:
@@ -554,11 +564,11 @@ class SystemRegistry:
                 subsystem.state = SubsystemState.ACTIVE
                 subsystem.failure_count = 0
 
-                logger.info(f"Successfully recovered subsystem: {subsystem_id}")
+                logger.info("Successfully recovered subsystem: %s", subsystem_id)
 
             except Exception as e:
                 subsystem.state = SubsystemState.FAILED
-                logger.error(f"Recovery failed for subsystem {subsystem_id}: {e}")
+                logger.error("Recovery failed for subsystem %s: %s", subsystem_id, e)
 
     def get_system_status(self) -> dict[str, Any]:
         """
@@ -612,25 +622,25 @@ class SystemRegistry:
                 json.dump(self._audit_log[-10000:], f, indent=2)
 
         except Exception as e:
-            logger.error(f"Failed to save registry state: {e}")
+            logger.error("Failed to save registry state: %s", e)
 
     def _load_state(self):
         """Load registry state from disk."""
         try:
             if self._state_file.exists():
                 with open(self._state_file) as f:
-                    state = json.load(f)
+                    json.load(f)
 
-                logger.info(f"Loaded registry state from {self._state_file}")
+                logger.info("Loaded registry state from %s", self._state_file)
 
             if self._audit_log_path.exists():
                 with open(self._audit_log_path) as f:
                     self._audit_log = json.load(f)
 
-                logger.info(f"Loaded {len(self._audit_log)} audit log entries")
+                logger.info("Loaded %s audit log entries", len(self._audit_log))
 
         except Exception as e:
-            logger.error(f"Failed to load registry state: {e}")
+            logger.error("Failed to load registry state: %s", e)
 
     def shutdown(self):
         """Shutdown the registry and all subsystems."""
@@ -653,10 +663,12 @@ class SystemRegistry:
                         subsystem.instance.shutdown()
 
                     subsystem.state = SubsystemState.TERMINATED
-                    logger.info(f"Shutdown subsystem: {subsystem_id}")
+                    logger.info("Shutdown subsystem: %s", subsystem_id)
 
                 except Exception as e:
-                    logger.error(f"Error shutting down subsystem {subsystem_id}: {e}")
+                    logger.error(
+                        "Error shutting down subsystem %s: %s", subsystem_id, e
+                    )
 
             self._save_state()
 

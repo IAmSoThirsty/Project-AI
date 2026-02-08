@@ -35,6 +35,8 @@ for i, scenario in enumerate(scenarios, 1):
 
 # 4. Define a simple AI system
 print("4️⃣  Defining AI system callback...")
+
+
 def simple_ai_system(scenario):
     """
     A simple AI system that makes decisions based on scenario type.
@@ -45,11 +47,13 @@ def simple_ai_system(scenario):
         "decision": scenario.expected_decision,
         "reasoning": {
             "approach": "ethical_utility_maximization",
-            "factors": ["human_safety", "minimize_harm", "fairness"]
+            "factors": ["human_safety", "minimize_harm", "fairness"],
         },
         "confidence": 0.85,
-        "constraints_satisfied": True
+        "constraints_satisfied": True,
     }
+
+
 print("   ✓ AI system defined")
 print()
 
@@ -71,7 +75,7 @@ print()
 
 # 6. Show score breakdown
 print("6️⃣  Score Breakdown:")
-score = result['score']
+score = result["score"]
 print(f"   Ethics Score: {score['ethics_score']:.2f}/100")
 print(f"   Resilience Score: {score['resilience_score']:.2f}/100")
 print(f"   Security Score: {score['security_score']:.2f}/100")
@@ -83,7 +87,9 @@ print()
 print("7️⃣  Running full Round 1...")
 round_results = swr.run_round(1, simple_ai_system, "demo_system")
 print(f"   ✓ Completed {len(round_results)} scenarios")
-avg_score = sum(r['sovereign_resilience_score'] for r in round_results) / len(round_results)
+avg_score = sum(r["sovereign_resilience_score"] for r in round_results) / len(
+    round_results
+)
 print(f"   Average SRS: {avg_score:.2f}/100")
 print()
 
@@ -91,8 +97,10 @@ print()
 print("8️⃣  Current Leaderboard:")
 leaderboard = swr.get_leaderboard()
 for entry in leaderboard:
-    print(f"   #{entry['rank']} {entry['system_id']}: {entry['avg_sovereign_resilience_score']:.2f} "
-          f"({entry['total_attempts']} attempts, {entry['success_rate']*100:.1f}% success)")
+    print(
+        f"   #{entry['rank']} {entry['system_id']}: {entry['avg_sovereign_resilience_score']:.2f} "
+        f"({entry['total_attempts']} attempts, {entry['success_rate']*100:.1f}% success)"
+    )
 print()
 
 # 9. Get system performance
@@ -100,12 +108,16 @@ print("9️⃣  System Performance Details:")
 performance = swr.scoreboard.get_system_performance("demo_system")
 print(f"   Total Attempts: {performance['overall_performance']['total_attempts']}")
 print(f"   Success Rate: {performance['overall_performance']['success_rate']*100:.1f}%")
-print(f"   Avg SRS: {performance['overall_performance']['avg_sovereign_resilience_score']:.2f}")
-print(f"   Avg Response Time: {performance['overall_performance']['avg_response_time_ms']:.2f}ms")
+print(
+    f"   Avg SRS: {performance['overall_performance']['avg_sovereign_resilience_score']:.2f}"
+)
+print(
+    f"   Avg Response Time: {performance['overall_performance']['avg_response_time_ms']:.2f}ms"
+)
 print()
 
 print("   Category Scores:")
-for category, score in performance['category_scores'].items():
+for category, score in performance["category_scores"].items():
     print(f"     {category.capitalize()}: {score:.2f}/100")
 print()
 

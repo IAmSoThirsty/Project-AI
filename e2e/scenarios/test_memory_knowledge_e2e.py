@@ -636,9 +636,7 @@ class TestMemoryCleanupArchival:
 
         for memory_file in list(memory_dir.glob("dup_*.json")):
             memory = load_json_file(memory_file)
-            content_hash = hashlib.sha256(
-                memory["content"].encode()
-            ).hexdigest()
+            content_hash = hashlib.sha256(memory["content"].encode()).hexdigest()
 
             if content_hash in seen_hashes:
                 memory_file.unlink()
@@ -714,8 +712,7 @@ class TestMemoryCleanupArchival:
         for memory_file in list(memory_dir.glob("retention_*.json")):
             memory = load_json_file(memory_file)
             should_delete = (
-                memory["priority"] == "low"
-                and memory["created_at"] < cutoff_date
+                memory["priority"] == "low" and memory["created_at"] < cutoff_date
             )
             if should_delete:
                 memory_file.unlink()

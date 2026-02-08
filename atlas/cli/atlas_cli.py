@@ -66,7 +66,7 @@ class AtlasCLI:
     def sovereign_verify(self, bundle_path: Path) -> bool:
         """
         Verify constitutional compliance of a bundle.
-        
+
         Validates:
         - Data hashes
         - Seed reproducibility
@@ -75,7 +75,7 @@ class AtlasCLI:
         - Trigger legitimacy
         - Driver bounds
         - Graph integrity
-        
+
         Returns:
             True if PASS, False if FAIL
         """
@@ -129,10 +129,17 @@ class AtlasCLI:
             print(f"  {'✓ PASS' if graph_valid else '✗ FAIL'}")
 
             # Overall result
-            all_valid = all([
-                hash_valid, seed_valid, posterior_valid, sludge_valid,
-                trigger_valid, bounds_valid, graph_valid
-            ])
+            all_valid = all(
+                [
+                    hash_valid,
+                    seed_valid,
+                    posterior_valid,
+                    sludge_valid,
+                    trigger_valid,
+                    bounds_valid,
+                    graph_valid,
+                ]
+            )
 
             print("\n" + "═" * 70)
             if all_valid:
@@ -147,7 +154,7 @@ class AtlasCLI:
 
         except Exception as e:
             print(f"\n✗ Error during verification: {e}")
-            logger.error(f"Verification error: {e}", exc_info=True)
+            logger.error("Verification error: %s", e, exc_info=True)
             return False
 
     def _verify_data_hashes(self, bundle: dict[str, Any]) -> bool:
@@ -161,7 +168,7 @@ class AtlasCLI:
         except ConstitutionalViolation:
             return False
         except Exception as e:
-            logger.error(f"Hash verification error: {e}")
+            logger.error("Hash verification error: %s", e)
             return False
 
     def _verify_seed_reproducibility(self, bundle: dict[str, Any]) -> bool:
@@ -174,7 +181,7 @@ class AtlasCLI:
         except ConstitutionalViolation:
             return False
         except Exception as e:
-            logger.error(f"Seed verification error: {e}")
+            logger.error("Seed verification error: %s", e)
             return False
 
     def _verify_posteriors(self, bundle: dict[str, Any]) -> bool:
@@ -267,7 +274,7 @@ def main():
     # Setup logging
     logging.basicConfig(
         level=logging.INFO,
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
 
     # Display subordination notice
@@ -297,47 +304,40 @@ Examples:
   atlas status
   atlas build-hc --input data/raw
   atlas project --seed ATLAS-TS0-BASE-2026-02-07-001 --horizon 30
-        """
+        """,
     )
 
-    subparsers = parser.add_subparsers(dest='command', help='Commands')
+    subparsers = parser.add_subparsers(dest="command", help="Commands")
 
     # sovereign-verify command
     verify_parser = subparsers.add_parser(
-        'sovereign-verify',
-        help='Verify constitutional compliance of a bundle'
+        "sovereign-verify", help="Verify constitutional compliance of a bundle"
     )
     verify_parser.add_argument(
-        '--bundle',
-        type=Path,
-        required=True,
-        help='Path to bundle JSON file'
+        "--bundle", type=Path, required=True, help="Path to bundle JSON file"
     )
 
     # status command
-    subparsers.add_parser('status', help='Display system status')
+    subparsers.add_parser("status", help="Display system status")
 
     # build-hc command
     build_parser = subparsers.add_parser(
-        'build-hc',
-        help='Build history chain (Reality Stack)'
+        "build-hc", help="Build history chain (Reality Stack)"
     )
-    build_parser.add_argument('--input', type=Path, help='Input data directory')
+    build_parser.add_argument("--input", type=Path, help="Input data directory")
 
     # project command
     project_parser = subparsers.add_parser(
-        'project',
-        help='Generate timeline projections'
+        "project", help="Generate timeline projections"
     )
-    project_parser.add_argument('--seed', help='Deterministic seed')
-    project_parser.add_argument('--horizon', type=int, help='Projection horizon (days)')
+    project_parser.add_argument("--seed", help="Deterministic seed")
+    project_parser.add_argument("--horizon", type=int, help="Projection horizon (days)")
 
     # export command
     export_parser = subparsers.add_parser(
-        'export',
-        help='Export artifacts with compliance stamps'
+        "export", help="Export artifacts with compliance stamps"
     )
-    export_parser.add_argument('--output', type=Path, help='Output directory')
+    export_parser.add_argument("--output", type=Path, help="Output directory")
 
     # Parse arguments
     args = parser.parse_args()
@@ -351,28 +351,28 @@ Examples:
         cli = AtlasCLI()
     except Exception as e:
         print(f"✗ Failed to initialize ATLAS: {e}")
-        logger.error(f"Initialization error: {e}", exc_info=True)
+        logger.error("Initialization error: %s", e, exc_info=True)
         sys.exit(1)
 
     # Execute command
     try:
-        if args.command == 'sovereign-verify':
+        if args.command == "sovereign-verify":
             success = cli.sovereign_verify(args.bundle)
             sys.exit(0 if success else 1)
 
-        elif args.command == 'status':
+        elif args.command == "status":
             cli.status()
             sys.exit(0)
 
-        elif args.command == 'build-hc':
+        elif args.command == "build-hc":
             print("build-hc not yet implemented")
             sys.exit(1)
 
-        elif args.command == 'project':
+        elif args.command == "project":
             print("project not yet implemented")
             sys.exit(1)
 
-        elif args.command == 'export':
+        elif args.command == "export":
             print("export not yet implemented")
             sys.exit(1)
 
@@ -386,7 +386,7 @@ Examples:
         sys.exit(130)
     except Exception as e:
         print(f"\n✗ Error: {e}")
-        logger.error(f"Command error: {e}", exc_info=True)
+        logger.error("Command error: %s", e, exc_info=True)
         sys.exit(1)
 
 

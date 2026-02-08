@@ -17,7 +17,7 @@ Usage:
     # Option 1: Wrap existing memory engine
     memory_engine = MemoryEngine()
     optimized_memory = OptimizationMiddleware(memory_engine, config)
-    
+
     # Option 2: Use standalone
     optimized_memory = OptimizationMiddleware(config=config)
     optimized_memory.store("key", data)

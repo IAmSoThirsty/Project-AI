@@ -31,7 +31,7 @@ async def validate_learning_content(request: dict) -> bool:
         True if content is valid, False otherwise
     """
     activity.logger.info(
-        f"Validating learning content for category: {request.get('category')}"
+        "Validating learning content for category: %s", request.get("category")
     )
 
     content = request.get("content", "")
@@ -55,7 +55,7 @@ async def validate_learning_content(request: dict) -> bool:
         "facts",
     ]
     if request.get("category") not in valid_categories:
-        activity.logger.warning(f"Invalid category: {request.get('category')}")
+        activity.logger.warning("Invalid category: %s", request.get("category"))
         return False
 
     activity.logger.info("Content validation passed")
@@ -88,7 +88,7 @@ async def check_black_vault(content: str) -> bool:
                     activity.logger.warning("Content blocked by Black Vault")
                     return False
         except Exception as e:
-            activity.logger.error(f"Error reading Black Vault: {e}")
+            activity.logger.error("Error reading Black Vault: %s", e)
 
     activity.logger.info("Content allowed by Black Vault")
     return True
@@ -105,7 +105,7 @@ async def process_learning_request(request: dict) -> str:
     Returns:
         Generated knowledge ID
     """
-    activity.logger.info(f"Processing learning request: {request.get('source')}")
+    activity.logger.info("Processing learning request: %s", request.get("source"))
 
     # Generate unique knowledge ID
     timestamp = datetime.now().isoformat()
@@ -113,7 +113,7 @@ async def process_learning_request(request: dict) -> str:
         f"{request.get('content')}{timestamp}".encode()
     ).hexdigest()[:16]
 
-    activity.logger.info(f"Generated knowledge ID: {knowledge_id}")
+    activity.logger.info("Generated knowledge ID: %s", knowledge_id)
     return knowledge_id
 
 
@@ -131,7 +131,7 @@ async def store_knowledge(data: dict) -> bool:
     knowledge_id = data.get("knowledge_id")
     request = data.get("request", {})
 
-    activity.logger.info(f"Storing knowledge: {knowledge_id}")
+    activity.logger.info("Storing knowledge: %s", knowledge_id)
 
     # Ensure data directory exists
     knowledge_path = Path("data/memory/knowledge.json")
@@ -144,7 +144,7 @@ async def store_knowledge(data: dict) -> bool:
             with open(knowledge_path) as f:
                 knowledge_base = json.load(f)
         except Exception as e:
-            activity.logger.error(f"Error loading knowledge base: {e}")
+            activity.logger.error("Error loading knowledge base: %s", e)
             knowledge_base = {}
 
     # Add new knowledge
@@ -166,10 +166,10 @@ async def store_knowledge(data: dict) -> bool:
     try:
         with open(knowledge_path, "w") as f:
             json.dump(knowledge_base, f, indent=2)
-        activity.logger.info(f"Knowledge stored successfully: {knowledge_id}")
+        activity.logger.info("Knowledge stored successfully: %s", knowledge_id)
         return True
     except Exception as e:
-        activity.logger.error(f"Error storing knowledge: {e}")
+        activity.logger.error("Error storing knowledge: %s", e)
         return False
 
 
@@ -205,7 +205,7 @@ async def check_content_safety(prompt: str) -> bool:
     prompt_lower = prompt.lower()
     for keyword in blocked_keywords:
         if keyword in prompt_lower:
-            activity.logger.warning(f"Blocked keyword detected: {keyword}")
+            activity.logger.warning("Blocked keyword detected: %s", keyword)
             return False
 
     activity.logger.info("Content safety check passed")
@@ -223,7 +223,7 @@ async def generate_image(request: dict) -> dict:
     Returns:
         Dictionary with image_path and metadata
     """
-    activity.logger.info(f"Generating image with {request.get('backend')} backend")
+    activity.logger.info("Generating image with %s backend", request.get("backend"))
 
     # In production, this would call the actual ImageGenerator
     # For now, return a placeholder result
@@ -245,7 +245,7 @@ async def generate_image(request: dict) -> dict:
         },
     }
 
-    activity.logger.info(f"Image generation completed: {image_path}")
+    activity.logger.info("Image generation completed: %s", image_path)
     return result
 
 
@@ -272,7 +272,7 @@ async def store_image_metadata(result: dict) -> bool:
             with open(metadata_path) as f:
                 all_metadata = json.load(f)
         except Exception as e:
-            activity.logger.error(f"Error loading metadata: {e}")
+            activity.logger.error("Error loading metadata: %s", e)
 
     # Add new metadata
     all_metadata.append(result.get("metadata", {}))
@@ -284,7 +284,7 @@ async def store_image_metadata(result: dict) -> bool:
         activity.logger.info("Metadata stored successfully")
         return True
     except Exception as e:
-        activity.logger.error(f"Error storing metadata: {e}")
+        activity.logger.error("Error storing metadata: %s", e)
         return False
 
 
@@ -302,22 +302,22 @@ async def validate_data_file(file_path: str) -> bool:
     Returns:
         True if valid, False otherwise
     """
-    activity.logger.info(f"Validating data file: {file_path}")
+    activity.logger.info("Validating data file: %s", file_path)
 
     path = Path(file_path)
 
     if not path.exists():
-        activity.logger.warning(f"File does not exist: {file_path}")
+        activity.logger.warning("File does not exist: %s", file_path)
         return False
 
     if not path.is_file():
-        activity.logger.warning(f"Path is not a file: {file_path}")
+        activity.logger.warning("Path is not a file: %s", file_path)
         return False
 
     # Check file extension
     valid_extensions = [".csv", ".xlsx", ".json", ".txt"]
     if path.suffix not in valid_extensions:
-        activity.logger.warning(f"Invalid file extension: {path.suffix}")
+        activity.logger.warning("Invalid file extension: %s", path.suffix)
         return False
 
     activity.logger.info("Data file validation passed")
@@ -335,7 +335,7 @@ async def load_data(file_path: str) -> dict:
     Returns:
         Dictionary with loaded data
     """
-    activity.logger.info(f"Loading data from: {file_path}")
+    activity.logger.info("Loading data from: %s", file_path)
 
     # In production, this would use pandas or other data loading libraries
     # For now, return placeholder
@@ -359,7 +359,7 @@ async def perform_analysis(data: dict) -> dict:
         Analysis results
     """
     analysis_type = data.get("type", "statistics")
-    activity.logger.info(f"Performing {analysis_type} analysis")
+    activity.logger.info("Performing %s analysis", analysis_type)
 
     # Placeholder results
     results = {
@@ -388,7 +388,7 @@ async def generate_visualizations(results: dict) -> str:
     output_dir = Path("data/analysis") / datetime.now().strftime("%Y%m%d_%H%M%S")
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    activity.logger.info(f"Visualizations saved to: {output_dir}")
+    activity.logger.info("Visualizations saved to: %s", output_dir)
     return str(output_dir)
 
 
@@ -406,7 +406,7 @@ async def extract_memory_information(messages: list) -> list:
     Returns:
         List of extracted information items
     """
-    activity.logger.info(f"Extracting information from {len(messages)} messages")
+    activity.logger.info("Extracting information from %s messages", len(messages))
 
     # Placeholder extraction
     extracted = []
@@ -420,7 +420,7 @@ async def extract_memory_information(messages: list) -> list:
                 }
             )
 
-    activity.logger.info(f"Extracted {len(extracted)} items")
+    activity.logger.info("Extracted %s items", len(extracted))
     return extracted
 
 
@@ -439,7 +439,7 @@ async def store_memories(data: dict) -> int:
     info = data.get("info", [])
 
     activity.logger.info(
-        f"Storing {len(info)} memories for conversation: {conversation_id}"
+        "Storing %s memories for conversation: %s", len(info), conversation_id
     )
 
     memory_path = Path("data/memory/conversations.json")
@@ -452,7 +452,7 @@ async def store_memories(data: dict) -> int:
             with open(memory_path) as f:
                 all_memories = json.load(f)
         except Exception as e:
-            activity.logger.error(f"Error loading memories: {e}")
+            activity.logger.error("Error loading memories: %s", e)
 
     # Add new memories
     if conversation_id not in all_memories:
@@ -464,10 +464,10 @@ async def store_memories(data: dict) -> int:
     try:
         with open(memory_path, "w") as f:
             json.dump(all_memories, f, indent=2)
-        activity.logger.info(f"Stored {len(info)} memories")
+        activity.logger.info("Stored %s memories", len(info))
         return len(info)
     except Exception as e:
-        activity.logger.error(f"Error storing memories: {e}")
+        activity.logger.error("Error storing memories: %s", e)
         return 0
 
 
@@ -482,7 +482,7 @@ async def update_memory_indexes(conversation_id: str) -> bool:
     Returns:
         True if successful
     """
-    activity.logger.info(f"Updating memory indexes for: {conversation_id}")
+    activity.logger.info("Updating memory indexes for: %s", conversation_id)
 
     # Placeholder for index update logic
     # In production, this would update search indexes, embeddings, etc.
@@ -506,7 +506,7 @@ async def validate_crisis_request(request: dict) -> bool:
         True if request is valid, False otherwise
     """
     activity.logger.info(
-        f"Validating crisis request for target: {request.get('target_member')}"
+        "Validating crisis request for target: %s", request.get("target_member")
     )
 
     # Validate target member
@@ -526,10 +526,10 @@ async def validate_crisis_request(request: dict) -> bool:
         if not all(
             key in mission for key in ["phase_id", "agent_id", "action", "target"]
         ):
-            activity.logger.warning(f"Invalid mission structure: {mission}")
+            activity.logger.warning("Invalid mission structure: %s", mission)
             return False
 
-    activity.logger.info(f"Crisis request validated: {len(missions)} mission phases")
+    activity.logger.info("Crisis request validated: %s mission phases", len(missions))
     return True
 
 
@@ -548,7 +548,7 @@ async def initialize_crisis_response(data: dict) -> bool:
     target = data.get("target")
 
     activity.logger.info(
-        f"Initializing crisis response: {crisis_id} for target: {target}"
+        "Initializing crisis response: %s for target: %s", crisis_id, target
     )
 
     # Ensure data directory exists
@@ -568,10 +568,10 @@ async def initialize_crisis_response(data: dict) -> bool:
     try:
         with open(crisis_file, "w") as f:
             json.dump(crisis_data, f, indent=2)
-        activity.logger.info(f"Crisis response initialized: {crisis_id}")
+        activity.logger.info("Crisis response initialized: %s", crisis_id)
         return True
     except Exception as e:
-        activity.logger.error(f"Error initializing crisis: {e}")
+        activity.logger.error("Error initializing crisis: %s", e)
         return False
 
 
@@ -607,7 +607,7 @@ async def perform_agent_mission(mission: dict) -> bool:
     # - Handle agent-specific errors
 
     activity.logger.info(
-        f"Agent {agent_id} deployed successfully for mission phase {phase_id}"
+        "Agent %s deployed successfully for mission phase %s", agent_id, phase_id
     )
 
     return True
@@ -629,12 +629,12 @@ async def log_mission_phase(data: dict) -> bool:
     status = data.get("status")
     error = data.get("error")
 
-    activity.logger.info(f"Logging mission phase: {phase_id} - Status: {status}")
+    activity.logger.info("Logging mission phase: %s - Status: %s", phase_id, status)
 
     # Load crisis record
     crisis_file = Path("data/crises") / f"{crisis_id}.json"
     if not crisis_file.exists():
-        activity.logger.warning(f"Crisis file not found: {crisis_id}")
+        activity.logger.warning("Crisis file not found: %s", crisis_id)
         return False
 
     try:
@@ -656,10 +656,10 @@ async def log_mission_phase(data: dict) -> bool:
         with open(crisis_file, "w") as f:
             json.dump(crisis_data, f, indent=2)
 
-        activity.logger.info(f"Mission phase logged: {phase_id}")
+        activity.logger.info("Mission phase logged: %s", phase_id)
         return True
     except Exception as e:
-        activity.logger.error(f"Error logging phase: {e}")
+        activity.logger.error("Error logging phase: %s", e)
         return False
 
 
@@ -685,7 +685,7 @@ async def finalize_crisis_response(data: dict) -> bool:
 
     crisis_file = Path("data/crises") / f"{crisis_id}.json"
     if not crisis_file.exists():
-        activity.logger.warning(f"Crisis file not found: {crisis_id}")
+        activity.logger.warning("Crisis file not found: %s", crisis_id)
         return False
 
     try:
@@ -705,10 +705,10 @@ async def finalize_crisis_response(data: dict) -> bool:
         with open(crisis_file, "w") as f:
             json.dump(crisis_data, f, indent=2)
 
-        activity.logger.info(f"Crisis response finalized: {crisis_id}")
+        activity.logger.info("Crisis response finalized: %s", crisis_id)
         return True
     except Exception as e:
-        activity.logger.error(f"Error finalizing crisis: {e}")
+        activity.logger.error("Error finalizing crisis: %s", e)
         return False
 
 

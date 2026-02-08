@@ -337,7 +337,7 @@ def main():
             system.emergency_stop()
             system.shutdown()
     except Exception as e:
-        logger.error(f"Demo error: {e}", exc_info=True)
+        logger.error("Demo error: %s", e, exc_info=True)
         if "system" in locals():
             system.shutdown()
 

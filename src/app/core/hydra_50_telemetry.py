@@ -125,13 +125,13 @@ class Alert:
     def acknowledge(self) -> None:
         """Mark alert as acknowledged"""
         self.acknowledged = True
-        logger.info(f"Alert acknowledged: {self.alert_id}")
+        logger.info("Alert acknowledged: %s", self.alert_id)
 
     def resolve(self) -> None:
         """Mark alert as resolved"""
         self.resolved = True
         self.resolution_time = time.time()
-        logger.info(f"Alert resolved: {self.alert_id}")
+        logger.info("Alert resolved: %s", self.alert_id)
 
 
 @dataclass
@@ -325,7 +325,7 @@ class MetricsCollector:
         """Get snapshot of all current metrics"""
         with self.lock:
             snapshot = []
-            for key, metric_queue in self.metrics.items():
+            for _key, metric_queue in self.metrics.items():
                 if metric_queue:
                     snapshot.append(metric_queue[-1])
             return snapshot
@@ -509,7 +509,7 @@ class AlertRule:
         try:
             return self.condition(metrics)
         except Exception as e:
-            logger.error(f"Error evaluating alert rule {self.name}: {e}")
+            logger.error("Error evaluating alert rule %s: %s", self.name, e)
             return False
 
 
@@ -641,7 +641,7 @@ class HealthMonitor:
                 self.health_history.append(health_check)
 
             except Exception as e:
-                logger.error(f"Health check {check_name} failed: {e}")
+                logger.error("Health check %s failed: %s", check_name, e)
                 results[check_name] = HealthCheck(
                     check_name=check_name,
                     status=HealthStatus.CRITICAL,
@@ -833,9 +833,9 @@ class AuditLogger:
                         entry = AuditLogEntry(**entry_data)
                         self.audit_log.append(entry)
                         self.last_hash = entry.entry_hash
-                logger.info(f"Loaded {len(self.audit_log)} audit log entries")
+                logger.info("Loaded %s audit log entries", len(self.audit_log))
             except Exception as e:
-                logger.error(f"Failed to load audit log: {e}")
+                logger.error("Failed to load audit log: %s", e)
 
     def _persist_entry(self, entry: AuditLogEntry) -> None:
         """Persist single entry to disk"""
@@ -844,7 +844,7 @@ class AuditLogger:
             with open(log_file, "a") as f:
                 f.write(json.dumps(asdict(entry)) + "\n")
         except Exception as e:
-            logger.error(f"Failed to persist audit entry: {e}")
+            logger.error("Failed to persist audit entry: %s", e)
 
 
 # ============================================================================
@@ -872,7 +872,7 @@ class PrometheusExporter:
     def start_http_server(self) -> None:
         """Start HTTP server for Prometheus scraping"""
         # Implementation would use http.server
-        logger.info(f"Prometheus exporter would start on port {self.port}")
+        logger.info("Prometheus exporter would start on port %s", self.port)
 
 
 # ============================================================================
@@ -922,7 +922,7 @@ class HYDRA50TelemetrySystem:
             target=self._monitoring_loop, args=(interval_seconds,), daemon=True
         )
         self._monitoring_thread.start()
-        logger.info(f"Monitoring started with {interval_seconds}s interval")
+        logger.info("Monitoring started with %ss interval", interval_seconds)
 
     def stop_monitoring(self) -> None:
         """Stop background monitoring"""
@@ -940,7 +940,7 @@ class HYDRA50TelemetrySystem:
                 self.alert_manager.evaluate_rules(metrics)
                 self.metrics_collector.prune_old_metrics()
             except Exception as e:
-                logger.error(f"Error in monitoring loop: {e}")
+                logger.error("Error in monitoring loop: %s", e)
 
             self._stop_monitoring.wait(interval_seconds)
 

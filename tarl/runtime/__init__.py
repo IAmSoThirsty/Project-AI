@@ -80,7 +80,7 @@ class BytecodeVM:
         if not bytecode.startswith(b"TARL_BYTECODE_V1\x00"):
             raise ValueError("Invalid bytecode format: missing header")
 
-        logger.debug(f"Executing {len(bytecode)} bytes of bytecode")
+        logger.debug("Executing %s bytes of bytecode", len(bytecode))
 
         # Parse bytecode
         ip = 17  # Skip header (16 bytes + null terminator)
@@ -113,7 +113,7 @@ class BytecodeVM:
                     constants.append(const_data.decode("utf-8"))
                     pool_ip += const_len
 
-        logger.debug(f"Loaded {len(constants)} constants from pool")
+        logger.debug("Loaded %s constants from pool", len(constants))
 
         # Execute instructions
         result = None
@@ -190,7 +190,11 @@ class BytecodeVM:
                             context.stack.append(result)
                         except KeyError as err:
                             # Get available functions for helpful error message
-                            available = stdlib.list_builtins() if hasattr(stdlib, 'list_builtins') else []
+                            available = (
+                                stdlib.list_builtins()
+                                if hasattr(stdlib, "list_builtins")
+                                else []
+                            )
                             available_str = ", ".join(available[:5])  # Show first 5
                             if len(available) > 5:
                                 available_str += ", ..."
@@ -239,7 +243,7 @@ class BytecodeVM:
                     result = value
 
             else:
-                logger.warning(f"Unknown opcode: 0x{opcode:02X}")
+                logger.warning("Unknown opcode: 0x%s", opcode)
 
         logger.debug("Bytecode execution complete")
         return {"status": "success", "result": result}

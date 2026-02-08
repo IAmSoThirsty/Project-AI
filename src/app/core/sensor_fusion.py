@@ -243,10 +243,7 @@ class KalmanFilter:
             measurement: Measurement vector [x, y, z]
             measurement_noise: Optional measurement noise covariance
         """
-        if measurement_noise is not None:
-            R = measurement_noise
-        else:
-            R = self.R
+        R = measurement_noise if measurement_noise is not None else self.R
 
         # Innovation
         y = measurement - self.H @ self.state
@@ -475,8 +472,7 @@ class SensorFusionEngine(
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS sensors (
                 sensor_id TEXT PRIMARY KEY,
                 sensor_type TEXT,
@@ -490,11 +486,9 @@ class SensorFusionEngine(
                 last_seen REAL,
                 metadata TEXT
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS sensor_readings (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 sensor_id TEXT,
@@ -502,11 +496,9 @@ class SensorFusionEngine(
                 data TEXT,
                 confidence REAL
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS threats (
                 threat_id TEXT PRIMARY KEY,
                 threat_type TEXT,
@@ -519,11 +511,9 @@ class SensorFusionEngine(
                 confidence REAL,
                 metadata TEXT
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS fused_states (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 timestamp REAL,
@@ -535,8 +525,7 @@ class SensorFusionEngine(
                 velocity_z REAL,
                 confidence REAL
             )
-        """
-        )
+        """)
 
         conn.commit()
         conn.close()
@@ -567,7 +556,7 @@ class SensorFusionEngine(
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to initialize sensor fusion: {e}")
+            self.logger.error("Failed to initialize sensor fusion: %s", e)
             return False
 
     def shutdown(self) -> bool:
@@ -587,7 +576,7 @@ class SensorFusionEngine(
             return True
 
         except Exception as e:
-            self.logger.error(f"Error during shutdown: {e}")
+            self.logger.error("Error during shutdown: %s", e)
             return False
 
     def health_check(self) -> bool:
@@ -599,7 +588,7 @@ class SensorFusionEngine(
         alive_threads = sum(1 for t in self.worker_threads if t.is_alive())
         if alive_threads < len(self.worker_threads):
             self.logger.warning(
-                f"Only {alive_threads}/{len(self.worker_threads)} workers alive"
+                "Only %s/%s workers alive", alive_threads, len(self.worker_threads)
             )
             return False
 
@@ -639,7 +628,7 @@ class SensorFusionEngine(
         """Ingest data from a sensor"""
         try:
             if sensor_id not in self.sensors:
-                self.logger.warning(f"Unknown sensor: {sensor_id}")
+                self.logger.warning("Unknown sensor: %s", sensor_id)
                 return False
 
             sensor = self.sensors[sensor_id]
@@ -667,7 +656,7 @@ class SensorFusionEngine(
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to ingest sensor data: {e}")
+            self.logger.error("Failed to ingest sensor data: %s", e)
             return False
 
     def get_fused_state(self) -> dict[str, Any]:
@@ -705,13 +694,13 @@ class SensorFusionEngine(
             self.sensors[sensor_id] = sensor
             self._persist_sensor(sensor)
 
-            self.logger.info(f"Registered sensor: {sensor_id} ({sensor_type})")
+            self.logger.info("Registered sensor: %s (%s)", sensor_id, sensor_type)
             self.emit_event("sensor_registered", {"sensor_id": sensor_id})
 
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to register sensor: {e}")
+            self.logger.error("Failed to register sensor: %s", e)
             return False
 
     # ========================================================================
@@ -724,7 +713,7 @@ class SensorFusionEngine(
 
         try:
             # Analyze sensor data for threat signatures
-            for sensor_id, readings in self.sensor_buffers.items():
+            for _sensor_id, readings in self.sensor_buffers.items():
                 if not readings:
                     continue
 
@@ -742,7 +731,7 @@ class SensorFusionEngine(
                             threats.append(threat)
 
         except Exception as e:
-            self.logger.error(f"Threat detection failed: {e}")
+            self.logger.error("Threat detection failed: %s", e)
 
         return threats
 
@@ -763,7 +752,7 @@ class SensorFusionEngine(
             return ThreatType.UNKNOWN.value
 
         except Exception as e:
-            self.logger.error(f"Threat classification failed: {e}")
+            self.logger.error("Threat classification failed: %s", e)
             return ThreatType.UNKNOWN.value
 
     def get_threat_level(self) -> int:
@@ -824,7 +813,7 @@ class SensorFusionEngine(
             except queue.Empty:
                 continue
             except Exception as e:
-                self.logger.error(f"Fusion worker error: {e}")
+                self.logger.error("Fusion worker error: %s", e)
 
     def _threat_detection_worker(self):
         """Continuously detect and track threats"""
@@ -880,7 +869,7 @@ class SensorFusionEngine(
                 time.sleep(5)  # Check every 5 seconds
 
             except Exception as e:
-                self.logger.error(f"Threat detection worker error: {e}")
+                self.logger.error("Threat detection worker error: %s", e)
 
     def _health_monitoring_worker(self):
         """Monitor sensor health and data quality"""
@@ -889,7 +878,7 @@ class SensorFusionEngine(
                 current_time = time.time()
 
                 # Check sensor health
-                for sensor_id, sensor in self.sensors.items():
+                for _sensor_id, sensor in self.sensors.items():
                     time_since_seen = current_time - sensor.last_seen
 
                     if time_since_seen > 30:
@@ -913,7 +902,7 @@ class SensorFusionEngine(
                 time.sleep(10)  # Check every 10 seconds
 
             except Exception as e:
-                self.logger.error(f"Health monitoring worker error: {e}")
+                self.logger.error("Health monitoring worker error: %s", e)
 
     def _prediction_worker(self):
         """Generate predictive analytics"""
@@ -928,7 +917,7 @@ class SensorFusionEngine(
                 time.sleep(30)  # Update every 30 seconds
 
             except Exception as e:
-                self.logger.error(f"Prediction worker error: {e}")
+                self.logger.error("Prediction worker error: %s", e)
 
     # ========================================================================
     # ANALYTICS AND PREDICTIONS
@@ -965,7 +954,7 @@ class SensorFusionEngine(
             return {"predictions": predictions, "generated_at": time.time()}
 
         except Exception as e:
-            self.logger.error(f"Prediction generation failed: {e}")
+            self.logger.error("Prediction generation failed: %s", e)
             return {}
 
     def _calculate_data_quality(self) -> float:
@@ -1029,7 +1018,7 @@ class SensorFusionEngine(
                             self.metrics["anomalies_detected"] += 1
 
         except Exception as e:
-            self.logger.error(f"Threat analysis failed: {e}")
+            self.logger.error("Threat analysis failed: %s", e)
 
         return threats
 
@@ -1082,7 +1071,7 @@ class SensorFusionEngine(
             conn.close()
 
         except Exception as e:
-            self.logger.error(f"Failed to persist sensor: {e}")
+            self.logger.error("Failed to persist sensor: %s", e)
 
     def _persist_fused_state(self, state: FusedState):
         """Persist fused state to database"""
@@ -1110,7 +1099,7 @@ class SensorFusionEngine(
             conn.close()
 
         except Exception as e:
-            self.logger.error(f"Failed to persist fused state: {e}")
+            self.logger.error("Failed to persist fused state: %s", e)
 
     # ========================================================================
     # INTERFACE IMPLEMENTATIONS
@@ -1135,14 +1124,13 @@ class SensorFusionEngine(
                 self.use_particle_filter = config["use_particle_filter"]
             return True
         except Exception as e:
-            self.logger.error(f"Failed to set config: {e}")
+            self.logger.error("Failed to set config: %s", e)
             return False
 
     def validate_config(self, config: dict[str, Any]) -> tuple[bool, str | None]:
         """Validate configuration"""
-        if "anomaly_threshold" in config:
-            if config["anomaly_threshold"] <= 0:
-                return False, "anomaly_threshold must be positive"
+        if "anomaly_threshold" in config and config["anomaly_threshold"] <= 0:
+            return False, "anomaly_threshold must be positive"
         return True, None
 
     def subscribe(self, event_type: str, callback: Callable) -> str:
@@ -1164,12 +1152,12 @@ class SensorFusionEngine(
     def emit_event(self, event_type: str, data: Any) -> int:
         """Emit event to subscribers"""
         count = 0
-        for sub_id, callback in self.subscribers.get(event_type, []):
+        for _sub_id, callback in self.subscribers.get(event_type, []):
             try:
                 callback(data)
                 count += 1
             except Exception as e:
-                self.logger.error(f"Event callback failed: {e}")
+                self.logger.error("Event callback failed: %s", e)
         return count
 
     def get_metrics(self) -> dict[str, Any]:

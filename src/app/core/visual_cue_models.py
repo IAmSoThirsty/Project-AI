@@ -97,7 +97,7 @@ class VisualCueModel(ABC):
         self.model_name = model_name
         self._initialized = False
         self._lock = threading.RLock()
-        logger.info(f"Visual model created: {model_id}")
+        logger.info("Visual model created: %s", model_id)
 
     @abstractmethod
     def detect(
@@ -133,12 +133,12 @@ class FacialEmotionModel(VisualCueModel):
         """Initialize facial emotion model"""
         try:
             with self._lock:
-                logger.info(f"Initializing {self.model_name}")
+                logger.info("Initializing %s", self.model_name)
                 # In production, load actual ML model
                 self._initialized = True
                 return True
         except Exception as e:
-            logger.error(f"Failed to initialize {self.model_name}: {e}")
+            logger.error("Failed to initialize %s: %s", self.model_name, e)
             return False
 
     def detect(
@@ -175,7 +175,7 @@ class FacialEmotionModel(VisualCueModel):
                 return cue_data
 
         except Exception as e:
-            logger.error(f"Detection error: {e}")
+            logger.error("Detection error: %s", e)
             return VisualCueData(is_present=False)
 
     def _detect_emotion(self, frame_data: np.ndarray) -> tuple[EmotionType, float]:
@@ -214,7 +214,7 @@ class FacialEmotionModel(VisualCueModel):
     def shutdown(self) -> None:
         """Shutdown emotion model"""
         with self._lock:
-            logger.info(f"Shutting down {self.model_name}")
+            logger.info("Shutting down %s", self.model_name)
             self._emotion_history.clear()
             self._initialized = False
 
@@ -232,11 +232,11 @@ class FocusAttentionModel(VisualCueModel):
         """Initialize focus model"""
         try:
             with self._lock:
-                logger.info(f"Initializing {self.model_name}")
+                logger.info("Initializing %s", self.model_name)
                 self._initialized = True
                 return True
         except Exception as e:
-            logger.error(f"Failed to initialize {self.model_name}: {e}")
+            logger.error("Failed to initialize %s: %s", self.model_name, e)
             return False
 
     def detect(
@@ -277,7 +277,7 @@ class FocusAttentionModel(VisualCueModel):
                 return cue_data
 
         except Exception as e:
-            logger.error(f"Focus detection error: {e}")
+            logger.error("Focus detection error: %s", e)
             return VisualCueData(is_present=False)
 
     def _detect_focus(self, frame_data: np.ndarray) -> FocusLevel:
@@ -377,7 +377,7 @@ class FocusAttentionModel(VisualCueModel):
     def shutdown(self) -> None:
         """Shutdown focus model"""
         with self._lock:
-            logger.info(f"Shutting down {self.model_name}")
+            logger.info("Shutting down %s", self.model_name)
             self._focus_history.clear()
             self._initialized = False
 
@@ -392,22 +392,22 @@ class VisualCueModelRegistry:
         self._models: dict[str, VisualCueModel] = {}
         self._lock = threading.RLock()
 
-        logger.info(f"VisualCueModelRegistry initialized at {data_dir}")
+        logger.info("VisualCueModelRegistry initialized at %s", data_dir)
 
     def register(self, model: VisualCueModel) -> bool:
         """Register a visual model"""
         try:
             with self._lock:
                 if model.model_id in self._models:
-                    logger.warning(f"Model already registered: {model.model_id}")
+                    logger.warning("Model already registered: %s", model.model_id)
                     return False
 
                 self._models[model.model_id] = model
-                logger.info(f"Registered visual model: {model.model_id}")
+                logger.info("Registered visual model: %s", model.model_id)
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to register model: {e}")
+            logger.error("Failed to register model: %s", e)
             return False
 
     def unregister(self, model_id: str) -> bool:
@@ -420,11 +420,11 @@ class VisualCueModelRegistry:
                 model = self._models[model_id]
                 model.shutdown()
                 del self._models[model_id]
-                logger.info(f"Unregistered model: {model_id}")
+                logger.info("Unregistered model: %s", model_id)
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to unregister model: {e}")
+            logger.error("Failed to unregister model: %s", e)
             return False
 
     def get_model(self, model_id: str) -> VisualCueModel | None:
@@ -452,7 +452,7 @@ class VisualCueModelRegistry:
                 try:
                     model.shutdown()
                 except Exception as e:
-                    logger.error(f"Error shutting down model: {e}")
+                    logger.error("Error shutting down model: %s", e)
 
 
 class CameraManager:
@@ -500,11 +500,11 @@ class CameraManager:
                 for device in devices:
                     self._devices[device.device_id] = device
 
-                logger.info(f"Discovered {len(devices)} camera devices")
+                logger.info("Discovered %s camera devices", len(devices))
                 return devices
 
         except Exception as e:
-            logger.error(f"Device discovery error: {e}")
+            logger.error("Device discovery error: %s", e)
             return []
 
     def activate_device(self, device_id: str) -> bool:
@@ -512,7 +512,7 @@ class CameraManager:
         try:
             with self._lock:
                 if device_id not in self._devices:
-                    logger.error(f"Device not found: {device_id}")
+                    logger.error("Device not found: %s", device_id)
                     return False
 
                 # Deactivate current device
@@ -523,11 +523,11 @@ class CameraManager:
                 self._devices[device_id].is_active = True
                 self._active_device = device_id
 
-                logger.info(f"Activated camera device: {device_id}")
+                logger.info("Activated camera device: %s", device_id)
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to activate device: {e}")
+            logger.error("Failed to activate device: %s", e)
             return False
 
     def start_capture(self, callback: callable) -> bool:
@@ -554,7 +554,7 @@ class CameraManager:
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to start capture: {e}")
+            logger.error("Failed to start capture: %s", e)
             return False
 
     def stop_capture(self) -> None:
@@ -570,7 +570,7 @@ class CameraManager:
                 logger.info("Stopped camera capture")
 
         except Exception as e:
-            logger.error(f"Error stopping capture: {e}")
+            logger.error("Error stopping capture: %s", e)
 
     def _capture_loop(self) -> None:
         """Main capture loop (runs in thread)"""
@@ -593,7 +593,7 @@ class CameraManager:
                 time.sleep(1.0 / 30.0)  # 30 FPS
 
             except Exception as e:
-                logger.error(f"Capture loop error: {e}")
+                logger.error("Capture loop error: %s", e)
                 time.sleep(0.1)
 
         logger.info("Capture loop stopped")

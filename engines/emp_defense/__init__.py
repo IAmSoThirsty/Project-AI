@@ -13,4 +13,9 @@ from engines.emp_defense.schemas.config_schema import (
 )
 
 __version__ = "1.0.0"
-__all__ = ["EMPDefenseEngine", "EMPScenario", "SimulationConfig", "load_scenario_preset"]
+__all__ = [
+    "EMPDefenseEngine",
+    "EMPScenario",
+    "SimulationConfig",
+    "load_scenario_preset",
+]

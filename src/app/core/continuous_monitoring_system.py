@@ -212,7 +212,7 @@ class SecureStorageManager:
         # Verify checksum
         checksum = hashlib.sha256(decrypted_data).hexdigest()
         if checksum != package.checksum:
-            logger.error(f"Checksum mismatch for {data_id}")
+            logger.error("Checksum mismatch for %s", data_id)
             return None
 
         # Parse JSON
@@ -331,7 +331,7 @@ class Continuous24x7Agent(IntelligenceAgent):
         self._initialize_labels()
 
         logger.info(
-            f"Continuous24x7Agent {agent_id} initialized for {coverage.region.value}"
+            "Continuous24x7Agent %s initialized for %s", agent_id, coverage.region.value
         )
 
     def _initialize_labels(self) -> None:
@@ -345,7 +345,7 @@ class Continuous24x7Agent(IntelligenceAgent):
     def start_monitoring(self) -> None:
         """Start 24/7 continuous monitoring."""
         if self.monitoring_active:
-            logger.warning(f"Agent {self.agent_id} already monitoring")
+            logger.warning("Agent %s already monitoring", self.agent_id)
             return
 
         self.monitoring_active = True
@@ -359,7 +359,7 @@ class Continuous24x7Agent(IntelligenceAgent):
         )
         self.monitoring_thread.start()
 
-        logger.info(f"Agent {self.agent_id} started 24/7 monitoring")
+        logger.info("Agent %s started 24/7 monitoring", self.agent_id)
 
     def stop_monitoring(self) -> None:
         """Stop continuous monitoring."""
@@ -372,11 +372,11 @@ class Continuous24x7Agent(IntelligenceAgent):
         if self.monitoring_thread:
             self.monitoring_thread.join(timeout=5)
 
-        logger.info(f"Agent {self.agent_id} stopped monitoring")
+        logger.info("Agent %s stopped monitoring", self.agent_id)
 
     def _monitoring_loop(self) -> None:
         """Main 24/7 monitoring loop."""
-        logger.info(f"Agent {self.agent_id} entering monitoring loop")
+        logger.info("Agent %s entering monitoring loop", self.agent_id)
 
         while self.monitoring_active and not self.stop_event.is_set():
             try:
@@ -387,7 +387,7 @@ class Continuous24x7Agent(IntelligenceAgent):
                 self.stop_event.wait(self.monitoring_interval)
 
             except Exception as e:
-                logger.error(f"Agent {self.agent_id} monitoring error: {e}")
+                logger.error("Agent %s monitoring error: %s", self.agent_id, e)
                 self.status = MonitoringStatus.ERROR
                 # Continue monitoring despite errors
                 time.sleep(self.monitoring_interval)
@@ -417,7 +417,7 @@ class Continuous24x7Agent(IntelligenceAgent):
         self.total_stored += 1
         self.last_collection_time = time.time()
 
-        logger.debug(f"Agent {self.agent_id} collected and stored report {data_id}")
+        logger.debug("Agent %s collected and stored report %s", self.agent_id, data_id)
 
     def _classify_report(self, report: IntelligenceReport) -> DataClassification:
         """Classify report for secure storage.
@@ -486,7 +486,10 @@ class GlobalCoverageCoordinator:
             self.country_coverage[country].append(agent.agent_id)
 
         logger.info(
-            f"Assigned agent {agent.agent_id} to {len(countries)} countries in {agent.coverage.region.value}"
+            "Assigned agent %s to %s countries in %s",
+            agent.agent_id,
+            len(countries),
+            agent.coverage.region.value,
         )
 
     def get_coverage_report(self) -> dict[str, Any]:
@@ -613,7 +616,10 @@ class ContinuousMonitoringSystem:
                 agents.append(agent)
 
         logger.info(
-            f"Created {len(agents)} agents for {domain.value}/{specialty} with global coverage"
+            "Created %s agents for %s/%s with global coverage",
+            len(agents),
+            domain.value,
+            specialty,
         )
 
         return agents
@@ -698,7 +704,7 @@ class ContinuousMonitoringSystem:
             agent.start_monitoring()
 
         logger.info(
-            f"Started 24/7 monitoring for {len(self.agents)} agents across all regions"
+            "Started 24/7 monitoring for %s agents across all regions", len(self.agents)
         )
 
     def stop_all_monitoring(self) -> None:

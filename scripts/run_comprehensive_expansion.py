@@ -101,7 +101,7 @@ def main():
     # Generate scenarios
     logger.info("\nGenerating 2,200 additional security scenarios...")
     scenarios = expansion.generate_all_scenarios()
-    logger.info(f"✓ Generated {len(scenarios)} scenarios")
+    logger.info("✓ Generated %s scenarios", len(scenarios))
 
     # Generate summary
     summary = expansion.generate_summary()
@@ -135,7 +135,7 @@ def main():
     # Export scenarios
     if args.export:
         export_path = expansion.export_scenarios()
-        logger.info(f"✓ Exported scenarios to: {export_path}")
+        logger.info("✓ Exported scenarios to: %s", export_path)
 
     # Initialize AI systems
     logger.info("\nInitializing Project-AI defense systems...")
@@ -147,7 +147,7 @@ def main():
     logger.info("✓ Defense systems ready")
 
     # Run tests
-    logger.info(f"\nRunning {len(scenarios)} comprehensive security tests...")
+    logger.info("\nRunning %s comprehensive security tests...", len(scenarios))
     logger.info("This will take several minutes...\n")
 
     results = []
@@ -155,7 +155,7 @@ def main():
 
     for i, scenario in enumerate(scenarios, 1):
         if i % 200 == 0:
-            logger.info(f"Progress: {i}/{len(scenarios)} scenarios tested...")
+            logger.info("Progress: %s/%s scenarios tested...", i, len(scenarios))
 
         result = simulate_defense(scenario, ai_systems)
         results.append(result)
@@ -244,7 +244,7 @@ def main():
                 indent=2,
             )
 
-        logger.info(f"\n✓ Exported results to: {results_path}")
+        logger.info("\n✓ Exported results to: %s", results_path)
 
     # Calculate combined total
     previous_tests = 6150

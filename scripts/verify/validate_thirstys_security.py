@@ -7,7 +7,7 @@ Tests basic functionality without requiring pytest
 import os
 import sys
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
 
 print("=" * 80)
@@ -32,6 +32,7 @@ try:
 except Exception as e:
     print(f"✗ Import failed: {e}")
     import traceback
+
     traceback.print_exc()
     sys.exit(1)
 
@@ -42,16 +43,23 @@ print("Test 2: Verify Thirsty's branding...")
 try:
     # Check module docstrings
     doc1 = asymmetric_security_engine.__doc__
-    assert "THIRSTY'S" in doc1 or "Thirsty's" in doc1, "Missing Thirsty's branding in asymmetric_security_engine"
+    if not ("THIRSTY'S" in doc1 or "Thirsty's" in doc1):
+        raise AssertionError("Missing Thirsty's branding in asymmetric_security_engine")
 
     doc2 = god_tier_asymmetric_security.__doc__
-    assert "THIRSTY'S" in doc2 or "Thirsty's" in doc2, "Missing Thirsty's branding in god_tier_asymmetric_security"
+    if not ("THIRSTY'S" in doc2 or "Thirsty's" in doc2):
+        raise AssertionError(
+            "Missing Thirsty's branding in god_tier_asymmetric_security"
+        )
 
     # Check enforcement gateway file directly
-    gateway_file = os.path.join(os.path.dirname(__file__), "src/app/security/asymmetric_enforcement_gateway.py")
+    gateway_file = os.path.join(
+        os.path.dirname(__file__), "src/app/security/asymmetric_enforcement_gateway.py"
+    )
     with open(gateway_file) as f:
         gateway_content = f.read()
-        assert "THIRSTY'S" in gateway_content or "Thirsty's" in gateway_content, "Missing Thirsty's branding in enforcement gateway"
+        if not ("THIRSTY'S" in gateway_content or "Thirsty's" in gateway_content):
+            raise AssertionError("Missing Thirsty's branding in enforcement gateway")
 
     print("✓ All modules have Thirsty's branding")
     print("  - asymmetric_security_engine: Contains 'Thirsty's'")
@@ -70,6 +78,7 @@ print()
 print("Test 3: Initialize security systems...")
 try:
     import tempfile
+
     tmpdir = tempfile.mkdtemp()
 
     # Initialize AsymmetricSecurityEngine
@@ -87,6 +96,7 @@ try:
 except Exception as e:
     print(f"✗ Initialization failed: {e}")
     import traceback
+
     traceback.print_exc()
     sys.exit(1)
 
@@ -104,10 +114,11 @@ try:
             "mutates_state": False,
             "trust_delta": 0,
         },
-        user_id="test_user_001"
+        user_id="test_user_001",
     )
 
-    assert result["allowed"], "Valid action should be allowed"
+    if not (result["allowed"]):
+        raise AssertionError("Valid action should be allowed")
     print("✓ Valid action allowed")
     print("  - Action: read_data")
     print(f"  - Allowed: {result['allowed']}")
@@ -116,6 +127,7 @@ try:
 except Exception as e:
     print(f"✗ Validation test failed: {e}")
     import traceback
+
     traceback.print_exc()
     sys.exit(1)
 
@@ -131,10 +143,10 @@ try:
         context={
             "auth_token": "valid",
             "current_state": "authenticated",
-            "state_mutated": True,    # This triggers state mutation check
-            "trust_change": -10,       # This triggers trust decrease check
+            "state_mutated": True,  # This triggers state mutation check
+            "trust_change": -10,  # This triggers trust decrease check
         },
-        user_id="test_user_002"
+        user_id="test_user_002",
     )
 
     # The system might allow it through God Tier but the individual
@@ -150,6 +162,7 @@ try:
 except Exception as e:
     print(f"✗ Constitutional test failed: {e}")
     import traceback
+
     traceback.print_exc()
     sys.exit(1)
 
@@ -166,7 +179,8 @@ try:
 
     for filepath in tarl_files:
         full_path = os.path.join(os.path.dirname(__file__), filepath)
-        assert os.path.exists(full_path), f"T.A.R.L. file not found: {filepath}"
+        if not os.path.exists(full_path):
+            raise AssertionError(f"T.A.R.L. file not found: {filepath}")
 
         # Check file size
         size = os.path.getsize(full_path)
@@ -189,13 +203,17 @@ try:
     doc_file = "docs/THIRSTYS_ASYMMETRIC_SECURITY_README.md"
     full_path = os.path.join(os.path.dirname(__file__), doc_file)
 
-    assert os.path.exists(full_path), f"Documentation file not found: {doc_file}"
+    if not os.path.exists(full_path):
+        raise AssertionError(f"Documentation file not found: {doc_file}")
 
     with open(full_path) as f:
         content = f.read()
-        assert "THIRSTY'S ASYMMETRIC SECURITY" in content, "Missing title in documentation"
-        assert "T.A.R.L." in content, "Missing T.A.R.L. reference in documentation"
-        assert "exploitation structurally unfinishable" in content.lower(), "Missing key paradigm in documentation"
+        if not ("THIRSTY'S ASYMMETRIC SECURITY" in content):
+            raise AssertionError("Missing title in documentation")
+        if not ("T.A.R.L." in content):
+            raise AssertionError("Missing T.A.R.L. reference in documentation")
+        if not ("exploitation structurally unfinishable" in content.lower()):
+            raise AssertionError("Missing key paradigm in documentation")
 
     size = os.path.getsize(full_path)
     print(f"✓ Documentation verified: {size:,} bytes")

@@ -40,7 +40,7 @@ def wait_for_condition(
             if condition():
                 return True
         except Exception as e:
-            logger.debug(f"Condition check raised exception: {e}")
+            logger.debug("Condition check raised exception: %s", e)
 
         time.sleep(check_interval)
 
@@ -85,7 +85,7 @@ def save_json_file(
     with open(file_path, "w") as f:
         json.dump(data, f, indent=indent)
 
-    logger.debug(f"Saved JSON data to {file_path}")
+    logger.debug("Saved JSON data to %s", file_path)
 
 
 def create_test_file(
@@ -109,7 +109,7 @@ def create_test_file(
     with open(file_path, "w") as f:
         f.write(content)
 
-    logger.debug(f"Created test file: {file_path}")
+    logger.debug("Created test file: %s", file_path)
     return file_path
 
 
@@ -123,12 +123,12 @@ def cleanup_test_files(*file_paths: Path) -> None:
         if file_path.exists():
             if file_path.is_file():
                 file_path.unlink()
-                logger.debug(f"Deleted test file: {file_path}")
+                logger.debug("Deleted test file: %s", file_path)
             elif file_path.is_dir():
                 import shutil
 
                 shutil.rmtree(file_path)
-                logger.debug(f"Deleted test directory: {file_path}")
+                logger.debug("Deleted test directory: %s", file_path)
 
 
 def measure_execution_time(func: Callable) -> Callable:
@@ -145,7 +145,7 @@ def measure_execution_time(func: Callable) -> Callable:
         start_time = time.time()
         result = func(*args, **kwargs)
         execution_time = time.time() - start_time
-        logger.info(f"{func.__name__} executed in {execution_time:.2f}s")
+        logger.info("%s executed in %ss", func.__name__, execution_time)
         return result
 
     return wrapper
@@ -178,9 +178,7 @@ def retry_on_failure(
             return func()
         except exceptions as e:
             last_exception = e
-            logger.warning(
-                f"Attempt {attempt + 1}/{max_retries} failed: {e}"
-            )
+            logger.warning("Attempt %s/%s failed: %s", attempt + 1, max_retries, e)
             if attempt < max_retries - 1:
                 time.sleep(retry_delay)
 
@@ -227,11 +225,9 @@ def compare_json_objects(
 
         elif isinstance(o1, list):
             if len(o1) != len(o2):
-                differences.append(
-                    f"{path}: Length mismatch ({len(o1)} vs {len(o2)})"
-                )
+                differences.append(f"{path}: Length mismatch ({len(o1)} vs {len(o2)})")
             else:
-                for i, (item1, item2) in enumerate(zip(o1, o2)):
+                for i, (item1, item2) in enumerate(zip(o1, o2, strict=False)):
                     compare_recursive(item1, item2, f"{path}[{i}]")
 
         else:

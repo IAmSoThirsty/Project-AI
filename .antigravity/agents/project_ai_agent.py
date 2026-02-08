@@ -248,7 +248,7 @@ class ProjectAIAgent:
                 "reason": "Temporal.io integration not available",
             }
         except Exception as e:
-            logger.error(f"Triumvirate review failed: {e}")
+            logger.error("Triumvirate review failed: %s", e)
             return {"approved": False, "decision": "ERROR", "reason": str(e)}
 
     def validate_four_laws(
@@ -274,7 +274,7 @@ class ProjectAIAgent:
             # Conservative default - require review
             return False, "Four Laws validation unavailable - manual review required"
         except Exception as e:
-            logger.error(f"Four Laws validation failed: {e}")
+            logger.error("Four Laws validation failed: %s", e)
             return False, f"Validation error: {e}"
 
     def generate_recommendations(
@@ -327,7 +327,7 @@ class ProjectAIAgent:
 
         # Check file categories
         has_core_changes = any("src/app/core/" in f for f in affected_files)
-        has_gui_changes = any("src/app/gui/" in f for f in affected_files)
+        any("src/app/gui/" in f for f in affected_files)
         has_temporal_changes = any(
             "temporal/" in f or "src/app/temporal/" in f for f in affected_files
         )

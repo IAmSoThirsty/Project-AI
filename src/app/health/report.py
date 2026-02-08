@@ -96,7 +96,9 @@ class HealthReporter:
         self.audit_log = audit_log or AuditLog()
 
         logger.info(
-            f"HealthReporter initialized: snapshots={self.snapshot_dir}, reports={self.report_dir}"
+            "HealthReporter initialized: snapshots=%s, reports=%s",
+            self.snapshot_dir,
+            self.report_dir,
         )
 
     def collect_system_metrics(self) -> dict[str, Any]:
@@ -139,7 +141,7 @@ class HealthReporter:
                 },
             }
         except Exception as e:
-            logger.error(f"Failed to collect system metrics: {e}")
+            logger.error("Failed to collect system metrics: %s", e)
             return {"error": str(e)}
 
     def collect_dependencies(self) -> dict[str, str]:
@@ -157,7 +159,7 @@ class HealthReporter:
 
             return dependencies
         except Exception as e:
-            logger.error(f"Failed to collect dependencies: {e}")
+            logger.error("Failed to collect dependencies: %s", e)
             return {"error": str(e)}
 
     def collect_config_summary(self) -> dict[str, Any]:
@@ -174,7 +176,7 @@ class HealthReporter:
                 "security_enabled": self.config.get("security", "enable_four_laws"),
             }
         except Exception as e:
-            logger.error(f"Failed to collect config summary: {e}")
+            logger.error("Failed to collect config summary: %s", e)
             return {"error": str(e)}
 
     def generate_yaml_snapshot(self) -> tuple[bool, Path | None]:
@@ -209,11 +211,11 @@ class HealthReporter:
             with open(snapshot_path, "w", encoding="utf-8") as f:
                 yaml.dump(snapshot, f, default_flow_style=False, sort_keys=False)
 
-            logger.info(f"YAML snapshot generated: {snapshot_path}")
+            logger.info("YAML snapshot generated: %s", snapshot_path)
             return True, snapshot_path
 
         except Exception as e:
-            logger.error(f"Failed to generate YAML snapshot: {e}")
+            logger.error("Failed to generate YAML snapshot: %s", e)
             return False, None
 
     def generate_png_report(
@@ -326,11 +328,11 @@ Status: {"✓ Healthy" if all([
             fig.savefig(timestamped_path, dpi=100, bbox_inches="tight")
             plt.close(fig)
 
-            logger.info(f"PNG report generated: {canonical_path}")
+            logger.info("PNG report generated: %s", canonical_path)
             return True, canonical_path
 
         except Exception as e:
-            logger.error(f"Failed to generate PNG report: {e}")
+            logger.error("Failed to generate PNG report: %s", e)
             return False, None
 
     def generate_full_report(self) -> tuple[bool, Path | None, Path | None]:
@@ -366,12 +368,14 @@ Status: {"✓ Healthy" if all([
             )
 
             logger.info(
-                f"Full health report generated: snapshot={snapshot_path}, report={report_path}"
+                "Full health report generated: snapshot=%s, report=%s",
+                snapshot_path,
+                report_path,
             )
             return True, snapshot_path, report_path
 
         except Exception as e:
-            logger.error(f"Failed to generate full report: {e}")
+            logger.error("Failed to generate full report: %s", e)
 
             # Log failure to audit
             self.audit_log.log_event(

@@ -141,7 +141,7 @@ class ISubsystem(ABC):
         Returns:
             bool: True if recovery successful
         """
-        logger.info(f"Default recovery for {self.__class__.__name__}")
+        logger.info("Default recovery for %s", self.__class__.__name__)
         return self.initialize()
 
     def set_operational_mode(self, mode: OperationalMode) -> bool:
@@ -155,7 +155,7 @@ class ISubsystem(ABC):
             bool: True if mode change successful
         """
         logger.info(
-            f"Setting operational mode to {mode.value} for {self.__class__.__name__}"
+            "Setting operational mode to %s for %s", mode.value, self.__class__.__name__
         )
         return True
 
@@ -459,13 +459,13 @@ class BaseSubsystem(ISubsystem):
 
     def initialize(self) -> bool:
         """Initialize the subsystem."""
-        self.logger.info(f"Initializing {self.__class__.__name__}")
+        self.logger.info("Initializing %s", self.__class__.__name__)
         self._initialized = True
         return True
 
     def shutdown(self) -> bool:
         """Shutdown the subsystem."""
-        self.logger.info(f"Shutting down {self.__class__.__name__}")
+        self.logger.info("Shutting down %s", self.__class__.__name__)
         self._initialized = False
         return True
 
@@ -489,7 +489,7 @@ class BaseSubsystem(ISubsystem):
 
     def set_operational_mode(self, mode: OperationalMode) -> bool:
         """Set operational mode."""
-        self.logger.info(f"Setting operational mode to {mode.value}")
+        self.logger.info("Setting operational mode to %s", mode.value)
         self.context.operational_mode = mode
         self.context.air_gapped = mode == OperationalMode.AIR_GAPPED
         self.context.adversarial_conditions = mode == OperationalMode.ADVERSARIAL

@@ -58,10 +58,10 @@ async def main():
             )
             handles.append(handle)
             logger.info(
-                f"Started workflow {i+1}/{len(learning_requests)}: {workflow_id}"
+                "Started workflow %s/%s: %s", i + 1, len(learning_requests), workflow_id
             )
 
-        logger.info(f"All {len(handles)} workflows started, waiting for results...")
+        logger.info("All %s workflows started, waiting for results...", len(handles))
 
         # Wait for all workflows to complete
         results = await asyncio.gather(*[h.result() for h in handles])
@@ -70,18 +70,18 @@ async def main():
         successful = sum(1 for r in results if r.success)
         failed = len(results) - successful
 
-        logger.info(f"\n{'='*60}")
+        logger.info("\n%s", "=" * 60)
         logger.info("Batch workflow results:")
-        logger.info(f"  Total: {len(results)}")
-        logger.info(f"  Successful: {successful}")
-        logger.info(f"  Failed: {failed}")
-        logger.info(f"{'='*60}\n")
+        logger.info("  Total: %s", len(results))
+        logger.info("  Successful: %s", successful)
+        logger.info("  Failed: %s", failed)
+        logger.info("%s\n", "=" * 60)
 
         for i, result in enumerate(results):
             if result.success:
-                logger.info(f"✓ Workflow {i+1}: {result.knowledge_id}")
+                logger.info("✓ Workflow %s: %s", i + 1, result.knowledge_id)
             else:
-                logger.error(f"✗ Workflow {i+1}: {result.error}")
+                logger.error("✗ Workflow %s: %s", i + 1, result.error)
 
     finally:
         await manager.disconnect()

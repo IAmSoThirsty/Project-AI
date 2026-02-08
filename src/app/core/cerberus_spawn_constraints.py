@@ -341,7 +341,7 @@ class SpawnConstraints:
     ) -> None:
         """Enter cooldown period for observation."""
         self.cooldown_state.enter_cooldown(duration)
-        logger.warning(f"🧊 Entering cooldown period for {duration}s: {reason}")
+        logger.warning("🧊 Entering cooldown period for %ss: %s", duration, reason)
 
     def should_enter_cooldown(
         self, recent_incidents: list[dict[str, Any]], system_load: SystemLoad

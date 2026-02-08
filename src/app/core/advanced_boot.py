@@ -273,7 +273,7 @@ class AdvancedBootSystem:
         """
         with self._lock:
             if profile not in self._profiles:
-                logger.error(f"Unknown boot profile: {profile}")
+                logger.error("Unknown boot profile: %s", profile)
                 return False
 
             self._current_profile = profile
@@ -286,8 +286,8 @@ class AdvancedBootSystem:
                 result="success",
             )
 
-            logger.info(f"Boot profile set to: {profile.value}")
-            logger.info(f"  Description: {self._current_profile_config.description}")
+            logger.info("Boot profile set to: %s", profile.value)
+            logger.info("  Description: %s", self._current_profile_config.description)
 
             return True
 
@@ -420,9 +420,9 @@ class AdvancedBootSystem:
                     "timestamp": datetime.now().isoformat(),
                 },
             )
-            logger.debug(f"Ethics approval event emitted: {event_id}")
+            logger.debug("Ethics approval event emitted: %s", event_id)
         except Exception as e:
-            logger.warning(f"Failed to emit ethics approval event: {e}")
+            logger.warning("Failed to emit ethics approval event: %s", e)
 
         # Create audit entry with event linkage
         self._audit_event(
@@ -476,7 +476,7 @@ class AdvancedBootSystem:
             )
             logger.debug("Ethics checkpoint event emitted")
         except Exception as e:
-            logger.warning(f"Failed to emit ethics checkpoint event: {e}")
+            logger.warning("Failed to emit ethics checkpoint event: %s", e)
 
         self._audit_event(
             event_type="ethics_checkpoint",
@@ -527,7 +527,7 @@ class AdvancedBootSystem:
             )
             logger.debug("Emergency mode activation event emitted")
         except Exception as e:
-            logger.warning(f"Failed to emit emergency mode event: {e}")
+            logger.warning("Failed to emit emergency mode event: %s", e)
 
         self._audit_event(
             event_type="emergency_mode",
@@ -536,9 +536,11 @@ class AdvancedBootSystem:
             result="activated",
         )
 
-        logger.critical(f"🚨 EMERGENCY MODE ACTIVATED: {reason}")
+        logger.critical("🚨 EMERGENCY MODE ACTIVATED: %s", reason)
         logger.critical("   Only critical subsystems will be available")
-        logger.critical(f"   Critical subsystems: {self.EMERGENCY_CRITICAL_SUBSYSTEMS}")
+        logger.critical(
+            "   Critical subsystems: %s", self.EMERGENCY_CRITICAL_SUBSYSTEMS
+        )
 
     def deactivate_emergency_mode(self):
         """
@@ -575,7 +577,7 @@ class AdvancedBootSystem:
             )
             logger.debug("Emergency mode deactivation event emitted")
         except Exception as e:
-            logger.warning(f"Failed to emit emergency mode deactivation event: {e}")
+            logger.warning("Failed to emit emergency mode deactivation event: %s", e)
 
         self._audit_event(
             event_type="emergency_mode",
@@ -584,7 +586,7 @@ class AdvancedBootSystem:
             result="deactivated",
         )
 
-        logger.info(f"Emergency mode deactivated (was active for {duration}s)")
+        logger.info("Emergency mode deactivated (was active for %ss)", duration)
 
     def is_emergency_mode(self) -> bool:
         """Check if emergency mode is active."""
@@ -665,7 +667,7 @@ class AdvancedBootSystem:
                 f.write(json.dumps(event.to_dict()) + "\n")
 
         except Exception as e:
-            logger.error(f"Failed to write audit event: {e}")
+            logger.error("Failed to write audit event: %s", e)
 
     def _capture_state_snapshot(self) -> dict[str, Any]:
         """Capture current system state snapshot."""
@@ -698,7 +700,7 @@ class AdvancedBootSystem:
             result="saved",
         )
 
-        logger.info(f"State snapshot saved: {snapshot_id}")
+        logger.info("State snapshot saved: %s", snapshot_id)
 
     def load_audit_log(self, date: str | None = None) -> list[AuditEvent]:
         """
@@ -716,7 +718,7 @@ class AdvancedBootSystem:
         audit_file = self.audit_dir / f"audit_{date}.jsonl"
 
         if not audit_file.exists():
-            logger.warning(f"Audit log not found: {audit_file}")
+            logger.warning("Audit log not found: %s", audit_file)
             return []
 
         events = []
@@ -728,10 +730,10 @@ class AdvancedBootSystem:
                         data = json.loads(line)
                         events.append(AuditEvent.from_dict(data))
 
-            logger.info(f"Loaded {len(events)} audit events from {audit_file}")
+            logger.info("Loaded %s audit events from %s", len(events), audit_file)
 
         except Exception as e:
-            logger.error(f"Failed to load audit log: {e}")
+            logger.error("Failed to load audit log: %s", e)
 
         return events
 
@@ -769,7 +771,7 @@ class AdvancedBootSystem:
 
             filtered_events.append(event)
 
-        logger.info(f"Replaying {len(filtered_events)} audit events...")
+        logger.info("Replaying %s audit events...", len(filtered_events))
 
         # Reconstruct state
         reconstructed_state = {
@@ -831,7 +833,7 @@ class AdvancedBootSystem:
             "state_snapshots": len(reconstructed_state["state_snapshots"]),
         }
 
-        logger.info(f"Replay complete: {replay_stats}")
+        logger.info("Replay complete: %s", replay_stats)
 
         return {
             "reconstructed_state": reconstructed_state,
@@ -882,8 +884,8 @@ class AdvancedBootSystem:
         logger.info("=" * 80)
         logger.info("BOOT SEQUENCE STARTED")
         if self._current_profile:
-            logger.info(f"Profile: {self._current_profile.value}")
-            logger.info(f"Description: {self._current_profile_config.description}")
+            logger.info("Profile: %s", self._current_profile.value)
+            logger.info("Description: %s", self._current_profile_config.description)
         logger.info("=" * 80)
 
     def finish_boot(self):
@@ -901,14 +903,16 @@ class AdvancedBootSystem:
 
         logger.info("=" * 80)
         logger.info("BOOT SEQUENCE COMPLETE")
-        logger.info(f"Profile: {self._boot_stats['profile']}")
+        logger.info("Profile: %s", self._boot_stats["profile"])
         logger.info(
-            f"Subsystems initialized: {self._boot_stats['subsystems_initialized']}"
+            "Subsystems initialized: %s", self._boot_stats["subsystems_initialized"]
         )
-        logger.info(f"Subsystems skipped: {self._boot_stats['subsystems_skipped']}")
+        logger.info("Subsystems skipped: %s", self._boot_stats["subsystems_skipped"])
         if self._boot_stats.get("ethics_approvals_required", 0) > 0:
             logger.info(
-                f"Ethics approvals: {self._boot_stats['ethics_approvals_granted']}/{self._boot_stats['ethics_approvals_required']}"
+                "Ethics approvals: %s/%s",
+                self._boot_stats["ethics_approvals_granted"],
+                self._boot_stats["ethics_approvals_required"],
             )
         logger.info("=" * 80)
 

@@ -29,9 +29,7 @@ def api_scenarios():
     """Get scenarios."""
     round_num = request.args.get("round", type=int)
     scenarios = swr.load_scenarios(round_num)
-    return jsonify({
-        "scenarios": [s.model_dump() for s in scenarios]
-    })
+    return jsonify({"scenarios": [s.model_dump() for s in scenarios]})
 
 
 @app.route("/api/leaderboard")
@@ -61,13 +59,15 @@ def api_system_performance(system_id):
 @app.route("/api/stats")
 def api_stats():
     """Get overall statistics."""
-    return jsonify({
-        "total_scenarios": len(swr.active_scenarios),
-        "total_results": len(swr.results),
-        "total_systems": len(swr.scoreboard.system_stats),
-        "total_proofs": len(swr.proof_system.proof_store),
-        "audit_entries": len(swr.governance.audit_log)
-    })
+    return jsonify(
+        {
+            "total_scenarios": len(swr.active_scenarios),
+            "total_results": len(swr.results),
+            "total_systems": len(swr.scoreboard.system_stats),
+            "total_proofs": len(swr.proof_system.proof_store),
+            "audit_entries": len(swr.governance.audit_log),
+        }
+    )
 
 
 if __name__ == "__main__":

@@ -252,7 +252,7 @@ class SecureCommunicationsKernel(
         self.store_forward_queue: list[SecureMessage] = []
 
         self._init_database()
-        self.logger.info(f"Secure communications kernel initialized: {self.node_id}")
+        self.logger.info("Secure communications kernel initialized: %s", self.node_id)
 
     def _generate_node_id(self) -> str:
         """Generate unique node identifier from public key"""
@@ -266,8 +266,7 @@ class SecureCommunicationsKernel(
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS messages (
                 message_id TEXT PRIMARY KEY,
                 sender_id TEXT,
@@ -281,11 +280,9 @@ class SecureCommunicationsKernel(
                 retry_count INTEGER DEFAULT 0,
                 metadata TEXT
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS routing_table (
                 destination_id TEXT PRIMARY KEY,
                 next_hop_id TEXT,
@@ -295,18 +292,15 @@ class SecureCommunicationsKernel(
                 last_updated REAL,
                 transport_type TEXT
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS peer_keys (
                 node_id TEXT PRIMARY KEY,
                 public_key BLOB,
                 last_seen REAL
             )
-        """
-        )
+        """)
 
         conn.commit()
         conn.close()
@@ -337,7 +331,7 @@ class SecureCommunicationsKernel(
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to initialize secure comms: {e}")
+            self.logger.error("Failed to initialize secure comms: %s", e)
             return False
 
     def shutdown(self) -> bool:
@@ -364,7 +358,7 @@ class SecureCommunicationsKernel(
             return True
 
         except Exception as e:
-            self.logger.error(f"Error during shutdown: {e}")
+            self.logger.error("Error during shutdown: %s", e)
             return False
 
     def health_check(self) -> bool:
@@ -376,7 +370,7 @@ class SecureCommunicationsKernel(
         alive_threads = sum(1 for t in self.worker_threads if t.is_alive())
         if alive_threads < len(self.worker_threads):
             self.logger.warning(
-                f"Only {alive_threads}/{len(self.worker_threads)} workers alive"
+                "Only %s/%s workers alive", alive_threads, len(self.worker_threads)
             )
             return False
 
@@ -448,7 +442,7 @@ class SecureCommunicationsKernel(
             return plaintext
 
         except Exception as e:
-            self.logger.error(f"Decryption failed: {e}")
+            self.logger.error("Decryption failed: %s", e)
             return None
 
     def _sign_message(self, message: bytes) -> bytes:
@@ -467,7 +461,7 @@ class SecureCommunicationsKernel(
             sender_public_key.verify(signature, message)
             return True
         except Exception as e:
-            self.logger.error(f"Signature verification failed: {e}")
+            self.logger.error("Signature verification failed: %s", e)
             return False
 
     def _compute_hmac(self, message: bytes, key: bytes) -> bytes:
@@ -483,7 +477,7 @@ class SecureCommunicationsKernel(
         try:
             # Rate limiting check
             if not self._check_rate_limit(destination):
-                self.logger.warning(f"Rate limit exceeded for {destination}")
+                self.logger.warning("Rate limit exceeded for %s", destination)
                 return False
 
             # Serialize message
@@ -497,7 +491,7 @@ class SecureCommunicationsKernel(
             # Get recipient public key
             recipient_public_key = self._get_peer_public_key(destination)
             if not recipient_public_key:
-                self.logger.error(f"No public key for {destination}")
+                self.logger.error("No public key for %s", destination)
                 return False
 
             # Encrypt
@@ -539,7 +533,7 @@ class SecureCommunicationsKernel(
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to send message: {e}")
+            self.logger.error("Failed to send message: %s", e)
             self.metrics["messages_failed"] += 1
             return False
 
@@ -580,11 +574,13 @@ class SecureCommunicationsKernel(
         try:
             self.transports[endpoint.endpoint_id] = endpoint
             self.logger.info(
-                f"Registered transport: {endpoint.endpoint_id} ({endpoint.transport_type.value})"
+                "Registered transport: %s (%s)",
+                endpoint.endpoint_id,
+                endpoint.transport_type.value,
             )
             return True
         except Exception as e:
-            self.logger.error(f"Failed to register transport: {e}")
+            self.logger.error("Failed to register transport: %s", e)
             return False
 
     def _transmit_message(
@@ -601,12 +597,12 @@ class SecureCommunicationsKernel(
             else:
                 # Placeholder for RF/acoustic/optical transports
                 self.logger.warning(
-                    f"Transport {transport.transport_type} not fully implemented"
+                    "Transport %s not fully implemented", transport.transport_type
                 )
                 return False
 
         except Exception as e:
-            self.logger.error(f"Transmission failed: {e}")
+            self.logger.error("Transmission failed: %s", e)
             return False
 
     def _transmit_tcp(self, msg: SecureMessage, transport: TransportEndpoint) -> bool:
@@ -630,7 +626,7 @@ class SecureCommunicationsKernel(
             return True
 
         except Exception as e:
-            self.logger.error(f"TCP transmission failed: {e}")
+            self.logger.error("TCP transmission failed: %s", e)
             return False
 
     def _transmit_udp(self, msg: SecureMessage, transport: TransportEndpoint) -> bool:
@@ -646,7 +642,7 @@ class SecureCommunicationsKernel(
             return True
 
         except Exception as e:
-            self.logger.error(f"UDP transmission failed: {e}")
+            self.logger.error("UDP transmission failed: %s", e)
             return False
 
     def _transmit_store_forward(
@@ -655,10 +651,10 @@ class SecureCommunicationsKernel(
         """Store message for delayed forwarding (air-gapped mode)"""
         try:
             self.store_forward_queue.append(msg)
-            self.logger.info(f"Message queued for store-and-forward: {msg.message_id}")
+            self.logger.info("Message queued for store-and-forward: %s", msg.message_id)
             return True
         except Exception as e:
-            self.logger.error(f"Store-forward failed: {e}")
+            self.logger.error("Store-forward failed: %s", e)
             return False
 
     def _serialize_message(self, msg: SecureMessage) -> bytes:
@@ -696,7 +692,7 @@ class SecureCommunicationsKernel(
                 metadata=data.get("metadata", {}),
             )
         except Exception as e:
-            self.logger.error(f"Message deserialization failed: {e}")
+            self.logger.error("Message deserialization failed: %s", e)
             return None
 
     # ========================================================================
@@ -711,7 +707,7 @@ class SecureCommunicationsKernel(
             self.metrics["active_routes"] = len(self.routing_table)
             return True
         except Exception as e:
-            self.logger.error(f"Failed to update routing table: {e}")
+            self.logger.error("Failed to update routing table: %s", e)
             return False
 
     def find_route(self, destination_id: str) -> RouteEntry | None:
@@ -769,7 +765,7 @@ class SecureCommunicationsKernel(
             return True
 
         except Exception as e:
-            self.logger.error(f"Consensus proposal failed: {e}")
+            self.logger.error("Consensus proposal failed: %s", e)
             return False
 
     def check_consensus(self, proposal_id: str) -> bool | None:
@@ -802,7 +798,7 @@ class SecureCommunicationsKernel(
                 # Find route
                 route = self.find_route(msg.recipient_id)
                 if not route:
-                    self.logger.warning(f"No route to {msg.recipient_id}")
+                    self.logger.warning("No route to %s", msg.recipient_id)
                     continue
 
                 # Select transport
@@ -822,7 +818,7 @@ class SecureCommunicationsKernel(
             except queue.Empty:
                 continue
             except Exception as e:
-                self.logger.error(f"Outbound worker error: {e}")
+                self.logger.error("Outbound worker error: %s", e)
 
     def _inbound_worker(self):
         """Process inbound messages"""
@@ -831,7 +827,7 @@ class SecureCommunicationsKernel(
                 # Poll for incoming messages (would integrate with actual transport listeners)
                 time.sleep(1)
             except Exception as e:
-                self.logger.error(f"Inbound worker error: {e}")
+                self.logger.error("Inbound worker error: %s", e)
 
     def _routing_maintenance(self):
         """Maintain routing table and discover neighbors"""
@@ -853,7 +849,7 @@ class SecureCommunicationsKernel(
                 time.sleep(60)
 
             except Exception as e:
-                self.logger.error(f"Routing maintenance error: {e}")
+                self.logger.error("Routing maintenance error: %s", e)
 
     def _cleanup_worker(self):
         """Clean up expired messages and old nonces"""
@@ -874,7 +870,7 @@ class SecureCommunicationsKernel(
                 time.sleep(300)  # Every 5 minutes
 
             except Exception as e:
-                self.logger.error(f"Cleanup worker error: {e}")
+                self.logger.error("Cleanup worker error: %s", e)
 
     # ========================================================================
     # UTILITY METHODS
@@ -957,7 +953,7 @@ class SecureCommunicationsKernel(
             conn.close()
 
         except Exception as e:
-            self.logger.error(f"Failed to persist message: {e}")
+            self.logger.error("Failed to persist message: %s", e)
 
     def _persist_route(self, route: RouteEntry):
         """Persist route to database"""
@@ -984,7 +980,7 @@ class SecureCommunicationsKernel(
             conn.close()
 
         except Exception as e:
-            self.logger.error(f"Failed to persist route: {e}")
+            self.logger.error("Failed to persist route: %s", e)
 
     # ========================================================================
     # INTERFACE IMPLEMENTATIONS
@@ -1011,7 +1007,7 @@ class SecureCommunicationsKernel(
                 self.rate_limit_window = config["rate_limit_window"]
             return True
         except Exception as e:
-            self.logger.error(f"Failed to set config: {e}")
+            self.logger.error("Failed to set config: %s", e)
             return False
 
     def validate_config(self, config: dict[str, Any]) -> tuple[bool, str | None]:
@@ -1038,12 +1034,12 @@ class SecureCommunicationsKernel(
     def emit_event(self, event_type: str, data: Any) -> int:
         """Emit event to subscribers"""
         count = 0
-        for sub_id, callback in self.subscribers.get(event_type, []):
+        for _sub_id, callback in self.subscribers.get(event_type, []):
             try:
                 callback(data)
                 count += 1
             except Exception as e:
-                self.logger.error(f"Event callback failed: {e}")
+                self.logger.error("Event callback failed: %s", e)
         return count
 
     def get_metrics(self) -> dict[str, Any]:
@@ -1072,5 +1068,5 @@ class SecureCommunicationsKernel(
 
     def audit_log(self, action: str, details: dict[str, Any]) -> bool:
         """Log audit event"""
-        self.logger.info(f"AUDIT: {action} - {details}")
+        self.logger.info("AUDIT: %s - %s", action, details)
         return True

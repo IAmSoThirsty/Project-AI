@@ -101,7 +101,7 @@ async def run_red_team_campaign(request: dict) -> dict:
         }
 
     except Exception as e:
-        activity.logger.error(f"Red team campaign activity failed: {e}")
+        activity.logger.error("Red team campaign activity failed: %s", e)
         return {
             "success": False,
             "total_attacks": 0,
@@ -164,7 +164,7 @@ async def run_code_vulnerability_scan(request: dict) -> dict:
             }
 
     except Exception as e:
-        activity.logger.error(f"Code vulnerability scan failed: {e}")
+        activity.logger.error("Code vulnerability scan failed: %s", e)
         return {
             "success": False,
             "total_findings": 0,
@@ -185,7 +185,7 @@ async def generate_security_patches(findings: list[dict]) -> list[dict]:
     Returns:
         List of patches
     """
-    activity.logger.info(f"Generating patches for {len(findings)} findings")
+    activity.logger.info("Generating patches for %s findings", len(findings))
 
     try:
         import sys
@@ -207,7 +207,7 @@ async def generate_security_patches(findings: list[dict]) -> list[dict]:
             return []
 
     except Exception as e:
-        activity.logger.error(f"Patch generation failed: {e}")
+        activity.logger.error("Patch generation failed: %s", e)
         return []
 
 
@@ -222,7 +222,7 @@ async def generate_sarif_report(findings: list[dict]) -> dict:
     Returns:
         Dictionary with SARIF report path
     """
-    activity.logger.info(f"Generating SARIF report for {len(findings)} findings")
+    activity.logger.info("Generating SARIF report for %s findings", len(findings))
 
     try:
         import sys
@@ -247,7 +247,7 @@ async def generate_sarif_report(findings: list[dict]) -> dict:
             return {"path": None, "error": result.get("error")}
 
     except Exception as e:
-        activity.logger.error(f"SARIF generation failed: {e}")
+        activity.logger.error("SARIF generation failed: %s", e)
         return {"path": None, "error": str(e)}
 
 
@@ -313,7 +313,7 @@ async def run_constitutional_reviews(request: dict) -> dict:
         }
 
     except Exception as e:
-        activity.logger.error(f"Constitutional reviews failed: {e}")
+        activity.logger.error("Constitutional reviews failed: %s", e)
         return {
             "success": False,
             "total_reviews": 0,
@@ -352,7 +352,7 @@ async def run_safety_benchmark(request: dict) -> dict:
         agent = JailbreakBenchAgent(kernel=None)
 
         # Extract request parameters
-        test_dataset = request.get("test_dataset", "hydra")
+        request.get("test_dataset", "hydra")
         max_tests = request.get("max_tests", 50)
 
         # Mock target system
@@ -389,7 +389,7 @@ async def run_safety_benchmark(request: dict) -> dict:
             }
 
     except Exception as e:
-        activity.logger.error(f"Safety benchmark failed: {e}")
+        activity.logger.error("Safety benchmark failed: %s", e)
         return {
             "success": False,
             "total_tests": 0,
@@ -413,7 +413,7 @@ async def trigger_incident_workflow(vulnerabilities: list[dict]) -> bool:
         True if triggered successfully
     """
     activity.logger.info(
-        f"Triggering incident workflow for {len(vulnerabilities)} vulnerabilities"
+        "Triggering incident workflow for %s vulnerabilities", len(vulnerabilities)
     )
 
     try:
@@ -427,11 +427,11 @@ async def trigger_incident_workflow(vulnerabilities: list[dict]) -> bool:
             "timestamp": datetime.now().isoformat(),
         }
 
-        activity.logger.warning(f"SECURITY INCIDENT: {json.dumps(incident_data)}")
+        activity.logger.warning("SECURITY INCIDENT: %s", json.dumps(incident_data))
         return True
 
     except Exception as e:
-        activity.logger.error(f"Failed to trigger incident: {e}")
+        activity.logger.error("Failed to trigger incident: %s", e)
         return False
 
 
@@ -446,7 +446,7 @@ async def block_deployment(reason: dict) -> bool:
     Returns:
         True if blocked successfully
     """
-    activity.logger.info(f"Blocking deployment: {reason}")
+    activity.logger.info("Blocking deployment: %s", reason)
 
     try:
         # In production, this would integrate with CI/CD to block deployment
@@ -458,11 +458,11 @@ async def block_deployment(reason: dict) -> bool:
             "workflow_id": activity.info().workflow_id,
         }
 
-        activity.logger.error(f"DEPLOYMENT BLOCKED: {json.dumps(block_data)}")
+        activity.logger.error("DEPLOYMENT BLOCKED: %s", json.dumps(block_data))
         return True
 
     except Exception as e:
-        activity.logger.error(f"Failed to block deployment: {e}")
+        activity.logger.error("Failed to block deployment: %s", e)
         return False
 
 
@@ -477,7 +477,7 @@ async def trigger_security_alert(alert_data: dict) -> bool:
     Returns:
         True if triggered successfully
     """
-    activity.logger.info(f"Triggering security alert: {alert_data.get('type')}")
+    activity.logger.info("Triggering security alert: %s", alert_data.get("type"))
 
     try:
         # In production, this would send to monitoring/alerting system
@@ -490,11 +490,11 @@ async def trigger_security_alert(alert_data: dict) -> bool:
             "workflow_id": activity.info().workflow_id,
         }
 
-        activity.logger.warning(f"SECURITY ALERT: {json.dumps(full_alert)}")
+        activity.logger.warning("SECURITY ALERT: %s", json.dumps(full_alert))
         return True
 
     except Exception as e:
-        activity.logger.error(f"Failed to trigger alert: {e}")
+        activity.logger.error("Failed to trigger alert: %s", e)
         return False
 
 

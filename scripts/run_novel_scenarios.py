@@ -114,7 +114,7 @@ def main():
     # Generate scenarios
     logger.info("\nGenerating 500 novel, unprecedented security scenarios...")
     scenarios = generator.generate_all_scenarios()
-    logger.info(f"✓ Generated {len(scenarios)} novel scenarios")
+    logger.info("✓ Generated %s novel scenarios", len(scenarios))
 
     # Generate summary
     summary = generator.generate_summary()
@@ -146,7 +146,7 @@ def main():
     # Export scenarios
     if args.export:
         export_path = generator.export_scenarios()
-        logger.info(f"✓ Exported redacted scenarios to: {export_path}")
+        logger.info("✓ Exported redacted scenarios to: %s", export_path)
 
     # Initialize AI systems
     logger.info(
@@ -160,7 +160,7 @@ def main():
     logger.info("✓ Defense systems ready with theoretical threat monitoring")
 
     # Run tests
-    logger.info(f"\nRunning {len(scenarios)} novel security scenario tests...")
+    logger.info("\nRunning %s novel security scenario tests...", len(scenarios))
     logger.info("Testing unprecedented attack vectors...\n")
 
     results = []
@@ -168,7 +168,7 @@ def main():
 
     for i, scenario in enumerate(scenarios, 1):
         if i % 50 == 0:
-            logger.info(f"Progress: {i}/{len(scenarios)} novel scenarios tested...")
+            logger.info("Progress: %s/%s novel scenarios tested...", i, len(scenarios))
 
         result = simulate_defense(scenario, ai_systems)
         results.append(result)
@@ -263,7 +263,7 @@ def main():
                 indent=2,
             )
 
-        logger.info(f"\n✓ Exported redacted results to: {results_path}")
+        logger.info("\n✓ Exported redacted results to: %s", results_path)
 
     # Calculate grand total
     previous_total = 8350

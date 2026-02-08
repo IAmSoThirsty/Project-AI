@@ -113,7 +113,7 @@ class RoboticMainframeSystem:
                     return False
 
                 self.status.hardware_healthy = self.hardware.is_healthy()
-                logger.info(f"✅ Hardware initialized: {self.config.robot_name}")
+                logger.info("✅ Hardware initialized: %s", self.config.robot_name)
 
                 # Step 2: Initialize Safety Validator
                 logger.info("2/4 - Initializing Safety Validator (Four Laws)...")
@@ -144,10 +144,11 @@ class RoboticMainframeSystem:
 
                 logger.info("=" * 80)
                 logger.info("ROBOTIC MAINFRAME SYSTEM INITIALIZED SUCCESSFULLY")
-                logger.info(f"Robot: {self.config.robot_name}")
-                logger.info(f"Joints: {self.config.num_joints}")
+                logger.info("Robot: %s", self.config.robot_name)
+                logger.info("Joints: %s", self.config.num_joints)
                 logger.info(
-                    f"Four Laws: {'ENABLED' if self.config.four_laws_enabled else 'DISABLED'}"
+                    "Four Laws: %s",
+                    "ENABLED" if self.config.four_laws_enabled else "DISABLED",
                 )
                 logger.info("Triumvirate: ENABLED")
                 logger.info("=" * 80)
@@ -155,7 +156,7 @@ class RoboticMainframeSystem:
                 return True
 
         except Exception as e:
-            logger.error(f"System initialization failed: {e}", exc_info=True)
+            logger.error("System initialization failed: %s", e, exc_info=True)
             return False
 
     def _validate_system(self) -> bool:
@@ -178,12 +179,12 @@ class RoboticMainframeSystem:
                 return False
 
             logger.info(
-                f"System validation passed: {len(joint_states)} joints responsive"
+                "System validation passed: %s joints responsive", len(joint_states)
             )
             return True
 
         except Exception as e:
-            logger.error(f"System validation error: {e}")
+            logger.error("System validation error: %s", e)
             return False
 
     def execute_motion(
@@ -224,14 +225,14 @@ class RoboticMainframeSystem:
             success = self.controller.execute_command(command)
 
             if success:
-                logger.info(f"Motion command {command.command_id} queued")
+                logger.info("Motion command %s queued", command.command_id)
             else:
                 logger.error("Failed to queue motion command")
 
             return success
 
         except Exception as e:
-            logger.error(f"Motion execution error: {e}")
+            logger.error("Motion execution error: %s", e)
             return False
 
     def emergency_stop(self) -> bool:
@@ -261,7 +262,7 @@ class RoboticMainframeSystem:
             return False
 
         except Exception as e:
-            logger.error(f"Emergency stop error: {e}")
+            logger.error("Emergency stop error: %s", e)
             return False
 
     def reset_emergency_stop(self) -> bool:
@@ -284,7 +285,7 @@ class RoboticMainframeSystem:
             return False
 
         except Exception as e:
-            logger.error(f"Reset emergency stop error: {e}")
+            logger.error("Reset emergency stop error: %s", e)
             return False
 
     def get_status(self) -> RoboticSystemStatus:
@@ -331,7 +332,7 @@ class RoboticMainframeSystem:
             return state
 
         except Exception as e:
-            logger.error(f"Get robot state error: {e}")
+            logger.error("Get robot state error: %s", e)
             return {"error": str(e)}
 
     def register_event_handler(
@@ -342,7 +343,7 @@ class RoboticMainframeSystem:
             if event_type not in self._event_handlers:
                 self._event_handlers[event_type] = []
             self._event_handlers[event_type].append(handler)
-            logger.info(f"Registered handler for {event_type}")
+            logger.info("Registered handler for %s", event_type)
 
     def _trigger_event(self, event_type: str, data: dict[str, Any]) -> None:
         """Trigger event to registered handlers"""
@@ -351,7 +352,7 @@ class RoboticMainframeSystem:
             try:
                 handler(data)
             except Exception as e:
-                logger.error(f"Event handler error: {e}")
+                logger.error("Event handler error: %s", e)
 
     def shutdown(self) -> None:
         """Graceful system shutdown"""
@@ -373,7 +374,7 @@ class RoboticMainframeSystem:
             logger.info("Robotic mainframe system shutdown complete")
 
         except Exception as e:
-            logger.error(f"Shutdown error: {e}")
+            logger.error("Shutdown error: %s", e)
 
 
 class RoboticIntegrationAPI:

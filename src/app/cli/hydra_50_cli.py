@@ -185,14 +185,14 @@ def simulate(
     try:
         from app.core.hydra_50_engine import HYDRA50Engine
 
-        engine = HYDRA50Engine()
+        HYDRA50Engine()
 
         console.print(f"[cyan]Running simulation for scenario {scenario_id}...[/cyan]")
 
         # Simulate with progress
         results = []
         steps = 100
-        for step in track(range(steps), description="Simulating..."):
+        for _step in track(range(steps), description="Simulating..."):
             # Simulation logic would go here
             pass
 

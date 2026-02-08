@@ -87,7 +87,7 @@ def verify_uniqueness():
 
     # Sample unique tests
     print("\n6. SAMPLE UNIQUE TEST IDs:")
-    for id in sorted(list(unique_ids))[:10]:
+    for id in sorted(unique_ids)[:10]:
         print(f"   - {id}")
 
     # Verification summary

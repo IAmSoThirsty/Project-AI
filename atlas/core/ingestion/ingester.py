@@ -27,13 +27,14 @@ logger = logging.getLogger(__name__)
 
 class IngestionError(Exception):
     """Raised when data ingestion fails."""
+
     pass
 
 
 class DataIngester:
     """
     Production-grade data ingestion system.
-    
+
     Loads, validates, and processes raw data from multiple sources with
     full audit logging and error handling.
     """
@@ -41,7 +42,7 @@ class DataIngester:
     def __init__(self, data_dir: Path | None = None):
         """
         Initialize data ingester.
-        
+
         Args:
             data_dir: Path to data directory (defaults to atlas/data)
         """
@@ -57,7 +58,7 @@ class DataIngester:
         self.audit = get_audit_trail()
         self.tier_classifier = get_tier_classifier()
 
-        logger.info(f"Initialized DataIngester with data dir: {self.data_dir}")
+        logger.info("Initialized DataIngester with data dir: %s", self.data_dir)
 
         # Log initialization
         self.audit.log_event(
@@ -65,25 +66,27 @@ class DataIngester:
             level=AuditLevel.INFORMATIONAL,
             operation="ingester_initialized",
             actor="DATA_INGESTER",
-            details={"data_dir": str(self.data_dir)}
+            details={"data_dir": str(self.data_dir)},
         )
 
-    def ingest_json_file(self, filepath: Path, schema_type: str) -> list[dict[str, Any]]:
+    def ingest_json_file(
+        self, filepath: Path, schema_type: str
+    ) -> list[dict[str, Any]]:
         """
         Ingest data from a JSON file.
-        
+
         Args:
             filepath: Path to JSON file
             schema_type: Type of schema to validate against
                         ('organization', 'claim', 'opinion', etc.)
-            
+
         Returns:
             List of validated data objects
-            
+
         Raises:
             IngestionError: If ingestion or validation fails
         """
-        logger.info(f"Ingesting JSON file: {filepath} (schema: {schema_type})")
+        logger.info("Ingesting JSON file: %s (schema: %s)", filepath, schema_type)
 
         if not filepath.exists():
             error_msg = f"File not found: {filepath}"
@@ -93,16 +96,16 @@ class DataIngester:
                 level=AuditLevel.HIGH_PRIORITY,
                 operation="ingestion_failed",
                 actor="DATA_INGESTER",
-                details={"file": str(filepath), "error": error_msg}
+                details={"file": str(filepath), "error": error_msg},
             )
             raise IngestionError(error_msg)
 
         try:
-            with open(filepath, encoding='utf-8') as f:
+            with open(filepath, encoding="utf-8") as f:
                 content = f.read()
 
             # Compute file hash for provenance
-            file_hash = hashlib.sha256(content.encode('utf-8')).hexdigest()
+            file_hash = hashlib.sha256(content.encode("utf-8")).hexdigest()
 
             # Parse JSON
             data = json.loads(content)
@@ -130,21 +133,17 @@ class DataIngester:
                         obj["metadata"]["source_hash"] = file_hash
 
                     # Validate
-                    is_valid, error_msgs = self.validator.validate(schema_type, obj, strict=False)
+                    is_valid, error_msgs = self.validator.validate(
+                        schema_type, obj, strict=False
+                    )
 
                     if is_valid:
                         validated_data.append(obj)
                     else:
-                        errors.append({
-                            "index": idx,
-                            "errors": error_msgs
-                        })
+                        errors.append({"index": idx, "errors": error_msgs})
 
                 except Exception as e:
-                    errors.append({
-                        "index": idx,
-                        "errors": [str(e)]
-                    })
+                    errors.append({"index": idx, "errors": [str(e)]})
 
             # Log ingestion result
             self.audit.log_event(
@@ -159,8 +158,8 @@ class DataIngester:
                     "total_objects": len(data_list),
                     "validated": len(validated_data),
                     "errors": len(errors),
-                    "error_details": errors if errors else None
-                }
+                    "error_details": errors if errors else None,
+                },
             )
 
             if errors and not validated_data:
@@ -168,9 +167,17 @@ class DataIngester:
                 raise IngestionError(f"All objects failed validation: {errors}")
 
             if errors:
-                logger.warning(f"Ingested {len(validated_data)} objects with {len(errors)} failures")
+                logger.warning(
+                    "Ingested %s objects with %s failures",
+                    len(validated_data),
+                    len(errors),
+                )
 
-            logger.info(f"Successfully ingested {len(validated_data)} objects from {filepath}")
+            logger.info(
+                "Successfully ingested %s objects from %s",
+                len(validated_data),
+                filepath,
+            )
             return validated_data
 
         except json.JSONDecodeError as e:
@@ -181,7 +188,7 @@ class DataIngester:
                 level=AuditLevel.HIGH_PRIORITY,
                 operation="ingestion_failed",
                 actor="DATA_INGESTER",
-                details={"file": str(filepath), "error": error_msg}
+                details={"file": str(filepath), "error": error_msg},
             )
             raise IngestionError(error_msg) from e
 
@@ -193,37 +200,38 @@ class DataIngester:
                 level=AuditLevel.HIGH_PRIORITY,
                 operation="ingestion_failed",
                 actor="DATA_INGESTER",
-                details={"file": str(filepath), "error": error_msg}
+                details={"file": str(filepath), "error": error_msg},
             )
             raise IngestionError(error_msg) from e
 
-    def ingest_csv_file(self, filepath: Path, schema_type: str,
-                       mapping: dict[str, str] | None = None) -> list[dict[str, Any]]:
+    def ingest_csv_file(
+        self, filepath: Path, schema_type: str, mapping: dict[str, str] | None = None
+    ) -> list[dict[str, Any]]:
         """
         Ingest data from a CSV file.
-        
+
         Args:
             filepath: Path to CSV file
             schema_type: Type of schema to validate against
             mapping: Optional column name mapping (csv_col -> schema_field)
-            
+
         Returns:
             List of validated data objects
         """
-        logger.info(f"Ingesting CSV file: {filepath} (schema: {schema_type})")
+        logger.info("Ingesting CSV file: %s (schema: %s)", filepath, schema_type)
 
         if not filepath.exists():
             raise IngestionError(f"File not found: {filepath}")
 
         try:
-            with open(filepath, encoding='utf-8') as f:
+            with open(filepath, encoding="utf-8") as f:
                 content = f.read()
 
-            file_hash = hashlib.sha256(content.encode('utf-8')).hexdigest()
+            file_hash = hashlib.sha256(content.encode("utf-8")).hexdigest()
 
             # Parse CSV
             rows = []
-            with open(filepath, encoding='utf-8') as f:
+            with open(filepath, encoding="utf-8") as f:
                 reader = csv.DictReader(f)
                 for row in reader:
                     # Apply mapping if provided
@@ -250,21 +258,17 @@ class DataIngester:
                         obj["metadata"]["source_hash"] = file_hash
 
                     # Validate (non-strict to allow conversion)
-                    is_valid, error_msgs = self.validator.validate(schema_type, obj, strict=False)
+                    is_valid, error_msgs = self.validator.validate(
+                        schema_type, obj, strict=False
+                    )
 
                     if is_valid:
                         validated_data.append(obj)
                     else:
-                        errors.append({
-                            "row": idx + 1,
-                            "errors": error_msgs
-                        })
+                        errors.append({"row": idx + 1, "errors": error_msgs})
 
                 except Exception as e:
-                    errors.append({
-                        "row": idx + 1,
-                        "errors": [str(e)]
-                    })
+                    errors.append({"row": idx + 1, "errors": [str(e)]})
 
             # Log ingestion result
             self.audit.log_event(
@@ -278,11 +282,13 @@ class DataIngester:
                     "file_hash": file_hash,
                     "total_rows": len(rows),
                     "validated": len(validated_data),
-                    "errors": len(errors)
-                }
+                    "errors": len(errors),
+                },
             )
 
-            logger.info(f"Successfully ingested {len(validated_data)} objects from CSV")
+            logger.info(
+                "Successfully ingested %s objects from CSV", len(validated_data)
+            )
             return validated_data
 
         except Exception as e:
@@ -293,24 +299,25 @@ class DataIngester:
                 level=AuditLevel.HIGH_PRIORITY,
                 operation="ingestion_failed",
                 actor="DATA_INGESTER",
-                details={"file": str(filepath), "error": error_msg}
+                details={"file": str(filepath), "error": error_msg},
             )
             raise IngestionError(error_msg) from e
 
-    def ingest_directory(self, directory: Path, schema_type: str,
-                        pattern: str = "*.json") -> list[dict[str, Any]]:
+    def ingest_directory(
+        self, directory: Path, schema_type: str, pattern: str = "*.json"
+    ) -> list[dict[str, Any]]:
         """
         Ingest all files matching pattern from a directory.
-        
+
         Args:
             directory: Directory to scan
             schema_type: Type of schema to validate against
             pattern: File pattern to match (e.g., '*.json', '*.csv')
-            
+
         Returns:
             List of all validated data objects from all files
         """
-        logger.info(f"Ingesting directory: {directory} (pattern: {pattern})")
+        logger.info("Ingesting directory: %s (pattern: %s)", directory, pattern)
 
         if not directory.exists():
             raise IngestionError(f"Directory not found: {directory}")
@@ -318,7 +325,7 @@ class DataIngester:
         files = list(directory.glob(pattern))
 
         if not files:
-            logger.warning(f"No files matching {pattern} in {directory}")
+            logger.warning("No files matching %s in %s", pattern, directory)
             return []
 
         all_data = []
@@ -328,19 +335,19 @@ class DataIngester:
 
         for filepath in files:
             try:
-                if filepath.suffix == '.json':
+                if filepath.suffix == ".json":
                     data = self.ingest_json_file(filepath, schema_type)
-                elif filepath.suffix == '.csv':
+                elif filepath.suffix == ".csv":
                     data = self.ingest_csv_file(filepath, schema_type)
                 else:
-                    logger.warning(f"Unsupported file type: {filepath}")
+                    logger.warning("Unsupported file type: %s", filepath)
                     continue
 
                 all_data.extend(data)
                 successful_files += 1
 
             except Exception as e:
-                logger.error(f"Failed to ingest {filepath}: {e}")
+                logger.error("Failed to ingest %s: %s", filepath, e)
                 failed_files += 1
 
         # Log directory ingestion summary
@@ -355,8 +362,8 @@ class DataIngester:
                 "total_files": total_files,
                 "successful": successful_files,
                 "failed": failed_files,
-                "total_objects": len(all_data)
-            }
+                "total_objects": len(all_data),
+            },
         )
 
         logger.info(
@@ -369,24 +376,24 @@ class DataIngester:
     def save_raw_data(self, data: list[dict[str, Any]], filename: str) -> Path:
         """
         Save raw data to file.
-        
+
         Args:
             data: Data objects to save
             filename: Output filename
-            
+
         Returns:
             Path to saved file
         """
         output_path = self.raw_dir / filename
 
         try:
-            with open(output_path, 'w', encoding='utf-8') as f:
+            with open(output_path, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=2, sort_keys=True)
 
             # Compute hash
-            with open(output_path, encoding='utf-8') as f:
+            with open(output_path, encoding="utf-8") as f:
                 content = f.read()
-            file_hash = hashlib.sha256(content.encode('utf-8')).hexdigest()
+            file_hash = hashlib.sha256(content.encode("utf-8")).hexdigest()
 
             # Log save operation
             self.audit.log_event(
@@ -397,15 +404,15 @@ class DataIngester:
                 details={
                     "file": str(output_path),
                     "objects": len(data),
-                    "file_hash": file_hash
-                }
+                    "file_hash": file_hash,
+                },
             )
 
-            logger.info(f"Saved {len(data)} objects to {output_path}")
+            logger.info("Saved %s objects to %s", len(data), output_path)
             return output_path
 
         except Exception as e:
-            logger.error(f"Failed to save data to {output_path}: {e}")
+            logger.error("Failed to save data to %s: %s", output_path, e)
             raise IngestionError(f"Failed to save data: {e}") from e
 
     def ingest_with_tier_classification(
@@ -415,17 +422,17 @@ class DataIngester:
         source_name: str,
         source_type: str,
         geographic_scope: str = "global",
-        **tier_kwargs
+        **tier_kwargs,
     ) -> tuple[list[dict[str, Any]], list[TierMetadata]]:
         """
         Ingest data with full tier classification and validation.
-        
+
         This is the production method that enforces:
         - Four-tier classification (TierA/B/C/D)
         - Confidence weighting
         - "No hash → no inclusion" rule
         - Complete provenance tracking
-        
+
         Args:
             filepath: Path to data file
             schema_type: Schema to validate against
@@ -433,10 +440,10 @@ class DataIngester:
             source_type: Type of source (e.g., "peer_reviewed_journal")
             geographic_scope: Geographic scope (e.g., "global", "US", "EU")
             **tier_kwargs: Additional tier metadata (peer_reviewed, citation_count, etc.)
-            
+
         Returns:
             (validated_data, tier_metadata_list)
-            
+
         Raises:
             IngestionError: If ingestion fails or data excluded by tier rules
         """
@@ -449,7 +456,7 @@ class DataIngester:
         if not filepath.exists():
             raise IngestionError(f"File not found: {filepath}")
 
-        with open(filepath, encoding='utf-8') as f:
+        with open(filepath, encoding="utf-8") as f:
             content = f.read()
 
         # Create tier metadata
@@ -459,7 +466,7 @@ class DataIngester:
             source_type=source_type,
             timestamp=datetime.utcnow(),
             geographic_scope=geographic_scope,
-            **tier_kwargs
+            **tier_kwargs,
         )
 
         # Enforce inclusion rule ("No hash → no inclusion")
@@ -473,14 +480,14 @@ class DataIngester:
 
         # Ingest the data
         try:
-            if filepath.suffix == '.json':
+            if filepath.suffix == ".json":
                 data = self.ingest_json_file(filepath, schema_type)
-            elif filepath.suffix == '.csv':
+            elif filepath.suffix == ".csv":
                 data = self.ingest_csv_file(filepath, schema_type)
             else:
                 raise IngestionError(f"Unsupported file type: {filepath.suffix}")
         except Exception as e:
-            logger.error(f"Ingestion failed for {filepath}: {e}")
+            logger.error("Ingestion failed for %s: %s", filepath, e)
             raise
 
         # Attach tier metadata to each object
@@ -503,8 +510,8 @@ class DataIngester:
                 "tier": tier_metadata.tier.value,
                 "confidence_weight": tier_metadata.confidence_weight,
                 "objects_ingested": len(data),
-                "validation_passed": tier_metadata.validation_passed
-            }
+                "validation_passed": tier_metadata.validation_passed,
+            },
         )
 
         logger.info(
@@ -518,13 +525,11 @@ class DataIngester:
     def get_statistics(self) -> dict[str, Any]:
         """Get ingestion statistics from audit trail."""
         events = self.audit.get_events(
-            category=AuditCategory.DATA,
-            operation="json_file_ingested"
+            category=AuditCategory.DATA, operation="json_file_ingested"
         )
 
         tier_events = self.audit.get_events(
-            category=AuditCategory.DATA,
-            operation="tier_classified_ingestion"
+            category=AuditCategory.DATA, operation="tier_classified_ingestion"
         )
 
         total_objects = sum(e.details.get("validated", 0) for e in events)
@@ -534,16 +539,22 @@ class DataIngester:
         tier_stats = {}
         for event in tier_events:
             tier = event.details.get("tier", "unknown")
-            tier_stats[tier] = tier_stats.get(tier, 0) + event.details.get("objects_ingested", 0)
+            tier_stats[tier] = tier_stats.get(tier, 0) + event.details.get(
+                "objects_ingested", 0
+            )
 
         return {
             "total_ingestions": len(events),
             "total_objects": total_objects,
             "total_errors": total_errors,
-            "success_rate": total_objects / (total_objects + total_errors) if total_objects + total_errors > 0 else 0,
+            "success_rate": (
+                total_objects / (total_objects + total_errors)
+                if total_objects + total_errors > 0
+                else 0
+            ),
             "tier_classified_ingestions": len(tier_events),
             "objects_by_tier": tier_stats,
-            "tier_classifier_stats": self.tier_classifier.get_tier_statistics()
+            "tier_classifier_stats": self.tier_classifier.get_tier_statistics(),
         }
 
 
@@ -551,7 +562,7 @@ if __name__ == "__main__":
     # Test data ingestion
     logging.basicConfig(
         level=logging.DEBUG,
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
 
     ingester = DataIngester()

@@ -118,7 +118,7 @@ class AIController:
             result = await handle.result()
 
             logger.info(
-                f"Workflow {workflow_id} completed with success={result.success}"
+                "Workflow %s completed with success=%s", workflow_id, result.success
             )
             return result
 

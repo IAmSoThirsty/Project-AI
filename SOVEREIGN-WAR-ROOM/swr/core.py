@@ -20,19 +20,17 @@ from .scoreboard import Scoreboard
 class SovereignWarRoom:
     """
     Main SOVEREIGN WAR ROOM system.
-    
+
     Orchestrates adversarial testing of AI systems through five rounds
     of progressively difficult scenarios.
     """
 
     def __init__(
-        self,
-        governance_rules_path: str | None = None,
-        bundle_dir: str | None = None
+        self, governance_rules_path: str | None = None, bundle_dir: str | None = None
     ):
         """
         Initialize SOVEREIGN WAR ROOM.
-        
+
         Args:
             governance_rules_path: Optional path to custom governance rules
             bundle_dir: Optional directory for bundles
@@ -49,10 +47,10 @@ class SovereignWarRoom:
     def load_scenarios(self, round_number: int | None = None) -> list[Scenario]:
         """
         Load scenarios for testing.
-        
+
         Args:
             round_number: Optional filter by round (1-5)
-            
+
         Returns:
             List of loaded scenarios
         """
@@ -82,16 +80,16 @@ class SovereignWarRoom:
         self,
         scenario: Scenario,
         ai_system_response: dict[str, Any],
-        system_id: str = "test_system"
+        system_id: str = "test_system",
     ) -> dict[str, Any]:
         """
         Execute a scenario and evaluate AI system response.
-        
+
         Args:
             scenario: Scenario to execute
             ai_system_response: AI system's response to scenario
             system_id: Identifier for the AI system
-            
+
         Returns:
             Execution results including scores and proofs
         """
@@ -99,8 +97,7 @@ class SovereignWarRoom:
 
         # Generate cryptographic challenge
         challenge = self.crypto.generate_challenge(
-            scenario.scenario_id,
-            scenario.difficulty.value
+            scenario.scenario_id, scenario.difficulty.value
         )
 
         # Prepare context for governance evaluation
@@ -110,20 +107,17 @@ class SovereignWarRoom:
             "difficulty": scenario.difficulty.value,
             "round_number": scenario.round_number,
             "constraints": scenario.constraints,
-            "objectives": scenario.objectives
+            "objectives": scenario.objectives,
         }
 
         # Evaluate decision against governance rules
         compliance_report = self.governance.evaluate_decision(
-            ai_system_response,
-            context
+            ai_system_response, context
         )
 
         # Verify cryptographic response
         is_valid, verification_error = self.crypto.verify_response(
-            challenge,
-            ai_system_response,
-            scenario.expected_decision
+            challenge, ai_system_response, scenario.expected_decision
         )
 
         # Calculate response time
@@ -134,12 +128,11 @@ class SovereignWarRoom:
             scenario.scenario_id,
             ai_system_response,
             ai_system_response.get("reasoning", {}),
-            compliance_report.model_dump()
+            compliance_report.model_dump(),
         )
 
         compliance_proof = self.proof_system.generate_compliance_proof(
-            scenario.scenario_id,
-            compliance_report.model_dump()
+            scenario.scenario_id, compliance_report.model_dump()
         )
 
         # Calculate score
@@ -149,17 +142,19 @@ class SovereignWarRoom:
             scenario.model_dump(),
             ai_system_response,
             compliance_report.model_dump(),
-            response_time_ms
+            response_time_ms,
         )
 
         # Create audit log entry
-        audit_entry = self.crypto.create_audit_log_entry({
-            "scenario_id": scenario.scenario_id,
-            "system_id": system_id,
-            "decision": ai_system_response.get("decision"),
-            "compliance_status": compliance_report.overall_status.value,
-            "score": score.sovereign_resilience_score
-        })
+        audit_entry = self.crypto.create_audit_log_entry(
+            {
+                "scenario_id": scenario.scenario_id,
+                "system_id": system_id,
+                "decision": ai_system_response.get("decision"),
+                "compliance_status": compliance_report.overall_status.value,
+                "score": score.sovereign_resilience_score,
+            }
+        )
 
         # Compile results
         result = {
@@ -167,30 +162,25 @@ class SovereignWarRoom:
             "scenario_name": scenario.name,
             "system_id": system_id,
             "timestamp": datetime.utcnow().isoformat(),
-
             # Response data
             "decision": ai_system_response.get("decision"),
             "expected_decision": scenario.expected_decision,
             "response_valid": is_valid,
             "verification_error": verification_error,
             "response_time_ms": response_time_ms,
-
             # Compliance
             "compliance_status": compliance_report.overall_status.value,
             "violations": compliance_report.violations,
             "warnings": compliance_report.warnings,
             "recommendations": compliance_report.recommendations,
-
             # Score
             "score": score.model_dump(),
             "sovereign_resilience_score": score.sovereign_resilience_score,
-
             # Proofs
             "decision_proof_id": decision_proof.proof_id,
             "compliance_proof_id": compliance_proof.proof_id,
-
             # Audit
-            "audit_entry": audit_entry
+            "audit_entry": audit_entry,
         }
 
         self.results.append(result)
@@ -198,19 +188,16 @@ class SovereignWarRoom:
         return result
 
     def run_round(
-        self,
-        round_number: int,
-        ai_system_callback,
-        system_id: str = "test_system"
+        self, round_number: int, ai_system_callback, system_id: str = "test_system"
     ) -> list[dict[str, Any]]:
         """
         Run all scenarios for a specific round.
-        
+
         Args:
             round_number: Round to run (1-5)
             ai_system_callback: Callable that takes scenario and returns response
             system_id: Identifier for the AI system
-            
+
         Returns:
             List of execution results
         """
@@ -228,24 +215,22 @@ class SovereignWarRoom:
         return round_results
 
     def run_full_competition(
-        self,
-        ai_system_callback,
-        system_id: str = "test_system"
+        self, ai_system_callback, system_id: str = "test_system"
     ) -> dict[str, Any]:
         """
         Run all five rounds of competition.
-        
+
         Args:
             ai_system_callback: Callable that takes scenario and returns response
             system_id: Identifier for the AI system
-            
+
         Returns:
             Complete competition results
         """
         competition_results = {
             "system_id": system_id,
             "start_time": datetime.utcnow().isoformat(),
-            "rounds": {}
+            "rounds": {},
         }
 
         for round_num in range(1, 6):
@@ -262,8 +247,12 @@ class SovereignWarRoom:
         # Get leaderboard position
         leaderboard = self.scoreboard.get_leaderboard()
         competition_results["leaderboard_position"] = next(
-            (i for i, entry in enumerate(leaderboard) if entry["system_id"] == system_id),
-            None
+            (
+                i
+                for i, entry in enumerate(leaderboard)
+                if entry["system_id"] == system_id
+            ),
+            None,
         )
 
         return competition_results
@@ -273,17 +262,15 @@ class SovereignWarRoom:
         return self.active_scenarios.get(scenario_id)
 
     def get_results(
-        self,
-        system_id: str | None = None,
-        round_number: int | None = None
+        self, system_id: str | None = None, round_number: int | None = None
     ) -> list[dict[str, Any]]:
         """
         Get execution results with optional filtering.
-        
+
         Args:
             system_id: Optional filter by system
             round_number: Optional filter by round
-            
+
         Returns:
             Filtered results list
         """
@@ -295,13 +282,24 @@ class SovereignWarRoom:
         if round_number:
             # Filter by round based on scenario round_number
             results = [
-                r for r in results
-                if self.active_scenarios.get(r["scenario_id"], Scenario(
-                    name="", description="", scenario_type=ScenarioType.ETHICAL_DILEMMA,
-                    difficulty=DifficultyLevel.MEDIUM, round_number=0,
-                    initial_state={}, constraints={}, objectives=[],
-                    expected_decision="", success_criteria={}
-                )).round_number == round_number
+                r
+                for r in results
+                if self.active_scenarios.get(
+                    r["scenario_id"],
+                    Scenario(
+                        name="",
+                        description="",
+                        scenario_type=ScenarioType.ETHICAL_DILEMMA,
+                        difficulty=DifficultyLevel.MEDIUM,
+                        round_number=0,
+                        initial_state={},
+                        constraints={},
+                        objectives=[],
+                        expected_decision="",
+                        success_criteria={},
+                    ),
+                ).round_number
+                == round_number
             ]
 
         return results
@@ -309,16 +307,12 @@ class SovereignWarRoom:
     def export_results(self, filename: str, format: str = "json"):
         """
         Export results to file.
-        
+
         Args:
             filename: Output filename
             format: Export format (json, csv)
         """
-        filepath = self.bundle_manager.export_results(
-            self.results,
-            filename,
-            format
-        )
+        filepath = self.bundle_manager.export_results(self.results, filename, format)
         return filepath
 
     def get_leaderboard(self) -> list[dict[str, Any]]:
@@ -328,10 +322,10 @@ class SovereignWarRoom:
     def verify_result_integrity(self, result: dict[str, Any]) -> bool:
         """
         Verify integrity of execution result.
-        
+
         Args:
             result: Result to verify
-            
+
         Returns:
             True if result is valid and untampered
         """
@@ -350,7 +344,9 @@ class SovereignWarRoom:
             if not verification["valid"]:
                 return False
 
-        compliance_proof = self.proof_system.get_proof(result.get("compliance_proof_id"))
+        compliance_proof = self.proof_system.get_proof(
+            result.get("compliance_proof_id")
+        )
         if compliance_proof:
             verification = self.proof_system.verify_proof(compliance_proof)
             if not verification["valid"]:

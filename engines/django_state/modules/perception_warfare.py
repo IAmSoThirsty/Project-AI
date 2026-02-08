@@ -16,13 +16,13 @@ logger = logging.getLogger(__name__)
 
 class PerceptionWarfareModule:
     """Models information manipulation and epistemic attacks.
-    
+
     Tracks manipulation campaigns, reality fragmentation, and epistemic collapse.
     """
 
     def __init__(self, laws: IrreversibilityLaws):
         """Initialize perception warfare module.
-        
+
         Args:
             laws: Irreversibility laws instance
         """
@@ -53,17 +53,19 @@ class PerceptionWarfareModule:
         duration: int = 10,
     ) -> str:
         """Launch information manipulation campaign.
-        
+
         Args:
             campaign_type: Type of manipulation
             target_reach: Target fraction of population
             sophistication: Detection difficulty
             duration: Campaign duration in ticks
-            
+
         Returns:
             Campaign ID
         """
-        campaign_id = f"campaign_{len(self.active_campaigns) + len(self.completed_campaigns) + 1}"
+        campaign_id = (
+            f"campaign_{len(self.active_campaigns) + len(self.completed_campaigns) + 1}"
+        )
 
         campaign = {
             "campaign_id": campaign_id,
@@ -77,16 +79,21 @@ class PerceptionWarfareModule:
 
         self.active_campaigns.append(campaign)
 
-        logger.info(f"Launched manipulation campaign: {campaign_id}, type={campaign_type}, reach={target_reach:.2f}")
+        logger.info(
+            "Launched manipulation campaign: %s, type=%s, reach=%s",
+            campaign_id,
+            campaign_type,
+            target_reach,
+        )
 
         return campaign_id
 
     def process_active_campaigns(self, state: StateVector) -> list[ManipulationEvent]:
         """Process active manipulation campaigns for this tick.
-        
+
         Args:
             state: Current state vector
-            
+
         Returns:
             List of manipulation events generated
         """
@@ -98,7 +105,9 @@ class PerceptionWarfareModule:
 
             # Gradually increase reach
             reach_increment = campaign["target_reach"] / campaign["duration"]
-            campaign["current_reach"] = min(campaign["target_reach"], campaign["current_reach"] + reach_increment)
+            campaign["current_reach"] = min(
+                campaign["target_reach"], campaign["current_reach"] + reach_increment
+            )
 
             # Generate manipulation event
             from ..schemas.event_schema import EventType
@@ -123,14 +132,16 @@ class PerceptionWarfareModule:
             )
 
             # Record in history
-            self.manipulation_history.append({
-                "timestamp": state.timestamp,
-                "campaign_id": campaign["campaign_id"],
-                "type": campaign["campaign_type"],
-                "reach": campaign["current_reach"],
-                "sophistication": campaign["sophistication"],
-                "event_id": event.event_id,
-            })
+            self.manipulation_history.append(
+                {
+                    "timestamp": state.timestamp,
+                    "campaign_id": campaign["campaign_id"],
+                    "type": campaign["campaign_type"],
+                    "reach": campaign["current_reach"],
+                    "sophistication": campaign["sophistication"],
+                    "event_id": event.event_id,
+                }
+            )
 
             # Check if campaign complete
             if campaign["ticks_remaining"] <= 0:
@@ -140,16 +151,16 @@ class PerceptionWarfareModule:
         for campaign in campaigns_to_complete:
             self.active_campaigns.remove(campaign)
             self.completed_campaigns.append(campaign)
-            logger.info(f"Campaign completed: {campaign['campaign_id']}")
+            logger.info("Campaign completed: %s", campaign["campaign_id"])
 
         return events
 
     def calculate_reality_fragmentation(self, state: StateVector) -> int:
         """Calculate number of divergent reality fragments.
-        
+
         Args:
             state: Current state vector
-            
+
         Returns:
             Number of reality fragments
         """
@@ -159,24 +170,28 @@ class PerceptionWarfareModule:
         elif state.epistemic_confidence.value > 0.5:
             self.reality_fragments = 2
         elif state.epistemic_confidence.value > 0.3:
-            self.reality_fragments = 3 + int((0.5 - state.epistemic_confidence.value) * 10)
+            self.reality_fragments = 3 + int(
+                (0.5 - state.epistemic_confidence.value) * 10
+            )
         else:
-            self.reality_fragments = 5 + int((0.3 - state.epistemic_confidence.value) * 20)
+            self.reality_fragments = 5 + int(
+                (0.3 - state.epistemic_confidence.value) * 20
+            )
 
         # Manipulation campaigns increase fragmentation
         active_campaigns_factor = len(self.active_campaigns)
         self.reality_fragments += active_campaigns_factor
 
-        logger.debug(f"Reality fragments: {self.reality_fragments}")
+        logger.debug("Reality fragments: %s", self.reality_fragments)
 
         return self.reality_fragments
 
     def calculate_consensus_level(self, state: StateVector) -> float:
         """Calculate level of shared reality consensus.
-        
+
         Args:
             state: Current state vector
-            
+
         Returns:
             Consensus level (0.0 to 1.0)
         """
@@ -188,19 +203,19 @@ class PerceptionWarfareModule:
         self.consensus_level -= fragmentation_penalty
 
         # Recent manipulation reduces consensus
-        recent_manipulation = len([m for m in self.manipulation_history[-20:]])
+        recent_manipulation = len(list(self.manipulation_history[-20:]))
         manipulation_penalty = min(recent_manipulation * 0.02, 0.3)
         self.consensus_level -= manipulation_penalty
 
         self.consensus_level = max(0.0, min(1.0, self.consensus_level))
 
-        logger.debug(f"Reality consensus: {self.consensus_level:.4f}")
+        logger.debug("Reality consensus: %s", self.consensus_level)
 
         return self.consensus_level
 
     def update_information_environment(self, state: StateVector) -> None:
         """Update information environment quality and noise.
-        
+
         Args:
             state: Current state vector
         """
@@ -212,40 +227,53 @@ class PerceptionWarfareModule:
 
         # Active campaigns increase noise
         if self.active_campaigns:
-            campaign_noise = sum(c["sophistication"] * c["current_reach"] for c in self.active_campaigns) / len(self.active_campaigns)
+            campaign_noise = sum(
+                c["sophistication"] * c["current_reach"] for c in self.active_campaigns
+            ) / len(self.active_campaigns)
             self.noise_level = min(1.0, self.noise_level + campaign_noise * 0.3)
             self.information_quality = 1.0 - self.noise_level
 
-        logger.debug(f"Information environment: quality={self.information_quality:.3f}, noise={self.noise_level:.3f}")
+        logger.debug(
+            "Information environment: quality=%s, noise=%s",
+            self.information_quality,
+            self.noise_level,
+        )
 
     def check_epistemic_collapse(self, state: StateVector) -> bool:
         """Check if epistemic collapse has occurred.
-        
+
         Args:
             state: Current state vector
-            
+
         Returns:
             True if epistemic collapse detected
         """
         threshold = self.laws.config.epistemic_collapse_threshold
 
         if state.epistemic_confidence.value < threshold:
-            logger.critical(f"EPISTEMIC COLLAPSE: confidence {state.epistemic_confidence.value:.4f} < threshold {threshold:.4f}")
+            logger.critical(
+                "EPISTEMIC COLLAPSE: confidence %s < threshold %s",
+                state.epistemic_confidence.value,
+                threshold,
+            )
             return True
 
         # Also check for extreme fragmentation
         if self.reality_fragments > 10:
-            logger.critical(f"EPISTEMIC COLLAPSE: extreme fragmentation {self.reality_fragments} fragments")
+            logger.critical(
+                "EPISTEMIC COLLAPSE: extreme fragmentation %s fragments",
+                self.reality_fragments,
+            )
             return True
 
         return False
 
     def apply_perception_warfare_dynamics(self, state: StateVector) -> dict[str, Any]:
         """Apply perception warfare dynamics for this tick.
-        
+
         Args:
             state: Current state vector
-            
+
         Returns:
             Dictionary with dynamics results
         """
@@ -266,10 +294,16 @@ class PerceptionWarfareModule:
 
         if not epistemic_collapse:
             # More campaigns likely when trust/legitimacy low
-            campaign_prob = 0.1 + (1.0 - state.trust.value) * 0.2 + (1.0 - state.legitimacy.value) * 0.15
+            campaign_prob = (
+                0.1
+                + (1.0 - state.trust.value) * 0.2
+                + (1.0 - state.legitimacy.value) * 0.15
+            )
 
             if random.random() < campaign_prob:
-                campaign_type = random.choice(["misinformation", "disinformation", "gaslighting"])
+                campaign_type = random.choice(
+                    ["misinformation", "disinformation", "gaslighting"]
+                )
                 target_reach = random.uniform(0.3, 0.8)
                 sophistication = random.uniform(0.4, 0.9)
                 duration = random.randint(5, 15)
@@ -296,7 +330,7 @@ class PerceptionWarfareModule:
 
     def get_summary(self) -> dict[str, Any]:
         """Get module summary.
-        
+
         Returns:
             Dictionary with module state
         """

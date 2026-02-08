@@ -252,7 +252,9 @@ class DecisionContract(ABC):
         """
         self.authorities[authority.decision_type] = authority
         logger.debug(
-            f"[{self.component_name}] Registered decision authority: {authority.decision_type}"
+            "[%s] Registered decision authority: %s",
+            self.component_name,
+            authority.decision_type,
         )
 
     def check_authorization(
@@ -319,7 +321,10 @@ class DecisionContract(ABC):
         if decision_type in self.authorities:
             if self.authorities[decision_type].audit_required:
                 logger.info(
-                    f"[{self.component_name}] Decision: {decision_type} - {rationale}"
+                    "[%s] Decision: %s - %s",
+                    self.component_name,
+                    decision_type,
+                    rationale,
                 )
 
     @abstractmethod
@@ -470,7 +475,10 @@ class FailureSemantics(ABC):
         self.failure_history.append(response)
 
         logger.error(
-            f"[{self.component_name}] Failure detected: {failure_mode.value} - Escalation: {response.escalation_required}"
+            "[%s] Failure detected: %s - Escalation: %s",
+            self.component_name,
+            failure_mode.value,
+            response.escalation_required,
         )
 
         # Execute recovery callbacks
@@ -504,7 +512,7 @@ class FailureSemantics(ABC):
         """Clear current failure state."""
         self.current_failure_mode = None
         logger.info(
-            f"[{self.component_name}] Failure cleared - returning to normal operation"
+            "[%s] Failure cleared - returning to normal operation", self.component_name
         )
 
     @abstractmethod
@@ -571,7 +579,8 @@ class OperationalComponent:
         self.failure_semantics = failure_semantics
 
         logger.info(
-            f"[{component_name}] Operational component initialized with full substructure"
+            "[%s] Operational component initialized with full substructure",
+            component_name,
         )
 
     def get_operational_status(self) -> dict[str, Any]:

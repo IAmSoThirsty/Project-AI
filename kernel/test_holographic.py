@@ -299,7 +299,7 @@ class TestIntegration(unittest.TestCase):
 
         # Phase 1: Normal commands (should stay in mirror)
         cmd1 = Command("ls", [])
-        result1 = manager.execute_user_command(attacker, cmd1)
+        manager.execute_user_command(attacker, cmd1)
         self.assertEqual(manager.get_user_layer(attacker), 1)
 
         # Phase 2: Suspicious command (still in mirror, monitored)
@@ -309,7 +309,7 @@ class TestIntegration(unittest.TestCase):
 
         # Phase 3: Malicious command (moved to deception)
         cmd3 = Command("cat", ["/etc/shadow"])
-        result3 = manager.execute_user_command(attacker, cmd3)
+        manager.execute_user_command(attacker, cmd3)
         deception_layer_id = manager.get_user_layer(attacker)
         self.assertGreater(deception_layer_id, 1)
 

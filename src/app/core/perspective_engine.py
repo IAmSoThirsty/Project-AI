@@ -320,7 +320,7 @@ class PerspectiveEngine:
                     self.work_profiles[profile.profile_name] = profile
 
                 logger.info(
-                    f"Loaded perspective state: {self.interaction_count} interactions"
+                    "Loaded perspective state: %s interactions", self.interaction_count
                 )
 
             except Exception as e:
@@ -381,9 +381,7 @@ class PerspectiveEngine:
         old_dict = old_state.to_dict()
         new_dict = new_state.to_dict()
 
-        total_change = sum(
-            abs(new_dict[key] - old_dict[key]) for key in old_dict.keys()
-        )
+        total_change = sum(abs(new_dict[key] - old_dict[key]) for key in old_dict)
 
         return total_change
 

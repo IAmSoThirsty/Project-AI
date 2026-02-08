@@ -157,7 +157,7 @@ class AGISafeguardsSubsystem(
         return context.get("authority_level", 0) >= 9
 
     def audit_log(self, action: str, details: dict[str, Any]) -> bool:
-        logger.info(f"AUDIT: {action}")
+        logger.info("AUDIT: %s", action)
         return True
 
     def _processing_loop(self):

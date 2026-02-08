@@ -132,7 +132,9 @@ class EngineConfig:
     snapshot_interval: int = 100  # Take state snapshot every N ticks
 
     # Irreversibility laws
-    irreversibility: IrreversibilityConfig = field(default_factory=IrreversibilityConfig)
+    irreversibility: IrreversibilityConfig = field(
+        default_factory=IrreversibilityConfig
+    )
 
     # Outcome thresholds
     thresholds: OutcomeThresholds = field(default_factory=OutcomeThresholds)
@@ -213,12 +215,16 @@ class EngineConfig:
             betrayal_trust_impact=trust_conf.get("betrayal_impact", 0.15),
             betrayal_ceiling_reduction=trust_conf.get("ceiling_reduction", 0.1),
             kindness_decay_rate=kindness_conf.get("decay_rate", 0.0005),
-            kindness_singularity_threshold=kindness_conf.get("singularity_threshold", 0.2),
+            kindness_singularity_threshold=kindness_conf.get(
+                "singularity_threshold", 0.2
+            ),
             kindness_cooperation_boost=kindness_conf.get("cooperation_boost", 0.02),
             legitimacy_decay_rate=legitimacy_conf.get("decay_rate", 0.0008),
             legitimacy_recovery_limit=legitimacy_conf.get("recovery_limit", 0.85),
             broken_promise_impact=legitimacy_conf.get("broken_promise_impact", 0.08),
-            institutional_failure_impact=legitimacy_conf.get("institutional_failure_impact", 0.12),
+            institutional_failure_impact=legitimacy_conf.get(
+                "institutional_failure_impact", 0.12
+            ),
             moral_injury_decay_rate=moral_conf.get("decay_rate", 0.0002),
             moral_injury_threshold=moral_conf.get("threshold", 0.85),
             violation_severity_base=moral_conf.get("violation_base", 0.05),
@@ -227,7 +233,9 @@ class EngineConfig:
             epistemic_collapse_threshold=epistemic_conf.get("collapse_threshold", 0.2),
             betrayal_prob_base=betrayal_conf.get("base", 0.01),
             betrayal_prob_trust_factor=betrayal_conf.get("trust_factor", 0.15),
-            betrayal_prob_legitimacy_factor=betrayal_conf.get("legitimacy_factor", 0.10),
+            betrayal_prob_legitimacy_factor=betrayal_conf.get(
+                "legitimacy_factor", 0.10
+            ),
             betrayal_prob_moral_factor=betrayal_conf.get("moral_factor", 0.12),
         )
 

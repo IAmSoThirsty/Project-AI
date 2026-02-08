@@ -127,6 +127,7 @@ class TestRedTeamModule:
         laws = IrreversibilityLaws(IrreversibilityConfig())
         module = RedTeamModule(laws, black_vault_enabled=True)
         from ..schemas.event_schema import BetrayalEvent
+
         event = BetrayalEvent(
             timestamp=0.0,
             source="test",
@@ -180,6 +181,7 @@ class TestTimelineModule:
         """Test recording events."""
         module = TimelineModule()
         from ..schemas.event_schema import Event, EventType
+
         event = Event(
             event_type=EventType.COOPERATION,
             timestamp=0.0,
@@ -195,6 +197,7 @@ class TestTimelineModule:
         """Test chain integrity verification."""
         module = TimelineModule()
         from ..schemas.event_schema import Event, EventType
+
         state = StateVector.create_initial_state()
         for i in range(5):
             event = Event(

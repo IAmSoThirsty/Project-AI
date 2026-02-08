@@ -29,6 +29,7 @@ logger = logging.getLogger(__name__)
 
 class ClaimType(Enum):
     """Types of claims in the system."""
+
     FACTUAL = "factual"
     PREDICTIVE = "predictive"
     AGENCY = "agency"  # Intent/conspiracy claims - automatically penalized
@@ -39,6 +40,7 @@ class ClaimType(Enum):
 
 class EvidenceTier(Enum):
     """Evidence quality tiers."""
+
     TIER_A = "TierA"  # Peer-reviewed / official audited
     TIER_B = "TierB"  # Government statistical archives
     TIER_C = "TierC"  # Reputable institutional reporting
@@ -48,7 +50,7 @@ class EvidenceTier(Enum):
 class BayesianClaimEngine:
     """
     Layer 4: Bayesian Claim Engine
-    
+
     Calculates probabilistic legitimacy of claims using evidence-based Bayesian
     inference with automatic penalties for low-quality evidence or agency claims.
     """
@@ -68,7 +70,7 @@ class BayesianClaimEngine:
             EvidenceTier.TIER_A: 1.0,
             EvidenceTier.TIER_B: 0.85,
             EvidenceTier.TIER_C: 0.65,
-            EvidenceTier.TIER_D: 0.40
+            EvidenceTier.TIER_D: 0.40,
         }
 
         # Agency penalty multiplier
@@ -83,13 +85,15 @@ class BayesianClaimEngine:
             actor="BAYESIAN_ENGINE",
             details={
                 "tier_weights": {k.value: v for k, v in self.tier_weights.items()},
-                "agency_penalty": self.agency_penalty_multiplier
-            }
+                "agency_penalty": self.agency_penalty_multiplier,
+            },
         )
 
-    def _load_stack_penalties(self, penalties_config: dict[str, Any]) -> dict[str, float]:
+    def _load_stack_penalties(
+        self, penalties_config: dict[str, Any]
+    ) -> dict[str, float]:
         """Load stack-specific penalty multipliers."""
-        stack_penalties_config = penalties_config.get("stack_penalties", {})
+        penalties_config.get("stack_penalties", {})
 
         penalties = {
             "RS": 1.0,  # Reality Stack - no penalty
@@ -97,31 +101,33 @@ class BayesianClaimEngine:
             "TS-1": 1.0,
             "TS-2": 0.95,  # Slight uncertainty penalty for far projections
             "TS-3": 0.90,
-            "SS": 0.0  # Simulation Stack - claims have no legitimacy
+            "SS": 0.0,  # Simulation Stack - claims have no legitimacy
         }
 
         return penalties
 
-    def calculate_claim_posterior(self,
-                                   claim: dict[str, Any],
-                                   evidence: list[dict[str, Any]],
-                                   driver_context: dict[str, float],
-                                   stack: str = "RS") -> float:
+    def calculate_claim_posterior(
+        self,
+        claim: dict[str, Any],
+        evidence: list[dict[str, Any]],
+        driver_context: dict[str, float],
+        stack: str = "RS",
+    ) -> float:
         """
         Calculate Bayesian posterior for a claim.
-        
+
         Formula: P = normalize(EL × WDP × StackPenalty)
-        
+
         Args:
             claim: Claim object
             evidence: List of evidence objects supporting the claim
             driver_context: Current driver values relevant to the claim
             stack: Stack context (RS, TS-*, SS)
-            
+
         Returns:
             Posterior probability [0, 1]
         """
-        logger.debug(f"Calculating posterior for claim {claim.get('id', 'unknown')}")
+        logger.debug("Calculating posterior for claim %s", claim.get("id", "unknown"))
 
         # 1. Calculate Evidence Legitimacy (EL)
         evidence_legitimacy = self._calculate_evidence_legitimacy(evidence)
@@ -137,10 +143,7 @@ class BayesianClaimEngine:
         claim_type = claim.get("claim_type", "")
         if claim_type == ClaimType.AGENCY.value or claim_type == "AGENCY":
             # Check if TierA/B evidence exists
-            has_high_tier = any(
-                ev.get("tier") in ["TierA", "TierB"]
-                for ev in evidence
-            )
+            has_high_tier = any(ev.get("tier") in ["TierA", "TierB"] for ev in evidence)
 
             if not has_high_tier:
                 agency_penalty = self.agency_penalty_multiplier
@@ -153,12 +156,14 @@ class BayesianClaimEngine:
                     details={
                         "claim_id": claim.get("id"),
                         "reason": "Agency claim without TierA/B evidence",
-                        "penalty_multiplier": agency_penalty
-                    }
+                        "penalty_multiplier": agency_penalty,
+                    },
                 )
 
         # 5. Calculate raw posterior
-        raw_posterior = evidence_legitimacy * driver_posterior * stack_penalty * agency_penalty
+        raw_posterior = (
+            evidence_legitimacy * driver_posterior * stack_penalty * agency_penalty
+        )
 
         # 6. Normalize to [0, 1]
         posterior = self._normalize(raw_posterior)
@@ -181,8 +186,8 @@ class BayesianClaimEngine:
                 "agency_penalty": agency_penalty,
                 "raw_posterior": raw_posterior,
                 "final_posterior": posterior,
-                "stack": stack
-            }
+                "stack": stack,
+            },
         )
 
         return posterior
@@ -190,10 +195,10 @@ class BayesianClaimEngine:
     def _calculate_evidence_legitimacy(self, evidence: list[dict[str, Any]]) -> float:
         """
         Calculate evidence legitimacy score.
-        
+
         Args:
             evidence: List of evidence objects
-            
+
         Returns:
             Evidence legitimacy score [0, 1]
         """
@@ -233,18 +238,18 @@ class BayesianClaimEngine:
         # Cap at 1.0
         return min(legitimacy, 1.0)
 
-    def _calculate_driver_posterior(self,
-                                     claim: dict[str, Any],
-                                     driver_context: dict[str, float]) -> float:
+    def _calculate_driver_posterior(
+        self, claim: dict[str, Any], driver_context: dict[str, float]
+    ) -> float:
         """
         Calculate driver-weighted posterior.
-        
+
         Measures how well the claim aligns with current driver values.
-        
+
         Args:
             claim: Claim object
             driver_context: Current driver values
-            
+
         Returns:
             Driver posterior [0, 1]
         """
@@ -294,11 +299,11 @@ class BayesianClaimEngine:
     def _apply_temporal_decay(self, posterior: float, claim: dict[str, Any]) -> float:
         """
         Apply temporal decay to posterior based on claim age.
-        
+
         Args:
             posterior: Current posterior
             claim: Claim object with timestamp
-            
+
         Returns:
             Decayed posterior
         """
@@ -312,7 +317,7 @@ class BayesianClaimEngine:
             return posterior
 
         try:
-            timestamp = datetime.fromisoformat(timestamp_str.replace('Z', '+00:00'))
+            timestamp = datetime.fromisoformat(timestamp_str.replace("Z", "+00:00"))
             age_days = (datetime.utcnow() - timestamp.replace(tzinfo=None)).days
 
             # Exponential decay: P(t) = P_0 * exp(-ln(2) * t / half_life)
@@ -321,28 +326,32 @@ class BayesianClaimEngine:
             return posterior * decay_factor
 
         except Exception as e:
-            logger.warning(f"Error applying temporal decay: {e}")
+            logger.warning("Error applying temporal decay: %s", e)
             return posterior
 
-    def process_claim(self,
-                      claim: dict[str, Any],
-                      evidence: list[dict[str, Any]],
-                      driver_context: dict[str, float],
-                      stack: str = "RS") -> dict[str, Any]:
+    def process_claim(
+        self,
+        claim: dict[str, Any],
+        evidence: list[dict[str, Any]],
+        driver_context: dict[str, float],
+        stack: str = "RS",
+    ) -> dict[str, Any]:
         """
         Process a claim through the Bayesian engine.
-        
+
         Args:
             claim: Claim object
             evidence: Supporting evidence
             driver_context: Current driver values
             stack: Stack context
-            
+
         Returns:
             Processed claim with posterior probability
         """
         # Calculate posterior
-        posterior = self.calculate_claim_posterior(claim, evidence, driver_context, stack)
+        posterior = self.calculate_claim_posterior(
+            claim, evidence, driver_context, stack
+        )
 
         # Update claim object
         if "bayesian_analysis" not in claim:
@@ -358,25 +367,25 @@ class BayesianClaimEngine:
             {
                 "source": ev.get("source", "unknown"),
                 "tier": ev.get("tier", "TierD"),
-                "confidence": ev.get("confidence", 0.5)
+                "confidence": ev.get("confidence", 0.5),
             }
             for ev in evidence
         ]
 
         return claim
 
-    def influence_agent_perception(self,
-                                    claims: list[dict[str, Any]],
-                                    agent_state: dict[str, Any]) -> dict[str, Any]:
+    def influence_agent_perception(
+        self, claims: list[dict[str, Any]], agent_state: dict[str, Any]
+    ) -> dict[str, Any]:
         """
         Update agent perception based on claim posteriors.
-        
+
         Claims with high posterior influence agent's worldview.
-        
+
         Args:
             claims: List of processed claims
             agent_state: Agent state object
-            
+
         Returns:
             Updated agent state
         """
@@ -395,33 +404,36 @@ class BayesianClaimEngine:
                 if category not in perception:
                     perception[category] = []
 
-                perception[category].append({
-                    "claim_id": claim.get("id"),
-                    "statement": claim.get("statement", "")[:100],  # Truncate
-                    "posterior": posterior,
-                    "influence_weight": posterior  # Direct mapping for now
-                })
+                perception[category].append(
+                    {
+                        "claim_id": claim.get("id"),
+                        "statement": claim.get("statement", "")[:100],  # Truncate
+                        "posterior": posterior,
+                        "influence_weight": posterior,  # Direct mapping for now
+                    }
+                )
 
         # Update timestamp
         agent_state["perception_updated_at"] = datetime.utcnow().isoformat()
 
         return agent_state
 
-    def get_high_posterior_claims(self,
-                                   claims: list[dict[str, Any]],
-                                   threshold: float = 0.7) -> list[dict[str, Any]]:
+    def get_high_posterior_claims(
+        self, claims: list[dict[str, Any]], threshold: float = 0.7
+    ) -> list[dict[str, Any]]:
         """
         Get claims with posterior above threshold.
-        
+
         Args:
             claims: List of claims
             threshold: Minimum posterior
-            
+
         Returns:
             Filtered list of high-confidence claims
         """
         return [
-            claim for claim in claims
+            claim
+            for claim in claims
             if claim.get("bayesian_analysis", {}).get("posterior", 0.0) >= threshold
         ]
 
@@ -449,9 +461,10 @@ def reset_bayesian_engine() -> None:
 if __name__ == "__main__":
     # Test Bayesian claim engine
     import json
+
     logging.basicConfig(
         level=logging.DEBUG,
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
 
     engine = BayesianClaimEngine()
@@ -463,24 +476,18 @@ if __name__ == "__main__":
         "claim_type": "factual",
         "timestamp": datetime.utcnow().isoformat(),
         "driver_dependencies": [
-            {
-                "driver": "economic_power",
-                "expected_range": [0.6, 0.9]
-            }
-        ]
+            {"driver": "economic_power", "expected_range": [0.6, 0.9]}
+        ],
     }
 
     # Evidence
     evidence = [
         {"tier": "TierA", "source": "IMF Report 2026", "confidence": 0.95},
-        {"tier": "TierB", "source": "Federal Reserve Data", "confidence": 0.90}
+        {"tier": "TierB", "source": "Federal Reserve Data", "confidence": 0.90},
     ]
 
     # Driver context
-    drivers = {
-        "economic_power": 0.75,
-        "political_influence": 0.65
-    }
+    drivers = {"economic_power": 0.75, "political_influence": 0.65}
 
     # Process claim
     processed_claim = engine.process_claim(claim, evidence, drivers, "RS")

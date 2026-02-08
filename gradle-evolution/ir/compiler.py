@@ -36,7 +36,13 @@ logger = logging.getLogger(__name__)
 
 class CompilationError(Exception):
     """Compilation error with line number context"""
-    def __init__(self, message: str, line_number: int | None = None, source_file: str | None = None):
+
+    def __init__(
+        self,
+        message: str,
+        line_number: int | None = None,
+        source_file: str | None = None,
+    ):
         self.message = message
         self.line_number = line_number
         self.source_file = source_file
@@ -60,7 +66,7 @@ class IntentCompiler:
     def __init__(self, governance_enabled: bool = True):
         """
         Initialize compiler
-        
+
         Args:
             governance_enabled: Whether to enforce governance policies
         """
@@ -76,14 +82,14 @@ class IntentCompiler:
     def compile(self, yaml_content: str, source_file: str | None = None) -> IRGraph:
         """
         Compile YAML intent to IR graph
-        
+
         Args:
             yaml_content: YAML intent specification
             source_file: Optional source file path for error reporting
-        
+
         Returns:
             Compiled IR graph
-        
+
         Raises:
             CompilationError: If compilation fails
         """
@@ -99,7 +105,9 @@ class IntentCompiler:
             # Parse YAML
             intent_spec = yaml.safe_load(yaml_content)
             if not isinstance(intent_spec, dict):
-                raise CompilationError("Intent must be a YAML dictionary", source_file=source_file)
+                raise CompilationError(
+                    "Intent must be a YAML dictionary", source_file=source_file
+                )
 
             # Validate schema
             self._validate_intent_schema(intent_spec)
@@ -109,7 +117,7 @@ class IntentCompiler:
                 "intent": intent_spec.get("intent", "unknown"),
                 "version": intent_spec.get("version", "1.0"),
                 "source_file": source_file,
-                "compiler_version": "1.0.0"
+                "compiler_version": "1.0.0",
             }
 
             # Compile steps
@@ -131,9 +139,15 @@ class IntentCompiler:
 
             if self.errors:
                 error_msg = "\n".join(str(e) for e in self.errors)
-                raise CompilationError(f"Compilation failed with {len(self.errors)} errors:\n{error_msg}")
+                raise CompilationError(
+                    f"Compilation failed with {len(self.errors)} errors:\n{error_msg}"
+                )
 
-            logger.info(f"Compiled {len(self.graph.nodes)} IR nodes from {source_file or 'inline'}")
+            logger.info(
+                "Compiled %s IR nodes from %s",
+                len(self.graph.nodes),
+                source_file or "inline",
+            )
             return self.graph
 
         except yaml.YAMLError as e:
@@ -162,7 +176,9 @@ class IntentCompiler:
             return self._create_node(IROpcode.NOP)
 
         # Create sequence node
-        sequence = self._create_node(IROpcode.SEQUENCE, attributes={"step_count": len(steps)})
+        sequence = self._create_node(
+            IROpcode.SEQUENCE, attributes={"step_count": len(steps)}
+        )
         prev_node = sequence
 
         for idx, step in enumerate(steps):
@@ -172,10 +188,14 @@ class IntentCompiler:
 
         return sequence
 
-    def _compile_step(self, step: dict[str, Any], line_number: int | None = None) -> IRNode:
+    def _compile_step(
+        self, step: dict[str, Any], line_number: int | None = None
+    ) -> IRNode:
         """Compile single step into IR node(s)"""
         if "action" not in step:
-            raise CompilationError("Step missing 'action' field", line_number=line_number)
+            raise CompilationError(
+                "Step missing 'action' field", line_number=line_number
+            )
 
         action = step["action"]
 
@@ -207,11 +227,17 @@ class IntentCompiler:
         # - accountability: Action must be traceable to responsible party
         # Additional policies can be specified in YAML via explicit validate actions
         entry_node = node  # Default entry point
-        if self.governance_enabled and opcode in {IROpcode.COMPILE, IROpcode.DEPLOY, IROpcode.EXEC}:
+        if self.governance_enabled and opcode in {
+            IROpcode.COMPILE,
+            IROpcode.DEPLOY,
+            IROpcode.EXEC,
+        }:
             validate_node = self._create_node(
                 IROpcode.VALIDATE_POLICY,
-                attributes={"policies": ["non_maleficence", "transparency", "accountability"]},
-                line_number=line_number
+                attributes={
+                    "policies": ["non_maleficence", "transparency", "accountability"]
+                },
+                line_number=line_number,
             )
             self.graph.add_edge(validate_node.id, node.id)
             entry_node = validate_node  # Validation is now the entry point
@@ -232,7 +258,7 @@ class IntentCompiler:
         inputs: list[str] | None = None,
         operands: list[Any] | None = None,
         attributes: dict[str, Any] | None = None,
-        line_number: int | None = None
+        line_number: int | None = None,
     ) -> IRNode:
         """Create new IR node and add to graph"""
         node_id = f"n{self.node_counter}"
@@ -245,7 +271,7 @@ class IntentCompiler:
             operands=operands or [],
             attributes=attributes or {},
             line_number=line_number,
-            source_file=self.current_file
+            source_file=self.current_file,
         )
 
         self.graph.add_node(node)
@@ -255,21 +281,29 @@ class IntentCompiler:
         """Perform semantic analysis on IR graph"""
         logger.debug("Running semantic analysis")
 
-        for node_id, node in self.graph.nodes.items():
+        for _node_id, node in self.graph.nodes.items():
             # Check policy validation nodes
             if node.opcode == IROpcode.VALIDATE_POLICY:
                 if "policies" not in node.attributes:
                     self.errors.append(
-                        CompilationError("Policy validation missing 'policies' attribute", node.line_number)
+                        CompilationError(
+                            "Policy validation missing 'policies' attribute",
+                            node.line_number,
+                        )
                     )
                 else:
-                    self._validate_policies(node.attributes["policies"], node.line_number)
+                    self._validate_policies(
+                        node.attributes["policies"], node.line_number
+                    )
 
             # Check compile nodes
             if node.opcode == IROpcode.COMPILE:
                 if "source" not in node.attributes:
                     self.errors.append(
-                        CompilationError("Compile action missing 'source' attribute", node.line_number)
+                        CompilationError(
+                            "Compile action missing 'source' attribute",
+                            node.line_number,
+                        )
                     )
 
             # Check test nodes
@@ -289,15 +323,18 @@ class IntentCompiler:
     def _validate_policies(self, policies: list[str], line_number: int | None) -> None:
         """Validate policy names"""
         valid_policies = {
-            "non_maleficence", "transparency", "accountability",
-            "privacy", "fairness", "safety", "security"
+            "non_maleficence",
+            "transparency",
+            "accountability",
+            "privacy",
+            "fairness",
+            "safety",
+            "security",
         }
 
         for policy in policies:
             if policy not in valid_policies:
-                self.warnings.append(
-                    f"Unknown policy '{policy}' at line {line_number}"
-                )
+                self.warnings.append(f"Unknown policy '{policy}' at line {line_number}")
 
     def _type_inference(self) -> None:
         """Infer types for all nodes in topological order"""
@@ -320,7 +357,12 @@ class IntentCompiler:
                 node.type_info = IRTypeInfo(base_type=IRType.PATH)
             elif node.opcode == IROpcode.TEST:
                 node.type_info = IRTypeInfo(base_type=IRType.BOOL)
-            elif node.opcode in {IROpcode.ADD, IROpcode.SUB, IROpcode.MUL, IROpcode.DIV}:
+            elif node.opcode in {
+                IROpcode.ADD,
+                IROpcode.SUB,
+                IROpcode.MUL,
+                IROpcode.DIV,
+            }:
                 node.type_info = self._infer_arithmetic_type(node)
             elif node.opcode == IROpcode.CMP:
                 node.type_info = IRTypeInfo(base_type=IRType.BOOL)
@@ -349,7 +391,9 @@ class IntentCompiler:
         elif isinstance(value, list):
             return IRTypeInfo(base_type=IRType.LIST, element_type=IRType.ANY)
         elif isinstance(value, dict):
-            return IRTypeInfo(base_type=IRType.DICT, key_type=IRType.STRING, value_type=IRType.ANY)
+            return IRTypeInfo(
+                base_type=IRType.DICT, key_type=IRType.STRING, value_type=IRType.ANY
+            )
         else:
             return IRTypeInfo(base_type=IRType.ANY)
 
@@ -385,7 +429,9 @@ class IntentCompiler:
             for dep_id in dep_ids:
                 if dep_id not in self.graph.nodes:
                     self.errors.append(
-                        CompilationError(f"Node {node_id} depends on non-existent node {dep_id}")
+                        CompilationError(
+                            f"Node {node_id} depends on non-existent node {dep_id}"
+                        )
                     )
 
         # Topological sort to ensure valid execution order
@@ -430,16 +476,25 @@ class IntentCompiler:
         dead_nodes = set(self.graph.nodes.keys()) - reachable
         for node_id in dead_nodes:
             del self.graph.nodes[node_id]
-            logger.debug(f"Eliminated dead code: {node_id}")
+            logger.debug("Eliminated dead code: %s", node_id)
 
     def _fold_constants(self) -> None:
         """Fold constant expressions"""
         for node_id, node in list(self.graph.nodes.items()):
-            if node.opcode not in {IROpcode.ADD, IROpcode.SUB, IROpcode.MUL, IROpcode.DIV}:
+            if node.opcode not in {
+                IROpcode.ADD,
+                IROpcode.SUB,
+                IROpcode.MUL,
+                IROpcode.DIV,
+            }:
                 continue
 
             # Check if all inputs are constants
-            input_nodes = [self.graph.nodes[inp_id] for inp_id in node.inputs if inp_id in self.graph.nodes]
+            input_nodes = [
+                self.graph.nodes[inp_id]
+                for inp_id in node.inputs
+                if inp_id in self.graph.nodes
+            ]
             if not all(n.opcode == IROpcode.CONST for n in input_nodes):
                 continue
 
@@ -456,22 +511,23 @@ class IntentCompiler:
                     result = values[0] - values[1]
                 elif node.opcode == IROpcode.MUL:
                     result = values[0] * values[1]
-                elif node.opcode == IROpcode.DIV:
-                    if values[1] != 0:
-                        result = values[0] / values[1]
+                elif node.opcode == IROpcode.DIV and values[1] != 0:
+                    result = values[0] / values[1]
 
                 if result is not None:
                     # Replace with constant node
                     node.opcode = IROpcode.CONST
                     node.operands = [result]
                     node.inputs.clear()
-                    logger.debug(f"Folded constant: {node_id} = {result}")
+                    logger.debug("Folded constant: %s = %s", node_id, result)
             except Exception as e:
-                logger.warning(f"Constant folding failed for {node_id}: {e}")
+                logger.warning("Constant folding failed for %s: %s", node_id, e)
 
     def _remove_nops(self) -> None:
         """Remove NOP nodes and reconnect edges"""
-        nop_nodes = [nid for nid, node in self.graph.nodes.items() if node.opcode == IROpcode.NOP]
+        nop_nodes = [
+            nid for nid, node in self.graph.nodes.items() if node.opcode == IROpcode.NOP
+        ]
 
         for nop_id in nop_nodes:
             nop_node = self.graph.nodes[nop_id]
@@ -484,7 +540,7 @@ class IntentCompiler:
 
             # Remove NOP node
             del self.graph.nodes[nop_id]
-            logger.debug(f"Removed NOP: {nop_id}")
+            logger.debug("Removed NOP: %s", nop_id)
 
     def compile_file(self, file_path: str) -> IRGraph:
         """Compile YAML file to IR graph"""
@@ -503,5 +559,5 @@ class IntentCompiler:
             "errors": [str(e) for e in self.errors],
             "warnings": self.warnings,
             "entry_node": self.graph.entry_node,
-            "metadata": self.graph.metadata
+            "metadata": self.graph.metadata,
         }

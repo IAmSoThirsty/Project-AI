@@ -171,7 +171,7 @@ class ComponentHealthMonitor:
             return health_check
 
         except Exception as e:
-            logger.error(f"Error checking health of {self.component_name}: {e}")
+            logger.error("Error checking health of %s: %s", self.component_name, e)
             self.consecutive_failures += 1
             error_check = HealthCheck(
                 component=self.component_name,
@@ -221,11 +221,11 @@ class FallbackManager:
         try:
             with self.lock:
                 if component not in self.fallback_strategies:
-                    logger.warning(f"No fallback strategy for component: {component}")
+                    logger.warning("No fallback strategy for component: %s", component)
                     return False
 
                 if component in self.active_fallbacks:
-                    logger.info(f"Fallback already active for: {component}")
+                    logger.info("Fallback already active for: %s", component)
                     return True
 
                 strategies = self.fallback_strategies[component]
@@ -235,17 +235,21 @@ class FallbackManager:
                         if success:
                             self.active_fallbacks.add(component)
                             logger.info(
-                                f"Activated fallback for {component} (priority: {priority})"
+                                "Activated fallback for %s (priority: %s)",
+                                component,
+                                priority,
                             )
                             return True
                     except Exception as e:
-                        logger.error(f"Fallback strategy failed for {component}: {e}")
+                        logger.error(
+                            "Fallback strategy failed for %s: %s", component, e
+                        )
                         continue
 
-                logger.error(f"All fallback strategies failed for: {component}")
+                logger.error("All fallback strategies failed for: %s", component)
                 return False
         except Exception as e:
-            logger.error(f"Error activating fallback: {e}")
+            logger.error("Error activating fallback: %s", e)
             return False
 
     def deactivate_fallback(self, component: str) -> bool:
@@ -253,7 +257,7 @@ class FallbackManager:
         with self.lock:
             if component in self.active_fallbacks:
                 self.active_fallbacks.remove(component)
-                logger.info(f"Deactivated fallback for: {component}")
+                logger.info("Deactivated fallback for: %s", component)
                 return True
             return False
 
@@ -334,11 +338,11 @@ class AGIContinuityTracker:
                 self.continuity_scores.append(score)
                 self._save_continuity_state()
 
-            logger.info(f"AGI continuity score: {score.overall_score:.2f}")
+            logger.info("AGI continuity score: %s", score.overall_score)
             return score
 
         except Exception as e:
-            logger.error(f"Error calculating continuity score: {e}")
+            logger.error("Error calculating continuity score: %s", e)
             return ContinuityScore(overall_score=0.0)
 
     def verify_identity(self, current_identity: dict[str, Any]) -> bool:
@@ -358,7 +362,7 @@ class AGIContinuityTracker:
             return current_hash == self.identity_hash
 
         except Exception as e:
-            logger.error(f"Error verifying identity: {e}")
+            logger.error("Error verifying identity: %s", e)
             return False
 
     def get_continuity_trend(self, window: int = 10) -> dict[str, Any]:
@@ -409,7 +413,7 @@ class AGIContinuityTracker:
             with open(state_file, "w") as f:
                 json.dump(state, f, indent=2)
         except Exception as e:
-            logger.error(f"Error saving continuity state: {e}")
+            logger.error("Error saving continuity state: %s", e)
 
     def _load_continuity_state(self) -> None:
         """Load continuity state from disk."""
@@ -427,7 +431,7 @@ class AGIContinuityTracker:
                             self.continuity_scores.append(score)
                 logger.info("Loaded continuity state from disk")
         except Exception as e:
-            logger.error(f"Error loading continuity state: {e}")
+            logger.error("Error loading continuity state: %s", e)
 
 
 class PredictiveFailureDetector:
@@ -503,13 +507,16 @@ class PredictiveFailureDetector:
 
                     self.predictions.append(prediction)
                     logger.warning(
-                        f"Predicted failure for {component}/{metric_name} in {steps_to_failure} steps"
+                        "Predicted failure for %s/%s in %s steps",
+                        component,
+                        metric_name,
+                        steps_to_failure,
                     )
                     return prediction
 
                 return None
         except Exception as e:
-            logger.error(f"Error predicting failure: {e}")
+            logger.error("Error predicting failure: %s", e)
             return None
 
 
@@ -545,7 +552,7 @@ class HealthMonitoringSystem:
                     "monitor": ComponentHealthMonitor(component_name),
                     "check_func": health_check_func,
                 }
-                logger.info(f"Registered component for monitoring: {component_name}")
+                logger.info("Registered component for monitoring: %s", component_name)
 
     def start_monitoring(self) -> bool:
         """Start continuous health monitoring."""
@@ -561,7 +568,7 @@ class HealthMonitoringSystem:
             logger.info("Started health monitoring")
             return True
         except Exception as e:
-            logger.error(f"Failed to start monitoring: {e}")
+            logger.error("Failed to start monitoring: %s", e)
             return False
 
     def stop_monitoring(self) -> bool:
@@ -573,7 +580,7 @@ class HealthMonitoringSystem:
             logger.info("Stopped health monitoring")
             return True
         except Exception as e:
-            logger.error(f"Failed to stop monitoring: {e}")
+            logger.error("Failed to stop monitoring: %s", e)
             return False
 
     def _monitoring_loop(self) -> None:
@@ -591,14 +598,16 @@ class HealthMonitoringSystem:
                     # Handle unhealthy components
                     if health_check.status == HealthStatus.UNHEALTHY.value:
                         logger.warning(
-                            f"Component {component_name} is unhealthy: {health_check.error_message}"
+                            "Component %s is unhealthy: %s",
+                            component_name,
+                            health_check.error_message,
                         )
                         # Attempt fallback activation
                         self.fallback_manager.activate_fallback(component_name)
 
                 time.sleep(self.check_interval)
             except Exception as e:
-                logger.error(f"Error in monitoring loop: {e}")
+                logger.error("Error in monitoring loop: %s", e)
 
     def get_system_status(self) -> dict[str, Any]:
         """Get comprehensive system status."""

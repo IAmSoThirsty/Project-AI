@@ -112,10 +112,10 @@ class WiFiController:
             elif self.platform == "Darwin":
                 self._discover_adapters_macos()
 
-            self.logger.info(f"Discovered {len(self.adapters)} WiFi adapter(s)")
+            self.logger.info("Discovered %s WiFi adapter(s)", len(self.adapters))
 
         except Exception as e:
-            self.logger.error(f"Adapter discovery failed: {e}")
+            self.logger.error("Adapter discovery failed: %s", e)
 
     def _discover_adapters_linux(self) -> None:
         """Discover WiFi adapters on Linux using iw/iwconfig"""
@@ -150,7 +150,7 @@ class WiFiController:
         except FileNotFoundError:
             self.logger.warning("iw command not found - install iw package")
         except Exception as e:
-            self.logger.error(f"Linux adapter discovery error: {e}")
+            self.logger.error("Linux adapter discovery error: %s", e)
 
     def _get_adapter_capabilities_linux(
         self, interface: str, mac: str
@@ -212,7 +212,7 @@ class WiFiController:
             )
 
         except Exception as e:
-            self.logger.error(f"Error getting adapter capabilities: {e}")
+            self.logger.error("Error getting adapter capabilities: %s", e)
             return None
 
     def _discover_adapters_windows(self) -> None:
@@ -248,7 +248,7 @@ class WiFiController:
                         interface_name = None
 
         except Exception as e:
-            self.logger.error(f"Windows adapter discovery error: {e}")
+            self.logger.error("Windows adapter discovery error: %s", e)
 
     def _get_adapter_capabilities_windows(
         self, interface: str, mac: str
@@ -295,7 +295,7 @@ class WiFiController:
             )
 
         except Exception as e:
-            self.logger.error(f"Error getting Windows adapter capabilities: {e}")
+            self.logger.error("Error getting Windows adapter capabilities: %s", e)
             return None
 
     def _discover_adapters_macos(self) -> None:
@@ -327,7 +327,7 @@ class WiFiController:
                                     self.adapters.append(adapter)
 
         except Exception as e:
-            self.logger.error(f"macOS adapter discovery error: {e}")
+            self.logger.error("macOS adapter discovery error: %s", e)
 
     def _get_adapter_capabilities_macos(self, interface: str) -> WiFiAdapter | None:
         """Get WiFi adapter capabilities on macOS"""
@@ -386,7 +386,7 @@ class WiFiController:
             )
 
         except Exception as e:
-            self.logger.error(f"Error getting macOS adapter capabilities: {e}")
+            self.logger.error("Error getting macOS adapter capabilities: %s", e)
             return None
 
     def _estimate_max_speed(self, standards: list[WiFiStandard]) -> int:
@@ -455,7 +455,7 @@ class WiFiController:
             return []
 
         except Exception as e:
-            self.logger.error(f"Network scan failed: {e}")
+            self.logger.error("Network scan failed: %s", e)
             return []
 
     def _scan_networks_linux(self, band: WiFiBand | None) -> list[WiFiNetwork]:
@@ -478,7 +478,7 @@ class WiFiController:
                     networks.extend(self._parse_scan_results_linux(result.stdout, band))
 
         except Exception as e:
-            self.logger.error(f"Linux network scan error: {e}")
+            self.logger.error("Linux network scan error: %s", e)
 
         self.available_networks = networks
         return networks
@@ -508,7 +508,7 @@ class WiFiController:
                 networks.extend(self._parse_scan_results_windows(result.stdout, band))
 
         except Exception as e:
-            self.logger.error(f"Windows network scan error: {e}")
+            self.logger.error("Windows network scan error: %s", e)
 
         self.available_networks = networks
         return networks
@@ -541,7 +541,7 @@ class WiFiController:
                 networks.extend(self._parse_scan_results_macos(result.stdout, band))
 
         except Exception as e:
-            self.logger.error(f"macOS network scan error: {e}")
+            self.logger.error("macOS network scan error: %s", e)
 
         self.available_networks = networks
         return networks
@@ -569,7 +569,7 @@ class WiFiController:
             True if connection successful
         """
         try:
-            self.logger.info(f"Connecting to {ssid} with God Tier security")
+            self.logger.info("Connecting to %s with God Tier security", ssid)
 
             if self.platform == "Linux":
                 return self._connect_linux(ssid, password, security)
@@ -581,7 +581,7 @@ class WiFiController:
             return False
 
         except Exception as e:
-            self.logger.error(f"WiFi connection failed: {e}")
+            self.logger.error("WiFi connection failed: %s", e)
             return False
 
     def _connect_linux(
@@ -618,7 +618,7 @@ class WiFiController:
             return True
 
         except Exception as e:
-            self.logger.error(f"WiFi disconnect failed: {e}")
+            self.logger.error("WiFi disconnect failed: %s", e)
             return False
 
     def get_status(self) -> dict[str, Any]:

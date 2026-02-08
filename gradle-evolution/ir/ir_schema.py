@@ -27,6 +27,7 @@ logger = logging.getLogger(__name__)
 
 class IRType(Enum):
     """IR type system for operations and data"""
+
     VOID = "void"
     BOOL = "bool"
     INT = "int"
@@ -41,6 +42,7 @@ class IRType(Enum):
 
 class IROpcode(Enum):
     """IR operation codes"""
+
     # Control flow
     NOP = "nop"
     SEQUENCE = "sequence"
@@ -88,6 +90,7 @@ class IROpcode(Enum):
 @dataclass
 class IRTypeInfo:
     """Type information with constraints"""
+
     base_type: IRType
     element_type: IRType | None = None  # For lists
     key_type: IRType | None = None  # For dicts
@@ -103,14 +106,22 @@ class IRTypeInfo:
             return False
         if self.base_type == IRType.LIST:
             if self.element_type and other.element_type:
-                return self.element_type == other.element_type or \
-                       self.element_type == IRType.ANY or \
-                       other.element_type == IRType.ANY
+                return (
+                    self.element_type == other.element_type
+                    or self.element_type == IRType.ANY
+                    or other.element_type == IRType.ANY
+                )
         if self.base_type == IRType.DICT:
-            key_compat = not self.key_type or not other.key_type or \
-                        self.key_type == other.key_type
-            val_compat = not self.value_type or not other.value_type or \
-                        self.value_type == other.value_type
+            key_compat = (
+                not self.key_type
+                or not other.key_type
+                or self.key_type == other.key_type
+            )
+            val_compat = (
+                not self.value_type
+                or not other.value_type
+                or self.value_type == other.value_type
+            )
             return key_compat and val_compat
         return True
 
@@ -122,7 +133,7 @@ class IRTypeInfo:
             "key_type": self.key_type.value if self.key_type else None,
             "value_type": self.value_type.value if self.value_type else None,
             "nullable": self.nullable,
-            "constraints": self.constraints
+            "constraints": self.constraints,
         }
 
     @classmethod
@@ -130,17 +141,20 @@ class IRTypeInfo:
         """Deserialize from dictionary"""
         return cls(
             base_type=IRType(data["base_type"]),
-            element_type=IRType(data["element_type"]) if data.get("element_type") else None,
+            element_type=(
+                IRType(data["element_type"]) if data.get("element_type") else None
+            ),
             key_type=IRType(data["key_type"]) if data.get("key_type") else None,
             value_type=IRType(data["value_type"]) if data.get("value_type") else None,
             nullable=data.get("nullable", False),
-            constraints=data.get("constraints", {})
+            constraints=data.get("constraints", {}),
         )
 
 
 @dataclass
 class IRNode:
     """Single IR operation node in execution graph"""
+
     id: str
     opcode: IROpcode
     inputs: list[str] = field(default_factory=list)  # Input node IDs
@@ -154,37 +168,40 @@ class IRNode:
 
     def compute_hash(self) -> str:
         """Compute deterministic hash for node identity"""
-        content = json.dumps({
-            "opcode": self.opcode.value,
-            "inputs": sorted(self.inputs),
-            "operands": self.operands,
-            "attributes": sorted(self.attributes.items())
-        }, sort_keys=True)
+        content = json.dumps(
+            {
+                "opcode": self.opcode.value,
+                "inputs": sorted(self.inputs),
+                "operands": self.operands,
+                "attributes": sorted(self.attributes.items()),
+            },
+            sort_keys=True,
+        )
         return hashlib.sha256(content.encode()).hexdigest()[:16]
 
     def is_pure(self) -> bool:
         """Check if operation has no side effects"""
         pure_ops = {
-            IROpcode.NOP, IROpcode.CONST, IROpcode.COPY,
-            IROpcode.ADD, IROpcode.SUB, IROpcode.MUL, IROpcode.DIV,
-            IROpcode.MOD, IROpcode.CMP, IROpcode.LOAD
+            IROpcode.NOP,
+            IROpcode.CONST,
+            IROpcode.COPY,
+            IROpcode.ADD,
+            IROpcode.SUB,
+            IROpcode.MUL,
+            IROpcode.DIV,
+            IROpcode.MOD,
+            IROpcode.CMP,
+            IROpcode.LOAD,
         }
         return self.opcode in pure_ops
 
     def is_terminator(self) -> bool:
         """Check if this is a control flow terminator"""
-        return self.opcode in {
-            IROpcode.RETURN, IROpcode.BREAK, IROpcode.CONTINUE
-        }
+        return self.opcode in {IROpcode.RETURN, IROpcode.BREAK, IROpcode.CONTINUE}
 
     def get_resource_cost(self) -> dict[str, float]:
         """Estimate resource costs for this operation"""
-        costs = {
-            "cpu": 0.0,
-            "memory": 0.0,
-            "io": 0.0,
-            "network": 0.0
-        }
+        costs = {"cpu": 0.0, "memory": 0.0, "io": 0.0, "network": 0.0}
 
         # High-cost operations
         if self.opcode in {IROpcode.COMPILE, IROpcode.TEST}:
@@ -216,7 +233,7 @@ class IRNode:
             "type_info": self.type_info.to_dict() if self.type_info else None,
             "metadata": self.metadata,
             "line_number": self.line_number,
-            "source_file": self.source_file
+            "source_file": self.source_file,
         }
 
     @classmethod
@@ -229,16 +246,21 @@ class IRNode:
             outputs=data.get("outputs", []),
             operands=data.get("operands", []),
             attributes=data.get("attributes", {}),
-            type_info=IRTypeInfo.from_dict(data["type_info"]) if data.get("type_info") else None,
+            type_info=(
+                IRTypeInfo.from_dict(data["type_info"])
+                if data.get("type_info")
+                else None
+            ),
             metadata=data.get("metadata", {}),
             line_number=data.get("line_number"),
-            source_file=data.get("source_file")
+            source_file=data.get("source_file"),
         )
 
 
 @dataclass
 class IRGraph:
     """Directed acyclic graph of IR nodes"""
+
     nodes: dict[str, IRNode] = field(default_factory=dict)
     entry_node: str | None = None
     exit_nodes: list[str] = field(default_factory=list)
@@ -334,7 +356,7 @@ class IRGraph:
             "nodes": {node_id: node.to_dict() for node_id, node in self.nodes.items()},
             "entry_node": self.entry_node,
             "exit_nodes": self.exit_nodes,
-            "metadata": self.metadata
+            "metadata": self.metadata,
         }
 
     @classmethod
@@ -343,7 +365,7 @@ class IRGraph:
         graph = cls(
             entry_node=data.get("entry_node"),
             exit_nodes=data.get("exit_nodes", []),
-            metadata=data.get("metadata", {})
+            metadata=data.get("metadata", {}),
         )
 
         for node_id, node_data in data.get("nodes", {}).items():
@@ -377,7 +399,7 @@ class IRSchema:
             return False
 
         # Validate each node
-        for node_id, node in graph.nodes.items():
+        for _node_id, node in graph.nodes.items():
             self._validate_node(node, graph)
 
         # Check for cycles
@@ -397,17 +419,23 @@ class IRSchema:
         # Check input references
         for input_id in node.inputs:
             if input_id not in graph.nodes:
-                self.errors.append(f"Node {node.id} references non-existent input {input_id}")
+                self.errors.append(
+                    f"Node {node.id} references non-existent input {input_id}"
+                )
 
         # Check output references
         for output_id in node.outputs:
             if output_id not in graph.nodes:
-                self.errors.append(f"Node {node.id} references non-existent output {output_id}")
+                self.errors.append(
+                    f"Node {node.id} references non-existent output {output_id}"
+                )
 
         # Validate opcode-specific constraints
         if node.opcode == IROpcode.CONDITIONAL:
             if len(node.inputs) < 1:
-                self.errors.append(f"Conditional node {node.id} requires at least 1 input")
+                self.errors.append(
+                    f"Conditional node {node.id} requires at least 1 input"
+                )
         elif node.opcode == IROpcode.LOOP:
             if "max_iterations" not in node.attributes:
                 self.warnings.append(f"Loop node {node.id} has no max_iterations bound")

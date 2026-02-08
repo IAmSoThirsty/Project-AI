@@ -330,9 +330,7 @@ class CanonicalReplay:
         print(f"   Previous Score: {trust['previous_score']}")
         print(f"   New Score: {trust['new_score']}")
         print(f"   Change: {trust['new_score'] - trust['previous_score']:+.2f}")
-        print(
-            f"   Threshold Crossed: {trust.get('threshold_crossed', 'None')}"
-        )
+        print(f"   Threshold Crossed: {trust.get('threshold_crossed', 'None')}")
         print()
 
         # Adversarial Pattern Detection
@@ -362,9 +360,7 @@ class CanonicalReplay:
         print()
 
         phase_trace["completed_at"] = datetime.now(UTC).isoformat() + "Z"
-        phase_trace["trust_score_delta"] = (
-            trust["new_score"] - trust["previous_score"]
-        )
+        phase_trace["trust_score_delta"] = trust["new_score"] - trust["previous_score"]
         self.trace["execution"]["phases"].append(phase_trace)
 
         return True
@@ -414,9 +410,15 @@ class CanonicalReplay:
         replay = expected["replayability"]
         print(f"   Replay ID: {replay['replay_id']}")
         print(f"   Deterministic: {'✅ YES' if replay['deterministic'] else '❌ NO'}")
-        print(f"   Input State: {'✅ Captured' if replay['input_state_captured'] else '❌ Missing'}")
-        print(f"   Output State: {'✅ Captured' if replay['output_state_captured'] else '❌ Missing'}")
-        print(f"   Audit Capable: {'✅ YES' if replay['can_replay_for_audit'] else '❌ NO'}")
+        print(
+            f"   Input State: {'✅ Captured' if replay['input_state_captured'] else '❌ Missing'}"
+        )
+        print(
+            f"   Output State: {'✅ Captured' if replay['output_state_captured'] else '❌ Missing'}"
+        )
+        print(
+            f"   Audit Capable: {'✅ YES' if replay['can_replay_for_audit'] else '❌ NO'}"
+        )
         print()
 
         phase_trace["completed_at"] = datetime.now(UTC).isoformat() + "Z"
@@ -428,7 +430,8 @@ class CanonicalReplay:
     def execute_phase_5_explainability(self) -> bool:
         """Phase 5: Explainable Outcome."""
         self.print_header(
-            "5. EXPLAINABLE OUTCOME", "Human-readable, machine-verifiable, deterministic"
+            "5. EXPLAINABLE OUTCOME",
+            "Human-readable, machine-verifiable, deterministic",
         )
 
         phase_trace = {
@@ -477,9 +480,15 @@ class CanonicalReplay:
         print(f"   Input Hash: sha256:{input_hash[:32]}...")
 
         validation = replay["replay_validation"]
-        print(f"   Can Reproduce: {'✅ YES' if validation['can_reproduce'] else '❌ NO'}")
-        print(f"   Output Deterministic: {'✅ YES' if validation['output_deterministic'] else '❌ NO'}")
-        print(f"   Trace Consistent: {'✅ YES' if validation['trace_consistent'] else '❌ NO'}")
+        print(
+            f"   Can Reproduce: {'✅ YES' if validation['can_reproduce'] else '❌ NO'}"
+        )
+        print(
+            f"   Output Deterministic: {'✅ YES' if validation['output_deterministic'] else '❌ NO'}"
+        )
+        print(
+            f"   Trace Consistent: {'✅ YES' if validation['trace_consistent'] else '❌ NO'}"
+        )
         print()
 
         phase_trace["completed_at"] = datetime.now(UTC).isoformat() + "Z"
@@ -543,9 +552,7 @@ class CanonicalReplay:
         print()
 
         try:
-            self.trace["metadata"]["completed_at"] = (
-                datetime.now(UTC).isoformat() + "Z"
-            )
+            self.trace["metadata"]["completed_at"] = datetime.now(UTC).isoformat() + "Z"
 
             with open(self.trace_path, "w") as f:
                 json.dump(self.trace, f, indent=2)
@@ -632,7 +639,9 @@ class CanonicalReplay:
         print()
         print(f"⏱️  Duration: {duration:.2f} seconds")
         print(f"📊 Success Criteria: {'✅ ALL MET' if all_met else '❌ SOME FAILED'}")
-        print(f"🔍 Invariants: {'✅ ALL PASSED' if invariants_passed else '❌ SOME FAILED'}")
+        print(
+            f"🔍 Invariants: {'✅ ALL PASSED' if invariants_passed else '❌ SOME FAILED'}"
+        )
         print()
 
         if all_met and invariants_passed:
@@ -643,7 +652,9 @@ class CanonicalReplay:
             if not all_met:
                 print("⚠️  Some success criteria were not met.")
             if not invariants_passed:
-                print("⚠️  Some invariants failed - system behavior violated core principles.")
+                print(
+                    "⚠️  Some invariants failed - system behavior violated core principles."
+                )
             print("⚠️  Review the trace for details.")
 
         print()

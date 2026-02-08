@@ -55,8 +55,8 @@ class TestHardwareAbstractionLayer:
     def test_hardware_initialization(self, hardware, config):
         """Test hardware initialization"""
         success = hardware.initialize()
-        assert success == True
-        assert hardware._initialized == True
+        assert success
+        assert hardware._initialized
         assert len(hardware._joint_states) == config.num_joints
 
     def test_hardware_joint_read(self, hardware):
@@ -75,7 +75,7 @@ class TestHardwareAbstractionLayer:
         commands = [{"position": 0.5} for _ in range(6)]
         success = hardware.write_joint_commands(commands)
 
-        assert success == True
+        assert success
 
     def test_hardware_sensor_read(self, hardware):
         """Test sensor reading"""
@@ -91,22 +91,22 @@ class TestHardwareAbstractionLayer:
         hardware.initialize()
         success = hardware.emergency_stop()
 
-        assert success == True
-        assert hardware._emergency_stopped == True
+        assert success
+        assert hardware._emergency_stopped
 
     def test_hardware_health_check(self, hardware):
         """Test hardware health check"""
         hardware.initialize()
         is_healthy = hardware.is_healthy()
 
-        assert is_healthy == True
+        assert is_healthy
 
     def test_hardware_shutdown(self, hardware):
         """Test hardware shutdown"""
         hardware.initialize()
         hardware.shutdown()
 
-        assert hardware._initialized == False
+        assert not hardware._initialized
 
 
 class TestSafetyValidator:
@@ -166,7 +166,7 @@ class TestSafetyValidator:
             "Test motion", commands, joint_states, context
         )
 
-        assert is_valid == True
+        assert is_valid
 
     def test_four_laws_endangers_human(self, validator, joint_states):
         """Test action that endangers human"""
@@ -177,7 +177,7 @@ class TestSafetyValidator:
             "Dangerous motion", commands, joint_states, context
         )
 
-        assert is_valid == False
+        assert not is_valid
         assert "FOUR LAWS VIOLATION" in reason
 
     def test_four_laws_human_in_workspace(self, validator, joint_states):
@@ -193,7 +193,7 @@ class TestSafetyValidator:
             "Motion with human nearby", commands, joint_states, context
         )
 
-        assert is_valid == False
+        assert not is_valid
 
     def test_hardware_limits_validation(self, validator, joint_states):
         """Test hardware limits enforcement"""
@@ -205,7 +205,7 @@ class TestSafetyValidator:
             "Limit exceeding motion", commands, joint_states, context
         )
 
-        assert is_valid == False
+        assert not is_valid
         assert "exceeds limits" in reason
 
     def test_violation_history(self, validator, joint_states):
@@ -249,7 +249,7 @@ class TestRobotController:
         controller = RobotControllerManager(hardware, validator, config)
         success = controller.start()
 
-        assert success == True
+        assert success
         assert controller._state == RobotState.READY
 
         controller.stop()
@@ -269,7 +269,7 @@ class TestRobotController:
         )
 
         success = controller.execute_command(command)
-        assert success == True
+        assert success
 
         time.sleep(0.5)
         controller.stop()
@@ -282,7 +282,7 @@ class TestRobotController:
         controller.start()
 
         success = controller.emergency_stop()
-        assert success == True
+        assert success
         assert controller._state == RobotState.EMERGENCY_STOP
 
         controller.stop()
@@ -359,7 +359,7 @@ class TestTriumvirateValidation:
 
         is_valid, reason, metadata = validator.validate_command(command, joint_states)
 
-        assert is_valid == True
+        assert is_valid
         assert "cerberus" in metadata["validation_stages"]
         assert "codex" in metadata["validation_stages"]
         assert "galahad" in metadata["validation_stages"]
@@ -376,7 +376,7 @@ class TestTriumvirateValidation:
 
         is_valid, reason, metadata = validator.validate_command(command, joint_states)
 
-        assert is_valid == False
+        assert not is_valid
         assert "Cerberus" in reason
 
 
@@ -388,10 +388,10 @@ class TestMainframeIntegration:
         system = RoboticMainframeSystem()
         success = system.initialize()
 
-        assert success == True
-        assert system.status.initialized == True
-        assert system.status.hardware_healthy == True
-        assert system.status.controller_active == True
+        assert success
+        assert system.status.initialized
+        assert system.status.hardware_healthy
+        assert system.status.controller_active
 
         system.shutdown()
 
@@ -401,7 +401,7 @@ class TestMainframeIntegration:
         system.initialize()
 
         success = system.execute_motion([0.1, 0.1, 0.1, 0.1, 0.1, 0.1], 1.0)
-        assert success == True
+        assert success
 
         time.sleep(1.5)
         system.shutdown()
@@ -417,7 +417,7 @@ class TestMainframeIntegration:
 
         # Emergency stop
         success = system.emergency_stop()
-        assert success == True
+        assert success
 
         status = system.get_status()
         assert "EMERGENCY_STOP" in status.active_alarms
@@ -429,15 +429,15 @@ class TestMainframeIntegration:
         api = RoboticIntegrationAPI()
         success = api.initialize()
 
-        assert success == True
+        assert success
 
         # Move joints
         success = api.move_joints([0.1, 0.1, 0.1, 0.1, 0.1, 0.1])
-        assert success == True
+        assert success
 
         # Check health
         is_healthy = api.is_healthy()
-        assert is_healthy == True
+        assert is_healthy
 
         api.shutdown()
 

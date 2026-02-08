@@ -258,7 +258,7 @@ class CommandControlSubsystem(
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to initialize Command & Control subsystem: {e}")
+            self.logger.error("Failed to initialize Command & Control subsystem: %s", e)
             return False
 
     def shutdown(self) -> bool:
@@ -279,7 +279,7 @@ class CommandControlSubsystem(
             return True
 
         except Exception as e:
-            self.logger.error(f"Error during shutdown: {e}")
+            self.logger.error("Error during shutdown: %s", e)
             return False
 
     def health_check(self) -> bool:
@@ -301,7 +301,7 @@ class CommandControlSubsystem(
             1 for m in self._missions.values() if m.status == MissionStatus.ACTIVE
         )
         if active_missions > self.max_concurrent_missions:
-            self.logger.warning(f"Too many active missions: {active_missions}")
+            self.logger.warning("Too many active missions: %s", active_missions)
             return False
 
         return True
@@ -360,7 +360,7 @@ class CommandControlSubsystem(
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to send message: {e}")
+            self.logger.error("Failed to send message: %s", e)
             return False
 
     def receive_messages(self) -> list[Any]:
@@ -437,7 +437,7 @@ class CommandControlSubsystem(
             )
 
         except Exception as e:
-            self.logger.error(f"Command execution failed: {e}")
+            self.logger.error("Command execution failed: %s", e)
             return SubsystemResponse(
                 command_id=command.command_id,
                 success=False,
@@ -511,7 +511,9 @@ class CommandControlSubsystem(
                 try:
                     callback(data)
                 except Exception as e:
-                    self.logger.error(f"Error in event callback {subscription_id}: {e}")
+                    self.logger.error(
+                        "Error in event callback %s: %s", subscription_id, e
+                    )
 
             return len(subscribers)
 
@@ -526,7 +528,7 @@ class CommandControlSubsystem(
                 self._cleanup_old_data()
                 time.sleep(1.0)
             except Exception as e:
-                self.logger.error(f"Error in processing loop: {e}")
+                self.logger.error("Error in processing loop: %s", e)
                 time.sleep(1.0)
 
     def _process_tasks(self):
@@ -593,7 +595,7 @@ class CommandControlSubsystem(
             return mission
 
         except Exception as e:
-            self.logger.error(f"Failed to create mission: {e}")
+            self.logger.error("Failed to create mission: %s", e)
             return None
 
     def _update_mission_status(self, params: dict[str, Any]) -> bool:
@@ -664,7 +666,7 @@ class CommandControlSubsystem(
             return task
 
         except Exception as e:
-            self.logger.error(f"Failed to create task: {e}")
+            self.logger.error("Failed to create task: %s", e)
             return None
 
     def _allocate_resources(self, params: dict[str, Any]) -> str | None:
@@ -695,7 +697,7 @@ class CommandControlSubsystem(
             return allocation_id
 
         except Exception as e:
-            self.logger.error(f"Failed to allocate resources: {e}")
+            self.logger.error("Failed to allocate resources: %s", e)
             return None
 
     def _get_mission_status(self, params: dict[str, Any]) -> dict[str, Any] | None:
@@ -761,7 +763,7 @@ class CommandControlSubsystem(
             return plan
 
         except Exception as e:
-            self.logger.error(f"Failed to plan tactical response: {e}")
+            self.logger.error("Failed to plan tactical response: %s", e)
             return None
 
     def _initialize_command_hierarchy(self):
@@ -896,10 +898,10 @@ class CommandControlSubsystem(
             with open(state_file, "w") as f:
                 json.dump(state, f, indent=2, default=str)
 
-            self.logger.info(f"State saved to {state_file}")
+            self.logger.info("State saved to %s", state_file)
 
         except Exception as e:
-            self.logger.error(f"Failed to save state: {e}")
+            self.logger.error("Failed to save state: %s", e)
 
     def _load_state(self):
         """Load persistent state."""
@@ -924,7 +926,7 @@ class CommandControlSubsystem(
                     )
                     self._missions[mission.mission_id] = mission
 
-                self.logger.info(f"State loaded from {state_file}")
+                self.logger.info("State loaded from %s", state_file)
 
         except Exception as e:
-            self.logger.error(f"Failed to load state: {e}")
+            self.logger.error("Failed to load state: %s", e)

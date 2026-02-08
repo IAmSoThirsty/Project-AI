@@ -40,6 +40,7 @@ from typing import Any
 
 try:
     import cbor2
+
     HAS_CBOR = True
 except ImportError:
     HAS_CBOR = False
@@ -51,6 +52,7 @@ logger = logging.getLogger(__name__)
 
 class ViolationType(Enum):
     """Types of constitutional violations."""
+
     SLUDGE_TO_RS = "sludge_to_rs_blocked"
     NARRATIVE_TO_PROBABILITY = "narrative_to_probability_blocked"
     NON_AUDITED_DATA = "non_audited_data_blocked"
@@ -65,16 +67,19 @@ class ViolationType(Enum):
 
 class ConstitutionalViolation(Exception):
     """Raised when a constitutional constraint is violated."""
+
     def __init__(self, violation_type: ViolationType, details: str):
         self.violation_type = violation_type
         self.details = details
-        super().__init__(f"CONSTITUTIONAL VIOLATION [{violation_type.value}]: {details}")
+        super().__init__(
+            f"CONSTITUTIONAL VIOLATION [{violation_type.value}]: {details}"
+        )
 
 
 class ConstitutionalKernel:
     """
     Layer 0: Immutable Constitutional Kernel
-    
+
     Hard-coded runtime constraints that run before every simulation tick.
     NO BYPASS. NO OVERRIDE. ABORT ON VIOLATION.
     """
@@ -99,7 +104,9 @@ class ConstitutionalKernel:
                 "status": "active",
                 "bypass_allowed": False,
                 "override_allowed": False,
-                "hash_method": "canonical_cbor" if HAS_CBOR else "canonical_json_quantized",
+                "hash_method": (
+                    "canonical_cbor" if HAS_CBOR else "canonical_json_quantized"
+                ),
                 "axioms": [
                     "Determinism > Interpretation",
                     "Probability > Narrative",
@@ -107,21 +114,21 @@ class ConstitutionalKernel:
                     "Isolation > Contamination",
                     "Reproducibility > Authority",
                     "Bounded Inputs > Open Chaos",
-                    "Abort > Drift"
-                ]
-            }
+                    "Abort > Drift",
+                ],
+            },
         )
 
     def run_pre_tick_check(self, state: dict[str, Any]) -> bool:
         """
         Run all constitutional checks before a simulation tick.
-        
+
         Args:
             state: Current system state
-            
+
         Returns:
             True if all checks pass
-            
+
         Raises:
             ConstitutionalViolation: If any constraint is violated
         """
@@ -137,7 +144,9 @@ class ConstitutionalKernel:
             self._check_sludge_to_rs_blocked(state)
             self._check_narrative_to_probability_blocked(state)
             self._check_non_audited_data_blocked(state)
-            self._check_agency_inference_structural(state)  # FIXED: structural, not lexical
+            self._check_agency_inference_structural(
+                state
+            )  # FIXED: structural, not lexical
             self._check_seed_present(state)
             self._check_hash_integrity_canonical(state)  # FIXED: canonical hashing
             self._check_graph_drift_enforced(state)  # FIXED: actual enforcement
@@ -151,8 +160,8 @@ class ConstitutionalKernel:
                 actor="CONSTITUTIONAL_KERNEL",
                 details={
                     "timestamp": self._last_check_timestamp,
-                    "state_id": state.get("id", "unknown")
-                }
+                    "state_id": state.get("id", "unknown"),
+                },
             )
 
             return True
@@ -171,17 +180,17 @@ class ConstitutionalKernel:
                     "details": e.details,
                     "timestamp": self._last_check_timestamp,
                     "state_id": state.get("id", "unknown"),
-                    "total_violations": self._violation_count
-                }
+                    "total_violations": self._violation_count,
+                },
             )
 
-            logger.critical(f"CONSTITUTIONAL VIOLATION: {e}")
+            logger.critical("CONSTITUTIONAL VIOLATION: %s", e)
             raise
 
     def _check_sludge_to_rs_blocked(self, state: dict[str, Any]) -> None:
         """
         HARD CONSTRAINT: Sludge → RS is BLOCKED
-        
+
         Sludge (fictional narrative) data must NEVER enter Reality Stack.
         """
         stack = state.get("stack", "")
@@ -190,23 +199,25 @@ class ConstitutionalKernel:
         if stack == "RS" and "sludge" in data_source.lower():
             raise ConstitutionalViolation(
                 ViolationType.SLUDGE_TO_RS,
-                f"Attempted to inject sludge data into Reality Stack: {data_source}"
+                f"Attempted to inject sludge data into Reality Stack: {data_source}",
             )
 
         # Check if any data objects are marked as sludge
         if stack == "RS":
             for key, value in state.items():
                 if isinstance(value, dict):
-                    if value.get("is_sludge", False) or value.get("sludge_origin", False):
+                    if value.get("is_sludge", False) or value.get(
+                        "sludge_origin", False
+                    ):
                         raise ConstitutionalViolation(
                             ViolationType.SLUDGE_TO_RS,
-                            f"Sludge-marked data found in RS: {key}"
+                            f"Sludge-marked data found in RS: {key}",
                         )
 
     def _check_narrative_to_probability_blocked(self, state: dict[str, Any]) -> None:
         """
         HARD CONSTRAINT: Narrative → Probability is BLOCKED
-        
+
         Narrative descriptions must not be converted to numeric probabilities
         without proper evidence and bayesian processing.
         """
@@ -215,17 +226,19 @@ class ConstitutionalKernel:
             for item_key, item_value in state.items():
                 if isinstance(item_value, dict):
                     # If it has narrative but no evidence_vector, block probability assignment
-                    if item_value.get("narrative") and not item_value.get("evidence_vector"):
+                    if item_value.get("narrative") and not item_value.get(
+                        "evidence_vector"
+                    ):
                         if "probability" in item_value or "likelihood" in item_value:
                             raise ConstitutionalViolation(
                                 ViolationType.NARRATIVE_TO_PROBABILITY,
-                                f"Narrative converted to probability without evidence: {item_key}"
+                                f"Narrative converted to probability without evidence: {item_key}",
                             )
 
     def _check_non_audited_data_blocked(self, state: dict[str, Any]) -> None:
         """
         HARD CONSTRAINT: Non-audited data → projection is BLOCKED
-        
+
         All data entering projections must have audit trail and hash.
         """
         if state.get("type") in ["projection", "simulation", "timeline"]:
@@ -239,19 +252,19 @@ class ConstitutionalKernel:
                     if not metadata.get("hash"):
                         raise ConstitutionalViolation(
                             ViolationType.NON_AUDITED_DATA,
-                            f"Non-hashed data in projection input: {data_key}"
+                            f"Non-hashed data in projection input: {data_key}",
                         )
 
                     if not metadata.get("source"):
                         raise ConstitutionalViolation(
                             ViolationType.NON_AUDITED_DATA,
-                            f"Unsourced data in projection input: {data_key}"
+                            f"Unsourced data in projection input: {data_key}",
                         )
 
     def _check_agency_inference_structural(self, state: dict[str, Any]) -> None:
         """
         HARD CONSTRAINT: Agency inference without TierA/B requires penalty signal.
-        
+
         FIXED: Schema-based, not lexical. Kernel validates, does not mutate.
         """
         claims = state.get("claims", [])
@@ -279,15 +292,15 @@ class ConstitutionalKernel:
                         raise ConstitutionalViolation(
                             ViolationType.AGENCY_WITHOUT_TIER,
                             f"Agency claim {claim.get('id', 'unknown')} requires TierA/B evidence. "
-                            f"Layer 4 (Bayesian Engine) must apply penalty."
+                            f"Layer 4 (Bayesian Engine) must apply penalty.",
                         )
 
     def _check_temporal_consistency(self, state: dict[str, Any]) -> None:
         """
         HARD CONSTRAINT: Clock consistency check
-        
+
         CRITICAL FIX: Enforces monotonic time progression, prevents temporal skew.
-        
+
         Checks:
         - Monotonic timestep progression
         - Consistency between state year, graph year, driver year
@@ -310,7 +323,7 @@ class ConstitutionalKernel:
                     raise ConstitutionalViolation(
                         ViolationType.NON_MONOTONIC_TIME,
                         f"Non-monotonic timestep! Previous: {self._last_timestep}, "
-                        f"Current: {current_timestep}"
+                        f"Current: {current_timestep}",
                     )
 
                 # Check for unexpected jumps (should be +1 for sequential ticks)
@@ -320,7 +333,7 @@ class ConstitutionalKernel:
                     if not parameters.get("timestep_jump_declared"):
                         raise ConstitutionalViolation(
                             ViolationType.TEMPORAL_SKEW,
-                            f"Undeclared timestep jump of {timestep_delta} steps"
+                            f"Undeclared timestep jump of {timestep_delta} steps",
                         )
 
             # Update last timestep
@@ -337,7 +350,7 @@ class ConstitutionalKernel:
                         raise ConstitutionalViolation(
                             ViolationType.TEMPORAL_SKEW,
                             f"Temporal skew: state year={current_year}, "
-                            f"graph year={graph_year}"
+                            f"graph year={graph_year}",
                         )
 
             # Check driver context year if present
@@ -349,7 +362,7 @@ class ConstitutionalKernel:
                         raise ConstitutionalViolation(
                             ViolationType.TEMPORAL_SKEW,
                             f"Temporal skew: state year={current_year}, "
-                            f"driver year={driver_year}"
+                            f"driver year={driver_year}",
                         )
 
         # Check 3: No future leakage into past
@@ -357,7 +370,7 @@ class ConstitutionalKernel:
         if created_at:
             try:
                 # Parse timestamp with timezone awareness
-                created_time = datetime.fromisoformat(created_at.replace('Z', '+00:00'))
+                created_time = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
                 # Use timezone-aware current time
                 now = datetime.now(UTC)
 
@@ -369,11 +382,11 @@ class ConstitutionalKernel:
                 if created_time > now:
                     raise ConstitutionalViolation(
                         ViolationType.TEMPORAL_SKEW,
-                        f"State created_at {created_at} is in the future!"
+                        f"State created_at {created_at} is in the future!",
                     )
             except Exception as e:
                 # Log but don't fail on timestamp parse errors
-                logger.debug(f"Could not parse timestamp {created_at}: {e}")
+                logger.debug("Could not parse timestamp %s: %s", created_at, e)
 
         # Check 4: Step size must be consistent
         if "previous_step_size_hours" in parameters:
@@ -383,13 +396,13 @@ class ConstitutionalKernel:
                 if not parameters.get("step_size_change_declared"):
                     raise ConstitutionalViolation(
                         ViolationType.TEMPORAL_SKEW,
-                        f"Undeclared step size change from {prev_step_size}h to {step_size_hours}h"
+                        f"Undeclared step size change from {prev_step_size}h to {step_size_hours}h",
                     )
 
     def _check_seed_present(self, state: dict[str, Any]) -> None:
         """
         HARD CONSTRAINT: Seed omission → projection INVALID
-        
+
         All projections must have deterministic seed.
         """
         if state.get("type") in ["projection", "simulation", "timeline"]:
@@ -398,26 +411,25 @@ class ConstitutionalKernel:
             if "seed" not in parameters or not parameters["seed"]:
                 raise ConstitutionalViolation(
                     ViolationType.SEED_OMISSION,
-                    "Projection attempted without deterministic seed"
+                    "Projection attempted without deterministic seed",
                 )
 
             # Validate seed format
             seed = parameters["seed"]
             if not isinstance(seed, str) or len(seed) < 16:
                 raise ConstitutionalViolation(
-                    ViolationType.SEED_OMISSION,
-                    f"Invalid seed format: {seed}"
+                    ViolationType.SEED_OMISSION, f"Invalid seed format: {seed}"
                 )
 
     def _compute_canonical_hash(self, data: Any) -> str:
         """
         Compute canonical, deterministic hash using CBOR or quantized JSON.
-        
+
         CRITICAL FIX: Handles floats, numpy arrays, timestamps, ordering.
-        
+
         Args:
             data: Data to hash
-            
+
         Returns:
             SHA-256 hash hex string
         """
@@ -430,27 +442,30 @@ class ConstitutionalKernel:
                 binary_data = cbor2.dumps(normalized, canonical=True)
                 return hashlib.sha256(binary_data).hexdigest()
             except Exception as e:
-                logger.warning(f"CBOR encoding failed, falling back to quantized JSON: {e}")
+                logger.warning(
+                    "CBOR encoding failed, falling back to quantized JSON: %s", e
+                )
 
         # Fallback: Quantized JSON with explicit ordering
         import json
-        json_str = json.dumps(normalized, sort_keys=True, separators=(',', ':'))
-        return hashlib.sha256(json_str.encode('utf-8')).hexdigest()
+
+        json_str = json.dumps(normalized, sort_keys=True, separators=(",", ":"))
+        return hashlib.sha256(json_str.encode("utf-8")).hexdigest()
 
     def _normalize_for_hashing(self, data: Any) -> Any:
         """
         Normalize data to canonical form for deterministic hashing.
-        
+
         Handles:
         - Float quantization (8 decimal places)
-        - NaN/Inf standardization  
+        - NaN/Inf standardization
         - Timestamp normalization
         - Dict key ordering
         - Type coercion
-        
+
         Args:
             data: Data to normalize
-            
+
         Returns:
             Normalized data
         """
@@ -480,8 +495,7 @@ class ConstitutionalKernel:
         if isinstance(data, dict):
             # Recursively normalize, enforce key sorting
             return {
-                str(k): self._normalize_for_hashing(v)
-                for k, v in sorted(data.items())
+                str(k): self._normalize_for_hashing(v) for k, v in sorted(data.items())
             }
 
         if isinstance(data, (list, tuple)):
@@ -495,6 +509,7 @@ class ConstitutionalKernel:
         # Try to handle numpy/scipy objects if present
         try:
             import numpy as np
+
             if isinstance(data, np.ndarray):
                 # Quantize and convert to list
                 return [self._normalize_for_hashing(float(x)) for x in data.flatten()]
@@ -506,13 +521,13 @@ class ConstitutionalKernel:
             pass
 
         # For unknown types, use string representation
-        logger.warning(f"Normalizing unknown type {type(data)} to string")
+        logger.warning("Normalizing unknown type %s to string", type(data))
         return str(data)
 
     def _check_hash_integrity_canonical(self, state: dict[str, Any]) -> None:
         """
         HARD CONSTRAINT: Hash mismatch → ABORT
-        
+
         FIXED: Uses canonical hashing with float quantization and type normalization.
         """
         metadata = state.get("metadata", {})
@@ -533,13 +548,13 @@ class ConstitutionalKernel:
             if computed_hash != claimed_hash:
                 raise ConstitutionalViolation(
                     ViolationType.HASH_MISMATCH,
-                    f"Hash mismatch! Claimed: {claimed_hash[:16]}..., Computed: {computed_hash[:16]}..."
+                    f"Hash mismatch! Claimed: {claimed_hash[:16]}..., Computed: {computed_hash[:16]}...",
                 )
 
     def _check_graph_drift_enforced(self, state: dict[str, Any]) -> None:
         """
         HARD CONSTRAINT: Graph drift without checksum → ABORT
-        
+
         FIXED: Actual Merkle chain validation, not a no-op.
         """
         if "influence_graph" not in state:
@@ -557,7 +572,7 @@ class ConstitutionalKernel:
         if not metadata.get("hash"):
             raise ConstitutionalViolation(
                 ViolationType.GRAPH_DRIFT,
-                f"Influence graph {graph_id} missing hash checksum"
+                f"Influence graph {graph_id} missing hash checksum",
             )
 
         current_hash = metadata["hash"]
@@ -573,7 +588,7 @@ class ConstitutionalKernel:
                 # First time seeing this baseline - record it
                 self._baseline_graph_hashes[baseline_hash] = {
                     "first_seen": datetime.utcnow().isoformat(),
-                    "descendants": set()
+                    "descendants": set(),
                 }
 
             # Record this graph as a descendant
@@ -598,7 +613,7 @@ class ConstitutionalKernel:
                 raise ConstitutionalViolation(
                     ViolationType.GRAPH_DRIFT,
                     f"Graph {graph_id} claims parent {parent_hash[:16]}... "
-                    f"but parent not in validated lineage"
+                    f"but parent not in validated lineage",
                 )
 
         # 3. Verify graph hash is correct
@@ -614,13 +629,13 @@ class ConstitutionalKernel:
             raise ConstitutionalViolation(
                 ViolationType.GRAPH_DRIFT,
                 f"Graph {graph_id} hash mismatch! "
-                f"Claimed: {current_hash[:16]}..., Computed: {computed_hash[:16]}..."
+                f"Claimed: {current_hash[:16]}..., Computed: {computed_hash[:16]}...",
             )
 
     def _check_parameter_bounds_complete(self, state: dict[str, Any]) -> None:
         """
         HARD CONSTRAINT: Parameter outside bounded range → ABORT
-        
+
         FIXED: Complete bounds including decay rates, volatility, coupling, noise, utilities.
         """
         parameters = state.get("parameters", {})
@@ -631,36 +646,30 @@ class ConstitutionalKernel:
             "horizon_days": (1, 18250),  # 1 day to 50 years
             "step_size_hours": (1, 8760),  # 1 hour to 1 year
             "timestep": (0, 1000000),  # Maximum simulation steps
-
             # Probability/confidence bounds
             "influence_score": (0.0, 1.0),
             "probability": (0.0, 1.0),
             "confidence": (0.0, 1.0),
             "weight": (0.0, 1.0),
             "posterior": (0.0, 1.0),
-
             # Decay rates
             "decay_rate": (0.0, 1.0),
             "decay_half_life": (1, 36500),  # 1 day to 100 years
             "temporal_decay": (0.0, 1.0),
-
             # Volatility and noise
             "volatility": (0.0, 10.0),  # Allow up to 10x volatility
             "noise_variance": (0.0, 1.0),
             "stochastic_volatility": (0.0, 1.0),
             "noise_amplitude": (0.0, 1.0),
-
             # Coupling coefficients
             "coupling_coefficient": (-1.0, 1.0),  # Allow negative feedback
             "feedback_strength": (0.0, 1.0),
             "propagation_factor": (0.0, 1.0),
             "damping": (0.0, 1.0),
-
             # Agent utilities
             "utility_weight": (0.0, 1.0),
             "utility_discount": (0.0, 1.0),
             "risk_aversion": (-1.0, 1.0),  # Allow risk-seeking
-
             # Graph metrics
             "centrality": (0.0, 1.0),
             "betweenness": (0.0, 1.0),
@@ -668,7 +677,6 @@ class ConstitutionalKernel:
             "pagerank": (0.0, 1.0),
             "modularity": (-1.0, 1.0),  # Can be negative
             "assortativity": (-1.0, 1.0),  # Can be negative
-
             # Sensitivity analysis
             "perturbation_magnitude": (0.0, 1.0),
             "sensitivity_threshold": (0.0, 1.0),
@@ -684,18 +692,18 @@ class ConstitutionalKernel:
                         if math.isnan(param_value):
                             raise ConstitutionalViolation(
                                 ViolationType.PARAMETER_OUT_OF_BOUNDS,
-                                f"Parameter {param_name} is NaN"
+                                f"Parameter {param_name} is NaN",
                             )
                         if math.isinf(param_value):
                             raise ConstitutionalViolation(
                                 ViolationType.PARAMETER_OUT_OF_BOUNDS,
-                                f"Parameter {param_name} is Inf"
+                                f"Parameter {param_name} is Inf",
                             )
 
                     if not (min_val <= param_value <= max_val):
                         raise ConstitutionalViolation(
                             ViolationType.PARAMETER_OUT_OF_BOUNDS,
-                            f"Parameter {param_name}={param_value} outside bounds [{min_val}, {max_val}]"
+                            f"Parameter {param_name}={param_value} outside bounds [{min_val}, {max_val}]",
                         )
 
         # Check drivers are bounded [0, 1]
@@ -708,13 +716,13 @@ class ConstitutionalKernel:
                             if math.isnan(driver_value) or math.isinf(driver_value):
                                 raise ConstitutionalViolation(
                                     ViolationType.PARAMETER_OUT_OF_BOUNDS,
-                                    f"Driver {driver_name} is NaN or Inf"
+                                    f"Driver {driver_name} is NaN or Inf",
                                 )
 
                         if not (0.0 <= driver_value <= 1.0):
                             raise ConstitutionalViolation(
                                 ViolationType.PARAMETER_OUT_OF_BOUNDS,
-                                f"Driver {driver_name}={driver_value} outside bounds [0.0, 1.0]"
+                                f"Driver {driver_name}={driver_value} outside bounds [0.0, 1.0]",
                             )
 
     def get_statistics(self) -> dict[str, Any]:
@@ -724,7 +732,7 @@ class ConstitutionalKernel:
             "last_check": self._last_check_timestamp,
             "status": "active",
             "bypass_allowed": False,
-            "override_allowed": False
+            "override_allowed": False,
         }
 
 
@@ -752,7 +760,7 @@ if __name__ == "__main__":
     # Test constitutional kernel
     logging.basicConfig(
         level=logging.DEBUG,
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
 
     kernel = ConstitutionalKernel()
@@ -762,20 +770,17 @@ if __name__ == "__main__":
         "id": "WS-TEST-001",
         "stack": "TS-0",
         "type": "projection",
-        "parameters": {
-            "seed": "ATLAS-TS0-BASE-2026-02-07-001",
-            "horizon_days": 30
-        },
-        "metadata": {
-            "created_at": datetime.utcnow().isoformat(),
-            "source": "test"
-        }
+        "parameters": {"seed": "ATLAS-TS0-BASE-2026-02-07-001", "horizon_days": 30},
+        "metadata": {"created_at": datetime.utcnow().isoformat(), "source": "test"},
     }
 
     # Compute hash
     import json
-    json_str = json.dumps(valid_state, sort_keys=True, separators=(',', ':'))
-    valid_state["metadata"]["hash"] = hashlib.sha256(json_str.encode('utf-8')).hexdigest()
+
+    json_str = json.dumps(valid_state, sort_keys=True, separators=(",", ":"))
+    valid_state["metadata"]["hash"] = hashlib.sha256(
+        json_str.encode("utf-8")
+    ).hexdigest()
 
     try:
         kernel.run_pre_tick_check(valid_state)
@@ -787,9 +792,7 @@ if __name__ == "__main__":
     invalid_state = {
         "id": "WS-TEST-002",
         "stack": "RS",  # Reality Stack
-        "metadata": {
-            "source": "sludge_sandbox"  # VIOLATION!
-        }
+        "metadata": {"source": "sludge_sandbox"},  # VIOLATION!
     }
 
     try:

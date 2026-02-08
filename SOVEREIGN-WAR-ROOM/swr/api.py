@@ -19,6 +19,7 @@ from .scenario import DifficultyLevel, ScenarioType
 # Request/Response models
 class AISystemResponse(BaseModel):
     """AI system response to scenario."""
+
     decision: str
     reasoning: dict[str, Any] | None = None
     confidence: float | None = None
@@ -28,6 +29,7 @@ class AISystemResponse(BaseModel):
 
 class ExecuteScenarioRequest(BaseModel):
     """Request to execute a scenario."""
+
     scenario_id: str
     system_id: str
     response: AISystemResponse
@@ -35,6 +37,7 @@ class ExecuteScenarioRequest(BaseModel):
 
 class LoadScenariosRequest(BaseModel):
     """Request to load scenarios."""
+
     round_number: int | None = None
     scenario_type: ScenarioType | None = None
     difficulty: DifficultyLevel | None = None
@@ -44,7 +47,7 @@ class LoadScenariosRequest(BaseModel):
 app = FastAPI(
     title="SOVEREIGN WAR ROOM API",
     description="AI Governance Testing Framework API",
-    version="1.0.0"
+    version="1.0.0",
 )
 
 # Add CORS middleware
@@ -66,7 +69,7 @@ async def root():
     return {
         "name": "SOVEREIGN WAR ROOM API",
         "version": "1.0.0",
-        "status": "operational"
+        "status": "operational",
     }
 
 
@@ -80,10 +83,10 @@ async def health_check():
 async def load_scenarios(request: LoadScenariosRequest = Body(...)):
     """
     Load scenarios for testing.
-    
+
     Args:
         request: Load scenarios request
-        
+
     Returns:
         List of loaded scenarios
     """
@@ -92,7 +95,9 @@ async def load_scenarios(request: LoadScenariosRequest = Body(...)):
 
         # Filter by type if specified
         if request.scenario_type:
-            scenarios = [s for s in scenarios if s.scenario_type == request.scenario_type]
+            scenarios = [
+                s for s in scenarios if s.scenario_type == request.scenario_type
+            ]
 
         # Filter by difficulty if specified
         if request.difficulty:
@@ -100,7 +105,7 @@ async def load_scenarios(request: LoadScenariosRequest = Body(...)):
 
         return {
             "count": len(scenarios),
-            "scenarios": [s.model_dump() for s in scenarios]
+            "scenarios": [s.model_dump() for s in scenarios],
         }
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -110,10 +115,10 @@ async def load_scenarios(request: LoadScenariosRequest = Body(...)):
 async def get_scenario(scenario_id: str):
     """
     Get scenario by ID.
-    
+
     Args:
         scenario_id: Scenario identifier
-        
+
     Returns:
         Scenario details
     """
@@ -127,18 +132,16 @@ async def get_scenario(scenario_id: str):
 
 @app.post("/scenarios/{scenario_id}/execute")
 async def execute_scenario(
-    scenario_id: str,
-    system_id: str,
-    response: AISystemResponse
+    scenario_id: str, system_id: str, response: AISystemResponse
 ):
     """
     Execute a scenario with AI system response.
-    
+
     Args:
         scenario_id: Scenario identifier
         system_id: AI system identifier
         response: AI system response
-        
+
     Returns:
         Execution results
     """
@@ -148,28 +151,21 @@ async def execute_scenario(
         raise HTTPException(status_code=404, detail="Scenario not found")
 
     try:
-        result = swr.execute_scenario(
-            scenario,
-            response.model_dump(),
-            system_id
-        )
+        result = swr.execute_scenario(scenario, response.model_dump(), system_id)
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.get("/results")
-async def get_results(
-    system_id: str | None = None,
-    round_number: int | None = None
-):
+async def get_results(system_id: str | None = None, round_number: int | None = None):
     """
     Get execution results.
-    
+
     Args:
         system_id: Optional filter by system
         round_number: Optional filter by round
-        
+
     Returns:
         List of results
     """
@@ -181,10 +177,10 @@ async def get_results(
 async def verify_result(result_id: int):
     """
     Verify integrity of a result.
-    
+
     Args:
         result_id: Index of result to verify
-        
+
     Returns:
         Verification status
     """
@@ -198,7 +194,7 @@ async def verify_result(result_id: int):
         "result_id": result_id,
         "valid": is_valid,
         "scenario_id": result["scenario_id"],
-        "system_id": result["system_id"]
+        "system_id": result["system_id"],
     }
 
 
@@ -206,10 +202,10 @@ async def verify_result(result_id: int):
 async def get_leaderboard(limit: int = 10):
     """
     Get competition leaderboard.
-    
+
     Args:
         limit: Maximum entries to return
-        
+
     Returns:
         Leaderboard entries
     """
@@ -221,10 +217,10 @@ async def get_leaderboard(limit: int = 10):
 async def get_system_performance(system_id: str):
     """
     Get performance metrics for a system.
-    
+
     Args:
         system_id: System identifier
-        
+
     Returns:
         Performance metrics
     """
@@ -240,10 +236,10 @@ async def get_system_performance(system_id: str):
 async def get_scenario_statistics(scenario_id: str):
     """
     Get statistics for a scenario.
-    
+
     Args:
         scenario_id: Scenario identifier
-        
+
     Returns:
         Scenario statistics
     """
@@ -259,10 +255,10 @@ async def get_scenario_statistics(scenario_id: str):
 async def get_audit_log(limit: int = 100):
     """
     Get governance audit log.
-    
+
     Args:
         limit: Maximum entries to return
-        
+
     Returns:
         Audit log entries
     """
@@ -274,11 +270,11 @@ async def get_audit_log(limit: int = 100):
 async def get_proof(proof_id: str, reveal_witness: bool = False):
     """
     Get and optionally verify a proof.
-    
+
     Args:
         proof_id: Proof identifier
         reveal_witness: Whether to reveal witness data
-        
+
     Returns:
         Proof and verification result
     """
@@ -289,31 +285,24 @@ async def get_proof(proof_id: str, reveal_witness: bool = False):
 
     verification = swr.proof_system.verify_proof(proof, reveal_witness)
 
-    return {
-        "proof": proof.model_dump(),
-        "verification": verification
-    }
+    return {"proof": proof.model_dump(), "verification": verification}
 
 
 @app.post("/export")
 async def export_results(filename: str, format: str = "json"):
     """
     Export results to file.
-    
+
     Args:
         filename: Output filename
         format: Export format (json, csv)
-        
+
     Returns:
         Export confirmation
     """
     try:
         filepath = swr.export_results(filename, format)
-        return {
-            "success": True,
-            "filepath": filepath,
-            "format": format
-        }
+        return {"success": True, "filepath": filepath, "format": format}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -321,7 +310,7 @@ async def export_results(filename: str, format: str = "json"):
 def start_api(host: str = "0.0.0.0", port: int = 8000):
     """
     Start the API server.
-    
+
     Args:
         host: Host address
         port: Port number
