@@ -4,15 +4,15 @@ Complete Demonstration Script for Google/DARPA Presentations
 Professional presentation demo with narrative and visual elements.
 """
 
+import os
 import sys
 import time
-import os
 
 # Add kernel to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from kernel.thirsty_super_kernel import ThirstySuperKernel, SystemConfig
-from kernel.visualize import VisualizationMode, ASCIIArt
+from kernel.thirsty_super_kernel import SystemConfig, ThirstySuperKernel
+from kernel.visualize import ASCIIArt, VisualizationMode
 
 
 class PresentationDemo:
@@ -64,7 +64,7 @@ class PresentationDemo:
                 print("✓ Command executed successfully")
                 print("\n🎭 [SYSTEM VIEW - Hidden from attacker]")
                 print(f"   Attacker is now in DECEPTION LAYER {result['layer']}")
-                print(f"   All activity is being logged")
+                print("   All activity is being logged")
             else:
                 print(f"✓ Command executed successfully (Layer {result['layer']})")
 

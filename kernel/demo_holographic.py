@@ -4,10 +4,9 @@ Interactive Demo of Holographic Defense System
 Demonstrates the revolutionary security system for Google/DARPA presentations.
 """
 
-import sys
 import time
-from typing import List
-from kernel.holographic import HolographicLayerManager, Command, ThreatLevel
+
+from kernel.holographic import Command, HolographicLayerManager
 
 
 class Colors:
@@ -115,10 +114,10 @@ class HolographicDemo:
             f"\n{Colors.MAGENTA}{Colors.BOLD}=== ATTACK SCENARIO: Privilege Escalation with Data Exfiltration ==={Colors.RESET}\n"
         )
         print(f"{Colors.WHITE}Simulating a sophisticated attacker attempting to:")
-        print(f"  1. Reconnaissance")
-        print(f"  2. Privilege escalation")
-        print(f"  3. Access sensitive data")
-        print(f"  4. Exfiltrate data")
+        print("  1. Reconnaissance")
+        print("  2. Privilege escalation")
+        print("  3. Access sensitive data")
+        print("  4. Exfiltrate data")
         print(f"{Colors.RESET}")
 
         input(f"\n{Colors.CYAN}Press Enter to start attack simulation...{Colors.RESET}")
@@ -187,7 +186,7 @@ class HolographicDemo:
         result = deception_layer.trigger_bubblegum_protocol()
 
         print(f"\n{Colors.YELLOW}{'=' * 70}")
-        print(f"  BUBBLEGUM PROTOCOL EXECUTED")
+        print("  BUBBLEGUM PROTOCOL EXECUTED")
         print(f"  - Attacker ID: {result['attacker']}")
         print(f"  - Commands Logged: {result['commands_logged']}")
         print(f"  - Threat Type: {result['threat_type']}")
@@ -238,9 +237,9 @@ class HolographicDemo:
         self.print_header()
 
         print(f"{Colors.WHITE}Choose demo mode:{Colors.RESET}")
-        print(f"  1. Automated Attack Scenario (Recommended for presentation)")
-        print(f"  2. Interactive Mode (Manual testing)")
-        print(f"  3. Quick Test (Both modes)")
+        print("  1. Automated Attack Scenario (Recommended for presentation)")
+        print("  2. Interactive Mode (Manual testing)")
+        print("  3. Quick Test (Both modes)")
 
         choice = input(f"\n{Colors.CYAN}Select (1-3): {Colors.RESET}")
 
