@@ -131,8 +131,15 @@ class ThirstyAST {
   }
 
   exportJSON(filepath) {
-    fs.writeFileSync(filepath, JSON.stringify(this.ast, null, 2));
-    console.log(`✓ AST exported to ${filepath}`);
+    try {
+      // Validate filepath to prevent path traversal
+      const validatedPath = validatePath(filepath);
+      fs.writeFileSync(validatedPath, JSON.stringify(this.ast, null, 2));
+      console.log(`✓ AST exported to ${filepath}`);
+    } catch (error) {
+      console.error('❌ Error exporting AST: ' + error.message);
+      throw error;
+    }
   }
 }
 
@@ -148,20 +155,27 @@ function main() {
 
   const filename = args[0];
 
-  if (!fs.existsSync(filename)) {
-    console.error(`Error: File '${filename}' not found`);
+  try {
+    // Validate filename to prevent path traversal
+    const validatedFilename = validatePath(filename);
+    if (!isValidFile(validatedFilename)) {
+      console.error(`Error: File '${filename}' not found or is not a valid file`);
+      process.exit(1);
+    }
+
+    const code = fs.readFileSync(validatedFilename, 'utf-8');
+    const astGenerator = new ThirstyAST();
+    astGenerator.parse(code);
+    astGenerator.generateDiagram();
+
+    // Export JSON if requested
+    const jsonIndex = args.indexOf('--json');
+    if (jsonIndex !== -1 && args[jsonIndex + 1]) {
+      astGenerator.exportJSON(args[jsonIndex + 1]);
+    }
+  } catch (error) {
+    console.error('Error: ' + error.message);
     process.exit(1);
-  }
-
-  const code = fs.readFileSync(filename, 'utf-8');
-  const astGenerator = new ThirstyAST();
-  astGenerator.parse(code);
-  astGenerator.generateDiagram();
-
-  // Export JSON if requested
-  const jsonIndex = args.indexOf('--json');
-  if (jsonIndex !== -1 && args[jsonIndex + 1]) {
-    astGenerator.exportJSON(args[jsonIndex + 1]);
   }
 }
 

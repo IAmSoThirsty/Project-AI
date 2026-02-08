@@ -3,6 +3,9 @@
  * Measure execution time and optimize your code
  */
 
+const fs = require('fs');
+const path = require('path');
+const { validatePath, isValidFile } = require('./path-validator');
 const ThirstyInterpreter = require('./index');
 
 class ThirstyProfiler extends ThirstyInterpreter {
@@ -92,7 +95,6 @@ class ThirstyProfiler extends ThirstyInterpreter {
 }
 
 function main() {
-  const fs = require('fs');
   const args = process.argv.slice(2);
 
   if (args.length === 0) {
@@ -103,17 +105,24 @@ function main() {
 
   const filename = args[0];
 
-  if (!fs.existsSync(filename)) {
-    console.error("Error: File '" + filename + "' not found");
+  try {
+    // Validate filename to prevent path traversal
+    const validatedFilename = validatePath(filename);
+    if (!isValidFile(validatedFilename)) {
+      console.error("Error: File '" + filename + "' not found or is not a valid file");
+      process.exit(1);
+    }
+
+    const code = fs.readFileSync(validatedFilename, 'utf-8');
+    const profiler = new ThirstyProfiler();
+
+    console.log('⚡ Profiling execution...\n');
+    profiler.execute(code);
+    profiler.generateReport();
+  } catch (error) {
+    console.error('Error: ' + error.message);
     process.exit(1);
   }
-
-  const code = fs.readFileSync(filename, 'utf-8');
-  const profiler = new ThirstyProfiler();
-
-  console.log('⚡ Profiling execution...\n');
-  profiler.execute(code);
-  profiler.generateReport();
 }
 
 if (require.main === module) {
