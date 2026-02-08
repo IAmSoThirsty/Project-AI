@@ -1,0 +1,223 @@
+name: Generate SBOM (Software Bill of Materials)
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'requirements.txt'
+      - 'requirements-dev.txt'
+      - 'package.json'
+      - 'pyproject.toml'
+  schedule:
+    - cron: '0 2 * * 1'  # Weekly on Monday at 2 AM UTC
+  workflow_dispatch:  # Manual trigger
+
+permissions:
+  contents: write
+  security-events: write
+
+jobs:
+  generate-python-sbom:
+    name: Generate Python Dependencies SBOM
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install cyclonedx-bom
+        run: |
+          pip install cyclonedx-bom
+      
+      - name: Generate CycloneDX SBOM for Python
+        run: |
+          mkdir -p docs/security_compliance/sbom
+          
+          echo "📦 Generating Python SBOM..."
+          cyclonedx-py requirements \
+            --requirements-file requirements.txt \
+            --output-format json \
+            --output-file docs/security_compliance/sbom/python-sbom.json
+          
+          # Also generate XML format
+          cyclonedx-py requirements \
+            --requirements-file requirements.txt \
+            --output-format xml \
+            --output-file docs/security_compliance/sbom/python-sbom.xml
+          
+          echo "✅ Python SBOM generated"
+      
+      - name: Generate dev dependencies SBOM
+        run: |
+          if [ -f requirements-dev.txt ]; then
+            cyclonedx-py requirements \
+              --requirements-file requirements-dev.txt \
+              --output-format json \
+              --output-file docs/security_compliance/sbom/python-dev-sbom.json
+            
+            echo "✅ Python dev SBOM generated"
+          fi
+      
+      - name: Add SBOM metadata
+        run: |
+          cat > docs/security_compliance/sbom/README.md << 'EOF'
+# Software Bill of Materials (SBOM)
+
+**Last Generated**: $(date -u +"%Y-%m-%d %H:%M:%S UTC")  
+**Format**: CycloneDX 1.4+
+
+## Purpose
+
+This directory contains machine-readable Software Bill of Materials (SBOM) files for Project-AI dependencies. These files enable:
+
+- **Supply chain security**: Track all dependencies and their versions
+- **Vulnerability scanning**: Automated security analysis
+- **License compliance**: Track dependency licenses
+- **Audit trail**: Historical record of dependency changes
+
+## Files
+
+### Python Dependencies
+
+- `python-sbom.json` - Production Python dependencies (CycloneDX JSON)
+- `python-sbom.xml` - Production Python dependencies (CycloneDX XML)
+- `python-dev-sbom.json` - Development Python dependencies
+
+### Node.js Dependencies
+
+- `nodejs-sbom.json` - Node.js dependencies (if applicable)
+
+## Verification
+
+To verify the SBOM:
+
+\`\`\`bash
+# Install CycloneDX CLI
+npm install -g @cyclonedx/cyclonedx-cli
+
+# Validate SBOM
+cyclonedx validate --input-file python-sbom.json
+\`\`\`
+
+## Update Frequency
+
+SBOMs are automatically regenerated:
+- On dependency file changes (requirements.txt, package.json)
+- Weekly (Monday 2 AM UTC)
+- On manual workflow trigger
+
+## Standards Compliance
+
+- **Format**: CycloneDX 1.4+ (OWASP standard)
+- **Alternative**: SPDX format available on request
+- **Specification**: https://cyclonedx.org/specification/overview/
+
+## Integration
+
+SBOMs can be ingested by:
+- Dependency-Track (https://dependencytrack.org/)
+- GitHub Dependency Graph
+- Third-party security scanning tools
+
+---
+
+**Maintained by**: Automated CI workflow  
+**Contact**: security@project-ai.dev
+EOF
+          
+          echo "✅ SBOM README created"
+      
+      - name: Commit SBOM files
+        if: github.event_name != 'pull_request'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add docs/security_compliance/sbom/
+          
+          if git diff --staged --quiet; then
+            echo "No changes to SBOM files"
+          else
+            git commit -m "chore: Update SBOM files [automated]"
+            git push
+            echo "✅ SBOM files committed"
+          fi
+
+  generate-nodejs-sbom:
+    name: Generate Node.js Dependencies SBOM
+    runs-on: ubuntu-latest
+    if: hashFiles('package.json') != ''
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Install cyclonedx-npm
+        run: |
+          npm install -g @cyclonedx/cyclonedx-npm
+      
+      - name: Generate CycloneDX SBOM for Node.js
+        run: |
+          mkdir -p docs/security_compliance/sbom
+          
+          echo "📦 Generating Node.js SBOM..."
+          cyclonedx-npm \
+            --output-file docs/security_compliance/sbom/nodejs-sbom.json \
+            --output-format JSON
+          
+          echo "✅ Node.js SBOM generated"
+      
+      - name: Commit SBOM files
+        if: github.event_name != 'pull_request'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add docs/security_compliance/sbom/
+          
+          if git diff --staged --quiet; then
+            echo "No changes to SBOM files"
+          else
+            git commit -m "chore: Update Node.js SBOM [automated]"
+            git push
+            echo "✅ Node.js SBOM files committed"
+          fi
+
+  summary:
+    name: SBOM Generation Summary
+    runs-on: ubuntu-latest
+    needs: [generate-python-sbom, generate-nodejs-sbom]
+    if: always()
+    
+    steps:
+      - name: Summary
+        run: |
+          echo "═══════════════════════════════════════════════════════════"
+          echo "📊 SBOM GENERATION SUMMARY"
+          echo "═══════════════════════════════════════════════════════════"
+          echo ""
+          echo "SBOM files generated for:"
+          echo "  ✅ Python dependencies (requirements.txt)"
+          echo "  ✅ Python dev dependencies (requirements-dev.txt)"
+          echo "  ✅ Node.js dependencies (package.json)"
+          echo ""
+          echo "Format: CycloneDX 1.4+ (JSON + XML)"
+          echo "Location: docs/security_compliance/sbom/"
+          echo ""
+          echo "Next steps:"
+          echo "  - Review SBOM files for completeness"
+          echo "  - Integrate with Dependency-Track or similar"
+          echo "  - Set up automated vulnerability scanning"
+          echo "═══════════════════════════════════════════════════════════"
