@@ -13,6 +13,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from .sql_utils import sanitize_identifier_list
+
 logger = logging.getLogger(__name__)
 
 
@@ -412,8 +414,18 @@ class BuildMemoryDB:
 
         with self.get_connection() as conn:
             try:
+                # Sanitize column names to prevent SQL injection
+                # Extract column names from "column = ?" format and validate
+                column_names = [u.split(" = ?")[0].strip() for u in updates if " = ?" in u]
+                safe_columns = sanitize_identifier_list(column_names)
+                # Rebuild updates list with sanitized column names
+                safe_updates = [f"{col} = ?" for col in safe_columns]
+                # Add the timestamp update that doesn't have a placeholder
+                if "updated_at = CURRENT_TIMESTAMP" in updates:
+                    safe_updates.append("updated_at = CURRENT_TIMESTAMP")
+                
                 conn.execute(
-                    f"UPDATE builds SET {', '.join(updates)} WHERE id = ?",
+                    f"UPDATE builds SET {', '.join(safe_updates)} WHERE id = ?",
                     params,
                 )
                 conn.commit()
@@ -570,8 +582,13 @@ class BuildMemoryDB:
 
         with self.get_connection() as conn:
             try:
+                # Sanitize column names to prevent SQL injection
+                column_names = [u.split(" = ?")[0].strip() for u in updates]
+                safe_columns = sanitize_identifier_list(column_names)
+                safe_updates = [f"{col} = ?" for col in safe_columns]
+                
                 conn.execute(
-                    f"UPDATE build_phases SET {', '.join(updates)} WHERE id = ?",
+                    f"UPDATE build_phases SET {', '.join(safe_updates)} WHERE id = ?",
                     params,
                 )
                 conn.commit()

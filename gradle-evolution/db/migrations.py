@@ -12,6 +12,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from .sql_utils import sanitize_identifier, sanitize_identifier_list
+
 logger = logging.getLogger(__name__)
 
 
@@ -428,8 +430,12 @@ class MigrationManager:
             Number of rows migrated
         """
         with self._get_connection() as conn:
+            # Sanitize table name to prevent SQL injection
+            # Note: Table names cannot be parameterized in SQL, so we validate them
+            safe_table = sanitize_identifier(table)
+            
             # Get all rows
-            cursor = conn.execute(f"SELECT * FROM {table}")
+            cursor = conn.execute(f"SELECT * FROM {safe_table}")
             rows = cursor.fetchall()
             columns = [desc[0] for desc in cursor.description]
 
@@ -441,15 +447,17 @@ class MigrationManager:
                     row_dict = dict(zip(columns, row, strict=False))
                     transformed = transform(row_dict)
 
-                    # Build UPDATE statement
-                    set_clause = ", ".join(f"{k} = ?" for k in transformed)
+                    # Build UPDATE statement with validated column names
+                    # Column names cannot be parameterized, so we sanitize them
+                    safe_columns = sanitize_identifier_list(list(transformed.keys()))
+                    set_clause = ", ".join(f"{col} = ?" for col in safe_columns)
                     values = list(transformed.values())
                     row_id = row_dict.get("id")
 
                     if row_id:
                         values.append(row_id)
                         conn.execute(
-                            f"UPDATE {table} SET {set_clause} WHERE id = ?",
+                            f"UPDATE {safe_table} SET {set_clause} WHERE id = ?",
                             values,
                         )
                         migrated += 1
@@ -478,18 +486,27 @@ class MigrationManager:
             Number of rows copied
         """
         with self._get_connection() as conn:
+            # Sanitize table names to prevent SQL injection
+            safe_source = sanitize_identifier(source_table)
+            safe_dest = sanitize_identifier(dest_table)
+            
             if column_mapping:
-                source_cols = ", ".join(column_mapping.keys())
-                dest_cols = ", ".join(column_mapping.values())
+                # Sanitize column names
+                safe_src_cols = sanitize_identifier_list(list(column_mapping.keys()))
+                safe_dest_cols = sanitize_identifier_list(list(column_mapping.values()))
+                source_cols = ", ".join(safe_src_cols)
+                dest_cols = ", ".join(safe_dest_cols)
             else:
                 # Copy all columns with same names
-                cursor = conn.execute(f"SELECT * FROM {source_table} LIMIT 0")
+                cursor = conn.execute(f"SELECT * FROM {safe_source} LIMIT 0")
                 columns = [desc[0] for desc in cursor.description]
-                source_cols = dest_cols = ", ".join(columns)
+                # Sanitize column names from schema
+                safe_columns = sanitize_identifier_list(columns)
+                source_cols = dest_cols = ", ".join(safe_columns)
 
             conn.execute(f"""
-                INSERT INTO {dest_table} ({dest_cols})
-                SELECT {source_cols} FROM {source_table}
+                INSERT INTO {safe_dest} ({dest_cols})
+                SELECT {source_cols} FROM {safe_source}
             """)
 
             cursor = conn.execute("SELECT changes()")
@@ -509,12 +526,16 @@ class MigrationManager:
         Returns:
             Backup table name
         """
+        # Sanitize table name to prevent SQL injection
+        safe_table = sanitize_identifier(table)
+        
         timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
         backup_table = f"{table}_backup_{timestamp}"
+        safe_backup = sanitize_identifier(backup_table)
 
         with self._get_connection() as conn:
-            conn.execute(f"CREATE TABLE {backup_table} AS SELECT * FROM {table}")
-            cursor = conn.execute(f"SELECT COUNT(*) FROM {backup_table}")
+            conn.execute(f"CREATE TABLE {safe_backup} AS SELECT * FROM {safe_table}")
+            cursor = conn.execute(f"SELECT COUNT(*) FROM {safe_backup}")
             count = cursor.fetchone()[0]
             conn.commit()
 
@@ -532,12 +553,16 @@ class MigrationManager:
         Returns:
             Number of rows restored
         """
+        # Sanitize table names to prevent SQL injection
+        safe_backup = sanitize_identifier(backup_table)
+        safe_target = sanitize_identifier(target_table)
+        
         with self._get_connection() as conn:
             # Clear target table
-            conn.execute(f"DELETE FROM {target_table}")
+            conn.execute(f"DELETE FROM {safe_target}")
 
             # Copy from backup
-            conn.execute(f"INSERT INTO {target_table} SELECT * FROM {backup_table}")
+            conn.execute(f"INSERT INTO {safe_target} SELECT * FROM {safe_backup}")
 
             cursor = conn.execute("SELECT changes()")
             restored = cursor.fetchone()[0]
