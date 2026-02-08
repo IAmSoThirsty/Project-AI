@@ -18,7 +18,7 @@ from gradle_evolution.capsules.capsule_engine import CapsuleEngine, BuildCapsule
 from gradle_evolution.capsules.replay_engine import ReplayEngine
 from gradle_evolution.security.security_engine import SecurityEngine
 from gradle_evolution.audit.audit_integration import BuildAuditIntegration
-from gradle_evolution.audit.accountability import AccountabilityTracker
+from gradle_evolution.audit.accountability import AccountabilitySystem
 from gradle_evolution.api.verifiability_api import VerifiabilityAPI
 
 
@@ -41,7 +41,7 @@ class TestFullBuildWorkflow:
         
         # Accountability
         accountability_path = temp_dir / "accountability.json"
-        accountability = AccountabilityTracker(storage_path=accountability_path)
+        accountability = AccountabilitySystem(storage_path=accountability_path)
         
         # Capsule layer
         capsule_storage = temp_dir / "capsules"

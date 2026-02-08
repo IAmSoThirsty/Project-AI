@@ -174,6 +174,14 @@ def mock_four_laws(mocker):
 
 
 @pytest.fixture
+def mock_identity_manager(mocker):
+    """Mock IdentityManager for testing."""
+    mock = mocker.MagicMock()
+    mock.verify_identity.return_value = True
+    return mock
+
+
+@pytest.fixture
 def mock_audit_function(mocker):
     """Mock audit function from cognition.audit."""
     return mocker.patch("cognition.audit.audit")
