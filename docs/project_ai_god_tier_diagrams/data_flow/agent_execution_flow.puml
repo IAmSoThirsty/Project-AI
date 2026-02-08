@@ -1,0 +1,223 @@
+@startuml agent_execution_flow
+!theme plain
+skinparam backgroundColor #FFFFFF
+
+title Project-AI Agent Execution Flow - Dynamic Selection and Orchestration
+
+participant "ExecutionService" as Exec
+participant "AgentSelector" as Selector
+participant "AgentOrchestrator" as Orch
+participant "AgentPool" as Pool
+participant "Agent" as Agent
+participant "MemoryEngine" as Memory
+database "PostgreSQL" as DB
+
+== Agent Selection ==
+
+Exec -> Selector: Select agent(request)
+activate Selector
+
+Selector -> Selector: Extract intent\nfrom request
+
+note right of Selector
+  **INTENT → AGENT MAPPING**
+  query.information → IntelligenceAgent
+  analysis.data → DataAnalysisAgent
+  generation.image → ImageGenerationAgent
+  command.execute → CommandExecutionAgent
+  learning.request → LearningAgent
+  memory.search → MemorySearchAgent
+  security.scan → SecurityScanAgent
+  location.track → LocationTrackingAgent
+  emergency.alert → EmergencyAlertAgent
+end note
+
+Selector -> Selector: Load agent configuration
+
+Selector --> Exec: Selected agent(s)
+deactivate Selector
+
+== Multi-Agent Orchestration (if applicable) ==
+
+alt Multi-Agent Request
+    Exec -> Orch: Build execution graph
+    activate Orch
+    
+    Orch -> Orch: Detect dependencies\nbetween agents
+    
+    note right of Orch
+      Example dependency chain:
+      DataLoadAgent →
+        DataAnalysisAgent →
+          ReportGenerationAgent
+    end note
+    
+    Orch -> Orch: Topological sort\nfor execution order
+    
+    Orch --> Exec: Execution graph
+    deactivate Orch
+end
+
+== Agent Acquisition from Pool ==
+
+Exec -> Pool: Acquire agent
+activate Pool
+
+alt Agent Available in Pool
+    Pool -> Pool: Get from queue
+    Pool --> Exec: Pooled agent
+else Pool Exhausted
+    Pool -> Pool: Create new instance
+    Pool --> Exec: New agent
+end
+
+deactivate Pool
+
+== Agent Execution with Timeout ==
+
+Exec -> Agent: execute(request)
+activate Agent
+
+note right of Agent
+  **TIMEOUT PROTECTION**
+  Default: 60 seconds
+  Configurable per agent
+  Automatic cleanup on timeout
+end note
+
+Agent -> Agent: Validate input
+
+alt Input Validation Failed
+    Agent --> Exec: Validation error
+    Exec -> Memory: Record error
+    activate Memory
+    Memory -> DB: Write to error channel
+    deactivate Memory
+    deactivate Agent
+else Input Valid
+    Agent -> Agent: Perform operation
+    
+    alt Execution Timeout
+        Agent --> Exec: TimeoutError
+        
+        Exec -> Memory: Record timeout
+        activate Memory
+        Memory -> DB: Write to error channel
+        note right
+          • Error type: TimeoutError
+          • Agent: {agent_type}
+          • Timeout: {seconds}
+          • Recovery: operation_aborted
+        end note
+        deactivate Memory
+        
+        deactivate Agent
+    else Execution Success
+        Agent -> Agent: Generate result
+        Agent --> Exec: AgentResult(success)
+        
+        note right of Agent
+          **AGENT RESULT**
+          • Status: success
+          • Output: execution output
+          • Execution time: Xms
+          • Resources used: {...}
+          • Side effects: [...]
+        end note
+        
+        deactivate Agent
+    end
+end
+
+== Result Recording ==
+
+Exec -> Memory: Record result
+activate Memory
+
+par Five-Channel Recording
+    Memory -> DB: Write to result channel
+    Memory -> DB: Write to reflection channel
+end
+
+Memory --> Exec: Result recorded
+deactivate Memory
+
+== Agent Release to Pool ==
+
+Exec -> Agent: Reset state
+activate Agent
+Agent -> Agent: Clear context\nReset counters
+Agent --> Exec: Reset complete
+deactivate Agent
+
+Exec -> Pool: Release agent
+activate Pool
+Pool -> Pool: Return to queue\n(if pool not full)
+Pool --> Exec: Released
+deactivate Pool
+
+== Parallel Execution (if applicable) ==
+
+note over Exec, DB
+  **PARALLEL AGENT EXECUTION**
+  For independent operations
+end note
+
+par Agent 1
+    Exec -> Agent: execute(request)
+    activate Agent
+    Agent --> Exec: Result 1
+    deactivate Agent
+else Agent 2
+    Exec -> Agent: execute(request)
+    activate Agent
+    Agent --> Exec: Result 2
+    deactivate Agent
+else Agent 3
+    Exec -> Agent: execute(request)
+    activate Agent
+    Agent --> Exec: Result 3
+    deactivate Agent
+end
+
+Exec -> Exec: Aggregate results
+
+== Sequential Execution (if dependencies) ==
+
+note over Exec, DB
+  **SEQUENTIAL AGENT EXECUTION**
+  With dependency resolution
+end note
+
+Exec -> Agent: execute Agent 1
+activate Agent
+Agent --> Exec: Result 1
+deactivate Agent
+
+Exec -> Agent: execute Agent 2\n(with Result 1)
+activate Agent
+Agent --> Exec: Result 2
+deactivate Agent
+
+Exec -> Agent: execute Agent 3\n(with Results 1 & 2)
+activate Agent
+Agent --> Exec: Result 3
+deactivate Agent
+
+note over Exec, DB
+  **PERFORMANCE METRICS (P95)**
+  Simple agent: < 1s
+  Medium agent: < 30s
+  Complex agent: < 60s
+  
+  **THROUGHPUT**
+  Concurrent agents: 50+
+  Agents/second: 100+
+  
+  **AGENT POOL**
+  Pool size: 10 per agent type
+  Acquisition timeout: 1s
+  Auto-scaling: enabled
+end note
+
+@enduml
