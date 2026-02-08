@@ -4,6 +4,7 @@
  */
 
 const fs = require('fs');
+const { validatePath, isValidFile } = require('./path-validator');
 
 class ThirstyLinter {
   constructor(options = {}) {
@@ -180,10 +181,20 @@ class ThirstyLinter {
   }
 
   lintFile(filepath) {
-    const code = fs.readFileSync(filepath, 'utf-8');
-    const results = this.lint(code, filepath);
-    this.printResults(results);
-    return results.isValid;
+    try {
+      // Validate filepath to prevent path traversal
+      const validatedPath = validatePath(filepath);
+      if (!isValidFile(validatedPath)) {
+        throw new Error('File not found or is not a valid file');
+      }
+      const code = fs.readFileSync(validatedPath, 'utf-8');
+      const results = this.lint(code, filepath);
+      this.printResults(results);
+      return results.isValid;
+    } catch (error) {
+      console.error('❌ Error linting file: ' + error.message);
+      return false;
+    }
   }
 }
 

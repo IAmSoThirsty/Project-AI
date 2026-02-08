@@ -5,6 +5,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { validatePath, safeJoin, isValidFile, isValidDirectory } = require('./path-validator');
 
 class ThirstyDocGenerator {
   constructor() {
@@ -154,24 +155,37 @@ class ThirstyDocGenerator {
   }
 
   generate(inputFile, outputDir = 'docs') {
-    const code = fs.readFileSync(inputFile, 'utf-8');
-    this.parse(code);
+    try {
+      // Validate input file path
+      const validatedInputFile = validatePath(inputFile);
+      if (!isValidFile(validatedInputFile)) {
+        throw new Error('Input file not found or is not a valid file');
+      }
+      
+      const code = fs.readFileSync(validatedInputFile, 'utf-8');
+      this.parse(code);
 
-    if (!fs.existsSync(outputDir)) {
-      fs.mkdirSync(outputDir, { recursive: true });
+      // Validate output directory path
+      const validatedOutputDir = validatePath(outputDir);
+      if (!fs.existsSync(validatedOutputDir)) {
+        fs.mkdirSync(validatedOutputDir, { recursive: true });
+      }
+
+      // Generate Markdown
+      const markdown = this.generateMarkdown();
+      const mdPath = safeJoin(validatedOutputDir, 'API.md');
+      fs.writeFileSync(mdPath, markdown);
+      console.log(`✓ Generated ${mdPath}`);
+
+      // Generate HTML
+      const html = this.generateHTML();
+      const htmlPath = safeJoin(validatedOutputDir, 'index.html');
+      fs.writeFileSync(htmlPath, html);
+      console.log(`✓ Generated ${htmlPath}`);
+    } catch (error) {
+      console.error('❌ Error generating documentation: ' + error.message);
+      throw error;
     }
-
-    // Generate Markdown
-    const markdown = this.generateMarkdown();
-    const mdPath = path.join(outputDir, 'API.md');
-    fs.writeFileSync(mdPath, markdown);
-    console.log(`✓ Generated ${mdPath}`);
-
-    // Generate HTML
-    const html = this.generateHTML();
-    const htmlPath = path.join(outputDir, 'index.html');
-    fs.writeFileSync(htmlPath, html);
-    console.log(`✓ Generated ${htmlPath}`);
 
     console.log('\n📚 Documentation generated successfully!');
     console.log(`   Open ${htmlPath} in your browser to view`);
