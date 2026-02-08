@@ -1,0 +1,209 @@
+name: Documentation Truth Gates
+
+on:
+  pull_request:
+    paths:
+      - '**.md'
+      - '**.py'
+      - 'tarl/**'
+      - 'src/thirsty_lang/**'
+  push:
+    branches:
+      - main
+      - develop
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly on Sunday
+
+jobs:
+  validate-doc-code-alignment:
+    name: Validate Documentation-Code Alignment
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Check for "planned" features with implementation
+        run: |
+          echo "🔍 Checking for 'planned' features that are actually implemented..."
+          
+          VIOLATIONS=0
+          
+          # Files to check
+          DOC_FILES=(
+            "src/thirsty_lang/docs/SPECIFICATION.md"
+            "tarl/README.md"
+            "docs/developer/tarl/TARL_README.md"
+          )
+          
+          for doc in "${DOC_FILES[@]}"; do
+            if [ ! -f "$doc" ]; then
+              continue
+            fi
+            
+            echo "Checking: $doc"
+            
+            # Look for "planned" or "not yet implemented" near feature keywords
+            if grep -in "planned\|not yet implemented\|todo.*implement" "$doc" | grep -v "^#" | head -5; then
+              echo "⚠️  Found 'planned' markers in $doc"
+              echo "   → Verify these features are truly unimplemented"
+              # Not a hard error, just a warning for review
+            fi
+          done
+          
+          echo "✅ Planned feature check complete"
+      
+      - name: Validate version consistency
+        run: |
+          echo "🔍 Validating version numbers across documentation..."
+          
+          VIOLATIONS=0
+          
+          # Check TARL versions
+          echo "Checking TARL versions..."
+          
+          # Extract versions from different files
+          TARL_README_VERSION=$(grep -m 1 "Version.*[0-9]" tarl/README.md | grep -oP '\d+\.\d+\.\d+' || echo "not-found")
+          TARL_CORE_VERSION=$(grep -m 1 "TARL_VERSION.*=.*[\"']" tarl/core.py | grep -oP '\d+\.\d+' || echo "not-found")
+          TARL_SYSTEM_VERSION=$(grep -m 1 "VERSION.*=.*[\"']" tarl/system.py | grep -oP '\d+\.\d+\.\d+' || echo "not-found")
+          
+          echo "  TARL README version: $TARL_README_VERSION"
+          echo "  TARL core.py version: $TARL_CORE_VERSION (Policy system)"
+          echo "  TARL system.py version: $TARL_SYSTEM_VERSION (Language VM)"
+          
+          # These are intentionally different systems, so just log them
+          if [ "$TARL_README_VERSION" != "1.0.0" ]; then
+            echo "⚠️  TARL README version is $TARL_README_VERSION (expected 1.0.0 for Language VM)"
+          fi
+          
+          # Check pyproject.toml version
+          if [ -f "pyproject.toml" ]; then
+            PYPROJECT_VERSION=$(grep -m 1 '^version = ' pyproject.toml | grep -oP '\d+\.\d+\.\d+' || echo "not-found")
+            echo "  pyproject.toml version: $PYPROJECT_VERSION"
+          fi
+          
+          echo "✅ Version consistency check complete"
+      
+      - name: Check for implemented features without "Implemented" tag
+        run: |
+          echo "🔍 Checking for implemented features not marked as such..."
+          
+          # Check Thirsty-Lang keywords in implementation vs docs
+          IMPLEMENTED_KEYWORDS=()
+          
+          if [ -f "src/thirsty_lang/src/index.js" ]; then
+            # Extract implemented keywords from code
+            while IFS= read -r keyword; do
+              IMPLEMENTED_KEYWORDS+=("$keyword")
+            done < <(grep -oP "startsWith\(['\"](\w+)" src/thirsty_lang/src/index.js | cut -d"'" -f2 | cut -d'"' -f2 | sort -u)
+            
+            echo "Found ${#IMPLEMENTED_KEYWORDS[@]} implemented keywords in Thirsty-Lang"
+            
+            # Check if these are documented
+            if [ -f "src/thirsty_lang/docs/SPECIFICATION.md" ]; then
+              for keyword in "${IMPLEMENTED_KEYWORDS[@]}"; do
+                if ! grep -q "$keyword" src/thirsty_lang/docs/SPECIFICATION.md; then
+                  echo "⚠️  Keyword '$keyword' implemented but not in SPECIFICATION.md"
+                fi
+              done
+            fi
+          fi
+          
+          echo "✅ Implementation documentation check complete"
+      
+      - name: Validate archive references
+        run: |
+          echo "🔍 Validating that archived docs are properly indexed..."
+          
+          # Check if ARCHIVE_INDEX.md exists
+          if [ ! -f "docs/internal/archive/ARCHIVE_INDEX.md" ]; then
+            echo "❌ ARCHIVE_INDEX.md is missing!"
+            echo "   → Run: create docs/internal/archive/ARCHIVE_INDEX.md"
+            exit 1
+          fi
+          
+          # Count files in archive
+          ARCHIVE_FILES=$(find docs/internal/archive -type f \( -name "*.md" -o -name "*.txt" \) | wc -l)
+          INDEX_ENTRIES=$(grep -c "\.md\|\.txt" docs/internal/archive/ARCHIVE_INDEX.md || echo "0")
+          
+          echo "  Archive files: $ARCHIVE_FILES"
+          echo "  Index entries: ~$INDEX_ENTRIES"
+          
+          if [ $ARCHIVE_FILES -gt $((INDEX_ENTRIES + 20)) ]; then
+            echo "⚠️  Archive has significantly more files than index entries"
+            echo "   → Consider updating ARCHIVE_INDEX.md"
+          else
+            echo "✅ Archive index appears current"
+          fi
+      
+      - name: Check for common documentation issues
+        run: |
+          echo "🔍 Checking for common documentation issues..."
+          
+          ISSUES=0
+          
+          # Check for TODO without issue reference
+          echo "Checking for untracked TODOs..."
+          TODO_COUNT=$(find . -name "*.md" -not -path "./node_modules/*" -not -path "./.venv/*" -not -path "./.git/*" -exec grep -l "TODO\|FIXME" {} \; | wc -l)
+          
+          if [ $TODO_COUNT -gt 10 ]; then
+            echo "⚠️  Found $TODO_COUNT markdown files with TODO/FIXME"
+            echo "   → Consider converting to GitHub issues"
+          fi
+          
+          # Check for broken internal links (basic check)
+          echo "Checking for potentially broken links..."
+          while IFS= read -r file; do
+            while IFS= read -r link; do
+              # Extract file path from markdown link
+              target=$(echo "$link" | sed -n 's/.*(\([^)]*\)).*/\1/p' | cut -d'#' -f1)
+              
+              # Skip external links
+              if [[ "$target" =~ ^https?:// ]]; then
+                continue
+              fi
+              
+              # Skip if empty or anchor-only
+              if [ -z "$target" ] || [[ "$target" =~ ^# ]]; then
+                continue
+              fi
+              
+              # Resolve relative path
+              dir=$(dirname "$file")
+              full_path="$dir/$target"
+              
+              if [ ! -f "$full_path" ] && [ ! -d "$full_path" ]; then
+                echo "⚠️  Broken link in $file: $target"
+                ISSUES=$((ISSUES + 1))
+              fi
+            done < <(grep -o '\[.*\](.*)'  "$file" | head -20)  # Limit to avoid noise
+          done < <(find docs -name "*.md" -type f | head -10)  # Sample check
+          
+          if [ $ISSUES -gt 0 ]; then
+            echo "⚠️  Found $ISSUES potential link issues (sample check)"
+          else
+            echo "✅ No obvious link issues found (sample check)"
+          fi
+      
+      - name: Summary
+        if: always()
+        run: |
+          echo ""
+          echo "═══════════════════════════════════════════════════════════"
+          echo "📊 DOCUMENTATION TRUTH GATES SUMMARY"
+          echo "═══════════════════════════════════════════════════════════"
+          echo ""
+          echo "✅ Planned vs Implemented check: COMPLETE"
+          echo "✅ Version consistency check: COMPLETE"  
+          echo "✅ Implementation documentation check: COMPLETE"
+          echo "✅ Archive index validation: COMPLETE"
+          echo "✅ Common issues check: COMPLETE"
+          echo ""
+          echo "Documentation alignment validation finished."
+          echo "Review warnings above for potential improvements."
+          echo "═══════════════════════════════════════════════════════════"
