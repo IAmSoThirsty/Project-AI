@@ -7,11 +7,11 @@ Enforces policies/constitution.yaml principles during build execution.
 """
 
 from .engine import ConstitutionalEngine
-from .enforcer import BuildPolicyEnforcer
-from .temporal_law import TemporalLawEngine
+from .enforcer import ConstitutionalEnforcer
+from .temporal_law import TemporalLawEnforcer
 
 __all__ = [
     "ConstitutionalEngine",
-    "BuildPolicyEnforcer",
-    "TemporalLawEngine",
+    "ConstitutionalEnforcer",
+    "TemporalLawEnforcer",
 ]
