@@ -202,6 +202,12 @@ class IntentCompiler:
         node = self._create_node(opcode, attributes=attributes, line_number=line_number)
         
         # Add governance validation if enabled
+        # These three policies are always injected for sensitive operations as they
+        # form the core governance framework:
+        # - non_maleficence: Ensure action doesn't cause harm
+        # - transparency: Action must be auditable
+        # - accountability: Action must be traceable to responsible party
+        # Additional policies can be specified in YAML via explicit validate actions
         entry_node = node  # Default entry point
         if self.governance_enabled and opcode in {IROpcode.COMPILE, IROpcode.DEPLOY, IROpcode.EXEC}:
             validate_node = self._create_node(

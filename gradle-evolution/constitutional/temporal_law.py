@@ -307,6 +307,7 @@ class TemporalLawEnforcer:
             
             for action, workflow_id in list(self.workflow_cache.items()):
                 # Extract timestamp from workflow_id
+                # Expected format: <action>-<timestamp>
                 try:
                     timestamp_str = workflow_id.split("-")[-1]
                     timestamp = datetime.fromtimestamp(float(timestamp_str))
@@ -314,7 +315,12 @@ class TemporalLawEnforcer:
                     if timestamp < cutoff:
                         del self.workflow_cache[action]
                         cleaned += 1
-                except (ValueError, IndexError):
+                except (ValueError, IndexError) as parse_error:
+                    # Log parse failures to detect format changes
+                    logger.warning(
+                        f"Failed to parse timestamp from workflow_id '{workflow_id}': {parse_error}. "
+                        f"Expected format: <action>-<timestamp>"
+                    )
                     continue
             
             logger.info(f"Cleaned up {cleaned} expired workflows")
