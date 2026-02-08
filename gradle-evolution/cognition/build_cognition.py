@@ -97,7 +97,7 @@ class BuildCognitionEngine:
             return optimized_tasks, reasoning
 
         except Exception as e:
-            logger.error(f"Error deliberating build plan: {e}", exc_info=True)
+            logger.error("Error deliberating build plan: %s", e, exc_info=True)
             return tasks, {"error": str(e)}
 
     def learn_from_build(
@@ -142,7 +142,7 @@ class BuildCognitionEngine:
             logger.debug("Learned from build: %s, success=%s", pattern_key, success)
 
         except Exception as e:
-            logger.error(f"Error learning from build: {e}", exc_info=True)
+            logger.error("Error learning from build: %s", e, exc_info=True)
 
     def suggest_optimizations(
         self,
@@ -199,7 +199,7 @@ class BuildCognitionEngine:
             return suggestions
 
         except Exception as e:
-            logger.error(f"Error suggesting optimizations: {e}", exc_info=True)
+            logger.error("Error suggesting optimizations: %s", e, exc_info=True)
             return []
 
     def _analyze_patterns(
@@ -262,7 +262,7 @@ class BuildCognitionEngine:
             return True
 
         except Exception as e:
-            logger.error(f"Error validating task order: {e}", exc_info=True)
+            logger.error("Error validating task order: %s", e, exc_info=True)
             return False
 
     def _compute_pattern_key(self, tasks: list[str]) -> str:

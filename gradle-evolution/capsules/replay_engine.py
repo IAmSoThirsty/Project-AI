@@ -115,7 +115,7 @@ class ReplayEngine:
             return result
 
         except Exception as e:
-            logger.error(f"Error replaying build: {e}", exc_info=True)
+            logger.error("Error replaying build: %s", e, exc_info=True)
             return ReplayResult(
                 success=False,
                 capsule_id=capsule_id,
@@ -148,7 +148,7 @@ class ReplayEngine:
             )
 
         except Exception as e:
-            logger.error(f"Error in Temporal replay: {e}", exc_info=True)
+            logger.error("Error in Temporal replay: %s", e, exc_info=True)
             return ReplayResult(
                 success=False,
                 capsule_id=capsule.capsule_id,
@@ -221,7 +221,7 @@ class ReplayEngine:
             )
 
         except Exception as e:
-            logger.error(f"Error in local replay: {e}", exc_info=True)
+            logger.error("Error in local replay: %s", e, exc_info=True)
             return ReplayResult(
                 success=False,
                 capsule_id=capsule.capsule_id,
@@ -331,7 +331,7 @@ class ReplayEngine:
             return report
 
         except Exception as e:
-            logger.error(f"Error generating replay report: {e}", exc_info=True)
+            logger.error("Error generating replay report: %s", e, exc_info=True)
             return {"error": str(e)}
 
     def _record_replay(

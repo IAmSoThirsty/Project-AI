@@ -147,7 +147,7 @@ class AtlasCLI:
 
         except Exception as e:
             print(f"\n✗ Error during verification: {e}")
-            logger.error(f"Verification error: {e}", exc_info=True)
+            logger.error("Verification error: %s", e, exc_info=True)
             return False
 
     def _verify_data_hashes(self, bundle: dict[str, Any]) -> bool:
@@ -351,7 +351,7 @@ Examples:
         cli = AtlasCLI()
     except Exception as e:
         print(f"✗ Failed to initialize ATLAS: {e}")
-        logger.error(f"Initialization error: {e}", exc_info=True)
+        logger.error("Initialization error: %s", e, exc_info=True)
         sys.exit(1)
 
     # Execute command
@@ -386,7 +386,7 @@ Examples:
         sys.exit(130)
     except Exception as e:
         print(f"\n✗ Error: {e}")
-        logger.error(f"Command error: {e}", exc_info=True)
+        logger.error("Command error: %s", e, exc_info=True)
         sys.exit(1)
 
 

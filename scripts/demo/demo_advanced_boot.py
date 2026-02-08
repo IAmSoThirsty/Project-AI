@@ -346,7 +346,7 @@ def main():
         return 0
 
     except Exception as e:
-        logger.error(f"Demo failed: {e}", exc_info=True)
+        logger.error("Demo failed: %s", e, exc_info=True)
         return 1
 
 

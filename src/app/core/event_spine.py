@@ -335,7 +335,7 @@ class EventSpine:
                     self._stats["events_processed"] += 1
 
             except Exception as e:
-                logger.error(f"Error in event processing loop: {e}", exc_info=True)
+                logger.error("Error in event processing loop: %s", e, exc_info=True)
 
     def _process_event(self, event: Event):
         """

@@ -153,7 +153,7 @@ class RoboticMainframeSystem:
                 return True
 
         except Exception as e:
-            logger.error(f"System initialization failed: {e}", exc_info=True)
+            logger.error("System initialization failed: %s", e, exc_info=True)
             return False
 
     def _validate_system(self) -> bool:

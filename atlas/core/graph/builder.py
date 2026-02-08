@@ -656,5 +656,5 @@ if __name__ == "__main__":
         print(json.dumps(builder.get_statistics(), indent=2))
 
     except Exception as e:
-        logger.error(f"Test failed: {e}", exc_info=True)
+        logger.error("Test failed: %s", e, exc_info=True)
         raise

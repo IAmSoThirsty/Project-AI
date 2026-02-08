@@ -190,7 +190,7 @@ class ExperienceReplayBuffer:
                 logger.info("Saved %s experiences to %s", len(self._buffer), filepath)
                 return True
         except Exception as e:
-            logger.error(f"Failed to save replay buffer: {e}", exc_info=True)
+            logger.error("Failed to save replay buffer: %s", e, exc_info=True)
             return False
 
     def load(self, filename: str = "replay_buffer.pkl") -> bool:
@@ -209,7 +209,7 @@ class ExperienceReplayBuffer:
                 logger.info("Loaded %s experiences from %s", len(self._buffer), filepath)
                 return True
         except Exception as e:
-            logger.error(f"Failed to load replay buffer: {e}", exc_info=True)
+            logger.error("Failed to load replay buffer: %s", e, exc_info=True)
             return False
 
 
@@ -470,7 +470,7 @@ class ReinforcementLearningAgent:
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to save agent: {e}", exc_info=True)
+            logger.error("Failed to save agent: %s", e, exc_info=True)
             return False
 
     def load(self, filename: str | None = None) -> bool:
@@ -502,7 +502,7 @@ class ReinforcementLearningAgent:
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to load agent: {e}", exc_info=True)
+            logger.error("Failed to load agent: %s", e, exc_info=True)
             return False
 
 
@@ -684,7 +684,7 @@ class ContinualLearningSystem:
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to save continual learning state: {e}", exc_info=True)
+            logger.error("Failed to save continual learning state: %s", e, exc_info=True)
             return False
 
     def load(self, filename: str = "continual_learning.json") -> bool:
@@ -709,7 +709,7 @@ class ContinualLearningSystem:
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to load continual learning state: {e}", exc_info=True)
+            logger.error("Failed to load continual learning state: %s", e, exc_info=True)
             return False
 
 

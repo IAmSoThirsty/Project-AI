@@ -164,7 +164,8 @@ def secure_h323_call_setup(
 
 
 def exchange_keys_securely(ep_a, ep_b, key_a, key_b):
-    assert key_a and key_b  # placeholder
+    if not (key_a and key_b  # placeholder):
+        raise AssertionError("Assertion failed: key_a and key_b  # placeholder")
 
 
 def setup_srtp_media(ep_a, ep_b):
@@ -340,9 +341,11 @@ def run_simulated_secure_call():
     globals()["log_event"] = temp_log_event
 
     try:
-        assert validate_certificate_chain(ep.certificate, trust_store, crl_ocsp)
+        if not (validate_certificate_chain(ep.certificate, trust_store, crl_ocsp)):
+            raise AssertionError("Assertion failed: validate_certificate_chain(ep.certificate, trust_store, crl_ocsp)")
         call = secure_h323_call_setup(ep, gw, "+18005551234", trust_store, crl_ocsp)
-        assert call.media_negotiated is True
+        if not (call.media_negotiated is True):
+            raise AssertionError("Assertion failed: call.media_negotiated is True")
 
         ep2 = SimEndpoint("ep-sim-2")
         setup_srtp_media(ep, ep2)

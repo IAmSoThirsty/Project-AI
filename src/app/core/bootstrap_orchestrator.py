@@ -417,7 +417,7 @@ class BootstrapOrchestrator:
             return failure_count == 0
 
         except Exception as e:
-            logger.error(f"Bootstrap failed with exception: {e}", exc_info=True)
+            logger.error("Bootstrap failed with exception: %s", e, exc_info=True)
             self._rollback_bootstrap()
             return False
 

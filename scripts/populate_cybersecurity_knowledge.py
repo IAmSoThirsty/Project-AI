@@ -71,7 +71,7 @@ def main():
         return 0
 
     except Exception as e:
-        logger.error(f"Error populating cybersecurity knowledge: {e}", exc_info=True)
+        logger.error("Error populating cybersecurity knowledge: %s", e, exc_info=True)
         return 1
 
 

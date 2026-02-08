@@ -97,7 +97,7 @@ class DocumentationGenerator:
             return output_path
 
         except Exception as e:
-            logger.error(f"Error generating build history doc: {e}", exc_info=True)
+            logger.error("Error generating build history doc: %s", e, exc_info=True)
             raise
 
     def generate_capsule_registry_doc(self) -> Path:
@@ -141,7 +141,7 @@ class DocumentationGenerator:
             return output_path
 
         except Exception as e:
-            logger.error(f"Error generating capsule registry doc: {e}", exc_info=True)
+            logger.error("Error generating capsule registry doc: %s", e, exc_info=True)
             raise
 
     def generate_audit_summary_doc(
@@ -200,7 +200,7 @@ class DocumentationGenerator:
             return output_path
 
         except Exception as e:
-            logger.error(f"Error generating audit summary doc: {e}", exc_info=True)
+            logger.error("Error generating audit summary doc: %s", e, exc_info=True)
             raise
 
     def generate_api_reference_doc(self) -> Path:
@@ -287,7 +287,7 @@ class DocumentationGenerator:
             return output_path
 
         except Exception as e:
-            logger.error(f"Error generating API reference doc: {e}", exc_info=True)
+            logger.error("Error generating API reference doc: %s", e, exc_info=True)
             raise
 
     def generate_complete_documentation(self) -> list[Path]:
@@ -314,7 +314,7 @@ class DocumentationGenerator:
             return docs
 
         except Exception as e:
-            logger.error(f"Error generating complete documentation: {e}", exc_info=True)
+            logger.error("Error generating complete documentation: %s", e, exc_info=True)
             raise
 
     def _generate_index(self, docs: list[Path]) -> Path:
@@ -369,7 +369,7 @@ class DocumentationGenerator:
             return output_path
 
         except Exception as e:
-            logger.error(f"Error exporting JSON snapshot: {e}", exc_info=True)
+            logger.error("Error exporting JSON snapshot: %s", e, exc_info=True)
             raise
 
 

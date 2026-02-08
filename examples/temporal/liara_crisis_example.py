@@ -144,5 +144,5 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         logger.info("\nDemo interrupted by user")
     except Exception as e:
-        logger.error(f"\nDemo failed: {e}", exc_info=True)
+        logger.error("\nDemo failed: %s", e, exc_info=True)
         sys.exit(1)

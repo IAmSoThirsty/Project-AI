@@ -155,7 +155,7 @@ class AccountabilitySystem:
             return request_id
 
         except Exception as e:
-            logger.error(f"Error requesting policy override: {e}", exc_info=True)
+            logger.error("Error requesting policy override: %s", e, exc_info=True)
             raise
 
     def request_waiver(
@@ -209,7 +209,7 @@ class AccountabilitySystem:
             return request_id
 
         except Exception as e:
-            logger.error(f"Error requesting waiver: {e}", exc_info=True)
+            logger.error("Error requesting waiver: %s", e, exc_info=True)
             raise
 
     def approve_request(
@@ -263,7 +263,7 @@ class AccountabilitySystem:
             return False
 
         except Exception as e:
-            logger.error(f"Error approving request: {e}", exc_info=True)
+            logger.error("Error approving request: %s", e, exc_info=True)
             return False
 
     def deny_request(
@@ -299,7 +299,7 @@ class AccountabilitySystem:
             logger.info("Request denied: %s by %s", request_id, denier)
 
         except Exception as e:
-            logger.error(f"Error denying request: {e}", exc_info=True)
+            logger.error("Error denying request: %s", e, exc_info=True)
 
     def sign_action(
         self,
@@ -345,7 +345,7 @@ class AccountabilitySystem:
             return record_id
 
         except Exception as e:
-            logger.error(f"Error signing action: {e}", exc_info=True)
+            logger.error("Error signing action: %s", e, exc_info=True)
             raise
 
     def get_record(self, record_id: str) -> AccountabilityRecord | None:
@@ -426,7 +426,7 @@ class AccountabilitySystem:
             }
 
         except Exception as e:
-            logger.error(f"Error generating report: {e}", exc_info=True)
+            logger.error("Error generating report: %s", e, exc_info=True)
             return {"error": str(e)}
 
     def _generate_request_id(self, actor: str, identifier: str) -> str:
@@ -441,7 +441,7 @@ class AccountabilitySystem:
             with open(filepath, "w") as f:
                 json.dump(record.to_dict(), f, indent=2)
         except Exception as e:
-            logger.error(f"Error persisting record: {e}", exc_info=True)
+            logger.error("Error persisting record: %s", e, exc_info=True)
 
     def _load_records(self) -> None:
         """Load records from disk."""
@@ -471,7 +471,7 @@ class AccountabilitySystem:
 
             logger.info("Loaded %s accountability records", len(self.records))
         except Exception as e:
-            logger.error(f"Error loading records: {e}", exc_info=True)
+            logger.error("Error loading records: %s", e, exc_info=True)
 
 
 __all__ = ["AccountabilitySystem", "AccountabilityRecord"]

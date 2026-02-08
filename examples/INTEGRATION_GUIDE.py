@@ -288,7 +288,7 @@ class PersonaFeatureExample:
 
     def _on_persona_error(self, error):
         """Handle persona loading error."""
-        self.logger.log_operation(f"Persona loading failed: {error}")
+        self.logger.log_operation("Persona loading failed: %s", error)
 
         DashboardErrorHandler.handle_exception(
             error,

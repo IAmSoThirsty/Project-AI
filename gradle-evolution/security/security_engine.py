@@ -74,7 +74,7 @@ class SecurityEngine:
             return config
 
         except Exception as e:
-            logger.error(f"Error loading config: {e}, using defaults", exc_info=True)
+            logger.error("Error loading config: %s, using defaults", e, exc_info=True)
             return self._default_config()
 
     def _default_config(self) -> dict[str, Any]:
@@ -117,7 +117,7 @@ class SecurityEngine:
             )
 
         except Exception as e:
-            logger.error(f"Error getting security context: {e}", exc_info=True)
+            logger.error("Error getting security context: %s", e, exc_info=True)
             return None
 
     def validate_path_access(
@@ -167,7 +167,7 @@ class SecurityEngine:
             return True, None
 
         except Exception as e:
-            logger.error(f"Error validating path access: {e}", exc_info=True)
+            logger.error("Error validating path access: %s", e, exc_info=True)
             return False, f"Validation error: {str(e)}"
 
     def validate_batch_operations(
@@ -282,7 +282,7 @@ class SecurityEngine:
             }
 
         except Exception as e:
-            logger.error(f"Error getting security summary: {e}", exc_info=True)
+            logger.error("Error getting security summary: %s", e, exc_info=True)
             return {"error": str(e)}
 
     def clear_logs(self) -> None:

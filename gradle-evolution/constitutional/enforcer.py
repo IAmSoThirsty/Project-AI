@@ -115,7 +115,7 @@ class ConstitutionalEnforcer:
             return True, None
 
         except Exception as e:
-            logger.error(f"Error validating build action '{action}': {e}", exc_info=True)
+            logger.error("Error validating build action '%s': %s", action, e, exc_info=True)
             return False, f"Validation error: {str(e)}"
 
     def enforce_task_limit(self, task_count: int) -> tuple[bool, str | None]:
@@ -143,7 +143,7 @@ class ConstitutionalEnforcer:
             return True, None
 
         except Exception as e:
-            logger.error(f"Error enforcing task limit: {e}", exc_info=True)
+            logger.error("Error enforcing task limit: %s", e, exc_info=True)
             return False, f"Task limit enforcement error: {str(e)}"
 
     def validate_batch_actions(
@@ -184,7 +184,7 @@ class ConstitutionalEnforcer:
                 "violation_count": len(self.violation_history),
             }
         except Exception as e:
-            logger.error(f"Error getting policy summary: {e}", exc_info=True)
+            logger.error("Error getting policy summary: %s", e, exc_info=True)
             return {"error": str(e)}
 
     def _record_violation(

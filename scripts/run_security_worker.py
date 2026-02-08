@@ -122,7 +122,7 @@ class SecurityWorker:
         except KeyboardInterrupt:
             logger.info("⚠️ Received interrupt signal")
         except Exception as e:
-            logger.error(f"❌ Worker error: {e}", exc_info=True)
+            logger.error("❌ Worker error: %s", e, exc_info=True)
             raise
         finally:
             await self.shutdown()
@@ -166,5 +166,5 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         logger.info("Worker stopped by user")
     except Exception as e:
-        logger.error(f"Fatal error: {e}", exc_info=True)
+        logger.error("Fatal error: %s", e, exc_info=True)
         sys.exit(1)

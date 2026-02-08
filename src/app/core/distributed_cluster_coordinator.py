@@ -341,7 +341,7 @@ class ClusterCoordinator:
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to start coordinator: {e}", exc_info=True)
+            logger.error("Failed to start coordinator: %s", e, exc_info=True)
             self.state = NodeState.OFFLINE
             return False
 
@@ -369,7 +369,7 @@ class ClusterCoordinator:
                 return True
 
         except Exception as e:
-            logger.error(f"Error stopping coordinator: {e}", exc_info=True)
+            logger.error("Error stopping coordinator: %s", e, exc_info=True)
             return False
 
     def _register_self(self) -> None:
@@ -403,7 +403,7 @@ class ClusterCoordinator:
                 self._send_heartbeat()
                 time.sleep(self.heartbeat_interval)
             except Exception as e:
-                logger.error(f"Error in heartbeat loop: {e}", exc_info=True)
+                logger.error("Error in heartbeat loop: %s", e, exc_info=True)
 
     def _send_heartbeat(self) -> None:
         """Send heartbeat to update node status"""
@@ -421,7 +421,7 @@ class ClusterCoordinator:
                 self._check_leader_health()
                 time.sleep(self.heartbeat_interval / 2)
             except Exception as e:
-                logger.error(f"Error in monitor loop: {e}", exc_info=True)
+                logger.error("Error in monitor loop: %s", e, exc_info=True)
 
     def _check_node_health(self) -> None:
         """Check health of all nodes and mark offline if needed"""
@@ -638,9 +638,7 @@ class ClusterCoordinator:
             try:
                 handler(data)
             except Exception as e:
-                logger.error(
-                    f"Error in event handler for {event_type}: {e}", exc_info=True
-                )
+                logger.error("Error in event handler for %s: %s", event_type, e, exc_info=True)
 
 
 def create_cluster_coordinator(
