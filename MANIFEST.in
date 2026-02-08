@@ -1,13 +1,10 @@
 # Include project metadata
 include README.md
 include LICENSE
-include LICENSE.txt
 include CHANGELOG.md
-include RELEASE_NOTES_v1.0.0.md
-include PROGRAM_SUMMARY.md
-include CONTRIBUTING.md
 include CODE_OF_CONDUCT.md
 include SECURITY.md
+include DEVELOPER_QUICK_REFERENCE.md
 include pyproject.toml
 include setup.py
 include setup.cfg
