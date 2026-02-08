@@ -54,7 +54,7 @@ tests/gradle_evolution/
 - `TestCapsuleEngine` - 9 tests
 - `TestReplayEngine` - 7 tests
 
-### Security Tests (373 lines)
+### Security Tests (299 lines)
 - Security context management
 - Path and operation validation
 - Access logging and denied operations
