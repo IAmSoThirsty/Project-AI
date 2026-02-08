@@ -18,7 +18,7 @@ tests/gradle_evolution/
 
 ## Test Coverage
 
-### Constitutional Tests (277 lines)
+### Constitutional Tests (274 lines)
 - Constitutional engine initialization and configuration
 - Principle validation and enforcement
 - Violation logging and history tracking
@@ -67,7 +67,7 @@ tests/gradle_evolution/
 - `TestSecurityPolicy` - 2 tests
 - `TestPolicyScheduler` - 8 tests
 
-### Audit Tests (351 lines)
+### Audit Tests (344 lines)
 - Build event auditing
 - Audit buffer management
 - Accountability tracking
@@ -303,7 +303,7 @@ If mocks aren't working:
 ## Test Statistics
 
 - **Total Tests**: ~90+ tests across 7 files
-- **Total Lines**: 2,489 lines of test code
+- **Total Lines**: 2,180 lines of test code (excluding conftest and README)
 - **Coverage Target**: 80%+ for all gradle-evolution modules
 - **Execution Time**: < 10 seconds for full suite
 - **Test Ratio**: ~3-4 tests per module function
