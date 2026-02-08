@@ -3,6 +3,9 @@ const nextConfig = {
   // Static export configuration for GitHub Pages deployment
   output: 'export',
   
+  // Workspace root configuration
+  outputFileTracingRoot: require('path').join(__dirname),
+  
   // Disable image optimization for static export
   images: {
     unoptimized: true,
