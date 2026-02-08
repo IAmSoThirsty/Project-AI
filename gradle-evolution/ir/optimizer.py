@@ -38,6 +38,17 @@ class OptimizationStats:
     peephole_optimizations: int = 0
     nodes_before: int = 0
     nodes_after: int = 0
+    _reduction_percent: Optional[float] = None
+    
+    @property
+    def reduction_percent(self) -> float:
+        """Calculate reduction percentage (cached)"""
+        if self._reduction_percent is None:
+            if self.nodes_before > 0:
+                self._reduction_percent = 100 * (1 - self.nodes_after / self.nodes_before)
+            else:
+                self._reduction_percent = 0.0
+        return self._reduction_percent
     
     def to_dict(self) -> Dict[str, Any]:
         """Serialize to dictionary"""
@@ -49,7 +60,7 @@ class OptimizationStats:
             "peephole_optimizations": self.peephole_optimizations,
             "nodes_before": self.nodes_before,
             "nodes_after": self.nodes_after,
-            "reduction_percent": 100 * (1 - self.nodes_after / self.nodes_before) if self.nodes_before > 0 else 0
+            "reduction_percent": self.reduction_percent
         }
 
 

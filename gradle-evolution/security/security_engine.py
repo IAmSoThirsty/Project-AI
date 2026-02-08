@@ -7,6 +7,7 @@ Provides runtime security controls and agent-based security validation.
 """
 
 import logging
+from fnmatch import fnmatch
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set
 
@@ -150,8 +151,6 @@ class SecurityEngine:
                 return False, reason
             
             # Check path allowed (glob matching)
-            from fnmatch import fnmatch
-            
             path_allowed = any(
                 fnmatch(path, pattern)
                 for pattern in context.allowed_paths

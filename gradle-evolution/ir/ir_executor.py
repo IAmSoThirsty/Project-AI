@@ -33,7 +33,18 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class ExecutionContext:
-    """Execution context with variables and state"""
+    """
+    Execution context with variables and state
+    
+    This context is created at the start of execution and shared across all node
+    executions. It maintains:
+    - variables: Named values produced by IR nodes
+    - stack: Evaluation stack for intermediate computations
+    - call_depth: Current recursion depth to prevent stack overflow
+    
+    The context enables deterministic execution by maintaining all state explicitly
+    rather than relying on external state or side effects.
+    """
     variables: Dict[str, Any] = field(default_factory=dict)
     stack: List[Any] = field(default_factory=list)
     call_depth: int = 0
