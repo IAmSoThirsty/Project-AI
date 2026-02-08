@@ -100,12 +100,14 @@ class AuditPipeline(KernelRoutedAgent if KERNEL_AVAILABLE else object):
             kernel: Optional CognitionKernel instance for routing
         """
         # Initialize kernel routing if available
+        self.kernel = None
         if KERNEL_AVAILABLE and kernel is not None:
             super().__init__(
                 kernel=kernel,
                 execution_type=ExecutionType.AGENT_ACTION,
                 default_risk_level="low",  # Auditing is read-only
             )
+            self.kernel = kernel
 
         self.config = config or AuditConfig(repo_root=Path.cwd())
         self.repo_root = Path(self.config.repo_root).resolve()
@@ -135,7 +137,7 @@ class AuditPipeline(KernelRoutedAgent if KERNEL_AVAILABLE else object):
 
         This is the main entry point for running a complete audit.
         """
-        if KERNEL_AVAILABLE and hasattr(self, "_execute_through_kernel"):
+        if KERNEL_AVAILABLE and self.kernel is not None and hasattr(self, "_execute_through_kernel"):
             # Route through kernel for governance
             return self._execute_through_kernel(
                 action=self._do_run,
@@ -381,10 +383,10 @@ class AuditPipeline(KernelRoutedAgent if KERNEL_AVAILABLE else object):
     def _compute_overall_assessment(self, results: dict[str, Any]) -> dict[str, Any]:
         """Compute overall assessment for catalog."""
         # This is a simplified version; the full assessment is in ReportGenerator
-        inspection = results.get("inspection", {})
-        integrity = results.get("integrity", {})
-        quality = results.get("quality", {})
-        lint = results.get("lint", {})
+        inspection = results.get("inspection") or {}
+        integrity = results.get("integrity") or {}
+        quality = results.get("quality") or {}
+        lint = results.get("lint") or {}
 
         # Extract metrics
         total_files = inspection.get("statistics", {}).get("total_files", 0)
