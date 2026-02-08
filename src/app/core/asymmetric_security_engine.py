@@ -1,5 +1,6 @@
 """
-Asymmetric Security Engine - System-Theoretic Advantage Framework
+THIRSTY'S ASYMMETRIC SECURITY ENGINE
+Part of Thirsty's Active Resistance Language (T.A.R.L.) Framework
 
 This module implements 10 high-leverage security strategies that create
 structural asymmetry, making exploitation unfinishable rather than just harder.
@@ -7,16 +8,16 @@ structural asymmetry, making exploitation unfinishable rather than just harder.
 The winning question: "How do we make exploitation structurally unfinishable?"
 
 Strategies:
-1. Invariant Bounties - Systemic thinking, not CVE volume
-2. Time-Shift Fuzzing - Temporal attack surface exploration
-3. Hostile UX Design - Semantic ambiguity breaks automation
-4. Runtime Attack Surface Randomization - Models go stale mid-attack
-5. Failure-Oriented Red Teaming - Failure cascades, not clever payloads
-6. Negative Capability Tests - "Must never do" enforcement
-7. Self-Invalidating Secrets - Context-aware, self-destructing credentials
-8. Cognitive Tripwires - Bot detection via optimality signals
-9. Exploit Attacker's AI - False stability, poisoned training
-10. Security as Living Constitution - Hard rules with automatic enforcement
+1. Thirsty's Invariant Bounties - Systemic thinking, not CVE volume
+2. Thirsty's Time-Shift Fuzzing - Temporal attack surface exploration
+3. Thirsty's Hostile UX Design - Semantic ambiguity breaks automation
+4. Thirsty's Runtime Attack Surface Randomization - Models go stale mid-attack
+5. Thirsty's Failure-Oriented Red Teaming - Failure cascades, not clever payloads
+6. Thirsty's Negative Capability Tests - "Must never do" enforcement
+7. Thirsty's Self-Invalidating Secrets - Context-aware, self-destructing credentials
+8. Thirsty's Cognitive Tripwires - Bot detection via optimality signals
+9. Thirsty's Attacker AI Exploitation - False stability, poisoned training
+10. Thirsty's Security Constitution - Hard rules with automatic enforcement
 """
 
 import hashlib
