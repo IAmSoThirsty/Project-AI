@@ -492,18 +492,24 @@ class TestTier2Registration:
 
     def test_memory_engine_registers_as_tier2(self):
         """Test that MemoryEngine registers as Tier 2."""
-        from app.core.memory_engine import MemoryEngine
-        from app.core.platform_tiers import get_tier_registry, PlatformTier, AuthorityLevel, ComponentRole
         import tempfile
-        
+
+        from app.core.memory_engine import MemoryEngine
+        from app.core.platform_tiers import (
+            AuthorityLevel,
+            ComponentRole,
+            PlatformTier,
+            get_tier_registry,
+        )
+
         with tempfile.TemporaryDirectory() as tmpdir:
             # MemoryEngine should auto-register during init
             memory_engine = MemoryEngine(data_dir=tmpdir)
-            
+
             # Check registration
             registry = get_tier_registry()
             component = registry.get_component("memory_engine")
-            
+
             assert component is not None
             assert component.tier == PlatformTier.TIER_2_INFRASTRUCTURE
             assert component.authority_level == AuthorityLevel.CONSTRAINED
@@ -521,6 +527,7 @@ class TestTier3Registration:
         # For now, just verify the import and registration logic exists
         try:
             from app.gui.dashboard_main import DashboardMainWindow
+
             # If we can import it, the registration code exists
             assert True
         except ImportError:
@@ -532,6 +539,7 @@ class TestTier3Registration:
         # For now, just verify the import and registration logic exists
         try:
             from app.gui.leather_book_interface import LeatherBookInterface
+
             # If we can import it, the registration code exists
             assert True
         except ImportError:

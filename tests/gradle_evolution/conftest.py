@@ -7,10 +7,10 @@ security, audit, and API components.
 
 from __future__ import annotations
 
-import json
 import tempfile
+from collections.abc import Generator
 from pathlib import Path
-from typing import Any, Dict, Generator
+from typing import Any
 
 import pytest
 import yaml
@@ -59,11 +59,11 @@ def constitution_file(temp_dir: Path) -> Path:
             "immediate_block": ["security_violation", "credential_leak"],
         },
     }
-    
+
     const_file = temp_dir / "constitution.yaml"
     with open(const_file, "w") as f:
         yaml.dump(constitution, f)
-    
+
     return const_file
 
 
@@ -90,11 +90,11 @@ def security_config_file(temp_dir: Path) -> Path:
             "require_signature": True,
         },
     }
-    
+
     sec_file = temp_dir / "security_hardening.yaml"
     with open(sec_file, "w") as f:
         yaml.dump(config, f)
-    
+
     return sec_file
 
 
@@ -115,7 +115,7 @@ def audit_log_path(temp_dir: Path) -> Path:
 
 
 @pytest.fixture
-def sample_build_context() -> Dict[str, Any]:
+def sample_build_context() -> dict[str, Any]:
     """Sample build context for testing."""
     return {
         "project": "test-project",
@@ -129,7 +129,7 @@ def sample_build_context() -> Dict[str, Any]:
 
 
 @pytest.fixture
-def sample_build_capsule_data() -> Dict[str, Any]:
+def sample_build_capsule_data() -> dict[str, Any]:
     """Sample build capsule data."""
     return {
         "capsule_id": "test-capsule-001",
@@ -188,7 +188,7 @@ def mock_audit_function(mocker):
 
 
 @pytest.fixture
-def sample_security_violation() -> Dict[str, Any]:
+def sample_security_violation() -> dict[str, Any]:
     """Sample security violation data."""
     return {
         "violation_type": "unauthorized_path_access",
@@ -200,7 +200,7 @@ def sample_security_violation() -> Dict[str, Any]:
 
 
 @pytest.fixture
-def sample_temporal_law() -> Dict[str, Any]:
+def sample_temporal_law() -> dict[str, Any]:
     """Sample temporal law configuration."""
     return {
         "law_id": "test_law_001",

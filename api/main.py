@@ -58,17 +58,17 @@ try:
     from api.firewall_routes import router as firewall_router
     app.include_router(firewall_router)
     print("[OK] Contrarian Firewall endpoints registered")
-    
+
     # Initialize orchestrator on startup
     from src.app.security.contrarian_firewall_orchestrator import get_orchestrator
-    
+
     @app.on_event("startup")
     async def startup_firewall_orchestrator():
         """Start the Contrarian Firewall Orchestrator"""
         orchestrator = get_orchestrator()
         await orchestrator.start()
         print("[OK] Contrarian Firewall Orchestrator started")
-    
+
     @app.on_event("shutdown")
     async def shutdown_firewall_orchestrator():
         """Stop the Contrarian Firewall Orchestrator"""

@@ -4,10 +4,11 @@ Thirsty's Asymmetric Security Framework - Demo Server
 Minimal Flask server for demonstrating the framework
 """
 
-from flask import Flask, render_template_string, jsonify, request
-from flask_cors import CORS
 import json
 from datetime import datetime
+
+from flask import Flask, jsonify, render_template_string
+from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
@@ -191,9 +192,9 @@ def index():
 def execute_scenario(scenario_id):
     if scenario_id not in SCENARIOS:
         return jsonify({"error": "Unknown scenario"}), 404
-    
+
     scenario = SCENARIOS[scenario_id]
-    
+
     # In real implementation, this would call the actual framework
     # For demo, we return pre-defined results
     return jsonify({
@@ -217,5 +218,5 @@ if __name__ == '__main__':
     for s_id, s in SCENARIOS.items():
         print(f"  - {s['name']}")
     print("\n" + "=" * 80)
-    
+
     app.run(host='0.0.0.0', port=5000, debug=True)

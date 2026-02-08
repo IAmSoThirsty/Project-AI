@@ -71,7 +71,7 @@ def main():
 
     # Record constitutional validation
     print("4. Recording constitutional compliance...")
-    
+
     # Simulate a determinism violation
     violation_id = db.create_violation(
         build_id=build_id,
@@ -80,21 +80,21 @@ def main():
         severity="medium",
         reason="Timestamp embedded in compiled artifact",
     )
-    print(f"   ⚠ Violation detected: DETERMINISM (medium)")
+    print("   ⚠ Violation detected: DETERMINISM (medium)")
     print(f"     Violation ID: {violation_id}")
-    
+
     # Waive the violation with justification
     db.waive_violation(
         violation_id,
         waiver_reason="Timestamp is intentional for build versioning",
         waived_by="tech-lead@example.com",
     )
-    print(f"   ✓ Violation waived by tech-lead@example.com")
+    print("   ✓ Violation waived by tech-lead@example.com")
     print()
 
     # Record security events
     print("5. Recording security events...")
-    
+
     # Simulate vulnerability detection
     event_id = db.create_security_event(
         build_id=build_id,
@@ -105,9 +105,9 @@ def main():
         cvss_score=7.5,
         affected_components=["commons-codec:1.15"],
     )
-    print(f"   🔒 Security event: dependency_vulnerability (high)")
+    print("   🔒 Security event: dependency_vulnerability (high)")
     print(f"     Event ID: {event_id}")
-    print(f"     CVE: CVE-2024-1234 (CVSS 7.5)")
+    print("     CVE: CVE-2024-1234 (CVSS 7.5)")
     print()
 
     # Record artifacts
@@ -164,16 +164,16 @@ def main():
         constitutional_status="waived",
         exit_code=0,
     )
-    print(f"   ✓ Build completed successfully")
+    print("   ✓ Build completed successfully")
     print(f"   Duration: {total_duration:.1f}s")
-    print(f"   Status: success (constitutional: waived)")
+    print("   Status: success (constitutional: waived)")
     print()
 
     # Build graph and analyze
     print("9. Building historical graph...")
     graph = BuildGraphDB(db)
     graph.build_graph(limit=100)
-    
+
     stats = graph.get_graph_statistics()
     print(f"   Nodes: {stats['nodes']['total']}")
     print(f"     - Builds: {stats['nodes']['builds']}")
@@ -185,19 +185,19 @@ def main():
     # Run analytics
     print("10. Running analytics...")
     query_engine = BuildQueryEngine(db)
-    
+
     # Build trends
     trends = query_engine.analyze_build_trends(days=7)
     if trends.get("total_builds", 0) > 0:
-        print(f"    Build Trends (7 days):")
+        print("    Build Trends (7 days):")
         print(f"      Total builds: {trends['total_builds']}")
         print(f"      Success rate: {trends['success_rate']}%")
         print(f"      Avg duration: {trends['avg_duration_seconds']:.1f}s")
-    
+
     # Constitutional compliance
     compliance = query_engine.analyze_constitutional_compliance(days=7)
     if compliance.get("total_builds", 0) > 0:
-        print(f"    Constitutional Compliance (7 days):")
+        print("    Constitutional Compliance (7 days):")
         print(f"      Total builds: {compliance['total_builds']}")
         print(f"      Compliance rate: {compliance['compliance_rate']}%")
         print(f"      Total violations: {compliance['total_violations']}")
@@ -212,13 +212,13 @@ def main():
         keep_with_violations=True,
     )
     manager = MemoryManager(db, retention_policy=policy)
-    
+
     health = manager.get_health_status()
     print(f"    Health status: {health['status']}")
     if health.get("warnings"):
         for warning in health["warnings"]:
             print(f"      ⚠ {warning}")
-    
+
     usage = manager.get_memory_usage()
     print(f"    Database size: {usage['total_size_mb']:.2f} MB")
     print(f"    Total records: {sum(usage['record_counts'].values())}")
@@ -228,7 +228,7 @@ def main():
     print("12. Exporting graph...")
     output_dir = Path("build/graph-exports")
     output_dir.mkdir(parents=True, exist_ok=True)
-    
+
     graph.export_to_dot(output_dir / "build_graph.dot")
     graph.export_to_json(output_dir / "build_graph.json")
     print(f"    ✓ Exported to {output_dir}/")

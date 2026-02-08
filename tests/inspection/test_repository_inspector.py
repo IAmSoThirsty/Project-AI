@@ -11,7 +11,6 @@ from pathlib import Path
 import pytest
 
 from app.inspection.repository_inspector import (
-    FileStatus,
     FileType,
     RepositoryInspector,
 )
@@ -28,9 +27,7 @@ def temp_repo():
         (repo_path / "src" / "main.py").write_text(
             '"""Main module."""\n\ndef main():\n    print("Hello")\n'
         )
-        (repo_path / "src" / "utils.py").write_text(
-            "def helper():\n    pass\n"
-        )
+        (repo_path / "src" / "utils.py").write_text("def helper():\n    pass\n")
         (repo_path / "tests").mkdir()
         (repo_path / "tests" / "test_main.py").write_text(
             "def test_main():\n    assert True\n"

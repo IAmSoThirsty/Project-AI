@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class MemoryMetrics:
     """Memory usage metrics."""
+
     total_bytes: int = 0
     used_bytes: int = 0
     available_bytes: int = 0
@@ -24,6 +25,7 @@ class MemoryMetrics:
 @dataclass
 class CompressionMetrics:
     """Compression performance metrics."""
+
     total_compressions: int = 0
     compression_ratio: float = 0.0
     space_saved_bytes: int = 0
@@ -33,6 +35,7 @@ class CompressionMetrics:
 @dataclass
 class TierMetrics:
     """Tiered storage metrics."""
+
     hot_usage_bytes: int = 0
     warm_usage_bytes: int = 0
     cold_usage_bytes: int = 0
@@ -43,12 +46,15 @@ class TierMetrics:
 
 class TelemetryCollector:
     """Collects and aggregates memory optimization telemetry."""
-    
+
     def __init__(self, collection_interval_seconds: int = 10):
         self.collection_interval = collection_interval_seconds
         self.metrics_history: list[dict[str, Any]] = []
-        logger.info("TelemetryCollector initialized with interval %ds", collection_interval_seconds)
-    
+        logger.info(
+            "TelemetryCollector initialized with interval %ds",
+            collection_interval_seconds,
+        )
+
     def collect_metrics(self) -> dict[str, Any]:
         """Collect current metrics snapshot."""
         metrics = {
@@ -59,7 +65,7 @@ class TelemetryCollector:
         }
         self.metrics_history.append(metrics)
         return metrics
-    
+
     def get_statistics(self) -> dict[str, Any]:
         """Get telemetry statistics."""
         return {

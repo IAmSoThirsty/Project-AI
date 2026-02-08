@@ -68,13 +68,22 @@ class CatalogBuilder:
         logger.info("Building markdown catalog...")
 
         try:
-            output_path = self.output_dir / f"AUDIT_CATALOG_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
+            output_path = (
+                self.output_dir
+                / f"AUDIT_CATALOG_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
+            )
 
             with open(output_path, "w", encoding="utf-8") as f:
                 # Write sections
                 self._write_header(f, inspection_results)
                 self._write_executive_summary(f, overall_assessment)
-                self._write_statistics(f, inspection_results, integrity_results, quality_results, lint_results)
+                self._write_statistics(
+                    f,
+                    inspection_results,
+                    integrity_results,
+                    quality_results,
+                    lint_results,
+                )
                 self._write_file_inventory(f, inspection_results)
                 self._write_component_catalog(f, inspection_results)
                 self._write_dependency_analysis(f, integrity_results)
@@ -100,7 +109,7 @@ class CatalogBuilder:
         f.write("## Institutional-Grade Inspection Report\n\n")
         f.write(f"**Repository:** `{repo}`\n\n")
         f.write(f"**Generated:** {timestamp}\n\n")
-        f.write(f"**Tool:** Project-AI Inspection & Audit System v1.0.0\n\n")
+        f.write("**Tool:** Project-AI Inspection & Audit System v1.0.0\n\n")
         f.write("---\n\n")
 
     def _write_executive_summary(self, f, assessment: dict[str, Any]) -> None:
@@ -111,7 +120,9 @@ class CatalogBuilder:
         grade = assessment.get("grade", "N/A")
         factors = assessment.get("health_factors", {})
 
-        f.write(f"### Overall Health Score: **{health_score:.1f}/100** (Grade: **{grade}**)\n\n")
+        f.write(
+            f"### Overall Health Score: **{health_score:.1f}/100** (Grade: **{grade}**)\n\n"
+        )
 
         f.write("#### Health Factor Breakdown\n\n")
         f.write("| Factor | Score | Status |\n")
@@ -127,14 +138,20 @@ class CatalogBuilder:
         critical = assessment.get("critical_issues", {})
         f.write("#### Critical Issues\n\n")
         f.write(f"- **Integrity Issues:** {critical.get('integrity_issues', 0)}\n")
-        f.write(f"- **Circular Dependencies:** {critical.get('circular_dependencies', 0)}\n")
+        f.write(
+            f"- **Circular Dependencies:** {critical.get('circular_dependencies', 0)}\n"
+        )
         f.write(f"- **Lint Errors:** {critical.get('lint_errors', 0)}\n\n")
 
         f.write("---\n\n")
 
     def _write_statistics(
-        self, f, inspection: dict[str, Any], integrity: dict[str, Any],
-        quality: dict[str, Any], lint: dict[str, Any]
+        self,
+        f,
+        inspection: dict[str, Any],
+        integrity: dict[str, Any],
+        quality: dict[str, Any],
+        lint: dict[str, Any],
     ) -> None:
         """Write repository statistics."""
         f.write("## Repository Statistics\n\n")
@@ -150,33 +167,51 @@ class CatalogBuilder:
 
         f.write("### Files by Type\n\n")
         by_type = stats.get("by_type", {})
-        for file_type, count in sorted(by_type.items(), key=lambda x: x[1], reverse=True):
+        for file_type, count in sorted(
+            by_type.items(), key=lambda x: x[1], reverse=True
+        ):
             f.write(f"- **{file_type}:** {count}\n")
         f.write("\n")
 
         f.write("### Files by Status\n\n")
         by_status = stats.get("by_status", {})
-        for status, count in sorted(by_status.items(), key=lambda x: x[1], reverse=True):
+        for status, count in sorted(
+            by_status.items(), key=lambda x: x[1], reverse=True
+        ):
             f.write(f"- **{status}:** {count}\n")
         f.write("\n")
 
         f.write("### Quality Metrics\n\n")
-        f.write(f"- **Documentation Coverage:** {quality_agg.get('average_documentation_coverage', 0)*100:.1f}%\n")
-        f.write(f"- **Code Coverage:** {quality_agg.get('average_code_coverage', 0)*100:.1f}%\n")
-        f.write(f"- **Maintainability Index:** {quality_agg.get('average_maintainability_index', 0):.1f}/100\n")
-        f.write(f"- **Average Cohesion:** {quality_agg.get('average_cohesion_score', 0)*100:.1f}%\n\n")
+        f.write(
+            f"- **Documentation Coverage:** {quality_agg.get('average_documentation_coverage', 0)*100:.1f}%\n"
+        )
+        f.write(
+            f"- **Code Coverage:** {quality_agg.get('average_code_coverage', 0)*100:.1f}%\n"
+        )
+        f.write(
+            f"- **Maintainability Index:** {quality_agg.get('average_maintainability_index', 0):.1f}/100\n"
+        )
+        f.write(
+            f"- **Average Cohesion:** {quality_agg.get('average_cohesion_score', 0)*100:.1f}%\n\n"
+        )
 
         f.write("### Integrity\n\n")
         int_stats = integrity.get("statistics", {})
         f.write(f"- **Total Dependencies:** {int_stats.get('total_dependencies', 0)}\n")
         f.write(f"- **Integrity Issues:** {int_stats.get('total_issues', 0)}\n")
-        f.write(f"- **Circular Dependencies:** {len(integrity.get('circular_dependencies', []))}\n\n")
+        f.write(
+            f"- **Circular Dependencies:** {len(integrity.get('circular_dependencies', []))}\n\n"
+        )
 
         f.write("### Linting\n\n")
         f.write(f"- **Files Checked:** {lint_sum.get('total_files_checked', 0)}\n")
         f.write(f"- **Total Issues:** {lint_sum.get('total_issues', 0)}\n")
-        f.write(f"- **Errors:** {lint_sum.get('issues_by_severity', {}).get('error', 0)}\n")
-        f.write(f"- **Warnings:** {lint_sum.get('issues_by_severity', {}).get('warning', 0)}\n\n")
+        f.write(
+            f"- **Errors:** {lint_sum.get('issues_by_severity', {}).get('error', 0)}\n"
+        )
+        f.write(
+            f"- **Warnings:** {lint_sum.get('issues_by_severity', {}).get('warning', 0)}\n\n"
+        )
 
         f.write("---\n\n")
 
@@ -241,7 +276,9 @@ class CatalogBuilder:
             f.write("| Module | Dependency Count |\n")
             f.write("|--------|------------------|\n")
             for item in most_dependent:
-                f.write(f"| `{item.get('module', '')}` | {item.get('dependency_count', 0)} |\n")
+                f.write(
+                    f"| `{item.get('module', '')}` | {item.get('dependency_count', 0)} |\n"
+                )
             f.write("\n")
         else:
             f.write("*No dependency data available.*\n\n")
@@ -254,7 +291,9 @@ class CatalogBuilder:
             f.write("| Module | Import Count |\n")
             f.write("|--------|-------------|\n")
             for item in most_imported:
-                f.write(f"| `{item.get('module', '')}` | {item.get('import_count', 0)} |\n")
+                f.write(
+                    f"| `{item.get('module', '')}` | {item.get('import_count', 0)} |\n"
+                )
             f.write("\n")
         else:
             f.write("*No import data available.*\n\n")
@@ -271,7 +310,9 @@ class CatalogBuilder:
                 f.write(f"{i}. **{severity.upper()}**: {' → '.join(cycle)}\n")
 
             if len(circular) > 10:
-                f.write(f"\n*...and {len(circular) - 10} more circular dependencies.*\n")
+                f.write(
+                    f"\n*...and {len(circular) - 10} more circular dependencies.*\n"
+                )
 
             f.write("\n")
 
@@ -288,13 +329,17 @@ class CatalogBuilder:
             return
 
         f.write("### Component Quality Scores\n\n")
-        f.write("| Component | Overall | Documentation | Integration | Cohesion | Rigor |\n")
-        f.write("|-----------|---------|---------------|-------------|----------|-------|\n")
+        f.write(
+            "| Component | Overall | Documentation | Integration | Cohesion | Rigor |\n"
+        )
+        f.write(
+            "|-----------|---------|---------------|-------------|----------|-------|\n"
+        )
 
         for name, cq in sorted(
             component_quality.items(),
             key=lambda x: x[1].get("overall_score", 0),
-            reverse=True
+            reverse=True,
         ):
             overall = cq.get("overall_score", 0)
             doc = cq.get("documentation_score", 0)
@@ -359,7 +404,9 @@ class CatalogBuilder:
         f.write("|----------|-------|\n")
         for severity in ["error", "warning", "info"]:
             count = issues_by_severity.get(severity, 0)
-            emoji = "🔴" if severity == "error" else "🟡" if severity == "warning" else "🔵"
+            emoji = (
+                "🔴" if severity == "error" else "🟡" if severity == "warning" else "🔵"
+            )
             f.write(f"| {emoji} {severity.capitalize()} | {count} |\n")
         f.write("\n")
 
@@ -374,9 +421,7 @@ class CatalogBuilder:
         if file_issue_counts:
             f.write("### Files with Most Issues\n\n")
             top_files = sorted(
-                file_issue_counts.items(),
-                key=lambda x: x[1],
-                reverse=True
+                file_issue_counts.items(), key=lambda x: x[1], reverse=True
             )[:10]
 
             f.write("| File | Issue Count |\n")
@@ -408,7 +453,9 @@ class CatalogBuilder:
             if not issues_list:
                 continue
 
-            emoji = {"critical": "🔴", "high": "🟠", "medium": "🟡", "low": "🟢"}[severity]
+            emoji = {"critical": "🔴", "high": "🟠", "medium": "🟡", "low": "🟢"}[
+                severity
+            ]
             f.write(f"### {emoji} {severity.upper()} Issues ({len(issues_list)})\n\n")
 
             for issue in issues_list[:20]:  # Show top 20 per severity
@@ -449,19 +496,33 @@ class CatalogBuilder:
         """Write document footer."""
         f.write("## Appendix\n\n")
         f.write("### Methodology\n\n")
-        f.write("This audit was conducted using the Project-AI Inspection & Audit System, ")
-        f.write("which employs best-of-breed tools and institutional-grade standards:\n\n")
-        f.write("- **Repository Inspection:** Automated file discovery and classification\n")
-        f.write("- **Integrity Checking:** Dependency analysis, circular dependency detection\n")
-        f.write("- **Quality Analysis:** Documentation coverage, maintainability index, cohesion scoring\n")
-        f.write("- **Lint Checking:** Ruff, Flake8, Mypy, Bandit, YAML/JSON validation\n\n")
+        f.write(
+            "This audit was conducted using the Project-AI Inspection & Audit System, "
+        )
+        f.write(
+            "which employs best-of-breed tools and institutional-grade standards:\n\n"
+        )
+        f.write(
+            "- **Repository Inspection:** Automated file discovery and classification\n"
+        )
+        f.write(
+            "- **Integrity Checking:** Dependency analysis, circular dependency detection\n"
+        )
+        f.write(
+            "- **Quality Analysis:** Documentation coverage, maintainability index, cohesion scoring\n"
+        )
+        f.write(
+            "- **Lint Checking:** Ruff, Flake8, Mypy, Bandit, YAML/JSON validation\n\n"
+        )
 
         f.write("### Report Version\n\n")
         f.write("- **Report Format Version:** 1.0.0\n")
         f.write("- **Tool Version:** Project-AI Inspection System 1.0.0\n\n")
 
         f.write("---\n\n")
-        f.write(f"*Generated by Project-AI Inspection & Audit System - {datetime.now().strftime('%Y-%m-%d')}*\n")
+        f.write(
+            f"*Generated by Project-AI Inspection & Audit System - {datetime.now().strftime('%Y-%m-%d')}*\n"
+        )
 
     def _get_status_emoji(self, score: float, max_score: float) -> str:
         """Get status emoji based on score."""

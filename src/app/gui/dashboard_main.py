@@ -70,7 +70,9 @@ class DashboardMainWindow(QMainWindow):
             )
             logger.info("DashboardMainWindow registered as Tier-3 User Interface")
         except Exception as e:
-            logger.warning("Failed to register DashboardMainWindow in tier registry: %s", e)
+            logger.warning(
+                "Failed to register DashboardMainWindow in tier registry: %s", e
+            )
 
     def _init_requests_tab(self) -> None:
         widget = QWidget()

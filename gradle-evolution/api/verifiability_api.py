@@ -8,14 +8,13 @@ Provides cryptographic proof interfaces for external auditors.
 
 import logging
 from datetime import datetime
-from typing import Any, Dict, List, Optional
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
+from ..audit.audit_integration import BuildAuditIntegration
 from ..capsules.capsule_engine import CapsuleEngine
 from ..capsules.replay_engine import ReplayEngine
-from ..audit.audit_integration import BuildAuditIntegration
 
 logger = logging.getLogger(__name__)
 
@@ -49,16 +48,16 @@ class VerifiabilityAPI:
         self.audit_integration = audit_integration
         self.host = host
         self.port = port
-        
+
         self.app = Flask(__name__)
         CORS(self.app)  # Enable CORS for external access
-        
+
         self._register_routes()
         logger.info(f"Verifiability API initialized on {host}:{port}")
 
     def _register_routes(self) -> None:
         """Register API routes."""
-        
+
         @self.app.route("/api/v1/health", methods=["GET"])
         def health():
             """Health check endpoint."""
@@ -83,7 +82,7 @@ class VerifiabilityAPI:
                     }
                     for cap in self.capsule_engine.capsules.values()
                 ]
-                
+
                 return jsonify({
                     "capsules": capsules,
                     "count": len(capsules),
@@ -99,7 +98,7 @@ class VerifiabilityAPI:
                 capsule = self.capsule_engine.capsules.get(capsule_id)
                 if not capsule:
                     return jsonify({"error": "Capsule not found"}), 404
-                
+
                 return jsonify(capsule.to_dict())
             except Exception as e:
                 logger.error(f"Error getting capsule: {e}", exc_info=True)
@@ -110,7 +109,7 @@ class VerifiabilityAPI:
             """Verify capsule integrity."""
             try:
                 is_valid, error = self.capsule_engine.verify_capsule(capsule_id)
-                
+
                 return jsonify({
                     "capsule_id": capsule_id,
                     "valid": is_valid,
@@ -127,12 +126,12 @@ class VerifiabilityAPI:
             try:
                 data = request.get_json() or {}
                 verify_outputs = data.get("verify_outputs", True)
-                
+
                 result = await self.replay_engine.replay_build(
                     capsule_id,
                     verify_outputs=verify_outputs
                 )
-                
+
                 return jsonify({
                     "capsule_id": result.capsule_id,
                     "success": result.success,
@@ -151,17 +150,17 @@ class VerifiabilityAPI:
                 data = request.get_json()
                 capsule_id1 = data.get("capsule_id1")
                 capsule_id2 = data.get("capsule_id2")
-                
+
                 if not capsule_id1 or not capsule_id2:
                     return jsonify({
                         "error": "Both capsule_id1 and capsule_id2 required"
                     }), 400
-                
+
                 diff = self.capsule_engine.compute_capsule_diff(
                     capsule_id1,
                     capsule_id2
                 )
-                
+
                 return jsonify(diff)
             except Exception as e:
                 logger.error(f"Error computing diff: {e}", exc_info=True)
@@ -173,7 +172,7 @@ class VerifiabilityAPI:
             try:
                 limit = request.args.get("limit", 100, type=int)
                 events = self.audit_integration.get_audit_buffer(limit=limit)
-                
+
                 return jsonify({
                     "events": events,
                     "count": len(events),
@@ -188,7 +187,7 @@ class VerifiabilityAPI:
             try:
                 start_str = request.args.get("start_time")
                 end_str = request.args.get("end_time")
-                
+
                 start_time = (
                     datetime.fromisoformat(start_str)
                     if start_str else None
@@ -197,12 +196,12 @@ class VerifiabilityAPI:
                     datetime.fromisoformat(end_str)
                     if end_str else None
                 )
-                
+
                 report = self.audit_integration.generate_audit_report(
                     start_time=start_time,
                     end_time=end_time
                 )
-                
+
                 return jsonify(report)
             except Exception as e:
                 logger.error(f"Error generating report: {e}", exc_info=True)
@@ -215,10 +214,10 @@ class VerifiabilityAPI:
                 capsule = self.capsule_engine.capsules.get(capsule_id)
                 if not capsule:
                     return jsonify({"error": "Capsule not found"}), 404
-                
+
                 # Verify integrity
                 is_valid, error = self.capsule_engine.verify_capsule(capsule_id)
-                
+
                 # Generate proof package
                 proof = {
                     "capsule_id": capsule_id,
@@ -228,7 +227,7 @@ class VerifiabilityAPI:
                     "timestamp": datetime.utcnow().isoformat(),
                     "capsule_data": capsule.to_dict(),
                 }
-                
+
                 return jsonify(proof)
             except Exception as e:
                 logger.error(f"Error generating proof: {e}", exc_info=True)

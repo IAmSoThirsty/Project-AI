@@ -16,7 +16,6 @@ Date: 2026-02-08
 
 import ast
 import logging
-import re
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
@@ -194,9 +193,7 @@ class QualityAnalyzer:
             comment_ratio=comment_ratio,
         )
 
-    def _compute_doc_coverage(
-        self, content: str, file_info: dict[str, Any]
-    ) -> float:
+    def _compute_doc_coverage(self, content: str, file_info: dict[str, Any]) -> float:
         """Compute documentation coverage for a file."""
         try:
             tree = ast.parse(content)
@@ -205,7 +202,9 @@ class QualityAnalyzer:
             total_items = 0
 
             for node in ast.walk(tree):
-                if isinstance(node, (ast.FunctionDef, ast.ClassDef, ast.AsyncFunctionDef)):
+                if isinstance(
+                    node, (ast.FunctionDef, ast.ClassDef, ast.AsyncFunctionDef)
+                ):
                     total_items += 1
                     if ast.get_docstring(node):
                         documented_items += 1
@@ -274,9 +273,7 @@ class QualityAnalyzer:
             for node in ast.walk(tree):
                 if isinstance(node, ast.FunctionDef):
                     # Check for return type or argument annotations
-                    if node.returns or any(
-                        arg.annotation for arg in node.args.args
-                    ):
+                    if node.returns or any(arg.annotation for arg in node.args.args):
                         return True
 
             return False
@@ -318,15 +315,15 @@ class QualityAnalyzer:
             comp_files = comp_info.get("files", [])
 
             # Get metrics for all files in component
-            file_metrics = [
-                self.metrics[f] for f in comp_files if f in self.metrics
-            ]
+            file_metrics = [self.metrics[f] for f in comp_files if f in self.metrics]
 
             if not file_metrics:
                 continue
 
             # Compute component quality
-            quality = self._compute_component_quality(comp_name, comp_info, file_metrics)
+            quality = self._compute_component_quality(
+                comp_name, comp_info, file_metrics
+            )
             self.component_quality[comp_name] = quality
 
     def _compute_component_quality(
@@ -356,8 +353,7 @@ class QualityAnalyzer:
         integration_factors = [
             sum(1 for m in file_metrics if m.has_tests) / len(file_metrics),
             sum(1 for m in file_metrics if m.has_type_hints) / len(file_metrics),
-            sum(1 for m in file_metrics if m.complexity_score < 20)
-            / len(file_metrics),
+            sum(1 for m in file_metrics if m.complexity_score < 20) / len(file_metrics),
         ]
         integration_score = (sum(integration_factors) / len(integration_factors)) * 100
 

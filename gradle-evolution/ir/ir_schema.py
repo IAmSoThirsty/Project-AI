@@ -20,7 +20,7 @@ import json
 import logging
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, List, Optional, Set, Tuple, Union
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -50,13 +50,13 @@ class IROpcode(Enum):
     BREAK = "break"
     CONTINUE = "continue"
     RETURN = "return"
-    
+
     # Data operations
     LOAD = "load"
     STORE = "store"
     CONST = "const"
     COPY = "copy"
-    
+
     # Computation
     ADD = "add"
     SUB = "sub"
@@ -64,20 +64,20 @@ class IROpcode(Enum):
     DIV = "div"
     MOD = "mod"
     CMP = "cmp"
-    
+
     # I/O operations
     READ_FILE = "read_file"
     WRITE_FILE = "write_file"
     EXEC = "exec"
     HTTP_REQUEST = "http_request"
-    
+
     # Intent-specific
     VALIDATE_POLICY = "validate_policy"
     COMPILE = "compile"
     TEST = "test"
     PACKAGE = "package"
     DEPLOY = "deploy"
-    
+
     # System
     LOG = "log"
     METRIC = "metric"
@@ -89,12 +89,12 @@ class IROpcode(Enum):
 class IRTypeInfo:
     """Type information with constraints"""
     base_type: IRType
-    element_type: Optional[IRType] = None  # For lists
-    key_type: Optional[IRType] = None  # For dicts
-    value_type: Optional[IRType] = None  # For dicts
+    element_type: IRType | None = None  # For lists
+    key_type: IRType | None = None  # For dicts
+    value_type: IRType | None = None  # For dicts
     nullable: bool = False
-    constraints: Dict[str, Any] = field(default_factory=dict)
-    
+    constraints: dict[str, Any] = field(default_factory=dict)
+
     def is_compatible(self, other: IRTypeInfo) -> bool:
         """Check type compatibility for assignment/parameter passing"""
         if self.base_type == IRType.ANY or other.base_type == IRType.ANY:
@@ -113,8 +113,8 @@ class IRTypeInfo:
                         self.value_type == other.value_type
             return key_compat and val_compat
         return True
-    
-    def to_dict(self) -> Dict[str, Any]:
+
+    def to_dict(self) -> dict[str, Any]:
         """Serialize to dictionary"""
         return {
             "base_type": self.base_type.value,
@@ -124,9 +124,9 @@ class IRTypeInfo:
             "nullable": self.nullable,
             "constraints": self.constraints
         }
-    
+
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> IRTypeInfo:
+    def from_dict(cls, data: dict[str, Any]) -> IRTypeInfo:
         """Deserialize from dictionary"""
         return cls(
             base_type=IRType(data["base_type"]),
@@ -143,15 +143,15 @@ class IRNode:
     """Single IR operation node in execution graph"""
     id: str
     opcode: IROpcode
-    inputs: List[str] = field(default_factory=list)  # Input node IDs
-    outputs: List[str] = field(default_factory=list)  # Output node IDs
-    operands: List[Any] = field(default_factory=list)  # Immediate operands
-    attributes: Dict[str, Any] = field(default_factory=dict)
-    type_info: Optional[IRTypeInfo] = None
-    metadata: Dict[str, Any] = field(default_factory=dict)
-    line_number: Optional[int] = None
-    source_file: Optional[str] = None
-    
+    inputs: list[str] = field(default_factory=list)  # Input node IDs
+    outputs: list[str] = field(default_factory=list)  # Output node IDs
+    operands: list[Any] = field(default_factory=list)  # Immediate operands
+    attributes: dict[str, Any] = field(default_factory=dict)
+    type_info: IRTypeInfo | None = None
+    metadata: dict[str, Any] = field(default_factory=dict)
+    line_number: int | None = None
+    source_file: str | None = None
+
     def compute_hash(self) -> str:
         """Compute deterministic hash for node identity"""
         content = json.dumps({
@@ -161,7 +161,7 @@ class IRNode:
             "attributes": sorted(self.attributes.items())
         }, sort_keys=True)
         return hashlib.sha256(content.encode()).hexdigest()[:16]
-    
+
     def is_pure(self) -> bool:
         """Check if operation has no side effects"""
         pure_ops = {
@@ -170,14 +170,14 @@ class IRNode:
             IROpcode.MOD, IROpcode.CMP, IROpcode.LOAD
         }
         return self.opcode in pure_ops
-    
+
     def is_terminator(self) -> bool:
         """Check if this is a control flow terminator"""
         return self.opcode in {
             IROpcode.RETURN, IROpcode.BREAK, IROpcode.CONTINUE
         }
-    
-    def get_resource_cost(self) -> Dict[str, float]:
+
+    def get_resource_cost(self) -> dict[str, float]:
         """Estimate resource costs for this operation"""
         costs = {
             "cpu": 0.0,
@@ -185,7 +185,7 @@ class IRNode:
             "io": 0.0,
             "network": 0.0
         }
-        
+
         # High-cost operations
         if self.opcode in {IROpcode.COMPILE, IROpcode.TEST}:
             costs["cpu"] = 10.0
@@ -201,10 +201,10 @@ class IRNode:
         else:
             costs["cpu"] = 0.1
             costs["memory"] = 1.0
-        
+
         return costs
-    
-    def to_dict(self) -> Dict[str, Any]:
+
+    def to_dict(self) -> dict[str, Any]:
         """Serialize to dictionary"""
         return {
             "id": self.id,
@@ -218,9 +218,9 @@ class IRNode:
             "line_number": self.line_number,
             "source_file": self.source_file
         }
-    
+
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> IRNode:
+    def from_dict(cls, data: dict[str, Any]) -> IRNode:
         """Deserialize from dictionary"""
         return cls(
             id=data["id"],
@@ -239,64 +239,64 @@ class IRNode:
 @dataclass
 class IRGraph:
     """Directed acyclic graph of IR nodes"""
-    nodes: Dict[str, IRNode] = field(default_factory=dict)
-    entry_node: Optional[str] = None
-    exit_nodes: List[str] = field(default_factory=list)
-    metadata: Dict[str, Any] = field(default_factory=dict)
-    
+    nodes: dict[str, IRNode] = field(default_factory=dict)
+    entry_node: str | None = None
+    exit_nodes: list[str] = field(default_factory=list)
+    metadata: dict[str, Any] = field(default_factory=dict)
+
     def add_node(self, node: IRNode) -> None:
         """Add node to graph"""
         if node.id in self.nodes:
             raise ValueError(f"Node {node.id} already exists in graph")
         self.nodes[node.id] = node
-        
+
         if self.entry_node is None:
             self.entry_node = node.id
-    
+
     def add_edge(self, from_id: str, to_id: str) -> None:
         """Add directed edge between nodes"""
         if from_id not in self.nodes:
             raise ValueError(f"Source node {from_id} not in graph")
         if to_id not in self.nodes:
             raise ValueError(f"Target node {to_id} not in graph")
-        
+
         if to_id not in self.nodes[from_id].outputs:
             self.nodes[from_id].outputs.append(to_id)
         if from_id not in self.nodes[to_id].inputs:
             self.nodes[to_id].inputs.append(from_id)
-    
-    def get_predecessors(self, node_id: str) -> List[IRNode]:
+
+    def get_predecessors(self, node_id: str) -> list[IRNode]:
         """Get all predecessor nodes"""
         if node_id not in self.nodes:
             raise ValueError(f"Node {node_id} not in graph")
         return [self.nodes[pred_id] for pred_id in self.nodes[node_id].inputs]
-    
-    def get_successors(self, node_id: str) -> List[IRNode]:
+
+    def get_successors(self, node_id: str) -> list[IRNode]:
         """Get all successor nodes"""
         if node_id not in self.nodes:
             raise ValueError(f"Node {node_id} not in graph")
         return [self.nodes[succ_id] for succ_id in self.nodes[node_id].outputs]
-    
-    def topological_sort(self) -> List[IRNode]:
+
+    def topological_sort(self) -> list[IRNode]:
         """Return nodes in topological order (valid execution order)"""
         in_degree = {node_id: len(node.inputs) for node_id, node in self.nodes.items()}
         queue = [node_id for node_id, degree in in_degree.items() if degree == 0]
         result = []
-        
+
         while queue:
             node_id = queue.pop(0)
             result.append(self.nodes[node_id])
-            
+
             for succ_id in self.nodes[node_id].outputs:
                 in_degree[succ_id] -= 1
                 if in_degree[succ_id] == 0:
                     queue.append(succ_id)
-        
+
         if len(result) != len(self.nodes):
             raise ValueError("Graph contains cycles - cannot compute topological sort")
-        
+
         return result
-    
+
     def has_cycle(self) -> bool:
         """Check if graph contains cycles"""
         try:
@@ -304,31 +304,31 @@ class IRGraph:
             return False
         except ValueError:
             return True
-    
-    def get_dataflow_chains(self) -> List[List[str]]:
+
+    def get_dataflow_chains(self) -> list[list[str]]:
         """Extract dataflow dependency chains"""
         chains = []
         visited = set()
-        
-        def dfs(node_id: str, chain: List[str]) -> None:
+
+        def dfs(node_id: str, chain: list[str]) -> None:
             if node_id in visited:
                 return
             visited.add(node_id)
             chain.append(node_id)
-            
+
             successors = self.nodes[node_id].outputs
             if not successors:
                 chains.append(chain.copy())
             else:
                 for succ_id in successors:
                     dfs(succ_id, chain.copy())
-        
+
         if self.entry_node:
             dfs(self.entry_node, [])
-        
+
         return chains
-    
-    def to_dict(self) -> Dict[str, Any]:
+
+    def to_dict(self) -> dict[str, Any]:
         """Serialize to dictionary"""
         return {
             "nodes": {node_id: node.to_dict() for node_id, node in self.nodes.items()},
@@ -336,74 +336,74 @@ class IRGraph:
             "exit_nodes": self.exit_nodes,
             "metadata": self.metadata
         }
-    
+
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> IRGraph:
+    def from_dict(cls, data: dict[str, Any]) -> IRGraph:
         """Deserialize from dictionary"""
         graph = cls(
             entry_node=data.get("entry_node"),
             exit_nodes=data.get("exit_nodes", []),
             metadata=data.get("metadata", {})
         )
-        
+
         for node_id, node_data in data.get("nodes", {}).items():
             graph.nodes[node_id] = IRNode.from_dict(node_data)
-        
+
         return graph
 
 
 class IRSchema:
     """Validates IR graph structure and type correctness"""
-    
+
     def __init__(self):
-        self.errors: List[str] = []
-        self.warnings: List[str] = []
-    
+        self.errors: list[str] = []
+        self.warnings: list[str] = []
+
     def validate(self, graph: IRGraph) -> bool:
         """Validate entire IR graph"""
         self.errors.clear()
         self.warnings.clear()
-        
+
         if not graph.nodes:
             self.errors.append("Graph is empty")
             return False
-        
+
         if not graph.entry_node:
             self.errors.append("Graph has no entry node")
             return False
-        
+
         if graph.entry_node not in graph.nodes:
             self.errors.append(f"Entry node {graph.entry_node} not in graph")
             return False
-        
+
         # Validate each node
         for node_id, node in graph.nodes.items():
             self._validate_node(node, graph)
-        
+
         # Check for cycles
         if graph.has_cycle():
             self.errors.append("Graph contains cycles")
-        
+
         # Validate dataflow
         self._validate_dataflow(graph)
-        
+
         # Type checking
         self._validate_types(graph)
-        
+
         return len(self.errors) == 0
-    
+
     def _validate_node(self, node: IRNode, graph: IRGraph) -> None:
         """Validate single node"""
         # Check input references
         for input_id in node.inputs:
             if input_id not in graph.nodes:
                 self.errors.append(f"Node {node.id} references non-existent input {input_id}")
-        
+
         # Check output references
         for output_id in node.outputs:
             if output_id not in graph.nodes:
                 self.errors.append(f"Node {node.id} references non-existent output {output_id}")
-        
+
         # Validate opcode-specific constraints
         if node.opcode == IROpcode.CONDITIONAL:
             if len(node.inputs) < 1:
@@ -411,7 +411,7 @@ class IRSchema:
         elif node.opcode == IROpcode.LOOP:
             if "max_iterations" not in node.attributes:
                 self.warnings.append(f"Loop node {node.id} has no max_iterations bound")
-    
+
     def _validate_dataflow(self, graph: IRGraph) -> None:
         """Validate dataflow dependencies"""
         for node_id, node in graph.nodes.items():
@@ -422,18 +422,18 @@ class IRSchema:
                     self.errors.append(
                         f"Dataflow inconsistency: {node_id} uses {input_id} but not in outputs"
                     )
-    
+
     def _validate_types(self, graph: IRGraph) -> None:
         """Validate type consistency across dataflow"""
         for node_id, node in graph.nodes.items():
             if not node.type_info:
                 continue
-            
+
             for input_id in node.inputs:
                 input_node = graph.nodes[input_id]
                 if not input_node.type_info:
                     continue
-                
+
                 if not node.type_info.is_compatible(input_node.type_info):
                     self.errors.append(
                         f"Type mismatch: {node_id} expects {node.type_info.base_type.value} "

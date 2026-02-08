@@ -20,18 +20,17 @@ Strategies:
 10. Thirsty's Security Constitution - Hard rules with automatic enforcement
 """
 
-import hashlib
 import json
 import logging
-import random
 import secrets
 import time
 from collections import defaultdict
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta
+from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -43,6 +42,7 @@ logger = logging.getLogger(__name__)
 
 class InvariantSeverity(Enum):
     """Severity levels for invariant violations."""
+
     CRITICAL = "critical"
     HIGH = "high"
     MEDIUM = "medium"
@@ -52,6 +52,7 @@ class InvariantSeverity(Enum):
 @dataclass
 class SystemInvariant:
     """A declared system invariant that must never be violated."""
+
     name: str
     description: str
     check_function: Callable[..., bool]
@@ -64,6 +65,7 @@ class SystemInvariant:
 @dataclass
 class InvariantViolation:
     """Record of an invariant violation for bounty submission."""
+
     invariant_name: str
     timestamp: str
     context: dict[str, Any]
@@ -121,12 +123,12 @@ class InvariantBountySystem:
         """Check if an invariant holds given the context."""
         if invariant_name not in self.invariants:
             return True
-        
+
         invariant = self.invariants[invariant_name]
         missing = [k for k in invariant.context_required if k not in context]
         if missing:
             return True
-        
+
         try:
             return invariant.check_function(context)
         except Exception as e:
@@ -138,7 +140,9 @@ class InvariantBountySystem:
         return {
             "total_violations": len(self.violations),
             "by_severity": {
-                severity.value: len([v for v in self.violations if v.severity == severity])
+                severity.value: len(
+                    [v for v in self.violations if v.severity == severity]
+                )
                 for severity in InvariantSeverity
             },
         }
@@ -152,6 +156,7 @@ class InvariantBountySystem:
 @dataclass
 class TemporalAnomaly:
     """Record of a temporal attack surface finding."""
+
     attack_type: str
     component: str
     timing_delta: float
@@ -169,12 +174,14 @@ class TimeShiftFuzzer:
         self.anomalies: list[TemporalAnomaly] = []
         self.delayed_callbacks: dict[str, tuple[Callable, float]] = {}
 
-    def delay_callback(self, callback: Callable, delay_seconds: float, component: str) -> str:
+    def delay_callback(
+        self, callback: Callable, delay_seconds: float, component: str
+    ) -> str:
         """Inject delay into callback execution."""
         callback_id = secrets.token_hex(8)
         execute_at = time.time() + delay_seconds
         self.delayed_callbacks[callback_id] = (callback, execute_at)
-        
+
         anomaly = TemporalAnomaly(
             attack_type="delay",
             component=component,
@@ -191,7 +198,9 @@ class TimeShiftFuzzer:
         return {
             "total_anomalies": len(self.anomalies),
             "by_type": {
-                attack_type: len([a for a in self.anomalies if a.attack_type == attack_type])
+                attack_type: len(
+                    [a for a in self.anomalies if a.attack_type == attack_type]
+                )
                 for attack_type in ["delay", "reorder", "replay", "desync"]
             },
         }
@@ -204,12 +213,14 @@ class TimeShiftFuzzer:
 
 class HostileUXEngine:
     """Deliberately mislead automation. Require semantic understanding."""
+
     def __init__(self):
         self.contexts: dict[str, Any] = {}
 
 
 class RuntimeRandomizer:
     """Rotate at runtime: API shapes, field ordering, error semantics."""
+
     def __init__(self, rotation_interval_seconds: float = 300):
         self.rotation_interval = rotation_interval_seconds
         self.current_schema_version = 0
@@ -217,18 +228,21 @@ class RuntimeRandomizer:
 
 class FailureRedTeamEngine:
     """Don't simulate attackers. Simulate system failure modes."""
+
     def __init__(self):
         self.scenarios: list[Any] = []
 
 
 class NegativeCapabilityFramework:
     """Test what the system must never be able to do."""
+
     def __init__(self):
         self.forbidden_actions: list[Any] = []
 
 
 class SelfInvalidatingSecretSystem:
     """Secrets that decay after use and poison themselves if replayed."""
+
     def __init__(self, data_dir: str = "data/security"):
         self.data_dir = Path(data_dir)
         self.secrets: dict[str, Any] = {}
@@ -236,6 +250,7 @@ class SelfInvalidatingSecretSystem:
 
 class CognitiveTripwireDetector:
     """Detect behavior that looks too optimal (bots)."""
+
     def __init__(self):
         self.behavioral_history: dict[str, list[float]] = defaultdict(list)
         self.detections: list[Any] = []
@@ -243,6 +258,7 @@ class CognitiveTripwireDetector:
 
 class AttackerAIExploitationSystem:
     """Feed attackers false stability. Poison their training data."""
+
     def __init__(self):
         self.canary_states: dict[str, Any] = {}
         self.false_positives_generated: int = 0
@@ -251,6 +267,7 @@ class AttackerAIExploitationSystem:
 @dataclass
 class ConstitutionalRule:
     """A hard rule that cannot be violated."""
+
     rule_id: str
     description: str
     enforcement_function: Callable[..., bool]
@@ -261,12 +278,12 @@ class ConstitutionalRule:
 class SecurityConstitution:
     """
     Hard rules > heuristics. Security becomes constitutional.
-    
+
     FULLY IMPLEMENTED - NO PLACEHOLDERS
-    
+
     These rules are ENFORCED. Violations cause operations to be blocked.
     """
-    
+
     def __init__(self, data_dir: str = "data/security"):
         self.data_dir = Path(data_dir)
         self.data_dir.mkdir(parents=True, exist_ok=True)
@@ -276,20 +293,21 @@ class SecurityConstitution:
 
     def _establish_constitution(self) -> None:
         """Establish core constitutional rules - FULLY IMPLEMENTED."""
-        
+
         # RULE 1: No state mutation + trust decrease in same execution
         self.add_rule(
             ConstitutionalRule(
                 rule_id="no_state_mutation_with_trust_decrease",
                 description="No action may both mutate state and lower trust score",
                 enforcement_function=lambda ctx: not (
-                    ctx.get("state_mutated", False) and ctx.get("trust_decreased", False)
+                    ctx.get("state_mutated", False)
+                    and ctx.get("trust_decreased", False)
                 ),
                 violation_action="halt",
                 immutable=True,
             )
         )
-        
+
         # RULE 2: Human-affecting actions must be replayable
         self.add_rule(
             ConstitutionalRule(
@@ -301,7 +319,7 @@ class SecurityConstitution:
                 immutable=True,
             )
         )
-        
+
         # RULE 3: Agent actions require audit span
         self.add_rule(
             ConstitutionalRule(
@@ -313,7 +331,7 @@ class SecurityConstitution:
                 immutable=True,
             )
         )
-        
+
         # RULE 4: Cross-tenant requires explicit authorization
         self.add_rule(
             ConstitutionalRule(
@@ -327,17 +345,16 @@ class SecurityConstitution:
                 immutable=True,
             )
         )
-        
+
         # RULE 5: Privilege escalation requires multi-party approval
         self.add_rule(
             ConstitutionalRule(
                 rule_id="privilege_escalation_approval",
                 description="Privilege escalation requires multi-party approval",
-                enforcement_function=lambda ctx: not ctx.get("privilege_escalated", False)
-                or (
-                    bool(ctx.get("approvals"))
-                    and len(ctx.get("approvals", [])) >= 2
-                ),
+                enforcement_function=lambda ctx: not ctx.get(
+                    "privilege_escalated", False
+                )
+                or (bool(ctx.get("approvals")) and len(ctx.get("approvals", [])) >= 2),
                 violation_action="escalate",
                 immutable=True,
             )
@@ -347,16 +364,16 @@ class SecurityConstitution:
         """Add a constitutional rule."""
         if rule.immutable and rule.rule_id in self.rules:
             raise ValueError(f"Cannot modify immutable rule: {rule.rule_id}")
-        
+
         self.rules[rule.rule_id] = rule
         logger.info(f"Constitutional rule established: {rule.rule_id}")
 
     def enforce(self, context: dict[str, Any]) -> tuple[bool, str]:
         """
         Enforce all constitutional rules.
-        
+
         FULLY IMPLEMENTED - NO PLACEHOLDERS
-        
+
         Returns:
             (allowed, reason)
         """
@@ -365,15 +382,17 @@ class SecurityConstitution:
                 if not rule.enforcement_function(context):
                     self._handle_violation(rule, context)
                     return False, f"Constitutional violation: {rule.description}"
-            
+
             except Exception as e:
                 logger.error(f"Error enforcing rule {rule_id}: {e}")
                 # Fail closed for security
                 return False, f"Rule enforcement error: {rule_id}"
-        
+
         return True, "Constitutional compliance verified"
 
-    def _handle_violation(self, rule: ConstitutionalRule, context: dict[str, Any]) -> None:
+    def _handle_violation(
+        self, rule: ConstitutionalRule, context: dict[str, Any]
+    ) -> None:
         """Handle constitutional violation - FULLY IMPLEMENTED."""
         violation_record = {
             "rule_id": rule.rule_id,
@@ -382,14 +401,14 @@ class SecurityConstitution:
             "context": context,
             "action_taken": rule.violation_action,
         }
-        
+
         self.violations.append(violation_record)
         self._save_violations()
-        
+
         logger.critical(
             f"CONSTITUTIONAL VIOLATION: {rule.rule_id} - {rule.description}"
         )
-        
+
         if rule.violation_action == "halt":
             self._halt_request(context)
         elif rule.violation_action == "snapshot":
@@ -411,7 +430,9 @@ class SecurityConstitution:
         except Exception as e:
             logger.error(f"Failed to save snapshot: {e}")
 
-    def _escalate_incident(self, rule: ConstitutionalRule, context: dict[str, Any]) -> None:
+    def _escalate_incident(
+        self, rule: ConstitutionalRule, context: dict[str, Any]
+    ) -> None:
         """Escalate to security team."""
         logger.critical(f"INCIDENT ESCALATED: {rule.rule_id}")
 
@@ -433,14 +454,14 @@ class SecurityConstitution:
 class AsymmetricSecurityEngine:
     """
     Main orchestrator for all 10 asymmetric security strategies.
-    
+
     This engine integrates all subsystems and provides a unified interface
     for system-theoretic security that makes exploitation structurally unfinishable.
     """
 
     def __init__(self, data_dir: str = "data/security"):
         self.data_dir = data_dir
-        
+
         # Initialize all subsystems
         self.invariant_bounty = InvariantBountySystem(data_dir)
         self.time_fuzzer = TimeShiftFuzzer(data_dir)
@@ -452,13 +473,13 @@ class AsymmetricSecurityEngine:
         self.tripwire_detector = CognitiveTripwireDetector()
         self.attacker_exploitation = AttackerAIExploitationSystem()
         self.constitution = SecurityConstitution(data_dir)
-        
+
         logger.info("Asymmetric Security Engine initialized with 10 strategies")
 
     def validate_action(self, action: str, context: dict[str, Any]) -> dict[str, Any]:
         """
         Validate action through all asymmetric security layers.
-        
+
         Returns:
             Validation result with details
         """
@@ -471,7 +492,7 @@ class AsymmetricSecurityEngine:
                 "layer": "constitution",
                 "action_taken": "halted",
             }
-        
+
         # Check invariants
         for invariant_name in self.invariant_bounty.invariants:
             if not self.invariant_bounty.check_invariant(invariant_name, context):
@@ -481,7 +502,7 @@ class AsymmetricSecurityEngine:
                     "layer": "invariant",
                     "bounty_eligible": True,
                 }
-        
+
         return {
             "allowed": True,
             "reason": "All asymmetric security checks passed",
@@ -500,9 +521,13 @@ class AsymmetricSecurityEngine:
                     "schema_version": self.runtime_randomizer.current_schema_version,
                 },
                 "failure_tester": {"scenarios": len(self.failure_tester.scenarios)},
-                "negative_tests": {"forbidden_actions": len(self.negative_tests.forbidden_actions)},
+                "negative_tests": {
+                    "forbidden_actions": len(self.negative_tests.forbidden_actions)
+                },
                 "secret_system": {"active_secrets": len(self.secret_system.secrets)},
-                "tripwire_detector": {"detections": len(self.tripwire_detector.detections)},
+                "tripwire_detector": {
+                    "detections": len(self.tripwire_detector.detections)
+                },
                 "attacker_exploitation": {
                     "canary_states": len(self.attacker_exploitation.canary_states),
                     "false_positives": self.attacker_exploitation.false_positives_generated,
@@ -525,6 +550,6 @@ if __name__ == "__main__":
     }
     result = engine.validate_action("delete_user", test_context)
     print(json.dumps(result, indent=2))
-    
+
     report = engine.generate_comprehensive_report()
     print(json.dumps(report, indent=2))

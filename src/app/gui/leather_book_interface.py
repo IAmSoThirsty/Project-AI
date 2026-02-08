@@ -7,6 +7,8 @@ Creates an old leather book aesthetic with:
 - 3D elements with modern graphics
 """
 
+import logging
+
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QColor
 from PyQt6.QtWidgets import (
@@ -24,8 +26,6 @@ from app.core.platform_tiers import (
     get_tier_registry,
 )
 from app.gui.leather_book_panels import IntroInfoPage, TronFacePage
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -79,7 +79,9 @@ class LeatherBookInterface(QMainWindow):
             )
             logger.info("LeatherBookInterface registered as Tier-3 User Interface")
         except Exception as e:
-            logger.warning("Failed to register LeatherBookInterface in tier registry: %s", e)
+            logger.warning(
+                "Failed to register LeatherBookInterface in tier registry: %s", e
+            )
 
         self.show()
 

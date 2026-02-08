@@ -9,12 +9,12 @@ Layer 1 Component - Production-Grade Implementation
 
 import hashlib
 import logging
+from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional, Set
-from dataclasses import dataclass, field
+from typing import Any
 
-from atlas.audit.trail import get_audit_trail, AuditCategory, AuditLevel
+from atlas.audit.trail import AuditCategory, AuditLevel, get_audit_trail
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +29,7 @@ class DataTier(Enum):
     TIER_B = "TierB"  # Government statistical archives
     TIER_C = "TierC"  # Reputable institutional reporting
     TIER_D = "TierD"  # Media / secondary analysis
-    
+
     def get_confidence_weight(self) -> float:
         """Get confidence weight for this tier."""
         weights = {
@@ -39,8 +39,8 @@ class DataTier(Enum):
             DataTier.TIER_D: 0.40   # Lower confidence
         }
         return weights[self]
-    
-    def get_requirements(self) -> Dict[str, Any]:
+
+    def get_requirements(self) -> dict[str, Any]:
         """Get validation requirements for this tier."""
         return {
             DataTier.TIER_A: {
@@ -88,22 +88,22 @@ class TierMetadata:
     geographic_scope: str
     source_type: str
     source_name: str
-    
+
     # Optional metadata
     peer_reviewed: bool = False
     audit_trail_present: bool = False
     methodology_documented: bool = False
     raw_data_available: bool = False
     citation_count: int = 0
-    doi: Optional[str] = None
-    url: Optional[str] = None
-    
+    doi: str | None = None
+    url: str | None = None
+
     # Provenance tracking
     ingestion_timestamp: datetime = field(default_factory=datetime.utcnow)
     validation_passed: bool = False
-    validation_errors: List[str] = field(default_factory=list)
-    
-    def to_dict(self) -> Dict[str, Any]:
+    validation_errors: list[str] = field(default_factory=list)
+
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for storage/transmission."""
         return {
             "tier": self.tier.value,
@@ -133,32 +133,32 @@ class TierClassifier:
     Enforces the four-tier data classification with complete validation,
     confidence weighting, and "No hash → no inclusion" rule.
     """
-    
+
     def __init__(self):
         """Initialize tier classifier."""
         self.audit = get_audit_trail()
-        
+
         # Known source registries (expandable)
-        self.tier_a_sources: Set[str] = {
+        self.tier_a_sources: set[str] = {
             "nature", "science", "cell", "lancet", "nejm",
             "pnas", "arxiv_verified", "cochrane", "nber",
             "world_bank_official", "imf_official", "who_official"
         }
-        
-        self.tier_b_sources: Set[str] = {
+
+        self.tier_b_sources: set[str] = {
             "bls", "census", "fed", "oecd", "eurostat",
             "national_statistics", "government_archives"
         }
-        
-        self.tier_c_sources: Set[str] = {
+
+        self.tier_c_sources: set[str] = {
             "pew_research", "gallup", "reuters_institute",
             "brookings", "rand", "csis", "carnegie"
         }
-        
+
         # All others default to Tier D unless upgraded
-        
+
         logger.info("Initialized TierClassifier with source registries")
-        
+
         self.audit.log_event(
             category=AuditCategory.SYSTEM,
             level=AuditLevel.INFORMATIONAL,
@@ -170,12 +170,12 @@ class TierClassifier:
                 "tier_c_sources": len(self.tier_c_sources)
             }
         )
-    
+
     def classify_source(
         self,
         source_name: str,
         source_type: str,
-        metadata: Dict[str, Any]
+        metadata: dict[str, Any]
     ) -> DataTier:
         """
         Classify data source into appropriate tier.
@@ -189,7 +189,7 @@ class TierClassifier:
             Classified tier
         """
         source_lower = source_name.lower()
-        
+
         # Check explicit registries first
         if source_lower in self.tier_a_sources:
             return DataTier.TIER_A
@@ -197,23 +197,23 @@ class TierClassifier:
             return DataTier.TIER_B
         if source_lower in self.tier_c_sources:
             return DataTier.TIER_C
-        
+
         # Check metadata-based classification
         if source_type == "peer_reviewed_journal":
             # Requires additional validation
             if metadata.get("peer_reviewed") and metadata.get("citation_count", 0) > 0:
                 return DataTier.TIER_A
-        
+
         if source_type == "government_statistical":
             return DataTier.TIER_B
-        
+
         if source_type == "institutional_research":
             if metadata.get("methodology_documented"):
                 return DataTier.TIER_C
-        
+
         # Default to Tier D
         return DataTier.TIER_D
-    
+
     def compute_source_hash(self, content: str) -> str:
         """
         Compute canonical hash of source content.
@@ -225,12 +225,12 @@ class TierClassifier:
             SHA-256 hash as hex string
         """
         return hashlib.sha256(content.encode('utf-8')).hexdigest()
-    
+
     def validate_tier_requirements(
         self,
         tier: DataTier,
         metadata: TierMetadata
-    ) -> tuple[bool, List[str]]:
+    ) -> tuple[bool, list[str]]:
         """
         Validate that metadata meets tier requirements.
         
@@ -243,33 +243,33 @@ class TierClassifier:
         """
         requirements = tier.get_requirements()
         errors = []
-        
+
         # Check each requirement
         if requirements.get("requires_peer_review") and not metadata.peer_reviewed:
             errors.append(f"{tier.value} requires peer review")
-        
+
         if requirements.get("requires_audit_trail") and not metadata.audit_trail_present:
             errors.append(f"{tier.value} requires audit trail")
-        
+
         if requirements.get("requires_methodology") and not metadata.methodology_documented:
             errors.append(f"{tier.value} requires documented methodology")
-        
+
         if requirements.get("requires_raw_data") and not metadata.raw_data_available:
             errors.append(f"{tier.value} requires raw data availability")
-        
+
         min_citations = requirements.get("min_citation_count", 0)
         if metadata.citation_count < min_citations:
             errors.append(
                 f"{tier.value} requires at least {min_citations} citations "
                 f"(found {metadata.citation_count})"
             )
-        
+
         # Check source hash presence (CRITICAL: "No hash → no inclusion")
         if not metadata.source_hash:
             errors.append("CRITICAL: No source hash - data cannot be included")
-        
+
         valid = len(errors) == 0
-        
+
         # Log validation result
         self.audit.log_event(
             category=AuditCategory.DATA,
@@ -283,9 +283,9 @@ class TierClassifier:
                 "source_name": metadata.source_name
             }
         )
-        
+
         return valid, errors
-    
+
     def create_tier_metadata(
         self,
         content: str,
@@ -311,13 +311,13 @@ class TierClassifier:
         """
         # Compute source hash
         source_hash = self.compute_source_hash(content)
-        
+
         # Classify tier
         tier = self.classify_source(source_name, source_type, kwargs)
-        
+
         # Get confidence weight
         confidence_weight = tier.get_confidence_weight()
-        
+
         # Create metadata object
         metadata = TierMetadata(
             tier=tier,
@@ -335,12 +335,12 @@ class TierClassifier:
             doi=kwargs.get("doi"),
             url=kwargs.get("url")
         )
-        
+
         # Validate requirements
         valid, errors = self.validate_tier_requirements(tier, metadata)
         metadata.validation_passed = valid
         metadata.validation_errors = errors
-        
+
         # Log metadata creation
         self.audit.log_event(
             category=AuditCategory.DATA,
@@ -354,9 +354,9 @@ class TierClassifier:
                 "validation_passed": valid
             }
         )
-        
+
         return metadata
-    
+
     def enforce_inclusion_rule(self, metadata: TierMetadata) -> bool:
         """
         Enforce "No hash → no inclusion" rule.
@@ -383,7 +383,7 @@ class TierClassifier:
                 }
             )
             return False
-        
+
         if not metadata.validation_passed:
             logger.warning(
                 f"EXCLUSION: Validation failed for {metadata.source_name} - "
@@ -401,10 +401,10 @@ class TierClassifier:
                 }
             )
             return False
-        
+
         return True
-    
-    def get_tier_statistics(self) -> Dict[str, Any]:
+
+    def get_tier_statistics(self) -> dict[str, Any]:
         """
         Get statistics about tier classification.
         
@@ -423,7 +423,7 @@ class TierClassifier:
 
 
 # Singleton instance
-_tier_classifier: Optional[TierClassifier] = None
+_tier_classifier: TierClassifier | None = None
 
 
 def get_tier_classifier() -> TierClassifier:

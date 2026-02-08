@@ -9,7 +9,7 @@ Provides comprehensive audit trail for build operations and policy decisions.
 import logging
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from cognition.audit import audit
 
@@ -24,7 +24,7 @@ class BuildAuditIntegration:
 
     def __init__(
         self,
-        audit_log_path: Optional[Path] = None,
+        audit_log_path: Path | None = None,
         enable_verbose: bool = False
     ):
         """
@@ -36,14 +36,14 @@ class BuildAuditIntegration:
         """
         self.audit_log_path = audit_log_path
         self.enable_verbose = enable_verbose
-        self.audit_buffer: List[Dict[str, Any]] = []
+        self.audit_buffer: list[dict[str, Any]] = []
         logger.info("Build audit integration initialized")
 
     def audit_build_start(
         self,
         build_id: str,
-        tasks: List[str],
-        context: Dict[str, Any]
+        tasks: list[str],
+        context: dict[str, Any]
     ) -> None:
         """
         Audit build start event.
@@ -61,13 +61,13 @@ class BuildAuditIntegration:
                 "timestamp": datetime.utcnow().isoformat(),
                 "context": self._sanitize_context(context),
             }
-            
+
             audit(event, detail)
             self._buffer_audit(event, detail)
-            
+
             if self.enable_verbose:
                 logger.info(f"Audited build start: {build_id}")
-                
+
         except Exception as e:
             logger.error(f"Error auditing build start: {e}", exc_info=True)
 
@@ -76,7 +76,7 @@ class BuildAuditIntegration:
         build_id: str,
         success: bool,
         duration_seconds: float,
-        result: Dict[str, Any]
+        result: dict[str, Any]
     ) -> None:
         """
         Audit build completion event.
@@ -95,13 +95,13 @@ class BuildAuditIntegration:
                 "timestamp": datetime.utcnow().isoformat(),
                 "result_summary": self._summarize_result(result),
             }
-            
+
             audit(event, detail)
             self._buffer_audit(event, detail)
-            
+
             if self.enable_verbose:
                 logger.info(f"Audited build complete: {build_id}, success={success}")
-                
+
         except Exception as e:
             logger.error(f"Error auditing build complete: {e}", exc_info=True)
 
@@ -110,8 +110,8 @@ class BuildAuditIntegration:
         decision_type: str,
         action: str,
         allowed: bool,
-        reason: Optional[str] = None,
-        metadata: Optional[Dict[str, Any]] = None
+        reason: str | None = None,
+        metadata: dict[str, Any] | None = None
     ) -> None:
         """
         Audit policy decision event.
@@ -132,16 +132,16 @@ class BuildAuditIntegration:
                 "timestamp": datetime.utcnow().isoformat(),
                 "metadata": metadata or {},
             }
-            
+
             audit(event, detail)
             self._buffer_audit(event, detail)
-            
+
             if self.enable_verbose or not allowed:
                 logger.info(
                     f"Audited policy decision: {decision_type}, "
                     f"action={action}, allowed={allowed}"
                 )
-                
+
         except Exception as e:
             logger.error(f"Error auditing policy decision: {e}", exc_info=True)
 
@@ -152,7 +152,7 @@ class BuildAuditIntegration:
         path: str,
         operation: str,
         allowed: bool,
-        reason: Optional[str] = None
+        reason: str | None = None
     ) -> None:
         """
         Audit security event.
@@ -175,23 +175,23 @@ class BuildAuditIntegration:
                 "reason": reason,
                 "timestamp": datetime.utcnow().isoformat(),
             }
-            
+
             audit(event, detail)
             self._buffer_audit(event, detail)
-            
+
             if self.enable_verbose or not allowed:
                 logger.info(
                     f"Audited security event: {event_type}, "
                     f"agent={agent}, allowed={allowed}"
                 )
-                
+
         except Exception as e:
             logger.error(f"Error auditing security event: {e}", exc_info=True)
 
     def audit_capsule_creation(
         self,
         capsule_id: str,
-        tasks: List[str],
+        tasks: list[str],
         input_count: int,
         output_count: int,
         merkle_root: str
@@ -215,13 +215,13 @@ class BuildAuditIntegration:
                 "merkle_root": merkle_root,
                 "timestamp": datetime.utcnow().isoformat(),
             }
-            
+
             audit(event, detail)
             self._buffer_audit(event, detail)
-            
+
             if self.enable_verbose:
                 logger.info(f"Audited capsule creation: {capsule_id}")
-                
+
         except Exception as e:
             logger.error(f"Error auditing capsule creation: {e}", exc_info=True)
 
@@ -229,7 +229,7 @@ class BuildAuditIntegration:
         self,
         capsule_id: str,
         success: bool,
-        differences: Optional[Dict[str, Any]] = None
+        differences: dict[str, Any] | None = None
     ) -> None:
         """
         Audit build replay event.
@@ -246,25 +246,25 @@ class BuildAuditIntegration:
                 "has_differences": differences is not None,
                 "timestamp": datetime.utcnow().isoformat(),
             }
-            
+
             if differences:
                 detail["differences_summary"] = self._summarize_differences(differences)
-            
+
             audit(event, detail)
             self._buffer_audit(event, detail)
-            
+
             if self.enable_verbose or not success:
                 logger.info(f"Audited replay event: {capsule_id}, success={success}")
-                
+
         except Exception as e:
             logger.error(f"Error auditing replay event: {e}", exc_info=True)
 
     def audit_cognition_decision(
         self,
         decision_type: str,
-        inputs: Dict[str, Any],
-        outputs: Dict[str, Any],
-        reasoning: Optional[Dict[str, Any]] = None
+        inputs: dict[str, Any],
+        outputs: dict[str, Any],
+        reasoning: dict[str, Any] | None = None
     ) -> None:
         """
         Audit cognitive decision event.
@@ -283,17 +283,17 @@ class BuildAuditIntegration:
                 "has_reasoning": reasoning is not None,
                 "timestamp": datetime.utcnow().isoformat(),
             }
-            
+
             audit(event, detail)
             self._buffer_audit(event, detail)
-            
+
             if self.enable_verbose:
                 logger.info(f"Audited cognition decision: {decision_type}")
-                
+
         except Exception as e:
             logger.error(f"Error auditing cognition decision: {e}", exc_info=True)
 
-    def get_audit_buffer(self, limit: int = 100) -> List[Dict[str, Any]]:
+    def get_audit_buffer(self, limit: int = 100) -> list[dict[str, Any]]:
         """
         Get recent audit entries from buffer.
 
@@ -319,9 +319,9 @@ class BuildAuditIntegration:
 
     def generate_audit_report(
         self,
-        start_time: Optional[datetime] = None,
-        end_time: Optional[datetime] = None
-    ) -> Dict[str, Any]:
+        start_time: datetime | None = None,
+        end_time: datetime | None = None
+    ) -> dict[str, Any]:
         """
         Generate audit report for time period.
 
@@ -338,29 +338,29 @@ class BuildAuditIntegration:
                 start_time,
                 end_time
             )
-            
+
             # Aggregate statistics
             event_counts = {}
             policy_decisions = {"allowed": 0, "denied": 0}
             security_events = {"allowed": 0, "denied": 0}
-            
+
             for entry in filtered_entries:
                 event_type = entry["event"].split(":")[0]
                 event_counts[event_type] = event_counts.get(event_type, 0) + 1
-                
+
                 detail = entry.get("detail", {})
                 if "POLICY_DECISION" in entry["event"]:
                     if detail.get("allowed"):
                         policy_decisions["allowed"] += 1
                     else:
                         policy_decisions["denied"] += 1
-                
+
                 if "SECURITY_EVENT" in entry["event"]:
                     if detail.get("allowed"):
                         security_events["allowed"] += 1
                     else:
                         security_events["denied"] += 1
-            
+
             return {
                 "period": {
                     "start": start_time.isoformat() if start_time else None,
@@ -371,7 +371,7 @@ class BuildAuditIntegration:
                 "policy_decisions": policy_decisions,
                 "security_events": security_events,
             }
-            
+
         except Exception as e:
             logger.error(f"Error generating audit report: {e}", exc_info=True)
             return {"error": str(e)}
@@ -383,12 +383,12 @@ class BuildAuditIntegration:
             "detail": detail,
             "timestamp": datetime.utcnow().isoformat(),
         })
-        
+
         # Keep last 10000 entries
         if len(self.audit_buffer) > 10000:
             self.audit_buffer = self.audit_buffer[-10000:]
 
-    def _sanitize_context(self, context: Dict[str, Any]) -> Dict[str, Any]:
+    def _sanitize_context(self, context: dict[str, Any]) -> dict[str, Any]:
         """Sanitize context for audit logging."""
         # Remove sensitive keys
         sensitive_keys = {"password", "token", "secret", "key"}
@@ -397,7 +397,7 @@ class BuildAuditIntegration:
             if k.lower() not in sensitive_keys
         }
 
-    def _summarize_result(self, result: Dict[str, Any]) -> Dict[str, Any]:
+    def _summarize_result(self, result: dict[str, Any]) -> dict[str, Any]:
         """Summarize build result for audit."""
         return {
             "success": result.get("success"),
@@ -406,7 +406,7 @@ class BuildAuditIntegration:
             "error_count": len(result.get("errors", [])),
         }
 
-    def _summarize_differences(self, differences: Dict[str, Any]) -> Dict[str, Any]:
+    def _summarize_differences(self, differences: dict[str, Any]) -> dict[str, Any]:
         """Summarize differences for audit."""
         summary = {}
         for key, value in differences.items():
@@ -416,7 +416,7 @@ class BuildAuditIntegration:
                 summary[key] = "present"
         return summary
 
-    def _summarize_dict(self, data: Dict[str, Any], max_keys: int = 5) -> Dict[str, Any]:
+    def _summarize_dict(self, data: dict[str, Any], max_keys: int = 5) -> dict[str, Any]:
         """Summarize dictionary for audit."""
         keys = list(data.keys())[:max_keys]
         return {
@@ -426,29 +426,29 @@ class BuildAuditIntegration:
 
     def _filter_by_time(
         self,
-        entries: List[Dict[str, Any]],
-        start_time: Optional[datetime],
-        end_time: Optional[datetime]
-    ) -> List[Dict[str, Any]]:
+        entries: list[dict[str, Any]],
+        start_time: datetime | None,
+        end_time: datetime | None
+    ) -> list[dict[str, Any]]:
         """Filter entries by time range."""
         if not start_time and not end_time:
             return entries
-        
+
         filtered = []
         for entry in entries:
             timestamp_str = entry.get("timestamp")
             if not timestamp_str:
                 continue
-            
+
             timestamp = datetime.fromisoformat(timestamp_str)
-            
+
             if start_time and timestamp < start_time:
                 continue
             if end_time and timestamp > end_time:
                 continue
-            
+
             filtered.append(entry)
-        
+
         return filtered
 
 

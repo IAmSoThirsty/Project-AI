@@ -12,13 +12,13 @@ This is a simulation tool for analysis, not a decision-making system.
 Triggers are FOR ANALYSIS ONLY - they do not authorize actions.
 """
 
+import hashlib
+import json
 import logging
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Dict, List, Optional, Tuple, Any, Callable
-import hashlib
-import json
+from typing import Any
 
 from atlas.audit.trail import get_audit_trail
 
@@ -64,12 +64,12 @@ class TriggerCondition:
     threshold: float
     operator: str  # ">", "<", ">=", "<=", "=="
     duration_timesteps: int = 1  # Minimum duration to trigger
-    
+
     # State tracking
     consecutive_timesteps: int = 0
-    first_triggered: Optional[datetime] = None
-    last_checked: Optional[datetime] = None
-    
+    first_triggered: datetime | None = None
+    last_checked: datetime | None = None
+
     def evaluate(self, metric_value: float) -> bool:
         """
         Evaluate condition against metric value.
@@ -77,7 +77,7 @@ class TriggerCondition:
         Returns: True if condition met, False otherwise
         """
         self.last_checked = datetime.now()
-        
+
         # Evaluate comparison
         if self.operator == ">":
             met = metric_value > self.threshold
@@ -91,7 +91,7 @@ class TriggerCondition:
             met = abs(metric_value - self.threshold) < 1e-6
         else:
             raise ValueError(f"Unknown operator: {self.operator}")
-        
+
         # Update consecutive timesteps
         if met:
             self.consecutive_timesteps += 1
@@ -100,31 +100,31 @@ class TriggerCondition:
         else:
             self.consecutive_timesteps = 0
             self.first_triggered = None
-        
+
         # Check duration requirement
         return self.consecutive_timesteps >= self.duration_timesteps
-    
+
     def reset(self) -> None:
         """Reset condition state."""
         self.consecutive_timesteps = 0
         self.first_triggered = None
-    
-    def validate(self) -> Tuple[bool, List[str]]:
+
+    def validate(self) -> tuple[bool, list[str]]:
         """Validate condition parameters."""
         errors = []
-        
+
         if not self.metric_name:
             errors.append("metric_name is empty")
-        
+
         if np.isnan(self.threshold) or np.isinf(self.threshold):
             errors.append(f"Invalid threshold: {self.threshold}")
-        
+
         if self.operator not in [">", "<", ">=", "<=", "=="]:
             errors.append(f"Invalid operator: {self.operator}")
-        
+
         if self.duration_timesteps < 1:
             errors.append(f"Invalid duration: {self.duration_timesteps}")
-        
+
         return len(errors) == 0, errors
 
 
@@ -139,21 +139,21 @@ class Playbook:
     version: str
     name: str
     description: str
-    
+
     # Actions (for analysis/recommendation only)
-    actions: List[PlaybookAction] = field(default_factory=list)
-    
+    actions: list[PlaybookAction] = field(default_factory=list)
+
     # Conditions that activate this playbook
-    conditions: List[TriggerCondition] = field(default_factory=list)
-    
+    conditions: list[TriggerCondition] = field(default_factory=list)
+
     # Metadata
     created: datetime = field(default_factory=datetime.now)
     last_updated: datetime = field(default_factory=datetime.now)
-    
+
     # Immutability
-    playbook_hash: Optional[str] = None
+    playbook_hash: str | None = None
     locked: bool = False
-    
+
     def compute_hash(self) -> str:
         """Compute canonical hash of playbook."""
         canonical = {
@@ -173,21 +173,21 @@ class Playbook:
                 for c in self.conditions
             ]
         }
-        
+
         content = json.dumps(canonical, sort_keys=True, separators=(',', ':'))
         return hashlib.sha256(content.encode()).hexdigest()
-    
+
     def lock(self) -> None:
         """Lock playbook and compute hash."""
         if not self.locked:
             self.playbook_hash = self.compute_hash()
             self.locked = True
-    
+
     def verify_integrity(self) -> bool:
         """Verify playbook hasn't been tampered."""
         if not self.locked or not self.playbook_hash:
             return True  # Not locked, no integrity to verify
-        
+
         current_hash = self.compute_hash()
         return current_hash == self.playbook_hash
 
@@ -199,15 +199,15 @@ class TriggerActivation:
     playbook_id: str
     timestamp: datetime
     stack: StackType
-    
+
     # Conditions that caused activation
-    triggering_conditions: List[str] = field(default_factory=list)
-    
+    triggering_conditions: list[str] = field(default_factory=list)
+
     # Metrics at activation
-    metric_values: Dict[str, float] = field(default_factory=dict)
-    
+    metric_values: dict[str, float] = field(default_factory=dict)
+
     # Actions recommended (for analysis only)
-    recommended_actions: List[PlaybookAction] = field(default_factory=list)
+    recommended_actions: list[PlaybookAction] = field(default_factory=list)
 
 
 class ContingencyTriggerFramework:
@@ -218,7 +218,7 @@ class ContingencyTriggerFramework:
     
     CRITICAL: RS-only enforcement. Narrative triggers are BLOCKED.
     """
-    
+
     def __init__(self, stack: StackType, audit_trail=None):
         """
         Initialize contingency trigger framework.
@@ -229,20 +229,20 @@ class ContingencyTriggerFramework:
         """
         self.stack = stack
         self.audit_trail = audit_trail or get_audit_trail()
-        
+
         # Enforce RS-only for triggers
         if stack != StackType.RS:
             raise ValueError(f"Contingency triggers only allowed in RS stack, not {stack.value}")
-        
+
         # Playbook registry
-        self.playbooks: Dict[str, Playbook] = {}
-        
+        self.playbooks: dict[str, Playbook] = {}
+
         # Trigger activations
-        self.activations: List[TriggerActivation] = []
-        
+        self.activations: list[TriggerActivation] = []
+
         # Current timestep
         self.timestep = 0
-        
+
         self.audit_trail.log(
             category="GOVERNANCE",
             operation="contingency_trigger_framework_initialized",
@@ -253,9 +253,9 @@ class ContingencyTriggerFramework:
             level="INFORMATIONAL",
             priority="HIGH_PRIORITY"
         )
-        
+
         logger.info(f"Contingency trigger framework initialized for {stack.value}")
-    
+
     def register_playbook(self, playbook: Playbook) -> None:
         """
         Register playbook.
@@ -267,13 +267,13 @@ class ContingencyTriggerFramework:
             valid, errors = condition.validate()
             if not valid:
                 raise ValueError(f"Invalid condition in playbook {playbook.playbook_id}: {errors}")
-        
+
         # Lock playbook
         playbook.lock()
-        
+
         # Store
         self.playbooks[playbook.playbook_id] = playbook
-        
+
         self.audit_trail.log(
             category="GOVERNANCE",
             operation="playbook_registered",
@@ -287,21 +287,21 @@ class ContingencyTriggerFramework:
             level="INFORMATIONAL",
             priority="HIGH_PRIORITY"
         )
-        
+
         logger.info(f"Registered playbook: {playbook.name} (v{playbook.version})")
-    
-    def verify_all_playbooks(self) -> Tuple[bool, List[str]]:
+
+    def verify_all_playbooks(self) -> tuple[bool, list[str]]:
         """
         Verify integrity of all playbooks.
         
         Returns: (all_valid, list_of_errors)
         """
         errors = []
-        
+
         for playbook_id, playbook in self.playbooks.items():
             if not playbook.verify_integrity():
                 errors.append(f"Playbook {playbook_id} integrity check failed")
-                
+
                 self.audit_trail.log(
                     category="GOVERNANCE",
                     operation="playbook_integrity_failure",
@@ -313,9 +313,9 @@ class ContingencyTriggerFramework:
                     level="CRITICAL",
                     priority="HIGH_PRIORITY"
                 )
-        
+
         return len(errors) == 0, errors
-    
+
     def reject_narrative_trigger(self, trigger_description: str) -> None:
         """
         Block narrative triggers.
@@ -332,12 +332,12 @@ class ContingencyTriggerFramework:
             level="CRITICAL",
             priority="HIGH_PRIORITY"
         )
-        
+
         logger.critical(f"BLOCKED narrative trigger: {trigger_description}")
-        
+
         raise ValueError("Narrative triggers are BLOCKED. Only deterministic metric triggers allowed.")
-    
-    def evaluate_triggers(self, metrics: Dict[str, float]) -> List[TriggerActivation]:
+
+    def evaluate_triggers(self, metrics: dict[str, float]) -> list[TriggerActivation]:
         """
         Evaluate all trigger conditions against current metrics.
         
@@ -349,21 +349,21 @@ class ContingencyTriggerFramework:
         """
         self.timestep += 1
         activations = []
-        
+
         for playbook_id, playbook in self.playbooks.items():
             # Check if any condition is met
             triggered_conditions = []
-            
+
             for condition in playbook.conditions:
                 metric_value = metrics.get(condition.metric_name)
-                
+
                 if metric_value is None:
                     logger.warning(f"Metric {condition.metric_name} not found in current metrics")
                     continue
-                
+
                 if condition.evaluate(metric_value):
                     triggered_conditions.append(condition.condition_id)
-            
+
             # If any conditions triggered, create activation
             if triggered_conditions:
                 activation = TriggerActivation(
@@ -375,10 +375,10 @@ class ContingencyTriggerFramework:
                     metric_values=metrics.copy(),
                     recommended_actions=playbook.actions.copy()
                 )
-                
+
                 activations.append(activation)
                 self.activations.append(activation)
-                
+
                 self.audit_trail.log(
                     category="GOVERNANCE",
                     operation="trigger_activated",
@@ -392,16 +392,16 @@ class ContingencyTriggerFramework:
                     level="INFORMATIONAL",
                     priority="HIGH_PRIORITY"
                 )
-                
+
                 logger.info(f"Trigger activated: {playbook.name}")
-        
+
         return activations
-    
-    def get_activation_history(self) -> List[TriggerActivation]:
+
+    def get_activation_history(self) -> list[TriggerActivation]:
         """Get complete activation history."""
         return self.activations.copy()
-    
-    def get_statistics(self) -> Dict[str, Any]:
+
+    def get_statistics(self) -> dict[str, Any]:
         """Get trigger framework statistics."""
         return {
             "playbooks": len(self.playbooks),

@@ -5,12 +5,12 @@ Creates believable fake environments tailored to detected threats.
 Manages the "Bubblegum Protocol" for dramatic attacker revelation.
 """
 
-from dataclasses import dataclass, field
-from typing import Dict, List, Any, Optional
-from enum import Enum
-import time
-import random
 import logging
+import random
+import time
+from dataclasses import dataclass, field
+from enum import Enum
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +32,7 @@ class FakeResource:
     path: str
     content: Any
     appears_sensitive: bool = False
-    honeypot_markers: List[str] = field(default_factory=list)
+    honeypot_markers: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -43,9 +43,9 @@ class DeceptionEnvironment:
     strategy: DeceptionStrategy
     target_user: int
     threat_type: str
-    resources: List[FakeResource] = field(default_factory=list)
+    resources: list[FakeResource] = field(default_factory=list)
     created_at: float = field(default_factory=time.time)
-    attacker_actions: List[str] = field(default_factory=list)
+    attacker_actions: list[str] = field(default_factory=list)
     confidence_level: float = 0.0
 
 
@@ -88,7 +88,7 @@ class BubblegumProtocol:
         return False
 
     @staticmethod
-    def execute(environment: DeceptionEnvironment) -> Dict[str, Any]:
+    def execute(environment: DeceptionEnvironment) -> dict[str, Any]:
         """Execute the Bubblegum Protocol"""
         logger.critical("💥 BUBBLEGUM PROTOCOL ACTIVATED")
         logger.critical(" ")
@@ -114,7 +114,7 @@ class EnvironmentGenerator:
     def __init__(self):
         self.fake_data_templates = self._load_templates()
 
-    def _load_templates(self) -> Dict[str, Any]:
+    def _load_templates(self) -> dict[str, Any]:
         """Load templates for fake data"""
         return {
             "passwords": [
@@ -164,7 +164,7 @@ class EnvironmentGenerator:
 
     def generate_for_threat(
         self, threat_type: str, strategy: DeceptionStrategy = DeceptionStrategy.ADAPTIVE
-    ) -> List[FakeResource]:
+    ) -> list[FakeResource]:
         """Generate resources based on threat type"""
         resources = []
 
@@ -185,7 +185,7 @@ class EnvironmentGenerator:
 
         return resources
 
-    def _generate_privilege_resources(self) -> List[FakeResource]:
+    def _generate_privilege_resources(self) -> list[FakeResource]:
         """Generate resources for privilege escalation attacks"""
         resources = []
 
@@ -213,7 +213,7 @@ class EnvironmentGenerator:
 
         return resources
 
-    def _generate_credential_resources(self) -> List[FakeResource]:
+    def _generate_credential_resources(self) -> list[FakeResource]:
         """Generate fake credential files"""
         resources = []
 
@@ -259,7 +259,7 @@ class EnvironmentGenerator:
 
         return resources
 
-    def _generate_data_resources(self) -> List[FakeResource]:
+    def _generate_data_resources(self) -> list[FakeResource]:
         """Generate fake data for exfiltration"""
         resources = []
 
@@ -287,7 +287,7 @@ class EnvironmentGenerator:
 
         return resources
 
-    def _generate_persistence_resources(self) -> List[FakeResource]:
+    def _generate_persistence_resources(self) -> list[FakeResource]:
         """Generate resources for persistence attempts"""
         resources = []
 
@@ -304,7 +304,7 @@ class EnvironmentGenerator:
 
         return resources
 
-    def _generate_generic_resources(self) -> List[FakeResource]:
+    def _generate_generic_resources(self) -> list[FakeResource]:
         """Generate generic system resources for believability"""
         resources = []
 
@@ -346,8 +346,8 @@ class DeceptionOrchestrator:
 
     def __init__(self):
         self.generator = EnvironmentGenerator()
-        self.active_environments: Dict[int, DeceptionEnvironment] = {}
-        self.bubblegum_history: List[Dict[str, Any]] = []
+        self.active_environments: dict[int, DeceptionEnvironment] = {}
+        self.bubblegum_history: list[dict[str, Any]] = []
 
         logger.info("Deception Orchestrator initialized")
 
@@ -380,7 +380,7 @@ class DeceptionOrchestrator:
 
         return environment
 
-    def record_action(self, user_id: int, action: str) -> Dict[str, Any]:
+    def record_action(self, user_id: int, action: str) -> dict[str, Any]:
         """Record an attacker action and update confidence"""
         if user_id not in self.active_environments:
             return {"error": "No environment for user"}
@@ -426,7 +426,7 @@ class DeceptionOrchestrator:
         total = action_score + time_score + sensitive_score
         return min(total, 1.0)
 
-    def trigger_bubblegum(self, user_id: int) -> Dict[str, Any]:
+    def trigger_bubblegum(self, user_id: int) -> dict[str, Any]:
         """Trigger the Bubblegum Protocol"""
         if user_id not in self.active_environments:
             return {"error": "No environment for user"}
@@ -485,7 +485,7 @@ class DeceptionOrchestrator:
             logger.info(f"   Total actions: {len(env.attacker_actions)}")
             logger.info(f"   Final confidence: {env.confidence_level:.2f}")
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get deception orchestrator statistics"""
         return {
             "active_environments": len(self.active_environments),

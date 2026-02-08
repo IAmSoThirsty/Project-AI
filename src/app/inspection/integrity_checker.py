@@ -216,7 +216,9 @@ class IntegrityChecker:
             except Exception as e:
                 logger.debug("Error processing %s: %s", file_path, e)
 
-        logger.info("Built dependency graph with %d dependencies", len(self.dependencies))
+        logger.info(
+            "Built dependency graph with %d dependencies", len(self.dependencies)
+        )
 
     def _detect_circular_dependencies(self) -> list[CircularDependency]:
         """Detect circular dependencies in the dependency graph."""
@@ -327,7 +329,9 @@ class IntegrityChecker:
         entry_point_patterns = ["main", "cli", "app", "__main__", "start", "run"]
 
         for module in never_imported:
-            is_entry_point = any(pattern in module.lower() for pattern in entry_point_patterns)
+            is_entry_point = any(
+                pattern in module.lower() for pattern in entry_point_patterns
+            )
 
             if not is_entry_point:
                 # Check if it's in tests (tests are entry points)

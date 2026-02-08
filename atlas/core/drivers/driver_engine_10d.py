@@ -14,15 +14,16 @@ Layer 2 Component - Production-Grade Implementation
 import hashlib
 import json
 import logging
+from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
-import numpy as np
-from dataclasses import dataclass, field
+from typing import Any
 
+import numpy as np
+
+from atlas.audit.trail import AuditCategory, AuditLevel, get_audit_trail
 from atlas.config.loader import get_config_loader
-from atlas.audit.trail import get_audit_trail, AuditCategory, AuditLevel
 
 logger = logging.getLogger(__name__)
 
@@ -37,21 +38,21 @@ class DriverType(Enum):
     CAPITAL_CONCENTRATION = "capital_concentration"  # Wealth/capital concentration index
     MARKET_VOLATILITY = "market_volatility"  # Financial market instability
     RESOURCE_SCARCITY = "resource_scarcity"  # Access to critical resources
-    
+
     # Institutional Drivers (3)
     MEDIA_GATEKEEPING = "media_gatekeeping"  # Media consolidation and control
     INSTITUTIONAL_CAPTURE_RISK = "institutional_capture_risk"  # Regulatory capture index
     GOVERNANCE_FRAGILITY = "governance_fragility"  # State capacity/legitimacy
-    
+
     # Social Drivers (2)
     INEQUALITY_INDEX = "inequality_index"  # Income/wealth inequality (Gini-like)
     SOCIAL_COHESION = "social_cohesion"  # Community bonds and trust
-    
+
     # Information Drivers (2)
     INFORMATION_ASYMMETRY = "information_asymmetry"  # Access to truth vs. noise
     TECHNOLOGICAL_DISRUPTION = "technological_disruption"  # Rate of technological change
-    
-    def get_historical_range(self) -> Tuple[float, float]:
+
+    def get_historical_range(self) -> tuple[float, float]:
         """
         Get historical min/max for normalization (1900-2026).
         
@@ -72,7 +73,7 @@ class DriverType(Enum):
             DriverType.TECHNOLOGICAL_DISRUPTION: (0.05, 0.95),  # Innovation rate index
         }
         return ranges[self]
-    
+
     def get_description(self) -> str:
         """Get human-readable description of driver."""
         descriptions = {
@@ -98,7 +99,7 @@ class DriverVector:
     All values normalized to [0, 1] using historical anchors.
     """
     timestamp: datetime
-    
+
     # 10 driver values (all [0, 1])
     capital_concentration: float
     market_volatility: float
@@ -110,11 +111,11 @@ class DriverVector:
     social_cohesion: float
     information_asymmetry: float
     technological_disruption: float
-    
+
     # Metadata
     source: str = "computed"
     confidence: float = 1.0
-    
+
     def as_array(self) -> np.ndarray:
         """Return as numpy array."""
         return np.array([
@@ -129,8 +130,8 @@ class DriverVector:
             self.information_asymmetry,
             self.technological_disruption
         ])
-    
-    def to_dict(self) -> Dict[str, Any]:
+
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return {
             "timestamp": self.timestamp.isoformat(),
@@ -149,8 +150,8 @@ class DriverVector:
             "source": self.source,
             "confidence": self.confidence
         }
-    
-    def validate_bounds(self) -> Tuple[bool, List[str]]:
+
+    def validate_bounds(self) -> tuple[bool, list[str]]:
         """
         Validate all driver values are in [0, 1].
         
@@ -170,13 +171,13 @@ class DriverVector:
             "information_asymmetry": self.information_asymmetry,
             "technological_disruption": self.technological_disruption
         }
-        
+
         for name, value in values.items():
             if not (0.0 <= value <= 1.0):
                 errors.append(f"{name} = {value} (must be in [0, 1])")
             if np.isnan(value) or np.isinf(value):
                 errors.append(f"{name} = {value} (NaN/Inf not allowed)")
-        
+
         return len(errors) == 0, errors
 
 
@@ -191,8 +192,8 @@ class DriverNormalizationEngine:
     - Immutable baseline file with checksum
     - Zero subjective tuning
     """
-    
-    def __init__(self, config_dir: Optional[Path] = None):
+
+    def __init__(self, config_dir: Path | None = None):
         """
         Initialize driver normalization engine.
         
@@ -201,21 +202,21 @@ class DriverNormalizationEngine:
         """
         if config_dir is None:
             config_dir = Path(__file__).parent.parent.parent / "config"
-        
+
         self.config_dir = Path(config_dir)
         self.audit = get_audit_trail()
-        
+
         # Load driver configuration
         self.config_loader = get_config_loader()
         self.driver_config = self.config_loader.get_config("drivers")
-        
+
         # Create/load immutable baseline
         self.baseline_file = self.config_dir / "driver_baseline.json"
-        self.baseline_checksum: Optional[str] = None
+        self.baseline_checksum: str | None = None
         self._load_or_create_baseline()
-        
+
         logger.info("Initialized DriverNormalizationEngine with historical anchors")
-        
+
         self.audit.log_event(
             category=AuditCategory.SYSTEM,
             level=AuditLevel.INFORMATIONAL,
@@ -226,32 +227,32 @@ class DriverNormalizationEngine:
                 "baseline_checksum": self.baseline_checksum
             }
         )
-    
+
     def _load_or_create_baseline(self) -> None:
         """Load or create immutable baseline file."""
         if self.baseline_file.exists():
             # Load existing baseline
-            with open(self.baseline_file, 'r') as f:
+            with open(self.baseline_file) as f:
                 content = f.read()
                 self.baseline = json.loads(content)
                 self.baseline_checksum = hashlib.sha256(content.encode()).hexdigest()
-            
+
             logger.info(f"Loaded baseline from {self.baseline_file}")
             logger.info(f"Baseline checksum: {self.baseline_checksum}")
         else:
             # Create new baseline
             self.baseline = self._create_baseline()
-            
+
             # Save with checksum
             content = json.dumps(self.baseline, indent=2, sort_keys=True)
             with open(self.baseline_file, 'w') as f:
                 f.write(content)
-            
+
             self.baseline_checksum = hashlib.sha256(content.encode()).hexdigest()
-            
+
             logger.info(f"Created new baseline at {self.baseline_file}")
             logger.info(f"Baseline checksum: {self.baseline_checksum}")
-            
+
             self.audit.log_event(
                 category=AuditCategory.GOVERNANCE,
                 level=AuditLevel.HIGH_PRIORITY,
@@ -262,8 +263,8 @@ class DriverNormalizationEngine:
                     "checksum": self.baseline_checksum
                 }
             )
-    
-    def _create_baseline(self) -> Dict[str, Any]:
+
+    def _create_baseline(self) -> dict[str, Any]:
         """Create immutable baseline with historical ranges."""
         baseline = {
             "version": "1.0.0",
@@ -272,7 +273,7 @@ class DriverNormalizationEngine:
             "description": "Immutable baseline for driver normalization",
             "drivers": {}
         }
-        
+
         # Add each driver's historical range
         for driver_type in DriverType:
             min_val, max_val = driver_type.get_historical_range()
@@ -283,9 +284,9 @@ class DriverNormalizationEngine:
                 "historical_max": max_val,
                 "normalization_formula": "(value - min) / (max - min)"
             }
-        
+
         return baseline
-    
+
     def normalize_value(
         self,
         driver_type: DriverType,
@@ -302,18 +303,18 @@ class DriverNormalizationEngine:
             Normalized value in [0, 1]
         """
         min_val, max_val = driver_type.get_historical_range()
-        
+
         # Normalize: (value - min) / (max - min)
         if max_val == min_val:
             return 0.5  # Edge case
-        
+
         normalized = (raw_value - min_val) / (max_val - min_val)
-        
+
         # Clip to [0, 1]
         normalized = max(0.0, min(1.0, normalized))
-        
+
         return normalized
-    
+
     def denormalize_value(
         self,
         driver_type: DriverType,
@@ -331,11 +332,11 @@ class DriverNormalizationEngine:
         """
         min_val, max_val = driver_type.get_historical_range()
         return min_val + normalized_value * (max_val - min_val)
-    
+
     def create_driver_vector(
         self,
         timestamp: datetime,
-        raw_values: Dict[str, float],
+        raw_values: dict[str, float],
         source: str = "computed"
     ) -> DriverVector:
         """
@@ -358,10 +359,10 @@ class DriverNormalizationEngine:
             key = driver_type.value
             if key not in raw_values:
                 raise ValueError(f"Missing required driver: {key}")
-            
+
             raw_val = raw_values[key]
             normalized[key] = self.normalize_value(driver_type, raw_val)
-        
+
         # Create vector
         vector = DriverVector(
             timestamp=timestamp,
@@ -377,12 +378,12 @@ class DriverNormalizationEngine:
             technological_disruption=normalized["technological_disruption"],
             source=source
         )
-        
+
         # Validate bounds
         valid, errors = vector.validate_bounds()
         if not valid:
             raise ValueError(f"Driver vector validation failed: {errors}")
-        
+
         # Log creation
         self.audit.log_event(
             category=AuditCategory.DATA,
@@ -395,14 +396,14 @@ class DriverNormalizationEngine:
                 "drivers": vector.to_dict()["drivers"]
             }
         )
-        
+
         return vector
-    
+
     def compute_derived_metrics(
         self,
         vector: DriverVector,
-        graph_metrics: Optional[Dict[str, float]] = None
-    ) -> Dict[str, float]:
+        graph_metrics: dict[str, float] | None = None
+    ) -> dict[str, float]:
         """
         Compute derived metrics from driver vector and graph.
         
@@ -414,7 +415,7 @@ class DriverNormalizationEngine:
             Dictionary of derived metrics
         """
         arr = vector.as_array()
-        
+
         derived = {
             # Composite indices
             "systemic_risk_index": np.mean([
@@ -422,36 +423,36 @@ class DriverNormalizationEngine:
                 vector.institutional_capture_risk,
                 vector.governance_fragility
             ]),
-            
+
             "information_control_index": np.mean([
                 vector.media_gatekeeping,
                 vector.information_asymmetry
             ]),
-            
+
             "social_stability_index": 1.0 - np.mean([
                 vector.inequality_index,
                 1.0 - vector.social_cohesion,
                 vector.governance_fragility
             ]),
-            
+
             # Interaction terms
             "elite_capture_potential": vector.capital_concentration * vector.institutional_capture_risk,
             "narrative_control_capacity": vector.media_gatekeeping * vector.information_asymmetry,
             "disruption_vulnerability": vector.technological_disruption * vector.governance_fragility,
-            
+
             # Volatility measures
             "economic_instability": np.sqrt(vector.market_volatility * vector.resource_scarcity),
             "institutional_stress": vector.institutional_capture_risk * vector.governance_fragility
         }
-        
+
         # Add graph-derived metrics if available
         if graph_metrics:
             derived["graph_concentration"] = graph_metrics.get("power_concentration", 0.0)
             derived["network_fragmentation"] = graph_metrics.get("modularity", 0.0)
             derived["influence_centralization"] = graph_metrics.get("centralization", 0.0)
-        
+
         return derived
-    
+
     def verify_baseline_integrity(self) -> bool:
         """
         Verify baseline file hasn't been tampered with.
@@ -462,12 +463,12 @@ class DriverNormalizationEngine:
         if not self.baseline_file.exists():
             logger.error("Baseline file missing!")
             return False
-        
-        with open(self.baseline_file, 'r') as f:
+
+        with open(self.baseline_file) as f:
             content = f.read()
-        
+
         current_checksum = hashlib.sha256(content.encode()).hexdigest()
-        
+
         if current_checksum != self.baseline_checksum:
             logger.error(
                 f"Baseline integrity check FAILED! "
@@ -485,10 +486,10 @@ class DriverNormalizationEngine:
                 }
             )
             return False
-        
+
         return True
-    
-    def get_statistics(self) -> Dict[str, Any]:
+
+    def get_statistics(self) -> dict[str, Any]:
         """Get driver engine statistics."""
         return {
             "baseline_file": str(self.baseline_file),
@@ -501,7 +502,7 @@ class DriverNormalizationEngine:
 
 
 # Singleton instance
-_driver_engine: Optional[DriverNormalizationEngine] = None
+_driver_engine: DriverNormalizationEngine | None = None
 
 
 def get_driver_engine() -> DriverNormalizationEngine:

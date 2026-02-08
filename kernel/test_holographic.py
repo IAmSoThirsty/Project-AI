@@ -5,14 +5,15 @@ Comprehensive tests for Google/DARPA demo verification.
 """
 
 import unittest
+
 from kernel.holographic import (
-    HolographicLayerManager,
-    RealSystemLayer,
-    MirrorLayer,
-    DeceptionLayer,
     Command,
-    ThreatLevel,
+    DeceptionLayer,
+    HolographicLayerManager,
     LayerType,
+    MirrorLayer,
+    RealSystemLayer,
+    ThreatLevel,
 )
 
 

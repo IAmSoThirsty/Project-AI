@@ -6,13 +6,11 @@ Forensic replay engine using Temporal workflows.
 Enables deterministic replay of build executions for debugging and auditing.
 """
 
-import asyncio
 import logging
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
-from temporalio import workflow
 from temporalio.client import Client
 
 from .capsule_engine import BuildCapsule, CapsuleEngine
@@ -27,8 +25,8 @@ class ReplayResult:
         self,
         success: bool,
         capsule_id: str,
-        differences: Optional[Dict[str, Any]] = None,
-        error: Optional[str] = None
+        differences: dict[str, Any] | None = None,
+        error: str | None = None
     ):
         """
         Initialize replay result.
@@ -55,7 +53,7 @@ class ReplayEngine:
     def __init__(
         self,
         capsule_engine: CapsuleEngine,
-        temporal_client: Optional[Client] = None,
+        temporal_client: Client | None = None,
         task_queue: str = "build-replay"
     ):
         """
@@ -69,7 +67,7 @@ class ReplayEngine:
         self.capsule_engine = capsule_engine
         self.temporal_client = temporal_client
         self.task_queue = task_queue
-        self.replay_history: List[Dict[str, Any]] = []
+        self.replay_history: list[dict[str, Any]] = []
         logger.info(f"Replay engine initialized with queue: {task_queue}")
 
     async def replay_build(
@@ -95,7 +93,7 @@ class ReplayEngine:
                     capsule_id=capsule_id,
                     error=f"Capsule not found: {capsule_id}"
                 )
-            
+
             # Verify capsule integrity first
             is_valid, error = self.capsule_engine.verify_capsule(capsule_id)
             if not is_valid:
@@ -104,18 +102,18 @@ class ReplayEngine:
                     capsule_id=capsule_id,
                     error=f"Capsule integrity check failed: {error}"
                 )
-            
+
             # Execute replay workflow if Temporal available
             if self.temporal_client:
                 result = await self._replay_with_temporal(capsule, verify_outputs)
             else:
                 result = await self._replay_local(capsule, verify_outputs)
-            
+
             # Record replay
             self._record_replay(capsule_id, result)
-            
+
             return result
-            
+
         except Exception as e:
             logger.error(f"Error replaying build: {e}", exc_info=True)
             return ReplayResult(
@@ -132,23 +130,23 @@ class ReplayEngine:
         """Replay using Temporal workflow."""
         try:
             workflow_id = f"replay-{capsule.capsule_id}-{datetime.utcnow().timestamp()}"
-            
+
             handle = await self.temporal_client.start_workflow(
                 "BuildReplayWorkflow",
                 args=[capsule.to_dict(), verify_outputs],
                 id=workflow_id,
                 task_queue=self.task_queue,
             )
-            
+
             result_dict = await handle.result()
-            
+
             return ReplayResult(
                 success=result_dict.get("success", False),
                 capsule_id=capsule.capsule_id,
                 differences=result_dict.get("differences"),
                 error=result_dict.get("error")
             )
-            
+
         except Exception as e:
             logger.error(f"Error in Temporal replay: {e}", exc_info=True)
             return ReplayResult(
@@ -165,16 +163,16 @@ class ReplayEngine:
         """Fallback local replay without Temporal."""
         try:
             differences = {}
-            
+
             # Verify inputs still exist
             missing_inputs = []
             for input_path in capsule.inputs:
                 if not Path(input_path).exists():
                     missing_inputs.append(input_path)
-            
+
             if missing_inputs:
                 differences["missing_inputs"] = missing_inputs
-            
+
             # Verify input hashes if files exist
             modified_inputs = []
             for input_path, original_hash in capsule.inputs.items():
@@ -187,15 +185,15 @@ class ReplayEngine:
                             "original_hash": original_hash,
                             "current_hash": current_hash,
                         })
-            
+
             if modified_inputs:
                 differences["modified_inputs"] = modified_inputs
-            
+
             # Verify outputs if requested
             if verify_outputs:
                 missing_outputs = []
                 modified_outputs = []
-                
+
                 for output_path, original_hash in capsule.outputs.items():
                     path = Path(output_path)
                     if not path.exists():
@@ -208,20 +206,20 @@ class ReplayEngine:
                                 "original_hash": original_hash,
                                 "current_hash": current_hash,
                             })
-                
+
                 if missing_outputs:
                     differences["missing_outputs"] = missing_outputs
                 if modified_outputs:
                     differences["modified_outputs"] = modified_outputs
-            
+
             success = not differences
-            
+
             return ReplayResult(
                 success=success,
                 capsule_id=capsule.capsule_id,
                 differences=differences if differences else None
             )
-            
+
         except Exception as e:
             logger.error(f"Error in local replay: {e}", exc_info=True)
             return ReplayResult(
@@ -232,9 +230,9 @@ class ReplayEngine:
 
     async def replay_capsule_chain(
         self,
-        capsule_ids: List[str],
+        capsule_ids: list[str],
         stop_on_failure: bool = True
-    ) -> List[ReplayResult]:
+    ) -> list[ReplayResult]:
         """
         Replay a chain of capsules in sequence.
 
@@ -246,21 +244,21 @@ class ReplayEngine:
             List of replay results
         """
         results = []
-        
+
         for capsule_id in capsule_ids:
             result = await self.replay_build(capsule_id, verify_outputs=True)
             results.append(result)
-            
+
             if stop_on_failure and not result.success:
                 logger.warning(f"Stopping chain replay at failed capsule: {capsule_id}")
                 break
-        
+
         return results
 
     async def find_divergence_point(
         self,
-        capsule_ids: List[str]
-    ) -> Optional[str]:
+        capsule_ids: list[str]
+    ) -> str | None:
         """
         Find where a capsule chain diverges from expected.
 
@@ -271,15 +269,15 @@ class ReplayEngine:
             First capsule ID that diverges, or None if all match
         """
         results = await self.replay_capsule_chain(capsule_ids, stop_on_failure=False)
-        
+
         for result in results:
             if not result.success:
                 logger.info(f"Divergence found at capsule: {result.capsule_id}")
                 return result.capsule_id
-        
+
         return None
 
-    def get_replay_history(self, limit: int = 10) -> List[Dict[str, Any]]:
+    def get_replay_history(self, limit: int = 10) -> list[dict[str, Any]]:
         """
         Get recent replay history.
 
@@ -294,7 +292,7 @@ class ReplayEngine:
     def generate_replay_report(
         self,
         replay_result: ReplayResult
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Generate detailed replay report.
 
@@ -306,14 +304,14 @@ class ReplayEngine:
         """
         try:
             capsule = self.capsule_engine.capsules.get(replay_result.capsule_id)
-            
+
             report = {
                 "capsule_id": replay_result.capsule_id,
                 "replay_timestamp": replay_result.timestamp,
                 "success": replay_result.success,
                 "error": replay_result.error,
             }
-            
+
             if capsule:
                 report["capsule_info"] = {
                     "tasks": capsule.tasks,
@@ -322,16 +320,16 @@ class ReplayEngine:
                     "original_timestamp": capsule.timestamp,
                     "merkle_root": capsule.merkle_root,
                 }
-            
+
             if replay_result.differences:
                 report["differences"] = replay_result.differences
                 report["difference_count"] = sum(
                     len(v) if isinstance(v, list) else 1
                     for v in replay_result.differences.values()
                 )
-            
+
             return report
-            
+
         except Exception as e:
             logger.error(f"Error generating replay report: {e}", exc_info=True)
             return {"error": str(e)}
@@ -349,7 +347,7 @@ class ReplayEngine:
             "has_differences": result.differences is not None,
             "error": result.error,
         })
-        
+
         # Keep last 1000 replays
         if len(self.replay_history) > 1000:
             self.replay_history = self.replay_history[-1000:]
