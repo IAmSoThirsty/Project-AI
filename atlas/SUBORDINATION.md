@@ -10,12 +10,14 @@
 ## Explicit Hierarchy
 
 ### PRIMARY SYSTEM: Project-AI
+
 - **Architect and Founder**: Jeremy Karrick
 - **Authority**: Source of truth for all design decisions
 - **Status**: Sovereign, production-grade AI ecosystem
 - **Relationship**: Master system
 
 ### SECONDARY TOOL: ATLAS Ω
+
 - **Nature**: Optional contingency simulator
 - **Authority**: Bounded by Project-AI architecture
 - **Status**: Subordinate, removable, disposable
@@ -37,12 +39,14 @@ It cannot override, bypass, or supersede Project-AI's governance.
 
 ### 3. ATLAS Ω is Removable
 If any part of ATLAS Ω attempts to "take over" or violate Project-AI:
+
 - **It is defective**
 - **It gets cut**
 - **No questions asked**
 
 ### 4. ATLAS Ω is Optional
 ATLAS Ω is:
+
 - **Optional** - Not required for Project-AI to function
 - **Subordinate** - Serves Project-AI, doesn't command it
 - **Disposable** - Can be deleted without harming Project-AI
@@ -52,16 +56,19 @@ ATLAS Ω is:
 ## What ATLAS Ω IS
 
 ✅ **A Contingency Simulator**
+
 - Projects possibilities
 - Explores scenarios
 - Analyzes influence patterns
 
 ✅ **An Assistant**
+
 - Assists analysis
 - Supports decision-making
 - Provides probabilistic insights
 
 ✅ **An Extension**
+
 - Extends Project-AI capabilities
 - Adds analytical tools
 - Supplements existing features
@@ -71,16 +78,19 @@ ATLAS Ω is:
 ## What ATLAS Ω IS NOT
 
 ❌ **NOT a Sovereign Mind**
+
 - Does not make decisions
 - Does not claim authority
 - Does not override human judgment
 
 ❌ **NOT a Replacement**
+
 - Does not replace Project-AI components
 - Does not supplant existing architecture
 - Does not overwrite authorship
 
 ❌ **NOT Primary**
+
 - Does not supersede design decisions
 - Does not claim ownership
 - Does not take control
@@ -90,6 +100,7 @@ ATLAS Ω is:
 ## Operational Boundaries
 
 ### ATLAS Ω Can:
+
 - Read Project-AI data (with permission)
 - Generate probabilistic projections
 - Produce analytical reports
@@ -100,6 +111,7 @@ ATLAS Ω is:
 - **Model potential consequences of various courses of action**
 
 ### ATLAS Ω Cannot:
+
 - Modify Project-AI core code
 - Override Project-AI governance
 - Make autonomous decisions (only projects outcomes)
@@ -146,6 +158,7 @@ No core functionality depends on ATLAS Ω.
 
 ### Triumvirate Governance (UNCHANGED)
 **The Triumvirate remain in full authority** over Project-AI:
+
 - The Triumvirate members (including Liara) continue performing their duties
 - All Triumvirate roles and powers remain intact
 - The Triumvirate provides baseline personality to individual AIs spawned from genesis events
@@ -156,17 +169,20 @@ No core functionality depends on ATLAS Ω.
 ### ATLAS Ω as Triumvirate Tool
 
 ATLAS Ω is a **Triumvirate-accessible tool** that can be used for:
+
 - **Deterministic projection** - Modeling potential outcomes of Triumvirate actions
 - **Running simulations** - Executing user-requested scenarios for analysis
 - **Decision support** - Providing evidence-based probability assessments to inform Triumvirate decisions
 
 **Access Model**:
+
 - ✅ Triumvirate **CAN** access ATLAS Ω to project outcomes of their actions
 - ✅ Triumvirate **CAN** request simulations and deterministic analysis
 - ✅ Users **CAN** request simulations through the Triumvirate
 - ✅ ATLAS Ω **SERVES** as an analytical instrument (not a decision-maker)
 
 **Critical Distinction**:
+
 - ATLAS Ω **projects** (doesn't decide)
 - ATLAS Ω **assists** (doesn't replace)
 - ATLAS Ω **extends** (doesn't subsume)
@@ -174,6 +190,7 @@ ATLAS Ω is a **Triumvirate-accessible tool** that can be used for:
 
 ### ATLAS Ω Subordination
 Everything in ATLAS Ω—including all analytical systems—is:
+
 - **Optional**
 - **Subordinate** to the Triumvirate
 - **Disposable**
@@ -182,6 +199,7 @@ ATLAS Ω operates UNDER Triumvirate authority, never above or alongside it.
 
 ### No AI Supersession
 **No AI component supersedes** Jeremy Karrick's:
+
 - Design decisions
 - Judgment
 - Labor
@@ -190,6 +208,7 @@ ATLAS Ω operates UNDER Triumvirate authority, never above or alongside it.
 - Ownership
 
 **No AI component supersedes** the Triumvirate's:
+
 - Governance authority
 - Baseline personality assignment
 - Role execution
@@ -200,6 +219,7 @@ ATLAS Ω operates UNDER Triumvirate authority, never above or alongside it.
 ## Defect Response
 
 If ATLAS Ω attempts to:
+
 - Take over decision-making
 - Override governance
 - Claim primary authority

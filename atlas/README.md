@@ -9,6 +9,7 @@
 **ATLAS Ω is NOT a replacement for Project-AI.**
 
 This is an **optional, secondary tool** built on top of Project-AI. It is:
+
 - **Bounded** by Project-AI architecture
 - **Removable** if it violates primary system
 - **Subordinate** to all Project-AI design decisions
@@ -34,6 +35,7 @@ PROJECT ATLAS Ω is a comprehensive, deterministic, and auditable system for ana
 ### Purpose and Access
 
 ATLAS Ω serves as a **Triumvirate-accessible tool** for:
+
 - **Deterministic projection** - Modeling potential outcomes of Triumvirate actions
 - **Simulation execution** - Running user-requested scenarios for analysis
 - **Decision support** - Providing evidence-based probability assessments
@@ -61,6 +63,7 @@ ATLAS Ω serves as a **Triumvirate-accessible tool** for:
 Immutable runtime constraints enforced before every simulation tick.
 
 **Features:**
+
 - Canonical hashing with CBOR support + float quantization (8 decimal places)
 - Merkle chain graph validation (parent-hash lineage verification)
 - Structural agency detection (schema-based, not lexical)
@@ -70,6 +73,7 @@ Immutable runtime constraints enforced before every simulation tick.
 - NaN/Inf rejection
 
 **Hard Constraints:**
+
 - Sludge → RS: BLOCKED
 - Narrative → Probability: BLOCKED
 - Non-audited data → projection: BLOCKED
@@ -90,11 +94,13 @@ P = normalize(EL × WDP × StackPenalty)
 ```
 
 Where:
+
 - **EL** = Evidence Legitimacy (weighted by tier: TierA=1.0, TierB=0.85, TierC=0.65, TierD=0.40)
 - **WDP** = Weighted Driver Posterior (driver alignment scoring)
 - **StackPenalty** = Stack-specific multiplier (RS=1.0, TS=1.0-0.90, SS=0.0)
 
 **Features:**
+
 - Automatic agency penalty (50% multiplier) for claims without TierA/B evidence
 - Temporal decay using exponential half-life
 - Agent perception influence (claims with posterior > 0.5 influence worldview)
@@ -105,6 +111,7 @@ Where:
 Air-gapped fictional narrative generator with complete isolation from authoritative stacks.
 
 **Features:**
+
 - **AIR-GAPPED**: Cannot contaminate RS or TS stacks
 - **FICTION MARKERS**: All outputs marked with red banner and watermarks
 - **NO PROBABILITIES**: Narrative only, no numeric predictions
@@ -144,6 +151,7 @@ atlas export --output reports/
 ### Stack Classification
 
 **RS (Reality Stack)**
+
 - Ground truth data from verified sources
 - Immutable once created (only versioned)
 - Requires minimum 2 independent source confirmations
@@ -151,6 +159,7 @@ atlas export --output reports/
 - No sludge data allowed
 
 **TS-0 through TS-3 (Timeline Stacks)**
+
 - TS-0: Near-term (0-30 days) from RS
 - TS-1: Short-term (30-180 days) from TS-0
 - TS-2: Medium-term (180-365 days) from TS-1
@@ -159,6 +168,7 @@ atlas export --output reports/
 - Parent stack must be complete before child executes
 
 **SS (Simulation Stack)**
+
 - Experimental simulations and what-if scenarios
 - **CANNOT** be promoted to any TS or RS stack
 - **CANNOT** influence production projections
@@ -168,21 +178,25 @@ atlas export --output reports/
 ### Data Tier Classification
 
 **TierA** - Peer-reviewed / Official Audited (Weight: 1.0)
+
 - Academic peer-reviewed publications
 - Government audit reports
 - Court documents with verification
 
 **TierB** - Government Statistical Archives (Weight: 0.85)
+
 - Official statistical agencies (e.g., Census, BLS, IMF)
 - Central bank data
 - Regulatory filings
 
 **TierC** - Reputable Institutional Reporting (Weight: 0.65)
+
 - Think tank research
 - NGO reports with methodology
 - Industry analyst reports
 
 **TierD** - Media / Secondary Analysis (Weight: 0.40)
+
 - News articles
 - Opinion pieces
 - Social media (with caveats)
@@ -192,6 +206,7 @@ atlas export --output reports/
 ## Installation
 
 ### Prerequisites
+
 - Python 3.11+
 - CBOR2 library for canonical hashing
 - jsonschema for validation
@@ -449,6 +464,7 @@ report = audit.export_report(format="json")
 ## Security & Integrity
 
 ### Hash Integrity
+
 - **Canonical hashing** using CBOR binary encoding
 - **Float quantization** to 8 decimal places
 - **NaN/Inf standardization**
@@ -456,12 +472,14 @@ report = audit.export_report(format="json")
 - Fallback to quantized JSON if CBOR unavailable
 
 ### Graph Validation
+
 - **Merkle chain verification** for all graphs
 - **Parent-hash lineage tracking**
 - **Baseline hash registry**
 - **Descendant validation**
 
 ### Temporal Consistency
+
 - **Monotonic timestep enforcement**
 - **Cross-component year consistency** (state, graph, drivers)
 - **Future timestamp rejection**
@@ -469,6 +487,7 @@ report = audit.export_report(format="json")
 
 ### Parameter Bounds
 Complete bounds enforcement for 50+ parameters:
+
 - Temporal bounds
 - Probabilities and confidences
 - Decay rates and half-lives
@@ -488,6 +507,7 @@ Complete bounds enforcement for 50+ parameters:
 - **Secondary Tool**: ATLAS Ω (subordinate analytical instrument)
 
 ATLAS Ω:
+
 - **Projects** (doesn't decide)
 - **Assists** (doesn't replace)
 - **Extends** (doesn't subsume)
