@@ -62,18 +62,26 @@ function showVersion() {
 }
 
 function initProject(name = 'my-thirsty-project') {
-  const projectDir = path.join(process.cwd(), name);
+  // Validate project name to prevent path traversal
+  try {
+    // Only allow alphanumeric, hyphens, and underscores in project names
+    if (!/^[a-zA-Z0-9_-]+$/.test(name)) {
+      console.error("❌ Invalid project name. Use only letters, numbers, hyphens, and underscores");
+      process.exit(1);
+    }
+    
+    const projectDir = safeJoin(process.cwd(), name);
 
-  if (fs.existsSync(projectDir)) {
-    console.error("❌ Directory '" + name + "' already exists");
-    process.exit(1);
-  }
+    if (fs.existsSync(projectDir)) {
+      console.error("❌ Directory '" + name + "' already exists");
+      process.exit(1);
+    }
 
-  // Create project structure
-  fs.mkdirSync(projectDir);
-  fs.mkdirSync(path.join(projectDir, 'src'));
-  fs.mkdirSync(path.join(projectDir, 'tests'));
-  fs.mkdirSync(path.join(projectDir, 'docs'));
+    // Create project structure
+    fs.mkdirSync(projectDir);
+    fs.mkdirSync(safeJoin(projectDir, 'src'));
+    fs.mkdirSync(safeJoin(projectDir, 'tests'));
+    fs.mkdirSync(safeJoin(projectDir, 'docs'));
 
   // Create main file
   const mainContent = '// Welcome to ' + name + '!\n' +
@@ -83,7 +91,7 @@ function initProject(name = 'my-thirsty-project') {
 'pour message\n' +
 '\n' +
 '// Stay hydrated! 💧\n';
-  fs.writeFileSync(path.join(projectDir, 'src', 'main.thirsty'), mainContent);
+  fs.writeFileSync(safeJoin(projectDir, 'src', 'main.thirsty'), mainContent);
 
   // Create thirsty.json
   const config = {
@@ -103,7 +111,7 @@ function initProject(name = 'my-thirsty-project') {
     license: 'MIT'
   };
   fs.writeFileSync(
-    path.join(projectDir, 'thirsty.json'),
+    safeJoin(projectDir, 'thirsty.json'),
     JSON.stringify(config, null, 2)
   );
 
@@ -132,7 +140,7 @@ function initProject(name = 'my-thirsty-project') {
 '- [Expansions Guide](https://github.com/IAmSoThirsty/Thirsty-lang/blob/main/docs/EXPANSIONS.md)\n' +
 '\n' +
 'Stay hydrated! 💧\n';
-  fs.writeFileSync(path.join(projectDir, 'README.md'), readme);
+  fs.writeFileSync(safeJoin(projectDir, 'README.md'), readme);
 
   // Create .gitignore
   const gitignore = `thirsty_packages/
@@ -140,13 +148,17 @@ node_modules/
 *.log
 .DS_Store
 `;
-  fs.writeFileSync(path.join(projectDir, '.gitignore'), gitignore);
+  fs.writeFileSync(safeJoin(projectDir, '.gitignore'), gitignore);
 
-  console.log('✓ Project initialized successfully!');
-  console.log('\nNext steps:');
-  console.log('  cd ' + name);
-  console.log('  thirsty run src/main.thirsty');
-  console.log('\nStay hydrated! 💧');
+    console.log('✓ Project initialized successfully!');
+    console.log('\nNext steps:');
+    console.log('  cd ' + name);
+    console.log('  thirsty run src/main.thirsty');
+    console.log('\nStay hydrated! 💧');
+  } catch (error) {
+    console.error('❌ Error initializing project: ' + error.message);
+    process.exit(1);
+  }
 }
 
 async function main() {

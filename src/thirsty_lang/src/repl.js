@@ -219,8 +219,10 @@ class ThirstyREPL {
 
   saveSession(filename) {
     try {
+      // Validate filename to prevent path traversal
+      const validatedPath = validatePath(filename);
       const code = this.history.filter(function(h) { return !h.startsWith('.'); }).join('\n');
-      fs.writeFileSync(filename, code);
+      fs.writeFileSync(validatedPath, code);
       console.log('✓ Session saved to ' + filename);
     } catch (error) {
       console.error('❌ Error saving file: ' + error.message);
@@ -229,7 +231,12 @@ class ThirstyREPL {
 
   loadFile(filename) {
     try {
-      const code = fs.readFileSync(filename, 'utf-8');
+      // Validate filename to prevent path traversal
+      const validatedPath = validatePath(filename);
+      if (!isValidFile(validatedPath)) {
+        throw new Error('File not found or is not a valid file');
+      }
+      const code = fs.readFileSync(validatedPath, 'utf-8');
       this.interpreter.execute(code);
       console.log('✓ Loaded and executed ' + filename);
     } catch (error) {
