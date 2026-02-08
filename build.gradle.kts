@@ -1284,5 +1284,409 @@ For detailed task information, run: gradle tasks --all
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// END OF GOD TIER BUILD ORCHESTRATION
+// EVOLUTION SUBSTRATE - GOD TIER INTEGRATION LAYER
+// ═══════════════════════════════════════════════════════════════════════════
+
+val evolutionPython = if (System.getProperty("os.name").lowercase().contains("windows")) {
+    file("${pythonVenvDir}/Scripts/python.exe").absolutePath
+} else {
+    file("${pythonVenvDir}/bin/python").absolutePath
+}
+
+val evolutionBridge = file("gradle-evolution/gradle_integration.py")
+
+// Evolution: Constitutional validation for build phases
+tasks.register<Exec>("evolutionValidate") {
+    group = "evolution"
+    description = "Validate build through constitutional, policy, and security layers"
+    
+    dependsOn("pythonInstall")
+    
+    commandLine(
+        evolutionPython,
+        evolutionBridge.absolutePath,
+        "validate-phase",
+        "full-build",
+        """{"phase":"validation","timestamp":"$buildTimestamp","ci":"$isContinuousIntegration"}"""
+    )
+    
+    doFirst {
+        logger.lifecycle("🧬 Validating build through Evolution substrate...")
+    }
+    
+    doLast {
+        logger.lifecycle("✓ Constitutional validation complete")
+    }
+}
+
+// Evolution: Create deterministic build capsule
+tasks.register<Exec>("evolutionCapsule") {
+    group = "evolution"
+    description = "Create deterministic, signed build capsule with Merkle hash trees"
+    
+    dependsOn("pythonInstall", "buildAll")
+    
+    val artifactsJson = """["build/outputs","build/artifacts"]"""
+    
+    commandLine(
+        evolutionPython,
+        evolutionBridge.absolutePath,
+        "create-capsule",
+        "full-build",
+        artifactsJson,
+        """{"timestamp":"$buildTimestamp","version":"$version","ci":"$isContinuousIntegration"}"""
+    )
+    
+    doFirst {
+        logger.lifecycle("🧬 Creating deterministic build capsule with hash trees...")
+    }
+    
+    doLast {
+        logger.lifecycle("✓ Build capsule created: build/capsules/")
+    }
+}
+
+// Evolution: Forensic replay from capsule
+tasks.register<Exec>("evolutionReplay") {
+    group = "evolution"
+    description = "Forensic replay of build from capsule with cryptographic verification"
+    
+    dependsOn("pythonInstall")
+    
+    val capsuleId = project.findProperty("capsuleId")?.toString() ?: "latest"
+    
+    commandLine(
+        evolutionPython,
+        "-m", "gradle_evolution.capsules.replay_engine",
+        "--capsule-id", capsuleId,
+        "--verify"
+    )
+    
+    doFirst {
+        logger.lifecycle("🧬 Replaying build from capsule: $capsuleId")
+    }
+    
+    doLast {
+        logger.lifecycle("✓ Replay complete with cryptographic verification")
+    }
+}
+
+// Evolution: Generate comprehensive audit report
+tasks.register<Exec>("evolutionAudit") {
+    group = "evolution"
+    description = "Generate military-grade audit report with full accountability chain"
+    
+    dependsOn("pythonInstall")
+    
+    commandLine(
+        evolutionPython,
+        "-m", "gradle_evolution.audit.audit_integration",
+        "--generate-report",
+        "--output", "build/reports/evolution/audit.html",
+        "--format", "html,json,pdf"
+    )
+    
+    doFirst {
+        logger.lifecycle("🧬 Generating comprehensive audit report...")
+    }
+    
+    doLast {
+        logger.lifecycle("✓ Audit reports generated:")
+        logger.lifecycle("  • build/reports/evolution/audit.html")
+        logger.lifecycle("  • build/reports/evolution/audit.json")
+        logger.lifecycle("  • build/reports/evolution/audit.pdf")
+    }
+}
+
+// Evolution: Generate living documentation
+tasks.register<Exec>("evolutionDocs") {
+    group = "evolution"
+    description = "Generate living documentation from execution state and cognition"
+    
+    dependsOn("pythonInstall")
+    
+    commandLine(
+        evolutionPython,
+        evolutionBridge.absolutePath,
+        "generate-docs"
+    )
+    
+    doFirst {
+        logger.lifecycle("🧬 Generating living documentation from execution state...")
+    }
+    
+    doLast {
+        logger.lifecycle("✓ Living documentation: build/docs/generated/")
+    }
+}
+
+// Evolution: System status and health
+tasks.register<Exec>("evolutionStatus") {
+    group = "evolution"
+    description = "Show evolution substrate status, health, and metrics"
+    
+    dependsOn("pythonInstall")
+    
+    commandLine(
+        evolutionPython,
+        evolutionBridge.absolutePath,
+        "status"
+    )
+    
+    doFirst {
+        logger.lifecycle("═══════════════════════════════════════════════════════════")
+        logger.lifecycle("EVOLUTION SUBSTRATE STATUS")
+        logger.lifecycle("═══════════════════════════════════════════════════════════")
+    }
+}
+
+// Evolution: Zero-magic transparency mode
+tasks.register<Exec>("evolutionTransparency") {
+    group = "evolution"
+    description = "Enable zero-magic mode with full transparency logging"
+    
+    dependsOn("pythonInstall")
+    
+    commandLine(
+        evolutionPython,
+        "-m", "gradle_evolution.api.documentation_generator",
+        "--zero-magic-mode",
+        "--output", "build/transparency-log.json"
+    )
+    
+    doFirst {
+        logger.lifecycle("🧬 Enabling zero-magic transparency mode...")
+    }
+    
+    doLast {
+        logger.lifecycle("✓ Transparency log: build/transparency-log.json")
+    }
+}
+
+// Evolution: Accountability override (requires human authorization)
+tasks.register<Exec>("evolutionOverride") {
+    group = "evolution"
+    description = "Request human accountability override for policy violations"
+    
+    dependsOn("pythonInstall")
+    
+    val reason = project.findProperty("overrideReason")?.toString() 
+        ?: throw GradleException("Must provide -PoverrideReason='...'")
+    val authorizer = project.findProperty("authorizer")?.toString() 
+        ?: throw GradleException("Must provide -Pauthorizer='...'")
+    
+    commandLine(
+        evolutionPython,
+        "-m", "gradle_evolution.audit.accountability",
+        "--request-override",
+        "--reason", reason,
+        "--authorizer", authorizer
+    )
+    
+    doFirst {
+        logger.lifecycle("🧬 Requesting accountability override...")
+        logger.lifecycle("  Reason: $reason")
+        logger.lifecycle("  Authorizer: $authorizer")
+    }
+    
+    doLast {
+        logger.lifecycle("✓ Override request submitted for review")
+    }
+}
+
+// Evolution: Policy scheduler configuration
+tasks.register<Exec>("evolutionPolicySchedule") {
+    group = "evolution"
+    description = "Configure dynamic policy scheduling based on risk levels"
+    
+    dependsOn("pythonInstall")
+    
+    val mode = project.findProperty("policyMode")?.toString() ?: "adaptive"
+    
+    commandLine(
+        evolutionPython,
+        "-m", "gradle_evolution.security.policy_scheduler",
+        "--mode", mode,
+        "--config", "config/security_hardening.yaml"
+    )
+    
+    doFirst {
+        logger.lifecycle("🧬 Configuring policy scheduler: $mode mode")
+    }
+    
+    doLast {
+        logger.lifecycle("✓ Policy scheduler configured")
+    }
+}
+
+// Evolution: Verifiability API server
+tasks.register<Exec>("evolutionApiStart") {
+    group = "evolution"
+    description = "Start external verifiability API server"
+    
+    dependsOn("pythonInstall")
+    
+    val port = project.findProperty("apiPort")?.toString() ?: "8765"
+    
+    commandLine(
+        evolutionPython,
+        "-m", "gradle_evolution.api.verifiability_api",
+        "--port", port,
+        "--host", "0.0.0.0"
+    )
+    
+    doFirst {
+        logger.lifecycle("🧬 Starting verifiability API server on port $port...")
+    }
+}
+
+// Wire evolution validation into check task (constitutional gate)
+tasks.named("check").configure {
+    dependsOn("evolutionValidate")
+}
+
+// Wire comprehensive evolution into release pipeline
+tasks.named("release").configure {
+    dependsOn(
+        "evolutionValidate",
+        "evolutionCapsule",
+        "evolutionAudit",
+        "evolutionDocs",
+        "evolutionTransparency"
+    )
+    
+    doFirst {
+        logger.lifecycle("═══════════════════════════════════════════════════════════")
+        logger.lifecycle("INITIATING GOD TIER RELEASE WITH EVOLUTION SUBSTRATE")
+        logger.lifecycle("═══════════════════════════════════════════════════════════")
+    }
+}
+
+// God Tier help for Evolution
+tasks.register("evolutionHelp") {
+    group = "evolution"
+    description = "Display comprehensive Evolution substrate help"
+    
+    doLast {
+        println("""
+═══════════════════════════════════════════════════════════════════════════
+         THIRSTY'S GRADLE - EVOLUTION SUBSTRATE (GOD TIER)
+═══════════════════════════════════════════════════════════════════════════
+
+The Evolution Substrate integrates constitutional governance, build cognition,
+deterministic capsules, security enforcement, audit trails, and accountability
+into the Gradle build lifecycle.
+
+🧬 CONSTITUTIONAL LAYER
+────────────────────────────────────────────────────────────────────────────
+  evolutionValidate        Validate build through constitutional principles
+                          • Enforces policies/constitution.yaml
+                          • Policy engine integration
+                          • Security layer validation
+                          • Automatically runs on 'gradle check'
+
+🔐 DETERMINISTIC CAPSULES
+────────────────────────────────────────────────────────────────────────────
+  evolutionCapsule         Create signed build capsule with Merkle trees
+                          • Cryptographic signatures
+                          • Hash tree verification
+                          • Tamper-proof artifacts
+                          • Automatically runs on 'gradle release'
+  
+  evolutionReplay          Forensic replay from capsule
+                          Usage: gradle evolutionReplay -PcapsuleId=<id>
+                          • Cryptographic verification
+                          • Temporal consistency checks
+                          • Audit trail reconstruction
+
+📊 AUDIT & ACCOUNTABILITY
+────────────────────────────────────────────────────────────────────────────
+  evolutionAudit           Generate comprehensive audit report
+                          • Military-grade audit trail
+                          • Full accountability chain
+                          • HTML, JSON, and PDF outputs
+                          • Automatically runs on 'gradle release'
+  
+  evolutionOverride        Request human accountability override
+                          Usage: gradle evolutionOverride \
+                                 -PoverrideReason="..." \
+                                 -Pauthorizer="..."
+                          • Requires human authorization
+                          • Creates immutable audit record
+                          • Policy exception workflow
+
+📚 DOCUMENTATION & TRANSPARENCY
+────────────────────────────────────────────────────────────────────────────
+  evolutionDocs            Generate living documentation
+                          • Auto-generated from execution state
+                          • Build cognition insights
+                          • System behavior documentation
+  
+  evolutionTransparency    Enable zero-magic transparency mode
+                          • Full execution logging
+                          • No hidden operations
+                          • Complete state disclosure
+
+🔒 SECURITY & POLICY
+────────────────────────────────────────────────────────────────────────────
+  evolutionPolicySchedule  Configure dynamic policy scheduling
+                          Usage: gradle evolutionPolicySchedule \
+                                 -PpolicyMode=<adaptive|strict|permissive>
+                          • Risk-adaptive scheduling
+                          • Plugin containment
+                          • Security mode switching
+  
+  evolutionStatus          Show system status and health
+                          • Component health checks
+                          • Metrics and statistics
+                          • Configuration status
+
+🌐 EXTERNAL VERIFIABILITY
+────────────────────────────────────────────────────────────────────────────
+  evolutionApiStart        Start verifiability API server
+                          Usage: gradle evolutionApiStart -PapiPort=8765
+                          • REST API for external verification
+                          • Capsule verification endpoints
+                          • Audit log access
+                          • Real-time status monitoring
+
+═══════════════════════════════════════════════════════════════════════════
+ARCHITECTURE LAYERS
+═══════════════════════════════════════════════════════════════════════════
+
+1. Constitutional Engine    policies/constitution.yaml enforcement
+2. Policy Enforcer          project_ai/engine/policy integration
+3. Build Cognition         Self-modeling and optimization
+4. State Management        Build memory and history
+5. Capsule Engine          Deterministic, signed artifacts
+6. Replay Engine           Forensic reconstruction
+7. Security Engine         config/security_hardening.yaml
+8. Policy Scheduler        Dynamic, risk-adaptive policies
+9. Audit Integration       cognition/audit.py integration
+10. Accountability Manager  Human override workflow
+11. Verifiability API       External verification endpoints
+12. Documentation Generator Living documentation from state
+
+═══════════════════════════════════════════════════════════════════════════
+INTEGRATION POINTS
+═══════════════════════════════════════════════════════════════════════════
+
+• Wires into 'gradle check' for constitutional validation
+• Wires into 'gradle release' for complete audit trail
+• Uses existing governance/ infrastructure
+• Integrates cognition/ for build intelligence
+• Leverages temporal/ for replay capability
+• Extends project_ai/engine components
+• Enforces config/security_hardening.yaml
+
+═══════════════════════════════════════════════════════════════════════════
+For complete Gradle help: gradle godTierHelp
+For all tasks:            gradle tasks --all
+═══════════════════════════════════════════════════════════════════════════
+        """.trimIndent())
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// END OF GOD TIER BUILD ORCHESTRATION WITH EVOLUTION SUBSTRATE
 // ═══════════════════════════════════════════════════════════════════════════
