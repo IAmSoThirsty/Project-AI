@@ -92,9 +92,7 @@ class MockOpenAIClient:
         return {
             "created": 1234567890,
             "data": [
-                {
-                    "url": f"https://mock-image-url.example.com/image_{i}.png"
-                }
+                {"url": f"https://mock-image-url.example.com/image_{i}.png"}
                 for i in range(n)
             ],
         }
@@ -192,7 +190,7 @@ class MockEmailService:
                 "kwargs": kwargs,
             }
         )
-        logger.info(f"Mock email sent to {to}: {subject}")
+        logger.info("Mock email sent to %s: %s", to, subject)
         return True
 
     def get_sent_email_count(self) -> int:
@@ -201,9 +199,7 @@ class MockEmailService:
 
     def get_emails_to(self, recipient: str) -> list[dict[str, Any]]:
         """Get emails sent to a specific recipient."""
-        return [
-            email for email in self.sent_emails if email["to"] == recipient
-        ]
+        return [email for email in self.sent_emails if email["to"] == recipient]
 
     def reset(self) -> None:
         """Reset sent emails."""

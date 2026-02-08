@@ -105,12 +105,12 @@ class TestCrossComponentIntegration:
         admin_login = flask_client.post(
             "/api/auth/login", json={"username": "admin", "password": "open-sesame"}
         )
-        admin_token = admin_login.get_json()["token"]
+        admin_login.get_json()["token"]
 
         guest_login = flask_client.post(
             "/api/auth/login", json={"username": "guest", "password": "letmein"}
         )
-        guest_token = guest_login.get_json()["token"]
+        guest_login.get_json()["token"]
 
         # Step 2: Each user submits their own intent
         admin_intent = {
@@ -363,7 +363,7 @@ class TestCompleteUserJourneys:
         assert all(r.status_code in [200, 403] for r in results)
 
         # At least reads should be allowed
-        read_results = [r for r in results[:2]]
+        read_results = list(results[:2])
         assert all(r.status_code == 200 for r in read_results)
 
     def test_e2e_security_denial_workflow(self, flask_client, governance_api_available):

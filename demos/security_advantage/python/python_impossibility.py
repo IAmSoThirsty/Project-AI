@@ -54,10 +54,11 @@ print("-" * 80)
 
 class SecretWithSlots:
     """Attempt to restrict attributes with __slots__."""
-    __slots__ = ('_key',)
+
+    __slots__ = ("_key",)
 
     def __init__(self, api_key: str):
-        object.__setattr__(self, '_key', api_key)
+        object.__setattr__(self, "_key", api_key)
 
     def __setattr__(self, name, value):
         raise AttributeError("Cannot modify attributes!")
@@ -219,7 +220,7 @@ class SecretWithDescriptor:
 
 
 # Bypass: Access descriptor's internal storage
-descriptor = type(SecretWithDescriptor).__dict__['api_key']
+descriptor = type(SecretWithDescriptor).__dict__["api_key"]
 print(f"✗ BYPASSED (descriptor): {descriptor._value}")
 print("  Attack: Descriptor internals are accessible")
 print()
@@ -236,7 +237,6 @@ def use_secret_and_delete():
     """Use secret then immediately delete it."""
     secret = "sk-PRODUCTION-SECRET-12345"
     # Use it
-    result = f"Key: {secret}"
     # Delete it
     del secret
     gc.collect()  # Force garbage collection

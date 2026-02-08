@@ -48,7 +48,9 @@ def test_execute_canonical():
 
         if "success_criteria" in metrics:
             sc = metrics["success_criteria"]
-            print(f"   Success Criteria: {'✅ ALL MET' if sc['all_met'] else '❌ FAILED'}")
+            print(
+                f"   Success Criteria: {'✅ ALL MET' if sc['all_met'] else '❌ FAILED'}"
+            )
 
         if "invariants" in metrics:
             inv = metrics["invariants"]

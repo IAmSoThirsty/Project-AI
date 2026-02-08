@@ -244,7 +244,7 @@ class ReflectionCycle:
                 self.total_insights = data.get("total_insights", 0)
 
                 logger.info(
-                    f"Loaded reflection history: {self.total_reflections} cycles"
+                    "Loaded reflection history: %s cycles", self.total_reflections
                 )
 
             except Exception as e:
@@ -402,7 +402,7 @@ class ReflectionCycle:
         self._save_history()
 
         logger.info(
-            f"Daily reflection complete: {len(report.insights)} insights discovered"
+            "Daily reflection complete: %s insights discovered", len(report.insights)
         )
         return report
 

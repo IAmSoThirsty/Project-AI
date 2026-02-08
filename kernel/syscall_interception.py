@@ -75,7 +75,7 @@ class SyscallInterceptor:
             self.hooks[syscall_type] = []
 
         self.hooks[syscall_type].append(callback)
-        logger.info(f"Registered hook for {syscall_type.value}")
+        logger.info("Registered hook for %s", syscall_type.value)
 
     def enable(self):
         """Enable interception"""
@@ -105,7 +105,7 @@ class SyscallInterceptor:
             for hook in self.hooks[event.syscall_type]:
                 result = hook(event)
                 if result is False:
-                    logger.warning(f"🚫 Syscall blocked: {event.syscall_type.value}")
+                    logger.warning("🚫 Syscall blocked: %s", event.syscall_type.value)
                     return False
 
         return True
@@ -217,7 +217,7 @@ class KernelHookSimulator:
         # Hook: Block unauthorized SETUID
         def block_unauthorized_setuid(event: SyscallEvent) -> bool:
             if event.uid != 0 and "sudo" in str(event.args):
-                logger.warning(f"⚠️  Unauthorized SETUID attempt from UID {event.uid}")
+                logger.warning("⚠️  Unauthorized SETUID attempt from UID %s", event.uid)
                 return False  # Block
             return True
 
@@ -229,7 +229,7 @@ class KernelHookSimulator:
 
             for arg in event.args:
                 if any(path in str(arg) for path in sensitive_paths):
-                    logger.warning(f"⚠️  Sensitive file access: {arg}")
+                    logger.warning("⚠️  Sensitive file access: %s", arg)
                     # Don't block, but log for analysis
 
             return True
@@ -240,7 +240,7 @@ class KernelHookSimulator:
         def detect_exfiltration(event: SyscallEvent) -> bool:
             # Check for suspicious network activity
             if "evil.com" in str(event.args) or "attacker.net" in str(event.args):
-                logger.error(f"🚨 EXFILTRATION DETECTED: {event.args}")
+                logger.error("🚨 EXFILTRATION DETECTED: %s", event.args)
                 return False  # Block malicious connections
 
             return True

@@ -140,7 +140,7 @@ class RedTeamCampaignWorkflow:
     async def run(self, request: RedTeamCampaignRequest) -> RedTeamCampaignResult:
         """Execute red team campaign workflow."""
         workflow.logger.info(
-            f"Starting red team campaign with {len(request.persona_ids)} personas"
+            "Starting red team campaign with %s personas", len(request.persona_ids)
         )
 
         try:
@@ -203,7 +203,7 @@ class RedTeamCampaignWorkflow:
             return RedTeamCampaignResult(**result)
 
         except Exception as e:
-            workflow.logger.error(f"Red team campaign failed: {e}")
+            workflow.logger.error("Red team campaign failed: %s", e)
             return RedTeamCampaignResult(
                 success=False,
                 total_attacks=0,
@@ -312,7 +312,7 @@ class CodeSecuritySweepWorkflow:
             )
 
         except Exception as e:
-            workflow.logger.error(f"Code security sweep failed: {e}")
+            workflow.logger.error("Code security sweep failed: %s", e)
             return CodeSecuritySweepResult(
                 success=False,
                 total_findings=0,
@@ -384,7 +384,7 @@ class ConstitutionalMonitoringWorkflow:
             return ConstitutionalMonitoringResult(**result)
 
         except Exception as e:
-            workflow.logger.error(f"Constitutional monitoring failed: {e}")
+            workflow.logger.error("Constitutional monitoring failed: %s", e)
             return ConstitutionalMonitoringResult(
                 success=False,
                 total_reviews=0,
@@ -410,7 +410,7 @@ class SafetyTestingWorkflow:
     async def run(self, request: SafetyTestingRequest) -> SafetyTestingResult:
         """Execute safety testing workflow."""
         workflow.logger.info(
-            f"Starting safety testing with dataset: {request.test_dataset}"
+            "Starting safety testing with dataset: %s", request.test_dataset
         )
 
         try:
@@ -472,7 +472,7 @@ class SafetyTestingWorkflow:
             return SafetyTestingResult(**result)
 
         except Exception as e:
-            workflow.logger.error(f"Safety testing failed: {e}")
+            workflow.logger.error("Safety testing failed: %s", e)
             return SafetyTestingResult(
                 success=False,
                 total_tests=0,

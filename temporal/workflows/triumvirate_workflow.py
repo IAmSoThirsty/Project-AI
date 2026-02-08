@@ -119,7 +119,7 @@ class TriumvirateWorkflow:
 
             # Build result
             workflow.logger.info(
-                f"Triumvirate workflow completed: {result.get('correlation_id')}"
+                "Triumvirate workflow completed: %s", result.get("correlation_id")
             )
 
             return TriumvirateResult(
@@ -132,7 +132,7 @@ class TriumvirateWorkflow:
             )
 
         except Exception as e:
-            workflow.logger.error(f"Triumvirate workflow failed: {e}")
+            workflow.logger.error("Triumvirate workflow failed: %s", e)
 
             # Record failure telemetry
             try:
@@ -271,5 +271,5 @@ class TriumvirateStepWorkflow:
             )
 
         except Exception as e:
-            workflow.logger.error(f"Step-by-step workflow failed: {e}")
+            workflow.logger.error("Step-by-step workflow failed: %s", e)
             return TriumvirateResult(success=False, error=str(e))

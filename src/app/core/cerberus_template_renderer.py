@@ -114,7 +114,7 @@ class TemplateRenderer:
         remaining = self._extract_placeholders(rendered)
         if remaining:
             logger.warning(
-                f"Unsubstituted placeholders remain: {', '.join(sorted(remaining))}"
+                "Unsubstituted placeholders remain: %s", ", ".join(sorted(remaining))
             )
 
         return rendered
@@ -152,7 +152,7 @@ class TemplateRenderer:
                     self.template_cache[template_path] = template_content
 
             except Exception as e:
-                logger.error(f"Failed to load template {template_path}: {e}")
+                logger.error("Failed to load template %s: %s", template_path, e)
                 raise
 
         # Render template

@@ -13,6 +13,8 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from .sql_utils import sanitize_identifier
+
 logger = logging.getLogger(__name__)
 
 
@@ -46,7 +48,7 @@ class BuildQueryEngine:
         if cache_key in self._query_cache:
             result, timestamp = self._query_cache[cache_key]
             if datetime.utcnow() - timestamp < self._cache_ttl:
-                logger.debug(f"Cache hit for {cache_key}")
+                logger.debug("Cache hit for %s", cache_key)
                 return result
             else:
                 del self._query_cache[cache_key]
@@ -108,14 +110,20 @@ class BuildQueryEngine:
             failures = [dict(row) for row in cursor.fetchall()]
 
         if len(failures) < min_failures:
-            logger.info(f"Found {len(failures)} failures, below minimum {min_failures}")
+            logger.info(
+                "Found %s failures, below minimum %s", len(failures), min_failures
+            )
             return []
 
         # Group failures by common characteristics
         correlations = self._compute_failure_correlations(failures)
 
         self._cache_result(cache_key, correlations)
-        logger.info(f"Analyzed {len(failures)} failures, found {len(correlations)} correlations")
+        logger.info(
+            "Analyzed %s failures, found %s correlations",
+            len(failures),
+            len(correlations),
+        )
         return correlations
 
     def _compute_failure_correlations(
@@ -135,39 +143,47 @@ class BuildQueryEngine:
 
         for principle, group in principle_groups.items():
             if len(group) >= 2:
-                correlations.append({
-                    "type": "principle_violation",
-                    "principle": principle,
-                    "failure_count": len(group),
-                    "builds": [f["id"] for f in group],
-                    "versions": [f["version"] for f in group],
-                })
+                correlations.append(
+                    {
+                        "type": "principle_violation",
+                        "principle": principle,
+                        "failure_count": len(group),
+                        "builds": [f["id"] for f in group],
+                        "versions": [f["version"] for f in group],
+                    }
+                )
 
         # Group by vulnerability presence
-        vulnerable_failures = [f for f in failures if f.get("total_vulnerabilities", 0) > 0]
+        vulnerable_failures = [
+            f for f in failures if f.get("total_vulnerabilities", 0) > 0
+        ]
         if len(vulnerable_failures) >= 2:
-            correlations.append({
-                "type": "vulnerability_related",
-                "failure_count": len(vulnerable_failures),
-                "builds": [f["id"] for f in vulnerable_failures],
-                "total_vulnerabilities": sum(
-                    f.get("total_vulnerabilities", 0) for f in vulnerable_failures
-                ),
-            })
+            correlations.append(
+                {
+                    "type": "vulnerability_related",
+                    "failure_count": len(vulnerable_failures),
+                    "builds": [f["id"] for f in vulnerable_failures],
+                    "total_vulnerabilities": sum(
+                        f.get("total_vulnerabilities", 0) for f in vulnerable_failures
+                    ),
+                }
+            )
 
         # Group by time proximity (within 1 hour)
         time_clusters = self._cluster_by_time(failures, hours=1)
         for cluster in time_clusters:
             if len(cluster) >= 2:
-                correlations.append({
-                    "type": "temporal_cluster",
-                    "failure_count": len(cluster),
-                    "builds": [f["id"] for f in cluster],
-                    "time_range": {
-                        "start": min(f["timestamp"] for f in cluster),
-                        "end": max(f["timestamp"] for f in cluster),
-                    },
-                })
+                correlations.append(
+                    {
+                        "type": "temporal_cluster",
+                        "failure_count": len(cluster),
+                        "builds": [f["id"] for f in cluster],
+                        "time_range": {
+                            "start": min(f["timestamp"] for f in cluster),
+                            "end": max(f["timestamp"] for f in cluster),
+                        },
+                    }
+                )
 
         return correlations
 
@@ -313,7 +329,9 @@ class BuildQueryEngine:
             results = [dict(row) for row in cursor.fetchall()]
 
         self._cache_result(cache_key, results)
-        logger.info(f"Tracked {len(results)} vulnerable dependencies (grouped by {group_by})")
+        logger.info(
+            "Tracked %s vulnerable dependencies (grouped by %s)", len(results), group_by
+        )
         return results
 
     def analyze_dependency_trends(
@@ -448,7 +466,7 @@ class BuildQueryEngine:
         }
 
         self._cache_result(cache_key, result)
-        logger.info(f"Analyzed {total_builds} builds over {days} days")
+        logger.info("Analyzed %s builds over %s days", total_builds, days)
         return result
 
     def _group_by_time_period(
@@ -457,13 +475,15 @@ class BuildQueryEngine:
         granularity: str,
     ) -> list[dict[str, Any]]:
         """Group builds by time period."""
-        groups = defaultdict(lambda: {
-            "success": 0,
-            "failure": 0,
-            "cancelled": 0,
-            "total": 0,
-            "durations": [],
-        })
+        groups = defaultdict(
+            lambda: {
+                "success": 0,
+                "failure": 0,
+                "cancelled": 0,
+                "total": 0,
+                "durations": [],
+            }
+        )
 
         for build in builds:
             try:
@@ -493,17 +513,24 @@ class BuildQueryEngine:
         for period, data in sorted(groups.items()):
             avg_duration = (
                 sum(data["durations"]) / len(data["durations"])
-                if data["durations"] else 0
+                if data["durations"]
+                else 0
             )
-            result.append({
-                "period": period,
-                "total": data["total"],
-                "success": data["success"],
-                "failure": data["failure"],
-                "cancelled": data["cancelled"],
-                "success_rate": round(data["success"] / data["total"] * 100, 2) if data["total"] > 0 else 0,
-                "avg_duration": round(avg_duration, 2),
-            })
+            result.append(
+                {
+                    "period": period,
+                    "total": data["total"],
+                    "success": data["success"],
+                    "failure": data["failure"],
+                    "cancelled": data["cancelled"],
+                    "success_rate": (
+                        round(data["success"] / data["total"] * 100, 2)
+                        if data["total"] > 0
+                        else 0
+                    ),
+                    "avg_duration": round(avg_duration, 2),
+                }
+            )
 
         return result
 
@@ -611,7 +638,9 @@ class BuildQueryEngine:
                 """,
                 (cutoff_time,),
             )
-            status_counts = {row["constitutional_status"]: row["count"] for row in cursor.fetchall()}
+            status_counts = {
+                row["constitutional_status"]: row["count"] for row in cursor.fetchall()
+            }
 
             # Violations by principle
             cursor = conn.execute(
@@ -672,10 +701,10 @@ class BuildQueryEngine:
             with output_path.open("w") as f:
                 json.dump(query_result, f, indent=2, default=str)
 
-            logger.info(f"Exported query result to {output_path}")
+            logger.info("Exported query result to %s", output_path)
             return True
         except Exception as e:
-            logger.error(f"Failed to export to JSON: {e}")
+            logger.error("Failed to export to JSON: %s", e)
             return False
 
     def export_to_csv(
@@ -697,10 +726,10 @@ class BuildQueryEngine:
                 writer.writeheader()
                 writer.writerows(query_result)
 
-            logger.info(f"Exported {len(query_result)} rows to {output_path}")
+            logger.info("Exported %s rows to %s", len(query_result), output_path)
             return True
         except Exception as e:
-            logger.error(f"Failed to export to CSV: {e}")
+            logger.error("Failed to export to CSV: %s", e)
             return False
 
     def export_to_sql(
@@ -715,6 +744,9 @@ class BuildQueryEngine:
                 logger.warning("No data to export")
                 return False
 
+            # Sanitize table name to prevent SQL injection
+            safe_table = sanitize_identifier(table_name)
+
             output_path = Path(output_path)
             output_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -722,13 +754,16 @@ class BuildQueryEngine:
                 for row in query_result:
                     columns = ", ".join(row.keys())
                     values = ", ".join(
-                        f"'{v}'" if isinstance(v, str) else str(v)
-                        for v in row.values()
+                        f"'{v}'" if isinstance(v, str) else str(v) for v in row.values()
                     )
-                    f.write(f"INSERT INTO {table_name} ({columns}) VALUES ({values});\n")
+                    f.write(
+                        f"INSERT INTO {safe_table} ({columns}) VALUES ({values});\n"
+                    )
 
-            logger.info(f"Exported {len(query_result)} SQL statements to {output_path}")
+            logger.info(
+                "Exported %s SQL statements to %s", len(query_result), output_path
+            )
             return True
         except Exception as e:
-            logger.error(f"Failed to export to SQL: {e}")
+            logger.error("Failed to export to SQL: %s", e)
             return False

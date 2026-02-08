@@ -134,7 +134,7 @@ def interactive_chat(deepseek: DeepSeekV32, args: argparse.Namespace) -> None:
         except KeyboardInterrupt:
             print("\n\n⚠️  Interrupted. Type 'exit' to quit or continue chatting.\n")
         except Exception as e:
-            logger.error(f"Error in interactive chat: {e}")
+            logger.error("Error in interactive chat: %s", e)
             print(f"\n❌ Unexpected error: {e}\n")
 
 

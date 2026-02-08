@@ -97,7 +97,10 @@ class PlanetaryDefenseMonolith:
         # Track registry access for auditing
         self.access_log: list[tuple[RegistryAccessRequest, bool]] = []
 
-        logger.info("Planetary Defense Monolith initialized (strict=%s)", enable_strict_enforcement)
+        logger.info(
+            "Planetary Defense Monolith initialized (strict=%s)",
+            enable_strict_enforcement,
+        )
 
     def evaluate_action(
         self,

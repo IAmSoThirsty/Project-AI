@@ -14,6 +14,7 @@ from pydantic import BaseModel
 
 class ConversationEntry(BaseModel):
     """Single conversation turn"""
+
     user_id: str
     message: str
     response: str
@@ -24,6 +25,7 @@ class ConversationEntry(BaseModel):
 
 class ContextWindow(BaseModel):
     """EED context window"""
+
     user_id: str
     conversations: list[ConversationEntry]
     total_tokens: int
@@ -50,7 +52,7 @@ class EEDMemoryAdapter:
         Args:
             api_url: Base URL for Project-AI API
         """
-        self.api_url = api_url.rstrip('/')
+        self.api_url = api_url.rstrip("/")
         self.memory_endpoint = f"{self.api_url}/memory"
         self.session: aiohttp.ClientSession | None = None
 
@@ -70,7 +72,7 @@ class EEDMemoryAdapter:
         message: str,
         response: str,
         context: dict[str, Any] = None,
-        metadata: dict[str, Any] = None
+        metadata: dict[str, Any] = None,
     ) -> str:
         """
         Store conversation in EED with 200k token context
@@ -97,7 +99,7 @@ class EEDMemoryAdapter:
             response=response,
             timestamp=datetime.now(),
             context=context or {},
-            metadata=metadata or {}
+            metadata=metadata or {},
         )
 
         payload = {
@@ -108,15 +110,15 @@ class EEDMemoryAdapter:
                 "response": response,
                 "timestamp": entry.timestamp.isoformat(),
                 "context": entry.context,
-                "metadata": entry.metadata
-            }
+                "metadata": entry.metadata,
+            },
         }
 
         try:
             async with self.session.post(
                 f"{self.memory_endpoint}/store",
                 json=payload,
-                timeout=aiohttp.ClientTimeout(total=10)
+                timeout=aiohttp.ClientTimeout(total=10),
             ) as response:
                 if response.status != 200:
                     error_text = await response.text()
@@ -129,10 +131,7 @@ class EEDMemoryAdapter:
             raise EEDError(f"Network error storing conversation: {str(e)}")
 
     async def retrieve_context(
-        self,
-        user_id: str,
-        max_tokens: int = 200000,
-        since: datetime | None = None
+        self, user_id: str, max_tokens: int = 200000, since: datetime | None = None
     ) -> ContextWindow:
         """
         Retrieve full conversation history and context
@@ -151,10 +150,7 @@ class EEDMemoryAdapter:
         if not self.session:
             self.session = aiohttp.ClientSession()
 
-        params = {
-            "user_id": user_id,
-            "max_tokens": max_tokens
-        }
+        params = {"user_id": user_id, "max_tokens": max_tokens}
 
         if since:
             params["since"] = since.isoformat()
@@ -163,7 +159,7 @@ class EEDMemoryAdapter:
             async with self.session.get(
                 f"{self.memory_endpoint}/retrieve",
                 params=params,
-                timeout=aiohttp.ClientTimeout(total=10)
+                timeout=aiohttp.ClientTimeout(total=10),
             ) as response:
                 if response.status != 200:
                     error_text = await response.text()
@@ -180,29 +176,34 @@ class EEDMemoryAdapter:
         conversations = []
 
         for conv_data in data.get("conversations", []):
-            conversations.append(ConversationEntry(
-                user_id=conv_data.get("user_id", ""),
-                message=conv_data.get("message", ""),
-                response=conv_data.get("response", ""),
-                timestamp=datetime.fromisoformat(conv_data.get("timestamp", datetime.now().isoformat())),
-                context=conv_data.get("context", {}),
-                metadata=conv_data.get("metadata", {})
-            ))
+            conversations.append(
+                ConversationEntry(
+                    user_id=conv_data.get("user_id", ""),
+                    message=conv_data.get("message", ""),
+                    response=conv_data.get("response", ""),
+                    timestamp=datetime.fromisoformat(
+                        conv_data.get("timestamp", datetime.now().isoformat())
+                    ),
+                    context=conv_data.get("context", {}),
+                    metadata=conv_data.get("metadata", {}),
+                )
+            )
 
         return ContextWindow(
             user_id=data.get("user_id", ""),
             conversations=conversations,
             total_tokens=data.get("total_tokens", 0),
             max_tokens=data.get("max_tokens", 200000),
-            created_at=datetime.fromisoformat(data.get("created_at", datetime.now().isoformat())),
-            updated_at=datetime.fromisoformat(data.get("updated_at", datetime.now().isoformat()))
+            created_at=datetime.fromisoformat(
+                data.get("created_at", datetime.now().isoformat())
+            ),
+            updated_at=datetime.fromisoformat(
+                data.get("updated_at", datetime.now().isoformat())
+            ),
         )
 
     async def search_memory(
-        self,
-        user_id: str,
-        query: str,
-        limit: int = 10
+        self, user_id: str, query: str, limit: int = 10
     ) -> list[ConversationEntry]:
         """
         Search conversation memory
@@ -218,17 +219,13 @@ class EEDMemoryAdapter:
         if not self.session:
             self.session = aiohttp.ClientSession()
 
-        payload = {
-            "user_id": user_id,
-            "query": query,
-            "limit": limit
-        }
+        payload = {"user_id": user_id, "query": query, "limit": limit}
 
         try:
             async with self.session.post(
                 f"{self.memory_endpoint}/search",
                 json=payload,
-                timeout=aiohttp.ClientTimeout(total=10)
+                timeout=aiohttp.ClientTimeout(total=10),
             ) as response:
                 if response.status != 200:
                     return []
@@ -237,25 +234,25 @@ class EEDMemoryAdapter:
                 results = []
 
                 for conv_data in data.get("results", []):
-                    results.append(ConversationEntry(
-                        user_id=conv_data.get("user_id", ""),
-                        message=conv_data.get("message", ""),
-                        response=conv_data.get("response", ""),
-                        timestamp=datetime.fromisoformat(conv_data.get("timestamp", datetime.now().isoformat())),
-                        context=conv_data.get("context", {}),
-                        metadata=conv_data.get("metadata", {})
-                    ))
+                    results.append(
+                        ConversationEntry(
+                            user_id=conv_data.get("user_id", ""),
+                            message=conv_data.get("message", ""),
+                            response=conv_data.get("response", ""),
+                            timestamp=datetime.fromisoformat(
+                                conv_data.get("timestamp", datetime.now().isoformat())
+                            ),
+                            context=conv_data.get("context", {}),
+                            metadata=conv_data.get("metadata", {}),
+                        )
+                    )
 
                 return results
 
         except:
             return []
 
-    async def forget_conversation(
-        self,
-        user_id: str,
-        memory_id: str
-    ) -> bool:
+    async def forget_conversation(self, user_id: str, memory_id: str) -> bool:
         """
         Remove specific conversation from memory
 
@@ -273,17 +270,13 @@ class EEDMemoryAdapter:
             async with self.session.delete(
                 f"{self.memory_endpoint}/{memory_id}",
                 params={"user_id": user_id},
-                timeout=aiohttp.ClientTimeout(total=5)
+                timeout=aiohttp.ClientTimeout(total=5),
             ) as response:
                 return response.status == 200
         except:
             return False
 
-    async def clear_user_memory(
-        self,
-        user_id: str,
-        confirm: bool = False
-    ) -> bool:
+    async def clear_user_memory(self, user_id: str, confirm: bool = False) -> bool:
         """
         Clear all memory for a user (requires confirmation)
 
@@ -307,16 +300,13 @@ class EEDMemoryAdapter:
             async with self.session.delete(
                 f"{self.memory_endpoint}/user/{user_id}",
                 params={"confirm": "true"},
-                timeout=aiohttp.ClientTimeout(total=10)
+                timeout=aiohttp.ClientTimeout(total=10),
             ) as response:
                 return response.status == 200
         except:
             return False
 
-    async def get_statistics(
-        self,
-        user_id: str
-    ) -> dict[str, Any]:
+    async def get_statistics(self, user_id: str) -> dict[str, Any]:
         """
         Get memory statistics for a user
 
@@ -332,7 +322,7 @@ class EEDMemoryAdapter:
         try:
             async with self.session.get(
                 f"{self.memory_endpoint}/stats/{user_id}",
-                timeout=aiohttp.ClientTimeout(total=5)
+                timeout=aiohttp.ClientTimeout(total=5),
             ) as response:
                 if response.status != 200:
                     return {}
@@ -344,6 +334,7 @@ class EEDMemoryAdapter:
 
 class EEDError(Exception):
     """Exception raised for EED memory errors"""
+
     pass
 
 
@@ -365,7 +356,7 @@ async def test_eed_memory():
                 message="Hello, Legion!",
                 response="Greetings. How may I assist you today?",
                 context={"test": True},
-                metadata={"source": "test_script"}
+                metadata={"source": "test_script"},
             )
             print(f"  Stored with ID: {memory_id}\n")
         except EEDError as e:

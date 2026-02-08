@@ -347,7 +347,7 @@ def main():
 
     try:
         # Demo 1: Bootstrap
-        orchestrator = demo_bootstrap_orchestrator()
+        demo_bootstrap_orchestrator()
 
         # Demo 2: Event Spine
         demo_event_spine()
@@ -379,7 +379,7 @@ def main():
         return 0
 
     except Exception as e:
-        logger.error(f"Demo failed: {e}", exc_info=True)
+        logger.error("Demo failed: %s", e, exc_info=True)
         return 1
 
 

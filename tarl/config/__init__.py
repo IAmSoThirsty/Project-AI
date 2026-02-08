@@ -30,12 +30,16 @@ from typing import Any, Dict, Optional
 try:
     import tomllib
 
-    TOML_READER = lambda path: tomllib.load(open(path, "rb"))
+    def TOML_READER(path):
+        return tomllib.load(open(path, "rb"))
+
 except ImportError:
     try:
         import toml
 
-        TOML_READER = lambda path: toml.load(open(path))
+        def TOML_READER(path):
+            return toml.load(open(path))
+
     except ImportError:
         TOML_READER = None
 
@@ -127,7 +131,7 @@ class ConfigRegistry:
         self._config: dict[str, Any] = {}
         self._loaded = False
 
-        logger.info(f"ConfigRegistry created with path: {config_path}")
+        logger.info("ConfigRegistry created with path: %s", config_path)
 
     def load(self) -> None:
         """
@@ -150,7 +154,7 @@ class ConfigRegistry:
         if self.config_path and Path(self.config_path).exists():
             file_config = self._load_file(self.config_path)
             self._merge_config(self._config, file_config)
-            logger.info(f"Loaded configuration from {self.config_path}")
+            logger.info("Loaded configuration from %s", self.config_path)
         else:
             logger.info("No configuration file found, using defaults")
 
@@ -217,7 +221,7 @@ class ConfigRegistry:
 
         # Set value
         config[parts[-1]] = value
-        logger.info(f"Configuration updated: {key} = {value}")
+        logger.info("Configuration updated: %s = %s", key, value)
 
     def get_section(self, section: str) -> dict[str, Any]:
         """
@@ -248,7 +252,7 @@ class ConfigRegistry:
         try:
             return TOML_READER(path)
         except Exception as e:
-            logger.error(f"Failed to load configuration file: {e}")
+            logger.error("Failed to load configuration file: %s", e)
             return {}
 
     def _load_environment(self) -> dict[str, Any]:

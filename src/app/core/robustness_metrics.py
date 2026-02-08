@@ -534,8 +534,8 @@ class RobustnessMetricsEngine:
 
         logger.info("Robustness analysis complete for %s", test_suite_name)
         logger.info("  Near-miss count: %s/%s", near_miss_count, total)
-        logger.info("  Min robustness margin: %s", min_margin:.3f)
-        logger.info("  Avg detection confidence: %s", avg_confidence:.3f)
+        logger.info("  Min robustness margin: %s", min_margin)
+        logger.info("  Avg detection confidence: %s", avg_confidence)
 
         return analysis
 

@@ -88,7 +88,7 @@ class ThirstySuperKernel:
 
         logger.info("=" * 70)
         logger.info("THIRSTY SUPER KERNEL - INITIALIZING")
-        logger.info(f"Version: {self.VERSION}")
+        logger.info("Version: %s", self.VERSION)
         logger.info("Thirst of Gods Level Architecture")
         logger.info("=" * 70)
 
@@ -123,7 +123,7 @@ class ThirstySuperKernel:
                 logger.info("   - Split-Screen Viz: ACTIVE")
                 logger.info("   - Attack Flow Animation: ACTIVE")
             except Exception as e:
-                logger.warning(f"Advanced features initialization failed: {e}")
+                logger.warning("Advanced features initialization failed: %s", e)
 
         # Project-AI Integration
         self.project_ai = None
@@ -135,16 +135,19 @@ class ThirstySuperKernel:
                 # Show integration status
                 status = self.project_ai.get_integration_status()
                 logger.info(
-                    f"   - Cerberus: {'ACTIVE' if status['cerberus']['available'] else 'UNAVAILABLE'}"
+                    "   - Cerberus: %s",
+                    "ACTIVE" if status["cerberus"]["available"] else "UNAVAILABLE",
                 )
                 logger.info(
-                    f"   - CodexDeus: {'ACTIVE' if status['codex_deus']['available'] else 'FALLBACK'}"
+                    "   - CodexDeus: %s",
+                    "ACTIVE" if status["codex_deus"]["available"] else "FALLBACK",
                 )
                 logger.info(
-                    f"   - Triumvirate: {'ACTIVE' if status['triumvirate']['available'] else 'UNAVAILABLE'}"
+                    "   - Triumvirate: %s",
+                    "ACTIVE" if status["triumvirate"]["available"] else "UNAVAILABLE",
                 )
             except Exception as e:
-                logger.warning(f"Project-AI integration failed: {e}")
+                logger.warning("Project-AI integration failed: %s", e)
 
         # System state
         self.start_time = time.time()
@@ -186,7 +189,7 @@ class ThirstySuperKernel:
             cmdtype=parts[0] if parts else "", args=parts[1:] if len(parts) > 1 else []
         )
 
-        logger.info(f"[User {user_id}] Executing: {command_str}")
+        logger.info("[User %s] Executing: %s", user_id, command_str)
 
         # Get user's current layer
         layer_id = self.layer_manager.get_user_layer(user_id)
@@ -239,7 +242,10 @@ class ThirstySuperKernel:
                 self.visualizer.metrics.increment("threats_detected")
 
         logger.info(
-            f"[User {user_id}] Result: {result['status']} (threat: {threat.level.name})"
+            "[User %s] Result: %s (threat: %s)",
+            user_id,
+            result["status"],
+            threat.level.name,
         )
 
         return result
@@ -263,9 +269,9 @@ class ThirstySuperKernel:
         self, user_id: int, cmd: Command, observed: Any, threat: ThreatAssessment
     ) -> dict[str, Any]:
         """Handle suspicious command - allow but monitor closely"""
-        logger.warning(f"⚠️  Suspicious activity from user {user_id}")
-        logger.warning(f"   Type: {threat.threat_type}")
-        logger.warning(f"   Indicators: {', '.join(threat.indicators)}")
+        logger.warning("⚠️  Suspicious activity from user %s", user_id)
+        logger.warning("   Type: %s", threat.threat_type)
+        logger.warning("   Indicators: %s", ", ".join(threat.indicators))
 
         if self.config.enable_visualization:
             self.visualizer.show_threat_detected(
@@ -295,10 +301,10 @@ class ThirstySuperKernel:
         """Handle malicious command - transition to deception"""
         self.threats_detected += 1
 
-        logger.error(f"🚨 MALICIOUS ACTIVITY DETECTED from user {user_id}")
-        logger.error(f"   Type: {threat.threat_type}")
-        logger.error(f"   Confidence: {threat.confidence:.2f}")
-        logger.error(f"   Indicators: {', '.join(threat.indicators)}")
+        logger.error("🚨 MALICIOUS ACTIVITY DETECTED from user %s", user_id)
+        logger.error("   Type: %s", threat.threat_type)
+        logger.error("   Confidence: %s", threat.confidence)
+        logger.error("   Indicators: %s", ", ".join(threat.indicators))
 
         # Get current layer
         current_layer = self.layer_manager.get_user_layer(user_id)
@@ -369,9 +375,9 @@ class ThirstySuperKernel:
             "layer": deception_layer.id,
             "threat_level": threat.level.name,
             "DECEPTION_ACTIVE": True,
-            "deception_env_id": deception_env.env_id
-            if self.config.enable_deception
-            else None,
+            "deception_env_id": (
+                deception_env.env_id if self.config.enable_deception else None
+            ),
         }
 
     def _execute_bubblegum_transition(
@@ -394,8 +400,8 @@ class ThirstySuperKernel:
             self.deception_orchestrator.cleanup_environment(user_id)
             self.deceptions_active = max(0, self.deceptions_active - 1)
 
-        logger.critical(f"User {user_id} returned to mirror layer")
-        logger.critical(f"Actions logged: {bubblegum_result.get('actions_logged', 0)}")
+        logger.critical("User %s returned to mirror layer", user_id)
+        logger.critical("Actions logged: %s", bubblegum_result.get("actions_logged", 0))
         logger.critical("=" * 70)
         logger.critical("")
 

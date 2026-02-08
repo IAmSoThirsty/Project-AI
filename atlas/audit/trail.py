@@ -22,6 +22,7 @@ logger = logging.getLogger(__name__)
 
 class AuditLevel(Enum):
     """Audit event severity levels."""
+
     INFORMATIONAL = "informational"
     STANDARD = "standard"
     HIGH_PRIORITY = "high_priority"
@@ -31,6 +32,7 @@ class AuditLevel(Enum):
 
 class AuditCategory(Enum):
     """Categories of audit events."""
+
     SYSTEM = "system"
     DATA = "data"
     GOVERNANCE = "governance"
@@ -44,6 +46,7 @@ class AuditCategory(Enum):
 @dataclass
 class AuditEvent:
     """Immutable audit event record."""
+
     timestamp: str
     event_id: str
     category: str
@@ -63,10 +66,10 @@ class AuditEvent:
     def compute_hash(self, previous_hash: str | None = None) -> str:
         """
         Compute cryptographic hash of this event for chain.
-        
+
         Args:
             previous_hash: Hash of previous event in chain
-            
+
         Returns:
             SHA-256 hash of event
         """
@@ -81,17 +84,17 @@ class AuditEvent:
             "details": self.details,
             "stack": self.stack,
             "parent_event_id": self.parent_event_id,
-            "previous_hash": previous_hash or ""
+            "previous_hash": previous_hash or "",
         }
 
-        json_str = json.dumps(data, sort_keys=True, separators=(',', ':'))
-        return hashlib.sha256(json_str.encode('utf-8')).hexdigest()
+        json_str = json.dumps(data, sort_keys=True, separators=(",", ":"))
+        return hashlib.sha256(json_str.encode("utf-8")).hexdigest()
 
 
 class AuditTrail:
     """
     Immutable audit trail with cryptographic hash chaining.
-    
+
     Provides tamper-proof logging of all system operations with
     full provenance and replay capability.
     """
@@ -99,7 +102,7 @@ class AuditTrail:
     def __init__(self, log_dir: Path | None = None):
         """
         Initialize audit trail.
-        
+
         Args:
             log_dir: Directory for audit logs (defaults to atlas/logs)
         """
@@ -118,14 +121,14 @@ class AuditTrail:
         timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
         self._log_file = self.log_dir / f"audit_{timestamp}.jsonl"
 
-        logger.info(f"Initialized AuditTrail, logging to {self._log_file}")
+        logger.info("Initialized AuditTrail, logging to %s", self._log_file)
 
         # Write header event
         self._write_header()
 
     def _write_header(self) -> None:
         """Write audit trail header event."""
-        header_event = self.log_event(
+        self.log_event(
             category=AuditCategory.SYSTEM,
             level=AuditLevel.INFORMATIONAL,
             operation="audit_trail_initialized",
@@ -133,8 +136,8 @@ class AuditTrail:
             details={
                 "log_file": str(self._log_file),
                 "version": "1.0.0",
-                "protocol": "SHA-256_chain"
-            }
+                "protocol": "SHA-256_chain",
+            },
         )
 
     def _generate_event_id(self) -> str:
@@ -144,17 +147,19 @@ class AuditTrail:
             timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S%f")
             return f"AE-{timestamp}-{self._event_counter:06d}"
 
-    def log_event(self,
-                  category: AuditCategory,
-                  level: AuditLevel,
-                  operation: str,
-                  actor: str,
-                  details: dict[str, Any],
-                  stack: str | None = None,
-                  parent_event_id: str | None = None) -> AuditEvent:
+    def log_event(
+        self,
+        category: AuditCategory,
+        level: AuditLevel,
+        operation: str,
+        actor: str,
+        details: dict[str, Any],
+        stack: str | None = None,
+        parent_event_id: str | None = None,
+    ) -> AuditEvent:
         """
         Log an audit event.
-        
+
         Args:
             category: Event category
             level: Event severity level
@@ -163,7 +168,7 @@ class AuditTrail:
             details: Additional event details
             stack: Stack context (RS, TS-*, SS)
             parent_event_id: ID of parent event if this is a sub-operation
-            
+
         Returns:
             Created AuditEvent
         """
@@ -182,7 +187,7 @@ class AuditTrail:
                 details=details,
                 stack=stack,
                 parent_event_id=parent_event_id,
-                previous_hash=self._last_hash
+                previous_hash=self._last_hash,
             )
 
             # Compute hash with chain
@@ -206,12 +211,12 @@ class AuditTrail:
     def _write_to_file(self, event: AuditEvent) -> None:
         """Write event to audit log file."""
         try:
-            with open(self._log_file, 'a', encoding='utf-8') as f:
+            with open(self._log_file, "a", encoding="utf-8") as f:
                 json_line = json.dumps(event.to_dict())
-                f.write(json_line + '\n')
+                f.write(json_line + "\n")
                 f.flush()  # Ensure immediate write
         except Exception as e:
-            logger.error(f"Failed to write audit event to file: {e}")
+            logger.error("Failed to write audit event to file: %s", e)
             # This is critical - we should not continue if audit fails
             raise
 
@@ -224,7 +229,7 @@ class AuditTrail:
             AuditLevel.STANDARD.value: logging.INFO,
             AuditLevel.HIGH_PRIORITY.value: logging.WARNING,
             AuditLevel.CRITICAL.value: logging.ERROR,
-            AuditLevel.EMERGENCY.value: logging.CRITICAL
+            AuditLevel.EMERGENCY.value: logging.CRITICAL,
         }
 
         log_level = level_map.get(event.level, logging.INFO)
@@ -233,7 +238,7 @@ class AuditTrail:
     def verify_chain(self) -> bool:
         """
         Verify integrity of the entire audit chain.
-        
+
         Returns:
             True if chain is valid, False if tampering detected
         """
@@ -258,22 +263,24 @@ class AuditTrail:
         logger.info("Audit chain verification passed")
         return True
 
-    def get_events(self,
-                   category: AuditCategory | None = None,
-                   level: AuditLevel | None = None,
-                   stack: str | None = None,
-                   operation: str | None = None,
-                   since: datetime | None = None) -> list[AuditEvent]:
+    def get_events(
+        self,
+        category: AuditCategory | None = None,
+        level: AuditLevel | None = None,
+        stack: str | None = None,
+        operation: str | None = None,
+        since: datetime | None = None,
+    ) -> list[AuditEvent]:
         """
         Query audit events with filters.
-        
+
         Args:
             category: Filter by category
             level: Filter by level
             stack: Filter by stack
             operation: Filter by operation
             since: Filter events after this timestamp
-            
+
         Returns:
             List of matching audit events
         """
@@ -298,16 +305,16 @@ class AuditTrail:
 
         return results
 
-    def export_report(self,
-                      output_path: Path | None = None,
-                      format: str = "json") -> str:
+    def export_report(
+        self, output_path: Path | None = None, format: str = "json"
+    ) -> str:
         """
         Export audit trail report.
-        
+
         Args:
             output_path: Path to write report (if None, returns string)
             format: Report format ('json' or 'text')
-            
+
         Returns:
             Report content as string
         """
@@ -317,9 +324,9 @@ class AuditTrail:
                     "generated_at": datetime.utcnow().isoformat(),
                     "total_events": len(self._events),
                     "chain_valid": self.verify_chain(),
-                    "log_file": str(self._log_file)
+                    "log_file": str(self._log_file),
                 },
-                "events": [event.to_dict() for event in self._events]
+                "events": [event.to_dict() for event in self._events],
             }
             content = json.dumps(report, indent=2)
         else:
@@ -332,7 +339,7 @@ class AuditTrail:
                 f"Chain Valid: {self.verify_chain()}",
                 f"Log File: {self._log_file}",
                 "=" * 80,
-                ""
+                "",
             ]
 
             for event in self._events:
@@ -349,7 +356,7 @@ class AuditTrail:
             content = "\n".join(lines)
 
         if output_path:
-            with open(output_path, 'w', encoding='utf-8') as f:
+            with open(output_path, "w", encoding="utf-8") as f:
                 f.write(content)
 
         return content
@@ -372,7 +379,7 @@ class AuditTrail:
             "by_level": level_counts,
             "by_stack": stack_counts,
             "chain_valid": self.verify_chain(),
-            "log_file": str(self._log_file)
+            "log_file": str(self._log_file),
         }
 
 
@@ -383,10 +390,10 @@ _global_audit_trail: AuditTrail | None = None
 def get_audit_trail(log_dir: Path | None = None) -> AuditTrail:
     """
     Get the global audit trail instance.
-    
+
     Args:
         log_dir: Log directory (only used on first call)
-        
+
     Returns:
         AuditTrail instance
     """
@@ -408,7 +415,7 @@ if __name__ == "__main__":
     # Test audit trail
     logging.basicConfig(
         level=logging.DEBUG,
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
 
     audit = AuditTrail()
@@ -419,7 +426,7 @@ if __name__ == "__main__":
         level=AuditLevel.STANDARD,
         operation="data_ingested",
         actor="INGESTION_MODULE",
-        details={"source": "test_data.json", "records": 100}
+        details={"source": "test_data.json", "records": 100},
     )
 
     audit.log_event(
@@ -428,7 +435,7 @@ if __name__ == "__main__":
         operation="penalty_applied",
         actor="GOVERNANCE_COUNCIL",
         details={"organization": "ORG-TEST", "penalty": "false_claim"},
-        stack="RS"
+        stack="RS",
     )
 
     # Verify chain

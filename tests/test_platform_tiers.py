@@ -504,7 +504,7 @@ class TestTier2Registration:
 
         with tempfile.TemporaryDirectory() as tmpdir:
             # MemoryEngine should auto-register during init
-            memory_engine = MemoryEngine(data_dir=tmpdir)
+            MemoryEngine(data_dir=tmpdir)
 
             # Check registration
             registry = get_tier_registry()

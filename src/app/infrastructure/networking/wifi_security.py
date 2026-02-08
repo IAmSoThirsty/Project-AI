@@ -64,7 +64,7 @@ class WiFiSecurityManager:
             # Check for deprecated protocols
             if config.protocol in [WiFiSecurityProtocol.WEP, WiFiSecurityProtocol.WPA]:
                 self.logger.error(
-                    f"{config.protocol.value} is deprecated and insecure - REFUSED"
+                    "%s is deprecated and insecure - REFUSED", config.protocol.value
                 )
                 return False
 
@@ -74,7 +74,7 @@ class WiFiSecurityManager:
                 WiFiSecurityProtocol.WPA3_ENTERPRISE,
             ]:
                 self.logger.warning(
-                    f"{config.protocol.value} is not God Tier - consider WPA3"
+                    "%s is not God Tier - consider WPA3", config.protocol.value
                 )
 
             # Enforce PMF (Protected Management Frames)
@@ -85,12 +85,12 @@ class WiFiSecurityManager:
                 config.enable_pmf = True
 
             self.current_security = config
-            self.logger.info(f"Security configured: {config.protocol.value} with PMF")
+            self.logger.info("Security configured: %s with PMF", config.protocol.value)
 
             return True
 
         except Exception as e:
-            self.logger.error(f"Security configuration failed: {e}")
+            self.logger.error("Security configuration failed: %s", e)
             return False
 
     def _validate_security_config(self, config: WiFiSecurityConfig) -> bool:
@@ -200,7 +200,7 @@ class WiFiSecurityManager:
             return True
 
         except Exception as e:
-            self.logger.error(f"Fast roaming enable failed: {e}")
+            self.logger.error("Fast roaming enable failed: %s", e)
             return False
 
     def get_security_status(self) -> dict:
@@ -274,13 +274,16 @@ class WiFiSecurityManager:
             recommendations.append("ENABLE PMF immediately")
 
         # Check SAE for WPA3
-        if self.current_security.protocol in [
-            WiFiSecurityProtocol.WPA3_PERSONAL,
-            WiFiSecurityProtocol.WPA3_ENTERPRISE,
-        ]:
-            if not self.current_security.enable_sae:
-                warnings.append("SAE disabled for WPA3 - not recommended")
-                recommendations.append("Enable SAE for full WPA3 benefits")
+        if (
+            self.current_security.protocol
+            in [
+                WiFiSecurityProtocol.WPA3_PERSONAL,
+                WiFiSecurityProtocol.WPA3_ENTERPRISE,
+            ]
+            and not self.current_security.enable_sae
+        ):
+            warnings.append("SAE disabled for WPA3 - not recommended")
+            recommendations.append("Enable SAE for full WPA3 benefits")
 
         return {
             "security_level": self.get_security_status()["security_level"],

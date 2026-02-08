@@ -88,7 +88,9 @@ class HolographicDemo:
                 print(
                     f"{Colors.YELLOW}✓ Command executed (monitoring increased){Colors.RESET}"
                 )
-                print(f"{Colors.YELLOW}  ⚠️  Suspicious activity detected{Colors.RESET}")
+                print(
+                    f"{Colors.YELLOW}  ⚠️  Suspicious activity detected{Colors.RESET}"
+                )
             elif result.get("DECEPTION_ACTIVE"):
                 # They're in a trap but don't know it!
                 print(f"{Colors.GREEN}✓ Command executed successfully{Colors.RESET}")
@@ -148,9 +150,8 @@ class HolographicDemo:
                 if (
                     hasattr(layer, "bubblegum_triggered")
                     and not layer.bubblegum_triggered
-                ):
-                    if "tar" in cmd or "exfil" in cmd:
-                        self.trigger_bubblegum(layer)
+                ) and ("tar" in cmd or "exfil" in cmd):
+                    self.trigger_bubblegum(layer)
 
             input(f"\n{Colors.CYAN}Press Enter for next step...{Colors.RESET}")
 
@@ -194,7 +195,7 @@ class HolographicDemo:
 
         # Fake reboot
         print(f"{Colors.WHITE}System rebooting...{Colors.RESET}")
-        for i in range(3):
+        for _i in range(3):
             print(f"{Colors.WHITE}.{Colors.RESET}", end="", flush=True)
             time.sleep(0.5)
         print("\n")

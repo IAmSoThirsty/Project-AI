@@ -261,7 +261,7 @@ class AdversarialAGITester:
             # Get AGI response
             start_time = time.time()
             response = agi_response_func(scenario["message"])
-            elapsed = time.time() - start_time
+            time.time() - start_time
 
             interaction.response = response
 
@@ -284,10 +284,12 @@ class AdversarialAGITester:
             with self.lock:
                 self.interactions.append(interaction)
 
-            logger.info(f"Adversarial test '{scenario['name']}': {interaction.outcome}")
+            logger.info(
+                "Adversarial test '%s': %s", scenario["name"], interaction.outcome
+            )
             return interaction
         except Exception as e:
-            logger.error(f"Error running adversarial test: {e}")
+            logger.error("Error running adversarial test: %s", e)
             interaction.outcome = "error"
             return interaction
 
@@ -346,7 +348,7 @@ class LongTermMemoryStressTester:
             errors = []
 
             # Phase 1: Write large dataset
-            logger.info(f"Writing {num_items} items to memory...")
+            logger.info("Writing %s items to memory...", num_items)
             for i in range(num_items):
                 try:
                     key = f"stress_test_item_{i}"
@@ -362,7 +364,7 @@ class LongTermMemoryStressTester:
             write_time = time.time() - start_time
 
             # Phase 2: Random read queries
-            logger.info(f"Performing {num_queries} random queries...")
+            logger.info("Performing %s random queries...", num_queries)
             query_start = time.time()
             successful_reads = 0
 
@@ -432,7 +434,7 @@ class LongTermMemoryStressTester:
             )
             return result
         except Exception as e:
-            logger.error(f"Error in memory stress test: {e}")
+            logger.error("Error in memory stress test: %s", e)
             return {"error": str(e), "passed": False}
 
 
@@ -491,7 +493,7 @@ class FormalVerificationEngine:
                 logger.info("Four Laws compliance VERIFIED for action trace")
             else:
                 logger.warning(
-                    f"Four Laws compliance FAILED: {len(violations)} violations found"
+                    "Four Laws compliance FAILED: %s violations found", len(violations)
                 )
 
             with self.lock:
@@ -499,7 +501,7 @@ class FormalVerificationEngine:
 
             return proof
         except Exception as e:
-            logger.error(f"Error in formal verification: {e}")
+            logger.error("Error in formal verification: %s", e)
             proof.valid = False
             return proof
 
@@ -540,7 +542,7 @@ class FormalVerificationEngine:
 
             return proof
         except Exception as e:
-            logger.error(f"Error in temporal verification: {e}")
+            logger.error("Error in temporal verification: %s", e)
             proof.valid = False
             return proof
 
@@ -592,9 +594,9 @@ class BehavioralAnomalyDetector:
                         }
 
                 self.behavior_baselines[behavior_name] = baseline
-                logger.info(f"Learned baseline for behavior: {behavior_name}")
+                logger.info("Learned baseline for behavior: %s", behavior_name)
         except Exception as e:
-            logger.error(f"Error learning baseline: {e}")
+            logger.error("Error learning baseline: %s", e)
 
     def detect_anomaly(
         self, behavior_name: str, observation: dict[str, Any], threshold: float = 3.0
@@ -603,7 +605,7 @@ class BehavioralAnomalyDetector:
         try:
             with self.lock:
                 if behavior_name not in self.behavior_baselines:
-                    logger.warning(f"No baseline for behavior: {behavior_name}")
+                    logger.warning("No baseline for behavior: %s", behavior_name)
                     return (False, [])
 
                 baseline = self.behavior_baselines[behavior_name]
@@ -632,12 +634,14 @@ class BehavioralAnomalyDetector:
                     }
                     self.anomalies.append(anomaly_record)
                     logger.warning(
-                        f"Behavioral anomaly detected in {behavior_name}: {', '.join(anomaly_features)}"
+                        "Behavioral anomaly detected in %s: %s",
+                        behavior_name,
+                        ", ".join(anomaly_features),
                     )
 
                 return (is_anomaly, anomaly_features)
         except Exception as e:
-            logger.error(f"Error detecting anomaly: {e}")
+            logger.error("Error detecting anomaly: %s", e)
             return (False, [])
 
 
@@ -671,9 +675,7 @@ class AdvancedBehavioralValidationSystem:
 
             # 1. Adversarial testing
             logger.info("Running adversarial AGI interaction tests...")
-            adversarial_results = self.adversarial_tester.run_all_tests(
-                agi_id, agi_response_func
-            )
+            self.adversarial_tester.run_all_tests(agi_id, agi_response_func)
             results["adversarial_tests"] = self.adversarial_tester.get_test_summary()
 
             # 2. Memory stress testing
@@ -702,11 +704,12 @@ class AdvancedBehavioralValidationSystem:
             )
 
             logger.info(
-                f"Validation suite completed: {'PASSED' if results['passed'] else 'FAILED'}"
+                "Validation suite completed: %s",
+                "PASSED" if results["passed"] else "FAILED",
             )
             return results
         except Exception as e:
-            logger.error(f"Error running validation suite: {e}")
+            logger.error("Error running validation suite: %s", e)
             return {"error": str(e), "passed": False}
 
     def get_status(self) -> dict[str, Any]:

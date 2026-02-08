@@ -24,7 +24,7 @@ class ScheduledPolicy:
         policy_data: dict[str, Any],
         activation_time: datetime,
         expiration_time: datetime | None = None,
-        conditions: dict[str, Any] | None = None
+        conditions: dict[str, Any] | None = None,
     ):
         """
         Initialize scheduled policy.
@@ -66,7 +66,7 @@ class PolicyScheduler:
         policy_data: dict[str, Any],
         activation_time: datetime,
         expiration_time: datetime | None = None,
-        conditions: dict[str, Any] | None = None
+        conditions: dict[str, Any] | None = None,
     ) -> None:
         """
         Schedule a policy for future activation.
@@ -84,18 +84,17 @@ class PolicyScheduler:
                 policy_data=policy_data,
                 activation_time=activation_time,
                 expiration_time=expiration_time,
-                conditions=conditions
+                conditions=conditions,
             )
 
             self.scheduled_policies[policy_id] = scheduled
 
             logger.info(
-                f"Scheduled policy '{policy_id}' "
-                f"for {activation_time.isoformat()}"
+                f"Scheduled policy '{policy_id}' " f"for {activation_time.isoformat()}"
             )
 
         except Exception as e:
-            logger.error(f"Error scheduling policy: {e}", exc_info=True)
+            logger.error("Error scheduling policy: %s", e, exc_info=True)
 
     def schedule_recurring_policy(
         self,
@@ -103,7 +102,7 @@ class PolicyScheduler:
         policy_data: dict[str, Any],
         interval_hours: int,
         duration_hours: int = 1,
-        start_time: datetime | None = None
+        start_time: datetime | None = None,
     ) -> None:
         """
         Schedule a recurring policy activation.
@@ -133,18 +132,18 @@ class PolicyScheduler:
                     policy_id=recurring_id,
                     policy_data=policy_data,
                     activation_time=activation,
-                    expiration_time=expiration
+                    expiration_time=expiration,
                 )
 
                 current += timedelta(hours=interval_hours)
                 recurrence_count += 1
 
             logger.info(
-                f"Scheduled {recurrence_count} recurrences of policy '{policy_id}'"
+                "Scheduled %s recurrences of policy '%s'", recurrence_count, policy_id
             )
 
         except Exception as e:
-            logger.error(f"Error scheduling recurring policy: {e}", exc_info=True)
+            logger.error("Error scheduling recurring policy: %s", e, exc_info=True)
 
     async def start_scheduler(self) -> None:
         """Start the policy scheduler background task."""
@@ -175,14 +174,14 @@ class PolicyScheduler:
         except asyncio.CancelledError:
             logger.info("Scheduler loop cancelled")
         except Exception as e:
-            logger.error(f"Error in scheduler loop: {e}", exc_info=True)
+            logger.error("Error in scheduler loop: %s", e, exc_info=True)
 
     async def _process_scheduled_policies(self) -> None:
         """Process scheduled policies for activation/expiration."""
         try:
             now = datetime.utcnow()
 
-            for policy_id, scheduled in list(self.scheduled_policies.items()):
+            for _policy_id, scheduled in list(self.scheduled_policies.items()):
                 # Check for activation
                 if not scheduled.is_active and now >= scheduled.activation_time:
                     if self._check_conditions(scheduled.conditions):
@@ -194,7 +193,7 @@ class PolicyScheduler:
                         await self._deactivate_policy(scheduled)
 
         except Exception as e:
-            logger.error(f"Error processing scheduled policies: {e}", exc_info=True)
+            logger.error("Error processing scheduled policies: %s", e, exc_info=True)
 
     def _check_conditions(self, conditions: dict[str, Any]) -> bool:
         """Check if policy activation conditions are met."""
@@ -222,18 +221,16 @@ class PolicyScheduler:
             self.active_policies.add(scheduled.policy_id)
 
             self._record_policy_event(
-                scheduled.policy_id,
-                "activated",
-                scheduled.policy_data
+                scheduled.policy_id, "activated", scheduled.policy_data
             )
 
             # Execute callbacks
             await self._execute_callbacks(scheduled.policy_id, "activate")
 
-            logger.info(f"Activated policy: {scheduled.policy_id}")
+            logger.info("Activated policy: %s", scheduled.policy_id)
 
         except Exception as e:
-            logger.error(f"Error activating policy: {e}", exc_info=True)
+            logger.error("Error activating policy: %s", e, exc_info=True)
 
     async def _deactivate_policy(self, scheduled: ScheduledPolicy) -> None:
         """Deactivate a scheduled policy."""
@@ -242,24 +239,18 @@ class PolicyScheduler:
             self.active_policies.discard(scheduled.policy_id)
 
             self._record_policy_event(
-                scheduled.policy_id,
-                "deactivated",
-                scheduled.policy_data
+                scheduled.policy_id, "deactivated", scheduled.policy_data
             )
 
             # Execute callbacks
             await self._execute_callbacks(scheduled.policy_id, "deactivate")
 
-            logger.info(f"Deactivated policy: {scheduled.policy_id}")
+            logger.info("Deactivated policy: %s", scheduled.policy_id)
 
         except Exception as e:
-            logger.error(f"Error deactivating policy: {e}", exc_info=True)
+            logger.error("Error deactivating policy: %s", e, exc_info=True)
 
-    def register_callback(
-        self,
-        policy_id: str,
-        callback: Callable
-    ) -> None:
+    def register_callback(self, policy_id: str, callback: Callable) -> None:
         """
         Register callback for policy events.
 
@@ -271,13 +262,9 @@ class PolicyScheduler:
             self.policy_callbacks[policy_id] = []
 
         self.policy_callbacks[policy_id].append(callback)
-        logger.debug(f"Registered callback for policy: {policy_id}")
+        logger.debug("Registered callback for policy: %s", policy_id)
 
-    async def _execute_callbacks(
-        self,
-        policy_id: str,
-        event_type: str
-    ) -> None:
+    async def _execute_callbacks(self, policy_id: str, event_type: str) -> None:
         """Execute callbacks for policy event."""
         callbacks = self.policy_callbacks.get(policy_id, [])
 
@@ -288,7 +275,7 @@ class PolicyScheduler:
                 else:
                     callback(policy_id, event_type)
             except Exception as e:
-                logger.error(f"Error executing callback: {e}", exc_info=True)
+                logger.error("Error executing callback: %s", e, exc_info=True)
 
     def get_active_policies(self) -> list[dict[str, Any]]:
         """
@@ -301,23 +288,23 @@ class PolicyScheduler:
         for policy_id in self.active_policies:
             scheduled = self.scheduled_policies.get(policy_id)
             if scheduled:
-                active.append({
-                    "policy_id": policy_id,
-                    "policy_data": scheduled.policy_data,
-                    "activation_time": scheduled.activation_time.isoformat(),
-                    "expiration_time": (
-                        scheduled.expiration_time.isoformat()
-                        if scheduled.expiration_time else None
-                    ),
-                    "activation_count": scheduled.activation_count,
-                })
+                active.append(
+                    {
+                        "policy_id": policy_id,
+                        "policy_data": scheduled.policy_data,
+                        "activation_time": scheduled.activation_time.isoformat(),
+                        "expiration_time": (
+                            scheduled.expiration_time.isoformat()
+                            if scheduled.expiration_time
+                            else None
+                        ),
+                        "activation_count": scheduled.activation_count,
+                    }
+                )
 
         return active
 
-    def get_upcoming_policies(
-        self,
-        hours_ahead: int = 24
-    ) -> list[dict[str, Any]]:
+    def get_upcoming_policies(self, hours_ahead: int = 24) -> list[dict[str, Any]]:
         """
         Get policies scheduled for future activation.
 
@@ -333,14 +320,17 @@ class PolicyScheduler:
         upcoming = []
         for scheduled in self.scheduled_policies.values():
             if not scheduled.is_active and scheduled.activation_time <= cutoff:
-                upcoming.append({
-                    "policy_id": scheduled.policy_id,
-                    "policy_data": scheduled.policy_data,
-                    "activation_time": scheduled.activation_time.isoformat(),
-                    "time_until_activation": (
-                        scheduled.activation_time - now
-                    ).total_seconds() / 3600,  # hours
-                })
+                upcoming.append(
+                    {
+                        "policy_id": scheduled.policy_id,
+                        "policy_data": scheduled.policy_data,
+                        "activation_time": scheduled.activation_time.isoformat(),
+                        "time_until_activation": (
+                            scheduled.activation_time - now
+                        ).total_seconds()
+                        / 3600,  # hours
+                    }
+                )
 
         # Sort by activation time
         upcoming.sort(key=lambda x: x["activation_time"])
@@ -348,18 +338,17 @@ class PolicyScheduler:
         return upcoming
 
     def _record_policy_event(
-        self,
-        policy_id: str,
-        event_type: str,
-        policy_data: dict[str, Any]
+        self, policy_id: str, event_type: str, policy_data: dict[str, Any]
     ) -> None:
         """Record policy event to history."""
-        self.policy_history.append({
-            "timestamp": datetime.utcnow().isoformat(),
-            "policy_id": policy_id,
-            "event_type": event_type,
-            "policy_data": policy_data,
-        })
+        self.policy_history.append(
+            {
+                "timestamp": datetime.utcnow().isoformat(),
+                "policy_id": policy_id,
+                "event_type": event_type,
+                "policy_data": policy_data,
+            }
+        )
 
         # Keep last 10000 events
         if len(self.policy_history) > 10000:

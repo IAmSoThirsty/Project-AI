@@ -101,7 +101,7 @@ class FFIBridge:
         if library not in self.loaded_libraries:
             self.loaded_libraries.append(library)
 
-        logger.info(f"Registered FFI function: {name} from {library}")
+        logger.info("Registered FFI function: %s from %s", name, library)
 
     def call_function(self, name: str, *args, **kwargs) -> Any:
         """
@@ -129,7 +129,7 @@ class FFIBridge:
 
         result = func(*args, **kwargs)
 
-        logger.debug(f"Called FFI function: {name}")
+        logger.debug("Called FFI function: %s", name)
         return result
 
     def _validate_call(self, func: ForeignFunction, args, kwargs) -> None:

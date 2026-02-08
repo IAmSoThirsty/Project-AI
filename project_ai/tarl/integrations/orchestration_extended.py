@@ -100,7 +100,7 @@ class TaskQueue:
             "tasks_retried": 0,
         }
 
-        logger.info(f"TaskQueue '{name}' initialized")
+        logger.info("TaskQueue '%s' initialized", name)
 
     def enqueue(
         self,
@@ -123,7 +123,7 @@ class TaskQueue:
         self._queues[priority].append(task)
         self._metrics["tasks_enqueued"] += 1
 
-        logger.debug(f"Task {task_id} enqueued with priority {priority.name}")
+        logger.debug("Task %s enqueued with priority %s", task_id, priority.name)
         return task_id
 
     def lease_task(self, worker_id: str, lease_duration: int = 300) -> Task | None:
@@ -143,7 +143,7 @@ class TaskQueue:
                 task.lease_expires_at = self._logical_now() + lease_duration
                 self._leases[worker_id] = task
 
-                logger.debug(f"Task {task.task_id} leased to worker {worker_id}")
+                logger.debug("Task %s leased to worker %s", task.task_id, worker_id)
                 return task
 
         return None
@@ -161,7 +161,7 @@ class TaskQueue:
         del self._leases[worker_id]
         self._metrics["tasks_completed"] += 1
 
-        logger.info(f"Task {task_id} completed by worker {worker_id}")
+        logger.info("Task %s completed by worker %s", task_id, worker_id)
 
     def fail_task(self, worker_id: str, task_id: str, error: str) -> None:
         """Mark task as failed and potentially retry"""
@@ -183,14 +183,17 @@ class TaskQueue:
             self._queues[task.priority].append(task)
             self._metrics["tasks_retried"] += 1
             logger.warning(
-                f"Task {task_id} failed (attempt {task.attempts}/{task.max_attempts}), re-enqueued"
+                "Task %s failed (attempt %s/%s), re-enqueued",
+                task_id,
+                task.attempts,
+                task.max_attempts,
             )
         else:
             # Move to dead letter queue
             self._dlq.append(task)
             self._metrics["tasks_failed"] += 1
             logger.error(
-                f"Task {task_id} failed permanently after {task.attempts} attempts"
+                "Task %s failed permanently after %s attempts", task_id, task.attempts
             )
 
     def register_worker(
@@ -202,7 +205,7 @@ class TaskQueue:
             "metadata": metadata,
             "registered_at": self._logical_now(),
         }
-        logger.info(f"Worker {worker_id} registered")
+        logger.info("Worker %s registered", worker_id)
 
     def heartbeat(self, worker_id: str) -> None:
         """Worker heartbeat to maintain registration"""
@@ -245,7 +248,7 @@ class WorkerPool:
                 worker_id, capabilities=["*"], metadata={"index": i}
             )
 
-        logger.info(f"Worker pool started with {self.worker_count} workers")
+        logger.info("Worker pool started with %s workers", self.worker_count)
 
     async def stop(self) -> None:
         """Stop worker pool"""
@@ -311,14 +314,14 @@ class LongRunningWorkflowManager:
         )
 
         self._timers[timer_id] = timer
-        logger.debug(f"Timer {timer_id} scheduled for workflow {workflow_id}")
+        logger.debug("Timer %s scheduled for workflow %s", timer_id, workflow_id)
         return timer_id
 
     def cancel_timer(self, timer_id: str) -> None:
         """Cancel a durable timer"""
         if timer_id in self._timers:
             self._timers[timer_id].cancelled = True
-            logger.debug(f"Timer {timer_id} cancelled")
+            logger.debug("Timer %s cancelled", timer_id)
 
     def fire_timers(self) -> list[DurableTimer]:
         """Fire all timers that are ready"""
@@ -332,7 +335,7 @@ class LongRunningWorkflowManager:
                 try:
                     timer.callback()
                 except Exception as ex:
-                    logger.error(f"Timer {timer.timer_id} callback failed: {ex}")
+                    logger.error("Timer %s callback failed: %s", timer.timer_id, ex)
 
         return fired
 
@@ -354,7 +357,7 @@ class LongRunningWorkflowManager:
         )
 
         self._leases[workflow_id] = lease
-        logger.info(f"Lease acquired for workflow {workflow_id} by {holder}")
+        logger.info("Lease acquired for workflow %s by %s", workflow_id, holder)
         return True
 
     def release_lease(self, workflow_id: str, holder: str) -> None:
@@ -363,7 +366,7 @@ class LongRunningWorkflowManager:
             lease = self._leases[workflow_id]
             if lease.holder == holder:
                 del self._leases[workflow_id]
-                logger.info(f"Lease released for workflow {workflow_id}")
+                logger.info("Lease released for workflow %s", workflow_id)
 
     def heartbeat(self, workflow_id: str, holder: str) -> bool:
         """Send heartbeat to maintain lease"""
@@ -378,7 +381,7 @@ class LongRunningWorkflowManager:
         lease.last_heartbeat = self._logical_now()
         lease.expires_at = self._logical_now() + 300  # Extend lease
 
-        logger.debug(f"Heartbeat received for workflow {workflow_id}")
+        logger.debug("Heartbeat received for workflow %s", workflow_id)
         return True
 
     def _logical_now(self) -> int:
@@ -457,7 +460,9 @@ class ActivityExecutor:
         # Check idempotency
         if idempotency_token and idempotency_token in self._completed:
             logger.info(
-                f"Activity {activity.activity_id} already executed (token: {idempotency_token})"
+                "Activity %s already executed (token: %s)",
+                activity.activity_id,
+                idempotency_token,
             )
             return self._completed[idempotency_token]
 
@@ -484,14 +489,17 @@ class ActivityExecutor:
                     self._completed[idempotency_token] = activity_result
 
                 logger.info(
-                    f"Activity {activity.activity_id} completed on attempt {attempt}"
+                    "Activity %s completed on attempt %s", activity.activity_id, attempt
                 )
                 return activity_result
 
             except Exception as ex:
                 last_error = str(ex)
                 logger.warning(
-                    f"Activity {activity.activity_id} failed on attempt {attempt}: {ex}"
+                    "Activity %s failed on attempt %s: %s",
+                    activity.activity_id,
+                    attempt,
+                    ex,
                 )
 
                 if attempt < max_retries:
@@ -507,7 +515,9 @@ class ActivityExecutor:
             idempotency_token=idempotency_token,
         )
 
-        logger.error(f"Activity {activity.activity_id} failed after {attempt} attempts")
+        logger.error(
+            "Activity %s failed after %s attempts", activity.activity_id, attempt
+        )
         return activity_result
 
 
@@ -575,7 +585,7 @@ class MultiTenantManager:
         self._namespaces[namespace_id] = namespace
         self._quotas[namespace_id] = quota
 
-        logger.info(f"Namespace '{name}' created with ID {namespace_id}")
+        logger.info("Namespace '%s' created with ID %s", name, namespace_id)
         return namespace
 
     def check_quota(self, namespace_id: str, resource: str, amount: int = 1) -> bool:
@@ -686,7 +696,7 @@ class HumanInTheLoopManager:
         )
 
         self._signals[workflow_id].append(signal)
-        logger.info(f"Signal {signal_type} sent to workflow {workflow_id}")
+        logger.info("Signal %s sent to workflow %s", signal_type, workflow_id)
         return signal_id
 
     def get_signals(
@@ -718,7 +728,7 @@ class HumanInTheLoopManager:
         )
 
         self._approval_requests[request_id] = request
-        logger.info(f"Approval requested for workflow {workflow_id}")
+        logger.info("Approval requested for workflow %s", workflow_id)
         return request_id
 
     def approve(self, request_id: str, approver: str) -> bool:
@@ -737,7 +747,7 @@ class HumanInTheLoopManager:
         # Check if all required approvals are received
         if set(request.approvals) >= set(request.required_approvers):
             request.status = "approved"
-            logger.info(f"Approval request {request_id} approved")
+            logger.info("Approval request %s approved", request_id)
 
         return True
 
@@ -749,7 +759,7 @@ class HumanInTheLoopManager:
         request = self._approval_requests[request_id]
         request.status = "rejected"
 
-        logger.info(f"Approval request {request_id} rejected by {rejector}")
+        logger.info("Approval request %s rejected by %s", request_id, rejector)
         return True
 
     def is_approved(self, request_id: str) -> bool:
@@ -808,7 +818,7 @@ class MetaOrchestrator:
         )
 
         self._nodes[node_id] = node
-        logger.info(f"Orchestrator node {node_id} registered")
+        logger.info("Orchestrator node %s registered", node_id)
 
     def route_task(
         self, task_type: str, required_capabilities: list[str]
@@ -822,14 +832,14 @@ class MetaOrchestrator:
                     candidates.append(node)
 
         if not candidates:
-            logger.warning(f"No orchestrator available for task {task_type}")
+            logger.warning("No orchestrator available for task %s", task_type)
             return None
 
         # Select node with highest priority and lowest load
         best_node = max(candidates, key=lambda n: (n.priority, -n.load))
 
         best_node.load += 1
-        logger.debug(f"Task {task_type} routed to {best_node.node_id}")
+        logger.debug("Task %s routed to %s", task_type, best_node.node_id)
         return best_node.node_id
 
     def release_task(self, node_id: str) -> None:
@@ -900,7 +910,7 @@ class WorkflowHierarchyManager:
         self._children[parent_id].append(child)
         self._parent_map[child_id] = parent_id
 
-        logger.info(f"Child workflow {child_id} spawned from parent {parent_id}")
+        logger.info("Child workflow %s spawned from parent %s", child_id, parent_id)
         return child_id
 
     def update_child_status(
@@ -917,7 +927,7 @@ class WorkflowHierarchyManager:
                 child.result = result
                 child.error = error
 
-                logger.debug(f"Child workflow {child_id} status: {status}")
+                logger.debug("Child workflow %s status: %s", child_id, status)
                 break
 
     def wait_for_child(self, parent_id: str, child_id: str) -> ChildWorkflow | None:
@@ -943,14 +953,17 @@ class WorkflowHierarchyManager:
     def cancel_child(self, child_id: str) -> None:
         """Cancel a child workflow"""
         self.update_child_status(child_id, "cancelled")
-        logger.info(f"Child workflow {child_id} cancelled")
+        logger.info("Child workflow %s cancelled", child_id)
 
     def propagate_failure(self, child_id: str, error: str) -> None:
         """Propagate failure from child to parent"""
         parent_id = self._parent_map.get(child_id)
         if parent_id:
             logger.warning(
-                f"Failure propagated from child {child_id} to parent {parent_id}: {error}"
+                "Failure propagated from child %s to parent %s: %s",
+                child_id,
+                parent_id,
+                error,
             )
             # In production, this would trigger parent error handling
 

@@ -521,7 +521,7 @@ class SovereignMessaging:
             import logging
 
             logging.error(
-                f"Failed to decrypt message from {sender_code}: {type(e).__name__}"
+                "Failed to decrypt message from %s: %s", sender_code, type(e).__name__
             )
             return None
 

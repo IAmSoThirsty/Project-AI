@@ -30,16 +30,17 @@ logger = logging.getLogger(__name__)
 class ExecutionContext:
     """
     Execution context with variables and state
-    
+
     This context is created at the start of execution and shared across all node
     executions. It maintains:
     - variables: Named values produced by IR nodes
     - stack: Evaluation stack for intermediate computations
     - call_depth: Current recursion depth to prevent stack overflow
-    
+
     The context enables deterministic execution by maintaining all state explicitly
     rather than relying on external state or side effects.
     """
+
     variables: dict[str, Any] = field(default_factory=dict)
     stack: list[Any] = field(default_factory=list)
     call_depth: int = 0
@@ -67,6 +68,7 @@ class ExecutionContext:
 @dataclass
 class ExecutionTrace:
     """Trace of execution for replay and debugging"""
+
     node_id: str
     opcode: str
     inputs: list[Any]
@@ -84,13 +86,14 @@ class ExecutionTrace:
             "outputs": self.outputs,
             "timestamp": self.timestamp,
             "duration_ms": self.duration_ms,
-            "metadata": self.metadata
+            "metadata": self.metadata,
         }
 
 
 @dataclass
 class ResourceUsage:
     """Resource usage tracking"""
+
     cpu_time_ms: float = 0.0
     memory_bytes: int = 0
     io_operations: int = 0
@@ -109,13 +112,14 @@ class ResourceUsage:
             "cpu_time_ms": self.cpu_time_ms,
             "memory_bytes": self.memory_bytes,
             "io_operations": self.io_operations,
-            "network_requests": self.network_requests
+            "network_requests": self.network_requests,
         }
 
 
 @dataclass
 class Checkpoint:
     """Execution checkpoint for rollback"""
+
     checkpoint_id: str
     node_id: str
     context: ExecutionContext
@@ -125,7 +129,13 @@ class Checkpoint:
 
 class ExecutionError(Exception):
     """Execution error with context"""
-    def __init__(self, message: str, node_id: str | None = None, trace: list[ExecutionTrace] | None = None):
+
+    def __init__(
+        self,
+        message: str,
+        node_id: str | None = None,
+        trace: list[ExecutionTrace] | None = None,
+    ):
         self.message = message
         self.node_id = node_id
         self.trace = trace or []
@@ -147,11 +157,11 @@ class IRExecutor:
         max_memory_bytes: int = 1024 * 1024 * 1024,  # 1 GB
         max_io_operations: int = 10000,
         enable_tracing: bool = True,
-        enable_checkpointing: bool = True
+        enable_checkpointing: bool = True,
     ):
         """
         Initialize executor
-        
+
         Args:
             max_execution_time_ms: Maximum execution time in milliseconds
             max_memory_bytes: Maximum memory usage in bytes
@@ -175,17 +185,17 @@ class IRExecutor:
     def execute(self, graph: IRGraph) -> dict[str, Any]:
         """
         Execute IR graph deterministically
-        
+
         Args:
             graph: IR graph to execute
-        
+
         Returns:
             Execution results with outputs and metadata
-        
+
         Raises:
             ExecutionError: If execution fails
         """
-        logger.info(f"Starting execution of graph with {len(graph.nodes)} nodes")
+        logger.info("Starting execution of graph with %s nodes", len(graph.nodes))
 
         self.start_time = time.time()
         self.trace.clear()
@@ -216,22 +226,32 @@ class IRExecutor:
                 "resource_usage": self.resource_usage.to_dict(),
                 "execution_time_ms": (time.time() - self.start_time) * 1000,
                 "nodes_executed": len(self.trace),
-                "trace": [t.to_dict() for t in self.trace] if self.enable_tracing else []
+                "trace": (
+                    [t.to_dict() for t in self.trace] if self.enable_tracing else []
+                ),
             }
 
-            logger.info(f"Execution completed: {len(self.trace)} nodes in {results['execution_time_ms']:.2f}ms")
+            logger.info(
+                "Execution completed: %s nodes in %sms",
+                len(self.trace),
+                results["execution_time_ms"],
+            )
             return results
 
         except Exception as e:
-            error_results = {
+            {
                 "status": "error",
                 "error": str(e),
                 "resource_usage": self.resource_usage.to_dict(),
-                "execution_time_ms": (time.time() - self.start_time) * 1000 if self.start_time else 0,
+                "execution_time_ms": (
+                    (time.time() - self.start_time) * 1000 if self.start_time else 0
+                ),
                 "nodes_executed": len(self.trace),
-                "trace": [t.to_dict() for t in self.trace] if self.enable_tracing else []
+                "trace": (
+                    [t.to_dict() for t in self.trace] if self.enable_tracing else []
+                ),
             }
-            logger.error(f"Execution failed: {e}")
+            logger.error("Execution failed: %s", e)
             if isinstance(e, ExecutionError):
                 raise
             raise ExecutionError(str(e), trace=self.trace)
@@ -240,7 +260,7 @@ class IRExecutor:
         """Execute single IR node"""
         start_time = time.time()
 
-        logger.debug(f"Executing node {node.id}: {node.opcode.value}")
+        logger.debug("Executing node %s: %s", node.id, node.opcode.value)
 
         # Get input values
         input_values = []
@@ -273,7 +293,12 @@ class IRExecutor:
                 result = self._execute_checkpoint(node)
             elif node.opcode == IROpcode.ROLLBACK:
                 result = self._execute_rollback(node)
-            elif node.opcode in {IROpcode.ADD, IROpcode.SUB, IROpcode.MUL, IROpcode.DIV}:
+            elif node.opcode in {
+                IROpcode.ADD,
+                IROpcode.SUB,
+                IROpcode.MUL,
+                IROpcode.DIV,
+            }:
                 result = self._execute_arithmetic(node, input_values)
             elif node.opcode == IROpcode.CMP:
                 result = self._execute_compare(node, input_values)
@@ -282,7 +307,7 @@ class IRExecutor:
             elif node.opcode == IROpcode.WRITE_FILE:
                 result = self._execute_write_file(node, input_values)
             else:
-                logger.warning(f"Unimplemented opcode: {node.opcode.value}")
+                logger.warning("Unimplemented opcode: %s", node.opcode.value)
                 result = None
 
             # Store result
@@ -305,14 +330,16 @@ class IRExecutor:
                     outputs=[result] if result is not None else [],
                     timestamp=start_time,
                     duration_ms=duration_ms,
-                    metadata={"attributes": node.attributes}
+                    metadata={"attributes": node.attributes},
                 )
                 self.trace.append(trace_entry)
 
             return result
 
         except Exception as e:
-            raise ExecutionError(f"Node execution failed: {e}", node_id=node.id, trace=self.trace)
+            raise ExecutionError(
+                f"Node execution failed: {e}", node_id=node.id, trace=self.trace
+            )
 
     def _execute_sequence(self, node: IRNode, graph: IRGraph) -> Any:
         """Execute sequence of nodes"""
@@ -328,7 +355,7 @@ class IRExecutor:
     def _execute_validate_policy(self, node: IRNode) -> bool:
         """Execute policy validation"""
         policies = node.attributes.get("policies", [])
-        logger.info(f"Validating policies: {policies}")
+        logger.info("Validating policies: %s", policies)
 
         # In production, integrate with governance system
         # For now, always return True
@@ -339,20 +366,16 @@ class IRExecutor:
         source = node.attributes.get("source", ".")
         output = node.attributes.get("output", "build/")
 
-        logger.info(f"Compiling {source} -> {output}")
+        logger.info("Compiling %s -> %s", source, output)
 
         # Simulate compilation
-        return {
-            "source": source,
-            "output": output,
-            "status": "compiled"
-        }
+        return {"source": source, "output": output, "status": "compiled"}
 
     def _execute_test(self, node: IRNode) -> dict[str, Any]:
         """Execute tests"""
         suite = node.attributes.get("suite", "pytest")
 
-        logger.info(f"Running tests with {suite}")
+        logger.info("Running tests with %s", suite)
 
         # Simulate test execution
         return {
@@ -360,33 +383,30 @@ class IRExecutor:
             "tests_run": 0,
             "tests_passed": 0,
             "tests_failed": 0,
-            "status": "passed"
+            "status": "passed",
         }
 
     def _execute_package(self, node: IRNode) -> dict[str, Any]:
         """Execute packaging"""
         format_ = node.attributes.get("format", "wheel")
 
-        logger.info(f"Packaging as {format_}")
+        logger.info("Packaging as %s", format_)
 
         # Simulate packaging
         return {
             "format": format_,
             "output": f"dist/package.{format_}",
-            "status": "packaged"
+            "status": "packaged",
         }
 
     def _execute_deploy(self, node: IRNode) -> dict[str, Any]:
         """Execute deployment"""
         target = node.attributes.get("target", "production")
 
-        logger.info(f"Deploying to {target}")
+        logger.info("Deploying to %s", target)
 
         # Simulate deployment
-        return {
-            "target": target,
-            "status": "deployed"
-        }
+        return {"target": target, "status": "deployed"}
 
     def _execute_log(self, node: IRNode) -> None:
         """Execute logging"""
@@ -408,14 +428,14 @@ class IRExecutor:
             context=ExecutionContext(
                 variables=self.context.variables.copy(),
                 stack=self.context.stack.copy(),
-                call_depth=self.context.call_depth
+                call_depth=self.context.call_depth,
             ),
             timestamp=time.time(),
-            metadata=node.attributes
+            metadata=node.attributes,
         )
 
         self.checkpoints[checkpoint_id] = checkpoint
-        logger.info(f"Created checkpoint: {checkpoint_id}")
+        logger.info("Created checkpoint: %s", checkpoint_id)
 
         return checkpoint_id
 
@@ -423,13 +443,13 @@ class IRExecutor:
         """Execute rollback to checkpoint"""
         checkpoint_id = node.attributes.get("checkpoint_id")
         if not checkpoint_id or checkpoint_id not in self.checkpoints:
-            logger.error(f"Invalid checkpoint ID: {checkpoint_id}")
+            logger.error("Invalid checkpoint ID: %s", checkpoint_id)
             return False
 
         checkpoint = self.checkpoints[checkpoint_id]
         self.context = checkpoint.context
 
-        logger.info(f"Rolled back to checkpoint: {checkpoint_id}")
+        logger.info("Rolled back to checkpoint: %s", checkpoint_id)
         return True
 
     def _execute_arithmetic(self, node: IRNode, inputs: list[Any]) -> Any:
@@ -438,7 +458,9 @@ class IRExecutor:
             if node.operands and len(node.operands) >= 2:
                 inputs = node.operands[:2]
             else:
-                raise ExecutionError("Arithmetic operation requires 2 inputs", node_id=node.id)
+                raise ExecutionError(
+                    "Arithmetic operation requires 2 inputs", node_id=node.id
+                )
 
         a, b = inputs[0], inputs[1]
 
@@ -485,21 +507,23 @@ class IRExecutor:
         self.resource_usage.io_operations += 1
 
         # Simulate file read
-        logger.info(f"Reading file: {path}")
+        logger.info("Reading file: %s", path)
         return f"<content of {path}>"
 
     def _execute_write_file(self, node: IRNode, inputs: list[Any]) -> bool:
         """Execute file write"""
         path = node.attributes.get("path")
         if not path:
-            raise ExecutionError("Write file requires 'path' attribute", node_id=node.id)
+            raise ExecutionError(
+                "Write file requires 'path' attribute", node_id=node.id
+            )
 
-        content = inputs[0] if inputs else ""
+        inputs[0] if inputs else ""
 
         self.resource_usage.io_operations += 1
 
         # Simulate file write
-        logger.info(f"Writing file: {path}")
+        logger.info("Writing file: %s", path)
         return True
 
     def _check_resource_limits(self) -> None:
@@ -507,17 +531,23 @@ class IRExecutor:
         if self.start_time:
             elapsed_ms = (time.time() - self.start_time) * 1000
             if elapsed_ms > self.max_execution_time_ms:
-                raise ExecutionError(f"Execution time limit exceeded: {elapsed_ms:.2f}ms > {self.max_execution_time_ms}ms")
+                raise ExecutionError(
+                    f"Execution time limit exceeded: {elapsed_ms:.2f}ms > {self.max_execution_time_ms}ms"
+                )
 
         if self.resource_usage.memory_bytes > self.max_memory_bytes:
-            raise ExecutionError(f"Memory limit exceeded: {self.resource_usage.memory_bytes} > {self.max_memory_bytes}")
+            raise ExecutionError(
+                f"Memory limit exceeded: {self.resource_usage.memory_bytes} > {self.max_memory_bytes}"
+            )
 
         if self.resource_usage.io_operations > self.max_io_operations:
-            raise ExecutionError(f"I/O operations limit exceeded: {self.resource_usage.io_operations} > {self.max_io_operations}")
+            raise ExecutionError(
+                f"I/O operations limit exceeded: {self.resource_usage.io_operations} > {self.max_io_operations}"
+            )
 
     def replay_trace(self, trace: list[dict[str, Any]]) -> dict[str, Any]:
         """Replay execution from trace"""
-        logger.info(f"Replaying {len(trace)} trace entries")
+        logger.info("Replaying %s trace entries", len(trace))
 
         # Reset state
         self.context = ExecutionContext()
@@ -530,7 +560,4 @@ class IRExecutor:
             if outputs:
                 self.execution_results[node_id] = outputs[0]
 
-        return {
-            "status": "replayed",
-            "entries": len(trace)
-        }
+        return {"status": "replayed", "entries": len(trace)}

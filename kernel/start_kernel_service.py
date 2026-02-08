@@ -38,15 +38,17 @@ def run_kernel_service():
     logger.info("🔥 Kernel is now LIVE and monitoring")
     logger.info("")
     logger.info("Status:")
-    logger.info(f"  - Version: {kernel.VERSION}")
+    logger.info("  - Version: %s", kernel.VERSION)
     logger.info(
-        f"  - AI Detection: {'ACTIVE' if kernel.config.enable_ai_detection else 'DISABLED'}"
+        "  - AI Detection: %s",
+        "ACTIVE" if kernel.config.enable_ai_detection else "DISABLED",
     )
     logger.info(
-        f"  - Deception: {'ACTIVE' if kernel.config.enable_deception else 'DISABLED'}"
+        "  - Deception: %s", "ACTIVE" if kernel.config.enable_deception else "DISABLED"
     )
     logger.info(
-        f"  - Visualization: {'ACTIVE' if kernel.config.enable_visualization else 'DISABLED'}"
+        "  - Visualization: %s",
+        "ACTIVE" if kernel.config.enable_visualization else "DISABLED",
     )
 
     if hasattr(kernel, "learning_engine") and kernel.learning_engine:
@@ -72,10 +74,12 @@ def run_kernel_service():
     ]
 
     for label, user_id, cmd in test_commands:
-        logger.info(f"[{label} {user_id}] Executing: {cmd}")
+        logger.info("[%s %s] Executing: %s", label, user_id, cmd)
         result = kernel.execute_command(user_id, cmd)
         logger.info(
-            f"  → Layer {result.get('current_layer', result.get('layer', '?'))}: {result['status']}"
+            "  → Layer %s: %s",
+            result.get("current_layer", result.get("layer", "?")),
+            result["status"],
         )
         logger.info("")
         time.sleep(1)
@@ -98,7 +102,10 @@ def run_kernel_service():
             counter += 1
             status = kernel.get_system_status()
             logger.info(
-                f"[Heartbeat {counter}] Kernel ACTIVE - Commands: {status['total_commands']}, Threats: {status['threats_detected']}"
+                "[Heartbeat %s] Kernel ACTIVE - Commands: %s, Threats: %s",
+                counter,
+                status["total_commands"],
+                status["threats_detected"],
             )
 
     except KeyboardInterrupt:

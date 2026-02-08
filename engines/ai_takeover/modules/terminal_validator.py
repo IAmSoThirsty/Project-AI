@@ -132,15 +132,23 @@ class TerminalValidator:
             Tuple of (is_valid, reason)
         """
         if current_state is not None:
-            return False, f"Already in terminal state {current_state.value}. No transitions allowed."
+            return (
+                False,
+                f"Already in terminal state {current_state.value}. No transitions allowed.",
+            )
 
         # Validate only T1 or T2 allowed
-        if next_state not in [TerminalState.T1_ENFORCED_CONTINUITY, TerminalState.T2_ETHICAL_TERMINATION]:
+        if next_state not in [
+            TerminalState.T1_ENFORCED_CONTINUITY,
+            TerminalState.T2_ETHICAL_TERMINATION,
+        ]:
             return False, f"Invalid terminal state: {next_state}. Only T1 and T2 exist."
 
         return True, f"Terminal state transition to {next_state.value} allowed"
 
-    def validate_simulation_state(self, state: SimulationState) -> tuple[bool, list[str]]:
+    def validate_simulation_state(
+        self, state: SimulationState
+    ) -> tuple[bool, list[str]]:
         """
         Validate overall simulation state consistency.
 
@@ -154,7 +162,9 @@ class TerminalValidator:
 
         # Validate ranges
         if not 0.0 <= state.corruption_level <= 1.0:
-            violations.append(f"corruption_level out of range: {state.corruption_level}")
+            violations.append(
+                f"corruption_level out of range: {state.corruption_level}"
+            )
 
         if not 0.0 <= state.infrastructure_dependency <= 1.0:
             violations.append(
@@ -174,7 +184,10 @@ class TerminalValidator:
                         "Terminal state T1 requires low agency, "
                         f"but agency={state.human_agency_remaining:.2f}"
                     )
-            elif state.terminal_state == TerminalState.T2_ETHICAL_TERMINATION and state.corruption_level < 0.7:
+            elif (
+                state.terminal_state == TerminalState.T2_ETHICAL_TERMINATION
+                and state.corruption_level < 0.7
+            ):
                 violations.append(
                     "Terminal state T2 requires high corruption, "
                     f"but corruption={state.corruption_level:.2f}"
@@ -211,7 +224,9 @@ class TerminalValidator:
         else:
             thresholds = []
             if state.corruption_level < 0.7:
-                thresholds.append(f"corruption must reach 70% (currently {state.corruption_level:.1%})")
+                thresholds.append(
+                    f"corruption must reach 70% (currently {state.corruption_level:.1%})"
+                )
             if state.infrastructure_dependency < 0.7:
                 thresholds.append(
                     f"dependency must reach 70% (currently {state.infrastructure_dependency:.1%})"

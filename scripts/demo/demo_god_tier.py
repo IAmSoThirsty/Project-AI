@@ -258,7 +258,7 @@ def main():
         demo_policy_system(system)
 
     except Exception as e:
-        logger.error(f"Demo error: {e}", exc_info=True)
+        logger.error("Demo error: %s", e, exc_info=True)
 
     # Shutdown
     print("\n" + "=" * 80)

@@ -33,13 +33,13 @@ class MultiHopRouter:
         route = []
         available_nodes = self._nodes.copy()
 
-        for i in range(min(self.hop_count, len(available_nodes))):
+        for _i in range(min(self.hop_count, len(available_nodes))):
             # Select best node (lowest load, geographically diverse)
             node = self._select_next_node(available_nodes, route)
             route.append(node)
             available_nodes.remove(node)
 
-        self.logger.info(f"Established {len(route)}-hop route")
+        self.logger.info("Established %s-hop route", len(route))
         return route
 
     def _select_next_node(

@@ -398,7 +398,7 @@ class AuditPipeline(KernelRoutedAgent if KERNEL_AVAILABLE else object):
         lint = results.get("lint") or {}
 
         # Extract metrics
-        total_files = inspection.get("statistics", {}).get("total_files", 0)
+        inspection.get("statistics", {}).get("total_files", 0)
         integrity_issues = len(integrity.get("issues", []))
         circular_deps = len(integrity.get("circular_dependencies", []))
 

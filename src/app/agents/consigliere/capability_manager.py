@@ -57,7 +57,7 @@ class CapabilityManager:
     def request_permission(self, capability: str, reason: str) -> bool:
         """Request permission for a capability"""
         if capability not in self.capabilities:
-            self.logger.error(f"Unknown capability: {capability}")
+            self.logger.error("Unknown capability: %s", capability)
             return False
 
         cap_info = self.capabilities[capability]
@@ -71,12 +71,15 @@ class CapabilityManager:
         self._permission_requests.append(request)
 
         self.logger.info(
-            f"Capability requested: {capability} (Risk: {cap_info['risk_level']}) - {reason}"
+            "Capability requested: %s (Risk: %s) - %s",
+            capability,
+            cap_info["risk_level"],
+            reason,
         )
 
         # Auto-grant low/medium risk, deny high risk (in production: user prompt)
         if cap_info["risk_level"] == "high":
-            self.logger.warning(f"High-risk capability denied: {capability}")
+            self.logger.warning("High-risk capability denied: %s", capability)
             return False
 
         return True

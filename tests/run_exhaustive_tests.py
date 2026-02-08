@@ -228,7 +228,7 @@ class ExhaustiveTestRunner:
 """
 
         # Add each step
-        for i, step_result in enumerate(result["steps_executed"], 1):
+        for _i, step_result in enumerate(result["steps_executed"], 1):
             step_status = "✅ PASS" if step_result["passed"] else "❌ FAIL"
 
             report += f"""

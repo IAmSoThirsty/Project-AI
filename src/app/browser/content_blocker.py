@@ -87,13 +87,13 @@ class ContentBlocker:
 
         # Check tracker domains
         if self.block_trackers and self._is_tracker(url):
-            self.logger.debug(f"Blocked tracker: {url}")
+            self.logger.debug("Blocked tracker: %s", url)
             self._blocked_count += 1
             return False
 
         # Check malicious patterns
         if self._is_malicious(url):
-            self.logger.warning(f"Blocked malicious URL: {url}")
+            self.logger.warning("Blocked malicious URL: %s", url)
             self._blocked_count += 1
             return False
 
@@ -113,7 +113,7 @@ class ContentBlocker:
         # Check for malicious patterns in content
         for pattern in self._malicious_patterns:
             if re.search(pattern, content, re.IGNORECASE):
-                self.logger.warning(f"Blocked content with pattern: {pattern}")
+                self.logger.warning("Blocked content with pattern: %s", pattern)
                 self._blocked_count += 1
                 return False
 
@@ -133,10 +133,7 @@ class ContentBlocker:
 
     def _is_tracker(self, url: str) -> bool:
         """Check if URL is a known tracker"""
-        for domain in self._tracker_domains:
-            if domain in url:
-                return True
-        return False
+        return any(domain in url for domain in self._tracker_domains)
 
     def _is_malicious(self, url: str) -> bool:
         """Check if URL appears malicious"""
@@ -149,11 +146,7 @@ class ContentBlocker:
             "chrome://",
         ]
 
-        for pattern in suspicious:
-            if pattern in url.lower():
-                return True
-
-        return False
+        return any(pattern in url.lower() for pattern in suspicious)
 
     def _contains_popup_code(self, content: str) -> bool:
         """Check if content contains pop-up code (NEW REQUIREMENT)"""

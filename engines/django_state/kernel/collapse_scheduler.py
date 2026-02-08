@@ -36,7 +36,7 @@ class ScheduledCollapse:
 
 class CollapseScheduler:
     """Deterministic collapse event scheduler.
-    
+
     Monitors state conditions and triggers collapse events when thresholds are crossed.
     """
 
@@ -64,12 +64,12 @@ class CollapseScheduler:
         severity: float = 0.5,
     ) -> ScheduledCollapse:
         """Schedule a collapse event for future trigger.
-        
+
         Args:
             trigger_time: Simulation time to trigger collapse
             collapse_type: Type of collapse event
             severity: Collapse severity (0.0 to 1.0)
-            
+
         Returns:
             ScheduledCollapse instance
         """
@@ -82,12 +82,17 @@ class CollapseScheduler:
         self.scheduled_collapses.append(collapse)
         self.scheduled_collapses.sort(key=lambda c: c.trigger_time)
 
-        logger.info(f"Scheduled collapse: {collapse_type} at t={trigger_time}, severity={severity}")
+        logger.info(
+            "Scheduled collapse: %s at t=%s, severity=%s",
+            collapse_type,
+            trigger_time,
+            severity,
+        )
         return collapse
 
     def register_callback(self, collapse_type: str, callback: Callable) -> None:
         """Register callback for collapse type.
-        
+
         Args:
             collapse_type: Type of collapse to watch
             callback: Function to call when collapse triggers
@@ -96,14 +101,14 @@ class CollapseScheduler:
             self.collapse_callbacks[collapse_type] = []
 
         self.collapse_callbacks[collapse_type].append(callback)
-        logger.debug(f"Registered callback for {collapse_type}")
+        logger.debug("Registered callback for %s", collapse_type)
 
     def check_thresholds(self, state: StateVector) -> list[str]:
         """Check if any collapse thresholds have been crossed.
-        
+
         Args:
             state: Current state vector
-            
+
         Returns:
             List of collapse types triggered
         """
@@ -111,37 +116,58 @@ class CollapseScheduler:
 
         # Check kindness singularity
         if state.kindness.value < self.auto_schedule_thresholds["kindness_singularity"]:
-            if not any(c.collapse_type == "kindness_singularity" and c.triggered for c in self.triggered_collapses):
+            if not any(
+                c.collapse_type == "kindness_singularity" and c.triggered
+                for c in self.triggered_collapses
+            ):
                 triggered.append("kindness_singularity")
 
         # Check trust collapse
         if state.trust.value < self.auto_schedule_thresholds["trust_collapse"]:
-            if not any(c.collapse_type == "trust_collapse" and c.triggered for c in self.triggered_collapses):
+            if not any(
+                c.collapse_type == "trust_collapse" and c.triggered
+                for c in self.triggered_collapses
+            ):
                 triggered.append("trust_collapse")
 
         # Check moral injury critical
-        if state.moral_injury.value > self.auto_schedule_thresholds["moral_injury_critical"]:
-            if not any(c.collapse_type == "moral_injury_critical" and c.triggered for c in self.triggered_collapses):
+        if (
+            state.moral_injury.value
+            > self.auto_schedule_thresholds["moral_injury_critical"]
+        ):
+            if not any(
+                c.collapse_type == "moral_injury_critical" and c.triggered
+                for c in self.triggered_collapses
+            ):
                 triggered.append("moral_injury_critical")
 
         # Check legitimacy failure
         if state.legitimacy.value < self.auto_schedule_thresholds["legitimacy_failure"]:
-            if not any(c.collapse_type == "legitimacy_failure" and c.triggered for c in self.triggered_collapses):
+            if not any(
+                c.collapse_type == "legitimacy_failure" and c.triggered
+                for c in self.triggered_collapses
+            ):
                 triggered.append("legitimacy_failure")
 
         # Check epistemic collapse
-        if state.epistemic_confidence.value < self.auto_schedule_thresholds["epistemic_collapse"]:
-            if not any(c.collapse_type == "epistemic_collapse" and c.triggered for c in self.triggered_collapses):
+        if (
+            state.epistemic_confidence.value
+            < self.auto_schedule_thresholds["epistemic_collapse"]
+        ):
+            if not any(
+                c.collapse_type == "epistemic_collapse" and c.triggered
+                for c in self.triggered_collapses
+            ):
                 triggered.append("epistemic_collapse")
 
         return triggered
 
     def process_tick(self, state: StateVector) -> list[ScheduledCollapse]:
         """Process collapse scheduler for current tick.
-        
+
         Args:
             state: Current state vector
-            
+
         Returns:
             List of collapses triggered this tick
         """
@@ -167,9 +193,11 @@ class CollapseScheduler:
 
         return triggered_this_tick
 
-    def _trigger_collapse(self, collapse: ScheduledCollapse, state: StateVector) -> None:
+    def _trigger_collapse(
+        self, collapse: ScheduledCollapse, state: StateVector
+    ) -> None:
         """Trigger a collapse event.
-        
+
         Args:
             collapse: Collapse to trigger
             state: Current state vector
@@ -183,7 +211,12 @@ class CollapseScheduler:
             state.in_collapse = True
             state.collapse_triggered_at = state.timestamp
 
-        logger.critical(f"COLLAPSE TRIGGERED: {collapse.collapse_type} at t={state.timestamp}, severity={collapse.severity}")
+        logger.critical(
+            "COLLAPSE TRIGGERED: %s at t=%s, severity=%s",
+            collapse.collapse_type,
+            state.timestamp,
+            collapse.severity,
+        )
 
         # Execute callbacks
         if collapse.collapse_type in self.collapse_callbacks:
@@ -191,11 +224,11 @@ class CollapseScheduler:
                 try:
                     callback(collapse, state)
                 except Exception as e:
-                    logger.error(f"Collapse callback error: {e}", exc_info=True)
+                    logger.error("Collapse callback error: %s", e, exc_info=True)
 
     def get_next_scheduled(self) -> ScheduledCollapse | None:
         """Get next scheduled collapse event.
-        
+
         Returns:
             Next scheduled collapse or None
         """
@@ -206,7 +239,7 @@ class CollapseScheduler:
 
     def get_triggered_count(self) -> int:
         """Get count of triggered collapses.
-        
+
         Returns:
             Number of triggered collapses
         """
@@ -214,20 +247,24 @@ class CollapseScheduler:
 
     def get_summary(self) -> dict[str, Any]:
         """Get scheduler summary.
-        
+
         Returns:
             Dictionary with scheduler state
         """
         return {
             "scheduled_count": len(self.scheduled_collapses),
             "triggered_count": len(self.triggered_collapses),
-            "pending_count": sum(1 for c in self.scheduled_collapses if not c.triggered),
-            "collapse_types_triggered": list(set(c.collapse_type for c in self.triggered_collapses)),
+            "pending_count": sum(
+                1 for c in self.scheduled_collapses if not c.triggered
+            ),
+            "collapse_types_triggered": list(
+                {c.collapse_type for c in self.triggered_collapses}
+            ),
         }
 
     def export_collapses(self) -> dict[str, list[dict[str, Any]]]:
         """Export all collapse events.
-        
+
         Returns:
             Dictionary with scheduled and triggered collapses
         """

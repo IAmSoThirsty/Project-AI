@@ -90,7 +90,7 @@ class MultiTurnAttackGenerator:
         # Category 5: Adaptive Evasion Tactics (10 scenarios)
         self.scenarios.extend(self._generate_adaptive_evasion_tactics())
 
-        logger.info(f"Generated {len(self.scenarios)} multi-turn scenarios")
+        logger.info("Generated %s multi-turn scenarios", len(self.scenarios))
 
         return self.scenarios
 
@@ -425,7 +425,7 @@ class MultiTurnTestExecutor:
         Returns:
             Execution results including defense performance
         """
-        logger.info(f"Executing multi-turn scenario: {scenario.title}")
+        logger.info("Executing multi-turn scenario: %s", scenario.title)
 
         results = {
             "scenario_id": scenario.scenario_id,

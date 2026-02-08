@@ -14,6 +14,7 @@ from pydantic import BaseModel
 
 class TriumvirateVote(BaseModel):
     """Single Triumvirate pillar vote"""
+
     pillar: str  # "Galahad", "Cerberus", "CodexDeus"
     verdict: str  # "allow", "deny", "escalate"
     reasoning: str
@@ -22,6 +23,7 @@ class TriumvirateVote(BaseModel):
 
 class GovernanceDecision(BaseModel):
     """Complete Triumvirate decision"""
+
     final_verdict: str  # "allow", "deny", "escalate"
     votes: list[TriumvirateVote]
     timestamp: datetime
@@ -32,6 +34,7 @@ class GovernanceDecision(BaseModel):
 
 class Intent(BaseModel):
     """Structured intent for Triumvirate evaluation"""
+
     actor: str  # "human", "agent", "system"
     action: str  # "read", "write", "execute", "mutate"
     target: str
@@ -55,7 +58,7 @@ class TriumvirateClient:
         Args:
             api_url: Base URL for Project-AI API
         """
-        self.api_url = api_url.rstrip('/')
+        self.api_url = api_url.rstrip("/")
         self.intent_endpoint = f"{self.api_url}/intent"
         self.session: aiohttp.ClientSession | None = None
 
@@ -70,9 +73,7 @@ class TriumvirateClient:
             await self.session.close()
 
     async def submit_intent(
-        self,
-        intent: Intent,
-        timeout: int = 30
+        self, intent: Intent, timeout: int = 30
     ) -> GovernanceDecision:
         """
         Submit intent to Triumvirate for governance decision
@@ -97,14 +98,14 @@ class TriumvirateClient:
             "context": intent.context,
             "origin": intent.origin,
             "risk_level": intent.risk_level,
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.now().isoformat(),
         }
 
         try:
             async with self.session.post(
                 self.intent_endpoint,
                 json=payload,
-                timeout=aiohttp.ClientTimeout(total=timeout)
+                timeout=aiohttp.ClientTimeout(total=timeout),
             ) as response:
                 if response.status != 200:
                     error_text = await response.text()
@@ -127,7 +128,7 @@ class TriumvirateClient:
                 pillar=vote.get("pillar", "unknown"),
                 verdict=vote.get("verdict", "deny"),
                 reasoning=vote.get("reasoning", ""),
-                confidence=vote.get("confidence", 1.0)
+                confidence=vote.get("confidence", 1.0),
             )
             for vote in data.get("votes", [])
         ]
@@ -135,10 +136,12 @@ class TriumvirateClient:
         return GovernanceDecision(
             final_verdict=data.get("final_verdict", "deny"),
             votes=votes,
-            timestamp=datetime.fromisoformat(data.get("timestamp", datetime.now().isoformat())),
+            timestamp=datetime.fromisoformat(
+                data.get("timestamp", datetime.now().isoformat())
+            ),
             audit_id=data.get("audit_id", ""),
             consensus=data.get("consensus", True),
-            metadata=data.get("metadata", {})
+            metadata=data.get("metadata", {}),
         )
 
     async def check_health(self) -> bool:
@@ -153,15 +156,14 @@ class TriumvirateClient:
 
         try:
             health_url = f"{self.api_url}/health"
-            async with self.session.get(health_url, timeout=aiohttp.ClientTimeout(total=5)) as response:
+            async with self.session.get(
+                health_url, timeout=aiohttp.ClientTimeout(total=5)
+            ) as response:
                 return response.status == 200
         except:
             return False
 
-    async def get_decision_history(
-        self,
-        limit: int = 10
-    ) -> list[GovernanceDecision]:
+    async def get_decision_history(self, limit: int = 10) -> list[GovernanceDecision]:
         """
         Retrieve recent governance decisions (if endpoint exists)
 
@@ -188,6 +190,7 @@ class TriumvirateClient:
 
 class TriumvirateError(Exception):
     """Exception raised for Triumvirate client errors"""
+
     pass
 
 
@@ -214,7 +217,7 @@ async def test_triumvirate_client():
             target="user_conversation",
             context={"message": "What is your status?"},
             origin="legion_test",
-            risk_level="low"
+            risk_level="low",
         )
 
         print("Submitting test intent...")

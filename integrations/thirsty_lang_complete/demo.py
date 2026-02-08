@@ -154,7 +154,7 @@ print("Testing TARL policy evaluation speed...")
 iterations = 10000
 start = time.time()
 
-for i in range(iterations):
+for _i in range(iterations):
     decision = runtime.evaluate(context_allow)
 
 elapsed = time.time() - start

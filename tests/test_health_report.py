@@ -76,7 +76,7 @@ class TestHealthReporter:
             assert len(dependencies) > 0
 
             # Common packages should be present
-            package_names = [pkg.lower() for pkg in dependencies.keys()]
+            package_names = [pkg.lower() for pkg in dependencies]
             assert any("pytest" in name for name in package_names)
 
     def test_collect_config_summary(self):
@@ -199,9 +199,9 @@ class TestHealthReporter:
 
     def test_config_integration(self):
         """Test that health reporter uses configuration correctly."""
-        with tempfile.TemporaryDirectory() as tmpdir:
+        with tempfile.TemporaryDirectory():
             # Create a config with health settings
-            config = Config()
+            Config()
 
             reporter = HealthReporter()
 

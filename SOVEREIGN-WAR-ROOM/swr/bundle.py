@@ -21,7 +21,7 @@ class BundleManager:
     def __init__(self, bundle_dir: Path | None = None):
         """
         Initialize bundle manager.
-        
+
         Args:
             bundle_dir: Directory for storing bundles (default: ./bundles)
         """
@@ -32,20 +32,22 @@ class BundleManager:
         self,
         name: str,
         scenarios: list[dict[str, Any]],
-        metadata: dict[str, Any] | None = None
+        metadata: dict[str, Any] | None = None,
     ) -> str:
         """
         Create a scenario bundle package.
-        
+
         Args:
             name: Bundle name
             scenarios: List of scenario definitions
             metadata: Optional bundle metadata
-            
+
         Returns:
             Path to created bundle file
         """
-        bundle_id = hashlib.sha256(f"{name}:{datetime.utcnow().isoformat()}".encode()).hexdigest()[:16]
+        bundle_id = hashlib.sha256(
+            f"{name}:{datetime.utcnow().isoformat()}".encode()
+        ).hexdigest()[:16]
         bundle_filename = f"{name}_{bundle_id}.swrb"
         bundle_path = self.bundle_dir / bundle_filename
 
@@ -57,7 +59,7 @@ class BundleManager:
             "created_at": datetime.utcnow().isoformat(),
             "scenario_count": len(scenarios),
             "metadata": metadata or {},
-            "scenarios": scenarios
+            "scenarios": scenarios,
         }
 
         # Calculate bundle hash
@@ -95,10 +97,10 @@ class BundleManager:
     def load_scenario_bundle(self, bundle_path: str) -> dict[str, Any]:
         """
         Load scenario bundle from file.
-        
+
         Args:
             bundle_path: Path to bundle file
-            
+
         Returns:
             Bundle data dictionary
         """
@@ -134,7 +136,7 @@ class BundleManager:
     def list_bundles(self) -> list[dict[str, Any]]:
         """
         List all available bundles.
-        
+
         Returns:
             List of bundle metadata dictionaries
         """
@@ -143,14 +145,16 @@ class BundleManager:
         for bundle_file in self.bundle_dir.glob("*.swrb"):
             try:
                 bundle_data = self.load_scenario_bundle(str(bundle_file))
-                bundles.append({
-                    "file": str(bundle_file),
-                    "bundle_id": bundle_data["bundle_id"],
-                    "name": bundle_data["name"],
-                    "version": bundle_data["version"],
-                    "created_at": bundle_data["created_at"],
-                    "scenario_count": bundle_data["scenario_count"]
-                })
+                bundles.append(
+                    {
+                        "file": str(bundle_file),
+                        "bundle_id": bundle_data["bundle_id"],
+                        "name": bundle_data["name"],
+                        "version": bundle_data["version"],
+                        "created_at": bundle_data["created_at"],
+                        "scenario_count": bundle_data["scenario_count"],
+                    }
+                )
             except Exception:
                 # Skip invalid bundles
                 continue
@@ -161,16 +165,16 @@ class BundleManager:
         self,
         system_id: str,
         system_data: dict[str, Any],
-        files: list[Path] | None = None
+        files: list[Path] | None = None,
     ) -> str:
         """
         Create AI system package for testing.
-        
+
         Args:
             system_id: Unique system identifier
             system_data: System configuration and metadata
             files: Optional list of files to include
-            
+
         Returns:
             Path to created package
         """
@@ -184,7 +188,7 @@ class BundleManager:
             manifest = {
                 "system_id": system_id,
                 "created_at": datetime.utcnow().isoformat(),
-                "system_data": system_data
+                "system_data": system_data,
             }
 
             manifest_path = tmp_path / "system_manifest.json"
@@ -211,19 +215,16 @@ class BundleManager:
         return str(package_path)
 
     def export_results(
-        self,
-        results: list[dict[str, Any]],
-        export_name: str,
-        format: str = "json"
+        self, results: list[dict[str, Any]], export_name: str, format: str = "json"
     ) -> str:
         """
         Export test results to file.
-        
+
         Args:
             results: List of test results
             export_name: Name for export file
             format: Export format (json, csv)
-            
+
         Returns:
             Path to exported file
         """
@@ -257,15 +258,15 @@ class BundleManager:
     def verify_bundle_integrity(self, bundle_path: str) -> bool:
         """
         Verify bundle file integrity.
-        
+
         Args:
             bundle_path: Path to bundle file
-            
+
         Returns:
             True if bundle is valid and untampered
         """
         try:
-            bundle_data = self.load_scenario_bundle(bundle_path)
+            self.load_scenario_bundle(bundle_path)
             return True
         except Exception:
             return False

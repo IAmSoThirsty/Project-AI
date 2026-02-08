@@ -65,7 +65,7 @@ class ArtifactManager:
         log_file = self.current_run_dir / "logs" / f"{name}.log"
         log_file.parent.mkdir(parents=True, exist_ok=True)
         log_file.write_text(content)
-        logger.info(f"Saved log: {log_file}")
+        logger.info("Saved log: %s", log_file)
         return log_file
 
     def save_screenshot(self, name: str, image_data: bytes) -> Path:
@@ -78,12 +78,10 @@ class ArtifactManager:
         Returns:
             Path to saved screenshot
         """
-        screenshot_file = (
-            self.current_run_dir / "screenshots" / f"{name}.png"
-        )
+        screenshot_file = self.current_run_dir / "screenshots" / f"{name}.png"
         screenshot_file.parent.mkdir(parents=True, exist_ok=True)
         screenshot_file.write_bytes(image_data)
-        logger.info(f"Saved screenshot: {screenshot_file}")
+        logger.info("Saved screenshot: %s", screenshot_file)
         return screenshot_file
 
     def save_api_dump(self, name: str, request: dict, response: dict) -> Path:
@@ -107,7 +105,7 @@ class ArtifactManager:
         }
 
         dump_file.write_text(json.dumps(dump_data, indent=2))
-        logger.info(f"Saved API dump: {dump_file}")
+        logger.info("Saved API dump: %s", dump_file)
         return dump_file
 
     def save_error_trace(self, name: str, error_data: dict) -> Path:
@@ -125,7 +123,7 @@ class ArtifactManager:
 
         error_data["timestamp"] = datetime.now().isoformat()
         error_file.write_text(json.dumps(error_data, indent=2))
-        logger.info(f"Saved error trace: {error_file}")
+        logger.info("Saved error trace: %s", error_file)
         return error_file
 
     def save_json(self, name: str, data: Any) -> Path:
@@ -140,7 +138,7 @@ class ArtifactManager:
         """
         json_file = self.current_run_dir / f"{name}.json"
         json_file.write_text(json.dumps(data, indent=2, default=str))
-        logger.info(f"Saved JSON: {json_file}")
+        logger.info("Saved JSON: %s", json_file)
         return json_file
 
     def get_run_dir(self) -> Path:
@@ -166,9 +164,9 @@ class ArtifactManager:
         for old_run in runs[keep_last:]:
             try:
                 shutil.rmtree(old_run)
-                logger.info(f"Cleaned up old run: {old_run}")
+                logger.info("Cleaned up old run: %s", old_run)
             except Exception as e:
-                logger.warning(f"Failed to clean up {old_run}: {e}")
+                logger.warning("Failed to clean up %s: %s", old_run, e)
 
     def archive_run(self) -> Path:
         """Archive current test run.
@@ -182,7 +180,7 @@ class ArtifactManager:
             "gztar",
             self.current_run_dir,
         )
-        logger.info(f"Archived run to: {archive_path}")
+        logger.info("Archived run to: %s", archive_path)
         return archive_path
 
     def get_artifact_summary(self) -> dict:
@@ -194,21 +192,25 @@ class ArtifactManager:
         summary = {
             "run_id": self.run_id,
             "run_dir": str(self.current_run_dir),
-            "logs": len(list((self.current_run_dir / "logs").glob("*.log")))
-            if (self.current_run_dir / "logs").exists()
-            else 0,
-            "screenshots": len(
-                list((self.current_run_dir / "screenshots").glob("*.png"))
-            )
-            if (self.current_run_dir / "screenshots").exists()
-            else 0,
-            "dumps": len(list((self.current_run_dir / "dumps").glob("*.json")))
-            if (self.current_run_dir / "dumps").exists()
-            else 0,
-            "errors": len(
-                list((self.current_run_dir / "errors").glob("*.json"))
-            )
-            if (self.current_run_dir / "errors").exists()
-            else 0,
+            "logs": (
+                len(list((self.current_run_dir / "logs").glob("*.log")))
+                if (self.current_run_dir / "logs").exists()
+                else 0
+            ),
+            "screenshots": (
+                len(list((self.current_run_dir / "screenshots").glob("*.png")))
+                if (self.current_run_dir / "screenshots").exists()
+                else 0
+            ),
+            "dumps": (
+                len(list((self.current_run_dir / "dumps").glob("*.json")))
+                if (self.current_run_dir / "dumps").exists()
+                else 0
+            ),
+            "errors": (
+                len(list((self.current_run_dir / "errors").glob("*.json")))
+                if (self.current_run_dir / "errors").exists()
+                else 0
+            ),
         }
         return summary

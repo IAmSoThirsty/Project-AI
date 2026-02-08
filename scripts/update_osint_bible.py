@@ -75,7 +75,7 @@ class OSINTBibleFetcher:
             f"{GITHUB_API_BASE}/repos/{OSINT_BIBLE_OWNER}/"
             f"{OSINT_BIBLE_REPO}/git/trees/{OSINT_BIBLE_BRANCH}?recursive=1"
         )
-        logger.info(f"Fetching repository contents from {url}")
+        logger.info("Fetching repository contents from %s", url)
 
         response = self.session.get(url, timeout=30)
         response.raise_for_status()
@@ -98,7 +98,7 @@ class OSINTBibleFetcher:
             f"{GITHUB_API_BASE}/repos/{OSINT_BIBLE_OWNER}/"
             f"{OSINT_BIBLE_REPO}/contents/{path}?ref={OSINT_BIBLE_BRANCH}"
         )
-        logger.debug(f"Fetching file: {path}")
+        logger.debug("Fetching file: %s", path)
 
         response = self.session.get(url, timeout=30)
         response.raise_for_status()
@@ -151,7 +151,7 @@ class OSINTBibleFetcher:
         try:
             repo_tree = self.fetch_repo_contents()
         except requests.RequestException as e:
-            logger.error(f"Failed to fetch repository: {e}")
+            logger.error("Failed to fetch repository: %s", e)
             # Return minimal structure if fetch fails
             return {
                 "metadata": {
@@ -174,7 +174,7 @@ class OSINTBibleFetcher:
             if item["path"].endswith(".md") and item["type"] == "blob"
         ]
 
-        logger.info(f"Found {len(markdown_files)} markdown files")
+        logger.info("Found %s markdown files", len(markdown_files))
 
         # Process README.md for main content (stub)
         for md_file in markdown_files[:5]:  # Limit to first 5 files for now
@@ -183,9 +183,9 @@ class OSINTBibleFetcher:
                 # For now, we'll create a placeholder
                 category_name = Path(md_file).stem
                 categories[category_name] = []
-                logger.info(f"Processed category: {category_name}")
+                logger.info("Processed category: %s", category_name)
             except Exception as e:
-                logger.warning(f"Failed to process {md_file}: {e}")
+                logger.warning("Failed to process %s: %s", md_file, e)
 
         return {
             "metadata": {
@@ -207,12 +207,12 @@ class OSINTBibleFetcher:
             filename: Output filename
         """
         output_path = self.output_dir / filename
-        logger.info(f"Writing output to {output_path}")
+        logger.info("Writing output to %s", output_path)
 
         with open(output_path, "w") as f:
             json.dump(data, f, indent=2)
 
-        logger.info(f"Successfully wrote {output_path.stat().st_size} bytes")
+        logger.info("Successfully wrote %s bytes", output_path.stat().st_size)
 
 
 def main():
@@ -246,7 +246,9 @@ def main():
 
     output_file = args.output / DEFAULT_OUTPUT_FILE
     if output_file.exists() and not args.force:
-        logger.info(f"Output file {output_file} already exists. Use --force to update.")
+        logger.info(
+            "Output file %s already exists. Use --force to update.", output_file
+        )
         return
 
     logger.info("Starting OSINT-BIBLE update...")

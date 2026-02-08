@@ -35,7 +35,7 @@ class ActionLedger:
         if len(self._entries) > self._max_entries:
             self._entries.pop(0)
 
-        self.logger.debug(f"Ledger entry added: {action}")
+        self.logger.debug("Ledger entry added: %s", action)
 
     def get_entries(self, include_redacted: bool = False) -> list[dict[str, Any]]:
         """Get all ledger entries"""
@@ -49,7 +49,7 @@ class ActionLedger:
             if entry["id"] == entry_id:
                 entry["redacted"] = True
                 entry["details"] = {"redacted": True}
-                self.logger.info(f"Entry redacted: {entry_id}")
+                self.logger.info("Entry redacted: %s", entry_id)
                 return
 
     def clear(self):
@@ -57,4 +57,4 @@ class ActionLedger:
         count = len(self._entries)
         self._entries.clear()
         self._entry_counter = 0
-        self.logger.info(f"Ledger cleared - {count} entries deleted")
+        self.logger.info("Ledger cleared - %s entries deleted", count)

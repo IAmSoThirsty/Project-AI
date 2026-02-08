@@ -33,9 +33,7 @@ class CerberusGuardAgent:
             }
         }
         # Additional language support would go here
-        msg = messages.get(self.human_lang, messages["en"]).get(
-            message_key, message_key
-        )
+        messages.get(self.human_lang, messages["en"]).get(message_key, message_key)
         print("[{datetime.now().isoformat()}] [{self.agent_id}] {msg}", **kwargs)
 
     def monitor(self):

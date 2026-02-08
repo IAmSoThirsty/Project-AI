@@ -475,7 +475,7 @@ class TestTimeTravel:
         t1 = datetime.utcnow()
         engine.update_scenario_metrics("S01", {"synthetic_content_ratio": 0.6})
 
-        t2 = datetime.utcnow()
+        datetime.utcnow()
         engine.update_scenario_metrics("S01", {"synthetic_content_ratio": 0.8})
 
         # Replay to t1
@@ -749,7 +749,7 @@ class TestPerformance:
         import time
 
         start = time.time()
-        engine = Hydra50Engine(data_dir=temp_data_dir)
+        Hydra50Engine(data_dir=temp_data_dir)
         elapsed = time.time() - start
 
         assert elapsed < 1.0  # Should init in <1 second

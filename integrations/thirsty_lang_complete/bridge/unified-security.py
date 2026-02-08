@@ -144,7 +144,7 @@ class TARLBridge:
             print(json.dumps({"type": "ready"}), flush=True)
 
         except Exception as e:
-            self.logger.error(f"Failed to initialize TARL bridge: {e}")
+            self.logger.error("Failed to initialize TARL bridge: %s", e)
             raise
 
     async def _load_policies(self) -> None:
@@ -153,14 +153,14 @@ class TARLBridge:
             self.policy_dir.glob("*.json")
         )
 
-        self.logger.info(f"Loading {len(policy_files)} policy files...")
+        self.logger.info("Loading %s policy files...", len(policy_files))
 
         for policy_file in policy_files:
             try:
                 await self.policy_engine.load_policy_file(str(policy_file))
-                self.logger.debug(f"Loaded policy: {policy_file.name}")
+                self.logger.debug("Loaded policy: %s", policy_file.name)
             except Exception as e:
-                self.logger.error(f"Failed to load policy {policy_file}: {e}")
+                self.logger.error("Failed to load policy %s: %s", policy_file, e)
 
         self.metrics["policy_reloads"] += 1
 
@@ -226,7 +226,7 @@ class TARLBridge:
             return decision
 
         except Exception as e:
-            self.logger.error(f"Policy evaluation failed: {e}")
+            self.logger.error("Policy evaluation failed: %s", e)
             # Fail-safe: deny on error
             return SecurityDecision(
                 allowed=False,
@@ -264,7 +264,7 @@ class TARLBridge:
         if not self.policy_engine:
             raise RuntimeError("Policy engine not initialized")
 
-        self.logger.info(f"Loading policy: {policy.get('name', 'unnamed')}")
+        self.logger.info("Loading policy: %s", policy.get("name", "unnamed"))
         await self.policy_engine.load_policy_dict(policy)
         self.cache.clear()
 
@@ -273,7 +273,7 @@ class TARLBridge:
         if not self.runtime:
             raise RuntimeError("Runtime not initialized")
 
-        self.logger.info(f"Setting resource limits: {limits}")
+        self.logger.info("Setting resource limits: %s", limits)
         await self.runtime.set_resource_limits(limits)
 
     async def get_metrics(self) -> dict[str, Any]:
@@ -517,7 +517,7 @@ class UnifiedSecurityManager:
             self.logger.info("Unified security manager initialized")
 
         except Exception as e:
-            self.logger.error(f"Initialization failed: {e}")
+            self.logger.error("Initialization failed: %s", e)
             raise
 
     async def check_permission(self, context: dict[str, Any]) -> dict[str, Any]:
@@ -614,7 +614,7 @@ class UnifiedSecurityManager:
             except asyncio.CancelledError:
                 break
             except Exception as e:
-                self.logger.error(f"Audit flush error: {e}")
+                self.logger.error("Audit flush error: %s", e)
 
     async def _flush_audit_log(self) -> None:
         """Write audit buffer to log file"""
@@ -629,7 +629,7 @@ class UnifiedSecurityManager:
             self.audit_buffer.clear()
 
         except Exception as e:
-            self.logger.error(f"Failed to flush audit log: {e}")
+            self.logger.error("Failed to flush audit log: %s", e)
 
     async def get_resource_usage(self) -> dict[str, Any]:
         """Get current resource usage"""

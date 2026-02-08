@@ -78,7 +78,7 @@ class ExampleWorkflow:
             WorkflowOutput with success status and results
         """
         workflow.logger.info(
-            f"Starting ExampleWorkflow for user: {input_data.user_id or 'anonymous'}"
+            "Starting ExampleWorkflow for user: %s", input_data.user_id or "anonymous"
         )
 
         steps_completed = []
@@ -121,7 +121,7 @@ class ExampleWorkflow:
                 retry_policy=retry_policy,
             )
             steps_completed.append("ai_call")
-            workflow.logger.info(f"✓ AI call completed: {ai_response}")
+            workflow.logger.info("✓ AI call completed: %s", ai_response)
 
             # Step 3: Process the task
             workflow.logger.info("Step 3: Processing AI task...")

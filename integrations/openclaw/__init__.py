@@ -11,7 +11,7 @@ __version__ = "1.0.0-phase1"
 __all__ = [
     "LegionAgent",
     "LEGION_CONFIG",
-   "get_config",
+    "get_config",
     "SecurityWrapper",
     "SecurityResult",
     "ThreatLevel",

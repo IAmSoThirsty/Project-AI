@@ -215,7 +215,7 @@ class EngagementProfiler:
                 profile = UserEngagementProfile(user_id=user_id)
                 self._profiles[user_id] = profile
                 self._save_profile(user_id)
-                logger.info(f"Created engagement profile for user: {user_id}")
+                logger.info("Created engagement profile for user: %s", user_id)
             return self._profiles[user_id]
 
     def analyze_user_input(
@@ -257,7 +257,7 @@ class EngagementProfiler:
             # No false alarm - adjust based on user's tolerance
             if profile.swearing_tolerance > 0.7:
                 analysis["should_tone_down"] = False
-                logger.debug(f"User {user_id} has high swearing tolerance")
+                logger.debug("User %s has high swearing tolerance", user_id)
             else:
                 analysis["should_tone_down"] = True
                 analysis["recommended_emotion"] = VoiceEmotionType.CALM
@@ -407,7 +407,7 @@ class EngagementProfiler:
                 json.dump(asdict(profile), f, indent=2)
 
         except Exception as e:
-            logger.error(f"Failed to save profile for {user_id}: {e}")
+            logger.error("Failed to save profile for %s: %s", user_id, e)
 
     def load_profile(self, user_id: str) -> UserEngagementProfile | None:
         """Load user profile from disk"""
@@ -423,7 +423,7 @@ class EngagementProfiler:
                 return profile
 
         except Exception as e:
-            logger.error(f"Failed to load profile for {user_id}: {e}")
+            logger.error("Failed to load profile for %s: %s", user_id, e)
             return None
 
 
@@ -458,7 +458,7 @@ class VoiceBondingProtocol:
         try:
             with self._lock:
                 if user_id in self._bonding_states:
-                    logger.warning(f"Bonding already in progress for {user_id}")
+                    logger.warning("Bonding already in progress for %s", user_id)
                     return False
 
                 self._bonding_states[user_id] = BondingPhase.DISCOVERY
@@ -470,11 +470,11 @@ class VoiceBondingProtocol:
                         model_id=metadata.model_id
                     )
 
-                logger.info(f"Started bonding for user {user_id}")
+                logger.info("Started bonding for user %s", user_id)
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to start bonding: {e}")
+            logger.error("Failed to start bonding: %s", e)
             return False
 
     def experiment_with_model(
@@ -491,7 +491,7 @@ class VoiceBondingProtocol:
         try:
             model = self.registry.get_model(model_id)
             if not model or not model.is_ready():
-                logger.error(f"Model not ready: {model_id}")
+                logger.error("Model not ready: %s", model_id)
                 return None
 
             # Analyze user input
@@ -536,7 +536,7 @@ class VoiceBondingProtocol:
             return response
 
         except Exception as e:
-            logger.error(f"Experimentation error: {e}")
+            logger.error("Experimentation error: %s", e)
             return None
 
     def provide_feedback(self, user_id: str, model_id: str, feedback: str) -> bool:
@@ -570,7 +570,7 @@ class VoiceBondingProtocol:
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to provide feedback: {e}")
+            logger.error("Failed to provide feedback: %s", e)
             return False
 
     def evaluate_and_select(self, user_id: str) -> str | None:
@@ -607,7 +607,7 @@ class VoiceBondingProtocol:
                 return best_model_id
 
         except Exception as e:
-            logger.error(f"Failed to evaluate and select: {e}")
+            logger.error("Failed to evaluate and select: %s", e)
             return None
 
     def get_selected_model(self, user_id: str) -> VoiceModel | None:
@@ -655,7 +655,7 @@ class VoiceBondingProtocol:
                 json.dump(state_data, f, indent=2)
 
         except Exception as e:
-            logger.error(f"Failed to save bonding state: {e}")
+            logger.error("Failed to save bonding state: %s", e)
 
 
 # Global instances

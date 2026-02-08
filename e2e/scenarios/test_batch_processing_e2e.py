@@ -64,8 +64,10 @@ class TestBatchProcessing:
         num_batches = 5
         batch_size = 10
         batches = [
-            [{"id": f"{b}_{i}", "value": f"batch_{b}_item_{i}"}
-             for i in range(batch_size)]
+            [
+                {"id": f"{b}_{i}", "value": f"batch_{b}_item_{i}"}
+                for i in range(batch_size)
+            ]
             for b in range(num_batches)
         ]
 
@@ -74,10 +76,7 @@ class TestBatchProcessing:
         results = []
 
         with ThreadPoolExecutor(max_workers=5) as executor:
-            futures = [
-                executor.submit(self._process_batch, batch)
-                for batch in batches
-            ]
+            futures = [executor.submit(self._process_batch, batch) for batch in batches]
 
             for future in as_completed(futures):
                 results.extend(future.result())
@@ -95,8 +94,7 @@ class TestBatchProcessing:
         """Test batch retry mechanism for transient failures."""
         # Arrange
         test_data = [
-            {"id": i, "value": f"item_{i}", "retry_count": 0}
-            for i in range(10)
+            {"id": i, "value": f"item_{i}", "retry_count": 0} for i in range(10)
         ]
 
         # Act
@@ -152,8 +150,7 @@ class TestBatchProcessing:
         """Test that errors in one item don't affect others."""
         # Arrange
         test_data = [
-            {"id": i, "value": f"item_{i}", "should_error": i == 25}
-            for i in range(50)
+            {"id": i, "value": f"item_{i}", "should_error": i == 25} for i in range(50)
         ]
 
         # Act
@@ -173,9 +170,7 @@ class TestBatchProcessing:
         test_data = [{"id": i, "value": i} for i in range(20)]
 
         # Act
-        results, final_state = self._process_batch_with_state(
-            test_data, initial_state
-        )
+        results, final_state = self._process_batch_with_state(test_data, initial_state)
 
         # Assert
         assert final_state["counter"] == 20
@@ -189,25 +184,31 @@ class TestBatchProcessing:
         results = []
         for item in batch:
             if item.get("should_fail", False):
-                results.append({
-                    "id": item["id"],
-                    "status": "failed",
-                    "error": "Simulated failure",
-                })
+                results.append(
+                    {
+                        "id": item["id"],
+                        "status": "failed",
+                        "error": "Simulated failure",
+                    }
+                )
             elif item.get("should_error", False):
-                results.append({
-                    "id": item["id"],
-                    "status": "error",
-                    "error": "Simulated error",
-                })
+                results.append(
+                    {
+                        "id": item["id"],
+                        "status": "error",
+                        "error": "Simulated error",
+                    }
+                )
             else:
                 # Simulate processing
                 time.sleep(0.01)
-                results.append({
-                    "id": item["id"],
-                    "status": "success",
-                    "value": item.get("value"),
-                })
+                results.append(
+                    {
+                        "id": item["id"],
+                        "status": "success",
+                        "value": item.get("value"),
+                    }
+                )
         return results
 
     def _process_batch_with_retry(
@@ -226,12 +227,14 @@ class TestBatchProcessing:
                     continue
 
                 # Process successfully
-                results.append({
-                    "id": item["id"],
-                    "status": "success",
-                    "value": item["value"],
-                    "retries": retry_count,
-                })
+                results.append(
+                    {
+                        "id": item["id"],
+                        "status": "success",
+                        "value": item["value"],
+                        "retries": retry_count,
+                    }
+                )
                 success = True
 
         return results
@@ -268,11 +271,13 @@ class TestBatchProcessing:
             state["processed_ids"].append(item["id"])
 
             # Process item
-            results.append({
-                "id": item["id"],
-                "status": "success",
-                "value": item["value"],
-            })
+            results.append(
+                {
+                    "id": item["id"],
+                    "status": "success",
+                    "value": item["value"],
+                }
+            )
 
         return results, state
 
@@ -291,7 +296,7 @@ class TestBatchPerformance:
 
         # Act
         start_time = time.time()
-        results = self._process_simple_batch(test_data)
+        self._process_simple_batch(test_data)
         duration = time.time() - start_time
 
         # Assert
@@ -310,7 +315,7 @@ class TestBatchPerformance:
         for size in batch_sizes:
             test_data = [{"id": i} for i in range(size)]
             start_time = time.time()
-            results = self._process_simple_batch(test_data)
+            self._process_simple_batch(test_data)
             duration = time.time() - start_time
 
             throughput = size / duration

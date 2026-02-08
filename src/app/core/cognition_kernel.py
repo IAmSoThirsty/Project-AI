@@ -499,7 +499,7 @@ class CognitionKernel:
             PermissionError: If governance blocks the action
         """
         logger.info(
-            f"[{context.trace_id}] Enforcing governance for {action.action_name}"
+            "[%s] Enforcing governance for %s", context.trace_id, action.action_name
         )
 
         # Freeze identity snapshot (immutable, governance can only observe)
@@ -549,9 +549,7 @@ class CognitionKernel:
             context.end_time = time.time()
             context.duration_ms = (context.end_time - context.start_time) * 1000
 
-            logger.info(
-                f"[{context.trace_id}] Completed in {context.duration_ms:.2f}ms"
-            )
+            logger.info("[%s] Completed in %sms", context.trace_id, context.duration_ms)
 
         except Exception as e:
             context.status = ExecutionStatus.FAILED

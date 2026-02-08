@@ -12,6 +12,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from .sql_utils import sanitize_identifier, sanitize_identifier_list
+
 logger = logging.getLogger(__name__)
 
 
@@ -41,14 +43,14 @@ class Migration:
 
     def apply(self, conn: sqlite3.Connection) -> None:
         """Apply migration."""
-        logger.info(f"Applying migration {self.version}: {self.description}")
+        logger.info("Applying migration %s: %s", self.version, self.description)
         try:
             self.up(conn)
             conn.commit()
-            logger.info(f"Migration {self.version} applied successfully")
+            logger.info("Migration %s applied successfully", self.version)
         except Exception as e:
             conn.rollback()
-            logger.error(f"Failed to apply migration {self.version}: {e}")
+            logger.error("Failed to apply migration %s: %s", self.version, e)
             raise
 
     def rollback(self, conn: sqlite3.Connection) -> None:
@@ -56,14 +58,14 @@ class Migration:
         if not self.down:
             raise ValueError(f"Migration {self.version} has no rollback function")
 
-        logger.info(f"Rolling back migration {self.version}: {self.description}")
+        logger.info("Rolling back migration %s: %s", self.version, self.description)
         try:
             self.down(conn)
             conn.commit()
-            logger.info(f"Migration {self.version} rolled back successfully")
+            logger.info("Migration %s rolled back successfully", self.version)
         except Exception as e:
             conn.rollback()
-            logger.error(f"Failed to rollback migration {self.version}: {e}")
+            logger.error("Failed to rollback migration %s: %s", self.version, e)
             raise
 
 
@@ -84,7 +86,9 @@ class MigrationManager:
         self.db_path = Path(db_path)
         self.migrations: list[Migration] = []
         self._register_migrations()
-        logger.info(f"MigrationManager initialized with {len(self.migrations)} migrations")
+        logger.info(
+            "MigrationManager initialized with %s migrations", len(self.migrations)
+        )
 
     def _register_migrations(self) -> None:
         """Register all migrations."""
@@ -162,11 +166,15 @@ class MigrationManager:
         target = target_version or self.get_latest_version()
 
         if current_version == target:
-            logger.info(f"Database already at version {target}")
+            logger.info("Database already at version %s", target)
             return True
 
         if current_version > target:
-            logger.error(f"Cannot migrate backwards (current: {current_version}, target: {target})")
+            logger.error(
+                "Cannot migrate backwards (current: %s, target: %s)",
+                current_version,
+                target,
+            )
             return False
 
         pending = [m for m in self.migrations if current_version < m.version <= target]
@@ -176,7 +184,9 @@ class MigrationManager:
             logger.info("No pending migrations")
             return True
 
-        logger.info(f"Applying {len(pending)} migrations ({current_version} -> {target})")
+        logger.info(
+            "Applying %s migrations (%s -> %s)", len(pending), current_version, target
+        )
 
         with self._get_connection() as conn:
             for migration in pending:
@@ -184,10 +194,12 @@ class MigrationManager:
                     migration.apply(conn)
                     self._update_version(conn, migration.version)
                 except Exception as e:
-                    logger.error(f"Migration failed at version {migration.version}: {e}")
+                    logger.error(
+                        "Migration failed at version %s: %s", migration.version, e
+                    )
                     raise
 
-        logger.info(f"Successfully migrated to version {target}")
+        logger.info("Successfully migrated to version %s", target)
         return True
 
     def rollback(self, target_version: int | None = None) -> bool:
@@ -207,17 +219,28 @@ class MigrationManager:
         target = target_version if target_version is not None else current_version - 1
 
         if current_version <= target:
-            logger.error(f"Cannot rollback forwards (current: {current_version}, target: {target})")
+            logger.error(
+                "Cannot rollback forwards (current: %s, target: %s)",
+                current_version,
+                target,
+            )
             return False
 
-        to_rollback = [m for m in self.migrations if target < m.version <= current_version]
+        to_rollback = [
+            m for m in self.migrations if target < m.version <= current_version
+        ]
         to_rollback.sort(key=lambda m: m.version, reverse=True)
 
         if not to_rollback:
             logger.info("No migrations to rollback")
             return True
 
-        logger.info(f"Rolling back {len(to_rollback)} migrations ({current_version} -> {target})")
+        logger.info(
+            "Rolling back %s migrations (%s -> %s)",
+            len(to_rollback),
+            current_version,
+            target,
+        )
 
         with self._get_connection() as conn:
             for migration in to_rollback:
@@ -225,10 +248,12 @@ class MigrationManager:
                     migration.rollback(conn)
                     self._update_version(conn, migration.version - 1)
                 except Exception as e:
-                    logger.error(f"Rollback failed at version {migration.version}: {e}")
+                    logger.error(
+                        "Rollback failed at version %s: %s", migration.version, e
+                    )
                     raise
 
-        logger.info(f"Successfully rolled back to version {target}")
+        logger.info("Successfully rolled back to version %s", target)
         return True
 
     def _get_connection(self) -> sqlite3.Connection:
@@ -325,7 +350,7 @@ class MigrationManager:
         for table, column, col_type in columns_to_add:
             try:
                 conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {col_type}")
-                logger.debug(f"Added column {column} to {table}")
+                logger.debug("Added column %s to %s", column, table)
             except sqlite3.OperationalError as e:
                 if "duplicate column" not in str(e).lower():
                     raise
@@ -346,7 +371,7 @@ class MigrationManager:
         for table, column, col_type in columns_to_add:
             try:
                 conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {col_type}")
-                logger.debug(f"Added column {column} to {table}")
+                logger.debug("Added column %s to %s", column, table)
             except sqlite3.OperationalError as e:
                 if "duplicate column" not in str(e).lower():
                     raise
@@ -366,7 +391,7 @@ class MigrationManager:
         for table, column, col_type in columns_to_add:
             try:
                 conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {col_type}")
-                logger.debug(f"Added column {column} to {table}")
+                logger.debug("Added column %s to %s", column, table)
             except sqlite3.OperationalError as e:
                 if "duplicate column" not in str(e).lower():
                     raise
@@ -399,7 +424,7 @@ class MigrationManager:
         for table, column, col_type in columns_to_add:
             try:
                 conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {col_type}")
-                logger.debug(f"Added column {column} to {table}")
+                logger.debug("Added column %s to %s", column, table)
             except sqlite3.OperationalError as e:
                 if "duplicate column" not in str(e).lower():
                     raise
@@ -428,36 +453,44 @@ class MigrationManager:
             Number of rows migrated
         """
         with self._get_connection() as conn:
+            # Sanitize table name to prevent SQL injection
+            # Note: Table names cannot be parameterized in SQL, so we validate them
+            safe_table = sanitize_identifier(table)
+
             # Get all rows
-            cursor = conn.execute(f"SELECT * FROM {table}")
+            cursor = conn.execute(f"SELECT * FROM {safe_table}")
             rows = cursor.fetchall()
             columns = [desc[0] for desc in cursor.description]
 
             migrated = 0
             for i in range(0, len(rows), batch_size):
-                batch = rows[i:i + batch_size]
+                batch = rows[i : i + batch_size]
 
                 for row in batch:
                     row_dict = dict(zip(columns, row, strict=False))
                     transformed = transform(row_dict)
 
-                    # Build UPDATE statement
-                    set_clause = ", ".join(f"{k} = ?" for k in transformed)
+                    # Build UPDATE statement with validated column names
+                    # Column names cannot be parameterized, so we sanitize them
+                    safe_columns = sanitize_identifier_list(list(transformed.keys()))
+                    set_clause = ", ".join(f"{col} = ?" for col in safe_columns)
                     values = list(transformed.values())
                     row_id = row_dict.get("id")
 
                     if row_id:
                         values.append(row_id)
                         conn.execute(
-                            f"UPDATE {table} SET {set_clause} WHERE id = ?",
+                            f"UPDATE {safe_table} SET {set_clause} WHERE id = ?",
                             values,
                         )
                         migrated += 1
 
                 conn.commit()
-                logger.debug(f"Migrated batch {i // batch_size + 1} ({migrated} rows)")
+                logger.debug(
+                    "Migrated batch %s (%s rows)", i // batch_size + 1, migrated
+                )
 
-        logger.info(f"Data migration complete: {migrated} rows migrated in {table}")
+        logger.info("Data migration complete: %s rows migrated in %s", migrated, table)
         return migrated
 
     def copy_table(
@@ -478,25 +511,34 @@ class MigrationManager:
             Number of rows copied
         """
         with self._get_connection() as conn:
+            # Sanitize table names to prevent SQL injection
+            safe_source = sanitize_identifier(source_table)
+            safe_dest = sanitize_identifier(dest_table)
+
             if column_mapping:
-                source_cols = ", ".join(column_mapping.keys())
-                dest_cols = ", ".join(column_mapping.values())
+                # Sanitize column names
+                safe_src_cols = sanitize_identifier_list(list(column_mapping.keys()))
+                safe_dest_cols = sanitize_identifier_list(list(column_mapping.values()))
+                source_cols = ", ".join(safe_src_cols)
+                dest_cols = ", ".join(safe_dest_cols)
             else:
                 # Copy all columns with same names
-                cursor = conn.execute(f"SELECT * FROM {source_table} LIMIT 0")
+                cursor = conn.execute(f"SELECT * FROM {safe_source} LIMIT 0")
                 columns = [desc[0] for desc in cursor.description]
-                source_cols = dest_cols = ", ".join(columns)
+                # Sanitize column names from schema
+                safe_columns = sanitize_identifier_list(columns)
+                source_cols = dest_cols = ", ".join(safe_columns)
 
             conn.execute(f"""
-                INSERT INTO {dest_table} ({dest_cols})
-                SELECT {source_cols} FROM {source_table}
+                INSERT INTO {safe_dest} ({dest_cols})
+                SELECT {source_cols} FROM {safe_source}
             """)
 
             cursor = conn.execute("SELECT changes()")
             copied = cursor.fetchone()[0]
             conn.commit()
 
-        logger.info(f"Copied {copied} rows from {source_table} to {dest_table}")
+        logger.info("Copied %s rows from %s to %s", copied, source_table, dest_table)
         return copied
 
     def backup_table(self, table: str) -> str:
@@ -509,16 +551,20 @@ class MigrationManager:
         Returns:
             Backup table name
         """
+        # Sanitize table name to prevent SQL injection
+        safe_table = sanitize_identifier(table)
+
         timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
         backup_table = f"{table}_backup_{timestamp}"
+        safe_backup = sanitize_identifier(backup_table)
 
         with self._get_connection() as conn:
-            conn.execute(f"CREATE TABLE {backup_table} AS SELECT * FROM {table}")
-            cursor = conn.execute(f"SELECT COUNT(*) FROM {backup_table}")
+            conn.execute(f"CREATE TABLE {safe_backup} AS SELECT * FROM {safe_table}")
+            cursor = conn.execute(f"SELECT COUNT(*) FROM {safe_backup}")
             count = cursor.fetchone()[0]
             conn.commit()
 
-        logger.info(f"Created backup {backup_table} with {count} rows")
+        logger.info("Created backup %s with %s rows", backup_table, count)
         return backup_table
 
     def restore_table(self, backup_table: str, target_table: str) -> int:
@@ -532,18 +578,24 @@ class MigrationManager:
         Returns:
             Number of rows restored
         """
+        # Sanitize table names to prevent SQL injection
+        safe_backup = sanitize_identifier(backup_table)
+        safe_target = sanitize_identifier(target_table)
+
         with self._get_connection() as conn:
             # Clear target table
-            conn.execute(f"DELETE FROM {target_table}")
+            conn.execute(f"DELETE FROM {safe_target}")
 
             # Copy from backup
-            conn.execute(f"INSERT INTO {target_table} SELECT * FROM {backup_table}")
+            conn.execute(f"INSERT INTO {safe_target} SELECT * FROM {safe_backup}")
 
             cursor = conn.execute("SELECT changes()")
             restored = cursor.fetchone()[0]
             conn.commit()
 
-        logger.info(f"Restored {restored} rows from {backup_table} to {target_table}")
+        logger.info(
+            "Restored %s rows from %s to %s", restored, backup_table, target_table
+        )
         return restored
 
     def validate_schema(self) -> tuple[bool, list[str]]:
@@ -580,9 +632,7 @@ class MigrationManager:
                 "dependencies",
             ]
 
-            cursor = conn.execute(
-                "SELECT name FROM sqlite_master WHERE type='table'"
-            )
+            cursor = conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
             existing_tables = {row[0] for row in cursor.fetchall()}
 
             missing = set(required_tables) - existing_tables
@@ -593,6 +643,6 @@ class MigrationManager:
         if is_valid:
             logger.info("Schema validation passed")
         else:
-            logger.warning(f"Schema validation failed: {'; '.join(issues)}")
+            logger.warning("Schema validation failed: %s", "; ".join(issues))
 
         return is_valid, issues

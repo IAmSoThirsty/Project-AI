@@ -49,7 +49,7 @@ class KillSwitch:
         if not self._active:
             return
 
-        self.logger.critical(f"KILL SWITCH TRIGGERED: {reason}")
+        self.logger.critical("KILL SWITCH TRIGGERED: %s", reason)
 
         # Block all network traffic
         self._block_all_traffic()
@@ -75,7 +75,7 @@ class KillSwitch:
             try:
                 callback(reason)
             except Exception as e:
-                self.logger.error(f"Callback error: {e}")
+                self.logger.error("Callback error: %s", e)
 
     def is_active(self) -> bool:
         """Check if kill switch is active"""

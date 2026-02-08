@@ -130,7 +130,7 @@ class ThirstysHoneypotSwarmDefense:
             (DecoyType.FAKE_CONFIG_FILE, 0.95, ".env file with secrets"),
         ]
 
-        for i, (decoy_type, believability, desc) in enumerate(decoy_configs):
+        for i, (decoy_type, believability, _desc) in enumerate(decoy_configs):
             for j in range(self.base_decoy_count // len(decoy_configs)):
                 decoy_id = f"{decoy_type.value}_{i}_{j}"
                 self.decoys[decoy_id] = DecoyNode(
@@ -139,7 +139,7 @@ class ThirstysHoneypotSwarmDefense:
                     believability_score=believability,
                 )
 
-        self.logger.info(f"Deployed {len(self.decoys)} base honeypot decoys")
+        self.logger.info("Deployed %s base honeypot decoys", len(self.decoys))
 
     def detect_policy_violation(
         self, source_ip: str, violation_type: str, details: dict
@@ -371,9 +371,7 @@ class ThirstysHoneypotSwarmDefense:
         limit = decoy_counts[attacker.threat_level]
 
         # Prioritize decoys they haven't seen (keep them guessing)
-        unseen_decoys = [
-            d for d in self.decoys.keys() if d not in attacker.accessed_decoys
-        ]
+        unseen_decoys = [d for d in self.decoys if d not in attacker.accessed_decoys]
 
         # Mix unseen with high-believability decoys
         recommendations = unseen_decoys[: limit // 2]

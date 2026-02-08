@@ -114,20 +114,26 @@ def validate_death_accounting(state: SectorizedWorldState) -> tuple[bool, str]:
         (False, 'Death mismatch: total=150, sum_categories=100')
     """
     sum_categories = (
-        state.deaths_starvation +
-        state.deaths_disease +
-        state.deaths_violence +
-        state.deaths_exposure +
-        state.deaths_other
+        state.deaths_starvation
+        + state.deaths_disease
+        + state.deaths_violence
+        + state.deaths_exposure
+        + state.deaths_other
     )
 
     if state.total_deaths != sum_categories:
-        return False, f"Death mismatch: total={state.total_deaths}, sum_categories={sum_categories}"
+        return (
+            False,
+            f"Death mismatch: total={state.total_deaths}, sum_categories={sum_categories}",
+        )
 
     # Also validate population accounting
     expected_pop = 8_000_000_000 - state.total_deaths
     if state.global_population != expected_pop and state.global_population > 0:
-        return False, f"Population mismatch: current={state.global_population}, expected={expected_pop}"
+        return (
+            False,
+            f"Population mismatch: current={state.global_population}, expected={expected_pop}",
+        )
 
     return True, "Death accounting valid"
 

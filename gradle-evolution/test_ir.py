@@ -66,13 +66,13 @@ def test_verification(graph):
     verifier = IRVerifier(strict_mode=True)
     verification = verifier.verify(graph)
 
-    verified_count = len([r for r in verification['results'] if r['verified']])
-    total_count = len(verification['results'])
+    verified_count = len([r for r in verification["results"] if r["verified"]])
+    total_count = len(verification["results"])
 
     print(f"✓ Verification: {verified_count}/{total_count} properties verified")
 
-    for result in verification['results']:
-        status = "✓" if result['verified'] else "✗"
+    for result in verification["results"]:
+        status = "✓" if result["verified"] else "✗"
         print(f"  {status} {result['property']}: confidence={result['confidence']:.2f}")
 
     return verification
@@ -108,10 +108,10 @@ def main():
         optimized_graph = test_optimization(graph)
 
         # Test verification
-        verification = test_verification(optimized_graph)
+        test_verification(optimized_graph)
 
         # Test execution
-        results = test_execution(optimized_graph)
+        test_execution(optimized_graph)
 
         print("\n" + "=" * 60)
         print("✓ All tests passed successfully!")
@@ -122,6 +122,7 @@ def main():
     except Exception as e:
         print(f"\n✗ Test failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
 

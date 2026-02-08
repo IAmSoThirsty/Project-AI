@@ -62,7 +62,7 @@ class SavePointsManager:
         # Copy important files
         self._backup_files(save_path)
 
-        logger.info(f"Created user save point: {name} ({save_id})")
+        logger.info("Created user save point: %s (%s)", name, save_id)
         return manifest
 
     def create_auto_save(self) -> dict:
@@ -98,7 +98,7 @@ class SavePointsManager:
         # Backup files
         self._backup_files(save_path)
 
-        logger.info(f"Created auto-save at {timestamp}")
+        logger.info("Created auto-save at %s", timestamp)
         return manifest
 
     def _rotate_auto_saves(self):
@@ -146,13 +146,13 @@ class SavePointsManager:
         # Find save point
         save_path = self._find_save_point(save_id)
         if not save_path:
-            logger.error(f"Save point not found: {save_id}")
+            logger.error("Save point not found: %s", save_id)
             return False
 
         # Read manifest
         manifest_path = save_path / "manifest.json"
         if not manifest_path.exists():
-            logger.error(f"No manifest found for save point: {save_id}")
+            logger.error("No manifest found for save point: %s", save_id)
             return False
 
         with open(manifest_path) as f:
@@ -166,7 +166,7 @@ class SavePointsManager:
             dest = Path("data") / file.name
             shutil.copy2(file, dest)
 
-        logger.info(f"Restored save point: {manifest['name']}")
+        logger.info("Restored save point: %s", manifest["name"])
         return True
 
     def _find_save_point(self, save_id: str) -> Path | None:
@@ -225,9 +225,9 @@ class SavePointsManager:
 
         # Don't allow deleting auto-saves
         if save_path.parent == self.auto_dir:
-            logger.warning(f"Cannot delete auto-save: {save_id}")
+            logger.warning("Cannot delete auto-save: %s", save_id)
             return False
 
         shutil.rmtree(save_path)
-        logger.info(f"Deleted save point: {save_id}")
+        logger.info("Deleted save point: %s", save_id)
         return True

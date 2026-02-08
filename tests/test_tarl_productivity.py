@@ -30,7 +30,7 @@ def test_cache_functionality():
     assert decision1.verdict == TarlVerdict.ALLOW
 
     # Next 9 evaluations - should all be cache hits
-    for i in range(9):
+    for _i in range(9):
         decision = runtime.evaluate(context)
         assert decision.verdict == TarlVerdict.ALLOW
 

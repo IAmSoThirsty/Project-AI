@@ -12,9 +12,9 @@ class EphemeralStorage:
     """
 
     def __init__(self, config: dict[str, Any]):
-        self.enabled = config.get('ephemeral_mode', True)
-        self.memory_only = config.get('memory_only', True)
-        self.auto_wipe_interval = config.get('auto_wipe_interval', 300)  # 5 minutes
+        self.enabled = config.get("ephemeral_mode", True)
+        self.memory_only = config.get("memory_only", True)
+        self.auto_wipe_interval = config.get("auto_wipe_interval", 300)  # 5 minutes
         self.logger = logging.getLogger(__name__)
 
         self._storage: dict[str, dict[str, Any]] = {}
@@ -43,13 +43,9 @@ class EphemeralStorage:
         if not self._active:
             raise RuntimeError("Ephemeral storage not active")
 
-        self._storage[key] = {
-            'value': value,
-            'created': time.time(),
-            'ttl': ttl
-        }
+        self._storage[key] = {"value": value, "created": time.time(), "ttl": ttl}
 
-        self.logger.debug(f"Stored ephemeral data: {key}")
+        self.logger.debug("Stored ephemeral data: %s", key)
 
     def retrieve(self, key: str) -> Any | None:
         """
@@ -64,18 +60,17 @@ class EphemeralStorage:
         item = self._storage[key]
 
         # Check if expired
-        if item['ttl']:
-            if time.time() - item['created'] > item['ttl']:
-                self.delete(key)
-                return None
+        if item["ttl"] and time.time() - item["created"] > item["ttl"]:
+            self.delete(key)
+            return None
 
-        return item['value']
+        return item["value"]
 
     def delete(self, key: str):
         """Delete ephemeral data"""
         if key in self._storage:
             del self._storage[key]
-            self.logger.debug(f"Deleted ephemeral data: {key}")
+            self.logger.debug("Deleted ephemeral data: %s", key)
 
     def _wipe_all(self):
         """Wipe all ephemeral data"""
@@ -88,19 +83,19 @@ class EphemeralStorage:
         expired_keys = []
 
         for key, item in self._storage.items():
-            if item['ttl'] and current_time - item['created'] > item['ttl']:
+            if item["ttl"] and current_time - item["created"] > item["ttl"]:
                 expired_keys.append(key)
 
         for key in expired_keys:
             self.delete(key)
 
         if expired_keys:
-            self.logger.debug(f"Cleaned up {len(expired_keys)} expired items")
+            self.logger.debug("Cleaned up %s expired items", len(expired_keys))
 
     def get_statistics(self) -> dict[str, Any]:
         """Get storage statistics"""
         return {
-            'active': self._active,
-            'items_stored': len(self._storage),
-            'memory_only': self.memory_only
+            "active": self._active,
+            "items_stored": len(self._storage),
+            "memory_only": self.memory_only,
         }

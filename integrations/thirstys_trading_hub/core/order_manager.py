@@ -105,7 +105,7 @@ class OrderManager:
         os.makedirs(data_dir, exist_ok=True)
         self._load_orders()
 
-        logger.info(f"OrderManager initialized in {mode} mode")
+        logger.info("OrderManager initialized in %s mode", mode)
 
     def _load_orders(self) -> None:
         """Load orders from persistent storage."""
@@ -145,7 +145,7 @@ class OrderManager:
                     f"{len(self._order_history)} total orders"
                 )
             except Exception as e:
-                logger.error(f"Failed to load orders: {e}")
+                logger.error("Failed to load orders: %s", e)
                 self._orders = {}
                 self._order_history = []
 
@@ -179,7 +179,7 @@ class OrderManager:
             with open(orders_file, "w") as f:
                 json.dump(data, f, indent=2)
         except Exception as e:
-            logger.error(f"Failed to save orders: {e}")
+            logger.error("Failed to save orders: %s", e)
 
     def _route_through_governance(
         self, action_name: str, order: Order, context: dict[str, Any]
@@ -233,11 +233,11 @@ class OrderManager:
                 )
 
             reason = governance_decision.get("reason", "Rejected by governance")
-            logger.warning(f"Order action '{action_name}' rejected: {reason}")
+            logger.warning("Order action '%s' rejected: %s", action_name, reason)
             return False, reason, governance_decision
 
         except Exception as e:
-            logger.error(f"Governance routing failed: {e}")
+            logger.error("Governance routing failed: %s", e)
             return False, f"Governance error: {e}", None
 
     def _assess_risk_level(self, order: Order) -> str:
@@ -415,7 +415,7 @@ class OrderManager:
         del self._orders[order_id]
         self._save_orders()
 
-        logger.info(f"Order {order_id} cancelled")
+        logger.info("Order %s cancelled", order_id)
 
         return OrderResult(
             success=True,

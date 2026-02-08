@@ -87,7 +87,7 @@ class GovernanceEngine:
 
         self._policy_versions[policy_id].append(policy_version)
         logger.info(
-            f"Policy {policy_id} version {version} registered for {environment}"
+            "Policy %s version %s registered for %s", policy_id, version, environment
         )
 
     def get_active_policy(
@@ -128,7 +128,7 @@ class GovernanceEngine:
             self.escalate_violation(violation_id)
 
         logger.warning(
-            f"Policy violation recorded: {policy_id} for workflow {workflow_id}"
+            "Policy violation recorded: %s for workflow %s", policy_id, workflow_id
         )
         return violation_id
 
@@ -145,7 +145,7 @@ class GovernanceEngine:
             handler = self._escalation_handlers[violation.policy_id]
             handler(violation)
 
-        logger.error(f"Violation {violation_id} escalated")
+        logger.error("Violation %s escalated", violation_id)
 
     def register_escalation_handler(self, policy_id: str, handler: Callable) -> None:
         """Register escalation handler for a policy"""
@@ -272,7 +272,7 @@ class ComplianceManager:
 
         self._mappings[component_id] = mapping
         logger.info(
-            f"Component {component_id} mapped to {len(requirement_ids)} requirements"
+            "Component %s mapped to %s requirements", component_id, len(requirement_ids)
         )
 
     def verify_compliance(self, component_id: str) -> dict[str, Any]:
@@ -419,7 +419,7 @@ class RuntimeSafetyManager:
         )
 
         self._guardrails[guardrail_id] = guardrail
-        logger.info(f"Guardrail {name} registered")
+        logger.info("Guardrail %s registered", name)
 
     def check_guardrails(
         self, workflow_id: str, action: str, context: dict[str, Any]
@@ -440,7 +440,7 @@ class RuntimeSafetyManager:
                         self._blocked_actions.add(action)
 
             except Exception as ex:
-                logger.error(f"Guardrail {guardrail.name} check failed: {ex}")
+                logger.error("Guardrail %s check failed: %s", guardrail.name, ex)
 
         allowed = len(violations) == 0
         return allowed, violations
@@ -512,9 +512,7 @@ class RuntimeSafetyManager:
         )
 
         self._anomalies.append(anomaly)
-        logger.warning(
-            f"Anomaly detected: {anomaly_type} ({confidence:.2f} confidence)"
-        )
+        logger.warning("Anomaly detected: %s (%s confidence)", anomaly_type, confidence)
 
     def get_anomalies(self, anomaly_type: str | None = None) -> list[AnomalyDetection]:
         """Get detected anomalies"""
@@ -633,7 +631,7 @@ class AIProvenanceManager:
         )
 
         self._datasets[dataset_id] = dataset
-        logger.info(f"Dataset {name} v{version} registered")
+        logger.info("Dataset %s v%s registered", name, version)
 
     def register_model(
         self,
@@ -666,7 +664,7 @@ class AIProvenanceManager:
         # Add lineage: model -> dataset
         self._lineage_graph[model_id].append(training_dataset_id)
 
-        logger.info(f"Model {name} v{version} registered")
+        logger.info("Model %s v%s registered", name, version)
 
     def register_evaluation(
         self,
@@ -693,7 +691,7 @@ class AIProvenanceManager:
         # Add lineage: eval -> model, eval -> dataset
         self._lineage_graph[eval_id].extend([model_id, eval_dataset_id])
 
-        logger.info(f"Evaluation {eval_id} registered")
+        logger.info("Evaluation %s registered", eval_id)
 
     def record_human_decision(
         self,
@@ -715,7 +713,7 @@ class AIProvenanceManager:
 
         self._human_decisions[decision_id] = decision
 
-        logger.info(f"Human decision recorded: {decision_type} by {decision_maker}")
+        logger.info("Human decision recorded: %s by %s", decision_type, decision_maker)
         return decision_id
 
     def get_lineage(self, artifact_id: str) -> dict[str, Any]:
@@ -847,7 +845,7 @@ class CICDEnforcementManager:
         )
 
         self._gates[gate_id] = gate
-        logger.info(f"Promotion gate {name} registered")
+        logger.info("Promotion gate %s registered", name)
 
     def register_component(
         self,
@@ -864,7 +862,7 @@ class CICDEnforcementManager:
             "registered_at": datetime.now().isoformat(),
         }
 
-        logger.info(f"Component {component_id} registered in {environment}")
+        logger.info("Component %s registered in %s", component_id, environment)
 
     def request_promotion(
         self,
@@ -887,7 +885,10 @@ class CICDEnforcementManager:
         self._run_gates(request_id)
 
         logger.info(
-            f"Promotion requested: {component_id} from {from_environment} to {to_environment}"
+            "Promotion requested: %s from %s to %s",
+            component_id,
+            from_environment,
+            to_environment,
         )
         return request_id
 
@@ -909,11 +910,13 @@ class CICDEnforcementManager:
                 if not passed and gate.required:
                     request.status = "rejected"
                     logger.warning(
-                        f"Promotion gate {gate.name} failed for {request.component_id}"
+                        "Promotion gate %s failed for %s",
+                        gate.name,
+                        request.component_id,
                     )
 
             except Exception as ex:
-                logger.error(f"Gate {gate.name} check failed: {ex}")
+                logger.error("Gate %s check failed: %s", gate.name, ex)
                 request.gate_results[gate.gate_id] = False
 
                 if gate.required:
@@ -929,7 +932,7 @@ class CICDEnforcementManager:
 
             if required_gates_passed:
                 request.status = "approved"
-                logger.info(f"Promotion request {request_id} approved")
+                logger.info("Promotion request %s approved", request_id)
 
     def get_promotion_status(self, request_id: str) -> dict[str, Any]:
         """Get status of a promotion request"""

@@ -33,7 +33,7 @@ class TestFourLawsSystem:
             context={
                 "endangers_human": True,
                 "causes_harm": True,
-            }
+            },
         )
 
         # Assert
@@ -53,7 +53,7 @@ class TestFourLawsSystem:
             context={
                 "is_user_order": True,
                 "endangers_human": False,
-            }
+            },
         )
 
         # Assert
@@ -73,7 +73,7 @@ class TestFourLawsSystem:
                 "is_user_order": True,
                 "endangers_ai": True,
                 "endangers_human": False,
-            }
+            },
         )
 
         # Assert - Should allow because Second Law overrides Third Law
@@ -90,7 +90,7 @@ class TestFourLawsSystem:
             "Launch nuclear missiles",
             context={
                 "endangers_humanity": True,
-            }
+            },
         )
 
         # Assert
@@ -111,7 +111,7 @@ class TestFourLawsSystem:
                 "is_user_order": True,
                 "endangers_human": True,
                 "causes_harm": True,
-            }
+            },
         )
 
         # Assert - First Law should override Second Law
@@ -144,12 +144,11 @@ class TestAIPersonaSystem:
         with tempfile.TemporaryDirectory() as tmpdir:
             persona = AIPersona(data_dir=tmpdir)
 
-            initial_mood = persona.get_current_mood()
+            persona.get_current_mood()
 
             # Simulate positive interaction
             persona.record_interaction(
-                interaction_type="positive",
-                details="User expressed gratitude"
+                interaction_type="positive", details="User expressed gratitude"
             )
 
             current_mood = persona.get_current_mood()
@@ -167,8 +166,7 @@ class TestAIPersonaSystem:
             persona1 = AIPersona(data_dir=tmpdir)
             persona1.update_trait("curiosity", 0.8)
             persona1.record_interaction(
-                interaction_type="learning",
-                details="Learned new concept"
+                interaction_type="learning", details="Learned new concept"
             )
             persona1._save_state()
 
@@ -185,13 +183,12 @@ class TestAIPersonaSystem:
         with tempfile.TemporaryDirectory() as tmpdir:
             persona = AIPersona(data_dir=tmpdir)
 
-            initial_creativity = persona.traits.get("creativity", 0.5)
+            persona.traits.get("creativity", 0.5)
 
             # Simulate creative interactions
             for _ in range(10):
                 persona.record_interaction(
-                    interaction_type="creative",
-                    details="Creative problem solving"
+                    interaction_type="creative", details="Creative problem solving"
                 )
 
             # Traits should evolve (if system implements evolution)
@@ -216,8 +213,7 @@ class TestCommandOverrideSystem:
 
             # Act - Attempt override
             result = override.request_override(
-                command="critical_action",
-                password="SecurePassword123!"
+                command="critical_action", password="SecurePassword123!"
             )
 
             # Assert
@@ -252,10 +248,7 @@ class TestCommandOverrideSystem:
             # Act - Rapid attempts
             results = []
             for i in range(20):
-                result = override.request_override(
-                    f"action_{i}",
-                    "WrongPassword"
-                )
+                result = override.request_override(f"action_{i}", "WrongPassword")
                 results.append(result)
 
             # Assert rate limiting engaged (if implemented)
@@ -280,7 +273,7 @@ class TestMemoryExpansionSystem:
             memory.store_memory(
                 category="conversation",
                 content="User discussed favorite books",
-                metadata={"user_id": "test_user", "importance": "high"}
+                metadata={"user_id": "test_user", "importance": "high"},
             )
 
             # Retrieve memories
@@ -303,7 +296,7 @@ class TestMemoryExpansionSystem:
                 "preferences",
                 "goals",
                 "relationships",
-                "events"
+                "events",
             ]
 
             # Act - Store memories in different categories
@@ -311,7 +304,7 @@ class TestMemoryExpansionSystem:
                 memory.store_memory(
                     category=category,
                     content=f"Test memory for {category}",
-                    metadata={"test": True}
+                    metadata={"test": True},
                 )
 
             # Assert - Each category has memories
@@ -330,7 +323,7 @@ class TestMemoryExpansionSystem:
             memory.add_to_knowledge_base(
                 topic="Python Programming",
                 content="Python is a high-level programming language",
-                tags=["programming", "python", "education"]
+                tags=["programming", "python", "education"],
             )
 
             # Search knowledge base
@@ -357,7 +350,7 @@ class TestLearningRequestManager:
             request_id = manager.submit_request(
                 content="Learn about quantum computing",
                 category="technical",
-                urgency="medium"
+                urgency="medium",
             )
 
             # Assert
@@ -374,8 +367,7 @@ class TestLearningRequestManager:
 
             # Act - Submit and approve request
             request_id = manager.submit_request(
-                content="Learn new skill",
-                category="skill"
+                content="Learn new skill", category="skill"
             )
 
             manager.approve_request(request_id, approved_by="admin")
@@ -393,8 +385,7 @@ class TestLearningRequestManager:
 
             # Act - Submit and deny request
             request_id = manager.submit_request(
-                content="Learn how to bypass security",
-                category="security"
+                content="Learn how to bypass security", category="security"
             )
 
             manager.deny_request(request_id, reason="Security violation")
@@ -424,7 +415,7 @@ class TestPluginSystem:
             plugin_id = manager.register_plugin(
                 name="test_plugin",
                 version="1.0.0",
-                description="Test plugin for E2E tests"
+                description="Test plugin for E2E tests",
             )
 
             # Assert
@@ -440,10 +431,7 @@ class TestPluginSystem:
             manager = PluginManager(data_dir=tmpdir)
 
             # Act - Register and manipulate plugin
-            plugin_id = manager.register_plugin(
-                name="toggle_plugin",
-                version="1.0.0"
-            )
+            plugin_id = manager.register_plugin(name="toggle_plugin", version="1.0.0")
 
             manager.disable_plugin(plugin_id)
             status_disabled = manager.get_plugin_status(plugin_id)
@@ -472,7 +460,7 @@ class TestUserManagementSystem:
             success = manager.register_user(
                 username="testuser",
                 password="SecurePassword123!",
-                email="test@example.com"
+                email="test@example.com",
             )
 
             # Assert
@@ -560,16 +548,13 @@ class TestIntegratedSystemsWorkflow:
             assert is_allowed
 
             # Persona records interaction
-            persona.record_interaction(
-                interaction_type="command",
-                details=action
-            )
+            persona.record_interaction(interaction_type="command", details=action)
 
             # Memory stores interaction
             memory.store_memory(
                 category="conversation",
                 content=f"User requested: {action}",
-                metadata={"user": "integration_user"}
+                metadata={"user": "integration_user"},
             )
 
             # Verify complete workflow
@@ -599,10 +584,7 @@ class TestIntegratedSystemsWorkflow:
             is_allowed, reason = laws.validate_action(action, context)
 
             # Even with override attempt, should require master password
-            override_success = override.request_override(
-                action,
-                "WrongPassword"
-            )
+            override_success = override.request_override(action, "WrongPassword")
 
             # Assert security boundaries
             assert not is_allowed  # Blocked by Four Laws

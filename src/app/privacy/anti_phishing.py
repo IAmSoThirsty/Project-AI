@@ -66,20 +66,20 @@ class AntiPhishingEngine:
         # Check known phishing domains
         for domain in self._phishing_domains:
             if domain in url:
-                self.logger.warning(f"Known phishing domain detected: {domain}")
+                self.logger.warning("Known phishing domain detected: %s", domain)
                 self._blocked_count += 1
                 return True
 
         # Check suspicious patterns in URL
         for pattern in self._suspicious_patterns:
             if re.search(pattern, url, re.IGNORECASE):
-                self.logger.warning(f"Suspicious URL pattern: {pattern}")
+                self.logger.warning("Suspicious URL pattern: %s", pattern)
                 self._blocked_count += 1
                 return True
 
         # Check for homograph attacks (look-alike domains)
         if self._is_homograph_attack(url):
-            self.logger.warning(f"Homograph attack detected: {url}")
+            self.logger.warning("Homograph attack detected: %s", url)
             self._blocked_count += 1
             return True
 
@@ -96,11 +96,7 @@ class AntiPhishingEngine:
         # Check for unicode characters that look like ASCII
         suspicious_chars = ["а", "е", "о", "р", "с", "у", "х"]  # Cyrillic
 
-        for char in suspicious_chars:
-            if char in url:
-                return True
-
-        return False
+        return any(char in url for char in suspicious_chars)
 
     def _contains_phishing_content(self, content: str) -> bool:
         """Check if content contains phishing indicators"""
@@ -115,16 +111,12 @@ class AntiPhishingEngine:
         ]
 
         content_lower = content.lower()
-        for keyword in phishing_keywords:
-            if keyword in content_lower:
-                return True
-
-        return False
+        return any(keyword in content_lower for keyword in phishing_keywords)
 
     def report_phishing(self, url: str):
         """Report new phishing URL"""
         self._phishing_domains.add(url)
-        self.logger.info(f"Phishing URL reported and blocked: {url}")
+        self.logger.info("Phishing URL reported and blocked: %s", url)
 
     def get_statistics(self) -> dict[str, Any]:
         """Get anti-phishing statistics"""

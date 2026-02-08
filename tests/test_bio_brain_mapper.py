@@ -283,7 +283,7 @@ class TestResonantSparseGeometryNetwork:
         rsgn2.load_state(state)
 
         # Should have same weights
-        for w1, w2 in zip(rsgn.weights_fast, rsgn2.weights_fast):
+        for w1, w2 in zip(rsgn.weights_fast, rsgn2.weights_fast, strict=False):
             np.testing.assert_allclose(w1, w2)
 
 

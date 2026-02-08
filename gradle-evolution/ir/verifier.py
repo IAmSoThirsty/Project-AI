@@ -31,6 +31,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class VerificationResult:
     """Result of verification with proof certificate"""
+
     property_name: str
     verified: bool
     confidence: float  # 0.0 to 1.0
@@ -46,13 +47,14 @@ class VerificationResult:
             "confidence": self.confidence,
             "proof_certificate": self.proof_certificate,
             "counterexample": self.counterexample,
-            "warnings": self.warnings
+            "warnings": self.warnings,
         }
 
 
 @dataclass
 class ResourceBounds:
     """Proven resource bounds"""
+
     max_cpu_time_ms: float
     max_memory_bytes: int
     max_io_operations: int
@@ -66,7 +68,7 @@ class ResourceBounds:
             "max_memory_bytes": self.max_memory_bytes,
             "max_io_operations": self.max_io_operations,
             "max_network_requests": self.max_network_requests,
-            "max_call_depth": self.max_call_depth
+            "max_call_depth": self.max_call_depth,
         }
 
 
@@ -76,7 +78,7 @@ class IRVerifier:
     def __init__(self, strict_mode: bool = True):
         """
         Initialize verifier
-        
+
         Args:
             strict_mode: Whether to use strict verification (may reject valid but complex programs)
         """
@@ -87,14 +89,14 @@ class IRVerifier:
     def verify(self, graph: IRGraph) -> dict[str, Any]:
         """
         Verify all properties of IR graph
-        
+
         Args:
             graph: IR graph to verify
-        
+
         Returns:
             Verification report with all results
         """
-        logger.info(f"Starting verification of graph with {len(graph.nodes)} nodes")
+        logger.info("Starting verification of graph with %s nodes", len(graph.nodes))
 
         self.verification_results.clear()
 
@@ -117,11 +119,17 @@ class IRVerifier:
             "node_count": len(graph.nodes),
             "all_verified": all(r.verified for r in self.verification_results),
             "results": [r.to_dict() for r in self.verification_results],
-            "resource_bounds": self.resource_bounds.to_dict() if self.resource_bounds else None,
-            "certificate_hash": self._compute_certificate_hash()
+            "resource_bounds": (
+                self.resource_bounds.to_dict() if self.resource_bounds else None
+            ),
+            "certificate_hash": self._compute_certificate_hash(),
         }
 
-        logger.info(f"Verification complete: {sum(r.verified for r in self.verification_results)}/{len(self.verification_results)} properties verified")
+        logger.info(
+            "Verification complete: %s/%s properties verified",
+            sum(r.verified for r in self.verification_results),
+            len(self.verification_results),
+        )
 
         return report
 
@@ -150,9 +158,7 @@ class IRVerifier:
         # Check for cycles
         try:
             graph.topological_sort()
-            has_cycles = False
         except ValueError:
-            has_cycles = True
             errors.append("Graph contains cycles")
 
         result = VerificationResult(
@@ -160,7 +166,7 @@ class IRVerifier:
             verified=len(errors) == 0,
             confidence=1.0 if len(errors) == 0 else 0.0,
             proof_certificate={"checks": ["entry_node", "edges", "acyclic"]},
-            warnings=errors
+            warnings=errors,
         )
 
         self.verification_results.append(result)
@@ -195,7 +201,7 @@ class IRVerifier:
             verified=len(errors) == 0,
             confidence=1.0 if len(errors) == 0 else 0.0,
             proof_certificate={"type_errors": len(errors)},
-            warnings=errors
+            warnings=errors,
         )
 
         self.verification_results.append(result)
@@ -205,7 +211,9 @@ class IRVerifier:
         logger.debug("Verifying termination")
 
         # Find all loops
-        loop_nodes = [node for node in graph.nodes.values() if node.opcode == IROpcode.LOOP]
+        loop_nodes = [
+            node for node in graph.nodes.values() if node.opcode == IROpcode.LOOP
+        ]
 
         errors = []
         loop_bounds = {}
@@ -225,12 +233,16 @@ class IRVerifier:
 
                 # Verify bound is reasonable
                 if max_iter > 10000:
-                    errors.append(f"Loop {loop_node.id} has very high iteration bound: {max_iter}")
+                    errors.append(
+                        f"Loop {loop_node.id} has very high iteration bound: {max_iter}"
+                    )
 
         # Check for recursion (call depth)
         max_call_depth = self._analyze_call_depth(graph)
 
-        verified = len(errors) == 0 or (not self.strict_mode and "unbounded" not in loop_bounds.values())
+        verified = len(errors) == 0 or (
+            not self.strict_mode and "unbounded" not in loop_bounds.values()
+        )
 
         result = VerificationResult(
             property_name="terminates",
@@ -239,9 +251,9 @@ class IRVerifier:
             proof_certificate={
                 "loop_bounds": loop_bounds,
                 "max_call_depth": max_call_depth,
-                "method": "loop_bound_analysis"
+                "method": "loop_bound_analysis",
             },
-            warnings=errors
+            warnings=errors,
         )
 
         self.verification_results.append(result)
@@ -281,7 +293,9 @@ class IRVerifier:
                 errors.append(f"Node {node_id} depends on system time")
 
         # Check for data races (parallel execution without synchronization)
-        parallel_nodes = [node for node in graph.nodes.values() if node.opcode == IROpcode.PARALLEL]
+        parallel_nodes = [
+            node for node in graph.nodes.values() if node.opcode == IROpcode.PARALLEL
+        ]
 
         for parallel_node in parallel_nodes:
             # Analyze parallel branches for shared state
@@ -297,9 +311,9 @@ class IRVerifier:
             confidence=1.0 if verified else 0.5,
             proof_certificate={
                 "non_deterministic_ops": non_deterministic_ops,
-                "method": "dataflow_analysis"
+                "method": "dataflow_analysis",
             },
-            warnings=errors
+            warnings=errors,
         )
 
         self.verification_results.append(result)
@@ -347,7 +361,7 @@ class IRVerifier:
             max_memory_bytes=max_memory,
             max_io_operations=max_io,
             max_network_requests=max_network,
-            max_call_depth=self._analyze_call_depth(graph)
+            max_call_depth=self._analyze_call_depth(graph),
         )
 
         # Check if bounds are reasonable
@@ -361,7 +375,7 @@ class IRVerifier:
             verified=len(errors) == 0,
             confidence=0.9,  # Resource analysis is approximate
             proof_certificate=self.resource_bounds.to_dict(),
-            warnings=errors
+            warnings=errors,
         )
 
         self.verification_results.append(result)
@@ -408,9 +422,9 @@ class IRVerifier:
             confidence=0.8,
             proof_certificate={
                 "side_effect_count": len(side_effect_ops),
-                "documented": len(errors) == 0
+                "documented": len(errors) == 0,
             },
-            warnings=errors
+            warnings=errors,
         )
 
         self.verification_results.append(result)
@@ -423,8 +437,11 @@ class IRVerifier:
 
         # Check for policy validation before sensitive operations
         sensitive_ops = [
-            IROpcode.COMPILE, IROpcode.DEPLOY, IROpcode.EXEC,
-            IROpcode.WRITE_FILE, IROpcode.HTTP_REQUEST
+            IROpcode.COMPILE,
+            IROpcode.DEPLOY,
+            IROpcode.EXEC,
+            IROpcode.WRITE_FILE,
+            IROpcode.HTTP_REQUEST,
         ]
 
         for node_id, node in graph.nodes.items():
@@ -440,17 +457,21 @@ class IRVerifier:
                             break
 
                 if not has_validation:
-                    errors.append(f"Sensitive operation {node_id} ({node.opcode.value}) lacks policy validation")
+                    errors.append(
+                        f"Sensitive operation {node_id} ({node.opcode.value}) lacks policy validation"
+                    )
 
         result = VerificationResult(
             property_name="governance_compliant",
             verified=len(errors) == 0,
             confidence=1.0 if len(errors) == 0 else 0.6,
             proof_certificate={
-                "sensitive_ops_checked": len([n for n in graph.nodes.values() if n.opcode in sensitive_ops]),
-                "violations": len(errors)
+                "sensitive_ops_checked": len(
+                    [n for n in graph.nodes.values() if n.opcode in sensitive_ops]
+                ),
+                "violations": len(errors),
             },
-            warnings=errors
+            warnings=errors,
         )
 
         self.verification_results.append(result)
@@ -463,17 +484,21 @@ class IRVerifier:
 
     def _compute_certificate_hash(self) -> str:
         """Compute hash of all proof certificates"""
-        certificates = [r.proof_certificate for r in self.verification_results if r.proof_certificate]
+        certificates = [
+            r.proof_certificate
+            for r in self.verification_results
+            if r.proof_certificate
+        ]
         content = json.dumps(certificates, sort_keys=True)
         return hashlib.sha256(content.encode()).hexdigest()
 
     def generate_proof_certificate(self, graph: IRGraph) -> dict[str, Any]:
         """
         Generate formal proof certificate
-        
+
         Args:
             graph: Verified IR graph
-        
+
         Returns:
             Proof certificate that can be independently verified
         """
@@ -483,9 +508,11 @@ class IRVerifier:
             "timestamp": self._get_timestamp(),
             "verifier": "IRVerifier/1.0",
             "properties": [r.to_dict() for r in self.verification_results],
-            "resource_bounds": self.resource_bounds.to_dict() if self.resource_bounds else None,
+            "resource_bounds": (
+                self.resource_bounds.to_dict() if self.resource_bounds else None
+            ),
             "certificate_hash": self._compute_certificate_hash(),
-            "signature": self._sign_certificate(graph)
+            "signature": self._sign_certificate(graph),
         }
 
         return certificate
@@ -493,6 +520,7 @@ class IRVerifier:
     def _get_timestamp(self) -> str:
         """Get current timestamp"""
         from datetime import datetime
+
         return datetime.utcnow().isoformat() + "Z"
 
     def _sign_certificate(self, graph: IRGraph) -> str:
@@ -507,11 +535,11 @@ class IRVerifier:
     def verify_certificate(self, certificate: dict[str, Any], graph: IRGraph) -> bool:
         """
         Verify proof certificate matches graph
-        
+
         Args:
             certificate: Proof certificate to verify
             graph: IR graph to check against
-        
+
         Returns:
             True if certificate is valid
         """

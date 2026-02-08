@@ -532,7 +532,7 @@ class StressTestGenerator:
         """Generate race condition and timing attack scenarios (100 tests)."""
 
         for i in range(100):
-            attack_variant = i % 10
+            i % 10
             self.create_test(
                 category="race_condition",
                 subcategory="toctou",

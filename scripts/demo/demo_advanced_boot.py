@@ -272,8 +272,6 @@ def demo_integration():
 
     print("\n🎯 Subsystem Filtering with Emergency Profile:")
 
-    emergency_subsystems = orchestrator.advanced_boot.EMERGENCY_CRITICAL_SUBSYSTEMS
-
     allowed_count = 0
     blocked_count = 0
 
@@ -346,7 +344,7 @@ def main():
         return 0
 
     except Exception as e:
-        logger.error(f"Demo failed: {e}", exc_info=True)
+        logger.error("Demo failed: %s", e, exc_info=True)
         return 1
 
 

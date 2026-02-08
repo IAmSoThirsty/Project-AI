@@ -177,7 +177,7 @@ async def main():
         logger.info("Server shutdown requested")
         sys.exit(0)
     except Exception as e:
-        logger.error(f"Server error: {e}", exc_info=True)
+        logger.error("Server error: %s", e, exc_info=True)
         sys.exit(1)
 
 

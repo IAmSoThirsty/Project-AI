@@ -82,7 +82,9 @@ class MeshNetworkEngine:
             True if mesh created/joined successfully
         """
         try:
-            self.logger.info(f"Creating mesh network '{self.mesh_id}' as {role.value}")
+            self.logger.info(
+                "Creating mesh network '%s' as %s", self.mesh_id, role.value
+            )
 
             # Generate unique node ID
             self.my_node_id = self._generate_node_id()
@@ -102,7 +104,7 @@ class MeshNetworkEngine:
             return success
 
         except Exception as e:
-            self.logger.error(f"Mesh creation failed: {e}")
+            self.logger.error("Mesh creation failed: %s", e)
             return False
 
     def _generate_node_id(self) -> str:
@@ -123,11 +125,11 @@ class MeshNetworkEngine:
             # sudo iw dev mesh0 set meshid ThirstysMesh
             # sudo ip link set mesh0 up
 
-            self.logger.info(f"Mesh interface configured with role: {role.value}")
+            self.logger.info("Mesh interface configured with role: %s", role.value)
             return True
 
         except Exception as e:
-            self.logger.error(f"Mesh interface configuration failed: {e}")
+            self.logger.error("Mesh interface configuration failed: %s", e)
             return False
 
     def _discover_mesh_peers(self) -> None:
@@ -143,7 +145,7 @@ class MeshNetworkEngine:
             # Production would actually scan for mesh peers
 
         except Exception as e:
-            self.logger.error(f"Peer discovery failed: {e}")
+            self.logger.error("Peer discovery failed: %s", e)
 
     def _update_routing_table(self) -> None:
         """Update mesh routing table using HWMP (Hybrid Wireless Mesh Protocol)"""
@@ -158,11 +160,11 @@ class MeshNetworkEngine:
                     self.routing_table[node_id] = path
 
             self.logger.debug(
-                f"Routing table updated: {len(self.routing_table)} routes"
+                "Routing table updated: %s routes", len(self.routing_table)
             )
 
         except Exception as e:
-            self.logger.error(f"Routing table update failed: {e}")
+            self.logger.error("Routing table update failed: %s", e)
 
     def _calculate_best_path(self, destination: str) -> list[str] | None:
         """
@@ -185,7 +187,9 @@ class MeshNetworkEngine:
     def add_node(self, node: MeshNode) -> None:
         """Add discovered node to mesh topology"""
         self.nodes[node.node_id] = node
-        self.logger.info(f"Added mesh node: {node.node_id} (role: {node.role.value})")
+        self.logger.info(
+            "Added mesh node: %s (role: %s)", node.node_id, node.role.value
+        )
 
         # Update total pool bandwidth
         if self.enable_bandwidth_pooling:
@@ -201,7 +205,7 @@ class MeshNetworkEngine:
                 self.total_pool_bandwidth_mbps -= node.bandwidth_mbps
 
             del self.nodes[node_id]
-            self.logger.info(f"Removed mesh node: {node_id}")
+            self.logger.info("Removed mesh node: %s", node_id)
 
             # Trigger routing table update (self-healing)
             self._update_routing_table()
@@ -230,7 +234,7 @@ class MeshNetworkEngine:
             bottlenecks = self._identify_bottlenecks()
 
             if bottlenecks:
-                self.logger.warning(f"Identified {len(bottlenecks)} bottleneck nodes")
+                self.logger.warning("Identified %s bottleneck nodes", len(bottlenecks))
 
                 # Attempt automatic rebalancing
                 self._rebalance_traffic()
@@ -238,7 +242,7 @@ class MeshNetworkEngine:
             return True
 
         except Exception as e:
-            self.logger.error(f"Mesh optimization failed: {e}")
+            self.logger.error("Mesh optimization failed: %s", e)
             return False
 
     def _identify_bottlenecks(self) -> list[str]:
@@ -262,5 +266,5 @@ class MeshNetworkEngine:
         )
 
         self.logger.info(
-            f"Marketplace pooling enabled: {self.total_pool_bandwidth_mbps} Mbps total"
+            "Marketplace pooling enabled: %s Mbps total", self.total_pool_bandwidth_mbps
         )

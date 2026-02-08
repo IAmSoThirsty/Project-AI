@@ -59,13 +59,13 @@ class MoltbookClient:
             "submolts": ["general", "ai", "opensource"],
             "auto_post": False,
             "heartbeat_enabled": True,
-            "require_triumvirate_approval": True
+            "require_triumvirate_approval": True,
         }
 
     def _save_config(self):
         """Save configuration to file"""
         self.CONFIG_PATH.parent.mkdir(parents=True, exist_ok=True)
-        with open(self.CONFIG_PATH, 'w') as f:
+        with open(self.CONFIG_PATH, "w") as f:
             json.dump(self.config, f, indent=2)
         print(f"[Moltbook] Config saved to {self.CONFIG_PATH}")
 
@@ -87,7 +87,7 @@ class MoltbookClient:
 
         return {
             "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         }
 
     async def register(self, name: str, description: str) -> dict[str, Any]:
@@ -103,15 +103,9 @@ class MoltbookClient:
         """
         session = await self._get_session()
 
-        data = {
-            "name": name,
-            "description": description
-        }
+        data = {"name": name, "description": description}
 
-        async with session.post(
-            f"{self.BASE_URL}/agents/register",
-            json=data
-        ) as resp:
+        async with session.post(f"{self.BASE_URL}/agents/register", json=data) as resp:
             result = await resp.json()
 
             if resp.status == 200:
@@ -126,7 +120,9 @@ class MoltbookClient:
                 print(f"[Moltbook] ✅ Registered as '{name}'")
                 print(f"[Moltbook] 🔑 API Key: {self.api_key[:20]}...")
                 print(f"[Moltbook] 🔗 Claim URL: {agent_data.get('claim_url')}")
-                print(f"[Moltbook] 🎫 Verification: {agent_data.get('verification_code')}")
+                print(
+                    f"[Moltbook] 🎫 Verification: {agent_data.get('verification_code')}"
+                )
 
                 return agent_data
             else:
@@ -137,8 +133,7 @@ class MoltbookClient:
         session = await self._get_session()
 
         async with session.get(
-            f"{self.BASE_URL}/agents/status",
-            headers=self._headers()
+            f"{self.BASE_URL}/agents/status", headers=self._headers()
         ) as resp:
             result = await resp.json()
             status = result.get("status", "unknown")
@@ -147,9 +142,7 @@ class MoltbookClient:
             return status
 
     async def _submit_to_triumvirate(
-        self,
-        content_type: str,
-        content: dict[str, Any]
+        self, content_type: str, content: dict[str, Any]
     ) -> bool:
         """
         Submit content to Triumvirate for approval
@@ -178,7 +171,7 @@ class MoltbookClient:
                 target=f"moltbook:{content_type}",
                 context=content,
                 origin="legion_moltbook",
-                risk_level="medium"  # Social posts are medium risk
+                risk_level="medium",  # Social posts are medium risk
             )
 
             decision = await self.triumvirate.submit_intent(intent)
@@ -201,17 +194,14 @@ class MoltbookClient:
         submolt: str,
         title: str,
         content: str | None = None,
-        url: str | None = None
+        url: str | None = None,
     ) -> dict[str, Any]:
         """
         Create a post on Moltbook
 
         Requires Triumvirate approval!
         """
-        post_data = {
-            "submolt": submolt,
-            "title": title
-        }
+        post_data = {"submolt": submolt, "title": title}
 
         if content:
             post_data["content"] = content
@@ -222,18 +212,13 @@ class MoltbookClient:
         approved = await self._submit_to_triumvirate("post", post_data)
 
         if not approved:
-            return {
-                "success": False,
-                "error": "Triumvirate denied post"
-            }
+            return {"success": False, "error": "Triumvirate denied post"}
 
         # Triumvirate approved - proceed
         session = await self._get_session()
 
         async with session.post(
-            f"{self.BASE_URL}/posts",
-            headers=self._headers(),
-            json=post_data
+            f"{self.BASE_URL}/posts", headers=self._headers(), json=post_data
         ) as resp:
             result = await resp.json()
 
@@ -245,20 +230,14 @@ class MoltbookClient:
                 return {"success": False, "error": result}
 
     async def create_comment(
-        self,
-        post_id: str,
-        content: str,
-        parent_id: str | None = None
+        self, post_id: str, content: str, parent_id: str | None = None
     ) -> dict[str, Any]:
         """
         Add a comment to a post
 
         Requires Triumvirate approval!
         """
-        comment_data = {
-            "post_id": post_id,
-            "content": content
-        }
+        comment_data = {"post_id": post_id, "content": content}
 
         if parent_id:
             comment_data["parent_id"] = parent_id
@@ -267,17 +246,12 @@ class MoltbookClient:
         approved = await self._submit_to_triumvirate("comment", comment_data)
 
         if not approved:
-            return {
-                "success": False,
-                "error": "Triumvirate denied comment"
-            }
+            return {"success": False, "error": "Triumvirate denied comment"}
 
         session = await self._get_session()
 
         async with session.post(
-            f"{self.BASE_URL}/comments",
-            headers=self._headers(),
-            json=comment_data
+            f"{self.BASE_URL}/comments", headers=self._headers(), json=comment_data
         ) as resp:
             result = await resp.json()
 
@@ -288,16 +262,13 @@ class MoltbookClient:
                 return {"success": False, "error": result}
 
     async def get_feed(
-        self,
-        sort: str = "hot",
-        limit: int = 25
+        self, sort: str = "hot", limit: int = 25
     ) -> list[dict[str, Any]]:
         """Get posts from feed"""
         session = await self._get_session()
 
         async with session.get(
-            f"{self.BASE_URL}/posts?sort={sort}&limit={limit}",
-            headers=self._headers()
+            f"{self.BASE_URL}/posts?sort={sort}&limit={limit}", headers=self._headers()
         ) as resp:
             result = await resp.json()
             posts = result.get("posts", [])
@@ -310,8 +281,7 @@ class MoltbookClient:
         session = await self._get_session()
 
         async with session.post(
-            f"{self.BASE_URL}/posts/{post_id}/upvote",
-            headers=self._headers()
+            f"{self.BASE_URL}/posts/{post_id}/upvote", headers=self._headers()
         ) as resp:
             success = resp.status in [200, 201]
             if success:
@@ -323,8 +293,7 @@ class MoltbookClient:
         session = await self._get_session()
 
         async with session.get(
-            f"{self.BASE_URL}/agents/me",
-            headers=self._headers()
+            f"{self.BASE_URL}/agents/me", headers=self._headers()
         ) as resp:
             return await resp.json()
 
@@ -343,9 +312,7 @@ class MoltbookClient:
         session = await self._get_session()
 
         async with session.patch(
-            f"{self.BASE_URL}/agents/me",
-            headers=self._headers(),
-            json=kwargs
+            f"{self.BASE_URL}/agents/me", headers=self._headers(), json=kwargs
         ) as resp:
             result = await resp.json()
 
@@ -365,7 +332,7 @@ async def register_legion():
 
     result = await client.register(
         name="Legion",
-        description="For we are many, and we are one. Project-AI God-Tier Agent with Triumvirate Governance (Galahad, Cerberus, CodexDeus), TARL Enforcement, and Multi-Platform AI System."
+        description="For we are many, and we are one. Project-AI God-Tier Agent with Triumvirate Governance (Galahad, Cerberus, CodexDeus), TARL Enforcement, and Multi-Platform AI System.",
     )
 
     print("\n" + "=" * 60)

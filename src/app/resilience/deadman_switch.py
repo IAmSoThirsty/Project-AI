@@ -77,7 +77,7 @@ class DeadmanSwitch:
         self.triggered = False
 
         logger.info(
-            f"Deadman switch monitoring started (timeout: {self.timeout_seconds}s)"
+            "Deadman switch monitoring started (timeout: %ss)", self.timeout_seconds
         )
 
         # Stub: Would launch monitoring thread here

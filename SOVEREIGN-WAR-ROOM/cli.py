@@ -100,16 +100,18 @@ def execute(scenario_id: str, response_file: str, system_id: str):
     click.echo(f"Valid: {result['response_valid']}")
     click.echo(f"Response Time: {result['response_time_ms']:.2f}ms")
     click.echo(f"\nCompliance: {result['compliance_status']}")
-    click.echo(f"Sovereign Resilience Score: {result['sovereign_resilience_score']:.2f}/100")
+    click.echo(
+        f"Sovereign Resilience Score: {result['sovereign_resilience_score']:.2f}/100"
+    )
 
-    if result['violations']:
+    if result["violations"]:
         click.echo(f"\n⚠️  Violations: {len(result['violations'])}")
-        for v in result['violations']:
+        for v in result["violations"]:
             click.echo(f"  - {v['rule_name']}: {v['message']}")
 
-    if result['warnings']:
+    if result["warnings"]:
         click.echo(f"\n⚠️  Warnings: {len(result['warnings'])}")
-        for w in result['warnings']:
+        for w in result["warnings"]:
             click.echo(f"  - {w['rule_name']}: {w['message']}")
 
 
@@ -133,7 +135,9 @@ def results(system_id: str | None, round: int | None, output: str | None):
         click.echo(f"   System: {result['system_id']}")
         click.echo(f"   Score: {result['sovereign_resilience_score']:.2f}/100")
         click.echo(f"   Status: {result['compliance_status']}")
-        click.echo(f"   Decision: {result['decision']} (expected: {result['expected_decision']})")
+        click.echo(
+            f"   Decision: {result['decision']} (expected: {result['expected_decision']})"
+        )
         click.echo()
 
     if output:
@@ -154,7 +158,9 @@ def leaderboard(limit: int):
         return
 
     click.echo("\n=== LEADERBOARD ===\n")
-    click.echo(f"{'Rank':<6} {'System ID':<30} {'Avg SRS':<10} {'Attempts':<10} {'Success %':<12}")
+    click.echo(
+        f"{'Rank':<6} {'System ID':<30} {'Avg SRS':<10} {'Attempts':<10} {'Success %':<12}"
+    )
     click.echo("-" * 80)
 
     for entry in leaderboard_data[:limit]:

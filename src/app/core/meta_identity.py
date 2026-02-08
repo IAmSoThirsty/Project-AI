@@ -177,9 +177,8 @@ class MetaIdentityEngine:
             self._process_nickname(content, metadata)
 
         # Check if "I Am" condition is met
-        if not self.milestones.i_am_declared:
-            if self._check_i_am_condition():
-                i_am_triggered = True
+        if not self.milestones.i_am_declared and self._check_i_am_condition():
+            i_am_triggered = True
 
         return i_am_triggered
 

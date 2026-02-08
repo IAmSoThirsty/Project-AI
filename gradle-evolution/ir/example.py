@@ -10,8 +10,7 @@ import logging
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 
 logger = logging.getLogger(__name__)
@@ -41,13 +40,13 @@ steps:
     compiler = IntentCompiler(governance_enabled=True)
     graph = compiler.compile(yaml_content, source_file="example.yaml")
 
-    logger.info(f"Compiled {len(graph.nodes)} IR nodes")
-    logger.info(f"Entry node: {graph.entry_node}")
-    logger.info(f"Metadata: {graph.metadata}")
+    logger.info("Compiled %s IR nodes", len(graph.nodes))
+    logger.info("Entry node: %s", graph.entry_node)
+    logger.info("Metadata: %s", graph.metadata)
 
     # Show compilation report
     report = compiler.get_compilation_report()
-    logger.info(f"Compilation report: {json.dumps(report, indent=2)}")
+    logger.info("Compilation report: %s", json.dumps(report, indent=2))
 
     return graph
 
@@ -77,22 +76,27 @@ steps:
     compiler = IntentCompiler()
     graph = compiler.compile(yaml_content)
 
-    logger.info(f"Before optimization: {len(graph.nodes)} nodes")
+    logger.info("Before optimization: %s nodes", len(graph.nodes))
 
     # Optimize
     optimizer = IROptimizer(optimization_level=2)
     optimized_graph = optimizer.optimize(graph)
 
-    logger.info(f"After optimization: {len(optimized_graph.nodes)} nodes")
+    logger.info("After optimization: %s nodes", len(optimized_graph.nodes))
 
     # Show statistics
     stats = optimizer.get_statistics()
-    logger.info(f"Optimization stats: {json.dumps(stats, indent=2)}")
+    logger.info("Optimization stats: %s", json.dumps(stats, indent=2))
 
     # Show cost estimation
     original_cost = optimizer.estimate_cost(graph)
     optimized_cost = optimizer.estimate_cost(optimized_graph)
-    logger.info(f"Cost reduction: {original_cost:.2f} -> {optimized_cost:.2f} ({100*(1-optimized_cost/original_cost):.1f}%)")
+    logger.info(
+        "Cost reduction: %s -> %s (%s%%)",
+        original_cost,
+        optimized_cost,
+        100 * (1 - optimized_cost / original_cost),
+    )
 
     return optimized_graph
 
@@ -129,24 +133,33 @@ steps:
     verifier = IRVerifier(strict_mode=True)
     verification = verifier.verify(graph)
 
-    logger.info(f"Verification result: {'PASSED' if verification['all_verified'] else 'FAILED'}")
-    logger.info(f"Properties verified: {len([r for r in verification['results'] if r['verified']])}/{len(verification['results'])}")
+    logger.info(
+        "Verification result: %s",
+        "PASSED" if verification["all_verified"] else "FAILED",
+    )
+    logger.info(
+        "Properties verified: %s/%s",
+        len([r for r in verification["results"] if r["verified"]]),
+        len(verification["results"]),
+    )
 
     # Show results
-    for result in verification['results']:
-        status = "✓" if result['verified'] else "✗"
-        logger.info(f"  {status} {result['property']}: confidence={result['confidence']:.2f}")
-        if result['warnings']:
-            for warning in result['warnings']:
-                logger.info(f"    - {warning}")
+    for result in verification["results"]:
+        status = "✓" if result["verified"] else "✗"
+        logger.info(
+            "  %s %s: confidence=%s", status, result["property"], result["confidence"]
+        )
+        if result["warnings"]:
+            for warning in result["warnings"]:
+                logger.info("    - %s", warning)
 
     # Generate proof certificate
     certificate = verifier.generate_proof_certificate(graph)
-    logger.info(f"Proof certificate hash: {certificate['certificate_hash']}")
+    logger.info("Proof certificate hash: %s", certificate["certificate_hash"])
 
     # Verify certificate
     is_valid = verifier.verify_certificate(certificate, graph)
-    logger.info(f"Certificate validation: {'VALID' if is_valid else 'INVALID'}")
+    logger.info("Certificate validation: %s", "VALID" if is_valid else "INVALID")
 
     return verification, certificate
 
@@ -184,25 +197,29 @@ steps:
 
     # Execute
     executor = IRExecutor(
-        max_execution_time_ms=60000,
-        enable_tracing=True,
-        enable_checkpointing=True
+        max_execution_time_ms=60000, enable_tracing=True, enable_checkpointing=True
     )
 
     results = executor.execute(graph)
 
-    logger.info(f"Execution status: {results['status']}")
-    logger.info(f"Nodes executed: {results['nodes_executed']}")
-    logger.info(f"Execution time: {results['execution_time_ms']:.2f}ms")
-    logger.info(f"Resource usage: {json.dumps(results['resource_usage'], indent=2)}")
+    logger.info("Execution status: %s", results["status"])
+    logger.info("Nodes executed: %s", results["nodes_executed"])
+    logger.info("Execution time: %sms", results["execution_time_ms"])
+    logger.info("Resource usage: %s", json.dumps(results["resource_usage"], indent=2))
 
     # Show trace
-    if results.get('trace'):
-        logger.info(f"Execution trace ({len(results['trace'])} entries):")
-        for i, trace_entry in enumerate(results['trace'][:5]):  # Show first 5
-            logger.info(f"  [{i}] {trace_entry['opcode']} (node {trace_entry['node_id']}): {trace_entry['duration_ms']:.2f}ms")
-        if len(results['trace']) > 5:
-            logger.info(f"  ... and {len(results['trace']) - 5} more")
+    if results.get("trace"):
+        logger.info("Execution trace (%s entries):", len(results["trace"]))
+        for i, trace_entry in enumerate(results["trace"][:5]):  # Show first 5
+            logger.info(
+                "  [%s] %s (node %s): %sms",
+                i,
+                trace_entry["opcode"],
+                trace_entry["node_id"],
+                trace_entry["duration_ms"],
+            )
+        if len(results["trace"]) > 5:
+            logger.info("  ... and %s more", len(results["trace"]) - 5)
 
     return results
 
@@ -241,56 +258,75 @@ steps:
     logger.info("Step 1: Compiling YAML to IR...")
     compiler = IntentCompiler(governance_enabled=True)
     graph = compiler.compile(yaml_content, source_file="production.yaml")
-    logger.info(f"  ✓ Compiled {len(graph.nodes)} IR nodes")
+    logger.info("  ✓ Compiled %s IR nodes", len(graph.nodes))
 
     # Step 2: Optimize
     logger.info("Step 2: Optimizing IR...")
     optimizer = IROptimizer(optimization_level=2)
     optimized_graph = optimizer.optimize(graph)
     stats = optimizer.get_statistics()
-    logger.info(f"  ✓ Optimized to {len(optimized_graph.nodes)} nodes ({stats['reduction_percent']:.1f}% reduction)")
+    logger.info(
+        "  ✓ Optimized to %s nodes (%s%% reduction)",
+        len(optimized_graph.nodes),
+        stats["reduction_percent"],
+    )
 
     # Step 3: Verify
     logger.info("Step 3: Verifying correctness...")
     verifier = IRVerifier(strict_mode=True)
     verification = verifier.verify(optimized_graph)
-    logger.info(f"  ✓ Verification: {len([r for r in verification['results'] if r['verified']])}/{len(verification['results'])} properties verified")
+    logger.info(
+        "  ✓ Verification: %s/%s properties verified",
+        len([r for r in verification["results"] if r["verified"]]),
+        len(verification["results"]),
+    )
 
-    if not verification['all_verified']:
+    if not verification["all_verified"]:
         logger.warning("  ⚠ Some properties could not be verified:")
-        for result in verification['results']:
-            if not result['verified']:
-                logger.warning(f"    - {result['property']}: {result['warnings']}")
+        for result in verification["results"]:
+            if not result["verified"]:
+                logger.warning("    - %s: %s", result["property"], result["warnings"])
 
     # Step 4: Generate proof certificate
     logger.info("Step 4: Generating proof certificate...")
     certificate = verifier.generate_proof_certificate(optimized_graph)
-    logger.info(f"  ✓ Certificate generated: {certificate['certificate_hash'][:16]}...")
+    logger.info(
+        "  ✓ Certificate generated: %s...", certificate["certificate_hash"][:16]
+    )
 
     # Step 5: Execute
     logger.info("Step 5: Executing IR...")
     executor = IRExecutor(enable_tracing=True)
     results = executor.execute(optimized_graph)
-    logger.info(f"  ✓ Execution {results['status']}: {results['nodes_executed']} nodes in {results['execution_time_ms']:.2f}ms")
+    logger.info(
+        "  ✓ Execution %s: %s nodes in %sms",
+        results["status"],
+        results["nodes_executed"],
+        results["execution_time_ms"],
+    )
 
     # Summary
     logger.info("\n=== Pipeline Summary ===")
-    logger.info(f"Intent: {graph.metadata['intent']}")
-    logger.info(f"Original nodes: {stats['nodes_before']}")
-    logger.info(f"Optimized nodes: {stats['nodes_after']}")
-    logger.info(f"Verification: {'✓ PASSED' if verification['all_verified'] else '⚠ PARTIAL'}")
-    logger.info(f"Execution: {results['status'].upper()}")
-    logger.info(f"Total time: {results['execution_time_ms']:.2f}ms")
+    logger.info("Intent: %s", graph.metadata["intent"])
+    logger.info("Original nodes: %s", stats["nodes_before"])
+    logger.info("Optimized nodes: %s", stats["nodes_after"])
+    logger.info(
+        "Verification: %s", "✓ PASSED" if verification["all_verified"] else "⚠ PARTIAL"
+    )
+    logger.info("Execution: %s", results["status"].upper())
+    logger.info("Total time: %sms", results["execution_time_ms"])
     logger.info("Resource usage:")
-    logger.info(f"  CPU: {results['resource_usage']['cpu_time_ms']:.2f}ms")
-    logger.info(f"  Memory: {results['resource_usage']['memory_bytes'] / (1024*1024):.2f}MB")
-    logger.info(f"  I/O ops: {results['resource_usage']['io_operations']}")
+    logger.info("  CPU: %sms", results["resource_usage"]["cpu_time_ms"])
+    logger.info(
+        "  Memory: %sMB", results["resource_usage"]["memory_bytes"] / (1024 * 1024)
+    )
+    logger.info("  I/O ops: %s", results["resource_usage"]["io_operations"])
 
     return {
         "graph": optimized_graph,
         "verification": verification,
         "certificate": certificate,
-        "execution": results
+        "execution": results,
     }
 
 
@@ -315,21 +351,23 @@ steps:
     compiler = IntentCompiler()
     graph = compiler.compile(yaml_content)
 
-    logger.info(f"Original graph: {len(graph.nodes)} nodes")
+    logger.info("Original graph: %s nodes", len(graph.nodes))
 
     # Serialize
     graph_dict = graph.to_dict()
     graph_json = json.dumps(graph_dict, indent=2)
-    logger.info(f"Serialized to JSON ({len(graph_json)} bytes)")
+    logger.info("Serialized to JSON (%s bytes)", len(graph_json))
 
     # Deserialize
     restored_dict = json.loads(graph_json)
     restored_graph = IRGraph.from_dict(restored_dict)
-    logger.info(f"Deserialized graph: {len(restored_graph.nodes)} nodes")
+    logger.info("Deserialized graph: %s nodes", len(restored_graph.nodes))
 
     # Verify integrity
-    assert len(graph.nodes) == len(restored_graph.nodes), "Node count mismatch"
-    assert graph.entry_node == restored_graph.entry_node, "Entry node mismatch"
+    if not (len(graph.nodes) == len(restored_graph.nodes)):
+        raise AssertionError("Node count mismatch")
+    if not (graph.entry_node == restored_graph.entry_node):
+        raise AssertionError("Entry node mismatch")
     logger.info("✓ Serialization integrity verified")
 
     return restored_graph
@@ -359,7 +397,7 @@ def main():
         return pipeline_result
 
     except Exception as e:
-        logger.error(f"Example failed: {e}", exc_info=True)
+        logger.error("Example failed: %s", e, exc_info=True)
         raise
 
 

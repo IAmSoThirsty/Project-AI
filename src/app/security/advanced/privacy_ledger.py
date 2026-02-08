@@ -351,7 +351,7 @@ class PrivacyLedger:
         self._load_ledger()
 
         self.logger.info(
-            f"Privacy Ledger initialized: {len(self.entries)} entries loaded"
+            "Privacy Ledger initialized: %s entries loaded", len(self.entries)
         )
 
     def _setup_encryption(self, encryption_key: bytes | None):
@@ -484,7 +484,7 @@ class PrivacyLedger:
                 self._persist_ledger()
 
             except Exception as e:
-                self.logger.error(f"Atomic append failed: {e}")
+                self.logger.error("Atomic append failed: %s", e)
                 raise RuntimeError(f"Failed to append entry atomically: {e}")
 
     def _serialize_entry(self, entry: LedgerEntry) -> bytes:
@@ -532,7 +532,7 @@ class PrivacyLedger:
             return LedgerEntry.from_dict(entry_dict)
 
         except Exception as e:
-            self.logger.error(f"Entry deserialization failed: {e}")
+            self.logger.error("Entry deserialization failed: %s", e)
             raise ValueError(f"Failed to deserialize entry: {e}")
 
     def _encrypt_field(self, value: str) -> str:
@@ -700,9 +700,11 @@ class PrivacyLedger:
             if is_valid:
                 self.logger.info("Chain integrity verified successfully")
             else:
-                self.logger.error(f"Chain integrity check failed: {len(errors)} errors")
+                self.logger.error(
+                    "Chain integrity check failed: %s errors", len(errors)
+                )
                 for error in errors[:10]:  # Log first 10 errors
-                    self.logger.error(f"  - {error}")
+                    self.logger.error("  - %s", error)
 
             return is_valid, errors
 
@@ -727,7 +729,8 @@ class PrivacyLedger:
             if entries_to_delete:
                 self._secure_delete_entries(entries_to_delete)
                 self.logger.info(
-                    f"Retention policy enforced: {len(entries_to_delete)} entries deleted"
+                    "Retention policy enforced: %s entries deleted",
+                    len(entries_to_delete),
                 )
 
     def _secure_delete_entries(self, entries: list[LedgerEntry]):
@@ -802,7 +805,7 @@ class PrivacyLedger:
                 wal_path.unlink()
 
         except Exception as e:
-            self.logger.error(f"Failed to persist ledger: {e}")
+            self.logger.error("Failed to persist ledger: %s", e)
 
     def _load_ledger(self):
         """Load ledger from disk"""
@@ -833,22 +836,24 @@ class PrivacyLedger:
                         self.last_entry_hash = entry.hash
 
                     except Exception as e:
-                        self.logger.error(f"Failed to load entry: {e}")
+                        self.logger.error("Failed to load entry: %s", e)
                         continue
 
             # Update stats
             self.stats["total_entries"] = len(self.entries)
             self.stats["encrypted_entries"] = len(self.entries)
 
-            self.logger.info(f"Loaded {len(self.entries)} entries from ledger")
+            self.logger.info("Loaded %s entries from ledger", len(self.entries))
 
             # Verify integrity on load
             is_valid, errors = self.verify_chain_integrity()
             if not is_valid:
-                self.logger.error(f"Ledger integrity compromised: {len(errors)} errors")
+                self.logger.error(
+                    "Ledger integrity compromised: %s errors", len(errors)
+                )
 
         except Exception as e:
-            self.logger.error(f"Failed to load ledger: {e}")
+            self.logger.error("Failed to load ledger: %s", e)
 
     def get_stats(self) -> dict[str, Any]:
         """Get ledger statistics"""
@@ -933,7 +938,7 @@ class PrivacyLedger:
                     indent=2,
                 )
 
-            self.logger.info(f"Exported {len(entries)} entries to {output_path}")
+            self.logger.info("Exported %s entries to %s", len(entries), output_path)
 
             # Log export action
             self.append(
@@ -958,7 +963,7 @@ class PrivacyLedger:
             is_valid, errors = self.verify_chain_integrity()
             if not is_valid:
                 self.logger.warning(
-                    f"Ledger closed with integrity issues: {len(errors)} errors"
+                    "Ledger closed with integrity issues: %s errors", len(errors)
                 )
 
-            self.logger.info(f"Privacy ledger closed: {len(self.entries)} entries")
+            self.logger.info("Privacy ledger closed: %s entries", len(self.entries))

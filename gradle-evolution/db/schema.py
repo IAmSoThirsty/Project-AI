@@ -13,6 +13,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from .sql_utils import sanitize_identifier_list
+
 logger = logging.getLogger(__name__)
 
 
@@ -44,7 +46,7 @@ class BuildMemoryDB:
         self.db_path = db_path
         self._conn: sqlite3.Connection | None = None
         self._initialize_database()
-        logger.info(f"BuildMemoryDB initialized at {self.db_path}")
+        logger.info("BuildMemoryDB initialized at %s", self.db_path)
 
     def _initialize_database(self) -> None:
         """Initialize database with schema and enable WAL mode."""
@@ -239,35 +241,29 @@ class BuildMemoryDB:
             "CREATE INDEX IF NOT EXISTS idx_builds_version ON builds(version)",
             "CREATE INDEX IF NOT EXISTS idx_builds_capsule ON builds(capsule_id)",
             "CREATE INDEX IF NOT EXISTS idx_builds_constitutional ON builds(constitutional_status)",
-
             # Build phases indexes
             "CREATE INDEX IF NOT EXISTS idx_phases_build_id ON build_phases(build_id)",
             "CREATE INDEX IF NOT EXISTS idx_phases_phase ON build_phases(phase)",
             "CREATE INDEX IF NOT EXISTS idx_phases_status ON build_phases(status)",
-
             # Constitutional violations indexes
             "CREATE INDEX IF NOT EXISTS idx_violations_build_id ON constitutional_violations(build_id)",
             "CREATE INDEX IF NOT EXISTS idx_violations_principle ON constitutional_violations(principle)",
             "CREATE INDEX IF NOT EXISTS idx_violations_severity ON constitutional_violations(severity)",
             "CREATE INDEX IF NOT EXISTS idx_violations_waived ON constitutional_violations(waived)",
-
             # Policy decisions indexes
             "CREATE INDEX IF NOT EXISTS idx_policies_build_id ON policy_decisions(build_id)",
             "CREATE INDEX IF NOT EXISTS idx_policies_policy_id ON policy_decisions(policy_id)",
             "CREATE INDEX IF NOT EXISTS idx_policies_decision ON policy_decisions(decision)",
-
             # Security events indexes
             "CREATE INDEX IF NOT EXISTS idx_security_build_id ON security_events(build_id)",
             "CREATE INDEX IF NOT EXISTS idx_security_type ON security_events(event_type)",
             "CREATE INDEX IF NOT EXISTS idx_security_severity ON security_events(severity)",
             "CREATE INDEX IF NOT EXISTS idx_security_remediated ON security_events(remediated)",
-
             # Artifacts indexes
             "CREATE INDEX IF NOT EXISTS idx_artifacts_build_id ON artifacts(build_id)",
             "CREATE INDEX IF NOT EXISTS idx_artifacts_hash ON artifacts(hash)",
             "CREATE INDEX IF NOT EXISTS idx_artifacts_type ON artifacts(type)",
             "CREATE INDEX IF NOT EXISTS idx_artifacts_path ON artifacts(path)",
-
             # Dependencies indexes
             "CREATE INDEX IF NOT EXISTS idx_deps_build_id ON dependencies(build_id)",
             "CREATE INDEX IF NOT EXISTS idx_deps_name_version ON dependencies(name, version)",
@@ -353,11 +349,11 @@ class BuildMemoryDB:
                 )
                 conn.commit()
                 build_id = cursor.lastrowid
-                logger.info(f"Created build {build_id} for version {version}")
+                logger.info("Created build %s for version %s", build_id, version)
                 return build_id
             except sqlite3.Error as e:
                 conn.rollback()
-                logger.error(f"Failed to create build: {e}")
+                logger.error("Failed to create build: %s", e)
                 raise
 
     def update_build(
@@ -412,16 +408,28 @@ class BuildMemoryDB:
 
         with self.get_connection() as conn:
             try:
+                # Sanitize column names to prevent SQL injection
+                # Extract column names from "column = ?" format and validate
+                column_names = [
+                    u.split(" = ?")[0].strip() for u in updates if " = ?" in u
+                ]
+                safe_columns = sanitize_identifier_list(column_names)
+                # Rebuild updates list with sanitized column names
+                safe_updates = [f"{col} = ?" for col in safe_columns]
+                # Add the timestamp update that doesn't have a placeholder
+                if "updated_at = CURRENT_TIMESTAMP" in updates:
+                    safe_updates.append("updated_at = CURRENT_TIMESTAMP")
+
                 conn.execute(
-                    f"UPDATE builds SET {', '.join(updates)} WHERE id = ?",
+                    f"UPDATE builds SET {', '.join(safe_updates)} WHERE id = ?",
                     params,
                 )
                 conn.commit()
-                logger.debug(f"Updated build {build_id}")
+                logger.debug("Updated build %s", build_id)
                 return True
             except sqlite3.Error as e:
                 conn.rollback()
-                logger.error(f"Failed to update build {build_id}: {e}")
+                logger.error("Failed to update build %s: %s", build_id, e)
                 return False
 
     def get_build(self, build_id: int) -> dict[str, Any] | None:
@@ -494,11 +502,11 @@ class BuildMemoryDB:
             try:
                 conn.execute("DELETE FROM builds WHERE id = ?", (build_id,))
                 conn.commit()
-                logger.info(f"Deleted build {build_id}")
+                logger.info("Deleted build %s", build_id)
                 return True
             except sqlite3.Error as e:
                 conn.rollback()
-                logger.error(f"Failed to delete build {build_id}: {e}")
+                logger.error("Failed to delete build %s: %s", build_id, e)
                 return False
 
     # ==================== CRUD Operations: Build Phases ====================
@@ -532,14 +540,18 @@ class BuildMemoryDB:
                         start_time,
                         json.dumps(artifacts) if artifacts else None,
                         logs_path,
-                        json.dumps(kwargs.get("resource_usage")) if kwargs.get("resource_usage") else None,
+                        (
+                            json.dumps(kwargs.get("resource_usage"))
+                            if kwargs.get("resource_usage")
+                            else None
+                        ),
                     ),
                 )
                 conn.commit()
                 return cursor.lastrowid
             except sqlite3.Error as e:
                 conn.rollback()
-                logger.error(f"Failed to create build phase: {e}")
+                logger.error("Failed to create build phase: %s", e)
                 raise
 
     def update_build_phase(
@@ -570,15 +582,20 @@ class BuildMemoryDB:
 
         with self.get_connection() as conn:
             try:
+                # Sanitize column names to prevent SQL injection
+                column_names = [u.split(" = ?")[0].strip() for u in updates]
+                safe_columns = sanitize_identifier_list(column_names)
+                safe_updates = [f"{col} = ?" for col in safe_columns]
+
                 conn.execute(
-                    f"UPDATE build_phases SET {', '.join(updates)} WHERE id = ?",
+                    f"UPDATE build_phases SET {', '.join(safe_updates)} WHERE id = ?",
                     params,
                 )
                 conn.commit()
                 return True
             except sqlite3.Error as e:
                 conn.rollback()
-                logger.error(f"Failed to update build phase {phase_id}: {e}")
+                logger.error("Failed to update build phase %s: %s", phase_id, e)
                 return False
 
     def get_build_phases(self, build_id: int) -> list[dict[str, Any]]:
@@ -612,11 +629,16 @@ class BuildMemoryDB:
                     (build_id, phase, principle, severity, reason),
                 )
                 conn.commit()
-                logger.warning(f"Recorded {severity} violation for build {build_id}: {principle}")
+                logger.warning(
+                    "Recorded %s violation for build %s: %s",
+                    severity,
+                    build_id,
+                    principle,
+                )
                 return cursor.lastrowid
             except sqlite3.Error as e:
                 conn.rollback()
-                logger.error(f"Failed to create violation: {e}")
+                logger.error("Failed to create violation: %s", e)
                 raise
 
     def waive_violation(
@@ -637,11 +659,11 @@ class BuildMemoryDB:
                     (waiver_reason, waived_by, violation_id),
                 )
                 conn.commit()
-                logger.info(f"Waived violation {violation_id} by {waived_by}")
+                logger.info("Waived violation %s by %s", violation_id, waived_by)
                 return True
             except sqlite3.Error as e:
                 conn.rollback()
-                logger.error(f"Failed to waive violation {violation_id}: {e}")
+                logger.error("Failed to waive violation %s: %s", violation_id, e)
                 return False
 
     def get_violations(
@@ -705,7 +727,7 @@ class BuildMemoryDB:
                 return cursor.lastrowid
             except sqlite3.Error as e:
                 conn.rollback()
-                logger.error(f"Failed to create policy decision: {e}")
+                logger.error("Failed to create policy decision: %s", e)
                 raise
 
     def override_policy_decision(
@@ -727,11 +749,15 @@ class BuildMemoryDB:
                     (override_reason, overridden_by, decision_id),
                 )
                 conn.commit()
-                logger.info(f"Overridden policy decision {decision_id} by {overridden_by}")
+                logger.info(
+                    "Overridden policy decision %s by %s", decision_id, overridden_by
+                )
                 return True
             except sqlite3.Error as e:
                 conn.rollback()
-                logger.error(f"Failed to override policy decision {decision_id}: {e}")
+                logger.error(
+                    "Failed to override policy decision %s: %s", decision_id, e
+                )
                 return False
 
     def get_policy_decisions(self, build_id: int) -> list[dict[str, Any]]:
@@ -773,15 +799,24 @@ class BuildMemoryDB:
                         details,
                         json.dumps(cve_ids) if cve_ids else None,
                         cvss_score,
-                        json.dumps(affected_components) if affected_components else None,
+                        (
+                            json.dumps(affected_components)
+                            if affected_components
+                            else None
+                        ),
                     ),
                 )
                 conn.commit()
-                logger.warning(f"Recorded {severity} security event for build {build_id}: {event_type}")
+                logger.warning(
+                    "Recorded %s security event for build %s: %s",
+                    severity,
+                    build_id,
+                    event_type,
+                )
                 return cursor.lastrowid
             except sqlite3.Error as e:
                 conn.rollback()
-                logger.error(f"Failed to create security event: {e}")
+                logger.error("Failed to create security event: %s", e)
                 raise
 
     def remediate_security_event(
@@ -803,11 +838,13 @@ class BuildMemoryDB:
                     (remediation_details, remediated_by, event_id),
                 )
                 conn.commit()
-                logger.info(f"Remediated security event {event_id} by {remediated_by}")
+                logger.info(
+                    "Remediated security event %s by %s", event_id, remediated_by
+                )
                 return True
             except sqlite3.Error as e:
                 conn.rollback()
-                logger.error(f"Failed to remediate security event {event_id}: {e}")
+                logger.error("Failed to remediate security event %s: %s", event_id, e)
                 return False
 
     def get_security_events(
@@ -875,7 +912,7 @@ class BuildMemoryDB:
                 return cursor.lastrowid
             except sqlite3.Error as e:
                 conn.rollback()
-                logger.error(f"Failed to create artifact: {e}")
+                logger.error("Failed to create artifact: %s", e)
                 raise
 
     def get_artifacts(self, build_id: int) -> list[dict[str, Any]]:
@@ -942,11 +979,16 @@ class BuildMemoryDB:
                 )
                 conn.commit()
                 if vuln_count > 0:
-                    logger.warning(f"Dependency {name}:{version} has {vuln_count} vulnerabilities")
+                    logger.warning(
+                        "Dependency %s:%s has %s vulnerabilities",
+                        name,
+                        version,
+                        vuln_count,
+                    )
                 return cursor.lastrowid
             except sqlite3.Error as e:
                 conn.rollback()
-                logger.error(f"Failed to create dependency: {e}")
+                logger.error("Failed to create dependency: %s", e)
                 raise
 
     def get_dependencies(
@@ -995,7 +1037,7 @@ class BuildMemoryDB:
                 logger.info("Database vacuumed successfully")
                 return True
             except sqlite3.Error as e:
-                logger.error(f"Failed to vacuum database: {e}")
+                logger.error("Failed to vacuum database: %s", e)
                 return False
 
     def get_database_size(self) -> int:

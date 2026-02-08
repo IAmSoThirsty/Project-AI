@@ -29,7 +29,7 @@ class DocumentationGenerator:
         capsule_engine: CapsuleEngine,
         state_integration: BuildStateIntegration,
         audit_integration: BuildAuditIntegration,
-        output_dir: Path | None = None
+        output_dir: Path | None = None,
     ):
         """
         Initialize documentation generator.
@@ -45,7 +45,7 @@ class DocumentationGenerator:
         self.audit_integration = audit_integration
         self.output_dir = output_dir or Path("docs/generated")
         self.output_dir.mkdir(parents=True, exist_ok=True)
-        logger.info(f"Documentation generator initialized: {self.output_dir}")
+        logger.info("Documentation generator initialized: %s", self.output_dir)
 
     def generate_build_history_doc(self, limit: int = 50) -> Path:
         """
@@ -93,11 +93,11 @@ class DocumentationGenerator:
             output_path = self.output_dir / "build-history.md"
             output_path.write_text(doc)
 
-            logger.info(f"Generated build history doc: {output_path}")
+            logger.info("Generated build history doc: %s", output_path)
             return output_path
 
         except Exception as e:
-            logger.error(f"Error generating build history doc: {e}", exc_info=True)
+            logger.error("Error generating build history doc: %s", e, exc_info=True)
             raise
 
     def generate_capsule_registry_doc(self) -> Path:
@@ -118,7 +118,7 @@ class DocumentationGenerator:
             for capsule in sorted(
                 self.capsule_engine.capsules.values(),
                 key=lambda c: c.timestamp,
-                reverse=True
+                reverse=True,
             ):
                 doc += f"### Capsule: `{capsule.capsule_id}`\n\n"
                 doc += f"- **Timestamp**: {capsule.timestamp}\n"
@@ -137,17 +137,15 @@ class DocumentationGenerator:
             output_path = self.output_dir / "capsule-registry.md"
             output_path.write_text(doc)
 
-            logger.info(f"Generated capsule registry doc: {output_path}")
+            logger.info("Generated capsule registry doc: %s", output_path)
             return output_path
 
         except Exception as e:
-            logger.error(f"Error generating capsule registry doc: {e}", exc_info=True)
+            logger.error("Error generating capsule registry doc: %s", e, exc_info=True)
             raise
 
     def generate_audit_summary_doc(
-        self,
-        start_time: datetime | None = None,
-        end_time: datetime | None = None
+        self, start_time: datetime | None = None, end_time: datetime | None = None
     ) -> Path:
         """
         Generate audit summary documentation.
@@ -161,8 +159,7 @@ class DocumentationGenerator:
         """
         try:
             report = self.audit_integration.generate_audit_report(
-                start_time=start_time,
-                end_time=end_time
+                start_time=start_time, end_time=end_time
             )
 
             doc = self._build_markdown_header("Audit Summary")
@@ -196,11 +193,11 @@ class DocumentationGenerator:
             output_path = self.output_dir / "audit-summary.md"
             output_path.write_text(doc)
 
-            logger.info(f"Generated audit summary doc: {output_path}")
+            logger.info("Generated audit summary doc: %s", output_path)
             return output_path
 
         except Exception as e:
-            logger.error(f"Error generating audit summary doc: {e}", exc_info=True)
+            logger.error("Error generating audit summary doc: %s", e, exc_info=True)
             raise
 
     def generate_api_reference_doc(self) -> Path:
@@ -283,11 +280,11 @@ class DocumentationGenerator:
             output_path = self.output_dir / "api-reference.md"
             output_path.write_text(doc)
 
-            logger.info(f"Generated API reference doc: {output_path}")
+            logger.info("Generated API reference doc: %s", output_path)
             return output_path
 
         except Exception as e:
-            logger.error(f"Error generating API reference doc: {e}", exc_info=True)
+            logger.error("Error generating API reference doc: %s", e, exc_info=True)
             raise
 
     def generate_complete_documentation(self) -> list[Path]:
@@ -310,11 +307,13 @@ class DocumentationGenerator:
             index_path = self._generate_index(docs)
             docs.insert(0, index_path)
 
-            logger.info(f"Generated {len(docs)} documentation files")
+            logger.info("Generated %s documentation files", len(docs))
             return docs
 
         except Exception as e:
-            logger.error(f"Error generating complete documentation: {e}", exc_info=True)
+            logger.error(
+                "Error generating complete documentation: %s", e, exc_info=True
+            )
             raise
 
     def _generate_index(self, docs: list[Path]) -> Path:
@@ -353,23 +352,25 @@ class DocumentationGenerator:
             snapshot = {
                 "timestamp": datetime.utcnow().isoformat(),
                 "capsules": [
-                    cap.to_dict()
-                    for cap in self.capsule_engine.capsules.values()
+                    cap.to_dict() for cap in self.capsule_engine.capsules.values()
                 ],
                 "build_statistics": self.state_integration.get_build_statistics(),
                 "build_history": self.state_integration.get_build_history(limit=100),
                 "audit_report": self.audit_integration.generate_audit_report(),
             }
 
-            output_path = self.output_dir / f"snapshot-{datetime.utcnow().strftime('%Y%m%d-%H%M%S')}.json"
+            output_path = (
+                self.output_dir
+                / f"snapshot-{datetime.utcnow().strftime('%Y%m%d-%H%M%S')}.json"
+            )
             with open(output_path, "w") as f:
                 json.dump(snapshot, f, indent=2)
 
-            logger.info(f"Exported JSON snapshot: {output_path}")
+            logger.info("Exported JSON snapshot: %s", output_path)
             return output_path
 
         except Exception as e:
-            logger.error(f"Error exporting JSON snapshot: {e}", exc_info=True)
+            logger.error("Error exporting JSON snapshot: %s", e, exc_info=True)
             raise
 
 

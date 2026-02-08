@@ -15,12 +15,24 @@ class QASystem:
         self.god_tier_encryption = god_tier_encryption
 
         self.qa_database = [
-            {'id': 'q1', 'category': 'privacy', 'question': 'How does God tier encryption work?',
-             'answer': 'God tier encryption uses 7 layers: SHA-512, Fernet, AES-256-GCM, ChaCha20, Double AES-256-GCM, Quantum-resistant padding, HMAC-SHA512'},
-            {'id': 'q2', 'category': 'security', 'question': 'What is the kill switch?',
-             'answer': 'Kill switch stops all network traffic if VPN connection drops. 100% guaranteed protection.'},
-            {'id': 'q3', 'category': 'ads', 'question': 'How aggressive is ad blocking?',
-             'answer': 'HOLY WAR mode - eliminates ALL ads, trackers, pop-ups, redirects, autoplay videos. Zero mercy. Complete annihilation of intrusive advertising.'}
+            {
+                "id": "q1",
+                "category": "privacy",
+                "question": "How does God tier encryption work?",
+                "answer": "God tier encryption uses 7 layers: SHA-512, Fernet, AES-256-GCM, ChaCha20, Double AES-256-GCM, Quantum-resistant padding, HMAC-SHA512",
+            },
+            {
+                "id": "q2",
+                "category": "security",
+                "question": "What is the kill switch?",
+                "answer": "Kill switch stops all network traffic if VPN connection drops. 100% guaranteed protection.",
+            },
+            {
+                "id": "q3",
+                "category": "ads",
+                "question": "How aggressive is ad blocking?",
+                "answer": "HOLY WAR mode - eliminates ALL ads, trackers, pop-ups, redirects, autoplay videos. Zero mercy. Complete annihilation of intrusive advertising.",
+            },
         ]
 
         self.user_questions: list[dict[str, Any]] = []
@@ -28,17 +40,23 @@ class QASystem:
     def search(self, query: str) -> list[dict[str, Any]]:
         """Search Q/A database"""
         query_lower = query.lower()
-        return [qa for qa in self.qa_database
-                if query_lower in qa['question'].lower() or query_lower in qa['answer'].lower()]
+        return [
+            qa
+            for qa in self.qa_database
+            if query_lower in qa["question"].lower()
+            or query_lower in qa["answer"].lower()
+        ]
 
-    def submit_question(self, question: str, category: str = 'general') -> dict[str, Any]:
+    def submit_question(
+        self, question: str, category: str = "general"
+    ) -> dict[str, Any]:
         """Submit a question (encrypted)"""
         encrypted_q = self.god_tier_encryption.encrypt_god_tier(question.encode())
         submission = {
-            'id': f"uq_{len(self.user_questions)}",
-            'encrypted_question': encrypted_q,
-            'timestamp': time.time(),
-            'god_tier_encrypted': True
+            "id": f"uq_{len(self.user_questions)}",
+            "encrypted_question": encrypted_q,
+            "timestamp": time.time(),
+            "god_tier_encrypted": True,
         }
         self.user_questions.append(submission)
-        return {'status': 'submitted', 'id': submission['id']}
+        return {"status": "submitted", "id": submission["id"]}

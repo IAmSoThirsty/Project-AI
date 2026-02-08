@@ -28,6 +28,7 @@ logger = logging.getLogger(__name__)
 
 class AgentType(Enum):
     """Types of institutional agents in the simulation."""
+
     STATE_ACTOR = "state_actor"
     CORPORATE_ACTOR = "corporate_actor"
     REGULATOR = "regulator"
@@ -38,6 +39,7 @@ class AgentType(Enum):
 
 class ResourceType(Enum):
     """Types of resources agents track."""
+
     CAPITAL = "capital"
     INFLUENCE = "influence"
     INFORMATION = "information"
@@ -48,6 +50,7 @@ class ResourceType(Enum):
 @dataclass
 class ResourceConstraints:
     """Agent resource constraints and current state."""
+
     capital: float = 0.5  # [0, 1] normalized
     influence: float = 0.5
     information: float = 0.5
@@ -71,7 +74,7 @@ class ResourceConstraints:
             "influence": self.influence,
             "information": self.information,
             "legitimacy": self.legitimacy,
-            "capability": self.capability
+            "capability": self.capability,
         }
 
         for name, value in resources.items():
@@ -84,8 +87,10 @@ class ResourceConstraints:
 
     def can_act(self) -> bool:
         """Check if agent has sufficient resources to act."""
-        return (self.capital >= self.min_capital_for_action and
-                self.influence >= self.min_influence_for_action)
+        return (
+            self.capital >= self.min_capital_for_action
+            and self.influence >= self.min_influence_for_action
+        )
 
     def consume_resources(self, timestep: float) -> None:
         """Apply resource consumption and decay."""
@@ -96,6 +101,7 @@ class ResourceConstraints:
 @dataclass
 class UtilityFunction:
     """Bounded utility function for agent decision-making."""
+
     # Utility weights (sum should = 1.0)
     capital_weight: float = 0.3
     influence_weight: float = 0.3
@@ -110,19 +116,20 @@ class UtilityFunction:
     min_utility: float = -1.0
     max_utility: float = 1.0
 
-    def compute(self, resources: ResourceConstraints,
-                stability: float, timestep: float = 1.0) -> float:
+    def compute(
+        self, resources: ResourceConstraints, stability: float, timestep: float = 1.0
+    ) -> float:
         """
         Compute bounded utility value.
-        
+
         Returns utility in [min_utility, max_utility].
         """
         # Linear utility from resources
         utility = (
-            self.capital_weight * resources.capital +
-            self.influence_weight * resources.influence +
-            self.legitimacy_weight * resources.legitimacy +
-            self.stability_weight * stability
+            self.capital_weight * resources.capital
+            + self.influence_weight * resources.influence
+            + self.legitimacy_weight * resources.legitimacy
+            + self.stability_weight * stability
         )
 
         # Apply risk aversion (concave transformation)
@@ -139,8 +146,12 @@ class UtilityFunction:
 
     def validate_weights(self) -> tuple[bool, list[str]]:
         """Validate utility weights sum to 1.0."""
-        total = (self.capital_weight + self.influence_weight +
-                 self.legitimacy_weight + self.stability_weight)
+        total = (
+            self.capital_weight
+            + self.influence_weight
+            + self.legitimacy_weight
+            + self.stability_weight
+        )
 
         if not np.isclose(total, 1.0, atol=0.01):
             return False, [f"Utility weights sum to {total}, not 1.0"]
@@ -152,9 +163,10 @@ class UtilityFunction:
 class AgentState:
     """
     Complete state for an institutional agent.
-    
+
     No free will modeling - agents respond deterministically to inputs.
     """
+
     agent_id: str
     agent_type: AgentType
     name: str
@@ -167,7 +179,9 @@ class AgentState:
     driver_pressure: dict[str, float] = field(default_factory=dict)
 
     # Claim-weighted perception
-    perceived_claims: dict[str, float] = field(default_factory=dict)  # claim_id -> posterior
+    perceived_claims: dict[str, float] = field(
+        default_factory=dict
+    )  # claim_id -> posterior
     perception_threshold: float = 0.5  # Only perceive claims with posterior > threshold
 
     # Historical inertia
@@ -179,11 +193,12 @@ class AgentState:
     last_updated: datetime | None = None
     timestep: int = 0
 
-    def compute_action_vector(self, available_actions: list[str],
-                            current_stability: float) -> np.ndarray:
+    def compute_action_vector(
+        self, available_actions: list[str], current_stability: float
+    ) -> np.ndarray:
         """
         Compute vector response to current state.
-        
+
         Returns: Action probabilities (vector, not decisions).
         No free will - purely deterministic response.
         """
@@ -207,9 +222,9 @@ class AgentState:
                 action_utilities[idx] += self.inertia_weight * self.last_action_utility
 
         # Apply driver pressure (increase/decrease utilities)
-        for driver, pressure in self.driver_pressure.items():
+        for _driver, pressure in self.driver_pressure.items():
             # Pressure affects all actions proportionally
-            action_utilities *= (1 + 0.1 * pressure)  # 10% effect per unit pressure
+            action_utilities *= 1 + 0.1 * pressure  # 10% effect per unit pressure
 
         # Convert to probabilities via softmax (bounded)
         action_utilities = np.clip(action_utilities, -10, 10)  # Prevent overflow
@@ -221,7 +236,7 @@ class AgentState:
     def update_perception(self, claims: dict[str, float]) -> None:
         """
         Update claim-weighted perception.
-        
+
         Only perceives claims above threshold.
         """
         self.perceived_claims = {
@@ -263,7 +278,9 @@ class AgentState:
 
         # Validate perception threshold
         if not (0 <= self.perception_threshold <= 1):
-            errors.append(f"Perception threshold out of bounds: {self.perception_threshold}")
+            errors.append(
+                f"Perception threshold out of bounds: {self.perception_threshold}"
+            )
 
         # Validate inertia weight
         if not (0 <= self.inertia_weight <= 1):
@@ -275,7 +292,7 @@ class AgentState:
 class AgentSimulator:
     """
     Layer 5: Agent-Based Institutional Simulator
-    
+
     Simulates institutional agents with:
     - No free will modeling
     - Vector-only responses
@@ -296,7 +313,7 @@ class AgentSimulator:
             category="SIMULATION",
             operation="agent_simulator_initialized",
             details={"timestamp": datetime.now().isoformat()},
-            level="INFORMATIONAL"
+            level="INFORMATIONAL",
         )
 
         logger.info("Agent simulator initialized")
@@ -316,12 +333,12 @@ class AgentSimulator:
             details={
                 "agent_id": agent.agent_id,
                 "agent_type": agent.agent_type.value,
-                "name": agent.name
+                "name": agent.name,
             },
-            level="INFORMATIONAL"
+            level="INFORMATIONAL",
         )
 
-        logger.info(f"Added agent: {agent.name} ({agent.agent_type.value})")
+        logger.info("Added agent: %s (%s)", agent.name, agent.agent_type.value)
 
     def remove_agent(self, agent_id: str) -> None:
         """Remove agent from simulation."""
@@ -333,7 +350,7 @@ class AgentSimulator:
                 category="SIMULATION",
                 operation="agent_removed",
                 details={"agent_id": agent_id, "name": agent.name},
-                level="INFORMATIONAL"
+                level="INFORMATIONAL",
             )
 
     def get_agent(self, agent_id: str) -> AgentState | None:
@@ -350,11 +367,12 @@ class AgentSimulator:
         for agent in self.agents.values():
             agent.update_driver_pressure(driver_vector)
 
-    def compute_all_action_vectors(self, available_actions: list[str],
-                                   current_stability: float) -> dict[str, np.ndarray]:
+    def compute_all_action_vectors(
+        self, available_actions: list[str], current_stability: float
+    ) -> dict[str, np.ndarray]:
         """
         Compute action vectors for all agents.
-        
+
         Returns: {agent_id: action_probability_vector}
         """
         action_vectors = {}
@@ -383,19 +401,15 @@ class AgentSimulator:
             details={
                 "timestep": self.timestep,
                 "delta": timestep_delta,
-                "active_agents": len(self.agents)
+                "active_agents": len(self.agents),
             },
-            level="INFORMATIONAL"
+            level="INFORMATIONAL",
         )
 
     def get_statistics(self) -> dict[str, Any]:
         """Get simulation statistics."""
         if not self.agents:
-            return {
-                "total_agents": 0,
-                "by_type": {},
-                "avg_resources": {}
-            }
+            return {"total_agents": 0, "by_type": {}, "avg_resources": {}}
 
         # Count by type
         by_type = {}
@@ -412,7 +426,7 @@ class AgentSimulator:
         avg_resources = {
             "capital": total_capital / n,
             "influence": total_influence / n,
-            "legitimacy": total_legitimacy / n
+            "legitimacy": total_legitimacy / n,
         }
 
         # Count agents who can act
@@ -424,7 +438,7 @@ class AgentSimulator:
             "avg_resources": avg_resources,
             "can_act": can_act,
             "cannot_act": n - can_act,
-            "timestep": self.timestep
+            "timestep": self.timestep,
         }
 
 

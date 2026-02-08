@@ -156,10 +156,10 @@ class ThreatDetectionEngine:
                     "enabled": True,
                     "match_count": 0,
                 }
-                logger.info(f"Added detection rule: {rule_id}")
+                logger.info("Added detection rule: %s", rule_id)
                 return True
         except Exception as e:
-            logger.error(f"Failed to add detection rule {rule_id}: {e}")
+            logger.error("Failed to add detection rule %s: %s", rule_id, e)
             return False
 
     def detect_threats(self, event: SecurityEvent) -> list[str]:
@@ -175,10 +175,12 @@ class ThreatDetectionEngine:
                         detected_threats.append(rule_id)
                         rule["match_count"] += 1
                         logger.warning(
-                            f"Threat detected: {rule_id} (level: {rule['threat_level']})"
+                            "Threat detected: %s (level: %s)",
+                            rule_id,
+                            rule["threat_level"],
                         )
         except Exception as e:
-            logger.error(f"Error detecting threats: {e}")
+            logger.error("Error detecting threats: %s", e)
 
         return detected_threats
 
@@ -206,7 +208,7 @@ class ThreatDetectionEngine:
 
             return True
         except Exception as e:
-            logger.error(f"Error matching rule: {e}")
+            logger.error("Error matching rule: %s", e)
             return False
 
     def analyze_anomaly(self, metric_name: str, value: float) -> bool:
@@ -242,7 +244,7 @@ class ThreatDetectionEngine:
 
                 return False
         except Exception as e:
-            logger.error(f"Error analyzing anomaly for {metric_name}: {e}")
+            logger.error("Error analyzing anomaly for %s: %s", metric_name, e)
             return False
 
 
@@ -264,11 +266,13 @@ class AutomatedRemediationEngine:
             with self.lock:
                 self.remediation_policies[threat_level.value] = actions
                 logger.info(
-                    f"Added remediation policy for {threat_level.value}: {[a.value for a in actions]}"
+                    "Added remediation policy for %s: %s",
+                    threat_level.value,
+                    [a.value for a in actions],
                 )
                 return True
         except Exception as e:
-            logger.error(f"Failed to add remediation policy: {e}")
+            logger.error("Failed to add remediation policy: %s", e)
             return False
 
     def execute_remediation(
@@ -282,13 +286,14 @@ class AutomatedRemediationEngine:
 
                 if not actions:
                     logger.info(
-                        f"No remediation actions for threat level {incident.threat_level}"
+                        "No remediation actions for threat level %s",
+                        incident.threat_level,
                     )
                     return executed_actions
 
                 for action in actions:
                     if action not in self.allowed_actions:
-                        logger.warning(f"Action {action.value} not allowed, skipping")
+                        logger.warning("Action %s not allowed, skipping", action.value)
                         continue
 
                     success = self._execute_action(incident, action, manual_override)
@@ -299,10 +304,12 @@ class AutomatedRemediationEngine:
                         self._log_action(incident.incident_id, action, False)
 
                 logger.info(
-                    f"Executed {len(executed_actions)} remediation actions for incident {incident.incident_id}"
+                    "Executed %s remediation actions for incident %s",
+                    len(executed_actions),
+                    incident.incident_id,
                 )
         except Exception as e:
-            logger.error(f"Error executing remediation: {e}")
+            logger.error("Error executing remediation: %s", e)
 
         return executed_actions
 
@@ -316,7 +323,9 @@ class AutomatedRemediationEngine:
         try:
             if self.dry_run and not manual_override:
                 logger.info(
-                    f"DRY RUN: Would execute {action.value} for {incident.incident_id}"
+                    "DRY RUN: Would execute %s for %s",
+                    action.value,
+                    incident.incident_id,
                 )
                 return True
 
@@ -334,47 +343,47 @@ class AutomatedRemediationEngine:
             elif action == RemediationAction.LOG_EVENT:
                 return self._log_event(incident)
             else:
-                logger.warning(f"Action {action.value} not implemented")
+                logger.warning("Action %s not implemented", action.value)
                 return False
         except Exception as e:
-            logger.error(f"Error executing action {action.value}: {e}")
+            logger.error("Error executing action %s: %s", action.value, e)
             return False
 
     def _block_ip(self, incident: SecurityIncident) -> bool:
         """Block malicious IP addresses."""
-        logger.info(f"Blocking IPs for incident {incident.incident_id}")
+        logger.info("Blocking IPs for incident %s", incident.incident_id)
         # Implementation would interface with firewall/network controls
         return True
 
     def _kill_process(self, incident: SecurityIncident) -> bool:
         """Terminate malicious processes."""
-        logger.info(f"Killing processes for incident {incident.incident_id}")
+        logger.info("Killing processes for incident %s", incident.incident_id)
         # Implementation would interface with OS process management
         return True
 
     def _isolate_system(self, incident: SecurityIncident) -> bool:
         """Isolate affected systems from network."""
-        logger.info(f"Isolating systems for incident {incident.incident_id}")
+        logger.info("Isolating systems for incident %s", incident.incident_id)
         # Implementation would interface with network segmentation
         return True
 
     def _revoke_access(self, incident: SecurityIncident) -> bool:
         """Revoke compromised access credentials."""
-        logger.info(f"Revoking access for incident {incident.incident_id}")
+        logger.info("Revoking access for incident %s", incident.incident_id)
         # Implementation would interface with identity management
         return True
 
     def _alert_admin(self, incident: SecurityIncident) -> bool:
         """Send alert to administrators."""
         logger.warning(
-            f"SECURITY ALERT: {incident.title} (level: {incident.threat_level})"
+            "SECURITY ALERT: %s (level: %s)", incident.title, incident.threat_level
         )
         # Implementation would send notifications via email/SMS/Slack
         return True
 
     def _log_event(self, incident: SecurityIncident) -> bool:
         """Log security event."""
-        logger.info(f"Logging incident {incident.incident_id}")
+        logger.info("Logging incident %s", incident.incident_id)
         return True
 
     def _log_action(
@@ -418,16 +427,19 @@ class IncidentManager:
                     description=description,
                     threat_level=threat_level.value,
                     events=events,
-                    affected_systems=list(set(e.source for e in events)),
+                    affected_systems=list({e.source for e in events}),
                 )
                 self.incidents[incident.incident_id] = incident
                 self._save_incident(incident)
                 logger.warning(
-                    f"Created incident {incident.incident_id}: {title} (level: {threat_level.value})"
+                    "Created incident %s: %s (level: %s)",
+                    incident.incident_id,
+                    title,
+                    threat_level.value,
                 )
                 return incident.incident_id
         except Exception as e:
-            logger.error(f"Failed to create incident: {e}")
+            logger.error("Failed to create incident: %s", e)
             return ""
 
     def update_incident_status(
@@ -437,7 +449,7 @@ class IncidentManager:
         try:
             with self.lock:
                 if incident_id not in self.incidents:
-                    logger.error(f"Incident {incident_id} not found")
+                    logger.error("Incident %s not found", incident_id)
                     return False
 
                 incident = self.incidents[incident_id]
@@ -454,10 +466,12 @@ class IncidentManager:
                     incident.notes.append(f"{incident.updated_at}: {note}")
 
                 self._save_incident(incident)
-                logger.info(f"Updated incident {incident_id} status to {status.value}")
+                logger.info(
+                    "Updated incident %s status to %s", incident_id, status.value
+                )
                 return True
         except Exception as e:
-            logger.error(f"Failed to update incident status: {e}")
+            logger.error("Failed to update incident status: %s", e)
             return False
 
     def add_remediation_action(self, incident_id: str, action: str) -> bool:
@@ -473,7 +487,7 @@ class IncidentManager:
                 self._save_incident(incident)
                 return True
         except Exception as e:
-            logger.error(f"Failed to add remediation action: {e}")
+            logger.error("Failed to add remediation action: %s", e)
             return False
 
     def get_incident(self, incident_id: str) -> SecurityIncident | None:
@@ -513,7 +527,7 @@ class IncidentManager:
             with open(incident_file, "w") as f:
                 json.dump(incident.to_dict(), f, indent=2)
         except Exception as e:
-            logger.error(f"Failed to save incident {incident.incident_id}: {e}")
+            logger.error("Failed to save incident %s: %s", incident.incident_id, e)
 
     def _load_incidents(self) -> None:
         """Load incidents from disk."""
@@ -537,9 +551,9 @@ class IncidentManager:
                         notes=data["notes"],
                     )
                     self.incidents[incident.incident_id] = incident
-            logger.info(f"Loaded {len(self.incidents)} incidents from disk")
+            logger.info("Loaded %s incidents from disk", len(self.incidents))
         except Exception as e:
-            logger.error(f"Failed to load incidents: {e}")
+            logger.error("Failed to load incidents: %s", e)
 
 
 class SecurityOperationsCenter:
@@ -559,7 +573,7 @@ class SecurityOperationsCenter:
         self._setup_default_rules()
         self._setup_default_policies()
 
-        logger.info(f"Initialized SOC (dry_run={dry_run})")
+        logger.info("Initialized SOC (dry_run=%s)", dry_run)
 
     def _setup_default_rules(self) -> None:
         """Setup default threat detection rules."""
@@ -676,11 +690,11 @@ class SecurityOperationsCenter:
                 try:
                     handler(event)
                 except Exception as e:
-                    logger.error(f"Error in event handler: {e}")
+                    logger.error("Error in event handler: %s", e)
 
             return None
         except Exception as e:
-            logger.error(f"Error ingesting event: {e}")
+            logger.error("Error ingesting event: %s", e)
             return None
 
     def register_event_handler(self, handler: Callable[[SecurityEvent], None]) -> None:
@@ -703,7 +717,7 @@ class SecurityOperationsCenter:
             logger.info("SOC monitoring started")
             return True
         except Exception as e:
-            logger.error(f"Failed to start monitoring: {e}")
+            logger.error("Failed to start monitoring: %s", e)
             return False
 
     def stop_monitoring(self) -> bool:
@@ -715,7 +729,7 @@ class SecurityOperationsCenter:
             logger.info("SOC monitoring stopped")
             return True
         except Exception as e:
-            logger.error(f"Failed to stop monitoring: {e}")
+            logger.error("Failed to stop monitoring: %s", e)
             return False
 
     def _monitoring_loop(self) -> None:
@@ -725,7 +739,7 @@ class SecurityOperationsCenter:
                 # Monitor system health, check for anomalies, etc.
                 time.sleep(10)
             except Exception as e:
-                logger.error(f"Error in monitoring loop: {e}")
+                logger.error("Error in monitoring loop: %s", e)
 
     def get_status(self) -> dict[str, Any]:
         """Get SOC status."""

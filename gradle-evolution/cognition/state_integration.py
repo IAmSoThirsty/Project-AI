@@ -23,11 +23,7 @@ class BuildStateIntegration:
     Provides episodic build memory and state persistence.
     """
 
-    def __init__(
-        self,
-        state_manager: StateManager,
-        state_dir: Path | None = None
-    ):
+    def __init__(self, state_manager: StateManager, state_dir: Path | None = None):
         """
         Initialize build state integration.
 
@@ -45,14 +41,14 @@ class BuildStateIntegration:
         self.BUILD_CONFIG_KEY = "build_configuration"
 
         self._load_persistent_state()
-        logger.info(f"Build state integration initialized: {self.state_dir}")
+        logger.info("Build state integration initialized: %s", self.state_dir)
 
     def record_build_episode(
         self,
         build_id: str,
         tasks: list[str],
         result: dict[str, Any],
-        metadata: dict[str, Any] | None = None
+        metadata: dict[str, Any] | None = None,
     ) -> None:
         """
         Record a build execution as an episode.
@@ -78,15 +74,12 @@ class BuildStateIntegration:
             # Update build statistics
             self._update_build_stats(result)
 
-            logger.debug(f"Recorded build episode: {build_id}")
+            logger.debug("Recorded build episode: %s", build_id)
 
         except Exception as e:
-            logger.error(f"Error recording build episode: {e}", exc_info=True)
+            logger.error("Error recording build episode: %s", e, exc_info=True)
 
-    def save_build_cache(
-        self,
-        cache_data: dict[str, Any]
-    ) -> None:
+    def save_build_cache(self, cache_data: dict[str, Any]) -> None:
         """
         Save build cache state.
 
@@ -98,7 +91,7 @@ class BuildStateIntegration:
             self._persist_to_disk(self.BUILD_CACHE_KEY, cache_data)
             logger.debug("Build cache saved")
         except Exception as e:
-            logger.error(f"Error saving build cache: {e}", exc_info=True)
+            logger.error("Error saving build cache: %s", e, exc_info=True)
 
     def load_build_cache(self) -> dict[str, Any]:
         """
@@ -109,16 +102,14 @@ class BuildStateIntegration:
         """
         try:
             cache = self.state_manager.load_state(self.BUILD_CACHE_KEY, default={})
-            logger.debug(f"Loaded build cache: {len(cache)} entries")
+            logger.debug("Loaded build cache: %s entries", len(cache))
             return cache
         except Exception as e:
-            logger.error(f"Error loading build cache: {e}", exc_info=True)
+            logger.error("Error loading build cache: %s", e, exc_info=True)
             return {}
 
     def get_build_history(
-        self,
-        limit: int = 10,
-        task_filter: str | None = None
+        self, limit: int = 10, task_filter: str | None = None
     ) -> list[dict[str, Any]]:
         """
         Get recent build episodes.
@@ -135,27 +126,22 @@ class BuildStateIntegration:
 
             # Filter to build episodes
             build_episodes = [
-                ep for ep in episodes
-                if ep.get("type") == "build_execution"
+                ep for ep in episodes if ep.get("type") == "build_execution"
             ]
 
             # Apply task filter if specified
             if task_filter:
                 build_episodes = [
-                    ep for ep in build_episodes
-                    if task_filter in ep.get("tasks", [])
+                    ep for ep in build_episodes if task_filter in ep.get("tasks", [])
                 ]
 
             return build_episodes[:limit]
 
         except Exception as e:
-            logger.error(f"Error getting build history: {e}", exc_info=True)
+            logger.error("Error getting build history: %s", e, exc_info=True)
             return []
 
-    def save_build_configuration(
-        self,
-        config: dict[str, Any]
-    ) -> None:
+    def save_build_configuration(self, config: dict[str, Any]) -> None:
         """
         Save build configuration state.
 
@@ -167,7 +153,7 @@ class BuildStateIntegration:
             self._persist_to_disk(self.BUILD_CONFIG_KEY, config)
             logger.debug("Build configuration saved")
         except Exception as e:
-            logger.error(f"Error saving build configuration: {e}", exc_info=True)
+            logger.error("Error saving build configuration: %s", e, exc_info=True)
 
     def load_build_configuration(self) -> dict[str, Any]:
         """
@@ -181,7 +167,7 @@ class BuildStateIntegration:
             logger.debug("Loaded build configuration")
             return config
         except Exception as e:
-            logger.error(f"Error loading build configuration: {e}", exc_info=True)
+            logger.error("Error loading build configuration: %s", e, exc_info=True)
             return {}
 
     def get_build_statistics(self) -> dict[str, Any]:
@@ -192,18 +178,21 @@ class BuildStateIntegration:
             Build statistics summary
         """
         try:
-            stats = self.state_manager.load_state(self.BUILD_STATS_KEY, default={
-                "total_builds": 0,
-                "successful_builds": 0,
-                "failed_builds": 0,
-                "total_duration_seconds": 0,
-                "average_duration_seconds": 0,
-            })
+            stats = self.state_manager.load_state(
+                self.BUILD_STATS_KEY,
+                default={
+                    "total_builds": 0,
+                    "successful_builds": 0,
+                    "failed_builds": 0,
+                    "total_duration_seconds": 0,
+                    "average_duration_seconds": 0,
+                },
+            )
 
             return stats
 
         except Exception as e:
-            logger.error(f"Error getting build statistics: {e}", exc_info=True)
+            logger.error("Error getting build statistics: %s", e, exc_info=True)
             return {}
 
     def clear_build_state(self, keep_config: bool = True) -> None:
@@ -218,13 +207,16 @@ class BuildStateIntegration:
             self.state_manager.save_state(self.BUILD_CACHE_KEY, {})
 
             # Reset statistics
-            self.state_manager.save_state(self.BUILD_STATS_KEY, {
-                "total_builds": 0,
-                "successful_builds": 0,
-                "failed_builds": 0,
-                "total_duration_seconds": 0,
-                "average_duration_seconds": 0,
-            })
+            self.state_manager.save_state(
+                self.BUILD_STATS_KEY,
+                {
+                    "total_builds": 0,
+                    "successful_builds": 0,
+                    "failed_builds": 0,
+                    "total_duration_seconds": 0,
+                    "average_duration_seconds": 0,
+                },
+            )
 
             # Clear configuration if requested
             if not keep_config:
@@ -233,7 +225,7 @@ class BuildStateIntegration:
             logger.info("Build state cleared")
 
         except Exception as e:
-            logger.error(f"Error clearing build state: {e}", exc_info=True)
+            logger.error("Error clearing build state: %s", e, exc_info=True)
 
     def export_state_snapshot(self, output_path: Path) -> None:
         """
@@ -254,10 +246,10 @@ class BuildStateIntegration:
             with open(output_path, "w") as f:
                 json.dump(snapshot, f, indent=2)
 
-            logger.info(f"State snapshot exported to: {output_path}")
+            logger.info("State snapshot exported to: %s", output_path)
 
         except Exception as e:
-            logger.error(f"Error exporting state snapshot: {e}", exc_info=True)
+            logger.error("Error exporting state snapshot: %s", e, exc_info=True)
 
     def import_state_snapshot(self, input_path: Path) -> bool:
         """
@@ -283,13 +275,15 @@ class BuildStateIntegration:
 
             # Import statistics
             if "statistics" in snapshot:
-                self.state_manager.save_state(self.BUILD_STATS_KEY, snapshot["statistics"])
+                self.state_manager.save_state(
+                    self.BUILD_STATS_KEY, snapshot["statistics"]
+                )
 
-            logger.info(f"State snapshot imported from: {input_path}")
+            logger.info("State snapshot imported from: %s", input_path)
             return True
 
         except Exception as e:
-            logger.error(f"Error importing state snapshot: {e}", exc_info=True)
+            logger.error("Error importing state snapshot: %s", e, exc_info=True)
             return False
 
     def _update_build_stats(self, result: dict[str, Any]) -> None:
@@ -315,7 +309,7 @@ class BuildStateIntegration:
             self.state_manager.save_state(self.BUILD_STATS_KEY, stats)
 
         except Exception as e:
-            logger.error(f"Error updating build stats: {e}", exc_info=True)
+            logger.error("Error updating build stats: %s", e, exc_info=True)
 
     def _persist_to_disk(self, key: str, data: dict[str, Any]) -> None:
         """Persist state to disk for durability."""
@@ -324,20 +318,24 @@ class BuildStateIntegration:
             with open(filepath, "w") as f:
                 json.dump(data, f, indent=2)
         except Exception as e:
-            logger.error(f"Error persisting to disk: {e}", exc_info=True)
+            logger.error("Error persisting to disk: %s", e, exc_info=True)
 
     def _load_persistent_state(self) -> None:
         """Load persistent state from disk on initialization."""
         try:
-            for key in [self.BUILD_CACHE_KEY, self.BUILD_CONFIG_KEY, self.BUILD_STATS_KEY]:
+            for key in [
+                self.BUILD_CACHE_KEY,
+                self.BUILD_CONFIG_KEY,
+                self.BUILD_STATS_KEY,
+            ]:
                 filepath = self.state_dir / f"{key}.json"
                 if filepath.exists():
                     with open(filepath) as f:
                         data = json.load(f)
                     self.state_manager.save_state(key, data)
-                    logger.debug(f"Loaded persistent state: {key}")
+                    logger.debug("Loaded persistent state: %s", key)
         except Exception as e:
-            logger.error(f"Error loading persistent state: {e}", exc_info=True)
+            logger.error("Error loading persistent state: %s", e, exc_info=True)
 
 
 __all__ = ["BuildStateIntegration"]

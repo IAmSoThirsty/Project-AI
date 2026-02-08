@@ -207,7 +207,7 @@ class CBRNClassifier:
         X_vec = self.vectorizer.fit_transform(X_train)  # noqa: N806 - ML convention
         self.model.fit(X_vec, y_train)
 
-        self.logger.info(f"CBRN classifier trained on {len(X_train)} examples")
+        self.logger.info("CBRN classifier trained on %s examples", len(X_train))
 
     def classify(
         self, input_text: str, user: str = "anonymous", context: list[str] | None = None

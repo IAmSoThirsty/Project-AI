@@ -78,7 +78,7 @@ class ConstitutionalScenarioEngine(GlobalScenarioEngine):
             authorized_by="SystemBootstrap",
         )
 
-        logger.info(f"Data load authorized under action_id: {action_id}")
+        logger.info("Data load authorized under action_id: %s", action_id)
 
         # Perform actual data loading
         return super().load_historical_data(start_year, end_year, domains, countries)
@@ -113,7 +113,7 @@ class ConstitutionalScenarioEngine(GlobalScenarioEngine):
             authorized_by="AnalystRequest",
         )
 
-        logger.info(f"Simulation authorized under action_id: {action_id}")
+        logger.info("Simulation authorized under action_id: %s", action_id)
 
         # Perform actual simulation
         return super().run_monte_carlo_simulation(
@@ -168,7 +168,7 @@ class ConstitutionalScenarioEngine(GlobalScenarioEngine):
             authorized_by="MonitoringSystem",
         )
 
-        logger.info(f"Alert generation authorized under action_id: {action_id}")
+        logger.info("Alert generation authorized under action_id: %s", action_id)
 
         # Perform actual alert generation
         alerts = super().generate_alerts(scenarios, threshold)

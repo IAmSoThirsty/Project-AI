@@ -91,10 +91,9 @@ class TestSecureCommunicationsKernel(unittest.TestCase):
 
     def test_message_encryption(self):
         """Test message encryption/decryption"""
-        plaintext = b"Test message for encryption"
 
         # Get public key
-        pub_key = self.kernel.ephemeral_public_key.public_bytes(
+        self.kernel.ephemeral_public_key.public_bytes(
             encoding=bytes([0] * 32).__class__.__bases__[0],
             format=bytes([0] * 32).__class__.__bases__[0],
         )

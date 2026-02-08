@@ -550,7 +550,7 @@ class LintChecker:
 
     def _compute_summary(self) -> dict[str, Any]:
         """Compute summary statistics from lint reports."""
-        total_files = len(set(r.file for r in self.reports))
+        total_files = len({r.file for r in self.reports})
         total_issues = sum(len(r.issues) for r in self.reports)
         passed_files = sum(1 for r in self.reports if r.passed)
 

@@ -235,7 +235,7 @@ class DeterministicVM:
             "status": "registered",
             "result": None,
         }
-        logger.info(f"Registered workflow: {workflow.workflow_id}")
+        logger.info("Registered workflow: %s", workflow.workflow_id)
 
     def submit_task(
         self, workflow_id: str, task_name: str, task_fn: Callable, args: dict[str, Any]
@@ -261,7 +261,7 @@ class DeterministicVM:
         # Queue task for execution
         self._pending_tasks.append((task_id, workflow_id, task_fn, args))
 
-        logger.debug(f"Submitted task {task_id}: {task_name}")
+        logger.debug("Submitted task %s: %s", task_id, task_name)
         return task_id
 
     def execute_workflow(
@@ -313,7 +313,7 @@ class DeterministicVM:
             self._workflow_state[workflow_id]["status"] = "completed"
             self._workflow_state[workflow_id]["result"] = result
 
-            logger.info(f"Workflow {workflow_id} completed successfully")
+            logger.info("Workflow %s completed successfully", workflow_id)
             return result
 
         except Exception as ex:
@@ -334,7 +334,7 @@ class DeterministicVM:
             self._workflow_state[workflow_id]["status"] = "failed"
             self._workflow_state[workflow_id]["error"] = str(ex)
 
-            logger.error(f"Workflow {workflow_id} failed: {ex}")
+            logger.error("Workflow %s failed: %s", workflow_id, ex)
             raise
 
     def snapshot(self, workflow_id: str) -> str:
@@ -366,7 +366,7 @@ class DeterministicVM:
         )
         self._event_log.append(snap_event)
 
-        logger.debug(f"Created snapshot {state_hash} at sequence {snapshot_seq}")
+        logger.debug("Created snapshot %s at sequence %s", state_hash, snapshot_seq)
         return state_hash
 
     def restore_snapshot(self, snapshot_hash: str) -> None:
@@ -378,7 +378,7 @@ class DeterministicVM:
         workflow_id = snapshot["workflow_id"]
 
         self._workflow_state[workflow_id] = snapshot["state"].copy()
-        logger.info(f"Restored snapshot {snapshot_hash} for workflow {workflow_id}")
+        logger.info("Restored snapshot %s for workflow %s", snapshot_hash, workflow_id)
 
     def get_event_log(self, workflow_id: str | None = None) -> list[WorkflowEvent]:
         """Get event log for a workflow or all workflows"""
@@ -404,7 +404,7 @@ class DeterministicVM:
         with open(state_file, "w") as f:
             json.dump(state, f, indent=2)
 
-        logger.info(f"VM state persisted to {state_file}")
+        logger.info("VM state persisted to %s", state_file)
 
     def load_state(self) -> None:
         """Load VM state from disk"""
@@ -422,7 +422,7 @@ class DeterministicVM:
         self._event_log = [WorkflowEvent.from_dict(e) for e in state["event_log"]]
         self._snapshots = state["snapshots"]
 
-        logger.info(f"VM state loaded from {state_file}")
+        logger.info("VM state loaded from %s", state_file)
 
 
 # ============================================================================
@@ -444,7 +444,7 @@ class AgentOrchestrator:
     def register_agent(self, agent_id: str, agent_fn: Callable) -> None:
         """Register an agent for orchestration"""
         self._agent_registry[agent_id] = agent_fn
-        logger.info(f"Registered agent: {agent_id}")
+        logger.info("Registered agent: %s", agent_id)
 
     def sequential(
         self, workflow_id: str, agents: list[str], initial_input: Any
@@ -475,7 +475,7 @@ class AgentOrchestrator:
             # Execute agent
             result = agent_fn(result)
 
-            logger.debug(f"Sequential agent {agent_id} completed")
+            logger.debug("Sequential agent %s completed", agent_id)
 
         return result
 
@@ -512,7 +512,7 @@ class AgentOrchestrator:
             result = agent_fn(agent_input)
             results.append(result)
 
-            logger.debug(f"Concurrent agent {agent_id} completed")
+            logger.debug("Concurrent agent %s completed", agent_id)
 
         return results
 
@@ -556,7 +556,7 @@ class AgentOrchestrator:
             response = agent_fn(conversation)
             conversation.append(response)
 
-            logger.debug(f"Chat turn {turn}: agent {agent_id}")
+            logger.debug("Chat turn %s: agent %s", turn, agent_id)
 
         return conversation
 
@@ -618,7 +618,7 @@ class AgentOrchestrator:
             return node_result
 
         result = visit_node(start_node, result)
-        logger.info(f"Graph execution completed, visited {len(visited)} nodes")
+        logger.info("Graph execution completed, visited %s nodes", len(visited))
 
         return result
 
@@ -644,12 +644,12 @@ class CapabilityEngine:
     def register_capability(self, cap: Capability) -> None:
         """Register a capability in the system"""
         self._registry[cap.name] = cap
-        logger.info(f"Registered capability: {cap.name}")
+        logger.info("Registered capability: %s", cap.name)
 
     def register_policy(self, policy: Policy) -> None:
         """Register a policy for enforcement"""
         self._policies.append(policy)
-        logger.info(f"Registered policy: {policy.name}")
+        logger.info("Registered policy: %s", policy.name)
 
     def verify_workflow(self, workflow: Workflow) -> tuple[bool, list[str]]:
         """
@@ -801,7 +801,7 @@ class EventRecorder:
         )
         self.vm._event_log.append(event)
 
-        logger.debug(f"Recorded external call: {call_type}")
+        logger.debug("Recorded external call: %s", call_type)
 
     def save_recording(self, workflow_id: str, recording_name: str) -> None:
         """Save recording to disk"""
@@ -817,7 +817,7 @@ class EventRecorder:
         with open(recording_file, "w") as f:
             json.dump(recording, f, indent=2)
 
-        logger.info(f"Saved recording to {recording_file}")
+        logger.info("Saved recording to %s", recording_file)
 
     def load_recording(self, recording_name: str) -> dict[str, Any]:
         """Load recording from disk"""
@@ -829,7 +829,7 @@ class EventRecorder:
         with open(recording_file) as f:
             recording = json.load(f)
 
-        logger.info(f"Loaded recording {recording_name}")
+        logger.info("Loaded recording %s", recording_name)
         return recording
 
     def replay_workflow(
@@ -870,14 +870,14 @@ class EventRecorder:
 
             if event.kind == WorkflowEventKind.EXTERNAL_CALL:
                 # On replay, pull result from recorded event instead of calling
-                logger.debug(f"Replaying external call at sequence {event.sequence}")
+                logger.debug("Replaying external call at sequence %s", event.sequence)
 
         # Reset replay mode
         self.vm._replay_mode = False
         self.vm._replay_events = []
         self.vm._replay_index = 0
 
-        logger.info(f"Replay of {recording_name} completed")
+        logger.info("Replay of %s completed", recording_name)
         return replay_result
 
     def is_replay_mode(self) -> bool:
@@ -954,13 +954,16 @@ class ProvenanceManager:
     def register_artifact(self, artifact: Artifact) -> None:
         """Register an artifact in the provenance system"""
         self._artifacts[artifact.artifact_id] = artifact
-        logger.info(f"Registered artifact: {artifact.artifact_id} ({artifact.kind})")
+        logger.info("Registered artifact: %s (%s)", artifact.artifact_id, artifact.kind)
 
     def add_relationship(self, relationship: ArtifactRelationship) -> None:
         """Add a relationship between artifacts"""
         self._relationships.append(relationship)
         logger.debug(
-            f"Added relationship: {relationship.from_artifact} {relationship.relationship_type} {relationship.to_artifact}"
+            "Added relationship: %s %s %s",
+            relationship.from_artifact,
+            relationship.relationship_type,
+            relationship.to_artifact,
         )
 
     def attest(
@@ -982,7 +985,7 @@ class ProvenanceManager:
         }
 
         self._attestations.append(attestation)
-        logger.info(f"Recorded attestation: {attestation_type} for {artifact_id}")
+        logger.info("Recorded attestation: %s for %s", attestation_type, artifact_id)
 
     def _get_logical_timestamp(self) -> int:
         """Get logical timestamp (counter-based, not wall-clock)"""
@@ -1069,7 +1072,7 @@ class ProvenanceManager:
         with open(sbom_file, "w") as f:
             json.dump(sbom, f, indent=2)
 
-        logger.info(f"SBOM saved to {sbom_file}")
+        logger.info("SBOM saved to %s", sbom_file)
         return sbom_file
 
     def verify_sbom(self, sbom: dict[str, Any]) -> tuple[bool, list[str]]:
@@ -1193,7 +1196,7 @@ class TarlStackBox:
         )
         self.provenance.register_artifact(artifact)
 
-        logger.info(f"Created workflow: {workflow_id}")
+        logger.info("Created workflow: %s", workflow_id)
         return workflow
 
     def execute_with_provenance(

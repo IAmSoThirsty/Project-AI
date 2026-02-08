@@ -10,7 +10,7 @@ Zero tolerance. Zero placeholders. Zero bypass.
 
 import logging
 from dataclasses import dataclass
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 from src.app.governance.acceptance_ledger import (
@@ -23,7 +23,7 @@ from src.app.governance.jurisdiction_loader import get_jurisdiction_loader
 logger = logging.getLogger(__name__)
 
 
-class EnforcementVerdict(str, Enum):
+class EnforcementVerdict(StrEnum):
     """Enforcement decision"""
 
     ALLOW = "allow"
@@ -190,7 +190,7 @@ class RuntimeEnforcer:
             )
 
         except Exception as e:
-            logger.error(f"Error checking acceptance ledger for {user_id}: {e}")
+            logger.error("Error checking acceptance ledger for %s: %s", user_id, e)
             return EnforcementResult(
                 verdict=EnforcementVerdict.DENY,
                 reason="Ledger verification failed",
@@ -230,7 +230,7 @@ class RuntimeEnforcer:
             )
 
         except Exception as e:
-            logger.error(f"Error checking termination for {user_id}: {e}")
+            logger.error("Error checking termination for %s: %s", user_id, e)
             # Fail closed - deny on error
             return EnforcementResult(
                 verdict=EnforcementVerdict.DENY,

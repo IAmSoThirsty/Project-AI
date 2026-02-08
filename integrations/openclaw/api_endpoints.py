@@ -10,7 +10,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
 # Add integrations to path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
 from integrations.openclaw import LegionAgent, get_config
 
@@ -33,6 +33,7 @@ def get_legion_agent() -> LegionAgent:
 # Request/Response models
 class OpenClawMessage(BaseModel):
     """Message from OpenClaw to Legion"""
+
     content: str
     user_id: str
     platform: str = "openclaw"
@@ -41,6 +42,7 @@ class OpenClawMessage(BaseModel):
 
 class LegionResponse(BaseModel):
     """Response from Legion to OpenClaw"""
+
     response: str
     agent_id: str
     status: str
@@ -49,12 +51,14 @@ class LegionResponse(BaseModel):
 
 class CapabilityRequest(BaseModel):
     """Request to execute a specific capability"""
+
     capability_id: str
     params: dict = {}
     user_id: str
 
 
 # Endpoints
+
 
 @router.post("/message", response_model=LegionResponse)
 async def process_message(message: OpenClawMessage):
@@ -75,13 +79,11 @@ async def process_message(message: OpenClawMessage):
             message=message.content,
             user_id=message.user_id,
             platform=message.platform,
-            metadata=message.metadata
+            metadata=message.metadata,
         )
 
         return LegionResponse(
-            response=response_text,
-            agent_id=legion.agent_id,
-            status="success"
+            response=response_text, agent_id=legion.agent_id, status="success"
         )
 
     except Exception as e:
@@ -106,22 +108,22 @@ async def list_capabilities():
                 "subsystem": "Cerberus",
                 "description": "Analyze current threat landscape",
                 "risk_level": "high",
-                "permissions": ["security.read", "cerberus.analyze"]
+                "permissions": ["security.read", "cerberus.analyze"],
             },
             "scenario_forecast": {
                 "subsystem": "Global Scenario Engine",
                 "description": "Run Monte Carlo crisis simulations",
                 "risk_level": "medium",
-                "permissions": ["scenario.read", "scenario.simulate"]
+                "permissions": ["scenario.read", "scenario.simulate"],
             },
             "memory_recall": {
                 "subsystem": "EED",
                 "description": "Query episodic memory",
                 "risk_level": "low",
-                "permissions": ["memory.read"]
-            }
+                "permissions": ["memory.read"],
+            },
         },
-        "total_count": 3
+        "total_count": 3,
     }
 
 
@@ -139,7 +141,7 @@ async def execute_capability(request: CapabilityRequest):
     return {
         "capability_id": request.capability_id,
         "status": "phase1_placeholder",
-        "message": "Full capability execution in Phase 2"
+        "message": "Full capability execution in Phase 2",
     }
 
 
@@ -165,8 +167,8 @@ async def health_check():
             "triumvirate": "ready",
             "cerberus": "active",
             "eed": "online",
-            "tarl": "enforcing"
-        }
+            "tarl": "enforcing",
+        },
     }
 
 
@@ -178,8 +180,5 @@ async def get_status():
     return {
         "agent_id": legion.agent_id,
         "conversations": len(legion.conversation_history),
-        "security": {
-            "enabled": True,
-            "hydra_active": True
-        }
+        "security": {"enabled": True, "hydra_active": True},
     }

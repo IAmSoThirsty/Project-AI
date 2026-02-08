@@ -186,7 +186,7 @@ class ConfigurationManager:
         self.config_file = config_file
         self.config: GodTierConfig = GodTierConfig()
         self._ensure_config_dir()
-        logger.info(f"ConfigurationManager initialized with {config_file}")
+        logger.info("ConfigurationManager initialized with %s", config_file)
 
     def _ensure_config_dir(self) -> None:
         """Ensure configuration directory exists"""
@@ -203,7 +203,7 @@ class ConfigurationManager:
 
                 if config_dict:
                     self.config = self._dict_to_config(config_dict)
-                    logger.info(f"Configuration loaded from {self.config_file}")
+                    logger.info("Configuration loaded from %s", self.config_file)
                 else:
                     logger.warning("Empty config file, using defaults")
             else:
@@ -213,7 +213,7 @@ class ConfigurationManager:
             return self.config
 
         except Exception as e:
-            logger.error(f"Failed to load config: {e}")
+            logger.error("Failed to load config: %s", e)
             return self.config
 
     def save_config(self) -> bool:
@@ -224,11 +224,11 @@ class ConfigurationManager:
             with open(self.config_file, "w") as f:
                 yaml.dump(config_dict, f, default_flow_style=False, sort_keys=False)
 
-            logger.info(f"Configuration saved to {self.config_file}")
+            logger.info("Configuration saved to %s", self.config_file)
             return True
 
         except Exception as e:
-            logger.error(f"Failed to save config: {e}")
+            logger.error("Failed to save config: %s", e)
             return False
 
     def _dict_to_config(self, config_dict: dict[str, Any]) -> GodTierConfig:
@@ -300,7 +300,7 @@ class ConfigurationManager:
             return True
 
         except Exception as e:
-            logger.error(f"Failed to update config: {e}")
+            logger.error("Failed to update config: %s", e)
             return False
 
     def validate_config(self) -> tuple[bool, list[str]]:
@@ -353,7 +353,7 @@ class ConfigurationManager:
         if is_valid:
             logger.info("Configuration validation passed")
         else:
-            logger.error(f"Configuration validation failed: {errors}")
+            logger.error("Configuration validation failed: %s", errors)
 
         return is_valid, errors
 
@@ -366,11 +366,11 @@ class ConfigurationManager:
             with open(output_file, "w") as f:
                 yaml.dump(template_dict, f, default_flow_style=False, sort_keys=False)
 
-            logger.info(f"Configuration template exported to {output_file}")
+            logger.info("Configuration template exported to %s", output_file)
             return True
 
         except Exception as e:
-            logger.error(f"Failed to export template: {e}")
+            logger.error("Failed to export template: %s", e)
             return False
 
 

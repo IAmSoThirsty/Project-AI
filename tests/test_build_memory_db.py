@@ -118,7 +118,7 @@ class TestBuildGraphDB:
 
             # Create test data
             build1 = db.create_build(version="1.0.0", status="success")
-            build2 = db.create_build(version="1.1.0", status="success")
+            db.create_build(version="1.1.0", status="success")
 
             db.create_artifact(build1, "app.jar", "hash1", 100, "jar")
             db.create_dependency(build1, "dep1", "1.0", license="MIT")

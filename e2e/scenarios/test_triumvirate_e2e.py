@@ -16,4 +16,3 @@ class TestTriumvirateArchitecture:
     def test_triumvirate_placeholder(self):
         """Placeholder test - real tests in test_triumvirate_council_tarl_e2e.py."""
         assert True
-

@@ -169,7 +169,7 @@ class TriumvirateRobotValidator:
             return True, "Command validated by Triumvirate", metadata
 
         except Exception as e:
-            logger.error(f"Triumvirate validation error: {e}")
+            logger.error("Triumvirate validation error: %s", e)
             metadata["error"] = str(e)
             return False, f"Validation error: {e}", metadata
 
@@ -219,7 +219,9 @@ class TriumvirateRobotValidator:
 
         # Check for large position changes that might need trajectory planning
         max_delta = 0.0
-        for i, (target, state) in enumerate(zip(command.joint_targets, joint_states)):
+        for i, (target, state) in enumerate(
+            zip(command.joint_targets, joint_states, strict=False)
+        ):
             delta = abs(target - state.position)
             max_delta = max(max_delta, delta)
 
@@ -253,7 +255,9 @@ class TriumvirateRobotValidator:
         }
 
         # Assess command feasibility
-        for i, (target, state) in enumerate(zip(command.joint_targets, joint_states)):
+        for i, (target, state) in enumerate(
+            zip(command.joint_targets, joint_states, strict=False)
+        ):
             # Check if target is reachable given current velocity
             delta = target - state.position
             time_required = abs(delta) / max(abs(state.limits.max_velocity), 0.1)
@@ -350,7 +354,7 @@ class RobotControllerManager:
         self._commands_executed = 0
         self._commands_rejected = 0
 
-        logger.info(f"Robot controller initialized for {config.robot_name}")
+        logger.info("Robot controller initialized for %s", config.robot_name)
 
     def start(self) -> bool:
         """Start robot controller"""
@@ -378,7 +382,7 @@ class RobotControllerManager:
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to start controller: {e}")
+            logger.error("Failed to start controller: %s", e)
             return False
 
     def stop(self) -> None:
@@ -396,7 +400,7 @@ class RobotControllerManager:
                 logger.info("Robot controller stopped")
 
         except Exception as e:
-            logger.error(f"Error stopping controller: {e}")
+            logger.error("Error stopping controller: %s", e)
 
     def execute_command(self, command: RobotCommand) -> bool:
         """
@@ -411,11 +415,11 @@ class RobotControllerManager:
 
                 # Add to queue (will be validated in control loop)
                 self._command_queue.append(command)
-                logger.info(f"Command {command.command_id} queued")
+                logger.info("Command %s queued", command.command_id)
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to queue command: {e}")
+            logger.error("Failed to queue command: %s", e)
             return False
 
     def emergency_stop(self) -> bool:
@@ -437,7 +441,7 @@ class RobotControllerManager:
                 return True
 
         except Exception as e:
-            logger.error(f"Emergency stop failed: {e}")
+            logger.error("Emergency stop failed: %s", e)
             return False
 
     def reset_emergency_stop(self) -> bool:
@@ -464,7 +468,7 @@ class RobotControllerManager:
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to reset emergency stop: {e}")
+            logger.error("Failed to reset emergency stop: %s", e)
             return False
 
     def get_status(self) -> RobotStatus:
@@ -507,7 +511,7 @@ class RobotControllerManager:
                 time.sleep(1.0 / self.config.control_frequency)
 
             except Exception as e:
-                logger.error(f"Control loop error: {e}")
+                logger.error("Control loop error: %s", e)
                 time.sleep(0.1)
 
         logger.info("Control loop stopped")
@@ -527,14 +531,14 @@ class RobotControllerManager:
             )
 
             if not is_valid:
-                logger.error(f"Command rejected: {reason}")
+                logger.error("Command rejected: %s", reason)
                 self._commands_rejected += 1
                 self._state = RobotState.READY
                 self._current_command = None
                 return
 
             # Execute command
-            logger.info(f"Executing command {command.command_id}")
+            logger.info("Executing command %s", command.command_id)
 
             # Prepare joint commands
             joint_commands = []
@@ -546,16 +550,16 @@ class RobotControllerManager:
 
             if success:
                 self._commands_executed += 1
-                logger.info(f"Command {command.command_id} executed successfully")
+                logger.info("Command %s executed successfully", command.command_id)
             else:
-                logger.error(f"Command {command.command_id} execution failed")
+                logger.error("Command %s execution failed", command.command_id)
                 self._commands_rejected += 1
 
             self._state = RobotState.READY
             self._current_command = None
 
         except Exception as e:
-            logger.error(f"Command execution error: {e}")
+            logger.error("Command execution error: %s", e)
             self._state = RobotState.ERROR
             self._current_command = None
 

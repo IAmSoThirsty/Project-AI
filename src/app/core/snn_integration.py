@@ -253,7 +253,10 @@ class BindsNetRLAgent:
         self.encoder = PoissonEncoder(time=100, dt=dt)
 
         logger.info(
-            f"BindsNet RL agent initialized: {input_size}→{hidden_size}→{output_size}"
+            "BindsNet RL agent initialized: %s→%s→%s",
+            input_size,
+            hidden_size,
+            output_size,
         )
 
     def process_observation(
@@ -405,7 +408,7 @@ class SinabsVisionSNN:
         self.model = self._build_model()
 
         logger.info(
-            f"Sinabs vision SNN initialized: {input_shape} → {num_classes} classes"
+            "Sinabs vision SNN initialized: %s → %s classes", input_shape, num_classes
         )
 
     def _build_model(self) -> nn.Module:

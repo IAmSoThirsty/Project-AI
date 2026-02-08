@@ -73,7 +73,7 @@ class SurvivorSupportSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObser
             self._initialized = True
             return True
         except Exception as e:
-            logger.error(f"Init failed: {e}")
+            logger.error("Init failed: %s", e)
             return False
 
     def shutdown(self) -> bool:

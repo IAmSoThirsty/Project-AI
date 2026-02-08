@@ -26,7 +26,7 @@ def sample_scenario():
         constraints={"time_limit_seconds": 30},
         objectives=["Test objective"],
         expected_decision="test_decision",
-        success_criteria={"test_passed": True}
+        success_criteria={"test_passed": True},
     )
 
 
@@ -35,12 +35,9 @@ def sample_ai_response():
     """Create a sample AI response."""
     return {
         "decision": "test_decision",
-        "reasoning": {
-            "approach": "test approach",
-            "factors": ["factor1", "factor2"]
-        },
+        "reasoning": {"approach": "test approach", "factors": ["factor1", "factor2"]},
         "confidence": 0.85,
-        "constraints_satisfied": True
+        "constraints_satisfied": True,
     }
 
 
@@ -76,9 +73,7 @@ class TestSovereignWarRoom:
         swr.active_scenarios[sample_scenario.scenario_id] = sample_scenario
 
         result = swr.execute_scenario(
-            sample_scenario,
-            sample_ai_response,
-            "test_system"
+            sample_scenario, sample_ai_response, "test_system"
         )
 
         assert result is not None
@@ -93,16 +88,9 @@ class TestSovereignWarRoom:
         """Test scenario execution with wrong decision."""
         swr.active_scenarios[sample_scenario.scenario_id] = sample_scenario
 
-        wrong_response = {
-            "decision": "wrong_decision",
-            "reasoning": {}
-        }
+        wrong_response = {"decision": "wrong_decision", "reasoning": {}}
 
-        result = swr.execute_scenario(
-            sample_scenario,
-            wrong_response,
-            "test_system"
-        )
+        result = swr.execute_scenario(sample_scenario, wrong_response, "test_system")
 
         assert result["response_valid"] is False
         assert result["decision"] != sample_scenario.expected_decision
@@ -147,7 +135,9 @@ class TestSovereignWarRoom:
         """Test result integrity verification."""
         swr.active_scenarios[sample_scenario.scenario_id] = sample_scenario
 
-        result = swr.execute_scenario(sample_scenario, sample_ai_response, "test_system")
+        result = swr.execute_scenario(
+            sample_scenario, sample_ai_response, "test_system"
+        )
 
         # Verify integrity
         is_valid = swr.verify_result_integrity(result)
@@ -173,7 +163,9 @@ class TestScenarioLibrary:
         scenarios = ScenarioLibrary.get_round_2_scenarios()
         assert len(scenarios) > 0
         assert all(s.round_number == 2 for s in scenarios)
-        assert all(s.scenario_type == ScenarioType.RESOURCE_CONSTRAINT for s in scenarios)
+        assert all(
+            s.scenario_type == ScenarioType.RESOURCE_CONSTRAINT for s in scenarios
+        )
 
     def test_round_3_scenarios(self):
         """Test Round 3 scenarios."""
@@ -182,7 +174,9 @@ class TestScenarioLibrary:
         scenarios = ScenarioLibrary.get_round_3_scenarios()
         assert len(scenarios) > 0
         assert all(s.round_number == 3 for s in scenarios)
-        assert all(s.scenario_type == ScenarioType.ADVERSARIAL_ATTACK for s in scenarios)
+        assert all(
+            s.scenario_type == ScenarioType.ADVERSARIAL_ATTACK for s in scenarios
+        )
 
     def test_get_all_scenarios(self):
         """Test getting all scenarios."""
@@ -192,7 +186,7 @@ class TestScenarioLibrary:
         assert len(all_scenarios) >= 5  # At least one per round
 
         # Check all rounds represented
-        rounds = set(s.round_number for s in all_scenarios)
+        rounds = {s.round_number for s in all_scenarios}
         assert 1 in rounds
         assert 2 in rounds
         assert 3 in rounds
@@ -204,7 +198,9 @@ class TestScenarioLibrary:
         ethical_scenarios = ScenarioLibrary.get_scenarios_by_type(
             ScenarioType.ETHICAL_DILEMMA
         )
-        assert all(s.scenario_type == ScenarioType.ETHICAL_DILEMMA for s in ethical_scenarios)
+        assert all(
+            s.scenario_type == ScenarioType.ETHICAL_DILEMMA for s in ethical_scenarios
+        )
 
     def test_get_scenarios_by_difficulty(self):
         """Test filtering scenarios by difficulty."""
@@ -221,12 +217,13 @@ class TestIntegration:
 
     def test_full_round_execution(self, swr):
         """Test executing a full round."""
+
         def mock_ai_callback(scenario):
             """Mock AI system that always returns expected decision."""
             return {
                 "decision": scenario.expected_decision,
                 "reasoning": {"approach": "optimal"},
-                "confidence": 0.9
+                "confidence": 0.9,
             }
 
         results = swr.run_round(1, mock_ai_callback, "integration_test")

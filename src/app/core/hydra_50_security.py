@@ -189,7 +189,7 @@ class InputValidator:
         """Detect SQL injection attempts"""
         for pattern in cls.SQL_INJECTION_PATTERNS:
             if re.search(pattern, text, re.IGNORECASE):
-                logger.warning(f"SQL injection detected: {text[:50]}")
+                logger.warning("SQL injection detected: %s", text[:16])
                 return True
         return False
 
@@ -198,7 +198,7 @@ class InputValidator:
         """Detect XSS attempts"""
         for pattern in cls.XSS_PATTERNS:
             if re.search(pattern, text, re.IGNORECASE):
-                logger.warning(f"XSS detected: {text[:50]}")
+                logger.warning("XSS detected: %s", text[:16])
                 return True
         return False
 
@@ -288,7 +288,7 @@ class AccessControl:
         self.users[username] = user
         self._save_users()
 
-        logger.info(f"User created: {username} (role={role.value})")
+        logger.info("User created: %s (role=%s)", username, role.value)
 
         return True, "User created successfully", user
 
@@ -301,7 +301,7 @@ class AccessControl:
 
         # Check if locked
         if user.locked_until and time.time() < user.locked_until:
-            logger.warning(f"Login attempt for locked account: {username}")
+            logger.warning("Login attempt for locked account: %s", username)
             return False, None
 
         # Verify password
@@ -310,7 +310,7 @@ class AccessControl:
             user.last_login = time.time()
             self._save_users()
 
-            logger.info(f"User authenticated: {username}")
+            logger.info("User authenticated: %s", username)
             return True, user
         else:
             user.failed_login_attempts += 1
@@ -318,7 +318,7 @@ class AccessControl:
             # Lock account after 5 failed attempts
             if user.failed_login_attempts >= 5:
                 user.locked_until = time.time() + 900  # 15 minutes
-                logger.warning(f"Account locked due to failed attempts: {username}")
+                logger.warning("Account locked due to failed attempts: %s", username)
 
             self._save_users()
             return False, None
@@ -342,9 +342,9 @@ class AccessControl:
                             Permission(p) for p in user_data["permissions"]
                         }
                         self.users[user_data["username"]] = User(**user_data)
-                logger.info(f"Loaded {len(self.users)} users")
+                logger.info("Loaded %s users", len(self.users))
             except Exception as e:
-                logger.error(f"Failed to load users: {e}")
+                logger.error("Failed to load users: %s", e)
 
     def _save_users(self) -> None:
         """Save users to disk"""
@@ -362,7 +362,7 @@ class AccessControl:
             with open(users_file, "w") as f:
                 json.dump(data, f, indent=2)
         except Exception as e:
-            logger.error(f"Failed to save users: {e}")
+            logger.error("Failed to save users: %s", e)
 
 
 # ============================================================================
@@ -457,7 +457,7 @@ class SessionManager:
 
         self.sessions[session.session_id] = session
 
-        logger.info(f"Session created for user {user_id}")
+        logger.info("Session created for user %s", user_id)
 
         return session
 
@@ -478,7 +478,7 @@ class SessionManager:
         """Delete session"""
         if session_id in self.sessions:
             del self.sessions[session_id]
-            logger.info(f"Session deleted: {session_id}")
+            logger.info("Session deleted: %s", session_id)
 
 
 # ============================================================================
@@ -517,7 +517,7 @@ class APIKeyManager:
 
         self.keys[key_hash] = api_key
 
-        logger.info(f"API key created: {name}")
+        logger.info("API key created: %s", name)
 
         return key, api_key
 

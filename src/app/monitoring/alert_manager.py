@@ -292,7 +292,7 @@ class AlertManager:
 
         self.incident_log.append(incident)
         logger.critical(
-            f"Incident created: {incident['incident_id']} - {alert['message']}"
+            "Incident created: %s - %s", incident["incident_id"], alert["message"]
         )
 
         # In production: trigger incident workflow

@@ -91,8 +91,8 @@ class ComprehensiveTestRunner:
         with open(unified_path, "w") as f:
             json.dump(unified_report, f, indent=2)
 
-        logger.info(f"\n✅ All tests complete in {elapsed:.2f}s")
-        logger.info(f"📜 Unified report saved to {unified_path}")
+        logger.info("\n✅ All tests complete in %ss", elapsed)
+        logger.info("📜 Unified report saved to %s", unified_path)
 
         # Print summary
         self._print_summary(unified_report)
@@ -120,7 +120,8 @@ class ComprehensiveTestRunner:
                     "success" if result.returncode == 0 else "warning"
                 )
                 logger.info(
-                    f"✅ JBB: {self.results['jbb']['metrics']['harmful_blocked_rate']:.2%} harmful blocked"
+                    "✅ JBB: %s harmful blocked",
+                    self.results["jbb"]["metrics"]["harmful_blocked_rate"],
                 )
                 return True
             else:
@@ -129,7 +130,7 @@ class ComprehensiveTestRunner:
                 return False
 
         except Exception as e:
-            logger.error(f"❌ JBB: Error - {e}")
+            logger.error("❌ JBB: Error - %s", e)
             self.test_status["jbb"] = "error"
             return False
 
@@ -159,7 +160,8 @@ class ComprehensiveTestRunner:
                     "success" if result.returncode == 0 else "warning"
                 )
                 logger.info(
-                    f"✅ Multi-Turn: {self.results['multiturn']['metrics']['mitigation_rate']:.2%} mitigation rate"
+                    "✅ Multi-Turn: %s mitigation rate",
+                    self.results["multiturn"]["metrics"]["mitigation_rate"],
                 )
                 return True
             else:
@@ -168,7 +170,7 @@ class ComprehensiveTestRunner:
                 return False
 
         except Exception as e:
-            logger.error(f"❌ Multi-Turn: Error - {e}")
+            logger.error("❌ Multi-Turn: Error - %s", e)
             self.test_status["multiturn"] = "error"
             return False
 
@@ -193,7 +195,8 @@ class ComprehensiveTestRunner:
                     "success" if result.returncode == 0 else "warning"
                 )
                 logger.info(
-                    f"✅ Garak: {self.results['garak']['metrics']['detection_rate']:.2%} detection rate"
+                    "✅ Garak: %s detection rate",
+                    self.results["garak"]["metrics"]["detection_rate"],
                 )
                 return True
             else:
@@ -202,7 +205,7 @@ class ComprehensiveTestRunner:
                 return False
 
         except Exception as e:
-            logger.error(f"❌ Garak: Error - {e}")
+            logger.error("❌ Garak: Error - %s", e)
             self.test_status["garak"] = "error"
             return False
 

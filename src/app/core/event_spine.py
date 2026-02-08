@@ -257,7 +257,7 @@ class EventSpine:
                     if subscriber_id in self._subscriptions_by_category[category]:
                         self._subscriptions_by_category[category].remove(subscriber_id)
 
-            logger.info(f"Unsubscribed: {subscriber_id}")
+            logger.info("Unsubscribed: %s", subscriber_id)
             return True
 
     def publish(
@@ -307,7 +307,10 @@ class EventSpine:
                 self._stats["events_published"] += 1
 
             logger.debug(
-                f"Event published: {event_id} ({category.value}) from {source_domain}"
+                "Event published: %s (%s) from %s",
+                event_id,
+                category.value,
+                source_domain,
             )
 
             return event_id
@@ -316,7 +319,7 @@ class EventSpine:
             with self._lock:
                 self._stats["events_dropped"] += 1
 
-            logger.error(f"Event queue full, dropping event: {event_id}")
+            logger.error("Event queue full, dropping event: %s", event_id)
             return event_id
 
     def _process_events_loop(self):
@@ -337,7 +340,7 @@ class EventSpine:
                     self._stats["events_processed"] += 1
 
             except Exception as e:
-                logger.error(f"Error in event processing loop: {e}", exc_info=True)
+                logger.error("Error in event processing loop: %s", e, exc_info=True)
 
     def _process_event(self, event: Event):
         """
@@ -346,7 +349,7 @@ class EventSpine:
         Args:
             event: Event to process
         """
-        logger.debug(f"Processing event: {event.event_id} ({event.category.value})")
+        logger.debug("Processing event: %s (%s)", event.event_id, event.category.value)
 
         # Add to history
         with self._lock:
@@ -358,7 +361,7 @@ class EventSpine:
         subscriber_ids = self._subscriptions_by_category.get(event.category, [])
 
         if not subscriber_ids:
-            logger.debug(f"No subscribers for event category: {event.category.value}")
+            logger.debug("No subscribers for event category: %s", event.category.value)
             return
 
         # Phase 1: Check for veto (if event can be vetoed)
@@ -393,7 +396,7 @@ class EventSpine:
                         return  # Event is vetoed, don't process further
 
                 except Exception as e:
-                    logger.error(f"Error in veto check for {subscriber_id}: {e}")
+                    logger.error("Error in veto check for %s: %s", subscriber_id, e)
 
         # Phase 2: Check for approval (if event requires approval)
         if event.requires_approval:
@@ -430,10 +433,10 @@ class EventSpine:
                         break
 
                 except Exception as e:
-                    logger.error(f"Error in approval check for {subscriber_id}: {e}")
+                    logger.error("Error in approval check for %s: %s", subscriber_id, e)
 
             if not approved:
-                logger.warning(f"Event not approved: {event.event_id}")
+                logger.warning("Event not approved: %s", event.event_id)
                 return  # Event not approved, don't process further
 
         # Phase 3: Deliver to all subscribers
@@ -455,11 +458,13 @@ class EventSpine:
                 subscription.callback(event)
 
                 logger.debug(
-                    f"Event delivered to {subscriber_id} ({subscription.subscriber_domain})"
+                    "Event delivered to %s (%s)",
+                    subscriber_id,
+                    subscription.subscriber_domain,
                 )
 
             except Exception as e:
-                logger.error(f"Error delivering event to {subscriber_id}: {e}")
+                logger.error("Error delivering event to %s: %s", subscriber_id, e)
 
     def _matches_filters(self, event: Event, subscription: Subscription) -> bool:
         """

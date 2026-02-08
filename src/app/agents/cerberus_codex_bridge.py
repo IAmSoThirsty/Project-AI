@@ -79,7 +79,8 @@ class CerberusCodexBridge(KernelRoutedAgent):
     ) -> dict[str, Any]:
         """Internal implementation of threat engagement processing."""
         logger.info(
-            f"Processing threat engagement: {threat_data.get('threat_type', 'unknown')}"
+            "Processing threat engagement: %s",
+            threat_data.get("threat_type", "unknown"),
         )
 
         # Analyze threat for defensive opportunities

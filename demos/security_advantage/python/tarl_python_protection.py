@@ -8,7 +8,6 @@ The Solution: T.A.R.L.'s `armor` keyword provides compile-time immutability
 enforcement that cannot be bypassed through any runtime mechanism.
 """
 
-
 from tarl import TARLSystem
 from tarl.runtime import TARLSecurityViolation
 
@@ -42,7 +41,7 @@ thirsty_code_basic = """
 shield secretProtection {
   drink apiKey = "sk-PRODUCTION-SECRET-12345"
   armor apiKey
-  
+
   pour "API Key is protected"
 }
 """
@@ -71,10 +70,10 @@ thirsty_code_modify = """
 shield secretProtection {
   drink apiKey = "sk-PRODUCTION-SECRET-12345"
   armor apiKey
-  
+
   # This line will cause a COMPILE-TIME ERROR
   apiKey = "HACKED"
-  
+
   pour apiKey
 }
 """
@@ -102,10 +101,10 @@ shield memoryProtection {
   detect attacks {
     defend with: "paranoid"
   }
-  
+
   drink apiKey = "sk-PRODUCTION-SECRET-12345"
   armor apiKey
-  
+
   pour "Secret stored with memory encryption"
 }
 """
@@ -143,10 +142,10 @@ thirsty_code_reflection = """
 shield noReflection {
   drink apiKey = "sk-PRODUCTION-SECRET-12345"
   armor apiKey
-  
+
   # No equivalent to Python's dir(), vars(), __dict__
   # No way to introspect variables at runtime
-  
+
   pour "Secret protected from introspection"
 }
 """
@@ -172,7 +171,7 @@ thirsty_code_bytecode = """
 shield bytecodeProtection {
   drink apiKey = "sk-PRODUCTION-SECRET-12345"
   armor apiKey
-  
+
   pour "Bytecode is cryptographically signed"
 }
 """

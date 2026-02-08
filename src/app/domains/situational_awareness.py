@@ -235,7 +235,7 @@ class SituationalAwarenessSubsystem(
 
         except Exception as e:
             self.logger.error(
-                f"Failed to initialize Situational Awareness subsystem: {e}"
+                "Failed to initialize Situational Awareness subsystem: %s", e
             )
             return False
 
@@ -257,7 +257,7 @@ class SituationalAwarenessSubsystem(
             return True
 
         except Exception as e:
-            self.logger.error(f"Error during shutdown: {e}")
+            self.logger.error("Error during shutdown: %s", e)
             return False
 
     def health_check(self) -> bool:
@@ -281,7 +281,7 @@ class SituationalAwarenessSubsystem(
                 age = datetime.now() - last_update
                 if age > timedelta(seconds=self.sensor_fusion_interval * 10):
                     self.logger.warning(
-                        f"Fused state is stale (age={age.total_seconds()}s)"
+                        "Fused state is stale (age=%ss)", age.total_seconds()
                     )
                     return False
 
@@ -309,7 +309,7 @@ class SituationalAwarenessSubsystem(
         self, sensor_id: str, sensor_type: str, metadata: dict[str, Any]
     ) -> bool:
         """Register a new sensor."""
-        self.logger.info(f"Registering sensor: {sensor_id} (type={sensor_type})")
+        self.logger.info("Registering sensor: %s (type=%s)", sensor_id, sensor_type)
 
         self._sensors[sensor_id] = {
             "sensor_id": sensor_id,
@@ -328,7 +328,7 @@ class SituationalAwarenessSubsystem(
     def ingest_sensor_data(self, sensor_id: str, data: Any) -> bool:
         """Ingest data from a sensor."""
         if sensor_id not in self._sensors:
-            self.logger.warning(f"Data from unregistered sensor: {sensor_id}")
+            self.logger.warning("Data from unregistered sensor: %s", sensor_id)
             return False
 
         sensor_data = SensorData(
@@ -459,7 +459,7 @@ class SituationalAwarenessSubsystem(
             )
 
         except Exception as e:
-            self.logger.error(f"Command execution failed: {e}")
+            self.logger.error("Command execution failed: %s", e)
             return SubsystemResponse(
                 command_id=command.command_id,
                 success=False,
@@ -531,7 +531,9 @@ class SituationalAwarenessSubsystem(
                 try:
                     callback(data)
                 except Exception as e:
-                    self.logger.error(f"Error in event callback {subscription_id}: {e}")
+                    self.logger.error(
+                        "Error in event callback %s: %s", subscription_id, e
+                    )
 
             return len(subscribers)
 
@@ -544,7 +546,7 @@ class SituationalAwarenessSubsystem(
                 self._perform_sensor_fusion()
                 time.sleep(self.sensor_fusion_interval)
             except Exception as e:
-                self.logger.error(f"Error in sensor fusion loop: {e}")
+                self.logger.error("Error in sensor fusion loop: %s", e)
                 time.sleep(self.sensor_fusion_interval)
 
     def _perform_sensor_fusion(self):
@@ -780,10 +782,10 @@ class SituationalAwarenessSubsystem(
             with open(state_file, "w") as f:
                 json.dump(state, f, indent=2, default=str)
 
-            self.logger.info(f"State saved to {state_file}")
+            self.logger.info("State saved to %s", state_file)
 
         except Exception as e:
-            self.logger.error(f"Failed to save state: {e}")
+            self.logger.error("Failed to save state: %s", e)
 
     def _load_state(self):
         """Load persistent state."""
@@ -807,7 +809,7 @@ class SituationalAwarenessSubsystem(
                     )
                     self._safe_zones[zone.zone_id] = zone
 
-                self.logger.info(f"State loaded from {state_file}")
+                self.logger.info("State loaded from %s", state_file)
 
         except Exception as e:
-            self.logger.error(f"Failed to load state: {e}")
+            self.logger.error("Failed to load state: %s", e)

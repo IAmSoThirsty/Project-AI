@@ -59,7 +59,7 @@ class ModuleLoader:
         """
         # Check cache
         if module_name in self.cache:
-            logger.debug(f"Module '{module_name}' loaded from cache")
+            logger.debug("Module '%s' loaded from cache", module_name)
             return self.cache[module_name]
 
         # Find module file
@@ -72,7 +72,7 @@ class ModuleLoader:
             source = f.read()
 
         # Compile module
-        bytecode = self.compiler.compile(source)
+        self.compiler.compile(source)
 
         # Create module
         module = Module(module_name, module_path)
@@ -80,7 +80,7 @@ class ModuleLoader:
         # Cache
         self.cache[module_name] = module
 
-        logger.info(f"Module '{module_name}' loaded from {module_path}")
+        logger.info("Module '%s' loaded from %s", module_name, module_path)
         return module
 
     def _resolve_path(self, module_name: str) -> str | None:

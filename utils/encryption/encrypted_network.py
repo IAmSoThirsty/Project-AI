@@ -58,7 +58,7 @@ class EncryptedNetworkHandler:
         # Layer 2: Additional encryption for extra security
         # In production would add more encryption layers
 
-        self.logger.debug(f"Encrypted outgoing request: {len(encrypted_layer1)} bytes")
+        self.logger.debug("Encrypted outgoing request: %s bytes", len(encrypted_layer1))
         return encrypted_layer1
 
     def decrypt_response(self, encrypted_response: bytes) -> dict[str, Any]:
@@ -83,7 +83,7 @@ class EncryptedNetworkHandler:
             return {"data": decrypted.decode()}
 
         except Exception as e:
-            self.logger.error(f"Failed to decrypt response: {e}")
+            self.logger.error("Failed to decrypt response: %s", e)
             return {}
 
     def encrypt_dns_query(self, hostname: str) -> bytes:

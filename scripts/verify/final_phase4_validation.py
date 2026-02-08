@@ -25,13 +25,12 @@ def main():
     ]
 
     print("File Existence Checks:")
-    all_exist = True
     for filepath in required_files:
         exists = os.path.exists(filepath)
         status = "✓" if exists else "✗"
         print(f"  {status} {filepath}")
         if not exists:
-            all_exist = False
+            pass
 
     print()
 
@@ -52,10 +51,10 @@ def main():
             ("Property Proof", "execution_paths"),
             ("Phase T: Temporal Fuzzing", "Phase T"),
             ("Delayed Callbacks", "Delayed Callbacks"),
-            ("Real-World Scenario", "Real-World Scenario" or "Concrete Example"),
-            ("Unprivileged Agent", "agent_malicious" or "Unprivileged"),
+            ("Real-World Scenario", "Real-World Scenario"),
+            ("Unprivileged Agent", "agent_malicious"),
             ("Performance Characteristics", "Performance Characteristics"),
-            ("Overhead Analysis", "0.0001 ms" or "ops_per_sec"),
+            ("Overhead Analysis", "0.0001 ms"),
             ("O(1) Complexity", "O(1)"),
         ]
 
@@ -138,6 +137,7 @@ def main():
     print("  • Practitioner use")
     print()
     print("=" * 80)
+
 
 if __name__ == "__main__":
     main()

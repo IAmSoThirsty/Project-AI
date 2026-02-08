@@ -44,7 +44,7 @@ async def main():
         # Generate unique workflow ID
         workflow_id = f"learning-{datetime.now().timestamp()}"
 
-        logger.info(f"Starting workflow: {workflow_id}")
+        logger.info("Starting workflow: %s", workflow_id)
 
         # Start workflow
         handle = await manager.client.start_workflow(
@@ -61,9 +61,9 @@ async def main():
 
         if result.success:
             logger.info("✓ Learning successful!")
-            logger.info(f"  Knowledge ID: {result.knowledge_id}")
+            logger.info("  Knowledge ID: %s", result.knowledge_id)
         else:
-            logger.error(f"✗ Learning failed: {result.error}")
+            logger.error("✗ Learning failed: %s", result.error)
 
     finally:
         await manager.disconnect()

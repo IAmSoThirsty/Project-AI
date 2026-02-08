@@ -180,7 +180,7 @@ class PolicyEngine:
 
         self.policies = policies
         logger.info(
-            f"PolicyEngine initialized with {len(policies)} policies (mode: {mode})"
+            "PolicyEngine initialized with %s policies (mode: %s)", len(policies), mode
         )
 
     def add_policy(self, policy: Policy):

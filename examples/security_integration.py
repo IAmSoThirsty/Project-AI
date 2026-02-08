@@ -63,7 +63,7 @@ class SecureAIApplication:
         is_valid, issues = self.hardening.validate_environment()
 
         if not is_valid:
-            logger.warning(f"Security issues detected: {issues}")
+            logger.warning("Security issues detected: %s", issues)
 
             # Apply fixes
             self.hardening.harden_sys_path()
@@ -75,7 +75,7 @@ class SecureAIApplication:
             if not is_valid:
                 # In production, this should raise an error
                 # For demo purposes, we'll log and continue
-                logger.warning(f"Some security issues remain: {issues}")
+                logger.warning("Some security issues remain: %s", issues)
 
         logger.info("✓ Environment hardened")
 
@@ -123,7 +123,7 @@ class SecureAIApplication:
         db_path = self.config.get("database_path", "data/secure.db")
         self.db = SecureDatabaseManager(db_path)
 
-        logger.info(f"✓ Database initialized: {db_path}")
+        logger.info("✓ Database initialized: %s", db_path)
 
     def _init_aws(self):
         """Initialize AWS integration if in cloud environment."""
@@ -137,7 +137,7 @@ class SecureAIApplication:
 
                 # Audit permissions
                 audit = self.aws.audit_iam_permissions()
-                logger.info(f"IAM Role: {audit.get('role_name')}")
+                logger.info("IAM Role: %s", audit.get("role_name"))
 
                 # Validate PoLP
                 required_perms = self.config.get(
@@ -156,7 +156,7 @@ class SecureAIApplication:
                 logger.info("✓ AWS security initialized")
 
             except Exception as e:
-                logger.warning(f"AWS initialization failed: {e}")
+                logger.warning("AWS initialization failed: %s", e)
                 self.aws = None
         else:
             logger.info("Not in AWS environment - skipping AWS integration")
@@ -216,7 +216,7 @@ class SecureAIApplication:
             metadata={"agent_id": agent_id, "permissions": permissions},
         )
 
-        logger.info(f"✓ Created agent: {agent_id}")
+        logger.info("✓ Created agent: %s", agent_id)
         return agent
 
     def process_user_input(self, user_input: str, client_ip: str, user_id: int) -> dict:
@@ -384,7 +384,7 @@ class SecureAIApplication:
 
         # Get final statistics
         stats = self.monitor.get_event_statistics()
-        logger.info(f"Final event statistics: {stats}")
+        logger.info("Final event statistics: %s", stats)
 
         logger.info("✓ Application shutdown complete")
 

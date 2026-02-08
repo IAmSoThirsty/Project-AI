@@ -22,9 +22,10 @@ logger = logging.getLogger(__name__)
 class DataTier(Enum):
     """
     Four-tier data classification system.
-    
+
     Each tier has specific confidence weights and validation requirements.
     """
+
     TIER_A = "TierA"  # Peer-reviewed / official audited
     TIER_B = "TierB"  # Government statistical archives
     TIER_C = "TierC"  # Reputable institutional reporting
@@ -33,10 +34,10 @@ class DataTier(Enum):
     def get_confidence_weight(self) -> float:
         """Get confidence weight for this tier."""
         weights = {
-            DataTier.TIER_A: 1.0,   # Full confidence
+            DataTier.TIER_A: 1.0,  # Full confidence
             DataTier.TIER_B: 0.85,  # High confidence
             DataTier.TIER_C: 0.65,  # Medium confidence
-            DataTier.TIER_D: 0.40   # Lower confidence
+            DataTier.TIER_D: 0.40,  # Lower confidence
         }
         return weights[self]
 
@@ -48,29 +49,29 @@ class DataTier(Enum):
                 "requires_audit_trail": True,
                 "requires_methodology": True,
                 "requires_raw_data": True,
-                "min_citation_count": 1
+                "min_citation_count": 1,
             },
             DataTier.TIER_B: {
                 "requires_official_source": True,
                 "requires_audit_trail": True,
                 "requires_methodology": True,
                 "requires_raw_data": False,
-                "min_citation_count": 0
+                "min_citation_count": 0,
             },
             DataTier.TIER_C: {
                 "requires_institutional_source": True,
                 "requires_audit_trail": False,
                 "requires_methodology": True,
                 "requires_raw_data": False,
-                "min_citation_count": 0
+                "min_citation_count": 0,
             },
             DataTier.TIER_D: {
                 "requires_source_attribution": True,
                 "requires_audit_trail": False,
                 "requires_methodology": False,
                 "requires_raw_data": False,
-                "min_citation_count": 0
-            }
+                "min_citation_count": 0,
+            },
         }[self]
 
 
@@ -78,9 +79,10 @@ class DataTier(Enum):
 class TierMetadata:
     """
     Complete metadata for tiered data.
-    
+
     Tracks all required information for tier validation and provenance.
     """
+
     tier: DataTier
     source_hash: str
     confidence_weight: float
@@ -122,14 +124,14 @@ class TierMetadata:
             "url": self.url,
             "ingestion_timestamp": self.ingestion_timestamp.isoformat(),
             "validation_passed": self.validation_passed,
-            "validation_errors": self.validation_errors
+            "validation_errors": self.validation_errors,
         }
 
 
 class TierClassifier:
     """
     Production-grade tier classification system.
-    
+
     Enforces the four-tier data classification with complete validation,
     confidence weighting, and "No hash → no inclusion" rule.
     """
@@ -140,19 +142,38 @@ class TierClassifier:
 
         # Known source registries (expandable)
         self.tier_a_sources: set[str] = {
-            "nature", "science", "cell", "lancet", "nejm",
-            "pnas", "arxiv_verified", "cochrane", "nber",
-            "world_bank_official", "imf_official", "who_official"
+            "nature",
+            "science",
+            "cell",
+            "lancet",
+            "nejm",
+            "pnas",
+            "arxiv_verified",
+            "cochrane",
+            "nber",
+            "world_bank_official",
+            "imf_official",
+            "who_official",
         }
 
         self.tier_b_sources: set[str] = {
-            "bls", "census", "fed", "oecd", "eurostat",
-            "national_statistics", "government_archives"
+            "bls",
+            "census",
+            "fed",
+            "oecd",
+            "eurostat",
+            "national_statistics",
+            "government_archives",
         }
 
         self.tier_c_sources: set[str] = {
-            "pew_research", "gallup", "reuters_institute",
-            "brookings", "rand", "csis", "carnegie"
+            "pew_research",
+            "gallup",
+            "reuters_institute",
+            "brookings",
+            "rand",
+            "csis",
+            "carnegie",
         }
 
         # All others default to Tier D unless upgraded
@@ -167,24 +188,21 @@ class TierClassifier:
             details={
                 "tier_a_sources": len(self.tier_a_sources),
                 "tier_b_sources": len(self.tier_b_sources),
-                "tier_c_sources": len(self.tier_c_sources)
-            }
+                "tier_c_sources": len(self.tier_c_sources),
+            },
         )
 
     def classify_source(
-        self,
-        source_name: str,
-        source_type: str,
-        metadata: dict[str, Any]
+        self, source_name: str, source_type: str, metadata: dict[str, Any]
     ) -> DataTier:
         """
         Classify data source into appropriate tier.
-        
+
         Args:
             source_name: Name of data source
             source_type: Type of source (journal, government, institution, media)
             metadata: Additional metadata for classification
-            
+
         Returns:
             Classified tier
         """
@@ -217,27 +235,25 @@ class TierClassifier:
     def compute_source_hash(self, content: str) -> str:
         """
         Compute canonical hash of source content.
-        
+
         Args:
             content: Raw content to hash
-            
+
         Returns:
             SHA-256 hash as hex string
         """
-        return hashlib.sha256(content.encode('utf-8')).hexdigest()
+        return hashlib.sha256(content.encode("utf-8")).hexdigest()
 
     def validate_tier_requirements(
-        self,
-        tier: DataTier,
-        metadata: TierMetadata
+        self, tier: DataTier, metadata: TierMetadata
     ) -> tuple[bool, list[str]]:
         """
         Validate that metadata meets tier requirements.
-        
+
         Args:
             tier: Claimed tier
             metadata: Metadata to validate
-            
+
         Returns:
             (valid, list of validation errors)
         """
@@ -248,10 +264,16 @@ class TierClassifier:
         if requirements.get("requires_peer_review") and not metadata.peer_reviewed:
             errors.append(f"{tier.value} requires peer review")
 
-        if requirements.get("requires_audit_trail") and not metadata.audit_trail_present:
+        if (
+            requirements.get("requires_audit_trail")
+            and not metadata.audit_trail_present
+        ):
             errors.append(f"{tier.value} requires audit trail")
 
-        if requirements.get("requires_methodology") and not metadata.methodology_documented:
+        if (
+            requirements.get("requires_methodology")
+            and not metadata.methodology_documented
+        ):
             errors.append(f"{tier.value} requires documented methodology")
 
         if requirements.get("requires_raw_data") and not metadata.raw_data_available:
@@ -280,8 +302,8 @@ class TierClassifier:
                 "tier": tier.value,
                 "valid": valid,
                 "errors": errors,
-                "source_name": metadata.source_name
-            }
+                "source_name": metadata.source_name,
+            },
         )
 
         return valid, errors
@@ -293,11 +315,11 @@ class TierClassifier:
         source_type: str,
         timestamp: datetime,
         geographic_scope: str,
-        **kwargs
+        **kwargs,
     ) -> TierMetadata:
         """
         Create complete tier metadata for data.
-        
+
         Args:
             content: Raw content (for hashing)
             source_name: Name of source
@@ -305,7 +327,7 @@ class TierClassifier:
             timestamp: Data timestamp
             geographic_scope: Geographic scope of data
             **kwargs: Additional metadata fields
-            
+
         Returns:
             Complete tier metadata object
         """
@@ -333,7 +355,7 @@ class TierClassifier:
             raw_data_available=kwargs.get("raw_data_available", False),
             citation_count=kwargs.get("citation_count", 0),
             doi=kwargs.get("doi"),
-            url=kwargs.get("url")
+            url=kwargs.get("url"),
         )
 
         # Validate requirements
@@ -351,8 +373,8 @@ class TierClassifier:
                 "tier": tier.value,
                 "confidence_weight": confidence_weight,
                 "source_hash": source_hash[:16] + "...",
-                "validation_passed": valid
-            }
+                "validation_passed": valid,
+            },
         )
 
         return metadata
@@ -360,10 +382,10 @@ class TierClassifier:
     def enforce_inclusion_rule(self, metadata: TierMetadata) -> bool:
         """
         Enforce "No hash → no inclusion" rule.
-        
+
         Args:
             metadata: Tier metadata to check
-            
+
         Returns:
             True if data can be included, False otherwise
         """
@@ -379,8 +401,8 @@ class TierClassifier:
                 actor="TIER_CLASSIFIER",
                 details={
                     "source_name": metadata.source_name,
-                    "reason": "No hash → no inclusion (constitutional rule)"
-                }
+                    "reason": "No hash → no inclusion (constitutional rule)",
+                },
             )
             return False
 
@@ -397,8 +419,8 @@ class TierClassifier:
                 details={
                     "source_name": metadata.source_name,
                     "tier": metadata.tier.value,
-                    "errors": metadata.validation_errors
-                }
+                    "errors": metadata.validation_errors,
+                },
             )
             return False
 
@@ -407,7 +429,7 @@ class TierClassifier:
     def get_tier_statistics(self) -> dict[str, Any]:
         """
         Get statistics about tier classification.
-        
+
         Returns:
             Dictionary with tier statistics
         """
@@ -416,9 +438,8 @@ class TierClassifier:
             "tier_b_sources": len(self.tier_b_sources),
             "tier_c_sources": len(self.tier_c_sources),
             "confidence_weights": {
-                tier.value: tier.get_confidence_weight()
-                for tier in DataTier
-            }
+                tier.value: tier.get_confidence_weight() for tier in DataTier
+            },
         }
 
 

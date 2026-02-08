@@ -236,8 +236,6 @@ class TestRuntimeRandomizer:
         """Test schema version rotation."""
         randomizer = RuntimeRandomizer(rotation_interval_seconds=1)
 
-        initial_version = randomizer.current_schema_version
-
         # Wait for rotation interval
         time.sleep(1.1)
 

@@ -188,18 +188,18 @@ class EnhancedBootstrapOrchestrator:
 
                             discovered += 1
 
-                            logger.info(f"Discovered: {info.name} ({subsystem_id})")
+                            logger.info("Discovered: %s (%s)", info.name, subsystem_id)
 
                     except Exception as e:
-                        logger.error(f"Error loading module {module_name}: {e}")
+                        logger.error("Error loading module %s: %s", module_name, e)
 
             except Exception as e:
-                logger.error(f"Error discovering from {domain_path}: {e}")
+                logger.error("Error discovering from %s: %s", domain_path, e)
 
         with self._lock:
             self._stats["discovered"] = discovered
 
-        logger.info(f"Discovery complete: {discovered} subsystems found")
+        logger.info("Discovery complete: %s subsystems found", discovered)
 
         return discovered
 
@@ -245,7 +245,7 @@ class EnhancedBootstrapOrchestrator:
         # Check for cycles
         if len(result) != len(self._subsystem_metadata):
             remaining = set(self._subsystem_metadata.keys()) - set(result)
-            logger.error(f"Circular dependency detected: {remaining}")
+            logger.error("Circular dependency detected: %s", remaining)
             # Add remaining in priority order
             result.extend(
                 sorted(remaining, key=lambda sid: self._get_priority_value(sid))
@@ -253,7 +253,7 @@ class EnhancedBootstrapOrchestrator:
 
         self._init_order = result
 
-        logger.info(f"Initialization order: {result}")
+        logger.info("Initialization order: %s", result)
 
         return result
 
@@ -314,7 +314,7 @@ class EnhancedBootstrapOrchestrator:
             )
 
             if not should_init:
-                logger.info(f"Skipping {info.name}: {reason}")
+                logger.info("Skipping %s: %s", info.name, reason)
                 skipped_count += 1
                 self.advanced_boot.increment_subsystems_skipped()
                 continue
@@ -324,10 +324,10 @@ class EnhancedBootstrapOrchestrator:
             if priority_override:
                 info.priority = priority_override
                 logger.info(
-                    f"Priority override for {subsystem_id}: {priority_override}"
+                    "Priority override for %s: %s", subsystem_id, priority_override
                 )
 
-            logger.info(f"Initializing: {info.name} ({subsystem_id})")
+            logger.info("Initializing: %s (%s)", info.name, subsystem_id)
 
             if self._initialize_subsystem(subsystem_id):
                 success_count += 1
@@ -350,7 +350,7 @@ class EnhancedBootstrapOrchestrator:
 
                 # Check if critical
                 if info.priority.upper() == "CRITICAL":
-                    logger.error(f"Critical subsystem failed: {subsystem_id}")
+                    logger.error("Critical subsystem failed: %s", subsystem_id)
 
                     # Check if should activate emergency mode
                     if not self.advanced_boot.is_emergency_mode():
@@ -363,7 +363,10 @@ class EnhancedBootstrapOrchestrator:
 
         logger.info("=" * 80)
         logger.info(
-            f"INITIALIZATION COMPLETE: {success_count} success, {failure_count} failed, {skipped_count} skipped"
+            "INITIALIZATION COMPLETE: %s success, %s failed, %s skipped",
+            success_count,
+            failure_count,
+            skipped_count,
         )
         logger.info("=" * 80)
 
@@ -397,7 +400,7 @@ class EnhancedBootstrapOrchestrator:
 
                 if dep_state != SubsystemLifecycleState.RUNNING:
                     logger.error(
-                        f"Dependency not running: {dep_id} (state: {dep_state})"
+                        "Dependency not running: %s (state: %s)", dep_id, dep_state
                     )
                     with self._lock:
                         self._subsystem_lifecycle[subsystem_id] = (
@@ -440,12 +443,12 @@ class EnhancedBootstrapOrchestrator:
                 self._stats["running"] += 1
                 self._stats["initialized"] += 1
 
-            logger.info(f"✅ {info.name} initialized successfully")
+            logger.info("✅ %s initialized successfully", info.name)
 
             return True
 
         except Exception as e:
-            logger.error(f"❌ Failed to initialize {subsystem_id}: {e}")
+            logger.error("❌ Failed to initialize %s: %s", subsystem_id, e)
 
             with self._lock:
                 self._subsystem_lifecycle[subsystem_id] = SubsystemLifecycleState.FAILED
@@ -467,7 +470,7 @@ class EnhancedBootstrapOrchestrator:
         )
         self._health_monitor_thread.start()
 
-        logger.info(f"Health monitoring started (interval={interval}s)")
+        logger.info("Health monitoring started (interval=%ss)", interval)
 
     def stop_health_monitoring(self):
         """Stop health monitoring."""
@@ -485,7 +488,7 @@ class EnhancedBootstrapOrchestrator:
                 self._check_all_health()
                 time.sleep(interval)
             except Exception as e:
-                logger.error(f"Error in health monitoring: {e}")
+                logger.error("Error in health monitoring: %s", e)
                 time.sleep(interval)
 
     def _check_all_health(self):
@@ -500,15 +503,15 @@ class EnhancedBootstrapOrchestrator:
                 current_state = self._subsystem_lifecycle.get(subsystem_id)
 
                 if not is_healthy and current_state == SubsystemLifecycleState.RUNNING:
-                    logger.warning(f"Health check failed: {subsystem_id}")
+                    logger.warning("Health check failed: %s", subsystem_id)
                     self.degrade_subsystem(subsystem_id)
 
                 elif is_healthy and current_state == SubsystemLifecycleState.DEGRADED:
-                    logger.info(f"Health recovered: {subsystem_id}")
+                    logger.info("Health recovered: %s", subsystem_id)
                     self.restore_subsystem(subsystem_id)
 
             except Exception as e:
-                logger.error(f"Error checking health of {subsystem_id}: {e}")
+                logger.error("Error checking health of %s: %s", subsystem_id, e)
 
     def degrade_subsystem(self, subsystem_id: str):
         """
@@ -517,7 +520,7 @@ class EnhancedBootstrapOrchestrator:
         Args:
             subsystem_id: Subsystem to degrade
         """
-        logger.info(f"Degrading subsystem: {subsystem_id}")
+        logger.info("Degrading subsystem: %s", subsystem_id)
 
         with self._lock:
             self._subsystem_lifecycle[subsystem_id] = SubsystemLifecycleState.DEGRADED
@@ -543,7 +546,7 @@ class EnhancedBootstrapOrchestrator:
         Args:
             subsystem_id: Subsystem to restore
         """
-        logger.info(f"Restoring subsystem: {subsystem_id}")
+        logger.info("Restoring subsystem: %s", subsystem_id)
 
         with self._lock:
             self._subsystem_lifecycle[subsystem_id] = SubsystemLifecycleState.RUNNING
@@ -572,7 +575,7 @@ class EnhancedBootstrapOrchestrator:
         Returns:
             True if restart successful
         """
-        logger.info(f"Restarting subsystem: {subsystem_id}")
+        logger.info("Restarting subsystem: %s", subsystem_id)
 
         with self._lock:
             self._subsystem_lifecycle[subsystem_id] = SubsystemLifecycleState.RESTARTING
@@ -583,15 +586,15 @@ class EnhancedBootstrapOrchestrator:
             try:
                 instance.shutdown()
             except Exception as e:
-                logger.error(f"Error shutting down {subsystem_id}: {e}")
+                logger.error("Error shutting down %s: %s", subsystem_id, e)
 
         # Reinitialize
         success = self._initialize_subsystem(subsystem_id)
 
         if success:
-            logger.info(f"✅ Subsystem restarted: {subsystem_id}")
+            logger.info("✅ Subsystem restarted: %s", subsystem_id)
         else:
-            logger.error(f"❌ Failed to restart: {subsystem_id}")
+            logger.error("❌ Failed to restart: %s", subsystem_id)
 
         return success
 
@@ -602,7 +605,7 @@ class EnhancedBootstrapOrchestrator:
         Args:
             subsystem_id: Subsystem to isolate
         """
-        logger.info(f"Isolating subsystem: {subsystem_id}")
+        logger.info("Isolating subsystem: %s", subsystem_id)
 
         instance = self._subsystem_instances.get(subsystem_id)
 
@@ -610,7 +613,7 @@ class EnhancedBootstrapOrchestrator:
             try:
                 instance.shutdown()
             except Exception as e:
-                logger.error(f"Error isolating {subsystem_id}: {e}")
+                logger.error("Error isolating %s: %s", subsystem_id, e)
 
         with self._lock:
             self._subsystem_lifecycle[subsystem_id] = SubsystemLifecycleState.ISOLATED
@@ -668,9 +671,9 @@ class EnhancedBootstrapOrchestrator:
 
             if instance and hasattr(instance, "shutdown"):
                 try:
-                    logger.info(f"Shutting down: {subsystem_id}")
+                    logger.info("Shutting down: %s", subsystem_id)
                     instance.shutdown()
                 except Exception as e:
-                    logger.error(f"Error shutting down {subsystem_id}: {e}")
+                    logger.error("Error shutting down %s: %s", subsystem_id, e)
 
         logger.info("Enhanced Bootstrap Orchestrator shutdown complete")

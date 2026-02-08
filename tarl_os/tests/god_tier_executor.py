@@ -96,7 +96,7 @@ class CerberusDefenseSimulator:
         if len(scenario.attack_chain) > 3:
             detected_threats.append("multi_stage_attack")
 
-        detection_time = (time.time() - start_time) * 1000  # ms
+        (time.time() - start_time) * 1000  # ms
         detected = len(detected_threats) > 0
         confidence = min(len(detected_threats) * 0.15, 1.0)
 
@@ -159,13 +159,15 @@ class GodTierStressTestExecutor:
         Returns:
             List of test results
         """
-        logger.info(f"Executing {len(scenarios)} stress test scenarios...")
+        logger.info("Executing %s stress test scenarios...", len(scenarios))
 
         start_time = time.time()
 
         for i, scenario in enumerate(scenarios):
             if (i + 1) % 50 == 0:
-                logger.info(f"Progress: {i+1}/{len(scenarios)} scenarios completed")
+                logger.info(
+                    "Progress: %s/%s scenarios completed", i + 1, len(scenarios)
+                )
 
             try:
                 result = self._execute_scenario(scenario)
@@ -175,7 +177,7 @@ class GodTierStressTestExecutor:
                 self._update_stats(result)
 
             except Exception as e:
-                logger.error(f"Error executing scenario {scenario.scenario_id}: {e}")
+                logger.error("Error executing scenario %s: %s", scenario.scenario_id, e)
                 self.results.append(
                     TestResult(
                         scenario_id=scenario.scenario_id,
@@ -188,7 +190,7 @@ class GodTierStressTestExecutor:
                 )
 
         total_time = time.time() - start_time
-        logger.info(f"Completed {len(scenarios)} scenarios in {total_time:.2f} seconds")
+        logger.info("Completed %s scenarios in %s seconds", len(scenarios), total_time)
 
         return self.results
 
@@ -385,7 +387,7 @@ class GodTierStressTestExecutor:
 
         # Category breakdown
         category_stats = defaultdict(lambda: {"total": 0, "passed": 0, "blocked": 0})
-        for scenario, result in zip(scenarios, self.results):
+        for scenario, result in zip(scenarios, self.results, strict=False):
             cat = scenario.category.value
             category_stats[cat]["total"] += 1
             if result.passed:
@@ -395,7 +397,7 @@ class GodTierStressTestExecutor:
 
         # Severity breakdown
         severity_stats = defaultdict(lambda: {"total": 0, "passed": 0, "blocked": 0})
-        for scenario, result in zip(scenarios, self.results):
+        for scenario, result in zip(scenarios, self.results, strict=False):
             sev = scenario.severity.value
             severity_stats[sev]["total"] += 1
             if result.passed:
@@ -515,7 +517,7 @@ def main():
     generator = GodTierStressTestGenerator()
     scenarios = generator.generate_all_scenarios()
 
-    logger.info(f"Generated {len(scenarios)} unique test scenarios")
+    logger.info("Generated %s unique test scenarios", len(scenarios))
 
     # Execute tests
     logger.info("Phase 2: Executing stress tests...")
@@ -547,18 +549,18 @@ def main():
             default=str,
         )
 
-    logger.info(f"Results saved to: {results_file}")
+    logger.info("Results saved to: %s", results_file)
 
     # Return exit code based on pass rate
     pass_rate = report["summary"]["pass_rate"]
     if pass_rate >= 95:
-        logger.info(f"✅ EXCELLENT: {pass_rate:.1f}% pass rate")
+        logger.info("✅ EXCELLENT: %s%% pass rate", pass_rate)
         return 0
     elif pass_rate >= 90:
-        logger.warning(f"⚠️  GOOD: {pass_rate:.1f}% pass rate")
+        logger.warning("⚠️  GOOD: %s%% pass rate", pass_rate)
         return 0
     else:
-        logger.error(f"❌ NEEDS IMPROVEMENT: {pass_rate:.1f}% pass rate")
+        logger.error("❌ NEEDS IMPROVEMENT: %s%% pass rate", pass_rate)
         return 1
 
 

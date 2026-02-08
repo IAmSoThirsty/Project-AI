@@ -290,7 +290,7 @@ class StatisticalAnalyzer:
                     "fits_well": p_value > 0.05,
                 }
             except Exception as e:
-                logger.warning(f"Failed to fit {dist_name}: {e}")
+                logger.warning("Failed to fit %s: %s", dist_name, e)
 
         return results
 
@@ -328,7 +328,7 @@ class CorrelationAnalyzer:
     ) -> dict[str, dict[str, float]]:
         """Compute correlation matrix for multiple variables"""
         variables = list(data.keys())
-        n = len(variables)
+        len(variables)
 
         matrix = {}
         for i, var1 in enumerate(variables):
@@ -355,7 +355,7 @@ class CorrelationAnalyzer:
         results = []
 
         for i, var1 in enumerate(variables):
-            for j, var2 in enumerate(variables[i + 1 :], i + 1):
+            for _j, var2 in enumerate(variables[i + 1 :], i + 1):
                 corr, p_value = CorrelationAnalyzer.compute_correlation(
                     data[var1], data[var2], method
                 )
@@ -414,7 +414,7 @@ class PredictiveModeler:
         self.models[model_name] = model
         self.scalers[model_name] = scaler
 
-        logger.info(f"Trained {model_name}: R²={r2:.3f}, MAE={mae:.3f}")
+        logger.info("Trained %s: R²=%s, MAE=%s", model_name, r2, mae)
 
         return {
             "mse": float(mse),
@@ -453,14 +453,14 @@ class PredictiveModeler:
         model.fit(X_train_scaled, y_train)
 
         # Evaluate
-        y_pred = model.predict(X_test_scaled)
+        model.predict(X_test_scaled)
         accuracy = float(model.score(X_test_scaled, y_test))
 
         # Store model
         self.models[model_name] = model
         self.scalers[model_name] = scaler
 
-        logger.info(f"Trained {model_name}: Accuracy={accuracy:.3f}")
+        logger.info("Trained %s: Accuracy=%s", model_name, accuracy)
 
         return {
             "accuracy": accuracy,
@@ -636,7 +636,7 @@ class MonteCarloSimulator:
                 recent_mean = np.mean(results[-1000:])
                 previous_mean = np.mean(results[-2000:-1000])
                 if abs(recent_mean - previous_mean) < convergence_threshold:
-                    logger.info(f"Convergence achieved at iteration {i}")
+                    logger.info("Convergence achieved at iteration %s", i)
                     break
 
         arr = np.array(results)
@@ -830,7 +830,7 @@ class HYDRA50AnalyticsEngine:
             "statistical_summary": asdict(stats_summary),
             "avg_progression_rate_seconds": avg_progression_rate,
             "total_progressions": len(progressions),
-            "unique_scenarios": len(set(p.scenario_id for p in progressions)),
+            "unique_scenarios": len({p.scenario_id for p in progressions}),
         }
 
     def export_analysis(
@@ -850,7 +850,7 @@ class HYDRA50AnalyticsEngine:
                 indent=2,
             )
 
-        logger.info(f"Exported analysis to {output_path}")
+        logger.info("Exported analysis to %s", output_path)
         return str(output_path)
 
 

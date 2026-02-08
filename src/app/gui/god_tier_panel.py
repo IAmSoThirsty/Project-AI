@@ -84,8 +84,7 @@ class SystemHealthPanel(QFrame):
 
         # Refresh button
         refresh_btn = QPushButton("🔄 REFRESH")
-        refresh_btn.setStyleSheet(
-            """
+        refresh_btn.setStyleSheet("""
             QPushButton {
                 background-color: #1a1a1a;
                 border: 2px solid #00ff00;
@@ -97,8 +96,7 @@ class SystemHealthPanel(QFrame):
                 border: 2px solid #00ffff;
                 color: #00ffff;
             }
-        """
-        )
+        """)
         refresh_btn.clicked.connect(self.refresh_health)
         layout.addWidget(refresh_btn)
 
@@ -108,8 +106,7 @@ class SystemHealthPanel(QFrame):
     def _create_metric_label(self, name: str, value: str) -> QLabel:
         """Create a styled metric label."""
         label = QLabel(f"{name}:\n{value}")
-        label.setStyleSheet(
-            """
+        label.setStyleSheet("""
             QLabel {
                 color: #00ff00;
                 font-family: 'Courier New';
@@ -119,8 +116,7 @@ class SystemHealthPanel(QFrame):
                 background-color: #0a0a0a;
                 border-radius: 3px;
             }
-        """
-        )
+        """)
         label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         return label
 
@@ -151,7 +147,7 @@ class SystemHealthPanel(QFrame):
             )
 
         except Exception as e:
-            logger.error(f"Error refreshing health: {e}")
+            logger.error("Error refreshing health: %s", e)
 
 
 class ComponentStatusPanel(QFrame):
@@ -172,23 +168,20 @@ class ComponentStatusPanel(QFrame):
 
         # Component list
         self.status_label = QLabel("Loading component status...")
-        self.status_label.setStyleSheet(
-            """
+        self.status_label.setStyleSheet("""
             QLabel {
                 color: #00ff00;
                 font-family: 'Courier New';
                 font-size: 10px;
                 padding: 10px;
             }
-        """
-        )
+        """)
         self.status_label.setWordWrap(True)
         layout.addWidget(self.status_label)
 
         # Refresh button
         refresh_btn = QPushButton("🔄 REFRESH")
-        refresh_btn.setStyleSheet(
-            """
+        refresh_btn.setStyleSheet("""
             QPushButton {
                 background-color: #1a1a1a;
                 border: 2px solid #00ff00;
@@ -200,8 +193,7 @@ class ComponentStatusPanel(QFrame):
                 border: 2px solid #00ffff;
                 color: #00ffff;
             }
-        """
-        )
+        """)
         refresh_btn.clicked.connect(self.refresh_components)
         layout.addWidget(refresh_btn)
 
@@ -229,7 +221,7 @@ class ComponentStatusPanel(QFrame):
             self.status_label.setText("\n".join(output))
 
         except Exception as e:
-            logger.error(f"Error refreshing components: {e}")
+            logger.error("Error refreshing components: %s", e)
             self.status_label.setText(f"ERROR: {str(e)}")
 
 
@@ -252,8 +244,7 @@ class IntelligenceAssessmentPanel(QFrame):
         # Assessment display
         self.assessment_display = QTextEdit()
         self.assessment_display.setReadOnly(True)
-        self.assessment_display.setStyleSheet(
-            """
+        self.assessment_display.setStyleSheet("""
             QTextEdit {
                 background-color: #0a0a0a;
                 border: 1px solid #00ff00;
@@ -261,16 +252,14 @@ class IntelligenceAssessmentPanel(QFrame):
                 font-family: 'Courier New';
                 font-size: 10px;
             }
-        """
-        )
+        """)
         layout.addWidget(self.assessment_display)
 
         # Control buttons
         btn_layout = QHBoxLayout()
 
         self.generate_btn = QPushButton("▶ GENERATE ASSESSMENT")
-        self.generate_btn.setStyleSheet(
-            """
+        self.generate_btn.setStyleSheet("""
             QPushButton {
                 background-color: #1a1a1a;
                 border: 2px solid #00ff00;
@@ -282,8 +271,7 @@ class IntelligenceAssessmentPanel(QFrame):
                 border: 2px solid #00ffff;
                 color: #00ffff;
             }
-        """
-        )
+        """)
         self.generate_btn.clicked.connect(self.generate_assessment)
         btn_layout.addWidget(self.generate_btn)
 
@@ -339,7 +327,7 @@ class IntelligenceAssessmentPanel(QFrame):
             self.assessment_display.setText("\n".join(output))
 
         except Exception as e:
-            logger.error(f"Error generating assessment: {e}")
+            logger.error("Error generating assessment: %s", e)
             self.assessment_display.setText(
                 f"ERROR: Failed to generate assessment\n\n{str(e)}"
             )
@@ -359,13 +347,11 @@ class GodTierCommandPanel(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setStyleSheet(
-            """
+        self.setStyleSheet("""
             QWidget {
                 background-color: #1a1a1a;
             }
-        """
-        )
+        """)
 
         main_layout = QVBoxLayout(self)
 
@@ -403,23 +389,20 @@ class GodTierCommandPanel(QWidget):
     def _create_title_bar(self) -> QFrame:
         """Create title bar with back button."""
         title_frame = QFrame()
-        title_frame.setStyleSheet(
-            """
+        title_frame.setStyleSheet("""
             QFrame {
                 background-color: #0f0f0f;
                 border: 2px solid #00ff00;
                 border-radius: 5px;
             }
-        """
-        )
+        """)
         title_frame.setFixedHeight(60)
 
         layout = QHBoxLayout(title_frame)
 
         # Back button
         back_btn = QPushButton("◀ BACK")
-        back_btn.setStyleSheet(
-            """
+        back_btn.setStyleSheet("""
             QPushButton {
                 background-color: #1a1a1a;
                 border: 2px solid #00ff00;
@@ -431,8 +414,7 @@ class GodTierCommandPanel(QWidget):
                 border: 2px solid #00ffff;
                 color: #00ffff;
             }
-        """
-        )
+        """)
         back_btn.clicked.connect(self.back_requested.emit)
         layout.addWidget(back_btn)
 
@@ -453,7 +435,7 @@ class GodTierCommandPanel(QWidget):
     def _initialize_command_center(self):
         """Initialize the command center if needed."""
         try:
-            command_center = GodTierCommandCenter.get_instance()
+            GodTierCommandCenter.get_instance()
             logger.info("Command center already initialized")
         except RuntimeError:
             # Command center not initialized yet
@@ -465,7 +447,7 @@ class GodTierCommandPanel(QWidget):
                 )
                 logger.info("Command center initialized successfully")
             except Exception as e:
-                logger.error(f"Failed to initialize command center: {e}")
+                logger.error("Failed to initialize command center: %s", e)
 
     def _auto_refresh(self):
         """Auto-refresh panels."""

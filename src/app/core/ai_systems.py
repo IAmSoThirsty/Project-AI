@@ -826,8 +826,7 @@ class LearningRequestManager:
         try:
             conn = sqlite3.connect(self._db_file)
             cur = conn.cursor()
-            cur.execute(
-                """
+            cur.execute("""
                 CREATE TABLE IF NOT EXISTS requests (
                     id TEXT PRIMARY KEY,
                     topic TEXT,
@@ -838,8 +837,7 @@ class LearningRequestManager:
                     response TEXT,
                     reason TEXT
                 )
-                """
-            )
+                """)
             cur.execute(
                 "CREATE TABLE IF NOT EXISTS black_vault (hash TEXT PRIMARY KEY)"
             )

@@ -91,7 +91,7 @@ class OpenAIProvider(ModelProvider):
             )
             return response.choices[0].message.content
         except Exception as e:
-            logger.error(f"OpenAI API error: {e}")
+            logger.error("OpenAI API error: %s", e)
             raise
 
     def is_available(self) -> bool:
@@ -142,7 +142,7 @@ class PerplexityProvider(ModelProvider):
             )
             return response.choices[0].message.content
         except Exception as e:
-            logger.error(f"Perplexity API error: {e}")
+            logger.error("Perplexity API error: %s", e)
             raise
 
     def is_available(self) -> bool:
@@ -182,6 +182,6 @@ def get_provider(
     provider = provider_class(api_key=api_key)
 
     if not provider.is_available():
-        logger.warning(f"Provider {provider_name} is not available")
+        logger.warning("Provider %s is not available", provider_name)
 
     return provider

@@ -236,7 +236,7 @@ def demo_domain_coverage():
 
         print(f"📂 {domain.value.upper()} Domain:")
         print(f"   - Agents deployed: {len(agents)}")
-        print(f"   - Specialties covered: {len(set(a.specialty for a in agents))}")
+        print(f"   - Specialties covered: {len({a.specialty for a in agents})}")
 
         # Show sample specialties
         sample_specialties = [a.specialty for a in agents[:5]]

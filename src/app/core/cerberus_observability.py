@@ -354,14 +354,14 @@ class CerberusObservability:
             graph_report = self.get_incident_graph_report(incident_id)
             with open(graph_file, "w") as f:
                 json.dump(graph_report, f, indent=2)
-            logger.info(f"Exported incident graph: {graph_file}")
+            logger.info("Exported incident graph: %s", graph_file)
 
         # Export SLO metrics
         slo_file = self.telemetry_dir / f"slo_metrics_{timestamp}.json"
         slo_report = self.get_slo_report()
         with open(slo_file, "w") as f:
             json.dump(slo_report, f, indent=2)
-        logger.info(f"Exported SLO metrics: {slo_file}")
+        logger.info("Exported SLO metrics: %s", slo_file)
 
     def generate_prometheus_metrics(self) -> str:
         """Generate Prometheus-compatible metrics."""

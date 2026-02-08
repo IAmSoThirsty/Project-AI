@@ -31,6 +31,7 @@ from e2e.utils.test_helpers import (
 
 class AgentStatus(Enum):
     """Agent status enumeration."""
+
     IDLE = "idle"
     BUSY = "busy"
     WAITING = "waiting"
@@ -40,6 +41,7 @@ class AgentStatus(Enum):
 @dataclass
 class Message:
     """Agent communication message."""
+
     sender: str
     receiver: str
     content: Any
@@ -258,10 +260,7 @@ class TestAgentCommunication:
 
         # Act
         for i in range(5):
-            msg = agents[i % 3].send_message(
-                f"agent_{(i + 1) % 3}",
-                {"iteration": i}
-            )
+            msg = agents[i % 3].send_message(f"agent_{(i + 1) % 3}", {"iteration": i})
             broker.deliver_message(msg)
 
         # Assert
@@ -359,7 +358,7 @@ class TestAgentCoordination:
     def test_work_stealing(self):
         """Test work stealing between agents."""
         # Arrange
-        agents = [Agent(f"agent_{i}") for i in range(3)]
+        [Agent(f"agent_{i}") for i in range(3)]
 
         # Give uneven workload
         work_queues = {
@@ -388,7 +387,7 @@ class TestAgentCoordination:
         """Test barrier synchronization for agents."""
         # Arrange
         num_agents = 5
-        agents = [Agent(f"agent_{i}") for i in range(num_agents)]
+        [Agent(f"agent_{i}") for i in range(num_agents)]
         barrier_count = [0]
         lock = threading.Lock()
 
@@ -467,7 +466,7 @@ class TestAgentCollaboration:
         """Test map-reduce workflow with agents."""
         # Arrange
         mappers = [Agent(f"mapper_{i}") for i in range(3)]
-        reducer = Agent("reducer")
+        Agent("reducer")
 
         data = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
@@ -475,26 +474,26 @@ class TestAgentCollaboration:
         map_results = []
         chunk_size = len(data) // len(mappers)
 
-        for i, mapper in enumerate(mappers):
+        for i, _mapper in enumerate(mappers):
             start_idx = i * chunk_size
             end_idx = start_idx + chunk_size if i < len(mappers) - 1 else len(data)
             chunk = data[start_idx:end_idx]
 
             # Map: square each number
-            mapped = [x ** 2 for x in chunk]
+            mapped = [x**2 for x in chunk]
             map_results.extend(mapped)
 
         # Reduce phase
         total = sum(map_results)
 
         # Assert
-        assert total == sum(x ** 2 for x in data)
+        assert total == sum(x**2 for x in data)
         assert len(map_results) == len(data)
 
     def test_collaborative_decision_making(self):
         """Test collaborative decision making among agents."""
         # Arrange
-        agents = [Agent(f"expert_{i}") for i in range(4)]
+        [Agent(f"expert_{i}") for i in range(4)]
 
         # Each agent provides a recommendation
         recommendations = {
@@ -515,10 +514,7 @@ class TestAgentCollaboration:
             action_scores[action].append(confidence)
 
         # Calculate weighted decision
-        final_decision = max(
-            action_scores.items(),
-            key=lambda x: sum(x[1]) / len(x[1])
-        )
+        final_decision = max(action_scores.items(), key=lambda x: sum(x[1]) / len(x[1]))
 
         # Assert
         assert final_decision[0] == "buy"
@@ -527,7 +523,7 @@ class TestAgentCollaboration:
     def test_peer_review_workflow(self):
         """Test peer review workflow among agents."""
         # Arrange
-        author = Agent("author")
+        Agent("author")
         reviewers = [Agent(f"reviewer_{i}") for i in range(3)]
 
         work = {
@@ -559,7 +555,7 @@ class TestAgentCollaboration:
     def test_resource_sharing(self):
         """Test resource sharing between agents."""
         # Arrange
-        agents = [Agent(f"agent_{i}") for i in range(3)]
+        [Agent(f"agent_{i}") for i in range(3)]
 
         shared_resources = {
             "cpu": 100,
@@ -600,7 +596,7 @@ class TestAgentConflictResolution:
     def test_resource_conflict_resolution(self):
         """Test resolving resource conflicts between agents."""
         # Arrange
-        agents = [Agent(f"agent_{i}") for i in range(3)]
+        [Agent(f"agent_{i}") for i in range(3)]
         available_resource = 100
 
         # Competing requests
@@ -676,8 +672,8 @@ class TestAgentConflictResolution:
     def test_conflict_arbitration(self):
         """Test arbitration of conflicts by coordinator."""
         # Arrange
-        coordinator = Agent("coordinator", "coordinator")
-        agents = [Agent(f"agent_{i}") for i in range(2)]
+        Agent("coordinator", "coordinator")
+        [Agent(f"agent_{i}") for i in range(2)]
 
         conflicts = [
             {
@@ -698,8 +694,8 @@ class TestAgentConflictResolution:
     def test_negotiation_protocol(self):
         """Test negotiation protocol between agents."""
         # Arrange
-        buyer = Agent("buyer")
-        seller = Agent("seller")
+        Agent("buyer")
+        Agent("seller")
 
         # Initial positions
         buyer_offer = 80
@@ -709,7 +705,7 @@ class TestAgentConflictResolution:
         agreement_threshold = 5
 
         # Act - Negotiate
-        for round_num in range(max_rounds):
+        for _round_num in range(max_rounds):
             # Buyer increases offer
             buyer_offer += 4
             # Seller decreases ask
@@ -752,10 +748,7 @@ class TestAgentStateSynchronization:
         # Act - Replicate to all replicas
         for replica in replicas:
             replica.state = primary_state.copy()
-            save_json_file(
-                replica.get_state(),
-                state_dir / f"{replica.agent_id}.json"
-            )
+            save_json_file(replica.get_state(), state_dir / f"{replica.agent_id}.json")
 
         # Assert - All replicas have same state
         for replica in replicas:
@@ -777,6 +770,7 @@ class TestAgentStateSynchronization:
             for agent in agents:
                 # Pick random peer
                 import random
+
                 peer = random.choice(agents)
                 if peer != agent:
                     # Take average of values

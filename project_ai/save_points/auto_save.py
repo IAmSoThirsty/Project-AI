@@ -31,7 +31,7 @@ class AutoSaveService:
         self.running = True
         self.task = asyncio.create_task(self._auto_save_loop())
         logger.info(
-            f"Auto-save service started (interval: {self.interval_minutes} minutes)"
+            "Auto-save service started (interval: %s minutes)", self.interval_minutes
         )
 
     async def stop(self):
@@ -63,7 +63,7 @@ class AutoSaveService:
             except asyncio.CancelledError:
                 break
             except Exception as e:
-                logger.error(f"Error in auto-save loop: {e}", exc_info=True)
+                logger.error("Error in auto-save loop: %s", e, exc_info=True)
                 # Continue running even if one save fails
 
     def get_stats(self) -> dict:

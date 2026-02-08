@@ -169,7 +169,9 @@ class AlienInvadersSimulationAdapter(SimulationSystem):
                     target=event.event_id,
                     strength=0.7,  # Default correlation
                     lag_years=(event.timestamp - prev_event.timestamp).days / 365.0,
-                    evidence=[f"Sequential events: {prev_event.event_id} -> {event.event_id}"],
+                    evidence=[
+                        f"Sequential events: {prev_event.event_id} -> {event.event_id}"
+                    ],
                     confidence=0.8,
                 )
 
@@ -212,7 +214,11 @@ class AlienInvadersSimulationAdapter(SimulationSystem):
             trigger_events=[],
             causal_chain=[],
             affected_countries=set(self.engine.state.countries.keys()),
-            impact_domains={RiskDomain.MILITARY, RiskDomain.POLITICAL, RiskDomain.ECONOMIC},
+            impact_domains={
+                RiskDomain.MILITARY,
+                RiskDomain.POLITICAL,
+                RiskDomain.ECONOMIC,
+            },
             severity=self._determine_severity(current_state),
             mitigation_strategies=self._generate_mitigation_strategies(current_state),
         )
@@ -383,13 +389,15 @@ Recommended Actions:
         if state["global"]["average_morale"] < 0.5:
             strategies.append("Implement public morale support programs")
 
-        strategies.extend([
-            "Strengthen international alliances",
-            "Accelerate defense technology development",
-            "Establish secure communication networks",
-            "Implement resource conservation protocols",
-            "Prepare contingency evacuation plans",
-        ])
+        strategies.extend(
+            [
+                "Strengthen international alliances",
+                "Accelerate defense technology development",
+                "Establish secure communication networks",
+                "Implement resource conservation protocols",
+                "Prepare contingency evacuation plans",
+            ]
+        )
 
         return strategies
 
@@ -419,7 +427,7 @@ def register_aicpd_system(config: SimulationConfig | None = None) -> bool:
 
         # INTEGRATION POINT C: Set monolith authority on registry
         # This enables projection mode enforcement
-        if hasattr(adapter.engine, 'monolith'):
+        if hasattr(adapter.engine, "monolith"):
             SimulationRegistry.set_monolith_authority(adapter.engine.monolith)
             SimulationRegistry.enable_projection_mode(True)
             logger.info("Registry projection mode enabled with monolith authority")

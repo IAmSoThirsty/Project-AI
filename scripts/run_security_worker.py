@@ -73,13 +73,13 @@ class SecurityWorker:
         """Start the worker."""
         try:
             # Connect to Temporal server
-            logger.info(f"🔌 Connecting to Temporal server at {self.temporal_address}")
+            logger.info("🔌 Connecting to Temporal server at %s", self.temporal_address)
             self.client = await Client.connect(self.temporal_address)
             logger.info("✅ Connected to Temporal server")
 
             # Create worker
             logger.info(
-                f"🛡️ Creating security agent worker on queue: {self.task_queue}"
+                "🛡️ Creating security agent worker on queue: %s", self.task_queue
             )
             self.worker = Worker(
                 self.client,
@@ -115,7 +115,7 @@ class SecurityWorker:
             logger.info("📋 Registered activities: 10")
 
             # Run worker
-            logger.info(f"🚀 Starting worker (task queue: {self.task_queue})")
+            logger.info("🚀 Starting worker (task queue: %s)", self.task_queue)
             logger.info("Press Ctrl+C to stop")
 
             # Run worker until shutdown event is set
@@ -124,7 +124,7 @@ class SecurityWorker:
         except KeyboardInterrupt:
             logger.info("⚠️ Received interrupt signal")
         except Exception as e:
-            logger.error(f"❌ Worker error: {e}", exc_info=True)
+            logger.error("❌ Worker error: %s", e, exc_info=True)
             raise
         finally:
             await self.shutdown()
@@ -146,7 +146,7 @@ class SecurityWorker:
 
 def handle_signal(signum, frame):
     """Handle shutdown signals."""
-    logger.info(f"Received signal {signum}")
+    logger.info("Received signal %s", signum)
     # Let asyncio handle the shutdown
     raise KeyboardInterrupt()
 
@@ -168,5 +168,5 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         logger.info("Worker stopped by user")
     except Exception as e:
-        logger.error(f"Fatal error: {e}", exc_info=True)
+        logger.error("Fatal error: %s", e, exc_info=True)
         sys.exit(1)

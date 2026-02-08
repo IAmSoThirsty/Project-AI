@@ -218,7 +218,9 @@ class ParallelProcessor:
             self.executor = ThreadPoolExecutor(max_workers=self.max_workers)
 
         logger.info(
-            f"ParallelProcessor initialized: {self.max_workers} {'processes' if use_processes else 'threads'}"
+            "ParallelProcessor initialized: %s %s",
+            self.max_workers,
+            "processes" if use_processes else "threads",
         )
 
     def map(self, func: Callable, items: list[Any]) -> list[Any]:
@@ -412,7 +414,7 @@ class BackgroundTaskProcessor:
             worker.start()
             self.workers.append(worker)
 
-        logger.info(f"Background task processor started: {self.num_workers} workers")
+        logger.info("Background task processor started: %s workers", self.num_workers)
 
     def stop(self) -> None:
         """Stop background workers"""
@@ -440,7 +442,7 @@ class BackgroundTaskProcessor:
                 try:
                     task()
                 except Exception as e:
-                    logger.error(f"Background task failed: {e}")
+                    logger.error("Background task failed: %s", e)
             else:
                 time.sleep(0.1)
 
