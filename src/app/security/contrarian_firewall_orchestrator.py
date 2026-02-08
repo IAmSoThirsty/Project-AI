@@ -170,9 +170,7 @@ class ContrariaNFirewallOrchestrator:
         self.running = False
         self.background_tasks: list[asyncio.Task] = []
 
-        self.logger.info(
-            f"ContrariaNFirewallOrchestrator initialized in {self.config.mode.value} mode"
-        )
+        self.logger.info("ContrariaNFirewallOrchestrator initialized in %s mode", self.config.mode.value)
 
     def _initialize_subsystems(self):
         """Initialize all integrated subsystems"""
@@ -207,7 +205,7 @@ class ContrariaNFirewallOrchestrator:
 
             self.logger.info("Governance integration active")
         except ImportError as e:
-            self.logger.warning(f"Governance integration unavailable: {e}")
+            self.logger.warning("Governance integration unavailable: %s", e)
             self.triumvirate = None
             self.governance = None
 
@@ -226,7 +224,7 @@ class ContrariaNFirewallOrchestrator:
 
             self.logger.info("Agent coordination active")
         except Exception as e:
-            self.logger.warning(f"Agent coordination unavailable: {e}")
+            self.logger.warning("Agent coordination unavailable: %s", e)
 
     # ========================================================================
     # Core Orchestration Methods
@@ -287,7 +285,7 @@ class ContrariaNFirewallOrchestrator:
         5. Cognitive warfare
         6. Auto-tuning feedback
         """
-        self.logger.warning(f"Processing violation: {source_ip} - {violation_type}")
+        self.logger.warning("Processing violation: %s - %s", source_ip, violation_type)
 
         # 1. Swarm defense response
         swarm_result = self.swarm_defense.detect_policy_violation(
@@ -392,7 +390,7 @@ class ContrariaNFirewallOrchestrator:
                 "votes": [v.dict() for v in result.votes],
             }
         except Exception as e:
-            self.logger.error(f"Governance evaluation failed: {e}")
+            self.logger.error("Governance evaluation failed: %s", e)
             return None
 
     def _track_intent(
@@ -439,7 +437,7 @@ class ContrariaNFirewallOrchestrator:
         self.agent_communications.append(notification)
 
         # In production, would send to actual agent message bus
-        self.logger.debug(f"Agent notification: {event_type} from {source}")
+        self.logger.debug("Agent notification: %s from %s", event_type, source)
 
     def _escalate_to_liara(self, source_ip: str, swarm_result: dict[str, Any]):
         """Escalate crisis to LiaraLayer"""
@@ -524,7 +522,7 @@ class ContrariaNFirewallOrchestrator:
 
                 await asyncio.sleep(self.config.telemetry_polling_interval)
             except Exception as e:
-                self.logger.error(f"Telemetry collection error: {e}")
+                self.logger.error("Telemetry collection error: %s", e)
                 await asyncio.sleep(1.0)
 
     async def _auto_tuner(self):
@@ -564,7 +562,7 @@ class ContrariaNFirewallOrchestrator:
 
                 await asyncio.sleep(30.0)  # Tune every 30 seconds
             except Exception as e:
-                self.logger.error(f"Auto-tuning error: {e}")
+                self.logger.error("Auto-tuning error: %s", e)
                 await asyncio.sleep(5.0)
 
     async def _agent_coordinator(self):
@@ -580,7 +578,7 @@ class ContrariaNFirewallOrchestrator:
 
                 await asyncio.sleep(5.0)
             except Exception as e:
-                self.logger.error(f"Agent coordination error: {e}")
+                self.logger.error("Agent coordination error: %s", e)
                 await asyncio.sleep(1.0)
 
     def _apply_tuning(self):

@@ -351,7 +351,7 @@ class BuildGraphDB:
             if dep_id not in visited:
                 dfs(dep_id, [])
 
-        logger.info(f"Detected {len(cycles)} dependency cycles")
+        logger.info("Detected %s dependency cycles", len(cycles))
         return cycles
 
     def trace_artifact_provenance(self, artifact_hash: str) -> list[dict[str, Any]]:
@@ -383,7 +383,7 @@ class BuildGraphDB:
         # Sort by timestamp
         provenance.sort(key=lambda p: p["build_timestamp"])
 
-        logger.debug(f"Found {len(provenance)} provenance records for hash {artifact_hash[:8]}...")
+        logger.debug("Found %s provenance records for hash %s...", len(provenance), artifact_hash[)
         return provenance
 
     def identify_failure_correlations(
@@ -438,7 +438,7 @@ class BuildGraphDB:
                                 "time_window": window,
                             })
 
-        logger.info(f"Found {len(correlations)} failure correlations")
+        logger.info("Found %s failure correlations", len(correlations))
         return correlations
 
     def _compute_build_correlation(self, build1_id: int, build2_id: int) -> float:
@@ -616,7 +616,7 @@ class BuildGraphDB:
             output_path = Path(output_path)
             output_path.parent.mkdir(parents=True, exist_ok=True)
             output_path.write_text(dot_content)
-            logger.info(f"Exported graph to {output_path}")
+            logger.info("Exported graph to %s", output_path)
 
         return dot_content
 
@@ -681,7 +681,7 @@ class BuildGraphDB:
             output_path = Path(output_path)
             output_path.parent.mkdir(parents=True, exist_ok=True)
             output_path.write_text(json.dumps(graph_data, indent=2))
-            logger.info(f"Exported graph to {output_path}")
+            logger.info("Exported graph to %s", output_path)
 
         return graph_data
 

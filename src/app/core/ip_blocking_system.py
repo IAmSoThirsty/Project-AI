@@ -116,11 +116,9 @@ class IPBlockingSystem:
         self._load_state()
 
         logger.info("IP Blocking System initialized")
-        logger.info(
-            f"  Rate limits: {max_requests_per_minute}/min, {max_requests_per_hour}/hour"
-        )
-        logger.info(f"  Violation threshold: {violation_threshold}")
-        logger.info(f"  Block duration: {block_duration_hours} hours")
+        logger.info("  Rate limits: %s/min, %s/hour", max_requests_per_minute, max_requests_per_hour)
+        logger.info("  Violation threshold: %s", violation_threshold)
+        logger.info("  Block duration: %s hours", block_duration_hours)
 
     def check_ip_allowed(
         self,
@@ -149,7 +147,7 @@ class IPBlockingSystem:
 
             # Check blacklist
             if ip_address in self.blacklist:
-                logger.warning(f"Blocked blacklisted IP: {ip_address}")
+                logger.warning("Blocked blacklisted IP: %s", ip_address)
                 return False, "IP is blacklisted"
 
             # Check if currently blocked
@@ -163,9 +161,9 @@ class IPBlockingSystem:
                             # Unblock
                             record.blocked = False
                             record.block_timestamp = None
-                            logger.info(f"Auto-unblocked IP after expiry: {ip_address}")
+                            logger.info("Auto-unblocked IP after expiry: %s", ip_address)
                         else:
-                            logger.warning(f"Blocked IP attempted access: {ip_address}")
+                            logger.warning("Blocked IP attempted access: %s", ip_address)
                             return False, f"IP blocked: {record.block_reason}"
 
             # Check rate limits
@@ -200,18 +198,14 @@ class IPBlockingSystem:
 
         # Check limits
         if requests_last_minute >= self.max_requests_per_minute:
-            logger.warning(
-                f"Rate limit exceeded (minute): {ip_address} - {requests_last_minute} requests"
-            )
+            logger.warning("Rate limit exceeded (minute): %s - %s requests", ip_address, requests_last_minute)
             return (
                 False,
                 f"Rate limit exceeded: {requests_last_minute} requests in last minute",
             )
 
         if requests_last_hour >= self.max_requests_per_hour:
-            logger.warning(
-                f"Rate limit exceeded (hour): {ip_address} - {requests_last_hour} requests"
-            )
+            logger.warning("Rate limit exceeded (hour): %s - %s requests", ip_address, requests_last_hour)
             return (
                 False,
                 f"Rate limit exceeded: {requests_last_hour} requests in last hour",
@@ -297,7 +291,7 @@ class IPBlockingSystem:
             if permanent:
                 self.blacklist.add(ip_address)
 
-            logger.warning(f"IP blocked: {ip_address} - {reason}")
+            logger.warning("IP blocked: %s - %s", ip_address, reason)
             self._save_state()
 
     def unblock_ip(self, ip_address: str) -> None:
@@ -311,7 +305,7 @@ class IPBlockingSystem:
             if ip_address in self.blacklist:
                 self.blacklist.remove(ip_address)
 
-            logger.info(f"IP unblocked: {ip_address}")
+            logger.info("IP unblocked: %s", ip_address)
             self._save_state()
 
     def add_to_whitelist(self, ip_address: str) -> None:
@@ -321,7 +315,7 @@ class IPBlockingSystem:
             # Remove from blacklist if present
             if ip_address in self.blacklist:
                 self.blacklist.remove(ip_address)
-            logger.info(f"IP whitelisted: {ip_address}")
+            logger.info("IP whitelisted: %s", ip_address)
             self._save_state()
 
     def remove_from_whitelist(self, ip_address: str) -> None:
@@ -329,7 +323,7 @@ class IPBlockingSystem:
         with self.lock:
             if ip_address in self.whitelist:
                 self.whitelist.remove(ip_address)
-                logger.info(f"IP removed from whitelist: {ip_address}")
+                logger.info("IP removed from whitelist: %s", ip_address)
                 self._save_state()
 
     def get_statistics(self) -> dict[str, Any]:
@@ -373,26 +367,26 @@ class IPBlockingSystem:
                     self.ip_records = {
                         ip: IPRecord(**record) for ip, record in data.items()
                     }
-                logger.info(f"Loaded {len(self.ip_records)} IP records")
+                logger.info("Loaded %s IP records", len(self.ip_records))
 
             if self.blacklist_file.exists():
                 with open(self.blacklist_file) as f:
                     self.blacklist = set(json.load(f))
-                logger.info(f"Loaded {len(self.blacklist)} blacklisted IPs")
+                logger.info("Loaded %s blacklisted IPs", len(self.blacklist))
 
             if self.whitelist_file.exists():
                 with open(self.whitelist_file) as f:
                     self.whitelist = set(json.load(f))
-                logger.info(f"Loaded {len(self.whitelist)} whitelisted IPs")
+                logger.info("Loaded %s whitelisted IPs", len(self.whitelist))
 
             if self.violations_file.exists():
                 with open(self.violations_file) as f:
                     violation_data = json.load(f)
                     self.violations = [RateLimitViolation(**v) for v in violation_data]
-                logger.info(f"Loaded {len(self.violations)} violations")
+                logger.info("Loaded %s violations", len(self.violations))
 
         except Exception as e:
-            logger.error(f"Error loading IP blocking state: {e}")
+            logger.error("Error loading IP blocking state: %s", e)
 
     def _save_state(self) -> None:
         """Save state to disk."""
@@ -416,4 +410,4 @@ class IPBlockingSystem:
                 json.dump(violation_data, f, indent=2)
 
         except Exception as e:
-            logger.error(f"Error saving IP blocking state: {e}")
+            logger.error("Error saving IP blocking state: %s", e)

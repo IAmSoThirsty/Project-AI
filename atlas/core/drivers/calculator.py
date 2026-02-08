@@ -162,7 +162,7 @@ class DriverCalculator:
                     weighted_sum += score * weight
 
                 except Exception as e:
-                    logger.error(f"Failed to calculate driver {driver_name}: {e}")
+                    logger.error("Failed to calculate driver %s: %s", driver_name, e)
                     driver_scores[driver_name] = {
                         "value": 0.0,
                         "weight": driver_config.get("weight", 0.0),
@@ -172,7 +172,7 @@ class DriverCalculator:
 
             # Validate weights sum to 1.0
             if not (0.99 <= total_weight <= 1.01):
-                logger.warning(f"Driver weights sum to {total_weight}, expected 1.0")
+                logger.warning("Driver weights sum to %s, expected 1.0", total_weight)
 
             # Calculate composite influence
             composite_influence = weighted_sum / total_weight if total_weight > 0 else 0.0
@@ -208,7 +208,7 @@ class DriverCalculator:
 
         except Exception as e:
             self._stats["errors_encountered"] += 1
-            logger.error(f"Failed to calculate influence score: {e}")
+            logger.error("Failed to calculate influence score: %s", e)
 
             self.audit.log_event(
                 category=AuditCategory.OPERATION,
@@ -254,7 +254,7 @@ class DriverCalculator:
                     projection_values[driver_name] = value
 
                 except Exception as e:
-                    logger.error(f"Failed to calculate projection driver {driver_name}: {e}")
+                    logger.error("Failed to calculate projection driver %s: %s", driver_name, e)
                     projection_values[driver_name] = 0.0
 
             return {
@@ -263,7 +263,7 @@ class DriverCalculator:
             }
 
         except Exception as e:
-            logger.error(f"Failed to calculate projection drivers: {e}")
+            logger.error("Failed to calculate projection drivers: %s", e)
             raise DriverError(f"Failed to calculate projection drivers: {e}") from e
 
     def calculate_relationship_strength(self,
@@ -283,7 +283,7 @@ class DriverCalculator:
         """
         try:
             if relationship_type not in self.relationship_drivers:
-                logger.warning(f"Unknown relationship type: {relationship_type}")
+                logger.warning("Unknown relationship type: %s", relationship_type)
                 return 0.5
 
             driver_config = self.relationship_drivers[relationship_type]
@@ -312,7 +312,7 @@ class DriverCalculator:
             return strength
 
         except Exception as e:
-            logger.error(f"Failed to calculate relationship strength: {e}")
+            logger.error("Failed to calculate relationship strength: %s", e)
             return 0.5
 
     def _calculate_driver(self,
@@ -348,7 +348,7 @@ class DriverCalculator:
             try:
                 context[input_name] = float(value)
             except (ValueError, TypeError):
-                logger.warning(f"Could not convert {input_name} to float: {value}")
+                logger.warning("Could not convert %s to float: %s", input_name, value)
                 context[input_name] = 0.0
 
         # Evaluate formula
@@ -356,7 +356,7 @@ class DriverCalculator:
             score = self._evaluate_formula(formula, context)
             self._stats["formulas_evaluated"] += 1
         except Exception as e:
-            logger.error(f"Formula evaluation failed for {driver_name}: {e}")
+            logger.error("Formula evaluation failed for %s: %s", driver_name, e)
             raise FormulaError(f"Formula evaluation failed: {e}") from e
 
         # Apply normalization
@@ -439,7 +439,7 @@ class DriverCalculator:
             return float(result)
 
         except Exception as e:
-            logger.error(f"Formula evaluation failed: {formula}, error: {e}")
+            logger.error("Formula evaluation failed: %s, error: %s", formula, e)
             raise FormulaError(f"Formula evaluation failed: {e}") from e
 
     def _eval_node(self, node: ast.AST, context: dict[str, Any]) -> Any:
@@ -561,9 +561,7 @@ class DriverCalculator:
         )
 
         if not (0.99 <= total_weight <= 1.01):
-            logger.warning(
-                f"Influence driver weights sum to {total_weight}, expected 1.0"
-            )
+            logger.warning("Influence driver weights sum to %s, expected 1.0", total_weight)
 
         # Validate all drivers have required fields
         for driver_name, driver_config in self.influence_drivers.items():

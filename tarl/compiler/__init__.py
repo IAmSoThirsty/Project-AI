@@ -128,7 +128,7 @@ class Lexer:
                     i += 1
                     col_num += 1
 
-        logger.debug(f"Tokenized {len(tokens)} tokens")
+        logger.debug("Tokenized %s tokens", len(tokens))
         return tokens
 
 
@@ -260,9 +260,7 @@ class CodeGenerator:
                         num_value = float(token.value)
                     except ValueError:
                         # If parsing fails, log warning and skip
-                        logger.warning(
-                            f"NUMBER token '{token.value}' cannot be parsed as numeric type, skipping"
-                        )
+                        logger.warning("NUMBER token '%s' cannot be parsed as numeric type, skipping", token.value)
                         continue
 
                 constants.append(num_value)
@@ -288,9 +286,7 @@ class CodeGenerator:
                 bytecode.append(len(encoded))
                 bytecode.extend(encoded)
 
-        logger.debug(
-            f"Generated {len(bytecode)} bytes of bytecode with {len(constants)} constants"
-        )
+        logger.debug("Generated %s bytes of bytecode with %s constants", len(bytecode), len(constants))
 
         return bytes(bytecode)
 
@@ -383,7 +379,7 @@ class CompilerFrontend:
             return bytecode
 
         except Exception as e:
-            logger.error(f"Compilation failed: {e}")
+            logger.error("Compilation failed: %s", e)
             raise
 
     def get_status(self) -> dict[str, Any]:

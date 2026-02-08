@@ -503,7 +503,7 @@ Answer:"""
                 }
 
         except ImportError as e:
-            logger.error(f"Import error: {e}")
+            logger.error("Import error: %s", e)
             return {
                 "answer": f"Integration not available: {str(e)}",
                 "context": context if "context" in locals() else "",

@@ -119,9 +119,7 @@ class EncryptedStateManager:
         # Thread safety
         self._lock = threading.Lock()
 
-        logger.info(
-            f"Encrypted State Manager initialized (algorithm={algorithm.value})"
-        )
+        logger.info("Encrypted State Manager initialized (algorithm=%s)", algorithm.value)
 
     def _load_or_generate_master_key(self) -> bytes:
         """Load existing master key or generate new one."""
@@ -273,11 +271,11 @@ class EncryptedStateManager:
             with open(metadata_file, "w") as f:
                 json.dump(metadata, f, indent=2)
 
-            logger.info(f"Saved encrypted state: {state_id} ({len(encrypted)} bytes)")
+            logger.info("Saved encrypted state: %s (%s bytes)", state_id, len(encrypted))
             return True
 
         except Exception as e:
-            logger.error(f"Failed to save encrypted state {state_id}: {e}")
+            logger.error("Failed to save encrypted state %s: %s", state_id, e)
             return False
 
     def load_encrypted_state(self, state_id: str) -> dict[str, Any] | None:
@@ -295,7 +293,7 @@ class EncryptedStateManager:
             metadata_file = self.data_dir / f"{state_id}.meta"
 
             if not state_file.exists() or not metadata_file.exists():
-                logger.warning(f"Encrypted state not found: {state_id}")
+                logger.warning("Encrypted state not found: %s", state_id)
                 return None
 
             # Load metadata
@@ -316,11 +314,11 @@ class EncryptedStateManager:
             json_data = data_bytes.decode("utf-8")
             state_data = json.loads(json_data)
 
-            logger.info(f"Loaded encrypted state: {state_id}")
+            logger.info("Loaded encrypted state: %s", state_id)
             return state_data
 
         except Exception as e:
-            logger.error(f"Failed to load encrypted state {state_id}: {e}")
+            logger.error("Failed to load encrypted state %s: %s", state_id, e)
             return None
 
     def rotate_keys(self) -> bool:
@@ -366,11 +364,11 @@ class EncryptedStateManager:
             self._cipher = self._initialize_cipher()
             self.last_rotation = datetime.now()
 
-            logger.info(f"Key rotation complete: {old_key_id} -> {new_key_id}")
+            logger.info("Key rotation complete: %s -> %s", old_key_id, new_key_id)
             return True
 
         except Exception as e:
-            logger.error(f"Key rotation failed: {e}")
+            logger.error("Key rotation failed: %s", e)
             return False
 
     def check_rotation_needed(self) -> bool:
@@ -403,7 +401,7 @@ class DataMigrationManager:
         """Register a migration function."""
         key = f"{from_version}->{to_version}"
         self.migrations[key] = migration_fn
-        logger.info(f"Registered migration: {key}")
+        logger.info("Registered migration: %s", key)
 
     def get_data_version(self, data: dict[str, Any]) -> DataVersion:
         """Extract version from data."""
@@ -429,16 +427,16 @@ class DataMigrationManager:
         current_ver = self.get_data_version(data)
 
         if current_ver == target_version:
-            logger.info(f"Data already at version {target_version}")
+            logger.info("Data already at version %s", target_version)
             return data
 
-        logger.info(f"Migrating data from {current_ver} to {target_version}")
+        logger.info("Migrating data from %s to %s", current_ver, target_version)
 
         # Find migration path
         migration_path = self._find_migration_path(current_ver, target_version)
 
         if not migration_path:
-            logger.error(f"No migration path from {current_ver} to {target_version}")
+            logger.error("No migration path from %s to %s", current_ver, target_version)
             return data
 
         # Apply migrations
@@ -448,13 +446,13 @@ class DataMigrationManager:
             key = f"{from_ver}->{to_ver}"
 
             if key in self.migrations:
-                logger.info(f"Applying migration: {key}")
+                logger.info("Applying migration: %s", key)
                 migrated_data = self.migrations[key](migrated_data)
                 migrated_data["version"] = str(to_ver)
             else:
-                logger.warning(f"Migration not found: {key}")
+                logger.warning("Migration not found: %s", key)
 
-        logger.info(f"Migration complete: {current_ver} -> {target_version}")
+        logger.info("Migration complete: %s -> %s", current_ver, target_version)
         return migrated_data
 
     def _find_migration_path(
@@ -513,7 +511,7 @@ class BackupManager:
         self.max_backups = max_backups
         self.compression_enabled = compression_enabled
 
-        logger.info(f"Backup Manager initialized (max_backups={max_backups})")
+        logger.info("Backup Manager initialized (max_backups=%s)", max_backups)
 
     def create_backup(self, backup_name: str | None = None) -> bool:
         """
@@ -531,7 +529,7 @@ class BackupManager:
 
             backup_path = self.backup_dir / backup_name
 
-            logger.info(f"Creating backup: {backup_name}")
+            logger.info("Creating backup: %s", backup_name)
 
             # Create backup using shutil
             if self.compression_enabled:
@@ -556,7 +554,7 @@ class BackupManager:
             with open(metadata_file, "w") as f:
                 json.dump(metadata, f, indent=2)
 
-            logger.info(f"Backup created successfully: {backup_file}")
+            logger.info("Backup created successfully: %s", backup_file)
 
             # Cleanup old backups
             self._cleanup_old_backups()
@@ -564,7 +562,7 @@ class BackupManager:
             return True
 
         except Exception as e:
-            logger.error(f"Failed to create backup: {e}")
+            logger.error("Failed to create backup: %s", e)
             return False
 
     def restore_backup(self, backup_name: str) -> bool:
@@ -578,12 +576,12 @@ class BackupManager:
             bool: True if restore successful
         """
         try:
-            logger.info(f"Restoring backup: {backup_name}")
+            logger.info("Restoring backup: %s", backup_name)
 
             # Load metadata
             metadata_file = self.backup_dir / f"{backup_name}.meta"
             if not metadata_file.exists():
-                logger.error(f"Backup metadata not found: {backup_name}")
+                logger.error("Backup metadata not found: %s", backup_name)
                 return False
 
             with open(metadata_file) as f:
@@ -596,12 +594,12 @@ class BackupManager:
                 backup_file = self.backup_dir / backup_name
 
             if not backup_file.exists():
-                logger.error(f"Backup file not found: {backup_file}")
+                logger.error("Backup file not found: %s", backup_file)
                 return False
 
             checksum = self._calculate_checksum(str(backup_file))
             if checksum != metadata["checksum"]:
-                logger.error(f"Checksum mismatch for backup {backup_name}")
+                logger.error("Checksum mismatch for backup %s", backup_name)
                 return False
 
             # Create backup of current data before restore
@@ -619,11 +617,11 @@ class BackupManager:
             else:
                 shutil.copytree(backup_file, self.data_dir)
 
-            logger.info(f"Backup restored successfully: {backup_name}")
+            logger.info("Backup restored successfully: %s", backup_name)
             return True
 
         except Exception as e:
-            logger.error(f"Failed to restore backup: {e}")
+            logger.error("Failed to restore backup: %s", e)
             return False
 
     def list_backups(self) -> list[dict[str, Any]]:
@@ -636,7 +634,7 @@ class BackupManager:
                     metadata = json.load(f)
                 backups.append(metadata)
             except Exception as e:
-                logger.error(f"Error reading backup metadata {meta_file}: {e}")
+                logger.error("Error reading backup metadata %s: %s", meta_file, e)
 
         # Sort by timestamp
         backups.sort(key=lambda x: x["timestamp"], reverse=True)
@@ -689,7 +687,7 @@ class BackupManager:
                 if meta_file.exists():
                     meta_file.unlink()
 
-                logger.info(f"Removed old backup: {backup_name}")
+                logger.info("Removed old backup: %s", backup_name)
 
 
 # Convenience functions

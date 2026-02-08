@@ -202,7 +202,7 @@ class JSONReporter:
         report_dict = self._to_dict(report)
 
         report_file.write_text(json.dumps(report_dict, indent=2, default=str))
-        logger.info(f"Saved JSON report: {report_file}")
+        logger.info("Saved JSON report: %s", report_file)
         return report_file
 
     def _to_dict(self, obj: Any) -> dict:

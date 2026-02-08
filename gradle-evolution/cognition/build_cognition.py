@@ -63,7 +63,7 @@ class BuildCognitionEngine:
         try:
             # Check cognitive boundaries
             if not check_boundary("build_planning", len(tasks)):
-                logger.warning(f"Task count {len(tasks)} exceeds cognitive boundary")
+                logger.warning("Task count %s exceeds cognitive boundary", len(tasks))
                 return tasks, {"warning": "Boundary exceeded, using original order"}
 
             # Analyze build patterns
@@ -93,7 +93,7 @@ class BuildCognitionEngine:
             # Record optimization
             self._record_optimization(tasks, optimized_tasks, reasoning)
 
-            logger.info(f"Build plan optimized: {len(tasks)} tasks")
+            logger.info("Build plan optimized: %s tasks", len(tasks))
             return optimized_tasks, reasoning
 
         except Exception as e:
@@ -139,7 +139,7 @@ class BuildCognitionEngine:
             if len(self.build_patterns[pattern_key]) > 100:
                 self.build_patterns[pattern_key] = self.build_patterns[pattern_key][-100:]
 
-            logger.debug(f"Learned from build: {pattern_key}, success={success}")
+            logger.debug("Learned from build: %s, success=%s", pattern_key, success)
 
         except Exception as e:
             logger.error(f"Error learning from build: {e}", exc_info=True)
@@ -195,7 +195,7 @@ class BuildCognitionEngine:
                     "recommendation": "Enable caching for these tasks",
                 })
 
-            logger.info(f"Generated {len(suggestions)} optimization suggestions")
+            logger.info("Generated %s optimization suggestions", len(suggestions))
             return suggestions
 
         except Exception as e:

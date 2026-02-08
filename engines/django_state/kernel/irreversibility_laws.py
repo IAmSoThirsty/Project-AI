@@ -53,7 +53,7 @@ class IrreversibilityLaws:
             enforce_ceiling=True,
         )
 
-        logger.debug(f"Trust decay: {decay:.6f}, actual: {actual_change:.6f}, value: {state.trust.value:.4f}")
+        logger.debug("Trust decay: %s, actual: %s, value: %s", decay, actual_change, state.trust.value)
         return actual_change
 
     def apply_betrayal_impact(self, state: StateVector, severity: float = 0.5) -> dict[str, float]:
@@ -85,7 +85,7 @@ class IrreversibilityLaws:
         # Update betrayal counter
         state.betrayal_count += 1
 
-        logger.info(f"Betrayal impact: trust loss {trust_change:.4f}, new ceiling {new_ceiling:.4f}")
+        logger.info("Betrayal impact: trust loss %s, new ceiling %s", trust_change, new_ceiling)
 
         return {
             "trust_change": trust_change,
@@ -108,7 +108,7 @@ class IrreversibilityLaws:
 
         if state.kindness.value < threshold:
             if not state.in_collapse:
-                logger.critical(f"KINDNESS SINGULARITY: value {state.kindness.value:.4f} < threshold {threshold:.4f}")
+                logger.critical("KINDNESS SINGULARITY: value %s < threshold %s", state.kindness.value, threshold)
                 return True, "kindness_singularity"
 
         return False, ""
@@ -141,7 +141,7 @@ class IrreversibilityLaws:
             enforce_ceiling=True,
         )
 
-        logger.debug(f"Kindness decay: {decay:.6f}, actual: {actual_change:.6f}, value: {state.kindness.value:.4f}")
+        logger.debug("Kindness decay: %s, actual: %s, value: %s", decay, actual_change, state.kindness.value)
         return actual_change
 
     def apply_cooperation_boost(self, state: StateVector, magnitude: float = 0.5) -> float:
@@ -170,7 +170,7 @@ class IrreversibilityLaws:
 
         state.cooperation_count += 1
 
-        logger.debug(f"Cooperation boost: {boost:.6f}, actual: {actual_change:.6f}")
+        logger.debug("Cooperation boost: %s, actual: %s", boost, actual_change)
         return actual_change
 
     def apply_legitimacy_erosion(
@@ -220,9 +220,9 @@ class IrreversibilityLaws:
             new_ceiling = state.legitimacy.value * 0.95
             new_ceiling = max(new_ceiling, self.config.legitimacy_recovery_limit)
             state.legitimacy.impose_ceiling(new_ceiling)
-            logger.info(f"Legitimacy ceiling imposed: {new_ceiling:.4f}")
+            logger.info("Legitimacy ceiling imposed: %s", new_ceiling)
 
-        logger.debug(f"Legitimacy erosion: {decay:.6f}, actual: {actual_change:.6f}")
+        logger.debug("Legitimacy erosion: %s, actual: %s", decay, actual_change)
 
         return {
             "legitimacy_change": actual_change,
@@ -263,7 +263,7 @@ class IrreversibilityLaws:
         # Check if critical threshold crossed
         critical = state.moral_injury.value > self.config.moral_injury_threshold
 
-        logger.info(f"Moral injury accumulated: {actual_change:.4f}, total: {state.moral_injury.value:.4f}, critical: {critical}")
+        logger.info("Moral injury accumulated: %s, total: %s, critical: %s", actual_change, state.moral_injury.value, critical)
 
         return {
             "moral_injury_change": actual_change,
@@ -296,7 +296,7 @@ class IrreversibilityLaws:
             enforce_ceiling=False,
         )
 
-        logger.debug(f"Moral injury healing: {healing:.6f}, actual: {actual_change:.6f}")
+        logger.debug("Moral injury healing: %s, actual: %s", healing, actual_change)
         return actual_change
 
     def calculate_betrayal_probability(self, state: StateVector) -> float:
@@ -328,7 +328,7 @@ class IrreversibilityLaws:
         # Cap at 1.0
         probability = min(probability, 1.0)
 
-        logger.debug(f"Betrayal probability: {probability:.4f} (trust: {trust_factor:.4f}, legitimacy: {legitimacy_factor:.4f}, moral: {moral_factor:.4f})")
+        logger.debug("Betrayal probability: %s (trust: %s, legitimacy: %s, moral: %s)", probability, trust_factor, legitimacy_factor, moral_factor)
 
         return probability
 
@@ -360,7 +360,7 @@ class IrreversibilityLaws:
             enforce_ceiling=True,
         )
 
-        logger.debug(f"Epistemic decay: {decay:.6f}, actual: {actual_change:.6f}")
+        logger.debug("Epistemic decay: %s, actual: %s", decay, actual_change)
         return actual_change
 
     def apply_manipulation_impact(self, state: StateVector, reach: float = 0.5, sophistication: float = 0.5) -> dict[str, float]:
@@ -393,11 +393,11 @@ class IrreversibilityLaws:
         if actual_change < -0.05:
             new_ceiling = state.epistemic_confidence.value * 0.92
             state.epistemic_confidence.impose_ceiling(new_ceiling)
-            logger.info(f"Epistemic confidence ceiling imposed: {new_ceiling:.4f}")
+            logger.info("Epistemic confidence ceiling imposed: %s", new_ceiling)
 
         state.manipulation_events += 1
 
-        logger.info(f"Manipulation impact: {total_damage:.4f}, actual: {actual_change:.4f}")
+        logger.info("Manipulation impact: %s, actual: %s", total_damage, actual_change)
 
         return {
             "epistemic_change": actual_change,
@@ -416,7 +416,7 @@ class IrreversibilityLaws:
         if not state.in_collapse:
             return
 
-        logger.warning(f"Applying collapse acceleration (factor: {acceleration_factor})")
+        logger.warning("Applying collapse acceleration (factor: %s)", acceleration_factor)
 
         # Accelerate all decay rates temporarily
         original_config = IrreversibilityConfig(

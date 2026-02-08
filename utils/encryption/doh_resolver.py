@@ -42,7 +42,7 @@ class DoHResolver:
         if not self._active:
             return None
 
-        self.logger.debug(f"Resolving {hostname} via DoH")
+        self.logger.debug("Resolving %s via DoH", hostname)
 
         # In production, would make HTTPS request to DoH server
         # For now, simplified implementation

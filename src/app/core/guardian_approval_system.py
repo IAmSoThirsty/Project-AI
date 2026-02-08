@@ -582,12 +582,10 @@ class GuardianApprovalSystem:
                 self.requests[request.request_id] = request
                 self._save_request(request)
 
-                logger.info(
-                    f"Created approval request {request.request_id}: {title} (impact: {impact_level.value})"
-                )
+                logger.info("Created approval request %s: %s (impact: %s)", request.request_id, title, impact_level.value)
                 return request.request_id
         except Exception as e:
-            logger.error(f"Failed to create approval request: {e}")
+            logger.error("Failed to create approval request: %s", e)
             return ""
 
     def _run_compliance_checks(
@@ -623,15 +621,13 @@ class GuardianApprovalSystem:
         try:
             with self.lock:
                 if request_id not in self.requests:
-                    logger.error(f"Request {request_id} not found")
+                    logger.error("Request %s not found", request_id)
                     return False
 
                 request = self.requests[request_id]
 
                 if guardian_id not in request.required_guardians:
-                    logger.error(
-                        f"Guardian {guardian_id} not required for request {request_id}"
-                    )
+                    logger.error("Guardian %s not required for request %s", guardian_id, request_id)
                     return False
 
                 # Check if already approved by this guardian
@@ -639,9 +635,7 @@ class GuardianApprovalSystem:
                     a for a in request.approvals if a.guardian_id == guardian_id
                 ]
                 if existing:
-                    logger.warning(
-                        f"Guardian {guardian_id} already approved request {request_id}"
-                    )
+                    logger.warning("Guardian %s already approved request %s", guardian_id, request_id)
                     return False
 
                 # Create approval
@@ -675,12 +669,10 @@ class GuardianApprovalSystem:
                         request.status = ApprovalStatus.APPROVED.value
 
                 self._save_request(request)
-                logger.info(
-                    f"Guardian {guardian_id} {'approved' if approved else 'rejected'} request {request_id}"
-                )
+                logger.info("Guardian %s %s request %s", guardian_id, 'approved' if approved else 'rejected', request_id)
                 return True
         except Exception as e:
-            logger.error(f"Failed to submit approval: {e}")
+            logger.error("Failed to submit approval: %s", e)
             return False
 
     def get_request(self, request_id: str) -> ApprovalRequest | None:
@@ -724,9 +716,9 @@ class GuardianApprovalSystem:
                             request.updated_at = now.isoformat()
                             self._save_request(request)
                             expired.append(request.request_id)
-                            logger.warning(f"Request {request.request_id} expired")
+                            logger.warning("Request %s expired", request.request_id)
         except Exception as e:
-            logger.error(f"Error checking expiration: {e}")
+            logger.error("Error checking expiration: %s", e)
 
         return expired
 
@@ -737,7 +729,7 @@ class GuardianApprovalSystem:
             with open(request_file, "w") as f:
                 json.dump(request.to_dict(), f, indent=2)
         except Exception as e:
-            logger.error(f"Failed to save request {request.request_id}: {e}")
+            logger.error("Failed to save request %s: %s", request.request_id, e)
 
     def _load_requests(self) -> None:
         """Load requests from disk."""
@@ -767,9 +759,9 @@ class GuardianApprovalSystem:
                         lines_changed=data["lines_changed"],
                     )
                     self.requests[request.request_id] = request
-            logger.info(f"Loaded {len(self.requests)} approval requests from disk")
+            logger.info("Loaded %s approval requests from disk", len(self.requests))
         except Exception as e:
-            logger.error(f"Failed to load requests: {e}")
+            logger.error("Failed to load requests: %s", e)
 
     def _sign_override(
         self, override_id: str, guardian_id: str, justification: str
@@ -811,9 +803,7 @@ class GuardianApprovalSystem:
                         "timestamp": datetime.now(UTC).isoformat(),
                     },
                 )
-                logger.info(
-                    f"Emitted override activation event for {override.override_id}"
-                )
+                logger.info("Emitted override activation event for %s", override.override_id)
 
             # Record metric in dashboard
             metrics = get_metrics_dashboard()
@@ -823,9 +813,7 @@ class GuardianApprovalSystem:
                     1,
                     {"category": "governance", "override_id": override.override_id},
                 )
-                logger.info(
-                    f"Recorded override activation metric for {override.override_id}"
-                )
+                logger.info("Recorded override activation metric for %s", override.override_id)
 
             # Create SOC incident for HIGH/CRITICAL impact overrides
             soc = get_soc_system()
@@ -848,9 +836,7 @@ class GuardianApprovalSystem:
                             ],
                         },
                     )
-                    logger.warning(
-                        f"Created SOC incident for {impact.upper()} impact override {override.override_id}"
-                    )
+                    logger.warning("Created SOC incident for %s impact override %s", impact.upper(), override.override_id)
         except ImportError:
             # Systems not available, which is OK (they're optional integrations)
             logger.debug(
@@ -858,7 +844,7 @@ class GuardianApprovalSystem:
             )
         except Exception as e:
             # Don't fail override activation if notifications fail
-            logger.warning(f"Failed to emit override activation notifications: {e}")
+            logger.warning("Failed to emit override activation notifications: %s", e)
 
     def initiate_emergency_override(
         self,
@@ -870,7 +856,7 @@ class GuardianApprovalSystem:
         try:
             with self.lock:
                 if request_id not in self.requests:
-                    logger.error(f"Request {request_id} not found")
+                    logger.error("Request %s not found", request_id)
                     return ""
 
                 request = self.requests[request_id]
@@ -893,12 +879,10 @@ class GuardianApprovalSystem:
                 override_file = self.data_dir / f"emergency_{override.override_id}.json"
                 _atomic_json_write(override_file, override.to_dict())
 
-                logger.warning(
-                    f"Emergency override {override.override_id} initiated for request {request_id} by {initiated_by}"
-                )
+                logger.warning("Emergency override %s initiated for request %s by %s", override.override_id, request_id, initiated_by)
                 return override.override_id
         except Exception as e:
-            logger.error(f"Failed to initiate emergency override: {e}")
+            logger.error("Failed to initiate emergency override: %s", e)
             return ""
 
     def sign_emergency_override(
@@ -908,16 +892,14 @@ class GuardianApprovalSystem:
         try:
             with self.lock:
                 if override_id not in self.emergency_overrides:
-                    logger.error(f"Override {override_id} not found")
+                    logger.error("Override %s not found", override_id)
                     return False
 
                 override = self.emergency_overrides[override_id]
 
                 # State check: only allow signing in pending or active status
                 if override.status not in ("pending", "active"):
-                    logger.error(
-                        f"Override {override_id} not signable in status={override.status}"
-                    )
+                    logger.error("Override %s not signable in status=%s", override_id, override.status)
                     return False
 
                 # Verify guardian exists and is active
@@ -925,16 +907,14 @@ class GuardianApprovalSystem:
                     guardian_id not in self.guardians
                     or not self.guardians[guardian_id]["active"]
                 ):
-                    logger.error(f"Guardian {guardian_id} not found or inactive")
+                    logger.error("Guardian %s not found or inactive", guardian_id)
                     return False
 
                 # Check if guardian already signed
                 if any(
                     sig["guardian_id"] == guardian_id for sig in override.signatures
                 ):
-                    logger.warning(
-                        f"Guardian {guardian_id} already signed override {override_id}"
-                    )
+                    logger.warning("Guardian %s already signed override %s", guardian_id, override_id)
                     return False
 
                 # Get guardian role
@@ -945,9 +925,7 @@ class GuardianApprovalSystem:
                     sig.get("role") for sig in override.signatures if sig.get("role")
                 }
                 if guardian_role in signed_roles:
-                    logger.warning(
-                        f"Role {guardian_role} already represented on override {override_id}"
-                    )
+                    logger.warning("Role %s already represented on override %s", guardian_role, override_id)
 
                 # Create HMAC signature
                 signature_value = self._sign_override(
@@ -1012,7 +990,7 @@ class GuardianApprovalSystem:
                 )
                 return True
         except Exception as e:
-            logger.error(f"Failed to sign emergency override: {e}")
+            logger.error("Failed to sign emergency override: %s", e)
             return False
 
     def complete_post_mortem(
@@ -1022,22 +1000,18 @@ class GuardianApprovalSystem:
         try:
             with self.lock:
                 if override_id not in self.emergency_overrides:
-                    logger.error(f"Override {override_id} not found")
+                    logger.error("Override %s not found", override_id)
                     return False
 
                 override = self.emergency_overrides[override_id]
 
                 # Idempotency check
                 if override.post_mortem_completed:
-                    logger.warning(
-                        f"Post-mortem already completed for override {override_id}"
-                    )
+                    logger.warning("Post-mortem already completed for override %s", override_id)
                     return False
 
                 if override.status != "active":
-                    logger.error(
-                        f"Override {override_id} is not active (status={override.status})"
-                    )
+                    logger.error("Override %s is not active (status=%s)", override_id, override.status)
                     return False
 
                 # Complete post-mortem
@@ -1058,12 +1032,10 @@ class GuardianApprovalSystem:
                 override_file = self.data_dir / f"emergency_{override_id}.json"
                 _atomic_json_write(override_file, override.to_dict())
 
-                logger.info(
-                    f"Post-mortem completed for emergency override {override_id}"
-                )
+                logger.info("Post-mortem completed for emergency override %s", override_id)
                 return True
         except Exception as e:
-            logger.error(f"Failed to complete post-mortem: {e}")
+            logger.error("Failed to complete post-mortem: %s", e)
             return False
 
     def get_emergency_overrides(

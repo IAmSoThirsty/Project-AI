@@ -193,12 +193,10 @@ class InMemoryStreamBackend(EventStreamBackend):
                 event.topic = topic
                 event.offset = len(self.topics[topic])
                 self.topics[topic].append(event)
-                logger.debug(
-                    f"Published event {event.event_id} to topic {topic} at offset {event.offset}"
-                )
+                logger.debug("Published event %s to topic %s at offset %s", event.event_id, topic, event.offset)
                 return True
         except Exception as e:
-            logger.error(f"Failed to publish event to {topic}: {e}")
+            logger.error("Failed to publish event to %s: %s", topic, e)
             return False
 
     def _handle_backpressure(self, topic: str, event: StreamEvent) -> bool:
@@ -210,9 +208,7 @@ class InMemoryStreamBackend(EventStreamBackend):
             if self.topics[topic]:
                 dropped = self.topics[topic].pop(0)
                 self.backpressure_metrics["events_dropped"] += 1
-                logger.warning(
-                    f"Backpressure: Dropped oldest event {dropped.event_id} from topic {topic}"
-                )
+                logger.warning("Backpressure: Dropped oldest event %s from topic %s", dropped.event_id, topic)
                 # Add new event
                 event.topic = topic
                 event.offset = len(self.topics[topic])
@@ -222,14 +218,14 @@ class InMemoryStreamBackend(EventStreamBackend):
         elif strategy == BackpressureStrategy.BLOCK_PRODUCER.value:
             # Block and retry (simplified - in production would use condition variable)
             self.backpressure_metrics["events_blocked"] += 1
-            logger.warning(f"Backpressure: Blocking producer for topic {topic}")
+            logger.warning("Backpressure: Blocking producer for topic %s", topic)
             # In real implementation, would wait for space
             return False
 
         elif strategy == BackpressureStrategy.SPILL_TO_DISK.value:
             # Spill to disk (simplified)
             self.backpressure_metrics["events_spilled"] += 1
-            logger.warning(f"Backpressure: Spilling event {event.event_id} to disk")
+            logger.warning("Backpressure: Spilling event %s to disk", event.event_id)
             # In real implementation, would write to disk
             # For now, we'll just log it
             return True
@@ -237,9 +233,7 @@ class InMemoryStreamBackend(EventStreamBackend):
         elif strategy == BackpressureStrategy.REJECT_NEW.value:
             # Reject new event
             self.backpressure_metrics["events_rejected"] += 1
-            logger.warning(
-                f"Backpressure: Rejecting event {event.event_id} for topic {topic}"
-            )
+            logger.warning("Backpressure: Rejecting event %s for topic %s", event.event_id, topic)
             return False
 
         return False
@@ -275,12 +269,10 @@ class InMemoryStreamBackend(EventStreamBackend):
             thread.start()
             self.consumer_threads.append(thread)
 
-            logger.info(
-                f"Subscribed to topics {topics} with group {consumer_group} (subscription {subscription_id})"
-            )
+            logger.info("Subscribed to topics %s with group %s (subscription %s)", topics, consumer_group, subscription_id)
             return subscription_id
         except Exception as e:
-            logger.error(f"Failed to subscribe to topics {topics}: {e}")
+            logger.error("Failed to subscribe to topics %s: %s", topics, e)
             return ""
 
     def _consumer_loop(
@@ -305,11 +297,9 @@ class InMemoryStreamBackend(EventStreamBackend):
                                 callback(event)
                                 self.offsets[topic][consumer_group] = event.offset + 1
                             except Exception as e:
-                                logger.error(
-                                    f"Error processing event {event.event_id}: {e}"
-                                )
+                                logger.error("Error processing event %s: %s", event.event_id, e)
             except Exception as e:
-                logger.error(f"Error in consumer loop for {subscription_id}: {e}")
+                logger.error("Error in consumer loop for %s: %s", subscription_id, e)
 
             time.sleep(0.1)  # Poll interval
 
@@ -320,11 +310,11 @@ class InMemoryStreamBackend(EventStreamBackend):
                 if subscription_id in self.subscriptions:
                     self.subscriptions[subscription_id]["active"] = False
                     del self.subscriptions[subscription_id]
-                    logger.info(f"Unsubscribed {subscription_id}")
+                    logger.info("Unsubscribed %s", subscription_id)
                     return True
                 return False
         except Exception as e:
-            logger.error(f"Failed to unsubscribe {subscription_id}: {e}")
+            logger.error("Failed to unsubscribe %s: %s", subscription_id, e)
             return False
 
     def get_events(
@@ -336,7 +326,7 @@ class InMemoryStreamBackend(EventStreamBackend):
                 events = self.topics[topic][offset : offset + limit]
                 return events
         except Exception as e:
-            logger.error(f"Failed to get events from {topic}: {e}")
+            logger.error("Failed to get events from %s: %s", topic, e)
             return []
 
     def commit_offset(self, topic: str, consumer_group: str, offset: int) -> bool:
@@ -346,7 +336,7 @@ class InMemoryStreamBackend(EventStreamBackend):
                 self.offsets[topic][consumer_group] = offset
                 return True
         except Exception as e:
-            logger.error(f"Failed to commit offset for {topic}/{consumer_group}: {e}")
+            logger.error("Failed to commit offset for %s/%s: %s", topic, consumer_group, e)
             return False
 
     def close(self) -> None:
@@ -377,7 +367,7 @@ class EventSourceStore:
                     self.aggregates[aggregate_id].append(event)
                 return success
         except Exception as e:
-            logger.error(f"Failed to append event to aggregate {aggregate_id}: {e}")
+            logger.error("Failed to append event to aggregate %s: %s", aggregate_id, e)
             return False
 
     def get_aggregate_events(
@@ -389,7 +379,7 @@ class EventSourceStore:
                 events = self.aggregates[aggregate_id][from_version:]
                 return events
         except Exception as e:
-            logger.error(f"Failed to get aggregate events for {aggregate_id}: {e}")
+            logger.error("Failed to get aggregate events for %s: %s", aggregate_id, e)
             return []
 
     def create_snapshot(self, aggregate_id: str, state: Any, version: int) -> bool:
@@ -401,12 +391,10 @@ class EventSourceStore:
                     "version": version,
                     "timestamp": datetime.now(UTC).isoformat(),
                 }
-                logger.info(
-                    f"Created snapshot for aggregate {aggregate_id} at version {version}"
-                )
+                logger.info("Created snapshot for aggregate %s at version %s", aggregate_id, version)
                 return True
         except Exception as e:
-            logger.error(f"Failed to create snapshot for {aggregate_id}: {e}")
+            logger.error("Failed to create snapshot for %s: %s", aggregate_id, e)
             return False
 
     def get_snapshot(self, aggregate_id: str) -> dict[str, Any] | None:
@@ -415,7 +403,7 @@ class EventSourceStore:
             with self.lock:
                 return self.snapshots.get(aggregate_id)
         except Exception as e:
-            logger.error(f"Failed to get snapshot for {aggregate_id}: {e}")
+            logger.error("Failed to get snapshot for %s: %s", aggregate_id, e)
             return None
 
 
@@ -445,7 +433,7 @@ class SensorMotorAggregator:
             logger.info("Sensor/Motor aggregator started")
             return True
         except Exception as e:
-            logger.error(f"Failed to start aggregator: {e}")
+            logger.error("Failed to start aggregator: %s", e)
             return False
 
     def stop(self) -> bool:
@@ -457,7 +445,7 @@ class SensorMotorAggregator:
             logger.info("Sensor/Motor aggregator stopped")
             return True
         except Exception as e:
-            logger.error(f"Failed to stop aggregator: {e}")
+            logger.error("Failed to stop aggregator: %s", e)
             return False
 
     def _process_event(self, event: StreamEvent) -> None:
@@ -474,7 +462,7 @@ class SensorMotorAggregator:
                 # Trigger aggregation callbacks
                 self._trigger_aggregation()
         except Exception as e:
-            logger.error(f"Error processing event in aggregator: {e}")
+            logger.error("Error processing event in aggregator: %s", e)
 
     def _trigger_aggregation(self) -> None:
         """Trigger aggregation callbacks with current state."""
@@ -493,9 +481,9 @@ class SensorMotorAggregator:
                 try:
                     callback(aggregated_data)
                 except Exception as e:
-                    logger.error(f"Error in aggregation callback: {e}")
+                    logger.error("Error in aggregation callback: %s", e)
         except Exception as e:
-            logger.error(f"Error triggering aggregation: {e}")
+            logger.error("Error triggering aggregation: %s", e)
 
     def register_callback(self, callback: Callable[[dict[str, Any]], None]) -> None:
         """Register callback for aggregation events."""
@@ -535,9 +523,7 @@ class DistributedEventStreamingSystem:
             "errors": 0,
         }
         self.lock = threading.RLock()
-        logger.info(
-            f"Initialized event streaming system with {backend_type.value} backend"
-        )
+        logger.info("Initialized event streaming system with %s backend", backend_type.value)
 
     def _create_backend(self) -> EventStreamBackend:
         """Create appropriate backend based on type."""
@@ -571,7 +557,7 @@ class DistributedEventStreamingSystem:
                     self.metrics["events_published"] += 1
             return success
         except Exception as e:
-            logger.error(f"Failed to publish event: {e}")
+            logger.error("Failed to publish event: %s", e)
             with self.lock:
                 self.metrics["errors"] += 1
             return False
@@ -590,7 +576,7 @@ class DistributedEventStreamingSystem:
                     self.metrics["subscriptions"] += 1
             return subscription_id
         except Exception as e:
-            logger.error(f"Failed to subscribe to topics: {e}")
+            logger.error("Failed to subscribe to topics: %s", e)
             with self.lock:
                 self.metrics["errors"] += 1
             return ""

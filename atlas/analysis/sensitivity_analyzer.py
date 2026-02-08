@@ -116,7 +116,7 @@ class SensitivityAnalyzer:
         Returns:
             List of Sobol indices for each parameter
         """
-        logger.info(f"Computing Sobol indices for {len(parameters)} parameters ({n_samples} samples)")
+        logger.info("Computing Sobol indices for %s parameters (%s samples)", len(parameters), n_samples)
 
         param_names = list(parameters.keys())
         n_params = len(param_names)
@@ -197,7 +197,7 @@ class SensitivityAnalyzer:
             level="INFORMATIONAL"
         )
 
-        logger.info(f"Sobol decomposition complete: {len(indices)} parameters analyzed")
+        logger.info("Sobol decomposition complete: %s parameters analyzed", len(indices))
         return indices
 
     def eigenvalue_stability(self, jacobian_matrix: np.ndarray) -> StabilityMetrics:
@@ -210,7 +210,7 @@ class SensitivityAnalyzer:
         Returns:
             Stability metrics
         """
-        logger.info(f"Computing eigenvalue stability for {jacobian_matrix.shape[0]}D system")
+        logger.info("Computing eigenvalue stability for %sD system", jacobian_matrix.shape[0])
 
         # Compute eigenvalues
         eigenvalues = linalg.eigvals(jacobian_matrix)
@@ -253,7 +253,7 @@ class SensitivityAnalyzer:
             level="INFORMATIONAL"
         )
 
-        logger.info(f"Stability analysis: {'STABLE' if is_stable else 'UNSTABLE'} (ρ={spectral_radius:.3f})")
+        logger.info("Stability analysis: %s (ρ=%s)", 'STABLE' if is_stable else 'UNSTABLE', spectral_radius)
         return metrics
 
     def parameter_perturbation_sweep(self, parameters: dict[str, float],
@@ -270,7 +270,7 @@ class SensitivityAnalyzer:
         Returns:
             List of perturbation results
         """
-        logger.info(f"Parameter perturbation sweep: {len(parameters)} parameters")
+        logger.info("Parameter perturbation sweep: %s parameters", len(parameters))
 
         # Baseline
         baseline_risk, baseline_stability = evaluate_fn(parameters)
@@ -325,7 +325,7 @@ class SensitivityAnalyzer:
             level="INFORMATIONAL"
         )
 
-        logger.info(f"Perturbation sweep complete: max elasticity={perturbations[0].elasticity:.3f}")
+        logger.info("Perturbation sweep complete: max elasticity=%s", perturbations[0].elasticity)
         return perturbations
 
     def identify_tipping_points(self, parameter_name: str,
@@ -344,7 +344,7 @@ class SensitivityAnalyzer:
         Returns:
             List of tipping points found
         """
-        logger.info(f"Searching for tipping points in {parameter_name}")
+        logger.info("Searching for tipping points in %s", parameter_name)
 
         min_val, max_val = search_range
         values = np.linspace(min_val, max_val, n_steps)
@@ -383,7 +383,7 @@ class SensitivityAnalyzer:
             level="INFORMATIONAL"
         )
 
-        logger.info(f"Found {len(tipping_points)} tipping points for {parameter_name}")
+        logger.info("Found %s tipping points for %s", len(tipping_points), parameter_name)
         return tipping_points
 
     def get_summary(self) -> dict[str, Any]:

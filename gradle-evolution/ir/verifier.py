@@ -94,7 +94,7 @@ class IRVerifier:
         Returns:
             Verification report with all results
         """
-        logger.info(f"Starting verification of graph with {len(graph.nodes)} nodes")
+        logger.info("Starting verification of graph with %s nodes", len(graph.nodes))
 
         self.verification_results.clear()
 
@@ -121,7 +121,7 @@ class IRVerifier:
             "certificate_hash": self._compute_certificate_hash()
         }
 
-        logger.info(f"Verification complete: {sum(r.verified for r in self.verification_results)}/{len(self.verification_results)} properties verified")
+        logger.info("Verification complete: %s/%s properties verified", sum(r.verified for r in self.verification_results), len(self.verification_results))
 
         return report
 

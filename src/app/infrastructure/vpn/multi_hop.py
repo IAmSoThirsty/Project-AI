@@ -39,7 +39,7 @@ class MultiHopRouter:
             route.append(node)
             available_nodes.remove(node)
 
-        self.logger.info(f"Established {len(route)}-hop route")
+        self.logger.info("Established %s-hop route", len(route))
         return route
 
     def _select_next_node(

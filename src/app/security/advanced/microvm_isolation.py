@@ -109,12 +109,10 @@ class CommunicationChannel:
                     self._socket.settimeout(timeout)
                     self._socket.connect(self.socket_path)
                     self._connected = True
-                    self.logger.info(
-                        f"Connected to VM {self.vm_id} via {self.socket_path}"
-                    )
+                    self.logger.info("Connected to VM %s via %s", self.vm_id, self.socket_path)
                     return True
             except Exception as e:
-                self.logger.error(f"Failed to connect to VM {self.vm_id}: {e}")
+                self.logger.error("Failed to connect to VM %s: %s", self.vm_id, e)
 
             return False
 
@@ -130,7 +128,7 @@ class CommunicationChannel:
                 self._socket.sendall(length + data)
                 return True
             except Exception as e:
-                self.logger.error(f"Failed to send message to VM {self.vm_id}: {e}")
+                self.logger.error("Failed to send message to VM %s: %s", self.vm_id, e)
                 return False
 
     def receive_message(self, timeout: float = 1.0) -> dict[str, Any] | None:
@@ -162,9 +160,7 @@ class CommunicationChannel:
             except TimeoutError:
                 return None
             except Exception as e:
-                self.logger.error(
-                    f"Failed to receive message from VM {self.vm_id}: {e}"
-                )
+                self.logger.error("Failed to receive message from VM %s: %s", self.vm_id, e)
                 return None
 
     def close(self):
@@ -249,18 +245,14 @@ class MicroVMInstance:
         """Start the MicroVM instance"""
         with self._lock:
             if self._state == VMState.RUNNING:
-                self.logger.warning(f"VM {self.vm_id} already running")
+                self.logger.warning("VM %s already running", self.vm_id)
                 return True
 
             if self._state not in [VMState.CREATED, VMState.STOPPED]:
-                self.logger.error(
-                    f"Cannot start VM {self.vm_id} in state {self._state.value}"
-                )
+                self.logger.error("Cannot start VM %s in state %s", self.vm_id, self._state.value)
                 return False
 
-            self.logger.info(
-                f"Starting MicroVM {self.vm_id} with backend {self.backend.value}"
-            )
+            self.logger.info("Starting MicroVM %s with backend %s", self.vm_id, self.backend.value)
             self._state = VMState.STARTING
 
             try:
@@ -271,7 +263,7 @@ class MicroVMInstance:
 
                 # Setup networking
                 if not self._setup_networking():
-                    self.logger.warning(f"Network setup failed for VM {self.vm_id}")
+                    self.logger.warning("Network setup failed for VM %s", self.vm_id)
 
                 # Launch VM process
                 if not self._launch_vm_process():
@@ -280,7 +272,7 @@ class MicroVMInstance:
 
                 # Wait for VM to become ready
                 if not self._wait_for_ready(timeout=30.0):
-                    self.logger.error(f"VM {self.vm_id} did not become ready")
+                    self.logger.error("VM %s did not become ready", self.vm_id)
                     self.stop()
                     self._state = VMState.ERROR
                     return False
@@ -291,13 +283,11 @@ class MicroVMInstance:
                 # Start health monitoring
                 self._start_monitoring()
 
-                self.logger.info(
-                    f"MicroVM {self.vm_id} started successfully (PID: {self._pid})"
-                )
+                self.logger.info("MicroVM %s started successfully (PID: %s)", self.vm_id, self._pid)
                 return True
 
             except Exception as e:
-                self.logger.error(f"Failed to start VM {self.vm_id}: {e}")
+                self.logger.error("Failed to start VM %s: %s", self.vm_id, e)
                 self._state = VMState.ERROR
                 return False
 
@@ -309,7 +299,7 @@ class MicroVMInstance:
             elif self.backend == VMBackend.QEMU:
                 config = self._create_qemu_config()
             else:
-                self.logger.error(f"Unsupported backend: {self.backend.value}")
+                self.logger.error("Unsupported backend: %s", self.backend.value)
                 return False
 
             # Write config to temporary file
@@ -320,11 +310,11 @@ class MicroVMInstance:
             with os.fdopen(fd, "w") as f:
                 json.dump(config, f, indent=2)
 
-            self.logger.debug(f"Created config file: {self._config_file}")
+            self.logger.debug("Created config file: %s", self._config_file)
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to create VM config: {e}")
+            self.logger.error("Failed to create VM config: %s", e)
             return False
 
     def _create_firecracker_config(self) -> dict[str, Any]:
@@ -388,7 +378,7 @@ class MicroVMInstance:
         try:
             if self.network_config.isolated_network:
                 # No external network access
-                self.logger.info(f"VM {self.vm_id} configured with isolated network")
+                self.logger.info("VM %s configured with isolated network", self.vm_id)
                 return True
 
             # Create TAP device
@@ -401,11 +391,11 @@ class MicroVMInstance:
             # ip link set {tap_name} master br0
 
             self.network_config.tap_device = tap_name
-            self.logger.info(f"Network setup completed for VM {self.vm_id}")
+            self.logger.info("Network setup completed for VM %s", self.vm_id)
             return True
 
         except Exception as e:
-            self.logger.error(f"Network setup failed: {e}")
+            self.logger.error("Network setup failed: %s", e)
             return False
 
     def _launch_vm_process(self) -> bool:
@@ -418,7 +408,7 @@ class MicroVMInstance:
             else:
                 return False
 
-            self.logger.debug(f"Launching VM with command: {' '.join(cmd)}")
+            self.logger.debug("Launching VM with command: %s", ' '.join(cmd))
 
             # Launch process
             self._process = subprocess.Popen(
@@ -429,12 +419,12 @@ class MicroVMInstance:
             )
 
             self._pid = self._process.pid
-            self.logger.info(f"VM process launched with PID {self._pid}")
+            self.logger.info("VM process launched with PID %s", self._pid)
 
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to launch VM process: {e}")
+            self.logger.error("Failed to launch VM process: %s", e)
             return False
 
     def _build_firecracker_command(self) -> list[str]:
@@ -499,10 +489,10 @@ class MicroVMInstance:
         """Stop the MicroVM instance"""
         with self._lock:
             if self._state not in [VMState.RUNNING, VMState.PAUSED, VMState.ERROR]:
-                self.logger.warning(f"VM {self.vm_id} not running")
+                self.logger.warning("VM %s not running", self.vm_id)
                 return True
 
-            self.logger.info(f"Stopping MicroVM {self.vm_id}")
+            self.logger.info("Stopping MicroVM %s", self.vm_id)
             self._state = VMState.STOPPING
 
             try:
@@ -523,14 +513,12 @@ class MicroVMInstance:
                             self._process.wait(timeout=10.0)
                         except subprocess.TimeoutExpired:
                             # Force kill if not responding
-                            self.logger.warning(
-                                f"VM {self.vm_id} not responding, forcing shutdown"
-                            )
+                            self.logger.warning("VM %s not responding, forcing shutdown", self.vm_id)
                             self._process.kill()
                             self._process.wait()
 
                     except Exception as e:
-                        self.logger.error(f"Error stopping VM process: {e}")
+                        self.logger.error("Error stopping VM process: %s", e)
 
                 # Cleanup networking
                 self._cleanup_networking()
@@ -543,11 +531,11 @@ class MicroVMInstance:
                 self._process = None
                 self._pid = None
 
-                self.logger.info(f"MicroVM {self.vm_id} stopped successfully")
+                self.logger.info("MicroVM %s stopped successfully", self.vm_id)
                 return True
 
             except Exception as e:
-                self.logger.error(f"Failed to stop VM {self.vm_id}: {e}")
+                self.logger.error("Failed to stop VM %s: %s", self.vm_id, e)
                 self._state = VMState.ERROR
                 return False
 
@@ -557,7 +545,7 @@ class MicroVMInstance:
             if self._state != VMState.RUNNING:
                 return False
 
-            self.logger.info(f"Pausing MicroVM {self.vm_id}")
+            self.logger.info("Pausing MicroVM %s", self.vm_id)
 
             # In production: Send pause command via QMP/Firecracker API
             self._state = VMState.PAUSED
@@ -569,7 +557,7 @@ class MicroVMInstance:
             if self._state != VMState.PAUSED:
                 return False
 
-            self.logger.info(f"Resuming MicroVM {self.vm_id}")
+            self.logger.info("Resuming MicroVM %s", self.vm_id)
 
             # In production: Send resume command via QMP/Firecracker API
             self._state = VMState.RUNNING
@@ -581,9 +569,9 @@ class MicroVMInstance:
             if self.network_config.tap_device:
                 # In production: Remove TAP device
                 # ip link delete {self.network_config.tap_device}
-                self.logger.debug(f"Cleaned up network for VM {self.vm_id}")
+                self.logger.debug("Cleaned up network for VM %s", self.vm_id)
         except Exception as e:
-            self.logger.error(f"Network cleanup failed: {e}")
+            self.logger.error("Network cleanup failed: %s", e)
 
     def _start_monitoring(self):
         """Start health monitoring thread"""
@@ -610,7 +598,7 @@ class MicroVMInstance:
                 self._check_health()
                 time.sleep(5.0)
             except Exception as e:
-                self.logger.error(f"Monitoring error for VM {self.vm_id}: {e}")
+                self.logger.error("Monitoring error for VM %s: %s", self.vm_id, e)
 
     def _update_health_metrics(self):
         """Update health metrics"""
@@ -634,12 +622,12 @@ class MicroVMInstance:
                 self._health_metrics.health_status = "healthy"
 
         except Exception as e:
-            self.logger.error(f"Failed to update health metrics: {e}")
+            self.logger.error("Failed to update health metrics: %s", e)
 
     def _check_health(self):
         """Perform health check"""
         if self._health_metrics.health_status == "dead":
-            self.logger.error(f"VM {self.vm_id} health check failed - process dead")
+            self.logger.error("VM %s health check failed - process dead", self.vm_id)
             with self._lock:
                 self._state = VMState.ERROR
 
@@ -783,7 +771,7 @@ class MicroVMIsolationManager:
                 vm_id = self._generate_vm_id(isolation_type)
 
             if vm_id in self._vms:
-                self.logger.error(f"VM {vm_id} already exists")
+                self.logger.error("VM %s already exists", vm_id)
                 return None
 
             # Use defaults if not specified
@@ -792,7 +780,7 @@ class MicroVMIsolationManager:
 
             # Check resource availability
             if not self._check_resource_availability(resource_limits):
-                self.logger.error(f"Insufficient resources for VM {vm_id}")
+                self.logger.error("Insufficient resources for VM %s", vm_id)
                 return None
 
             try:
@@ -821,7 +809,7 @@ class MicroVMIsolationManager:
                 return vm_id
 
             except Exception as e:
-                self.logger.error(f"Failed to create VM: {e}")
+                self.logger.error("Failed to create VM: %s", e)
                 return None
 
     def _generate_vm_id(self, isolation_type: IsolationType) -> str:
@@ -844,7 +832,7 @@ class MicroVMIsolationManager:
         """Start a MicroVM instance"""
         vm = self._vms.get(vm_id)
         if not vm:
-            self.logger.error(f"VM {vm_id} not found")
+            self.logger.error("VM %s not found", vm_id)
             return False
 
         return vm.start()
@@ -853,7 +841,7 @@ class MicroVMIsolationManager:
         """Stop a MicroVM instance"""
         vm = self._vms.get(vm_id)
         if not vm:
-            self.logger.error(f"VM {vm_id} not found")
+            self.logger.error("VM %s not found", vm_id)
             return False
 
         return vm.stop()
@@ -879,7 +867,7 @@ class MicroVMIsolationManager:
         with self._lock:
             vm = self._vms.get(vm_id)
             if not vm:
-                self.logger.error(f"VM {vm_id} not found")
+                self.logger.error("VM %s not found", vm_id)
                 return False
 
             # Stop VM if running
@@ -893,7 +881,7 @@ class MicroVMIsolationManager:
             # Remove from tracking
             del self._vms[vm_id]
 
-            self.logger.info(f"Destroyed MicroVM {vm_id}")
+            self.logger.info("Destroyed MicroVM %s", vm_id)
             return True
 
     def destroy_all_vms(self):
@@ -991,7 +979,7 @@ class MicroVMIsolationManager:
                 self._cleanup_dead_vms()
                 time.sleep(30.0)
             except Exception as e:
-                self.logger.error(f"Cleanup error: {e}")
+                self.logger.error("Cleanup error: %s", e)
 
     def _cleanup_dead_vms(self):
         """Remove VMs in error state"""
@@ -1003,7 +991,7 @@ class MicroVMIsolationManager:
             ]
 
         for vm_id in dead_vms:
-            self.logger.warning(f"Cleaning up dead VM {vm_id}")
+            self.logger.warning("Cleaning up dead VM %s", vm_id)
             self.destroy_vm(vm_id)
 
     def get_health_status(self) -> dict[str, Any]:

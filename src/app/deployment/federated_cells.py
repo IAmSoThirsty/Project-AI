@@ -265,7 +265,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
         self.worker_threads: list[threading.Thread] = []
 
         self._init_database()
-        self.logger.info(f"Federated cell manager initialized: {self.cell_id}")
+        self.logger.info("Federated cell manager initialized: %s", self.cell_id)
 
     def _generate_cell_id(self) -> str:
         """Generate unique cell identifier"""
@@ -372,7 +372,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to initialize federated cells: {e}")
+            self.logger.error("Failed to initialize federated cells: %s", e)
             return False
 
     def shutdown(self) -> bool:
@@ -399,7 +399,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
             return True
 
         except Exception as e:
-            self.logger.error(f"Error during shutdown: {e}")
+            self.logger.error("Error during shutdown: %s", e)
             return False
 
     def health_check(self) -> bool:
@@ -410,9 +410,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
         # Check worker threads
         alive_threads = sum(1 for t in self.worker_threads if t.is_alive())
         if alive_threads < len(self.worker_threads):
-            self.logger.warning(
-                f"Only {alive_threads}/{len(self.worker_threads)} workers alive"
-            )
+            self.logger.warning("Only %s/%s workers alive", alive_threads, len(self.worker_threads))
             return False
 
         return True
@@ -462,14 +460,14 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
             self._persist_cell(identity)
 
             self.metrics["registered_cells"] = len(self.cells)
-            self.logger.info(f"Registered cell: {identity.cell_id} ({identity.name})")
+            self.logger.info("Registered cell: %s (%s)", identity.cell_id, identity.name)
 
             self.emit_event("cell_registered", {"cell_id": identity.cell_id})
 
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to register cell: {e}")
+            self.logger.error("Failed to register cell: %s", e)
             return False
 
     def discover_cells(self) -> list[CellIdentity]:
@@ -485,9 +483,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
     def _start_election(self):
         """Start leader election"""
         try:
-            self.logger.info(
-                f"Starting election for term {self.raft_state.current_term + 1}"
-            )
+            self.logger.info("Starting election for term %s", self.raft_state.current_term + 1)
 
             # Increment term and become candidate
             self.raft_state.current_term += 1
@@ -510,7 +506,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
             self.metrics["leader_elections"] += 1
 
         except Exception as e:
-            self.logger.error(f"Election failed: {e}")
+            self.logger.error("Election failed: %s", e)
 
     def _handle_vote_request(self, message: InterCellMessage):
         """Handle vote request from candidate"""
@@ -555,7 +551,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
             self._send_message(candidate_id, MessageType.VOTE_RESPONSE, vote_response)
 
         except Exception as e:
-            self.logger.error(f"Vote request handling failed: {e}")
+            self.logger.error("Vote request handling failed: %s", e)
 
     def _handle_vote_response(self, message: InterCellMessage):
         """Handle vote response"""
@@ -580,11 +576,11 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
                     self._become_leader()
 
         except Exception as e:
-            self.logger.error(f"Vote response handling failed: {e}")
+            self.logger.error("Vote response handling failed: %s", e)
 
     def _become_leader(self):
         """Transition to leader role"""
-        self.logger.info(f"Became leader for term {self.raft_state.current_term}")
+        self.logger.info("Became leader for term %s", self.raft_state.current_term)
         self.cell_identity.role = CellRole.LEADER
 
         # Initialize leader state
@@ -637,7 +633,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
             self.metrics["heartbeats_received"] += 1
 
         except Exception as e:
-            self.logger.error(f"Heartbeat handling failed: {e}")
+            self.logger.error("Heartbeat handling failed: %s", e)
 
     def _check_health(self, cell_id: str) -> bool:
         """Check if a cell is healthy"""
@@ -699,7 +695,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
             self.metrics["gossip_rounds"] += 1
 
         except Exception as e:
-            self.logger.error(f"Gossip failed: {e}")
+            self.logger.error("Gossip failed: %s", e)
 
     def _handle_gossip(self, message: InterCellMessage):
         """Handle gossip message from peer"""
@@ -724,7 +720,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
                             self.cell_health[cell_id].healthy = health_data["healthy"]
 
         except Exception as e:
-            self.logger.error(f"Gossip handling failed: {e}")
+            self.logger.error("Gossip handling failed: %s", e)
 
     # ========================================================================
     # WORK DISTRIBUTION AND LOAD BALANCING
@@ -750,7 +746,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
             return True
 
         except Exception as e:
-            self.logger.error(f"Work distribution failed: {e}")
+            self.logger.error("Work distribution failed: %s", e)
             return False
 
     def _assign_work(self, work: WorkUnit) -> bool:
@@ -791,12 +787,12 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
             )
 
             self.metrics["work_distributed"] += 1
-            self.logger.info(f"Assigned work {work.work_id} to cell {selected_cell_id}")
+            self.logger.info("Assigned work %s to cell %s", work.work_id, selected_cell_id)
 
             return True
 
         except Exception as e:
-            self.logger.error(f"Work assignment failed: {e}")
+            self.logger.error("Work assignment failed: %s", e)
             return False
 
     def _handle_work_request(self, message: InterCellMessage):
@@ -805,7 +801,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
             work_data = message.payload["work"]
 
             # Execute work (placeholder)
-            self.logger.info(f"Processing work: {work_data['work_id']}")
+            self.logger.info("Processing work: %s", work_data['work_id'])
 
             # Send completion response
             self._send_message(
@@ -815,7 +811,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
             )
 
         except Exception as e:
-            self.logger.error(f"Work request handling failed: {e}")
+            self.logger.error("Work request handling failed: %s", e)
 
     def _handle_work_response(self, message: InterCellMessage):
         """Handle work completion response"""
@@ -830,7 +826,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
                 self.emit_event("work_completed", {"work_id": work_id})
 
         except Exception as e:
-            self.logger.error(f"Work response handling failed: {e}")
+            self.logger.error("Work response handling failed: %s", e)
 
     # ========================================================================
     # MESSAGING
@@ -842,7 +838,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
         """Send message to specific cell"""
         try:
             if recipient_id not in self.cell_endpoints:
-                self.logger.warning(f"No endpoint for cell: {recipient_id}")
+                self.logger.warning("No endpoint for cell: %s", recipient_id)
                 return
 
             message = InterCellMessage(
@@ -857,10 +853,10 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
 
             # Placeholder for actual network transmission
             # In production, would serialize and send over network
-            self.logger.debug(f"Sending {message_type.value} to {recipient_id}")
+            self.logger.debug("Sending %s to %s", message_type.value, recipient_id)
 
         except Exception as e:
-            self.logger.error(f"Message send failed: {e}")
+            self.logger.error("Message send failed: %s", e)
 
     def _broadcast_message(self, message_type: MessageType, payload: dict[str, Any]):
         """Broadcast message to all cells"""
@@ -882,7 +878,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
                 time.sleep(1)  # Every second
 
             except Exception as e:
-                self.logger.error(f"Heartbeat worker error: {e}")
+                self.logger.error("Heartbeat worker error: %s", e)
 
     def _election_worker(self):
         """Monitor election timeout and start elections"""
@@ -896,7 +892,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
                 time.sleep(1)
 
             except Exception as e:
-                self.logger.error(f"Election worker error: {e}")
+                self.logger.error("Election worker error: %s", e)
 
     def _gossip_worker(self):
         """Periodic gossip protocol execution"""
@@ -906,7 +902,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
                 time.sleep(5)  # Every 5 seconds
 
             except Exception as e:
-                self.logger.error(f"Gossip worker error: {e}")
+                self.logger.error("Gossip worker error: %s", e)
 
     def _health_monitoring_worker(self):
         """Monitor cell health"""
@@ -936,7 +932,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
                 time.sleep(10)  # Every 10 seconds
 
             except Exception as e:
-                self.logger.error(f"Health monitoring worker error: {e}")
+                self.logger.error("Health monitoring worker error: %s", e)
 
     def _work_distribution_worker(self):
         """Distribute queued work"""
@@ -949,7 +945,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
                 time.sleep(2)
 
             except Exception as e:
-                self.logger.error(f"Work distribution worker error: {e}")
+                self.logger.error("Work distribution worker error: %s", e)
 
     def _discovery_worker(self):
         """Discover new cells"""
@@ -968,7 +964,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
                 time.sleep(30)  # Every 30 seconds
 
             except Exception as e:
-                self.logger.error(f"Discovery worker error: {e}")
+                self.logger.error("Discovery worker error: %s", e)
 
     # ========================================================================
     # UTILITY METHODS
@@ -1009,7 +1005,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
             conn.close()
 
         except Exception as e:
-            self.logger.error(f"Failed to persist cell: {e}")
+            self.logger.error("Failed to persist cell: %s", e)
 
     # ========================================================================
     # INTERFACE IMPLEMENTATIONS
@@ -1031,7 +1027,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
                 self.election_timeout = config["election_timeout"]
             return True
         except Exception as e:
-            self.logger.error(f"Failed to set config: {e}")
+            self.logger.error("Failed to set config: %s", e)
             return False
 
     def validate_config(self, config: dict[str, Any]) -> tuple[bool, str | None]:
@@ -1063,7 +1059,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
                 callback(data)
                 count += 1
             except Exception as e:
-                self.logger.error(f"Event callback failed: {e}")
+                self.logger.error("Event callback failed: %s", e)
         return count
 
     def get_metrics(self) -> dict[str, Any]:

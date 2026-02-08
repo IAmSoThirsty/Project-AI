@@ -1286,7 +1286,7 @@ class BioBrainMappingSystem:
         # Persist state
         self.save_state()
 
-        logger.info(f"Memory consolidation complete (count={self.consolidation_count})")
+        logger.info("Memory consolidation complete (count=%s)", self.consolidation_count)
 
     def get_diagnostics(self) -> dict[str, Any]:
         """

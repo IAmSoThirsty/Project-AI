@@ -66,9 +66,7 @@ class TemporalClient:
             return self._client
 
         try:
-            logger.info(
-                f"Connecting to Temporal at {self.host}, namespace={self.namespace}"
-            )
+            logger.info("Connecting to Temporal at %s, namespace=%s", self.host, self.namespace)
             self._client = await Client.connect(
                 self.host,
                 namespace=self.namespace,

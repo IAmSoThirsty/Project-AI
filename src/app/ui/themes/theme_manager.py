@@ -14,7 +14,7 @@ class ThemeManager:
 
     def set_theme(self, theme):
         self._current_theme = theme
-        self.logger.info(f"Theme set to: {theme}")
+        self.logger.info("Theme set to: %s", theme)
 
     def get_effective_theme(self):
         if self._current_theme == "default":

@@ -74,7 +74,7 @@ class WireGuardBackend(VPNBackend):
                 return result.returncode == 0
 
         except Exception as e:
-            self.logger.debug(f"WireGuard availability check failed: {e}")
+            self.logger.debug("WireGuard availability check failed: %s", e)
             return False
 
         return False
@@ -93,11 +93,11 @@ class WireGuardBackend(VPNBackend):
             elif self.platform == "Darwin":
                 return self._connect_macos()
             else:
-                self.logger.error(f"Unsupported platform: {self.platform}")
+                self.logger.error("Unsupported platform: %s", self.platform)
                 return False
 
         except Exception as e:
-            self.logger.error(f"WireGuard connection failed: {e}")
+            self.logger.error("WireGuard connection failed: %s", e)
             return False
 
     def _connect_linux(self) -> bool:
@@ -110,10 +110,10 @@ class WireGuardBackend(VPNBackend):
 
             if result.returncode == 0:
                 self.connected = True
-                self.logger.info(f"WireGuard connected on Linux: {self.interface_name}")
+                self.logger.info("WireGuard connected on Linux: %s", self.interface_name)
                 return True
             else:
-                self.logger.error(f"wg-quick failed: {result.stderr}")
+                self.logger.error("wg-quick failed: %s", result.stderr)
                 return False
 
         except subprocess.TimeoutExpired:
@@ -140,7 +140,7 @@ class WireGuardBackend(VPNBackend):
                 return False
 
         except Exception as e:
-            self.logger.error(f"Windows connection error: {e}")
+            self.logger.error("Windows connection error: %s", e)
             return False
 
     def _connect_macos(self) -> bool:
@@ -152,14 +152,14 @@ class WireGuardBackend(VPNBackend):
 
             if result.returncode == 0:
                 self.connected = True
-                self.logger.info(f"WireGuard connected on macOS: {self.interface_name}")
+                self.logger.info("WireGuard connected on macOS: %s", self.interface_name)
                 return True
             else:
-                self.logger.error(f"macOS wg-quick failed: {result.stderr}")
+                self.logger.error("macOS wg-quick failed: %s", result.stderr)
                 return False
 
         except Exception as e:
-            self.logger.error(f"macOS connection error: {e}")
+            self.logger.error("macOS connection error: %s", e)
             return False
 
     def disconnect(self) -> bool:
@@ -191,7 +191,7 @@ class WireGuardBackend(VPNBackend):
             return False
 
         except Exception as e:
-            self.logger.error(f"WireGuard disconnect failed: {e}")
+            self.logger.error("WireGuard disconnect failed: %s", e)
             return False
 
     def get_status(self) -> dict[str, Any]:
@@ -217,7 +217,7 @@ class WireGuardBackend(VPNBackend):
                     status["details"] = result.stdout
 
             except Exception as e:
-                self.logger.debug(f"Could not get WireGuard stats: {e}")
+                self.logger.debug("Could not get WireGuard stats: %s", e)
 
         return status
 
@@ -246,7 +246,7 @@ class OpenVPNBackend(VPNBackend):
             return result.returncode == 0
 
         except Exception as e:
-            self.logger.debug(f"OpenVPN availability check failed: {e}")
+            self.logger.debug("OpenVPN availability check failed: %s", e)
             return False
 
     def connect(self) -> bool:
@@ -279,7 +279,7 @@ class OpenVPNBackend(VPNBackend):
                 return False
 
         except Exception as e:
-            self.logger.error(f"OpenVPN connection failed: {e}")
+            self.logger.error("OpenVPN connection failed: %s", e)
             return False
 
     def disconnect(self) -> bool:
@@ -295,7 +295,7 @@ class OpenVPNBackend(VPNBackend):
             return True
 
         except Exception as e:
-            self.logger.error(f"OpenVPN disconnect failed: {e}")
+            self.logger.error("OpenVPN disconnect failed: %s", e)
             return False
 
     def get_status(self) -> dict[str, Any]:
@@ -336,7 +336,7 @@ class IKEv2Backend(VPNBackend):
             return False
 
         except Exception as e:
-            self.logger.error(f"IKEv2 connection failed: {e}")
+            self.logger.error("IKEv2 connection failed: %s", e)
             return False
 
     def _connect_linux_strongswan(self) -> bool:
@@ -354,7 +354,7 @@ class IKEv2Backend(VPNBackend):
             return False
 
         except Exception as e:
-            self.logger.error(f"Linux IKEv2 connection error: {e}")
+            self.logger.error("Linux IKEv2 connection error: %s", e)
             return False
 
     def _connect_windows_native(self) -> bool:
@@ -372,7 +372,7 @@ class IKEv2Backend(VPNBackend):
             return False
 
         except Exception as e:
-            self.logger.error(f"Windows IKEv2 connection error: {e}")
+            self.logger.error("Windows IKEv2 connection error: %s", e)
             return False
 
     def _connect_macos_native(self) -> bool:
@@ -390,7 +390,7 @@ class IKEv2Backend(VPNBackend):
             return False
 
         except Exception as e:
-            self.logger.error(f"macOS IKEv2 connection error: {e}")
+            self.logger.error("macOS IKEv2 connection error: %s", e)
             return False
 
     def disconnect(self) -> bool:
@@ -424,7 +424,7 @@ class IKEv2Backend(VPNBackend):
             return False
 
         except Exception as e:
-            self.logger.error(f"IKEv2 disconnect failed: {e}")
+            self.logger.error("IKEv2 disconnect failed: %s", e)
             return False
 
     def get_status(self) -> dict[str, Any]:

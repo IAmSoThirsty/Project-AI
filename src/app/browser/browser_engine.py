@@ -184,10 +184,10 @@ class IncognitoBrowser:
             True if installed, False if blocked
         """
         if extension_id in self._extension_whitelist:
-            self.logger.info(f"Installing whitelisted extension: {extension_id}")
+            self.logger.info("Installing whitelisted extension: %s", extension_id)
             return True
         else:
-            self.logger.warning(f"Extension not whitelisted: {extension_id}")
+            self.logger.warning("Extension not whitelisted: %s", extension_id)
             return False
 
     def download_file(self, url: str, tab_id: str) -> str | None:
@@ -201,7 +201,7 @@ class IncognitoBrowser:
             self.logger.warning("Download isolation not enabled")
 
         # Downloads are isolated and scanned
-        self.logger.info(f"Downloading file: {url}")
+        self.logger.info("Downloading file: %s", url)
         # In production, would download to isolated directory
         return None
 

@@ -352,7 +352,7 @@ class PlanetaryDefenseCore:
             assessments = {
                 name: agent.assess(context) for name, agent in self.agents.items()
             }
-            logger.info(f"Triumvirate assessments for {action_id}: {assessments}")
+            logger.info("Triumvirate assessments for %s: %s", action_id, assessments)
 
             # Law evaluation (binding constraint)
             evaluations = self.evaluate_laws(context)
@@ -396,7 +396,7 @@ class PlanetaryDefenseCore:
             self.ledger.append(record)
             raise
 
-        logger.info(f"Action {action_id} completed: {outcome}")
+        logger.info("Action %s completed: %s", action_id, outcome)
         return action_id
 
     # -------------------------------

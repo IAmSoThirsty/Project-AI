@@ -153,7 +153,7 @@ class GraphBuilder:
             return graph
 
         except Exception as e:
-            logger.error(f"Failed to build graph: {e}")
+            logger.error("Failed to build graph: %s", e)
 
             self.audit.log_event(
                 category=AuditCategory.OPERATION,

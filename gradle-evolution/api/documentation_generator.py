@@ -45,7 +45,7 @@ class DocumentationGenerator:
         self.audit_integration = audit_integration
         self.output_dir = output_dir or Path("docs/generated")
         self.output_dir.mkdir(parents=True, exist_ok=True)
-        logger.info(f"Documentation generator initialized: {self.output_dir}")
+        logger.info("Documentation generator initialized: %s", self.output_dir)
 
     def generate_build_history_doc(self, limit: int = 50) -> Path:
         """
@@ -93,7 +93,7 @@ class DocumentationGenerator:
             output_path = self.output_dir / "build-history.md"
             output_path.write_text(doc)
 
-            logger.info(f"Generated build history doc: {output_path}")
+            logger.info("Generated build history doc: %s", output_path)
             return output_path
 
         except Exception as e:
@@ -137,7 +137,7 @@ class DocumentationGenerator:
             output_path = self.output_dir / "capsule-registry.md"
             output_path.write_text(doc)
 
-            logger.info(f"Generated capsule registry doc: {output_path}")
+            logger.info("Generated capsule registry doc: %s", output_path)
             return output_path
 
         except Exception as e:
@@ -196,7 +196,7 @@ class DocumentationGenerator:
             output_path = self.output_dir / "audit-summary.md"
             output_path.write_text(doc)
 
-            logger.info(f"Generated audit summary doc: {output_path}")
+            logger.info("Generated audit summary doc: %s", output_path)
             return output_path
 
         except Exception as e:
@@ -283,7 +283,7 @@ class DocumentationGenerator:
             output_path = self.output_dir / "api-reference.md"
             output_path.write_text(doc)
 
-            logger.info(f"Generated API reference doc: {output_path}")
+            logger.info("Generated API reference doc: %s", output_path)
             return output_path
 
         except Exception as e:
@@ -310,7 +310,7 @@ class DocumentationGenerator:
             index_path = self._generate_index(docs)
             docs.insert(0, index_path)
 
-            logger.info(f"Generated {len(docs)} documentation files")
+            logger.info("Generated %s documentation files", len(docs))
             return docs
 
         except Exception as e:
@@ -365,7 +365,7 @@ class DocumentationGenerator:
             with open(output_path, "w") as f:
                 json.dump(snapshot, f, indent=2)
 
-            logger.info(f"Exported JSON snapshot: {output_path}")
+            logger.info("Exported JSON snapshot: %s", output_path)
             return output_path
 
         except Exception as e:

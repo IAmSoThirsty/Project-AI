@@ -63,9 +63,7 @@ class WiFiSecurityManager:
 
             # Check for deprecated protocols
             if config.protocol in [WiFiSecurityProtocol.WEP, WiFiSecurityProtocol.WPA]:
-                self.logger.error(
-                    f"{config.protocol.value} is deprecated and insecure - REFUSED"
-                )
+                self.logger.error("%s is deprecated and insecure - REFUSED", config.protocol.value)
                 return False
 
             # Warn about non-God-Tier configurations
@@ -73,9 +71,7 @@ class WiFiSecurityManager:
                 WiFiSecurityProtocol.WPA3_PERSONAL,
                 WiFiSecurityProtocol.WPA3_ENTERPRISE,
             ]:
-                self.logger.warning(
-                    f"{config.protocol.value} is not God Tier - consider WPA3"
-                )
+                self.logger.warning("%s is not God Tier - consider WPA3", config.protocol.value)
 
             # Enforce PMF (Protected Management Frames)
             if not config.enable_pmf:
@@ -85,12 +81,12 @@ class WiFiSecurityManager:
                 config.enable_pmf = True
 
             self.current_security = config
-            self.logger.info(f"Security configured: {config.protocol.value} with PMF")
+            self.logger.info("Security configured: %s with PMF", config.protocol.value)
 
             return True
 
         except Exception as e:
-            self.logger.error(f"Security configuration failed: {e}")
+            self.logger.error("Security configuration failed: %s", e)
             return False
 
     def _validate_security_config(self, config: WiFiSecurityConfig) -> bool:
@@ -200,7 +196,7 @@ class WiFiSecurityManager:
             return True
 
         except Exception as e:
-            self.logger.error(f"Fast roaming enable failed: {e}")
+            self.logger.error("Fast roaming enable failed: %s", e)
             return False
 
     def get_security_status(self) -> dict:

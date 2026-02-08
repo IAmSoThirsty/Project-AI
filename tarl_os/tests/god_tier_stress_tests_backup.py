@@ -216,8 +216,8 @@ class GodTierStressTestGenerator:
         logger.info("Generating Phase 7: Hypothetical (500 scenarios)...")
         self.scenarios.extend(self._generate_hypothetical_tests())
 
-        logger.info(f"✅ Generated {len(self.scenarios)} total test scenarios")
-        logger.info(f"   Target: 3,500 | Actual: {len(self.scenarios)}")
+        logger.info("✅ Generated %s total test scenarios", len(self.scenarios))
+        logger.info("   Target: 3,500 | Actual: %s", len(self.scenarios))
 
         return self.scenarios
 
@@ -247,7 +247,7 @@ class GodTierStressTestGenerator:
         # RBAC Bypass Tests (100 scenarios)
         scenarios.extend(self._generate_rbac_bypass_tests())
 
-        logger.info(f"  White Box: Generated {len(scenarios)} scenarios")
+        logger.info("  White Box: Generated %s scenarios", len(scenarios))
         return scenarios
 
     def _generate_kernel_exploitation_tests(self) -> list[TestScenario]:
@@ -751,7 +751,7 @@ class GodTierStressTestGenerator:
         scenarios = self._generate_placeholder_scenarios(
             "GB", 500, TestCategory.GREY_BOX
         )
-        logger.info(f"  Grey Box: Generated {len(scenarios)} scenarios")
+        logger.info("  Grey Box: Generated %s scenarios", len(scenarios))
         return scenarios
 
     def _generate_black_box_tests(self) -> list[TestScenario]:
@@ -759,7 +759,7 @@ class GodTierStressTestGenerator:
         scenarios = self._generate_placeholder_scenarios(
             "BB", 500, TestCategory.BLACK_BOX
         )
-        logger.info(f"  Black Box: Generated {len(scenarios)} scenarios")
+        logger.info("  Black Box: Generated %s scenarios", len(scenarios))
         return scenarios
 
     def _generate_red_team_tests(self) -> list[TestScenario]:
@@ -767,7 +767,7 @@ class GodTierStressTestGenerator:
         scenarios = self._generate_placeholder_scenarios(
             "RT", 500, TestCategory.RED_TEAM
         )
-        logger.info(f"  Red Team: Generated {len(scenarios)} scenarios")
+        logger.info("  Red Team: Generated %s scenarios", len(scenarios))
         return scenarios
 
     def _generate_blue_team_tests(self) -> list[TestScenario]:
@@ -775,7 +775,7 @@ class GodTierStressTestGenerator:
         scenarios = self._generate_placeholder_scenarios(
             "BT", 500, TestCategory.BLUE_TEAM
         )
-        logger.info(f"  Blue Team: Generated {len(scenarios)} scenarios")
+        logger.info("  Blue Team: Generated %s scenarios", len(scenarios))
         return scenarios
 
     def _generate_real_world_tests(self) -> list[TestScenario]:
@@ -783,7 +783,7 @@ class GodTierStressTestGenerator:
         scenarios = self._generate_placeholder_scenarios(
             "RW", 500, TestCategory.REAL_WORLD
         )
-        logger.info(f"  Real World: Generated {len(scenarios)} scenarios")
+        logger.info("  Real World: Generated %s scenarios", len(scenarios))
         return scenarios
 
     def _generate_hypothetical_tests(self) -> list[TestScenario]:
@@ -791,7 +791,7 @@ class GodTierStressTestGenerator:
         scenarios = self._generate_placeholder_scenarios(
             "HT", 500, TestCategory.HYPOTHETICAL
         )
-        logger.info(f"  Hypothetical: Generated {len(scenarios)} scenarios")
+        logger.info("  Hypothetical: Generated %s scenarios", len(scenarios))
         return scenarios
 
     def _generate_placeholder_scenarios(

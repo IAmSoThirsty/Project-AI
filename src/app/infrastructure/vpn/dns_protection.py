@@ -61,7 +61,7 @@ class DNSProtection:
 
     def _set_dns_servers(self, servers: list[str]):
         """Set system DNS servers"""
-        self.logger.debug(f"Setting DNS servers: {servers}")
+        self.logger.debug("Setting DNS servers: %s", servers)
         # In production, would modify /etc/resolv.conf or Windows registry
 
     def _block_ipv6(self):
@@ -88,7 +88,7 @@ class DNSProtection:
         # Check if using VPN DNS
         for server in current_dns:
             if server not in self._dns_servers:
-                self.logger.warning(f"Potential DNS leak detected: {server}")
+                self.logger.warning("Potential DNS leak detected: %s", server)
                 return False
 
         return True

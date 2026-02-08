@@ -237,8 +237,8 @@ class DriverNormalizationEngine:
                 self.baseline = json.loads(content)
                 self.baseline_checksum = hashlib.sha256(content.encode()).hexdigest()
 
-            logger.info(f"Loaded baseline from {self.baseline_file}")
-            logger.info(f"Baseline checksum: {self.baseline_checksum}")
+            logger.info("Loaded baseline from %s", self.baseline_file)
+            logger.info("Baseline checksum: %s", self.baseline_checksum)
         else:
             # Create new baseline
             self.baseline = self._create_baseline()
@@ -250,8 +250,8 @@ class DriverNormalizationEngine:
 
             self.baseline_checksum = hashlib.sha256(content.encode()).hexdigest()
 
-            logger.info(f"Created new baseline at {self.baseline_file}")
-            logger.info(f"Baseline checksum: {self.baseline_checksum}")
+            logger.info("Created new baseline at %s", self.baseline_file)
+            logger.info("Baseline checksum: %s", self.baseline_checksum)
 
             self.audit.log_event(
                 category=AuditCategory.GOVERNANCE,

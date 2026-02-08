@@ -101,7 +101,7 @@ class GradleEvolutionBridge:
             logger.info("✓ All evolution components initialized")
 
         except Exception as e:
-            logger.error(f"Failed to initialize components: {e}")
+            logger.error("Failed to initialize components: %s", e)
             raise
 
     def validate_build_phase(
@@ -122,7 +122,7 @@ class GradleEvolutionBridge:
         if context is None:
             context = {}
 
-        logger.info(f"Validating build phase: {phase}")
+        logger.info("Validating build phase: %s", phase)
 
         result = {
             "phase": phase,
@@ -166,10 +166,10 @@ class GradleEvolutionBridge:
             # Update build cognition
             self.build_cognition.record_build_event(phase, context, result)
 
-            logger.info(f"Validation result: {'ALLOWED' if result['allowed'] else 'BLOCKED'}")
+            logger.info("Validation result: %s", 'ALLOWED' if result['allowed'] else 'BLOCKED')
 
         except Exception as e:
-            logger.error(f"Error during validation: {e}")
+            logger.error("Error during validation: %s", e)
             result["allowed"] = False
             result["violations"].append({
                 "layer": "system",
@@ -195,7 +195,7 @@ class GradleEvolutionBridge:
         Returns:
             Capsule creation result with hash and signature
         """
-        logger.info(f"Creating build capsule for phase: {phase}")
+        logger.info("Creating build capsule for phase: %s", phase)
 
         if metadata is None:
             metadata = {}
@@ -214,11 +214,11 @@ class GradleEvolutionBridge:
                 {"success": True}
             )
 
-            logger.info(f"✓ Capsule created: {capsule['capsule_id']}")
+            logger.info("✓ Capsule created: %s", capsule['capsule_id'])
             return capsule
 
         except Exception as e:
-            logger.error(f"Failed to create capsule: {e}")
+            logger.error("Failed to create capsule: %s", e)
             return {"success": False, "error": str(e)}
 
     def generate_documentation(self) -> dict[str, Any]:
@@ -245,11 +245,11 @@ class GradleEvolutionBridge:
             # Generate documentation
             docs = self.doc_generator.generate_from_state(state)
 
-            logger.info(f"✓ Documentation generated: {len(docs.get('files', []))} files")
+            logger.info("✓ Documentation generated: %s files", len(docs.get('files', [])))
             return docs
 
         except Exception as e:
-            logger.error(f"Failed to generate documentation: {e}")
+            logger.error("Failed to generate documentation: %s", e)
             return {"success": False, "error": str(e)}
 
 
@@ -308,7 +308,7 @@ def main():
             sys.exit(1)
 
     except Exception as e:
-        logger.error(f"Command failed: {e}")
+        logger.error("Command failed: %s", e)
         print(json.dumps({"error": str(e)}, indent=2))
         sys.exit(1)
 

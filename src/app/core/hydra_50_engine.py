@@ -101,9 +101,7 @@ class TriggerEvent:
         if not self.activated and self.current_value >= self.threshold_value:
             self.activated = True
             self.activation_time = datetime.utcnow()
-            logger.warning(
-                f"Trigger activated: {self.name} (value={self.current_value})"
-            )
+            logger.warning("Trigger activated: %s (value=%s)", self.name, self.current_value)
         return self.activated
 
 
@@ -415,7 +413,7 @@ class BaseScenario(ABC):
                     new_value = metrics[constraint.variable_name]
                     is_valid, reason = constraint.validate(new_value)
                     if not is_valid:
-                        logger.error(f"CONSTRAINT VIOLATION: {reason}")
+                        logger.error("CONSTRAINT VIOLATION: %s", reason)
                         raise ValueError(
                             f"Irreversibility constraint violated: {reason}"
                         )
@@ -445,7 +443,7 @@ class BaseScenario(ABC):
                     step.reached = True
                     step.reached_time = datetime.utcnow()
                     self.escalation_level = step.level
-                    logger.warning(f"{self.name} escalated to {step.level.name}")
+                    logger.warning("%s escalated to %s", self.name, step.level.name)
 
     def get_active_couplings(self) -> list[DomainCoupling]:
         """Return couplings that should activate based on current state"""
@@ -4441,7 +4439,7 @@ class AdversarialRealityGenerator:
         }
 
         self.adversarial_scenarios.append(compound)
-        logger.warning(f"Compound scenario generated: severity={compound_severity:.2f}")
+        logger.warning("Compound scenario generated: severity=%s", compound_severity)
         return compound
 
     def identify_critical_nodes(self, all_scenarios: list[BaseScenario]) -> list[str]:
@@ -4457,7 +4455,7 @@ class AdversarialRealityGenerator:
         # Return top 10 most coupled scenarios
         sorted_nodes = sorted(coupling_counts.items(), key=lambda x: x[1], reverse=True)
         critical = [node[0] for node in sorted_nodes[:10]]
-        logger.info(f"Critical nodes identified: {critical}")
+        logger.info("Critical nodes identified: %s", critical)
         return critical
 
 
@@ -4522,9 +4520,7 @@ class CrossScenarioCoupler:
             )
 
         if activated:
-            logger.warning(
-                f"Coupling propagation from {source_scenario.scenario_id}: activated {activated}"
-            )
+            logger.warning("Coupling propagation from %s: activated %s", source_scenario.scenario_id, activated)
         return activated
 
 
@@ -4592,9 +4588,7 @@ class HumanFailureEmulator:
         self.failure_history.append(result)
 
         if failed:
-            logger.warning(
-                f"Human failure simulated: {result['failure_mode']} (p={failure_probability:.2f})"
-            )
+            logger.warning("Human failure simulated: %s (p=%s)", result['failure_mode'], failure_probability)
 
         return result
 
@@ -4648,7 +4642,7 @@ class IrreversibilityDetector:
 
         if is_irreversible:
             self.irreversible_states.append(assessment)
-            logger.error(f"IRREVERSIBLE STATE: {scenario.name} - {triggered_collapses}")
+            logger.error("IRREVERSIBLE STATE: %s - %s", scenario.name, triggered_collapses)
 
         return assessment
 
@@ -5060,9 +5054,7 @@ class FalseRecoveryEngine:
                 }
 
                 self.poison_deployments.append(deployment)
-                logger.warning(
-                    f"RECOVERY POISON DETECTED: {poison.name} for {scenario.name}"
-                )
+                logger.warning("RECOVERY POISON DETECTED: %s for %s", poison.name, scenario.name)
                 return deployment
 
         # Not a known poison
@@ -5084,7 +5076,7 @@ class FalseRecoveryEngine:
             if deployment.get("is_poison"):
                 total_multiplier *= deployment["long_term_multiplier"]
 
-        logger.info(f"Cumulative poison cost multiplier: {total_multiplier:.2f}x")
+        logger.info("Cumulative poison cost multiplier: %sx", total_multiplier)
         return total_multiplier
 
 
@@ -5131,7 +5123,7 @@ class Hydra50Engine:
         # Load persisted state
         self._load_state()
 
-        logger.info(f"Hydra50Engine initialized with {len(self.scenarios)} scenarios")
+        logger.info("Hydra50Engine initialized with %s scenarios", len(self.scenarios))
 
     def _initialize_all_scenarios(self) -> None:
         """Initialize all 50 scenario objects"""
@@ -5360,7 +5352,7 @@ class Hydra50Engine:
 
     def replay_to_timestamp(self, target_time: datetime) -> dict[str, Any]:
         """Time-travel: replay event log to specific timestamp"""
-        logger.info(f"Replaying to timestamp: {target_time}")
+        logger.info("Replaying to timestamp: %s", target_time)
 
         # Reset all scenarios
         self._initialize_all_scenarios()
@@ -5376,7 +5368,7 @@ class Hydra50Engine:
                 self.scenarios[event.scenario_id].update_metrics(metrics)
                 replayed_events += 1
 
-        logger.info(f"Replayed {replayed_events} events")
+        logger.info("Replayed %s events", replayed_events)
 
         return {
             "target_timestamp": target_time.isoformat(),
@@ -5391,7 +5383,7 @@ class Hydra50Engine:
         alternate_events: list[dict[str, Any]],
     ) -> dict[str, Any]:
         """Create what-if scenario by branching from history"""
-        logger.info(f"Creating counterfactual branch: {branch_name}")
+        logger.info("Creating counterfactual branch: %s", branch_name)
 
         # Replay to branch point
         self.replay_to_timestamp(branch_point)
@@ -5444,7 +5436,7 @@ class Hydra50Engine:
         )
 
         if not is_allowed:
-            logger.error(f"Recovery attempt BLOCKED: {disable_reason}")
+            logger.error("Recovery attempt BLOCKED: %s", disable_reason)
 
             # Record blocked attempt
             event = EventRecord(
@@ -5602,7 +5594,7 @@ class Hydra50Engine:
         )
         self.event_log.append(event)
 
-        logger.warning(f"HUMAN OVERRIDE ACTIVATED by {user_id}: {reason}")
+        logger.warning("HUMAN OVERRIDE ACTIVATED by %s: %s", user_id, reason)
         self._save_state()
 
     def _save_state(self) -> None:
@@ -5629,9 +5621,9 @@ class Hydra50Engine:
         try:
             with open(state_file, "w") as f:
                 json.dump(state_data, f, indent=2)
-            logger.debug(f"State persisted: {len(self.event_log)} events")
+            logger.debug("State persisted: %s events", len(self.event_log))
         except Exception as e:
-            logger.error(f"Failed to save state: {e}")
+            logger.error("Failed to save state: %s", e)
 
     def _load_state(self) -> None:
         """Load persisted engine state"""
@@ -5660,9 +5652,9 @@ class Hydra50Engine:
                     )
                     self.scenarios[sid].metrics = state["metrics"]
 
-            logger.info(f"State loaded from {state_file}")
+            logger.info("State loaded from %s", state_file)
         except Exception as e:
-            logger.error(f"Failed to load state: {e}")
+            logger.error("Failed to load state: %s", e)
 
 
 # ============================================================================

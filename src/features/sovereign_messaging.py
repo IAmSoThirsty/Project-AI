@@ -520,9 +520,7 @@ class SovereignMessaging:
             # Log error without exposing sensitive data
             import logging
 
-            logging.error(
-                f"Failed to decrypt message from {sender_code}: {type(e).__name__}"
-            )
+            logging.error("Failed to decrypt message from %s: %s", sender_code, type(e).__name__)
             return None
 
     def mark_message_seen(self, message_id: str) -> bool:

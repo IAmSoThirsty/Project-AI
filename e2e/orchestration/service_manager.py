@@ -46,14 +46,14 @@ class ServiceManager:
         """
         service = self.config.get_service(service_name)
         if not service:
-            logger.error(f"Service {service_name} not found in configuration")
+            logger.error("Service %s not found in configuration", service_name)
             return False
 
         if not service.enabled:
-            logger.info(f"Service {service_name} is disabled, skipping")
+            logger.info("Service %s is disabled, skipping", service_name)
             return True
 
-        logger.info(f"Starting service: {service.name}")
+        logger.info("Starting service: %s", service.name)
 
         try:
             # Start the service based on its type
@@ -64,7 +64,7 @@ class ServiceManager:
             elif service_name == "temporal_server":
                 process = self._start_temporal_server(service)
             else:
-                logger.warning(f"Unknown service type: {service_name}")
+                logger.warning("Unknown service type: %s", service_name)
                 return False
 
             if process:
@@ -77,7 +77,7 @@ class ServiceManager:
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to start service {service_name}: {e}")
+            logger.error("Failed to start service %s: %s", service_name, e)
             return False
 
         return True
@@ -92,10 +92,10 @@ class ServiceManager:
             True if service stopped successfully, False otherwise
         """
         if service_name not in self._processes:
-            logger.warning(f"Service {service_name} is not running")
+            logger.warning("Service %s is not running", service_name)
             return True
 
-        logger.info(f"Stopping service: {service_name}")
+        logger.info("Stopping service: %s", service_name)
 
         try:
             process = self._processes[service_name]
@@ -105,13 +105,13 @@ class ServiceManager:
             self._started_services.remove(service_name)
             return True
         except subprocess.TimeoutExpired:
-            logger.warning(f"Service {service_name} did not terminate, killing")
+            logger.warning("Service %s did not terminate, killing", service_name)
             process.kill()
             del self._processes[service_name]
             self._started_services.remove(service_name)
             return True
         except Exception as e:
-            logger.error(f"Failed to stop service {service_name}: {e}")
+            logger.error("Failed to stop service %s: %s", service_name, e)
             return False
 
     def start_all(self, wait_for_health: bool = True) -> bool:
@@ -128,11 +128,11 @@ class ServiceManager:
 
         for service in enabled_services:
             if not self.start_service(service.name, wait_for_health):
-                logger.error(f"Failed to start service: {service.name}")
+                logger.error("Failed to start service: %s", service.name)
                 self.stop_all()
                 return False
 
-        logger.info(f"Successfully started {len(enabled_services)} services")
+        logger.info("Successfully started %s services", len(enabled_services))
         return True
 
     def stop_all(self) -> None:
@@ -176,7 +176,7 @@ class ServiceManager:
         Returns:
             True if service became healthy, False if timeout
         """
-        logger.info(f"Waiting for {service.name} to become healthy")
+        logger.info("Waiting for %s to become healthy", service.name)
         start_time = time.time()
         max_wait = service.startup_timeout
 
@@ -187,16 +187,14 @@ class ServiceManager:
                     timeout=self.config.api_request_timeout,
                 )
                 if response.status_code == 200:
-                    logger.info(f"{service.name} is healthy")
+                    logger.info("%s is healthy", service.name)
                     return True
             except requests.RequestException:
                 pass
 
             time.sleep(1)
 
-        logger.error(
-            f"{service.name} did not become healthy within {max_wait}s"
-        )
+        logger.error("%s did not become healthy within %ss", service.name, max_wait)
         return False
 
     def _start_flask_api(self, service: ServiceConfig) -> subprocess.Popen | None:
@@ -216,10 +214,10 @@ class ServiceManager:
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
             )
-            logger.info(f"Started Flask API on {service.base_url}")
+            logger.info("Started Flask API on %s", service.base_url)
             return process
         except Exception as e:
-            logger.error(f"Failed to start Flask API: {e}")
+            logger.error("Failed to start Flask API: %s", e)
             return None
 
     def _start_fastapi_backend(
@@ -247,10 +245,10 @@ class ServiceManager:
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
             )
-            logger.info(f"Started FastAPI backend on {service.base_url}")
+            logger.info("Started FastAPI backend on %s", service.base_url)
             return process
         except Exception as e:
-            logger.error(f"Failed to start FastAPI backend: {e}")
+            logger.error("Failed to start FastAPI backend: %s", e)
             return None
 
     def _start_temporal_server(

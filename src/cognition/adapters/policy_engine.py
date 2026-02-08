@@ -179,9 +179,7 @@ class PolicyEngine:
                 policies = []
 
         self.policies = policies
-        logger.info(
-            f"PolicyEngine initialized with {len(policies)} policies (mode: {mode})"
-        )
+        logger.info("PolicyEngine initialized with %s policies (mode: %s)", len(policies), mode)
 
     def add_policy(self, policy: Policy):
         """Add a policy to the engine."""

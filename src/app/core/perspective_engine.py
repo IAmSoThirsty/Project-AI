@@ -319,9 +319,7 @@ class PerspectiveEngine:
                     profile = WorkProfileState.from_dict(profile_data)
                     self.work_profiles[profile.profile_name] = profile
 
-                logger.info(
-                    f"Loaded perspective state: {self.interaction_count} interactions"
-                )
+                logger.info("Loaded perspective state: %s interactions", self.interaction_count)
 
             except Exception as e:
                 logger.error("Failed to load perspective state: %s", e)

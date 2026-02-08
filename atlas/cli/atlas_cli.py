@@ -161,7 +161,7 @@ class AtlasCLI:
         except ConstitutionalViolation:
             return False
         except Exception as e:
-            logger.error(f"Hash verification error: {e}")
+            logger.error("Hash verification error: %s", e)
             return False
 
     def _verify_seed_reproducibility(self, bundle: dict[str, Any]) -> bool:
@@ -174,7 +174,7 @@ class AtlasCLI:
         except ConstitutionalViolation:
             return False
         except Exception as e:
-            logger.error(f"Seed verification error: {e}")
+            logger.error("Seed verification error: %s", e)
             return False
 
     def _verify_posteriors(self, bundle: dict[str, Any]) -> bool:

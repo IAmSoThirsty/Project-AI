@@ -45,7 +45,7 @@ class BuildStateIntegration:
         self.BUILD_CONFIG_KEY = "build_configuration"
 
         self._load_persistent_state()
-        logger.info(f"Build state integration initialized: {self.state_dir}")
+        logger.info("Build state integration initialized: %s", self.state_dir)
 
     def record_build_episode(
         self,
@@ -78,7 +78,7 @@ class BuildStateIntegration:
             # Update build statistics
             self._update_build_stats(result)
 
-            logger.debug(f"Recorded build episode: {build_id}")
+            logger.debug("Recorded build episode: %s", build_id)
 
         except Exception as e:
             logger.error(f"Error recording build episode: {e}", exc_info=True)
@@ -109,7 +109,7 @@ class BuildStateIntegration:
         """
         try:
             cache = self.state_manager.load_state(self.BUILD_CACHE_KEY, default={})
-            logger.debug(f"Loaded build cache: {len(cache)} entries")
+            logger.debug("Loaded build cache: %s entries", len(cache))
             return cache
         except Exception as e:
             logger.error(f"Error loading build cache: {e}", exc_info=True)
@@ -254,7 +254,7 @@ class BuildStateIntegration:
             with open(output_path, "w") as f:
                 json.dump(snapshot, f, indent=2)
 
-            logger.info(f"State snapshot exported to: {output_path}")
+            logger.info("State snapshot exported to: %s", output_path)
 
         except Exception as e:
             logger.error(f"Error exporting state snapshot: {e}", exc_info=True)
@@ -285,7 +285,7 @@ class BuildStateIntegration:
             if "statistics" in snapshot:
                 self.state_manager.save_state(self.BUILD_STATS_KEY, snapshot["statistics"])
 
-            logger.info(f"State snapshot imported from: {input_path}")
+            logger.info("State snapshot imported from: %s", input_path)
             return True
 
         except Exception as e:
@@ -335,7 +335,7 @@ class BuildStateIntegration:
                     with open(filepath) as f:
                         data = json.load(f)
                     self.state_manager.save_state(key, data)
-                    logger.debug(f"Loaded persistent state: {key}")
+                    logger.debug("Loaded persistent state: %s", key)
         except Exception as e:
             logger.error(f"Error loading persistent state: {e}", exc_info=True)
 

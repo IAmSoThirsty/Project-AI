@@ -54,7 +54,7 @@ class AuditLog:
         self.log_file.parent.mkdir(parents=True, exist_ok=True)
         self.last_hash = self._load_last_hash()
 
-        logger.info(f"AuditLog initialized at {self.log_file}")
+        logger.info("AuditLog initialized at %s", self.log_file)
 
     def _load_last_hash(self) -> str:
         """Load the hash of the last event from the log file.
@@ -78,7 +78,7 @@ class AuditLog:
                     if last_event and "hash" in last_event:
                         return last_event["hash"]
         except Exception as e:
-            logger.warning(f"Failed to load last hash from audit log: {e}")
+            logger.warning("Failed to load last hash from audit log: %s", e)
 
         return "GENESIS"
 
@@ -136,13 +136,11 @@ class AuditLog:
             # Update last hash for next event
             self.last_hash = event_hash
 
-            logger.info(
-                f"Audit event logged: {event_type} (hash: {event_hash[:16]}...)"
-            )
+            logger.info("Audit event logged: %s (hash: %s...)", event_type, event_hash[)
             return True
 
         except Exception as e:
-            logger.error(f"Failed to log audit event: {e}")
+            logger.error("Failed to log audit event: %s", e)
             return False
 
     def verify_chain(self) -> tuple[bool, str]:
@@ -237,7 +235,7 @@ class AuditLog:
             return events
 
         except Exception as e:
-            logger.error(f"Failed to retrieve events: {e}")
+            logger.error("Failed to retrieve events: %s", e)
             return []
 
 

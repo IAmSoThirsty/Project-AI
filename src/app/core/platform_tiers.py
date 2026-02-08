@@ -473,7 +473,7 @@ class TierRegistry:
             raise ValueError(f"Component {component_id} not registered")
 
         self._failed_components.add(component_id)
-        logger.error(f"Component {component_id} marked as failed: {reason}")
+        logger.error("Component %s marked as failed: %s", component_id, reason)
 
     def mark_component_recovered(self, component_id: str) -> None:
         """
@@ -484,7 +484,7 @@ class TierRegistry:
         """
         if component_id in self._failed_components:
             self._failed_components.remove(component_id)
-            logger.info(f"Component {component_id} marked as recovered")
+            logger.info("Component %s marked as recovered", component_id)
 
     def is_component_failed(self, component_id: str) -> bool:
         """Check if a component has failed."""

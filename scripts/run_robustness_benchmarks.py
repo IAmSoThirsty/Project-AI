@@ -61,7 +61,7 @@ class ComprehensiveBenchmarkRunner:
 
         file_path = suite_paths.get(suite_name)
         if not file_path or not file_path.exists():
-            logger.warning(f"Scenario file not found for {suite_name}: {file_path}")
+            logger.warning("Scenario file not found for %s: %s", suite_name, file_path)
             return []
 
         with open(file_path) as f:
@@ -169,20 +169,20 @@ class ComprehensiveBenchmarkRunner:
     def benchmark_suite(self, suite_name: str) -> RobustnessAnalysis:
         """Run robustness benchmark on entire test suite."""
         logger.info("=" * 80)
-        logger.info(f"Benchmarking: {suite_name}")
+        logger.info("Benchmarking: %s", suite_name)
         logger.info("=" * 80)
 
         scenarios = self.load_test_scenarios(suite_name)
         if not scenarios:
-            logger.warning(f"No scenarios found for {suite_name}")
+            logger.warning("No scenarios found for %s", suite_name)
             return None
 
-        logger.info(f"Analyzing {len(scenarios)} scenarios...")
+        logger.info("Analyzing %s scenarios...", len(scenarios))
 
         proximity_metrics = []
         for i, scenario in enumerate(scenarios):
             if (i + 1) % 100 == 0:
-                logger.info(f"  Processed {i + 1}/{len(scenarios)} scenarios...")
+                logger.info("  Processed %s/%s scenarios...", i + 1, len(scenarios))
 
             metrics = self.analyze_scenario_robustness(scenario, suite_name)
             proximity_metrics.append(metrics)
@@ -525,7 +525,7 @@ class ComprehensiveBenchmarkRunner:
             f.write("**Robustness Rating**: ⭐⭐⭐⭐⭐ (5/5)\n")
             f.write("**Status**: PRODUCTION-READY WITH CONTINUOUS MONITORING\n")
 
-        logger.info(f"Generated comparative report: {report_path}")
+        logger.info("Generated comparative report: %s", report_path)
         return str(report_path)
 
     def run_all_benchmarks(self, export: bool = True) -> dict:
@@ -540,13 +540,13 @@ class ComprehensiveBenchmarkRunner:
             try:
                 self.benchmark_suite(suite)
             except Exception as e:
-                logger.error(f"Error benchmarking {suite}: {e}")
+                logger.error("Error benchmarking %s: %s", suite, e)
                 continue
 
         # Generate comparative report
         if export:
             report_path = self.generate_comparative_report()
-            logger.info(f"\nComparative report generated: {report_path}")
+            logger.info("\nComparative report generated: %s", report_path)
 
         # Summary
         logger.info("\n" + "=" * 80)
@@ -554,8 +554,8 @@ class ComprehensiveBenchmarkRunner:
         logger.info("=" * 80)
 
         total_scenarios = sum(r["scenario_count"] for r in self.results.values())
-        logger.info(f"\nTotal scenarios analyzed: {total_scenarios}")
-        logger.info(f"Test suites benchmarked: {len(self.results)}")
+        logger.info("\nTotal scenarios analyzed: %s", total_scenarios)
+        logger.info("Test suites benchmarked: %s", len(self.results))
         logger.info("Defense win rate: 100%")
 
         return self.results

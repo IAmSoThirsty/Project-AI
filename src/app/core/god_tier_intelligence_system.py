@@ -137,9 +137,7 @@ class CircuitBreaker:
 
             if self.failure_count >= self.failure_threshold:
                 self.state = "OPEN"
-                logger.error(
-                    f"Circuit breaker OPENED after {self.failure_count} failures"
-                )
+                logger.error("Circuit breaker OPENED after %s failures", self.failure_count)
 
 
 class SelfHealingSystem:
@@ -172,7 +170,7 @@ class SelfHealingSystem:
         if recovery_func:
             self.recovery_strategies[component_name] = recovery_func
 
-        logger.info(f"Registered component: {component_name}")
+        logger.info("Registered component: %s", component_name)
 
     def check_health(self, component_name: str) -> HealthCheck:
         """Check component health.
@@ -204,7 +202,7 @@ class SelfHealingSystem:
             )
 
         except Exception as e:
-            logger.error(f"Health check failed for {component_name}: {e}")
+            logger.error("Health check failed for %s: %s", component_name, e)
             return HealthCheck(
                 component=component_name,
                 status=HealthStatus.FAILING,
@@ -224,16 +222,16 @@ class SelfHealingSystem:
         """
         recovery_func = self.recovery_strategies.get(component_name)
         if not recovery_func:
-            logger.warning(f"No recovery strategy for {component_name}")
+            logger.warning("No recovery strategy for %s", component_name)
             return False
 
         try:
-            logger.info(f"Attempting recovery for {component_name}")
+            logger.info("Attempting recovery for %s", component_name)
             recovery_func()
-            logger.info(f"Recovery successful for {component_name}")
+            logger.info("Recovery successful for %s", component_name)
             return True
         except Exception as e:
-            logger.error(f"Recovery failed for {component_name}: {e}")
+            logger.error("Recovery failed for %s: %s", component_name, e)
             return False
 
 
@@ -261,7 +259,7 @@ class LoadBalancer:
         self.failed_tasks = 0
         self.total_processing_time = 0.0
 
-        logger.info(f"LoadBalancer initialized with {self.num_workers} workers")
+        logger.info("LoadBalancer initialized with %s workers", self.num_workers)
 
     def submit_batch(self, tasks: list[tuple[Callable, tuple, dict]]) -> dict[str, Any]:
         """Submit batch of tasks for parallel processing.
@@ -291,7 +289,7 @@ class LoadBalancer:
             except Exception as e:
                 results[task_id] = {"success": False, "error": str(e)}
                 self.failed_tasks += 1
-                logger.error(f"Task {task_id} failed: {e}")
+                logger.error("Task %s failed: %s", task_id, e)
 
         # Update metrics
         elapsed = time.time() - start_time
@@ -471,9 +469,7 @@ class IntelligentCache:
         self.hits = 0
         self.misses = 0
 
-        logger.info(
-            f"IntelligentCache initialized (max_size={max_size}, ttl={default_ttl}s)"
-        )
+        logger.info("IntelligentCache initialized (max_size=%s, ttl=%ss)", max_size, default_ttl)
 
     def get(self, key: str) -> Any | None:
         """Get value from cache.
@@ -651,7 +647,7 @@ class ResourceMonitor:
                         "timestamp": time.time(),
                     }
                     self.alerts.append(alert)
-                    logger.warning(f"High CPU usage: {cpu_percent}%")
+                    logger.warning("High CPU usage: %s%%", cpu_percent)
 
                 # Check memory
                 memory = psutil.virtual_memory()
@@ -663,12 +659,12 @@ class ResourceMonitor:
                         "timestamp": time.time(),
                     }
                     self.alerts.append(alert)
-                    logger.warning(f"High memory usage: {memory.percent}%")
+                    logger.warning("High memory usage: %s%%", memory.percent)
 
                 time.sleep(self.check_interval)
 
             except Exception as e:
-                logger.error(f"Resource monitoring error: {e}")
+                logger.error("Resource monitoring error: %s", e)
                 time.sleep(self.check_interval)
 
     def get_current_resources(self) -> dict[str, Any]:

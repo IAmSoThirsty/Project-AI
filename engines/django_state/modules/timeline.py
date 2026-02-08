@@ -77,7 +77,7 @@ class TimelineModule:
         self.timeline.append(entry)
         self.event_index[event.event_id] = entry["index"]
 
-        logger.debug(f"Recorded event {event.event_id} at index {entry['index']}")
+        logger.debug("Recorded event %s at index %s", event.event_id, entry['index'])
 
         return entry["index"]
 
@@ -124,7 +124,7 @@ class TimelineModule:
         """
         self.state_snapshots[tick] = state.to_dict()
         self.last_snapshot_tick = tick
-        logger.debug(f"Created state snapshot at tick {tick}")
+        logger.debug("Created state snapshot at tick %s", tick)
 
     def _hash_state(self, state: StateVector) -> str:
         """Calculate hash of state vector.
@@ -227,13 +227,13 @@ class TimelineModule:
         # Load snapshot or use initial state
         if snapshot_tick > 0:
             # Would need to implement StateVector.from_dict() for full reconstruction
-            logger.info(f"Loading snapshot from tick {snapshot_tick}")
+            logger.info("Loading snapshot from tick %s", snapshot_tick)
             current_state = initial_state.copy()  # Simplified
         else:
             current_state = initial_state.copy()
 
         # Replay events from snapshot to target
-        logger.info(f"Replaying events from tick {snapshot_tick} to {target_tick}")
+        logger.info("Replaying events from tick %s to %s", snapshot_tick, target_tick)
 
         # This would require storing and replaying all events
         # Simplified implementation for now

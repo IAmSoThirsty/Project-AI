@@ -212,9 +212,7 @@ class StateMachineAnalyzer:
             )
 
             self.illegal_transitions.append(transition)
-            logger.critical(
-                f"ILLEGAL STATE TRANSITION: {component} {from_state} -> {to_state}"
-            )
+            logger.critical("ILLEGAL STATE TRANSITION: %s %s -> %s", component, from_state, to_state)
             return False, f"Illegal transition: {from_state} -> {to_state}"
 
         self.current_states[component] = to_state
@@ -229,9 +227,7 @@ class StateMachineAnalyzer:
         ]
 
         if illegal_reachable:
-            logger.critical(
-                f"Found {len(illegal_reachable)} illegal but reachable states"
-            )
+            logger.critical("Found %s illegal but reachable states", len(illegal_reachable))
 
         return illegal_reachable
 
@@ -311,9 +307,7 @@ class TemporalSecurityAnalyzer:
                 )
 
                 self.violations.append(violation)
-                logger.critical(
-                    f"RACE CONDITION DETECTED: {component} (delta={time_delta:.2f}ms)"
-                )
+                logger.critical("RACE CONDITION DETECTED: %s (delta=%sms)", component, time_delta)
                 return violation
 
         return None
@@ -385,11 +379,9 @@ class InvertedKillChainEngine:
             try:
                 if precond.check_function(context):
                     met_preconditions.append(precond_id)
-                    logger.warning(
-                        f"PRECONDITION MET: {precond_id} - {precond.description}"
-                    )
+                    logger.warning("PRECONDITION MET: %s - %s", precond_id, precond.description)
             except Exception as e:
-                logger.error(f"Error checking precondition {precond_id}: {e}")
+                logger.error("Error checking precondition %s: %s", precond_id, e)
 
         return met_preconditions
 
@@ -420,9 +412,7 @@ class InvertedKillChainEngine:
 
             predictions.append(prediction)
             self.predictions.append(prediction)
-            logger.warning(
-                f"ATTACK PREDICTED: {attack_type} (confidence={confidence:.2f})"
-            )
+            logger.warning("ATTACK PREDICTED: %s (confidence=%s)", attack_type, confidence)
 
         return predictions
 
@@ -497,7 +487,7 @@ class EntropicArchitecture:
         )
 
         self.observer_schemas[observer_id] = schema
-        logger.info(f"Created observer schema v{self.schema_version} for {observer_id}")
+        logger.info("Created observer schema v%s for %s", self.schema_version, observer_id)
 
     def transform_response(
         self, data: dict[str, Any], observer_id: str

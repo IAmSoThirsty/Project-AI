@@ -133,7 +133,7 @@ class IntentCompiler:
                 error_msg = "\n".join(str(e) for e in self.errors)
                 raise CompilationError(f"Compilation failed with {len(self.errors)} errors:\n{error_msg}")
 
-            logger.info(f"Compiled {len(self.graph.nodes)} IR nodes from {source_file or 'inline'}")
+            logger.info("Compiled %s IR nodes from %s", len(self.graph.nodes), source_file or 'inline')
             return self.graph
 
         except yaml.YAMLError as e:
@@ -430,7 +430,7 @@ class IntentCompiler:
         dead_nodes = set(self.graph.nodes.keys()) - reachable
         for node_id in dead_nodes:
             del self.graph.nodes[node_id]
-            logger.debug(f"Eliminated dead code: {node_id}")
+            logger.debug("Eliminated dead code: %s", node_id)
 
     def _fold_constants(self) -> None:
         """Fold constant expressions"""
@@ -465,9 +465,9 @@ class IntentCompiler:
                     node.opcode = IROpcode.CONST
                     node.operands = [result]
                     node.inputs.clear()
-                    logger.debug(f"Folded constant: {node_id} = {result}")
+                    logger.debug("Folded constant: %s = %s", node_id, result)
             except Exception as e:
-                logger.warning(f"Constant folding failed for {node_id}: {e}")
+                logger.warning("Constant folding failed for %s: %s", node_id, e)
 
     def _remove_nops(self) -> None:
         """Remove NOP nodes and reconnect edges"""
@@ -484,7 +484,7 @@ class IntentCompiler:
 
             # Remove NOP node
             del self.graph.nodes[nop_id]
-            logger.debug(f"Removed NOP: {nop_id}")
+            logger.debug("Removed NOP: %s", nop_id)
 
     def compile_file(self, file_path: str) -> IRGraph:
         """Compile YAML file to IR graph"""

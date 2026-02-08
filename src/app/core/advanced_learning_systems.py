@@ -139,7 +139,7 @@ class ExperienceReplayBuffer:
         # Ensure data directory exists
         os.makedirs(data_dir, exist_ok=True)
 
-        logger.info(f"Experience Replay Buffer created (max_size={max_size})")
+        logger.info("Experience Replay Buffer created (max_size=%s)", max_size)
 
     def add(self, experience: Experience) -> None:
         """Add experience to buffer"""
@@ -187,7 +187,7 @@ class ExperienceReplayBuffer:
                 filepath = os.path.join(self.data_dir, filename)
                 with open(filepath, "wb") as f:
                     pickle.dump(list(self._buffer), f)
-                logger.info(f"Saved {len(self._buffer)} experiences to {filepath}")
+                logger.info("Saved %s experiences to %s", len(self._buffer), filepath)
                 return True
         except Exception as e:
             logger.error(f"Failed to save replay buffer: {e}", exc_info=True)
@@ -199,14 +199,14 @@ class ExperienceReplayBuffer:
             with self._lock:
                 filepath = os.path.join(self.data_dir, filename)
                 if not os.path.exists(filepath):
-                    logger.warning(f"Replay buffer file not found: {filepath}")
+                    logger.warning("Replay buffer file not found: %s", filepath)
                     return False
 
                 with open(filepath, "rb") as f:
                     experiences = pickle.load(f)
 
                 self._buffer = deque(experiences, maxlen=self.max_size)
-                logger.info(f"Loaded {len(self._buffer)} experiences from {filepath}")
+                logger.info("Loaded %s experiences from %s", len(self._buffer), filepath)
                 return True
         except Exception as e:
             logger.error(f"Failed to load replay buffer: {e}", exc_info=True)
@@ -265,7 +265,7 @@ class ReinforcementLearningAgent:
         # Ensure data directory
         os.makedirs(data_dir, exist_ok=True)
 
-        logger.info(f"RL Agent '{agent_id}' created with {len(actions)} actions")
+        logger.info("RL Agent '%s' created with %s actions", agent_id, len(actions))
 
     def _state_to_key(self, state: dict[str, Any]) -> str:
         """Convert state dict to hashable key"""
@@ -466,7 +466,7 @@ class ReinforcementLearningAgent:
                 # Save replay buffer separately
                 self.replay_buffer.save(f"{self.agent_id}_replay.pkl")
 
-                logger.info(f"Agent '{self.agent_id}' saved to {filepath}")
+                logger.info("Agent '%s' saved to %s", self.agent_id, filepath)
                 return True
 
         except Exception as e:
@@ -483,7 +483,7 @@ class ReinforcementLearningAgent:
                 filepath = os.path.join(self.data_dir, filename)
 
                 if not os.path.exists(filepath):
-                    logger.warning(f"Agent file not found: {filepath}")
+                    logger.warning("Agent file not found: %s", filepath)
                     return False
 
                 with open(filepath) as f:
@@ -498,7 +498,7 @@ class ReinforcementLearningAgent:
                 # Load replay buffer
                 self.replay_buffer.load(f"{self.agent_id}_replay.pkl")
 
-                logger.info(f"Agent '{self.agent_id}' loaded from {filepath}")
+                logger.info("Agent '%s' loaded from %s", self.agent_id, filepath)
                 return True
 
         except Exception as e:
@@ -545,7 +545,7 @@ class ContinualLearningSystem:
         # Ensure data directory
         os.makedirs(data_dir, exist_ok=True)
 
-        logger.info(f"Continual Learning System '{system_id}' created")
+        logger.info("Continual Learning System '%s' created", system_id)
 
     def register_model(
         self, model_id: str, model_type: str, initial_performance: float = 0.0
@@ -577,7 +577,7 @@ class ContinualLearningSystem:
             self.model_versions[model_id].append(version)
             self.performance_history[model_id].append(initial_performance)
 
-            logger.info(f"Model '{model_id}' registered (type: {model_type})")
+            logger.info("Model '%s' registered (type: %s)", model_id, model_type)
             return True
 
     def update_model_performance(
@@ -596,7 +596,7 @@ class ContinualLearningSystem:
         """
         with self._lock:
             if model_id not in self.model_versions:
-                logger.warning(f"Model '{model_id}' not registered")
+                logger.warning("Model '%s' not registered", model_id)
                 return False
 
             # Add new version if performance improved significantly
@@ -615,9 +615,7 @@ class ContinualLearningSystem:
                 }
 
                 self.model_versions[model_id].append(version)
-                logger.info(
-                    f"Model '{model_id}' updated: {current_performance:.3f} -> {performance:.3f}"
-                )
+                logger.info("Model '%s' updated: %s -> %s", model_id, current_performance, performance)
 
             self.performance_history[model_id].append(performance)
             return True
@@ -640,9 +638,7 @@ class ContinualLearningSystem:
             # Merge new knowledge with existing
             self.consolidated_knowledge[model_id].update(knowledge)
 
-            logger.info(
-                f"Knowledge consolidated for model '{model_id}' ({len(knowledge)} items)"
-            )
+            logger.info("Knowledge consolidated for model '%s' (%s items)", model_id, len(knowledge))
             return True
 
     def get_consolidated_knowledge(self, model_id: str) -> dict[str, Any] | None:
@@ -684,7 +680,7 @@ class ContinualLearningSystem:
                 with open(filepath, "w") as f:
                     json.dump(data, f, indent=2)
 
-                logger.info(f"Continual learning state saved to {filepath}")
+                logger.info("Continual learning state saved to %s", filepath)
                 return True
 
         except Exception as e:
@@ -698,7 +694,7 @@ class ContinualLearningSystem:
                 filepath = os.path.join(self.data_dir, filename)
 
                 if not os.path.exists(filepath):
-                    logger.warning(f"Continual learning file not found: {filepath}")
+                    logger.warning("Continual learning file not found: %s", filepath)
                     return False
 
                 with open(filepath) as f:
@@ -709,7 +705,7 @@ class ContinualLearningSystem:
                 self.performance_history = data["performance_history"]
                 self.consolidated_knowledge = data["consolidated_knowledge"]
 
-                logger.info(f"Continual learning state loaded from {filepath}")
+                logger.info("Continual learning state loaded from %s", filepath)
                 return True
 
         except Exception as e:

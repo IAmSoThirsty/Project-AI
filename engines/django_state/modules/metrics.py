@@ -175,7 +175,7 @@ class MetricsModule:
                     "type": "sudden_trust_drop",
                     "magnitude": trust_change,
                 })
-                logger.warning(f"ANOMALY: Sudden trust drop {trust_change:.4f}")
+                logger.warning("ANOMALY: Sudden trust drop %s", trust_change)
 
         # Legitimacy sudden drop
         if len(self.legitimacy_trend) >= 2:
@@ -186,7 +186,7 @@ class MetricsModule:
                     "type": "sudden_legitimacy_drop",
                     "magnitude": legitimacy_change,
                 })
-                logger.warning(f"ANOMALY: Sudden legitimacy drop {legitimacy_change:.4f}")
+                logger.warning("ANOMALY: Sudden legitimacy drop %s", legitimacy_change)
 
         # Moral injury spike
         if len(self.moral_injury_trend) >= 2:
@@ -197,7 +197,7 @@ class MetricsModule:
                     "type": "moral_injury_spike",
                     "magnitude": moral_change,
                 })
-                logger.warning(f"ANOMALY: Moral injury spike {moral_change:.4f}")
+                logger.warning("ANOMALY: Moral injury spike %s", moral_change)
 
     def get_trend_analysis(self, window: int = 20) -> dict[str, str]:
         """Analyze trends over recent window.

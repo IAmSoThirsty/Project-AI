@@ -37,7 +37,7 @@ class TemporalLawEnforcer:
         self.temporal_client = temporal_client
         self.task_queue = task_queue
         self.workflow_cache: dict[str, str] = {}  # action_id -> workflow_id
-        logger.info(f"Temporal law enforcer initialized with queue: {task_queue}")
+        logger.info("Temporal law enforcer initialized with queue: %s", task_queue)
 
     async def enforce_with_timeout(
         self,
@@ -79,11 +79,11 @@ class TemporalLawEnforcer:
                 timeout=timeout_seconds
             )
 
-            logger.info(f"Temporal enforcement completed: {action}")
+            logger.info("Temporal enforcement completed: %s", action)
             return result
 
         except TimeoutError:
-            logger.error(f"Enforcement timeout for action: {action}")
+            logger.error("Enforcement timeout for action: %s", action)
             return {
                 "allowed": False,
                 "reason": f"Policy enforcement timeout ({timeout_seconds}s)",
@@ -115,7 +115,7 @@ class TemporalLawEnforcer:
         try:
             workflow_id = self.workflow_cache.get(action)
             if not workflow_id or not self.temporal_client:
-                logger.warning(f"No workflow found for action: {action}")
+                logger.warning("No workflow found for action: %s", action)
                 return None
 
             handle = self.temporal_client.get_workflow_handle(workflow_id)
@@ -126,7 +126,7 @@ class TemporalLawEnforcer:
                 args=[timestamp.isoformat()]
             )
 
-            logger.debug(f"Historical query result for {action}: {result}")
+            logger.debug("Historical query result for %s: %s", action, result)
             return result
 
         except Exception as e:
@@ -194,7 +194,7 @@ class TemporalLawEnforcer:
             now = datetime.utcnow()
 
             if now > valid_until:
-                logger.warning(f"Time-bounded policy expired for {action}")
+                logger.warning("Time-bounded policy expired for %s", action)
                 return {
                     "allowed": False,
                     "reason": f"Policy expired at {valid_until.isoformat()}",
@@ -322,7 +322,7 @@ class TemporalLawEnforcer:
                     )
                     continue
 
-            logger.info(f"Cleaned up {cleaned} expired workflows")
+            logger.info("Cleaned up %s expired workflows", cleaned)
             return cleaned
 
         except Exception as e:

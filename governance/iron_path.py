@@ -520,21 +520,21 @@ def run_iron_path_cli(pipeline_path: str) -> None:
         logger.info("\n" + "=" * 80)
         logger.info("✅ IRON PATH EXECUTION SUCCESSFUL")
         logger.info("=" * 80)
-        logger.info(f"Execution ID: {result['execution_id']}")
-        logger.info(f"Stages Completed: {len(result['stages_completed'])}")
-        logger.info(f"Artifacts Directory: {executor.artifacts_dir}")
-        logger.info(f"Audit Trail Integrity: {result['audit_integrity']['is_valid']}")
+        logger.info("Execution ID: %s", result['execution_id'])
+        logger.info("Stages Completed: %s", len(result['stages_completed']))
+        logger.info("Artifacts Directory: %s", executor.artifacts_dir)
+        logger.info("Audit Trail Integrity: %s", result['audit_integrity']['is_valid'])
         logger.info("\nArtifacts Generated:")
         for stage_name, artifact_path in result["artifacts"].items():
             artifact_hash = result["hashes"][stage_name]
-            logger.info(f"  - {stage_name}: {artifact_hash[:16]}... -> {artifact_path}")
+            logger.info("  - %s: %s... -> %s", stage_name, artifact_hash[, artifact_path)
         logger.info("\n" + "=" * 80)
         sys.exit(0)
     else:
         logger.error("\n" + "=" * 80)
         logger.error("❌ IRON PATH EXECUTION FAILED")
         logger.error("=" * 80)
-        logger.error(f"Error: {result.get('error', 'Unknown error')}")
+        logger.error("Error: %s", result.get('error', 'Unknown error'))
         logger.error("=" * 80)
         sys.exit(1)
 

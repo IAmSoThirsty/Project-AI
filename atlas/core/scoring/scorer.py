@@ -170,7 +170,7 @@ class Scorer:
             return result
 
         except Exception as e:
-            logger.error(f"Failed to calculate score for {entity_id}: {e}")
+            logger.error("Failed to calculate score for %s: %s", entity_id, e)
             raise ScoringError(f"Failed to calculate score: {e}") from e
 
     def apply_penalty(self,
@@ -272,7 +272,7 @@ class Scorer:
             return penalty_record
 
         except Exception as e:
-            logger.error(f"Failed to apply penalty to {entity_id}: {e}")
+            logger.error("Failed to apply penalty to %s: %s", entity_id, e)
             raise PenaltyError(f"Failed to apply penalty: {e}") from e
 
     def remove_penalty(self, entity_id: str, penalty_id: str, reason: str) -> bool:
@@ -375,7 +375,7 @@ class Scorer:
             return recovery_amount
 
         except Exception as e:
-            logger.error(f"Failed to apply recovery for {entity_id}: {e}")
+            logger.error("Failed to apply recovery for %s: %s", entity_id, e)
             raise PenaltyError(f"Failed to apply recovery: {e}") from e
 
     def _expire_penalties(self, entity_id: str) -> int:

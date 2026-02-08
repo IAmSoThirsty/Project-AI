@@ -339,10 +339,10 @@ class GraphBuilder:
 
         # Add or update node
         if node.node_id in self.nodes:
-            logger.info(f"Updating existing node: {node.node_id}")
+            logger.info("Updating existing node: %s", node.node_id)
             node.last_updated = datetime.utcnow()
         else:
-            logger.info(f"Adding new node: {node.node_id} ({node.node_type.value})")
+            logger.info("Adding new node: %s (%s)", node.node_id, node.node_type.value)
             node.first_seen = datetime.utcnow()
             node.last_updated = datetime.utcnow()
 
@@ -506,7 +506,7 @@ class GraphBuilder:
         valid = len(errors) == 0
 
         if not valid:
-            logger.error(f"Merkle chain validation failed: {errors}")
+            logger.error("Merkle chain validation failed: %s", errors)
             self.audit.log_event(
                 category=AuditCategory.GOVERNANCE,
                 level=AuditLevel.CRITICAL,
@@ -546,7 +546,7 @@ class GraphBuilder:
         with open(filepath, 'w') as f:
             json.dump(snapshot_data, f, indent=2, sort_keys=True)
 
-        logger.info(f"Saved snapshot to {filepath}")
+        logger.info("Saved snapshot to %s", filepath)
 
         return filepath
 

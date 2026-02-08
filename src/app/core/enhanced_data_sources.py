@@ -83,7 +83,7 @@ class IMFDataSource(DataSource):
         data = self.fetch_with_retry(url, params, use_cache=True)
 
         if not data:
-            logger.warning(f"No IMF data returned for indicator {indicator}")
+            logger.warning("No IMF data returned for indicator %s", indicator)
             # Return empty dict - IMF API often has limited free access
             # In production, would need proper API credentials
             return {}
@@ -107,13 +107,11 @@ class IMFDataSource(DataSource):
                             if country_data:
                                 result[country_code] = country_data
         except Exception as e:
-            logger.warning(f"Error parsing IMF data: {e}")
+            logger.warning("Error parsing IMF data: %s", e)
             # For demo purposes, return empty dict
             # In production, this would be handled with proper error recovery
 
-        logger.info(
-            f"Loaded IMF data for {len(result)} countries, indicator {indicator}"
-        )
+        logger.info("Loaded IMF data for %s countries, indicator %s", len(result), indicator)
         return result
 
     def fetch_fiscal_data(
@@ -198,7 +196,7 @@ class WHODataSource(DataSource):
         data = self.fetch_with_retry(url, params, use_cache=True)
 
         if not data or "value" not in data:
-            logger.warning(f"No WHO data returned for indicator {indicator}")
+            logger.warning("No WHO data returned for indicator %s", indicator)
             return {}
 
         # Parse WHO API response
@@ -224,11 +222,9 @@ class WHODataSource(DataSource):
                         result[country_code] = {}
                     result[country_code][year] = value
         except Exception as e:
-            logger.warning(f"Error parsing WHO data: {e}")
+            logger.warning("Error parsing WHO data: %s", e)
 
-        logger.info(
-            f"Loaded WHO data for {len(result)} countries, indicator {indicator}"
-        )
+        logger.info("Loaded WHO data for %s countries, indicator %s", len(result), indicator)
         return result
 
     def fetch_covid19_data(
@@ -327,7 +323,7 @@ def integrate_imf_data(
         return True
 
     except Exception as e:
-        logger.error(f"Failed to integrate IMF data: {e}")
+        logger.error("Failed to integrate IMF data: %s", e)
         return False
 
 
@@ -372,5 +368,5 @@ def integrate_who_data(
         return True
 
     except Exception as e:
-        logger.error(f"Failed to integrate WHO data: {e}")
+        logger.error("Failed to integrate WHO data: %s", e)
         return False

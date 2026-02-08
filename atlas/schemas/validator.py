@@ -52,12 +52,12 @@ class SchemaValidator:
         self._validators: dict[str, Draft7Validator] = {}
         self._schema_hashes: dict[str, str] = {}
 
-        logger.info(f"Initializing SchemaValidator with directory: {self.schema_dir}")
+        logger.info("Initializing SchemaValidator with directory: %s", self.schema_dir)
 
         # Load all schemas
         self._load_all_schemas()
 
-        logger.info(f"Loaded {len(self._schemas)} schemas successfully")
+        logger.info("Loaded %s schemas successfully", len(self._schemas))
 
     def _load_all_schemas(self) -> None:
         """Load all JSON schema files."""
@@ -75,7 +75,7 @@ class SchemaValidator:
             try:
                 self._load_schema(schema_name, filepath)
             except Exception as e:
-                logger.error(f"Failed to load schema {filename}: {e}")
+                logger.error("Failed to load schema %s: %s", filename, e)
                 raise ValidationError(f"Failed to load schema {filename}: {e}") from e
 
     def _load_schema(self, name: str, filepath: Path) -> None:
@@ -86,7 +86,7 @@ class SchemaValidator:
             name: Schema name (e.g., 'organization')
             filepath: Path to schema file
         """
-        logger.debug(f"Loading schema: {name} from {filepath}")
+        logger.debug("Loading schema: %s from %s", name, filepath)
 
         if not filepath.exists():
             raise ValidationError(f"Schema file not found: {filepath}")
@@ -111,16 +111,16 @@ class SchemaValidator:
             self._schemas[name] = schema
             self._validators[name] = validator
 
-            logger.debug(f"Loaded schema {name} (hash: {schema_hash[:16]}...)")
+            logger.debug("Loaded schema %s (hash: %s...)", name, schema_hash[)
 
         except json.JSONDecodeError as e:
-            logger.error(f"JSON parse error in {filepath}: {e}")
+            logger.error("JSON parse error in %s: %s", filepath, e)
             raise ValidationError(f"JSON parse error in {filepath}: {e}") from e
         except jsonschema.SchemaError as e:
-            logger.error(f"Invalid JSON schema in {filepath}: {e}")
+            logger.error("Invalid JSON schema in %s: %s", filepath, e)
             raise ValidationError(f"Invalid JSON schema in {filepath}: {e}") from e
         except Exception as e:
-            logger.error(f"Error loading schema {filepath}: {e}")
+            logger.error("Error loading schema %s: %s", filepath, e)
             raise ValidationError(f"Error loading schema {filepath}: {e}") from e
 
     def validate(self, schema_name: str, data: dict[str, Any],
@@ -151,7 +151,7 @@ class SchemaValidator:
                 path = " -> ".join(str(p) for p in error.path) if error.path else "root"
                 message = f"{path}: {error.message}"
                 error_messages.append(message)
-                logger.debug(f"Validation error in {schema_name}: {message}")
+                logger.debug("Validation error in %s: %s", schema_name, message)
 
             if strict:
                 error_summary = "\n".join(error_messages)
@@ -260,7 +260,7 @@ class SchemaValidator:
                     return False
 
             except Exception as e:
-                logger.error(f"Error verifying schema {schema_name}: {e}")
+                logger.error("Error verifying schema %s: %s", schema_name, e)
                 return False
 
         return True

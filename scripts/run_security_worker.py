@@ -73,14 +73,12 @@ class SecurityWorker:
         """Start the worker."""
         try:
             # Connect to Temporal server
-            logger.info(f"🔌 Connecting to Temporal server at {self.temporal_address}")
+            logger.info("🔌 Connecting to Temporal server at %s", self.temporal_address)
             self.client = await Client.connect(self.temporal_address)
             logger.info("✅ Connected to Temporal server")
 
             # Create worker
-            logger.info(
-                f"🛡️ Creating security agent worker on queue: {self.task_queue}"
-            )
+            logger.info("🛡️ Creating security agent worker on queue: %s", self.task_queue)
             self.worker = Worker(
                 self.client,
                 task_queue=self.task_queue,
@@ -115,7 +113,7 @@ class SecurityWorker:
             logger.info("📋 Registered activities: 10")
 
             # Run worker
-            logger.info(f"🚀 Starting worker (task queue: {self.task_queue})")
+            logger.info("🚀 Starting worker (task queue: %s)", self.task_queue)
             logger.info("Press Ctrl+C to stop")
 
             # Run worker until shutdown event is set
@@ -146,7 +144,7 @@ class SecurityWorker:
 
 def handle_signal(signum, frame):
     """Handle shutdown signals."""
-    logger.info(f"Received signal {signum}")
+    logger.info("Received signal %s", signum)
     # Let asyncio handle the shutdown
     raise KeyboardInterrupt()
 

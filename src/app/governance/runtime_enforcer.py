@@ -190,7 +190,7 @@ class RuntimeEnforcer:
             )
 
         except Exception as e:
-            logger.error(f"Error checking acceptance ledger for {user_id}: {e}")
+            logger.error("Error checking acceptance ledger for %s: %s", user_id, e)
             return EnforcementResult(
                 verdict=EnforcementVerdict.DENY,
                 reason="Ledger verification failed",
@@ -230,7 +230,7 @@ class RuntimeEnforcer:
             )
 
         except Exception as e:
-            logger.error(f"Error checking termination for {user_id}: {e}")
+            logger.error("Error checking termination for %s: %s", user_id, e)
             # Fail closed - deny on error
             return EnforcementResult(
                 verdict=EnforcementVerdict.DENY,

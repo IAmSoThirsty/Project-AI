@@ -196,9 +196,7 @@ class IntelligenceAgent(KernelRoutedAgent):
         self.last_report: IntelligenceReport | None = None
         self.report_count = 0
 
-        logger.info(
-            f"IntelligenceAgent {agent_id} initialized for {domain.value}/{specialty}"
-        )
+        logger.info("IntelligenceAgent %s initialized for %s/%s", agent_id, domain.value, specialty)
 
     def monitor(self) -> IntelligenceReport:
         """Monitor for changes and generate a report.
@@ -232,7 +230,7 @@ class IntelligenceAgent(KernelRoutedAgent):
             return report
 
         except Exception as e:
-            logger.error(f"Agent {self.agent_id} monitoring error: {e}")
+            logger.error("Agent %s monitoring error: %s", self.agent_id, e)
             self.status = MonitoringStatus.ERROR
             raise
 
@@ -288,7 +286,7 @@ class DomainOverseer(KernelRoutedAgent):
         self.last_analysis: DomainAnalysis | None = None
         self.analysis_count = 0
 
-        logger.info(f"DomainOverseer initialized for {domain.value}")
+        logger.info("DomainOverseer initialized for %s", domain.value)
 
     def add_agent(self, agent: IntelligenceAgent) -> None:
         """Add an agent to this overseer's supervision.
@@ -302,7 +300,7 @@ class DomainOverseer(KernelRoutedAgent):
             )
 
         self.agents.append(agent)
-        logger.info(f"Added agent {agent.agent_id} to {self.domain.value} overseer")
+        logger.info("Added agent %s to %s overseer", agent.agent_id, self.domain.value)
 
     def create_agents(self, count: int = 20) -> None:
         """Create intelligence agents for this domain.
@@ -480,7 +478,7 @@ class DomainOverseer(KernelRoutedAgent):
                 report = agent.monitor()
                 reports.append(report)
             except Exception as e:
-                logger.error(f"Failed to collect report from {agent.agent_id}: {e}")
+                logger.error("Failed to collect report from %s: %s", agent.agent_id, e)
 
         return reports
 
@@ -612,7 +610,7 @@ class DomainOverseer(KernelRoutedAgent):
             with open(analysis_file, "w") as f:
                 json.dump(analysis.to_dict(), f, indent=2)
         except Exception as e:
-            logger.error(f"Failed to save analysis: {e}")
+            logger.error("Failed to save analysis: %s", e)
 
     def get_status(self) -> dict[str, Any]:
         """Get overseer status.
@@ -682,7 +680,7 @@ class GlobalCurator(KernelRoutedAgent):
             overseer: DomainOverseer instance to add
         """
         self.overseers[overseer.domain] = overseer
-        logger.info(f"Added {overseer.domain.value} overseer to GlobalCurator")
+        logger.info("Added %s overseer to GlobalCurator", overseer.domain.value)
 
     def collect_analyses(self) -> list[DomainAnalysis]:
         """Collect analyses from all domain overseers.
@@ -696,7 +694,7 @@ class GlobalCurator(KernelRoutedAgent):
                 analysis = overseer.analyze_domain()
                 analyses.append(analysis)
             except Exception as e:
-                logger.error(f"Failed to collect analysis from {domain.value}: {e}")
+                logger.error("Failed to collect analysis from %s: %s", domain.value, e)
 
         return analyses
 
@@ -902,7 +900,7 @@ class GlobalCurator(KernelRoutedAgent):
                 json.dump(theory.to_dict(), f, indent=2)
 
         except Exception as e:
-            logger.error(f"Failed to save theory: {e}")
+            logger.error("Failed to save theory: %s", e)
 
     def get_status(self) -> dict[str, Any]:
         """Get curator status.
@@ -992,9 +990,7 @@ class GlobalIntelligenceLibrary:
 
             # Ensure minimum 20 agents per domain
             if agents_per_domain < 20:
-                logger.warning(
-                    f"Requested {agents_per_domain} agents per domain, using minimum of 20"
-                )
+                logger.warning("Requested %s agents per domain, using minimum of 20", agents_per_domain)
                 agents_per_domain = 20
 
             # Initialize curator
@@ -1025,7 +1021,7 @@ class GlobalIntelligenceLibrary:
                         "Continuous 24/7 monitoring system initialized with secure storage"
                     )
                 except Exception as e:
-                    logger.warning(f"Could not initialize continuous monitoring: {e}")
+                    logger.warning("Could not initialize continuous monitoring: %s", e)
 
             # Integrate with Global Watch Tower if requested
             if use_watch_tower:
@@ -1039,7 +1035,7 @@ class GlobalIntelligenceLibrary:
                         "Global Intelligence Library integrated with Global Watch Tower command center"
                     )
                 except Exception as e:
-                    logger.warning(f"Could not integrate with Global Watch Tower: {e}")
+                    logger.warning("Could not integrate with Global Watch Tower: %s", e)
 
             cls._instance = instance
             cls._initialized = True
@@ -1187,9 +1183,7 @@ class GlobalIntelligenceLibrary:
         # Generate statistical simulation (curator's analytical role)
         simulation = self.generate_statistical_simulation()
 
-        logger.info(
-            f"Analysis cycle complete. Simulation {simulation.simulation_id} generated"
-        )
+        logger.info("Analysis cycle complete. Simulation %s generated", simulation.simulation_id)
 
         # Note: Watch Tower reviews simulations and makes command decisions
         if self.watch_tower:

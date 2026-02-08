@@ -41,7 +41,7 @@ class TARLOSBridge:
         self.module_cache = {}
 
         logger.info("TARL OS Bridge v2.0 initializing...")
-        logger.info(f"TARL OS Root: {self.tarl_os_root}")
+        logger.info("TARL OS Root: %s", self.tarl_os_root)
 
         # Module paths
         self.module_paths = {
@@ -60,12 +60,12 @@ class TARLOSBridge:
         for name, path in self.module_paths.items():
             if not path.exists():
                 missing.append(f"{name} ({path})")
-                logger.warning(f"Module not found: {name} at {path}")
+                logger.warning("Module not found: %s at %s", name, path)
             else:
-                logger.info(f"✓ Module found: {name}")
+                logger.info("✓ Module found: %s", name)
 
         if missing:
-            logger.warning(f"Missing modules: {', '.join(missing)}")
+            logger.warning("Missing modules: %s", ', '.join(missing))
         else:
             logger.info("✓ All core modules validated")
 
@@ -80,12 +80,12 @@ class TARLOSBridge:
             True if module loaded successfully
         """
         if module_name in self.module_cache:
-            logger.debug(f"Module {module_name} already loaded")
+            logger.debug("Module %s already loaded", module_name)
             return True
 
         module_path = self.module_paths.get(module_name)
         if not module_path or not module_path.exists():
-            logger.error(f"Module not found: {module_name}")
+            logger.error("Module not found: %s", module_name)
             return False
 
         try:
@@ -99,11 +99,11 @@ class TARLOSBridge:
                 "loaded_at": self._current_timestamp(),
             }
 
-            logger.info(f"✓ Module loaded: {module_name}")
+            logger.info("✓ Module loaded: %s", module_name)
             return True
 
         except Exception as e:
-            logger.error(f"Failed to load module {module_name}: {e}")
+            logger.error("Failed to load module %s: %s", module_name, e)
             return False
 
     def execute_module_function(
@@ -128,7 +128,7 @@ class TARLOSBridge:
         try:
             # For now, we simulate execution since full Thirsty-Lang
             # interpreter integration is complex
-            logger.info(f"Executing {module_name}.{function_name}(*{args}, **{kwargs})")
+            logger.info("Executing %s.%s(*%s, **%s)", module_name, function_name, args, kwargs)
 
             # Simulate result based on function
             result = self._simulate_execution(module_name, function_name, args, kwargs)
@@ -136,7 +136,7 @@ class TARLOSBridge:
             return result
 
         except Exception as e:
-            logger.error(f"Failed to execute {module_name}.{function_name}: {e}")
+            logger.error("Failed to execute %s.%s: %s", module_name, function_name, e)
             return None
 
     def _simulate_execution(

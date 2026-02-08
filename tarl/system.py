@@ -191,10 +191,10 @@ class TARLSystem:
             logger.info("✓ Development tooling initialized")
 
             self._initialized = True
-            logger.info(f"T.A.R.L. System v{self.VERSION} initialized successfully")
+            logger.info("T.A.R.L. System v%s initialized successfully", self.VERSION)
 
         except Exception as e:
-            logger.error(f"System initialization failed: {e}")
+            logger.error("System initialization failed: %s", e)
             # Cleanup partially initialized subsystems
             self._cleanup_subsystems()
             raise RuntimeError(f"T.A.R.L. system initialization failed: {e}") from e
@@ -228,7 +228,7 @@ class TARLSystem:
             return result
 
         except Exception as e:
-            logger.error(f"Execution failed: {e}")
+            logger.error("Execution failed: %s", e)
             # Log diagnostics if available
             if self.diagnostics and self.diagnostics.has_errors():
                 logger.error("Diagnostics:\n" + self.diagnostics.format_all())

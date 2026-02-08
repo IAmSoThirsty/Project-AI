@@ -120,9 +120,7 @@ class AILearningWorkflow:
         Returns:
             Learning result with success status and knowledge ID
         """
-        workflow.logger.info(
-            f"Starting AI learning workflow for category: {request.category}"
-        )
+        workflow.logger.info("Starting AI learning workflow for category: %s", request.category)
 
         try:
             # Activity 1: Validate content
@@ -167,11 +165,11 @@ class AILearningWorkflow:
                 start_to_close_timeout=timedelta(seconds=30),
             )
 
-            workflow.logger.info(f"Learning workflow completed: {knowledge_id}")
+            workflow.logger.info("Learning workflow completed: %s", knowledge_id)
             return LearningResult(success=True, knowledge_id=knowledge_id)
 
         except Exception as e:
-            workflow.logger.error(f"Learning workflow failed: {e}")
+            workflow.logger.error("Learning workflow failed: %s", e)
             return LearningResult(success=False, error=str(e))
 
 
@@ -198,7 +196,7 @@ class ImageGenerationWorkflow:
         Returns:
             Generation result with image path and metadata
         """
-        workflow.logger.info(f"Starting image generation workflow: {request.backend}")
+        workflow.logger.info("Starting image generation workflow: %s", request.backend)
 
         try:
             # Activity 1: Content filtering
@@ -240,7 +238,7 @@ class ImageGenerationWorkflow:
             )
 
         except Exception as e:
-            workflow.logger.error(f"Image generation workflow failed: {e}")
+            workflow.logger.error("Image generation workflow failed: %s", e)
             return ImageGenerationResult(success=False, error=str(e))
 
 
@@ -267,9 +265,7 @@ class DataAnalysisWorkflow:
         Returns:
             Analysis result with findings and output path
         """
-        workflow.logger.info(
-            f"Starting data analysis workflow: {request.analysis_type}"
-        )
+        workflow.logger.info("Starting data analysis workflow: %s", request.analysis_type)
 
         try:
             # Activity 1: Validate file
@@ -316,7 +312,7 @@ class DataAnalysisWorkflow:
             )
 
         except Exception as e:
-            workflow.logger.error(f"Data analysis workflow failed: {e}")
+            workflow.logger.error("Data analysis workflow failed: %s", e)
             return DataAnalysisResult(success=False, error=str(e))
 
 
@@ -375,16 +371,14 @@ class MemoryExpansionWorkflow:
                 start_to_close_timeout=timedelta(seconds=30),
             )
 
-            workflow.logger.info(
-                f"Memory expansion workflow completed: {memory_count} memories"
-            )
+            workflow.logger.info("Memory expansion workflow completed: %s memories", memory_count)
             return MemoryExpansionResult(
                 success=True,
                 memory_count=memory_count,
             )
 
         except Exception as e:
-            workflow.logger.error(f"Memory expansion workflow failed: {e}")
+            workflow.logger.error("Memory expansion workflow failed: %s", e)
             return MemoryExpansionResult(success=False, error=str(e))
 
 
@@ -450,9 +444,7 @@ class CrisisResponseWorkflow:
         Returns:
             Crisis result with completion status and metrics
         """
-        workflow.logger.info(
-            f"Starting crisis response workflow for target: {request.target_member}"
-        )
+        workflow.logger.info("Starting crisis response workflow for target: %s", request.target_member)
 
         crisis_id = request.crisis_id or f"crisis-{workflow.now().timestamp()}"
         completed_phases = 0
@@ -515,9 +507,7 @@ class CrisisResponseWorkflow:
                     completed_phases += 1
 
                 except Exception as e:
-                    workflow.logger.error(
-                        f"Mission phase {mission.phase_id} failed: {e}"
-                    )
+                    workflow.logger.error("Mission phase %s failed: %s", mission.phase_id, e)
                     failed_phases.append(mission.phase_id)
 
                     # Log failure but continue with remaining phases
@@ -556,7 +546,7 @@ class CrisisResponseWorkflow:
             )
 
         except Exception as e:
-            workflow.logger.error(f"Crisis response workflow failed: {e}")
+            workflow.logger.error("Crisis response workflow failed: %s", e)
             return CrisisResult(
                 success=False,
                 crisis_id=crisis_id,

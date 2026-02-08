@@ -115,7 +115,7 @@ class TPMInterface(HardwareInterface):
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to initialize TPM: {e}")
+            self.logger.error("Failed to initialize TPM: %s", e)
             return False
 
     def _initialize_pcr_banks(self):
@@ -140,10 +140,10 @@ class TPMInterface(HardwareInterface):
                 # In production: Use TPM2_NV_Write to store in NVRAM
                 # Keys are encrypted with TPM's storage root key
                 self._keys[key_id] = self._encrypt_with_srk(key_data)
-                self.logger.info(f"Stored key {key_id} in TPM")
+                self.logger.info("Stored key %s in TPM", key_id)
                 return True
             except Exception as e:
-                self.logger.error(f"Failed to store key {key_id}: {e}")
+                self.logger.error("Failed to store key %s: %s", key_id, e)
                 return False
 
     def retrieve_key(self, key_id: str) -> bytes | None:
@@ -156,7 +156,7 @@ class TPMInterface(HardwareInterface):
                     return self._decrypt_with_srk(encrypted_key)
                 return None
             except Exception as e:
-                self.logger.error(f"Failed to retrieve key {key_id}: {e}")
+                self.logger.error("Failed to retrieve key %s: %s", key_id, e)
                 return None
 
     def delete_key(self, key_id: str) -> bool:
@@ -166,10 +166,10 @@ class TPMInterface(HardwareInterface):
                 if key_id in self._keys:
                     # In production: Use TPM2_NV_UndefineSpace
                     del self._keys[key_id]
-                    self.logger.info(f"Deleted key {key_id} from TPM")
+                    self.logger.info("Deleted key %s from TPM", key_id)
                 return True
             except Exception as e:
-                self.logger.error(f"Failed to delete key {key_id}: {e}")
+                self.logger.error("Failed to delete key %s: %s", key_id, e)
                 return False
 
     def attest_boot(self) -> AttestationStatus:
@@ -192,7 +192,7 @@ class TPMInterface(HardwareInterface):
                 return AttestationStatus.TAMPERED
 
         except Exception as e:
-            self.logger.error(f"Boot attestation failed: {e}")
+            self.logger.error("Boot attestation failed: %s", e)
             return AttestationStatus.UNKNOWN
 
     def get_hardware_id(self) -> str:
@@ -217,11 +217,11 @@ class TPMInterface(HardwareInterface):
             # Encrypt data with a key that's sealed to the policy
             sealed = self._encrypt_with_policy(data, policy_digest)
 
-            self.logger.info(f"Sealed data to PCRs: {pcr_values}")
+            self.logger.info("Sealed data to PCRs: %s", pcr_values)
             return sealed
 
         except Exception as e:
-            self.logger.error(f"Failed to seal data: {e}")
+            self.logger.error("Failed to seal data: %s", e)
             raise
 
     def unseal_data(self, sealed_data: bytes) -> bytes | None:
@@ -242,7 +242,7 @@ class TPMInterface(HardwareInterface):
             return data
 
         except Exception as e:
-            self.logger.error(f"Failed to unseal data: {e}")
+            self.logger.error("Failed to unseal data: %s", e)
             return None
 
     def _encrypt_with_srk(self, data: bytes) -> bytes:
@@ -332,7 +332,7 @@ class SecureEnclaveInterface(HardwareInterface):
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to initialize Secure Enclave: {e}")
+            self.logger.error("Failed to initialize Secure Enclave: %s", e)
             return False
 
     def store_key(self, key_id: str, key_data: bytes) -> bool:
@@ -341,10 +341,10 @@ class SecureEnclaveInterface(HardwareInterface):
             try:
                 # In production: Use Keychain Services with kSecAttrAccessibleWhenUnlockedThisDeviceOnly
                 self._keychain[key_id] = self._encrypt_for_enclave(key_data)
-                self.logger.info(f"Stored key {key_id} in Secure Enclave")
+                self.logger.info("Stored key %s in Secure Enclave", key_id)
                 return True
             except Exception as e:
-                self.logger.error(f"Failed to store key: {e}")
+                self.logger.error("Failed to store key: %s", e)
                 return False
 
     def retrieve_key(self, key_id: str) -> bytes | None:
@@ -360,7 +360,7 @@ class SecureEnclaveInterface(HardwareInterface):
         with self._lock:
             if key_id in self._keychain:
                 del self._keychain[key_id]
-                self.logger.info(f"Deleted key {key_id}")
+                self.logger.info("Deleted key %s", key_id)
             return True
 
     def attest_boot(self) -> AttestationStatus:
@@ -449,7 +449,7 @@ class HSMInterface(HardwareInterface):
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to initialize HSM: {e}")
+            self.logger.error("Failed to initialize HSM: %s", e)
             return False
 
     def store_key(self, key_id: str, key_data: bytes) -> bool:
@@ -458,10 +458,10 @@ class HSMInterface(HardwareInterface):
             try:
                 # In production: Use PKCS#11 C_CreateObject or CloudHSM SDK
                 self._keys[key_id] = self._hsm_encrypt(key_data)
-                self.logger.info(f"Stored key {key_id} in HSM")
+                self.logger.info("Stored key %s in HSM", key_id)
                 return True
             except Exception as e:
-                self.logger.error(f"Failed to store key: {e}")
+                self.logger.error("Failed to store key: %s", e)
                 return False
 
     def retrieve_key(self, key_id: str) -> bytes | None:
@@ -478,7 +478,7 @@ class HSMInterface(HardwareInterface):
             if key_id in self._keys:
                 # In production: Use PKCS#11 C_DestroyObject
                 del self._keys[key_id]
-                self.logger.info(f"Deleted key {key_id}")
+                self.logger.info("Deleted key %s", key_id)
             return True
 
     def attest_boot(self) -> AttestationStatus:
@@ -585,11 +585,11 @@ class HardwareRootOfTrust:
 
             if self._interface.initialize():
                 self._active_type = hw_type
-                self.logger.info(f"Initialized {hw_type.value} successfully")
+                self.logger.info("Initialized %s successfully", hw_type.value)
                 return True
 
         except Exception as e:
-            self.logger.warning(f"Failed to initialize {hw_type.value}: {e}")
+            self.logger.warning("Failed to initialize %s: %s", hw_type.value, e)
 
         return False
 
@@ -674,5 +674,5 @@ class HardwareRootOfTrust:
             self.logger.info("Master encryption key wiped from hardware")
             return True
         except Exception as e:
-            self.logger.error(f"Failed to wipe keys: {e}")
+            self.logger.error("Failed to wipe keys: %s", e)
             return False

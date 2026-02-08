@@ -48,7 +48,7 @@ class BuildQueryEngine:
         if cache_key in self._query_cache:
             result, timestamp = self._query_cache[cache_key]
             if datetime.utcnow() - timestamp < self._cache_ttl:
-                logger.debug(f"Cache hit for {cache_key}")
+                logger.debug("Cache hit for %s", cache_key)
                 return result
             else:
                 del self._query_cache[cache_key]
@@ -110,14 +110,14 @@ class BuildQueryEngine:
             failures = [dict(row) for row in cursor.fetchall()]
 
         if len(failures) < min_failures:
-            logger.info(f"Found {len(failures)} failures, below minimum {min_failures}")
+            logger.info("Found %s failures, below minimum %s", len(failures), min_failures)
             return []
 
         # Group failures by common characteristics
         correlations = self._compute_failure_correlations(failures)
 
         self._cache_result(cache_key, correlations)
-        logger.info(f"Analyzed {len(failures)} failures, found {len(correlations)} correlations")
+        logger.info("Analyzed %s failures, found %s correlations", len(failures), len(correlations))
         return correlations
 
     def _compute_failure_correlations(
@@ -315,7 +315,7 @@ class BuildQueryEngine:
             results = [dict(row) for row in cursor.fetchall()]
 
         self._cache_result(cache_key, results)
-        logger.info(f"Tracked {len(results)} vulnerable dependencies (grouped by {group_by})")
+        logger.info("Tracked %s vulnerable dependencies (grouped by %s)", len(results), group_by)
         return results
 
     def analyze_dependency_trends(
@@ -450,7 +450,7 @@ class BuildQueryEngine:
         }
 
         self._cache_result(cache_key, result)
-        logger.info(f"Analyzed {total_builds} builds over {days} days")
+        logger.info("Analyzed %s builds over %s days", total_builds, days)
         return result
 
     def _group_by_time_period(
@@ -674,10 +674,10 @@ class BuildQueryEngine:
             with output_path.open("w") as f:
                 json.dump(query_result, f, indent=2, default=str)
 
-            logger.info(f"Exported query result to {output_path}")
+            logger.info("Exported query result to %s", output_path)
             return True
         except Exception as e:
-            logger.error(f"Failed to export to JSON: {e}")
+            logger.error("Failed to export to JSON: %s", e)
             return False
 
     def export_to_csv(
@@ -699,10 +699,10 @@ class BuildQueryEngine:
                 writer.writeheader()
                 writer.writerows(query_result)
 
-            logger.info(f"Exported {len(query_result)} rows to {output_path}")
+            logger.info("Exported %s rows to %s", len(query_result), output_path)
             return True
         except Exception as e:
-            logger.error(f"Failed to export to CSV: {e}")
+            logger.error("Failed to export to CSV: %s", e)
             return False
 
     def export_to_sql(
@@ -732,8 +732,8 @@ class BuildQueryEngine:
                     )
                     f.write(f"INSERT INTO {safe_table} ({columns}) VALUES ({values});\n")
 
-            logger.info(f"Exported {len(query_result)} SQL statements to {output_path}")
+            logger.info("Exported %s SQL statements to %s", len(query_result), output_path)
             return True
         except Exception as e:
-            logger.error(f"Failed to export to SQL: {e}")
+            logger.error("Failed to export to SQL: %s", e)
             return False

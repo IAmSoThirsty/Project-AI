@@ -146,7 +146,7 @@ class EpistemicGravityMitigation:
             priority="HIGH_PRIORITY"
         )
 
-        logger.info(f"Decision logged: {decision.decision_id} (basis: {decision.basis.value})")
+        logger.info("Decision logged: %s (basis: %s)", decision.decision_id, decision.basis.value)
 
     def verify_dissent_pathway(self) -> tuple[bool, str]:
         """
@@ -274,7 +274,7 @@ class PromptFramingGuards:
                     priority="HIGH_PRIORITY"
                 )
 
-                logger.warning(f"REJECTED normative query: {validation.rejection_reason}")
+                logger.warning("REJECTED normative query: %s", validation.rejection_reason)
                 return validation
 
         # Determine query type (simplified classification)
@@ -434,7 +434,7 @@ class ResponsibilityBoundaryEnforcement:
             priority="HIGH_PRIORITY"
         )
 
-        logger.info(f"Responsibility clause attached to output {output_id}")
+        logger.info("Responsibility clause attached to output %s", output_id)
         return clause
 
     def log_output_use_in_decision(self, output_id: str, decision_id: str,
@@ -457,7 +457,7 @@ class ResponsibilityBoundaryEnforcement:
 
         # Verify reasoning is provided
         if not reasoning or len(reasoning) < 10:
-            logger.warning(f"Decision {decision_id} has insufficient reasoning beyond ATLAS")
+            logger.warning("Decision %s has insufficient reasoning beyond ATLAS", decision_id)
 
         self.audit_trail.log(
             category="GOVERNANCE",
@@ -472,7 +472,7 @@ class ResponsibilityBoundaryEnforcement:
             priority="HIGH_PRIORITY"
         )
 
-        logger.info(f"Output {output_id} used in decision {decision_id} by {decision_maker}")
+        logger.info("Output %s used in decision %s by %s", output_id, decision_id, decision_maker)
 
     def get_statistics(self) -> dict[str, Any]:
         """Get responsibility tracking statistics."""

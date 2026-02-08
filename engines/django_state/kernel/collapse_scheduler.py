@@ -82,7 +82,7 @@ class CollapseScheduler:
         self.scheduled_collapses.append(collapse)
         self.scheduled_collapses.sort(key=lambda c: c.trigger_time)
 
-        logger.info(f"Scheduled collapse: {collapse_type} at t={trigger_time}, severity={severity}")
+        logger.info("Scheduled collapse: %s at t=%s, severity=%s", collapse_type, trigger_time, severity)
         return collapse
 
     def register_callback(self, collapse_type: str, callback: Callable) -> None:
@@ -96,7 +96,7 @@ class CollapseScheduler:
             self.collapse_callbacks[collapse_type] = []
 
         self.collapse_callbacks[collapse_type].append(callback)
-        logger.debug(f"Registered callback for {collapse_type}")
+        logger.debug("Registered callback for %s", collapse_type)
 
     def check_thresholds(self, state: StateVector) -> list[str]:
         """Check if any collapse thresholds have been crossed.
@@ -183,7 +183,7 @@ class CollapseScheduler:
             state.in_collapse = True
             state.collapse_triggered_at = state.timestamp
 
-        logger.critical(f"COLLAPSE TRIGGERED: {collapse.collapse_type} at t={state.timestamp}, severity={collapse.severity}")
+        logger.critical("COLLAPSE TRIGGERED: %s at t=%s, severity=%s", collapse.collapse_type, state.timestamp, collapse.severity)
 
         # Execute callbacks
         if collapse.collapse_type in self.collapse_callbacks:

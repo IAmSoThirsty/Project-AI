@@ -617,7 +617,7 @@ class IdentityIntegratedIntelligenceEngine:
                 self.bonding_protocols[user_id].execute_genesis(
                     self.memory_engines[user_id]
                 )
-                self.logger.info(f"Genesis Event executed for user {user_id}")
+                self.logger.info("Genesis Event executed for user %s", user_id)
 
         # Get current status
         bonding_phase = self.bonding_protocols[user_id].get_current_phase()
@@ -831,9 +831,7 @@ class IdentityIntegratedIntelligenceEngine:
         # Apply adaptation if approved
         if decision.allowed and instance:
             perspective_engine.update_from_interaction(adaptation)
-            self.logger.info(
-                f"Personality adaptation applied for user {user_id}: {adaptation}"
-            )
+            self.logger.info("Personality adaptation applied for user %s: %s", user_id, adaptation)
 
         return {
             "governance_decision": {

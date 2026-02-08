@@ -254,7 +254,7 @@ class ContingencyTriggerFramework:
             priority="HIGH_PRIORITY"
         )
 
-        logger.info(f"Contingency trigger framework initialized for {stack.value}")
+        logger.info("Contingency trigger framework initialized for %s", stack.value)
 
     def register_playbook(self, playbook: Playbook) -> None:
         """
@@ -288,7 +288,7 @@ class ContingencyTriggerFramework:
             priority="HIGH_PRIORITY"
         )
 
-        logger.info(f"Registered playbook: {playbook.name} (v{playbook.version})")
+        logger.info("Registered playbook: %s (v%s)", playbook.name, playbook.version)
 
     def verify_all_playbooks(self) -> tuple[bool, list[str]]:
         """
@@ -333,7 +333,7 @@ class ContingencyTriggerFramework:
             priority="HIGH_PRIORITY"
         )
 
-        logger.critical(f"BLOCKED narrative trigger: {trigger_description}")
+        logger.critical("BLOCKED narrative trigger: %s", trigger_description)
 
         raise ValueError("Narrative triggers are BLOCKED. Only deterministic metric triggers allowed.")
 
@@ -358,7 +358,7 @@ class ContingencyTriggerFramework:
                 metric_value = metrics.get(condition.metric_name)
 
                 if metric_value is None:
-                    logger.warning(f"Metric {condition.metric_name} not found in current metrics")
+                    logger.warning("Metric %s not found in current metrics", condition.metric_name)
                     continue
 
                 if condition.evaluate(metric_value):
@@ -393,7 +393,7 @@ class ContingencyTriggerFramework:
                     priority="HIGH_PRIORITY"
                 )
 
-                logger.info(f"Trigger activated: {playbook.name}")
+                logger.info("Trigger activated: %s", playbook.name)
 
         return activations
 

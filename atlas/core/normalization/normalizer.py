@@ -148,7 +148,7 @@ class Normalizer:
 
         except Exception as e:
             self._stats["failed"] += 1
-            logger.error(f"Failed to normalize organization: {e}")
+            logger.error("Failed to normalize organization: %s", e)
 
             self.audit.log_event(
                 category=AuditCategory.DATA,
@@ -205,7 +205,7 @@ class Normalizer:
 
         except Exception as e:
             self._stats["failed"] += 1
-            logger.error(f"Failed to normalize claim: {e}")
+            logger.error("Failed to normalize claim: %s", e)
             raise NormalizationError(f"Failed to normalize claim: {e}") from e
 
     def normalize_opinion(self, raw_opinion: dict[str, Any]) -> dict[str, Any]:
@@ -253,7 +253,7 @@ class Normalizer:
 
         except Exception as e:
             self._stats["failed"] += 1
-            logger.error(f"Failed to normalize opinion: {e}")
+            logger.error("Failed to normalize opinion: %s", e)
             raise NormalizationError(f"Failed to normalize opinion: {e}") from e
 
     def deduplicate(self, entities: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -479,7 +479,7 @@ class Normalizer:
             # Add more parsing logic as needed
             return str(raw_date)
         except Exception:
-            logger.warning(f"Could not normalize date: {raw_date}")
+            logger.warning("Could not normalize date: %s", raw_date)
             return None
 
     def _normalize_jurisdiction(self, raw_jurisdiction: Any) -> str | None:

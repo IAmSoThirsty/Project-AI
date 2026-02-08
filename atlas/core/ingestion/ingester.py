@@ -57,7 +57,7 @@ class DataIngester:
         self.audit = get_audit_trail()
         self.tier_classifier = get_tier_classifier()
 
-        logger.info(f"Initialized DataIngester with data dir: {self.data_dir}")
+        logger.info("Initialized DataIngester with data dir: %s", self.data_dir)
 
         # Log initialization
         self.audit.log_event(
@@ -83,7 +83,7 @@ class DataIngester:
         Raises:
             IngestionError: If ingestion or validation fails
         """
-        logger.info(f"Ingesting JSON file: {filepath} (schema: {schema_type})")
+        logger.info("Ingesting JSON file: %s (schema: %s)", filepath, schema_type)
 
         if not filepath.exists():
             error_msg = f"File not found: {filepath}"
@@ -168,9 +168,9 @@ class DataIngester:
                 raise IngestionError(f"All objects failed validation: {errors}")
 
             if errors:
-                logger.warning(f"Ingested {len(validated_data)} objects with {len(errors)} failures")
+                logger.warning("Ingested %s objects with %s failures", len(validated_data), len(errors))
 
-            logger.info(f"Successfully ingested {len(validated_data)} objects from {filepath}")
+            logger.info("Successfully ingested %s objects from %s", len(validated_data), filepath)
             return validated_data
 
         except json.JSONDecodeError as e:
@@ -210,7 +210,7 @@ class DataIngester:
         Returns:
             List of validated data objects
         """
-        logger.info(f"Ingesting CSV file: {filepath} (schema: {schema_type})")
+        logger.info("Ingesting CSV file: %s (schema: %s)", filepath, schema_type)
 
         if not filepath.exists():
             raise IngestionError(f"File not found: {filepath}")
@@ -282,7 +282,7 @@ class DataIngester:
                 }
             )
 
-            logger.info(f"Successfully ingested {len(validated_data)} objects from CSV")
+            logger.info("Successfully ingested %s objects from CSV", len(validated_data))
             return validated_data
 
         except Exception as e:
@@ -310,7 +310,7 @@ class DataIngester:
         Returns:
             List of all validated data objects from all files
         """
-        logger.info(f"Ingesting directory: {directory} (pattern: {pattern})")
+        logger.info("Ingesting directory: %s (pattern: %s)", directory, pattern)
 
         if not directory.exists():
             raise IngestionError(f"Directory not found: {directory}")
@@ -318,7 +318,7 @@ class DataIngester:
         files = list(directory.glob(pattern))
 
         if not files:
-            logger.warning(f"No files matching {pattern} in {directory}")
+            logger.warning("No files matching %s in %s", pattern, directory)
             return []
 
         all_data = []
@@ -333,14 +333,14 @@ class DataIngester:
                 elif filepath.suffix == '.csv':
                     data = self.ingest_csv_file(filepath, schema_type)
                 else:
-                    logger.warning(f"Unsupported file type: {filepath}")
+                    logger.warning("Unsupported file type: %s", filepath)
                     continue
 
                 all_data.extend(data)
                 successful_files += 1
 
             except Exception as e:
-                logger.error(f"Failed to ingest {filepath}: {e}")
+                logger.error("Failed to ingest %s: %s", filepath, e)
                 failed_files += 1
 
         # Log directory ingestion summary
@@ -401,11 +401,11 @@ class DataIngester:
                 }
             )
 
-            logger.info(f"Saved {len(data)} objects to {output_path}")
+            logger.info("Saved %s objects to %s", len(data), output_path)
             return output_path
 
         except Exception as e:
-            logger.error(f"Failed to save data to {output_path}: {e}")
+            logger.error("Failed to save data to %s: %s", output_path, e)
             raise IngestionError(f"Failed to save data: {e}") from e
 
     def ingest_with_tier_classification(
@@ -480,7 +480,7 @@ class DataIngester:
             else:
                 raise IngestionError(f"Unsupported file type: {filepath.suffix}")
         except Exception as e:
-            logger.error(f"Ingestion failed for {filepath}: {e}")
+            logger.error("Ingestion failed for %s: %s", filepath, e)
             raise
 
         # Attach tier metadata to each object

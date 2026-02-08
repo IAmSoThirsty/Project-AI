@@ -206,7 +206,7 @@ class LiaraTemporalAgency:
         if not self._connected or not self._manager:
             raise RuntimeError("Not connected to Temporal server")
 
-        logger.info(f"Waiting for crisis workflow completion: {workflow_id}")
+        logger.info("Waiting for crisis workflow completion: %s", workflow_id)
 
         handle = self._manager.client.get_workflow_handle(workflow_id)
         result = await handle.result()

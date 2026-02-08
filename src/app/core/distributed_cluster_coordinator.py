@@ -138,7 +138,7 @@ class DistributedLock:
             if self.holder:
                 # Check if lock has timed out
                 if time.time() - self.acquired_at > self.timeout:
-                    logger.warning(f"Lock {self.lock_name} timed out, releasing")
+                    logger.warning("Lock %s timed out, releasing", self.lock_name)
                     self.release(self.holder)
                 else:
                     return False
@@ -146,21 +146,19 @@ class DistributedLock:
             # Acquire lock
             self.holder = node_id
             self.acquired_at = time.time()
-            logger.info(f"Node {node_id} acquired lock {self.lock_name}")
+            logger.info("Node %s acquired lock %s", node_id, self.lock_name)
             return True
 
     def release(self, node_id: str) -> bool:
         """Release distributed lock"""
         with self._lock:
             if self.holder != node_id:
-                logger.warning(
-                    f"Node {node_id} tried to release lock {self.lock_name} held by {self.holder}"
-                )
+                logger.warning("Node %s tried to release lock %s held by %s", node_id, self.lock_name, self.holder)
                 return False
 
             self.holder = None
             self.acquired_at = None
-            logger.info(f"Node {node_id} released lock {self.lock_name}")
+            logger.info("Node %s released lock %s", node_id, self.lock_name)
             return True
 
     def is_held_by(self, node_id: str) -> bool:
@@ -189,7 +187,7 @@ class FederatedRegistry:
                 "registered_at": time.time(),
                 "last_update": time.time(),
             }
-            logger.info(f"Service {service_name} registered by node {node_id}")
+            logger.info("Service %s registered by node %s", service_name, node_id)
             return True
 
     def unregister_service(self, node_id: str, service_name: str) -> bool:
@@ -198,7 +196,7 @@ class FederatedRegistry:
             key = f"{node_id}:{service_name}"
             if key in self._registry:
                 del self._registry[key]
-                logger.info(f"Service {service_name} unregistered from node {node_id}")
+                logger.info("Service %s unregistered from node %s", service_name, node_id)
                 return True
             return False
 
@@ -231,7 +229,7 @@ class FederatedRegistry:
                 del self._registry[key]
                 removed += 1
             if removed > 0:
-                logger.info(f"Cleaned up {removed} services from node {node_id}")
+                logger.info("Cleaned up %s services from node %s", removed, node_id)
             return removed
 
 
@@ -298,7 +296,7 @@ class ClusterCoordinator:
         self._election_term: int = 0
         self._last_leader_contact: float = time.time()
 
-        logger.info(f"Cluster Coordinator created: {self.node_id}")
+        logger.info("Cluster Coordinator created: %s", self.node_id)
 
     def start(self) -> bool:
         """Start the cluster coordinator"""
@@ -311,10 +309,10 @@ class ClusterCoordinator:
                 logger.info("=" * 80)
                 logger.info("STARTING CLUSTER COORDINATOR")
                 logger.info("=" * 80)
-                logger.info(f"Node ID: {self.node_id}")
-                logger.info(f"Hostname: {self.hostname}")
-                logger.info(f"IP Address: {self.ip_address}")
-                logger.info(f"Port: {self.bind_port}")
+                logger.info("Node ID: %s", self.node_id)
+                logger.info("Hostname: %s", self.hostname)
+                logger.info("IP Address: %s", self.ip_address)
+                logger.info("Port: %s", self.bind_port)
 
                 # Register self
                 self._register_self()
@@ -438,9 +436,7 @@ class ClusterCoordinator:
                 time_since_heartbeat = current_time - node_info.last_heartbeat
                 if time_since_heartbeat > self.node_timeout:
                     if node_info.state != NodeState.OFFLINE:
-                        logger.warning(
-                            f"Node {node_id} timed out (no heartbeat for {time_since_heartbeat:.1f}s)"
-                        )
+                        logger.warning("Node %s timed out (no heartbeat for %ss)", node_id, time_since_heartbeat)
                         node_info.state = NodeState.OFFLINE
                         offline_nodes.append(node_id)
 
@@ -452,7 +448,7 @@ class ClusterCoordinator:
 
             # If leader went offline, trigger election
             if self._leader_id in offline_nodes:
-                logger.warning(f"Leader {self._leader_id} went offline")
+                logger.warning("Leader %s went offline", self._leader_id)
                 self._leader_id = None
                 self._trigger_election()
 
@@ -480,9 +476,7 @@ class ClusterCoordinator:
     def _trigger_election(self) -> None:
         """Trigger leader election (simplified Raft-like algorithm)"""
         with self._lock:
-            logger.info(
-                f"Node {self.node_id} triggering election (term {self._election_term + 1})"
-            )
+            logger.info("Node %s triggering election (term %s)", self.node_id, self._election_term + 1)
 
             self._election_term += 1
             self.role = NodeRole.CANDIDATE
@@ -512,9 +506,7 @@ class ClusterCoordinator:
     def _become_leader(self) -> None:
         """Become cluster leader"""
         with self._lock:
-            logger.info(
-                f"Node {self.node_id} became LEADER for term {self._election_term}"
-            )
+            logger.info("Node %s became LEADER for term %s", self.node_id, self._election_term)
             self.role = NodeRole.LEADER
             self._leader_id = self.node_id
             self._last_leader_contact = time.time()
@@ -526,7 +518,7 @@ class ClusterCoordinator:
     def _become_follower(self, leader_id: str) -> None:
         """Become follower of a leader"""
         with self._lock:
-            logger.info(f"Node {self.node_id} became FOLLOWER of {leader_id}")
+            logger.info("Node %s became FOLLOWER of %s", self.node_id, leader_id)
             self.role = NodeRole.FOLLOWER
             self._leader_id = leader_id
             self._last_leader_contact = time.time()
@@ -536,7 +528,7 @@ class ClusterCoordinator:
         with self._lock:
             if capability not in self.capabilities:
                 self.capabilities.append(capability)
-                logger.info(f"Node {self.node_id} added capability: {capability}")
+                logger.info("Node %s added capability: %s", self.node_id, capability)
                 return True
             return False
 
@@ -545,7 +537,7 @@ class ClusterCoordinator:
         with self._lock:
             if capability in self.capabilities:
                 self.capabilities.remove(capability)
-                logger.info(f"Node {self.node_id} removed capability: {capability}")
+                logger.info("Node %s removed capability: %s", self.node_id, capability)
                 return True
             return False
 
@@ -571,7 +563,7 @@ class ClusterCoordinator:
             task_id = str(uuid.uuid4())
             task = ClusterTask(task_id=task_id, task_type=task_type, payload=payload)
             self._tasks[task_id] = task
-            logger.info(f"Task {task_id} submitted (type: {task_type})")
+            logger.info("Task %s submitted (type: %s)", task_id, task_type)
 
             # If leader, assign task
             if self.role == NodeRole.LEADER:
@@ -599,7 +591,7 @@ class ClusterCoordinator:
 
             task.assigned_node = assigned_node.node_id
             task.status = "assigned"
-            logger.info(f"Task {task.task_id} assigned to node {assigned_node.node_id}")
+            logger.info("Task %s assigned to node %s", task.task_id, assigned_node.node_id)
 
     def get_task_status(self, task_id: str) -> dict[str, Any] | None:
         """Get status of a task"""

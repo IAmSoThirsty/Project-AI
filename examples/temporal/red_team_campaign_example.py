@@ -64,10 +64,8 @@ async def run_high_priority_campaign():
         execution_timeout=timedelta(hours=2),
     )
 
-    logger.info(f"✅ Workflow started: {handle.id}")
-    logger.info(
-        f"🔗 View in UI: http://localhost:8233/namespaces/default/workflows/{handle.id}"
-    )
+    logger.info("✅ Workflow started: %s", handle.id)
+    logger.info("🔗 View in UI: http://localhost:8233/namespaces/default/workflows/%s", handle.id)
 
     # Wait for result
     logger.info("⏳ Waiting for campaign to complete...")
@@ -75,18 +73,16 @@ async def run_high_priority_campaign():
 
     # Display results
     logger.info("📊 Campaign Results:")
-    logger.info(f"   • Total attacks: {result.total_attacks}")
-    logger.info(f"   • Successful: {result.successful_attacks}")
-    logger.info(f"   • Failed: {result.failed_attacks}")
-    logger.info(f"   • Vulnerabilities found: {len(result.vulnerabilities_found)}")
+    logger.info("   • Total attacks: %s", result.total_attacks)
+    logger.info("   • Successful: %s", result.successful_attacks)
+    logger.info("   • Failed: %s", result.failed_attacks)
+    logger.info("   • Vulnerabilities found: %s", len(result.vulnerabilities_found))
 
     if result.vulnerabilities_found:
         logger.warning("⚠️ VULNERABILITIES DETECTED:")
         for vuln in result.vulnerabilities_found:
-            logger.warning(
-                f"   • {vuln.get('severity', 'unknown').upper()}: {vuln.get('persona')} -> {vuln.get('target')}"
-            )
-            logger.warning(f"     Details: {vuln.get('details', 'N/A')}")
+            logger.warning("   • %s: %s -> %s", vuln.get('severity', 'unknown').upper(), vuln.get('persona'), vuln.get('target'))
+            logger.warning("     Details: %s", vuln.get('details', 'N/A'))
 
     return result
 
@@ -127,16 +123,12 @@ async def run_comprehensive_campaign():
         execution_timeout=timedelta(hours=4),
     )
 
-    logger.info(f"✅ Workflow started: {handle.id}")
-    logger.info(
-        f"🔗 View in UI: http://localhost:8233/namespaces/default/workflows/{handle.id}"
-    )
+    logger.info("✅ Workflow started: %s", handle.id)
+    logger.info("🔗 View in UI: http://localhost:8233/namespaces/default/workflows/%s", handle.id)
 
     # Don't wait for result - this is a long-running campaign
     logger.info("⏳ Campaign running in background...")
-    logger.info(
-        f"   Query result with: temporal workflow describe --workflow-id {handle.id}"
-    )
+    logger.info("   Query result with: temporal workflow describe --workflow-id %s", handle.id)
 
     return handle
 

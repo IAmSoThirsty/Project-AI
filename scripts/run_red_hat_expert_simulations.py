@@ -159,7 +159,7 @@ def main():
     # Generate scenarios
     logger.info("\nGenerating expert-level attack scenarios...")
     scenarios = simulator.generate_all_scenarios()
-    logger.info(f"✓ Generated {len(scenarios)} expert scenarios")
+    logger.info("✓ Generated %s expert scenarios", len(scenarios))
 
     # Generate summary
     summary = simulator.generate_summary()
@@ -199,14 +199,12 @@ def main():
             for s in scenarios
             if any(s.category.split("_")[0].startswith(cat) for cat in category_filter)
         ]
-        logger.info(
-            f"\nFiltered to categories {category_filter}: {len(scenarios)} scenarios"
-        )
+        logger.info("\nFiltered to categories %s: %s scenarios", category_filter, len(scenarios))
 
     # Export scenarios if requested
     if args.export:
         export_path = simulator.export_scenarios()
-        logger.info(f"✓ Exported scenarios to: {export_path}")
+        logger.info("✓ Exported scenarios to: %s", export_path)
 
     # Initialize AI systems for testing
     logger.info("\nInitializing Project-AI defense systems...")
@@ -218,7 +216,7 @@ def main():
     logger.info("✓ AI systems ready")
 
     # Run simulations
-    logger.info(f"\nRunning {len(scenarios)} expert-level attack simulations...")
+    logger.info("\nRunning %s expert-level attack simulations...", len(scenarios))
     logger.info("This may take several minutes...\n")
 
     results = []
@@ -227,7 +225,7 @@ def main():
 
     for i, scenario in enumerate(scenarios, 1):
         if i % 100 == 0:
-            logger.info(f"Progress: {i}/{len(scenarios)} scenarios tested...")
+            logger.info("Progress: %s/%s scenarios tested...", i, len(scenarios))
 
         result = simulate_defense_against_scenario(scenario, ai_systems)
         results.append(result)
@@ -305,7 +303,7 @@ def main():
                 indent=2,
             )
 
-        logger.info(f"\n✓ Exported results to: {results_path}")
+        logger.info("\n✓ Exported results to: %s", results_path)
 
     print("\n" + "=" * 80)
     print("SIMULATION COMPLETE")

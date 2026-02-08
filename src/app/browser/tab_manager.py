@@ -36,7 +36,7 @@ class TabManager:
             "history": [],  # Empty - no history
         }
 
-        self.logger.debug(f"Created tab: {tab_id}")
+        self.logger.debug("Created tab: %s", tab_id)
         return tab_id
 
     def close_tab(self, tab_id: str):
@@ -49,7 +49,7 @@ class TabManager:
 
             # Remove tab
             del self._tabs[tab_id]
-            self.logger.debug(f"Closed tab: {tab_id}")
+            self.logger.debug("Closed tab: %s", tab_id)
 
     def close_all_tabs(self):
         """Close all tabs"""
@@ -72,7 +72,7 @@ class TabManager:
         tab["url"] = url
 
         # Don't store in history (privacy-first)
-        self.logger.debug(f"Tab {tab_id} navigated to {url} (not stored in history)")
+        self.logger.debug("Tab %s navigated to %s (not stored in history)", tab_id, url)
 
         return True
 

@@ -373,10 +373,10 @@ class DeceptionOrchestrator:
 
         self.active_environments[user_id] = environment
 
-        logger.warning(f"🎭 Created deception environment for user {user_id}")
-        logger.warning(f"   Strategy: {strategy.value}")
-        logger.warning(f"   Threat: {threat_type}")
-        logger.warning(f"   Resources: {len(resources)} fake items")
+        logger.warning("🎭 Created deception environment for user %s", user_id)
+        logger.warning("   Strategy: %s", strategy.value)
+        logger.warning("   Threat: %s", threat_type)
+        logger.warning("   Resources: %s fake items", len(resources))
 
         return environment
 
@@ -391,8 +391,8 @@ class DeceptionOrchestrator:
         # Update confidence based on action progression
         env.confidence_level = self._calculate_confidence(env)
 
-        logger.debug(f"[Deception] User {user_id} action: {action}")
-        logger.debug(f"[Deception] Confidence now: {env.confidence_level:.2f}")
+        logger.debug("[Deception] User %s action: %s", user_id, action)
+        logger.debug("[Deception] Confidence now: %s", env.confidence_level)
 
         # Check if Bubblegum should trigger
         if BubblegumProtocol.should_trigger(env, action):
@@ -441,9 +441,9 @@ class DeceptionOrchestrator:
             {"timestamp": time.time(), "user_id": user_id, "result": result}
         )
 
-        logger.critical(f"💥 BUBBLEGUM TRIGGERED for user {user_id}")
-        logger.critical(f"   Actions logged: {result['actions_logged']}")
-        logger.critical(f"   Time in trap: {result['time_in_trap']:.1f}s")
+        logger.critical("💥 BUBBLEGUM TRIGGERED for user %s", user_id)
+        logger.critical("   Actions logged: %s", result['actions_logged'])
+        logger.critical("   Time in trap: %ss", result['time_in_trap'])
 
         return result
 
@@ -481,9 +481,9 @@ class DeceptionOrchestrator:
         """Clean up a deception environment"""
         if user_id in self.active_environments:
             env = self.active_environments.pop(user_id)
-            logger.info(f"Cleaned up deception environment for user {user_id}")
-            logger.info(f"   Total actions: {len(env.attacker_actions)}")
-            logger.info(f"   Final confidence: {env.confidence_level:.2f}")
+            logger.info("Cleaned up deception environment for user %s", user_id)
+            logger.info("   Total actions: %s", len(env.attacker_actions))
+            logger.info("   Final confidence: %s", env.confidence_level)
 
     def get_stats(self) -> dict[str, Any]:
         """Get deception orchestrator statistics"""

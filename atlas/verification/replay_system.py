@@ -139,7 +139,7 @@ class VerificationSystem:
 
         self.audit = get_audit_trail()
 
-        logger.info(f"Initialized VerificationSystem with output: {self.output_dir}")
+        logger.info("Initialized VerificationSystem with output: %s", self.output_dir)
 
     def create_bundle(
         self,
@@ -161,7 +161,7 @@ class VerificationSystem:
 
         bundle.bundle_hash = bundle.compute_bundle_hash()
 
-        logger.info(f"Created bundle: {bundle_id}")
+        logger.info("Created bundle: %s", bundle_id)
 
         return bundle
 
@@ -181,7 +181,7 @@ class VerificationSystem:
             with open(filepath, 'w', encoding='utf-8') as f:
                 json.dump(bundle_data, f, indent=2, sort_keys=True)
 
-        logger.info(f"Saved bundle to {filepath}")
+        logger.info("Saved bundle to %s", filepath)
         return filepath
 
     def load_bundle(self, filepath: Path) -> VerificationBundle:
@@ -197,7 +197,7 @@ class VerificationSystem:
                 data = json.load(f)
 
         bundle = VerificationBundle.from_dict(data)
-        logger.info(f"Loaded bundle from {filepath}")
+        logger.info("Loaded bundle from %s", filepath)
         return bundle
 
 

@@ -63,8 +63,8 @@ class AttackPatternExtractor:
         self.patterns: dict[str, AttackPattern] = {}
 
         logger.info("Attack Pattern Extractor initialized")
-        logger.info(f"  Min frequency: {min_frequency}")
-        logger.info(f"  Min confidence: {min_confidence}")
+        logger.info("  Min frequency: %s", min_frequency)
+        logger.info("  Min confidence: %s", min_confidence)
 
     def extract_from_attack(self, attack_data: dict[str, Any]) -> list[AttackPattern]:
         """Extract patterns from single attack"""
@@ -213,9 +213,9 @@ class PlaybookGenerator:
 
         self.playbooks[playbook_id] = playbook
 
-        logger.info(f"Generated playbook: {playbook_id}")
-        logger.info(f"  Pattern: {pattern.attack_type}")
-        logger.info(f"  Rules: {len(detection_rules)}")
+        logger.info("Generated playbook: %s", playbook_id)
+        logger.info("  Pattern: %s", pattern.attack_type)
+        logger.info("  Rules: %s", len(detection_rules))
 
         return playbook
 
@@ -323,14 +323,14 @@ class DefenseEvolutionEngine:
 
         logger.info("=" * 70)
         logger.info("DEFENSE EVOLUTION ENGINE - Initialized")
-        logger.info(f"  Storage: {self.storage_dir}")
-        logger.info(f"  Known patterns: {len(self.pattern_extractor.patterns)}")
-        logger.info(f"  Active playbooks: {len(self.playbook_generator.playbooks)}")
+        logger.info("  Storage: %s", self.storage_dir)
+        logger.info("  Known patterns: %s", len(self.pattern_extractor.patterns))
+        logger.info("  Active playbooks: %s", len(self.playbook_generator.playbooks))
         logger.info("=" * 70)
 
     def learn_from_attack(self, attack_data: dict[str, Any]):
         """Learn from a completed attack"""
-        logger.info(f"Learning from attack: {attack_data.get('attack_id', 'unknown')}")
+        logger.info("Learning from attack: %s", attack_data.get('attack_id', 'unknown'))
 
         # Add to history
         self.attack_history.append(attack_data)
@@ -338,7 +338,7 @@ class DefenseEvolutionEngine:
         # Extract patterns
         patterns = self.pattern_extractor.extract_from_attack(attack_data)
 
-        logger.info(f"  Extracted {len(patterns)} pattern(s)")
+        logger.info("  Extracted %s pattern(s)", len(patterns))
 
         # Generate playbooks for new significant patterns
         for pattern in patterns:
@@ -347,7 +347,7 @@ class DefenseEvolutionEngine:
 
                 if playbook_id not in self.playbook_generator.playbooks:
                     playbook = self.playbook_generator.generate_playbook(pattern)
-                    logger.info(f"  Generated new playbook: {playbook_id}")
+                    logger.info("  Generated new playbook: %s", playbook_id)
 
     def evolve_defenses(self):
         """Trigger defense evolution cycle"""
@@ -355,13 +355,13 @@ class DefenseEvolutionEngine:
 
         logger.info("")
         logger.info("=" * 70)
-        logger.info(f"EVOLUTION CYCLE {self.evolution_cycles}")
+        logger.info("EVOLUTION CYCLE %s", self.evolution_cycles)
         logger.info("=" * 70)
 
         # Get significant patterns
         significant = self.pattern_extractor.get_significant_patterns()
 
-        logger.info(f"Significant patterns: {len(significant)}")
+        logger.info("Significant patterns: %s", len(significant))
 
         # Ensure playbooks exist for all significant patterns
         new_playbooks = 0
@@ -371,8 +371,8 @@ class DefenseEvolutionEngine:
                 self.playbook_generator.generate_playbook(pattern)
                 new_playbooks += 1
 
-        logger.info(f"New playbooks generated: {new_playbooks}")
-        logger.info(f"Total playbooks: {len(self.playbook_generator.playbooks)}")
+        logger.info("New playbooks generated: %s", new_playbooks)
+        logger.info("Total playbooks: %s", len(self.playbook_generator.playbooks))
 
         # Save knowledge
         self._save_knowledge()
@@ -413,7 +413,7 @@ class DefenseEvolutionEngine:
         with open(playbooks_file, "w") as f:
             json.dump(self.playbook_generator.export_playbooks(), f, indent=2)
 
-        logger.info(f"Knowledge saved: {patterns_file}, {playbooks_file}")
+        logger.info("Knowledge saved: %s, %s", patterns_file, playbooks_file)
 
     def _load_knowledge(self):
         """Load existing patterns and playbooks"""
@@ -429,7 +429,7 @@ class DefenseEvolutionEngine:
                 pattern = AttackPattern(**p_data)
                 self.pattern_extractor.patterns[pattern.pattern_id] = pattern
 
-            logger.info(f"Loaded {len(patterns_data)} patterns")
+            logger.info("Loaded %s patterns", len(patterns_data))
 
         # Load playbooks
         if playbooks_file.exists():
@@ -440,7 +440,7 @@ class DefenseEvolutionEngine:
                 playbook = DefensePlaybook(**pb_data)
                 self.playbook_generator.playbooks[playbook.playbook_id] = playbook
 
-            logger.info(f"Loaded {len(playbooks_data)} playbooks")
+            logger.info("Loaded %s playbooks", len(playbooks_data))
 
     def get_statistics(self) -> dict[str, Any]:
         """Get learning engine statistics"""

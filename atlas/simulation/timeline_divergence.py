@@ -204,7 +204,7 @@ class TimelineDivergenceEngine:
             level="INFORMATIONAL"
         )
 
-        logger.info(f"Timeline divergence engine initialized: {len(self.seeds)} seeds, {len(self.horizons)} horizons")
+        logger.info("Timeline divergence engine initialized: %s seeds, %s horizons", len(self.seeds), len(self.horizons))
 
     def project_single_timeline(self, seed: str, horizon_years: int,
                                initial_state: WorldState,
@@ -229,7 +229,7 @@ class TimelineDivergenceEngine:
         total_steps = horizon_years * steps_per_year
 
         # Run simulation
-        logger.info(f"Projecting timeline: seed={seed}, horizon={horizon_years}y, steps={total_steps}")
+        logger.info("Projecting timeline: seed=%s, horizon=%sy, steps=%s", seed, horizon_years, total_steps)
         states = engine.run(n_steps=total_steps)
 
         # Extract yearly projection points
@@ -345,7 +345,7 @@ class TimelineDivergenceEngine:
             all_points_by_horizon[horizon] = {}
 
             for seed in self.seeds:
-                logger.info(f"Projecting: seed={seed}, horizon={horizon}y")
+                logger.info("Projecting: seed=%s, horizon=%sy", seed, horizon)
 
                 points = self.project_single_timeline(
                     seed=seed,
@@ -404,7 +404,7 @@ class TimelineDivergenceEngine:
             level="INFORMATIONAL"
         )
 
-        logger.info(f"Projection tensor complete: {tensor.get_statistics()}")
+        logger.info("Projection tensor complete: %s", tensor.get_statistics())
 
         return tensor
 

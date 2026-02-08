@@ -45,7 +45,7 @@ class EMPDefenseEngine:
         self.initialized = False
         self.events: list[dict[str, Any]] = []
 
-        logger.info(f"EMPDefenseEngine created with scenario: {self.config.scenario}")
+        logger.info("EMPDefenseEngine created with scenario: %s", self.config.scenario)
 
     def init(self) -> bool:
         """
@@ -77,7 +77,7 @@ class EMPDefenseEngine:
             return True
 
         except Exception as e:
-            logger.error(f"❌ Initialization failed: {e}")
+            logger.error("❌ Initialization failed: %s", e)
             return False
 
     def tick(self) -> bool:
@@ -107,11 +107,11 @@ class EMPDefenseEngine:
             # Simple degradation model
             self._update_world_state()
 
-            logger.debug(f"Tick complete: Day {self.state.simulation_day}")
+            logger.debug("Tick complete: Day %s", self.state.simulation_day)
             return True
 
         except Exception as e:
-            logger.error(f"❌ Tick failed: {e}")
+            logger.error("❌ Tick failed: %s", e)
             return False
 
     def inject_event(self, event_type: str, parameters: dict) -> str:
@@ -147,14 +147,14 @@ class EMPDefenseEngine:
             }
             self.events.append(event)
 
-            logger.info(f"Event injected: {event_type} (ID: {event_id})")
+            logger.info("Event injected: %s (ID: %s)", event_type, event_id)
             self.state.major_events.append(
                 f"Day {self.state.simulation_day}: {event_type}"
             )
             return event_id
 
         except Exception as e:
-            logger.error(f"❌ Event injection failed: {e}")
+            logger.error("❌ Event injection failed: %s", e)
             return ""
 
     def observe(self, query: str | None = None) -> dict:
@@ -185,7 +185,7 @@ class EMPDefenseEngine:
             return self.state.to_dict()
 
         except Exception as e:
-            logger.error(f"❌ Observation failed: {e}")
+            logger.error("❌ Observation failed: %s", e)
             return {}
 
     def export_artifacts(self, output_dir: str | None = None) -> bool:
@@ -243,11 +243,11 @@ class EMPDefenseEngine:
             with open(summary_file, 'w') as f:
                 json.dump(summary, f, indent=2)
 
-            logger.info(f"✅ Artifacts exported to {base_dir}")
+            logger.info("✅ Artifacts exported to %s", base_dir)
             return True
 
         except Exception as e:
-            logger.error(f"❌ Artifact export failed: {e}")
+            logger.error("❌ Artifact export failed: %s", e)
             return False
 
     # Private helper methods

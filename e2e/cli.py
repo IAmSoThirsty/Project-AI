@@ -89,7 +89,7 @@ class E2EOrchestrator:
         # Build pytest command
         pytest_cmd = self._build_pytest_command()
 
-        logger.info(f"Pytest command: {' '.join(pytest_cmd)}")
+        logger.info("Pytest command: %s", ' '.join(pytest_cmd))
 
         # Execute tests
         import subprocess
@@ -103,7 +103,7 @@ class E2EOrchestrator:
         end_time = datetime.now()
         duration = (end_time - start_time).total_seconds()
 
-        logger.info(f"Test execution completed in {duration:.2f}s")
+        logger.info("Test execution completed in %ss", duration)
 
         # Parse test results
         test_results = self._parse_pytest_output(result.stdout, duration)
@@ -263,7 +263,7 @@ class E2EOrchestrator:
             return None
 
         except Exception as e:
-            logger.error(f"Failed to generate coverage report: {e}")
+            logger.error("Failed to generate coverage report: %s", e)
             return None
 
     def _generate_html_report(
@@ -288,10 +288,10 @@ class E2EOrchestrator:
                 artifacts,
             )
 
-            logger.info(f"HTML report: {report_path}")
+            logger.info("HTML report: %s", report_path)
 
         except Exception as e:
-            logger.error(f"Failed to generate HTML report: {e}")
+            logger.error("Failed to generate HTML report: %s", e)
 
     def _generate_json_report(
         self,
@@ -327,10 +327,10 @@ class E2EOrchestrator:
             )
 
             report_path = self.json_reporter.save_report(report)
-            logger.info(f"JSON report: {report_path}")
+            logger.info("JSON report: %s", report_path)
 
         except Exception as e:
-            logger.error(f"Failed to generate JSON report: {e}")
+            logger.error("Failed to generate JSON report: %s", e)
 
     def _print_summary(
         self,

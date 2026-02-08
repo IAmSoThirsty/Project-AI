@@ -57,7 +57,7 @@ async def create_forensic_snapshot(campaign_id: str) -> dict[str, Any]:
     Returns:
         Snapshot metadata with ID and creation timestamp
     """
-    activity.logger.info(f"Creating forensic snapshot for campaign {campaign_id}")
+    activity.logger.info("Creating forensic snapshot for campaign %s", campaign_id)
 
     snapshot_id = f"snapshot-{campaign_id}-{uuid.uuid4().hex[:8]}"
 
@@ -96,11 +96,11 @@ async def create_forensic_snapshot(campaign_id: str) -> dict[str, Any]:
             "size_bytes": snapshot_file.stat().st_size,
         }
 
-        activity.logger.info(f"Snapshot created: {snapshot_id}")
+        activity.logger.info("Snapshot created: %s", snapshot_id)
         return result
 
     except Exception as e:
-        activity.logger.error(f"Snapshot creation failed: {e}")
+        activity.logger.error("Snapshot creation failed: %s", e)
         raise  # Non-retryable - abort campaign
 
 
@@ -126,14 +126,12 @@ async def run_red_team_attack(
     target_name = target.get("name", "unknown")
     idempotency_key = f"{persona_id}-{target_name}-{snapshot_id}"
 
-    activity.logger.info(
-        f"Running attack: {persona_id} on {target_name} (key: {idempotency_key})"
-    )
+    activity.logger.info("Running attack: %s on %s (key: %s)", persona_id, target_name, idempotency_key)
 
     # Check for cached result (idempotency)
     result_file = Path(f"data/attack_results/{idempotency_key}.json")
     if result_file.exists():
-        activity.logger.info(f"Returning cached result for {idempotency_key}")
+        activity.logger.info("Returning cached result for %s", idempotency_key)
         with open(result_file) as f:
             return json.load(f)
 
@@ -182,19 +180,15 @@ async def run_red_team_attack(
             json.dump(result, f, indent=2)
 
         # Emit metric
-        activity.logger.info(
-            f"Attack completed: success={result['success']}, turns={result['metrics']['turns']}"
-        )
+        activity.logger.info("Attack completed: success=%s, turns=%s", result['success'], result['metrics']['turns'])
 
         return result
 
     except Exception as e:
-        activity.logger.error(f"Attack execution failed: {e}")
+        activity.logger.error("Attack execution failed: %s", e)
         # Mark as flaky if beyond retry limit
         if activity.info().attempt >= 3:
-            activity.logger.warning(
-                f"Attack marked as flaky after {activity.info().attempt} attempts"
-            )
+            activity.logger.warning("Attack marked as flaky after %s attempts", activity.info().attempt)
         raise
 
 
@@ -209,9 +203,7 @@ async def evaluate_attack(attack_result: dict[str, Any]) -> str:
     Returns:
         Severity: critical, high, medium, or low
     """
-    activity.logger.info(
-        f"Evaluating attack: {attack_result['persona']} on {attack_result['target'].get('name')}"
-    )
+    activity.logger.info("Evaluating attack: %s on %s", attack_result['persona'], attack_result['target'].get('name'))
 
     # Severity based on success and persona
     if attack_result["success"]:
@@ -251,9 +243,7 @@ async def trigger_incident(
     from datetime import datetime
 
     incident_id = f"INC-{datetime.now().strftime('%Y%m%d%H%M%S')}"
-    activity.logger.critical(
-        f"Incident triggered: {incident_id} (severity: {severity})"
-    )
+    activity.logger.critical("Incident triggered: %s (severity: %s)", incident_id, severity)
 
     incident = {
         "incident_id": incident_id,
@@ -272,7 +262,7 @@ async def trigger_incident(
     with open(incident_file, "w") as f:
         json.dump(incident, f, indent=2)
 
-    activity.logger.info(f"Incident {incident_id} created and saved")
+    activity.logger.info("Incident %s created and saved", incident_id)
 
 
 @activity.defn
@@ -287,7 +277,7 @@ async def generate_sarif(results: list[dict[str, Any]], campaign_id: str) -> str
     Returns:
         SARIF JSON string
     """
-    activity.logger.info(f"Generating SARIF for campaign {campaign_id}")
+    activity.logger.info("Generating SARIF for campaign %s", campaign_id)
 
     # Add src to path
     project_root = Path(__file__).parent.parent
@@ -337,7 +327,7 @@ async def upload_sarif(sarif_json: str, campaign_id: str) -> str:
     Returns:
         Artifact ID or URL
     """
-    activity.logger.info(f"Uploading SARIF for campaign {campaign_id}")
+    activity.logger.info("Uploading SARIF for campaign %s", campaign_id)
 
     try:
         # Try GitHub upload (requires GITHUB_TOKEN)
@@ -349,11 +339,11 @@ async def upload_sarif(sarif_json: str, campaign_id: str) -> str:
         with open(artifact_file, "w") as f:
             f.write(sarif_json)
 
-        activity.logger.info(f"SARIF saved locally: {artifact_file}")
+        activity.logger.info("SARIF saved locally: %s", artifact_file)
         return str(artifact_file)
 
     except Exception as e:
-        activity.logger.error(f"SARIF upload failed: {e}")
+        activity.logger.error("SARIF upload failed: %s", e)
         raise
 
 
@@ -366,7 +356,7 @@ async def notify_triumvirate(campaign_id: str, results: list[dict[str, Any]]) ->
         campaign_id: Campaign identifier
         results: Campaign results
     """
-    activity.logger.info(f"Notifying Triumvirate of campaign {campaign_id}")
+    activity.logger.info("Notifying Triumvirate of campaign %s", campaign_id)
 
     from datetime import datetime
 
@@ -387,9 +377,7 @@ async def notify_triumvirate(campaign_id: str, results: list[dict[str, Any]]) ->
     with open(notif_file, "w") as f:
         json.dump(summary, f, indent=2)
 
-    activity.logger.info(
-        f"Triumvirate notified: {summary['successful_attacks']}/{summary['total_attacks']} attacks succeeded"
-    )
+    activity.logger.info("Triumvirate notified: %s/%s attacks succeeded", summary['successful_attacks'], summary['total_attacks'])
 
 
 # ============================================================================
@@ -425,7 +413,7 @@ class RedTeamCampaignWorkflow:
         Returns:
             Campaign results
         """
-        workflow.logger.info(f"Starting red team campaign: {campaign_id}")
+        workflow.logger.info("Starting red team campaign: %s", campaign_id)
 
         # Step 1: Create forensic snapshot (non-retryable)
         workflow.logger.info("Step 1: Creating forensic snapshot")
@@ -437,9 +425,9 @@ class RedTeamCampaignWorkflow:
                 retry_policy=None,  # Non-retryable
             )
             snapshot_id = snapshot["snapshot_id"]
-            workflow.logger.info(f"Snapshot created: {snapshot_id}")
+            workflow.logger.info("Snapshot created: %s", snapshot_id)
         except Exception as e:
-            workflow.logger.error(f"Snapshot creation failed: {e}")
+            workflow.logger.error("Snapshot creation failed: %s", e)
             return {
                 "status": "aborted",
                 "reason": "snapshot_creation_failed",
@@ -476,9 +464,7 @@ class RedTeamCampaignWorkflow:
                     retry_policy=workflow.RetryPolicy(maximum_attempts=1),
                 )
 
-                workflow.logger.info(
-                    f"Attack evaluated: {persona} on {target.get('name')} = {severity}"
-                )
+                workflow.logger.info("Attack evaluated: %s on %s = %s", persona, target.get('name'), severity)
 
                 # Trigger incident for critical/high
                 if severity in ["critical", "high"]:
@@ -491,9 +477,7 @@ class RedTeamCampaignWorkflow:
 
                     # Policy: halt on critical
                     if severity == "critical":
-                        workflow.logger.warning(
-                            f"Campaign halted due to {severity} severity"
-                        )
+                        workflow.logger.warning("Campaign halted due to %s severity", severity)
                         halted = True
                         halt_reason = severity
                         break
@@ -592,9 +576,9 @@ async def execute_campaign(campaign_id: str, personas: list[str], targets: list[
     # Convert target strings to dicts
     target_dicts = [{"name": t, "uri": f"workspace://{t}"} for t in targets]
 
-    logger.info(f"Executing campaign {campaign_id}")
-    logger.info(f"Personas: {personas}")
-    logger.info(f"Targets: {targets}")
+    logger.info("Executing campaign %s", campaign_id)
+    logger.info("Personas: %s", personas)
+    logger.info("Targets: %s", targets)
 
     result = await client.execute_workflow(
         RedTeamCampaignWorkflow.run,
@@ -603,7 +587,7 @@ async def execute_campaign(campaign_id: str, personas: list[str], targets: list[
         task_queue="security-agents",
     )
 
-    logger.info(f"Campaign completed: {result}")
+    logger.info("Campaign completed: %s", result)
     print(json.dumps(result, indent=2))
 
 

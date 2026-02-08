@@ -79,7 +79,7 @@ class FailureStatesEngine:
             state: World state to modify
             threshold: Failure threshold that was breached
         """
-        logger.critical(f"💀 FAILURE STATE TRIGGERED: {threshold.name}")
+        logger.critical("💀 FAILURE STATE TRIGGERED: %s", threshold.name)
 
         # Apply consequences
         threshold.consequence(state)
@@ -224,7 +224,7 @@ class FailureStatesEngine:
         state.governance.competing_authorities = 1 + num_splinters
         state.governance.regional_fragmentation = 0.80
 
-        logger.critical(f"💀 Government splinter - {num_splinters} competing authorities")
+        logger.critical("💀 Government splinter - %s competing authorities", num_splinters)
         state.major_events.append(
             f"IRREVERSIBLE: Government fragmented into {num_splinters} splinter entities"
         )
@@ -250,7 +250,7 @@ class FailureStatesEngine:
         state.total_deaths += longterm_deaths
         state.global_population -= longterm_deaths
 
-        logger.critical(f"💀 Nuclear meltdown cascade - {meltdowns} plants, {affected_population:,} affected")
+        logger.critical("💀 Nuclear meltdown cascade - %s plants, %s affected", meltdowns, affected_population)
         state.major_events.append(
             f"IRREVERSIBLE: {meltdowns} nuclear meltdowns - {affected_population:,} in exclusion zones"
         )
@@ -310,7 +310,7 @@ class FailureStatesEngine:
         state.food.logistics_integrity *= 0.70
         state.health.hospital_capacity_pct *= 0.60
 
-        logger.critical(f"💀 Civil war - {war_deaths:,} immediate casualties")
+        logger.critical("💀 Civil war - %s immediate casualties", war_deaths)
         state.major_events.append(
             f"RECOVERABLE (but costly): Civil war - {war_deaths:,} deaths, infrastructure damaged"
         )

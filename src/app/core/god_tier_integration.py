@@ -247,7 +247,7 @@ class GodTierIntegratedSystem:
 
                 logger.info("=" * 80)
                 logger.info("GOD TIER SYSTEM INITIALIZATION COMPLETE")
-                logger.info(f"Status: {self.get_status_summary()}")
+                logger.info("Status: %s", self.get_status_summary())
                 logger.info("=" * 80)
 
                 return True
@@ -298,7 +298,7 @@ class GodTierIntegratedSystem:
 
             # Initialize all models
             init_results = self.voice_registry.initialize_all()
-            logger.info(f"Voice models initialized: {init_results}")
+            logger.info("Voice models initialized: %s", init_results)
 
             # Create engagement profiler
             engagement_dir = os.path.join(
@@ -322,7 +322,7 @@ class GodTierIntegratedSystem:
             return True
 
         except Exception as e:
-            logger.error(f"Voice system initialization error: {e}")
+            logger.error("Voice system initialization error: %s", e)
             return False
 
     def _initialize_visual_system(self) -> bool:
@@ -347,7 +347,7 @@ class GodTierIntegratedSystem:
 
             # Initialize all models
             init_results = self.visual_registry.initialize_all()
-            logger.info(f"Visual models initialized: {init_results}")
+            logger.info("Visual models initialized: %s", init_results)
 
             # Create camera manager
             if self.config.camera.enabled:
@@ -358,7 +358,7 @@ class GodTierIntegratedSystem:
 
                 if self.config.camera.auto_discover:
                     devices = self.camera_manager.discover_devices()
-                    logger.info(f"Discovered {len(devices)} camera devices")
+                    logger.info("Discovered %s camera devices", len(devices))
 
                     # Activate preferred or first device
                     if self.config.camera.preferred_device:
@@ -395,7 +395,7 @@ class GodTierIntegratedSystem:
             return True
 
         except Exception as e:
-            logger.error(f"Visual system initialization error: {e}")
+            logger.error("Visual system initialization error: %s", e)
             return False
 
     def _initialize_conversation_system(self) -> bool:
@@ -414,7 +414,7 @@ class GodTierIntegratedSystem:
             return True
 
         except Exception as e:
-            logger.error(f"Conversation system initialization error: {e}")
+            logger.error("Conversation system initialization error: %s", e)
             return False
 
     def _initialize_policy_system(self) -> bool:
@@ -433,7 +433,7 @@ class GodTierIntegratedSystem:
             return True
 
         except Exception as e:
-            logger.error(f"Policy system initialization error: {e}")
+            logger.error("Policy system initialization error: %s", e)
             return False
 
     def _initialize_fusion_system(self) -> bool:
@@ -469,7 +469,7 @@ class GodTierIntegratedSystem:
             return True
 
         except Exception as e:
-            logger.error(f"Fusion system initialization error: {e}")
+            logger.error("Fusion system initialization error: %s", e)
             return False
 
     def _wire_event_hooks(self) -> None:
@@ -550,7 +550,7 @@ class GodTierIntegratedSystem:
             }
 
         except Exception as e:
-            logger.error(f"Interaction processing error: {e}")
+            logger.error("Interaction processing error: %s", e)
             return {"error": str(e)}
 
     def _generate_response(
@@ -607,7 +607,7 @@ class GodTierIntegratedSystem:
             logger.info("God Tier system shutdown complete")
 
         except Exception as e:
-            logger.error(f"Shutdown error: {e}")
+            logger.error("Shutdown error: %s", e)
 
 
 # Global system instance

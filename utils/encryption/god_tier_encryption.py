@@ -111,7 +111,7 @@ class GodTierEncryption:
         # Layer 7: Final authentication MAC
         layer7 = self._add_authentication_mac(layer6)
 
-        self.logger.debug(f"Encrypted {len(data)} bytes to {len(layer7)} bytes (7 layers)")
+        self.logger.debug("Encrypted %s bytes to %s bytes (7 layers)", len(data), len(layer7))
         return layer7
 
     def decrypt_god_tier(self, encrypted_data: bytes) -> bytes:
@@ -158,7 +158,7 @@ class GodTierEncryption:
             return data
 
         except Exception as e:
-            self.logger.error(f"GOD TIER decryption failed: {e}")
+            self.logger.error("GOD TIER decryption failed: %s", e)
             raise ValueError("Decryption failed - data may be corrupted or tampered")
 
     def _encrypt_aes_gcm(self, data: bytes) -> bytes:

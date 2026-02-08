@@ -56,7 +56,7 @@ class EncryptedSearchEngine:
 
         # Log encrypted query (never plaintext)
         query_hash = hashlib.sha256(encrypted_query).hexdigest()[:16]
-        self.logger.debug(f"Encrypted search: {query_hash}")
+        self.logger.debug("Encrypted search: %s", query_hash)
 
         # Store encrypted query in history
         self._encrypted_search_history.append(
@@ -101,7 +101,7 @@ class EncryptedSearchEngine:
         try:
             return self._cipher.decrypt(encrypted_results).decode()
         except Exception as e:
-            self.logger.error(f"Failed to decrypt results: {e}")
+            self.logger.error("Failed to decrypt results: %s", e)
             return ""
 
     def get_encrypted_history(self) -> list:

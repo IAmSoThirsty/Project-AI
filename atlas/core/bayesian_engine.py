@@ -121,7 +121,7 @@ class BayesianClaimEngine:
         Returns:
             Posterior probability [0, 1]
         """
-        logger.debug(f"Calculating posterior for claim {claim.get('id', 'unknown')}")
+        logger.debug("Calculating posterior for claim %s", claim.get('id', 'unknown'))
 
         # 1. Calculate Evidence Legitimacy (EL)
         evidence_legitimacy = self._calculate_evidence_legitimacy(evidence)
@@ -321,7 +321,7 @@ class BayesianClaimEngine:
             return posterior * decay_factor
 
         except Exception as e:
-            logger.warning(f"Error applying temporal decay: {e}")
+            logger.warning("Error applying temporal decay: %s", e)
             return posterior
 
     def process_claim(self,

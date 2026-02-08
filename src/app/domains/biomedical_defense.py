@@ -116,7 +116,7 @@ class BiomedicalDefenseSubsystem(
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to initialize: {e}")
+            self.logger.error("Failed to initialize: %s", e)
             return False
 
     def shutdown(self) -> bool:
@@ -133,7 +133,7 @@ class BiomedicalDefenseSubsystem(
             return True
 
         except Exception as e:
-            self.logger.error(f"Error during shutdown: {e}")
+            self.logger.error("Error during shutdown: %s", e)
             return False
 
     def health_check(self) -> bool:
@@ -243,7 +243,7 @@ class BiomedicalDefenseSubsystem(
                 try:
                     callback(data)
                 except Exception as e:
-                    self.logger.error(f"Error in event callback {subscription_id}: {e}")
+                    self.logger.error("Error in event callback %s: %s", subscription_id, e)
 
             return len(subscribers)
 
@@ -253,7 +253,7 @@ class BiomedicalDefenseSubsystem(
                 self._monitor_patients()
                 time.sleep(10.0)
             except Exception as e:
-                self.logger.error(f"Error in processing loop: {e}")
+                self.logger.error("Error in processing loop: %s", e)
                 time.sleep(10.0)
 
     def _monitor_patients(self):
@@ -281,7 +281,7 @@ class BiomedicalDefenseSubsystem(
             return patient
 
         except Exception as e:
-            self.logger.error(f"Failed to register patient: {e}")
+            self.logger.error("Failed to register patient: %s", e)
             return None
 
     def _save_state(self):
@@ -293,7 +293,7 @@ class BiomedicalDefenseSubsystem(
                 json.dump(state, f, indent=2, default=str)
 
         except Exception as e:
-            self.logger.error(f"Failed to save state: {e}")
+            self.logger.error("Failed to save state: %s", e)
 
     def _load_state(self):
         try:
@@ -305,4 +305,4 @@ class BiomedicalDefenseSubsystem(
                 self._metrics = state.get("metrics", self._metrics)
 
         except Exception as e:
-            self.logger.error(f"Failed to load state: {e}")
+            self.logger.error("Failed to load state: %s", e)

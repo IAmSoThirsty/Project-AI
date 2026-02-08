@@ -42,9 +42,7 @@ def assert_state_transition(
             f"but current state is {current_state}"
         )
 
-    logger.info(
-        f"State transition validated: {expected_old_state} -> {expected_new_state}"
-    )
+    logger.info("State transition validated: %s -> %s", expected_old_state, expected_new_state)
 
 
 def assert_audit_log_entry(
@@ -87,7 +85,7 @@ def assert_audit_log_entry(
                 f"No audit log entry found with event_type='{event_type}' and action='{action}'"
             )
 
-    logger.info(f"Audit log entry validated: {event_type}")
+    logger.info("Audit log entry validated: %s", event_type)
 
 
 def assert_event_propagation(
@@ -121,7 +119,7 @@ def assert_event_propagation(
             f"Event {source_id} did not propagate to target systems"
         )
 
-    logger.info(f"Event propagation validated for {source_id}")
+    logger.info("Event propagation validated for %s", source_id)
 
 
 def assert_business_invariant(
@@ -140,7 +138,7 @@ def assert_business_invariant(
     if not condition:
         raise AssertionError(f"Business invariant violated: {invariant_description}")
 
-    logger.info(f"Business invariant validated: {invariant_description}")
+    logger.info("Business invariant validated: %s", invariant_description)
 
 
 def assert_permission_denied(
@@ -200,7 +198,7 @@ def assert_four_laws_compliance(
                 f"Action '{action}' harms user without explicit order but was allowed"
             )
 
-    logger.info(f"Four Laws validation result: {is_allowed} - {reason}")
+    logger.info("Four Laws validation result: %s - %s", is_allowed, reason)
 
 
 def assert_watch_tower_trigger(
@@ -237,7 +235,7 @@ def assert_watch_tower_trigger(
                 f"and severity='{severity}'"
             )
 
-    logger.info(f"Watch Tower trigger validated: {trigger_type}")
+    logger.info("Watch Tower trigger validated: %s", trigger_type)
 
 
 def assert_within_timeout(

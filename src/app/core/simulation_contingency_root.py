@@ -340,9 +340,9 @@ class SimulationRegistry:
                     raise PermissionError(f"Registry registration denied: {reason}")
 
         if name in cls._systems:
-            logger.warning(f"Overwriting existing system: {name}")
+            logger.warning("Overwriting existing system: %s", name)
         cls._systems[name] = system
-        logger.info(f"Registered simulation system: {name}")
+        logger.info("Registered simulation system: %s", name)
 
     @classmethod
     def get(
@@ -441,6 +441,6 @@ class SimulationRegistry:
 
         if name in cls._systems:
             del cls._systems[name]
-            logger.info(f"Unregistered simulation system: {name}")
+            logger.info("Unregistered simulation system: %s", name)
             return True
         return False

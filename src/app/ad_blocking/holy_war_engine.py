@@ -78,9 +78,9 @@ class AdAnnihilator:
     def stop(self):
         """Stop ad annihilator"""
         self.logger.info("AD ANNIHILATOR stopped - Statistics:")
-        self.logger.info(f"  Ads blocked: {self.stats['ads_blocked']}")
-        self.logger.info(f"  Trackers destroyed: {self.stats['trackers_destroyed']}")
-        self.logger.info(f"  Pop-ups obliterated: {self.stats['popups_obliterated']}")
+        self.logger.info("  Ads blocked: %s", self.stats['ads_blocked'])
+        self.logger.info("  Trackers destroyed: %s", self.stats['trackers_destroyed'])
+        self.logger.info("  Pop-ups obliterated: %s", self.stats['popups_obliterated'])
 
         self._active = False
 
@@ -409,7 +409,7 @@ class AdAnnihilator:
 
         if result["block"]:
             self.stats["scripts_annihilated"] += 1
-            self.logger.debug(f"SCRIPT BLOCKED: {script_url}")
+            self.logger.debug("SCRIPT BLOCKED: %s", script_url)
             return True
 
         return False
@@ -447,7 +447,7 @@ class AdAnnihilator:
 
         if result["block"]:
             self.stats["redirects_intercepted"] += 1
-            self.logger.debug(f"REDIRECT INTERCEPTED: {url}")
+            self.logger.debug("REDIRECT INTERCEPTED: %s", url)
             return True
 
         return False

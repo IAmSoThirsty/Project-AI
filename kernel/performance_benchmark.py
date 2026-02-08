@@ -49,7 +49,7 @@ class PerformanceBenchmark:
         self, kernel, iterations: int = 100
     ) -> BenchmarkResult:
         """Benchmark basic command execution"""
-        logger.info(f"Benchmarking command execution ({iterations} iterations)...")
+        logger.info("Benchmarking command execution (%s iterations)...", iterations)
 
         test_commands = ["ls -la", "whoami", "pwd", "echo test"]
 
@@ -76,9 +76,9 @@ class PerformanceBenchmark:
 
         self.results.append(result)
 
-        logger.info(f"  Total time: {duration:.2f} ms")
-        logger.info(f"  Avg per command: {duration / iterations:.2f} ms")
-        logger.info(f"  Memory delta: {result.memory_mb:.2f} MB")
+        logger.info("  Total time: %s ms", duration)
+        logger.info("  Avg per command: %s ms", duration / iterations)
+        logger.info("  Memory delta: %s MB", result.memory_mb)
 
         return result
 
@@ -86,7 +86,7 @@ class PerformanceBenchmark:
         self, kernel, iterations: int = 50
     ) -> BenchmarkResult:
         """Benchmark threat detection speed"""
-        logger.info(f"Benchmarking threat detection ({iterations} iterations)...")
+        logger.info("Benchmarking threat detection (%s iterations)...", iterations)
 
         malicious_commands = [
             "sudo cat /etc/shadow",
@@ -116,13 +116,13 @@ class PerformanceBenchmark:
 
         self.results.append(result)
 
-        logger.info(f"  Avg detection time: {duration / iterations:.2f} ms")
+        logger.info("  Avg detection time: %s ms", duration / iterations)
 
         return result
 
     def benchmark_layer_transitions(self, kernel, count: int = 20) -> BenchmarkResult:
         """Benchmark layer transition speed"""
-        logger.info(f"Benchmarking layer transitions ({count} transitions)...")
+        logger.info("Benchmarking layer transitions (%s transitions)...", count)
 
         transition_times = []
 
@@ -158,8 +158,8 @@ class PerformanceBenchmark:
 
         self.results.append(result)
 
-        logger.info(f"  Avg transition: {avg_time:.2f} ms")
-        logger.info(f"  Range: {min_time:.2f} - {max_time:.2f} ms")
+        logger.info("  Avg transition: %s ms", avg_time)
+        logger.info("  Range: %s - %s ms", min_time, max_time)
 
         return result
 
@@ -167,7 +167,7 @@ class PerformanceBenchmark:
         self, kernel, max_users: int = 100
     ) -> BenchmarkResult:
         """Benchmark memory usage with increasing users"""
-        logger.info(f"Benchmarking memory scalability ({max_users} users)...")
+        logger.info("Benchmarking memory scalability (%s users)...", max_users)
 
         start_mem = self.process.memory_info().rss / 1024 / 1024
         start_time = time.time()
@@ -191,8 +191,8 @@ class PerformanceBenchmark:
 
         self.results.append(result)
 
-        logger.info(f"  Memory delta: {mem_delta:.2f} MB")
-        logger.info(f"  Per user: {mem_delta / max_users:.3f} MB")
+        logger.info("  Memory delta: %s MB", mem_delta)
+        logger.info("  Per user: %s MB", mem_delta / max_users)
 
         return result
 

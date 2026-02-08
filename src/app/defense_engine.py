@@ -116,11 +116,11 @@ class DefenseEngine:
             for subsystem_id in critical_subsystems:
                 subsystem = self.registry.get_subsystem(subsystem_id)
                 if not subsystem:
-                    logger.error(f"Critical subsystem not initialized: {subsystem_id}")
+                    logger.error("Critical subsystem not initialized: %s", subsystem_id)
                     return False
 
                 if not subsystem.health_check():
-                    logger.error(f"Critical subsystem unhealthy: {subsystem_id}")
+                    logger.error("Critical subsystem unhealthy: %s", subsystem_id)
                     return False
 
             self.running = True
@@ -176,7 +176,7 @@ class DefenseEngine:
 
     def _set_operational_mode(self, mode: OperationalMode):
         """Set operational mode on all subsystems."""
-        logger.info(f"Setting operational mode to: {mode.value}")
+        logger.info("Setting operational mode to: %s", mode.value)
 
         if not self.registry:
             return
@@ -190,7 +190,7 @@ class DefenseEngine:
                 try:
                     subsystem.set_operational_mode(mode)
                 except Exception as e:
-                    logger.error(f"Failed to set mode on {subsystem_id}: {e}")
+                    logger.error("Failed to set mode on %s: %s", subsystem_id, e)
 
     def _log_status(self):
         """Log current system status."""
@@ -200,14 +200,14 @@ class DefenseEngine:
         status = self.registry.get_system_status()
 
         logger.info("=" * 60)
-        logger.info(f"SYSTEM STATUS: {status['timestamp']}")
-        logger.info(f"Total Subsystems: {status['total_subsystems']}")
-        logger.info(f"State Distribution: {status['subsystems_by_state']}")
+        logger.info("SYSTEM STATUS: %s", status['timestamp'])
+        logger.info("Total Subsystems: %s", status['total_subsystems'])
+        logger.info("State Distribution: %s", status['subsystems_by_state'])
         logger.info("=" * 60)
 
     def _signal_handler(self, signum, frame):
         """Handle shutdown signals."""
-        logger.info(f"Received signal {signum}")
+        logger.info("Received signal %s", signum)
         self.running = False
 
     def get_subsystem(self, subsystem_id: str):
@@ -263,7 +263,7 @@ class DefenseEngine:
                 "execution_time_ms": response.execution_time_ms,
             }
         except Exception as e:
-            logger.error(f"Command execution failed: {e}")
+            logger.error("Command execution failed: %s", e)
             return {"error": str(e)}
 
 

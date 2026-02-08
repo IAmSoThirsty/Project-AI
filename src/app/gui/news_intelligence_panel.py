@@ -172,7 +172,7 @@ class GlobalStatisticsPanel(QFrame):
             self.stats_display.setText("\n".join(output))
 
         except Exception as e:
-            logger.error(f"Error refreshing statistics: {e}")
+            logger.error("Error refreshing statistics: %s", e)
             self.stats_display.setText(
                 "Initializing global intelligence monitoring...\n\n"
                 "Please ensure Intelligence Library is initialized.\n\n"
@@ -332,7 +332,7 @@ class VerifiedNewsPanel(QFrame):
             self.news_list.addItem(item)
 
         except Exception as e:
-            logger.error(f"Error refreshing news: {e}")
+            logger.error("Error refreshing news: %s", e)
             item = QListWidgetItem(f"⚠️ Error loading sources: {str(e)}")
             self.news_list.addItem(item)
 

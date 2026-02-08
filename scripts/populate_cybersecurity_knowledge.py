@@ -43,7 +43,7 @@ def main():
 
         # Export to JSON for reference
         export_path = cyber_knowledge.export_to_json()
-        logger.info(f"Exported cybersecurity knowledge to: {export_path}")
+        logger.info("Exported cybersecurity knowledge to: %s", export_path)
 
         # Integrate with memory system
         logger.info("Integrating cybersecurity knowledge with memory system...")

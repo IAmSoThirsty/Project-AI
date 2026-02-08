@@ -94,9 +94,7 @@ class VPNManager:
         """Establish VPN connection"""
         if self.multi_hop:
             self._current_route = self.router.establish_route()
-            self.logger.info(
-                f"Multi-hop route established: {len(self._current_route)} hops"
-            )
+            self.logger.info("Multi-hop route established: %s hops", len(self._current_route))
         else:
             self._current_route = [self._connect_single_node()]
 
@@ -109,10 +107,10 @@ class VPNManager:
         for protocol in self.protocol_fallback:
             try:
                 node = self._connect_with_protocol(protocol)
-                self.logger.info(f"Connected via {protocol}")
+                self.logger.info("Connected via %s", protocol)
                 return node
             except Exception as e:
-                self.logger.warning(f"Failed to connect via {protocol}: {e}")
+                self.logger.warning("Failed to connect via %s: %s", protocol, e)
 
         raise ConnectionError("All VPN protocols failed")
 
@@ -142,14 +140,14 @@ class VPNManager:
 
     def select_exit_node(self, node_id: str):
         """User-driven exit node selection"""
-        self.logger.info(f"Selecting exit node: {node_id}")
+        self.logger.info("Selecting exit node: %s", node_id)
         # Reconnect with new exit node
         self.reconnect()
 
     def enable_split_tunneling(self, enabled: bool):
         """Enable/disable split tunneling"""
         self.split_tunneling = enabled
-        self.logger.info(f"Split tunneling: {'enabled' if enabled else 'disabled'}")
+        self.logger.info("Split tunneling: %s", 'enabled' if enabled else 'disabled')
 
     def encrypt_traffic(self, data: bytes) -> bytes:
         """
@@ -166,7 +164,7 @@ class VPNManager:
         try:
             return self._vpn_cipher.decrypt(encrypted_data)
         except Exception as e:
-            self.logger.error(f"Failed to decrypt VPN traffic: {e}")
+            self.logger.error("Failed to decrypt VPN traffic: %s", e)
             return b""
 
     def get_status(self) -> dict[str, Any]:

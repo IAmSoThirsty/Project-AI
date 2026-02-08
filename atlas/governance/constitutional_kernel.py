@@ -175,7 +175,7 @@ class ConstitutionalKernel:
                 }
             )
 
-            logger.critical(f"CONSTITUTIONAL VIOLATION: {e}")
+            logger.critical("CONSTITUTIONAL VIOLATION: %s", e)
             raise
 
     def _check_sludge_to_rs_blocked(self, state: dict[str, Any]) -> None:
@@ -373,7 +373,7 @@ class ConstitutionalKernel:
                     )
             except Exception as e:
                 # Log but don't fail on timestamp parse errors
-                logger.debug(f"Could not parse timestamp {created_at}: {e}")
+                logger.debug("Could not parse timestamp %s: %s", created_at, e)
 
         # Check 4: Step size must be consistent
         if "previous_step_size_hours" in parameters:
@@ -430,7 +430,7 @@ class ConstitutionalKernel:
                 binary_data = cbor2.dumps(normalized, canonical=True)
                 return hashlib.sha256(binary_data).hexdigest()
             except Exception as e:
-                logger.warning(f"CBOR encoding failed, falling back to quantized JSON: {e}")
+                logger.warning("CBOR encoding failed, falling back to quantized JSON: %s", e)
 
         # Fallback: Quantized JSON with explicit ordering
         import json
@@ -506,7 +506,7 @@ class ConstitutionalKernel:
             pass
 
         # For unknown types, use string representation
-        logger.warning(f"Normalizing unknown type {type(data)} to string")
+        logger.warning("Normalizing unknown type %s to string", type(data))
         return str(data)
 
     def _check_hash_integrity_canonical(self, state: dict[str, Any]) -> None:

@@ -149,7 +149,7 @@ class MetricsCollector:
 
                 self._add_to_series(name, point, labels)
         except Exception as e:
-            logger.error(f"Error recording counter {name}: {e}")
+            logger.error("Error recording counter %s: %s", name, e)
 
     def record_gauge(
         self,
@@ -174,7 +174,7 @@ class MetricsCollector:
 
                 self._add_to_series(name, point, labels)
         except Exception as e:
-            logger.error(f"Error recording gauge {name}: {e}")
+            logger.error("Error recording gauge %s: %s", name, e)
 
     def record_histogram(
         self,
@@ -203,7 +203,7 @@ class MetricsCollector:
 
                 self._add_to_series(name, point, labels)
         except Exception as e:
-            logger.error(f"Error recording histogram {name}: {e}")
+            logger.error("Error recording histogram %s: %s", name, e)
 
     def _make_key(self, name: str, labels: dict[str, str] | None) -> str:
         """Create unique key for metric with labels."""
@@ -317,11 +317,9 @@ class AGIBehaviorMonitor:
                     category=MetricCategory.AGI_BEHAVIOR.value,
                 )
 
-                logger.debug(
-                    f"Recorded AGI decision: {decision_type}, confidence: {confidence}, compliant: {compliant}"
-                )
+                logger.debug("Recorded AGI decision: %s, confidence: %s, compliant: %s", decision_type, confidence, compliant)
         except Exception as e:
-            logger.error(f"Error recording AGI decision: {e}")
+            logger.error("Error recording AGI decision: %s", e)
 
     def record_learning_event(
         self, learning_type: str, success: bool, duration: float
@@ -401,7 +399,7 @@ class FusionOperationsMonitor:
                         category=MetricCategory.FUSION_OPS.value,
                     )
         except Exception as e:
-            logger.error(f"Error recording fusion operation: {e}")
+            logger.error("Error recording fusion operation: %s", e)
 
     def record_sensor_reading(
         self, sensor_id: str, sensor_type: str, value: float
@@ -461,7 +459,7 @@ class RoboticActionMonitor:
                         category=MetricCategory.ROBOTIC_ACTION.value,
                     )
         except Exception as e:
-            logger.error(f"Error recording robotic action: {e}")
+            logger.error("Error recording robotic action: %s", e)
 
     def record_motor_health(
         self, motor_id: str, temperature: float, current: float
@@ -623,7 +621,7 @@ class AlertManager:
                         alerts.append(alert)
                         self._trigger_alert(alert)
         except Exception as e:
-            logger.error(f"Error checking thresholds: {e}")
+            logger.error("Error checking thresholds: %s", e)
 
         return alerts
 
@@ -637,7 +635,7 @@ class AlertManager:
             try:
                 handler(alert)
             except Exception as e:
-                logger.error(f"Error in alert handler: {e}")
+                logger.error("Error in alert handler: %s", e)
 
         logger.warning(
             f"ALERT: {alert['severity'].upper()} - {alert['metric']} = {alert['value']} "
@@ -704,7 +702,7 @@ class LiveMetricsDashboard:
             logger.info("Started live metrics monitoring")
             return True
         except Exception as e:
-            logger.error(f"Failed to start monitoring: {e}")
+            logger.error("Failed to start monitoring: %s", e)
             return False
 
     def stop_monitoring(self) -> bool:
@@ -716,7 +714,7 @@ class LiveMetricsDashboard:
             logger.info("Stopped live metrics monitoring")
             return True
         except Exception as e:
-            logger.error(f"Failed to stop monitoring: {e}")
+            logger.error("Failed to stop monitoring: %s", e)
             return False
 
     def _monitoring_loop(self) -> None:
@@ -727,7 +725,7 @@ class LiveMetricsDashboard:
                 self.alert_manager.check_thresholds(self.collector)
                 time.sleep(10)
             except Exception as e:
-                logger.error(f"Error in monitoring loop: {e}")
+                logger.error("Error in monitoring loop: %s", e)
 
     def get_dashboard_data(
         self, category: MetricCategory | None = None
@@ -747,7 +745,7 @@ class LiveMetricsDashboard:
                 "active_alerts": list(self.alert_manager.active_alerts.values()),
             }
         except Exception as e:
-            logger.error(f"Error getting dashboard data: {e}")
+            logger.error("Error getting dashboard data: %s", e)
             return {}
 
     def get_metrics_summary(self) -> dict[str, Any]:

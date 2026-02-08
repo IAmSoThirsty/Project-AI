@@ -155,7 +155,7 @@ class HoneypotDetector:
 
         logger.info("Honeypot Detection System initialized")
         logger.info("  Attack patterns: SQL, XSS, Path Traversal, Command Injection")
-        logger.info(f"  Tool detection: {len(self.tool_signatures)} signatures")
+        logger.info("  Tool detection: %s signatures", len(self.tool_signatures))
 
     def analyze_request(
         self,
@@ -251,11 +251,9 @@ class HoneypotDetector:
             self._update_attacker_profile(ip_address, attack_type, tool_detected)
             self._save_state()
 
-            logger.warning(
-                f"Attack detected: {attack_type} from {ip_address} on {endpoint}"
-            )
+            logger.warning("Attack detected: %s from %s on %s", attack_type, ip_address, endpoint)
             if tool_detected:
-                logger.warning(f"  Tool detected: {tool_detected}")
+                logger.warning("  Tool detected: %s", tool_detected)
 
             return attempt
 
@@ -474,7 +472,7 @@ class HoneypotDetector:
                     self.attack_attempts = [
                         AttackAttempt(**a) for a in attempt_data[-10000:]
                     ]
-                logger.info(f"Loaded {len(self.attack_attempts)} attack attempts")
+                logger.info("Loaded %s attack attempts", len(self.attack_attempts))
 
             if self.profiles_file.exists():
                 with open(self.profiles_file) as f:
@@ -482,10 +480,10 @@ class HoneypotDetector:
                     self.attacker_profiles = {
                         ip: AttackerProfile(**data) for ip, data in profile_data.items()
                     }
-                logger.info(f"Loaded {len(self.attacker_profiles)} attacker profiles")
+                logger.info("Loaded %s attacker profiles", len(self.attacker_profiles))
 
         except Exception as e:
-            logger.error(f"Error loading honeypot state: {e}")
+            logger.error("Error loading honeypot state: %s", e)
 
     def _save_state(self) -> None:
         """Save state to disk."""
@@ -504,4 +502,4 @@ class HoneypotDetector:
                 json.dump(profile_data, f, indent=2)
 
         except Exception as e:
-            logger.error(f"Error saving honeypot state: {e}")
+            logger.error("Error saving honeypot state: %s", e)

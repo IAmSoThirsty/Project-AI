@@ -90,7 +90,7 @@ class MemoryManager:
         self.archive_dir.mkdir(parents=True, exist_ok=True)
 
         self.policy = retention_policy or self.DEFAULT_POLICY
-        logger.info(f"MemoryManager initialized with archive dir: {self.archive_dir}")
+        logger.info("MemoryManager initialized with archive dir: %s", self.archive_dir)
 
     def cleanup(self, dry_run: bool = False) -> dict[str, Any]:
         """
@@ -102,7 +102,7 @@ class MemoryManager:
         Returns:
             Cleanup report with statistics
         """
-        logger.info(f"Starting cleanup (dry_run={dry_run})...")
+        logger.info("Starting cleanup (dry_run=%s)...", dry_run)
 
         # Get all builds
         all_builds = self.db.get_builds(limit=100000, offset=0)
@@ -209,7 +209,7 @@ class MemoryManager:
             # Get all build data
             build = self.db.get_build(build_id)
             if not build:
-                logger.warning(f"Build {build_id} not found for archival")
+                logger.warning("Build %s not found for archival", build_id)
                 return False
 
             archive_data = {
@@ -229,11 +229,11 @@ class MemoryManager:
             with gzip.open(archive_file, "wt", encoding="utf-8") as f:
                 json.dump(archive_data, f, indent=2, default=str)
 
-            logger.debug(f"Archived build {build_id} to {archive_file}")
+            logger.debug("Archived build %s to %s", build_id, archive_file)
             return True
 
         except Exception as e:
-            logger.error(f"Failed to archive build {build_id}: {e}")
+            logger.error("Failed to archive build %s: %s", build_id, e)
             return False
 
     def restore_from_archive(self, archive_file: Path) -> int | None:
@@ -334,11 +334,11 @@ class MemoryManager:
                     scope=dep.get("scope"),
                 )
 
-            logger.info(f"Restored build {build_id} from {archive_file}")
+            logger.info("Restored build %s from %s", build_id, archive_file)
             return build_id
 
         except Exception as e:
-            logger.error(f"Failed to restore from archive {archive_file}: {e}")
+            logger.error("Failed to restore from archive %s: %s", archive_file, e)
             return None
 
     def vacuum_database(self) -> dict[str, Any]:
@@ -397,7 +397,7 @@ class MemoryManager:
                 logger.info("Database analysis completed")
             except Exception as e:
                 results["analyze"] = {"status": "failed", "error": str(e)}
-                logger.error(f"Database analysis failed: {e}")
+                logger.error("Database analysis failed: %s", e)
 
         # Rebuild indexes
         results["reindex"] = self._rebuild_indexes()
@@ -421,10 +421,10 @@ class MemoryManager:
                     conn.execute(f"REINDEX {index}")
 
                 conn.commit()
-                logger.info(f"Rebuilt {len(indexes)} indexes")
+                logger.info("Rebuilt %s indexes", len(indexes))
                 return {"status": "success", "indexes_rebuilt": len(indexes)}
             except Exception as e:
-                logger.error(f"Failed to rebuild indexes: {e}")
+                logger.error("Failed to rebuild indexes: %s", e)
                 return {"status": "failed", "error": str(e)}
 
     def get_memory_usage(self) -> dict[str, Any]:
@@ -516,7 +516,7 @@ class MemoryManager:
         elif health["warnings"]:
             health["status"] = "warning"
 
-        logger.info(f"Health check completed: {health['status']}")
+        logger.info("Health check completed: %s", health['status'])
         return health
 
     def create_backup(self, backup_path: Path | None = None) -> Path:
@@ -552,12 +552,12 @@ class MemoryManager:
                 # Remove uncompressed backup
                 backup_path.unlink()
 
-                logger.info(f"Created database backup: {compressed_path}")
+                logger.info("Created database backup: %s", compressed_path)
                 return compressed_path
             except Exception as e:
                 if backup_conn:
                     backup_conn.close()
-                logger.error(f"Backup failed: {e}")
+                logger.error("Backup failed: %s", e)
                 raise
 
     def list_archives(self) -> list[dict[str, Any]]:

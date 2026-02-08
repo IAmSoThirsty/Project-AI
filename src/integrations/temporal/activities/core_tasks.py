@@ -55,7 +55,7 @@ async def validate_input(data: str) -> bool:
     dangerous_patterns = ["<script>", "javascript:", "eval("]
     for pattern in dangerous_patterns:
         if pattern.lower() in data.lower():
-            activity.logger.warning(f"Dangerous pattern detected: {pattern}")
+            activity.logger.warning("Dangerous pattern detected: %s", pattern)
             return False
 
     activity.logger.info("Input validation passed")
@@ -83,7 +83,7 @@ async def simulate_ai_call(prompt: str) -> str:
         >>> print(response)
         "AI Response: quantum computing explanation..."
     """
-    activity.logger.info(f"Simulating AI call with prompt: {prompt[:50]}...")
+    activity.logger.info("Simulating AI call with prompt: %s...", prompt[)
 
     # Simulate API call delay
     await asyncio.sleep(2)
@@ -142,7 +142,7 @@ async def process_ai_task(task_data: dict) -> str:
         "status": "completed",
     }
 
-    activity.logger.info(f"Task processing completed for user: {user_id}")
+    activity.logger.info("Task processing completed for user: %s", user_id)
 
     # Return a formatted result
     return (

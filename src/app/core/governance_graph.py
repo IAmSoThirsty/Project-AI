@@ -274,9 +274,7 @@ class GovernanceGraph:
                     self._must_consult[from_domain] = set()
                 self._must_consult[from_domain].add(to_domain)
 
-            logger.info(
-                f"Added relationship: {from_domain} -{relationship_type.value}-> {to_domain}"
-            )
+            logger.info("Added relationship: %s -%s-> %s", from_domain, relationship_type.value, to_domain)
 
             return True
 

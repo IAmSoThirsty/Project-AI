@@ -204,11 +204,11 @@ class ConversationContextEngine:
 
                 self._user_histories[user_id].total_sessions += 1
 
-                logger.info(f"Started conversation session: {session_id}")
+                logger.info("Started conversation session: %s", session_id)
                 return session_id
 
         except Exception as e:
-            logger.error(f"Failed to start session: {e}")
+            logger.error("Failed to start session: %s", e)
             return ""
 
     def add_turn(
@@ -222,7 +222,7 @@ class ConversationContextEngine:
         try:
             with self._lock:
                 if session_id not in self._active_sessions:
-                    logger.error(f"Session not found: {session_id}")
+                    logger.error("Session not found: %s", session_id)
                     return None
 
                 session = self._active_sessions[session_id]
@@ -281,11 +281,11 @@ class ConversationContextEngine:
                 self._save_session(session_id)
                 self._save_user_history(session.user_id)
 
-                logger.debug(f"Added turn {turn_id} to session {session_id}")
+                logger.debug("Added turn %s to session %s", turn_id, session_id)
                 return turn
 
         except Exception as e:
-            logger.error(f"Failed to add turn: {e}")
+            logger.error("Failed to add turn: %s", e)
             return None
 
     def _detect_intent(self, text: str) -> Intent:
@@ -399,7 +399,7 @@ class ConversationContextEngine:
                 return context
 
         except Exception as e:
-            logger.error(f"Failed to get context: {e}")
+            logger.error("Failed to get context: %s", e)
             return {}
 
     def _summarize_user_history(self, history: UserHistory) -> dict[str, Any]:
@@ -448,11 +448,11 @@ class ConversationContextEngine:
                 # Move to archive
                 del self._active_sessions[session_id]
 
-                logger.info(f"Ended session: {session_id}")
+                logger.info("Ended session: %s", session_id)
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to end session: {e}")
+            logger.error("Failed to end session: %s", e)
             return False
 
     def get_user_history(self, user_id: str) -> UserHistory | None:
@@ -483,7 +483,7 @@ class ConversationContextEngine:
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to update preference: {e}")
+            logger.error("Failed to update preference: %s", e)
             return False
 
     def _save_session(self, session_id: str) -> None:
@@ -520,7 +520,7 @@ class ConversationContextEngine:
                 json.dump(session_data, f, indent=2)
 
         except Exception as e:
-            logger.error(f"Failed to save session: {e}")
+            logger.error("Failed to save session: %s", e)
 
     def _save_user_history(self, user_id: str) -> None:
         """Save user history to disk"""
@@ -535,7 +535,7 @@ class ConversationContextEngine:
                 json.dump(asdict(history), f, indent=2)
 
         except Exception as e:
-            logger.error(f"Failed to save user history: {e}")
+            logger.error("Failed to save user history: %s", e)
 
 
 class AdaptivePolicy(Enum):
@@ -646,7 +646,7 @@ class PolicyManager:
                 return adjusted_policies
 
         except Exception as e:
-            logger.error(f"Failed to get adaptive policy: {e}")
+            logger.error("Failed to get adaptive policy: %s", e)
             return {}
 
     def _adjust_policy_for_context(
@@ -760,11 +760,11 @@ class PolicyManager:
                 policy.last_updated = datetime.utcnow().isoformat()
 
                 self._save_user_policies(user_id)
-                logger.info(f"Updated policy {policy_type.value} for user {user_id}")
+                logger.info("Updated policy %s for user %s", policy_type.value, user_id)
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to update policy: {e}")
+            logger.error("Failed to update policy: %s", e)
             return False
 
     def _save_user_policies(self, user_id: str) -> None:
@@ -785,7 +785,7 @@ class PolicyManager:
                 json.dump(policies_data, f, indent=2)
 
         except Exception as e:
-            logger.error(f"Failed to save user policies: {e}")
+            logger.error("Failed to save user policies: %s", e)
 
 
 # Global instances

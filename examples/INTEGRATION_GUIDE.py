@@ -52,14 +52,14 @@ def setup_ui(self):
 # Add event handlers:
 def on_personality_changed(self, personality_traits):
     """Handle personality trait changes."""
-    logger.info(f"Personality updated: {personality_traits}")
+    logger.info("Personality updated: %s", personality_traits)
     # Save to user preferences
     self.user_manager.save_user_preferences({"persona_traits": personality_traits})
 
 
 def on_proactive_changed(self, settings):
     """Handle proactive settings changes."""
-    logger.info(f"Proactive settings updated: {settings}")
+    logger.info("Proactive settings updated: %s", settings)
     # Apply settings based on enabled flag
     # Implementation: start/stop proactive message timer as needed
 
@@ -126,13 +126,13 @@ def load_heavy_data(self):
 
 def on_data_loaded(self, result):
     """Handle loaded data."""
-    logger.info(f"Data loaded: {result}")
+    logger.info("Data loaded: %s", result)
     self.update_ui(result)
 
 
 def on_data_error(self, error):
     """Handle loading error."""
-    logger.error(f"Error loading data: {error}")
+    logger.error("Error loading data: %s", error)
     DashboardErrorHandler.handle_exception(
         error, context="Data Loading Failed", show_dialog=True, parent=self
     )
@@ -194,14 +194,14 @@ def expensive_operation(self):
     result = None
 
     duration_ms = (time.time() - start) * 1000
-    logger.info(f"Expensive Calculation took {duration_ms:.2f}ms")
+    logger.info("Expensive Calculation took %sms", duration_ms)
 
     return result
 
 
 def user_action_performed(self, user, action):
     """Log user actions."""
-    logger.info(f"User action: {user} performed {action}")
+    logger.info("User action: %s performed %s", user, action)
 
 
 # ============================================================================

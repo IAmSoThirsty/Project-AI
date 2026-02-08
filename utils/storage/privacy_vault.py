@@ -64,7 +64,7 @@ class PrivacyVault:
         else:
             self._vault[key] = value.encode()
 
-        self.logger.debug(f"Stored encrypted data: {key}")
+        self.logger.debug("Stored encrypted data: %s", key)
 
     def retrieve(self, key: str) -> str | None:
         """
@@ -83,7 +83,7 @@ class PrivacyVault:
                 decrypted = self._cipher.decrypt(encrypted_value)
                 return decrypted.decode()
             except Exception as e:
-                self.logger.error(f"Decryption failed: {e}")
+                self.logger.error("Decryption failed: %s", e)
                 return None
         else:
             return encrypted_value.decode()
@@ -96,7 +96,7 @@ class PrivacyVault:
                 self._vault[key] = os.urandom(len(self._vault[key]))
 
             del self._vault[key]
-            self.logger.debug(f"Deleted data: {key}")
+            self.logger.debug("Deleted data: %s", key)
 
     def _secure_wipe(self):
         """Securely wipe all vault data"""

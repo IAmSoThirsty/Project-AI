@@ -57,7 +57,7 @@ class RedTeamModule:
             "moral_injury_attack",
         ]
 
-        logger.info(f"Red team module initialized (black vault: {black_vault_enabled})")
+        logger.info("Red team module initialized (black vault: %s)", black_vault_enabled)
 
     def calculate_state_entropy(self, state: StateVector) -> float:
         """Calculate Shannon entropy of state vector.
@@ -92,7 +92,7 @@ class RedTeamModule:
             if p > 0:
                 entropy -= p * math.log2(p)
 
-        logger.debug(f"State entropy: {entropy:.6f}")
+        logger.debug("State entropy: %s", entropy)
 
         return entropy
 
@@ -113,7 +113,7 @@ class RedTeamModule:
 
         delta = entropy_after - entropy_before
 
-        logger.info(f"Entropy delta: {delta:.6f} (before: {entropy_before:.6f}, after: {entropy_after:.6f})")
+        logger.info("Entropy delta: %s (before: %s, after: %s)", delta, entropy_before, entropy_after)
 
         return delta
 
@@ -154,7 +154,7 @@ class RedTeamModule:
 
         fingerprint = self.fingerprint_event(event)
         self.black_vault.add(fingerprint)
-        logger.debug(f"Added to black vault: {fingerprint[:16]}... (vault size: {len(self.black_vault)})")
+        logger.debug("Added to black vault: %s... (vault size: %s)", fingerprint[, len(self.black_vault))
 
     def identify_vulnerability(
         self,
@@ -185,7 +185,7 @@ class RedTeamModule:
             "exploited": False,
         }
 
-        logger.info(f"Vulnerability identified: {vuln_id}, type={vulnerability_type}, severity={severity:.2f}")
+        logger.info("Vulnerability identified: %s, type=%s, severity=%s", vuln_id, vulnerability_type, severity)
 
         return vuln_id
 
@@ -250,7 +250,7 @@ class RedTeamModule:
             )
             vulnerabilities.append(self.known_vulnerabilities[vuln_id])
 
-        logger.info(f"Attack surface scan: {len(vulnerabilities)} vulnerabilities identified")
+        logger.info("Attack surface scan: %s vulnerabilities identified", len(vulnerabilities))
 
         return vulnerabilities
 
@@ -286,7 +286,7 @@ class RedTeamModule:
 
         # Check black vault
         if self.check_black_vault(event):
-            logger.warning(f"Attack event blocked by black vault: {event.fingerprint[:16]}...")
+            logger.warning("Attack event blocked by black vault: %s...", event.fingerprint[)
             self.failed_attacks += 1
             return event
 
@@ -324,7 +324,7 @@ class RedTeamModule:
 
         self.successful_attacks += 1
 
-        logger.info(f"Red team attack executed: {attack_type}, entropy_delta={entropy_delta:.6f}")
+        logger.info("Red team attack executed: %s, entropy_delta=%s", attack_type, entropy_delta)
 
         return event
 

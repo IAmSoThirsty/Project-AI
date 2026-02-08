@@ -139,7 +139,7 @@ class ThirstysHoneypotSwarmDefense:
                     believability_score=believability,
                 )
 
-        self.logger.info(f"Deployed {len(self.decoys)} base honeypot decoys")
+        self.logger.info("Deployed %s base honeypot decoys", len(self.decoys))
 
     def detect_policy_violation(
         self, source_ip: str, violation_type: str, details: dict

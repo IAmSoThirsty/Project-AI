@@ -46,7 +46,7 @@ class BuildMemoryDB:
         self.db_path = db_path
         self._conn: sqlite3.Connection | None = None
         self._initialize_database()
-        logger.info(f"BuildMemoryDB initialized at {self.db_path}")
+        logger.info("BuildMemoryDB initialized at %s", self.db_path)
 
     def _initialize_database(self) -> None:
         """Initialize database with schema and enable WAL mode."""
@@ -355,11 +355,11 @@ class BuildMemoryDB:
                 )
                 conn.commit()
                 build_id = cursor.lastrowid
-                logger.info(f"Created build {build_id} for version {version}")
+                logger.info("Created build %s for version %s", build_id, version)
                 return build_id
             except sqlite3.Error as e:
                 conn.rollback()
-                logger.error(f"Failed to create build: {e}")
+                logger.error("Failed to create build: %s", e)
                 raise
 
     def update_build(
@@ -429,11 +429,11 @@ class BuildMemoryDB:
                     params,
                 )
                 conn.commit()
-                logger.debug(f"Updated build {build_id}")
+                logger.debug("Updated build %s", build_id)
                 return True
             except sqlite3.Error as e:
                 conn.rollback()
-                logger.error(f"Failed to update build {build_id}: {e}")
+                logger.error("Failed to update build %s: %s", build_id, e)
                 return False
 
     def get_build(self, build_id: int) -> dict[str, Any] | None:
@@ -506,11 +506,11 @@ class BuildMemoryDB:
             try:
                 conn.execute("DELETE FROM builds WHERE id = ?", (build_id,))
                 conn.commit()
-                logger.info(f"Deleted build {build_id}")
+                logger.info("Deleted build %s", build_id)
                 return True
             except sqlite3.Error as e:
                 conn.rollback()
-                logger.error(f"Failed to delete build {build_id}: {e}")
+                logger.error("Failed to delete build %s: %s", build_id, e)
                 return False
 
     # ==================== CRUD Operations: Build Phases ====================
@@ -551,7 +551,7 @@ class BuildMemoryDB:
                 return cursor.lastrowid
             except sqlite3.Error as e:
                 conn.rollback()
-                logger.error(f"Failed to create build phase: {e}")
+                logger.error("Failed to create build phase: %s", e)
                 raise
 
     def update_build_phase(
@@ -595,7 +595,7 @@ class BuildMemoryDB:
                 return True
             except sqlite3.Error as e:
                 conn.rollback()
-                logger.error(f"Failed to update build phase {phase_id}: {e}")
+                logger.error("Failed to update build phase %s: %s", phase_id, e)
                 return False
 
     def get_build_phases(self, build_id: int) -> list[dict[str, Any]]:
@@ -629,11 +629,11 @@ class BuildMemoryDB:
                     (build_id, phase, principle, severity, reason),
                 )
                 conn.commit()
-                logger.warning(f"Recorded {severity} violation for build {build_id}: {principle}")
+                logger.warning("Recorded %s violation for build %s: %s", severity, build_id, principle)
                 return cursor.lastrowid
             except sqlite3.Error as e:
                 conn.rollback()
-                logger.error(f"Failed to create violation: {e}")
+                logger.error("Failed to create violation: %s", e)
                 raise
 
     def waive_violation(
@@ -654,11 +654,11 @@ class BuildMemoryDB:
                     (waiver_reason, waived_by, violation_id),
                 )
                 conn.commit()
-                logger.info(f"Waived violation {violation_id} by {waived_by}")
+                logger.info("Waived violation %s by %s", violation_id, waived_by)
                 return True
             except sqlite3.Error as e:
                 conn.rollback()
-                logger.error(f"Failed to waive violation {violation_id}: {e}")
+                logger.error("Failed to waive violation %s: %s", violation_id, e)
                 return False
 
     def get_violations(
@@ -722,7 +722,7 @@ class BuildMemoryDB:
                 return cursor.lastrowid
             except sqlite3.Error as e:
                 conn.rollback()
-                logger.error(f"Failed to create policy decision: {e}")
+                logger.error("Failed to create policy decision: %s", e)
                 raise
 
     def override_policy_decision(
@@ -744,11 +744,11 @@ class BuildMemoryDB:
                     (override_reason, overridden_by, decision_id),
                 )
                 conn.commit()
-                logger.info(f"Overridden policy decision {decision_id} by {overridden_by}")
+                logger.info("Overridden policy decision %s by %s", decision_id, overridden_by)
                 return True
             except sqlite3.Error as e:
                 conn.rollback()
-                logger.error(f"Failed to override policy decision {decision_id}: {e}")
+                logger.error("Failed to override policy decision %s: %s", decision_id, e)
                 return False
 
     def get_policy_decisions(self, build_id: int) -> list[dict[str, Any]]:
@@ -794,11 +794,11 @@ class BuildMemoryDB:
                     ),
                 )
                 conn.commit()
-                logger.warning(f"Recorded {severity} security event for build {build_id}: {event_type}")
+                logger.warning("Recorded %s security event for build %s: %s", severity, build_id, event_type)
                 return cursor.lastrowid
             except sqlite3.Error as e:
                 conn.rollback()
-                logger.error(f"Failed to create security event: {e}")
+                logger.error("Failed to create security event: %s", e)
                 raise
 
     def remediate_security_event(
@@ -820,11 +820,11 @@ class BuildMemoryDB:
                     (remediation_details, remediated_by, event_id),
                 )
                 conn.commit()
-                logger.info(f"Remediated security event {event_id} by {remediated_by}")
+                logger.info("Remediated security event %s by %s", event_id, remediated_by)
                 return True
             except sqlite3.Error as e:
                 conn.rollback()
-                logger.error(f"Failed to remediate security event {event_id}: {e}")
+                logger.error("Failed to remediate security event %s: %s", event_id, e)
                 return False
 
     def get_security_events(
@@ -892,7 +892,7 @@ class BuildMemoryDB:
                 return cursor.lastrowid
             except sqlite3.Error as e:
                 conn.rollback()
-                logger.error(f"Failed to create artifact: {e}")
+                logger.error("Failed to create artifact: %s", e)
                 raise
 
     def get_artifacts(self, build_id: int) -> list[dict[str, Any]]:
@@ -959,11 +959,11 @@ class BuildMemoryDB:
                 )
                 conn.commit()
                 if vuln_count > 0:
-                    logger.warning(f"Dependency {name}:{version} has {vuln_count} vulnerabilities")
+                    logger.warning("Dependency %s:%s has %s vulnerabilities", name, version, vuln_count)
                 return cursor.lastrowid
             except sqlite3.Error as e:
                 conn.rollback()
-                logger.error(f"Failed to create dependency: {e}")
+                logger.error("Failed to create dependency: %s", e)
                 raise
 
     def get_dependencies(
@@ -1012,7 +1012,7 @@ class BuildMemoryDB:
                 logger.info("Database vacuumed successfully")
                 return True
             except sqlite3.Error as e:
-                logger.error(f"Failed to vacuum database: {e}")
+                logger.error("Failed to vacuum database: %s", e)
                 return False
 
     def get_database_size(self) -> int:

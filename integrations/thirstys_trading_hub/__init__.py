@@ -43,7 +43,7 @@ class TradingHub:
         self.kernel = kernel
         self._enabled = True
 
-        logger.info(f"Initializing Trading Hub in {mode} mode")
+        logger.info("Initializing Trading Hub in %s mode", mode)
 
         # Initialize components (lazy loading to avoid import errors)
         self._market_data = None
@@ -119,7 +119,7 @@ class TradingHub:
         if not self._enabled:
             raise RuntimeError("Trading Hub is not enabled")
 
-        logger.info(f"Fetching market data for {symbol}")
+        logger.info("Fetching market data for %s", symbol)
         return self.market_data.get_data(symbol, timeframe, limit)
 
     def place_order(
@@ -157,7 +157,7 @@ class TradingHub:
         if not is_allowed:
             raise PermissionError(f"Trade blocked by risk manager: {reason}")
 
-        logger.info(f"Placing {side} order for {quantity} {symbol}")
+        logger.info("Placing %s order for %s %s", side, quantity, symbol)
         return self.order_manager.place_order(
             symbol=symbol,
             quantity=quantity,
@@ -199,7 +199,7 @@ class TradingHub:
                 )
                 results.append(result)
             except Exception as e:
-                logger.error(f"Failed to close position {position['symbol']}: {e}")
+                logger.error("Failed to close position %s: %s", position['symbol'], e)
 
         return results
 

@@ -145,10 +145,8 @@ class IncidentResponder:
         self._load_state()
 
         logger.info("Incident Responder initialized")
-        logger.info(
-            f"  Auto-response: {'enabled' if enable_auto_response else 'disabled'}"
-        )
-        logger.info(f"  Available actions: {len(self.response_handlers)}")
+        logger.info("  Auto-response: %s", 'enabled' if enable_auto_response else 'disabled')
+        logger.info("  Available actions: %s", len(self.response_handlers))
 
     def handle_incident(
         self,
@@ -190,9 +188,7 @@ class IncidentResponder:
         with self.lock:
             self.incidents.append(incident)
 
-        logger.warning(
-            f"Incident detected: {incident_type} (severity: {severity}) from {source_ip}"
-        )
+        logger.warning("Incident detected: %s (severity: %s) from %s", incident_type, severity, source_ip)
 
         # Execute automated response if enabled
         if auto_respond and self.enable_auto_response:
@@ -205,9 +201,7 @@ class IncidentResponder:
         """Execute automated response based on incident."""
         actions = self._determine_response_actions(incident)
 
-        logger.info(
-            f"Executing {len(actions)} automated responses for {incident.incident_id}"
-        )
+        logger.info("Executing %s automated responses for %s", len(actions), incident.incident_id)
 
         for action in actions:
             try:
@@ -237,12 +231,12 @@ class IncidentResponder:
                     incident.automated_responses.append(action)
 
                 if success:
-                    logger.info(f"Response action succeeded: {action} - {details}")
+                    logger.info("Response action succeeded: %s - %s", action, details)
                 else:
-                    logger.error(f"Response action failed: {action} - {details}")
+                    logger.error("Response action failed: %s - %s", action, details)
 
             except Exception as e:
-                logger.error(f"Error executing response {action}: {e}")
+                logger.error("Error executing response %s: %s", action, e)
                 response = IncidentResponse(
                     incident_id=incident.incident_id,
                     action=action,
@@ -314,7 +308,7 @@ class IncidentResponder:
 
         # In production, this would actually disable the component
         # For now, we just log and track
-        logger.warning(f"Component isolated: {component}")
+        logger.warning("Component isolated: %s", component)
 
         return True, f"Component {component} isolated from network"
 
@@ -344,11 +338,11 @@ class IncidentResponder:
                         shutil.copytree(src, dst, dirs_exist_ok=True)
                         backed_up.append(str(src))
 
-            logger.info(f"Backup created: {backup_path}")
+            logger.info("Backup created: %s", backup_path)
             return True, f"Backup created: {len(backed_up)} items backed up"
 
         except Exception as e:
-            logger.error(f"Backup failed: {e}")
+            logger.error("Backup failed: %s", e)
             return False, f"Backup failed: {e}"
 
     def _restore_from_backup(self, incident: SecurityIncident) -> tuple[bool, str]:
@@ -360,7 +354,7 @@ class IncidentResponder:
             return False, "No backups available"
 
         latest_backup = backups[-1]
-        logger.info(f"Restoring from backup: {latest_backup}")
+        logger.info("Restoring from backup: %s", latest_backup)
 
         # In production, this would restore the data
         # For now, just log
@@ -386,7 +380,7 @@ Automated responses executed:
 Please review and take appropriate action.
         """
 
-        logger.critical(f"SECURITY ALERT: {incident.incident_type}")
+        logger.critical("SECURITY ALERT: %s", incident.incident_type)
         logger.critical(alert_message)
 
         # Write alert to file
@@ -404,7 +398,7 @@ Please review and take appropriate action.
             return False, "No IP address to block"
 
         # In production, this would integrate with firewall/IPBlocking system
-        logger.warning(f"IP blocked: {ip}")
+        logger.warning("IP blocked: %s", ip)
 
         return True, f"IP {ip} blocked at firewall level"
 
@@ -425,10 +419,10 @@ Please review and take appropriate action.
                 timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
                 dst = quarantine_dir / f"{timestamp}_{src.name}"
                 shutil.move(str(src), str(dst))
-                logger.info(f"File quarantined: {src} -> {dst}")
+                logger.info("File quarantined: %s -> %s", src, dst)
                 return True, f"File quarantined: {dst.name}"
         except Exception as e:
-            logger.error(f"Quarantine failed: {e}")
+            logger.error("Quarantine failed: %s", e)
             return False, f"Quarantine failed: {e}"
 
         return False, "File not found"
@@ -454,11 +448,11 @@ Please review and take appropriate action.
             with open(forensics_file, "w") as f:
                 json.dump(forensics_data, f, indent=2)
 
-            logger.info(f"Forensic data logged: {forensics_file}")
+            logger.info("Forensic data logged: %s", forensics_file)
             return True, f"Forensic data preserved: {forensics_file.name}"
 
         except Exception as e:
-            logger.error(f"Forensics logging failed: {e}")
+            logger.error("Forensics logging failed: %s", e)
             return False, f"Forensics logging failed: {e}"
 
     def get_statistics(self) -> dict[str, Any]:
@@ -526,7 +520,7 @@ Please review and take appropriate action.
                     self.incidents = [
                         SecurityIncident(**i) for i in incident_data[-1000:]
                     ]
-                logger.info(f"Loaded {len(self.incidents)} incidents")
+                logger.info("Loaded %s incidents", len(self.incidents))
 
             if self.responses_file.exists():
                 with open(self.responses_file) as f:
@@ -535,10 +529,10 @@ Please review and take appropriate action.
                     self.responses = [
                         IncidentResponse(**r) for r in response_data[-5000:]
                     ]
-                logger.info(f"Loaded {len(self.responses)} responses")
+                logger.info("Loaded %s responses", len(self.responses))
 
         except Exception as e:
-            logger.error(f"Error loading incident responder state: {e}")
+            logger.error("Error loading incident responder state: %s", e)
 
     def _save_state(self) -> None:
         """Save state to disk."""
@@ -554,4 +548,4 @@ Please review and take appropriate action.
                 json.dump(response_data, f, indent=2)
 
         except Exception as e:
-            logger.error(f"Error saving incident responder state: {e}")
+            logger.error("Error saving incident responder state: %s", e)
