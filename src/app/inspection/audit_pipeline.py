@@ -470,7 +470,9 @@ class AuditPipeline(KernelRoutedAgent if KERNEL_AVAILABLE else object):
             "lint_issues": results["lint"]["summary"]["total_issues"]
             if results.get("lint")
             else 0,
-            "reports_generated": list(results.get("reports", {}).keys()),
+            "reports_generated": list(results.get("reports").keys())
+            if results.get("reports")
+            else [],
             "catalog_path": results.get("catalog_path"),
         }
 
