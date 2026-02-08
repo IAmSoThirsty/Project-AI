@@ -1,0 +1,228 @@
+# PROJECT ATLAS Drivers Configuration
+# Formula-based drivers for influence, projection, and dynamics
+# Version: 1.0.0
+# Status: LOCKED
+
+version: "1.0.0"
+schema_version: "1.0.0"
+
+# Core Influence Drivers
+influence_drivers:
+  economic_power:
+    name: "Economic Power Driver"
+    weight: 0.25
+    formula: "(gdp * 0.4) + (market_cap * 0.3) + (trade_volume * 0.2) + (currency_strength * 0.1)"
+    inputs:
+      - gdp
+      - market_cap
+      - trade_volume
+      - currency_strength
+    normalization: "min_max"
+    constraints:
+      min: 0.0
+      max: 1.0
+      
+  military_capability:
+    name: "Military Capability Driver"
+    weight: 0.20
+    formula: "(budget * 0.3) + (personnel * 0.2) + (technology * 0.3) + (readiness * 0.2)"
+    inputs:
+      - budget
+      - personnel
+      - technology
+      - readiness
+    normalization: "min_max"
+    constraints:
+      min: 0.0
+      max: 1.0
+      
+  political_influence:
+    name: "Political Influence Driver"
+    weight: 0.20
+    formula: "(diplomatic_relations * 0.4) + (treaty_power * 0.3) + (soft_power * 0.3)"
+    inputs:
+      - diplomatic_relations
+      - treaty_power
+      - soft_power
+    normalization: "min_max"
+    constraints:
+      min: 0.0
+      max: 1.0
+      
+  technological_advancement:
+    name: "Technological Advancement Driver"
+    weight: 0.15
+    formula: "(rd_spending * 0.4) + (patent_count * 0.3) + (innovation_index * 0.3)"
+    inputs:
+      - rd_spending
+      - patent_count
+      - innovation_index
+    normalization: "min_max"
+    constraints:
+      min: 0.0
+      max: 1.0
+      
+  information_control:
+    name: "Information Control Driver"
+    weight: 0.10
+    formula: "(media_reach * 0.5) + (narrative_strength * 0.3) + (censorship_power * 0.2)"
+    inputs:
+      - media_reach
+      - narrative_strength
+      - censorship_power
+    normalization: "min_max"
+    constraints:
+      min: 0.0
+      max: 1.0
+      
+  social_cohesion:
+    name: "Social Cohesion Driver"
+    weight: 0.10
+    formula: "(internal_stability * 0.5) + (public_trust * 0.3) + (unity_index * 0.2)"
+    inputs:
+      - internal_stability
+      - public_trust
+      - unity_index
+    normalization: "min_max"
+    constraints:
+      min: 0.0
+      max: 1.0
+
+# Composite Influence Score
+composite_influence:
+  name: "Composite Influence Score"
+  formula: "sum(driver_value * driver_weight for each driver)"
+  normalization: "weighted_sum"
+  constraints:
+    min: 0.0
+    max: 1.0
+  validation:
+    - "All driver weights must sum to 1.0"
+    - "All driver values must be in [0, 1]"
+
+# Dynamic Projection Drivers
+projection_drivers:
+  momentum:
+    name: "Momentum Driver"
+    formula: "(current_influence - previous_influence) * velocity_factor"
+    velocity_factor: 0.1
+    decay_rate: 0.05
+    constraints:
+      min: -0.1
+      max: 0.1
+      
+  volatility:
+    name: "Volatility Driver"
+    formula: "stddev(influence_history) * volatility_multiplier"
+    volatility_multiplier: 1.5
+    lookback_periods: 10
+    constraints:
+      min: 0.0
+      max: 0.5
+      
+  network_effect:
+    name: "Network Effect Driver"
+    formula: "sum(neighbor_influence * edge_weight) / total_neighbors"
+    propagation_factor: 0.7
+    damping: 0.15
+    constraints:
+      min: 0.0
+      max: 1.0
+      
+  crisis_amplifier:
+    name: "Crisis Amplifier Driver"
+    formula: "base_influence * (1 + crisis_severity * amplification_factor)"
+    amplification_factor: 2.0
+    crisis_threshold: 0.7
+    constraints:
+      min: 0.0
+      max: 2.0
+      
+  alliance_boost:
+    name: "Alliance Boost Driver"
+    formula: "base_influence + sum(ally_influence * alliance_strength * boost_factor)"
+    boost_factor: 0.3
+    max_allies: 10
+    constraints:
+      min: 0.0
+      max: 1.5
+
+# Relationship Dynamics
+relationship_drivers:
+  cooperation:
+    name: "Cooperation Strength"
+    formula: "(shared_interests * 0.5) + (mutual_benefit * 0.3) + (trust * 0.2)"
+    evolution_rate: 0.01
+    
+  competition:
+    name: "Competition Intensity"
+    formula: "(conflicting_interests * 0.6) + (resource_overlap * 0.4)"
+    evolution_rate: 0.02
+    
+  conflict:
+    name: "Conflict Probability"
+    formula: "competition * tension * (1 - cooperation)"
+    threshold: 0.7
+    escalation_rate: 0.05
+
+# Scenario Generators
+scenario_drivers:
+  best_case:
+    name: "Best Case Scenario Driver"
+    multipliers:
+      economic_power: 1.2
+      political_influence: 1.15
+      social_cohesion: 1.3
+    probability_weight: 0.15
+    
+  expected:
+    name: "Expected Scenario Driver"
+    multipliers:
+      economic_power: 1.0
+      political_influence: 1.0
+      social_cohesion: 1.0
+    probability_weight: 0.70
+    
+  worst_case:
+    name: "Worst Case Scenario Driver"
+    multipliers:
+      economic_power: 0.7
+      political_influence: 0.8
+      social_cohesion: 0.6
+    probability_weight: 0.15
+
+# Temporal Dynamics
+temporal_drivers:
+  decay:
+    name: "Influence Decay Over Time"
+    formula: "current_value * exp(-decay_rate * time_elapsed)"
+    decay_rate: 0.001
+    
+  growth:
+    name: "Influence Growth"
+    formula: "current_value * (1 + growth_rate * growth_factor)"
+    growth_rate: 0.002
+    saturation_limit: 0.95
+    
+  oscillation:
+    name: "Cyclic Oscillation"
+    formula: "mean + amplitude * sin(2 * pi * frequency * time + phase)"
+    frequency: 0.1
+    amplitude: 0.1
+
+# Validation Rules
+validation:
+  driver_completeness:
+    - "All influence drivers must be present"
+    - "All weights must sum to 1.0"
+    - "All formulas must be syntactically valid"
+    
+  constraint_enforcement:
+    - "All outputs must respect min/max constraints"
+    - "Normalization must preserve relative ordering"
+    - "No division by zero allowed"
+    
+  determinism:
+    - "All random operations must use seeded RNG"
+    - "Formula evaluation must be deterministic"
+    - "No external API calls in drivers"

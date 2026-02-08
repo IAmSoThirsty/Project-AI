@@ -1,0 +1,226 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://project-ai.org/schemas/atlas/projection_pack.v1.json",
+  "title": "ProjectionPack",
+  "description": "Canonical schema for projection packs in PROJECT ATLAS. Immutable and locked for sovereign use.",
+  "type": "object",
+  "required": ["id", "name", "initial_state_id", "timeline", "scenarios", "metadata"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^PP-[A-Z0-9]{16}$",
+      "description": "Unique projection pack identifier with prefix"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 2048
+    },
+    "initial_state_id": {
+      "type": "string",
+      "pattern": "^WS-[A-Z0-9]{16}$",
+      "description": "Starting world state for projection"
+    },
+    "timeline": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["step", "timestamp", "state_id", "events"],
+        "properties": {
+          "step": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "state_id": {
+            "type": "string",
+            "pattern": "^WS-[A-Z0-9]{16}$"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["type", "description"],
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "claim_made",
+                    "opinion_changed",
+                    "relationship_formed",
+                    "influence_shift",
+                    "conflict_started",
+                    "conflict_resolved",
+                    "organization_created",
+                    "organization_dissolved",
+                    "policy_enacted",
+                    "crisis_occurred"
+                  ]
+                },
+                "description": {
+                  "type": "string"
+                },
+                "actors": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "impact": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              }
+            }
+          },
+          "metrics": {
+            "type": "object",
+            "properties": {
+              "stability": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "tension": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "information_quality": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "scenarios": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "probability", "timeline"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^SC-[A-Z0-9]{16}$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "probability": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "timeline": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^WS-[A-Z0-9]{16}$"
+            }
+          },
+          "triggers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "outcomes": {
+            "type": "object",
+            "properties": {
+              "best_case": {
+                "type": "string"
+              },
+              "expected": {
+                "type": "string"
+              },
+              "worst_case": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "parameters": {
+      "type": "object",
+      "required": ["horizon_days", "step_size_hours", "seed"],
+      "properties": {
+        "horizon_days": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3650
+        },
+        "step_size_hours": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8760
+        },
+        "seed": {
+          "type": "string",
+          "description": "Deterministic random seed"
+        },
+        "drivers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "constraints": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["created_at", "version", "hash", "deterministic"],
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "completed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "SHA-256 hash for provenance"
+        },
+        "deterministic": {
+          "type": "boolean"
+        },
+        "engine_version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "computation_time_seconds": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}
