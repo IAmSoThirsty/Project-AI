@@ -90,7 +90,7 @@ class TemporalLawEnforcer:
                 "timestamp": datetime.utcnow().isoformat(),
             }
         except Exception as e:
-            logger.error(f"Error in temporal enforcement: {e}", exc_info=True)
+            logger.error("Error in temporal enforcement: %s", e, exc_info=True)
             return {
                 "allowed": False,
                 "reason": f"Enforcement error: {str(e)}",
@@ -130,7 +130,7 @@ class TemporalLawEnforcer:
             return result
 
         except Exception as e:
-            logger.error(f"Error querying historical decision: {e}", exc_info=True)
+            logger.error("Error querying historical decision: %s", e, exc_info=True)
             return None
 
     async def schedule_periodic_review(
@@ -170,7 +170,7 @@ class TemporalLawEnforcer:
             return workflow_id
 
         except Exception as e:
-            logger.error(f"Error scheduling periodic review: {e}", exc_info=True)
+            logger.error("Error scheduling periodic review: %s", e, exc_info=True)
             raise
 
     async def enforce_time_bounded_policy(
@@ -217,7 +217,7 @@ class TemporalLawEnforcer:
             return result
 
         except Exception as e:
-            logger.error(f"Error in time-bounded enforcement: {e}", exc_info=True)
+            logger.error("Error in time-bounded enforcement: %s", e, exc_info=True)
             return {
                 "allowed": False,
                 "reason": f"Time-bounded enforcement error: {str(e)}",
@@ -287,7 +287,7 @@ class TemporalLawEnforcer:
             return history or []
 
         except Exception as e:
-            logger.error(f"Error getting enforcement history: {e}", exc_info=True)
+            logger.error("Error getting enforcement history: %s", e, exc_info=True)
             return []
 
     async def cleanup_expired_workflows(self, max_age_days: int = 30) -> int:
@@ -326,7 +326,7 @@ class TemporalLawEnforcer:
             return cleaned
 
         except Exception as e:
-            logger.error(f"Error cleaning up workflows: {e}", exc_info=True)
+            logger.error("Error cleaning up workflows: %s", e, exc_info=True)
             return 0
 
 

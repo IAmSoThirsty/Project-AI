@@ -191,7 +191,7 @@ class CollapseScheduler:
                 try:
                     callback(collapse, state)
                 except Exception as e:
-                    logger.error(f"Collapse callback error: {e}", exc_info=True)
+                    logger.error("Collapse callback error: %s", e, exc_info=True)
 
     def get_next_scheduled(self) -> ScheduledCollapse | None:
         """Get next scheduled collapse event.

@@ -95,7 +95,7 @@ class PolicyScheduler:
             )
 
         except Exception as e:
-            logger.error(f"Error scheduling policy: {e}", exc_info=True)
+            logger.error("Error scheduling policy: %s", e, exc_info=True)
 
     def schedule_recurring_policy(
         self,
@@ -142,7 +142,7 @@ class PolicyScheduler:
             logger.info("Scheduled %s recurrences of policy '%s'", recurrence_count, policy_id)
 
         except Exception as e:
-            logger.error(f"Error scheduling recurring policy: {e}", exc_info=True)
+            logger.error("Error scheduling recurring policy: %s", e, exc_info=True)
 
     async def start_scheduler(self) -> None:
         """Start the policy scheduler background task."""
@@ -173,7 +173,7 @@ class PolicyScheduler:
         except asyncio.CancelledError:
             logger.info("Scheduler loop cancelled")
         except Exception as e:
-            logger.error(f"Error in scheduler loop: {e}", exc_info=True)
+            logger.error("Error in scheduler loop: %s", e, exc_info=True)
 
     async def _process_scheduled_policies(self) -> None:
         """Process scheduled policies for activation/expiration."""
@@ -192,7 +192,7 @@ class PolicyScheduler:
                         await self._deactivate_policy(scheduled)
 
         except Exception as e:
-            logger.error(f"Error processing scheduled policies: {e}", exc_info=True)
+            logger.error("Error processing scheduled policies: %s", e, exc_info=True)
 
     def _check_conditions(self, conditions: dict[str, Any]) -> bool:
         """Check if policy activation conditions are met."""
@@ -231,7 +231,7 @@ class PolicyScheduler:
             logger.info("Activated policy: %s", scheduled.policy_id)
 
         except Exception as e:
-            logger.error(f"Error activating policy: {e}", exc_info=True)
+            logger.error("Error activating policy: %s", e, exc_info=True)
 
     async def _deactivate_policy(self, scheduled: ScheduledPolicy) -> None:
         """Deactivate a scheduled policy."""
@@ -251,7 +251,7 @@ class PolicyScheduler:
             logger.info("Deactivated policy: %s", scheduled.policy_id)
 
         except Exception as e:
-            logger.error(f"Error deactivating policy: {e}", exc_info=True)
+            logger.error("Error deactivating policy: %s", e, exc_info=True)
 
     def register_callback(
         self,
@@ -286,7 +286,7 @@ class PolicyScheduler:
                 else:
                     callback(policy_id, event_type)
             except Exception as e:
-                logger.error(f"Error executing callback: {e}", exc_info=True)
+                logger.error("Error executing callback: %s", e, exc_info=True)
 
     def get_active_policies(self) -> list[dict[str, Any]]:
         """

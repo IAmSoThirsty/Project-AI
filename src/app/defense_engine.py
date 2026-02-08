@@ -130,7 +130,7 @@ class DefenseEngine:
             return True
 
         except Exception as e:
-            logger.error(f"Failed to initialize Defense Engine: {e}", exc_info=True)
+            logger.error("Failed to initialize Defense Engine: %s", e, exc_info=True)
             return False
 
     def run(self):

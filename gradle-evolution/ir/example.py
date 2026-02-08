@@ -265,7 +265,7 @@ steps:
     # Step 4: Generate proof certificate
     logger.info("Step 4: Generating proof certificate...")
     certificate = verifier.generate_proof_certificate(optimized_graph)
-    logger.info("  ✓ Certificate generated: %s...", certificate['certificate_hash'][)
+    logger.info("  ✓ Certificate generated: %s...", certificate['certificate_hash'][:16])
 
     # Step 5: Execute
     logger.info("Step 5: Executing IR...")
@@ -328,8 +328,10 @@ steps:
     logger.info("Deserialized graph: %s nodes", len(restored_graph.nodes))
 
     # Verify integrity
-    assert len(graph.nodes) == len(restored_graph.nodes), "Node count mismatch"
-    assert graph.entry_node == restored_graph.entry_node, "Entry node mismatch"
+    if not (len(graph.nodes) == len(restored_graph.nodes)):
+        raise AssertionError("Node count mismatch")
+    if not (graph.entry_node == restored_graph.entry_node):
+        raise AssertionError("Entry node mismatch")
     logger.info("✓ Serialization integrity verified")
 
     return restored_graph
@@ -359,7 +361,7 @@ def main():
         return pipeline_result
 
     except Exception as e:
-        logger.error(f"Example failed: {e}", exc_info=True)
+        logger.error("Example failed: %s", e, exc_info=True)
         raise
 
 

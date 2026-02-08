@@ -88,7 +88,7 @@ class VerifiabilityAPI:
                     "count": len(capsules),
                 })
             except Exception as e:
-                logger.error(f"Error listing capsules: {e}", exc_info=True)
+                logger.error("Error listing capsules: %s", e, exc_info=True)
                 return jsonify({"error": str(e)}), 500
 
         @self.app.route("/api/v1/capsules/<capsule_id>", methods=["GET"])
@@ -101,7 +101,7 @@ class VerifiabilityAPI:
 
                 return jsonify(capsule.to_dict())
             except Exception as e:
-                logger.error(f"Error getting capsule: {e}", exc_info=True)
+                logger.error("Error getting capsule: %s", e, exc_info=True)
                 return jsonify({"error": str(e)}), 500
 
         @self.app.route("/api/v1/capsules/<capsule_id>/verify", methods=["POST"])
@@ -117,7 +117,7 @@ class VerifiabilityAPI:
                     "timestamp": datetime.utcnow().isoformat(),
                 })
             except Exception as e:
-                logger.error(f"Error verifying capsule: {e}", exc_info=True)
+                logger.error("Error verifying capsule: %s", e, exc_info=True)
                 return jsonify({"error": str(e)}), 500
 
         @self.app.route("/api/v1/capsules/<capsule_id>/replay", methods=["POST"])
@@ -140,7 +140,7 @@ class VerifiabilityAPI:
                     "timestamp": result.timestamp,
                 })
             except Exception as e:
-                logger.error(f"Error replaying capsule: {e}", exc_info=True)
+                logger.error("Error replaying capsule: %s", e, exc_info=True)
                 return jsonify({"error": str(e)}), 500
 
         @self.app.route("/api/v1/capsules/diff", methods=["POST"])
@@ -163,7 +163,7 @@ class VerifiabilityAPI:
 
                 return jsonify(diff)
             except Exception as e:
-                logger.error(f"Error computing diff: {e}", exc_info=True)
+                logger.error("Error computing diff: %s", e, exc_info=True)
                 return jsonify({"error": str(e)}), 500
 
         @self.app.route("/api/v1/audit/events", methods=["GET"])
@@ -178,7 +178,7 @@ class VerifiabilityAPI:
                     "count": len(events),
                 })
             except Exception as e:
-                logger.error(f"Error getting audit events: {e}", exc_info=True)
+                logger.error("Error getting audit events: %s", e, exc_info=True)
                 return jsonify({"error": str(e)}), 500
 
         @self.app.route("/api/v1/audit/report", methods=["GET"])
@@ -204,7 +204,7 @@ class VerifiabilityAPI:
 
                 return jsonify(report)
             except Exception as e:
-                logger.error(f"Error generating report: {e}", exc_info=True)
+                logger.error("Error generating report: %s", e, exc_info=True)
                 return jsonify({"error": str(e)}), 500
 
         @self.app.route("/api/v1/proof/<capsule_id>", methods=["GET"])
@@ -230,7 +230,7 @@ class VerifiabilityAPI:
 
                 return jsonify(proof)
             except Exception as e:
-                logger.error(f"Error generating proof: {e}", exc_info=True)
+                logger.error("Error generating proof: %s", e, exc_info=True)
                 return jsonify({"error": str(e)}), 500
 
         @self.app.route("/api/v1/statistics", methods=["GET"])
@@ -248,7 +248,7 @@ class VerifiabilityAPI:
                     "timestamp": datetime.utcnow().isoformat(),
                 })
             except Exception as e:
-                logger.error(f"Error getting statistics: {e}", exc_info=True)
+                logger.error("Error getting statistics: %s", e, exc_info=True)
                 return jsonify({"error": str(e)}), 500
 
     def run(self, debug: bool = False) -> None:
@@ -262,7 +262,7 @@ class VerifiabilityAPI:
             logger.info("Starting verifiability API on %s:%s", self.host, self.port)
             self.app.run(host=self.host, port=self.port, debug=debug)
         except Exception as e:
-            logger.error(f"Error running API: {e}", exc_info=True)
+            logger.error("Error running API: %s", e, exc_info=True)
             raise
 
     def get_app(self) -> Flask:

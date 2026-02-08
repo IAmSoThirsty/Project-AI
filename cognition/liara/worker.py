@@ -87,7 +87,7 @@ async def main():
             logger.info("Worker stopped")
 
     except Exception as e:
-        logger.error(f"Worker error: {e}", exc_info=True)
+        logger.error("Worker error: %s", e, exc_info=True)
         return 1
     finally:
         # Cleanup

@@ -471,7 +471,7 @@ class GlobalScenarioEngine(SimulationSystem):
             return True
 
         except Exception as e:
-            logger.error(f"Failed to load historical data: {e}", exc_info=True)
+            logger.error("Failed to load historical data: %s", e, exc_info=True)
             return False
 
     def detect_threshold_events(
@@ -979,7 +979,7 @@ class GlobalScenarioEngine(SimulationSystem):
             return True
 
         except Exception as e:
-            logger.error(f"Failed to persist state: {e}", exc_info=True)
+            logger.error("Failed to persist state: %s", e, exc_info=True)
             return False
 
     def validate_data_quality(self) -> dict[str, Any]:

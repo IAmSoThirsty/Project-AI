@@ -69,7 +69,7 @@ class BuildAuditIntegration:
                 logger.info("Audited build start: %s", build_id)
 
         except Exception as e:
-            logger.error(f"Error auditing build start: {e}", exc_info=True)
+            logger.error("Error auditing build start: %s", e, exc_info=True)
 
     def audit_build_complete(
         self,
@@ -103,7 +103,7 @@ class BuildAuditIntegration:
                 logger.info("Audited build complete: %s, success=%s", build_id, success)
 
         except Exception as e:
-            logger.error(f"Error auditing build complete: {e}", exc_info=True)
+            logger.error("Error auditing build complete: %s", e, exc_info=True)
 
     def audit_policy_decision(
         self,
@@ -143,7 +143,7 @@ class BuildAuditIntegration:
                 )
 
         except Exception as e:
-            logger.error(f"Error auditing policy decision: {e}", exc_info=True)
+            logger.error("Error auditing policy decision: %s", e, exc_info=True)
 
     def audit_security_event(
         self,
@@ -186,7 +186,7 @@ class BuildAuditIntegration:
                 )
 
         except Exception as e:
-            logger.error(f"Error auditing security event: {e}", exc_info=True)
+            logger.error("Error auditing security event: %s", e, exc_info=True)
 
     def audit_capsule_creation(
         self,
@@ -223,7 +223,7 @@ class BuildAuditIntegration:
                 logger.info("Audited capsule creation: %s", capsule_id)
 
         except Exception as e:
-            logger.error(f"Error auditing capsule creation: {e}", exc_info=True)
+            logger.error("Error auditing capsule creation: %s", e, exc_info=True)
 
     def audit_replay_event(
         self,
@@ -257,7 +257,7 @@ class BuildAuditIntegration:
                 logger.info("Audited replay event: %s, success=%s", capsule_id, success)
 
         except Exception as e:
-            logger.error(f"Error auditing replay event: {e}", exc_info=True)
+            logger.error("Error auditing replay event: %s", e, exc_info=True)
 
     def audit_cognition_decision(
         self,
@@ -291,7 +291,7 @@ class BuildAuditIntegration:
                 logger.info("Audited cognition decision: %s", decision_type)
 
         except Exception as e:
-            logger.error(f"Error auditing cognition decision: {e}", exc_info=True)
+            logger.error("Error auditing cognition decision: %s", e, exc_info=True)
 
     def get_audit_buffer(self, limit: int = 100) -> list[dict[str, Any]]:
         """
@@ -373,7 +373,7 @@ class BuildAuditIntegration:
             }
 
         except Exception as e:
-            logger.error(f"Error generating audit report: {e}", exc_info=True)
+            logger.error("Error generating audit report: %s", e, exc_info=True)
             return {"error": str(e)}
 
     def _buffer_audit(self, event: str, detail: Any) -> None:

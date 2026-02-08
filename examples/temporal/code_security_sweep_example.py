@@ -106,5 +106,5 @@ if __name__ == "__main__":
     try:
         asyncio.run(run_code_sweep())
     except Exception as e:
-        logger.error(f"❌ Sweep failed: {e}", exc_info=True)
+        logger.error("❌ Sweep failed: %s", e, exc_info=True)
         sys.exit(1)

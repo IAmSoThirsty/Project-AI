@@ -277,7 +277,7 @@ def run_all_demos():
             success = demo_func()
             results.append((name, success))
         except Exception as e:
-            logger.error(f"Demo '{name}' failed with exception: {e}", exc_info=True)
+            logger.error("Demo '%s' failed with exception: %s", name, e, exc_info=True)
             results.append((name, False))
 
     # Print summary

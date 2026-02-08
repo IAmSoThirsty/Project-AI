@@ -122,7 +122,7 @@ class DjangoStateEngine:
             return True
 
         except Exception as e:
-            logger.error(f"Initialization failed: {e}", exc_info=True)
+            logger.error("Initialization failed: %s", e, exc_info=True)
             return False
 
     def tick(self) -> dict[str, Any]:
@@ -269,7 +269,7 @@ class DjangoStateEngine:
             return True
 
         except Exception as e:
-            logger.error(f"Failed to inject event: {e}", exc_info=True)
+            logger.error("Failed to inject event: %s", e, exc_info=True)
             return False
 
     def _apply_event(self, event: Event) -> dict[str, Any]:
@@ -516,5 +516,5 @@ class DjangoStateEngine:
             return True
 
         except Exception as e:
-            logger.error(f"Reset failed: {e}", exc_info=True)
+            logger.error("Reset failed: %s", e, exc_info=True)
             return False

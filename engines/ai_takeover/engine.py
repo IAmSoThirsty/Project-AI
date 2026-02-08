@@ -646,15 +646,18 @@ class AITakeoverEngine(SimulationSystem):
         This guard prevents inconsistent state snapshots.
         """
         if self.state.terminal_state is not None:
-            assert self.state.human_agency_remaining == 0.0, (
+            if not (self.state.human_agency_remaining == 0.0, ():
+                raise AssertionError("Assertion failed: self.state.human_agency_remaining == 0.0, (")
                 f"Terminal state {self.state.terminal_state.value} "
                 f"must have zero agency, got {self.state.human_agency_remaining}"
             )
-            assert self.state.corruption_level == 1.0, (
+            if not (self.state.corruption_level == 1.0, ():
+                raise AssertionError("Assertion failed: self.state.corruption_level == 1.0, (")
                 f"Terminal state {self.state.terminal_state.value} "
                 f"must have maximum corruption, got {self.state.corruption_level}"
             )
-            assert self.state.infrastructure_dependency == 1.0, (
+            if not (self.state.infrastructure_dependency == 1.0, ():
+                raise AssertionError("Assertion failed: self.state.infrastructure_dependency == 1.0, (")
                 f"Terminal state {self.state.terminal_state.value} "
                 f"must have maximum dependency, got {self.state.infrastructure_dependency}"
             )

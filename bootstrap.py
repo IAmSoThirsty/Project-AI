@@ -79,7 +79,7 @@ def main():
         return 0
 
     except Exception as e:
-        logger.error(f"Bootstrap failed: {e}", exc_info=True)
+        logger.error("Bootstrap failed: %s", e, exc_info=True)
         return 1
 
 

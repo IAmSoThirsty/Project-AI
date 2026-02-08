@@ -331,7 +331,7 @@ class StrategyEngine:
             result.completed_at = int(datetime.now(UTC).timestamp() * 1000)
             result.errors.append(str(e))
 
-            logger.error(f"Strategy '{strategy.name}' failed: {e}", exc_info=True)
+            logger.error("Strategy '%s' failed: %s", strategy.name, e, exc_info=True)
 
         self._execution_history.append(result)
         self._save_strategies()

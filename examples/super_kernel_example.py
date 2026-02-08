@@ -227,7 +227,7 @@ def main():
 
         logger.info("\n=== All Examples Completed Successfully ===")
     except Exception as e:
-        logger.error(f"Example failed: {e}", exc_info=True)
+        logger.error("Example failed: %s", e, exc_info=True)
 
 
 if __name__ == "__main__":

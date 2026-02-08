@@ -61,7 +61,7 @@ class AutoSaveService:
             except asyncio.CancelledError:
                 break
             except Exception as e:
-                logger.error(f"Error in auto-save loop: {e}", exc_info=True)
+                logger.error("Error in auto-save loop: %s", e, exc_info=True)
                 # Continue running even if one save fails
 
     def get_stats(self) -> dict:

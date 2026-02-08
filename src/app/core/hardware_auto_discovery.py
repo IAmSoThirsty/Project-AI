@@ -410,7 +410,7 @@ class HardwareRegistry:
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to save hardware registry: {e}", exc_info=True)
+            logger.error("Failed to save hardware registry: %s", e, exc_info=True)
             return False
 
     def load(self, filename: str = "hardware_registry.json") -> bool:
@@ -447,7 +447,7 @@ class HardwareRegistry:
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to load hardware registry: {e}", exc_info=True)
+            logger.error("Failed to load hardware registry: %s", e, exc_info=True)
             return False
 
 
@@ -519,7 +519,7 @@ class HardwareAutoDiscoverySystem:
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to start auto-discovery: {e}", exc_info=True)
+            logger.error("Failed to start auto-discovery: %s", e, exc_info=True)
             return False
 
     def stop(self) -> bool:
@@ -540,7 +540,7 @@ class HardwareAutoDiscoverySystem:
                 return True
 
         except Exception as e:
-            logger.error(f"Error stopping auto-discovery: {e}", exc_info=True)
+            logger.error("Error stopping auto-discovery: %s", e, exc_info=True)
             return False
 
     def _scan_loop(self) -> None:
@@ -550,7 +550,7 @@ class HardwareAutoDiscoverySystem:
                 self._perform_scan()
                 time.sleep(self.scan_interval)
             except Exception as e:
-                logger.error(f"Error in scan loop: {e}", exc_info=True)
+                logger.error("Error in scan loop: %s", e, exc_info=True)
 
     def _perform_scan(self) -> None:
         """Perform a single device scan"""
@@ -626,9 +626,7 @@ class HardwareAutoDiscoverySystem:
             try:
                 handler(data)
             except Exception as e:
-                logger.error(
-                    f"Error in event handler for {event_type}: {e}", exc_info=True
-                )
+                logger.error("Error in event handler for %s: %s", event_type, e, exc_info=True)
 
     def get_system_status(self) -> dict[str, Any]:
         """Get system status"""
