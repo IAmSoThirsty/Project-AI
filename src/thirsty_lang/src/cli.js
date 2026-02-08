@@ -6,7 +6,9 @@
  */
 
 const fs = require('fs');
+const path = require('path');
 const ThirstyInterpreter = require('./index');
+const { validatePath, validateExtension, isValidFile } = require('./path-validator');
 
 function main() {
   const args = process.argv.slice(2);
@@ -21,13 +23,22 @@ function main() {
 
   const filename = args[0];
   
-  if (!fs.existsSync(filename)) {
-    console.error(`Error: File '${filename}' not found`);
-    process.exit(1);
-  }
-
+  // Validate the filename to prevent path traversal
   try {
-    const code = fs.readFileSync(filename, 'utf-8');
+    const validatedPath = validatePath(filename);
+    
+    // Check if file exists
+    if (!isValidFile(validatedPath)) {
+      console.error(`Error: File '${filename}' not found or is not a valid file`);
+      process.exit(1);
+    }
+    
+    // Validate file extension (optional but recommended)
+    if (!validateExtension(validatedPath, ['.thirsty', '.js'])) {
+      console.warn(`Warning: File '${filename}' does not have a .thirsty extension`);
+    }
+    
+    const code = fs.readFileSync(validatedPath, 'utf-8');
     const interpreter = new ThirstyInterpreter();
     interpreter.execute(code);
   } catch (error) {
