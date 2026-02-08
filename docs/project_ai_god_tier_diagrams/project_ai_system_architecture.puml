@@ -1,0 +1,218 @@
+@startuml project_ai_system_architecture
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+
+title Project-AI System Architecture - Complete Overview
+
+package "TIER 1: GOVERNANCE" {
+    [CognitionKernel] as CK
+    [GovernanceTriumvirate] as GT
+    [MemoryEngine] as ME
+    [IdentityEngine] as IE
+    [AuditTrail] as AT
+    [PolicyEngine] as PE
+    
+    note right of CK
+        **Intent Detection**
+        • ML-based classification (30+ intents)
+        • Context enrichment
+        • Entity extraction (NER)
+        • Semantic parsing
+        
+        Performance: < 200ms (P95)
+    end note
+    
+    note right of GT
+        **Triumvirate Validation**
+        • Galahad (Ethics - Asimov's Laws)
+        • Cerberus (Security - Threat Detection)
+        • Codex Deus Maximus (Policy - Final Authority)
+        
+        Unanimous approval required
+        Performance: < 100ms (P95)
+    end note
+    
+    note right of ME
+        **Five-Channel Recording**
+        1. Attempt - Initial request
+        2. Decision - Governance results
+        3. Result - Execution output
+        4. Reflection - Analysis
+        5. Error - Failures
+        
+        Performance: < 50ms (P95)
+    end note
+}
+
+package "TIER 2: INFRASTRUCTURE" {
+    [ExecutionService] as ES
+    [CouncilHub] as CH
+    [DatabasePool] as DP
+    [CacheLayer] as CL
+    [MessageQueue] as MQ
+    [ObjectStore] as OS
+    
+    note right of ES
+        **Agent Orchestration**
+        • Dynamic agent selection
+        • Multi-agent coordination
+        • Timeout management (60s default)
+        • Result aggregation
+        • Agent pooling
+        
+        30+ specialized agents
+    end note
+}
+
+package "TIER 3: APPLICATION" {
+    [Agent System] as AS
+    [GUI Layer] as GUI
+    [REST API] as API
+    [CLI Interface] as CLI
+    [Plugin System] as PS
+    [WebSocket API] as WS
+    
+    note right of AS
+        **Agent Categories**
+        • Core: Intelligence, Learning, Command
+        • Analysis: Data, Security, Pattern
+        • Utility: Image, Location, Emergency
+        • Custom: User-defined plugins
+    end note
+    
+    note right of GUI
+        **PyQt6 Desktop**
+        • Leather Book Interface
+        • 6-zone Dashboard
+        • Persona Panel
+        • Image Generation UI
+        • Real-time chat
+    end note
+}
+
+package "DATA TIER" {
+    database "PostgreSQL" as PG {
+        [User Data]
+        [Memory Records]
+        [Audit Trail]
+        [Sessions]
+    }
+    
+    database "Redis Cache" as RC {
+        [Hot Data]
+        [Sessions]
+        [Rate Limits]
+        [Latest Hashes]
+    }
+    
+    database "RabbitMQ" as RMQ {
+        [Job Queue]
+        [Event Bus]
+        [Dead Letter Queue]
+    }
+    
+    database "MinIO/S3" as S3 {
+        [Files]
+        [Archives]
+        [Backups]
+        [Images]
+    }
+}
+
+' User interaction
+actor User
+User --> GUI : Desktop
+User --> API : HTTP/REST
+User --> CLI : Commands
+User --> WS : WebSocket
+
+' Tier 1 interactions
+GUI --> CK : Submit request
+API --> CK : Submit request
+CLI --> CK : Submit request
+WS --> CK : Submit request
+
+CK --> IE : Authenticate
+CK --> GT : Validate request
+CK --> ME : Record attempt
+
+GT --> PE : Check policies
+GT --> AT : Log decision
+
+' Tier 2 interactions
+CK --> ES : Execute (if approved)
+
+ES --> AS : Select agent
+ES --> CH : Publish events
+ES --> MQ : Queue jobs
+
+AS --> ME : Record result
+AS --> AT : Log execution
+
+' Data tier interactions
+CK --> DP : Query user context
+ES --> DP : Read/write data
+ME --> DP : Store memories
+AT --> DP : Append audit log
+
+ES --> CL : Cache results
+IE --> CL : Store sessions
+CK --> CL : Cache contexts
+
+ES --> MQ : Queue operations
+CH --> MQ : Pub/sub events
+
+AS --> OS : Store files
+ME --> OS : Archive memories
+
+' Data flow
+CK ..> DP : User context
+DP ..> RC : Cache hit/miss
+ES ..> MQ : Async operations
+ME ..> S3 : Archive old data
+AT ..> S3 : Export compliance
+
+' Security layers
+note bottom of IE
+    **7-Layer Security**
+    1. TLS 1.3 transport encryption
+    2. OAuth 2.0 / JWT authentication
+    3. RBAC authorization
+    4. Field-level encryption (AES-256-GCM)
+    5. Database encryption (TDE)
+    6. Storage encryption (S3)
+    7. Key management (HSM)
+end note
+
+' Monitoring
+package "OBSERVABILITY" {
+    [Prometheus] as PROM
+    [Grafana] as GRAF
+    [Jaeger] as JAE
+    [Alertmanager] as AM
+}
+
+ES --> PROM : Metrics
+CK --> PROM : Metrics
+GT --> PROM : Metrics
+AS --> PROM : Metrics
+
+PROM --> GRAF : Visualize
+PROM --> AM : Alerts
+
+ES --> JAE : Traces
+CK --> JAE : Traces
+AS --> JAE : Traces
+
+note bottom of PROM
+    **Key Metrics**
+    • Request rates per endpoint
+    • Governance decision latency
+    • Agent execution time
+    • Memory recording throughput
+    • Error rates and types
+    • Resource utilization
+end note
+
+@enduml
