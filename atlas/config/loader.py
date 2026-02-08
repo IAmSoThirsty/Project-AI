@@ -10,10 +10,9 @@ Production-grade with full error handling and audit logging.
 import hashlib
 import json
 import logging
-import os
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import yaml
 
@@ -37,8 +36,8 @@ class ConfigLoader:
     Loads, validates, and provides access to all YAML configuration files
     with immutability enforcement and audit logging.
     """
-    
-    def __init__(self, config_dir: Optional[Path] = None):
+
+    def __init__(self, config_dir: Path | None = None):
         """
         Initialize configuration loader.
         
@@ -48,25 +47,25 @@ class ConfigLoader:
         if config_dir is None:
             # Default to atlas/config (this file is already in config directory)
             config_dir = Path(__file__).parent
-        
+
         self.config_dir = Path(config_dir)
         if not self.config_dir.exists():
             raise ConfigurationError(f"Configuration directory not found: {self.config_dir}")
-        
-        self._configs: Dict[str, Dict[str, Any]] = {}
-        self._hashes: Dict[str, str] = {}
+
+        self._configs: dict[str, dict[str, Any]] = {}
+        self._hashes: dict[str, str] = {}
         self._load_timestamp = datetime.utcnow().isoformat()
-        
+
         logger.info(f"Initializing ConfigLoader with directory: {self.config_dir}")
-        
+
         # Load all configurations
         self._load_all()
-        
+
         # Validate integrity
         self._validate_all()
-        
+
         logger.info("Configuration loaded and validated successfully")
-    
+
     def _load_all(self) -> None:
         """Load all configuration files."""
         config_files = {
@@ -77,7 +76,7 @@ class ConfigLoader:
             "safety": "safety.yaml",
             "seeds": "seeds.yaml"
         }
-        
+
         for config_name, filename in config_files.items():
             filepath = self.config_dir / filename
             try:
@@ -85,7 +84,7 @@ class ConfigLoader:
             except Exception as e:
                 logger.error(f"Failed to load {filename}: {e}")
                 raise ConfigurationError(f"Failed to load {filename}: {e}") from e
-    
+
     def _load_config(self, name: str, filepath: Path) -> None:
         """
         Load a single configuration file.
@@ -95,61 +94,61 @@ class ConfigLoader:
             filepath: Path to YAML file
         """
         logger.debug(f"Loading configuration: {name} from {filepath}")
-        
+
         if not filepath.exists():
             raise ConfigurationError(f"Configuration file not found: {filepath}")
-        
+
         try:
-            with open(filepath, 'r', encoding='utf-8') as f:
+            with open(filepath, encoding='utf-8') as f:
                 content = f.read()
-            
+
             # Compute hash for integrity
             config_hash = hashlib.sha256(content.encode('utf-8')).hexdigest()
             self._hashes[name] = config_hash
-            
+
             # Parse YAML
             config = yaml.safe_load(content)
-            
+
             if not isinstance(config, dict):
                 raise ConfigurationError(f"{name} configuration must be a dictionary")
-            
+
             self._configs[name] = config
             logger.debug(f"Loaded {name} configuration (hash: {config_hash[:16]}...)")
-            
+
         except yaml.YAMLError as e:
             logger.error(f"YAML parse error in {filepath}: {e}")
             raise ConfigurationError(f"YAML parse error in {filepath}: {e}") from e
         except Exception as e:
             logger.error(f"Error loading {filepath}: {e}")
             raise ConfigurationError(f"Error loading {filepath}: {e}") from e
-    
+
     def _validate_all(self) -> None:
         """Validate all loaded configurations."""
         logger.debug("Validating all configurations")
-        
+
         # Validate required fields
         required_configs = ["stacks", "drivers", "penalties", "thresholds", "safety", "seeds"]
         for config_name in required_configs:
             if config_name not in self._configs:
                 raise ConfigurationError(f"Required configuration missing: {config_name}")
-        
+
         # Validate versions
         self._validate_versions()
-        
+
         # Validate safety configuration (most critical)
         self._validate_safety()
-        
+
         # Validate stacks configuration
         self._validate_stacks()
-        
+
         # Validate drivers configuration
         self._validate_drivers()
-        
+
         # Validate cross-configuration consistency
         self._validate_consistency()
-        
+
         logger.debug("All configurations validated successfully")
-    
+
     def _validate_versions(self) -> None:
         """Validate that all configurations have consistent versions."""
         versions = {}
@@ -157,21 +156,21 @@ class ConfigLoader:
             if "version" not in config:
                 raise ConfigurationError(f"Configuration {name} missing version field")
             versions[name] = config["version"]
-        
+
         # Log versions for audit
         logger.info(f"Configuration versions: {versions}")
-    
+
     def _validate_safety(self) -> None:
         """Validate safety configuration with strict enforcement."""
         safety = self._configs["safety"]
-        
+
         # Verify immutability flags
         if not safety.get("locked", False):
             raise SafetyViolationError("Safety configuration must be locked")
-        
+
         if safety.get("modification_allowed", True):
             raise SafetyViolationError("Safety configuration must not allow modification")
-        
+
         # Validate required safety sections
         required_sections = [
             "stack_separation",
@@ -180,11 +179,11 @@ class ConfigLoader:
             "governance",
             "security"
         ]
-        
+
         for section in required_sections:
             if section not in safety:
                 raise SafetyViolationError(f"Safety configuration missing required section: {section}")
-        
+
         # Validate that all critical rules have bypass: false
         for section_name, section in safety.items():
             if isinstance(section, dict):
@@ -192,38 +191,38 @@ class ConfigLoader:
                     if isinstance(rule, dict) and "bypass" in rule:
                         if rule.get("bypass", True):
                             logger.warning(f"Safety rule {section_name}.{rule_name} allows bypass")
-        
+
         logger.info("Safety configuration validated successfully")
-    
+
     def _validate_stacks(self) -> None:
         """Validate stacks configuration."""
         stacks_config = self._configs["stacks"]
-        
+
         if "stacks" not in stacks_config:
             raise ConfigurationError("Stacks configuration missing 'stacks' section")
-        
+
         stacks = stacks_config["stacks"]
         required_stacks = ["RS", "TS-0", "TS-1", "TS-2", "TS-3", "SS"]
-        
+
         for stack_name in required_stacks:
             if stack_name not in stacks:
                 raise ConfigurationError(f"Required stack missing: {stack_name}")
-        
+
         # Validate SS cannot be promoted
         if "transitions" in stacks_config:
             for transition in stacks_config["transitions"]:
                 if transition.get("from") == "SS" and transition.get("allowed", False):
                     raise SafetyViolationError("SS stack must not allow transitions to other stacks")
-        
+
         logger.info("Stacks configuration validated successfully")
-    
+
     def _validate_drivers(self) -> None:
         """Validate drivers configuration."""
         drivers = self._configs["drivers"]
-        
+
         if "influence_drivers" not in drivers:
             raise ConfigurationError("Drivers configuration missing 'influence_drivers' section")
-        
+
         # Validate that weights sum to 1.0
         influence_drivers = drivers["influence_drivers"]
         total_weight = sum(
@@ -231,28 +230,28 @@ class ConfigLoader:
             for driver in influence_drivers.values()
             if isinstance(driver, dict)
         )
-        
+
         if not (0.99 <= total_weight <= 1.01):  # Allow small floating point error
             raise ConfigurationError(
                 f"Influence driver weights must sum to 1.0, got {total_weight}"
             )
-        
+
         logger.info("Drivers configuration validated successfully")
-    
+
     def _validate_consistency(self) -> None:
         """Validate cross-configuration consistency."""
         # Validate that all stacks referenced in seeds exist in stacks config
         stacks = self._configs["stacks"]["stacks"]
         seeds = self._configs["seeds"]
-        
+
         if "timeline_seeds" in seeds:
             for stack_name in seeds["timeline_seeds"].keys():
                 if stack_name not in stacks:
                     logger.warning(f"Seed defined for unknown stack: {stack_name}")
-        
+
         logger.info("Cross-configuration consistency validated")
-    
-    def get(self, config_name: str) -> Dict[str, Any]:
+
+    def get(self, config_name: str) -> dict[str, Any]:
         """
         Get a configuration by name.
         
@@ -267,10 +266,10 @@ class ConfigLoader:
         """
         if config_name not in self._configs:
             raise ConfigurationError(f"Configuration not found: {config_name}")
-        
+
         # Return a copy to prevent modification
         return dict(self._configs[config_name])
-    
+
     def get_hash(self, config_name: str) -> str:
         """
         Get the SHA-256 hash of a configuration file.
@@ -283,13 +282,13 @@ class ConfigLoader:
         """
         if config_name not in self._hashes:
             raise ConfigurationError(f"Configuration not found: {config_name}")
-        
+
         return self._hashes[config_name]
-    
-    def get_all_hashes(self) -> Dict[str, str]:
+
+    def get_all_hashes(self) -> dict[str, str]:
         """Get hashes of all configurations for audit trail."""
         return dict(self._hashes)
-    
+
     def verify_integrity(self) -> bool:
         """
         Verify that configurations have not been modified.
@@ -300,27 +299,27 @@ class ConfigLoader:
         for config_name, original_hash in self._hashes.items():
             filename = f"{config_name}.yaml"
             filepath = self.config_dir / filename
-            
+
             try:
-                with open(filepath, 'r', encoding='utf-8') as f:
+                with open(filepath, encoding='utf-8') as f:
                     content = f.read()
-                
+
                 current_hash = hashlib.sha256(content.encode('utf-8')).hexdigest()
-                
+
                 if current_hash != original_hash:
                     logger.error(
                         f"Configuration {config_name} has been modified! "
                         f"Original: {original_hash}, Current: {current_hash}"
                     )
                     return False
-                    
+
             except Exception as e:
                 logger.error(f"Error verifying {config_name}: {e}")
                 return False
-        
+
         return True
-    
-    def get_metadata(self) -> Dict[str, Any]:
+
+    def get_metadata(self) -> dict[str, Any]:
         """Get metadata about loaded configurations."""
         return {
             "load_timestamp": self._load_timestamp,
@@ -332,7 +331,7 @@ class ConfigLoader:
                 for name, config in self._configs.items()
             }
         }
-    
+
     def export_audit_log(self) -> str:
         """
         Export configuration audit log as JSON.
@@ -349,15 +348,15 @@ class ConfigLoader:
                 "modification_allowed": self._configs["safety"].get("modification_allowed", True)
             }
         }
-        
+
         return json.dumps(audit_data, indent=2)
 
 
 # Singleton instance for application-wide access
-_global_config_loader: Optional[ConfigLoader] = None
+_global_config_loader: ConfigLoader | None = None
 
 
-def get_config_loader(config_dir: Optional[Path] = None) -> ConfigLoader:
+def get_config_loader(config_dir: Path | None = None) -> ConfigLoader:
     """
     Get the global configuration loader instance.
     
@@ -368,10 +367,10 @@ def get_config_loader(config_dir: Optional[Path] = None) -> ConfigLoader:
         ConfigLoader instance
     """
     global _global_config_loader
-    
+
     if _global_config_loader is None:
         _global_config_loader = ConfigLoader(config_dir)
-    
+
     return _global_config_loader
 
 
@@ -387,16 +386,16 @@ if __name__ == "__main__":
         level=logging.DEBUG,
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
-    
+
     try:
         loader = ConfigLoader()
         print("Configuration loaded successfully!")
         print("\nMetadata:")
         print(json.dumps(loader.get_metadata(), indent=2))
-        
+
         print("\nAudit Log:")
         print(loader.export_audit_log())
-        
+
     except Exception as e:
         print(f"Error: {e}")
         raise

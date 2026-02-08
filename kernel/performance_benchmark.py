@@ -9,12 +9,13 @@ Measures and tracks kernel performance:
 - Throughput metrics
 """
 
-import time
-import psutil
-import statistics
-from typing import Dict, List, Any
-from dataclasses import dataclass, field
 import logging
+import statistics
+import time
+from dataclasses import dataclass, field
+from typing import Any
+
+import psutil
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +29,7 @@ class BenchmarkResult:
     memory_mb: float
     cpu_percent: float
     iterations: int
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 class PerformanceBenchmark:
@@ -39,7 +40,7 @@ class PerformanceBenchmark:
     """
 
     def __init__(self):
-        self.results: List[BenchmarkResult] = []
+        self.results: list[BenchmarkResult] = []
         self.process = psutil.Process()
 
         logger.info("Performance Benchmark Suite initialized")
@@ -195,7 +196,7 @@ class PerformanceBenchmark:
 
         return result
 
-    def run_full_suite(self, kernel) -> Dict[str, BenchmarkResult]:
+    def run_full_suite(self, kernel) -> dict[str, BenchmarkResult]:
         """Run complete benchmark suite"""
         logger.info("")
         logger.info("=" * 70)
@@ -245,7 +246,7 @@ class PerformanceBenchmark:
 
         print("\n" + "=" * 70)
 
-    def export_results(self) -> Dict[str, Any]:
+    def export_results(self) -> dict[str, Any]:
         """Export results for analysis"""
         return {
             "timestamp": time.time(),

@@ -127,9 +127,7 @@ class ReportGenerator:
                 "circular_dependencies": integrity.get("circular_dependencies", []),
                 "issues": integrity.get("issues", []),
                 "dependency_graph": integrity.get("dependency_graph", {}),
-                "cross_reference_catalog": integrity.get(
-                    "cross_reference_catalog", {}
-                ),
+                "cross_reference_catalog": integrity.get("cross_reference_catalog", {}),
                 "statistics": integrity.get("statistics", {}),
             },
             "quality": {
@@ -186,7 +184,9 @@ class ReportGenerator:
 
         # Lint factor (0-25 points)
         # Penalize for lint errors and warnings
-        lint_penalty = min(lint_errors * 0.5 + (total_lint_issues - lint_errors) * 0.1, 25)
+        lint_penalty = min(
+            lint_errors * 0.5 + (total_lint_issues - lint_errors) * 0.1, 25
+        )
         lint_score = max(0, 25 - lint_penalty)
         health_factors.append(("lint", lint_score))
 
@@ -255,7 +255,10 @@ class ReportGenerator:
 
     def _generate_json_report(self, report_data: dict[str, Any]) -> Path:
         """Generate JSON format report."""
-        output_path = self.output_dir / f"audit_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        output_path = (
+            self.output_dir
+            / f"audit_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        )
 
         with open(output_path, "w", encoding="utf-8") as f:
             json.dump(report_data, f, indent=2, default=str)
@@ -265,7 +268,10 @@ class ReportGenerator:
 
     def _generate_yaml_report(self, report_data: dict[str, Any]) -> Path:
         """Generate YAML format report."""
-        output_path = self.output_dir / f"audit_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.yaml"
+        output_path = (
+            self.output_dir
+            / f"audit_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.yaml"
+        )
 
         with open(output_path, "w", encoding="utf-8") as f:
             yaml.dump(report_data, f, default_flow_style=False, sort_keys=False)
@@ -275,7 +281,10 @@ class ReportGenerator:
 
     def _generate_summary_report(self, report_data: dict[str, Any]) -> Path:
         """Generate condensed summary report."""
-        output_path = self.output_dir / f"audit_summary_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        output_path = (
+            self.output_dir
+            / f"audit_summary_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        )
 
         summary = {
             "metadata": report_data["metadata"],
@@ -286,9 +295,7 @@ class ReportGenerator:
                 "total_lines": report_data["inspection"]["statistics"].get(
                     "total_lines", 0
                 ),
-                "total_components": len(
-                    report_data["inspection"]["components"]
-                ),
+                "total_components": len(report_data["inspection"]["components"]),
             },
             "integrity_summary": {
                 "total_dependencies": len(report_data["integrity"]["dependencies"]),

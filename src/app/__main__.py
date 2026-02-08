@@ -14,6 +14,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 # Import from the cli.py file, not the cli directory
 import importlib.util
+
 cli_path = Path(__file__).parent / "cli.py"
 spec = importlib.util.spec_from_file_location("app_cli", cli_path)
 app_cli = importlib.util.module_from_spec(spec)

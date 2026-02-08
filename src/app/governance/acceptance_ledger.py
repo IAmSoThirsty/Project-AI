@@ -20,10 +20,8 @@ import os
 import sqlite3
 import time
 from dataclasses import dataclass, field
-from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, Optional
 
 try:
     from cryptography.hazmat.primitives import hashes, serialization
@@ -80,12 +78,12 @@ class AcceptanceEntry:
     tier: TierLevel
     jurisdiction: str
     document_hash: str  # SHA-256 of accepted document
-    previous_entry_hash: Optional[str]  # Hash chain link
+    previous_entry_hash: str | None  # Hash chain link
     signing_method: SigningMethod
     signature: str  # Ed25519 or hardware-backed signature
     public_key: str  # User's public key for verification
-    timestamp_authority: Optional[str] = None  # RFC 3161 timestamp token
-    hardware_attestation: Optional[str] = None  # TPM/HSM attestation
+    timestamp_authority: str | None = None  # RFC 3161 timestamp token
+    hardware_attestation: str | None = None  # TPM/HSM attestation
     metadata: dict = field(default_factory=dict)
 
     def to_dict(self) -> dict:
@@ -267,7 +265,7 @@ class AcceptanceLedger:
                     entries.append(AcceptanceEntry.from_dict(entry_dict))
         return entries
 
-    def _get_last_entry_hash(self) -> Optional[str]:
+    def _get_last_entry_hash(self) -> str | None:
         """Get hash of the last entry in the chain"""
         entries = self._load_all_entries()
         if not entries:
@@ -282,11 +280,11 @@ class AcceptanceLedger:
         tier: TierLevel,
         jurisdiction: str,
         document_hash: str,
-        private_key: Optional[bytes] = None,
+        private_key: bytes | None = None,
         signing_method: SigningMethod = SigningMethod.SOFTWARE_ED25519,
-        timestamp_authority_url: Optional[str] = None,
-        hardware_attestation: Optional[str] = None,
-        metadata: Optional[dict] = None,
+        timestamp_authority_url: str | None = None,
+        hardware_attestation: str | None = None,
+        metadata: dict | None = None,
     ) -> AcceptanceEntry:
         """
         Append a new acceptance to the ledger.
@@ -423,7 +421,7 @@ class AcceptanceLedger:
         except Exception:
             return False
 
-    def get_entry(self, entry_id: str) -> Optional[AcceptanceEntry]:
+    def get_entry(self, entry_id: str) -> AcceptanceEntry | None:
         """Get a specific entry by ID"""
         if self.enable_sqlite:
             conn = sqlite3.connect(str(self.db_path))
@@ -531,9 +529,7 @@ class AcceptanceLedger:
             prev_entry = self.get_entry(entry.previous_entry_hash)
             if prev_entry:
                 expected_hash = prev_entry.compute_entry_hash()
-                results["hash_chain_valid"] = (
-                    entry.previous_entry_hash == expected_hash
-                )
+                results["hash_chain_valid"] = entry.previous_entry_hash == expected_hash
             else:
                 results["hash_chain_valid"] = False
         else:
@@ -557,7 +553,7 @@ class AcceptanceLedger:
 
 
 # Singleton instance
-_ledger_instance: Optional[AcceptanceLedger] = None
+_ledger_instance: AcceptanceLedger | None = None
 
 
 def get_acceptance_ledger(data_dir: str = "data/legal") -> AcceptanceLedger:

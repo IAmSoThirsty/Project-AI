@@ -15,13 +15,8 @@ Supports:
 """
 
 import hashlib
-import json
-import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
-
-import yaml
 
 
 @dataclass
@@ -155,7 +150,7 @@ class JurisdictionLoader:
             except Exception as e:
                 print(f"Warning: Failed to load jurisdiction {file_path}: {e}")
 
-    def get_jurisdiction(self, code: str) -> Optional[JurisdictionAnnex]:
+    def get_jurisdiction(self, code: str) -> JurisdictionAnnex | None:
         """Get a specific jurisdiction by code"""
         return self.loaded_jurisdictions.get(code)
 
@@ -205,9 +200,7 @@ class JurisdictionLoader:
             annex = self.get_jurisdiction(code)
             if annex:
                 combined["data_subject_rights"].update(annex.data_subject_rights)
-                combined["compliance_obligations"].update(
-                    annex.compliance_obligations
-                )
+                combined["compliance_obligations"].update(annex.compliance_obligations)
 
         # Convert sets back to lists
         return {
@@ -219,7 +212,7 @@ class JurisdictionLoader:
 
 
 # Singleton instance
-_jurisdiction_loader: Optional[JurisdictionLoader] = None
+_jurisdiction_loader: JurisdictionLoader | None = None
 
 
 def get_jurisdiction_loader(
