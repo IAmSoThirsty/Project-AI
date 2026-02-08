@@ -87,15 +87,28 @@ class ThirstyFormatter {
   }
 
   formatFile(inputPath, outputPath = null) {
-    const code = fs.readFileSync(inputPath, 'utf-8');
-    const formatted = this.format(code);
+    try {
+      // Validate input path
+      const validatedInputPath = validatePath(inputPath);
+      if (!isValidFile(validatedInputPath)) {
+        throw new Error('Input path is not a valid file');
+      }
+      
+      const code = fs.readFileSync(validatedInputPath, 'utf-8');
+      const formatted = this.format(code);
 
-    if (outputPath) {
-      fs.writeFileSync(outputPath, formatted);
-      console.log('✓ Formatted ' + inputPath + ' -> ' + outputPath);
-    } else {
-      fs.writeFileSync(inputPath, formatted);
-      console.log('✓ Formatted ' + inputPath);
+      if (outputPath) {
+        // Validate output path
+        const validatedOutputPath = validatePath(outputPath);
+        fs.writeFileSync(validatedOutputPath, formatted);
+        console.log('✓ Formatted ' + inputPath + ' -> ' + outputPath);
+      } else {
+        fs.writeFileSync(validatedInputPath, formatted);
+        console.log('✓ Formatted ' + inputPath);
+      }
+    } catch (error) {
+      console.error('❌ Error formatting file: ' + error.message);
+      throw error;
     }
   }
 }

@@ -46,6 +46,6 @@ mypy==1.8.0
 # accelerate==0.26.0
 
 # ATLAS Ω Constitutional Engine Dependencies
-cbor2>=5.4.0  # Canonical binary encoding for hash integrity
-jsonschema>=4.17.0  # Schema validation
-pyyaml>=6.0  # Configuration loading
+cbor2>=5.6.0  # Canonical binary encoding for hash integrity (updated for security)
+jsonschema>=4.23.0  # Schema validation (updated for security)
+pyyaml>=6.0.2  # Configuration loading (updated for security)
