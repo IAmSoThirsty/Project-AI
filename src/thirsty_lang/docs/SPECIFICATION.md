@@ -49,30 +49,88 @@ pour "Hello, World!"
 pour varname
 ```
 
-### Input (Future)
+### Input
 
-The `sip` keyword will read input from the user (not yet implemented):
+The `sip` keyword reads input from the user:
 
 ```thirsty
 sip username
+pour "Hello, " + username
 ```
 
 ## Reserved Keywords
 
 - `drink` - Variable declaration
 - `pour` - Output/print
-- `sip` - Input (planned)
-- `thirsty` - If statement (planned)
-- `hydrated` - Else statement (planned)
-- `refill` - Loop (planned)
-- `glass` - Function declaration (planned)
+- `sip` - Input from user
+- `thirsty` - If statement (conditional execution)
+- `hydrated` - Else statement
+- `refill` - Loop iteration
+- `glass` / `endglass` - Function declaration
+- `fountain` / `endfountain` - Class definition
+
+## Control Flow
+
+### If Statements
+
+The `thirsty` keyword provides conditional execution:
+
+```thirsty
+thirsty age > 18
+  pour "Adult"
+```
+
+### Else Statements
+
+The `hydrated` keyword provides alternative execution paths:
+
+```thirsty
+thirsty age > 18
+  pour "Adult"
+hydrated
+  pour "Minor"
+```
+
+## Functions
+
+Define reusable code blocks with the `glass` keyword:
+
+```thirsty
+glass greet(name)
+  pour "Hello, " + name
+endglass
+
+greet("World")
+```
+
+## Classes
+
+Define object blueprints with the `fountain` keyword:
+
+```thirsty
+fountain Person
+  drink name
+  drink age
+endfountain
+
+new Person
+```
+
+## Loops
+
+The `refill` keyword enables iteration:
+
+```thirsty
+refill 5
+  pour "Iteration"
+```
 
 ## Future Features
 
 The following features are planned for future releases:
 
-1. Control flow (`thirsty`/`hydrated` for if/else)
-1. Loops (`refill` keyword)
+1. Advanced error handling
+1. Module system and imports
 1. Functions (`glass` keyword)
 1. Arithmetic operations
 1. String concatenation
