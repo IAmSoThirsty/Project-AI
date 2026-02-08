@@ -1,0 +1,24 @@
+{
+  "violations": [
+    {
+      "rule_id": "no_state_mutation_with_trust_decrease",
+      "description": "No action may both mutate state and lower trust score",
+      "timestamp": "2026-02-08T04:58:37.958156",
+      "context": {
+        "state_mutated": true,
+        "trust_decreased": true
+      },
+      "action_taken": "halt"
+    },
+    {
+      "rule_id": "human_action_replayability",
+      "description": "No action affecting humans may be non-replayable",
+      "timestamp": "2026-02-08T04:58:37.958421",
+      "context": {
+        "affects_human": true,
+        "replay_log": null
+      },
+      "action_taken": "halt"
+    }
+  ]
+}
