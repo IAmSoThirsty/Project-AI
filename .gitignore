@@ -181,3 +181,8 @@ unity/sysinfo.txt
 .antigravity/.cache/
 .antigravity/logs/
 node_modules/
+
+# Inspection & Audit System outputs
+audit_reports/
+test_audit_sample/
+test_audit_output/
