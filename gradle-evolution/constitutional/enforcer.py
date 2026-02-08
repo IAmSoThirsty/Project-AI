@@ -111,7 +111,7 @@ class ConstitutionalEnforcer:
                 self._record_violation(action, metadata, reason)
                 return False, reason
 
-            logger.debug(f"Build action '{action}' validated successfully")
+            logger.debug("Build action '%s' validated successfully", action)
             return True, None
 
         except Exception as e:
@@ -211,7 +211,7 @@ class ConstitutionalEnforcer:
             "identity_phase": self.identity_manager.get_identity_phase(),
         }
         self.violation_history.append(violation)
-        logger.warning(f"Policy violation recorded: {reason}")
+        logger.warning("Policy violation recorded: %s", reason)
 
     def get_violations(self, limit: int = 10) -> list[dict[str, Any]]:
         """
@@ -234,7 +234,7 @@ class ConstitutionalEnforcer:
         """
         count = len(self.violation_history)
         self.violation_history.clear()
-        logger.info(f"Cleared {count} violations")
+        logger.info("Cleared %s violations", count)
         return count
 
 

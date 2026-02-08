@@ -49,7 +49,7 @@ class CerberusSecurityBridge:
             logger.info("   - Hydra Controller: ACTIVE")
 
         except ImportError as e:
-            logger.warning(f"Cerberus components not available: {e}")
+            logger.warning("Cerberus components not available: %s", e)
             logger.warning("Running in standalone mode")
 
     def register_holographic_layer(self, layer_id: int, layer_type: str, user_id: int):
@@ -64,9 +64,9 @@ class CerberusSecurityBridge:
                 security_level="MAXIMUM" if layer_type == "REAL" else "ISOLATED",
                 user_id=user_id,
             )
-            logger.debug(f"Registered holographic layer {layer_id} with Cerberus")
+            logger.debug("Registered holographic layer %s with Cerberus", layer_id)
         except Exception as e:
-            logger.error(f"Failed to register with Cerberus: {e}")
+            logger.error("Failed to register with Cerberus: %s", e)
 
     def report_threat(self, threat_assessment: dict[str, Any]):
         """Report threat to Cerberus for coordinated response"""
@@ -80,11 +80,9 @@ class CerberusSecurityBridge:
                 source_user=threat_assessment.get("user_id"),
                 indicators=threat_assessment.get("indicators", []),
             )
-            logger.info(
-                f"Threat reported to Cerberus Hydra: {threat_assessment['threat_type']}"
-            )
+            logger.info("Threat reported to Cerberus Hydra: %s", threat_assessment['threat_type'])
         except Exception as e:
-            logger.error(f"Failed to report to Cerberus: {e}")
+            logger.error("Failed to report to Cerberus: %s", e)
 
     def request_lockdown(self, user_id: int, reason: str):
         """Request Cerberus lockdown for user"""
@@ -95,12 +93,10 @@ class CerberusSecurityBridge:
             from src.app.core.cerberus_lockdown_controller import lock_user_session
 
             lock_user_session(user_id=user_id, reason=reason, duration="INDEFINITE")
-            logger.warning(
-                f"🔒 Cerberus lockdown initiated for user {user_id}: {reason}"
-            )
+            logger.warning("🔒 Cerberus lockdown initiated for user %s: %s", user_id, reason)
             return True
         except Exception as e:
-            logger.error(f"Lockdown request failed: {e}")
+            logger.error("Lockdown request failed: %s", e)
             return False
 
 
@@ -129,7 +125,7 @@ class CodexDeusAIBridge:
             logger.info("   - Models: READY")
 
         except ImportError as e:
-            logger.warning(f"CodexDeus not available: {e}")
+            logger.warning("CodexDeus not available: %s", e)
             logger.warning("Using heuristic-based detection")
 
     def predict_threat(
@@ -161,7 +157,7 @@ class CodexDeusAIBridge:
             }
 
         except Exception as e:
-            logger.error(f"CodexDeus prediction failed: {e}")
+            logger.error("CodexDeus prediction failed: %s", e)
             return self._fallback_prediction(command)
 
     def _fallback_prediction(self, command: str) -> dict[str, Any]:
@@ -203,7 +199,7 @@ class CodexDeusAIBridge:
             )
             logger.info("CodexDeus model updated with attack data")
         except Exception as e:
-            logger.error(f"Model update failed: {e}")
+            logger.error("Model update failed: %s", e)
 
 
 class TriumvirateGovernanceBridge:
@@ -225,7 +221,7 @@ class TriumvirateGovernanceBridge:
             logger.info("   - Policy Engine: READY")
 
         except Exception as e:
-            logger.warning(f"Triumvirate not available: {e}")
+            logger.warning("Triumvirate not available: %s", e)
 
     def check_action_permitted(
         self, action: str, user_id: int, context: dict[str, Any]
@@ -236,7 +232,7 @@ class TriumvirateGovernanceBridge:
 
     def audit_log_action(self, action: str, user_id: int, result: dict[str, Any]):
         """Log action to governance audit trail"""
-        logger.info(f"[AUDIT] User {user_id}: {action} -> {result.get('status')}")
+        logger.info("[AUDIT] User %s: %s -> %s", user_id, action, result.get('status'))
 
 
 class ProjectAIIntegration:

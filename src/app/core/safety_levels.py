@@ -507,9 +507,7 @@ class ASLMonitor:
 
         # Check if escalation needed
         if assessment.requires_escalation():
-            self.logger.warning(
-                f"ASL escalation recommended: {current_level} → {assessment.recommended_level}"
-            )
+            self.logger.warning("ASL escalation recommended: %s → %s", current_level, assessment.recommended_level)
             self._handle_escalation(assessment)
         else:
             self.logger.info(
@@ -554,7 +552,7 @@ class ASLMonitor:
         with open(output_file, "w") as f:
             json.dump(assessment_dict, f, indent=2)
 
-        self.logger.info(f"ASL assessment saved to {output_file}")
+        self.logger.info("ASL assessment saved to %s", output_file)
 
     def _handle_escalation(self, assessment: ASLAssessment) -> None:
         """Handle ASL level escalation."""

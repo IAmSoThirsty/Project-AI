@@ -177,9 +177,9 @@ class TierPerformanceMonitor:
         )  # request_id -> start_time
 
         logger.info("TierPerformanceMonitor initialized")
-        logger.info(f"  Window size: {window_size} samples")
-        logger.info(f"  Sample retention: {sample_retention}")
-        logger.info(f"  Predictions: {'enabled' if enable_predictions else 'disabled'}")
+        logger.info("  Window size: %s samples", window_size)
+        logger.info("  Sample retention: %s", sample_retention)
+        logger.info("  Predictions: %s", 'enabled' if enable_predictions else 'disabled')
 
     def start_request_tracking(
         self,
@@ -221,7 +221,7 @@ class TierPerformanceMonitor:
         """
         with self._lock:
             if request_id not in self._active_requests:
-                logger.warning(f"Request {request_id} not being tracked")
+                logger.warning("Request %s not being tracked", request_id)
                 return None
 
             req_info = self._active_requests.pop(request_id)

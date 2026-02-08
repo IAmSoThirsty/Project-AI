@@ -97,7 +97,7 @@ class AccountabilitySystem:
         self.records: dict[str, AccountabilityRecord] = {}
         self.pending_approvals: dict[str, dict[str, Any]] = {}
         self._load_records()
-        logger.info(f"Accountability system initialized: {self.records_dir}")
+        logger.info("Accountability system initialized: %s", self.records_dir)
 
     def request_policy_override(
         self,
@@ -151,7 +151,7 @@ class AccountabilitySystem:
 
             self._persist_record(record)
 
-            logger.info(f"Policy override requested: {request_id} by {actor}")
+            logger.info("Policy override requested: %s by %s", request_id, actor)
             return request_id
 
         except Exception as e:
@@ -205,7 +205,7 @@ class AccountabilitySystem:
 
             self._persist_record(record)
 
-            logger.info(f"Waiver requested: {request_id} by {actor}")
+            logger.info("Waiver requested: %s by %s", request_id, actor)
             return request_id
 
         except Exception as e:
@@ -231,7 +231,7 @@ class AccountabilitySystem:
         """
         try:
             if request_id not in self.pending_approvals:
-                logger.warning(f"Request not found: {request_id}")
+                logger.warning("Request not found: %s", request_id)
                 return False
 
             approval_data = self.pending_approvals[request_id]
@@ -253,7 +253,7 @@ class AccountabilitySystem:
                 del self.pending_approvals[request_id]
                 self._persist_record(record)
 
-                logger.info(f"Request approved: {request_id}")
+                logger.info("Request approved: %s", request_id)
                 return True
 
             logger.info(
@@ -282,7 +282,7 @@ class AccountabilitySystem:
         """
         try:
             if request_id not in self.pending_approvals:
-                logger.warning(f"Request not found: {request_id}")
+                logger.warning("Request not found: %s", request_id)
                 return
 
             approval_data = self.pending_approvals[request_id]
@@ -296,7 +296,7 @@ class AccountabilitySystem:
             del self.pending_approvals[request_id]
             self._persist_record(record)
 
-            logger.info(f"Request denied: {request_id} by {denier}")
+            logger.info("Request denied: %s by %s", request_id, denier)
 
         except Exception as e:
             logger.error(f"Error denying request: {e}", exc_info=True)
@@ -341,7 +341,7 @@ class AccountabilitySystem:
             self.records[record_id] = record
             self._persist_record(record)
 
-            logger.info(f"Action signed: {record_id} by {actor}")
+            logger.info("Action signed: %s by %s", record_id, actor)
             return record_id
 
         except Exception as e:
@@ -469,7 +469,7 @@ class AccountabilitySystem:
                         "approvals": data["metadata"].get("approvals", []),
                     }
 
-            logger.info(f"Loaded {len(self.records)} accountability records")
+            logger.info("Loaded %s accountability records", len(self.records))
         except Exception as e:
             logger.error(f"Error loading records: {e}", exc_info=True)
 

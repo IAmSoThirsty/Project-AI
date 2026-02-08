@@ -290,7 +290,7 @@ class StatisticalAnalyzer:
                     "fits_well": p_value > 0.05,
                 }
             except Exception as e:
-                logger.warning(f"Failed to fit {dist_name}: {e}")
+                logger.warning("Failed to fit %s: %s", dist_name, e)
 
         return results
 
@@ -414,7 +414,7 @@ class PredictiveModeler:
         self.models[model_name] = model
         self.scalers[model_name] = scaler
 
-        logger.info(f"Trained {model_name}: R²={r2:.3f}, MAE={mae:.3f}")
+        logger.info("Trained %s: R²=%s, MAE=%s", model_name, r2, mae)
 
         return {
             "mse": float(mse),
@@ -460,7 +460,7 @@ class PredictiveModeler:
         self.models[model_name] = model
         self.scalers[model_name] = scaler
 
-        logger.info(f"Trained {model_name}: Accuracy={accuracy:.3f}")
+        logger.info("Trained %s: Accuracy=%s", model_name, accuracy)
 
         return {
             "accuracy": accuracy,
@@ -636,7 +636,7 @@ class MonteCarloSimulator:
                 recent_mean = np.mean(results[-1000:])
                 previous_mean = np.mean(results[-2000:-1000])
                 if abs(recent_mean - previous_mean) < convergence_threshold:
-                    logger.info(f"Convergence achieved at iteration {i}")
+                    logger.info("Convergence achieved at iteration %s", i)
                     break
 
         arr = np.array(results)
@@ -850,7 +850,7 @@ class HYDRA50AnalyticsEngine:
                 indent=2,
             )
 
-        logger.info(f"Exported analysis to {output_path}")
+        logger.info("Exported analysis to %s", output_path)
         return str(output_path)
 
 

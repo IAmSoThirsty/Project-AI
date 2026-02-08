@@ -107,18 +107,14 @@ def initialize_kernel() -> CognitionKernel:
         try:
             governance_system = GovernanceTriumvirate()
         except Exception as e:
-            logger.warning(
-                f"GovernanceTriumvirate initialization failed: {e}, using fallback"
-            )
+            logger.warning("GovernanceTriumvirate initialization failed: %s, using fallback", e)
             governance_system = None
 
         # 4. Reflection Engine (post-hoc reasoning)
         try:
             reflection_engine = ReflectionCycle(data_dir="data")
         except Exception as e:
-            logger.warning(
-                f"ReflectionCycle initialization failed: {e}, using fallback"
-            )
+            logger.warning("ReflectionCycle initialization failed: %s, using fallback", e)
             reflection_engine = None
 
         # 5. Triumvirate (Galahad, Cerberus, Codex)
@@ -288,15 +284,13 @@ def initialize_security_systems(
         status = tower.get_security_status()
 
         logger.info("✅ Global Watch Tower activated")
-        logger.info(f"   - Chief of Security: {status['chief_of_security']}")
-        logger.info(
-            f"   - Border Patrol agents: {status['registered_agents']['border_patrol']}"
-        )
-        logger.info(f"   - Port Admins: {len(tower.port_admins)}")
-        logger.info(f"   - Watch Towers: {len(tower.watch_towers)}")
-        logger.info(f"   - Gate Guardians: {len(tower.gate_guardians)}")
+        logger.info("   - Chief of Security: %s", status['chief_of_security'])
+        logger.info("   - Border Patrol agents: %s", status['registered_agents']['border_patrol'])
+        logger.info("   - Port Admins: %s", len(tower.port_admins))
+        logger.info("   - Watch Towers: %s", len(tower.watch_towers))
+        logger.info("   - Gate Guardians: %s", len(tower.gate_guardians))
     except Exception as e:
-        logger.warning(f"Global Watch Tower initialization failed: {e}")
+        logger.warning("Global Watch Tower initialization failed: %s", e)
         security_components["watch_tower"] = None
 
     # Phase 2: Initialize Active Defense Agents
@@ -312,14 +306,14 @@ def initialize_security_systems(
         try:
             council_hub.register_agent("safety_guard", safety_guard)
         except Exception as e:
-            logger.warning(f"Failed to register SafetyGuardAgent with CouncilHub: {e}")
+            logger.warning("Failed to register SafetyGuardAgent with CouncilHub: %s", e)
 
         logger.info("✅ SafetyGuardAgent activated")
         logger.info("   - Pre/post-processing content filtering enabled")
         logger.info("   - Jailbreak detection active")
         logger.info("   - Strict mode: ON")
     except Exception as e:
-        logger.warning(f"SafetyGuardAgent initialization failed: {e}")
+        logger.warning("SafetyGuardAgent initialization failed: %s", e)
         security_components["safety_guard"] = None
 
     try:
@@ -334,12 +328,12 @@ def initialize_security_systems(
         try:
             council_hub.register_agent("constitutional_guard", constitutional_guard)
         except Exception as e:
-            logger.warning(f"Failed to register ConstitutionalGuardrailAgent: {e}")
+            logger.warning("Failed to register ConstitutionalGuardrailAgent: %s", e)
 
         logger.info("✅ ConstitutionalGuardrailAgent activated")
         logger.info("   - Ethical boundary enforcement enabled")
     except Exception as e:
-        logger.warning(f"ConstitutionalGuardrailAgent initialization failed: {e}")
+        logger.warning("ConstitutionalGuardrailAgent initialization failed: %s", e)
         security_components["constitutional_guard"] = None
 
     try:
@@ -352,12 +346,12 @@ def initialize_security_systems(
         try:
             council_hub.register_agent("tarl_protector", tarl_protector)
         except Exception as e:
-            logger.warning(f"Failed to register TARLCodeProtector: {e}")
+            logger.warning("Failed to register TARLCodeProtector: %s", e)
 
         logger.info("✅ TARL Code Protector activated")
         logger.info("   - Runtime code protection enabled")
     except Exception as e:
-        logger.warning(f"TARL Code Protector initialization failed: {e}")
+        logger.warning("TARL Code Protector initialization failed: %s", e)
         security_components["tarl_protector"] = None
 
     # Phase 2b: Initialize Red Team Agents (Adversarial Testing)
@@ -371,13 +365,13 @@ def initialize_security_systems(
         try:
             council_hub.register_agent("red_team", red_team)
         except Exception as e:
-            logger.warning(f"Failed to register RedTeamAgent: {e}")
+            logger.warning("Failed to register RedTeamAgent: %s", e)
 
         logger.info("✅ RedTeamAgent activated")
         logger.info("   - Adversarial testing capabilities enabled")
         logger.info("   - Multi-turn attack simulation ready")
     except Exception as e:
-        logger.warning(f"RedTeamAgent initialization failed: {e}")
+        logger.warning("RedTeamAgent initialization failed: %s", e)
         security_components["red_team"] = None
 
     try:
@@ -390,13 +384,13 @@ def initialize_security_systems(
         try:
             council_hub.register_agent("code_adversary", code_adversary)
         except Exception as e:
-            logger.warning(f"Failed to register CodeAdversaryAgent: {e}")
+            logger.warning("Failed to register CodeAdversaryAgent: %s", e)
 
         logger.info("✅ CodeAdversaryAgent activated")
         logger.info("   - Automated vulnerability scanning enabled")
         logger.info("   - DARPA-grade security testing ready")
     except Exception as e:
-        logger.warning(f"CodeAdversaryAgent initialization failed: {e}")
+        logger.warning("CodeAdversaryAgent initialization failed: %s", e)
         security_components["code_adversary"] = None
 
     # Phase 2c: Initialize Oversight & Analysis Agents
@@ -410,13 +404,13 @@ def initialize_security_systems(
         try:
             council_hub.register_agent("oversight", oversight)
         except Exception as e:
-            logger.warning(f"Failed to register OversightAgent: {e}")
+            logger.warning("Failed to register OversightAgent: %s", e)
 
         logger.info("✅ OversightAgent activated")
         logger.info("   - System health monitoring enabled")
         logger.info("   - Compliance tracking active")
     except Exception as e:
-        logger.warning(f"OversightAgent initialization failed: {e}")
+        logger.warning("OversightAgent initialization failed: %s", e)
         security_components["oversight"] = None
 
     try:
@@ -429,13 +423,13 @@ def initialize_security_systems(
         try:
             council_hub.register_agent("validator", validator)
         except Exception as e:
-            logger.warning(f"Failed to register ValidatorAgent: {e}")
+            logger.warning("Failed to register ValidatorAgent: %s", e)
 
         logger.info("✅ ValidatorAgent activated")
         logger.info("   - Input/output validation enabled")
         logger.info("   - Data integrity checking active")
     except Exception as e:
-        logger.warning(f"ValidatorAgent initialization failed: {e}")
+        logger.warning("ValidatorAgent initialization failed: %s", e)
         security_components["validator"] = None
 
     try:
@@ -448,13 +442,13 @@ def initialize_security_systems(
         try:
             council_hub.register_agent("explainability", explainability)
         except Exception as e:
-            logger.warning(f"Failed to register ExplainabilityAgent: {e}")
+            logger.warning("Failed to register ExplainabilityAgent: %s", e)
 
         logger.info("✅ ExplainabilityAgent activated")
         logger.info("   - Decision transparency enabled")
         logger.info("   - Security reasoning traces available")
     except Exception as e:
-        logger.warning(f"ExplainabilityAgent initialization failed: {e}")
+        logger.warning("ExplainabilityAgent initialization failed: %s", e)
         security_components["explainability"] = None
 
     # Register all agents with Watch Tower if available
@@ -487,17 +481,11 @@ def initialize_security_systems(
                 tower.register_security_agent("oversight", "explainability_main")
 
             status = tower.get_security_status()
-            logger.info(
-                f"   - Active Defense agents: {status['registered_agents']['active_defense']}"
-            )
-            logger.info(
-                f"   - Red Team agents: {status['registered_agents']['red_team']}"
-            )
-            logger.info(
-                f"   - Oversight agents: {status['registered_agents']['oversight']}"
-            )
+            logger.info("   - Active Defense agents: %s", status['registered_agents']['active_defense'])
+            logger.info("   - Red Team agents: %s", status['registered_agents']['red_team'])
+            logger.info("   - Oversight agents: %s", status['registered_agents']['oversight'])
         except Exception as e:
-            logger.warning(f"Failed to register agents with Watch Tower: {e}")
+            logger.warning("Failed to register agents with Watch Tower: %s", e)
 
     # Phase 3: Initialize Payload Validation & Attack Detection
     try:
@@ -512,7 +500,7 @@ def initialize_security_systems(
         logger.info("   - Data poisoning countermeasures ready")
         logger.info("   - Max file size: 100MB")
     except Exception as e:
-        logger.warning(f"Secure Data Parser initialization failed: {e}")
+        logger.warning("Secure Data Parser initialization failed: %s", e)
         security_components["data_parser"] = None
 
     # Phase 4: Initialize ASL-3 Security Enforcement
@@ -538,15 +526,13 @@ def initialize_security_systems(
         logger.info("   - Tamper-proof audit logging active")
         logger.info("   - Emergency alert integration ready")
     except Exception as e:
-        logger.warning(f"ASL-3 Security Enforcer initialization failed: {e}")
+        logger.warning("ASL-3 Security Enforcer initialization failed: %s", e)
         security_components["asl3_security"] = None
 
     # Summary
     active_count = sum(1 for v in security_components.values() if v is not None)
     logger.info("=" * 60)
-    logger.info(
-        f"🔒 Security Systems Initialized: {active_count}/{len(security_components)}"
-    )
+    logger.info("🔒 Security Systems Initialized: %s/%s", active_count, len(security_components))
     logger.info("=" * 60)
     logger.info("Security Posture: DEFENSIVE - NO OFFENSIVE CAPABILITIES")
     logger.info("Aligned with: Asimov's Laws, FourLaws Governance")
@@ -606,7 +592,7 @@ def initialize_enhanced_defenses(
         logger.info("   - Auto-block after 5 violations")
         logger.info("   - Block duration: 24 hours")
     except Exception as e:
-        logger.warning(f"IP Blocking System initialization failed: {e}")
+        logger.warning("IP Blocking System initialization failed: %s", e)
         enhanced_components["ip_blocker"] = None
 
     # Phase 2: Honeypot Detection
@@ -623,7 +609,7 @@ def initialize_enhanced_defenses(
         logger.info("   - Tool fingerprinting: sqlmap, nikto, burp, metasploit, etc.")
         logger.info("   - Attacker profiling and threat intelligence")
     except Exception as e:
-        logger.warning(f"Honeypot Detection System initialization failed: {e}")
+        logger.warning("Honeypot Detection System initialization failed: %s", e)
         enhanced_components["honeypot"] = None
 
     # Phase 3: Automated Incident Response
@@ -643,7 +629,7 @@ def initialize_enhanced_defenses(
         logger.info("   - Security team alerting")
         logger.info("   - Forensic data preservation")
     except Exception as e:
-        logger.warning(f"Incident Responder initialization failed: {e}")
+        logger.warning("Incident Responder initialization failed: %s", e)
         enhanced_components["incident_responder"] = None
 
     # Phase 4: Integration with existing systems
@@ -652,7 +638,7 @@ def initialize_enhanced_defenses(
             # Link IP blocker with Watch Tower for coordinated defense
             logger.info("   - IP Blocker integrated with GlobalWatchTower")
         except Exception as e:
-            logger.warning(f"IP Blocker integration failed: {e}")
+            logger.warning("IP Blocker integration failed: %s", e)
 
     if enhanced_components.get("honeypot") and enhanced_components.get(
         "incident_responder"
@@ -661,14 +647,12 @@ def initialize_enhanced_defenses(
             # Link honeypot detections to incident responder
             logger.info("   - Honeypot linked to Incident Responder")
         except Exception as e:
-            logger.warning(f"Honeypot integration failed: {e}")
+            logger.warning("Honeypot integration failed: %s", e)
 
     # Summary
     active_count = sum(1 for v in enhanced_components.values() if v is not None)
     logger.info("=" * 60)
-    logger.info(
-        f"🛡️  Enhanced Defenses Initialized: {active_count}/{len(enhanced_components)}"
-    )
+    logger.info("🛡️  Enhanced Defenses Initialized: %s/%s", active_count, len(enhanced_components))
     logger.info("=" * 60)
     logger.info("Enhanced Capabilities: Detection, Response, Hardening")
     logger.info("Defensive Posture: Stronger deterrent through resilience")
@@ -766,44 +750,40 @@ def report_tier_health():
             1,
         ):
             tier_health = health_monitor.collect_tier_health(tier)
-            logger.info(f"Tier {tier_num} ({tier.name}):")
-            logger.info(f"   Status: {tier_health.overall_health.value.upper()}")
-            logger.info(f"   Components: {tier_health.tier_status.component_count}")
-            logger.info(f"   Active: {tier_health.tier_status.active_components}")
-            logger.info(f"   Paused: {tier_health.tier_status.paused_components}")
+            logger.info("Tier %s (%s):", tier_num, tier.name)
+            logger.info("   Status: %s", tier_health.overall_health.value.upper())
+            logger.info("   Components: %s", tier_health.tier_status.component_count)
+            logger.info("   Active: %s", tier_health.tier_status.active_components)
+            logger.info("   Paused: %s", tier_health.tier_status.paused_components)
 
             # List components
             for comp in tier_health.component_reports[:5]:  # First 5
                 status_icon = "✓" if comp.is_operational else "✗"
-                logger.info(f"     {status_icon} {comp.component_name}")
+                logger.info("     %s %s", status_icon, comp.component_name)
 
             if len(tier_health.component_reports) > 5:
-                logger.info(
-                    f"     ... and {len(tier_health.component_reports) - 5} more"
-                )
+                logger.info("     ... and %s more", len(tier_health.component_reports) - 5)
 
         # Overall status
         logger.info("")
-        logger.info(f"Platform Status: {platform_health.overall_health.value.upper()}")
-        logger.info(f"Total Components: {platform_health.total_components}")
-        logger.info(f"Active: {platform_health.active_components}")
-        logger.info(f"Violations: {platform_health.total_violations}")
+        logger.info("Platform Status: %s", platform_health.overall_health.value.upper())
+        logger.info("Total Components: %s", platform_health.total_components)
+        logger.info("Active: %s", platform_health.active_components)
+        logger.info("Violations: %s", platform_health.total_violations)
 
         # Check for violations
         violations = registry.get_all_violations()
         if violations:
-            logger.warning(f"⚠️  {len(violations)} tier boundary violations detected:")
+            logger.warning("⚠️  %s tier boundary violations detected:", len(violations))
             for violation in violations[:3]:  # First 3
-                logger.warning(
-                    f"   - {violation.violation_type}: {violation.description}"
-                )
+                logger.warning("   - %s: %s", violation.violation_type, violation.description)
         else:
             logger.info("✓ No tier boundary violations")
 
         logger.info("=" * 60)
 
     except Exception as e:
-        logger.error(f"Failed to report tier health: {e}")
+        logger.error("Failed to report tier health: %s", e)
         import traceback
 
         traceback.print_exc()

@@ -46,7 +46,7 @@ async def trigger_crisis(target: str, mission_actions: list[str]):
         target: Target member identifier
         mission_actions: List of action names for mission phases
     """
-    logger.info(f"Triggering crisis response for target: {target}")
+    logger.info("Triggering crisis response for target: %s", target)
 
     # Build mission list from action names
     missions = []
@@ -61,7 +61,7 @@ async def trigger_crisis(target: str, mission_actions: list[str]):
             }
         )
 
-    logger.info(f"Configured {len(missions)} mission phases")
+    logger.info("Configured %s mission phases", len(missions))
 
     async with LiaraTemporalAgency() as agency:
         workflow_id = await agency.trigger_crisis_response(
@@ -71,7 +71,7 @@ async def trigger_crisis(target: str, mission_actions: list[str]):
         )
 
         logger.info("✓ Crisis response workflow triggered")
-        logger.info(f"  Workflow ID: {workflow_id}")
+        logger.info("  Workflow ID: %s", workflow_id)
         logger.info("  View in UI: http://localhost:8233/namespaces/default/workflows")
         return workflow_id
 
@@ -83,21 +83,21 @@ async def check_status(workflow_id: str):
     Args:
         workflow_id: Workflow ID to check
     """
-    logger.info(f"Checking status of workflow: {workflow_id}")
+    logger.info("Checking status of workflow: %s", workflow_id)
 
     async with LiaraTemporalAgency() as agency:
         status = await agency.get_crisis_status(workflow_id)
 
         logger.info("✓ Workflow status retrieved")
-        logger.info(f"  Status: {status.get('status')}")
+        logger.info("  Status: %s", status.get('status'))
 
         if status.get("status") == "completed":
-            logger.info(f"  Success: {status.get('success')}")
-            logger.info(f"  Crisis ID: {status.get('crisis_id')}")
-            logger.info(f"  Completed phases: {status.get('completed_phases')}")
+            logger.info("  Success: %s", status.get('success'))
+            logger.info("  Crisis ID: %s", status.get('crisis_id'))
+            logger.info("  Completed phases: %s", status.get('completed_phases'))
 
             if status.get("failed_phases"):
-                logger.warning(f"  Failed phases: {status.get('failed_phases')}")
+                logger.warning("  Failed phases: %s", status.get('failed_phases'))
 
         return status
 
@@ -109,28 +109,28 @@ async def wait_for_completion(workflow_id: str):
     Args:
         workflow_id: Workflow ID to wait for
     """
-    logger.info(f"Waiting for workflow completion: {workflow_id}")
+    logger.info("Waiting for workflow completion: %s", workflow_id)
 
     async with LiaraTemporalAgency() as agency:
         result = await agency.wait_for_crisis_completion(workflow_id)
 
-        logger.info(f"\n{'='*60}")
+        logger.info("\n%s", '='*60)
         logger.info("CRISIS RESPONSE COMPLETED")
-        logger.info(f"{'='*60}")
-        logger.info(f"Success: {result['success']}")
-        logger.info(f"Crisis ID: {result['crisis_id']}")
-        logger.info(f"Completed phases: {result['completed_phases']}")
+        logger.info("%s", '='*60)
+        logger.info("Success: %s", result['success'])
+        logger.info("Crisis ID: %s", result['crisis_id'])
+        logger.info("Completed phases: %s", result['completed_phases'])
 
         if result.get("failed_phases"):
-            logger.warning(f"Failed phases: {result['failed_phases']}")
+            logger.warning("Failed phases: %s", result['failed_phases'])
 
         if result.get("error"):
-            logger.error(f"Error: {result['error']}")
+            logger.error("Error: %s", result['error'])
 
         # Show persistent state location
         crisis_file = Path("data/crises") / f"{result['crisis_id']}.json"
         if crisis_file.exists():
-            logger.info(f"\nPersistent state saved to: {crisis_file}")
+            logger.info("\nPersistent state saved to: %s", crisis_file)
 
         return result
 
@@ -179,7 +179,7 @@ def main():
             sys.exit(0 if result["success"] else 1)
 
         else:
-            logger.error(f"Unknown command: {command}")
+            logger.error("Unknown command: %s", command)
             print_usage()
             sys.exit(1)
 

@@ -120,11 +120,9 @@ class StrategyEngine:
                         for r in data.get("execution_history", [])
                     ]
 
-                logger.info(
-                    f"Loaded {len(self._execution_history)} strategy execution results"
-                )
+                logger.info("Loaded %s strategy execution results", len(self._execution_history))
             except Exception as e:
-                logger.error(f"Failed to load strategies: {e}")
+                logger.error("Failed to load strategies: %s", e)
 
     def _save_strategies(self) -> None:
         """Save strategies and results to persistent storage."""
@@ -168,7 +166,7 @@ class StrategyEngine:
             with open(strategies_file, "w") as f:
                 json.dump(data, f, indent=2)
         except Exception as e:
-            logger.error(f"Failed to save strategies: {e}")
+            logger.error("Failed to save strategies: %s", e)
 
     def register_strategy(
         self,
@@ -219,7 +217,7 @@ class StrategyEngine:
         self._strategies[strategy_id] = strategy
         self._save_strategies()
 
-        logger.info(f"Registered strategy '{name}' with ID {strategy_id}")
+        logger.info("Registered strategy '%s' with ID %s", name, strategy_id)
         return strategy_id
 
     def unregister_strategy(self, strategy_id: str) -> bool:
@@ -232,14 +230,14 @@ class StrategyEngine:
             True if strategy was unregistered, False if not found
         """
         if strategy_id not in self._strategies:
-            logger.warning(f"Strategy {strategy_id} not found")
+            logger.warning("Strategy %s not found", strategy_id)
             return False
 
         strategy = self._strategies[strategy_id]
         del self._strategies[strategy_id]
         self._save_strategies()
 
-        logger.info(f"Unregistered strategy '{strategy.name}' ({strategy_id})")
+        logger.info("Unregistered strategy '%s' (%s)", strategy.name, strategy_id)
         return True
 
     def get_strategy(self, strategy_id: str) -> Strategy | None:
@@ -294,7 +292,7 @@ class StrategyEngine:
 
         self._results[strategy_id] = result
 
-        logger.info(f"Executing strategy '{strategy.name}' ({strategy_id})")
+        logger.info("Executing strategy '%s' (%s)", strategy.name, strategy_id)
 
         try:
             parameters = {**strategy.parameters, **(override_parameters or {})}
@@ -350,20 +348,18 @@ class StrategyEngine:
             True if strategy was stopped, False if not running
         """
         if strategy_id not in self._results:
-            logger.warning(f"No running strategy with ID {strategy_id}")
+            logger.warning("No running strategy with ID %s", strategy_id)
             return False
 
         result = self._results[strategy_id]
         if result.status != StrategyStatus.RUNNING:
-            logger.warning(
-                f"Strategy {strategy_id} is not running (status: {result.status.value})"
-            )
+            logger.warning("Strategy %s is not running (status: %s)", strategy_id, result.status.value)
             return False
 
         result.status = StrategyStatus.STOPPED
         result.completed_at = int(datetime.now(UTC).timestamp() * 1000)
 
-        logger.info(f"Stopped strategy '{result.strategy_name}' ({strategy_id})")
+        logger.info("Stopped strategy '%s' (%s)", result.strategy_name, strategy_id)
 
         self._save_strategies()
         return True
@@ -458,14 +454,14 @@ class StrategyEngine:
             True if strategy was enabled, False if not found
         """
         if strategy_id not in self._strategies:
-            logger.warning(f"Strategy {strategy_id} not found")
+            logger.warning("Strategy %s not found", strategy_id)
             return False
 
         strategy = self._strategies[strategy_id]
         strategy.enabled = True
         self._save_strategies()
 
-        logger.info(f"Enabled strategy '{strategy.name}' ({strategy_id})")
+        logger.info("Enabled strategy '%s' (%s)", strategy.name, strategy_id)
         return True
 
     def disable_strategy(self, strategy_id: str) -> bool:
@@ -478,12 +474,12 @@ class StrategyEngine:
             True if strategy was disabled, False if not found
         """
         if strategy_id not in self._strategies:
-            logger.warning(f"Strategy {strategy_id} not found")
+            logger.warning("Strategy %s not found", strategy_id)
             return False
 
         strategy = self._strategies[strategy_id]
         strategy.enabled = False
         self._save_strategies()
 
-        logger.info(f"Disabled strategy '{strategy.name}' ({strategy_id})")
+        logger.info("Disabled strategy '%s' (%s)", strategy.name, strategy_id)
         return True

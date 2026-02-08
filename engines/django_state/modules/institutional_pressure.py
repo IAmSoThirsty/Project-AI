@@ -75,7 +75,7 @@ class InstitutionalPressureModule:
         self.current_capacity = max(0.0, min(1.0, capacity))
         self.capacity_history.append(self.current_capacity)
 
-        logger.debug(f"Governance capacity: {self.current_capacity:.4f}")
+        logger.debug("Governance capacity: %s", self.current_capacity)
 
         return self.current_capacity
 
@@ -91,7 +91,7 @@ class InstitutionalPressureModule:
         self.promises_made += 1
         promise_id = f"promise_{self.promises_made}"
 
-        logger.debug(f"Promise made: {promise_id}, difficulty={difficulty:.2f}")
+        logger.debug("Promise made: %s, difficulty=%s", promise_id, difficulty)
 
         return promise_id
 
@@ -118,10 +118,10 @@ class InstitutionalPressureModule:
 
         if kept:
             self.promises_kept += 1
-            logger.debug(f"Promise kept (prob={keep_probability:.2f})")
+            logger.debug("Promise kept (prob=%s)", keep_probability)
         else:
             self.promises_broken += 1
-            logger.info(f"Promise broken (prob={keep_probability:.2f})")
+            logger.info("Promise broken (prob=%s)", keep_probability)
 
         return kept
 
@@ -164,7 +164,7 @@ class InstitutionalPressureModule:
             "event_id": event.event_id,
         })
 
-        logger.info(f"Generated failure event: {failure_type}, scope={impact_scope}, severity={severity:.2f}")
+        logger.info("Generated failure event: %s, scope=%s, severity=%s", failure_type, impact_scope, severity)
 
         return event
 
@@ -189,7 +189,7 @@ class InstitutionalPressureModule:
 
             if random.random() < cascade_prob:
                 self.cascading_failures += 1
-                logger.warning(f"CASCADING FAILURE DETECTED (total: {self.cascading_failures})")
+                logger.warning("CASCADING FAILURE DETECTED (total: %s)", self.cascading_failures)
                 return True
 
         return False
@@ -274,7 +274,7 @@ class InstitutionalPressureModule:
         # Bureaucratic inertia increases over time
         if state.tick_count % 100 == 0:
             self.inertia_factor = min(0.5, self.inertia_factor * 1.05)
-            logger.debug(f"Bureaucratic inertia increased to {self.inertia_factor:.3f}")
+            logger.debug("Bureaucratic inertia increased to %s", self.inertia_factor)
 
         return {
             "governance_capacity": capacity,

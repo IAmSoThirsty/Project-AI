@@ -56,7 +56,7 @@ class ConfigLoader:
         self._hashes: dict[str, str] = {}
         self._load_timestamp = datetime.utcnow().isoformat()
 
-        logger.info(f"Initializing ConfigLoader with directory: {self.config_dir}")
+        logger.info("Initializing ConfigLoader with directory: %s", self.config_dir)
 
         # Load all configurations
         self._load_all()
@@ -82,7 +82,7 @@ class ConfigLoader:
             try:
                 self._load_config(config_name, filepath)
             except Exception as e:
-                logger.error(f"Failed to load {filename}: {e}")
+                logger.error("Failed to load %s: %s", filename, e)
                 raise ConfigurationError(f"Failed to load {filename}: {e}") from e
 
     def _load_config(self, name: str, filepath: Path) -> None:
@@ -93,7 +93,7 @@ class ConfigLoader:
             name: Configuration name (e.g., 'stacks')
             filepath: Path to YAML file
         """
-        logger.debug(f"Loading configuration: {name} from {filepath}")
+        logger.debug("Loading configuration: %s from %s", name, filepath)
 
         if not filepath.exists():
             raise ConfigurationError(f"Configuration file not found: {filepath}")
@@ -113,13 +113,13 @@ class ConfigLoader:
                 raise ConfigurationError(f"{name} configuration must be a dictionary")
 
             self._configs[name] = config
-            logger.debug(f"Loaded {name} configuration (hash: {config_hash[:16]}...)")
+            logger.debug("Loaded %s configuration (hash: %s...)", name, config_hash[)
 
         except yaml.YAMLError as e:
-            logger.error(f"YAML parse error in {filepath}: {e}")
+            logger.error("YAML parse error in %s: %s", filepath, e)
             raise ConfigurationError(f"YAML parse error in {filepath}: {e}") from e
         except Exception as e:
-            logger.error(f"Error loading {filepath}: {e}")
+            logger.error("Error loading %s: %s", filepath, e)
             raise ConfigurationError(f"Error loading {filepath}: {e}") from e
 
     def _validate_all(self) -> None:
@@ -158,7 +158,7 @@ class ConfigLoader:
             versions[name] = config["version"]
 
         # Log versions for audit
-        logger.info(f"Configuration versions: {versions}")
+        logger.info("Configuration versions: %s", versions)
 
     def _validate_safety(self) -> None:
         """Validate safety configuration with strict enforcement."""
@@ -190,7 +190,7 @@ class ConfigLoader:
                 for rule_name, rule in section.items():
                     if isinstance(rule, dict) and "bypass" in rule:
                         if rule.get("bypass", True):
-                            logger.warning(f"Safety rule {section_name}.{rule_name} allows bypass")
+                            logger.warning("Safety rule %s.%s allows bypass", section_name, rule_name)
 
         logger.info("Safety configuration validated successfully")
 
@@ -247,7 +247,7 @@ class ConfigLoader:
         if "timeline_seeds" in seeds:
             for stack_name in seeds["timeline_seeds"].keys():
                 if stack_name not in stacks:
-                    logger.warning(f"Seed defined for unknown stack: {stack_name}")
+                    logger.warning("Seed defined for unknown stack: %s", stack_name)
 
         logger.info("Cross-configuration consistency validated")
 
@@ -314,7 +314,7 @@ class ConfigLoader:
                     return False
 
             except Exception as e:
-                logger.error(f"Error verifying {config_name}: {e}")
+                logger.error("Error verifying %s: %s", config_name, e)
                 return False
 
         return True

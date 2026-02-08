@@ -886,7 +886,7 @@ class HYDRA50VisualizationEngine:
                 indent=2,
             )
 
-        logger.info(f"Exported visualization to {output_path}")
+        logger.info("Exported visualization to %s", output_path)
         return str(output_path)
 
 

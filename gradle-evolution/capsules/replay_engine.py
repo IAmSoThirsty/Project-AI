@@ -68,7 +68,7 @@ class ReplayEngine:
         self.temporal_client = temporal_client
         self.task_queue = task_queue
         self.replay_history: list[dict[str, Any]] = []
-        logger.info(f"Replay engine initialized with queue: {task_queue}")
+        logger.info("Replay engine initialized with queue: %s", task_queue)
 
     async def replay_build(
         self,
@@ -250,7 +250,7 @@ class ReplayEngine:
             results.append(result)
 
             if stop_on_failure and not result.success:
-                logger.warning(f"Stopping chain replay at failed capsule: {capsule_id}")
+                logger.warning("Stopping chain replay at failed capsule: %s", capsule_id)
                 break
 
         return results
@@ -272,7 +272,7 @@ class ReplayEngine:
 
         for result in results:
             if not result.success:
-                logger.info(f"Divergence found at capsule: {result.capsule_id}")
+                logger.info("Divergence found at capsule: %s", result.capsule_id)
                 return result.capsule_id
 
         return None

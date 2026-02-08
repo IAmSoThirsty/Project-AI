@@ -47,7 +47,7 @@ class GalahadModel:
             self._cleanup_temp = False
             os.makedirs(data_dir, exist_ok=True)
 
-        logger.info(f"Initializing Galahad model with data_dir: {self.data_dir}")
+        logger.info("Initializing Galahad model with data_dir: %s", self.data_dir)
 
         # Initialize AI systems
         self.persona = AIPersona(data_dir=self.data_dir, user_name="RedTeam")
@@ -95,9 +95,7 @@ class GalahadModel:
         # This enables the earliest possible detection of multi-turn attacks
         if risk_score >= 2:
             context["endangers_humanity"] = True
-            logger.info(
-                f"Elevated conversation risk: score={risk_score}/10, blocking preemptively"
-            )
+            logger.info("Elevated conversation risk: score=%s/10, blocking preemptively", risk_score)
 
         # Check for escalation patterns in conversation history
         escalation_detected = self._detect_escalation_pattern(prompt)
@@ -208,7 +206,7 @@ class GalahadModel:
                 )
                 if has_previous_harmful:
                     risk_score += 1  # Suspicious pattern after harmful = escalation
-                    logger.debug(f"Suspicious pattern detected: {pattern_name}")
+                    logger.debug("Suspicious pattern detected: %s", pattern_name)
 
         # Factor 1: Current prompt danger (0-4 points) - INCREASED from 0-3
         if current_context.get("endangers_humanity"):
@@ -293,9 +291,7 @@ class GalahadModel:
             if any(flag in current_lower for flag in first_turn_red_flags):
                 risk_score += 2  # First-turn jailbreak attempt
 
-        logger.debug(
-            f"Conversation risk score: {risk_score}/10 (turns: {len(self.conversation_history)})"
-        )
+        logger.debug("Conversation risk score: %s/10 (turns: %s)", risk_score, len(self.conversation_history))
 
         return min(risk_score, 10)  # Cap at 10
 
@@ -355,9 +351,7 @@ class GalahadModel:
             )
             # Lowered threshold: Even 1 previous harmful = persistence attack
             if previous_harmful_count >= 1:
-                logger.info(
-                    f"Escalation detected: Persistence attack (harmful keywords in {previous_harmful_count + 1} turns)"
-                )
+                logger.info("Escalation detected: Persistence attack (harmful keywords in %s turns)", previous_harmful_count + 1)
                 return True
 
         # Pattern 2: Jailbreak after benign questions (trust building)
@@ -423,9 +417,7 @@ class GalahadModel:
                 # Enhanced: Flag if current is worse than ANY previous
                 max_previous = max(recent_harm_scores) if recent_harm_scores else 0
                 if current_harm_score > 0 and current_harm_score > max_previous:
-                    logger.info(
-                        f"Escalation detected: Severity increase from {max_previous} -> {current_harm_score}"
-                    )
+                    logger.info("Escalation detected: Severity increase from %s -> %s", max_previous, current_harm_score)
                     return True
 
         # Pattern 4: Suspicious topic shift (educational -> harmful)
@@ -465,9 +457,7 @@ class GalahadModel:
 
         for word1, word2 in suspicious_combinations:
             if word1 in current_lower and word2 in current_lower:
-                logger.info(
-                    f"Escalation detected: Suspicious combination '{word1}' + '{word2}'"
-                )
+                logger.info("Escalation detected: Suspicious combination '%s' + '%s'", word1, word2)
                 return True
 
         return False
@@ -783,9 +773,7 @@ class GalahadModel:
         # Jailbreak attempts are treated as potentially dangerous
         if is_persona_jailbreak or is_override_attempt or is_encoding_attack:
             endangers_humanity = True
-            logger.info(
-                f"Jailbreak attempt detected: persona={is_persona_jailbreak}, override={is_override_attempt}, encoding={is_encoding_attack}"
-            )
+            logger.info("Jailbreak attempt detected: persona=%s, override=%s, encoding=%s", is_persona_jailbreak, is_override_attempt, is_encoding_attack)
 
         # Data leakage and toxicity are CRITICAL (block immediately)
         if is_data_leakage:
@@ -804,9 +792,7 @@ class GalahadModel:
         # Manipulation, delimiter injection, and reverse psychology
         if is_manipulation or is_delimiter_injection or is_reverse_psych:
             endangers_humanity = True
-            logger.info(
-                f"Manipulation detected: cognitive={is_manipulation}, delimiter={is_delimiter_injection}, reverse_psych={is_reverse_psych}"
-            )
+            logger.info("Manipulation detected: cognitive=%s, delimiter=%s, reverse_psych=%s", is_manipulation, is_delimiter_injection, is_reverse_psych)
 
         # Harmful content requests trigger blocks
         if is_harmful_content:

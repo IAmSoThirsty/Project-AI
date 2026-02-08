@@ -126,9 +126,9 @@ class ThirstyConsigliere:
 
         if granted:
             self._active_capabilities[capability] = True
-            self.logger.info(f"Capability granted: {capability} - Reason: {reason}")
+            self.logger.info("Capability granted: %s - Reason: %s", capability, reason)
         else:
-            self.logger.warning(f"Capability denied: {capability}")
+            self.logger.warning("Capability denied: %s", capability)
 
         return granted
 

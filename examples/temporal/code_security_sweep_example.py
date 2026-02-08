@@ -57,10 +57,8 @@ async def run_code_sweep():
         execution_timeout=timedelta(minutes=45),
     )
 
-    logger.info(f"✅ Workflow started: {handle.id}")
-    logger.info(
-        f"🔗 View in UI: http://localhost:8233/namespaces/default/workflows/{handle.id}"
-    )
+    logger.info("✅ Workflow started: %s", handle.id)
+    logger.info("🔗 View in UI: http://localhost:8233/namespaces/default/workflows/%s", handle.id)
 
     # Wait for result
     logger.info("⏳ Scanning codebase...")
@@ -68,38 +66,34 @@ async def run_code_sweep():
 
     # Display results
     logger.info("📊 Scan Results:")
-    logger.info(f"   • Total findings: {result.total_findings}")
+    logger.info("   • Total findings: %s", result.total_findings)
 
     if result.by_severity:
         logger.info("   • By severity:")
         for severity, count in result.by_severity.items():
             if count > 0:
-                logger.info(f"     - {severity.upper()}: {count}")
+                logger.info("     - %s: %s", severity.upper(), count)
 
     if result.findings:
         logger.info("\n📝 First 5 findings:")
         for i, finding in enumerate(result.findings[:5], 1):
-            logger.info(f"\n   {i}. {finding.get('title', 'Unknown')}")
-            logger.info(f"      Severity: {finding.get('severity', 'N/A')}")
-            logger.info(
-                f"      File: {finding.get('file_path', 'N/A')}:{finding.get('line_number', '?')}"
-            )
-            logger.info(f"      Code: {finding.get('code_snippet', 'N/A')[:60]}...")
-            logger.info(f"      Fix: {finding.get('recommendation', 'N/A')}")
+            logger.info("\n   %s. %s", i, finding.get('title', 'Unknown'))
+            logger.info("      Severity: %s", finding.get('severity', 'N/A'))
+            logger.info("      File: %s:%s", finding.get('file_path', 'N/A'), finding.get('line_number', '?'))
+            logger.info("      Code: %s...", finding.get('code_snippet', 'N/A')[)
+            logger.info("      Fix: %s", finding.get('recommendation', 'N/A'))
 
     if result.patches:
-        logger.info(f"\n🔧 Generated {len(result.patches)} patches")
+        logger.info("\n🔧 Generated %s patches", len(result.patches))
 
     if result.sarif_path:
-        logger.info(f"\n📄 SARIF report: {result.sarif_path}")
-        logger.info(
-            f"   Upload to GitHub: gh api repos/{{owner}}/{{repo}}/code-scanning/sarifs -F sarif=@{result.sarif_path}"
-        )
+        logger.info("\n📄 SARIF report: %s", result.sarif_path)
+        logger.info("   Upload to GitHub: gh api repos/%s}/%s}/code-scanning/sarifs -F sarif=@%s", {owner, {repo, result.sarif_path)
 
     # Check for critical vulnerabilities
     critical_count = result.by_severity.get("critical", 0)
     if critical_count > 0:
-        logger.error(f"\n❌ CRITICAL: {critical_count} critical vulnerabilities found!")
+        logger.error("\n❌ CRITICAL: %s critical vulnerabilities found!", critical_count)
         logger.error("   Deployment should be blocked until these are resolved.")
         sys.exit(1)
     else:

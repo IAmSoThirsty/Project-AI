@@ -83,10 +83,10 @@ class DataSource:
                     if datetime.fromisoformat(data["timestamp"]) > datetime.now(
                         UTC
                     ) - timedelta(days=30):
-                        logger.debug(f"Using cached data: {cache_key}")
+                        logger.debug("Using cached data: %s", cache_key)
                         return data["response"]
             except Exception as e:
-                logger.warning(f"Cache read error: {e}")
+                logger.warning("Cache read error: %s", e)
         return None
 
     def _set_cached(self, cache_key: str, response: dict) -> None:
@@ -99,7 +99,7 @@ class DataSource:
                     f,
                 )
         except Exception as e:
-            logger.warning(f"Cache write error: {e}")
+            logger.warning("Cache write error: %s", e)
 
     def fetch_with_retry(
         self,
@@ -131,13 +131,11 @@ class DataSource:
 
                 return data
             except requests.exceptions.RequestException as e:
-                logger.warning(
-                    f"Request failed (attempt {attempt + 1}/{max_retries}): {e}"
-                )
+                logger.warning("Request failed (attempt %s/%s): %s", attempt + 1, max_retries, e)
                 if attempt < max_retries - 1:
                     time.sleep(2**attempt)  # Exponential backoff
 
-        logger.error(f"Failed to fetch data from {url} after {max_retries} attempts")
+        logger.error("Failed to fetch data from %s after %s attempts", url, max_retries)
         return None
 
 
@@ -190,7 +188,7 @@ class WorldBankDataSource(DataSource):
 
         data = self.fetch_with_retry(url, params)
         if not data or len(data) < 2:
-            logger.warning(f"No data returned for indicator {indicator}")
+            logger.warning("No data returned for indicator %s", indicator)
             return {}
 
         # Parse World Bank response format
@@ -206,7 +204,7 @@ class WorldBankDataSource(DataSource):
                 if country_code and year:
                     result[country_code][year] = value
 
-        logger.info(f"Loaded {len(result)} countries for indicator {indicator}")
+        logger.info("Loaded %s countries for indicator %s", len(result), indicator)
         return dict(result)
 
 
@@ -265,7 +263,7 @@ class ACLEDDataSource(DataSource):
                 start_date, end_date, countries
             )
 
-        logger.info(f"Loaded {len(data['data'])} ACLED events")
+        logger.info("Loaded %s ACLED events", len(data['data']))
         return data["data"]
 
     def _generate_fallback_conflict_data(
@@ -308,7 +306,7 @@ class ACLEDDataSource(DataSource):
                     }
                 )
 
-        logger.info(f"Generated {len(events)} fallback conflict events")
+        logger.info("Generated %s fallback conflict events", len(events))
         return events
 
 
@@ -371,7 +369,7 @@ class GlobalScenarioEngine(SimulationSystem):
             logger.info("GlobalScenarioEngine initialization complete")
             return True
         except Exception as e:
-            logger.error(f"Initialization failed: {e}")
+            logger.error("Initialization failed: %s", e)
             return False
 
     def load_historical_data(
@@ -399,7 +397,7 @@ class GlobalScenarioEngine(SimulationSystem):
 
         try:
             # Load World Bank economic indicators
-            logger.info(f"Loading World Bank data for {start_year}-{end_year}")
+            logger.info("Loading World Bank data for %s-%s", start_year, end_year)
 
             # GDP growth -> ECONOMIC domain
             gdp_data = self.world_bank.fetch_indicator(
@@ -455,7 +453,7 @@ class GlobalScenarioEngine(SimulationSystem):
                     fatalities = int(event.get("fatalities", 0))
                     conflict_by_country_year[country][year] += fatalities
                 except (ValueError, KeyError) as e:
-                    logger.debug(f"Skipping malformed event: {e}")
+                    logger.debug("Skipping malformed event: %s", e)
 
             # Convert to standard format
             conflict_data = {}
@@ -468,7 +466,7 @@ class GlobalScenarioEngine(SimulationSystem):
             summary = {
                 domain.value: len(data) for domain, data in self.historical_data.items()
             }
-            logger.info(f"Historical data loaded: {summary}")
+            logger.info("Historical data loaded: %s", summary)
 
             return True
 
@@ -546,9 +544,7 @@ class GlobalScenarioEngine(SimulationSystem):
                         },
                     )
                     events.append(event)
-                    logger.debug(
-                        f"Detected event: {country} {domain.value} {year} z={z_score:.2f}"
-                    )
+                    logger.debug("Detected event: %s %s %s z=%s", country, domain.value, year, z_score)
 
                 # Check domain-specific absolute thresholds
                 if (
@@ -568,7 +564,7 @@ class GlobalScenarioEngine(SimulationSystem):
                     )
                     events.append(event)
 
-        logger.info(f"Detected {len(events)} threshold events for year {year}")
+        logger.info("Detected %s threshold events for year %s", len(events), year)
         self.threshold_events.extend(events)
         return events
 
@@ -641,7 +637,7 @@ class GlobalScenarioEngine(SimulationSystem):
                         )
                         link.confidence = min(0.95, link.confidence + 0.1)
 
-        logger.info(f"Built {len(causal_links)} causal links")
+        logger.info("Built %s causal links", len(causal_links))
         self.causal_links = causal_links
         return causal_links
 
@@ -798,9 +794,7 @@ class GlobalScenarioEngine(SimulationSystem):
         # Sort by likelihood
         scenarios.sort(key=lambda s: s.likelihood, reverse=True)
 
-        logger.info(
-            f"Simulated {len(scenarios)} scenarios over {projection_years} years"
-        )
+        logger.info("Simulated %s scenarios over %s years", len(scenarios), projection_years)
         self.scenarios = scenarios
         return scenarios
 
@@ -858,7 +852,7 @@ class GlobalScenarioEngine(SimulationSystem):
                     f"Risk Score: {risk_score:.1f}"
                 )
 
-        logger.info(f"Generated {len(alerts)} crisis alerts")
+        logger.info("Generated %s crisis alerts", len(alerts))
         self.alerts = alerts
         return alerts
 
@@ -981,7 +975,7 @@ class GlobalScenarioEngine(SimulationSystem):
             with open(state_file, "w") as f:
                 json.dump(state, f, indent=2, default=str)
 
-            logger.info(f"State persisted to {state_file}")
+            logger.info("State persisted to %s", state_file)
             return True
 
         except Exception as e:
@@ -1026,7 +1020,7 @@ class GlobalScenarioEngine(SimulationSystem):
 
         validation["quality_score"] = max(0, 100 - len(validation["issues"]) * 5)
 
-        logger.info(f"Data quality score: {validation['quality_score']}/100")
+        logger.info("Data quality score: %s/100", validation['quality_score'])
         return validation
 
 

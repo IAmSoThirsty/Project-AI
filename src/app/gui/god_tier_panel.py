@@ -151,7 +151,7 @@ class SystemHealthPanel(QFrame):
             )
 
         except Exception as e:
-            logger.error(f"Error refreshing health: {e}")
+            logger.error("Error refreshing health: %s", e)
 
 
 class ComponentStatusPanel(QFrame):
@@ -229,7 +229,7 @@ class ComponentStatusPanel(QFrame):
             self.status_label.setText("\n".join(output))
 
         except Exception as e:
-            logger.error(f"Error refreshing components: {e}")
+            logger.error("Error refreshing components: %s", e)
             self.status_label.setText(f"ERROR: {str(e)}")
 
 
@@ -339,7 +339,7 @@ class IntelligenceAssessmentPanel(QFrame):
             self.assessment_display.setText("\n".join(output))
 
         except Exception as e:
-            logger.error(f"Error generating assessment: {e}")
+            logger.error("Error generating assessment: %s", e)
             self.assessment_display.setText(
                 f"ERROR: Failed to generate assessment\n\n{str(e)}"
             )
@@ -465,7 +465,7 @@ class GodTierCommandPanel(QWidget):
                 )
                 logger.info("Command center initialized successfully")
             except Exception as e:
-                logger.error(f"Failed to initialize command center: {e}")
+                logger.error("Failed to initialize command center: %s", e)
 
     def _auto_refresh(self):
         """Auto-refresh panels."""

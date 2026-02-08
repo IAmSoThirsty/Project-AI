@@ -62,7 +62,7 @@ class RuntimeManager:
         runtimes_file = self.data_dir / "cerberus" / "runtimes.json"
 
         if not runtimes_file.exists():
-            logger.error(f"Runtimes file not found: {runtimes_file}")
+            logger.error("Runtimes file not found: %s", runtimes_file)
             # Create minimal fallback
             self.runtimes = {
                 "python": RuntimeDescriptor(
@@ -98,10 +98,10 @@ class RuntimeManager:
                 )
                 self.runtimes[lang_key] = runtime
 
-            logger.info(f"Loaded {len(self.runtimes)} runtime definitions")
+            logger.info("Loaded %s runtime definitions", len(self.runtimes))
 
         except Exception as e:
-            logger.error(f"Failed to load runtimes: {e}")
+            logger.error("Failed to load runtimes: %s", e)
             # Keep fallback if loading fails
 
     def verify_runtimes(self, timeout: int = 5) -> dict[str, Any]:
@@ -135,28 +135,24 @@ class RuntimeManager:
                     runtime.health_status = "healthy"
                     self.health_cache[lang_key] = "healthy"
                     healthy_count += 1
-                    logger.debug(
-                        f"✓ {runtime.name} ({lang_key}): healthy - {result.stdout.strip()[:50]}"
-                    )
+                    logger.debug("✓ %s (%s): healthy - %s", runtime.name, lang_key, result.stdout.strip()[)
                 else:
                     runtime.health_status = "degraded"
                     self.health_cache[lang_key] = "degraded"
                     degraded_count += 1
-                    logger.warning(
-                        f"⚠ {runtime.name} ({lang_key}): degraded - exit code {result.returncode}"
-                    )
+                    logger.warning("⚠ %s (%s): degraded - exit code %s", runtime.name, lang_key, result.returncode)
 
             except subprocess.TimeoutExpired:
                 runtime.health_status = "unavailable"
                 self.health_cache[lang_key] = "unavailable"
                 unavailable_count += 1
-                logger.warning(f"✗ {runtime.name} ({lang_key}): unavailable - timeout")
+                logger.warning("✗ %s (%s): unavailable - timeout", runtime.name, lang_key)
 
             except Exception as e:
                 runtime.health_status = "unavailable"
                 self.health_cache[lang_key] = "unavailable"
                 unavailable_count += 1
-                logger.warning(f"✗ {runtime.name} ({lang_key}): unavailable - {e}")
+                logger.warning("✗ %s (%s): unavailable - %s", runtime.name, lang_key, e)
 
         summary = {
             "total_runtimes": len(self.runtimes),
@@ -202,7 +198,7 @@ class RuntimeManager:
             candidates = [r for r in candidates if r.category == category]
 
         if not candidates:
-            logger.warning(f"No runtimes found for category: {category}")
+            logger.warning("No runtimes found for category: %s", category)
             return None
 
         # Apply preference weights

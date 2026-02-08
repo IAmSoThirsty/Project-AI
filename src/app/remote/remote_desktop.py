@@ -47,7 +47,7 @@ class RemoteDesktop:
         """Start remote desktop server"""
         self.logger.info("Starting Remote Desktop with God tier encryption")
         self.logger.info("All screen data encrypted with 7 layers")
-        self.logger.info(f"Listening on {self.host}:{self.port}")
+        self.logger.info("Listening on %s:%s", self.host, self.port)
 
         self._active = True
 
@@ -81,7 +81,7 @@ class RemoteDesktop:
 
         self._connections[conn_id] = connection
 
-        self.logger.info(f"Remote desktop connection established: {conn_id}")
+        self.logger.info("Remote desktop connection established: %s", conn_id)
 
         return {
             "connection_id": conn_id,
@@ -94,7 +94,7 @@ class RemoteDesktop:
         """Disconnect remote desktop connection"""
         if conn_id in self._connections:
             del self._connections[conn_id]
-            self.logger.info(f"Connection closed: {conn_id}")
+            self.logger.info("Connection closed: %s", conn_id)
 
     def get_status(self) -> dict[str, Any]:
         """Get remote desktop status"""

@@ -321,7 +321,7 @@ class AgentSimulator:
             level="INFORMATIONAL"
         )
 
-        logger.info(f"Added agent: {agent.name} ({agent.agent_type.value})")
+        logger.info("Added agent: %s (%s)", agent.name, agent.agent_type.value)
 
     def remove_agent(self, agent_id: str) -> None:
         """Remove agent from simulation."""

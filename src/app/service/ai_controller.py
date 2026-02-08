@@ -117,9 +117,7 @@ class AIController:
             # Wait for workflow to complete and get result
             result = await handle.result()
 
-            logger.info(
-                f"Workflow {workflow_id} completed with success={result.success}"
-            )
+            logger.info("Workflow %s completed with success=%s", workflow_id, result.success)
             return result
 
         except Exception as e:

@@ -45,7 +45,7 @@ class HumanForcesModule:
         self.mutual_cooperation_payoff = 4.0
         self.mutual_defection_payoff = 1.0
 
-        logger.info(f"Human forces module initialized: {self.cooperators} cooperators, {self.defectors} defectors")
+        logger.info("Human forces module initialized: %s cooperators, %s defectors", self.cooperators, self.defectors)
 
     def simulate_cooperation_decision(self, state: StateVector) -> tuple[int, int]:
         """Simulate cooperation vs defection decisions based on state.
@@ -90,7 +90,7 @@ class HumanForcesModule:
         self.cooperation_history.append(self.cooperators)
         self.defection_history.append(self.defectors)
 
-        logger.debug(f"Cooperation decision: {self.cooperators} cooperators ({self.cooperators/self.population_size:.2%}), {self.defectors} defectors")
+        logger.debug("Cooperation decision: %s cooperators (%s), %s defectors", self.cooperators, self.cooperators/self.population_size, self.defectors)
 
         return self.cooperators, self.defectors
 
@@ -127,7 +127,7 @@ class HumanForcesModule:
             )
             events.append(event)
 
-        logger.debug(f"Generated {count} cooperation events")
+        logger.debug("Generated %s cooperation events", count)
         return events
 
     def evaluate_betrayal_risk(self, state: StateVector) -> float:
@@ -152,7 +152,7 @@ class HumanForcesModule:
         total_risk = base_prob + defector_factor + history_factor
         total_risk = min(total_risk, 1.0)
 
-        logger.debug(f"Betrayal risk: {total_risk:.4f} (base: {base_prob:.4f}, defectors: {defector_factor:.4f}, history: {history_factor:.4f})")
+        logger.debug("Betrayal risk: %s (base: %s, defectors: %s, history: %s)", total_risk, base_prob, defector_factor, history_factor)
 
         return total_risk
 
@@ -201,7 +201,7 @@ class HumanForcesModule:
             "event_id": event.event_id,
         })
 
-        logger.info(f"Generated betrayal event: severity={severity:.2f}, visibility={visibility:.2f}")
+        logger.info("Generated betrayal event: severity=%s, visibility=%s", severity, visibility)
 
         return event
 

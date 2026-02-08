@@ -108,7 +108,7 @@ class BootstrapOrchestrator:
         else:
             self._initialize_default_config()
 
-        logger.info(f"Bootstrap Orchestrator initialized (config_path={config_path})")
+        logger.info("Bootstrap Orchestrator initialized (config_path=%s)", config_path)
 
     def _load_config(self):
         """Load configuration from file."""
@@ -120,7 +120,7 @@ class BootstrapOrchestrator:
                 with open(self.config_path) as f:
                     self.config = json.load(f)
             else:
-                logger.error(f"Unsupported config format: {self.config_path.suffix}")
+                logger.error("Unsupported config format: %s", self.config_path.suffix)
                 self._initialize_default_config()
                 return
 
@@ -129,13 +129,11 @@ class BootstrapOrchestrator:
                 for subsystem_id, subsystem_config in self.config["subsystems"].items():
                     self._parse_subsystem_definition(subsystem_id, subsystem_config)
 
-            logger.info(f"Loaded configuration from {self.config_path}")
-            logger.info(
-                f"Discovered {len(self.subsystem_definitions)} subsystem definitions"
-            )
+            logger.info("Loaded configuration from %s", self.config_path)
+            logger.info("Discovered %s subsystem definitions", len(self.subsystem_definitions))
 
         except Exception as e:
-            logger.error(f"Failed to load config from {self.config_path}: {e}")
+            logger.error("Failed to load config from %s: %s", self.config_path, e)
             self._initialize_default_config()
 
     def _parse_subsystem_definition(self, subsystem_id: str, config: dict[str, Any]):
@@ -158,9 +156,7 @@ class BootstrapOrchestrator:
             self.subsystem_definitions[subsystem_id] = definition
 
         except KeyError as e:
-            logger.error(
-                f"Invalid subsystem definition for {subsystem_id}: missing {e}"
-            )
+            logger.error("Invalid subsystem definition for %s: missing %s", subsystem_id, e)
 
     def _initialize_default_config(self):
         """Initialize with default configuration."""
@@ -197,7 +193,7 @@ class BootstrapOrchestrator:
         for search_path in discovery_paths:
             path = Path(search_path)
             if not path.exists():
-                logger.warning(f"Discovery path does not exist: {search_path}")
+                logger.warning("Discovery path does not exist: %s", search_path)
                 continue
 
             # Find all Python files
@@ -241,14 +237,12 @@ class BootstrapOrchestrator:
                                 self.subsystem_definitions[subsystem_id] = definition
                                 discovered += 1
 
-                                logger.info(
-                                    f"Discovered subsystem: {name} ({subsystem_id})"
-                                )
+                                logger.info("Discovered subsystem: %s (%s)", name, subsystem_id)
 
                 except Exception as e:
-                    logger.debug(f"Could not inspect {py_file}: {e}")
+                    logger.debug("Could not inspect %s: %s", py_file, e)
 
-        logger.info(f"Discovery complete: found {discovered} new subsystems")
+        logger.info("Discovery complete: found %s new subsystems", discovered)
         return discovered
 
     def register_subsystem_class(
@@ -296,11 +290,11 @@ class BootstrapOrchestrator:
 
             self.subsystem_definitions[sid] = definition
 
-            logger.info(f"Manually registered subsystem: {name} ({sid})")
+            logger.info("Manually registered subsystem: %s (%s)", name, sid)
             return True
 
         except Exception as e:
-            logger.error(f"Failed to register subsystem class {subsystem_class}: {e}")
+            logger.error("Failed to register subsystem class %s: %s", subsystem_class, e)
             return False
 
     def bootstrap(self, auto_start_monitoring: bool = True) -> bool:
@@ -327,19 +321,17 @@ class BootstrapOrchestrator:
             logger.info("Phase 1: Subsystem Discovery")
             if self.config.get("bootstrap", {}).get("auto_discover", True):
                 discovered = self.discover_subsystems()
-                logger.info(f"Auto-discovery complete: {discovered} subsystems found")
+                logger.info("Auto-discovery complete: %s subsystems found", discovered)
 
             # Phase 2: Registration
             logger.info("Phase 2: Subsystem Registration")
             registered_count = self._register_all_subsystems()
-            logger.info(f"Registered {registered_count} subsystems with registry")
+            logger.info("Registered %s subsystems with registry", registered_count)
 
             # Phase 3: Initialization
             logger.info("Phase 3: Subsystem Initialization")
             initialization_order = self.registry.get_initialization_order()
-            logger.info(
-                f"Initialization order determined: {len(initialization_order)} subsystems"
-            )
+            logger.info("Initialization order determined: %s subsystems", len(initialization_order))
 
             success_count = 0
             failure_count = 0
@@ -351,12 +343,10 @@ class BootstrapOrchestrator:
                 definition = self.subsystem_definitions[subsystem_id]
 
                 if not definition.enabled or not definition.auto_init:
-                    logger.info(
-                        f"Skipping {subsystem_id} (enabled={definition.enabled}, auto_init={definition.auto_init})"
-                    )
+                    logger.info("Skipping %s (enabled=%s, auto_init=%s)", subsystem_id, definition.enabled, definition.auto_init)
                     continue
 
-                logger.info(f"Initializing: {definition.name} ({subsystem_id})")
+                logger.info("Initializing: %s (%s)", definition.name, subsystem_id)
 
                 if self.registry.initialize_subsystem(subsystem_id):
                     self.initialized_subsystems.append(subsystem_id)
@@ -398,9 +388,7 @@ class BootstrapOrchestrator:
                         self._rollback_bootstrap()
                         return False
                     else:
-                        logger.warning(
-                            f"Failed to initialize {subsystem_id}, continuing..."
-                        )
+                        logger.warning("Failed to initialize %s, continuing...", subsystem_id)
 
             # Phase 4: Post-initialization
             logger.info("Phase 4: Post-Bootstrap Configuration")
@@ -421,9 +409,9 @@ class BootstrapOrchestrator:
 
             logger.info("=" * 80)
             logger.info("BOOTSTRAP COMPLETE")
-            logger.info(f"Duration: {duration:.2f}s")
-            logger.info(f"Success: {success_count}/{success_count + failure_count}")
-            logger.info(f"Failed: {failure_count}")
+            logger.info("Duration: %ss", duration)
+            logger.info("Success: %s/%s", success_count, success_count + failure_count)
+            logger.info("Failed: %s", failure_count)
             logger.info("=" * 80)
 
             return failure_count == 0
@@ -473,7 +461,7 @@ class BootstrapOrchestrator:
                 registered += 1
 
             except Exception as e:
-                logger.error(f"Failed to register subsystem {subsystem_id}: {e}")
+                logger.error("Failed to register subsystem %s: %s", subsystem_id, e)
 
         return registered
 
@@ -487,10 +475,10 @@ class BootstrapOrchestrator:
                 if subsystem and hasattr(subsystem, "shutdown"):
                     subsystem.shutdown()
 
-                logger.info(f"Rolled back: {subsystem_id}")
+                logger.info("Rolled back: %s", subsystem_id)
 
             except Exception as e:
-                logger.error(f"Error rolling back {subsystem_id}: {e}")
+                logger.error("Error rolling back %s: %s", subsystem_id, e)
 
         self.initialized_subsystems.clear()
 
@@ -518,10 +506,10 @@ class BootstrapOrchestrator:
             with open(state_file, "w") as f:
                 json.dump(state, f, indent=2)
 
-            logger.info(f"Saved bootstrap state to {state_file}")
+            logger.info("Saved bootstrap state to %s", state_file)
 
         except Exception as e:
-            logger.error(f"Failed to save bootstrap state: {e}")
+            logger.error("Failed to save bootstrap state: %s", e)
 
     def reload_subsystem(self, subsystem_id: str) -> bool:
         """
@@ -537,13 +525,13 @@ class BootstrapOrchestrator:
             logger.error("Hot-reload is disabled in configuration")
             return False
 
-        logger.info(f"Hot-reloading subsystem: {subsystem_id}")
+        logger.info("Hot-reloading subsystem: %s", subsystem_id)
 
         try:
             # Get current subsystem
             subsystem = self.registry.get_subsystem(subsystem_id)
             if not subsystem:
-                logger.error(f"Subsystem not found: {subsystem_id}")
+                logger.error("Subsystem not found: %s", subsystem_id)
                 return False
 
             # Shutdown current instance
@@ -560,7 +548,7 @@ class BootstrapOrchestrator:
             return self.registry.initialize_subsystem(subsystem_id)
 
         except Exception as e:
-            logger.error(f"Failed to reload subsystem {subsystem_id}: {e}")
+            logger.error("Failed to reload subsystem %s: %s", subsystem_id, e)
             return False
 
     def get_bootstrap_status(self) -> dict[str, Any]:

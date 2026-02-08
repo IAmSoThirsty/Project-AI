@@ -72,7 +72,7 @@ class DjangoStateEngine:
         self.timeline: TimelineModule | None = None
         self.outcomes: OutcomesModule | None = None
 
-        logger.info(f"Django State Engine created: {self.config.simulation_name}")
+        logger.info("Django State Engine created: %s", self.config.simulation_name)
 
     def init(self) -> bool:
         """Initialize simulation with starting conditions.
@@ -147,7 +147,7 @@ class DjangoStateEngine:
         self.state.timestamp = new_time
         self.state.tick_count += 1
 
-        logger.debug(f"=== TICK {self.state.tick_count} (t={new_time}) ===")
+        logger.debug("=== TICK %s (t=%s) ===", self.state.tick_count, new_time)
 
         # Apply irreversibility laws (natural decay)
         law_changes = self.laws.tick_all_laws(self.state)
@@ -168,7 +168,7 @@ class DjangoStateEngine:
         if collapsed and not self.state.in_collapse:
             self.state.in_collapse = True
             self.state.collapse_triggered_at = self.state.timestamp
-            logger.critical(f"COLLAPSE TRIGGERED: {collapse_reason}")
+            logger.critical("COLLAPSE TRIGGERED: %s", collapse_reason)
 
         # Process collapse scheduler
         triggered_collapses = self.collapse_scheduler.process_tick(self.state)
@@ -223,7 +223,7 @@ class DjangoStateEngine:
             self.running = False
             outcome = self.outcomes.determine_final_outcome(self.state)
             results["final_outcome"] = outcome
-            logger.critical(f"SIMULATION TERMINATED: {outcome}")
+            logger.critical("SIMULATION TERMINATED: %s", outcome)
 
         return results
 
@@ -241,7 +241,7 @@ class DjangoStateEngine:
             return False
 
         try:
-            logger.info(f"Injecting event: {event.event_type.value}")
+            logger.info("Injecting event: %s", event.event_type.value)
 
             # Save state before event
             state_before = self.state.copy()
@@ -265,7 +265,7 @@ class DjangoStateEngine:
                 irreversible=True,
             )
 
-            logger.info(f"Event applied: {event.event_id}")
+            logger.info("Event applied: %s", event.event_id)
             return True
 
         except Exception as e:
@@ -448,7 +448,7 @@ class DjangoStateEngine:
         """
         # Max ticks reached
         if self.state.tick_count >= self.config.max_ticks:
-            logger.info(f"Max ticks reached: {self.config.max_ticks}")
+            logger.info("Max ticks reached: %s", self.config.max_ticks)
             return True
 
         # Collapse conditions

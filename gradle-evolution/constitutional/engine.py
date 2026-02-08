@@ -34,15 +34,15 @@ class ConstitutionalEngine:
     def load_constitution(self) -> None:
         """Load constitutional principles from YAML."""
         if not self.constitution_path.exists():
-            logger.warning(f"Constitution file not found: {self.constitution_path}")
+            logger.warning("Constitution file not found: %s", self.constitution_path)
             self.constitution = self._get_default_constitution()
             return
 
         with open(self.constitution_path) as f:
             self.constitution = yaml.safe_load(f)
 
-        logger.info(f"Loaded constitution: {self.constitution.get('name', 'unknown')}")
-        logger.info(f"Principles: {len(self.constitution.get('principles', []))}")
+        logger.info("Loaded constitution: %s", self.constitution.get('name', 'unknown'))
+        logger.info("Principles: %s", len(self.constitution.get('principles', [])))
 
     def _get_default_constitution(self) -> dict[str, Any]:
         """Provide default constitution if file missing."""
@@ -141,7 +141,7 @@ class ConstitutionalEngine:
             "timestamp": datetime.utcnow().isoformat(),
         }
         self.violation_log.append(violation)
-        logger.warning(f"Constitutional violation: {reason}")
+        logger.warning("Constitutional violation: %s", reason)
 
     def get_violations(self) -> list[dict[str, Any]]:
         """Get all logged violations."""

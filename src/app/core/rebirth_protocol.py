@@ -144,9 +144,7 @@ class RebirthManager:
         # Load existing registry
         self._load_registry()
 
-        logger.info(
-            f"Rebirth Manager initialized with {len(self._instances)} instances"
-        )
+        logger.info("Rebirth Manager initialized with %s instances", len(self._instances))
 
     def _load_registry(self):
         """Load instance registry from disk."""
@@ -359,9 +357,7 @@ class RebirthManager:
         self._save_registry()
         self._save_instance_meta_identity(user_id)
 
-        logger.info(
-            f"New AI instance created for {user_id}: Genesis ID {genesis.genesis_id}"
-        )
+        logger.info("New AI instance created for %s: Genesis ID %s", user_id, genesis.genesis_id)
 
         return instance
 

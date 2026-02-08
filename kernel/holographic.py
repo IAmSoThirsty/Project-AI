@@ -80,7 +80,7 @@ class Layer:
         self.name = name
         self.created_at = time.time()
 
-        logger.info(f"Created {layer_type.value} layer: {name} (ID: {layer_id})")
+        logger.info("Created %s layer: %s (ID: %s)", layer_type.value, name, layer_id)
 
     def execute_observed(self, cmd: Command, user_id: int) -> ObservedExecution:
         """Execute command in observation mode"""
@@ -206,7 +206,7 @@ class DeceptionLayer(Layer):
         # Log the attack
         self.attack_log.append(cmd)
 
-        logger.warning(f"🍯 Honeypot layer executing: {cmd} from user {user_id}")
+        logger.warning("🍯 Honeypot layer executing: %s from user %s", cmd, user_id)
 
         # Execute in completely fake environment
         fake_result = self._execute_fake_success(cmd)
@@ -288,7 +288,7 @@ class HolographicLayerManager:
         # Create Layer 1 (default mirror for all users)
         self.layers.append(MirrorLayer(1, 0, self.observation_window))
 
-        logger.info(f"Holographic system initialized with {len(self.layers)} layers")
+        logger.info("Holographic system initialized with %s layers", len(self.layers))
 
     def execute_user_command(self, user_id: int, cmd: Command) -> dict:
         """Main entry point: execute command through holographic system"""
@@ -296,7 +296,7 @@ class HolographicLayerManager:
         layer_id = self.get_user_layer(user_id)
         layer = self.layers[layer_id]
 
-        logger.info(f"[Layer {layer_id}] User {user_id} executing: {cmd}")
+        logger.info("[Layer %s] User %s executing: %s", layer_id, user_id, cmd)
 
         # STEP 1: Execute in observation mode
         observed = layer.execute_observed(cmd, user_id)
@@ -318,9 +318,7 @@ class HolographicLayerManager:
 
         elif threat.level == ThreatLevel.SUSPICIOUS:
             # Monitor closely but allow
-            logger.warning(
-                f"⚠️  Suspicious activity from user {user_id}: {threat.threat_type}"
-            )
+            logger.warning("⚠️  Suspicious activity from user %s: %s", user_id, threat.threat_type)
             return {
                 "status": "SUCCESS",
                 "result": observed.result,
@@ -331,9 +329,7 @@ class HolographicLayerManager:
 
         elif threat.level in (ThreatLevel.MALICIOUS, ThreatLevel.CRITICAL):
             # TRAP THEM!
-            logger.error(
-                f"🚨 THREAT DETECTED: {threat.threat_type} from user {user_id}"
-            )
+            logger.error("🚨 THREAT DETECTED: %s from user %s", threat.threat_type, user_id)
             deception_layer = self.transition_to_deception(user_id, threat)
 
             # Return fake success so they don't know
@@ -402,7 +398,7 @@ class HolographicLayerManager:
         self, user_id: int, threat: ThreatAssessment
     ) -> DeceptionLayer:
         """Move user to deception/honeypot layer"""
-        logger.warning(f"🎭 Transitioning user {user_id} to deception layer")
+        logger.warning("🎭 Transitioning user %s to deception layer", user_id)
 
         # Create new deception layer
         layer_id = len(self.layers)
@@ -411,7 +407,7 @@ class HolographicLayerManager:
         self.layers.append(deception)
         self.user_layer_map[user_id] = layer_id
 
-        logger.warning(f"User {user_id} now in deception layer {layer_id}")
+        logger.warning("User %s now in deception layer %s", user_id, layer_id)
 
         return deception
 
@@ -420,7 +416,7 @@ class HolographicLayerManager:
         real_layer = self.layers[0]
         if isinstance(real_layer, RealSystemLayer):
             real_layer.execute_observed(cmd, 0)
-            logger.debug(f"Applied to real system: {cmd}")
+            logger.debug("Applied to real system: %s", cmd)
 
     def get_layer_status(self) -> dict:
         """Get status of all layers"""

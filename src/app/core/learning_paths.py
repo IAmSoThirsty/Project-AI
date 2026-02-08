@@ -71,7 +71,7 @@ class LearningPathManager:
             response = self.provider.chat_completion(messages=messages, model=model)
             return response
         except Exception as e:
-            logger.error(f"Error generating learning path: {e}")
+            logger.error("Error generating learning path: %s", e)
             return f"Error generating learning path: {str(e)}"
 
     def save_path(self, username, interest, path_content):

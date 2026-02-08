@@ -118,7 +118,7 @@ class AuditTrail:
         timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
         self._log_file = self.log_dir / f"audit_{timestamp}.jsonl"
 
-        logger.info(f"Initialized AuditTrail, logging to {self._log_file}")
+        logger.info("Initialized AuditTrail, logging to %s", self._log_file)
 
         # Write header event
         self._write_header()
@@ -211,7 +211,7 @@ class AuditTrail:
                 f.write(json_line + '\n')
                 f.flush()  # Ensure immediate write
         except Exception as e:
-            logger.error(f"Failed to write audit event to file: {e}")
+            logger.error("Failed to write audit event to file: %s", e)
             # This is critical - we should not continue if audit fails
             raise
 

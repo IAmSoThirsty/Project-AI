@@ -155,7 +155,7 @@ class OutcomesModule:
         # Update state
         state.terminal_outcome = outcome
 
-        logger.critical(f"FINAL OUTCOME DETERMINED: {outcome.upper()} at t={state.timestamp}")
+        logger.critical("FINAL OUTCOME DETERMINED: %s at t=%s", outcome.upper(), state.timestamp)
 
         return outcome
 

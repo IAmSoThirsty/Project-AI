@@ -83,7 +83,7 @@ class VoiceModel(ABC):
         self.metadata = metadata
         self._initialized = False
         self._lock = threading.RLock()
-        logger.info(f"Voice model created: {metadata.model_id}")
+        logger.info("Voice model created: %s", metadata.model_id)
 
     @abstractmethod
     def synthesize(
@@ -122,11 +122,11 @@ class BasicTTSVoiceModel(VoiceModel):
         try:
             with self._lock:
                 # Simulate initialization
-                logger.info(f"Initializing BasicTTS: {self.metadata.model_id}")
+                logger.info("Initializing BasicTTS: %s", self.metadata.model_id)
                 self._initialized = True
                 return True
         except Exception as e:
-            logger.error(f"Failed to initialize BasicTTS: {e}")
+            logger.error("Failed to initialize BasicTTS: %s", e)
             return False
 
     def synthesize(
@@ -162,7 +162,7 @@ class BasicTTSVoiceModel(VoiceModel):
                     success=True,
                 )
         except Exception as e:
-            logger.error(f"Synthesis error: {e}")
+            logger.error("Synthesis error: %s", e)
             return VoiceResponse(text=text, success=False, error=str(e))
 
     def _generate_audio(self, text: str, emotion: VoiceEmotionType) -> bytes:
@@ -174,7 +174,7 @@ class BasicTTSVoiceModel(VoiceModel):
     def shutdown(self) -> None:
         """Shutdown TTS engine"""
         with self._lock:
-            logger.info(f"Shutting down BasicTTS: {self.metadata.model_id}")
+            logger.info("Shutting down BasicTTS: %s", self.metadata.model_id)
             self._initialized = False
 
 
@@ -190,11 +190,11 @@ class EmotionalTTSVoiceModel(VoiceModel):
         """Initialize emotional TTS"""
         try:
             with self._lock:
-                logger.info(f"Initializing EmotionalTTS: {self.metadata.model_id}")
+                logger.info("Initializing EmotionalTTS: %s", self.metadata.model_id)
                 self._initialized = True
                 return True
         except Exception as e:
-            logger.error(f"Failed to initialize EmotionalTTS: {e}")
+            logger.error("Failed to initialize EmotionalTTS: %s", e)
             return False
 
     def synthesize(
@@ -213,7 +213,7 @@ class EmotionalTTSVoiceModel(VoiceModel):
 
         # Check cache
         if cache_key in self._emotion_cache:
-            logger.debug(f"Cache hit for: {cache_key[:50]}")
+            logger.debug("Cache hit for: %s", cache_key[)
             return self._emotion_cache[cache_key]
 
         try:
@@ -242,7 +242,7 @@ class EmotionalTTSVoiceModel(VoiceModel):
             return response
 
         except Exception as e:
-            logger.error(f"Emotional synthesis error: {e}")
+            logger.error("Emotional synthesis error: %s", e)
             return VoiceResponse(text=text, success=False, error=str(e))
 
     def _apply_emotion(self, text: str, emotion: VoiceEmotionType) -> bytes:
@@ -263,7 +263,7 @@ class EmotionalTTSVoiceModel(VoiceModel):
     def shutdown(self) -> None:
         """Shutdown emotional TTS"""
         with self._lock:
-            logger.info(f"Shutting down EmotionalTTS: {self.metadata.model_id}")
+            logger.info("Shutting down EmotionalTTS: %s", self.metadata.model_id)
             self._emotion_cache.clear()
             self._initialized = False
 
@@ -280,13 +280,11 @@ class ConversationalVoiceModel(VoiceModel):
         """Initialize conversational model"""
         try:
             with self._lock:
-                logger.info(
-                    f"Initializing ConversationalVoice: {self.metadata.model_id}"
-                )
+                logger.info("Initializing ConversationalVoice: %s", self.metadata.model_id)
                 self._initialized = True
                 return True
         except Exception as e:
-            logger.error(f"Failed to initialize ConversationalVoice: {e}")
+            logger.error("Failed to initialize ConversationalVoice: %s", e)
             return False
 
     def synthesize(
@@ -334,7 +332,7 @@ class ConversationalVoiceModel(VoiceModel):
             )
 
         except Exception as e:
-            logger.error(f"Conversational synthesis error: {e}")
+            logger.error("Conversational synthesis error: %s", e)
             return VoiceResponse(text=text, success=False, error=str(e))
 
     def _analyze_context(self, text: str, context: dict[str, Any]) -> dict[str, Any]:
@@ -408,7 +406,7 @@ class ConversationalVoiceModel(VoiceModel):
     def shutdown(self) -> None:
         """Shutdown conversational model"""
         with self._lock:
-            logger.info(f"Shutting down ConversationalVoice: {self.metadata.model_id}")
+            logger.info("Shutting down ConversationalVoice: %s", self.metadata.model_id)
             self._conversation_history.clear()
             self._initialized = False
 
@@ -425,7 +423,7 @@ class VoiceModelRegistry:
         self._lock = threading.RLock()
         self._registry_file = os.path.join(data_dir, "registry.json")
         os.makedirs(data_dir, exist_ok=True)
-        logger.info(f"VoiceModelRegistry initialized at {data_dir}")
+        logger.info("VoiceModelRegistry initialized at %s", data_dir)
 
     def register(self, model: VoiceModel) -> bool:
         """Register a voice model"""
@@ -433,16 +431,16 @@ class VoiceModelRegistry:
             with self._lock:
                 model_id = model.metadata.model_id
                 if model_id in self._models:
-                    logger.warning(f"Model already registered: {model_id}")
+                    logger.warning("Model already registered: %s", model_id)
                     return False
 
                 self._models[model_id] = model
                 self._save_registry()
-                logger.info(f"Registered model: {model_id}")
+                logger.info("Registered model: %s", model_id)
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to register model: {e}")
+            logger.error("Failed to register model: %s", e)
             return False
 
     def unregister(self, model_id: str) -> bool:
@@ -456,11 +454,11 @@ class VoiceModelRegistry:
                 model.shutdown()
                 del self._models[model_id]
                 self._save_registry()
-                logger.info(f"Unregistered model: {model_id}")
+                logger.info("Unregistered model: %s", model_id)
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to unregister model: {e}")
+            logger.error("Failed to unregister model: %s", e)
             return False
 
     def get_model(self, model_id: str) -> VoiceModel | None:
@@ -495,7 +493,7 @@ class VoiceModelRegistry:
                 try:
                     model.shutdown()
                 except Exception as e:
-                    logger.error(f"Error shutting down model: {e}")
+                    logger.error("Error shutting down model: %s", e)
 
     def _save_registry(self) -> None:
         """Save registry to disk"""
@@ -517,7 +515,7 @@ class VoiceModelRegistry:
                 json.dump(registry_data, f, indent=2)
 
         except Exception as e:
-            logger.error(f"Failed to save registry: {e}")
+            logger.error("Failed to save registry: %s", e)
 
 
 # Initialize default registry

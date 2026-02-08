@@ -340,7 +340,7 @@ class FailureSurveillanceSystem:
             priority="HIGH_PRIORITY"
         )
 
-        logger.warning(f"Anomaly detected: {anomaly.description} (severity: {anomaly.severity.value})")
+        logger.warning("Anomaly detected: %s (severity: %s)", anomaly.description, anomaly.severity.value)
 
     def compute_health(self) -> SystemHealth:
         """
@@ -442,7 +442,7 @@ class FailureSurveillanceSystem:
             priority="HIGH_PRIORITY"
         )
 
-        logger.critical(f"🛑 KILL SWITCH ACTIVATED: {reason}")
+        logger.critical("🛑 KILL SWITCH ACTIVATED: %s", reason)
 
     def reset(self) -> None:
         """Reset surveillance system (clears history, reactivates)."""

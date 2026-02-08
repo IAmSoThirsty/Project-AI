@@ -129,7 +129,7 @@ class MultiModalFusionEngine:
         # Register for visual events
         self._register_visual_events()
 
-        logger.info(f"MultiModalFusionEngine initialized with {fusion_strategy.value}")
+        logger.info("MultiModalFusionEngine initialized with %s", fusion_strategy.value)
 
     def _register_visual_events(self) -> None:
         """Register handlers for visual events"""
@@ -200,7 +200,7 @@ class MultiModalFusionEngine:
                 return fused
 
         except Exception as e:
-            logger.error(f"Multi-modal fusion error: {e}")
+            logger.error("Multi-modal fusion error: %s", e)
             return FusedContext(
                 user_id=user_id, session_id=session_id, timestamp=input_data.timestamp
             )
@@ -238,7 +238,7 @@ class MultiModalFusionEngine:
                 )
 
         except Exception as e:
-            logger.error(f"Text modality processing error: {e}")
+            logger.error("Text modality processing error: %s", e)
 
     def _process_visual_modality(
         self, user_id: str, frame: np.ndarray, fused: FusedContext
@@ -258,7 +258,7 @@ class MultiModalFusionEngine:
                 fused.gaze_engaged = abs(gaze_x) < 0.3 and abs(gaze_y) < 0.3
 
         except Exception as e:
-            logger.error(f"Visual modality processing error: {e}")
+            logger.error("Visual modality processing error: %s", e)
 
     def _apply_early_fusion(self, fused: FusedContext) -> None:
         """Apply early fusion strategy"""
@@ -414,7 +414,7 @@ class MultiModalFusionEngine:
                 # Trigger re-fusion
                 self._apply_hybrid_fusion(fused)
         except Exception as e:
-            logger.error(f"Error handling emotion change: {e}")
+            logger.error("Error handling emotion change: %s", e)
 
     def _on_focus_changed(self, event_data: VisualEventData) -> None:
         """Handle focus change event"""
@@ -425,7 +425,7 @@ class MultiModalFusionEngine:
                 fused.focus_level = event_data.cue_data.focus_level
                 self._apply_hybrid_fusion(fused)
         except Exception as e:
-            logger.error(f"Error handling focus change: {e}")
+            logger.error("Error handling focus change: %s", e)
 
     def _on_user_presence_changed(self, event_data: VisualEventData) -> None:
         """Handle user presence change"""
@@ -436,7 +436,7 @@ class MultiModalFusionEngine:
                 fused.user_present = event_data.cue_data.is_present
                 self._apply_hybrid_fusion(fused)
         except Exception as e:
-            logger.error(f"Error handling presence change: {e}")
+            logger.error("Error handling presence change: %s", e)
 
     def _on_gaze_changed(self, event_data: VisualEventData) -> None:
         """Handle gaze change"""
@@ -448,7 +448,7 @@ class MultiModalFusionEngine:
                 fused.gaze_engaged = abs(gaze_x) < 0.3 and abs(gaze_y) < 0.3
                 self._apply_hybrid_fusion(fused)
         except Exception as e:
-            logger.error(f"Error handling gaze change: {e}")
+            logger.error("Error handling gaze change: %s", e)
 
     def register_fusion_event_handler(
         self, handler: Callable[[str, FusedContext], None]
@@ -466,7 +466,7 @@ class MultiModalFusionEngine:
             try:
                 handler(user_id, fused)
             except Exception as e:
-                logger.error(f"Fusion event handler error: {e}")
+                logger.error("Fusion event handler error: %s", e)
 
     def get_current_fusion(self, user_id: str) -> FusedContext | None:
         """Get current fused context for user"""

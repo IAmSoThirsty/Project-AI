@@ -190,7 +190,7 @@ class ProjectionSimulator:
             return projection_pack
 
         except Exception as e:
-            logger.error(f"Failed to generate projection: {e}")
+            logger.error("Failed to generate projection: %s", e)
 
             self.audit.log_event(
                 category=AuditCategory.OPERATION,
@@ -254,7 +254,7 @@ class ProjectionSimulator:
             return replayed
 
         except Exception as e:
-            logger.error(f"Failed to replay projection: {e}")
+            logger.error("Failed to replay projection: %s", e)
             raise ProjectionError(f"Failed to replay projection: {e}") from e
 
     def _generate_scenario(self,
@@ -473,7 +473,7 @@ class ProjectionSimulator:
         seeds = self.timeline_seeds[stack_key].get("seeds", {})
 
         if variant not in seeds:
-            logger.warning(f"Seed variant {variant} not found for {stack}, using default")
+            logger.warning("Seed variant %s not found for %s, using default", variant, stack)
             variant = "default"
 
         seed_string = seeds.get(variant)

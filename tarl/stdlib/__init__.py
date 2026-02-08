@@ -130,7 +130,7 @@ class StandardLibrary:
             self.builtins[name] = BuiltInFunction(name, func)
 
         self._initialized = True
-        logger.info(f"Loaded {len(self.builtins)} built-in functions")
+        logger.info("Loaded %s built-in functions", len(self.builtins))
 
     def get_builtin(self, name: str) -> BuiltInFunction:
         """
@@ -158,7 +158,7 @@ class StandardLibrary:
             module: Module object
         """
         self.modules[name] = module
-        logger.info(f"Registered module: {name}")
+        logger.info("Registered module: %s", name)
 
     def get_module(self, name: str) -> Any:
         """

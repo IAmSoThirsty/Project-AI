@@ -88,7 +88,7 @@ class IROptimizer:
         Returns:
             Optimized IR graph
         """
-        logger.info(f"Starting optimization (level {self.optimization_level}) on graph with {len(graph.nodes)} nodes")
+        logger.info("Starting optimization (level %s) on graph with %s nodes", self.optimization_level, len(graph.nodes))
 
         self.stats = OptimizationStats()
         self.stats.nodes_before = len(graph.nodes)
@@ -117,7 +117,7 @@ class IROptimizer:
 
         self.stats.nodes_after = len(graph.nodes)
 
-        logger.info(f"Optimization complete: {self.stats.nodes_before} -> {self.stats.nodes_after} nodes")
+        logger.info("Optimization complete: %s -> %s nodes", self.stats.nodes_before, self.stats.nodes_after)
         logger.info(f"Optimizations: DCE={self.stats.dead_code_removed}, "
                    f"CF={self.stats.constants_folded}, CSE={self.stats.cse_eliminations}")
 
@@ -185,7 +185,7 @@ class IROptimizer:
 
             del graph.nodes[node_id]
             self.stats.dead_code_removed += 1
-            logger.debug(f"Eliminated dead code: {node_id}")
+            logger.debug("Eliminated dead code: %s", node_id)
 
     def _mark_reachable(self, graph: IRGraph, node_id: str, reachable: set[str]) -> None:
         """Mark all reachable nodes from given node"""
@@ -240,9 +240,9 @@ class IROptimizer:
 
                         self.stats.constants_folded += 1
                         changed = True
-                        logger.debug(f"Folded constant: {node_id} = {result}")
+                        logger.debug("Folded constant: %s = %s", node_id, result)
                 except Exception as e:
-                    logger.warning(f"Constant folding failed for {node_id}: {e}")
+                    logger.warning("Constant folding failed for %s: %s", node_id, e)
 
     def _compute_constant_op(self, opcode: IROpcode, a: Any, b: Any) -> Any:
         """Compute constant operation"""
@@ -287,7 +287,7 @@ class IROptimizer:
                 del graph.nodes[node_id]
 
                 self.stats.cse_eliminations += 1
-                logger.debug(f"CSE: Replaced {node_id} with {original_id}")
+                logger.debug("CSE: Replaced %s with %s", node_id, original_id)
             else:
                 expr_map[expr_hash] = node_id
 
@@ -399,7 +399,7 @@ class IROptimizer:
                 # (In a real implementation, this would restructure the graph)
 
                 self.stats.licm_hoisted += 1
-                logger.debug(f"Hoisted loop-invariant code: {inv_id}")
+                logger.debug("Hoisted loop-invariant code: %s", inv_id)
 
     def _get_loop_body(self, graph: IRGraph, loop_id: str) -> set[str]:
         """Get all nodes in loop body"""

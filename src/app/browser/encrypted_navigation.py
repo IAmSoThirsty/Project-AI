@@ -65,7 +65,7 @@ class EncryptedNavigationHistory:
         }
 
         self._encrypted_history.append(entry)
-        self.logger.debug(f"Recorded encrypted navigation: {url_hash}")
+        self.logger.debug("Recorded encrypted navigation: %s", url_hash)
 
     def get_encrypted_history(self) -> list[dict[str, Any]]:
         """
@@ -82,7 +82,7 @@ class EncryptedNavigationHistory:
         try:
             return self._cipher.decrypt(encrypted_url).decode()
         except Exception as e:
-            self.logger.error(f"Failed to decrypt URL: {e}")
+            self.logger.error("Failed to decrypt URL: %s", e)
             return "encrypted_url"
 
     def add_encrypted_bookmark(self, name: str, url: str):
@@ -97,7 +97,7 @@ class EncryptedNavigationHistory:
         name_hash = hashlib.sha256(encrypted_name).hexdigest()
         self._encrypted_bookmarks[name_hash] = encrypted_url
 
-        self.logger.debug(f"Added encrypted bookmark: {name_hash[:16]}")
+        self.logger.debug("Added encrypted bookmark: %s", name_hash[)
 
     def get_encrypted_bookmarks(self) -> dict[str, bytes]:
         """Get all encrypted bookmarks"""

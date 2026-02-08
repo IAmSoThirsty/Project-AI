@@ -77,7 +77,7 @@ class PerceptionWarfareModule:
 
         self.active_campaigns.append(campaign)
 
-        logger.info(f"Launched manipulation campaign: {campaign_id}, type={campaign_type}, reach={target_reach:.2f}")
+        logger.info("Launched manipulation campaign: %s, type=%s, reach=%s", campaign_id, campaign_type, target_reach)
 
         return campaign_id
 
@@ -140,7 +140,7 @@ class PerceptionWarfareModule:
         for campaign in campaigns_to_complete:
             self.active_campaigns.remove(campaign)
             self.completed_campaigns.append(campaign)
-            logger.info(f"Campaign completed: {campaign['campaign_id']}")
+            logger.info("Campaign completed: %s", campaign['campaign_id'])
 
         return events
 
@@ -167,7 +167,7 @@ class PerceptionWarfareModule:
         active_campaigns_factor = len(self.active_campaigns)
         self.reality_fragments += active_campaigns_factor
 
-        logger.debug(f"Reality fragments: {self.reality_fragments}")
+        logger.debug("Reality fragments: %s", self.reality_fragments)
 
         return self.reality_fragments
 
@@ -194,7 +194,7 @@ class PerceptionWarfareModule:
 
         self.consensus_level = max(0.0, min(1.0, self.consensus_level))
 
-        logger.debug(f"Reality consensus: {self.consensus_level:.4f}")
+        logger.debug("Reality consensus: %s", self.consensus_level)
 
         return self.consensus_level
 
@@ -216,7 +216,7 @@ class PerceptionWarfareModule:
             self.noise_level = min(1.0, self.noise_level + campaign_noise * 0.3)
             self.information_quality = 1.0 - self.noise_level
 
-        logger.debug(f"Information environment: quality={self.information_quality:.3f}, noise={self.noise_level:.3f}")
+        logger.debug("Information environment: quality=%s, noise=%s", self.information_quality, self.noise_level)
 
     def check_epistemic_collapse(self, state: StateVector) -> bool:
         """Check if epistemic collapse has occurred.
@@ -230,12 +230,12 @@ class PerceptionWarfareModule:
         threshold = self.laws.config.epistemic_collapse_threshold
 
         if state.epistemic_confidence.value < threshold:
-            logger.critical(f"EPISTEMIC COLLAPSE: confidence {state.epistemic_confidence.value:.4f} < threshold {threshold:.4f}")
+            logger.critical("EPISTEMIC COLLAPSE: confidence %s < threshold %s", state.epistemic_confidence.value, threshold)
             return True
 
         # Also check for extreme fragmentation
         if self.reality_fragments > 10:
-            logger.critical(f"EPISTEMIC COLLAPSE: extreme fragmentation {self.reality_fragments} fragments")
+            logger.critical("EPISTEMIC COLLAPSE: extreme fragmentation %s fragments", self.reality_fragments)
             return True
 
         return False

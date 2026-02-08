@@ -32,13 +32,13 @@ class E2ETestEnvironment:
 
         # Create temporary directory for test data
         self.temp_dir = Path(tempfile.mkdtemp(prefix="e2e_test_"))
-        logger.info(f"Created temporary directory: {self.temp_dir}")
+        logger.info("Created temporary directory: %s", self.temp_dir)
 
         # Backup existing data directory if it exists
         if self.original_data_dir.exists():
             self.backup_data_dir = Path(tempfile.mkdtemp(prefix="e2e_backup_"))
             shutil.copytree(self.original_data_dir, self.backup_data_dir / "data")
-            logger.info(f"Backed up data directory to: {self.backup_data_dir}")
+            logger.info("Backed up data directory to: %s", self.backup_data_dir)
 
         # Create test data directories
         self._create_test_data_dirs()
@@ -55,7 +55,7 @@ class E2ETestEnvironment:
         # Remove temporary directory
         if self.temp_dir and self.temp_dir.exists():
             shutil.rmtree(self.temp_dir)
-            logger.info(f"Removed temporary directory: {self.temp_dir}")
+            logger.info("Removed temporary directory: %s", self.temp_dir)
 
         # Restore backed up data directory
         if self.backup_data_dir and self.backup_data_dir.exists():
@@ -80,7 +80,7 @@ class E2ETestEnvironment:
 
         for directory in test_data_dirs:
             directory.mkdir(parents=True, exist_ok=True)
-            logger.debug(f"Created test data directory: {directory}")
+            logger.debug("Created test data directory: %s", directory)
 
     def _initialize_test_data(self) -> None:
         """Initialize test data files."""
@@ -100,7 +100,7 @@ class E2ETestEnvironment:
         }
         with open(users_file, "w") as f:
             json.dump(test_users, f, indent=2)
-        logger.debug(f"Created test users file: {users_file}")
+        logger.debug("Created test users file: %s", users_file)
 
         # Create test AI persona state
         persona_state_file = (
@@ -117,7 +117,7 @@ class E2ETestEnvironment:
         }
         with open(persona_state_file, "w") as f:
             json.dump(test_persona_state, f, indent=2)
-        logger.debug(f"Created test persona state: {persona_state_file}")
+        logger.debug("Created test persona state: %s", persona_state_file)
 
         # Create test memory knowledge base
         knowledge_file = self.temp_dir / "data" / "memory" / "knowledge.json"
@@ -128,7 +128,7 @@ class E2ETestEnvironment:
         }
         with open(knowledge_file, "w") as f:
             json.dump(test_knowledge, f, indent=2)
-        logger.debug(f"Created test knowledge base: {knowledge_file}")
+        logger.debug("Created test knowledge base: %s", knowledge_file)
 
     def get_temp_dir(self) -> Path:
         """Get the temporary directory path."""

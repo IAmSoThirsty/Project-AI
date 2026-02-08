@@ -41,7 +41,7 @@ async def main():
     shutdown_event = asyncio.Event()
 
     def signal_handler(signum, frame):
-        logger.info(f"Received signal {signum}, initiating shutdown")
+        logger.info("Received signal %s, initiating shutdown", signum)
         shutdown_event.set()
 
     signal.signal(signal.SIGINT, signal_handler)

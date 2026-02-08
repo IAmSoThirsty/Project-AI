@@ -132,7 +132,7 @@ class InvariantBountySystem:
         try:
             return invariant.check_function(context)
         except Exception as e:
-            logger.error(f"Error checking invariant {invariant_name}: {e}")
+            logger.error("Error checking invariant %s: %s", invariant_name, e)
             return True
 
     def get_bounty_report(self) -> dict[str, Any]:
@@ -366,7 +366,7 @@ class SecurityConstitution:
             raise ValueError(f"Cannot modify immutable rule: {rule.rule_id}")
 
         self.rules[rule.rule_id] = rule
-        logger.info(f"Constitutional rule established: {rule.rule_id}")
+        logger.info("Constitutional rule established: %s", rule.rule_id)
 
     def enforce(self, context: dict[str, Any]) -> tuple[bool, str]:
         """
@@ -384,7 +384,7 @@ class SecurityConstitution:
                     return False, f"Constitutional violation: {rule.description}"
 
             except Exception as e:
-                logger.error(f"Error enforcing rule {rule_id}: {e}")
+                logger.error("Error enforcing rule %s: %s", rule_id, e)
                 # Fail closed for security
                 return False, f"Rule enforcement error: {rule_id}"
 
@@ -405,9 +405,7 @@ class SecurityConstitution:
         self.violations.append(violation_record)
         self._save_violations()
 
-        logger.critical(
-            f"CONSTITUTIONAL VIOLATION: {rule.rule_id} - {rule.description}"
-        )
+        logger.critical("CONSTITUTIONAL VIOLATION: %s - %s", rule.rule_id, rule.description)
 
         if rule.violation_action == "halt":
             self._halt_request(context)
@@ -418,7 +416,7 @@ class SecurityConstitution:
 
     def _halt_request(self, context: dict[str, Any]) -> None:
         """Halt the request immediately."""
-        logger.critical(f"REQUEST HALTED: {context}")
+        logger.critical("REQUEST HALTED: %s", context)
 
     def _snapshot_state(self, context: dict[str, Any]) -> None:
         """Snapshot system state for forensics."""
@@ -426,15 +424,15 @@ class SecurityConstitution:
         try:
             with open(snapshot_file, "w") as f:
                 json.dump(context, f, indent=2)
-            logger.info(f"State snapshot saved: {snapshot_file}")
+            logger.info("State snapshot saved: %s", snapshot_file)
         except Exception as e:
-            logger.error(f"Failed to save snapshot: {e}")
+            logger.error("Failed to save snapshot: %s", e)
 
     def _escalate_incident(
         self, rule: ConstitutionalRule, context: dict[str, Any]
     ) -> None:
         """Escalate to security team."""
-        logger.critical(f"INCIDENT ESCALATED: {rule.rule_id}")
+        logger.critical("INCIDENT ESCALATED: %s", rule.rule_id)
 
     def _save_violations(self) -> None:
         """Persist violations to disk."""
@@ -443,7 +441,7 @@ class SecurityConstitution:
             with open(violations_file, "w") as f:
                 json.dump({"violations": self.violations}, f, indent=2)
         except Exception as e:
-            logger.error(f"Failed to save violations: {e}")
+            logger.error("Failed to save violations: %s", e)
 
 
 # ============================================================================

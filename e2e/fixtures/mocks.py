@@ -192,7 +192,7 @@ class MockEmailService:
                 "kwargs": kwargs,
             }
         )
-        logger.info(f"Mock email sent to {to}: {subject}")
+        logger.info("Mock email sent to %s: %s", to, subject)
         return True
 
     def get_sent_email_count(self) -> int:

@@ -111,7 +111,7 @@ class AgentProcess:
                 {"pid": self.info.pid, "command": " ".join(command)},
             )
 
-            logger.info(f"Spawned agent {self.agent_id} (PID: {self.info.pid})")
+            logger.info("Spawned agent %s (PID: %s)", self.agent_id, self.info.pid)
 
             return True
 
@@ -121,7 +121,7 @@ class AgentProcess:
 
             self._emit_log("agent_spawn_failed", {"error": str(e)})
 
-            logger.error(f"Failed to spawn agent {self.agent_id}: {e}")
+            logger.error("Failed to spawn agent %s: %s", self.agent_id, e)
 
             return False
 
@@ -165,7 +165,7 @@ class AgentProcess:
             True if successful, False otherwise
         """
         if not self.is_running() or self.process is None:
-            logger.warning(f"Cannot send input to non-running agent {self.agent_id}")
+            logger.warning("Cannot send input to non-running agent %s", self.agent_id)
             return False
 
         try:
@@ -178,7 +178,7 @@ class AgentProcess:
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to send input to agent {self.agent_id}: {e}")
+            logger.error("Failed to send input to agent %s: %s", self.agent_id, e)
 
         return False
 
@@ -217,7 +217,7 @@ class AgentProcess:
                     self.stderr_lines.append(line.rstrip())
 
         except Exception as e:
-            logger.error(f"Failed to read output from agent {self.agent_id}: {e}")
+            logger.error("Failed to read output from agent %s: %s", self.agent_id, e)
 
         return output
 
@@ -247,9 +247,7 @@ class AgentProcess:
 
                 except subprocess.TimeoutExpired:
                     # Force kill if timeout
-                    logger.warning(
-                        f"Agent {self.agent_id} did not terminate gracefully, forcing..."
-                    )
+                    logger.warning("Agent %s did not terminate gracefully, forcing...", self.agent_id)
                     self.process.kill()
                     self.process.wait(timeout=2)
                     self._emit_log("agent_terminated", {"method": "forced"})
@@ -264,14 +262,12 @@ class AgentProcess:
             self.info.stop_time = datetime.now().isoformat()
             self.info.exit_code = self.process.returncode
 
-            logger.info(
-                f"Terminated agent {self.agent_id} (exit code: {self.info.exit_code})"
-            )
+            logger.info("Terminated agent %s (exit code: %s)", self.agent_id, self.info.exit_code)
 
             return True
 
         except Exception as e:
-            logger.error(f"Failed to terminate agent {self.agent_id}: {e}")
+            logger.error("Failed to terminate agent %s: %s", self.agent_id, e)
             return False
 
     def get_info(self) -> AgentProcessInfo:
@@ -331,7 +327,7 @@ class AgentProcess:
                     f.write(json.dumps(log_entry) + "\n")
 
             except Exception as e:
-                logger.error(f"Failed to write to agent log file: {e}")
+                logger.error("Failed to write to agent log file: %s", e)
 
     def __repr__(self) -> str:
         """String representation of AgentProcess."""

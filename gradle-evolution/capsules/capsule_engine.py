@@ -119,7 +119,7 @@ class CapsuleEngine:
         self.capsule_dir.mkdir(parents=True, exist_ok=True)
         self.capsules: dict[str, BuildCapsule] = {}
         self._load_capsules()
-        logger.info(f"Capsule engine initialized: {self.capsule_dir}")
+        logger.info("Capsule engine initialized: %s", self.capsule_dir)
 
     def create_capsule(
         self,
@@ -172,7 +172,7 @@ class CapsuleEngine:
             self.capsules[capsule_id] = capsule
             self._persist_capsule(capsule)
 
-            logger.info(f"Created build capsule: {capsule_id}")
+            logger.info("Created build capsule: %s", capsule_id)
             return capsule
 
         except Exception as e:
@@ -318,7 +318,7 @@ class CapsuleEngine:
             with open(output_path, "w") as f:
                 json.dump(chain, f, indent=2)
 
-            logger.info(f"Exported capsule chain to: {output_path}")
+            logger.info("Exported capsule chain to: %s", output_path)
 
         except Exception as e:
             logger.error(f"Error exporting capsule chain: {e}", exc_info=True)
@@ -386,7 +386,7 @@ class CapsuleEngine:
                 if capsule:
                     self.capsules[capsule_id] = capsule
 
-            logger.info(f"Loaded {len(self.capsules)} capsules")
+            logger.info("Loaded %s capsules", len(self.capsules))
         except Exception as e:
             logger.error(f"Error loading capsules: {e}", exc_info=True)
 

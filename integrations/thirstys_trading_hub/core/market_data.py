@@ -90,7 +90,7 @@ class MarketDataProvider:
         os.makedirs(data_dir, exist_ok=True)
         self._load_cache()
 
-        logger.info(f"MarketDataProvider initialized in {mode.value} mode")
+        logger.info("MarketDataProvider initialized in %s mode", mode.value)
 
     def _load_cache(self) -> None:
         """Load cached market data from disk."""
@@ -99,9 +99,9 @@ class MarketDataProvider:
             try:
                 with open(cache_file) as f:
                     self._cache = json.load(f)
-                logger.info(f"Loaded market data cache with {len(self._cache)} entries")
+                logger.info("Loaded market data cache with %s entries", len(self._cache))
             except Exception as e:
-                logger.error(f"Failed to load market cache: {e}")
+                logger.error("Failed to load market cache: %s", e)
                 self._cache = {}
 
     def _save_cache(self) -> None:
@@ -111,7 +111,7 @@ class MarketDataProvider:
             with open(cache_file, "w") as f:
                 json.dump(self._cache, f, indent=2)
         except Exception as e:
-            logger.error(f"Failed to save market cache: {e}")
+            logger.error("Failed to save market cache: %s", e)
 
     def _get_base_price(self, symbol: str) -> float:
         """Get or generate base price for symbol."""
@@ -223,7 +223,7 @@ class MarketDataProvider:
                 cached_data = self._cache[cache_key]
                 cache_age = time.time() - cached_data.get("timestamp", 0)
                 if cache_age < 300:
-                    logger.debug(f"Using cached data for {cache_key}")
+                    logger.debug("Using cached data for %s", cache_key)
                     return [
                         OHLCV(**candle) for candle in cached_data.get("candles", [])
                     ]
@@ -246,9 +246,7 @@ class MarketDataProvider:
             }
             self._save_cache()
 
-            logger.info(
-                f"Generated {len(candles)} mock candles for {symbol} {timeframe.value}"
-            )
+            logger.info("Generated %s mock candles for %s %s", len(candles), symbol, timeframe.value)
             return candles
 
         raise NotImplementedError("Live mode requires exchange API integration")
@@ -287,7 +285,7 @@ class MarketDataProvider:
                 timestamp=int(datetime.now(UTC).timestamp() * 1000),
             )
 
-            logger.debug(f"Generated ticker for {symbol}: last={ticker.last}")
+            logger.debug("Generated ticker for %s: last=%s", symbol, ticker.last)
             return ticker
 
         raise NotImplementedError("Live mode requires exchange API integration")

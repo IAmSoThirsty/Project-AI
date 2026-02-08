@@ -78,7 +78,7 @@ class ConsequentialEventSystem:
     def register_event(self, event: EventDefinition) -> None:
         """Register a new event type."""
         self.events[event.name] = event
-        logger.info(f"Event registered: {event.name}")
+        logger.info("Event registered: %s", event.name)
 
     def execute_event(
         self,
@@ -194,7 +194,7 @@ class ConsequentialEventSystem:
             state.security.violence_index += spike
             state.security.violence_index = min(1.0, state.security.violence_index)
             consequences["violence_spike"] = True
-            logger.warning(f"⚠️ Violence spike triggered: +{spike:.0%}")
+            logger.warning("⚠️ Violence spike triggered: +%s", spike)
 
         # Cascade failure risk
         if self.rng.random() < risk.cascade_failure_chance:

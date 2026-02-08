@@ -137,7 +137,7 @@ class SecurityStatsPanel(QFrame):
             self.stats_label.setText("\n".join(output))
 
         except Exception as e:
-            logger.error(f"Error refreshing stats: {e}")
+            logger.error("Error refreshing stats: %s", e)
             self.stats_label.setText(f"ERROR: {str(e)}")
 
 
@@ -234,7 +234,7 @@ class IncidentLogPanel(QFrame):
             self.incident_list.scrollToBottom()
 
         except Exception as e:
-            logger.error(f"Error refreshing incidents: {e}")
+            logger.error("Error refreshing incidents: %s", e)
             item = QListWidgetItem(f"ERROR: {str(e)}")
             self.incident_list.addItem(item)
 
@@ -351,7 +351,7 @@ class EmergencyControlsPanel(QFrame):
             logger.warning("Emergency lockdown initiated from GUI")
 
         except Exception as e:
-            logger.error(f"Error initiating lockdown: {e}")
+            logger.error("Error initiating lockdown: %s", e)
             self.status_label.setText(f"ERROR: {str(e)}")
 
     def release_lockdown(self):
@@ -369,7 +369,7 @@ class EmergencyControlsPanel(QFrame):
             logger.info("Lockdown released from GUI")
 
         except Exception as e:
-            logger.error(f"Error releasing lockdown: {e}")
+            logger.error("Error releasing lockdown: %s", e)
             self.status_label.setText(f"ERROR: {str(e)}")
 
 
@@ -497,7 +497,7 @@ class WatchTowerPanel(QWidget):
                 GlobalWatchTower.initialize(data_dir="data/watch_tower")
                 logger.info("Watch tower initialized successfully")
             except Exception as e:
-                logger.error(f"Failed to initialize watch tower: {e}")
+                logger.error("Failed to initialize watch tower: %s", e)
 
     def _auto_refresh(self):
         """Auto-refresh panels."""

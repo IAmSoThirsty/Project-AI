@@ -112,7 +112,7 @@ class ASL3Security:
 
                 self.emergency_alert = EmergencyAlert()
             except Exception as e:
-                self.logger.warning(f"Emergency alerts unavailable: {e}")
+                self.logger.warning("Emergency alerts unavailable: %s", e)
 
         # Initialize Cerberus Hydra defense if enabled
         self.cerberus_hydra = None
@@ -128,7 +128,7 @@ class ASL3Security:
                 self.cerberus_hydra.spawn_initial_agents(count=3)
                 self.logger.info("Cerberus Hydra defense enabled with 3 initial agents")
             except Exception as e:
-                self.logger.warning(f"Cerberus Hydra unavailable: {e}")
+                self.logger.warning("Cerberus Hydra unavailable: %s", e)
 
         # Create security directories
         self._initialize_directories()
@@ -214,7 +214,7 @@ class ASL3Security:
 
         except Exception as e:
             # Restore from backup on failure
-            self.logger.error(f"Key rotation failed: {e}")
+            self.logger.error("Key rotation failed: %s", e)
             shutil.copy2(backup_key, self.key_file)
             self.cipher = old_cipher
             os.remove(backup_key)
@@ -281,7 +281,7 @@ class ASL3Security:
         if secure_delete:
             self._secure_delete(file_path)
 
-        self.logger.info(f"ASL-3: Encrypted {file_path} -> {encrypted_path}")
+        self.logger.info("ASL-3: Encrypted %s -> %s", file_path, encrypted_path)
         self._log_security_event(
             "file_encryption", "system", resource=str(file_path), success=True
         )
@@ -333,7 +333,7 @@ class ASL3Security:
             )
             return decrypted_data
         except Exception as e:
-            self.logger.error(f"Decryption failed for {encrypted_path}: {e}")
+            self.logger.error("Decryption failed for %s: %s", encrypted_path, e)
             self._log_security_event(
                 "file_decryption",
                 user,
@@ -375,7 +375,7 @@ class ASL3Security:
 
         # Delete file
         os.remove(file_path)
-        self.logger.info(f"Securely deleted: {file_path}")
+        self.logger.info("Securely deleted: %s", file_path)
 
     def check_access(
         self, resource: str, user: str, action: str, ip_address: str | None = None
@@ -432,9 +432,7 @@ class ASL3Security:
 
         # Alert if configured
         if policy.alert_on_access:
-            self.logger.warning(
-                f"ASL-3: Sensitive access - {user} performed {action} on {resource}"
-            )
+            self.logger.warning("ASL-3: Sensitive access - %s performed %s on %s", user, action, resource)
 
         return True
 
@@ -578,7 +576,7 @@ class ASL3Security:
             try:
                 self.emergency_alert.send_alert(alert_message, priority="critical")
             except Exception as e:
-                self.logger.error(f"Failed to send emergency alert: {e}")
+                self.logger.error("Failed to send emergency alert: %s", e)
 
         # Log to security incidents file
         incident = {
@@ -607,7 +605,7 @@ class ASL3Security:
                 )
                 self.logger.warning("🐍 Cerberus Hydra defense activated")
             except Exception as e:
-                self.logger.error(f"Failed to activate Cerberus Hydra: {e}")
+                self.logger.error("Failed to activate Cerberus Hydra: %s", e)
 
     def encrypt_critical_resources(self) -> dict[str, str]:
         """
@@ -626,9 +624,9 @@ class ASL3Security:
                         str(resource_path), secure_delete=False
                     )
                     encrypted_files[resource] = encrypted_path
-                    self.logger.info(f"Encrypted critical resource: {resource}")
+                    self.logger.info("Encrypted critical resource: %s", resource)
                 except Exception as e:
-                    self.logger.error(f"Failed to encrypt {resource}: {e}")
+                    self.logger.error("Failed to encrypt %s: %s", resource, e)
 
         return encrypted_files
 

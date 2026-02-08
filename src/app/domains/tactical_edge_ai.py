@@ -124,7 +124,7 @@ class TacticalEdgeAISubsystem(BaseSubsystem, ICommandable, IMonitorable, IObserv
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to initialize: {e}")
+            self.logger.error("Failed to initialize: %s", e)
             return False
 
     def shutdown(self) -> bool:
@@ -138,7 +138,7 @@ class TacticalEdgeAISubsystem(BaseSubsystem, ICommandable, IMonitorable, IObserv
             return True
 
         except Exception as e:
-            self.logger.error(f"Error during shutdown: {e}")
+            self.logger.error("Error during shutdown: %s", e)
             return False
 
     def health_check(self) -> bool:
@@ -249,7 +249,7 @@ class TacticalEdgeAISubsystem(BaseSubsystem, ICommandable, IMonitorable, IObserv
                 try:
                     callback(data)
                 except Exception as e:
-                    self.logger.error(f"Error in event callback {subscription_id}: {e}")
+                    self.logger.error("Error in event callback %s: %s", subscription_id, e)
 
             return len(subscribers)
 
@@ -259,7 +259,7 @@ class TacticalEdgeAISubsystem(BaseSubsystem, ICommandable, IMonitorable, IObserv
                 self._analyze_pending_situations()
                 time.sleep(1.0)
             except Exception as e:
-                self.logger.error(f"Error in processing loop: {e}")
+                self.logger.error("Error in processing loop: %s", e)
                 time.sleep(1.0)
 
     def _analyze_pending_situations(self):
@@ -317,7 +317,7 @@ class TacticalEdgeAISubsystem(BaseSubsystem, ICommandable, IMonitorable, IObserv
             return decision
 
         except Exception as e:
-            self.logger.error(f"Failed to analyze situation: {e}")
+            self.logger.error("Failed to analyze situation: %s", e)
             return None
 
     def _assess_combat_effectiveness(self, params: dict[str, Any]) -> dict[str, Any]:
@@ -365,7 +365,7 @@ class TacticalEdgeAISubsystem(BaseSubsystem, ICommandable, IMonitorable, IObserv
                 json.dump(state, f, indent=2, default=str)
 
         except Exception as e:
-            self.logger.error(f"Failed to save state: {e}")
+            self.logger.error("Failed to save state: %s", e)
 
     def _load_state(self):
         try:
@@ -377,4 +377,4 @@ class TacticalEdgeAISubsystem(BaseSubsystem, ICommandable, IMonitorable, IObserv
                 self._metrics = state.get("metrics", self._metrics)
 
         except Exception as e:
-            self.logger.error(f"Failed to load state: {e}")
+            self.logger.error("Failed to load state: %s", e)

@@ -191,7 +191,7 @@ class CerberusHydraDefense:
         db_path = self.data_dir / "cerberus" / "languages.json"
 
         if not db_path.exists():
-            logger.error(f"Language database not found: {db_path}")
+            logger.error("Language database not found: %s", db_path)
             # Return minimal fallback
             return {
                 "human_languages": {
@@ -254,9 +254,9 @@ class CerberusHydraDefense:
                     )
                     self.agents[agent.agent_id] = agent
 
-                logger.info(f"Restored {len(self.agents)} agents from state")
+                logger.info("Restored %s agents from state", len(self.agents))
             except Exception as e:
-                logger.error(f"Failed to load Cerberus state: {e}")
+                logger.error("Failed to load Cerberus state: %s", e)
 
     def _save_state(self) -> None:
         """Persist Cerberus state."""
@@ -304,7 +304,7 @@ class CerberusHydraDefense:
         Returns:
             List of spawned agent IDs
         """
-        logger.info(f"Spawning {count} initial Cerberus agents...")
+        logger.info("Spawning %s initial Cerberus agents...", count)
 
         spawned_ids = []
         for _i in range(count):
@@ -337,9 +337,7 @@ class CerberusHydraDefense:
         anomaly_type = event.get("anomaly_type", "unknown")
         severity = event.get("severity", "medium")
 
-        logger.warning(
-            f"⚠️ ANOMALY DETECTED: {anomaly_type} (severity: {severity}, event: {event_id})"
-        )
+        logger.warning("⚠️ ANOMALY DETECTED: %s (severity: %s, event: %s)", anomaly_type, severity, event_id)
 
         # Map severity to risk score
         severity_map = {
@@ -547,7 +545,7 @@ class CerberusHydraDefense:
         # Check max agents limit
         active_agents = len([a for a in self.agents.values() if a.status == "active"])
         if active_agents >= self.max_agents:
-            logger.error(f"Cannot spawn agent: max agents ({self.max_agents}) reached")
+            logger.error("Cannot spawn agent: max agents (%s) reached", self.max_agents)
             return None
 
         # Generate agent ID
@@ -624,7 +622,7 @@ class CerberusHydraDefense:
         if self.enable_polyglot_execution:
             success = self._generate_agent_code(agent, incident_id or "initial")
             if not success:
-                logger.error(f"Failed to generate agent code for {agent_id}")
+                logger.error("Failed to generate agent code for %s", agent_id)
                 return None
 
         # Emit structured log
@@ -670,7 +668,7 @@ class CerberusHydraDefense:
         runtime = self.runtime_manager.get_runtime(agent.programming_language)
 
         if not runtime:
-            logger.error(f"Runtime not found for {agent.programming_language}")
+            logger.error("Runtime not found for %s", agent.programming_language)
             return False
 
         # Get template file based on programming language
@@ -688,7 +686,7 @@ class CerberusHydraDefense:
                 break
 
         if not template_file:
-            logger.error(f"No template found for {agent.programming_language}")
+            logger.error("No template found for %s", agent.programming_language)
             return False
 
         # Prepare template context
@@ -716,7 +714,7 @@ class CerberusHydraDefense:
             )
 
         except Exception as e:
-            logger.error(f"Failed to render template for {agent.agent_id}: {e}")
+            logger.error("Failed to render template for %s: %s", agent.agent_id, e)
             return False
 
         # Write agent code
@@ -738,7 +736,7 @@ class CerberusHydraDefense:
 
             agent.log_file = str(agent_dir / f"{agent.agent_id}.log")
 
-            logger.debug(f"Generated agent code: {agent_file}")
+            logger.debug("Generated agent code: %s", agent_file)
 
             # Optionally spawn agent process (disabled by default for safety)
             # self._spawn_agent_process(agent, str(agent_file))
@@ -746,7 +744,7 @@ class CerberusHydraDefense:
             return True
 
         except Exception as e:
-            logger.error(f"Failed to write agent code for {agent.agent_id}: {e}")
+            logger.error("Failed to write agent code for %s: %s", agent.agent_id, e)
             return False
 
     def _spawn_agent_process(self, agent: AgentRecord, script_path: str) -> bool:
@@ -777,19 +775,17 @@ class CerberusHydraDefense:
                 agent.pid = agent_process.info.pid
                 agent.status = "running"
 
-                logger.info(
-                    f"Agent process spawned: {agent.agent_id} (PID: {agent.pid})"
-                )
+                logger.info("Agent process spawned: %s (PID: %s)", agent.agent_id, agent.pid)
 
                 return True
 
             else:
-                logger.error(f"Failed to spawn agent process: {agent.agent_id}")
+                logger.error("Failed to spawn agent process: %s", agent.agent_id)
                 agent.status = "failed"
                 return False
 
         except Exception as e:
-            logger.error(f"Exception spawning agent process {agent.agent_id}: {e}")
+            logger.error("Exception spawning agent process %s: %s", agent.agent_id, e)
             agent.status = "failed"
             return False
 
@@ -833,7 +829,7 @@ class CerberusHydraDefense:
                     reason=f"agent_bypass_{event.bypass_type}",
                 )
         except Exception as e:
-            logger.error(f"Failed to notify security enforcer: {e}")
+            logger.error("Failed to notify security enforcer: %s", e)
 
     def get_agent_registry(self) -> dict[str, Any]:
         """Get current agent registry with statistics."""

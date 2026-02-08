@@ -64,7 +64,7 @@ class RealityClock:
         self.simulation_start = datetime.utcnow()
         self.real_time_elapsed = 0.0
 
-        logger.info(f"Reality clock initialized at t={start_time}, step={time_step}")
+        logger.info("Reality clock initialized at t=%s, step=%s", start_time, time_step)
 
     def tick(self) -> float:
         """Advance time by one step.
@@ -75,7 +75,7 @@ class RealityClock:
         self.current_time += self.time_step
         self.tick_count += 1
 
-        logger.debug(f"Clock tick: t={self.current_time}, tick={self.tick_count}")
+        logger.debug("Clock tick: t=%s, tick=%s", self.current_time, self.tick_count)
         return self.current_time
 
     def record_event(
@@ -112,7 +112,7 @@ class RealityClock:
         if irreversible:
             self.irreversible_events.append(event_id)
 
-        logger.debug(f"Recorded event: {event_id} at t={self.current_time}, order={self.causal_order-1}")
+        logger.debug("Recorded event: %s at t=%s, order=%s", event_id, self.current_time, self.causal_order-1)
         return causal_event
 
     def checkpoint_state(self, state_hash: str) -> None:
@@ -122,7 +122,7 @@ class RealityClock:
             state_hash: Hash of current state
         """
         self.state_checkpoints[self.tick_count] = state_hash
-        logger.debug(f"State checkpoint at tick {self.tick_count}: {state_hash[:16]}")
+        logger.debug("State checkpoint at tick %s: %s", self.tick_count, state_hash[)
 
     def get_causal_ancestors(self, event_id: str) -> list[CausalEvent]:
         """Get all causal ancestors of an event.

@@ -92,14 +92,12 @@ class PlanetaryDefenseIntegration:
             )
 
             if not is_allowed:
-                logger.warning(
-                    f"Mitigation blocked by Constitutional Core: {mitigation_action} - {reason}"
-                )
+                logger.warning("Mitigation blocked by Constitutional Core: %s - %s", mitigation_action, reason)
 
             return is_allowed, reason
 
         except Exception as e:
-            logger.error(f"Constitutional validation failed: {e}")
+            logger.error("Constitutional validation failed: %s", e)
             return False, f"Validation error: {e}"
 
     def feed_threat_assessment(self) -> None:
@@ -123,11 +121,9 @@ class PlanetaryDefenseIntegration:
 
         try:
             pd.receive_threat_assessment(threat_data)
-            logger.info(
-                f"Threat assessment sent to Planetary Defense: {state['active_count']} active scenarios"
-            )
+            logger.info("Threat assessment sent to Planetary Defense: %s active scenarios", state['active_count'])
         except Exception as e:
-            logger.error(f"Failed to send threat assessment: {e}")
+            logger.error("Failed to send threat assessment: %s", e)
 
     def run_integrated_tick(self, user_id: str | None = None) -> dict[str, Any]:
         """
@@ -302,11 +298,9 @@ class GlobalScenarioEngineIntegration:
                         metrics=metrics,
                         user_id=external_data.get("source"),
                     )
-                    logger.info(
-                        f"Updated {scenario_id} from external source: {external_data.get('source')}"
-                    )
+                    logger.info("Updated %s from external source: %s", scenario_id, external_data.get('source'))
                 except Exception as e:
-                    logger.error(f"Failed to update {scenario_id}: {e}")
+                    logger.error("Failed to update %s: %s", scenario_id, e)
 
 
 # ============================================================================
@@ -488,7 +482,7 @@ class CommandCenterIntegration:
                 return {"success": False, "error": f"Unknown action: {action}"}
 
         except Exception as e:
-            logger.error(f"Control action failed: {action} - {e}")
+            logger.error("Control action failed: %s - %s", action, e)
             return {"success": False, "error": str(e)}
 
 
@@ -641,7 +635,7 @@ class GUIExportHooks:
                 "new_value": metric_value,
             }
         except Exception as e:
-            logger.error(f"GUI metric update failed: {e}")
+            logger.error("GUI metric update failed: %s", e)
             return {
                 "success": False,
                 "error": str(e),

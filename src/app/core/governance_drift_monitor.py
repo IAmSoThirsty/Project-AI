@@ -351,9 +351,7 @@ class GovernanceDriftMonitor:
         with filepath.open("w") as f:
             json.dump(alert_data, f, indent=2)
 
-        logger.warning(
-            f"🚨 Governance drift detected! {len(alerts)} alerts saved to {filepath}"
-        )
+        logger.warning("🚨 Governance drift detected! %s alerts saved to %s", len(alerts), filepath)
 
     def get_recent_alerts(self, days: int = 7) -> list[dict[str, Any]]:
         """Get recent drift alerts."""

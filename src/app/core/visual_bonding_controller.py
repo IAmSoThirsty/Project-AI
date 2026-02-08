@@ -115,7 +115,7 @@ class VisualBondingProtocol:
         try:
             with self._lock:
                 if user_id in self._bonding_states:
-                    logger.warning(f"Visual bonding already in progress for {user_id}")
+                    logger.warning("Visual bonding already in progress for %s", user_id)
                     return False
 
                 self._bonding_states[user_id] = VisualBondingPhase.DISCOVERY
@@ -127,11 +127,11 @@ class VisualBondingProtocol:
                         model_id=model_id
                     )
 
-                logger.info(f"Started visual bonding for user {user_id}")
+                logger.info("Started visual bonding for user %s", user_id)
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to start visual bonding: {e}")
+            logger.error("Failed to start visual bonding: %s", e)
             return False
 
     def experiment_with_model(
@@ -148,7 +148,7 @@ class VisualBondingProtocol:
         try:
             model = self.registry.get_model(model_id)
             if not model or not model.is_ready():
-                logger.error(f"Visual model not ready: {model_id}")
+                logger.error("Visual model not ready: %s", model_id)
                 return None
 
             # Perform detection
@@ -195,7 +195,7 @@ class VisualBondingProtocol:
             return cue_data
 
         except Exception as e:
-            logger.error(f"Visual experimentation error: {e}")
+            logger.error("Visual experimentation error: %s", e)
             return None
 
     def set_ground_truth(self, user_id: str, truth_data: dict[str, Any]) -> None:
@@ -248,11 +248,11 @@ class VisualBondingProtocol:
                 self._bonding_states[user_id] = VisualBondingPhase.EXPERIMENTATION
                 self._save_bonding_state(user_id)
 
-                logger.info(f"Calibration complete for user {user_id}")
+                logger.info("Calibration complete for user %s", user_id)
                 return calibration_results
 
         except Exception as e:
-            logger.error(f"Calibration error: {e}")
+            logger.error("Calibration error: %s", e)
             return {}
 
     def evaluate_and_select(self, user_id: str) -> str | None:
@@ -289,7 +289,7 @@ class VisualBondingProtocol:
                 return best_model_id
 
         except Exception as e:
-            logger.error(f"Failed to evaluate and select: {e}")
+            logger.error("Failed to evaluate and select: %s", e)
             return None
 
     def get_selected_model(self, user_id: str) -> VisualCueModel | None:
@@ -337,7 +337,7 @@ class VisualBondingProtocol:
                 json.dump(state_data, f, indent=2)
 
         except Exception as e:
-            logger.error(f"Failed to save visual bonding state: {e}")
+            logger.error("Failed to save visual bonding state: %s", e)
 
 
 class VisualEvent(Enum):
@@ -397,7 +397,7 @@ class VisualController:
         """Register an event handler"""
         with self._lock:
             self._event_handlers[event_type].append(handler)
-            logger.info(f"Registered handler for {event_type.value}")
+            logger.info("Registered handler for %s", event_type.value)
 
     def unregister_event_handler(
         self, event_type: VisualEvent, handler: Callable[[VisualEventData], None]
@@ -412,7 +412,7 @@ class VisualController:
         try:
             with self._lock:
                 if user_id in self._active_users and self._active_users[user_id]:
-                    logger.warning(f"Monitoring already active for {user_id}")
+                    logger.warning("Monitoring already active for %s", user_id)
                     return False
 
                 self._active_users[user_id] = True
@@ -427,11 +427,11 @@ class VisualController:
                     else:
                         return False
 
-                logger.info(f"Started visual monitoring for {user_id}")
+                logger.info("Started visual monitoring for %s", user_id)
                 return True
 
         except Exception as e:
-            logger.error(f"Failed to start monitoring: {e}")
+            logger.error("Failed to start monitoring: %s", e)
             return False
 
     def stop_monitoring(self, user_id: str) -> None:
@@ -446,10 +446,10 @@ class VisualController:
                     self.camera_manager.stop_capture()
                     self._is_running = False
 
-                logger.info(f"Stopped visual monitoring for {user_id}")
+                logger.info("Stopped visual monitoring for %s", user_id)
 
         except Exception as e:
-            logger.error(f"Error stopping monitoring: {e}")
+            logger.error("Error stopping monitoring: %s", e)
 
     def _on_frame_captured(self, frame: np.ndarray, user_id: str) -> None:
         """Handle captured frame"""
@@ -477,7 +477,7 @@ class VisualController:
             self._last_cue_data[user_id] = cue_data
 
         except Exception as e:
-            logger.error(f"Frame processing error: {e}")
+            logger.error("Frame processing error: %s", e)
 
     def _process_cue_data(self, user_id: str, cue_data: VisualCueData) -> None:
         """Process cue data and generate events"""
@@ -532,7 +532,7 @@ class VisualController:
             self._dispatch_event(VisualEvent.EXPRESSION_DETECTED, user_id, cue_data)
 
         except Exception as e:
-            logger.error(f"Error processing cue data: {e}")
+            logger.error("Error processing cue data: %s", e)
 
     def _dispatch_event(
         self,
@@ -557,10 +557,10 @@ class VisualController:
                 try:
                     handler(event_data)
                 except Exception as e:
-                    logger.error(f"Event handler error: {e}")
+                    logger.error("Event handler error: %s", e)
 
         except Exception as e:
-            logger.error(f"Event dispatch error: {e}")
+            logger.error("Event dispatch error: %s", e)
 
     def get_last_cue_data(self, user_id: str) -> VisualCueData | None:
         """Get last detected cue data for user"""
@@ -581,7 +581,7 @@ class VisualController:
                 logger.info("VisualController shutdown complete")
 
         except Exception as e:
-            logger.error(f"Shutdown error: {e}")
+            logger.error("Shutdown error: %s", e)
 
 
 # Global instances

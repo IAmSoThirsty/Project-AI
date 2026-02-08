@@ -181,9 +181,7 @@ class GodTierCommandCenter:
                     )
                     total_monitoring_agents += len(agents)
 
-            logger.info(
-                f"✅ Continuous monitoring active ({total_monitoring_agents} monitoring agents)"
-            )
+            logger.info("✅ Continuous monitoring active (%s monitoring agents)", total_monitoring_agents)
 
             # 5. Start all systems
             logger.info("Step 5/5: Activating all systems...")
@@ -198,18 +196,10 @@ class GodTierCommandCenter:
             logger.info("=" * 80)
             logger.info("GOD-TIER COMMAND CENTER FULLY OPERATIONAL")
             logger.info("=" * 80)
-            logger.info(
-                f"Intelligence Agents: {agents_per_domain * 6} (20 per domain × 6 domains)"
-            )
-            logger.info(
-                f"Monitoring Agents: {total_monitoring_agents} (global coverage)"
-            )
-            logger.info(
-                f"Watch Tower Gates: {instance.watch_tower.get_stats()['num_gates']}"
-            )
-            logger.info(
-                f"Processing Workers: {instance.god_tier_system.load_balancer.num_workers}"
-            )
+            logger.info("Intelligence Agents: %s (20 per domain × 6 domains)", agents_per_domain * 6)
+            logger.info("Monitoring Agents: %s (global coverage)", total_monitoring_agents)
+            logger.info("Watch Tower Gates: %s", instance.watch_tower.get_stats()['num_gates'])
+            logger.info("Processing Workers: %s", instance.god_tier_system.load_balancer.num_workers)
             logger.info(
                 "Features: Self-Healing | Distributed | Analytics | 24/7 | Encrypted"
             )
@@ -397,7 +387,7 @@ class GodTierCommandCenter:
             "note": "Statistical simulation provided by curator (librarian/statistician). Command decisions made by Watch Tower.",
         }
 
-        logger.info(f"Intelligence assessment {assessment['assessment_id']} completed")
+        logger.info("Intelligence assessment %s completed", assessment['assessment_id'])
 
         return assessment
 
@@ -467,7 +457,7 @@ class GodTierCommandCenter:
         with open(report_file, "w") as f:
             json.dump(report, f, indent=2)
 
-        logger.info(f"Intelligence report exported to {report_file}")
+        logger.info("Intelligence report exported to %s", report_file)
 
         return str(report_file)
 

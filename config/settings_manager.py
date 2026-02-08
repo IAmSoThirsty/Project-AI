@@ -276,11 +276,11 @@ class SettingsManager:
         self.settings[category][key] = value
         self._modified = True
 
-        self.logger.info(f"Setting updated: {category}.{key} = {value}")
+        self.logger.info("Setting updated: %s.%s = %s", category, key, value)
 
         # Log security-critical changes
         if category in ['security', 'privacy', 'ad_blocker']:
-            self.logger.warning(f"SECURITY SETTING CHANGED: {category}.{key} from {old_value} to {value}")
+            self.logger.warning("SECURITY SETTING CHANGED: %s.%s from %s to %s", category, key, old_value, value)
 
     def get_category(self, category: str) -> dict[str, Any]:
         """Get all settings in a category"""
@@ -295,7 +295,7 @@ class SettingsManager:
         if category in self._defaults:
             self.settings[category] = self._defaults[category].copy()
             self._modified = True
-            self.logger.info(f"Category reset to defaults: {category}")
+            self.logger.info("Category reset to defaults: %s", category)
 
     def reset_all(self):
         """Reset all settings to defaults"""
@@ -327,7 +327,7 @@ class SettingsManager:
             self.logger.info("Settings imported successfully")
 
         except Exception as e:
-            self.logger.error(f"Failed to import settings: {e}")
+            self.logger.error("Failed to import settings: %s", e)
 
     def validate_settings(self) -> dict[str, Any]:
         """Validate all settings for security and consistency"""

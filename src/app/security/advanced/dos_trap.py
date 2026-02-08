@@ -140,7 +140,7 @@ class KernelInterface:
                         module_name = line.split()[0]
                         modules.add(module_name)
             except Exception as e:
-                self.logger.error(f"Failed to read kernel modules: {e}")
+                self.logger.error("Failed to read kernel modules: %s", e)
         elif self._is_windows:
             try:
                 # Use PowerShell to get drivers
@@ -157,7 +157,7 @@ class KernelInterface:
                 if result.returncode == 0:
                     modules = set(result.stdout.strip().split("\n"))
             except Exception as e:
-                self.logger.error(f"Failed to enumerate Windows drivers: {e}")
+                self.logger.error("Failed to enumerate Windows drivers: %s", e)
 
         return modules
 
@@ -224,7 +224,7 @@ class KernelInterface:
                 return hashlib.sha256(b"SSDT_PLACEHOLDER").digest()
 
         except Exception as e:
-            self.logger.error(f"Failed to get syscall table hash: {e}")
+            self.logger.error("Failed to get syscall table hash: %s", e)
 
         return None
 
@@ -256,7 +256,7 @@ class KernelInterface:
                                 start, end = addr_range.split("-")
                                 regions.append((int(start, 16), int(end, 16)))
         except Exception as e:
-            self.logger.error(f"Failed to scan memory regions: {e}")
+            self.logger.error("Failed to scan memory regions: %s", e)
 
         return regions
 
@@ -286,10 +286,10 @@ class KernelInterface:
                 hidden_pids = list(hidden)
 
                 if hidden_pids:
-                    self.logger.warning(f"Found {len(hidden_pids)} hidden processes")
+                    self.logger.warning("Found %s hidden processes", len(hidden_pids))
 
         except Exception as e:
-            self.logger.error(f"Failed to detect hidden processes: {e}")
+            self.logger.error("Failed to detect hidden processes: %s", e)
 
         return hidden_pids
 
@@ -301,13 +301,13 @@ class KernelInterface:
                 with open("/proc/sys/kernel/tainted") as f:
                     tainted = int(f.read().strip())
                     if tainted != 0:
-                        self.logger.warning(f"Kernel is tainted: {tainted}")
+                        self.logger.warning("Kernel is tainted: %s", tainted)
                         return False
 
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to check memory integrity: {e}")
+            self.logger.error("Failed to check memory integrity: %s", e)
             return False
 
 
@@ -352,7 +352,7 @@ class CompromiseDetector:
             self.logger.info("Compromise detector initialized successfully")
 
         except Exception as e:
-            self.logger.error(f"Failed to initialize compromise detector: {e}")
+            self.logger.error("Failed to initialize compromise detector: %s", e)
 
     def _create_system_snapshot(self) -> SystemSnapshot:
         """Create current system state snapshot"""
@@ -400,14 +400,14 @@ class CompromiseDetector:
                     evidence={"modules": suspicious_modules},
                 )
 
-                self.logger.critical(f"ROOTKIT DETECTED: {suspicious_modules}")
+                self.logger.critical("ROOTKIT DETECTED: %s", suspicious_modules)
                 return event
 
             # Check for new unknown modules
             if self._baseline_snapshot:
                 new_modules = current_modules - self._baseline_snapshot.kernel_modules
                 if new_modules:
-                    self.logger.warning(f"New kernel modules loaded: {new_modules}")
+                    self.logger.warning("New kernel modules loaded: %s", new_modules)
 
                     # Deep inspection of new modules
                     for module in new_modules:
@@ -427,7 +427,7 @@ class CompromiseDetector:
                             return event
 
         except Exception as e:
-            self.logger.error(f"Rootkit detection failed: {e}")
+            self.logger.error("Rootkit detection failed: %s", e)
 
         return None
 
@@ -473,7 +473,7 @@ class CompromiseDetector:
                 return event
 
         except Exception as e:
-            self.logger.error(f"Kernel hook detection failed: {e}")
+            self.logger.error("Kernel hook detection failed: %s", e)
 
         return None
 
@@ -505,7 +505,7 @@ class CompromiseDetector:
                 return event
 
         except Exception as e:
-            self.logger.error(f"Memory anomaly detection failed: {e}")
+            self.logger.error("Memory anomaly detection failed: %s", e)
 
         return None
 
@@ -532,13 +532,11 @@ class CompromiseDetector:
                     evidence={"hidden_pids": hidden_pids},
                 )
 
-                self.logger.critical(
-                    f"PROCESS INJECTION DETECTED: {len(hidden_pids)} hidden processes"
-                )
+                self.logger.critical("PROCESS INJECTION DETECTED: %s hidden processes", len(hidden_pids))
                 return event
 
         except Exception as e:
-            self.logger.error(f"Process injection detection failed: {e}")
+            self.logger.error("Process injection detection failed: %s", e)
 
         return None
 
@@ -563,10 +561,10 @@ class CompromiseDetector:
                     events.append(event)
                     self._detection_history.append(event)
             except Exception as e:
-                self.logger.error(f"Detection method {method.__name__} failed: {e}")
+                self.logger.error("Detection method %s failed: %s", method.__name__, e)
 
         if events:
-            self.logger.critical(f"Scan completed: {len(events)} threats detected")
+            self.logger.critical("Scan completed: %s threats detected", len(events))
         else:
             self.logger.info("Scan completed: No threats detected")
 
@@ -598,11 +596,11 @@ class SecretWiper:
             # Final zero pass
             ctypes.memmove(address, ctypes.addressof(zeros), size)
 
-            self.logger.info(f"Wiped memory region at 0x{address:x} ({size} bytes)")
+            self.logger.info("Wiped memory region at 0x%s (%s bytes)", address, size)
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to wipe memory region: {e}")
+            self.logger.error("Failed to wipe memory region: %s", e)
             return False
 
     def wipe_master_keys(self, key_storage: dict[str, Any]) -> bool:
@@ -630,11 +628,11 @@ class SecretWiper:
                         self._wiped_items.add(key_id)
                         wiped_count += 1
 
-                self.logger.info(f"Wiped {wiped_count} master keys")
+                self.logger.info("Wiped %s master keys", wiped_count)
                 return True
 
             except Exception as e:
-                self.logger.error(f"Failed to wipe master keys: {e}")
+                self.logger.error("Failed to wipe master keys: %s", e)
                 return False
 
     def wipe_session_keys(self, session_storage: dict[str, Any]) -> bool:
@@ -650,7 +648,7 @@ class SecretWiper:
                 return True
 
             except Exception as e:
-                self.logger.error(f"Failed to wipe session keys: {e}")
+                self.logger.error("Failed to wipe session keys: %s", e)
                 return False
 
     def wipe_credentials(self, credential_store: dict[str, Any]) -> bool:
@@ -674,7 +672,7 @@ class SecretWiper:
                 return True
 
             except Exception as e:
-                self.logger.error(f"Failed to wipe credentials: {e}")
+                self.logger.error("Failed to wipe credentials: %s", e)
                 return False
 
     def emergency_wipe_all(self) -> bool:
@@ -692,7 +690,7 @@ class SecretWiper:
             return True
 
         except Exception as e:
-            self.logger.error(f"Emergency wipe failed: {e}")
+            self.logger.error("Emergency wipe failed: %s", e)
             return False
 
     def _wipe_process_memory(self):
@@ -708,7 +706,7 @@ class SecretWiper:
                 _ = data[-1]
                 del data
         except Exception as e:
-            self.logger.error(f"Failed to wipe process memory: {e}")
+            self.logger.error("Failed to wipe process memory: %s", e)
 
     def _flush_cpu_caches(self):
         """Attempt to flush CPU caches"""
@@ -722,7 +720,7 @@ class SecretWiper:
                 except PermissionError:
                     self.logger.warning("Insufficient permissions to drop caches")
         except Exception as e:
-            self.logger.error(f"Failed to flush CPU caches: {e}")
+            self.logger.error("Failed to flush CPU caches: %s", e)
 
 
 class HardwareKeyDestroyer:
@@ -747,13 +745,13 @@ class HardwareKeyDestroyer:
                     if tpm_interface.delete_key(key_id):
                         self._destroyed_keys.add(key_id)
 
-                self.logger.info(f"Destroyed {len(key_ids)} TPM keys")
+                self.logger.info("Destroyed %s TPM keys", len(key_ids))
                 return True
 
             return False
 
         except Exception as e:
-            self.logger.error(f"Failed to destroy TPM keys: {e}")
+            self.logger.error("Failed to destroy TPM keys: %s", e)
             return False
 
     def destroy_hsm_keys(self, hsm_interface) -> bool:
@@ -772,7 +770,7 @@ class HardwareKeyDestroyer:
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to destroy HSM keys: {e}")
+            self.logger.error("Failed to destroy HSM keys: %s", e)
             return False
 
     def destroy_all_hardware_keys(self, hardware_interfaces: list[Any]) -> bool:
@@ -790,7 +788,7 @@ class HardwareKeyDestroyer:
                     success &= self.destroy_hsm_keys(interface)
 
             except Exception as e:
-                self.logger.error(f"Failed to destroy keys in {interface_type}: {e}")
+                self.logger.error("Failed to destroy keys in %s: %s", interface_type, e)
                 success = False
 
         return success
@@ -835,9 +833,9 @@ class InterfaceDisabler:
                             ["ip", "link", "set", iface, "down"], timeout=5, check=True
                         )
                         self._disabled_interfaces.append(iface)
-                        self.logger.info(f"Disabled network interface: {iface}")
+                        self.logger.info("Disabled network interface: %s", iface)
                     except Exception as e:
-                        self.logger.error(f"Failed to disable {iface}: {e}")
+                        self.logger.error("Failed to disable %s: %s", iface, e)
 
             elif self._is_windows:
                 # Disable Windows network adapters
@@ -853,15 +851,13 @@ class InterfaceDisabler:
                     )
                     self.logger.info("Disabled all Windows network adapters")
                 except Exception as e:
-                    self.logger.error(f"Failed to disable Windows adapters: {e}")
+                    self.logger.error("Failed to disable Windows adapters: %s", e)
 
-            self.logger.info(
-                f"Disabled {len(self._disabled_interfaces)} network interfaces"
-            )
+            self.logger.info("Disabled %s network interfaces", len(self._disabled_interfaces))
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to disable network interfaces: {e}")
+            self.logger.error("Failed to disable network interfaces: %s", e)
             return False
 
     def disable_usb_interfaces(self) -> bool:
@@ -884,11 +880,9 @@ class InterfaceDisabler:
                                     if ":" in device:
                                         with open(unbind_path, "w") as f:
                                             f.write(device)
-                                        self.logger.info(
-                                            f"Unbound USB device: {device}"
-                                        )
+                                        self.logger.info("Unbound USB device: %s", device)
                             except Exception as e:
-                                self.logger.error(f"Failed to unbind {driver}: {e}")
+                                self.logger.error("Failed to unbind %s: %s", driver, e)
 
             elif self._is_windows:
                 # Disable USB controllers in Windows
@@ -903,12 +897,12 @@ class InterfaceDisabler:
                     )
                     self.logger.info("Disabled USB controllers")
                 except Exception as e:
-                    self.logger.error(f"Failed to disable USB: {e}")
+                    self.logger.error("Failed to disable USB: %s", e)
 
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to disable USB interfaces: {e}")
+            self.logger.error("Failed to disable USB interfaces: %s", e)
             return False
 
     def disable_all_io(self) -> bool:
@@ -943,7 +937,7 @@ class MemorySanitizer:
             mode: Sanitization method to use
         """
         try:
-            self.logger.critical(f"Sanitizing RAM using {mode.value} method")
+            self.logger.critical("Sanitizing RAM using %s method", mode.value)
 
             # Determine number of passes
             passes = {
@@ -960,7 +954,7 @@ class MemorySanitizer:
             chunk_size = 1024 * 1024 * 100  # 100MB chunks
 
             for pass_num in range(num_passes):
-                self.logger.info(f"RAM sanitization pass {pass_num + 1}/{num_passes}")
+                self.logger.info("RAM sanitization pass %s/%s", pass_num + 1, num_passes)
 
                 try:
                     # Allocate memory
@@ -994,7 +988,7 @@ class MemorySanitizer:
             return True
 
         except Exception as e:
-            self.logger.error(f"RAM sanitization failed: {e}")
+            self.logger.error("RAM sanitization failed: %s", e)
             return False
 
 
@@ -1021,7 +1015,7 @@ class DiskSanitizer:
             if not os.path.exists(file_path):
                 return False
 
-            self.logger.info(f"Sanitizing file: {file_path} ({mode.value})")
+            self.logger.info("Sanitizing file: %s (%s)", file_path, mode.value)
 
             file_size = os.path.getsize(file_path)
 
@@ -1069,11 +1063,11 @@ class DiskSanitizer:
             # Delete file
             os.remove(file_path)
 
-            self.logger.info(f"File sanitized and deleted: {file_path}")
+            self.logger.info("File sanitized and deleted: %s", file_path)
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to sanitize file {file_path}: {e}")
+            self.logger.error("Failed to sanitize file %s: %s", file_path, e)
             return False
 
     def sanitize_directory(
@@ -1081,7 +1075,7 @@ class DiskSanitizer:
     ) -> bool:
         """Securely delete all files in directory"""
         try:
-            self.logger.warning(f"Sanitizing directory: {directory}")
+            self.logger.warning("Sanitizing directory: %s", directory)
 
             for root, dirs, files in os.walk(directory, topdown=False):
                 for file in files:
@@ -1100,11 +1094,11 @@ class DiskSanitizer:
             except Exception:
                 pass
 
-            self.logger.info(f"Directory sanitized: {directory}")
+            self.logger.info("Directory sanitized: %s", directory)
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to sanitize directory: {e}")
+            self.logger.error("Failed to sanitize directory: %s", e)
             return False
 
 
@@ -1193,7 +1187,7 @@ class DOSTrapMode:
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to initialize DOS Trap Mode: {e}")
+            self.logger.error("Failed to initialize DOS Trap Mode: %s", e)
             return False
 
     def enable(self):
@@ -1249,7 +1243,7 @@ class DOSTrapMode:
                 self._stop_monitoring.wait(self.config["monitor_interval"])
 
             except Exception as e:
-                self.logger.error(f"Monitoring loop error: {e}")
+                self.logger.error("Monitoring loop error: %s", e)
                 time.sleep(10)
 
         self.logger.info("DOS Trap monitoring stopped")
@@ -1283,7 +1277,7 @@ class DOSTrapMode:
                 return event
 
         except Exception as e:
-            self.logger.error(f"Attestation check failed: {e}")
+            self.logger.error("Attestation check failed: %s", e)
 
         return None
 
@@ -1298,16 +1292,14 @@ class DOSTrapMode:
             if max_threat.value > self._threat_level.value:
                 self._threat_level = max_threat
 
-            self.logger.critical(
-                f"THREATS DETECTED: {len(events)} events, max level: {max_threat.name}"
-            )
+            self.logger.critical("THREATS DETECTED: %s events, max level: %s", len(events), max_threat.name)
 
             # Log all events
             for event in events:
-                self.logger.critical(f"Threat: {event.description}")
-                self.logger.critical(f"  Type: {event.compromise_type.value}")
-                self.logger.critical(f"  Level: {event.threat_level.name}")
-                self.logger.critical(f"  Indicators: {event.indicators}")
+                self.logger.critical("Threat: %s", event.description)
+                self.logger.critical("  Type: %s", event.compromise_type.value)
+                self.logger.critical("  Level: %s", event.threat_level.name)
+                self.logger.critical("  Indicators: %s", event.indicators)
 
             # Auto-respond if configured
             if (
@@ -1321,7 +1313,7 @@ class DOSTrapMode:
                 try:
                     callback(events)
                 except Exception as e:
-                    self.logger.error(f"Response callback failed: {e}")
+                    self.logger.error("Response callback failed: %s", e)
 
     def _execute_emergency_response(self, events: list[CompromiseEvent]):
         """Execute emergency response to detected threats"""
@@ -1356,11 +1348,11 @@ class DOSTrapMode:
             self.logger.critical("Emergency response completed")
 
         except Exception as e:
-            self.logger.error(f"Emergency response failed: {e}")
+            self.logger.error("Emergency response failed: %s", e)
 
     def _execute_action(self, action: ResponseAction):
         """Execute specific response action"""
-        self.logger.critical(f"Executing action: {action.value}")
+        self.logger.critical("Executing action: %s", action.value)
 
         try:
             if action == ResponseAction.TRIGGER_KILL_SWITCH:
@@ -1392,7 +1384,7 @@ class DOSTrapMode:
                     self._emergency_shutdown()
 
         except Exception as e:
-            self.logger.error(f"Failed to execute action {action.value}: {e}")
+            self.logger.error("Failed to execute action %s: %s", action.value, e)
 
     def wipe_all_secrets(self):
         """Wipe all secrets from system"""
@@ -1418,7 +1410,7 @@ class DOSTrapMode:
             self.logger.info("All secrets wiped")
 
         except Exception as e:
-            self.logger.error(f"Failed to wipe all secrets: {e}")
+            self.logger.error("Failed to wipe all secrets: %s", e)
 
     def _emergency_shutdown(self):
         """Emergency system shutdown"""
@@ -1435,7 +1427,7 @@ class DOSTrapMode:
                 os._exit(1)
 
         except Exception as e:
-            self.logger.error(f"Emergency shutdown failed: {e}")
+            self.logger.error("Emergency shutdown failed: %s", e)
             os._exit(1)
 
     def register_response_callback(self, callback: Callable):
@@ -1444,7 +1436,7 @@ class DOSTrapMode:
 
     def manual_trigger(self, reason: str):
         """Manually trigger DOS trap mode"""
-        self.logger.critical(f"MANUAL TRIGGER: {reason}")
+        self.logger.critical("MANUAL TRIGGER: %s", reason)
 
         event = CompromiseEvent(
             timestamp=time.time(),

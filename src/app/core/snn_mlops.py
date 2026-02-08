@@ -192,17 +192,13 @@ class ANNToSNNConverter:
             return None
 
         try:
-            logger.info(
-                f"Converting PyTorch model to SNN (T={time_steps}, thresh={threshold})"
-            )
+            logger.info("Converting PyTorch model to SNN (T=%s, thresh=%s)", time_steps, threshold)
 
             # Extract weights and biases from ANN
             snn_layers = []
             for name, module in ann_model.named_modules():
                 if isinstance(module, nn.Linear):
-                    logger.info(
-                        f"Converting layer: {name} (Linear {module.in_features}→{module.out_features})"
-                    )
+                    logger.info("Converting layer: %s (Linear %s→%s)", name, module.in_features, module.out_features)
                     snn_layers.append(
                         {
                             "type": "linear",
@@ -346,15 +342,11 @@ class ModelQuantizer:
             # Check guardrails
             accuracy_drop = baseline_accuracy - metrics.accuracy
             if accuracy_drop > self.guardrails.max_accuracy_drop:
-                logger.error(
-                    f"Accuracy drop {accuracy_drop:.2%} exceeds limit {self.guardrails.max_accuracy_drop:.2%}"
-                )
+                logger.error("Accuracy drop %s exceeds limit %s", accuracy_drop, self.guardrails.max_accuracy_drop)
                 return None, metrics
 
             if metrics.accuracy < self.guardrails.min_accuracy:
-                logger.error(
-                    f"Accuracy {metrics.accuracy:.2%} below minimum {self.guardrails.min_accuracy:.2%}"
-                )
+                logger.error("Accuracy %s below minimum %s", metrics.accuracy, self.guardrails.min_accuracy)
                 return None, metrics
 
             self.quantization_log.append(
@@ -496,13 +488,9 @@ class NIRCompiler:
             is_valid = mismatch_rate <= tolerance
 
             if is_valid:
-                logger.info(
-                    f"✓ Sim-to-real validation passed: {mismatch_rate:.2%} mismatch"
-                )
+                logger.info("✓ Sim-to-real validation passed: %s mismatch", mismatch_rate)
             else:
-                logger.error(
-                    f"✗ Sim-to-real validation failed: {mismatch_rate:.2%} > {tolerance:.2%}"
-                )
+                logger.error("✗ Sim-to-real validation failed: %s > %s", mismatch_rate, tolerance)
 
             self.compilation_log.append(f"Sim-to-real: {mismatch_rate:.2%} mismatch")
             return is_valid, mismatch_rate
@@ -645,9 +633,7 @@ class OTADeployer:
 
         self.mqtt_client = mqtt.Client()
         self.mqtt_client.connect(self.config.mqtt_broker, self.config.mqtt_port)
-        logger.info(
-            f"Connected to MQTT broker: {self.config.mqtt_broker}:{self.config.mqtt_port}"
-        )
+        logger.info("Connected to MQTT broker: %s:%s", self.config.mqtt_broker, self.config.mqtt_port)
 
     def _publish_to_device(self, device_id: str, model_data: bytes) -> bool:
         """Publish model to device via MQTT"""
@@ -693,9 +679,7 @@ class CanaryDeployment:
         Returns:
             True if canary succeeded, False if rolled back
         """
-        logger.info(
-            f"Starting canary deployment: {self.config.canary_percentage:.0%} traffic"
-        )
+        logger.info("Starting canary deployment: %s traffic", self.config.canary_percentage)
 
         start_time = time.time()
         duration = self.config.canary_duration_sec
@@ -762,9 +746,7 @@ class CanaryDeployment:
 
         # Check latency
         if canary.latency_ms > production.latency_ms * 1.5:
-            logger.warning(
-                f"Latency increased: {canary.latency_ms:.1f}ms vs {production.latency_ms:.1f}ms"
-            )
+            logger.warning("Latency increased: %sms vs %sms", canary.latency_ms, production.latency_ms)
             return True
 
         return False
@@ -1003,9 +985,7 @@ class SNNMLOpsPipeline:
 
             # Stage 6: Canary rollout
             self.status = DeploymentStatus.MONITORING
-            logger.info(
-                f"\n[6/7] Canary rollout ({self.config.canary_percentage:.0%} traffic)..."
-            )
+            logger.info("\n[6/7] Canary rollout (%s traffic)...", self.config.canary_percentage)
             canary_success = self.canary.start_canary(snn_model, ann_model)
             if not canary_success:
                 raise ValueError("Canary rollout failed - rolled back")

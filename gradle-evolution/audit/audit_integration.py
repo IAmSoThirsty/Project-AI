@@ -66,7 +66,7 @@ class BuildAuditIntegration:
             self._buffer_audit(event, detail)
 
             if self.enable_verbose:
-                logger.info(f"Audited build start: {build_id}")
+                logger.info("Audited build start: %s", build_id)
 
         except Exception as e:
             logger.error(f"Error auditing build start: {e}", exc_info=True)
@@ -100,7 +100,7 @@ class BuildAuditIntegration:
             self._buffer_audit(event, detail)
 
             if self.enable_verbose:
-                logger.info(f"Audited build complete: {build_id}, success={success}")
+                logger.info("Audited build complete: %s, success=%s", build_id, success)
 
         except Exception as e:
             logger.error(f"Error auditing build complete: {e}", exc_info=True)
@@ -220,7 +220,7 @@ class BuildAuditIntegration:
             self._buffer_audit(event, detail)
 
             if self.enable_verbose:
-                logger.info(f"Audited capsule creation: {capsule_id}")
+                logger.info("Audited capsule creation: %s", capsule_id)
 
         except Exception as e:
             logger.error(f"Error auditing capsule creation: {e}", exc_info=True)
@@ -254,7 +254,7 @@ class BuildAuditIntegration:
             self._buffer_audit(event, detail)
 
             if self.enable_verbose or not success:
-                logger.info(f"Audited replay event: {capsule_id}, success={success}")
+                logger.info("Audited replay event: %s, success=%s", capsule_id, success)
 
         except Exception as e:
             logger.error(f"Error auditing replay event: {e}", exc_info=True)
@@ -288,7 +288,7 @@ class BuildAuditIntegration:
             self._buffer_audit(event, detail)
 
             if self.enable_verbose:
-                logger.info(f"Audited cognition decision: {decision_type}")
+                logger.info("Audited cognition decision: %s", decision_type)
 
         except Exception as e:
             logger.error(f"Error auditing cognition decision: {e}", exc_info=True)
@@ -314,7 +314,7 @@ class BuildAuditIntegration:
         """
         count = len(self.audit_buffer)
         self.audit_buffer.clear()
-        logger.info(f"Cleared {count} audit buffer entries")
+        logger.info("Cleared %s audit buffer entries", count)
         return count
 
     def generate_audit_report(

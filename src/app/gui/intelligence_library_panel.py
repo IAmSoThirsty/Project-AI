@@ -131,7 +131,7 @@ class DomainAgentsPanel(QFrame):
             self.status_label.setText(f"Status: {len(overseer.agents)} agents active")
 
         except Exception as e:
-            logger.error(f"Error refreshing agents: {e}")
+            logger.error("Error refreshing agents: %s", e)
             self.status_label.setText(f"Status: Error - {e}")
 
 
@@ -227,7 +227,7 @@ class SimulationViewerPanel(QFrame):
             self.simulation_display.setText("\n".join(output))
 
         except Exception as e:
-            logger.error(f"Error running simulation: {e}")
+            logger.error("Error running simulation: %s", e)
             self.simulation_display.setText(
                 f"ERROR: Failed to run simulation\n\n{str(e)}"
             )
@@ -259,7 +259,7 @@ class SimulationViewerPanel(QFrame):
                 )
 
         except Exception as e:
-            logger.error(f"Error loading simulation: {e}")
+            logger.error("Error loading simulation: %s", e)
             self.simulation_display.setText(f"ERROR: {str(e)}")
 
 
@@ -496,7 +496,7 @@ class IntelligenceLibraryPanel(QWidget):
             self.stats_label.setText("\n".join(output))
 
         except Exception as e:
-            logger.error(f"Error refreshing overview: {e}")
+            logger.error("Error refreshing overview: %s", e)
             self.stats_label.setText(f"ERROR: Failed to load statistics\n\n{str(e)}")
 
     def _initialize_library(self):
@@ -514,7 +514,7 @@ class IntelligenceLibraryPanel(QWidget):
                 )
                 logger.info("Intelligence library initialized successfully")
             except Exception as e:
-                logger.error(f"Failed to initialize library: {e}")
+                logger.error("Failed to initialize library: %s", e)
 
     def _get_domain_icon(self, domain: IntelligenceDomain) -> str:
         """Get icon for a domain."""

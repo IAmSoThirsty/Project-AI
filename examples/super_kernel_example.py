@@ -41,8 +41,8 @@ def example_1_minimal_setup():
         source="test",
     )
 
-    logger.info(f"Result: {result}")
-    logger.info(f"Statistics: {super_kernel.get_statistics()}")
+    logger.info("Result: %s", result)
+    logger.info("Statistics: %s", super_kernel.get_statistics())
 
 
 def example_2_with_adapters():
@@ -96,7 +96,7 @@ def example_2_with_adapters():
         kernel_type=KernelType.REFLECTION,
         memory_engine=mock_memory,
     )
-    logger.info(f"Reflection result: {report}")
+    logger.info("Reflection result: %s", report)
 
     # Use MemoryEngine
     logger.info("Searching memories...")
@@ -105,12 +105,12 @@ def example_2_with_adapters():
         kernel_type=KernelType.MEMORY,
         query="test",
     )
-    logger.info(f"Memory results: {results}")
+    logger.info("Memory results: %s", results)
 
     # Get statistics
-    logger.info(f"SuperKernel stats: {super_kernel.get_statistics()}")
-    logger.info(f"Reflection stats: {super_kernel.get_kernel_statistics(KernelType.REFLECTION)}")
-    logger.info(f"Memory stats: {super_kernel.get_kernel_statistics(KernelType.MEMORY)}")
+    logger.info("SuperKernel stats: %s", super_kernel.get_statistics())
+    logger.info("Reflection stats: %s", super_kernel.get_kernel_statistics(KernelType.REFLECTION))
+    logger.info("Memory stats: %s", super_kernel.get_kernel_statistics(KernelType.MEMORY))
 
 
 def example_3_execution_history():
@@ -142,17 +142,17 @@ def example_3_execution_history():
             kernel_type=KernelType.COGNITION,
             source="test",
         )
-        logger.info(f"Operation {i+1} result: {result}")
+        logger.info("Operation %s result: %s", i+1, result)
 
     # Get execution history
     logger.info("\nExecution History:")
     history = super_kernel.get_execution_history(limit=10)
     for record in history:
-        logger.info(f"  Execution {record['execution_id']}:")
-        logger.info(f"    Attempt: {record['attempt']}")
-        logger.info(f"    Decision: {record['decision']}")
-        logger.info(f"    Result: {record['result']}")
-        logger.info(f"    Duration: {record['duration_ms']:.2f}ms")
+        logger.info("  Execution %s:", record['execution_id'])
+        logger.info("    Attempt: %s", record['attempt'])
+        logger.info("    Decision: %s", record['decision'])
+        logger.info("    Result: %s", record['result'])
+        logger.info("    Duration: %sms", record['duration_ms'])
 
 
 def example_4_error_handling():
@@ -186,7 +186,7 @@ def example_4_error_handling():
         "success",
         kernel_type=KernelType.COGNITION,
     )
-    logger.info(f"Success result: {result}")
+    logger.info("Success result: %s", result)
 
     # Test failure case
     logger.info("\nTesting failure case...")
@@ -196,7 +196,7 @@ def example_4_error_handling():
             kernel_type=KernelType.COGNITION,
         )
     except ValueError as e:
-        logger.info(f"Caught expected error: {e}")
+        logger.info("Caught expected error: %s", e)
 
     # Test blocked case
     logger.info("\nTesting blocked case...")
@@ -209,12 +209,12 @@ def example_4_error_handling():
             kernel_type=KernelType.COGNITION,
         )
     except PermissionError as e:
-        logger.info(f"Caught expected permission error: {e}")
+        logger.info("Caught expected permission error: %s", e)
 
     # Check statistics
     stats = super_kernel.get_statistics()
-    logger.info(f"\nFinal statistics: {stats}")
-    logger.info(f"Blocked count: {super_kernel.blocked_count}")
+    logger.info("\nFinal statistics: %s", stats)
+    logger.info("Blocked count: %s", super_kernel.blocked_count)
 
 
 def main():

@@ -62,7 +62,7 @@ class DARPAEvaluator:
             "tests_failed": self.tests_failed,
         }
 
-        logger.info(f"DARPA evaluation complete: {overall_score:.2f}/100 ({self._calculate_grade(overall_score)})")
+        logger.info("DARPA evaluation complete: %s/100 (%s)", overall_score, self._calculate_grade(overall_score))
 
         return self.evaluation_results
 
@@ -489,7 +489,7 @@ class DARPAEvaluator:
                 issues.append(f"Slow performance: 100 ticks took {elapsed:.2f}s")
 
             self._record_test("performance_100_ticks", True)
-            logger.info(f"Performance test: 100 ticks in {elapsed:.2f}s")
+            logger.info("Performance test: 100 ticks in %ss", elapsed)
 
         except Exception as e:
             score -= 50

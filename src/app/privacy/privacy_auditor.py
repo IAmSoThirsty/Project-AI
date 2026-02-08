@@ -52,7 +52,7 @@ class PrivacyAuditor:
         # Check for privacy violations
         if self._is_privacy_violation(event_type, details):
             self._privacy_violations.append(event)
-            self.logger.warning(f"Privacy violation detected: {event_type}")
+            self.logger.warning("Privacy violation detected: %s", event_type)
 
     def _is_privacy_violation(self, event_type: str, details: dict[str, Any]) -> bool:
         """Check if event is a privacy violation"""
@@ -124,7 +124,7 @@ class PrivacyAuditor:
             "events_logged": len(self._audit_log),
         }
 
-        self.logger.info(f"Full privacy audit completed: {results}")
+        self.logger.info("Full privacy audit completed: %s", results)
         return results
 
     def get_audit_log(self) -> list[dict[str, Any]]:

@@ -49,7 +49,7 @@ class EphemeralStorage:
             'ttl': ttl
         }
 
-        self.logger.debug(f"Stored ephemeral data: {key}")
+        self.logger.debug("Stored ephemeral data: %s", key)
 
     def retrieve(self, key: str) -> Any | None:
         """
@@ -75,7 +75,7 @@ class EphemeralStorage:
         """Delete ephemeral data"""
         if key in self._storage:
             del self._storage[key]
-            self.logger.debug(f"Deleted ephemeral data: {key}")
+            self.logger.debug("Deleted ephemeral data: %s", key)
 
     def _wipe_all(self):
         """Wipe all ephemeral data"""
@@ -95,7 +95,7 @@ class EphemeralStorage:
             self.delete(key)
 
         if expired_keys:
-            self.logger.debug(f"Cleaned up {len(expired_keys)} expired items")
+            self.logger.debug("Cleaned up %s expired items", len(expired_keys))
 
     def get_statistics(self) -> dict[str, Any]:
         """Get storage statistics"""

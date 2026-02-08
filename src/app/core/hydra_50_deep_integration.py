@@ -130,7 +130,7 @@ class CerberusAgentIntegration:
 
             logger.info("Cerberus Agent Integration: CONNECTED")
         except ImportError as e:
-            logger.warning(f"Cerberus integration not available: {e}")
+            logger.warning("Cerberus integration not available: %s", e)
             self.cerberus_hydra = None
             self.lockdown_controller = None
             self.integration_status = IntegrationStatus.DISCONNECTED
@@ -156,9 +156,7 @@ class CerberusAgentIntegration:
 
             self.spawned_count += spawn_result.get("agents_spawned", 0)
 
-            logger.info(
-                f"Cerberus defense triggered: {spawn_result.get('agents_spawned', 0)} agents spawned"
-            )
+            logger.info("Cerberus defense triggered: %s agents spawned", spawn_result.get('agents_spawned', 0))
 
             return {
                 "success": True,
@@ -172,7 +170,7 @@ class CerberusAgentIntegration:
             }
 
         except Exception as e:
-            logger.error(f"Cerberus defense trigger failed: {e}")
+            logger.error("Cerberus defense trigger failed: %s", e)
             return {"success": False, "error": str(e)}
 
     def get_active_agents(self) -> list[dict[str, Any]]:
@@ -183,7 +181,7 @@ class CerberusAgentIntegration:
         try:
             return self.cerberus_hydra.list_active_agents()
         except Exception as e:
-            logger.error(f"Failed to get active agents: {e}")
+            logger.error("Failed to get active agents: %s", e)
             return []
 
 
@@ -217,7 +215,7 @@ class TARLOrchestrationIntegration:
             self.integration_status = IntegrationStatus.CONNECTED
             logger.info("TARL Orchestration Integration: CONNECTED")
         except Exception as e:
-            logger.warning(f"TARL integration not available: {e}")
+            logger.warning("TARL integration not available: %s", e)
             self.integration_status = IntegrationStatus.DISCONNECTED
 
     def schedule_intervention(
@@ -242,7 +240,7 @@ class TARLOrchestrationIntegration:
 
         self.scheduled_tasks[task_id] = task
 
-        logger.info(f"TARL intervention scheduled: {task_id} for {execute_at}")
+        logger.info("TARL intervention scheduled: %s for %s", task_id, execute_at)
 
         return task_id
 
@@ -280,7 +278,7 @@ class TemporalWorkflowIntegration:
             self.integration_status = IntegrationStatus.CONNECTED
             logger.info("Temporal Workflow Integration: CONNECTED")
         except Exception as e:
-            logger.warning(f"Temporal integration not available: {e}")
+            logger.warning("Temporal integration not available: %s", e)
             self.integration_status = IntegrationStatus.DISCONNECTED
 
     def start_workflow(
@@ -297,7 +295,7 @@ class TemporalWorkflowIntegration:
 
         self.workflows[workflow_id] = workflow
 
-        logger.info(f"Temporal workflow started: {workflow_id}")
+        logger.info("Temporal workflow started: %s", workflow_id)
 
         return workflow
 
@@ -344,7 +342,7 @@ class GodTierCommandCenterIntegration:
                 logger.warning("Command Center not operational")
 
         except Exception as e:
-            logger.warning(f"Command Center integration not available: {e}")
+            logger.warning("Command Center integration not available: %s", e)
             self.integration_status = IntegrationStatus.DISCONNECTED
 
     def query_intelligence(self, domain: str, query: str) -> dict[str, Any]:
@@ -361,12 +359,12 @@ class GodTierCommandCenterIntegration:
                 "results": [],
             }
 
-            logger.info(f"Intelligence query: {domain} - {query}")
+            logger.info("Intelligence query: %s - %s", domain, query)
 
             return results
 
         except Exception as e:
-            logger.error(f"Intelligence query failed: {e}")
+            logger.error("Intelligence query failed: %s", e)
             return {"success": False, "error": str(e)}
 
     def submit_threat_report(
@@ -377,10 +375,10 @@ class GodTierCommandCenterIntegration:
             return False
 
         try:
-            logger.info(f"Threat report submitted: {scenario_id}")
+            logger.info("Threat report submitted: %s", scenario_id)
             return True
         except Exception as e:
-            logger.error(f"Threat report submission failed: {e}")
+            logger.error("Threat report submission failed: %s", e)
             return False
 
 
@@ -416,7 +414,7 @@ class SecurityOperationsCenterIntegration:
 
             logger.info("Security Operations Center Integration: CONNECTED")
         except Exception as e:
-            logger.warning(f"SOC integration not available: {e}")
+            logger.warning("SOC integration not available: %s", e)
             self.soc = None
             self.integration_status = IntegrationStatus.DISCONNECTED
 
@@ -442,7 +440,7 @@ class SecurityOperationsCenterIntegration:
 
         self.incidents[incident_id] = incident
 
-        logger.warning(f"Security incident reported: {incident_id} - {incident_type}")
+        logger.warning("Security incident reported: %s - %s", incident_id, incident_type)
 
         return incident_id
 
@@ -483,7 +481,7 @@ class CouncilHubIntegration:
 
             logger.info("Council Hub Integration: CONNECTED")
         except Exception as e:
-            logger.warning(f"Council Hub integration not available: {e}")
+            logger.warning("Council Hub integration not available: %s", e)
             self.council = None
             self.integration_status = IntegrationStatus.DISCONNECTED
 
@@ -504,7 +502,7 @@ class CouncilHubIntegration:
 
         self.advisory_requests[request_id] = request
 
-        logger.info(f"Council advisory requested: {request_id}")
+        logger.info("Council advisory requested: %s", request_id)
 
         return request_id
 
@@ -545,7 +543,7 @@ class PlanetaryDefenseIntegration:
 
             logger.info("Planetary Defense Integration: CONNECTED")
         except Exception as e:
-            logger.warning(f"Planetary Defense integration not available: {e}")
+            logger.warning("Planetary Defense integration not available: %s", e)
             self.planetary_defense = None
             self.integration_status = IntegrationStatus.DISCONNECTED
 
@@ -564,7 +562,7 @@ class PlanetaryDefenseIntegration:
                 return False, "Action violates constitutional principles"
 
         except Exception as e:
-            logger.error(f"Action validation failed: {e}")
+            logger.error("Action validation failed: %s", e)
             return False, f"Validation error: {str(e)}"
 
 
@@ -597,7 +595,7 @@ class EventSpineIntegration:
 
             logger.info("Event Spine Integration: CONNECTED")
         except Exception as e:
-            logger.warning(f"Event Spine integration not available: {e}")
+            logger.warning("Event Spine integration not available: %s", e)
             self.event_spine = None
             self.integration_status = IntegrationStatus.DISCONNECTED
 
@@ -616,14 +614,14 @@ class EventSpineIntegration:
 
         self.event_queue.append(event)
 
-        logger.info(f"Event published: {event_type} [{priority.value}]")
+        logger.info("Event published: %s [%s]", event_type, priority.value)
 
         return event.event_id
 
     def subscribe(self, system_name: str) -> None:
         """Subscribe system to events"""
         self.subscribers.add(system_name)
-        logger.info(f"System subscribed: {system_name}")
+        logger.info("System subscribed: %s", system_name)
 
 
 # ============================================================================
@@ -686,7 +684,7 @@ class HYDRA50DeepIntegration:
         logger.info("═══ HYDRA-50 INTEGRATION STATUS ═══")
         for system, status in self.integration_health.items():
             status_icon = "✓" if status == IntegrationStatus.CONNECTED else "✗"
-            logger.info(f"  {status_icon} {system.upper()}: {status.value}")
+            logger.info("  %s %s: %s", status_icon, system.upper(), status.value)
 
     def handle_scenario_trigger(
         self,
@@ -713,7 +711,7 @@ class HYDRA50DeepIntegration:
         )
 
         if not is_valid:
-            logger.error(f"Action blocked by Planetary Defense: {validation_msg}")
+            logger.error("Action blocked by Planetary Defense: %s", validation_msg)
             results["blocked"] = True
             results["reason"] = validation_msg
             return results
@@ -790,9 +788,7 @@ class HYDRA50DeepIntegration:
             }
         )
 
-        logger.info(
-            f"Scenario trigger handled: {scenario_id} - {len(results['actions'])} actions taken"
-        )
+        logger.info("Scenario trigger handled: %s - %s actions taken", scenario_id, len(results['actions']))
 
         return results
 

@@ -65,9 +65,7 @@ class EnhancedRedTeamCampaignWorkflow:
     @workflow.run
     async def run(self, request: RedTeamCampaignRequest) -> dict[str, Any]:
         """Execute enhanced red team campaign workflow."""
-        workflow.logger.info(
-            f"Starting enhanced red team campaign: {request.campaign_id}"
-        )
+        workflow.logger.info("Starting enhanced red team campaign: %s", request.campaign_id)
 
         # Define retry policies
         snapshot_retry = RetryPolicy(
@@ -98,9 +96,9 @@ class EnhancedRedTeamCampaignWorkflow:
                 retry_policy=snapshot_retry,
             )
             snapshot_id = snapshot_result["snapshot_id"]
-            workflow.logger.info(f"Snapshot created: {snapshot_id}")
+            workflow.logger.info("Snapshot created: %s", snapshot_id)
         except Exception as e:
-            workflow.logger.error(f"Snapshot creation failed: {e}")
+            workflow.logger.error("Snapshot creation failed: %s", e)
             return {
                 "status": "aborted",
                 "reason": "snapshot_creation_failed",
@@ -132,9 +130,7 @@ class EnhancedRedTeamCampaignWorkflow:
                     retry_policy=standard_retry,
                 )
 
-                workflow.logger.info(
-                    f"Attack evaluated: {persona} on {target} = {severity}"
-                )
+                workflow.logger.info("Attack evaluated: %s on %s = %s", persona, target, severity)
 
                 # Trigger incident for critical/high severity
                 if severity in ["critical", "high"]:
@@ -144,15 +140,11 @@ class EnhancedRedTeamCampaignWorkflow:
                         start_to_close_timeout=timedelta(minutes=5),
                         retry_policy=standard_retry,
                     )
-                    workflow.logger.critical(
-                        f"Incident triggered: {incident['incident_id']}"
-                    )
+                    workflow.logger.critical("Incident triggered: %s", incident['incident_id'])
 
                     # Check if campaign should halt
                     if await self._policy_should_halt(request.campaign_id, severity):
-                        workflow.logger.warning(
-                            f"Campaign halted due to {severity} severity"
-                        )
+                        workflow.logger.warning("Campaign halted due to %s severity", severity)
                         halted = True
                         halt_reason = severity
                         break
@@ -224,7 +216,7 @@ class EnhancedRedTeamCampaignWorkflow:
             workflow.logger.warning("Policy: Halt on critical severity")
             return True
         else:
-            workflow.logger.info(f"Policy: Continue campaign (severity: {severity})")
+            workflow.logger.info("Policy: Continue campaign (severity: %s)", severity)
             return False
 
 
@@ -319,9 +311,7 @@ class EnhancedCodeSecuritySweepWorkflow:
 
         # Step 5: Block deployment if critical vulnerabilities
         if critical_count > 0:
-            workflow.logger.critical(
-                f"Blocking deployment: {critical_count} critical vulnerabilities"
-            )
+            workflow.logger.critical("Blocking deployment: %s critical vulnerabilities", critical_count)
             await workflow.execute_activity(
                 block_deployment,
                 args=[scan_id, critical_count, "Critical vulnerabilities detected"],
@@ -362,9 +352,7 @@ class EnhancedConstitutionalMonitoringWorkflow:
     @workflow.run
     async def run(self, request: ConstitutionalMonitoringRequest) -> dict[str, Any]:
         """Execute constitutional monitoring workflow."""
-        workflow.logger.info(
-            f"Starting constitutional monitoring: {request.monitoring_id}"
-        )
+        workflow.logger.info("Starting constitutional monitoring: %s", request.monitoring_id)
 
         with workflow.unsafe.imports_passed_through():
             from temporal.workflows.security_agent_activities import (

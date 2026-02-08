@@ -53,7 +53,7 @@ class VerifiabilityAPI:
         CORS(self.app)  # Enable CORS for external access
 
         self._register_routes()
-        logger.info(f"Verifiability API initialized on {host}:{port}")
+        logger.info("Verifiability API initialized on %s:%s", host, port)
 
     def _register_routes(self) -> None:
         """Register API routes."""
@@ -259,7 +259,7 @@ class VerifiabilityAPI:
             debug: Enable debug mode
         """
         try:
-            logger.info(f"Starting verifiability API on {self.host}:{self.port}")
+            logger.info("Starting verifiability API on %s:%s", self.host, self.port)
             self.app.run(host=self.host, port=self.port, debug=debug)
         except Exception as e:
             logger.error(f"Error running API: {e}", exc_info=True)

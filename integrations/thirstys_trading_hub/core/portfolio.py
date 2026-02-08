@@ -109,9 +109,7 @@ class PortfolioManager:
         os.makedirs(data_dir, exist_ok=True)
         self._load_state()
 
-        logger.info(
-            f"PortfolioManager initialized with {initial_balance} {currency} balance"
-        )
+        logger.info("PortfolioManager initialized with %s %s balance", initial_balance, currency)
 
     def _load_state(self) -> None:
         """Load portfolio state from persistent storage."""
@@ -153,7 +151,7 @@ class PortfolioManager:
                     f"{len(self._balances)} balances"
                 )
             except Exception as e:
-                logger.error(f"Failed to load portfolio state: {e}")
+                logger.error("Failed to load portfolio state: %s", e)
 
     def _save_state(self) -> None:
         """Save portfolio state to persistent storage."""
@@ -192,7 +190,7 @@ class PortfolioManager:
             with open(portfolio_file, "w") as f:
                 json.dump(data, f, indent=2)
         except Exception as e:
-            logger.error(f"Failed to save portfolio state: {e}")
+            logger.error("Failed to save portfolio state: %s", e)
 
     def get_state(self) -> PortfolioState:
         """Get current portfolio state snapshot.
@@ -283,9 +281,7 @@ class PortfolioManager:
 
             self._record_trade(symbol, quantity, price, "open")
 
-            logger.info(
-                f"Opened new {side} position: {symbol} {abs(quantity)} @ {price}"
-            )
+            logger.info("Opened new %s position: %s %s @ %s", side, symbol, abs(quantity), price)
 
         else:
             if quantity > 0:
@@ -328,7 +324,7 @@ class PortfolioManager:
 
                 if current_position.quantity == 0:
                     del self._positions[symbol]
-                    logger.info(f"Closed position: {symbol}, realized PnL: {pnl:.2f}")
+                    logger.info("Closed position: %s, realized PnL: %s", symbol, pnl)
                 else:
                     logger.info(
                         f"Reduced position: {symbol} {quantity} @ {price}, "

@@ -57,7 +57,7 @@ class EMPCascadeTimeline:
         state.major_events.append(
             f"T+0s (Hour {state.simulation_hour}): EMP EVENT - {self.intensity:.0%} intensity"
         )
-        logger.warning(f"🔥 EMP CASCADE INITIATED - Intensity {self.intensity:.0%}")
+        logger.warning("🔥 EMP CASCADE INITIATED - Intensity %s", self.intensity)
 
     def update_cascade(self, state: SectorizedWorldState) -> None:
         """
@@ -135,7 +135,7 @@ class EMPCascadeTimeline:
             f"T+10s: {state.energy.transformers_damaged:,} transformers damaged"
         )
 
-        logger.error(f"⚡ Electronics damage: {state.energy.transformers_damaged:,} transformers lost")
+        logger.error("⚡ Electronics damage: %s transformers lost", state.energy.transformers_damaged)
 
     def _apply_grid_collapse_phase(self, state: SectorizedWorldState, hours: int) -> None:
         """

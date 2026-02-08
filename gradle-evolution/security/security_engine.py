@@ -58,13 +58,13 @@ class SecurityEngine:
         self.config = self._load_config()
         self.access_log: list[dict[str, Any]] = []
         self.denied_operations: list[dict[str, Any]] = []
-        logger.info(f"Security engine initialized from: {self.config_path}")
+        logger.info("Security engine initialized from: %s", self.config_path)
 
     def _load_config(self) -> dict[str, Any]:
         """Load security configuration from YAML."""
         try:
             if not self.config_path.exists():
-                logger.warning(f"Config not found: {self.config_path}, using defaults")
+                logger.warning("Config not found: %s, using defaults", self.config_path)
                 return self._default_config()
 
             with open(self.config_path) as f:
@@ -106,7 +106,7 @@ class SecurityEngine:
             agent_config = agents.get(agent)
 
             if not agent_config:
-                logger.warning(f"No security context for agent: {agent}")
+                logger.warning("No security context for agent: %s", agent)
                 return None
 
             return SecurityContext(
@@ -335,7 +335,7 @@ class SecurityEngine:
         if len(self.denied_operations) > 1000:
             self.denied_operations = self.denied_operations[-1000:]
 
-        logger.warning(f"Denied operation: {agent} {operation} {path} - {reason}")
+        logger.warning("Denied operation: %s %s %s - %s", agent, operation, path, reason)
 
 
 __all__ = ["SecurityEngine", "SecurityContext"]

@@ -40,13 +40,13 @@ def example_basic_activation():
 
     # List available scenarios
     scenarios = engine.list_scenarios()
-    logger.info(f"Available scenarios: {len(scenarios)}")
+    logger.info("Available scenarios: %s", len(scenarios))
 
     # Activate first scenario
     if scenarios:
         scenario_id = scenarios[0]["scenario_id"]
         result = engine.activate_scenario(scenario_id)
-        logger.info(f"Activation result: {result}")
+        logger.info("Activation result: %s", result)
 
     logger.info("Example 1 complete\n")
 
@@ -66,7 +66,7 @@ def example_realtime_monitoring():
     # Monitor for 10 seconds
     for i in range(5):
         status = engine.get_system_status()
-        logger.info(f"Active: {status['active_scenarios']}, Critical: {status['critical_scenarios']}")
+        logger.info("Active: %s, Critical: %s", status['active_scenarios'], status['critical_scenarios'])
         time.sleep(2)
 
     logger.info("Example 2 complete\n")
@@ -96,10 +96,10 @@ def example_monte_carlo():
         n_iterations=1000
     )
 
-    logger.info(f"Mean outcome: {result.mean_outcome:.3f}")
-    logger.info(f"Std deviation: {result.std_outcome:.3f}")
-    logger.info(f"5th percentile: {result.percentile_5:.3f}")
-    logger.info(f"95th percentile: {result.percentile_95:.3f}")
+    logger.info("Mean outcome: %s", result.mean_outcome)
+    logger.info("Std deviation: %s", result.std_outcome)
+    logger.info("5th percentile: %s", result.percentile_5)
+    logger.info("95th percentile: %s", result.percentile_95)
 
     logger.info("Example 3 complete\n")
 
@@ -124,9 +124,9 @@ def example_cerberus_integration():
         context={"attack_vector": "ransomware", "systems_affected": 10}
     )
 
-    logger.info(f"Integration actions: {len(result['actions'])}")
+    logger.info("Integration actions: %s", len(result['actions']))
     for action in result['actions']:
-        logger.info(f"  - {action['action']}: {action['status']}")
+        logger.info("  - %s: %s", action['action'], action['status'])
 
     logger.info("Example 4 complete\n")
 
@@ -149,11 +149,11 @@ def example_historical_replay():
         end_time=time.time()
     )
 
-    logger.info(f"Historical events: {len(history)}")
+    logger.info("Historical events: %s", len(history))
 
     # Replay events
     for event in history[:5]:  # Replay first 5
-        logger.info(f"Replaying: {event.get('event_type')} at {event.get('timestamp')}")
+        logger.info("Replaying: %s at %s", event.get('event_type'), event.get('timestamp'))
 
     logger.info("Example 5 complete\n")
 
@@ -188,7 +188,7 @@ def example_custom_scenario():
 
     # Register scenario
     scenario_id = engine.register_scenario(custom_scenario)
-    logger.info(f"Custom scenario registered: {scenario_id}")
+    logger.info("Custom scenario registered: %s", scenario_id)
 
     logger.info("Example 6 complete\n")
 
@@ -225,9 +225,9 @@ def example_alert_management():
         min_severity=AlertSeverity.WARNING
     )
 
-    logger.info(f"Active alerts: {len(active_alerts)}")
+    logger.info("Active alerts: %s", len(active_alerts))
     for alert in active_alerts:
-        logger.info(f"  [{alert.severity.value}] {alert.title}")
+        logger.info("  [%s] %s", alert.severity.value, alert.title)
 
     # Acknowledge and resolve
     telemetry.alert_manager.acknowledge_alert(alert1.alert_id)
@@ -312,17 +312,17 @@ def example_performance_optimization():
     start = time.time()
     result1 = expensive_computation(10)
     time1 = time.time() - start
-    logger.info(f"First call: {time1:.3f}s")
+    logger.info("First call: %ss", time1)
 
     # Second call (cached, fast)
     start = time.time()
     result2 = expensive_computation(10)
     time2 = time.time() - start
-    logger.info(f"Second call (cached): {time2:.3f}s")
+    logger.info("Second call (cached): %ss", time2)
 
     # Get performance stats
     stats = optimizer.get_performance_stats()
-    logger.info(f"Cache hit rate: {stats['lru_cache']['hit_rate']:.2%}")
+    logger.info("Cache hit rate: %s", stats['lru_cache']['hit_rate'])
 
     logger.info("Example 9 complete\n")
 
@@ -347,8 +347,8 @@ def example_security_hardening():
     )
 
     if success:
-        logger.info(f"User created: {user.username}")
-        logger.info(f"Permissions: {[p.value for p in user.permissions]}")
+        logger.info("User created: %s", user.username)
+        logger.info("Permissions: %s", [p.value for p in user.permissions])
 
     # Authenticate
     success, auth_user = security.access_control.authenticate(
@@ -364,7 +364,7 @@ def example_security_hardening():
             auth_user,
             Permission.EXECUTE
         )
-        logger.info(f"Can execute: {can_execute}")
+        logger.info("Can execute: %s", can_execute)
 
     # Test input validation
     test_inputs = [
@@ -375,7 +375,7 @@ def example_security_hardening():
 
     for test_input in test_inputs:
         is_valid, sanitized = security.validate_input(test_input)
-        logger.info(f"Input '{test_input[:20]}...': Valid={is_valid}")
+        logger.info("Input '%s...': Valid=%s", test_input[, is_valid)
 
     logger.info("Example 10 complete\n")
 
@@ -405,7 +405,7 @@ def run_all_examples():
         try:
             example_fn()
         except Exception as e:
-            logger.error(f"Example {i} failed: {e}")
+            logger.error("Example %s failed: %s", i, e)
 
     logger.info("All examples complete!")
 

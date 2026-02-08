@@ -57,20 +57,20 @@ class AntiTrackerEngine:
         # Check tracking domains
         for domain in self._tracking_domains:
             if domain in url:
-                self.logger.debug(f"Blocking tracker: {url}")
+                self.logger.debug("Blocking tracker: %s", url)
                 self._blocked_trackers.add(domain)
                 self._blocked_count += 1
                 return True
 
         # Block third-party cookies
         if request_type == "cookie" and self._is_third_party(url):
-            self.logger.debug(f"Blocking third-party cookie: {url}")
+            self.logger.debug("Blocking third-party cookie: %s", url)
             self._blocked_count += 1
             return True
 
         # Block tracking pixels
         if self._is_tracking_pixel(url):
-            self.logger.debug(f"Blocking tracking pixel: {url}")
+            self.logger.debug("Blocking tracking pixel: %s", url)
             self._blocked_count += 1
             return True
 

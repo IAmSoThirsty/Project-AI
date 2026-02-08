@@ -54,7 +54,7 @@ class OnionRouter:
             circuit = self._build_circuit()
             if circuit:
                 self._circuits.append(circuit)
-                self.logger.debug(f"Circuit established: {[n['id'] for n in circuit]}")
+                self.logger.debug("Circuit established: %s", [n['id'] for n in circuit])
 
     def _build_circuit(self) -> list[dict[str, Any]]:
         """Build a single onion circuit"""
@@ -99,9 +99,7 @@ class OnionRouter:
         encrypted_request["circuit"] = [node["id"] for node in circuit]
         encrypted_request["encrypted_layers"] = len(circuit)
 
-        self.logger.debug(
-            f"Request routed through circuit: {encrypted_request['circuit']}"
-        )
+        self.logger.debug("Request routed through circuit: %s", encrypted_request['circuit'])
         return encrypted_request
 
     def get_circuits(self) -> list[list[dict[str, Any]]]:
@@ -114,7 +112,7 @@ class OnionRouter:
             new_circuit = self._build_circuit()
             if new_circuit:
                 self._circuits[circuit_index] = new_circuit
-                self.logger.info(f"Circuit {circuit_index} rebuilt")
+                self.logger.info("Circuit %s rebuilt", circuit_index)
 
     def is_active(self) -> bool:
         """Check if onion router is active"""

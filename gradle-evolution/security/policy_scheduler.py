@@ -139,9 +139,7 @@ class PolicyScheduler:
                 current += timedelta(hours=interval_hours)
                 recurrence_count += 1
 
-            logger.info(
-                f"Scheduled {recurrence_count} recurrences of policy '{policy_id}'"
-            )
+            logger.info("Scheduled %s recurrences of policy '%s'", recurrence_count, policy_id)
 
         except Exception as e:
             logger.error(f"Error scheduling recurring policy: {e}", exc_info=True)
@@ -230,7 +228,7 @@ class PolicyScheduler:
             # Execute callbacks
             await self._execute_callbacks(scheduled.policy_id, "activate")
 
-            logger.info(f"Activated policy: {scheduled.policy_id}")
+            logger.info("Activated policy: %s", scheduled.policy_id)
 
         except Exception as e:
             logger.error(f"Error activating policy: {e}", exc_info=True)
@@ -250,7 +248,7 @@ class PolicyScheduler:
             # Execute callbacks
             await self._execute_callbacks(scheduled.policy_id, "deactivate")
 
-            logger.info(f"Deactivated policy: {scheduled.policy_id}")
+            logger.info("Deactivated policy: %s", scheduled.policy_id)
 
         except Exception as e:
             logger.error(f"Error deactivating policy: {e}", exc_info=True)
@@ -271,7 +269,7 @@ class PolicyScheduler:
             self.policy_callbacks[policy_id] = []
 
         self.policy_callbacks[policy_id].append(callback)
-        logger.debug(f"Registered callback for policy: {policy_id}")
+        logger.debug("Registered callback for policy: %s", policy_id)
 
     async def _execute_callbacks(
         self,

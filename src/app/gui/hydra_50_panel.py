@@ -211,7 +211,7 @@ class ScenarioListWidget(QFrame):
             self.populate_list()
 
         except Exception as e:
-            logger.error(f"Failed to refresh scenarios: {e}")
+            logger.error("Failed to refresh scenarios: %s", e)
 
     def populate_list(self):
         """Populate list widget"""
@@ -394,7 +394,7 @@ class StatusDashboardWidget(QFrame):
             self.memory_progress.setValue(int(status.get("memory_percent", 0)))
 
         except Exception as e:
-            logger.error(f"Failed to refresh status: {e}")
+            logger.error("Failed to refresh status: %s", e)
 
 
 # ============================================================================
@@ -496,7 +496,7 @@ class VisualizationWidget(QFrame):
                 self.viz_display.setPlainText(ascii_output)
 
         except Exception as e:
-            logger.error(f"Failed to refresh visualization: {e}")
+            logger.error("Failed to refresh visualization: %s", e)
             self.viz_display.setPlainText(f"Error: {str(e)}")
 
 
@@ -590,7 +590,7 @@ class AlertManagementWidget(QFrame):
                 self.alert_table.setItem(i, 3, QTableWidgetItem(status))
 
         except Exception as e:
-            logger.error(f"Failed to refresh alerts: {e}")
+            logger.error("Failed to refresh alerts: %s", e)
 
     def acknowledge_selected(self):
         """Acknowledge selected alert"""
@@ -669,9 +669,9 @@ class ControlPanelWidget(QFrame):
 
             engine = Hydra50Engine()
             engine.activate_scenario(self.current_scenario_id)
-            logger.info(f"Activated scenario: {self.current_scenario_id}")
+            logger.info("Activated scenario: %s", self.current_scenario_id)
         except Exception as e:
-            logger.error(f"Failed to activate: {e}")
+            logger.error("Failed to activate: %s", e)
 
     def deactivate_scenario(self):
         """Deactivate scenario"""
@@ -682,9 +682,9 @@ class ControlPanelWidget(QFrame):
 
             engine = Hydra50Engine()
             engine.deactivate_scenario(self.current_scenario_id)
-            logger.info(f"Deactivated scenario: {self.current_scenario_id}")
+            logger.info("Deactivated scenario: %s", self.current_scenario_id)
         except Exception as e:
-            logger.error(f"Failed to deactivate: {e}")
+            logger.error("Failed to deactivate: %s", e)
 
     def escalate_scenario(self):
         """Escalate scenario"""
@@ -909,7 +909,7 @@ class HYDRA50Panel(QWidget):
         """Handle scenario selection"""
         self.control_panel.set_scenario(scenario_id)
         self.visualization.set_scenario(scenario_id)
-        logger.info(f"Selected scenario: {scenario_id}")
+        logger.info("Selected scenario: %s", scenario_id)
 
 
 # Export main class

@@ -107,7 +107,7 @@ class LockdownController:
             )
 
         except Exception as e:
-            logger.error(f"Failed to load lockdown state: {e}")
+            logger.error("Failed to load lockdown state: %s", e)
 
     def _save_state(self) -> None:
         """Persist lockdown state to disk."""
@@ -125,7 +125,7 @@ class LockdownController:
                 json.dump(state, f, indent=2)
 
         except Exception as e:
-            logger.error(f"Failed to save lockdown state: {e}")
+            logger.error("Failed to save lockdown state: %s", e)
 
     def compute_lockdown_stage(self, risk_score: float, bypass_depth: int) -> int:
         """
@@ -177,9 +177,7 @@ class LockdownController:
 
         # Check if already at or above this stage
         if stage <= self.current_stage:
-            logger.debug(
-                f"Already at or above stage {stage} (current: {self.current_stage})"
-            )
+            logger.debug("Already at or above stage %s (current: %s)", stage, self.current_stage)
             return {
                 "success": True,
                 "previous_stage": self.current_stage,
@@ -327,7 +325,7 @@ class LockdownController:
             stage = max(0, min(25, stage))
 
             if stage >= self.current_stage:
-                logger.debug(f"Cannot release to higher stage {stage}")
+                logger.debug("Cannot release to higher stage %s", stage)
                 return {
                     "success": False,
                     "reason": "target_stage_higher",

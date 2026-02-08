@@ -249,7 +249,7 @@ class MonteCarloEngine:
             level="INFORMATIONAL"
         )
 
-        logger.info(f"Monte Carlo engine initialized with seed: {seed}")
+        logger.info("Monte Carlo engine initialized with seed: %s", seed)
 
     def set_initial_state(self, state: WorldState) -> None:
         """Set initial world state W_0."""
@@ -406,7 +406,7 @@ class MonteCarloEngine:
         # Validate next state
         valid, errors = next_state.validate()
         if not valid:
-            logger.error(f"Invalid next state: {errors}")
+            logger.error("Invalid next state: %s", errors)
             raise ValueError(f"State evolution produced invalid state: {errors}")
 
         # Compute and store hash
@@ -439,9 +439,9 @@ class MonteCarloEngine:
             self.step()
 
             if (i + 1) % 100 == 0:
-                logger.info(f"Completed {i + 1}/{n_steps} steps")
+                logger.info("Completed %s/%s steps", i + 1, n_steps)
 
-        logger.info(f"Monte Carlo simulation complete: {n_steps} steps")
+        logger.info("Monte Carlo simulation complete: %s steps", n_steps)
         return self.states
 
     def get_current_state(self) -> WorldState | None:

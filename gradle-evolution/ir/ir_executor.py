@@ -185,7 +185,7 @@ class IRExecutor:
         Raises:
             ExecutionError: If execution fails
         """
-        logger.info(f"Starting execution of graph with {len(graph.nodes)} nodes")
+        logger.info("Starting execution of graph with %s nodes", len(graph.nodes))
 
         self.start_time = time.time()
         self.trace.clear()
@@ -219,7 +219,7 @@ class IRExecutor:
                 "trace": [t.to_dict() for t in self.trace] if self.enable_tracing else []
             }
 
-            logger.info(f"Execution completed: {len(self.trace)} nodes in {results['execution_time_ms']:.2f}ms")
+            logger.info("Execution completed: %s nodes in %sms", len(self.trace), results['execution_time_ms'])
             return results
 
         except Exception as e:
@@ -231,7 +231,7 @@ class IRExecutor:
                 "nodes_executed": len(self.trace),
                 "trace": [t.to_dict() for t in self.trace] if self.enable_tracing else []
             }
-            logger.error(f"Execution failed: {e}")
+            logger.error("Execution failed: %s", e)
             if isinstance(e, ExecutionError):
                 raise
             raise ExecutionError(str(e), trace=self.trace)
@@ -240,7 +240,7 @@ class IRExecutor:
         """Execute single IR node"""
         start_time = time.time()
 
-        logger.debug(f"Executing node {node.id}: {node.opcode.value}")
+        logger.debug("Executing node %s: %s", node.id, node.opcode.value)
 
         # Get input values
         input_values = []
@@ -282,7 +282,7 @@ class IRExecutor:
             elif node.opcode == IROpcode.WRITE_FILE:
                 result = self._execute_write_file(node, input_values)
             else:
-                logger.warning(f"Unimplemented opcode: {node.opcode.value}")
+                logger.warning("Unimplemented opcode: %s", node.opcode.value)
                 result = None
 
             # Store result
@@ -328,7 +328,7 @@ class IRExecutor:
     def _execute_validate_policy(self, node: IRNode) -> bool:
         """Execute policy validation"""
         policies = node.attributes.get("policies", [])
-        logger.info(f"Validating policies: {policies}")
+        logger.info("Validating policies: %s", policies)
 
         # In production, integrate with governance system
         # For now, always return True
@@ -339,7 +339,7 @@ class IRExecutor:
         source = node.attributes.get("source", ".")
         output = node.attributes.get("output", "build/")
 
-        logger.info(f"Compiling {source} -> {output}")
+        logger.info("Compiling %s -> %s", source, output)
 
         # Simulate compilation
         return {
@@ -352,7 +352,7 @@ class IRExecutor:
         """Execute tests"""
         suite = node.attributes.get("suite", "pytest")
 
-        logger.info(f"Running tests with {suite}")
+        logger.info("Running tests with %s", suite)
 
         # Simulate test execution
         return {
@@ -367,7 +367,7 @@ class IRExecutor:
         """Execute packaging"""
         format_ = node.attributes.get("format", "wheel")
 
-        logger.info(f"Packaging as {format_}")
+        logger.info("Packaging as %s", format_)
 
         # Simulate packaging
         return {
@@ -380,7 +380,7 @@ class IRExecutor:
         """Execute deployment"""
         target = node.attributes.get("target", "production")
 
-        logger.info(f"Deploying to {target}")
+        logger.info("Deploying to %s", target)
 
         # Simulate deployment
         return {
@@ -415,7 +415,7 @@ class IRExecutor:
         )
 
         self.checkpoints[checkpoint_id] = checkpoint
-        logger.info(f"Created checkpoint: {checkpoint_id}")
+        logger.info("Created checkpoint: %s", checkpoint_id)
 
         return checkpoint_id
 
@@ -423,13 +423,13 @@ class IRExecutor:
         """Execute rollback to checkpoint"""
         checkpoint_id = node.attributes.get("checkpoint_id")
         if not checkpoint_id or checkpoint_id not in self.checkpoints:
-            logger.error(f"Invalid checkpoint ID: {checkpoint_id}")
+            logger.error("Invalid checkpoint ID: %s", checkpoint_id)
             return False
 
         checkpoint = self.checkpoints[checkpoint_id]
         self.context = checkpoint.context
 
-        logger.info(f"Rolled back to checkpoint: {checkpoint_id}")
+        logger.info("Rolled back to checkpoint: %s", checkpoint_id)
         return True
 
     def _execute_arithmetic(self, node: IRNode, inputs: list[Any]) -> Any:
@@ -485,7 +485,7 @@ class IRExecutor:
         self.resource_usage.io_operations += 1
 
         # Simulate file read
-        logger.info(f"Reading file: {path}")
+        logger.info("Reading file: %s", path)
         return f"<content of {path}>"
 
     def _execute_write_file(self, node: IRNode, inputs: list[Any]) -> bool:
@@ -499,7 +499,7 @@ class IRExecutor:
         self.resource_usage.io_operations += 1
 
         # Simulate file write
-        logger.info(f"Writing file: {path}")
+        logger.info("Writing file: %s", path)
         return True
 
     def _check_resource_limits(self) -> None:
@@ -517,7 +517,7 @@ class IRExecutor:
 
     def replay_trace(self, trace: list[dict[str, Any]]) -> dict[str, Any]:
         """Replay execution from trace"""
-        logger.info(f"Replaying {len(trace)} trace entries")
+        logger.info("Replaying %s trace entries", len(trace))
 
         # Reset state
         self.context = ExecutionContext()

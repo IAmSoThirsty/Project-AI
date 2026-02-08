@@ -67,7 +67,7 @@ try:
     from app.core.distributed_cluster_coordinator import create_cluster_coordinator
     from app.core.hardware_auto_discovery import HardwareAutoDiscoverySystem
 except ImportError as e:
-    logging.warning(f"Optional God Tier systems not available: {e}")
+    logging.warning("Optional God Tier systems not available: %s", e)
 
 logger = logging.getLogger(__name__)
 
@@ -251,7 +251,7 @@ class GodTierIntegratedSystem:
                     self.cluster_coordinator.start()
                     logger.info("✅ Cluster Coordinator initialized")
                 except Exception as e:
-                    logger.warning(f"Cluster Coordinator unavailable: {e}")
+                    logger.warning("Cluster Coordinator unavailable: %s", e)
 
             # 8. Initialize Hardware Discovery (optional)
             if self.config.hardware_discovery_enabled:
@@ -263,7 +263,7 @@ class GodTierIntegratedSystem:
                     self.hardware_system.start()
                     logger.info("✅ Hardware Auto-Discovery initialized")
                 except Exception as e:
-                    logger.warning(f"Hardware Discovery unavailable: {e}")
+                    logger.warning("Hardware Discovery unavailable: %s", e)
 
             # Wire up cross-system integrations
             self._wire_integrations()
@@ -275,7 +275,7 @@ class GodTierIntegratedSystem:
             return True
 
         except Exception as e:
-            logger.error(f"Failed to initialize God Tier system: {e}")
+            logger.error("Failed to initialize God Tier system: %s", e)
             self.status = SystemStatus.CRITICAL
             return False
 
@@ -322,7 +322,7 @@ class GodTierIntegratedSystem:
             logger.info("✅ Cross-system integrations wired")
 
         except Exception as e:
-            logger.error(f"Error wiring integrations: {e}")
+            logger.error("Error wiring integrations: %s", e)
 
     def shutdown(self) -> bool:
         """Gracefully shutdown all systems."""
@@ -372,7 +372,7 @@ class GodTierIntegratedSystem:
             return True
 
         except Exception as e:
-            logger.error(f"Error during shutdown: {e}")
+            logger.error("Error during shutdown: %s", e)
             return False
 
     def get_system_status(self) -> dict[str, Any]:
@@ -432,7 +432,7 @@ class GodTierIntegratedSystem:
                 return status
 
         except Exception as e:
-            logger.error(f"Error getting system status: {e}")
+            logger.error("Error getting system status: %s", e)
             return {"error": str(e)}
 
     def process_event(self, event_type: str, data: dict[str, Any]) -> bool:
@@ -475,7 +475,7 @@ class GodTierIntegratedSystem:
             return True
 
         except Exception as e:
-            logger.error(f"Error processing event: {e}")
+            logger.error("Error processing event: %s", e)
             return False
 
 
