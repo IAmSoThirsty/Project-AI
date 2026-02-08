@@ -87,7 +87,7 @@ class TestEventInjection:
             {
                 "target_country": "USA",
                 "severity": "high",
-            }
+            },
         )
 
         assert event_id.startswith("evt_")
@@ -106,7 +106,7 @@ class TestEventInjection:
             {
                 "severity": "medium",
                 "description": "Peace talks successful",
-            }
+            },
         )
 
         assert event_id is not None
@@ -364,7 +364,7 @@ class TestIntegration:
                     {
                         "target_country": "USA",
                         "severity": "critical",
-                    }
+                    },
                 )
 
         # Should have at least one event

@@ -14,6 +14,7 @@ from pydantic import BaseModel
 # Import Legion agent
 try:
     from integrations.openclaw.agent_adapter import LegionAgent
+
     LEGION_AVAILABLE = True
 except ImportError:
     LEGION_AVAILABLE = False
@@ -24,8 +25,10 @@ except ImportError:
 # Models
 # ============================================
 
+
 class ChatMessage(BaseModel):
     """User message to Legion"""
+
     message: str
     user_id: str
     platform: str = "web"
@@ -34,6 +37,7 @@ class ChatMessage(BaseModel):
 
 class ChatResponse(BaseModel):
     """Legion's response"""
+
     response: str
     agent_id: str
     timestamp: float
@@ -42,6 +46,7 @@ class ChatResponse(BaseModel):
 
 class LegionStatus(BaseModel):
     """Legion system status"""
+
     agent_id: str
     status: str
     learning_active: bool
@@ -57,7 +62,7 @@ class LegionStatus(BaseModel):
 app = FastAPI(
     title="Legion Interface",
     description="Single-gate interface to Project-AI via Triumvirate governance",
-    version="1.0.0"
+    version="1.0.0",
 )
 
 # CORS for web interface
@@ -71,6 +76,7 @@ app.add_middleware(
 
 # Initialize Legion
 legion: LegionAgent | None = None
+
 
 @app.on_event("startup")
 async def startup():
@@ -90,7 +96,7 @@ async def startup():
 async def shutdown():
     """Cleanup on shutdown"""
     global legion
-    if legion and hasattr(legion, 'learning_engine'):
+    if legion and hasattr(legion, "learning_engine"):
         await legion.stop_background_learning()
         print("[Legion] Background learning stopped")
 
@@ -98,6 +104,7 @@ async def shutdown():
 # ============================================
 # Endpoints
 # ============================================
+
 
 @app.get("/")
 async def root():
@@ -110,8 +117,8 @@ async def root():
         "endpoints": {
             "chat": "POST /chat",
             "status": "GET /status",
-            "health": "GET /health"
-        }
+            "health": "GET /health",
+        },
     }
 
 
@@ -121,7 +128,7 @@ async def health():
     return {
         "status": "healthy",
         "legion_available": LEGION_AVAILABLE,
-        "legion_initialized": legion is not None
+        "legion_initialized": legion is not None,
     }
 
 
@@ -137,9 +144,13 @@ async def get_status():
         agent_id=legion.agent_id,
         status="active",
         learning_active=learning_stats.get("status") == "active",
-        capabilities_loaded=len(legion.capability_registry.capabilities) if legion.capability_registry else 0,
+        capabilities_loaded=(
+            len(legion.capability_registry.capabilities)
+            if legion.capability_registry
+            else 0
+        ),
         triumvirate_connected=legion.triumvirate_client is not None,
-        eed_connected=legion.eed is not None
+        eed_connected=legion.eed is not None,
     )
 
 
@@ -160,15 +171,16 @@ async def chat(msg: ChatMessage) -> ChatResponse:
             message=msg.message,
             user_id=msg.user_id,
             platform=msg.platform,
-            metadata=msg.metadata
+            metadata=msg.metadata,
         )
 
         import time
+
         return ChatResponse(
             response=response,
             agent_id=legion.agent_id,
             timestamp=time.time(),
-            governed=True  # Always governed by Triumvirate
+            governed=True,  # Always governed by Triumvirate
         )
 
     except Exception as e:
@@ -223,9 +235,4 @@ if __name__ == "__main__":
     print("\nNote: Project-AI API must be running on port 8001")
     print("=" * 60 + "\n")
 
-    uvicorn.run(
-        app,
-        host="0.0.0.0",
-        port=8002,
-        log_level="info"
-    )
+    uvicorn.run(app, host="0.0.0.0", port=8002, log_level="info")

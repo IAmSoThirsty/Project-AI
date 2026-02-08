@@ -30,7 +30,9 @@ async def validate_learning_content(request: dict) -> bool:
     Returns:
         True if content is valid, False otherwise
     """
-    activity.logger.info("Validating learning content for category: %s", request.get('category'))
+    activity.logger.info(
+        "Validating learning content for category: %s", request.get("category")
+    )
 
     content = request.get("content", "")
 
@@ -53,7 +55,7 @@ async def validate_learning_content(request: dict) -> bool:
         "facts",
     ]
     if request.get("category") not in valid_categories:
-        activity.logger.warning("Invalid category: %s", request.get('category'))
+        activity.logger.warning("Invalid category: %s", request.get("category"))
         return False
 
     activity.logger.info("Content validation passed")
@@ -103,7 +105,7 @@ async def process_learning_request(request: dict) -> str:
     Returns:
         Generated knowledge ID
     """
-    activity.logger.info("Processing learning request: %s", request.get('source'))
+    activity.logger.info("Processing learning request: %s", request.get("source"))
 
     # Generate unique knowledge ID
     timestamp = datetime.now().isoformat()
@@ -221,7 +223,7 @@ async def generate_image(request: dict) -> dict:
     Returns:
         Dictionary with image_path and metadata
     """
-    activity.logger.info("Generating image with %s backend", request.get('backend'))
+    activity.logger.info("Generating image with %s backend", request.get("backend"))
 
     # In production, this would call the actual ImageGenerator
     # For now, return a placeholder result
@@ -436,7 +438,9 @@ async def store_memories(data: dict) -> int:
     conversation_id = data.get("conversation_id")
     info = data.get("info", [])
 
-    activity.logger.info("Storing %s memories for conversation: %s", len(info), conversation_id)
+    activity.logger.info(
+        "Storing %s memories for conversation: %s", len(info), conversation_id
+    )
 
     memory_path = Path("data/memory/conversations.json")
     memory_path.parent.mkdir(parents=True, exist_ok=True)
@@ -501,7 +505,9 @@ async def validate_crisis_request(request: dict) -> bool:
     Returns:
         True if request is valid, False otherwise
     """
-    activity.logger.info("Validating crisis request for target: %s", request.get('target_member'))
+    activity.logger.info(
+        "Validating crisis request for target: %s", request.get("target_member")
+    )
 
     # Validate target member
     target = request.get("target_member")
@@ -541,7 +547,9 @@ async def initialize_crisis_response(data: dict) -> bool:
     crisis_id = data.get("crisis_id")
     target = data.get("target")
 
-    activity.logger.info("Initializing crisis response: %s for target: %s", crisis_id, target)
+    activity.logger.info(
+        "Initializing crisis response: %s for target: %s", crisis_id, target
+    )
 
     # Ensure data directory exists
     crisis_path = Path("data/crises")
@@ -598,7 +606,9 @@ async def perform_agent_mission(mission: dict) -> bool:
     # - Monitor agent progress
     # - Handle agent-specific errors
 
-    activity.logger.info("Agent %s deployed successfully for mission phase %s", agent_id, phase_id)
+    activity.logger.info(
+        "Agent %s deployed successfully for mission phase %s", agent_id, phase_id
+    )
 
     return True
 

@@ -39,9 +39,17 @@ def run_kernel_service():
     logger.info("")
     logger.info("Status:")
     logger.info("  - Version: %s", kernel.VERSION)
-    logger.info("  - AI Detection: %s", 'ACTIVE' if kernel.config.enable_ai_detection else 'DISABLED')
-    logger.info("  - Deception: %s", 'ACTIVE' if kernel.config.enable_deception else 'DISABLED')
-    logger.info("  - Visualization: %s", 'ACTIVE' if kernel.config.enable_visualization else 'DISABLED')
+    logger.info(
+        "  - AI Detection: %s",
+        "ACTIVE" if kernel.config.enable_ai_detection else "DISABLED",
+    )
+    logger.info(
+        "  - Deception: %s", "ACTIVE" if kernel.config.enable_deception else "DISABLED"
+    )
+    logger.info(
+        "  - Visualization: %s",
+        "ACTIVE" if kernel.config.enable_visualization else "DISABLED",
+    )
 
     if hasattr(kernel, "learning_engine") and kernel.learning_engine:
         logger.info("  - Learning Engine: ACTIVE")
@@ -68,7 +76,11 @@ def run_kernel_service():
     for label, user_id, cmd in test_commands:
         logger.info("[%s %s] Executing: %s", label, user_id, cmd)
         result = kernel.execute_command(user_id, cmd)
-        logger.info("  → Layer %s: %s", result.get('current_layer', result.get('layer', '?')), result['status'])
+        logger.info(
+            "  → Layer %s: %s",
+            result.get("current_layer", result.get("layer", "?")),
+            result["status"],
+        )
         logger.info("")
         time.sleep(1)
 
@@ -89,7 +101,12 @@ def run_kernel_service():
             time.sleep(30)
             counter += 1
             status = kernel.get_system_status()
-            logger.info("[Heartbeat %s] Kernel ACTIVE - Commands: %s, Threats: %s", counter, status['total_commands'], status['threats_detected'])
+            logger.info(
+                "[Heartbeat %s] Kernel ACTIVE - Commands: %s, Threats: %s",
+                counter,
+                status["total_commands"],
+                status["threats_detected"],
+            )
 
     except KeyboardInterrupt:
         logger.info("\n\n🛑 Kernel shutdown requested")

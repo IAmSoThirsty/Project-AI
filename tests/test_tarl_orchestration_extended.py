@@ -50,7 +50,7 @@ class TestTaskQueue:
         """Test task leasing"""
         queue = TaskQueue("test_queue", data_dir=tempfile.mkdtemp())
 
-        task_id = queue.enqueue(
+        queue.enqueue(
             workflow_id="wf_001",
             task_type="processing",
             payload={"data": [1, 2, 3]},
@@ -66,7 +66,7 @@ class TestTaskQueue:
         """Test task completion"""
         queue = TaskQueue("test_queue", data_dir=tempfile.mkdtemp())
 
-        task_id = queue.enqueue("wf_001", "processing", {})
+        queue.enqueue("wf_001", "processing", {})
         task = queue.lease_task("worker_1")
 
         queue.complete_task("worker_1", task.task_id, result="success")
@@ -78,7 +78,7 @@ class TestTaskQueue:
         """Test task failure with retry"""
         queue = TaskQueue("test_queue", data_dir=tempfile.mkdtemp())
 
-        task_id = queue.enqueue("wf_001", "processing", {})
+        queue.enqueue("wf_001", "processing", {})
         task = queue.lease_task("worker_1")
 
         queue.fail_task("worker_1", task.task_id, error="Test error")
@@ -92,7 +92,7 @@ class TestTaskQueue:
         """Test task failure after max retries"""
         queue = TaskQueue("test_queue", data_dir=tempfile.mkdtemp())
 
-        task_id = queue.enqueue("wf_001", "processing", {})
+        queue.enqueue("wf_001", "processing", {})
 
         # Fail task 3 times (max_attempts)
         for _ in range(3):
@@ -227,7 +227,7 @@ class TestLongRunningWorkflowManager:
         def failing_callback():
             raise ValueError("Test error")
 
-        timer_id = manager.schedule_timer("wf_001", delay=0, callback=failing_callback)
+        manager.schedule_timer("wf_001", delay=0, callback=failing_callback)
 
         # Should not raise exception
         fired = manager.fire_timers()

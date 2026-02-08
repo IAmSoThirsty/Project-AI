@@ -71,7 +71,9 @@ class CoverageReporter:
             )
 
             if result.returncode != 0:
-                logger.warning("Coverage run had non-zero exit code: %s", result.returncode)
+                logger.warning(
+                    "Coverage run had non-zero exit code: %s", result.returncode
+                )
                 logger.debug("STDOUT: %s", result.stdout)
                 logger.debug("STDERR: %s", result.stderr)
 
@@ -177,13 +179,23 @@ class CoverageReporter:
         meets_threshold = metrics.coverage_percentage >= threshold
 
         if not meets_threshold:
-            logger.warning("Coverage %s%% below threshold %s%%", metrics.coverage_percentage, threshold)
+            logger.warning(
+                "Coverage %s%% below threshold %s%%",
+                metrics.coverage_percentage,
+                threshold,
+            )
         else:
-            logger.info("Coverage %s%% meets threshold %s%%", metrics.coverage_percentage, threshold)
+            logger.info(
+                "Coverage %s%% meets threshold %s%%",
+                metrics.coverage_percentage,
+                threshold,
+            )
 
         return meets_threshold
 
-    def save_report(self, metrics: CoverageMetrics, filename: str = "coverage_report.txt") -> Path:
+    def save_report(
+        self, metrics: CoverageMetrics, filename: str = "coverage_report.txt"
+    ) -> Path:
         """Save coverage report to file.
 
         Args:

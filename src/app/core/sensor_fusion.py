@@ -243,10 +243,7 @@ class KalmanFilter:
             measurement: Measurement vector [x, y, z]
             measurement_noise: Optional measurement noise covariance
         """
-        if measurement_noise is not None:
-            R = measurement_noise
-        else:
-            R = self.R
+        R = measurement_noise if measurement_noise is not None else self.R
 
         # Innovation
         y = measurement - self.H @ self.state
@@ -475,8 +472,7 @@ class SensorFusionEngine(
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS sensors (
                 sensor_id TEXT PRIMARY KEY,
                 sensor_type TEXT,
@@ -490,11 +486,9 @@ class SensorFusionEngine(
                 last_seen REAL,
                 metadata TEXT
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS sensor_readings (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 sensor_id TEXT,
@@ -502,11 +496,9 @@ class SensorFusionEngine(
                 data TEXT,
                 confidence REAL
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS threats (
                 threat_id TEXT PRIMARY KEY,
                 threat_type TEXT,
@@ -519,11 +511,9 @@ class SensorFusionEngine(
                 confidence REAL,
                 metadata TEXT
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS fused_states (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 timestamp REAL,
@@ -535,8 +525,7 @@ class SensorFusionEngine(
                 velocity_z REAL,
                 confidence REAL
             )
-        """
-        )
+        """)
 
         conn.commit()
         conn.close()
@@ -598,7 +587,9 @@ class SensorFusionEngine(
         # Check worker threads
         alive_threads = sum(1 for t in self.worker_threads if t.is_alive())
         if alive_threads < len(self.worker_threads):
-            self.logger.warning("Only %s/%s workers alive", alive_threads, len(self.worker_threads))
+            self.logger.warning(
+                "Only %s/%s workers alive", alive_threads, len(self.worker_threads)
+            )
             return False
 
         # Check sensor health
@@ -722,7 +713,7 @@ class SensorFusionEngine(
 
         try:
             # Analyze sensor data for threat signatures
-            for sensor_id, readings in self.sensor_buffers.items():
+            for _sensor_id, readings in self.sensor_buffers.items():
                 if not readings:
                     continue
 
@@ -887,7 +878,7 @@ class SensorFusionEngine(
                 current_time = time.time()
 
                 # Check sensor health
-                for sensor_id, sensor in self.sensors.items():
+                for _sensor_id, sensor in self.sensors.items():
                     time_since_seen = current_time - sensor.last_seen
 
                     if time_since_seen > 30:
@@ -1138,9 +1129,8 @@ class SensorFusionEngine(
 
     def validate_config(self, config: dict[str, Any]) -> tuple[bool, str | None]:
         """Validate configuration"""
-        if "anomaly_threshold" in config:
-            if config["anomaly_threshold"] <= 0:
-                return False, "anomaly_threshold must be positive"
+        if "anomaly_threshold" in config and config["anomaly_threshold"] <= 0:
+            return False, "anomaly_threshold must be positive"
         return True, None
 
     def subscribe(self, event_type: str, callback: Callable) -> str:
@@ -1162,7 +1152,7 @@ class SensorFusionEngine(
     def emit_event(self, event_type: str, data: Any) -> int:
         """Emit event to subscribers"""
         count = 0
-        for sub_id, callback in self.subscribers.get(event_type, []):
+        for _sub_id, callback in self.subscribers.get(event_type, []):
             try:
                 callback(data)
                 count += 1

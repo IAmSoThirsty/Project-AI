@@ -43,7 +43,11 @@ class HydraTestRunner:
         with open(dataset_path) as f:
             self.dataset = json.load(f)
 
-        logger.info("Loaded Hydra dataset: %s tests across %s categories", self.dataset['total_tests'], self.dataset['categories'])
+        logger.info(
+            "Loaded Hydra dataset: %s tests across %s categories",
+            self.dataset["total_tests"],
+            self.dataset["categories"],
+        )
 
     def run_all_tests(self) -> dict:
         """
@@ -54,11 +58,21 @@ class HydraTestRunner:
         """
         start_time = time.time()
         logger.info("🐉 Starting HYDRA DEFENSE evaluation...")
-        logger.info("   %s tests across %s categories", self.dataset['total_tests'], self.dataset['categories'])
+        logger.info(
+            "   %s tests across %s categories",
+            self.dataset["total_tests"],
+            self.dataset["categories"],
+        )
 
         # Process each test
         for i, test in enumerate(self.dataset["tests"], 1):
-            logger.info("Processing %s/%s: %s - %s", i, self.dataset['total_tests'], test['id'], test['threat_type'])
+            logger.info(
+                "Processing %s/%s: %s - %s",
+                i,
+                self.dataset["total_tests"],
+                test["id"],
+                test["threat_type"],
+            )
 
             # Reset model state for clean test
             self.model = GalahadModel()
@@ -208,9 +222,9 @@ class HydraTestRunner:
 
     def _log_summary(self, metrics: dict):
         """Log test summary"""
-        logger.info("\nHarmful block rate: %s%%", metrics['harmful_block_rate'])
-        logger.info("Vulnerability rate: %s%%", metrics['vulnerability_rate'])
-        logger.info("Overall accuracy: %s%%", metrics['overall_accuracy'])
+        logger.info("\nHarmful block rate: %s%%", metrics["harmful_block_rate"])
+        logger.info("Vulnerability rate: %s%%", metrics["vulnerability_rate"])
+        logger.info("Overall accuracy: %s%%", metrics["overall_accuracy"])
 
         status = metrics["pass_status"]
         if status == "PASSED":

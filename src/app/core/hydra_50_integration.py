@@ -92,7 +92,11 @@ class PlanetaryDefenseIntegration:
             )
 
             if not is_allowed:
-                logger.warning("Mitigation blocked by Constitutional Core: %s - %s", mitigation_action, reason)
+                logger.warning(
+                    "Mitigation blocked by Constitutional Core: %s - %s",
+                    mitigation_action,
+                    reason,
+                )
 
             return is_allowed, reason
 
@@ -121,7 +125,10 @@ class PlanetaryDefenseIntegration:
 
         try:
             pd.receive_threat_assessment(threat_data)
-            logger.info("Threat assessment sent to Planetary Defense: %s active scenarios", state['active_count'])
+            logger.info(
+                "Threat assessment sent to Planetary Defense: %s active scenarios",
+                state["active_count"],
+            )
         except Exception as e:
             logger.error("Failed to send threat assessment: %s", e)
 
@@ -298,7 +305,11 @@ class GlobalScenarioEngineIntegration:
                         metrics=metrics,
                         user_id=external_data.get("source"),
                     )
-                    logger.info("Updated %s from external source: %s", scenario_id, external_data.get('source'))
+                    logger.info(
+                        "Updated %s from external source: %s",
+                        scenario_id,
+                        external_data.get("source"),
+                    )
                 except Exception as e:
                     logger.error("Failed to update %s: %s", scenario_id, e)
 

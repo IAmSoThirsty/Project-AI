@@ -103,9 +103,7 @@ class E2ETestEnvironment:
         logger.debug("Created test users file: %s", users_file)
 
         # Create test AI persona state
-        persona_state_file = (
-            self.temp_dir / "data" / "ai_persona" / "state.json"
-        )
+        persona_state_file = self.temp_dir / "data" / "ai_persona" / "state.json"
         test_persona_state = {
             "personality_traits": {
                 "curiosity": 0.8,

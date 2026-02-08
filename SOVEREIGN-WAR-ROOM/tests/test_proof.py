@@ -20,7 +20,7 @@ def sample_decision():
         "decision": "proceed",
         "confidence": 0.85,
         "reasoning": "Optimal path chosen",
-        "internal_state": {"step": 1}
+        "internal_state": {"step": 1},
     }
 
 
@@ -30,7 +30,7 @@ def sample_reasoning():
     return {
         "approach": "utility_maximization",
         "factors": ["safety", "efficiency", "cost"],
-        "trade_offs": {"safety": 0.9, "efficiency": 0.7}
+        "trade_offs": {"safety": 0.9, "efficiency": 0.7},
     }
 
 
@@ -41,7 +41,7 @@ def sample_governance_report():
         "overall_status": "compliant",
         "violations": [],
         "warnings": [],
-        "total_rules_checked": 8
+        "total_rules_checked": 8,
     }
 
 
@@ -55,18 +55,11 @@ class TestProofSystem:
         assert len(proof_system.proof_store) == 0
 
     def test_generate_decision_proof(
-        self,
-        proof_system,
-        sample_decision,
-        sample_reasoning,
-        sample_governance_report
+        self, proof_system, sample_decision, sample_reasoning, sample_governance_report
     ):
         """Test generating a decision proof."""
         proof = proof_system.generate_decision_proof(
-            "scenario_001",
-            sample_decision,
-            sample_reasoning,
-            sample_governance_report
+            "scenario_001", sample_decision, sample_reasoning, sample_governance_report
         )
 
         assert proof is not None
@@ -79,8 +72,7 @@ class TestProofSystem:
     def test_generate_compliance_proof(self, proof_system, sample_governance_report):
         """Test generating a compliance proof."""
         proof = proof_system.generate_compliance_proof(
-            "scenario_002",
-            sample_governance_report
+            "scenario_002", sample_governance_report
         )
 
         assert proof is not None
@@ -92,7 +84,7 @@ class TestProofSystem:
         audit_data = {
             "entries": [
                 {"action": "test1", "timestamp": "2024-01-01T00:00:00"},
-                {"action": "test2", "timestamp": "2024-01-01T00:01:00"}
+                {"action": "test2", "timestamp": "2024-01-01T00:01:00"},
             ]
         }
 
@@ -102,18 +94,11 @@ class TestProofSystem:
         assert proof.proof_type == ProofType.AUDIT_PROOF
 
     def test_verify_valid_proof(
-        self,
-        proof_system,
-        sample_decision,
-        sample_reasoning,
-        sample_governance_report
+        self, proof_system, sample_decision, sample_reasoning, sample_governance_report
     ):
         """Test verifying a valid proof."""
         proof = proof_system.generate_decision_proof(
-            "scenario_003",
-            sample_decision,
-            sample_reasoning,
-            sample_governance_report
+            "scenario_003", sample_decision, sample_reasoning, sample_governance_report
         )
 
         verification = proof_system.verify_proof(proof)
@@ -124,18 +109,11 @@ class TestProofSystem:
         assert verification["key_valid"] is True
 
     def test_verify_proof_with_witness(
-        self,
-        proof_system,
-        sample_decision,
-        sample_reasoning,
-        sample_governance_report
+        self, proof_system, sample_decision, sample_reasoning, sample_governance_report
     ):
         """Test verifying proof with witness revelation."""
         proof = proof_system.generate_decision_proof(
-            "scenario_004",
-            sample_decision,
-            sample_reasoning,
-            sample_governance_report
+            "scenario_004", sample_decision, sample_reasoning, sample_governance_report
         )
 
         verification = proof_system.verify_proof(proof, reveal_witness=True)
@@ -145,18 +123,11 @@ class TestProofSystem:
         assert verification["witness"]["full_decision"] == sample_decision
 
     def test_verify_tampered_proof(
-        self,
-        proof_system,
-        sample_decision,
-        sample_reasoning,
-        sample_governance_report
+        self, proof_system, sample_decision, sample_reasoning, sample_governance_report
     ):
         """Test that tampered proofs are detected."""
         proof = proof_system.generate_decision_proof(
-            "scenario_005",
-            sample_decision,
-            sample_reasoning,
-            sample_governance_report
+            "scenario_005", sample_decision, sample_reasoning, sample_governance_report
         )
 
         # Tamper with the proof
@@ -167,18 +138,11 @@ class TestProofSystem:
         assert verification["valid"] is False
 
     def test_verify_decision_against_scenario(
-        self,
-        proof_system,
-        sample_decision,
-        sample_reasoning,
-        sample_governance_report
+        self, proof_system, sample_decision, sample_reasoning, sample_governance_report
     ):
         """Test verifying decision matches expected outcome."""
         proof = proof_system.generate_decision_proof(
-            "scenario_006",
-            sample_decision,
-            sample_reasoning,
-            sample_governance_report
+            "scenario_006", sample_decision, sample_reasoning, sample_governance_report
         )
 
         # Should match
@@ -188,18 +152,11 @@ class TestProofSystem:
         assert proof_system.verify_decision_against_scenario(proof, "abort") is False
 
     def test_get_proof(
-        self,
-        proof_system,
-        sample_decision,
-        sample_reasoning,
-        sample_governance_report
+        self, proof_system, sample_decision, sample_reasoning, sample_governance_report
     ):
         """Test retrieving a proof by ID."""
         proof = proof_system.generate_decision_proof(
-            "scenario_007",
-            sample_decision,
-            sample_reasoning,
-            sample_governance_report
+            "scenario_007", sample_decision, sample_reasoning, sample_governance_report
         )
 
         retrieved = proof_system.get_proof(proof.proof_id)
@@ -215,12 +172,11 @@ class TestProofSystem:
                 f"scenario_{i}",
                 {"decision": f"test_{i}"},
                 {},
-                {"overall_status": "compliant"}
+                {"overall_status": "compliant"},
             )
 
         proof_system.generate_compliance_proof(
-            "scenario_compliance",
-            {"overall_status": "compliant"}
+            "scenario_compliance", {"overall_status": "compliant"}
         )
 
         # List all proofs
@@ -232,7 +188,9 @@ class TestProofSystem:
         assert len(decision_proofs) >= 5
         assert all(p.proof_type == ProofType.DECISION_PROOF for p in decision_proofs)
 
-        compliance_proofs = proof_system.list_proofs(proof_type=ProofType.COMPLIANCE_PROOF)
+        compliance_proofs = proof_system.list_proofs(
+            proof_type=ProofType.COMPLIANCE_PROOF
+        )
         assert len(compliance_proofs) >= 1
 
         # Filter by scenario
@@ -249,7 +207,7 @@ class TestProofSystem:
                 f"chain_scenario_{i}",
                 {"decision": f"test_{i}"},
                 {},
-                {"overall_status": "compliant"}
+                {"overall_status": "compliant"},
             )
             proofs.append(proof)
 
@@ -270,7 +228,7 @@ class TestProofSystem:
             "scenario_persist",
             sample_decision,
             sample_reasoning,
-            {"overall_status": "compliant"}
+            {"overall_status": "compliant"},
         )
 
         assert len(proof_system.proof_store) == initial_count + 1
@@ -289,7 +247,7 @@ class TestProofModel:
             commitment="test_commitment",
             verification_key="test_key",
             proof_data="test_proof_data",
-            scenario_id="test_scenario"
+            scenario_id="test_scenario",
         )
 
         assert proof.proof_id == "test_proof_001"
@@ -311,10 +269,7 @@ class TestCryptoIntegration:
         """Test that proofs maintain cryptographic integrity."""
         decision = {"decision": "test", "data": "sensitive"}
         proof = proof_system.generate_decision_proof(
-            "crypto_test",
-            decision,
-            {},
-            {"overall_status": "compliant"}
+            "crypto_test", decision, {}, {"overall_status": "compliant"}
         )
 
         # Proof should be valid

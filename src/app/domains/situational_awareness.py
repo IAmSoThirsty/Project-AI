@@ -234,7 +234,9 @@ class SituationalAwarenessSubsystem(
             return True
 
         except Exception as e:
-            self.logger.error("Failed to initialize Situational Awareness subsystem: %s", e)
+            self.logger.error(
+                "Failed to initialize Situational Awareness subsystem: %s", e
+            )
             return False
 
     def shutdown(self) -> bool:
@@ -278,7 +280,9 @@ class SituationalAwarenessSubsystem(
             if last_update:
                 age = datetime.now() - last_update
                 if age > timedelta(seconds=self.sensor_fusion_interval * 10):
-                    self.logger.warning("Fused state is stale (age=%ss)", age.total_seconds())
+                    self.logger.warning(
+                        "Fused state is stale (age=%ss)", age.total_seconds()
+                    )
                     return False
 
         return True
@@ -527,7 +531,9 @@ class SituationalAwarenessSubsystem(
                 try:
                     callback(data)
                 except Exception as e:
-                    self.logger.error("Error in event callback %s: %s", subscription_id, e)
+                    self.logger.error(
+                        "Error in event callback %s: %s", subscription_id, e
+                    )
 
             return len(subscribers)
 

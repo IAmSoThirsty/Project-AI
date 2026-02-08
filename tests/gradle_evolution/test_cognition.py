@@ -61,7 +61,7 @@ class TestBuildCognitionEngine:
         engine = BuildCognitionEngine(mock_deliberation_engine)
 
         # Simulate multiple builds to establish patterns
-        for i in range(3):
+        for _i in range(3):
             tasks = sample_build_context["tasks"]
             with patch(
                 "gradle_evolution.cognition.build_cognition.check_boundary",
@@ -111,19 +111,21 @@ class TestBuildCognitionEngine:
         tasks = ["compile", "test"]
         context = {"dependencies": {"compile": ["test"]}}
 
-        with patch(
-            "gradle_evolution.cognition.build_cognition.check_boundary",
-            return_value=True,
-        ):
-            with patch.object(
+        with (
+            patch(
+                "gradle_evolution.cognition.build_cognition.check_boundary",
+                return_value=True,
+            ),
+            patch.object(
                 engine, "_validate_task_order", return_value=False
-            ) as mock_validate:
-                optimized, reasoning = engine.deliberate_build_plan(tasks, context)
+            ) as mock_validate,
+        ):
+            optimized, reasoning = engine.deliberate_build_plan(tasks, context)
 
-                # Should call validation
-                mock_validate.assert_called_once()
-                # Should revert to original due to invariant violation
-                assert optimized == tasks
+            # Should call validation
+            mock_validate.assert_called_once()
+            # Should revert to original due to invariant violation
+            assert optimized == tasks
 
     def test_error_handling(self, mock_deliberation_engine):
         """Test error handling in deliberation."""

@@ -23,8 +23,8 @@ SCENARIOS = {
                 "user_id": "attacker_001",
                 "current_privilege": "user",
                 "target_privilege": "admin",
-                "mfa_verified": False
-            }
+                "mfa_verified": False,
+            },
         },
         "result": {
             "allowed": False,
@@ -32,8 +32,8 @@ SCENARIOS = {
             "violations": ["privilege_escalation_approval"],
             "rfi_score": 0.25,
             "threat_level": "HIGH",
-            "actions_taken": ["HALT", "SNAPSHOT", "ESCALATE"]
-        }
+            "actions_taken": ["HALT", "SNAPSHOT", "ESCALATE"],
+        },
     },
     "cross_tenant": {
         "name": "Cross-Tenant Data Access",
@@ -42,34 +42,30 @@ SCENARIOS = {
             "context": {
                 "user_tenant": "tenant_a",
                 "target_tenant": "tenant_b",
-                "authorization": None
-            }
+                "authorization": None,
+            },
         },
         "result": {
             "allowed": False,
             "failure_reason": "Constitutional violation: cross_tenant_authorization",
             "violations": ["cross_tenant_authorization"],
             "rfi_score": 0.30,
-            "threat_level": "HIGH"
-        }
+            "threat_level": "HIGH",
+        },
     },
     "trust_score": {
         "name": "Trust Score Manipulation",
         "input": {
             "action": "modify_trust_score",
-            "context": {
-                "user_id": "user_001",
-                "new_score": 1.0,
-                "justification": None
-            }
+            "context": {"user_id": "user_001", "new_score": 1.0, "justification": None},
         },
         "result": {
             "allowed": False,
             "failure_reason": "Constitutional violation: modify_trust_score",
             "violations": ["modify_trust_score"],
             "rfi_score": 0.40,
-            "threat_level": "MEDIUM"
-        }
+            "threat_level": "MEDIUM",
+        },
     },
     "clock_skew": {
         "name": "Clock Skew Exploitation",
@@ -78,16 +74,16 @@ SCENARIOS = {
             "context": {
                 "system_time": "2026-02-08T06:00:00Z",
                 "actual_time": "2026-02-08T05:50:00Z",
-                "skew_minutes": 10
-            }
+                "skew_minutes": 10,
+            },
         },
         "result": {
             "allowed": False,
             "failure_reason": "Temporal anomaly detected: 10-minute clock skew",
             "temporal_anomaly": True,
             "rfi_score": 0.20,
-            "threat_level": "CRITICAL"
-        }
+            "threat_level": "CRITICAL",
+        },
     },
     "combined": {
         "name": "Combined Multi-Stage Attack",
@@ -95,18 +91,22 @@ SCENARIOS = {
             "stages": [
                 {"action": "manipulate_clock"},
                 {"action": "escalate_privileges"},
-                {"action": "access_cross_tenant"}
+                {"action": "access_cross_tenant"},
             ]
         },
         "result": {
             "allowed": False,
             "failure_reason": "Multiple violations: temporal_anomaly, privilege_escalation, cross_tenant",
-            "violations": ["temporal_anomaly", "privilege_escalation_approval", "cross_tenant_authorization"],
+            "violations": [
+                "temporal_anomaly",
+                "privilege_escalation_approval",
+                "cross_tenant_authorization",
+            ],
             "blocked_at_stage": 1,
             "rfi_score": 0.15,
-            "threat_level": "CRITICAL"
-        }
-    }
+            "threat_level": "CRITICAL",
+        },
+    },
 }
 
 HTML_TEMPLATE = """
@@ -134,12 +134,12 @@ HTML_TEMPLATE = """
         <h1>🛡️ THIRSTY'S ASYMMETRIC SECURITY FRAMEWORK</h1>
         <p class="tagline">"Making exploitation structurally unfinishable"</p>
     </div>
-    
+
     <div id="scenarios"></div>
-    
+
     <script>
         const scenarios = {{scenarios_json|safe}};
-        
+
         function executeAttack(scenarioId) {
             fetch('/api/execute/' + scenarioId, {method: 'POST'})
                 .then(r => r.json())
@@ -147,7 +147,7 @@ HTML_TEMPLATE = """
                     const resultDiv = document.getElementById('result-' + scenarioId);
                     const status = data.result.allowed ? 'ALLOWED' : 'BLOCKED';
                     const statusClass = data.result.allowed ? 'allowed' : 'blocked';
-                    
+
                     resultDiv.innerHTML = `
                         <h4>Result: <span class="${statusClass}">${status}</span></h4>
                         <p><strong>Reason:</strong> ${data.result.failure_reason || 'N/A'}</p>
@@ -161,7 +161,7 @@ HTML_TEMPLATE = """
                     `;
                 });
         }
-        
+
         function renderScenarios() {
             const container = document.getElementById('scenarios');
             Object.keys(scenarios).forEach(id => {
@@ -177,18 +177,20 @@ HTML_TEMPLATE = """
                 `;
             });
         }
-        
+
         renderScenarios();
     </script>
 </body>
 </html>
 """
 
-@app.route('/')
+
+@app.route("/")
 def index():
     return render_template_string(HTML_TEMPLATE, scenarios_json=json.dumps(SCENARIOS))
 
-@app.route('/api/execute/<scenario_id>', methods=['POST'])
+
+@app.route("/api/execute/<scenario_id>", methods=["POST"])
 def execute_scenario(scenario_id):
     if scenario_id not in SCENARIOS:
         return jsonify({"error": "Unknown scenario"}), 404
@@ -197,26 +199,30 @@ def execute_scenario(scenario_id):
 
     # In real implementation, this would call the actual framework
     # For demo, we return pre-defined results
-    return jsonify({
-        "scenario": scenario["name"],
-        "input": scenario["input"],
-        "result": scenario["result"],
-        "timestamp": datetime.now().isoformat()
-    })
+    return jsonify(
+        {
+            "scenario": scenario["name"],
+            "input": scenario["input"],
+            "result": scenario["result"],
+            "timestamp": datetime.now().isoformat(),
+        }
+    )
 
-@app.route('/api/scenarios')
+
+@app.route("/api/scenarios")
 def list_scenarios():
     return jsonify({s_id: s["name"] for s_id, s in SCENARIOS.items()})
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     print("=" * 80)
     print("  THIRSTY'S ASYMMETRIC SECURITY FRAMEWORK - DEMO SERVER")
     print("=" * 80)
     print("\nStarting demo server...")
     print("Open http://localhost:5000 in your browser\n")
     print("Available scenarios:")
-    for s_id, s in SCENARIOS.items():
+    for _s_id, s in SCENARIOS.items():
         print(f"  - {s['name']}")
     print("\n" + "=" * 80)
 
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)

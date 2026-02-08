@@ -131,7 +131,9 @@ class DataSource:
 
                 return data
             except requests.exceptions.RequestException as e:
-                logger.warning("Request failed (attempt %s/%s): %s", attempt + 1, max_retries, e)
+                logger.warning(
+                    "Request failed (attempt %s/%s): %s", attempt + 1, max_retries, e
+                )
                 if attempt < max_retries - 1:
                     time.sleep(2**attempt)  # Exponential backoff
 
@@ -263,7 +265,7 @@ class ACLEDDataSource(DataSource):
                 start_date, end_date, countries
             )
 
-        logger.info("Loaded %s ACLED events", len(data['data']))
+        logger.info("Loaded %s ACLED events", len(data["data"]))
         return data["data"]
 
     def _generate_fallback_conflict_data(
@@ -544,7 +546,13 @@ class GlobalScenarioEngine(SimulationSystem):
                         },
                     )
                     events.append(event)
-                    logger.debug("Detected event: %s %s %s z=%s", country, domain.value, year, z_score)
+                    logger.debug(
+                        "Detected event: %s %s %s z=%s",
+                        country,
+                        domain.value,
+                        year,
+                        z_score,
+                    )
 
                 # Check domain-specific absolute thresholds
                 if (
@@ -794,7 +802,9 @@ class GlobalScenarioEngine(SimulationSystem):
         # Sort by likelihood
         scenarios.sort(key=lambda s: s.likelihood, reverse=True)
 
-        logger.info("Simulated %s scenarios over %s years", len(scenarios), projection_years)
+        logger.info(
+            "Simulated %s scenarios over %s years", len(scenarios), projection_years
+        )
         self.scenarios = scenarios
         return scenarios
 
@@ -1020,7 +1030,7 @@ class GlobalScenarioEngine(SimulationSystem):
 
         validation["quality_score"] = max(0, 100 - len(validation["issues"]) * 5)
 
-        logger.info("Data quality score: %s/100", validation['quality_score'])
+        logger.info("Data quality score: %s/100", validation["quality_score"])
         return validation
 
 

@@ -134,9 +134,18 @@ class ThirstySuperKernel:
 
                 # Show integration status
                 status = self.project_ai.get_integration_status()
-                logger.info("   - Cerberus: %s", 'ACTIVE' if status['cerberus']['available'] else 'UNAVAILABLE')
-                logger.info("   - CodexDeus: %s", 'ACTIVE' if status['codex_deus']['available'] else 'FALLBACK')
-                logger.info("   - Triumvirate: %s", 'ACTIVE' if status['triumvirate']['available'] else 'UNAVAILABLE')
+                logger.info(
+                    "   - Cerberus: %s",
+                    "ACTIVE" if status["cerberus"]["available"] else "UNAVAILABLE",
+                )
+                logger.info(
+                    "   - CodexDeus: %s",
+                    "ACTIVE" if status["codex_deus"]["available"] else "FALLBACK",
+                )
+                logger.info(
+                    "   - Triumvirate: %s",
+                    "ACTIVE" if status["triumvirate"]["available"] else "UNAVAILABLE",
+                )
             except Exception as e:
                 logger.warning("Project-AI integration failed: %s", e)
 
@@ -232,7 +241,12 @@ class ThirstySuperKernel:
             if threat.level != ThreatLevel.SAFE:
                 self.visualizer.metrics.increment("threats_detected")
 
-        logger.info("[User %s] Result: %s (threat: %s)", user_id, result['status'], threat.level.name)
+        logger.info(
+            "[User %s] Result: %s (threat: %s)",
+            user_id,
+            result["status"],
+            threat.level.name,
+        )
 
         return result
 
@@ -257,7 +271,7 @@ class ThirstySuperKernel:
         """Handle suspicious command - allow but monitor closely"""
         logger.warning("⚠️  Suspicious activity from user %s", user_id)
         logger.warning("   Type: %s", threat.threat_type)
-        logger.warning("   Indicators: %s", ', '.join(threat.indicators))
+        logger.warning("   Indicators: %s", ", ".join(threat.indicators))
 
         if self.config.enable_visualization:
             self.visualizer.show_threat_detected(
@@ -290,7 +304,7 @@ class ThirstySuperKernel:
         logger.error("🚨 MALICIOUS ACTIVITY DETECTED from user %s", user_id)
         logger.error("   Type: %s", threat.threat_type)
         logger.error("   Confidence: %s", threat.confidence)
-        logger.error("   Indicators: %s", ', '.join(threat.indicators))
+        logger.error("   Indicators: %s", ", ".join(threat.indicators))
 
         # Get current layer
         current_layer = self.layer_manager.get_user_layer(user_id)
@@ -361,9 +375,9 @@ class ThirstySuperKernel:
             "layer": deception_layer.id,
             "threat_level": threat.level.name,
             "DECEPTION_ACTIVE": True,
-            "deception_env_id": deception_env.env_id
-            if self.config.enable_deception
-            else None,
+            "deception_env_id": (
+                deception_env.env_id if self.config.enable_deception else None
+            ),
         }
 
     def _execute_bubblegum_transition(
@@ -387,7 +401,7 @@ class ThirstySuperKernel:
             self.deceptions_active = max(0, self.deceptions_active - 1)
 
         logger.critical("User %s returned to mirror layer", user_id)
-        logger.critical("Actions logged: %s", bubblegum_result.get('actions_logged', 0))
+        logger.critical("Actions logged: %s", bubblegum_result.get("actions_logged", 0))
         logger.critical("=" * 70)
         logger.critical("")
 

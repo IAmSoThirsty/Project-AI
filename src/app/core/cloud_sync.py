@@ -176,7 +176,11 @@ class CloudSyncManager:
                 logger.info("Successfully uploaded data for %s", username)
                 return True
             else:
-                logger.error("Upload failed with status %s: %s", response.status_code, response.text)
+                logger.error(
+                    "Upload failed with status %s: %s",
+                    response.status_code,
+                    response.text,
+                )
                 return False
 
         except requests.RequestException as e:
@@ -231,7 +235,11 @@ class CloudSyncManager:
                 logger.info("No cloud data found for %s", username)
                 return None
             else:
-                logger.error("Download failed with status %s: %s", response.status_code, response.text)
+                logger.error(
+                    "Download failed with status %s: %s",
+                    response.status_code,
+                    response.text,
+                )
                 return None
 
         except requests.RequestException as e:
@@ -327,7 +335,9 @@ class CloudSyncManager:
                         resolved_data = cloud_data.get("data", cloud_data)
                         return resolved_data
                 except (ValueError, TypeError) as e:
-                    logger.warning("Error comparing timestamps: %s, defaulting to local data", e)
+                    logger.warning(
+                        "Error comparing timestamps: %s, defaulting to local data", e
+                    )
                     return local_data
             else:
                 # Fallback: use timestamp-based conflict resolution

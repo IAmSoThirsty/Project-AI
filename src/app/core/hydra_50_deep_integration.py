@@ -156,7 +156,10 @@ class CerberusAgentIntegration:
 
             self.spawned_count += spawn_result.get("agents_spawned", 0)
 
-            logger.info("Cerberus defense triggered: %s agents spawned", spawn_result.get('agents_spawned', 0))
+            logger.info(
+                "Cerberus defense triggered: %s agents spawned",
+                spawn_result.get("agents_spawned", 0),
+            )
 
             return {
                 "success": True,
@@ -440,7 +443,9 @@ class SecurityOperationsCenterIntegration:
 
         self.incidents[incident_id] = incident
 
-        logger.warning("Security incident reported: %s - %s", incident_id, incident_type)
+        logger.warning(
+            "Security incident reported: %s - %s", incident_id, incident_type
+        )
 
         return incident_id
 
@@ -788,7 +793,11 @@ class HYDRA50DeepIntegration:
             }
         )
 
-        logger.info("Scenario trigger handled: %s - %s actions taken", scenario_id, len(results['actions']))
+        logger.info(
+            "Scenario trigger handled: %s - %s actions taken",
+            scenario_id,
+            len(results["actions"]),
+        )
 
         return results
 

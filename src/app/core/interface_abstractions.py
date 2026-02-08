@@ -154,7 +154,9 @@ class ISubsystem(ABC):
         Returns:
             bool: True if mode change successful
         """
-        logger.info("Setting operational mode to %s for %s", mode.value, self.__class__.__name__)
+        logger.info(
+            "Setting operational mode to %s for %s", mode.value, self.__class__.__name__
+        )
         return True
 
 

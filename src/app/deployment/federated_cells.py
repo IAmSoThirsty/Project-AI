@@ -280,8 +280,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS cells (
                 cell_id TEXT PRIMARY KEY,
                 name TEXT,
@@ -294,11 +293,9 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
                 last_seen REAL,
                 metadata TEXT
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS cell_health (
                 cell_id TEXT PRIMARY KEY,
                 cpu_usage REAL,
@@ -309,11 +306,9 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
                 consecutive_failures INTEGER,
                 healthy INTEGER
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS work_units (
                 work_id TEXT PRIMARY KEY,
                 workload_type TEXT,
@@ -325,19 +320,16 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
                 status TEXT,
                 metadata TEXT
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS raft_log (
                 log_index INTEGER PRIMARY KEY,
                 term INTEGER,
                 command TEXT,
                 timestamp REAL
             )
-        """
-        )
+        """)
 
         conn.commit()
         conn.close()
@@ -410,7 +402,9 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
         # Check worker threads
         alive_threads = sum(1 for t in self.worker_threads if t.is_alive())
         if alive_threads < len(self.worker_threads):
-            self.logger.warning("Only %s/%s workers alive", alive_threads, len(self.worker_threads))
+            self.logger.warning(
+                "Only %s/%s workers alive", alive_threads, len(self.worker_threads)
+            )
             return False
 
         return True
@@ -460,7 +454,9 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
             self._persist_cell(identity)
 
             self.metrics["registered_cells"] = len(self.cells)
-            self.logger.info("Registered cell: %s (%s)", identity.cell_id, identity.name)
+            self.logger.info(
+                "Registered cell: %s (%s)", identity.cell_id, identity.name
+            )
 
             self.emit_event("cell_registered", {"cell_id": identity.cell_id})
 
@@ -483,7 +479,9 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
     def _start_election(self):
         """Start leader election"""
         try:
-            self.logger.info("Starting election for term %s", self.raft_state.current_term + 1)
+            self.logger.info(
+                "Starting election for term %s", self.raft_state.current_term + 1
+            )
 
             # Increment term and become candidate
             self.raft_state.current_term += 1
@@ -666,7 +664,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
         """Gossip state to random peers"""
         try:
             # Select random subset of peers
-            peers = [cid for cid in self.cells.keys() if cid != self.cell_id]
+            peers = [cid for cid in self.cells if cid != self.cell_id]
             if not peers:
                 return
 
@@ -787,7 +785,9 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
             )
 
             self.metrics["work_distributed"] += 1
-            self.logger.info("Assigned work %s to cell %s", work.work_id, selected_cell_id)
+            self.logger.info(
+                "Assigned work %s to cell %s", work.work_id, selected_cell_id
+            )
 
             return True
 
@@ -801,7 +801,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
             work_data = message.payload["work"]
 
             # Execute work (placeholder)
-            self.logger.info("Processing work: %s", work_data['work_id'])
+            self.logger.info("Processing work: %s", work_data["work_id"])
 
             # Send completion response
             self._send_message(
@@ -841,7 +841,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
                 self.logger.warning("No endpoint for cell: %s", recipient_id)
                 return
 
-            message = InterCellMessage(
+            InterCellMessage(
                 message_id=secrets.token_hex(8),
                 message_type=message_type,
                 sender_id=self.cell_id,
@@ -1032,9 +1032,8 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
 
     def validate_config(self, config: dict[str, Any]) -> tuple[bool, str | None]:
         """Validate configuration"""
-        if "election_timeout" in config:
-            if config["election_timeout"] <= 0:
-                return False, "election_timeout must be positive"
+        if "election_timeout" in config and config["election_timeout"] <= 0:
+            return False, "election_timeout must be positive"
         return True, None
 
     def subscribe(self, event_type: str, callback: Callable) -> str:
@@ -1054,7 +1053,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
     def emit_event(self, event_type: str, data: Any) -> int:
         """Emit event to subscribers"""
         count = 0
-        for sub_id, callback in self.subscribers.get(event_type, []):
+        for _sub_id, callback in self.subscribers.get(event_type, []):
             try:
                 callback(data)
                 count += 1

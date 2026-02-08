@@ -358,7 +358,12 @@ class ThreatDetectionEngine:
         self.detection_history.append(assessment)
 
         if level != ThreatLevel.SAFE:
-            logger.warning("Threat detected: %s (confidence: %s) - %s", level.name, combined_score, command)
+            logger.warning(
+                "Threat detected: %s (confidence: %s) - %s",
+                level.name,
+                combined_score,
+                command,
+            )
 
         return assessment
 

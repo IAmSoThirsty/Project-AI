@@ -27,6 +27,7 @@ logger = logging.getLogger(__name__)
 
 class StackType(Enum):
     """Stack classification for trigger enforcement."""
+
     RS = "reference_stack"  # Reference Stack (authoritative)
     TS_0 = "test_stack_0"
     TS_1 = "test_stack_1"
@@ -37,6 +38,7 @@ class StackType(Enum):
 
 class TriggerType(Enum):
     """Types of triggers."""
+
     THRESHOLD = "threshold"  # Metric exceeds threshold
     DURATION = "duration"  # Condition persists for duration
     RATE = "rate"  # Rate of change exceeds threshold
@@ -45,6 +47,7 @@ class TriggerType(Enum):
 
 class PlaybookAction(Enum):
     """Actions defined in playbooks (for analysis only)."""
+
     ALERT = "alert"
     MONITOR = "monitor"
     ANALYZE = "analyze"
@@ -56,9 +59,10 @@ class PlaybookAction(Enum):
 class TriggerCondition:
     """
     Single trigger condition.
-    
+
     Format: metric > threshold for duration ≥ D
     """
+
     condition_id: str
     metric_name: str
     threshold: float
@@ -73,7 +77,7 @@ class TriggerCondition:
     def evaluate(self, metric_value: float) -> bool:
         """
         Evaluate condition against metric value.
-        
+
         Returns: True if condition met, False otherwise
         """
         self.last_checked = datetime.now()
@@ -132,9 +136,10 @@ class TriggerCondition:
 class Playbook:
     """
     Deterministic playbook with versioned actions.
-    
+
     Playbooks are FOR ANALYSIS ONLY - they do not authorize actions.
     """
+
     playbook_id: str
     version: str
     name: str
@@ -168,13 +173,13 @@ class Playbook:
                     "metric_name": c.metric_name,
                     "threshold": c.threshold,
                     "operator": c.operator,
-                    "duration_timesteps": c.duration_timesteps
+                    "duration_timesteps": c.duration_timesteps,
                 }
                 for c in self.conditions
-            ]
+            ],
         }
 
-        content = json.dumps(canonical, sort_keys=True, separators=(',', ':'))
+        content = json.dumps(canonical, sort_keys=True, separators=(",", ":"))
         return hashlib.sha256(content.encode()).hexdigest()
 
     def lock(self) -> None:
@@ -195,6 +200,7 @@ class Playbook:
 @dataclass
 class TriggerActivation:
     """Record of trigger activation."""
+
     trigger_id: str
     playbook_id: str
     timestamp: datetime
@@ -213,16 +219,16 @@ class TriggerActivation:
 class ContingencyTriggerFramework:
     """
     Layer 8: Contingency Trigger Framework (RS Only)
-    
+
     Evaluates deterministic trigger conditions and links to playbooks.
-    
+
     CRITICAL: RS-only enforcement. Narrative triggers are BLOCKED.
     """
 
     def __init__(self, stack: StackType, audit_trail=None):
         """
         Initialize contingency trigger framework.
-        
+
         Args:
             stack: Stack type (must be RS for triggers)
             audit_trail: Audit trail instance
@@ -232,7 +238,9 @@ class ContingencyTriggerFramework:
 
         # Enforce RS-only for triggers
         if stack != StackType.RS:
-            raise ValueError(f"Contingency triggers only allowed in RS stack, not {stack.value}")
+            raise ValueError(
+                f"Contingency triggers only allowed in RS stack, not {stack.value}"
+            )
 
         # Playbook registry
         self.playbooks: dict[str, Playbook] = {}
@@ -246,12 +254,9 @@ class ContingencyTriggerFramework:
         self.audit_trail.log(
             category="GOVERNANCE",
             operation="contingency_trigger_framework_initialized",
-            details={
-                "stack": stack.value,
-                "timestamp": datetime.now().isoformat()
-            },
+            details={"stack": stack.value, "timestamp": datetime.now().isoformat()},
             level="INFORMATIONAL",
-            priority="HIGH_PRIORITY"
+            priority="HIGH_PRIORITY",
         )
 
         logger.info("Contingency trigger framework initialized for %s", stack.value)
@@ -259,14 +264,16 @@ class ContingencyTriggerFramework:
     def register_playbook(self, playbook: Playbook) -> None:
         """
         Register playbook.
-        
+
         Playbook is locked and hashed upon registration.
         """
         # Validate conditions
         for condition in playbook.conditions:
             valid, errors = condition.validate()
             if not valid:
-                raise ValueError(f"Invalid condition in playbook {playbook.playbook_id}: {errors}")
+                raise ValueError(
+                    f"Invalid condition in playbook {playbook.playbook_id}: {errors}"
+                )
 
         # Lock playbook
         playbook.lock()
@@ -282,10 +289,10 @@ class ContingencyTriggerFramework:
                 "version": playbook.version,
                 "playbook_hash": playbook.playbook_hash,
                 "conditions": len(playbook.conditions),
-                "actions": len(playbook.actions)
+                "actions": len(playbook.actions),
             },
             level="INFORMATIONAL",
-            priority="HIGH_PRIORITY"
+            priority="HIGH_PRIORITY",
         )
 
         logger.info("Registered playbook: %s (v%s)", playbook.name, playbook.version)
@@ -293,7 +300,7 @@ class ContingencyTriggerFramework:
     def verify_all_playbooks(self) -> tuple[bool, list[str]]:
         """
         Verify integrity of all playbooks.
-        
+
         Returns: (all_valid, list_of_errors)
         """
         errors = []
@@ -308,10 +315,10 @@ class ContingencyTriggerFramework:
                     details={
                         "playbook_id": playbook_id,
                         "expected_hash": playbook.playbook_hash,
-                        "current_hash": playbook.compute_hash()
+                        "current_hash": playbook.compute_hash(),
                     },
                     level="CRITICAL",
-                    priority="HIGH_PRIORITY"
+                    priority="HIGH_PRIORITY",
                 )
 
         return len(errors) == 0, errors
@@ -319,7 +326,7 @@ class ContingencyTriggerFramework:
     def reject_narrative_trigger(self, trigger_description: str) -> None:
         """
         Block narrative triggers.
-        
+
         Narrative triggers are NOT allowed - only deterministic metrics.
         """
         self.audit_trail.log(
@@ -327,23 +334,25 @@ class ContingencyTriggerFramework:
             operation="narrative_trigger_blocked",
             details={
                 "trigger_description": trigger_description,
-                "reason": "Narrative triggers not allowed in RS stack"
+                "reason": "Narrative triggers not allowed in RS stack",
             },
             level="CRITICAL",
-            priority="HIGH_PRIORITY"
+            priority="HIGH_PRIORITY",
         )
 
         logger.critical("BLOCKED narrative trigger: %s", trigger_description)
 
-        raise ValueError("Narrative triggers are BLOCKED. Only deterministic metric triggers allowed.")
+        raise ValueError(
+            "Narrative triggers are BLOCKED. Only deterministic metric triggers allowed."
+        )
 
     def evaluate_triggers(self, metrics: dict[str, float]) -> list[TriggerActivation]:
         """
         Evaluate all trigger conditions against current metrics.
-        
+
         Args:
             metrics: Current metric values
-        
+
         Returns:
             List of trigger activations (if any)
         """
@@ -358,7 +367,9 @@ class ContingencyTriggerFramework:
                 metric_value = metrics.get(condition.metric_name)
 
                 if metric_value is None:
-                    logger.warning("Metric %s not found in current metrics", condition.metric_name)
+                    logger.warning(
+                        "Metric %s not found in current metrics", condition.metric_name
+                    )
                     continue
 
                 if condition.evaluate(metric_value):
@@ -373,7 +384,7 @@ class ContingencyTriggerFramework:
                     stack=self.stack,
                     triggering_conditions=triggered_conditions,
                     metric_values=metrics.copy(),
-                    recommended_actions=playbook.actions.copy()
+                    recommended_actions=playbook.actions.copy(),
                 )
 
                 activations.append(activation)
@@ -386,11 +397,13 @@ class ContingencyTriggerFramework:
                         "trigger_id": activation.trigger_id,
                         "playbook_id": playbook_id,
                         "conditions": triggered_conditions,
-                        "recommended_actions": [a.value for a in activation.recommended_actions],
-                        "timestep": self.timestep
+                        "recommended_actions": [
+                            a.value for a in activation.recommended_actions
+                        ],
+                        "timestep": self.timestep,
                     },
                     level="INFORMATIONAL",
-                    priority="HIGH_PRIORITY"
+                    priority="HIGH_PRIORITY",
                 )
 
                 logger.info("Trigger activated: %s", playbook.name)
@@ -407,7 +420,7 @@ class ContingencyTriggerFramework:
             "playbooks": len(self.playbooks),
             "total_activations": len(self.activations),
             "timestep": self.timestep,
-            "stack": self.stack.value
+            "stack": self.stack.value,
         }
 
 
@@ -415,8 +428,9 @@ class ContingencyTriggerFramework:
 _framework = None
 
 
-def get_contingency_trigger_framework(stack: StackType = StackType.RS,
-                                     audit_trail=None) -> ContingencyTriggerFramework:
+def get_contingency_trigger_framework(
+    stack: StackType = StackType.RS, audit_trail=None
+) -> ContingencyTriggerFramework:
     """Get singleton contingency trigger framework instance (RS only)."""
     global _framework
     if _framework is None:

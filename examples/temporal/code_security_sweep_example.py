@@ -58,7 +58,10 @@ async def run_code_sweep():
     )
 
     logger.info("✅ Workflow started: %s", handle.id)
-    logger.info("🔗 View in UI: http://localhost:8233/namespaces/default/workflows/%s", handle.id)
+    logger.info(
+        "🔗 View in UI: http://localhost:8233/namespaces/default/workflows/%s",
+        handle.id,
+    )
 
     # Wait for result
     logger.info("⏳ Scanning codebase...")
@@ -77,23 +80,32 @@ async def run_code_sweep():
     if result.findings:
         logger.info("\n📝 First 5 findings:")
         for i, finding in enumerate(result.findings[:5], 1):
-            logger.info("\n   %s. %s", i, finding.get('title', 'Unknown'))
-            logger.info("      Severity: %s", finding.get('severity', 'N/A'))
-            logger.info("      File: %s:%s", finding.get('file_path', 'N/A'), finding.get('line_number', '?'))
-            logger.info("      Code: %s...", finding.get('code_snippet', 'N/A')[)
-            logger.info("      Fix: %s", finding.get('recommendation', 'N/A'))
+            logger.info("\n   %s. %s", i, finding.get("title", "Unknown"))
+            logger.info("      Severity: %s", finding.get("severity", "N/A"))
+            logger.info(
+                "      File: %s:%s",
+                finding.get("file_path", "N/A"),
+                finding.get("line_number", "?"),
+            )
+            logger.info("      Code: %s...", finding.get("code_snippet", "N/A")[:100])
+            logger.info("      Fix: %s", finding.get("recommendation", "N/A"))
 
     if result.patches:
         logger.info("\n🔧 Generated %s patches", len(result.patches))
 
     if result.sarif_path:
         logger.info("\n📄 SARIF report: %s", result.sarif_path)
-        logger.info("   Upload to GitHub: gh api repos/%s}/%s}/code-scanning/sarifs -F sarif=@%s", {owner, {repo, result.sarif_path)
+        logger.info(
+            "   Upload to GitHub: gh api repos/{owner}/{repo}/code-scanning/sarifs -F sarif=@%s",
+            result.sarif_path,
+        )
 
     # Check for critical vulnerabilities
     critical_count = result.by_severity.get("critical", 0)
     if critical_count > 0:
-        logger.error("\n❌ CRITICAL: %s critical vulnerabilities found!", critical_count)
+        logger.error(
+            "\n❌ CRITICAL: %s critical vulnerabilities found!", critical_count
+        )
         logger.error("   Deployment should be blocked until these are resolved.")
         sys.exit(1)
     else:

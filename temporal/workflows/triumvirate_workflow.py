@@ -118,7 +118,9 @@ class TriumvirateWorkflow:
             )
 
             # Build result
-            workflow.logger.info("Triumvirate workflow completed: %s", result.get('correlation_id'))
+            workflow.logger.info(
+                "Triumvirate workflow completed: %s", result.get("correlation_id")
+            )
 
             return TriumvirateResult(
                 success=result.get("success", False),

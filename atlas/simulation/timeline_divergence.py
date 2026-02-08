@@ -29,10 +29,22 @@ logger = logging.getLogger(__name__)
 
 # Standard seed set for divergence analysis
 STANDARD_SEEDS = [
-    "0xA17F01", "0xB28E02", "0xC39D03", "0xD4AC04",
-    "0xE5BB05", "0xF6CA06", "0x07D907", "0x18E808",
-    "0x29F709", "0x3A060A", "0x4B150B", "0x5C240C",
-    "0x6D330D", "0x7E420E", "0x8F510F", "0x13EE01"
+    "0xA17F01",
+    "0xB28E02",
+    "0xC39D03",
+    "0xD4AC04",
+    "0xE5BB05",
+    "0xF6CA06",
+    "0x07D907",
+    "0x18E808",
+    "0x29F709",
+    "0x3A060A",
+    "0x4B150B",
+    "0x5C240C",
+    "0x6D330D",
+    "0x7E420E",
+    "0x8F510F",
+    "0x13EE01",
 ]
 
 # Standard horizons in years
@@ -41,6 +53,7 @@ STANDARD_HORIZONS = [10, 20, 30, 40, 50]
 
 class UncertaintyAxis(Enum):
     """Two uncertainty axes for divergence tracking."""
+
     STOCHASTIC_VOLATILITY = "stochastic_volatility"  # Random fluctuations
     STRUCTURAL_DIVERGENCE = "structural_divergence"  # Fundamental shifts
 
@@ -48,6 +61,7 @@ class UncertaintyAxis(Enum):
 @dataclass
 class ProjectionPoint:
     """Single point in projection space."""
+
     seed: str
     horizon_years: int
     year: int  # Year offset from start
@@ -67,6 +81,7 @@ class ProjectionPoint:
 @dataclass
 class TimelineDivergence:
     """Divergence statistics across timelines."""
+
     seed_pair: tuple[str, str]
     horizon_years: int
 
@@ -84,9 +99,10 @@ class TimelineDivergence:
 class ProjectionTensor:
     """
     Complete projection tensor.
-    
+
     Structure: Projection[seed][horizon][year][metric]
     """
+
     seeds: list[str]
     horizons: list[int]  # In years
     metrics: list[str]
@@ -124,11 +140,12 @@ class ProjectionTensor:
                 len(years)
                 for seed_data in self.data.values()
                 for years in seed_data.values()
-            )
+            ),
         }
 
         import json
-        content = json.dumps(canonical, sort_keys=True, separators=(',', ':'))
+
+        content = json.dumps(canonical, sort_keys=True, separators=(",", ":"))
         return hashlib.sha256(content.encode()).hexdigest()
 
     def get_statistics(self) -> dict[str, Any]:
@@ -154,26 +171,33 @@ class ProjectionTensor:
             "seeds": len(self.seeds),
             "horizons": len(self.horizons),
             "metrics": len(self.metrics),
-            "avg_stochastic_volatility": np.mean(all_stochastic) if all_stochastic else 0,
-            "avg_structural_divergence": np.mean(all_structural) if all_structural else 0,
-            "divergence_pairs": len(self.divergences)
+            "avg_stochastic_volatility": (
+                np.mean(all_stochastic) if all_stochastic else 0
+            ),
+            "avg_structural_divergence": (
+                np.mean(all_structural) if all_structural else 0
+            ),
+            "divergence_pairs": len(self.divergences),
         }
 
 
 class TimelineDivergenceEngine:
     """
     Layer 7: Multi-Seed Timeline Divergence Engine
-    
+
     Executes projections across multiple seeds and horizons,
     storing results in tensor format with uncertainty tracking.
     """
 
-    def __init__(self, seeds: list[str] | None = None,
-                 horizons: list[int] | None = None,
-                 audit_trail=None):
+    def __init__(
+        self,
+        seeds: list[str] | None = None,
+        horizons: list[int] | None = None,
+        audit_trail=None,
+    ):
         """
         Initialize timeline divergence engine.
-        
+
         Args:
             seeds: List of hex seeds (uses STANDARD_SEEDS if None)
             horizons: List of horizon years (uses STANDARD_HORIZONS if None)
@@ -199,25 +223,33 @@ class TimelineDivergenceEngine:
             details={
                 "n_seeds": len(self.seeds),
                 "n_horizons": len(self.horizons),
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now().isoformat(),
             },
-            level="INFORMATIONAL"
+            level="INFORMATIONAL",
         )
 
-        logger.info("Timeline divergence engine initialized: %s seeds, %s horizons", len(self.seeds), len(self.horizons))
+        logger.info(
+            "Timeline divergence engine initialized: %s seeds, %s horizons",
+            len(self.seeds),
+            len(self.horizons),
+        )
 
-    def project_single_timeline(self, seed: str, horizon_years: int,
-                               initial_state: WorldState,
-                               steps_per_year: int = 12) -> list[ProjectionPoint]:
+    def project_single_timeline(
+        self,
+        seed: str,
+        horizon_years: int,
+        initial_state: WorldState,
+        steps_per_year: int = 12,
+    ) -> list[ProjectionPoint]:
         """
         Project single timeline for given seed and horizon.
-        
+
         Args:
             seed: Hex seed string
             horizon_years: Projection horizon in years
             initial_state: Initial world state
             steps_per_year: Simulation timesteps per year (default: 12 = monthly)
-        
+
         Returns:
             List of projection points (one per year)
         """
@@ -229,7 +261,12 @@ class TimelineDivergenceEngine:
         total_steps = horizon_years * steps_per_year
 
         # Run simulation
-        logger.info("Projecting timeline: seed=%s, horizon=%sy, steps=%s", seed, horizon_years, total_steps)
+        logger.info(
+            "Projecting timeline: seed=%s, horizon=%sy, steps=%s",
+            seed,
+            horizon_years,
+            total_steps,
+        )
         states = engine.run(n_steps=total_steps)
 
         # Extract yearly projection points
@@ -241,7 +278,7 @@ class TimelineDivergenceEngine:
 
                 # Compute stochastic volatility (variance over recent steps)
                 if step_idx >= steps_per_year:
-                    recent_states = states[step_idx - steps_per_year:step_idx]
+                    recent_states = states[step_idx - steps_per_year : step_idx]
                     recent_risks = [s.systemic_risk for s in recent_states]
                     stochastic_vol = float(np.std(recent_risks))
                 else:
@@ -258,44 +295,62 @@ class TimelineDivergenceEngine:
                     metrics={
                         "systemic_risk": state.systemic_risk,
                         "stability_index": state.stability_index,
-                        "market_avg": np.mean(list(state.markets.values())) if state.markets else 0,
-                        "governance_avg": np.mean(list(state.governance.values())) if state.governance else 0,
-                        "capital_concentration": np.mean(list(state.capital_distribution.values())) if state.capital_distribution else 0
+                        "market_avg": (
+                            np.mean(list(state.markets.values()))
+                            if state.markets
+                            else 0
+                        ),
+                        "governance_avg": (
+                            np.mean(list(state.governance.values()))
+                            if state.governance
+                            else 0
+                        ),
+                        "capital_concentration": (
+                            np.mean(list(state.capital_distribution.values()))
+                            if state.capital_distribution
+                            else 0
+                        ),
                     },
                     stochastic_volatility=stochastic_vol,
                     structural_divergence=structural_div,
-                    state_hash=state.state_hash
+                    state_hash=state.state_hash,
                 )
 
                 points.append(point)
 
         return points
 
-    def compute_divergence(self, points1: list[ProjectionPoint],
-                          points2: list[ProjectionPoint],
-                          horizon_years: int) -> TimelineDivergence:
+    def compute_divergence(
+        self,
+        points1: list[ProjectionPoint],
+        points2: list[ProjectionPoint],
+        horizon_years: int,
+    ) -> TimelineDivergence:
         """
         Compute divergence statistics between two timelines.
-        
+
         Args:
             points1: First timeline points
             points2: Second timeline points
             horizon_years: Projection horizon
-        
+
         Returns:
             Divergence statistics
         """
         divergence = TimelineDivergence(
-            seed_pair=(points1[0].seed, points2[0].seed),
-            horizon_years=horizon_years
+            seed_pair=(points1[0].seed, points2[0].seed), horizon_years=horizon_years
         )
 
         # Compute divergence at each year
         divergences = []
-        for p1, p2 in zip(points1, points2):
+        for p1, p2 in zip(points1, points2, strict=False):
             # Euclidean distance between metric vectors
-            metrics1 = np.array([p1.metrics.get(k, 0) for k in sorted(p1.metrics.keys())])
-            metrics2 = np.array([p2.metrics.get(k, 0) for k in sorted(p2.metrics.keys())])
+            metrics1 = np.array(
+                [p1.metrics.get(k, 0) for k in sorted(p1.metrics.keys())]
+            )
+            metrics2 = np.array(
+                [p2.metrics.get(k, 0) for k in sorted(p2.metrics.keys())]
+            )
 
             dist = float(np.linalg.norm(metrics1 - metrics2))
             divergences.append(dist)
@@ -317,25 +372,29 @@ class TimelineDivergenceEngine:
 
         return divergence
 
-    def project_all_timelines(self, initial_state: WorldState,
-                             steps_per_year: int = 12) -> ProjectionTensor:
+    def project_all_timelines(
+        self, initial_state: WorldState, steps_per_year: int = 12
+    ) -> ProjectionTensor:
         """
         Project all timelines (all seeds × all horizons).
-        
+
         Args:
             initial_state: Initial world state
             steps_per_year: Simulation timesteps per year
-        
+
         Returns:
             Complete projection tensor
         """
         # Create tensor
-        metrics = ["systemic_risk", "stability_index", "market_avg",
-                  "governance_avg", "capital_concentration"]
+        metrics = [
+            "systemic_risk",
+            "stability_index",
+            "market_avg",
+            "governance_avg",
+            "capital_concentration",
+        ]
         tensor = ProjectionTensor(
-            seeds=self.seeds.copy(),
-            horizons=self.horizons.copy(),
-            metrics=metrics
+            seeds=self.seeds.copy(), horizons=self.horizons.copy(), metrics=metrics
         )
 
         # Project each seed × horizon combination
@@ -351,7 +410,7 @@ class TimelineDivergenceEngine:
                     seed=seed,
                     horizon_years=horizon,
                     initial_state=initial_state,
-                    steps_per_year=steps_per_year
+                    steps_per_year=steps_per_year,
                 )
 
                 # Store in tensor
@@ -365,11 +424,9 @@ class TimelineDivergenceEngine:
             points_dict = all_points_by_horizon[horizon]
 
             for i, seed1 in enumerate(self.seeds):
-                for seed2 in self.seeds[i+1:]:
+                for seed2 in self.seeds[i + 1 :]:
                     div = self.compute_divergence(
-                        points_dict[seed1],
-                        points_dict[seed2],
-                        horizon
+                        points_dict[seed1], points_dict[seed2], horizon
                     )
                     tensor.divergences.append(div)
 
@@ -381,8 +438,7 @@ class TimelineDivergenceEngine:
                 for point in points1:
                     # Structural divergence is max divergence from this point to all others
                     point.structural_divergence = max(
-                        point.structural_divergence,
-                        div.max_divergence
+                        point.structural_divergence, div.max_divergence
                     )
 
         # Compute tensor hash
@@ -399,9 +455,9 @@ class TimelineDivergenceEngine:
                     for seed_data in tensor.data.values()
                     for years in seed_data.values()
                 ),
-                "tensor_hash": tensor.tensor_hash
+                "tensor_hash": tensor.tensor_hash,
             },
-            level="INFORMATIONAL"
+            level="INFORMATIONAL",
         )
 
         logger.info("Projection tensor complete: %s", tensor.get_statistics())
@@ -411,7 +467,7 @@ class TimelineDivergenceEngine:
     def analyze_uncertainty(self, tensor: ProjectionTensor) -> dict[str, Any]:
         """
         Analyze uncertainty across timelines.
-        
+
         Returns:
             Uncertainty analysis results
         """
@@ -430,17 +486,27 @@ class TimelineDivergenceEngine:
                         structural_divs.append(point.structural_divergence)
 
             by_horizon[horizon] = {
-                "avg_stochastic": float(np.mean(stochastic_vols)) if stochastic_vols else 0,
-                "max_stochastic": float(np.max(stochastic_vols)) if stochastic_vols else 0,
-                "avg_structural": float(np.mean(structural_divs)) if structural_divs else 0,
-                "max_structural": float(np.max(structural_divs)) if structural_divs else 0
+                "avg_stochastic": (
+                    float(np.mean(stochastic_vols)) if stochastic_vols else 0
+                ),
+                "max_stochastic": (
+                    float(np.max(stochastic_vols)) if stochastic_vols else 0
+                ),
+                "avg_structural": (
+                    float(np.mean(structural_divs)) if structural_divs else 0
+                ),
+                "max_structural": (
+                    float(np.max(structural_divs)) if structural_divs else 0
+                ),
             }
 
         # Overall statistics
         return {
             "by_horizon": by_horizon,
             "total_divergence_pairs": len(tensor.divergences),
-            "avg_divergence_rate": float(np.mean([d.divergence_rate for d in tensor.divergences]))
+            "avg_divergence_rate": float(
+                np.mean([d.divergence_rate for d in tensor.divergences])
+            ),
         }
 
 
@@ -448,11 +514,13 @@ class TimelineDivergenceEngine:
 _engine = None
 
 
-def get_timeline_divergence_engine(seeds: list[str] | None = None,
-                                   horizons: list[int] | None = None,
-                                   audit_trail=None) -> TimelineDivergenceEngine:
+def get_timeline_divergence_engine(
+    seeds: list[str] | None = None, horizons: list[int] | None = None, audit_trail=None
+) -> TimelineDivergenceEngine:
     """Get singleton timeline divergence engine instance."""
     global _engine
     if _engine is None:
-        _engine = TimelineDivergenceEngine(seeds=seeds, horizons=horizons, audit_trail=audit_trail)
+        _engine = TimelineDivergenceEngine(
+            seeds=seeds, horizons=horizons, audit_trail=audit_trail
+        )
     return _engine

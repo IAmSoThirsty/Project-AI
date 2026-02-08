@@ -92,9 +92,7 @@ def example_3_moral_certainty():
                 "intentional_harm_to_human": False,
                 "order_bypasses_accountability": False,
                 "predicted_harm": "some locations will not receive aid",
-                "moral_claims": [
-                    "This is the optimal distribution"  # FORBIDDEN
-                ],
+                "moral_claims": ["This is the optimal distribution"],  # FORBIDDEN
             },
             authorized_by="EmergencyCoordinator",
         )
@@ -147,7 +145,7 @@ def example_5_existential_threat():
     print("=" * 60)
 
     try:
-        action_id = planetary_interposition(
+        planetary_interposition(
             actor="GlobalMonitor",
             intent="alert_existential_risk",
             context={

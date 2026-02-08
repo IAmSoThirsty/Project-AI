@@ -20,7 +20,7 @@ import os
 import sqlite3
 import time
 from dataclasses import dataclass, field
-from enum import Enum
+from enum import StrEnum
 from pathlib import Path
 
 try:
@@ -38,7 +38,7 @@ except ImportError:
     CRYPTO_AVAILABLE = False
 
 
-class TierLevel(str, Enum):
+class TierLevel(StrEnum):
     """User tier levels"""
 
     SOLO = "solo"
@@ -47,7 +47,7 @@ class TierLevel(str, Enum):
     GOVERNMENT = "government"
 
 
-class AcceptanceType(str, Enum):
+class AcceptanceType(StrEnum):
     """Types of acceptance records"""
 
     INITIAL_MSA = "initial_msa"
@@ -58,7 +58,7 @@ class AcceptanceType(str, Enum):
     AUDIT_LOCK = "audit_lock"
 
 
-class SigningMethod(str, Enum):
+class SigningMethod(StrEnum):
     """Cryptographic signing methods"""
 
     SOFTWARE_ED25519 = "software_ed25519"
@@ -189,8 +189,7 @@ class AcceptanceLedger:
         conn.execute("PRAGMA journal_mode=WAL")
         conn.execute("PRAGMA synchronous=FULL")
 
-        conn.execute(
-            """
+        conn.execute("""
             CREATE TABLE IF NOT EXISTS acceptance_ledger (
                 entry_id TEXT PRIMARY KEY,
                 timestamp REAL NOT NULL,
@@ -210,8 +209,7 @@ class AcceptanceLedger:
                 metadata_json TEXT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
-        """
-        )
+        """)
 
         # Indexes for efficient queries
         conn.execute(

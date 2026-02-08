@@ -200,9 +200,9 @@ class DefenseEngine:
         status = self.registry.get_system_status()
 
         logger.info("=" * 60)
-        logger.info("SYSTEM STATUS: %s", status['timestamp'])
-        logger.info("Total Subsystems: %s", status['total_subsystems'])
-        logger.info("State Distribution: %s", status['subsystems_by_state'])
+        logger.info("SYSTEM STATUS: %s", status["timestamp"])
+        logger.info("Total Subsystems: %s", status["total_subsystems"])
+        logger.info("State Distribution: %s", status["subsystems_by_state"])
         logger.info("=" * 60)
 
     def _signal_handler(self, signum, frame):

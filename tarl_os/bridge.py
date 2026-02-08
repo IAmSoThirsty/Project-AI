@@ -65,7 +65,7 @@ class TARLOSBridge:
                 logger.info("✓ Module found: %s", name)
 
         if missing:
-            logger.warning("Missing modules: %s", ', '.join(missing))
+            logger.warning("Missing modules: %s", ", ".join(missing))
         else:
             logger.info("✓ All core modules validated")
 
@@ -128,7 +128,9 @@ class TARLOSBridge:
         try:
             # For now, we simulate execution since full Thirsty-Lang
             # interpreter integration is complex
-            logger.info("Executing %s.%s(*%s, **%s)", module_name, function_name, args, kwargs)
+            logger.info(
+                "Executing %s.%s(*%s, **%s)", module_name, function_name, args, kwargs
+            )
 
             # Simulate result based on function
             result = self._simulate_execution(module_name, function_name, args, kwargs)

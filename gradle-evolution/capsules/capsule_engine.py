@@ -25,7 +25,7 @@ class BuildCapsule:
         tasks: list[str],
         inputs: dict[str, str],
         outputs: dict[str, str],
-        metadata: dict[str, Any]
+        metadata: dict[str, Any],
     ):
         """
         Initialize build capsule.
@@ -126,7 +126,7 @@ class CapsuleEngine:
         tasks: list[str],
         input_files: list[Path],
         output_files: list[Path],
-        metadata: dict[str, Any] | None = None
+        metadata: dict[str, Any] | None = None,
     ) -> BuildCapsule:
         """
         Create a new build capsule.
@@ -165,7 +165,7 @@ class CapsuleEngine:
                 tasks=tasks,
                 inputs=inputs,
                 outputs=outputs,
-                metadata=capsule_metadata
+                metadata=capsule_metadata,
             )
 
             # Store capsule
@@ -218,10 +218,7 @@ class CapsuleEngine:
         Returns:
             List of matching capsules
         """
-        return [
-            capsule for capsule in self.capsules.values()
-            if task in capsule.tasks
-        ]
+        return [capsule for capsule in self.capsules.values() if task in capsule.tasks]
 
     def find_capsules_by_input(self, input_path: str) -> list[BuildCapsule]:
         """
@@ -234,14 +231,13 @@ class CapsuleEngine:
             List of matching capsules
         """
         return [
-            capsule for capsule in self.capsules.values()
+            capsule
+            for capsule in self.capsules.values()
             if input_path in capsule.inputs
         ]
 
     def compute_capsule_diff(
-        self,
-        capsule_id1: str,
-        capsule_id2: str
+        self, capsule_id1: str, capsule_id2: str
     ) -> dict[str, Any]:
         """
         Compute difference between two capsules.
@@ -296,11 +292,7 @@ class CapsuleEngine:
             logger.error("Error computing capsule diff: %s", e, exc_info=True)
             return {"error": str(e)}
 
-    def export_capsule_chain(
-        self,
-        capsule_ids: list[str],
-        output_path: Path
-    ) -> None:
+    def export_capsule_chain(self, capsule_ids: list[str], output_path: Path) -> None:
         """
         Export capsule chain for forensic analysis.
 
@@ -332,18 +324,18 @@ class CapsuleEngine:
         return sha256.hexdigest()
 
     def _generate_capsule_id(
-        self,
-        tasks: list[str],
-        inputs: dict[str, str],
-        outputs: dict[str, str]
+        self, tasks: list[str], inputs: dict[str, str], outputs: dict[str, str]
     ) -> str:
         """Generate unique capsule ID."""
-        content = json.dumps({
-            "tasks": sorted(tasks),
-            "inputs": inputs,
-            "outputs": outputs,
-            "timestamp": datetime.utcnow().isoformat(),
-        }, sort_keys=True)
+        content = json.dumps(
+            {
+                "tasks": sorted(tasks),
+                "inputs": inputs,
+                "outputs": outputs,
+                "timestamp": datetime.utcnow().isoformat(),
+            },
+            sort_keys=True,
+        )
 
         return hashlib.sha256(content.encode()).hexdigest()[:16]
 
@@ -371,7 +363,7 @@ class CapsuleEngine:
                 tasks=data["tasks"],
                 inputs=data["inputs"],
                 outputs=data["outputs"],
-                metadata=data["metadata"]
+                metadata=data["metadata"],
             )
         except Exception as e:
             logger.error("Error loading capsule: %s", e, exc_info=True)
@@ -391,9 +383,7 @@ class CapsuleEngine:
             logger.error("Error loading capsules: %s", e, exc_info=True)
 
     def _find_modified_files(
-        self,
-        files1: dict[str, str],
-        files2: dict[str, str]
+        self, files1: dict[str, str], files2: dict[str, str]
     ) -> list[str]:
         """Find files with different hashes."""
         modified = []

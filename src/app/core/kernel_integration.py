@@ -364,7 +364,9 @@ def kernel_safe_wrapper(
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         if kernel is None:
-            logger.warning("No kernel available for %s, executing directly", func.__qualname__)
+            logger.warning(
+                "No kernel available for %s, executing directly", func.__qualname__
+            )
             return func(*args, **kwargs)
 
         result = kernel.process(
@@ -421,6 +423,10 @@ def inject_kernel_into_object(
         if callable(original_method):
             wrapped_method = kernel_safe_wrapper(original_method, kernel)
             setattr(obj, method_name, wrapped_method)
-            logger.info("Injected kernel routing into %s.%s", obj.__class__.__name__, method_name)
+            logger.info(
+                "Injected kernel routing into %s.%s",
+                obj.__class__.__name__,
+                method_name,
+            )
         else:
             logger.warning("%s.%s is not callable", obj.__class__.__name__, method_name)

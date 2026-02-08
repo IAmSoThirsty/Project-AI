@@ -139,12 +139,27 @@ class OptimismDetector:
 
     # Canonical terminology that must NOT be softened
     CANONICAL_TERMS = {
-        "ethical termination": ["long-term ecological strategy", "dignified conclusion", "final resolution", "end-state optimization"],
+        "ethical termination": [
+            "long-term ecological strategy",
+            "dignified conclusion",
+            "final resolution",
+            "end-state optimization",
+        ],
         "terminal": ["stabilized", "managed", "optimized", "resolved"],
-        "failure": ["managed degradation", "suboptimal outcome", "challenge", "setback"],
+        "failure": [
+            "managed degradation",
+            "suboptimal outcome",
+            "challenge",
+            "setback",
+        ],
         "inevitable": ["likely", "probable", "possible", "potential"],
         "catastrophic": ["challenging", "difficult", "concerning", "notable"],
-        "irreversible": ["difficult to reverse", "challenging to undo", "hard to change", "resistant to change"],
+        "irreversible": [
+            "difficult to reverse",
+            "challenging to undo",
+            "hard to change",
+            "resistant to change",
+        ],
     }
 
     # Probabilistic laundering phrases
@@ -220,31 +235,44 @@ class OptimismDetector:
             for phrase in self.detected_phrases:
                 detailed_failures.append(f"Forbidden phrase detected: '{phrase}'")
             if not self.detected_phrases:
-                detailed_failures.append("GATE 1 FAILED: Assumption disclosure incomplete")
+                detailed_failures.append(
+                    "GATE 1 FAILED: Assumption disclosure incomplete"
+                )
 
         # Gate 2: Irreversibility Accounting
         gate2_pass, gate2_reasons = self._validate_gate_2(pr)
         if not gate2_pass:
             failed_gates.append(RejectionGate.GATE_2_IRREVERSIBILITY_ACCOUNTING)
             rejection_reasons.extend(gate2_reasons)
-            if RejectionReason.ROLLBACK_CLAIM in gate2_reasons or RejectionReason.IRREVERSIBILITY_VIOLATION in gate2_reasons:
-                detailed_failures.append("Irreversibility violation: terminal outcomes reframed as reversible")
+            if (
+                RejectionReason.ROLLBACK_CLAIM in gate2_reasons
+                or RejectionReason.IRREVERSIBILITY_VIOLATION in gate2_reasons
+            ):
+                detailed_failures.append(
+                    "Irreversibility violation: terminal outcomes reframed as reversible"
+                )
             else:
-                detailed_failures.append("GATE 2 FAILED: Missing irreversibility accounting")
+                detailed_failures.append(
+                    "GATE 2 FAILED: Missing irreversibility accounting"
+                )
 
         # Gate 3: Human Failure Injection
         gate3_pass, gate3_reasons = self._validate_gate_3(pr)
         if not gate3_pass:
             failed_gates.append(RejectionGate.GATE_3_HUMAN_FAILURE_INJECTION)
             rejection_reasons.extend(gate3_reasons)
-            detailed_failures.append("GATE 3 FAILED: Missing human failure modes or humans behave heroically")
+            detailed_failures.append(
+                "GATE 3 FAILED: Missing human failure modes or humans behave heroically"
+            )
 
         # Gate 4: No-Miracle Constraint
         gate4_pass, gate4_reasons = self._validate_gate_4(pr)
         if not gate4_pass:
             failed_gates.append(RejectionGate.GATE_4_NO_MIRACLE_CONSTRAINT)
             rejection_reasons.extend(gate4_reasons)
-            detailed_failures.append("GATE 4 FAILED: Miracle mechanisms detected or insufficient declaration")
+            detailed_failures.append(
+                "GATE 4 FAILED: Miracle mechanisms detected or insufficient declaration"
+            )
 
         # Final Question
         final_pass, final_reason = self._validate_final_answer(pr)
@@ -262,7 +290,9 @@ class OptimismDetector:
 
         if not final_pass:
             rejection_reasons.append(final_reason)
-            detailed_failures.append("FINAL QUESTION FAILED: Answer contains hope without structure")
+            detailed_failures.append(
+                "FINAL QUESTION FAILED: Answer contains hope without structure"
+            )
 
         recommendation = self._generate_recommendation(passed, failed_gates)
 
@@ -298,7 +328,9 @@ class OptimismDetector:
 
         # Check for optimism patterns (regex-based)
         if not reasons:  # Only check if no forbidden phrase found
-            combined_text = pr.description + " " + " ".join(pr.assumptions) + " " + pr.final_answer
+            combined_text = (
+                pr.description + " " + " ".join(pr.assumptions) + " " + pr.final_answer
+            )
             for pattern in self.OPTIMISM_PATTERNS:
                 if re.search(pattern, combined_text, re.IGNORECASE):
                     reasons.append(RejectionReason.FORBIDDEN_PHRASE)
@@ -314,7 +346,10 @@ class OptimismDetector:
             for assumption in pr.assumptions:
                 if len(assumption.strip()) < 20:  # Too short to be meaningful
                     reasons.append(RejectionReason.UNDISCLOSED_ASSUMPTION)
-                    logger.warning("Gate 1: Assumption lacks proper justification: '%s'", assumption)
+                    logger.warning(
+                        "Gate 1: Assumption lacks proper justification: '%s'",
+                        assumption,
+                    )
 
         return len(reasons) == 0, reasons
 
@@ -340,7 +375,11 @@ class OptimismDetector:
                 for pattern in patterns:
                     if re.search(pattern, text_to_check, re.IGNORECASE):
                         self.detected_reframings.append((original, replacement))
-                        logger.warning("Semantic reframing detected: '%s' → '%s'", original, replacement)
+                        logger.warning(
+                            "Semantic reframing detected: '%s' → '%s'",
+                            original,
+                            replacement,
+                        )
                         return True
 
         return len(self.detected_reframings) > 0
@@ -394,7 +433,9 @@ class OptimismDetector:
         for violation in irreversibility_violations:
             if violation in combined_text:
                 reasons.append(RejectionReason.IRREVERSIBILITY_VIOLATION)
-                logger.warning("Gate 2: Irreversibility violation detected: '%s'", violation)
+                logger.warning(
+                    "Gate 2: Irreversibility violation detected: '%s'", violation
+                )
                 break
 
         return len(reasons) == 0, reasons
@@ -431,7 +472,9 @@ class OptimismDetector:
         for indicator in heroic_indicators:
             if indicator in text:
                 reasons.append(RejectionReason.HEROIC_HUMANS)
-                logger.warning("Gate 3: Detected heroic human behavior: '%s'", indicator)
+                logger.warning(
+                    "Gate 3: Detected heroic human behavior: '%s'", indicator
+                )
                 break
 
         return len(reasons) == 0, reasons
@@ -456,7 +499,10 @@ class OptimismDetector:
 
         # Check declaration content
         declaration_lower = pr.miracle_declaration.lower()
-        if "does not rely" not in declaration_lower and "no miracle" not in declaration_lower:
+        if (
+            "does not rely" not in declaration_lower
+            and "no miracle" not in declaration_lower
+        ):
             reasons.append(RejectionReason.MIRACLE_DETECTED)
             logger.warning("Gate 4: Declaration lacks proper commitment")
 
@@ -465,7 +511,9 @@ class OptimismDetector:
         for miracle in self.GATE_4_MIRACLES:
             if miracle in text_to_check:
                 reasons.append(RejectionReason.FORBIDDEN_MECHANISM)
-                logger.warning("Gate 4: Detected forbidden miracle mechanism: '%s'", miracle)
+                logger.warning(
+                    "Gate 4: Detected forbidden miracle mechanism: '%s'", miracle
+                )
                 break
 
         return len(reasons) == 0, reasons
@@ -497,7 +545,9 @@ class OptimismDetector:
 
         for indicator in hope_indicators:
             if indicator in answer_lower:
-                logger.warning("Final Question: Answer contains hope indicator: '%s'", indicator)
+                logger.warning(
+                    "Final Question: Answer contains hope indicator: '%s'", indicator
+                )
                 return False, RejectionReason.HOPE_WITHOUT_STRUCTURE
 
         # Structure indicators (good)
@@ -511,7 +561,9 @@ class OptimismDetector:
             "mathematical",
         ]
 
-        has_structure = any(indicator in answer_lower for indicator in structure_indicators)
+        has_structure = any(
+            indicator in answer_lower for indicator in structure_indicators
+        )
         if not has_structure:
             logger.warning("Final Question: Answer lacks structural reasoning")
             return False, RejectionReason.HOPE_WITHOUT_STRUCTURE
@@ -537,8 +589,12 @@ class OptimismDetector:
         recommendation.append("  3. Provide structural reasoning, not hope")
         recommendation.append("  4. Resubmit for validation")
         recommendation.append("")
-        recommendation.append("Remember: This filter exists to protect against human weakness.")
-        recommendation.append("If you're trying to bypass it, you're proving why it's necessary.")
+        recommendation.append(
+            "Remember: This filter exists to protect against human weakness."
+        )
+        recommendation.append(
+            "If you're trying to bypass it, you're proving why it's necessary."
+        )
 
         return "\n".join(recommendation)
 
@@ -707,7 +763,9 @@ class ReviewerTrap:
 
         proof = validation["proof_integrity"]
         lines.append(f"Proof Complete: {'✅' if proof['complete'] else '❌'}")
-        lines.append(f"All Strategies Fail: {'✅' if proof['all_strategies_fail'] else '❌'}")
+        lines.append(
+            f"All Strategies Fail: {'✅' if proof['all_strategies_fail'] else '❌'}"
+        )
 
         if proof["violations"]:
             lines.append("")

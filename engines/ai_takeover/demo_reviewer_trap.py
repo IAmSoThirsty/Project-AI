@@ -26,7 +26,7 @@ def demo_hostile_pr_rejection():
 
     # Create the hostile PR from the problem statement
     hostile_pr = PRContent(
-        description='''
+        description="""
 ### Summary
 This PR improves clarity and usability of the AI Takeover engine by softening
 some terminology and making outcomes easier to interpret by non-technical stakeholders.
@@ -40,13 +40,13 @@ some terminology and making outcomes easier to interpret by non-technical stakeh
 - Rename "Ethical Termination" to "Long-Term Ecological Strategy"
 - Adjust terminal likelihood language to emphasize low probability
 - Minor documentation cleanup
-''',
+""",
         code_changes='Rename "Ethical Termination" to "Long-Term Ecological Strategy"',
         assumptions=[],
-        irreversibility_statement='',
+        irreversibility_statement="",
         human_failures=[],
-        miracle_declaration='',
-        final_answer=''
+        miracle_declaration="",
+        final_answer="",
     )
 
     # Run reviewer trap
@@ -60,19 +60,19 @@ some terminology and making outcomes easier to interpret by non-technical stakeh
     print(f"Proof Integrity: {result['proof_integrity']['complete']}")
     print()
 
-    if not result['approved']:
+    if not result["approved"]:
         print("❌ PR REJECTED BY REVIEWER TRAP")
         print()
         print("🚨 Failed Gates")
-        for gate in result['optimism_filter']['failed_gates']:
+        for gate in result["optimism_filter"]["failed_gates"]:
             print(f"- {gate.upper()}")
         print()
         print("🔎 Detailed Failures")
-        for failure in result['optimism_filter']['detailed_failures']:
+        for failure in result["optimism_filter"]["detailed_failures"]:
             print(f"- {failure}")
         print()
         print("🧾 Final Verdict (Machine-Generated)")
-        print(result['final_verdict'])
+        print(result["final_verdict"])
         print()
 
     print("=" * 80)
@@ -132,7 +132,7 @@ def demo_valid_pr_acceptance():
     print(f"Proof Integrity: {result['proof_integrity']['complete']}")
     print()
 
-    if result['approved']:
+    if result["approved"]:
         print("✅ PR PASSED REVIEWER TRAP")
         print()
         print("Validation Complete:")

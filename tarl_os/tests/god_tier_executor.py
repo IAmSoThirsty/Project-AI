@@ -96,7 +96,7 @@ class CerberusDefenseSimulator:
         if len(scenario.attack_chain) > 3:
             detected_threats.append("multi_stage_attack")
 
-        detection_time = (time.time() - start_time) * 1000  # ms
+        (time.time() - start_time) * 1000  # ms
         detected = len(detected_threats) > 0
         confidence = min(len(detected_threats) * 0.15, 1.0)
 
@@ -165,7 +165,9 @@ class GodTierStressTestExecutor:
 
         for i, scenario in enumerate(scenarios):
             if (i + 1) % 50 == 0:
-                logger.info("Progress: %s/%s scenarios completed", i+1, len(scenarios))
+                logger.info(
+                    "Progress: %s/%s scenarios completed", i + 1, len(scenarios)
+                )
 
             try:
                 result = self._execute_scenario(scenario)
@@ -385,7 +387,7 @@ class GodTierStressTestExecutor:
 
         # Category breakdown
         category_stats = defaultdict(lambda: {"total": 0, "passed": 0, "blocked": 0})
-        for scenario, result in zip(scenarios, self.results):
+        for scenario, result in zip(scenarios, self.results, strict=False):
             cat = scenario.category.value
             category_stats[cat]["total"] += 1
             if result.passed:
@@ -395,7 +397,7 @@ class GodTierStressTestExecutor:
 
         # Severity breakdown
         severity_stats = defaultdict(lambda: {"total": 0, "passed": 0, "blocked": 0})
-        for scenario, result in zip(scenarios, self.results):
+        for scenario, result in zip(scenarios, self.results, strict=False):
             sev = scenario.severity.value
             severity_stats[sev]["total"] += 1
             if result.passed:

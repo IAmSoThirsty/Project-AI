@@ -179,7 +179,9 @@ class TierPerformanceMonitor:
         logger.info("TierPerformanceMonitor initialized")
         logger.info("  Window size: %s samples", window_size)
         logger.info("  Sample retention: %s", sample_retention)
-        logger.info("  Predictions: %s", 'enabled' if enable_predictions else 'disabled')
+        logger.info(
+            "  Predictions: %s", "enabled" if enable_predictions else "disabled"
+        )
 
     def start_request_tracking(
         self,

@@ -306,7 +306,12 @@ class EventSpine:
             with self._lock:
                 self._stats["events_published"] += 1
 
-            logger.debug("Event published: %s (%s) from %s", event_id, category.value, source_domain)
+            logger.debug(
+                "Event published: %s (%s) from %s",
+                event_id,
+                category.value,
+                source_domain,
+            )
 
             return event_id
 
@@ -452,7 +457,11 @@ class EventSpine:
             try:
                 subscription.callback(event)
 
-                logger.debug("Event delivered to %s (%s)", subscriber_id, subscription.subscriber_domain)
+                logger.debug(
+                    "Event delivered to %s (%s)",
+                    subscriber_id,
+                    subscription.subscriber_domain,
+                )
 
             except Exception as e:
                 logger.error("Error delivering event to %s: %s", subscriber_id, e)

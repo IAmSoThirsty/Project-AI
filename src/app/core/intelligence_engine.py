@@ -831,7 +831,9 @@ class IdentityIntegratedIntelligenceEngine:
         # Apply adaptation if approved
         if decision.allowed and instance:
             perspective_engine.update_from_interaction(adaptation)
-            self.logger.info("Personality adaptation applied for user %s: %s", user_id, adaptation)
+            self.logger.info(
+                "Personality adaptation applied for user %s: %s", user_id, adaptation
+            )
 
         return {
             "governance_decision": {

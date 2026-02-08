@@ -712,7 +712,7 @@ class PolicyManager:
                 frequent_topics = history.frequent_topics
                 sensitive_count = sum(
                     1
-                    for topic in frequent_topics.keys()
+                    for topic in frequent_topics
                     if topic == TopicCategory.SENSITIVE.value
                 )
                 if sensitive_count > 5:

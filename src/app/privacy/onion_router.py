@@ -54,7 +54,7 @@ class OnionRouter:
             circuit = self._build_circuit()
             if circuit:
                 self._circuits.append(circuit)
-                self.logger.debug("Circuit established: %s", [n['id'] for n in circuit])
+                self.logger.debug("Circuit established: %s", [n["id"] for n in circuit])
 
     def _build_circuit(self) -> list[dict[str, Any]]:
         """Build a single onion circuit"""
@@ -99,7 +99,9 @@ class OnionRouter:
         encrypted_request["circuit"] = [node["id"] for node in circuit]
         encrypted_request["encrypted_layers"] = len(circuit)
 
-        self.logger.debug("Request routed through circuit: %s", encrypted_request['circuit'])
+        self.logger.debug(
+            "Request routed through circuit: %s", encrypted_request["circuit"]
+        )
         return encrypted_request
 
     def get_circuits(self) -> list[list[dict[str, Any]]]:

@@ -146,7 +146,10 @@ class RoboticMainframeSystem:
                 logger.info("ROBOTIC MAINFRAME SYSTEM INITIALIZED SUCCESSFULLY")
                 logger.info("Robot: %s", self.config.robot_name)
                 logger.info("Joints: %s", self.config.num_joints)
-                logger.info("Four Laws: %s", 'ENABLED' if self.config.four_laws_enabled else 'DISABLED')
+                logger.info(
+                    "Four Laws: %s",
+                    "ENABLED" if self.config.four_laws_enabled else "DISABLED",
+                )
                 logger.info("Triumvirate: ENABLED")
                 logger.info("=" * 80)
 
@@ -175,7 +178,9 @@ class RoboticMainframeSystem:
                 logger.error("Cannot read joint states")
                 return False
 
-            logger.info("System validation passed: %s joints responsive", len(joint_states))
+            logger.info(
+                "System validation passed: %s joints responsive", len(joint_states)
+            )
             return True
 
         except Exception as e:

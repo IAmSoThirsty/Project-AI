@@ -44,14 +44,14 @@ class TestSovereignRuntime:
 
             # Create first runtime - generates keypair
             sovereign1 = SovereignRuntime(data_dir=data_dir)
-            public_key1 = sovereign1.public_key.public_bytes(
+            sovereign1.public_key.public_bytes(
                 encoding=sovereign1.public_key.__class__.__module__,
                 format=sovereign1.public_key.__class__.__name__,
             )
 
             # Create second runtime - should load same keypair
             sovereign2 = SovereignRuntime(data_dir=data_dir)
-            public_key2 = sovereign2.public_key.public_bytes(
+            sovereign2.public_key.public_bytes(
                 encoding=sovereign2.public_key.__class__.__module__,
                 format=sovereign2.public_key.__class__.__name__,
             )

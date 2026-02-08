@@ -72,7 +72,7 @@ class ModuleLoader:
             source = f.read()
 
         # Compile module
-        bytecode = self.compiler.compile(source)
+        self.compiler.compile(source)
 
         # Create module
         module = Module(module_name, module_path)

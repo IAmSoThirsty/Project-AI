@@ -57,7 +57,9 @@ async def run_triumvirate_pipeline(request: dict) -> dict:
             input_data=input_data, context=context, skip_validation=skip_validation
         )
 
-        activity.logger.info("Triumvirate pipeline complete: %s", result.get('correlation_id'))
+        activity.logger.info(
+            "Triumvirate pipeline complete: %s", result.get("correlation_id")
+        )
         return result
 
     except Exception as e:

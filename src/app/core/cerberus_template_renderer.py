@@ -113,7 +113,9 @@ class TemplateRenderer:
         # Verify no unsubstituted placeholders remain
         remaining = self._extract_placeholders(rendered)
         if remaining:
-            logger.warning("Unsubstituted placeholders remain: %s", ', '.join(sorted(remaining)))
+            logger.warning(
+                "Unsubstituted placeholders remain: %s", ", ".join(sorted(remaining))
+            )
 
         return rendered
 

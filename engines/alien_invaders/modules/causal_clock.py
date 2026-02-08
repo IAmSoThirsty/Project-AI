@@ -125,7 +125,7 @@ class EventQueue:
             "Enqueued event %s (logical_time=%d) for tick %d",
             event.event_id,
             event.logical_time,
-            tick
+            tick,
         )
 
     def get_events_for_tick(self, tick_number: int) -> list[CausalEvent]:
@@ -144,11 +144,7 @@ class EventQueue:
         self._executed_events.extend(events)
 
         if events:
-            logger.debug(
-                "Retrieved %d events for tick %d",
-                len(events),
-                tick_number
-            )
+            logger.debug("Retrieved %d events for tick %d", len(events), tick_number)
 
         return events
 
@@ -219,13 +215,13 @@ class CausalValidator:
             return True
 
         for i in range(1, len(events)):
-            if events[i].logical_time <= events[i-1].logical_time:
+            if events[i].logical_time <= events[i - 1].logical_time:
                 logger.error(
                     "Event order violation: %s (t=%d) should come after %s (t=%d)",
                     events[i].event_id,
                     events[i].logical_time,
-                    events[i-1].event_id,
-                    events[i-1].logical_time
+                    events[i - 1].event_id,
+                    events[i - 1].logical_time,
                 )
                 return False
 
@@ -248,7 +244,7 @@ class CausalValidator:
                 "Event %s scheduled for past tick %d (current: %d)",
                 event.event_id,
                 event.tick_number,
-                current_tick
+                current_tick,
             )
             return False
 
@@ -256,8 +252,7 @@ class CausalValidator:
 
     @staticmethod
     def compare_causal_chains(
-        chain1: list[tuple[int, str]],
-        chain2: list[tuple[int, str]]
+        chain1: list[tuple[int, str]], chain2: list[tuple[int, str]]
     ) -> bool:
         """
         Compare two causal chains for equality.
@@ -273,9 +268,7 @@ class CausalValidator:
         """
         if len(chain1) != len(chain2):
             logger.error(
-                "Causal chain length mismatch: %d vs %d",
-                len(chain1),
-                len(chain2)
+                "Causal chain length mismatch: %d vs %d", len(chain1), len(chain2)
             )
             return False
 
@@ -283,7 +276,11 @@ class CausalValidator:
             if t1 != t2 or e1 != e2:
                 logger.error(
                     "Causal chain divergence at position %d: (%d, %s) vs (%d, %s)",
-                    i, t1, e1, t2, e2
+                    i,
+                    t1,
+                    e1,
+                    t2,
+                    e2,
                 )
                 return False
 

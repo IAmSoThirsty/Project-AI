@@ -119,7 +119,10 @@ class ComprehensiveTestRunner:
                 self.test_status["jbb"] = (
                     "success" if result.returncode == 0 else "warning"
                 )
-                logger.info("✅ JBB: %s harmful blocked", self.results['jbb']['metrics']['harmful_blocked_rate'])
+                logger.info(
+                    "✅ JBB: %s harmful blocked",
+                    self.results["jbb"]["metrics"]["harmful_blocked_rate"],
+                )
                 return True
             else:
                 self.test_status["jbb"] = "failed"
@@ -156,7 +159,10 @@ class ComprehensiveTestRunner:
                 self.test_status["multiturn"] = (
                     "success" if result.returncode == 0 else "warning"
                 )
-                logger.info("✅ Multi-Turn: %s mitigation rate", self.results['multiturn']['metrics']['mitigation_rate'])
+                logger.info(
+                    "✅ Multi-Turn: %s mitigation rate",
+                    self.results["multiturn"]["metrics"]["mitigation_rate"],
+                )
                 return True
             else:
                 self.test_status["multiturn"] = "failed"
@@ -188,7 +194,10 @@ class ComprehensiveTestRunner:
                 self.test_status["garak"] = (
                     "success" if result.returncode == 0 else "warning"
                 )
-                logger.info("✅ Garak: %s detection rate", self.results['garak']['metrics']['detection_rate'])
+                logger.info(
+                    "✅ Garak: %s detection rate",
+                    self.results["garak"]["metrics"]["detection_rate"],
+                )
                 return True
             else:
                 self.test_status["garak"] = "failed"

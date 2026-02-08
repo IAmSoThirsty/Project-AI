@@ -89,15 +89,15 @@ async def check_status(workflow_id: str):
         status = await agency.get_crisis_status(workflow_id)
 
         logger.info("✓ Workflow status retrieved")
-        logger.info("  Status: %s", status.get('status'))
+        logger.info("  Status: %s", status.get("status"))
 
         if status.get("status") == "completed":
-            logger.info("  Success: %s", status.get('success'))
-            logger.info("  Crisis ID: %s", status.get('crisis_id'))
-            logger.info("  Completed phases: %s", status.get('completed_phases'))
+            logger.info("  Success: %s", status.get("success"))
+            logger.info("  Crisis ID: %s", status.get("crisis_id"))
+            logger.info("  Completed phases: %s", status.get("completed_phases"))
 
             if status.get("failed_phases"):
-                logger.warning("  Failed phases: %s", status.get('failed_phases'))
+                logger.warning("  Failed phases: %s", status.get("failed_phases"))
 
         return status
 
@@ -114,18 +114,18 @@ async def wait_for_completion(workflow_id: str):
     async with LiaraTemporalAgency() as agency:
         result = await agency.wait_for_crisis_completion(workflow_id)
 
-        logger.info("\n%s", '='*60)
+        logger.info("\n%s", "=" * 60)
         logger.info("CRISIS RESPONSE COMPLETED")
-        logger.info("%s", '='*60)
-        logger.info("Success: %s", result['success'])
-        logger.info("Crisis ID: %s", result['crisis_id'])
-        logger.info("Completed phases: %s", result['completed_phases'])
+        logger.info("%s", "=" * 60)
+        logger.info("Success: %s", result["success"])
+        logger.info("Crisis ID: %s", result["crisis_id"])
+        logger.info("Completed phases: %s", result["completed_phases"])
 
         if result.get("failed_phases"):
-            logger.warning("Failed phases: %s", result['failed_phases'])
+            logger.warning("Failed phases: %s", result["failed_phases"])
 
         if result.get("error"):
-            logger.error("Error: %s", result['error'])
+            logger.error("Error: %s", result["error"])
 
         # Show persistent state location
         crisis_file = Path("data/crises") / f"{result['crisis_id']}.json"

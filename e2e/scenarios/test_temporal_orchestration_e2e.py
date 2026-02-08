@@ -43,16 +43,12 @@ class TestTemporalOrchestration:
         activities = ["activity_1", "activity_2", "activity_3"]
 
         # Act
-        result = self._execute_workflow_with_activities(
-            workflow_id, activities
-        )
+        result = self._execute_workflow_with_activities(workflow_id, activities)
 
         # Assert
         assert result["status"] == "completed"
         assert len(result["activity_results"]) == len(activities)
-        assert all(
-            ar["status"] == "success" for ar in result["activity_results"]
-        )
+        assert all(ar["status"] == "success" for ar in result["activity_results"])
 
     def test_workflow_activity_retry(self, e2e_config):
         """Test activity retry logic on transient failures."""
@@ -64,9 +60,7 @@ class TestTemporalOrchestration:
         }
 
         # Act
-        result = self._execute_workflow_with_retry(
-            workflow_id, activity_config
-        )
+        result = self._execute_workflow_with_retry(workflow_id, activity_config)
 
         # Assert
         assert result["status"] == "completed"
@@ -79,7 +73,7 @@ class TestTemporalOrchestration:
         workflow_id = "test_workflow_cancellation"
 
         # Act - Start long-running workflow
-        workflow_handle = self._start_long_workflow(workflow_id)
+        self._start_long_workflow(workflow_id)
 
         # Wait a bit then cancel
         time.sleep(0.5)
@@ -96,9 +90,7 @@ class TestTemporalOrchestration:
         timeout_seconds = 2
 
         # Act
-        result = self._execute_workflow_with_timeout(
-            workflow_id, timeout_seconds
-        )
+        result = self._execute_workflow_with_timeout(workflow_id, timeout_seconds)
 
         # Assert
         assert result["status"] == "timeout"
@@ -111,16 +103,12 @@ class TestTemporalOrchestration:
         num_children = 3
 
         # Act
-        result = self._execute_parent_child_workflow(
-            parent_workflow_id, num_children
-        )
+        result = self._execute_parent_child_workflow(parent_workflow_id, num_children)
 
         # Assert
         assert result["status"] == "completed"
         assert len(result["child_results"]) == num_children
-        assert all(
-            cr["status"] == "completed" for cr in result["child_results"]
-        )
+        assert all(cr["status"] == "completed" for cr in result["child_results"])
 
     def test_workflow_signal_handling(self, e2e_config):
         """Test workflow signal handling."""
@@ -128,7 +116,7 @@ class TestTemporalOrchestration:
         workflow_id = "test_workflow_signals"
 
         # Act - Start workflow that waits for signals
-        workflow_handle = self._start_signal_workflow(workflow_id)
+        self._start_signal_workflow(workflow_id)
 
         # Send signals
         self._send_workflow_signal(workflow_id, "signal_1", {"value": 100})
@@ -148,7 +136,7 @@ class TestTemporalOrchestration:
         workflow_id = "test_workflow_query"
 
         # Act - Start workflow
-        workflow_handle = self._start_long_workflow(workflow_id)
+        self._start_long_workflow(workflow_id)
 
         # Query workflow state
         state = self._query_workflow(workflow_id, "get_state")
@@ -193,9 +181,7 @@ class TestTemporalOrchestration:
 
     # Helper methods
 
-    def _execute_workflow(
-        self, workflow_id: str, input_data: dict
-    ) -> dict:
+    def _execute_workflow(self, workflow_id: str, input_data: dict) -> dict:
         """Execute a simple workflow."""
         # Simulate workflow execution
         time.sleep(0.5)
@@ -213,10 +199,12 @@ class TestTemporalOrchestration:
         for activity in activities:
             # Simulate activity execution
             time.sleep(0.2)
-            activity_results.append({
-                "activity": activity,
-                "status": "success",
-            })
+            activity_results.append(
+                {
+                    "activity": activity,
+                    "status": "success",
+                }
+            )
 
         return {
             "status": "completed",
@@ -224,9 +212,7 @@ class TestTemporalOrchestration:
             "activity_results": activity_results,
         }
 
-    def _execute_workflow_with_retry(
-        self, workflow_id: str, config: dict
-    ) -> dict:
+    def _execute_workflow_with_retry(self, workflow_id: str, config: dict) -> dict:
         """Execute workflow with retry logic."""
         max_retries = config["max_retries"]
         fail_first_n = config["fail_first_n"]
@@ -279,18 +265,18 @@ class TestTemporalOrchestration:
             "workflow_id": workflow_id,
         }
 
-    def _execute_parent_child_workflow(
-        self, parent_id: str, num_children: int
-    ) -> dict:
+    def _execute_parent_child_workflow(self, parent_id: str, num_children: int) -> dict:
         """Execute parent workflow that spawns children."""
         child_results = []
         for i in range(num_children):
             child_id = f"{parent_id}_child_{i}"
             time.sleep(0.2)
-            child_results.append({
-                "child_id": child_id,
-                "status": "completed",
-            })
+            child_results.append(
+                {
+                    "child_id": child_id,
+                    "status": "completed",
+                }
+            )
 
         return {
             "status": "completed",
@@ -312,9 +298,7 @@ class TestTemporalOrchestration:
         """Send signal to workflow."""
         time.sleep(0.1)
 
-    def _wait_for_workflow(
-        self, workflow_id: str, timeout: int
-    ) -> dict:
+    def _wait_for_workflow(self, workflow_id: str, timeout: int) -> dict:
         """Wait for workflow to complete."""
         time.sleep(1)
         return {
@@ -350,9 +334,7 @@ class TestTemporalOrchestration:
             "completed_steps": completed_steps,
         }
 
-    def _execute_workflows_parallel(
-        self, workflow_ids: list[str]
-    ) -> list[dict]:
+    def _execute_workflows_parallel(self, workflow_ids: list[str]) -> list[dict]:
         """Execute multiple workflows in parallel."""
         from concurrent.futures import ThreadPoolExecutor
 
@@ -396,7 +378,7 @@ class TestTemporalIntegration:
         data_to_persist = {"key": "value", "count": 42}
 
         # Act - Workflow persists data
-        result = self._execute_workflow_with_db(workflow_id, data_to_persist)
+        self._execute_workflow_with_db(workflow_id, data_to_persist)
 
         # Query database
         persisted_data = self._query_database(workflow_id)
@@ -410,9 +392,7 @@ class TestTemporalIntegration:
         """Simulate API call."""
         return {"workflow_id": "wf_12345", "status": "started"}
 
-    def _wait_for_workflow(
-        self, workflow_id: str, timeout: int
-    ) -> dict:
+    def _wait_for_workflow(self, workflow_id: str, timeout: int) -> dict:
         """Wait for workflow completion."""
         time.sleep(1)
         return {
@@ -421,9 +401,7 @@ class TestTemporalIntegration:
             "items_processed": 100,
         }
 
-    def _execute_workflow_with_db(
-        self, workflow_id: str, data: dict
-    ) -> dict:
+    def _execute_workflow_with_db(self, workflow_id: str, data: dict) -> dict:
         """Execute workflow that persists to database."""
         time.sleep(0.5)
         return {"status": "completed", "workflow_id": workflow_id}

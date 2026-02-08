@@ -73,11 +73,10 @@ class PolicyEngine:
         risk = capability_meta.get("risk_level", 0)
         if risk > max_risk:
             return False
-        if capability_meta.get("requires_external", False) and not rules.get(
-            "allow_external_calls", False
-        ):
-            return False
-        return True
+        return not (
+            capability_meta.get("requires_external", False)
+            and not rules.get("allow_external_calls", False)
+        )
 
 
 __all__ = ["PolicyEngine"]

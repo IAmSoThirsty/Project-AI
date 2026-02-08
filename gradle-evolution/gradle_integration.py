@@ -29,8 +29,7 @@ from gradle_evolution.security.policy_scheduler import PolicyScheduler
 from gradle_evolution.security.security_engine import SecurityEngine
 
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+    level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
 )
 logger = logging.getLogger(__name__)
 
@@ -44,7 +43,7 @@ class GradleEvolutionBridge:
     def __init__(self, project_dir: str = "."):
         """
         Initialize the evolution bridge.
-        
+
         Args:
             project_dir: Project root directory
         """
@@ -92,7 +91,7 @@ class GradleEvolutionBridge:
             # API layer
             self.verifiability_api = VerifiabilityAPI(
                 capsule_engine=self.capsule_engine,
-                audit_integration=self.audit_integration
+                audit_integration=self.audit_integration,
             )
             self.doc_generator = DocumentationGenerator(
                 output_dir=str(self.project_dir / "build" / "docs" / "generated")
@@ -105,17 +104,15 @@ class GradleEvolutionBridge:
             raise
 
     def validate_build_phase(
-        self,
-        phase: str,
-        context: dict[str, Any] | None = None
+        self, phase: str, context: dict[str, Any] | None = None
     ) -> dict[str, Any]:
         """
         Validate a build phase through all governance layers.
-        
+
         Args:
             phase: Build phase name (e.g., "compile", "test", "package")
             context: Additional context for validation
-            
+
         Returns:
             Validation result with status and details
         """
@@ -129,7 +126,7 @@ class GradleEvolutionBridge:
             "allowed": True,
             "violations": [],
             "warnings": [],
-            "details": {}
+            "details": {},
         }
 
         try:
@@ -139,10 +136,9 @@ class GradleEvolutionBridge:
             )
             if not is_allowed:
                 result["allowed"] = False
-                result["violations"].append({
-                    "layer": "constitutional",
-                    "reason": reason
-                })
+                result["violations"].append(
+                    {"layer": "constitutional", "reason": reason}
+                )
 
             # Policy enforcement
             policy_result = self.policy_enforcer.enforce_build_policy(phase, context)
@@ -155,10 +151,14 @@ class GradleEvolutionBridge:
             security_result = self.security_engine.validate_action(phase, context)
             if not security_result["allowed"]:
                 result["allowed"] = False
-                result["violations"].append({
-                    "layer": "security",
-                    "reason": security_result.get("reason", "Unknown security violation")
-                })
+                result["violations"].append(
+                    {
+                        "layer": "security",
+                        "reason": security_result.get(
+                            "reason", "Unknown security violation"
+                        ),
+                    }
+                )
 
             # Audit logging
             self.audit_integration.log_build_event(phase, context, result)
@@ -166,32 +166,30 @@ class GradleEvolutionBridge:
             # Update build cognition
             self.build_cognition.record_build_event(phase, context, result)
 
-            logger.info("Validation result: %s", 'ALLOWED' if result['allowed'] else 'BLOCKED')
+            logger.info(
+                "Validation result: %s", "ALLOWED" if result["allowed"] else "BLOCKED"
+            )
 
         except Exception as e:
             logger.error("Error during validation: %s", e)
             result["allowed"] = False
-            result["violations"].append({
-                "layer": "system",
-                "reason": f"Validation error: {str(e)}"
-            })
+            result["violations"].append(
+                {"layer": "system", "reason": f"Validation error: {str(e)}"}
+            )
 
         return result
 
     def create_build_capsule(
-        self,
-        phase: str,
-        artifacts: list,
-        metadata: dict[str, Any] | None = None
+        self, phase: str, artifacts: list, metadata: dict[str, Any] | None = None
     ) -> dict[str, Any]:
         """
         Create a deterministic build capsule.
-        
+
         Args:
             phase: Build phase
             artifacts: List of artifact paths
             metadata: Additional metadata
-            
+
         Returns:
             Capsule creation result with hash and signature
         """
@@ -202,19 +200,17 @@ class GradleEvolutionBridge:
 
         try:
             capsule = self.capsule_engine.create_capsule(
-                phase=phase,
-                artifacts=artifacts,
-                metadata=metadata
+                phase=phase, artifacts=artifacts, metadata=metadata
             )
 
             # Log capsule creation
             self.audit_integration.log_build_event(
                 "capsule_created",
                 {"phase": phase, "capsule_id": capsule["capsule_id"]},
-                {"success": True}
+                {"success": True},
             )
 
-            logger.info("✓ Capsule created: %s", capsule['capsule_id'])
+            logger.info("✓ Capsule created: %s", capsule["capsule_id"])
             return capsule
 
         except Exception as e:
@@ -224,7 +220,7 @@ class GradleEvolutionBridge:
     def generate_documentation(self) -> dict[str, Any]:
         """
         Generate documentation from current execution state.
-        
+
         Returns:
             Documentation generation result
         """
@@ -245,7 +241,9 @@ class GradleEvolutionBridge:
             # Generate documentation
             docs = self.doc_generator.generate_from_state(state)
 
-            logger.info("✓ Documentation generated: %s files", len(docs.get('files', [])))
+            logger.info(
+                "✓ Documentation generated: %s files", len(docs.get("files", []))
+            )
             return docs
 
         except Exception as e:
@@ -298,7 +296,7 @@ def main():
                     "security": "✓",
                     "audit": "✓",
                     "api": "✓",
-                }
+                },
             }
             print(json.dumps(status, indent=2))
             sys.exit(0)

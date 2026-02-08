@@ -20,12 +20,12 @@ from datetime import datetime
 from pathlib import Path
 
 # Color codes for terminal output
-GREEN = '\033[92m'
-YELLOW = '\033[93m'
-RED = '\033[91m'
-BLUE = '\033[94m'
-BOLD = '\033[1m'
-RESET = '\033[0m'
+GREEN = "\033[92m"
+YELLOW = "\033[93m"
+RED = "\033[91m"
+BLUE = "\033[94m"
+BOLD = "\033[1m"
+RESET = "\033[0m"
 
 
 class GodTierVerifier:
@@ -37,7 +37,7 @@ class GodTierVerifier:
             "timestamp": datetime.utcnow().isoformat() + "Z",
             "version": "1.0.0",
             "repository": "Project-AI",
-            "checks": []
+            "checks": [],
         }
         self.warnings = 0
         self.failures = 0
@@ -54,7 +54,7 @@ class GodTierVerifier:
                 "passed": passed,
                 "message": message,
                 "details": details,
-                "timestamp": datetime.utcnow().isoformat() + "Z"
+                "timestamp": datetime.utcnow().isoformat() + "Z",
             }
 
             self.results["checks"].append(result)
@@ -81,7 +81,7 @@ class GodTierVerifier:
                 "passed": False,
                 "message": f"Check failed with error: {str(e)}",
                 "details": [],
-                "timestamp": datetime.utcnow().isoformat() + "Z"
+                "timestamp": datetime.utcnow().isoformat() + "Z",
             }
             self.results["checks"].append(result)
             print(f"  {RED}✗{RESET} Error: {str(e)}")
@@ -90,13 +90,6 @@ class GodTierVerifier:
 
     def check_root_structure(self) -> tuple[bool, str, list[str]]:
         """Verify root directory structure compliance"""
-        allowed_patterns = [
-            "README.md", "CHANGELOG.md", "CODE_OF_CONDUCT.md", "CODEOWNERS",
-            "LICENSE", "DEVELOPER_QUICK_REFERENCE.md", "SECURITY.md",
-            "Dockerfile", "docker-compose.yml", "Makefile", "*.gradle",
-            "setup.py", "pyproject.toml", "package.json", "requirements*.txt",
-            ".gitignore", ".pre-commit-config.yaml", "*.py"
-        ]
 
         violations = []
         root_files = [f for f in self.root.iterdir() if f.is_file()]
@@ -105,14 +98,21 @@ class GodTierVerifier:
             name = file.name
 
             # Check for prohibited patterns
-            if any(pattern in name for pattern in ["_COMPLETE.md", "_SUMMARY.md", "_STATUS.md"]):
+            if any(
+                pattern in name
+                for pattern in ["_COMPLETE.md", "_SUMMARY.md", "_STATUS.md"]
+            ):
                 violations.append(f"Prohibited file in root: {name}")
 
             if name.endswith((".backup", ".bak", "~")):
                 violations.append(f"Backup file in root: {name}")
 
         if violations:
-            return False, f"Found {len(violations)} root structure violations", violations
+            return (
+                False,
+                f"Found {len(violations)} root structure violations",
+                violations,
+            )
 
         return True, f"Root structure clean ({len(root_files)} files)", []
 
@@ -121,11 +121,17 @@ class GodTierVerifier:
         index_path = self.root / "docs/internal/archive/ARCHIVE_INDEX.md"
 
         if not index_path.exists():
-            return False, "ARCHIVE_INDEX.md missing", ["Create: docs/internal/archive/ARCHIVE_INDEX.md"]
+            return (
+                False,
+                "ARCHIVE_INDEX.md missing",
+                ["Create: docs/internal/archive/ARCHIVE_INDEX.md"],
+            )
 
         # Count archived files
         archive_path = self.root / "docs/internal/archive"
-        archive_files = list(archive_path.rglob("*.md")) + list(archive_path.rglob("*.txt"))
+        archive_files = list(archive_path.rglob("*.md")) + list(
+            archive_path.rglob("*.txt")
+        )
         archive_count = len([f for f in archive_files if f.name != "ARCHIVE_INDEX.md"])
 
         # Check if index mentions approximate file count
@@ -134,9 +140,11 @@ class GodTierVerifier:
 
         # Simple heuristic: index should mention file count
         if str(archive_count) not in content and str(archive_count - 5) not in content:
-            return False, f"Archive index may be outdated ({archive_count} files found)", [
-                "Consider updating ARCHIVE_INDEX.md with current file count"
-            ]
+            return (
+                False,
+                f"Archive index may be outdated ({archive_count} files found)",
+                ["Consider updating ARCHIVE_INDEX.md with current file count"],
+            )
 
         return True, f"Archive index current ({archive_count} files indexed)", []
 
@@ -179,8 +187,8 @@ class GodTierVerifier:
         if pyproject.exists():
             with open(pyproject) as f:
                 for line in f:
-                    if line.strip().startswith('version ='):
-                        versions['pyproject'] = line.split('=')[1].strip().strip('"\'')
+                    if line.strip().startswith("version ="):
+                        versions["pyproject"] = line.split("=")[1].strip().strip("\"'")
                         break
 
         # TARL README
@@ -188,10 +196,10 @@ class GodTierVerifier:
         if tarl_readme.exists():
             with open(tarl_readme) as f:
                 for line in f:
-                    if 'Version:' in line:
-                        parts = line.split(':')
+                    if "Version:" in line:
+                        parts = line.split(":")
                         if len(parts) > 1:
-                            versions['tarl_readme'] = parts[1].strip()
+                            versions["tarl_readme"] = parts[1].strip()
                         break
 
         for name, version in versions.items():
@@ -223,10 +231,7 @@ class GodTierVerifier:
         if not workflows_dir.exists():
             return False, "No CI workflows directory", [".github/workflows/ missing"]
 
-        required_workflows = [
-            "enforce-root-structure.yml",
-            "doc-code-alignment.yml"
-        ]
+        required_workflows = ["enforce-root-structure.yml", "doc-code-alignment.yml"]
 
         missing = []
         found = []
@@ -239,7 +244,11 @@ class GodTierVerifier:
                 missing.append(workflow)
 
         if missing:
-            return False, f"Missing {len(missing)} critical workflows", [f"Missing: {w}" for w in missing]
+            return (
+                False,
+                f"Missing {len(missing)} critical workflows",
+                [f"Missing: {w}" for w in missing],
+            )
 
         return True, f"All {len(found)} critical workflows present", found
 
@@ -251,10 +260,16 @@ class GodTierVerifier:
             return False, "CODEOWNERS file missing", ["Create CODEOWNERS file"]
 
         with open(codeowners) as f:
-            lines = [l.strip() for l in f.readlines() if l.strip() and not l.startswith('#')]
+            lines = [
+                l.strip() for l in f.readlines() if l.strip() and not l.startswith("#")
+            ]
 
         if len(lines) < 5:
-            return False, f"CODEOWNERS too sparse ({len(lines)} rules)", ["Add more granular ownership rules"]
+            return (
+                False,
+                f"CODEOWNERS too sparse ({len(lines)} rules)",
+                ["Add more granular ownership rules"],
+            )
 
         return True, f"CODEOWNERS comprehensive ({len(lines)} rules)", []
 
@@ -272,8 +287,8 @@ class GodTierVerifier:
         lines.append("")
 
         # Summary
-        passed = sum(1 for c in self.results['checks'] if c['passed'])
-        total = len(self.results['checks'])
+        passed = sum(1 for c in self.results["checks"] if c["passed"])
+        total = len(self.results["checks"])
 
         lines.append("📊 Summary:")
         lines.append(f"  Total Checks: {total}")
@@ -290,7 +305,9 @@ class GodTierVerifier:
             lines.append("Documentation aligned with implementation.")
             lines.append("Quality standards maintained.")
         elif self.failures == 0:
-            lines.append(f"{YELLOW}{BOLD}⚠️  GOD TIER STATUS: PASSED WITH WARNINGS{RESET}")
+            lines.append(
+                f"{YELLOW}{BOLD}⚠️  GOD TIER STATUS: PASSED WITH WARNINGS{RESET}"
+            )
             lines.append("")
             lines.append("Core requirements met, but improvements recommended.")
         else:
@@ -321,8 +338,11 @@ class GodTierVerifier:
             "passed": sum(1 for c in self.results["checks"] if c["passed"]),
             "warnings": self.warnings,
             "failures": self.failures,
-            "status": "VERIFIED" if self.failures == 0 and self.warnings == 0 else
-                     "PASSED_WITH_WARNINGS" if self.failures == 0 else "FAILED"
+            "status": (
+                "VERIFIED"
+                if self.failures == 0 and self.warnings == 0
+                else "PASSED_WITH_WARNINGS" if self.failures == 0 else "FAILED"
+            ),
         }
 
 
@@ -346,7 +366,7 @@ def main():
     if args.json:
         output = json.dumps(verifier.results, indent=2)
         if args.output:
-            with open(args.output, 'w') as f:
+            with open(args.output, "w") as f:
                 f.write(output)
             print(f"\n✅ JSON report written to: {args.output}")
         else:
@@ -356,11 +376,11 @@ def main():
         print(report)
 
         if args.output:
-            with open(args.output, 'w') as f:
+            with open(args.output, "w") as f:
                 # Strip color codes for file output
                 clean_report = report
                 for code in [GREEN, YELLOW, RED, BLUE, BOLD, RESET]:
-                    clean_report = clean_report.replace(code, '')
+                    clean_report = clean_report.replace(code, "")
                 f.write(clean_report)
             print(f"\n✅ Report written to: {args.output}")
 

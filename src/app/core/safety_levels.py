@@ -507,7 +507,11 @@ class ASLMonitor:
 
         # Check if escalation needed
         if assessment.requires_escalation():
-            self.logger.warning("ASL escalation recommended: %s → %s", current_level, assessment.recommended_level)
+            self.logger.warning(
+                "ASL escalation recommended: %s → %s",
+                current_level,
+                assessment.recommended_level,
+            )
             self._handle_escalation(assessment)
         else:
             self.logger.info(

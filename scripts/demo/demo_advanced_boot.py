@@ -272,8 +272,6 @@ def demo_integration():
 
     print("\n🎯 Subsystem Filtering with Emergency Profile:")
 
-    emergency_subsystems = orchestrator.advanced_boot.EMERGENCY_CRITICAL_SUBSYSTEMS
-
     allowed_count = 0
     blocked_count = 0
 

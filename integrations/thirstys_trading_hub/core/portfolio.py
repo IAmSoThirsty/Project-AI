@@ -109,7 +109,9 @@ class PortfolioManager:
         os.makedirs(data_dir, exist_ok=True)
         self._load_state()
 
-        logger.info("PortfolioManager initialized with %s %s balance", initial_balance, currency)
+        logger.info(
+            "PortfolioManager initialized with %s %s balance", initial_balance, currency
+        )
 
     def _load_state(self) -> None:
         """Load portfolio state from persistent storage."""
@@ -281,7 +283,9 @@ class PortfolioManager:
 
             self._record_trade(symbol, quantity, price, "open")
 
-            logger.info("Opened new %s position: %s %s @ %s", side, symbol, abs(quantity), price)
+            logger.info(
+                "Opened new %s position: %s %s @ %s", side, symbol, abs(quantity), price
+            )
 
         else:
             if quantity > 0:

@@ -234,10 +234,16 @@ class FallbackManager:
                         success = fallback_func()
                         if success:
                             self.active_fallbacks.add(component)
-                            logger.info("Activated fallback for %s (priority: %s)", component, priority)
+                            logger.info(
+                                "Activated fallback for %s (priority: %s)",
+                                component,
+                                priority,
+                            )
                             return True
                     except Exception as e:
-                        logger.error("Fallback strategy failed for %s: %s", component, e)
+                        logger.error(
+                            "Fallback strategy failed for %s: %s", component, e
+                        )
                         continue
 
                 logger.error("All fallback strategies failed for: %s", component)
@@ -500,7 +506,12 @@ class PredictiveFailureDetector:
                     }
 
                     self.predictions.append(prediction)
-                    logger.warning("Predicted failure for %s/%s in %s steps", component, metric_name, steps_to_failure)
+                    logger.warning(
+                        "Predicted failure for %s/%s in %s steps",
+                        component,
+                        metric_name,
+                        steps_to_failure,
+                    )
                     return prediction
 
                 return None
@@ -586,7 +597,11 @@ class HealthMonitoringSystem:
 
                     # Handle unhealthy components
                     if health_check.status == HealthStatus.UNHEALTHY.value:
-                        logger.warning("Component %s is unhealthy: %s", component_name, health_check.error_message)
+                        logger.warning(
+                            "Component %s is unhealthy: %s",
+                            component_name,
+                            health_check.error_message,
+                        )
                         # Attempt fallback activation
                         self.fallback_manager.activate_fallback(component_name)
 

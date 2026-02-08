@@ -253,10 +253,7 @@ class MemoryLoggingService:
             return True
 
         # Reflect on high-risk completions
-        if context.proposed_action.risk_level == "high":
-            return True
-
-        return False
+        return context.proposed_action.risk_level == "high"
 
     def _generate_reflection(self, context: Any) -> None:
         """

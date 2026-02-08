@@ -31,6 +31,7 @@ from e2e.utils.test_helpers import (
 @dataclass
 class User:
     """User model for authentication tests."""
+
     user_id: str
     username: str
     password_hash: str
@@ -41,6 +42,7 @@ class User:
 @dataclass
 class AuthToken:
     """Authentication token."""
+
     token: str
     user_id: str
     expires_at: str
@@ -120,7 +122,8 @@ class RateLimiter:
         # Clean old requests
         if client_id in self.requests:
             self.requests[client_id] = [
-                req_time for req_time in self.requests[client_id]
+                req_time
+                for req_time in self.requests[client_id]
                 if current_time - req_time < self.window_seconds
             ]
         else:
@@ -185,9 +188,7 @@ class AuthenticationSystem:
         self.failed_attempts[username] = 0
 
         # Generate token
-        token_str = hashlib.sha256(
-            f"{user.user_id}{time.time()}".encode()
-        ).hexdigest()
+        token_str = hashlib.sha256(f"{user.user_id}{time.time()}".encode()).hexdigest()
 
         token = AuthToken(
             token=token_str,
@@ -261,8 +262,7 @@ class TestInputValidationAttacks:
 
         # Act
         sanitized_outputs = [
-            validator.sanitize_html(payload)
-            for payload in xss_payloads
+            validator.sanitize_html(payload) for payload in xss_payloads
         ]
 
         # Assert
@@ -326,7 +326,7 @@ class TestInputValidationAttacks:
     def test_null_byte_injection_prevention(self):
         """Test prevention of null byte injection."""
         # Arrange
-        validator = InputValidator()
+        InputValidator()
 
         null_byte_inputs = [
             "file.txt\x00.php",
@@ -394,7 +394,7 @@ class TestAuthenticationBypass:
 
         # Act - Attempt multiple failed logins
         failed_attempts = 0
-        for i in range(5):
+        for _i in range(5):
             token = auth_system.authenticate("testuser", "wrong_password")
             if token is None:
                 failed_attempts += 1
@@ -433,7 +433,7 @@ class TestAuthenticationBypass:
         """Test prevention of session fixation attacks."""
         # Arrange
         auth_system = AuthenticationSystem()
-        user = auth_system.register_user("testuser", "password")
+        auth_system.register_user("testuser", "password")
 
         # Act - Attacker tries to set known session token
         attacker_token = "known_token_12345"
@@ -516,8 +516,8 @@ class TestAuthorizationEscalation:
         """Test prevention of privilege escalation."""
         # Arrange
         auth_system = AuthenticationSystem()
-        regular_user = auth_system.register_user("user", "password", role="user")
-        admin_user = auth_system.register_user("admin", "password", role="admin")
+        auth_system.register_user("user", "password", role="user")
+        auth_system.register_user("admin", "password", role="admin")
 
         user_token = auth_system.authenticate("user", "password")
 
@@ -534,7 +534,7 @@ class TestAuthorizationEscalation:
         """Test prevention of accessing other users' resources."""
         # Arrange
         auth_system = AuthenticationSystem()
-        user1 = auth_system.register_user("user1", "password")
+        auth_system.register_user("user1", "password")
         user2 = auth_system.register_user("user2", "password")
 
         token1 = auth_system.authenticate("user1", "password")
@@ -559,10 +559,7 @@ class TestAuthorizationEscalation:
             "guest": auth_system.register_user("guest", "pass", role="guest"),
         }
 
-        tokens = {
-            role: auth_system.authenticate(role, "pass")
-            for role in users
-        }
+        tokens = {role: auth_system.authenticate(role, "pass") for role in users}
 
         # Act - Check permissions
         def has_permission(token: AuthToken, permission: str) -> bool:
@@ -577,11 +574,10 @@ class TestAuthorizationEscalation:
         """Test prevention of permission bypass."""
         # Arrange
         auth_system = AuthenticationSystem()
-        user = auth_system.register_user("user", "password", role="user")
+        auth_system.register_user("user", "password", role="user")
         token = auth_system.authenticate("user", "password")
 
         # Act - Try to bypass permission check
-        required_permission = "admin"
 
         # Attempt various bypass techniques
         bypass_attempts = [
@@ -674,10 +670,7 @@ class TestRateLimitingDoS:
         client_id = "client_1"
 
         # Act - Make requests, wait, make more
-        first_batch = sum(
-            1 for _ in range(5)
-            if rate_limiter.is_allowed(client_id)
-        )
+        first_batch = sum(1 for _ in range(5) if rate_limiter.is_allowed(client_id))
 
         # Should be blocked now
         blocked = not rate_limiter.is_allowed(client_id)
@@ -686,10 +679,7 @@ class TestRateLimitingDoS:
         time.sleep(2.1)
 
         # Should be allowed again
-        second_batch = sum(
-            1 for _ in range(5)
-            if rate_limiter.is_allowed(client_id)
-        )
+        second_batch = sum(1 for _ in range(5) if rate_limiter.is_allowed(client_id))
 
         # Assert
         assert first_batch == 5
@@ -763,8 +753,7 @@ class TestRateLimitingDoS:
             current_time = time.time()
             # Remove old connections
             active = [
-                conn for conn in connections
-                if current_time - conn < connection_timeout
+                conn for conn in connections if current_time - conn < connection_timeout
             ]
             connections.clear()
             connections.extend(active)
@@ -774,7 +763,7 @@ class TestRateLimitingDoS:
             return len(connections)
 
         # Simulate slow connections
-        connection_count = add_connection(time.time())
+        add_connection(time.time())
         time.sleep(6.0)  # Wait longer than timeout
 
         # Add new connection
@@ -849,6 +838,7 @@ class TestSecurityBoundaries:
 
     def test_data_leakage_prevention(self):
         """Test prevention of data leakage in errors."""
+
         # Arrange
         def process_sensitive_data(data: dict):
             # Simulate error
@@ -867,6 +857,7 @@ class TestSecurityBoundaries:
 
     def test_information_disclosure_prevention(self):
         """Test prevention of information disclosure."""
+
         # Arrange
         def get_user_info(user_id: str) -> dict:
             # Simulate user lookup

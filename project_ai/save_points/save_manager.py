@@ -166,7 +166,7 @@ class SavePointsManager:
             dest = Path("data") / file.name
             shutil.copy2(file, dest)
 
-        logger.info("Restored save point: %s", manifest['name'])
+        logger.info("Restored save point: %s", manifest["name"])
         return True
 
     def _find_save_point(self, save_id: str) -> Path | None:

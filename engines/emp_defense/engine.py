@@ -223,12 +223,12 @@ class EMPDefenseEngine:
 
             # Export final state
             state_file = base_dir / "final_state.json"
-            with open(state_file, 'w') as f:
+            with open(state_file, "w") as f:
                 json.dump(self.state.to_dict(), f, indent=2)
 
             # Export events log
             events_file = base_dir / "events.json"
-            with open(events_file, 'w') as f:
+            with open(events_file, "w") as f:
                 json.dump(self.events, f, indent=2)
 
             # Create simple summary
@@ -240,7 +240,7 @@ class EMPDefenseEngine:
                 "grid_operational_pct": self.state.grid_operational_pct,
                 "event_count": len(self.events),
             }
-            with open(summary_file, 'w') as f:
+            with open(summary_file, "w") as f:
                 json.dump(summary, f, indent=2)
 
             logger.info("✅ Artifacts exported to %s", base_dir)
@@ -263,10 +263,13 @@ class EMPDefenseEngine:
         )
 
         # Inject event
-        self.inject_event("emp_strike", {
-            "grid_failure_pct": self.config.grid_failure_pct,
-            "population_affected_pct": self.config.population_affected_pct,
-        })
+        self.inject_event(
+            "emp_strike",
+            {
+                "grid_failure_pct": self.config.grid_failure_pct,
+                "population_affected_pct": self.config.population_affected_pct,
+            },
+        )
 
     def _update_world_state(self):
         """Update world state for current tick."""
@@ -276,8 +279,7 @@ class EMPDefenseEngine:
         # Grid recovers slowly (0.1% per week)
         if self.state.grid_operational_pct < 1.0:
             self.state.grid_operational_pct = min(
-                1.0,
-                self.state.grid_operational_pct + 0.001
+                1.0, self.state.grid_operational_pct + 0.001
             )
 
         # Economic impact (GDP decreases with grid failure)
@@ -290,6 +292,5 @@ class EMPDefenseEngine:
             daily_deaths = int(grid_loss * 10000)  # Simple model
             self.state.total_deaths += daily_deaths * 7  # Weekly accumulation
             self.state.global_population = max(
-                0,
-                8_000_000_000 - self.state.total_deaths
+                0, 8_000_000_000 - self.state.total_deaths
             )

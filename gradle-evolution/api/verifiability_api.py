@@ -31,7 +31,7 @@ class VerifiabilityAPI:
         replay_engine: ReplayEngine,
         audit_integration: BuildAuditIntegration,
         host: str = "0.0.0.0",
-        port: int = 8080
+        port: int = 8080,
     ):
         """
         Initialize verifiability API.
@@ -61,11 +61,13 @@ class VerifiabilityAPI:
         @self.app.route("/api/v1/health", methods=["GET"])
         def health():
             """Health check endpoint."""
-            return jsonify({
-                "status": "healthy",
-                "timestamp": datetime.utcnow().isoformat(),
-                "service": "verifiability-api",
-            })
+            return jsonify(
+                {
+                    "status": "healthy",
+                    "timestamp": datetime.utcnow().isoformat(),
+                    "service": "verifiability-api",
+                }
+            )
 
         @self.app.route("/api/v1/capsules", methods=["GET"])
         def list_capsules():
@@ -83,10 +85,12 @@ class VerifiabilityAPI:
                     for cap in self.capsule_engine.capsules.values()
                 ]
 
-                return jsonify({
-                    "capsules": capsules,
-                    "count": len(capsules),
-                })
+                return jsonify(
+                    {
+                        "capsules": capsules,
+                        "count": len(capsules),
+                    }
+                )
             except Exception as e:
                 logger.error("Error listing capsules: %s", e, exc_info=True)
                 return jsonify({"error": str(e)}), 500
@@ -110,12 +114,14 @@ class VerifiabilityAPI:
             try:
                 is_valid, error = self.capsule_engine.verify_capsule(capsule_id)
 
-                return jsonify({
-                    "capsule_id": capsule_id,
-                    "valid": is_valid,
-                    "error": error,
-                    "timestamp": datetime.utcnow().isoformat(),
-                })
+                return jsonify(
+                    {
+                        "capsule_id": capsule_id,
+                        "valid": is_valid,
+                        "error": error,
+                        "timestamp": datetime.utcnow().isoformat(),
+                    }
+                )
             except Exception as e:
                 logger.error("Error verifying capsule: %s", e, exc_info=True)
                 return jsonify({"error": str(e)}), 500
@@ -128,17 +134,18 @@ class VerifiabilityAPI:
                 verify_outputs = data.get("verify_outputs", True)
 
                 result = await self.replay_engine.replay_build(
-                    capsule_id,
-                    verify_outputs=verify_outputs
+                    capsule_id, verify_outputs=verify_outputs
                 )
 
-                return jsonify({
-                    "capsule_id": result.capsule_id,
-                    "success": result.success,
-                    "differences": result.differences,
-                    "error": result.error,
-                    "timestamp": result.timestamp,
-                })
+                return jsonify(
+                    {
+                        "capsule_id": result.capsule_id,
+                        "success": result.success,
+                        "differences": result.differences,
+                        "error": result.error,
+                        "timestamp": result.timestamp,
+                    }
+                )
             except Exception as e:
                 logger.error("Error replaying capsule: %s", e, exc_info=True)
                 return jsonify({"error": str(e)}), 500
@@ -152,13 +159,13 @@ class VerifiabilityAPI:
                 capsule_id2 = data.get("capsule_id2")
 
                 if not capsule_id1 or not capsule_id2:
-                    return jsonify({
-                        "error": "Both capsule_id1 and capsule_id2 required"
-                    }), 400
+                    return (
+                        jsonify({"error": "Both capsule_id1 and capsule_id2 required"}),
+                        400,
+                    )
 
                 diff = self.capsule_engine.compute_capsule_diff(
-                    capsule_id1,
-                    capsule_id2
+                    capsule_id1, capsule_id2
                 )
 
                 return jsonify(diff)
@@ -173,10 +180,12 @@ class VerifiabilityAPI:
                 limit = request.args.get("limit", 100, type=int)
                 events = self.audit_integration.get_audit_buffer(limit=limit)
 
-                return jsonify({
-                    "events": events,
-                    "count": len(events),
-                })
+                return jsonify(
+                    {
+                        "events": events,
+                        "count": len(events),
+                    }
+                )
             except Exception as e:
                 logger.error("Error getting audit events: %s", e, exc_info=True)
                 return jsonify({"error": str(e)}), 500
@@ -188,18 +197,11 @@ class VerifiabilityAPI:
                 start_str = request.args.get("start_time")
                 end_str = request.args.get("end_time")
 
-                start_time = (
-                    datetime.fromisoformat(start_str)
-                    if start_str else None
-                )
-                end_time = (
-                    datetime.fromisoformat(end_str)
-                    if end_str else None
-                )
+                start_time = datetime.fromisoformat(start_str) if start_str else None
+                end_time = datetime.fromisoformat(end_str) if end_str else None
 
                 report = self.audit_integration.generate_audit_report(
-                    start_time=start_time,
-                    end_time=end_time
+                    start_time=start_time, end_time=end_time
                 )
 
                 return jsonify(report)
@@ -237,16 +239,18 @@ class VerifiabilityAPI:
         def get_statistics():
             """Get API statistics."""
             try:
-                return jsonify({
-                    "capsule_count": len(self.capsule_engine.capsules),
-                    "replay_history_count": len(
-                        self.replay_engine.get_replay_history(limit=10000)
-                    ),
-                    "audit_buffer_size": len(
-                        self.audit_integration.get_audit_buffer(limit=10000)
-                    ),
-                    "timestamp": datetime.utcnow().isoformat(),
-                })
+                return jsonify(
+                    {
+                        "capsule_count": len(self.capsule_engine.capsules),
+                        "replay_history_count": len(
+                            self.replay_engine.get_replay_history(limit=10000)
+                        ),
+                        "audit_buffer_size": len(
+                            self.audit_integration.get_audit_buffer(limit=10000)
+                        ),
+                        "timestamp": datetime.utcnow().isoformat(),
+                    }
+                )
             except Exception as e:
                 logger.error("Error getting statistics: %s", e, exc_info=True)
                 return jsonify({"error": str(e)}), 500

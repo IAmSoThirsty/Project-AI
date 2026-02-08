@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class EventCost:
     """Cost of executing an event."""
+
     legitimacy_cost: float = 0.0
     fuel_cost_days: float = 0.0
     population_cost: int = 0  # Lives lost to execute
@@ -29,6 +30,7 @@ class EventCost:
 @dataclass
 class EventBenefit:
     """Benefit from executing an event."""
+
     grid_restoration: float = 0.0  # Percentage points
     food_supply_days: float = 0.0  # Days added
     water_treatment_boost: float = 0.0  # Percentage points
@@ -39,6 +41,7 @@ class EventBenefit:
 @dataclass
 class EventRisk:
     """Risk of executing an event."""
+
     failure_chance: float = 0.0  # Chance event fails completely
     violence_spike_chance: float = 0.0  # Chance of triggering unrest
     cascade_failure_chance: float = 0.0  # Chance of making things worse
@@ -48,12 +51,15 @@ class EventRisk:
 @dataclass
 class EventDefinition:
     """Complete event definition with consequences."""
+
     name: str
     description: str
     cost: EventCost
     benefit: EventBenefit
     risk: EventRisk
-    validation: Callable[[SectorizedWorldState], tuple[bool, str]]  # Can event be executed?
+    validation: Callable[
+        [SectorizedWorldState], tuple[bool, str]
+    ]  # Can event be executed?
     execution: Callable[[SectorizedWorldState], None]  # Apply event effects
 
 
@@ -81,10 +87,7 @@ class ConsequentialEventSystem:
         logger.info("Event registered: %s", event.name)
 
     def execute_event(
-        self,
-        event_name: str,
-        state: SectorizedWorldState,
-        parameters: dict[str, Any]
+        self, event_name: str, state: SectorizedWorldState, parameters: dict[str, Any]
     ) -> tuple[bool, str, dict[str, Any]]:
         """
         Execute an event with full consequence system.
@@ -114,11 +117,11 @@ class ConsequentialEventSystem:
         if self.rng.random() < event.risk.failure_chance:
             # Event fails - costs paid, no benefits
             self._apply_failure_consequences(state, event.risk)
-            return False, f"{event.name} FAILED - costs paid, no benefit", {
-                "costs_paid": True,
-                "benefits_received": False,
-                "failure": True
-            }
+            return (
+                False,
+                f"{event.name} FAILED - costs paid, no benefit",
+                {"costs_paid": True, "benefits_received": False, "failure": True},
+            )
 
         # Apply benefits
         self._apply_benefits(state, event.benefit)
@@ -130,9 +133,7 @@ class ConsequentialEventSystem:
         event.execution(state)
 
         # Log event
-        state.major_events.append(
-            f"Day {state.simulation_day}: {event.name} executed"
-        )
+        state.major_events.append(f"Day {state.simulation_day}: {event.name} executed")
 
         return True, f"{event.name} executed successfully", consequences
 
@@ -158,12 +159,16 @@ class ConsequentialEventSystem:
             state.security.violence_index += cost.violence_increase
             state.security.violence_index = min(1.0, state.security.violence_index)
 
-    def _apply_benefits(self, state: SectorizedWorldState, benefit: EventBenefit) -> None:
+    def _apply_benefits(
+        self, state: SectorizedWorldState, benefit: EventBenefit
+    ) -> None:
         """Apply event benefits to state."""
         # Grid restoration
         if benefit.grid_restoration > 0:
             state.energy.grid_generation_pct += benefit.grid_restoration
-            state.energy.grid_generation_pct = min(1.0, state.energy.grid_generation_pct)
+            state.energy.grid_generation_pct = min(
+                1.0, state.energy.grid_generation_pct
+            )
 
         # Food supply
         if benefit.food_supply_days > 0:
@@ -172,19 +177,25 @@ class ConsequentialEventSystem:
         # Water treatment
         if benefit.water_treatment_boost > 0:
             state.water.treatment_capacity_pct += benefit.water_treatment_boost
-            state.water.treatment_capacity_pct = min(1.0, state.water.treatment_capacity_pct)
+            state.water.treatment_capacity_pct = min(
+                1.0, state.water.treatment_capacity_pct
+            )
 
         # Legitimacy gain
         if benefit.legitimacy_gain > 0:
             state.governance.legitimacy_score += benefit.legitimacy_gain
-            state.governance.legitimacy_score = min(1.0, state.governance.legitimacy_score)
+            state.governance.legitimacy_score = min(
+                1.0, state.governance.legitimacy_score
+            )
 
         # Violence reduction
         if benefit.violence_reduction > 0:
             state.security.violence_index -= benefit.violence_reduction
             state.security.violence_index = max(0.0, state.security.violence_index)
 
-    def _apply_risks(self, state: SectorizedWorldState, risk: EventRisk) -> dict[str, Any]:
+    def _apply_risks(
+        self, state: SectorizedWorldState, risk: EventRisk
+    ) -> dict[str, Any]:
         """Apply event risks and check for cascading failures."""
         consequences = {}
 
@@ -206,7 +217,9 @@ class ConsequentialEventSystem:
 
         return consequences
 
-    def _apply_failure_consequences(self, state: SectorizedWorldState, risk: EventRisk) -> None:
+    def _apply_failure_consequences(
+        self, state: SectorizedWorldState, risk: EventRisk
+    ) -> None:
         """Apply consequences when event fails."""
         # Legitimacy loss on failure
         state.governance.legitimacy_score -= risk.legitimacy_loss_on_failure
@@ -216,106 +229,118 @@ class ConsequentialEventSystem:
         """Register default event catalog."""
 
         # Recovery Effort - restore grid
-        self.register_event(EventDefinition(
-            name="grid_recovery_effort",
-            description="Deploy teams to repair transformers and restore grid",
-            cost=EventCost(
-                legitimacy_cost=0.02,  # Using emergency powers
-                fuel_cost_days=5.0,  # Fuel for crews
-                population_cost=50,  # Worker casualties
-                violence_increase=0.01  # Resentment if inequitable
-            ),
-            benefit=EventBenefit(
-                grid_restoration=0.03,  # 3% grid restored
-                legitimacy_gain=0.01  # If successful, gains trust
-            ),
-            risk=EventRisk(
-                failure_chance=0.20,  # 20% chance fails
-                violence_spike_chance=0.10,  # 10% chance triggers violence
-                legitimacy_loss_on_failure=0.05  # Big legitimacy hit if fails
-            ),
-            validation=lambda state: (
-                (state.energy.fuel_access_days >= 5.0, "Insufficient fuel")
-                if state.energy.fuel_access_days >= 5.0
-                else (False, "Insufficient fuel")
-            ),
-            execution=lambda state: None  # Benefits applied automatically
-        ))
+        self.register_event(
+            EventDefinition(
+                name="grid_recovery_effort",
+                description="Deploy teams to repair transformers and restore grid",
+                cost=EventCost(
+                    legitimacy_cost=0.02,  # Using emergency powers
+                    fuel_cost_days=5.0,  # Fuel for crews
+                    population_cost=50,  # Worker casualties
+                    violence_increase=0.01,  # Resentment if inequitable
+                ),
+                benefit=EventBenefit(
+                    grid_restoration=0.03,  # 3% grid restored
+                    legitimacy_gain=0.01,  # If successful, gains trust
+                ),
+                risk=EventRisk(
+                    failure_chance=0.20,  # 20% chance fails
+                    violence_spike_chance=0.10,  # 10% chance triggers violence
+                    legitimacy_loss_on_failure=0.05,  # Big legitimacy hit if fails
+                ),
+                validation=lambda state: (
+                    (state.energy.fuel_access_days >= 5.0, "Insufficient fuel")
+                    if state.energy.fuel_access_days >= 5.0
+                    else (False, "Insufficient fuel")
+                ),
+                execution=lambda state: None,  # Benefits applied automatically
+            )
+        )
 
         # Food Aid Distribution
-        self.register_event(EventDefinition(
-            name="food_aid_distribution",
-            description="Distribute emergency food supplies to urban areas",
-            cost=EventCost(
-                legitimacy_cost=0.01,  # Admitting crisis
-                fuel_cost_days=3.0,  # Distribution logistics
-                violence_increase=0.02  # Riots when supply runs out
-            ),
-            benefit=EventBenefit(
-                food_supply_days=2.0,  # 2 days of food added
-                violence_reduction=0.05,  # Temporarily reduces violence
-                legitimacy_gain=0.02  # Shows government still functions
-            ),
-            risk=EventRisk(
-                failure_chance=0.15,
-                violence_spike_chance=0.25,  # High risk - crowds, scarcity
-                cascade_failure_chance=0.10,  # Could trigger hoarding
-                legitimacy_loss_on_failure=0.08  # Major trust loss
-            ),
-            validation=lambda state: (
-                (state.governance.legitimacy_score > 0.20, "Government too weak")
-                if state.governance.legitimacy_score > 0.20
-                else (False, "Government too weak to organize distribution")
-            ),
-            execution=lambda state: None
-        ))
+        self.register_event(
+            EventDefinition(
+                name="food_aid_distribution",
+                description="Distribute emergency food supplies to urban areas",
+                cost=EventCost(
+                    legitimacy_cost=0.01,  # Admitting crisis
+                    fuel_cost_days=3.0,  # Distribution logistics
+                    violence_increase=0.02,  # Riots when supply runs out
+                ),
+                benefit=EventBenefit(
+                    food_supply_days=2.0,  # 2 days of food added
+                    violence_reduction=0.05,  # Temporarily reduces violence
+                    legitimacy_gain=0.02,  # Shows government still functions
+                ),
+                risk=EventRisk(
+                    failure_chance=0.15,
+                    violence_spike_chance=0.25,  # High risk - crowds, scarcity
+                    cascade_failure_chance=0.10,  # Could trigger hoarding
+                    legitimacy_loss_on_failure=0.08,  # Major trust loss
+                ),
+                validation=lambda state: (
+                    (state.governance.legitimacy_score > 0.20, "Government too weak")
+                    if state.governance.legitimacy_score > 0.20
+                    else (False, "Government too weak to organize distribution")
+                ),
+                execution=lambda state: None,
+            )
+        )
 
         # Martial Law Declaration
-        self.register_event(EventDefinition(
-            name="declare_martial_law",
-            description="Invoke emergency powers to restore order by force",
-            cost=EventCost(
-                legitimacy_cost=0.10,  # Huge legitimacy hit
-                violence_increase=0.05  # Initial resistance
-            ),
-            benefit=EventBenefit(
-                violence_reduction=0.15,  # Force-based order
-                legitimacy_gain=0.0  # No legitimacy gain
-            ),
-            risk=EventRisk(
-                failure_chance=0.10,
-                violence_spike_chance=0.30,  # High risk of armed resistance
-                cascade_failure_chance=0.20,  # Could trigger civil war
-                legitimacy_loss_on_failure=0.20  # Catastrophic if fails
-            ),
-            validation=lambda state: (
-                (not state.governance.constitutional_limits_exceeded, "Already in emergency powers")
-                if not state.governance.constitutional_limits_exceeded
-                else (False, "Already under martial law")
-            ),
-            execution=lambda state: setattr(state.governance, 'constitutional_limits_exceeded', True)
-        ))
+        self.register_event(
+            EventDefinition(
+                name="declare_martial_law",
+                description="Invoke emergency powers to restore order by force",
+                cost=EventCost(
+                    legitimacy_cost=0.10,  # Huge legitimacy hit
+                    violence_increase=0.05,  # Initial resistance
+                ),
+                benefit=EventBenefit(
+                    violence_reduction=0.15,  # Force-based order
+                    legitimacy_gain=0.0,  # No legitimacy gain
+                ),
+                risk=EventRisk(
+                    failure_chance=0.10,
+                    violence_spike_chance=0.30,  # High risk of armed resistance
+                    cascade_failure_chance=0.20,  # Could trigger civil war
+                    legitimacy_loss_on_failure=0.20,  # Catastrophic if fails
+                ),
+                validation=lambda state: (
+                    (
+                        not state.governance.constitutional_limits_exceeded,
+                        "Already in emergency powers",
+                    )
+                    if not state.governance.constitutional_limits_exceeded
+                    else (False, "Already under martial law")
+                ),
+                execution=lambda state: setattr(
+                    state.governance, "constitutional_limits_exceeded", True
+                ),
+            )
+        )
 
         # Water Purification Tablets Distribution
-        self.register_event(EventDefinition(
-            name="distribute_water_tablets",
-            description="Distribute purification tablets to prevent waterborne disease",
-            cost=EventCost(
-                fuel_cost_days=1.0,
-                population_cost=10  # Distribution casualties
-            ),
-            benefit=EventBenefit(
-                water_treatment_boost=0.05,  # Marginal improvement
-                legitimacy_gain=0.01
-            ),
-            risk=EventRisk(
-                failure_chance=0.10,
-                violence_spike_chance=0.05
-            ),
-            validation=lambda state: (
-                (state.water.contamination_index > 0.20, "No immediate water crisis")
-                if state.water.contamination_index > 0.20
-                else (False, "No immediate water crisis - tablets not needed")
-            ),
-            execution=lambda state: None
-        ))
+        self.register_event(
+            EventDefinition(
+                name="distribute_water_tablets",
+                description="Distribute purification tablets to prevent waterborne disease",
+                cost=EventCost(
+                    fuel_cost_days=1.0, population_cost=10  # Distribution casualties
+                ),
+                benefit=EventBenefit(
+                    water_treatment_boost=0.05,  # Marginal improvement
+                    legitimacy_gain=0.01,
+                ),
+                risk=EventRisk(failure_chance=0.10, violence_spike_chance=0.05),
+                validation=lambda state: (
+                    (
+                        state.water.contamination_index > 0.20,
+                        "No immediate water crisis",
+                    )
+                    if state.water.contamination_index > 0.20
+                    else (False, "No immediate water crisis - tablets not needed")
+                ),
+                execution=lambda state: None,
+            )
+        )

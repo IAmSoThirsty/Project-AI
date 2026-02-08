@@ -352,7 +352,7 @@ async def run_safety_benchmark(request: dict) -> dict:
         agent = JailbreakBenchAgent(kernel=None)
 
         # Extract request parameters
-        test_dataset = request.get("test_dataset", "hydra")
+        request.get("test_dataset", "hydra")
         max_tests = request.get("max_tests", 50)
 
         # Mock target system
@@ -412,7 +412,9 @@ async def trigger_incident_workflow(vulnerabilities: list[dict]) -> bool:
     Returns:
         True if triggered successfully
     """
-    activity.logger.info("Triggering incident workflow for %s vulnerabilities", len(vulnerabilities))
+    activity.logger.info(
+        "Triggering incident workflow for %s vulnerabilities", len(vulnerabilities)
+    )
 
     try:
         # In production, this would trigger an incident management workflow
@@ -475,7 +477,7 @@ async def trigger_security_alert(alert_data: dict) -> bool:
     Returns:
         True if triggered successfully
     """
-    activity.logger.info("Triggering security alert: %s", alert_data.get('type'))
+    activity.logger.info("Triggering security alert: %s", alert_data.get("type"))
 
     try:
         # In production, this would send to monitoring/alerting system

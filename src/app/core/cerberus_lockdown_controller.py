@@ -177,7 +177,9 @@ class LockdownController:
 
         # Check if already at or above this stage
         if stage <= self.current_stage:
-            logger.debug("Already at or above stage %s (current: %s)", stage, self.current_stage)
+            logger.debug(
+                "Already at or above stage %s (current: %s)", stage, self.current_stage
+            )
             return {
                 "success": True,
                 "previous_stage": self.current_stage,

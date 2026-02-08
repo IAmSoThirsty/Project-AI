@@ -171,7 +171,11 @@ class Triumvirate:
             if self.config.enable_telemetry:
                 self._record_telemetry_event("process_complete", result)
 
-            logger.info("Triumvirate processing complete [%s] in %sms", correlation_id, duration_ms)
+            logger.info(
+                "Triumvirate processing complete [%s] in %sms",
+                correlation_id,
+                duration_ms,
+            )
 
             return result
 

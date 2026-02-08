@@ -325,7 +325,7 @@ class MetricsCollector:
         """Get snapshot of all current metrics"""
         with self.lock:
             snapshot = []
-            for key, metric_queue in self.metrics.items():
+            for _key, metric_queue in self.metrics.items():
                 if metric_queue:
                     snapshot.append(metric_queue[-1])
             return snapshot

@@ -57,7 +57,9 @@ async def main():
                 task_queue="project-ai-tasks",
             )
             handles.append(handle)
-            logger.info("Started workflow %s/%s: %s", i+1, len(learning_requests), workflow_id)
+            logger.info(
+                "Started workflow %s/%s: %s", i + 1, len(learning_requests), workflow_id
+            )
 
         logger.info("All %s workflows started, waiting for results...", len(handles))
 
@@ -68,18 +70,18 @@ async def main():
         successful = sum(1 for r in results if r.success)
         failed = len(results) - successful
 
-        logger.info("\n%s", '='*60)
+        logger.info("\n%s", "=" * 60)
         logger.info("Batch workflow results:")
         logger.info("  Total: %s", len(results))
         logger.info("  Successful: %s", successful)
         logger.info("  Failed: %s", failed)
-        logger.info("%s\n", '='*60)
+        logger.info("%s\n", "=" * 60)
 
         for i, result in enumerate(results):
             if result.success:
-                logger.info("✓ Workflow %s: %s", i+1, result.knowledge_id)
+                logger.info("✓ Workflow %s: %s", i + 1, result.knowledge_id)
             else:
-                logger.error("✗ Workflow %s: %s", i+1, result.error)
+                logger.error("✗ Workflow %s: %s", i + 1, result.error)
 
     finally:
         await manager.disconnect()

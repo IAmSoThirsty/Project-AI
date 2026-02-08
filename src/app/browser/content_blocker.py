@@ -133,10 +133,7 @@ class ContentBlocker:
 
     def _is_tracker(self, url: str) -> bool:
         """Check if URL is a known tracker"""
-        for domain in self._tracker_domains:
-            if domain in url:
-                return True
-        return False
+        return any(domain in url for domain in self._tracker_domains)
 
     def _is_malicious(self, url: str) -> bool:
         """Check if URL appears malicious"""
@@ -149,11 +146,7 @@ class ContentBlocker:
             "chrome://",
         ]
 
-        for pattern in suspicious:
-            if pattern in url.lower():
-                return True
-
-        return False
+        return any(pattern in url.lower() for pattern in suspicious)
 
     def _contains_popup_code(self, content: str) -> bool:
         """Check if content contains pop-up code (NEW REQUIREMENT)"""

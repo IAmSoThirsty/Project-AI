@@ -10,7 +10,7 @@ Zero tolerance. Zero placeholders. Zero bypass.
 
 import logging
 from dataclasses import dataclass
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 from src.app.governance.acceptance_ledger import (
@@ -23,7 +23,7 @@ from src.app.governance.jurisdiction_loader import get_jurisdiction_loader
 logger = logging.getLogger(__name__)
 
 
-class EnforcementVerdict(str, Enum):
+class EnforcementVerdict(StrEnum):
     """Enforcement decision"""
 
     ALLOW = "allow"

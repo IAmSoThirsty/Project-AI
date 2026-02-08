@@ -40,9 +40,7 @@ def demo_basic_validation():
     }
 
     result = god_tier.validate_action_comprehensive(
-        action="read_profile",
-        context=valid_context,
-        user_id="alice_123"
+        action="read_profile", context=valid_context, user_id="alice_123"
     )
 
     print(f"✓ Result: {'ALLOWED' if result['allowed'] else 'BLOCKED'}")
@@ -60,13 +58,11 @@ def demo_basic_validation():
     }
 
     result = god_tier.validate_action_comprehensive(
-        action="delete_user_data",
-        context=invalid_context,
-        user_id="attacker_456"
+        action="delete_user_data", context=invalid_context, user_id="attacker_456"
     )
 
     print(f"✗ Result: {'ALLOWED' if result['allowed'] else 'BLOCKED'}")
-    if not result['allowed']:
+    if not result["allowed"]:
         print(f"  Reason: {result.get('failure_reason', 'Unknown')}")
         print(f"  Threat Level: {result['threat_level']}")
 
@@ -89,9 +85,7 @@ def demo_state_machine_analysis(god_tier):
     }
 
     result = god_tier.validate_action_comprehensive(
-        action="escalate_privileges",
-        context=context,
-        user_id="attacker_789"
+        action="escalate_privileges", context=context, user_id="attacker_789"
     )
 
     print("✗ Illegal transition BLOCKED")
@@ -113,30 +107,22 @@ def demo_temporal_attacks(god_tier):
     print("Simulating rapid state mutations (race condition)...")
 
     # First mutation
-    context1 = {
-        "user_id": "user_999",
-        "auth_token": "valid",
-        "current_state": "authenticated",
-        "target_state": "authenticated",
-    }
 
     god_tier.temporal_analyzer.record_event(
-        "payment_system",
-        "mutate_balance",
-        {"amount": 100, "operation": "credit"}
+        "payment_system", "mutate_balance", {"amount": 100, "operation": "credit"}
     )
 
     time.sleep(0.01)  # 10ms delay
 
     # Second mutation (too fast!)
     god_tier.temporal_analyzer.record_event(
-        "payment_system",
-        "mutate_balance",
-        {"amount": -50, "operation": "debit"}
+        "payment_system", "mutate_balance", {"amount": -50, "operation": "debit"}
     )
 
     # Check for race condition
-    violation = god_tier.temporal_analyzer.detect_race_condition("payment_system", window_ms=100)
+    violation = god_tier.temporal_analyzer.detect_race_condition(
+        "payment_system", window_ms=100
+    )
 
     if violation:
         print("✗ RACE CONDITION DETECTED!")
@@ -167,7 +153,9 @@ def demo_inverted_kill_chain(god_tier):
             print(f"  - {precond}")
 
         print("\nPhase 2: PREDICT - Predicting likely attacks...")
-        predictions = god_tier.inverted_kill_chain.predict_attacks(met_preconditions, context)
+        predictions = god_tier.inverted_kill_chain.predict_attacks(
+            met_preconditions, context
+        )
 
         for pred in predictions:
             print(f"  • {pred.attack_type} (confidence: {pred.confidence:.2f})")
@@ -185,7 +173,7 @@ def demo_entropic_architecture(god_tier):
         "user_id": 42,
         "name": "Bob Smith",
         "email": "bob@example.com",
-        "status": "active"
+        "status": "active",
     }
 
     print("Original data:")
@@ -231,7 +219,9 @@ def demo_rfi_calculation(god_tier):
         "requires_state_path": True,
     }
 
-    rfi_high = god_tier.rfi_calculator.calculate_rfi("protected_endpoint", high_friction)
+    rfi_high = god_tier.rfi_calculator.calculate_rfi(
+        "protected_endpoint", high_friction
+    )
     print(f"  RFI Score: {rfi_high:.2f}")
     print(f"  ✓ GOOD: Exploit requires {len(high_friction)} independent conditions")
 
@@ -245,26 +235,36 @@ def demo_comprehensive_report(god_tier):
     print(f"System: {report['system']} v{report['version']}")
     print(f"Timestamp: {report['timestamp']}")
     print("\nMetrics:")
-    for metric, value in report['metrics'].items():
+    for metric, value in report["metrics"].items():
         print(f"  {metric}: {value}")
 
     print("\nSubsystems Status:")
-    subsystems = report['subsystems']
+    subsystems = report["subsystems"]
 
     print("  State Machine Analyzer:")
     print(f"    - States: {subsystems['state_machine_analyzer']['states']}")
-    print(f"    - Illegal transitions: {subsystems['state_machine_analyzer']['illegal_transitions']}")
-    print(f"    - Illegal reachable states: {subsystems['state_machine_analyzer']['illegal_reachable_states']}")
+    print(
+        f"    - Illegal transitions: {subsystems['state_machine_analyzer']['illegal_transitions']}"
+    )
+    print(
+        f"    - Illegal reachable states: {subsystems['state_machine_analyzer']['illegal_reachable_states']}"
+    )
 
     print("  Temporal Analyzer:")
     print(f"    - Violations detected: {subsystems['temporal_analyzer']['violations']}")
 
     print("  Inverted Kill Chain:")
-    print(f"    - Attack predictions: {subsystems['inverted_kill_chain']['predictions']}")
+    print(
+        f"    - Attack predictions: {subsystems['inverted_kill_chain']['predictions']}"
+    )
 
     print("  Entropic Architecture:")
-    print(f"    - Schema version: {subsystems['entropic_architecture']['schema_version']}")
-    print(f"    - Observer schemas: {subsystems['entropic_architecture']['observer_schemas']}")
+    print(
+        f"    - Schema version: {subsystems['entropic_architecture']['schema_version']}"
+    )
+    print(
+        f"    - Observer schemas: {subsystems['entropic_architecture']['observer_schemas']}"
+    )
 
     print("  RFI Calculator:")
     print(f"    - Measurements taken: {subsystems['rfi_calculator']['measurements']}")
@@ -273,10 +273,10 @@ def demo_comprehensive_report(god_tier):
 
 def main():
     """Run the complete demo."""
-    print("\n" + "="*80)
-    print(" "*20 + "GOD TIER ASYMMETRIC SECURITY FRAMEWORK")
-    print(" "*25 + "Live Demonstration")
-    print("="*80)
+    print("\n" + "=" * 80)
+    print(" " * 20 + "GOD TIER ASYMMETRIC SECURITY FRAMEWORK")
+    print(" " * 25 + "Live Demonstration")
+    print("=" * 80)
 
     try:
         # Initialize
@@ -303,6 +303,7 @@ def main():
     except Exception as e:
         print(f"\n✗ Error during demo: {e}")
         import traceback
+
         traceback.print_exc()
         sys.exit(1)
 

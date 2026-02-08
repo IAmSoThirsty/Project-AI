@@ -76,7 +76,9 @@ class DeadmanSwitch:
         self.last_heartbeat = datetime.now()
         self.triggered = False
 
-        logger.info("Deadman switch monitoring started (timeout: %ss)", self.timeout_seconds)
+        logger.info(
+            "Deadman switch monitoring started (timeout: %ss)", self.timeout_seconds
+        )
 
         # Stub: Would launch monitoring thread here
         # self.monitoring_thread = threading.Thread(target=self._monitor_loop)

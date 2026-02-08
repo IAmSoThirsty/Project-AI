@@ -213,17 +213,14 @@ class EscalationLadderViz:
             is_passed = level < self.current_level
 
             # Determine color
-            if level >= 4:
-                color = "red"
-            elif level >= 2:
-                color = "yellow"
+            if level >= 4 or level >= 2:
+                pass
             else:
-                color = "green"
+                pass
 
             # Level indicator
             if is_current:
                 indicator = "►"
-                color = "bold"
             elif is_passed:
                 indicator = "✓"
             else:
@@ -457,7 +454,7 @@ class TemporalFlowViz:
         # Draw timeline
         start_time = self.transitions[0].timestamp
 
-        for i, transition in enumerate(self.transitions):
+        for _i, transition in enumerate(self.transitions):
             elapsed = transition.timestamp - start_time
 
             # Time marker
@@ -724,7 +721,7 @@ class HeatMapViz:
             )
 
             cells = []
-            for j, intensity in enumerate(row_data):
+            for _j, intensity in enumerate(row_data):
                 block = ASCIIArtRenderer.draw_intensity_block(intensity)
                 cells.append(f"{block * 6}")
 

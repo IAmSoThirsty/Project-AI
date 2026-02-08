@@ -241,35 +241,29 @@ class BuildMemoryDB:
             "CREATE INDEX IF NOT EXISTS idx_builds_version ON builds(version)",
             "CREATE INDEX IF NOT EXISTS idx_builds_capsule ON builds(capsule_id)",
             "CREATE INDEX IF NOT EXISTS idx_builds_constitutional ON builds(constitutional_status)",
-
             # Build phases indexes
             "CREATE INDEX IF NOT EXISTS idx_phases_build_id ON build_phases(build_id)",
             "CREATE INDEX IF NOT EXISTS idx_phases_phase ON build_phases(phase)",
             "CREATE INDEX IF NOT EXISTS idx_phases_status ON build_phases(status)",
-
             # Constitutional violations indexes
             "CREATE INDEX IF NOT EXISTS idx_violations_build_id ON constitutional_violations(build_id)",
             "CREATE INDEX IF NOT EXISTS idx_violations_principle ON constitutional_violations(principle)",
             "CREATE INDEX IF NOT EXISTS idx_violations_severity ON constitutional_violations(severity)",
             "CREATE INDEX IF NOT EXISTS idx_violations_waived ON constitutional_violations(waived)",
-
             # Policy decisions indexes
             "CREATE INDEX IF NOT EXISTS idx_policies_build_id ON policy_decisions(build_id)",
             "CREATE INDEX IF NOT EXISTS idx_policies_policy_id ON policy_decisions(policy_id)",
             "CREATE INDEX IF NOT EXISTS idx_policies_decision ON policy_decisions(decision)",
-
             # Security events indexes
             "CREATE INDEX IF NOT EXISTS idx_security_build_id ON security_events(build_id)",
             "CREATE INDEX IF NOT EXISTS idx_security_type ON security_events(event_type)",
             "CREATE INDEX IF NOT EXISTS idx_security_severity ON security_events(severity)",
             "CREATE INDEX IF NOT EXISTS idx_security_remediated ON security_events(remediated)",
-
             # Artifacts indexes
             "CREATE INDEX IF NOT EXISTS idx_artifacts_build_id ON artifacts(build_id)",
             "CREATE INDEX IF NOT EXISTS idx_artifacts_hash ON artifacts(hash)",
             "CREATE INDEX IF NOT EXISTS idx_artifacts_type ON artifacts(type)",
             "CREATE INDEX IF NOT EXISTS idx_artifacts_path ON artifacts(path)",
-
             # Dependencies indexes
             "CREATE INDEX IF NOT EXISTS idx_deps_build_id ON dependencies(build_id)",
             "CREATE INDEX IF NOT EXISTS idx_deps_name_version ON dependencies(name, version)",
@@ -416,14 +410,16 @@ class BuildMemoryDB:
             try:
                 # Sanitize column names to prevent SQL injection
                 # Extract column names from "column = ?" format and validate
-                column_names = [u.split(" = ?")[0].strip() for u in updates if " = ?" in u]
+                column_names = [
+                    u.split(" = ?")[0].strip() for u in updates if " = ?" in u
+                ]
                 safe_columns = sanitize_identifier_list(column_names)
                 # Rebuild updates list with sanitized column names
                 safe_updates = [f"{col} = ?" for col in safe_columns]
                 # Add the timestamp update that doesn't have a placeholder
                 if "updated_at = CURRENT_TIMESTAMP" in updates:
                     safe_updates.append("updated_at = CURRENT_TIMESTAMP")
-                
+
                 conn.execute(
                     f"UPDATE builds SET {', '.join(safe_updates)} WHERE id = ?",
                     params,
@@ -544,7 +540,11 @@ class BuildMemoryDB:
                         start_time,
                         json.dumps(artifacts) if artifacts else None,
                         logs_path,
-                        json.dumps(kwargs.get("resource_usage")) if kwargs.get("resource_usage") else None,
+                        (
+                            json.dumps(kwargs.get("resource_usage"))
+                            if kwargs.get("resource_usage")
+                            else None
+                        ),
                     ),
                 )
                 conn.commit()
@@ -586,7 +586,7 @@ class BuildMemoryDB:
                 column_names = [u.split(" = ?")[0].strip() for u in updates]
                 safe_columns = sanitize_identifier_list(column_names)
                 safe_updates = [f"{col} = ?" for col in safe_columns]
-                
+
                 conn.execute(
                     f"UPDATE build_phases SET {', '.join(safe_updates)} WHERE id = ?",
                     params,
@@ -629,7 +629,12 @@ class BuildMemoryDB:
                     (build_id, phase, principle, severity, reason),
                 )
                 conn.commit()
-                logger.warning("Recorded %s violation for build %s: %s", severity, build_id, principle)
+                logger.warning(
+                    "Recorded %s violation for build %s: %s",
+                    severity,
+                    build_id,
+                    principle,
+                )
                 return cursor.lastrowid
             except sqlite3.Error as e:
                 conn.rollback()
@@ -744,11 +749,15 @@ class BuildMemoryDB:
                     (override_reason, overridden_by, decision_id),
                 )
                 conn.commit()
-                logger.info("Overridden policy decision %s by %s", decision_id, overridden_by)
+                logger.info(
+                    "Overridden policy decision %s by %s", decision_id, overridden_by
+                )
                 return True
             except sqlite3.Error as e:
                 conn.rollback()
-                logger.error("Failed to override policy decision %s: %s", decision_id, e)
+                logger.error(
+                    "Failed to override policy decision %s: %s", decision_id, e
+                )
                 return False
 
     def get_policy_decisions(self, build_id: int) -> list[dict[str, Any]]:
@@ -790,11 +799,20 @@ class BuildMemoryDB:
                         details,
                         json.dumps(cve_ids) if cve_ids else None,
                         cvss_score,
-                        json.dumps(affected_components) if affected_components else None,
+                        (
+                            json.dumps(affected_components)
+                            if affected_components
+                            else None
+                        ),
                     ),
                 )
                 conn.commit()
-                logger.warning("Recorded %s security event for build %s: %s", severity, build_id, event_type)
+                logger.warning(
+                    "Recorded %s security event for build %s: %s",
+                    severity,
+                    build_id,
+                    event_type,
+                )
                 return cursor.lastrowid
             except sqlite3.Error as e:
                 conn.rollback()
@@ -820,7 +838,9 @@ class BuildMemoryDB:
                     (remediation_details, remediated_by, event_id),
                 )
                 conn.commit()
-                logger.info("Remediated security event %s by %s", event_id, remediated_by)
+                logger.info(
+                    "Remediated security event %s by %s", event_id, remediated_by
+                )
                 return True
             except sqlite3.Error as e:
                 conn.rollback()
@@ -959,7 +979,12 @@ class BuildMemoryDB:
                 )
                 conn.commit()
                 if vuln_count > 0:
-                    logger.warning("Dependency %s:%s has %s vulnerabilities", name, version, vuln_count)
+                    logger.warning(
+                        "Dependency %s:%s has %s vulnerabilities",
+                        name,
+                        version,
+                        vuln_count,
+                    )
                 return cursor.lastrowid
             except sqlite3.Error as e:
                 conn.rollback()

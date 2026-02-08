@@ -501,7 +501,7 @@ class SuperKernel:
                 if self.execution_count > 0
                 else 0.0
             ),
-            "registered_kernels": [k.name for k in self.kernels.keys()],
+            "registered_kernels": [k.name for k in self.kernels],
             "history_size": len(self.execution_history),
         }
 

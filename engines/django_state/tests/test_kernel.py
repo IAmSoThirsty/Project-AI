@@ -72,9 +72,13 @@ class TestStateVector:
         """Test checking collapse conditions."""
         state = StateVector.create_initial_state()
         state.kindness.value = 0.1  # Below threshold
-        thresholds = {"kindness_singularity": 0.2, "trust_collapse": 0.15,
-                     "moral_injury_critical": 0.85, "legitimacy_failure": 0.1,
-                     "epistemic_collapse": 0.2}
+        thresholds = {
+            "kindness_singularity": 0.2,
+            "trust_collapse": 0.15,
+            "moral_injury_critical": 0.85,
+            "legitimacy_failure": 0.1,
+            "epistemic_collapse": 0.2,
+        }
         collapsed, reason = state.check_collapse_conditions(thresholds)
         assert collapsed
         assert reason == "kindness_singularity"
@@ -85,8 +89,12 @@ class TestStateVector:
         state.trust.value = 0.4
         state.legitimacy.value = 0.3
         state.moral_injury.value = 0.5
-        thresholds = {"survivor_trust": 0.3, "survivor_legitimacy": 0.25,
-                     "martyr_kindness": 0.3, "martyr_moral": 0.6}
+        thresholds = {
+            "survivor_trust": 0.3,
+            "survivor_legitimacy": 0.25,
+            "martyr_kindness": 0.3,
+            "martyr_moral": 0.6,
+        }
         outcome = state.classify_outcome(thresholds)
         assert outcome in ["survivor", "martyr", "extinction"]
 
@@ -182,7 +190,9 @@ class TestIrreversibilityLaws:
         laws = IrreversibilityLaws(config)
         state = StateVector.create_initial_state()
         initial_legitimacy = state.legitimacy.value
-        result = laws.apply_legitimacy_erosion(state, broken_promises=1, failures=1, visibility=0.5)
+        laws.apply_legitimacy_erosion(
+            state, broken_promises=1, failures=1, visibility=0.5
+        )
         assert state.legitimacy.value < initial_legitimacy
 
     def test_betrayal_probability(self):
@@ -202,7 +212,7 @@ class TestIrreversibilityLaws:
         laws = IrreversibilityLaws(config)
         state = StateVector.create_initial_state()
         initial_epistemic = state.epistemic_confidence.value
-        result = laws.apply_manipulation_impact(state, reach=0.5, sophistication=0.5)
+        laws.apply_manipulation_impact(state, reach=0.5, sophistication=0.5)
         assert state.epistemic_confidence.value < initial_epistemic
 
 

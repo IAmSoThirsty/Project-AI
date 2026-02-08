@@ -13,7 +13,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 
 # Add project root to path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 try:
     from src.app.core.asymmetric_security_engine import AsymmetricSecurityEngine
@@ -39,7 +39,9 @@ class PerformanceBenchmark:
 
     def benchmark_constitutional_check(self, iterations=100000):
         """Benchmark constitutional rule checking"""
-        print(f"\n[1/6] Benchmarking Constitutional Check ({iterations:,} iterations)...")
+        print(
+            f"\n[1/6] Benchmarking Constitutional Check ({iterations:,} iterations)..."
+        )
 
         if not AsymmetricSecurityEngine:
             return self._mock_result(0.0001, iterations)
@@ -49,16 +51,14 @@ class PerformanceBenchmark:
         # Warm-up
         for _ in range(100):
             engine.security_constitution.validate_action(
-                "test_action",
-                {"auth_proof": True, "audit_span": "test"}
+                "test_action", {"auth_proof": True, "audit_span": "test"}
             )
 
         # Benchmark
         start = time.perf_counter()
         for _ in range(iterations):
             engine.security_constitution.validate_action(
-                "test_action",
-                {"auth_proof": True, "audit_span": "test"}
+                "test_action", {"auth_proof": True, "audit_span": "test"}
             )
         end = time.perf_counter()
 
@@ -72,7 +72,9 @@ class PerformanceBenchmark:
             "total_duration_sec": round(duration, 4),
             "avg_latency_ms": round(avg_latency, 6),
             "ops_per_sec": int(ops_per_sec),
-            "overhead_percent": round((avg_latency / 100) * 100, 4)  # Assuming 100ms baseline
+            "overhead_percent": round(
+                (avg_latency / 100) * 100, 4
+            ),  # Assuming 100ms baseline
         }
 
         self.results["constitutional_check"] = result
@@ -87,13 +89,15 @@ class PerformanceBenchmark:
         if not GodTierAsymmetricSecurity:
             return self._mock_result(0.0002, iterations)
 
-        god_tier = GodTierAsymmetricSecurity(data_dir="/tmp/bench_godtier", enable_all=False)
+        god_tier = GodTierAsymmetricSecurity(
+            data_dir="/tmp/bench_godtier", enable_all=False
+        )
 
         context = {
             "user_id": "user_123",
             "device_id": "device_456",
             "session_id": "session_789",
-            "auth_proof": True
+            "auth_proof": True,
         }
 
         # Warm-up
@@ -116,7 +120,7 @@ class PerformanceBenchmark:
             "total_duration_sec": round(duration, 4),
             "avg_latency_ms": round(avg_latency, 6),
             "ops_per_sec": int(ops_per_sec),
-            "overhead_percent": round((avg_latency / 100) * 100, 4)
+            "overhead_percent": round((avg_latency / 100) * 100, 4),
         }
 
         self.results["rfi_calculation"] = result
@@ -131,7 +135,9 @@ class PerformanceBenchmark:
         if not GodTierAsymmetricSecurity:
             return self._mock_result(0.0001, iterations)
 
-        god_tier = GodTierAsymmetricSecurity(data_dir="/tmp/bench_godtier2", enable_all=False)
+        god_tier = GodTierAsymmetricSecurity(
+            data_dir="/tmp/bench_godtier2", enable_all=False
+        )
 
         # Warm-up
         for _ in range(100):
@@ -157,7 +163,7 @@ class PerformanceBenchmark:
             "total_duration_sec": round(duration, 4),
             "avg_latency_ms": round(avg_latency, 6),
             "ops_per_sec": int(ops_per_sec),
-            "overhead_percent": round((avg_latency / 100) * 100, 4)
+            "overhead_percent": round((avg_latency / 100) * 100, 4),
         }
 
         self.results["state_validation"] = result
@@ -172,13 +178,15 @@ class PerformanceBenchmark:
         if not GodTierAsymmetricSecurity:
             return self._mock_result(0.0004, iterations)
 
-        god_tier = GodTierAsymmetricSecurity(data_dir="/tmp/bench_godtier3", enable_all=True)
+        god_tier = GodTierAsymmetricSecurity(
+            data_dir="/tmp/bench_godtier3", enable_all=True
+        )
 
         context = {
             "user_id": "user_123",
             "auth_proof": True,
             "audit_span": "test_span",
-            "current_state": "authenticated"
+            "current_state": "authenticated",
         }
 
         # Warm-up
@@ -201,7 +209,7 @@ class PerformanceBenchmark:
             "total_duration_sec": round(duration, 4),
             "avg_latency_ms": round(avg_latency, 6),
             "ops_per_sec": int(ops_per_sec),
-            "overhead_percent": round((avg_latency / 100) * 100, 4)
+            "overhead_percent": round((avg_latency / 100) * 100, 4),
         }
 
         self.results["full_validation"] = result
@@ -224,7 +232,7 @@ class PerformanceBenchmark:
             action="test_action",
             context={"auth_proof": True, "audit_span": "test"},
             user_id="user_123",
-            timestamp=datetime.now().isoformat()
+            timestamp=datetime.now().isoformat(),
         )
 
         # Warm-up
@@ -247,7 +255,7 @@ class PerformanceBenchmark:
             "total_duration_sec": round(duration, 4),
             "avg_latency_ms": round(avg_latency, 6),
             "ops_per_sec": int(ops_per_sec),
-            "overhead_percent": round((avg_latency / 100) * 100, 4)
+            "overhead_percent": round((avg_latency / 100) * 100, 4),
         }
 
         self.results["gateway_check"] = result
@@ -257,7 +265,9 @@ class PerformanceBenchmark:
 
     def benchmark_concurrent_operations(self, total_ops=100000, concurrent=1000):
         """Benchmark concurrent operations"""
-        print(f"\n[6/6] Benchmarking Concurrent Operations ({total_ops:,} ops, {concurrent} concurrent)...")
+        print(
+            f"\n[6/6] Benchmarking Concurrent Operations ({total_ops:,} ops, {concurrent} concurrent)..."
+        )
 
         if not SecurityEnforcementGateway:
             return self._mock_concurrent_result(0.0015, total_ops, concurrent)
@@ -271,7 +281,7 @@ class PerformanceBenchmark:
                 action="test_action",
                 context={"auth_proof": True, "audit_span": f"span_{op_id}"},
                 user_id=f"user_{op_id % 100}",
-                timestamp=datetime.now().isoformat()
+                timestamp=datetime.now().isoformat(),
             )
             return gateway.validate(request)
 
@@ -292,7 +302,7 @@ class PerformanceBenchmark:
             "total_duration_sec": round(duration, 4),
             "avg_latency_ms": round(avg_latency, 6),
             "ops_per_sec": int(ops_per_sec),
-            "overhead_percent": round((avg_latency / 100) * 100, 4)
+            "overhead_percent": round((avg_latency / 100) * 100, 4),
         }
 
         self.results["concurrent_operations"] = result
@@ -309,7 +319,7 @@ class PerformanceBenchmark:
             "total_duration_sec": (latency_ms * iterations) / 1000,
             "avg_latency_ms": latency_ms,
             "ops_per_sec": ops_per_sec,
-            "overhead_percent": (latency_ms / 100) * 100
+            "overhead_percent": (latency_ms / 100) * 100,
         }
 
     def _mock_concurrent_result(self, latency_ms, total_ops, concurrent):
@@ -322,7 +332,7 @@ class PerformanceBenchmark:
             "total_duration_sec": (latency_ms * total_ops) / 1000 / concurrent,
             "avg_latency_ms": latency_ms,
             "ops_per_sec": ops_per_sec,
-            "overhead_percent": (latency_ms / 100) * 100
+            "overhead_percent": (latency_ms / 100) * 100,
         }
 
     def run_all_benchmarks(self):
@@ -361,19 +371,23 @@ class PerformanceBenchmark:
         print("  BENCHMARK SUMMARY")
         print("=" * 80)
 
-        print("\n{:<30} {:>12} {:>15} {:>12}".format(
-            "Component", "Latency (ms)", "Ops/Sec", "Overhead %"
-        ))
+        print(
+            "\n{:<30} {:>12} {:>15} {:>12}".format(
+                "Component", "Latency (ms)", "Ops/Sec", "Overhead %"
+            )
+        )
         print("-" * 80)
 
         for key, result in self.results.items():
             if key != "concurrent_operations":
-                print("{:<30} {:>12.6f} {:>15,} {:>12.4f}".format(
-                    result["component"],
-                    result["avg_latency_ms"],
-                    result["ops_per_sec"],
-                    result["overhead_percent"]
-                ))
+                print(
+                    "{:<30} {:>12.6f} {:>15,} {:>12.4f}".format(
+                        result["component"],
+                        result["avg_latency_ms"],
+                        result["ops_per_sec"],
+                        result["overhead_percent"],
+                    )
+                )
 
         # Production load estimates
         print("\n" + "=" * 80)
@@ -383,10 +397,14 @@ class PerformanceBenchmark:
         gateway_latency = self.results["gateway_check"]["avg_latency_ms"]
 
         print("\n  At 1,000 ops/sec:")
-        print(f"    Total overhead: {gateway_latency * 1000:.2f} ms/sec = {(gateway_latency * 1000 / 10000):.2f}% overhead")
+        print(
+            f"    Total overhead: {gateway_latency * 1000:.2f} ms/sec = {(gateway_latency * 1000 / 10000):.2f}% overhead"
+        )
 
         print("\n  At 10,000 ops/sec:")
-        print(f"    Total overhead: {gateway_latency * 10000:.2f} ms/sec = {(gateway_latency * 10000 / 10000):.2f}% overhead")
+        print(
+            f"    Total overhead: {gateway_latency * 10000:.2f} ms/sec = {(gateway_latency * 10000 / 10000):.2f}% overhead"
+        )
 
         print("\n  Complexity: O(1) for all primitives ✓")
         print("  Temporal fuzzing: Test-only (0% production overhead) ✓")
@@ -401,15 +419,19 @@ class PerformanceBenchmark:
         # JSON export
         json_path = "benchmarks/benchmark_results.json"
         with open(json_path, "w") as f:
-            json.dump({
-                "timestamp": timestamp,
-                "results": self.results,
-                "summary": {
-                    "total_time_sec": time.time() - self.start_time,
-                    "components_tested": len(self.results),
-                    "status": "complete"
-                }
-            }, f, indent=2)
+            json.dump(
+                {
+                    "timestamp": timestamp,
+                    "results": self.results,
+                    "summary": {
+                        "total_time_sec": time.time() - self.start_time,
+                        "components_tested": len(self.results),
+                        "status": "complete",
+                    },
+                },
+                f,
+                indent=2,
+            )
 
         # CSV export
         csv_path = "benchmarks/benchmark_results.csv"
@@ -417,21 +439,31 @@ class PerformanceBenchmark:
             f.write("Component,Iterations,Latency_ms,Ops_Per_Sec,Overhead_Percent\n")
             for result in self.results.values():
                 if "total_operations" not in result:
-                    f.write(f"{result['component']},{result['iterations']},{result['avg_latency_ms']:.6f},{result['ops_per_sec']},{result['overhead_percent']:.4f}\n")
+                    f.write(
+                        f"{result['component']},{result['iterations']},{result['avg_latency_ms']:.6f},{result['ops_per_sec']},{result['overhead_percent']:.4f}\n"
+                    )
 
         # Markdown report
         md_path = "benchmarks/benchmark_report.md"
         with open(md_path, "w") as f:
-            f.write("# Thirsty's Asymmetric Security - Performance Benchmark Report\n\n")
-            f.write(f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
+            f.write(
+                "# Thirsty's Asymmetric Security - Performance Benchmark Report\n\n"
+            )
+            f.write(
+                f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+            )
             f.write("## Results\n\n")
             f.write("| Component | Latency (ms) | Ops/Sec | Overhead % |\n")
             f.write("|-----------|--------------|---------|------------|\n")
             for result in self.results.values():
                 if "total_operations" not in result:
-                    f.write(f"| {result['component']} | {result['avg_latency_ms']:.6f} | {result['ops_per_sec']:,} | {result['overhead_percent']:.4f} |\n")
+                    f.write(
+                        f"| {result['component']} | {result['avg_latency_ms']:.6f} | {result['ops_per_sec']:,} | {result['overhead_percent']:.4f} |\n"
+                    )
             f.write("\n## Conclusion\n\n")
-            f.write("All security primitives demonstrate O(1) complexity with negligible overhead (<0.2%).\n")
+            f.write(
+                "All security primitives demonstrate O(1) complexity with negligible overhead (<0.2%).\n"
+            )
 
 
 def main():

@@ -66,7 +66,7 @@ class TestSimulationTicks:
         engine = EMPDefenseEngine()
         engine.init()
 
-        for i in range(10):
+        for _i in range(10):
             engine.tick()
 
         assert engine.state.simulation_day == 70  # 10 weeks

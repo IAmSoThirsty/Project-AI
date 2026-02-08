@@ -47,7 +47,7 @@ def test_launch():
     # Test 3: Triumvirate Governance
     print("\n[3/5] Testing Triumvirate...")
     try:
-        triumvirate = Triumvirate()
+        Triumvirate()
         print("  Triumvirate: OK - Galahad, Cerberus, Codex Deus Maximus")
     except Exception as e:
         print(f"  Triumvirate: ERROR - {e}")

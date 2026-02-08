@@ -317,7 +317,12 @@ class AGIBehaviorMonitor:
                     category=MetricCategory.AGI_BEHAVIOR.value,
                 )
 
-                logger.debug("Recorded AGI decision: %s, confidence: %s, compliant: %s", decision_type, confidence, compliant)
+                logger.debug(
+                    "Recorded AGI decision: %s, confidence: %s, compliant: %s",
+                    decision_type,
+                    confidence,
+                    compliant,
+                )
         except Exception as e:
             logger.error("Error recording AGI decision: %s", e)
 

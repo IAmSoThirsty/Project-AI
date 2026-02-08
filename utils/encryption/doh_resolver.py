@@ -15,9 +15,9 @@ class DoHResolver:
 
         # Built-in DoH servers
         self._doh_servers = [
-            'https://dns.google/dns-query',
-            'https://cloudflare-dns.com/dns-query',
-            'https://dns.quad9.net/dns-query'
+            "https://dns.google/dns-query",
+            "https://cloudflare-dns.com/dns-query",
+            "https://dns.quad9.net/dns-query",
         ]
 
         self._current_server = self._doh_servers[0]

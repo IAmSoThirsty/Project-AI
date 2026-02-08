@@ -498,7 +498,9 @@ class CognitionKernel:
         Raises:
             PermissionError: If governance blocks the action
         """
-        logger.info("[%s] Enforcing governance for %s", context.trace_id, action.action_name)
+        logger.info(
+            "[%s] Enforcing governance for %s", context.trace_id, action.action_name
+        )
 
         # Freeze identity snapshot (immutable, governance can only observe)
         identity_snapshot = self._freeze_identity_snapshot()

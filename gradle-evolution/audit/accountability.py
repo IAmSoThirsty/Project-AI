@@ -26,7 +26,7 @@ class AccountabilityRecord:
         actor: str,
         justification: str,
         signature: str,
-        metadata: dict[str, Any]
+        metadata: dict[str, Any],
     ):
         """
         Initialize accountability record.
@@ -70,13 +70,12 @@ class AccountabilityRecord:
             True if signature valid
         """
         # Recompute signature
-        content = f"{self.action_type}:{self.actor}:{self.justification}:{self.timestamp}"
+        content = (
+            f"{self.action_type}:{self.actor}:{self.justification}:{self.timestamp}"
+        )
         computed_sig = hashlib.sha256(content.encode()).hexdigest()
 
-        return (
-            self.signature == computed_sig and
-            self.actor == expected_actor
-        )
+        return self.signature == computed_sig and self.actor == expected_actor
 
 
 class AccountabilitySystem:
@@ -105,7 +104,7 @@ class AccountabilitySystem:
         policy_id: str,
         reason: str,
         affected_actions: list[str],
-        duration_hours: int = 24
+        duration_hours: int = 24,
     ) -> str:
         """
         Request a policy override with justification.
@@ -139,7 +138,7 @@ class AccountabilitySystem:
                     "affected_actions": affected_actions,
                     "duration_hours": duration_hours,
                     "status": "pending_approval",
-                }
+                },
             )
 
             self.records[request_id] = record
@@ -159,11 +158,7 @@ class AccountabilitySystem:
             raise
 
     def request_waiver(
-        self,
-        actor: str,
-        requirement: str,
-        reason: str,
-        scope: dict[str, Any]
+        self, actor: str, requirement: str, reason: str, scope: dict[str, Any]
     ) -> str:
         """
         Request a requirement waiver.
@@ -193,7 +188,7 @@ class AccountabilitySystem:
                     "requirement": requirement,
                     "scope": scope,
                     "status": "pending_approval",
-                }
+                },
             )
 
             self.records[request_id] = record
@@ -213,10 +208,7 @@ class AccountabilitySystem:
             raise
 
     def approve_request(
-        self,
-        request_id: str,
-        approver: str,
-        comments: str | None = None
+        self, request_id: str, approver: str, comments: str | None = None
     ) -> bool:
         """
         Approve a pending request.
@@ -266,12 +258,7 @@ class AccountabilitySystem:
             logger.error("Error approving request: %s", e, exc_info=True)
             return False
 
-    def deny_request(
-        self,
-        request_id: str,
-        denier: str,
-        reason: str
-    ) -> None:
+    def deny_request(self, request_id: str, denier: str, reason: str) -> None:
         """
         Deny a pending request.
 
@@ -306,7 +293,7 @@ class AccountabilitySystem:
         actor: str,
         action_type: str,
         action_data: dict[str, Any],
-        justification: str
+        justification: str,
     ) -> str:
         """
         Create signed record of action.
@@ -323,7 +310,9 @@ class AccountabilitySystem:
         try:
             record_id = self._generate_request_id(actor, action_type)
 
-            content = f"{action_type}:{actor}:{justification}:{datetime.utcnow().isoformat()}"
+            content = (
+                f"{action_type}:{actor}:{justification}:{datetime.utcnow().isoformat()}"
+            )
             signature = hashlib.sha256(content.encode()).hexdigest()
 
             record = AccountabilityRecord(
@@ -335,7 +324,7 @@ class AccountabilitySystem:
                 metadata={
                     "action_data": action_data,
                     "status": "signed",
-                }
+                },
             )
 
             self.records[record_id] = record
@@ -370,10 +359,7 @@ class AccountabilitySystem:
         Returns:
             List of records
         """
-        return [
-            record for record in self.records.values()
-            if record.actor == actor
-        ]
+        return [record for record in self.records.values() if record.actor == actor]
 
     def get_pending_approvals(self) -> list[dict[str, Any]]:
         """
@@ -456,7 +442,7 @@ class AccountabilitySystem:
                     actor=data["actor"],
                     justification=data["justification"],
                     signature=data["signature"],
-                    metadata=data["metadata"]
+                    metadata=data["metadata"],
                 )
 
                 self.records[record.record_id] = record
@@ -465,7 +451,9 @@ class AccountabilitySystem:
                 if data["metadata"].get("status") == "pending_approval":
                     self.pending_approvals[record.record_id] = {
                         "record": record,
-                        "requires_approvals": data["metadata"].get("requires_approvals", 1),
+                        "requires_approvals": data["metadata"].get(
+                            "requires_approvals", 1
+                        ),
                         "approvals": data["metadata"].get("approvals", []),
                     }
 

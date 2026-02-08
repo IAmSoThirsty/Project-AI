@@ -65,7 +65,10 @@ async def run_high_priority_campaign():
     )
 
     logger.info("✅ Workflow started: %s", handle.id)
-    logger.info("🔗 View in UI: http://localhost:8233/namespaces/default/workflows/%s", handle.id)
+    logger.info(
+        "🔗 View in UI: http://localhost:8233/namespaces/default/workflows/%s",
+        handle.id,
+    )
 
     # Wait for result
     logger.info("⏳ Waiting for campaign to complete...")
@@ -81,8 +84,13 @@ async def run_high_priority_campaign():
     if result.vulnerabilities_found:
         logger.warning("⚠️ VULNERABILITIES DETECTED:")
         for vuln in result.vulnerabilities_found:
-            logger.warning("   • %s: %s -> %s", vuln.get('severity', 'unknown').upper(), vuln.get('persona'), vuln.get('target'))
-            logger.warning("     Details: %s", vuln.get('details', 'N/A'))
+            logger.warning(
+                "   • %s: %s -> %s",
+                vuln.get("severity", "unknown").upper(),
+                vuln.get("persona"),
+                vuln.get("target"),
+            )
+            logger.warning("     Details: %s", vuln.get("details", "N/A"))
 
     return result
 
@@ -124,11 +132,16 @@ async def run_comprehensive_campaign():
     )
 
     logger.info("✅ Workflow started: %s", handle.id)
-    logger.info("🔗 View in UI: http://localhost:8233/namespaces/default/workflows/%s", handle.id)
+    logger.info(
+        "🔗 View in UI: http://localhost:8233/namespaces/default/workflows/%s",
+        handle.id,
+    )
 
     # Don't wait for result - this is a long-running campaign
     logger.info("⏳ Campaign running in background...")
-    logger.info("   Query result with: temporal workflow describe --workflow-id %s", handle.id)
+    logger.info(
+        "   Query result with: temporal workflow describe --workflow-id %s", handle.id
+    )
 
     return handle
 

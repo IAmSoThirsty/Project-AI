@@ -69,7 +69,7 @@ for cat, count in sorted(black_cats.items()):
 
 # Sample IDs
 print("\n5. SAMPLE TEST IDs:")
-for id in sorted(list(unique_ids))[:15]:
+for id in sorted(unique_ids)[:15]:
     print(f"   {id}")
 
 # Final verdict

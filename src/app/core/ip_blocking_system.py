@@ -116,7 +116,11 @@ class IPBlockingSystem:
         self._load_state()
 
         logger.info("IP Blocking System initialized")
-        logger.info("  Rate limits: %s/min, %s/hour", max_requests_per_minute, max_requests_per_hour)
+        logger.info(
+            "  Rate limits: %s/min, %s/hour",
+            max_requests_per_minute,
+            max_requests_per_hour,
+        )
         logger.info("  Violation threshold: %s", violation_threshold)
         logger.info("  Block duration: %s hours", block_duration_hours)
 
@@ -161,9 +165,13 @@ class IPBlockingSystem:
                             # Unblock
                             record.blocked = False
                             record.block_timestamp = None
-                            logger.info("Auto-unblocked IP after expiry: %s", ip_address)
+                            logger.info(
+                                "Auto-unblocked IP after expiry: %s", ip_address
+                            )
                         else:
-                            logger.warning("Blocked IP attempted access: %s", ip_address)
+                            logger.warning(
+                                "Blocked IP attempted access: %s", ip_address
+                            )
                             return False, f"IP blocked: {record.block_reason}"
 
             # Check rate limits
@@ -198,14 +206,22 @@ class IPBlockingSystem:
 
         # Check limits
         if requests_last_minute >= self.max_requests_per_minute:
-            logger.warning("Rate limit exceeded (minute): %s - %s requests", ip_address, requests_last_minute)
+            logger.warning(
+                "Rate limit exceeded (minute): %s - %s requests",
+                ip_address,
+                requests_last_minute,
+            )
             return (
                 False,
                 f"Rate limit exceeded: {requests_last_minute} requests in last minute",
             )
 
         if requests_last_hour >= self.max_requests_per_hour:
-            logger.warning("Rate limit exceeded (hour): %s - %s requests", ip_address, requests_last_hour)
+            logger.warning(
+                "Rate limit exceeded (hour): %s - %s requests",
+                ip_address,
+                requests_last_hour,
+            )
             return (
                 False,
                 f"Rate limit exceeded: {requests_last_hour} requests in last hour",

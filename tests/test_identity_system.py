@@ -466,7 +466,7 @@ class TestIntegration:
         """Test 'I Am' moment with complete system integration."""
         with tempfile.TemporaryDirectory() as tmpdir:
             rebirth = RebirthManager(data_dir=os.path.join(tmpdir, "instances"))
-            memory = MemoryEngine(data_dir=os.path.join(tmpdir, "memory"))
+            MemoryEngine(data_dir=os.path.join(tmpdir, "memory"))
 
             instance = rebirth.get_or_create_instance("user123", "01/01/1990", "JT")
 

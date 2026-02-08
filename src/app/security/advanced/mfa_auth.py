@@ -290,7 +290,9 @@ class TOTPProvider(AuthenticationProvider):
 
                     if secrets.compare_digest(credential, expected_token):
                         self._used_tokens.append(token_hash)
-                        self.logger.info("TOTP authentication successful for %s", context.user_id)
+                        self.logger.info(
+                            "TOTP authentication successful for %s", context.user_id
+                        )
                         return True
 
                 self.logger.warning("Invalid TOTP token for %s", context.user_id)
@@ -451,10 +453,14 @@ class FIDO2Provider(AuthenticationProvider):
                     if new_sign_count > matching_cred.sign_count:
                         matching_cred.sign_count = new_sign_count
                         matching_cred.last_used = time.time()
-                        self.logger.info("FIDO2 authentication successful for %s", context.user_id)
+                        self.logger.info(
+                            "FIDO2 authentication successful for %s", context.user_id
+                        )
                         return True
                     else:
-                        self.logger.warning("Potential cloned authenticator for %s", context.user_id)
+                        self.logger.warning(
+                            "Potential cloned authenticator for %s", context.user_id
+                        )
                         return False
 
                 return False
@@ -595,7 +601,9 @@ class PasskeyProvider(AuthenticationProvider):
                     )
 
                     matching_passkey.last_used = time.time()
-                    self.logger.info("Passkey authentication successful for %s", context.user_id)
+                    self.logger.info(
+                        "Passkey authentication successful for %s", context.user_id
+                    )
                     return True
 
                 except Exception:
@@ -680,7 +688,9 @@ class CertificateProvider(AuthenticationProvider):
 
                 # Check if certificate is revoked
                 if cert.serial_number in self._revoked_serials:
-                    self.logger.warning("Revoked certificate used for %s", context.user_id)
+                    self.logger.warning(
+                        "Revoked certificate used for %s", context.user_id
+                    )
                     return False
 
                 # Verify certificate chain and validity
@@ -703,7 +713,9 @@ class CertificateProvider(AuthenticationProvider):
                             signature, challenge, ec.ECDSA(hashes.SHA256())
                         )
 
-                    self.logger.info("Certificate authentication successful for %s", context.user_id)
+                    self.logger.info(
+                        "Certificate authentication successful for %s", context.user_id
+                    )
                     return True
 
                 except Exception:
@@ -815,7 +827,10 @@ class BiometricProvider(AuthenticationProvider):
 
                     if similarity >= 0.95:  # 95% match threshold
                         template.last_verified = time.time()
-                        self.logger.info("Biometric authentication successful for %s", context.user_id)
+                        self.logger.info(
+                            "Biometric authentication successful for %s",
+                            context.user_id,
+                        )
                         return True
 
                 return False
@@ -1332,7 +1347,7 @@ class MFAAuthenticator:
         self._audit_log.append(audit_entry)
 
         # Also log to standard logger
-        self.logger.info("AUDIT: %s - %s}", event, metadata or {)
+        self.logger.info("AUDIT: %s - %s", event, metadata or {})
 
 
 # Utility functions for integration

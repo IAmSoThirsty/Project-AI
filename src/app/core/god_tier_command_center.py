@@ -170,7 +170,7 @@ class GodTierCommandCenter:
             for domain in IntelligenceDomain:
                 # Get specialties for this domain
                 overseer = instance.intelligence_library.curator.overseers[domain]
-                specialties = list(set(agent.specialty for agent in overseer.agents))
+                specialties = list({agent.specialty for agent in overseer.agents})
 
                 # Create continuous monitoring agents for key specialties
                 for specialty in specialties[:5]:  # Top 5 specialties per domain
@@ -181,7 +181,10 @@ class GodTierCommandCenter:
                     )
                     total_monitoring_agents += len(agents)
 
-            logger.info("✅ Continuous monitoring active (%s monitoring agents)", total_monitoring_agents)
+            logger.info(
+                "✅ Continuous monitoring active (%s monitoring agents)",
+                total_monitoring_agents,
+            )
 
             # 5. Start all systems
             logger.info("Step 5/5: Activating all systems...")
@@ -196,10 +199,20 @@ class GodTierCommandCenter:
             logger.info("=" * 80)
             logger.info("GOD-TIER COMMAND CENTER FULLY OPERATIONAL")
             logger.info("=" * 80)
-            logger.info("Intelligence Agents: %s (20 per domain × 6 domains)", agents_per_domain * 6)
-            logger.info("Monitoring Agents: %s (global coverage)", total_monitoring_agents)
-            logger.info("Watch Tower Gates: %s", instance.watch_tower.get_stats()['num_gates'])
-            logger.info("Processing Workers: %s", instance.god_tier_system.load_balancer.num_workers)
+            logger.info(
+                "Intelligence Agents: %s (20 per domain × 6 domains)",
+                agents_per_domain * 6,
+            )
+            logger.info(
+                "Monitoring Agents: %s (global coverage)", total_monitoring_agents
+            )
+            logger.info(
+                "Watch Tower Gates: %s", instance.watch_tower.get_stats()["num_gates"]
+            )
+            logger.info(
+                "Processing Workers: %s",
+                instance.god_tier_system.load_balancer.num_workers,
+            )
             logger.info(
                 "Features: Self-Healing | Distributed | Analytics | 24/7 | Encrypted"
             )
@@ -387,7 +400,7 @@ class GodTierCommandCenter:
             "note": "Statistical simulation provided by curator (librarian/statistician). Command decisions made by Watch Tower.",
         }
 
-        logger.info("Intelligence assessment %s completed", assessment['assessment_id'])
+        logger.info("Intelligence assessment %s completed", assessment["assessment_id"])
 
         return assessment
 

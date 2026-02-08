@@ -25,7 +25,7 @@ class BuildCognitionEngine:
     def __init__(
         self,
         deliberation_engine: DeliberationEngine,
-        config: dict[str, Any] | None = None
+        config: dict[str, Any] | None = None,
     ):
         """
         Initialize build cognition engine.
@@ -46,9 +46,7 @@ class BuildCognitionEngine:
         logger.info("Build cognition engine initialized")
 
     def deliberate_build_plan(
-        self,
-        tasks: list[str],
-        context: dict[str, Any]
+        self, tasks: list[str], context: dict[str, Any]
     ) -> tuple[list[str], dict[str, Any]]:
         """
         Deliberate on optimal build task ordering and execution.
@@ -78,8 +76,7 @@ class BuildCognitionEngine:
             }
 
             result = self.deliberation.deliberate(
-                decision_type="build_optimization",
-                inputs=deliberation_input
+                decision_type="build_optimization", inputs=deliberation_input
             )
 
             optimized_tasks = result.get("optimized_order", tasks)
@@ -101,10 +98,7 @@ class BuildCognitionEngine:
             return tasks, {"error": str(e)}
 
     def learn_from_build(
-        self,
-        tasks: list[str],
-        execution_data: dict[str, Any],
-        success: bool
+        self, tasks: list[str], execution_data: dict[str, Any], success: bool
     ) -> None:
         """
         Learn from build execution to improve future decisions.
@@ -137,17 +131,16 @@ class BuildCognitionEngine:
 
             # Prune old patterns (keep last 100 per pattern)
             if len(self.build_patterns[pattern_key]) > 100:
-                self.build_patterns[pattern_key] = self.build_patterns[pattern_key][-100:]
+                self.build_patterns[pattern_key] = self.build_patterns[pattern_key][
+                    -100:
+                ]
 
             logger.debug("Learned from build: %s, success=%s", pattern_key, success)
 
         except Exception as e:
             logger.error("Error learning from build: %s", e, exc_info=True)
 
-    def suggest_optimizations(
-        self,
-        context: dict[str, Any]
-    ) -> list[dict[str, Any]]:
+    def suggest_optimizations(self, context: dict[str, Any]) -> list[dict[str, Any]]:
         """
         Suggest build optimizations based on learned patterns.
 
@@ -163,37 +156,42 @@ class BuildCognitionEngine:
             # Analyze failure patterns
             if self.failure_patterns:
                 high_failure_tasks = [
-                    task for task, count in self.failure_patterns.items()
-                    if count > 3
+                    task for task, count in self.failure_patterns.items() if count > 3
                 ]
 
                 if high_failure_tasks:
-                    suggestions.append({
-                        "type": "failure_prevention",
-                        "description": "Tasks with high failure rates detected",
-                        "tasks": high_failure_tasks,
-                        "recommendation": "Consider adding pre-checks or retry logic",
-                    })
+                    suggestions.append(
+                        {
+                            "type": "failure_prevention",
+                            "description": "Tasks with high failure rates detected",
+                            "tasks": high_failure_tasks,
+                            "recommendation": "Consider adding pre-checks or retry logic",
+                        }
+                    )
 
             # Analyze parallelization opportunities
             parallel_opportunities = self._find_parallel_opportunities(context)
             if parallel_opportunities:
-                suggestions.append({
-                    "type": "parallelization",
-                    "description": "Tasks can be parallelized",
-                    "task_groups": parallel_opportunities,
-                    "recommendation": "Enable parallel execution for these task groups",
-                })
+                suggestions.append(
+                    {
+                        "type": "parallelization",
+                        "description": "Tasks can be parallelized",
+                        "task_groups": parallel_opportunities,
+                        "recommendation": "Enable parallel execution for these task groups",
+                    }
+                )
 
             # Analyze caching opportunities
             cache_opportunities = self._find_cache_opportunities(context)
             if cache_opportunities:
-                suggestions.append({
-                    "type": "caching",
-                    "description": "Tasks suitable for caching",
-                    "tasks": cache_opportunities,
-                    "recommendation": "Enable caching for these tasks",
-                })
+                suggestions.append(
+                    {
+                        "type": "caching",
+                        "description": "Tasks suitable for caching",
+                        "tasks": cache_opportunities,
+                        "recommendation": "Enable caching for these tasks",
+                    }
+                )
 
             logger.info("Generated %s optimization suggestions", len(suggestions))
             return suggestions
@@ -203,9 +201,7 @@ class BuildCognitionEngine:
             return []
 
     def _analyze_patterns(
-        self,
-        tasks: list[str],
-        context: dict[str, Any]
+        self, tasks: list[str], context: dict[str, Any]
     ) -> dict[str, Any]:
         """Analyze build patterns from history."""
         pattern_key = self._compute_pattern_key(tasks)
@@ -215,13 +211,12 @@ class BuildCognitionEngine:
             return {"status": "no_history"}
 
         # Compute pattern statistics
-        success_rate = sum(
-            1 for p in historical_patterns if p["success"]
-        ) / len(historical_patterns)
+        success_rate = sum(1 for p in historical_patterns if p["success"]) / len(
+            historical_patterns
+        )
 
         avg_duration = sum(
-            p["execution_data"].get("duration_seconds", 0)
-            for p in historical_patterns
+            p["execution_data"].get("duration_seconds", 0) for p in historical_patterns
         ) / len(historical_patterns)
 
         return {
@@ -231,11 +226,7 @@ class BuildCognitionEngine:
             "sample_count": len(historical_patterns),
         }
 
-    def _validate_task_order(
-        self,
-        tasks: list[str],
-        context: dict[str, Any]
-    ) -> bool:
+    def _validate_task_order(self, tasks: list[str], context: dict[str, Any]) -> bool:
         """Validate task order against dependency invariants."""
         try:
             dependencies = context.get("dependencies", {})
@@ -268,6 +259,7 @@ class BuildCognitionEngine:
     def _compute_pattern_key(self, tasks: list[str]) -> str:
         """Compute a pattern key for task list."""
         import hashlib
+
         task_str = "|".join(sorted(tasks))
         return hashlib.sha256(task_str.encode()).hexdigest()[:16]
 
@@ -277,35 +269,30 @@ class BuildCognitionEngine:
         return self.build_patterns.get(pattern_key, [])[-10:]  # Last 10
 
     def _record_optimization(
-        self,
-        original: list[str],
-        optimized: list[str],
-        reasoning: dict[str, Any]
+        self, original: list[str], optimized: list[str], reasoning: dict[str, Any]
     ) -> None:
         """Record optimization decision."""
         from datetime import datetime
 
-        self.optimization_history.append({
-            "timestamp": datetime.utcnow().isoformat(),
-            "original": original,
-            "optimized": optimized,
-            "reasoning": reasoning,
-        })
+        self.optimization_history.append(
+            {
+                "timestamp": datetime.utcnow().isoformat(),
+                "original": original,
+                "optimized": optimized,
+                "reasoning": reasoning,
+            }
+        )
 
         # Keep last 1000 optimizations
         if len(self.optimization_history) > 1000:
             self.optimization_history = self.optimization_history[-1000:]
 
-    def _find_parallel_opportunities(
-        self,
-        context: dict[str, Any]
-    ) -> list[list[str]]:
+    def _find_parallel_opportunities(self, context: dict[str, Any]) -> list[list[str]]:
         """Find tasks that can be parallelized."""
         # Simplified: tasks with no dependencies can be parallel
         dependencies = context.get("dependencies", {})
         independent_tasks = [
-            task for task in context.get("all_tasks", [])
-            if not dependencies.get(task)
+            task for task in context.get("all_tasks", []) if not dependencies.get(task)
         ]
 
         if len(independent_tasks) > 1:
@@ -313,10 +300,7 @@ class BuildCognitionEngine:
 
         return []
 
-    def _find_cache_opportunities(
-        self,
-        context: dict[str, Any]
-    ) -> list[str]:
+    def _find_cache_opportunities(self, context: dict[str, Any]) -> list[str]:
         """Find tasks suitable for caching."""
         # Tasks that frequently appear in patterns are cache candidates
         task_frequency = {}

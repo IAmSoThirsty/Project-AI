@@ -266,8 +266,7 @@ class SecureCommunicationsKernel(
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS messages (
                 message_id TEXT PRIMARY KEY,
                 sender_id TEXT,
@@ -281,11 +280,9 @@ class SecureCommunicationsKernel(
                 retry_count INTEGER DEFAULT 0,
                 metadata TEXT
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS routing_table (
                 destination_id TEXT PRIMARY KEY,
                 next_hop_id TEXT,
@@ -295,18 +292,15 @@ class SecureCommunicationsKernel(
                 last_updated REAL,
                 transport_type TEXT
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS peer_keys (
                 node_id TEXT PRIMARY KEY,
                 public_key BLOB,
                 last_seen REAL
             )
-        """
-        )
+        """)
 
         conn.commit()
         conn.close()
@@ -375,7 +369,9 @@ class SecureCommunicationsKernel(
         # Check if worker threads are alive
         alive_threads = sum(1 for t in self.worker_threads if t.is_alive())
         if alive_threads < len(self.worker_threads):
-            self.logger.warning("Only %s/%s workers alive", alive_threads, len(self.worker_threads))
+            self.logger.warning(
+                "Only %s/%s workers alive", alive_threads, len(self.worker_threads)
+            )
             return False
 
         return True
@@ -577,7 +573,11 @@ class SecureCommunicationsKernel(
         """Register a transport endpoint"""
         try:
             self.transports[endpoint.endpoint_id] = endpoint
-            self.logger.info("Registered transport: %s (%s)", endpoint.endpoint_id, endpoint.transport_type.value)
+            self.logger.info(
+                "Registered transport: %s (%s)",
+                endpoint.endpoint_id,
+                endpoint.transport_type.value,
+            )
             return True
         except Exception as e:
             self.logger.error("Failed to register transport: %s", e)
@@ -596,7 +596,9 @@ class SecureCommunicationsKernel(
                 return self._transmit_store_forward(msg, transport)
             else:
                 # Placeholder for RF/acoustic/optical transports
-                self.logger.warning("Transport %s not fully implemented", transport.transport_type)
+                self.logger.warning(
+                    "Transport %s not fully implemented", transport.transport_type
+                )
                 return False
 
         except Exception as e:
@@ -1032,7 +1034,7 @@ class SecureCommunicationsKernel(
     def emit_event(self, event_type: str, data: Any) -> int:
         """Emit event to subscribers"""
         count = 0
-        for sub_id, callback in self.subscribers.get(event_type, []):
+        for _sub_id, callback in self.subscribers.get(event_type, []):
             try:
                 callback(data)
                 count += 1

@@ -49,7 +49,6 @@ __author__ = "Django State Engine Team"
 __all__ = [
     # Main engine
     "DjangoStateEngine",
-
     # Schemas
     "StateVector",
     "StateDimension",
@@ -63,13 +62,11 @@ __all__ = [
     "EngineConfig",
     "IrreversibilityConfig",
     "OutcomeThresholds",
-
     # Kernel
     "RealityClock",
     "CausalEvent",
     "IrreversibilityLaws",
     "CollapseScheduler",
-
     # Modules
     "HumanForcesModule",
     "InstitutionalPressureModule",

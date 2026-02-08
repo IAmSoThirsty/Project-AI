@@ -432,7 +432,12 @@ class ASL3Security:
 
         # Alert if configured
         if policy.alert_on_access:
-            self.logger.warning("ASL-3: Sensitive access - %s performed %s on %s", user, action, resource)
+            self.logger.warning(
+                "ASL-3: Sensitive access - %s performed %s on %s",
+                user,
+                action,
+                resource,
+            )
 
         return True
 

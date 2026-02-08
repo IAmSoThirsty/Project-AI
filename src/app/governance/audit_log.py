@@ -136,7 +136,9 @@ class AuditLog:
             # Update last hash for next event
             self.last_hash = event_hash
 
-            logger.info("Audit event logged: %s (hash: %s...)", event_type, event_hash[)
+            logger.info(
+                "Audit event logged: %s (hash: %s...)", event_type, event_hash[:16]
+            )
             return True
 
         except Exception as e:

@@ -78,9 +78,7 @@ class ArtifactManager:
         Returns:
             Path to saved screenshot
         """
-        screenshot_file = (
-            self.current_run_dir / "screenshots" / f"{name}.png"
-        )
+        screenshot_file = self.current_run_dir / "screenshots" / f"{name}.png"
         screenshot_file.parent.mkdir(parents=True, exist_ok=True)
         screenshot_file.write_bytes(image_data)
         logger.info("Saved screenshot: %s", screenshot_file)
@@ -194,21 +192,25 @@ class ArtifactManager:
         summary = {
             "run_id": self.run_id,
             "run_dir": str(self.current_run_dir),
-            "logs": len(list((self.current_run_dir / "logs").glob("*.log")))
-            if (self.current_run_dir / "logs").exists()
-            else 0,
-            "screenshots": len(
-                list((self.current_run_dir / "screenshots").glob("*.png"))
-            )
-            if (self.current_run_dir / "screenshots").exists()
-            else 0,
-            "dumps": len(list((self.current_run_dir / "dumps").glob("*.json")))
-            if (self.current_run_dir / "dumps").exists()
-            else 0,
-            "errors": len(
-                list((self.current_run_dir / "errors").glob("*.json"))
-            )
-            if (self.current_run_dir / "errors").exists()
-            else 0,
+            "logs": (
+                len(list((self.current_run_dir / "logs").glob("*.log")))
+                if (self.current_run_dir / "logs").exists()
+                else 0
+            ),
+            "screenshots": (
+                len(list((self.current_run_dir / "screenshots").glob("*.png")))
+                if (self.current_run_dir / "screenshots").exists()
+                else 0
+            ),
+            "dumps": (
+                len(list((self.current_run_dir / "dumps").glob("*.json")))
+                if (self.current_run_dir / "dumps").exists()
+                else 0
+            ),
+            "errors": (
+                len(list((self.current_run_dir / "errors").glob("*.json")))
+                if (self.current_run_dir / "errors").exists()
+                else 0
+            ),
         }
         return summary

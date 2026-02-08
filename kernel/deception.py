@@ -82,10 +82,7 @@ class BubblegumProtocol:
 
         # Check for data exfiltration patterns
         exfil_keywords = ["tar", "zip", "curl", "wget", "scp", "nc", "exfil"]
-        if any(keyword in action_lower for keyword in exfil_keywords):
-            return True
-
-        return False
+        return bool(any(keyword in action_lower for keyword in exfil_keywords))
 
     @staticmethod
     def execute(environment: DeceptionEnvironment) -> dict[str, Any]:
@@ -442,8 +439,8 @@ class DeceptionOrchestrator:
         )
 
         logger.critical("💥 BUBBLEGUM TRIGGERED for user %s", user_id)
-        logger.critical("   Actions logged: %s", result['actions_logged'])
-        logger.critical("   Time in trap: %ss", result['time_in_trap'])
+        logger.critical("   Actions logged: %s", result["actions_logged"])
+        logger.critical("   Time in trap: %ss", result["time_in_trap"])
 
         return result
 

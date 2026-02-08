@@ -119,7 +119,9 @@ class EncryptedStateManager:
         # Thread safety
         self._lock = threading.Lock()
 
-        logger.info("Encrypted State Manager initialized (algorithm=%s)", algorithm.value)
+        logger.info(
+            "Encrypted State Manager initialized (algorithm=%s)", algorithm.value
+        )
 
     def _load_or_generate_master_key(self) -> bytes:
         """Load existing master key or generate new one."""
@@ -271,7 +273,9 @@ class EncryptedStateManager:
             with open(metadata_file, "w") as f:
                 json.dump(metadata, f, indent=2)
 
-            logger.info("Saved encrypted state: %s (%s bytes)", state_id, len(encrypted))
+            logger.info(
+                "Saved encrypted state: %s (%s bytes)", state_id, len(encrypted)
+            )
             return True
 
         except Exception as e:
@@ -332,7 +336,6 @@ class EncryptedStateManager:
 
         try:
             # Generate new key
-            old_key = self.master_key
             old_key_id = self.current_key_id
 
             if self.algorithm == EncryptionAlgorithm.FERNET:
@@ -651,7 +654,7 @@ class BackupManager:
                     sha256.update(chunk)
         elif os.path.isdir(file_path):
             # For directories, hash all files recursively
-            for root, dirs, files in os.walk(file_path):
+            for root, _dirs, files in os.walk(file_path):
                 for file in sorted(files):
                     file_path_full = os.path.join(root, file)
                     with open(file_path_full, "rb") as f:

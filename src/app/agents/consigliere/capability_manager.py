@@ -70,7 +70,12 @@ class CapabilityManager:
         }
         self._permission_requests.append(request)
 
-        self.logger.info("Capability requested: %s (Risk: %s) - %s", capability, cap_info['risk_level'], reason)
+        self.logger.info(
+            "Capability requested: %s (Risk: %s) - %s",
+            capability,
+            cap_info["risk_level"],
+            reason,
+        )
 
         # Auto-grant low/medium risk, deny high risk (in production: user prompt)
         if cap_info["risk_level"] == "high":

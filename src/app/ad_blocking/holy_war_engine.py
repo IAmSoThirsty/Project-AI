@@ -78,9 +78,9 @@ class AdAnnihilator:
     def stop(self):
         """Stop ad annihilator"""
         self.logger.info("AD ANNIHILATOR stopped - Statistics:")
-        self.logger.info("  Ads blocked: %s", self.stats['ads_blocked'])
-        self.logger.info("  Trackers destroyed: %s", self.stats['trackers_destroyed'])
-        self.logger.info("  Pop-ups obliterated: %s", self.stats['popups_obliterated'])
+        self.logger.info("  Ads blocked: %s", self.stats["ads_blocked"])
+        self.logger.info("  Trackers destroyed: %s", self.stats["trackers_destroyed"])
+        self.logger.info("  Pop-ups obliterated: %s", self.stats["popups_obliterated"])
 
         self._active = False
 

@@ -190,7 +190,11 @@ class BytecodeVM:
                             context.stack.append(result)
                         except KeyError as err:
                             # Get available functions for helpful error message
-                            available = stdlib.list_builtins() if hasattr(stdlib, 'list_builtins') else []
+                            available = (
+                                stdlib.list_builtins()
+                                if hasattr(stdlib, "list_builtins")
+                                else []
+                            )
                             available_str = ", ".join(available[:5])  # Show first 5
                             if len(available) > 5:
                                 available_str += ", ..."

@@ -139,8 +139,6 @@ class TestFullBuildWorkflow:
 
     def test_security_violation_workflow(self, integrated_system):
         """Test workflow with security violation."""
-        build_id = "security-test-001"
-        tasks = ["deploy"]
         context = {"violations": ["security_violation"]}
 
         # Constitutional check should block
@@ -310,7 +308,7 @@ class TestPerformanceAndScalability:
         # Create many capsules
         capsule_count = 100
         for i in range(capsule_count):
-            capsule = engine.create_capsule(
+            engine.create_capsule(
                 tasks=[f"task-{i}"],
                 inputs={f"input-{i}": f"hash-{i}"},
                 outputs={f"output-{i}": f"hash-{i}"},

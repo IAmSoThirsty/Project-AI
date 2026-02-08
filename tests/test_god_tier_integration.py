@@ -200,7 +200,7 @@ class TestGodTierIntegration:
                 assert node.start()
 
             # Register RL agents as services
-            for node, agent in zip(nodes, agents):
+            for node, agent in zip(nodes, agents, strict=False):
                 node.registry.register_service(
                     node.node_id, "rl_agent", metadata={"agent_id": agent.agent_id}
                 )
@@ -390,7 +390,7 @@ class TestGodTierPerformance:
             agent.update(state, action, 1.0, {"step": episode + 1}, done=True)
 
         # Train from replay
-        td_error = agent.train_from_replay(batch_size=32, num_batches=10)
+        agent.train_from_replay(batch_size=32, num_batches=10)
 
         # Verify training completed
         stats = agent.get_policy_stats()

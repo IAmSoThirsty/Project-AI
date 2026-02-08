@@ -99,7 +99,9 @@ class MarketDataProvider:
             try:
                 with open(cache_file) as f:
                     self._cache = json.load(f)
-                logger.info("Loaded market data cache with %s entries", len(self._cache))
+                logger.info(
+                    "Loaded market data cache with %s entries", len(self._cache)
+                )
             except Exception as e:
                 logger.error("Failed to load market cache: %s", e)
                 self._cache = {}
@@ -246,7 +248,12 @@ class MarketDataProvider:
             }
             self._save_cache()
 
-            logger.info("Generated %s mock candles for %s %s", len(candles), symbol, timeframe.value)
+            logger.info(
+                "Generated %s mock candles for %s %s",
+                len(candles),
+                symbol,
+                timeframe.value,
+            )
             return candles
 
         raise NotImplementedError("Live mode requires exchange API integration")

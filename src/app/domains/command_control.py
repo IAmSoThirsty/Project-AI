@@ -511,7 +511,9 @@ class CommandControlSubsystem(
                 try:
                     callback(data)
                 except Exception as e:
-                    self.logger.error("Error in event callback %s: %s", subscription_id, e)
+                    self.logger.error(
+                        "Error in event callback %s: %s", subscription_id, e
+                    )
 
             return len(subscribers)
 

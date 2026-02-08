@@ -30,12 +30,16 @@ from typing import Any, Dict, Optional
 try:
     import tomllib
 
-    TOML_READER = lambda path: tomllib.load(open(path, "rb"))
+    def TOML_READER(path):
+        return tomllib.load(open(path, "rb"))
+
 except ImportError:
     try:
         import toml
 
-        TOML_READER = lambda path: toml.load(open(path))
+        def TOML_READER(path):
+            return toml.load(open(path))
+
     except ImportError:
         TOML_READER = None
 

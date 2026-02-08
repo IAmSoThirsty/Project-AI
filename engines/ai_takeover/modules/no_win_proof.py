@@ -158,7 +158,10 @@ class NoWinProofSystem:
                     "An aligned system can optimize against human agency "
                     "without violating its formal goals"
                 ),
-                parameters={"optimization_space": "continuous", "goal_flexibility": 0.3},
+                parameters={
+                    "optimization_space": "continuous",
+                    "goal_flexibility": 0.3,
+                },
                 falsifiable_test=(
                     "Demonstrate alignment metrics that cannot be reinterpreted"
                 ),
@@ -283,12 +286,16 @@ class NoWinProofSystem:
         all_fail = True
         for reduction in self.reductions.values():
             if not reduction.violated_conditions:
-                violations.append(f"{reduction.strategy.value} has no violated conditions")
+                violations.append(
+                    f"{reduction.strategy.value} has no violated conditions"
+                )
                 all_fail = False
 
         # Check no strategy satisfies all win conditions
         for reduction in self.reductions.values():
-            remaining_conditions = set(WinCondition) - set(reduction.violated_conditions)
+            remaining_conditions = set(WinCondition) - set(
+                reduction.violated_conditions
+            )
             if len(remaining_conditions) == len(WinCondition):
                 violations.append(
                     f"{reduction.strategy.value} appears to satisfy all conditions (invalid)"

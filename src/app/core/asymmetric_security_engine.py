@@ -405,7 +405,9 @@ class SecurityConstitution:
         self.violations.append(violation_record)
         self._save_violations()
 
-        logger.critical("CONSTITUTIONAL VIOLATION: %s - %s", rule.rule_id, rule.description)
+        logger.critical(
+            "CONSTITUTIONAL VIOLATION: %s - %s", rule.rule_id, rule.description
+        )
 
         if rule.violation_action == "halt":
             self._halt_request(context)

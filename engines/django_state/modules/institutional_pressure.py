@@ -16,14 +16,14 @@ logger = logging.getLogger(__name__)
 
 class InstitutionalPressureModule:
     """Models institutional dynamics and governance capacity.
-    
+
     Tracks bureaucratic inertia, legitimacy erosion, broken promises,
     and institutional failure cascades.
     """
 
     def __init__(self, laws: IrreversibilityLaws):
         """Initialize institutional pressure module.
-        
+
         Args:
             laws: Irreversibility laws instance
         """
@@ -51,10 +51,10 @@ class InstitutionalPressureModule:
 
     def calculate_governance_capacity(self, state: StateVector) -> float:
         """Calculate current governance capacity from state.
-        
+
         Args:
             state: Current state vector
-            
+
         Returns:
             Governance capacity (0.0 to 1.0)
         """
@@ -62,13 +62,15 @@ class InstitutionalPressureModule:
         capacity = state.legitimacy.value * 0.6 + state.epistemic_confidence.value * 0.4
 
         # Reduce by bureaucratic inertia
-        capacity *= (1.0 - self.inertia_factor)
+        capacity *= 1.0 - self.inertia_factor
 
         # Adjust by efficiency
         capacity *= self.efficiency
 
         # Recent failures reduce capacity
-        recent_failures = len([f for f in self.failure_history[-10:] if f.get("severity", 0) > 0.5])
+        recent_failures = len(
+            [f for f in self.failure_history[-10:] if f.get("severity", 0) > 0.5]
+        )
         failure_penalty = min(recent_failures * 0.05, 0.3)
         capacity -= failure_penalty
 
@@ -81,10 +83,10 @@ class InstitutionalPressureModule:
 
     def make_promise(self, difficulty: float = 0.5) -> str:
         """Institutional promise made.
-        
+
         Args:
             difficulty: How difficult to keep (0.0 to 1.0)
-            
+
         Returns:
             Promise ID
         """
@@ -95,13 +97,15 @@ class InstitutionalPressureModule:
 
         return promise_id
 
-    def evaluate_promise_keeping(self, state: StateVector, promise_difficulty: float = 0.5) -> bool:
+    def evaluate_promise_keeping(
+        self, state: StateVector, promise_difficulty: float = 0.5
+    ) -> bool:
         """Evaluate whether a promise can be kept.
-        
+
         Args:
             state: Current state vector
             promise_difficulty: Difficulty of keeping promise (0.0 to 1.0)
-            
+
         Returns:
             True if promise kept, False if broken
         """
@@ -133,13 +137,13 @@ class InstitutionalPressureModule:
         severity: float = 0.5,
     ) -> InstitutionalFailureEvent:
         """Generate institutional failure event.
-        
+
         Args:
             state: Current state vector
             failure_type: Type of failure
             impact_scope: Scope of impact
             severity: Failure severity
-            
+
         Returns:
             InstitutionalFailureEvent instance
         """
@@ -156,26 +160,33 @@ class InstitutionalPressureModule:
         )
 
         # Record in history
-        self.failure_history.append({
-            "timestamp": state.timestamp,
-            "failure_type": failure_type,
-            "impact_scope": impact_scope,
-            "severity": severity,
-            "event_id": event.event_id,
-        })
+        self.failure_history.append(
+            {
+                "timestamp": state.timestamp,
+                "failure_type": failure_type,
+                "impact_scope": impact_scope,
+                "severity": severity,
+                "event_id": event.event_id,
+            }
+        )
 
-        logger.info("Generated failure event: %s, scope=%s, severity=%s", failure_type, impact_scope, severity)
+        logger.info(
+            "Generated failure event: %s, scope=%s, severity=%s",
+            failure_type,
+            impact_scope,
+            severity,
+        )
 
         return event
 
     def check_cascading_failure(self, state: StateVector) -> bool:
         """Check if conditions exist for cascading failure.
-        
+
         Cascading failures occur when legitimacy is very low and capacity is impaired.
-        
+
         Args:
             state: Current state vector
-            
+
         Returns:
             True if cascading failure should occur
         """
@@ -184,22 +195,24 @@ class InstitutionalPressureModule:
             cascade_prob = 0.3 * (1.0 - state.legitimacy.value / 0.25)
 
             # Recent failures increase cascade probability
-            recent_failures = len([f for f in self.failure_history[-5:]])
+            recent_failures = len(list(self.failure_history[-5:]))
             cascade_prob += recent_failures * 0.1
 
             if random.random() < cascade_prob:
                 self.cascading_failures += 1
-                logger.warning("CASCADING FAILURE DETECTED (total: %s)", self.cascading_failures)
+                logger.warning(
+                    "CASCADING FAILURE DETECTED (total: %s)", self.cascading_failures
+                )
                 return True
 
         return False
 
     def apply_institutional_dynamics(self, state: StateVector) -> dict[str, Any]:
         """Apply institutional dynamics for this tick.
-        
+
         Args:
             state: Current state vector
-            
+
         Returns:
             Dictionary with dynamics results
         """
@@ -238,11 +251,15 @@ class InstitutionalPressureModule:
 
         if random.random() < failure_prob:
             failure_occurred = True
-            failure_type = random.choice(["system_failure", "corruption", "promise_broken"])
+            failure_type = random.choice(
+                ["system_failure", "corruption", "promise_broken"]
+            )
             impact_scope = random.choice(["local", "regional", "national"])
             severity = random.uniform(0.4, 0.8)
 
-            failure_event = self.generate_failure_event(state, failure_type, impact_scope, severity)
+            failure_event = self.generate_failure_event(
+                state, failure_type, impact_scope, severity
+            )
 
             # Apply legitimacy erosion
             self.laws.apply_legitimacy_erosion(
@@ -258,7 +275,7 @@ class InstitutionalPressureModule:
         if cascading:
             # Generate multiple failures
             for _ in range(random.randint(2, 4)):
-                cascade_event = self.generate_failure_event(
+                self.generate_failure_event(
                     state,
                     failure_type="cascading_failure",
                     impact_scope=random.choice(["regional", "national", "global"]),
@@ -288,7 +305,7 @@ class InstitutionalPressureModule:
 
     def get_promise_keeping_rate(self) -> float:
         """Calculate promise-keeping rate.
-        
+
         Returns:
             Rate of promises kept (0.0 to 1.0)
         """
@@ -298,10 +315,10 @@ class InstitutionalPressureModule:
 
     def get_capacity_trend(self, window: int = 10) -> str:
         """Get capacity trend over recent history.
-        
+
         Args:
             window: Number of recent ticks to analyze
-            
+
         Returns:
             Trend description
         """
@@ -309,8 +326,8 @@ class InstitutionalPressureModule:
             return "insufficient_data"
 
         recent = self.capacity_history[-window:]
-        first_half = sum(recent[:window//2]) / (window//2)
-        second_half = sum(recent[window//2:]) / (window - window//2)
+        first_half = sum(recent[: window // 2]) / (window // 2)
+        second_half = sum(recent[window // 2 :]) / (window - window // 2)
 
         diff = second_half - first_half
 
@@ -323,7 +340,7 @@ class InstitutionalPressureModule:
 
     def get_summary(self) -> dict[str, Any]:
         """Get module summary.
-        
+
         Returns:
             Dictionary with module state
         """

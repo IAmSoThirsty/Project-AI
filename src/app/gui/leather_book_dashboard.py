@@ -318,8 +318,7 @@ class ProactiveActionsPanel(QFrame):
 
     def _create_action_scroll(self) -> QScrollArea:
         scroll = QScrollArea()
-        scroll.setStyleSheet(
-            """
+        scroll.setStyleSheet("""
             QScrollArea {
                 background-color: transparent;
                 border: none;
@@ -332,8 +331,7 @@ class ProactiveActionsPanel(QFrame):
             QScrollBar::handle:vertical {
                 background-color: #00ff00;
             }
-        """
-        )
+        """)
         scroll.setWidgetResizable(True)
 
         actions_widget = QWidget()
@@ -377,8 +375,7 @@ class UserChatPanel(QFrame):
         # Chat input
         self.input_text = QTextEdit()
         self.input_text.setPlaceholderText("Enter your message...")
-        self.input_text.setStyleSheet(
-            """
+        self.input_text.setStyleSheet("""
             QTextEdit {
                 background-color: #1a1a1a;
                 border: 2px solid #00ff00;
@@ -390,14 +387,12 @@ class UserChatPanel(QFrame):
             QTextEdit:focus {
                 border: 2px solid #00ffff;
             }
-        """
-        )
+        """)
         layout.addWidget(self.input_text, 1)
 
         # Send button
         send_btn = QPushButton("SEND ▶")
-        send_btn.setStyleSheet(
-            """
+        send_btn.setStyleSheet("""
             QPushButton {
                 background-color: #00ff00;
                 border: 2px solid #00ff00;
@@ -414,8 +409,7 @@ class UserChatPanel(QFrame):
             QPushButton:pressed {
                 background-color: #008800;
             }
-        """
-        )
+        """)
         send_btn.clicked.connect(self._send_message)
         layout.addWidget(send_btn)
 
@@ -432,15 +426,13 @@ class AINeuralHead(QFrame):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setStyleSheet(
-            """
+        self.setStyleSheet("""
             QFrame {
                 background-color: #000000;
                 border: 3px solid #00ffff;
                 border-radius: 10px;
             }
-        """
-        )
+        """)
         self.setMinimumSize(300, 400)
 
         self.animation_frame = 0
@@ -607,8 +599,7 @@ class AIResponsePanel(QFrame):
         # Response display
         self.response_text = QTextEdit()
         self.response_text.setReadOnly(True)
-        self.response_text.setStyleSheet(
-            """
+        self.response_text.setStyleSheet("""
             QTextEdit {
                 background-color: #1a1a1a;
                 border: 2px solid #00ff00;
@@ -617,14 +608,12 @@ class AIResponsePanel(QFrame):
                 font-family: Courier New;
                 font-size: 10px;
             }
-        """
-        )
+        """)
         layout.addWidget(self.response_text, 1)
 
         # Clear button
         clear_btn = QPushButton("CLEAR")
-        clear_btn.setStyleSheet(
-            """
+        clear_btn.setStyleSheet("""
             QPushButton {
                 background-color: #1a1a1a;
                 border: 2px solid #00ff00;
@@ -637,8 +626,7 @@ class AIResponsePanel(QFrame):
                 border: 2px solid #00ffff;
                 color: #00ffff;
             }
-        """
-        )
+        """)
         clear_btn.clicked.connect(self.response_text.clear)
         layout.addWidget(clear_btn)
 

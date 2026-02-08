@@ -347,7 +347,7 @@ def main():
 
     try:
         # Demo 1: Bootstrap
-        orchestrator = demo_bootstrap_orchestrator()
+        demo_bootstrap_orchestrator()
 
         # Demo 2: Event Spine
         demo_event_spine()

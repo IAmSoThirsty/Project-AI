@@ -67,7 +67,9 @@ class SovereignVerifier:
                 # Extract ZIP and load bundle
                 with zipfile.ZipFile(self.bundle_path, "r") as zip_file:
                     # Look for compliance_bundle.json
-                    bundle_files = [f for f in zip_file.namelist() if "compliance_bundle.json" in f]
+                    bundle_files = [
+                        f for f in zip_file.namelist() if "compliance_bundle.json" in f
+                    ]
                     if not bundle_files:
                         logger.error("No compliance_bundle.json found in ZIP")
                         return False
@@ -79,7 +81,9 @@ class SovereignVerifier:
                 with open(self.bundle_path) as f:
                     self.bundle = json.load(f)
 
-            logger.info("Loaded compliance bundle: version %s", self.bundle.get("version"))
+            logger.info(
+                "Loaded compliance bundle: version %s", self.bundle.get("version")
+            )
             return True
 
         except Exception as e:
@@ -219,7 +223,10 @@ class SovereignVerifier:
             if result["details"]["signatures_found"] == 0:
                 result["status"] = "warning"
                 result["issues"].append("No signatures found in audit trail")
-            elif result["details"]["signatures_verified"] == result["details"]["signatures_found"]:
+            elif (
+                result["details"]["signatures_verified"]
+                == result["details"]["signatures_found"]
+            ):
                 result["status"] = "pass"
             else:
                 result["status"] = "fail"
@@ -333,7 +340,9 @@ class SovereignVerifier:
         checks = self.verification_report["checks"]
 
         attestation["verification_summary"] = {
-            "hash_chain": checks.get("hash_chain_validation", {}).get("status", "unknown"),
+            "hash_chain": checks.get("hash_chain_validation", {}).get(
+                "status", "unknown"
+            ),
             "signatures": checks.get("signature_authority_mapping", {}).get(
                 "status", "unknown"
             ),
@@ -401,7 +410,9 @@ class SovereignVerifier:
         # 2. Signature authority mapping
         logger.info("2. Mapping signature authorities...")
         signature_result = self._map_signature_authorities()
-        self.verification_report["checks"]["signature_authority_mapping"] = signature_result
+        self.verification_report["checks"][
+            "signature_authority_mapping"
+        ] = signature_result
         logger.info("   Status: %s", signature_result["status"])
         logger.info("")
 
@@ -438,7 +449,9 @@ class SovereignVerifier:
             "bundle_version": self.bundle.get("version"),
             "total_audit_blocks": self.bundle["audit_trail"]["total_blocks"],
             "blocks_verified": hash_chain_result["details"].get("blocks_verified", 0),
-            "signatures_verified": signature_result["details"].get("signatures_verified", 0),
+            "signatures_verified": signature_result["details"].get(
+                "signatures_verified", 0
+            ),
             "policy_resolutions": policy_result["details"].get("total_resolutions", 0),
             "overall_status": self.verification_report["overall_status"],
         }
@@ -446,7 +459,9 @@ class SovereignVerifier:
         logger.info("=" * 80)
         logger.info("VERIFICATION COMPLETE")
         logger.info("=" * 80)
-        logger.info("Overall Status: %s", self.verification_report["overall_status"].upper())
+        logger.info(
+            "Overall Status: %s", self.verification_report["overall_status"].upper()
+        )
         logger.info("=" * 80)
 
         return self.verification_report

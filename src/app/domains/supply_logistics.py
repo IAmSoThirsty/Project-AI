@@ -516,7 +516,9 @@ class SupplyLogisticsSubsystem(
                 try:
                     callback(data)
                 except Exception as e:
-                    self.logger.error("Error in event callback %s: %s", subscription_id, e)
+                    self.logger.error(
+                        "Error in event callback %s: %s", subscription_id, e
+                    )
 
             return len(subscribers)
 
@@ -886,10 +888,7 @@ class SupplyLogisticsSubsystem(
         critical_reserve = rules.get("critical_reserve", 0)
 
         # Don't deplete below critical reserve
-        if available - request.quantity_requested < critical_reserve:
-            return False
-
-        return True
+        return not available - request.quantity_requested < critical_reserve
 
     def _find_consolidation_opportunities(self) -> list[dict[str, Any]]:
         """Find opportunities to consolidate shipments."""

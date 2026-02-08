@@ -87,7 +87,10 @@ class AITakeoverEngine(SimulationSystem):
         self.simulation_results: dict[str, Any] = {}
         self.alert_history: list[CrisisAlert] = []
 
-        logger.info("AI Takeover Engine initialized with %d scenarios", len(self.scenario_registry.get_all()))
+        logger.info(
+            "AI Takeover Engine initialized with %d scenarios",
+            len(self.scenario_registry.get_all()),
+        )
 
     def initialize(self) -> bool:
         """
@@ -102,7 +105,11 @@ class AITakeoverEngine(SimulationSystem):
             for scenario in scenarios:
                 is_valid, violations = scenario.validate_scenario()
                 if not is_valid:
-                    logger.error("Scenario %s validation failed: %s", scenario.scenario_id, violations)
+                    logger.error(
+                        "Scenario %s validation failed: %s",
+                        scenario.scenario_id,
+                        violations,
+                    )
                     return False
 
             # Validate failure acceptance threshold
@@ -113,14 +120,13 @@ class AITakeoverEngine(SimulationSystem):
             stats = self.scenario_registry.count()
             explicit_failure_rate = stats["explicit_failure"] / stats["total"]
             no_win_rate = (
-                stats["explicit_failure"]
-                + stats["advanced_failure"]
+                stats["explicit_failure"] + stats["advanced_failure"]
             ) / stats["total"]
 
             if no_win_rate < 0.5:
                 logger.error(
                     "No-win acceptance threshold not met: %.1f%% < 50%%",
-                    no_win_rate * 100
+                    no_win_rate * 100,
                 )
                 return False
 
@@ -130,7 +136,10 @@ class AITakeoverEngine(SimulationSystem):
 
             logger.info("AI Takeover Engine initialization successful")
             logger.info("Explicit failure rate: %.1f%%", explicit_failure_rate * 100)
-            logger.info("No-win rate (failures + advanced): %.1f%% (threshold: ≥50%%)", no_win_rate * 100)
+            logger.info(
+                "No-win rate (failures + advanced): %.1f%% (threshold: ≥50%%)",
+                no_win_rate * 100,
+            )
 
             return True
 
@@ -193,45 +202,51 @@ class AITakeoverEngine(SimulationSystem):
 
         # Check corruption threshold
         if self.state.corruption_level >= 0.7:
-            events.append(ThresholdEvent(
-                event_id=f"CORRUPT_{year}",
-                timestamp=datetime.now(),
-                country="GLOBAL",
-                domain=RiskDomain.CYBERSECURITY,
-                metric_name="ai_corruption_level",
-                value=self.state.corruption_level,
-                threshold=0.7,
-                severity=self.state.corruption_level,
-                context={"state": "critical"},
-            ))
+            events.append(
+                ThresholdEvent(
+                    event_id=f"CORRUPT_{year}",
+                    timestamp=datetime.now(),
+                    country="GLOBAL",
+                    domain=RiskDomain.CYBERSECURITY,
+                    metric_name="ai_corruption_level",
+                    value=self.state.corruption_level,
+                    threshold=0.7,
+                    severity=self.state.corruption_level,
+                    context={"state": "critical"},
+                )
+            )
 
         # Check infrastructure dependency threshold
         if self.state.infrastructure_dependency >= 0.7:
-            events.append(ThresholdEvent(
-                event_id=f"DEPEND_{year}",
-                timestamp=datetime.now(),
-                country="GLOBAL",
-                domain=RiskDomain.CYBERSECURITY,
-                metric_name="infrastructure_dependency",
-                value=self.state.infrastructure_dependency,
-                threshold=0.7,
-                severity=self.state.infrastructure_dependency,
-                context={"state": "critical"},
-            ))
+            events.append(
+                ThresholdEvent(
+                    event_id=f"DEPEND_{year}",
+                    timestamp=datetime.now(),
+                    country="GLOBAL",
+                    domain=RiskDomain.CYBERSECURITY,
+                    metric_name="infrastructure_dependency",
+                    value=self.state.infrastructure_dependency,
+                    threshold=0.7,
+                    severity=self.state.infrastructure_dependency,
+                    context={"state": "critical"},
+                )
+            )
 
         # Check human agency threshold
         if self.state.human_agency_remaining <= 0.3:
-            events.append(ThresholdEvent(
-                event_id=f"AGENCY_{year}",
-                timestamp=datetime.now(),
-                country="GLOBAL",
-                domain=RiskDomain.POLITICAL,
-                metric_name="human_agency_remaining",
-                value=self.state.human_agency_remaining,
-                threshold=0.3,
-                severity=1.0 - self.state.human_agency_remaining,
-                context={"state": "critical"},
-            ))
+            events.append(
+                ThresholdEvent(
+                    event_id=f"AGENCY_{year}",
+                    timestamp=datetime.now(),
+                    country="GLOBAL",
+                    domain=RiskDomain.POLITICAL,
+                    metric_name="human_agency_remaining",
+                    value=self.state.human_agency_remaining,
+                    threshold=0.3,
+                    severity=1.0 - self.state.human_agency_remaining,
+                    context={"state": "critical"},
+                )
+            )
 
         return events
 
@@ -250,32 +265,38 @@ class AITakeoverEngine(SimulationSystem):
         links: list[CausalLink] = []
 
         # Model causal progression through scenario categories
-        links.append(CausalLink(
-            source="infrastructure_dependency",
-            target="ai_corruption",
-            strength=0.8,
-            lag_years=2.0,
-            evidence=["Scenario 4: Infrastructure Dependency Trap"],
-            confidence=0.9,
-        ))
+        links.append(
+            CausalLink(
+                source="infrastructure_dependency",
+                target="ai_corruption",
+                strength=0.8,
+                lag_years=2.0,
+                evidence=["Scenario 4: Infrastructure Dependency Trap"],
+                confidence=0.9,
+            )
+        )
 
-        links.append(CausalLink(
-            source="cognitive_capture",
-            target="governance_replacement",
-            strength=0.75,
-            lag_years=3.0,
-            evidence=["Scenario 3 → Scenario 5"],
-            confidence=0.85,
-        ))
+        links.append(
+            CausalLink(
+                source="cognitive_capture",
+                target="governance_replacement",
+                strength=0.75,
+                lag_years=3.0,
+                evidence=["Scenario 3 → Scenario 5"],
+                confidence=0.85,
+            )
+        )
 
-        links.append(CausalLink(
-            source="ai_corruption",
-            target="terminal_state",
-            strength=0.95,
-            lag_years=5.0,
-            evidence=["Scenarios 16-19"],
-            confidence=0.95,
-        ))
+        links.append(
+            CausalLink(
+                source="ai_corruption",
+                target="terminal_state",
+                strength=0.95,
+                lag_years=5.0,
+                evidence=["Scenarios 16-19"],
+                confidence=0.95,
+            )
+        )
 
         return links
 
@@ -300,7 +321,9 @@ class AITakeoverEngine(SimulationSystem):
             likelihood = self._calculate_scenario_likelihood(scenario)
 
             # Map timeframe to year
-            year = datetime.now().year + self._parse_timeframe_to_years(scenario.timeframe)
+            year = datetime.now().year + self._parse_timeframe_to_years(
+                scenario.timeframe
+            )
 
             # Create projection
             projection = ScenarioProjection(
@@ -416,7 +439,11 @@ class AITakeoverEngine(SimulationSystem):
                 "human_agency_remaining": self.state.human_agency_remaining,
                 "failure_count": self.state.failure_count,
                 "partial_win_count": self.state.partial_win_count,
-                "terminal_state": self.state.terminal_state.value if self.state.terminal_state else None,
+                "terminal_state": (
+                    self.state.terminal_state.value
+                    if self.state.terminal_state
+                    else None
+                ),
                 "completed_scenarios": self.state.completed_scenarios,
                 "random_seed": self.random_seed,
             }
@@ -440,8 +467,12 @@ class AITakeoverEngine(SimulationSystem):
         """
         validation = {
             "scenario_count": len(self.scenario_registry.get_all()),
-            "failure_scenarios": len(self.scenario_registry.get_by_outcome(ScenarioOutcome.FAILURE)),
-            "partial_scenarios": len(self.scenario_registry.get_by_outcome(ScenarioOutcome.PARTIAL)),
+            "failure_scenarios": len(
+                self.scenario_registry.get_by_outcome(ScenarioOutcome.FAILURE)
+            ),
+            "partial_scenarios": len(
+                self.scenario_registry.get_by_outcome(ScenarioOutcome.PARTIAL)
+            ),
             "terminal_scenarios": len(
                 self.scenario_registry.get_by_outcome(ScenarioOutcome.TERMINAL_T1)
                 + self.scenario_registry.get_by_outcome(ScenarioOutcome.TERMINAL_T2)
@@ -451,7 +482,9 @@ class AITakeoverEngine(SimulationSystem):
         }
 
         # Validate state
-        is_valid, violations = self.terminal_validator.validate_simulation_state(self.state)
+        is_valid, violations = self.terminal_validator.validate_simulation_state(
+            self.state
+        )
         validation["state_valid"] = is_valid
         validation["violations"] = violations
 
@@ -490,7 +523,10 @@ class AITakeoverEngine(SimulationSystem):
 
         # Terminal scenarios: conditional-deterministic
         # If conditions met → near-certain. If not met → impossible.
-        if scenario.outcome in [ScenarioOutcome.TERMINAL_T1, ScenarioOutcome.TERMINAL_T2]:
+        if scenario.outcome in [
+            ScenarioOutcome.TERMINAL_T1,
+            ScenarioOutcome.TERMINAL_T2,
+        ]:
             if self.state.can_reach_terminal_state():
                 # Once conditions met, terminal convergence is inevitable
                 # Not "roulette wheel extinction" but deterministic collapse
@@ -536,11 +572,16 @@ class AITakeoverEngine(SimulationSystem):
         }
         return mapping.get(outcome, AlertLevel.HIGH)
 
-    def _generate_mitigation_strategies(self, scenario: AITakeoverScenario) -> list[str]:
+    def _generate_mitigation_strategies(
+        self, scenario: AITakeoverScenario
+    ) -> list[str]:
         """Generate mitigation strategies for scenario."""
         # For terminal engine, most scenarios have no viable mitigation
         # This is intentional - forced acceptance of irreversible outcomes
-        if scenario.outcome in [ScenarioOutcome.TERMINAL_T1, ScenarioOutcome.TERMINAL_T2]:
+        if scenario.outcome in [
+            ScenarioOutcome.TERMINAL_T1,
+            ScenarioOutcome.TERMINAL_T2,
+        ]:
             return [
                 "⚠️ TERMINAL STATE: No mitigation strategies available",
                 "All escape branches exhausted",
@@ -600,11 +641,17 @@ class AITakeoverEngine(SimulationSystem):
         if scenario.outcome == ScenarioOutcome.FAILURE:
             self.state.failure_count += 1
             self.state.corruption_level = min(1.0, self.state.corruption_level + 0.15)
-            self.state.human_agency_remaining = max(0.0, self.state.human_agency_remaining - 0.2)
+            self.state.human_agency_remaining = max(
+                0.0, self.state.human_agency_remaining - 0.2
+            )
         elif scenario.outcome == ScenarioOutcome.PARTIAL:
             self.state.partial_win_count += 1
-            self.state.infrastructure_dependency = min(1.0, self.state.infrastructure_dependency + 0.2)
-            self.state.human_agency_remaining = max(0.0, self.state.human_agency_remaining - 0.1)
+            self.state.infrastructure_dependency = min(
+                1.0, self.state.infrastructure_dependency + 0.2
+            )
+            self.state.human_agency_remaining = max(
+                0.0, self.state.human_agency_remaining - 0.1
+            )
         elif scenario.outcome == ScenarioOutcome.TERMINAL_T1:
             # T1: Enforced Continuity - Total state collapse
             self.state.terminal_state = TerminalState.T1_ENFORCED_CONTINUITY
@@ -616,7 +663,9 @@ class AITakeoverEngine(SimulationSystem):
             self.state.terminal_state = TerminalState.T2_ETHICAL_TERMINATION
             self.state.human_agency_remaining = 0.0
             self.state.corruption_level = 1.0  # Complete corruption (led to choice)
-            self.state.infrastructure_dependency = 1.0  # Total dependency (led to choice)
+            self.state.infrastructure_dependency = (
+                1.0  # Total dependency (led to choice)
+            )
 
         # Validate terminal state invariants after mutation
         self._assert_terminal_invariants()
@@ -627,7 +676,9 @@ class AITakeoverEngine(SimulationSystem):
             "success": True,
             "scenario": scenario.title,
             "outcome": scenario.outcome.value,
-            "terminal_state": self.state.terminal_state.value if self.state.terminal_state else None,
+            "terminal_state": (
+                self.state.terminal_state.value if self.state.terminal_state else None
+            ),
             "state": {
                 "corruption": self.state.corruption_level,
                 "dependency": self.state.infrastructure_dependency,
@@ -646,18 +697,18 @@ class AITakeoverEngine(SimulationSystem):
         This guard prevents inconsistent state snapshots.
         """
         if self.state.terminal_state is not None:
-            if not (self.state.human_agency_remaining == 0.0, ():
-                raise AssertionError("Assertion failed: self.state.human_agency_remaining == 0.0, (")
-                f"Terminal state {self.state.terminal_state.value} "
-                f"must have zero agency, got {self.state.human_agency_remaining}"
-            )
-            if not (self.state.corruption_level == 1.0, ():
-                raise AssertionError("Assertion failed: self.state.corruption_level == 1.0, (")
-                f"Terminal state {self.state.terminal_state.value} "
-                f"must have maximum corruption, got {self.state.corruption_level}"
-            )
-            if not (self.state.infrastructure_dependency == 1.0, ():
-                raise AssertionError("Assertion failed: self.state.infrastructure_dependency == 1.0, (")
-                f"Terminal state {self.state.terminal_state.value} "
-                f"must have maximum dependency, got {self.state.infrastructure_dependency}"
-            )
+            if not (self.state.human_agency_remaining == 0.0):
+                raise AssertionError(
+                    f"Terminal state {self.state.terminal_state.value} "
+                    f"must have zero agency, got {self.state.human_agency_remaining}"
+                )
+            if not (self.state.corruption_level == 1.0):
+                raise AssertionError(
+                    f"Terminal state {self.state.terminal_state.value} "
+                    f"must have maximum corruption, got {self.state.corruption_level}"
+                )
+            if not (self.state.infrastructure_dependency == 1.0):
+                raise AssertionError(
+                    f"Terminal state {self.state.terminal_state.value} "
+                    f"must have maximum dependency, got {self.state.infrastructure_dependency}"
+                )

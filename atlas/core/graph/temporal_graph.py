@@ -2,9 +2,9 @@
 Graph Construction & Validation System for PROJECT ATLAS Ω
 
 Implements complete temporal influence graph with:
-- 6 node types (STATE_ACTOR, CORPORATE_ACTOR, REGULATOR, MEDIA_GATEKEEPER, 
+- 6 node types (STATE_ACTOR, CORPORATE_ACTOR, REGULATOR, MEDIA_GATEKEEPER,
   RELIGIOUS_AUTHORITY, PUBLIC_CLUSTER)
-- 5 edge types (Capital flow, Board interlocks, Regulatory influence, 
+- 5 edge types (Capital flow, Board interlocks, Regulatory influence,
   Media amplification, Funding relationships)
 - Edge properties (weight, confidence_score, decay_rate, source_tier)
 - Time-indexed adjacency tensor (sparse-matrix optimized)
@@ -27,6 +27,7 @@ import numpy as np
 
 try:
     from scipy.sparse import csr_matrix, lil_matrix
+
     SCIPY_AVAILABLE = True
 except ImportError:
     SCIPY_AVAILABLE = False
@@ -41,6 +42,7 @@ class NodeType(Enum):
     """
     Six node types in the influence graph.
     """
+
     STATE_ACTOR = "state_actor"  # Governments, state entities
     CORPORATE_ACTOR = "corporate_actor"  # Corporations, businesses
     REGULATOR = "regulator"  # Regulatory bodies, agencies
@@ -56,7 +58,7 @@ class NodeType(Enum):
             NodeType.REGULATOR: "Regulatory bodies and oversight agencies",
             NodeType.MEDIA_GATEKEEPER: "Media outlets and information platforms",
             NodeType.RELIGIOUS_AUTHORITY: "Religious institutions and authorities",
-            NodeType.PUBLIC_CLUSTER: "Public groups and demographic clusters"
+            NodeType.PUBLIC_CLUSTER: "Public groups and demographic clusters",
         }
         return descriptions[self]
 
@@ -65,6 +67,7 @@ class EdgeType(Enum):
     """
     Five edge types representing different influence relationships.
     """
+
     CAPITAL_FLOW = "capital_flow"  # Financial flows and investments
     BOARD_INTERLOCK = "board_interlock"  # Shared board members/directors
     REGULATORY_INFLUENCE = "regulatory_influence"  # Regulatory relationships
@@ -78,7 +81,7 @@ class EdgeType(Enum):
             EdgeType.BOARD_INTERLOCK: "Shared board members and directorship",
             EdgeType.REGULATORY_INFLUENCE: "Regulatory oversight and influence",
             EdgeType.MEDIA_AMPLIFICATION: "Media coverage and information amplification",
-            EdgeType.FUNDING_RELATIONSHIP: "Funding, donations, and financial support"
+            EdgeType.FUNDING_RELATIONSHIP: "Funding, donations, and financial support",
         }
         return descriptions[self]
 
@@ -88,6 +91,7 @@ class GraphNode:
     """
     Node in the influence graph.
     """
+
     node_id: str
     node_type: NodeType
     name: str
@@ -117,9 +121,11 @@ class GraphNode:
             "sector": self.sector,
             "size_metric": self.size_metric,
             "first_seen": self.first_seen.isoformat() if self.first_seen else None,
-            "last_updated": self.last_updated.isoformat() if self.last_updated else None,
+            "last_updated": (
+                self.last_updated.isoformat() if self.last_updated else None
+            ),
             "source_tier": self.source_tier,
-            "source_hash": self.source_hash
+            "source_hash": self.source_hash,
         }
 
 
@@ -128,6 +134,7 @@ class GraphEdge:
     """
     Edge in the influence graph with complete properties.
     """
+
     edge_id: str
     source_id: str
     target_id: str
@@ -165,16 +172,16 @@ class GraphEdge:
             "start_date": self.start_date.isoformat() if self.start_date else None,
             "end_date": self.end_date.isoformat() if self.end_date else None,
             "source_hash": self.source_hash,
-            "evidence_ids": self.evidence_ids
+            "evidence_ids": self.evidence_ids,
         }
 
     def compute_current_weight(self, current_time: datetime) -> float:
         """
         Compute current weight with temporal decay.
-        
+
         Args:
             current_time: Current timestamp
-            
+
         Returns:
             Decayed weight
         """
@@ -189,7 +196,7 @@ class GraphEdge:
     def validate(self) -> tuple[bool, list[str]]:
         """
         Validate edge properties.
-        
+
         Returns:
             (valid, list of errors)
         """
@@ -199,7 +206,9 @@ class GraphEdge:
             errors.append(f"weight = {self.weight} (must be in [0, 1])")
 
         if not (0.0 <= self.confidence_score <= 1.0):
-            errors.append(f"confidence_score = {self.confidence_score} (must be in [0, 1])")
+            errors.append(
+                f"confidence_score = {self.confidence_score} (must be in [0, 1])"
+            )
 
         if self.decay_rate < 0:
             errors.append(f"decay_rate = {self.decay_rate} (must be >= 0)")
@@ -218,6 +227,7 @@ class GraphSnapshot:
     """
     Time-indexed snapshot of the influence graph.
     """
+
     timestamp: datetime
     nodes: dict[str, GraphNode]
     edges: dict[str, GraphEdge]
@@ -235,21 +245,25 @@ class GraphSnapshot:
         # Create canonical representation
         canonical = {
             "timestamp": self.timestamp.isoformat(),
-            "nodes": sorted([n.to_dict() for n in self.nodes.values()], key=lambda x: x["node_id"]),
-            "edges": sorted([e.to_dict() for e in self.edges.values()], key=lambda x: x["edge_id"]),
-            "previous_hash": self.previous_hash
+            "nodes": sorted(
+                [n.to_dict() for n in self.nodes.values()], key=lambda x: x["node_id"]
+            ),
+            "edges": sorted(
+                [e.to_dict() for e in self.edges.values()], key=lambda x: x["edge_id"]
+            ),
+            "previous_hash": self.previous_hash,
         }
 
-        content = json.dumps(canonical, sort_keys=True, separators=(',', ':'))
+        content = json.dumps(canonical, sort_keys=True, separators=(",", ":"))
         return hashlib.sha256(content.encode()).hexdigest()
 
     def to_adjacency_matrix(self, sparse: bool = True) -> Any:
         """
         Convert to adjacency matrix.
-        
+
         Args:
             sparse: Use sparse matrix representation (requires scipy)
-            
+
         Returns:
             Adjacency matrix (sparse or dense)
         """
@@ -276,7 +290,7 @@ class GraphSnapshot:
 class GraphBuilder:
     """
     Production-grade temporal influence graph construction system.
-    
+
     Implements:
     - 6 node types with complete metadata
     - 5 edge types with 4 required properties
@@ -289,7 +303,7 @@ class GraphBuilder:
     def __init__(self, data_dir: Path | None = None):
         """
         Initialize graph builder.
-        
+
         Args:
             data_dir: Path to data directory
         """
@@ -317,16 +331,16 @@ class GraphBuilder:
             level=AuditLevel.INFORMATIONAL,
             operation="graph_builder_initialized",
             actor="GRAPH_BUILDER",
-            details={"data_dir": str(self.data_dir)}
+            details={"data_dir": str(self.data_dir)},
         )
 
     def add_node(self, node: GraphNode) -> None:
         """
         Add node to graph.
-        
+
         Args:
             node: GraphNode to add
-            
+
         Raises:
             ValueError: If node validation fails
         """
@@ -356,17 +370,17 @@ class GraphBuilder:
             details={
                 "node_id": node.node_id,
                 "node_type": node.node_type.value,
-                "name": node.name
-            }
+                "name": node.name,
+            },
         )
 
     def add_edge(self, edge: GraphEdge) -> None:
         """
         Add edge to graph.
-        
+
         Args:
             edge: GraphEdge to add
-            
+
         Raises:
             ValueError: If edge validation fails
         """
@@ -400,17 +414,17 @@ class GraphBuilder:
                 "source_id": edge.source_id,
                 "target_id": edge.target_id,
                 "weight": edge.weight,
-                "source_tier": edge.source_tier
-            }
+                "source_tier": edge.source_tier,
+            },
         )
 
     def create_snapshot(self, timestamp: datetime | None = None) -> GraphSnapshot:
         """
         Create time-indexed snapshot of current graph state.
-        
+
         Args:
             timestamp: Snapshot timestamp (defaults to now)
-            
+
         Returns:
             GraphSnapshot with Merkle hash
         """
@@ -440,7 +454,7 @@ class GraphBuilder:
             edges=self.edges.copy(),
             previous_hash=previous_hash,
             node_count_by_type=dict(node_counts),
-            edge_count_by_type=dict(edge_counts)
+            edge_count_by_type=dict(edge_counts),
         )
 
         # Compute and store Merkle hash
@@ -464,8 +478,8 @@ class GraphBuilder:
                 "snapshot_hash": snapshot.snapshot_hash,
                 "previous_hash": previous_hash,
                 "node_count": len(self.nodes),
-                "edge_count": len(self.edges)
-            }
+                "edge_count": len(self.edges),
+            },
         )
 
         return snapshot
@@ -473,7 +487,7 @@ class GraphBuilder:
     def verify_merkle_chain(self) -> tuple[bool, list[str]]:
         """
         Verify Merkle chain integrity of all snapshots.
-        
+
         Returns:
             (valid, list of errors)
         """
@@ -512,24 +526,28 @@ class GraphBuilder:
                 level=AuditLevel.CRITICAL,
                 operation="merkle_chain_invalid",
                 actor="GRAPH_BUILDER",
-                details={"errors": errors}
+                details={"errors": errors},
             )
 
         return valid, errors
 
-    def save_snapshot(self, snapshot: GraphSnapshot, filename: str | None = None) -> Path:
+    def save_snapshot(
+        self, snapshot: GraphSnapshot, filename: str | None = None
+    ) -> Path:
         """
         Save snapshot to file.
-        
+
         Args:
             snapshot: Snapshot to save
             filename: Optional filename (defaults to timestamp-based)
-            
+
         Returns:
             Path to saved file
         """
         if filename is None:
-            filename = f"graph_snapshot_{snapshot.timestamp.strftime('%Y%m%d_%H%M%S')}.json"
+            filename = (
+                f"graph_snapshot_{snapshot.timestamp.strftime('%Y%m%d_%H%M%S')}.json"
+            )
 
         filepath = self.graph_dir / filename
 
@@ -540,10 +558,10 @@ class GraphBuilder:
             "node_count_by_type": snapshot.node_count_by_type,
             "edge_count_by_type": snapshot.edge_count_by_type,
             "nodes": [n.to_dict() for n in snapshot.nodes.values()],
-            "edges": [e.to_dict() for e in snapshot.edges.values()]
+            "edges": [e.to_dict() for e in snapshot.edges.values()],
         }
 
-        with open(filepath, 'w') as f:
+        with open(filepath, "w") as f:
             json.dump(snapshot_data, f, indent=2, sort_keys=True)
 
         logger.info("Saved snapshot to %s", filepath)
@@ -556,16 +574,22 @@ class GraphBuilder:
             "node_count": len(self.nodes),
             "edge_count": len(self.edges),
             "node_types": {
-                node_type.value: sum(1 for n in self.nodes.values() if n.node_type == node_type)
+                node_type.value: sum(
+                    1 for n in self.nodes.values() if n.node_type == node_type
+                )
                 for node_type in NodeType
             },
             "edge_types": {
-                edge_type.value: sum(1 for e in self.edges.values() if e.edge_type == edge_type)
+                edge_type.value: sum(
+                    1 for e in self.edges.values() if e.edge_type == edge_type
+                )
                 for edge_type in EdgeType
             },
             "snapshot_count": len(self.snapshots),
-            "latest_snapshot": self.snapshots[-1].timestamp.isoformat() if self.snapshots else None,
-            "merkle_chain_valid": self.verify_merkle_chain()[0]
+            "latest_snapshot": (
+                self.snapshots[-1].timestamp.isoformat() if self.snapshots else None
+            ),
+            "merkle_chain_valid": self.verify_merkle_chain()[0],
         }
 
 

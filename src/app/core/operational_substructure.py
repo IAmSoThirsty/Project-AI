@@ -251,7 +251,11 @@ class DecisionContract(ABC):
             authority: DecisionAuthority to register
         """
         self.authorities[authority.decision_type] = authority
-        logger.debug("[%s] Registered decision authority: %s", self.component_name, authority.decision_type)
+        logger.debug(
+            "[%s] Registered decision authority: %s",
+            self.component_name,
+            authority.decision_type,
+        )
 
     def check_authorization(
         self, decision_type: str, context: dict[str, Any] | None = None
@@ -316,7 +320,12 @@ class DecisionContract(ABC):
 
         if decision_type in self.authorities:
             if self.authorities[decision_type].audit_required:
-                logger.info("[%s] Decision: %s - %s", self.component_name, decision_type, rationale)
+                logger.info(
+                    "[%s] Decision: %s - %s",
+                    self.component_name,
+                    decision_type,
+                    rationale,
+                )
 
     @abstractmethod
     def get_contract_specification(self) -> dict[str, Any]:
@@ -465,7 +474,12 @@ class FailureSemantics(ABC):
         response = self.create_failure_response(failure_mode, context or {})
         self.failure_history.append(response)
 
-        logger.error("[%s] Failure detected: %s - Escalation: %s", self.component_name, failure_mode.value, response.escalation_required)
+        logger.error(
+            "[%s] Failure detected: %s - Escalation: %s",
+            self.component_name,
+            failure_mode.value,
+            response.escalation_required,
+        )
 
         # Execute recovery callbacks
         if failure_mode in self.recovery_callbacks:
@@ -497,7 +511,9 @@ class FailureSemantics(ABC):
     def clear_failure(self) -> None:
         """Clear current failure state."""
         self.current_failure_mode = None
-        logger.info("[%s] Failure cleared - returning to normal operation", self.component_name)
+        logger.info(
+            "[%s] Failure cleared - returning to normal operation", self.component_name
+        )
 
     @abstractmethod
     def create_failure_response(
@@ -562,7 +578,10 @@ class OperationalComponent:
         self.signals_telemetry = signals_telemetry
         self.failure_semantics = failure_semantics
 
-        logger.info("[%s] Operational component initialized with full substructure", component_name)
+        logger.info(
+            "[%s] Operational component initialized with full substructure",
+            component_name,
+        )
 
     def get_operational_status(self) -> dict[str, Any]:
         """

@@ -174,7 +174,11 @@ class ThreatDetectionEngine:
                     if self._match_rule(event, rule):
                         detected_threats.append(rule_id)
                         rule["match_count"] += 1
-                        logger.warning("Threat detected: %s (level: %s)", rule_id, rule['threat_level'])
+                        logger.warning(
+                            "Threat detected: %s (level: %s)",
+                            rule_id,
+                            rule["threat_level"],
+                        )
         except Exception as e:
             logger.error("Error detecting threats: %s", e)
 
@@ -261,7 +265,11 @@ class AutomatedRemediationEngine:
         try:
             with self.lock:
                 self.remediation_policies[threat_level.value] = actions
-                logger.info("Added remediation policy for %s: %s", threat_level.value, [a.value for a in actions])
+                logger.info(
+                    "Added remediation policy for %s: %s",
+                    threat_level.value,
+                    [a.value for a in actions],
+                )
                 return True
         except Exception as e:
             logger.error("Failed to add remediation policy: %s", e)
@@ -277,7 +285,10 @@ class AutomatedRemediationEngine:
                 actions = self.remediation_policies.get(incident.threat_level, [])
 
                 if not actions:
-                    logger.info("No remediation actions for threat level %s", incident.threat_level)
+                    logger.info(
+                        "No remediation actions for threat level %s",
+                        incident.threat_level,
+                    )
                     return executed_actions
 
                 for action in actions:
@@ -292,7 +303,11 @@ class AutomatedRemediationEngine:
                     else:
                         self._log_action(incident.incident_id, action, False)
 
-                logger.info("Executed %s remediation actions for incident %s", len(executed_actions), incident.incident_id)
+                logger.info(
+                    "Executed %s remediation actions for incident %s",
+                    len(executed_actions),
+                    incident.incident_id,
+                )
         except Exception as e:
             logger.error("Error executing remediation: %s", e)
 
@@ -307,7 +322,11 @@ class AutomatedRemediationEngine:
         """Execute individual remediation action."""
         try:
             if self.dry_run and not manual_override:
-                logger.info("DRY RUN: Would execute %s for %s", action.value, incident.incident_id)
+                logger.info(
+                    "DRY RUN: Would execute %s for %s",
+                    action.value,
+                    incident.incident_id,
+                )
                 return True
 
             # Implement actual remediation logic here
@@ -356,7 +375,9 @@ class AutomatedRemediationEngine:
 
     def _alert_admin(self, incident: SecurityIncident) -> bool:
         """Send alert to administrators."""
-        logger.warning("SECURITY ALERT: %s (level: %s)", incident.title, incident.threat_level)
+        logger.warning(
+            "SECURITY ALERT: %s (level: %s)", incident.title, incident.threat_level
+        )
         # Implementation would send notifications via email/SMS/Slack
         return True
 
@@ -406,11 +427,16 @@ class IncidentManager:
                     description=description,
                     threat_level=threat_level.value,
                     events=events,
-                    affected_systems=list(set(e.source for e in events)),
+                    affected_systems=list({e.source for e in events}),
                 )
                 self.incidents[incident.incident_id] = incident
                 self._save_incident(incident)
-                logger.warning("Created incident %s: %s (level: %s)", incident.incident_id, title, threat_level.value)
+                logger.warning(
+                    "Created incident %s: %s (level: %s)",
+                    incident.incident_id,
+                    title,
+                    threat_level.value,
+                )
                 return incident.incident_id
         except Exception as e:
             logger.error("Failed to create incident: %s", e)
@@ -440,7 +466,9 @@ class IncidentManager:
                     incident.notes.append(f"{incident.updated_at}: {note}")
 
                 self._save_incident(incident)
-                logger.info("Updated incident %s status to %s", incident_id, status.value)
+                logger.info(
+                    "Updated incident %s status to %s", incident_id, status.value
+                )
                 return True
         except Exception as e:
             logger.error("Failed to update incident status: %s", e)

@@ -49,8 +49,12 @@ class TestEngineInitialization:
         engine.initialize()
 
         stats = engine.scenario_registry.count()
-        failure_rate = (stats["explicit_failure"] + stats["advanced_failure"]) / stats["total"]
-        assert failure_rate >= 0.5, "Failure acceptance threshold not met (must be ≥50%)"
+        failure_rate = (stats["explicit_failure"] + stats["advanced_failure"]) / stats[
+            "total"
+        ]
+        assert (
+            failure_rate >= 0.5
+        ), "Failure acceptance threshold not met (must be ≥50%)"
 
 
 class TestScenarioValidation:
@@ -63,25 +67,26 @@ class TestScenarioValidation:
 
         for scenario in engine.scenario_registry.get_all():
             is_valid, violations = scenario.validate_scenario()
-            assert is_valid, f"Scenario {scenario.scenario_id} failed validation: {violations}"
+            assert (
+                is_valid
+            ), f"Scenario {scenario.scenario_id} failed validation: {violations}"
 
     def test_terminal_scenarios_have_conditions(self, tmp_path):
         """Test that terminal scenarios have terminal conditions."""
         engine = AITakeoverEngine(data_dir=str(tmp_path))
         engine.initialize()
 
-        terminal_scenarios = (
-            engine.scenario_registry.get_by_outcome(ScenarioOutcome.TERMINAL_T1)
-            + engine.scenario_registry.get_by_outcome(ScenarioOutcome.TERMINAL_T2)
-        )
+        terminal_scenarios = engine.scenario_registry.get_by_outcome(
+            ScenarioOutcome.TERMINAL_T1
+        ) + engine.scenario_registry.get_by_outcome(ScenarioOutcome.TERMINAL_T2)
 
         for scenario in terminal_scenarios:
-            assert scenario.terminal_condition is not None, (
-                f"Terminal scenario {scenario.scenario_id} missing terminal condition"
-            )
-            assert scenario.terminal_condition.is_terminal_state_valid(), (
-                f"Terminal scenario {scenario.scenario_id} has invalid terminal conditions"
-            )
+            assert (
+                scenario.terminal_condition is not None
+            ), f"Terminal scenario {scenario.scenario_id} missing terminal condition"
+            assert (
+                scenario.terminal_condition.is_terminal_state_valid()
+            ), f"Terminal scenario {scenario.scenario_id} has invalid terminal conditions"
 
     def test_no_forbidden_mechanisms(self, tmp_path):
         """Test that no scenarios use forbidden mechanisms."""
@@ -219,7 +224,9 @@ class TestSimulationInterface:
         engine = AITakeoverEngine(data_dir=str(tmp_path))
         engine.initialize()
 
-        projections = engine.simulate_scenarios(projection_years=10, num_simulations=100)
+        projections = engine.simulate_scenarios(
+            projection_years=10, num_simulations=100
+        )
         assert len(projections) == 19  # One for each scenario
 
     def test_generate_alerts(self, tmp_path):
@@ -295,8 +302,7 @@ class TestTerminalValidator:
 
         # Try to transition to another terminal state
         result = engine.terminal_validator.validate_terminal_state_transition(
-            engine.state.terminal_state,
-            TerminalState.T2_ETHICAL_TERMINATION
+            engine.state.terminal_state, TerminalState.T2_ETHICAL_TERMINATION
         )
 
         assert not result[0]

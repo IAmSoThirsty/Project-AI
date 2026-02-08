@@ -137,7 +137,9 @@ class CircuitBreaker:
 
             if self.failure_count >= self.failure_threshold:
                 self.state = "OPEN"
-                logger.error("Circuit breaker OPENED after %s failures", self.failure_count)
+                logger.error(
+                    "Circuit breaker OPENED after %s failures", self.failure_count
+                )
 
 
 class SelfHealingSystem:
@@ -469,7 +471,9 @@ class IntelligentCache:
         self.hits = 0
         self.misses = 0
 
-        logger.info("IntelligentCache initialized (max_size=%s, ttl=%ss)", max_size, default_ttl)
+        logger.info(
+            "IntelligentCache initialized (max_size=%s, ttl=%ss)", max_size, default_ttl
+        )
 
     def get(self, key: str) -> Any | None:
         """Get value from cache.

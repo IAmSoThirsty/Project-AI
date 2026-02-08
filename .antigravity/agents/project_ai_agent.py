@@ -327,7 +327,7 @@ class ProjectAIAgent:
 
         # Check file categories
         has_core_changes = any("src/app/core/" in f for f in affected_files)
-        has_gui_changes = any("src/app/gui/" in f for f in affected_files)
+        any("src/app/gui/" in f for f in affected_files)
         has_temporal_changes = any(
             "temporal/" in f or "src/app/temporal/" in f for f in affected_files
         )

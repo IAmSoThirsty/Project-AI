@@ -108,8 +108,15 @@ def demo_tier_health_report():
 
     # Register several agents
     agent_names = [
-        "SafetyGuard", "Expert", "Planner", "Oversight", "Validator",
-        "RedTeam", "CodeAdversary", "Constitutional", "Explainability"
+        "SafetyGuard",
+        "Expert",
+        "Planner",
+        "Oversight",
+        "Validator",
+        "RedTeam",
+        "CodeAdversary",
+        "Constitutional",
+        "Explainability",
     ]
 
     for agent_name in agent_names:
@@ -161,11 +168,14 @@ def demo_tier_health_report():
     health_monitor = get_health_monitor()
 
     # Report each tier
-    for tier_num, tier in enumerate([
-        PlatformTier.TIER_1_GOVERNANCE,
-        PlatformTier.TIER_2_INFRASTRUCTURE,
-        PlatformTier.TIER_3_APPLICATION
-    ], 1):
+    for tier_num, tier in enumerate(
+        [
+            PlatformTier.TIER_1_GOVERNANCE,
+            PlatformTier.TIER_2_INFRASTRUCTURE,
+            PlatformTier.TIER_3_APPLICATION,
+        ],
+        1,
+    ):
         tier_health = health_monitor.collect_tier_health(tier)
         print(f"Tier {tier_num} ({tier.name}):")
         print(f"   Status: {tier_health.overall_health.value.upper()}")

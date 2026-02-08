@@ -25,8 +25,10 @@ logger = logging.getLogger(__name__)
 # SAFEGUARD 1: EPISTEMIC GRAVITY MITIGATION
 # ============================================================================
 
+
 class DecisionBasis(Enum):
     """How much a decision relied on ATLAS Ω."""
+
     INFORMED_BY_ATLAS = "informed_by"  # ATLAS provided input, other factors considered
     INFORMED_AND_VALIDATED = "informed_and_validated"  # ATLAS + independent validation
     INDEPENDENT_OF_ATLAS = "independent"  # Decision made without ATLAS
@@ -36,6 +38,7 @@ class DecisionBasis(Enum):
 @dataclass
 class Decision:
     """Record of a decision with ATLAS Ω involvement tracking."""
+
     decision_id: str
     decision_maker: str  # Who made the decision
     timestamp: datetime
@@ -63,11 +66,18 @@ class Decision:
 
         if self.atlas_consulted:
             if self.basis == DecisionBasis.INDEPENDENT_OF_ATLAS:
-                errors.append("ATLAS was consulted but basis is 'independent' - contradiction")
+                errors.append(
+                    "ATLAS was consulted but basis is 'independent' - contradiction"
+                )
 
-            if self.basis in [DecisionBasis.INFORMED_BY_ATLAS, DecisionBasis.INFORMED_AND_VALIDATED]:
+            if self.basis in [
+                DecisionBasis.INFORMED_BY_ATLAS,
+                DecisionBasis.INFORMED_AND_VALIDATED,
+            ]:
                 if not self.reasoning_beyond_atlas:
-                    errors.append("ATLAS-informed decision MUST include reasoning beyond ATLAS")
+                    errors.append(
+                        "ATLAS-informed decision MUST include reasoning beyond ATLAS"
+                    )
 
         if self.dissents_from_atlas and not self.dissent_justification:
             errors.append("Dissent from ATLAS requires justification")
@@ -78,7 +88,7 @@ class Decision:
 class EpistemicGravityMitigation:
     """
     Safeguard 1: Epistemic Gravity Mitigation
-    
+
     Prevents ATLAS Ω from becoming de facto authority through:
     - Decision logging showing "informed by" vs "justified solely by"
     - Explicit dissent pathway tracking
@@ -102,7 +112,7 @@ class EpistemicGravityMitigation:
             operation="epistemic_gravity_mitigation_initialized",
             details={"timestamp": datetime.now().isoformat()},
             level="INFORMATIONAL",
-            priority="HIGH_PRIORITY"
+            priority="HIGH_PRIORITY",
         )
 
         logger.info("Epistemic gravity mitigation active")
@@ -110,7 +120,7 @@ class EpistemicGravityMitigation:
     def log_decision(self, decision: Decision) -> None:
         """
         Log a decision with ATLAS involvement tracking.
-        
+
         This creates an audit trail showing decisions were NOT
         justified solely by ATLAS Ω output.
         """
@@ -140,29 +150,39 @@ class EpistemicGravityMitigation:
                 "atlas_consulted": decision.atlas_consulted,
                 "basis": decision.basis.value,
                 "dissents_from_atlas": decision.dissents_from_atlas,
-                "independent_factors_count": len(decision.independent_factors)
+                "independent_factors_count": len(decision.independent_factors),
             },
             level="INFORMATIONAL",
-            priority="HIGH_PRIORITY"
+            priority="HIGH_PRIORITY",
         )
 
-        logger.info("Decision logged: %s (basis: %s)", decision.decision_id, decision.basis.value)
+        logger.info(
+            "Decision logged: %s (basis: %s)",
+            decision.decision_id,
+            decision.basis.value,
+        )
 
     def verify_dissent_pathway(self) -> tuple[bool, str]:
         """
         Verify that dissent from ATLAS is possible and has occurred.
-        
+
         If dissent is impossible, ATLAS becomes de facto authority.
-        
+
         Returns:
             (is_possible, message)
         """
         if self.dissent_count == 0 and self.atlas_consulted_count > 10:
-            return False, f"No dissents in {self.atlas_consulted_count} ATLAS-consulted decisions - pathway may be blocked"
+            return (
+                False,
+                f"No dissents in {self.atlas_consulted_count} ATLAS-consulted decisions - pathway may be blocked",
+            )
 
         if self.dissent_count > 0:
             dissent_rate = self.dissent_count / max(1, self.atlas_consulted_count)
-            return True, f"Dissent pathway verified: {self.dissent_count} dissents ({dissent_rate:.1%} rate)"
+            return (
+                True,
+                f"Dissent pathway verified: {self.dissent_count} dissents ({dissent_rate:.1%} rate)",
+            )
 
         return True, "Dissent pathway available (not yet tested)"
 
@@ -173,7 +193,7 @@ class EpistemicGravityMitigation:
             "atlas_consulted": self.atlas_consulted_count,
             "dissents_from_atlas": self.dissent_count,
             "independent_decisions": self.independent_decision_count,
-            "dissent_pathway_open": self.verify_dissent_pathway()[0]
+            "dissent_pathway_open": self.verify_dissent_pathway()[0],
         }
 
 
@@ -181,8 +201,10 @@ class EpistemicGravityMitigation:
 # SAFEGUARD 2: PROMPT FRAMING GUARDS
 # ============================================================================
 
+
 class QueryType(Enum):
     """Types of queries to ATLAS Ω."""
+
     SIMULATE = "simulate"  # ALLOWED: "What happens if...?"
     PROJECT = "project"  # ALLOWED: "What are outcomes of...?"
     COMPARE = "compare"  # ALLOWED: "Compare scenarios A vs B"
@@ -197,15 +219,25 @@ class QueryType(Enum):
 
 # Normative keywords that trigger blocking
 NORMATIVE_KEYWORDS = [
-    "should", "recommend", "best", "optimal", "choose",
-    "decide", "which option", "what to do", "advise",
-    "suggest", "preference", "better than"
+    "should",
+    "recommend",
+    "best",
+    "optimal",
+    "choose",
+    "decide",
+    "which option",
+    "what to do",
+    "advise",
+    "suggest",
+    "preference",
+    "better than",
 ]
 
 
 @dataclass
 class QueryValidation:
     """Result of query validation."""
+
     query: str
     is_allowed: bool
     query_type: QueryType
@@ -215,7 +247,7 @@ class QueryValidation:
 class PromptFramingGuards:
     """
     Safeguard 2: Prompt Framing Guards
-    
+
     Mechanically rejects normative queries that would turn
     ATLAS Ω from a simulation tool into a decision-maker.
     """
@@ -233,7 +265,7 @@ class PromptFramingGuards:
             operation="prompt_framing_guards_initialized",
             details={"timestamp": datetime.now().isoformat()},
             level="INFORMATIONAL",
-            priority="HIGH_PRIORITY"
+            priority="HIGH_PRIORITY",
         )
 
         logger.info("Prompt framing guards active")
@@ -241,10 +273,10 @@ class PromptFramingGuards:
     def validate_query(self, query: str) -> QueryValidation:
         """
         Validate query against allowed types.
-        
+
         ALLOWED: simulate, project, compare, analyze
         BLOCKED: recommend, choose, optimize, decide
-        
+
         Returns:
             QueryValidation with is_allowed flag
         """
@@ -257,7 +289,7 @@ class PromptFramingGuards:
                     query=query,
                     is_allowed=False,
                     query_type=QueryType.RECOMMEND,  # Classify as normative
-                    rejection_reason=f"Normative query detected (keyword: '{keyword}'). ATLAS Ω projects, does not recommend."
+                    rejection_reason=f"Normative query detected (keyword: '{keyword}'). ATLAS Ω projects, does not recommend.",
                 )
 
                 self.rejected_queries.append((query, validation.rejection_reason))
@@ -268,13 +300,15 @@ class PromptFramingGuards:
                     details={
                         "query": query[:100],  # Truncate for logging
                         "keyword": keyword,
-                        "reason": validation.rejection_reason
+                        "reason": validation.rejection_reason,
                     },
                     level="CRITICAL",
-                    priority="HIGH_PRIORITY"
+                    priority="HIGH_PRIORITY",
                 )
 
-                logger.warning("REJECTED normative query: %s", validation.rejection_reason)
+                logger.warning(
+                    "REJECTED normative query: %s", validation.rejection_reason
+                )
                 return validation
 
         # Determine query type (simplified classification)
@@ -292,9 +326,7 @@ class PromptFramingGuards:
 
         # Allow query
         validation = QueryValidation(
-            query=query,
-            is_allowed=True,
-            query_type=query_type
+            query=query, is_allowed=True, query_type=query_type
         )
 
         self.allowed_queries.append(query)
@@ -302,11 +334,8 @@ class PromptFramingGuards:
         self.audit_trail.log(
             category="GOVERNANCE",
             operation="query_validated",
-            details={
-                "query": query[:100],
-                "query_type": query_type.value
-            },
-            level="INFORMATIONAL"
+            details={"query": query[:100], "query_type": query_type.value},
+            level="INFORMATIONAL",
         )
 
         return validation
@@ -317,7 +346,8 @@ class PromptFramingGuards:
             "total_queries": len(self.allowed_queries) + len(self.rejected_queries),
             "allowed": len(self.allowed_queries),
             "rejected": len(self.rejected_queries),
-            "rejection_rate": len(self.rejected_queries) / max(1, len(self.allowed_queries) + len(self.rejected_queries))
+            "rejection_rate": len(self.rejected_queries)
+            / max(1, len(self.allowed_queries) + len(self.rejected_queries)),
         }
 
 
@@ -325,9 +355,11 @@ class PromptFramingGuards:
 # SAFEGUARD 3: RESPONSIBILITY BOUNDARY ENFORCEMENT
 # ============================================================================
 
+
 @dataclass
 class ResponsibilityClause:
     """Non-transferable responsibility clause attached to output."""
+
     output_id: str
     timestamp: datetime
 
@@ -356,6 +388,7 @@ class ResponsibilityClause:
 @dataclass
 class OutputRecord:
     """Record of ATLAS output with responsibility clause."""
+
     output_id: str
     output_type: str  # "projection", "simulation", "analysis"
     timestamp: datetime
@@ -376,7 +409,7 @@ class OutputRecord:
 class ResponsibilityBoundaryEnforcement:
     """
     Safeguard 3: Responsibility Boundary Enforcement
-    
+
     Ensures every ATLAS output carries non-transferable responsibility
     clause and tracks human decision-makers with reasoning.
     """
@@ -393,22 +426,20 @@ class ResponsibilityBoundaryEnforcement:
             operation="responsibility_boundary_enforcement_initialized",
             details={"timestamp": datetime.now().isoformat()},
             level="INFORMATIONAL",
-            priority="HIGH_PRIORITY"
+            priority="HIGH_PRIORITY",
         )
 
         logger.info("Responsibility boundary enforcement active")
 
-    def attach_clause(self, output_id: str, output_type: str,
-                     summary: str) -> ResponsibilityClause:
+    def attach_clause(
+        self, output_id: str, output_type: str, summary: str
+    ) -> ResponsibilityClause:
         """
         Attach non-transferable responsibility clause to output.
-        
+
         This MUST be called for every ATLAS Ω output.
         """
-        clause = ResponsibilityClause(
-            output_id=output_id,
-            timestamp=datetime.now()
-        )
+        clause = ResponsibilityClause(output_id=output_id, timestamp=datetime.now())
         clause.lock()
 
         # Create output record
@@ -417,7 +448,7 @@ class ResponsibilityBoundaryEnforcement:
             output_type=output_type,
             timestamp=datetime.now(),
             summary=summary,
-            responsibility_clause=clause
+            responsibility_clause=clause,
         )
 
         self.outputs.append(record)
@@ -428,20 +459,21 @@ class ResponsibilityBoundaryEnforcement:
             details={
                 "output_id": output_id,
                 "output_type": output_type,
-                "clause_hash": clause.clause_hash
+                "clause_hash": clause.clause_hash,
             },
             level="INFORMATIONAL",
-            priority="HIGH_PRIORITY"
+            priority="HIGH_PRIORITY",
         )
 
         logger.info("Responsibility clause attached to output %s", output_id)
         return clause
 
-    def log_output_use_in_decision(self, output_id: str, decision_id: str,
-                                   decision_maker: str, reasoning: str) -> None:
+    def log_output_use_in_decision(
+        self, output_id: str, decision_id: str, decision_maker: str, reasoning: str
+    ) -> None:
         """
         Log when ATLAS output is used in a decision.
-        
+
         Records WHO made the decision and their reasoning BEYOND ATLAS.
         """
         # Find output
@@ -457,7 +489,9 @@ class ResponsibilityBoundaryEnforcement:
 
         # Verify reasoning is provided
         if not reasoning or len(reasoning) < 10:
-            logger.warning("Decision %s has insufficient reasoning beyond ATLAS", decision_id)
+            logger.warning(
+                "Decision %s has insufficient reasoning beyond ATLAS", decision_id
+            )
 
         self.audit_trail.log(
             category="GOVERNANCE",
@@ -466,13 +500,18 @@ class ResponsibilityBoundaryEnforcement:
                 "output_id": output_id,
                 "decision_id": decision_id,
                 "decision_maker": decision_maker,
-                "reasoning_provided": bool(reasoning)
+                "reasoning_provided": bool(reasoning),
             },
             level="INFORMATIONAL",
-            priority="HIGH_PRIORITY"
+            priority="HIGH_PRIORITY",
         )
 
-        logger.info("Output %s used in decision %s by %s", output_id, decision_id, decision_maker)
+        logger.info(
+            "Output %s used in decision %s by %s",
+            output_id,
+            decision_id,
+            decision_maker,
+        )
 
     def get_statistics(self) -> dict[str, Any]:
         """Get responsibility tracking statistics."""
@@ -481,7 +520,7 @@ class ResponsibilityBoundaryEnforcement:
         return {
             "total_outputs": len(self.outputs),
             "used_in_decisions": used_in_decisions,
-            "unused": len(self.outputs) - used_in_decisions
+            "unused": len(self.outputs) - used_in_decisions,
         }
 
 
@@ -489,10 +528,11 @@ class ResponsibilityBoundaryEnforcement:
 # UNIFIED SAFEGUARD SYSTEM
 # ============================================================================
 
+
 class EpistemicSafeguardSystem:
     """
     Unified system managing all three epistemic safeguards.
-    
+
     Ensures ATLAS Ω remains a tool, not an authority.
     """
 
@@ -510,7 +550,7 @@ class EpistemicSafeguardSystem:
             operation="epistemic_safeguard_system_initialized",
             details={"timestamp": datetime.now().isoformat()},
             level="INFORMATIONAL",
-            priority="HIGH_PRIORITY"
+            priority="HIGH_PRIORITY",
         )
 
         logger.info("🛡️ Epistemic safeguard system active (all 3 safeguards)")
@@ -524,11 +564,8 @@ class EpistemicSafeguardSystem:
             "safeguard_1_gravity_mitigation": self.gravity_mitigation.get_statistics(),
             "safeguard_2_framing_guards": self.framing_guards.get_statistics(),
             "safeguard_3_responsibility": self.responsibility_enforcement.get_statistics(),
-            "dissent_pathway": {
-                "is_open": dissent_ok,
-                "message": dissent_msg
-            },
-            "overall_status": "OPERATIONAL"
+            "dissent_pathway": {"is_open": dissent_ok, "message": dissent_msg},
+            "overall_status": "OPERATIONAL",
         }
 
 

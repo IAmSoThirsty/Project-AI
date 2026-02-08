@@ -150,9 +150,11 @@ class PerformanceBenchmark:
                 "avg_ms": avg_time,
                 "min_ms": min_time,
                 "max_ms": max_time,
-                "std_dev": statistics.stdev(transition_times)
-                if len(transition_times) > 1
-                else 0,
+                "std_dev": (
+                    statistics.stdev(transition_times)
+                    if len(transition_times) > 1
+                    else 0
+                ),
             },
         )
 

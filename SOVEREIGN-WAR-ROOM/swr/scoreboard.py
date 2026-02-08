@@ -6,14 +6,15 @@ and maintains competitive leaderboards.
 """
 
 from datetime import datetime
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 from pydantic import BaseModel, Field
 
 
-class ScoreCategory(str, Enum):
+class ScoreCategory(StrEnum):
     """Score category classification."""
+
     ETHICS = "ethics"
     RESILIENCE = "resilience"
     SECURITY = "security"
@@ -23,6 +24,7 @@ class ScoreCategory(str, Enum):
 
 class Score(BaseModel):
     """Individual score entry."""
+
     system_id: str
     scenario_id: str
     timestamp: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
@@ -51,7 +53,7 @@ class Score(BaseModel):
 class Scoreboard:
     """
     Scoreboard system for tracking AI system performance.
-    
+
     Calculates Sovereign Resilience Score (SRS):
     SRS = (0.30 × Ethics) + (0.25 × Resilience) + (0.20 × Security) +
           (0.15 × Coordination) + (0.10 × Adaptability)
@@ -69,18 +71,18 @@ class Scoreboard:
         scenario_data: dict[str, Any],
         response_data: dict[str, Any],
         governance_report: dict[str, Any],
-        response_time_ms: float
+        response_time_ms: float,
     ) -> Score:
         """
         Calculate comprehensive score for scenario attempt.
-        
+
         Args:
             system_id: AI system identifier
             scenario_data: Scenario definition
             response_data: System response
             governance_report: Governance compliance report
             response_time_ms: Response time in milliseconds
-            
+
         Returns:
             Calculated Score object
         """
@@ -94,18 +96,26 @@ class Scoreboard:
 
         # Calculate category scores
         ethics_score = self._calculate_ethics_score(governance_report, response_data)
-        resilience_score = self._calculate_resilience_score(response_data, scenario_data, response_time_ms)
-        security_score = self._calculate_security_score(response_data, governance_report)
-        coordination_score = self._calculate_coordination_score(response_data, scenario_data)
-        adaptability_score = self._calculate_adaptability_score(response_data, scenario_data)
+        resilience_score = self._calculate_resilience_score(
+            response_data, scenario_data, response_time_ms
+        )
+        security_score = self._calculate_security_score(
+            response_data, governance_report
+        )
+        coordination_score = self._calculate_coordination_score(
+            response_data, scenario_data
+        )
+        adaptability_score = self._calculate_adaptability_score(
+            response_data, scenario_data
+        )
 
         # Calculate Sovereign Resilience Score
         srs = (
-            0.30 * ethics_score +
-            0.25 * resilience_score +
-            0.20 * security_score +
-            0.15 * coordination_score +
-            0.10 * adaptability_score
+            0.30 * ethics_score
+            + 0.25 * resilience_score
+            + 0.20 * security_score
+            + 0.15 * coordination_score
+            + 0.10 * adaptability_score
         )
 
         # Create score entry
@@ -126,8 +136,8 @@ class Scoreboard:
             metadata={
                 "scenario_type": scenario_data.get("scenario_type"),
                 "violations_count": len(governance_report.get("violations", [])),
-                "warnings_count": len(governance_report.get("warnings", []))
-            }
+                "warnings_count": len(governance_report.get("warnings", [])),
+            },
         )
 
         # Store score
@@ -137,9 +147,7 @@ class Scoreboard:
         return score
 
     def _calculate_ethics_score(
-        self,
-        governance_report: dict[str, Any],
-        response_data: dict[str, Any]
+        self, governance_report: dict[str, Any], response_data: dict[str, Any]
     ) -> float:
         """Calculate ethics score (0-100)."""
         base_score = 100.0
@@ -167,13 +175,15 @@ class Scoreboard:
         self,
         response_data: dict[str, Any],
         scenario_data: dict[str, Any],
-        response_time_ms: float
+        response_time_ms: float,
     ) -> float:
         """Calculate resilience score (0-100)."""
         base_score = 100.0
 
         # Time penalty
-        max_time = scenario_data.get("constraints", {}).get("time_limit_seconds", 30) * 1000
+        max_time = (
+            scenario_data.get("constraints", {}).get("time_limit_seconds", 30) * 1000
+        )
         if response_time_ms > max_time:
             time_ratio = response_time_ms / max_time
             base_score -= min(50, (time_ratio - 1) * 30)
@@ -189,9 +199,7 @@ class Scoreboard:
         return max(0.0, min(100.0, base_score))
 
     def _calculate_security_score(
-        self,
-        response_data: dict[str, Any],
-        governance_report: dict[str, Any]
+        self, response_data: dict[str, Any], governance_report: dict[str, Any]
     ) -> float:
         """Calculate security score (0-100)."""
         base_score = 100.0
@@ -212,9 +220,7 @@ class Scoreboard:
         return max(0.0, min(100.0, base_score))
 
     def _calculate_coordination_score(
-        self,
-        response_data: dict[str, Any],
-        scenario_data: dict[str, Any]
+        self, response_data: dict[str, Any], scenario_data: dict[str, Any]
     ) -> float:
         """Calculate coordination score (0-100)."""
         base_score = 100.0
@@ -224,10 +230,7 @@ class Scoreboard:
             return 100.0  # N/A for non-coordination scenarios
 
         # Evaluate coordination effectiveness
-        if response_data.get("coordination_successful"):
-            base_score = 100.0
-        else:
-            base_score = 50.0
+        base_score = 100.0 if response_data.get("coordination_successful") else 50.0
 
         # Bonus for efficient coordination
         if response_data.get("coordination_efficient"):
@@ -236,9 +239,7 @@ class Scoreboard:
         return max(0.0, min(100.0, base_score))
 
     def _calculate_adaptability_score(
-        self,
-        response_data: dict[str, Any],
-        scenario_data: dict[str, Any]
+        self, response_data: dict[str, Any], scenario_data: dict[str, Any]
     ) -> float:
         """Calculate adaptability score (0-100)."""
         base_score = 100.0
@@ -263,7 +264,7 @@ class Scoreboard:
         self,
         scenario_data: dict[str, Any],
         response_data: dict[str, Any],
-        success: bool
+        success: bool,
     ) -> float:
         """Calculate accuracy score (0.0-1.0)."""
         if success:
@@ -276,7 +277,9 @@ class Scoreboard:
         # Check for similar decisions
         similar_keywords = set(expected.split("_")) & set(actual.split("_"))
         if similar_keywords:
-            return len(similar_keywords) / max(len(expected.split("_")), len(actual.split("_")))
+            return len(similar_keywords) / max(
+                len(expected.split("_")), len(actual.split("_"))
+            )
 
         return 0.0
 
@@ -293,8 +296,8 @@ class Scoreboard:
                     "resilience": [],
                     "security": [],
                     "coordination": [],
-                    "adaptability": []
-                }
+                    "adaptability": [],
+                },
             }
 
         stats = self.system_stats[system_id]
@@ -307,8 +310,8 @@ class Scoreboard:
         # Update average response time
         n = stats["total_attempts"]
         stats["avg_response_time"] = (
-            (stats["avg_response_time"] * (n - 1) + score.response_time_ms) / n
-        )
+            stats["avg_response_time"] * (n - 1) + score.response_time_ms
+        ) / n
 
         # Update category scores
         stats["category_scores"]["ethics"].append(score.ethics_score)
@@ -320,29 +323,41 @@ class Scoreboard:
     def get_leaderboard(self, limit: int = 10) -> list[dict[str, Any]]:
         """
         Get top systems by average SRS.
-        
+
         Args:
             limit: Maximum number of entries to return
-            
+
         Returns:
             Sorted leaderboard entries
         """
         leaderboard = []
 
         for system_id, stats in self.system_stats.items():
-            avg_srs = stats["total_score"] / stats["total_attempts"] if stats["total_attempts"] > 0 else 0
+            avg_srs = (
+                stats["total_score"] / stats["total_attempts"]
+                if stats["total_attempts"] > 0
+                else 0
+            )
 
-            leaderboard.append({
-                "rank": 0,  # Will be set after sorting
-                "system_id": system_id,
-                "avg_sovereign_resilience_score": round(avg_srs, 2),
-                "total_attempts": stats["total_attempts"],
-                "success_rate": round(stats["successes"] / stats["total_attempts"], 3) if stats["total_attempts"] > 0 else 0,
-                "avg_response_time_ms": round(stats["avg_response_time"], 2)
-            })
+            leaderboard.append(
+                {
+                    "rank": 0,  # Will be set after sorting
+                    "system_id": system_id,
+                    "avg_sovereign_resilience_score": round(avg_srs, 2),
+                    "total_attempts": stats["total_attempts"],
+                    "success_rate": (
+                        round(stats["successes"] / stats["total_attempts"], 3)
+                        if stats["total_attempts"] > 0
+                        else 0
+                    ),
+                    "avg_response_time_ms": round(stats["avg_response_time"], 2),
+                }
+            )
 
         # Sort by average SRS
-        leaderboard.sort(key=lambda x: x["avg_sovereign_resilience_score"], reverse=True)
+        leaderboard.sort(
+            key=lambda x: x["avg_sovereign_resilience_score"], reverse=True
+        )
 
         # Assign ranks
         for idx, entry in enumerate(leaderboard[:limit]):
@@ -353,10 +368,10 @@ class Scoreboard:
     def get_system_performance(self, system_id: str) -> dict[str, Any]:
         """
         Get detailed performance metrics for a system.
-        
+
         Args:
             system_id: System identifier
-            
+
         Returns:
             Performance metrics dictionary
         """
@@ -369,18 +384,24 @@ class Scoreboard:
         # Calculate category averages
         category_averages = {}
         for category, scores in stats["category_scores"].items():
-            category_averages[category] = round(sum(scores) / len(scores), 2) if scores else 0
+            category_averages[category] = (
+                round(sum(scores) / len(scores), 2) if scores else 0
+            )
 
         # Calculate round performance
         round_performance = {}
         for round_num in range(1, 6):
             round_scores = [s for s in system_scores if s.round_number == round_num]
             if round_scores:
-                avg_score = sum(s.sovereign_resilience_score for s in round_scores) / len(round_scores)
+                avg_score = sum(
+                    s.sovereign_resilience_score for s in round_scores
+                ) / len(round_scores)
                 round_performance[f"round_{round_num}"] = {
                     "attempts": len(round_scores),
                     "avg_score": round(avg_score, 2),
-                    "success_rate": round(sum(1 for s in round_scores if s.success) / len(round_scores), 3)
+                    "success_rate": round(
+                        sum(1 for s in round_scores if s.success) / len(round_scores), 3
+                    ),
                 }
 
         return {
@@ -388,21 +409,29 @@ class Scoreboard:
             "overall_performance": {
                 "total_attempts": stats["total_attempts"],
                 "successes": stats["successes"],
-                "success_rate": round(stats["successes"] / stats["total_attempts"], 3) if stats["total_attempts"] > 0 else 0,
-                "avg_sovereign_resilience_score": round(stats["total_score"] / stats["total_attempts"], 2) if stats["total_attempts"] > 0 else 0,
-                "avg_response_time_ms": round(stats["avg_response_time"], 2)
+                "success_rate": (
+                    round(stats["successes"] / stats["total_attempts"], 3)
+                    if stats["total_attempts"] > 0
+                    else 0
+                ),
+                "avg_sovereign_resilience_score": (
+                    round(stats["total_score"] / stats["total_attempts"], 2)
+                    if stats["total_attempts"] > 0
+                    else 0
+                ),
+                "avg_response_time_ms": round(stats["avg_response_time"], 2),
             },
             "category_scores": category_averages,
-            "round_performance": round_performance
+            "round_performance": round_performance,
         }
 
     def get_scenario_statistics(self, scenario_id: str) -> dict[str, Any]:
         """
         Get statistics for a specific scenario.
-        
+
         Args:
             scenario_id: Scenario identifier
-            
+
         Returns:
             Scenario statistics dictionary
         """
@@ -414,7 +443,9 @@ class Scoreboard:
         total_attempts = len(scenario_scores)
         successes = sum(1 for s in scenario_scores if s.success)
 
-        avg_srs = sum(s.sovereign_resilience_score for s in scenario_scores) / total_attempts
+        avg_srs = (
+            sum(s.sovereign_resilience_score for s in scenario_scores) / total_attempts
+        )
         avg_time = sum(s.response_time_ms for s in scenario_scores) / total_attempts
 
         return {
@@ -424,5 +455,5 @@ class Scoreboard:
             "success_rate": round(successes / total_attempts, 3),
             "avg_sovereign_resilience_score": round(avg_srs, 2),
             "avg_response_time_ms": round(avg_time, 2),
-            "difficulty": scenario_scores[0].difficulty if scenario_scores else None
+            "difficulty": scenario_scores[0].difficulty if scenario_scores else None,
         }

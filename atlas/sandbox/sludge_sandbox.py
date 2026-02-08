@@ -27,6 +27,7 @@ logger = logging.getLogger(__name__)
 
 class NarrativeArchetype(Enum):
     """Archetype patterns for narrative injection."""
+
     HIDDEN_ELITES = "hidden_elites"
     SUPPRESSED_TECH = "suppressed_tech"
     FALSE_FLAGS = "false_flags"
@@ -36,7 +37,7 @@ class NarrativeArchetype(Enum):
 class SludgeSandbox:
     """
     Layer 9: Sludge Narrative Sandbox (Air-Gapped)
-    
+
     Generates FICTIONAL narratives from RS snapshots.
     COMPLETELY ISOLATED from Reality and Timeline stacks.
     """
@@ -67,7 +68,7 @@ class SludgeSandbox:
             "type": "fictional_narrative",
             "is_sludge": True,
             "fiction_banner": self.FICTION_BANNER,
-            "watermark": "FICTIONAL NARRATIVE - NOT FOR DECISION MAKING"
+            "watermark": "FICTIONAL NARRATIVE - NOT FOR DECISION MAKING",
         }
         self._generation_count += 1
         return narrative

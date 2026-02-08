@@ -233,7 +233,9 @@ class VisualBondingProtocol:
 
                     correct_count = 0
 
-                    for frame, truth in zip(calibration_frames, ground_truth_sequence):
+                    for frame, truth in zip(
+                        calibration_frames, ground_truth_sequence, strict=False
+                    ):
                         cue_data = self.experiment_with_model(
                             user_id, model_id, frame, truth
                         )
