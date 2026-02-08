@@ -13,6 +13,8 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from .sql_utils import sanitize_identifier
+
 logger = logging.getLogger(__name__)
 
 
@@ -715,6 +717,9 @@ class BuildQueryEngine:
                 logger.warning("No data to export")
                 return False
 
+            # Sanitize table name to prevent SQL injection
+            safe_table = sanitize_identifier(table_name)
+            
             output_path = Path(output_path)
             output_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -725,7 +730,7 @@ class BuildQueryEngine:
                         f"'{v}'" if isinstance(v, str) else str(v)
                         for v in row.values()
                     )
-                    f.write(f"INSERT INTO {table_name} ({columns}) VALUES ({values});\n")
+                    f.write(f"INSERT INTO {safe_table} ({columns}) VALUES ({values});\n")
 
             logger.info(f"Exported {len(query_result)} SQL statements to {output_path}")
             return True

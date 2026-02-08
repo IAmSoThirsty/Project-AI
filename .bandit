@@ -1,0 +1,26 @@
+[bandit]
+# Bandit configuration for Project-AI
+# Exclude test directories and files from certain checks
+
+exclude_dirs = 
+    /tests/,
+    /test/,
+    /.venv/,
+    /venv/,
+    /node_modules/,
+    /.git/
+
+# Skips for specific test IDs
+skips = 
+    # B101: assert_used - Standard practice in test files
+    # We handle this via exclude pattern instead
+
+[bandit.assert_used]
+# Exclude test files from assert_used check (B101)
+# This is a false positive for pytest test files
+exclude = 
+    */test_*.py,
+    */tests/*.py,
+    */*_test.py,
+    */test/*.py,
+    */example.py
