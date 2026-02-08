@@ -5,8 +5,10 @@
  * Step through your code and find bugs
  */
 
+const fs = require('fs');
 const ThirstyInterpreter = require('./index');
 const readline = require('readline');
+const { validatePath, isValidFile } = require('./path-validator');
 
 class ThirstyDebugger extends ThirstyInterpreter {
   constructor() {
@@ -221,7 +223,6 @@ class ThirstyDebugger extends ThirstyInterpreter {
 }
 
 async function main() {
-  const fs = require('fs');
   const args = process.argv.slice(2);
 
   if (args.length === 0) {
@@ -230,14 +231,22 @@ async function main() {
   }
 
   const filename = args[0];
-  if (!fs.existsSync(filename)) {
-    console.error("Error: File '" + filename + "' not found");
+  
+  try {
+    // Validate filename to prevent path traversal
+    const validatedPath = validatePath(filename);
+    if (!isValidFile(validatedPath)) {
+      console.error("Error: File '" + filename + "' not found or is not a valid file");
+      process.exit(1);
+    }
+
+    const code = fs.readFileSync(validatedPath, 'utf-8');
+    const thirstyDebugger = new ThirstyDebugger();
+    await thirstyDebugger.debug(code);
+  } catch (error) {
+    console.error('Error: ' + error.message);
     process.exit(1);
   }
-
-  const code = fs.readFileSync(filename, 'utf-8');
-  const thirstyDebugger = new ThirstyDebugger();
-  await thirstyDebugger.debug(code);
 }
 
 if (require.main === module) {
