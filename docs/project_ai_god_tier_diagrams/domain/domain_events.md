@@ -52,7 +52,7 @@ class DomainEvent(ABC):
     event_id: UUID = field(default_factory=uuid4)
     event_type: str = field(init=False)
     event_version: int = 1
-    occurred_at: datetime = field(default_factory=datetime.utcnow)
+    occurred_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     aggregate_id: Optional[UUID] = None
     aggregate_type: Optional[str] = None
     correlation_id: Optional[UUID] = None  # For tracing related events
