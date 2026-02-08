@@ -1,8 +1,18 @@
+"""
+TARL Core - Trust and Authorization Runtime Layer (Policy/Governance System)
+
+This is the POLICY/GOVERNANCE subsystem version 2.0.
+For the LANGUAGE RUNTIME VM, see tarl/system.py (version 1.0.0).
+
+The policy TARL provides authorization and trust management.
+The language TARL provides a complete programming language implementation.
+"""
+
 import hashlib
 import json
 from dataclasses import dataclass
 
-TARL_VERSION = "2.0"
+TARL_VERSION = "2.0"  # Policy/Governance TARL version
 
 
 @dataclass(frozen=True)
