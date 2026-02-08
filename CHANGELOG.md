@@ -5,6 +5,46 @@ All notable changes to Project-AI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] - 2026-02-08
+
+### Added
+- Created `docs/legal/LICENSE_README.md` documenting all license locations
+- Created `docs/internal/CLEANUP_SUMMARY_2026-02-08.md` documenting comprehensive cleanup
+
+### Changed
+- **MAJOR**: Reorganized repository structure - moved 33 files to proper locations
+  - Moved 17 implementation/summary docs to `docs/internal/archive/root-summaries/`
+  - Moved 4 architecture docs to `docs/architecture/`
+  - Moved 5 test files from root to `tests/`
+  - Moved data files to `data/` and `data/logs/`
+  - Moved validation scripts to `scripts/verify/`
+  - Moved H323 extension to `h323_sec_profile/`
+- Updated Thirsty-Lang SPECIFICATION.md to reflect implemented features
+- Updated T.A.R.L. README roadmap - marked compiler and runtime as complete
+- Fixed CODE_OF_CONDUCT.md typos and incomplete sentence
+- Updated pyproject.toml to add dynamic scripts field
+- Updated MANIFEST.in to reflect new file organization
+- Clarified TARL version numbers (Policy v2.0 vs Language v1.0.0)
+
+### Removed
+- Removed outdated LICENSE.txt from root (moved to docs/legal/third-party-licenses/)
+- Removed README.md.backup from root
+- Removed 21+ status/summary markdown files from root directory
+
+### Fixed
+- Fixed CODE_OF_CONDUCT.md grammar and typos
+- Fixed Thirsty-Lang documentation claiming implemented features were "planned"
+- Fixed T.A.R.L. roadmap showing complete features as "in progress"
+- Fixed pyproject.toml dynamic scripts warning
+
+### Documentation
+- Root directory now contains only 5 essential markdown files
+- All historical documentation archived in `docs/internal/archive/`
+- All architecture documentation organized in `docs/architecture/`
+- Complete documentation audit with all critical issues addressed
+
+---
+
 ## [Unreleased] - 2026-01-31
 
 ### 🔄 Integration

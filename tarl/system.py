@@ -38,7 +38,10 @@ logger = logging.getLogger(__name__)
 
 class TARLSystem:
     """
-    Main T.A.R.L. System Controller
+    Main T.A.R.L. System Controller (Language Runtime VM)
+
+    VERSION 1.0.0 - Programming Language Implementation
+    (Separate from TARL Policy/Governance system v2.0 in core.py)
 
     Manages lifecycle and coordination of all T.A.R.L. subsystems.
     Provides the primary interface for T.A.R.L. compilation and execution.

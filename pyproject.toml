@@ -11,6 +11,7 @@ requires-python = ">=3.11"
 license = {text = "MIT"}
 authors = [{name = "Project AI Team"}]
 keywords = ["ai", "assistant", "pyqt6", "machine-learning"]
+dynamic = ["scripts"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",

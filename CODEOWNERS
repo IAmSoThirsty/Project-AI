@@ -1,2 +1,60 @@
-# Code owners for repository
+# Project-AI Code Owners
+# 
+# This file defines who must review and approve changes to different parts of the repository.
+# Order matters - last matching pattern takes precedence.
+#
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner for everything
 * @IAmSoThirsty
+
+# Root directory markdown files - require owner approval
+/README.md @IAmSoThirsty
+/CHANGELOG.md @IAmSoThirsty
+/CODE_OF_CONDUCT.md @IAmSoThirsty
+/CONTRIBUTING.md @IAmSoThirsty
+/SECURITY.md @IAmSoThirsty
+/DEVELOPER_QUICK_REFERENCE.md @IAmSoThirsty
+
+# Root structure enforcement - architectural authority
+/docs/architecture/ROOT_STRUCTURE.md @IAmSoThirsty
+
+# Architecture documentation - require explicit review
+/docs/architecture/ @IAmSoThirsty
+
+# Security and compliance documentation
+/docs/security_compliance/ @IAmSoThirsty
+/SECURITY.md @IAmSoThirsty
+
+# Governance and policy documents
+/docs/governance/ @IAmSoThirsty
+/policies/ @IAmSoThirsty
+
+# CI/CD workflows - critical infrastructure
+/.github/workflows/ @IAmSoThirsty
+/.github/workflows/enforce-root-structure.yml @IAmSoThirsty
+/.github/workflows/doc-code-alignment.yml @IAmSoThirsty
+
+# Build and packaging configuration
+/pyproject.toml @IAmSoThirsty
+/setup.py @IAmSoThirsty
+/setup.cfg @IAmSoThirsty
+/Dockerfile @IAmSoThirsty
+/docker-compose.yml @IAmSoThirsty
+
+# Core Python modules - owner + maintainers
+/src/app/core/ @IAmSoThirsty
+/tarl/ @IAmSoThirsty
+/src/thirsty_lang/ @IAmSoThirsty
+
+# Archive - automated processes can update
+/docs/internal/archive/ @IAmSoThirsty
+/docs/internal/archive/ARCHIVE_INDEX.md @IAmSoThirsty
+
+# License files
+/LICENSE @IAmSoThirsty
+/docs/legal/ @IAmSoThirsty
+
+# CODEOWNERS itself - prevent unauthorized changes
+/CODEOWNERS @IAmSoThirsty
+

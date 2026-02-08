@@ -138,14 +138,14 @@ atlas sovereign-verify --bundle output.json
 # Display system status and statistics
 atlas status
 
-# Build Reality Stack history chain (TODO)
-atlas build-hc --input data/raw
+# Build Reality Stack history chain (Planned)
+# atlas build-hc --input data/raw
 
-# Generate timeline projections (TODO)
-atlas project --seed ATLAS-TS0-BASE-2026-02-07-001 --horizon 30
+# Generate timeline projections (Planned)
+# atlas project --seed ATLAS-TS0-BASE-2026-02-07-001 --horizon 30
 
-# Export artifacts with compliance stamps (TODO)
-atlas export --output reports/
+# Export artifacts with compliance stamps (Planned)
+# atlas export --output reports/
 ```
 
 ### Stack Classification

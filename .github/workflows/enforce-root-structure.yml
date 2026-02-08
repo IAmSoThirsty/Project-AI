@@ -1,0 +1,176 @@
+name: Enforce Root Structure
+
+on:
+  pull_request:
+    paths:
+      - '**'
+  push:
+    branches:
+      - main
+      - develop
+      - 'release/**'
+
+jobs:
+  enforce-root-structure:
+    name: Validate Root Directory Structure
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for git operations
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Validate root structure
+        run: |
+          echo "🔍 Validating root directory structure..."
+          
+          # Define allowed files in root (from ROOT_STRUCTURE.md)
+          ALLOWED_FILES=(
+            # Core Documentation
+            "README.md"
+            "CHANGELOG.md"
+            "CONTRIBUTING.md"
+            "CODE_OF_CONDUCT.md"
+            "CODEOWNERS"
+            "LICENSE"
+            "DEVELOPER_QUICK_REFERENCE.md"
+            "SECURITY.md"
+            
+            # Build & Configuration
+            "Dockerfile"
+            "docker-compose.yml"
+            "docker-compose.override.yml"
+            "Makefile"
+            "build.gradle"
+            "build.tarl"
+            "settings.gradle"
+            "gradle.properties"
+            "gradlew"
+            "gradlew.bat"
+            "setup.py"
+            "setup.cfg"
+            "pyproject.toml"
+            "package.json"
+            "package-lock.json"
+            "requirements.txt"
+            "requirements-dev.txt"
+            "requirements.in"
+            "requirements.lock"
+            "pytest.ini"
+            "MANIFEST.in"
+            
+            # Environment & Config
+            ".gitignore"
+            ".gitattributes"
+            ".gitmodules"
+            ".dockerignore"
+            ".python-version"
+            ".pre-commit-config.yaml"
+            "mcp.json"
+            "app-config.json"
+            
+            # Entry Points
+            "bootstrap.py"
+            "quickstart.py"
+            "start_api.py"
+            "project_ai_cli.py"
+            
+            # Other allowed files
+            "LAUNCH_MISSION_CONTROL.bat"
+            "PR_Overseer.prompt.yml"
+            "Project-AI.code-workspace"
+          )
+          
+          # Convert to associative array for faster lookup
+          declare -A ALLOWED
+          for file in "${ALLOWED_FILES[@]}"; do
+            ALLOWED["$file"]=1
+          done
+          
+          # Check for disallowed files
+          VIOLATIONS=0
+          
+          # Get all files in root (not directories)
+          while IFS= read -r file; do
+            filename=$(basename "$file")
+            
+            # Skip if it's in the allowed list
+            if [[ -n "${ALLOWED[$filename]}" ]]; then
+              continue
+            fi
+            
+            # Check for prohibited patterns
+            if [[ "$filename" =~ _COMPLETE\.md$ ]] || \
+               [[ "$filename" =~ _SUMMARY\.md$ ]] || \
+               [[ "$filename" =~ _STATUS\.md$ ]] || \
+               [[ "$filename" =~ _IMPLEMENTATION.*\.md$ ]] || \
+               [[ "$filename" =~ IMPLEMENTATION_.*\.md$ ]]; then
+              echo "❌ VIOLATION: Found prohibited file in root: $filename"
+              echo "   → This should be in docs/internal/archive/"
+              VIOLATIONS=$((VIOLATIONS + 1))
+            elif [[ "$filename" =~ \.md$ ]] && [[ "$filename" != "README.md" ]] && [[ "$filename" != "CHANGELOG.md" ]] && [[ "$filename" != "CODE_OF_CONDUCT.md" ]] && [[ "$filename" != "CONTRIBUTING.md" ]] && [[ "$filename" != "SECURITY.md" ]] && [[ "$filename" != "DEVELOPER_QUICK_REFERENCE.md" ]]; then
+              echo "⚠️  WARNING: Unexpected markdown file in root: $filename"
+              echo "   → Consider if this belongs in docs/ or should be in the allowed list"
+            fi
+          done < <(find . -maxdepth 1 -type f -not -path './.git/*')
+          
+          # Check for archived docs outside archive
+          echo ""
+          echo "🔍 Checking for misplaced archived documents..."
+          
+          ARCHIVE_VIOLATIONS=0
+          while IFS= read -r file; do
+            if [[ ! "$file" =~ ^docs/internal/archive/ ]]; then
+              echo "❌ VIOLATION: Archived document found outside archive: $file"
+              ARCHIVE_VIOLATIONS=$((ARCHIVE_VIOLATIONS + 1))
+            fi
+          done < <(find . -type f \( -name "*_COMPLETE.md" -o -name "*_SUMMARY.md" -o -name "*_STATUS.md" \) -not -path './.git/*' -not -path './docs/internal/archive/*' -not -path './node_modules/*' -not -path './.venv/*')
+          
+          # Report results
+          echo ""
+          echo "═══════════════════════════════════════════════════════════"
+          
+          if [ $VIOLATIONS -eq 0 ] && [ $ARCHIVE_VIOLATIONS -eq 0 ]; then
+            echo "✅ ROOT STRUCTURE VALIDATION PASSED"
+            echo ""
+            echo "   All files in root directory are authorized"
+            echo "   No misplaced archived documents found"
+            echo "═══════════════════════════════════════════════════════════"
+            exit 0
+          else
+            echo "❌ ROOT STRUCTURE VALIDATION FAILED"
+            echo ""
+            echo "   Root violations: $VIOLATIONS"
+            echo "   Archive violations: $ARCHIVE_VIOLATIONS"
+            echo ""
+            echo "📋 To fix:"
+            echo "   1. Move completion/summary docs to docs/internal/archive/"
+            echo "   2. Update ROOT_STRUCTURE.md if file should be allowed"
+            echo "   3. See docs/architecture/ROOT_STRUCTURE.md for guidelines"
+            echo "═══════════════════════════════════════════════════════════"
+            exit 1
+          fi
+      
+      - name: Check for README.md.backup or similar
+        run: |
+          echo "🔍 Checking for backup files..."
+          
+          BACKUP_VIOLATIONS=0
+          while IFS= read -r file; do
+            echo "❌ VIOLATION: Backup file found: $file"
+            BACKUP_VIOLATIONS=$((BACKUP_VIOLATIONS + 1))
+          done < <(find . -maxdepth 1 -type f \( -name "*.backup" -o -name "*.bak" -o -name "*~" \) -not -path './.git/*')
+          
+          if [ $BACKUP_VIOLATIONS -gt 0 ]; then
+            echo "❌ Found $BACKUP_VIOLATIONS backup file(s) in root"
+            echo "   → These should be removed or archived"
+            exit 1
+          else
+            echo "✅ No backup files found in root"
+          fi
