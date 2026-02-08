@@ -41,6 +41,7 @@ jobs:
             "LICENSE"
             "DEVELOPER_QUICK_REFERENCE.md"
             "SECURITY.md"
+            "HEALTH_REPORT.md"
             
             # Build & Configuration
             "Dockerfile"
