@@ -182,11 +182,13 @@ The following workflows show repeated failures and require investigation:
 **Risk Level**: High
 
 Security waivers have expiration dates to ensure periodic review of security exceptions. Expired waivers indicate:
+
 - Security exceptions that may no longer be valid
 - Need for re-evaluation of risk acceptance
 - Potential compliance issues
 
 **Action Items**:
+
 - Review security waiver registry
 - Re-evaluate each waived security finding
 - Update or revoke waivers as appropriate
@@ -199,11 +201,13 @@ Security waivers have expiration dates to ensure periodic review of security exc
 **Risk Level**: Critical
 
 Automated secret scanning has detected potential credentials, API keys, or sensitive data in the codebase. This pattern repeats across multiple issues, suggesting:
+
 - Test fixtures or example data containing secrets
 - Historical commits with secrets
 - Configuration files with hardcoded credentials
 
 **Action Items**:
+
 1. Immediately audit flagged files for actual secrets
 2. Rotate any exposed credentials
 3. Use `.gitignore` to prevent secret files from being committed
@@ -218,12 +222,14 @@ Automated secret scanning has detected potential credentials, API keys, or sensi
 **Risk Level**: Medium
 
 Code quality and security scanning tools have flagged potential vulnerabilities. Common patterns include:
+
 - SQL injection risks
 - Path traversal vulnerabilities
 - Insecure cryptographic operations
 - Improper input validation
 
 **Action Items**:
+
 - Review each flagged code location
 - Apply security best practices
 - Add input sanitization and validation
@@ -242,6 +248,7 @@ Code quality and security scanning tools have flagged potential vulnerabilities.
 **Observation**: Security automation is robust, but issue remediation is lagging behind issue creation rate.
 
 **Note**: Direct access to GitHub Security tab requires repository admin permissions. For complete security visibility, navigate to:
+
 - [Security Overview](https://github.com/IAmSoThirsty/Project-AI/security)
 - [Code Scanning Alerts](https://github.com/IAmSoThirsty/Project-AI/security/code-scanning)
 - [Secret Scanning Alerts](https://github.com/IAmSoThirsty/Project-AI/security/secret-scanning)
@@ -379,6 +386,7 @@ This report was generated using GitHub's REST API v3 and GraphQL API. The follow
 **Limitation**: Code scanning alerts and secret scanning alerts require `security_events` scope with elevated permissions.
 
 **Impact on Report**:
+
 - Unable to access detailed code scanning alerts via API
 - Unable to access detailed secret scanning alerts via API
 - Report relies on automated issue creation from security workflows as proxy data
@@ -393,6 +401,7 @@ This report was generated using GitHub's REST API v3 and GraphQL API. The follow
 **Workaround**: Security issues created by automated workflows provide visibility into security findings.
 
 **For Complete Visibility**:
+
 1. Navigate to [Security Tab](https://github.com/IAmSoThirsty/Project-AI/security)
 2. View [Code Scanning Alerts](https://github.com/IAmSoThirsty/Project-AI/security/code-scanning)
 3. View [Secret Scanning Alerts](https://github.com/IAmSoThirsty/Project-AI/security/secret-scanning)
@@ -401,6 +410,7 @@ This report was generated using GitHub's REST API v3 and GraphQL API. The follow
 #### 2. Pagination Limits
 
 **Current Settings**:
+
 - Issues: Retrieved 100 results (all current issues in repository)
 - Pull Requests: Limited to first 100 results (from 390 total)
 - Workflow Runs: Retrieved 100 most recent results (from 10,307 total)
@@ -421,6 +431,7 @@ This report was generated using GitHub's REST API v3 and GraphQL API. The follow
 **Impact**: Report shows workflow status and failure counts but not detailed failure reasons.
 
 **For Detailed Logs**:
+
 - Click individual workflow run links in report
 - Download workflow logs from Actions UI
 - Use `gh run view` CLI command for specific runs
@@ -428,6 +439,7 @@ This report was generated using GitHub's REST API v3 and GraphQL API. The follow
 #### 4. Rate Limiting
 
 GitHub API has rate limits:
+
 - Authenticated: 5,000 requests/hour
 - GraphQL: 5,000 points/hour
 

@@ -22,6 +22,7 @@ Thank you for your interest in contributing to Project-AI. This is not merely an
 Project-AI is open source not for convenience, but for **accountability**. Transparency enables scrutiny, and scrutiny enables trust.
 
 **Governance Model:**
+
 - **Distributed Stewardship:** No single entity controls AGI development
 - **High-Trust Review:** All contributions reviewed by multiple maintainers
 - **Openness to Dissent:** Disagreement is encouraged; consensus is earned, not assumed
@@ -29,6 +30,7 @@ Project-AI is open source not for convenience, but for **accountability**. Trans
 
 **Fork Philosophy:**
 You are welcome—and encouraged—to fork Project-AI. Forks serve as:
+
 - **Experiments:** Test radical ideas without risking the main branch
 - **Alternatives:** Offer different value alignments or use cases
 - **Checks:** Ensure no single implementation becomes monopolistic
@@ -48,6 +50,7 @@ In AGI development, a single mistake can have cascading consequences. Trust is n
 | **Steward** | Architecture decisions, governance participation | Long-term commitment, broad expertise, ethical clarity |
 
 **Building Trust:**
+
 1. Start with small, focused contributions
 2. Demonstrate understanding of existing code and philosophy
 3. Engage thoughtfully in code reviews
@@ -59,6 +62,7 @@ In AGI development, a single mistake can have cascading consequences. Trust is n
 **Principle:** Constructive disagreement strengthens the project. Echo chambers breed fragility.
 
 **How to Disagree Productively:**
+
 - State your position clearly and respectfully
 - Provide evidence or reasoning
 - Acknowledge valid counterarguments
@@ -66,6 +70,7 @@ In AGI development, a single mistake can have cascading consequences. Trust is n
 - Accept when consensus moves against you
 
 **Protected Dissent:**
+
 - Technical disagreements are always valid
 - Value disagreements require broader discussion
 - Safety concerns trigger immediate review
@@ -86,6 +91,7 @@ In AGI development, a single mistake can have cascading consequences. Trust is n
 ## 📚 Contributing Documentation
 
 **Before adding or moving documentation**, read:
+
 - [Documentation Contributing Guide](../.github/CONTRIBUTING_DOCS.md) - Where to place documentation
 - [Documentation Structure Guide](DOCUMENTATION_STRUCTURE_GUIDE.md) - Complete organization guide
 
@@ -113,6 +119,7 @@ This governance profile enforces:
 ### Adhere to Coding Standards
 
 **Code Quality Requirements:**
+
 - **Linting:** All code must pass `ruff check .` with zero errors
 - **Type Checking:** All code must pass `mypy src` with zero errors
 - **Testing:** All new code must have accompanying tests (80%+ coverage)
@@ -127,6 +134,7 @@ In AGI systems, bugs aren't just annoying—they can be dangerous. Strict code q
 **Principle:** Every component should do one thing well and integrate cleanly with others.
 
 **Composability Checklist:**
+
 - [ ] Module has a single, clear responsibility
 - [ ] Dependencies are explicit and minimal
 - [ ] Public API is documented and stable
@@ -204,6 +212,7 @@ def validate_action(self, action: str, context: Dict) -> Tuple[bool, str]:
 **Rule:** Every public function, class, and module MUST have documentation.
 
 **Minimum Documentation Requirements:**
+
 - **Functions:** Docstring with purpose, parameters, return value, and example
 - **Classes:** Docstring with purpose, key attributes, and usage example
 - **Modules:** Top-level docstring with purpose and key exports
@@ -215,6 +224,7 @@ def validate_action(self, action: str, context: Dict) -> Tuple[bool, str]:
 **Rule:** No code may be merged without review and approval from at least one maintainer.
 
 **Review Criteria:**
+
 - Code quality (passes linting, type checking)
 - Test coverage (new code has tests)
 - Documentation (public APIs documented)
@@ -222,6 +232,7 @@ def validate_action(self, action: str, context: Dict) -> Tuple[bool, str]:
 - Alignment (fits project architecture and philosophy)
 
 **Self-Merging:** Only stewards may self-merge, and only for:
+
 - Documentation updates
 - Dependency version bumps (after automated checks pass)
 - Urgent security fixes (with post-merge review)
@@ -231,6 +242,7 @@ def validate_action(self, action: str, context: Dict) -> Tuple[bool, str]:
 **Rule:** New features and bug fixes MUST include tests.
 
 **Test Requirements:**
+
 - Unit tests for core logic
 - Integration tests for component interactions
 - End-to-end tests for critical user flows
@@ -255,9 +267,11 @@ def test_four_laws_prevents_harm():
 **Rule:** Security vulnerabilities are treated as critical bugs and must be fixed immediately.
 
 **Security Responsibilities:**
+
 - Run security scans before every PR (`bandit`, `pip-audit`)
 - Never commit secrets (API keys, passwords, etc.)
 - Use secure defaults (encryption, authentication, least privilege)
+
 - Report security issues privately (security@project-ai.local)
 
 **Vulnerability Disclosure:**
