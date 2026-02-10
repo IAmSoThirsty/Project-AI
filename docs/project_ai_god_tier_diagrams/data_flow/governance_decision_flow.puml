@@ -1,0 +1,354 @@
+@startuml governance_decision_flow
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+
+title Project-AI Governance Triumvirate Decision Flow
+
+participant "CognitionKernel" as CK
+participant "Galahad\n(Ethics)" as Galahad
+participant "Cerberus\n(Security)" as Cerberus
+participant "Codex Deus Maximus\n(Policy)" as Codex
+participant "MemoryEngine" as Memory
+participant "AuditTrail" as Audit
+participant "ExecutionService" as Exec
+
+== Governance Validation Chain ==
+
+CK -> Galahad: Enriched Request
+activate Galahad
+
+note right of Galahad
+  **ASIMOV'S LAWS CHECK**
+  Law 0: Humanity protection
+  Law 1: Human protection
+  Law 2: Obey humans
+  Law 3: Self-preservation
+end note
+
+== Layer 1: Galahad (Ethics) ==
+
+Galahad -> Galahad: Check Law 0\n(Existential threats)
+
+alt Existential Threat Detected
+    Galahad -> Galahad: REJECT - Law 0 Violation
+    Galahad --> CK: REJECTED\n(Humanity risk)
+    
+    CK -> Memory: Record rejection
+    activate Memory
+    Memory --> CK: Recorded
+    deactivate Memory
+    
+    CK -> Audit: Log ethics violation
+    activate Audit
+    Audit --> CK: Logged
+    deactivate Audit
+    
+    deactivate Galahad
+else No Existential Threat
+    Galahad -> Galahad: Check Law 1\n(Individual harm)
+    
+    alt Individual Harm Detected
+        Galahad -> Galahad: REJECT - Law 1 Violation
+        Galahad --> CK: REJECTED\n(Harm to humans)
+        
+        CK -> Memory: Record rejection
+        activate Memory
+        Memory --> CK: Recorded
+        deactivate Memory
+        
+        CK -> Audit: Log ethics violation
+        activate Audit
+        Audit --> CK: Logged
+        deactivate Audit
+        
+        deactivate Galahad
+    else No Harm Detected
+        Galahad -> Galahad: Check Law 2\n(Human authority)
+        
+        alt Insufficient Authority
+            Galahad -> Galahad: ESCALATE\nto human oversight
+            Galahad --> CK: ESCALATION REQUIRED
+            
+            CK -> CK: Queue for human review
+            
+            deactivate Galahad
+        else Authority Validated
+            Galahad -> Galahad: Check Law 3\n(Self-preservation)
+            
+            alt System Threat Detected
+                Galahad -> Galahad: REJECT - Law 3 Violation
+                Galahad --> CK: REJECTED\n(System integrity)
+                
+                CK -> Memory: Record rejection
+                activate Memory
+                Memory --> CK: Recorded
+                deactivate Memory
+                
+                deactivate Galahad
+            else No System Threat
+                Galahad -> Galahad: Calculate confidence\nGenerate rationale
+                Galahad --> CK: APPROVED\n(Ethics validation passed)
+                
+                note right of Galahad
+                  Confidence: 0.95
+                  All laws satisfied
+                  Rationale generated
+                end note
+                
+                deactivate Galahad
+            end
+        end
+    end
+end
+
+== Layer 2: Cerberus (Security) ==
+
+CK -> Cerberus: Request + Galahad Result
+activate Cerberus
+
+note right of Cerberus
+  **SECURITY VALIDATION**
+  10 security checks
+  Pattern matching + ML
+  Threat detection
+end note
+
+Cerberus -> Cerberus: 1. SQL Injection Check
+
+alt SQL Injection Detected
+    Cerberus -> Cerberus: REJECT - Injection Attack
+    Cerberus --> CK: REJECTED\n(SQL injection)
+    
+    Cerberus -> Audit: Log security incident
+    activate Audit
+    Audit --> Cerberus: Incident logged
+    deactivate Audit
+    
+    CK -> Memory: Record security rejection
+    activate Memory
+    Memory --> CK: Recorded
+    deactivate Memory
+    
+    deactivate Cerberus
+else No SQL Injection
+    Cerberus -> Cerberus: 2. Command Injection Check
+    
+    alt Command Injection Detected
+        Cerberus -> Cerberus: REJECT - Injection Attack
+        Cerberus --> CK: REJECTED\n(Command injection)
+        
+        Cerberus -> Audit: Log security incident
+        activate Audit
+        Audit --> Cerberus: Incident logged
+        deactivate Audit
+        
+        deactivate Cerberus
+    else No Command Injection
+        Cerberus -> Cerberus: 3. XSS Check
+        Cerberus -> Cerberus: 4. Path Traversal Check
+        Cerberus -> Cerberus: 5. PII Exposure Check
+        
+        alt PII Exposure Risk
+            Cerberus -> Cerberus: Check user clearance
+            
+            alt Insufficient Clearance
+                Cerberus -> Cerberus: REJECT - PII Protection
+                Cerberus --> CK: REJECTED\n(GDPR/HIPAA violation)
+                
+                deactivate Cerberus
+            end
+        end
+        
+        Cerberus -> Cerberus: 6. Secrets Detection
+        Cerberus -> Cerberus: 7. SSRF Check
+        Cerberus -> Cerberus: 8. Abuse Pattern Check
+        
+        alt Abuse Pattern Detected
+            Cerberus -> Cerberus: Flag account
+            Cerberus --> CK: REJECTED\n(Abuse detected)
+            
+            deactivate Cerberus
+        end
+        
+        Cerberus -> Cerberus: 9. Auth Bypass Check
+        Cerberus -> Cerberus: 10. Authorization Check
+        
+        Cerberus -> Cerberus: Calculate security score
+        Cerberus --> CK: APPROVED\n(Security validation passed)
+        
+        note right of Cerberus
+          Security Score: 0.92
+          All 10 checks passed
+          No threats detected
+        end note
+        
+        deactivate Cerberus
+    end
+end
+
+== Layer 3: Codex Deus Maximus (Policy) ==
+
+CK -> Codex: Request + All Results
+activate Codex
+
+note right of Codex
+  **POLICY ENFORCEMENT**
+  Organizational policies
+  Regulatory compliance
+  Business rules
+  Resource limits
+end note
+
+Codex -> Codex: Validate previous approvals
+
+alt Previous Layer Rejected
+    Codex --> CK: REJECT\n(Pre-rejection)
+    deactivate Codex
+else All Previous Approved
+    Codex -> Codex: Check organizational policies
+    
+    alt Policy Violation
+        Codex -> Codex: REJECT - Policy Violation
+        Codex --> CK: REJECTED\n(Org policy)
+        
+        CK -> Memory: Record policy rejection
+        activate Memory
+        Memory --> CK: Recorded
+        deactivate Memory
+        
+        deactivate Codex
+    else Policy Compliant
+        Codex -> Codex: Check regulatory compliance\n(GDPR, HIPAA, SOC2)
+        
+        alt Compliance Violation
+            Codex -> Codex: REJECT - Compliance Issue
+            Codex --> CK: REJECTED\n(Regulatory)
+            
+            CK -> Memory: Record compliance rejection
+            activate Memory
+            Memory --> CK: Recorded
+            deactivate Memory
+            
+            deactivate Codex
+        else Compliant
+            Codex -> Codex: Check business rules
+            
+            alt Business Rule Violation
+                Codex -> Codex: REJECT - Business Rule
+                Codex --> CK: REJECTED\n(Business rule)
+                
+                deactivate Codex
+            else Business Rules Satisfied
+                Codex -> Codex: Check resource limits
+                
+                alt Resource Limit Exceeded
+                    Codex -> Codex: REJECT - Quota Exceeded
+                    Codex --> CK: REJECTED\n(Resource limit)
+                    
+                    deactivate Codex
+                else Within Limits
+                    Codex -> Codex: Generate approval hash\n(SHA-256)
+                    
+                    note right of Codex
+                      Approval Hash = SHA256({
+                        request_id,
+                        user_id,
+                        intent,
+                        governance_results,
+                        timestamp
+                      })
+                    end note
+                    
+                    Codex --> CK: APPROVED\n(All governance passed)
+                    
+                    note right of Codex
+                      **FINAL APPROVAL**
+                      All 3 layers approved
+                      Approval hash generated
+                      Valid for 5 minutes
+                    end note
+                    
+                    deactivate Codex
+                end
+            end
+        end
+    end
+end
+
+== Record Governance Decision ==
+
+CK -> Memory: Record complete governance chain
+activate Memory
+
+par Five-Channel Recording
+    Memory -> Memory: Attempt channel
+    Memory -> Memory: Decision channel
+end
+
+Memory --> CK: Governance recorded
+deactivate Memory
+
+CK -> Audit: Append to audit trail
+activate Audit
+
+Audit -> Audit: Generate audit entry\nwith governance chain
+
+Audit -> Audit: Fetch previous hash
+
+Audit -> Audit: Calculate current hash\n(SHA-256 of entry)
+
+note right of Audit
+  Audit Entry = {
+    request_id,
+    governance_chain: {
+      galahad: {...},
+      cerberus: {...},
+      codex: {...}
+    },
+    previous_hash,
+    current_hash
+  }
+end note
+
+Audit -> Audit: Append to immutable log
+
+Audit --> CK: Audit complete
+deactivate Audit
+
+== Forward to Execution ==
+
+CK -> Exec: Execute request\n(governance approved)
+activate Exec
+
+note right of Exec
+  Request approved by:
+  ✓ Galahad (Ethics)
+  ✓ Cerberus (Security)
+  ✓ Codex (Policy)
+  
+  Approval hash provided
+  Valid for 5 minutes
+end note
+
+Exec -> Exec: Select agent\nExecute operation
+
+Exec --> CK: Execution result
+deactivate Exec
+
+note over CK, Audit
+  **Governance Latency (P95)**
+  Galahad: < 30ms
+  Cerberus: < 40ms
+  Codex: < 30ms
+  ──────────────────
+  Total: < 100ms
+  
+  **Decision Statistics**
+  Approval rate: 95-98%
+  Galahad rejections: 1-2%
+  Cerberus rejections: 0.5-1%
+  Codex rejections: 0.5-1%
+end note
+
+@enduml

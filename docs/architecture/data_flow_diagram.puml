@@ -1,0 +1,35 @@
+@startuml
+' Data Flow Diagram for Project-AI
+' Render with PlantUML
+
+skinparam rectangle {
+  RoundCorner 5
+}
+
+actor User
+node "Desktop App\n(PyQt6)" as Desktop
+node "Web Backend\n(Flask/API)" as Backend
+node "Core Systems\n(ai_systems.py)" as Core
+database "Local Storage\n(data/, JSON files)" as Storage
+node "External Services\n(OpenAI, SMTP, Cloud Sync)" as External
+node "Cerberus Guardians\n(external submodule)" as Cerberus
+
+User -> Desktop : interacts (chat, commands, UI)
+Desktop -> Backend : REST calls (auth, sync, ml, image)
+Desktop -> Core : local calls (process_message, persona, overrides)
+Core -> Storage : read/write models, memory, requests, overrides
+Core -> Cerberus : guardian checks / policy enforcement
+Core -> External : optional API calls (OpenAI, image gen, cloud sync, email)
+Backend -> Storage : persistent sync / user data
+Backend -> External : proxy OpenAI / auth / cloud sync
+
+' Highlights
+note right of Core
+ - Persona validation
+ - Memory logging
+ - Learning request lifecycle
+ - Plugin hooks
+ - Command overrides
+end note
+
+@enduml

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.LegionMini" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">#00FF88</item>
+        <item name="colorPrimaryVariant">#00D470</item>
+        <item name="colorOnPrimary">#0A0A0A</item>
+        <item name="colorSecondary">#00D4FF</item>
+        <item name="colorSecondaryVariant">#00B8E0</item>
+        <item name="colorOnSecondary">#0A0A0A</item>
+        <item name="android:statusBarColor">#1A1A2E</item>
+        <item name="android:navigationBarColor">#1A1A2E</item>
+    </style>
+</resources>

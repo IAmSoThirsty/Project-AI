@@ -1,0 +1,58 @@
+{{- if .Values.projectAI.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "project-ai-monitoring.fullname" . }}-app
+  labels:
+    {{- include "project-ai-monitoring.labels" . | nindent 4 }}
+    app.kubernetes.io/component: application
+spec:
+  replicas: {{ .Values.projectAI.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "project-ai-monitoring.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: application
+  template:
+    metadata:
+      labels:
+        {{- include "project-ai-monitoring.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: application
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ .Values.projectAI.service.metricsPort }}"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: {{ include "project-ai-monitoring.fullname" . }}
+      containers:
+      - name: project-ai
+        image: "{{ .Values.projectAI.image.repository }}:{{ .Values.projectAI.image.tag }}"
+        imagePullPolicy: {{ .Values.projectAI.image.pullPolicy }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.projectAI.service.port }}
+          protocol: TCP
+        - name: metrics
+          containerPort: {{ .Values.projectAI.service.metricsPort }}
+          protocol: TCP
+        env:
+        - name: ENABLE_METRICS
+          value: "true"
+        - name: METRICS_PORT
+          value: "{{ .Values.projectAI.service.metricsPort }}"
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: "http://{{ .Release.Name }}-opentelemetry-collector:4317"
+        resources:
+          {{- toYaml .Values.projectAI.resources | nindent 12 }}
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: metrics
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: metrics
+          initialDelaySeconds: 5
+          periodSeconds: 5
+{{- end }}

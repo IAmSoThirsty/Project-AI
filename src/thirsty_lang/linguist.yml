@@ -1,0 +1,47 @@
+# Thirsty-lang Language Definition for GitHub Linguist
+# This file helps GitHub recognize Thirsty-lang as an official programming language
+
+# Language Information
+name: Thirsty-lang
+display_name: Thirsty-lang
+type: programming
+color: "#00BFFF"  # Deep Sky Blue - water themed
+aliases:
+  - thirsty
+  - thirsty-lang
+  - Thirsty
+
+# File Extensions
+extensions:
+  - .thirsty
+  - .thirstyplus
+  - .thirstyplusplus
+  - .thirstofgods
+
+# Syntax Highlighting
+tm_scope: source.thirsty
+ace_mode: text
+
+# Language Features
+primary_extension: .thirsty
+language_id: 472923847  # Unique identifier for Thirsty-lang
+
+# Comments
+line_comment: "//"
+
+# Documentation
+description: |
+  Thirsty-lang is a unique, expressive programming language designed with water-themed
+  syntax and enterprise-grade defensive programming capabilities. It combines intuitive
+  syntax with built-in security features for threat detection, code morphing, and
+  automated defense against attacks.
+
+# Official Repository
+repository: https://github.com/IAmSoThirsty/Thirsty-lang
+homepage: https://github.com/IAmSoThirsty/Thirsty-lang
+
+# Related Languages
+related:
+  - JavaScript
+  - Python
+  - TypeScript

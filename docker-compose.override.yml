@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  web-backend:
+    build:
+      context: ./web/backend
+    container_name: project-ai-backend-dev
+    ports:
+      - "5000:5000"
+    environment:
+      FLASK_ENV: development
+      FLASK_APP: app.py
+    volumes:
+      - ./web/backend:/app
+      - ./data:/app/data
+    command: flask run --host=0.0.0.0 --port=5000
+
+  web-frontend:
+    build:
+      context: ./web/frontend
+    container_name: project-ai-frontend-dev
+    ports:
+      - "3000:3000"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    volumes:
+      - ./web/frontend:/app
+    working_dir: /app
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 3000"
+
+  # Optional: local mock for desktop app integration (no GUI). Useful for local full-stack dev.
+  mock-desktop:
+    image: alpine:latest
+    container_name: project-ai-mock-desktop
+    command: tail -f /dev/null
+    volumes:
+      - ./:/workspace:ro

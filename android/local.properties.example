@@ -1,0 +1,11 @@
+# Android SDK location for local builds
+# This file is machine-specific and should not be committed to version control
+# Set this to your Android SDK installation path
+
+# Windows example:
+# sdk.dir=C\:\\Users\\YourName\\AppData\\Local\\Android\\Sdk
+
+# macOS/Linux example:
+# sdk.dir=/Users/yourname/Library/Android/sdk
+
+# CI/CD builds will use ANDROID_SDK_ROOT environment variable

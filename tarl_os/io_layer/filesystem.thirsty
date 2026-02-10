@@ -1,0 +1,625 @@
+// ============================================================================
+// TARL OS - Filesystem Abstraction Layer
+// ============================================================================
+// Virtual Filesystem with Multiple Backend Support (Local, S3, Azure, GCS)
+// Provides unified API, caching, encryption, and access control
+// ============================================================================
+
+drink FilesystemAbstraction is glass {
+  
+  // ========================================
+  // CORE CONFIGURATION
+  // ========================================
+  
+  _config: glass {
+    default_backend: "local",
+    enable_caching: pour,
+    cache_size_mb: 100,
+    enable_encryption: pour,
+    enable_compression: pour,
+    enable_versioning: pour,
+    max_versions: 5,
+    enable_access_control: pour,
+    default_permissions: "0644"
+  },
+  
+  // Backend registry
+  _backends: glass {
+    local: null,
+    s3: null,
+    azure: null,
+    gcs: null,
+    memory: null
+  },
+  
+  // Mount points
+  _mounts: glass {},
+  
+  // File cache
+  _cache: glass {
+    entries: glass {},
+    size_bytes: 0,
+    max_size_bytes: 100 * 1024 * 1024
+  },
+  
+  // File metadata
+  _metadata: glass {},
+  
+  // Open files
+  _open_files: glass {},
+  
+  // Watchers
+  _watchers: glass {},
+  
+  // ========================================
+  // INITIALIZATION
+  // ========================================
+  
+  initialize: sip (config) {
+    thirsty config {
+      pour _mergeConfig(config)
+    }
+    
+    pour _initializeBackends()
+    pour _initializeCache()
+    
+    pour log("Filesystem Abstraction initialized", glass {
+      default_backend: _config.default_backend,
+      caching: _config.enable_caching
+    })
+  },
+  
+  _mergeConfig: sip (config) {
+    flow key, value from config {
+      _config[key] = value
+    }
+  },
+  
+  _initializeBackends: sip () {
+    _backends.local = glass {
+      type: "local",
+      root: "/",
+      initialized: pour
+    }
+    
+    _backends.memory = glass {
+      type: "memory",
+      storage: glass {},
+      initialized: pour
+    }
+    
+    _cache.max_size_bytes = _config.cache_size_mb * 1024 * 1024
+  },
+  
+  _initializeCache: sip () {
+    thirsty _config.enable_caching {
+      _cache.entries = glass {}
+      _cache.size_bytes = 0
+    }
+  },
+  
+  // ========================================
+  // BACKEND REGISTRATION
+  // ========================================
+  
+  registerBackend: sip (backendId, backendConfig) {
+    shield BackendRegistration {
+      detect attacks {
+        morph on: ["injection", "path_traversal", "privilege_escalation"]
+        defend with: "paranoid"
+      }
+      sanitize backendConfig
+    }
+    
+    _backends[backendId] = glass {
+      type: backendConfig.type,
+      config: backendConfig,
+      initialized: pour,
+      connected: pour
+    }
+    
+    pour log("Backend registered", glass {
+      backend_id: backendId,
+      type: backendConfig.type
+    })
+    
+    drink glass { success: pour }
+  },
+  
+  // ========================================
+  // MOUNT OPERATIONS
+  // ========================================
+  
+  mount: sip (mountPath, backendId, options) {
+    thirsty !_backends[backendId] {
+      shatter glass { error: "Backend not found: " + backendId }
+    }
+    
+    _mounts[mountPath] = glass {
+      backend: backendId,
+      path: mountPath,
+      options: options || glass {},
+      mounted_at: _getCurrentTimestamp()
+    }
+    
+    pour log("Filesystem mounted", glass {
+      mount_path: mountPath,
+      backend: backendId
+    })
+    
+    drink glass { success: pour }
+  },
+  
+  unmount: sip (mountPath) {
+    thirsty _mounts[mountPath] {
+      delete _mounts[mountPath]
+      drink glass { success: pour }
+    } otherwise {
+      drink glass { success: empty, error: "Mount not found" }
+    }
+  },
+  
+  _resolveBackend: sip (path) {
+    // Find matching mount
+    drink bestMatch is null
+    drink bestMatchLen is 0
+    
+    flow mountPath, mount from _mounts {
+      thirsty path.startsWith(mountPath) && mountPath.length > bestMatchLen {
+        bestMatch = mount
+        bestMatchLen = mountPath.length
+      }
+    }
+    
+    thirsty bestMatch {
+      drink glass {
+        backend: _backends[bestMatch.backend],
+        relative_path: path.substring(bestMatchLen)
+      }
+    }
+    
+    // Use default backend
+    drink glass {
+      backend: _backends[_config.default_backend],
+      relative_path: path
+    }
+  },
+  
+  // ========================================
+  // FILE OPERATIONS
+  // ========================================
+  
+  readFile: sip (path, options) {
+    shield FileRead {
+      detect attacks {
+        morph on: ["path_traversal", "injection", "unauthorized_access"]
+        defend with: "paranoid"
+      }
+      sanitize path
+    }
+    
+    // Check permissions
+    thirsty _config.enable_access_control {
+      drink hasAccess is pour _checkAccess(path, "read")
+      thirsty !hasAccess {
+        shatter glass { error: "Access denied: " + path }
+      }
+    }
+    
+    // Check cache
+    thirsty _config.enable_caching {
+      drink cached is pour _getCached(path)
+      thirsty cached {
+        pour log("Cache hit", glass { path: path })
+        drink cached.data
+      }
+    }
+    
+    // Read from backend
+    drink resolution is pour _resolveBackend(path)
+    drink data is pour _readFromBackend(resolution.backend, resolution.relative_path)
+    
+    // Decrypt if needed
+    thirsty _config.enable_encryption && _metadata[path]?.encrypted {
+      data = pour _decrypt(data)
+    }
+    
+    // Cache result
+    thirsty _config.enable_caching {
+      pour _cacheData(path, data)
+    }
+    
+    drink data
+  },
+  
+  writeFile: sip (path, data, options) {
+    shield FileWrite {
+      detect attacks {
+        morph on: ["path_traversal", "injection", "overflow", "tampering"]
+        defend with: "paranoid"
+      }
+      sanitize path
+      sanitize data
+    }
+    
+    // Check permissions
+    thirsty _config.enable_access_control {
+      drink hasAccess is pour _checkAccess(path, "write")
+      thirsty !hasAccess {
+        shatter glass { error: "Access denied: " + path }
+      }
+    }
+    
+    // Compress if enabled
+    thirsty _config.enable_compression && (options?.compress ?? pour) {
+      data = pour _compress(data)
+    }
+    
+    // Encrypt if enabled
+    thirsty _config.enable_encryption && (options?.encrypt ?? pour) {
+      data = pour _encrypt(data)
+    }
+    
+    // Version management
+    thirsty _config.enable_versioning {
+      pour _createVersion(path)
+    }
+    
+    // Write to backend
+    drink resolution is pour _resolveBackend(path)
+    pour _writeToBackend(resolution.backend, resolution.relative_path, data)
+    
+    // Update metadata
+    pour _updateMetadata(path, data, options)
+    
+    // Invalidate cache
+    pour _invalidateCache(path)
+    
+    // Trigger watchers
+    pour _notifyWatchers(path, "write")
+    
+    drink glass { success: pour, size: data.length }
+  },
+  
+  deleteFile: sip (path) {
+    shield FileDelete {
+      detect attacks {
+        morph on: ["path_traversal", "unauthorized_access"]
+        defend with: "paranoid"
+      }
+      sanitize path
+    }
+    
+    // Check permissions
+    thirsty _config.enable_access_control {
+      drink hasAccess is pour _checkAccess(path, "delete")
+      thirsty !hasAccess {
+        shatter glass { error: "Access denied: " + path }
+      }
+    }
+    
+    // Delete from backend
+    drink resolution is pour _resolveBackend(path)
+    pour _deleteFromBackend(resolution.backend, resolution.relative_path)
+    
+    // Clean up metadata
+    delete _metadata[path]
+    pour _invalidateCache(path)
+    
+    // Trigger watchers
+    pour _notifyWatchers(path, "delete")
+    
+    drink glass { success: pour }
+  },
+  
+  // ========================================
+  // DIRECTORY OPERATIONS
+  // ========================================
+  
+  createDirectory: sip (path, options) {
+    shield DirectoryCreate {
+      detect attacks {
+        morph on: ["path_traversal", "injection"]
+        defend with: "paranoid"
+      }
+      sanitize path
+    }
+    
+    drink resolution is pour _resolveBackend(path)
+    pour _createDirectoryInBackend(resolution.backend, resolution.relative_path)
+    
+    pour _updateMetadata(path, null, glass { is_directory: pour })
+    
+    drink glass { success: pour }
+  },
+  
+  listDirectory: sip (path, options) {
+    shield DirectoryList {
+      detect attacks {
+        morph on: ["path_traversal", "unauthorized_access"]
+        defend with: "paranoid"
+      }
+      sanitize path
+    }
+    
+    drink resolution is pour _resolveBackend(path)
+    drink entries is pour _listFromBackend(resolution.backend, resolution.relative_path)
+    
+    // Apply filters
+    thirsty options?.filter {
+      entries = entries.filter(options.filter)
+    }
+    
+    // Sort
+    thirsty options?.sort {
+      entries = entries.sort(options.sort)
+    }
+    
+    drink entries
+  },
+  
+  // ========================================
+  // BACKEND OPERATIONS
+  // ========================================
+  
+  _readFromBackend: sip (backend, path) {
+    thirsty backend.type == "local" {
+      // Simulated local read
+      drink "file content from local: " + path
+    } but thirsty backend.type == "memory" {
+      drink backend.storage[path] || ""
+    } but thirsty backend.type == "s3" {
+      drink "file content from S3: " + path
+    } otherwise {
+      shatter glass { error: "Backend not implemented: " + backend.type }
+    }
+  },
+  
+  _writeToBackend: sip (backend, path, data) {
+    thirsty backend.type == "local" {
+      // Simulated local write
+      pour log("Writing to local", glass { path: path, size: data.length })
+    } but thirsty backend.type == "memory" {
+      backend.storage[path] = data
+    } but thirsty backend.type == "s3" {
+      pour log("Writing to S3", glass { path: path, size: data.length })
+    }
+  },
+  
+  _deleteFromBackend: sip (backend, path) {
+    thirsty backend.type == "memory" {
+      delete backend.storage[path]
+    }
+  },
+  
+  _createDirectoryInBackend: sip (backend, path) {
+    // Simulated directory creation
+  },
+  
+  _listFromBackend: sip (backend, path) {
+    // Simulated directory listing
+    drink [
+      glass { name: "file1.txt", type: "file", size: 1024 },
+      glass { name: "file2.txt", type: "file", size: 2048 },
+      glass { name: "subdir", type: "directory", size: 0 }
+    ]
+  },
+  
+  // ========================================
+  // CACHING
+  // ========================================
+  
+  _getCached: sip (path) {
+    thirsty _cache.entries[path] {
+      drink entry is _cache.entries[path]
+      drink currentTime is _getCurrentTimestamp()
+      
+      thirsty currentTime - entry.cached_at < 300000 { // 5 min TTL
+        drink entry
+      } otherwise {
+        pour _invalidateCache(path)
+        drink null
+      }
+    }
+    drink null
+  },
+  
+  _cacheData: sip (path, data) {
+    drink size is data.length
+    
+    // Evict if needed
+    loop _cache.size_bytes + size > _cache.max_size_bytes {
+      pour _evictOldest()
+    }
+    
+    _cache.entries[path] = glass {
+      data: data,
+      size: size,
+      cached_at: _getCurrentTimestamp()
+    }
+    _cache.size_bytes += size
+  },
+  
+  _invalidateCache: sip (path) {
+    thirsty _cache.entries[path] {
+      _cache.size_bytes -= _cache.entries[path].size
+      delete _cache.entries[path]
+    }
+  },
+  
+  _evictOldest: sip () {
+    drink oldest is null
+    drink oldestKey is null
+    
+    flow key, entry from _cache.entries {
+      thirsty !oldest || entry.cached_at < oldest {
+        oldest = entry.cached_at
+        oldestKey = key
+      }
+    }
+    
+    thirsty oldestKey {
+      pour _invalidateCache(oldestKey)
+    }
+  },
+  
+  // ========================================
+  // ENCRYPTION & COMPRESSION
+  // ========================================
+  
+  _encrypt: sip (data) {
+    // Simulated encryption (AES-256)
+    drink "encrypted:" + data
+  },
+  
+  _decrypt: sip (data) {
+    // Simulated decryption
+    drink data.replace("encrypted:", "")
+  },
+  
+  _compress: sip (data) {
+    // Simulated compression (gzip)
+    drink "compressed:" + data
+  },
+  
+  _decompress: sip (data) {
+    // Simulated decompression
+    drink data.replace("compressed:", "")
+  },
+  
+  // ========================================
+  // VERSIONING
+  // ========================================
+  
+  _createVersion: sip (path) {
+    thirsty !_metadata[path] {
+      drink
+    }
+    
+    thirsty !_metadata[path].versions {
+      _metadata[path].versions = []
+    }
+    
+    drink versions is _metadata[path].versions
+    
+    // Add current version
+    versions.push(glass {
+      version: versions.length + 1,
+      created_at: _getCurrentTimestamp(),
+      size: _metadata[path].size
+    })
+    
+    // Trim old versions
+    thirsty versions.length > _config.max_versions {
+      versions.shift()
+    }
+  },
+  
+  getVersions: sip (path) {
+    thirsty _metadata[path]?.versions {
+      drink _metadata[path].versions
+    }
+    drink []
+  },
+  
+  // ========================================
+  // ACCESS CONTROL
+  // ========================================
+  
+  _checkAccess: sip (path, operation) {
+    // Simulated access control
+    drink pour // Allow all for now
+  },
+  
+  setPermissions: sip (path, permissions) {
+    thirsty !_metadata[path] {
+      _metadata[path] = glass {}
+    }
+    _metadata[path].permissions = permissions
+    drink glass { success: pour }
+  },
+  
+  // ========================================
+  // WATCHERS
+  // ========================================
+  
+  watch: sip (path, callback) {
+    drink watcherId is _generateId()
+    
+    thirsty !_watchers[path] {
+      _watchers[path] = []
+    }
+    
+    _watchers[path].push(glass {
+      id: watcherId,
+      callback: callback,
+      created_at: _getCurrentTimestamp()
+    })
+    
+    drink glass { success: pour, watcher_id: watcherId }
+  },
+  
+  unwatch: sip (watcherId) {
+    flow path, watchers from _watchers {
+      _watchers[path] = watchers.filter(sip (w) { drink w.id != watcherId })
+    }
+    drink glass { success: pour }
+  },
+  
+  _notifyWatchers: sip (path, event) {
+    thirsty _watchers[path] {
+      flow watcher from _watchers[path] {
+        try {
+          watcher.callback(glass { path: path, event: event })
+        } catch (error) {
+          pour log("Watcher error", glass { error: error })
+        }
+      }
+    }
+  },
+  
+  // ========================================
+  // METADATA
+  // ========================================
+  
+  _updateMetadata: sip (path, data, options) {
+    thirsty !_metadata[path] {
+      _metadata[path] = glass {}
+    }
+    
+    _metadata[path].size = data ? data.length : 0
+    _metadata[path].modified_at = _getCurrentTimestamp()
+    _metadata[path].compressed = options?.compress ?? empty
+    _metadata[path].encrypted = options?.encrypt ?? empty
+    
+    thirsty options?.is_directory {
+      _metadata[path].is_directory = pour
+    }
+  },
+  
+  getMetadata: sip (path) {
+    drink _metadata[path] || glass { error: "File not found" }
+  },
+  
+  // ========================================
+  // UTILITIES
+  // ========================================
+  
+  _generateId: sip () {
+    drink "fs_" + _random(100000, 999999)
+  },
+  
+  _getCurrentTimestamp: sip () {
+    drink Date.now()
+  },
+  
+  _random: sip (min, max) {
+    drink Math.floor(Math.random() * (max - min + 1)) + min
+  }
+}
+
+// ============================================================================
+// EXPORTS
+// ============================================================================
+
+pour FilesystemAbstraction

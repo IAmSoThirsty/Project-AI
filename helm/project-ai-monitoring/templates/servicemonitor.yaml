@@ -1,0 +1,36 @@
+{{- if and .Values.projectAI.enabled .Values.projectAI.metrics.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "project-ai-monitoring.fullname" . }}-metrics
+  labels:
+    {{- include "project-ai-monitoring.labels" . | nindent 4 }}
+    app.kubernetes.io/component: metrics
+spec:
+  type: {{ .Values.projectAI.service.type }}
+  ports:
+    - port: {{ .Values.projectAI.service.metricsPort }}
+      targetPort: metrics
+      protocol: TCP
+      name: metrics
+  selector:
+    {{- include "project-ai-monitoring.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: application
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "project-ai-monitoring.fullname" . }}
+  labels:
+    {{- include "project-ai-monitoring.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+spec:
+  selector:
+    matchLabels:
+      {{- include "project-ai-monitoring.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: metrics
+  endpoints:
+  - port: metrics
+    interval: {{ .Values.projectAI.metrics.serviceMonitor.interval }}
+    path: /metrics
+{{- end }}

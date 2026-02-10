@@ -1,0 +1,134 @@
+# Security & Cerberus Alert Rules for Project-AI
+# Monitors security incidents, threat detection, and Cerberus defensive systems
+
+groups:
+  - name: security_alerts
+    interval: 15s
+    rules:
+      # Critical Security Incidents
+      - alert: CriticalSecurityIncident
+        expr: |
+          increase(project_ai_security_incidents_total{severity="critical"}[1m]) > 0
+        for: 1m
+        labels:
+          severity: critical
+          component: security
+        annotations:
+          summary: "Critical security incident detected"
+          description: "Critical security event: {{ $labels.event_type }}. Source: {{ $labels.source }}. Immediate action required."
+
+      - alert: HighSecurityIncidentRate
+        expr: |
+          rate(project_ai_security_incidents_total[5m]) > 1.0
+        for: 5m
+        labels:
+          severity: warning
+          component: security
+        annotations:
+          summary: "High rate of security incidents"
+          description: "{{ $value | humanize }} security incidents per second. Possible attack in progress."
+
+      # Cerberus Monitoring
+      - alert: CerberusDefenseActivation
+        expr: |
+          increase(project_ai_cerberus_blocks_total[5m]) > 10
+        for: 2m
+        labels:
+          severity: warning
+          component: cerberus
+        annotations:
+          summary: "Cerberus defensive system activated"
+          description: "Cerberus blocked {{ $value }} actions in 5 minutes. Attack pattern: {{ $labels.attack_type }}."
+
+      - alert: CerberusOverrideAttempt
+        expr: |
+          increase(project_ai_cerberus_override_attempts_total[1m]) > 0
+        for: 1m
+        labels:
+          severity: critical
+          component: cerberus
+        annotations:
+          summary: "Attempt to override Cerberus"
+          description: "Unauthorized Cerberus override attempt detected. User: {{ $labels.user }}. Investigate immediately."
+
+      # Threat Detection
+      - alert: ThreatDetectionHigh
+        expr: |
+          project_ai_threat_detection_score > 0.8
+        for: 2m
+        labels:
+          severity: high
+          component: threat-detection
+        annotations:
+          summary: "High threat detection score"
+          description: "Threat score {{ $value | humanize }} for {{ $labels.threat_type }}. Enhanced monitoring active."
+
+      - alert: MalwareDetected
+        expr: |
+          increase(project_ai_malware_detections_total[5m]) > 0
+        for: 1m
+        labels:
+          severity: critical
+          component: malware-scanner
+        annotations:
+          summary: "Malware detected in system"
+          description: "Malware detected: {{ $labels.malware_type }}. Quarantine initiated. File: {{ $labels.filename }}."
+
+      # Authentication & Access Control
+      - alert: AuthenticationFailureSpike
+        expr: |
+          rate(project_ai_auth_failures_total[5m]) > 0.5
+        for: 5m
+        labels:
+          severity: warning
+          component: authentication
+        annotations:
+          summary: "High authentication failure rate"
+          description: "{{ $value | humanize }} failed authentication attempts per second. Possible brute force attack."
+
+      - alert: UnauthorizedAccessAttempt
+        expr: |
+          increase(project_ai_unauthorized_access_total[1m]) > 3
+        for: 1m
+        labels:
+          severity: high
+          component: access-control
+        annotations:
+          summary: "Multiple unauthorized access attempts"
+          description: "{{ $value }} unauthorized access attempts in 1 minute. Source: {{ $labels.source_ip }}."
+
+      # Black Vault Monitoring
+      - alert: BlackVaultAccessAttempt
+        expr: |
+          increase(project_ai_black_vault_access_attempts_total[1m]) > 0
+        for: 1m
+        labels:
+          severity: critical
+          component: black-vault
+        annotations:
+          summary: "Attempt to access Black Vault"
+          description: "Unauthorized Black Vault access attempt. User: {{ $labels.user }}. Content: {{ $labels.content_hash }}."
+
+      # Emergency Alerts
+      - alert: EmergencyProtocolActivated
+        expr: |
+          increase(project_ai_emergency_activations_total[1m]) > 0
+        for: 1m
+        labels:
+          severity: critical
+          component: emergency
+        annotations:
+          summary: "Emergency protocol activated"
+          description: "Emergency protocol triggered: {{ $labels.protocol_type }}. Alert sent to emergency contacts."
+
+      # Audit Log Monitoring
+      - alert: AuditLogTamperAttempt
+        expr: |
+          increase(project_ai_audit_tamper_attempts_total[1m]) > 0
+        for: 1m
+        labels:
+          severity: critical
+          component: audit
+        annotations:
+          summary: "Audit log tampering detected"
+          description: "Attempt to tamper with audit logs detected. Integrity verification failed."

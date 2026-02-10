@@ -1,0 +1,127 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://project-ai.org/schemas/atlas/opinion.v1.json",
+  "title": "Opinion",
+  "description": "Canonical schema for organizational opinions in PROJECT ATLAS. Immutable and locked for sovereign use.",
+  "type": "object",
+  "required": ["id", "holder_id", "target_id", "stance", "timestamp", "metadata"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^OPN-[A-Z0-9]{16}$",
+      "description": "Unique opinion identifier with prefix"
+    },
+    "holder_id": {
+      "type": "string",
+      "pattern": "^ORG-[A-Z0-9]{16}$",
+      "description": "Organization holding the opinion"
+    },
+    "target_id": {
+      "type": "string",
+      "description": "Target entity (ORG-*, CLM-*, or topic identifier)"
+    },
+    "target_type": {
+      "type": "string",
+      "enum": ["organization", "claim", "policy", "event", "person", "other"]
+    },
+    "stance": {
+      "type": "string",
+      "enum": ["strongly_support", "support", "neutral", "oppose", "strongly_oppose", "unknown"]
+    },
+    "intensity": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Strength of opinion (0-1)"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When opinion was expressed (ISO 8601)"
+    },
+    "public": {
+      "type": "boolean",
+      "description": "Whether opinion is public or inferred"
+    },
+    "rationale": {
+      "type": "string",
+      "maxLength": 2048,
+      "description": "Stated reasoning for the opinion"
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "geopolitical": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "economic": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "social": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "consistency": {
+      "type": "object",
+      "properties": {
+        "historical_alignment": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "ideology_alignment": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "peer_alignment": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["created_at", "updated_at", "version", "hash"],
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "SHA-256 hash for provenance"
+        },
+        "source": {
+          "type": "string"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

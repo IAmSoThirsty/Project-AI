@@ -1,0 +1,363 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Project AI Governance Host",
+    "description": "Governance Kernel API with TARL enforcement and Triumvirate evaluation",
+    "version": "0.1.0",
+    "contact": {
+      "name": "Project AI Team",
+      "email": "governance@project-ai.dev"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8001",
+      "description": "Local development server"
+    },
+    {
+      "url": "https://api.project-ai.dev",
+      "description": "Production server"
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health Check",
+        "description": "Returns kernel status and TARL version",
+        "operationId": "health_check",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["System"]
+      }
+    },
+    "/tarl": {
+      "get": {
+        "summary": "Get TARL Rules",
+        "description": "Returns the current TARL version and all governance rules",
+        "operationId": "get_tarl",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TarlResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Governance"]
+      }
+    },
+    "/audit": {
+      "get": {
+        "summary": "Get Audit Log",
+        "description": "Returns audit trail of governance decisions",
+        "operationId": "get_audit",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Governance"]
+      }
+    },
+    "/intent": {
+      "post": {
+        "summary": "Submit Intent",
+        "description": "Submit an intent for governance evaluation",
+        "operationId": "submit_intent",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Intent"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Intent Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntentResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Intent Denied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Governance"]
+      }
+    },
+    "/execute": {
+      "post": {
+        "summary": "Execute Intent",
+        "description": "Execute an intent after governance approval",
+        "operationId": "execute_intent",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Intent"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Execution Complete",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExecutionResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Execution Denied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Execution"]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Intent": {
+        "type": "object",
+        "required": ["actor", "action", "target", "origin"],
+        "properties": {
+          "actor": {
+            "type": "string",
+            "enum": ["human", "agent", "system"]
+          },
+          "action": {
+            "type": "string",
+            "enum": ["read", "write", "execute", "mutate"]
+          },
+          "target": {
+            "type": "string"
+          },
+          "context": {
+            "type": "object"
+          },
+          "origin": {
+            "type": "string"
+          }
+        }
+      },
+      "HealthResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "tarl": {
+            "type": "string"
+          }
+        }
+      },
+      "TarlResponse": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string"
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TarlRule"
+            }
+          }
+        }
+      },
+      "TarlRule": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "allowed_actors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "risk": {
+            "type": "string"
+          },
+          "default": {
+            "type": "string"
+          }
+        }
+      },
+      "AuditResponse": {
+        "type": "object",
+        "properties": {
+          "tarl_version": {
+            "type": "string"
+          },
+          "tarl_signature": {
+            "type": "string"
+          },
+          "records": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuditRecord"
+            }
+          }
+        }
+      },
+      "AuditRecord": {
+        "type": "object",
+        "properties": {
+          "intent_hash": {
+            "type": "string"
+          },
+          "tarl_version": {
+            "type": "string"
+          },
+          "votes": {
+            "type": "array"
+          },
+          "final_verdict": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "number"
+          }
+        }
+      },
+      "IntentResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "governance": {
+            "$ref": "#/components/schemas/GovernanceResult"
+          }
+        }
+      },
+      "ExecutionResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "governance": {
+            "$ref": "#/components/schemas/GovernanceResult"
+          },
+          "execution": {
+            "type": "object"
+          }
+        }
+      },
+      "GovernanceResult": {
+        "type": "object",
+        "properties": {
+          "intent_hash": {
+            "type": "string"
+          },
+          "tarl_version": {
+            "type": "string"
+          },
+          "votes": {
+            "type": "array"
+          },
+          "final_verdict": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "number"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "detail": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "governance": {
+                "$ref": "#/components/schemas/GovernanceResult"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "System",
+      "description": "System health and status"
+    },
+    {
+      "name": "Governance",
+      "description": "TARL governance operations"
+    },
+    {
+      "name": "Execution",
+      "description": "Governed execution operations"
+    }
+  ]
+}

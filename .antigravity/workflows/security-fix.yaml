@@ -1,0 +1,188 @@
+# Security Fix Workflow for Antigravity
+# Specialized workflow for handling security vulnerabilities
+
+name: Security Fix
+description: Workflow for addressing security vulnerabilities with expedited review
+
+triggers:
+  - keyword: "security"
+  - keyword: "vulnerability"
+  - keyword: "CVE"
+  - severity: high
+  - alert_type: security_scan
+
+priority: critical
+
+steps:
+  - name: Vulnerability Assessment
+    agent: security
+    description: Analyze the security vulnerability
+    actions:
+      - identify_vulnerability
+      - assess_severity
+      - check_exploitability
+      - determine_scope
+    outputs:
+      - vulnerability_report
+      - affected_components
+      - severity_level
+      - remediation_plan
+  
+  - name: Immediate Mitigation
+    agent: security
+    description: Apply immediate mitigations if possible
+    condition: severity >= high
+    actions:
+      - disable_vulnerable_feature
+      - apply_temporary_fix
+      - update_security_config
+    timeout: 300  # 5 minutes
+  
+  - name: Triumvirate Emergency Review
+    agent: triumvirate
+    description: Fast-track ethical review for security fixes
+    condition: severity >= critical
+    actions:
+      - request_emergency_review
+      - notify_guardians
+    timeout: 1800  # 30 minutes (expedited)
+    skip_if: low_severity
+  
+  - name: Fix Implementation
+    agent: coding
+    description: Implement the security fix
+    actions:
+      - write_fix
+      - add_input_validation
+      - add_sanitization
+      - update_security_tests
+    validation:
+      - verify_fix_closes_vulnerability
+      - ensure_no_regression
+  
+  - name: Security Testing
+    agent: security
+    description: Comprehensive security testing
+    actions:
+      - run_bandit
+      - run_pip_audit
+      - test_exploit_scenarios
+      - verify_fix_effectiveness
+    tools:
+      - name: bandit
+        severity: low
+        comprehensive: true
+      - name: pip-audit
+        check_all: true
+      - name: custom_exploit_test
+        scenarios: all
+    fail_on:
+      - vulnerability_still_present
+      - new_vulnerabilities_introduced
+  
+  - name: Regression Testing
+    agent: testing
+    description: Ensure fix doesn't break existing functionality
+    actions:
+      - run_affected_tests
+      - run_integration_tests
+      - verify_api_contracts
+    fail_on:
+      - test_failures
+      - api_breakage
+  
+  - name: Security Documentation
+    agent: documentation
+    description: Document the security fix
+    actions:
+      - create_security_advisory
+      - update_security_docs
+      - document_remediation
+      - add_security_examples
+    outputs:
+      - security_advisory
+      - remediation_guide
+  
+  - name: Verification Scan
+    agent: security
+    description: Final security verification
+    actions:
+      - full_security_scan
+      - verify_no_residual_issues
+      - check_related_vulnerabilities
+    comprehensive: true
+
+gates:
+  - after: Vulnerability Assessment
+    require: severity_assessed
+    message: "Vulnerability must be assessed before proceeding"
+  
+  - after: Triumvirate Emergency Review
+    require: emergency_approval OR severity < high
+    message: "Critical security fixes require Triumvirate approval"
+  
+  - after: Security Testing
+    require: vulnerability_resolved AND no_new_issues
+    message: "Vulnerability must be completely resolved"
+  
+  - after: Regression Testing
+    require: no_regressions
+    message: "Fix must not break existing functionality"
+
+escalation:
+  on_critical:
+    notify:
+      - cerberus_guardian
+      - security_team
+      - project_lead
+    channels: ["slack", "email", "pager"]
+  
+  on_failure:
+    escalate_to: security_team
+    timeout: 600  # 10 minutes
+
+notifications:
+  on_start:
+    message: "Security fix workflow initiated for {{vulnerability_id}}"
+    channels: ["slack", "security"]
+    severity: high
+  
+  on_mitigation:
+    message: "Immediate mitigation applied: {{mitigation}}"
+    channels: ["slack", "security"]
+  
+  on_fix_complete:
+    message: "Security fix implemented and verified"
+    channels: ["slack", "security", "email"]
+  
+  on_failure:
+    message: "URGENT: Security fix failed - manual intervention required"
+    channels: ["slack", "security", "email", "pager"]
+    severity: critical
+
+artifacts:
+  preserve:
+    - vulnerability_report
+    - security_advisory
+    - test_results
+    - scan_results
+    - remediation_guide
+  
+  encrypt: true
+  retention: 365  # days
+
+compliance:
+  report_to:
+    - OWASP
+    - CWE
+    - internal_security_log
+  
+  notify_stakeholders: true
+  create_cve: auto  # if severity >= high
+
+post_workflow:
+  - create_security_bulletin
+  - update_threat_model
+  - notify_users_if_needed
+  - schedule_follow_up_audit
+  - update_security_metrics

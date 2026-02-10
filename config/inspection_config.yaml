@@ -1,0 +1,167 @@
+# Inspection & Audit System Configuration
+# Project-AI Repository Inspection, Audit, and Cataloging Subsystem
+
+# Repository settings
+repository:
+  root: "."  # Repository root directory (. for current directory)
+  exclusions:  # Additional exclusion patterns (extends defaults)
+    - "*.egg-info"
+    - "*.log"
+    - ".cache"
+  include_git_metadata: true  # Include git metadata in analysis
+
+# Output settings
+output:
+  directory: "audit_reports"  # Output directory for reports and catalogs
+  formats:  # Report formats to generate
+    - "json"
+    - "yaml"
+    - "markdown"
+  timestamp_files: true  # Include timestamp in output filenames
+  keep_history: 10  # Number of audit reports to keep
+
+# Inspection settings
+inspection:
+  enabled: true
+  deep_analysis: true  # Enable deep file analysis (AST parsing, etc.)
+  max_file_size_mb: 10  # Skip files larger than this (in MB)
+
+# Integrity checking settings
+integrity:
+  enabled: true
+  check_circular_dependencies: true
+  check_missing_imports: true
+  check_dead_code: true
+  stdlib_modules:  # Additional stdlib modules to recognize
+    - "typing"
+    - "dataclasses"
+    - "pathlib"
+  third_party_prefixes:  # Additional third-party prefixes
+    - "temporal"
+    - "pydantic"
+
+# Quality analysis settings
+quality:
+  enabled: true
+  min_documentation_coverage: 0.5  # Minimum documentation coverage (0.0-1.0)
+  min_maintainability_index: 60.0  # Minimum maintainability index (0-100)
+  min_cohesion_score: 0.6  # Minimum cohesion score (0.0-1.0)
+  complexity_threshold: 20  # Maximum acceptable complexity score
+  test_coverage:
+    enabled: false  # Enable test coverage analysis (requires coverage data)
+    min_coverage: 0.8  # Minimum test coverage (0.0-1.0)
+
+# Lint checking settings
+lint:
+  enabled: true
+  tools:  # Linting tools to use (auto-detected if available)
+    python:
+      - "ruff"      # Preferred Python linter
+      - "flake8"    # Fallback Python linter
+      - "mypy"      # Type checker
+      - "bandit"    # Security scanner
+    markdown:
+      - "markdown"  # Built-in markdown checker
+    yaml:
+      - "yaml"      # Built-in YAML validator
+    json:
+      - "json"      # Built-in JSON validator
+  
+  # Tool-specific settings
+  ruff:
+    config: "pyproject.toml"  # Ruff configuration file
+    fix: false  # Auto-fix issues (not implemented in checker)
+  
+  mypy:
+    strict: false  # Use strict mode
+    ignore_missing_imports: true
+  
+  bandit:
+    confidence_level: "MEDIUM"  # Minimum confidence level
+    severity_level: "MEDIUM"    # Minimum severity level
+
+# Report generation settings
+report:
+  enabled: true
+  include_statistics: true
+  include_dependency_graph: true
+  include_cross_reference_catalog: true
+  max_issues_per_file: 100  # Maximum issues to report per file
+
+# Catalog generation settings
+catalog:
+  enabled: true
+  include_executive_summary: true
+  include_file_inventory: true
+  include_component_catalog: true
+  include_dependency_analysis: true
+  include_quality_assessment: true
+  include_lint_report: true
+  include_integrity_issues: true
+  include_recommendations: true
+  max_issues_shown: 20  # Maximum issues to show per severity level
+
+# Audit pipeline settings
+pipeline:
+  parallel_execution: false  # Enable parallel phase execution (future)
+  progress_reporting: true   # Log progress during execution
+  fail_on_errors: false      # Fail pipeline if critical errors found
+  
+  # Phase execution order
+  phases:
+    - "inspection"
+    - "integrity"
+    - "quality"
+    - "lint"
+    - "report"
+    - "catalog"
+
+# Integration settings
+integration:
+  cognition_kernel:
+    enabled: true  # Route through CognitionKernel if available
+    log_actions: true
+    require_approval: false  # Auditing doesn't require approval
+  
+  tamperproof_log:
+    enabled: true  # Log to tamperproof audit trail
+    event_type: "audit_execution"
+  
+  api:
+    enabled: true  # Enable API endpoints
+    endpoint_prefix: "/api/v1/inspection"
+
+# Thresholds for health scoring
+thresholds:
+  health_score:
+    excellent: 90  # Grade A
+    good: 80       # Grade B
+    fair: 70       # Grade C
+    poor: 60       # Grade D
+    # Below 60 is Grade F
+  
+  component_quality:
+    excellent: 80
+    good: 60
+    fair: 40
+    # Below 40 is poor
+  
+  issue_severity_weights:
+    critical: 10.0
+    high: 5.0
+    medium: 2.0
+    low: 0.5
+
+# Logging settings
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "audit_reports/inspection.log"
+  console: true
+  rotate: true
+  max_bytes: 10485760  # 10 MB
+  backup_count: 5
+
+# Version information
+version: "1.0.0"
+schema_version: "1.0"

@@ -1,0 +1,99 @@
+# Labeler configuration for Project-AI
+# Automatically applies labels to PRs based on changed file paths
+# Documentation: https://github.com/actions/labeler
+
+# Documentation changes
+documentation:
+  - '**/*.md'
+  - 'docs/**/*'
+  - 'README*'
+  - 'CONTRIBUTING.md'
+  - 'CODE_OF_CONDUCT.md'
+  - 'SECURITY.md'
+  - 'LICENSE'
+
+# Web Frontend (React)
+frontend:
+  - 'web/frontend/**/*'
+  - 'src/frontend/**/*'
+
+# Web Backend (Flask)
+backend:
+  - 'web/backend/**/*'
+  - 'src/backend/**/*'
+
+# Desktop Application - Core Systems
+core:
+  - 'src/app/core/**/*'
+
+# Desktop Application - GUI
+gui:
+  - 'src/app/gui/**/*'
+
+# AI Agents
+agents:
+  - 'src/app/agents/**/*'
+  - 'tests/agents/**/*'
+
+# Tests
+tests:
+  - 'tests/**/*'
+  - '**/*test*.py'
+  - '**/*.test.js'
+  - '**/*.test.ts'
+  - '**/*.test.tsx'
+  - 'pytest.ini'
+  - 'conftest.py'
+
+# Security
+security:
+  - 'src/app/security/**/*'
+  - 'SECURITY*.md'
+  - 'threat-model.md'
+  - '.github/workflows/security-*.yml'
+  - '.github/workflows/bandit.yml'
+  - '.github/workflows/codeql.yml'
+
+# CI/CD and GitHub Actions
+ci/cd:
+  - '.github/workflows/**/*'
+  - '.github/dependabot.yml'
+  - 'docker-compose*.yml'
+  - 'Dockerfile'
+  - '.dockerignore'
+
+# Dependencies
+dependencies:
+  - 'requirements*.txt'
+  - 'requirements.in'
+  - 'requirements.lock'
+  - 'package.json'
+  - 'package-lock.json'
+  - 'pyproject.toml'
+  - 'setup.py'
+  - 'MANIFEST.in'
+
+# Configuration
+configuration:
+  - '**/*.json'
+  - '**/*.yml'
+  - '**/*.yaml'
+  - '**/*.toml'
+  - '.env*'
+  - 'app-config.json'
+  - 'mcp.json'
+  - 'pyrightconfig.json'
+
+# Docker
+docker:
+  - 'Dockerfile*'
+  - 'docker-compose*.yml'
+  - '.dockerignore'
+
+# Scripts
+scripts:
+  - 'scripts/**/*'
+  - '**/*.sh'
+  - '**/*.ps1'
+  - '**/*.bat'
+  - 'Makefile'

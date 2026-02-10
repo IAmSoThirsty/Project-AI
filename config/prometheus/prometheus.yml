@@ -1,0 +1,96 @@
+# Prometheus Configuration for Project-AI
+# Monitors AI assistant metrics, security events, and system performance
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'project-ai'
+    environment: 'production'
+
+# AlertManager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:9093
+
+# Load alerting rules
+rule_files:
+  - 'alerts/*.yml'
+
+# Scrape configurations for Project-AI components
+scrape_configs:
+  # Project-AI Main Application Metrics
+  - job_name: 'project-ai-app'
+    static_configs:
+      - targets: ['project-ai:8000']
+        labels:
+          component: 'main-application'
+          service: 'project-ai'
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+    scrape_timeout: 10s
+
+  # AI System Metrics (Persona, Four Laws, Memory)
+  - job_name: 'project-ai-ai-systems'
+    static_configs:
+      - targets: ['project-ai:8001']
+        labels:
+          component: 'ai-systems'
+          service: 'persona-fourlaws-memory'
+    metrics_path: '/ai-metrics'
+    scrape_interval: 30s
+
+  # Security & Cerberus Monitoring
+  - job_name: 'project-ai-security'
+    static_configs:
+      - targets: ['project-ai:8002']
+        labels:
+          component: 'security'
+          service: 'cerberus-monitoring'
+    metrics_path: '/security-metrics'
+    scrape_interval: 15s
+    scrape_timeout: 10s
+
+  # Plugin System Metrics
+  - job_name: 'project-ai-plugins'
+    static_configs:
+      - targets: ['project-ai:8003']
+        labels:
+          component: 'plugins'
+          service: 'plugin-manager'
+    metrics_path: '/plugin-metrics'
+    scrape_interval: 60s
+
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Node exporter for system metrics (optional)
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+
+# Remote write configuration for long-term storage (Thanos/Mimir compatible)
+# Uncomment and configure for federated setup
+# remote_write:
+#   - url: "http://thanos-receiver:19291/api/v1/receive"
+#     queue_config:
+#       capacity: 10000
+#       max_shards: 50
+#       min_shards: 1
+#       max_samples_per_send: 5000
+#       batch_send_deadline: 5s
+#   - url: "http://mimir:9009/api/v1/push"
+#     headers:
+#       X-Scope-OrgID: project-ai
+
+# Remote read configuration for querying federated data
+# remote_read:
+#   - url: "http://thanos-query:19192/api/v1/read"
+#     read_recent: true

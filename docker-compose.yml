@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  # --- THE ORCHESTRATOR ---
+  cerberus:
+    build: 
+      context: ../Cerberus-main
+      dockerfile: Dockerfile
+    image: projectai/cerberus:omega
+    container_name: cerberus_omega
+    restart: unless-stopped
+    volumes:
+      - spine_data:/var/data/spine
+    networks:
+      - sovereign_net
+    deploy:
+      resources:
+        limits:
+          cpus: '2.00'
+          memory: 4G
+
+  # --- THE GUARDIAN (Monolith) ---
+  monolith:
+    image: projectai/monolith:latest
+    # Build context would be Thirstys-Monolith-master if we had a Dockerfile there
+    container_name: thirsty_monolith
+    networks:
+      - sovereign_net
+    environment:
+      - TARL_POLICY_PATH=/app/tarl_policies
+
+networks:
+  sovereign_net:
+    driver: bridge
+    internal: true # No external internet access by default
+
+volumes:
+  spine_data:
+    driver: local

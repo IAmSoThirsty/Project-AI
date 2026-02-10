@@ -1,0 +1,116 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://project-ai.org/schemas/atlas/world_state.v1.json",
+  "title": "WorldState",
+  "description": "Canonical schema for world state snapshots in PROJECT ATLAS. Immutable and locked for sovereign use.",
+  "type": "object",
+  "required": ["id", "timestamp", "organizations", "claims", "opinions", "metrics", "metadata"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^WS-[A-Z0-9]{16}$",
+      "description": "Unique world state identifier with prefix"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Snapshot timestamp (ISO 8601)"
+    },
+    "organizations": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "organization.schema.json"
+      },
+      "description": "Map of organization ID to organization object"
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "claim.schema.json"
+      },
+      "description": "Map of claim ID to claim object"
+    },
+    "opinions": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "opinion.schema.json"
+      },
+      "description": "Map of opinion ID to opinion object"
+    },
+    "metrics": {
+      "type": "object",
+      "required": ["total_influence", "active_conflicts", "stability_index"],
+      "properties": {
+        "total_influence": {
+          "type": "number",
+          "minimum": 0
+        },
+        "active_conflicts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "stability_index": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "information_quality": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "polarization_index": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "crisis_level": {
+          "type": "string",
+          "enum": ["none", "low", "medium", "high", "critical"]
+        }
+      }
+    },
+    "stack": {
+      "type": "string",
+      "enum": ["RS", "TS-0", "TS-1", "TS-2", "TS-3", "SS"],
+      "description": "Stack classification (Reality/Timeline/Simulation)"
+    },
+    "parent_state_id": {
+      "type": "string",
+      "pattern": "^WS-[A-Z0-9]{16}$",
+      "description": "ID of parent state (for timeline branches)"
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["created_at", "version", "hash", "deterministic"],
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "SHA-256 hash for provenance"
+        },
+        "deterministic": {
+          "type": "boolean",
+          "description": "Whether state was generated deterministically"
+        },
+        "seed": {
+          "type": "string",
+          "description": "Random seed used for generation"
+        },
+        "engine_version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

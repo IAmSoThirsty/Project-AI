@@ -1,0 +1,3 @@
+rootProject.name = 'Project-AI'
+include ':app'
+include ':legion_mini'

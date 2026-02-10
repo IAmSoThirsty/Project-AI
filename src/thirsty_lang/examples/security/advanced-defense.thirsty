@@ -1,0 +1,20 @@
+// Thirsty-lang Security Example: Advanced Defense
+// Demonstrates morph, detect, and defend keywords
+
+shield advancedDefense {
+  // Configure threat detection
+  detect attacks {
+    morph on: ["injection", "overflow", "timing"]
+    defend with: "aggressive"
+  }
+  
+  // User input with full protection
+  drink userInput = sip "Enter command"
+  sanitize userInput
+  
+  // Process safely
+  drink result = "Processed: " + userInput
+  armor result
+  
+  pour result
+}

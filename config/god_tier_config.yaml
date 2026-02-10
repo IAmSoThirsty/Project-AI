@@ -1,0 +1,124 @@
+# God Tier Project-AI Configuration
+# Complete YAML configuration for all systems
+
+version: "1.0.0"
+deployment_mode: production  # production, development, testing
+system_name: "God Tier Project-AI"
+enable_all_features: true
+fail_safe_mode: true
+auto_recovery: true
+
+# Voice Model Configuration
+voice_model:
+  enabled: true
+  models:
+    - basic_tts
+    - emotional_tts
+    - conversational
+  default_model: conversational
+  bonding_enabled: true
+  experimentation_rounds: 5
+  auto_select: true
+
+# Visual Model Configuration
+visual_model:
+  enabled: true
+  models:
+    - facial_emotion
+    - focus_attention
+  default_model: facial_emotion
+  bonding_enabled: true
+  calibration_frames: 30
+  detection_fps: 10
+
+# Camera Configuration
+camera:
+  enabled: true
+  auto_discover: true
+  preferred_device: null
+  resolution:
+    - 1280
+    - 720
+  fps: 30
+
+# Conversation Engine Configuration
+conversation:
+  enabled: true
+  context_window: 10
+  max_history_turns: 1000
+  intent_detection: true
+  entity_extraction: true
+  topic_tracking: true
+  session_timeout_minutes: 30
+
+# Policy Manager Configuration
+policy:
+  enabled: true
+  auto_adjust: true
+  adjustment_rate: 0.05
+  
+  # Default policy values (0-1 scale)
+  default_response_length: 0.5
+  default_formality: 0.5
+  default_empathy: 0.7
+  default_sensitivity: 0.8
+  default_humor: 0.3
+  
+  # Context-aware adjustments
+  no_false_alarms: true  # CRITICAL: No overreaction to swearing/sensitive topics
+  user_adaptation: true
+
+# Multi-Modal Fusion Configuration
+fusion:
+  enabled: true
+  strategy: hybrid_fusion  # early_fusion, late_fusion, hybrid_fusion
+  
+  # Modality weights
+  voice_weight: 0.4
+  visual_weight: 0.4
+  text_weight: 0.2
+  
+  # Fusion parameters
+  confidence_threshold: 0.6
+  min_modalities: 1
+  event_driven: true
+
+# Logging Configuration
+logging:
+  enabled: true
+  level: INFO  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  
+  # Log destinations
+  console: true
+  file: true
+  file_path: data/logs/god_tier.log
+  
+  # Rotation
+  max_bytes: 10485760  # 10MB
+  backup_count: 5
+  
+  # Component-specific logging
+  voice_debug: false
+  visual_debug: false
+  fusion_debug: false
+
+# Data Storage Configuration
+storage:
+  base_dir: data
+  
+  # Subdirectories
+  voice_models_dir: voice_models
+  visual_models_dir: visual_models
+  camera_dir: camera
+  engagement_profiles_dir: engagement_profiles
+  conversation_context_dir: conversation_context
+  policy_manager_dir: policy_manager
+  fusion_dir: multimodal_fusion
+  bonding_dir: bonding
+  
+  # Persistence
+  auto_save: true
+  save_interval_seconds: 30
+  backup_enabled: true
+  backup_interval_hours: 24

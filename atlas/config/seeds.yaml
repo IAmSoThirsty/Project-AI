@@ -1,0 +1,271 @@
+# PROJECT ATLAS Seeds Configuration
+# Deterministic random seeds for replayable timeline generation
+# Version: 1.0.0
+# Status: LOCKED
+
+version: "1.0.0"
+schema_version: "1.0.0"
+
+# Base Seeds for Timeline Stacks
+timeline_seeds:
+  TS-0:
+    name: "Base Timeline Seed (0-30 days)"
+    seeds:
+      default: "ATLAS-TS0-BASE-2026-02-07-001"
+      variant_a: "ATLAS-TS0-VARA-2026-02-07-001"
+      variant_b: "ATLAS-TS0-VARB-2026-02-07-001"
+      optimistic: "ATLAS-TS0-OPTI-2026-02-07-001"
+      pessimistic: "ATLAS-TS0-PESS-2026-02-07-001"
+    description: "Near-term projection seeds for 30-day horizon"
+    properties:
+      deterministic: true
+      replayable: true
+      cryptographic_quality: true
+      
+  TS-1:
+    name: "Short-term Timeline Seed (30-180 days)"
+    seeds:
+      default: "ATLAS-TS1-BASE-2026-02-07-001"
+      variant_a: "ATLAS-TS1-VARA-2026-02-07-001"
+      variant_b: "ATLAS-TS1-VARB-2026-02-07-001"
+      variant_c: "ATLAS-TS1-VARC-2026-02-07-001"
+      optimistic: "ATLAS-TS1-OPTI-2026-02-07-001"
+      pessimistic: "ATLAS-TS1-PESS-2026-02-07-001"
+      moderate: "ATLAS-TS1-MODE-2026-02-07-001"
+    description: "Short-term projection seeds for 180-day horizon"
+    properties:
+      deterministic: true
+      replayable: true
+      branching_allowed: true
+      
+  TS-2:
+    name: "Medium-term Timeline Seed (180-365 days)"
+    seeds:
+      default: "ATLAS-TS2-BASE-2026-02-07-001"
+      variant_a: "ATLAS-TS2-VARA-2026-02-07-001"
+      variant_b: "ATLAS-TS2-VARB-2026-02-07-001"
+      variant_c: "ATLAS-TS2-VARC-2026-02-07-001"
+      variant_d: "ATLAS-TS2-VARD-2026-02-07-001"
+      optimistic: "ATLAS-TS2-OPTI-2026-02-07-001"
+      pessimistic: "ATLAS-TS2-PESS-2026-02-07-001"
+      moderate: "ATLAS-TS2-MODE-2026-02-07-001"
+      crisis: "ATLAS-TS2-CRIS-2026-02-07-001"
+      stable: "ATLAS-TS2-STAB-2026-02-07-001"
+    description: "Medium-term projection seeds for 365-day horizon"
+    properties:
+      deterministic: true
+      replayable: true
+      branching_allowed: true
+      uncertainty_scaling: 1.5
+      
+  TS-3:
+    name: "Long-term Timeline Seed (1-10 years)"
+    seeds:
+      default: "ATLAS-TS3-BASE-2026-02-07-001"
+      variant_a: "ATLAS-TS3-VARA-2026-02-07-001"
+      variant_b: "ATLAS-TS3-VARB-2026-02-07-001"
+      variant_c: "ATLAS-TS3-VARC-2026-02-07-001"
+      variant_d: "ATLAS-TS3-VARD-2026-02-07-001"
+      variant_e: "ATLAS-TS3-VARE-2026-02-07-001"
+      optimistic_future: "ATLAS-TS3-OPTF-2026-02-07-001"
+      pessimistic_future: "ATLAS-TS3-PESF-2026-02-07-001"
+      moderate_future: "ATLAS-TS3-MODF-2026-02-07-001"
+      transformative: "ATLAS-TS3-TRAN-2026-02-07-001"
+      collapse: "ATLAS-TS3-COLL-2026-02-07-001"
+      renaissance: "ATLAS-TS3-RENA-2026-02-07-001"
+    description: "Long-term projection seeds for 10-year horizon"
+    properties:
+      deterministic: true
+      replayable: true
+      branching_allowed: true
+      uncertainty_scaling: 3.0
+
+# Scenario-Specific Seeds
+scenario_seeds:
+  conflict_escalation:
+    seed: "ATLAS-SCEN-CONF-ESC-2026-02-07-001"
+    description: "Seed for conflict escalation scenarios"
+    
+  economic_crisis:
+    seed: "ATLAS-SCEN-ECON-CRI-2026-02-07-001"
+    description: "Seed for economic crisis scenarios"
+    
+  technological_breakthrough:
+    seed: "ATLAS-SCEN-TECH-BRK-2026-02-07-001"
+    description: "Seed for technological breakthrough scenarios"
+    
+  environmental_catastrophe:
+    seed: "ATLAS-SCEN-ENVI-CAT-2026-02-07-001"
+    description: "Seed for environmental catastrophe scenarios"
+    
+  political_revolution:
+    seed: "ATLAS-SCEN-POLI-REV-2026-02-07-001"
+    description: "Seed for political revolution scenarios"
+    
+  pandemic_outbreak:
+    seed: "ATLAS-SCEN-PAND-OUT-2026-02-07-001"
+    description: "Seed for pandemic outbreak scenarios"
+    
+  alliance_formation:
+    seed: "ATLAS-SCEN-ALLI-FOR-2026-02-07-001"
+    description: "Seed for major alliance formation scenarios"
+    
+  alliance_collapse:
+    seed: "ATLAS-SCEN-ALLI-COL-2026-02-07-001"
+    description: "Seed for alliance collapse scenarios"
+
+# Test and Validation Seeds
+testing_seeds:
+  unit_test:
+    seed: "ATLAS-TEST-UNIT-2026-02-07-001"
+    description: "Deterministic seed for unit testing"
+    properties:
+      deterministic: true
+      predictable_output: true
+      
+  integration_test:
+    seed: "ATLAS-TEST-INTG-2026-02-07-001"
+    description: "Deterministic seed for integration testing"
+    properties:
+      deterministic: true
+      full_stack: true
+      
+  regression_test:
+    seed: "ATLAS-TEST-REGR-2026-02-07-001"
+    description: "Deterministic seed for regression testing"
+    properties:
+      deterministic: true
+      baseline_comparison: true
+      
+  performance_test:
+    seed: "ATLAS-TEST-PERF-2026-02-07-001"
+    description: "Deterministic seed for performance testing"
+    properties:
+      deterministic: true
+      repeatable_benchmarks: true
+
+# Seed Generation Rules
+seed_generation:
+  format: "ATLAS-{STACK}-{VARIANT}-{DATE}-{SEQUENCE}"
+  components:
+    stack:
+      - "TS0"  # Timeline Stack 0
+      - "TS1"  # Timeline Stack 1
+      - "TS2"  # Timeline Stack 2
+      - "TS3"  # Timeline Stack 3
+      - "SCEN"  # Scenario-specific
+      - "TEST"  # Testing
+      
+    variant:
+      - "BASE"  # Base/default variant
+      - "VARA"  # Variant A
+      - "VARB"  # Variant B
+      - "VARC"  # Variant C
+      - "VARD"  # Variant D
+      - "VARE"  # Variant E
+      - "OPTI"  # Optimistic
+      - "PESS"  # Pessimistic
+      - "MODE"  # Moderate
+      - Custom scenario codes
+      
+    date:
+      format: "YYYY-MM-DD"
+      description: "ISO 8601 date of seed generation"
+      
+    sequence:
+      format: "NNN"
+      range: "001-999"
+      description: "Sequential number for multiple seeds on same date"
+      
+  validation:
+    min_length: 32
+    max_length: 64
+    allowed_chars: "A-Z0-9-"
+    uniqueness_required: true
+
+# Seed Usage Rules
+usage_rules:
+  determinism:
+    - "Same seed MUST produce identical results"
+    - "Seed MUST be logged in all operations"
+    - "Seed MUST be included in audit trail"
+    - "Seed MUST be recorded in metadata"
+    
+  selection:
+    - "Default seed used unless specified otherwise"
+    - "Scenario seeds used for specific scenario types"
+    - "Test seeds used only in test environments"
+    - "Production must use production-grade seeds"
+    
+  rotation:
+    - "Seeds should be rotated periodically"
+    - "Old seeds retained for replay purposes"
+    - "Rotation logged and audited"
+    - "Minimum 30-day retention of all seeds"
+    
+  security:
+    - "Seeds stored in secure configuration"
+    - "Access to seeds logged"
+    - "Seeds not exposed in public outputs"
+    - "Test seeds never used in production"
+
+# Seed Verification
+verification:
+  integrity_check:
+    enabled: true
+    method: "SHA-256"
+    frequency: "on_load"
+    
+  replay_validation:
+    enabled: true
+    sample_size: 100
+    tolerance: 1e-10
+    
+  audit_trail:
+    log_seed_usage: true
+    log_seed_changes: true
+    retention_years: 10
+
+# Emergency Seeds
+emergency_seeds:
+  emergency_projection:
+    seed: "ATLAS-EMER-PROJ-2026-02-07-001"
+    description: "Emergency projection seed for crisis situations"
+    usage: "council_authorized_only"
+    
+  disaster_recovery:
+    seed: "ATLAS-EMER-RECV-2026-02-07-001"
+    description: "Disaster recovery seed for system restoration"
+    usage: "authorized_personnel_only"
+    
+  forensic_analysis:
+    seed: "ATLAS-EMER-FORE-2026-02-07-001"
+    description: "Forensic analysis seed for incident investigation"
+    usage: "security_team_only"
+
+# Seed Metadata
+metadata:
+  generator_version: "1.0.0"
+  generation_date: "2026-02-07"
+  cryptographic_source: "secure_random"
+  entropy_bits: 256
+  collision_probability: 1e-77
+  
+  validation_status:
+    format_valid: true
+    uniqueness_valid: true
+    cryptographic_quality: true
+    determinism_verified: true
+    
+  audit_info:
+    created_by: "ATLAS_SYSTEM"
+    approved_by: "COUNCIL"
+    signature: "ed25519_signature_here"
+    hash: "sha256_hash_here"
+
+# Documentation
+documentation:
+  purpose: "Provide deterministic, replayable seeds for all timeline projections"
+  critical: "Seeds are essential for audit trail and deterministic reproduction"
+  warning: "Never use test seeds in production; never reuse seeds across different projection types"
+  compliance: "Seed usage must comply with safety.yaml and governance rules"

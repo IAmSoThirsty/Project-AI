@@ -1,0 +1,170 @@
+# AlertManager Configuration for Project-AI
+# Routes and receivers for AI system and security alerts
+
+global:
+  resolve_timeout: 5m
+  smtp_from: 'alerts@project-ai.local'
+  smtp_smarthost: '${SMTP_HOST}:${SMTP_PORT}'
+  smtp_auth_username: '${SMTP_USERNAME}'
+  smtp_auth_password: '${SMTP_PASSWORD}'
+  smtp_require_tls: true
+
+# Route tree for alert routing
+route:
+  receiver: 'default-receiver'
+  group_by: ['alertname', 'component', 'severity']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 12h
+
+  routes:
+    # Critical alerts - immediate notification
+    - match:
+        severity: critical
+      receiver: 'critical-alerts'
+      group_wait: 0s
+      group_interval: 5m
+      repeat_interval: 30m
+      continue: true
+
+    # Four Laws violations
+    - match:
+        component: four-laws
+      receiver: 'four-laws-alerts'
+      group_wait: 5s
+      group_interval: 5m
+      repeat_interval: 1h
+
+    # Security incidents
+    - match_re:
+        component: security|cerberus|threat-detection
+      receiver: 'security-alerts'
+      group_wait: 5s
+      group_interval: 5m
+      repeat_interval: 30m
+
+    # AI persona and system health
+    - match_re:
+        component: persona|memory|learning
+      receiver: 'ai-system-alerts'
+      group_wait: 30s
+      group_interval: 10m
+      repeat_interval: 4h
+
+    # Plugin system issues
+    - match:
+        component: plugins
+      receiver: 'plugin-alerts'
+      group_wait: 1m
+      group_interval: 15m
+      repeat_interval: 6h
+
+# Alert receivers and notification channels
+receivers:
+  - name: 'default-receiver'
+    email_configs:
+      - to: '${ALERT_EMAIL_DEFAULT}'
+        headers:
+          Subject: '[Project-AI] Alert: {{ .GroupLabels.alertname }}'
+        html: |
+          <h2>Project-AI Alert</h2>
+          <b>Alert:</b> {{ .GroupLabels.alertname }}<br>
+          <b>Severity:</b> {{ .CommonLabels.severity }}<br>
+          <b>Component:</b> {{ .CommonLabels.component }}<br>
+          <br>
+          {{ range .Alerts }}
+          <p>{{ .Annotations.description }}</p>
+          {{ end }}
+
+  - name: 'critical-alerts'
+    email_configs:
+      - to: '${ALERT_EMAIL_CRITICAL}'
+        send_resolved: true
+        headers:
+          Subject: '🚨 [CRITICAL] Project-AI: {{ .GroupLabels.alertname }}'
+        html: |
+          <h2 style="color: red;">CRITICAL ALERT - Immediate Action Required</h2>
+          <b>Alert:</b> {{ .GroupLabels.alertname }}<br>
+          <b>Component:</b> {{ .CommonLabels.component }}<br>
+          <b>Time:</b> {{ .CommonAnnotations.summary }}<br>
+          <br>
+          {{ range .Alerts }}
+          <p><b>Description:</b> {{ .Annotations.description }}</p>
+          <p><b>Labels:</b> {{ .Labels }}</p>
+          <hr>
+          {{ end }}
+    # Optional: Add webhook for critical alerts
+    webhook_configs:
+      - url: 'http://project-ai:8000/webhook/critical-alert'
+        send_resolved: true
+
+  - name: 'four-laws-alerts'
+    email_configs:
+      - to: '${ALERT_EMAIL_ETHICS}'
+        headers:
+          Subject: '⚖️ [Four Laws] Project-AI: {{ .GroupLabels.alertname }}'
+        html: |
+          <h2>Four Laws Alert - Ethics Violation Detected</h2>
+          {{ range .Alerts }}
+          <p><b>Summary:</b> {{ .Annotations.summary }}</p>
+          <p><b>Details:</b> {{ .Annotations.description }}</p>
+          <p><b>Law Violated:</b> {{ .Labels.law_violated }}</p>
+          {{ end }}
+
+  - name: 'security-alerts'
+    email_configs:
+      - to: '${ALERT_EMAIL_SECURITY}'
+        send_resolved: true
+        headers:
+          Subject: '🛡️ [Security] Project-AI: {{ .GroupLabels.alertname }}'
+        html: |
+          <h2>Security Alert</h2>
+          <b>Component:</b> {{ .CommonLabels.component }}<br>
+          <b>Severity:</b> {{ .CommonLabels.severity }}<br>
+          <br>
+          {{ range .Alerts }}
+          <p>{{ .Annotations.description }}</p>
+          <p><b>Source:</b> {{ .Labels.source }}</p>
+          <p><b>Event Type:</b> {{ .Labels.event_type }}</p>
+          {{ end }}
+    webhook_configs:
+      - url: 'http://project-ai:8000/webhook/security-alert'
+        send_resolved: true
+
+  - name: 'ai-system-alerts'
+    email_configs:
+      - to: '${ALERT_EMAIL_AI_HEALTH}'
+        headers:
+          Subject: '🤖 [AI System] Project-AI: {{ .GroupLabels.alertname }}'
+        html: |
+          <h2>AI System Health Alert</h2>
+          {{ range .Alerts }}
+          <p><b>{{ .Annotations.summary }}</b></p>
+          <p>{{ .Annotations.description }}</p>
+          {{ end }}
+
+  - name: 'plugin-alerts'
+    email_configs:
+      - to: '${ALERT_EMAIL_PLUGINS}'
+        headers:
+          Subject: '🔌 [Plugins] Project-AI: {{ .GroupLabels.alertname }}'
+        html: |
+          <h2>Plugin System Alert</h2>
+          {{ range .Alerts }}
+          <p>{{ .Annotations.description }}</p>
+          <p><b>Plugin:</b> {{ .Labels.plugin_name }}</p>
+          {{ end }}
+
+# Inhibit rules - suppress certain alerts when others fire
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'component']
+
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'info'
+    equal: ['alertname', 'component']

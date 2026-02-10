@@ -1,0 +1,290 @@
+# PROJECT ATLAS Thresholds Configuration
+# Decision boundaries, triggers, and governance limits
+# Version: 1.0.0
+# Status: LOCKED
+
+version: "1.0.0"
+schema_version: "1.0.0"
+
+# Influence Thresholds
+influence_thresholds:
+  superpower:
+    name: "Superpower Status"
+    threshold: 0.85
+    description: "Organizations with dominant global influence"
+    triggers:
+      - special_monitoring
+      - enhanced_reporting
+      
+  major_power:
+    name: "Major Power Status"
+    threshold: 0.70
+    description: "Organizations with significant regional/global influence"
+    
+  regional_power:
+    name: "Regional Power Status"
+    threshold: 0.50
+    description: "Organizations with strong regional influence"
+    
+  minor_player:
+    name: "Minor Player Status"
+    threshold: 0.30
+    description: "Organizations with limited influence"
+    
+  negligible:
+    name: "Negligible Influence"
+    threshold: 0.10
+    description: "Organizations with minimal influence"
+
+# Crisis Detection Thresholds
+crisis_thresholds:
+  conflict_probability:
+    critical: 0.80
+    high: 0.65
+    medium: 0.45
+    low: 0.25
+    description: "Probability of armed conflict"
+    action: "alert_council"
+    
+  stability_index:
+    critical: 0.20  # Below this is critical
+    unstable: 0.40
+    moderate: 0.60
+    stable: 0.80
+    description: "Overall system stability"
+    action: "monitor_closely"
+    
+  tension_level:
+    extreme: 0.90
+    very_high: 0.75
+    high: 0.60
+    elevated: 0.45
+    normal: 0.30
+    description: "Inter-organizational tension"
+    
+  information_quality:
+    critical: 0.30  # Below this is critical
+    poor: 0.50
+    adequate: 0.70
+    good: 0.85
+    excellent: 0.95
+    description: "Quality of available information"
+    action: "increase_verification"
+
+# Projection Confidence Thresholds
+confidence_thresholds:
+  projection_validity:
+    high_confidence: 0.85
+    medium_confidence: 0.65
+    low_confidence: 0.45
+    unreliable: 0.30
+    description: "Confidence in projection accuracy"
+    
+  scenario_probability:
+    very_likely: 0.75
+    likely: 0.55
+    possible: 0.35
+    unlikely: 0.15
+    description: "Scenario occurrence probability"
+    
+  data_sufficiency:
+    sufficient: 0.80
+    adequate: 0.60
+    marginal: 0.40
+    insufficient: 0.20
+    description: "Data sufficiency for analysis"
+    action: "request_more_data"
+
+# Governance Thresholds
+governance_thresholds:
+  council_review_required:
+    influence_change: 0.15  # >15% change requires review
+    penalty_severity: "high"  # High+ penalties require review
+    stack_transition: "TS-2"  # TS-2+ transitions require review
+    claim_impact: 0.70  # High-impact claims require review
+    
+  auto_approval:
+    influence_change: 0.05  # <5% change auto-approved
+    penalty_severity: "low"  # Low penalties auto-approved
+    stack_transition: "TS-0"  # TS-0 transitions auto-approved
+    
+  emergency_intervention:
+    conflict_probability: 0.85  # Emergency if >85%
+    stability_index: 0.15  # Emergency if <15%
+    crisis_escalation_rate: 0.20  # Emergency if >20% per day
+    
+  data_quality_minimum:
+    RS_minimum: 0.90  # RS requires 90%+ quality
+    TS_minimum: 0.75  # TS requires 75%+ quality
+    SS_minimum: 0.50  # SS requires 50%+ quality
+
+# Relationship Thresholds
+relationship_thresholds:
+  alliance:
+    strong: 0.80
+    moderate: 0.60
+    weak: 0.40
+    description: "Alliance strength levels"
+    
+  competition:
+    intense: 0.75
+    moderate: 0.55
+    mild: 0.35
+    description: "Competition intensity levels"
+    
+  hostility:
+    war: 0.90
+    severe: 0.75
+    elevated: 0.60
+    minor: 0.40
+    description: "Hostility levels"
+    triggers:
+      war: "immediate_council_alert"
+      severe: "enhanced_monitoring"
+
+# Scoring Thresholds
+scoring_thresholds:
+  veracity_score:
+    highly_credible: 0.90
+    credible: 0.75
+    questionable: 0.55
+    unreliable: 0.35
+    false: 0.15
+    description: "Claim veracity scoring"
+    
+  trust_score:
+    very_high: 0.85
+    high: 0.70
+    medium: 0.55
+    low: 0.40
+    very_low: 0.25
+    description: "Inter-organizational trust"
+    
+  risk_score:
+    extreme: 0.90
+    very_high: 0.75
+    high: 0.60
+    moderate: 0.45
+    low: 0.30
+    minimal: 0.15
+    description: "Risk assessment levels"
+
+# Alert Thresholds
+alert_thresholds:
+  immediate_notification:
+    conflict_probability: 0.80
+    stability_drop: 0.30  # Drop of 30% or more
+    critical_penalty_applied: true
+    stack_violation: true
+    
+  high_priority:
+    conflict_probability: 0.65
+    stability_drop: 0.20
+    high_penalty_applied: true
+    influence_spike: 0.25  # Spike of 25% or more
+    
+  standard_monitoring:
+    conflict_probability: 0.45
+    stability_drop: 0.10
+    medium_penalty_applied: true
+    
+  informational:
+    conflict_probability: 0.25
+    stability_drop: 0.05
+    low_penalty_applied: true
+
+# Simulation Boundaries
+simulation_boundaries:
+  max_projection_days:
+    TS-0: 30
+    TS-1: 180
+    TS-2: 365
+    TS-3: 3650
+    SS: 36500  # 100 years for experimental
+    
+  max_scenarios_per_projection:
+    TS-0: 3
+    TS-1: 5
+    TS-2: 10
+    TS-3: 20
+    SS: 100
+    
+  max_branches_per_timeline:
+    TS-0: 1
+    TS-1: 3
+    TS-2: 5
+    TS-3: 10
+    SS: 50
+    
+  max_events_per_step:
+    normal: 10
+    crisis: 50
+    war: 100
+
+# Performance Thresholds
+performance_thresholds:
+  computation_time_warning:
+    projection_seconds: 300  # Warn if >5 minutes
+    graph_seconds: 60  # Warn if >1 minute
+    scoring_seconds: 30  # Warn if >30 seconds
+    
+  memory_usage_warning:
+    world_state_mb: 500
+    influence_graph_mb: 200
+    projection_pack_mb: 1000
+    
+  data_volume_limits:
+    max_organizations: 100000
+    max_claims: 1000000
+    max_opinions: 5000000
+    max_relationships: 10000000
+
+# Audit Trail Thresholds
+audit_thresholds:
+  log_retention_days:
+    critical_events: 3650  # 10 years
+    high_priority: 1825  # 5 years
+    standard: 730  # 2 years
+    informational: 365  # 1 year
+    
+  hash_chain_verification:
+    frequency_hours: 24
+    failure_threshold: 1  # Any failure triggers alert
+    
+  backup_frequency:
+    RS_hours: 6
+    TS_hours: 24
+    SS_hours: 168  # Weekly
+
+# Determinism Validation
+determinism_thresholds:
+  replay_tolerance:
+    numerical_epsilon: 1e-10
+    hash_mismatch_allowed: 0
+    event_order_strict: true
+    
+  seed_validation:
+    must_be_present: true
+    must_be_logged: true
+    must_be_unique_per_run: true
+    
+  state_consistency:
+    parent_child_drift_max: 0.0
+    timeline_coherence_min: 1.0
+
+# Validation Rules
+validation:
+  threshold_ordering:
+    - "Higher severity must have higher threshold values for negative metrics"
+    - "Higher severity must have lower threshold values for positive metrics"
+    - "All thresholds must be in valid range [0.0, 1.0] where applicable"
+    
+  completeness:
+    - "All stack types must have defined thresholds"
+    - "All alert levels must have defined thresholds"
+    - "All governance actions must have clear thresholds"
+    
+  consistency:
+    - "Related thresholds must be internally consistent"
+    - "Cascading thresholds must not overlap"
+    - "Emergency thresholds must be more restrictive than standard"

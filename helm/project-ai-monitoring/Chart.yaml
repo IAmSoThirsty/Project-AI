@@ -1,0 +1,72 @@
+apiVersion: v2
+name: project-ai-monitoring
+description: Complete observability stack for Project-AI with Prometheus, Grafana, ELK, Netdata, OpenTelemetry, and Cilium/Hubble
+type: application
+version: 1.0.0
+appVersion: "1.0"
+keywords:
+  - monitoring
+  - observability
+  - prometheus
+  - grafana
+  - elk
+  - netdata
+  - opentelemetry
+  - cilium
+  - hubble
+  - ai-monitoring
+home: https://github.com/IAmSoThirsty/Project-AI
+sources:
+  - https://github.com/IAmSoThirsty/Project-AI
+maintainers:
+  - name: Project-AI Team
+    email: admin@project-ai.local
+
+dependencies:
+  # Prometheus Stack (includes Grafana, AlertManager, node-exporter)
+  - name: kube-prometheus-stack
+    version: ">=54.0.0"
+    repository: https://prometheus-community.github.io/helm-charts
+    condition: prometheus.enabled
+
+  # Elasticsearch
+  - name: elasticsearch
+    version: ">=8.5.1"
+    repository: https://helm.elastic.co
+    condition: elasticsearch.enabled
+
+  # Logstash
+  - name: logstash
+    version: ">=8.5.1"
+    repository: https://helm.elastic.co
+    condition: logstash.enabled
+
+  # Kibana
+  - name: kibana
+    version: ">=8.5.1"
+    repository: https://helm.elastic.co
+    condition: kibana.enabled
+
+  # Netdata
+  - name: netdata
+    version: ">=3.7.0"
+    repository: https://netdata.github.io/helmchart/
+    condition: netdata.enabled
+
+  # OpenTelemetry Collector
+  - name: opentelemetry-collector
+    version: ">=0.74.0"
+    repository: https://open-telemetry.github.io/opentelemetry-helm-charts
+    condition: opentelemetry.enabled
+
+  # Cilium (includes Hubble for eBPF observability)
+  - name: cilium
+    version: ">=1.14.0"
+    repository: https://helm.cilium.io/
+    condition: cilium.enabled
+
+  # Zabbix (optional - can be enabled for hybrid monitoring)
+  - name: zabbix
+    version: ">=4.0.0"
+    repository: https://zabbix.github.io/helm-charts
+    condition: zabbix.enabled

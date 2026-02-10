@@ -1,0 +1,188 @@
+# Bio-Inspired Brain Mapping Configuration
+# Production-grade configuration for RSGN and Bio-Modular Representation
+
+# Resonant Sparse Geometry Network (RSGN) Configuration
+rsgn:
+  # Network architecture
+  n_layers: 3
+  layer_sizes: [128, 256, 512, 256]  # Input -> Hidden1 -> Hidden2 -> Output
+  
+  # Sparse connectivity
+  sparsity: 0.1  # 10% connection density
+  
+  # Hyperbolic geometry (Poincaré ball)
+  hyperbolic_dim: 64  # Dimensionality of hyperbolic embeddings
+  curvature: 1.0  # Hyperbolic curvature (κ = -1 in standard notation)
+
+# Two-Timescale Learning Configuration
+learning:
+  # Fast learning (gradient-based)
+  fast_lr: 0.001  # Adam-style learning rate
+  
+  # Slow learning (Hebbian plasticity)
+  slow_lr: 0.0001  # Slower adaptation
+  hebb_potentiation: 0.1  # α: Potentiation rate
+  hebb_decay: 0.01  # β: Weight decay rate
+  
+  # Regularization
+  weight_decay: 0.0001  # L2 penalty
+
+# Local Inhibition Configuration
+inhibition:
+  # Mexican hat lateral interactions
+  excitation_radius: 1.0  # σ_exc: Excitatory reach
+  inhibition_radius: 3.0  # σ_inh: Inhibitory reach
+  excitation_strength: 1.0  # A_exc: Excitatory amplitude
+  inhibition_strength: 0.5  # A_inh: Inhibitory amplitude
+  
+  # Sparse activation
+  kwta_k: 10  # k in k-winner-take-all
+
+# Resonant Dynamics Configuration
+resonance:
+  # Oscillatory parameters
+  frequency: 40.0  # Hz (gamma band: 30-80 Hz)
+  modulation_depth: 0.1  # γ: Resonant modulation amplitude
+  phase_coherence_threshold: 0.5  # Minimum phase locking for synchronization
+
+# Bio-Modular Representation Configuration
+modules:
+  # Input dimensionality
+  input_dim: 128
+  
+  # Cortical hierarchy dimensions
+  v1_dim: 256   # Primary visual cortex
+  v2_dim: 256   # Secondary visual cortex
+  v4_dim: 512   # Shape/object features
+  it_dim: 512   # Inferotemporal (object recognition)
+  pfc_dim: 256  # Prefrontal cortex (executive)
+  
+  # Sparse activation
+  sparsity_k: 20  # Active neurons per module
+  
+  # Hebbian learning
+  learning_rate: 0.0001  # Plasticity rate
+  
+  # Resonance
+  resonance_freq: 40.0  # Hz (gamma synchronization)
+
+# Memory Consolidation Configuration
+consolidation:
+  # Trigger consolidation every N learning steps
+  interval_steps: 1000
+  
+  # Consolidate if cumulative weight change exceeds threshold
+  threshold_change: 0.01
+
+# System Configuration
+system:
+  # Data persistence
+  data_dir: "data/bio_brain_mapping"
+  autosave_interval: 100  # Save state every N processing steps
+  
+  # Reproducibility
+  seed: null  # Set to integer for deterministic behavior
+  
+  # Diagnostics
+  enable_diagnostics: true
+  enable_visualization_hooks: true
+  
+  # Performance
+  batch_size: 32
+  max_parallel_modules: 5
+
+# Security Configuration
+security:
+  # Resource limits
+  max_memory_mb: 2048  # Maximum memory usage
+  max_computation_time_sec: 60  # Timeout for single forward pass
+  
+  # Governance
+  require_kernel_approval: true  # Subject to CognitionKernel oversight
+  validate_inputs: true  # Input sanitization
+  log_all_operations: true  # Audit trail
+
+# Visualization Hooks Configuration
+visualization:
+  # What to visualize
+  plot_hyperbolic_embeddings: true
+  plot_activation_patterns: true
+  plot_weight_distributions: true
+  plot_resonance_dynamics: true
+  
+  # Update frequency
+  update_interval_steps: 100
+  
+  # Output paths
+  plots_dir: "data/bio_brain_mapping/visualizations"
+  export_format: "png"  # png, svg, pdf
+
+# Advanced Features
+advanced:
+  # Adaptive learning rates
+  use_adaptive_lr: true
+  lr_schedule: "cosine"  # constant, step, cosine
+  
+  # Pruning weak connections
+  enable_pruning: true
+  pruning_threshold: 0.001  # Remove weights below this magnitude
+  
+  # Online continual learning
+  enable_online_learning: true
+  memory_replay_buffer_size: 10000  # For experience replay
+  
+  # Multi-scale resonance
+  enable_multi_band: true
+  frequency_bands:
+    theta: 6.0   # 4-8 Hz
+    alpha: 10.0  # 8-13 Hz
+    beta: 20.0   # 13-30 Hz
+    gamma: 40.0  # 30-80 Hz
+
+# Presets for different use cases
+presets:
+  # Fast prototyping (smaller network, higher learning rate)
+  development:
+    rsgn:
+      n_layers: 2
+      layer_sizes: [64, 128, 64]
+      sparsity: 0.2
+    learning:
+      fast_lr: 0.01
+      slow_lr: 0.001
+    consolidation:
+      interval_steps: 100
+  
+  # Production (balanced)
+  production:
+    rsgn:
+      n_layers: 3
+      layer_sizes: [128, 256, 512, 256]
+      sparsity: 0.1
+    learning:
+      fast_lr: 0.001
+      slow_lr: 0.0001
+    consolidation:
+      interval_steps: 1000
+  
+  # Research (large network, careful learning)
+  research:
+    rsgn:
+      n_layers: 4
+      layer_sizes: [256, 512, 1024, 512, 256]
+      sparsity: 0.05
+      hyperbolic_dim: 128
+    learning:
+      fast_lr: 0.0001
+      slow_lr: 0.00001
+    modules:
+      v1_dim: 512
+      v2_dim: 512
+      v4_dim: 1024
+      it_dim: 1024
+      pfc_dim: 512
+    consolidation:
+      interval_steps: 5000
+
+# Active preset (change to switch configurations)
+active_preset: "production"

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thirst of Gods - Live Defense Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="logo-section">
+                <h1>🔥 THIRST OF GODS</h1>
+                <p class="subtitle">Holographic Defense System - Live Monitor</p>
+            </div>
+            <div class="status-section">
+                <div class="status-indicator active" id="systemStatus">
+                    <span class="status-dot"></span>
+                    <span>SYSTEM ACTIVE</span>
+                </div>
+                <div class="uptime" id="uptime">Uptime: 00:00:00</div>
+            </div>
+        </header>
+
+        <!-- Main Grid -->
+        <div class="dashboard-grid">
+            <!-- Metrics Cards -->
+            <div class="metrics-row">
+                <div class="metric-card">
+                    <div class="metric-icon">⚡</div>
+                    <div class="metric-content">
+                        <div class="metric-label">Commands Processed</div>
+                        <div class="metric-value" id="totalCommands">0</div>
+                    </div>
+                </div>
+
+                <div class="metric-card danger">
+                    <div class="metric-icon">🚨</div>
+                    <div class="metric-content">
+                        <div class="metric-label">Threats Detected</div>
+                        <div class="metric-value" id="threatsDetected">0</div>
+                    </div>
+                </div>
+
+                <div class="metric-card warning">
+                    <div class="metric-icon">🎭</div>
+                    <div class="metric-content">
+                        <div class="metric-label">Active Deceptions</div>
+                        <div class="metric-value" id="activeDeceptions">0</div>
+                    </div>
+                </div>
+
+                <div class="metric-card critical">
+                    <div class="metric-icon">💥</div>
+                    <div class="metric-content">
+                        <div class="metric-label">Bubblegum Triggers</div>
+                        <div class="metric-value" id="bubblegumTriggers">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Layer Distribution -->
+            <div class="panel layer-panel">
+                <h2>Layer Distribution</h2>
+                <div class="layer-visualization">
+                    <div class="layer-bar" id="layer0Bar">
+                        <div class="layer-label">Layer 0 (REAL)</div>
+                        <div class="bar-container">
+                            <div class="bar bar-real" style="width: 0%"></div>
+                            <span class="bar-percentage">0%</span>
+                        </div>
+                    </div>
+                    <div class="layer-bar" id="layer1Bar">
+                        <div class="layer-label">Layer 1 (MIRROR)</div>
+                        <div class="bar-container">
+                            <div class="bar bar-mirror" style="width: 0%"></div>
+                            <span class="bar-percentage">0%</span>
+                        </div>
+                    </div>
+                    <div class="layer-bar" id="layer2Bar">
+                        <div class="layer-label">Layer 2+ (DECEPTION)</div>
+                        <div class="bar-container">
+                            <div class="bar bar-deception" style="width: 0%"></div>
+                            <span class="bar-percentage">0%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Threat Heatmap -->
+            <div class="panel heatmap-panel">
+                <h2>Threat Heatmap (Last 60s)</h2>
+                <div class="heatmap-grid" id="threatHeatmap"></div>
+                <div class="heatmap-legend">
+                    <span><span class="legend-box safe"></span> Safe</span>
+                    <span><span class="legend-box suspicious"></span> Suspicious</span>
+                    <span><span class="legend-box malicious"></span> Malicious</span>
+                    <span><span class="legend-box critical"></span> Critical</span>
+                </div>
+            </div>
+
+            <!-- Live Activity Feed -->
+            <div class="panel activity-panel">
+                <h2>Live Activity Feed</h2>
+                <div class="activity-feed" id="activityFeed">
+                    <div class="activity-item info">
+                        <span class="activity-time">00:00:00</span>
+                        <span class="activity-icon">ℹ️</span>
+                        <span class="activity-text">System initialized - Awaiting connections...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Attack Types Chart -->
+            <div class="panel chart-panel">
+                <h2>Attack Type Distribution</h2>
+                <canvas id="attackTypesChart"></canvas>
+            </div>
+
+            <!-- Performance Metrics -->
+            <div class="panel performance-panel">
+                <h2>Performance Metrics</h2>
+                <div class="performance-grid">
+                    <div class="perf-item">
+                        <div class="perf-label">Avg Detection Time</div>
+                        <div class="perf-value" id="avgDetectionTime">0.0ms</div>
+                    </div>
+                    <div class="perf-item">
+                        <div class="perf-label">Avg Layer Transition</div>
+                        <div class="perf-value" id="avgTransitionTime">0.0ms</div>
+                    </div>
+                    <div class="perf-item">
+                        <div class="perf-label">Memory Usage</div>
+                        <div class="perf-value" id="memoryUsage">0 MB</div>
+                    </div>
+                    <div class="perf-item">
+                        <div class="perf-label">CPU Usage</div>
+                        <div class="perf-value" id="cpuUsage">0%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Learning Engine Status -->
+            <div class="panel learning-panel">
+                <h2>Learning Engine Status</h2>
+                <div class="learning-stats">
+                    <div class="stat-row">
+                        <span>Patterns Learned:</span>
+                        <span id="patternsLearned" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>Active Playbooks:</span>
+                        <span id="activePlaybooks" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>Evolution Cycles:</span>
+                        <span id="evolutionCycles" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>Detection Accuracy:</span>
+                        <span id="detectionAccuracy" class="stat-value">0%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart.js for visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>

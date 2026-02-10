@@ -1,0 +1,132 @@
+# HYDRA-50 Development Configuration
+# Settings optimized for local development and testing
+
+system:
+  name: "HYDRA-50 Contingency Engine (Dev)"
+  version: "1.0.0-dev"
+  environment: "development"
+  log_level: "DEBUG"
+
+engine:
+  data_dir: "data/hydra50"
+  max_concurrent_scenarios: 10
+  escalation_check_interval_seconds: 5
+  event_sourcing_enabled: true
+  replay_enabled: true
+
+telemetry:
+  enabled: true
+  metrics_retention_seconds: 3600
+  prometheus_port: 9091
+  export_interval_seconds: 30
+  distributed_tracing: true
+  health_check_interval_seconds: 60
+
+visualization:
+  output_dir: "data/hydra50/visualizations"
+  default_width: 80
+  default_height: 40
+  export_formats: ["json", "ascii", "svg"]
+  realtime_updates: true
+
+analytics:
+  enabled: true
+  ml_models_dir: "data/hydra50/models"
+  monte_carlo_iterations: 1000  # Reduced for faster dev testing
+  confidence_level: 0.95
+  anomaly_detection_threshold: 0.15
+
+integration:
+  cerberus:
+    enabled: false  # Disabled in dev to avoid spawning
+    max_spawn_agents: 10
+    lockdown_stages: 5
+  
+  tarl:
+    enabled: false
+    task_timeout_seconds: 600
+  
+  temporal:
+    enabled: false
+    namespace: "hydra50-dev"
+    task_queue: "hydra50-dev-tasks"
+  
+  command_center:
+    enabled: false
+    auto_reconnect: false
+  
+  soc:
+    enabled: false
+    incident_reporting: false
+  
+  planetary_defense:
+    enabled: true  # Keep enabled for testing
+    four_laws_validation: true
+
+performance:
+  caching:
+    lru_max_size: 1000
+    ttl_default_seconds: 60
+  
+  parallel_processing:
+    enabled: true
+    max_workers: 2  # Limited for dev
+    use_processes: false
+  
+  memory:
+    max_usage_percent: 90
+    gc_threshold_percent: 80
+
+security:
+  authentication_required: false  # Disabled for dev
+  session_timeout_minutes: 120
+  rate_limiting:
+    enabled: false
+    max_requests: 1000
+    window_seconds: 60
+  
+  encryption:
+    enabled: false  # Disabled for easier debugging
+    algorithm: "fernet"
+  
+  api_keys:
+    enabled: false
+    default_expiry_days: 7
+
+monitoring:
+  health_checks:
+    enabled: true
+    interval_seconds: 60
+  
+  alerting:
+    enabled: true
+    severity_threshold: "INFO"
+    notification_channels: ["console"]
+
+database:
+  type: "sqlite"
+  path: "data/hydra50/hydra50_dev.db"
+  connection_pool_size: 2
+  timeout_seconds: 10
+
+logging:
+  level: "DEBUG"
+  format: "text"  # Easier to read in dev
+  output: "logs/hydra50_dev.log"
+  rotation: "size"
+  max_size_mb: 10
+  retention_days: 7
+  structured_logging: false
+
+scenarios:
+  default_escalation_levels: 6
+  auto_escalation_enabled: false  # Manual control in dev
+  intervention_approval_required: false
+  
+  triggers:
+    evaluation_interval_seconds: 30
+    threshold_sensitivity: 0.5  # More sensitive for testing
+  
+  recovery:
+    poisoning_detection_enabled: true
+    recovery_validation_required: false

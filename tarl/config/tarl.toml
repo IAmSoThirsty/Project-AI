@@ -1,0 +1,53 @@
+# T.A.R.L. System Configuration
+# Version: 1.0.0
+
+[compiler]
+debug_mode = false
+optimization_level = 2
+target_version = "1.0"
+strict_mode = true
+emit_source_maps = true
+
+[runtime]
+stack_size = 1048576  # 1MB
+heap_size = 16777216  # 16MB
+gc_threshold = 0.75
+enable_jit = true
+jit_threshold = 100
+
+[stdlib]
+auto_import_builtins = true
+enable_experimental = false
+io_buffer_size = 8192
+
+[modules]
+search_paths = [".", "lib", "modules"]
+enable_cache = true
+cache_dir = ".tarl_cache"
+package_registry = "https://registry.tarl-lang.org"
+
+[diagnostics]
+log_level = "INFO"
+log_file = "tarl.log"
+error_context_lines = 3
+enable_warnings = true
+warning_level = "default"
+
+[ffi]
+enable_ffi = true
+allowed_libraries = []  # empty = allow all
+security_mode = "strict"
+
+[tooling]
+enable_lsp = true
+lsp_port = 9898
+enable_debugger = true
+debugger_port = 9899
+repl_history_size = 1000
+
+[security]
+enable_sandbox = true
+max_execution_time = 30.0
+max_memory = 67108864  # 64MB
+disable_file_io = false
+disable_network_io = false

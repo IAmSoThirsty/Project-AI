@@ -1,0 +1,28 @@
+{
+  "stage": "audit_export",
+  "type": "audit_export",
+  "status": "success",
+  "timestamp": "2026-02-03T21:55:53.034054",
+  "role_signature": {
+    "role": "pipeline_executor",
+    "payload_hash": "4b9c1aac753d59cd6bc1e52660ad71d7975267c1c8254d6ce02fe005f0d10ba5",
+    "signature": "7ec513ff9af5f8c9259bb814a0ac3ba6493fbb57ceb7fa393676085a30d05c6ac07ae852c660c1816c2721ab2ac6e5edcbc75e5ca051c4bbdaf2de4090b9ca0f",
+    "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+    "timestamp": "2026-02-03T21:55:53.033424"
+  },
+  "policy_binding": {
+    "policy_hash": "950c6be9c046f561131d1ee08eaf27e8c4179812819e19a86d800358d53d76d3",
+    "context_hash": "2cfc23457cf31caaecf60d0d16855315d57dc39cee0ed9adc3d82746d12b3129",
+    "binding_hash": "e3dbe0537f69a1ee2d924d6ac56cf21ea9f0708c1818e1e38fd9b3a10cec616a",
+    "signature": "9eb315ebc7b159e72526838192844c7f3894b6b1e251dc7cb85f8fdcc14ad902bb9cfc740bbcffc7a9d9537f9e5b7ba8d58730c47c12d46c6ea9304e8aa28802",
+    "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+    "timestamp": "2026-02-03T21:55:53.033755"
+  },
+  "output": {
+    "exported_at": "2026-02-03T21:55:53.035331",
+    "bundle_path": "/home/runner/work/Project-AI/Project-AI/governance/sovereign_data/artifacts/20260203_215553/compliance_bundle.json",
+    "export_successful": true,
+    "format": "json"
+  },
+  "artifact_hash": "b080876e9384eca0470c7df00ce4d90be0938f158caef037bc2f989d15f88c94"
+}

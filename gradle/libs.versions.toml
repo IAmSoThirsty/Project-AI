@@ -1,0 +1,115 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# THIRSTY'S GRADLE - VERSION CATALOG
+# ═══════════════════════════════════════════════════════════════════════════
+# 
+# Centralized dependency version management for Project-AI
+# Used by all modules for consistent dependency versions
+# 
+# Version: 1.0.0
+# ═══════════════════════════════════════════════════════════════════════════
+
+[versions]
+# Build Tools
+androidGradlePlugin = "8.2.1"
+kotlin = "1.9.22"
+node = "20.11.0"
+npm = "10.2.4"
+gradle = "8.5"
+
+# Android Libraries
+androidxCore = "1.12.0"
+androidxAppcompat = "1.6.1"
+androidxConstraintlayout = "2.1.4"
+material = "1.11.0"
+hilt = "2.50"
+
+# Testing
+junit = "4.13.2"
+androidxTestJunit = "1.1.5"
+androidxTestEspresso = "3.5.1"
+pytest = "7.4.0"
+jestNode = "29.7.0"
+
+# Gradle Plugins
+gradleNodePlugin = "7.0.1"
+dokka = "1.9.10"
+sonarqube = "4.4.1.3373"
+cyclonedx = "1.8.2"
+releasePlugin = "3.0.2"
+shadowPlugin = "8.1.1"
+
+# Python (tracked for reference, managed by pip)
+python = "3.11"
+pythonMax = "3.12"
+flask = "3.0.0"
+fastapi = "0.109.0"
+scikit-learn = "1.4.0"
+pytorch = "2.1.0"
+tensorflow = "2.15.0"
+ruff = "0.1.0"
+black = "23.12.0"
+mypy = "1.8.0"
+
+# JavaScript/TypeScript
+react = "18.2.0"
+typescript = "5.3.3"
+vite = "5.0.12"
+electron = "28.1.4"
+electronBuilder = "24.9.1"
+
+# Documentation
+sphinx = "7.2.0"
+mkdocs = "1.5.3"
+
+[libraries]
+# Android
+android-gradle = { module = "com.android.tools.build:gradle", version.ref = "androidGradlePlugin" }
+kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+hilt-gradle = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt" }
+
+androidx-core = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidxAppcompat" }
+androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "androidxConstraintlayout" }
+material = { module = "com.google.android.material:material", version.ref = "material" }
+
+# Testing
+junit = { module = "junit:junit", version.ref = "junit" }
+androidx-test-junit = { module = "androidx.test.ext:junit", version.ref = "androidxTestJunit" }
+androidx-test-espresso = { module = "androidx.test.espresso:espresso-core", version.ref = "androidxTestEspresso" }
+
+# Gradle Plugins
+node-gradle = { module = "com.github.node-gradle:gradle-node-plugin", version.ref = "gradleNodePlugin" }
+dokka-gradle = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
+sonarqube-gradle = { module = "org.sonarqube:sonarqube-gradle-plugin", version.ref = "sonarqube" }
+cyclonedx-gradle = { module = "org.cyclonedx:cyclonedx-gradle-plugin", version.ref = "cyclonedx" }
+release-gradle = { module = "net.researchgate:gradle-release", version.ref = "releasePlugin" }
+shadow-gradle = { module = "com.github.johnrengelman:shadow", version.ref = "shadowPlugin" }
+
+[bundles]
+# Android app dependencies
+android-app = [
+    "androidx-core",
+    "androidx-appcompat",
+    "androidx-constraintlayout",
+    "material"
+]
+
+# Android testing
+android-test = [
+    "junit",
+    "androidx-test-junit",
+    "androidx-test-espresso"
+]
+
+[plugins]
+# Plugin aliases for easy reference
+android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+node-gradle = { id = "com.github.node-gradle.node", version.ref = "gradleNodePlugin" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
+cyclonedx = { id = "org.cyclonedx.bom", version.ref = "cyclonedx" }
+release = { id = "net.researchgate.release", version.ref = "releasePlugin" }
+shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadowPlugin" }
