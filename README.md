@@ -397,53 +397,62 @@ project-ai show-acceptance --user-id your-email@example.com
 >
 > Lifetime and subscription options fund development and grant **commercial rights + priority support**. The code itself is yours forever, regardless of payment.
 
-### Lifetime Options (One-Time Purchase)
+### Solo Tier (FREE Forever)
 
-<table>
-<tr>
-<th>Tier</th>
-<th>Price</th>
-<th>Seats</th>
-<th>What You Get</th>
-</tr>
-<tr>
-<td><strong>Solo Commercial</strong></td>
-<td>$99</td>
-<td>1</td>
-<td>• Commercial use rights<br>• Priority support (48h)<br>• Name in credits</td>
-</tr>
-<tr>
-<td><strong>Company</strong></td>
-<td>$499</td>
-<td>5</td>
-<td>• Team collaboration<br>• Cloud sync (500GB)<br>• Priority support (24h)<br>• +$79/additional seat</td>
-</tr>
-<tr>
-<td><strong>Organization</strong></td>
-<td>$2,499</td>
-<td>25</td>
-<td>• Hardware-backed signing<br>• White-label rights<br>• Priority support (8h)<br>• +$49/additional seat</td>
-</tr>
-<tr>
-<td><strong>Government</strong></td>
-<td>N/A</td>
-<td>-</td>
-<td><em>Subscription only (requires continuous security ops)</em></td>
-</tr>
-</table>
+**Free for personal use.** Unlimited conversations, memory, plugins, and features. No credit card, no trials, no tricks.
 
-### Subscription Options (Recurring)
+**Solo Commercial:** $99 one-time for commercial rights + priority support.
 
-| Tier | Monthly | Annual | Seats | Break-Even |
-|------|---------|--------|-------|------------|
-| **Solo** | FREE | FREE | 1 | N/A |
-| **Company** | $19 | $180 | 2-50 | 6 months |
-| **Organization** | $49 | $480 | 50+ | 2 months |
-| **Government** | $99+ | $990+ | Unlimited | N/A |
+---
 
-**Example Savings:**
-- 5-person company: Lifetime $499 vs 3-year subscription $3,420 = **Save $2,921**
-- 25-person org: Lifetime $2,499 vs 3-year subscription $44,100 = **Save $41,601**
+### Company Tier (Unlimited Seats)
+
+**For organizations of any size.** No per-user fees, unlimited seats per entity.
+
+| Plan | Price | Best For |
+|------|-------|----------|
+| **Weekly** | $250/week | Short-term projects, pilots, trials |
+| **Monthly** | $1,000/month | Flexible commitments, growing teams |
+| **Yearly** | $8,000/year | Long-term use, 33% savings |
+| **Lifetime** | $25,000 one-time | Permanent rights, eliminate recurring costs |
+
+**What You Get:**
+- ✅ Unlimited seats per entity (no per-user fees)
+- ✅ Full commercial use rights
+- ✅ Team collaboration and cloud sync
+- ✅ Priority support (4-hour response)
+- ✅ Custom branding and audit logging
+- ✅ 99.5% uptime SLA
+
+**Example Value:**
+- 10-person team: $1,000/month = $100/person/month
+- 100-person team: $1,000/month = $10/person/month
+- **No per-seat penalties as you grow**
+
+---
+
+### Government Tier (Unlimited Seats)
+
+**For government, military, and defense.** Subscription only (requires ongoing compliance operations).
+
+| Plan | Price | Includes |
+|------|-------|----------|
+| **Monthly** | $2,500/month | Base tier + unlimited seats |
+| **Yearly** | $10,000/year | 58% savings vs monthly |
+| **Lifetime** | Not Available | Requires continuous compliance |
+
+**Additional Surcharges:**
+- Classified Deployment: +$1,000/month
+- Air-gapped/Tactical: +$1,500/month
+
+**What You Get:**
+- ✅ Unlimited seats per entity
+- ✅ FIPS 140-2/3 Level 3+ HSM (mandatory)
+- ✅ FedRAMP High authorization support
+- ✅ Classified data handling (up to Top Secret)
+- ✅ 24/7/365 cleared support personnel
+- ✅ Air-gapped and on-premises deployment
+- ✅ 99.99%+ uptime SLA
 
 [📊 Full Pricing Details](docs/legal/PRICING_FRAMEWORK.md)
 
