@@ -43,8 +43,25 @@ class TierLevel(StrEnum):
 
     SOLO = "solo"
     COMPANY = "company"
-    ORGANIZATION = "organization"
     GOVERNMENT = "government"
+
+
+class SubscriptionPlan(StrEnum):
+    """Subscription plan types for Company and Government tiers"""
+
+    # Company plans
+    COMPANY_WEEKLY = "company_weekly"
+    COMPANY_MONTHLY = "company_monthly"
+    COMPANY_YEARLY = "company_yearly"
+    COMPANY_LIFETIME = "company_lifetime"
+
+    # Government plans (no lifetime option)
+    GOVERNMENT_MONTHLY = "government_monthly"
+    GOVERNMENT_YEARLY = "government_yearly"
+
+    # Legacy Solo
+    SOLO_FREE = "solo_free"
+    SOLO_LIFETIME = "solo_lifetime"
 
 
 class AcceptanceType(StrEnum):
@@ -53,6 +70,7 @@ class AcceptanceType(StrEnum):
     INITIAL_MSA = "initial_msa"
     JURISDICTION_ANNEX = "jurisdiction_annex"
     TIER_UPGRADE = "tier_upgrade"
+    PLAN_CHANGE = "plan_change"  # New: for changing subscription plans
     POLICY_UPDATE = "policy_update"
     TERMINATION = "termination"
     AUDIT_LOCK = "audit_lock"
@@ -560,3 +578,43 @@ def get_acceptance_ledger(data_dir: str = "data/legal") -> AcceptanceLedger:
     if _ledger_instance is None:
         _ledger_instance = AcceptanceLedger(data_dir=data_dir)
     return _ledger_instance
+
+
+def get_seat_count_from_entry(entry: AcceptanceEntry) -> int | None:
+    """
+    Extract seat count from acceptance entry metadata.
+
+    Args:
+        entry: AcceptanceEntry to extract seat count from
+
+    Returns:
+        int: Seat count if present in metadata, None otherwise
+
+    Note:
+        Government tier entries should have 'seat_count' in metadata.
+        Company tier has unlimited seats (no seat count needed).
+    """
+    if entry.tier == TierLevel.GOVERNMENT:
+        return entry.metadata.get("seat_count")
+    return None
+
+
+def set_seat_count_in_metadata(metadata: dict, seat_count: int) -> dict:
+    """
+    Add seat count to metadata dictionary.
+
+    Args:
+        metadata: Metadata dictionary
+        seat_count: Number of seats
+
+    Returns:
+        dict: Updated metadata with seat_count
+
+    Raises:
+        ValueError: If seat_count is less than 1
+    """
+    if seat_count < 1:
+        raise ValueError(f"Seat count must be at least 1, got {seat_count}")
+
+    metadata["seat_count"] = seat_count
+    return metadata

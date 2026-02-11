@@ -179,12 +179,13 @@ def enforce_acceptance():
 - Public key stored in ledger
 - Signatures mathematically verifiable
 
-**Hardware-Backed Signing (Organization, Government Tiers):**
+**Hardware-Backed Signing (Government Tier):**
 - TPM (Trusted Platform Module) 2.0
 - HSM (Hardware Security Module) - FIPS 140-2/3
 - Private key never leaves hardware
 - Attestation proves hardware backing
 - Enhanced security against key theft
+- Mandatory for government deployments
 
 **Signature Verification:**
 ```python
@@ -293,7 +294,7 @@ entry_n.previous_entry_hash = entry_(n-1).compute_entry_hash()
 - Continuous monitoring for anomalies
 
 **External Audits:**
-- Available for Organization/Government tiers
+- Available for Company and Government tiers
 - Independent third-party verification
 - Audit reports provided to customers
 - Attestation of ledger integrity

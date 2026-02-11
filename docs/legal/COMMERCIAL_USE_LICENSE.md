@@ -55,49 +55,45 @@ Breach results in immediate termination.
 
 ### III. COMMERCIAL LICENSE TIERS
 
-**Company Tier ($19/seat/month or $499 lifetime):**
-- 2-50 employees
+**Company Tier:**
+- Unlimited seats per entity (no per-user fees)
 - Commercial use rights
 - Standard features and support
 - Cloud sync and collaboration
+- Pricing: Weekly ($250), Monthly ($1,000), Yearly ($8,000), or Lifetime ($25,000)
 
-**Organization Tier ($49/seat/month or $2,499 lifetime):**
-- 50+ employees or regulated industries
-- Advanced features (HSM, white-label, on-prem)
-- Priority support and dedicated account management
-- Enhanced compliance and security
-
-**Government Tier ($99+/seat/month, subscription only):**
+**Government Tier:**
+- Unlimited seats per entity (no per-user fees)
 - Government, military, intelligence agencies
 - Classified deployment support
 - Mandatory hardware-backed signing
 - Continuous security operations
+- Pricing: Monthly ($2,500), Yearly ($10,000), Lifetime (Not Available - requires ongoing compliance)
 
 ### IV. LICENSING MODELS
 
-**Subscription Model:**
-- Monthly or annual recurring billing
+**Subscription Model (Company & Government):**
+- Weekly, monthly, or annual recurring billing
 - Automatic updates and support
 - Managed cloud hosting (optional)
 - SLA guarantees
 - Cancel anytime (end of billing period)
+- Unlimited seats per entity
 
-**Lifetime Model:**
+**Lifetime Model (Company Only):**
 - One-time payment for perpetual commercial rights
 - Self-hosted or managed options
 - Lifetime updates and security patches
-- Priority support (varies by tier)
+- Priority support
 - Transfer restrictions apply
+- Unlimited seats per entity
 
-**Hybrid Model:**
-- Subscription for base features
-- One-time purchases for add-ons
-- Volume discounts available
+**Note:** Government tier does not offer lifetime option due to ongoing compliance, security monitoring, and clearance requirements.
 
 ### V. COMPENSATION REQUIREMENTS
 
 **Subscription Payments:**
-- Due in advance (monthly or annually)
+- Due in advance (weekly, monthly, or annually based on plan)
 - Automatic renewal unless canceled
 - Grace period: 7 days for payment issues
 - Suspension after grace period
@@ -108,9 +104,9 @@ Breach results in immediate termination.
 - Refund: 30-day money-back guarantee (first purchase only)
 
 **Usage-Based Fees (if applicable):**
-- API call overages
-- Storage overages
-- Additional seats beyond license
+- API call overages (above tier limits)
+- Storage overages (above tier limits)
+- Custom feature development (by quote)
 
 **Late Payments:**
 - 5% monthly interest on overdue amounts
@@ -127,7 +123,7 @@ Breach results in immediate termination.
 - Error and crash reports
 - Capability evolution feedback
 
-**Annual Reports (Organization/Government tiers):**
+**Annual Reports (Government tier):**
 - Deployment architecture changes
 - Integration patterns
 - Security posture updates
@@ -180,7 +176,7 @@ Breach results in immediate termination.
 
 ### X. WHITE-LABELING AND REBRANDING
 
-**Organization Tier and Above:**
+**Company Tier (Lifetime and Enterprise Options):**
 - May white-label and rebrand user interfaces
 - Must retain governance systems and attribution in code
 - Cannot claim Project-AI as proprietary development
@@ -198,26 +194,21 @@ Breach results in immediate termination.
 - 99.5% uptime SLA (managed hosting)
 - Community forum access
 - Documentation and knowledge base
-
-**Organization Tier:**
-- 24/7 phone/chat/email support, 1-hour critical response
-- 99.9% uptime SLA
-- Dedicated account manager
-- Onboarding and training
-- Priority bug fixes
+- Quarterly business reviews
 
 **Government Tier:**
-- 24/7 dedicated team, 15-minute critical response
-- 99.99% uptime SLA (configurable)
-- On-site support (available)
+- 24/7 dedicated team with security clearances, 15-minute critical response
+- 99.99%+ uptime SLA (configurable up to 99.999%)
+- On-site support available
 - Security operations center monitoring
 - Continuous compliance support
+- Dedicated account manager
 
 ### XII. AUDIT RIGHTS
 
 **Project-AI reserves the right to:**
 - Audit commercial usage annually (reasonable notice)
-- Verify seat counts and tier compliance
+- Verify tier compliance and active subscriptions
 - Review adherence to license terms
 - Inspect governance system integrity (no tampering)
 
@@ -225,7 +216,7 @@ Breach results in immediate termination.
 - Maintain accurate records of usage
 - Provide audit cooperation
 - Correct discrepancies within 30 days
-- Pay additional fees if under-licensed
+- Pay additional fees if under-licensed or subscription lapsed
 
 ### XIII. TERMINATION
 
@@ -299,11 +290,12 @@ Breach results in immediate termination.
 ## ACCEPTANCE
 
 **To obtain Commercial License:**
-1. Select appropriate tier (Company, Organization, Government)
-2. Execute Commercial Addendum (online or written)
-3. Provide payment information
-4. Cryptographically accept in acceptance ledger
-5. Receive license activation
+1. Select appropriate tier (Company or Government)
+2. Select subscription plan (weekly/monthly/yearly/lifetime for Company; monthly/yearly for Government)
+3. Execute Commercial Addendum (online or written)
+4. Provide payment information
+5. Cryptographically accept in acceptance ledger
+6. Receive license activation
 
 **Contact:**
 - **Sales:** sales@project-ai.dev
