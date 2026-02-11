@@ -123,7 +123,7 @@ Breach results in immediate termination.
 - Error and crash reports
 - Capability evolution feedback
 
-**Annual Reports (Organization/Government tiers):**
+**Annual Reports (Government tier):**
 - Deployment architecture changes
 - Integration patterns
 - Security posture updates
@@ -176,7 +176,7 @@ Breach results in immediate termination.
 
 ### X. WHITE-LABELING AND REBRANDING
 
-**Organization Tier and Above:**
+**Company Tier (Lifetime and Enterprise Options):**
 - May white-label and rebrand user interfaces
 - Must retain governance systems and attribution in code
 - Cannot claim Project-AI as proprietary development
@@ -194,20 +194,15 @@ Breach results in immediate termination.
 - 99.5% uptime SLA (managed hosting)
 - Community forum access
 - Documentation and knowledge base
-
-**Organization Tier:**
-- 24/7 phone/chat/email support, 1-hour critical response
-- 99.9% uptime SLA
-- Dedicated account manager
-- Onboarding and training
-- Priority bug fixes
+- Quarterly business reviews
 
 **Government Tier:**
-- 24/7 dedicated team, 15-minute critical response
-- 99.99% uptime SLA (configurable)
-- On-site support (available)
+- 24/7 dedicated team with security clearances, 15-minute critical response
+- 99.99%+ uptime SLA (configurable up to 99.999%)
+- On-site support available
 - Security operations center monitoring
 - Continuous compliance support
+- Dedicated account manager
 
 ### XII. AUDIT RIGHTS
 
@@ -295,11 +290,12 @@ Breach results in immediate termination.
 ## ACCEPTANCE
 
 **To obtain Commercial License:**
-1. Select appropriate tier (Company, Organization, Government)
-2. Execute Commercial Addendum (online or written)
-3. Provide payment information
-4. Cryptographically accept in acceptance ledger
-5. Receive license activation
+1. Select appropriate tier (Company or Government)
+2. Select subscription plan (weekly/monthly/yearly/lifetime for Company; monthly/yearly for Government)
+3. Execute Commercial Addendum (online or written)
+4. Provide payment information
+5. Cryptographically accept in acceptance ledger
+6. Receive license activation
 
 **Contact:**
 - **Sales:** sales@project-ai.dev
