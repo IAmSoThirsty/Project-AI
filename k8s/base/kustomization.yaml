@@ -1,0 +1,29 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: project-ai
+
+resources:
+- namespace.yaml
+- configmap.yaml
+- secret.yaml
+- deployment.yaml
+- service.yaml
+- ingress.yaml
+- pvc.yaml
+- rbac.yaml
+- hpa.yaml
+- pdb.yaml
+- networkpolicy.yaml
+- postgres.yaml
+- redis.yaml
+- monitoring.yaml
+
+commonLabels:
+  app.kubernetes.io/part-of: project-ai
+  app.kubernetes.io/managed-by: kustomize
+
+images:
+- name: project-ai
+  newName: ghcr.io/iamsothirsty/project-ai
+  newTag: latest
