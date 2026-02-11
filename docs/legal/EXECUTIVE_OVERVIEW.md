@@ -161,9 +161,11 @@ Project-AI delivers a production-grade, open-source AI assistant platform with e
 - Company Monthly: 150 companies × $1,000/month × 12 = $1,800,000
 - Company Yearly: 50 companies × $8,000/year = $400,000
 - Company Lifetime: 20 companies × $25,000 = $500,000
-- Government Monthly: 5 agencies × $2,500/month × 12 = $150,000
-- Government Yearly: 2 agencies × $10,000/year = $20,000
-- **Total: $3,068,000**
+- Government Monthly (progressive pricing):
+  - 3 agencies @ 20 seats: 3 × $2,500/month × 12 = $90,000
+  - 2 agencies @ 40 seats: 2 × $2,875/month × 12 = $69,000
+- Government Yearly: 2 agencies @ 30 seats × $11,500/year = $23,000
+- **Total: $3,080,000**
 
 **Expenses:**
 - Development: $600,000 (8 FTE)
@@ -173,15 +175,15 @@ Project-AI delivers a production-grade, open-source AI assistant platform with e
 - Operations: $150,000
 - **Total: $1,275,000**
 
-**Net: +$1,793,000** (Highly Profitable)
+**Net: +$1,805,000** (Highly Profitable)
 
 ### Year 5 (Scale)
 
 **Revenue:**
 - Company Subscriptions (monthly/yearly): $8,000,000 ARR
 - Company Lifetime Purchases: $2,000,000/year
-- Government Subscriptions: $3,000,000/year
-- **Total: $13,000,000**
+- Government Subscriptions (progressive pricing, avg 50 seats/agency): $4,000,000/year
+- **Total: $14,000,000**
 
 **Expenses:**
 - Personnel (25 FTE): $2,500,000
@@ -190,6 +192,8 @@ Project-AI delivers a production-grade, open-source AI assistant platform with e
 - Sales/Marketing: $1,500,000
 - Operations: $500,000
 - **Total: $5,600,000**
+
+**Net: +$8,400,000** (60% profit margin)
 
 **Net: +$7,400,000** (57% profit margin)
 
