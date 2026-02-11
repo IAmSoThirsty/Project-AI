@@ -1,0 +1,216 @@
+---
+# TK8S RBAC POLICIES
+# Least Privilege Access | Service Account Per Component
+# No Direct kubectl Access to Production
+
+# ============================================================================
+# SERVICE ACCOUNTS
+# ============================================================================
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: project-ai-core
+  namespace: project-ai-core
+  labels:
+    tk8s.io/component: "core"
+  annotations:
+    tk8s.io/doctrine: "Least privilege service account for core"
+automountServiceAccountToken: true
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: project-ai-eca
+  namespace: project-ai-eca
+  labels:
+    tk8s.io/component: "eca"
+    tk8s.io/isolation: "maximum"
+  annotations:
+    tk8s.io/doctrine: "Ultra isolation - no service account token mounted"
+automountServiceAccountToken: false
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: project-ai-security
+  namespace: project-ai-security
+  labels:
+    tk8s.io/component: "security"
+  annotations:
+    tk8s.io/doctrine: "Cerberus cluster integrity monitoring"
+automountServiceAccountToken: true
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: project-ai-monitoring
+  namespace: project-ai-monitoring
+  labels:
+    tk8s.io/component: "monitoring"
+  annotations:
+    tk8s.io/doctrine: "Prometheus metrics scraping"
+automountServiceAccountToken: true
+
+---
+# ============================================================================
+# ROLES - Namespace-scoped permissions
+# ============================================================================
+
+# Core namespace role
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: project-ai-core-role
+  namespace: project-ai-core
+  labels:
+    tk8s.io/component: "core"
+rules:
+- apiGroups: [""]
+  resources: ["configmaps", "secrets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list"]
+- apiGroups: [""]
+  resources: ["services"]
+  verbs: ["get", "list"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: project-ai-core-rolebinding
+  namespace: project-ai-core
+  labels:
+    tk8s.io/component: "core"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: project-ai-core-role
+subjects:
+- kind: ServiceAccount
+  name: project-ai-core
+  namespace: project-ai-core
+
+---
+# ECA namespace role (minimal permissions - ultra isolation)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: project-ai-eca-role
+  namespace: project-ai-eca
+  labels:
+    tk8s.io/component: "eca"
+    tk8s.io/isolation: "maximum"
+rules:
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["get"]
+  # Only read-only access to specific config
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: project-ai-eca-rolebinding
+  namespace: project-ai-eca
+  labels:
+    tk8s.io/component: "eca"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: project-ai-eca-role
+subjects:
+- kind: ServiceAccount
+  name: project-ai-eca
+  namespace: project-ai-eca
+
+---
+# ============================================================================
+# CLUSTER ROLES - Cross-namespace monitoring
+# ============================================================================
+
+# Monitoring cluster role (read-only metrics scraping)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: project-ai-monitoring-clusterrole
+  labels:
+    tk8s.io/component: "monitoring"
+rules:
+- apiGroups: [""]
+  resources: ["nodes", "nodes/metrics", "services", "endpoints", "pods"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["get"]
+- nonResourceURLs: ["/metrics", "/metrics/cadvisor"]
+  verbs: ["get"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: project-ai-monitoring-clusterrolebinding
+  labels:
+    tk8s.io/component: "monitoring"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: project-ai-monitoring-clusterrole
+subjects:
+- kind: ServiceAccount
+  name: project-ai-monitoring
+  namespace: project-ai-monitoring
+
+---
+# Security cluster role (Cerberus integrity monitoring)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: project-ai-security-clusterrole
+  labels:
+    tk8s.io/component: "security"
+rules:
+- apiGroups: [""]
+  resources: ["pods", "services", "configmaps"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apps"]
+  resources: ["deployments", "statefulsets", "daemonsets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["networking.k8s.io"]
+  resources: ["networkpolicies"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["policy"]
+  resources: ["podsecuritypolicies", "poddisruptionbudgets"]
+  verbs: ["get", "list", "watch"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: project-ai-security-clusterrolebinding
+  labels:
+    tk8s.io/component: "security"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: project-ai-security-clusterrole
+subjects:
+- kind: ServiceAccount
+  name: project-ai-security
+  namespace: project-ai-security
+
+---
+# ============================================================================
+# POD SECURITY POLICIES (Deprecated in K8s 1.25+, use Pod Security Standards)
+# Keeping for reference - enforced via namespace labels
+# ============================================================================
+
+# Note: Pod Security Admission enforced via namespace labels:
+# - pod-security.kubernetes.io/enforce: restricted
+# - pod-security.kubernetes.io/audit: restricted
+# - pod-security.kubernetes.io/warn: restricted

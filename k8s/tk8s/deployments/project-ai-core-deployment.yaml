@@ -1,0 +1,208 @@
+---
+# PROJECT-AI CORE DEPLOYMENT
+# TK8S Layer 2: Sovereign Services
+# Immutable | Signed Images Only | No Shell Access
+# SBOM Mandatory | All Secrets via Vault
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-ai-core
+  namespace: project-ai-core
+  labels:
+    app: project-ai-core
+    app.kubernetes.io/name: project-ai-core
+    app.kubernetes.io/component: application
+    app.kubernetes.io/version: "1.0.0"
+    tk8s.io/layer: "2-sovereign-services"
+    tk8s.io/signed-image: "required"
+  annotations:
+    tk8s.io/doctrine: "Single Monorepo Authority | Git = Source of Truth"
+    tk8s.io/sbom: "required"
+    tk8s.io/security: "no-shell-access | no-mutable-containers"
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8080"
+    prometheus.io/path: "/metrics"
+spec:
+  replicas: 3
+  revisionHistoryLimit: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: project-ai-core
+  template:
+    metadata:
+      labels:
+        app: project-ai-core
+        app.kubernetes.io/name: project-ai-core
+        app.kubernetes.io/component: application
+        app.kubernetes.io/version: "1.0.0"
+        tk8s.io/layer: "2-sovereign-services"
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
+        # Image signature validation (enforced by Kyverno)
+        cosign.sigstore.dev/signature: "required"
+        tk8s.io/sbom-sha256: "placeholder-to-be-generated"
+    spec:
+      serviceAccountName: project-ai-core
+      
+      # Security Context - Civilization Grade
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 2000
+        runAsGroup: 2000
+        fsGroup: 2000
+        seccompProfile:
+          type: RuntimeDefault
+      
+      # No shell access - removed debug containers
+      enableServiceLinks: false
+      automountServiceAccountToken: true
+      
+      containers:
+      - name: core
+        # Signed image only - enforced by admission controller
+        image: ghcr.io/iamsothirsty/project-ai-core:1.0.0
+        imagePullPolicy: IfNotPresent
+        
+        # Resource limits - civilization grade
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "4Gi"
+            cpu: "2000m"
+        
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        - name: metrics
+          containerPort: 9090
+          protocol: TCP
+        
+        # Health probes
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+        
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 3
+        
+        startupProbe:
+          httpGet:
+            path: /health/startup
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 0
+          periodSeconds: 5
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 30
+        
+        # Environment from Vault/SealedSecrets
+        envFrom:
+        - secretRef:
+            name: project-ai-core-secrets
+        - configMapRef:
+            name: project-ai-core-config
+        
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: TK8S_LAYER
+          value: "2-sovereign-services"
+        - name: TK8S_COMPONENT
+          value: "core"
+        
+        # Container security context - no privilege escalation
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 2000
+          capabilities:
+            drop:
+            - ALL
+        
+        # Volume mounts - read-only root, writable temp
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: data
+          mountPath: /app/data
+        - name: logs
+          mountPath: /app/logs
+        - name: cache
+          mountPath: /app/cache
+      
+      volumes:
+      - name: tmp
+        emptyDir:
+          sizeLimit: 1Gi
+      - name: logs
+        emptyDir:
+          sizeLimit: 5Gi
+      - name: cache
+        emptyDir:
+          sizeLimit: 2Gi
+      - name: data
+        persistentVolumeClaim:
+          claimName: project-ai-core-data
+      
+      # Pod anti-affinity - spread across nodes
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - project-ai-core
+              topologyKey: kubernetes.io/hostname
+      
+      # Tolerations for node failures
+      tolerations:
+      - key: "node.kubernetes.io/not-ready"
+        operator: "Exists"
+        effect: "NoExecute"
+        tolerationSeconds: 300
+      - key: "node.kubernetes.io/unreachable"
+        operator: "Exists"
+        effect: "NoExecute"
+        tolerationSeconds: 300

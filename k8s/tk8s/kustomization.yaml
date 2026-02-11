@@ -1,0 +1,81 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+metadata:
+  name: tk8s-base
+  annotations:
+    tk8s.io/doctrine: "Single Monorepo Authority | Git = Source of Truth"
+
+namespace: project-ai-core
+
+# Common labels applied to all resources
+commonLabels:
+  app.kubernetes.io/name: project-ai
+  app.kubernetes.io/managed-by: tk8s
+  tk8s.io/version: "1.0.0"
+
+# Common annotations
+commonAnnotations:
+  tk8s.io/doctrine: "Civilization-Grade Sovereign Orchestration"
+  tk8s.io/git-repo: "https://github.com/IAmSoThirsty/Project-AI"
+
+# Resources
+resources:
+  # Namespaces
+  - namespaces/tk8s-namespaces.yaml
+  
+  # Deployments
+  - deployments/project-ai-core-deployment.yaml
+  - deployments/project-ai-eca-deployment.yaml
+  
+  # Network Policies
+  - network-policies/tk8s-network-policies.yaml
+  
+  # RBAC
+  - rbac/tk8s-rbac.yaml
+  
+  # Security Policies (Kyverno)
+  - security/kyverno-policies.yaml
+  
+  # Monitoring
+  - monitoring/prometheus-config.yaml
+  
+  # ArgoCD Applications
+  - argocd/applications.yaml
+
+# Images - these will be updated by CI/CD pipeline
+images:
+  - name: project-ai-core
+    newName: ghcr.io/iamsothirsty/project-ai-core
+    newTag: latest
+  - name: project-ai-eca
+    newName: ghcr.io/iamsothirsty/project-ai-eca
+    newTag: latest
+
+# ConfigMap generator for TK8S metadata
+configMapGenerator:
+  - name: tk8s-metadata
+    literals:
+      - TK8S_VERSION=1.0.0
+      - TK8S_DOCTRINE=civilization-grade
+      - GIT_REPO=https://github.com/IAmSoThirsty/Project-AI
+      - DEPLOYMENT_TYPE=kubernetes
+      - ARCHITECTURE_LAYER=tk8s
+
+# Secret generator (placeholder - use SealedSecrets or Vault in production)
+secretGenerator:
+  - name: tk8s-secrets-placeholder
+    literals:
+      - REPLACE_WITH_SEALED_SECRETS=true
+
+# Patches for different environments
+patchesStrategicMerge: []
+
+# Patches for JSON6902
+patches: []
+
+# Replacements (for dynamic values)
+replacements: []
+
+# Vars (deprecated but kept for compatibility)
+vars: []
