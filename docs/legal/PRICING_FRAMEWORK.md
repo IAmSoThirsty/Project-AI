@@ -177,7 +177,7 @@ For organizations preferring ongoing support, automatic updates, and managed ser
 - ✓ Disaster recovery and business continuity (geographically distributed)
 - ✓ Chain of custody documentation
 - ✓ Tamper-evident packaging and delivery
-- ✓ Unlimited seats per entity (no per-user fees)
+- ✓ Progressive seat-based pricing (15% increase per 25 seats)
 
 **Entity Types Supported:**
 - Federal government agencies (civilian and military)
@@ -200,20 +200,39 @@ For organizations preferring ongoing support, automatic updates, and managed ser
 - Supply chain risk management (SCRM) compliance
 - Anti-tamper and self-destruct mechanisms (optional)
 
-**Pricing Plans:**
+**Pricing Plans (Progressive Seat-Based):**
 
-| Plan | Price | Best For |
-|------|-------|----------|
-| **Monthly** | $2,500/month | Flexible government contracts, pilot programs |
-| **Yearly** | $10,000/year | Long-term deployments, 67% savings vs monthly |
-| **Lifetime** | Not Available | Government requires ongoing compliance monitoring |
+**Base Pricing (1-25 seats):**
+- Monthly: $2,500/month
+- Yearly: $10,000/year
+
+**Progressive Pricing Tiers:**
+
+Government pricing increases by 15% for every 25 seats to account for increased security operations, compliance overhead, and support requirements.
+
+| Seat Range | Monthly Price | Yearly Price | Price Multiplier |
+|------------|---------------|--------------|------------------|
+| 1-25 seats | $2,500/month | $10,000/year | Base (100%) |
+| 26-50 seats | $2,875/month | $11,500/year | +15% (115%) |
+| 51-75 seats | $3,250/month | $13,000/year | +30% (130%) |
+| 76-100 seats | $3,625/month | $14,500/year | +45% (145%) |
+| 101-125 seats | $4,000/month | $16,000/year | +60% (160%) |
+| 126-150 seats | $4,375/month | $17,500/year | +75% (175%) |
+| 151+ seats | Contact sales | Contact sales | Custom pricing |
+
+**Formula:** 
+```
+Price = Base_Price × (1 + 0.15 × floor((seats - 1) / 25))
+Monthly: $2,500 × multiplier
+Yearly: $10,000 × multiplier
+```
 
 **Additional Surcharges:**
 - Classified Deployment: +$1,000/month (requires security clearances)
 - Air-gapped/Tactical: +$1,500/month (special hardware and deployment)
 
 **All Plans Include:**
-- Unlimited seats per entity
+- Specified seat count with progressive pricing
 - 24/7/365 dedicated support with cleared personnel
 - Continuous security monitoring
 - On-site installation and training
@@ -233,6 +252,14 @@ For organizations preferring ongoing support, automatic updates, and managed ser
 - Contract vehicle (GSA Schedule, BPA, or direct contract)
 
 **Why No Lifetime Option:** Government-grade security and compliance require ongoing operations: continuous security monitoring, compliance audits, cleared support staff, threat intelligence feeds, and regulatory updates. These operational requirements make subscription the only viable model.
+
+**Why Progressive Pricing:** Government deployments scale with complexity. Each additional 25-seat tier requires:
+- Additional cleared support personnel
+- Increased security monitoring infrastructure
+- Enhanced compliance reporting and audits
+- Expanded threat intelligence coverage
+- Additional hardware security modules
+- Greater operational overhead
 
 ---
 
