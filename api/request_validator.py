@@ -107,18 +107,28 @@ class RequestValidator:
         return True
     
     @classmethod
-    def sanitize_string(cls, value: str) -> str:
-        """Sanitize string input"""
+    def sanitize_string(cls, value: str, max_length: int = 10000) -> str:
+        """
+        Sanitize string input
+        
+        Args:
+            value: String to sanitize
+            max_length: Maximum allowed length
+        
+        Raises:
+            RequestValidationError: If string exceeds maximum length
+        """
         # Remove null bytes
         value = value.replace("\x00", "")
         
         # Remove control characters (except newline and tab)
         value = re.sub(r"[\x00-\x08\x0B-\x0C\x0E-\x1F\x7F]", "", value)
         
-        # Limit string length
-        max_length = 10000
+        # Check string length and raise error if too long
         if len(value) > max_length:
-            value = value[:max_length]
+            raise RequestValidationError(
+                f"Input string exceeds maximum length of {max_length} characters"
+            )
         
         return value
     

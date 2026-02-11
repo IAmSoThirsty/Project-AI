@@ -43,7 +43,10 @@ spec:
           protocol: TCP
         env:
         - name: REDIS_PASSWORD
-          value: "changeme"
+          valueFrom:
+            secretKeyRef:
+              name: redis-password
+              key: password
         resources:
           requests:
             memory: "256Mi"

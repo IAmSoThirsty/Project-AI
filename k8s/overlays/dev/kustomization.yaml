@@ -3,7 +3,7 @@ kind: Kustomization
 
 namespace: project-ai-dev
 
-bases:
+resources:
 - ../../base
 
 namePrefix: dev-
