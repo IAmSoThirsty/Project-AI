@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-ai-app
+spec:
+  replicas: 2
+  template:
+    spec:
+      containers:
+      - name: project-ai
+        resources:
+          requests:
+            memory: "384Mi"
+            cpu: "200m"
+          limits:
+            memory: "1.5Gi"
+            cpu: "750m"

@@ -1,9 +1,11 @@
 # Project AI – Governance‑First Web Backend
 # Canonical minimal-but-complete backend enforcing TARL as law
 # Stack: Python 3.11 + FastAPI
+# Production-ready with rate limiting, validation, observability, and circuit breakers
 
 import hashlib
 import json
+import os
 import time
 from enum import StrEnum
 from typing import Any
@@ -12,16 +14,72 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
-app = FastAPI(title="Project AI Governance Host", version="0.1.0")
+app = FastAPI(
+    title="Project AI Governance Host",
+    version=os.getenv("APP_VERSION", "1.0.0"),
+    description="Production-ready AI governance platform with enterprise security"
+)
 
 # CORS for web frontend
+cors_origins = os.getenv("CORS_ORIGINS", "*").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Configure appropriately for production
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Production middleware: Rate limiting
+enable_rate_limiting = os.getenv("ENABLE_RATE_LIMITING", "true").lower() == "true"
+if enable_rate_limiting:
+    try:
+        from api.rate_limiter import RateLimitMiddleware
+        
+        rate_limit = int(os.getenv("RATE_LIMIT_PER_MINUTE", "60"))
+        app.add_middleware(
+            RateLimitMiddleware,
+            rate=rate_limit,
+            per=60,
+            exempt_paths=["/health", "/metrics", "/docs"]
+        )
+        print(f"[OK] Rate limiting enabled: {rate_limit} requests/minute")
+    except ImportError as e:
+        print(f"[WARN] Rate limiting not available: {e}")
+
+# Production middleware: Request validation
+enable_validation = os.getenv("ENABLE_REQUEST_VALIDATION", "true").lower() == "true"
+if enable_validation:
+    try:
+        from api.request_validator import RequestValidationMiddleware
+        
+        app.add_middleware(
+            RequestValidationMiddleware,
+            exempt_paths=["/docs", "/openapi.json", "/metrics"]
+        )
+        print("[OK] Request validation enabled")
+    except ImportError as e:
+        print(f"[WARN] Request validation not available: {e}")
+
+# Production observability: OpenTelemetry
+enable_observability = os.getenv("ENABLE_OBSERVABILITY", "true").lower() == "true"
+if enable_observability:
+    try:
+        from api.observability import setup_observability
+        
+        setup_observability(app)
+        print("[OK] Observability (tracing, metrics) enabled")
+    except ImportError as e:
+        print(f"[WARN] Observability not available: {e}")
+
+# Include health check endpoints
+try:
+    from api.health_endpoints import router as health_router
+
+    app.include_router(health_router)
+    print("[OK] Health check endpoints registered")
+except ImportError as e:
+    print(f"[WARN] Health check endpoints not available: {e}")
 
 # Include Legion/OpenClaw router
 try:

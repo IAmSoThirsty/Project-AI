@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: project-ai
+  labels:
+    name: project-ai
+    environment: production
+    app.kubernetes.io/name: project-ai
+    app.kubernetes.io/component: namespace
+    app.kubernetes.io/managed-by: kubernetes

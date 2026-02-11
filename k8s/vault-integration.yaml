@@ -1,0 +1,178 @@
+---
+# HashiCorp Vault Integration for Project-AI
+# Provides secure secrets management with automatic rotation
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: vault-auth
+  namespace: project-ai
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: vault-auth-delegator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:auth-delegator
+subjects:
+- kind: ServiceAccount
+  name: vault-auth
+  namespace: project-ai
+---
+# External Secrets Operator - Vault SecretStore
+apiVersion: external-secrets.io/v1beta1
+kind: SecretStore
+metadata:
+  name: vault-backend
+  namespace: project-ai
+spec:
+  provider:
+    vault:
+      server: "http://vault.vault.svc.cluster.local:8200"
+      path: "secret"
+      version: "v2"
+      auth:
+        kubernetes:
+          mountPath: "kubernetes"
+          role: "project-ai"
+          serviceAccountRef:
+            name: vault-auth
+---
+# External Secret for Project-AI
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: project-ai-secrets
+  namespace: project-ai
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-backend
+    kind: SecretStore
+  target:
+    name: project-ai-secrets
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        # Database credentials
+        DB_USER: "{{ .db_username }}"
+        DB_PASSWORD: "{{ .db_password }}"
+        DB_HOST: "postgres.project-ai.svc.cluster.local"
+        DB_PORT: "5432"
+        DB_NAME: "projectai"
+        
+        # API Keys
+        OPENAI_API_KEY: "{{ .openai_api_key }}"
+        HUGGINGFACE_API_KEY: "{{ .huggingface_api_key }}"
+        
+        # Encryption keys
+        FERNET_KEY: "{{ .fernet_key }}"
+        JWT_SECRET_KEY: "{{ .jwt_secret_key }}"
+        
+        # SMTP credentials
+        SMTP_USERNAME: "{{ .smtp_username }}"
+        SMTP_PASSWORD: "{{ .smtp_password }}"
+        SMTP_HOST: "smtp.gmail.com"
+        SMTP_PORT: "587"
+        
+        # Redis password
+        REDIS_PASSWORD: "{{ .redis_password }}"
+  data:
+  - secretKey: db_username
+    remoteRef:
+      key: project-ai/database
+      property: username
+  
+  - secretKey: db_password
+    remoteRef:
+      key: project-ai/database
+      property: password
+  
+  - secretKey: openai_api_key
+    remoteRef:
+      key: project-ai/api-keys
+      property: openai
+  
+  - secretKey: huggingface_api_key
+    remoteRef:
+      key: project-ai/api-keys
+      property: huggingface
+  
+  - secretKey: fernet_key
+    remoteRef:
+      key: project-ai/encryption
+      property: fernet_key
+  
+  - secretKey: jwt_secret_key
+    remoteRef:
+      key: project-ai/encryption
+      property: jwt_secret
+  
+  - secretKey: smtp_username
+    remoteRef:
+      key: project-ai/smtp
+      property: username
+  
+  - secretKey: smtp_password
+    remoteRef:
+      key: project-ai/smtp
+      property: password
+  
+  - secretKey: redis_password
+    remoteRef:
+      key: project-ai/redis
+      property: password
+---
+# Vault Policy for Project-AI
+# Apply this in Vault: vault policy write project-ai policy.hcl
+#
+# policy.hcl content:
+# path "secret/data/project-ai/*" {
+#   capabilities = ["read", "list"]
+# }
+#
+# path "secret/metadata/project-ai/*" {
+#   capabilities = ["read", "list"]
+# }
+---
+# Vault Kubernetes Auth Configuration
+# Run these commands in Vault:
+#
+# 1. Enable Kubernetes auth:
+#    vault auth enable kubernetes
+#
+# 2. Configure Kubernetes auth:
+#    vault write auth/kubernetes/config \
+#      kubernetes_host="https://$KUBERNETES_PORT_443_TCP_ADDR:443" \
+#      kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt \
+#      token_reviewer_jwt=@/var/run/secrets/kubernetes.io/serviceaccount/token
+#
+# 3. Create role for project-ai:
+#    vault write auth/kubernetes/role/project-ai \
+#      bound_service_account_names=vault-auth \
+#      bound_service_account_namespaces=project-ai \
+#      policies=project-ai \
+#      ttl=24h
+#
+# 4. Store secrets in Vault:
+#    vault kv put secret/project-ai/database \
+#      username=projectai \
+#      password=<secure-password>
+#    
+#    vault kv put secret/project-ai/api-keys \
+#      openai=<your-openai-key> \
+#      huggingface=<your-hf-key>
+#    
+#    vault kv put secret/project-ai/encryption \
+#      fernet_key=<generated-fernet-key> \
+#      jwt_secret=<generated-jwt-secret>
+#    
+#    vault kv put secret/project-ai/smtp \
+#      username=<smtp-user> \
+#      password=<smtp-password>
+#    
+#    vault kv put secret/project-ai/redis \
+#      password=<redis-password>
