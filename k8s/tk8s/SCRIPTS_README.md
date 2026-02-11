@@ -453,8 +453,8 @@ cosign verify --key .cosign-keys/cosign.pub ghcr.io/iamsothirsty/project-ai-core
 
 ## Support
 
-- **Issues:** https://github.com/IAmSoThirsty/Project-AI/issues
-- **Discussions:** https://github.com/IAmSoThirsty/Project-AI/discussions
+- **Issues:** <a href="https://github.com/IAmSoThirsty/Project-AI/issues">https://github.com/IAmSoThirsty/Project-AI/issues</a>
+- **Discussions:** <a href="https://github.com/IAmSoThirsty/Project-AI/discussions">https://github.com/IAmSoThirsty/Project-AI/discussions</a>
 
 ## License
 

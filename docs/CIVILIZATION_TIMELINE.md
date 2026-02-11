@@ -309,4 +309,4 @@ Older releases are archived but never deleted. History is immutable.
 **Last Updated:** 2026-02-11  
 **Next Review:** TBD  
 **Maintained By:** TK8S Pipeline (automated)  
-**Contact:** tk8s@project-ai.example.com
+**Contact:**
