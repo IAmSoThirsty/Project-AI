@@ -1,0 +1,119 @@
+---
+# TK8S Namespace Structure
+# Civilization-Grade Sovereign Orchestration Layer
+# Git = Source of Truth | Immutable Infrastructure | Zero Trust
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: project-ai-core
+  labels:
+    name: project-ai-core
+    environment: production
+    tk8s-layer: "2-sovereign-services"
+    app.kubernetes.io/name: project-ai
+    app.kubernetes.io/component: core
+    app.kubernetes.io/managed-by: tk8s
+    security.tk8s.io/isolation: standard
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted
+  annotations:
+    tk8s.io/description: "Layer 2: Project-AI Core Services"
+    tk8s.io/doctrine: "sovereign-services"
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: project-ai-security
+  labels:
+    name: project-ai-security
+    environment: production
+    tk8s-layer: "3-governance-security"
+    app.kubernetes.io/name: project-ai
+    app.kubernetes.io/component: security
+    app.kubernetes.io/managed-by: tk8s
+    security.tk8s.io/isolation: high
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted
+  annotations:
+    tk8s.io/description: "Layer 3: TARL, Cerberus, Governance"
+    tk8s.io/doctrine: "governance-and-security"
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: project-ai-memory
+  labels:
+    name: project-ai-memory
+    environment: production
+    tk8s-layer: "2-sovereign-services"
+    app.kubernetes.io/name: project-ai
+    app.kubernetes.io/component: memory
+    app.kubernetes.io/managed-by: tk8s
+    security.tk8s.io/isolation: standard
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted
+  annotations:
+    tk8s.io/description: "Layer 2: Memory & Knowledge Systems"
+    tk8s.io/doctrine: "sovereign-services"
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: project-ai-eca
+  labels:
+    name: project-ai-eca
+    environment: production
+    tk8s-layer: "4-external-amplifiers"
+    app.kubernetes.io/name: project-ai
+    app.kubernetes.io/component: eca
+    app.kubernetes.io/managed-by: tk8s
+    security.tk8s.io/isolation: maximum
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted
+  annotations:
+    tk8s.io/description: "Layer 4: External Cognition Amplifier (Ultra Isolation)"
+    tk8s.io/doctrine: "external-amplifiers"
+    tk8s.io/security-note: "Strict egress-only, no cross-namespace writes"
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: project-ai-monitoring
+  labels:
+    name: project-ai-monitoring
+    environment: production
+    tk8s-layer: "5-observability-audit"
+    app.kubernetes.io/name: project-ai
+    app.kubernetes.io/component: monitoring
+    app.kubernetes.io/managed-by: tk8s
+    security.tk8s.io/isolation: standard
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted
+  annotations:
+    tk8s.io/description: "Layer 5: Observability, Metrics, Audit Trail"
+    tk8s.io/doctrine: "observability-and-audit"
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: project-ai-system
+  labels:
+    name: project-ai-system
+    environment: production
+    tk8s-layer: "1-kubernetes-core"
+    app.kubernetes.io/name: project-ai
+    app.kubernetes.io/component: system
+    app.kubernetes.io/managed-by: tk8s
+    security.tk8s.io/isolation: high
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted
+  annotations:
+    tk8s.io/description: "Layer 1: System Services (Vault, SealedSecrets, Cert-Manager)"
+    tk8s.io/doctrine: "kubernetes-core"

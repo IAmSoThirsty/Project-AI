@@ -186,3 +186,11 @@ node_modules/
 audit_reports/
 test_audit_sample/
 test_audit_output/
+
+# TK8S Cosign Keys (NEVER commit private keys)
+.cosign-keys/
+cosign.key
+cosign.pub
+*.key
+k8s/tk8s/.cosign-keys/
+k8s/tk8s/security/*.backup

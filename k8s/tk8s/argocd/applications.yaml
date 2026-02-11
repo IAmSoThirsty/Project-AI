@@ -1,0 +1,274 @@
+---
+# ArgoCD Application for Project-AI Core
+# GitOps-based deployment with auto-sync
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: project-ai-core
+  namespace: argocd
+  labels:
+    tk8s.io/component: core
+    tk8s.io/layer: "2-sovereign-services"
+  annotations:
+    tk8s.io/doctrine: "Git = Source of Truth"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: project-ai
+  
+  source:
+    repoURL: https://github.com/IAmSoThirsty/Project-AI
+    targetRevision: main
+    path: k8s/tk8s/deployments
+    directory:
+      recurse: true
+      include: '*-core-*.yaml'
+  
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: project-ai-core
+  
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  
+  revisionHistoryLimit: 10
+  
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+
+---
+# ArgoCD Application for Project-AI ECA
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: project-ai-eca
+  namespace: argocd
+  labels:
+    tk8s.io/component: eca
+    tk8s.io/layer: "4-external-amplifiers"
+    tk8s.io/isolation: maximum
+  annotations:
+    tk8s.io/doctrine: "External Cognition (Ultra) Runs in Isolation"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: project-ai
+  
+  source:
+    repoURL: https://github.com/IAmSoThirsty/Project-AI
+    targetRevision: main
+    path: k8s/tk8s/deployments
+    directory:
+      recurse: true
+      include: '*-eca-*.yaml'
+  
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: project-ai-eca
+  
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  
+  revisionHistoryLimit: 10
+
+---
+# ArgoCD Application for TK8S Security Layer
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: project-ai-security
+  namespace: argocd
+  labels:
+    tk8s.io/component: security
+    tk8s.io/layer: "3-governance-security"
+  annotations:
+    tk8s.io/doctrine: "Kyverno, Falco, OPA, Cert-Manager"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: project-ai
+  
+  source:
+    repoURL: https://github.com/IAmSoThirsty/Project-AI
+    targetRevision: main
+    path: k8s/tk8s/security
+    directory:
+      recurse: true
+  
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: project-ai-security
+  
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  
+  revisionHistoryLimit: 10
+
+---
+# ArgoCD Application for Network Policies
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: project-ai-network-policies
+  namespace: argocd
+  labels:
+    tk8s.io/component: network-security
+  annotations:
+    tk8s.io/doctrine: "Zero Trust | Default Deny"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: project-ai
+  
+  source:
+    repoURL: https://github.com/IAmSoThirsty/Project-AI
+    targetRevision: main
+    path: k8s/tk8s/network-policies
+    directory:
+      recurse: true
+  
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: project-ai-system
+  
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+---
+# ArgoCD Application for RBAC
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: project-ai-rbac
+  namespace: argocd
+  labels:
+    tk8s.io/component: rbac
+  annotations:
+    tk8s.io/doctrine: "Least Privilege Access"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: project-ai
+  
+  source:
+    repoURL: https://github.com/IAmSoThirsty/Project-AI
+    targetRevision: main
+    path: k8s/tk8s/rbac
+    directory:
+      recurse: true
+  
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: project-ai-system
+  
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+---
+# ArgoCD AppProject for Project-AI
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: project-ai
+  namespace: argocd
+  labels:
+    tk8s.io/project: project-ai
+  annotations:
+    tk8s.io/doctrine: "TK8S Sovereign Orchestration"
+spec:
+  description: "Project-AI TK8S Applications"
+  
+  sourceRepos:
+    - https://github.com/IAmSoThirsty/Project-AI
+  
+  destinations:
+    - namespace: 'project-ai-*'
+      server: https://kubernetes.default.svc
+    - namespace: argocd
+      server: https://kubernetes.default.svc
+  
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  
+  roles:
+    - name: admin
+      description: "Admin role for Project-AI"
+      policies:
+        - p, proj:project-ai:admin, applications, *, project-ai/*, allow
+      groups:
+        - project-ai-admins
+    
+    - name: developer
+      description: "Developer role for Project-AI"
+      policies:
+        - p, proj:project-ai:developer, applications, get, project-ai/*, allow
+        - p, proj:project-ai:developer, applications, sync, project-ai/*, allow
+      groups:
+        - project-ai-developers

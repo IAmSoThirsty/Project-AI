@@ -1,0 +1,70 @@
+# Dockerfile for ECA (External Cognition Amplifier)
+# Ultra Isolation Build - Layer 4: External Amplifiers
+
+# Stage 1: Build dependencies
+FROM python:3.11-slim as builder
+
+WORKDIR /build
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libssl-dev \
+    libffi-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements
+COPY requirements.txt .
+
+# Build wheels
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /build/wheels -r requirements.txt
+
+
+# Stage 2: Runtime
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install runtime dependencies only
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libssl3 \
+    libffi8 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy wheels from builder
+COPY --from=builder /build/wheels /wheels
+
+# Install wheels
+COPY requirements.txt .
+RUN pip install --no-cache /wheels/*
+
+# Copy ECA-specific application code
+COPY src/app/agents/ /app/src/app/agents/
+COPY src/app/core/ai_systems.py /app/src/app/core/ai_systems.py
+
+# Create non-root user for maximum security
+RUN groupadd -r eca -g 3000 && \
+    useradd -r -u 3000 -g eca -s /sbin/nologin -c "ECA User" eca && \
+    mkdir -p /tmp /app/cache && \
+    chown -R eca:eca /app /tmp
+
+# Set environment for ECA
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH=/app/src
+ENV ULTRA_MODE=scenario
+ENV ECA_ISOLATION=maximum
+ENV EGRESS_ONLY=true
+ENV CROSS_NAMESPACE_WRITES=false
+
+# Switch to non-root user
+USER eca
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD python -c "import sys; sys.exit(0)" || exit 1
+
+# Expose port
+EXPOSE 8081
+
+# Entry point for ECA
+CMD ["python", "-m", "app.agents.oversight"]

@@ -1,0 +1,180 @@
+---
+# ECA (External Cognition Amplifier) DEPLOYMENT
+# TK8S Layer 4: External Amplifiers - ULTRA ISOLATION
+# Strict Egress-Only | No Cross-Namespace Writes | Maximum Security
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-ai-eca
+  namespace: project-ai-eca
+  labels:
+    app: project-ai-eca
+    app.kubernetes.io/name: project-ai-eca
+    app.kubernetes.io/component: external-cognition
+    app.kubernetes.io/version: "1.0.0"
+    tk8s.io/layer: "4-external-amplifiers"
+    tk8s.io/signed-image: "required"
+    tk8s.io/isolation: "maximum"
+  annotations:
+    tk8s.io/doctrine: "External Cognition (Ultra) Runs in Isolation"
+    tk8s.io/sbom: "required"
+    tk8s.io/security: "egress-only | no-shell-access | no-cross-namespace-writes"
+    tk8s.io/quarantine: "active"
+spec:
+  replicas: 2
+  revisionHistoryLimit: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: project-ai-eca
+  template:
+    metadata:
+      labels:
+        app: project-ai-eca
+        app.kubernetes.io/name: project-ai-eca
+        app.kubernetes.io/component: external-cognition
+        app.kubernetes.io/version: "1.0.0"
+        tk8s.io/layer: "4-external-amplifiers"
+        tk8s.io/isolation: "maximum"
+      annotations:
+        # Image signature validation
+        cosign.sigstore.dev/signature: "required"
+        tk8s.io/sbom-sha256: "placeholder-to-be-generated"
+        tk8s.io/egress-only: "true"
+    spec:
+      serviceAccountName: project-ai-eca
+      
+      # Maximum security context
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 3000
+        runAsGroup: 3000
+        fsGroup: 3000
+        seccompProfile:
+          type: RuntimeDefault
+      
+      # No service links, no auto-mount tokens for maximum isolation
+      enableServiceLinks: false
+      automountServiceAccountToken: false
+      
+      containers:
+      - name: eca
+        # Signed image only
+        image: ghcr.io/iamsothirsty/project-ai-eca:1.0.0
+        imagePullPolicy: IfNotPresent
+        
+        # Resource limits for external cognition
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        
+        ports:
+        - name: http
+          containerPort: 8081
+          protocol: TCP
+        
+        # Ultra mode configuration
+        env:
+        - name: ULTRA_MODE
+          value: "scenario"
+        - name: ECA_ISOLATION
+          value: "maximum"
+        - name: EGRESS_ONLY
+          value: "true"
+        - name: CROSS_NAMESPACE_WRITES
+          value: "false"
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: TK8S_LAYER
+          value: "4-external-amplifiers"
+        - name: TK8S_COMPONENT
+          value: "eca"
+        
+        # Environment from sealed secrets
+        envFrom:
+        - secretRef:
+            name: project-ai-eca-secrets
+        - configMapRef:
+            name: project-ai-eca-config
+        
+        # Health probes
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8081
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+        
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 8081
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 3
+        
+        # Maximum container security
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 3000
+          capabilities:
+            drop:
+            - ALL
+        
+        # Volume mounts - minimal writable space
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: cache
+          mountPath: /app/cache
+      
+      volumes:
+      - name: tmp
+        emptyDir:
+          sizeLimit: 512Mi
+      - name: cache
+        emptyDir:
+          sizeLimit: 1Gi
+      
+      # Strong pod anti-affinity - never co-locate
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - project-ai-eca
+            topologyKey: kubernetes.io/hostname
+      
+      # Tolerations
+      tolerations:
+      - key: "node.kubernetes.io/not-ready"
+        operator: "Exists"
+        effect: "NoExecute"
+        tolerationSeconds: 300
