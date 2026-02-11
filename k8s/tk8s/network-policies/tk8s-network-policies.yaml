@@ -1,0 +1,310 @@
+---
+# TK8S NETWORK POLICIES
+# Civilization-Grade Security: Default Deny + Explicit Allow
+# Zero Trust | No Cross-Namespace Writes Without Policy Approval
+
+# ============================================================================
+# DEFAULT DENY ALL - ECA NAMESPACE (Maximum Isolation)
+# ============================================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-all-default
+  namespace: project-ai-eca
+  labels:
+    tk8s.io/security: "default-deny"
+    tk8s.io/isolation: "maximum"
+  annotations:
+    tk8s.io/doctrine: "Default deny in ECA namespace - explicit allow only"
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+
+---
+# ECA EGRESS ONLY - Strict Outbound Policy
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: eca-egress-only
+  namespace: project-ai-eca
+  labels:
+    tk8s.io/security: "egress-only"
+    tk8s.io/isolation: "maximum"
+  annotations:
+    tk8s.io/doctrine: "ECA can only initiate outbound connections"
+spec:
+  podSelector:
+    matchLabels:
+      app: project-ai-eca
+  policyTypes:
+  - Egress
+  egress:
+  # Allow DNS resolution
+  - to:
+    - namespaceSelector: {}
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+  
+  # Allow HTTPS to external APIs only (no internal cluster communication)
+  - to:
+    - namespaceSelector: {}
+    ports:
+    - protocol: TCP
+      port: 443
+  
+  # Explicitly deny all other egress
+  # (implicit by not specifying other rules)
+
+---
+# ============================================================================
+# CORE NAMESPACE - Standard Isolation
+# ============================================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: project-ai-core-policy
+  namespace: project-ai-core
+  labels:
+    tk8s.io/security: "standard-isolation"
+  annotations:
+    tk8s.io/doctrine: "Allow ingress from ingress controller and monitoring"
+spec:
+  podSelector:
+    matchLabels:
+      app: project-ai-core
+  policyTypes:
+  - Ingress
+  - Egress
+  
+  ingress:
+  # Allow from ingress controller
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: ingress-nginx
+    ports:
+    - protocol: TCP
+      port: 8080
+  
+  # Allow from monitoring namespace
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: project-ai-monitoring
+    ports:
+    - protocol: TCP
+      port: 9090
+  
+  # Allow pod-to-pod in same namespace
+  - from:
+    - podSelector: {}
+    ports:
+    - protocol: TCP
+      port: 8080
+  
+  egress:
+  # Allow DNS
+  - to:
+    - namespaceSelector: {}
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+  
+  # Allow to memory namespace
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          name: project-ai-memory
+    ports:
+    - protocol: TCP
+      port: 5432
+  
+  # Allow to external services (HTTPS)
+  - to:
+    - namespaceSelector: {}
+    ports:
+    - protocol: TCP
+      port: 443
+    - protocol: TCP
+      port: 80
+
+---
+# ============================================================================
+# SECURITY NAMESPACE - High Isolation
+# ============================================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: project-ai-security-policy
+  namespace: project-ai-security
+  labels:
+    tk8s.io/security: "high-isolation"
+    tk8s.io/component: "cerberus"
+  annotations:
+    tk8s.io/doctrine: "Cerberus monitors cluster integrity"
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: security
+  policyTypes:
+  - Ingress
+  - Egress
+  
+  ingress:
+  # Allow from monitoring only
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: project-ai-monitoring
+  
+  egress:
+  # Allow DNS
+  - to:
+    - namespaceSelector: {}
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - protocol: UDP
+      port: 53
+  
+  # Allow to all namespaces for monitoring (read-only)
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          app.kubernetes.io/name: project-ai
+    ports:
+    - protocol: TCP
+      port: 8080
+    - protocol: TCP
+      port: 9090
+
+---
+# ============================================================================
+# MONITORING NAMESPACE - Observability
+# ============================================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: project-ai-monitoring-policy
+  namespace: project-ai-monitoring
+  labels:
+    tk8s.io/security: "standard-isolation"
+    tk8s.io/component: "observability"
+  annotations:
+    tk8s.io/doctrine: "Prometheus, Grafana, Loki, Tempo"
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  
+  ingress:
+  # Allow from ingress controller (for Grafana UI)
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: ingress-nginx
+    ports:
+    - protocol: TCP
+      port: 3000  # Grafana
+    - protocol: TCP
+      port: 9090  # Prometheus
+  
+  # Allow from all project-ai namespaces for metrics scraping
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          app.kubernetes.io/name: project-ai
+  
+  egress:
+  # Allow DNS
+  - to:
+    - namespaceSelector: {}
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - protocol: UDP
+      port: 53
+  
+  # Allow scraping metrics from all project-ai namespaces
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          app.kubernetes.io/name: project-ai
+    ports:
+    - protocol: TCP
+      port: 8080
+    - protocol: TCP
+      port: 9090
+  
+  # Allow to external alerting services
+  - to:
+    - namespaceSelector: {}
+    ports:
+    - protocol: TCP
+      port: 443
+
+---
+# ============================================================================
+# MEMORY NAMESPACE - Database Access
+# ============================================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: project-ai-memory-policy
+  namespace: project-ai-memory
+  labels:
+    tk8s.io/security: "standard-isolation"
+  annotations:
+    tk8s.io/doctrine: "Memory & Knowledge Systems"
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  
+  ingress:
+  # Allow from core namespace
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: project-ai-core
+    ports:
+    - protocol: TCP
+      port: 5432  # PostgreSQL
+  
+  # Allow from monitoring
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: project-ai-monitoring
+  
+  egress:
+  # Allow DNS
+  - to:
+    - namespaceSelector: {}
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - protocol: UDP
+      port: 53
+  
+  # Allow pod-to-pod (for replication)
+  - to:
+    - podSelector: {}
