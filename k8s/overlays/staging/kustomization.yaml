@@ -3,7 +3,7 @@ kind: Kustomization
 
 namespace: project-ai-staging
 
-bases:
+resources:
 - ../../base
 
 namePrefix: staging-

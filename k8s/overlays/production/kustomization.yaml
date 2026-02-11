@@ -3,7 +3,7 @@ kind: Kustomization
 
 namespace: project-ai
 
-bases:
+resources:
 - ../../base
 
 namePrefix: prod-
