@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "project-ai.fullname" . }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+data:
+  APP_ENV: {{ .Values.config.appEnv | quote }}
+  LOG_LEVEL: {{ .Values.config.logLevel | quote }}
+  LOG_FORMAT: {{ .Values.config.logFormat | quote }}
+  API_PORT: {{ .Values.config.apiPort | quote }}
+  API_WORKERS: {{ .Values.config.apiWorkers | quote }}
+  ENABLE_RATE_LIMITING: {{ .Values.config.enableRateLimiting | quote }}
+  RATE_LIMIT_PER_MINUTE: {{ .Values.config.rateLimitPerMinute | quote }}
+  ENABLE_CORS: {{ .Values.config.enableCors | quote }}
+  CORS_ORIGINS: {{ .Values.config.corsOrigins | quote }}
+  CACHE_ENABLED: {{ .Values.config.cacheEnabled | quote }}
+  CACHE_TTL: {{ .Values.config.cacheTTL | quote }}
+  {{- if .Values.postgresql.enabled }}
+  DB_HOST: {{ include "project-ai.fullname" . }}-postgresql
+  DB_PORT: "5432"
+  DB_NAME: {{ .Values.postgresql.auth.database | quote }}
+  {{- end }}
+  {{- if .Values.redis.enabled }}
+  REDIS_HOST: {{ include "project-ai.fullname" . }}-redis-master
+  REDIS_PORT: "6379"
+  {{- end }}

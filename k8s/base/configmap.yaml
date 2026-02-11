@@ -1,0 +1,59 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: project-ai-config
+  namespace: project-ai
+  labels:
+    app.kubernetes.io/name: project-ai
+    app.kubernetes.io/component: configuration
+data:
+  # Application Configuration
+  APP_ENV: "production"
+  APP_NAME: "Project-AI"
+  APP_VERSION: "1.0.0"
+  
+  # Logging Configuration
+  LOG_LEVEL: "INFO"
+  LOG_FORMAT: "json"
+  LOG_OUTPUT: "stdout"
+  
+  # API Configuration
+  API_HOST: "0.0.0.0"
+  API_PORT: "5000"
+  API_WORKERS: "4"
+  API_TIMEOUT: "60"
+  
+  # Database Configuration (non-sensitive)
+  DB_POOL_SIZE: "20"
+  DB_MAX_OVERFLOW: "10"
+  DB_POOL_TIMEOUT: "30"
+  DB_POOL_RECYCLE: "3600"
+  
+  # Temporal Configuration
+  TEMPORAL_HOST: "temporal-server.project-ai.svc.cluster.local"
+  TEMPORAL_PORT: "7233"
+  TEMPORAL_NAMESPACE: "project-ai"
+  
+  # Monitoring Configuration
+  METRICS_ENABLED: "true"
+  METRICS_PORT: "9090"
+  TRACING_ENABLED: "true"
+  TRACING_SAMPLE_RATE: "0.1"
+  
+  # Feature Flags
+  ENABLE_AI_SYSTEMS: "true"
+  ENABLE_WEB_UI: "true"
+  ENABLE_API: "true"
+  ENABLE_TEMPORAL: "true"
+  
+  # Security Configuration
+  ENABLE_RATE_LIMITING: "true"
+  RATE_LIMIT_PER_MINUTE: "60"
+  ENABLE_CORS: "true"
+  CORS_ORIGINS: "*"
+  
+  # Cache Configuration
+  CACHE_ENABLED: "true"
+  CACHE_TTL: "3600"
+  CACHE_MAX_SIZE: "1000"

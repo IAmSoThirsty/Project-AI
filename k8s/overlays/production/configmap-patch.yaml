@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: project-ai-config
+data:
+  APP_ENV: "production"
+  LOG_LEVEL: "WARNING"
+  TRACING_SAMPLE_RATE: "0.05"
+  RATE_LIMIT_PER_MINUTE: "100"
