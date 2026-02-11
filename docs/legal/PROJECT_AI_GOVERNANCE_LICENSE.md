@@ -200,9 +200,8 @@ Project-AI includes tamper detection mechanisms. Circumventing these violates PA
 
 Users and organizations MUST comply with tier restrictions:
 - **Solo Tier:** No commercial use, single user only
-- **Company Tier:** Commercial use requires active subscription or lifetime purchase
-- **Organization Tier:** Enterprise features require appropriate licensing
-- **Government Tier:** Sovereign use requires Government Use License
+- **Company Tier:** Commercial use requires active subscription or lifetime purchase, unlimited seats per entity
+- **Government Tier:** Sovereign use requires Government Use License, unlimited seats per entity
 
 ### 5.2 Feature Locks
 
@@ -352,7 +351,7 @@ Cryptographically-verified acceptance records and audit logs are admissible evid
 
 **Tamper:** Modify, disable, bypass, circumvent, or attempt to defeat any governance or safeguard mechanism.
 
-**Tier:** Service level designation (Solo, Company, Organization, Government) determining feature access and obligations.
+**Tier:** Service level designation (Solo, Company, Government) determining feature access and obligations.
 
 **Termination:** Cessation of all rights under Project-AI licenses, recorded permanently in acceptance ledger.
 
