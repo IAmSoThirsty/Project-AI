@@ -357,14 +357,15 @@ python -m src.app.governance.verify_ledger
 ├─ Commercial use (<$50K/year) → Solo Commercial ($99 lifetime)
 │   • Add: Commercial Use License
 │
-├─ Company (2-50 employees) → Company Tier ($19/mo or $499 lifetime)
+├─ Company (any size) → Company Tier
+│   • Pricing: Weekly ($250), Monthly ($1,000), Yearly ($8,000), Lifetime ($25,000)
 │   • Add: Commercial Use License
+│   • Unlimited seats per entity
 │
-├─ Organization (50+ employees) → Organization Tier ($49/mo or $2,499 lifetime)
-│   • Add: Commercial Use License
-│
-└─ Government/Military → Government Tier ($99+/mo)
+└─ Government/Military → Government Tier
+    • Pricing: Monthly ($2,500), Yearly ($10,000), Lifetime (Not Available)
     • Add: Commercial + Sovereign Use License
+    • Unlimited seats per entity
 ```
 
 ### What Can I Do With Each License?

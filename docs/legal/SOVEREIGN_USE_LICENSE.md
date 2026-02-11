@@ -69,9 +69,19 @@ Sovereign entities (governments, military, intelligence agencies) operate under 
 
 2. **Execute Government Services Agreement:**
    - Government Tier subscription or custom contract
-   - Minimum $99/seat/month (higher for classified)
+   - Progressive seat-based pricing (see pricing schedule below)
+   - No lifetime option (requires ongoing compliance and security operations)
    - Enhanced terms beyond Commercial License
    - Additional representations and warranties
+
+**Government Pricing Schedule (Progressive Tiers):**
+- 1-25 seats: $2,500/month or $10,000/year
+- 26-50 seats: $2,875/month or $11,500/year (+15%)
+- 51-75 seats: $3,250/month or $13,000/year (+30%)
+- 76-100 seats: $3,625/month or $14,500/year (+45%)
+- 101+ seats: Additional 15% per 25-seat tier (contact for custom pricing)
+
+Progressive pricing reflects increased operational costs for larger deployments.
 
 3. **Provide entity verification:**
    - Official documentation of government status
@@ -271,11 +281,15 @@ Sovereign entities (governments, military, intelligence agencies) operate under 
 - TEMPEST and EMSEC protections
 - Secure destruction procedures
 
-**Pricing:**
-- Base: $99/seat/month
-- Classified surcharge: +$50/seat/month
-- Air-gapped/tactical: +$75/seat/month
-- On-site support: Custom pricing
+**Pricing (Progressive Seat-Based):**
+- 1-25 seats: $2,500/month or $10,000/year (base tier)
+- 26-50 seats: $2,875/month or $11,500/year (+15%)
+- 51-75 seats: $3,250/month or $13,000/year (+30%)
+- 76-100 seats: $3,625/month or $14,500/year (+45%)
+- 101+ seats: Contact for custom pricing (+15% per 25-seat tier)
+- Classified surcharge: +$1,000/month (requires security clearances)
+- Air-gapped/tactical: +$1,500/month (special hardware and deployment)
+- On-site support: Included in base pricing
 
 **Deployment Support:**
 - On-site installation and hardening
