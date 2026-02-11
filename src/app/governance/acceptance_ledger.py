@@ -578,3 +578,43 @@ def get_acceptance_ledger(data_dir: str = "data/legal") -> AcceptanceLedger:
     if _ledger_instance is None:
         _ledger_instance = AcceptanceLedger(data_dir=data_dir)
     return _ledger_instance
+
+
+def get_seat_count_from_entry(entry: AcceptanceEntry) -> int | None:
+    """
+    Extract seat count from acceptance entry metadata.
+
+    Args:
+        entry: AcceptanceEntry to extract seat count from
+
+    Returns:
+        int: Seat count if present in metadata, None otherwise
+
+    Note:
+        Government tier entries should have 'seat_count' in metadata.
+        Company tier has unlimited seats (no seat count needed).
+    """
+    if entry.tier == TierLevel.GOVERNMENT:
+        return entry.metadata.get("seat_count")
+    return None
+
+
+def set_seat_count_in_metadata(metadata: dict, seat_count: int) -> dict:
+    """
+    Add seat count to metadata dictionary.
+
+    Args:
+        metadata: Metadata dictionary
+        seat_count: Number of seats
+
+    Returns:
+        dict: Updated metadata with seat_count
+
+    Raises:
+        ValueError: If seat_count is less than 1
+    """
+    if seat_count < 1:
+        raise ValueError(f"Seat count must be at least 1, got {seat_count}")
+
+    metadata["seat_count"] = seat_count
+    return metadata

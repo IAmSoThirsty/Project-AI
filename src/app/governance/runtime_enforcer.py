@@ -17,6 +17,11 @@ from src.app.governance.acceptance_ledger import (
     AcceptanceType,
     TierLevel,
     get_acceptance_ledger,
+    get_seat_count_from_entry,
+)
+from src.app.governance.government_pricing import (
+    GovernmentBillingCycle,
+    calculate_government_price,
 )
 from src.app.governance.jurisdiction_loader import get_jurisdiction_loader
 
@@ -448,3 +453,64 @@ def enforce_action(
         metadata=kwargs,
     )
     return enforcer.enforce(context)
+
+
+def get_government_pricing_for_user(user_id: str) -> dict | None:
+    """
+    Get government pricing information for a user.
+
+    Args:
+        user_id: User identifier
+
+    Returns:
+        dict: Pricing information with keys:
+            - seat_count: Number of seats
+            - monthly_price: Monthly price
+            - yearly_price: Yearly price
+            - tier_number: Pricing tier (0-based)
+            - price_increase: Percentage increase from base
+        None if user is not on government tier or seat count not found
+
+    Usage:
+        pricing = get_government_pricing_for_user("user123")
+        if pricing:
+            print(f"Monthly: ${pricing['monthly_price']}")
+            print(f"Yearly: ${pricing['yearly_price']}")
+            print(f"Seats: {pricing['seat_count']}")
+    """
+    enforcer = get_runtime_enforcer()
+    acceptances = enforcer.ledger.get_user_acceptances(user_id)
+
+    if not acceptances:
+        return None
+
+    # Get latest acceptance
+    latest_acceptance = max(acceptances, key=lambda a: a.timestamp)
+
+    # Check if government tier
+    if latest_acceptance.tier != TierLevel.GOVERNMENT:
+        return None
+
+    # Get seat count from metadata
+    seat_count = get_seat_count_from_entry(latest_acceptance)
+
+    if seat_count is None:
+        logger.warning(
+            "Government tier user %s has no seat count in metadata", user_id
+        )
+        return None
+
+    # Calculate pricing
+    monthly_pricing = calculate_government_price(
+        seat_count, GovernmentBillingCycle.MONTHLY
+    )
+    yearly_pricing = calculate_government_price(seat_count, GovernmentBillingCycle.YEARLY)
+
+    return {
+        "seat_count": seat_count,
+        "monthly_price": monthly_pricing.total_price,
+        "yearly_price": yearly_pricing.total_price,
+        "tier_number": monthly_pricing.tier_number,
+        "price_increase": monthly_pricing.price_increase_percentage,
+        "tier_multiplier": monthly_pricing.tier_multiplier,
+    }
