@@ -32,15 +32,20 @@ Project-AI delivers a production-grade, open-source AI assistant platform with e
 
 **Target Markets:**
 - **Solo/Individual:** Free tier competitive advantage vs. ChatGPT, Claude, Gemini
-- **SMB (2-50 employees):** $19-49/seat/month competitive with productivity tools
-- **Enterprise (50-1000+ employees):** $49/seat with hardware security and compliance
-- **Government/Defense:** $99+/seat with classified deployment capabilities
+- **Companies (Any Size):** Weekly ($250), Monthly ($1,000), Yearly ($8,000), Lifetime ($25,000)
+  - Unlimited seats per entity, no per-user fees
+  - Flexible billing for startups to enterprises
+- **Government/Defense:** Monthly ($2,500), Yearly ($10,000), subscription only
+  - Unlimited seats per entity
+  - Classified deployment capabilities with ongoing compliance
 
 **Competitive Advantage:**
 - Free tier surpasses all "big tech" free offerings
-- Lifetime options eliminate recurring costs and vendor lock-in
+- Unlimited seats eliminate per-user cost concerns for organizations
+- Lifetime options for companies eliminate recurring costs and vendor lock-in
 - Open source builds trust and enables customization
 - Ethical AI framework addresses governance and liability concerns
+- Flexible weekly/monthly/yearly plans accommodate all budget cycles
 
 ---
 
@@ -136,9 +141,9 @@ Project-AI delivers a production-grade, open-source AI assistant platform with e
 
 **Revenue:**
 - Solo Lifetime: 500 purchases × $99 = $49,500
-- Company Subscriptions: 20 companies × 5 seats × $19/month × 12 = $22,800
-- Company Lifetime: 10 companies × $499 = $4,990
-- **Total: $77,290**
+- Company Monthly: 15 companies × $1,000/month × 12 = $180,000
+- Company Lifetime: 5 companies × $25,000 = $125,000
+- **Total: $354,500**
 
 **Expenses:**
 - Development: $120,000 (2 FTE)
@@ -147,44 +152,46 @@ Project-AI delivers a production-grade, open-source AI assistant platform with e
 - Marketing: $10,000
 - **Total: $157,000**
 
-**Net: -$79,710** (Seed funding required)
+**Net: +$197,500** (Break-even in Year 1)
 
 ### Year 3 (Growth)
 
 **Revenue:**
 - Solo Lifetime: 2,000 purchases × $99 = $198,000
-- Company Subscriptions: 200 companies × 8 seats × $19/month × 12 = $364,800
-- Organization Subscriptions: 20 orgs × 30 seats × $49/month × 12 = $352,800
-- Government Contracts: 3 agencies × $200K/year = $600,000
-- **Total: $1,515,600**
+- Company Monthly: 150 companies × $1,000/month × 12 = $1,800,000
+- Company Yearly: 50 companies × $8,000/year = $400,000
+- Company Lifetime: 20 companies × $25,000 = $500,000
+- Government Monthly: 5 agencies × $2,500/month × 12 = $150,000
+- Government Yearly: 2 agencies × $10,000/year = $20,000
+- **Total: $3,068,000**
 
 **Expenses:**
 - Development: $600,000 (8 FTE)
-- Infrastructure: $100,000
+- Infrastructure: $200,000
 - Legal/Compliance: $75,000
-- Sales/Marketing: $150,000
-- Operations: $100,000
-- **Total: $1,025,000**
+- Sales/Marketing: $250,000
+- Operations: $150,000
+- **Total: $1,275,000**
 
-**Net: +$490,600** (Profitable)
+**Net: +$1,793,000** (Highly Profitable)
 
 ### Year 5 (Scale)
 
 **Revenue:**
-- Subscriptions (various tiers): $3,500,000 ARR
-- Lifetime Purchases: $500,000/year
-- Government Contracts: $1,000,000/year
-- **Total: $5,000,000**
+- Company Subscriptions (monthly/yearly): $8,000,000 ARR
+- Company Lifetime Purchases: $2,000,000/year
+- Government Subscriptions: $3,000,000/year
+- **Total: $13,000,000**
 
 **Expenses:**
 - Personnel (25 FTE): $2,500,000
-- Infrastructure: $500,000
-- Legal/Compliance: $200,000
-- Sales/Marketing: $800,000
-- Operations: $300,000
-- **Total: $4,300,000**
+- Infrastructure: $800,000
+- Legal/Compliance: $300,000
+- Sales/Marketing: $1,500,000
+- Operations: $500,000
+- **Total: $5,600,000**
 
-**Net: +$700,000** (16% profit margin)
+**Net: +$7,400,000** (57% profit margin)
 
 ---
 

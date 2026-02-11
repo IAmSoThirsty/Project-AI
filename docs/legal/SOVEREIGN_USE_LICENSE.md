@@ -69,9 +69,11 @@ Sovereign entities (governments, military, intelligence agencies) operate under 
 
 2. **Execute Government Services Agreement:**
    - Government Tier subscription or custom contract
-   - Minimum $99/seat/month (higher for classified)
+   - Pricing: Monthly ($2,500), Yearly ($10,000), or custom contract
+   - No lifetime option (requires ongoing compliance and security operations)
    - Enhanced terms beyond Commercial License
    - Additional representations and warranties
+   - Unlimited seats per entity (no per-user fees)
 
 3. **Provide entity verification:**
    - Official documentation of government status
@@ -272,10 +274,12 @@ Sovereign entities (governments, military, intelligence agencies) operate under 
 - Secure destruction procedures
 
 **Pricing:**
-- Base: $99/seat/month
-- Classified surcharge: +$50/seat/month
-- Air-gapped/tactical: +$75/seat/month
-- On-site support: Custom pricing
+- Monthly: $2,500/month (base government tier)
+- Yearly: $10,000/year (base government tier)
+- Classified surcharge: +$1,000/month (requires security clearances)
+- Air-gapped/tactical: +$1,500/month (special hardware and deployment)
+- On-site support: Included in base pricing
+- Unlimited seats per entity (no per-user fees)
 
 **Deployment Support:**
 - On-site installation and hardening
