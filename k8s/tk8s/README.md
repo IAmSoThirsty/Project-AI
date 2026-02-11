@@ -8,15 +8,47 @@
 
 ## Quick Start
 
-### Prerequisites
+### 🚀 Automated Deployment (Recommended)
+
+**One-command deployment:**
+```bash
+cd Project-AI/k8s/tk8s
+./install-prerequisites.sh && ./generate-cosign-keys.sh && ./deploy-tk8s.sh
+```
+
+**Step-by-step:**
+```bash
+# 1. Install ArgoCD, Kyverno, and tools
+./install-prerequisites.sh
+
+# 2. Generate Cosign signing keys
+./generate-cosign-keys.sh
+
+# 3. Deploy TK8S infrastructure
+./deploy-tk8s.sh
+
+# 4. Verify deployment
+./verify-deployment.sh
+```
+
+**See:** [SCRIPTS_README.md](SCRIPTS_README.md) for detailed automation documentation.
+
+---
+
+### 📋 Manual Deployment
+
+For manual deployment or custom workflows:
+
+#### Prerequisites
 
 - Kubernetes cluster 1.29+ (managed or self-hosted)
 - kubectl configured and authenticated
-- ArgoCD installed in cluster
-- Cosign for image signing
-- Syft for SBOM generation
+- ArgoCD installed in cluster (or use `install-prerequisites.sh`)
+- Kyverno installed in cluster (or use `install-prerequisites.sh`)
+- Cosign for image signing (or use `install-prerequisites.sh`)
+- Syft for SBOM generation (or use `install-prerequisites.sh`)
 
-### Installation
+#### Installation
 
 1. **Clone the repository:**
 ```bash
@@ -24,27 +56,36 @@ git clone https://github.com/IAmSoThirsty/Project-AI.git
 cd Project-AI/k8s/tk8s
 ```
 
-2. **Apply namespaces:**
+2. **Generate Cosign keys:**
+```bash
+cosign generate-key-pair
+# Store keys securely and update security/kyverno-policies.yaml
+```
+
+3. **Apply namespaces:**
 ```bash
 kubectl apply -f namespaces/tk8s-namespaces.yaml
 ```
 
-3. **Deploy base infrastructure:**
+4. **Deploy base infrastructure:**
 ```bash
 kubectl apply -k .
 ```
 
-4. **Install ArgoCD applications:**
+5. **Install ArgoCD applications:**
 ```bash
 kubectl apply -f argocd/applications.yaml
 ```
 
-5. **Verify deployment:**
+6. **Verify deployment:**
 ```bash
 kubectl get pods -n project-ai-core
 kubectl get pods -n project-ai-eca
 kubectl get networkpolicies -A
+python validate_tk8s.py
 ```
+
+**See:** [SETUP_GUIDE.md](SETUP_GUIDE.md) for detailed manual deployment steps.
 
 ---
 
