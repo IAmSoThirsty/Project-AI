@@ -1,0 +1,271 @@
+---
+# TK8S KYVERNO POLICIES
+# Image Signature Validation | SBOM Enforcement | Immutable Containers
+# No Unsigned Images | No Mutable Infrastructure
+
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: tk8s-verify-image-signatures
+  annotations:
+    tk8s.io/doctrine: "Signed Images Only | No unsigned image deploys"
+    policies.kyverno.io/title: "Verify Image Signatures with Cosign"
+    policies.kyverno.io/category: "TK8S Security"
+    policies.kyverno.io/severity: "critical"
+    policies.kyverno.io/description: >-
+      All container images must be signed with Cosign before deployment.
+      This is a foundational TK8S doctrine - no unsigned images permitted.
+spec:
+  validationFailureAction: enforce
+  background: false
+  webhookTimeoutSeconds: 30
+  failurePolicy: Fail
+  rules:
+  - name: verify-ghcr-images
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - project-ai-core
+          - project-ai-eca
+          - project-ai-security
+          - project-ai-memory
+    verifyImages:
+    - imageReferences:
+      - "ghcr.io/iamsothirsty/project-ai-*:*"
+      attestors:
+      - count: 1
+        entries:
+        - keys:
+            publicKeys: |-
+              -----BEGIN PUBLIC KEY-----
+              # TODO: Replace with actual Cosign public key
+              # Generated with: cosign generate-key-pair
+              -----END PUBLIC KEY-----
+      - count: 1
+        entries:
+        - keyless:
+            rekor:
+              url: https://rekor.sigstore.dev
+            subject: "https://github.com/IAmSoThirsty/Project-AI/*"
+            issuer: "https://token.actions.githubusercontent.com"
+
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: tk8s-require-sbom-annotation
+  annotations:
+    tk8s.io/doctrine: "SBOM Mandatory"
+    policies.kyverno.io/title: "Require SBOM Annotation"
+    policies.kyverno.io/category: "TK8S Security"
+    policies.kyverno.io/severity: "high"
+    policies.kyverno.io/description: >-
+      All deployments must have SBOM SHA256 annotation for supply chain security.
+spec:
+  validationFailureAction: enforce
+  background: true
+  rules:
+  - name: require-sbom
+    match:
+      any:
+      - resources:
+          kinds:
+          - Deployment
+          namespaces:
+          - project-ai-core
+          - project-ai-eca
+          - project-ai-security
+          - project-ai-memory
+    validate:
+      message: "SBOM annotation 'tk8s.io/sbom-sha256' is required per TK8S doctrine"
+      pattern:
+        metadata:
+          annotations:
+            tk8s.io/sbom-sha256: "?*"
+
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: tk8s-no-mutable-containers
+  annotations:
+    tk8s.io/doctrine: "No Mutable Containers"
+    policies.kyverno.io/title: "Prevent Mutable Containers"
+    policies.kyverno.io/category: "TK8S Security"
+    policies.kyverno.io/severity: "high"
+spec:
+  validationFailureAction: enforce
+  background: true
+  rules:
+  - name: no-latest-tag
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - project-ai-core
+          - project-ai-eca
+          - project-ai-security
+    validate:
+      message: "Using 'latest' tag violates TK8S immutability doctrine"
+      pattern:
+        spec:
+          containers:
+          - image: "!*:latest"
+  - name: no-privileged-containers
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+    validate:
+      message: "Privileged containers forbidden per TK8S security doctrine"
+      pattern:
+        spec:
+          containers:
+          - securityContext:
+              privileged: false
+
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: tk8s-no-shell-access
+  annotations:
+    tk8s.io/doctrine: "No Shell Access in Production"
+    policies.kyverno.io/title: "Block Shell Access"
+    policies.kyverno.io/category: "TK8S Security"
+    policies.kyverno.io/severity: "critical"
+spec:
+  validationFailureAction: enforce
+  background: true
+  rules:
+  - name: no-debug-containers
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - project-ai-core
+          - project-ai-eca
+          - project-ai-security
+    validate:
+      message: "Debug/ephemeral containers forbidden in production per TK8S doctrine"
+      pattern:
+        spec:
+          =(ephemeralContainers): []
+
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: tk8s-require-readonly-root-filesystem
+  annotations:
+    tk8s.io/doctrine: "Immutable Infrastructure"
+    policies.kyverno.io/title: "Require Read-Only Root Filesystem"
+    policies.kyverno.io/category: "TK8S Security"
+    policies.kyverno.io/severity: "high"
+spec:
+  validationFailureAction: enforce
+  background: true
+  rules:
+  - name: readonly-root-filesystem
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - project-ai-core
+          - project-ai-eca
+          - project-ai-security
+    validate:
+      message: "Read-only root filesystem required per TK8S immutability doctrine"
+      pattern:
+        spec:
+          containers:
+          - securityContext:
+              readOnlyRootFilesystem: true
+
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: tk8s-eca-isolation-enforcement
+  annotations:
+    tk8s.io/doctrine: "External Cognition (Ultra) Runs in Isolation"
+    policies.kyverno.io/title: "Enforce ECA Isolation"
+    policies.kyverno.io/category: "TK8S Security"
+    policies.kyverno.io/severity: "critical"
+spec:
+  validationFailureAction: enforce
+  background: true
+  rules:
+  - name: eca-no-service-account-token
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - project-ai-eca
+    validate:
+      message: "ECA pods must not mount service account tokens per isolation doctrine"
+      pattern:
+        spec:
+          automountServiceAccountToken: false
+  - name: eca-no-host-network
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - project-ai-eca
+    validate:
+      message: "ECA pods must not use host network"
+      pattern:
+        spec:
+          hostNetwork: false
+
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: tk8s-require-resource-limits
+  annotations:
+    tk8s.io/doctrine: "Resource Limits Required"
+    policies.kyverno.io/title: "Require Resource Limits"
+    policies.kyverno.io/category: "TK8S Security"
+    policies.kyverno.io/severity: "medium"
+spec:
+  validationFailureAction: enforce
+  background: true
+  rules:
+  - name: require-cpu-memory-limits
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - project-ai-core
+          - project-ai-eca
+          - project-ai-security
+    validate:
+      message: "CPU and memory limits required per TK8S resource doctrine"
+      pattern:
+        spec:
+          containers:
+          - resources:
+              limits:
+                memory: "?*"
+                cpu: "?*"
+              requests:
+                memory: "?*"
+                cpu: "?*"

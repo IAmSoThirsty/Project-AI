@@ -1,0 +1,416 @@
+---
+# TK8S MONITORING CONFIGURATION
+# Prometheus, Grafana, Loki, Tempo, OpenTelemetry
+# Track: Policy Rejections, Escalations, Invariant Failures, Token Spend, Pod Restarts, Security Alerts
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: project-ai-monitoring
+  labels:
+    tk8s.io/component: monitoring
+    tk8s.io/layer: "5-observability-audit"
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+      external_labels:
+        cluster: 'tk8s-production'
+        tk8s_layer: '5-observability-audit'
+    
+    # TK8S Custom Metrics
+    scrape_configs:
+      # Core application metrics
+      - job_name: 'project-ai-core'
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names:
+                - project-ai-core
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+            action: keep
+            regex: true
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+            action: replace
+            target_label: __metrics_path__
+            regex: (.+)
+          - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+            action: replace
+            regex: ([^:]+)(?::\d+)?;(\d+)
+            replacement: $1:$2
+            target_label: __address__
+          - action: labelmap
+            regex: __meta_kubernetes_pod_label_(.+)
+          - source_labels: [__meta_kubernetes_namespace]
+            action: replace
+            target_label: kubernetes_namespace
+          - source_labels: [__meta_kubernetes_pod_name]
+            action: replace
+            target_label: kubernetes_pod_name
+      
+      # ECA metrics (isolated)
+      - job_name: 'project-ai-eca'
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names:
+                - project-ai-eca
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_tk8s_io_isolation]
+            action: keep
+            regex: maximum
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+            action: keep
+            regex: true
+          - source_labels: [__address__]
+            action: replace
+            regex: ([^:]+)(?::\d+)?
+            replacement: $1:8081
+            target_label: __address__
+      
+      # Security metrics
+      - job_name: 'project-ai-security'
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names:
+                - project-ai-security
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+            action: keep
+            regex: true
+      
+      # Kubernetes metrics
+      - job_name: 'kubernetes-nodes'
+        kubernetes_sd_configs:
+          - role: node
+        relabel_configs:
+          - action: labelmap
+            regex: __meta_kubernetes_node_label_(.+)
+      
+      - job_name: 'kubernetes-pods'
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names:
+                - project-ai-core
+                - project-ai-eca
+                - project-ai-security
+                - project-ai-memory
+                - project-ai-monitoring
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+            action: keep
+            regex: true
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+            action: replace
+            target_label: __metrics_path__
+            regex: (.+)
+          - action: labelmap
+            regex: __meta_kubernetes_pod_label_(.+)
+    
+    # Alert rules for TK8S
+    rule_files:
+      - '/etc/prometheus/rules/*.yml'
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-rules
+  namespace: project-ai-monitoring
+  labels:
+    tk8s.io/component: monitoring
+data:
+  tk8s-alerts.yml: |
+    groups:
+      - name: tk8s_policy_violations
+        interval: 30s
+        rules:
+          - alert: PolicyRejectionRate
+            expr: rate(kyverno_policy_results_total{result="fail"}[5m]) > 0.1
+            for: 5m
+            labels:
+              severity: warning
+              tk8s_doctrine: "policy_enforcement"
+            annotations:
+              summary: "High policy rejection rate detected"
+              description: "Policy rejection rate is {{ $value }} per second"
+          
+          - alert: ImageSignatureValidationFailure
+            expr: kyverno_policy_results_total{policy="tk8s-verify-image-signatures",result="fail"} > 0
+            for: 1m
+            labels:
+              severity: critical
+              tk8s_doctrine: "signed_images_only"
+            annotations:
+              summary: "Unsigned image deployment attempted"
+              description: "Image signature validation failed - unsigned image blocked"
+          
+          - alert: SBOMAnnotationMissing
+            expr: kyverno_policy_results_total{policy="tk8s-require-sbom-annotation",result="fail"} > 0
+            for: 1m
+            labels:
+              severity: high
+              tk8s_doctrine: "sbom_mandatory"
+            annotations:
+              summary: "SBOM annotation missing"
+              description: "Deployment attempted without SBOM annotation"
+      
+      - name: tk8s_canonical_invariants
+        interval: 1m
+        rules:
+          - alert: CanonicalInvariantFailure
+            expr: canonical_invariant_failures_total > 0
+            for: 1m
+            labels:
+              severity: critical
+              tk8s_doctrine: "canonical_invariants"
+            annotations:
+              summary: "Canonical invariant failure detected"
+              description: "Invariant '{{ $labels.invariant_name }}' failed"
+          
+          - alert: EscalationEvent
+            expr: increase(ai_escalation_events_total[5m]) > 0
+            for: 1m
+            labels:
+              severity: warning
+              tk8s_doctrine: "governance"
+            annotations:
+              summary: "AI escalation event detected"
+              description: "Escalation to human oversight triggered"
+      
+      - name: tk8s_security_alerts
+        interval: 30s
+        rules:
+          - alert: SecurityAlertHigh
+            expr: security_alerts_total{severity="high"} > 0
+            for: 1m
+            labels:
+              severity: high
+              tk8s_doctrine: "security_layer"
+            annotations:
+              summary: "High severity security alert"
+              description: "{{ $labels.alert_type }}: {{ $labels.description }}"
+          
+          - alert: FalcoRuntimeViolation
+            expr: increase(falco_events_total{priority="Critical"}[5m]) > 0
+            for: 1m
+            labels:
+              severity: critical
+              tk8s_doctrine: "runtime_detection"
+            annotations:
+              summary: "Falco runtime violation detected"
+              description: "Critical runtime security event: {{ $labels.rule }}"
+          
+          - alert: ECAIsolationBreach
+            expr: rate(eca_cross_namespace_attempts_total[5m]) > 0
+            for: 1m
+            labels:
+              severity: critical
+              tk8s_doctrine: "eca_isolation"
+            annotations:
+              summary: "ECA isolation breach attempted"
+              description: "ECA attempted cross-namespace communication"
+      
+      - name: tk8s_resource_health
+        interval: 30s
+        rules:
+          - alert: PodRestartRate
+            expr: rate(kube_pod_container_status_restarts_total[15m]) > 0.1
+            for: 5m
+            labels:
+              severity: warning
+              tk8s_doctrine: "stability"
+            annotations:
+              summary: "High pod restart rate"
+              description: "Pod {{ $labels.pod }} is restarting frequently"
+          
+          - alert: HighMemoryUsage
+            expr: (container_memory_usage_bytes / container_spec_memory_limit_bytes) > 0.9
+            for: 5m
+            labels:
+              severity: warning
+              tk8s_doctrine: "resource_management"
+            annotations:
+              summary: "High memory usage"
+              description: "Container {{ $labels.container }} memory usage is {{ $value | humanizePercentage }}"
+          
+          - alert: TokenSpendRateHigh
+            expr: rate(ai_token_spend_total[1h]) > 10000
+            for: 10m
+            labels:
+              severity: warning
+              tk8s_doctrine: "cost_monitoring"
+            annotations:
+              summary: "High token spend rate"
+              description: "Token spend rate is {{ $value }} per second"
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboards
+  namespace: project-ai-monitoring
+  labels:
+    tk8s.io/component: monitoring
+    grafana_dashboard: "1"
+data:
+  tk8s-overview.json: |
+    {
+      "dashboard": {
+        "title": "TK8S Civilization Overview",
+        "tags": ["tk8s", "civilization"],
+        "timezone": "utc",
+        "panels": [
+          {
+            "title": "Policy Rejection Rate",
+            "targets": [
+              {
+                "expr": "rate(kyverno_policy_results_total{result=\"fail"}[5m])"
+              }
+            ],
+            "gridPos": {"x": 0, "y": 0, "w": 12, "h": 8}
+          },
+          {
+            "title": "Canonical Invariant Status",
+            "targets": [
+              {
+                "expr": "canonical_invariant_status"
+              }
+            ],
+            "gridPos": {"x": 12, "y": 0, "w": 12, "h": 8}
+          },
+          {
+            "title": "Security Alerts by Severity",
+            "targets": [
+              {
+                "expr": "sum by (severity) (security_alerts_total)"
+              }
+            ],
+            "gridPos": {"x": 0, "y": 8, "w": 12, "h": 8}
+          },
+          {
+            "title": "Token Spend Rate",
+            "targets": [
+              {
+                "expr": "rate(ai_token_spend_total[1h])"
+              }
+            ],
+            "gridPos": {"x": 12, "y": 8, "w": 12, "h": 8}
+          },
+          {
+            "title": "Pod Restart Rate by Namespace",
+            "targets": [
+              {
+                "expr": "sum by (namespace) (rate(kube_pod_container_status_restarts_total[15m]))"
+              }
+            ],
+            "gridPos": {"x": 0, "y": 16, "w": 12, "h": 8}
+          },
+          {
+            "title": "ECA Isolation Metrics",
+            "targets": [
+              {
+                "expr": "eca_isolation_status"
+              }
+            ],
+            "gridPos": {"x": 12, "y": 16, "w": 12, "h": 8}
+          }
+        ]
+      }
+    }
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: loki-config
+  namespace: project-ai-monitoring
+  labels:
+    tk8s.io/component: monitoring
+data:
+  loki.yaml: |
+    auth_enabled: false
+    
+    server:
+      http_listen_port: 3100
+    
+    ingester:
+      lifecycler:
+        ring:
+          kvstore:
+            store: inmemory
+          replication_factor: 1
+      chunk_idle_period: 5m
+      chunk_retain_period: 30s
+    
+    schema_config:
+      configs:
+        - from: 2020-10-24
+          store: boltdb-shipper
+          object_store: filesystem
+          schema: v11
+          index:
+            prefix: index_
+            period: 24h
+    
+    storage_config:
+      boltdb_shipper:
+        active_index_directory: /loki/index
+        cache_location: /loki/cache
+        shared_store: filesystem
+      filesystem:
+        directory: /loki/chunks
+    
+    limits_config:
+      enforce_metric_name: false
+      reject_old_samples: true
+      reject_old_samples_max_age: 168h
+    
+    compactor:
+      working_directory: /loki/compactor
+      shared_store: filesystem
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tempo-config
+  namespace: project-ai-monitoring
+  labels:
+    tk8s.io/component: monitoring
+data:
+  tempo.yaml: |
+    server:
+      http_listen_port: 3200
+    
+    distributor:
+      receivers:
+        jaeger:
+          protocols:
+            thrift_http:
+              endpoint: 0.0.0.0:14268
+            grpc:
+              endpoint: 0.0.0.0:14250
+        otlp:
+          protocols:
+            http:
+              endpoint: 0.0.0.0:4318
+            grpc:
+              endpoint: 0.0.0.0:4317
+    
+    storage:
+      trace:
+        backend: local
+        local:
+          path: /var/tempo/traces
+        wal:
+          path: /var/tempo/wal
+    
+    compactor:
+      compaction:
+        block_retention: 168h
