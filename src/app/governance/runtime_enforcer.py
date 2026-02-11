@@ -335,8 +335,7 @@ class RuntimeEnforcer:
         commercial_acceptances = [
             a
             for a in acceptances
-            if a.tier
-            in [TierLevel.COMPANY, TierLevel.ORGANIZATION, TierLevel.GOVERNMENT]
+            if a.tier in [TierLevel.COMPANY, TierLevel.GOVERNMENT]
         ]
 
         if not commercial_acceptances:
@@ -345,7 +344,7 @@ class RuntimeEnforcer:
                 reason="Commercial use requires paid tier",
                 details={
                     "user_id": context.user_id,
-                    "required_action": "Upgrade to Company, Organization, or Government tier",
+                    "required_action": "Upgrade to Company or Government tier",
                     "current_tier": "solo",
                     "commercial_license_section": "Section III - Commercial License Tiers",
                 },
@@ -375,12 +374,11 @@ class RuntimeEnforcer:
         latest_acceptance = max(acceptances, key=lambda a: a.timestamp)
         user_tier = latest_acceptance.tier
 
-        # Tier hierarchy: Solo < Company < Organization < Government
+        # Tier hierarchy: Solo < Company < Government
         tier_hierarchy = {
             TierLevel.SOLO: 0,
             TierLevel.COMPANY: 1,
-            TierLevel.ORGANIZATION: 2,
-            TierLevel.GOVERNMENT: 3,
+            TierLevel.GOVERNMENT: 2,
         }
 
         required_tier_level = tier_hierarchy.get(context.tier_required, 0)

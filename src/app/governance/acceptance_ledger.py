@@ -43,8 +43,25 @@ class TierLevel(StrEnum):
 
     SOLO = "solo"
     COMPANY = "company"
-    ORGANIZATION = "organization"
     GOVERNMENT = "government"
+
+
+class SubscriptionPlan(StrEnum):
+    """Subscription plan types for Company and Government tiers"""
+
+    # Company plans
+    COMPANY_WEEKLY = "company_weekly"
+    COMPANY_MONTHLY = "company_monthly"
+    COMPANY_YEARLY = "company_yearly"
+    COMPANY_LIFETIME = "company_lifetime"
+
+    # Government plans (no lifetime option)
+    GOVERNMENT_MONTHLY = "government_monthly"
+    GOVERNMENT_YEARLY = "government_yearly"
+
+    # Legacy Solo
+    SOLO_FREE = "solo_free"
+    SOLO_LIFETIME = "solo_lifetime"
 
 
 class AcceptanceType(StrEnum):
@@ -53,6 +70,7 @@ class AcceptanceType(StrEnum):
     INITIAL_MSA = "initial_msa"
     JURISDICTION_ANNEX = "jurisdiction_annex"
     TIER_UPGRADE = "tier_upgrade"
+    PLAN_CHANGE = "plan_change"  # New: for changing subscription plans
     POLICY_UPDATE = "policy_update"
     TERMINATION = "termination"
     AUDIT_LOCK = "audit_lock"
