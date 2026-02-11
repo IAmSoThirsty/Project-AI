@@ -205,7 +205,7 @@ For organizations preferring ongoing support, automatic updates, and managed ser
 | Plan | Price | Best For |
 |------|-------|----------|
 | **Monthly** | $2,500/month | Flexible government contracts, pilot programs |
-| **Yearly** | $10,000/year | Long-term deployments, 58% savings vs monthly |
+| **Yearly** | $10,000/year | Long-term deployments, 67% savings vs monthly |
 | **Lifetime** | Not Available | Government requires ongoing compliance monitoring |
 
 **Additional Surcharges:**
