@@ -431,22 +431,32 @@ project-ai show-acceptance --user-id your-email@example.com
 
 ---
 
-### Government Tier (Unlimited Seats)
+### Government Tier (Progressive Seat Pricing)
 
 **For government, military, and defense.** Subscription only (requires ongoing compliance operations).
 
-| Plan | Price | Includes |
-|------|-------|----------|
-| **Monthly** | $2,500/month | Base tier + unlimited seats |
-| **Yearly** | $10,000/year | 58% savings vs monthly |
-| **Lifetime** | Not Available | Requires continuous compliance |
+**Base Pricing (1-25 seats):**
+- Monthly: $2,500/month
+- Yearly: $10,000/year (67% savings vs monthly)
+
+**Progressive Pricing:**
+Government pricing increases by 15% for every 25 seats:
+
+| Seat Range | Monthly | Yearly | Increase |
+|------------|---------|--------|----------|
+| 1-25 seats | $2,500 | $10,000 | Base |
+| 26-50 seats | $2,875 | $11,500 | +15% |
+| 51-75 seats | $3,250 | $13,000 | +30% |
+| 76-100 seats | $3,625 | $14,500 | +45% |
+| 101-125 seats | $4,000 | $16,000 | +60% |
+| 151+ seats | Custom pricing | Custom pricing | Contact sales |
 
 **Additional Surcharges:**
 - Classified Deployment: +$1,000/month
 - Air-gapped/Tactical: +$1,500/month
 
 **What You Get:**
-- ✅ Unlimited seats per entity
+- ✅ Specified seat count with progressive pricing
 - ✅ FIPS 140-2/3 Level 3+ HSM (mandatory)
 - ✅ FedRAMP High authorization support
 - ✅ Classified data handling (up to Top Secret)
