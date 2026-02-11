@@ -1,7 +1,7 @@
 # Project-AI Pricing Framework
 
-**Version:** 1.0.0  
-**Effective Date:** February 8, 2026  
+**Version:** 2.0.0  
+**Effective Date:** February 11, 2026  
 **Subject to:** Master Services Agreement
 
 ---
@@ -13,6 +13,10 @@
 **Target:** Individual humans, digital entities, personal AI beings, hobbyists, researchers, creators
 
 **Philosophy:** Solo tier vastly exceeds all "big tech" free offerings. We believe in empowering individuals with God-tier capabilities, not crippling them to drive upgrades.
+
+**Pricing:** FREE - Forever, No credit card required, No trials, No tricks
+
+**Usage Rights:** Personal, non-commercial, educational, research
 
 ---
 
@@ -42,59 +46,6 @@
 
 ---
 
-### Company Lifetime ($499 one-time, up to 5 seats)
-
-**What You Get:**
-- ✓ **Lifetime** commercial rights for up to 5 team members
-- ✓ **Lifetime** priority support (24-hour response)
-- ✓ **Lifetime** team collaboration features
-- ✓ **Lifetime** cloud sync (500GB total)
-- ✓ **Lifetime** updates and priority bug fixes
-- ✓ Company name in supporters list
-- ✓ 2 hours of onboarding/training (one-time)
-
-**What You Already Had Anyway:**
-- The source code (MIT license)
-- Right to self-host for your team
-- Right to modify and customize
-
-**Why Buy This:** Predictable costs, no vendor lock-in, support sustainable open source, get team features forever.
-
-**Additional Seats:** $79 one-time per additional seat (lifetime)
-
-**Perfect For:** Small businesses, agencies, studios, teams wanting predictable costs and lifetime ownership.
-
----
-
-### Organization Lifetime ($2,499 one-time, up to 25 seats)
-
-**What You Get:**
-- ✓ **Lifetime** commercial rights for up to 25 seats
-- ✓ **Lifetime** hardware-backed signing support
-- ✓ **Lifetime** priority support (8-hour response)
-- ✓ **Lifetime** white-label and custom branding
-- ✓ **Lifetime** on-premises deployment support
-- ✓ **Lifetime** updates and security patches
-- ✓ 10 hours of custom development/integration (one-time)
-- ✓ Organization featured as major supporter
-
-**What You Already Had Anyway:**
-- The source code (MIT license)
-- Right to deploy anywhere
-- Right to rebrand and customize
-
-**Why Buy This:** Eliminate recurring costs, support open source sustainability, get enterprise features without enterprise subscription pain.
-
-**Additional Seats:** $49 one-time per seat (lifetime)
-
-**Perfect For:** Established companies, non-profits, universities wanting long-term cost predictability.
-
----
-
-**Note on Government/Classified:** Lifetime options not available for government tier due to ongoing compliance, security operations, and clearance requirements. Government tier requires active subscription for continuous security monitoring.
-
----
-
 **The Honest Truth:** This is open source. You can fork it, modify it, host it yourself, and never pay us a dime. These lifetime options are for those who:
 1. Want to support sustainable open source development
 2. Need commercial use rights without worrying about licensing
@@ -106,11 +57,11 @@
 
 ---
 
-## 🔄 SUBSCRIPTION TIERS (Recurring)
+## 🔄 SUBSCRIPTION PLANS (Recurring)
 
-For those who prefer ongoing support, automatic updates, and don't want to think about it:
+For organizations preferring ongoing support, automatic updates, and managed services:
 
-**Features - VASTLY SUPERIOR TO BIG TECH FREE TIERS:**
+**Solo Tier Features - VASTLY SUPERIOR TO BIG TECH FREE TIERS:**
 - ✓ **Unlimited** AI conversations (no monthly caps like ChatGPT/Claude free)
 - ✓ **Unlimited** memory expansion (vs. big tech's 0-5GB limits)
 - ✓ **Full** AGI identity system with Asimov's Laws (ethical AI, not just chatbot)
@@ -155,24 +106,20 @@ For those who prefer ongoing support, automatic updates, and don't want to think
 | Ethics | ✓ Asimov's Laws | ❌ Basic | ❌ Basic | ❌ Basic | ❌ Basic |
 | Autonomy | ✓ Full AGI | ❌ Chat only | ❌ Chat only | ❌ Chat only | ❌ Chat only |
 
-**Pricing:** FREE - Forever, No credit card required, No trials, No tricks
-
-**Usage Rights:** Personal, non-commercial, educational, research
-
 ---
 
-### Company Tier (Subscription: $19/seat/month)
+### Company Tier
 
 **All Solo Features, Plus:**
 - ✓ Multi-user coordination and collaboration
-- ✓ Commercial use rights (full)
+- ✓ Commercial use rights (unlimited seats per entity)
 - ✓ Team dashboard and analytics
-- ✓ Cloud synchronization (optional, 500GB per seat)
+- ✓ Cloud synchronization (optional)
 - ✓ Priority email support (4-hour response)
 - ✓ Enhanced cryptographic verification with team key management
 - ✓ Collaborative memory sharing (team knowledge base)
 - ✓ Advanced audit logging and compliance tools
-- ✓ API access with higher rate limits (1M calls/month)
+- ✓ API access with higher rate limits
 - ✓ Custom branding (logo, colors)
 - ✓ Standard SLA (99.5% uptime)
 - ✓ Quarterly business reviews
@@ -182,70 +129,33 @@ For those who prefer ongoing support, automatic updates, and don't want to think
 - Corporations (LLC, Inc, Ltd, etc.)
 - Partnerships
 - Digital collectives and DAOs
-- Startup companies (<100 employees)
+- Startup companies
 
-**Limitations:**
-- Software-backed signing only (hardware optional at additional cost)
-- Email support only (no phone/chat)
-- Standard compliance (GDPR, CCPA basic)
+**Pricing Plans:**
 
-**Pricing:** $19/seat/month (annual: $180/seat/year, save 21%)
+| Plan | Price | Best For |
+|------|-------|----------|
+| **Weekly** | $250/week | Short-term projects, trials, pilot programs |
+| **Monthly** | $1,000/month | Flexible commitments, small teams |
+| **Yearly** | $8,000/year | Long-term use, 33% savings vs monthly |
+| **Lifetime** | $25,000 one-time | Permanent rights, unlimited seats, no recurring costs |
+
+**All Plans Include:**
+- Unlimited seats per entity (no per-user fees)
+- Full commercial use rights
+- Priority support
+- Automatic updates
+- Cancel anytime (no penalties)
 
 **Why Subscribe vs Lifetime:** Subscription includes automatic managed cloud hosting, daily backups, 4-hour support response, and continuous hands-off updates. Lifetime requires self-management.
 
-**Switch Anytime:** Can upgrade to lifetime by paying difference (subscription payments credited toward lifetime purchase).
+**Upgrade Anytime:** Subscription payments can be credited toward lifetime purchase.
 
 ---
 
-### Organization Tier (Subscription: $49/seat/month)
+### Government Tier (Subscription Only)
 
 **All Company Features, Plus:**
-- ✓ Hardware-backed signing (TPM/HSM support included)
-- ✓ Dedicated infrastructure and isolated deployment options
-- ✓ Premium SLA (99.9% uptime)
-- ✓ 24/7 phone, chat, and email support
-- ✓ Unlimited memory expansion per seat
-- ✓ Advanced security and compliance features (SOC 2, ISO 27001)
-- ✓ Custom plugin development support (10 hours/month included)
-- ✓ White-label options (full UI customization)
-- ✓ On-premises deployment available
-- ✓ Air-gapped deployment support
-- ✓ Dedicated account manager
-- ✓ Unlimited training and onboarding
-- ✓ Custom integrations and API development
-- ✓ Advanced analytics and reporting
-- ✓ Multi-region deployment
-- ✓ Federated identity integration (SSO, SAML, OAuth)
-- ✓ Advanced audit and compliance dashboards
-
-**Entity Types Supported:**
-- Large corporations (100+ employees)
-- Regulated industries (finance, healthcare, legal)
-- Non-profit organizations (501(c)(3), charities)
-- Educational institutions (universities, schools)
-- Research organizations and laboratories
-- International organizations
-- Multi-national enterprises
-
-**Security:**
-- Required: Hardware security module (HSM) or TPM integration
-- Advanced threat intelligence and response
-- Custom security policies and frameworks
-- Detailed audit trails with 7-year retention
-- Penetration testing (annual, included)
-- Security operations center (SOC) integration
-
-**Pricing:** $49/seat/month (annual: $480/seat/year, save 18%)
-
-**Why Subscribe vs Lifetime:** Subscription includes managed compliance monitoring, SOC 2 audit support, continuous security updates, and dedicated account management.
-
-**Switch Anytime:** Can upgrade to lifetime by paying difference (subscription payments credited).
-
----
-
-### Government Tier (Subscription Only: $99/seat/month base)
-
-**All Organization Features, Plus:**
 - ✓ **Mandatory** hardware-backed signing (FIPS 140-2/3 Level 3+ HSM required)
 - ✓ **Mandatory** timestamp authority notarization (RFC 3161, eIDAS-compliant)
 - ✓ Air-gapped deployment (fully disconnected operation)
@@ -267,6 +177,7 @@ For those who prefer ongoing support, automatic updates, and don't want to think
 - ✓ Disaster recovery and business continuity (geographically distributed)
 - ✓ Chain of custody documentation
 - ✓ Tamper-evident packaging and delivery
+- ✓ Unlimited seats per entity (no per-user fees)
 
 **Entity Types Supported:**
 - Federal government agencies (civilian and military)
@@ -278,7 +189,7 @@ For those who prefer ongoing support, automatic updates, and don't want to think
 - Government contractors (cleared facilities)
 - Foreign allied governments (case-by-case approval)
 
-**Security:**
+**Security Requirements:**
 - Required: FIPS 140-2/3 Level 3 or higher HSM
 - Required: RFC 3161 or eIDAS-compliant timestamp authority
 - Required: Continuous monitoring with SIEM integration
@@ -289,20 +200,25 @@ For those who prefer ongoing support, automatic updates, and don't want to think
 - Supply chain risk management (SCRM) compliance
 - Anti-tamper and self-destruct mechanisms (optional)
 
-**Pricing:** Starting at $99/seat/month (custom pricing for classified/specialized deployments)
+**Pricing Plans:**
 
-**Base Price:** $99/seat/month (annual: $990/seat/year, save 17%)
-**Classified Deployment:** +$50/seat/month (requires security clearances)
-**Air-gapped/Tactical:** +$75/seat/month (special hardware and deployment)
+| Plan | Price | Best For |
+|------|-------|----------|
+| **Monthly** | $2,500/month | Flexible government contracts, pilot programs |
+| **Yearly** | $10,000/year | Long-term deployments, 58% savings vs monthly |
+| **Lifetime** | Not Available | Government requires ongoing compliance monitoring |
 
-**Why This Price:** Government-grade security and compliance traditionally costs $200-500/user (e.g., Palantir, classified SaaS). Our pricing is 50-80% lower while maintaining highest security standards.
+**Additional Surcharges:**
+- Classified Deployment: +$1,000/month (requires security clearances)
+- Air-gapped/Tactical: +$1,500/month (special hardware and deployment)
 
-**Requirements:**
-- Government entity verification (official documentation)
-- Security clearance verification (personnel and facility where applicable)
-- Compliance assessment and security review
-- Minimum 50 seats (exceptions for small agencies)
-- Contract vehicle (GSA Schedule, BPA, or direct contract)
+**All Plans Include:**
+- Unlimited seats per entity
+- 24/7/365 dedicated support with cleared personnel
+- Continuous security monitoring
+- On-site installation and training
+- Source code escrow
+- Hardware security modules (HSMs)
 
 **Deployment Options:**
 - On-premises (government data center)
@@ -310,22 +226,30 @@ For those who prefer ongoing support, automatic updates, and don't want to think
 - Air-gapped secure facility
 - Mobile/tactical deployment (rugged hardware)
 
+**Requirements:**
+- Government entity verification (official documentation)
+- Security clearance verification (personnel and facility where applicable)
+- Compliance assessment and security review
+- Contract vehicle (GSA Schedule, BPA, or direct contract)
+
+**Why No Lifetime Option:** Government-grade security and compliance require ongoing operations: continuous security monitoring, compliance audits, cleared support staff, threat intelligence feeds, and regulatory updates. These operational requirements make subscription the only viable model.
+
 ---
 
 ## PAYMENT TERMS
 
-**Billing Cycle:** Monthly or annual (prepaid)
+**Billing Cycle:** Weekly, Monthly, or Annual (prepaid based on selected plan)
 
 **Payment Methods:** 
 - Credit card (all tiers)
-- ACH/wire transfer (Enterprise and Government)
-- Purchase order (Enterprise and Government, pre-approved only)
+- ACH/wire transfer (Company and Government)
+- Purchase order (Government, pre-approved only)
 
-**Currency:** USD (other currencies available for Enterprise/Government)
+**Currency:** USD (other currencies available for Government on request)
 
 **Refund Policy:** 
 - Solo Tier: N/A (free)
-- Team/Enterprise: 30-day money-back guarantee (first purchase only)
+- Company Tier: 30-day money-back guarantee (first purchase only)
 - Government: Custom terms negotiated in contract
 
 **Price Changes:** 
@@ -352,25 +276,8 @@ For those who prefer ongoing support, automatic updates, and don't want to think
 **Downgrade Process:**
 - End of current billing cycle
 - Feature access restricted to new tier
-- Data retention for 90 days (Enterprise) or 30 days (Team)
+- Data retention for 90 days (Company) or 30 days (Solo)
 - Export tools provided
-
----
-
-## OVERAGE AND USAGE LIMITS
-
-**Storage Overages:**
-- Team: $0.50/GB/month for data over tier limit
-- Enterprise: Included (unlimited)
-
-**API Call Overages:**
-- Team: $0.01 per 1,000 calls over 100,000/month limit
-- Enterprise: $0.005 per 1,000 calls over 1,000,000/month limit
-- Government: Custom negotiation
-
-**User Overages:**
-- Automatic billing for additional users at tier rate
-- No penalties for temporary overages (grace period: 7 days)
 
 ---
 
@@ -381,42 +288,36 @@ For those who prefer ongoing support, automatic updates, and don't want to think
 - Documentation and knowledge base
 - No SLA
 
-### Team Tier
-- Email support (24-hour response)
+### Company Tier
+- Email support (4-hour response)
 - 99.5% uptime SLA
 - Business hours coverage (9am-5pm local time, weekdays)
-
-### Enterprise Tier
-- 24/7 phone, email, and chat support
-- 99.9% uptime SLA
-- 1-hour response time for critical issues
-- Dedicated account manager
+- Quarterly business reviews
 
 ### Government Tier
-- 24/7 dedicated support team
-- 99.99% uptime SLA (configurable)
+- 24/7/365 dedicated support team with security clearances
+- 99.99%+ uptime SLA (configurable up to 99.999%)
 - 15-minute response time for critical issues
 - On-site support available
 - Security operations center (SOC) monitoring
+- Dedicated account manager
 
 ---
 
 ## CUSTOM PRICING
 
-**Volume Discounts:**
-- 50-99 seats: 10% discount
-- 100-249 seats: 15% discount  
-- 250-499 seats: 20% discount
-- 500-999 seats: 25% discount
-- 1,000+ seats: 30% discount + custom terms
+**Volume Discounts (Company Tier):**
+- Multiple entity subscriptions: 10% discount (2+ entities)
+- Industry partnerships: 15% discount (vetted partners)
+- Multi-year commitments: Custom terms available
 
 **Non-Profit Discount:**
-- 501(c)(3) organizations: 50% discount on all paid tiers
+- 501(c)(3) organizations: 50% discount on Company tier
 - Educational institutions: 60% discount with accreditation
 - Open source projects: 70% discount with verification
 
 **Startup Program:**
-- Qualified startups (<2 years, <$1M funding): 75% off Company tier for 1 year ($4.75/seat/month)
+- Qualified startups (<2 years, <$1M funding): 75% off Company tier for 1 year
 - Y Combinator / Techstars / equivalent: 80% off for 2 years
 
 **Individual Creator / Solopreneur:**
