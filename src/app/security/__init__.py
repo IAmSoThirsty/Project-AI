@@ -8,6 +8,7 @@ This module provides comprehensive security controls including:
 - Agent encapsulation and adversarial controls
 - Database security
 - Monitoring and alerting
+- T-SECA/GHOST Protocol for runtime hardening and catastrophic continuity
 """
 
 # Import core security components (always available)
@@ -35,6 +36,23 @@ try:
 except ImportError:
     SecurityMonitor = None
 
+try:
+    from .tseca_ghost_protocol import (
+        GhostProtocol,
+        TSECA,
+        HeartbeatMonitor,
+        TSECA_Ghost_System,
+        shamir_split,
+        shamir_reconstruct,
+    )
+except ImportError:
+    GhostProtocol = None
+    TSECA = None
+    HeartbeatMonitor = None
+    TSECA_Ghost_System = None
+    shamir_split = None
+    shamir_reconstruct = None
+
 __all__ = [
     "EnvironmentHardening",
     "SecureDataParser",
@@ -43,4 +61,10 @@ __all__ = [
     "AgentEncapsulation",
     "SecureDatabaseManager",
     "SecurityMonitor",
+    "GhostProtocol",
+    "TSECA",
+    "HeartbeatMonitor",
+    "TSECA_Ghost_System",
+    "shamir_split",
+    "shamir_reconstruct",
 ]
