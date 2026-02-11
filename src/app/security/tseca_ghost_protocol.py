@@ -23,6 +23,7 @@ import logging
 import secrets
 import threading
 import time
+from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
@@ -446,7 +447,7 @@ class HeartbeatMonitor:
         self.state.last_seen = time.time()
         self.state.failure_count = 0
 
-    def monitor(self, on_failure: callable) -> None:
+    def monitor(self, on_failure: Callable[[], None]) -> None:
         """Monitor heartbeat and trigger callback on failure.
 
         Runs in separate thread, checking every timeout seconds.
