@@ -389,6 +389,66 @@ project-ai show-acceptance --user-id your-email@example.com
 
 ---
 
+## 🏛️ TK8S: Civilization-Grade Kubernetes
+
+### Thirsty's Kubernetes (TK8S) - Sovereign Orchestration Layer
+
+Project-AI includes **TK8S**, a civilization-grade Kubernetes deployment architecture:
+
+```
+┌─────────────────────────────────────────────┐
+│  Layer 5: Observability + Audit            │
+│  Prometheus, Grafana, Loki, Tempo          │
+├─────────────────────────────────────────────┤
+│  Layer 4: External Amplifiers              │
+│  ECA / Ultra (Maximum Isolation)           │
+├─────────────────────────────────────────────┤
+│  Layer 3: Governance & Security            │
+│  TARL, Cerberus, Kyverno, Falco, OPA      │
+├─────────────────────────────────────────────┤
+│  Layer 2: Sovereign Services               │
+│  Project-AI Core, Memory Systems           │
+├─────────────────────────────────────────────┤
+│  Layer 1: Kubernetes Core                  │
+│  etcd, API server, Controllers             │
+└─────────────────────────────────────────────┘
+```
+
+#### Core Principles
+
+- ✅ **Signed Images Only** - Cosign verification enforced via Kyverno
+- ✅ **SBOM Mandatory** - Software Bill of Materials for every image
+- ✅ **No Mutable Containers** - Read-only root filesystem, no `latest` tags
+- ✅ **No Shell Access** - Debug containers blocked in production
+- ✅ **GitOps via ArgoCD** - Git is single source of truth
+- ✅ **Zero Trust Networking** - Default-deny with explicit allow rules
+- ✅ **Ultra Isolation for ECA** - External cognition runs in isolation namespace
+
+#### Quick Deploy
+
+```bash
+# Navigate to TK8S directory
+cd k8s/tk8s
+
+# Apply namespaces and infrastructure
+kubectl apply -k .
+
+# Install ArgoCD applications
+kubectl apply -f argocd/applications.yaml
+
+# Validate deployment
+python validate_tk8s.py
+```
+
+#### Documentation
+
+- **[TK8S Doctrine](docs/TK8S_DOCTRINE.md)** - Complete philosophy and principles
+- **[Setup Guide](k8s/tk8s/SETUP_GUIDE.md)** - Step-by-step deployment instructions
+- **[Civilization Timeline](docs/CIVILIZATION_TIMELINE.md)** - Immutable release history
+- **[CI/CD Pipeline](.github/workflows/tk8s-civilization-pipeline.yml)** - 14-stage validation
+
+---
+
 ## 💎 Pricing: Radical Honesty
 
 ### The Truth About Licensing
