@@ -449,6 +449,7 @@ Government pricing increases by 15% for every 25 seats:
 | 51-75 seats | $3,250 | $13,000 | +30% |
 | 76-100 seats | $3,625 | $14,500 | +45% |
 | 101-125 seats | $4,000 | $16,000 | +60% |
+| 126-150 seats | $4,375 | $17,500 | +75% |
 | 151+ seats | Custom pricing | Custom pricing | Contact sales |
 
 **Additional Surcharges:**
