@@ -1,0 +1,33 @@
+apiVersion: v2
+name: project-ai
+description: A Helm chart for Project-AI - Civilization-tier AI platform
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - ai
+  - assistant
+  - python
+  - pyqt6
+  - machine-learning
+  - kubernetes
+home: https://github.com/IAmSoThirsty/Project-AI
+sources:
+  - https://github.com/IAmSoThirsty/Project-AI
+maintainers:
+  - name: Project-AI Team
+    email: support@project-ai.example.com
+icon: https://project-ai.example.com/logo.png
+dependencies:
+  - name: postgresql
+    version: 12.x.x
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
+  - name: redis
+    version: 18.x.x
+    repository: https://charts.bitnami.com/bitnami
+    condition: redis.enabled
+  - name: prometheus
+    version: 25.x.x
+    repository: https://prometheus-community.github.io/helm-charts
+    condition: prometheus.enabled

@@ -23,6 +23,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Include health check endpoints
+try:
+    from api.health_endpoints import router as health_router
+
+    app.include_router(health_router)
+    print("[OK] Health check endpoints registered")
+except ImportError as e:
+    print(f"[WARN] Health check endpoints not available: {e}")
+
 # Include Legion/OpenClaw router
 try:
     from integrations.openclaw.api_endpoints import router as openclaw_router
