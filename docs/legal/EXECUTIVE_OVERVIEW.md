@@ -195,8 +195,6 @@ Project-AI delivers a production-grade, open-source AI assistant platform with e
 
 **Net: +$8,400,000** (60% profit margin)
 
-**Net: +$7,400,000** (57% profit margin)
-
 ---
 
 ## STRATEGIC RECOMMENDATIONS
