@@ -1,0 +1,163 @@
+# Enhanced Image Signing Job for TK8S Pipeline
+# Supports both keyless (GitHub OIDC) and KMS-backed signing
+
+# Add this to .github/workflows/tk8s-civilization-pipeline.yml
+
+# ==========================================================================
+# PHASE 9: IMAGE SIGNING (Enhanced with KMS Support)
+# ==========================================================================
+sign-images:
+  name: ✍️ Sign Images with Cosign
+  runs-on: ubuntu-latest
+  needs: [build-images, scan-images, generate-sbom]
+  permissions:
+    contents: read
+    packages: write
+    id-token: write
+  strategy:
+    matrix:
+      image: [core, eca]
+  steps:
+    - name: Install Cosign
+      uses: sigstore/cosign-installer@v3
+    
+    - name: Log in to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    
+    # KMS-backed signing (production)
+    - name: Sign with GCP KMS
+      if: github.ref == 'refs/heads/main' && vars.USE_KMS_SIGNING == 'true'
+      env:
+        COSIGN_EXPERIMENTAL: 1
+      run: |
+        IMAGE_TAG="${{ needs.build-images.outputs[format('{0}-image-tag', matrix.image)] }}"
+        IMAGE_DIGEST="${{ needs.build-images.outputs[format('{0}-image-digest', matrix.image)] }}"
+        
+        echo "Signing image with KMS: ${IMAGE_TAG}@${IMAGE_DIGEST}"
+        
+        # Authenticate with GCP via Workload Identity
+        gcloud auth login --brief --cred-file="${GOOGLE_APPLICATION_CREDENTIALS}"
+        
+        # Sign with KMS key
+        cosign sign --yes \
+          --key "gcpkms://projects/${{ secrets.GCP_PROJECT_ID }}/locations/us-central1/keyRings/tk8s-keyring/cryptoKeys/cosign-key" \
+          -a "repo=${{ github.repository }}" \
+          -a "workflow=${{ github.workflow }}" \
+          -a "ref=${{ github.ref }}" \
+          -a "sha=${{ github.sha }}" \
+          -a "actor=${{ github.actor }}" \
+          -a "signed-at=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+          "${IMAGE_TAG}@${IMAGE_DIGEST}"
+    
+    # Keyless signing (development/staging)
+    - name: Sign with Keyless (GitHub OIDC)
+      if: github.ref != 'refs/heads/main' || vars.USE_KMS_SIGNING != 'true'
+      env:
+        COSIGN_EXPERIMENTAL: 1
+      run: |
+        IMAGE_TAG="${{ needs.build-images.outputs[format('{0}-image-tag', matrix.image)] }}"
+        IMAGE_DIGEST="${{ needs.build-images.outputs[format('{0}-image-digest', matrix.image)] }}"
+        
+        echo "Signing image with keyless: ${IMAGE_TAG}@${IMAGE_DIGEST}"
+        
+        # Keyless signing using GitHub OIDC
+        cosign sign --yes \
+          -a "repo=${{ github.repository }}" \
+          -a "workflow=${{ github.workflow }}" \
+          -a "ref=${{ github.ref }}" \
+          -a "sha=${{ github.sha }}" \
+          -a "actor=${{ github.actor }}" \
+          -a "signed-at=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+          "${IMAGE_TAG}@${IMAGE_DIGEST}"
+    
+    # Verify KMS signature
+    - name: Verify KMS signature
+      if: github.ref == 'refs/heads/main' && vars.USE_KMS_SIGNING == 'true'
+      run: |
+        IMAGE_TAG="${{ needs.build-images.outputs[format('{0}-image-tag', matrix.image)] }}"
+        IMAGE_DIGEST="${{ needs.build-images.outputs[format('{0}-image-digest', matrix.image)] }}"
+        
+        # Download public key from GCS or use KMS directly
+        gcloud kms keys versions get-public-key 1 \
+          --location=us-central1 \
+          --keyring=tk8s-keyring \
+          --key=cosign-key \
+          --output-file=/tmp/cosign-kms.pub
+        
+        cosign verify \
+          --key /tmp/cosign-kms.pub \
+          "${IMAGE_TAG}@${IMAGE_DIGEST}"
+    
+    # Verify keyless signature
+    - name: Verify keyless signature
+      if: github.ref != 'refs/heads/main' || vars.USE_KMS_SIGNING != 'true'
+      run: |
+        IMAGE_TAG="${{ needs.build-images.outputs[format('{0}-image-tag', matrix.image)] }}"
+        IMAGE_DIGEST="${{ needs.build-images.outputs[format('{0}-image-digest', matrix.image)] }}"
+        
+        cosign verify \
+          --certificate-identity-regexp="https://github.com/${{ github.repository }}/*" \
+          --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
+          "${IMAGE_TAG}@${IMAGE_DIGEST}"
+    
+    # Create Binary Authorization attestation (for GKE)
+    - name: Create Binary Authorization attestation
+      if: github.ref == 'refs/heads/main' && vars.USE_BINARY_AUTH == 'true'
+      run: |
+        IMAGE_TAG="${{ needs.build-images.outputs[format('{0}-image-tag', matrix.image)] }}"
+        IMAGE_DIGEST="${{ needs.build-images.outputs[format('{0}-image-digest', matrix.image)] }}"
+        
+        # Extract digest hash
+        DIGEST_HASH=$(echo "${IMAGE_DIGEST}" | cut -d'@' -f2)
+        ARTIFACT_URL="${IMAGE_TAG}@${DIGEST_HASH}"
+        
+        echo "Creating attestation for: ${ARTIFACT_URL}"
+        
+        gcloud container binauthz attestations sign-and-create \
+          --artifact-url="${ARTIFACT_URL}" \
+          --attestor=cosign-attestor \
+          --attestor-project=${{ secrets.GCP_PROJECT_ID }} \
+          --keyversion-project=${{ secrets.GCP_PROJECT_ID }} \
+          --keyversion-location=us-central1 \
+          --keyversion-keyring=tk8s-keyring \
+          --keyversion-key=cosign-key \
+          --keyversion=1
+
+# ==========================================================================
+# REQUIRED SECRETS AND VARIABLES
+# ==========================================================================
+# 
+# GitHub Secrets (Settings > Secrets and variables > Actions):
+#   - GCP_PROJECT_ID: Your GCP project ID
+#   - GCP_WORKLOAD_IDENTITY_PROVIDER: Workload Identity provider path
+#   - GCP_SERVICE_ACCOUNT: Service account email
+#
+# GitHub Variables (Settings > Secrets and variables > Actions > Variables):
+#   - USE_KMS_SIGNING: "true" to enable KMS signing (default: false)
+#   - USE_BINARY_AUTH: "true" to enable Binary Authorization (default: false)
+#
+# ==========================================================================
+# WORKLOAD IDENTITY SETUP
+# ==========================================================================
+#
+# Add this step before signing to authenticate with GCP:
+#
+#     - name: Authenticate to Google Cloud
+#       uses: google-github-actions/auth@v2
+#       with:
+#         workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+#         service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+#
+# ==========================================================================
+# MIGRATION PATH
+# ==========================================================================
+#
+# Phase 1: Test in staging with keyless (current state)
+# Phase 2: Enable KMS signing for main branch only
+# Phase 3: Enable Binary Authorization in audit mode
+# Phase 4: Enforce Binary Authorization in production
+# Phase 5: Migrate all branches to KMS signing
