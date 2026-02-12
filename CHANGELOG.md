@@ -5,6 +5,31 @@ All notable changes to Project-AI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] - 2026-02-12
+
+### Added
+- Created comprehensive `PROJECT_STATUS.md` documenting current system status
+- Created `docs/internal/archive/subsystem-implementations/` for historical subsystem reports
+
+### Changed
+- **MAJOR**: Comprehensive documentation cleanup and archival
+  - Moved 5 root-level historical summaries to `docs/internal/archive/root-summaries/`
+  - Moved 15 subsystem implementation summaries to `docs/internal/archive/subsystem-implementations/`
+  - Moved `CLEANUP_SUMMARY_2026-02-08.md` to archive
+- Updated `ARCHIVE_INDEX.md` with complete catalog (157 archived files)
+
+### Removed
+- Removed outdated implementation summaries from root directory
+- Removed historical summaries from subsystem directories (engines/, web/, unity/, etc.)
+
+### Documentation
+- Root now contains only current operational documentation
+- `PROJECT_STATUS.md` provides comprehensive current system status
+- All historical documentation indexed in `docs/internal/archive/ARCHIVE_INDEX.md`
+- Clear separation between current docs and historical records
+
+---
+
 ## [Unreleased] - 2026-02-08
 
 ### Added

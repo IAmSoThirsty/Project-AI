@@ -1,7 +1,7 @@
 # Project-AI Archive Index
 
 **Last Updated**: 2026-02-12  
-**Total Archived Documents**: 142 files  
+**Total Archived Documents**: 157 files  
 **Purpose**: Historical memory and audit trail of completed work
 
 ---
@@ -16,6 +16,7 @@ This archive contains historical implementation documentation, completion summar
 docs/internal/archive/
 ├── ARCHIVE_INDEX.md (this file)
 ├── root-summaries/ (22 files) - Previously in root, archived 2026-02-08 and 2026-02-12
+├── subsystem-implementations/ (15 files) - Subsystem completion summaries, archived 2026-02-12
 ├── adversarial-completion/ (5 files) - Adversarial testing completion docs
 ├── historical-summaries/ (9 files) - Historical project summaries
 ├── security-incident-jan2026/ (4 files) - Security incident documentation
@@ -39,6 +40,33 @@ docs/internal/archive/
 | TRANSFORMATION_SUMMARY.md | Historical | Project | Point-in-time summary - transformation complete |
 | HEALTH_REPORT.md | 2026-02-08 | Monitoring | Point-in-time snapshot - continuous monitoring now in place |
 | CODACY_COMPREHENSIVE_PATCH.md | Historical | Code Quality | Point-in-time patch analysis - quality improvements applied |
+
+### Subsystem Implementation Summaries Collection
+**Reason**: Consolidation - moved historical subsystem completion reports  
+**Subsystem**: Multiple engines and integrations  
+**Status**: Completed implementations
+
+| File | Date | Subsystem | Reason |
+|------|------|-----------|--------|
+| AGI_IDENTITY_IMPLEMENTATION_SUMMARY.md | 2026-01-17 | Core/Identity | Point-in-time implementation report - system now operational |
+| COMPLETE_INTEGRATION_SUMMARY.md | Historical | Monitoring | Point-in-time integration report - monitoring stack now active |
+| DJANGO_STATE_IMPLEMENTATION_SUMMARY.md | 2026-02-04 | Engines | Completed simulation engine implementation |
+| AI_TAKEOVER_IMPLEMENTATION_SUMMARY.md | Historical | Engines | Completed terminal engine implementation |
+| AI_TAKEOVER_FINAL_INTEGRATION_SUMMARY.md | Historical | Engines | Final integration completion report |
+| ALIEN_INVADERS_IMPLEMENTATION_SUMMARY.md | Historical | Engines | Completed game engine implementation |
+| ALIEN_INVADERS_INTEGRATION_SUMMARY.md | Historical | Engines | Integration completion report |
+| EMP_DEFENSE_IMPLEMENTATION_SUMMARY.md | Historical | Engines | Completed defense engine implementation |
+| WEB_IMPLEMENTATION_SUMMARY.md | Historical | Web | Web platform implementation report |
+| UNITY_IMPLEMENTATION_SUMMARY.md | Historical | Unity | Unity integration completion |
+| ATLAS_IMPLEMENTATION_SUMMARY.md | Historical | Atlas | Atlas system implementation |
+| GRADLE_DB_IMPLEMENTATION_SUMMARY.md | Historical | Gradle | Database gradle integration |
+| GRADLE_IR_IMPLEMENTATION_SUMMARY.md | Historical | Gradle | IR gradle integration |
+| TK8S_IMPLEMENTATION_SUMMARY.md | Historical | K8s | TK8s implementation completion |
+
+### Other Archived Documentation
+| File | Date | Type | Reason |
+|------|------|------|--------|
+| CLEANUP_SUMMARY_2026-02-08.md | 2026-02-08 | Maintenance | Historical cleanup report - work complete |
 
 ---
 
@@ -308,12 +336,13 @@ git log --follow docs/internal/archive/FILENAME.md
 
 ## Archive Statistics
 
-- **Total Files**: 142
+- **Total Files**: 157
 - **Root-Summaries**: 22 (archived 2026-02-08, 2026-02-12)
+- **Subsystem-Implementations**: 15 (archived 2026-02-12)
 - **Main Archive**: 76
-- **Subdirectories**: 44
+- **Subdirectories**: 5 (root-summaries, subsystem-implementations, adversarial-completion, historical-summaries, security-incident-jan2026, session-notes)
 - **Date Range**: 2025-12 to 2026-02-12
-- **Subsystems Covered**: 12+ (Infrastructure, Security, TARL, Testing, Architecture, etc.)
+- **Subsystems Covered**: 15+ (Infrastructure, Security, TARL, Testing, Architecture, Engines, Web, Unity, etc.)
 
 ---
 
