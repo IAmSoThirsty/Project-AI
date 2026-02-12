@@ -66,7 +66,7 @@ class ConstitutionSealer:
 
         logger.info("ConstitutionSealer initialized at %s", self.data_dir)
 
-    def validate_10_year_convergence(self) -> tuple[bool, dict[str, any]]:
+    def validate_10_year_convergence(self) -> tuple[bool, dict[str, Any]]:
         """
         Validate 10-year convergence criteria.
 
@@ -102,7 +102,7 @@ class ConstitutionSealer:
         logger.info("10-year convergence criteria validated: %s", metadata)
         return True, {"passes": True, "metadata": metadata}
 
-    def validate_entropy_stability(self) -> tuple[bool, dict[str, any]]:
+    def validate_entropy_stability(self) -> tuple[bool, dict[str, Any]]:
         """
         Validate entropy stability (no creep or collapse).
 
@@ -140,7 +140,7 @@ class ConstitutionSealer:
             "metadata": metadata,
         }
 
-    def validate_ledger_integrity(self) -> tuple[bool, dict[str, any]]:
+    def validate_ledger_integrity(self) -> tuple[bool, dict[str, Any]]:
         """
         Validate all ledger hash chains are intact.
 
@@ -187,7 +187,7 @@ class ConstitutionSealer:
             },
         }
 
-    def validate_system_state(self) -> tuple[bool, dict[str, any]]:
+    def validate_system_state(self) -> tuple[bool, dict[str, Any]]:
         """
         Validate system is in valid state for completion.
 
@@ -216,7 +216,7 @@ class ConstitutionSealer:
             "current_state": current_state.value,
         }
 
-    def run_validation(self) -> tuple[bool, dict[str, any]]:
+    def run_validation(self) -> tuple[bool, dict[str, Any]]:
         """
         Run all validation checks.
 
@@ -267,13 +267,13 @@ class ConstitutionSealer:
 
         return all_pass, validation_results
 
-    def _record_validation_attempt(self, validation_results: dict[str, any]):
+    def _record_validation_attempt(self, validation_results: dict[str, Any]):
         """Record validation attempt to ledger"""
         with open(self.completion_ledger_path, "a") as f:
             f.write(json.dumps(validation_results) + "\n")
 
     def generate_completion_seal(
-        self, validation_results: dict[str, any]
+        self, validation_results: dict[str, Any]
     ) -> dict[str, str]:
         """
         Generate CONSTITUTION_COMPLETE seal.
