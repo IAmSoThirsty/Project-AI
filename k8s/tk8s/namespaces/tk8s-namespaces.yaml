@@ -117,3 +117,45 @@ metadata:
   annotations:
     tk8s.io/description: "Layer 1: System Services (Vault, SealedSecrets, Cert-Manager)"
     tk8s.io/doctrine: "kubernetes-core"
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: project-ai-production
+  labels:
+    name: project-ai-production
+    environment: production
+    tk8s-layer: "2-sovereign-services"
+    app.kubernetes.io/name: project-ai
+    app.kubernetes.io/component: production
+    app.kubernetes.io/managed-by: tk8s
+    security.tk8s.io/isolation: high
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted
+    audit.project-ai.io/enabled: "true"
+    audit.project-ai.io/retention: "365d"
+  annotations:
+    tk8s.io/description: "Production environment with strict security controls"
+    tk8s.io/doctrine: "zero-trust-production"
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: project-ai-staging
+  labels:
+    name: project-ai-staging
+    environment: staging
+    tk8s-layer: "2-sovereign-services"
+    app.kubernetes.io/name: project-ai
+    app.kubernetes.io/component: staging
+    app.kubernetes.io/managed-by: tk8s
+    security.tk8s.io/isolation: standard
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted
+    audit.project-ai.io/enabled: "true"
+    audit.project-ai.io/retention: "90d"
+  annotations:
+    tk8s.io/description: "Staging environment for pre-production testing"
+    tk8s.io/doctrine: "staging-validation"
