@@ -81,19 +81,13 @@ In AGI development, a single mistake can have cascading consequences. Trust is n
 ## Quick Start: How to Contribute
 
 - **Read the [Copilot Workspace Profile](.github/copilot_workspace_profile.md)** - All contributions must meet production-grade standards
+- **Read the [Security Validation Claims Policy](.github/SECURITY_VALIDATION_POLICY.md)** - MANDATORY for all PRs making security or runtime enforcement claims
 - **For documentation**: See [Documentation Contributing Guide](../.github/CONTRIBUTING_DOCS.md)
 - Fork the repository
 - Create a branch with a descriptive name
 - Run tests locally: `pytest -q`
 - Run linters: `ruff check .` and `mypy src`
 - Open a pull request describing your changes
-
-## 📚 Contributing Documentation
-
-**Before adding or moving documentation**, read:
-
-- [Documentation Contributing Guide](../.github/CONTRIBUTING_DOCS.md) - Where to place documentation
-- [Documentation Structure Guide](DOCUMENTATION_STRUCTURE_GUIDE.md) - Complete organization guide
 
 ## 🚨 Governance & Standards
 
@@ -111,6 +105,44 @@ This governance profile enforces:
 - ✅ 80%+ test coverage
 
 **Non-compliant contributions will be rejected.**
+
+### 🔒 Security Validation Claims Policy (MANDATORY)
+
+**[.github/SECURITY_VALIDATION_POLICY.md](.github/SECURITY_VALIDATION_POLICY.md)**
+
+**ALL Pull Requests that claim any of the following are PROHIBITED unless they include complete runtime validation evidence:**
+
+- "Production-ready"
+- "Enterprise best practices"  
+- "Complete forensic capability"
+- "Runtime enforcement"
+- "Operational security"
+- Any similar assertion of runtime or operational enforcement
+
+**Required Evidence (ALL five validations must be included):**
+
+1. ✅ Unsigned image admission denial (with logs)
+2. ✅ Signed image admission success (with logs)
+3. ✅ Privileged container denial (with logs)
+4. ✅ Cross-namespace/lateral communication denial (with logs)
+5. ✅ Log deletion prevention (with logs)
+
+**If ANY validations are missing, PRs MUST use safe framing language ONLY:**
+
+- "Implementation aligns with enterprise hardening patterns."
+- "Validation tests confirm configuration correctness."
+- "Full adversarial validation is ongoing."
+
+**Enforcement:** PRs that violate this policy will be rejected with no exceptions. See the complete policy document for evidence format requirements and reviewer guidelines.
+
+---
+
+## 📚 Contributing Documentation
+
+**Before adding or moving documentation**, read:
+
+- [Documentation Contributing Guide](.github/CONTRIBUTING_DOCS.md) - Where to place documentation
+- [Documentation Structure Guide](DOCUMENTATION_STRUCTURE_GUIDE.md) - Complete organization guide
 
 ---
 
