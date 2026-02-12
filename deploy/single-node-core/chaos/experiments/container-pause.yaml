@@ -1,0 +1,49 @@
+# Chaos Experiment: Container Pause Test
+# ========================================
+# Tests graceful handling of frozen/paused containers
+
+id: "exp-003-container-pause"
+name: "Container Freeze Simulation"
+description: |
+  Pause Redis container to simulate a frozen service and test how
+  the orchestrator handles cache unavailability.
+
+failure_type: "container_pause"
+target_service: "redis"
+
+# Blast radius limits - very conservative for critical service
+blast_radius:
+  max_affected_services: 3
+  max_affected_containers: 3
+  max_downtime_seconds: 60
+  critical_services_excluded:
+    - "postgres"  # Protect database at all costs
+  region: "core-stack"
+
+# Short duration due to impact
+duration_seconds: 30
+
+# No additional parameters needed for pause
+parameters: {}
+
+# Hypothesis
+hypothesis: |
+  When Redis is paused (simulating frozen process), the system should:
+  1. Detect Redis unavailability within 10 seconds
+  2. Gracefully degrade (skip caching, hit DB directly)
+  3. Not crash or hang waiting for Redis
+  4. Resume normal caching when Redis recovers
+
+# Success criteria
+success_criteria:
+  system_recovered: true
+  max_downtime_seconds: 35
+  orchestrator_stayed_healthy: true
+  cache_recovery_time_lt_10s: true
+  no_cascading_failures: true
+
+# Expected impact
+expected_impact:
+  severity: "high"
+  user_impact: "Slower reads, increased database load"
+  mitigation: "Circuit breakers detect failure and degrade gracefully"

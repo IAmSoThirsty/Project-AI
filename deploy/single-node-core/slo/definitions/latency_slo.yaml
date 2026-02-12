@@ -1,0 +1,180 @@
+# Project-AI Latency SLOs
+# =========================
+# Service Level Objectives for request latency across all services
+
+version: "1.0"
+
+# Global latency SLO
+global_slo:
+  name: "Overall System Latency"
+  target: 99.9  # 99.9% of requests
+  budget_period: "30d"
+  
+# Service-specific latency budgets
+services:
+  
+  # Core orchestrator API
+  orchestrator:
+    name: "Orchestrator API Latency"
+    description: "End-to-end API request latency"
+    
+    slo_targets:
+      - percentile: "p50"
+        threshold_ms: 100
+        target_percent: 99.9
+      
+      - percentile: "p95"
+        threshold_ms: 500
+        target_percent: 99.5
+      
+      - percentile: "p99"
+        threshold_ms: 1000
+        target_percent: 99.0
+      
+      - percentile: "p99.9"
+        threshold_ms: 5000
+        target_percent: 95.0
+    
+    measurement:
+      metric: "http_request_duration_seconds"
+      labels:
+        service: "project-ai-orchestrator"
+      source: "prometheus"
+    
+    alerting:
+      burn_rate_window: "1h"
+      burn_rate_threshold: 10  # 10x normal error rate
+      notification_channels:
+        - "pagerduty-critical"
+        - "slack-alerts"
+  
+  # MCP Gateway
+  mcp_gateway:
+    name: "MCP Gateway Latency"
+    description: "Agent tool execution latency"
+    
+    slo_targets:
+      - percentile: "p50"
+        threshold_ms: 200
+        target_percent: 99.5
+      
+      - percentile: "p95"
+        threshold_ms: 1000
+        target_percent: 99.0
+      
+      - percentile: "p99"
+        threshold_ms: 3000
+        target_percent: 98.0
+    
+    measurement:
+      metric: "mcp_tool_execution_duration_seconds"
+      labels:
+        service: "mcp-gateway"
+      source: "prometheus"
+    
+    alerting:
+      burn_rate_window: "30m"
+      burn_rate_threshold: 5
+      notification_channels:
+        - "slack-alerts"
+  
+  # PostgreSQL queries
+  database:
+    name: "Database Query Latency"
+    description: "PostgreSQL query execution time"
+    
+    slo_targets:
+      - percentile: "p50"
+        threshold_ms: 10
+        target_percent: 99.9
+      
+      - percentile: "p95"
+        threshold_ms: 50
+        target_percent: 99.5
+      
+      - percentile: "p99"
+        threshold_ms: 200
+        target_percent: 99.0
+    
+    measurement:
+      metric: "pg_stat_statements_mean_exec_time"
+      source: "postgres_exporter"
+    
+    alerting:
+      burn_rate_window: "10m"
+      burn_rate_threshold: 8
+      notification_channels:
+        - "pagerduty-critical"
+        - "slack-alerts"
+  
+  # Redis cache operations
+  cache:
+    name: "Cache Operation Latency"
+    description: "Redis command execution time"
+    
+    slo_targets:
+      - percentile: "p50"
+        threshold_ms: 1
+        target_percent: 99.99
+      
+      - percentile: "p95"
+        threshold_ms: 5
+        target_percent: 99.9
+      
+      - percentile: "p99"
+        threshold_ms: 10
+        target_percent: 99.5
+    
+    measurement:
+      metric: "redis_command_duration_seconds"
+      source: "redis_exporter"
+    
+    alerting:
+      burn_rate_window: "5m"
+      burn_rate_threshold: 12
+      notification_channels:
+        - "slack-alerts"
+
+# Latency budget calculations
+budget_calculation:
+  # How to calculate remaining error budget
+  formula: "((target_percent / 100) * total_requests - successful_requests) / total_requests"
+  
+  # Budget depletion alerts
+  budget_alerts:
+    - threshold_percent: 25
+      severity: "warning"
+      message: "75% of latency budget consumed"
+    
+    - threshold_percent: 10
+      severity: "critical"
+      message: "90% of latency budget consumed - freeze deployments"
+    
+    - threshold_percent: 0
+      severity: "emergency"
+      message: "Latency budget exhausted - incident response required"
+
+# Measurement windows
+measurement_windows:
+  short: "5m"   # Real-time monitoring
+  medium: "1h"  # Tactical response
+  long: "30d"   # Strategic planning
+
+# Exemptions - requests excluded from SLO
+exemptions:
+  - path: "/health"
+    reason: "Health checks are not user-facing"
+  
+  - path: "/metrics"
+    reason: "Metrics endpoints are internal"
+  
+  - status_code: "4xx"
+    reason: "Client errors not counted against SLO"
+
+# Reporting
+reporting:
+  dashboard_url: "http://localhost:3000/d/slo-latency"
+  update_frequency: "1h"
+  stakeholders:
+    - "engineering@project-ai.example.com"
+    - "sre@project-ai.example.com"

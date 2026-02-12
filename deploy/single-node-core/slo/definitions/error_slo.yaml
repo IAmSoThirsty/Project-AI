@@ -1,0 +1,245 @@
+# Project-AI Error Budget SLOs
+# =============================
+# Service Level Objectives for error rates and reliability
+
+version: "1.0"
+
+# Global error budget SLO
+global_slo:
+  name: "Overall System Reliability"
+  target: 99.95  # 99.95% success rate
+  budget_period: "30d"
+  max_downtime_minutes: 21.6  # (1 - 0.9995) * 43200 minutes
+
+# Service-specific error budgets
+services:
+  
+  # Core orchestrator
+  orchestrator:
+    name: "Orchestrator Reliability"
+    description: "API request success rate"
+    
+    slo_targets:
+      - name: "Success Rate"
+        target_percent: 99.95
+        budget_period: "30d"
+      
+      - name: "Availability"
+        target_percent: 99.99
+        budget_period: "30d"
+    
+    error_budget:
+      # Total requests in 30 days (assuming 100 req/s)
+      monthly_request_estimate: 259200000
+      
+      # Allowed failures per period
+      allowed_failures_per_30d: 129600  # 0.05% of 259.2M
+      allowed_failures_per_day: 4320
+      allowed_failures_per_hour: 180
+    
+    measurement:
+      success_metric: "http_requests_total{status!~'5..'}"
+      total_metric: "http_requests_total"
+      labels:
+        service: "project-ai-orchestrator"
+      source: "prometheus"
+    
+    error_classification:
+      # 5xx errors count against SLO
+      server_errors:
+        - "500"  # Internal Server Error
+        - "502"  # Bad Gateway
+        - "503"  # Service Unavailable
+        - "504"  # Gateway Timeout
+      
+      # 4xx errors do NOT count against SLO (client errors)
+      client_errors_excluded: true
+    
+    alerting:
+      burn_rate_alerts:
+        - window: "1h"
+          threshold: 14.4  # 14.4x burn rate
+          severity: "critical"
+          long_window: "1h"
+          short_window: "5m"
+        
+        - window: "6h"
+          threshold: 6
+          severity: "warning"
+          long_window: "6h"
+          short_window: "30m"
+      
+      budget_alerts:
+        - threshold_percent: 25
+          severity: "warning"
+        
+        - threshold_percent: 10
+          severity: "critical"
+          action: "freeze_deployments"
+  
+  # MCP Gateway
+  mcp_gateway:
+    name: "MCP Gateway Reliability"
+    description: "Agent tool execution success rate"
+    
+    slo_targets:
+      - name: "Tool Execution Success"
+        target_percent: 99.9
+        budget_period: "30d"
+    
+    error_budget:
+      monthly_execution_estimate: 10000000
+      allowed_failures_per_30d: 10000
+      allowed_failures_per_day: 333
+      allowed_failures_per_hour: 14
+    
+    measurement:
+      success_metric: "mcp_tool_executions_total{status='success'}"
+      total_metric: "mcp_tool_executions_total"
+      source: "prometheus"
+    
+    error_classification:
+      counted_errors:
+        - "timeout"
+        - "internal_error"
+        - "gateway_error"
+      
+      excluded_errors:
+        - "invalid_input"  # Client error
+        - "authentication_failed"  # Client error
+    
+    alerting:
+      burn_rate_alerts:
+        - window: "1h"
+          threshold: 10
+          severity: "critical"
+  
+  # Database
+  database:
+    name: "Database Reliability"
+    description: "PostgreSQL query success rate"
+    
+    slo_targets:
+      - name: "Query Success Rate"
+        target_percent: 99.99
+        budget_period: "30d"
+      
+      - name: "Database Availability"
+        target_percent: 99.99
+        budget_period: "30d"
+        max_downtime_seconds: 259
+    
+    error_budget:
+      monthly_query_estimate: 500000000
+      allowed_failures_per_30d: 50000
+      allowed_failures_per_hour: 70
+    
+    measurement:
+      # Use connection success/failure metrics
+      success_metric: "pg_stat_database_xact_commit"
+      failure_metric: "pg_stat_database_xact_rollback"
+      source: "postgres_exporter"
+    
+    error_classification:
+      counted_errors:
+        - "deadlock"
+        - "connection_failure"
+        - "query_timeout"
+      
+      excluded_errors:
+        - "constraint_violation"  # Application logic error
+        - "syntax_error"  # Application error
+    
+    alerting:
+      burn_rate_alerts:
+        - window: "30m"
+          threshold: 20
+          severity: "emergency"
+  
+  # Cache (Redis)
+  cache:
+    name: "Cache Reliability"
+    description: "Redis operation success rate"
+    
+    slo_targets:
+      - name: "Operation Success"
+        target_percent: 99.99
+        budget_period: "30d"
+    
+    error_budget:
+      monthly_operation_estimate: 1000000000
+      allowed_failures_per_30d: 100000
+      allowed_failures_per_hour: 139
+    
+    measurement:
+      success_metric: "redis_commands_processed_total"
+      failure_metric: "redis_rejected_connections_total"
+      source: "redis_exporter"
+    
+    error_classification:
+      counted_errors:
+        - "out_of_memory"
+        - "connection_refused"
+        - "timeout"
+    
+    alerting:
+      burn_rate_alerts:
+        - window: "15m"
+          threshold: 15
+          severity: "critical"
+
+# Composite SLOs - combining multiple services
+composite_slos:
+  
+  end_to_end_request:
+    name: "End-to-End Request Success"
+    description: "Success rate for complete request flow (orchestrator -> gateway -> database)"
+    target_percent: 99.9
+    
+    # Calculated as: orchestrator_slo * gateway_slo * database_slo
+    # 0.9995 * 0.999 * 0.9999 = 0.998
+    component_slos:
+      - service: "orchestrator"
+        weight: 1.0
+      - service: "mcp_gateway"
+        weight: 0.5  # Not all requests use gateway
+      - service: "database"
+        weight: 1.0
+
+# Budget policy
+budget_policy:
+  # What to do when budget is exhausted
+  budget_exhausted_actions:
+    - "freeze_deployments"
+    - "increase_monitoring"
+    - "trigger_incident"
+    - "schedule_postmortem"
+  
+  # Budget restoration
+  restoration:
+    # Budget resets monthly
+    reset_period: "30d"
+    
+    # Can request emergency budget increase
+    emergency_increase_approval_required: true
+    emergency_increase_max_percent: 10
+
+# Reporting and dashboards
+reporting:
+  dashboard_url: "http://localhost:3000/d/slo-errors"
+  update_frequency: "5m"
+  
+  weekly_report:
+    enabled: true
+    day: "Monday"
+    time: "09:00"
+    recipients:
+      - "engineering@project-ai.example.com"
+      - "leadership@project-ai.example.com"
+  
+  monthly_review:
+    enabled: true
+    day: 1
+    recipients:
+      - "engineering@project-ai.example.com"
+      - "sre@project-ai.example.com"
