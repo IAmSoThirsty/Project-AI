@@ -1,7 +1,7 @@
 # Project-AI Archive Index
 
-**Last Updated**: 2026-02-08  
-**Total Archived Documents**: 137 files  
+**Last Updated**: 2026-02-12  
+**Total Archived Documents**: 142 files  
 **Purpose**: Historical memory and audit trail of completed work
 
 ---
@@ -15,7 +15,7 @@ This archive contains historical implementation documentation, completion summar
 ```
 docs/internal/archive/
 ├── ARCHIVE_INDEX.md (this file)
-├── root-summaries/ (17 files) - Previously in root, archived 2026-02-08
+├── root-summaries/ (22 files) - Previously in root, archived 2026-02-08 and 2026-02-12
 ├── adversarial-completion/ (5 files) - Adversarial testing completion docs
 ├── historical-summaries/ (9 files) - Historical project summaries
 ├── security-incident-jan2026/ (4 files) - Security incident documentation
@@ -25,7 +25,24 @@ docs/internal/archive/
 
 ---
 
-## Recently Archived (2026-02-08)
+## Recently Archived (2026-02-12)
+
+### Latest Root-Summaries Collection
+**Reason**: Repository cleanup - moved outdated implementation summaries from root  
+**Subsystem**: Multiple  
+**Status**: Completed/superseded
+
+| File | Date | Subsystem | Reason |
+|------|------|-----------|--------|
+| CATHEDRAL_IMPLEMENTATION_SUMMARY.md | 2026-02-12 | Architecture | Point-in-time snapshot - cathedral architecture now integrated |
+| IMPLEMENTATION_SUMMARY.md | Historical | Multiple | Superseded - T-SECA/GHOST protocol implementation complete |
+| TRANSFORMATION_SUMMARY.md | Historical | Project | Point-in-time summary - transformation complete |
+| HEALTH_REPORT.md | 2026-02-08 | Monitoring | Point-in-time snapshot - continuous monitoring now in place |
+| CODACY_COMPREHENSIVE_PATCH.md | Historical | Code Quality | Point-in-time patch analysis - quality improvements applied |
+
+---
+
+## Previously Archived (2026-02-08)
 
 ### Root-Summaries Collection
 **Reason**: Repository cleanup - moved from root directory  
@@ -291,16 +308,16 @@ git log --follow docs/internal/archive/FILENAME.md
 
 ## Archive Statistics
 
-- **Total Files**: 137
-- **Root-Summaries**: 17 (archived 2026-02-08)
+- **Total Files**: 142
+- **Root-Summaries**: 22 (archived 2026-02-08, 2026-02-12)
 - **Main Archive**: 76
 - **Subdirectories**: 44
-- **Date Range**: 2025-12 to 2026-02-08
+- **Date Range**: 2025-12 to 2026-02-12
 - **Subsystems Covered**: 12+ (Infrastructure, Security, TARL, Testing, Architecture, etc.)
 
 ---
 
 **Note**: This archive is immutable. Documents are never deleted, only relocated here. All files maintain full git history for audit trail purposes.
 
-**Last Audit**: 2026-02-08  
-**Next Review**: 2026-03-08 (monthly)
+**Last Audit**: 2026-02-12  
+**Next Review**: 2026-03-12 (monthly)
