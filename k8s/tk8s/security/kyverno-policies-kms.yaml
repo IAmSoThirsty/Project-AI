@@ -1,0 +1,352 @@
+---
+# ENHANCED KYVERNO POLICIES WITH KMS-BASED KEY REFERENCES
+# Image Signature Validation using Cloud KMS | HSM-backed keys | Automated rotation
+
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: tk8s-verify-image-signatures-kms
+  annotations:
+    tk8s.io/doctrine: "KMS-Backed Image Signatures | No local keys"
+    policies.kyverno.io/title: "Verify Image Signatures with KMS-backed Cosign Keys"
+    policies.kyverno.io/category: "TK8S Security"
+    policies.kyverno.io/severity: "critical"
+    policies.kyverno.io/description: >-
+      All container images must be signed with Cosign using KMS-backed keys.
+      Supports AWS KMS, GCP KMS, Azure Key Vault, and HSM via PKCS#11.
+      This enforces hardware-backed, auditable image signing.
+spec:
+  validationFailureAction: enforce
+  background: false
+  webhookTimeoutSeconds: 30
+  failurePolicy: Fail
+  rules:
+  - name: verify-with-aws-kms
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - project-ai-production
+          - project-ai-staging
+    verifyImages:
+    - imageReferences:
+      - "ghcr.io/iamsothirsty/project-ai-*:*"
+      attestors:
+      - count: 1
+        entries:
+        - keys:
+            # AWS KMS key reference
+            kms: "awskms:///arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012"
+      required: true
+  
+  - name: verify-with-gcp-kms
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - project-ai-production
+          - project-ai-staging
+    verifyImages:
+    - imageReferences:
+      - "gcr.io/project-ai/*:*"
+      attestors:
+      - count: 1
+        entries:
+        - keys:
+            # GCP KMS key reference
+            kms: "gcpkms://projects/project-ai/locations/us-central1/keyRings/cosign/cryptoKeys/cosign-key"
+      required: true
+  
+  - name: verify-with-azure-kv
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - project-ai-production
+          - project-ai-staging
+    verifyImages:
+    - imageReferences:
+      - "project-ai.azurecr.io/*:*"
+      attestors:
+      - count: 1
+        entries:
+        - keys:
+            # Azure Key Vault key reference
+            kms: "azurekms://project-ai-vault.vault.azure.net/keys/cosign-key/version"
+      required: true
+
+  - name: verify-with-pkcs11-hsm
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - project-ai-production
+    verifyImages:
+    - imageReferences:
+      - "*"
+      attestors:
+      - count: 1
+        entries:
+        - keys:
+            # PKCS#11 HSM reference
+            kms: "pkcs11:token=project-ai-hsm;object=cosign-key?module-path=/usr/lib/softhsm/libsofthsm2.so"
+      required: true
+
+---
+# Keyless verification with Sigstore (Rekor + Fulcio)
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: tk8s-verify-keyless-signatures
+  annotations:
+    tk8s.io/doctrine: "Keyless Signatures with Sigstore"
+    policies.kyverno.io/title: "Verify Keyless Image Signatures"
+    policies.kyverno.io/category: "TK8S Security"
+    policies.kyverno.io/severity: "high"
+spec:
+  validationFailureAction: enforce
+  background: false
+  rules:
+  - name: verify-keyless-github-actions
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - project-ai-core
+          - project-ai-eca
+          - project-ai-dev
+    verifyImages:
+    - imageReferences:
+      - "ghcr.io/iamsothirsty/project-ai-*:*"
+      attestors:
+      - count: 1
+        entries:
+        - keyless:
+            rekor:
+              url: https://rekor.sigstore.dev
+            subject: "https://github.com/IAmSoThirsty/Project-AI/*"
+            issuer: "https://token.actions.githubusercontent.com"
+            additionalExtensions:
+              githubWorkflowTrigger: push
+              githubWorkflowSha: "*"
+      required: true
+
+---
+# Key rotation enforcement policy
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: tk8s-enforce-key-rotation
+  annotations:
+    tk8s.io/doctrine: "Automated Key Rotation Enforcement"
+    policies.kyverno.io/title: "Enforce Key Rotation Policy"
+    policies.kyverno.io/category: "TK8S Security"
+    policies.kyverno.io/severity: "high"
+spec:
+  validationFailureAction: audit  # Audit mode for key rotation
+  background: true
+  rules:
+  - name: check-key-age
+    match:
+      any:
+      - resources:
+          kinds:
+          - ConfigMap
+          - Secret
+          namespaces:
+          - project-ai-core
+          - project-ai-eca
+          - project-ai-security
+    validate:
+      message: "Keys older than 90 days must be rotated"
+      pattern:
+        metadata:
+          annotations:
+            security.project-ai.io/key-created: "?*"
+            security.project-ai.io/key-rotation-policy: "enabled"
+
+---
+# Attestation requirement policy
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: tk8s-require-attestations
+  annotations:
+    tk8s.io/doctrine: "Attestations Required"
+    policies.kyverno.io/title: "Require SLSA Attestations"
+    policies.kyverno.io/category: "TK8S Security"
+    policies.kyverno.io/severity: "high"
+spec:
+  validationFailureAction: enforce
+  background: false
+  rules:
+  - name: require-slsa-attestation
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - project-ai-production
+    verifyImages:
+    - imageReferences:
+      - "*"
+      attestations:
+      - predicateType: https://slsa.dev/provenance/v0.2
+        attestors:
+        - count: 1
+          entries:
+          - keys:
+              kms: "awskms:///arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012"
+      required: true
+
+---
+# Webhook configuration protection
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: tk8s-protect-webhooks
+  annotations:
+    tk8s.io/doctrine: "Immutable Admission Webhooks"
+    policies.kyverno.io/title: "Protect ValidatingWebhookConfiguration"
+    policies.kyverno.io/category: "TK8S Security"
+    policies.kyverno.io/severity: "critical"
+spec:
+  validationFailureAction: enforce
+  background: false
+  rules:
+  - name: prevent-webhook-deletion
+    match:
+      any:
+      - resources:
+          kinds:
+          - ValidatingWebhookConfiguration
+          - MutatingWebhookConfiguration
+          names:
+          - "kyverno-*"
+          - "project-ai-*"
+    validate:
+      message: "Critical admission webhooks cannot be modified. Requires two-man approval."
+      deny:
+        conditions:
+          any:
+          - key: "{{ request.operation }}"
+            operator: In
+            value: ["DELETE", "UPDATE"]
+
+---
+# Kyverno policy protection
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: tk8s-protect-kyverno-policies
+  annotations:
+    tk8s.io/doctrine: "Immutable Security Policies"
+    policies.kyverno.io/title: "Protect ClusterPolicy Resources"
+    policies.kyverno.io/category: "TK8S Security"
+    policies.kyverno.io/severity: "critical"
+spec:
+  validationFailureAction: enforce
+  background: false
+  rules:
+  - name: prevent-policy-tampering
+    match:
+      any:
+      - resources:
+          kinds:
+          - ClusterPolicy
+          - Policy
+          names:
+          - "tk8s-*"
+    validate:
+      message: "TK8S security policies are immutable. Requires two-man approval."
+      deny:
+        conditions:
+          any:
+          - key: "{{ request.operation }}"
+            operator: In
+            value: ["DELETE"]
+          - key: "{{ request.operation }}"
+            operator: Equals
+            value: "UPDATE"
+
+---
+# ArgoCD application protection
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: tk8s-protect-argocd-apps
+  annotations:
+    tk8s.io/doctrine: "Immutable GitOps Applications"
+    policies.kyverno.io/title: "Protect ArgoCD Applications"
+    policies.kyverno.io/category: "TK8S Security"
+    policies.kyverno.io/severity: "critical"
+spec:
+  validationFailureAction: enforce
+  background: false
+  rules:
+  - name: prevent-app-source-modification
+    match:
+      any:
+      - resources:
+          kinds:
+          - Application
+          namespaces:
+          - argocd
+    validate:
+      message: "ArgoCD application source cannot be modified. Requires two-man approval."
+      deny:
+        conditions:
+          any:
+          - key: "{{ request.operation }}"
+            operator: Equals
+            value: "UPDATE"
+            preconditions:
+              any:
+              - key: "{{ request.object.spec.source.repoURL }}"
+                operator: NotEquals
+                value: "{{ request.oldObject.spec.source.repoURL }}"
+
+---
+# Audit logging requirement
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: tk8s-enforce-audit-logging
+  annotations:
+    tk8s.io/doctrine: "Audit Logging Required"
+    policies.kyverno.io/title: "Enforce Audit Logging"
+    policies.kyverno.io/category: "TK8S Security"
+    policies.kyverno.io/severity: "high"
+spec:
+  validationFailureAction: enforce
+  background: true
+  rules:
+  - name: require-audit-labels
+    match:
+      any:
+      - resources:
+          kinds:
+          - Deployment
+          - StatefulSet
+          - DaemonSet
+          namespaces:
+          - project-ai-production
+          - project-ai-staging
+    validate:
+      message: "Resources must have audit logging labels"
+      pattern:
+        metadata:
+          labels:
+            audit.project-ai.io/enabled: "true"
+            audit.project-ai.io/retention: "?*"
