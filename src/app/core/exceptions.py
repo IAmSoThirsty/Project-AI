@@ -70,7 +70,7 @@ class ProjectAIError(Exception):
         self.category = category
         self.context = context or {}
         self.original_exception = original_exception
-        self.timestamp = datetime.utcnow()
+        self.timestamp = datetime.now(datetime.UTC) if hasattr(datetime, 'UTC') else datetime.utcnow()
         self.traceback = traceback.format_exc() if original_exception else None
         
     def to_dict(self) -> Dict[str, Any]:
