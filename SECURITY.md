@@ -107,6 +107,29 @@ Project-AI implements security controls aligned with:
 - **OWASP LLM Top 10**: Protection against AI-specific vulnerabilities
 - **OWASP Testing Guide v4**: Comprehensive security testing
 
+### 🚨 Security Validation Claims Policy
+
+**MANDATORY REQUIREMENT FOR ALL PULL REQUESTS:**
+
+All PRs that claim "production-ready," "enterprise best practices," "complete forensic capability," "runtime enforcement," or any assertion of operational security **MUST** include direct runtime validation output for **ALL** of the following:
+
+1. **Unsigned Image Admission Denial** - Evidence of deployment denial for unsigned images
+2. **Signed Image Admission Success** - Evidence of successful deployment for signed images
+3. **Privileged Container Denial** - Evidence of deployment denial for privileged containers
+4. **Cross-Namespace/Lateral Communication Denial** - Evidence of network policy enforcement
+5. **Log Deletion Prevention** - Evidence of log deletion prevention or detection
+
+**If ANY of these validations are missing**, the PR MUST use safe framing language ONLY:
+- "Implementation aligns with enterprise hardening patterns."
+- "Validation tests confirm configuration correctness."
+- "Full adversarial validation is ongoing."
+
+**PRs that claim runtime enforcement without complete evidence will be rejected with no exceptions.**
+
+**Complete Policy:** See [.github/SECURITY_VALIDATION_POLICY.md](.github/SECURITY_VALIDATION_POLICY.md) for detailed requirements, evidence format, and enforcement process.
+
+**Rationale:** This policy ensures that security claims are backed by verifiable runtime evidence, preventing false assertions and maintaining trust in Project-AI's security posture.
+
 ## Security Testing
 
 The project includes:
