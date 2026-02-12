@@ -81,13 +81,19 @@ class EntropySlopeMonitor:
     # Completion criteria: 10 years of stable entropy
     COMPLETION_CONVERGENCE_YEARS = 10
     COMPLETION_SLOPE_THRESHOLD = 0.01  # Max slope for completion
+    COMPLETION_R_SQUARED_THRESHOLD = 0.8  # Min R-squared for good fit
+    COMPLETION_BASELINE_DELTA_THRESHOLD = 0.1  # Max delta from baseline
 
     # Creep detection: gradual entropy increase
     CREEP_SLOPE_THRESHOLD = 0.1  # Min slope for creep detection
     CREEP_WINDOW_DAYS = 30  # Window for creep analysis
+    CREEP_R_SQUARED_THRESHOLD = 0.6  # Min R-squared for sustained trend
 
     # Collapse detection: rapid entropy decrease
     COLLAPSE_THRESHOLD = 0.5  # Max ratio of current/baseline for collapse
+
+    # Converging detection
+    CONVERGING_WINDOW_SIZE = 100  # Number of recent snapshots for converging check
 
     def __init__(
         self,
@@ -314,7 +320,7 @@ class EntropySlopeMonitor:
             }
 
         # Check R-squared (good fit = low noise)
-        if r_squared < 0.8:
+        if r_squared < self.COMPLETION_R_SQUARED_THRESHOLD:
             return False, {
                 "reason": "Poor fit (high noise)",
                 "r_squared": r_squared,
@@ -324,7 +330,7 @@ class EntropySlopeMonitor:
         current_entropy = snapshots[-1].entropy_value
         baseline_delta = abs(current_entropy - self.baseline_entropy)
 
-        if baseline_delta > 0.1:
+        if baseline_delta > self.COMPLETION_BASELINE_DELTA_THRESHOLD:
             return False, {
                 "reason": "Not converged to baseline",
                 "current_entropy": current_entropy,
@@ -397,7 +403,7 @@ class EntropySlopeMonitor:
             }
 
         # Check for sustained trend (good fit)
-        if r_squared < 0.6:
+        if r_squared < self.CREEP_R_SQUARED_THRESHOLD:
             return False, {
                 "reason": "Trend not sustained (low R²)",
                 "r_squared": r_squared,
@@ -498,7 +504,9 @@ class EntropySlopeMonitor:
         # Check if converging (approaching completion)
         # This is a weaker version of completion check
         if len(snapshots) >= 2:
-            slope, r_squared = self.compute_entropy_slope(snapshots[-100:])  # Last 100 snapshots
+            slope, r_squared = self.compute_entropy_slope(
+                snapshots[-self.CONVERGING_WINDOW_SIZE :]
+            )  # Last N snapshots
             if abs(slope) < self.COMPLETION_SLOPE_THRESHOLD * 2 and r_squared > 0.5:
                 return EntropyState.CONVERGING, {
                     "slope": slope,
