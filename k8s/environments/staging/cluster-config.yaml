@@ -1,0 +1,121 @@
+---
+# STAGING CLUSTER CONFIGURATION
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-config
+  namespace: kube-system
+  labels:
+    environment: staging
+    cluster: project-ai-staging
+data:
+  environment: "staging"
+  cluster_name: "project-ai-staging"
+  region: "us-central1"
+  isolation_level: "cluster"
+  
+---
+# Pod Security Standards for STAGING
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: project-ai-staging
+  labels:
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted
+    environment: staging
+    managed-by: terraform
+
+---
+# Default-Deny NetworkPolicy for STAGING
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: project-ai-staging
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+
+---
+# Allow DNS Resolution
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-dns
+  namespace: project-ai-staging
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          name: kube-system
+    ports:
+    - protocol: UDP
+      port: 53
+
+---
+# Allow Intra-Namespace Communication (Explicit)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-intra-namespace
+  namespace: project-ai-staging
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector: {}
+  egress:
+  - to:
+    - podSelector: {}
+
+---
+# ResourceQuota for STAGING
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: staging-quota
+  namespace: project-ai-staging
+spec:
+  hard:
+    requests.cpu: "20"
+    requests.memory: "40Gi"
+    limits.cpu: "40"
+    limits.memory: "80Gi"
+    persistentvolumeclaims: "20"
+    services.loadbalancers: "3"
+
+---
+# LimitRange for STAGING
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: staging-limits
+  namespace: project-ai-staging
+spec:
+  limits:
+  - max:
+      cpu: "8"
+      memory: "16Gi"
+    min:
+      cpu: "100m"
+      memory: "128Mi"
+    type: Container
+  - max:
+      cpu: "16"
+      memory: "32Gi"
+    min:
+      cpu: "200m"
+      memory: "256Mi"
+    type: Pod
