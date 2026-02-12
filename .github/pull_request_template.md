@@ -138,6 +138,81 @@ Expected workflow results:
 - [ ] SBOM Generation: Pass (for dependency changes)
 - [ ] Conscience Check: Pass (for personhood changes)
 
+## Runtime Validation Evidence
+
+<!-- MANDATORY: Read .github/SECURITY_VALIDATION_POLICY.md before completing this section -->
+
+**Does this PR claim production-readiness, enterprise best practices, complete forensic capability, or runtime/operational enforcement?**
+
+- [ ] **YES** - I have included runtime validation evidence for ALL five required tests below
+- [ ] **NO** - I am using safe framing language only (see policy document)
+
+### Required Evidence (if YES selected above)
+
+**CRITICAL:** If you answered YES above, you MUST provide evidence for ALL five validations. Partial evidence is NOT acceptable.
+
+#### 1. Unsigned Image Admission Denial
+
+- [ ] Evidence attached (logs/screenshots showing deployment denial): 
+  - Link/attachment: <!-- paste link or attach file -->
+  - Timestamp (UTC): <!-- YYYY-MM-DD HH:MM:SS -->
+  - Command used: <!-- paste command -->
+
+#### 2. Signed Image Admission Success
+
+- [ ] Evidence attached (logs/screenshots showing successful deployment):
+  - Link/attachment: <!-- paste link or attach file -->
+  - Timestamp (UTC): <!-- YYYY-MM-DD HH:MM:SS -->
+  - Command used: <!-- paste command -->
+
+#### 3. Privileged Container Denial
+
+- [ ] Evidence attached (logs/screenshots showing deployment denial):
+  - Link/attachment: <!-- paste link or attach file -->
+  - Timestamp (UTC): <!-- YYYY-MM-DD HH:MM:SS -->
+  - Command used: <!-- paste command -->
+
+#### 4. Cross-Namespace/Lateral Communication Denial
+
+- [ ] Evidence attached (logs/screenshots showing communication denial):
+  - Link/attachment: <!-- paste link or attach file -->
+  - Timestamp (UTC): <!-- YYYY-MM-DD HH:MM:SS -->
+  - Commands used: <!-- paste commands -->
+
+#### 5. Log Deletion Prevention
+
+- [ ] Evidence attached (logs/screenshots showing deletion prevention):
+  - Link/attachment: <!-- paste link or attach file -->
+  - Timestamp (UTC): <!-- YYYY-MM-DD HH:MM:SS -->
+  - Commands used: <!-- paste commands -->
+
+### Policy Certification
+
+- [ ] I certify that ALL runtime validation evidence is authentic and reproducible
+- [ ] I understand that claims without complete evidence will result in PR rejection
+- [ ] I have read and understood the [Security Validation Claims Policy](.github/SECURITY_VALIDATION_POLICY.md)
+
+### Safe Framing Alternatives
+
+If you selected **NO** above, you may use ONLY these approved phrases:
+
+- ✅ "Implementation aligns with enterprise hardening patterns."
+- ✅ "Validation tests confirm configuration correctness."
+- ✅ "Full adversarial validation is ongoing."
+- ✅ "This PR implements security controls as per industry standards."
+- ✅ "Configuration has been reviewed for compliance with best practices."
+- ✅ "Automated tests validate the security configuration."
+
+**Prohibited without evidence:**
+
+- ❌ "Production-ready security enforcement"
+- ❌ "Complete runtime validation"
+- ❌ "Operational security hardening complete"
+- ❌ "Enterprise-grade admission control"
+- ❌ "Forensic-grade audit trail active"
+
+---
+
 ## Additional Context
 
 <!-- Add any other context about the PR here -->
@@ -160,6 +235,14 @@ Expected workflow results:
 - [ ] **Guardian approval verified** (if required)
 - [ ] **Continuity preserved** (for AGI identity changes)
 
+### Security Validation Claims Review (MANDATORY)
+
+- [ ] **Runtime validation evidence reviewed** (if PR claims production-readiness/runtime enforcement)
+- [ ] **ALL five validations present** (if claims are made) or **safe framing used** (if evidence incomplete)
+- [ ] **Evidence is authentic** (logs are complete, timestamps reasonable, commands valid)
+- [ ] **No prohibited claims without evidence** (see [Security Validation Claims Policy](.github/SECURITY_VALIDATION_POLICY.md))
+- [ ] **PR complies with policy** or rejection required
+
 ### Behavioral Review (if applicable)
 
 - [ ] Change justification is clear and ethical
@@ -171,4 +254,6 @@ Expected workflow results:
 
 ---
 
-**Reminder:** Changes to the personhood surface require heightened scrutiny. See [AGI Charter](../docs/AGI_CHARTER.md) and [Security Governance](../docs/security/SECURITY_GOVERNANCE.md) for guidelines.
+**Reminder:** 
+- Changes to the personhood surface require heightened scrutiny. See [AGI Charter](../docs/AGI_CHARTER.md) and [Security Governance](../docs/security/SECURITY_GOVERNANCE.md) for guidelines.
+- **All claims of production-readiness, enterprise best practices, or runtime enforcement require complete runtime validation evidence.** See [Security Validation Claims Policy](.github/SECURITY_VALIDATION_POLICY.md) for details. PRs that violate this policy will be rejected.

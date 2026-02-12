@@ -2162,6 +2162,29 @@ ciphertext = hsm.encrypt(key_id=key_id, plaintext=b"Sensitive data")
 
 We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
+### 🚨 CRITICAL: Security Validation Claims Policy
+
+**All Pull Requests MUST comply with the [Security Validation Claims Policy](.github/SECURITY_VALIDATION_POLICY.md).**
+
+**Claims of "production-ready," "enterprise best practices," "runtime enforcement," or similar assertions are PROHIBITED unless the PR includes direct runtime validation output for ALL of the following:**
+
+1. ✅ Deploying an unsigned image with evidence of admission denial
+2. ✅ Deploying a signed image with evidence of successful admission  
+3. ✅ Attempting to deploy privileged containers with evidence of denial
+4. ✅ Attempting cross-namespace or lateral pod communication with evidence of denial
+5. ✅ Attempting log deletion from a running workload with evidence of denial
+
+**If ANY validations are missing, use safe framing ONLY:**
+- "Implementation aligns with enterprise hardening patterns."
+- "Validation tests confirm configuration correctness."
+- "Full adversarial validation is ongoing."
+
+**PRs that violate this policy will be rejected with no exceptions.**
+
+See the complete policy: [.github/SECURITY_VALIDATION_POLICY.md](.github/SECURITY_VALIDATION_POLICY.md)
+
+### Development Setup
+
 **Development Setup:**
 ```bash
 git clone https://github.com/IAmSoThirsty/Project-AI.git
