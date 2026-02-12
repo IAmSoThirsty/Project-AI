@@ -112,18 +112,25 @@ if gsutil ls -b "gs://${LOG_BUCKET_NAME}" &> /dev/null; then
     echo -e "${YELLOW}⚠️  Bucket already exists: ${LOG_BUCKET_NAME}${NC}"
 else
     gsutil mb -p "${PROJECT_ID}" -l us-central1 "gs://${LOG_BUCKET_NAME}"
-    gsutil lifecycle set - "gs://${LOG_BUCKET_NAME}" << EOF
+    
+    # Create lifecycle configuration file
+    cat > /tmp/lifecycle.json << 'EOF'
 {
-  "lifecycle": {
-    "rule": [
-      {
-        "action": {"type": "Delete"},
-        "condition": {"age": ${LOG_RETENTION_DAYS}}
-      }
-    ]
-  }
+  "rule": [
+    {
+      "action": {"type": "Delete"},
+      "condition": {"age": RETENTION_DAYS}
+    }
+  ]
 }
 EOF
+    # Replace placeholder with actual value
+    sed -i "s/RETENTION_DAYS/${LOG_RETENTION_DAYS}/g" /tmp/lifecycle.json
+    
+    # Apply lifecycle policy
+    gsutil lifecycle set /tmp/lifecycle.json "gs://${LOG_BUCKET_NAME}"
+    rm /tmp/lifecycle.json
+    
     echo -e "${GREEN}✅ Audit log bucket created: ${LOG_BUCKET_NAME}${NC}"
 fi
 echo ""
