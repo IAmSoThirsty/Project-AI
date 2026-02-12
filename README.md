@@ -19,7 +19,7 @@
 [![Cryptographic Ledger](https://img.shields.io/badge/Ledger-SHA256%20%2B%20Ed25519-success.svg)](docs/legal/ACCEPTANCE_LEDGER_LICENSE.md)
 [![Court Defensible](https://img.shields.io/badge/Legal-Court%20Grade-blueviolet.svg)](docs/legal/)
 
-**[🚀 Quick Start](#-instant-deployment) • [📚 Architecture](#-constitutional-architecture) • [⚖️ Legal Codex](#%EF%B8%8F-the-license-codex) • [💎 Pricing](#-pricing-radical-honesty) • [🔐 Security](#-cryptographic-stack)**
+**[🚀 Quick Start](#-instant-deployment) • [📚 Architecture](#-constitutional-architecture) • [📊 Project Status](PROJECT_STATUS.md) • [⚖️ Legal Codex](#%EF%B8%8F-the-license-codex) • [💎 Pricing](#-pricing-radical-honesty) • [🔐 Security](#-cryptographic-stack)**
 
 ---
 
@@ -2139,6 +2139,11 @@ ciphertext = hsm.encrypt(key_id=key_id, plaintext=b"Sensitive data")
 ---
 
 ## 📖 Documentation
+
+**Project Status:**
+- [Current Project Status](PROJECT_STATUS.md) - Complete system status and capabilities
+- [Changelog](CHANGELOG.md) - Version history and recent updates
+- [Historical Documentation](docs/internal/archive/ARCHIVE_INDEX.md) - Archived implementation summaries (168 files)
 
 **Core Documentation:**
 - [Installation Guide](INSTALL.md) - Setup instructions for all platforms
