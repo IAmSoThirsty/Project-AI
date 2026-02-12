@@ -2142,12 +2142,14 @@ ciphertext = hsm.encrypt(key_id=key_id, plaintext=b"Sensitive data")
 
 **Project Status:**
 - [Current Project Status](PROJECT_STATUS.md) - Complete system status and capabilities
+- [360° Deployable System Standard](docs/DEPLOYABLE_SYSTEM_STANDARD.md) - Comprehensive deployment standard ⭐ NEW
 - [Changelog](CHANGELOG.md) - Version history and recent updates
 - [Historical Documentation](docs/internal/archive/ARCHIVE_INDEX.md) - Archived implementation summaries (168 files)
 
 **Core Documentation:**
 - [Installation Guide](INSTALL.md) - Setup instructions for all platforms
 - [Architecture Overview](docs/PRODUCTION_ARCHITECTURE.md) - System design and components
+- [Trust Boundaries](docs/TRUST_BOUNDARIES.md) - Security boundary analysis ⭐ NEW
 - [API Documentation](docs/developer/API_REFERENCE.md) - Complete API reference
 - [Security Documentation](SECURITY.md) - Security architecture and compliance
 
@@ -2159,6 +2161,8 @@ ciphertext = hsm.encrypt(key_id=key_id, plaintext=b"Sensitive data")
 **Operations:**
 - [TK8S Doctrine](docs/TK8S_DOCTRINE.md) - Kubernetes deployment philosophy
 - [Production Deployment](PRODUCTION_DEPLOYMENT.md) - Scaling guide
+- [Failure Models & Operations](docs/FAILURE_MODELS_OPERATIONS.md) - Incident response ⭐ NEW
+- [SLOs & Error Budgets](docs/SLO_ERROR_BUDGETS.md) - Operational maturity ⭐ NEW
 - [Contributing Guide](CONTRIBUTING.md) - How to contribute
 
 ---
