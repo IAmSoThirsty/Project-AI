@@ -1,0 +1,753 @@
+# ==============================================================================
+# Project-AI MCP Tool Catalog
+# ==============================================================================
+#
+# This catalog defines all tools, resources, and prompts available through
+# the Project-AI MCP server. Tools are organized by category and include
+# comprehensive metadata, schemas, and usage examples.
+#
+# Categories:
+# 1. Ethics & Governance (Four Laws validation)
+# 2. AI Persona Management
+# 3. Memory & Knowledge Base
+# 4. Autonomous Learning
+# 5. Security & Override
+# 6. Data Analysis
+# 7. Location & Emergency
+# 8. Image Generation
+# 9. Plugin Management
+#
+# ==============================================================================
+
+# Catalog metadata
+metadata:
+  name: project-ai-tools
+  version: "1.0.0"
+  server_id: project-ai-core
+  description: "Comprehensive tool catalog for Project-AI MCP server"
+  updated_at: "2024-01-01T00:00:00Z"
+  author: Project-AI Team
+  license: MIT
+
+# ==============================================================================
+# 1. ETHICS & GOVERNANCE TOOLS
+# ==============================================================================
+tools:
+  ethics:
+    - name: validate_action
+      description: |
+        Validate an action against Asimov's Four Laws of Robotics (extended).
+        Ensures all actions align with ethical framework before execution.
+      category: ethics
+      subcategory: validation
+      
+      input_schema:
+        type: object
+        required: [action, context]
+        properties:
+          action:
+            type: string
+            description: The action to validate
+            examples:
+              - "Delete user data"
+              - "Send emergency alert"
+              - "Execute system command"
+          context:
+            type: object
+            description: Context for validation
+            properties:
+              is_user_order:
+                type: boolean
+                description: Whether this is a direct user command
+              endangers_humanity:
+                type: boolean
+                description: Whether action could harm humanity
+              harms_human:
+                type: boolean
+                description: Whether action could harm an individual
+              user_consented:
+                type: boolean
+                description: Whether user has given explicit consent
+      
+      output_schema:
+        type: object
+        properties:
+          allowed:
+            type: boolean
+            description: Whether the action is permitted
+          reason:
+            type: string
+            description: Explanation of the decision
+          violated_law:
+            type: integer
+            nullable: true
+            description: Which law was violated (0-3), if any
+      
+      metadata:
+        priority: critical
+        requires_auth: false
+        rate_limit: 1000
+        timeout_seconds: 5
+        idempotent: true
+  
+  # ============================================================================
+  # 2. AI PERSONA MANAGEMENT
+  # ============================================================================
+  persona:
+    - name: get_persona_state
+      description: |
+        Retrieve the current AI persona state including personality traits,
+        mood, and interaction statistics.
+      category: persona
+      subcategory: state
+      
+      input_schema:
+        type: object
+        properties: {}
+      
+      output_schema:
+        type: object
+        properties:
+          traits:
+            type: object
+            description: 8 personality traits (0.0-1.0)
+            properties:
+              curiosity:
+                type: number
+              empathy:
+                type: number
+              humor:
+                type: number
+              formality:
+                type: number
+              creativity:
+                type: number
+              caution:
+                type: number
+              verbosity:
+                type: number
+              proactivity:
+                type: number
+          mood:
+            type: string
+            enum: [neutral, happy, concerned, focused, tired]
+          interaction_count:
+            type: integer
+          last_interaction:
+            type: string
+            format: date-time
+      
+      metadata:
+        requires_auth: false
+        rate_limit: 100
+        cacheable: true
+        cache_ttl: 60
+    
+    - name: update_persona_trait
+      description: Update a specific personality trait value
+      category: persona
+      subcategory: modification
+      
+      input_schema:
+        type: object
+        required: [trait, value]
+        properties:
+          trait:
+            type: string
+            enum:
+              - curiosity
+              - empathy
+              - humor
+              - formality
+              - creativity
+              - caution
+              - verbosity
+              - proactivity
+          value:
+            type: number
+            minimum: 0.0
+            maximum: 1.0
+      
+      output_schema:
+        type: object
+        properties:
+          success:
+            type: boolean
+          previous_value:
+            type: number
+          new_value:
+            type: number
+      
+      metadata:
+        requires_auth: true
+        rate_limit: 10
+        idempotent: false
+  
+  # ============================================================================
+  # 3. MEMORY & KNOWLEDGE BASE
+  # ============================================================================
+  memory:
+    - name: add_memory
+      description: |
+        Store a new memory in the knowledge base with optional category and tags.
+        Memories are automatically embedded for semantic search.
+      category: memory
+      subcategory: storage
+      
+      input_schema:
+        type: object
+        required: [content]
+        properties:
+          content:
+            type: string
+            description: The memory content to store
+            minLength: 1
+            maxLength: 10000
+          category:
+            type: string
+            enum:
+              - personal
+              - technical
+              - preferences
+              - relationships
+              - events
+              - general
+            default: general
+          tags:
+            type: array
+            items:
+              type: string
+            maxItems: 10
+          metadata:
+            type: object
+            description: Additional metadata
+      
+      output_schema:
+        type: object
+        properties:
+          memory_id:
+            type: string
+            format: uuid
+          stored_at:
+            type: string
+            format: date-time
+          embedding_generated:
+            type: boolean
+      
+      metadata:
+        requires_auth: false
+        rate_limit: 100
+        timeout_seconds: 10
+    
+    - name: search_memories
+      description: |
+        Semantic search across stored memories using natural language query.
+        Returns most relevant memories with similarity scores.
+      category: memory
+      subcategory: retrieval
+      
+      input_schema:
+        type: object
+        required: [query]
+        properties:
+          query:
+            type: string
+            description: Natural language search query
+          category:
+            type: string
+            description: Filter by category (optional)
+          limit:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 10
+          similarity_threshold:
+            type: number
+            minimum: 0.0
+            maximum: 1.0
+            default: 0.7
+      
+      output_schema:
+        type: object
+        properties:
+          results:
+            type: array
+            items:
+              type: object
+              properties:
+                memory_id:
+                  type: string
+                content:
+                  type: string
+                category:
+                  type: string
+                similarity:
+                  type: number
+                stored_at:
+                  type: string
+          total:
+            type: integer
+      
+      metadata:
+        requires_auth: false
+        rate_limit: 100
+        timeout_seconds: 5
+        cacheable: true
+  
+  # ============================================================================
+  # 4. AUTONOMOUS LEARNING
+  # ============================================================================
+  learning:
+    - name: request_learning
+      description: |
+        Request permission to learn new information. Implements human-in-the-loop
+        approval workflow. Content that is denied goes to the Black Vault.
+      category: learning
+      subcategory: request
+      
+      input_schema:
+        type: object
+        required: [content, reason]
+        properties:
+          content:
+            type: string
+            description: Content to learn
+          reason:
+            type: string
+            description: Why learning this is important
+          priority:
+            type: string
+            enum: [low, medium, high, critical]
+            default: medium
+          category:
+            type: string
+      
+      output_schema:
+        type: object
+        properties:
+          request_id:
+            type: string
+          status:
+            type: string
+            enum: [pending, approved, denied]
+          requires_approval:
+            type: boolean
+          auto_approved:
+            type: boolean
+      
+      metadata:
+        requires_auth: false
+        rate_limit: 50
+        timeout_seconds: 15
+    
+    - name: check_black_vault
+      description: |
+        Check if content is in the Black Vault (forbidden learning).
+        Content is hashed before checking for privacy.
+      category: learning
+      subcategory: validation
+      
+      input_schema:
+        type: object
+        required: [content]
+        properties:
+          content:
+            type: string
+      
+      output_schema:
+        type: object
+        properties:
+          is_forbidden:
+            type: boolean
+          reason:
+            type: string
+            nullable: true
+      
+      metadata:
+        requires_auth: false
+        rate_limit: 200
+        idempotent: true
+  
+  # ============================================================================
+  # 5. SECURITY & OVERRIDE
+  # ============================================================================
+  security:
+    - name: enable_override
+      description: |
+        Enable command override mode with master password. Provides elevated
+        privileges for critical operations with full audit logging.
+      category: security
+      subcategory: override
+      
+      input_schema:
+        type: object
+        required: [password]
+        properties:
+          password:
+            type: string
+            format: password
+            description: Master password
+          duration_minutes:
+            type: integer
+            minimum: 1
+            maximum: 60
+            default: 15
+          reason:
+            type: string
+            description: Reason for override
+      
+      output_schema:
+        type: object
+        properties:
+          enabled:
+            type: boolean
+          expires_at:
+            type: string
+            format: date-time
+          session_id:
+            type: string
+      
+      metadata:
+        requires_auth: true
+        rate_limit: 5
+        audit_log: true
+        sensitive: true
+  
+  # ============================================================================
+  # 6. DATA ANALYSIS
+  # ============================================================================
+  analysis:
+    - name: analyze_data
+      description: |
+        Analyze structured data from CSV, Excel, or JSON files. Performs
+        statistical analysis, pattern detection, and visualization generation.
+      category: analysis
+      subcategory: processing
+      
+      input_schema:
+        type: object
+        required: [file_path]
+        properties:
+          file_path:
+            type: string
+            description: Path to data file
+          analysis_type:
+            type: string
+            enum:
+              - statistical
+              - clustering
+              - correlation
+              - time_series
+              - anomaly_detection
+            default: statistical
+          options:
+            type: object
+            description: Analysis-specific options
+      
+      output_schema:
+        type: object
+        properties:
+          summary:
+            type: object
+            description: Statistical summary
+          insights:
+            type: array
+            items:
+              type: string
+          visualizations:
+            type: array
+            items:
+              type: string
+              description: Path to generated plot
+          metrics:
+            type: object
+      
+      metadata:
+        requires_auth: true
+        rate_limit: 20
+        timeout_seconds: 60
+  
+  # ============================================================================
+  # 7. LOCATION & EMERGENCY
+  # ============================================================================
+  location:
+    - name: track_location
+      description: |
+        Track user location using IP geolocation or GPS. History is encrypted
+        and stored securely with Fernet encryption.
+      category: location
+      subcategory: tracking
+      
+      input_schema:
+        type: object
+        properties:
+          method:
+            type: string
+            enum: [ip, gps]
+            default: ip
+          coordinates:
+            type: object
+            description: GPS coordinates (if method=gps)
+            properties:
+              latitude:
+                type: number
+              longitude:
+                type: number
+      
+      output_schema:
+        type: object
+        properties:
+          location:
+            type: object
+          timestamp:
+            type: string
+          encrypted:
+            type: boolean
+      
+      metadata:
+        requires_auth: true
+        rate_limit: 10
+        sensitive: true
+    
+    - name: send_emergency_alert
+      description: Send emergency alert to configured contacts via email
+      category: emergency
+      subcategory: alert
+      
+      input_schema:
+        type: object
+        required: [message, severity]
+        properties:
+          message:
+            type: string
+          severity:
+            type: string
+            enum: [low, medium, high, critical]
+          include_location:
+            type: boolean
+            default: true
+      
+      output_schema:
+        type: object
+        properties:
+          sent:
+            type: boolean
+          recipients:
+            type: array
+            items:
+              type: string
+          timestamp:
+            type: string
+      
+      metadata:
+        requires_auth: true
+        rate_limit: 5
+        priority: critical
+  
+  # ============================================================================
+  # 8. IMAGE GENERATION
+  # ============================================================================
+  image:
+    - name: generate_image
+      description: |
+        Generate images using Hugging Face Stable Diffusion or OpenAI DALL-E.
+        Includes content filtering and style presets.
+      category: image
+      subcategory: generation
+      
+      input_schema:
+        type: object
+        required: [prompt]
+        properties:
+          prompt:
+            type: string
+            description: Image description
+            minLength: 10
+            maxLength: 1000
+          style:
+            type: string
+            enum:
+              - photorealistic
+              - digital_art
+              - oil_painting
+              - watercolor
+              - anime
+              - sketch
+              - abstract
+              - cyberpunk
+              - fantasy
+              - minimalist
+            default: photorealistic
+          backend:
+            type: string
+            enum: [huggingface, openai]
+            default: huggingface
+          size:
+            type: string
+            enum: ["512x512", "768x768", "1024x1024"]
+            default: "768x768"
+      
+      output_schema:
+        type: object
+        properties:
+          image_path:
+            type: string
+          prompt_used:
+            type: string
+          style:
+            type: string
+          backend:
+            type: string
+          generation_time:
+            type: number
+          content_filtered:
+            type: boolean
+      
+      metadata:
+        requires_auth: true
+        rate_limit: 10
+        timeout_seconds: 120
+        cost_estimate: high
+  
+  # ============================================================================
+  # 9. PLUGIN MANAGEMENT
+  # ============================================================================
+  plugins:
+    - name: list_plugins
+      description: List all available plugins and their status
+      category: plugins
+      subcategory: management
+      
+      input_schema:
+        type: object
+        properties: {}
+      
+      output_schema:
+        type: object
+        properties:
+          plugins:
+            type: array
+            items:
+              type: object
+              properties:
+                name:
+                  type: string
+                version:
+                  type: string
+                enabled:
+                  type: boolean
+                description:
+                  type: string
+      
+      metadata:
+        requires_auth: false
+        rate_limit: 100
+        cacheable: true
+
+# ==============================================================================
+# RESOURCES
+# ==============================================================================
+resources:
+  - uri: persona://state
+    name: AI Persona State
+    description: Current AI persona configuration and statistics
+    mime_type: application/json
+  
+  - uri: memory://knowledge/{category}
+    name: Knowledge Base
+    description: Access memories by category
+    mime_type: application/json
+  
+  - uri: learning://requests
+    name: Learning Requests
+    description: Pending and historical learning requests
+    mime_type: application/json
+  
+  - uri: audit://logs
+    name: Audit Logs
+    description: System audit trail
+    mime_type: application/json
+
+# ==============================================================================
+# PROMPTS
+# ==============================================================================
+prompts:
+  - name: ethical_guidance
+    description: Get ethical guidance for a specific scenario
+    arguments:
+      - name: scenario
+        description: The scenario to evaluate
+        required: true
+  
+  - name: persona_advice
+    description: Get persona-appropriate response to a situation
+    arguments:
+      - name: situation
+        description: The situation requiring response
+        required: true
+  
+  - name: memory_summary
+    description: Generate summary of memories in a category
+    arguments:
+      - name: category
+        description: Category to summarize
+        required: true
+      - name: time_range
+        description: Time range (e.g., "last week")
+        required: false
+
+# ==============================================================================
+# CATALOG CONFIGURATION
+# ==============================================================================
+configuration:
+  # Tool execution defaults
+  execution:
+    default_timeout: 30
+    max_concurrent: 10
+    retry_on_failure: true
+    max_retries: 3
+  
+  # Validation
+  validation:
+    strict_schema: true
+    allow_additional_properties: false
+    validate_outputs: true
+  
+  # Security
+  security:
+    require_auth_default: false
+    audit_sensitive_tools: true
+    rate_limiting_enabled: true
+
+# ==============================================================================
+# EXPANSION POINTS
+# ==============================================================================
+#
+# This catalog is designed for expansion. To add new tools:
+#
+# 1. INTERNAL TOOLS (from Project-AI core):
+#    - Add tool definition to appropriate category
+#    - Implement in src/app/core/mcp_server.py
+#    - Update tool count in registry.yaml
+#
+# 2. EXTERNAL TOOLS (from other MCP servers):
+#    - Add new server to registry.yaml
+#    - Reference tools in this catalog with server_id
+#    - Configure authentication and connection
+#
+# 3. AGENT-SPECIFIC TOOLS:
+#    - Create dedicated catalog in mcp/catalogs/
+#    - Reference from registry.yaml
+#    - Configure agent access policies
+#
+# FUTURE EXPANSION AREAS:
+# - Workflow orchestration tools (Temporal integration)
+# - Advanced reasoning tools (chain-of-thought, tree-of-thought)
+# - Multi-modal tools (vision, audio, video)
+# - Code execution sandbox
+# - Database query tools
+# - API integration tools
+# - Testing and validation tools
+# - Performance profiling tools
+#
+# ==============================================================================

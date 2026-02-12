@@ -1,0 +1,51 @@
+# Chaos Experiment: CPU Stress Test
+# ===================================
+# Tests system behavior under high CPU load
+
+id: "exp-002-cpu-stress"
+name: "CPU Stress Test"
+description: |
+  Inject 90% CPU stress to the orchestrator to test resource limits,
+  throttling behavior, and whether other services remain stable.
+
+failure_type: "cpu_stress"
+target_service: "project-ai-orchestrator"
+
+# Blast radius limits
+blast_radius:
+  max_affected_services: 2
+  max_affected_containers: 2
+  max_downtime_seconds: 45
+  critical_services_excluded:
+    - "postgres"
+  region: "core-stack"
+
+# Experiment duration
+duration_seconds: 90
+
+# Failure parameters
+parameters:
+  cpu_percent: 90
+  cpu_workers: 2
+
+# Hypothesis
+hypothesis: |
+  When orchestrator experiences 90% CPU load, the system should:
+  1. Throttle requests rather than crashing
+  2. Respect CPU limits defined in docker-compose
+  3. Not impact database or cache services
+  4. Recover to normal operation when stress is removed
+
+# Success criteria
+success_criteria:
+  system_recovered: true
+  max_downtime_seconds: 15
+  postgres_stayed_healthy: true
+  redis_stayed_healthy: true
+  no_oom_kills: true
+
+# Expected impact
+expected_impact:
+  severity: "medium"
+  user_impact: "Slower request processing, possible request queuing"
+  mitigation: "Resource limits prevent resource exhaustion"

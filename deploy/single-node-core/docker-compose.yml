@@ -1,0 +1,419 @@
+# ==============================================================================
+# Project-AI Single-Node Core Stack - Production Deployment
+# ==============================================================================
+# 
+# This compose file defines a complete, production-ready deployment of the
+# Project-AI core stack with the following services:
+#
+# - project-ai-orchestrator: Core AI orchestration and coordination engine
+# - mcp-gateway: Model Context Protocol gateway for agent/tool communication
+# - redis: Message queue, caching, and pub/sub bus
+# - postgres: Primary data store with pgvector extension for vector memory
+#
+# All services are wired with:
+# ✓ Explicit service names and network aliases
+# ✓ Health checks for automatic recovery
+# ✓ Resource limits for stability
+# ✓ Security boundaries and least-privilege access
+# ✓ Volume mounts for persistence and configuration
+# ✓ Environment contracts for extensibility
+# ✓ Ready for horizontal scaling and worker processes
+#
+# ==============================================================================
+
+version: '3.8'
+
+# ==============================================================================
+# NETWORKS
+# ==============================================================================
+networks:
+  project-ai-core:
+    driver: bridge
+    name: project-ai-core-network
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/16
+
+# ==============================================================================
+# VOLUMES
+# ==============================================================================
+volumes:
+  # Postgres data with pgvector embeddings
+  postgres-data:
+    driver: local
+    name: project-ai-postgres-data
+  
+  # Redis AOF persistence
+  redis-data:
+    driver: local
+    name: project-ai-redis-data
+  
+  # Orchestrator state and logs
+  orchestrator-data:
+    driver: local
+    name: project-ai-orchestrator-data
+  
+  # MCP Gateway cache and registry
+  mcp-cache:
+    driver: local
+    name: project-ai-mcp-cache
+
+# ==============================================================================
+# SERVICES
+# ==============================================================================
+services:
+  
+  # ============================================================================
+  # POSTGRES - Primary Database with pgvector
+  # ============================================================================
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: project-ai-postgres
+    hostname: postgres
+    restart: unless-stopped
+    
+    networks:
+      project-ai-core:
+        aliases:
+          - postgres.project-ai.local
+    
+    ports:
+      - "5432:5432"
+    
+    environment:
+      # Database configuration
+      POSTGRES_DB: ${POSTGRES_DB:-project_ai}
+      POSTGRES_USER: ${POSTGRES_USER:-project_ai}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}
+      
+      # Performance tuning
+      POSTGRES_SHARED_BUFFERS: ${POSTGRES_SHARED_BUFFERS:-256MB}
+      POSTGRES_EFFECTIVE_CACHE_SIZE: ${POSTGRES_EFFECTIVE_CACHE_SIZE:-1GB}
+      POSTGRES_MAX_CONNECTIONS: ${POSTGRES_MAX_CONNECTIONS:-200}
+      
+      # pgvector configuration
+      PGVECTOR_DIMENSIONS: ${PGVECTOR_DIMENSIONS:-1536}
+      
+      # Data directory
+      PGDATA: /var/lib/postgresql/data/pgdata
+    
+    volumes:
+      # Persistent data
+      - postgres-data:/var/lib/postgresql/data
+      
+      # Initialization scripts (pgvector, pg_trgm extensions)
+      - ./postgres/init:/docker-entrypoint-initdb.d:ro
+      
+      # Custom postgres configuration (if needed)
+      - ./postgres/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+    
+    command: >
+      postgres
+      -c shared_buffers=${POSTGRES_SHARED_BUFFERS:-256MB}
+      -c effective_cache_size=${POSTGRES_EFFECTIVE_CACHE_SIZE:-1GB}
+      -c max_connections=${POSTGRES_MAX_CONNECTIONS:-200}
+      -c shared_preload_libraries=pg_stat_statements
+    
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-project_ai} -d ${POSTGRES_DB:-project_ai}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    
+    # Resource limits for stability
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+  
+  # ============================================================================
+  # REDIS - Queue, Cache, and Pub/Sub Bus
+  # ============================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: project-ai-redis
+    hostname: redis
+    restart: unless-stopped
+    
+    networks:
+      project-ai-core:
+        aliases:
+          - redis.project-ai.local
+    
+    ports:
+      - "6379:6379"
+    
+    environment:
+      # Redis configuration from secrets
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?REDIS_PASSWORD must be set}
+    
+    volumes:
+      # AOF persistence for durability
+      - redis-data:/data
+      
+      # Redis configuration
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    
+    command: >
+      redis-server /usr/local/etc/redis/redis.conf
+      --requirepass ${REDIS_PASSWORD}
+      --maxmemory ${REDIS_MAX_MEMORY:-512mb}
+      --maxmemory-policy ${REDIS_MAXMEMORY_POLICY:-allkeys-lru}
+      --appendonly yes
+      --appendfsync everysec
+    
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 20s
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 768M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+  
+  # ============================================================================
+  # PROJECT-AI ORCHESTRATOR - Core Coordination Engine
+  # ============================================================================
+  project-ai-orchestrator:
+    build:
+      context: ../../
+      dockerfile: Dockerfile
+      args:
+        PYTHON_VERSION: "3.11"
+    image: project-ai:latest
+    container_name: project-ai-orchestrator
+    hostname: orchestrator
+    restart: unless-stopped
+    
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    
+    networks:
+      project-ai-core:
+        aliases:
+          - orchestrator.project-ai.local
+    
+    ports:
+      # Main API
+      - "5000:5000"
+      
+      # Health/metrics endpoints
+      - "8000:8000"
+      - "8001:8001"
+      
+      # WebSocket for real-time updates
+      - "8765:8765"
+    
+    environment:
+      # Runtime configuration
+      PYTHONUNBUFFERED: "1"
+      PYTHONPATH: "/app/src"
+      ENVIRONMENT: ${ENVIRONMENT:-production}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      
+      # Database connection
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-project_ai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-project_ai}"
+      DB_POOL_SIZE: ${DB_POOL_SIZE:-20}
+      DB_MAX_OVERFLOW: ${DB_MAX_OVERFLOW:-10}
+      
+      # Redis connection
+      REDIS_URL: "redis://:${REDIS_PASSWORD}@redis:6379/0"
+      REDIS_MAX_CONNECTIONS: ${REDIS_MAX_CONNECTIONS:-50}
+      
+      # API Keys (from env file)
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      HUGGINGFACE_API_KEY: ${HUGGINGFACE_API_KEY}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      
+      # Security
+      FERNET_KEY: ${FERNET_KEY:?FERNET_KEY must be set}
+      SECRET_KEY: ${SECRET_KEY:?SECRET_KEY must be set}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-${SECRET_KEY}}
+      
+      # Application paths
+      DATA_DIR: /app/data
+      LOG_DIR: /app/logs
+      CONFIG_DIR: /app/config
+      
+      # Feature flags
+      ENABLE_METRICS: ${ENABLE_METRICS:-true}
+      ENABLE_TRACING: ${ENABLE_TRACING:-true}
+      ENABLE_MCP: ${ENABLE_MCP:-true}
+      
+      # MCP configuration
+      MCP_GATEWAY_URL: ${MCP_GATEWAY_URL:-http://mcp-gateway:9000}
+      MCP_REGISTRY_PATH: /app/config/mcp/registry.yaml
+      
+      # Worker configuration (for future horizontal scaling)
+      WORKER_CONCURRENCY: ${WORKER_CONCURRENCY:-4}
+      WORKER_PREFETCH_MULTIPLIER: ${WORKER_PREFETCH_MULTIPLIER:-4}
+    
+    volumes:
+      # Application source (for development; remove in production)
+      # - ../../src:/app/src
+      
+      # Persistent data
+      - orchestrator-data:/app/data
+      - ./logs:/app/logs
+      
+      # Configuration files
+      - ../../config:/app/config:ro
+      - ./env/project-ai-core.env:/app/.env:ro
+      
+      # MCP configuration
+      - ./mcp:/app/config/mcp:ro
+    
+    env_file:
+      - ./env/project-ai-core.env
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 4G
+        reservations:
+          cpus: '1'
+          memory: 1G
+  
+  # ============================================================================
+  # MCP GATEWAY - Model Context Protocol Gateway
+  # ============================================================================
+  mcp-gateway:
+    image: modelcontextprotocol/gateway:latest
+    container_name: project-ai-mcp-gateway
+    hostname: mcp-gateway
+    restart: unless-stopped
+    
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    
+    networks:
+      project-ai-core:
+        aliases:
+          - mcp-gateway.project-ai.local
+    
+    ports:
+      # Gateway API
+      - "9000:9000"
+      
+      # Admin interface
+      - "9001:9001"
+    
+    environment:
+      # Gateway configuration
+      MCP_GATEWAY_PORT: "9000"
+      MCP_ADMIN_PORT: "9001"
+      MCP_LOG_LEVEL: ${MCP_LOG_LEVEL:-info}
+      
+      # Backend storage
+      MCP_DB_URL: "postgresql://${POSTGRES_USER:-project_ai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-project_ai}"
+      MCP_REDIS_URL: "redis://:${REDIS_PASSWORD}@redis:6379/1"
+      
+      # Configuration paths
+      MCP_CONFIG_PATH: /etc/mcp/config.yaml
+      MCP_REGISTRY_PATH: /etc/mcp/registry.yaml
+      MCP_CATALOG_PATH: /etc/mcp/catalogs
+      
+      # Security
+      MCP_API_KEY: ${MCP_API_KEY:?MCP_API_KEY must be set}
+      MCP_ENABLE_AUTH: ${MCP_ENABLE_AUTH:-true}
+      
+      # Performance
+      MCP_MAX_CONNECTIONS: ${MCP_MAX_CONNECTIONS:-100}
+      MCP_TIMEOUT_SECONDS: ${MCP_TIMEOUT_SECONDS:-30}
+      MCP_RATE_LIMIT: ${MCP_RATE_LIMIT:-1000}
+    
+    volumes:
+      # MCP configuration files
+      - ./mcp/config.yaml:/etc/mcp/config.yaml:ro
+      - ./mcp/registry.yaml:/etc/mcp/registry.yaml:ro
+      - ./mcp/catalogs:/etc/mcp/catalogs:ro
+      - ./mcp/secrets.env:/etc/mcp/secrets.env:ro
+      
+      # Cache and working directory
+      - mcp-cache:/var/lib/mcp
+    
+    env_file:
+      - ./mcp/secrets.env
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+# ==============================================================================
+# NOTES AND OPERATIONAL GUIDANCE
+# ==============================================================================
+#
+# SCALING WORKERS:
+# To add worker processes, extend this compose file with:
+#
+#   worker-01:
+#     <<: *worker-template
+#     container_name: project-ai-worker-01
+#     environment:
+#       WORKER_ID: worker-01
+#
+# SECRETS MANAGEMENT:
+# For production, use Docker secrets or external secret managers:
+#   - HashiCorp Vault
+#   - AWS Secrets Manager
+#   - Azure Key Vault
+#
+# MONITORING:
+# Add Prometheus, Grafana, and alerting by extending with:
+#   - prometheus:latest
+#   - grafana/grafana:latest
+#   - prom/alertmanager:latest
+#
+# BACKUP STRATEGY:
+# - Postgres: pg_dump daily, point-in-time WAL archiving
+# - Redis: RDB snapshots + AOF for durability
+# - Orchestrator data: Volume snapshots
+#
+# MIGRATION:
+# Use Alembic for Postgres schema migrations:
+#   docker-compose exec project-ai-orchestrator alembic upgrade head
+#
+# ==============================================================================

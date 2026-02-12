@@ -1,0 +1,267 @@
+# ==============================================================================
+# Production Alert Rules for Project-AI
+# ==============================================================================
+
+groups:
+  
+  # ============================================================================
+  # SYSTEM HEALTH ALERTS
+  # ============================================================================
+  - name: system_health
+    interval: 30s
+    rules:
+      
+      - alert: HighCPUUsage
+        expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 5m
+        labels:
+          severity: warning
+          category: system
+        annotations:
+          summary: "High CPU usage detected"
+          description: "CPU usage is above 80% on {{ $labels.instance }} (current: {{ $value | humanize }}%)"
+      
+      - alert: CriticalCPUUsage
+        expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 95
+        for: 2m
+        labels:
+          severity: critical
+          category: system
+        annotations:
+          summary: "Critical CPU usage detected"
+          description: "CPU usage is above 95% on {{ $labels.instance }} (current: {{ $value | humanize }}%)"
+      
+      - alert: HighMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+          category: system
+        annotations:
+          summary: "High memory usage detected"
+          description: "Memory usage is above 85% on {{ $labels.instance }} (current: {{ $value | humanize }}%)"
+      
+      - alert: DiskSpaceLow
+        expr: (1 - (node_filesystem_avail_bytes / node_filesystem_size_bytes)) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+          category: system
+        annotations:
+          summary: "Disk space running low"
+          description: "Disk usage is above 85% on {{ $labels.instance }} at {{ $labels.mountpoint }} (current: {{ $value | humanize }}%)"
+  
+  # ============================================================================
+  # SERVICE AVAILABILITY ALERTS
+  # ============================================================================
+  - name: service_availability
+    interval: 30s
+    rules:
+      
+      - alert: ServiceDown
+        expr: up == 0
+        for: 2m
+        labels:
+          severity: critical
+          category: availability
+        annotations:
+          summary: "Service is down"
+          description: "{{ $labels.job }} on {{ $labels.instance }} has been down for more than 2 minutes"
+      
+      - alert: PostgreSQLDown
+        expr: up{job="postgres"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          category: database
+        annotations:
+          summary: "PostgreSQL is down"
+          description: "PostgreSQL database is unreachable - CRITICAL DATA LOSS RISK"
+      
+      - alert: RedisDown
+        expr: up{job="redis"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          category: cache
+        annotations:
+          summary: "Redis is down"
+          description: "Redis cache is unreachable - service degradation expected"
+      
+      - alert: OrchestratorDown
+        expr: up{job="orchestrator"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          category: application
+        annotations:
+          summary: "Project-AI Orchestrator is down"
+          description: "Core orchestrator is unreachable - all AI functionality unavailable"
+      
+      - alert: MCPGatewayDown
+        expr: up{job="mcp-gateway"} == 0
+        for: 2m
+        labels:
+          severity: warning
+          category: application
+        annotations:
+          summary: "MCP Gateway is down"
+          description: "MCP Gateway is unreachable - agent communication impaired"
+  
+  # ============================================================================
+  # DATABASE ALERTS
+  # ============================================================================
+  - name: database_health
+    interval: 30s
+    rules:
+      
+      - alert: PostgreSQLTooManyConnections
+        expr: sum(pg_stat_activity_count) > 180
+        for: 5m
+        labels:
+          severity: warning
+          category: database
+        annotations:
+          summary: "PostgreSQL has too many connections"
+          description: "PostgreSQL connection count is {{ $value }} (limit: 200)"
+      
+      - alert: PostgreSQLHighTransactionTime
+        expr: rate(pg_stat_activity_max_tx_duration[5m]) > 300
+        for: 5m
+        labels:
+          severity: warning
+          category: database
+        annotations:
+          summary: "Long-running transactions detected"
+          description: "Maximum transaction time is {{ $value | humanize }}s"
+      
+      - alert: PostgreSQLReplicationLag
+        expr: pg_replication_lag > 30
+        for: 2m
+        labels:
+          severity: warning
+          category: database
+        annotations:
+          summary: "PostgreSQL replication lag detected"
+          description: "Replication lag is {{ $value | humanize }}s"
+      
+      - alert: PostgreSQLDeadlocks
+        expr: rate(pg_stat_database_deadlocks[5m]) > 0.01
+        for: 5m
+        labels:
+          severity: warning
+          category: database
+        annotations:
+          summary: "Database deadlocks detected"
+          description: "Deadlock rate: {{ $value | humanize }}/s"
+  
+  # ============================================================================
+  # REDIS ALERTS
+  # ============================================================================
+  - name: redis_health
+    interval: 30s
+    rules:
+      
+      - alert: RedisHighMemoryUsage
+        expr: (redis_memory_used_bytes / redis_memory_max_bytes) * 100 > 90
+        for: 5m
+        labels:
+          severity: warning
+          category: cache
+        annotations:
+          summary: "Redis memory usage is high"
+          description: "Redis is using {{ $value | humanize }}% of available memory"
+      
+      - alert: RedisRejectedConnections
+        expr: rate(redis_rejected_connections_total[5m]) > 0
+        for: 2m
+        labels:
+          severity: warning
+          category: cache
+        annotations:
+          summary: "Redis is rejecting connections"
+          description: "Redis rejected {{ $value | humanize }} connections/s"
+      
+      - alert: RedisHighEvictionRate
+        expr: rate(redis_evicted_keys_total[5m]) > 100
+        for: 5m
+        labels:
+          severity: warning
+          category: cache
+        annotations:
+          summary: "High Redis key eviction rate"
+          description: "Redis is evicting {{ $value | humanize }} keys/s"
+  
+  # ============================================================================
+  # APPLICATION ALERTS
+  # ============================================================================
+  - name: application_health
+    interval: 30s
+    rules:
+      
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) * 100 > 5
+        for: 5m
+        labels:
+          severity: warning
+          category: application
+        annotations:
+          summary: "High error rate detected"
+          description: "Error rate is {{ $value | humanize }}% on {{ $labels.service }}"
+      
+      - alert: HighResponseTime
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 1
+        for: 5m
+        labels:
+          severity: warning
+          category: performance
+        annotations:
+          summary: "High response time detected"
+          description: "95th percentile response time is {{ $value | humanize }}s on {{ $labels.service }}"
+      
+      - alert: LowThroughput
+        expr: rate(http_requests_total[5m]) < 1
+        for: 10m
+        labels:
+          severity: info
+          category: application
+        annotations:
+          summary: "Low request throughput"
+          description: "Request rate is {{ $value | humanize }}/s on {{ $labels.service }}"
+  
+  # ============================================================================
+  # CONTAINER ALERTS
+  # ============================================================================
+  - name: container_health
+    interval: 30s
+    rules:
+      
+      - alert: ContainerHighCPU
+        expr: rate(container_cpu_usage_seconds_total{name!=""}[5m]) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          category: container
+        annotations:
+          summary: "Container CPU usage is high"
+          description: "Container {{ $labels.name }} is using {{ $value | humanize }}% CPU"
+      
+      - alert: ContainerHighMemory
+        expr: (container_memory_usage_bytes{name!=""} / container_spec_memory_limit_bytes{name!=""}) * 100 > 90
+        for: 5m
+        labels:
+          severity: warning
+          category: container
+        annotations:
+          summary: "Container memory usage is high"
+          description: "Container {{ $labels.name }} is using {{ $value | humanize }}% of memory limit"
+      
+      - alert: ContainerRestarting
+        expr: rate(container_last_seen{name!=""}[5m]) > 0
+        for: 5m
+        labels:
+          severity: warning
+          category: container
+        annotations:
+          summary: "Container is restarting"
+          description: "Container {{ $labels.name }} has restarted {{ $value | humanize }} times"
