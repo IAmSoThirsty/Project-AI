@@ -1,7 +1,7 @@
 # Project-AI Archive Index
 
-**Last Updated**: 2026-02-08  
-**Total Archived Documents**: 137 files  
+**Last Updated**: 2026-02-12  
+**Total Archived Documents**: 168 files  
 **Purpose**: Historical memory and audit trail of completed work
 
 ---
@@ -15,7 +15,8 @@ This archive contains historical implementation documentation, completion summar
 ```
 docs/internal/archive/
 ├── ARCHIVE_INDEX.md (this file)
-├── root-summaries/ (17 files) - Previously in root, archived 2026-02-08
+├── root-summaries/ (22 files) - Previously in root, archived 2026-02-08 and 2026-02-12
+├── subsystem-implementations/ (26 files) - Subsystem completion summaries, archived 2026-02-12
 ├── adversarial-completion/ (5 files) - Adversarial testing completion docs
 ├── historical-summaries/ (9 files) - Historical project summaries
 ├── security-incident-jan2026/ (4 files) - Security incident documentation
@@ -25,7 +26,62 @@ docs/internal/archive/
 
 ---
 
-## Recently Archived (2026-02-08)
+## Recently Archived (2026-02-12)
+
+### Latest Root-Summaries Collection
+**Reason**: Repository cleanup - moved outdated implementation summaries from root  
+**Subsystem**: Multiple  
+**Status**: Completed/superseded
+
+| File | Date | Subsystem | Reason |
+|------|------|-----------|--------|
+| CATHEDRAL_IMPLEMENTATION_SUMMARY.md | 2026-02-12 | Architecture | Point-in-time snapshot - cathedral architecture now integrated |
+| IMPLEMENTATION_SUMMARY.md | Historical | Multiple | Superseded - T-SECA/GHOST protocol implementation complete |
+| TRANSFORMATION_SUMMARY.md | Historical | Project | Point-in-time summary - transformation complete |
+| HEALTH_REPORT.md | 2026-02-08 | Monitoring | Point-in-time snapshot - continuous monitoring now in place |
+| CODACY_COMPREHENSIVE_PATCH.md | Historical | Code Quality | Point-in-time patch analysis - quality improvements applied |
+
+### Subsystem Implementation Summaries Collection
+**Reason**: Consolidation - moved historical subsystem completion reports  
+**Subsystem**: Multiple engines and integrations  
+**Status**: Completed implementations
+
+| File | Date | Subsystem | Reason |
+|------|------|-----------|--------|
+| AGI_IDENTITY_IMPLEMENTATION_SUMMARY.md | 2026-01-17 | Core/Identity | Point-in-time implementation report - system now operational |
+| COMPLETE_INTEGRATION_SUMMARY.md | Historical | Monitoring | Point-in-time integration report - monitoring stack now active |
+| DJANGO_STATE_IMPLEMENTATION_SUMMARY.md | 2026-02-04 | Engines | Completed simulation engine implementation |
+| AI_TAKEOVER_IMPLEMENTATION_SUMMARY.md | Historical | Engines | Completed terminal engine implementation |
+| AI_TAKEOVER_FINAL_INTEGRATION_SUMMARY.md | Historical | Engines | Final integration completion report |
+| ALIEN_INVADERS_IMPLEMENTATION_SUMMARY.md | Historical | Engines | Completed game engine implementation |
+| ALIEN_INVADERS_INTEGRATION_SUMMARY.md | Historical | Engines | Integration completion report |
+| EMP_DEFENSE_IMPLEMENTATION_SUMMARY.md | Historical | Engines | Completed defense engine implementation |
+| WEB_IMPLEMENTATION_SUMMARY.md | Historical | Web | Web platform implementation report |
+| UNITY_IMPLEMENTATION_SUMMARY.md | Historical | Unity | Unity integration completion |
+| ATLAS_IMPLEMENTATION_SUMMARY.md | Historical | Atlas | Atlas system implementation |
+| GRADLE_DB_IMPLEMENTATION_SUMMARY.md | Historical | Gradle | Database gradle integration |
+| GRADLE_IR_IMPLEMENTATION_SUMMARY.md | Historical | Gradle | IR gradle integration |
+| TK8S_IMPLEMENTATION_SUMMARY.md | Historical | K8s | TK8s implementation completion |
+| AI-INDIVIDUAL-ROLE-IMPLEMENTATION-SUMMARY.md | 2026-02-03 | Core | AI role implementation complete |
+| ANTIGRAVITY_IMPLEMENTATION_SUMMARY.md | 2026-01-28 | Integration | Antigravity IDE integration complete |
+| AUTOMATION_IMPLEMENTATION_SUMMARY.md | Historical | CI/CD | Repository automation implementation complete |
+| E2E_IMPLEMENTATION_COMPLETE.md | Historical | Testing | E2E evaluation pipeline complete |
+| FORMAL-PROOFS-AND-ADVERSARIAL-TESTING-SUMMARY.md | 2026-02-03 | Testing | Formal proofs and adversarial testing complete |
+| HARDENING_IMPLEMENTATION_SUMMARY.md | 2026-02-08 | Security | Repository hardening complete |
+| IMPLEMENTATION_COMPLETE.md | Historical | Project | General implementation completion |
+| MCP_IMPLEMENTATION_SUMMARY.md | Historical | Integration | Model Context Protocol implementation |
+| MONITORING_IMPLEMENTATION_SUMMARY.md | Historical | Infrastructure | Monitoring stack implementation |
+| NEW_TEMPORAL_INTEGRATION_SUMMARY.md | 2026-01-20 | Integration | Temporal.io integration complete |
+
+### Other Archived Documentation
+| File | Date | Type | Reason |
+|------|------|------|--------|
+| CLEANUP_SUMMARY_2026-02-08.md | 2026-02-08 | Maintenance | Historical cleanup report - work complete |
+| SYNC_CLEANUP_2026-01-31.md | 2026-01-31 | Maintenance | Historical sync cleanup report |
+
+---
+
+## Previously Archived (2026-02-08)
 
 ### Root-Summaries Collection
 **Reason**: Repository cleanup - moved from root directory  
@@ -291,16 +347,17 @@ git log --follow docs/internal/archive/FILENAME.md
 
 ## Archive Statistics
 
-- **Total Files**: 137
-- **Root-Summaries**: 17 (archived 2026-02-08)
+- **Total Files**: 168
+- **Root-Summaries**: 22 (archived 2026-02-08, 2026-02-12)
+- **Subsystem-Implementations**: 26 (archived 2026-02-12)
 - **Main Archive**: 76
-- **Subdirectories**: 44
-- **Date Range**: 2025-12 to 2026-02-08
-- **Subsystems Covered**: 12+ (Infrastructure, Security, TARL, Testing, Architecture, etc.)
+- **Subdirectories**: 6 (root-summaries, subsystem-implementations, adversarial-completion, historical-summaries, security-incident-jan2026, session-notes)
+- **Date Range**: 2025-12 to 2026-02-12
+- **Subsystems Covered**: 20+ (Infrastructure, Security, TARL, Testing, Architecture, Engines, Web, Unity, Integration, Monitoring, etc.)
 
 ---
 
 **Note**: This archive is immutable. Documents are never deleted, only relocated here. All files maintain full git history for audit trail purposes.
 
-**Last Audit**: 2026-02-08  
-**Next Review**: 2026-03-08 (monthly)
+**Last Audit**: 2026-02-12  
+**Next Review**: 2026-03-12 (monthly)
