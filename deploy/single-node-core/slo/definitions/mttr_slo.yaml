@@ -1,0 +1,269 @@
+# Project-AI MTTR (Mean Time To Recovery) SLOs
+# ==============================================
+# Service Level Objectives for incident response and recovery
+
+version: "1.0"
+
+# Global MTTR target
+global_slo:
+  name: "Overall MTTR"
+  target_minutes: 15
+  measurement_period: "30d"
+
+# Incident severity definitions
+incident_severity:
+  
+  sev1_critical:
+    name: "SEV1 - Critical"
+    description: "Complete service outage, data loss, security breach"
+    mttr_target_minutes: 15
+    max_incidents_per_month: 0  # Zero tolerance
+    
+    examples:
+      - "Database unavailable"
+      - "Complete orchestrator failure"
+      - "Data corruption or loss"
+      - "Security breach"
+    
+    response_requirements:
+      - "Immediate pagerduty alert"
+      - "Automatic escalation to on-call engineer"
+      - "Incident commander assigned within 5 minutes"
+      - "Executive notification required"
+    
+    recovery_steps:
+      - "Automated failover if available"
+      - "Manual intervention by SRE team"
+      - "Rollback to last known good state"
+      - "Invoke disaster recovery plan if needed"
+  
+  sev2_major:
+    name: "SEV2 - Major"
+    description: "Significant degradation, major feature unavailable"
+    mttr_target_minutes: 30
+    max_incidents_per_month: 2
+    
+    examples:
+      - "MCP Gateway unavailable"
+      - "High error rate (>1%)"
+      - "Severe performance degradation"
+      - "Redis cache failure"
+    
+    response_requirements:
+      - "Pagerduty alert"
+      - "On-call engineer notified"
+      - "Status page updated"
+    
+    recovery_steps:
+      - "Investigate root cause"
+      - "Apply fix or workaround"
+      - "Monitor for stability"
+  
+  sev3_minor:
+    name: "SEV3 - Minor"
+    description: "Limited impact, degraded performance, non-critical feature down"
+    mttr_target_minutes: 60
+    max_incidents_per_month: 5
+    
+    examples:
+      - "Monitoring alert triggered"
+      - "Single service pod failure"
+      - "Elevated latency"
+    
+    response_requirements:
+      - "Slack notification"
+      - "Ticket created"
+      - "On-call aware but not paged"
+    
+    recovery_steps:
+      - "Investigate during business hours"
+      - "Schedule fix in next deployment"
+  
+  sev4_low:
+    name: "SEV4 - Low"
+    description: "Minimal impact, informational"
+    mttr_target_minutes: 240
+    max_incidents_per_month: 20
+    
+    examples:
+      - "Single failed request"
+      - "Temporary spike in latency"
+      - "Resource usage warning"
+
+# Service-specific MTTR targets
+services:
+  
+  orchestrator:
+    name: "Orchestrator MTTR"
+    
+    recovery_targets:
+      sev1_minutes: 10
+      sev2_minutes: 20
+      sev3_minutes: 45
+      sev4_minutes: 180
+    
+    automated_recovery:
+      enabled: true
+      mechanisms:
+        - "Health check based restart"
+        - "Circuit breaker trip"
+        - "Automatic rollback on deployment failure"
+        - "Load shedding under high load"
+    
+    manual_recovery:
+      runbook_url: "https://docs.project-ai.example.com/runbooks/orchestrator"
+      oncall_contact: "pagerduty://project-ai-orchestrator"
+  
+  database:
+    name: "Database MTTR"
+    
+    recovery_targets:
+      sev1_minutes: 5  # Critical - fast recovery required
+      sev2_minutes: 15
+      sev3_minutes: 30
+    
+    automated_recovery:
+      enabled: true
+      mechanisms:
+        - "Automatic failover to replica"
+        - "Connection pool refresh"
+        - "Query timeout and retry"
+    
+    backup_recovery:
+      rpo_minutes: 5  # Recovery Point Objective
+      rto_minutes: 15  # Recovery Time Objective
+      backup_frequency: "hourly"
+      restore_test_frequency: "weekly"
+  
+  mcp_gateway:
+    name: "MCP Gateway MTTR"
+    
+    recovery_targets:
+      sev1_minutes: 15
+      sev2_minutes: 30
+      sev3_minutes: 60
+    
+    automated_recovery:
+      enabled: true
+      mechanisms:
+        - "Restart on crash"
+        - "Circuit breaker"
+        - "Request queuing"
+
+# Detection targets (MTTD - Mean Time To Detect)
+detection:
+  name: "MTTD Targets"
+  description: "How quickly incidents are detected"
+  
+  targets:
+    sev1_seconds: 30
+    sev2_seconds: 60
+    sev3_seconds: 300
+  
+  detection_methods:
+    - "Prometheus alerts"
+    - "Health check failures"
+    - "Error rate spikes"
+    - "User reports"
+    - "Synthetic monitoring"
+
+# Response targets (MTTR - Mean Time To Response)
+response:
+  name: "MTTR Targets"
+  description: "How quickly team responds to incidents"
+  
+  targets:
+    sev1_minutes: 5
+    sev2_minutes: 15
+    sev3_minutes: 60
+  
+  response_checklist:
+    sev1:
+      - "Acknowledge alert within 2 minutes"
+      - "Join incident channel within 5 minutes"
+      - "Assign incident commander"
+      - "Begin investigation immediately"
+    
+    sev2:
+      - "Acknowledge alert within 5 minutes"
+      - "Join incident channel within 15 minutes"
+      - "Begin investigation"
+    
+    sev3:
+      - "Acknowledge alert within 30 minutes"
+      - "Create ticket"
+      - "Schedule investigation"
+
+# Recovery validation
+recovery_validation:
+  name: "Recovery Verification"
+  description: "Steps to confirm full recovery"
+  
+  checklist:
+    - "All services report healthy"
+    - "Error rates back to baseline"
+    - "Latency within SLO"
+    - "No active alerts"
+    - "Synthetic checks passing"
+    - "User impact resolved"
+  
+  monitoring_period_after_recovery: "30m"
+
+# Post-incident review
+postmortem:
+  required_for:
+    - "SEV1 incidents"
+    - "SEV2 incidents exceeding MTTR"
+    - "Incidents causing SLO breach"
+  
+  timeline:
+    draft_due_hours: 24
+    review_due_hours: 72
+    action_items_due_days: 14
+  
+  sections:
+    - "Incident summary"
+    - "Impact assessment"
+    - "Root cause analysis"
+    - "Timeline of events"
+    - "Resolution steps"
+    - "Prevention action items"
+    - "Lessons learned"
+
+# MTTR measurement and reporting
+measurement:
+  # How MTTR is calculated
+  formula: "sum(incident_resolution_time) / count(incidents)"
+  
+  # Tracking
+  metrics:
+    - "Incident count by severity"
+    - "Mean, median, P95 resolution time"
+    - "MTTD (detection)"
+    - "MTTR (response)"
+    - "MTTR (resolution)"
+    - "MTTR (recovery)"
+  
+  # Reporting
+  dashboard_url: "http://localhost:3000/d/slo-mttr"
+  review_frequency: "weekly"
+  
+  monthly_report:
+    enabled: true
+    recipients:
+      - "engineering@project-ai.example.com"
+      - "sre@project-ai.example.com"
+
+# Continuous improvement
+improvement:
+  # Goals
+  quarterly_targets:
+    - "Reduce SEV1 MTTR by 20%"
+    - "Increase automated recovery rate"
+    - "Decrease incident count"
+  
+  # Action items from incidents
+  action_item_tracking:
+    tool: "Jira"
+    dashboard: "https://jira.example.com/dashboard/mttr"
+    review_frequency: "biweekly"

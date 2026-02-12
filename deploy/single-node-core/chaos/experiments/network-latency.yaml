@@ -1,0 +1,52 @@
+# Chaos Experiment: Network Latency Test
+# ========================================
+# Tests system resilience to network delays between services
+
+id: "exp-001-network-latency"
+name: "Network Latency Injection"
+description: |
+  Inject 200ms network latency to MCP Gateway to test how the orchestrator
+  handles slow agent communication and whether timeouts are properly configured.
+
+failure_type: "network_latency"
+target_service: "mcp-gateway"
+
+# Blast radius limits - safety boundaries
+blast_radius:
+  max_affected_services: 1
+  max_affected_containers: 1
+  max_downtime_seconds: 30
+  critical_services_excluded:
+    - "postgres"
+    - "redis"
+  region: "core-stack"
+
+# Experiment duration
+duration_seconds: 60
+
+# Failure parameters
+parameters:
+  latency_ms: 200
+  jitter_ms: 50
+  interface: "eth0"
+
+# Hypothesis to test
+hypothesis: |
+  When MCP Gateway experiences 200ms network latency, the orchestrator should:
+  1. Continue processing requests with degraded performance
+  2. Respect timeout configurations and retry policies
+  3. Not crash or enter an error state
+  4. Recover immediately when latency is removed
+
+# Success criteria
+success_criteria:
+  system_recovered: true
+  max_downtime_seconds: 10
+  orchestrator_stayed_healthy: true
+  no_data_loss: true
+
+# Expected impact
+expected_impact:
+  severity: "low"
+  user_impact: "Slower response times for agent queries"
+  mitigation: "Circuit breakers and timeouts should prevent cascading failures"
