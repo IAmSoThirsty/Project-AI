@@ -114,18 +114,18 @@ else
     gsutil mb -p "${PROJECT_ID}" -l us-central1 "gs://${LOG_BUCKET_NAME}"
     
     # Create lifecycle configuration file
-    cat > /tmp/lifecycle.json << 'EOF'
+    cat > /tmp/lifecycle.json << EOF
 {
-  "rule": [
-    {
-      "action": {"type": "Delete"},
-      "condition": {"age": RETENTION_DAYS}
-    }
-  ]
+  "lifecycle": {
+    "rule": [
+      {
+        "action": {"type": "Delete"},
+        "condition": {"age": ${LOG_RETENTION_DAYS}}
+      }
+    ]
+  }
 }
 EOF
-    # Replace placeholder with actual value
-    sed -i "s/RETENTION_DAYS/${LOG_RETENTION_DAYS}/g" /tmp/lifecycle.json
     
     # Apply lifecycle policy
     gsutil lifecycle set /tmp/lifecycle.json "gs://${LOG_BUCKET_NAME}"
