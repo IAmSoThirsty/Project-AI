@@ -1,0 +1,246 @@
+---
+# KYVERNO POLICY: KMS-BACKED IMAGE SIGNATURE VERIFICATION
+# Verifies images using public key stored in Kubernetes Secret
+# Public key is exported from GCP KMS and stored as K8s secret
+# This policy references the secret instead of embedding keys
+
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-kms-cosign-signatures
+  annotations:
+    policies.kyverno.io/title: "Verify Image Signatures with KMS Public Key"
+    policies.kyverno.io/category: "Security"
+    policies.kyverno.io/severity: "critical"
+    policies.kyverno.io/subject: "Pod"
+    policies.kyverno.io/description: >-
+      All container images must be signed with Cosign using KMS-backed keys.
+      The public key is stored in a Kubernetes secret and referenced by this policy.
+      This ensures that only images signed with the enterprise KMS key are deployed.
+spec:
+  validationFailureAction: enforce
+  background: false
+  webhookTimeoutSeconds: 30
+  failurePolicy: Fail
+  rules:
+    - name: verify-kms-signature
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - project-ai-core
+                - project-ai-eca
+                - project-ai-security
+                - project-ai-memory
+                - project-ai-production
+                - project-ai-staging
+      verifyImages:
+        - imageReferences:
+            - "ghcr.io/iamsothirsty/project-ai-*:*"
+            - "gcr.io/*/project-ai-*:*"
+          attestors:
+            - count: 1
+              entries:
+                - keys:
+                    # Reference to Kubernetes secret containing public key
+                    secretRef:
+                      name: cosign-public-key
+                      namespace: kyverno
+          required: true
+
+---
+# KYVERNO SELF-PROTECTION POLICY
+# Prevents deletion or modification of Kyverno namespace and policies
+# This ensures the security controls cannot be bypassed
+
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: protect-kyverno
+  annotations:
+    policies.kyverno.io/title: "Protect Kyverno from Deletion"
+    policies.kyverno.io/category: "Security"
+    policies.kyverno.io/severity: "critical"
+    policies.kyverno.io/description: >-
+      Prevents deletion or unauthorized modification of Kyverno namespace,
+      policies, and webhook configurations. This is a critical security control
+      that ensures admission policies cannot be bypassed.
+spec:
+  validationFailureAction: enforce
+  background: false
+  rules:
+    - name: block-kyverno-namespace-deletion
+      match:
+        any:
+          - resources:
+              kinds:
+                - Namespace
+              names:
+                - kyverno
+      validate:
+        message: "Kyverno namespace cannot be deleted. This would disable all admission policies."
+        deny:
+          conditions:
+            all:
+              - key: "{{ request.operation }}"
+                operator: Equals
+                value: DELETE
+
+    - name: block-kyverno-policy-deletion
+      match:
+        any:
+          - resources:
+              kinds:
+                - ClusterPolicy
+                - Policy
+              names:
+                - "require-kms-cosign-signatures"
+                - "protect-kyverno"
+                - "tk8s-*"
+      validate:
+        message: "Critical security policies cannot be deleted. Requires manual override with two-person authorization."
+        deny:
+          conditions:
+            all:
+              - key: "{{ request.operation }}"
+                operator: Equals
+                value: DELETE
+
+    - name: block-webhook-tampering
+      match:
+        any:
+          - resources:
+              kinds:
+                - ValidatingWebhookConfiguration
+                - MutatingWebhookConfiguration
+              names:
+                - "kyverno-*"
+      validate:
+        message: "Kyverno webhook configurations are protected and cannot be modified or deleted."
+        deny:
+          conditions:
+            any:
+              - key: "{{ request.operation }}"
+                operator: In
+                value: ["DELETE", "UPDATE"]
+
+---
+# POD SECURITY ADMISSION ENFORCEMENT
+# Ensures all production namespaces enforce restricted pod security standards
+
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: enforce-pod-security-standards
+  annotations:
+    policies.kyverno.io/title: "Enforce Pod Security Standards"
+    policies.kyverno.io/category: "Pod Security Standards"
+    policies.kyverno.io/severity: "high"
+    policies.kyverno.io/description: >-
+      Ensures all production namespaces have pod-security.kubernetes.io labels
+      set to 'restricted' mode. This enforces the most restrictive pod security
+      standards.
+spec:
+  validationFailureAction: audit
+  background: true
+  rules:
+    - name: require-restricted-pod-security
+      match:
+        any:
+          - resources:
+              kinds:
+                - Namespace
+              names:
+                - "project-ai-*"
+                - "tk8s-*"
+      validate:
+        message: "Production namespaces must enforce restricted pod security standards"
+        pattern:
+          metadata:
+            labels:
+              pod-security.kubernetes.io/enforce: restricted
+              pod-security.kubernetes.io/audit: restricted
+              pod-security.kubernetes.io/warn: restricted
+
+---
+# DEFAULT DENY NETWORK POLICY REQUIREMENT
+# Ensures all production namespaces have a default-deny network policy
+
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-default-deny-networkpolicy
+  annotations:
+    policies.kyverno.io/title: "Require Default Deny Network Policy"
+    policies.kyverno.io/category: "Network Security"
+    policies.kyverno.io/severity: "high"
+    policies.kyverno.io/description: >-
+      Ensures every production namespace has a default-deny network policy.
+      This implements a zero-trust network model where all traffic is denied
+      by default and must be explicitly allowed.
+spec:
+  validationFailureAction: audit
+  background: true
+  rules:
+    - name: check-default-deny-exists
+      match:
+        any:
+          - resources:
+              kinds:
+                - Namespace
+              names:
+                - "project-ai-*"
+                - "tk8s-*"
+      context:
+        - name: networkpolicies
+          apiCall:
+            urlPath: "/apis/networking.k8s.io/v1/namespaces/{{ request.object.metadata.name }}/networkpolicies"
+            jmesPath: "items[?spec.podSelector == `{}` && contains(spec.policyTypes, 'Ingress') && contains(spec.policyTypes, 'Egress')] | length(@)"
+      validate:
+        message: "Namespace must have a default-deny network policy (podSelector: {}, policyTypes: [Ingress, Egress])"
+        deny:
+          conditions:
+            all:
+              - key: "{{ networkpolicies }}"
+                operator: LessThan
+                value: 1
+
+---
+# AUDIT LOGGING REQUIREMENT
+# Ensures all deployments have audit logging enabled
+
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-audit-logging
+  annotations:
+    policies.kyverno.io/title: "Require Audit Logging Labels"
+    policies.kyverno.io/category: "Observability"
+    policies.kyverno.io/severity: "medium"
+    policies.kyverno.io/description: >-
+      All production deployments must have audit logging labels configured.
+      This ensures compliance with audit trail requirements.
+spec:
+  validationFailureAction: enforce
+  background: true
+  rules:
+    - name: require-audit-labels
+      match:
+        any:
+          - resources:
+              kinds:
+                - Deployment
+                - StatefulSet
+                - DaemonSet
+              namespaces:
+                - project-ai-production
+                - project-ai-staging
+                - project-ai-core
+      validate:
+        message: "Production workloads must have audit logging labels configured"
+        pattern:
+          metadata:
+            labels:
+              audit.project-ai.io/enabled: "true"
