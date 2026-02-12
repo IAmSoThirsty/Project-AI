@@ -189,8 +189,10 @@ test_audit_output/
 
 # TK8S Cosign Keys (NEVER commit private keys)
 .cosign-keys/
+.kms-keys/
 cosign.key
 cosign.pub
 *.key
 k8s/tk8s/.cosign-keys/
+k8s/tk8s/.kms-keys/
 k8s/tk8s/security/*.backup

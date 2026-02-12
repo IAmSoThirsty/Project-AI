@@ -1,0 +1,153 @@
+---
+# GKE BINARY AUTHORIZATION POLICY
+# Hard gate for container image deployment
+# Only signed images with valid attestations are allowed
+
+# This policy enforces:
+# 1. All images must have valid attestations
+# 2. Attestations must be signed by approved authorities
+# 3. Exceptions only for system containers (GKE, kube-system)
+
+# DEPLOYMENT INSTRUCTIONS:
+# 1. Save this file as binary-authorization-policy.yaml
+# 2. Update PROJECT_ID and CLUSTER_NAME placeholders
+# 3. Import policy:
+#    gcloud container binauthz policy import binary-authorization-policy.yaml
+
+admissionWhitelistPatterns:
+  # Allow Google-managed system containers
+  - namePattern: "gcr.io/google_containers/*"
+  - namePattern: "gcr.io/gke-release/*"
+  - namePattern: "k8s.gcr.io/*"
+  - namePattern: "gke.gcr.io/*"
+
+# Default rule: REQUIRE_ATTESTATION for all other images
+defaultAdmissionRule:
+  evaluationMode: REQUIRE_ATTESTATION
+  enforcementMode: ENFORCED_BLOCK_AND_AUDIT_LOG
+  requireAttestationsBy:
+    # Attestor for Cosign signatures
+    # Note: You need to create this attestor in your GCP project
+    # See: https://cloud.google.com/binary-authorization/docs/creating-attestors-cli
+    - projects/PROJECT_ID/attestors/cosign-attestor
+
+# Cluster-specific rules (override default rule if needed)
+clusterAdmissionRules:
+  # Production cluster - strictest enforcement
+  "us-central1.tk8s-prod":
+    evaluationMode: REQUIRE_ATTESTATION
+    enforcementMode: ENFORCED_BLOCK_AND_AUDIT_LOG
+    requireAttestationsBy:
+      - projects/PROJECT_ID/attestors/cosign-attestor
+      - projects/PROJECT_ID/attestors/vulnerability-scan-attestor
+
+  # Staging cluster - same enforcement as production
+  "us-central1.tk8s-staging":
+    evaluationMode: REQUIRE_ATTESTATION
+    enforcementMode: ENFORCED_BLOCK_AND_AUDIT_LOG
+    requireAttestationsBy:
+      - projects/PROJECT_ID/attestors/cosign-attestor
+
+  # Development cluster - audit mode (logs violations but allows deployment)
+  "us-central1.tk8s-dev":
+    evaluationMode: REQUIRE_ATTESTATION
+    enforcementMode: DRYRUN_AUDIT_LOG_ONLY
+    requireAttestationsBy:
+      - projects/PROJECT_ID/attestors/cosign-attestor
+
+# Global evaluation mode
+globalPolicyEvaluationMode: ENABLE
+
+# ============================================================================
+# SETUP INSTRUCTIONS
+# ============================================================================
+
+# Step 1: Create Binary Authorization attestor
+# ----------------------------------------------
+# gcloud container binauthz attestors create cosign-attestor \
+#   --attestation-authority-note=cosign-note \
+#   --attestation-authority-note-project=PROJECT_ID
+
+# Step 2: Create note for attestations
+# -------------------------------------
+# First, create a note in Container Analysis:
+# cat > /tmp/note_payload.json << EOF
+# {
+#   "name": "projects/PROJECT_ID/notes/cosign-note",
+#   "attestation": {
+#     "hint": {
+#       "human_readable_name": "Cosign image signature attestation"
+#     }
+#   }
+# }
+# EOF
+#
+# curl -X POST \
+#   -H "Content-Type: application/json" \
+#   -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+#   --data-binary @/tmp/note_payload.json \
+#   "https://containeranalysis.googleapis.com/v1/projects/PROJECT_ID/notes/?noteId=cosign-note"
+
+# Step 3: Associate KMS key with attestor
+# ----------------------------------------
+# gcloud container binauthz attestors public-keys add \
+#   --attestor=cosign-attestor \
+#   --keyversion-project=PROJECT_ID \
+#   --keyversion-location=us-central1 \
+#   --keyversion-keyring=tk8s-keyring \
+#   --keyversion-key=cosign-key \
+#   --keyversion=1
+
+# Step 4: Import this policy
+# ---------------------------
+# gcloud container binauthz policy import binary-authorization-policy.yaml
+
+# Step 5: Enable Binary Authorization on GKE cluster
+# ---------------------------------------------------
+# gcloud container clusters update tk8s-prod \
+#   --enable-binauthz \
+#   --zone=us-central1-a
+
+# Step 6: Create attestation during image signing
+# ------------------------------------------------
+# When signing images with Cosign, create Binary Authorization attestation:
+#
+# IMAGE="gcr.io/PROJECT_ID/project-ai-core:v1.0.0"
+# IMAGE_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $IMAGE | cut -d'@' -f2)
+#
+# # Sign with Cosign
+# COSIGN_EXPERIMENTAL=1 cosign sign \
+#   --key gcpkms://projects/PROJECT_ID/locations/us-central1/keyRings/tk8s-keyring/cryptoKeys/cosign-key \
+#   $IMAGE
+#
+# # Create Binary Authorization attestation
+# gcloud container binauthz attestations sign-and-create \
+#   --artifact-url="gcr.io/PROJECT_ID/project-ai-core@${IMAGE_DIGEST}" \
+#   --attestor=cosign-attestor \
+#   --attestor-project=PROJECT_ID \
+#   --keyversion-project=PROJECT_ID \
+#   --keyversion-location=us-central1 \
+#   --keyversion-keyring=tk8s-keyring \
+#   --keyversion-key=cosign-key \
+#   --keyversion=1
+
+# ============================================================================
+# VERIFICATION
+# ============================================================================
+
+# Check policy status:
+# gcloud container binauthz policy export
+
+# Check attestations for an image:
+# gcloud container binauthz attestations list \
+#   --attestor=cosign-attestor \
+#   --attestor-project=PROJECT_ID
+
+# Test deployment (should be blocked if not signed):
+# kubectl run test --image=nginx:latest
+# (This should be DENIED by Binary Authorization)
+
+# View audit logs:
+# gcloud logging read 'resource.type="k8s_cluster" AND protoPayload.methodName="io.k8s.core.v1.pods.create"' \
+#   --limit 50 \
+#   --format json

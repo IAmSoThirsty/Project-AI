@@ -1,0 +1,279 @@
+---
+# DEFAULT DENY NETWORK POLICIES
+# Zero-trust network model: deny all traffic by default
+# All ingress and egress must be explicitly allowed
+
+# ============================================================================
+# PROJECT-AI-PRODUCTION NAMESPACE
+# ============================================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: project-ai-production
+  labels:
+    app.kubernetes.io/name: project-ai
+    app.kubernetes.io/component: security
+    security.project-ai.io/policy: default-deny
+  annotations:
+    description: "Default deny all ingress and egress traffic"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+
+---
+# ============================================================================
+# PROJECT-AI-STAGING NAMESPACE
+# ============================================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: project-ai-staging
+  labels:
+    app.kubernetes.io/name: project-ai
+    app.kubernetes.io/component: security
+    security.project-ai.io/policy: default-deny
+  annotations:
+    description: "Default deny all ingress and egress traffic"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+
+---
+# ============================================================================
+# PROJECT-AI-CORE NAMESPACE (Production Services)
+# ============================================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: project-ai-core
+  labels:
+    app.kubernetes.io/name: project-ai
+    app.kubernetes.io/component: security
+    security.project-ai.io/policy: default-deny
+  annotations:
+    description: "Default deny all ingress and egress traffic - explicit allow required"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+
+---
+# Allow DNS resolution for project-ai-core
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-dns
+  namespace: project-ai-core
+  labels:
+    app.kubernetes.io/name: project-ai
+    security.project-ai.io/policy: allow-dns
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+
+---
+# ============================================================================
+# PROJECT-AI-SECURITY NAMESPACE
+# ============================================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: project-ai-security
+  labels:
+    app.kubernetes.io/name: project-ai
+    app.kubernetes.io/component: security
+    security.project-ai.io/policy: default-deny
+  annotations:
+    description: "Default deny all ingress and egress traffic"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+
+---
+# ============================================================================
+# PROJECT-AI-MEMORY NAMESPACE
+# ============================================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: project-ai-memory
+  labels:
+    app.kubernetes.io/name: project-ai
+    app.kubernetes.io/component: security
+    security.project-ai.io/policy: default-deny
+  annotations:
+    description: "Default deny all ingress and egress traffic"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+
+---
+# ============================================================================
+# PROJECT-AI-ECA NAMESPACE (External Cognition Amplifier - Maximum Isolation)
+# ============================================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: project-ai-eca
+  labels:
+    app.kubernetes.io/name: project-ai
+    app.kubernetes.io/component: security
+    security.project-ai.io/policy: default-deny
+    security.tk8s.io/isolation: maximum
+  annotations:
+    description: "Default deny all ingress and egress traffic - maximum isolation"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+
+---
+# ============================================================================
+# KYVERNO NAMESPACE PROTECTION
+# ============================================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: kyverno
+  labels:
+    app.kubernetes.io/name: kyverno
+    app.kubernetes.io/component: security
+    security.project-ai.io/policy: default-deny
+  annotations:
+    description: "Default deny all ingress and egress - Kyverno namespace protection"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+
+---
+# Allow Kyverno webhook traffic
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-kyverno-webhook
+  namespace: kyverno
+  labels:
+    app.kubernetes.io/name: kyverno
+    security.project-ai.io/policy: allow-webhook
+spec:
+  podSelector:
+    matchLabels:
+      app: kyverno
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Allow webhook calls from API server
+    - from:
+        - namespaceSelector: {}
+      ports:
+        - protocol: TCP
+          port: 9443
+  egress:
+    # Allow DNS resolution
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    # Allow API server communication
+    - to:
+        - namespaceSelector: {}
+      ports:
+        - protocol: TCP
+          port: 443
+        - protocol: TCP
+          port: 6443
+
+---
+# ============================================================================
+# DEPLOYMENT INSTRUCTIONS
+# ============================================================================
+# 
+# Before applying these policies:
+# 1. Ensure you have explicit allow policies for required traffic
+# 2. Test in a staging environment first
+# 3. Monitor logs for denied connections
+# 4. Gradually roll out to production
+#
+# Apply policies:
+#   kubectl apply -f default-deny-network-policies.yaml
+#
+# Verify policies:
+#   kubectl get networkpolicies -A
+#
+# Test connectivity:
+#   kubectl run test-pod --image=busybox -n project-ai-core -- sleep 3600
+#   kubectl exec -it test-pod -n project-ai-core -- wget -O- google.com
+#   (This should fail due to default deny egress)
+#
+# Monitor denied traffic:
+#   kubectl logs -n kube-system -l component=kube-proxy --tail=100 | grep DROP
+#
+# ============================================================================
+# IMPORTANT NOTES
+# ============================================================================
+#
+# 1. These policies implement a zero-trust network model
+# 2. ALL traffic is denied by default
+# 3. You MUST create explicit allow policies for:
+#    - Pod-to-pod communication within namespace
+#    - Ingress from load balancers
+#    - Egress to external APIs
+#    - Database connections
+# 4. DNS is explicitly allowed for most namespaces
+# 5. Kyverno namespace has special rules for webhook operation
+# 6. ECA namespace has maximum isolation (no cross-namespace communication)
+#
+# ============================================================================
+# ROLLBACK
+# ============================================================================
+#
+# If you need to remove these policies:
+#   kubectl delete networkpolicy default-deny-all -n project-ai-production
+#   kubectl delete networkpolicy default-deny-all -n project-ai-staging
+#   kubectl delete networkpolicy default-deny-all -n project-ai-core
+#   kubectl delete networkpolicy default-deny-all -n project-ai-security
+#   kubectl delete networkpolicy default-deny-all -n project-ai-memory
+#   kubectl delete networkpolicy default-deny-all -n project-ai-eca
+#   kubectl delete networkpolicy default-deny-all -n kyverno
