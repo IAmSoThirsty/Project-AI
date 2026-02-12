@@ -1,7 +1,7 @@
 # Project-AI Archive Index
 
 **Last Updated**: 2026-02-12  
-**Total Archived Documents**: 157 files  
+**Total Archived Documents**: 168 files  
 **Purpose**: Historical memory and audit trail of completed work
 
 ---
@@ -16,7 +16,7 @@ This archive contains historical implementation documentation, completion summar
 docs/internal/archive/
 ├── ARCHIVE_INDEX.md (this file)
 ├── root-summaries/ (22 files) - Previously in root, archived 2026-02-08 and 2026-02-12
-├── subsystem-implementations/ (15 files) - Subsystem completion summaries, archived 2026-02-12
+├── subsystem-implementations/ (26 files) - Subsystem completion summaries, archived 2026-02-12
 ├── adversarial-completion/ (5 files) - Adversarial testing completion docs
 ├── historical-summaries/ (9 files) - Historical project summaries
 ├── security-incident-jan2026/ (4 files) - Security incident documentation
@@ -62,11 +62,22 @@ docs/internal/archive/
 | GRADLE_DB_IMPLEMENTATION_SUMMARY.md | Historical | Gradle | Database gradle integration |
 | GRADLE_IR_IMPLEMENTATION_SUMMARY.md | Historical | Gradle | IR gradle integration |
 | TK8S_IMPLEMENTATION_SUMMARY.md | Historical | K8s | TK8s implementation completion |
+| AI-INDIVIDUAL-ROLE-IMPLEMENTATION-SUMMARY.md | 2026-02-03 | Core | AI role implementation complete |
+| ANTIGRAVITY_IMPLEMENTATION_SUMMARY.md | 2026-01-28 | Integration | Antigravity IDE integration complete |
+| AUTOMATION_IMPLEMENTATION_SUMMARY.md | Historical | CI/CD | Repository automation implementation complete |
+| E2E_IMPLEMENTATION_COMPLETE.md | Historical | Testing | E2E evaluation pipeline complete |
+| FORMAL-PROOFS-AND-ADVERSARIAL-TESTING-SUMMARY.md | 2026-02-03 | Testing | Formal proofs and adversarial testing complete |
+| HARDENING_IMPLEMENTATION_SUMMARY.md | 2026-02-08 | Security | Repository hardening complete |
+| IMPLEMENTATION_COMPLETE.md | Historical | Project | General implementation completion |
+| MCP_IMPLEMENTATION_SUMMARY.md | Historical | Integration | Model Context Protocol implementation |
+| MONITORING_IMPLEMENTATION_SUMMARY.md | Historical | Infrastructure | Monitoring stack implementation |
+| NEW_TEMPORAL_INTEGRATION_SUMMARY.md | 2026-01-20 | Integration | Temporal.io integration complete |
 
 ### Other Archived Documentation
 | File | Date | Type | Reason |
 |------|------|------|--------|
 | CLEANUP_SUMMARY_2026-02-08.md | 2026-02-08 | Maintenance | Historical cleanup report - work complete |
+| SYNC_CLEANUP_2026-01-31.md | 2026-01-31 | Maintenance | Historical sync cleanup report |
 
 ---
 
@@ -336,13 +347,13 @@ git log --follow docs/internal/archive/FILENAME.md
 
 ## Archive Statistics
 
-- **Total Files**: 157
+- **Total Files**: 168
 - **Root-Summaries**: 22 (archived 2026-02-08, 2026-02-12)
-- **Subsystem-Implementations**: 15 (archived 2026-02-12)
+- **Subsystem-Implementations**: 26 (archived 2026-02-12)
 - **Main Archive**: 76
-- **Subdirectories**: 5 (root-summaries, subsystem-implementations, adversarial-completion, historical-summaries, security-incident-jan2026, session-notes)
+- **Subdirectories**: 6 (root-summaries, subsystem-implementations, adversarial-completion, historical-summaries, security-incident-jan2026, session-notes)
 - **Date Range**: 2025-12 to 2026-02-12
-- **Subsystems Covered**: 15+ (Infrastructure, Security, TARL, Testing, Architecture, Engines, Web, Unity, etc.)
+- **Subsystems Covered**: 20+ (Infrastructure, Security, TARL, Testing, Architecture, Engines, Web, Unity, Integration, Monitoring, etc.)
 
 ---
 
