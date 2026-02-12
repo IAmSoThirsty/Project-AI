@@ -22,7 +22,7 @@ from typing import Any, Dict, Optional, Protocol
 
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 from .exceptions import ConfigurationError, SecurityError
 
@@ -47,7 +47,7 @@ class Secret:
     key: str
     value: str
     secret_type: SecretType
-    created_at: datetime = field(default_factory=datetime.utcnow)
+    created_at: datetime = field(default_factory=lambda: datetime.now(datetime.UTC) if hasattr(datetime, 'UTC') else datetime.utcnow())
     expires_at: Optional[datetime] = None
     rotation_required: bool = False
     metadata: Dict[str, Any] = field(default_factory=dict)
@@ -56,7 +56,8 @@ class Secret:
         """Check if secret has expired."""
         if self.expires_at is None:
             return False
-        return datetime.utcnow() > self.expires_at
+        now = datetime.now(datetime.UTC) if hasattr(datetime, 'UTC') else datetime.utcnow()
+        return now > self.expires_at
     
     def needs_rotation(self) -> bool:
         """Check if secret needs rotation."""
@@ -182,7 +183,8 @@ class EncryptedFileSecretStore:
         """Store secret in encrypted store."""
         expires_at = None
         if expires_in_days:
-            expires_at = datetime.utcnow() + timedelta(days=expires_in_days)
+            now = datetime.now(datetime.UTC) if hasattr(datetime, 'UTC') else datetime.utcnow()
+            expires_at = now + timedelta(days=expires_in_days)
         
         secret = Secret(
             key=key,
@@ -214,7 +216,7 @@ class EncryptedFileSecretStore:
         
         secret = self._secrets[key]
         secret.value = new_value
-        secret.created_at = datetime.utcnow()
+        secret.created_at = datetime.now(datetime.UTC) if hasattr(datetime, 'UTC') else datetime.utcnow()
         secret.rotation_required = False
         
         self._save_secrets()
@@ -469,7 +471,7 @@ class SecretsManager:
         if salt is None:
             salt = os.urandom(16)
         
-        kdf = PBKDF2(
+        kdf = PBKDF2HMAC(
             algorithm=hashes.SHA256(),
             length=32,
             salt=salt,

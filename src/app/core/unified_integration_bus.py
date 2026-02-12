@@ -69,7 +69,7 @@ class TraceContext:
     trace_id: str = field(default_factory=lambda: str(uuid4()))
     span_id: str = field(default_factory=lambda: str(uuid4()))
     parent_span_id: Optional[str] = None
-    timestamp: datetime = field(default_factory=datetime.utcnow)
+    timestamp: datetime = field(default_factory=lambda: datetime.now(datetime.UTC) if hasattr(datetime, 'UTC') else datetime.utcnow())
     baggage: Dict[str, Any] = field(default_factory=dict)
     
     def create_child_span(self) -> 'TraceContext':
@@ -196,7 +196,7 @@ class ServiceDescriptor:
     state: ServiceState = ServiceState.REGISTERED
     circuit_breaker: Optional[CircuitBreaker] = None
     metadata: Dict[str, Any] = field(default_factory=dict)
-    registered_at: datetime = field(default_factory=datetime.utcnow)
+    registered_at: datetime = field(default_factory=lambda: datetime.now(datetime.UTC) if hasattr(datetime, 'UTC') else datetime.utcnow())
     last_health_check: Optional[datetime] = None
     
     def is_available(self) -> bool:
@@ -210,7 +210,7 @@ class Event:
     event_type: str
     data: Any
     trace_context: TraceContext
-    timestamp: datetime = field(default_factory=datetime.utcnow)
+    timestamp: datetime = field(default_factory=lambda: datetime.now(datetime.UTC) if hasattr(datetime, 'UTC') else datetime.utcnow())
     metadata: Dict[str, Any] = field(default_factory=dict)
 
 
@@ -296,6 +296,9 @@ class UnifiedIntegrationBus:
                 except Exception as e:
                     logger.error(f"Initial health check failed for {service_id}: {e}")
                     descriptor.state = ServiceState.UNHEALTHY
+            else:
+                # If no health check provided, assume healthy after registration
+                descriptor.state = ServiceState.HEALTHY
             
             logger.info(f"Service registered: {service_id} (priority={priority.name}, state={descriptor.state.value})")
     
@@ -349,7 +352,7 @@ class UnifiedIntegrationBus:
             
             try:
                 is_healthy = descriptor.health_check()
-                descriptor.last_health_check = datetime.utcnow()
+                descriptor.last_health_check = datetime.now(datetime.UTC) if hasattr(datetime, 'UTC') else datetime.utcnow()
                 
                 if is_healthy:
                     if descriptor.state in (ServiceState.UNHEALTHY, ServiceState.DEGRADED):
