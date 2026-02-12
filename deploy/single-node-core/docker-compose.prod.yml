@@ -1,0 +1,394 @@
+# ==============================================================================
+# Project-AI Production Stack with Full Observability
+# ==============================================================================
+# 
+# Extends base docker-compose.yml with production monitoring:
+# - Prometheus (metrics collection)
+# - Grafana (visualization)
+# - AlertManager (alerting)
+# - Loki (log aggregation)
+# - Promtail (log shipping)
+# - Node Exporter (system metrics)
+# - cAdvisor (container metrics)
+# - Postgres Exporter (database metrics)
+# - Redis Exporter (cache metrics)
+#
+# Usage: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+# ==============================================================================
+
+version: '3.8'
+
+services:
+  
+  # ============================================================================
+  # PROMETHEUS - Metrics Collection and Time Series Database
+  # ============================================================================
+  prometheus:
+    image: prom/prometheus:v2.48.0
+    container_name: project-ai-prometheus
+    hostname: prometheus
+    restart: unless-stopped
+    user: "nobody"
+    
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+      - '--storage.tsdb.retention.size=50GB'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.enable-lifecycle'
+      - '--web.enable-admin-api'
+    
+    networks:
+      - project-ai-core
+    
+    ports:
+      - "9090:9090"
+    
+    volumes:
+      - prometheus-data:/prometheus
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/prometheus/alerts:/etc/prometheus/alerts:ro
+    
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+  
+  # ============================================================================
+  # GRAFANA - Metrics Visualization and Dashboards
+  # ============================================================================
+  grafana:
+    image: grafana/grafana:10.2.2
+    container_name: project-ai-grafana
+    hostname: grafana
+    restart: unless-stopped
+    user: "472"
+    
+    networks:
+      - project-ai-core
+    
+    ports:
+      - "3000:3000"
+    
+    environment:
+      # Admin credentials
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:?GRAFANA_ADMIN_PASSWORD must be set}
+      
+      # Server configuration
+      GF_SERVER_ROOT_URL: ${GRAFANA_ROOT_URL:-http://localhost:3000}
+      GF_SERVER_DOMAIN: ${GRAFANA_DOMAIN:-localhost}
+      
+      # Database (using Postgres)
+      GF_DATABASE_TYPE: postgres
+      GF_DATABASE_HOST: postgres:5432
+      GF_DATABASE_NAME: ${POSTGRES_DB:-project_ai}
+      GF_DATABASE_USER: ${POSTGRES_USER:-project_ai}
+      GF_DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+      
+      # Auth
+      GF_AUTH_ANONYMOUS_ENABLED: "false"
+      GF_AUTH_DISABLE_LOGIN_FORM: "false"
+      
+      # Plugins
+      GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-piechart-panel,grafana-worldmap-panel
+      
+      # Alerting
+      GF_ALERTING_ENABLED: "true"
+      GF_UNIFIED_ALERTING_ENABLED: "true"
+    
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    
+    depends_on:
+      prometheus:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+  
+  # ============================================================================
+  # ALERTMANAGER - Alert Routing and Management
+  # ============================================================================
+  alertmanager:
+    image: prom/alertmanager:v0.26.0
+    container_name: project-ai-alertmanager
+    hostname: alertmanager
+    restart: unless-stopped
+    user: "nobody"
+    
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'
+      - '--web.external-url=http://localhost:9093'
+    
+    networks:
+      - project-ai-core
+    
+    ports:
+      - "9093:9093"
+    
+    volumes:
+      - alertmanager-data:/alertmanager
+      - ./monitoring/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+    
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9093/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+  
+  # ============================================================================
+  # LOKI - Log Aggregation System
+  # ============================================================================
+  loki:
+    image: grafana/loki:2.9.3
+    container_name: project-ai-loki
+    hostname: loki
+    restart: unless-stopped
+    user: "10001"
+    
+    command: -config.file=/etc/loki/loki.yml
+    
+    networks:
+      - project-ai-core
+    
+    ports:
+      - "3100:3100"
+    
+    volumes:
+      - loki-data:/loki
+      - ./monitoring/loki/loki.yml:/etc/loki/loki.yml:ro
+    
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3100/ready"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+  
+  # ============================================================================
+  # PROMTAIL - Log Shipping Agent
+  # ============================================================================
+  promtail:
+    image: grafana/promtail:2.9.3
+    container_name: project-ai-promtail
+    hostname: promtail
+    restart: unless-stopped
+    user: root
+    
+    command: -config.file=/etc/promtail/promtail.yml
+    
+    networks:
+      - project-ai-core
+    
+    volumes:
+      - ./monitoring/promtail/promtail.yml:/etc/promtail/promtail.yml:ro
+      - /var/log:/var/log:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - ./logs:/app/logs:ro
+    
+    depends_on:
+      - loki
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+  
+  # ============================================================================
+  # NODE EXPORTER - System Metrics
+  # ============================================================================
+  node-exporter:
+    image: prom/node-exporter:v1.7.0
+    container_name: project-ai-node-exporter
+    hostname: node-exporter
+    restart: unless-stopped
+    
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+      - '--collector.netclass.ignored-devices=^(veth.*|docker.*|br-.*)$$'
+    
+    networks:
+      - project-ai-core
+    
+    ports:
+      - "9100:9100"
+    
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 128M
+  
+  # ============================================================================
+  # CADVISOR - Container Metrics
+  # ============================================================================
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.48.1
+    container_name: project-ai-cadvisor
+    hostname: cadvisor
+    restart: unless-stopped
+    privileged: true
+    
+    networks:
+      - project-ai-core
+    
+    ports:
+      - "8080:8080"
+    
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    
+    devices:
+      - /dev/kmsg
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+  
+  # ============================================================================
+  # POSTGRES EXPORTER - Database Metrics
+  # ============================================================================
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:v0.15.0
+    container_name: project-ai-postgres-exporter
+    hostname: postgres-exporter
+    restart: unless-stopped
+    
+    networks:
+      - project-ai-core
+    
+    ports:
+      - "9187:9187"
+    
+    environment:
+      DATA_SOURCE_NAME: "postgresql://${POSTGRES_USER:-project_ai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-project_ai}?sslmode=disable"
+      PG_EXPORTER_EXTEND_QUERY_PATH: /etc/postgres_exporter/queries.yaml
+    
+    volumes:
+      - ./monitoring/postgres-exporter/queries.yaml:/etc/postgres_exporter/queries.yaml:ro
+    
+    depends_on:
+      postgres:
+        condition: service_healthy
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 128M
+  
+  # ============================================================================
+  # REDIS EXPORTER - Cache Metrics
+  # ============================================================================
+  redis-exporter:
+    image: oliver006/redis_exporter:v1.55.0
+    container_name: project-ai-redis-exporter
+    hostname: redis-exporter
+    restart: unless-stopped
+    
+    command:
+      - '--redis.addr=redis://redis:6379'
+      - '--redis.password=${REDIS_PASSWORD}'
+    
+    networks:
+      - project-ai-core
+    
+    ports:
+      - "9121:9121"
+    
+    depends_on:
+      redis:
+        condition: service_healthy
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 128M
+
+# ==============================================================================
+# ADDITIONAL VOLUMES
+# ==============================================================================
+volumes:
+  prometheus-data:
+    driver: local
+    name: project-ai-prometheus-data
+  
+  grafana-data:
+    driver: local
+    name: project-ai-grafana-data
+  
+  alertmanager-data:
+    driver: local
+    name: project-ai-alertmanager-data
+  
+  loki-data:
+    driver: local
+    name: project-ai-loki-data
