@@ -1,0 +1,425 @@
+# ==============================================================================
+# MCP Server Registry - Project-AI Core Stack
+# ==============================================================================
+#
+# This registry defines all MCP servers available in the Project-AI ecosystem.
+# Each server exposes tools, resources, and prompts that can be used by AI
+# agents and the core orchestrator.
+#
+# Registry entries define:
+# - Server identity and metadata
+# - Connection configuration
+# - Authentication and authorization
+# - Health checks and monitoring
+# - Capability declarations
+#
+# ==============================================================================
+
+# Registry metadata
+metadata:
+  name: project-ai-mcp-registry
+  version: "1.0.0"
+  updated_at: "2024-01-01T00:00:00Z"
+  description: "Central registry of MCP servers for Project-AI core stack"
+
+# ==============================================================================
+# MCP SERVERS
+# ==============================================================================
+servers:
+  
+  # ============================================================================
+  # PROJECT-AI CORE SERVER
+  # ============================================================================
+  - id: project-ai-core
+    name: Project-AI Core MCP Server
+    description: |
+      Core Project-AI functionality exposed via MCP, including AI ethics
+      validation, persona management, memory expansion, learning systems,
+      data analysis, and image generation.
+    
+    # Server type and version
+    type: stdio  # stdio, http, grpc
+    version: "1.0.0"
+    
+    # Connection configuration
+    connection:
+      command: python
+      args:
+        - "-m"
+        - "src.app.core.mcp_server"
+      env:
+        PYTHONPATH: "/app/src"
+        OPENAI_API_KEY: ${OPENAI_API_KEY}
+        HUGGINGFACE_API_KEY: ${HUGGINGFACE_API_KEY}
+        FERNET_KEY: ${FERNET_KEY}
+      working_directory: /app
+      timeout: 30
+    
+    # Capabilities
+    capabilities:
+      tools: true
+      resources: true
+      prompts: true
+      sampling: false
+    
+    # Tool declarations
+    tools:
+      count: 14
+      categories:
+        - ethics
+        - persona
+        - memory
+        - learning
+        - security
+        - analysis
+        - generation
+    
+    # Health check
+    health_check:
+      enabled: true
+      interval: 30
+      timeout: 5
+      retries: 3
+    
+    # Metadata
+    metadata:
+      author: Project-AI Team
+      homepage: https://github.com/IAmSoThirsty/Project-AI
+      license: MIT
+      tags:
+        - ai-ethics
+        - asimovs-laws
+        - memory-expansion
+        - autonomous-learning
+        - image-generation
+  
+  # ============================================================================
+  # MEMORY SERVER (Vector Memory and Knowledge Base)
+  # ============================================================================
+  - id: memory-server
+    name: Project-AI Memory Server
+    description: |
+      Vector memory storage and retrieval system using pgvector. Provides
+      semantic search, knowledge base management, and conversation history
+      with embedding-based similarity.
+    
+    type: http
+    version: "1.0.0"
+    
+    connection:
+      url: http://project-ai-orchestrator:8002
+      auth:
+        type: api_key
+        header: X-Memory-API-Key
+        key: ${MEMORY_SERVER_API_KEY}
+      timeout: 30
+      retry:
+        enabled: true
+        max_attempts: 3
+    
+    capabilities:
+      tools: true
+      resources: true
+      prompts: false
+      sampling: false
+    
+    tools:
+      - name: store_memory
+        description: Store conversation or knowledge embedding
+      - name: search_memory
+        description: Semantic search across memory embeddings
+      - name: retrieve_memory
+        description: Retrieve specific memory by ID
+      - name: update_memory
+        description: Update existing memory entry
+      - name: delete_memory
+        description: Delete memory entry
+    
+    resources:
+      - uri: memory://conversations/{id}
+        name: Conversation memory
+      - uri: memory://knowledge/{category}
+        name: Knowledge base by category
+    
+    health_check:
+      enabled: true
+      endpoint: /health
+      interval: 30
+      timeout: 5
+      expected_status: 200
+    
+    metadata:
+      storage_backend: postgres-pgvector
+      vector_dimensions: 1536
+      embedding_model: text-embedding-3-small
+  
+  # ============================================================================
+  # FUTURE SERVERS (ready for expansion)
+  # ============================================================================
+  
+  # File System MCP Server (when needed)
+  - id: filesystem
+    name: File System Server
+    description: Secure file system access with sandboxing
+    type: stdio
+    version: "1.0.0"
+    enabled: false  # Enable when filesystem access is needed
+    
+    connection:
+      command: npx
+      args:
+        - "-y"
+        - "@modelcontextprotocol/server-filesystem"
+        - "/app/data/fs-sandbox"
+      env:
+        NODE_ENV: production
+      timeout: 30
+    
+    capabilities:
+      tools: true
+      resources: true
+      prompts: false
+    
+    security:
+      sandboxed: true
+      allowed_paths:
+        - /app/data/fs-sandbox
+      denied_paths:
+        - /etc
+        - /sys
+        - /proc
+      max_file_size_mb: 100
+  
+  # GitHub MCP Server (for code analysis)
+  - id: github
+    name: GitHub MCP Server
+    description: GitHub API integration for code analysis and issue tracking
+    type: stdio
+    version: "1.0.0"
+    enabled: false  # Enable when GitHub integration is needed
+    
+    connection:
+      command: npx
+      args:
+        - "-y"
+        - "@modelcontextprotocol/server-github"
+      env:
+        GITHUB_TOKEN: ${GITHUB_MCP_TOKEN}
+      timeout: 30
+    
+    capabilities:
+      tools: true
+      resources: true
+      prompts: true
+    
+    metadata:
+      api_url: https://api.github.com
+      rate_limit: 5000
+  
+  # Brave Search MCP Server (for web search)
+  - id: brave-search
+    name: Brave Search Server
+    description: Web search capabilities via Brave Search API
+    type: stdio
+    version: "1.0.0"
+    enabled: false  # Enable when web search is needed
+    
+    connection:
+      command: npx
+      args:
+        - "-y"
+        - "@modelcontextprotocol/server-brave-search"
+      env:
+        BRAVE_API_KEY: ${BRAVE_SEARCH_API_KEY}
+      timeout: 30
+    
+    capabilities:
+      tools: true
+      resources: false
+      prompts: false
+    
+    metadata:
+      max_results: 20
+      safe_search: strict
+  
+  # Google Drive MCP Server (for document access)
+  - id: google-drive
+    name: Google Drive Server
+    description: Access and manage Google Drive documents
+    type: stdio
+    version: "1.0.0"
+    enabled: false
+    
+    connection:
+      command: npx
+      args:
+        - "-y"
+        - "@modelcontextprotocol/server-gdrive"
+      env:
+        GOOGLE_DRIVE_CREDENTIALS: ${GOOGLE_DRIVE_CREDENTIALS}
+      timeout: 30
+    
+    capabilities:
+      tools: true
+      resources: true
+      prompts: false
+  
+  # PostgreSQL MCP Server (for direct database queries)
+  - id: postgres-query
+    name: PostgreSQL Query Server
+    description: Direct SQL query interface with safety constraints
+    type: stdio
+    version: "1.0.0"
+    enabled: false  # Enable with caution - direct DB access
+    
+    connection:
+      command: npx
+      args:
+        - "-y"
+        - "@modelcontextprotocol/server-postgres"
+        - "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}"
+      timeout: 30
+    
+    capabilities:
+      tools: true
+      resources: true
+      prompts: false
+    
+    security:
+      read_only: true  # Enforce read-only for safety
+      allowed_tables:
+        - vector_memory
+        - mcp_conversations
+      denied_operations:
+        - DROP
+        - TRUNCATE
+        - DELETE
+        - UPDATE
+
+# ==============================================================================
+# REGISTRY CONFIGURATION
+# ==============================================================================
+configuration:
+  # Auto-discovery of new servers
+  auto_discovery:
+    enabled: false
+    scan_interval: 300  # 5 minutes
+    scan_paths:
+      - /etc/mcp/servers
+  
+  # Server lifecycle management
+  lifecycle:
+    # Restart failed servers
+    auto_restart: true
+    restart_delay: 5
+    max_restarts: 3
+    
+    # Server health monitoring
+    health_check_interval: 30
+    unhealthy_threshold: 3
+  
+  # Load balancing (for future horizontal scaling)
+  load_balancing:
+    enabled: false
+    strategy: round_robin  # round_robin, least_connections, random
+    sticky_sessions: false
+  
+  # Server versioning
+  versioning:
+    strategy: semver
+    allow_multiple_versions: false
+    auto_upgrade: false
+
+# ==============================================================================
+# SECURITY POLICIES
+# ==============================================================================
+security:
+  # Server isolation
+  isolation:
+    enabled: true
+    method: process  # process, container, vm
+  
+  # Resource limits per server
+  limits:
+    max_memory_mb: 1024
+    max_cpu_percent: 50
+    max_connections: 100
+    max_request_size_mb: 10
+  
+  # Allowed capabilities
+  allowed_capabilities:
+    - tools
+    - resources
+    - prompts
+  
+  # Audit logging
+  audit:
+    enabled: true
+    log_all_requests: false
+    log_auth_events: true
+    log_errors: true
+
+# ==============================================================================
+# MONITORING AND OBSERVABILITY
+# ==============================================================================
+monitoring:
+  # Metrics collection
+  metrics:
+    enabled: true
+    collect_interval: 60
+    metrics:
+      - server_status
+      - request_count
+      - request_duration
+      - error_rate
+      - active_connections
+  
+  # Logging
+  logging:
+    level: info
+    include_request_body: false
+    include_response_body: false
+  
+  # Alerts
+  alerts:
+    enabled: true
+    conditions:
+      - condition: server_unhealthy
+        threshold: 2
+        duration: 120
+        action: restart
+      - condition: error_rate_high
+        threshold: 10
+        duration: 60
+        action: notify
+
+# ==============================================================================
+# USAGE NOTES
+# ==============================================================================
+#
+# ADDING NEW SERVERS:
+# To add a new MCP server to the registry:
+# 1. Add server entry to the 'servers' list
+# 2. Configure connection parameters
+# 3. Declare capabilities and tools
+# 4. Set health checks and monitoring
+# 5. Reload registry: docker-compose restart mcp-gateway
+#
+# ENABLING DISABLED SERVERS:
+# Change 'enabled: false' to 'enabled: true' and restart the gateway.
+#
+# CUSTOM SERVERS:
+# To add custom MCP servers:
+# 1. Build your server following MCP specification
+# 2. Add entry to this registry
+# 3. Mount server code/binary into gateway container
+# 4. Configure appropriate connection method (stdio/http/grpc)
+#
+# SECURITY CONSIDERATIONS:
+# - Always use authentication for production servers
+# - Restrict filesystem access paths
+# - Use read-only database connections when possible
+# - Enable audit logging for sensitive operations
+# - Set appropriate resource limits
+#
+# ==============================================================================
