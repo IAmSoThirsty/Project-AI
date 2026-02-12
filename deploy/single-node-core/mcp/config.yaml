@@ -1,0 +1,403 @@
+# ==============================================================================
+# MCP Gateway - Production Configuration
+# ==============================================================================
+#
+# This configuration file defines the Model Context Protocol (MCP) gateway
+# settings for the Project-AI core stack. The MCP gateway facilitates
+# communication between AI agents, tools, and the core orchestrator.
+#
+# ==============================================================================
+
+# ==============================================================================
+# SERVER CONFIGURATION
+# ==============================================================================
+server:
+  # Service identity
+  name: project-ai-mcp-gateway
+  version: "1.0.0"
+  environment: production
+  
+  # Network binding
+  host: 0.0.0.0
+  port: 9000
+  
+  # Admin interface
+  admin:
+    enabled: true
+    host: 0.0.0.0
+    port: 9001
+    # Admin endpoints: /health, /metrics, /registry, /catalogs, /config
+  
+  # TLS/SSL configuration (recommended for production)
+  tls:
+    enabled: false  # Set to true for production with proper certificates
+    cert_file: /etc/mcp/tls/server.crt
+    key_file: /etc/mcp/tls/server.key
+    ca_file: /etc/mcp/tls/ca.crt
+    verify_client: false
+
+# ==============================================================================
+# STORAGE BACKENDS
+# ==============================================================================
+storage:
+  # Primary database (PostgreSQL with pgvector)
+  database:
+    type: postgresql
+    connection:
+      host: postgres
+      port: 5432
+      database: project_ai
+      # Credentials loaded from environment
+      username: ${POSTGRES_USER}
+      password: ${POSTGRES_PASSWORD}
+    
+    # Connection pool settings
+    pool:
+      min_size: 5
+      max_size: 20
+      timeout: 30
+      max_lifetime: 3600
+    
+    # Schema settings
+    schema: public
+    tables:
+      conversations: mcp_conversations
+      messages: mcp_messages
+      tools: mcp_tools
+      registry: mcp_registry
+  
+  # Redis cache and message bus
+  redis:
+    type: redis
+    connection:
+      host: redis
+      port: 6379
+      database: 1
+      password: ${REDIS_PASSWORD}
+    
+    # Connection pool
+    pool:
+      min_size: 5
+      max_size: 50
+      timeout: 5
+    
+    # Key prefixes
+    prefixes:
+      cache: "mcp:cache:"
+      lock: "mcp:lock:"
+      pubsub: "mcp:pubsub:"
+      session: "mcp:session:"
+  
+  # Vector memory (pgvector for embeddings)
+  vector:
+    enabled: true
+    dimensions: 1536  # OpenAI text-embedding-3-small
+    similarity_metric: cosine  # cosine, l2, inner_product
+    index_type: ivfflat
+    lists: 100
+
+# ==============================================================================
+# AUTHENTICATION AND AUTHORIZATION
+# ==============================================================================
+auth:
+  # Enable authentication
+  enabled: true
+  
+  # Authentication methods
+  methods:
+    - api_key      # API key in Authorization header
+    - jwt          # JWT token authentication
+    - mtls         # Mutual TLS (when tls.verify_client = true)
+  
+  # API key configuration
+  api_key:
+    header: X-MCP-API-Key
+    query_param: api_key
+    # Keys defined in secrets.env
+  
+  # JWT configuration
+  jwt:
+    secret: ${MCP_JWT_SECRET}
+    algorithm: HS256
+    expiration: 3600  # 1 hour
+    issuer: project-ai-mcp
+    audience: project-ai
+  
+  # Service-to-service authentication
+  service_auth:
+    enabled: true
+    token: ${MCP_SERVICE_TOKEN}
+
+# ==============================================================================
+# RATE LIMITING AND QUOTAS
+# ==============================================================================
+rate_limiting:
+  enabled: true
+  
+  # Global rate limits
+  global:
+    requests_per_minute: 1000
+    requests_per_hour: 10000
+    burst: 100
+  
+  # Per-agent rate limits (by API key)
+  per_agent:
+    requests_per_minute: 100
+    requests_per_hour: 1000
+    burst: 20
+  
+  # Storage for rate limit counters
+  storage: redis  # redis or memory
+  
+  # Rate limit response
+  status_code: 429
+  retry_after_header: true
+
+# ==============================================================================
+# LOGGING AND MONITORING
+# ==============================================================================
+logging:
+  # Log level: debug, info, warning, error, critical
+  level: info
+  
+  # Log format: json or text
+  format: json
+  
+  # Log outputs
+  outputs:
+    - type: stdout
+      level: info
+    - type: file
+      level: info
+      path: /var/log/mcp/gateway.log
+      max_size_mb: 100
+      max_backups: 10
+      compress: true
+  
+  # Request logging
+  requests:
+    enabled: true
+    include_body: false  # Set true for debugging (sensitive data warning)
+    include_headers: false
+  
+  # Structured logging fields
+  fields:
+    service: project-ai-mcp-gateway
+    environment: production
+
+# Metrics and observability
+metrics:
+  enabled: true
+  endpoint: /metrics
+  port: 9001
+  
+  # Prometheus metrics
+  prometheus:
+    enabled: true
+    namespace: mcp
+    subsystem: gateway
+  
+  # Custom metrics
+  custom:
+    - name: mcp_requests_total
+      type: counter
+      labels: [method, endpoint, status]
+    - name: mcp_request_duration_seconds
+      type: histogram
+      labels: [method, endpoint]
+    - name: mcp_active_connections
+      type: gauge
+
+# Distributed tracing
+tracing:
+  enabled: true
+  
+  # OpenTelemetry configuration
+  opentelemetry:
+    endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT}
+    service_name: project-ai-mcp-gateway
+    sampler: parentbased_traceidratio
+    sample_rate: 0.1
+
+# ==============================================================================
+# PERFORMANCE AND RELIABILITY
+# ==============================================================================
+performance:
+  # Timeout settings
+  timeouts:
+    request: 30
+    tool_execution: 60
+    database: 10
+    redis: 5
+  
+  # Connection limits
+  connections:
+    max_concurrent: 1000
+    max_per_agent: 10
+    keepalive: 30
+  
+  # Request size limits
+  limits:
+    max_request_size_mb: 10
+    max_response_size_mb: 10
+    max_batch_size: 100
+  
+  # Retry configuration
+  retry:
+    enabled: true
+    max_attempts: 3
+    backoff: exponential
+    initial_delay_ms: 100
+    max_delay_ms: 5000
+  
+  # Circuit breaker
+  circuit_breaker:
+    enabled: true
+    failure_threshold: 5
+    timeout_seconds: 60
+    half_open_requests: 3
+
+# ==============================================================================
+# CACHING
+# ==============================================================================
+caching:
+  enabled: true
+  backend: redis
+  
+  # Cache TTLs (in seconds)
+  ttl:
+    tools: 3600        # 1 hour
+    registry: 300      # 5 minutes
+    catalogs: 600      # 10 minutes
+    responses: 60      # 1 minute (for idempotent requests)
+  
+  # Cache invalidation
+  invalidation:
+    enabled: true
+    on_update: true
+    on_delete: true
+
+# ==============================================================================
+# REGISTRY AND CATALOG PATHS
+# ==============================================================================
+paths:
+  # MCP server registry
+  registry: /etc/mcp/registry.yaml
+  
+  # Tool catalogs directory
+  catalogs: /etc/mcp/catalogs
+  
+  # Secrets file
+  secrets: /etc/mcp/secrets.env
+  
+  # Working directory
+  working_dir: /var/lib/mcp
+
+# ==============================================================================
+# FEATURE FLAGS
+# ==============================================================================
+features:
+  # Enable specific MCP features
+  tools: true
+  resources: true
+  prompts: true
+  sampling: true
+  
+  # Advanced features
+  streaming: true
+  batch_requests: true
+  webhooks: true
+  
+  # Experimental features
+  experimental:
+    multi_agent: true
+    function_calling: true
+    tool_composition: true
+
+# ==============================================================================
+# WEBHOOKS
+# ==============================================================================
+webhooks:
+  enabled: true
+  
+  # Webhook endpoints to call on events
+  endpoints: []
+    # - url: https://api.example.com/webhooks/mcp
+    #   secret: ${WEBHOOK_SECRET_1}
+    #   events: [tool.executed, conversation.created]
+  
+  # Webhook configuration
+  timeout: 10
+  retries: 3
+  verify_ssl: true
+
+# ==============================================================================
+# BACKUP AND RECOVERY
+# ==============================================================================
+backup:
+  enabled: true
+  schedule: "0 2 * * *"  # Daily at 2 AM
+  retention_days: 30
+  
+  # What to backup
+  include:
+    - conversations
+    - registry
+    - catalogs
+    - configuration
+  
+  # Backup destination
+  destination:
+    type: local  # local, s3, azure, gcs
+    path: /var/lib/mcp/backups
+
+# ==============================================================================
+# SECURITY
+# ==============================================================================
+security:
+  # CORS settings
+  cors:
+    enabled: true
+    allowed_origins:
+      - http://localhost:3000
+      - http://localhost:5000
+      - http://project-ai-orchestrator:5000
+    allowed_methods: [GET, POST, PUT, DELETE, OPTIONS]
+    allowed_headers: [Authorization, Content-Type, X-MCP-API-Key]
+    expose_headers: [X-Request-ID, X-RateLimit-Remaining]
+    max_age: 3600
+  
+  # Request validation
+  validation:
+    enabled: true
+    max_depth: 10
+    max_array_length: 1000
+    max_string_length: 100000
+  
+  # Content Security Policy
+  csp:
+    enabled: false  # Enable if serving web interface
+    policy: "default-src 'self'"
+
+# ==============================================================================
+# NOTES
+# ==============================================================================
+#
+# ENVIRONMENT VARIABLES:
+# - ${POSTGRES_USER}, ${POSTGRES_PASSWORD}: Database credentials
+# - ${REDIS_PASSWORD}: Redis authentication
+# - ${MCP_JWT_SECRET}: JWT signing key
+# - ${MCP_SERVICE_TOKEN}: Service authentication token
+# - ${OTEL_EXPORTER_OTLP_ENDPOINT}: OpenTelemetry endpoint
+#
+# PRODUCTION CHECKLIST:
+# 1. Enable TLS (server.tls.enabled = true)
+# 2. Set strong authentication (auth.enabled = true)
+# 3. Configure rate limiting (rate_limiting.enabled = true)
+# 4. Enable monitoring (metrics.enabled = true, tracing.enabled = true)
+# 5. Set up backups (backup.enabled = true)
+# 6. Review and adjust timeouts (performance.timeouts)
+# 7. Configure circuit breakers (performance.circuit_breaker)
+# 8. Set appropriate log level (logging.level = info)
+#
+# ==============================================================================
