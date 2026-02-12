@@ -141,6 +141,7 @@ Expected workflow results:
 ## Runtime Validation Evidence
 
 <!-- MANDATORY: Read .github/SECURITY_VALIDATION_POLICY.md before completing this section -->
+<!-- Quick Reference: See .github/SECURITY_VALIDATION_CHECKLIST.md for step-by-step guidance -->
 
 **Does this PR claim production-readiness, enterprise best practices, complete forensic capability, or runtime/operational enforcement?**
 

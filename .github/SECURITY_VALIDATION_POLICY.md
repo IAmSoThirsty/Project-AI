@@ -4,6 +4,8 @@
 **Effective Date:** 2026-02-12  
 **Status:** MANDATORY - Strictly Enforced
 
+> **Quick Reference:** See [Security Validation Evidence Checklist](SECURITY_VALIDATION_CHECKLIST.md) for a step-by-step guide.
+
 ---
 
 ## Policy Overview
