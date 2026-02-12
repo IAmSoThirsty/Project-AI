@@ -113,17 +113,31 @@ class StandardStatusUpdater:
         
         content = dockerfile.read_text()
         
-        # Check for non-root user
-        checks['non_root_user'] = bool(re.search(r'USER \S+', content))
+        # Check for non-root user (but not root or UID 0)
+        user_match = re.search(r'USER\s+(\S+)', content)
+        if user_match:
+            user = user_match.group(1)
+            checks['non_root_user'] = user.lower() not in ['root', '0']
+        else:
+            checks['non_root_user'] = False
         
-        # Check for pinned base image
-        checks['pinned_base'] = bool(re.search(r'FROM .+:\d+\.\d+', content))
+        # Check for pinned base image (version number or SHA256)
+        checks['pinned_base'] = bool(re.search(r'FROM .+:(?:\d+\.\d+(?:\.\d+)?|.*@sha256:)', content))
         
         # Check for multi-stage build
         checks['multistage'] = content.count('FROM ') >= 2
         
-        # Check for no shell
-        checks['no_shell'] = '/bin/sh' not in content and '/bin/bash' not in content
+        # Check for no shell in runtime (ENTRYPOINT/CMD, not RUN)
+        # Shell in RUN commands is OK, but not in ENTRYPOINT/CMD
+        entrypoint_cmd_lines = []
+        for line in content.split('\n'):
+            if line.strip().startswith(('ENTRYPOINT', 'CMD')):
+                entrypoint_cmd_lines.append(line)
+        
+        # Check if any ENTRYPOINT/CMD uses shell form with /bin/sh or /bin/bash
+        has_runtime_shell = any('/bin/sh' in line or '/bin/bash' in line 
+                                 for line in entrypoint_cmd_lines)
+        checks['no_shell'] = not has_runtime_shell
         
         return checks
     
