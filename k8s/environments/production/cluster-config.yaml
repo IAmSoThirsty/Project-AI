@@ -1,0 +1,123 @@
+---
+# PRODUCTION CLUSTER CONFIGURATION
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-config
+  namespace: kube-system
+  labels:
+    environment: production
+    cluster: project-ai-production
+data:
+  environment: "production"
+  cluster_name: "project-ai-production"
+  region: "us-central1"
+  isolation_level: "cluster"
+  compliance: "soc2,pci,hipaa,gdpr"
+  
+---
+# Pod Security Standards for PRODUCTION (Restricted)
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: project-ai-production
+  labels:
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted
+    environment: production
+    managed-by: terraform
+    compliance: "soc2,pci,hipaa,gdpr"
+
+---
+# Default-Deny NetworkPolicy for PRODUCTION
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: project-ai-production
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+
+---
+# Allow DNS Resolution
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-dns
+  namespace: project-ai-production
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          name: kube-system
+    ports:
+    - protocol: UDP
+      port: 53
+
+---
+# Allow Intra-Namespace Communication (Explicit)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-intra-namespace
+  namespace: project-ai-production
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector: {}
+  egress:
+  - to:
+    - podSelector: {}
+
+---
+# ResourceQuota for PRODUCTION
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: production-quota
+  namespace: project-ai-production
+spec:
+  hard:
+    requests.cpu: "50"
+    requests.memory: "100Gi"
+    limits.cpu: "100"
+    limits.memory: "200Gi"
+    persistentvolumeclaims: "50"
+    services.loadbalancers: "5"
+
+---
+# LimitRange for PRODUCTION
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: production-limits
+  namespace: project-ai-production
+spec:
+  limits:
+  - max:
+      cpu: "16"
+      memory: "32Gi"
+    min:
+      cpu: "100m"
+      memory: "128Mi"
+    type: Container
+  - max:
+      cpu: "32"
+      memory: "64Gi"
+    min:
+      cpu: "200m"
+      memory: "256Mi"
+    type: Pod

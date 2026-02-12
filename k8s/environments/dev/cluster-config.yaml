@@ -1,0 +1,123 @@
+---
+# Multi-Environment Cluster Configuration
+# Separate clusters for dev, staging, and production with dedicated resources
+
+# DEV CLUSTER CONFIGURATION
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-config
+  namespace: kube-system
+  labels:
+    environment: dev
+    cluster: project-ai-dev
+data:
+  environment: "dev"
+  cluster_name: "project-ai-dev"
+  region: "us-central1"
+  isolation_level: "logical"
+  
+---
+# Pod Security Standards for DEV
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: project-ai-dev
+  labels:
+    pod-security.kubernetes.io/enforce: baseline
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted
+    environment: dev
+    managed-by: terraform
+
+---
+# Default-Deny NetworkPolicy for DEV
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: project-ai-dev
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+
+---
+# Allow DNS Resolution
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-dns
+  namespace: project-ai-dev
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          name: kube-system
+    ports:
+    - protocol: UDP
+      port: 53
+
+---
+# Allow Intra-Namespace Communication (Explicit)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-intra-namespace
+  namespace: project-ai-dev
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector: {}
+  egress:
+  - to:
+    - podSelector: {}
+
+---
+# ResourceQuota for DEV
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: dev-quota
+  namespace: project-ai-dev
+spec:
+  hard:
+    requests.cpu: "10"
+    requests.memory: "20Gi"
+    limits.cpu: "20"
+    limits.memory: "40Gi"
+    persistentvolumeclaims: "10"
+    services.loadbalancers: "2"
+
+---
+# LimitRange for DEV
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: dev-limits
+  namespace: project-ai-dev
+spec:
+  limits:
+  - max:
+      cpu: "4"
+      memory: "8Gi"
+    min:
+      cpu: "100m"
+      memory: "128Mi"
+    type: Container
+  - max:
+      cpu: "8"
+      memory: "16Gi"
+    min:
+      cpu: "200m"
+      memory: "256Mi"
+    type: Pod
