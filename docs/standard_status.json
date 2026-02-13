@@ -1,0 +1,39 @@
+{
+  "timestamp": "2026-02-13T00:03:43.064437Z",
+  "overall_percentage": 64,
+  "categories": {
+    "test_coverage": 16,
+    "security_scans": 50,
+    "docker_security": 75,
+    "kubernetes_config": 100,
+    "documentation": 80
+  },
+  "details": {
+    "security_scans": {
+      "bandit": false,
+      "codeql": false,
+      "trivy": true,
+      "dependabot": true
+    },
+    "docker_security": {
+      "non_root_user": false,
+      "pinned_base": true,
+      "multistage": true,
+      "no_shell": true
+    },
+    "kubernetes_config": {
+      "readiness_probe": true,
+      "liveness_probe": true,
+      "resource_limits": true,
+      "security_context": true,
+      "network_policy": true
+    },
+    "documentation": {
+      "architecture_diagram": true,
+      "threat_model": true,
+      "deployment_guide": true,
+      "incident_response": true,
+      "recovery_guide": false
+    }
+  }
+}
