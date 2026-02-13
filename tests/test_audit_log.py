@@ -7,6 +7,7 @@ This test suite validates:
 - Chain verification
 - Event retrieval
 - Tamper detection
+- New features: rotation, compression, export, statistics
 """
 
 import tempfile
@@ -14,7 +15,10 @@ from pathlib import Path
 
 import yaml
 
-from app.governance.audit_log import AuditLog
+try:
+    from app.governance.audit_log import AuditLog
+except ImportError:
+    from src.app.governance.audit_log import AuditLog
 
 
 class TestAuditLog:
@@ -238,3 +242,199 @@ class TestAuditLog:
             assert "actor: human_reader" in content
             assert "message: This is a test" in content
             assert "---" in content  # YAML document separator
+
+    def test_new_features_thread_safety(self):
+        """Test thread-safe logging operations."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            log_path = Path(tmpdir) / "audit_log.yaml"
+            audit = AuditLog(log_file=log_path)
+
+            # Should have lock attribute
+            assert hasattr(audit, "lock")
+            assert audit.event_count == 0
+
+            # Log some events
+            audit.log_event("event_1", {"data": "first"})
+            assert audit.event_count == 1
+
+            audit.log_event("event_2", {"data": "second"})
+            assert audit.event_count == 2
+
+    def test_new_features_severity_and_metadata(self):
+        """Test new severity and metadata fields."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            log_path = Path(tmpdir) / "audit_log.yaml"
+            audit = AuditLog(log_file=log_path)
+
+            # Log event with severity and metadata
+            audit.log_event(
+                "critical_error",
+                {"error": "Something went wrong"},
+                severity="critical",
+                metadata={"ip": "1.2.3.4", "session_id": "abc123"},
+            )
+
+            # Verify the event
+            events = audit.get_events()
+            assert len(events) == 1
+            assert events[0]["severity"] == "critical"
+            assert events[0]["metadata"]["ip"] == "1.2.3.4"
+            assert events[0]["metadata"]["session_id"] == "abc123"
+
+    def test_advanced_filtering(self):
+        """Test get_events_filtered method."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            log_path = Path(tmpdir) / "audit_log.yaml"
+            audit = AuditLog(log_file=log_path)
+
+            # Log various events
+            audit.log_event("login", {"user": "alice"}, actor="alice", severity="info")
+            audit.log_event(
+                "unauthorized_access",
+                {"user": "bob"},
+                actor="bob",
+                severity="warning",
+            )
+            audit.log_event(
+                "system_crash", {"cause": "OOM"}, actor="system", severity="critical"
+            )
+
+            # Filter by severity
+            critical_events = audit.get_events_filtered(severity="critical")
+            assert len(critical_events) == 1
+            assert critical_events[0]["event_type"] == "system_crash"
+
+            # Filter by actor
+            alice_events = audit.get_events_filtered(actor="alice")
+            assert len(alice_events) == 1
+            assert alice_events[0]["event_type"] == "login"
+
+    def test_export_to_json(self):
+        """Test export_to_json method."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            log_path = Path(tmpdir) / "audit_log.yaml"
+            audit = AuditLog(log_file=log_path)
+
+            # Log some events
+            audit.log_event("event_1", {"num": 1})
+            audit.log_event("event_2", {"num": 2})
+
+            # Export to JSON
+            json_path = Path(tmpdir) / "export.json"
+            success = audit.export_to_json(json_path)
+            assert success
+            assert json_path.exists()
+
+            # Verify JSON content
+            import json
+
+            with open(json_path) as f:
+                data = json.load(f)
+
+            assert data["version"] == "1.0"
+            assert data["event_count"] == 2
+            assert len(data["events"]) == 2
+
+    def test_export_to_csv(self):
+        """Test export_to_csv method."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            log_path = Path(tmpdir) / "audit_log.yaml"
+            audit = AuditLog(log_file=log_path)
+
+            # Log some events
+            audit.log_event("event_1", {"num": 1})
+            audit.log_event("event_2", {"num": 2})
+
+            # Export to CSV
+            csv_path = Path(tmpdir) / "export.csv"
+            success = audit.export_to_csv(csv_path)
+            assert success
+            assert csv_path.exists()
+
+            # Verify CSV content
+            with open(csv_path) as f:
+                content = f.read()
+
+            assert "event_type" in content
+            assert "event_1" in content
+            assert "event_2" in content
+
+    def test_get_statistics(self):
+        """Test get_statistics method."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            log_path = Path(tmpdir) / "audit_log.yaml"
+            audit = AuditLog(log_file=log_path)
+
+            # Log various events
+            audit.log_event("login", {"user": "alice"}, actor="alice")
+            audit.log_event("login", {"user": "bob"}, actor="bob")
+            audit.log_event(
+                "error", {"code": 500}, actor="system", severity="error"
+            )
+
+            # Get statistics
+            stats = audit.get_statistics()
+            assert stats["total_events"] == 3
+            assert stats["event_types"]["login"] == 2
+            assert stats["event_types"]["error"] == 1
+            assert stats["actors"]["alice"] == 1
+            assert stats["actors"]["bob"] == 1
+            assert stats["actors"]["system"] == 1
+            assert stats["severities"]["info"] == 2
+            assert stats["severities"]["error"] == 1
+
+    def test_get_compliance_report(self):
+        """Test get_compliance_report method."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            log_path = Path(tmpdir) / "audit_log.yaml"
+            audit = AuditLog(log_file=log_path)
+
+            # Log various events
+            audit.log_event("info_event", {"msg": "info"}, severity="info")
+            audit.log_event("warning_event", {"msg": "warning"}, severity="warning")
+            audit.log_event("error_event", {"msg": "error"}, severity="error")
+
+            # Get compliance report
+            report = audit.get_compliance_report()
+            assert "report_generated" in report
+            assert report["total_events"] == 3
+            assert report["chain_valid"] is True
+            assert report["critical_events"] == 0
+            assert report["error_events"] == 1
+            assert report["warning_events"] == 1
+            assert report["compliance_status"] == "PASS"
+
+    def test_callback_registration(self):
+        """Test event callback registration."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            log_path = Path(tmpdir) / "audit_log.yaml"
+            audit = AuditLog(log_file=log_path)
+
+            # Track callback invocations
+            callback_events = []
+
+            def test_callback(event):
+                callback_events.append(event)
+
+            # Register callback
+            audit.register_callback(test_callback)
+
+            # Log events
+            audit.log_event("event_1", {"data": "first"})
+            audit.log_event("event_2", {"data": "second"})
+
+            # Verify callback was invoked
+            assert len(callback_events) == 2
+            assert callback_events[0]["event_type"] == "event_1"
+            assert callback_events[1]["event_type"] == "event_2"
+
+            # Unregister callback
+            success = audit.unregister_callback(test_callback)
+            assert success
+
+            # Log another event
+            audit.log_event("event_3", {"data": "third"})
+
+            # Callback should not be invoked
+            assert len(callback_events) == 2
+
