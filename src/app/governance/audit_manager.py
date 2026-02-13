@@ -3,16 +3,30 @@ Comprehensive Audit Management System
 
 This module provides a unified interface for all audit logging needs in Project-AI.
 It integrates:
-- Cryptographic audit logging (AuditLog)
+- Sovereign-grade cryptographic audit logging (SovereignAuditLog) - Constitutional grade
+- Cryptographic audit logging (AuditLog) - Operational grade
 - Tamperproof logging (TamperproofLog)
 - Causal trace logging (TraceLogger)
 - Real-time monitoring and alerting
 - Compliance reporting
 
+Constitutional-Grade Features (SovereignAuditLog):
+- Genesis root key binding for cryptographic sovereignty
+- Ed25519 per-entry digital signatures
+- HMAC with rotating keys
+- Deterministic replay support
+- Merkle tree anchoring
+- Hardware anchoring support (TPM/HSM)
+- RFC 3161 notarization ready
+
 Example:
     >>> from src.app.governance.audit_manager import AuditManager
+    >>> # Use operational-grade audit (default, backward compatible)
     >>> manager = AuditManager()
     >>> manager.log_system_event("system_started", {"version": "1.0.0"})
+    >>>
+    >>> # Use constitutional-grade sovereign audit
+    >>> manager = AuditManager(sovereign_mode=True)
     >>> manager.log_security_event("unauthorized_access_attempt", {"ip": "1.2.3.4"})
 """
 
@@ -25,17 +39,20 @@ try:
     from app.audit.tamperproof_log import TamperproofLog
     from app.audit.trace_logger import TraceLogger
     from app.governance.audit_log import AuditLog
+    from app.governance.sovereign_audit_log import SovereignAuditLog
 except ImportError:
     # Try alternative import paths for different environments
     try:
         from src.app.audit.tamperproof_log import TamperproofLog
         from src.app.audit.trace_logger import TraceLogger
         from src.app.governance.audit_log import AuditLog
+        from src.app.governance.sovereign_audit_log import SovereignAuditLog
     except ImportError:
         # For standalone testing, use relative imports
         from ...audit.tamperproof_log import TamperproofLog
         from ...audit.trace_logger import TraceLogger
         from .audit_log import AuditLog
+        from .sovereign_audit_log import SovereignAuditLog
 
 logger = logging.getLogger(__name__)
 
@@ -74,13 +91,18 @@ EVENT_CATEGORIES = {
 
 
 class AuditManager:
-    """Unified audit management system.
+    """Unified audit management system with constitutional-grade support.
 
     This class provides a centralized interface for all audit logging operations,
     integrating multiple logging subsystems for comprehensive audit trail coverage.
 
+    Two operating modes:
+    1. Operational Mode (default): Fast, production-ready audit logging with SHA-256 chains
+    2. Sovereign Mode: Constitutional-grade with Ed25519 signatures, Genesis root, Merkle anchors
+
     Attributes:
-        audit_log: Primary cryptographic audit log
+        audit_log: Primary audit log (AuditLog or SovereignAuditLog)
+        sovereign_mode: Whether using constitutional-grade sovereign audit
         tamperproof_log: Secondary tamperproof event log
         trace_logger: Causal decision trace logger
         enabled: Whether audit logging is currently enabled
@@ -92,6 +114,8 @@ class AuditManager:
         data_dir: Path | str | None = None,
         enable_tamperproof: bool = True,
         enable_trace: bool = True,
+        sovereign_mode: bool = False,
+        deterministic_mode: bool = False,
     ):
         """Initialize the audit manager.
 
@@ -99,6 +123,8 @@ class AuditManager:
             data_dir: Base directory for audit logs
             enable_tamperproof: Enable tamperproof logging subsystem
             enable_trace: Enable trace logging subsystem
+            sovereign_mode: Use constitutional-grade sovereign audit (Ed25519, Genesis root)
+            deterministic_mode: Enable deterministic replay (requires sovereign_mode=True)
         """
         if data_dir:
             data_path = Path(data_dir) if isinstance(data_dir, str) else data_dir
@@ -107,8 +133,24 @@ class AuditManager:
 
         data_path.mkdir(parents=True, exist_ok=True)
 
-        # Initialize primary audit log
-        self.audit_log = AuditLog(log_file=data_path / "audit_log.yaml")
+        self.sovereign_mode = sovereign_mode
+
+        # Initialize primary audit log (sovereign or operational)
+        if sovereign_mode:
+            try:
+                self.audit_log = SovereignAuditLog(
+                    data_dir=data_path / "sovereign",
+                    deterministic_mode=deterministic_mode
+                )
+                logger.info("Sovereign-grade audit logging enabled (Genesis: %s)",
+                           self.audit_log.genesis_keypair.genesis_id)
+            except ImportError as e:
+                logger.error("Failed to initialize sovereign audit (missing dependencies): %s", e)
+                logger.info("Falling back to operational audit log")
+                self.audit_log = AuditLog(log_file=data_path / "audit_log.yaml")
+                self.sovereign_mode = False
+        else:
+            self.audit_log = AuditLog(log_file=data_path / "audit_log.yaml")
 
         # Initialize tamperproof log if enabled
         self.tamperproof_log = None
@@ -133,10 +175,12 @@ class AuditManager:
         self.enabled = True
         self.alert_callbacks: list[Callable[[dict[str, Any]], None]] = []
 
-        # Register audit log callback for critical events
-        self.audit_log.register_callback(self._handle_audit_event)
+        # Register audit log callback for critical events (only for operational mode)
+        if not sovereign_mode and hasattr(self.audit_log, 'register_callback'):
+            self.audit_log.register_callback(self._handle_audit_event)
 
-        logger.info("AuditManager initialized at %s", data_path)
+        mode_str = "Sovereign-grade" if sovereign_mode else "Operational"
+        logger.info("AuditManager initialized at %s (mode: %s)", data_path, mode_str)
 
     def _handle_audit_event(self, event: dict[str, Any]) -> None:
         """Handle audit events and trigger alerts if needed.
@@ -418,11 +462,22 @@ class AuditManager:
     def verify_integrity(self) -> tuple[bool, str]:
         """Verify integrity of all audit logs.
 
+        For sovereign mode, this verifies:
+        - Hash chain integrity (SHA-256)
+        - Ed25519 signature validity for all events
+        - HMAC integrity
+        - Merkle anchor consistency
+
         Returns:
             Tuple of (is_valid, message)
         """
         # Verify main audit log
-        is_valid, message = self.audit_log.verify_chain()
+        if self.sovereign_mode and hasattr(self.audit_log, 'verify_integrity'):
+            # Sovereign audit has comprehensive verification
+            is_valid, message = self.audit_log.verify_integrity()
+        else:
+            # Operational audit only verifies hash chain
+            is_valid, message = self.audit_log.verify_chain()
 
         if not is_valid:
             return False, f"Main audit log: {message}"
@@ -436,7 +491,8 @@ class AuditManager:
             except Exception as e:
                 logger.warning("Failed to verify tamperproof log: %s", e)
 
-        return True, "All audit logs verified successfully"
+        mode_str = "Sovereign-grade" if self.sovereign_mode else "Operational"
+        return True, f"All audit logs verified successfully ({mode_str} mode)"
 
     def get_statistics(self) -> dict[str, Any]:
         """Get comprehensive audit statistics.
@@ -445,10 +501,15 @@ class AuditManager:
             Dictionary containing audit statistics from all subsystems
         """
         stats = {
+            "mode": "sovereign" if self.sovereign_mode else "operational",
             "main_log": self.audit_log.get_statistics(),
             "tamperproof_log": None,
             "trace_log": None,
         }
+
+        # Add Genesis ID for sovereign mode
+        if self.sovereign_mode and hasattr(self.audit_log, 'genesis_keypair'):
+            stats["genesis_id"] = self.audit_log.genesis_keypair.genesis_id
 
         if self.tamperproof_log:
             stats["tamperproof_log"] = {
@@ -534,6 +595,70 @@ class AuditManager:
         """Re-enable audit logging."""
         self.enabled = True
         logger.info("Audit logging enabled")
+
+    # Sovereign-grade methods (only available in sovereign mode)
+
+    def generate_proof_bundle(self, event_id: str) -> dict[str, Any] | None:
+        """Generate cryptographic proof bundle for an event (sovereign mode only).
+
+        Proof bundle includes:
+        - Event data
+        - Genesis Ed25519 signature
+        - HMAC value
+        - Merkle proof path
+        - Hash chain context
+        - Notarized timestamp (if available)
+
+        Args:
+            event_id: ID of event to generate proof for
+
+        Returns:
+            Proof bundle dictionary or None if not in sovereign mode or event not found
+        """
+        if not self.sovereign_mode or not hasattr(self.audit_log, 'generate_proof_bundle'):
+            logger.warning("Proof bundle generation only available in sovereign mode")
+            return None
+
+        return self.audit_log.generate_proof_bundle(event_id)
+
+    def verify_proof_bundle(self, proof: dict[str, Any]) -> tuple[bool, str]:
+        """Verify a cryptographic proof bundle (sovereign mode only).
+
+        Args:
+            proof: Proof bundle to verify
+
+        Returns:
+            Tuple of (is_valid, message)
+        """
+        if not self.sovereign_mode or not hasattr(self.audit_log, 'verify_proof_bundle'):
+            return False, "Proof bundle verification only available in sovereign mode"
+
+        return self.audit_log.verify_proof_bundle(proof)
+
+    def verify_event_signature(self, event_id: str) -> tuple[bool, str]:
+        """Verify Ed25519 signature for a specific event (sovereign mode only).
+
+        Args:
+            event_id: ID of event to verify
+
+        Returns:
+            Tuple of (is_valid, message)
+        """
+        if not self.sovereign_mode or not hasattr(self.audit_log, 'verify_event_signature'):
+            return False, "Signature verification only available in sovereign mode"
+
+        return self.audit_log.verify_event_signature(event_id)
+
+    def get_genesis_id(self) -> str | None:
+        """Get Genesis root key ID (sovereign mode only).
+
+        Returns:
+            Genesis ID string or None if not in sovereign mode
+        """
+        if not self.sovereign_mode or not hasattr(self.audit_log, 'genesis_keypair'):
+            return None
+
+        return self.audit_log.genesis_keypair.genesis_id
 
 
 __all__ = ["AuditManager"]
