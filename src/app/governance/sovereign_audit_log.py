@@ -102,7 +102,7 @@ logger = logging.getLogger(__name__)
 GENESIS_KEY_DIR = Path(__file__).parent.parent.parent.parent / "data" / "genesis_keys"
 SOVEREIGN_AUDIT_DIR = Path(__file__).parent.parent.parent.parent / "data" / "sovereign_audit"
 TSA_ANCHOR_DIR = Path(__file__).parent.parent.parent.parent / "data" / "tsa_anchors"
-HMAC_KEY_ROTATION_INTERVAL = 3600  # Rotate HMAC key every hour
+HMAC_KEY_ROTATION_INTERVAL = 3600  # Rotate HMAC key every N events (event-count based, NOT time-based)
 MERKLE_BATCH_SIZE = 1000  # Anchor every 1000 events
 TSA_ENABLED = True  # RFC 3161 TSA integration (VECTOR 3, 4, 10)
 
@@ -240,6 +240,9 @@ class HMACKeyRotator:
 
     In deterministic mode, keys are derived from Genesis seed to ensure
     replay compatibility (VECTOR 7 & 8).
+
+    CRITICAL: Rotation is event-count based, NOT time-based, to ensure
+    deterministic replay across different environments.
     """
 
     def __init__(
@@ -251,17 +254,21 @@ class HMACKeyRotator:
         """Initialize HMAC key rotator.
 
         Args:
-            rotation_interval: Seconds between key rotations
+            rotation_interval: Event count between key rotations (NOT seconds)
             deterministic_mode: Enable deterministic key derivation from Genesis
             genesis_seed: Genesis seed for deterministic key derivation (required if deterministic_mode=True)
 
         Raises:
             ValueError: If deterministic_mode is True but genesis_seed is None
         """
-        self.rotation_interval = rotation_interval
+        self.rotation_interval = rotation_interval  # Now event-count based
         self.deterministic_mode = deterministic_mode
         self.genesis_seed = genesis_seed
         self.lock = threading.Lock()
+
+        # Event counter for rotation (instead of timestamp)
+        self.event_count = 0
+        self.rotation_epoch = 0
 
         # Validate deterministic mode requirements
         if deterministic_mode and genesis_seed is None:
@@ -278,30 +285,44 @@ class HMACKeyRotator:
                 genesis_seed + b"hmac_key_v1"
             ).digest()
             self.key_id = hashlib.sha256(genesis_seed).hexdigest()[:8]
-            self.key_created_at = 0  # Fixed timestamp for deterministic mode
             logger.info("HMAC key rotator initialized (deterministic, key_id=%s)", self.key_id)
         else:
             # Random key generation for normal mode
             self.current_key = secrets.token_bytes(32)  # 256-bit key
             self.key_id = uuid4().hex[:8]
-            self.key_created_at = time.time()
             logger.info("HMAC key rotator initialized (random, key_id=%s)", self.key_id)
 
     def get_current_key(self) -> tuple[bytes, str]:
         """Get current HMAC key and its ID.
 
+        CRITICAL: Rotation is event-count based for deterministic replay.
+
+        Rotation logic:
+        - Events 0 to rotation_interval-1: use key epoch 0
+        - Events rotation_interval to 2*rotation_interval-1: use key epoch 1
+        - And so on...
+
         Returns:
             Tuple of (key_bytes, key_id)
         """
         with self.lock:
-            # Check if rotation is needed
-            if time.time() - self.key_created_at > self.rotation_interval:
+            # Increment event counter FIRST
+            self.event_count += 1
+
+            # Check if rotation is needed based on event count
+            # Rotate AFTER every rotation_interval events
+            if self.event_count >= self.rotation_interval:
                 self._rotate_key()
+                self.event_count = 0  # Reset counter
+                self.rotation_epoch += 1
 
             return self.current_key, self.key_id
 
     def _rotate_key(self) -> None:
-        """Rotate HMAC key (internal, called when needed)."""
+        """Rotate HMAC key (internal, called when needed).
+
+        CRITICAL: This is deterministic in deterministic mode.
+        """
         old_key_id = self.key_id
 
         if self.deterministic_mode and self.genesis_seed:
@@ -311,15 +332,13 @@ class HMACKeyRotator:
                 self.current_key + b"rotate_v1"
             ).digest()
             self.key_id = hashlib.sha256(self.current_key).hexdigest()[:8]
-            # Don't update key_created_at in deterministic mode
         else:
             # Random rotation for normal mode
             self.current_key = secrets.token_bytes(32)
             self.key_id = uuid4().hex[:8]
-            self.key_created_at = time.time()
 
-        logger.info("HMAC key rotated: %s -> %s (deterministic=%s)",
-                   old_key_id, self.key_id, self.deterministic_mode)
+        logger.info("HMAC key rotated: %s -> %s (deterministic=%s, epoch=%d)",
+                   old_key_id, self.key_id, self.deterministic_mode, self.rotation_epoch)
 
     def compute_hmac(self, data: bytes) -> tuple[bytes, str]:
         """Compute HMAC for data with current key.
