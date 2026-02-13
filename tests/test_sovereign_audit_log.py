@@ -132,6 +132,59 @@ class TestHMACKeyRotator:
         assert len(hmac_value) == 32  # SHA-256 output
         assert key_id is not None
 
+    def test_deterministic_hmac_initialization(self):
+        """Test deterministic HMAC key derivation from Genesis seed (VECTOR 7 & 8)."""
+        genesis_seed = b"test_genesis_seed_12345678901234567890123456789012"  # 32 bytes
+
+        # Create two rotators with same seed
+        rotator1 = HMACKeyRotator(deterministic_mode=True, genesis_seed=genesis_seed)
+        rotator2 = HMACKeyRotator(deterministic_mode=True, genesis_seed=genesis_seed)
+
+        # Should have identical keys and IDs
+        key1, key_id1 = rotator1.get_current_key()
+        key2, key_id2 = rotator2.get_current_key()
+
+        assert key1 == key2
+        assert key_id1 == key_id2
+        assert len(key1) == 32  # 256-bit key
+
+    def test_deterministic_hmac_replay(self):
+        """Test that deterministic HMAC produces identical values across replay."""
+        genesis_seed = b"test_genesis_seed_12345678901234567890123456789012"
+
+        # First execution
+        rotator1 = HMACKeyRotator(deterministic_mode=True, genesis_seed=genesis_seed)
+        data = b"Test event data for deterministic HMAC"
+        hmac1, key_id1 = rotator1.compute_hmac(data)
+
+        # Replay execution
+        rotator2 = HMACKeyRotator(deterministic_mode=True, genesis_seed=genesis_seed)
+        hmac2, key_id2 = rotator2.compute_hmac(data)
+
+        # Should be identical (deterministic)
+        assert hmac1 == hmac2
+        assert key_id1 == key_id2
+
+    def test_deterministic_hmac_different_seeds(self):
+        """Test that different Genesis seeds produce different HMAC keys."""
+        seed1 = b"test_genesis_seed_1_32_bytes_long!!!!!!!"
+        seed2 = b"test_genesis_seed_2_32_bytes_long!!!!!!!"
+
+        rotator1 = HMACKeyRotator(deterministic_mode=True, genesis_seed=seed1)
+        rotator2 = HMACKeyRotator(deterministic_mode=True, genesis_seed=seed2)
+
+        key1, key_id1 = rotator1.get_current_key()
+        key2, key_id2 = rotator2.get_current_key()
+
+        # Should be different (different seeds)
+        assert key1 != key2
+        assert key_id1 != key_id2
+
+    def test_deterministic_hmac_requires_seed(self):
+        """Test that deterministic mode requires genesis_seed."""
+        with pytest.raises(ValueError, match="genesis_seed is required"):
+            HMACKeyRotator(deterministic_mode=True, genesis_seed=None)
+
 
 class TestMerkleTreeAnchor:
     """Test suite for Merkle tree anchoring."""
