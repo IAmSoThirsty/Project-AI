@@ -65,8 +65,18 @@ import yaml
 # Import existing audit infrastructure
 try:
     from app.governance.audit_log import AuditLog
+    from app.governance.genesis_continuity import (
+        GenesisContinuityGuard,
+        GenesisDiscontinuityError,
+        GenesisReplacementError,
+    )
 except ImportError:
     from src.app.governance.audit_log import AuditLog
+    from src.app.governance.genesis_continuity import (
+        GenesisContinuityGuard,
+        GenesisDiscontinuityError,
+        GenesisReplacementError,
+    )
 
 # Import Ed25519 from cryptography library (already used by ConfigSigner)
 try:
@@ -367,6 +377,8 @@ class SovereignAuditLog:
         merkle_anchor: Merkle tree anchoring system
         deterministic_mode: Whether replay is deterministic
         notarization_enabled: Whether RFC 3161 notarization is enabled
+        continuity_guard: Genesis continuity protection system
+        system_frozen: Whether system is frozen due to constitutional violation
     """
 
     def __init__(
@@ -381,6 +393,10 @@ class SovereignAuditLog:
             data_dir: Directory for audit data (default: data/sovereign_audit)
             deterministic_mode: Enable deterministic replay mode
             enable_notarization: Enable RFC 3161 timestamp notarization
+
+        Raises:
+            GenesisDiscontinuityError: If Genesis discontinuity detected (VECTOR 1)
+            GenesisReplacementError: If Genesis public key replacement detected (VECTOR 2)
         """
         if ed25519 is None:
             raise ImportError(
@@ -396,8 +412,75 @@ class SovereignAuditLog:
 
         self.data_dir.mkdir(parents=True, exist_ok=True)
 
+        # Initialize Genesis continuity guard FIRST
+        # Pass consistent genesis pins directory
+        genesis_pins_dir = self.data_dir.parent / "genesis_pins"
+        self.continuity_guard = GenesisContinuityGuard(
+            external_pins_file=genesis_pins_dir / "external_pins.json",
+            continuity_log_file=genesis_pins_dir / "continuity_log.json",
+        )
+
+        # System freeze flag for constitutional violations
+        self.system_frozen = False
+
+        # Check if system has prior constitutional violations
+        if self.continuity_guard.is_system_compromised():
+            self.system_frozen = True
+            violations = self.continuity_guard.get_violations()
+            raise GenesisDiscontinuityError(
+                f"System has {len(violations)} prior constitutional violations. "
+                f"System is PERMANENTLY FROZEN. Manual intervention required."
+            )
+
         # Initialize Genesis key pair (cryptographic root of trust)
-        self.genesis_keypair = GenesisKeyPair()
+        # Use consistent key directory relative to data_dir
+        genesis_key_dir = self.data_dir.parent / "genesis_keys"
+        self.genesis_keypair = GenesisKeyPair(key_dir=genesis_key_dir)
+
+        # Get expected Genesis ID from external pins
+        pinned_genesis_ids = self.continuity_guard.get_pinned_genesis_ids()
+
+        # VECTOR 1 & 11 CHECK: Detect Genesis discontinuity
+        if pinned_genesis_ids:
+            # System has history - verify continuity
+            expected_genesis_id = pinned_genesis_ids[0]  # Should only have one
+            is_discontinuity, error_msg = self.continuity_guard.detect_genesis_discontinuity(
+                expected_genesis_id=expected_genesis_id,
+                actual_genesis_id=self.genesis_keypair.genesis_id,
+            )
+
+            if is_discontinuity:
+                self.system_frozen = True
+                logger.critical("Genesis discontinuity detected - FREEZING SYSTEM")
+                raise GenesisDiscontinuityError(error_msg)
+
+        # Get Genesis public key bytes for pinning/verification
+        genesis_pub_key_bytes = self.genesis_keypair.public_key.public_bytes(
+            encoding=serialization.Encoding.Raw,
+            format=serialization.PublicFormat.Raw
+        )
+
+        # VECTOR 2 CHECK: Verify Genesis public key continuity
+        if pinned_genesis_ids:
+            is_valid, error_msg = self.continuity_guard.verify_genesis_continuity(
+                genesis_id=self.genesis_keypair.genesis_id,
+                public_key_bytes=genesis_pub_key_bytes,
+            )
+
+            if not is_valid:
+                self.system_frozen = True
+                logger.critical("Genesis public key replacement detected - FREEZING SYSTEM")
+                raise GenesisReplacementError(error_msg)
+        else:
+            # First initialization - pin Genesis externally
+            self.continuity_guard.pin_genesis(
+                genesis_id=self.genesis_keypair.genesis_id,
+                public_key_bytes=genesis_pub_key_bytes,
+            )
+            logger.info(
+                "First initialization - Genesis %s pinned externally",
+                self.genesis_keypair.genesis_id
+            )
 
         # Initialize operational audit log
         self.operational_log = AuditLog(
@@ -464,13 +547,14 @@ class SovereignAuditLog:
         """Log a sovereign audit event with full cryptographic protection.
 
         This method:
-        1. Creates canonical event representation
-        2. Computes SHA-256 hash
-        3. Signs with Genesis Ed25519 key
-        4. Computes HMAC with rotating key
-        5. Adds Merkle anchor if batch complete
-        6. Optionally requests RFC 3161 notarization
-        7. Logs to operational audit log
+        1. Checks if system is frozen (constitutional violation)
+        2. Creates canonical event representation
+        3. Computes SHA-256 hash
+        4. Signs with Genesis Ed25519 key
+        5. Computes HMAC with rotating key
+        6. Adds Merkle anchor if batch complete
+        7. Optionally requests RFC 3161 notarization
+        8. Logs to operational audit log
 
         Args:
             event_type: Type of event (e.g., "system.decision")
@@ -483,7 +567,22 @@ class SovereignAuditLog:
 
         Returns:
             True if logged successfully, False otherwise
+
+        Raises:
+            GenesisDiscontinuityError: If system is frozen due to constitutional violation
         """
+        # CONSTITUTIONAL CHECKPOINT: Refuse logging if system frozen
+        if self.system_frozen:
+            logger.error(
+                "Attempt to log event while system frozen due to constitutional violation. "
+                "Event rejected: %s",
+                event_type
+            )
+            raise GenesisDiscontinuityError(
+                "System is FROZEN due to constitutional violation. "
+                "No new events can be logged. Manual intervention required."
+            )
+
         with self.lock:
             try:
                 # Generate event ID
