@@ -70,6 +70,7 @@ try:
         GenesisDiscontinuityError,
         GenesisReplacementError,
     )
+    from app.governance.external_merkle_anchor import ExternalMerkleAnchor
 except ImportError:
     from src.app.governance.audit_log import AuditLog
     from src.app.governance.genesis_continuity import (
@@ -77,6 +78,7 @@ except ImportError:
         GenesisDiscontinuityError,
         GenesisReplacementError,
     )
+    from src.app.governance.external_merkle_anchor import ExternalMerkleAnchor
 
 # Import Ed25519 from cryptography library (already used by ConfigSigner)
 try:
@@ -431,6 +433,8 @@ class SovereignAuditLog:
         data_dir: Path | str | None = None,
         deterministic_mode: bool = False,
         enable_notarization: bool = NOTARIZATION_ENABLED,
+        enable_external_anchoring: bool = True,
+        external_anchor_backends: list[str] | None = None,
     ):
         """Initialize sovereign audit log.
 
@@ -438,6 +442,8 @@ class SovereignAuditLog:
             data_dir: Directory for audit data (default: data/sovereign_audit)
             deterministic_mode: Enable deterministic replay mode
             enable_notarization: Enable RFC 3161 timestamp notarization
+            enable_external_anchoring: Enable external Merkle anchoring (VECTOR 3, 10)
+            external_anchor_backends: Backends for external anchoring (default: ["filesystem"])
 
         Raises:
             GenesisDiscontinuityError: If Genesis discontinuity detected (VECTOR 1)
@@ -546,6 +552,17 @@ class SovereignAuditLog:
 
         # Initialize Merkle tree anchoring
         self.merkle_anchor = MerkleTreeAnchor()
+
+        # Initialize external Merkle anchoring (VECTOR 3 & 10)
+        self.enable_external_anchoring = enable_external_anchoring
+        if enable_external_anchoring:
+            external_anchor_dir = self.data_dir.parent / "external_merkle_anchors"
+            self.external_anchor = ExternalMerkleAnchor(
+                backends=external_anchor_backends or ["filesystem"],
+                filesystem_dir=external_anchor_dir,
+            )
+        else:
+            self.external_anchor = None
 
         # Configuration
         self.deterministic_mode = deterministic_mode
@@ -674,6 +691,24 @@ class SovereignAuditLog:
 
                 # Check for Merkle anchor
                 merkle_anchor = self.merkle_anchor.add_entry(content_hash)
+
+                # Pin Merkle root externally if anchor was created (VECTOR 3 & 10)
+                if merkle_anchor and self.enable_external_anchoring and self.external_anchor:
+                    try:
+                        pin_results = self.external_anchor.pin_merkle_root(
+                            merkle_root=merkle_anchor["merkle_root"],
+                            genesis_id=self.genesis_keypair.genesis_id,
+                            batch_info=merkle_anchor,
+                            anchor_id=merkle_anchor["anchor_id"],
+                        )
+                        logger.info(
+                            "Merkle root externally anchored (anchor_id=%s, backends=%s)",
+                            merkle_anchor["anchor_id"],
+                            list(pin_results.keys())
+                        )
+                        self.anchor_count += 1
+                    except Exception as e:
+                        logger.error("Failed to pin Merkle root externally: %s", e)
 
                 # Build sovereign event record
                 sovereign_event = {
