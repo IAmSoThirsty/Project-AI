@@ -230,21 +230,55 @@ class HMACKeyRotator:
     Provides rotating HMAC keys for additional integrity protection beyond
     Ed25519 signatures. Keys are rotated at configurable intervals and all
     key rotations are logged to the audit trail.
+
+    In deterministic mode, keys are derived from Genesis seed to ensure
+    replay compatibility (VECTOR 7 & 8).
     """
 
-    def __init__(self, rotation_interval: int = HMAC_KEY_ROTATION_INTERVAL):
+    def __init__(
+        self,
+        rotation_interval: int = HMAC_KEY_ROTATION_INTERVAL,
+        deterministic_mode: bool = False,
+        genesis_seed: bytes | None = None,
+    ):
         """Initialize HMAC key rotator.
 
         Args:
             rotation_interval: Seconds between key rotations
+            deterministic_mode: Enable deterministic key derivation from Genesis
+            genesis_seed: Genesis seed for deterministic key derivation (required if deterministic_mode=True)
+
+        Raises:
+            ValueError: If deterministic_mode is True but genesis_seed is None
         """
         self.rotation_interval = rotation_interval
-        self.current_key = secrets.token_bytes(32)  # 256-bit key
-        self.key_id = uuid4().hex[:8]
-        self.key_created_at = time.time()
+        self.deterministic_mode = deterministic_mode
+        self.genesis_seed = genesis_seed
         self.lock = threading.Lock()
 
-        logger.info("HMAC key rotator initialized (key_id=%s)", self.key_id)
+        # Validate deterministic mode requirements
+        if deterministic_mode and genesis_seed is None:
+            raise ValueError(
+                "genesis_seed is required when deterministic_mode=True. "
+                "Pass the Genesis public key bytes as seed."
+            )
+
+        # Initialize first key
+        if deterministic_mode and genesis_seed:
+            # Deterministic key derivation from Genesis seed
+            # This ensures replay produces identical HMACs
+            self.current_key = hashlib.sha256(
+                genesis_seed + b"hmac_key_v1"
+            ).digest()
+            self.key_id = hashlib.sha256(genesis_seed).hexdigest()[:8]
+            self.key_created_at = 0  # Fixed timestamp for deterministic mode
+            logger.info("HMAC key rotator initialized (deterministic, key_id=%s)", self.key_id)
+        else:
+            # Random key generation for normal mode
+            self.current_key = secrets.token_bytes(32)  # 256-bit key
+            self.key_id = uuid4().hex[:8]
+            self.key_created_at = time.time()
+            logger.info("HMAC key rotator initialized (random, key_id=%s)", self.key_id)
 
     def get_current_key(self) -> tuple[bytes, str]:
         """Get current HMAC key and its ID.
@@ -263,11 +297,22 @@ class HMACKeyRotator:
         """Rotate HMAC key (internal, called when needed)."""
         old_key_id = self.key_id
 
-        self.current_key = secrets.token_bytes(32)
-        self.key_id = uuid4().hex[:8]
-        self.key_created_at = time.time()
+        if self.deterministic_mode and self.genesis_seed:
+            # Deterministic rotation: derive next key from previous key
+            # This maintains deterministic replay while still rotating
+            self.current_key = hashlib.sha256(
+                self.current_key + b"rotate_v1"
+            ).digest()
+            self.key_id = hashlib.sha256(self.current_key).hexdigest()[:8]
+            # Don't update key_created_at in deterministic mode
+        else:
+            # Random rotation for normal mode
+            self.current_key = secrets.token_bytes(32)
+            self.key_id = uuid4().hex[:8]
+            self.key_created_at = time.time()
 
-        logger.info("HMAC key rotated: %s -> %s", old_key_id, self.key_id)
+        logger.info("HMAC key rotated: %s -> %s (deterministic=%s)",
+                   old_key_id, self.key_id, self.deterministic_mode)
 
     def compute_hmac(self, data: bytes) -> tuple[bytes, str]:
         """Compute HMAC for data with current key.
@@ -487,8 +532,17 @@ class SovereignAuditLog:
             log_file=self.data_dir / "operational_audit.yaml"
         )
 
-        # Initialize HMAC key rotator
-        self.hmac_rotator = HMACKeyRotator()
+        # Get Genesis public key bytes for HMAC seed derivation
+        genesis_pub_key_bytes = self.genesis_keypair.public_key.public_bytes(
+            encoding=serialization.Encoding.Raw,
+            format=serialization.PublicFormat.Raw
+        )
+
+        # Initialize HMAC key rotator with deterministic mode support
+        self.hmac_rotator = HMACKeyRotator(
+            deterministic_mode=deterministic_mode,
+            genesis_seed=genesis_pub_key_bytes if deterministic_mode else None,
+        )
 
         # Initialize Merkle tree anchoring
         self.merkle_anchor = MerkleTreeAnchor()
