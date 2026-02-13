@@ -1,10 +1,21 @@
 # GitHub Actions Workflows
 
-## 🏛️ Codex Deus Ultimate - Single Source of Truth
+## 🏛️ Sovereign CI/CD Architecture
 
-This repository uses **ONE comprehensive workflow** that handles all CI/CD operations:
+This repository implements a **supply chain hardened CI/CD pipeline** with complete trust boundary enforcement.
 
-### Active Workflow
+### Primary Production Workflow
+
+**[project-ai-monolith.yml](project-ai-monolith.yml)** - 🛡️ **Sovereign Monolithic Pipeline**
+- **12 phases** with full trust chain validation
+- **7 trust boundaries** structurally enforced
+- **13/13 supply chain threats** mitigated
+- **SLSA Level 3** compliant with provenance attestation
+- **Zero bypass paths** - all checks required for release
+
+See: [Sovereign Pipeline Documentation](#sovereign-pipeline-documentation)
+
+### Additional Active Workflows
 
 **[codex-deus-ultimate.yml](codex-deus-ultimate.yml)** (2,507 lines, 83KB)
 - 55 jobs across 15 phases
@@ -14,6 +25,14 @@ This repository uses **ONE comprehensive workflow** that handles all CI/CD opera
 
 ## 📖 Documentation
 
+### Sovereign Pipeline Documentation
+
+**Core Documentation:**
+- **[docs/SUPPLY_CHAIN_SECURITY.md](../../docs/SUPPLY_CHAIN_SECURITY.md)** - 13 threat classes and mitigation
+- **[docs/REPOSITORY_HARDENING.md](../../docs/REPOSITORY_HARDENING.md)** - Required repository settings
+- **[project-ai-monolith.yml](project-ai-monolith.yml)** - Complete workflow implementation
+
+**Codex Deus Documentation:**
 **Start here:** [`/CODEX_DEUS_INDEX.md`](../../CODEX_DEUS_INDEX.md)
 
 Full documentation suite:
