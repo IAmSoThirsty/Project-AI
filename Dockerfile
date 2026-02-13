@@ -1,7 +1,8 @@
 # Multi-stage build for Project-AI
+# Supply Chain Hardening: Base images pinned to SHA256 digest
 
 # Stage 1: Build dependencies
-FROM python:3.11-slim as builder
+FROM python:3.11-slim@sha256:0b23cfb7425d065008b778022a17b1551c82f8b4866ee5a7a200084b7e2eafbf as builder
 
 WORKDIR /build
 
@@ -20,7 +21,7 @@ RUN pip wheel --no-cache-dir --no-deps --wheel-dir /build/wheels -r requirements
 
 
 # Stage 2: Runtime
-FROM python:3.11-slim
+FROM python:3.11-slim@sha256:0b23cfb7425d065008b778022a17b1551c82f8b4866ee5a7a200084b7e2eafbf
 
 WORKDIR /app
 
