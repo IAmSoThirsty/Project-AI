@@ -211,13 +211,19 @@ class TSAProvider:
             }
         )
 
+        # Encode to DER bytes
+        try:
+            tsq_der = tsq.dump()
+        except Exception as e:
+            raise TSARequestError(f"Failed to encode TSA request: {e}")
+
         # Send HTTP POST with proper content type
         headers = {"Content-Type": "application/timestamp-query"}
 
         try:
             response = requests.post(
                 tsa_url,
-                data=tsq.dump(),
+                data=tsq_der,
                 headers=headers,
                 timeout=self.timeout,
             )
