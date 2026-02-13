@@ -71,6 +71,8 @@ try:
         GenesisReplacementError,
     )
     from app.governance.external_merkle_anchor import ExternalMerkleAnchor
+    from app.governance.tsa_provider import TSAProvider
+    from app.governance.tsa_anchor_manager import TSAAnchorManager
 except ImportError:
     from src.app.governance.audit_log import AuditLog
     from src.app.governance.genesis_continuity import (
@@ -79,6 +81,8 @@ except ImportError:
         GenesisReplacementError,
     )
     from src.app.governance.external_merkle_anchor import ExternalMerkleAnchor
+    from src.app.governance.tsa_provider import TSAProvider
+    from src.app.governance.tsa_anchor_manager import TSAAnchorManager
 
 # Import Ed25519 from cryptography library (already used by ConfigSigner)
 try:
@@ -97,9 +101,10 @@ logger = logging.getLogger(__name__)
 # Configuration
 GENESIS_KEY_DIR = Path(__file__).parent.parent.parent.parent / "data" / "genesis_keys"
 SOVEREIGN_AUDIT_DIR = Path(__file__).parent.parent.parent.parent / "data" / "sovereign_audit"
+TSA_ANCHOR_DIR = Path(__file__).parent.parent.parent.parent / "data" / "tsa_anchors"
 HMAC_KEY_ROTATION_INTERVAL = 3600  # Rotate HMAC key every hour
 MERKLE_BATCH_SIZE = 1000  # Anchor every 1000 events
-NOTARIZATION_ENABLED = False  # RFC 3161 notarization (requires external service)
+TSA_ENABLED = True  # RFC 3161 TSA integration (VECTOR 3, 4, 10)
 
 
 class GenesisKeyPair:
@@ -432,7 +437,7 @@ class SovereignAuditLog:
         self,
         data_dir: Path | str | None = None,
         deterministic_mode: bool = False,
-        enable_notarization: bool = NOTARIZATION_ENABLED,
+        enable_notarization: bool = TSA_ENABLED,
         enable_external_anchoring: bool = True,
         external_anchor_backends: list[str] | None = None,
     ):
@@ -441,7 +446,7 @@ class SovereignAuditLog:
         Args:
             data_dir: Directory for audit data (default: data/sovereign_audit)
             deterministic_mode: Enable deterministic replay mode
-            enable_notarization: Enable RFC 3161 timestamp notarization
+            enable_notarization: Enable RFC 3161 TSA timestamps (VECTOR 3, 4, 10)
             enable_external_anchoring: Enable external Merkle anchoring (VECTOR 3, 10)
             external_anchor_backends: Backends for external anchoring (default: ["filesystem"])
 
@@ -563,6 +568,22 @@ class SovereignAuditLog:
             )
         else:
             self.external_anchor = None
+
+        # Initialize TSA anchor manager (VECTOR 3, 4, 10)
+        self.enable_tsa = enable_notarization
+        if enable_notarization:
+            tsa_anchor_file = (
+                self.data_dir.parent / "tsa_anchors" / "tsa_anchor_chain.json"
+            )
+            tsa_anchor_file.parent.mkdir(parents=True, exist_ok=True)
+            self.tsa_anchor_manager = TSAAnchorManager(
+                genesis_private_key=self.genesis_keypair.private_key,
+                anchor_path=tsa_anchor_file,
+            )
+            logger.info("TSA anchor manager initialized (VECTOR 3, 4, 10 protection)")
+        else:
+            self.tsa_anchor_manager = None
+            logger.warning("TSA disabled - VECTOR 3, 4, 10 protection unavailable")
 
         # Configuration
         self.deterministic_mode = deterministic_mode
@@ -709,6 +730,24 @@ class SovereignAuditLog:
                         self.anchor_count += 1
                     except Exception as e:
                         logger.error("Failed to pin Merkle root externally: %s", e)
+
+                # CRITICAL: TSA timestamp anchor (VECTOR 3, 4, 10)
+                if merkle_anchor and self.enable_tsa and self.tsa_anchor_manager:
+                    try:
+                        tsa_anchor = self.tsa_anchor_manager.create_anchor(
+                            merkle_root=merkle_anchor["merkle_root"],
+                            genesis_id=self.genesis_keypair.genesis_id,
+                        )
+                        logger.info(
+                            "TSA anchor created (index=%d, tsa_time=%s, merkle=%s...)",
+                            tsa_anchor.index,
+                            tsa_anchor.tsa_time,
+                            tsa_anchor.merkle_root[:16],
+                        )
+                    except Exception as e:
+                        logger.error("Failed to create TSA anchor: %s", e)
+                        # TSA failure is critical - consider system freeze
+                        logger.critical("TSA anchoring failed - constitutional protection degraded")
 
                 # Build sovereign event record
                 sovereign_event = {
@@ -914,6 +953,12 @@ class SovereignAuditLog:
     def verify_integrity(self) -> tuple[bool, str]:
         """Verify integrity of entire sovereign audit log.
 
+        This method performs constitutional-grade verification:
+        1. Operational log hash chain
+        2. All Ed25519 signatures
+        3. TSA anchor chain (monotonic, Genesis-bound)
+        4. Merkle tree integrity
+
         Returns:
             Tuple of (is_valid, message)
         """
@@ -938,6 +983,19 @@ class SovereignAuditLog:
 
         if signature_failures:
             return False, f"Signature verification failed for {len(signature_failures)} events"
+
+        # CRITICAL: Verify TSA anchor chain (VECTOR 3, 4, 10)
+        if self.enable_tsa and self.tsa_anchor_manager:
+            try:
+                is_valid, msg = self.tsa_anchor_manager.verify_chain(
+                    self.genesis_keypair.public_key
+                )
+                if not is_valid:
+                    return False, f"TSA anchor chain verification failed: {msg}"
+
+                logger.info("TSA anchor chain verified successfully")
+            except Exception as e:
+                return False, f"TSA verification error: {e}"
 
         return True, f"Sovereign audit log verified successfully ({len(events)} events)"
 
