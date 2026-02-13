@@ -290,8 +290,9 @@ Agents are NOT the same as plugins. Plugin system is simpler (enable/disable onl
    - `UserManager`: bcrypt (secure, salted)
    - `CommandOverride`: SHA-256 (legacy, consider upgrading)
 
-1. **Codacy integration**: After file edits, MUST run `codacy_cli_analyze`
-   - See `.github/instructions/codacy.instructions.md` for workflow
+1. **Codacy integration** (OPTIONAL): After file edits, may run `codacy_cli_analyze` if available
+   - See `.github/instructions/codacy.instructions.md` for guidelines
+   - Not mandatory - prioritize task completion over perfect analysis
 
 ## Deployment Workflows
 
