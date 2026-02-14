@@ -6,10 +6,10 @@ for all subsystems, enabling standardized error handling, categorization,
 and observability across the entire system.
 """
 
-from enum import Enum
-from typing import Optional, Dict, Any
 import traceback
 from datetime import datetime
+from enum import Enum
+from typing import Any
 
 
 class ErrorSeverity(Enum):
@@ -44,7 +44,7 @@ class ErrorCategory(Enum):
 class ProjectAIError(Exception):
     """
     Base exception for all Project-AI errors.
-    
+
     Provides comprehensive error context including:
     - Error code for programmatic handling
     - Severity level for prioritization
@@ -53,15 +53,15 @@ class ProjectAIError(Exception):
     - Timestamp for temporal analysis
     - Traceback for root cause analysis
     """
-    
+
     def __init__(
         self,
         message: str,
         error_code: str,
         severity: ErrorSeverity = ErrorSeverity.ERROR,
         category: ErrorCategory = ErrorCategory.UNKNOWN,
-        context: Optional[Dict[str, Any]] = None,
-        original_exception: Optional[Exception] = None,
+        context: dict[str, Any] | None = None,
+        original_exception: Exception | None = None,
     ):
         super().__init__(message)
         self.message = message
@@ -72,8 +72,8 @@ class ProjectAIError(Exception):
         self.original_exception = original_exception
         self.timestamp = datetime.now(datetime.UTC) if hasattr(datetime, 'UTC') else datetime.utcnow()
         self.traceback = traceback.format_exc() if original_exception else None
-        
-    def to_dict(self) -> Dict[str, Any]:
+
+    def to_dict(self) -> dict[str, Any]:
         """Convert exception to structured dictionary for logging/serialization."""
         return {
             "message": self.message,
@@ -85,7 +85,7 @@ class ProjectAIError(Exception):
             "traceback": self.traceback,
             "original_exception": str(self.original_exception) if self.original_exception else None,
         }
-    
+
     def __str__(self) -> str:
         """Human-readable error representation."""
         return (
@@ -173,7 +173,7 @@ class InjectionDetectedError(SecurityError):
     """Potential injection attack detected."""
     def __init__(self, message: str, **kwargs):
         super().__init__(
-            message, 
+            message,
             error_code="INJECTION_DETECTED",
             severity=ErrorSeverity.CRITICAL,
             **kwargs

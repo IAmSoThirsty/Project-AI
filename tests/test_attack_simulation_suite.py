@@ -20,13 +20,10 @@ Test Categories:
 8. Attack Report Generation
 """
 
-import hashlib
 import json
-import os
 import shutil
 import tempfile
 import threading
-import time
 from collections import defaultdict
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -36,6 +33,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 try:
+    from app.governance.external_merkle_anchor import ExternalMerkleAnchor
     from app.governance.genesis_continuity import (
         GenesisContinuityGuard,
         GenesisDiscontinuityError,
@@ -45,18 +43,14 @@ try:
         GenesisKeyPair,
         SovereignAuditLog,
     )
-    from app.governance.external_merkle_anchor import ExternalMerkleAnchor
 except ImportError:
+    from src.app.governance.external_merkle_anchor import ExternalMerkleAnchor
     from src.app.governance.genesis_continuity import (
-        GenesisContinuityGuard,
         GenesisDiscontinuityError,
-        GenesisReplacementError,
     )
     from src.app.governance.sovereign_audit_log import (
-        GenesisKeyPair,
         SovereignAuditLog,
     )
-    from src.app.governance.external_merkle_anchor import ExternalMerkleAnchor
 
 
 class AttackSimulationReport:
@@ -582,7 +576,7 @@ class TestGenesisDeletionRecovery:
 
             # Attempt restart (will fail)
             try:
-                audit_restarted = SovereignAuditLog(data_dir=data_dir)
+                SovereignAuditLog(data_dir=data_dir)
                 recovery_failed = True
             except GenesisDiscontinuityError:
                 recovery_failed = False
@@ -726,10 +720,9 @@ class TestKeyCompromiseSimulation:
 
             try:
                 # Sign forged event
-                from cryptography.hazmat.primitives import hashes
 
                 forged_content = json.dumps(forged_data, sort_keys=True).encode()
-                forged_signature = stolen_private_key.sign(forged_content)
+                stolen_private_key.sign(forged_content)
 
                 # Attempt to inject (would need to bypass internal controls)
                 # In practice, TSA timestamp mismatch would detect this
@@ -894,7 +887,7 @@ class TestCompleteAttackSimulation:
         reporter = AttackSimulationReport()
 
         # Run all attack classes
-        test_classes = [
+        [
             TestVMRollbackSimulation(),
             TestClockSkewInjection(),
             TestConcurrentCorruptionStress(),

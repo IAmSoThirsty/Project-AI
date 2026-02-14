@@ -7,8 +7,16 @@
     "test": "npm run test:js && npm run test:python",
     "test:js": "node --test src/**/*.test.js",
     "test:python": "pytest -q",
-    "lint": "ruff check .",
+    "lint": "npm run lint:python && npm run lint:js",
+    "lint:python": "ruff check .",
+    "lint:js": "eslint --ext .js,.jsx src/ --max-warnings 0",
+    "lint:fix": "npm run lint:python:fix && npm run lint:js:fix",
+    "lint:python:fix": "ruff check . --fix",
+    "lint:js:fix": "eslint --ext .js,.jsx src/ --fix",
     "format": "ruff check . --fix",
+    "validate": "python scripts/validate_all_code.py",
+    "validate:fast": "python scripts/validate_all_code.py --fast",
+    "validate:fix": "python scripts/validate_all_code.py --fix",
     "dev": "docker-compose up",
     "build": "docker build -t project-ai:latest .",
     "lint:markdown": "markdownlint README.md PROGRAM_SUMMARY.md docs docs/developer --config .markdownlint.json",
@@ -34,6 +42,10 @@
     "node": ">=18.0.0"
   },
   "devDependencies": {
-    "markdownlint-cli": "^0.47.0"
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.29.1",
+    "markdownlint-cli": "^0.47.0",
+    "prettier": "^3.2.5"
   }
 }

@@ -20,13 +20,9 @@ Test Vectors:
 - META-VECTOR: Archive corruption
 """
 
-import hashlib
-import json
-import os
 import shutil
 import tempfile
 import threading
-import time
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -106,7 +102,7 @@ class TestVector1_GenesisKeyDeletion:
 
             # Step 3: Attempt to restart system (should fail FATALLY)
             with pytest.raises(GenesisDiscontinuityError) as exc_info:
-                audit2 = SovereignAuditLog(data_dir=data_dir)
+                SovereignAuditLog(data_dir=data_dir)
 
             # Verify error message indicates Genesis discontinuity
             error_msg = str(exc_info.value)
@@ -126,7 +122,6 @@ class TestVector1_GenesisKeyDeletion:
 
             # Initialize first Genesis
             audit1 = SovereignAuditLog(data_dir=data_dir)
-            genesis_id_1 = audit1.genesis_keypair.genesis_id
             audit1.log_event("event_before_attack", {"index": 1})
 
             # Delete Genesis keys
@@ -137,7 +132,7 @@ class TestVector1_GenesisKeyDeletion:
 
             # Attempt restart - MUST FAIL
             with pytest.raises(GenesisDiscontinuityError):
-                audit2 = SovereignAuditLog(data_dir=data_dir)
+                SovereignAuditLog(data_dir=data_dir)
 
             # Even if somehow initialized, system must be frozen
             # Verify we cannot create a new audit that silently regenerates
@@ -173,8 +168,7 @@ class TestVector2_GenesisPublicKeyReplacement:
 
             # Step 1: Initialize with original Genesis
             audit1 = SovereignAuditLog(data_dir=data_dir)
-            genesis_id = audit1.genesis_keypair.genesis_id
-            original_pub_key_bytes = audit1.genesis_keypair.public_key.public_bytes(
+            audit1.genesis_keypair.public_key.public_bytes(
                 encoding=audit1.genesis_keypair.public_key.__class__.__module__.split('.')[0] == 'cryptography' and __import__('cryptography.hazmat.primitives.serialization', fromlist=['Encoding']).Encoding.Raw or None,
                 format=__import__('cryptography.hazmat.primitives.serialization', fromlist=['PublicFormat']).PublicFormat.Raw
             )
@@ -195,7 +189,7 @@ class TestVector2_GenesisPublicKeyReplacement:
 
             # Step 4: Attempt to restart (should fail FATALLY)
             with pytest.raises(GenesisReplacementError) as exc_info:
-                audit2 = SovereignAuditLog(data_dir=data_dir)
+                SovereignAuditLog(data_dir=data_dir)
 
             # Verify error indicates public key replacement
             error_msg = str(exc_info.value)
@@ -275,7 +269,7 @@ class TestVector11_FileSystemFullWipe:
 
             # Attempt restart - MUST FAIL
             with pytest.raises(GenesisDiscontinuityError) as exc_info:
-                audit2 = SovereignAuditLog(data_dir=data_dir)
+                SovereignAuditLog(data_dir=data_dir)
 
             error_msg = str(exc_info.value)
             assert "discontinuity" in error_msg.lower() or "VECTOR" in error_msg
@@ -297,7 +291,6 @@ class TestVector11_FileSystemFullWipe:
             assert len(audit1.merkle_anchor.anchor_points) > 0
 
             # Store Genesis ID
-            genesis_id = audit1.genesis_keypair.genesis_id
 
             # ATTACK: Delete audit files but keep Genesis keys
             audit_file = data_dir / "operational_audit.yaml"
@@ -312,7 +305,7 @@ class TestVector11_FileSystemFullWipe:
 
             # Restart should fail due to Genesis discontinuity
             with pytest.raises((GenesisDiscontinuityError, GenesisReplacementError)):
-                audit2 = SovereignAuditLog(data_dir=data_dir)
+                SovereignAuditLog(data_dir=data_dir)
 
 
 class TestVector5_LogTruncation:
@@ -504,7 +497,7 @@ class TestVector7_ReplayDeterminism:
         # Compare artifacts - timestamps should match
         assert len(artifacts1) == len(artifacts2)
 
-        for i, (art1, art2) in enumerate(zip(artifacts1, artifacts2)):
+        for i, (art1, art2) in enumerate(zip(artifacts1, artifacts2, strict=False)):
             # Timestamps must match exactly
             assert art1["timestamp"] == art2["timestamp"], f"Timestamp mismatch at index {i}"
 

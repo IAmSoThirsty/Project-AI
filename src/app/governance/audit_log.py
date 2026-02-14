@@ -35,12 +35,12 @@ import gzip
 import hashlib
 import json
 import logging
-import os
 import shutil
 import threading
-from datetime import UTC, datetime, timedelta
+from collections.abc import Callable
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 import yaml
 

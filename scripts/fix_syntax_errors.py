@@ -61,7 +61,7 @@ def fix_format_specifiers(content: str) -> tuple[str, int]:
         nonlocal changes
         prefix = match.group(1)
         var = match.group(2)
-        fmt = match.group(3)
+        match.group(3)
         changes += 1
         # This needs to be in the string, not as argument
         return prefix + var

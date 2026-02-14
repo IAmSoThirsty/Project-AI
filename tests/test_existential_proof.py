@@ -9,8 +9,6 @@ Validates:
 - Ledger-driven state analysis
 """
 
-import hashlib
-import json
 import tempfile
 from pathlib import Path
 

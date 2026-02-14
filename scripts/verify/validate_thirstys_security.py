@@ -208,11 +208,11 @@ try:
 
     with open(full_path) as f:
         content = f.read()
-        if not ("THIRSTY'S ASYMMETRIC SECURITY" in content):
+        if "THIRSTY'S ASYMMETRIC SECURITY" not in content:
             raise AssertionError("Missing title in documentation")
-        if not ("T.A.R.L." in content):
+        if "T.A.R.L." not in content:
             raise AssertionError("Missing T.A.R.L. reference in documentation")
-        if not ("exploitation structurally unfinishable" in content.lower()):
+        if "exploitation structurally unfinishable" not in content.lower():
             raise AssertionError("Missing key paradigm in documentation")
 
     size = os.path.getsize(full_path)

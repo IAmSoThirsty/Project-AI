@@ -317,7 +317,7 @@ class SchemaValidator:
 
         # Compute and add hash
         # Temporarily remove hash to compute it
-        old_hash = metadata.pop("hash", None)
+        metadata.pop("hash", None)
         data_hash = self.compute_data_hash(data)
         metadata["hash"] = data_hash
 

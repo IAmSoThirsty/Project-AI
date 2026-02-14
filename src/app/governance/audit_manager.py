@@ -31,9 +31,10 @@ Example:
 """
 
 import logging
-from datetime import UTC, datetime
+from collections.abc import Callable
+from datetime import datetime
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 try:
     from app.audit.tamperproof_log import TamperproofLog

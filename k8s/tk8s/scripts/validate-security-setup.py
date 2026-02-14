@@ -4,10 +4,9 @@ TK8S Security Validation Script
 Validates KMS setup, Kyverno policies, and network policies
 """
 
+import json
 import subprocess
 import sys
-import json
-from typing import List, Dict, Tuple
 from dataclasses import dataclass
 
 # Color codes
@@ -27,9 +26,9 @@ class ValidationResult:
 
 class SecurityValidator:
     def __init__(self):
-        self.results: List[ValidationResult] = []
-        
-    def run_command(self, cmd: List[str], check: bool = True) -> Tuple[int, str, str]:
+        self.results: list[ValidationResult] = []
+
+    def run_command(self, cmd: list[str], check: bool = True) -> tuple[int, str, str]:
         """Run a shell command and return exit code, stdout, stderr"""
         try:
             result = subprocess.run(
@@ -43,7 +42,7 @@ class SecurityValidator:
             return e.returncode, e.stdout, e.stderr
         except Exception as e:
             return 1, "", str(e)
-    
+
     def check_kubectl_access(self) -> ValidationResult:
         """Check if kubectl is accessible and authenticated"""
         code, stdout, stderr = self.run_command(['kubectl', 'version', '--client'], check=False)
@@ -70,7 +69,7 @@ class SecurityValidator:
                 "kubectl is not installed or not in PATH",
                 stderr
             )
-    
+
     def check_kyverno_installed(self) -> ValidationResult:
         """Check if Kyverno is installed"""
         code, stdout, stderr = self.run_command(
@@ -91,7 +90,7 @@ class SecurityValidator:
                 "Kyverno is not installed in the cluster",
                 "Run: kubectl apply -f https://github.com/kyverno/kyverno/releases/latest/download/install.yaml"
             )
-    
+
     def check_cosign_secret(self) -> ValidationResult:
         """Check if cosign public key secret exists"""
         code, stdout, stderr = self.run_command(
@@ -112,7 +111,7 @@ class SecurityValidator:
                 "cosign-public-key secret not found in kyverno namespace",
                 "Run: kubectl create secret generic cosign-public-key --from-file=cosign.pub=<path> -n kyverno"
             )
-    
+
     def check_kyverno_policies(self) -> ValidationResult:
         """Check if critical Kyverno policies are deployed"""
         code, stdout, stderr = self.run_command(
@@ -126,18 +125,18 @@ class SecurityValidator:
                 "Cannot list ClusterPolicies",
                 stderr
             )
-        
+
         try:
             policies = json.loads(stdout)
             policy_names = [p['metadata']['name'] for p in policies.get('items', [])]
-            
+
             required_policies = [
                 'require-kms-cosign-signatures',
                 'protect-kyverno'
             ]
-            
+
             missing = [p for p in required_policies if p not in policy_names]
-            
+
             if not missing:
                 return ValidationResult(
                     "Kyverno Policies",
@@ -159,7 +158,7 @@ class SecurityValidator:
                 "Cannot parse ClusterPolicy JSON",
                 stdout[:200]
             )
-    
+
     def check_network_policies(self) -> ValidationResult:
         """Check if default-deny network policies are deployed"""
         code, stdout, stderr = self.run_command(
@@ -173,16 +172,16 @@ class SecurityValidator:
                 "Cannot list NetworkPolicies",
                 stderr
             )
-        
+
         try:
             netpols = json.loads(stdout)
             default_deny_count = 0
-            
+
             for np in netpols.get('items', []):
                 name = np['metadata']['name']
                 if 'default-deny' in name:
                     default_deny_count += 1
-            
+
             if default_deny_count >= 3:  # Expecting at least 3 namespaces
                 return ValidationResult(
                     "Network Policies",
@@ -193,7 +192,7 @@ class SecurityValidator:
             else:
                 return ValidationResult(
                     "Network Policies",
-                    False if default_deny_count == 0 else True,
+                    default_deny_count != 0,
                     f"Found {default_deny_count} default-deny policies (expected 3+)",
                     "Some namespaces may not have default-deny policies"
                 )
@@ -204,7 +203,7 @@ class SecurityValidator:
                 "Cannot parse NetworkPolicy JSON",
                 stdout[:200]
             )
-    
+
     def check_pod_security_admission(self) -> ValidationResult:
         """Check if namespaces have Pod Security Admission labels"""
         code, stdout, stderr = self.run_command(
@@ -218,21 +217,21 @@ class SecurityValidator:
                 "Cannot list namespaces",
                 stderr
             )
-        
+
         try:
             namespaces = json.loads(stdout)
             compliant_count = 0
             total_count = len(namespaces.get('items', []))
-            
+
             for ns in namespaces.get('items', []):
                 labels = ns['metadata'].get('labels', {})
                 has_enforce = labels.get('pod-security.kubernetes.io/enforce') == 'restricted'
                 has_audit = labels.get('pod-security.kubernetes.io/audit') == 'restricted'
                 has_warn = labels.get('pod-security.kubernetes.io/warn') == 'restricted'
-                
+
                 if has_enforce and has_audit and has_warn:
                     compliant_count += 1
-            
+
             if compliant_count == total_count and total_count > 0:
                 return ValidationResult(
                     "Pod Security Admission",
@@ -243,7 +242,7 @@ class SecurityValidator:
             else:
                 return ValidationResult(
                     "Pod Security Admission",
-                    False if compliant_count == 0 else True,
+                    compliant_count != 0,
                     f"{compliant_count}/{total_count} namespaces have PSA labels",
                     "Some namespaces may not enforce restricted standards"
                 )
@@ -254,7 +253,7 @@ class SecurityValidator:
                 "Cannot parse namespace JSON",
                 stdout[:200]
             )
-    
+
     def check_gcp_kms(self) -> ValidationResult:
         """Check if GCP KMS key is accessible"""
         code, stdout, stderr = self.run_command(['which', 'gcloud'], check=False)
@@ -265,7 +264,7 @@ class SecurityValidator:
                 "gcloud CLI not found",
                 "Install gcloud: https://cloud.google.com/sdk/docs/install"
             )
-        
+
         # Try to list KMS keys (this will fail if not authenticated or key doesn't exist)
         code, stdout, stderr = self.run_command(
             ['gcloud', 'kms', 'keys', 'list', '--location=us-central1', '--keyring=tk8s-keyring'],
@@ -285,14 +284,14 @@ class SecurityValidator:
                 "Cannot access GCP KMS or key doesn't exist",
                 "Run: ./k8s/tk8s/scripts/setup-gcp-kms.sh"
             )
-    
+
     def run_all_checks(self):
         """Run all validation checks"""
         print(f"{BLUE}╔══════════════════════════════════════════════════════════════════════╗{NC}")
         print(f"{BLUE}║           TK8S Security Validation                                   ║{NC}")
         print(f"{BLUE}╚══════════════════════════════════════════════════════════════════════╝{NC}")
         print()
-        
+
         checks = [
             self.check_kubectl_access,
             self.check_kyverno_installed,
@@ -302,11 +301,11 @@ class SecurityValidator:
             self.check_pod_security_admission,
             self.check_gcp_kms,
         ]
-        
+
         for check in checks:
             result = check()
             self.results.append(result)
-            
+
             # Print result
             status = f"{GREEN}✅{NC}" if result.passed else f"{RED}❌{NC}"
             print(f"{status} {result.name}")
@@ -314,16 +313,16 @@ class SecurityValidator:
             if result.details:
                 print(f"   {YELLOW}{result.details}{NC}")
             print()
-        
+
         # Summary
         passed = sum(1 for r in self.results if r.passed)
         total = len(self.results)
-        
+
         print(f"{BLUE}╔══════════════════════════════════════════════════════════════════════╗{NC}")
         print(f"{BLUE}║           Validation Summary                                         ║{NC}")
         print(f"{BLUE}╚══════════════════════════════════════════════════════════════════════╝{NC}")
         print()
-        
+
         if passed == total:
             print(f"{GREEN}✅ All {total} checks passed!{NC}")
             print(f"{GREEN}   Enterprise security is properly configured.{NC}")

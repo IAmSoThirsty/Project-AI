@@ -253,7 +253,7 @@ class DomainSubsystemBase(BaseSubsystem, ICommandable, IMonitorable, IObservable
         state_file = self.data_path / "state.json"
         if state_file.exists():
             try:
-                with open(state_file, 'r') as file:
+                with open(state_file) as file:
                     state = json.load(file)
                     self._restore_state(state)
                     self.logger.debug(f"State loaded from {state_file}")
