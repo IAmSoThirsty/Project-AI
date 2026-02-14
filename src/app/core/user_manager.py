@@ -6,6 +6,8 @@ the application should prompt to create an admin user. The `create_user`
 method stores a password hash under the `password_hash` key. If an existing
 `users.json` contains plaintext `password` entries, this manager will migrate
 them to hashed `password_hash` entries on load.
+
+STATUS: PRODUCTION
 """
 
 import json
