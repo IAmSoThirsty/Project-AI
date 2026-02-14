@@ -5,12 +5,12 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "project-ai"
 version = "1.0.0"
-description = "Comprehensive AI assistant with advanced features"
+description = "A constitutionally governed, sovereign-grade AI platform with cryptographic audit trails and enforced ethical behavior"
 readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}
 authors = [{name = "Project AI Team"}]
-keywords = ["ai", "assistant", "pyqt6", "machine-learning"]
+keywords = ["ai", "assistant", "pyqt6", "machine-learning", "constitutional-ai", "asimov-laws", "cryptographic-audit", "ethical-ai", "open-source", "governance"]
 dynamic = ["scripts"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
