@@ -6,8 +6,6 @@ the application should prompt to create an admin user. The `create_user`
 method stores a password hash under the `password_hash` key. If an existing
 `users.json` contains plaintext `password` entries, this manager will migrate
 them to hashed `password_hash` entries on load.
-
-STATUS: PRODUCTION
 """
 
 import json
@@ -166,10 +164,10 @@ class UserManager:
 
     def get_user_data(self, username):
         """Get sanitized user data (omit password hash)."""
-        user = self.users.get(username)
-        if not user:
+        u = self.users.get(username)
+        if not u:
             return {}
-        sanitized = {k: v for k, v in user.items() if k != "password_hash"}
+        sanitized = {k: v for k, v in u.items() if k != "password_hash"}
         return sanitized
 
     # --- Additional management helpers ---

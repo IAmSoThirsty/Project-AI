@@ -98,8 +98,8 @@ class BloomFilter:
 
     def _hash(self, item: str, seed: int) -> int:
         """Generate hash with seed."""
-        content_hash = hashlib.sha256(f"{item}{seed}".encode()).digest()
-        return int.from_bytes(content_hash[:4], byteorder="big")
+        h = hashlib.sha256(f"{item}{seed}".encode()).digest()
+        return int.from_bytes(h[:4], byteorder="big")
 
     def clear(self):
         """Clear bloom filter."""

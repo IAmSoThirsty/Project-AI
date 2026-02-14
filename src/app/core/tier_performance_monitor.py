@@ -336,12 +336,12 @@ class TierPerformanceMonitor:
 
             # Calculate latency percentiles
             latencies = sorted([s.value for s in latency_samples])
-            num_latencies = len(latencies)
+            n = len(latencies)
 
-            avg_latency = sum(latencies) / num_latencies
-            p50_latency = latencies[int(num_latencies * 0.50)] if num_latencies > 0 else 0.0
-            p95_latency = latencies[int(num_latencies * 0.95)] if num_latencies > 0 else 0.0
-            p99_latency = latencies[int(num_latencies * 0.99)] if num_latencies > 0 else 0.0
+            avg_latency = sum(latencies) / n
+            p50_latency = latencies[int(n * 0.50)] if n > 0 else 0.0
+            p95_latency = latencies[int(n * 0.95)] if n > 0 else 0.0
+            p99_latency = latencies[int(n * 0.99)] if n > 0 else 0.0
             max_latency = latencies[-1] if latencies else 0.0
 
             # Calculate throughput (requests per second)

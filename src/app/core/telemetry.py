@@ -3,8 +3,6 @@
 Telemetry is disabled by default. Enable by setting TELEMETRY_ENABLED=true in the environment
 or `.env` file. Events are recorded to `logs/telemetry.json` using atomic writes to avoid
 corruption from concurrent writers.
-
-STATUS: PRODUCTION
 """
 
 from __future__ import annotations
@@ -26,9 +24,9 @@ TELEMETRY_MAX_EVENTS = int(os.getenv("TELEMETRY_MAX_EVENTS", "1000"))
 
 
 def _ensure_logs_dir() -> None:
-    telemetry_dir = os.path.dirname(TELEMETRY_FILE)
-    if telemetry_dir:
-        os.makedirs(telemetry_dir, exist_ok=True)
+    d = os.path.dirname(TELEMETRY_FILE)
+    if d:
+        os.makedirs(d, exist_ok=True)
 
 
 class TelemetryManager:
