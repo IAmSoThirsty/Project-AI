@@ -1,8 +1,8 @@
 {
-  "timestamp": "2026-02-14T19:35:38.416568Z",
-  "overall_percentage": 64,
+  "timestamp": "2026-02-14T20:37:14.815079Z",
+  "overall_percentage": 63,
   "categories": {
-    "test_coverage": 16,
+    "test_coverage": 12,
     "security_scans": 50,
     "docker_security": 75,
     "kubernetes_config": 100,
